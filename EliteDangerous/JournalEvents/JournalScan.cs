@@ -1248,25 +1248,25 @@ namespace EliteDangerousCore.JournalEvents
                 iconName = "M";
 
             if (StarTypeID == EDStar.Nebula)
-                return EDDiscovery.Icons.IconSet.GetIcon($"Bodies.Nebula");
+                return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Nebula");
 
             if (StarTypeID == EDStar.StellarRemnantNebula)
-                return EDDiscovery.Icons.IconSet.GetIcon($"Bodies.StellarRemnantNebula");
+                return BaseUtils.Icons.IconSet.GetIcon($"Bodies.StellarRemnantNebula");
 
             if (StarTypeID == EDStar.X || StarTypeID == EDStar.RoguePlanet)
             {
                 System.Diagnostics.Debug.WriteLine(StarTypeID + ": " + iconName);
-                return EDDiscovery.Icons.IconSet.GetIcon($"Bodies.Unknown");
+                return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Unknown");
             }
             else
 
                 System.Diagnostics.Debug.WriteLine(StarTypeID + ": " + iconName);
-            return EDDiscovery.Icons.IconSet.GetIcon($"Bodies.Stars.{iconName}");
+            return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Stars.{iconName}");
         }
 
         static public System.Drawing.Image GetStarImageNotScanned()
         {
-            return EDDiscovery.Icons.IconSet.GetIcon($"Bodies.Unknown");
+            return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Unknown");
         }
 
         public System.Drawing.Image GetPlanetClassImage()
@@ -1556,7 +1556,7 @@ namespace EliteDangerousCore.JournalEvents
                 }
 
                 System.Diagnostics.Debug.WriteLine(PlanetTypeID + ": " + iconName);
-                return EDDiscovery.Icons.IconSet.GetIcon($"Bodies.Planets.Giant.{iconName}");
+                return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Planets.Giant.{iconName}");
             }
 
             // Terrestrial planets variants
@@ -1912,17 +1912,17 @@ namespace EliteDangerousCore.JournalEvents
             }
 
             System.Diagnostics.Debug.WriteLine(PlanetTypeID + ": " + iconName);
-            return EDDiscovery.Icons.IconSet.GetIcon($"Bodies.Planets.Terrestrial.{iconName}");
+            return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Planets.Terrestrial.{iconName}");
         }
 
         static public System.Drawing.Image GetPlanetImageNotScanned()
         {
-            return EDDiscovery.Icons.IconSet.GetIcon($"Bodies.Unknown");
+            return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Unknown");
         }
 
         static public System.Drawing.Image GetMoonImageNotScanned()
         {
-            return EDDiscovery.Icons.IconSet.GetIcon($"Bodies.Unknown");
+            return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Unknown");
         }
 
         public double GetMaterial(string v)
