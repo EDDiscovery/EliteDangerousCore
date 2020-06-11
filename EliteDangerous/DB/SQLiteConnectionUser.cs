@@ -25,6 +25,13 @@ namespace EliteDangerousCore.DB
 {
     internal class SQLiteConnectionUser : SQLExtConnectionRegister<SQLiteConnectionUser>
     {
+        public class UserDBUpgradeException : Exception
+        {
+            public UserDBUpgradeException(Exception ex) : base("UpgradeUserDB error: " + ex.Message, ex)
+            {
+            }
+        }
+
         public SQLiteConnectionUser() : base(EliteDangerousCore.EliteConfigInstance.InstanceOptions.UserDatabasePath, utctimeindicator:true)
         {
         }
@@ -139,8 +146,7 @@ namespace EliteDangerousCore.DB
             }
             catch (Exception ex)
             {
-                ExtendedControls.MessageBoxTheme.Show("UpgradeUserDB error: " + ex.Message + Environment.NewLine + ex.StackTrace);
-                return false;
+                throw new UserDBUpgradeException(ex);
             }
         }
 

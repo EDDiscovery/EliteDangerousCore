@@ -36,7 +36,7 @@ namespace EliteDangerousCore
 
             if (!File.Exists(desigmappath))
             {
-                desigmappath = Path.Combine(Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), "bodydesignations.csv");
+                desigmappath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bodydesignations.csv");
             }
 
             if (File.Exists(desigmappath))

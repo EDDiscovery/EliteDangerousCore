@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace EliteDangerous.Properties {
+namespace EliteDangerous.WinForms.Properties {
     using System;
     
     
@@ -22,7 +22,7 @@ namespace EliteDangerous.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Resources {
+    internal class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace EliteDangerous.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
+        internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("EliteDangerous.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace EliteDangerous.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
+        internal static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,11 +61,12 @@ namespace EliteDangerous.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://coriolis.edcd.io/import?.
+        ///   Looks up a localized string similar to Enter the journal location folder.  Normally only needed if you are using EDD on another computer than your play computer.
+        ///Leave override journal location blank to use the standard Frontier location for journals..
         /// </summary>
-        public static string URLCoriolis {
+        internal static string Tooltip_JournalLocation {
             get {
-                return ResourceManager.GetString("URLCoriolis", resourceCulture);
+                return ResourceManager.GetString("Tooltip_JournalLocation", resourceCulture);
             }
         }
     }
