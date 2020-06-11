@@ -19,8 +19,8 @@
     <PackageReference Include="System.Management" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BaseUtilities\BaseUtilities\BaseUtils.csproj" />
-    <ProjectReference Include="..\BaseUtilities\SQLLite\SQLLite.csproj" />
-    <ProjectReference Include="..\EDDIcons\EDDIcons.csproj" />
+    <ProjectReference Include="$(SolutionDir)\BaseUtilities\BaseUtilities\BaseUtils.csproj" />
+    <ProjectReference Include="$(SolutionDir)\BaseUtilities\SQLLite\SQLLite.csproj" />
+    <ProjectReference Include="$(SolutionDir)\EDDIcons\EDDIcons.csproj" />
   </ItemGroup>
 </Project>
