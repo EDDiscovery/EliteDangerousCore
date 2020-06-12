@@ -75,6 +75,10 @@
     <Compile Include="DB\TargetClass.cs" />
     <Compile Include="DB\TravelLogUnit.cs" />
     <Compile Include="DB\WantedSystemClass.cs" />
+    <Compile Include="DLL\EDDDLLCaller.cs" />
+    <Compile Include="DLL\EDDDLLHistoryEntry.cs" />
+    <Compile Include="DLL\EDDDLLManager.cs" />
+    <Compile Include="DLL\EDDInterface.cs" />
     <Compile Include="EDDN\EDDNClass.cs" />
     <Compile Include="EDDN\EDDNSync.cs" />
     <Compile Include="EDSM\EDSMJournalSync.cs" />
