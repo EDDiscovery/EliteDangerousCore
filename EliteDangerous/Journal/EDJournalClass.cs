@@ -278,7 +278,7 @@ namespace EliteDangerousCore
                 {
                     bool found = false;
 
-                    if (frontierfolder != null && watchers[i].WatcherFolder.Equals(frontierfolder))
+                    if (frontierfolder != null && statuswatchers[i].WatcherFolder.Equals(frontierfolder))
                         found = true;
 
                     for (int j = 0; j < listCommanders.Count; j++)          // all commanders, see if this watch folder is present

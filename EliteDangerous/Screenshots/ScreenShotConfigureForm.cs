@@ -1,4 +1,20 @@
-﻿using System;
+﻿/*
+ * Copyright © 2020 EDDiscovery development team
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ * 
+ * EDDiscovery is not affiliated with Frontier Developments plc.
+ */
+
+using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -15,11 +31,11 @@ namespace EliteDangerousCore.ScreenShots
         public int FileNameFormat { get { return comboBoxFileNameFormat.SelectedIndex; } }
         public int FolderNameFormat { get { return comboBoxSubFolder.SelectedIndex; } }
         public bool KeepMasterConvertedImage { get { return extCheckBoxKeepMasterConvertedImage.Checked; } }
-        public ScreenShotImageConverter.CropResizeOptions CropResize1 { get { return (ScreenShotImageConverter.CropResizeOptions)extComboBoxConvert1.SelectedIndex; } }
+        public ScreenShotImageConverter.CropResizeOptions CropResizeImage1 { get { return (ScreenShotImageConverter.CropResizeOptions)extComboBoxConvert1.SelectedIndex; } }
         public Rectangle CropResizeArea1 { get { return new Rectangle(numericUpDownLeft1.Value, numericUpDownTop1.Value, numericUpDownWidth1.Value, numericUpDownHeight1.Value); } }
-        public ScreenShotImageConverter.CropResizeOptions CropResize2 { get { return (ScreenShotImageConverter.CropResizeOptions)extComboBoxConvert2.SelectedIndex; } }
+        public ScreenShotImageConverter.CropResizeOptions CropResizeImage2 { get { return (ScreenShotImageConverter.CropResizeOptions)extComboBoxConvert2.SelectedIndex; } }
         public Rectangle CropResizeArea2 { get { return new Rectangle(extNumericUpDownLeft2.Value, extNumericUpDownTop2.Value, extNumericUpDownWidth2.Value, extNumericUpDownHeight2.Value); } }
-        public bool HiRes {  get { return extCheckBoxHiRes.Checked; } }
+        public bool HighRes {  get { return extCheckBoxHiRes.Checked; } }
         public bool CopyToClipboard { get { return extCheckBoxCopyClip.Checked; } }
 
         string initialssfolder;
@@ -48,6 +64,7 @@ namespace EliteDangerousCore.ScreenShots
             extComboBoxConvert1.Items.AddRange(opt);
             extComboBoxConvert2.Items.AddRange(opt);
 
+            extCheckBoxHiRes.Checked = cf.HighRes;
             extCheckBoxCopyClip.Checked = cf.CopyToClipboard;
 
             extComboBoxConvert1.SelectedIndex = (int)cf.CropResizeImage1;

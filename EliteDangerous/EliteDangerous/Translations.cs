@@ -33,6 +33,7 @@ namespace EliteDangerousCore
         ScreenShotImageConverter_ERRF, // Unable to open screenshot '{0}': {1}
         ScreenshotDirectoryWatcher_Scan,
         ScreenshotDirectoryWatcher_NOF,
+        ScreenshotDirectoryWatcher_Excp,
 
         NoTranslate, // DO NOT Define this attribute, used to cause a purposeful mismatch
 
