@@ -112,6 +112,15 @@
     <Compile Include="Journal\JournalEssentialEvents.cs" />
     <Compile Include="Journal\JournalEntryDB.cs" />
     <Compile Include="Journal\JournalEnums.cs" />
+    <Compile Include="Screenshots\ScreenShotConfigureForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screenshots\ScreenShotConfigureForm.Designer.cs">
+      <DependentUpon>ScreenShotConfigureForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screenshots\ScreenShotConverter.cs" />
+    <Compile Include="Screenshots\ScreenShotDirectoryWatcher.cs" />
+    <Compile Include="Screenshots\ScreenShotImageConverter.cs" />
     <Compile Include="StarScan\StarScanHelpers.cs" />
     <Compile Include="StarScan\StarScanDesignationMaps.cs" />
     <Compile Include="StarScan\StarScanJournalScans.cs" />
@@ -282,6 +291,9 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screenshots\ScreenShotConfigureForm.resx">
+      <DependentUpon>ScreenShotConfigureForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
