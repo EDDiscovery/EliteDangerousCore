@@ -13,13 +13,9 @@
  * 
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using System;
+
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using EliteDangerousCore;
-using EDDiscovery.Icons;
 
 namespace EliteDangerousCore.EDSM
 {
@@ -69,7 +65,7 @@ namespace EliteDangerousCore.EDSM
             Enabled = false;
         }
 
-        public static IReadOnlyDictionary<GalMapTypeEnum, Image> GalMapTypeIcons { get; } = new IconGroup<GalMapTypeEnum>("GalMap");
+        public static IReadOnlyDictionary<GalMapTypeEnum, Image> GalMapTypeIcons { get; } = new BaseUtils.Icons.IconGroup<GalMapTypeEnum>("GalMap");
 
         static public List<GalMapType> GetTypes()
         {

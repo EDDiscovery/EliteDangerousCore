@@ -14,7 +14,6 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
-using EDDiscovery.Icons;
 using EliteDangerousCore.DB;
 using EliteDangerousCore.JournalEvents;
 using Newtonsoft.Json.Linq;
@@ -354,7 +353,7 @@ namespace EliteDangerousCore
         #region Icons and names
 
         // enum -> icons 
-        public static IReadOnlyDictionary<JournalTypeEnum, Image> JournalTypeIcons { get; } = new IconGroup<JournalTypeEnum>("Journal");
+        public static IReadOnlyDictionary<JournalTypeEnum, Image> JournalTypeIcons { get; } = new BaseUtils.Icons.IconGroup<JournalTypeEnum>("Journal");
 
         // enum -> Translated Name Events
         private static Dictionary<JournalTypeEnum, string> TranslatedEventNames = GetJournalTranslatedNames();     // precompute the names due to the expense of splitcapsword

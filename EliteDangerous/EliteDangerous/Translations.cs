@@ -28,6 +28,13 @@ namespace EliteDangerousCore
         Information, // Information
         NoPos, // No Pos
 
+        ScreenShotImageConverter_FolderErr, // Cannot convert {0} into the same folder as they are stored into
+        ScreenShotImageConverter_CNV, // Converted {0} to {1}
+        ScreenShotImageConverter_ERRF, // Unable to open screenshot '{0}': {1}
+        ScreenshotDirectoryWatcher_Scan,
+        ScreenshotDirectoryWatcher_NOF,
+        ScreenshotDirectoryWatcher_Excp,
+
         NoTranslate, // DO NOT Define this attribute, used to cause a purposeful mismatch
 
         Bodies_HMS, //"Luminous Hot Main Sequence {0} star" @
