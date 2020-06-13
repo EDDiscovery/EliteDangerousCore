@@ -93,8 +93,6 @@ namespace EliteDangerousCore.ScreenShots
 
         public void NewJournalEntry(JournalEntry je)       // will be in UI thread
         {
-            System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);
-
             if (je.EventTypeID == JournalTypeEnum.Screenshot)
             {
                 JournalScreenshot ss = je as JournalScreenshot;
@@ -128,8 +126,6 @@ namespace EliteDangerousCore.ScreenShots
 
         private void ProcessFilesystemEvent(object sender, System.IO.FileSystemEventArgs e, ScreenShotImageConverter cp) // on UI thread
         {
-            System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);
-
             if (e.FullPath.ToLowerInvariant().EndsWith(".bmp"))     // cause its a frontier bmp file..
             {
                 if (!ScreenshotTimers.ContainsKey(e.FullPath))      // just double check against repeated file watcher fires
@@ -173,8 +169,6 @@ namespace EliteDangerousCore.ScreenShots
 
         private void ProcessScreenshot(string filenamepart, string sysname, string bodyname, string cmdrname, ScreenShotImageConverter cp)
         {
-            System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);  // UI thread
-
             var r = getcurinfo();
 
             if (sysname == null)            // fill in if required

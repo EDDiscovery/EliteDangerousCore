@@ -81,6 +81,7 @@ namespace EliteDangerousCore.ScreenShots
         public bool RemoveOriginal { get; set; } = false;
         public bool CopyToClipboard { get; set; } = false;
         public bool HighRes { get; set; } = false;
+        public event Action<Image> OnCopyToClipboard;
 
         public Tuple<string,Size> Convert(Bitmap bmp, string inputfilename, string outputfolder, DateTime filetime, Action<string> logit, string bodyname, string systemname, string cmdrname ) // can call independent of watcher, pass in bmp to convert
         {
@@ -159,7 +160,7 @@ namespace EliteDangerousCore.ScreenShots
                 {
                     try
                     {
-                        System.Windows.Forms.Clipboard.SetImage(bmpc);
+                        OnCopyToClipboard?.Invoke(bmpc);
                     }
                     catch
                     {

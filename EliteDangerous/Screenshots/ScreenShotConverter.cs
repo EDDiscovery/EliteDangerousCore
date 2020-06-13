@@ -17,7 +17,6 @@
 using System;
 using System.Drawing;
 using System.IO;
-using System.Windows.Forms;
 
 namespace EliteDangerousCore.ScreenShots
 {
@@ -29,15 +28,19 @@ namespace EliteDangerousCore.ScreenShots
         public string OutputFolder { get; set; }
         public bool AutoConvert { get; set; }
         public Action<string, Size> OnScreenShot;
+        private Func<IScreenShotConfigureForm> ConfigureFormCreator;
 
         public ScreenShotImageConverter converter;
         private ScreenshotDirectoryWatcher watcher;
 
         private Action<Action> invokeOnUiThread;
 
-        public ScreenShotConverter()
+        public ScreenShotConverter(Func<IScreenShotConfigureForm> configformcreator, Action<Action> invokeOnUiThreadp, Action<Image> copytoclipboard)
         {
             converter = new ScreenShotImageConverter();
+            converter.OnCopyToClipboard += copytoclipboard;
+            ConfigureFormCreator = configformcreator;
+            invokeOnUiThread = invokeOnUiThreadp;
 
             string screenshotsDirdefault = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Frontier Developments", "Elite Dangerous");
             string outputDirdefault = Path.Combine(screenshotsDirdefault, "Converted");
@@ -114,12 +117,11 @@ namespace EliteDangerousCore.ScreenShots
 
         }
 
-        public void Configure(Form parent)
+        public void Configure()
         {
-            ScreenShotConfigureForm frm = new ScreenShotConfigureForm();
-            frm.Init(converter, InputFolder, InputFileExtension, OutputFolder);
+            IScreenShotConfigureForm frm = ConfigureFormCreator();
 
-            if ( frm.ShowDialog(parent) == DialogResult.OK)
+            if (frm.Show(converter, InputFolder, InputFileExtension, OutputFolder))
             {
                 if (watcher != null)
                     watcher.Stop();
@@ -145,12 +147,9 @@ namespace EliteDangerousCore.ScreenShots
         }
 
 
-        public bool Start(Action<Action> invokeOnUiThreadp, Action<string> logger,
-                                        Func<Tuple<string, string, string>> currentloccmdr)
+        public bool Start(Action<string> logger, Func<Tuple<string, string, string>> currentloccmdr)
         {
             Stop();
-
-            invokeOnUiThread = invokeOnUiThreadp;
 
             watcher = new ScreenshotDirectoryWatcher(CallWithConverter,logger,currentloccmdr);   // pass function to get the convert going
             watcher.OnScreenshot += ConvertCompleted;  // and function for it to call when its over..
@@ -178,25 +177,17 @@ namespace EliteDangerousCore.ScreenShots
 
         private void CallWithConverter(Action<ScreenShotImageConverter> cb)           // called by Watcher with a function to run in the UI main thread..
         {
-
-            if ( !Application.MessageLoop)
+            invokeOnUiThread(() =>
             {
-                invokeOnUiThread(() => { CallWithConverter(cb); });
-            }
-            else
-            {
-                System.Diagnostics.Debug.Assert(Application.MessageLoop);
-
                 if (AutoConvert)
                 {
                     cb(converter);                                  // call the processor the system wants. Function needs an image converter.  Back to processScreenshot
                 }
-            }
+            });
         }
 
         private void ConvertCompleted(string file,Size sz) // Called by the watcher when a convert had completed, in UI thread
         {
-            System.Diagnostics.Debug.Assert(Application.MessageLoop);
             OnScreenShot?.Invoke(file,sz);
         }
     }

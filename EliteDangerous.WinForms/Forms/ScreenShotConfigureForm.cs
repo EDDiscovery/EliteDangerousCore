@@ -21,7 +21,7 @@ using System.Windows.Forms;
 
 namespace EliteDangerousCore.ScreenShots
 {
-    public partial class ScreenShotConfigureForm : ExtendedControls.DraggableForm
+    public partial class ScreenShotConfigureForm : ExtendedControls.DraggableForm, IScreenShotConfigureForm
     {
         public string InputFolder { get { return textBoxScreenshotsDir.Text; } }
         public string OutputFolder { get { return textBoxOutputDir.Text; } }
@@ -93,6 +93,12 @@ namespace EliteDangerousCore.ScreenShots
             BaseUtils.Translator.Instance.Translate(this);
 
             label_index.Text = this.Text;
+        }
+
+        public bool Show(ScreenShotImageConverter cf, string inputfolder, ScreenShotConverter.InputTypes it, string outputfolder)
+        {
+            Init(cf, inputfolder, it, outputfolder);
+            return ShowDialog() == DialogResult.OK;
         }
 
         private void ScreenShotConfigureForm_FormClosed(object sender, FormClosedEventArgs e)
