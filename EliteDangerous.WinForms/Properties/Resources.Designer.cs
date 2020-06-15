@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace EliteDangerous.WinForms.Properties {
+namespace EliteDangerousCore.WinForms {
     using System;
     
     
@@ -57,6 +57,16 @@ namespace EliteDangerous.WinForms.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Dropdown {
+            get {
+                object obj = ResourceManager.GetObject("Dropdown", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

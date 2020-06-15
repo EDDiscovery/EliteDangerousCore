@@ -285,7 +285,7 @@
             this.textBoxBorderEDSMName.ClearOnFirstChar = false;
             this.textBoxBorderEDSMName.ControlBackground = System.Drawing.SystemColors.Control;
             this.textBoxBorderEDSMName.EndButtonEnable = true;
-            this.textBoxBorderEDSMName.EndButtonImage = global::EDDiscovery.Icons.Controls.Dropdown;
+            this.textBoxBorderEDSMName.EndButtonImage = global::EliteDangerousCore.WinForms.Resources.Dropdown;
             this.textBoxBorderEDSMName.EndButtonVisible = false;
             this.textBoxBorderEDSMName.InErrorCondition = false;
             this.textBoxBorderEDSMName.Location = new System.Drawing.Point(206, 3);
@@ -312,7 +312,7 @@
             this.textBoxBorderEDSMAPI.ClearOnFirstChar = false;
             this.textBoxBorderEDSMAPI.ControlBackground = System.Drawing.SystemColors.Control;
             this.textBoxBorderEDSMAPI.EndButtonEnable = true;
-            this.textBoxBorderEDSMAPI.EndButtonImage = global::EDDiscovery.Icons.Controls.Dropdown;
+            this.textBoxBorderEDSMAPI.EndButtonImage = global::EliteDangerousCore.WinForms.Resources.Dropdown;
             this.textBoxBorderEDSMAPI.EndButtonVisible = false;
             this.textBoxBorderEDSMAPI.InErrorCondition = false;
             this.textBoxBorderEDSMAPI.Location = new System.Drawing.Point(206, 29);
@@ -340,7 +340,7 @@
             this.textBoxBorderJournal.ClearOnFirstChar = false;
             this.textBoxBorderJournal.ControlBackground = System.Drawing.SystemColors.Control;
             this.textBoxBorderJournal.EndButtonEnable = true;
-            this.textBoxBorderJournal.EndButtonImage = global::EDDiscovery.Icons.Controls.Dropdown;
+            this.textBoxBorderJournal.EndButtonImage = global::EliteDangerousCore.WinForms.Resources.Dropdown;
             this.textBoxBorderJournal.EndButtonVisible = false;
             this.textBoxBorderJournal.InErrorCondition = false;
             this.textBoxBorderJournal.Location = new System.Drawing.Point(206, 32);
@@ -353,7 +353,7 @@
             this.textBoxBorderJournal.Size = new System.Drawing.Size(197, 20);
             this.textBoxBorderJournal.TabIndex = 3;
             this.textBoxBorderJournal.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.toolTip.SetToolTip(this.textBoxBorderJournal, global::EliteDangerous.WinForms.Properties.Resources.Tooltip_JournalLocation);
+            this.toolTip.SetToolTip(this.textBoxBorderJournal, global::EliteDangerousCore.WinForms.Resources.Tooltip_JournalLocation);
             this.textBoxBorderJournal.WordWrap = true;
             // 
             // textBoxBorderCmdr
@@ -367,7 +367,7 @@
             this.textBoxBorderCmdr.ClearOnFirstChar = false;
             this.textBoxBorderCmdr.ControlBackground = System.Drawing.SystemColors.Control;
             this.textBoxBorderCmdr.EndButtonEnable = true;
-            this.textBoxBorderCmdr.EndButtonImage = global::EDDiscovery.Icons.Controls.Dropdown;
+            this.textBoxBorderCmdr.EndButtonImage = global::EliteDangerousCore.WinForms.Resources.Dropdown;
             this.textBoxBorderCmdr.EndButtonVisible = false;
             this.textBoxBorderCmdr.InErrorCondition = false;
             this.textBoxBorderCmdr.Location = new System.Drawing.Point(206, 3);
@@ -415,7 +415,7 @@
             this.textBoxBorderInaraName.ClearOnFirstChar = false;
             this.textBoxBorderInaraName.ControlBackground = System.Drawing.SystemColors.Control;
             this.textBoxBorderInaraName.EndButtonEnable = true;
-            this.textBoxBorderInaraName.EndButtonImage = global::EDDiscovery.Icons.Controls.Dropdown;
+            this.textBoxBorderInaraName.EndButtonImage = global::EliteDangerousCore.WinForms.Resources.Dropdown;
             this.textBoxBorderInaraName.EndButtonVisible = false;
             this.textBoxBorderInaraName.InErrorCondition = false;
             this.textBoxBorderInaraName.Location = new System.Drawing.Point(206, 3);
@@ -442,7 +442,7 @@
             this.textBoxBorderInaraAPIKey.ClearOnFirstChar = false;
             this.textBoxBorderInaraAPIKey.ControlBackground = System.Drawing.SystemColors.Control;
             this.textBoxBorderInaraAPIKey.EndButtonEnable = true;
-            this.textBoxBorderInaraAPIKey.EndButtonImage = global::EDDiscovery.Icons.Controls.Dropdown;
+            this.textBoxBorderInaraAPIKey.EndButtonImage = global::EliteDangerousCore.WinForms.Resources.Dropdown;
             this.textBoxBorderInaraAPIKey.EndButtonVisible = false;
             this.textBoxBorderInaraAPIKey.InErrorCondition = false;
             this.textBoxBorderInaraAPIKey.Location = new System.Drawing.Point(206, 28);
@@ -471,7 +471,7 @@
             this.textBoxDefaultZoom.ControlBackground = System.Drawing.SystemColors.Control;
             this.textBoxDefaultZoom.DelayBeforeNotification = 0;
             this.textBoxDefaultZoom.EndButtonEnable = true;
-            this.textBoxDefaultZoom.EndButtonImage = global::EDDiscovery.Icons.Controls.Dropdown;
+            this.textBoxDefaultZoom.EndButtonImage = global::EliteDangerousCore.WinForms.Resources.Dropdown;
             this.textBoxDefaultZoom.EndButtonVisible = false;
             this.textBoxDefaultZoom.Format = "0.#######";
             this.textBoxDefaultZoom.InErrorCondition = true;
@@ -873,7 +873,7 @@
             this.extTextBoxAutoCompleteHomeSystem.DropDownScrollBarButtonColor = System.Drawing.Color.LightGray;
             this.extTextBoxAutoCompleteHomeSystem.DropDownScrollBarColor = System.Drawing.Color.LightGray;
             this.extTextBoxAutoCompleteHomeSystem.EndButtonEnable = false;
-            this.extTextBoxAutoCompleteHomeSystem.EndButtonImage = global::EDDiscovery.Icons.Controls.Dropdown;
+            this.extTextBoxAutoCompleteHomeSystem.EndButtonImage = global::EliteDangerousCore.WinForms.Resources.Dropdown;
             this.extTextBoxAutoCompleteHomeSystem.EndButtonVisible = false;
             this.extTextBoxAutoCompleteHomeSystem.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.extTextBoxAutoCompleteHomeSystem.InErrorCondition = false;
