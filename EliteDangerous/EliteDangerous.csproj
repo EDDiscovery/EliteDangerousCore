@@ -324,10 +324,6 @@
       <Project>{3d79de63-5eec-4f30-a879-fb4c6ba4b4dc}</Project>
       <Name>SQLLite</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\EDDIcons\EDDIcons.csproj">
-      <Project>{646f71be-f102-444e-9254-818e5a320ab8}</Project>
-      <Name>EDDIcons</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\ExtendedControls\ExtendedControls\ExtendedControls.csproj">
       <Project>{2049403f-f4c7-45e6-b777-6390c78e4d2b}</Project>
       <Name>ExtendedControls</Name>

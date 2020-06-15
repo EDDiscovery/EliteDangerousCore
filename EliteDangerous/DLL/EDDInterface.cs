@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 
 namespace EliteDangerousCore.DLL
 {
-    public static class EDDDLLIF
+    public static class EDDDLLIF       // Standard DLL Interface for a C++ type program
     {
         [StructLayout(LayoutKind.Explicit)]
         public struct JournalEntry
@@ -59,12 +59,19 @@ namespace EliteDangerousCore.DLL
             [FieldOffset(168)] public int totalrecords;
 
             // Version 1 Ends here
+
+            [FieldOffset(176)] [MarshalAs(UnmanagedType.BStr)] public string json;
+
+            // Version 2 Ends here
         };
 
         public delegate bool EDDRequestHistory(long index, bool isjid, out JournalEntry f); //index =1..total records, or jid
-
-        public delegate bool EDDRunAction(   [MarshalAs(UnmanagedType.BStr)]string eventname,
+        public delegate bool EDDRunAction([MarshalAs(UnmanagedType.BStr)]string eventname,
                                              [MarshalAs(UnmanagedType.BStr)]string parameters);  // parameters in format v="k",X="k"
+
+        [return: MarshalAs(UnmanagedType.BStr)]
+        public delegate string EDDShipLoadout(string name); //index =1..total records, or jid
+
 
         [StructLayout(LayoutKind.Explicit)]
         public struct EDDCallBacks
@@ -73,6 +80,13 @@ namespace EliteDangerousCore.DLL
             [FieldOffset(8)] public EDDRequestHistory RequestHistory;
             [FieldOffset(16)] public EDDRunAction RunAction;
             // Version 1 Ends here
+            [FieldOffset(24)] public EDDShipLoadout GetShipLoadout;
+            // Version 2 Ends here
+
+            public EDDCallBacks(int version, EDDRequestHistory rh, EDDRunAction ra , EDDShipLoadout sl = null)
+            {
+                ver = version; RequestHistory = rh;RunAction = ra;GetShipLoadout = sl;
+            }
         }
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -80,6 +94,11 @@ namespace EliteDangerousCore.DLL
         public delegate String EDDInitialise([MarshalAs(UnmanagedType.BStr)]string vstr,
                                              [MarshalAs(UnmanagedType.BStr)]string dllfolder,
                                              EDDCallBacks callbacks);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.BStr)]
+        public delegate String EDDInitialiseT([MarshalAs(UnmanagedType.BStr)]string vstr,
+                                             [MarshalAs(UnmanagedType.BStr)]string dllfolder);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void EDDRefresh([MarshalAs(UnmanagedType.BStr)]string cmdname, JournalEntry lastje);
@@ -99,7 +118,16 @@ namespace EliteDangerousCore.DLL
 
         // Version 1 Ends here
 
-    }
+        // back: list of (config name, config value, config type (string,int)) of all configs
+        // in : either an empty array or list of (name, values) to set
+        // if fails, return empty array back
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.SafeArray)]
+        public delegate string[] EDDConfigParameters([MarshalAs(UnmanagedType.SafeArray)] string[] values);
+
+        // Version 2 Ends here
+
+    }
 
 }

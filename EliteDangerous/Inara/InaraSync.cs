@@ -47,9 +47,9 @@ namespace EliteDangerousCore.Inara
 
         #region Public IF
 
-        public static bool Refresh(Action<string> logger, HistoryList history, EDCommander cmdr)
+        public static bool Refresh(Action<string> logger, HistoryEntry lasthe, EDCommander cmdr)
         {
-            List<JToken> events = RefreshList(history);
+            List<JToken> events = RefreshList(lasthe);
             if (events.Count > 0)
                 Submit(events,logger, cmdr, true);
             return true;
@@ -82,11 +82,10 @@ namespace EliteDangerousCore.Inara
 
         #region Formatters
 
-        public static List<JToken> RefreshList(HistoryList history)         // may create NULL entries if some material items not found
+        public static List<JToken> RefreshList(HistoryEntry last)         // may create NULL entries if some material items not found
         {
             List<JToken> eventstosend = new List<JToken>();
 
-            HistoryEntry last = history.GetLast;
             if (last != null && last.EventTimeUTC > DateTime.UtcNow.AddDays(-30))
             {
                 var si = last.ShipInformation;
