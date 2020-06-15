@@ -21,6 +21,5 @@
   <ItemGroup>
     <ProjectReference Include="$(SolutionDir)\BaseUtilities\BaseUtilities\BaseUtils.csproj" />
     <ProjectReference Include="$(SolutionDir)\BaseUtilities\SQLLite\SQLLite.csproj" />
-    <ProjectReference Include="$(SolutionDir)\EDDIcons\EDDIcons.csproj" />
   </ItemGroup>
 </Project>

@@ -24,12 +24,12 @@ namespace EliteDangerousCore.DLL
 {
     public class EDDDLLManager
     {
-        public int Count { get { return dlls.Count; } }
+        public int Count { get { return DLLs.Count; } }
+        public List<EDDDLLCaller> DLLs { get; private set; } = new List<EDDDLLCaller>();
 
-        private List<EDDDLLCaller> dlls = new List<EDDDLLCaller>();
-
+        // search directory for *.dll, 
         // return loaded, failed, notallowed
-        public Tuple<string,string,string> Load(string directory, string ourversion, string dllfolder, EDDDLLIF.EDDCallBacks callbacks, string allowed)
+        public Tuple<string, string, string> Load(string directory, string ourversion, string dllfolder, EDDDLLIF.EDDCallBacks callbacks, string allowed)
         {
             string loaded = "";
             string failed = "";
@@ -49,13 +49,14 @@ namespace EliteDangerousCore.DLL
 
                     EDDDLLCaller caller = new EDDDLLCaller();
 
+
                     if (caller.Load(f.FullName))        // if loaded (meaning it loaded, and its got EDDInitialise)
                     {
                         if (allowed.Equals("All", StringComparison.InvariantCultureIgnoreCase) || allowedfiles.Contains(filename, StringComparer.InvariantCultureIgnoreCase))    // if allowed..
                         {
                             if (caller.Init(ourversion, dllfolder, callbacks))       // must init
                             {
-                                dlls.Add(caller);
+                                DLLs.Add(caller);
                                 loaded = loaded.AppendPrePad(caller.Name, ",");
                             }
                             else
@@ -72,22 +73,22 @@ namespace EliteDangerousCore.DLL
                 }
             }
 
-            return new Tuple<string, string,string>(loaded,failed,notallowed);
+            return new Tuple<string, string, string>(loaded, failed, notallowed);
         }
 
         public void UnLoad()
         {
-            foreach (EDDDLLCaller caller in dlls)
+            foreach (EDDDLLCaller caller in DLLs)
             {
                 caller.UnLoad();
             }
 
-            dlls.Clear();
+            DLLs.Clear();
         }
 
         public void Refresh(string cmdr, EDDDLLIF.JournalEntry je)
         {
-            foreach (EDDDLLCaller caller in dlls)
+            foreach (EDDDLLCaller caller in DLLs)
             {
                 caller.Refresh(cmdr, je);
             }
@@ -95,15 +96,15 @@ namespace EliteDangerousCore.DLL
 
         public void NewJournalEntry(EDDDLLIF.JournalEntry nje)
         {
-            foreach (EDDDLLCaller caller in dlls)
+            foreach (EDDDLLCaller caller in DLLs)
             {
                 caller.NewJournalEntry(nje);
             }
         }
 
-        private EDDDLLCaller FindCaller(string name)
+        public EDDDLLCaller FindCaller(string name)
         {
-            return dlls.Find(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            return DLLs.Find(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
         }
 
         // item1 = true if found, item2 = true if caller implements.
@@ -111,7 +112,7 @@ namespace EliteDangerousCore.DLL
         {
             if (dllname.Equals("All", StringComparison.InvariantCultureIgnoreCase))
             {
-                foreach (EDDDLLCaller caller in dlls)
+                foreach (EDDDLLCaller caller in DLLs)
                     caller.ActionJournalEntry(nje);
 
                 return new Tuple<bool, bool>(true, true);
@@ -125,36 +126,36 @@ namespace EliteDangerousCore.DLL
 
         // List of DLL results, empty if no DLLs were found
         // else list of results. bool = true no error, false error.  String contains error string, or result string
-        public List<Tuple<bool,string,string>> ActionCommand(string dllname, string cmd, string[] paras)
+        public List<Tuple<bool, string, string>> ActionCommand(string dllname, string cmd, string[] paras)
         {
-            List<Tuple<bool,string,string>> resultlist = new List<Tuple<bool,string,string>>();
+            List<Tuple<bool, string, string>> resultlist = new List<Tuple<bool, string, string>>();
 
             if (dllname.Equals("All", StringComparison.InvariantCultureIgnoreCase))
             {
-                foreach (EDDDLLCaller caller in dlls)
+                foreach (EDDDLLCaller caller in DLLs)
                     resultlist.Add(AC(caller, cmd, paras));
             }
             else
             {
                 EDDDLLCaller caller = FindCaller(dllname);
-                if ( caller != null )
+                if (caller != null)
                     resultlist.Add(AC(caller, cmd, paras));
                 else
-                    resultlist.Add(new Tuple<bool,string,string>(false, dllname, "Cannot find DLL "));
+                    resultlist.Add(new Tuple<bool, string, string>(false, dllname, "Cannot find DLL "));
             }
 
             return resultlist;
         }
 
-        public Tuple<bool,string,string> AC(EDDDLLCaller caller, string cmd, string[] paras)
+        private Tuple<bool, string, string> AC(EDDDLLCaller caller, string cmd, string[] paras)
         {
             string r = caller.ActionCommand(cmd, paras);
             if (r == null)
-                return new Tuple<bool,string,string>(false, caller.Name, "DLL does not implement ActionCommand");
+                return new Tuple<bool, string, string>(false, caller.Name, "DLL does not implement ActionCommand");
             else if (r.Length > 0 && r[0] == '+')
-                return new Tuple<bool,string,string>(true, caller.Name, r.Mid(1));
+                return new Tuple<bool, string, string>(true, caller.Name, r.Mid(1));
             else
-                return new Tuple<bool,string,string>(false, caller.Name, r.Mid(1));
+                return new Tuple<bool, string, string>(false, caller.Name, r.Mid(1));
         }
     }
 }

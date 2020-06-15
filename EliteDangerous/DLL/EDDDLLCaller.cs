@@ -15,7 +15,6 @@
  */
 
 using System;
-using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace EliteDangerousCore.DLL
@@ -24,11 +23,14 @@ namespace EliteDangerousCore.DLL
     {
         public string Version { get; private set; }
         public string Name { get; private set; }
+        public bool HasConfig { get { return pConfigParameters != null; } }
 
+        // for a standard DLL
         private IntPtr pDll = IntPtr.Zero;
         private IntPtr pNewJournalEntry = IntPtr.Zero;
         private IntPtr pActionJournalEntry = IntPtr.Zero;
         private IntPtr pActionCommand = IntPtr.Zero;
+        private IntPtr pConfigParameters = IntPtr.Zero;
 
         public bool Load(string path)
         {
@@ -46,6 +48,7 @@ namespace EliteDangerousCore.DLL
                         pNewJournalEntry = BaseUtils.Win32.UnsafeNativeMethods.GetProcAddress(pDll, "EDDNewJournalEntry");
                         pActionJournalEntry = BaseUtils.Win32.UnsafeNativeMethods.GetProcAddress(pDll, "EDDActionJournalEntry");
                         pActionCommand = BaseUtils.Win32.UnsafeNativeMethods.GetProcAddress(pDll, "EDDActionCommand");
+                        pConfigParameters = BaseUtils.Win32.UnsafeNativeMethods.GetProcAddress(pDll, "EDDConfigParameters");
                         return true;
                     }
                     else
@@ -69,12 +72,17 @@ namespace EliteDangerousCore.DLL
                                                                                                 peddinit,
                                                                                                 typeof(EDDDLLIF.EDDInitialise));
                 Version = edinit(ourversion, dllfolder, callbacks);
+            }
+            else
+                Version = "!";
 
-                bool ok = Version != null && Version.Length > 0 && Version[0] != '!';
+            bool ok = Version != null && Version.Length > 0 && Version[0] != '!';
 
-                if (ok)
-                    return true;
-                else
+            if (ok)
+                return true;
+            else
+            {
+                if (pDll != IntPtr.Zero)
                 {
                     BaseUtils.Win32.UnsafeNativeMethods.FreeLibrary(pDll);
                     pDll = IntPtr.Zero;
@@ -140,6 +148,8 @@ namespace EliteDangerousCore.DLL
             return false;
         }
 
+        // ACTION DLLCALL <dllname>, "JournalEntry", JID
+
         public bool ActionJournalEntry(EDDDLLIF.JournalEntry je)
         {
             if (pDll != IntPtr.Zero && pActionJournalEntry != IntPtr.Zero)
@@ -154,6 +164,8 @@ namespace EliteDangerousCore.DLL
             return false;
         }
 
+        // ACTION DLLCALL <dllname>, cmd, paras..
+
         public string ActionCommand(string cmd, string[] paras) // paras must be present..
         {
             if (pDll != IntPtr.Zero && pActionCommand != IntPtr.Zero)
@@ -165,6 +177,35 @@ namespace EliteDangerousCore.DLL
             }
 
             return null;
+        }
+
+        // Config..
+
+        public string[] GetConfig()
+        {
+            if (pDll != IntPtr.Zero && pConfigParameters != IntPtr.Zero)
+            {
+                EDDDLLIF.EDDConfigParameters edf = (EDDDLLIF.EDDConfigParameters)Marshal.GetDelegateForFunctionPointer(
+                                                                                    pConfigParameters,
+                                                                                    typeof(EDDDLLIF.EDDConfigParameters));
+                return edf(new string[] { });
+            }
+
+            return null;
+        }
+
+        public bool SetConfig(string[] paras)
+        {
+            if (pDll != IntPtr.Zero && pConfigParameters != IntPtr.Zero)
+            {
+                EDDDLLIF.EDDConfigParameters edf = (EDDDLLIF.EDDConfigParameters)Marshal.GetDelegateForFunctionPointer(
+                                                                                    pConfigParameters,
+                                                                                    typeof(EDDDLLIF.EDDConfigParameters));
+                var r = edf(paras);
+                return r.Length > 0;
+            }
+
+            return false;
         }
 
     }

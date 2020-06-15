@@ -33,7 +33,7 @@ namespace EliteDangerousCore.DLL
             {
                 EDDDLLIF.JournalEntry je = new EDDDLLIF.JournalEntry()
                 {
-                    ver = 1,
+                    ver = 2,
                     indexno = he.Indexno,
                     utctime = he.EventTimeUTC.ToStringZulu(),
                     name = he.EventSummary,
@@ -50,7 +50,8 @@ namespace EliteDangerousCore.DLL
                     gamemode = he.GameMode,
                     group = he.Group,
                     credits = he.Credits,
-                    eventid = he.journalEntry.EventTypeStr
+                    eventid = he.journalEntry.EventTypeStr,
+                    json = he.journalEntry.GetJson().ToString()
                 };
 
                 he.journalEntry.FillInformation(out je.info, out je.detailedinfo);
