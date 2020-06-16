@@ -44,6 +44,7 @@ namespace EliteDangerousCore.Forms
             checkBoxCustomEDSMFrom.Visible = !disablefromedsm;
             extGroupBoxCommanderInfo.Visible = !disable3dmapsettings;
             Height -= extGroupBoxCommanderInfo.Height;
+            checkBoxCustomEDDNTo.Checked = true;        // default EDDN on
         }
 
         public void Init(EDCommander cmdr, bool enablecmdredit, bool disablefromedsm = false, bool disable3dmapsettings = false)

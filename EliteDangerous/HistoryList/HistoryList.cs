@@ -936,7 +936,7 @@ namespace EliteDangerousCore
             return he;
         }
 
-        public static HistoryList LoadHistory(EDJournalClass journalmonitor, Func<bool> cancelRequested, Action<int, string> reportProgress,
+        public static HistoryList LoadHistory(EDJournalUIScanner journalmonitor, Func<bool> cancelRequested, Action<int, string> reportProgress,
                                     string NetLogPath = null,
                                     bool ForceNetLogReload = false,
                                     bool ForceJournalReload = false,
@@ -950,7 +950,8 @@ namespace EliteDangerousCore
             if (CurrentCommander >= 0)
             {
                 journalmonitor.SetupWatchers();   // Parse files stop monitor..
-                journalmonitor.ParseJournalFilesOnWatchers((p, s) => reportProgress(p, s), forceReload: ForceJournalReload);   // Parse files stop monitor..
+                int forcereloadoflastn = ForceJournalReload ? int.MaxValue / 2 : 0;     // if forcing a reload, we indicate that by setting the reload count to a very high value, but not enough to cause int wrap
+                journalmonitor.ParseJournalFilesOnWatchers((p, s) => reportProgress(p, s), forcereloadoflastn );
 
                 if (NetLogPath != null)
                 {

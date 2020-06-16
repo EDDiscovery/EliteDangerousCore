@@ -68,7 +68,7 @@ namespace EliteDangerousCore
             }
         }
 
-        public JObject JsonCached { get; set; }             // EDD does not use this, EDDLite uses this to keep JSON.
+        public JObject JsonCached { get; set; }             // New entries scanned thru the readers get this, ones from history rely on looking up in DB 
 
         public abstract void FillInformation(out string info, out string detailed);     // all entries must implement
 

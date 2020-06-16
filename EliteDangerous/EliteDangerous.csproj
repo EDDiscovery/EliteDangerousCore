@@ -106,7 +106,7 @@
     <Compile Include="IGAU\IGAUClass.cs" />
     <Compile Include="JournalEvents\JournalCarrier.cs" />
     <Compile Include="JournalEvents\JournalNavRoute.cs" />
-    <Compile Include="Journal\EDJournalClass.cs" />
+    <Compile Include="Journal\EDScanner.cs" />
     <Compile Include="Journal\EDJournalReader.cs" />
     <Compile Include="Journal\EDJournalMonitorWatcher.cs" />
     <Compile Include="Journal\JournalEssentialEvents.cs" />

@@ -146,7 +146,7 @@ namespace EliteDangerousCore
         }
 
         public static EDCommander Create(string name = null, string edsmName = null, string edsmApiKey = null, string journalpath = null,
-                                        bool toedsm = true, bool fromedsm = false, 
+                                        bool toedsm = false, bool fromedsm = false, 
                                         bool toeddn = true, 
                                         bool toego = false, string egoname = null, string egoapi = null,
                                         bool toinara = false, string inaraname = null, string inaraapikey = null, 
@@ -429,6 +429,7 @@ namespace EliteDangerousCore
 
         public EDCommander()
         {
+            SyncToEddn = true;          // set it default to try and make them send it.
         }
 
         public EDCommander(DbDataReader reader)

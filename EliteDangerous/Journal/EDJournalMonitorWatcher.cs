@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 EDDiscovery development team
+ * Copyright © 2016-2020 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -18,12 +18,9 @@ using EliteDangerousCore.DB;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
-using System.Data.Common;
-using Newtonsoft.Json.Linq;
-using System.Threading;
 
 namespace EliteDangerousCore
 {
@@ -40,12 +37,9 @@ namespace EliteDangerousCore
         private ConcurrentQueue<string> m_netLogFileQueue;
         private const string journalfilematch = "Journal*.log";       // this picks up beta and normal logs
 
-        bool StoreJsonInJE { get; set; } = false;
-
-        public JournalMonitorWatcher(string folder, bool storejsoninje)
+        public JournalMonitorWatcher(string folder)
         {
             WatcherFolder = folder;
-            StoreJsonInJE = storejsoninje;
         }
 
         #region Scan start stop and monitor
@@ -186,7 +180,7 @@ namespace EliteDangerousCore
 
                 netlogpos = nfi.TravelLogUnit.Size;
 
-                bool readanything = nfi.ReadJournal(out List<JournalReaderEntry> ents, out List<UIEvent> uie, historyrefreshparsing: false, resetOnError: false );
+                bool readanything = nfi.ReadJournal(out List<JournalEntry> ents, out List<UIEvent> uie, historyrefreshparsing: false, resetOnError: false );
 
                 uientries.AddRange(uie);
 
@@ -198,12 +192,12 @@ namespace EliteDangerousCore
                     {
                         using (DbTransaction txn = cn.Connection.BeginTransaction())
                         {
-                            ents = ents.Where(jre => JournalEntry.FindEntry(jre.JournalEntry, cn, jre.Json).Count == 0).ToList();
+                            ents = ents.Where(jre => JournalEntry.FindEntry(jre, cn, jre.JsonCached).Count == 0).ToList();
 
-                            foreach (JournalReaderEntry jre in ents)
+                            foreach (JournalEntry jre in ents)
                             {
-                                entries.Add(jre.JournalEntry);
-                                jre.JournalEntry.Add(jre.Json, cn.Connection, txn);
+                                entries.Add(jre);
+                                jre.Add(jre.JsonCached, cn.Connection, txn);
                             }
 
                             // System.Diagnostics.Debug.WriteLine("Wrote " + ents.Count() + " to db and updated TLU");
@@ -232,7 +226,10 @@ namespace EliteDangerousCore
 
         #region Called during history refresh, by EDJournalClass, for a reparse.
 
-        public List<EDJournalReader> ScanJournalFiles(bool forceAllReload = false, bool forceLastReload = false)
+        // look thru all files in the location, in date ascending order, work out if we need to scan them, assemble a list of JournalReaders representing one
+        // file to parse.  We can order the reload of the last N files
+
+        public List<EDJournalReader> ScanJournalFiles(int reloadlastn)
         {
             //            System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLap("PJF", true), "Scanned " + WatcherFolder);
 
@@ -263,7 +260,7 @@ namespace EliteDangerousCore
 
                 bool islast = (i == allFiles.Length - 1);
 
-                if (forceAllReload || ( islast && forceLastReload))     // Force a reload of the travel log
+                if ( i >= allFiles.Length - reloadlastn )
                 {
                     reader.TravelLogUnit.Size = 0;      // by setting the start zero (reader.filePos is the same as Size)
                 }
@@ -277,8 +274,10 @@ namespace EliteDangerousCore
             return readersToUpdate;
         }
 
+        // given a list of files to reparse, read them and store to db or fire them back (and set firebacklastn to make it work)
+
         public void ProcessDetectedNewFiles(List<EDJournalReader> readersToUpdate,  Action<int, string> updateProgress, 
-                                            Action<JournalEntry> fireback = null)
+                                            Action<JournalEntry> fireback = null, int firebacklastn = 0)
         {
             //System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLap("PJF"), "Ready to update");
 
@@ -289,7 +288,7 @@ namespace EliteDangerousCore
 
                 //System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLap("PJF"), i + " read ");
 
-                reader.ReadJournal(out List<JournalReaderEntry> entries, out List<UIEvent> uievents, historyrefreshparsing: true, resetOnError: true);      // this may create new commanders, and may write to the TLU db
+                reader.ReadJournal(out List<JournalEntry> entries, out List<UIEvent> uievents, historyrefreshparsing: true, resetOnError: true);      // this may create new commanders, and may write to the TLU db
 
                 UserDatabase.Instance.ExecuteWithDatabase(cn =>
                 {
@@ -297,8 +296,11 @@ namespace EliteDangerousCore
                     {
                         if (fireback != null)
                         {
-                            foreach (JournalReaderEntry jre in entries)
-                                fireback(jre.JournalEntry);
+                            if (i >= readersToUpdate.Count - firebacklastn) // if within fireback window
+                            {
+                                foreach (JournalEntry jre in entries)
+                                    fireback(jre);
+                            }
                         }
                         else
                         {
@@ -308,13 +310,11 @@ namespace EliteDangerousCore
 
                             using (DbTransaction tn = cn.Connection.BeginTransaction())
                             {
-                                foreach (JournalReaderEntry jre in entries)
+                                foreach (JournalEntry jre in entries)
                                 {
-                                    JObject jsonofentry = jre.Json;
-
-                                    if (!existing[jre.JournalEntry.EventTimeUTC].Any(e => JournalEntry.AreSameEntry(jre.JournalEntry, e, cn.Connection, ent1jo: jsonofentry)))
+                                    if (!existing[jre.EventTimeUTC].Any(e => JournalEntry.AreSameEntry(jre, e, cn.Connection, ent1jo: jre.JsonCached)))
                                     {
-                                        jre.JournalEntry.Add(jsonofentry, cn.Connection, tn);
+                                        jre.Add(jre.JsonCached, cn.Connection, tn);
 
                                         //System.Diagnostics.Trace.WriteLine(string.Format("Write Journal to db {0} {1}", jre.JournalEntry.EventTimeUTC, jre.JournalEntry.EventTypeStr));
                                     }
@@ -357,18 +357,18 @@ namespace EliteDangerousCore
             {
                 tlu = tlu_lookup[fi.Name];
                 tlu.Path = fi.DirectoryName;
-                reader = new EDJournalReader(tlu,StoreJsonInJE);
+                reader = new EDJournalReader(tlu);
                 netlogreaders[fi.Name] = reader;
             }
             else if (TravelLogUnit.TryGet(fi.Name, out tlu))
             {
                 tlu.Path = fi.DirectoryName;
-                reader = new EDJournalReader(tlu,StoreJsonInJE);
+                reader = new EDJournalReader(tlu);
                 netlogreaders[fi.Name] = reader;
             }
             else
             {
-                reader = new EDJournalReader(fi.FullName,StoreJsonInJE);
+                reader = new EDJournalReader(fi.FullName);
 
                 netlogreaders[fi.Name] = reader;
             }
