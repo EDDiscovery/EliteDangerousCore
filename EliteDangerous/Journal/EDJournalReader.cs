@@ -30,6 +30,8 @@ namespace EliteDangerousCore
         JournalEvents.JournalStoredModules laststoredmodules = null;
         JournalEvents.JournalOutfitting lastoutfitting = null;
         JournalEvents.JournalMarket lastmarket = null;
+        JournalEvents.JournalNavRoute lastnavroute = null;
+        bool cqc = false;
         const int timelimit = 5 * 60;   //seconds.. 5 mins between logs. Note if we undock, we reset the counters.
 
         static JournalEvents.JournalContinued lastcontinued = null;
@@ -202,11 +204,37 @@ namespace EliteDangerousCore
                 lastoutfitting = null;
                 laststoredmodules = null;
                 laststoredships = null;
+                cqc = false;
+            }
+            else if (je is JournalEvents.JournalMusic)
+            {
+                var music = je as JournalEvents.JournalMusic;
+                
+                if (music.MusicTrackID == JournalEvents.EDMusicTrackEnum.CQC || music.MusicTrackID == JournalEvents.EDMusicTrackEnum.CQCMenu)
+                {
+                    cqc = true;
+                }
+            }
+            else if (je is JournalEvents.JournalNavRoute)
+            {
+                var route = je as JournalEvents.JournalNavRoute;
+
+                if (lastnavroute != null && (route.EventTimeUTC == lastnavroute.EventTimeUTC || route.EventTimeUTC == lastnavroute.EventTimeUTC.AddSeconds(1)))
+                {
+                    toosoon = true;
+                }
+
+                lastnavroute = route;
             }
 
             if (toosoon)                                                // if seeing repeats, remove
             {
                // System.Diagnostics.Debug.WriteLine("**** Remove as dup " + je.EventTypeStr);
+                return null;
+            }
+
+            if (cqc)  // Ignore events if in CQC
+            {
                 return null;
             }
 
