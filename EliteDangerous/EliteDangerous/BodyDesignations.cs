@@ -469,6 +469,10 @@ namespace EliteDangerousCore
                 { "Ifreds Harbour", "82 Eridani 2" },
                 { "Teekay 100705", "82 Eridani 3" },
             } },
+            { "59 Virginis", new Dictionary<string, string> {
+                { "Alchemia Virginis", "59 Virginis 4" },
+                { "Lapis Philosophorum", "59 Virginis 8 a" },
+            } },
             { "Achenar", new Dictionary<string, string> {
                 { "Achenar 4a", "Achenar 4 a" },
                 { "Yamaha's Grave", "Achenar 6 a" },
@@ -1504,6 +1508,9 @@ namespace EliteDangerousCore
             { "Reynes", new Dictionary<string, string> {
                 { "Ohajiki", "Reynes 1" },
             } },
+            { "Rhea", new Dictionary<string, string> {
+                { "Foursyth", "Rhea 4" },
+            } },
             { "Riedquat", new Dictionary<string, string> {
                 { "Waterloo", "Riedquat 1" },
             } },
@@ -1890,6 +1897,9 @@ namespace EliteDangerousCore
             { "HIP 44291", new Dictionary<string, string> {
                 { "Karl-Heinz Lechtermann", "HIP 44291 1" },
             } },
+            { "Faisel C", new Dictionary<string, string> {
+                { "Jon Harris", "Faisel C 1" },
+            } },
             { "LHS 2335", new Dictionary<string, string> {
                 { "Jon Harris", "LHS 2335 1" },
             } },
@@ -2048,6 +2058,10 @@ namespace EliteDangerousCore
             { "m Centauri", new Dictionary<int, DesigMap> {
                 { 1, new DesigMap("m Centauri", "m Centauri A", true) },
                 { 2, new DesigMap("M Centauri", "m Centauri B", true) }
+            } },
+            { "2 Puppis", new Dictionary<int, DesigMap> {
+                { 1, new DesigMap("2 Puppis", "2 Puppis A") },
+                { 2, new DesigMap("2 Puppis", "2 Puppis B") }
             } },
             { "39 Omicron Ophiuchi", new Dictionary<int, DesigMap>
             {
