@@ -67,7 +67,33 @@ namespace EliteDangerousCore.JournalEvents
         public double? nStellarMass { get; set; }                   // direct
         public double? nAbsoluteMagnitude { get; set; }             // direct
         public string Luminosity { get; set; }                      // character string (I,II,.. V)
-        public string StarClassification { get { return (StarType ?? "") + (StarSubclass?.ToStringInvariant() ?? "") + (Luminosity ?? ""); } }
+        public string StarTypeAbbrev
+        {
+            get
+            {
+                if (StarType != null && StarType.EndsWith("Giant") && StarType[1] == '_')
+                {
+                    if (Luminosity == null && StarSubclass == null)
+                    {
+                        if (StarType.EndsWith("SuperGiant"))
+                        {
+                            return StarType.Substring(0, 1) + "I";
+                        }
+                        else
+                        {
+                            return StarType.Substring(0, 1) + "III";
+                        }
+                    }
+                    else if (Luminosity != null && Luminosity.StartsWith("I"))
+                    {
+                        return StarType.Substring(0, 1);
+                    }
+                }
+
+                return StarType;
+            }
+        }
+        public string StarClassification { get { return (StarTypeAbbrev ?? "") + (StarSubclass?.ToStringInvariant() ?? "") + (Luminosity ?? ""); } }
         public double? nAge { get; set; }                           // direct, in million years
         public double? HabitableZoneInner { get; set; }             // in AU
         public double? HabitableZoneOuter { get; set; }             // in AU
