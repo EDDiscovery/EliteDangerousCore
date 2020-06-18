@@ -89,6 +89,10 @@ namespace EliteDangerousCore.JournalEvents
                         return StarType.Substring(0, 1);
                     }
                 }
+                else if (StarType == "SuperMassiveBlackHole")
+                {
+                    return "SMBH";
+                }
 
                 return StarType;
             }
