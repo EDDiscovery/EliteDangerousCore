@@ -168,7 +168,16 @@ namespace EliteDangerousCore
             if (je is IAdditionalFiles)
             {
                 if ((je as IAdditionalFiles).ReadAdditionalFiles(Path.GetDirectoryName(FileName), inhistoryrefreshparse, ref jo) == false)     // if failed
-                    return null;
+                {
+                    if (!inhistoryrefreshparse && je.EventTimeUTC > DateTime.UtcNow.AddSeconds(-10))
+                    {
+                        throw new DelayedExtraInfoException();
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
             }
 
             if (je is JournalEvents.JournalShipyard)                // when going into shipyard
@@ -253,7 +262,7 @@ namespace EliteDangerousCore
 
             bool readanything = false;
 
-            while (ReadLine(out JournalEntry newentry, l => ProcessLine(l, historyrefreshparsing, resetOnError)))
+            while (ReadLine(out JournalEntry newentry, l => ProcessLine(l, historyrefreshparsing, resetOnError), out Exception ex) || (readanything && ex is DelayedExtraInfoException && !readanything))
             {
                 readanything = true;
 
@@ -338,6 +347,10 @@ namespace EliteDangerousCore
 
             jent.Add(newentry);
         }
+    }
+
+    public class DelayedExtraInfoException : Exception
+    {
     }
 }
 

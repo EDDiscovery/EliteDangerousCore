@@ -51,8 +51,10 @@ namespace EliteDangerousCore
             this.TravelLogUnit = tlu;
         }
 
-        public bool ReadLine<T>(out T line, Func<string, T> processor, Stream stream = null, bool ownstream = false)
+        public bool ReadLine<T>(out T line, Func<string, T> processor, out Exception exception, Stream stream = null, bool ownstream = false)
         {
+            exception = null;
+
             // Initialize buffer if not yet allocated
             if (buffer == null)
             {
@@ -112,8 +114,9 @@ namespace EliteDangerousCore
                                 TravelLogUnit.Size += linelen;
                                 return true;
                             }
-                            catch
+                            catch (Exception ex)
                             {
+                                exception = ex;
                                 buffer = null;
                                 line = default(T);
                                 return false;
@@ -146,6 +149,7 @@ namespace EliteDangerousCore
                     }
                     catch (Exception ex)
                     {
+                        exception = ex;
                         System.Diagnostics.Trace.WriteLine($"Error reading journal {this.FileName}: {ex.Message}");
                         buffer = null;
                         line = default(T);

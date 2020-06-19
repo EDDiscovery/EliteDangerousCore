@@ -227,6 +227,7 @@ namespace EliteDangerousCore
                 cancelRequested = () => false;
 
             string line;
+            Exception ex;
             try
             {
                 if (stream == null)
@@ -234,7 +235,7 @@ namespace EliteDangerousCore
                     stream = File.Open(this.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                     ownstream = true;
                 }
-                while (!cancelRequested() && this.ReadLine(out line, l => l, stream))
+                while (!cancelRequested() && this.ReadLine(out line, l => l, out ex, stream))
                 {
                     ParseLineTime(line);
 
