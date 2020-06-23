@@ -29,17 +29,20 @@ namespace EliteDangerousCore.DLL
 
         // search directory for *.dll, 
         // return loaded, failed, notallowed
-        public Tuple<string, string, string> Load(string directory, string ourversion, string dllfolder, EDDDLLIF.EDDCallBacks callbacks, string allowed)
+        // all Csharp assembly DLLs are loaded - only ones implementing *EDDClass class causes it to be added to the DLL list
+        // only normal DLLs implementing EDDInitialise are kept loaded
+
+        public Tuple<string, string, string> Load(string dlldirectory, string ourversion, string[] inoptions, EDDDLLInterfaces.EDDDLLIF.EDDCallBacks callbacks, string allowed)
         {
             string loaded = "";
             string failed = "";
             string notallowed = "";
 
-            if (!Directory.Exists(directory))
+            if (!Directory.Exists(dlldirectory))
                 failed = "DLL Folder does not exist";
             else
             {
-                FileInfo[] allFiles = Directory.EnumerateFiles(directory, "*.dll", SearchOption.TopDirectoryOnly).Select(f => new FileInfo(f)).OrderBy(p => p.LastWriteTime).ToArray();
+                FileInfo[] allFiles = Directory.EnumerateFiles(dlldirectory, "*.dll", SearchOption.TopDirectoryOnly).Select(f => new FileInfo(f)).OrderBy(p => p.LastWriteTime).ToArray();
 
                 string[] allowedfiles = allowed.Split(',');
 
@@ -49,12 +52,13 @@ namespace EliteDangerousCore.DLL
 
                     EDDDLLCaller caller = new EDDDLLCaller();
 
+                    System.Diagnostics.Debug.WriteLine("Try to load " + f.FullName);
 
-                    if (caller.Load(f.FullName))        // if loaded (meaning it loaded, and its got EDDInitialise)
+                    if (caller.Load(f.FullName))        // if loaded okay
                     {
                         if (allowed.Equals("All", StringComparison.InvariantCultureIgnoreCase) || allowedfiles.Contains(filename, StringComparer.InvariantCultureIgnoreCase))    // if allowed..
                         {
-                            if (caller.Init(ourversion, dllfolder, callbacks))       // must init
+                            if (caller.Init(ourversion, inoptions, dlldirectory, callbacks))       // must init
                             {
                                 DLLs.Add(caller);
                                 loaded = loaded.AppendPrePad(caller.Name, ",");
@@ -86,7 +90,7 @@ namespace EliteDangerousCore.DLL
             DLLs.Clear();
         }
 
-        public void Refresh(string cmdr, EDDDLLIF.JournalEntry je)
+        public void Refresh(string cmdr, EDDDLLInterfaces.EDDDLLIF.JournalEntry je)
         {
             foreach (EDDDLLCaller caller in DLLs)
             {
@@ -94,11 +98,11 @@ namespace EliteDangerousCore.DLL
             }
         }
 
-        public void NewJournalEntry(EDDDLLIF.JournalEntry nje)
+        public void NewJournalEntry(EDDDLLInterfaces.EDDDLLIF.JournalEntry nje, bool stored)
         {
             foreach (EDDDLLCaller caller in DLLs)
             {
-                caller.NewJournalEntry(nje);
+                caller.NewJournalEntry(nje,stored);
             }
         }
 
@@ -108,7 +112,7 @@ namespace EliteDangerousCore.DLL
         }
 
         // item1 = true if found, item2 = true if caller implements.
-        public Tuple<bool, bool> ActionJournalEntry(string dllname, EDDDLLIF.JournalEntry nje)
+        public Tuple<bool, bool> ActionJournalEntry(string dllname, EDDDLLInterfaces.EDDDLLIF.JournalEntry nje)
         {
             if (dllname.Equals("All", StringComparison.InvariantCultureIgnoreCase))
             {

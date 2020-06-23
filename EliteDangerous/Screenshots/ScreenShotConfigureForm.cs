@@ -23,9 +23,11 @@ namespace EliteDangerousCore.ScreenShots
 {
     public partial class ScreenShotConfigureForm : ExtendedControls.DraggableForm
     {
+        public bool AutoConvert { get { return extCheckBoxEnabled.Checked; } }
         public string InputFolder { get { return textBoxScreenshotsDir.Text; } }
         public string OutputFolder { get { return textBoxOutputDir.Text; } }
-        public bool RemoveOriginal { get { return extCheckBoxRemoveOriginal.Checked; } }
+        public ScreenShotImageConverter.OriginalImageOptions OriginalImageOption { get { return (ScreenShotImageConverter.OriginalImageOptions)extComboBoxOriginalImageSel.SelectedIndex; } }
+        public string OriginalImageDirectory { get; set; }
         public ScreenShotConverter.InputTypes InputFileExtension { get { return (ScreenShotConverter.InputTypes)comboBoxScanFor.SelectedIndex; } }
         public ScreenShotImageConverter.OutputTypes OutputFileExtension { get { return (ScreenShotImageConverter.OutputTypes)comboBoxOutputAs.SelectedIndex; } }
         public int FileNameFormat { get { return comboBoxFileNameFormat.SelectedIndex; } }
@@ -36,7 +38,7 @@ namespace EliteDangerousCore.ScreenShots
         public ScreenShotImageConverter.CropResizeOptions CropResizeImage2 { get { return (ScreenShotImageConverter.CropResizeOptions)extComboBoxConvert2.SelectedIndex; } }
         public Rectangle CropResizeArea2 { get { return new Rectangle(extNumericUpDownLeft2.Value, extNumericUpDownTop2.Value, extNumericUpDownWidth2.Value, extNumericUpDownHeight2.Value); } }
         public bool HighRes {  get { return extCheckBoxHiRes.Checked; } }
-        public bool CopyToClipboard { get { return extCheckBoxCopyClip.Checked; } }
+        public ScreenShotImageConverter.ClipboardOptions ClipboardOption { get { return (ScreenShotImageConverter.ClipboardOptions)extComboBoxClipboard.SelectedIndex; } }
 
         string initialssfolder;
 
@@ -48,8 +50,9 @@ namespace EliteDangerousCore.ScreenShots
             panelTop.Visible = panelTop.Enabled = !winborder;
         }
 
-        public void Init(ScreenShotImageConverter cf , string inputfolder, ScreenShotConverter.InputTypes it, string outputfolder)
+        public void Init(ScreenShotImageConverter cf , bool enabled, string inputfolder, ScreenShotConverter.InputTypes it, string outputfolder)
         {
+            extCheckBoxEnabled.Checked = enabled;
             comboBoxOutputAs.Items.AddRange(Enum.GetNames(typeof(ScreenShotImageConverter.OutputTypes)));
             comboBoxOutputAs.SelectedIndex = (int)cf.OutputFileExtension;
             comboBoxScanFor.Items.AddRange(Enum.GetNames(typeof(ScreenShotConverter.InputTypes)));
@@ -65,12 +68,23 @@ namespace EliteDangerousCore.ScreenShots
             extComboBoxConvert2.Items.AddRange(opt);
 
             extCheckBoxHiRes.Checked = cf.HighRes;
-            extCheckBoxCopyClip.Checked = cf.CopyToClipboard;
+
+            extComboBoxClipboard.Items.Add(ScreenShotImageConverter.ClipboardOptions.NoCopy.ToString().SplitCapsWordFull());
+            extComboBoxClipboard.Items.Add(ScreenShotImageConverter.ClipboardOptions.CopyMaster.ToString().SplitCapsWordFull());
+            extComboBoxClipboard.Items.Add(ScreenShotImageConverter.ClipboardOptions.CopyImage1.ToString().SplitCapsWordFull());
+            extComboBoxClipboard.Items.Add(ScreenShotImageConverter.ClipboardOptions.CopyImage2.ToString().SplitCapsWordFull());
+            extComboBoxClipboard.SelectedIndex = (int)cf.ClipboardOption;
 
             extComboBoxConvert1.SelectedIndex = (int)cf.CropResizeImage1;
             extComboBoxConvert2.SelectedIndex = (int)cf.CropResizeImage2;
 
-            extCheckBoxRemoveOriginal.Checked = cf.RemoveOriginal;
+            OriginalImageDirectory = cf.OriginalImageOptionDirectory;
+
+            extComboBoxOriginalImageSel.Items.Add(ScreenShotImageConverter.OriginalImageOptions.Leave.ToString());
+            extComboBoxOriginalImageSel.Items.Add(ScreenShotImageConverter.OriginalImageOptions.Delete.ToString());
+            extComboBoxOriginalImageSel.Items.Add(ScreenShotImageConverter.OriginalImageOptions.Move.ToString() + "->" + OriginalImageDirectory);
+            extComboBoxOriginalImageSel.SelectedIndex = (int)cf.OriginalImageOption;
+
             extCheckBoxKeepMasterConvertedImage.Checked = cf.KeepMasterConvertedImage;
 
             numericUpDownTop1.Value = cf.CropResizeArea1.Top;
@@ -88,7 +102,7 @@ namespace EliteDangerousCore.ScreenShots
             extComboBoxConvert1.SelectedIndexChanged += (s, e) => { SetNumEnabled(); };
             extComboBoxConvert2.SelectedIndexChanged += (s, e) => { SetNumEnabled(); };
 
-            textBoxFileNameExample.Text = ScreenShotImageConverter.CreateFileName("Sol", "Earth", "HighResScreenshot_0000.bmp", comboBoxFileNameFormat.SelectedIndex, extCheckBoxHiRes.Checked, DateTime.Now);
+            UpdateExample();
 
             BaseUtils.Translator.Instance.Translate(this);
 
@@ -192,12 +206,51 @@ namespace EliteDangerousCore.ScreenShots
 
         private void comboBoxFileNameFormat_SelectedIndexChanged(object sender, EventArgs e)
         {
-            textBoxFileNameExample.Text = ScreenShotImageConverter.CreateFileName("Sol", "Earth", "HighResScreenshot_0000.bmp", comboBoxFileNameFormat.SelectedIndex, extCheckBoxHiRes.Checked, DateTime.Now);
+            UpdateExample();
         }
 
         private void extCheckBoxHiRes_CheckedChanged(object sender, EventArgs e)
         {
-            textBoxFileNameExample.Text = ScreenShotImageConverter.CreateFileName("Sol", "Earth", "HighResScreenshot_0000.bmp", comboBoxFileNameFormat.SelectedIndex, extCheckBoxHiRes.Checked, DateTime.Now);
+            UpdateExample();
         }
+
+        private void comboBoxSubFolder_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateExample();
+        }
+
+        private void comboBoxOutputAs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateExample();
+        }
+
+        private void textBoxOutputDir_TextChanged(object sender, EventArgs e)
+        {
+            UpdateExample();
+        }
+
+        private void UpdateExample()
+        {
+            textBoxFileNameExample.Text = Path.Combine(ScreenShotImageConverter.SubFolder(comboBoxSubFolder.SelectedIndex, OutputFolder, "Sol","Jameson",DateTime.Now),
+                                          ScreenShotImageConverter.CreateFileName("Sol", "Earth", "HighResScreenshot_0000.bmp", comboBoxFileNameFormat.SelectedIndex, extCheckBoxHiRes.Checked, DateTime.Now) + "." + comboBoxOutputAs.Text);
+        }
+
+        private void extButtonBrowseMoveOrg_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog dlg = new FolderBrowserDialog();
+
+            dlg.Description = "Select folder to move to";
+            dlg.SelectedPath = OriginalImageDirectory;
+
+            if (dlg.ShowDialog(this) == DialogResult.OK)
+            {
+                OriginalImageDirectory = dlg.SelectedPath;
+                extComboBoxOriginalImageSel.Items[2] = ScreenShotImageConverter.OriginalImageOptions.Move.ToString() + "->" + OriginalImageDirectory;
+                extComboBoxOriginalImageSel.SelectedIndex = 0;  // force change
+                extComboBoxOriginalImageSel.SelectedIndex = 2;
+            }
+
+        }
+
     }
 }

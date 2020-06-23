@@ -23,15 +23,15 @@ namespace EliteDangerousCore.DLL
 {
     static public class EDDDLLCallerHE
     {
-        static public EDDDLLIF.JournalEntry CreateFromHistoryEntry(EliteDangerousCore.HistoryEntry he)
+        static public EDDDLLInterfaces.EDDDLLIF.JournalEntry CreateFromHistoryEntry(EliteDangerousCore.HistoryEntry he, bool storedflag = false)
         {
             if (he == null)
             {
-                return new EDDDLLIF.JournalEntry() { ver = 1, indexno = -1 };
+                return new EDDDLLInterfaces.EDDDLLIF.JournalEntry() { ver = 1, indexno = -1 };
             }
             else
             {
-                EDDDLLIF.JournalEntry je = new EDDDLLIF.JournalEntry()
+                EDDDLLInterfaces.EDDDLLIF.JournalEntry je = new EDDDLLInterfaces.EDDDLLIF.JournalEntry()
                 {
                     ver = 2,
                     indexno = he.Indexno,
@@ -51,7 +51,15 @@ namespace EliteDangerousCore.DLL
                     group = he.Group,
                     credits = he.Credits,
                     eventid = he.journalEntry.EventTypeStr,
-                    json = he.journalEntry.GetJson().ToString()
+                    json = he.journalEntry.GetJson().ToString(Newtonsoft.Json.Formatting.None),
+                    cmdrname = he.Commander.Name,
+                    cmdrfid = he.Commander.FID,
+                    shipident = he.ShipInformation?.ShipUserIdent ?? "Unknown",
+                    shipname = he.ShipInformation?.ShipUserName ?? "Unknown",
+                    hullvalue = he.ShipInformation?.HullValue ?? 0,
+                    rebuy = he.ShipInformation?.Rebuy ?? 0,
+                    modulesvalue = he.ShipInformation?.ModulesValue ?? 0,
+                    stored = storedflag
                 };
 
                 he.journalEntry.FillInformation(out je.info, out je.detailedinfo);

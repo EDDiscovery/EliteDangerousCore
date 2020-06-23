@@ -25,16 +25,15 @@ namespace EliteDangerousCore.ScreenShots
 {
     public class ScreenshotDirectoryWatcher : IDisposable
     {
-        public event Action<string, Size> OnScreenshot;     // called on screenshot
+        public event Action<string, string, Size, JournalScreenshot> OnScreenshot;     // called on screenshot
 
         private Action<Action<ScreenShotImageConverter>> invokeonui;
         private FileSystemWatcher filesystemwatcher = null;
 
-        // ones already processed by journal screenshot system
-        private ConcurrentDictionary<string, JournalScreenshot> JournalScreenshotted = new ConcurrentDictionary<string, JournalScreenshot>(StringComparer.InvariantCultureIgnoreCase);
+        // ones already processed by journal screenshot system and which the originals did not get removed
+        private ConcurrentDictionary<string, JournalScreenshot> journalScreenshotted = new ConcurrentDictionary<string, JournalScreenshot>(StringComparer.InvariantCultureIgnoreCase);
 
-        // set of timers used per screenshot to delay processing them - detected by file watcher
-        private ConcurrentDictionary<string, System.Threading.Timer> ScreenshotTimers = new ConcurrentDictionary<string, System.Threading.Timer>(StringComparer.InvariantCultureIgnoreCase);
+        private ConcurrentDictionary<System.Timers.Timer, string> filewatchTimers = new ConcurrentDictionary<System.Timers.Timer, string>();
 
         private Action<string> logit;
         private Func<Tuple<string, string,string>> getcurinfo;      // system, body, commander
@@ -100,23 +99,13 @@ namespace EliteDangerousCore.ScreenShots
                 JournalScreenshot ss = je as JournalScreenshot;
                 System.Diagnostics.Trace.WriteLine("Journal Screenshot " + ss.Filename);
 
-                string ssname = ss.Filename;
-
-                if (ssname.StartsWith("\\ED_Pictures\\"))   // cut to basename for the ID
-                    ssname = ssname.Substring(13);
-
-                if (!JournalScreenshotted.ContainsKey(ssname))  // ensure no repeats
-                {
-                    JournalScreenshotted[ssname] = ss;      // record we processed it this way
-
-                    invokeonui?.Invoke(cp => ProcessScreenshot(ss.Filename, ss.System, ss.Body, EDCommander.GetCommander(ss.CommanderId).Name ?? "Unknown", cp));
-
-                    System.Diagnostics.Trace.WriteLine("Journal Screenshot over " + ss.Filename + " recorded as " + ssname);
-                }
-                else
-                {
-                    System.Diagnostics.Trace.WriteLine("Journal Screenshot repeat and ignored " + ss.Filename + " recorded as " + ssname);
-                }
+                string ssname = ss.Filename.StartsWith("\\ED_Pictures\\") ? ss.Filename.Substring(13) : ss.Filename;
+                invokeonui?.Invoke(cp => 
+                    {
+                        bool leftinplace = ProcessScreenshot(ss.Filename, ss, cp);      
+                        if (leftinplace)
+                            journalScreenshotted[ssname] = ss;      // if we leave the file behind, tell the file watcher we have done it
+                    });
             }
         }
 
@@ -132,70 +121,77 @@ namespace EliteDangerousCore.ScreenShots
 
             if (e.FullPath.ToLowerInvariant().EndsWith(".bmp"))     // cause its a frontier bmp file..
             {
-                if (!ScreenshotTimers.ContainsKey(e.FullPath))      // just double check against repeated file watcher fires
-                {
-                    System.Diagnostics.Debug.WriteLine("File watch start a timer to wait for SS entry");
-                    System.Threading.Timer timer = new System.Threading.Timer(s=>TimeOutForFileWatcher(e.FullPath), null, 5000, System.Threading.Timeout.Infinite);
+                System.Diagnostics.Debug.WriteLine("File watch start a timer to wait for SS entry");
 
-                    if (!ScreenshotTimers.TryAdd(e.FullPath, timer))
+                System.Timers.Timer t = new System.Timers.Timer(5000);  // use a timer since we can set it up slowly before we start it
+                t.Elapsed += T_Elapsed;
+                filewatchTimers[t] = e.FullPath;
+                t.Start();
+            }
+            else
+            {
+                string name = Path.GetFileName(e.FullPath);
+                ProcessScreenshot(e.FullPath, null, cp);
+            }
+        }
+
+        private void T_Elapsed(object sender, System.Timers.ElapsedEventArgs e)     // not in UI thread
+        {
+            var t = sender as System.Timers.Timer;
+            t.Stop();
+
+            if ( filewatchTimers.TryRemove(t,out string filename) )     // find the filename associated with this timer
+            {
+                if (File.Exists(filename))     // still there.. it may have been removed by journal screenshot moving it
+                {
+                    if (!journalScreenshotted.ContainsKey(Path.GetFileName(filename)))     // and its not in the peristent list dealt with by screenshot
                     {
-                        timer.Dispose();
+                        System.Diagnostics.Debug.WriteLine("Timer timed out, not journal screen shotted");
+                        this.invokeonui?.Invoke(cp => ProcessScreenshot(filename, null, cp)); //process on UI thread
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("Timer timed out, screenshot was processed by journal screen shot");
                     }
                 }
-            }
-            else
-            {
-                if (!JournalScreenshotted.ContainsKey(Path.GetFileName(e.FullPath)))        // just make sure in case the order is wrong
-                {
-                    System.Diagnostics.Debug.WriteLine("Not a .bmp, not been journal screenshotted, go");
-                    ProcessScreenshot(e.FullPath, null, null, null, cp);
-                }
                 else
-                    System.Diagnostics.Debug.WriteLine("Journal screenshot already did this one");
+                {
+                    System.Diagnostics.Debug.WriteLine("Timer timed out, file was not there");
+                }
             }
+
+            t.Dispose();
         }
 
-        // time is set up if the file is .bmp by the file watcher.. 
-
-        private void TimeOutForFileWatcher(string filename)   // timer is executed on a background thread, go back to UI
-        {
-            if (!JournalScreenshotted.ContainsKey(Path.GetFileName(filename)))
-            {
-                System.Diagnostics.Debug.WriteLine("Timer timed out, no journal screen shot");
-                this.invokeonui?.Invoke(cp => ProcessScreenshot(filename, null,null,null, cp)); //process on UI thread
-            }
-            else
-                System.Diagnostics.Debug.WriteLine("Timer timed out, screenshot was processed by journal screen shot");
-        }
-
-        // called thru CalLWithConverter in UI main class to give us a ScreenShotImageConverter
+        // called thru CallWithConverter in UI main class to give us a ScreenShotImageConverter
         // fileid may not be the whole name if picked up thru ss system - like \EDPICTURES\
+        // ss is not null if it was a screenshot
+        // return if original is left in place
 
-        private void ProcessScreenshot(string filenamepart, string sysname, string bodyname, string cmdrname, ScreenShotImageConverter cp)
+        private bool ProcessScreenshot(string filenamepart, JournalScreenshot ss, ScreenShotImageConverter cp)
         {
             System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);  // UI thread
 
             var r = getcurinfo();
 
-            if (sysname == null)            // fill in if required
-                sysname = r.Item1 ?? "Unknown";
-            
-            if ( bodyname == null)        
-                bodyname = r.Item2 ?? "Unknown";
-
-            if (cmdrname == null)
-                cmdrname = r.Item3 ?? "Unknown";
+            string sysname = (ss == null ? r.Item1 : ss.System) ?? "Unknown";
+            string bodyname = (ss == null ? r.Item2 : ss.Body) ?? "Unknown";
+            string cmdrname = (ss == null ? r.Item3 : EDCommander.GetCommander(ss.CommanderId)?.Name) ?? "Unknown";
 
             System.Diagnostics.Debug.WriteLine("Process {0} s={1} b={2} c={3}", filenamepart, sysname, bodyname, cmdrname);
 
             try
             {
-                if (TryGetScreenshot(filenamepart, out Bitmap bmp, out string filepath, out DateTime timestamp))
+                string filein = TryGetScreenshot(filenamepart, out Bitmap bmp, out string filepath, out DateTime timestamp);
+                if (filein != null)
                 {
+                    // return output filename and size
                     var fs = cp.Convert(bmp, filepath, outputfolder, timestamp, logit, bodyname, sysname, cmdrname);
 
                     if ( fs.Item1 != null )
-                        OnScreenshot?.Invoke(fs.Item1,fs.Item2);
+                        OnScreenshot?.Invoke(filein, fs.Item1,fs.Item2,ss);
+
+                    return cp.OriginalImageOption == ScreenShotImageConverter.OriginalImageOptions.Leave;
                 }
                 else
                     logit(string.Format("Failed to read screenshot {0}", filenamepart));
@@ -206,9 +202,10 @@ namespace EliteDangerousCore.ScreenShots
                 System.Diagnostics.Trace.WriteLine("Trace: " + ex.StackTrace);
                 logit("Error in executing image conversion, try another screenshot, check output path settings. (Exception ".T(EDTx.ScreenshotDirectoryWatcher_Excp) + ex.Message + ")");
             }
+            return false;
         }
 
-        private bool TryGetScreenshot(string filepart, out Bitmap bmp, out string filenameout, out DateTime timestamp)//, ref string store_name, ref Point finalsize, ref DateTime timestamp, out Bitmap bmp, out string readfilename, Action<string> logit, bool throwOnError = false)
+        private string TryGetScreenshot(string filepart, out Bitmap bmp, out string filenameout, out DateTime timestamp)//, ref string store_name, ref Point finalsize, ref DateTime timestamp, out Bitmap bmp, out string readfilename, Action<string> logit, bool throwOnError = false)
         {
             timestamp = DateTime.Now;
             filenameout = null;
@@ -244,7 +241,7 @@ namespace EliteDangerousCore.ScreenShots
                             bmp = new Bitmap(memstrm);
                         }
                     }
-                    return true;
+                    return filenameout;
                 }
                 catch 
                 {
@@ -258,7 +255,7 @@ namespace EliteDangerousCore.ScreenShots
                 System.Threading.Thread.Sleep(500);     // every 500ms see if we can read the file, if we can, go, else wait..
             }
 
-            return false;
+            return null;
         }
     }
 

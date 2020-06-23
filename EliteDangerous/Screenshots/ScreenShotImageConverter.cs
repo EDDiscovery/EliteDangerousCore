@@ -73,18 +73,27 @@ namespace EliteDangerousCore.ScreenShots
         public CropResizeOptions CropResizeImage2;
         public Rectangle CropResizeArea1 = new Rectangle();
         public Rectangle CropResizeArea2 = new Rectangle();
+
         public bool KeepMasterConvertedImage = false;
 
         public enum OutputTypes { png, jpg, bmp, tiff };
         public OutputTypes OutputFileExtension { get; set; } = OutputTypes.png;
 
-        public bool RemoveOriginal { get; set; } = false;
-        public bool CopyToClipboard { get; set; } = false;
+        public enum OriginalImageOptions { Leave, Delete, Move };
+        public OriginalImageOptions OriginalImageOption { get; set; } = OriginalImageOptions.Leave;
+        public string OriginalImageOptionDirectory { get; set; } = @"c:\";
+
+        public enum ClipboardOptions { NoCopy, CopyMaster, CopyImage1, CopyImage2 };
+        public ClipboardOptions ClipboardOption { get; set; } =  ClipboardOptions.NoCopy;
+
         public bool HighRes { get; set; } = false;
 
         public Tuple<string,Size> Convert(Bitmap bmp, string inputfilename, string outputfolder, DateTime filetime, Action<string> logit, string bodyname, string systemname, string cmdrname ) // can call independent of watcher, pass in bmp to convert
         {
-            outputfolder = SubFolder(outputfolder, systemname, cmdrname, filetime);
+            outputfolder = SubFolder(FolderNameFormat, outputfolder, systemname, cmdrname, filetime);
+
+            if (!Directory.Exists(outputfolder))
+                Directory.CreateDirectory(outputfolder);
 
             // bmp is the original bitmap at full res
 
@@ -117,68 +126,93 @@ namespace EliteDangerousCore.ScreenShots
             {
                 WriteBMP(bmp, outputfilename, filetime);
                 finalsize = bmp.Size;        // this is our image to use in the rest of the system
+
+                if (ClipboardOption == ClipboardOptions.CopyMaster)
+                {
+                    CopyClipboardSafe(bmp, logit);
+                }
             }
 
-            if (CropResizeImage1 !=CropResizeOptions.Off)
+            if (CropResizeImage1 != CropResizeOptions.Off)
             {
-                string nametouse = KeepMasterConvertedImage ? secondfilename : outputfilename;     // if keep full sized off, we use this one as our image
+                Bitmap converted = null;
 
                 if (CropResizeImage1 == CropResizeOptions.Crop)
                 {
-                    Bitmap cropped = bmp.CropImage(CropResizeArea1);
-                    WriteBMP(cropped, nametouse, filetime);
-                    cropped.Dispose();
+                    converted  = bmp.CropImage(CropResizeArea1);
                 }
                 else
                 {
-                    Bitmap resized = bmp.ResizeImage(CropResizeArea1.Width, CropResizeArea1.Height);
-                    WriteBMP(resized, nametouse, filetime);
-                    resized.Dispose();
+                    converted = bmp.ResizeImage(CropResizeArea1.Width, CropResizeArea1.Height);
                 }
+
+                string nametouse = KeepMasterConvertedImage ? secondfilename : outputfilename;     // if keep full sized off, we use this one as our image
+                WriteBMP(converted, nametouse, filetime);
 
                 if (!KeepMasterConvertedImage)       // if not keeping the full sized one, its final
                     finalsize = bmp.Size;
-            }
 
-            if (CropResizeImage2 == CropResizeOptions.Crop)
-            {
-                Bitmap cropped = bmp.CropImage(CropResizeArea2);
-                WriteBMP(cropped, thirdfilename, filetime);
-                cropped.Dispose();
-            }
-            else if (CropResizeImage2 == CropResizeOptions.Resize)
-            {
-                Bitmap resized = bmp.ResizeImage(CropResizeArea2.Width, CropResizeArea2.Height);
-                WriteBMP(resized, thirdfilename, filetime);
-                resized.Dispose();
-            }
-
-            if (CopyToClipboard)
-            {
-                using (Image bmpc = Bitmap.FromFile(outputfilename))
+                if (ClipboardOption == ClipboardOptions.CopyImage1)
                 {
-                    try
-                    {
-                        System.Windows.Forms.Clipboard.SetImage(bmpc);
-                    }
-                    catch
-                    {
-                        logit("Copying image to clipboard failed");
-                    }
+                    CopyClipboardSafe(converted, logit);
                 }
+
+                converted.Dispose();
             }
 
-            if ( RemoveOriginal )
+            if (CropResizeImage2 != CropResizeOptions.Off)
+            {
+                Bitmap converted = null;
+
+                if (CropResizeImage2 == CropResizeOptions.Crop)
+                {
+                    converted = bmp.CropImage(CropResizeArea2);
+                }
+                else
+                {
+                    converted = bmp.ResizeImage(CropResizeArea2.Width, CropResizeArea2.Height);
+                }
+
+                WriteBMP(converted, thirdfilename, filetime);
+
+                if (ClipboardOption == ClipboardOptions.CopyImage2)
+                {
+                    CopyClipboardSafe(converted, logit);
+                }
+
+                converted.Dispose();
+            }
+
+            if (OriginalImageOption == OriginalImageOptions.Delete)
             {
                 try
                 {
+                    System.Diagnostics.Debug.WriteLine("Delete {0}", inputfilename);
                     File.Delete(inputfilename);
                 }
                 catch
                 {
-                    logit( $"Unable to remove file {inputfilename}");
+                    logit($"Unable to remove file {inputfilename}");
                 }
 
+            }
+            else if (OriginalImageOption == OriginalImageOptions.Move)
+            {
+                string outfile = Path.Combine(OriginalImageOptionDirectory, Path.GetFileName(outputfilename));
+                int indexi = 1;
+                while (true)
+                {
+                    try
+                    {
+                        System.Diagnostics.Debug.WriteLine("Move {0} to {1}", inputfilename, outfile);
+                        File.Move(inputfilename, outfile);
+                        break;
+                    }
+                    catch
+                    {
+                        outfile = Path.Combine(OriginalImageOptionDirectory, Path.GetFileNameWithoutExtension(outfile) + "-" + indexi++.ToString() + Path.GetExtension(outfile));
+                    }
+                }
             }
 
             System.Diagnostics.Debug.WriteLine("Convert " + inputfilename + " at " + systemname + " to " + outputfilename);
@@ -216,14 +250,14 @@ namespace EliteDangerousCore.ScreenShots
 
         // helpers for above
 
-        private string SubFolder(string outputfolder, string systemname, string cmdrname, DateTime timestamp)
+        public static string SubFolder(int foldernameformat, string outputfolder, string systemname, string cmdrname, DateTime timestamp)
         {
             if (String.IsNullOrWhiteSpace(outputfolder))
             {
                 outputfolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Frontier Developments", "Elite Dangerous", "Converted");
             }
 
-            switch (FolderNameFormat)
+            switch (foldernameformat)
             {
                 case 1:     // system name
                     outputfolder = Path.Combine(outputfolder, systemname.SafeFileString());
@@ -268,9 +302,6 @@ namespace EliteDangerousCore.ScreenShots
                     outputfolder = Path.Combine(outputfolder, cmdrname.SafeFileString(), systemname.SafeFileString());
                     break;
             }
-
-            if (!Directory.Exists(outputfolder))
-                Directory.CreateDirectory(outputfolder);
 
             return outputfolder;
         }
@@ -339,6 +370,18 @@ namespace EliteDangerousCore.ScreenShots
 
                 default:
                     return Path.GetFileNameWithoutExtension(inputfile);
+            }
+        }
+
+        static void CopyClipboardSafe(Bitmap bmp, Action<string> logit)
+        {
+            try
+            {
+                System.Windows.Forms.Clipboard.SetImage(bmp);
+            }
+            catch
+            {
+                logit("Copying image to clipboard failed");
             }
         }
     }
