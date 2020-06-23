@@ -198,7 +198,7 @@ namespace EliteDangerousCore.ScreenShots
             }
             else if (OriginalImageOption == OriginalImageOptions.Move)
             {
-                string outfile = Path.Combine(OriginalImageOptionDirectory, Path.GetFileName(outputfilename));
+                string outfile = Path.Combine(OriginalImageOptionDirectory, Path.GetFileNameWithoutExtension(outputfilename) + Path.GetExtension(inputfilename));
                 int indexi = 1;
                 while (true)
                 {
