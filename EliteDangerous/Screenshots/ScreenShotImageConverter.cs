@@ -88,7 +88,12 @@ namespace EliteDangerousCore.ScreenShots
 
         public bool HighRes { get; set; } = false;
 
-        public Tuple<string,Size> Convert(Bitmap bmp, string inputfilename, string outputfolder, DateTime filetime, Action<string> logit, string bodyname, string systemname, string cmdrname ) // can call independent of watcher, pass in bmp to convert
+        // convert bmp from inputfilename with filetime
+        // into outputfolder with properties body,system,cmdrname
+        // return final inputfilename, output filename, size. or null if failed.
+
+        public Tuple<string, string, Size> Convert(Bitmap bmp, string inputfilename, DateTime filetime, string outputfolder, 
+                                                   string bodyname, string systemname, string cmdrname, Action<string> logit ) // can call independent of watcher, pass in bmp to convert
         {
             outputfolder = SubFolder(FolderNameFormat, outputfolder, systemname, cmdrname, filetime);
 
@@ -115,7 +120,7 @@ namespace EliteDangerousCore.ScreenShots
             if ( outputfilename.Equals(inputfilename,StringComparison.InvariantCultureIgnoreCase))
             {
                 logit(string.Format(("Cannot convert {0} to {1} as names clash" + Environment.NewLine + "Pick a different conversion folder or a different output format"),inputfilename, outputfilename));
-                return new Tuple<string, Size>(null,Size.Empty);
+                return null;
             }
 
             // the OutputFilename should point to the best screenshot, and FinalSize points to this
@@ -189,6 +194,7 @@ namespace EliteDangerousCore.ScreenShots
                 {
                     System.Diagnostics.Debug.WriteLine("Delete {0}", inputfilename);
                     File.Delete(inputfilename);
+                    inputfilename = null;
                 }
                 catch
                 {
@@ -206,6 +212,7 @@ namespace EliteDangerousCore.ScreenShots
                     {
                         System.Diagnostics.Debug.WriteLine("Move {0} to {1}", inputfilename, outfile);
                         File.Move(inputfilename, outfile);
+                        inputfilename = outfile;
                         break;
                     }
                     catch
@@ -219,7 +226,7 @@ namespace EliteDangerousCore.ScreenShots
 
             logit(string.Format("Converted {0} to {1}".T(EDTx.ScreenShotImageConverter_CNV), Path.GetFileName(inputfilename) , outputfilename));
 
-            return new Tuple<string, Size>(outputfilename, finalsize);
+            return new Tuple<string, string, Size>(inputfilename, outputfilename, finalsize);
         }
 
         private void WriteBMP(Bitmap bmp, string filename, DateTime datetime)

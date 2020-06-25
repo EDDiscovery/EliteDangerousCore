@@ -28,7 +28,9 @@ namespace EliteDangerousCore.ScreenShots
         public InputTypes InputFileExtension { get; set; } = InputTypes.bmp;
         public string OutputFolder { get; set; }
         public bool AutoConvert { get; set; }
-        public event Action<string, string, Size, JournalEvents.JournalScreenshot> OnScreenshot;     // called on screenshot
+
+        // called on screenshot. inputfilename location (may be null if deleted), outputfilename location, image size, screenshot (may be null)
+        public event Action<string, string, Size, JournalEvents.JournalScreenshot> OnScreenshot;     
 
         public ScreenShotImageConverter converter;
         private ScreenshotDirectoryWatcher watcher;
@@ -216,7 +218,7 @@ namespace EliteDangerousCore.ScreenShots
             }
         }
 
-        private void ConvertCompleted(string infile,string outfile, Size sz, JournalEvents.JournalScreenshot ss) // Called by the watcher when a convert had completed, in UI thread
+        private void ConvertCompleted(string infile, string outfile, Size sz, JournalEvents.JournalScreenshot ss) // Called by the watcher when a convert had completed, in UI thread
         {
             System.Diagnostics.Debug.Assert(Application.MessageLoop);
             OnScreenshot?.Invoke(infile,outfile, sz, ss);

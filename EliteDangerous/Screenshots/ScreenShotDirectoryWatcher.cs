@@ -182,14 +182,15 @@ namespace EliteDangerousCore.ScreenShots
 
             try
             {
-                string filein = TryGetScreenshot(filenamepart, out Bitmap bmp, out string filepath, out DateTime timestamp);
+                string filein = TryGetScreenshot(filenamepart, out Bitmap bmp, out DateTime timestamp);
+
                 if (filein != null)
                 {
-                    // return output filename and size
-                    var fs = cp.Convert(bmp, filepath, outputfolder, timestamp, logit, bodyname, sysname, cmdrname);
+                    // return input filename now, output filename and size
+                    var fs = cp.Convert(bmp, filein, timestamp, outputfolder, bodyname, sysname, cmdrname, logit);
 
-                    if ( fs.Item1 != null )
-                        OnScreenshot?.Invoke(filein, fs.Item1,fs.Item2,ss);
+                    if ( fs != null )
+                        OnScreenshot?.Invoke(fs.Item1, fs.Item2, fs.Item3, ss);
 
                     return cp.OriginalImageOption == ScreenShotImageConverter.OriginalImageOptions.Leave;
                 }
@@ -205,10 +206,13 @@ namespace EliteDangerousCore.ScreenShots
             return false;
         }
 
-        private string TryGetScreenshot(string filepart, out Bitmap bmp, out string filenameout, out DateTime timestamp)//, ref string store_name, ref Point finalsize, ref DateTime timestamp, out Bitmap bmp, out string readfilename, Action<string> logit, bool throwOnError = false)
+        // given a filepart, try and read the file and datetime to bmp/timestamp
+        // return null or filenamein
+
+        private string TryGetScreenshot(string filepart, out Bitmap bmp, out DateTime timestamp)//, ref string store_name, ref Point finalsize, ref DateTime timestamp, out Bitmap bmp, out string readfilename, Action<string> logit, bool throwOnError = false)
         {
             timestamp = DateTime.Now;
-            filenameout = null;
+            string filenameout = null;
             bmp = null;
 
             for (int tries = 60; tries > 0; tries--)          // wait 30 seconds and then try it anyway.. 32K hires shots take a while to write.
@@ -240,8 +244,9 @@ namespace EliteDangerousCore.ScreenShots
                             memstrm.Seek(0, SeekOrigin.Begin);
                             bmp = new Bitmap(memstrm);
                         }
+
+                        return filenameout;
                     }
-                    return filenameout;
                 }
                 catch 
                 {
