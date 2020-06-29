@@ -32,6 +32,7 @@ namespace EliteDangerousCore.DLL
         private IntPtr pActionJournalEntry = IntPtr.Zero;
         private IntPtr pActionCommand = IntPtr.Zero;
         private IntPtr pConfigParameters = IntPtr.Zero;
+        private IntPtr pNewUIEvent = IntPtr.Zero;
 
         // for a csharp assembly
         private dynamic AssemblyMainType;
@@ -74,6 +75,7 @@ namespace EliteDangerousCore.DLL
                             pActionJournalEntry = BaseUtils.Win32.UnsafeNativeMethods.GetProcAddress(pDll, "EDDActionJournalEntry");
                             pActionCommand = BaseUtils.Win32.UnsafeNativeMethods.GetProcAddress(pDll, "EDDActionCommand");
                             pConfigParameters = BaseUtils.Win32.UnsafeNativeMethods.GetProcAddress(pDll, "EDDConfigParameters");
+                            pNewUIEvent = BaseUtils.Win32.UnsafeNativeMethods.GetProcAddress(pDll, "EDDNewUIEvent");
                             return true;
                         }
                         else
@@ -305,5 +307,28 @@ namespace EliteDangerousCore.DLL
 
             return false;
         }
+
+        public bool NewUIEvent(string json)
+        {
+            if (AssemblyMainType != null)
+            {
+                if (AssemblyMainType.GetType().GetMethod("EDDNewUIEvent") != null)
+                {
+                    AssemblyMainType.EDDNewUIEvent(json);
+                }
+            }
+            else if (pDll != IntPtr.Zero && pNewUIEvent != IntPtr.Zero)
+            {
+                EDDDLLInterfaces.EDDDLLIF.EDDNewUIEvent newui = (EDDDLLInterfaces.EDDDLLIF.EDDNewUIEvent)Marshal.GetDelegateForFunctionPointer(
+                                                                                    pNewUIEvent,
+                                                                                    typeof(EDDDLLInterfaces.EDDDLLIF.EDDNewUIEvent));
+                newui(json);
+                return true;
+            }
+
+            return false;
+        }
+
+
     }
 }

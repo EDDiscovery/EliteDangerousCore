@@ -102,7 +102,15 @@ namespace EliteDangerousCore.DLL
         {
             foreach (EDDDLLCaller caller in DLLs)
             {
-                caller.NewJournalEntry(nje,stored);
+                caller.NewJournalEntry(nje, stored);
+            }
+        }
+
+        public void NewUIEvent(string json)
+        {
+            foreach (EDDDLLCaller caller in DLLs)
+            {
+                caller.NewUIEvent(json);
             }
         }
 

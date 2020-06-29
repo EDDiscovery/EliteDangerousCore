@@ -130,7 +130,6 @@ namespace EDDDLLInterfaces
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void EDDNewJournalEntry(JournalEntry nje);
 
-
         // Optional DLLCall in Action causes this
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]            
         [return: MarshalAs(UnmanagedType.BStr)]                         // paras can be an empty array, but is always present
@@ -141,6 +140,10 @@ namespace EDDDLLInterfaces
         public delegate void EDDActionJournalEntry(JournalEntry lastje);
 
         // Version 1 Ends here
+
+        // Optional
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void EDDNewUIEvent([MarshalAs(UnmanagedType.BStr)]string jsonui);
 
         // Optional 
         // back: list of (config name, config value, config type (string,int)) of all configs
