@@ -302,8 +302,8 @@ namespace EliteDangerousCore
         // options to force reload of last N files, to fireback instead of storing the last n
 
         public void ParseJournalFilesOnWatchers(Action<int, string> updateProgress, 
-                                                int reloadlastn, 
-                                                Action<JournalEntry> firebacknostore = null, int firebacklastn = 0)
+                                                int reloadlastn,
+                                                Action<JournalEntry, int, int, int, int> firebacknostore = null, int firebacklastn = 0)
         {
             System.Diagnostics.Debug.Assert(ScanThread == null);        // double check we are not scanning.
 

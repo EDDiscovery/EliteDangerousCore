@@ -83,6 +83,15 @@ namespace EliteDangerousCore
         public string GameModeGroup { get { return GameMode + (String.IsNullOrEmpty(Group) ? "" : (":" + Group)); } }
         public bool Wanted { get { return EntryStatus.Wanted; } }
         public long? MarketID { get { return EntryStatus.MarketId; } }
+        public int? BodyID { get { return EntryStatus.BodyID; } }           // NOTE -1 is used for no body, as well as null
+        public bool HasBodyID { get { return EntryStatus.HasBodyID; } }
+
+        public long? FullBodyID { get {                                     // only if at a body
+                if (System.SystemAddress.HasValue && HasBodyID)
+                    return System.SystemAddress.Value | ((long)EntryStatus.BodyID.Value << 55);
+                else
+                    return null;
+            }}
 
         public string DebugStatus { get {      // Use as a replacement for note in travel grid to debug
                 return

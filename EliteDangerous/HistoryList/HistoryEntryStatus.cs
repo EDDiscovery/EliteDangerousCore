@@ -25,6 +25,7 @@ namespace EliteDangerousCore
 
         public string BodyName { get; private set; }
         public int? BodyID { get; private set; }
+        public bool HasBodyID { get { return BodyID.HasValue && BodyID.Value >= 0; } }
         public string BodyType { get; private set; }
         public string StationName { get; private set; }
         public string StationType { get; private set; }
@@ -197,6 +198,15 @@ namespace EliteDangerousCore
                         BodyType = jappbody.BodyType,
                         BodyName = jappbody.Body,
                         BodyID = jappbody.BodyID,
+                    };
+                case JournalTypeEnum.ApproachSettlement:
+                    JournalApproachSettlement jappsettlement = (JournalApproachSettlement)je;
+                    return new HistoryEntryStatus(prev)
+                    {
+                        BodyApproached = true,
+                        BodyType = jappsettlement.BodyType,
+                        BodyName = jappsettlement.BodyName,
+                        BodyID = jappsettlement.BodyID,
                     };
                 case JournalTypeEnum.LeaveBody:
                     JournalLeaveBody jlbody = (JournalLeaveBody)je;

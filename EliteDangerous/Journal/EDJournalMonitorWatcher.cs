@@ -277,16 +277,12 @@ namespace EliteDangerousCore
         // given a list of files to reparse, read them and store to db or fire them back (and set firebacklastn to make it work)
 
         public void ProcessDetectedNewFiles(List<EDJournalReader> readersToUpdate,  Action<int, string> updateProgress, 
-                                            Action<JournalEntry> fireback = null, int firebacklastn = 0)
+                                            Action<JournalEntry, int,int,int,int> fireback = null, int firebacklastn = 0)
         {
-            //System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLap("PJF"), "Ready to update");
-
             for (int i = 0; i < readersToUpdate.Count; i++)
             {
                 EDJournalReader reader = readersToUpdate[i];
                 updateProgress(i * 100 / readersToUpdate.Count, reader.TravelLogUnit.Name);
-
-                //System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLap("PJF"), i + " read ");
 
                 reader.ReadJournal(out List<JournalEntry> entries, out List<UIEvent> uievents, historyrefreshparsing: true, resetOnError: true);      // this may create new commanders, and may write to the TLU db
 
@@ -298,8 +294,11 @@ namespace EliteDangerousCore
                         {
                             if (i >= readersToUpdate.Count - firebacklastn) // if within fireback window
                             {
-                                foreach (JournalEntry jre in entries)
-                                    fireback(jre);
+                                for( int e = 0; e < entries.Count; e++ )
+                                {
+                                    //System.Diagnostics.Debug.WriteLine("Fire {0} {1} {2} {3} {4} {5}", entries[e].CommanderId, i, readersToUpdate.Count, e, entries.Count, entries[e].EventTypeStr );
+                                    fireback(entries[e], i, readersToUpdate.Count, e, entries.Count);
+                                }
                             }
                         }
                         else
