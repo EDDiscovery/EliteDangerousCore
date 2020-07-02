@@ -200,7 +200,7 @@ namespace EliteDangerousCore
                                 jre.Add(jre.JsonCached, cn.Connection, txn);
                             }
 
-                            // System.Diagnostics.Debug.WriteLine("Wrote " + ents.Count() + " to db and updated TLU");
+                            //System.Diagnostics.Debug.WriteLine("Wrote " + ents.Count() + " to db and updated TLU");
 
                             nfi.TravelLogUnit.Update(cn.Connection);
 
@@ -233,25 +233,21 @@ namespace EliteDangerousCore
         {
             //            System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLap("PJF", true), "Scanned " + WatcherFolder);
 
-            Dictionary<string, TravelLogUnit> m_travelogUnits = TravelLogUnit.GetAll().Where(t => (t.type & TravelLogUnit.TypeMask) == TravelLogUnit.JournalType).GroupBy(t => t.Name).Select(g => g.First()).ToDictionary(t => t.Name);
-
             // order by file write time so we end up on the last one written
             FileInfo[] allFiles = Directory.EnumerateFiles(WatcherFolder, journalfilematch, SearchOption.AllDirectories).Select(f => new FileInfo(f)).OrderBy(p => p.LastWriteTime).ToArray();
 
             List<EDJournalReader> readersToUpdate = new List<EDJournalReader>();
 
+            List<TravelLogUnit> toadd = new List<TravelLogUnit>();
+
             for (int i = 0; i < allFiles.Length; i++)
             {
                 FileInfo fi = allFiles[i];
 
-                var reader = OpenFileReader(fi, m_travelogUnits);       // open it
+                var reader = OpenFileReader(fi, true);       // open it, but delay adding
 
-                if (!m_travelogUnits.ContainsKey(reader.TravelLogUnit.Name))
-                {
-                    m_travelogUnits[reader.TravelLogUnit.Name] = reader.TravelLogUnit;
-                    reader.TravelLogUnit.type = TravelLogUnit.JournalType;
-                    reader.TravelLogUnit.Add();
-                }
+                if (reader.TravelLogUnit.id == 0)            // if not present, add to commit add list
+                    toadd.Add(reader.TravelLogUnit);
 
                 if (!netlogreaders.ContainsKey(reader.TravelLogUnit.Name))
                 {
@@ -271,6 +267,22 @@ namespace EliteDangerousCore
                 }
             }
 
+            if ( toadd.Count > 0 )                      // now, on spinning rust, this takes ages for 600+ log files first time, so transaction it
+            {
+                UserDatabase.Instance.ExecuteWithDatabase(cn => 
+                    {
+                        using (DbTransaction txn = cn.Connection.BeginTransaction())
+                        {
+                            foreach (var tlu in toadd)
+                            {
+                                tlu.Add(cn.Connection, txn);
+                            }
+
+                            txn.Commit();
+                        }
+                    });
+            }
+
             return readersToUpdate;
         }
 
@@ -282,7 +294,6 @@ namespace EliteDangerousCore
             for (int i = 0; i < readersToUpdate.Count; i++)
             {
                 EDJournalReader reader = readersToUpdate[i];
-                updateProgress(i * 100 / readersToUpdate.Count, reader.TravelLogUnit.Name);
 
                 reader.ReadJournal(out List<JournalEntry> entries, out List<UIEvent> uievents, historyrefreshparsing: true, resetOnError: true);      // this may create new commanders, and may write to the TLU db
 
@@ -341,23 +352,16 @@ namespace EliteDangerousCore
 
         // open a new file for watching, place it into the netlogreaders list
 
-        private EDJournalReader OpenFileReader(FileInfo fi, Dictionary<string, TravelLogUnit> tlu_lookup = null)
+        private EDJournalReader OpenFileReader(FileInfo fi, bool delayadd = false)
         {
             EDJournalReader reader;
             TravelLogUnit tlu;
 
-            //System.Diagnostics.Trace.WriteLine(string.Format("File Read {0}", fi.FullName));
+            //System.Diagnostics.Trace.WriteLine(string.Format("{0} Opening File {1}", Environment.TickCount % 10000, fi.FullName));
 
             if (netlogreaders.ContainsKey(fi.Name))
             {
                 reader = netlogreaders[fi.Name];
-            }
-            else if (tlu_lookup != null && tlu_lookup.ContainsKey(fi.Name))
-            {
-                tlu = tlu_lookup[fi.Name];
-                tlu.Path = fi.DirectoryName;
-                reader = new EDJournalReader(tlu);
-                netlogreaders[fi.Name] = reader;
             }
             else if (TravelLogUnit.TryGet(fi.Name, out tlu))
             {
@@ -368,7 +372,9 @@ namespace EliteDangerousCore
             else
             {
                 reader = new EDJournalReader(fi.FullName);
-
+                reader.TravelLogUnit.type = TravelLogUnit.JournalType;
+                if (!delayadd)
+                    reader.TravelLogUnit.Add();
                 netlogreaders[fi.Name] = reader;
             }
 
