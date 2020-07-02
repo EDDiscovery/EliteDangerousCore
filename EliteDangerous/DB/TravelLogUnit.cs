@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 
 namespace EliteDangerousCore.DB
 {
@@ -91,9 +92,11 @@ namespace EliteDangerousCore.DB
             return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Add(cn.Connection); });
         }
 
-        private bool Add(SQLiteConnectionUser cn)
+        internal bool Add(SQLiteConnectionUser cn, DbTransaction tn = null)
         {
-            using (DbCommand cmd = cn.CreateCommand("Insert into TravelLogUnit (Name, type, size, Path, CommanderID) values (@name, @type, @size, @Path, @CommanderID)"))
+            FetchAll();
+
+            using (DbCommand cmd = cn.CreateCommand("Insert into TravelLogUnit (Name, type, size, Path, CommanderID) values (@name, @type, @size, @Path, @CommanderID)", tn))
             {
                 cmd.AddParameterWithValue("@name", Name);
                 cmd.AddParameterWithValue("@type", type);
@@ -108,6 +111,7 @@ namespace EliteDangerousCore.DB
                     id = (long)cmd2.ExecuteScalar();
                 }
 
+                cache[id] = this;
                 return true;
             }
         }
@@ -128,73 +132,55 @@ namespace EliteDangerousCore.DB
                 cmd.AddParameterWithValue("@Path", Path);
                 cmd.AddParameterWithValue("@CommanderID", CommanderId);
 
+                //System.Diagnostics.Debug.WriteLine("TLU Update " + Name + " " + Size);
                 cmd.ExecuteNonQuery();
 
                 return true;
             }
         }
-        
-        static public List<TravelLogUnit> GetAll()
-        {
-            return UserDatabase.Instance.ExecuteWithDatabase<List<TravelLogUnit>>(cn =>
-            {
-                List<TravelLogUnit> list = new List<TravelLogUnit>();
 
-                using (DbCommand cmd = cn.Connection.CreateCommand("select * from TravelLogUnit"))
+        static private void FetchAll()
+        {
+            if (cache == null)
+            {
+                cache = new Dictionary<long, TravelLogUnit>();
+
+                UserDatabase.Instance.ExecuteWithDatabase(cn =>
                 {
-                    using (DbDataReader rdr = cmd.ExecuteReader())
+                    List<TravelLogUnit> list = new List<TravelLogUnit>();
+
+                    using (DbCommand cmd = cn.Connection.CreateCommand("select * from TravelLogUnit"))
                     {
-                        while (rdr.Read())
+                        using (DbDataReader rdr = cmd.ExecuteReader())
                         {
-                            TravelLogUnit sys = new TravelLogUnit(rdr);
-                            list.Add(sys);
+                            while (rdr.Read())
+                            {
+                                TravelLogUnit sys = new TravelLogUnit(rdr);
+                                cache[sys.id] = sys;
+                                list.Add(sys);
+                            }
                         }
                     }
+                });
+            }
+        }
 
-                }
-
-                return list;
-            });
+        static public List<TravelLogUnit> GetAll()
+        {
+            FetchAll();
+            return cache.Values.ToList();
         }
 
         public static List<string> GetAllNames()
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<List<string>>(cn =>
-            {
-                List<string> names = new List<string>();
-
-                using (DbCommand cmd = cn.Connection.CreateCommand("SELECT DISTINCT Name FROM TravelLogUnit"))
-                {
-                    using (DbDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            names.Add((string)reader["Name"]);
-                        }
-                    }
-                }
-                return names;
-            });
+            FetchAll();
+            return cache.Values.Select(x=>x.Name).ToList();
         }
 
         public static TravelLogUnit Get(string name)
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<TravelLogUnit>(cn =>
-            {
-                using (DbCommand cmd = cn.Connection.CreateCommand("SELECT * FROM TravelLogUnit WHERE Name = @name ORDER BY Id DESC"))
-                {
-                    cmd.AddParameterWithValue("@name", name);
-                    using (DbDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            return new TravelLogUnit(reader);
-                        }
-                    }
-                }
-
-                return null;
-            });
+            FetchAll();
+            return cache.Values.ToList().Find(x => x.Name == name); // null if not there
         }
 
         public static bool TryGet(string name, out TravelLogUnit tlu)
@@ -205,24 +191,8 @@ namespace EliteDangerousCore.DB
 
         public static TravelLogUnit Get(long id)
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<TravelLogUnit>(cn => Get(id, cn.Connection));
-        }
-
-        internal static TravelLogUnit Get(long id, SQLiteConnectionUser cn)
-        {
-            using (DbCommand cmd = cn.CreateCommand("SELECT * FROM TravelLogUnit WHERE Id = @id ORDER BY Id DESC"))
-            {
-                cmd.AddParameterWithValue("@id", id);
-                using (DbDataReader reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        return new TravelLogUnit(reader);
-                    }
-                }
-            }
-
-            return null;
+            FetchAll();
+            return cache.ContainsKey(id) ? cache[id] : null;
         }
 
         public static bool TryGet(long id, out TravelLogUnit tlu)
@@ -230,6 +200,8 @@ namespace EliteDangerousCore.DB
             tlu = Get(id);
             return tlu != null;
         }
+
+        public static Dictionary<long, TravelLogUnit> cache = null;
     }
 }
 

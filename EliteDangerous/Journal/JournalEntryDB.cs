@@ -474,7 +474,7 @@ namespace EliteDangerousCore
                
         internal static List<JournalEntry> GetAllByTLU(long tluid, SQLiteConnectionUser cn)
         {
-            TravelLogUnit tlu = TravelLogUnit.Get(tluid, cn);
+            TravelLogUnit tlu = TravelLogUnit.Get(tluid);
             List<JournalEntry> vsc = new List<JournalEntry>();
 
             using (DbCommand cmd = cn.CreateCommand("SELECT * FROM JournalEntries WHERE TravelLogId = @source ORDER BY EventTime ASC"))

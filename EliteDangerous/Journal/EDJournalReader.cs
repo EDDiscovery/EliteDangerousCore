@@ -152,11 +152,10 @@ namespace EliteDangerousCore
 
                 cmdrid = commander.Nr;
 
-                if (!TravelLogUnit.CommanderId.HasValue)
+                if (!TravelLogUnit.CommanderId.HasValue)        // we do not need to write to DB the TLU at this point, since we read something the upper layers will do that
                 {
                     TravelLogUnit.CommanderId = cmdrid;
-                    TravelLogUnit.Update();
-//                    System.Diagnostics.Trace.WriteLine(string.Format("TLU {0} updated with commander {1}", TravelLogUnit.Path, cmdrid));
+                    //System.Diagnostics.Trace.WriteLine(string.Format("TLU {0} updated with commander {1} at {2}", TravelLogUnit.Path, cmdrid, TravelLogUnit.Size));
                 }
             }
             else if (je is ISystemStationEntry && ((ISystemStationEntry)je).IsTrainingEvent)
