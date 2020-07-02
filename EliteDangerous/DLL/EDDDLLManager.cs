@@ -28,15 +28,17 @@ namespace EliteDangerousCore.DLL
         public List<EDDDLLCaller> DLLs { get; private set; } = new List<EDDDLLCaller>();
 
         // search directory for *.dll, 
-        // return loaded, failed, notallowed
+        // return loaded, failed, new dlls not in the allowed/disallowed list
+        // alloweddisallowed list is +allowed,-disallowed.. 
         // all Csharp assembly DLLs are loaded - only ones implementing *EDDClass class causes it to be added to the DLL list
         // only normal DLLs implementing EDDInitialise are kept loaded
 
-        public Tuple<string, string, string> Load(string dlldirectory, string ourversion, string[] inoptions, EDDDLLInterfaces.EDDDLLIF.EDDCallBacks callbacks, string allowed)
+        public Tuple<string, string, string> Load(string dlldirectory, string ourversion, string[] inoptions, 
+                                EDDDLLInterfaces.EDDDLLIF.EDDCallBacks callbacks, string alloweddisallowed)
         {
             string loaded = "";
             string failed = "";
-            string notallowed = "";
+            string newdlls = "";
 
             if (!Directory.Exists(dlldirectory))
                 failed = "DLL Folder does not exist";
@@ -44,40 +46,43 @@ namespace EliteDangerousCore.DLL
             {
                 FileInfo[] allFiles = Directory.EnumerateFiles(dlldirectory, "*.dll", SearchOption.TopDirectoryOnly).Select(f => new FileInfo(f)).OrderBy(p => p.LastWriteTime).ToArray();
 
-                string[] allowedfiles = allowed.Split(',');
+                string[] allowedfiles = alloweddisallowed.Split(',');
 
                 foreach (FileInfo f in allFiles)
                 {
-                    string filename = System.IO.Path.GetFileNameWithoutExtension(f.FullName);
-
                     EDDDLLCaller caller = new EDDDLLCaller();
 
                     System.Diagnostics.Debug.WriteLine("Try to load " + f.FullName);
 
-                    if (caller.Load(f.FullName))        // if loaded okay
+                    string filename = System.IO.Path.GetFileNameWithoutExtension(f.FullName);
+
+                    bool isallowed = alloweddisallowed.Equals("All", StringComparison.InvariantCultureIgnoreCase) || allowedfiles.Contains("+" + filename, StringComparer.InvariantCultureIgnoreCase);
+
+                    if (isallowed)    // if allowed..
                     {
-                        if (allowed.Equals("All", StringComparison.InvariantCultureIgnoreCase) || allowedfiles.Contains(filename, StringComparer.InvariantCultureIgnoreCase))    // if allowed..
+                        if (caller.Load(f.FullName))        // if loaded okay
                         {
                             if (caller.Init(ourversion, inoptions, dlldirectory, callbacks))       // must init
                             {
                                 DLLs.Add(caller);
-                                loaded = loaded.AppendPrePad(caller.Name, ",");
+                                loaded = loaded.AppendPrePad(filename, ",");
                             }
                             else
                             {
                                 string errstr = caller.Version.HasChars() ? (": " + caller.Version.Substring(1)) : "";
-                                failed = failed.AppendPrePad(caller.Name + errstr, ",");
+                                failed = failed.AppendPrePad(filename + errstr, ",");
                             }
                         }
-                        else
-                        {
-                            notallowed = notallowed.AppendPrePad(caller.Name, ",");
-                        }
+                    }
+                    else
+                    {
+                        if (!allowedfiles.Contains("-" + filename, StringComparer.InvariantCultureIgnoreCase))   // is not disallowed, its new, ask
+                            newdlls = newdlls.AppendPrePad(filename, ",");
                     }
                 }
             }
 
-            return new Tuple<string, string, string>(loaded, failed, notallowed);
+            return new Tuple<string, string, string>(loaded, failed, newdlls);
         }
 
         public void UnLoad()
