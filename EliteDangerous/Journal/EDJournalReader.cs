@@ -31,6 +31,8 @@ namespace EliteDangerousCore
         JournalEvents.JournalOutfitting lastoutfitting = null;
         JournalEvents.JournalMarket lastmarket = null;
         JournalEvents.JournalNavRoute lastnavroute = null;
+        JournalEvents.JournalCargo lastcargo = null;
+
         bool cqc = false;
         const int timelimit = 5 * 60;   //seconds.. 5 mins between logs. Note if we undock, we reset the counters.
 
@@ -196,6 +198,12 @@ namespace EliteDangerousCore
                 toosoon = lastmarket != null && lastmarket.Equals(je as JournalEvents.JournalMarket);
                 lastmarket = je as JournalEvents.JournalMarket;
             }
+            else if ( je is JournalEvents.JournalCargo )
+            {
+                var cargo = je as JournalEvents.JournalCargo;
+                toosoon = lastcargo != null && cargo.EventTimeUTC.Subtract(lastcargo.EventTimeUTC).Minutes < 15;
+                lastcargo = cargo;
+            }
             else if (je is JournalEvents.JournalUndocked || je is JournalEvents.JournalLoadGame)             // undocked, Load Game, repeats are cleared
             {
                 lastshipyard = null;
@@ -203,6 +211,7 @@ namespace EliteDangerousCore
                 lastoutfitting = null;
                 laststoredmodules = null;
                 laststoredships = null;
+                lastcargo = null;                  
                 cqc = false;
             }
             else if (je is JournalEvents.JournalMusic)
@@ -228,7 +237,7 @@ namespace EliteDangerousCore
 
             if (toosoon)                                                // if seeing repeats, remove
             {
-               // System.Diagnostics.Debug.WriteLine("**** Remove as dup " + je.EventTypeStr);
+                System.Diagnostics.Debug.WriteLine("**** Remove as dup " + je.EventTypeStr);
                 return null;
             }
 
