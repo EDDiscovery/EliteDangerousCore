@@ -99,13 +99,14 @@ namespace EliteDangerousCore.JournalEvents
             detailed = info = "";
             if ( Route != null )
             {
-                foreach( var r in Route )
+                for( int i = 1; i < Route.Length;i++)
                 {
+                    var r = Route[i];
                     string n = r.StarSystem ?? r.SystemAddress.ToStringInvariant();
                     info = info.AppendPrePad(n, ", ");
                     detailed = detailed.AppendPrePad(n + " @ " + r.StarPos.X.ToString("N1") + "," + r.StarPos.Y.ToString("N1") + "," + r.StarPos.Z.ToString("N1") + " " + r.StarClass, System.Environment.NewLine);
                 }
-                info = string.Format("{0} jumps: ".T(EDTx.BankAccountClass_InsuranceClaims), Route.Length) + info;
+                info = string.Format("{0} jumps: ".T(EDTx.BankAccountClass_InsuranceClaims), Route.Length-1) + info;
             }
         }
 
