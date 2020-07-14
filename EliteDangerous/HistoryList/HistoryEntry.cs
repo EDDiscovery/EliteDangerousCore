@@ -118,9 +118,9 @@ namespace EliteDangerousCore
         // Calculated values, not from JE
 
         public MaterialCommoditiesList MaterialCommodity { get; private set; }
-        public ShipInformation ShipInformation { get; set; }     // may be null if not set up yet
-        public ModulesInStore StoredModules { get; set; }
-        public MissionList MissionList { get; set; }
+        public ShipInformation ShipInformation { get; private set; }     // may be null if not set up yet
+        public ModulesInStore StoredModules { get; private set; }
+        public MissionList MissionList { get; private set; }
 
         public SystemNoteClass snc;     // system note class found attached to this entry. May be null
 
@@ -300,6 +300,16 @@ namespace EliteDangerousCore
         public void UpdateShipInformation(ShipInformation si)       // something externally updated SI
         {
             ShipInformation = si;
+        }
+
+        public void UpdateShipStoredModules( ModulesInStore ms )
+        {
+            StoredModules = ms;
+        }
+
+        public void UpdateMissionList( MissionList ml )
+        {
+            MissionList = ml;
         }
 
         #endregion

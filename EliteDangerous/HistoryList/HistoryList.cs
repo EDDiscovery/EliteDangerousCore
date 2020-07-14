@@ -887,10 +887,10 @@ namespace EliteDangerousCore
             outfitting.Process(je);
 
             Tuple<ShipInformation, ModulesInStore> ret = shipinformationlist.Process(je, he.WhereAmI, he.System);
-            he.ShipInformation = ret.Item1;
-            he.StoredModules = ret.Item2;
-
-            he.MissionList = missionlistaccumulator.Process(je, he.System, he.WhereAmI);
+            he.UpdateShipInformation(ret.Item1);
+            he.UpdateShipStoredModules(ret.Item2);
+            
+            he.UpdateMissionList(missionlistaccumulator.Process(je, he.System, he.WhereAmI));
 
             historylist.Add(he);
 
@@ -1103,10 +1103,10 @@ namespace EliteDangerousCore
                 outfitting.Process(je);
 
                 Tuple<ShipInformation, ModulesInStore> ret = shipinformationlist.Process(je, he.WhereAmI, he.System);  // the ships
-                he.ShipInformation = ret.Item1;
-                he.StoredModules = ret.Item2;
+                he.UpdateShipInformation(ret.Item1);
+                he.UpdateShipStoredModules(ret.Item2);
 
-                he.MissionList = missionlistaccumulator.Process(je, he.System, he.WhereAmI);                           // the missions
+                he.UpdateMissionList(missionlistaccumulator.Process(je, he.System, he.WhereAmI));
 
                 if (je.EventTypeID == JournalTypeEnum.Scan && je is JournalScan)
                 {

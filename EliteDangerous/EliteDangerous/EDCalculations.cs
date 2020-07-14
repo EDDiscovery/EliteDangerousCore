@@ -12,21 +12,13 @@ namespace EliteDangerousCore
 
         public class FSDSpec
         {
-            private int fsdClass;
-            private string rating;
-            private double pc;
-            private double lc;
-            private double mOpt;
-            private double mfpj;
-            private double boost;
-
-            public int FsdClass { get { return fsdClass; } }
-            public string Rating { get { return rating; } }
-            public double PowerConstant { get { return pc; } }
-            public double LinearConstant { get { return lc; } }
-            public double OptimalMass { get { return mOpt; } set { mOpt = value; } }
-            public double MaxFuelPerJump { get { return mfpj; } set { mfpj = value; } }
-            public double FSDBoosterRange { get { return boost; } set { boost = value; } }
+            public int FsdClass { get; set; }
+            public string Rating { get; set; }
+            public double PowerConstant { get; set; }
+            public double LinearConstant { get; set; }
+            public double OptimalMass { get; set; }
+            public double MaxFuelPerJump { get; set; }
+            public double FSDBoosterRange { get; set; }
 
             public FSDSpec(int fsdClass,
                 string rating,
@@ -35,15 +27,13 @@ namespace EliteDangerousCore
                 double mOpt,
                 double mfpj)
             {
-
-                this.fsdClass = fsdClass;
-                this.rating = rating;
-                this.pc = pc;
-                this.lc = lc;
-                this.lc = lc;
-                this.mOpt = mOpt;
-                this.mfpj = mfpj;
-                this.boost = 0;
+                this.FsdClass = fsdClass;
+                this.Rating = rating;
+                this.PowerConstant = pc;
+                this.LinearConstant = lc;
+                this.OptimalMass = mOpt;
+                this.MaxFuelPerJump = mfpj;
+                this.FSDBoosterRange = 0;
             }
 
             public void SetFSDBooster(int fsdBoosterClass)
@@ -88,24 +78,31 @@ namespace EliteDangerousCore
 
             public double CalculateMaxJumpDistance(double cargo, double unladenmass, double fuel, out double jumps)
             {
-                double fr = fuel % mfpj;                // fraction of fuel left.. up to maximum of fuel per jump
+                double fr = fuel % MaxFuelPerJump;                // fraction of fuel left.. up to maximum of fuel per jump
 
-                jumps = Math.Floor(fuel / mfpj);        // number of jumps possible PAST first one (Floor)
+                jumps = Math.Floor(fuel / MaxFuelPerJump);        // number of jumps possible PAST first one (Floor)
 
                 double mass = unladenmass + fr + cargo;  // weight with just fuel on board for 1 jump
 
                 double d = 0.0;
 
                 if (fuel > 0.0)
-                    d = Math.Pow(fr / (lc * 0.001), 1 / pc) * mOpt / mass + boost;      // fr is what we have for 1 jump... This is probably incorrect for the boost but it is the same formula as coriolis
+                    d = Math.Pow(fr / (LinearConstant * 0.001), 1 / PowerConstant) * OptimalMass / mass + FSDBoosterRange;      // fr is what we have for 1 jump... This is probably incorrect for the boost but it is the same formula as coriolis
 
                 for (int idx = 0; idx < jumps; idx++)   // if any more jumps past the first
                 {
-                    mass += mfpj;
-                    d += Math.Pow(mfpj / (lc * 0.001), 1 / pc) * mOpt / mass + boost;
+                    mass += MaxFuelPerJump;
+                    d += Math.Pow(MaxFuelPerJump / (LinearConstant * 0.001), 1 / PowerConstant) * OptimalMass / mass + FSDBoosterRange;
                 }
 
                 return d;
+            }
+
+            public double FuelUse(double cargo, double unladenmass, double distance)  
+            {
+                double mass = unladenmass + cargo;  // weight with just fuel on board for 1 jump
+
+                return LinearConstant * 0.001 * Math.Pow((distance * mass / OptimalMass), PowerConstant);
             }
 
             public override string ToString()
@@ -126,11 +123,12 @@ namespace EliteDangerousCore
 
         public static List<FSDSpec> FSDList = new List<FSDSpec>(        // verified against website on 5 april 2018..  
             new FSDSpec[] {                                             // looks same as coriolis 
-                new FSDSpec(2, "E", 2, 11, 48, 0.6),                    // coriolis-data: frame_shift_drive.json   2A: fuelmul = 0.012, fuelpower=2
-                new FSDSpec(2,  "D" ,   2   ,10 ,54 ,0.6),              // APP/shipyard/calculations.js does the same function
-                new FSDSpec(2,  "C" ,   2   ,8  ,60 ,0.6),
-                new FSDSpec(2,  "B" ,   2   ,10 ,75,    0.8),
-                new FSDSpec(2   ,"A",   2,  12, 90, 0.9),
+                          //C    R      pc  lc  mop mfpj
+                new FSDSpec(2,  "E",    2,  11, 48, 0.6),                // coriolis-data: frame_shift_drive.json   2A: fuelmul = 0.012, fuelpower=2
+                new FSDSpec(2,  "D" ,   2,  10, 54, 0.6),                // APP/shipyard/calculations.js does the same function
+                new FSDSpec(2,  "C" ,   2,  8,  60, 0.6),
+                new FSDSpec(2,  "B" ,   2,  10, 75, 0.8),
+                new FSDSpec(2,  "A",    2,  12, 90, 0.9),
 
                 new FSDSpec(3,  "E",    2.15    ,11 ,80,    1.2),
                 new FSDSpec(3,  "D",    2.15    ,10 ,90,    1.2),
