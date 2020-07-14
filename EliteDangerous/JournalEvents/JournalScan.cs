@@ -1379,17 +1379,21 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     if (st < 110)
                     {
-                        if (AtmosphereComposition.ToNullSafeString().ToLowerInvariant().Contains("antimony") || 
-                            AtmosphereComposition.ToNullSafeString().ToLowerInvariant().Contains("cadmium") || 
+                        if (AtmosphereComposition.ToNullSafeString().ToLowerInvariant().Contains("antimony") ||
+                            AtmosphereComposition.ToNullSafeString().ToLowerInvariant().Contains("cadmium") ||
                             AtmosphereComposition.ToNullSafeString().ToLowerInvariant().Contains("niobium"))
                             iconName = "GGHv7";
                         else
                             iconName = "GGHv7";
                     }
+                    else if (st < 120)
+                        iconName = "GGHv10";
                     else if (st < 125)
                         iconName = "GGHv6";
-                    else if (st < 140)
+                    else if (st < 135)
                         iconName = "GGHv2";
+                    else if (st < 145)
+                        iconName = "GGHv11";
                     else if (st < 180)
                         iconName = "GGHv5";
                     else if (st < 270)
@@ -1515,6 +1519,8 @@ namespace EliteDangerousCore.JournalEvents
                         iconName = "GG4v7";
                     else if (st < 1200)
                         iconName = "GG4v2";
+                    else if (st < 1215)
+                        iconName = "GG4v13";
                     else if (st < 1225)
                         iconName = "GG4v11";
                     else if (st < 1250)
@@ -1578,6 +1584,8 @@ namespace EliteDangerousCore.JournalEvents
                     iconName = "AMWv6";
                 else if (st < 200)
                     iconName = "AMWv3";
+                else if (st < 205 && VolcanismID == EDVolcanism.Water_Geysers)
+                    iconName = "AMWv7";
                 else if (st < 210)
                 {
                     iconName = "AMWv1";
@@ -1699,7 +1707,9 @@ namespace EliteDangerousCore.JournalEvents
                     }
                     else if (AtmosphereID == EDAtmosphereType.Nitrogen)
                     {
-                        if (st < 200)
+                        if (st > 100)
+                            iconName = "HMCv38";
+                        else if (st < 200)
                             iconName = "HMCv2";
                         else
                             iconName = "HMCv5";
