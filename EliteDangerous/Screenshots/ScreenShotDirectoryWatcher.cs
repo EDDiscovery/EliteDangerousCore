@@ -80,6 +80,7 @@ namespace EliteDangerousCore.ScreenShots
         {
             if (filesystemwatcher != null)
             {
+                filesystemwatcher.EnableRaisingEvents = false;
                 filesystemwatcher.Dispose();
                 filesystemwatcher = null;
             }
