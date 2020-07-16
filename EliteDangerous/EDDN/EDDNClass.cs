@@ -515,6 +515,7 @@ namespace EliteDangerousCore.EDDN
             if (message["StarPosFromEDSM"] != null)  // Reject systems recently updated with EDSM coords
                 return null;
 
+            message = (JObject)message.DeepClone();
             message = RemoveCommonKeys(message);
             message = RemoveFactionReputation(message);
             message.Remove("BoostUsed");
@@ -551,6 +552,7 @@ namespace EliteDangerousCore.EDDN
             if (message["StarPosFromEDSM"] != null)  // Reject systems recently updated with EDSM coords
                 return null;
 
+            message = (JObject)message.DeepClone();
             message = RemoveCommonKeys(message);
             message = RemoveFactionReputation(message);
             message = RemoveStationEconomyKeys(message);
@@ -586,6 +588,7 @@ namespace EliteDangerousCore.EDDN
             if (message["StarPosFromEDSM"] != null)  // Reject systems recently updated with EDSM coords
                 return null;
 
+            message = (JObject)message.DeepClone();
             message = RemoveCommonKeys(message);
             message = RemoveFactionReputation(message);
             message = RemoveStationEconomyKeys(message);
@@ -621,6 +624,7 @@ namespace EliteDangerousCore.EDDN
                 return null;
             }
 
+            message = (JObject)message.DeepClone();
             message = RemoveCommonKeys(message);
             message = RemoveStationEconomyKeys(message);
             message.Remove("CockpitBreach");
@@ -652,6 +656,7 @@ namespace EliteDangerousCore.EDDN
                 return null;
             }
 
+            message = (JObject)message.DeepClone();
             message = RemoveCommonKeys(message);
 
             message["StarPos"] = new JArray(new float[] { (float)x, (float)y, (float)z });
@@ -711,6 +716,7 @@ namespace EliteDangerousCore.EDDN
                 return null;
             }
 
+            message = (JObject)message.DeepClone();
             message = RemoveCommonKeys(message);
 
             message["StarPos"] = new JArray(new float[] { (float)x, (float)y, (float)z });
@@ -770,6 +776,7 @@ namespace EliteDangerousCore.EDDN
                 return null;
             }
 
+            message = (JObject)message.DeepClone();
             message = RemoveCommonKeys(message);
 
             message["StarPos"] = new JArray(new float[] { (float)x, (float)y, (float)z });
@@ -802,6 +809,7 @@ namespace EliteDangerousCore.EDDN
                 return null;
             }
 
+            message = (JObject)message.DeepClone();
             message["StarSystem"] = system.Name;
             message["StarPos"] = new JArray(new float[] { (float)system.X, (float)system.Y, (float)system.Z });
 
@@ -857,6 +865,7 @@ namespace EliteDangerousCore.EDDN
                 return null;
             }
 
+            message = (JObject)message.DeepClone();
             message["StarSystem"] = system.Name;
             message["StarPos"] = new JArray(new float[] { (float)system.X, (float)system.Y, (float)system.Z });
             message["SystemAddress"] = system.SystemAddress;

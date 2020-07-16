@@ -427,6 +427,7 @@ namespace EliteDangerousCore.EDSM
                     continue;
                 }
 
+                json = (JObject)json.DeepClone();
                 RemoveCommonKeys(json);
                 if (je.EventTypeID == JournalTypeEnum.FSDJump && json["FuelUsed"].Empty())
                     json["_convertedNetlog"] = true;

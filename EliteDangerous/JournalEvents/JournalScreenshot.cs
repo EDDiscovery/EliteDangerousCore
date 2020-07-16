@@ -72,6 +72,7 @@ namespace EliteDangerousCore.JournalEvents
             JObject jo = GetJson();
             if (jo != null)
             {
+                jo = (JObject)jo.DeepClone();
                 jo["EDDInputFile"] = input_filename;
                 jo["EDDOutputFile"] = output_filename;
                 jo["EDDOutputWidth"] = width;
