@@ -1515,10 +1515,14 @@ namespace EliteDangerousCore.JournalEvents
                         iconName = "GG4v7";
                     else if (st < 1200)
                         iconName = "GG4v2";
-                    else if (st < 1225)
+                    else if (st < 1220)
+                        iconName = "GG4v13";
+                    else if (st < 1240)
                         iconName = "GG4v11";
-                    else if (st < 1250)
+                    else if (st < 1270)
                         iconName = "GG4v8";
+                    else if (st < 1300)
+                        iconName = "GG4v12";
                     else
                         iconName = "GG4v5";
                 }
