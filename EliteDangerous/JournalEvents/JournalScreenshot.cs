@@ -69,7 +69,7 @@ namespace EliteDangerousCore.JournalEvents
             EDDOutputWidth = width;
             EDDOutputHeight = height;
 
-            JObject jo = GetJson();
+            JObject jo = GetJsonCloned();       // get a fresh copy as we are about to mod it
             if (jo != null)
             {
                 jo["EDDInputFile"] = input_filename;

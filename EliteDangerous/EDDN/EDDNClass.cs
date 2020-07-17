@@ -502,7 +502,7 @@ namespace EliteDangerousCore.EDDN
             msg["header"] = Header();
             msg["$schemaRef"] = GetEDDNJournalSchemaRef();
 
-            JObject message = journal.GetJson();
+            JObject message = journal.GetJsonCloned();
 
             if (message == null)
             {
@@ -541,7 +541,7 @@ namespace EliteDangerousCore.EDDN
             msg["header"] = Header();
             msg["$schemaRef"] = GetEDDNJournalSchemaRef();
 
-            JObject message = journal.GetJson();
+            JObject message = journal.GetJsonCloned();
 
             if (message == null)
             {
@@ -576,7 +576,7 @@ namespace EliteDangerousCore.EDDN
             msg["header"] = Header();
             msg["$schemaRef"] = GetEDDNJournalSchemaRef();
 
-            JObject message = journal.GetJson();
+            JObject message = journal.GetJsonCloned();
 
             if (message == null)
             {
@@ -614,7 +614,7 @@ namespace EliteDangerousCore.EDDN
             msg["header"] = Header();
             msg["$schemaRef"] = GetEDDNJournalSchemaRef();
 
-            JObject message = journal.GetJson();
+            JObject message = journal.GetJsonCloned();
 
             if (message == null)
             {
@@ -645,7 +645,7 @@ namespace EliteDangerousCore.EDDN
             msg["header"] = Header();
             msg["$schemaRef"] = GetEDDNJournalSchemaRef();
 
-            JObject message = journal.GetJson();
+            JObject message = journal.GetJsonCloned();
 
             if (message == null)
             {
@@ -704,7 +704,7 @@ namespace EliteDangerousCore.EDDN
             msg["header"] = Header();
             msg["$schemaRef"] = GetEDDNJournalSchemaRef();
 
-            JObject message = journal.GetJson();
+            JObject message = journal.GetJsonCloned();
 
             if (message == null)
             {
@@ -763,7 +763,7 @@ namespace EliteDangerousCore.EDDN
             msg["header"] = Header();
             msg["$schemaRef"] = GetEDDNJournalSchemaRef();
 
-            JObject message = journal.GetJson();
+            JObject message = journal.GetJsonCloned();
 
             if (message == null)
             {
@@ -795,7 +795,7 @@ namespace EliteDangerousCore.EDDN
             msg["header"] = Header();
             msg["$schemaRef"] = GetEDDNJournalSchemaRef();
 
-            JObject message = journal.GetJson();
+            JObject message = journal.GetJsonCloned();
 
             if (message == null)
             {
@@ -850,7 +850,7 @@ namespace EliteDangerousCore.EDDN
             msg["header"] = Header();
             msg["$schemaRef"] = GetEDDNJournalSchemaRef();
 
-            JObject message = journal.GetJson();
+            JObject message = journal.GetJsonCloned();
 
             if (message == null)
             {

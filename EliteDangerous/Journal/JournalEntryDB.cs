@@ -120,6 +120,11 @@ namespace EliteDangerousCore
 
         internal void UpdateJsonEntry(JObject jo, SQLiteConnectionUser cn, DbTransaction tn = null)
         {
+            if ( JsonCached != null )
+            {
+                JsonCached = jo;
+            }
+
             using (DbCommand cmd = cn.CreateCommand("Update JournalEntries set EventData=@EventData where ID=@id", tn))
             {
                 cmd.AddParameterWithValue("@ID", Id);
@@ -242,7 +247,12 @@ namespace EliteDangerousCore
             return true;
         }
 
-        public JObject GetJson()
+        public JObject GetJsonCloned()      // you may modify this
+        {
+            return (JObject)GetJson().DeepClone(); 
+        }
+
+        public JObject GetJson()            // do not modify
         {
             return JsonCached != null ? JsonCached : UserDatabase.Instance.ExecuteWithDatabase<JObject>(cn => { return GetJson(Id, cn.Connection); });
         }

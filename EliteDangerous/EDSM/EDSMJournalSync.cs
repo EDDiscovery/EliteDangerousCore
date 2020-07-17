@@ -420,7 +420,7 @@ namespace EliteDangerousCore.EDSM
                     je = JournalEntry.Get(he.Journalid);
                 }
 
-                JObject json = je.GetJson();
+                JObject json = je.GetJsonCloned();
 
                 if (json == null)
                 {
