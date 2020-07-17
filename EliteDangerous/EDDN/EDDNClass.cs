@@ -933,11 +933,20 @@ namespace EliteDangerousCore.EDDN
         {
             try
             {
+                System.Diagnostics.Debug.WriteLine("EDDN Send");
+
                 BaseUtils.ResponseData resp = RequestPost(msg.ToString(), "");
 
                 if (resp.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    System.Diagnostics.Debug.WriteLine("EDDN Status OK");
                     return true;
-                else return false;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("EDDN Error code " + resp.StatusCode);
+                    return false;
+                }
             }
             catch (System.Net.WebException ex)
             {
@@ -960,86 +969,5 @@ namespace EliteDangerousCore.EDDN
                 return false;
             }
         }
-
-
-
-        static public bool CheckforEDMC()
-        {
-            string EDMCFileName = null;
-
-
-            try
-            {
-                Process[] processes32 = Process.GetProcessesByName("EDMarketConnector");
-               
-
-                Process[] processes = processes32;
-
-                if (processes == null)
-                {
-                    return  false;
-                }
-                else if (processes.Length == 0)
-                {
-                    return false;
-                }
-                else
-                {
-                    string processFilename = null;
-                    try
-                    {
-                        int id = processes[0].Id;
-                        processFilename = GetMainModuleFilepath(id);        // may return null if id not found (seen this)
-
-                        if (processFilename != null)
-                            EDMCFileName = processFilename;
-                    }
-                    catch (Win32Exception)
-                    {
-                    }
-
-                    if (EDMCFileName != null)                                 // if found..
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-            catch (Exception)
-            {
-            }
-            return false;
-        }
-
-        private static string GetMainModuleFilepath(int processId)
-        {
-            string wmiQueryString = "SELECT ProcessId, ExecutablePath FROM Win32_Process WHERE ProcessId = " + processId;
-
-            using (var searcher = new ManagementObjectSearcher(wmiQueryString))
-            {
-                if (searcher != null)           // seen it return null
-                {
-                    using (var results = searcher.Get())
-                    {
-                        if (results != null)
-                        {
-                            foreach (ManagementObject mo in results)
-                            {
-                                if (mo != null)
-                                {
-                                    return (string)mo["ExecutablePath"];
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-
-
-
-
     }
 }

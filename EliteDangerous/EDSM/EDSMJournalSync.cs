@@ -192,7 +192,7 @@ namespace EliteDangerousCore.EDSM
 
         public static bool SendEDSMEvents(Action<string> log, IEnumerable<HistoryEntry> helist, bool manual = false)
         {
-            System.Diagnostics.Debug.WriteLine("Send " + helist.Count());
+            System.Diagnostics.Debug.WriteLine("EDSM Send Events " + helist.Count());
 
             int eventCount = 0;
             bool hasbeta = false;
@@ -494,12 +494,12 @@ namespace EliteDangerousCore.EDSM
 
                                 if (msgnr == 500)
                                 {
-                                    System.Diagnostics.Trace.WriteLine($"Warning submitting event {he.Journalid} \"{he.EventSummary}\": {msgnr} {result["msg"].Str()}");
+                                    System.Diagnostics.Trace.WriteLine($"EDSM Warning submitting event {he.Journalid} \"{he.EventSummary}\": {msgnr} {result["msg"].Str()}");
                                 }
                             }
                             else
                             {
-                                System.Diagnostics.Trace.WriteLine($"Error submitting event {he.Journalid} \"{he.EventSummary}\": {msgnr} {result["msg"].Str()}");
+                                System.Diagnostics.Trace.WriteLine($"EDSM Error submitting event {he.Journalid} \"{he.EventSummary}\": {msgnr} {result["msg"].Str()}");
                             }
 
                         }
