@@ -155,7 +155,7 @@ namespace EliteDangerousCore.ScreenShots
                 WriteBMP(converted, nametouse, filetime);
 
                 if (!KeepMasterConvertedImage)       // if not keeping the full sized one, its final
-                    finalsize = bmp.Size;
+                    finalsize = converted.Size;
 
                 if (ClipboardOption == ClipboardOptions.CopyImage1)
                 {
