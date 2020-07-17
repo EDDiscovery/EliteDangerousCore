@@ -1384,7 +1384,7 @@ namespace EliteDangerousCore.JournalEvents
                             AtmosphereComposition.ToNullSafeString().ToLowerInvariant().Contains("niobium"))
                             iconName = "GGHv7";
                         else
-                            iconName = "GGHv7";
+                            iconName = "GGHv3";
                     }
                     else if (st < 125)
                         iconName = "GGHv6";
