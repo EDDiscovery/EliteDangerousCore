@@ -164,6 +164,7 @@ namespace EliteDangerousCore.Inara
 
         static public JToken setCommanderGameStatistics(JObject jsonfromstats, DateTime dt)
         {
+            jsonfromstats = (JObject)jsonfromstats.DeepClone();
             jsonfromstats.Remove("event");
             jsonfromstats.Remove("timestamp");
             return Event("setCommanderGameStatistics", dt, jsonfromstats);
