@@ -507,7 +507,7 @@ namespace EliteDangerousCore.Inara
                 case JournalTypeEnum.Statistics://VERIFIED 16/5/18
                     {
                         JournalStatistics stats = he.journalEntry as JournalStatistics;
-                        eventstosend.Add(InaraClass.setCommanderGameStatistics(stats.Json, stats.EventTimeUTC));
+                        eventstosend.Add(InaraClass.setCommanderGameStatistics(stats.GetJsonCloned(), stats.EventTimeUTC));
                         break;
                     }
 

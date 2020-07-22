@@ -192,12 +192,12 @@ namespace EliteDangerousCore
                     {
                         using (DbTransaction txn = cn.Connection.BeginTransaction())
                         {
-                            ents = ents.Where(jre => JournalEntry.FindEntry(jre, cn, jre.JsonCached).Count == 0).ToList();
+                            ents = ents.Where(jre => JournalEntry.FindEntry(jre, cn, jre.GetJson()).Count == 0).ToList();
 
                             foreach (JournalEntry jre in ents)
                             {
                                 entries.Add(jre);
-                                jre.Add(jre.JsonCached, cn.Connection, txn);
+                                jre.Add(jre.GetJson(), cn.Connection, txn);
                             }
 
                             //System.Diagnostics.Debug.WriteLine("Wrote " + ents.Count() + " to db and updated TLU");
@@ -322,9 +322,9 @@ namespace EliteDangerousCore
                             {
                                 foreach (JournalEntry jre in entries)
                                 {
-                                    if (!existing[jre.EventTimeUTC].Any(e => JournalEntry.AreSameEntry(jre, e, cn.Connection, ent1jo: jre.JsonCached)))
+                                    if (!existing[jre.EventTimeUTC].Any(e => JournalEntry.AreSameEntry(jre, e, cn.Connection, ent1jo: jre.GetJson())))
                                     {
-                                        jre.Add(jre.JsonCached, cn.Connection, tn);
+                                        jre.Add(jre.GetJson(), cn.Connection, tn);
 
                                         //System.Diagnostics.Trace.WriteLine(string.Format("Write Journal to db {0} {1}", jre.JournalEntry.EventTimeUTC, jre.JournalEntry.EventTypeStr));
                                     }

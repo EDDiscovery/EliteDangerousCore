@@ -62,7 +62,7 @@ namespace EliteDangerousCore
             try
             {
                 jo = JObject.Parse(line);
-                je = JournalEntry.CreateJournalEntry(jo);
+                je = JournalEntry.CreateJournalEntry(jo,true);
             }
             catch
             {
@@ -83,8 +83,6 @@ namespace EliteDangerousCore
                 System.Diagnostics.Trace.WriteLine($"Bad journal line:\n{line}");
                 return null;
             }
-
-            je.JsonCached = jo;
 
             bool toosoon = false;
 

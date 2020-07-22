@@ -68,8 +68,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     jo = jnew;      // replace current
                     Rescan(jo);
-                    if (JsonCached != null)
-                        JsonCached = jo;
+                    UpdateJson(jo);
                 }
                 return jnew != null;
             }

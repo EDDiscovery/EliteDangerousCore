@@ -247,6 +247,8 @@ namespace EliteDangerousCore
             return true;
         }
 
+        private JObject JsonCached { get; set; }             // New entries scanned thru the readers get this, ones from history rely on looking up in DB 
+
         public JObject GetJsonCloned()      // you may modify this
         {
             return (JObject)GetJson().DeepClone(); 
@@ -254,7 +256,16 @@ namespace EliteDangerousCore
 
         public JObject GetJson()            // do not modify
         {
-            return JsonCached != null ? JsonCached : UserDatabase.Instance.ExecuteWithDatabase<JObject>(cn => { return GetJson(Id, cn.Connection); });
+            if (JsonCached == null)
+            {
+                JsonCached = UserDatabase.Instance.ExecuteWithDatabase<JObject>(cn => { return GetJson(Id, cn.Connection); });
+            }
+            return JsonCached;
+        }
+
+        public void UpdateJson(JObject jo)
+        {
+            JsonCached = jo;
         }
 
         static internal JObject GetJson(long journalid, SQLiteConnectionUser cn, DbTransaction tn = null)

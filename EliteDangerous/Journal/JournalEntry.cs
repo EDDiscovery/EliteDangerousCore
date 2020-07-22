@@ -68,8 +68,6 @@ namespace EliteDangerousCore
             }
         }
 
-        public JObject JsonCached { get; set; }             // New entries scanned thru the readers get this, ones from history rely on looking up in DB 
-
         public abstract void FillInformation(out string info, out string detailed);     // all entries must implement
 
         // the long name of it, such as Approach Body. May be overridden, is translated
@@ -232,7 +230,7 @@ namespace EliteDangerousCore
             return CreateJournalEntry(jo);
         }
 
-        static public JournalEntry CreateJournalEntry(JObject jo)
+        static public JournalEntry CreateJournalEntry(JObject jo, bool savejson = false)
         {
             string Eventstr = jo["event"].StrNull();
 
@@ -250,6 +248,9 @@ namespace EliteDangerousCore
                 else
                     ret = (JournalEntry)Activator.CreateInstance(jtype, jo);
             }
+
+            if (savejson)
+                ret.JsonCached = jo;
 
             return ret;
         }
