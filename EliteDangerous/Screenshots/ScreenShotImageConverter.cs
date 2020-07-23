@@ -69,7 +69,7 @@ namespace EliteDangerousCore.ScreenShots
             "YYYY-MM-DD_HH-MM-SS_Sysname_BodyName",     "%yyyy-%MM-%dd_%HH-%mm-%ss_%S_%B%H",
             "YYYY-MM-DD HH-MM-SS Sysname @ BodyName",   "%yyyy-%MM-%dd %HH-%mm-%ss %S @ %B%H",
             "Sysname @ BodyName",   "%S @ %B%H",
-            "BodyName @ Sysname",   "%B @ S%H",
+            "BodyName @ Sysname",   "%B @ %S%H",
             "YYYY-MM-DD HH-MM-SS Sysname @ BodyName", "%yyyy-%MM-%dd %HH-%mm-%ss %S @ %B%H",
             "DD-MM-YYYY HH-MM-SS Sysname @ BodyName","%dd-%MM-%yyyy %HH-%mm-%ss %S @ %B%H",
             "MM-DD-YYYY HH-MM-SS Sysname @ BodyName", "%MM-%dd-%yyyy %HH-%mm-%ss %S @ %B%H",
