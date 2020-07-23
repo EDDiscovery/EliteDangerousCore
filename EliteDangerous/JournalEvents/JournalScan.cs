@@ -170,6 +170,8 @@ namespace EliteDangerousCore.JournalEvents
                         return EfficientMapped ? EstimatedValueFirstMappedEfficiently : EstimatedValueFirstMapped;
                     else if (IsNotDiscovered)
                         return EstimatedValueFirstDiscovered;
+                    else if (Mapped)
+                        return EfficientMapped ? EstimatedValueMappedEfficiently : EstimatedValueMapped;
                 }
 
                 return EstimatedValueBase;
@@ -183,6 +185,8 @@ namespace EliteDangerousCore.JournalEvents
         public int EstimatedValueFirstDiscoveredFirstMappedEfficiently { get; private set; }           // with both efficiently
         public int EstimatedValueFirstMapped { get; private set; }             // with just mapped                 
         public int EstimatedValueFirstMappedEfficiently { get; private set; }             // with just mapped                 
+        public int EstimatedValueMapped { get; private set; }             // with just mapped
+        public int EstimatedValueMappedEfficiently { get; private set; }             // with just mapped
 
         public void SetMapped(bool m, bool e)
         {
@@ -785,7 +789,10 @@ namespace EliteDangerousCore.JournalEvents
             }
 
             if (EstimatedValueFirstDiscovered > 0 ) // if we have extra details, on planets, show the base value
+            {
+                scanText.AppendFormat("Mapped value: {0:N0}/{1:N0}e".T(EDTx.JournalScan_EVM) + "\n", EstimatedValueMapped, EstimatedValueMappedEfficiently);
                 scanText.AppendFormat("Base Estimated value: {0:N0}".T(EDTx.JournalScan_EV) + "\n", EstimatedValueBase);
+            }
 
             if (WasDiscovered.HasValue && WasDiscovered.Value)
                 scanText.AppendFormat("Already Discovered".T(EDTx.JournalScan_EVAD) + "\n");
@@ -2143,6 +2150,9 @@ namespace EliteDangerousCore.JournalEvents
 
                     EstimatedValueFirstMapped = (int)(basevalue * 8.0956);
                     EstimatedValueFirstMappedEfficiently = (int)(basevalue * 8.0956 * effmapped);
+
+                    EstimatedValueMapped = (int)(basevalue * 3.3333333333);
+                    EstimatedValueMappedEfficiently = (int)(basevalue * 3.3333333333 * effmapped);
                 }
             }
         }

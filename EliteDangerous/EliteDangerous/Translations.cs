@@ -441,6 +441,7 @@ namespace EliteDangerousCore
         JournalScan_MPIE, // Efficiently
         JournalScan_EVFD, //  First Discovered+Mapped value: {0:N0}
         JournalScan_EVFM, //  First Mapped value: {0:N0}
+        JournalScan_EVM, //  Mapped value: {0:N0}
         JournalScan_SCNT, //  Scan Type: {0}
         JournalScan_EVAD, //  Already Discovered
         JournalScan_EVAM, //  Already Mapped
