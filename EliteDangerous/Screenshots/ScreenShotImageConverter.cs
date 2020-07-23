@@ -19,6 +19,7 @@ using EliteDangerousCore;
 using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 
 
 namespace EliteDangerousCore.ScreenShots
@@ -46,25 +47,35 @@ namespace EliteDangerousCore.ScreenShots
             "CMDRName\\Sysname"
         };
 
-        public static string[] FileNameFormats = new string[]
+        private static string[] FileNameCtrl = new string[]
         {
-            "Sysname (YYYYMMDD-HHMMSS)",            //0
-            "Sysname (Windows dateformat)",
-            "YYYY-MM-DD HH-MM-SS Sysname",
-            "DD-MM-YYYY HH-MM-SS Sysname",
-            "MM-DD-YYYY HH-MM-SS Sysname",          //4
-            "HH-MM-SS Sysname",
-            "HH-MM-SS",
-            "Sysname",
-            "Keep original",                        // 8
-            "Sysname BodyName (YYYYMMDD-HHMMSS)",       //9
-            "Sysname BodyName (Windows dateformat)",
-            "YYYY-MM-DD HH-MM-SS Sysname BodyName",     //11
-            "DD-MM-YYYY HH-MM-SS Sysname BodyName",
-            "MM-DD-YYYY HH-MM-SS Sysname BodyName",     //13
-            "HH-MM-SS Sysname BodyName",        //14
-            "Sysname BodyName",                 //15
+            "Sysname (YYYYMMDD-HHMMSS)",  "%S (%yyyy%MM%dd-%HH%mm%ss)%H",
+            "Sysname (Windows dateformat)", "%S (%WT)%H",
+            "YYYY-MM-DD HH-MM-SS Sysname", "%yyyy-%MM-%dd %HH-%mm-%ss %S%H",
+            "DD-MM-YYYY HH-MM-SS Sysname", "%dd-%MM-%yyyy %HH-%mm-%ss %S%H",
+            "MM-DD-YYYY HH-MM-SS Sysname", "%MM-%dd-%yyyy %HH-%mm-%ss %S%H",
+            "HH-MM-SS Sysname", "%HH-%mm-%ss %S%H",
+            "HH-MM-SS", "%HH-%mm-%ss%H",
+            "Sysname", "%S%H",
+            "Keep original", "%O",
+            "Sysname BodyName (YYYYMMDD-HHMMSS)",   "%S %B (%yyyy%MM%dd-%HH%mm%ss)%H",
+            "Sysname BodyName (Windows dateformat)", "%S %B (%WT)%H",
+            "YYYY-MM-DD HH-MM-SS Sysname-BodyName", "%yyyy-%MM-%dd %HH-%mm-%ss %S%BD%H",
+            "DD-MM-YYYY HH-MM-SS Sysname-BodyName","%dd-%MM-%yyyy %HH-%mm-%ss %S%BD%H",
+            "MM-DD-YYYY HH-MM-SS Sysname-BodyName", "%MM-%dd-%yyyy %HH-%mm-%ss %S%BD%H",
+            "HH-MM-SS Sysname-BodyName",        "%HH-%mm-%ss %S%BD%H",
+            "Sysname-BodyName",               "%S%BD%H",
+            "YYYY-MM-DD_HH-MM-SS_Sysname",    "%yyyy-%MM-%dd_%HH-%mm-%ss_%S%H",
+            "YYYY-MM-DD_HH-MM-SS_Sysname_BodyName",     "%yyyy-%MM-%dd_%HH-%mm-%ss_%S_%B%H",
+            "YYYY-MM-DD HH-MM-SS Sysname @ BodyName",   "%yyyy-%MM-%dd %HH-%mm-%ss %S @ %B%H",
+            "Sysname @ BodyName",   "%S @ %B%H",
+            "BodyName @ Sysname",   "%B @ S%H",
+            "YYYY-MM-DD HH-MM-SS Sysname @ BodyName", "%yyyy-%MM-%dd %HH-%mm-%ss %S @ %B%H",
+            "DD-MM-YYYY HH-MM-SS Sysname @ BodyName","%dd-%MM-%yyyy %HH-%mm-%ss %S @ %B%H",
+            "MM-DD-YYYY HH-MM-SS Sysname @ BodyName", "%MM-%dd-%yyyy %HH-%mm-%ss %S @ %B%H",
         };
+
+        public static string[] FileNameFormats = FileNameCtrl.Where((s,i)=>i%2 ==0).ToArray();      // every other is a selection
 
         // Configuration
 
@@ -318,66 +329,68 @@ namespace EliteDangerousCore.ScreenShots
         {
             cur_sysname = cur_sysname.SafeFileString();
             cur_bodyname = cur_bodyname.SafeFileString();
+            bool hasbodyname = cur_bodyname.Length > 0;
 
-            string postfix = (hires && Path.GetFileName(inputfile).Contains("HighRes")) ? " (HighRes)" : "";
-            string bodyinsert = (formatindex >= 9 && formatindex <= 15 && cur_bodyname.Length > 0) ? ("-" + cur_bodyname) : "";
+            string ctrl = (formatindex >= 0 && formatindex < FileNameFormats.Length) ? FileNameCtrl[formatindex * 2 + 1] : "%O";    // being paranoid
 
-            switch (formatindex)
+            System.Text.StringBuilder b = new System.Text.StringBuilder();
+            for (int i = 0; i < ctrl.Length; i++)
             {
-                case 0:
-                case 9:
-                    return cur_sysname + bodyinsert + " (" + timestamp.ToString("yyyyMMdd-HHmmss") + ")" + postfix;
-
-                case 1:
-                case 10:
-                    {
-                        string time = timestamp.ToString();
-                        time = time.Replace(":", "-");
-                        time = time.Replace("/", "-");          // Rob found it was outputting 21/2/2020 on mine, so we need more replaces
-                        time = time.Replace("\\", "-");
-                        return cur_sysname + bodyinsert + " (" + time + ")" + postfix;
-                    }
-                case 2:
-                case 11:
-                    {
-                        string time = timestamp.ToString("yyyy-MM-dd HH-mm-ss");
-                        return time + " " + cur_sysname + bodyinsert + postfix;
-                    }
-                case 3:
-                case 12:
-                    {
-                        string time = timestamp.ToString("dd-MM-yyyy HH-mm-ss");
-                        return time + " " + cur_sysname + bodyinsert + postfix;
-                    }
-                case 4:
-                case 13:
-                    {
-                        string time = timestamp.ToString("MM-dd-yyyy HH-mm-ss");
-                        return time + " " + cur_sysname + bodyinsert + postfix;
-                    }
-
-                case 5:
-                case 14:
-                    {
-                        string time = timestamp.ToString("HH-mm-ss");
-                        return time + " " + cur_sysname + bodyinsert + postfix;
-                    }
-
-                case 6:
-                    {
-                        string time = timestamp.ToString("HH-mm-ss");
-                        return time + postfix;
-                    }
-
-                case 7:
-                case 15:
-                    {
-                        return cur_sysname + bodyinsert + postfix;
-                    }
-
-                default:
-                    return Path.GetFileNameWithoutExtension(inputfile);
+                string part = ctrl.Substring(i);
+                if (part.StartsWith("%yyyy") )
+                {
+                    b.Append(timestamp.ToString("yyyy"));
+                    i += 4;
+                }
+                else if (part.StartsWith("%MM") || part.StartsWith("%dd") || part.StartsWith("%HH") || part.StartsWith("%mm") || part.StartsWith("%ss") )
+                {
+                    b.Append(timestamp.ToString(part.Substring(1,2)));
+                    i += 2;
+                }
+                else if (part.StartsWith("%WT"))
+                {
+                    string time = timestamp.ToString();
+                    time = time.Replace(":", "-");
+                    time = time.Replace("/", "-");          // Rob found it was outputting 21/2/2020 on mine, so we need more replaces
+                    time = time.Replace("\\", "-");
+                    time = time.SafeFileString();
+                    b.Append(time);
+                    i += 2;
+                }
+                else if (part.StartsWith("%BD"))
+                {
+                    if (hasbodyname)
+                        b.Append("-" + cur_bodyname);
+                    i += 2;
+                }
+                else if (part.StartsWith("%B"))
+                {
+                    b.Append(cur_bodyname);
+                    i += 1;
+                }
+                else if (part.StartsWith("%S"))
+                {
+                    b.Append(cur_sysname);
+                    i += 1;
+                }
+                else if (part.StartsWith("%H"))
+                {
+                    if (hires && Path.GetFileName(inputfile).Contains("HighRes"))
+                        b.Append(" (HighRes)");
+                    i += 1;
+                }
+                else if (part.StartsWith("%O"))
+                {
+                    b.Append(Path.GetFileNameWithoutExtension(inputfile));
+                    i += 1;
+                }
+                else
+                {
+                    b.Append(ctrl[i]);
+                }
             }
+
+            return b.ToString();
         }
 
         static void CopyClipboardSafe(Bitmap bmp, Action<string> logit)

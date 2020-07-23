@@ -52,6 +52,8 @@ namespace EliteDangerousCore.ScreenShots
 
         public void Init(ScreenShotImageConverter cf , bool enabled, string inputfolder, ScreenShotConverter.InputTypes it, string outputfolder)
         {
+            comboBoxFileNameFormat.Items.AddRange(ScreenShotImageConverter.FileNameFormats);
+            comboBoxFileNameFormat.SelectedIndex = cf.FileNameFormat;
             extCheckBoxEnabled.Checked = enabled;
             comboBoxOutputAs.Items.AddRange(Enum.GetNames(typeof(ScreenShotImageConverter.OutputTypes)));
             comboBoxOutputAs.SelectedIndex = (int)cf.OutputFileExtension;
@@ -61,8 +63,6 @@ namespace EliteDangerousCore.ScreenShots
             textBoxOutputDir.Text = outputfolder;
             comboBoxSubFolder.Items.AddRange(ScreenShotImageConverter.SubFolderSelections);
             comboBoxSubFolder.SelectedIndex = cf.FolderNameFormat;
-            comboBoxFileNameFormat.Items.AddRange(ScreenShotImageConverter.FileNameFormats);
-            comboBoxFileNameFormat.SelectedIndex = cf.FileNameFormat;
             string[] opt = new string[] { "Off", "Crop", "Resize" };
             extComboBoxConvert1.Items.AddRange(opt);
             extComboBoxConvert2.Items.AddRange(opt);
