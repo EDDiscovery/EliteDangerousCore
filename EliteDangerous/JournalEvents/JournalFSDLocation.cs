@@ -741,7 +741,11 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", JumpType, "< to ".T(EDTx.JournalEntry_to), StarSystem, "", FriendlyStarClass);
+            if (IsHyperspace)
+                info = "Hyperspace".T(EDTx.JournalEntry_Hyperspace) + " " + BaseUtils.FieldBuilder.Build("<to ".T(EDTx.JournalEntry_to), StarSystem, "", FriendlyStarClass);
+            else
+                info = "Supercruise".T(EDTx.JournalEntry_Supercruise);
+
             detailed = "";
         }
     }

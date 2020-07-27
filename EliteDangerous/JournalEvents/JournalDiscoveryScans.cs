@@ -54,7 +54,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Progress:;%;N1".T(EDTx.JournalFSSDiscoveryScan_Progress), Progress, "Bodies:", BodyCount, "Others:".T(EDTx.JournalFSSDiscoveryScan_Others), NonBodyCount);
+            info = BaseUtils.FieldBuilder.Build("Progress:;%;N1".T(EDTx.JournalFSSDiscoveryScan_Progress), Progress, 
+                "Bodies:".T(EDTx.JournalFSSDiscoveryScan_Bodies), BodyCount, "Others:".T(EDTx.JournalFSSDiscoveryScan_Others), NonBodyCount);
             detailed = "";
         }
     }

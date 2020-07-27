@@ -105,7 +105,7 @@ namespace EliteDangerousCore.JournalEvents
                     info = info.AppendPrePad(n, ", ");
                     detailed = detailed.AppendPrePad(n + " @ " + r.StarPos.X.ToString("N1") + "," + r.StarPos.Y.ToString("N1") + "," + r.StarPos.Z.ToString("N1") + " " + r.StarClass, System.Environment.NewLine);
                 }
-                info = string.Format("{0} jumps: ".T(EDTx.BankAccountClass_InsuranceClaims), Route.Length-1) + info;
+                info = string.Format("{0} jumps: ".T(EDTx.JournalNavRoute_Jumps), Route.Length-1) + info;
             }
         }
 

@@ -218,6 +218,8 @@ SECTION JournalCargo
 
 SECTION JournalFSSDiscoveryScan
 
+.Progress: "Progress:;%;N1" @
+.Bodies: "Bodies:" @
 .Others: "Others:" @
 
 SECTION JournalCodexEntry
@@ -764,12 +766,17 @@ SECTION JournalUnknown
 
 .UnhandledJournalevent: "Unhandled Journal event, Report to EDDiscovery team. " @
 
+SECTION JournalNavRoute
+.Jumps: "{0} jumps: " @
+
 SECTION JournalApproachBody
 
 .In: "In " @
 
 SECTION JournalEntry
 
+.Hyperspace: "Hyperspace" @
+.Supercruise: "Supercruise" @
 .LegBounty: "{0} total {1:N0}" @
 .Target: "Target:" @
 .Victimfaction: "Victim faction:" @

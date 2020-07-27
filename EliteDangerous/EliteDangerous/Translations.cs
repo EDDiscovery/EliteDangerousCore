@@ -364,6 +364,8 @@ namespace EliteDangerousCore
         CQCClass_Kills, // Kills:;;N0
         CQCClass_Win, // Win/Loss:;;N
 
+        JournalNavRoute_Jumps, // "{0} jumps: "
+
         JournalScan_Autoscanof, // Autoscan of {0}
         JournalScan_Detailedscanof, // Detailed scan of {0}
         JournalScan_Basicscanof, // Basic scan of {0}
@@ -471,7 +473,11 @@ namespace EliteDangerousCore
         FSSSignal_ThreatLevel, //  Threat Level:
         FSSSignal_StationBool, // ;Station
 
+        JournalEntry_Hyperspace,
+        JournalEntry_Supercruise,
+
         JournalFSSDiscoveryScan_Progress, // Progress:;%;N1
+        JournalFSSDiscoveryScan_Bodies, // Bodies:
         JournalFSSDiscoveryScan_Others, // Others:
 
         JournalFSSSignalDiscovered_Detected, // Detected ; signals
