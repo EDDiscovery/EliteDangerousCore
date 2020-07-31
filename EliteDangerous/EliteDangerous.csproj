@@ -112,6 +112,7 @@
     <Compile Include="Journal\JournalEssentialEvents.cs" />
     <Compile Include="Journal\JournalEntryDB.cs" />
     <Compile Include="Journal\JournalEnums.cs" />
+    <Compile Include="NewtonJSONObjectExtensions.cs" />
     <Compile Include="Screenshots\ScreenShotConfigureForm.cs">
       <SubType>Form</SubType>
     </Compile>
