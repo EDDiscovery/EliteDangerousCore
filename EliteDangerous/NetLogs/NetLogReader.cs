@@ -21,7 +21,7 @@ using System.Globalization;
 using EliteDangerousCore.DB;
 using System.IO;
 using EliteDangerousCore.JournalEvents;
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 
 namespace EliteDangerousCore
 {

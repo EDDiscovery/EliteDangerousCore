@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 EDDiscovery development team
+ * Copyright © 2020 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -13,13 +13,11 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+
+using EliteDangerousCore.JournalEvents;
 using System;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Threading;
-using EliteDangerousCore;
-using EliteDangerousCore.JournalEvents;
 
 namespace EliteDangerousCore.IGAU
 {
@@ -87,7 +85,7 @@ namespace EliteDangerousCore.IGAU
                             var msg = igau.CreateIGAUMessage(he.EventTimeUTC.ToStringZulu(),
                                                               c.EntryID.ToString(), c.Name, c.Name_Localised, c.System, c.SystemAddress?.ToString() ?? "0");
 
-                            System.Diagnostics.Debug.WriteLine("IGAU Post " + msg.ToString(Newtonsoft.Json.Formatting.Indented));
+                            System.Diagnostics.Debug.WriteLine("IGAU Post " + msg.ToString(true));
 
                             // comment ball the ack in when your ready to try!
 

@@ -13,7 +13,7 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -130,7 +130,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 Ingredients = new Dictionary<string, int>();
 
-                if (mats.Type == JTokenType.Object)
+                if (mats.IsObject)
                 {
                     Dictionary<string, int> temp = mats?.ToObjectProtected<Dictionary<string, int>>();
 
@@ -144,7 +144,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     foreach (JObject jo in (JArray)mats)
                     {
-                        Ingredients[JournalFieldNaming.FDNameTranslation((string)jo["Name"])] = jo["Count"].Int();
+                        Ingredients[JournalFieldNaming.FDNameTranslation(jo["Name"].Str("Default"))] = jo["Count"].Int();
                     }
                 }
             }
@@ -227,7 +227,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public JournalEngineerProgress(JObject evt) : base(evt, JournalTypeEnum.EngineerProgress)
         {
-            Engineers = evt["Engineers"]?.ToObjectProtected<ProgressInformation[]>().OrderBy(x => x.Engineer)?.ToArray();       // 3.3 introduced this at startup
+            Engineers = evt["Engineers"]?.ToObjectProtected<ProgressInformation[]>()?.OrderBy(x => x.Engineer)?.ToArray();       // 3.3 introduced this at startup
 
             if (Engineers == null)
             {

@@ -13,11 +13,9 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+
+ using BaseUtils.JSON;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace EliteDangerousCore.JournalEvents
 {

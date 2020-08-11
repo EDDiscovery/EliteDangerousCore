@@ -16,7 +16,7 @@
 
 using EliteDangerousCore.DB;
 using EliteDangerousCore.JournalEvents;
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -30,24 +30,6 @@ namespace EliteDangerousCore
 
     public abstract partial class JournalEntry
     {
-        static protected JournalEntry CreateJournalEntry(DataRow dr)
-        {
-            string EDataString = (string)dr["EventData"];
-
-            JournalEntry jr = JournalEntry.CreateJournalEntry(EDataString);     // this sets EventTypeId, EventTypeStr and UTC via constructor above.. 
-
-            jr.Id = (int)(long)dr["Id"];
-            jr.TLUId = (int)(long)dr["TravelLogId"];
-            jr.CommanderId = (int)(long)dr["CommanderId"];
-            if (jr.EventTimeUTC == default(DateTime))
-                jr.EventTimeUTC = (DateTime)dr["EventTime"];
-            if (jr.EventTypeID == JournalTypeEnum.Unknown)
-                jr.EventTypeID = (JournalTypeEnum)(long)dr["eventTypeID"];
-            jr.EdsmID = (long)dr["EdsmID"];
-            jr.Synced = (int)(long)dr["Synced"];
-            return jr;
-        }
-
         static protected JournalEntry CreateJournalEntry(DbDataReader dr)
         {
             string EDataString = (string)dr["EventData"];
@@ -249,9 +231,14 @@ namespace EliteDangerousCore
 
         private JObject JsonCached { get; set; }             // New entries scanned thru the readers get this, ones from history rely on looking up in DB 
 
+        public string GetJsonString()       // null if no JSON - not likely.
+        {
+            return GetJson()?.ToString();
+        }
+
         public JObject GetJsonCloned()      // you may modify this
         {
-            return (JObject)GetJson().DeepClone(); 
+            return (JObject)GetJson().Clone();
         }
 
         public JObject GetJson()            // do not modify

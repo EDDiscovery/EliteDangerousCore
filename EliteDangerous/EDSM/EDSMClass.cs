@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 EDDiscovery development team
+ * Copyright © 2016-2020 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -13,19 +13,19 @@
  * 
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using EliteDangerousCore;
+
 using EliteDangerousCore.DB;
 using EliteDangerousCore.JournalEvents;
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Web;
-using System.Linq;
 
 namespace EliteDangerousCore.EDSM
 {
@@ -124,19 +124,19 @@ namespace EliteDangerousCore.EDSM
                 if (distances != null)
                     foreach (var st in distances)
                     {
-                        int statusnum = st["msgnum"].Value<int>();
+                        int statusnum = st["msgnum"].Int();
 
                         if (statusnum == 201)
                             retval = false;
 
-                        respstr += "Status " + statusnum.ToString() + " : " + st["msg"].Value<string>() + Environment.NewLine;
+                        respstr += "Status " + statusnum.ToString() + " : " + st["msg"].Str() + Environment.NewLine;
 
                     }
 
                 if (basesystem != null)
                 {
 
-                    int statusnum = basesystem["msgnum"].Value<int>();
+                    int statusnum = basesystem["msgnum"].Int();
 
                     if (statusnum == 101)
                         retval = false;
@@ -144,7 +144,7 @@ namespace EliteDangerousCore.EDSM
                     if (statusnum == 102 || statusnum == 104)
                         trilOK = true;
 
-                    respstr += "System " + statusnum.ToString() + " : " + basesystem["msg"].Value<string>() + Environment.NewLine;
+                    respstr += "System " + statusnum.ToString() + " : " + basesystem["msg"].Str() + Environment.NewLine;
                 }
 
                 return retval;
@@ -323,7 +323,7 @@ namespace EliteDangerousCore.EDSM
                 try
                 {
                     JObject msg = JObject.Parse(json);                  // protect against bad json - seen in the wild
-                    int msgnr = msg["msgnum"].Value<int>();
+                    int msgnr = msg["msgnum"].Int();
 
                     JArray comments = (JArray)msg["comments"];
                     if (comments != null)
@@ -332,9 +332,9 @@ namespace EliteDangerousCore.EDSM
 
                         foreach (JObject jo in comments)
                         {
-                            string name = jo["system"].Value<string>();
-                            string note = jo["comment"].Value<string>();
-                            string utctime = jo["lastUpdate"].Value<string>();
+                            string name = jo["system"].Str();
+                            string note = jo["comment"].Str();
+                            string utctime = jo["lastUpdate"].Str();
                             int edsmid = 0;
 
                             if (!Int32.TryParse(jo["systemId"].Str("0"), out edsmid))
@@ -456,8 +456,8 @@ namespace EliteDangerousCore.EDSM
 
                 if (logs != null)
                 {
-                    string startdatestr = msg["startDateTime"].Value<string>();
-                    string enddatestr = msg["endDateTime"].Value<string>();
+                    string startdatestr = msg["startDateTime"].Str();
+                    string enddatestr = msg["endDateTime"].Str();
                     if (startdatestr == null || !DateTime.TryParseExact(startdatestr, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out logstarttime))
                         logstarttime = DateTime.MaxValue;
                     if (enddatestr == null || !DateTime.TryParseExact(enddatestr, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out logendtime))
@@ -469,9 +469,9 @@ namespace EliteDangerousCore.EDSM
 
                         foreach (JObject jo in logs)
                         {
-                            string name = jo["system"].Value<string>();
-                            string ts = jo["date"].Value<string>();
-                            long id = jo["systemId"].Value<long>();
+                            string name = jo["system"].Str();
+                            string ts = jo["date"].Str();
+                            long id = jo["systemId"].Long();
                             DateTime etutc = DateTime.ParseExact(ts, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal); // UTC time
 
                             ISystem sc = DB.SystemCache.FindSystem(name, id, db);
@@ -488,10 +488,10 @@ namespace EliteDangerousCore.EDSM
                     {
                         var jo = js.Item1;
                         var sc = js.Item2;
-                        string name = jo["system"].Value<string>();
-                        string ts = jo["date"].Value<string>();
-                        long id = jo["systemId"].Value<long>();
-                        bool firstdiscover = jo["firstDiscover"].Value<bool>();
+                        string name = jo["system"].Str();
+                        string ts = jo["date"].Str();
+                        long id = jo["systemId"].Long();
+                        bool firstdiscover = jo["firstDiscover"].Bool();
                         DateTime etutc = DateTime.ParseExact(ts, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal); // UTC time
 
                         if (sc == null)
@@ -673,7 +673,7 @@ namespace EliteDangerousCore.EDSM
                     return "";
 
                 JObject msg = JObject.Parse(json);
-                sysID = msg["id"].Value<string>();
+                sysID = msg["id"].Str();
             }
 
             string url = base.httpserveraddress + "system/id/" + sysID + "/name/" + encodedSys;
@@ -793,6 +793,7 @@ namespace EliteDangerousCore.EDSM
                             try
                             {
                                 JObject jbody = EDSMClass.ConvertFromEDSMBodies(edsmbody);
+
                                 JournalScan js = new JournalScan(jbody, sys.EDSMID);
 
                                 bodies.Add(js);
@@ -855,7 +856,7 @@ namespace EliteDangerousCore.EDSM
                 ["BodyName"] = jo["name"],
             };
 
-            if (jo["discovery"] != null && jo["discovery"].HasValues)       // much more defense around this.. EDSM gives discovery=null back
+            if (!jo["discovery"].IsNull())       // much more defense around this.. EDSM gives discovery=null back
             {
                 jout["discovery"] = jo["discovery"];
             }
@@ -873,16 +874,16 @@ namespace EliteDangerousCore.EDSM
             if (jo["parents"] != null) jout["Parents"] = jo["parents"];
             if (jo["id64"] != null) jout["BodyID"] = jo["id64"].Long() >> 55;
 
-            if (!jo["type"].Empty())
+            if (!jo["type"].IsNull())
             {
-                if (jo["type"].Value<string>().Equals("Star"))
+                if (jo["type"].Str().Equals("Star"))
                 {
                     jout["StarType"] = EDSMStar2JournalName(jo["subType"].StrNull());           // pass thru null to code, it will cope with it
                     jout["Age_MY"] = jo["age"];
                     jout["StellarMass"] = jo["solarMasses"];
                     jout["Radius"] = jo["solarRadius"].Double() * JournalScan.oneSolRadius_m; // solar-rad -> metres
                 }
-                else if (jo["type"].Value<string>().Equals("Planet"))
+                else if (jo["type"].Str().Equals("Planet"))
                 {
                     jout["Landable"] = jo["isLandable"];
                     jout["MassEM"] = jo["earthMasses"];
@@ -906,7 +907,7 @@ namespace EliteDangerousCore.EDSM
 
             JArray rings = (jo["belts"] ?? jo["rings"]) as JArray;
 
-            if (!rings.Empty())
+            if (!rings.IsNull())
             {
                 JArray jring = new JArray();
 
@@ -925,7 +926,7 @@ namespace EliteDangerousCore.EDSM
                 jout["Rings"] = jring;
             }
 
-            if (!jo["materials"].Empty())  // Check if materials has null
+            if (!jo["materials"].IsNull())  // Check if materials has stuff
             {
                 Dictionary<string, double?> mats;
                 Dictionary<string, double> mats2;
@@ -1031,9 +1032,9 @@ namespace EliteDangerousCore.EDSM
                               "&apiKey=" + Uri.EscapeDataString(apiKey) +
                               "&fromSoftware=" + Uri.EscapeDataString(SoftwareName) +
                               "&fromSoftwareVersion=" + Uri.EscapeDataString(fromSoftwareVersion) +
-                              "&message=" + EscapeLongDataString(message.ToString(Newtonsoft.Json.Formatting.None));
+                              "&message=" + EscapeLongDataString(message.ToString());
 
-          //  BaseUtils.HttpCom.WriteLog(message.ToString(Newtonsoft.Json.Formatting.Indented), "");
+          //  BaseUtils.HttpCom.WriteLog(message.ToString(), "");
 
             MimeType = "application/x-www-form-urlencoded";
             var response = RequestPost(postdata, "api-journal-v1", handleException: true);

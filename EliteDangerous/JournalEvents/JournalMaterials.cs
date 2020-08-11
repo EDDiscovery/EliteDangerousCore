@@ -13,7 +13,7 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +27,7 @@ namespace EliteDangerousCore.JournalEvents
         public class Material
         {
             public string Name { get; set; }        //FDNAME
+            public string Name_Localised { get; set; }    
             public string FriendlyName { get; set; }        //friendly
             public int Count { get; set; }
 
@@ -301,7 +302,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 Materials = new Dictionary<string, int>();
 
-                if (mats.Type == JTokenType.Object)
+                if (mats.IsObject)
                 {
                     Dictionary<string, int> temp = mats?.ToObjectProtected<Dictionary<string, int>>();
 
@@ -315,7 +316,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     foreach (JObject ja in (JArray)mats)
                     {
-                        Materials[JournalFieldNaming.FDNameTranslation((string)ja["Name"])] = ja["Count"].Int();
+                        Materials[JournalFieldNaming.FDNameTranslation(ja["Name"].Str("Default"))] = ja["Count"].Int();
                     }
                 }
             }

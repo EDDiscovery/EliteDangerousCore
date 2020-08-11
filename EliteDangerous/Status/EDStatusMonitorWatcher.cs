@@ -14,7 +14,7 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
@@ -157,7 +157,7 @@ namespace EliteDangerousCore
 
                         //System.Diagnostics.Debug.WriteLine("New status text " + text);
 
-                        jo = (JObject)JObject.Parse(text);  // and of course the json could be crap
+                        jo = JObject.Parse(text);  // and of course the json could be crap
 
                         prev_text = text;       // set after successful parse
                     }
@@ -171,11 +171,11 @@ namespace EliteDangerousCore
 
                     if (jo != null)
                     {
-                        DateTime EventTimeUTC = DateTime.Parse(jo.Value<string>("timestamp"), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
-
+                        DateTime EventTimeUTC = jo["timestamp"].DateTimeUTC();
+                            
                         List<UIEvent> events = new List<UIEvent>();
 
-                        long curflags = (long)jo["Flags"].Long();
+                        long curflags = jo["Flags"].Long();
 
                         bool fireoverall = false;
                         bool fireoverallrefresh = prev_guifocus == -1;     //meaning its a refresh
@@ -209,7 +209,7 @@ namespace EliteDangerousCore
                             fireoverall = true;
                         }
 
-                        int curguifocus = (int)jo["GuiFocus"].Int();
+                        int curguifocus = jo["GuiFocus"].Int();
                         if (curguifocus != prev_guifocus)
                         {
                             events.Add(new UIEvents.UIGUIFocus(curguifocus, EventTimeUTC, prev_guifocus == -1));
@@ -249,9 +249,9 @@ namespace EliteDangerousCore
                             fireoverall = true;
                         }
 
-                        JToken jfuel = (JToken)jo["Fuel"];
+                        JToken jfuel = jo["Fuel"];
 
-                        if (jfuel != null && jfuel.Type == JTokenType.Object)        // because they changed its type in 3.3.2
+                        if (jfuel != null && jfuel.IsObject)        // because they changed its type in 3.3.2
                         {
                             double? curfuel = jfuel["FuelMain"].DoubleNull();
                             double? curres = jfuel["FuelReservoir"].DoubleNull();

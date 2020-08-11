@@ -15,7 +15,7 @@
  */
 
 using EliteDangerousCore;
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents

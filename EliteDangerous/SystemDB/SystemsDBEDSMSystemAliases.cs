@@ -14,10 +14,9 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
-using Newtonsoft.Json;
+using BaseUtils.JSON;
 using System.IO;
 using System.Data.Common;
-using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System;
 
@@ -37,13 +36,7 @@ namespace EliteDangerousCore.DB
                 return ParseAlias(sr);
         }
 
-        public static long ParseAlias(TextReader sr)
-        {
-            using (JsonTextReader jr = new JsonTextReader(sr))
-                return ParseAlias(jr);
-        }
-
-        public static long ParseAlias(JsonTextReader jr)
+        public static long ParseAlias(TextReader textreader)
         {
             return SystemsDatabase.Instance.ExecuteWithDatabase(func: db =>
             {
@@ -63,27 +56,33 @@ namespace EliteDangerousCore.DB
                         deletesystemcmd = cn.CreateDelete("Systems", "edsmid=@edsmid", paras: new string[] { "edsmid:int64" }, tx: txn);
                         insertCmd = cn.CreateReplace("Aliases", paras: new string[] { "edsmid:int64", "edsmid_mergedto:int64", "name:string" }, tx: txn);
 
+                        var parser = new BaseUtils.StringParserQuickTextReader(textreader, 32768);
+                        var enumerator = JToken.ParseToken(parser, JToken.ParseOptions.None).GetEnumerator();
+
                         try
                         {       // protect against json exceptions
                             while (true)
                             {
-                                if (!jr.Read())
+                                if ( !enumerator.MoveNext())
                                 {
                                     break;
                                 }
 
-                                if (jr.TokenType == JsonToken.StartObject)
-                                {
-                                    JObject jo = JObject.Load(jr);
+                                JToken t = enumerator.Current;
 
-                                    long edsmid = (long)jo["id"];
-                                    string name = (string)jo["system"];
-                                    string action = (string)jo["action"];
+                                if (t.IsObject)
+                                {
+                                    enumerator.Load();          // load all objects associated with the entry
+                                    JObject jo = t as JObject;
+
+                                    long edsmid = jo["id"].Long();
+                                    string name = jo["system"].Str("Default");
+                                    string action = jo["action"].Str("NOP");
                                     long mergedto = 0;
 
                                     if (jo["mergedTo"] != null)
                                     {
-                                        mergedto = (long)jo["mergedTo"];
+                                        mergedto = jo["mergedTo"].Long();
                                     }
 
                                     if (action.Contains("delete system", System.StringComparison.InvariantCultureIgnoreCase))

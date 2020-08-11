@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 EDDiscovery development team
+ * Copyright © 2016-2020 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -14,7 +14,7 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -32,7 +32,7 @@ namespace EliteDangerousCore.DB
             public double Latitude;
             public double Longitude;
 
-            [Newtonsoft.Json.JsonIgnore]
+            [JsonIgnore]
             public bool IsWholePlanetBookmark { get { return Name== "" && Latitude == 0 && Longitude == 0; } }
         }
 
@@ -53,7 +53,7 @@ namespace EliteDangerousCore.DB
                 JObject jo = JObject.Parse(json);
                 if (jo["Marks"] != null)
                 {
-                    Planets = jo["Marks"].ToObjectProtected<List<Planet>>();
+                    Planets = jo["Marks"].ToObjectProtected<List<Planet>>();        //verified with basutils.json
                 }
             }
             catch (Exception ex)
@@ -72,11 +72,11 @@ namespace EliteDangerousCore.DB
             {
                 JArray ja = new JArray();
                 foreach (Planet p in Planets)
-                    ja.Add(JObject.FromObject(p));
+                    ja.Add(JObject.FromObject(p));       //verified with basutils.json
 
                 JObject overall = new JObject();
                 overall["Marks"] = ja;
-                return overall.ToString(Newtonsoft.Json.Formatting.Indented);
+                return overall.ToString();
             }
             else
                 return null;

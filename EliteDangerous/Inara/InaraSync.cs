@@ -15,12 +15,12 @@
  */
 
 using EliteDangerousCore.JournalEvents;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using BaseUtils.JSON;
 
 namespace EliteDangerousCore.Inara
 {

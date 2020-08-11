@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 EDDiscovery development team
+ * Copyright © 2016-2020 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -13,15 +13,15 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
-using System.Threading;
-using EliteDangerousCore;
-using EliteDangerousCore.JournalEvents;
+
 using EliteDangerousCore.DB;
+using EliteDangerousCore.JournalEvents;
+using BaseUtils.JSON;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace EliteDangerousCore.EDSM
 {
@@ -140,11 +140,11 @@ namespace EliteDangerousCore.EDSM
 
         private static JObject RemoveCommonKeys(JObject obj)
         {
-            foreach (JProperty prop in obj.Properties().ToList())
+            foreach (var key in obj.PropertyNames())
             {
-                if (prop.Name.StartsWith("EDD"))
+                if (key.StartsWith("EDD"))
                 {
-                    obj.Remove(prop.Name);
+                    obj.Remove(key);
                 }
             }
 
@@ -428,7 +428,7 @@ namespace EliteDangerousCore.EDSM
                 }
 
                 RemoveCommonKeys(json);
-                if (je.EventTypeID == JournalTypeEnum.FSDJump && json["FuelUsed"].Empty())
+                if (je.EventTypeID == JournalTypeEnum.FSDJump && json["FuelUsed"].IsNull())
                     json["_convertedNetlog"] = true;
                 if (json["StarPosFromEDSM"].Bool(false)) // Remove star pos from EDSM
                     json.Remove("StarPos");

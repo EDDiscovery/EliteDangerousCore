@@ -13,7 +13,7 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
@@ -80,6 +80,7 @@ namespace EliteDangerousCore.JournalEvents
         public class Material
         {
             public string Name { get; set; }        //FDNAME
+            public string Name_Localised { get; set; }     
             public string FriendlyName { get; set; }        //friendly
             public double Proportion { get; set; }      // 0-100
 

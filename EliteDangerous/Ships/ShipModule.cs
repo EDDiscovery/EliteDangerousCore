@@ -14,7 +14,7 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
- using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System;
 
 namespace EliteDangerousCore
@@ -197,7 +197,7 @@ namespace EliteDangerousCore
                 Level = evt["Level"].Int();
                 Quality = evt["Quality"].Double(0);
                 // EngineerCraft has it as Apply.. Loadout has just ExperimentalEffect.  Check both
-                ExperimentalEffect = JSONObjectExtensions.GetMultiStringDef(evt, new string[] { "ExperimentalEffect", "ApplyExperimentalEffect" });
+                ExperimentalEffect = evt.MultiStr(new string[] { "ExperimentalEffect", "ApplyExperimentalEffect" });
                 ExperimentalEffect_Localised = JournalFieldNaming.CheckLocalisation(evt["ExperimentalEffect_Localised"].Str(),ExperimentalEffect);
 
                 Modifiers = evt["Modifiers"]?.ToObjectProtected<EngineeringModifiers[]>();
@@ -211,7 +211,7 @@ namespace EliteDangerousCore
 
             public JObject ToJSONLoadout()  // reproduce the loadout format..
             {
-                JObject jo = new JObject();
+                var jo = new JObject();
                 jo["Engineer"] = Engineer;
                 jo["EngineerID"] = EngineerID;
                 jo["BlueprintID"] = BlueprintID;
@@ -227,7 +227,7 @@ namespace EliteDangerousCore
 
                 if ( Modifiers != null )
                 {
-                    JArray modarray = new JArray();
+                    var modarray = new JArray();
                     foreach( EngineeringModifiers m in Modifiers )
                     {
                         JObject mod = new JObject();

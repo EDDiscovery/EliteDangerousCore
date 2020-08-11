@@ -16,7 +16,7 @@
 
 using EliteDangerousCore.DB;
 using EliteDangerousCore.JournalEvents;
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -373,14 +373,14 @@ namespace EliteDangerousCore
         {
             JObject jcopy = null;
 
-            foreach (JProperty prop in obj.Properties().ToList())
+            foreach (var kvp in obj)
             {
-                if (prop.Name.StartsWith("EDD") || prop.Name.Equals("StarPosFromEDSM"))//|| (removeLocalised && prop.Name.EndsWith("_Localised")))
+                if (kvp.Key.StartsWith("EDD") || kvp.Key.Equals("StarPosFromEDSM"))
                 {
                     if (jcopy == null)      // only pay the expense if it has one of the entries in it
-                        jcopy = (JObject)obj.DeepClone();
+                        jcopy = (JObject)obj.Clone();
 
-                    jcopy.Remove(prop.Name);
+                    jcopy.Remove(kvp.Key);
                 }
             }
 
@@ -416,7 +416,7 @@ namespace EliteDangerousCore
             JObject ent1jorm = RemoveEDDGeneratedKeys(ent1jo);     // remove keys, but don't alter originals as they can be used later 
             JObject ent2jorm = RemoveEDDGeneratedKeys(ent2jo);
 
-            return JToken.DeepEquals(ent1jorm, ent2jorm);
+            return JToken.Equals(ent1jorm, ent2jorm);
         }
 
         protected JObject ReadAdditionalFile( string extrafile, bool waitforfile, bool checktimestamptype )       // read file, return new JSON
@@ -432,8 +432,7 @@ namespace EliteDangerousCore
                         JObject joaf = JObject.Parse(json);       // this has the full version of the event, including data, at the same timestamp
 
                         string newtype = joaf["event"].Str();
-                        DateTime newUTC = DateTime.Parse(joaf.Value<string>("timestamp"), System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeUniversal | System.Globalization.DateTimeStyles.AdjustToUniversal);
-
+                        DateTime newUTC = joaf["timestamp"].DateTimeUTC();
                         if (checktimestamptype == false || (newUTC != null && newUTC == EventTimeUTC && newtype == EventTypeStr))
                         {
                             return joaf;                        // good current file..

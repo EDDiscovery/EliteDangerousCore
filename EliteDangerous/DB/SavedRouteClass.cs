@@ -13,6 +13,8 @@
  * 
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
+
+using BaseUtils.JSON;
 using EMK.LightGeometry;
 using System;
 using System.Collections.Generic;
@@ -63,7 +65,9 @@ namespace EliteDangerousCore.DB
 
         public long Id { get; set; }
         public string Name { get; set; }
+        [JsonName("StartDate")]                                // fixed aug 2020, broken since name changed
         public DateTime? StartDateUTC { get; set; }            // UTC times now since jan 2020, changed to make compatible with gametime
+        [JsonName("EndDate")]
         public DateTime? EndDateUTC { get; set; }
         public List<string> Systems { get; private set; }
         public bool EDSM { get; set; }          // supplied by EDSM
@@ -445,7 +449,11 @@ namespace EliteDangerousCore.DB
 
                     if (text != null && text.Length>0)      // use a blank file to overwrite an old one you want to get rid of
                     {
-                        var array = Newtonsoft.Json.Linq.JArray.Parse(text).ToObject<SavedRouteClass[]>();
+                        var ja = JArray.Parse(text, JToken.ParseOptions.AllowTrailingCommas);        // JSON has trailing commas illegally but keep for backwards compat
+                        var array = ja?.ToObject<SavedRouteClass[]>();   // try and toobject
+
+                        if (array == null)
+                            continue;
 
                         List<SavedRouteClass> stored = SavedRouteClass.GetAllSavedRoutes(); // incl deleted
 

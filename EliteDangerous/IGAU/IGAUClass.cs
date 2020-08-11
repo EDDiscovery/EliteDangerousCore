@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 EDDiscovery development team
+ * Copyright © 2020 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -14,18 +14,9 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
-using EliteDangerousCore;
-using EliteDangerousCore.JournalEvents;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+using BaseUtils.JSON;
 using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Management;
 using System.Reflection;
-using System.Text;
 
 namespace EliteDangerousCore.IGAU
 {
@@ -74,14 +65,14 @@ namespace EliteDangerousCore.IGAU
 
                 var result = JToken.Parse(resp.Body);
 
-                if (result.Value<string>() == "SUCCESS")
+                if (result.Str() == "SUCCESS")
                 {
                     return true;
                 }
                 else
                 {
                     var res = result["response"];
-                    var errmsg = res?.Value<string>("errorMessage");
+                    var errmsg = res?.Str("errorMessage");
                     Trace.WriteLine($"IGAU message post failed: {errmsg}");
                     return false;
                 }

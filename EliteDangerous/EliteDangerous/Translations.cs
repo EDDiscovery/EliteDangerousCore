@@ -298,6 +298,7 @@ namespace EliteDangerousCore
         BankAccountClass_SpendonAmmo, // Spend on Ammo:;cr;N0
         BankAccountClass_InsuranceClaims, // Insurance Claims:;;N0
         BankAccountClass_SpentonInsurance, // Spent on Insurance:;cr;N0
+        BankAccountClass_OwnedShipCount, // Owned ships
         CombatClass_Bounties, // Bounties :;;N0
         CombatClass_BountyProfits, // Bounty Profits:;cr;N0
         CombatClass_CombatBonds, // Combat Bonds:;;N0
@@ -334,10 +335,13 @@ namespace EliteDangerousCore
         ExplorationClass_NoofJumps, // No of Jumps:;;N0
         ExplorationClass_GreatestDistance, // Greatest Distance:;;N0
         ExplorationClass_TimePlayed, // Time Played:
+        ExplorationClass_EfficientScans,
+        PassengerMissionsClass_Accepted, // Accepted:;;N0
         PassengerMissionsClass_BulkMissionPassengers, // Bulk Mission Passengers:;;N0
         PassengerMissionsClass_VIPMissionPassengers, // VIP Mission Passengers:;;N0
         PassengerMissionsClass_PassengersDelivered, // Passengers Delivered:;;N0
         PassengerMissionsClass_PassengersEjected, // Passengers Ejected:;;N0
+        PassengerMissionsClass_PassengersDisgrunted, // Passengers Disgrunted:;;N0
         SearchAndRescueClass_TotalItemsRescued, // Total Items Rescued:;;N0
         SearchAndRescueClass_Profit, // Profit:;cr;N0
         SearchAndRescueClass_TotalRescueTransactions, // Total Rescue Transactions:;;N0

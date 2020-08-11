@@ -13,7 +13,7 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -422,20 +422,20 @@ namespace EliteDangerousCore.JournalEvents
                 PlanetTypeID = EDPlanet.Unknown_Body_Type;
             }
 
-            JToken mats = (JToken)evt["Materials"];
+            JToken mats = evt["Materials"];
 
             if (mats != null)
             {
-                if (mats.Type == JTokenType.Object)
+                if (mats.IsObject)
                 {
-                    Materials = mats?.ToObjectProtected<Dictionary<string, double>>();  // name in fd logs is lower case
+                    Materials = mats.ToObjectProtected<Dictionary<string, double>>();  // name in fd logs is lower case
                 }
                 else
                 {
                     Materials = new Dictionary<string, double>();
                     foreach (JObject jo in mats)                                        // name in fd logs is lower case
                     {
-                        Materials[jo["Name"].Str().ToLowerInvariant()] = jo["Percent"].Double();
+                        Materials[jo["Name"].Str("Default").ToLowerInvariant()] = jo["Percent"].Double();
                     }
                 }
 
@@ -443,11 +443,10 @@ namespace EliteDangerousCore.JournalEvents
                 MaterialList = String.Join(",", na);
             }
 
-            JToken atmos = (JToken)evt["AtmosphereComposition"];
-
+            JToken atmos = evt["AtmosphereComposition"];
             if (atmos != null)
             {
-                if (atmos.Type == JTokenType.Object)
+                if (atmos.IsObject)
                 {
                     AtmosphereComposition = atmos?.ToObjectProtected<Dictionary<string, double>>();
                 }
@@ -456,29 +455,28 @@ namespace EliteDangerousCore.JournalEvents
                     AtmosphereComposition = new Dictionary<string, double>();
                     foreach (JObject jo in atmos)
                     {
-                        AtmosphereComposition[(string)jo["Name"]] = jo["Percent"].Double();
+                        AtmosphereComposition[jo["Name"].Str("Default")] = jo["Percent"].Double();
                     }
                 }
             }
 
-            JToken composition = evt["Composition"];
-
+            JObject composition = evt["Composition"].Object();
             if (composition != null)
             {
                 PlanetComposition = new Dictionary<string, double>();
-                foreach (JProperty jp in composition)
+                foreach (var kvp in composition)
                 {
-                    PlanetComposition[jp.Name] = (double)jp.Value;
+                    PlanetComposition[kvp.Key] = kvp.Value.Double();
                 }
             }
 
-            if (evt["Parents"] != null)
+            JObject parents = evt["Parents"].Object();
+            if ( parents != null)
             {
                 Parents = new List<BodyParent>();
-                foreach (JObject parent in evt["Parents"])
+                foreach (var kvp in parents)
                 {
-                    JProperty prop = parent.Properties().First();
-                    Parents.Add(new BodyParent { Type = prop.Name, BodyID = prop.Value.Int() });
+                    Parents.Add(new BodyParent { Type = kvp.Key, BodyID = kvp.Value.Int() });
                 }
             }
 

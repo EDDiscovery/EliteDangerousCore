@@ -13,14 +13,14 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
+
+using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Data;
 using System.IO;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
 using EliteDangerousCore.DB;
 
 namespace EliteDangerousCore
@@ -289,21 +289,12 @@ namespace EliteDangerousCore
                 jo[cmdr.Name] = j;
             }
 
-            using (Stream stream = File.OpenWrite(Path.Combine(EliteDangerousCore.EliteConfigInstance.InstanceOptions.AppDataDirectory, "CommanderPaths.json.tmp")))
-            {
-                using (StreamWriter writer = new StreamWriter(stream))
-                {
-                    using (JsonTextWriter jwriter = new JsonTextWriter(writer))
-                    {
-                        jo.WriteTo(jwriter);
-                    }
-                }
-            }
+            string tmpfile = Path.Combine(EliteDangerousCore.EliteConfigInstance.InstanceOptions.AppDataDirectory, "CommanderPaths.json.tmp");
+            string cmdfile = Path.Combine(EliteDangerousCore.EliteConfigInstance.InstanceOptions.AppDataDirectory, "CommanderPaths.json");
 
-            File.Delete(Path.Combine(EliteDangerousCore.EliteConfigInstance.InstanceOptions.AppDataDirectory, "CommanderPaths.json"));
-            File.Move(Path.Combine(EliteDangerousCore.EliteConfigInstance.InstanceOptions.AppDataDirectory, "CommanderPaths.json.tmp"),
-                Path.Combine(EliteDangerousCore.EliteConfigInstance.InstanceOptions.AppDataDirectory, "CommanderPaths.json"));
-
+            File.WriteAllText(tmpfile, jo.ToString());
+            File.Delete(cmdfile);
+            File.Move(tmpfile, cmdfile);
         }
 
 
@@ -343,30 +334,24 @@ namespace EliteDangerousCore
                 commandersDict[-1] = hidden;        // so we give back a valid entry when its selected
             }
 
+            string cmdfile = Path.Combine(EliteDangerousCore.EliteConfigInstance.InstanceOptions.AppDataDirectory, "CommanderPaths.json");
+
             // For  some people sharing their user DB between different computers and having different paths to their journals on those computers.
-            if (File.Exists(Path.Combine(EliteDangerousCore.EliteConfigInstance.InstanceOptions.AppDataDirectory, "CommanderPaths.json")))
+            if (File.Exists(cmdfile))
             {
-                JObject jo;
+                string text = File.ReadAllText(cmdfile);
+                JObject jo = JObject.Parse(text);
 
-                using (Stream stream = File.OpenRead(Path.Combine(EliteDangerousCore.EliteConfigInstance.InstanceOptions.AppDataDirectory, "CommanderPaths.json")))
+                if (jo != null)
                 {
-                    using (StreamReader reader = new StreamReader(stream))
+                    foreach (var kvp in jo)
                     {
-                        using (JsonTextReader jreader = new JsonTextReader(reader))
+                        string name = kvp.Key;
+                        EDCommander cmdr = GetCommander(name);
+                        if (kvp.Value is JObject props && cmdr != null)
                         {
-                            jo = JObject.Load(jreader);
+                            cmdr.JournalDir = props["JournalDir"].Str(cmdr.JournalDir);
                         }
-                    }
-                }
-
-                foreach (var kvp in jo)
-                {
-                    string name = kvp.Key;
-                    JObject props = kvp.Value as JObject;
-                    EDCommander cmdr = GetCommander(name);
-                    if (props != null && cmdr != null)
-                    {
-                        cmdr.JournalDir = props["JournalDir"].Str(cmdr.JournalDir);
                     }
                 }
             }

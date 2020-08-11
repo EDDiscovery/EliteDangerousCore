@@ -14,10 +14,7 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 
 namespace EliteDangerousCore.DLL
 {
@@ -51,7 +48,7 @@ namespace EliteDangerousCore.DLL
                     group = he.Group,
                     credits = he.Credits,
                     eventid = he.journalEntry.EventTypeStr,
-                    json = he.journalEntry.GetJson().ToString(Newtonsoft.Json.Formatting.None),
+                    json = he.journalEntry.GetJsonString(),
                     cmdrname = he.Commander.Name,
                     cmdrfid = he.Commander.FID,
                     shipident = he.ShipInformation?.ShipUserIdent ?? "Unknown",

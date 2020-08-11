@@ -13,7 +13,7 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -32,27 +32,26 @@ namespace EliteDangerousCore.JournalEvents
             CockpitBreach = evt["CockpitBreach"].Bool();
 
             JToken jk = (JToken)evt["StationFaction"];
-            if (jk != null && jk.Type == JTokenType.Object)     // new 3.03
+            if (jk != null && jk.IsObject)     // new 3.03
             {
-                JObject jo = jk as JObject;
                 Faction = jk["Name"].Str();                // system faction pick up
                 FactionState = jk["FactionState"].Str();
             }
             else
             {
                 // old pre 3.3.3 had this
-                Faction = JSONObjectExtensions.GetMultiStringDef(evt, new string[] { "StationFaction", "Faction" });
+                Faction = evt.MultiStr(new string[] { "StationFaction", "Faction" });
                 FactionState = evt["FactionState"].Str();           // PRE 2.3 .. not present in newer files, fixed up in next bit of code (but see 3.3.2 as its been incorrectly reintroduced)
             }
 
-            Allegiance = JSONObjectExtensions.GetMultiStringDef(evt, new string[] { "StationAllegiance", "Allegiance" });
+            Allegiance = evt.MultiStr(new string[] { "StationAllegiance", "Allegiance" });
 
-            Economy = JSONObjectExtensions.GetMultiStringDef(evt, new string[] { "StationEconomy", "Economy" });
-            Economy_Localised = JournalFieldNaming.CheckLocalisation(JSONObjectExtensions.GetMultiStringDef(evt, new string[] { "StationEconomy_Localised", "Economy_Localised" }),Economy);
+            Economy = evt.MultiStr(new string[] { "StationEconomy", "Economy" });
+            Economy_Localised = JournalFieldNaming.CheckLocalisation(evt.MultiStr(new string[] { "StationEconomy_Localised", "Economy_Localised" }),Economy);
             EconomyList = evt["StationEconomies"]?.ToObjectProtected<Economies[]>();
 
-            Government = JSONObjectExtensions.GetMultiStringDef(evt, new string[] { "StationGovernment", "Government" });
-            Government_Localised = JournalFieldNaming.CheckLocalisation(JSONObjectExtensions.GetMultiStringDef(evt, new string[] { "StationGovernment_Localised", "Government_Localised" }),Government);
+            Government = evt.MultiStr(new string[] { "StationGovernment", "Government" });
+            Government_Localised = JournalFieldNaming.CheckLocalisation(evt.MultiStr(new string[] { "StationGovernment_Localised", "Government_Localised" }),Government);
 
             Wanted = evt["Wanted"].Bool();
 

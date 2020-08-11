@@ -13,7 +13,7 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System;
 using System.Linq;
 
@@ -24,20 +24,23 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalStatistics(JObject evt ) : base(evt, JournalTypeEnum.Statistics)
         {
-            BankAccount = evt["Bank_Account"].RemoveKeyUnderscores()?.ToObjectProtected<BankAccountClass>() ?? new BankAccountClass();
-            Combat = evt["Combat"].RemoveKeyUnderscores()?.ToObjectProtected<CombatClass>() ?? new CombatClass();
-            Crime = evt["Crime"].RemoveKeyUnderscores()?.ToObjectProtected<CrimeClass>() ?? new CrimeClass();
-            Smuggling = evt["Smuggling"].RemoveKeyUnderscores()?.ToObjectProtected<SmugglingClass>() ?? new SmugglingClass();
-            Trading = evt["Trading"].RemoveKeyUnderscores()?.ToObjectProtected<TradingClass>() ?? new TradingClass();
-            Mining = evt["Mining"].RemoveKeyUnderscores()?.ToObjectProtected<MiningClass>() ?? new MiningClass();
-            Exploration = evt["Exploration"].RemoveKeyUnderscores()?.ToObjectProtected<ExplorationClass>() ?? new ExplorationClass();
-            PassengerMissions = evt["Passengers"].RemoveKeyUnderscores().RemoveKeyPrefix("PassengersMissions")?.ToObjectProtected<PassengerMissionsClass>() ?? new PassengerMissionsClass();
-            SearchAndRescue = evt["Search_And_Rescue"].RemoveKeyUnderscores().RemoveKeyPrefix("SearchRescue")?.ToObjectProtected<SearchAndRescueClass>() ?? new SearchAndRescueClass();
-            Crafting = evt["Crafting"].RemoveKeyUnderscores()?.ToObjectProtected<CraftingClass>() ?? new CraftingClass();
-            Crew = evt["Crew"].RemoveKeyUnderscores().RemoveKeyPrefix("NpcCrew")?.ToObjectProtected<CrewClass>() ?? new CrewClass();
-            Multicrew = evt["Multicrew"].RemoveKeyUnderscores().RemoveKeyPrefix("Multicrew")?.ToObjectProtected<MulticrewClass>() ?? new MulticrewClass();
-            MaterialTraderStats = evt["Material_Trader_Stats"].RemoveKeyUnderscores()?.ToObjectProtected<MaterialTraderStatsClass>() ?? new MaterialTraderStatsClass();
-            CQC = evt["CQC"].RemoveKeyUnderscores().RemoveKeyPrefix("CQC")?.ToObjectProtected<CQCClass>() ?? new CQCClass();
+            var s1 = evt["Bank_Account"].RenameObjectFieldsUnderscores();
+            BankAccount = evt["Bank_Account"]?.RenameObjectFieldsUnderscores()?.ToObjectProtected<BankAccountClass>() ?? new BankAccountClass();
+            var c1 = evt["Combat"]?.RenameObjectFieldsUnderscores();
+
+            Combat = evt["Combat"]?.RenameObjectFieldsUnderscores()?.ToObjectProtected<CombatClass>() ?? new CombatClass();
+            Crime = evt["Crime"]?.RenameObjectFieldsUnderscores()?.ToObjectProtected<CrimeClass>() ?? new CrimeClass();
+            Smuggling = evt["Smuggling"]?.RenameObjectFieldsUnderscores()?.ToObjectProtected<SmugglingClass>() ?? new SmugglingClass();
+            Trading = evt["Trading"]?.RenameObjectFieldsUnderscores()?.ToObjectProtected<TradingClass>() ?? new TradingClass();
+            Mining = evt["Mining"]?.RenameObjectFieldsUnderscores()?.ToObjectProtected<MiningClass>() ?? new MiningClass();
+            Exploration = evt["Exploration"]?.RenameObjectFieldsUnderscores()?.ToObjectProtected<ExplorationClass>() ?? new ExplorationClass();
+            PassengerMissions = evt["Passengers"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("PassengersMissions")?.ToObjectProtected<PassengerMissionsClass>() ?? new PassengerMissionsClass();
+            SearchAndRescue = evt["Search_And_Rescue"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("SearchRescue")?.ToObjectProtected<SearchAndRescueClass>() ?? new SearchAndRescueClass();
+            Crafting = evt["Crafting"]?.RenameObjectFieldsUnderscores()?.ToObjectProtected<CraftingClass>() ?? new CraftingClass();
+            Crew = evt["Crew"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("NpcCrew")?.ToObjectProtected<CrewClass>() ?? new CrewClass();
+            Multicrew = evt["Multicrew"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("Multicrew")?.ToObjectProtected<MulticrewClass>() ?? new MulticrewClass();
+            MaterialTraderStats = evt["Material_Trader_Stats"]?.RenameObjectFieldsUnderscores()?.ToObjectProtected<MaterialTraderStatsClass>() ?? new MaterialTraderStatsClass();
+            CQC = evt["CQC"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("CQC")?.ToObjectProtected<CQCClass>() ?? new CQCClass();
         }
 
         public BankAccountClass BankAccount { get; set; }
@@ -85,6 +88,7 @@ namespace EliteDangerousCore.JournalEvents
             public long SpentOnAmmoConsumables { get; set; }
             public int InsuranceClaims { get; set; }
             public long SpentOnInsurance { get; set; }
+            public int OwnedShipCount { get; set; }
 
             public string Format(string frontline = "    ")
             {
@@ -95,8 +99,9 @@ namespace EliteDangerousCore.JournalEvents
                     "Spent on Repairs:;cr;N0".T(EDTx.BankAccountClass_SpentonRepairs), SpentOnRepairs, 
                     "Spent on Fuel:;cr;N0".T(EDTx.BankAccountClass_SpentonFuel), SpentOnFuel,
                     "Spent on Ammo:;cr;N0".T(EDTx.BankAccountClass_SpendonAmmo), SpentOnAmmoConsumables, 
-                    "Insurance Claims:;;N0".T(EDTx.BankAccountClass_InsuranceClaims), InsuranceClaims, 
-                    "Spent on Insurance:;cr;N0".T(EDTx.BankAccountClass_SpentonInsurance), SpentOnInsurance);
+                    "Insurance Claims:;;N0".T(EDTx.BankAccountClass_InsuranceClaims), InsuranceClaims,
+                    "Spent on Insurance:;cr;N0".T(EDTx.BankAccountClass_SpentonInsurance), SpentOnInsurance,
+                    "Owned ships".T(EDTx.BankAccountClass_OwnedShipCount), OwnedShipCount);
             }
         }
 
@@ -211,14 +216,17 @@ namespace EliteDangerousCore.JournalEvents
             public int TotalHyperspaceJumps { get; set; }
             public double GreatestDistanceFromStart { get; set; }
             public int TimePlayed { get; set; }
+            public int EfficientScans { get; set; }
+
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
                         "Systems Visited:;;N0".T(EDTx.ExplorationClass_SystemsVisited), SystemsVisited, 
                         "Profits:;cr;N0".T(EDTx.ExplorationClass_Profits), ExplorationProfits,
-                        "Level 2 Scans:;;N0".T(EDTx.ExplorationClass_Level2Scans), PlanetsScannedToLevel2, 
+                        "Level 2 Scans:;;N0".T(EDTx.ExplorationClass_Level2Scans), PlanetsScannedToLevel2,
                         "Level 3 Scans:;;N0".T(EDTx.ExplorationClass_Level3Scans), PlanetsScannedToLevel3,
-                        "Highest Payout:;cr;N0".T(EDTx.ExplorationClass_HighestPayout), HighestPayout, 
+                        "Efficient Scans:;;N0".T(EDTx.ExplorationClass_EfficientScans), EfficientScans,
+                        "Highest Payout:;cr;N0".T(EDTx.ExplorationClass_HighestPayout), HighestPayout,
                         "Total Distance:;;N0".T(EDTx.ExplorationClass_TotalDistance), TotalHyperspaceDistance,
                         "No of Jumps:;;N0".T(EDTx.ExplorationClass_NoofJumps), TotalHyperspaceJumps,
                         "Greatest Distance:;;N0".T(EDTx.ExplorationClass_GreatestDistance), GreatestDistanceFromStart, 
@@ -230,15 +238,19 @@ namespace EliteDangerousCore.JournalEvents
         {
             public int Bulk { get; set; }
             public int VIP { get; set; }
+            public int Accepted { get; set; }
             public int Delivered { get; set; }
+            public int Disgruntled { get; set; }
             public int Ejected { get; set; }
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Bulk Mission Passengers:;;N0".T(EDTx.PassengerMissionsClass_BulkMissionPassengers), Bulk, 
+                    "Accepted Mission Passengers:;;N0".T(EDTx.PassengerMissionsClass_Accepted), Bulk,
+                    "Bulk Mission Passengers:;;N0".T(EDTx.PassengerMissionsClass_BulkMissionPassengers), Bulk,
                     "VIP Mission Passengers:;;N0".T(EDTx.PassengerMissionsClass_VIPMissionPassengers), VIP, 
-                    "Passengers Delivered:;;N0".T(EDTx.PassengerMissionsClass_PassengersDelivered), Delivered, 
-                    "Passengers Ejected:;;N0".T(EDTx.PassengerMissionsClass_PassengersEjected), Ejected);
+                    "Passengers Delivered:;;N0".T(EDTx.PassengerMissionsClass_PassengersDelivered), Delivered,
+                    "Passengers Ejected:;;N0".T(EDTx.PassengerMissionsClass_PassengersEjected), Ejected,
+                    "Passengers Disgruntled:;;N0".T(EDTx.PassengerMissionsClass_PassengersDisgrunted), Ejected);
             }
         }
 
@@ -315,10 +327,19 @@ namespace EliteDangerousCore.JournalEvents
         {
             public int TradesCompleted { get; set; }
             public int MaterialsTraded { get; set; }
+            public int EncodedMaterialsTraded { get; set; }     // not currently outputted, TBD
+            public int RawMaterialsTraded { get; set; }         // not currently outputted, TBD
+            public int Grade1MaterialsTraded { get; set; }      // 1-5 not currently outputted, TBD
+            public int Grade2MaterialsTraded { get; set; }
+            public int Grade3MaterialsTraded { get; set; }
+            public int Grade4MaterialsTraded { get; set; }
+            public int Grade5MaterialsTraded { get; set; }
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Commodity Trades:;;N0".T(EDTx.MaterialTraderStatsClass_CommodityTrades), TradesCompleted, "Material Traded:;;N0".T(EDTx.MaterialTraderStatsClass_MaterialTraded), MaterialsTraded);
+                    "Commodity Trades:;;N0".T(EDTx.MaterialTraderStatsClass_CommodityTrades), TradesCompleted,
+                    "Material Traded:;;N0".T(EDTx.MaterialTraderStatsClass_MaterialTraded), MaterialsTraded
+                    );
             }
         }
 
@@ -328,10 +349,12 @@ namespace EliteDangerousCore.JournalEvents
             public double KD { get; set; }
             public int Kills { get; set; }
             public double WL { get; set; }
+            public long CreditsEarned { get; set; }
 
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
+                    "Credits:;cr;N0".T(EDTx.MulticrewClass_Credits), CreditsEarned,
                     "Time Played:;;N0".T(EDTx.CQCClass_TimePlayed), TimePlayed.SecondsToWeeksDaysHoursMinutesSeconds(),
                     "KD Ratio:;;N".T(EDTx.CQCClass_KDRatio), KD,
                     "Kills:;;N0".T(EDTx.CQCClass_Kills), Kills,

@@ -13,7 +13,7 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
@@ -27,8 +27,7 @@ namespace EliteDangerousCore.JournalEvents
             Interdictor = evt["Interdictor"].Str();
             Interdictor_Localised = JournalFieldNaming.CheckLocalisation(evt["Interdictor_Localised"].Str(),Interdictor);
             IsPlayer = evt["IsPlayer"].Bool();
-            if (!evt["CombatRank"].Empty())
-                CombatRank = (CombatRank)(evt["CombatRank"].Int());
+            CombatRank = evt["CombatRank"].Enum<CombatRank>(CombatRank.Unknown);
             Faction = evt["Faction"].Str();
             Power = evt["Power"].Str();
         }
@@ -58,8 +57,7 @@ namespace EliteDangerousCore.JournalEvents
             Interdicted = evt["Interdicted"].Str();
             Interdicted_Localised = JournalFieldNaming.CheckLocalisation(evt["Interdicted_Localised"].Str(), Interdicted);
             IsPlayer = evt["IsPlayer"].Bool();
-            if (!evt["CombatRank"].Empty())
-                CombatRank = (CombatRank)(evt["CombatRank"].Int());
+            CombatRank = evt["CombatRank"].Enum<CombatRank>(CombatRank.Unknown);
             Faction = evt["Faction"].Str();
             Power = evt["Power"].Str();
         }

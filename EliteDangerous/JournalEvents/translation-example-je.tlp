@@ -628,6 +628,7 @@ SECTION BankAccountClass
 .SpendonAmmo: "Spent on Ammo:;cr;N0" @
 .InsuranceClaims: "Insurance Claims:;;N0" @
 .SpentonInsurance: "Spent on Insurance:;cr;N0" @
+.OwnedShipCount: "Owned ships" @
 
 SECTION CombatClass
 
@@ -682,13 +683,16 @@ SECTION ExplorationClass
 .NoofJumps: "No of Jumps:;;N0" @
 .GreatestDistance: "Greatest Distance:;;N0" @
 .TimePlayed: "Time Played:" @
+.EfficientScans: "Efficient Scans:;;N0" @
 
 SECTION PassengerMissionsClass
 
+.Accepted: "Accepted:;;N0" @
 .BulkMissionPassengers: "Bulk Mission Passengers:;;N0" @
 .VIPMissionPassengers: "VIP Mission Passengers:;;N0" @
 .PassengersDelivered: "Passengers Delivered:;;N0" @
 .PassengersEjected: "Passengers Ejected:;;N0" @
+.PassengersDisgrunted: "Passengers Disgrunted:;;N0" @
 
 SECTION SearchAndRescueClass
 

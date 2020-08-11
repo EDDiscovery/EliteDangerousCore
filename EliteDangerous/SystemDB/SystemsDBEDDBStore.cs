@@ -14,13 +14,11 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
-using Newtonsoft.Json;
 using System;
 using System.IO;
-using SQLLiteExtensions;
 using System.Data.Common;
 using System.Data;
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 
 namespace EliteDangerousCore.DB
 {
@@ -109,11 +107,11 @@ namespace EliteDangerousCore.DB
 
                                             try
                                             {
-                                                if (jo["states"] != null && jo["states"].HasValues)
+                                                JArray states = jo["states"].Array();
+                                                if ( states != null && states.Count>0)
                                                 {
-                                                    JToken tk = jo["states"].First;     // we take the first one whatever
-                                                    JObject jostate = (JObject)tk;
-                                                    edstate = EliteDangerousTypesFromJSON.EDState2ID(jostate["name"].Str("Unknown"));
+                                                    JObject state = states[0].Object();
+                                                    edstate = EliteDangerousTypesFromJSON.EDState2ID(state["name"].Str("Unknown"));
                                                 }
                                             }
                                             catch (Exception ex)
@@ -188,7 +186,7 @@ namespace EliteDangerousCore.DB
             jo.Remove("updated_at");
             jo.Remove("controlling_minor_faction");
 
-            return jo.ToString(Formatting.None);
+            return jo.ToString();
         }
     }
 }
