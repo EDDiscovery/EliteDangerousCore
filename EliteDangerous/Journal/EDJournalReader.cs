@@ -210,7 +210,7 @@ namespace EliteDangerousCore
                 laststoredmodules = null;
                 laststoredships = null;
                 lastcargo = null;                  
-                cqc = false;
+                cqc = !(je is JournalEvents.JournalLoadGame) || ((JournalEvents.JournalLoadGame)je).GameMode != null;
             }
             else if (je is JournalEvents.JournalMusic)
             {
