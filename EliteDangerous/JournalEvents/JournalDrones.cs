@@ -112,11 +112,13 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalLaunchDrone(JObject evt) : base(evt, JournalTypeEnum.LaunchDrone)
         {
-            Type = evt["Type"].Str();
-            FriendlyType = Type.SplitCapsWordFull();
+            Type = evt["Type"].Enumeration<DroneType>(DroneType.Prospector);
+            FriendlyType = Type.ToString();
         }
 
-        public string Type { get; set; }
+        public enum DroneType { Prospector, Collection }
+
+        public DroneType Type { get; set; }
         public string FriendlyType { get; set; }
 
         public void UpdateCommodities(MaterialCommoditiesList mc)

@@ -62,9 +62,9 @@ namespace EliteDangerousCore
 
         public int Count { get { return historylist.Count; } }
 
-        #region Output filters and stats
+        #region Output filters
 
-        public List<HistoryEntry> FilterByNumber(int max)
+        public List<HistoryEntry> FilterLastN(int max)
         {
             return historylist.OrderByDescending(s => s.EventTimeUTC).Take(max).ToList();
         }
@@ -76,6 +76,36 @@ namespace EliteDangerousCore
             if (lastdockpos >= 0)
                 inorder = inorder.Take(lastdockpos + 1).ToList();
             return inorder;
+        }
+
+        // from pos, find all HEs satifying where condition, bounded by boundcondition
+        // return null if no HE entries, empty list if no entries between
+        public List<HistoryEntry> FilterBetween(HistoryEntry pos, Predicate<HistoryEntry> boundcondition, Predicate<HistoryEntry> where)
+        {
+            HistoryEntry heabove = GetFromPos(pos, boundcondition, 1, returnlast: true);     // find entry later matching bound conditions
+            HistoryEntry hebelow = GetFromPos(pos, boundcondition, -1, usecurrent: true, returnlast: true);     // find entry before, including ourselves, matching bound conditions
+
+            if (heabove != null && hebelow != null)
+            {
+                return historylist.Where(x => x.Indexno >= hebelow.Indexno && x.Indexno <= heabove.Indexno && where(x) == true).ToList();
+            }
+            else
+                return null;
+        }
+
+        public List<HistoryEntry> FilterBetween(HistoryEntry pos, Predicate<HistoryEntry> boundcondition, Predicate<HistoryEntry> where, out HistoryEntry hebelow, out HistoryEntry heabove)
+        {
+            heabove = GetFromPos(pos, boundcondition, 1, returnlast: true);     // find entry later matching bound conditions
+            hebelow = GetFromPos(pos, boundcondition, -1, usecurrent: true, returnlast: true);     // find entry before, including ourselves, matching bound conditions
+
+            if (heabove != null && hebelow != null)
+            {
+                int hebelowix = hebelow.Indexno;
+                int heaboveix = heabove.Indexno;
+                return historylist.Where(x => x.Indexno >= hebelowix && x.Indexno <= heaboveix && where(x) == true).ToList();
+            }
+            else
+                return null;
         }
 
         public List<HistoryEntry> FilterStartEnd()
@@ -104,7 +134,6 @@ namespace EliteDangerousCore
             var oldestData = DateTime.UtcNow.Subtract(days);
             return (from systems in historylist where systems.EventTimeUTC >= oldestData orderby systems.EventTimeUTC descending select systems).ToList();
         }
-
 
         public List<HistoryEntry> EntryOrder
         {
@@ -210,29 +239,17 @@ namespace EliteDangerousCore
             }
         }
 
-        public HistoryEntry GetByJID(long jid)
+        public static List<HistoryEntry> FilterByJournalEvent(List<HistoryEntry> he, string eventstring, out int count)
         {
-            return historylist.Find(x => x.Journalid == jid);
-        }
-
-        public HistoryEntry GetByIndex(int index)
-        {
-            return (index >= 1 && index <= historylist.Count) ? historylist[index - 1] : null;
-        }
-
-        public int GetIndex(long jid)
-        {
-            return EntryOrder.FindIndex(x => x.Journalid == jid);
-        }
-
-        public HistoryEntry GetLast
-        {
-            get
+            count = 0;
+            if (eventstring.Equals("All"))
+                return he;
+            else
             {
-                if (historylist.Count > 0)
-                    return historylist[historylist.Count - 1];
-                else
-                    return null;
+                string[] events = eventstring.Split(';');
+                List<HistoryEntry> ret = (from systems in he where systems.IsJournalEventInEventFilter(events) select systems).ToList();
+                count = he.Count - ret.Count;
+                return ret;
             }
         }
 
@@ -264,6 +281,57 @@ namespace EliteDangerousCore
             ISystem cursys = CurrentSystem;
             ISystem other = SystemCache.FindSystem(system);
             return cursys != null ? cursys.Distance(other) : -1;  // current can be null, shipsystem can be null, cursys can not have co-ord, -1 if failed.
+        }
+
+        #endregion
+
+        #region Gets
+
+        public HistoryEntry GetByJID(long jid)
+        {
+            return historylist.Find(x => x.Journalid == jid);
+        }
+
+        public HistoryEntry GetByIndex(int index)
+        {
+            return (index >= 1 && index <= historylist.Count) ? historylist[index - 1] : null;
+        }
+
+        public int GetIndex(long jid)
+        {
+            return EntryOrder.FindIndex(x => x.Journalid == jid);
+        }
+
+        public HistoryEntry GetLast
+        {
+            get
+            {
+                if (historylist.Count > 0)
+                    return historylist[historylist.Count - 1];
+                else
+                    return null;
+            }
+        }
+
+        // from athe, find where in a direction..
+        // dir = 1 forward to newer, -1 backwards.  usecurrent means check athe entry.  returnlast means if we did not find it, return first or last
+        // null if not found, or no athe, or no list
+        public HistoryEntry GetFromPos(HistoryEntry athe, Predicate<HistoryEntry> where, int dir = 1, 
+                                            bool usecurrent = false, bool returnlast = false)      
+        {
+            if (historylist.Count == 0 || athe == null)
+                return null;
+
+            for (int i = (athe.Indexno - 1) + (usecurrent ? 0 : dir); dir > 0 ? (i < historylist.Count) : (i >= 0); i += dir )        // indexno is +1 due to historic reasons, start from one on
+            {
+                if (where(historylist[i]))
+                    return historylist[i];
+            }
+
+            if (returnlast)
+                return dir > 0 ? historylist.Last() : historylist.First();
+            else
+                return null;
         }
 
         public HistoryEntry GetLastFSDCarrierJump
@@ -501,20 +569,6 @@ namespace EliteDangerousCore
                                             Math.Abs(s.System.X - x) < limit &&
                                             Math.Abs(s.System.Y - y) < limit &&
                                             Math.Abs(s.System.Z - z) < limit);
-        }
-
-        public static List<HistoryEntry> FilterByJournalEvent(List<HistoryEntry> he, string eventstring, out int count)
-        {
-            count = 0;
-            if (eventstring.Equals("All"))
-                return he;
-            else
-            {
-                string[] events = eventstring.Split(';');
-                List<HistoryEntry> ret = (from systems in he where systems.IsJournalEventInEventFilter(events) select systems).ToList();
-                count = he.Count - ret.Count;
-                return ret;
-            }
         }
 
         public static IEnumerable<ISystem> FindSystemsWithinLy(List<HistoryEntry> he, ISystem centre, double minrad, double maxrad, bool spherical)

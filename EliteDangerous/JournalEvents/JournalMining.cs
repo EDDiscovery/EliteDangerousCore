@@ -98,6 +98,7 @@ namespace EliteDangerousCore.JournalEvents
 
             MotherlodeMaterial = JournalFieldNaming.FDNameTranslation(evt["MotherlodeMaterial"].Str());
             FriendlyMotherlodeMaterial = MaterialCommodityData.GetNameByFDName(MotherlodeMaterial);
+            MotherlodeMaterial_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["MotherlodeMaterial_Localised"].Str(),FriendlyMotherlodeMaterial);
 
             Remaining = evt["Remaining"].Double();      // 0-100o
             Materials = evt["Materials"]?.ToObjectProtected<Material[]>().OrderBy(x => x.Name)?.ToArray();
@@ -113,6 +114,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Content_Localised { get; set; }
 
         public string MotherlodeMaterial { get; set; }
+        public string MotherlodeMaterial_Localised { get; set; }
         public string FriendlyMotherlodeMaterial { get; set; }
 
         public double Remaining { get; set; }
