@@ -93,14 +93,14 @@ namespace EliteDangerousCore.JournalEvents
 
         public JournalProspectedAsteroid(JObject evt) : base(evt, JournalTypeEnum.ProspectedAsteroid)
         {
-            Content = evt["Content"].Str();     // strange string with $AsteroidMaterialContent_High
-            Content_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Content_Localised"].Str(), Content);
+            Content = evt["Content"].Enumeration<AsteroidContent>(AsteroidContent.Low, x=>x.Replace("$AsteroidMaterialContent_","").Replace(";",""));
+            Content_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Content_Localised"].Str(), Content.ToString());
 
             MotherlodeMaterial = JournalFieldNaming.FDNameTranslation(evt["MotherlodeMaterial"].Str());
             FriendlyMotherlodeMaterial = MaterialCommodityData.GetNameByFDName(MotherlodeMaterial);
             MotherlodeMaterial_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["MotherlodeMaterial_Localised"].Str(),FriendlyMotherlodeMaterial);
 
-            Remaining = evt["Remaining"].Double();      // 0-100o
+            Remaining = evt["Remaining"].Double();      // 0-100
             Materials = evt["Materials"]?.ToObjectProtected<Material[]>().OrderBy(x => x.Name)?.ToArray();
 
             if ( Materials != null )
@@ -110,7 +110,9 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public string Content { get; set; }
+        public enum AsteroidContent { Low, Medium, High };
+
+        public AsteroidContent Content { get; set; }
         public string Content_Localised { get; set; }
 
         public string MotherlodeMaterial { get; set; }

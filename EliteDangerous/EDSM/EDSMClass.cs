@@ -112,7 +112,7 @@ namespace EliteDangerousCore.EDSM
                 if (json == null)
                     return false;
 
-                edsm = (JObject)JObject.Parse(json);
+                edsm = JObject.Parse(json);
 
                 if (edsm == null)
                     return false;

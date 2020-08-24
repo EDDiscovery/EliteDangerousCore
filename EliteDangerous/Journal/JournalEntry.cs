@@ -220,14 +220,13 @@ namespace EliteDangerousCore
             try
             {
                 jo = (JObject)JObject.Parse(text);
+                return CreateJournalEntry(jo);
             }
             catch (Exception ex)
             {
                 Trace.WriteLine($"Error parsing journal entry\n{text}\n{ex.ToString()}");
                 return new JournalUnknown(new JObject());
             }
-
-            return CreateJournalEntry(jo);
         }
 
         static public JournalEntry CreateJournalEntry(JObject jo, bool savejson = false)
@@ -416,7 +415,7 @@ namespace EliteDangerousCore
             JObject ent1jorm = RemoveEDDGeneratedKeys(ent1jo);     // remove keys, but don't alter originals as they can be used later 
             JObject ent2jorm = RemoveEDDGeneratedKeys(ent2jo);
 
-            return JToken.Equals(ent1jorm, ent2jorm);
+            return JToken.DeepEquals(ent1jorm, ent2jorm);
         }
 
         protected JObject ReadAdditionalFile( string extrafile, bool waitforfile, bool checktimestamptype )       // read file, return new JSON
