@@ -48,7 +48,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.PowerplayCollect)]
-    public class JournalPowerplayCollect : JournalEntry
+    public class JournalPowerplayCollect : JournalEntry, ICommodityJournalEntry
     {
         public JournalPowerplayCollect(JObject evt) : base(evt, JournalTypeEnum.PowerplayCollect)
         {
@@ -67,6 +67,11 @@ namespace EliteDangerousCore.JournalEvents
         {
             info = BaseUtils.FieldBuilder.Build("", Power, "Type:".T(EDTx.JournalEntry_Type), Type_Localised, "Count:".T(EDTx.JournalEntry_Count), Count);
             detailed = "";
+        }
+
+        public void UpdateCommodities(MaterialCommoditiesList mc)
+        {
+            mc.Change(MaterialCommodityData.CatType.Commodity, Type, Count, 0);
         }
     }
 
@@ -90,7 +95,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.PowerplayDeliver)]
-    public class JournalPowerplayDeliver : JournalEntry
+    public class JournalPowerplayDeliver : JournalEntry, ICommodityJournalEntry
     {
         public JournalPowerplayDeliver(JObject evt) : base(evt, JournalTypeEnum.PowerplayDeliver)
         {
@@ -109,6 +114,11 @@ namespace EliteDangerousCore.JournalEvents
         {
             info = BaseUtils.FieldBuilder.Build("", Power, "Type:".T(EDTx.JournalEntry_Type), Type_Localised, "Count:".T(EDTx.JournalEntry_Count), Count);
             detailed = "";
+        }
+
+        public void UpdateCommodities(MaterialCommoditiesList mc)
+        {
+            mc.Change(MaterialCommodityData.CatType.Commodity, Type, -Count, 0);
         }
     }
 
