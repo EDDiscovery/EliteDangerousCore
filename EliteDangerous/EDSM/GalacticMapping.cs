@@ -76,7 +76,7 @@ namespace EliteDangerousCore.EDSM
 
                 if (json != null)
                 {
-                    JArray galobjects = JArray.Parse(json);
+                    JArray galobjects = JArray.ParseThrowCommaEOL(json);
                     foreach (JObject jo in galobjects)
                     {
                         GalacticMapObject galobject = new GalacticMapObject(jo);

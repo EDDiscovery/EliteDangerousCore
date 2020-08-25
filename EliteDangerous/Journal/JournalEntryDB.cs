@@ -269,7 +269,7 @@ namespace EliteDangerousCore
 
                         try
                         {
-                            return JObject.Parse(EDataString);
+                            return JObject.ParseThrowCommaEOL(EDataString);       
                         }
                         catch (Exception ex)
                         {

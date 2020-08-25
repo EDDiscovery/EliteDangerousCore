@@ -157,7 +157,7 @@ namespace EliteDangerousCore
 
                         //System.Diagnostics.Debug.WriteLine("New status text " + text);
 
-                        jo = JObject.Parse(text);  // and of course the json could be crap
+                        jo = JObject.ParseThrowCommaEOL(text);  // and of course the json could be crap
 
                         prev_text = text;       // set after successful parse
                     }

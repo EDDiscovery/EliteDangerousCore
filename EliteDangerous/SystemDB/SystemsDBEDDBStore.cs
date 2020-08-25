@@ -83,7 +83,7 @@ namespace EliteDangerousCore.DB
 
                                 try
                                 {
-                                    JObject jo = JObject.Parse(line);
+                                    JObject jo = JObject.ParseThrowCommaEOL(line);
                                     long jsonupdatedat = jo["updated_at"].Int();
                                     long jsonedsmid = jo["edsm_id"].Long();
                                     bool jsonispopulated = jo["is_populated"].Bool();

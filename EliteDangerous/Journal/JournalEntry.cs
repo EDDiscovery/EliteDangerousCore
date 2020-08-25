@@ -219,7 +219,7 @@ namespace EliteDangerousCore
 
             try
             {
-                jo = (JObject)JObject.Parse(text);
+                jo = JObject.ParseThrowCommaEOL(text);
                 return CreateJournalEntry(jo);
             }
             catch (Exception ex)
@@ -428,7 +428,7 @@ namespace EliteDangerousCore
 
                     if (json != null)
                     {
-                        JObject joaf = JObject.Parse(json);       // this has the full version of the event, including data, at the same timestamp
+                        JObject joaf = JObject.ParseThrowCommaEOL(json);       // this has the full version of the event, including data, at the same timestamp
 
                         string newtype = joaf["event"].Str();
                         DateTime newUTC = joaf["timestamp"].DateTimeUTC();

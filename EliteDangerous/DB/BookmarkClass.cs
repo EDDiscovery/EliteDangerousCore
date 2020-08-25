@@ -50,7 +50,7 @@ namespace EliteDangerousCore.DB
         {
             try // prevent crashes
             {
-                JObject jo = JObject.Parse(json);
+                JObject jo = JObject.ParseThrowCommaEOL(json);
                 if (jo["Marks"] != null)
                 {
                     Planets = jo["Marks"].ToObjectProtected<List<Planet>>();        //verified with basutils.json

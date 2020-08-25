@@ -322,7 +322,7 @@ namespace EliteDangerousCore.EDSM
             {
                 try
                 {
-                    JObject msg = JObject.Parse(json);                  // protect against bad json - seen in the wild
+                    JObject msg = JObject.ParseThrowCommaEOL(json);                  // protect against bad json - seen in the wild
                     int msgnr = msg["msgnum"].Int();
 
                     JArray comments = (JArray)msg["comments"];
@@ -449,7 +449,7 @@ namespace EliteDangerousCore.EDSM
             try
             {
 
-                JObject msg = JObject.Parse(json);
+                JObject msg = JObject.ParseThrowCommaEOL(json);
                 int msgnr = msg["msgnum"].Int(0);
 
                 JArray logs = (JArray)msg["logs"];
@@ -673,7 +673,10 @@ namespace EliteDangerousCore.EDSM
                     return "";
 
                 JObject msg = JObject.Parse(json);
-                sysID = msg["id"].Str();
+                if (msg != null)
+                    sysID = msg["id"].Str();
+                else
+                    return "";
             }
 
             string url = base.httpserveraddress + "system/id/" + sysID + "/name/" + encodedSys;
@@ -1047,8 +1050,7 @@ namespace EliteDangerousCore.EDSM
 
             try
             {
-
-                JObject resp = JObject.Parse(response.Body);
+                JObject resp = JObject.ParseThrowCommaEOL(response.Body);
                 errmsg = resp["msg"]?.ToString();
 
                 int msgnr = resp["msgnum"].Int();

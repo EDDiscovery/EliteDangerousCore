@@ -61,7 +61,7 @@ namespace EliteDangerousCore
 
             try
             {
-                jo = JObject.Parse(line);
+                jo = JObject.ParseThrowCommaEOL(line);
                 je = JournalEntry.CreateJournalEntry(jo,true);
             }
             catch
@@ -209,8 +209,8 @@ namespace EliteDangerousCore
                 lastoutfitting = null;
                 laststoredmodules = null;
                 laststoredships = null;
-                lastcargo = null;                  
-                cqc = !((je is JournalEvents.JournalLoadGame) || ((JournalEvents.JournalLoadGame)je).GameMode != null);
+                lastcargo = null;
+                cqc = (je is JournalEvents.JournalLoadGame) && ((JournalEvents.JournalLoadGame)je).GameMode == null;
             }
             else if (je is JournalEvents.JournalMusic)
             {

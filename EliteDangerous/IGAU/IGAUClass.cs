@@ -63,7 +63,7 @@ namespace EliteDangerousCore.IGAU
             {
                 BaseUtils.ResponseData resp = RequestPost(msg.ToString(), "");
 
-                var result = JToken.Parse(resp.Body);
+                var result = JToken.ParseThrowCommaEOL(resp.Body);
 
                 if (result.Str() == "SUCCESS")
                 {
@@ -81,6 +81,11 @@ namespace EliteDangerousCore.IGAU
             {
                 System.Net.HttpWebResponse response = ex.Response as System.Net.HttpWebResponse;
                 System.Diagnostics.Trace.WriteLine($"IGAU message post failed - status: {response?.StatusCode.ToString() ?? ex.Status.ToString()}\nIGAU Message: {msg.ToString()}");
+                return false;
+            }
+            catch (System.Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine($"IGAU exception - status: {ex}");
                 return false;
             }
         }

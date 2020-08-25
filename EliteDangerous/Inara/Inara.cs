@@ -94,7 +94,7 @@ namespace EliteDangerousCore.Inara
 
             try
             {
-                JObject resp = JObject.Parse(response.Body);
+                JObject resp = JObject.ParseThrowCommaEOL(response.Body);
 
                 JObject header = resp["header"].Object();
                 int headerstatus = header["eventStatus"].Int();     // this is the response to the input header - error if user credentials bad etc
