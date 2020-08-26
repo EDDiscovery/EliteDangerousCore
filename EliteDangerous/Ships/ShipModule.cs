@@ -179,8 +179,8 @@ namespace EliteDangerousCore
             public string Engineer { get; set; }
             public string BlueprintName { get; set; }
             public string FriendlyBlueprintName { get; set; }
-            public long EngineerID { get; set; }
-            public long BlueprintID { get; set; }
+            public ulong EngineerID { get; set; }
+            public ulong BlueprintID { get; set; }
             public int Level { get; set; }
             public double Quality { get; set; }
             public string ExperimentalEffect { get; set; }
@@ -190,10 +190,10 @@ namespace EliteDangerousCore
             public EngineeringData(JObject evt)
             {
                 Engineer = evt["Engineer"].Str();
-                EngineerID = evt["EngineerID"].Long();
+                EngineerID = evt["EngineerID"].ULong();
                 BlueprintName = evt["BlueprintName"].Str();
                 FriendlyBlueprintName = BlueprintName.SplitCapsWordFull();
-                BlueprintID = evt["BlueprintID"].Long();
+                BlueprintID = evt["BlueprintID"].ULong();
                 Level = evt["Level"].Int();
                 Quality = evt["Quality"].Double(0);
                 // EngineerCraft has it as Apply.. Loadout has just ExperimentalEffect.  Check both

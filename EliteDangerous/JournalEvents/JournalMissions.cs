@@ -287,7 +287,15 @@ namespace EliteDangerousCore.JournalEvents
             TargetLocalised = JournalFieldNaming.CheckLocalisation(evt["Target_Localised"].Str(), TargetFriendly);        // copied from Accepted.. no evidence
 
             Reward = evt["Reward"].LongNull();
-            Donation = evt["Donation"].LongNull();
+            JToken dtk = evt["Donation"];
+            if ( dtk != null )
+            {
+                if (dtk.IsString)      // some records have donations as strings incorrectly
+                    Donation = dtk.Str().InvariantParseLongNull();
+                else
+                    Donation = dtk.LongNull();
+            }
+
             MissionId = evt["MissionID"].Int();
 
             DestinationSystem = evt["DestinationSystem"].Str().Replace("$MISSIONUTIL_MULTIPLE_INNER_SEPARATOR;", ",")
