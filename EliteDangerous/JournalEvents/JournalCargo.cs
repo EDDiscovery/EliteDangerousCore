@@ -297,6 +297,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             public string Type { get; set; }
             public string Type_Localised { get; set; }
+            public ulong MissionID { get; set; }            // only on some types of transfers, not in journal doc, found in logs.
             public int Count { get; set; }
             public string Direction { get; set; }       // tocarrier , toship, tosrv
         }

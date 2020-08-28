@@ -65,6 +65,7 @@ namespace EliteDangerousCore.JournalEvents
         public class Commodities
         {
             public string Name;
+            public string Name_Localised;
             public string FriendlyName;
             public int Count;
         }
@@ -72,6 +73,7 @@ namespace EliteDangerousCore.JournalEvents
         public class Materials
         {
             public string Name;
+            public string Name_Localised;
             public string FriendlyName;
             public string Category;
             public int Count;

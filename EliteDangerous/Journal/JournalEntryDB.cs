@@ -313,7 +313,7 @@ namespace EliteDangerousCore
 
         static internal List<JournalEntry> Get(string eventtype, SQLiteConnectionUser cn, DbTransaction tn = null)
         {
-            Dictionary<long, TravelLogUnit> tlus = TravelLogUnit.GetAll().ToDictionary(t => t.id);
+            Dictionary<long, TravelLogUnit> tlus = TravelLogUnit.GetAll().ToDictionary(t => t.ID);
 
             using (DbCommand cmd = cn.CreateCommand("select * from JournalEntries where EventType=@ev", tn))
             {
@@ -338,7 +338,9 @@ namespace EliteDangerousCore
         static public List<JournalEntry> GetAll(int commander = -999, DateTime? afterutc = null, DateTime? beforeutc = null,
                             JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null)
         {
-            Dictionary<long, TravelLogUnit> tlus = TravelLogUnit.GetAll().ToDictionary(t => t.id);
+            var tluslist = TravelLogUnit.GetAll();
+            Dictionary<long, TravelLogUnit> tlus = tluslist.ToDictionary(t => t.ID);
+
             DbCommand cmd = null;
             DbDataReader reader = null;
             List<JournalEntry> entries = new List<JournalEntry>();
@@ -408,7 +410,10 @@ namespace EliteDangerousCore
                 }
                 while (retlist != null && retlist.Count != 0);
 
-                return entries;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Getall Exception " + ex);
             }
             finally
             {
@@ -421,12 +426,14 @@ namespace EliteDangerousCore
                     });
                 }
             }
+
+            return entries;
         }
 
 
         public static List<JournalEntry> GetByEventType(JournalTypeEnum eventtype, int commanderid, DateTime startutc, DateTime stoputc)
         {
-            Dictionary<long, TravelLogUnit> tlus = TravelLogUnit.GetAll().ToDictionary(t => t.id);
+            Dictionary<long, TravelLogUnit> tlus = TravelLogUnit.GetAll().ToDictionary(t => t.ID);
             DbCommand cmd = null;
             DbDataReader reader = null;
             List<JournalEntry> entries = new List<JournalEntry>();

@@ -424,17 +424,20 @@ namespace EliteDangerousCore
             {
                 try
                 {
-                    string json = System.IO.File.ReadAllText(extrafile);        // try the current file
-
-                    if (json != null)
+                    if (System.IO.File.Exists(extrafile))
                     {
-                        JObject joaf = JObject.ParseThrowCommaEOL(json);       // this has the full version of the event, including data, at the same timestamp
+                        string json = System.IO.File.ReadAllText(extrafile);        // try the current file
 
-                        string newtype = joaf["event"].Str();
-                        DateTime newUTC = joaf["timestamp"].DateTimeUTC();
-                        if (checktimestamptype == false || (newUTC != null && newUTC == EventTimeUTC && newtype == EventTypeStr))
+                        if (json != null)
                         {
-                            return joaf;                        // good current file..
+                            JObject joaf = JObject.ParseThrowCommaEOL(json);       // this has the full version of the event, including data, at the same timestamp
+
+                            string newtype = joaf["event"].Str();
+                            DateTime newUTC = joaf["timestamp"].DateTimeUTC();
+                            if (checktimestamptype == false || (newUTC != null && newUTC == EventTimeUTC && newtype == EventTypeStr))
+                            {
+                                return joaf;                        // good current file..
+                            }
                         }
                     }
                 }
@@ -446,7 +449,7 @@ namespace EliteDangerousCore
                 if (!waitforfile)               // if don't wait, continue with no return
                     return null;
 
-                System.Diagnostics.Debug.WriteLine("Current file is not the right one, waiting for it to appear.." + retries);
+                System.Diagnostics.Debug.WriteLine($"Cannot read {extrafile}, waiting.. {retries}");
                 System.Threading.Thread.Sleep(100);
             }
 

@@ -30,20 +30,14 @@ namespace EliteDangerousCore
         protected int bufferlen;
 
         // File Information
-        public string FileName { get { return Path.Combine(TravelLogUnit.Path, TravelLogUnit.Name); } }
-        public long filePos { get { return TravelLogUnit.Size; } }
         public TravelLogUnit TravelLogUnit { get; protected set; }
+        public string FullName { get { return TravelLogUnit.FullName; } }
+        public int Pos { get { return TravelLogUnit.Size; } set { TravelLogUnit.Size = value; } }
+        public long ID { get { return TravelLogUnit.ID; } }
 
         public TravelLogUnitLogReader(string filename)
         {
-            FileInfo fi = new FileInfo(filename);
-
-            this.TravelLogUnit = new TravelLogUnit
-            {
-                Name = fi.Name,
-                Path = fi.DirectoryName,
-                Size = 0
-            };
+            this.TravelLogUnit = new TravelLogUnit(filename);
         }
 
         public TravelLogUnitLogReader(TravelLogUnit tlu)
@@ -59,14 +53,14 @@ namespace EliteDangerousCore
                 buffer = new byte[16384];
                 bufferpos = 0;
                 bufferlen = 0;
-                fileptr = TravelLogUnit.Size;
+                fileptr = Pos;
             }
 
             try
             {
                 if (stream == null)
                 {
-                    stream = File.Open(this.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    stream = File.Open(FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                     ownstream = true;
                 }
 
@@ -81,7 +75,7 @@ namespace EliteDangerousCore
                         // Return false if the OS gave us nulls
                         if (buffer[bufferpos] == 0)
                         {
-                            System.Diagnostics.Trace.WriteLine($"Read null bytes from journal {this.FileName}");
+                            System.Diagnostics.Trace.WriteLine($"Read empty line from journal {FullName}");
                             buffer = null;
                             line = default(T);
                             return false;
@@ -109,7 +103,7 @@ namespace EliteDangerousCore
                             try
                             {
                                 line = processor(System.Text.Encoding.UTF8.GetString(buf));
-                                TravelLogUnit.Size += linelen;
+                                Pos += linelen;
                                 return true;
                             }
                             catch
@@ -146,7 +140,7 @@ namespace EliteDangerousCore
                     }
                     catch (Exception ex)
                     {
-                        System.Diagnostics.Trace.WriteLine($"Error reading journal {this.FileName}: {ex.Message}");
+                        System.Diagnostics.Trace.WriteLine($"Error reading journal {FullName}: {ex.Message}");
                         buffer = null;
                         line = default(T);
                         return false;
@@ -168,7 +162,7 @@ namespace EliteDangerousCore
                     // Return false if the OS gave us nulls
                     if (buffer[bufferlen] == 0)
                     {
-                        System.Diagnostics.Trace.WriteLine($"Read null bytes from journal {this.FileName}");
+                        System.Diagnostics.Trace.WriteLine($"Read empty line from journal {FullName}");
                         buffer = null;
                         line = default(T);
                         return false;

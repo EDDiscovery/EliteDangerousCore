@@ -169,6 +169,7 @@ namespace EliteDangerousCore
             public string Label { get; set; }
             public string FriendlyLabel { get; set; }
             public string ValueStr { get; set; }            // 3.02 if set, means ones further on do not apply. check first
+            public string ValueStr_Localised { get; set; }  
             public double Value { get; set; }               // may be 0
             public double OriginalValue { get; set; }
             public bool LessIsGood { get; set; }
@@ -200,12 +201,16 @@ namespace EliteDangerousCore
                 ExperimentalEffect = evt.MultiStr(new string[] { "ExperimentalEffect", "ApplyExperimentalEffect" });
                 ExperimentalEffect_Localised = JournalFieldNaming.CheckLocalisation(evt["ExperimentalEffect_Localised"].Str(),ExperimentalEffect);
 
-                Modifiers = evt["Modifiers"]?.ToObjectProtected<EngineeringModifiers[]>();
+                Modifiers = evt["Modifiers"]?.ToObjectProtected<EngineeringModifiers[]>(ignoretypeerrors:true);     // instances of Value being wrong type - ignore and continue
 
                 if (Modifiers != null)
                 {
                     foreach (EngineeringModifiers v in Modifiers)
                         v.FriendlyLabel = v.Label.SplitCapsWord();
+                }
+                else
+                {
+
                 }
             }
 

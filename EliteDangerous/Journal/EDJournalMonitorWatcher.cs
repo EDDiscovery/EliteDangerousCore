@@ -105,12 +105,14 @@ namespace EliteDangerousCore
 
                 if (lastnfi != null)                            // always give old file another go, even if we are going to change
                 {
-                    if (!File.Exists(lastnfi.FileName))         // if its been removed, null
+                    if (!File.Exists(lastnfi.FullName))         // if its been removed, null
                     {
                         lastnfi = null;
                     }
                     else
                     {
+                        //var notdone = new FileInfo(lastnfi.FullName).Length != lastnfi.Pos ? "**********" : ""; System.Diagnostics.Debug.WriteLine($"Scan last nfi {lastnfi.FullName} from {lastnfi.Pos} Length file is {new FileInfo(lastnfi.FullName).Length} {notdone} ");
+
                         ScanReader(lastnfi, entries, uientries);
 
                         if (entries.Count > 0 || uientries.Count > 0 )
@@ -123,13 +125,13 @@ namespace EliteDangerousCore
 
                 if (m_netLogFileQueue.TryDequeue(out filename))      // if a new one queued, we swap to using it
                 {
-                    lastnfi = OpenFileReader(new FileInfo(filename));
-                    System.Diagnostics.Debug.WriteLine(string.Format("Change to scan {0}", lastnfi.FileName));
+                    lastnfi = OpenFileReader(filename);
+                    System.Diagnostics.Debug.WriteLine(string.Format("Change to scan {0}", lastnfi.FullName));
                     if (lastnfi != null)
                         ScanReader(lastnfi, entries, uientries);   // scan new one
                 }
                 // every few goes, if its not there or filepos is greater equal to length (so only done when fully up to date)
-                else if ( ticksNoActivity >= 30 && (lastnfi == null || lastnfi.filePos >= new FileInfo(lastnfi.FileName).Length))
+                else if ( ticksNoActivity >= 30 && (lastnfi == null || lastnfi.Pos >= new FileInfo(lastnfi.FullName).Length))
                 {
                     HashSet<string> tlunames = new HashSet<string>(TravelLogUnit.GetAllNames());
                     string[] filenames = Directory.EnumerateFiles(WatcherFolder, journalfilematch, SearchOption.AllDirectories)
@@ -139,10 +141,10 @@ namespace EliteDangerousCore
                                                   .Select(s => s.fullname)
                                                   .ToArray();
 
-                    foreach (var name in filenames)         // for any new filenames..
+                    foreach (var filepath in filenames)         // for any new filenames..
                     {
-                        System.Diagnostics.Debug.WriteLine("No Activity but found new file " + name);
-                        lastnfi = OpenFileReader(new FileInfo(name));
+                        //System.Diagnostics.Debug.WriteLine("No Activity checking " + filepath);
+                        lastnfi = OpenFileReader(filepath);
                         break;      // stop on first found
                     }
 
@@ -172,16 +174,16 @@ namespace EliteDangerousCore
 
             try
             {
-                if (nfi.TravelLogUnit.id == 0)
+                if (nfi.ID == 0)
                 {
-                    nfi.TravelLogUnit.type = TravelLogUnit.JournalType;
+                    nfi.TravelLogUnit.Type = TravelLogUnit.JournalType;
                     nfi.TravelLogUnit.Add();
                 }
 
-                netlogpos = nfi.TravelLogUnit.Size;
+                netlogpos = nfi.Pos;
 
-                bool readanything = nfi.ReadJournal(out List<JournalEntry> ents, out List<UIEvent> uie, historyrefreshparsing: false, resetOnError: false );
-
+                bool readanything = nfi.ReadJournal(out List<JournalEntry> ents, out List<UIEvent> uie, historyrefreshparsing: false);
+                //System.Diagnostics.Debug.WriteLine($"From {0} Read {1} j{2} u{3}", nfi.FileName, readanything, ents.Count, uie.Count);
                 uientries.AddRange(uie);
 
                 if (readanything)           // if we read, we must update the travel log pos
@@ -215,7 +217,7 @@ namespace EliteDangerousCore
                 // Revert and re-read the failed entries
                 if (nfi != null && nfi.TravelLogUnit != null)
                 {
-                    nfi.TravelLogUnit.Size = netlogpos;
+                    nfi.Pos = netlogpos;
                 }
 
                 throw;
@@ -238,42 +240,44 @@ namespace EliteDangerousCore
 
             List<EDJournalReader> readersToUpdate = new List<EDJournalReader>();
 
-            List<TravelLogUnit> toadd = new List<TravelLogUnit>();
+            List<TravelLogUnit> tlutoadd = new List<TravelLogUnit>();
 
             for (int i = 0; i < allFiles.Length; i++)
             {
                 FileInfo fi = allFiles[i];
 
-                var reader = OpenFileReader(fi, true);       // open it, but delay adding
+                var reader = OpenFileReader(allFiles[i].FullName, true);       // open it, but delay adding
 
-                if (reader.TravelLogUnit.id == 0)            // if not present, add to commit add list
-                    toadd.Add(reader.TravelLogUnit);
-
-                if (!netlogreaders.ContainsKey(reader.TravelLogUnit.Name))
+                if (reader.ID == 0)            // if not present, add to commit add list
                 {
-                    netlogreaders[reader.TravelLogUnit.Name] = reader;
+                    tlutoadd.Add(reader.TravelLogUnit);
+                }
+
+                if (!netlogreaders.ContainsKey(reader.FullName))
+                {
+                    netlogreaders[reader.FullName] = reader;
                 }
 
                 bool islast = (i == allFiles.Length - 1);
 
                 if ( i >= allFiles.Length - reloadlastn )
                 {
-                    reader.TravelLogUnit.Size = 0;      // by setting the start zero (reader.filePos is the same as Size)
+                    reader.Pos = 0;      // by setting the start zero (reader.filePos is the same as Size)
                 }
 
-                if (reader.filePos != fi.Length || islast )  // File not already in DB, or is the last one
+                if (reader.Pos != fi.Length || islast )  // File not already in DB, or is the last one
                 {
                     readersToUpdate.Add(reader);
                 }
             }
 
-            if ( toadd.Count > 0 )                      // now, on spinning rust, this takes ages for 600+ log files first time, so transaction it
+            if ( tlutoadd.Count > 0 )                      // now, on spinning rust, this takes ages for 600+ log files first time, so transaction it
             {
                 UserDatabase.Instance.ExecuteWithDatabase(cn => 
                     {
                         using (DbTransaction txn = cn.Connection.BeginTransaction())
                         {
-                            foreach (var tlu in toadd)
+                            foreach (var tlu in tlutoadd)
                             {
                                 tlu.Add(cn.Connection, txn);
                             }
@@ -295,7 +299,7 @@ namespace EliteDangerousCore
             {
                 EDJournalReader reader = readersToUpdate[i];
 
-                reader.ReadJournal(out List<JournalEntry> entries, out List<UIEvent> uievents, historyrefreshparsing: true, resetOnError: true);      // this may create new commanders, and may write to the TLU db
+                reader.ReadJournal(out List<JournalEntry> entries, out List<UIEvent> uievents, historyrefreshparsing: true);      // this may create new commanders, and may write to the TLU
 
                 UserDatabase.Instance.ExecuteWithDatabase(cn =>
                 {
@@ -314,7 +318,7 @@ namespace EliteDangerousCore
                         }
                         else
                         {
-                            ILookup<DateTime, JournalEntry> existing = JournalEntry.GetAllByTLU(reader.TravelLogUnit.id, cn.Connection).ToLookup(e => e.EventTimeUTC);
+                            ILookup<DateTime, JournalEntry> existing = JournalEntry.GetAllByTLU(reader.ID, cn.Connection).ToLookup(e => e.EventTimeUTC);
 
                             //System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLap("PJF"), i + " into db");
 
@@ -337,7 +341,7 @@ namespace EliteDangerousCore
 
                     reader.TravelLogUnit.Update(cn.Connection);
 
-                    updateProgress((i + 1) * 100 / readersToUpdate.Count, reader.TravelLogUnit.Name);
+                    updateProgress((i + 1) * 100 / readersToUpdate.Count, reader.FullName);
 
                     lastnfi = reader;
                 });
@@ -352,30 +356,29 @@ namespace EliteDangerousCore
 
         // open a new file for watching, place it into the netlogreaders list
 
-        private EDJournalReader OpenFileReader(FileInfo fi, bool delayadd = false)
+        private EDJournalReader OpenFileReader(string filepath, bool delayadd = false)
         {
             EDJournalReader reader;
             TravelLogUnit tlu;
 
             //System.Diagnostics.Trace.WriteLine(string.Format("{0} Opening File {1}", Environment.TickCount % 10000, fi.FullName));
 
-            if (netlogreaders.ContainsKey(fi.Name))
+            if (netlogreaders.ContainsKey(filepath))        // cache
             {
-                reader = netlogreaders[fi.Name];
+                reader = netlogreaders[filepath];
             }
-            else if (TravelLogUnit.TryGet(fi.Name, out tlu))
+            else if (TravelLogUnit.TryGet(filepath, out tlu))   // from db
             {
-                tlu.Path = fi.DirectoryName;
                 reader = new EDJournalReader(tlu);
-                netlogreaders[fi.Name] = reader;
+                netlogreaders[filepath] = reader;
             }
             else
             {
-                reader = new EDJournalReader(fi.FullName);
-                reader.TravelLogUnit.type = TravelLogUnit.JournalType;
+                reader = new EDJournalReader(filepath);
+                reader.TravelLogUnit.Type = TravelLogUnit.JournalType;
                 if (!delayadd)
                     reader.TravelLogUnit.Add();
-                netlogreaders[fi.Name] = reader;
+                netlogreaders[filepath] = reader;
             }
 
             return reader;

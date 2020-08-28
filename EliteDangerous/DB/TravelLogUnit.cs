@@ -30,40 +30,33 @@ namespace EliteDangerousCore.DB
         public const int TypeMask = 0xff;
         public const int BetaMarker = 0x8000;
 
-        public long id;
-        public string Name;
-        public int type;            // bit 15 = BETA.  Type = 2 EDSM log, 3 = Journal, 1 = Old pre 2.1 logs.
+        public long ID;
+        public int Type;            // bit 15 = BETA.  Type = 2 EDSM log, 3 = Journal, 1 = Old pre 2.1 logs.
         public int Size;
-        public string Path;
         public int? CommanderId;
+        public string FullName { get { return System.IO.Path.Combine(Path, FileName); } }
+        public string Path;
+
+        private string FileName;        // should not be using this
 
         public TravelLogUnit()
         {
         }
 
-        public TravelLogUnit(DataRow dr)
+        public TravelLogUnit(string s)
         {
-            Object obj;
-            id = (long)dr["id"];
-            Name = (string)dr["Name"];
-            type = (int)(long)dr["type"];
-            Size = (int)(long)dr["size"];
-            Path = (string)dr["Path"];
-             obj = dr["CommanderId"];
-
-            if (obj == DBNull.Value)
-                CommanderId = null; 
-            else
-                CommanderId = (int)(long)dr["CommanderId"];
-
+            var fi = new System.IO.FileInfo(s);
+            FileName = fi.Name;
+            Path = fi.DirectoryName;
+            Size = 0;
         }
 
         public TravelLogUnit(DbDataReader dr)
         {
             Object obj;
-            id = (long)dr["id"];
-            Name = (string)dr["Name"];
-            type = (int)(long)dr["type"];
+            ID = (long)dr["id"];
+            FileName = (string)dr["Name"];
+            Type = (int)(long)dr["type"];
             Size = (int)(long)dr["size"];
             Path = (string)dr["Path"];
             obj =dr["CommanderId"];
@@ -72,14 +65,13 @@ namespace EliteDangerousCore.DB
                 CommanderId = null;  // TODO  use better default value?
             else
                 CommanderId = (int)(long)dr["CommanderId"];
-
         }
 
         public bool Beta
         {
             get
             {
-                if ((Path != null && Path.Contains("PUBLIC_TEST_SERVER")) || (type & BetaMarker) == BetaMarker)
+                if ((Path != null && Path.Contains("PUBLIC_TEST_SERVER")) || (Type & BetaMarker) == BetaMarker)
                     return true;
                 else
                     return false;
@@ -95,11 +87,12 @@ namespace EliteDangerousCore.DB
         internal bool Add(SQLiteConnectionUser cn, DbTransaction tn = null)
         {
             FetchAll();
+            System.Diagnostics.Debug.WriteLine($"Add TLU {Path} {FileName}");
 
             using (DbCommand cmd = cn.CreateCommand("Insert into TravelLogUnit (Name, type, size, Path, CommanderID) values (@name, @type, @size, @Path, @CommanderID)", tn))
             {
-                cmd.AddParameterWithValue("@name", Name);
-                cmd.AddParameterWithValue("@type", type);
+                cmd.AddParameterWithValue("@name", FileName);
+                cmd.AddParameterWithValue("@type", Type);
                 cmd.AddParameterWithValue("@size", Size);
                 cmd.AddParameterWithValue("@Path", Path);
                 cmd.AddParameterWithValue("@CommanderID", CommanderId);
@@ -108,10 +101,11 @@ namespace EliteDangerousCore.DB
 
                 using (DbCommand cmd2 = cn.CreateCommand("Select Max(id) as id from TravelLogUnit"))
                 {
-                    id = (long)cmd2.ExecuteScalar();
+                    ID = (long)cmd2.ExecuteScalar();
                 }
 
-                cache[id] = this;
+                System.Diagnostics.Debug.WriteLine("Update cache with " + ID);
+                cache[ID] = this;
                 return true;
             }
         }
@@ -125,9 +119,9 @@ namespace EliteDangerousCore.DB
         {
             using (DbCommand cmd = cn.CreateCommand("Update TravelLogUnit set Name=@Name, Type=@type, size=@size, Path=@Path, CommanderID=@CommanderID  where ID=@id", tn))
             {
-                cmd.AddParameterWithValue("@ID", id);
-                cmd.AddParameterWithValue("@Name", Name);
-                cmd.AddParameterWithValue("@Type", type);
+                cmd.AddParameterWithValue("@ID", ID);
+                cmd.AddParameterWithValue("@Name", FileName);
+                cmd.AddParameterWithValue("@Type", Type);
                 cmd.AddParameterWithValue("@size", Size);
                 cmd.AddParameterWithValue("@Path", Path);
                 cmd.AddParameterWithValue("@CommanderID", CommanderId);
@@ -147,8 +141,6 @@ namespace EliteDangerousCore.DB
 
                 UserDatabase.Instance.ExecuteWithDatabase(cn =>
                 {
-                    List<TravelLogUnit> list = new List<TravelLogUnit>();
-
                     using (DbCommand cmd = cn.Connection.CreateCommand("select * from TravelLogUnit"))
                     {
                         using (DbDataReader rdr = cmd.ExecuteReader())
@@ -156,8 +148,8 @@ namespace EliteDangerousCore.DB
                             while (rdr.Read())
                             {
                                 TravelLogUnit sys = new TravelLogUnit(rdr);
-                                cache[sys.id] = sys;
-                                list.Add(sys);
+                                System.Diagnostics.Debug.Assert(!cache.ContainsKey(sys.ID));
+                                cache[sys.ID] = sys;
                             }
                         }
                     }
@@ -174,13 +166,13 @@ namespace EliteDangerousCore.DB
         public static List<string> GetAllNames()
         {
             FetchAll();
-            return cache.Values.Select(x=>x.Name).ToList();
+            return cache.Values.Select(x=>x.FullName).ToList();
         }
 
-        public static TravelLogUnit Get(string name)
+        public static TravelLogUnit Get(string pathfilename)
         {
             FetchAll();
-            return cache.Values.ToList().Find(x => x.Name == name); // null if not there
+            return cache.Values.ToList().Find(x => x.FullName == pathfilename); // null if not there
         }
 
         public static bool TryGet(string name, out TravelLogUnit tlu)

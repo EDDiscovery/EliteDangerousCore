@@ -49,38 +49,36 @@ namespace EliteDangerousCore
         }
 
         // inhistoryrefreshparse = means reading history in batch mode
-        private JournalEntry ProcessLine(string line, bool inhistoryrefreshparse, bool resetOnError)
+        // returns null if journal line is bad or its a repeat..
+        private JournalEntry ProcessLine(string line, bool inhistoryrefreshparse)
         {
             int cmdrid = TravelLogUnit.CommanderId.HasValue  ? TravelLogUnit.CommanderId.Value  : -2; //-1 is hidden, -2 is never shown
 
             if (line.Length == 0)
                 return null;
 
-            JObject jo = null;
+            JObject jo = JObject.Parse(line, JToken.ParseOptions.AllowTrailingCommas | JToken.ParseOptions.CheckEOL);  // parse, null if failed
+
+            if (jo == null)     // decode failed, gently return null
+            {
+                System.Diagnostics.Trace.WriteLine($"{TravelLogUnit.FullName} Bad journal line: {line}");
+                return null;
+            }
+
             JournalEntry je = null;
 
             try
-            {
-                jo = JObject.ParseThrowCommaEOL(line);
-                je = JournalEntry.CreateJournalEntry(jo,true);
+            {           // use a try block in case anything in the creation goes tits up
+                je = JournalEntry.CreateJournalEntry(jo, true);
             }
             catch
             {
-                System.Diagnostics.Trace.WriteLine($"Bad journal line:\n{line}");
-
-                if (resetOnError)
-                {
-                    throw;
-                }
-                else
-                {
-                    return null;
-                }
+                je = null;
             }
 
             if (je == null)
             {
-                System.Diagnostics.Trace.WriteLine($"Bad journal line:\n{line}");
+                System.Diagnostics.Trace.WriteLine($"{TravelLogUnit.FullName} Bad journal creation: {line}");
                 return null;
             }
 
@@ -92,7 +90,7 @@ namespace EliteDangerousCore
 
                 if ((header.Beta && !EliteConfigInstance.InstanceOptions.DisableBetaCommanderCheck) || EliteConfigInstance.InstanceOptions.ForceBetaOnCommander) // if beta, and not disabled, or force beta
                 {
-                    TravelLogUnit.type |= TravelLogUnit.BetaMarker;
+                    TravelLogUnit.Type |= TravelLogUnit.BetaMarker;
                 }
 
                 if (header.Part > 1)
@@ -126,7 +124,7 @@ namespace EliteDangerousCore
                 var jlg = je as JournalEvents.JournalLoadGame;
                 string newname = jlg.LoadGameCommander;
 
-                if ((TravelLogUnit.type & TravelLogUnit.BetaMarker) == TravelLogUnit.BetaMarker)
+                if ((TravelLogUnit.Type & TravelLogUnit.BetaMarker) == TravelLogUnit.BetaMarker)
                 {
                     newname = "[BETA] " + newname;
                 }
@@ -160,13 +158,15 @@ namespace EliteDangerousCore
             }
             else if (je is ISystemStationEntry && ((ISystemStationEntry)je).IsTrainingEvent)
             {
-                System.Diagnostics.Trace.WriteLine($"Training detected:\n{line}");
+                //System.Diagnostics.Trace.WriteLine($"{filename} Training detected:\n{line}");
                 return null;
             }
 
             if (je is IAdditionalFiles)
             {
-                if ((je as IAdditionalFiles).ReadAdditionalFiles(Path.GetDirectoryName(FileName), inhistoryrefreshparse, ref jo) == false)     // if failed
+
+
+                if ((je as IAdditionalFiles).ReadAdditionalFiles(TravelLogUnit.Path, inhistoryrefreshparse, ref jo) == false)     // if failed
                     return null;
             }
 
@@ -235,7 +235,7 @@ namespace EliteDangerousCore
 
             if (toosoon)                                                // if seeing repeats, remove
             {
-                System.Diagnostics.Debug.WriteLine("**** Remove as dup " + je.EventTypeStr);
+               // System.Diagnostics.Debug.WriteLine("**** Remove as dup " + je.EventTypeStr);
                 return null;
             }
 
@@ -244,7 +244,7 @@ namespace EliteDangerousCore
                 return null;
             }
 
-            je.SetTLUCommander(TravelLogUnit.id, cmdrid);
+            je.SetTLUCommander(TravelLogUnit.ID, cmdrid);
 
             return je;
         }
@@ -252,14 +252,14 @@ namespace EliteDangerousCore
         // function needs to report two things, list of JREs (may be empty) and UIs, and if it read something, bool.. hence form changed
         // bool reporting we have performed any sort of action is important.. it causes the TLU pos to be updated above even if we have junked all the events or delayed them
 
-        public bool ReadJournal(out List<JournalEntry> jent, out List<UIEvent> uievents, bool historyrefreshparsing, bool resetOnError )      // True if anything was processed, even if we rejected it
+        public bool ReadJournal(out List<JournalEntry> jent, out List<UIEvent> uievents, bool historyrefreshparsing )      // True if anything was processed, even if we rejected it
         {
             jent = new List<JournalEntry>();
             uievents = new List<UIEvent>();
 
             bool readanything = false;
 
-            while (ReadLine(out JournalEntry newentry, l => ProcessLine(l, historyrefreshparsing, resetOnError)))
+            while (ReadLine(out JournalEntry newentry, l => ProcessLine(l, historyrefreshparsing)))
             {
                 readanything = true;
 

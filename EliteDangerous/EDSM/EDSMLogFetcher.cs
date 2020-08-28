@@ -249,11 +249,8 @@ namespace EliteDangerousCore.EDSM
             {
                 System.Diagnostics.Debug.WriteLine($"Adding EDSM logs count {toadd.Count}");
 
-                TravelLogUnit tlu = new TravelLogUnit();    // need a tlu for it
-                tlu.type = TravelLogUnit.EDSMType;  // EDSM
-                tlu.Name = "EDSM-" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                tlu.Size = 0;
-                tlu.Path = "EDSM";
+                TravelLogUnit tlu = new TravelLogUnit("EDSM\\EDSM-" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture));    // need a tlu for it
+                tlu.Type = TravelLogUnit.EDSMType;  // EDSM
                 tlu.CommanderId = EDCommander.CurrentCmdrID;
                 tlu.Add();  // Add to Database
 
@@ -262,7 +259,7 @@ namespace EliteDangerousCore.EDSM
                     foreach (JournalFSDJump jfsd in toadd)
                     {
                         System.Diagnostics.Trace.WriteLine(string.Format("Add {0} {1}", jfsd.EventTimeUTC, jfsd.StarSystem));
-                        jfsd.SetTLUCommander(tlu.id, tlu.CommanderId.Value);        // update its TLU id to the TLU made above
+                        jfsd.SetTLUCommander(tlu.ID, tlu.CommanderId.Value);        // update its TLU id to the TLU made above
                         jfsd.Add(jfsd.CreateFSDJournalEntryJson(), cn.Connection);     // add it to the db with the JSON created
                     }
                 });
