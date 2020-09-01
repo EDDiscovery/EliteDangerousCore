@@ -136,7 +136,7 @@ namespace EliteDangerousCore
                     HashSet<string> tlunames = new HashSet<string>(TravelLogUnit.GetAllNames());
                     string[] filenames = Directory.EnumerateFiles(WatcherFolder, journalfilematch, SearchOption.AllDirectories)
                                                   .Select(s => new { name = Path.GetFileName(s), fullname = s })
-                                                  .Where(s => !tlunames.Contains(s.name))           // find any new ones..
+                                                  .Where(s => !tlunames.Contains(s.fullname))           // find any new ones..
                                                   .OrderBy(s => s.name)
                                                   .Select(s => s.fullname)
                                                   .ToArray();
