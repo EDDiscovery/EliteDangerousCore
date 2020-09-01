@@ -36,6 +36,7 @@ namespace EliteDangerousCore
         private int ticksNoActivity = 0;
         private ConcurrentQueue<string> m_netLogFileQueue;
         private const string journalfilematch = "Journal*.log";       // this picks up beta and normal logs
+        private bool StoreToDBDuringUpdateRead = false;
 
         public JournalMonitorWatcher(string folder)
         {
@@ -44,12 +45,13 @@ namespace EliteDangerousCore
 
         #region Scan start stop and monitor
 
-        public void StartMonitor()
+        public void StartMonitor(bool storetodb)
         {
             if (m_Watcher == null)
             {
                 try
                 {
+                    StoreToDBDuringUpdateRead = storetodb;
                     m_netLogFileQueue = new ConcurrentQueue<string>();
                     m_Watcher = new System.IO.FileSystemWatcher();
                     m_Watcher.Path = WatcherFolder + Path.DirectorySeparatorChar;
@@ -94,134 +96,118 @@ namespace EliteDangerousCore
 
         // Called by EDJournalClass periodically to scan for journal entries
 
-        public Tuple<List<JournalEntry>,List<UIEvent>> ScanForNewEntries()
+        public Tuple<List<JournalEntry>, List<UIEvent>> ScanForNewEntries()
         {
             var entries = new List<JournalEntry>();
             var uientries = new List<UIEvent>();
 
-            try
+            string filename = null;
+
+            if (lastnfi != null)                            // always give old file another go, even if we are going to change
             {
-                string filename = null;
-
-                if (lastnfi != null)                            // always give old file another go, even if we are going to change
+                if (!File.Exists(lastnfi.FullName))         // if its been removed, null
                 {
-                    if (!File.Exists(lastnfi.FullName))         // if its been removed, null
-                    {
-                        lastnfi = null;
-                    }
-                    else
-                    {
-                        //var notdone = new FileInfo(lastnfi.FullName).Length != lastnfi.Pos ? "**********" : ""; System.Diagnostics.Debug.WriteLine($"Scan last nfi {lastnfi.FullName} from {lastnfi.Pos} Length file is {new FileInfo(lastnfi.FullName).Length} {notdone} ");
+                    lastnfi = null;
+                }
+                else
+                {
+                    //var notdone = new FileInfo(lastnfi.FullName).Length != lastnfi.Pos ? "**********" : ""; System.Diagnostics.Debug.WriteLine($"Scan last nfi {lastnfi.FullName} from {lastnfi.Pos} Length file is {new FileInfo(lastnfi.FullName).Length} {notdone} ");
 
-                        ScanReader(lastnfi, entries, uientries);
+                    ScanReader(entries, uientries);
 
-                        if (entries.Count > 0 || uientries.Count > 0 )
-                        {
-                            ticksNoActivity = 0;
-                            return new Tuple<List<JournalEntry>, List<UIEvent>>(entries,uientries);     // feed back now don't change file
-                        }
+                    if (entries.Count > 0 || uientries.Count > 0)
+                    {
+                       // System.Diagnostics.Debug.WriteLine("ScanFornew read " + entries.Count() + " ui " + uientries.Count());
+                        ticksNoActivity = 0;
+                        return new Tuple<List<JournalEntry>, List<UIEvent>>(entries, uientries);     // feed back now don't change file
                     }
                 }
+            }
 
-                if (m_netLogFileQueue.TryDequeue(out filename))      // if a new one queued, we swap to using it
-                {
-                    lastnfi = OpenFileReader(filename);
-                    System.Diagnostics.Debug.WriteLine(string.Format("Change to scan {0}", lastnfi.FullName));
-                    if (lastnfi != null)
-                        ScanReader(lastnfi, entries, uientries);   // scan new one
-                }
+            if (m_netLogFileQueue.TryDequeue(out filename))      // if a new one queued, we swap to using it
+            {
+                lastnfi = OpenFileReader(filename);
+                System.Diagnostics.Debug.WriteLine(string.Format("Change to scan {0}", lastnfi.FullName));
+                ScanReader(entries, uientries);
+            }
+            else if (ticksNoActivity >= 30 && (lastnfi == null || lastnfi.Pos >= new FileInfo(lastnfi.FullName).Length))
+            {
                 // every few goes, if its not there or filepos is greater equal to length (so only done when fully up to date)
-                else if ( ticksNoActivity >= 30 && (lastnfi == null || lastnfi.Pos >= new FileInfo(lastnfi.FullName).Length))
+                // scan all files in the folder, pick out any new logs, and process the first that is found.
+
+                try
                 {
                     HashSet<string> tlunames = new HashSet<string>(TravelLogUnit.GetAllNames());
                     string[] filenames = Directory.EnumerateFiles(WatcherFolder, journalfilematch, SearchOption.AllDirectories)
-                                                  .Select(s => new { name = Path.GetFileName(s), fullname = s })
-                                                  .Where(s => !tlunames.Contains(s.fullname))           // find any new ones..
-                                                  .OrderBy(s => s.name)
-                                                  .Select(s => s.fullname)
-                                                  .ToArray();
+                                                    .Select(s => new { name = Path.GetFileName(s), fullname = s })
+                                                    .Where(s => !tlunames.Contains(s.fullname))           // find any new ones..
+                                                    .OrderBy(s => s.name)
+                                                    .Select(s => s.fullname)
+                                                    .ToArray();
 
-                    foreach (var filepath in filenames)         // for any new filenames..
+                    if (filenames.Length > 0)
                     {
-                        //System.Diagnostics.Debug.WriteLine("No Activity checking " + filepath);
-                        lastnfi = OpenFileReader(filepath);
-                        break;      // stop on first found
+                        lastnfi = OpenFileReader(filenames[0]);     // open first one
+                        System.Diagnostics.Debug.WriteLine(string.Format("Found new file {0}", lastnfi.FullName));
+                        ScanReader(entries, uientries);
                     }
-
-                    if (lastnfi != null)
-                        ScanReader(lastnfi, entries , uientries);   // scan new one
-
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine("Exception during monitor watch file found " + ex);
+                }
+                finally
+                {
                     ticksNoActivity = 0;
                 }
-
-                ticksNoActivity++;
-
-                return new Tuple<List<JournalEntry>, List<UIEvent>>(entries, uientries);     // feed back now don't change file
             }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Trace.WriteLine("Net tick exception : " + ex.Message);
-                System.Diagnostics.Trace.WriteLine(ex.StackTrace);
-                return new Tuple<List<JournalEntry>, List<UIEvent>>(new List<JournalEntry>(), new List<UIEvent>());     // send out empty
-            }
+
+            ticksNoActivity++;
+
+            return new Tuple<List<JournalEntry>, List<UIEvent>>(entries, uientries);     // feed back now don't change file
         }
 
         // Called by ScanForNewEntries (from EDJournalClass Scan Tick Worker) to scan a NFI for new entries
 
-        private void ScanReader(EDJournalReader nfi, List<JournalEntry> entries, List<UIEvent> uientries )
+        private void ScanReader(List<JournalEntry> entries, List<UIEvent> uientries)
         {
-            int netlogpos = 0;
+            System.Diagnostics.Debug.Assert(lastnfi.ID != 0);       // must have committed it at this point, prev code checked for it but it must have been done
+            System.Diagnostics.Debug.Assert(netlogreaders.ContainsKey(lastnfi.FullName));       // must have added to netlogreaders.. double check
 
-            try
+            bool readanything = lastnfi.ReadJournal(entries, uientries, historyrefreshparsing: false);
+
+            if (StoreToDBDuringUpdateRead)
             {
-                if (nfi.ID == 0)
+                if (entries.Count > 0 || readanything )
                 {
-                    nfi.TravelLogUnit.Type = TravelLogUnit.JournalType;
-                    nfi.TravelLogUnit.Add();
-                }
-
-                netlogpos = nfi.Pos;
-
-                bool readanything = nfi.ReadJournal(out List<JournalEntry> ents, out List<UIEvent> uie, historyrefreshparsing: false);
-                //System.Diagnostics.Debug.WriteLine($"From {0} Read {1} j{2} u{3}", nfi.FileName, readanything, ents.Count, uie.Count);
-                uientries.AddRange(uie);
-
-                if (readanything)           // if we read, we must update the travel log pos
-                {
-                    //System.Diagnostics.Debug.WriteLine("ScanReader " + Path.GetFileName(nfi.FileName) + " read " + ents.Count + " ui " +uientries.Count + " size " + netlogpos);
-
                     UserDatabase.Instance.ExecuteWithDatabase(cn =>
                     {
                         using (DbTransaction txn = cn.Connection.BeginTransaction())
                         {
-                            ents = ents.Where(jre => JournalEntry.FindEntry(jre, cn, jre.GetJson()).Count == 0).ToList();
-
-                            foreach (JournalEntry jre in ents)
+                            if (entries.Count > 0)
                             {
-                                entries.Add(jre);
-                                jre.Add(jre.GetJson(), cn.Connection, txn);
+                                entries = entries.Where(jre => JournalEntry.FindEntry(jre, cn, jre.GetJson()).Count == 0).ToList();
+
+                                foreach (JournalEntry jre in entries)
+                                {
+                                    jre.Add(jre.GetJson(), cn.Connection, txn);
+                                }
                             }
 
-                            //System.Diagnostics.Debug.WriteLine("Wrote " + ents.Count() + " to db and updated TLU");
-
-                            nfi.TravelLogUnit.Update(cn.Connection);
+                            lastnfi.TravelLogUnit.Update(cn.Connection, txn);       // update TLU pos
 
                             txn.Commit();
                         }
                     });
                 }
             }
-            catch ( Exception ex )
+            else
             {
-                System.Diagnostics.Debug.WriteLine("Exception " + ex.Message);
-                // Revert and re-read the failed entries
-                if (nfi != null && nfi.TravelLogUnit != null)
-                {
-                    nfi.Pos = netlogpos;
-                }
-
-                throw;
+                if (readanything)
+                    lastnfi.TravelLogUnit.Update();
             }
+
+            //if ( entries.Count()>0 || uientries.Count()>0) System.Diagnostics.Debug.WriteLine("ScanRead " + entries.Count() + " " + uientries.Count());
         }
 
         #endregion
@@ -253,17 +239,12 @@ namespace EliteDangerousCore
                     tlutoadd.Add(reader.TravelLogUnit);
                 }
 
-                if (!netlogreaders.ContainsKey(reader.FullName))
-                {
-                    netlogreaders[reader.FullName] = reader;
-                }
-
-                bool islast = (i == allFiles.Length - 1);
-
                 if ( i >= allFiles.Length - reloadlastn )
                 {
                     reader.Pos = 0;      // by setting the start zero (reader.filePos is the same as Size)
                 }
+
+                bool islast = (i == allFiles.Length - 1);
 
                 if (reader.Pos != fi.Length || islast )  // File not already in DB, or is the last one
                 {
@@ -299,52 +280,55 @@ namespace EliteDangerousCore
             {
                 EDJournalReader reader = readersToUpdate[i];
 
-                reader.ReadJournal(out List<JournalEntry> entries, out List<UIEvent> uievents, historyrefreshparsing: true);      // this may create new commanders, and may write to the TLU
+                List<JournalEntry> entries = new List<JournalEntry>();
+                List<UIEvent> uievents = new List<UIEvent>();
+                bool readanything = reader.ReadJournal(entries, uievents, historyrefreshparsing: true);      // this may create new commanders, and may write to the TLU
 
-                UserDatabase.Instance.ExecuteWithDatabase(cn =>
+                if (fireback != null)
                 {
-                    if (entries.Count > 0 )
+                    if (readanything)               // need to update TLU pos if read anything
+                        reader.TravelLogUnit.Update();
+
+                    if (i >= readersToUpdate.Count - firebacklastn) // if within fireback window
                     {
-                        if (fireback != null)
+                        for( int e = 0; e < entries.Count; e++ )
                         {
-                            if (i >= readersToUpdate.Count - firebacklastn) // if within fireback window
-                            {
-                                for( int e = 0; e < entries.Count; e++ )
-                                {
-                                    //System.Diagnostics.Debug.WriteLine("Fire {0} {1} {2} {3} {4} {5}", entries[e].CommanderId, i, readersToUpdate.Count, e, entries.Count, entries[e].EventTypeStr );
-                                    fireback(entries[e], i, readersToUpdate.Count, e, entries.Count);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            ILookup<DateTime, JournalEntry> existing = JournalEntry.GetAllByTLU(reader.ID, cn.Connection).ToLookup(e => e.EventTimeUTC);
-
-                            //System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLap("PJF"), i + " into db");
-
-                            using (DbTransaction tn = cn.Connection.BeginTransaction())
-                            {
-                                foreach (JournalEntry jre in entries)
-                                {
-                                    if (!existing[jre.EventTimeUTC].Any(e => JournalEntry.AreSameEntry(jre, e, cn.Connection, ent1jo: jre.GetJson())))
-                                    {
-                                        jre.Add(jre.GetJson(), cn.Connection, tn);
-
-                                        //System.Diagnostics.Trace.WriteLine(string.Format("Write Journal to db {0} {1}", jre.JournalEntry.EventTimeUTC, jre.JournalEntry.EventTypeStr));
-                                    }
-                                }
-
-                                tn.Commit();
-                            }
+                            //System.Diagnostics.Debug.WriteLine("Fire {0} {1} {2} {3} {4} {5}", entries[e].CommanderId, i, readersToUpdate.Count, e, entries.Count, entries[e].EventTypeStr );
+                            fireback(entries[e], i, readersToUpdate.Count, e, entries.Count);
                         }
                     }
+                }
+                else
+                {
+                    UserDatabase.Instance.ExecuteWithDatabase(cn =>
+                    {
+                        ILookup<DateTime, JournalEntry> existing = JournalEntry.GetAllByTLU(reader.ID, cn.Connection).ToLookup(e => e.EventTimeUTC);
 
-                    reader.TravelLogUnit.Update(cn.Connection);
+                        //System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLap("PJF"), i + " into db");
 
-                    updateProgress((i + 1) * 100 / readersToUpdate.Count, reader.FullName);
+                        using (DbTransaction tn = cn.Connection.BeginTransaction())
+                        {
+                            foreach (JournalEntry jre in entries)
+                            {
+                                if (!existing[jre.EventTimeUTC].Any(e => JournalEntry.AreSameEntry(jre, e, cn.Connection, ent1jo: jre.GetJson())))
+                                {
+                                    jre.Add(jre.GetJson(), cn.Connection, tn);
 
-                    lastnfi = reader;
-                });
+                                    //System.Diagnostics.Trace.WriteLine(string.Format("Write Journal to db {0} {1}", jre.JournalEntry.EventTimeUTC, jre.JournalEntry.EventTypeStr));
+                                }
+                            }
+
+                            if (readanything)
+                                reader.TravelLogUnit.Update(cn.Connection, tn);
+
+                            tn.Commit();
+                        }
+                    });
+                }
+
+                updateProgress((i + 1) * 100 / readersToUpdate.Count, reader.FullName);
+
+                lastnfi = reader;
             }
 
             updateProgress(-1, "");
@@ -354,12 +338,11 @@ namespace EliteDangerousCore
 
         #region Open
 
-        // open a new file for watching, place it into the netlogreaders list
+        // open a new file for watching, place it into the netlogreaders list. Always return a reader
 
         private EDJournalReader OpenFileReader(string filepath, bool delayadd = false)
         {
             EDJournalReader reader;
-            TravelLogUnit tlu;
 
             //System.Diagnostics.Trace.WriteLine(string.Format("{0} Opening File {1}", Environment.TickCount % 10000, fi.FullName));
 
@@ -367,7 +350,7 @@ namespace EliteDangerousCore
             {
                 reader = netlogreaders[filepath];
             }
-            else if (TravelLogUnit.TryGet(filepath, out tlu))   // from db
+            else if (TravelLogUnit.TryGet(filepath, out TravelLogUnit tlu))   // from db
             {
                 reader = new EDJournalReader(tlu);
                 netlogreaders[filepath] = reader;

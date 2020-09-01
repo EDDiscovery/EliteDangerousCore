@@ -104,7 +104,7 @@ namespace EliteDangerousCore.DB
                     ID = (long)cmd2.ExecuteScalar();
                 }
 
-                System.Diagnostics.Debug.WriteLine("Update cache with " + ID);
+                //System.Diagnostics.Debug.WriteLine("Update cache with " + ID);
                 cache[ID] = this;
                 return true;
             }

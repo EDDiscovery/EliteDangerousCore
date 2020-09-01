@@ -82,7 +82,7 @@ namespace EliteDangerousCore
 
         #region Start stop and scan
 
-        public void StartMonitor()
+        public void StartMonitor(bool storetodb)
         {
             StopRequested = new ManualResetEvent(false);
             ScanThread = new Thread(ScanThreadProc) { Name = "Journal Monitor Thread", IsBackground = true };
@@ -90,7 +90,7 @@ namespace EliteDangerousCore
 
             foreach (JournalMonitorWatcher mw in watchers)
             {
-                mw.StartMonitor();
+                mw.StartMonitor(storetodb);
             }
 
             foreach (StatusMonitorWatcher mw in statuswatchers)

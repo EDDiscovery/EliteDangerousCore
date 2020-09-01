@@ -49,7 +49,7 @@ namespace EliteDangerousCore
         }
 
         // inhistoryrefreshparse = means reading history in batch mode
-        // returns null if journal line is bad or its a repeat..
+        // returns null if journal line is bad or its a repeat.. It does not throw
         private JournalEntry ProcessLine(string line, bool inhistoryrefreshparse)
         {
             int cmdrid = TravelLogUnit.CommanderId.HasValue  ? TravelLogUnit.CommanderId.Value  : -2; //-1 is hidden, -2 is never shown
@@ -251,12 +251,10 @@ namespace EliteDangerousCore
 
         // function needs to report two things, list of JREs (may be empty) and UIs, and if it read something, bool.. hence form changed
         // bool reporting we have performed any sort of action is important.. it causes the TLU pos to be updated above even if we have junked all the events or delayed them
+        // function does not throw.
 
-        public bool ReadJournal(out List<JournalEntry> jent, out List<UIEvent> uievents, bool historyrefreshparsing )      // True if anything was processed, even if we rejected it
+        public bool ReadJournal(List<JournalEntry> jent, List<UIEvent> uievents, bool historyrefreshparsing )      // True if anything was processed, even if we rejected it
         {
-            jent = new List<JournalEntry>();
-            uievents = new List<UIEvent>();
-
             bool readanything = false;
 
             while (ReadLine(out JournalEntry newentry, l => ProcessLine(l, historyrefreshparsing)))
@@ -279,11 +277,11 @@ namespace EliteDangerousCore
                             var dentry = StartEntries.Dequeue();
                             dentry.SetCommander(TravelLogUnit.CommanderId.Value);
                             //System.Diagnostics.Debug.WriteLine("*** UnDelay " + dentry.JournalEntry.EventTypeStr);
-                            AddEntry(dentry, ref jent, ref uievents);
+                            AddEntry(dentry, jent, uievents);
                         }
 
                         //System.Diagnostics.Debug.WriteLine("*** Send  " + newentry.JournalEntry.EventTypeStr);
-                        AddEntry(newentry, ref jent, ref uievents);
+                        AddEntry(newentry, jent, uievents);
                     }
                 }
             }
@@ -293,7 +291,7 @@ namespace EliteDangerousCore
 
         // this class looks at the JE and decides if its really a UI not a journal entry
 
-        private void AddEntry( JournalEntry newentry, ref List<JournalEntry> jent, ref List<UIEvent> uievents )
+        private void AddEntry( JournalEntry newentry, List<JournalEntry> jent, List<UIEvent> uievents )
         {
             if (newentry.EventTypeID == JournalTypeEnum.Music)     // MANUALLY sync this list with ActionEventList.cs::EventList function
             {
