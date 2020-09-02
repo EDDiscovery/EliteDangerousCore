@@ -420,37 +420,51 @@ namespace EliteDangerousCore
 
         protected JObject ReadAdditionalFile( string extrafile, bool waitforfile, bool checktimestamptype )       // read file, return new JSON
         {
-            for (int retries = 0; retries < 25 ; retries++)
+            for (int retries = 0; retries < 25*4 ; retries++)
             {
-                try
+                // this has the full version of the event, including data, at the same timestamp
+                string json = BaseUtils.FileHelpers.TryReadAllTextFromFile(extrafile);      // null if not there, or locked..
+
+                // decode into JObject if there, null if in error or not there
+                JObject joaf = json != null ? JObject.Parse(json, JToken.ParseOptions.AllowTrailingCommas | JToken.ParseOptions.CheckEOL) : null;
+
+                if (joaf != null)
                 {
-                    if (System.IO.File.Exists(extrafile))
+                    string newtype = joaf["event"].Str();
+                    DateTime fileUTC = joaf["timestamp"].DateTimeUTC();
+                    if (newtype != EventTypeStr || fileUTC == DateTime.MinValue)
                     {
-                        string json = System.IO.File.ReadAllText(extrafile);        // try the current file
-
-                        if (json != null)
+                        System.Diagnostics.Debug.WriteLine($"Rejected {extrafile} due to type/bad date, deleting");
+                        BaseUtils.FileHelpers.DeleteFileNoError(extrafile);     // may be corrupt..
+                        return null;
+                    }
+                    else
+                    {
+                        if (fileUTC > EventTimeUTC)
                         {
-                            JObject joaf = JObject.ParseThrowCommaEOL(json);       // this has the full version of the event, including data, at the same timestamp
-
-                            string newtype = joaf["event"].Str();
-                            DateTime newUTC = joaf["timestamp"].DateTimeUTC();
-                            if (checktimestamptype == false || (newUTC != null && newUTC == EventTimeUTC && newtype == EventTypeStr))
-                            {
-                                return joaf;                        // good current file..
-                            }
+                            System.Diagnostics.Debug.WriteLine($"File is younger than Event, can't be associated {extrafile}");
+                            return null;
+                        }
+                        else if (checktimestamptype == false || fileUTC == EventTimeUTC)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Read {extrafile} at {fileUTC} after {retries}");
+                            return joaf;                        // good current file..
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine($"File not written yet due to timestamp {extrafile} at {fileUTC}, waiting.. {retries}");
                         }
                     }
                 }
-                catch (Exception ex)
+                else
                 {
-                    System.Diagnostics.Trace.WriteLine($"Unable to read extra info from {extrafile}: {ex.Message}");
+                    System.Diagnostics.Debug.WriteLine($"Cannot read {extrafile}, waiting.. {retries}");
                 }
 
                 if (!waitforfile)               // if don't wait, continue with no return
                     return null;
 
-                System.Diagnostics.Debug.WriteLine($"Cannot read {extrafile}, waiting.. {retries}");
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(25);
             }
 
             return null;
