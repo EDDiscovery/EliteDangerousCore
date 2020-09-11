@@ -702,6 +702,9 @@ SECTION MaterialCommodityData
 .ManufacturedCrystals: "Manufactured Crystals" @
 .ManufacturedAlloys: "Manufactured Alloys" @
 .NA: "NA" @
+.tritium: "Tritium" @
+.s6_tissuesample_mesoglea: "Pod Mesoglea" @
+.s6_tissuesample_cells: "Pod Outer Tissue" @
 
 SECTION EngineeringData
 
@@ -717,3 +720,40 @@ SECTION MissionState
 
 .ToGo: "To Go:" @
 .Progress: "Progress:;%;N1" @
+
+SECTION JournalCarrier
+.At: "At " @
+.Callsign: "Call Sign:" @
+.Name: "Name:" @
+.JumpRange: "Jump Range:;ly;0.0" @
+.Balance: "Carrier Balance:; cr;N0" @
+.ReserveBalance: "Reserve Balance:; cr;N0" @
+.AvailableBalance: "Available Balance:; cr;N0" @
+.ReservePercent: "Reserve Percent:;;N1" @
+.TaxRate: "Tax Rate:;;N1" @
+.TotalCapacity: "Total Capacity:" @
+.Crew: "Crew:" @
+.Cargo: "Cargo:" @
+.CargoReserved: "Cargo Space Reserved:" @
+.ShipPacks: "Ship Packs:" @
+.ModulePacks: "Module Packs:" @
+.FreeSpace: "Free Space:" @
+.ToSystem: "To " @
+.Body: "Body " @
+.Refund: "Refund:; cr;N0" @
+.RefundTime: "at UTC " @
+.Deposit: "Deposit:; cr;N0" @
+.Withdraw: "Withdraw:; cr;N0" @
+.Operation: "Operation:" @
+.Tier: "Tier:" @
+.Purchase: "Purchase:" @
+.Sell: "Sell:" @
+.CancelSell: "Cancel Sell of:" @
+.Access: "Access:" @
+.AllowNotorious: ";Allow Notorious" @
+.Amount: "Amount:;;N0" @
+.FuelLevel: "Fuel Level:;;N0" @
+
+
+
+

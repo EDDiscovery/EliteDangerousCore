@@ -210,6 +210,25 @@ SECTION JournalTypeEnum
 .ReservoirReplenished: "Reservoir Replenished" @
 .SquadronStartup: "Squadron Startup" @
 .ICONIDsStart: "ICONI Ds Start" @
+.CarrierBankTransfer: "Carrier Bank Transfer" @
+.CarrierBuy: "Carrier Buy" @
+.CarrierCancelDecommission: "Carrier Cancel Decommission" @
+.CarrierCrewServices: "Carrier Crew Services" @
+.CarrierDecommission: "Carrier Decommission" @
+.CarrierDepositFuel: "Carrier Deposit Fuel" @
+.CarrierDockingPermission: "Carrier Docking Permission" @
+.CarrierFinance: "Carrier Finance" @
+.CarrierJumpRequest: "Carrier Jump Request" @
+.CarrierJump: "Carrier Jump" @
+.CarrierModulePack: "Carrier Module Pack" @
+.CarrierShipPack: "Carrier Ship Pack" @
+.CarrierStats: "Carrier Stats" @
+.CarrierTradeOrder: "Carrier Trade Order" @
+.CarrierNameChange: "Carrier Name Change" @
+.CarrierJumpCancelled: "Carrier Jump Cancelled" @
+.CargoTransfer: "Cargo Transfer" @
+.NavRoute: "Nav Route" @
+
 
 SECTION JournalCargo
 
@@ -504,6 +523,7 @@ SECTION JournalScan
 .Ring: "Ring" @
 .Rings: "Rings" @
 .EV: "Base Estimated value: {0:N0}" @
+.EVM: "Mapped value: {0:N0}/{1:N0}e" @
 .DB: "Discovered by {0} on {1}" @
 .HabitableZoneApprox: "Habitable Zone Approx. {0} ({1}-{2} AU)\n" @
 .Othersstarsnotconsidered: " - Others stars not considered\n" @
@@ -945,6 +965,10 @@ SECTION JournalEntry
 .Ships: "Ships" @
 .Distance: "Distance:; ly;0.0" @
 .Threat: "Threat:" @
-.RemaingJumps: "Remaining Jumps" @
+.RemainingJumps: "Remaining Jumps" @
 .Nearest: "Nearest:" @
+.Old: "Old:" @
+.New: "New:" @
 
+SECTION JournalCarrierJump
+.JumpedWith: "Jumped with carrier {0} to {1}" @
