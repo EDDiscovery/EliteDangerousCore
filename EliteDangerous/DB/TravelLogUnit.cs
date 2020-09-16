@@ -45,9 +45,8 @@ namespace EliteDangerousCore.DB
 
         public TravelLogUnit(string s)
         {
-            var fi = new System.IO.FileInfo(s);
-            FileName = fi.Name;
-            Path = fi.DirectoryName;
+            FileName = System.IO.Path.GetFileName(s);
+            Path = System.IO.Path.GetDirectoryName(s);
             Size = 0;
         }
 
