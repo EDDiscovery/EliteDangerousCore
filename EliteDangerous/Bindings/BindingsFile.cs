@@ -28,6 +28,7 @@ namespace EliteDangerousCore
     public class BindingsFile : IEnumerable<BindingsFile.Device>
     {
         public bool Loaded { get { return devices.Count > 0; } }
+        public string FileLoaded { get; private set; }
 
         public HashSet<string> AxisNames { get; private set; } = new HashSet<string>();        // from Bindings in frontier file - all names even if not assigned
         public HashSet<string> KeyNames { get; private set; } = new HashSet<string>();         // from Primary or Secondary in frontier file - all names even if not assigned
@@ -284,6 +285,8 @@ namespace EliteDangerousCore
                             }
                         }
                     }
+
+                    FileLoaded = allFiles[0].FullName;
                     return true;
                 }
             }
