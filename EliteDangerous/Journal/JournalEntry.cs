@@ -415,7 +415,9 @@ namespace EliteDangerousCore
             JObject ent1jorm = RemoveEDDGeneratedKeys(ent1jo);     // remove keys, but don't alter originals as they can be used later 
             JObject ent2jorm = RemoveEDDGeneratedKeys(ent2jo);
 
-            return JToken.DeepEquals(ent1jorm, ent2jorm);
+            bool res = JToken.DeepEquals(ent1jorm, ent2jorm);
+            //if (!res) System.Diagnostics.Debug.WriteLine("!! Not duplicate {0} vs {1}", ent1jorm.ToString(), ent2jorm.ToString()); else  System.Diagnostics.Debug.WriteLine("Duplicate");
+            return res;
         }
 
         protected JObject ReadAdditionalFile( string extrafile, bool waitforfile, bool checktimestamptype )       // read file, return new JSON

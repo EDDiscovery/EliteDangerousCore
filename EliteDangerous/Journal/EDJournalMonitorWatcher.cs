@@ -310,11 +310,19 @@ namespace EliteDangerousCore
                         {
                             foreach (JournalEntry jre in entries)
                             {
+                                //System.Diagnostics.Trace.WriteLine(string.Format("--- Check {0} {1} Existing {2} : {3}", jre.EventTimeUTC, jre.EventTypeStr, existing[jre.EventTimeUTC].Count(), jre.GetJson().ToString()));
+
                                 if (!existing[jre.EventTimeUTC].Any(e => JournalEntry.AreSameEntry(jre, e, cn.Connection, ent1jo: jre.GetJson())))
                                 {
+                                    //foreach (var x in existing[jre.EventTimeUTC]) { System.Diagnostics.Trace.WriteLine(string.Format(" passed vs {0} Deepequals {1}", x.GetJson().ToString(), x.GetJson().DeepEquals(jre.GetJson()))); }
+
                                     jre.Add(jre.GetJson(), cn.Connection, tn);
 
-                                    //System.Diagnostics.Trace.WriteLine(string.Format("Write Journal to db {0} {1}", jre.JournalEntry.EventTimeUTC, jre.JournalEntry.EventTypeStr));
+                                    //System.Diagnostics.Trace.WriteLine(string.Format("Write Journal to db {0} {1}", jre.EventTimeUTC, jre.EventTypeStr));
+                                }
+                                else
+                                {
+                                    //System.Diagnostics.Trace.WriteLine(string.Format("Duplicate Journal to db {0} {1}", jre.EventTimeUTC, jre.EventTypeStr));
                                 }
                             }
 
