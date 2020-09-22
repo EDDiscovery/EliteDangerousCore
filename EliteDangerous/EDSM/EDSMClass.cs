@@ -87,7 +87,6 @@ namespace EliteDangerousCore.EDSM
                 query += " { \"name\": \"" + to + "\",  \"dist\": " + distance + " } ";
             }
 
-
             query += "] } ";
 
             MimeType = "application/json; charset=utf-8";
@@ -120,8 +119,8 @@ namespace EliteDangerousCore.EDSM
                 JObject basesystem = (JObject)edsm["basesystem"];
                 JArray distances = (JArray)edsm["distances"];
 
-
                 if (distances != null)
+                {
                     foreach (var st in distances)
                     {
                         int statusnum = st["msgnum"].Int();
@@ -130,12 +129,11 @@ namespace EliteDangerousCore.EDSM
                             retval = false;
 
                         respstr += "Status " + statusnum.ToString() + " : " + st["msg"].Str() + Environment.NewLine;
-
                     }
+                }
 
                 if (basesystem != null)
                 {
-
                     int statusnum = basesystem["msgnum"].Int();
 
                     if (statusnum == 101)
@@ -198,7 +196,7 @@ namespace EliteDangerousCore.EDSM
             {
                 foreach (JObject sysname in msg)
                 {
-                    nowKnown.Add(sysname["name"].ToString());
+                    nowKnown.Add(sysname["name"].Str("Unknown"));
                 }
             }
 
@@ -236,7 +234,7 @@ namespace EliteDangerousCore.EDSM
             {
                 foreach (JObject sysname in msg)
                 {
-                    systems.Add(sysname["name"].ToString());
+                    systems.Add(sysname["name"].Str("Unknown"));
                 }
             }
 
@@ -1051,7 +1049,7 @@ namespace EliteDangerousCore.EDSM
             try
             {
                 JObject resp = JObject.ParseThrowCommaEOL(response.Body);
-                errmsg = resp["msg"]?.ToString();
+                errmsg = resp["msg"].Str();
 
                 int msgnr = resp["msgnum"].Int();
 
