@@ -302,7 +302,8 @@ namespace EliteDangerousCore
                 {
                     UserDatabase.Instance.ExecuteWithDatabase(cn =>
                     {
-                        ILookup<DateTime, JournalEntry> existing = JournalEntry.GetAllByTLU(reader.ID, cn.Connection).ToLookup(e => e.EventTimeUTC);
+                        // only lookup TLUs if there is actually anything to compare against
+                        ILookup<DateTime, JournalEntry> existing = entries.Count > 0 ? JournalEntry.GetAllByTLU(reader.ID, cn.Connection).ToLookup(e => e.EventTimeUTC) : null;
 
                         //System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLap("PJF"), i + " into db");
 
