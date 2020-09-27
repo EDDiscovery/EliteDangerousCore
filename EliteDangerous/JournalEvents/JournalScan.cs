@@ -470,13 +470,18 @@ namespace EliteDangerousCore.JournalEvents
                 }
             }
 
-            JObject parents = evt["Parents"].Object();
-            if ( parents != null)
+            var parents = evt["Parents"];
+
+            if (parents != null)
             {
                 Parents = new List<BodyParent>();
-                foreach (var kvp in parents)
+
+                foreach (JObject parent in parents)
                 {
-                    Parents.Add(new BodyParent { Type = kvp.Key, BodyID = kvp.Value.Int() });
+                    foreach (var kvp in parent)
+                    {
+                        Parents.Add(new BodyParent { Type = kvp.Key, BodyID = kvp.Value.Int() });
+                    }
                 }
             }
 
