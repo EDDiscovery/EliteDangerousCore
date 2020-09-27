@@ -430,7 +430,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     Materials = mats.ToObjectProtected<Dictionary<string, double>>();  // name in fd logs is lower case
                 }
-                else
+                else if ( mats.IsArray)
                 {
                     Materials = new Dictionary<string, double>();
                     foreach (JObject jo in mats)                                        // name in fd logs is lower case
@@ -439,18 +439,21 @@ namespace EliteDangerousCore.JournalEvents
                     }
                 }
 
-                var na = (from x in Materials select x.Key).ToArray();
-                MaterialList = String.Join(",", na);
+                if (Materials != null)
+                {
+                    var na = (from x in Materials select x.Key).ToArray();
+                    MaterialList = String.Join(",", na);
+                }
             }
 
             JToken atmos = evt["AtmosphereComposition"];
-            if (atmos != null)
+            if (!atmos.IsNull())
             {
                 if (atmos.IsObject)
                 {
                     AtmosphereComposition = atmos?.ToObjectProtected<Dictionary<string, double>>();
                 }
-                else
+                else if ( atmos.IsArray)
                 {
                     AtmosphereComposition = new Dictionary<string, double>();
                     foreach (JObject jo in atmos)
@@ -461,7 +464,7 @@ namespace EliteDangerousCore.JournalEvents
             }
 
             JObject composition = evt["Composition"].Object();
-            if (composition != null)
+            if (!composition.IsNull() && composition.IsObject)
             {
                 PlanetComposition = new Dictionary<string, double>();
                 foreach (var kvp in composition)
@@ -470,17 +473,19 @@ namespace EliteDangerousCore.JournalEvents
                 }
             }
 
-            var parents = evt["Parents"];
-
-            if (parents != null)
+            JArray parents = evt["Parents"].Array();            // will be null if parents is not an array (also if its Null)
+            if (!parents.IsNull() && parents.IsArray )
             {
                 Parents = new List<BodyParent>();
 
                 foreach (JObject parent in parents)
                 {
-                    foreach (var kvp in parent)
+                    if (parent.IsObject)
                     {
-                        Parents.Add(new BodyParent { Type = kvp.Key, BodyID = kvp.Value.Int() });
+                        foreach (var kvp in parent)
+                        {
+                            Parents.Add(new BodyParent { Type = kvp.Key, BodyID = kvp.Value.Int() });
+                        }
                     }
                 }
             }
@@ -490,7 +495,7 @@ namespace EliteDangerousCore.JournalEvents
             IsEDSMBody = evt["EDDFromEDSMBodie"].Bool(false);           // Bodie? Who is bodie?  Did you mean Body Finwen ;-)
 
             JToken discovery = evt["discovery"];
-            if (discovery != null)
+            if (!discovery.IsNull())
             {
                 EDSMDiscoveryCommander = discovery["commander"].StrNull();
                 EDSMDiscoveryUTC = discovery["date"].DateTimeUTC();
