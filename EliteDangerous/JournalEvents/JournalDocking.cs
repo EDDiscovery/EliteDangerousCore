@@ -183,7 +183,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", StationName, "< on pad ".T(EDTx.JournalEntry_onpad), LandingPad);
+            info = BaseUtils.FieldBuilder.Build("", StationName, "< on pad ".T(EDTx.JournalEntry_onpad), LandingPad, "Type:".T(EDTx.JournalEntry_Type), StationType);
             detailed = "";
         }
     }
