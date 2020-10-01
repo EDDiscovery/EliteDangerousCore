@@ -594,7 +594,7 @@ namespace EliteDangerousCore.EDSM
         {
             string query = String.Format("api-v1/sphere-systems?systemName={0}&radius={1}&minRadius={2}&showCoordinates=1&showId=1", Uri.EscapeDataString(systemName), maxradius , minradius);
 
-            var response = RequestGet(query, handleException: true);
+            var response = RequestGet(query, handleException: true, timeout: 30000);
             if (response.Error)
                 return null;
 
@@ -628,6 +628,52 @@ namespace EliteDangerousCore.EDSM
                     }
                 }
                 catch( Exception e)      // json may be garbage
+                {
+                    System.Diagnostics.Debug.WriteLine("Failed due to " + e.ToString());
+                }
+            }
+
+            return null;
+        }
+
+        public List<Tuple<ISystem, double>> GetSphereSystems(double x, double y, double z, double maxradius, double minradius)      // may return null
+        {
+            string query = String.Format("api-v1/sphere-systems?x={0}&y={1}&z={2}&radius={3}&minRadius={4}&showCoordinates=1&showId=1", x, y, z, maxradius, minradius);
+
+            var response = RequestGet(query, handleException: true, timeout: 30000);
+            if (response.Error)
+                return null;
+
+            var json = response.Body;
+            if (json != null)
+            {
+                try
+                {
+                    List<Tuple<ISystem, double>> systems = new List<Tuple<ISystem, double>>();
+
+                    JArray msg = JArray.Parse(json);        // allow for crap from EDSM or empty list
+
+                    if (msg != null)
+                    {
+                        foreach (JObject sysname in msg)
+                        {
+                            ISystem sys = new SystemClass();
+                            sys.Name = sysname["name"].Str("Unknown");
+                            sys.EDSMID = sysname["id"].Long(0);
+                            JObject co = (JObject)sysname["coords"];
+                            if (co != null)
+                            {
+                                sys.X = co["x"].Double();
+                                sys.Y = co["y"].Double();
+                                sys.Z = co["z"].Double();
+                            }
+                            systems.Add(new Tuple<ISystem, double>(sys, sysname["distance"].Double()));
+                        }
+
+                        return systems;
+                    }
+                }
+                catch (Exception e)      // json may be garbage
                 {
                     System.Diagnostics.Debug.WriteLine("Failed due to " + e.ToString());
                 }
