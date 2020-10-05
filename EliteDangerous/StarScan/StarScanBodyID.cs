@@ -266,7 +266,7 @@ namespace EliteDangerousCore
                         node.BodyID = sc.BodyID;
                     }
 
-                    if (sc.BodyType == "" || sc.BodyType == "Null")
+                    if (sc.BodyType == "" || sc.BodyType == "Null" || sc.BodyType == "Barycentre")
                         node.type = ScanNodeType.barycentre;
                     else if (sc.BodyType == "Belt")
                         node.type = ScanNodeType.belt;
