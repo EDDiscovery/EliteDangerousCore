@@ -68,6 +68,7 @@ namespace EliteDangerousCore.JournalEvents
         public double? nAbsoluteMagnitude { get; set; }             // direct
         public string Luminosity { get; set; }                      // character string (I,II,.. V)
         public string StarClassification { get { return (StarType ?? "") + (StarSubclass?.ToStringInvariant() ?? "") + (Luminosity ?? ""); } }
+        public string StarClassificationAbv { get { return new string((StarType ?? "").Where(x => char.IsUpper(x) || x == '_').Select(x => x).ToArray()) + (StarSubclass?.ToStringInvariant() ?? "") + (Luminosity ?? ""); } }
         public double? nAge { get; set; }                           // direct, in million years
         public double? HabitableZoneInner { get; set; }             // in AU
         public double? HabitableZoneOuter { get; set; }             // in AU
@@ -409,6 +410,9 @@ namespace EliteDangerousCore.JournalEvents
                     IcyPlanetZoneInner = DistanceForBlackBodyTemperature(150);
                     IcyPlanetZoneOuter = "\u221E"; // practically infinite, at least until the body suffer from the gravitational bond with its host star
                 }
+
+                //var f = System.IO.File.AppendText(@"c:\code\stars.lst"); f.Write("{0} / {1} / {2} : {3} / {4}" +Environment.NewLine, StarType, StarSubclass, Luminosity, StarClassification, StarClassificationAbv);// f.Close();
+
             }
             else if (PlanetClass != null)
             {
