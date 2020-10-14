@@ -812,7 +812,7 @@ namespace EliteDangerousCore.JournalEvents
 
             scanText.AppendFormat("Scan Type: {0}".T(EDTx.JournalScan_SCNT) + "\n", ScanType);
 
-            scanText.AppendFormat("BID+Parents: {0} - {1}\n", BodyID ?? -1, ParentList());
+            //scanText.AppendFormat("BID+Parents: {0} - {1}\n", BodyID ?? -1, ParentList());
 
             if (scanText.Length > 0 && scanText[scanText.Length - 1] == '\n')
                 scanText.Remove(scanText.Length - 1, 1);
