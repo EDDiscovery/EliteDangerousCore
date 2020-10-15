@@ -63,7 +63,7 @@ namespace EliteDangerousCore.JournalEvents
         // STAR
         public string StarType { get; set; }                        // null if no StarType, direct from journal, K, A, B etc
         public EDStar StarTypeID { get; }                           // star type -> identifier
-        public string StarTypeText { get { return IsStar ? GetStarTypeName() : ""; } }   // Long form star name, from StarTypeID
+        public string StarTypeText { get { return IsStar ? Bodies.StarName(StarTypeID) : ""; } }   // Long form star name, from StarTypeID
         public double? nStellarMass { get; set; }                   // direct
         public double? nAbsoluteMagnitude { get; set; }             // direct
         public string Luminosity { get; set; }                      // character string (I,II,.. V)
@@ -101,9 +101,10 @@ namespace EliteDangerousCore.JournalEvents
         public int? StarSubclass { get; set; }                      // star Subclass, direct, 3.4
 
         // Planets
-        public string PlanetClass { get; set; }                     // planet class, direct
-
+        public string PlanetClass { get; set; }                     // planet class, direct. If belt cluster, null
         public EDPlanet PlanetTypeID { get; }                       // planet class -> ID
+        public string PlanetTypeText { get { return IsStar || IsBeltCluster ? "" : Bodies.PlanetTypeName(PlanetTypeID); } }   // Long form star name, from StarTypeID
+
         public bool AmmoniaWorld { get { return Bodies.AmmoniaWorld(PlanetTypeID); } }
         public bool Earthlike { get { return Bodies.Earthlike(PlanetTypeID); } }
         public bool WaterWorld { get { return Bodies.WaterWorld(PlanetTypeID); } }
@@ -246,28 +247,28 @@ namespace EliteDangerousCore.JournalEvents
             public double OuterRad;
 
             // has trailing LF
-            public string RingInformation(double scale = 1, string scaletype = " MT", bool parentIsStar = false)
+            public string RingInformation(double scale = 1, string scaletype = " MT", bool parentIsStar = false, string frontpad = "  ")
             {
                 StringBuilder scanText = new StringBuilder();
-                scanText.AppendFormat("  {0} ({1})\n", Name.Alt("Unknown".T(EDTx.Unknown)), DisplayStringFromRingClass(RingClass));
-                scanText.AppendFormat("  Mass: {0:N4}{1}\n".T(EDTx.StarPlanetRing_Mass), MassMT * scale, scaletype);
+                scanText.AppendFormat(frontpad + "{0} ({1})\n", Name.Alt("Unknown".T(EDTx.Unknown)), DisplayStringFromRingClass(RingClass));
+                scanText.AppendFormat(frontpad + "Mass: {0:N4}{1}\n".T(EDTx.StarPlanetRing_Mass), MassMT * scale, scaletype);
                 if (parentIsStar && InnerRad > 3000000)
                 {
-                    scanText.AppendFormat("  Inner Radius: {0:0.00}ls\n".T(EDTx.StarPlanetRing_InnerRadius), (InnerRad / oneLS_m));
-                    scanText.AppendFormat("  Outer Radius: {0:0.00}ls\n".T(EDTx.StarPlanetRing_OuterRadius), (OuterRad / oneLS_m));
+                    scanText.AppendFormat(frontpad + "Inner Radius: {0:0.00}ls\n".T(EDTx.StarPlanetRing_InnerRadius), (InnerRad / oneLS_m));
+                    scanText.AppendFormat(frontpad + "Outer Radius: {0:0.00}ls\n".T(EDTx.StarPlanetRing_OuterRadius), (OuterRad / oneLS_m));
                 }
                 else
                 {
-                    scanText.AppendFormat("  Inner Radius: {0}km\n".T(EDTx.StarPlanetRing_IK), (InnerRad / 1000).ToString("N0"));
-                    scanText.AppendFormat("  Outer Radius: {0}km\n".T(EDTx.StarPlanetRing_OK), (OuterRad / 1000).ToString("N0"));
+                    scanText.AppendFormat(frontpad + "Inner Radius: {0}km\n".T(EDTx.StarPlanetRing_IK), (InnerRad / 1000).ToString("N0"));
+                    scanText.AppendFormat(frontpad + "Outer Radius: {0}km\n".T(EDTx.StarPlanetRing_OK), (OuterRad / 1000).ToString("N0"));
                 }
                 return scanText.ToNullSafeString();
             }
 
             // has trailing LF
-            public string RingInformationMoons(bool parentIsStar = false)
+            public string RingInformationMoons(bool parentIsStar = false, string frontpad = "  ")
             {
-                return RingInformation(1 / oneMoon_MT, " Moons".T(EDTx.StarPlanetRing_Moons), parentIsStar);
+                return RingInformation(1 / oneMoon_MT, " Moons".T(EDTx.StarPlanetRing_Moons), parentIsStar, frontpad);
             }
 
             public static string DisplayStringFromRingClass(string ringClass)   // no trailing LF
@@ -580,7 +581,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (IsStar)
             {
-                info = BaseUtils.FieldBuilder.Build("", GetStarTypeName(), "Mass:;SM;0.00".T(EDTx.JournalScan_MSM), nStellarMass,
+                info = BaseUtils.FieldBuilder.Build("", StarTypeText, "Mass:;SM;0.00".T(EDTx.JournalScan_MSM), nStellarMass,
                                                 "Age:;my;0.0".T(EDTx.JournalScan_Age), nAge,
                                                 "Radius:".T(EDTx.JournalScan_RS), RadiusText(),
                                                 "Dist:;ls;0.0".T(EDTx.JournalScan_DISTA), DistanceFromArrivalLS,
@@ -604,7 +605,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (IsStar)
             {
-                return BaseUtils.FieldBuilder.Build("", GetStarTypeName(), "Mass:;SM;0.00".T(EDTx.JournalScan_MSM), nStellarMass,
+                return BaseUtils.FieldBuilder.Build("", StarTypeText, "Mass:;SM;0.00".T(EDTx.JournalScan_MSM), nStellarMass,
                                                 "Age:;my;0.0".T(EDTx.JournalScan_Age), nAge,
                                                 "Radius:".T(EDTx.JournalScan_RS), RadiusText(),
                                                 "Dist:".T(EDTx.JournalScan_DIST), DistanceFromArrivalText,
@@ -637,26 +638,24 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (IsStar)
                 {
-                    scanText.AppendFormat(GetStarTypeName() + " (" + StarClassification + ")");
+                    scanText.AppendFormat(StarTypeText + " (" + StarClassification + ")\n");
                 }
                 else if (PlanetClass != null)
                 {
-                    scanText.AppendFormat("{0}", PlanetClass);
+                    scanText.AppendFormat("{0}", PlanetTypeText);
 
                     if (!PlanetClass.ToLowerInvariant().Contains("gas"))
                     {
                         scanText.AppendFormat((Atmosphere == null || Atmosphere == String.Empty) ? ", No Atmosphere".T(EDTx.JournalScan_NoAtmosphere) : (", " + Atmosphere));
                     }
+
+                    if (IsLandable)
+                        scanText.AppendFormat(", Landable".T(EDTx.JournalScan_LandC));
+                    scanText.AppendFormat("\n");
                 }
-
-                if (IsLandable)
-                    scanText.AppendFormat(", Landable".T(EDTx.JournalScan_LandC));
-
-                scanText.AppendFormat("\n");
 
                 if (Terraformable)
                     scanText.Append("Candidate for terraforming\n".T(EDTx.JournalScan_Candidateforterraforming));
-
 
                 if (nAge.HasValue)
                     scanText.AppendFormat("Age: {0} my\n".T(EDTx.JournalScan_AMY), nAge.Value.ToString("N0"));
@@ -1122,10 +1121,6 @@ namespace EliteDangerousCore.JournalEvents
                 return null;
         }
 
-        public string GetStarTypeName()           // give description to star class
-        {
-            return Bodies.StarName(StarTypeID);
-        }
 
         public System.Drawing.Image GetStarTypeImage()           // give image and description to star class
         {
