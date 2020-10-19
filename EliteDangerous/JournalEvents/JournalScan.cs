@@ -39,6 +39,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StarSystem { get; set; }                      // direct (3.5)
         public long? SystemAddress { get; set; }                    // direct (3.5)
         public double DistanceFromArrivalLS { get; set; }           // direct
+        public double DistanceFromArrivalm { get { return DistanceFromArrivalLS * oneLS_m; } }           
         public string DistanceFromArrivalText { get { return string.Format("{0:0.00}AU ({1:0.0}ls)", DistanceFromArrivalLS / JournalScan.oneAU_LS, DistanceFromArrivalLS); } }
         public double? nRotationPeriod { get; set; }                // direct
         public double? nRotationPeriodDays { get; set; }      
