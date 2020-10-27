@@ -52,6 +52,7 @@ namespace EliteDangerousCore
         // returns null if journal line is bad or its a repeat.. It does not throw
         private JournalEntry ProcessLine(string line, bool inhistoryrefreshparse)
         {
+         //   System.Diagnostics.Debug.WriteLine("Line in '" + line + "'");
             int cmdrid = TravelLogUnit.CommanderId.HasValue  ? TravelLogUnit.CommanderId.Value  : -2; //-1 is hidden, -2 is never shown
 
             if (line.Length == 0)
@@ -257,9 +258,17 @@ namespace EliteDangerousCore
         {
             bool readanything = false;
 
-            while (ReadLine(out JournalEntry newentry, l => ProcessLine(l, historyrefreshparsing)))
+            while (true)
             {
+                string line = ReadLine();           // read line from TLU.
+
+                if (line == null)                   // null means finished, no more data
+                    return readanything;
+
+                //System.Diagnostics.Debug.WriteLine("Line read '" + line + "'");
                 readanything = true;
+
+                JournalEntry newentry = ProcessLine(line, historyrefreshparsing);
 
                 if (newentry != null)                           // if we got a record back, we may not because it may not be valid or be rejected..
                 {
@@ -285,8 +294,6 @@ namespace EliteDangerousCore
                     }
                 }
             }
-
-            return readanything;
         }
 
         // this class looks at the JE and decides if its really a UI not a journal entry

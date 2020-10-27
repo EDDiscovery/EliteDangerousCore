@@ -211,7 +211,6 @@ namespace EliteDangerousCore
             if (cancelRequested == null)
                 cancelRequested = () => false;
 
-            string line;
             try
             {
                 if (stream == null)
@@ -219,8 +218,14 @@ namespace EliteDangerousCore
                     stream = File.Open(this.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                     ownstream = true;
                 }
-                while (!cancelRequested() && this.ReadLine(out line, l => l, stream))
+
+                while (!cancelRequested() )
                 {
+                    string line = ReadLine();         // read line from TLU. Tell it if its in full read mode or play mode
+
+                    if (line == null)                       // null means finished
+                        break;
+
                     ParseLineTime(line);
 
                     if (line.Contains("[PG]"))

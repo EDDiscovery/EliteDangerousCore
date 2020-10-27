@@ -696,12 +696,14 @@ namespace EliteDangerousCore.JournalEvents
             StarClass = evt["StarClass"].Str();
             SystemAddress = evt["SystemAddress"].Long();
             RemainingJumpsInRoute = evt["RemainingJumpsInRoute"].IntNull();
+            FriendlyStarClass = (StarClass.Length > 0) ? Bodies.StarName(Bodies.StarStr2Enum(StarClass)) : "";
         }
 
         public string StarSystem { get; set; }
         public string StarClass { get; set; }
         public long SystemAddress { get; set; }
         public int? RemainingJumpsInRoute { get; set; }
+        public string FriendlyStarClass { get; set; }
 
         public override void FillInformation(out string info, out string detailed)
         {
