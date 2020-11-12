@@ -1270,13 +1270,14 @@ namespace EliteDangerousCore.JournalEvents
 
             if (StarTypeID == EDStar.X || StarTypeID == EDStar.RoguePlanet)
             {
-                System.Diagnostics.Debug.WriteLine(StarTypeID + ": " + iconName);
+               // System.Diagnostics.Debug.WriteLine(StarTypeID + ": " + iconName);
                 return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Unknown");
             }
             else
-
-                System.Diagnostics.Debug.WriteLine(StarTypeID + ": " + iconName);
-            return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Stars.{iconName}");
+            {
+             //   System.Diagnostics.Debug.WriteLine(StarTypeID + ": " + iconName);
+                return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Stars.{iconName}");
+            }
         }
 
         static public System.Drawing.Image GetStarImageNotScanned()
