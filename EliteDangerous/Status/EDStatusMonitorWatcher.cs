@@ -72,8 +72,8 @@ namespace EliteDangerousCore
         int prev_cargo = -1;
         UIEvents.UIPips.Pips prev_pips = new UIEvents.UIPips.Pips();
         UIEvents.UIPosition.Position prev_pos = new UIEvents.UIPosition.Position();     // default is MinValue
-        double prev_heading = double.MaxValue;    // this forces a pos report
-        double prev_jpradius = double.MinValue;    // this forces a pos report
+        double prev_heading = UIEvents.UIPosition.InvalidValue;    // this forces a pos report
+        double prev_jpradius = UIEvents.UIPosition.InvalidValue;    // this forces a pos report
 
         private enum StatusFlagsShip                        // PURPOSELY PRIVATE - don't want users to get into low level detail of BITS
         {
@@ -276,11 +276,11 @@ namespace EliteDangerousCore
                             fireoverall = true;
                         }
 
-                        double jlat = jo["Latitude"].Double(double.MinValue);       // if not there, min value
-                        double jlon = jo["Longitude"].Double(double.MinValue);
-                        double jalt = jo["Altitude"].Double(double.MinValue);
-                        double jheading = jo["Heading"].Double(double.MinValue);
-                        double jpradius = jo["PlanetRadius"].Double(double.MinValue);       // 3.4
+                        double jlat = jo["Latitude"].Double(UIEvents.UIPosition.InvalidValue);       // if not there, min value
+                        double jlon = jo["Longitude"].Double(UIEvents.UIPosition.InvalidValue);
+                        double jalt = jo["Altitude"].Double(UIEvents.UIPosition.InvalidValue);
+                        double jheading = jo["Heading"].Double(UIEvents.UIPosition.InvalidValue);
+                        double jpradius = jo["PlanetRadius"].Double(UIEvents.UIPosition.InvalidValue);       // 3.4
 
                         if (jlat != prev_pos.Latitude || jlon != prev_pos.Longitude || jalt != prev_pos.Altitude || jheading != prev_heading || jpradius != prev_jpradius)
                         {
@@ -290,7 +290,7 @@ namespace EliteDangerousCore
                                 Altitude = jalt, AltitudeFromAverageRadius = (curflags & (1 << (int)StatusFlagsReportedInOtherEvents.AltitudeFromAverageRadius)) != 0
                             };
 
-                            events.Add(new UIEvents.UIPosition(newpos, jheading, jpradius, EventTimeUTC, prev_pos.Latitude == double.MinValue));
+                            events.Add(new UIEvents.UIPosition(newpos, jheading, jpradius, EventTimeUTC, prev_pos.ValidPosition == false));
                             prev_pos = newpos;
                             prev_heading = jheading;
                             prev_jpradius = jpradius;
