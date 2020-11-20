@@ -293,7 +293,6 @@ namespace EliteDangerousCore.JournalEvents
 
             // station data only if docked..
 
-            //TBD
             JObject jk = evt["StationFaction"].Object();  // 3.3.3 post
 
             if ( jk != null )

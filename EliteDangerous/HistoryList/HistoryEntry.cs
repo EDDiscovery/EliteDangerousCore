@@ -49,7 +49,7 @@ namespace EliteDangerousCore
         public DateTime EventTimeUTC { get { return journalEntry.EventTimeUTC; } }  // local removed to stop us using it!.
         public TimeSpan AgeOfEntry() { return DateTime.UtcNow - EventTimeUTC; }
 
-        public string EventSummary { get { return journalEntry.SummaryName(System);} }
+        public string EventSummary { get { return journalEntry.SummaryName(System); } }
 
         public bool EdsmSync { get { return journalEntry.SyncedEDSM; } }           // flag populated from journal entry when HE is made. Have we synced?
         public bool EDDNSync { get { return journalEntry.SyncedEDDN; } }
@@ -75,7 +75,7 @@ namespace EliteDangerousCore
         public string WhereAmI { get { return EntryStatus.StationName ?? EntryStatus.BodyName ?? "Unknown"; } }
         public string BodyType { get { return EntryStatus.BodyType ?? "Unknown"; } }
         public string ShipType { get { return EntryStatus.ShipType ?? "Unknown"; } }         // NOT FD - translated name
-        public string ShipTypeFD {  get { return EntryStatus.ShipTypeFD ?? "unknown";  } }
+        public string ShipTypeFD { get { return EntryStatus.ShipTypeFD ?? "unknown"; } }
         public int ShipId { get { return EntryStatus.ShipID; } }
         public bool MultiPlayer { get { return EntryStatus.OnCrewWithCaptain != null; } }
         public string GameMode { get { return EntryStatus.GameMode ?? ""; } }
@@ -85,6 +85,7 @@ namespace EliteDangerousCore
         public long? MarketID { get { return EntryStatus.MarketId; } }
         public int? BodyID { get { return EntryStatus.BodyID; } }           // NOTE -1 is used for no body, as well as null
         public bool HasBodyID { get { return EntryStatus.HasBodyID; } }
+        public string StationFaction { get { return EntryStatus.StationFaction; } }
 
         public long? FullBodyID { get {                                     // only if at a body
                 if (System.SystemAddress.HasValue && HasBodyID)
