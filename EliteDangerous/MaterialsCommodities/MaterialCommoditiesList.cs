@@ -14,7 +14,6 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
-using EliteDangerousCore.DB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,8 +46,6 @@ namespace EliteDangerousCore
     public class MaterialCommoditiesList
     {
         private List<MaterialCommodities> list;
-
-        // static BaseUtils.LogToFile log = new BaseUtils.LogToFile("c:\\code"); // debug
 
         public MaterialCommoditiesList()
         {
@@ -127,37 +124,37 @@ namespace EliteDangerousCore
                 MaterialCommodityData mcdb = MaterialCommodityData.EnsurePresent(cat,fdname);    // get a MCDB of this
                 MaterialCommodities mc = new MaterialCommodities(mcdb);        // make a new entry
                 list.Add(mc);
-
-                //log.WriteLine("MC Made:" + cat + " " + fdname + " >> " + mc.fdname + mc.name );
-
                 return mc;
             }
         }
 
-        public void Change(string catname, string fdname, int num, long price, bool ignorecatonsearch = false)
+        public void Change(DateTime utc, string catname, string fdname, int num, long price, string faction, bool ignorecatonsearch = false)
         {
             var cat = MaterialCommodityData.CategoryFrom(catname);
             if (cat.HasValue)
             {
-                Change(cat.Value, fdname, num, price, ignorecatonsearch);
+                Change(utc, cat.Value, fdname, num, price, faction, ignorecatonsearch);
             }
             else
                 System.Diagnostics.Debug.WriteLine("Unknown Cat " + catname);
         }
 
         // ignore cat is only used if you don't know what it is 
-        public void Change(MaterialCommodityData.CatType cat, string fdname, int num, long price, bool ignorecatonsearch = false)
+        public void Change(DateTime utc, MaterialCommodityData.CatType cat, string fdname, int num, long price, string faction, bool ignorecatonsearch = false)
         {
             MaterialCommodities mc = GetNewCopyOf(cat, fdname, ignorecatonsearch);
        
             double costprev = mc.Count * mc.Price;
             double costnew = num * price;
+
+            //if (mc.Count == 0 && num < 0) System.Diagnostics.Debug.WriteLine("{0} Error, removing {1} {2} but nothing counted", utc, fdname, num);
+
             mc.Count = Math.Max(mc.Count + num, 0);
 
             if (mc.Count > 0 && num > 0)      // if bought (defensive with mc.count)
                 mc.Price = (costprev + costnew) / mc.Count;       // price is now a combination of the current cost and the new cost. in case we buy in tranches
 
-            //log.WriteLine("MC Change:" + cat + " " + fdname + " " + num + " " + mc.count);
+            //System.Diagnostics.Debug.WriteLine("In {0} At {1} MC Change {2} {3} {4} = {5} {6}", System.Threading.Thread.CurrentThread.Name, utc, cat, fdname, num,mc.Count, faction);
         }
 
         public void Craft(string fdname, int num)
@@ -169,8 +166,6 @@ namespace EliteDangerousCore
                 MaterialCommodities mc = new MaterialCommodities(list[index]);      // new clone of
                 list[index] = mc;       // replace ours with new one
                 mc.Count = Math.Max(mc.Count - num, 0);
-
-                //log.WriteLine("MC Craft:" + fdname + " " + num + " " + mc.count);
             }
         }
 
@@ -197,13 +192,10 @@ namespace EliteDangerousCore
             mc.Count = num;
             if (price > 0)
                 mc.Price = price;
-
-            //log.WriteLine("MC Set:" + cat + " " + fdname + " " + num + " " + mc.count);
         }
 
         public void Clear(bool commodity)
         {
-            //log.Write("MC Clear");
             for (int i = 0; i < list.Count; i++)
             {
                 MaterialCommodities mc = list[i];
@@ -211,13 +203,11 @@ namespace EliteDangerousCore
                 {
                     list[i] = new MaterialCommodities(list[i]);     // new clone of it we can change..
                     list[i].Count = 0;  // and clear it
-                    //log.Write(mc.fdname + ",");
                 }
             }
-            //log.Write("", true);
         }
 
-        static public MaterialCommoditiesList Process(JournalEntry je, MaterialCommoditiesList oldml)
+        static public MaterialCommoditiesList Process(JournalEntry je, MaterialCommoditiesList oldml, string faction)
         {
             MaterialCommoditiesList newmc = (oldml == null) ? new MaterialCommoditiesList() : oldml;
 
@@ -228,13 +218,13 @@ namespace EliteDangerousCore
                 if (je is ICommodityJournalEntry)
                 {
                     ICommodityJournalEntry e = je as ICommodityJournalEntry;
-                    e.UpdateCommodities(newmc);
+                    e.UpdateCommodities(newmc,faction);
                 }
 
                 if (je is IMaterialJournalEntry)
                 {
                     IMaterialJournalEntry e = je as IMaterialJournalEntry;
-                    e.UpdateMaterials(newmc);
+                    e.UpdateMaterials(newmc, faction);
                 }
             }
 

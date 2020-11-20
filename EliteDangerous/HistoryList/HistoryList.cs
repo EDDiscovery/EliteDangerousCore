@@ -931,7 +931,7 @@ namespace EliteDangerousCore
                 }
             }
 
-            he.UpdateMaterials(je, prev);           // let some processes which need the user db to work
+            he.UpdateMaterialsCommodities(je, prev);           // let some processes which need the user db to work
             he.UpdateSystemNote();
 
             cashledger.Process(je);
@@ -1052,9 +1052,8 @@ namespace EliteDangerousCore
 
             foreach (JournalEntry je in jlist)
             {
-                if (MergeEntries(jprev, je))        // if we merge.. we may have updated info, so reprint.
+                if (MergeEntries(jprev, je))        // if we merge, don't store into HE
                 {
-                    //jprev.FillInformation(out prev.EventSummary, out prev.EventDescription, out prev.EventDetailedInfo);    // need to keep this up to date..
                     continue;
                 }
 
@@ -1143,7 +1142,7 @@ namespace EliteDangerousCore
                 HistoryEntry he = hl[i];
                 JournalEntry je = he.journalEntry;
 
-                he.UpdateMaterials(je, (i > 0) ? hl[i - 1] : null);        // let the HE do what it wants to with the user db
+                he.UpdateMaterialsCommodities(je, (i > 0) ? hl[i - 1] : null);        // update material commodities
                 he.UpdateSystemNote();
 
                 Debug.Assert(he.MaterialCommodity != null);

@@ -20,12 +20,12 @@ namespace EliteDangerousCore
 {
     public interface IMaterialJournalEntry
     {
-        void UpdateMaterials(MaterialCommoditiesList mc);
+        void UpdateMaterials(MaterialCommoditiesList mc, string faction);
     }
 
     public interface ICommodityJournalEntry
     {
-        void UpdateCommodities(MaterialCommoditiesList mc);
+        void UpdateCommodities(MaterialCommoditiesList mc, string faction);
     }
 
     public interface ILedgerJournalEntry

@@ -81,16 +81,16 @@ namespace EliteDangerousCore.JournalEvents
         public int Quantity { get; set; }
         public int TotalQuantity { get; set; }
 
-        public void UpdateMaterials(MaterialCommoditiesList mc)
+        public void UpdateMaterials(MaterialCommoditiesList mc, string faction)
         {
             if (Type.Equals("Materials"))
-                mc.Change(MaterialCommodityData.CatType.Raw, Material, -Quantity, 0, true);
+                mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Raw, Material, -Quantity, 0, faction, true);
         }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
         {
             if (Type.Equals("Commodity"))
-                mc.Change(MaterialCommodityData.CatType.Commodity, Commodity, -Quantity, 0);
+                mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Commodity, -Quantity, 0, faction);
         }
 
         public void Ledger(Ledger mcl)
@@ -162,7 +162,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public Dictionary<string, int> Ingredients { get; set; }        // not for legacy convert
 
-        public void UpdateMaterials(MaterialCommoditiesList mc)
+        public void UpdateMaterials(MaterialCommoditiesList mc, string ignorefaction)
         {
             if (Ingredients != null)
             {

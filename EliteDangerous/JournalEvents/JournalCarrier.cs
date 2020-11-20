@@ -286,9 +286,9 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
         {
-            mc.Change(MaterialCommodityData.CatType.Commodity, "tritium", -Amount, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, "tritium", -Amount, 0, faction);
         }
     }
 

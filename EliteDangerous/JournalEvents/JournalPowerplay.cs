@@ -69,9 +69,9 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
         {
-            mc.Change(MaterialCommodityData.CatType.Commodity, Type, Count, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, Count, 0, faction);
         }
     }
 
@@ -116,9 +116,9 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
         {
-            mc.Change(MaterialCommodityData.CatType.Commodity, Type, -Count, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, -Count, 0 , faction);
         }
     }
 

@@ -57,9 +57,9 @@ namespace EliteDangerousCore.JournalEvents
         public long BuyPrice { get; set; }
         public long TotalCost { get; set; }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
         {
-            mc.Change(MaterialCommodityData.CatType.Commodity, "drones", Count, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, "drones", Count, 0, faction);
         }
 
         public void Ledger(Ledger mcl)
@@ -90,9 +90,9 @@ namespace EliteDangerousCore.JournalEvents
         public long SellPrice { get; set; }
         public long TotalSale { get; set; }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
         {
-            mc.Change(MaterialCommodityData.CatType.Commodity, "drones", -Count, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, "drones", -Count, 0, faction);
         }
 
         public void Ledger(Ledger mcl)
@@ -121,9 +121,9 @@ namespace EliteDangerousCore.JournalEvents
         public DroneType Type { get; set; }
         public string FriendlyType { get; set; }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
         {
-            mc.Change(MaterialCommodityData.CatType.Commodity, "drones", -1, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, "drones", -1, 0, faction);
         }
 
         public override void FillInformation(out string info, out string detailed)

@@ -69,7 +69,7 @@ namespace EliteDangerousCore.JournalEvents
             mlist.Died(this.EventTimeUTC);
         }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
         {
             mc.Died();
         }

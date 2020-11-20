@@ -90,9 +90,9 @@ namespace EliteDangerousCore.JournalEvents
         public long TotalCost { get; set; }
         public long? MarketID { get; set; }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
         {
-            mc.Change(MaterialCommodityData.CatType.Commodity, Type, Count, BuyPrice);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, Count, BuyPrice, faction);
         }
 
         public void Ledger(Ledger mcl)
@@ -140,9 +140,9 @@ namespace EliteDangerousCore.JournalEvents
         public bool BlackMarket { get; set; }
         public long? MarketID { get; set; }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
         {
-            mc.Change(MaterialCommodityData.CatType.Commodity, Type, -Count, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, -Count, 0, faction);
         }
 
         public void Ledger(Ledger mcl)

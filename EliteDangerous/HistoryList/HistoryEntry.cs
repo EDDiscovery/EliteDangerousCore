@@ -247,9 +247,9 @@ namespace EliteDangerousCore
             return he;
         }
 
-        public void UpdateMaterials(JournalEntry je, HistoryEntry prev)
+        public void UpdateMaterialsCommodities(JournalEntry je, HistoryEntry prev)
         {
-            MaterialCommodity = MaterialCommoditiesList.Process(je, prev?.MaterialCommodity);
+            MaterialCommodity = MaterialCommoditiesList.Process(je, prev?.MaterialCommodity, StationFaction);
         }
 
         public void UpdateSystemNote()

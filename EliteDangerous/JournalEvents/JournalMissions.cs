@@ -193,16 +193,6 @@ namespace EliteDangerousCore.JournalEvents
             detailed = MissionDetailedInfo(true);
         }
 
-        private static HashSet<string> DeliveryMissions = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase)
-        {
-            "Mission_Delivery",
-            "Mission_Delivery_Boom",
-            "Chain_HelpFinishTheOrder",
-            "Mission_Delivery_War"
-        };
-
-        private static DateTime ED32Date = new DateTime(2018, 8, 28, 10, 0, 0);
-
         public string MissionBasicInfo(bool translate)          // MissionList::FullInfo uses this. Journal Entry info brief uses this
         {
             DateTime exp = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(Expiry);
@@ -221,6 +211,7 @@ namespace EliteDangerousCore.JournalEvents
         public string MissionDetailedInfo(bool translate)          // MissionList::FullInfo (DLL uses this), Journal Entry detailed info
         {
             return BaseUtils.FieldBuilder.Build("Deliver:".T(translate ? EDTx.JournalMissionAccepted_Deliver : EDTx.NoTranslate), CommodityLocalised,
+                                           "Count:".T(translate ? EDTx.JournalMissionAccepted_Count : EDTx.NoTranslate), Count,
                                            "Target:".T(translate ? EDTx.JournalEntry_Target : EDTx.NoTranslate), TargetLocalised,
                                            "Type:".T(translate ? EDTx.JournalEntry_Type : EDTx.NoTranslate), TargetTypeFriendly,
                                            "Target Faction:".T(translate ? EDTx.JournalEntry_TargetFaction : EDTx.NoTranslate), TargetFaction,
@@ -249,11 +240,26 @@ namespace EliteDangerousCore.JournalEvents
             mlist.Accepted(this, sys, body);
         }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        private static List<string> DeliveryMissions = new List<string>()
         {
-            if (Commodity != null && Count != null && DeliveryMissions.Contains(FDName) && EventTimeUTC < ED32Date)
+            "Mission_Delivery",
+            "Chain_HelpFinishTheOrder",
+        };
+
+        private static DateTime ED32Date = new DateTime(2018, 8, 28, 10, 0, 0);
+
+        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
+        {
+            if (Commodity != null && Count != null && EventTimeUTC < ED32Date)           // after this we will rely on Cargo to update us, only safe way to know if something has been stowed
             {
-                mc.Change(MaterialCommodityData.CatType.Commodity, Commodity, (int)Count, 0);
+                if (DeliveryMissions.StartsWith(FDName, StringComparison.InvariantCultureIgnoreCase)>=0 )
+                {
+                    mc.Change(EventTimeUTC, MaterialCommodityData.CatType.Commodity, Commodity, (int)Count, 0, faction);
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("{0} Rejected {1} {2} {3}", EventTimeUTC, FDName, Commodity, Count);
+                }
             }
         }
     }
@@ -329,7 +335,7 @@ namespace EliteDangerousCore.JournalEvents
         public string FDName { get; set; }
         public string Faction { get; set; }
 
-        public string Commodity { get; set; }               // FDNAME, leave, evidence of the $_name problem
+        public string Commodity { get; set; }               // The thing shipped. But in pre3.0, this could also be a commodity reward, which was not clear.
         public string CommodityLocalised { get; set; }
         public string FriendlyCommodity { get; set; }
         public int? Count { get; set; }
@@ -355,27 +361,25 @@ namespace EliteDangerousCore.JournalEvents
 
         public FactionEffectsEntry[] FactionEffects;
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
         {
-            if (Commodity != null && Count != null)
-            {
-                mc.Change(MaterialCommodityData.CatType.Commodity, Commodity, -(int)Count, 0);
-            }
+            // removed update on Commodity/Count (which is unreliable about if you should remove them from cargo)
+            // rely on Cargo to update stats, its emitted directly after MissionCompleted.
 
             if (CommodityReward != null)
             {
                 foreach (CommodityRewards c in CommodityReward)
-                    mc.Change(MaterialCommodityData.CatType.Commodity, c.Name, c.Count, 0);
+                    mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, c.Name, c.Count, 0, faction);
             }
         }
 
-        public void UpdateMaterials(MaterialCommoditiesList mc)
+        public void UpdateMaterials(MaterialCommoditiesList mc, string faction)
         {
             if (MaterialsReward != null)
             {
                 foreach (MaterialRewards m in MaterialsReward)                 // 7/3/2018 not yet fully proven.. changed in 3.02
                 {
-                    mc.Change(m.Category.Alt("Raw"), m.Name, m.Count, 0);
+                    mc.Change( EventTimeUTC, m.Category.Alt("Raw"), m.Name, m.Count, 0, faction);      // mats from faction
                 }
             }
         }
@@ -404,6 +408,7 @@ namespace EliteDangerousCore.JournalEvents
                                         "Station:".T(EDTx.JournalEntry_Station), DestinationStation);
 
             detailed = BaseUtils.FieldBuilder.Build("Commodity:".T(EDTx.JournalEntry_Commodity), CommodityLocalised,
+                                            "Count:".T(EDTx.JournalMissionAccepted_Count), Count,
                                             "Target:".T(EDTx.JournalEntry_Target), TargetLocalised,
                                             "Type:".T(EDTx.JournalEntry_Type), TargetTypeLocalised,
                                             "Target Faction:".T(EDTx.JournalEntry_TargetFaction), TargetFaction);

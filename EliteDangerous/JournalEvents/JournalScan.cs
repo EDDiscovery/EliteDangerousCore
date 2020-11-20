@@ -1575,7 +1575,7 @@ namespace EliteDangerousCore.JournalEvents
                         iconName = "WTGv7";
                 }
 
-                System.Diagnostics.Debug.WriteLine(PlanetTypeID + ": " + iconName);
+                //System.Diagnostics.Debug.WriteLine(PlanetTypeID + ": " + iconName);
                 return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Planets.Giant.{iconName}");
             }
 
@@ -1931,7 +1931,7 @@ namespace EliteDangerousCore.JournalEvents
                 }
             }
 
-            System.Diagnostics.Debug.WriteLine(PlanetTypeID + ": " + iconName);
+            //System.Diagnostics.Debug.WriteLine(PlanetTypeID + ": " + iconName);
             return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Planets.Terrestrial.{iconName}");
         }
 

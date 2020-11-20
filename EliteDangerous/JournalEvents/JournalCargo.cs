@@ -58,6 +58,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
+
         public bool ReadAdditionalFiles(string directory, bool historyrefreshparse, ref JObject jo)
         {
             if (Inventory == null)  // so, if cargo contained info, we use that.. else we try for cargo.json.
@@ -79,6 +80,26 @@ namespace EliteDangerousCore.JournalEvents
                 return true;
             }
         }
+
+        public bool SameAs(JournalCargo other)      // concerning itself only with count and inventory
+        {
+            if (Inventory != null && other.Inventory != null && Inventory.Length == other.Inventory.Length)
+            {
+                for (int i = 0; i < Inventory.Length; i++)
+                {
+                    int otherindex = Array.FindIndex(other.Inventory, x => x.Name.Equals(Inventory[i].Name));
+                    if (otherindex == -1)
+                        return false;
+                    if (Inventory[i].Count != other.Inventory[otherindex].Count)
+                        return false;
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
 
         public string Vessel { get; set; }          // always set, Ship or SRV.
         public Cargo[] Inventory { get; set; }      // may be NULL
@@ -112,7 +133,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
         {
             if (Vessel.Equals("Ship"))      // only want ship cargo to change lists..
             {
@@ -154,9 +175,9 @@ namespace EliteDangerousCore.JournalEvents
         public string PowerplayOrigin { get; set; }
         public long? MissionID { get; set; }             // if applicable
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
         {
-            mc.Change(MaterialCommodityData.CatType.Commodity, Type, -Count, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, -Count, 0, faction);
         }
 
         public void LedgerNC(Ledger mcl)
@@ -219,10 +240,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public long? MarketID { get; set; }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
         {
             if (CargoType.Length > 0 && Count > 0)
-                mc.Change(MaterialCommodityData.CatType.Commodity, CargoType, (UpdateEnum == UpdateTypeEnum.Collect) ? Count : -Count, 0);
+                mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, CargoType, (UpdateEnum == UpdateTypeEnum.Collect) ? Count : -Count, 0, faction);
         }
 
         public void UpdateMissions(MissionListAccumulator mlist, EliteDangerousCore.ISystem sys, string body)
@@ -273,9 +294,9 @@ namespace EliteDangerousCore.JournalEvents
         public bool Stolen { get; set; }
         public long? MissionID { get; set; }             // if applicable
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
         {
-            mc.Change(MaterialCommodityData.CatType.Commodity, Type, 1, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, 1, 0, faction);
         }
 
         public void LedgerNC(Ledger mcl)
@@ -328,16 +349,16 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
         {
             if (Transfers != null)
             {
                 foreach (var t in Transfers)
                 {
                     if (t.Direction.Contains("ship", StringComparison.InvariantCultureIgnoreCase))     // toship, with some leaway to allow fd to change their formatting in future
-                        mc.Change(MaterialCommodityData.CatType.Commodity, t.Type, t.Count, 0);
+                        mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, t.Type, t.Count, 0, faction);
                     else
-                        mc.Change(MaterialCommodityData.CatType.Commodity, t.Type, -t.Count, 0);
+                        mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, t.Type, -t.Count, 0, faction);
                 }
             }
         }
