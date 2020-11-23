@@ -121,9 +121,9 @@ namespace EliteDangerousCore.JournalEvents
         public DroneType Type { get; set; }
         public string FriendlyType { get; set; }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string unusedfaction) 
         {
-            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, "drones", -1, 0, faction);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, "drones", -1, 0, null);
         }
 
         public override void FillInformation(out string info, out string detailed)

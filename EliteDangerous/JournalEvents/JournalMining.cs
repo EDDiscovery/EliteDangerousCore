@@ -35,9 +35,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public int Total { get; set; }      // found from MCL
 
-        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string unusedfaction)
         {
-            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, 1, 0, faction);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, 1, 0, null);
             Total = mc.FindFDName(Type)?.Count ?? 0;
         }
 

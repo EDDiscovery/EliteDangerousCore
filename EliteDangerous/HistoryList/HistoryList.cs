@@ -909,29 +909,20 @@ namespace EliteDangerousCore
 
         #region Entry processing
 
-        // Called on a New Entry, by EDDiscoveryController:NewEntry, to add an journal entry in
+        // Called on a New Entry, by EDDiscoveryController:NewEntry, to add an journal entry in.  May return null if don't want it in history
 
-        public HistoryEntry AddJournalEntry(JournalEntry je, Action<string> logerror)   // always return he
+        public HistoryEntry AddJournalEntryToHistory(JournalEntry je, Action<string> logerror)   
         {
-            HistoryEntry prev = GetLast;
+            HistoryEntry hprev = GetLast;
 
-            bool journalupdate = false;
-            HistoryEntry he = HistoryEntry.FromJournalEntry(je, prev, true, out journalupdate);     // we may check edsm for this entry
+            HistoryEntry he = HistoryEntry.FromJournalEntry(je, hprev, true, out bool journalupdate);     // we may check edsm for this entry
 
-            if (journalupdate)
-            {
-                JournalFSDJump jfsd = je as JournalFSDJump;
+            he.UpdateMaterialsCommodities(je, hprev?.MaterialCommodity);           // let some processes which need the user db to work
+            Debug.Assert(he.MaterialCommodity != null);
 
-                if (jfsd != null)
-                {
-                    UserDatabase.Instance.ExecuteWithDatabase(cn =>
-                    {
-                        JournalEntry.UpdateEDSMIDPosJump(jfsd.Id, he.System, !jfsd.HasCoordinate && he.System.HasCoordinate, jfsd.JumpDist, cn.Connection);
-                    });
-                }
-            }
+            if (CheckForRemoval(he, hprev))                                     // check here to see if we want to remove the entry.. can move this lower later, but at first point where we have the data
+                return null;
 
-            he.UpdateMaterialsCommodities(je, prev);           // let some processes which need the user db to work
             he.UpdateSystemNote();
 
             cashledger.Process(je);
@@ -946,46 +937,22 @@ namespace EliteDangerousCore
             
             he.UpdateMissionList(missionlistaccumulator.Process(je, he.System, he.WhereAmI));
 
-            historylist.Add(he);
-
-            if (je.EventTypeID == JournalTypeEnum.Scan)
+            if (journalupdate)
             {
-                JournalScan js = je as JournalScan;
-                JournalLocOrJump jl;
-                HistoryEntry jlhe;
-                if (!starscan.AddScanToBestSystem(js, Count - 1, EntryOrder, out jlhe, out jl))
-                {
-                    // Ignore scans where the system name has been changed
-                    // Also ignore belt clusters
-                    var bodyname = js.BodyDesignation ?? js.BodyName;
+                JournalFSDJump jfsd = je as JournalFSDJump;
 
-                    if (bodyname == null)
+                if (jfsd != null)
+                {
+                    UserDatabase.Instance.ExecuteWithDatabase(cn =>
                     {
-                        logerror("Body name not set in scan entry");
-                    }
-                    else if (jl == null || (jl.StarSystem.Equals(jlhe.System.Name, StringComparison.InvariantCultureIgnoreCase) && !bodyname.ToLowerInvariant().Contains(" belt cluster ")))
-                    {
-                        logerror("Cannot add scan to system - alert the EDDiscovery developers using either discord or Github (see help)" + Environment.NewLine +
-                                            "Scan object " + js.BodyName + " in " + he.System.Name);
-                    }
+                        JournalEntry.UpdateEDSMIDPosJump(jfsd.Id, he.System, !jfsd.HasCoordinate && he.System.HasCoordinate, jfsd.JumpDist, cn.Connection);
+                    });
                 }
             }
-            else if (je is JournalSAAScanComplete)
-            {
-                starscan.AddSAAScanToBestSystem((JournalSAAScanComplete)je, Count - 1, EntryOrder);
-            }
-            else if (je is JournalSAASignalsFound)
-            {
-                this.starscan.AddSAASignalsFoundToBestSystem((JournalSAASignalsFound)je, Count - 1, EntryOrder);
-            }
-            else if (je is JournalFSSDiscoveryScan && he.System != null)
-            {
-                starscan.SetFSSDiscoveryScan((JournalFSSDiscoveryScan)je, he.System);
-            }
-            else if (je is IBodyNameAndID)
-            {
-                starscan.AddBodyToBestSystem((IBodyNameAndID)je, Count - 1, EntryOrder);
-            }
+
+            AddToScan(this, he, logerror);  // add to scan database and complain if can't add
+
+            historylist.Add(he);        // then add to history
 
             return he;
         }
@@ -1040,7 +1007,7 @@ namespace EliteDangerousCore
 
             List<Tuple<JournalEntry, HistoryEntry>> jlistUpdated = new List<Tuple<JournalEntry, HistoryEntry>>();
 
-            HistoryEntry prev = null;
+            HistoryEntry hprev = null;
             JournalEntry jprev = null;
 
             reportProgress(-1, "Creating History");
@@ -1071,7 +1038,7 @@ namespace EliteDangerousCore
                 }
 
                 long timetoload = sw.ElapsedMilliseconds;
-                HistoryEntry he = HistoryEntry.FromJournalEntry(je, prev, checkforunknownsystemsindb, out bool journalupdate);
+                HistoryEntry he = HistoryEntry.FromJournalEntry(je, hprev, checkforunknownsystemsindb, out bool journalupdate);
 
                 if (sw.ElapsedMilliseconds - timetoload > 100)
                 {
@@ -1079,10 +1046,34 @@ namespace EliteDangerousCore
                     checkforunknownsystemsindb = false;
                 }
 
-                prev = he;
-                jprev = je;
+                he.UpdateMaterialsCommodities(je, hprev?.MaterialCommodity);        // update material commodities
+                Debug.Assert(he.MaterialCommodity != null);
 
-                hist.historylist.Add(he);
+                if (CheckForRemoval(he, hprev))                                     // check here to see if we want to remove the entry.. can move this lower later, but at first point where we have the data
+                    continue;
+
+                he.UpdateSystemNote();
+
+                // **** REMEMBER NEW Journal entry needs this too *****************
+
+                hist.cashledger.Process(je);            // update the ledger     
+                he.Credits = hist.cashledger.CashTotal;
+
+                hist.shipyards.Process(je);
+                hist.outfitting.Process(je);
+
+                Tuple<ShipInformation, ModulesInStore> ret = hist.shipinformationlist.Process(je, he.WhereAmI, he.System);  // the ships
+                he.UpdateShipInformation(ret.Item1);
+                he.UpdateShipStoredModules(ret.Item2);
+
+                he.UpdateMissionList(hist.missionlistaccumulator.Process(je, he.System, he.WhereAmI));
+
+                AddToScan(hist, he, null);          // add to scan but don't complain if can't add.
+
+                hist.historylist.Add(he);           // now add it to the history
+
+                hprev = he;
+                jprev = je;
 
                 if (journalupdate)
                 {
@@ -1090,6 +1081,10 @@ namespace EliteDangerousCore
                     Debug.WriteLine("Queued update requested {0} {1}", he.System.EDSMID, he.System.Name);
                 }
             }
+
+            reportProgress(-1, "Updating user statistics");
+
+            // see if there are any DB entries to update
 
             if (jlistUpdated.Count > 0)
             {
@@ -1122,68 +1117,80 @@ namespace EliteDangerousCore
 
             EDCommander.Current.FID = hist.GetCommanderFID();               // ensure FID is set.. the other place it gets changed is a read of LoadGame.
 
-            reportProgress(-1, "Updating user statistics");
-
-            hist.ProcessUserHistoryListEntries();      // here, we update the DBs in HistoryEntry and any global DBs in historylist
-
             reportProgress(-1, "Done");
 
             return hist;
         }
 
-
-        // go through the history list and recalculate the materials ledger and the materials count, plus any other stuff..
-        public void ProcessUserHistoryListEntries()
+        public static bool CheckForRemoval(HistoryEntry he, HistoryEntry hprev)
         {
-            List<HistoryEntry> hl = historylist;
-
-            for (int i = 0; i < hl.Count; i++)
+            if (he.EntryType == JournalTypeEnum.Cargo && hprev != null)       // we generally try and remove cargo as spam, but we need to keep its updated MC
             {
-                HistoryEntry he = hl[i];
-                JournalEntry je = he.journalEntry;
+                var cargo = he.journalEntry as JournalCargo;
 
-                he.UpdateMaterialsCommodities(je, (i > 0) ? hl[i - 1] : null);        // update material commodities
-                he.UpdateSystemNote();
-
-                Debug.Assert(he.MaterialCommodity != null);
-
-                // **** REMEMBER NEW Journal entry needs this too *****************
-
-                cashledger.Process(je);            // update the ledger     
-                he.Credits = cashledger.CashTotal;
-
-                shipyards.Process(je);
-                outfitting.Process(je);
-
-                Tuple<ShipInformation, ModulesInStore> ret = shipinformationlist.Process(je, he.WhereAmI, he.System);  // the ships
-                he.UpdateShipInformation(ret.Item1);
-                he.UpdateShipStoredModules(ret.Item2);
-
-                he.UpdateMissionList(missionlistaccumulator.Process(je, he.System, he.WhereAmI));
-
-                if (je.EventTypeID == JournalTypeEnum.Scan && je is JournalScan)
+                if (cargo.EDDFromFile == true ||       // if from file, its a newer entry, after nov 20, so we remove it
+                                                       // else if older than when this flag was introduced, we remove if its not following the two types below
+                     (cargo.EventTimeUTC < new DateTime(2020, 11, 20) && hprev.EntryType != JournalTypeEnum.Statistics && hprev.EntryType != JournalTypeEnum.Friends)
+                    )
                 {
-                    if (!this.starscan.AddScanToBestSystem(je as JournalScan, i, hl))
+                    System.Diagnostics.Debug.WriteLine(he.EventTimeUTC + " Remove cargo and assign to previous entry FromFile: " + cargo.EDDFromFile);
+                    hprev.UpdateMaterialCommodity(he.MaterialCommodity);        // assign its updated commodity list to previous entry
+                    return true;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine(he.EventTimeUTC + " Keep cargo entry FromFile: " + cargo.EDDFromFile);
+                }
+            }
+
+            return false;
+        }
+
+        public static void AddToScan(HistoryList hist, HistoryEntry he, Action<string> logerror )
+        {
+            if (he.EntryType == JournalTypeEnum.Scan)
+            {
+                JournalScan js = he.journalEntry as JournalScan;
+
+                if (!hist.starscan.AddScanToBestSystem(js, hist.historylist.Count - 1, hist.historylist, out HistoryEntry jlhe, out JournalLocOrJump jl))
+                {
+                    if (logerror != null)
                     {
-                        System.Diagnostics.Debug.WriteLine("******** Cannot add scan to system " + (je as JournalScan).BodyName + " in " + he.System.Name);
+                        // Ignore scans where the system name has been changed
+                        // Also ignore belt clusters
+                        var bodyname = js.BodyDesignation ?? js.BodyName;
+
+                        if (bodyname == null)
+                        {
+                            logerror("Body name not set in scan entry");
+                        }
+                        else if (jl == null || (jl.StarSystem.Equals(jlhe.System.Name, StringComparison.InvariantCultureIgnoreCase) && !bodyname.ToLowerInvariant().Contains(" belt cluster ")))
+                        {
+                            logerror("Cannot add scan to system - alert the EDDiscovery developers using either discord or Github (see help)" + Environment.NewLine +
+                                                "Scan object " + js.BodyName + " in " + he.System.Name);
+                        }
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("******** Cannot add scan to system " + (he.journalEntry as JournalScan).BodyName + " in " + he.System.Name);
                     }
                 }
-                else if (je.EventTypeID == JournalTypeEnum.SAAScanComplete)
-                {
-                    this.starscan.AddSAAScanToBestSystem((JournalSAAScanComplete)je, i, hl);
-                }
-                else if (je.EventTypeID == JournalTypeEnum.SAASignalsFound)
-                {
-                    this.starscan.AddSAASignalsFoundToBestSystem((JournalSAASignalsFound)je, i, hl);
-                }
-                else if (je.EventTypeID == JournalTypeEnum.FSSDiscoveryScan && he.System != null)
-                {
-                    this.starscan.SetFSSDiscoveryScan((JournalFSSDiscoveryScan)je, he.System);
-                }
-                else if (je is IBodyNameAndID)
-                {
-                    this.starscan.AddBodyToBestSystem((IBodyNameAndID)je, i, hl);
-                }
+            }
+            else if (he.EntryType == JournalTypeEnum.SAAScanComplete)
+            {
+                hist.starscan.AddSAAScanToBestSystem((JournalSAAScanComplete)he.journalEntry, hist.historylist.Count - 1, hist.historylist);
+            }
+            else if (he.EntryType == JournalTypeEnum.SAASignalsFound)
+            {
+                hist.starscan.AddSAASignalsFoundToBestSystem((JournalSAASignalsFound)he.journalEntry, hist.historylist.Count - 1, hist.historylist);
+            }
+            else if (he.EntryType == JournalTypeEnum.FSSDiscoveryScan && he.System != null)
+            {
+                hist.starscan.SetFSSDiscoveryScan((JournalFSSDiscoveryScan)he.journalEntry, he.System);
+            }
+            else if (he.journalEntry is IBodyNameAndID)
+            {
+                hist.starscan.AddBodyToBestSystem((IBodyNameAndID)he.journalEntry, hist.historylist.Count - 1, hist.historylist);
             }
         }
 

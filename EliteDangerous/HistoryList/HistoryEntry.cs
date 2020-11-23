@@ -247,9 +247,9 @@ namespace EliteDangerousCore
             return he;
         }
 
-        public void UpdateMaterialsCommodities(JournalEntry je, HistoryEntry prev)
+        public void UpdateMaterialsCommodities(JournalEntry je, MaterialCommoditiesList prev)
         {
-            MaterialCommodity = MaterialCommoditiesList.Process(je, prev?.MaterialCommodity, StationFaction);
+            MaterialCommodity = MaterialCommoditiesList.Process(je, prev, StationFaction);
         }
 
         public void UpdateSystemNote()
@@ -308,9 +308,14 @@ namespace EliteDangerousCore
             StoredModules = ms;
         }
 
-        public void UpdateMissionList( MissionList ml )
+        public void UpdateMissionList(MissionList ml)
         {
             MissionList = ml;
+        }
+
+        public void UpdateMaterialCommodity(MaterialCommoditiesList mc)
+        {
+            MaterialCommodity = mc;
         }
 
         #endregion

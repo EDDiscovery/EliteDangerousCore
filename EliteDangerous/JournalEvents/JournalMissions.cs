@@ -248,13 +248,13 @@ namespace EliteDangerousCore.JournalEvents
 
         private static DateTime ED32Date = new DateTime(2018, 8, 28, 10, 0, 0);
 
-        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string unusedfaction)
         {
             if (Commodity != null && Count != null && EventTimeUTC < ED32Date)           // after this we will rely on Cargo to update us, only safe way to know if something has been stowed
             {
                 if (DeliveryMissions.StartsWith(FDName, StringComparison.InvariantCultureIgnoreCase)>=0 )
                 {
-                    mc.Change(EventTimeUTC, MaterialCommodityData.CatType.Commodity, Commodity, (int)Count, 0, faction);
+                    mc.Change(EventTimeUTC, MaterialCommodityData.CatType.Commodity, Commodity, (int)Count, 0, null);
                 }
                 else
                 {
@@ -263,8 +263,6 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
     }
-
-
 
     [JournalEntryType(JournalTypeEnum.MissionCompleted)]
     public class JournalMissionCompleted : JournalEntry, ICommodityJournalEntry, IMaterialJournalEntry, ILedgerJournalEntry, IMissions
@@ -361,7 +359,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public FactionEffectsEntry[] FactionEffects;
 
-        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string unusedfaction)
         {
             // removed update on Commodity/Count (which is unreliable about if you should remove them from cargo)
             // rely on Cargo to update stats, its emitted directly after MissionCompleted.
@@ -369,17 +367,17 @@ namespace EliteDangerousCore.JournalEvents
             if (CommodityReward != null)
             {
                 foreach (CommodityRewards c in CommodityReward)
-                    mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, c.Name, c.Count, 0, faction);
+                    mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, c.Name, c.Count, 0, null);    // commodities are traded by faction
             }
         }
 
-        public void UpdateMaterials(MaterialCommoditiesList mc, string faction)
+        public void UpdateMaterials(MaterialCommoditiesList mc, string unusedfaction)
         {
             if (MaterialsReward != null)
             {
                 foreach (MaterialRewards m in MaterialsReward)                 // 7/3/2018 not yet fully proven.. changed in 3.02
                 {
-                    mc.Change( EventTimeUTC, m.Category.Alt("Raw"), m.Name, m.Count, 0, faction);      // mats from faction
+                    mc.Change( EventTimeUTC, m.Category.Alt("Raw"), m.Name, m.Count, 0, Faction);      // mats from faction of mission
                 }
             }
         }

@@ -23,14 +23,6 @@ namespace EliteDangerousCore
 {
     public partial class StarScan
     {
-        // used by historylist during full history processing in background
-        public bool AddScanToBestSystem(JournalScan je, int startindex, List<HistoryEntry> hl)
-        {
-            HistoryEntry he;
-            JournalLocOrJump jl;
-            return AddScanToBestSystem(je, startindex, hl, out he, out jl);
-        }
-
         // used by historylist directly for a single update during play, in foreground..  Also used by above.. so can be either in fore/back
         public bool AddScanToBestSystem(JournalScan je, int startindex, List<HistoryEntry> hl, out HistoryEntry he, out JournalLocOrJump jl)
         {

@@ -26,7 +26,7 @@ namespace EliteDangerousCore.JournalEvents
         public class Cargo
         {
             public string Name { get; set; }            // FDNAME
-            public string Name_Localised { get; set; }          
+            public string Name_Localised { get; set; }
             public string FriendlyName { get; set; }            // FDNAME
             public int Count { get; set; }
             public int Stolen { get; set; }
@@ -51,6 +51,8 @@ namespace EliteDangerousCore.JournalEvents
 
             Inventory = evt["Inventory"]?.ToObjectProtected<Cargo[]>().OrderBy(x => x.Name)?.ToArray();
 
+            EDDFromFile = evt["EDDFromFile"].Bool(false);  // EDD marker its from file - will only be present if cargo > Nov 20 and it was read from file
+
             if (Inventory != null)
             {
                 foreach (Cargo c in Inventory)
@@ -69,6 +71,7 @@ namespace EliteDangerousCore.JournalEvents
                 if (jnew != null)        // new json, rescan. returns null if cargo in the folder is not related to this entry by time.
                 {
                     jo = jnew;      // replace current
+                    jo["EDDFromFile"] = true;  // mark its from file
                     Rescan(jo);
                     UpdateJson(jo);
                 }
@@ -81,7 +84,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public bool SameAs(JournalCargo other)      // concerning itself only with count and inventory
+        public bool SameAs(JournalCargo other)      // concerning itself only with count, stolen and name
         {
             if (Inventory != null && other.Inventory != null && Inventory.Length == other.Inventory.Length)
             {
@@ -90,7 +93,7 @@ namespace EliteDangerousCore.JournalEvents
                     int otherindex = Array.FindIndex(other.Inventory, x => x.Name.Equals(Inventory[i].Name));
                     if (otherindex == -1)
                         return false;
-                    if (Inventory[i].Count != other.Inventory[otherindex].Count)
+                    if (Inventory[i].Count != other.Inventory[otherindex].Count || Inventory[i].Stolen != other.Inventory[otherindex].Stolen)
                         return false;
                 }
 
@@ -103,6 +106,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Vessel { get; set; }          // always set, Ship or SRV.
         public Cargo[] Inventory { get; set; }      // may be NULL
+        public bool EDDFromFile { get; set; }       // set if from file, but only from nov 2020
 
         public override void FillInformation(out string info, out string detailed) 
         {
@@ -175,9 +179,9 @@ namespace EliteDangerousCore.JournalEvents
         public string PowerplayOrigin { get; set; }
         public long? MissionID { get; set; }             // if applicable
 
-        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string unusedfaction)
         {
-            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, -Count, 0, faction);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, -Count, 0, null);   // no faction here, we are dumping
         }
 
         public void LedgerNC(Ledger mcl)
@@ -240,10 +244,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public long? MarketID { get; set; }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string unusedfaction) // station faction is prob not the mission faction
         {
             if (CargoType.Length > 0 && Count > 0)
-                mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, CargoType, (UpdateEnum == UpdateTypeEnum.Collect) ? Count : -Count, 0, faction);
+                mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, CargoType, (UpdateEnum == UpdateTypeEnum.Collect) ? Count : -Count, 0, null);
         }
 
         public void UpdateMissions(MissionListAccumulator mlist, EliteDangerousCore.ISystem sys, string body)
@@ -294,9 +298,9 @@ namespace EliteDangerousCore.JournalEvents
         public bool Stolen { get; set; }
         public long? MissionID { get; set; }             // if applicable
 
-        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string unusedfaction) // faction is not applicable
         {
-            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, 1, 0, faction);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, 1, 0, null);
         }
 
         public void LedgerNC(Ledger mcl)
@@ -349,16 +353,16 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
+        public void UpdateCommodities(MaterialCommoditiesList mc, string unusedfaction) // faction not applicable
         {
             if (Transfers != null)
             {
                 foreach (var t in Transfers)
                 {
                     if (t.Direction.Contains("ship", StringComparison.InvariantCultureIgnoreCase))     // toship, with some leaway to allow fd to change their formatting in future
-                        mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, t.Type, t.Count, 0, faction);
+                        mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, t.Type, t.Count, 0, null);
                     else
-                        mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, t.Type, -t.Count, 0, faction);
+                        mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, t.Type, -t.Count, 0, null);
                 }
             }
         }
