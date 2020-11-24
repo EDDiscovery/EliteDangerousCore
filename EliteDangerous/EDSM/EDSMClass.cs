@@ -713,6 +713,21 @@ namespace EliteDangerousCore.EDSM
             return url;
         }
 
+        public JObject GetSystemByAddress(long id64)
+        {
+            string query = "?systemId64=" + id64.ToString() + "&showInformation=1&includeHidden=1";
+            var response = RequestGet("api-v1/system" + query, handleException: true);
+            if (response.Error)
+                return null;
+
+            var json = response.Body;
+            if (json == null || json.ToString() == "[]")
+                return null;
+
+            JObject msg = JObject.Parse(json);
+            return msg;
+        }
+
         // https://www.edsm.net/api-system-v1/bodies?systemName=Colonia
         // https://www.edsm.net/api-system-v1/bodies?systemId=27
 
