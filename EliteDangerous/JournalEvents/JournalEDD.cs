@@ -133,7 +133,7 @@ namespace EliteDangerousCore.JournalEvents
         public MaterialListClass Materials { get; set; }             // FDNAMES
         public CommodityListClass Commodities { get; set; }
 
-        public void UpdateMaterials(MaterialCommoditiesList mc, string ignorefaction)
+        public void UpdateMaterials(MaterialCommoditiesList mc)
         {
             if (Materials != null)
             {
@@ -142,7 +142,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc, string ignorefaction)
+        public void UpdateCommodities(MaterialCommoditiesList mc)
         { 
             if (Commodities != null)
             {

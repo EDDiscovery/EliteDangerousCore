@@ -44,7 +44,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.EngineerContribution)]
-    public class JournalEngineerContribution : JournalEntry, ILedgerJournalEntry, ICommodityJournalEntry, IMaterialJournalEntry
+    public class JournalEngineerContribution : JournalEntry, ILedgerJournalEntry, ICommodityJournalEntry, IMaterialJournalEntry, IStats
     {
         public JournalEngineerContribution(JObject evt) : base(evt, JournalTypeEnum.EngineerContribution)
         {
@@ -81,16 +81,24 @@ namespace EliteDangerousCore.JournalEvents
         public int Quantity { get; set; }
         public int TotalQuantity { get; set; }
 
-        public void UpdateMaterials(MaterialCommoditiesList mc, string faction)
+        public void UpdateMaterials(MaterialCommoditiesList mc)
         {
             if (Type.Equals("Materials"))
-                mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Raw, Material, -Quantity, 0, faction, true);
+                mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Raw, Material, -Quantity, 0, true);
         }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
+        public void UpdateCommodities(MaterialCommoditiesList mc)
         {
             if (Type.Equals("Commodity"))
-                mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Commodity, -Quantity, 0, faction);
+                mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Commodity, -Quantity, 0);
+        }
+
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            if (Type.Equals("Materials"))
+                stats.UpdateEngineerMaterial(Engineer, Material, Quantity);
+            if (Type.Equals("Commodity"))
+                stats.UpdateEngineerCommodity(Engineer, Commodity, Quantity);
         }
 
         public void Ledger(Ledger mcl)
@@ -162,7 +170,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public Dictionary<string, int> Ingredients { get; set; }        // not for legacy convert
 
-        public void UpdateMaterials(MaterialCommoditiesList mc, string ignorefaction)
+        public void UpdateMaterials(MaterialCommoditiesList mc)
         {
             if (Ingredients != null)
             {

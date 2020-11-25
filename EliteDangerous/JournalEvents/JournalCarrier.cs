@@ -266,7 +266,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierDepositFuel)]
-    public class JournalCarrierDepositFuel : JournalEntry, ICommodityJournalEntry
+    public class JournalCarrierDepositFuel : JournalEntry, ICommodityJournalEntry, IStats
     {
         public long CarrierID { get; set; }
         public int Amount { get; set; }      // being paranoid about this .. don't trust they will be ints forever.
@@ -286,9 +286,14 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
+        public void UpdateCommodities(MaterialCommoditiesList mc)
         {
-            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, "tritium", -Amount, 0, faction);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, "tritium", -Amount, 0);
+        }
+
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            stats.UpdateCommodity("tritium", -Amount, stationfaction);
         }
     }
 

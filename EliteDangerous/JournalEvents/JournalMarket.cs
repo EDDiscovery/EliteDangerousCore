@@ -68,7 +68,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.MarketBuy)]
-    public class JournalMarketBuy : JournalEntry, ICommodityJournalEntry, ILedgerJournalEntry
+    public class JournalMarketBuy : JournalEntry, ICommodityJournalEntry, ILedgerJournalEntry, IStats
     {
         public JournalMarketBuy(JObject evt) : base(evt, JournalTypeEnum.MarketBuy)
         {
@@ -90,9 +90,14 @@ namespace EliteDangerousCore.JournalEvents
         public long TotalCost { get; set; }
         public long? MarketID { get; set; }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
+        public void UpdateCommodities(MaterialCommoditiesList mc)
         {
-            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, Count, BuyPrice, faction);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, Count, BuyPrice);
+        }
+
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            stats.UpdateCommodity(Type, Count, stationfaction);
         }
 
         public void Ledger(Ledger mcl)
@@ -109,7 +114,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.MarketSell)]
-    public class JournalMarketSell : JournalEntry, ICommodityJournalEntry, ILedgerJournalEntry
+    public class JournalMarketSell : JournalEntry, ICommodityJournalEntry, ILedgerJournalEntry, IStats
     {
         public JournalMarketSell(JObject evt) : base(evt, JournalTypeEnum.MarketSell)
         {
@@ -140,9 +145,14 @@ namespace EliteDangerousCore.JournalEvents
         public bool BlackMarket { get; set; }
         public long? MarketID { get; set; }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
+        public void UpdateCommodities(MaterialCommoditiesList mc)
         {
-            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, -Count, 0, faction);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, -Count, 0);
+        }
+
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            stats.UpdateCommodity(Type, -Count, stationfaction);
         }
 
         public void Ledger(Ledger mcl)

@@ -124,6 +124,7 @@
     <Compile Include="StarScan\StarScanBodyID.cs" />
     <Compile Include="StarScan\StarScanSAASignalsFound.cs" />
     <Compile Include="StarScan\StarScanSAAScan.cs" />
+    <Compile Include="Stats\Stats.cs" />
     <Compile Include="Status\EDStatusMonitorWatcher.cs" />
     <Compile Include="EliteDangerous\EDTypesFromString.cs" />
     <Compile Include="Bindings\FrontierToVKey.cs" />

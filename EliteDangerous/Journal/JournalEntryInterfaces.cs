@@ -20,12 +20,12 @@ namespace EliteDangerousCore
 {
     public interface IMaterialJournalEntry
     {
-        void UpdateMaterials(MaterialCommoditiesList mc, string faction);
+        void UpdateMaterials(MaterialCommoditiesList mc);
     }
 
     public interface ICommodityJournalEntry
     {
-        void UpdateCommodities(MaterialCommoditiesList mc, string faction);
+        void UpdateCommodities(MaterialCommoditiesList mc);
     }
 
     public interface ILedgerJournalEntry
@@ -76,5 +76,11 @@ namespace EliteDangerousCore
     public interface IJournalJumpColor
     {
         int MapColor { get; set; }
+    }
+
+    public interface IStats
+    {
+        void UpdateStats(Stats stats, string stationfaction);
+
     }
 }

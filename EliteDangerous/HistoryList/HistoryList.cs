@@ -1,6 +1,5 @@
-﻿
-/*
- * Copyright © 2016 - 2017 EDDiscovery development team
+﻿/*
+ * Copyright © 2016 - 2020 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -33,8 +32,8 @@ namespace EliteDangerousCore
         public ShipInformationList shipinformationlist { get; private set; } = new ShipInformationList();     // ship info
         private MissionListAccumulator missionlistaccumulator = new MissionListAccumulator(); // and mission list..
         public ShipYardList shipyards = new ShipYardList(); // yards in space (not meters)
-        public OutfittingList outfitting = new OutfittingList();
-        public StarScan starscan { get; private set; } = new StarScan();                                           // and the results of scanning
+        public OutfittingList outfitting = new OutfittingList();        // outfitting on stations
+        public StarScan starscan { get; private set; } = new StarScan();      // the results of scanning
         public int CommanderId { get; private set; }
 
         public HistoryList() { }
@@ -923,6 +922,7 @@ namespace EliteDangerousCore
             if (CheckForRemoval(he, hprev))                                     // check here to see if we want to remove the entry.. can move this lower later, but at first point where we have the data
                 return null;
 
+            he.UpdateStats(je, hprev?.Stats, he.StationFaction);
             he.UpdateSystemNote();
 
             cashledger.Process(je);
@@ -1046,15 +1046,16 @@ namespace EliteDangerousCore
                     checkforunknownsystemsindb = false;
                 }
 
+                // **** REMEMBER NEW Journal entry needs this too *****************
+
                 he.UpdateMaterialsCommodities(je, hprev?.MaterialCommodity);        // update material commodities
                 Debug.Assert(he.MaterialCommodity != null);
 
                 if (CheckForRemoval(he, hprev))                                     // check here to see if we want to remove the entry.. can move this lower later, but at first point where we have the data
                     continue;
 
+                he.UpdateStats(je, hprev?.Stats, he.StationFaction);
                 he.UpdateSystemNote();
-
-                // **** REMEMBER NEW Journal entry needs this too *****************
 
                 hist.cashledger.Process(je);            // update the ledger     
                 he.Credits = hist.cashledger.CashTotal;
@@ -1133,13 +1134,13 @@ namespace EliteDangerousCore
                      (cargo.EventTimeUTC < new DateTime(2020, 11, 20) && hprev.EntryType != JournalTypeEnum.Statistics && hprev.EntryType != JournalTypeEnum.Friends)
                     )
                 {
-                    System.Diagnostics.Debug.WriteLine(he.EventTimeUTC + " Remove cargo and assign to previous entry FromFile: " + cargo.EDDFromFile);
+                  //  System.Diagnostics.Debug.WriteLine(he.EventTimeUTC + " Remove cargo and assign to previous entry FromFile: " + cargo.EDDFromFile);
                     hprev.UpdateMaterialCommodity(he.MaterialCommodity);        // assign its updated commodity list to previous entry
                     return true;
                 }
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine(he.EventTimeUTC + " Keep cargo entry FromFile: " + cargo.EDDFromFile);
+                  //  System.Diagnostics.Debug.WriteLine(he.EventTimeUTC + " Keep cargo entry FromFile: " + cargo.EDDFromFile);
                 }
             }
 

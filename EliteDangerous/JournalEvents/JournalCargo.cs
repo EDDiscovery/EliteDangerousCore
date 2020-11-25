@@ -59,8 +59,7 @@ namespace EliteDangerousCore.JournalEvents
                     c.Normalise();
             }
         }
-
-
+        
         public bool ReadAdditionalFiles(string directory, bool historyrefreshparse, ref JObject jo)
         {
             if (Inventory == null)  // so, if cargo contained info, we use that.. else we try for cargo.json.
@@ -137,7 +136,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc, string faction)
+        public void UpdateCommodities(MaterialCommoditiesList mc)
         {
             if (Vessel.Equals("Ship"))      // only want ship cargo to change lists..
             {
@@ -179,9 +178,9 @@ namespace EliteDangerousCore.JournalEvents
         public string PowerplayOrigin { get; set; }
         public long? MissionID { get; set; }             // if applicable
 
-        public void UpdateCommodities(MaterialCommoditiesList mc, string unusedfaction)
+        public void UpdateCommodities(MaterialCommoditiesList mc)
         {
-            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, -Count, 0, null);   // no faction here, we are dumping
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, -Count, 0);   // no faction here, we are dumping
         }
 
         public void LedgerNC(Ledger mcl)
@@ -244,10 +243,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public long? MarketID { get; set; }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc, string unusedfaction) // station faction is prob not the mission faction
+        public void UpdateCommodities(MaterialCommoditiesList mc)
         {
             if (CargoType.Length > 0 && Count > 0)
-                mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, CargoType, (UpdateEnum == UpdateTypeEnum.Collect) ? Count : -Count, 0, null);
+                mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, CargoType, (UpdateEnum == UpdateTypeEnum.Collect) ? Count : -Count, 0);
         }
 
         public void UpdateMissions(MissionListAccumulator mlist, EliteDangerousCore.ISystem sys, string body)
@@ -298,9 +297,9 @@ namespace EliteDangerousCore.JournalEvents
         public bool Stolen { get; set; }
         public long? MissionID { get; set; }             // if applicable
 
-        public void UpdateCommodities(MaterialCommoditiesList mc, string unusedfaction) // faction is not applicable
+        public void UpdateCommodities(MaterialCommoditiesList mc) 
         {
-            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, 1, 0, null);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, 1, 0);
         }
 
         public void LedgerNC(Ledger mcl)
@@ -353,16 +352,16 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc, string unusedfaction) // faction not applicable
+        public void UpdateCommodities(MaterialCommoditiesList mc) 
         {
             if (Transfers != null)
             {
                 foreach (var t in Transfers)
                 {
                     if (t.Direction.Contains("ship", StringComparison.InvariantCultureIgnoreCase))     // toship, with some leaway to allow fd to change their formatting in future
-                        mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, t.Type, t.Count, 0, null);
+                        mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, t.Type, t.Count, 0);
                     else
-                        mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, t.Type, -t.Count, 0, null);
+                        mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, t.Type, -t.Count, 0);
                 }
             }
         }
