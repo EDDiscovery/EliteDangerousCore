@@ -42,7 +42,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.BuyDrones)]
-    public class JournalBuyDrones : JournalEntry, ILedgerJournalEntry, ICommodityJournalEntry
+    public class JournalBuyDrones : JournalEntry, ILedgerJournalEntry, ICommodityJournalEntry, IStats
     {
         public JournalBuyDrones(JObject evt) : base(evt, JournalTypeEnum.BuyDrones)
         {
@@ -59,7 +59,12 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesList mc)
         {
-            mc.Change(MaterialCommodityData.CatType.Commodity, "drones", Count, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, "drones", Count, 0);
+        }
+
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            stats.UpdateCommodity("drones", Count, stationfaction);
         }
 
         public void Ledger(Ledger mcl)
@@ -76,7 +81,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.SellDrones)]
-    public class JournalSellDrones : JournalEntry, ILedgerJournalEntry, ICommodityJournalEntry
+    public class JournalSellDrones : JournalEntry, ILedgerJournalEntry, ICommodityJournalEntry, IStats
     {
         public JournalSellDrones(JObject evt) : base(evt, JournalTypeEnum.SellDrones)
         {
@@ -92,7 +97,12 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesList mc)
         {
-            mc.Change(MaterialCommodityData.CatType.Commodity, "drones", -Count, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, "drones", -Count, 0);
+        }
+
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            stats.UpdateCommodity("drones", -Count, stationfaction);
         }
 
         public void Ledger(Ledger mcl)
@@ -121,9 +131,9 @@ namespace EliteDangerousCore.JournalEvents
         public DroneType Type { get; set; }
         public string FriendlyType { get; set; }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesList mc) 
         {
-            mc.Change(MaterialCommodityData.CatType.Commodity, "drones", -1, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, "drones", -1, 0);
         }
 
         public override void FillInformation(out string info, out string detailed)

@@ -71,7 +71,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesList mc)
         {
-            mc.Change(MaterialCommodityData.CatType.Commodity, Type, Count, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, Count, 0);
         }
     }
 
@@ -118,7 +118,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesList mc)
         {
-            mc.Change(MaterialCommodityData.CatType.Commodity, Type, -Count, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, -Count, 0 );
         }
     }
 

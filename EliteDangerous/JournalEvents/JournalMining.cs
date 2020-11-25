@@ -37,7 +37,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesList mc)
         {
-            mc.Change(MaterialCommodityData.CatType.Commodity, Type, 1, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, 1, 0);
             Total = mc.FindFDName(Type)?.Count ?? 0;
         }
 

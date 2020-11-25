@@ -44,7 +44,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.EngineerContribution)]
-    public class JournalEngineerContribution : JournalEntry, ILedgerJournalEntry, ICommodityJournalEntry, IMaterialJournalEntry
+    public class JournalEngineerContribution : JournalEntry, ILedgerJournalEntry, ICommodityJournalEntry, IMaterialJournalEntry, IStats
     {
         public JournalEngineerContribution(JObject evt) : base(evt, JournalTypeEnum.EngineerContribution)
         {
@@ -84,13 +84,21 @@ namespace EliteDangerousCore.JournalEvents
         public void UpdateMaterials(MaterialCommoditiesList mc)
         {
             if (Type.Equals("Materials"))
-                mc.Change(MaterialCommodityData.CatType.Raw, Material, -Quantity, 0, true);
+                mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Raw, Material, -Quantity, 0, true);
         }
 
         public void UpdateCommodities(MaterialCommoditiesList mc)
         {
             if (Type.Equals("Commodity"))
-                mc.Change(MaterialCommodityData.CatType.Commodity, Commodity, -Quantity, 0);
+                mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Commodity, -Quantity, 0);
+        }
+
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            if (Type.Equals("Materials"))
+                stats.UpdateEngineerMaterial(Engineer, Material, Quantity);
+            if (Type.Equals("Commodity"))
+                stats.UpdateEngineerCommodity(Engineer, Commodity, Quantity);
         }
 
         public void Ledger(Ledger mcl)

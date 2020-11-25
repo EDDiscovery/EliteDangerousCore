@@ -77,4 +77,10 @@ namespace EliteDangerousCore
     {
         int MapColor { get; set; }
     }
+
+    public interface IStats
+    {
+        void UpdateStats(Stats stats, string stationfaction);
+
+    }
 }

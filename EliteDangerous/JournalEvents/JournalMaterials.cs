@@ -138,7 +138,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateMaterials(MaterialCommoditiesList mc)
         {
-            mc.Change(Category, Name, Count, 0);
+            mc.Change( EventTimeUTC, Category, Name, Count, 0);
 
             Total = mc.FindFDName(Name)?.Count ?? 0;
         }
@@ -175,7 +175,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateMaterials(MaterialCommoditiesList mc)
         {
-            mc.Change(Category, Name, -Count, 0);
+            mc.Change( EventTimeUTC, Category, Name, -Count, 0);
             Total = mc.FindFDName(Name)?.Count ?? 0;
         }
 
@@ -222,7 +222,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.MaterialTrade)]
-    public class JournalMaterialTrade : JournalEntry, IMaterialJournalEntry
+    public class JournalMaterialTrade : JournalEntry, IMaterialJournalEntry, IStats
     {
         public JournalMaterialTrade(JObject evt) : base(evt, JournalTypeEnum.MaterialTrade)
         {
@@ -270,9 +270,15 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (Paid != null && Received != null)
             {
-                mc.Change(Paid.Category.Alt(TraderType), Paid.Material, -Paid.Quantity, 0);
-                mc.Change(Received.Category.Alt(TraderType), Received.Material, Received.Quantity, 0);
+                mc.Change( EventTimeUTC, Paid.Category.Alt(TraderType), Paid.Material, -Paid.Quantity, 0);        // use faction - person your using to swap
+                mc.Change( EventTimeUTC, Received.Category.Alt(TraderType), Received.Material, Received.Quantity, 0);
             }
+        }
+
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            stats.UpdateMaterial(Paid.Material, -Paid.Quantity, stationfaction);
+            stats.UpdateMaterial(Received.Material, -Received.Quantity, stationfaction);
         }
 
         public override void FillInformation(out string info, out string detailed)
@@ -334,7 +340,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Name.Contains("Limpet", StringComparison.InvariantCultureIgnoreCase) )      // hard code limpets mean 1 more cargo of them
             {
-                mc.Change(MaterialCommodityData.CatType.Commodity, "drones", 1, 0);
+                mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, "drones", 1, 0);   // ignore faction - synthesis
             }
         }
 

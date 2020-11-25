@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 - 2018 EDDiscovery development team
+ * Copyright © 2016 - 2020 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -14,13 +14,12 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
+using EliteDangerousCore.DB;
+using EliteDangerousCore.EDSM;
+using EliteDangerousCore.JournalEvents;
 using System;
 using System.Diagnostics;
 using System.Linq;
-using EliteDangerousCore.DB;
-using EliteDangerousCore.JournalEvents;
-using EliteDangerousCore.EDSM;
-using System.Data.Common;
 
 namespace EliteDangerousCore
 {
@@ -122,6 +121,7 @@ namespace EliteDangerousCore
         public ShipInformation ShipInformation { get; private set; }     // may be null if not set up yet
         public ModulesInStore StoredModules { get; private set; }
         public MissionList MissionList { get; private set; }
+        public Stats Stats { get; private set; }
 
         public SystemNoteClass snc;     // system note class found attached to this entry. May be null
 
@@ -247,9 +247,14 @@ namespace EliteDangerousCore
             return he;
         }
 
-        public void UpdateMaterials(JournalEntry je, HistoryEntry prev)
+        public void UpdateMaterialsCommodities(JournalEntry je, MaterialCommoditiesList prev)
         {
-            MaterialCommodity = MaterialCommoditiesList.Process(je, prev?.MaterialCommodity);
+            MaterialCommodity = MaterialCommoditiesList.Process(je, prev);
+        }
+
+        public void UpdateStats(JournalEntry je, Stats prev, string station)
+        {
+            Stats = Stats.Process(je, prev, station);
         }
 
         public void UpdateSystemNote()
@@ -308,9 +313,14 @@ namespace EliteDangerousCore
             StoredModules = ms;
         }
 
-        public void UpdateMissionList( MissionList ml )
+        public void UpdateMissionList(MissionList ml)
         {
             MissionList = ml;
+        }
+
+        public void UpdateMaterialCommodity(MaterialCommoditiesList mc)
+        {
+            MaterialCommodity = mc;
         }
 
         #endregion

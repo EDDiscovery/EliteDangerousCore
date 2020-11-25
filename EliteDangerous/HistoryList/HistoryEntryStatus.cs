@@ -140,7 +140,7 @@ namespace EliteDangerousCore
                     };
                 case JournalTypeEnum.Docked:
                     JournalDocked jdocked = (JournalDocked)je;
-                    System.Diagnostics.Debug.WriteLine("{0} Station {1} {2}", jdocked.EventTimeUTC, jdocked.StationName, jdocked.Faction);
+                    //System.Diagnostics.Debug.WriteLine("{0} Station {1} {2}", jdocked.EventTimeUTC, jdocked.StationName, jdocked.Faction);
                     return new HistoryEntryStatus(prev)
                     {
                         TravelState = TravelStateType.Docked,

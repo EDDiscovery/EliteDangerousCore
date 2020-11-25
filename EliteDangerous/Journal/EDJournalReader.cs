@@ -165,8 +165,6 @@ namespace EliteDangerousCore
 
             if (je is IAdditionalFiles)
             {
-
-
                 if ((je as IAdditionalFiles).ReadAdditionalFiles(TravelLogUnit.Path, inhistoryrefreshparse, ref jo) == false)     // if failed
                     return null;
             }
@@ -200,7 +198,11 @@ namespace EliteDangerousCore
             else if ( je is JournalEvents.JournalCargo )
             {
                 var cargo = je as JournalEvents.JournalCargo;
-                toosoon = lastcargo != null && cargo.EventTimeUTC.Subtract(lastcargo.EventTimeUTC).Minutes < 15;
+                if ( lastcargo != null )
+                {
+                    toosoon = lastcargo.SameAs(cargo);     // if exactly the same, swallow.
+                    System.Diagnostics.Debug.WriteLine("Cargo vs last " + toosoon);
+                }
                 lastcargo = cargo;
             }
             else if (je is JournalEvents.JournalUndocked || je is JournalEvents.JournalLoadGame)             // undocked, Load Game, repeats are cleared
