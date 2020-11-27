@@ -107,6 +107,23 @@ namespace EliteDangerousCore
                 return null;
         }
 
+        public List<HistoryEntry> FilterBefore(HistoryEntry pos, Predicate<HistoryEntry> where)         // from and including pos, go back in time, and return all which match where
+        {
+            int indexno = pos.Indexno-1;        // position in HElist..
+            List<HistoryEntry> helist = new List<HistoryEntry>();
+            while (indexno >= 0)
+            {
+                if (where(historylist[indexno]))
+                {
+                    System.Diagnostics.Debug.WriteLine(historylist[indexno].EntryType + " " + historylist[indexno].StationFaction);
+                    helist.Add(historylist[indexno]);
+                }
+                indexno--;
+            }
+
+            return helist;
+        }
+
         public List<HistoryEntry> FilterStartEnd()
         {
             List<HistoryEntry> entries = new List<HistoryEntry>();

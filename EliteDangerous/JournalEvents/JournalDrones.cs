@@ -14,6 +14,8 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 using BaseUtils.JSON;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
@@ -42,7 +44,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.BuyDrones)]
-    public class JournalBuyDrones : JournalEntry, ILedgerJournalEntry, ICommodityJournalEntry, IStats
+    public class JournalBuyDrones : JournalEntry, ILedgerJournalEntry, ICommodityJournalEntry, IStatsJournalEntryMatCommod
     {
         public JournalBuyDrones(JObject evt) : base(evt, JournalTypeEnum.BuyDrones)
         {
@@ -56,6 +58,12 @@ namespace EliteDangerousCore.JournalEvents
         public int Count { get; set; }
         public long BuyPrice { get; set; }
         public long TotalCost { get; set; }
+
+        // Istats
+        public List<Tuple<string, int>> ItemsList { get { return new List<Tuple<string, int>>() { new Tuple<string, int>(Type, Count) }; } }
+
+        public string FDNameOfItem { get { return Type; } }        // implement IStatsJournalEntryMatCommod
+        public int CountOfItem { get { return Count; } }
 
         public void UpdateCommodities(MaterialCommoditiesList mc)
         {
@@ -81,7 +89,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.SellDrones)]
-    public class JournalSellDrones : JournalEntry, ILedgerJournalEntry, ICommodityJournalEntry, IStats
+    public class JournalSellDrones : JournalEntry, ILedgerJournalEntry, ICommodityJournalEntry, IStatsJournalEntryMatCommod
     {
         public JournalSellDrones(JObject evt) : base(evt, JournalTypeEnum.SellDrones)
         {
@@ -94,6 +102,9 @@ namespace EliteDangerousCore.JournalEvents
         public int Count { get; set; }
         public long SellPrice { get; set; }
         public long TotalSale { get; set; }
+
+        // Istats
+        public List<Tuple<string, int>> ItemsList { get { return new List<Tuple<string, int>>() { new Tuple<string, int>(Type, -Count) }; } }
 
         public void UpdateCommodities(MaterialCommoditiesList mc)
         {

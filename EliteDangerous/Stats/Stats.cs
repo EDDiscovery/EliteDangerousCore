@@ -91,6 +91,7 @@ namespace EliteDangerousCore
             var newfi = Clone(faction);
             if (newfi != null)
             {
+//                if (faction == "89 Leonis Republic Party") { } // debug
                 if (amount < 0)
                     newfi.SoldCommodity += -amount;
                 else
@@ -197,10 +198,10 @@ namespace EliteDangerousCore
 
         public static Stats Process(JournalEntry je, Stats prev, string stationfaction)
         {
-            if (je is IStats)
+            if (je is IStatsJournalEntry)
             {
                 Stats news = prev != null ? new Stats(prev) : new Stats();
-                ((IStats)je).UpdateStats(news, stationfaction);
+                ((IStatsJournalEntry)je).UpdateStats(news, stationfaction);
                 return news;
             }
             else

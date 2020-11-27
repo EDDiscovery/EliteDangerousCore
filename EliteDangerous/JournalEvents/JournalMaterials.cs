@@ -222,7 +222,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.MaterialTrade)]
-    public class JournalMaterialTrade : JournalEntry, IMaterialJournalEntry, IStats
+    public class JournalMaterialTrade : JournalEntry, IMaterialJournalEntry, IStatsJournalEntryMatCommod
     {
         public JournalMaterialTrade(JObject evt) : base(evt, JournalTypeEnum.MaterialTrade)
         {
@@ -242,6 +242,9 @@ namespace EliteDangerousCore.JournalEvents
         public long? MarketID { get; set; }
         public Traded Paid { get; set; }      // may be null
         public Traded Received { get; set; } // may be null
+
+        // Istats
+        public List<Tuple<string, int>> ItemsList { get { return new List<Tuple<string, int>>() { new Tuple<string, int>(Paid.Material, -Paid.Quantity), new Tuple<string, int>(Received.Material, Received.Quantity) }; } }
 
         public class Traded
         {
@@ -274,6 +277,7 @@ namespace EliteDangerousCore.JournalEvents
                 mc.Change( EventTimeUTC, Received.Category.Alt(TraderType), Received.Material, Received.Quantity, 0);
             }
         }
+
 
         public void UpdateStats(Stats stats, string stationfaction)
         {

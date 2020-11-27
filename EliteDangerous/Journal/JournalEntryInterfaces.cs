@@ -15,6 +15,8 @@
  */
 
 using EliteDangerousCore.DB;
+using System;
+using System.Collections.Generic;
 
 namespace EliteDangerousCore
 {
@@ -78,9 +80,13 @@ namespace EliteDangerousCore
         int MapColor { get; set; }
     }
 
-    public interface IStats
+    public interface IStatsJournalEntry
     {
         void UpdateStats(Stats stats, string stationfaction);
+    }
 
+    public interface IStatsJournalEntryMatCommod : IStatsJournalEntry
+    {
+        List<Tuple<string, int>> ItemsList { get; }     // negative means sold
     }
 }

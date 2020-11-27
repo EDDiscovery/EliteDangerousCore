@@ -15,6 +15,7 @@
  */
 using BaseUtils.JSON;
 using System;
+using System.Collections.Generic;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -266,11 +267,17 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierDepositFuel)]
-    public class JournalCarrierDepositFuel : JournalEntry, ICommodityJournalEntry, IStats
+    public class JournalCarrierDepositFuel : JournalEntry, ICommodityJournalEntry, IStatsJournalEntryMatCommod
     {
         public long CarrierID { get; set; }
         public int Amount { get; set; }      // being paranoid about this .. don't trust they will be ints forever.
         public int Total { get; set; }
+
+        // Istats
+        public List<Tuple<string, int>> ItemsList { get { return new List<Tuple<string, int>>() { new Tuple<string, int>("tritium", -Amount) }; } }
+
+        public string FDNameOfItem { get { return "Carrier"; } }        // implement IStatsJournalEntryMatCommod
+        public int CountOfItem { get { return Amount; } }
 
         public JournalCarrierDepositFuel(JObject evt) : base(evt, JournalTypeEnum.CarrierDepositFuel)
         {

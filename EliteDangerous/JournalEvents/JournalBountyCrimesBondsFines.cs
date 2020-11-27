@@ -19,7 +19,7 @@ using BaseUtils.JSON;
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.Bounty)]
-    public class JournalBounty : JournalEntry, ILedgerNoCashJournalEntry, IStats
+    public class JournalBounty : JournalEntry, ILedgerNoCashJournalEntry, IStatsJournalEntry
     {
         public class BountyReward
         {
@@ -112,7 +112,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.CapShipBond)]
-    public class JournalCapShipBond : JournalEntry, ILedgerNoCashJournalEntry, IStats
+    public class JournalCapShipBond : JournalEntry, ILedgerNoCashJournalEntry, IStatsJournalEntry
     {
         public JournalCapShipBond(JObject evt) : base(evt, JournalTypeEnum.CapShipBond)
         {
@@ -149,7 +149,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.CommitCrime)]
-    public class JournalCommitCrime : JournalEntry, ILedgerNoCashJournalEntry, IStats
+    public class JournalCommitCrime : JournalEntry, ILedgerNoCashJournalEntry, IStatsJournalEntry
     {
         public JournalCommitCrime(JObject evt) : base(evt, JournalTypeEnum.CommitCrime)
         {
@@ -219,7 +219,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.FactionKillBond)]
-    public class JournalFactionKillBond : JournalEntry, ILedgerNoCashJournalEntry, IStats
+    public class JournalFactionKillBond : JournalEntry, ILedgerNoCashJournalEntry, IStatsJournalEntry
     {
         public JournalFactionKillBond(JObject evt) : base(evt, JournalTypeEnum.FactionKillBond)
         {

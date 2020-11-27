@@ -19,7 +19,7 @@ using System.Linq;
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.Interdicted)]
-    public class JournalInterdicted : JournalEntry, IStats
+    public class JournalInterdicted : JournalEntry, IStatsJournalEntry
     {
         public JournalInterdicted(JObject evt ) : base(evt, JournalTypeEnum.Interdicted)        // some nasty pilot has got you
         {
@@ -57,7 +57,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.Interdiction)]
-    public class JournalInterdiction : JournalEntry, IStats
+    public class JournalInterdiction : JournalEntry, IStatsJournalEntry
     {
         public JournalInterdiction(JObject evt) : base(evt, JournalTypeEnum.Interdiction)       // you've been naughty and interdicted someone
         {
