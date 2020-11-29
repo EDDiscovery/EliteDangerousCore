@@ -250,6 +250,8 @@ namespace EliteDangerousCore
         JournalEntry_NotorietyIndex, // Notoriety Index:;;N0
         JournalEntry_RemainingJumps,  // Remaining Jumps
         JournalEntry_Nearest, // Nearest:
+        JournalEntry_CapShipBond, // Capital Ship Bond
+        JournalEntry_FactionKillBond, // Faction Kill Bond
 
 
         JournalLocOrJump_Type, // "Type " @

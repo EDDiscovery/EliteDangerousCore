@@ -19,7 +19,7 @@ using BaseUtils.JSON;
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.Bounty)]
-    public class JournalBounty : JournalEntry, ILedgerNoCashJournalEntry, IStatsJournalEntry
+    public class JournalBounty : JournalEntry, ILedgerNoCashJournalEntry, IStatsJournalEntry, IStatsJournalEntryBountyOrBond
     {
         public class BountyReward
         {
@@ -109,10 +109,43 @@ namespace EliteDangerousCore.JournalEvents
                 }
             }
         }
+
+        public string Type { get { return "Bounty".T(EDTx.JournalEntry_Bounty); } }
+        public string TargetFaction { get { return VictimFaction; } }
+
+        public bool HasFaction(string faction)
+        {
+            if (Rewards != null)
+            {
+                foreach (var br in Rewards)
+                {
+                    if (br.Faction == faction)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public long FactionReward(string faction)
+        {
+            if (Rewards != null)
+            {
+                foreach (var br in Rewards)
+                {
+                    if (br.Faction == faction)
+                    {
+                        return br.Reward;
+                    }
+                }
+            }
+            return 0;
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.CapShipBond)]
-    public class JournalCapShipBond : JournalEntry, ILedgerNoCashJournalEntry, IStatsJournalEntry
+    public class JournalCapShipBond : JournalEntry, ILedgerNoCashJournalEntry, IStatsJournalEntry, IStatsJournalEntryBountyOrBond
     {
         public JournalCapShipBond(JObject evt) : base(evt, JournalTypeEnum.CapShipBond)
         {
@@ -145,6 +178,20 @@ namespace EliteDangerousCore.JournalEvents
             info = BaseUtils.FieldBuilder.Build("; cr;N0", Reward, "< from ".T(EDTx.JournalEntry_from), AwardingFaction_Localised,
                 "< , due to ".T(EDTx.JournalEntry_dueto), VictimFaction_Localised);
             detailed = "";
+        }
+
+        public string Type { get { return "Capital Ship Bond".T(EDTx.JournalEntry_CapShipBond); } }
+        public string Target { get { return ""; } }
+        public string TargetFaction { get { return VictimFaction; } }
+
+        public bool HasFaction(string faction)
+        {
+            return faction == AwardingFaction;
+        }
+
+        public long FactionReward(string faction)
+        {
+            return faction == AwardingFaction ? Reward : 0;
         }
     }
 
@@ -219,7 +266,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.FactionKillBond)]
-    public class JournalFactionKillBond : JournalEntry, ILedgerNoCashJournalEntry, IStatsJournalEntry
+    public class JournalFactionKillBond : JournalEntry, ILedgerNoCashJournalEntry, IStatsJournalEntry, IStatsJournalEntryBountyOrBond
     {
         public JournalFactionKillBond(JObject evt) : base(evt, JournalTypeEnum.FactionKillBond)
         {
@@ -236,6 +283,10 @@ namespace EliteDangerousCore.JournalEvents
         public string VictimFaction_Localised { get; set; }         // may be empty
         public long Reward { get; set; }
 
+        public string Type { get { return "Faction Kill Bond".T(EDTx.JournalEntry_FactionKillBond); } }
+        public string Target { get { return ""; } }
+        public string TargetFaction { get { return VictimFaction; } }
+
         public void LedgerNC(Ledger mcl)
         {
             mcl.AddEventNoCash(Id, EventTimeUTC, EventTypeID, AwardingFaction_Localised.Alt(AwardingFaction) + " " + Reward.ToString("N0"));
@@ -251,6 +302,16 @@ namespace EliteDangerousCore.JournalEvents
             info = BaseUtils.FieldBuilder.Build("Reward:; cr;N0".T(EDTx.JournalEntry_Reward), Reward, "< from ".T(EDTx.JournalEntry_from), AwardingFaction_Localised,
                 "< , due to ".T(EDTx.JournalEntry_dueto), VictimFaction_Localised);
             detailed = "";
+        }
+
+        public bool HasFaction(string faction)
+        {
+            return faction == AwardingFaction;
+        }
+
+        public long FactionReward(string faction)
+        {
+            return faction == AwardingFaction ? Reward : 0;
         }
     }
 

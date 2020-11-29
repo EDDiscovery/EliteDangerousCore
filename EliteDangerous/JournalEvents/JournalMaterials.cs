@@ -282,7 +282,7 @@ namespace EliteDangerousCore.JournalEvents
         public void UpdateStats(Stats stats, string stationfaction)
         {
             stats.UpdateMaterial(Paid.Material, -Paid.Quantity, stationfaction);
-            stats.UpdateMaterial(Received.Material, -Received.Quantity, stationfaction);
+            stats.UpdateMaterial(Received.Material, Received.Quantity, stationfaction);
         }
 
         public override void FillInformation(out string info, out string detailed)

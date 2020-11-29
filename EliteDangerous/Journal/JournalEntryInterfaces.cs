@@ -89,4 +89,13 @@ namespace EliteDangerousCore
     {
         List<Tuple<string, int>> ItemsList { get; }     // negative means sold
     }
+
+    public interface IStatsJournalEntryBountyOrBond : IStatsJournalEntry
+    {
+        string Type { get; }
+        string Target { get; }
+        string TargetFaction { get; }
+        bool HasFaction(string faction);
+        long FactionReward(string faction);
+    }
 }
