@@ -35,8 +35,6 @@ namespace EliteDangerousCore
         ScreenshotDirectoryWatcher_NOF,
         ScreenshotDirectoryWatcher_Excp,
 
-        NoTranslate, // DO NOT Define this attribute, used to cause a purposeful mismatch
-
         Bodies_HMS, //"Luminous Hot Main Sequence {0} star" @
         Bodies_BMS, //"Luminous Blue Main Sequence {0} star" @
         Bodies_BWMS, //"Bluish-White Main Sequence {0} star" @
@@ -748,6 +746,10 @@ namespace EliteDangerousCore
         static public string T(this string s, EDTx value)              // use the enum.
         {
             return BaseUtils.Translator.Instance.Translate(s, value.ToString().Replace("_", "."));
+        }
+        static public string T(bool translate, string s, EDTx value)              // use the enum.
+        {
+            return translate ? BaseUtils.Translator.Instance.Translate(s, value.ToString().Replace("_", ".")) : s;
         }
     }
 }

@@ -198,26 +198,27 @@ namespace EliteDangerousCore.JournalEvents
             DateTime exp = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(Expiry);
 
             return BaseUtils.FieldBuilder.Build("", LocalisedName,
-                                      "< from ".T(translate ? EDTx.JournalMissionAccepted_from : EDTx.NoTranslate), Faction,
-                                      "System:".T(translate ? EDTx.JournalEntry_System : EDTx.NoTranslate), DestinationSystem,
-                                      "Station:".T(translate ? EDTx.JournalEntry_Station : EDTx.NoTranslate), DestinationStation,
-                                      "Expiry:".T(translate ? EDTx.JournalMissionAccepted_Expiry : EDTx.NoTranslate), exp,
-                                      "Influence:".T(translate ? EDTx.JournalMissionAccepted_Influence : EDTx.NoTranslate), Influence,
-                                      "Reputation:".T(translate ? EDTx.JournalMissionAccepted_Reputation : EDTx.NoTranslate), Reputation,
-                                      "Reward:; cr;N0".T(translate ? EDTx.JournalMissionAccepted_Reward : EDTx.NoTranslate), Reward,
-                                      "; (Wing)".T(translate ? EDTx.JournalMissionAccepted_Wing : EDTx.NoTranslate), Wing);
+                                      EDTranslatorExtensions.T(translate, "< from ", EDTx.JournalMissionAccepted_from), Faction,
+                                      EDTranslatorExtensions.T(translate, "System:",EDTx.JournalEntry_System ), DestinationSystem,
+                                      EDTranslatorExtensions.T(translate, "Station:",EDTx.JournalEntry_Station ), DestinationStation,
+                                      EDTranslatorExtensions.T(translate, "Expiry:",EDTx.JournalMissionAccepted_Expiry ), exp,
+                                      EDTranslatorExtensions.T(translate, "Influence:",EDTx.JournalMissionAccepted_Influence ), Influence,
+                                      EDTranslatorExtensions.T(translate, "Reputation:",EDTx.JournalMissionAccepted_Reputation ), Reputation,
+                                      EDTranslatorExtensions.T(translate, "Reward:; cr;N0",EDTx.JournalMissionAccepted_Reward ), Reward,
+                                      EDTranslatorExtensions.T(translate, "; (Wing)",EDTx.JournalMissionAccepted_Wing ), Wing);
         }
 
         public string MissionDetailedInfo(bool translate)          // MissionList::FullInfo (DLL uses this), Journal Entry detailed info
         {
-            return BaseUtils.FieldBuilder.Build("Deliver:".T(translate ? EDTx.JournalMissionAccepted_Deliver : EDTx.NoTranslate), CommodityLocalised,
-                                           "Count:".T(translate ? EDTx.JournalMissionAccepted_Count : EDTx.NoTranslate), Count,
-                                           "Target:".T(translate ? EDTx.JournalEntry_Target : EDTx.NoTranslate), TargetLocalised,
-                                           "Type:".T(translate ? EDTx.JournalEntry_Type : EDTx.NoTranslate), TargetTypeFriendly,
-                                           "Target Faction:".T(translate ? EDTx.JournalEntry_TargetFaction : EDTx.NoTranslate), TargetFaction,
-                                           "Target Type:".T(translate ? EDTx.JournalMissionAccepted_TargetType : EDTx.NoTranslate), TargetTypeLocalised,
-                                           "Kill Count:".T(translate ? EDTx.JournalMissionAccepted_KillCount : EDTx.NoTranslate), KillCount,
-                                           "Passengers:".T(translate ? EDTx.JournalMissionAccepted_Passengers : EDTx.NoTranslate), PassengerCount);
+            return BaseUtils.FieldBuilder.Build(
+                                           EDTranslatorExtensions.T(translate, "Deliver:", EDTx.JournalMissionAccepted_Deliver ), CommodityLocalised,
+                                           EDTranslatorExtensions.T(translate, "Count:", EDTx.JournalMissionAccepted_Count ), Count,
+                                           EDTranslatorExtensions.T(translate, "Target:", EDTx.JournalEntry_Target ), TargetLocalised,
+                                           EDTranslatorExtensions.T(translate, "Type:", EDTx.JournalEntry_Type ), TargetTypeFriendly,
+                                           EDTranslatorExtensions.T(translate, "Target Faction:", EDTx.JournalEntry_TargetFaction ), TargetFaction,
+                                           EDTranslatorExtensions.T(translate, "Target Type:", EDTx.JournalMissionAccepted_TargetType ), TargetTypeLocalised,
+                                           EDTranslatorExtensions.T(translate, "Kill Count:", EDTx.JournalMissionAccepted_KillCount ), KillCount,
+                                           EDTranslatorExtensions.T(translate, "Passengers:", EDTx.JournalMissionAccepted_Passengers ), PassengerCount);
         }
 
         public string MissionInfoColumn()          //  MissionList:info, used for MissionList:Info, used in mission panels.
@@ -428,7 +429,7 @@ namespace EliteDangerousCore.JournalEvents
             if (PermitsAwarded != null && PermitsAwarded.Length > 0)
             {
                 if (pretty)
-                    detailed += "Permits:".T(translate ? EDTx.JournalEntry_Permits: EDTx.NoTranslate);
+                    detailed += EDTranslatorExtensions.T(translate,"Permits:",EDTx.JournalEntry_Permits);
 
                 for (int i = 0; i < PermitsAwarded.Length; i++)
                     detailed += ((i > 0) ? "," : "") + PermitsAwarded[i];
@@ -445,7 +446,7 @@ namespace EliteDangerousCore.JournalEvents
             if (CommodityReward != null && CommodityReward.Length > 0)
             {
                 if (pretty)
-                    detailed += "Rewards:".T(translate ? EDTx.JournalEntry_Rewards : EDTx.NoTranslate);
+                    detailed += EDTranslatorExtensions.T(translate,"Rewards:",EDTx.JournalEntry_Rewards);
 
                 for (int i = 0; i < CommodityReward.Length; i++)
                 {
@@ -465,7 +466,7 @@ namespace EliteDangerousCore.JournalEvents
             if (MaterialsReward != null && MaterialsReward.Length > 0)
             {
                 if (pretty)
-                    detailed += "Rewards:".T(translate ? EDTx.JournalEntry_Rewards : EDTx.NoTranslate);
+                    detailed += EDTranslatorExtensions.T(translate, "Rewards:", EDTx.JournalEntry_Rewards);
 
                 for (int i = 0; i < MaterialsReward.Length; i++)
                 {

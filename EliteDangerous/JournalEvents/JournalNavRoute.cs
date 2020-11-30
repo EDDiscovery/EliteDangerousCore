@@ -103,10 +103,13 @@ namespace EliteDangerousCore.JournalEvents
                     var r = Route[i];
                     string n = r.StarSystem ?? r.SystemAddress.ToStringInvariant();
 
-                    if (i < 21)
-                        info = info.AppendPrePad(n, ", ");
-                    else if (i == 21)
-                        info += "..";
+                    if (Route.Length >= 18)       // 0.14 printed, 15 = .. , -2/-1 printed
+                    {
+                        if (i < 15 || i >= Route.Length - 2)
+                            info = info.AppendPrePad(n, ", ");
+                        else if (i == 15)
+                            info += ", .. ";
+                    }
 
                     detailed = detailed.AppendPrePad(n + " @ " + r.StarPos.X.ToString("N1") + "," + r.StarPos.Y.ToString("N1") + "," + r.StarPos.Z.ToString("N1") + " " + r.StarClass, System.Environment.NewLine);
                 }
