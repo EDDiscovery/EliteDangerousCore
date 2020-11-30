@@ -235,12 +235,6 @@ SECTION JournalCargo
 .CargoShip: "Ship" @
 .CargoSRV: "SRV" @
 
-SECTION JournalFSSDiscoveryScan
-
-.Progress: "Progress:;%;N1" @
-.Bodies: "Bodies:" @
-.Others: "Others:" @
-
 SECTION JournalCodexEntry
 
 .At: "At " @
@@ -280,8 +274,9 @@ SECTION FSSSignal
 .StationBool: ";Station" @
 
 SECTION JournalFSSDiscoveryScan
-
 .Progress: "Progress:;%;N1" @
+.Bodies: "Bodies:" @
+.Others: "Others:" @
 
 SECTION JournalFSSSignalDiscovered
 
