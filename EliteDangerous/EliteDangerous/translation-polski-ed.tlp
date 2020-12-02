@@ -30,7 +30,6 @@ SECTION Bodies
 .Herbig: "Herbig Ae/Be" @
 .TTauri: "T Tauri" @
 
-
 SECTION EDPlanet
 
 .Metalrichbody: "Metal-rich body" @
@@ -648,6 +647,9 @@ SECTION MaterialCommodityData
 .ManufacturedCrystals: "Manufactured Crystals" @
 .ManufacturedAlloys: "Manufactured Alloys" @
 .NA: "NA" @
+.tritium: "Tritium" @
+.s6_tissuesample_mesoglea: "Pod Mesoglea" @
+.s6_tissuesample_cells: "Pod Outer Tissue" @
 
 SECTION EngineeringData
 

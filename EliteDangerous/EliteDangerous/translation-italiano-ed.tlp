@@ -16,12 +16,12 @@ SECTION Bodies
 .IZ: "Intermediate low Zirconium Monoxide Type star" => "Stella intermediaria a basso tenore di Monossido di Zirconio"
 .CGZ: "Cool Giant Zirconium Monoxide rich Type star" => "Stella gigante fredda a alto tenore di Monossido di Zirconio"
 .WD: "White Dwarf {0} star" => "Nana bianca"
-.NS: "Neutron Star" => "Stella di neutroni
+.NS: "Neutron Star" @
 .BH: "Black Hole" => "Buco nero"
 .EX: "Exotic" => "Corpo stellare esotico"
 .SMBH: "Super Massive Black Hole" => "Buco nero super massiccio"
 .BSG: "Blue White Super Giant" => "Stella super gigante bianco-blu"
-.WSG: "F White Super Giant" => Stella super gigante bianca"
+.WSG: "F White Super Giant" => "Stella"
 .MSR: "M Red Super Giant" => "Stella super gigante rossa"
 .MOG: "M Red Giant" => "Stella gigante rossa"
 .KOG: "K Orange Giant" => "Stella gigante arancione"
@@ -50,7 +50,7 @@ SECTION EDPlanet
 .SudarskyclassIVgasgiant: "Class IV gas giant" => "Gigante gassoso di tipo IV"
 .SudarskyclassVgasgiant: "Class V gas giant" => "Gigante gassoso di tipo V"
 .Heliumrichgasgiant: "Helium-rich gas giant" => "Gigante gassoso ricco in Elio"
-.Heliumgasgiant: "Helium gas giant" => "=> "Gigante gassoso di Elio"
+.Heliumgasgiant: "Helium gas giant" => "=> "
 .Unknown: "Unknown planet type" => "Classe planetaria sconosciuta"
 
 SECTION MaterialCommodityData
@@ -647,6 +647,9 @@ SECTION MaterialCommodityData
 .ManufacturedCrystals: "Manufactured Crystals" @
 .ManufacturedAlloys: "Manufactured Alloys" @
 .NA: "NA" @
+.tritium: "Tritium" @
+.s6_tissuesample_mesoglea: "Pod Mesoglea" @
+.s6_tissuesample_cells: "Pod Outer Tissue" @
 
 SECTION EngineeringData
 

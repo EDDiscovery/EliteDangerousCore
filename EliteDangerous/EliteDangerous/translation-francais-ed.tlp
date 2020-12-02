@@ -30,89 +30,35 @@ SECTION Bodies
 .Herbig: "Herbig Ae/Be" => "Objet Herbig-Haro"
 .TTauri: "T Tauri" => "Étoile T Tauri"
 
+SECTION EDPlanet
 
-Section EDStar
-
-EDStar.O: "O (Blue-White) Star" => "Étoile bleu-blanc O"
-EDStar.B: "B (Blue-White) Star" => "Étoile bleu-blanc B"
-EDStar.BBlueWhiteSuperGiant: "B (Blue-White super giant) Star" => "Supergéante bleu-blanc B"
-EDStar.A: "A (Blue-White) Star" => "Étoile bleu-blanc A"
-EDStar.ABlueWhiteSuperGiant: "A (Blue-White super giant) Star" => "Supergéante bleu blanc A"
-EDStar.F: "F (White) Star" => "Étoile blanche F"
-EDStar.FWhiteSuperGiant: "F (White super giant) Star" => "Supergéante blanche F"
-EDStar.G: "G (White-Yellow) Star" => "Étoile blanc-jaune G"
-EDStar.GWhiteSuperGiant: "G (White-Yellow super giant) Star" => "Supergéante blanc-jaune G"
-EDStar.K: "K (Yellow-Orange) Star" => "Étoile jaune-orange K"
-EDStar.KOrangeGiant: "K (Yellow-Orange giant) Star" => "Géante jaune-orange K"
-EDStar.M: "M (Red dwarf) Star" => "Naine rouge M"
-EDStar.MRedGiant: "M (Red giant) Star" => "Géante rouge M"
-EDStar.MRedSuperGiant: "M (Red super giant) Star" => "Supergéante rouge M"
-EDStar.L: "L (Brown dwarf) Star" => "Naine brune L"
-EDStar.T: "T (Brown dwarf) Star" => "Naine brune T"
-EDStar.Y: "Y (Brown dwarf) Star" => "Naine brune Y"
-EDStar.TTS: "T Tauri Star" => "Étoile T Tauri"
-EDStar.AeBe: "Herbig Ae/Be Star" => "Objet Herbig-Haro"
-EDStar.W: "Wolf-Rayet Star" => "Étoile Wolf-Rayet"
-EDStar.WN: "Wolf-Rayet N Star" => "Étoile Wolf-Rayet N"
-EDStar.WNC: "Wolf-Rayet NC Star" => "Étoile Wolf-Rayet NC"
-EDStar.WC: "Wolf-Rayet C Star" => "Étoile Wolf-Rayet C"
-EDStar.WO: "Wolf-Rayet O Star" => "Étoile Wolf-Rayet O"
-EDStar.CS: "CS Star" => "Étoile CS"
-EDStar.C: "C Star" => "Étoile C"
-EDStar.CN: "CN Star" => "Étoile CN"
-EDStar.CJ: "CJ Star" => "Étoile CJ"
-EDStar.CHd: "CHd Star" => "Étoile CHd"
-EDStar.MS: "MS-type Star" => "Étoile MS"
-EDStar.S: "S-type Star" => "Étoile S"
-EDStar.D: "White Dwarf (D) Star" => "Naine blanche D"
-EDStar.DA: "White Dwarf (DA) Star" => "Naine blanche DA"
-EDStar.DAB: "White Dwarf (DAB) Star" => "Naine blanche DAB"
-EDStar.DAO: "White Dwarf (DAO) Star" => "Naine blanche DAO"
-EDStar.DAZ: "White Dwarf (DAZ) Star" => "Naine blanche DAZ"
-EDStar.DAV: "White Dwarf (DAV) Star" => "Naine blanche DAV"
-EDStar.DB: "White Dwarf (DB) Star" => "Naine blanche DB"
-EDStar.DBZ: "White Dwarf (DBZ) Star" => "Naine blanche DBZ"
-EDStar.DBV: "White Dwarf (DBV) Star" => "Naine blanche DBV"
-EDStar.DO: "White Dwarf (DO) Star" => "Naine blanche DO"
-EDStar.DOV: "White Dwarf (DOV) Star" => "Naine blanche DOV"
-EDStar.DQ: "White Dwarf (DQ) Star" => "Naine blanche DQ"
-EDStar.DC: "White Dwarf (DC) Star" => "Naine blanche DC"
-EDStar.DCV: "White Dwarf (DCV) Star" => "Naine blanche DCV"
-EDStar.DX: "White Dwarf (DX) Star" => "Naine blanche DX"
-EDStar.N: "Neutron Star" => "Étoile à neutrons"
-EDStar.H: "Black Hole" => "Trou noir"
-EDStar.SuperMassiveBlackHole: "Supermassive Black Hole" => "Trou noir supermassif"
-EDStar.Unknown: "Unknown star type" => "Type d'étoile inconnu"
-
-Section EDPlanet
-
-EDPlanet.Metalrichbody: "Metal-rich body" => "Corps riche en métaux"
-EDPlanet.Highmetalcontentbody: "High metal content world" => "Monde abondant en métaux"
-EDPlanet.Rockybody: "Rocky body" => "Monde rocheux"
-EDPlanet.Icybody: "Icy body" => "Monde glacé"
-EDPlanet.Rockyicebody: "Rocky ice world" => "Monde rocheux gelé"
-EDPlanet.Earthlikebody: "Earth-like world" => "Monde Tellurique"
-EDPlanet.Waterworld: "Water world" => "Monde aquatique"
-EDPlanet.Ammoniaworld: "Ammonia world" => "Monde amoniaque"
-EDPlanet.Watergiant: "Water giant" => "Géante aquatique"
-EDPlanet.Watergiantwithlife: "Water giant with life" => "Géante aquatique avec de la vie"
-EDPlanet.Gasgiantwithwaterbasedlife: "Gas giant with water-based life" => "Géante gazeuse avec de la vie basée sur l'eau"
-EDPlanet.Gasgiantwithammoniabasedlife: "Gas giant with ammonia-based life" => "Géante gazeuse à la vie basée sur l'amoniaque"
-EDPlanet.SudarskyclassIgasgiant: "Class I gas giant" => "Géante gazeuse de classe I"
-EDPlanet.SudarskyclassIIgasgiant: "Class II gas giant" => "Géante gazeuse de classe II"
-EDPlanet.SudarskyclassIIIgasgiant: "Class III gas giant" => "Géante gazeuse de classe III"
-EDPlanet.SudarskyclassIVgasgiant: "Class IV gas giant" => "Géante gazeuse de classe IV"
-EDPlanet.SudarskyclassVgasgiant: "Class V gas giant" => "Géante gazeuse de classe V"
-EDPlanet.Heliumrichgasgiant: "Helium-rich gas giant" => "Géante gazeuse riche en Hélium"
-EDPlanet.Heliumgasgiant: "Helium gas giant" => "Géante gazeuse hélium"
-EDPlanet.Unknown: "Unknown planet type" => "Type de planète inconnu"
+.Metalrichbody: "Metal-rich body" => "Corps riche en métaux"
+.Highmetalcontentbody: "High metal content world" => "Monde abondant en métaux"
+.Rockybody: "Rocky body" => "Monde rocheux"
+.Icybody: "Icy body" => "Monde glacé"
+.Rockyicebody: "Rocky ice world" => "Monde rocheux gelé"
+.Earthlikebody: "Earth-like world" => "Monde Tellurique"
+.Waterworld: "Water world" => "Monde aquatique"
+.Ammoniaworld: "Ammonia world" => "Monde amoniaque"
+.Watergiant: "Water giant" => "Géante aquatique"
+.Watergiantwithlife: "Water giant with life" => "Géante aquatique avec de la vie"
+.Gasgiantwithwaterbasedlife: "Gas giant with water-based life" => "Géante gazeuse avec de la vie basée sur l'eau"
+.Gasgiantwithammoniabasedlife: "Gas giant with ammonia-based life" => "Géante gazeuse à la vie basée sur l'amoniaque"
+.SudarskyclassIgasgiant: "Class I gas giant" => "Géante gazeuse de classe I"
+.SudarskyclassIIgasgiant: "Class II gas giant" => "Géante gazeuse de classe II"
+.SudarskyclassIIIgasgiant: "Class III gas giant" => "Géante gazeuse de classe III"
+.SudarskyclassIVgasgiant: "Class IV gas giant" => "Géante gazeuse de classe IV"
+.SudarskyclassVgasgiant: "Class V gas giant" => "Géante gazeuse de classe V"
+.Heliumrichgasgiant: "Helium-rich gas giant" => "Géante gazeuse riche en Hélium"
+.Heliumgasgiant: "Helium gas giant" => "Géante gazeuse hélium"
+.Unknown: "Unknown planet type" => "Type de planète inconnu"
 
 SECTION MaterialCommodityData
 
 .Raw: "Raw" => "Brut"
 .VeryCommon: "Very Common" => "Très courant"
 .Common: "Common" => "Courant"
-.Standard: "Standard" => "Standard"
+.Standard: "Standard" @
 .Rare: "Rare" @
 .Encoded: "Encoded" => "Encodé"
 .VeryRare: "Very Rare" => "Très rare"
@@ -677,7 +623,6 @@ SECTION MaterialCommodityData
 .m3_tissuesample_spores: "Mollusc Spores" @
 .s6_tissuesample_coenosarc: "Pod Shell Tissue" @
 .apavietii: "Apa Vietii" @
-
 .RawCategory1: "Raw Category 1" => "Cat. Brut 1"
 .RawCategory2: "Raw Category 2" => "Cat. Brut 2"
 .RawCategory3: "Raw Category 3" => "Cat. Brut 3"
@@ -692,8 +637,8 @@ SECTION MaterialCommodityData
 .EncodedDataArchives: "Encoded Data Archives" => "Archives encodées"
 .EncodedFirmware: "Encoded Firmware" => "Micrologiciel encodé"
 .ManufacturedChemical: "Manufactured Chemical" => "Produit chimique manufacturé"
-.ManufacturedThermic: "Manufactured Thermic" => "<Manufactured Thermic>"
-.ManufacturedHeat: "Manufactured Heat" => "<Manufactured Heat>"
+.ManufacturedThermic: "Manufactured Thermic" @
+.ManufacturedHeat: "Manufactured Heat" @
 .ManufacturedConductive: "Manufactured Conductive" => "Conducteur manufacturé"
 .ManufacturedMechanicalComponents: "Manufactured Mechanical Components" => "Composants mécaniques manufacturés"
 .ManufacturedCapacitors: "Manufactured Capacitors" => "Condensateurs manufacturés"
@@ -702,6 +647,9 @@ SECTION MaterialCommodityData
 .ManufacturedCrystals: "Manufactured Crystals" => "Cristaux manufacturés"
 .ManufacturedAlloys: "Manufactured Alloys" => "Alliages mannufacturés"
 .NA: "NA" @
+.tritium: "Tritium" @
+.s6_tissuesample_mesoglea: "Pod Mesoglea" @
+.s6_tissuesample_cells: "Pod Outer Tissue" @
 
 SECTION EngineeringData
 

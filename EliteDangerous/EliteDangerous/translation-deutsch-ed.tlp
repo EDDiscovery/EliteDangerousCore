@@ -30,7 +30,6 @@ SECTION Bodies
 .Herbig: "Herbig Ae/Be" @
 .TTauri: "T Tauri" @
 
-
 SECTION EDPlanet
 
 .Metalrichbody: "Metal-rich body" @
@@ -466,7 +465,7 @@ SECTION MaterialCommodityData
 .neritusberries: "Neritus Berries" => "Neritus-Beeren"
 .ochoengchillies: "Ochoeng Chillies" => "Ochoeng-Chili"
 .deuringastruffles: "Deuringas Truffles" => "Deuringas-Trüffel"
-.hr7221wheat: "HR 7221 Wheat" => "\"HR 7221\"-Weizen"
+.hr7221wheat: "HR 7221 Wheat" => "\\"
 .jarouarice: "Jaroua Rice" => "Jaroua-Reis"
 .belalansrayleather: "Belalans Ray Leather" => "Belalans-Rochenleder"
 .damnacarapaces: "Damna Carapaces" => "Damna-Schildpanzer"
@@ -648,6 +647,9 @@ SECTION MaterialCommodityData
 .ManufacturedCrystals: "Manufactured Crystals" @
 .ManufacturedAlloys: "Manufactured Alloys" @
 .NA: "NA" @
+.tritium: "Tritium" @
+.s6_tissuesample_mesoglea: "Pod Mesoglea" @
+.s6_tissuesample_cells: "Pod Outer Tissue" @
 
 SECTION EngineeringData
 
