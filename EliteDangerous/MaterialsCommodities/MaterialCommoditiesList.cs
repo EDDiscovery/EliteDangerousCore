@@ -205,7 +205,7 @@ namespace EliteDangerousCore
 
             if (je is ICommodityJournalEntry || je is IMaterialJournalEntry)    // could be both
             {
-                newmc = new MaterialCommoditiesList(oldml);          // so we need a new one, makes a new list, but copies the items..
+                newmc = new MaterialCommoditiesList(newmc);          // so we need a new one, makes a new list, but copies the items..
 
                 if (je is ICommodityJournalEntry)
                 {
