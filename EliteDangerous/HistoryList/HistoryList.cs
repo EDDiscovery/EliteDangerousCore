@@ -972,10 +972,10 @@ namespace EliteDangerousCore
                 }
             }
 
-            AddToScan(this, he, logerror);  // add to scan database and complain if can't add
-
             historylist.Add(he);        // then add to history
 
+            AddToScan(this, he, logerror);  // add to scan database and complain if can't add. Do this after history add, so it has a list.
+            
             return he;
         }
 
@@ -1091,9 +1091,9 @@ namespace EliteDangerousCore
 
                 he.UpdateMissionList(hist.missionlistaccumulator.Process(je, he.System, he.WhereAmI));
 
-                AddToScan(hist, he, null);          // add to scan but don't complain if can't add.
-
                 hist.historylist.Add(he);           // now add it to the history
+
+                AddToScan(hist, he, null);          // add to scan but don't complain if can't add.  Do this AFTER add, as it uses the history list
 
                 hprev = he;
                 jprev = je;
