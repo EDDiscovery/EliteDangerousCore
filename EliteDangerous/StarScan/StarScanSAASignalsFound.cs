@@ -79,9 +79,14 @@ namespace EliteDangerousCore
                 }
             }
 
-            if (relatednode == null)
+            if (relatednode != null && relatednode.type == ScanNodeType.ring && relatednode.ScanData != null && relatednode.ScanData.Parents != null && sn.NodesByID.ContainsKey(relatednode.ScanData.Parents[0].BodyID))
             {
-                bool ringname = jsaa.BodyName.EndsWith("A Ring") || jsaa.BodyName.EndsWith("B Ring") || jsaa.BodyName.EndsWith("C Ring") | jsaa.BodyName.EndsWith("D Ring");
+                relatednode = sn.NodesByID[relatednode.ScanData.Parents[0].BodyID];
+            }
+
+            if (relatednode == null || relatednode.type == ScanNodeType.ring)
+            {
+                bool ringname = jsaa.BodyName.EndsWith("A Ring") || jsaa.BodyName.EndsWith("B Ring") || jsaa.BodyName.EndsWith("C Ring") || jsaa.BodyName.EndsWith("D Ring");
                 string ringcutname = ringname ? jsaa.BodyName.Left(jsaa.BodyName.Length - 6).TrimEnd() : null;
 
                 foreach (var body in sn.Bodies)
