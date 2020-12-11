@@ -231,7 +231,6 @@
             // 
             // extGroupBox1
             // 
-            this.extGroupBox1.AlternateClientBackColor = System.Drawing.Color.Blue;
             this.extGroupBox1.BackColorScaling = 0.5F;
             this.extGroupBox1.BorderColor = System.Drawing.Color.LightGray;
             this.extGroupBox1.BorderColorScaling = 0.5F;
@@ -243,7 +242,6 @@
             this.extGroupBox1.Controls.Add(this.labelWidth2);
             this.extGroupBox1.Controls.Add(this.labelLeft2);
             this.extGroupBox1.Controls.Add(this.labelTop2);
-            this.extGroupBox1.FillClientAreaWithAlternateColor = false;
             this.extGroupBox1.Location = new System.Drawing.Point(430, 469);
             this.extGroupBox1.Name = "extGroupBox1";
             this.extGroupBox1.Size = new System.Drawing.Size(197, 143);
@@ -366,7 +364,6 @@
             // 
             // groupBoxCropSettings
             // 
-            this.groupBoxCropSettings.AlternateClientBackColor = System.Drawing.Color.Blue;
             this.groupBoxCropSettings.BackColorScaling = 0.5F;
             this.groupBoxCropSettings.BorderColor = System.Drawing.Color.LightGray;
             this.groupBoxCropSettings.BorderColorScaling = 0.5F;
@@ -378,7 +375,6 @@
             this.groupBoxCropSettings.Controls.Add(this.labelWidth);
             this.groupBoxCropSettings.Controls.Add(this.labelLeft);
             this.groupBoxCropSettings.Controls.Add(this.labelTop);
-            this.groupBoxCropSettings.FillClientAreaWithAlternateColor = false;
             this.groupBoxCropSettings.Location = new System.Drawing.Point(217, 469);
             this.groupBoxCropSettings.Name = "groupBoxCropSettings";
             this.groupBoxCropSettings.Size = new System.Drawing.Size(197, 143);

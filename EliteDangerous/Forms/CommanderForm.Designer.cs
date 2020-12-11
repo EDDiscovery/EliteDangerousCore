@@ -559,14 +559,12 @@
             // 
             // groupBoxCustomEDDN
             // 
-            this.groupBoxCustomEDDN.AlternateClientBackColor = System.Drawing.Color.Blue;
             this.groupBoxCustomEDDN.AutoSize = true;
             this.groupBoxCustomEDDN.BackColorScaling = 0.5F;
             this.groupBoxCustomEDDN.BorderColor = System.Drawing.Color.LightGray;
             this.groupBoxCustomEDDN.BorderColorScaling = 0.5F;
             this.groupBoxCustomEDDN.Controls.Add(this.checkBoxCustomEDDNTo);
             this.groupBoxCustomEDDN.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBoxCustomEDDN.FillClientAreaWithAlternateColor = false;
             this.groupBoxCustomEDDN.Location = new System.Drawing.Point(0, 205);
             this.groupBoxCustomEDDN.Name = "groupBoxCustomEDDN";
             this.groupBoxCustomEDDN.Size = new System.Drawing.Size(615, 64);
@@ -578,14 +576,12 @@
             // 
             // groupBoxCustomEDSM
             // 
-            this.groupBoxCustomEDSM.AlternateClientBackColor = System.Drawing.Color.Blue;
             this.groupBoxCustomEDSM.AutoSize = true;
             this.groupBoxCustomEDSM.BackColorScaling = 0.5F;
             this.groupBoxCustomEDSM.BorderColor = System.Drawing.Color.LightGray;
             this.groupBoxCustomEDSM.BorderColorScaling = 0.5F;
             this.groupBoxCustomEDSM.Controls.Add(this.tableLayoutPanel2);
             this.groupBoxCustomEDSM.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBoxCustomEDSM.FillClientAreaWithAlternateColor = false;
             this.groupBoxCustomEDSM.Location = new System.Drawing.Point(0, 124);
             this.groupBoxCustomEDSM.Margin = new System.Windows.Forms.Padding(10);
             this.groupBoxCustomEDSM.Name = "groupBoxCustomEDSM";
@@ -638,14 +634,12 @@
             // 
             // groupBoxCustomJournal
             // 
-            this.groupBoxCustomJournal.AlternateClientBackColor = System.Drawing.Color.Blue;
             this.groupBoxCustomJournal.AutoSize = true;
             this.groupBoxCustomJournal.BackColorScaling = 0.5F;
             this.groupBoxCustomJournal.BorderColor = System.Drawing.Color.LightGray;
             this.groupBoxCustomJournal.BorderColorScaling = 0.5F;
             this.groupBoxCustomJournal.Controls.Add(this.tableLayoutPanel1);
             this.groupBoxCustomJournal.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBoxCustomJournal.FillClientAreaWithAlternateColor = false;
             this.groupBoxCustomJournal.Location = new System.Drawing.Point(0, 37);
             this.groupBoxCustomJournal.Name = "groupBoxCustomJournal";
             this.groupBoxCustomJournal.Size = new System.Drawing.Size(615, 77);
@@ -718,14 +712,12 @@
             // 
             // groupBoxCustomInara
             // 
-            this.groupBoxCustomInara.AlternateClientBackColor = System.Drawing.Color.Blue;
             this.groupBoxCustomInara.AutoSize = true;
             this.groupBoxCustomInara.BackColorScaling = 0.5F;
             this.groupBoxCustomInara.BorderColor = System.Drawing.Color.LightGray;
             this.groupBoxCustomInara.BorderColorScaling = 0.5F;
             this.groupBoxCustomInara.Controls.Add(this.tableLayoutPanel5);
             this.groupBoxCustomInara.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBoxCustomInara.FillClientAreaWithAlternateColor = false;
             this.groupBoxCustomInara.Location = new System.Drawing.Point(0, 279);
             this.groupBoxCustomInara.Margin = new System.Windows.Forms.Padding(10);
             this.groupBoxCustomInara.Name = "groupBoxCustomInara";
@@ -805,13 +797,11 @@
             // 
             // extGroupBoxCommanderInfo
             // 
-            this.extGroupBoxCommanderInfo.AlternateClientBackColor = System.Drawing.Color.Blue;
             this.extGroupBoxCommanderInfo.BackColorScaling = 0.5F;
             this.extGroupBoxCommanderInfo.BorderColor = System.Drawing.Color.LightGray;
             this.extGroupBoxCommanderInfo.BorderColorScaling = 0.5F;
             this.extGroupBoxCommanderInfo.Controls.Add(this.tableLayoutPanel4);
             this.extGroupBoxCommanderInfo.Dock = System.Windows.Forms.DockStyle.Top;
-            this.extGroupBoxCommanderInfo.FillClientAreaWithAlternateColor = false;
             this.extGroupBoxCommanderInfo.Location = new System.Drawing.Point(0, 408);
             this.extGroupBoxCommanderInfo.Name = "extGroupBoxCommanderInfo";
             this.extGroupBoxCommanderInfo.Size = new System.Drawing.Size(615, 122);
@@ -918,14 +908,12 @@
             // 
             // groupBoxCustomIGAU
             // 
-            this.groupBoxCustomIGAU.AlternateClientBackColor = System.Drawing.Color.Blue;
             this.groupBoxCustomIGAU.AutoSize = true;
             this.groupBoxCustomIGAU.BackColorScaling = 0.5F;
             this.groupBoxCustomIGAU.BorderColor = System.Drawing.Color.LightGray;
             this.groupBoxCustomIGAU.BorderColorScaling = 0.5F;
             this.groupBoxCustomIGAU.Controls.Add(this.checkBoxIGAUSync);
             this.groupBoxCustomIGAU.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBoxCustomIGAU.FillClientAreaWithAlternateColor = false;
             this.groupBoxCustomIGAU.Location = new System.Drawing.Point(0, 349);
             this.groupBoxCustomIGAU.Name = "groupBoxCustomIGAU";
             this.groupBoxCustomIGAU.Size = new System.Drawing.Size(615, 59);
