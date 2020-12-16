@@ -444,7 +444,7 @@ namespace EliteDangerousCore
                     {
                         if (fileUTC > EventTimeUTC)
                         {
-                            System.Diagnostics.Debug.WriteLine($"File is younger than Event, can't be associated {extrafile}");
+                          //  System.Diagnostics.Debug.WriteLine($"File is younger than Event, can't be associated {extrafile}");
                             return null;
                         }
                         else if (checktimestamptype == false || fileUTC == EventTimeUTC)

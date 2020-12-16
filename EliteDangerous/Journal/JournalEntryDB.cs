@@ -335,6 +335,8 @@ namespace EliteDangerousCore
             }
         }
 
+        // ordered in time, id order, ascending, oldest first
+
         static public List<JournalEntry> GetAll(int commander = -999, DateTime? afterutc = null, DateTime? beforeutc = null,
                             JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null)
         {
@@ -383,7 +385,7 @@ namespace EliteDangerousCore
                     if (cnd.HasChars())
                         cmd.CommandText += " where " + cnd;
 
-                    cmd.CommandText += " Order By EventTime ASC";
+                    cmd.CommandText += " Order By EventTime,Id ASC";
 
                     return cmd.ExecuteReader();
                 });
@@ -392,13 +394,16 @@ namespace EliteDangerousCore
 
                 do
                 {
-                    retlist = UserDatabase.Instance.ExecuteWithDatabase(cn =>
+                    // experiments state that reading the DL takes 270/4000ms, reading json -> 1250, then the rest is creating and decoding the fields
+                    // not much scope to improve it outside of the core json speed.
+
+                    retlist = UserDatabase.Instance.ExecuteWithDatabase(cn =>       // split into smaller chunks to allow other things access..
                     {
                         List<JournalEntry> list = new List<JournalEntry>();
 
                         while (list.Count < 1000 && reader.Read())
                         {
-                            JournalEntry sys = JournalEntry.CreateJournalEntry(reader);
+                            JournalEntry sys = JournalEntry.CreateJournalEntry(reader);     
                             sys.beta = tlus.ContainsKey(sys.TLUId) ? tlus[sys.TLUId].Beta : false;
                             list.Add(sys);
                         }
@@ -409,7 +414,6 @@ namespace EliteDangerousCore
                     entries.AddRange(retlist);
                 }
                 while (retlist != null && retlist.Count != 0);
-
             }
             catch (Exception ex)
             {

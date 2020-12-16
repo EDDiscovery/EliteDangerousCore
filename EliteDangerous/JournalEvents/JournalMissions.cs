@@ -253,13 +253,13 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (Commodity != null && Count != null && EventTimeUTC < ED32Date)           // after this we will rely on Cargo to update us, only safe way to know if something has been stowed
             {
-                if (DeliveryMissions.StartsWith(FDName, StringComparison.InvariantCultureIgnoreCase)>=0 )
+                if (DeliveryMissions.StartsWith(FDName, StringComparison.InvariantCultureIgnoreCase)>=0 )   // before, we accept only these as mission deliveries
                 {
                     mc.Change(EventTimeUTC, MaterialCommodityData.CatType.Commodity, Commodity, (int)Count, 0);
                 }
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine("{0} Rejected {1} {2} {3}", EventTimeUTC, FDName, Commodity, Count);
+                 //   System.Diagnostics.Debug.WriteLine("{0} Rejected {1} {2} {3}", EventTimeUTC, FDName, Commodity, Count);
                 }
             }
         }

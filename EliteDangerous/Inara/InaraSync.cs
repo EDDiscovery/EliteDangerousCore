@@ -116,7 +116,7 @@ namespace EliteDangerousCore.Inara
 
             if (last != null && last.EventTimeUTC > DateTime.UtcNow.AddDays(-30))
             {
-                foreach( var s in history.shipinformationlist.Ships )
+                foreach( var s in history.ShipInformationList.Ships )
                 {
                     ShipInformation si = s.Value;
                     if ( si.State == ShipInformation.ShipState.Owned && !ShipModuleData.IsSRVOrFighter(si.ShipFD))

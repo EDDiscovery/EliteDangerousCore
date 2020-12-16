@@ -182,15 +182,9 @@ namespace EliteDangerousCore.EDSM
         }
 
         // called by onNewEntry
+                // Called by Perform, by Sync, by above.
 
-        public static bool SendEDSMEvents(Action<string> logger, params HistoryEntry[] helist)
-        {
-            return SendEDSMEvents(logger, (IEnumerable<HistoryEntry>)helist);
-        }
-
-        // Called by Perform, by Sync, by above.
-
-        public static bool SendEDSMEvents(Action<string> log, IEnumerable<HistoryEntry> helist, bool manual = false)
+        public static bool SendEDSMEvents(Action<string> log, List<HistoryEntry> helist, bool manual = false)
         {
             System.Diagnostics.Debug.WriteLine("EDSM Send Events " + helist.Count());
 

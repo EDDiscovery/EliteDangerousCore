@@ -68,7 +68,8 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalLoadGame(JObject evt) : base(evt, JournalTypeEnum.LoadGame)
         {
-            LoadGameCommander = evt["Commander"].Str();
+            LoadGameCommander = JournalFieldNaming.SubsituteCommanderName( evt["Commander"].Str() );
+            
             ShipFD = evt["Ship"].Str();
             if (ShipFD.Length > 0)      // Vega logs show no ship on certain logs.. handle it to prevent warnings.
             {
@@ -95,7 +96,7 @@ namespace EliteDangerousCore.JournalEvents
 
             Horizons = evt["Horizons"].BoolNull();
 
-            FID = evt["FID"].Str();     // 3.3 on
+            FID = JournalFieldNaming.SubsituteCommanderFID(evt["FID"].Str());     // 3.3 on
         }
 
         public string LoadGameCommander { get; set; }

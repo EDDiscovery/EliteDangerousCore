@@ -17,7 +17,6 @@
 using EliteDangerousCore.DB;
 using EliteDangerousCore.JournalEvents;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Diagnostics;
@@ -25,16 +24,10 @@ using System.Linq;
 
 namespace EliteDangerousCore
 {
-    public class HistoryList : IEnumerable<HistoryEntry>
+    public partial class HistoryList //: IEnumerable<HistoryEntry>
     {
         private List<HistoryEntry> historylist = new List<HistoryEntry>();  // oldest first here
-        public Ledger cashledger { get; private set; } = new Ledger();       // and the ledger..
-        public ShipInformationList shipinformationlist { get; private set; } = new ShipInformationList();     // ship info
         private MissionListAccumulator missionlistaccumulator = new MissionListAccumulator(); // and mission list..
-        public ShipYardList shipyards = new ShipYardList(); // yards in space (not meters)
-        public OutfittingList outfitting = new OutfittingList();        // outfitting on stations
-        public StarScan starscan { get; private set; } = new StarScan();      // the results of scanning
-        public int CommanderId { get; private set; }
 
         public HistoryList() { }
 
@@ -50,561 +43,16 @@ namespace EliteDangerousCore
                 Debug.Assert(ent.MaterialCommodity != null);
             }
 
-            cashledger = other.cashledger;
-            starscan = other.starscan;
-            shipinformationlist = other.shipinformationlist;
+            CashLedger = other.CashLedger;
+            StarScan = other.StarScan;
+            ShipInformationList = other.ShipInformationList;
             CommanderId = other.CommanderId;
             missionlistaccumulator = other.missionlistaccumulator;
-            shipyards = other.shipyards;
-            outfitting = other.outfitting;
+            Shipyards = other.Shipyards;
+            Outfitting = other.Outfitting;
+            Visited = other.Visited;
+            LastSystem = other.LastSystem;
         }
-
-        public int Count { get { return historylist.Count; } }
-
-        #region Output filters
-
-        public List<HistoryEntry> FilterLastN(int max)
-        {
-            return historylist.OrderByDescending(s => s.EventTimeUTC).Take(max).ToList();
-        }
-
-        public List<HistoryEntry> FilterToLastDock()
-        {
-            List<HistoryEntry> inorder = historylist.OrderByDescending(s => s.EventTimeUTC).ToList();
-            int lastdockpos = inorder.FindIndex(x => !x.MultiPlayer && x.EntryType == JournalTypeEnum.Docked);
-            if (lastdockpos >= 0)
-                inorder = inorder.Take(lastdockpos + 1).ToList();
-            return inorder;
-        }
-
-        // from pos, find all HEs satifying where condition, bounded by boundcondition
-        // return null if no HE entries, empty list if no entries between
-        public List<HistoryEntry> FilterBetween(HistoryEntry pos, Predicate<HistoryEntry> boundcondition, Predicate<HistoryEntry> where)
-        {
-            HistoryEntry heabove = GetFromPos(pos, boundcondition, 1, returnlast: true);     // find entry later matching bound conditions
-            HistoryEntry hebelow = GetFromPos(pos, boundcondition, -1, usecurrent: true, returnlast: true);     // find entry before, including ourselves, matching bound conditions
-
-            if (heabove != null && hebelow != null)
-            {
-                return historylist.Where(x => x.Indexno >= hebelow.Indexno && x.Indexno <= heabove.Indexno && where(x) == true).ToList();
-            }
-            else
-                return null;
-        }
-
-        public List<HistoryEntry> FilterBetween(HistoryEntry pos, Predicate<HistoryEntry> boundcondition, Predicate<HistoryEntry> where, out HistoryEntry hebelow, out HistoryEntry heabove)
-        {
-            heabove = GetFromPos(pos, boundcondition, 1, returnlast: true);     // find entry later matching bound conditions
-            hebelow = GetFromPos(pos, boundcondition, -1, usecurrent: true, returnlast: true);     // find entry before, including ourselves, matching bound conditions
-
-            if (heabove != null && hebelow != null)
-            {
-                int hebelowix = hebelow.Indexno;
-                int heaboveix = heabove.Indexno;
-                return historylist.Where(x => x.Indexno >= hebelowix && x.Indexno <= heaboveix && where(x) == true).ToList();
-            }
-            else
-                return null;
-        }
-
-        public List<HistoryEntry> FilterBefore(HistoryEntry pos, Predicate<HistoryEntry> where)         // from and including pos, go back in time, and return all which match where
-        {
-            int indexno = pos.Indexno-1;        // position in HElist..
-            List<HistoryEntry> helist = new List<HistoryEntry>();
-            while (indexno >= 0)
-            {
-                if (where(historylist[indexno]))
-                {
-                    System.Diagnostics.Debug.WriteLine(historylist[indexno].EntryType + " " + historylist[indexno].StationFaction);
-                    helist.Add(historylist[indexno]);
-                }
-                indexno--;
-            }
-
-            return helist;
-        }
-
-        public List<HistoryEntry> FilterStartEnd()
-        {
-            List<HistoryEntry> entries = new List<HistoryEntry>();
-            bool started = false;
-            foreach (HistoryEntry he in historylist.OrderBy(s => s.EventTimeUTC).ToList())      // ascending order
-            {
-                if (he.StartMarker)
-                {
-                    started = true;
-                    entries.Add(he);
-                }
-                else if (started)
-                {
-                    entries.Add(he);
-                    if (he.StopMarker && !he.StartMarker)
-                        started = false;
-                }
-            }
-            return entries.OrderByDescending(s => s.EventTimeUTC).ToList();
-        }
-
-        public List<HistoryEntry> FilterByDate(TimeSpan days)
-        {
-            var oldestData = DateTime.UtcNow.Subtract(days);
-            return (from systems in historylist where systems.EventTimeUTC >= oldestData orderby systems.EventTimeUTC descending select systems).ToList();
-        }
-
-        public List<HistoryEntry> EntryOrder
-        {
-            get
-            {
-                return historylist;
-            }
-        }
-
-        public List<HistoryEntry> LastFirst
-        {
-            get
-            {
-                return historylist.OrderByDescending(s => s.Indexno).ToList();
-            }
-        }
-
-        public List<HistoryEntry> OrderByDate
-        {
-            get
-            {
-                return historylist.OrderByDescending(s => s.EventTimeUTC).ToList();
-            }
-        }
-
-        public List<HistoryEntry> FilterByDateRange(DateTime startutc, DateTime endutc) // UTC! in time ascending order
-        {
-            return historylist.Where(s => s.EventTimeUTC >= startutc && s.EventTimeUTC <= endutc).ToList();
-        }
-
-        public List<HistoryEntry> FilterByDateRangeLatestFirst(DateTime startutc, DateTime endutc) // UTC! in time ascending order
-        {
-            return historylist.Where(s => s.EventTimeUTC >= startutc && s.EventTimeUTC <= endutc).OrderByDescending(s => s.EventTimeUTC).ToList();
-        }
-
-        public List<HistoryEntry> FilterByScanNotEDDNSynced
-        {
-            get
-            {
-                return (from s in historylist where s.EDDNSync == false && s.EntryType == JournalTypeEnum.Scan orderby s.EventTimeUTC ascending select s).ToList();
-            }
-        }
-
-        public List<HistoryEntry> FilterByFSDCarrierJumpAndPosition
-        {
-            get
-            {
-                return (from s in historylist where s.IsFSDCarrierJump && s.System.HasCoordinate select s).ToList();
-            }
-        }
-
-
-        public List<HistoryEntry> FilterByCommodityPricesBackwards      // full commodity price information only
-        {
-            get
-            {
-                return (from s in historylist
-                        where (s.journalEntry is JournalCommodityPricesBase && (s.journalEntry as JournalCommodityPricesBase).Commodities.Count > 0)
-                        orderby s.EventTimeUTC descending
-                        select s).ToList();
-            }
-        }
-
-        public List<HistoryEntry> FilterByTravel { get { return FilterHLByTravel(historylist); } }
-
-        static public List<HistoryEntry> FilterHLByTravel(List<HistoryEntry> hlist)        // filter, in its own order. return FSD and location events after death
-        {
-            List<HistoryEntry> ents = new List<HistoryEntry>();
-            bool resurrect = true;
-            foreach (HistoryEntry he in hlist)
-            {
-                if (he.EntryType == JournalTypeEnum.Resurrect || he.EntryType == JournalTypeEnum.Died)
-                {
-                    resurrect = true;
-                    ents.Add(he);
-                }
-                else if ((resurrect && he.EntryType == JournalTypeEnum.Location) || he.EntryType == JournalTypeEnum.FSDJump || he.EntryType == JournalTypeEnum.CarrierJump)
-                {
-                    resurrect = false;
-                    ents.Add(he);
-                }
-            }
-
-            return ents;
-        }
-
-        public List<HistoryEntry> FilterByFSDCarrierJump
-        {
-            get
-            {
-                return (from s in historylist where s.IsFSDCarrierJump select s).ToList();
-            }
-        }
-
-        public List<HistoryEntry> FilterByFSDOnly
-        {
-            get
-            {
-                return (from s in historylist where s.EntryType == JournalTypeEnum.FSDJump select s).ToList();
-            }
-        }
-
-        public List<HistoryEntry> FilterByScan
-        {
-            get
-            {
-                return (from s in historylist where s.journalEntry.EventTypeID == JournalTypeEnum.Scan select s).ToList();
-            }
-        }
-
-        public static List<HistoryEntry> FilterByJournalEvent(List<HistoryEntry> he, string eventstring, out int count)
-        {
-            count = 0;
-            if (eventstring.Equals("All"))
-                return he;
-            else
-            {
-                string[] events = eventstring.Split(';');
-                List<HistoryEntry> ret = (from systems in he where systems.IsJournalEventInEventFilter(events) select systems).ToList();
-                count = he.Count - ret.Count;
-                return ret;
-            }
-        }
-
-        static public List<List<HistoryEntry>> SystemAggregateList(List<HistoryEntry> result) // give a list of HEs, and return unique systems list of those HEs
-        {
-            Dictionary<string, List<HistoryEntry>> systemsentered = new Dictionary<string, List<HistoryEntry>>();
-
-            foreach (HistoryEntry he in result)
-            {
-                if (!systemsentered.ContainsKey(he.System.Name))
-                    systemsentered[he.System.Name] = new List<HistoryEntry>();
-
-                systemsentered[he.System.Name].Add(he);
-            }
-
-            return systemsentered.Values.ToList();
-        }
-
-        #endregion
-
-        #region Status
-
-        public bool IsCurrentlyLanded { get { HistoryEntry he = GetLast; return (he != null) ? he.IsLanded : false; } }     //safe methods
-        public bool IsCurrentlyDocked { get { HistoryEntry he = GetLast; return (he != null) ? he.IsDocked : false; } }
-        public ISystem CurrentSystem { get { HistoryEntry he = GetLast; return (he != null) ? he.System : null; } }  // current system
-
-        public double DistanceCurrentTo(string system)          // from current, if we have one, to system, if its found.
-        {
-            ISystem cursys = CurrentSystem;
-            ISystem other = SystemCache.FindSystem(system);
-            return cursys != null ? cursys.Distance(other) : -1;  // current can be null, shipsystem can be null, cursys can not have co-ord, -1 if failed.
-        }
-
-        #endregion
-
-        #region Gets
-
-        public HistoryEntry GetByJID(long jid)
-        {
-            return historylist.Find(x => x.Journalid == jid);
-        }
-
-        public HistoryEntry GetByIndex(int index)
-        {
-            return (index >= 1 && index <= historylist.Count) ? historylist[index - 1] : null;
-        }
-
-        public int GetIndex(long jid)
-        {
-            return EntryOrder.FindIndex(x => x.Journalid == jid);
-        }
-
-        public HistoryEntry GetLast
-        {
-            get
-            {
-                if (historylist.Count > 0)
-                    return historylist[historylist.Count - 1];
-                else
-                    return null;
-            }
-        }
-
-        // from athe, find where in a direction..
-        // dir = 1 forward to newer, -1 backwards.  usecurrent means check athe entry.  returnlast means if we did not find it, return first or last
-        // null if not found, or no athe, or no list
-        public HistoryEntry GetFromPos(HistoryEntry athe, Predicate<HistoryEntry> where, int dir = 1, 
-                                            bool usecurrent = false, bool returnlast = false)      
-        {
-            if (historylist.Count == 0 || athe == null)
-                return null;
-
-            for (int i = (athe.Indexno - 1) + (usecurrent ? 0 : dir); dir > 0 ? (i < historylist.Count) : (i >= 0); i += dir )        // indexno is +1 due to historic reasons, start from one on
-            {
-                if (where(historylist[i]))
-                    return historylist[i];
-            }
-
-            if (returnlast)
-                return dir > 0 ? historylist.Last() : historylist.First();
-            else
-                return null;
-        }
-
-        public HistoryEntry GetLastFSDCarrierJump
-        {
-            get
-            {
-                return historylist.FindLast(x => x.IsFSDCarrierJump);
-            }
-        }
-
-        public HistoryEntry GetLastFSDOnly
-        {
-            get
-            {
-                return historylist.FindLast(x => x.EntryType == JournalTypeEnum.FSDJump);
-            }
-        }
-
-        public HistoryEntry GetLastHistoryEntry(Predicate<HistoryEntry> where)
-        {
-            return historylist.FindLast(where);
-        }
-
-        public T GetLastJournalEntry<T>(Predicate<HistoryEntry> where) where T : class             // may be Null
-        {
-            return historylist.FindLast(where)?.journalEntry as T;
-        }
-
-        public HistoryEntry GetLastHistoryEntry(Predicate<HistoryEntry> where, HistoryEntry frominclusive)
-        {
-            if (frominclusive is null)
-                return GetLastHistoryEntry(where);
-
-            int hepos = historylist.FindIndex(x => x.Journalid == frominclusive.Journalid);
-            if (hepos != -1)
-                hepos = historylist.FindLastIndex(hepos, where);
-
-            return (hepos != -1) ? historylist[hepos] : null;
-        }
-
-        public HistoryEntry GetLastWithPosition
-        {
-            get
-            {
-                return historylist.FindLast(x => x.System.HasCoordinate);
-            }
-        }
-
-        public DateTime GetMaxDate
-        {
-            get
-            {
-                return historylist.Max(x => x.EventTimeUTC);
-            }
-        }
-        public DateTime GetMinDate
-        {
-            get
-            {
-                return historylist.Min(x => x.EventTimeUTC);
-            }
-        }
-
-
-        public int GetVisitsCount(string name)
-        {
-            return (from he in historylist.AsParallel()
-                    where (he.IsFSDCarrierJump && he.System.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
-                    select he).Count();
-        }
-        public List<JournalScan> GetScans(string name)
-        {
-            return (from s in historylist.AsParallel()
-                    where (s.journalEntry.EventTypeID == JournalTypeEnum.Scan && s.System.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
-                    select s.journalEntry as JournalScan).ToList<JournalScan>();
-        }
-
-        public int GetFSDCarrierJumps(TimeSpan t)
-        {
-            DateTime tme = DateTime.UtcNow.Subtract(t);
-            return (from s in historylist where s.IsFSDCarrierJump && s.EventTimeUTC >= tme select s).Count();
-        }
-
-        public int GetFSDCarrierJumpsUTC(DateTime startutc, DateTime toutc)
-        {
-            return (from s in historylist where s.IsFSDCarrierJump && s.EventTimeUTC >= startutc && s.EventTimeUTC < toutc select s).Count();
-        }
-
-        public int GetFSDCarrierJumps(string forShipKey)
-        {
-            return (from s in historylist where s.IsFSDCarrierJump && $"{s.ShipTypeFD.ToLowerInvariant()}:{s.ShipId}" == forShipKey select s).Count();
-        }
-
-        public int GetNrMappedUTC(DateTime startutc, DateTime toutc)
-        {
-            return (from s in historylist where s.journalEntry.EventTypeID == JournalTypeEnum.SAAScanComplete && s.EventTimeUTC >= startutc && s.EventTimeUTC < toutc select s).Count();
-        }
-
-
-        public Tuple<int, long> GetScanCountAndValueUTC(DateTime startutc, DateTime toutc)
-        {
-            var scans = historylist
-                .Where(s => s.EntryType == JournalTypeEnum.Scan && s.EventTimeUTC >= startutc && s.EventTimeUTC < toutc)
-                .Select(h => h.journalEntry as JournalScan)
-                .Distinct(new ScansAreForSameBody()).ToArray();
-
-            var total = scans.Sum(scan => (long)scan.EstimatedValue);
-
-            return new Tuple<int, long>(scans.Length, total);
-        }
-
-        public int GetJetConeBoostUTC(DateTime startutc, DateTime toutc)
-        {
-            return (from s in historylist where s.EntryType == JournalTypeEnum.JetConeBoost && s.EventTimeUTC >= startutc && s.EventTimeUTC < toutc select s).Count();
-        }
-
-
-        public HistoryFsdJumpStatistics GetFsdJumpStatistics(DateTime startUtc, DateTime toUtc)
-        {
-            var jumps = historylist
-                .Where(s => s.EntryType == JournalTypeEnum.FSDJump && s.EventTimeUTC >= startUtc && s.EventTimeUTC < toUtc)
-                .Select(h => h.journalEntry as JournalFSDJump)
-                .ToArray();
-
-            return new HistoryFsdJumpStatistics(
-                jumps.Length,
-                jumps.Sum(j => j.JumpDist),
-                jumps.Where(j => j.BoostValue == 1).Count(),
-                jumps.Where(j => j.BoostValue == 2).Count(),
-                jumps.Where(j => j.BoostValue == 3).Count());
-        }
-
-        public bool IsTravellingUTC(out DateTime startTimeutc)
-        {
-            bool inTrip = false;
-            startTimeutc = DateTime.UtcNow;
-            HistoryEntry lastStartMark = GetLastHistoryEntry(x => x.StartMarker);
-            if (lastStartMark != null)
-            {
-                HistoryEntry lastStopMark = GetLastHistoryEntry(x => x.StopMarker);
-                inTrip = lastStopMark == null || lastStopMark.EventTimeUTC < lastStartMark.EventTimeUTC;
-                if (inTrip)
-                    startTimeutc = lastStartMark.EventTimeUTC;
-            }
-            return inTrip;
-        }
-
-
-        public double GetTraveledLy(string forShipKey)
-        {
-            var list = (from s in historylist where s.EntryType == JournalTypeEnum.FSDJump && $"{s.ShipTypeFD.ToLowerInvariant()}:{s.ShipId}" == forShipKey select s.journalEntry as JournalFSDJump).ToList<JournalFSDJump>();
-
-            return (from s in list select s.JumpDist).Sum();
-        }
-
-        public List<JournalScan> GetScanListUTC(DateTime startutc, DateTime toutc)
-        {
-            return (from s in historylist where s.EntryType == JournalTypeEnum.Scan && s.EventTimeUTC >= startutc && s.EventTimeUTC < toutc select s.journalEntry as JournalScan)
-                .Distinct(new ScansAreForSameBody()).ToList();
-        }
-
-        public int GetTonnesBought(string forShipKey)
-        {
-            var list = (from s in historylist where s.EntryType == JournalTypeEnum.MarketBuy && $"{s.ShipTypeFD.ToLowerInvariant()}:{s.ShipId}" == forShipKey select s.journalEntry as JournalMarketBuy).ToList();
-
-            return (from s in list select s.Count).Sum();
-        }
-
-        public int GetTonnesSold(string forShipKey)
-        {
-            var list = (from s in historylist where s.EntryType == JournalTypeEnum.MarketSell && $"{s.ShipTypeFD.ToLowerInvariant()}:{s.ShipId}" == forShipKey select s.journalEntry as JournalMarketSell).ToList();
-
-            return (from s in list select s.Count).Sum();
-        }
-
-        public int GetDeathCount(string forShipKey)
-        {
-            return (from s in historylist where s.EntryType == JournalTypeEnum.Died && $"{s.ShipTypeFD.ToLowerInvariant()}:{s.ShipId}" == forShipKey select s).Count();
-        }
-
-        public int GetBodiesScanned(string forShipKey)
-        {
-            return (from s in historylist where s.EntryType == JournalTypeEnum.Scan && $"{s.ShipTypeFD.ToLowerInvariant()}:{s.ShipId}" == forShipKey select s.journalEntry as JournalScan)
-                .Distinct(new ScansAreForSameBody()).Count();
-        }
-
-        public int GetFSDCarrierJumpsBeforeUTC(DateTime utc)
-        {
-            return (from s in historylist where s.IsFSDCarrierJump && s.EventTimeUTC < utc select s).Count();
-        }
-
-        public string GetCommanderFID()     // may be null
-        {
-            var cmdr = historylist.FindLast(x => x.EntryType == JournalTypeEnum.Commander);
-            return (cmdr?.journalEntry as JournalCommander)?.FID;
-        }
-
-        public delegate bool FurthestFund(HistoryEntry he, ref double lastv);
-        public HistoryEntry GetConditionally(double lastv, FurthestFund f)              // give a comparision function, find entry
-        {
-            HistoryEntry best = null;
-            foreach (HistoryEntry s in historylist)
-            {
-                if (f(s, ref lastv))
-                    best = s;
-            }
-
-            return best;
-        }
-
-        public bool IsBetween(HistoryEntry first, HistoryEntry last, Predicate<HistoryEntry> predicate)     // either direction
-        {
-            if (first.Indexno < last.Indexno)
-                return historylist.Where(h => h.Indexno > first.Indexno && h.Indexno <= last.Indexno && predicate(h)).Any();
-            else
-                return historylist.Where(h => h.Indexno >= first.Indexno && h.Indexno < last.Indexno && predicate(h)).Any();
-        }
-
-        public bool AnyBetween(HistoryEntry first, HistoryEntry last, IEnumerable<JournalTypeEnum> journalTypes)
-        {
-            if (first.Indexno < last.Indexno)
-                return historylist.Where(h => h.Indexno > first.Indexno && h.Indexno <= last.Indexno && journalTypes.Contains(h.EntryType)).Any();
-            else
-                return historylist.Where(h => h.Indexno >= first.Indexno && h.Indexno < last.Indexno && journalTypes.Contains(h.EntryType)).Any();
-        }
-
-        public static HistoryEntry FindLastKnownPosition(List<HistoryEntry> syslist)        // can return FSD, Carrier or Location
-        {
-            return syslist.FindLast(x => x.System.HasCoordinate && x.IsLocOrJump);
-        }
-
-        public static HistoryEntry FindByPos(List<HistoryEntry> syslist, float x, float y, float z, double limit)     // go thru setting the lastknowsystem
-        {
-            return syslist.FindLast(s => s.System.HasCoordinate &&
-                                            Math.Abs(s.System.X - x) < limit &&
-                                            Math.Abs(s.System.Y - y) < limit &&
-                                            Math.Abs(s.System.Z - z) < limit);
-        }
-
-        public static IEnumerable<ISystem> FindSystemsWithinLy(List<HistoryEntry> he, ISystem centre, double minrad, double maxrad, bool spherical)
-        {
-            IEnumerable<ISystem> list;
-
-            if (spherical)
-                list = (from x in he where x.System.HasCoordinate && x.System.Distance(centre, minrad, maxrad) select x.System);
-            else
-                list = (from x in he where x.System.HasCoordinate && x.System.Cuboid(centre, minrad, maxrad) select x.System);
-
-            return list.GroupBy(x => x.Name).Select(group => group.First());
-        }
-
-        #endregion
 
         #region EDSM
 
@@ -738,196 +186,6 @@ namespace EliteDangerousCore
 
         #endregion
 
-        #region General Info
-
-        // Add in any systems we have to the distlist 
-
-        public void CalculateSqDistances(BaseUtils.SortedListDoubleDuplicate<ISystem> distlist, double x, double y, double z,
-                                         int maxitems, double mindistance, double maxdistance, bool spherical)
-        {
-            HashSet<string> listnames = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
-
-            foreach (ISystem sys in distlist.Values.ToList())
-                listnames.Add(sys.Name);
-
-            mindistance *= mindistance;
-
-            foreach (HistoryEntry pos in historylist)
-            {
-                if (pos.System.HasCoordinate && !listnames.Contains(pos.System.Name))
-                {
-                    double dx = (pos.System.X - x);
-                    double dy = (pos.System.Y - y);
-                    double dz = (pos.System.Z - z);
-                    double distsq = dx * dx + dy * dy + dz * dz;
-
-                    listnames.Add(pos.System.Name); //stops repeats..
-
-                    if (distsq >= mindistance &&
-                            (spherical && distsq <= maxdistance * maxdistance ||
-                            !spherical && Math.Abs(dx) <= maxdistance && Math.Abs(dy) <= maxdistance && Math.Abs(dz) <= maxdistance))
-                    {
-                        if (distlist.Count < maxitems)          // if less than max, add..
-                        {
-                            distlist.Add(distsq, pos.System);
-                        }
-                        else if (distsq < distlist.Keys[distlist.Count - 1])   // if last entry (which must be the biggest) is greater than dist..
-                        {
-                            distlist.Add(distsq, pos.System);           // add in
-                            distlist.RemoveAt(maxitems);        // remove last..
-                        }
-                    }
-                }
-            }
-        }
-
-        public HistoryEntry FindByName(string name, bool fsdjump = false)
-        {
-            if (fsdjump)
-                return historylist.FindLast(x => x.System.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-            else
-                return historylist.FindLast(x => x.IsFSDCarrierJump && x.System.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-        }
-
-        public ISystem FindSystem(string name, EDSM.GalacticMapping glist = null)        // in system or name
-        {
-            ISystem ds1 = SystemCache.FindSystem(name);     // now go thru the cache..
-
-            if (ds1 == null)
-            {
-                HistoryEntry vs = FindByName(name);         // else try and find in our list
-
-                if (vs != null)
-                    ds1 = vs.System;
-                else if (glist != null)                     // if we have a galmap
-                {
-                    EDSM.GalacticMapObject gmo = glist.Find(name, true, true);
-
-                    if (gmo != null && gmo.points.Count > 0)
-                    {
-                        ds1 = SystemCache.FindSystem(gmo.galMapSearch);
-
-                        if (ds1 != null)
-                        {
-                            return new EDSM.GalacticMapSystem(ds1, gmo);
-                        }
-                        else
-                        {
-                            return new EDSM.GalacticMapSystem(gmo);
-                        }
-                    }
-                }
-            }
-
-            return ds1;
-        }
-
-        public static HistoryEntry FindNextSystem(List<HistoryEntry> syslist, string sysname, int dir)
-        {
-            int index = syslist.FindIndex(x => x.System.Name.Equals(sysname));
-
-            if (index != -1)
-            {
-                if (dir == -1)
-                {
-                    if (index < 1)                                  //0, we go to the end and work from back..
-                        index = syslist.Count;
-
-                    int indexn = syslist.FindLastIndex(index - 1, x => x.System.HasCoordinate);
-
-                    if (indexn == -1)                             // from where we were, did not find one, try from back..
-                        indexn = syslist.FindLastIndex(x => x.System.HasCoordinate);
-
-                    return (indexn != -1) ? syslist[indexn] : null;
-                }
-                else
-                {
-                    index++;
-
-                    if (index == syslist.Count)             // if at end, go to beginning
-                        index = 0;
-
-                    int indexn = syslist.FindIndex(index, x => x.System.HasCoordinate);
-
-                    if (indexn == -1)                             // if not found, go to beginning
-                        indexn = syslist.FindIndex(x => x.System.HasCoordinate);
-
-                    return (indexn != -1) ? syslist[indexn] : null;
-                }
-            }
-            else
-            {
-                index = syslist.FindLastIndex(x => x.System.HasCoordinate);
-                return (index != -1) ? syslist[index] : null;
-            }
-        }
-
-
-        public HistoryEntry PreviousFrom(HistoryEntry e, bool fsdjumps)
-        {
-            if (e != null)
-            {
-                int curindex = historylist.IndexOf(e);
-
-                if (curindex > 0)       // no point with index=0, there is no last.
-                {
-                    int lastindex = historylist.FindLastIndex(curindex - 1, x => (fsdjumps) ? x.IsFSDCarrierJump : true);
-
-                    if (lastindex >= 0)
-                        return historylist[lastindex];
-                }
-            }
-
-            return null;
-        }
-
-        #endregion
-
-        #region Enumeration
-
-        public IEnumerator<HistoryEntry> GetEnumerator()
-        {
-            foreach (var e in historylist)
-            {
-                yield return e;
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        #endregion
-
-        #region Markers
-
-        public void SetStartStop(HistoryEntry hs)
-        {
-            bool started = false;
-
-            foreach (HistoryEntry he in historylist)
-            {
-                if (hs == he)
-                {
-                    if (he.StartMarker || he.StopMarker)
-                        hs.journalEntry.ClearStartEndFlag();
-                    else if (started == false)
-                        hs.journalEntry.SetStartFlag();
-                    else
-                        hs.journalEntry.SetEndFlag();
-
-                    break;
-                }
-                else if (he.StartMarker)
-                    started = true;
-                else if (he.StopMarker)
-                    started = false;
-            }
-        }
-
-        #endregion
-
         #region Entry processing
 
         // Called on a New Entry, by EDDiscoveryController:NewEntry, to add an journal entry in.  May return null if don't want it in history
@@ -947,13 +205,13 @@ namespace EliteDangerousCore
             he.UpdateStats(je, hprev?.Stats, he.StationFaction);
             he.UpdateSystemNote();
 
-            cashledger.Process(je);
-            he.Credits = cashledger.CashTotal;
+            CashLedger.Process(je);
+            he.Credits = CashLedger.CashTotal;
 
-            shipyards.Process(je);
-            outfitting.Process(je);
+            Shipyards.Process(je);
+            Outfitting.Process(je);
 
-            Tuple<ShipInformation, ModulesInStore> ret = shipinformationlist.Process(je, he.WhereAmI, he.System);
+            Tuple<ShipInformation, ModulesInStore> ret = ShipInformationList.Process(je, he.WhereAmI, he.System);
             he.UpdateShipInformation(ret.Item1);
             he.UpdateShipStoredModules(ret.Item2);
             
@@ -974,7 +232,7 @@ namespace EliteDangerousCore
 
             historylist.Add(he);        // then add to history
 
-            AddToScan(this, he, logerror);  // add to scan database and complain if can't add. Do this after history add, so it has a list.
+            AddToVisitsScan(this, he, logerror);  // add to scan database and complain if can't add. Do this after history add, so it has a list.
             
             return he;
         }
@@ -1007,7 +265,9 @@ namespace EliteDangerousCore
 
             reportProgress(-1, "Reading Database");
 
-            List<JournalEntry> jlist;
+            List<JournalEntry> jlist;       // returned in date ascending, oldest first order.
+
+            System.Diagnostics.Debug.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL", true) + "History Load");
 
             if (fullhistoryloaddaylimit > 0)
             {
@@ -1020,10 +280,12 @@ namespace EliteDangerousCore
                 jlist = JournalEntry.GetAll(CurrentCommander,
                     ids: list,
                     allidsafterutc: DateTime.UtcNow.Subtract(new TimeSpan(fullhistoryloaddaylimit, 0, 0, 0))
-                    ).OrderBy(x => x.EventTimeUTC).ThenBy(x => x.Id).ToList();
+                    );
             }
             else
-                jlist = JournalEntry.GetAll(CurrentCommander).OrderBy(x => x.EventTimeUTC).ThenBy(x => x.Id).ToList();
+                jlist = JournalEntry.GetAll(CurrentCommander);
+
+            System.Diagnostics.Debug.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL") + "History Load END");
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLap() + " Database read " + jlist.Count);
 
@@ -1079,13 +341,13 @@ namespace EliteDangerousCore
                 he.UpdateStats(je, hprev?.Stats, he.StationFaction);
                 he.UpdateSystemNote();
 
-                hist.cashledger.Process(je);            // update the ledger     
-                he.Credits = hist.cashledger.CashTotal;
+                hist.CashLedger.Process(je);            // update the ledger     
+                he.Credits = hist.CashLedger.CashTotal;
 
-                hist.shipyards.Process(je);
-                hist.outfitting.Process(je);
+                hist.Shipyards.Process(je);
+                hist.Outfitting.Process(je);
 
-                Tuple<ShipInformation, ModulesInStore> ret = hist.shipinformationlist.Process(je, he.WhereAmI, he.System);  // the ships
+                Tuple<ShipInformation, ModulesInStore> ret = hist.ShipInformationList.Process(je, he.WhereAmI, he.System);  // the ships
                 he.UpdateShipInformation(ret.Item1);
                 he.UpdateShipStoredModules(ret.Item2);
 
@@ -1093,7 +355,7 @@ namespace EliteDangerousCore
 
                 hist.historylist.Add(he);           // now add it to the history
 
-                AddToScan(hist, he, null);          // add to scan but don't complain if can't add.  Do this AFTER add, as it uses the history list
+                AddToVisitsScan(hist, he, null);          // add to scan but don't complain if can't add.  Do this AFTER add, as it uses the history list
 
                 hprev = he;
                 jprev = je;
@@ -1169,13 +431,29 @@ namespace EliteDangerousCore
             return false;
         }
 
-        public static void AddToScan(HistoryList hist, HistoryEntry he, Action<string> logerror )
+
+        public static void AddToVisitsScan(HistoryList hist, HistoryEntry he, Action<string> logerror )
         {
+            if ((hist.LastSystem == null || he.System.Name != hist.LastSystem ) && he.System.Name != "Unknown" )   // if system is not last, we moved somehow (FSD, location, carrier jump), add
+            {
+                if (hist.Visited.TryGetValue(he.System.Name, out var value))
+                {
+                    he.Visits = value.Visits + 1;               // visits is 1 more than previous entry
+                    hist.Visited[he.System.Name] = he;          // reset to point to latest he
+                }
+                else
+                {
+                    he.Visits = 1;                              // first visit
+                    hist.Visited[he.System.Name] = he;          // point to he
+                }
+                hist.LastSystem = he.System.Name;
+            }
+
             if (he.EntryType == JournalTypeEnum.Scan)
             {
                 JournalScan js = he.journalEntry as JournalScan;
 
-                if (!hist.starscan.AddScanToBestSystem(js, hist.historylist.Count - 1, hist.historylist, out HistoryEntry jlhe, out JournalLocOrJump jl))
+                if (!hist.StarScan.AddScanToBestSystem(js, hist.historylist.Count - 1, hist.historylist, out HistoryEntry jlhe, out JournalLocOrJump jl))
                 {
                     if (logerror != null)
                     {
@@ -1201,19 +479,19 @@ namespace EliteDangerousCore
             }
             else if (he.EntryType == JournalTypeEnum.SAAScanComplete)
             {
-                hist.starscan.AddSAAScanToBestSystem((JournalSAAScanComplete)he.journalEntry, hist.historylist.Count - 1, hist.historylist);
+                hist.StarScan.AddSAAScanToBestSystem((JournalSAAScanComplete)he.journalEntry, hist.historylist.Count - 1, hist.historylist);
             }
             else if (he.EntryType == JournalTypeEnum.SAASignalsFound)
             {
-                hist.starscan.AddSAASignalsFoundToBestSystem((JournalSAASignalsFound)he.journalEntry, hist.historylist.Count - 1, hist.historylist);
+                hist.StarScan.AddSAASignalsFoundToBestSystem((JournalSAASignalsFound)he.journalEntry, hist.historylist.Count - 1, hist.historylist);
             }
             else if (he.EntryType == JournalTypeEnum.FSSDiscoveryScan && he.System != null)
             {
-                hist.starscan.SetFSSDiscoveryScan((JournalFSSDiscoveryScan)he.journalEntry, he.System);
+                hist.StarScan.SetFSSDiscoveryScan((JournalFSSDiscoveryScan)he.journalEntry, he.System);
             }
             else if (he.journalEntry is IBodyNameAndID)
             {
-                hist.starscan.AddBodyToBestSystem((IBodyNameAndID)he.journalEntry, hist.historylist.Count - 1, hist.historylist);
+                hist.StarScan.AddBodyToBestSystem((IBodyNameAndID)he.journalEntry, hist.historylist.Count - 1, hist.historylist);
             }
         }
 
@@ -1306,32 +584,6 @@ namespace EliteDangerousCore
             }
 
             return false;
-        }
-
-        #endregion
-
-        #region Common info extractors
-
-        public void ReturnSystemInfo(HistoryEntry he, out string allegiance, out string economy, out string gov,
-                                out string faction, out string factionstate, out string security)
-        {
-            EliteDangerousCore.JournalEvents.JournalFSDJump lastfsd =
-                GetLastHistoryEntry(x => x.journalEntry is EliteDangerousCore.JournalEvents.JournalFSDJump, he)?.journalEntry as EliteDangerousCore.JournalEvents.JournalFSDJump;
-            // same code in spanel.. not sure where to put it
-            allegiance = lastfsd != null && lastfsd.Allegiance.Length > 0 ? lastfsd.Allegiance : he.System.Allegiance.ToNullUnknownString();
-            if (allegiance.IsEmpty())
-                allegiance = "-";
-            economy = lastfsd != null && lastfsd.Economy_Localised.Length > 0 ? lastfsd.Economy_Localised : he.System.PrimaryEconomy.ToNullUnknownString();
-            if (economy.IsEmpty())
-                economy = "-";
-            gov = lastfsd != null && lastfsd.Government_Localised.Length > 0 ? lastfsd.Government_Localised : he.System.Government.ToNullUnknownString();
-            faction = lastfsd != null && lastfsd.FactionState.Length > 0 ? lastfsd.Faction : "-";
-            factionstate = lastfsd != null && lastfsd.FactionState.Length > 0 ? lastfsd.FactionState : he.System.State.ToNullUnknownString();
-            factionstate = factionstate.SplitCapsWord();
-            if (factionstate.IsEmpty())
-                factionstate = "-";
-
-            security = lastfsd != null && lastfsd.Security_Localised.Length > 0 ? lastfsd.Security_Localised : "-";
         }
 
         #endregion

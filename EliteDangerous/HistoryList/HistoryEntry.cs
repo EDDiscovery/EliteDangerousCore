@@ -85,6 +85,7 @@ namespace EliteDangerousCore
         public int? BodyID { get { return EntryStatus.BodyID; } }           // NOTE -1 is used for no body, as well as null
         public bool HasBodyID { get { return EntryStatus.HasBodyID; } }
         public string StationFaction { get { return EntryStatus.StationFaction; } }
+        public int Visits { get; set; }                                     // set by Historylist, visits up to this point in time
 
         public long? FullBodyID { get {                                     // only if at a body
                 if (System.SystemAddress.HasValue && HasBodyID)

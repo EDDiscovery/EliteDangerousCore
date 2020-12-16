@@ -95,6 +95,16 @@ namespace EliteDangerousCore
             {
                 return Bodies.Where(b => b.type == ScanNodeType.star && b.ScanData != null).Count();
             }
+
+            public ScanNode Find(string bodyname)
+            {
+                foreach( var b in Bodies)
+                {
+                    if (b.fullname.Equals(bodyname, StringComparison.InvariantCultureIgnoreCase))
+                        return b;
+                }
+                return null;
+            }
         };
 
         public enum ScanNodeType { star, barycentre, body, belt, beltcluster, ring };
