@@ -237,7 +237,7 @@ namespace EliteDangerousCore.DB
                 }
 
                 var tres1 = BaseUtils.AppTicks.TickCountLapDelta("U1");
-                var tres2 = BaseUtils.AppTicks.TickCountFrom("UTotal");
+                var tres2 = BaseUtils.AppTicks.TickCountFromLastLap("UTotal");
                 System.Diagnostics.Debug.WriteLine("Sector " + gridid + " took " + tres1.Item1 + " store " + recordstostore + " total " + updates + " " + ((float)tres1.Item2 / (float)recordstostore) + " cumulative " + tres2);
             }
 

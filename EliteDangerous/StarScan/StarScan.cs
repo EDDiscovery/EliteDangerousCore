@@ -457,8 +457,6 @@ namespace EliteDangerousCore
 
             if ((sys.EDSMID > 0 || (sys.SystemAddress != null && sys.SystemAddress > 0) || (sys.Name.HasChars())) && (sn == null || sn.EDSMCacheCheck == false || (edsmweblookup && !sn.EDSMWebChecked)))
             {
-                System.Diagnostics.Debug.WriteLine("..Asking for EDSM data");
-
                 var jl = await EliteDangerousCore.EDSM.EDSMClass.GetBodiesListAsync(sys, edsmweblookup); // lookup, with optional web
 
                 // return bodies and a flag indicating if from cache.

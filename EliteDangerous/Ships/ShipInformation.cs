@@ -454,7 +454,7 @@ namespace EliteDangerousCore
         {
             if (fuellevel != 0 && ( Math.Abs(FuelLevel - fuellevel) > 0.01 || Math.Abs(ReserveFuelCapacity - reserve) > 0.01))
             {
-                System.Diagnostics.Debug.WriteLine("Update ship fuel to " + fuellevel + " " + reserve);
+                //System.Diagnostics.Debug.WriteLine("Update ship fuel to " + fuellevel + " " + reserve);
 
                 ShipInformation sm = this.ShallowClone();
 

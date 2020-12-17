@@ -176,8 +176,6 @@ namespace EliteDangerousCore
                         if (stopRequested.WaitOne(0))
                             return;
 
-                        System.Diagnostics.Trace.WriteLine(string.Format("New entry {0} {1}", ent.EventTimeUTC, ent.EventTypeStr));
-
                         OnNewJournalEntry?.Invoke(ent);
                     }
                 }

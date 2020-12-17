@@ -182,6 +182,8 @@ namespace EliteDangerousCore
                 {
                     UserDatabase.Instance.ExecuteWithDatabase(cn =>
                     {
+                        System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+                        sw.Start();
                         using (DbTransaction txn = cn.Connection.BeginTransaction())
                         {
                             if (entries.Count > 0)
@@ -198,6 +200,14 @@ namespace EliteDangerousCore
 
                             txn.Commit();
                         }
+
+                        if (sw.ElapsedMilliseconds > 20)
+                        {
+                            System.Diagnostics.Trace.WriteLine("Warning access to DB to write new journal entries slow " + sw.ElapsedMilliseconds);
+                            foreach (var e in entries)
+                                System.Diagnostics.Trace.WriteLine(".." + e.EventTimeUTC + " " + e.EventTypeStr);
+                        }
+
                     });
                 }
             }
