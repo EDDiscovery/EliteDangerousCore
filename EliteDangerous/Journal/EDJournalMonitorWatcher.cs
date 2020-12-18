@@ -184,6 +184,7 @@ namespace EliteDangerousCore
                     {
                         System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
                         sw.Start();
+
                         using (DbTransaction txn = cn.Connection.BeginTransaction())
                         {
                             if (entries.Count > 0)
@@ -201,7 +202,7 @@ namespace EliteDangerousCore
                             txn.Commit();
                         }
 
-                        if (sw.ElapsedMilliseconds > 20)
+                        if (sw.ElapsedMilliseconds >= 50)        // this is written to the log to try and debug bad DB behaviour
                         {
                             System.Diagnostics.Trace.WriteLine("Warning access to DB to write new journal entries slow " + sw.ElapsedMilliseconds);
                             foreach (var e in entries)
