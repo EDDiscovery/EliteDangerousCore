@@ -151,7 +151,7 @@ namespace EliteDangerousCore
         string PowerState { get; set; }
         int NeedsPermit { get; set; }
         int EDDBUpdatedAt { get; set; }
-        bool HasEDDBInformation { get; }
+        bool HasSystemStateInfo { get; }
     }
 
     // Definition of the core interface so we can swap out an "offline" version during testing

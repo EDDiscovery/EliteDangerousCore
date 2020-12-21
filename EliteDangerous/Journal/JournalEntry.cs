@@ -91,11 +91,6 @@ namespace EliteDangerousCore
             CommanderId = cmdr;
         }
 
-        public void SetEDSMId(long edsmid)          // used if edsm id is changed
-        {
-            EdsmID = edsmid;
-        }
-
         #endregion
 
         #region Setters - db is updated

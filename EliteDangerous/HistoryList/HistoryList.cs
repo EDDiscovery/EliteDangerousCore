@@ -194,7 +194,7 @@ namespace EliteDangerousCore
         {
             HistoryEntry hprev = GetLast;
 
-            HistoryEntry he = HistoryEntry.FromJournalEntry(je, hprev, true, out bool journalupdate);     // we may check edsm for this entry
+            HistoryEntry he = HistoryEntry.FromJournalEntry(je, hprev);     // we may check edsm for this entry
 
             he.UpdateMaterialsCommodities(je, hprev?.MaterialCommodity);           // let some processes which need the user db to work
             Debug.Assert(he.MaterialCommodity != null);
@@ -216,19 +216,6 @@ namespace EliteDangerousCore
             he.UpdateShipStoredModules(ret.Item2);
             
             he.UpdateMissionList(missionlistaccumulator.Process(je, he.System, he.WhereAmI));
-
-            if (journalupdate)
-            {
-                JournalFSDJump jfsd = je as JournalFSDJump;
-
-                if (jfsd != null)
-                {
-                    UserDatabase.Instance.ExecuteWithDatabase(cn =>
-                    {
-                        JournalEntry.UpdateEDSMIDPosJump(jfsd.Id, he.System, !jfsd.HasCoordinate && he.System.HasCoordinate, jfsd.JumpDist, cn.Connection);
-                    });
-                }
-            }
 
             historylist.Add(he);        // then add to history
 
@@ -289,14 +276,10 @@ namespace EliteDangerousCore
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLap() + " Database read " + jlist.Count);
 
-            List<Tuple<JournalEntry, HistoryEntry>> jlistUpdated = new List<Tuple<JournalEntry, HistoryEntry>>();
-
             HistoryEntry hprev = null;
             JournalEntry jprev = null;
 
             reportProgress(-1, "Creating History");
-
-            bool checkforunknownsystemsindb = true;
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -322,13 +305,7 @@ namespace EliteDangerousCore
                 }
 
                 long timetoload = sw.ElapsedMilliseconds;
-                HistoryEntry he = HistoryEntry.FromJournalEntry(je, hprev, checkforunknownsystemsindb, out bool journalupdate);
-
-                if (sw.ElapsedMilliseconds - timetoload > 100)
-                {
-                    System.Diagnostics.Debug.WriteLine("DB is slow - probably 3dmap is being initialised, give up checking for old systems");
-                    checkforunknownsystemsindb = false;
-                }
+                HistoryEntry he = HistoryEntry.FromJournalEntry(je, hprev);
 
                 // **** REMEMBER NEW Journal entry needs this too *****************
 
@@ -360,40 +337,6 @@ namespace EliteDangerousCore
                 hprev = he;
                 jprev = je;
 
-                if (journalupdate)
-                {
-                    jlistUpdated.Add(new Tuple<JournalEntry, HistoryEntry>(je, he));
-                    Debug.WriteLine("Queued update requested {0} {1}", he.System.EDSMID, he.System.Name);
-                }
-            }
-
-            reportProgress(-1, "Updating user statistics");
-
-            // see if there are any DB entries to update
-
-            if (jlistUpdated.Count > 0)
-            {
-                reportProgress(-1, "Updating journal entries");
-
-                UserDatabase.Instance.ExecuteWithDatabase(cn =>
-                {
-                    using (DbTransaction txn = cn.Connection.BeginTransaction())
-                    {
-                        foreach (Tuple<JournalEntry, HistoryEntry> jehe in jlistUpdated)
-                        {
-                            JournalEntry je = jehe.Item1;
-                            HistoryEntry he = jehe.Item2;
-
-                            double dist = (je is JournalFSDJump) ? (je as JournalFSDJump).JumpDist : 0;
-                            bool updatecoord = (je is JournalLocOrJump) ? (!(je as JournalLocOrJump).HasCoordinate && he.System.HasCoordinate) : false;
-
-                            Debug.WriteLine("Push update {0} {1} to JE {2} HE {3}", he.System.EDSMID, he.System.Name, je.Id, he.Indexno);
-                            JournalEntry.UpdateEDSMIDPosJump(je.Id, he.System, updatecoord, dist, cn.Connection, txn);
-                        }
-
-                        txn.Commit();
-                    }
-                });
             }
 
             // now database has been updated due to initial fill, now fill in stuff which needs the user database
@@ -401,6 +344,12 @@ namespace EliteDangerousCore
             hist.CommanderId = CurrentCommander;
 
             EDCommander.Current.FID = hist.GetCommanderFID();               // ensure FID is set.. the other place it gets changed is a read of LoadGame.
+
+            if (NetLogPath != null)
+            {
+                reportProgress(-1,"Netlog scanning systems");
+                hist.FillInPositionsFSDJumps();         // if netlog reading, try and resolve systems..
+            }
 
             reportProgress(-1, "Done");
 

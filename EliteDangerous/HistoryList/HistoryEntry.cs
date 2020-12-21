@@ -141,12 +141,10 @@ namespace EliteDangerousCore
         {
         }
 
-        public static HistoryEntry FromJournalEntry(JournalEntry je, HistoryEntry prev, bool checkdbforunknownsystem , out bool journalupdate)
+        public static HistoryEntry FromJournalEntry(JournalEntry je, HistoryEntry prev)
         {
             ISystem isys = prev == null ? new SystemClass("Unknown") : prev.System;
             int indexno = prev == null ? 1 : prev.Indexno + 1;
-
-            journalupdate = false;
 
             if (je.EventTypeID == JournalTypeEnum.Location || je.EventTypeID == JournalTypeEnum.FSDJump || je.EventTypeID == JournalTypeEnum.CarrierJump)
             {
@@ -187,49 +185,8 @@ namespace EliteDangerousCore
                     // JumpStart still gets the system when the FSD loc is processed, see above.
                     // Jumpstart was also screwing about with the EDSM ID fill in which was broken.  This is now working again.
 
-                    // Default one
-                    newsys = new SystemClass(jl.StarSystem);         // this will be a synthesised one, unless we find an EDSM to replace it
+                    newsys = new SystemClass(jl.StarSystem);         // this will be a synthesised one
                     newsys.EDSMID = je.EdsmID;
-
-                    ISystem s = checkdbforunknownsystem ? SystemCache.FindSystem(newsys) : null;      // did we find it?
-
-                    if (s != null)                                  // found a system..
-                    {
-                        if (jl != null && jl.HasCoordinate)         // if journal Loc, and journal has a star position, use that instead of EDSM..
-                        {
-                            s.X = Math.Round(jl.StarPos.X * 32.0) / 32.0;
-                            s.Y = Math.Round(jl.StarPos.Y * 32.0) / 32.0;
-                            s.Z = Math.Round(jl.StarPos.Z * 32.0) / 32.0;
-                        }
-
-                        //Debug.WriteLine("HistoryList found system {0} {1}", s.id_edsm, s.name);
-                        newsys = s;
-
-                        if (jl != null && je.EdsmID <= 0 && newsys.EDSMID > 0) // only update on a JL..
-                        {
-                            journalupdate = true;
-                            Debug.WriteLine("HE EDSM ID update requested {0} {1}", newsys.EDSMID, newsys.Name);
-                        }
-                    }
-                    else
-                        newsys.EDSMID = -1;        // mark as checked but not found
-                }
-
-                JournalFSDJump jfsd = je as JournalFSDJump;
-
-                if (jfsd != null)
-                {
-                    if (jfsd.JumpDist <= 0 && isys.HasCoordinate && newsys.HasCoordinate) // if no JDist, its a really old entry, and if previous has a co-ord
-                    {
-                        jfsd.JumpDist = isys.Distance(newsys); // fill it out here
-
-                        if (jfsd.JumpDist > 0)
-                        {
-                            journalupdate = true;
-                            Debug.WriteLine("Je Jump distance update(3) requested {0} {1} {2}", newsys.EDSMID, newsys.Name, jfsd.JumpDist);
-                        }
-                    }
-
                 }
 
                 isys = newsys;

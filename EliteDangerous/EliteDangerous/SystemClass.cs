@@ -229,7 +229,7 @@ namespace EliteDangerousCore
         public int NeedsPermit { get; set; }
         public int EDDBUpdatedAt { get; set; }
 
-        public bool HasEDDBInformation
+        public bool HasSystemStateInfo
         {
             get
             {
@@ -246,9 +246,9 @@ namespace EliteDangerousCore
         public string ToStringVerbose()
         {
             string x = string.Format("{0} @ {1:N1},{2:N1},{3:N1} EDSMID:{4}", Name, X, Y, Z, EDSMID);
-            if (EDDBID != 0)
+            if (HasSystemStateInfo)
             {
-                x += " EDDBID:" + EDDBID + " " + Population + " " + Faction + " " + Government + " " + Allegiance + " " + State + " " + Security + " " + PrimaryEconomy
+                x += " " + Population + " " + Faction + " " + Government + " " + Allegiance + " " + State + " " + Security + " " + PrimaryEconomy
                                     + " " + Power + " " + PowerState + " " + NeedsPermit + " " + EDDBUpdatedAt;
             }
             return x;
