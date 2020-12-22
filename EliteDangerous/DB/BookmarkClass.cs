@@ -33,7 +33,7 @@ namespace EliteDangerousCore.DB
             public double Longitude;
 
             [JsonIgnore]
-            public bool IsWholePlanetBookmark { get { return Name== "" && Latitude == 0 && Longitude == 0; } }
+            public bool IsWholePlanetBookmark { get { return Latitude == 0 && Longitude == 0; } }
         }
 
         public class Planet
