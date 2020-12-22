@@ -49,7 +49,7 @@ namespace EliteDangerousCore.DB
             // needs a xz index for speed
 
             using (DbCommand cmd = cn.CreateSelect("Systems s",
-                MakeSystemQueryEDDB,
+                MakeSystemQueryNamed,
                 where:
                     "s.x >= @xv - @maxdist " +
                     "AND s.x <= @xv + @maxdist " +
@@ -59,7 +59,7 @@ namespace EliteDangerousCore.DB
                     "AND s.y <= @yv + @maxdist " +
                     (mindist > 0 ? ("AND (s.x-@xv)*(s.x-@xv)+(s.y-@yv)*(s.y-@yv)+(s.z-@zv)*(s.z-@zv)>=" + (mindistint).ToStringInvariant()) : ""),
                 orderby: "(s.x-@xv)*(s.x-@xv)+(s.y-@yv)*(s.y-@yv)+(s.z-@zv)*(s.z-@zv)",         // just use squares to order
-                joinlist: MakeSystemQueryEDDBJoinList,
+                joinlist: MakeSystemQueryNamedJoinList,
                 limit: "@max"
                 ))
             {
@@ -135,7 +135,7 @@ namespace EliteDangerousCore.DB
                                                   int limitto = 1000)
         {
             using (DbCommand cmd = cn.CreateSelect("Systems s",
-                        MakeSystemQueryEDDB,
+                        MakeSystemQueryNamed,
                         where:
                                 "x >= @xc - @maxfromcurpos " +
                                 "AND x <= @xc + @maxfromcurpos " +
@@ -151,7 +151,7 @@ namespace EliteDangerousCore.DB
                                 "AND y <= @yw + @maxfromwanted ",
                         orderby: "(s.x-@xw)*(s.x-@xw)+(s.y-@yw)*(s.y-@yw)+(s.z-@zw)*(s.z-@zw)",         // orderby distance from wanted
                         limit: limitto,
-                        joinlist: MakeSystemQueryEDDBJoinList))
+                        joinlist: MakeSystemQueryNamedJoinList))
             {
                 cmd.AddParameterWithValue("@xw", SystemClass.DoubleToInt(wantedpos.X));         // easier to manage with named paras
                 cmd.AddParameterWithValue("@yw", SystemClass.DoubleToInt(wantedpos.Y));

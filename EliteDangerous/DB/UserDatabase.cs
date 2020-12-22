@@ -109,5 +109,22 @@ namespace EliteDangerousCore.DB
         {
             return ExecuteWithDatabase(db =>  db.Connection.PutSettingDate(key, value));
         }
+
+        public void RebuildIndexes(Action<string> logger)
+        {
+            System.Threading.Tasks.Task.Factory.StartNew(() =>
+            {
+                ExecuteWithDatabase(db =>
+                {
+                    logger?.Invoke("Removing indexes");
+                    db.Connection.DropUserDBTableIndexes();
+                    logger?.Invoke("Rebuilding indexes, please wait");
+                    db.Connection.CreateUserDBTableIndexes();
+                    logger?.Invoke("Indexes rebuilt");
+                });
+            });
+        }
+
+
     }
 }

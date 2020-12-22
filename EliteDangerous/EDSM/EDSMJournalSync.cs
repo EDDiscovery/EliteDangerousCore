@@ -463,15 +463,6 @@ namespace EliteDangerousCore.EDSM
 
                             if ((msgnr >= 100 && msgnr < 200) || msgnr == 500)
                             {
-                                if (he.IsLocOrJump)
-                                {
-                                    if (systemId != 0)
-                                    {
-                                        he.System.EDSMID = systemId;
-                                        JournalEntry.UpdateEDSMIDPosJump(he.Journalid, he.System, false, 0, cn.Connection, txn);
-                                    }
-                                }
-
                                 if (he.EntryType == JournalTypeEnum.FSDJump)       // only on FSD, confirmed with Anthor.  25/4/2018
                                 {
                                     bool systemCreated = result["systemCreated"].Bool();

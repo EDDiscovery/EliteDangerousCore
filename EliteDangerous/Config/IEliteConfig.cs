@@ -20,6 +20,5 @@ namespace EliteDangerousCore
     {
         System.DateTime ConvertTimeToSelectedFromUTC(System.DateTime t);
         string EDSMFullSystemsURL { get; }
-        string EDDBSystemsURL { get; }
     }
 }

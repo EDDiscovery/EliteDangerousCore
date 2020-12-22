@@ -39,7 +39,7 @@ namespace EliteDangerousCore.DB
 
         // Beware with no extra conditions, you get them all..  Mostly used for debugging
         // use starreport to avoid storing the entries instead pass back one by one
-        public static List<ISystem> ListStars(string where = null, string orderby = null, string limit = null, bool eddbinfo = false, 
+        public static List<ISystem> ListStars(string where = null, string orderby = null, string limit = null, 
                                                 Action<ISystem> starreport = null)
         {
             List<ISystem> ret = new List<ISystem>();
@@ -54,14 +54,13 @@ namespace EliteDangerousCore.DB
 
                 var cn = db.Connection;
 
-                using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", eddbinfo ? MakeSystemQueryEDDB : MakeSystemQueryNoEDDB, where, orderby, limit: limit,
-                    joinlist: (eddbinfo ? MakeSystemQueryEDDBJoinList : MakeSystemQueryJoinList)))
+                using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed, where, orderby, limit: limit, joinlist: MakeSystemQueryNamedJoinList))
                 {
                     using (DbDataReader reader = selectSysCmd.ExecuteReader())
                     {
                         while (reader.Read())      // if there..
                         {
-                            SystemClass s = MakeSystem(reader, eddbinfo);
+                            SystemClass s = MakeSystem(reader);
                             if (starreport != null)
                                 starreport(s);
                             else

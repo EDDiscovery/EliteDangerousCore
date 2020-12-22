@@ -30,6 +30,8 @@ namespace EliteDangerousCore
         static public int DoubleToInt(double pos) { return (int)(pos * XYZScalar); }
         static public double IntToDoubleSq(int pos) { double p = (float)pos / XYZScalar; return p * p; }
 
+        public long EDSMID { get; set; }
+
         public string Name { get; set; }
 
         public int Xi { get; set; }
@@ -50,22 +52,25 @@ namespace EliteDangerousCore
             Xi = int.MinValue;
         }
 
-        public SystemClassBase(string name, double vx, double vy, double vz)
+        public SystemClassBase(string name, double vx, double vy, double vz, long edsmid = 0)
         {
+            EDSMID = edsmid;
             Name = name;
             X = vx; Y = vy; Z = vz;
             GridID = EliteDangerousCore.DB.GridId.Id128(Xi, Zi);
         }
 
-        public SystemClassBase(string name, int xi, int yi, int zi, int gridid = -1)
+        public SystemClassBase(string name, int xi, int yi, int zi, long edsmid = 0 , int gridid = -1)
         {
+            EDSMID = edsmid;
             Name = name;
             Xi = xi; Yi = yi; Zi = zi;
             GridID = gridid == -1 ? EliteDangerousCore.DB.GridId.Id128(Xi,Zi) : gridid;
         }
 
-        public SystemClassBase(ISystemBase sys)
+        public SystemClassBase(ISystem sys)
         {
+            this.EDSMID = sys.EDSMID;
             this.Name = sys.Name;
             this.Xi = sys.Xi;
             this.Yi = sys.Yi;
@@ -133,7 +138,7 @@ namespace EliteDangerousCore
         }
     }
 
-    [DebuggerDisplay("System {Name} ({X,nq},{Y,nq},{Z,nq}) {Source}")]
+    [DebuggerDisplay("System {Name} ({X,nq},{Y,nq},{Z,nq})")]
     public class SystemClass : SystemClassBase, ISystem
     {
         public SystemClass() : base()
@@ -142,8 +147,7 @@ namespace EliteDangerousCore
 
         public SystemClass(ISystem sys) : base(sys)
         {
-            this.EDSMID = sys.EDSMID;
-            this.Source = sys.Source;
+            this.source = sys.source;
 
             this.Population = sys.Population;
             this.Faction = sys.Faction;
@@ -160,36 +164,53 @@ namespace EliteDangerousCore
         public SystemClass(string name) : base()
         {
             Name = name;
-            Source = SystemSource.Synthesised;
+            source = SystemSource.Synthesised;
         }
 
-        public SystemClass(string name, long edsmid)
+        public SystemClass(string name, long id)
         {
             Name = name;
-            EDSMID = edsmid;
-            Source = EDSMID <= 0 ? SystemSource.Synthesised : SystemSource.FromEDSM;
+            EDSMID = id;
+            source = SystemSource.Synthesised;
         }
 
-        public SystemClass(long edsmid)
+        public SystemClass(long id)
         {
             Name = "UnKnown";
-            EDSMID = edsmid;
-            Source = SystemSource.FromEDSM;
+            EDSMID = id;
+            source = SystemSource.Synthesised;
         }
 
         public SystemClass(string name, double vx, double vy, double vz) : base( name, vx,vy,vz )
         {
-            Source = SystemSource.Synthesised;
+            source = SystemSource.Synthesised;
         }
 
-        public SystemClass(string name, int xi, int yi, int zi, long edsmid, int gridid = -1) : base(name,xi,yi,zi,gridid)
+        public SystemClass(string name, int xi, int yi, int zi, long edsmid, int gridid = -1) : base(name,xi,yi,zi,edsmid,gridid)
         {
-            EDSMID = edsmid;
-            Source = EDSMID <= 0 ? SystemSource.Synthesised : SystemSource.FromEDSM;
+            source = SystemSource.Synthesised;
         }
 
-        public long EDSMID { get; set; }
-        public SystemSource Source { get; set; }
+        public SystemClass(SystemSource statusv, string name, int xi, int yi, int zi, long edsmid,
+                            long population, string faction,
+                            EDGovernment g, EDAllegiance a, EDState s, EDSecurity security,
+                            EDEconomy eco, string power, string powerstate, int needspermit,
+                            int gridid = -1) : base(name, xi, yi, zi, edsmid, gridid)
+        {
+            Population = population;
+            Faction = faction;
+            Government = g;
+            Allegiance = a;
+            State = s;
+            Security = security;
+            PrimaryEconomy = eco;
+            Power = power;
+            PowerState = powerstate;
+            NeedsPermit = needspermit;
+            source = statusv;
+        }
+
+        public SystemSource source { get; set; }
 
         public long Population { get; set; }        // just because its 0 does not mean it may have other info
         public string Faction { get; set; }

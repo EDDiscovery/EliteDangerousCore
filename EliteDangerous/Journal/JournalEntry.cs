@@ -28,7 +28,7 @@ using System.Linq;
 
 namespace EliteDangerousCore
 {
-    [DebuggerDisplay("Event {EventTypeStr} {EventTimeUTC} EdsmID {EdsmID} JID {Id} C {CommanderId}")]
+    [DebuggerDisplay("Event {EventTypeStr} {EventTimeUTC} JID {Id} C {CommanderId}")]
     public abstract partial class JournalEntry
     {
         #region Public Instance properties and fields
@@ -44,8 +44,6 @@ namespace EliteDangerousCore
         public string GetIconPackPath { get { return "Journal." + IconEventType.ToString(); } } // its icon pack name..
 
         public DateTime EventTimeUTC { get; set; }
-
-        public long EdsmID { get; protected set; }                      // 0 = unassigned, >0 = assigned
 
         public DateTime EventTimeLocal { get { return EventTimeUTC.ToLocalTime(); } }
 

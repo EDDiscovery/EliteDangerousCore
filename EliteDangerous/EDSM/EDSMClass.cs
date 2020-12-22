@@ -327,19 +327,19 @@ namespace EliteDangerousCore.EDSM
                             int edsmid = jo["systemId"].Int(0);
                             var localtime = utctime.ToLocalTime();
 
-                            SystemNoteClass curnote = SystemNoteClass.GetNoteOnSystem(name, edsmid);
+                            SystemNoteClass curnote = SystemNoteClass.GetNoteOnSystem(name);
 
                             if (curnote != null)                // curnote uses local time to store
                             {
                                 if (localtime.Ticks > curnote.Time.Ticks)   // if newer, add on (verified with EDSM 29/9/2016)
                                 {
-                                    curnote.UpdateNote(curnote.Note + ". EDSM: " + note, true, localtime, edsmid, true);
+                                    curnote.UpdateNote(curnote.Note + ". EDSM: " + note, true, localtime, true);
                                     commentsadded++;
                                 }
                             }
                             else
                             {
-                                SystemNoteClass.MakeSystemNote(note, localtime, name, 0, edsmid, true);   // new one!  its an FSD one as well
+                                SystemNoteClass.MakeSystemNote(note, localtime, name, 0, true);   // new one!  its an FSD one as well
                                 commentsadded++;
                             }
                         }
@@ -843,7 +843,7 @@ namespace EliteDangerousCore.EDSM
                             {
                                 JObject jbody = EDSMClass.ConvertFromEDSMBodies(edsmbody);
 
-                                JournalScan js = new JournalScan(jbody, sys.EDSMID);
+                                JournalScan js = new JournalScan(jbody);//TBD, sys.EDSMID);
 
                                 bodies.Add(js);
                             }

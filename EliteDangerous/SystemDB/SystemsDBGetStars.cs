@@ -37,12 +37,12 @@ namespace EliteDangerousCore.DB
             {
                 // needs index on sectorid [nameid]. Relies on Names.id being the edsmid.   
 
-                using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryEDDB,
+                using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
                                                     "s.edsmid IN (Select id FROM Names WHERE name=@p1) AND s.sectorid IN (Select id FROM Sectors c WHERE c.name=@p2)",
                                                     new Object[] { ec.StarName, ec.SectorName },
-                                                    joinlist: MakeSystemQueryEDDBJoinList))
+                                                    joinlist: MakeSystemQueryNamedJoinList))
                 {
-                    // System.Diagnostics.Debug.WriteLine( cn.ExplainQueryPlanString(selectSysCmd));
+                    //System.Diagnostics.Debug.WriteLine( cn.ExplainQueryPlanString(selectSysCmd));
 
                     using (DbDataReader reader = selectSysCmd.ExecuteReader())
                     {
@@ -59,10 +59,10 @@ namespace EliteDangerousCore.DB
                 // Numeric or Standard - all data in ID
                 // needs index on Systems(sectorid, Nameid)
 
-                using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSysStdNumericQueryEDDB,
+                using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSysStdNumericQuery,
                                                     "s.nameid = @p1 AND s.sectorid IN (Select id FROM Sectors c WHERE c.name=@p2)",
                                                     new Object[] { ec.ID, ec.SectorName },
-                                                    joinlist: MakeSysStdNumericQueryEDDBJoinList))
+                                                    joinlist: MakeSysStdNumericQueryJoinList))
                 {
                   //  System.Diagnostics.Debug.WriteLine( cn.ExplainQueryPlanString(selectSysCmd));
 
@@ -91,10 +91,10 @@ namespace EliteDangerousCore.DB
         {
             // No indexes needed- edsmid is primary key
 
-            using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryEDDB,
+            using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
                                                 "s.edsmid=@p1",
                                                 new Object[] { edsmid },
-                                                joinlist: MakeSystemQueryEDDBJoinList))
+                                                joinlist: MakeSystemQueryNamedJoinList))
             {
                 //System.Diagnostics.Debug.WriteLine( cn.ExplainQueryPlanString(selectSysCmd));
 
@@ -126,11 +126,11 @@ namespace EliteDangerousCore.DB
             {
                 // needs index on Systems(sectorid, Nameid)
 
-                using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryEDDB,
+                using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
                                                     "s.nameid >= @p1 AND s.nameid <= @p2 AND s.sectorid IN (Select id FROM Sectors c WHERE c.name=@p3)",
                                                     new Object[] { ec.ID, ec.IDHigh, ec.SectorName },
                                                     limit:limit,
-                                                    joinlist: MakeSystemQueryEDDBJoinList))
+                                                    joinlist: MakeSystemQueryNamedJoinList))
                 {
                     //System.Diagnostics.Debug.WriteLine( cn.ExplainQueryPlanString(selectSysCmd));
 
@@ -150,11 +150,11 @@ namespace EliteDangerousCore.DB
                 // beware, 1<<46 works, 0x40 0000 0000 does not.. 
                 // needs index on Systems(sectorid, Nameid)
 
-                using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryEDDB,
+                using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
                                                     "(s.nameid & (1<<46) != 0) AND cast((s.nameid & 0x3fffffffff) as text) LIKE @p1 AND s.sectorid IN (Select id FROM Sectors c WHERE c.name=@p2)",
                                                     new Object[] { ec.NameIdNumeric.ToStringInvariant() + "%", ec.SectorName },
                                                     limit:limit,
-                                                    joinlist: MakeSystemQueryEDDBJoinList))  
+                                                    joinlist: MakeSystemQueryNamedJoinList))  
                 {
 
                     //System.Diagnostics.Debug.WriteLine( cn.ExplainQueryPlanString(selectSysCmd));
@@ -175,11 +175,11 @@ namespace EliteDangerousCore.DB
                 {
                     // needs index on Systems(sectorid, Nameid)
 
-                    using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryEDDB,
+                    using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
                                                         "s.nameid IN (Select id FROM Names WHERE name LIKE @p1) AND s.sectorid IN (Select id FROM Sectors c WHERE c.name=@p2)",
                                                         new Object[] { ec.StarName + "%", ec.SectorName },
                                                         limit: limit,
-                                                        joinlist: MakeSystemQueryEDDBJoinList))
+                                                        joinlist: MakeSystemQueryNamedJoinList))
                     {
                         //System.Diagnostics.Debug.WriteLine(cn.ExplainQueryPlanString(selectSysCmd));
 
@@ -202,11 +202,11 @@ namespace EliteDangerousCore.DB
 
                 if (limit > 0)
                 {
-                    using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryEDDB,
+                    using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
                                                         "s.sectorid IN (Select id FROM Sectors c WHERE c.name LIKE @p1)",
                                                         new Object[] { (ec.SectorName != EliteNameClassifier.NoSectorName ? ec.SectorName : ec.StarName) + "%" },
                                                         limit: limit,
-                                                        joinlist: MakeSystemQueryEDDBJoinList))
+                                                        joinlist: MakeSystemQueryNamedJoinList))
                     {
                        // System.Diagnostics.Debug.WriteLine(cn.ExplainQueryPlanString(selectSysCmd));
 
@@ -229,38 +229,20 @@ namespace EliteDangerousCore.DB
 
         //                                         0   1   2   3        4      5        6 
         const string MakeSysStdNumericQuery = "s.x,s.y,s.z,s.edsmid,c.name,c.gridid";
-        const string MakeSysStdNumericQueryEDDB = "s.x,s.y,s.z,s.edsmid,c.name,c.gridid,e.eddbid,e.eddbupdatedat,e.population,e.faction,e.government,e.allegiance,e.state,e.security,e.primaryeconomy,e.power,e.powerstate,e.needspermit";
         static string[] MakeSysStdNumericQueryJoinList = new string[] { "JOIN Sectors c on s.sectorid=c.id" };
-        static string[] MakeSysStdNumericQueryEDDBJoinList = new string[] { "JOIN Sectors c on s.sectorid=c.id", "LEFT OUTER JOIN EDDB e on e.edsmid=s.edsmid" };
 
-        static SystemClass MakeSystem(DbDataReader reader, ulong nid, bool eddb = true)
+        static SystemClass MakeSystem(DbDataReader reader, ulong nid)
         {
-            const int offset = 6;
-
             EliteNameClassifier ec = new EliteNameClassifier(nid);
             ec.SectorName = reader.GetString(4);
-
-            if (!eddb || reader[offset] is System.DBNull)
-            {
-                return new SystemClass(ec.ToString(), reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt64(3), reader.GetInt32(5));
-            }
-            else
-            {
-                return new SystemClass(SystemSource.FromEDSM, ec.ToString(), reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt64(3),
-                                reader.GetInt64(offset), reader.GetInt32(offset + 1), reader.GetInt64(offset + 2), reader.GetString(offset + 3),
-                                (EDGovernment)reader.GetInt64(offset + 4), (EDAllegiance)reader.GetInt64(offset + 5), (EDState)reader.GetInt64(offset + 6), (EDSecurity)reader.GetInt64(offset + 7),
-                                (EDEconomy)reader.GetInt64(offset + offset), reader.GetString(offset + 9), reader.GetString(offset + 10), reader.GetInt32(offset + 11),
-                                reader.GetInt32(5));
-            }
+            return new SystemClass(ec.ToString(), reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt64(3), reader.GetInt32(5));
         }
 
         //                                     0   1   2   3        4      5        6        7      8            
-        const string MakeSystemQueryEDDB = "s.x,s.y,s.z,s.edsmid,c.name,c.gridid,s.nameid,n.Name,e.eddbid,e.eddbupdatedat,e.population,e.faction,e.government,e.allegiance,e.state,e.security,e.primaryeconomy,e.power,e.powerstate,e.needspermit";
-        const string MakeSystemQueryNoEDDB = "s.x,s.y,s.z,s.edsmid,c.name,c.gridid,s.nameid,n.Name";
-        static string[] MakeSystemQueryJoinList = new string[] { "LEFT OUTER JOIN Names n On s.nameid=n.id", "JOIN Sectors c on s.sectorid=c.id" };
-        static string[] MakeSystemQueryEDDBJoinList = new string[] { "LEFT OUTER JOIN Names n On s.nameid=n.id", "JOIN Sectors c on s.sectorid=c.id", "LEFT OUTER JOIN EDDB e on e.edsmid=s.edsmid" };
+        const string MakeSystemQueryNamed = "s.x,s.y,s.z,s.edsmid,c.name,c.gridid,s.nameid,n.Name";
+        static string[] MakeSystemQueryNamedJoinList = new string[] { "LEFT OUTER JOIN Names n On s.nameid=n.id", "JOIN Sectors c on s.sectorid=c.id" };
 
-        static SystemClass MakeSystem(DbDataReader reader, bool eddbinfo = true)
+        static SystemClass MakeSystem(DbDataReader reader)
         {
             EliteNameClassifier ec = new EliteNameClassifier((ulong)reader.GetInt64(6));
             ec.SectorName = reader.GetString(4);
@@ -268,26 +250,14 @@ namespace EliteDangerousCore.DB
             if (ec.IsNamed)
                 ec.StarName = reader.GetString(7);
 
-            const int offset = 8;
-            if (!eddbinfo || reader[offset] is System.DBNull)
-            {
-                return new SystemClass(ec.ToString(), reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt64(3), reader.GetInt32(5));
-            }
-            else
-            {
-                return new SystemClass(SystemSource.FromEDSM, ec.ToString(), reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt64(3),
-                                reader.GetInt64(offset), reader.GetInt32(offset + 1), reader.GetInt64(offset + 2), reader.GetString(offset + 3),
-                                (EDGovernment)reader.GetInt64(offset + 4), (EDAllegiance)reader.GetInt64(offset + 5), (EDState)reader.GetInt64(offset + 6), (EDSecurity)reader.GetInt64(offset + 7),
-                                (EDEconomy)reader.GetInt64(offset + offset), reader.GetString(offset + 9), reader.GetString(offset + 10), reader.GetInt32(offset + 11),
-                                reader.GetInt32(5));
-            }
+            return new SystemClass(ec.ToString(), reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt64(3), reader.GetInt32(5));
         }
 
-        static IEnumerable<SystemClass> MakeSystemEnumerable(DbDataReader reader, bool eddbinfo = true, Action<ISystem> callback = null)
+        static IEnumerable<SystemClass> MakeSystemEnumerable(DbDataReader reader, Action<ISystem> callback = null)
         {
             while (reader.Read())
             {
-                var sys = MakeSystem(reader, eddbinfo);
+                var sys = MakeSystem(reader);
                 callback?.Invoke(sys);
                 yield return sys;
             }

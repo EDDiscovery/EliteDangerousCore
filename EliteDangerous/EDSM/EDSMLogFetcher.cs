@@ -190,9 +190,7 @@ namespace EliteDangerousCore.EDSM
 
             List<HistoryEntry> hlfsdlist = JournalEntry.GetAll(Commander.Nr, logstarttime.AddDays(-1), logendtime.AddDays(1)).
                 OfType<JournalLocOrJump>().OrderBy(je => je.EventTimeUTC).
-                Select(je => HistoryEntry.FromJournalEntry(je, null)).ToList();    // using HE just because of the FillEDSM func
-
-            HistoryList hl = new HistoryList(hlfsdlist);        // just so we can access the FillEDSM func
+                Select(je => HistoryEntry.FromJournalEntry(je, null)).ToList();   
 
             List<JournalFSDJump> toadd = new List<JournalFSDJump>();
 
@@ -201,7 +199,7 @@ namespace EliteDangerousCore.EDSM
             {
                 int index = hlfsdlist.FindIndex(x => x.System.Name.Equals(jfsd.StarSystem, StringComparison.InvariantCultureIgnoreCase) && x.EventTimeUTC.Ticks == jfsd.EventTimeUTC.Ticks);
 
-                if (index < 0)
+                if (index < 0)      // not found, see if its around that date..
                 {
                     // Look for any entries where DST may have thrown off the time
                     foreach (var vi in hlfsdlist.Select((v, i) => new { v = v, i = i }).Where(vi => vi.v.System.Name.Equals(jfsd.StarSystem, StringComparison.InvariantCultureIgnoreCase)))
@@ -211,17 +209,8 @@ namespace EliteDangerousCore.EDSM
                             double hdiff = vi.v.EventTimeUTC.Subtract(jfsd.EventTimeUTC).TotalHours;
                             if (hdiff >= -2 && hdiff <= 2 && hdiff == Math.Floor(hdiff))
                             {
-                                if (vi.v.System.EDSMID <= 0)        // if we don't have a valid EDMSID..
-                                {
-                                    vi.v.System.EDSMID = 0;
-                                    hl.FillEDSM(vi.v);
-                                }
-
-                                if (vi.v.System.EDSMID <= 0 || vi.v.System.EDSMID == jfsd.EdsmID)
-                                {
-                                    index = vi.i;
-                                    break;
-                                }
+                                index = vi.i;       // same system, nearly same time.. TBD check
+                                break;
                             }
                         }
                     }
@@ -238,7 +227,6 @@ namespace EliteDangerousCore.EDSM
                     if (existingfsd != null && existingfsd.EDSMFirstDiscover != jfsd.EDSMFirstDiscover)    // if we have a FSD one, and first discover is different
                     {
                         existingfsd.UpdateFirstDiscover(jfsd.EDSMFirstDiscover);
-
                     }
 
                     previdx = index;

@@ -43,7 +43,6 @@ namespace EliteDangerousCore
                 jr.EventTimeUTC = ((DateTime)dr["EventTime"]).ToUniversalTime();
             if (jr.EventTypeID == JournalTypeEnum.Unknown)
                 jr.EventTypeID = (JournalTypeEnum)(long)dr["eventTypeID"];
-            jr.EdsmID = (long)dr["EdsmID"];
             jr.Synced = (int)(long)dr["Synced"];
             return jr;
         }
@@ -56,7 +55,7 @@ namespace EliteDangerousCore
 
         internal bool Add(JObject jo, SQLiteConnectionUser cn, DbTransaction tn = null)
         {
-            using (DbCommand cmd = cn.CreateCommand("Insert into JournalEntries (EventTime, TravelLogID, CommanderId, EventTypeId , EventType, EventData, EdsmId, Synced) values (@EventTime, @TravelLogID, @CommanderID, @EventTypeId , @EventStrName, @EventData, @EdsmId, @Synced)", tn))
+            using (DbCommand cmd = cn.CreateCommand("Insert into JournalEntries (EventTime, TravelLogID, CommanderId, EventTypeId , EventType, EventData, Synced) values (@EventTime, @TravelLogID, @CommanderID, @EventTypeId , @EventStrName, @EventData, @Synced)", tn))
             {
                 cmd.AddParameterWithValue("@EventTime", EventTimeUTC);           // MUST use UTC connection
                 cmd.AddParameterWithValue("@TravelLogID", TLUId);
@@ -64,7 +63,6 @@ namespace EliteDangerousCore
                 cmd.AddParameterWithValue("@EventTypeId", EventTypeID);
                 cmd.AddParameterWithValue("@EventStrName", EventTypeStr);
                 cmd.AddParameterWithValue("@EventData", jo.ToString());
-                cmd.AddParameterWithValue("@EdsmId", EdsmID);
                 cmd.AddParameterWithValue("@Synced", Synced);
 
                 cmd.ExecuteNonQuery();
@@ -84,7 +82,7 @@ namespace EliteDangerousCore
 
         private bool Update(SQLiteConnectionUser cn, DbTransaction tn = null)
         {
-            using (DbCommand cmd = cn.CreateCommand("Update JournalEntries set EventTime=@EventTime, TravelLogID=@TravelLogID, CommanderID=@CommanderID, EventTypeId=@EventTypeId, EventType=@EventStrName, EdsmId=@EdsmId, Synced=@Synced where ID=@id", tn))
+            using (DbCommand cmd = cn.CreateCommand("Update JournalEntries set EventTime=@EventTime, TravelLogID=@TravelLogID, CommanderID=@CommanderID, EventTypeId=@EventTypeId, EventType=@EventStrName, Synced=@Synced where ID=@id", tn))
             {
                 cmd.AddParameterWithValue("@ID", Id);
                 cmd.AddParameterWithValue("@EventTime", EventTimeUTC);  // MUST use UTC connection
@@ -92,7 +90,6 @@ namespace EliteDangerousCore
                 cmd.AddParameterWithValue("@CommanderID", CommanderId);
                 cmd.AddParameterWithValue("@EventTypeId", EventTypeID);
                 cmd.AddParameterWithValue("@EventStrName", EventTypeStr);
-                cmd.AddParameterWithValue("@EdsmId", EdsmID);
                 cmd.AddParameterWithValue("@Synced", Synced);
                 cmd.ExecuteNonQuery();
 
@@ -136,40 +133,19 @@ namespace EliteDangerousCore
                 fsd.SetMapColour(v);
         }
 
-        //dist >0 to update
-        internal static void UpdateEDSMIDPosJump(long journalid, ISystem system, bool jsonpos, double dist, SQLiteConnectionUser cn, DbTransaction tn = null)
+        internal void UpdateStarPosition(ISystem pos, SQLiteConnectionUser cn, DbTransaction tn = null)
         {
-            bool updatejson = jsonpos || dist > 0;
-
-            JObject jo = updatejson ? GetJson(journalid, cn, tn) : null;       // if JSON pos update, get it, else null
-                                                                                // no need to JSON read if just doing an EDSM update
-            if (jo != null || !updatejson)        // if got it, or no pos
+            JObject jo = GetJson();
+                                                                                
+            if (jo != null )
             {
-                if (jsonpos)
+                jo["StarPos"] = new JArray() { pos.X, pos.Y, pos.Z };
+                jo["StarPosFromEDSM"] = true;
+
+                using (DbCommand cmd2 = cn.CreateCommand("Update JournalEntries set EventData = @EventData where ID = @ID", tn))
                 {
-                    jo["StarPos"] = new JArray() { system.X, system.Y, system.Z };
-                    jo["StarPosFromEDSM"] = true;
-                }
-
-                if (dist > 0)
-                    jo["JumpDist"] = dist;
-
-                using (DbCommand cmd2 = cn.CreateCommand("Update JournalEntries set EdsmId = @EdsmId where ID = @ID", tn))
-                {
-                    if (updatejson)
-                    {
-                        cmd2.CommandText = "Update JournalEntries set EventData = @EventData, EdsmId = @EdsmId where ID = @ID";
-                        cmd2.AddParameterWithValue("@EventData", jo.ToString());
-                        System.Diagnostics.Trace.WriteLine(string.Format("Update journal ID {0} with pos/edsmid {1} dist {2}", journalid, system.EDSMID, dist));
-                    }
-                    else
-                    {
-                        System.Diagnostics.Trace.WriteLine(string.Format("Update journal ID {0} with edsmid {1}", journalid, system.EDSMID));
-                    }
-
-                    cmd2.AddParameterWithValue("@ID", journalid);
-                    cmd2.AddParameterWithValue("@EdsmId", system.EDSMID);
-
+                    cmd2.AddParameterWithValue("@EventData", jo.ToString());
+                    cmd2.AddParameterWithValue("@ID", Id);
                     cmd2.ExecuteNonQuery();
                 }
             }
@@ -634,22 +610,6 @@ namespace EliteDangerousCore
             return count;
         }
 
-        public static void ClearEDSMID(int currentcmdrid = -2)      // -2 is all
-        {
-            UserDatabase.Instance.ExecuteWithDatabase(cn =>
-            {
-                using (DbCommand cmd = cn.Connection.CreateCommand("UPDATE JournalEntries SET EdsmId=0"))
-                {
-                    if (currentcmdrid != -2)
-                    {
-                        cmd.CommandText = "UPDATE JournalEntries SET EdsmId=0 WHERE CommanderId==@cmd";
-                        cmd.AddParameterWithValue("@cmd", currentcmdrid);
-                    }
-
-                    cmd.ExecuteNonQuery();
-                }
-            });
-        }
     }
 }
 

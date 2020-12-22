@@ -44,8 +44,8 @@ namespace EliteDangerousCore
         public List<HistoryEntry> EntryOrder() { return historylist; }
         public HistoryEntry this[int i] { get {return historylist[i]; } }       
 
-        // combat, spanel,stats
-        public List<HistoryEntry> ReverseOrder() { return historylist.OrderByDescending(s => s.Indexno).ToList(); }
+        // combat, spanel,stats, history filter
+        public List<HistoryEntry> LatestFirst() { return historylist.OrderByDescending(s => s.Indexno).ToList(); }
 
         #endregion
 
@@ -54,7 +54,7 @@ namespace EliteDangerousCore
         // history filter
         static public List<HistoryEntry> LatestFirst(List<HistoryEntry> list)
         {
-            return list.OrderByDescending(s => s.EventTimeUTC).ToList();
+            return list.OrderByDescending(s=>s.Indexno).ToList();
         }
 
         // history filter

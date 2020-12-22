@@ -167,10 +167,10 @@ namespace EliteDangerousCore.DB
         {
             List<ISystem> ret = new List<ISystem>();
 
-            using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryEDDB,
+            using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
                                                 "s.edsmid IN (Select edsmid_mergedto FROM Aliases WHERE name like @p1)",
                                                 new Object[] { name+"%" },
-                                                joinlist: MakeSystemQueryEDDBJoinList))
+                                                joinlist: MakeSystemQueryNamedJoinList))
             {
                 //System.Diagnostics.Debug.WriteLine( cn.ExplainQueryPlanString(selectSysCmd));
 

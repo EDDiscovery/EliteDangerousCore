@@ -305,10 +305,7 @@ namespace EliteDangerousCore.JournalEvents
             public int BodyID;
         }
 
-        public JournalScan(JObject evt, long edsmid) : this(evt)
-        {
-            EdsmID = edsmid;
-        }
+//TBD        public JournalScan(JObject evt, long edsmid) : this(evt)  {  EdsmID = edsmid;}
 
         public JournalScan(JObject evt) : base(evt, JournalTypeEnum.Scan)
         {

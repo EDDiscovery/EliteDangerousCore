@@ -156,7 +156,7 @@ namespace EliteDangerousCore
                 {
                     newsys = new SystemClass(jl.StarSystem, jl.StarPos.X, jl.StarPos.Y, jl.StarPos.Z)
                     {
-                        EDSMID = jl.EdsmID < 0 ? 0 : jl.EdsmID,       // pass across the EDSMID for the lazy load process.
+                        EDSMID = 0,         // not an EDSM entry
                         SystemAddress = jl.SystemAddress,
                         Population = jl.Population ?? 0,
                         Faction = jl.Faction,
@@ -167,7 +167,7 @@ namespace EliteDangerousCore
                         PrimaryEconomy = jl.EDEconomy,
                         Power = jl.PowerList,
                         PowerState = jl.PowerplayState,
-                        source = jl.StarPosFromEDSM ? SystemSource.FromEDSM : SystemSource.FromJournal,
+                        Source = jl.StarPosFromEDSM ? SystemSource.FromEDSM : SystemSource.FromJournal,
                     };
 
                     SystemCache.FindCachedJournalSystem(newsys);
@@ -186,7 +186,6 @@ namespace EliteDangerousCore
                     // Jumpstart was also screwing about with the EDSM ID fill in which was broken.  This is now working again.
 
                     newsys = new SystemClass(jl.StarSystem);         // this will be a synthesised one
-                    newsys.EDSMID = je.EdsmID;
                 }
 
                 isys = newsys;
@@ -217,7 +216,7 @@ namespace EliteDangerousCore
 
         public void UpdateSystemNote()
         { 
-            snc = SystemNoteClass.GetSystemNote(Journalid, IsFSDCarrierJump, System);       // may be null
+            snc = SystemNoteClass.GetSystemNote(Journalid, IsFSDCarrierJump ?  System.Name : null);       // may be null
         }
 
         #endregion
@@ -227,13 +226,13 @@ namespace EliteDangerousCore
         public void SetJournalSystemNoteText(string text, bool commit, bool sendtoedsm)
         {
             if (snc == null || snc.Journalid == 0)           // if no system note, or its one on a system, from now on we assign journal system notes only from this IF
-                snc = SystemNoteClass.MakeSystemNote("", DateTime.Now, System.Name, Journalid, System.EDSMID, IsFSDCarrierJump);
+                snc = SystemNoteClass.MakeSystemNote("", DateTime.Now, System.Name, Journalid, IsFSDCarrierJump);
 
-            snc = snc.UpdateNote(text, commit, DateTime.Now, snc.EdsmId, IsFSDCarrierJump);        // and update info, and update our ref in case it has changed or gone null
-                                                                                            // remember for EDSM send purposes if its an FSD entry
+            snc = snc.UpdateNote(text, commit, DateTime.Now, IsFSDCarrierJump);        // and update info, and update our ref in case it has changed or gone null
+                                                                                       // remember for EDSM send purposes if its an FSD entry
 
-            if (snc != null && commit && sendtoedsm && snc.FSDEntry)                    // if still have a note, and commiting, and send to esdm, and FSD jump
-                EDSMClass.SendComments(snc.SystemName, snc.Note, snc.EdsmId);
+            if (snc != null && commit && sendtoedsm && snc.FSDEntry)                   // if still have a note, and commiting, and send to esdm, and FSD jump
+                EDSMClass.SendComments(snc.SystemName, snc.Note);
         }
 
         public bool IsJournalEventInEventFilter(string[] events)

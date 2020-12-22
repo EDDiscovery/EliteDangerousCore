@@ -79,13 +79,16 @@ namespace EliteDangerousCore
                     // Find the next end-of-line, 0 based index offset
                     int endlineoffset = Array.IndexOf(buffer, (byte)'\n', readpos, storedlen - readpos) - readpos;
 
-                    if (endlineoffset >= 0)                        // if we find EOL, process the line, else we will grab some more below
+                    //System.Diagnostics.Debug.WriteLine("At {0} len {1} eol {2}", readpos, storedlen, endlineoffset);
+
+                    if (endlineoffset >= 0)                         // if we find EOL, process the line, else we will grab some more below
                     {
                         Pos += endlineoffset + 1;                   // tlu moves on past
 
-                        int lineendpos = readpos + endlineoffset + 1;        // 1 past \n 2 past \r\n
-
-                        int textendpos = readpos + endlineoffset - (buffer[lineendpos - 2] == '\r' ? 1 : 0);
+                        int lineendpos = readpos + endlineoffset + 1; // always past the \n
+                        int textendpos = lineendpos - 1;           
+                        if ( textendpos>0 && buffer[textendpos-1] == '\r')      // note we could have a \n at the beginning, so we need to make sure we check before text (bug dec 20)
+                            textendpos--;
 
                         while (readpos < textendpos && buffer[readpos] == 0)  // filter out any pre nulls, we have seen these
                             readpos++;
@@ -114,8 +117,10 @@ namespace EliteDangerousCore
                 // Move remaining data to start of buffer
                 if (readpos != 0)
                 {
+                    //System.Diagnostics.Debug.WriteLine("Slide back buffer from {0} to 0 storing {1}", readpos, storedlen - readpos);
                     Buffer.BlockCopy(buffer, readpos, buffer, 0, storedlen - readpos);
                     storedlen -= readpos;
+                    //System.Diagnostics.Debug.WriteLine(".. leaving {0} stored", storedlen);
                     readpos = 0;
                 }
 
@@ -124,11 +129,12 @@ namespace EliteDangerousCore
                 if (storedlen == buffer.Length)
                 {
                     Array.Resize(ref buffer, buffer.Length * 2);
-                //    System.Diagnostics.Debug.WriteLine("Resize" + buffer.Length);
+                    //System.Diagnostics.Debug.WriteLine("Resize" + buffer.Length);
                 }
 
                 try
                 {
+                    //System.Diagnostics.Debug.WriteLine("Read to {0} len {1}", storedlen, buffer.Length-storedlen);
                     int bytesread = stream.Read(buffer, storedlen, buffer.Length - storedlen);
 
                     if ( bytesread == 0 )           // we are here because there is no data left or no LF found, so if we did not read anything, we are over
@@ -141,8 +147,8 @@ namespace EliteDangerousCore
                         return null;
                     }
 
-                    //System.Diagnostics.Debug.WriteLine("Read " + FullName + " at " + Pos + " stored " + storedlen + " size " + bytesread);
                     storedlen += bytesread;
+                    //System.Diagnostics.Debug.WriteLine(".. leaving {0} stored", storedlen);
                 }
                 catch (Exception ex)        // OS threw exception, abort
                 {

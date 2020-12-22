@@ -106,7 +106,6 @@ namespace EliteDangerousCore.JournalEvents
         {
             StarSystem = sys.Name;
             StarPos = new EMK.LightGeometry.Vector3((float)sys.X, (float)sys.Y, (float)sys.Z);
-            EdsmID = sys.EDSMID;
         }
 
         protected JournalLocOrJump(JObject evt, JournalTypeEnum jtype) : base(evt, jtype)

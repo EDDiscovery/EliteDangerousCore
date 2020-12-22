@@ -54,138 +54,6 @@ namespace EliteDangerousCore
             LastSystem = other.LastSystem;
         }
 
-        #region EDSM
-
-        public void FillInPositionsFSDJumps()       // call if you want to ensure we have the best posibile position data on FSD Jumps.  Only occurs on pre 2.1 with lazy load of just name/edsmid
-        {
-            List<Tuple<HistoryEntry, ISystem>> updatesystems = new List<Tuple<HistoryEntry, ISystem>>();
-
-            if (!SystemsDatabase.Instance.RebuildRunning)       // only run this when the system db is stable.. this prevents the UI from slowing to a standstill
-            {
-                SystemsDatabase.Instance.ExecuteWithDatabase(cn =>
-                {
-                    foreach (HistoryEntry he in historylist)
-                    {
-                        if (he.IsFSDCarrierJump && !he.System.HasCoordinate)// try and load ones without position.. if its got pos we are happy
-                        {           // done in two IFs for debugging, in case your wondering why!
-                            if (he.System.source != SystemSource.FromEDSM && he.System.EDSMID == 0)   // and its not from EDSM and we have not already tried
-                            {
-                                ISystem found = SystemCache.FindSystem(he.System, cn);
-                                if (found != null)
-                                    updatesystems.Add(new Tuple<HistoryEntry, ISystem>(he, found));
-                            }
-                        }
-                    }
-                });
-            }
-
-            if (updatesystems.Count > 0)
-            {
-                UserDatabase.Instance.ExecuteWithDatabase(cn =>
-                {
-                    using (DbTransaction txn = cn.Connection.BeginTransaction())        // take a transaction over this
-                    {
-                        foreach (Tuple<HistoryEntry, ISystem> he in updatesystems)
-                        {
-                            FillInSystemFromDBInt(he.Item1, he.Item2, cn.Connection, txn);  // fill, we already have an EDSM system to use
-                        }
-
-                        txn.Commit();
-                    }
-                });
-            }
-        }
-
-        public void FillEDSM(HistoryEntry syspos)       // call to fill in ESDM data for entry, and also fills in all others pointing to the system object
-        {
-            if (syspos.System.source == SystemSource.FromEDSM || syspos.System.EDSMID == -1)  // if set already, or we tried and failed..
-            {
-                //System.Diagnostics.Debug.WriteLine("Checked System {0} already id {1} ", syspos.System.name , syspos.System.id_edsm);
-                return;
-            }
-
-            ISystem edsmsys = SystemCache.FindSystem(syspos.System);        // see if we have it..
-
-            if (edsmsys != null)                                            // if we found it externally, fill in info
-            {
-                UserDatabase.Instance.ExecuteWithDatabase(cn =>
-                {
-                    using (DbTransaction txn = cn.Connection.BeginTransaction())
-                    {
-                        FillInSystemFromDBInt(syspos, edsmsys, cn.Connection, txn); // and fill in using this connection/tx
-                        txn.Commit();
-                    }
-                });
-            }
-            else
-                FillInSystemFromDBInt(syspos, null, null, null);        // else fill in using null system, which means just mark it checked
-        }
-
-        private void FillInSystemFromDBInt(HistoryEntry syspos, ISystem edsmsys, SQLiteConnectionUser uconn, DbTransaction utn)       // call to fill in ESDM data for entry, and also fills in all others pointing to the system object
-        {
-            List<HistoryEntry> alsomatching = new List<HistoryEntry>();
-
-            foreach (HistoryEntry he in historylist)       // list of systems in historylist using the same system object
-            {
-                if (Object.ReferenceEquals(he.System, syspos.System))
-                    alsomatching.Add(he);
-            }
-
-            if (edsmsys != null)
-            {
-                ISystem oldsys = syspos.System;
-
-                bool updateedsmid = oldsys.EDSMID != edsmsys.EDSMID;
-                bool updatesyspos = edsmsys.HasCoordinate &&
-                                    (edsmsys.Xi != oldsys.Xi || edsmsys.Yi != oldsys.Yi || edsmsys.Zi != oldsys.Zi) &&
-                                    oldsys.source != SystemSource.FromJournal; // NEVER EVER EVER OVERRIDE JOURNAL COORDINATES
-                bool updatename = oldsys.source != SystemSource.FromJournal ||
-                                  !oldsys.Name.Equals(edsmsys.Name, StringComparison.InvariantCultureIgnoreCase);
-
-                ISystem newsys = new SystemClass
-                {
-                    EDSMID = updateedsmid ? edsmsys.EDSMID : oldsys.EDSMID,
-                    Name = updatename ? edsmsys.Name : oldsys.Name,
-                    X = updatesyspos ? edsmsys.X : oldsys.X,
-                    Y = updatesyspos ? edsmsys.Y : oldsys.Y,
-                    Z = updatesyspos ? edsmsys.Z : oldsys.Z,
-                    GridID = edsmsys.GridID,
-                    SystemAddress = oldsys.SystemAddress ?? edsmsys.SystemAddress,
-
-                    EDDBID = edsmsys.EDDBID,
-                    Population = oldsys.Government == EDGovernment.Unknown ? edsmsys.Population : oldsys.Population,
-                    Faction = oldsys.Faction ?? edsmsys.Faction,
-                    Government = oldsys.Government == EDGovernment.Unknown ? edsmsys.Government : oldsys.Government,
-                    Allegiance = oldsys.Allegiance == EDAllegiance.Unknown ? edsmsys.Allegiance : oldsys.Allegiance,
-                    State = oldsys.State == EDState.Unknown ? edsmsys.State : oldsys.State,
-                    Security = oldsys.Security == EDSecurity.Unknown ? edsmsys.Security : oldsys.Security,
-                    PrimaryEconomy = oldsys.PrimaryEconomy == EDEconomy.Unknown ? edsmsys.PrimaryEconomy : oldsys.PrimaryEconomy,
-                    Power = !oldsys.Power.HasChars() ? edsmsys.Power : oldsys.Power,
-                    PowerState = !oldsys.PowerState.HasChars() ? edsmsys.PowerState : oldsys.PowerState,
-                    NeedsPermit = edsmsys.NeedsPermit,
-                    EDDBUpdatedAt = edsmsys.EDDBUpdatedAt,
-                    source = SystemSource.FromEDSM
-                };
-
-                foreach (HistoryEntry he in alsomatching)       // list of systems in historylist using the same system object
-                {
-                    bool updatepos = he.IsLocOrJump && updatesyspos;
-
-                    if (updatepos || updateedsmid)
-                        JournalEntry.UpdateEDSMIDPosJump(he.Journalid, edsmsys, updatepos, -1, uconn, utn);  // update pos and edsmid, jdist not updated
-
-                    he.System = newsys;
-                }
-            }
-            else
-            {
-                foreach (HistoryEntry he in alsomatching)       // list of systems in historylist using the same system object
-                    he.System.EDSMID = -1;                     // can't do it
-            }
-        }
-
-        #endregion
-
         #region Entry processing
 
         // Called on a New Entry, by EDDiscoveryController:NewEntry, to add an journal entry in.  May return null if don't want it in history
@@ -339,6 +207,8 @@ namespace EliteDangerousCore
 
             }
 
+            //for (int i = hist.Count - 10; i < hist.Count; i++)  System.Diagnostics.Debug.WriteLine("Hist {0} {1} {2}", hist[i].EventTimeUTC, hist[i].Indexno , hist[i].EventSummary);
+
             // now database has been updated due to initial fill, now fill in stuff which needs the user database
 
             hist.CommanderId = CurrentCommander;
@@ -347,7 +217,7 @@ namespace EliteDangerousCore
 
             if (NetLogPath != null)
             {
-                reportProgress(-1,"Netlog scanning systems");
+                reportProgress(-1,"Netlog Updating System Positions");
                 hist.FillInPositionsFSDJumps();         // if netlog reading, try and resolve systems..
             }
 
@@ -540,5 +410,52 @@ namespace EliteDangerousCore
         }
 
         #endregion
+
+        #region EDSM
+
+        public void FillInPositionsFSDJumps()       // call if you want to ensure we have the best posibile position data on FSD Jumps.  Only occurs on pre 2.1 netlogs
+        {
+            List<Tuple<HistoryEntry, ISystem>> updatesystems = new List<Tuple<HistoryEntry, ISystem>>();
+
+            if (!SystemsDatabase.Instance.RebuildRunning)       // only run this when the system db is stable.. this prevents the UI from slowing to a standstill
+            {
+                SystemsDatabase.Instance.ExecuteWithDatabase(cn =>
+                {
+                    foreach (HistoryEntry he in historylist)
+                    {
+                        if (he.IsFSDCarrierJump && !he.System.HasCoordinate)// try and load ones without position.. if its got pos we are happy
+                        {           // done in two IFs for debugging, in case your wondering why!
+                            if (he.System.Source != SystemSource.FromEDSM)   // and its not from EDSM 
+                            {
+                                ISystem found = SystemCache.FindSystem(he.System, cn);
+                                if (found != null)
+                                    updatesystems.Add(new Tuple<HistoryEntry, ISystem>(he, found));
+                            }
+                        }
+                    }
+                });
+            }
+
+            if (updatesystems.Count > 0)
+            {
+                UserDatabase.Instance.ExecuteWithDatabase(cn =>
+                {
+                    using (DbTransaction txn = cn.Connection.BeginTransaction())        // take a transaction over this
+                    {
+                        foreach (Tuple<HistoryEntry, ISystem> hesys in updatesystems)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Update {0} with pos", hesys.Item1.System.Name);
+                            hesys.Item1.journalEntry.UpdateStarPosition(hesys.Item2, cn.Connection, txn);
+                            hesys.Item1.System = hesys.Item2;
+                        }
+
+                        txn.Commit();
+                    }
+                });
+            }
+        }
+
+        #endregion
+
     }
 }
