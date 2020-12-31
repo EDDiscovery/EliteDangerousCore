@@ -203,6 +203,33 @@ namespace EliteDangerousCore.JournalEvents
         public int EstimatedValueMapped { get; private set; }             // with just mapped
         public int EstimatedValueMappedEfficiently { get; private set; }             // with just mapped
 
+        public BodyScanStatus BodyScanStatus
+        {
+            get
+            {
+                if (IsEDSMBody)
+                {
+                    return BodyScanStatus.KnownFromEDSM; // both for stars and planets
+                }
+                
+                if (!IsPlanet)
+                {
+                    return BodyScanStatus.Scanned;
+                }
+
+                if (!WasMapped.HasValue)
+                {
+                    return BodyScanStatus.Scanned;
+                }
+
+                if (Mapped)
+                {
+                    return BodyScanStatus.MappedByYou;
+                }
+
+                return IsPreviouslyMapped ? BodyScanStatus.ScannedAndWasMappedBySomeone : BodyScanStatus.ScannedAndNotMappedByAnyone;
+            }
+        }
         public void SetMapped(bool m, bool e)
         {
             Mapped = m; EfficientMapped = e;
@@ -2542,6 +2569,15 @@ namespace EliteDangerousCore.JournalEvents
         {
             return obj.BodyName.GetHashCode();
         }
+    }
+
+    public enum BodyScanStatus
+    {
+        KnownFromEDSM,
+        Scanned,
+        ScannedAndWasMappedBySomeone,
+        ScannedAndNotMappedByAnyone,
+        MappedByYou
     }
 }
 
