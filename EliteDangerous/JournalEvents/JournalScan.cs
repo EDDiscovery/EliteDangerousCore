@@ -55,11 +55,17 @@ namespace EliteDangerousCore.JournalEvents
         public bool IsOrbitingPlanet { get { return Parents?.FirstOrDefault()?.Type == "Planet"; } }
         public bool IsOrbitingStar { get { return Parents?.FirstOrDefault()?.Type == "Star"; } }
 
-        public bool? WasDiscovered { get; set; }                    // direct, 3.4, indicates whether the body has already been discovered
+        public bool? WasDiscovered // direct, 3.4, indicates whether the body has already been discovered
+        {
+            get => IsMapped ? true : wasDiscovered; // takes into account that some bodies are pre-known and cannot be 'discovered' in game
+            set => wasDiscovered = value;
+        }
+
         public bool IsNotDiscovered { get { return WasDiscovered.HasValue && WasDiscovered == false; } }
 
         public bool? WasMapped { get; set; }                        // direct, 3.4, indicates whether the body has already been mapped
         public bool IsNotMapped { get { return WasMapped.HasValue && WasMapped == false; } }
+        public bool IsMapped { get => WasMapped.HasValue && WasMapped == true; }
 
         // STAR
         public string StarType { get; set; }                        // null if no StarType, direct from journal, K, A, B etc
@@ -219,6 +225,8 @@ namespace EliteDangerousCore.JournalEvents
         public string ParentList() { return Parents != null ? string.Join(",", Parents.Select(x => x.Type + ":" + x.BodyID)) : ""; }     // not get on purpose
 
         private bool mapped, efficientmapped;
+
+        private bool? wasDiscovered;
 
         // Constants:
 
@@ -805,7 +813,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (WasDiscovered.HasValue && WasDiscovered.Value)
                 scanText.AppendFormat("Already Discovered".T(EDTx.JournalScan_EVAD) + "\n");
-            if (WasMapped.HasValue && WasMapped.Value)
+            if (IsMapped)
                 scanText.AppendFormat("Already Mapped".T(EDTx.JournalScan_EVAM) + "\n");
 
             if (EDSMDiscoveryCommander != null)
