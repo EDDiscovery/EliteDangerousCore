@@ -13,7 +13,7 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -565,8 +565,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 jo = jnew;      // replace current
                 Rescan(jo);
-                if (JsonCached != null)
-                    JsonCached = jo;
+                UpdateJson(jo);
             }
             return jnew != null;
         }
@@ -690,6 +689,7 @@ namespace EliteDangerousCore.JournalEvents
             public string Slot;
             public string NameFD;
             public string Name;
+            public string Name_Localised;
             public string EngineerModifications;
             public double? Quality { get; set; }
             public int? Level { get; set; }

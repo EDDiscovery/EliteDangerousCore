@@ -13,7 +13,7 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -39,6 +39,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StarSystem { get; set; }                      // direct (3.5)
         public long? SystemAddress { get; set; }                    // direct (3.5)
         public double DistanceFromArrivalLS { get; set; }           // direct
+        public double DistanceFromArrivalm { get { return DistanceFromArrivalLS * oneLS_m; } }           
         public string DistanceFromArrivalText { get { return string.Format("{0:0.00}AU ({1:0.0}ls)", DistanceFromArrivalLS / JournalScan.oneAU_LS, DistanceFromArrivalLS); } }
         public double? nRotationPeriod { get; set; }                // direct
         public double? nRotationPeriodDays { get; set; }      
@@ -63,11 +64,12 @@ namespace EliteDangerousCore.JournalEvents
         // STAR
         public string StarType { get; set; }                        // null if no StarType, direct from journal, K, A, B etc
         public EDStar StarTypeID { get; }                           // star type -> identifier
-        public string StarTypeText { get { return IsStar ? GetStarTypeName() : ""; } }   // Long form star name, from StarTypeID
+        public string StarTypeText { get { return IsStar ? Bodies.StarName(StarTypeID) : ""; } }   // Long form star name, from StarTypeID
         public double? nStellarMass { get; set; }                   // direct
         public double? nAbsoluteMagnitude { get; set; }             // direct
         public string Luminosity { get; set; }                      // character string (I,II,.. V)
         public string StarClassification { get { return (StarType ?? "") + (StarSubclass?.ToStringInvariant() ?? "") + (Luminosity ?? ""); } }
+        public string StarClassificationAbv { get { return new string((StarType ?? "").Where(x => char.IsUpper(x) || x == '_').Select(x => x).ToArray()) + (StarSubclass?.ToStringInvariant() ?? "") + (Luminosity ?? ""); } }
         public double? nAge { get; set; }                           // direct, in million years
         public double? HabitableZoneInner { get; set; }             // in AU
         public double? HabitableZoneOuter { get; set; }             // in AU
@@ -100,9 +102,10 @@ namespace EliteDangerousCore.JournalEvents
         public int? StarSubclass { get; set; }                      // star Subclass, direct, 3.4
 
         // Planets
-        public string PlanetClass { get; set; }                     // planet class, direct
-
+        public string PlanetClass { get; set; }                     // planet class, direct. If belt cluster, null
         public EDPlanet PlanetTypeID { get; }                       // planet class -> ID
+        public string PlanetTypeText { get { return IsStar || IsBeltCluster ? "" : Bodies.PlanetTypeName(PlanetTypeID); } }   // Long form star name, from StarTypeID
+
         public bool AmmoniaWorld { get { return Bodies.AmmoniaWorld(PlanetTypeID); } }
         public bool Earthlike { get { return Bodies.Earthlike(PlanetTypeID); } }
         public bool WaterWorld { get { return Bodies.WaterWorld(PlanetTypeID); } }
@@ -170,6 +173,8 @@ namespace EliteDangerousCore.JournalEvents
                         return EfficientMapped ? EstimatedValueFirstMappedEfficiently : EstimatedValueFirstMapped;
                     else if (IsNotDiscovered)
                         return EstimatedValueFirstDiscovered;
+                    else if (Mapped)
+                        return EfficientMapped ? EstimatedValueMappedEfficiently : EstimatedValueMapped;
                 }
 
                 return EstimatedValueBase;
@@ -183,6 +188,8 @@ namespace EliteDangerousCore.JournalEvents
         public int EstimatedValueFirstDiscoveredFirstMappedEfficiently { get; private set; }           // with both efficiently
         public int EstimatedValueFirstMapped { get; private set; }             // with just mapped                 
         public int EstimatedValueFirstMappedEfficiently { get; private set; }             // with just mapped                 
+        public int EstimatedValueMapped { get; private set; }             // with just mapped
+        public int EstimatedValueMappedEfficiently { get; private set; }             // with just mapped
 
         public void SetMapped(bool m, bool e)
         {
@@ -241,28 +248,28 @@ namespace EliteDangerousCore.JournalEvents
             public double OuterRad;
 
             // has trailing LF
-            public string RingInformation(double scale = 1, string scaletype = " MT", bool parentIsStar = false)
+            public string RingInformation(double scale = 1, string scaletype = " MT", bool parentIsStar = false, string frontpad = "  ")
             {
                 StringBuilder scanText = new StringBuilder();
-                scanText.AppendFormat("  {0} ({1})\n", Name.Alt("Unknown".T(EDTx.Unknown)), DisplayStringFromRingClass(RingClass));
-                scanText.AppendFormat("  Mass: {0:N4}{1}\n".T(EDTx.StarPlanetRing_Mass), MassMT * scale, scaletype);
+                scanText.AppendFormat(frontpad + "{0} ({1})\n", Name.Alt("Unknown".T(EDTx.Unknown)), DisplayStringFromRingClass(RingClass));
+                scanText.AppendFormat(frontpad + "Mass: {0:N4}{1}\n".T(EDTx.StarPlanetRing_Mass), MassMT * scale, scaletype);
                 if (parentIsStar && InnerRad > 3000000)
                 {
-                    scanText.AppendFormat("  Inner Radius: {0:0.00}ls\n".T(EDTx.StarPlanetRing_InnerRadius), (InnerRad / oneLS_m));
-                    scanText.AppendFormat("  Outer Radius: {0:0.00}ls\n".T(EDTx.StarPlanetRing_OuterRadius), (OuterRad / oneLS_m));
+                    scanText.AppendFormat(frontpad + "Inner Radius: {0:0.00}ls\n".T(EDTx.StarPlanetRing_InnerRadius), (InnerRad / oneLS_m));
+                    scanText.AppendFormat(frontpad + "Outer Radius: {0:0.00}ls\n".T(EDTx.StarPlanetRing_OuterRadius), (OuterRad / oneLS_m));
                 }
                 else
                 {
-                    scanText.AppendFormat("  Inner Radius: {0}km\n".T(EDTx.StarPlanetRing_IK), (InnerRad / 1000).ToString("N0"));
-                    scanText.AppendFormat("  Outer Radius: {0}km\n".T(EDTx.StarPlanetRing_OK), (OuterRad / 1000).ToString("N0"));
+                    scanText.AppendFormat(frontpad + "Inner Radius: {0}km\n".T(EDTx.StarPlanetRing_IK), (InnerRad / 1000).ToString("N0"));
+                    scanText.AppendFormat(frontpad + "Outer Radius: {0}km\n".T(EDTx.StarPlanetRing_OK), (OuterRad / 1000).ToString("N0"));
                 }
                 return scanText.ToNullSafeString();
             }
 
             // has trailing LF
-            public string RingInformationMoons(bool parentIsStar = false)
+            public string RingInformationMoons(bool parentIsStar = false, string frontpad = "  ")
             {
-                return RingInformation(1 / oneMoon_MT, " Moons".T(EDTx.StarPlanetRing_Moons), parentIsStar);
+                return RingInformation(1 / oneMoon_MT, " Moons".T(EDTx.StarPlanetRing_Moons), parentIsStar, frontpad);
             }
 
             public static string DisplayStringFromRingClass(string ringClass)   // no trailing LF
@@ -298,10 +305,7 @@ namespace EliteDangerousCore.JournalEvents
             public int BodyID;
         }
 
-        public JournalScan(JObject evt, long edsmid) : this(evt)
-        {
-            EdsmID = edsmid;
-        }
+//TBD        public JournalScan(JObject evt, long edsmid) : this(evt)  {  EdsmID = edsmid;}
 
         public JournalScan(JObject evt) : base(evt, JournalTypeEnum.Scan)
         {
@@ -405,6 +409,9 @@ namespace EliteDangerousCore.JournalEvents
                     IcyPlanetZoneInner = DistanceForBlackBodyTemperature(150);
                     IcyPlanetZoneOuter = "\u221E"; // practically infinite, at least until the body suffer from the gravitational bond with its host star
                 }
+
+                //var f = System.IO.File.AppendText(@"c:\code\stars.lst"); f.Write("{0} / {1} / {2} : {3} / {4}" +Environment.NewLine, StarType, StarSubclass, Luminosity, StarClassification, StarClassificationAbv);// f.Close();
+
             }
             else if (PlanetClass != null)
             {
@@ -418,63 +425,71 @@ namespace EliteDangerousCore.JournalEvents
                 PlanetTypeID = EDPlanet.Unknown_Body_Type;
             }
 
-            JToken mats = (JToken)evt["Materials"];
+            JToken mats = evt["Materials"];
 
             if (mats != null)
             {
-                if (mats.Type == JTokenType.Object)
+                if (mats.IsObject)
                 {
-                    Materials = mats?.ToObjectProtected<Dictionary<string, double>>();  // name in fd logs is lower case
+                    Materials = mats.ToObjectProtected<Dictionary<string, double>>();  // name in fd logs is lower case
                 }
-                else
+                else if ( mats.IsArray)
                 {
                     Materials = new Dictionary<string, double>();
                     foreach (JObject jo in mats)                                        // name in fd logs is lower case
                     {
-                        Materials[jo["Name"].Str().ToLowerInvariant()] = jo["Percent"].Double();
+                        Materials[jo["Name"].Str("Default").ToLowerInvariant()] = jo["Percent"].Double();
                     }
                 }
 
-                var na = (from x in Materials select x.Key).ToArray();
-                MaterialList = String.Join(",", na);
+                if (Materials != null)
+                {
+                    var na = (from x in Materials select x.Key).ToArray();
+                    MaterialList = String.Join(",", na);
+                }
             }
 
-            JToken atmos = (JToken)evt["AtmosphereComposition"];
-
-            if (atmos != null)
+            JToken atmos = evt["AtmosphereComposition"];
+            if (!atmos.IsNull())
             {
-                if (atmos.Type == JTokenType.Object)
+                if (atmos.IsObject)
                 {
                     AtmosphereComposition = atmos?.ToObjectProtected<Dictionary<string, double>>();
                 }
-                else
+                else if ( atmos.IsArray)
                 {
                     AtmosphereComposition = new Dictionary<string, double>();
                     foreach (JObject jo in atmos)
                     {
-                        AtmosphereComposition[(string)jo["Name"]] = jo["Percent"].Double();
+                        AtmosphereComposition[jo["Name"].Str("Default")] = jo["Percent"].Double();
                     }
                 }
             }
 
-            JToken composition = evt["Composition"];
-
-            if (composition != null)
+            JObject composition = evt["Composition"].Object();
+            if (!composition.IsNull() && composition.IsObject)
             {
                 PlanetComposition = new Dictionary<string, double>();
-                foreach (JProperty jp in composition)
+                foreach (var kvp in composition)
                 {
-                    PlanetComposition[jp.Name] = (double)jp.Value;
+                    PlanetComposition[kvp.Key] = kvp.Value.Double();
                 }
             }
 
-            if (evt["Parents"] != null)
+            JArray parents = evt["Parents"].Array();            // will be null if parents is not an array (also if its Null)
+            if (!parents.IsNull() && parents.IsArray )
             {
                 Parents = new List<BodyParent>();
-                foreach (JObject parent in evt["Parents"])
+
+                foreach (JObject parent in parents)
                 {
-                    JProperty prop = parent.Properties().First();
-                    Parents.Add(new BodyParent { Type = prop.Name, BodyID = prop.Value.Int() });
+                    if (parent.IsObject)
+                    {
+                        foreach (var kvp in parent)
+                        {
+                            Parents.Add(new BodyParent { Type = kvp.Key, BodyID = kvp.Value.Int() });
+                        }
+                    }
                 }
             }
 
@@ -483,7 +498,7 @@ namespace EliteDangerousCore.JournalEvents
             IsEDSMBody = evt["EDDFromEDSMBodie"].Bool(false);           // Bodie? Who is bodie?  Did you mean Body Finwen ;-)
 
             JToken discovery = evt["discovery"];
-            if (discovery != null)
+            if (!discovery.IsNull())
             {
                 EDSMDiscoveryCommander = discovery["commander"].StrNull();
                 EDSMDiscoveryUTC = discovery["date"].DateTimeUTC();
@@ -564,7 +579,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (IsStar)
             {
-                info = BaseUtils.FieldBuilder.Build("", GetStarTypeName(), "Mass:;SM;0.00".T(EDTx.JournalScan_MSM), nStellarMass,
+                info = BaseUtils.FieldBuilder.Build("", StarTypeText, "Mass:;SM;0.00".T(EDTx.JournalScan_MSM), nStellarMass,
                                                 "Age:;my;0.0".T(EDTx.JournalScan_Age), nAge,
                                                 "Radius:".T(EDTx.JournalScan_RS), RadiusText(),
                                                 "Dist:;ls;0.0".T(EDTx.JournalScan_DISTA), DistanceFromArrivalLS,
@@ -588,7 +603,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (IsStar)
             {
-                return BaseUtils.FieldBuilder.Build("", GetStarTypeName(), "Mass:;SM;0.00".T(EDTx.JournalScan_MSM), nStellarMass,
+                return BaseUtils.FieldBuilder.Build("", StarTypeText, "Mass:;SM;0.00".T(EDTx.JournalScan_MSM), nStellarMass,
                                                 "Age:;my;0.0".T(EDTx.JournalScan_Age), nAge,
                                                 "Radius:".T(EDTx.JournalScan_RS), RadiusText(),
                                                 "Dist:".T(EDTx.JournalScan_DIST), DistanceFromArrivalText,
@@ -621,26 +636,24 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (IsStar)
                 {
-                    scanText.AppendFormat(GetStarTypeName() + " (" + StarClassification + ")");
+                    scanText.AppendFormat(StarTypeText + " (" + StarClassification + ")\n");
                 }
                 else if (PlanetClass != null)
                 {
-                    scanText.AppendFormat("{0}", PlanetClass);
+                    scanText.AppendFormat("{0}", PlanetTypeText);
 
                     if (!PlanetClass.ToLowerInvariant().Contains("gas"))
                     {
                         scanText.AppendFormat((Atmosphere == null || Atmosphere == String.Empty) ? ", No Atmosphere".T(EDTx.JournalScan_NoAtmosphere) : (", " + Atmosphere));
                     }
+
+                    if (IsLandable)
+                        scanText.AppendFormat(", Landable".T(EDTx.JournalScan_LandC));
+                    scanText.AppendFormat("\n");
                 }
-
-                if (IsLandable)
-                    scanText.AppendFormat(", Landable".T(EDTx.JournalScan_LandC));
-
-                scanText.AppendFormat("\n");
 
                 if (Terraformable)
                     scanText.Append("Candidate for terraforming\n".T(EDTx.JournalScan_Candidateforterraforming));
-
 
                 if (nAge.HasValue)
                     scanText.AppendFormat("Age: {0} my\n".T(EDTx.JournalScan_AMY), nAge.Value.ToString("N0"));
@@ -785,7 +798,10 @@ namespace EliteDangerousCore.JournalEvents
             }
 
             if (EstimatedValueFirstDiscovered > 0 ) // if we have extra details, on planets, show the base value
+            {
+                scanText.AppendFormat("Mapped value: {0:N0}/{1:N0}e".T(EDTx.JournalScan_EVM) + "\n", EstimatedValueMapped, EstimatedValueMappedEfficiently);
                 scanText.AppendFormat("Base Estimated value: {0:N0}".T(EDTx.JournalScan_EV) + "\n", EstimatedValueBase);
+            }
 
             if (WasDiscovered.HasValue && WasDiscovered.Value)
                 scanText.AppendFormat("Already Discovered".T(EDTx.JournalScan_EVAD) + "\n");
@@ -797,7 +813,7 @@ namespace EliteDangerousCore.JournalEvents
 
             scanText.AppendFormat("Scan Type: {0}".T(EDTx.JournalScan_SCNT) + "\n", ScanType);
 
-            scanText.AppendFormat("BID+Parents: {0} - {1}\n", BodyID ?? -1, ParentList());
+            //scanText.AppendFormat("BID+Parents: {0} - {1}\n", BodyID ?? -1, ParentList());
 
             if (scanText.Length > 0 && scanText[scanText.Length - 1] == '\n')
                 scanText.Remove(scanText.Length - 1, 1);
@@ -1103,10 +1119,6 @@ namespace EliteDangerousCore.JournalEvents
                 return null;
         }
 
-        public string GetStarTypeName()           // give description to star class
-        {
-            return Bodies.StarName(StarTypeID);
-        }
 
         public System.Drawing.Image GetStarTypeImage()           // give image and description to star class
         {
@@ -1255,13 +1267,14 @@ namespace EliteDangerousCore.JournalEvents
 
             if (StarTypeID == EDStar.X || StarTypeID == EDStar.RoguePlanet)
             {
-                System.Diagnostics.Debug.WriteLine(StarTypeID + ": " + iconName);
+               // System.Diagnostics.Debug.WriteLine(StarTypeID + ": " + iconName);
                 return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Unknown");
             }
             else
-
-                System.Diagnostics.Debug.WriteLine(StarTypeID + ": " + iconName);
-            return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Stars.{iconName}");
+            {
+             //   System.Diagnostics.Debug.WriteLine(StarTypeID + ": " + iconName);
+                return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Stars.{iconName}");
+            }
         }
 
         static public System.Drawing.Image GetStarImageNotScanned()
@@ -1384,7 +1397,7 @@ namespace EliteDangerousCore.JournalEvents
                             AtmosphereComposition.ToNullSafeString().ToLowerInvariant().Contains("niobium"))
                             iconName = "GGHv7";
                         else
-                            iconName = "GGHv7";
+                            iconName = "GGHv3";
                     }
                     else if (st < 125)
                         iconName = "GGHv6";
@@ -1515,10 +1528,14 @@ namespace EliteDangerousCore.JournalEvents
                         iconName = "GG4v7";
                     else if (st < 1200)
                         iconName = "GG4v2";
-                    else if (st < 1225)
+                    else if (st < 1220)
+                        iconName = "GG4v13";
+                    else if (st < 1240)
                         iconName = "GG4v11";
-                    else if (st < 1250)
+                    else if (st < 1270)
                         iconName = "GG4v8";
+                    else if (st < 1300)
+                        iconName = "GG4v12";
                     else
                         iconName = "GG4v5";
                 }
@@ -1555,7 +1572,7 @@ namespace EliteDangerousCore.JournalEvents
                         iconName = "WTGv7";
                 }
 
-                System.Diagnostics.Debug.WriteLine(PlanetTypeID + ": " + iconName);
+                //System.Diagnostics.Debug.WriteLine(PlanetTypeID + ": " + iconName);
                 return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Planets.Giant.{iconName}");
             }
 
@@ -1911,7 +1928,7 @@ namespace EliteDangerousCore.JournalEvents
                 }
             }
 
-            System.Diagnostics.Debug.WriteLine(PlanetTypeID + ": " + iconName);
+            //System.Diagnostics.Debug.WriteLine(PlanetTypeID + ": " + iconName);
             return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Planets.Terrestrial.{iconName}");
         }
 
@@ -2139,6 +2156,9 @@ namespace EliteDangerousCore.JournalEvents
 
                     EstimatedValueFirstMapped = (int)(basevalue * 8.0956);
                     EstimatedValueFirstMappedEfficiently = (int)(basevalue * 8.0956 * effmapped);
+
+                    EstimatedValueMapped = (int)(basevalue * 3.3333333333);
+                    EstimatedValueMappedEfficiently = (int)(basevalue * 3.3333333333 * effmapped);
                 }
             }
         }

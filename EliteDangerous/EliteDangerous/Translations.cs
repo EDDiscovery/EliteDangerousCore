@@ -35,8 +35,6 @@ namespace EliteDangerousCore
         ScreenshotDirectoryWatcher_NOF,
         ScreenshotDirectoryWatcher_Excp,
 
-        NoTranslate, // DO NOT Define this attribute, used to cause a purposeful mismatch
-
         Bodies_HMS, //"Luminous Hot Main Sequence {0} star" @
         Bodies_BMS, //"Luminous Blue Main Sequence {0} star" @
         Bodies_BWMS, //"Bluish-White Main Sequence {0} star" @
@@ -250,6 +248,8 @@ namespace EliteDangerousCore
         JournalEntry_NotorietyIndex, // Notoriety Index:;;N0
         JournalEntry_RemainingJumps,  // Remaining Jumps
         JournalEntry_Nearest, // Nearest:
+        JournalEntry_CapShipBond, // Capital Ship Bond
+        JournalEntry_FactionKillBond, // Faction Kill Bond
 
 
         JournalLocOrJump_Type, // "Type " @
@@ -298,6 +298,7 @@ namespace EliteDangerousCore
         BankAccountClass_SpendonAmmo, // Spend on Ammo:;cr;N0
         BankAccountClass_InsuranceClaims, // Insurance Claims:;;N0
         BankAccountClass_SpentonInsurance, // Spent on Insurance:;cr;N0
+        BankAccountClass_OwnedShipCount, // Owned ships
         CombatClass_Bounties, // Bounties :;;N0
         CombatClass_BountyProfits, // Bounty Profits:;cr;N0
         CombatClass_CombatBonds, // Combat Bonds:;;N0
@@ -334,10 +335,13 @@ namespace EliteDangerousCore
         ExplorationClass_NoofJumps, // No of Jumps:;;N0
         ExplorationClass_GreatestDistance, // Greatest Distance:;;N0
         ExplorationClass_TimePlayed, // Time Played:
+        ExplorationClass_EfficientScans,
+        PassengerMissionsClass_Accepted, // Accepted:;;N0
         PassengerMissionsClass_BulkMissionPassengers, // Bulk Mission Passengers:;;N0
         PassengerMissionsClass_VIPMissionPassengers, // VIP Mission Passengers:;;N0
         PassengerMissionsClass_PassengersDelivered, // Passengers Delivered:;;N0
         PassengerMissionsClass_PassengersEjected, // Passengers Ejected:;;N0
+        PassengerMissionsClass_PassengersDisgrunted, // Passengers Disgrunted:;;N0
         SearchAndRescueClass_TotalItemsRescued, // Total Items Rescued:;;N0
         SearchAndRescueClass_Profit, // Profit:;cr;N0
         SearchAndRescueClass_TotalRescueTransactions, // Total Rescue Transactions:;;N0
@@ -363,6 +367,8 @@ namespace EliteDangerousCore
         CQCClass_KDRatio, // KD Ratio:;;N
         CQCClass_Kills, // Kills:;;N0
         CQCClass_Win, // Win/Loss:;;N
+
+        JournalNavRoute_Jumps, // "{0} jumps: "
 
         JournalScan_Autoscanof, // Autoscan of {0}
         JournalScan_Detailedscanof, // Detailed scan of {0}
@@ -441,6 +447,7 @@ namespace EliteDangerousCore
         JournalScan_MPIE, // Efficiently
         JournalScan_EVFD, //  First Discovered+Mapped value: {0:N0}
         JournalScan_EVFM, //  First Mapped value: {0:N0}
+        JournalScan_EVM, //  Mapped value: {0:N0}
         JournalScan_SCNT, //  Scan Type: {0}
         JournalScan_EVAD, //  Already Discovered
         JournalScan_EVAM, //  Already Mapped
@@ -470,7 +477,11 @@ namespace EliteDangerousCore
         FSSSignal_ThreatLevel, //  Threat Level:
         FSSSignal_StationBool, // ;Station
 
+        JournalEntry_Hyperspace,
+        JournalEntry_Supercruise,
+
         JournalFSSDiscoveryScan_Progress, // Progress:;%;N1
+        JournalFSSDiscoveryScan_Bodies, // Bodies:
         JournalFSSDiscoveryScan_Others, // Others:
 
         JournalFSSSignalDiscovered_Detected, // Detected ; signals
@@ -737,6 +748,10 @@ namespace EliteDangerousCore
         static public string T(this string s, EDTx value)              // use the enum.
         {
             return BaseUtils.Translator.Instance.Translate(s, value.ToString().Replace("_", "."));
+        }
+        static public string T(bool translate, string s, EDTx value)              // use the enum.
+        {
+            return translate ? BaseUtils.Translator.Instance.Translate(s, value.ToString().Replace("_", ".")) : s;
         }
     }
 }

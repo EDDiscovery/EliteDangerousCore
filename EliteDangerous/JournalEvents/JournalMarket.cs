@@ -13,7 +13,8 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -59,8 +60,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 jo = jnew;      // replace current
                 Rescan(jo);
-                if (JsonCached != null)
-                    JsonCached = jo;
+                UpdateJson(jo);
             }
             return jnew != null;
         }
@@ -69,7 +69,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.MarketBuy)]
-    public class JournalMarketBuy : JournalEntry, ICommodityJournalEntry, ILedgerJournalEntry
+    public class JournalMarketBuy : JournalEntry, ICommodityJournalEntry, ILedgerJournalEntry, IStatsJournalEntryMatCommod
     {
         public JournalMarketBuy(JObject evt) : base(evt, JournalTypeEnum.MarketBuy)
         {
@@ -91,9 +91,17 @@ namespace EliteDangerousCore.JournalEvents
         public long TotalCost { get; set; }
         public long? MarketID { get; set; }
 
+        // Istats
+        public List<Tuple<string, int>> ItemsList { get { return new List<Tuple<string, int>>() { new Tuple<string, int>(Type, Count) }; } }
+
         public void UpdateCommodities(MaterialCommoditiesList mc)
         {
-            mc.Change(MaterialCommodityData.CatType.Commodity, Type, Count, BuyPrice);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, Count, BuyPrice);
+        }
+
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            stats.UpdateCommodity(Type, Count, stationfaction);
         }
 
         public void Ledger(Ledger mcl)
@@ -110,7 +118,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.MarketSell)]
-    public class JournalMarketSell : JournalEntry, ICommodityJournalEntry, ILedgerJournalEntry
+    public class JournalMarketSell : JournalEntry, ICommodityJournalEntry, ILedgerJournalEntry, IStatsJournalEntryMatCommod
     {
         public JournalMarketSell(JObject evt) : base(evt, JournalTypeEnum.MarketSell)
         {
@@ -141,9 +149,17 @@ namespace EliteDangerousCore.JournalEvents
         public bool BlackMarket { get; set; }
         public long? MarketID { get; set; }
 
+        // Istats
+        public List<Tuple<string, int>> ItemsList { get { return new List<Tuple<string, int>>() { new Tuple<string, int>(Type, -Count) }; } }
+
         public void UpdateCommodities(MaterialCommoditiesList mc)
         {
-            mc.Change(MaterialCommodityData.CatType.Commodity, Type, -Count, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, -Count, 0);
+        }
+
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            stats.UpdateCommodity(Type, -Count, stationfaction);
         }
 
         public void Ledger(Ledger mcl)

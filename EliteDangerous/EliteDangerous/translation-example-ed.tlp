@@ -31,59 +31,6 @@ SECTION Bodies
 .TTauri: "T Tauri" @
 
 
-Section EDStar
-
-EDStar.O: "O (Blue-White) Star" @
-EDStar.B: "B (Blue-White) Star" @
-EDStar.BBlueWhiteSuperGiant: "B (Blue-White super giant) Star" @
-EDStar.A: "A (Blue-White) Star" @
-EDStar.ABlueWhiteSuperGiant: "A (Blue-White super giant) Star" @
-EDStar.F: "F (White) Star" @
-EDStar.FWhiteSuperGiant: "F (White super giant) Star" @
-EDStar.G: "G (White-Yellow) Star" @
-EDStar.GWhiteSuperGiant: "G (White-Yellow super giant) Star" @
-EDStar.K: "K (Yellow-Orange) Star" @
-EDStar.KOrangeGiant: "K (Yellow-Orange giant) Star" @
-EDStar.M: "M (Red dwarf) Star" @
-EDStar.MRedGiant: "M (Red giant) Star" @
-EDStar.MRedSuperGiant: "M (Red super giant) Star" @
-EDStar.L: "L (Brown dwarf) Star" @
-EDStar.T: "T (Brown dwarf) Star" @
-EDStar.Y: "Y (Brown dwarf) Star" @
-EDStar.TTS: "T Tauri Star" @
-EDStar.AeBe: "Herbig Ae/Be Star" @
-EDStar.W: "Wolf-Rayet Star" @
-EDStar.WN: "Wolf-Rayet N Star" @
-EDStar.WNC: "Wolf-Rayet NC Star" @
-EDStar.WC: "Wolf-Rayet C Star" @
-EDStar.WO: "Wolf-Rayet O Star" @
-EDStar.CS: "CS Star" @
-EDStar.C: "C Star" @
-EDStar.CN: "CN Star" @
-EDStar.CJ: "CJ Star" @
-EDStar.CHd: "CHd Star" @
-EDStar.MS: "MS-type Star" @
-EDStar.S: "S-type Star" @
-EDStar.D: "White Dwarf (D) Star" @
-EDStar.DA: "White Dwarf (DA) Star" @
-EDStar.DAB: "White Dwarf (DAB) Star" @
-EDStar.DAO: "White Dwarf (DAO) Star" @
-EDStar.DAZ: "White Dwarf (DAZ) Star" @
-EDStar.DAV: "White Dwarf (DAV) Star" @
-EDStar.DB: "White Dwarf (DB) Star" @
-EDStar.DBZ: "White Dwarf (DBZ) Star" @
-EDStar.DBV: "White Dwarf (DBV) Star" @
-EDStar.DO: "White Dwarf (DO) Star" @
-EDStar.DOV: "White Dwarf (DOV) Star" @
-EDStar.DQ: "White Dwarf (DQ) Star" @
-EDStar.DC: "White Dwarf (DC) Star" @
-EDStar.DCV: "White Dwarf (DCV) Star" @
-EDStar.DX: "White Dwarf (DX) Star" @
-EDStar.N: "Neutron Star" @
-EDStar.H: "Black Hole" @
-EDStar.SuperMassiveBlackHole: "Supermassive Black Hole" @
-EDStar.Unknown: "Unknown star type" @
-
 Section EDPlanet
 
 EDPlanet.Metalrichbody: "Metal-rich body" @
@@ -702,6 +649,9 @@ SECTION MaterialCommodityData
 .ManufacturedCrystals: "Manufactured Crystals" @
 .ManufacturedAlloys: "Manufactured Alloys" @
 .NA: "NA" @
+.tritium: "Tritium" @
+.s6_tissuesample_mesoglea: "Pod Mesoglea" @
+.s6_tissuesample_cells: "Pod Outer Tissue" @
 
 SECTION EngineeringData
 
@@ -717,3 +667,7 @@ SECTION MissionState
 
 .ToGo: "To Go:" @
 .Progress: "Progress:;%;N1" @
+
+
+
+

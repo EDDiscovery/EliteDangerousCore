@@ -13,7 +13,7 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
@@ -41,7 +41,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesList mc)
         {
-            mc.Change(MaterialCommodityData.CatType.Commodity, FDName, -Count, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, FDName, -Count, 0);
         }
 
         public override void FillInformation(out string info, out string detailed) 

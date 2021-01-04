@@ -15,12 +15,12 @@
  */
 
 using EliteDangerousCore.JournalEvents;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using BaseUtils.JSON;
 
 namespace EliteDangerousCore.Inara
 {
@@ -116,7 +116,7 @@ namespace EliteDangerousCore.Inara
 
             if (last != null && last.EventTimeUTC > DateTime.UtcNow.AddDays(-30))
             {
-                foreach( var s in history.shipinformationlist.Ships )
+                foreach( var s in history.ShipInformationList.Ships )
                 {
                     ShipInformation si = s.Value;
                     if ( si.State == ShipInformation.ShipState.Owned && !ShipModuleData.IsSRVOrFighter(si.ShipFD))
@@ -507,7 +507,7 @@ namespace EliteDangerousCore.Inara
                 case JournalTypeEnum.Statistics://VERIFIED 16/5/18
                     {
                         JournalStatistics stats = he.journalEntry as JournalStatistics;
-                        eventstosend.Add(InaraClass.setCommanderGameStatistics(stats.Json, stats.EventTimeUTC));
+                        eventstosend.Add(InaraClass.setCommanderGameStatistics(stats.GetJsonCloned(), stats.EventTimeUTC));
                         break;
                     }
 

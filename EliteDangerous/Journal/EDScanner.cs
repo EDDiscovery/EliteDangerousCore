@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 EDDiscovery development team
+ * Copyright © 2016-2020 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -14,21 +14,17 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
-using EliteDangerousCore.DB;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Data.Common;
 using System.Runtime.InteropServices;
-using Newtonsoft.Json.Linq;
 using System.Threading;
 
 namespace EliteDangerousCore
 {
-    public class EDJournalClass
+    public class EDJournalUIScanner
     {
         public Action<JournalEntry> OnNewJournalEntry; 
         public Action<UIEvent> OnNewUIEvent;
@@ -43,7 +39,7 @@ namespace EliteDangerousCore
 
         const int ScanTick = 100;       // tick time to check journals and status
 
-        public EDJournalClass(Action<Action> invokeAsyncOnUiThread)
+        public EDJournalUIScanner(Action<Action> invokeAsyncOnUiThread)
         {
             InvokeAsyncOnUiThread = invokeAsyncOnUiThread;
             frontierfolder = GetDefaultJournalDir();
@@ -86,7 +82,7 @@ namespace EliteDangerousCore
 
         #region Start stop and scan
 
-        public void StartMonitor()
+        public void StartMonitor(bool storetodb)
         {
             StopRequested = new ManualResetEvent(false);
             ScanThread = new Thread(ScanThreadProc) { Name = "Journal Monitor Thread", IsBackground = true };
@@ -94,7 +90,7 @@ namespace EliteDangerousCore
 
             foreach (JournalMonitorWatcher mw in watchers)
             {
-                mw.StartMonitor();
+                mw.StartMonitor(storetodb);
             }
 
             foreach (StatusMonitorWatcher mw in statuswatchers)
@@ -180,8 +176,6 @@ namespace EliteDangerousCore
                         if (stopRequested.WaitOne(0))
                             return;
 
-                        System.Diagnostics.Trace.WriteLine(string.Format("New entry {0} {1}", ent.EventTimeUTC, ent.EventTypeStr));
-
                         OnNewJournalEntry?.Invoke(ent);
                     }
                 }
@@ -205,8 +199,12 @@ namespace EliteDangerousCore
 
         #region History refresh calls this for a set up of watchers.. then a global reparse of all journal event folders during load history
 
-        public void SetupWatchers(bool storejsoninje = false)
+        // call to update/create watchers on joutnal and UI.  Do it with system stopped
+
+        public void SetupWatchers()
         {
+            System.Diagnostics.Debug.Assert(ScanThread == null);        // double check we are not scanning.
+
             List<EDCommander> listCommanders = EDCommander.GetListCommanders();
 
             // add the default frontier folder in
@@ -216,7 +214,7 @@ namespace EliteDangerousCore
                 if (watchers.FindIndex(x => x.WatcherFolder.Equals(frontierfolder)) < 0)  // and we are not watching it..
                 {
                     System.Diagnostics.Trace.WriteLine(string.Format("New watch on {0}", frontierfolder));
-                    JournalMonitorWatcher mw = new JournalMonitorWatcher(frontierfolder, storejsoninje);
+                    JournalMonitorWatcher mw = new JournalMonitorWatcher(frontierfolder);
                     watchers.Add(mw);
 
                     StatusMonitorWatcher sw = new StatusMonitorWatcher(frontierfolder, ScanTick);
@@ -236,7 +234,7 @@ namespace EliteDangerousCore
                     continue;       // already done
 
                 System.Diagnostics.Trace.WriteLine(string.Format("New watch on {0}", datapath));
-                JournalMonitorWatcher mw = new JournalMonitorWatcher(datapath, storejsoninje);
+                JournalMonitorWatcher mw = new JournalMonitorWatcher(datapath);
                 watchers.Add(mw);
 
                 StatusMonitorWatcher sw = new StatusMonitorWatcher(datapath, ScanTick);
@@ -298,13 +296,20 @@ namespace EliteDangerousCore
             }
         }
 
-        public void ParseJournalFilesOnWatchers(Action<int, string> updateProgress, bool forceReload = false, bool forceLastReload = false, Action<JournalEntry> firebacknostore = null)
+        // Go thru all watchers and check to see if any new files have been found, if so, process them and either store to DB or fireback
+        // options to force reload of last N files, to fireback instead of storing the last n
+
+        public void ParseJournalFilesOnWatchers(Action<int, string> updateProgress, 
+                                                int reloadlastn,
+                                                Action<JournalEntry, int, int, int, int> firebacknostore = null, int firebacklastn = 0)
         {
+            System.Diagnostics.Debug.Assert(ScanThread == null);        // double check we are not scanning.
+
             for (int i = 0; i < watchers.Count; i++)             // parse files of all folders being watched
             {
                 // may create new commanders at the end, but won't need any new watchers, because they will obv be in the same folder
-                var list = watchers[i].ScanJournalFiles(forceReload, forceLastReload);    
-                watchers[i].ProcessDetectedNewFiles(list, updateProgress, firebacknostore);
+                var list = watchers[i].ScanJournalFiles(reloadlastn);    
+                watchers[i].ProcessDetectedNewFiles(list, updateProgress, firebacknostore, firebacklastn );
             }
         }
 

@@ -15,7 +15,7 @@
  */
 
 using EliteDangerousCore;
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
@@ -42,8 +42,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 jo = jnew;      // replace current
                 Rescan(jo);
-                if (JsonCached != null)
-                    JsonCached = jo;
+                UpdateJson(jo);
             }
             return jnew != null;
         }

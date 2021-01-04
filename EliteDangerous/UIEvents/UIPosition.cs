@@ -34,26 +34,28 @@ namespace EliteDangerousCore.UIEvents
 
         public Position Location { get; private set; }
 
+        public const double InvalidValue = -999999;    // change to make it more JSON friendly
+
         // you MAY not get heading.
 
         public double Heading { get; private set; }
-        public bool ValidHeading { get { return Heading != double.MinValue; } }
+        public bool ValidHeading { get { return Heading != InvalidValue; } }
 
         public double PlanetRadius { get; private set; }
-        public bool ValidRadius { get { return PlanetRadius != double.MinValue; } }
+        public bool ValidRadius { get { return PlanetRadius != InvalidValue; } }
 
         public class Position
         {
             public Position()
             {
-                Latitude = Longitude = Altitude = double.MinValue;
+                Latitude = Longitude = Altitude = InvalidValue;
                 AltitudeFromAverageRadius = false;
             }
 
             // you MAY get position without Altitude.. seen in SRV it doing that.  Code defensively
 
-            public bool ValidPosition { get { return Latitude != double.MinValue && Latitude != double.MinValue; } }
-            public bool ValidAltitude { get { return Altitude != double.MinValue; } }
+            public bool ValidPosition { get { return Latitude != InvalidValue && Latitude != InvalidValue; } }
+            public bool ValidAltitude { get { return Altitude != InvalidValue; } }
 
             public double Latitude;
             public double Longitude;

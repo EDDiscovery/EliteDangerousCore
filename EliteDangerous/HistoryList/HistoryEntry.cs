@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 - 2018 EDDiscovery development team
+ * Copyright © 2016 - 2020 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -14,13 +14,12 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
+using EliteDangerousCore.DB;
+using EliteDangerousCore.EDSM;
+using EliteDangerousCore.JournalEvents;
 using System;
 using System.Diagnostics;
 using System.Linq;
-using EliteDangerousCore.DB;
-using EliteDangerousCore.JournalEvents;
-using EliteDangerousCore.EDSM;
-using System.Data.Common;
 
 namespace EliteDangerousCore
 {
@@ -49,7 +48,7 @@ namespace EliteDangerousCore
         public DateTime EventTimeUTC { get { return journalEntry.EventTimeUTC; } }  // local removed to stop us using it!.
         public TimeSpan AgeOfEntry() { return DateTime.UtcNow - EventTimeUTC; }
 
-        public string EventSummary { get { return journalEntry.SummaryName(System);} }
+        public string EventSummary { get { return journalEntry.SummaryName(System); } }
 
         public bool EdsmSync { get { return journalEntry.SyncedEDSM; } }           // flag populated from journal entry when HE is made. Have we synced?
         public bool EDDNSync { get { return journalEntry.SyncedEDDN; } }
@@ -75,7 +74,7 @@ namespace EliteDangerousCore
         public string WhereAmI { get { return EntryStatus.StationName ?? EntryStatus.BodyName ?? "Unknown"; } }
         public string BodyType { get { return EntryStatus.BodyType ?? "Unknown"; } }
         public string ShipType { get { return EntryStatus.ShipType ?? "Unknown"; } }         // NOT FD - translated name
-        public string ShipTypeFD {  get { return EntryStatus.ShipTypeFD ?? "unknown";  } }
+        public string ShipTypeFD { get { return EntryStatus.ShipTypeFD ?? "unknown"; } }
         public int ShipId { get { return EntryStatus.ShipID; } }
         public bool MultiPlayer { get { return EntryStatus.OnCrewWithCaptain != null; } }
         public string GameMode { get { return EntryStatus.GameMode ?? ""; } }
@@ -83,6 +82,17 @@ namespace EliteDangerousCore
         public string GameModeGroup { get { return GameMode + (String.IsNullOrEmpty(Group) ? "" : (":" + Group)); } }
         public bool Wanted { get { return EntryStatus.Wanted; } }
         public long? MarketID { get { return EntryStatus.MarketId; } }
+        public int? BodyID { get { return EntryStatus.BodyID; } }           // NOTE -1 is used for no body, as well as null
+        public bool HasBodyID { get { return EntryStatus.HasBodyID; } }
+        public string StationFaction { get { return EntryStatus.StationFaction; } }
+        public int Visits { get; set; }                                     // set by Historylist, visits up to this point in time
+
+        public long? FullBodyID { get {                                     // only if at a body
+                if (System.SystemAddress.HasValue && HasBodyID)
+                    return System.SystemAddress.Value | ((long)EntryStatus.BodyID.Value << 55);
+                else
+                    return null;
+            }}
 
         public string DebugStatus { get {      // Use as a replacement for note in travel grid to debug
                 return
@@ -109,9 +119,10 @@ namespace EliteDangerousCore
         // Calculated values, not from JE
 
         public MaterialCommoditiesList MaterialCommodity { get; private set; }
-        public ShipInformation ShipInformation { get; set; }     // may be null if not set up yet
-        public ModulesInStore StoredModules { get; set; }
-        public MissionList MissionList { get; set; }
+        public ShipInformation ShipInformation { get; private set; }     // may be null if not set up yet
+        public ModulesInStore StoredModules { get; private set; }
+        public MissionList MissionList { get; private set; }
+        public Stats Stats { get; private set; }
 
         public SystemNoteClass snc;     // system note class found attached to this entry. May be null
 
@@ -130,12 +141,10 @@ namespace EliteDangerousCore
         {
         }
 
-        public static HistoryEntry FromJournalEntry(JournalEntry je, HistoryEntry prev, bool checkdbforunknownsystem , out bool journalupdate)
+        public static HistoryEntry FromJournalEntry(JournalEntry je, HistoryEntry prev)
         {
             ISystem isys = prev == null ? new SystemClass("Unknown") : prev.System;
             int indexno = prev == null ? 1 : prev.Indexno + 1;
-
-            journalupdate = false;
 
             if (je.EventTypeID == JournalTypeEnum.Location || je.EventTypeID == JournalTypeEnum.FSDJump || je.EventTypeID == JournalTypeEnum.CarrierJump)
             {
@@ -147,7 +156,7 @@ namespace EliteDangerousCore
                 {
                     newsys = new SystemClass(jl.StarSystem, jl.StarPos.X, jl.StarPos.Y, jl.StarPos.Z)
                     {
-                        EDSMID = jl.EdsmID < 0 ? 0 : jl.EdsmID,       // pass across the EDSMID for the lazy load process.
+                        EDSMID = 0,         // not an EDSM entry
                         SystemAddress = jl.SystemAddress,
                         Population = jl.Population ?? 0,
                         Faction = jl.Faction,
@@ -158,7 +167,7 @@ namespace EliteDangerousCore
                         PrimaryEconomy = jl.EDEconomy,
                         Power = jl.PowerList,
                         PowerState = jl.PowerplayState,
-                        source = jl.StarPosFromEDSM ? SystemSource.FromEDSM : SystemSource.FromJournal,
+                        Source = jl.StarPosFromEDSM ? SystemSource.FromEDSM : SystemSource.FromJournal,
                     };
 
                     SystemCache.FindCachedJournalSystem(newsys);
@@ -176,49 +185,7 @@ namespace EliteDangerousCore
                     // JumpStart still gets the system when the FSD loc is processed, see above.
                     // Jumpstart was also screwing about with the EDSM ID fill in which was broken.  This is now working again.
 
-                    // Default one
-                    newsys = new SystemClass(jl.StarSystem);         // this will be a synthesised one, unless we find an EDSM to replace it
-                    newsys.EDSMID = je.EdsmID;
-
-                    ISystem s = checkdbforunknownsystem ? SystemCache.FindSystem(newsys) : null;      // did we find it?
-
-                    if (s != null)                                  // found a system..
-                    {
-                        if (jl != null && jl.HasCoordinate)         // if journal Loc, and journal has a star position, use that instead of EDSM..
-                        {
-                            s.X = Math.Round(jl.StarPos.X * 32.0) / 32.0;
-                            s.Y = Math.Round(jl.StarPos.Y * 32.0) / 32.0;
-                            s.Z = Math.Round(jl.StarPos.Z * 32.0) / 32.0;
-                        }
-
-                        //Debug.WriteLine("HistoryList found system {0} {1}", s.id_edsm, s.name);
-                        newsys = s;
-
-                        if (jl != null && je.EdsmID <= 0 && newsys.EDSMID > 0) // only update on a JL..
-                        {
-                            journalupdate = true;
-                            Debug.WriteLine("HE EDSM ID update requested {0} {1}", newsys.EDSMID, newsys.Name);
-                        }
-                    }
-                    else
-                        newsys.EDSMID = -1;        // mark as checked but not found
-                }
-
-                JournalFSDJump jfsd = je as JournalFSDJump;
-
-                if (jfsd != null)
-                {
-                    if (jfsd.JumpDist <= 0 && isys.HasCoordinate && newsys.HasCoordinate) // if no JDist, its a really old entry, and if previous has a co-ord
-                    {
-                        jfsd.JumpDist = isys.Distance(newsys); // fill it out here
-
-                        if (jfsd.JumpDist > 0)
-                        {
-                            journalupdate = true;
-                            Debug.WriteLine("Je Jump distance update(3) requested {0} {1} {2}", newsys.EDSMID, newsys.Name, jfsd.JumpDist);
-                        }
-                    }
-
+                    newsys = new SystemClass(jl.StarSystem);         // this will be a synthesised one
                 }
 
                 isys = newsys;
@@ -237,14 +204,19 @@ namespace EliteDangerousCore
             return he;
         }
 
-        public void UpdateMaterials(JournalEntry je, HistoryEntry prev)
+        public void UpdateMaterialsCommodities(JournalEntry je, MaterialCommoditiesList prev)
         {
-            MaterialCommodity = MaterialCommoditiesList.Process(je, prev?.MaterialCommodity);
+            MaterialCommodity = MaterialCommoditiesList.Process(je, prev);
+        }
+
+        public void UpdateStats(JournalEntry je, Stats prev, string station)
+        {
+            Stats = Stats.Process(je, prev, station);
         }
 
         public void UpdateSystemNote()
         { 
-            snc = SystemNoteClass.GetSystemNote(Journalid, IsFSDCarrierJump, System);       // may be null
+            snc = SystemNoteClass.GetSystemNote(Journalid, IsFSDCarrierJump ?  System.Name : null);       // may be null
         }
 
         #endregion
@@ -254,13 +226,13 @@ namespace EliteDangerousCore
         public void SetJournalSystemNoteText(string text, bool commit, bool sendtoedsm)
         {
             if (snc == null || snc.Journalid == 0)           // if no system note, or its one on a system, from now on we assign journal system notes only from this IF
-                snc = SystemNoteClass.MakeSystemNote("", DateTime.Now, System.Name, Journalid, System.EDSMID, IsFSDCarrierJump);
+                snc = SystemNoteClass.MakeSystemNote("", DateTime.Now, System.Name, Journalid, IsFSDCarrierJump);
 
-            snc = snc.UpdateNote(text, commit, DateTime.Now, snc.EdsmId, IsFSDCarrierJump);        // and update info, and update our ref in case it has changed or gone null
-                                                                                            // remember for EDSM send purposes if its an FSD entry
+            snc = snc.UpdateNote(text, commit, DateTime.Now, IsFSDCarrierJump);        // and update info, and update our ref in case it has changed or gone null
+                                                                                       // remember for EDSM send purposes if its an FSD entry
 
-            if (snc != null && commit && sendtoedsm && snc.FSDEntry)                    // if still have a note, and commiting, and send to esdm, and FSD jump
-                EDSMClass.SendComments(snc.SystemName, snc.Note, snc.EdsmId);
+            if (snc != null && commit && sendtoedsm && snc.FSDEntry)                   // if still have a note, and commiting, and send to esdm, and FSD jump
+                EDSMClass.SendComments(snc.SystemName, snc.Note);
         }
 
         public bool IsJournalEventInEventFilter(string[] events)
@@ -291,6 +263,21 @@ namespace EliteDangerousCore
         public void UpdateShipInformation(ShipInformation si)       // something externally updated SI
         {
             ShipInformation = si;
+        }
+
+        public void UpdateShipStoredModules( ModulesInStore ms )
+        {
+            StoredModules = ms;
+        }
+
+        public void UpdateMissionList(MissionList ml)
+        {
+            MissionList = ml;
+        }
+
+        public void UpdateMaterialCommodity(MaterialCommoditiesList mc)
+        {
+            MaterialCommodity = mc;
         }
 
         #endregion

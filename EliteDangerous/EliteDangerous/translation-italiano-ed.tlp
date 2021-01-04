@@ -1,110 +1,57 @@
 ﻿
 SECTION Bodies
 
-.HMS: "Luminous Hot Main Sequence {0} star" @
-.BMS: "Luminous Blue Main Sequence {0} star" @
-.BWMS: "Bluish-White Main Sequence {0} star" @
-.WMS: "White Main Sequence {0} star" @
-.YMS: "Yellow Main Sequence {0} star" @
-.OMS: "Orange Main Sequence {0} star" @
-.RMS: "Red Main Sequence {0} star" @
-.DRNS: "Dark Red Non Main Sequence {0} star" @
-.MD: "Methane Dwarf star" @
-.BD: "Brown Dwarf star" @
-.WR: "Wolf-Rayet {0} star" @
-.C: "Carbon {0} star" @
-.IZ: "Intermediate low Zirconium Monoxide Type star" @
-.CGZ: "Cool Giant Zirconium Monoxide rich Type star" @
-.WD: "White Dwarf {0} star" @
+.HMS: "Luminous Hot Main Sequence {0} star" => "Stella luminosa calda di sequenza-principale"
+.BMS: "Luminous Blue Main Sequence {0} star" => "Stella luminosa blu di sequenza-principale"
+.BWMS: "Bluish-White Main Sequence {0} star" => "Stella biano-blu di sequenza-principale"
+.WMS: "White Main Sequence {0} star" => "Stella bianca di sequenza-principale"
+.YMS: "Yellow Main Sequence {0} star" => "Stella gialla di sequenza-principale"
+.OMS: "Orange Main Sequence {0} star" => "Stella arancione di sequenza-principale"
+.RMS: "Red Main Sequence {0} star" => "Stella rossa di sequenza-principale"
+.DRNS: "Dark Red Non Main Sequence {0} star" => "Stella rosso scura"
+.MD: "Methane Dwarf star" => "Stella nana di metano"
+.BD: "Brown Dwarf star" => "Stella nana marrone"
+.WR: "Wolf-Rayet {0} star" => "Stella Wolf-Rayet"
+.C: "Carbon {0} star" => "Stella al carbonio"
+.IZ: "Intermediate low Zirconium Monoxide Type star" => "Stella intermediaria a basso tenore di Monossido di Zirconio"
+.CGZ: "Cool Giant Zirconium Monoxide rich Type star" => "Stella gigante fredda a alto tenore di Monossido di Zirconio"
+.WD: "White Dwarf {0} star" => "Nana bianca"
 .NS: "Neutron Star" @
-.BH: "Black Hole" @
-.EX: "Exotic" @
-.SMBH: "Super Massive Black Hole" @
-.BSG: "Blue White Super Giant" @
-.WSG: "F White Super Giant" @
-.MSR: "M Red Super Giant" @
-.MOG: "M Red Giant" @
-.KOG: "K Orange Giant" @
-.RP: "Rogue Planet" @
-.UNK: "Class {0} star" @
-.Herbig: "Herbig Ae/Be" @
-.TTauri: "T Tauri" @
-
-SECTION EDStar
-
-.O: "O (Blue-White) Star" @
-.B: "B (Blue-White) Star" @
-.BBlueWhiteSuperGiant: "B (Blue-White super giant) Star" @
-.A: "A (Blue-White) Star" @
-.ABlueWhiteSuperGiant: "A (Blue-White super giant) Star" @
-.F: "F (White) Star" @
-.FWhiteSuperGiant: "F (White super giant) Star" @
-.G: "G (White-Yellow) Star" @
-.GWhiteSuperGiant: "G (White-Yellow super giant) Star" @
-.K: "K (Yellow-Orange) Star" @
-.KOrangeGiant: "K (Yellow-Orange giant) Star" @
-.M: "M (Red dwarf) Star" @
-.MRedGiant: "M (Red giant) Star" @
-.MRedSuperGiant: "M (Red super giant) Star" @
-.L: "L (Brown dwarf) Star" @
-.T: "T (Brown dwarf) Star" @
-.Y: "Y (Brown dwarf) Star" @
-.TTS: "T Tauri Star" @
-.AeBe: "Herbig Ae/Be Star" @
-.W: "Wolf-Rayet Star" @
-.WN: "Wolf-Rayet N Star" @
-.WNC: "Wolf-Rayet NC Star" @
-.WC: "Wolf-Rayet C Star" @
-.WO: "Wolf-Rayet O Star" @
-.CS: "CS Star" @
-.C: "C Star" @
-.CN: "CN Star" @
-.CJ: "CJ Star" @
-.CHd: "CHd Star" @
-.MS: "MS-type Star" @
-.S: "S-type Star" @
-.D: "White Dwarf (D) Star" @
-.DA: "White Dwarf (DA) Star" @
-.DAB: "White Dwarf (DAB) Star" @
-.DAO: "White Dwarf (DAO) Star" @
-.DAZ: "White Dwarf (DAZ) Star" @
-.DAV: "White Dwarf (DAV) Star" @
-.DB: "White Dwarf (DB) Star" @
-.DBZ: "White Dwarf (DBZ) Star" @
-.DBV: "White Dwarf (DBV) Star" @
-.DO: "White Dwarf (DO) Star" @
-.DOV: "White Dwarf (DOV) Star" @
-.DQ: "White Dwarf (DQ) Star" @
-.DC: "White Dwarf (DC) Star" @
-.DCV: "White Dwarf (DCV) Star" @
-.DX: "White Dwarf (DX) Star" @
-.N: "Neutron Star" @
-.H: "Black Hole" @
-.SuperMassiveBlackHole: "Supermassive Black Hole" @
-.Unknown: "Unknown star type" @
+.BH: "Black Hole" => "Buco nero"
+.EX: "Exotic" => "Corpo stellare esotico"
+.SMBH: "Super Massive Black Hole" => "Buco nero super massiccio"
+.BSG: "Blue White Super Giant" => "Stella super gigante bianco-blu"
+.WSG: "F White Super Giant" => "Stella"
+.MSR: "M Red Super Giant" => "Stella super gigante rossa"
+.MOG: "M Red Giant" => "Stella gigante rossa"
+.KOG: "K Orange Giant" => "Stella gigante arancione"
+.RP: "Rogue Planet" => "Pianeta errante"
+.UNK: "Class {0} star" => "Stella di classe {0}"
+.Herbig: "Herbig Ae/Be" => "Stella HErbig Ae/Be"
+.TTauri: "T Tauri" => "Stella T Tauri"
 
 SECTION EDPlanet
 
-.Metalrichbody: "Metal-rich body" @
-.Highmetalcontentbody: "High metal content world" @
-.Rockybody: "Rocky body" @
-.Icybody: "Icy body" @
-.Rockyicebody: "Rocky ice world" @
-.Earthlikebody: "Earth-like world" @
-.Waterworld: "Water world" @
-.Ammoniaworld: "Ammonia world" @
-.Watergiant: "Water giant" @
-.Watergiantwithlife: "Water giant with life" @
-.Gasgiantwithwaterbasedlife: "Gas giant with water-based life" @
-.Gasgiantwithammoniabasedlife: "Gas giant with ammonia-based life" @
-.SudarskyclassIgasgiant: "Class I gas giant" @
-.SudarskyclassIIgasgiant: "Class II gas giant" @
-.SudarskyclassIIIgasgiant: "Class III gas giant" @
-.SudarskyclassIVgasgiant: "Class IV gas giant" @
-.SudarskyclassVgasgiant: "Class V gas giant" @
-.Heliumrichgasgiant: "Helium-rich gas giant" @
-.Heliumgasgiant: "Helium gas giant" @
-.Unknown: "Unknown planet type" @
+.Metalrichbody: "Metal-rich body" => "Corpo ricco in metalli"
+.Highmetalcontentbody: "High metal content world" => "Mondo ad alto contenuto di metalli"
+.Rockybody: "Rocky body" => "Corpo roccioso"
+.Icybody: "Icy body" => "Corpo di gelo"
+.Rockyicebody: "Rocky ice world" => "Corpo di gelo e roccia"
+.Earthlikebody: "Earth-like world" => "Mondo di tipo terrestre"
+.Waterworld: "Water world" => "Mondo acquatico"
+.Ammoniaworld: "Ammonia world" => "Mondo di ammonia"
+.Watergiant: "Water giant" => "Gigante acquoso"
+.Watergiantwithlife: "Water giant with life" => "Gigante acquoso con vita"
+.Gasgiantwithwaterbasedlife: "Gas giant with water-based life" => "Gigante gassoso con vita a base di acqua"
+.Gasgiantwithammoniabasedlife: "Gas giant with ammonia-based life" => "Gigante gassoso con vita a base di ammonia"
+.SudarskyclassIgasgiant: "Class I gas giant" => "Gigante gassoso di tipo I"
+.SudarskyclassIIgasgiant: "Class II gas giant" => "Gigante gassoso di tipo II"
+.SudarskyclassIIIgasgiant: "Class III gas giant" => "Gigante gassoso di tipo III"
+.SudarskyclassIVgasgiant: "Class IV gas giant" => "Gigante gassoso di tipo IV"
+.SudarskyclassVgasgiant: "Class V gas giant" => "Gigante gassoso di tipo V"
+.Heliumrichgasgiant: "Helium-rich gas giant" => "Gigante gassoso ricco in Elio"
+.Heliumgasgiant: "Helium gas giant" => "=> "
+.Unknown: "Unknown planet type" => "Classe planetaria sconosciuta"
 
 SECTION MaterialCommodityData
 
@@ -700,16 +647,19 @@ SECTION MaterialCommodityData
 .ManufacturedCrystals: "Manufactured Crystals" @
 .ManufacturedAlloys: "Manufactured Alloys" @
 .NA: "NA" @
+.tritium: "Tritium" @
+.s6_tissuesample_mesoglea: "Pod Mesoglea" @
+.s6_tissuesample_cells: "Pod Outer Tissue" @
 
 SECTION EngineeringData
 
-.Engineer: "Engineer:" @
-.Blueprint: "Blueprint:" @
-.Level: "Level:" @
-.Quality: "Quality:" @
-.ExperimentalEffect: "Experimental Effect:" @
-.Original: "Original:;;N2" @
-.Worse: "< (Worse); (Better)" @
+.Engineer: "Engineer:" => "Ingegnere"
+.Blueprint: "Blueprint:" => "Progetto"
+.Level: "Level:" => "Livello"
+.Quality: "Quality:" => "Qualità"
+.ExperimentalEffect: "Experimental Effect:" => "Effetto sperimental"
+.Original: "Original:;;N2" => "Originale:;;N2"
+.Worse: "< (Worse); (Better)" => "< (Peggiore); (Migliore)"
 
 SECTION MissionState
 

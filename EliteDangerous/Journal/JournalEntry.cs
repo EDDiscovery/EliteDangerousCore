@@ -16,7 +16,7 @@
 
 using EliteDangerousCore.DB;
 using EliteDangerousCore.JournalEvents;
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -28,7 +28,7 @@ using System.Linq;
 
 namespace EliteDangerousCore
 {
-    [DebuggerDisplay("Event {EventTypeStr} {EventTimeUTC} EdsmID {EdsmID} JID {Id} C {CommanderId}")]
+    [DebuggerDisplay("Event {EventTypeStr} {EventTimeUTC} JID {Id} C {CommanderId}")]
     public abstract partial class JournalEntry
     {
         #region Public Instance properties and fields
@@ -44,8 +44,6 @@ namespace EliteDangerousCore
         public string GetIconPackPath { get { return "Journal." + IconEventType.ToString(); } } // its icon pack name..
 
         public DateTime EventTimeUTC { get; set; }
-
-        public long EdsmID { get; protected set; }                      // 0 = unassigned, >0 = assigned
 
         public DateTime EventTimeLocal { get { return EventTimeUTC.ToLocalTime(); } }
 
@@ -68,8 +66,6 @@ namespace EliteDangerousCore
             }
         }
 
-        public JObject JsonCached { get; set; }             // EDD does not use this, EDDLite uses this to keep JSON.
-
         public abstract void FillInformation(out string info, out string detailed);     // all entries must implement
 
         // the long name of it, such as Approach Body. May be overridden, is translated
@@ -91,11 +87,6 @@ namespace EliteDangerousCore
         public void SetCommander(int cmdr)         // used during log reading..
         {
             CommanderId = cmdr;
-        }
-
-        public void SetEDSMId(long edsmid)          // used if edsm id is changed
-        {
-            EdsmID = edsmid;
         }
 
         #endregion
@@ -221,18 +212,17 @@ namespace EliteDangerousCore
 
             try
             {
-                jo = (JObject)JObject.Parse(text);
+                jo = JObject.ParseThrowCommaEOL(text);
+                return CreateJournalEntry(jo);
             }
             catch (Exception ex)
             {
                 Trace.WriteLine($"Error parsing journal entry\n{text}\n{ex.ToString()}");
                 return new JournalUnknown(new JObject());
             }
-
-            return CreateJournalEntry(jo);
         }
 
-        static public JournalEntry CreateJournalEntry(JObject jo)
+        static public JournalEntry CreateJournalEntry(JObject jo, bool savejson = false)
         {
             string Eventstr = jo["event"].StrNull();
 
@@ -250,6 +240,9 @@ namespace EliteDangerousCore
                 else
                     ret = (JournalEntry)Activator.CreateInstance(jtype, jo);
             }
+
+            if (savejson)
+                ret.JsonCached = jo;
 
             return ret;
         }
@@ -372,14 +365,14 @@ namespace EliteDangerousCore
         {
             JObject jcopy = null;
 
-            foreach (JProperty prop in obj.Properties().ToList())
+            foreach (var kvp in obj)
             {
-                if (prop.Name.StartsWith("EDD") || prop.Name.Equals("StarPosFromEDSM"))//|| (removeLocalised && prop.Name.EndsWith("_Localised")))
+                if (kvp.Key.StartsWith("EDD") || kvp.Key.Equals("StarPosFromEDSM"))
                 {
                     if (jcopy == null)      // only pay the expense if it has one of the entries in it
-                        jcopy = (JObject)obj.DeepClone();
+                        jcopy = (JObject)obj.Clone();
 
-                    jcopy.Remove(prop.Name);
+                    jcopy.Remove(kvp.Key);
                 }
             }
 
@@ -415,40 +408,58 @@ namespace EliteDangerousCore
             JObject ent1jorm = RemoveEDDGeneratedKeys(ent1jo);     // remove keys, but don't alter originals as they can be used later 
             JObject ent2jorm = RemoveEDDGeneratedKeys(ent2jo);
 
-            return JToken.DeepEquals(ent1jorm, ent2jorm);
+            bool res = JToken.DeepEquals(ent1jorm, ent2jorm);
+            //if (!res) System.Diagnostics.Debug.WriteLine("!! Not duplicate {0} vs {1}", ent1jorm.ToString(), ent2jorm.ToString()); else  System.Diagnostics.Debug.WriteLine("Duplicate");
+            return res;
         }
 
         protected JObject ReadAdditionalFile( string extrafile, bool waitforfile, bool checktimestamptype )       // read file, return new JSON
         {
-            for (int retries = 0; retries < 25 ; retries++)
+            for (int retries = 0; retries < 25*4 ; retries++)
             {
-                try
+                // this has the full version of the event, including data, at the same timestamp
+                string json = BaseUtils.FileHelpers.TryReadAllTextFromFile(extrafile);      // null if not there, or locked..
+
+                // decode into JObject if there, null if in error or not there
+                JObject joaf = json != null ? JObject.Parse(json, JToken.ParseOptions.AllowTrailingCommas | JToken.ParseOptions.CheckEOL) : null;
+
+                if (joaf != null)
                 {
-                    string json = System.IO.File.ReadAllText(extrafile);        // try the current file
-
-                    if (json != null)
+                    string newtype = joaf["event"].Str();
+                    DateTime fileUTC = joaf["timestamp"].DateTimeUTC();
+                    if (newtype != EventTypeStr || fileUTC == DateTime.MinValue)
                     {
-                        JObject joaf = JObject.Parse(json);       // this has the full version of the event, including data, at the same timestamp
-
-                        string newtype = joaf["event"].Str();
-                        DateTime newUTC = DateTime.Parse(joaf.Value<string>("timestamp"), System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeUniversal | System.Globalization.DateTimeStyles.AdjustToUniversal);
-
-                        if (checktimestamptype == false || (newUTC != null && newUTC == EventTimeUTC && newtype == EventTypeStr))
+                        System.Diagnostics.Debug.WriteLine($"Rejected {extrafile} due to type/bad date, deleting");
+                        BaseUtils.FileHelpers.DeleteFileNoError(extrafile);     // may be corrupt..
+                        return null;
+                    }
+                    else
+                    {
+                        if (fileUTC > EventTimeUTC)
                         {
+                          //  System.Diagnostics.Debug.WriteLine($"File is younger than Event, can't be associated {extrafile}");
+                            return null;
+                        }
+                        else if (checktimestamptype == false || fileUTC == EventTimeUTC)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Read {extrafile} at {fileUTC} after {retries}");
                             return joaf;                        // good current file..
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine($"File not written yet due to timestamp {extrafile} at {fileUTC}, waiting.. {retries}");
                         }
                     }
                 }
-                catch (Exception ex)
+                else
                 {
-                    System.Diagnostics.Trace.WriteLine($"Unable to read extra info from {extrafile}: {ex.Message}");
+                    System.Diagnostics.Debug.WriteLine($"Cannot read {extrafile}, waiting.. {retries}");
                 }
 
                 if (!waitforfile)               // if don't wait, continue with no return
                     return null;
 
-                System.Diagnostics.Debug.WriteLine("Current file is not the right one, waiting for it to appear.." + retries);
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(25);
             }
 
             return null;

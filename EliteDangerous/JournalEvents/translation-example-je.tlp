@@ -210,15 +210,30 @@ SECTION JournalTypeEnum
 .ReservoirReplenished: "Reservoir Replenished" @
 .SquadronStartup: "Squadron Startup" @
 .ICONIDsStart: "ICONI Ds Start" @
+.CarrierBankTransfer: "Carrier Bank Transfer" @
+.CarrierBuy: "Carrier Buy" @
+.CarrierCancelDecommission: "Carrier Cancel Decommission" @
+.CarrierCrewServices: "Carrier Crew Services" @
+.CarrierDecommission: "Carrier Decommission" @
+.CarrierDepositFuel: "Carrier Deposit Fuel" @
+.CarrierDockingPermission: "Carrier Docking Permission" @
+.CarrierFinance: "Carrier Finance" @
+.CarrierJumpRequest: "Carrier Jump Request" @
+.CarrierJump: "Carrier Jump" @
+.CarrierModulePack: "Carrier Module Pack" @
+.CarrierShipPack: "Carrier Ship Pack" @
+.CarrierStats: "Carrier Stats" @
+.CarrierTradeOrder: "Carrier Trade Order" @
+.CarrierNameChange: "Carrier Name Change" @
+.CarrierJumpCancelled: "Carrier Jump Cancelled" @
+.CargoTransfer: "Cargo Transfer" @
+.NavRoute: "Nav Route" @
+
 
 SECTION JournalCargo
 
 .CargoShip: "Ship" @
 .CargoSRV: "SRV" @
-
-SECTION JournalFSSDiscoveryScan
-
-.Others: "Others:" @
 
 SECTION JournalCodexEntry
 
@@ -259,8 +274,9 @@ SECTION FSSSignal
 .StationBool: ";Station" @
 
 SECTION JournalFSSDiscoveryScan
-
 .Progress: "Progress:;%;N1" @
+.Bodies: "Bodies:" @
+.Others: "Others:" @
 
 SECTION JournalFSSSignalDiscovered
 
@@ -502,6 +518,7 @@ SECTION JournalScan
 .Ring: "Ring" @
 .Rings: "Rings" @
 .EV: "Base Estimated value: {0:N0}" @
+.EVM: "Mapped value: {0:N0}/{1:N0}e" @
 .DB: "Discovered by {0} on {1}" @
 .HabitableZoneApprox: "Habitable Zone Approx. {0} ({1}-{2} AU)\n" @
 .Othersstarsnotconsidered: " - Others stars not considered\n" @
@@ -626,6 +643,7 @@ SECTION BankAccountClass
 .SpendonAmmo: "Spent on Ammo:;cr;N0" @
 .InsuranceClaims: "Insurance Claims:;;N0" @
 .SpentonInsurance: "Spent on Insurance:;cr;N0" @
+.OwnedShipCount: "Owned ships" @
 
 SECTION CombatClass
 
@@ -680,13 +698,16 @@ SECTION ExplorationClass
 .NoofJumps: "No of Jumps:;;N0" @
 .GreatestDistance: "Greatest Distance:;;N0" @
 .TimePlayed: "Time Played:" @
+.EfficientScans: "Efficient Scans:;;N0" @
 
 SECTION PassengerMissionsClass
 
+.Accepted: "Accepted:;;N0" @
 .BulkMissionPassengers: "Bulk Mission Passengers:;;N0" @
 .VIPMissionPassengers: "VIP Mission Passengers:;;N0" @
 .PassengersDelivered: "Passengers Delivered:;;N0" @
 .PassengersEjected: "Passengers Ejected:;;N0" @
+.PassengersDisgrunted: "Passengers Disgrunted:;;N0" @
 
 SECTION SearchAndRescueClass
 
@@ -764,12 +785,17 @@ SECTION JournalUnknown
 
 .UnhandledJournalevent: "Unhandled Journal event, Report to EDDiscovery team. " @
 
+SECTION JournalNavRoute
+.Jumps: "{0} jumps: " @
+
 SECTION JournalApproachBody
 
 .In: "In " @
 
 SECTION JournalEntry
 
+.Hyperspace: "Hyperspace" @
+.Supercruise: "Supercruise" @
 .LegBounty: "{0} total {1:N0}" @
 .Target: "Target:" @
 .Victimfaction: "Victim faction:" @
@@ -934,6 +960,44 @@ SECTION JournalEntry
 .Ships: "Ships" @
 .Distance: "Distance:; ly;0.0" @
 .Threat: "Threat:" @
-.RemaingJumps: "Remaining Jumps" @
+.RemainingJumps: "Remaining Jumps" @
 .Nearest: "Nearest:" @
+.Old: "Old:" @
+.New: "New:" @
+
+SECTION JournalCarrierJump
+.JumpedWith: "Jumped with carrier {0} to {1}" @
+
+SECTION JournalCarrier
+.At: "At " @
+.Callsign: "Call Sign:" @
+.Name: "Name:" @
+.JumpRange: "Jump Range:;ly;0.0" @
+.Balance: "Carrier Balance:; cr;N0" @
+.ReserveBalance: "Reserve Balance:; cr;N0" @
+.AvailableBalance: "Available Balance:; cr;N0" @
+.ReservePercent: "Reserve Percent:;;N1" @
+.TaxRate: "Tax Rate:;;N1" @
+.TotalCapacity: "Total Capacity:" @
+.Crew: "Crew:" @
+.Cargo: "Cargo:" @
+.CargoReserved: "Cargo Space Reserved:" @
+.ShipPacks: "Ship Packs:" @
+.ModulePacks: "Module Packs:" @
+.FreeSpace: "Free Space:" @
+.ToSystem: "To " @
+.Body: "Body " @
+.Refund: "Refund:; cr;N0" @
+.RefundTime: "at UTC " @
+.Deposit: "Deposit:; cr;N0" @
+.Withdraw: "Withdraw:; cr;N0" @
+.Operation: "Operation:" @
+.Tier: "Tier:" @
+.Purchase: "Purchase:" @
+.Sell: "Sell:" @
+.CancelSell: "Cancel Sell of:" @
+.Access: "Access:" @
+.AllowNotorious: ";Allow Notorious" @
+.Amount: "Amount:;;N0" @
+.FuelLevel: "Fuel Level:;;N0" @
 

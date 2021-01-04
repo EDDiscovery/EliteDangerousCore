@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2019 EDDiscovery development team
+ * Copyright © 2016-2020 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -18,17 +18,11 @@ using EliteDangerousCore.DB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System.IO;
 
 namespace EliteDangerousCore
 {
-    public class JournalReaderEntry
-    {
-        public JournalEntry JournalEntry;
-        public JObject Json;
-    }
-
     public class EDJournalReader : TravelLogUnitLogReader
     {
         JournalEvents.JournalShipyard lastshipyard = null;
@@ -37,66 +31,57 @@ namespace EliteDangerousCore
         JournalEvents.JournalOutfitting lastoutfitting = null;
         JournalEvents.JournalMarket lastmarket = null;
         JournalEvents.JournalNavRoute lastnavroute = null;
+        JournalEvents.JournalCargo lastcargo = null;
+
         bool cqc = false;
         const int timelimit = 5 * 60;   //seconds.. 5 mins between logs. Note if we undock, we reset the counters.
-        bool StoreJsonInJE { get; set; } = false;
 
-        private Queue<JournalReaderEntry> StartEntries = new Queue<JournalReaderEntry>();
+        static JournalEvents.JournalContinued lastcontinued = null;
 
-        public EDJournalReader(string filename, bool storejson) : base(filename)
+        private Queue<JournalEntry> StartEntries = new Queue<JournalEntry>();
+
+        public EDJournalReader(string filename) : base(filename)
         {
-            StoreJsonInJE = storejson;
         }
 
-        public EDJournalReader(TravelLogUnit tlu, bool storejson) : base(tlu)
+        public EDJournalReader(TravelLogUnit tlu) : base(tlu)
         {
-            StoreJsonInJE = storejson;
         }
 
         // inhistoryrefreshparse = means reading history in batch mode
-        private JournalReaderEntry ProcessLine(string line, bool inhistoryrefreshparse, bool resetOnError)
+        // returns null if journal line is bad or its a repeat.. It does not throw
+        private JournalEntry ProcessLine(string line, bool inhistoryrefreshparse)
         {
-            int cmdrid = -2;        //-1 is hidden, -2 is never shown
-
-            if (TravelLogUnit.CommanderId.HasValue)
-            {
-                cmdrid = TravelLogUnit.CommanderId.Value;
-                // System.Diagnostics.Trace.WriteLine(string.Format("TLU says commander {0} at {1}", cmdrid, TravelLogUnit.Name));
-            }
+         //   System.Diagnostics.Debug.WriteLine("Line in '" + line + "'");
+            int cmdrid = TravelLogUnit.CommanderId.HasValue  ? TravelLogUnit.CommanderId.Value  : -2; //-1 is hidden, -2 is never shown
 
             if (line.Length == 0)
                 return null;
 
-            JObject jo = null;
+            JObject jo = JObject.Parse(line, JToken.ParseOptions.AllowTrailingCommas | JToken.ParseOptions.CheckEOL);  // parse, null if failed
+
+            if (jo == null)     // decode failed, gently return null
+            {
+                System.Diagnostics.Trace.WriteLine($"{TravelLogUnit.FullName} Bad journal line: {line}");
+                return null;
+            }
+
             JournalEntry je = null;
 
             try
-            {
-                jo = JObject.Parse(line);
-                je = JournalEntry.CreateJournalEntry(jo);
+            {           // use a try block in case anything in the creation goes tits up
+                je = JournalEntry.CreateJournalEntry(jo, true);
             }
             catch
             {
-                System.Diagnostics.Trace.WriteLine($"Bad journal line:\n{line}");
-
-                if (resetOnError)
-                {
-                    throw;
-                }
-                else
-                {
-                    return null;
-                }
+                je = null;
             }
 
             if (je == null)
             {
-                System.Diagnostics.Trace.WriteLine($"Bad journal line:\n{line}");
+                System.Diagnostics.Trace.WriteLine($"{TravelLogUnit.FullName} Bad journal creation: {line}");
                 return null;
             }
-
-            if (StoreJsonInJE)
-                je.JsonCached = jo;
 
             bool toosoon = false;
 
@@ -106,26 +91,41 @@ namespace EliteDangerousCore
 
                 if ((header.Beta && !EliteConfigInstance.InstanceOptions.DisableBetaCommanderCheck) || EliteConfigInstance.InstanceOptions.ForceBetaOnCommander) // if beta, and not disabled, or force beta
                 {
-                    TravelLogUnit.type |= TravelLogUnit.BetaMarker;
+                    TravelLogUnit.Type |= TravelLogUnit.BetaMarker;
                 }
 
                 if (header.Part > 1)
                 {
-                    JournalEvents.JournalContinued contd = JournalEntry.GetLast<JournalEvents.JournalContinued>(je.EventTimeUTC.AddSeconds(1), e => e.Part == header.Part);
-
-                    // Carry commander over from previous log if it ends with a Continued event.
-                    if (contd != null && Math.Abs(header.EventTimeUTC.Subtract(contd.EventTimeUTC).TotalSeconds) < 5 && contd.CommanderId >= 0)
+                    // if we have a last continued, and its header parts match, and it has a commander, and its not too different in time..
+                    if (lastcontinued != null && lastcontinued.Part == header.Part && lastcontinued.CommanderId >= 0 &&
+                            Math.Abs(header.EventTimeUTC.Subtract(lastcontinued.EventTimeUTC).TotalSeconds) < 5)
                     {
-                        TravelLogUnit.CommanderId = contd.CommanderId;
+                        cmdrid = lastcontinued.CommanderId;
+                        TravelLogUnit.CommanderId = lastcontinued.CommanderId;      // copy commander across.
+                    }
+                    else
+                    {           // this only works if you have a history... EDD does.
+                        JournalEvents.JournalContinued contd = JournalEntry.GetLast<JournalEvents.JournalContinued>(je.EventTimeUTC.AddSeconds(1), e => e.Part == header.Part);
+
+                        // Carry commander over from previous log if it ends with a Continued event.
+                        if (contd != null && Math.Abs(header.EventTimeUTC.Subtract(contd.EventTimeUTC).TotalSeconds) < 5 && contd.CommanderId >= 0)
+                        {
+                            cmdrid = lastcontinued.CommanderId;
+                            TravelLogUnit.CommanderId = contd.CommanderId;
+                        }
                     }
                 }
+            }
+            else if ( je.EventTypeID == JournalTypeEnum.Continued )
+            {
+                lastcontinued = je as JournalEvents.JournalContinued;       // save.. we are getting a new file soon
             }
             else if (je.EventTypeID == JournalTypeEnum.LoadGame)
             {
                 var jlg = je as JournalEvents.JournalLoadGame;
                 string newname = jlg.LoadGameCommander;
 
-                if ((TravelLogUnit.type & TravelLogUnit.BetaMarker) == TravelLogUnit.BetaMarker)
+                if ((TravelLogUnit.Type & TravelLogUnit.BetaMarker) == TravelLogUnit.BetaMarker)
                 {
                     newname = "[BETA] " + newname;
                 }
@@ -143,7 +143,7 @@ namespace EliteDangerousCore
                         EDCommander.Update(new List<EDCommander> { commander }, false);
                     }
                     else
-                        commander = EDCommander.Create(newname, null, EDJournalClass.GetDefaultJournalDir().Equals(TravelLogUnit.Path) ? "" : TravelLogUnit.Path);
+                        commander = EDCommander.Create(name:newname, journalpath:EDJournalUIScanner.GetDefaultJournalDir().Equals(TravelLogUnit.Path) ? "" : TravelLogUnit.Path);
 
                 }
 
@@ -151,22 +151,21 @@ namespace EliteDangerousCore
 
                 cmdrid = commander.Nr;
 
-                if (!TravelLogUnit.CommanderId.HasValue)
+                if (!TravelLogUnit.CommanderId.HasValue)        // we do not need to write to DB the TLU at this point, since we read something the upper layers will do that
                 {
                     TravelLogUnit.CommanderId = cmdrid;
-                    TravelLogUnit.Update();
-//                    System.Diagnostics.Trace.WriteLine(string.Format("TLU {0} updated with commander {1}", TravelLogUnit.Path, cmdrid));
+                    //System.Diagnostics.Trace.WriteLine(string.Format("TLU {0} updated with commander {1} at {2}", TravelLogUnit.Path, cmdrid, TravelLogUnit.Size));
                 }
             }
             else if (je is ISystemStationEntry && ((ISystemStationEntry)je).IsTrainingEvent)
             {
-                System.Diagnostics.Trace.WriteLine($"Training detected:\n{line}");
+                //System.Diagnostics.Trace.WriteLine($"{filename} Training detected:\n{line}");
                 return null;
             }
 
             if (je is IAdditionalFiles)
             {
-                if ((je as IAdditionalFiles).ReadAdditionalFiles(Path.GetDirectoryName(FileName), inhistoryrefreshparse, ref jo) == false)     // if failed
+                if ((je as IAdditionalFiles).ReadAdditionalFiles(TravelLogUnit.Path, inhistoryrefreshparse, ref jo) == false)     // if failed
                     return null;
             }
 
@@ -196,6 +195,16 @@ namespace EliteDangerousCore
                 toosoon = lastmarket != null && lastmarket.Equals(je as JournalEvents.JournalMarket);
                 lastmarket = je as JournalEvents.JournalMarket;
             }
+            else if ( je is JournalEvents.JournalCargo )
+            {
+                var cargo = je as JournalEvents.JournalCargo;
+                if ( lastcargo != null )
+                {
+                    toosoon = lastcargo.SameAs(cargo);     // if exactly the same, swallow.
+                    System.Diagnostics.Debug.WriteLine("Cargo vs last " + toosoon);
+                }
+                lastcargo = cargo;
+            }
             else if (je is JournalEvents.JournalUndocked || je is JournalEvents.JournalLoadGame)             // undocked, Load Game, repeats are cleared
             {
                 lastshipyard = null;
@@ -203,7 +212,8 @@ namespace EliteDangerousCore
                 lastoutfitting = null;
                 laststoredmodules = null;
                 laststoredships = null;
-                cqc = false;
+                lastcargo = null;
+                cqc = (je is JournalEvents.JournalLoadGame) && ((JournalEvents.JournalLoadGame)je).GameMode == null;
             }
             else if (je is JournalEvents.JournalMusic)
             {
@@ -237,30 +247,36 @@ namespace EliteDangerousCore
                 return null;
             }
 
-            je.SetTLUCommander(TravelLogUnit.id, cmdrid);
+            je.SetTLUCommander(TravelLogUnit.ID, cmdrid);
 
-            return new JournalReaderEntry { JournalEntry = je, Json = jo };
+            return je;
         }
 
         // function needs to report two things, list of JREs (may be empty) and UIs, and if it read something, bool.. hence form changed
         // bool reporting we have performed any sort of action is important.. it causes the TLU pos to be updated above even if we have junked all the events or delayed them
+        // function does not throw.
 
-        public bool ReadJournal(out List<JournalReaderEntry> jent, out List<UIEvent> uievents, bool historyrefreshparsing, bool resetOnError )      // True if anything was processed, even if we rejected it
+        public bool ReadJournal(List<JournalEntry> jent, List<UIEvent> uievents, bool historyrefreshparsing )      // True if anything was processed, even if we rejected it
         {
-            jent = new List<JournalReaderEntry>();
-            uievents = new List<UIEvent>();
-
             bool readanything = false;
 
-            while (ReadLine(out JournalReaderEntry newentry, l => ProcessLine(l, historyrefreshparsing, resetOnError)))
+            while (true)
             {
+                string line = ReadLine();           // read line from TLU.
+
+                if (line == null)                   // null means finished, no more data
+                    return readanything;
+
+                //System.Diagnostics.Debug.WriteLine("Line read '" + line + "'");
                 readanything = true;
+
+                JournalEntry newentry = ProcessLine(line, historyrefreshparsing);
 
                 if (newentry != null)                           // if we got a record back, we may not because it may not be valid or be rejected..
                 {
                     // if we don't have a commander yet, we need to queue it until we have one, since every entry needs a commander
 
-                    if ((this.TravelLogUnit.CommanderId == null || this.TravelLogUnit.CommanderId < 0) && newentry.JournalEntry.EventTypeID != JournalTypeEnum.LoadGame)
+                    if ((this.TravelLogUnit.CommanderId == null || this.TravelLogUnit.CommanderId < 0) && newentry.EventTypeID != JournalTypeEnum.LoadGame)
                     {
                         //System.Diagnostics.Debug.WriteLine("*** Delay " + newentry.JournalEntry.EventTypeStr);
                         StartEntries.Enqueue(newentry);         // queue..
@@ -270,48 +286,46 @@ namespace EliteDangerousCore
                         while (StartEntries.Count != 0)     // we have a commander, anything queued up, play that in first.
                         {
                             var dentry = StartEntries.Dequeue();
-                            dentry.JournalEntry.SetCommander(TravelLogUnit.CommanderId.Value);
+                            dentry.SetCommander(TravelLogUnit.CommanderId.Value);
                             //System.Diagnostics.Debug.WriteLine("*** UnDelay " + dentry.JournalEntry.EventTypeStr);
-                            AddEntry(dentry, ref jent, ref uievents);
+                            AddEntry(dentry, jent, uievents);
                         }
 
                         //System.Diagnostics.Debug.WriteLine("*** Send  " + newentry.JournalEntry.EventTypeStr);
-                        AddEntry(newentry, ref jent, ref uievents);
+                        AddEntry(newentry, jent, uievents);
                     }
                 }
             }
-
-            return readanything;
         }
 
         // this class looks at the JE and decides if its really a UI not a journal entry
 
-        private void AddEntry( JournalReaderEntry newentry, ref List<JournalReaderEntry> jent, ref List<UIEvent> uievents )
+        private void AddEntry( JournalEntry newentry, List<JournalEntry> jent, List<UIEvent> uievents )
         {
-            if (newentry.JournalEntry.EventTypeID == JournalTypeEnum.Music)     // MANUALLY sync this list with ActionEventList.cs::EventList function
+            if (newentry.EventTypeID == JournalTypeEnum.Music)     // MANUALLY sync this list with ActionEventList.cs::EventList function
             {
-                var jm = newentry.JournalEntry as JournalEvents.JournalMusic;
+                var jm = newentry as JournalEvents.JournalMusic;
                 uievents.Add(new UIEvents.UIMusic(jm.MusicTrack, jm.MusicTrackID, jm.EventTimeUTC, false));
                 return;
             }
-            else if (newentry.JournalEntry.EventTypeID == JournalTypeEnum.UnderAttack)
+            else if (newentry.EventTypeID == JournalTypeEnum.UnderAttack)
             {
-                var ja = newentry.JournalEntry as JournalEvents.JournalUnderAttack;
+                var ja = newentry as JournalEvents.JournalUnderAttack;
                 uievents.Add(new UIEvents.UIUnderAttack(ja.Target, ja.EventTimeUTC, false));
                 return;
             }
-            else if (newentry.JournalEntry.EventTypeID == JournalTypeEnum.SendText)
+            else if (newentry.EventTypeID == JournalTypeEnum.SendText)
             {
-                var jt = newentry.JournalEntry as JournalEvents.JournalSendText;
+                var jt = newentry as JournalEvents.JournalSendText;
                 if (jt.Command)
                 {
                     uievents.Add(new UIEvents.UICommand(jt.Message, jt.To, jt.EventTimeUTC, false));
                     return;
                 }
             }
-            else if (newentry.JournalEntry.EventTypeID == JournalTypeEnum.ShipTargeted)
+            else if (newentry.EventTypeID == JournalTypeEnum.ShipTargeted)
             {
-                var jst = newentry.JournalEntry as JournalEvents.JournalShipTargeted;
+                var jst = newentry as JournalEvents.JournalShipTargeted;
                 if (jst.TargetLocked == false)
                 {
                     uievents.Add(new UIEvents.UIShipTargeted(jst, jst.EventTimeUTC, false));
@@ -319,18 +333,18 @@ namespace EliteDangerousCore
                 }
 
             }
-            else if (newentry.JournalEntry.EventTypeID == JournalTypeEnum.ReceiveText)
+            else if (newentry.EventTypeID == JournalTypeEnum.ReceiveText)
             {
-                var jt = newentry.JournalEntry as JournalEvents.JournalReceiveText;
+                var jt = newentry as JournalEvents.JournalReceiveText;
                 if (jt.Channel == "Info")
                 {
                     uievents.Add(new UIEvents.UIReceiveText(jt, jt.EventTimeUTC, false));
                     return;
                 }
             }
-            else if (newentry.JournalEntry.EventTypeID == JournalTypeEnum.FSDTarget)
+            else if (newentry.EventTypeID == JournalTypeEnum.FSDTarget)
             {
-                var jt = newentry.JournalEntry as JournalEvents.JournalFSDTarget;
+                var jt = newentry as JournalEvents.JournalFSDTarget;
                 uievents.Add(new UIEvents.UIFSDTarget(jt, jt.EventTimeUTC, false));
                 return;
             }

@@ -16,10 +16,12 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Management" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(SolutionDir)\BaseUtilities\BaseUtilities\BaseUtils.csproj" />
     <ProjectReference Include="$(SolutionDir)\BaseUtilities\SQLLite\SQLLite.csproj" />
+    <ProjectReference Include="..\EDDDLLInterfaces\EDDDLLInterfaces.csproj" />
   </ItemGroup>
 </Project>

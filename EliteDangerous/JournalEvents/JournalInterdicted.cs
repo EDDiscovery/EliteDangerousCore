@@ -13,22 +13,21 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.Interdicted)]
-    public class JournalInterdicted : JournalEntry
+    public class JournalInterdicted : JournalEntry, IStatsJournalEntry
     {
-        public JournalInterdicted(JObject evt ) : base(evt, JournalTypeEnum.Interdicted)
+        public JournalInterdicted(JObject evt ) : base(evt, JournalTypeEnum.Interdicted)        // some nasty pilot has got you
         {
             Submitted = evt["Submitted"].Bool();
             Interdictor = evt["Interdictor"].Str();
             Interdictor_Localised = JournalFieldNaming.CheckLocalisation(evt["Interdictor_Localised"].Str(),Interdictor);
             IsPlayer = evt["IsPlayer"].Bool();
-            if (!evt["CombatRank"].Empty())
-                CombatRank = (CombatRank)(evt["CombatRank"].Int());
+            CombatRank = evt["CombatRank"].Enum<CombatRank>(CombatRank.Unknown);
             Faction = evt["Faction"].Str();
             Power = evt["Power"].Str();
         }
@@ -40,26 +39,33 @@ namespace EliteDangerousCore.JournalEvents
         public string Faction { get; set; }
         public string Power { get; set; }
 
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            stats.Interdicted(Faction);
+        }
+
         public override void FillInformation(out string info, out string detailed) 
         {
-            
-            info = BaseUtils.FieldBuilder.Build(";Submitted".T(EDTx.JournalEntry_Submitted), Submitted, "< to ".T(EDTx.JournalEntry_to), Interdictor_Localised, "< (NPC);(Player)".T(EDTx.JournalEntry_NPC), IsPlayer, "Rank:", CombatRank.ToString().SplitCapsWord(), "Faction:".T(EDTx.JournalEntry_Faction), Faction, "Power:".T(EDTx.JournalEntry_Power), Power);
+            if ( Submitted )
+                info = BaseUtils.FieldBuilder.Build(";Submitted".T(EDTx.JournalEntry_Submitted), Submitted, "< to ".T(EDTx.JournalEntry_to), Interdictor_Localised, "< (NPC);(Player)".T(EDTx.JournalEntry_NPC), IsPlayer, "Rank:", CombatRank.ToString().SplitCapsWord(), "Faction:".T(EDTx.JournalEntry_Faction), Faction, "Power:".T(EDTx.JournalEntry_Power), Power);
+            else
+                info = BaseUtils.FieldBuilder.Build("<By ".T(EDTx.JournalEntry_to), Interdictor_Localised, "< (NPC);(Player)".T(EDTx.JournalEntry_NPC), IsPlayer, "Rank:", CombatRank.ToString().SplitCapsWord(), "Faction:".T(EDTx.JournalEntry_Faction), Faction, "Power:".T(EDTx.JournalEntry_Power), Power);
+
             detailed = "";
         }
     }
 
 
     [JournalEntryType(JournalTypeEnum.Interdiction)]
-    public class JournalInterdiction : JournalEntry
+    public class JournalInterdiction : JournalEntry, IStatsJournalEntry
     {
-        public JournalInterdiction(JObject evt) : base(evt, JournalTypeEnum.Interdiction)
+        public JournalInterdiction(JObject evt) : base(evt, JournalTypeEnum.Interdiction)       // you've been naughty and interdicted someone
         {
             Success = evt["Success"].Bool();
             Interdicted = evt["Interdicted"].Str();
             Interdicted_Localised = JournalFieldNaming.CheckLocalisation(evt["Interdicted_Localised"].Str(), Interdicted);
             IsPlayer = evt["IsPlayer"].Bool();
-            if (!evt["CombatRank"].Empty())
-                CombatRank = (CombatRank)(evt["CombatRank"].Int());
+            CombatRank = evt["CombatRank"].Enum<CombatRank>(CombatRank.Unknown);
             Faction = evt["Faction"].Str();
             Power = evt["Power"].Str();
         }
@@ -70,6 +76,11 @@ namespace EliteDangerousCore.JournalEvents
         public CombatRank CombatRank { get; set; } = CombatRank.Unknown;
         public string Faction { get; set; }
         public string Power { get; set; }
+
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            stats.Interdiction(Faction);
+        }
 
         public override void FillInformation(out string info, out string detailed)
         {

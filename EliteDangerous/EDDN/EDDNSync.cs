@@ -13,12 +13,11 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Threading;
-using EliteDangerousCore;
 using EliteDangerousCore.JournalEvents;
 
 namespace EliteDangerousCore.EDDN
@@ -147,7 +146,7 @@ namespace EliteDangerousCore.EDDN
             running = 0;
         }
 
-        static public bool? SendToEDDN(HistoryEntry he)
+        static public bool? SendToEDDN(HistoryEntry he, bool debugonly = false)
         {
             EDDNClass eddn = new EDDNClass();
 
@@ -171,7 +170,7 @@ namespace EliteDangerousCore.EDDN
                 je = JournalEntry.Get(he.Journalid);
             }
 
-            JObject msg = null;
+            BaseUtils.JSON.JObject msg = null;
 
             if (je.EventTypeID == JournalTypeEnum.FSDJump)
             {
@@ -199,11 +198,11 @@ namespace EliteDangerousCore.EDDN
             }
             else if (je.EventTypeID == JournalTypeEnum.Outfitting)
             {
-                msg = eddn.CreateEDDNOutfittingMessage(je as JournalOutfitting, he.System);
+                msg = eddn.CreateEDDNOutfittingMessage(je as JournalOutfitting);
             }
             else if (je.EventTypeID == JournalTypeEnum.Shipyard)
             {
-                msg = eddn.CreateEDDNShipyardMessage(je as JournalShipyard, he.System);
+                msg = eddn.CreateEDDNShipyardMessage(je as JournalShipyard);
             }
             else if (je.EventTypeID == JournalTypeEnum.Market)
             {
@@ -213,7 +212,9 @@ namespace EliteDangerousCore.EDDN
 
             if (msg != null)
             {
-                if (eddn.PostMessage(msg))
+                System.Diagnostics.Debug.WriteLine("Send to EDDN " + msg.ToString(true));
+
+                if (!debugonly && eddn.PostMessage(msg))
                 {
                     he.journalEntry.SetEddnSync();
                     return true;

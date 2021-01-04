@@ -201,5 +201,16 @@ namespace EliteDangerousCore
             else
                 return CheckLocalisation(loc, alt);
         }
+
+        public static string SubsituteCommanderName(string cmdrin)      // only for debugging, subsitute a commander name
+        {
+            return cmdrin;
+        }
+
+        public static string SubsituteCommanderFID(string cmdrin)       // only for debugging, subsitute a commander name
+        {
+            return cmdrin;
+        }
+
     }
 }

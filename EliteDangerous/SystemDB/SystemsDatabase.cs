@@ -33,7 +33,7 @@ namespace EliteDangerousCore.DB
         {
         }
 
-        public static SystemsDatabase Instance { get; } = new SystemsDatabase();
+        public static SystemsDatabase Instance { get; } = new SystemsDatabase();        //STATIC constructor, make once at start of program
 
         public void Initialize()
         {
@@ -268,19 +268,19 @@ namespace EliteDangerousCore.DB
             }));
         }
 
-        public DateTime GetLastEDDBDownloadTime()
+        public DateTime GetLastAliasDownloadTime()
         {
-            return ExecuteWithDatabase( db => db.Connection.GetSettingDate("EDDBLastDownloadTime", DateTime.MinValue));
+            return ExecuteWithDatabase(db => db.Connection.GetSettingDate("EDSMAliasLastDownloadTime", DateTime.MinValue));
         }
 
-        public void SetLastEDDBDownloadTime()
+        public void SetLastEDSMAliasDownloadTime()
         {
-            WithReadWrite(() => ExecuteWithDatabase( db => db.Connection.PutSettingDate("EDDBLastDownloadTime", DateTime.UtcNow)));
+            WithReadWrite(() => ExecuteWithDatabase(db => db.Connection.PutSettingDate("EDSMAliasLastDownloadTime", DateTime.UtcNow)));
         }
 
-        public void ForceEDDBFullUpdate()
+        public void ForceEDSMAliasFullUpdate()
         {
-            WithReadWrite(() => ExecuteWithDatabase( db => db.Connection.PutSettingDate("EDDBLastDownloadTime", DateTime.MinValue)));
+            WithReadWrite(() => ExecuteWithDatabase(db => db.Connection.PutSettingDate("EDSMAliasLastDownloadTime", DateTime.MinValue)));
         }
 
         public int GetEDSMSectorIDNext()

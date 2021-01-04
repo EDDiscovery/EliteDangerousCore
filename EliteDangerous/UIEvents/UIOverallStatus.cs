@@ -48,9 +48,9 @@ namespace EliteDangerousCore.UIEvents
         public int Cargo { get; private set; }
         public UIEvents.UIPosition.Position Pos { get; private set; }
         public double Heading { get; private set; }
-        public bool ValidHeading { get { return Heading != double.MinValue; } }
+        public bool ValidHeading { get { return Heading != UIEvents.UIPosition.InvalidValue; } }
         public double PlanetRadius { get; private set; }
-        public bool ValidRadius { get { return PlanetRadius != double.MinValue; } }
+        public bool ValidRadius { get { return PlanetRadius != UIEvents.UIPosition.InvalidValue; } }
         public string LegalState { get; private set; }      // may be null
     }
 }

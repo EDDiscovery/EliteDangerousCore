@@ -17,7 +17,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace EliteDangerousCore.DLL
+namespace EDDDLLInterfaces
 {
     public static class EDDDLLIF       // Standard DLL Interface for a C++ type program
     {
@@ -61,6 +61,14 @@ namespace EliteDangerousCore.DLL
             // Version 1 Ends here
 
             [FieldOffset(176)] [MarshalAs(UnmanagedType.BStr)] public string json;
+            [FieldOffset(184)] [MarshalAs(UnmanagedType.BStr)] public string cmdrname;
+            [FieldOffset(192)] [MarshalAs(UnmanagedType.BStr)] public string cmdrfid;
+            [FieldOffset(200)] [MarshalAs(UnmanagedType.BStr)] public string shipident;
+            [FieldOffset(208)] [MarshalAs(UnmanagedType.BStr)] public string shipname;
+            [FieldOffset(216)] public long hullvalue;
+            [FieldOffset(224)] public long rebuy;
+            [FieldOffset(232)] public long modulesvalue;
+            [FieldOffset(240)] public bool stored;          // true if its a stored replay journal, false if live
 
             // Version 2 Ends here
         };
@@ -83,45 +91,64 @@ namespace EliteDangerousCore.DLL
             [FieldOffset(24)] public EDDShipLoadout GetShipLoadout;
             // Version 2 Ends here
 
-            public EDDCallBacks(int version, EDDRequestHistory rh, EDDRunAction ra , EDDShipLoadout sl = null)
-            {
-                ver = version; RequestHistory = rh;RunAction = ra;GetShipLoadout = sl;
-            }
         }
 
+        // c# assemblies implement the following functions inside a class named *MainDLL.  This is the class which is instanced
+        // and gets EDDInitialise, EDDTerminate etc called on it with the parameters as below.
+
+        // C++ DLLs implement these functions with the types indicated in the MarshalAs
+
+        public const string FLAG_HOSTNAME = "HOSTNAME=";                    // flags in
+        public const string FLAG_JOURNALVERSION = "JOURNALVERSION=";
+        public const string FLAG_CALLBACKVERSION = "CALLBACKVERSION=";
+
+        public const string FLAG_PLAYLASTFILELOAD = "PLAYLASTFILELOAD";     // flags back
+
+        // Manadatory
+        // vstr = Host Vnum [;InOptions]..
+        //      HOSTNAME=x
+        //      JOURNALVERSION=x
+        // return !errorstring || DLLVNumber [;RetOptions]..
+        // DLLVnumber = 0.0.0.0 [;OutOptions]
+        //      PLAYLASTFILELOAD - play the start events on Commander refresh Fileheader, Commander, Materials, LoadGame, Rank, Progress, reputation, EngineerProgress, Location, Missions
+
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        [return: MarshalAs(UnmanagedType.BStr)]
-        public delegate String EDDInitialise([MarshalAs(UnmanagedType.BStr)]string vstr,
+        [return: MarshalAs(UnmanagedType.BStr)]     
+        public delegate String EDDInitialise([MarshalAs(UnmanagedType.BStr)]string vstr,        
                                              [MarshalAs(UnmanagedType.BStr)]string dllfolder,
                                              EDDCallBacks callbacks);
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        [return: MarshalAs(UnmanagedType.BStr)]
-        public delegate String EDDInitialiseT([MarshalAs(UnmanagedType.BStr)]string vstr,
-                                             [MarshalAs(UnmanagedType.BStr)]string dllfolder);
-
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void EDDRefresh([MarshalAs(UnmanagedType.BStr)]string cmdname, JournalEntry lastje);
-
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void EDDNewJournalEntry(JournalEntry nje);
-
+        // Manadatory
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void EDDTerminate();
 
+        // Optional
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void EDDRefresh([MarshalAs(UnmanagedType.BStr)]string cmdname, JournalEntry lastje);
+
+        // Optional
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void EDDNewJournalEntry(JournalEntry nje);
+
+        // Optional DLLCall in Action causes this
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]            
         [return: MarshalAs(UnmanagedType.BStr)]                         // paras can be an empty array, but is always present
         public delegate String EDDActionCommand([MarshalAs(UnmanagedType.BStr)]string cmdname, [MarshalAs(UnmanagedType.SafeArray)]string[] paras);
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        // Optional DLLCall in Action causes this with a JID
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] 
         public delegate void EDDActionJournalEntry(JournalEntry lastje);
 
         // Version 1 Ends here
 
+        // Optional
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void EDDNewUIEvent([MarshalAs(UnmanagedType.BStr)]string jsonui);
+
+        // Optional 
         // back: list of (config name, config value, config type (string,int)) of all configs
         // in : either an empty array or list of (name, values) to set
         // if fails, return empty array back
-
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         [return: MarshalAs(UnmanagedType.SafeArray)]
         public delegate string[] EDDConfigParameters([MarshalAs(UnmanagedType.SafeArray)] string[] values);

@@ -13,11 +13,10 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.IO;
 using System.Linq;
 using SQLLiteExtensions;
 
@@ -139,6 +138,9 @@ namespace EliteDangerousCore.DB
 
                 if (dbver < 123)
                     UpgradeUserDB123();
+
+                if (dbver < 124)
+                    UpgradeUserDB124();
 
                 CreateUserDBTableIndexes();
 
@@ -456,6 +458,14 @@ namespace EliteDangerousCore.DB
             PerformUpgrade(123, true, false, new[] { query1 });
         }
 
+        private void UpgradeUserDB124()
+        {
+            string query1 = "DROP TABLE IF EXISTS MaterialsCommodities";
+            string query2 = "ALTER TABLE JournalEntries RENAME EdsmId TO Unused1";          // SQLite does not have a remove column command, best we can do
+            string query3 = "ALTER TABLE SystemNote RENAME EdsmId TO Unused1";          
+            PerformUpgrade(124, true, false, new[] { query1, query2, query3 });
+        }
+
         private void DropOldUserTables()
         {
             string[] queries = new[]
@@ -479,7 +489,7 @@ namespace EliteDangerousCore.DB
             }
         }
 
-        private void CreateUserDBTableIndexes()
+        public void CreateUserDBTableIndexes()
         {
             string[] queries = new[]
             {
@@ -491,9 +501,29 @@ namespace EliteDangerousCore.DB
                 "CREATE INDEX IF NOT EXISTS JournalEntry_EventTypeId ON JournalEntries (EventTypeId)",
                 "CREATE INDEX IF NOT EXISTS JournalEntry_EventType ON JournalEntries (EventType)",
                 "CREATE INDEX IF NOT EXISTS JournalEntry_EventTime ON JournalEntries (EventTime)",
+            };
 
-                "CREATE INDEX IF NOT EXISTS MaterialsCommodities_ClassName ON MaterialsCommodities (Name)",
-                "CREATE INDEX IF NOT EXISTS MaterialsCommodities_FDName ON MaterialsCommodities (FDName)",
+            foreach (string query in queries)
+            {
+                using (DbCommand cmd = CreateCommand(query))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void DropUserDBTableIndexes()
+        {
+            string[] queries = new[]
+            {
+                "DROP INDEX IF EXISTS TravelLogUnit_Name",
+                "DROP INDEX IF EXISTS TravelLogUnit_Commander",
+
+                "DROP INDEX IF EXISTS JournalEntry_CommanderId",
+                "DROP INDEX IF EXISTS JournalEntry_TravelLogId",
+                "DROP INDEX IF EXISTS JournalEntry_EventTypeId",
+                "DROP INDEX IF EXISTS JournalEntry_EventType",
+                "DROP INDEX IF EXISTS JournalEntry_EventTime",
             };
 
             foreach (string query in queries)

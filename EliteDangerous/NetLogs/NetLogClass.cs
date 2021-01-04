@@ -1,5 +1,5 @@
 /*
- * Copyright © 2015 - 2016 EDDiscovery development team
+ * Copyright © 2015 - 2020 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -21,21 +21,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Data.Common;
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 
 namespace EliteDangerousCore
 {
-    public class NetLogClass
+    public static class NetLogClass
     {
-        public delegate void NetLogEventHandler(JournalLocOrJump vsc);
-
-        Dictionary<string, NetLogFileReader> netlogreaders = new Dictionary<string, NetLogFileReader>();
-
-        public NetLogClass()
-        {
-        }
-
-        static public void ParseFiles(string datapath, out string error, int defaultMapColour, Func<bool> cancelRequested, Action<int, string> updateProgress, bool forceReload = false, Dictionary<string, NetLogFileReader> netlogreaders = null, int currentcmdrid = -1)
+        static public void ParseFiles(string datapath, out string error, int defaultMapColour,
+                                     Func<bool> cancelRequested, Action<int, string> updateProgress,
+                                     bool forceReload, int currentcmdrid)
         {
             error = null;
 
@@ -48,24 +42,8 @@ namespace EliteDangerousCore
             if (!Directory.Exists(datapath))   // if logfiles directory is not found
             {
                 error = "Netlog directory is not present!";
-                return; 
+                return;
             }
-
-            if (netlogreaders == null)
-            {
-                netlogreaders = new Dictionary<string, NetLogFileReader>();
-            }
-
-            if (currentcmdrid < 0)
-            {
-                currentcmdrid = EDCommander.CurrentCmdrID;
-            }
-
-            // TLUs
-            List<TravelLogUnit> tlus = TravelLogUnit.GetAll();
-            Dictionary<string, TravelLogUnit> netlogtravelogUnits = tlus.Where(t => t.type == TravelLogUnit.NetLogType).GroupBy(t => t.Name).Select(g => g.First()).ToDictionary(t => t.Name);
-            Dictionary<long, string> travellogunitid2name = netlogtravelogUnits.Values.ToDictionary(t => t.id, t => t.Name);
-            Dictionary<string, List<JournalLocOrJump>> vsc_lookup = JournalEntry.GetAll().OfType<JournalLocOrJump>().GroupBy(v => v.TLUId).Where(g => travellogunitid2name.ContainsKey(g.Key)).ToDictionary(g => travellogunitid2name[g.Key], g => g.ToList());
 
             // list of systems in journal, sorted by time
             List<JournalLocOrJump> vsSystemsEnts = JournalEntry.GetAll(currentcmdrid).OfType<JournalLocOrJump>().OrderBy(j => j.EventTimeUTC).ToList();
@@ -74,34 +52,44 @@ namespace EliteDangerousCore
             FileInfo[] allFiles = Directory.EnumerateFiles(datapath, "netLog.*.log", SearchOption.AllDirectories).Select(f => new FileInfo(f)).OrderBy(p => p.LastWriteTime).ToArray();
 
             List<NetLogFileReader> readersToUpdate = new List<NetLogFileReader>();
+            List<TravelLogUnit> tlutoadd = new List<TravelLogUnit>();
 
             for (int i = 0; i < allFiles.Length; i++)
             {
                 FileInfo fi = allFiles[i];
 
-                var reader = OpenFileReader(fi, netlogtravelogUnits, vsc_lookup, netlogreaders);
+                var reader = OpenFileReader(fi.FullName, currentcmdrid);
 
-                if (!netlogtravelogUnits.ContainsKey(reader.TravelLogUnit.Name))
+                if (reader.ID == 0)            // if not present, add to commit add list
                 {
-                    netlogtravelogUnits[reader.TravelLogUnit.Name] = reader.TravelLogUnit;
-                    reader.TravelLogUnit.Add();
+                    tlutoadd.Add(reader.TravelLogUnit);
                 }
 
-                if (!netlogreaders.ContainsKey(reader.TravelLogUnit.Name))
+                if (forceReload)        // Force a reload of the travel log
                 {
-                    netlogreaders[reader.TravelLogUnit.Name] = reader;
+                    reader.Pos = 0;
                 }
 
-                if (forceReload)
-                {
-                    // Force a reload of the travel log
-                    reader.TravelLogUnit.Size = 0;
-                }
-
-                if (reader.filePos != fi.Length || i == allFiles.Length - 1)  // File not already in DB, or is the last one
+                if (reader.Pos != fi.Length || i == allFiles.Length - 1)  // File not already in DB, or is the last one
                 {
                     readersToUpdate.Add(reader);
                 }
+            }
+
+            if (tlutoadd.Count > 0)                      // now, on spinning rust, this takes ages for 600+ log files first time, so transaction it
+            {
+                UserDatabase.Instance.ExecuteWithDatabase(cn =>
+                {
+                    using (DbTransaction txn = cn.Connection.BeginTransaction())
+                    {
+                        foreach (var tlu in tlutoadd)
+                        {
+                            tlu.Add(cn.Connection, txn);
+                        }
+
+                        txn.Commit();
+                    }
+                });
             }
 
             for (int i = 0; i < readersToUpdate.Count; i++)
@@ -111,16 +99,22 @@ namespace EliteDangerousCore
                     int ji = 0;
 
                     NetLogFileReader reader = readersToUpdate[i];
-                    updateProgress(i * 100 / readersToUpdate.Count, reader.TravelLogUnit.Name);
+                    updateProgress(i * 100 / readersToUpdate.Count, reader.TravelLogUnit.FullName);
+
+                    var systems = JournalEntry.GetAllByTLU(reader.ID, cn.Connection).OfType<JournalLocOrJump>().ToList();
+                    var last = systems.LastOrDefault();     // find last system recorded for this TLU, may be null if no systems..
 
                     using (DbTransaction tn = cn.Connection.BeginTransaction())
                     {
-                        foreach (JObject jo in reader.ReadSystems(cancelRequested, currentcmdrid))
+                        var ienum = reader.ReadSystems(last, cancelRequested, currentcmdrid);
+                        System.Diagnostics.Debug.WriteLine("Scanning TLU " + reader.ID + " " + reader.FullName);
+
+                        foreach (JObject jo in ienum)
                         {
                             jo["EDDMapColor"] = defaultMapColour;
 
                             JournalLocOrJump je = new JournalFSDJump(jo);
-                            je.SetTLUCommander(reader.TravelLogUnit.id, currentcmdrid);
+                            je.SetTLUCommander(reader.TravelLogUnit.ID, currentcmdrid);
 
                             while (ji < vsSystemsEnts.Count && vsSystemsEnts[ji].EventTimeUTC < je.EventTimeUTC)
                             {
@@ -142,53 +136,32 @@ namespace EliteDangerousCore
                             }
                         }
 
-                        tn.Commit();
+                        reader.TravelLogUnit.Update(cn.Connection, tn);
 
-                        reader.TravelLogUnit.Update();
+                        tn.Commit();
                     }
 
                     if (updateProgress != null)
                     {
-                        updateProgress((i + 1) * 100 / readersToUpdate.Count, reader.TravelLogUnit.Name);
+                        updateProgress((i + 1) * 100 / readersToUpdate.Count, reader.TravelLogUnit.FullName);
                     }
                 });
             }
         }
 
-        private static NetLogFileReader OpenFileReader(FileInfo fi, Dictionary<string, TravelLogUnit> tlu_lookup = null, Dictionary<string, List<JournalLocOrJump>> vsc_lookup = null, Dictionary<string, NetLogFileReader> netlogreaders = null)
+        private static NetLogFileReader OpenFileReader(string filepath, int cmdrid )
         {
             NetLogFileReader reader;
-            TravelLogUnit tlu;
-            List<JournalLocOrJump> vsclist = null;
 
-            if (vsc_lookup != null && vsc_lookup.ContainsKey(fi.Name))
+            if (TravelLogUnit.TryGet(filepath, out TravelLogUnit tlu))
             {
-                vsclist = vsc_lookup[fi.Name];
-            }
-
-            if (netlogreaders != null && netlogreaders.ContainsKey(fi.Name))
-            {
-                return netlogreaders[fi.Name];
-            }
-            else if (tlu_lookup != null && tlu_lookup.ContainsKey(fi.Name))
-            {
-                tlu = tlu_lookup[fi.Name];
-                tlu.Path = fi.DirectoryName;
-                reader = new NetLogFileReader(tlu, vsclist);
-            }
-            else if (TravelLogUnit.TryGet(fi.Name, out tlu))
-            {
-                tlu.Path = fi.DirectoryName;
-                reader = new NetLogFileReader(tlu, vsclist);
+                reader = new NetLogFileReader(tlu);
             }
             else
             {
-                reader = new NetLogFileReader(fi.FullName);
-            }
-
-            if (netlogreaders != null)
-            {
-                netlogreaders[fi.Name] = reader;
+                reader = new NetLogFileReader(filepath);
+                reader.TravelLogUnit.Type = TravelLogUnit.NetLogType;
+                reader.TravelLogUnit.CommanderId = cmdrid;
             }
 
             return reader;

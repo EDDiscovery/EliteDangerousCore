@@ -13,7 +13,7 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
@@ -23,8 +23,8 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalCommander(JObject evt ) : base(evt, JournalTypeEnum.Commander)
         {
-            Name = evt["Name"].Str();
-            FID = evt["FID"].Str();     // 3.3 on
+            Name = JournalFieldNaming.SubsituteCommanderName(evt["Name"].Str());
+            FID = JournalFieldNaming.SubsituteCommanderFID(evt["FID"].Str());     // 3.3 on
         }
 
         public string Name { get; set; }
@@ -42,9 +42,9 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalNewCommander(JObject evt) : base(evt, JournalTypeEnum.NewCommander)
         {
-            Name = evt["Name"].Str();
+            Name = JournalFieldNaming.SubsituteCommanderName(evt["Name"].Str());
+            FID = JournalFieldNaming.SubsituteCommanderFID(evt["FID"].Str());     // 3.3 on
             Package = evt["Package"].Str();
-            FID = evt["FID"].Str();     // 3.3 on
         }
 
         public string Name { get; set; }
@@ -63,8 +63,8 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalClearSavedGame(JObject evt) : base(evt, JournalTypeEnum.ClearSavedGame)
         {
-            Name = evt["Name"].Str();
-            FID = evt["FID"].Str();     // 3.3 on
+            Name = JournalFieldNaming.SubsituteCommanderName(evt["Name"].Str());
+            FID = JournalFieldNaming.SubsituteCommanderFID(evt["FID"].Str());     // 3.3 on
         }
 
         public string Name { get; set; }

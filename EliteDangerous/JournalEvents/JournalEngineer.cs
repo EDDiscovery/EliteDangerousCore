@@ -13,7 +13,8 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -44,7 +45,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.EngineerContribution)]
-    public class JournalEngineerContribution : JournalEntry, ILedgerJournalEntry, ICommodityJournalEntry, IMaterialJournalEntry
+    public class JournalEngineerContribution : JournalEntry, ILedgerJournalEntry, ICommodityJournalEntry, IMaterialJournalEntry, IStatsJournalEntryMatCommod
     {
         public JournalEngineerContribution(JObject evt) : base(evt, JournalTypeEnum.EngineerContribution)
         {
@@ -81,16 +82,27 @@ namespace EliteDangerousCore.JournalEvents
         public int Quantity { get; set; }
         public int TotalQuantity { get; set; }
 
+        // Istats
+        public List<Tuple<string, int>> ItemsList { get { return new List<Tuple<string, int>>() { new Tuple<string, int>(Type == "Materials" ? Material : Commodity, -Quantity) }; } }
+
         public void UpdateMaterials(MaterialCommoditiesList mc)
         {
             if (Type.Equals("Materials"))
-                mc.Change(MaterialCommodityData.CatType.Raw, Material, -Quantity, 0, true);
+                mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Raw, Material, -Quantity, 0, true);
         }
 
         public void UpdateCommodities(MaterialCommoditiesList mc)
         {
             if (Type.Equals("Commodity"))
-                mc.Change(MaterialCommodityData.CatType.Commodity, Commodity, -Quantity, 0);
+                mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Commodity, -Quantity, 0);
+        }
+
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            if (Type.Equals("Materials"))
+                stats.UpdateEngineerMaterial(Engineer, Material, Quantity);
+            if (Type.Equals("Commodity"))
+                stats.UpdateEngineerCommodity(Engineer, Commodity, Quantity);
         }
 
         public void Ledger(Ledger mcl)
@@ -130,7 +142,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 Ingredients = new Dictionary<string, int>();
 
-                if (mats.Type == JTokenType.Object)
+                if (mats.IsObject)
                 {
                     Dictionary<string, int> temp = mats?.ToObjectProtected<Dictionary<string, int>>();
 
@@ -144,7 +156,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     foreach (JObject jo in (JArray)mats)
                     {
-                        Ingredients[JournalFieldNaming.FDNameTranslation((string)jo["Name"])] = jo["Count"].Int();
+                        Ingredients[JournalFieldNaming.FDNameTranslation(jo["Name"].Str("Default"))] = jo["Count"].Int();
                     }
                 }
             }
@@ -227,7 +239,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public JournalEngineerProgress(JObject evt) : base(evt, JournalTypeEnum.EngineerProgress)
         {
-            Engineers = evt["Engineers"]?.ToObjectProtected<ProgressInformation[]>().OrderBy(x => x.Engineer)?.ToArray();       // 3.3 introduced this at startup
+            Engineers = evt["Engineers"]?.ToObjectProtected<ProgressInformation[]>()?.OrderBy(x => x.Engineer)?.ToArray();       // 3.3 introduced this at startup
 
             if (Engineers == null)
             {

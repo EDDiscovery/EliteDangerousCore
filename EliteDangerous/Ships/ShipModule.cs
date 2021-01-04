@@ -14,7 +14,7 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
- using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System;
 
 namespace EliteDangerousCore
@@ -169,6 +169,7 @@ namespace EliteDangerousCore
             public string Label { get; set; }
             public string FriendlyLabel { get; set; }
             public string ValueStr { get; set; }            // 3.02 if set, means ones further on do not apply. check first
+            public string ValueStr_Localised { get; set; }  
             public double Value { get; set; }               // may be 0
             public double OriginalValue { get; set; }
             public bool LessIsGood { get; set; }
@@ -179,8 +180,8 @@ namespace EliteDangerousCore
             public string Engineer { get; set; }
             public string BlueprintName { get; set; }
             public string FriendlyBlueprintName { get; set; }
-            public long EngineerID { get; set; }
-            public long BlueprintID { get; set; }
+            public ulong EngineerID { get; set; }
+            public ulong BlueprintID { get; set; }
             public int Level { get; set; }
             public double Quality { get; set; }
             public string ExperimentalEffect { get; set; }
@@ -190,28 +191,32 @@ namespace EliteDangerousCore
             public EngineeringData(JObject evt)
             {
                 Engineer = evt["Engineer"].Str();
-                EngineerID = evt["EngineerID"].Long();
+                EngineerID = evt["EngineerID"].ULong();
                 BlueprintName = evt["BlueprintName"].Str();
                 FriendlyBlueprintName = BlueprintName.SplitCapsWordFull();
-                BlueprintID = evt["BlueprintID"].Long();
+                BlueprintID = evt["BlueprintID"].ULong();
                 Level = evt["Level"].Int();
                 Quality = evt["Quality"].Double(0);
                 // EngineerCraft has it as Apply.. Loadout has just ExperimentalEffect.  Check both
-                ExperimentalEffect = JSONObjectExtensions.GetMultiStringDef(evt, new string[] { "ExperimentalEffect", "ApplyExperimentalEffect" });
+                ExperimentalEffect = evt.MultiStr(new string[] { "ExperimentalEffect", "ApplyExperimentalEffect" });
                 ExperimentalEffect_Localised = JournalFieldNaming.CheckLocalisation(evt["ExperimentalEffect_Localised"].Str(),ExperimentalEffect);
 
-                Modifiers = evt["Modifiers"]?.ToObjectProtected<EngineeringModifiers[]>();
+                Modifiers = evt["Modifiers"]?.ToObjectProtected<EngineeringModifiers[]>(ignoretypeerrors:true);     // instances of Value being wrong type - ignore and continue
 
                 if (Modifiers != null)
                 {
                     foreach (EngineeringModifiers v in Modifiers)
                         v.FriendlyLabel = v.Label.SplitCapsWord();
                 }
+                else
+                {
+
+                }
             }
 
             public JObject ToJSONLoadout()  // reproduce the loadout format..
             {
-                JObject jo = new JObject();
+                var jo = new JObject();
                 jo["Engineer"] = Engineer;
                 jo["EngineerID"] = EngineerID;
                 jo["BlueprintID"] = BlueprintID;
@@ -227,7 +232,7 @@ namespace EliteDangerousCore
 
                 if ( Modifiers != null )
                 {
-                    JArray modarray = new JArray();
+                    var modarray = new JArray();
                     foreach( EngineeringModifiers m in Modifiers )
                     {
                         JObject mod = new JObject();

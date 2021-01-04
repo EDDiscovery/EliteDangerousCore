@@ -13,7 +13,7 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System.Collections.Generic;
 using EliteDangerousCore;
 using System.Linq;
@@ -28,10 +28,8 @@ namespace EliteDangerousCore.JournalEvents
             Station = evt["station"].Str();
             Faction = evt["faction"].Str();
             Commodities = new List<CCommodities>();
-           
-            JArray jcommodities = null;
-            if (!evt["commodities"].Empty())
-                jcommodities = (JArray)evt["commodities"];
+
+            JArray jcommodities = evt["commodities"].Array();
 
             if (jcommodities != null)
             {

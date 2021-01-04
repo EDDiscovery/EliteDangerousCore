@@ -14,10 +14,9 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 using EliteDangerousCore.JournalEvents;
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using System.Linq;
 
@@ -66,7 +65,7 @@ namespace EliteDangerousCore.Inara
         public string ToJSONString(List<JToken> events)
         {
             JToken finaljson = Request(events.ToArray());
-            return finaljson.ToString(Newtonsoft.Json.Formatting.Indented);
+            return finaljson.ToString(true);
         }
 
         public string Send(List<JToken> events)
@@ -95,9 +94,9 @@ namespace EliteDangerousCore.Inara
 
             try
             {
-                JObject resp = JObject.Parse(response.Body);
+                JObject resp = JObject.ParseThrowCommaEOL(response.Body);
 
-                JObject header = (JObject)resp["header"];
+                JObject header = resp["header"].Object();
                 int headerstatus = header["eventStatus"].Int();     // this is the response to the input header - error if user credentials bad etc
 
                 if (headerstatus >= 300 || headerstatus < 200)      // 2xx good
@@ -106,11 +105,11 @@ namespace EliteDangerousCore.Inara
                 }
                 else
                 {
-                    JArray responses = (JArray)resp["events"];
+                    JArray responses = resp["events"].Array();
 
                     for( int i = 0; i < responses.Count;  i++)      // for each event.. check response..
                     {
-                        JObject ro = (JObject)responses[i];
+                        JObject ro = responses[i].Object();
                         int eventstate = ro["eventStatus"].Int();
 
                         datalist.Add(ro["eventData"] as JObject);       // may be null!  if no data is returned by Inara.. Only a few data requestes exists

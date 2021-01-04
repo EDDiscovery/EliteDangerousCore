@@ -70,7 +70,7 @@ namespace EliteDangerousCore.DB
 
             ISystem found = FindCachedSystem(find);
 
-            if ((found == null || found.source != SystemSource.FromEDSM) && cn != null && !SystemsDatabase.Instance.RebuildRunning)   // not cached, connection and not rebuilding, try db
+            if ((found == null || found.Source != SystemSource.FromEDSM) && cn != null && !SystemsDatabase.Instance.RebuildRunning)   // not cached, connection and not rebuilding, try db
             {
                 //System.Diagnostics.Debug.WriteLine("Look up from DB " + sys.name + " " + sys.id_edsm);
 
@@ -92,7 +92,7 @@ namespace EliteDangerousCore.DB
                 {
                     long newid = DB.SystemsDB.FindAlias(find.EDSMID, find.Name , cn.Connection);   // is there a named alias in there due to a system being renamed..
                     if (newid >= 0)
-                        found = DB.SystemsDB.FindStar(newid);  // find it using the new id
+                        found = DB.SystemsDB.FindStar(newid,cn.Connection);  // find it using the new id
                 }
 
                 if (found != null)                              // if we have a good db, go for it
@@ -122,7 +122,7 @@ namespace EliteDangerousCore.DB
                     return found;
                 }
 
-                if (find.source == SystemSource.FromJournal && find.Name != null && find.HasCoordinate == true)
+                if (find.Source == SystemSource.FromJournal && find.Name != null && find.HasCoordinate == true)
                 {
                     AddToCache(find);
                     return find;
@@ -167,7 +167,7 @@ namespace EliteDangerousCore.DB
         {
             var found = FindCachedSystem(system);
 
-            if ((found == null || (found.source != SystemSource.FromJournal && found.source != SystemSource.FromEDSM)) && system.HasCoordinate == true && system.Name != "")
+            if ((found == null || (found.Source != SystemSource.FromJournal && found.Source != SystemSource.FromEDSM)) && system.HasCoordinate == true && system.Name != "")
             {
                 AddToCache(system, found);
                 found = system;

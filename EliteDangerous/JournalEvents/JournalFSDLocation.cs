@@ -13,7 +13,7 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System;
 using EliteDangerousCore.DB;
 using System.Linq;
@@ -106,7 +106,6 @@ namespace EliteDangerousCore.JournalEvents
         {
             StarSystem = sys.Name;
             StarPos = new EMK.LightGeometry.Vector3((float)sys.X, (float)sys.Y, (float)sys.Z);
-            EdsmID = sys.EDSMID;
         }
 
         protected JournalLocOrJump(JObject evt, JournalTypeEnum jtype) : base(evt, jtype)
@@ -116,9 +115,9 @@ namespace EliteDangerousCore.JournalEvents
 
             EMK.LightGeometry.Vector3 pos = new EMK.LightGeometry.Vector3();
 
-            if (!evt["StarPos"].Empty())            // if its an old VS entry, may not have co-ords
+            JArray coords = evt["StarPos"].Array();
+            if (coords!=null)
             {
-                JArray coords = evt["StarPos"] as JArray;
                 pos.X = coords[0].Float();
                 pos.Y = coords[1].Float();
                 pos.Z = coords[2].Float();
@@ -132,17 +131,16 @@ namespace EliteDangerousCore.JournalEvents
 
             SystemAddress = evt["SystemAddress"].LongNull();
 
-            JToken jk = (JToken)evt["SystemFaction"];
-            if (jk != null && jk.Type == JTokenType.Object)     // new 3.03
+            JToken jk = evt["SystemFaction"];
+            if (jk != null && jk.IsObject)                  // new 3.03
             {
-                JObject jo = jk as JObject;
                 Faction = jk["Name"].Str();                // system faction pick up
                 FactionState = jk["FactionState"].Str();
             }
             else
             {
                 // old pre 3.3.3 had this - for system faction
-                Faction = JSONObjectExtensions.GetMultiStringDef(evt, new string[] { "SystemFaction", "Faction" });
+                Faction = evt.MultiStr(new string[] { "SystemFaction", "Faction" });
                 FactionState = evt["FactionState"].Str();           // PRE 2.3 .. not present in newer files, fixed up in next bit of code (but see 3.3.2 as its been incorrectly reintroduced)
             }
 
@@ -158,19 +156,19 @@ namespace EliteDangerousCore.JournalEvents
                     x.Happiness_Localised = JournalFieldNaming.CheckLocalisation(x.Happiness_Localised, x.Happiness);
             }
 
-            Allegiance = JSONObjectExtensions.GetMultiStringDef(evt, new string[] { "SystemAllegiance", "Allegiance" });
+            Allegiance = evt.MultiStr(new string[] { "SystemAllegiance", "Allegiance" });
 
-            Economy = JSONObjectExtensions.GetMultiStringDef(evt, new string[] { "SystemEconomy", "Economy" });
-            Economy_Localised = JournalFieldNaming.CheckLocalisation(JSONObjectExtensions.GetMultiStringDef(evt, new string[] { "SystemEconomy_Localised", "Economy_Localised" }), Economy);
+            Economy = evt.MultiStr(new string[] { "SystemEconomy", "Economy" });
+            Economy_Localised = JournalFieldNaming.CheckLocalisation(evt.MultiStr(new string[] { "SystemEconomy_Localised", "Economy_Localised" }), Economy);
 
             SecondEconomy = evt["SystemSecondEconomy"].Str();
             SecondEconomy_Localised = JournalFieldNaming.CheckLocalisation(evt["SystemSecondEconomy_Localised"].Str(), SecondEconomy);
 
-            Government = JSONObjectExtensions.GetMultiStringDef(evt, new string[] { "SystemGovernment", "Government" });
-            Government_Localised = JournalFieldNaming.CheckLocalisation(JSONObjectExtensions.GetMultiStringDef(evt, new string[] { "SystemGovernment_Localised", "Government_Localised" }), Government);
+            Government = evt.MultiStr(new string[] { "SystemGovernment", "Government" });
+            Government_Localised = JournalFieldNaming.CheckLocalisation(evt.MultiStr(new string[] { "SystemGovernment_Localised", "Government_Localised" }), Government);
 
-            Security = JSONObjectExtensions.GetMultiStringDef(evt, new string[] { "SystemSecurity", "Security" });
-            Security_Localised = JournalFieldNaming.CheckLocalisation(JSONObjectExtensions.GetMultiStringDef(evt, new string[] { "SystemSecurity_Localised", "Security_Localised" }), Security);
+            Security = evt.MultiStr(new string[] { "SystemSecurity", "Security" });
+            Security_Localised = JournalFieldNaming.CheckLocalisation(evt.MultiStr(new string[] { "SystemSecurity_Localised", "Security_Localised" }), Security);
 
             Wanted = evt["Wanted"].Bool();      // if absence, your not wanted, by definition of frontier in journal (only present if wanted, see docked)
 
@@ -279,7 +277,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             // base class does StarSystem/StarPos/Faction/Powerplay
 
-            Docked = evt.Value<bool?>("Docked") ?? false;
+            Docked = evt["Docked"].Bool();
             StationName = evt["StationName"].Str();
             StationType = evt["StationType"].Str().SplitCapsWord();
             Body = evt["Body"].Str();
@@ -294,11 +292,10 @@ namespace EliteDangerousCore.JournalEvents
 
             // station data only if docked..
 
-            JToken jk = (JToken)evt["StationFaction"];  // 3.3.3 post
+            JObject jk = evt["StationFaction"].Object();  // 3.3.3 post
 
-            if ( jk != null && jk.Type == JTokenType.Object)
+            if ( jk != null )
             {
-                JObject jo = jk as JObject;
                 StationFaction = jk["Name"].Str();                // system faction pick up
                 StationFactionState = jk["FactionState"].Str();
             }
@@ -414,7 +411,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             // base class does StarSystem/StarPos/Faction/Powerplay
 
-            Docked = evt.Value<bool?>("Docked") ?? false;
+            Docked = evt["Docked"].Bool();
             StationName = evt["StationName"].Str();
             StationType = evt["StationType"].Str().SplitCapsWord();
             Body = evt["Body"].Str();
@@ -429,11 +426,10 @@ namespace EliteDangerousCore.JournalEvents
 
             // station data only if docked..
 
-            JToken jk = (JToken)evt["StationFaction"];  // 3.3.3 post
+            JObject jk = evt["StationFaction"].Object();  // 3.3.3 post
 
-            if (jk != null && jk.Type == JTokenType.Object)
+            if (jk != null )
             {
-                JObject jo = jk as JObject;
                 StationFaction = jk["Name"].Str();                // system faction pick up
                 StationFactionState = jk["FactionState"].Str();
             }
@@ -447,7 +443,7 @@ namespace EliteDangerousCore.JournalEvents
 
             JToken jm = evt["EDDMapColor"];
             MapColor = jm.Int(EDCommander.Current.MapColour);
-            if (jm.Empty())
+            if (jm.IsNull())
                 evt["EDDMapColor"] = EDCommander.Current.MapColour;      // new entries get this default map colour if its not already there
         }
 
@@ -528,8 +524,6 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalFSDJump(JObject evt) : base(evt, JournalTypeEnum.FSDJump)
         {
-            RealJournalEvent = evt["FuelUsed"].Empty(); // Old pre ED 2.2 messages has no Fuel used fields
-
             // base class does StarSystem/StarPos/Faction/Powerplay
 
             JumpDist = evt["JumpDist"].Double();
@@ -543,7 +537,7 @@ namespace EliteDangerousCore.JournalEvents
 
             JToken jm = evt["EDDMapColor"];
             MapColor = jm.Int(EDCommander.Current.MapColour);
-            if (jm.Empty())
+            if (jm.IsNull())
                 evt["EDDMapColor"] = EDCommander.Current.MapColour;      // new entries get this default map colour if its not already there
 
             EDSMFirstDiscover = evt["EDD_EDSMFirstDiscover"].Bool(false);
@@ -561,7 +555,6 @@ namespace EliteDangerousCore.JournalEvents
         public bool BoostUsed { get; set; }
         public int BoostValue { get; set; }
         public int MapColor { get; set; }
-        public bool RealJournalEvent { get; private set; } // True if real ED 2.2+ journal event and not pre 2.2 imported.
         public bool EDSMFirstDiscover { get; set; }
         public string Body { get; set; }
         public int? BodyID { get; set; }
@@ -701,12 +694,14 @@ namespace EliteDangerousCore.JournalEvents
             StarClass = evt["StarClass"].Str();
             SystemAddress = evt["SystemAddress"].Long();
             RemainingJumpsInRoute = evt["RemainingJumpsInRoute"].IntNull();
+            FriendlyStarClass = (StarClass.Length > 0) ? Bodies.StarName(Bodies.StarStr2Enum(StarClass)) : "";
         }
 
         public string StarSystem { get; set; }
         public string StarClass { get; set; }
         public long SystemAddress { get; set; }
         public int? RemainingJumpsInRoute { get; set; }
+        public string FriendlyStarClass { get; set; }
 
         public override void FillInformation(out string info, out string detailed)
         {
@@ -741,7 +736,11 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", JumpType, "< to ".T(EDTx.JournalEntry_to), StarSystem, "", FriendlyStarClass);
+            if (IsHyperspace)
+                info = "Hyperspace".T(EDTx.JournalEntry_Hyperspace) + " " + BaseUtils.FieldBuilder.Build("<to ".T(EDTx.JournalEntry_to), StarSystem, "", FriendlyStarClass);
+            else
+                info = "Supercruise".T(EDTx.JournalEntry_Supercruise);
+
             detailed = "";
         }
     }

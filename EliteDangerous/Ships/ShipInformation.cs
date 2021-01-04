@@ -19,9 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EliteDangerousCore.JournalEvents;
-using Newtonsoft.Json.Linq;
-using System.IO;
-using EliteDangerousCore.DB;
+using BaseUtils.JSON;
 
 namespace EliteDangerousCore
 {
@@ -456,7 +454,7 @@ namespace EliteDangerousCore
         {
             if (fuellevel != 0 && ( Math.Abs(FuelLevel - fuellevel) > 0.01 || Math.Abs(ReserveFuelCapacity - reserve) > 0.01))
             {
-                System.Diagnostics.Debug.WriteLine("Update ship fuel to " + fuellevel + " " + reserve);
+                //System.Diagnostics.Debug.WriteLine("Update ship fuel to " + fuellevel + " " + reserve);
 
                 ShipInformation sm = this.ShallowClone();
 
@@ -683,9 +681,9 @@ namespace EliteDangerousCore
 
             jo["Modules"] = mlist;
 
-            System.Diagnostics.Debug.WriteLine("Export " + jo.ToString(Newtonsoft.Json.Formatting.Indented));
+            System.Diagnostics.Debug.WriteLine("Export " + jo.ToString());
 
-            return jo.ToString(Newtonsoft.Json.Formatting.Indented);
+            return jo.ToString();
         }
 
         private JObject ToJsonCoriolisEngineering(ShipModule module)
@@ -719,7 +717,7 @@ namespace EliteDangerousCore
             return engineering;
         }
 
-        public JObject ToJSONLoadout()
+        public string ToJSONLoadout()
         {
             JObject jo = new JObject();
 
@@ -772,7 +770,7 @@ namespace EliteDangerousCore
 
             jo["Modules"] = mlist;
 
-            return jo;
+            return jo.ToString();
         }
 
         #endregion

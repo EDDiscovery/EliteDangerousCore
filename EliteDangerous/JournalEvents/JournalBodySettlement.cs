@@ -13,7 +13,7 @@
  * 
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
@@ -105,6 +105,7 @@ namespace EliteDangerousCore.JournalEvents
         public long? SystemAddress { get; set; }
         public int? BodyID { get; set; }
         public string BodyName { get; set; }
+        public string BodyType { get { return "Settlement"; } }
 
         public override void FillInformation(out string info, out string detailed)
         {

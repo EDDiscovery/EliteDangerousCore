@@ -407,10 +407,10 @@ namespace EliteDangerousCore
             // rare raw
 
             AddRaw("Yttrium", ItemType.Rare, MaterialGroupType.RawCategory1, "Y");
-            AddRaw("Tellurium", ItemType.Rare, MaterialGroupType.RawCategory2, "Te");
+            AddRaw("Technetium", ItemType.Rare, MaterialGroupType.RawCategory2, "Tc");
             AddRaw("Ruthenium", ItemType.Rare, MaterialGroupType.RawCategory3, "Ru");
             AddRaw("Selenium", ItemType.Rare, MaterialGroupType.RawCategory4, "Se");
-            AddRaw("Technetium", ItemType.Rare, MaterialGroupType.RawCategory5, "Tc");
+            AddRaw("Tellurium", ItemType.Rare, MaterialGroupType.RawCategory5, "Te");
             AddRaw("Polonium", ItemType.Rare, MaterialGroupType.RawCategory6, "Po");
             AddRaw("Antimony", ItemType.Rare, MaterialGroupType.RawCategory7, "Sb");
 

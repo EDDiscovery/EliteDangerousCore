@@ -13,7 +13,7 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System;
 using System.Linq;
 
@@ -33,9 +33,14 @@ namespace EliteDangerousCore.JournalEvents
             nLongitude = evt["Longitude"].DoubleNull();
             nAltitude = evt["Altitude"].DoubleNull();
             nHeading = evt["Heading"].DoubleNull();
+
+            EDDInputFile = evt["EDDInputFile"].Str();
+            EDDOutputFile = evt["EDDOutputFile"].Str();
+            EDDOutputWidth = evt["EDDOutputWidth"].Int();
+            EDDOutputHeight = evt["EDDOutputHeight"].Int();
         }
 
-        public string Filename { get; set; }
+        public string Filename { get; set; }        // orginal from elite
         public int Width { get; set; }
         public int Height { get; set; }
         public string System { get; set; }
@@ -45,6 +50,11 @@ namespace EliteDangerousCore.JournalEvents
         public double? nAltitude { get; set; }
         public double? nHeading { get; set; }
 
+        public string EDDInputFile { get; set; }        // may be Deleted
+        public string EDDOutputFile { get; set; }
+        public int EDDOutputWidth { get; set; }
+        public int EDDOutputHeight { get; set; }
+
         public override void FillInformation(out string info, out string detailed)  
         {
             info = BaseUtils.FieldBuilder.Build("At ".T(EDTx.JournalScreenshot_At), Body , "< in ".T(EDTx.JournalScreenshot_in), System , "File:".T(EDTx.JournalScreenshot_File), Filename, 
@@ -52,9 +62,14 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void SetConvertedFilename(string input_filename, string output_filename, int width, int height)
+        public void SetConvertedFilename(string input_filename, string output_filename, int width, int height)  // called when screenshot is captured, records info for later display
         {
-            JObject jo = GetJson();
+            EDDInputFile = input_filename;
+            EDDOutputFile = output_filename;
+            EDDOutputWidth = width;
+            EDDOutputHeight = height;
+
+            JObject jo = GetJsonCloned();       // get a fresh copy as we are about to mod it
             if (jo != null)
             {
                 jo["EDDInputFile"] = input_filename;
@@ -63,67 +78,6 @@ namespace EliteDangerousCore.JournalEvents
                 jo["EDDOutputHeight"] = height;
                 EliteDangerousCore.DB.UserDatabase.Instance.ExecuteWithDatabase(cn=> UpdateJsonEntry(jo,cn.Connection) );
             }
-        }
-
-        public void GetConvertedFilename(out string input_filename, out string output_filename, out int width, out int height)
-        {
-            JObject jo = GetJson();
-            input_filename = jo == null ? null : jo["EDDInputFile"]?.ToString();
-            output_filename = jo == null ? null : jo["EDDOutputFile"]?.ToString();
-            width = jo == null ? 0 : jo["EDDOutputWidth"].Int();
-            height = jo == null ? 0 : jo["EDDOutputHeight"].Int();
-        }
-
-        public static JournalScreenshot GetScreenshot(string filename, int width, int height, DateTime timestamputc, string sysname, int cmdrid)
-        {
-            JournalScreenshot ss = null;
-            string body = null;
-
-            if (cmdrid >= 0)
-            {
-                JournalEntry je = JournalEntry.GetLast(cmdrid, timestamputc + TimeSpan.FromSeconds(2), e =>
-                    e is JournalScreenshot ||
-                    e is JournalSupercruiseEntry ||
-                    e is JournalSupercruiseExit ||
-                    e is JournalLocation ||
-                    e is JournalFSDJump);
-
-                if (je is JournalScreenshot && (sysname == null || sysname == ((JournalScreenshot)je).System) && Math.Abs(timestamputc.Subtract(je.EventTimeUTC).TotalSeconds) < 2)
-                {
-                    ss = je as JournalScreenshot;
-                    body = ss.Body;
-                    sysname = ss.System;
-                }
-                if (je is JournalSupercruiseExit)
-                {
-                    body = ((JournalSupercruiseExit)je).Body;
-                    sysname = ((JournalSupercruiseExit)je).StarSystem;
-                }
-                else if (je is JournalLocation)
-                {
-                    body = ((JournalLocation)je).Body;
-                    sysname = ((JournalLocation)je).StarSystem;
-                }
-            }
-
-            if (ss == null)
-            {
-                JObject jo = JObject.FromObject(new
-                {
-                    timestamp = timestamputc.ToUniversalTime().ToString("s") + "Z",
-                    @event = "Screenshot",
-                    Filename = filename,
-                    Width = width,
-                    Height = height,
-                    System = sysname,
-                    Body = body
-                });
-
-                ss = JournalEntry.CreateJournalEntry(jo) as JournalScreenshot;
-                ss.Add(jo);
-            }
-
-            return ss;
         }
     }
 }

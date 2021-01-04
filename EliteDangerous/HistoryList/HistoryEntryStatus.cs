@@ -25,6 +25,7 @@ namespace EliteDangerousCore
 
         public string BodyName { get; private set; }
         public int? BodyID { get; private set; }
+        public bool HasBodyID { get { return BodyID.HasValue && BodyID.Value >= 0; } }
         public string BodyType { get; private set; }
         public string StationName { get; private set; }
         public string StationType { get; private set; }
@@ -38,6 +39,7 @@ namespace EliteDangerousCore
         public string Group { get; private set; } = "";                   // group..
         public bool Wanted { get; private set; } = false;
         public bool BodyApproached { get; private set; } = false;           // set at approach body, cleared at leave body or fsd jump
+        public string StationFaction { get; private set; } = "";          // when docked
 
         private HistoryEntryStatus()
         {
@@ -60,6 +62,7 @@ namespace EliteDangerousCore
             Group = prevstatus.Group;
             Wanted = prevstatus.Wanted;
             BodyApproached = prevstatus.BodyApproached;
+            StationFaction = prevstatus.StationFaction;
         }
 
         public static HistoryEntryStatus Update(HistoryEntryStatus prev, JournalEntry je, string curStarSystem)
@@ -85,6 +88,7 @@ namespace EliteDangerousCore
                         Wanted = jloc.Wanted,
                         StationName = jloc.StationName.Alt(null),       // if empty string, set to null
                         StationType = jloc.StationType.Alt(null),
+                        StationFaction = jloc.StationFaction,          // may be null
                     };
 
                 case JournalTypeEnum.CarrierJump:
@@ -114,6 +118,7 @@ namespace EliteDangerousCore
                         StationName = null,
                         StationType = null,
                         BodyApproached = false,
+                        StationFaction = null, // to ensure
                     };
                 case JournalTypeEnum.LoadGame:
                     JournalLoadGame jlg = je as JournalLoadGame;
@@ -131,9 +136,11 @@ namespace EliteDangerousCore
                         ShipType = shiptype,
                         ShipID = shipid,
                         ShipTypeFD = shiptypefd,
+                        StationFaction = null, // to ensure
                     };
                 case JournalTypeEnum.Docked:
                     JournalDocked jdocked = (JournalDocked)je;
+                    //System.Diagnostics.Debug.WriteLine("{0} Station {1} {2}", jdocked.EventTimeUTC, jdocked.StationName, jdocked.Faction);
                     return new HistoryEntryStatus(prev)
                     {
                         TravelState = TravelStateType.Docked,
@@ -141,6 +148,7 @@ namespace EliteDangerousCore
                         Wanted = jdocked.Wanted,
                         StationName = jdocked.StationName,
                         StationType = jdocked.StationType,
+                        StationFaction = jdocked.Faction,
                     };
                 case JournalTypeEnum.Undocked:
                     return new HistoryEntryStatus(prev)
@@ -149,6 +157,7 @@ namespace EliteDangerousCore
                         MarketId = null,
                         StationName = null,
                         StationType = null,
+                        StationFaction = null, // to clear
                     };
                 case JournalTypeEnum.Touchdown:
                     if (((JournalTouchdown)je).PlayerControlled == true)        // can get this when not player controlled
@@ -197,6 +206,15 @@ namespace EliteDangerousCore
                         BodyType = jappbody.BodyType,
                         BodyName = jappbody.Body,
                         BodyID = jappbody.BodyID,
+                    };
+                case JournalTypeEnum.ApproachSettlement:
+                    JournalApproachSettlement jappsettlement = (JournalApproachSettlement)je;
+                    return new HistoryEntryStatus(prev)
+                    {
+                        BodyApproached = true,
+                        BodyType = jappsettlement.BodyType,
+                        BodyName = jappsettlement.BodyName,
+                        BodyID = jappsettlement.BodyID,
                     };
                 case JournalTypeEnum.LeaveBody:
                     JournalLeaveBody jlbody = (JournalLeaveBody)je;

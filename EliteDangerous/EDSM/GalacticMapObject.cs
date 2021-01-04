@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 EDDiscovery development team
+ * Copyright © 2016-2020 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -15,9 +15,9 @@
  */
 
 using EMK.LightGeometry;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using BaseUtils.JSON;
 
 namespace EliteDangerousCore.EDSM
 {
@@ -59,14 +59,14 @@ namespace EliteDangerousCore.EDSM
 
                 if (coords.Count > 0)
                 {
-                    if (coords[0].Type == JTokenType.Array)
+                    if (coords[0].IsArray)
                     {
                         foreach (JArray ja in coords)
                         {
                             float x, y, z;
-                            x = ja[0].Value<float>();
-                            y = ja[1].Value<float>();
-                            z = ja[2].Value<float>();
+                            x = ja[0].Float();
+                            y = ja[1].Float();
+                            z = ja[2].Float();
                             points.Add(new Vector3(x, y, z));
                         }
                     }
@@ -75,9 +75,9 @@ namespace EliteDangerousCore.EDSM
                         JArray plist = coords;
 
                         float x, y, z;
-                        x = plist[0].Value<float>();
-                        y = plist[1].Value<float>();
-                        z = plist[2].Value<float>();
+                        x = plist[0].Float();
+                        y = plist[1].Float();
+                        z = plist[2].Float();
                         points.Add(new Vector3(x, y, z));
                     }
                 }

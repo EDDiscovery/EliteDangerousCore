@@ -15,6 +15,8 @@
  */
 
 using EliteDangerousCore.DB;
+using System;
+using System.Collections.Generic;
 
 namespace EliteDangerousCore
 {
@@ -65,7 +67,7 @@ namespace EliteDangerousCore
 
     public interface IAdditionalFiles
     {
-        bool ReadAdditionalFiles(string directory, bool inhistoryparse, ref Newtonsoft.Json.Linq.JObject jo);     // true if your happy, you can replace jo..
+        bool ReadAdditionalFiles(string directory, bool inhistoryparse, ref BaseUtils.JSON.JObject jo);     // true if your happy, you can replace jo..
     }
 
     public interface IScanDataChanges       // no functions, just marks entries which change scan data. IBodyNameAndID also changes starscan
@@ -76,5 +78,24 @@ namespace EliteDangerousCore
     public interface IJournalJumpColor
     {
         int MapColor { get; set; }
+    }
+
+    public interface IStatsJournalEntry
+    {
+        void UpdateStats(Stats stats, string stationfaction);
+    }
+
+    public interface IStatsJournalEntryMatCommod : IStatsJournalEntry
+    {
+        List<Tuple<string, int>> ItemsList { get; }     // negative means sold
+    }
+
+    public interface IStatsJournalEntryBountyOrBond : IStatsJournalEntry
+    {
+        string Type { get; }
+        string Target { get; }
+        string TargetFaction { get; }
+        bool HasFaction(string faction);
+        long FactionReward(string faction);
     }
 }

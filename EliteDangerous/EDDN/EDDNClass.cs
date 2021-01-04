@@ -13,18 +13,15 @@
  * 
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using EliteDangerousCore;
+
 using EliteDangerousCore.JournalEvents;
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Management;
 using System.Reflection;
-using System.Text;
 
 namespace EliteDangerousCore.EDDN
 {
@@ -370,29 +367,32 @@ namespace EliteDangerousCore.EDDN
                 {
                     JToken allowedField = allowedFields[kvp.Key];
 
-                    if (kvp.Value is JValue && allowedField.BoolNull() == true)
+                    if (kvp.Value.HasValue )
                     {
-                        ret[kvp.Key] = kvp.Value;
-                    }
-                    else if (kvp.Value is JArray && allowedField is JArray && ((JArray)allowedField).Count == 1 && allowedField[0] is JObject)
+                        if (allowedField.BoolNull() == true)      // if straight value and allowed)
+                            ret[kvp.Key] = kvp.Value;
+                        else
+                            System.Diagnostics.Debug.WriteLine("Reject Field " + mpath);
+                    }                                                               // if Jarray, allowed is Jarray, and one JOBJECT underneath
+                    else if (kvp.Value.IsArray && allowedField.IsArray && allowedField.Count == 1 && allowedField[0] is JObject)
                     {
                         JObject allowed = (JObject)allowedField[0];
                         JArray vals = new JArray();
 
-                        foreach (JObject val in kvp.Value)
+                        foreach (JObject val in kvp.Value)      // go thru array
                         {
                             vals.Add(FilterJournalEvent(val, allowed, $"{mpath}[]"));
                         }
 
                         ret[kvp.Key] = vals;
                     }
-                    else if (kvp.Value is JArray && allowedField.StrNull() == "[]")
+                    else if (kvp.Value.IsArray && allowedField.StrNull() == "[]")     //  if Jarray, and allowed fields is a special [] string marker
                     {
                         JArray vals = new JArray();
 
-                        foreach (JToken val in kvp.Value)
+                        foreach (JToken val in kvp.Value)       // just add all values
                         {
-                            if (val is JValue)
+                            if (val.HasValue)
                             {
                                 vals.Add(val);
                             }
@@ -403,31 +403,13 @@ namespace EliteDangerousCore.EDDN
                         }
 
                         ret[kvp.Key] = vals;
-                    }
-                    else if (kvp.Value is JObject && allowedField is JObject)
+                    }       
+                    else if (kvp.Value.IsObject && allowedField.IsObject)       // if object, and allowed is object
                     {
                         JObject allowed = (JObject)allowedField;
                         JObject val = (JObject)kvp.Value;
 
-                        ret[kvp.Key] = FilterJournalEvent(val, allowed, mpath);
-                    }
-                    else if (kvp.Value is JObject && kvp.Key == "Materials")
-                    {
-                        JObject vals = new JObject();
-
-                        foreach (var mkvp in (JObject)kvp.Value)
-                        {
-                            if (mkvp.Value is JValue)
-                            {
-                                vals[mkvp.Key] = mkvp.Value;
-                            }
-                            else
-                            {
-                                Trace.WriteLine($"Material value {mpath}.{mkvp.Key} is not a value: {mkvp.Value?.ToString()}");
-                            }
-                        }
-
-                        ret[kvp.Key] = vals;
+                        ret[kvp.Key] = FilterJournalEvent(val, allowed, mpath);     // recurse add
                     }
                     else
                     {
@@ -445,11 +427,11 @@ namespace EliteDangerousCore.EDDN
 
         private JObject RemoveCommonKeys(JObject obj)
         {
-            foreach (JProperty prop in obj.Properties().ToList())
+            foreach (var key in obj.PropertyNames())
             {
-                if (prop.Name.EndsWith("_Localised") || prop.Name.StartsWith("EDD"))
+                if (key.EndsWith("_Localised") || key.StartsWith("EDD"))
                 {
-                    obj.Remove(prop.Name);
+                    obj.Remove(key);
                 }
             }
 
@@ -485,9 +467,9 @@ namespace EliteDangerousCore.EDDN
                 {
                     RemoveCommonKeys(economy);
                 }
-            }
 
-            jo["StationEconomies"] = economies;
+                jo["StationEconomies"] = economies;
+            }
 
             return jo;
         }
@@ -502,14 +484,14 @@ namespace EliteDangerousCore.EDDN
             msg["header"] = Header();
             msg["$schemaRef"] = GetEDDNJournalSchemaRef();
 
-            JObject message = journal.GetJson();
+            JObject message = journal.GetJsonCloned();
 
             if (message == null)
             {
                 return null;
             }
 
-            if (message["FuelUsed"].Empty() || message["SystemAddress"] == null)  // Old ED 2.1 messages has no Fuel used fields
+            if (message["FuelUsed"].IsNull() || message["SystemAddress"] == null)  // Old ED 2.1 messages has no Fuel used fields
                 return null;
 
             if (message["StarPosFromEDSM"] != null)  // Reject systems recently updated with EDSM coords
@@ -541,7 +523,7 @@ namespace EliteDangerousCore.EDDN
             msg["header"] = Header();
             msg["$schemaRef"] = GetEDDNJournalSchemaRef();
 
-            JObject message = journal.GetJson();
+            JObject message = journal.GetJsonCloned();
 
             if (message == null)
             {
@@ -576,7 +558,7 @@ namespace EliteDangerousCore.EDDN
             msg["header"] = Header();
             msg["$schemaRef"] = GetEDDNJournalSchemaRef();
 
-            JObject message = journal.GetJson();
+            JObject message = journal.GetJsonCloned();
 
             if (message == null)
             {
@@ -614,7 +596,7 @@ namespace EliteDangerousCore.EDDN
             msg["header"] = Header();
             msg["$schemaRef"] = GetEDDNJournalSchemaRef();
 
-            JObject message = journal.GetJson();
+            JObject message = journal.GetJsonCloned();
 
             if (message == null)
             {
@@ -635,35 +617,7 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
-        public JObject CreateEDDNJournalMessage(JournalOutfitting journal, double x, double y, double z, long? systemAddress)
-        {
-            if (journal.ItemList.Items == null)
-                return null;
-
-            JObject msg = new JObject();
-
-            msg["header"] = Header();
-            msg["$schemaRef"] = GetEDDNJournalSchemaRef();
-
-            JObject message = journal.GetJson();
-
-            if (message == null)
-            {
-                return null;
-            }
-
-            message = RemoveCommonKeys(message);
-
-            message["StarPos"] = new JArray(new float[] { (float)x, (float)y, (float)z });
-
-            if (systemAddress != null)
-                message["SystemAddress"] = systemAddress;
-
-            msg["message"] = message;
-            return msg;
-        }
-
-        public JObject CreateEDDNOutfittingMessage(JournalOutfitting journal, ISystem system = null)
+        public JObject CreateEDDNOutfittingMessage(JournalOutfitting journal)
         {
             if (journal.ItemList.Items == null)
                 return null;
@@ -694,35 +648,7 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
-        public JObject CreateEDDNJournalMessage(JournalShipyard journal, double x, double y, double z, long? systemAddress)
-        {
-            if (journal.Yard.Ships == null)
-                return null;
-
-            JObject msg = new JObject();
-
-            msg["header"] = Header();
-            msg["$schemaRef"] = GetEDDNJournalSchemaRef();
-
-            JObject message = journal.GetJson();
-
-            if (message == null)
-            {
-                return null;
-            }
-
-            message = RemoveCommonKeys(message);
-
-            message["StarPos"] = new JArray(new float[] { (float)x, (float)y, (float)z });
-
-            if (systemAddress != null)
-                message["SystemAddress"] = systemAddress;
-
-            msg["message"] = message;
-            return msg;
-        }
-
-        public JObject CreateEDDNShipyardMessage(JournalShipyard journal, ISystem system = null)
+        public JObject CreateEDDNShipyardMessage(JournalShipyard journal)
         {
             if (journal.Yard.Ships == null)
                 return null;
@@ -753,34 +679,6 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
-        public JObject CreateEDDNJournalMessage(JournalMarket journal, double x, double y, double z, long? systemAddress)
-        {
-            if (journal.Commodities == null || journal.Commodities.Count == 0)
-                return null;
-
-            JObject msg = new JObject();
-
-            msg["header"] = Header();
-            msg["$schemaRef"] = GetEDDNJournalSchemaRef();
-
-            JObject message = journal.GetJson();
-
-            if (message == null)
-            {
-                return null;
-            }
-
-            message = RemoveCommonKeys(message);
-
-            message["StarPos"] = new JArray(new float[] { (float)x, (float)y, (float)z });
-
-            if (systemAddress != null)
-                message["SystemAddress"] = systemAddress;
-
-            msg["message"] = message;
-            return msg;
-        }
-
         public JObject CreateEDDNMessage(JournalScan journal, ISystem system)
         {
             if (system.SystemAddress == null)
@@ -795,7 +693,7 @@ namespace EliteDangerousCore.EDDN
             msg["header"] = Header();
             msg["$schemaRef"] = GetEDDNJournalSchemaRef();
 
-            JObject message = journal.GetJson();
+            JObject message = journal.GetJsonCloned();
 
             if (message == null)
             {
@@ -850,7 +748,7 @@ namespace EliteDangerousCore.EDDN
             msg["header"] = Header();
             msg["$schemaRef"] = GetEDDNJournalSchemaRef();
 
-            JObject message = journal.GetJson();
+            JObject message = journal.GetJsonCloned();
 
             if (message == null)
             {
@@ -933,11 +831,20 @@ namespace EliteDangerousCore.EDDN
         {
             try
             {
+                System.Diagnostics.Debug.WriteLine("EDDN Send");
+
                 BaseUtils.ResponseData resp = RequestPost(msg.ToString(), "");
 
                 if (resp.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    System.Diagnostics.Debug.WriteLine("EDDN Status OK");
                     return true;
-                else return false;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("EDDN Error code " + resp.StatusCode);
+                    return false;
+                }
             }
             catch (System.Net.WebException ex)
             {
@@ -960,86 +867,5 @@ namespace EliteDangerousCore.EDDN
                 return false;
             }
         }
-
-
-
-        static public bool CheckforEDMC()
-        {
-            string EDMCFileName = null;
-
-
-            try
-            {
-                Process[] processes32 = Process.GetProcessesByName("EDMarketConnector");
-               
-
-                Process[] processes = processes32;
-
-                if (processes == null)
-                {
-                    return  false;
-                }
-                else if (processes.Length == 0)
-                {
-                    return false;
-                }
-                else
-                {
-                    string processFilename = null;
-                    try
-                    {
-                        int id = processes[0].Id;
-                        processFilename = GetMainModuleFilepath(id);        // may return null if id not found (seen this)
-
-                        if (processFilename != null)
-                            EDMCFileName = processFilename;
-                    }
-                    catch (Win32Exception)
-                    {
-                    }
-
-                    if (EDMCFileName != null)                                 // if found..
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-            catch (Exception)
-            {
-            }
-            return false;
-        }
-
-        private static string GetMainModuleFilepath(int processId)
-        {
-            string wmiQueryString = "SELECT ProcessId, ExecutablePath FROM Win32_Process WHERE ProcessId = " + processId;
-
-            using (var searcher = new ManagementObjectSearcher(wmiQueryString))
-            {
-                if (searcher != null)           // seen it return null
-                {
-                    using (var results = searcher.Get())
-                    {
-                        if (results != null)
-                        {
-                            foreach (ManagementObject mo in results)
-                            {
-                                if (mo != null)
-                                {
-                                    return (string)mo["ExecutablePath"];
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-
-
-
-
     }
 }

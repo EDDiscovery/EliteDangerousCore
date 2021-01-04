@@ -28,52 +28,61 @@ namespace EliteDangerousCore.DLL
         public List<EDDDLLCaller> DLLs { get; private set; } = new List<EDDDLLCaller>();
 
         // search directory for *.dll, 
-        // return loaded, failed, notallowed
-        public Tuple<string, string, string> Load(string directory, string ourversion, string dllfolder, EDDDLLIF.EDDCallBacks callbacks, string allowed)
+        // return loaded, failed, new dlls not in the allowed/disallowed list
+        // alloweddisallowed list is +allowed,-disallowed.. 
+        // all Csharp assembly DLLs are loaded - only ones implementing *EDDClass class causes it to be added to the DLL list
+        // only normal DLLs implementing EDDInitialise are kept loaded
+
+        public Tuple<string, string, string> Load(string dlldirectory, string ourversion, string[] inoptions, 
+                                EDDDLLInterfaces.EDDDLLIF.EDDCallBacks callbacks, string alloweddisallowed)
         {
             string loaded = "";
             string failed = "";
-            string notallowed = "";
+            string newdlls = "";
 
-            if (!Directory.Exists(directory))
+            if (!Directory.Exists(dlldirectory))
                 failed = "DLL Folder does not exist";
             else
             {
-                FileInfo[] allFiles = Directory.EnumerateFiles(directory, "*.dll", SearchOption.TopDirectoryOnly).Select(f => new FileInfo(f)).OrderBy(p => p.LastWriteTime).ToArray();
+                FileInfo[] allFiles = Directory.EnumerateFiles(dlldirectory, "*.dll", SearchOption.TopDirectoryOnly).Select(f => new FileInfo(f)).OrderBy(p => p.LastWriteTime).ToArray();
 
-                string[] allowedfiles = allowed.Split(',');
+                string[] allowedfiles = alloweddisallowed.Split(',');
 
                 foreach (FileInfo f in allFiles)
                 {
-                    string filename = System.IO.Path.GetFileNameWithoutExtension(f.FullName);
-
                     EDDDLLCaller caller = new EDDDLLCaller();
 
+                    System.Diagnostics.Debug.WriteLine("Try to load " + f.FullName);
 
-                    if (caller.Load(f.FullName))        // if loaded (meaning it loaded, and its got EDDInitialise)
+                    string filename = System.IO.Path.GetFileNameWithoutExtension(f.FullName);
+
+                    bool isallowed = alloweddisallowed.Equals("All", StringComparison.InvariantCultureIgnoreCase) || allowedfiles.Contains("+" + filename, StringComparer.InvariantCultureIgnoreCase);
+
+                    if (isallowed)    // if allowed..
                     {
-                        if (allowed.Equals("All", StringComparison.InvariantCultureIgnoreCase) || allowedfiles.Contains(filename, StringComparer.InvariantCultureIgnoreCase))    // if allowed..
+                        if (caller.Load(f.FullName))        // if loaded okay
                         {
-                            if (caller.Init(ourversion, dllfolder, callbacks))       // must init
+                            if (caller.Init(ourversion, inoptions, dlldirectory, callbacks))       // must init
                             {
                                 DLLs.Add(caller);
-                                loaded = loaded.AppendPrePad(caller.Name, ",");
+                                loaded = loaded.AppendPrePad(filename, ",");
                             }
                             else
                             {
                                 string errstr = caller.Version.HasChars() ? (": " + caller.Version.Substring(1)) : "";
-                                failed = failed.AppendPrePad(caller.Name + errstr, ",");
+                                failed = failed.AppendPrePad(filename + errstr, ",");
                             }
                         }
-                        else
-                        {
-                            notallowed = notallowed.AppendPrePad(caller.Name, ",");
-                        }
+                    }
+                    else
+                    {
+                        if (!allowedfiles.Contains("-" + filename, StringComparer.InvariantCultureIgnoreCase))   // is not disallowed, its new, ask
+                            newdlls = newdlls.AppendPrePad(filename, ",");
                     }
                 }
             }
 
-            return new Tuple<string, string, string>(loaded, failed, notallowed);
+            return new Tuple<string, string, string>(loaded, failed, newdlls);
         }
 
         public void UnLoad()
@@ -86,7 +95,7 @@ namespace EliteDangerousCore.DLL
             DLLs.Clear();
         }
 
-        public void Refresh(string cmdr, EDDDLLIF.JournalEntry je)
+        public void Refresh(string cmdr, EDDDLLInterfaces.EDDDLLIF.JournalEntry je)
         {
             foreach (EDDDLLCaller caller in DLLs)
             {
@@ -94,11 +103,19 @@ namespace EliteDangerousCore.DLL
             }
         }
 
-        public void NewJournalEntry(EDDDLLIF.JournalEntry nje)
+        public void NewJournalEntry(EDDDLLInterfaces.EDDDLLIF.JournalEntry nje, bool stored)
         {
             foreach (EDDDLLCaller caller in DLLs)
             {
-                caller.NewJournalEntry(nje);
+                caller.NewJournalEntry(nje, stored);
+            }
+        }
+
+        public void NewUIEvent(string json)
+        {
+            foreach (EDDDLLCaller caller in DLLs)
+            {
+                caller.NewUIEvent(json);
             }
         }
 
@@ -108,7 +125,7 @@ namespace EliteDangerousCore.DLL
         }
 
         // item1 = true if found, item2 = true if caller implements.
-        public Tuple<bool, bool> ActionJournalEntry(string dllname, EDDDLLIF.JournalEntry nje)
+        public Tuple<bool, bool> ActionJournalEntry(string dllname, EDDDLLInterfaces.EDDDLLIF.JournalEntry nje)
         {
             if (dllname.Equals("All", StringComparison.InvariantCultureIgnoreCase))
             {

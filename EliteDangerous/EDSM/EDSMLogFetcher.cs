@@ -1,9 +1,24 @@
-﻿using System;
+﻿/*
+ * Copyright © 2016-2020 EDDiscovery development team
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ *
+ * EDDiscovery is not affiliated with Frontier Developments plc.
+ */
+ 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Globalization;
-using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using EliteDangerousCore.JournalEvents;
 using EliteDangerousCore.DB;
@@ -175,9 +190,7 @@ namespace EliteDangerousCore.EDSM
 
             List<HistoryEntry> hlfsdlist = JournalEntry.GetAll(Commander.Nr, logstarttime.AddDays(-1), logendtime.AddDays(1)).
                 OfType<JournalLocOrJump>().OrderBy(je => je.EventTimeUTC).
-                Select(je => HistoryEntry.FromJournalEntry(je, null, true, out bool jupdate)).ToList();    // using HE just because of the FillEDSM func
-
-            HistoryList hl = new HistoryList(hlfsdlist);        // just so we can access the FillEDSM func
+                Select(je => HistoryEntry.FromJournalEntry(je, null)).ToList();   
 
             List<JournalFSDJump> toadd = new List<JournalFSDJump>();
 
@@ -186,7 +199,7 @@ namespace EliteDangerousCore.EDSM
             {
                 int index = hlfsdlist.FindIndex(x => x.System.Name.Equals(jfsd.StarSystem, StringComparison.InvariantCultureIgnoreCase) && x.EventTimeUTC.Ticks == jfsd.EventTimeUTC.Ticks);
 
-                if (index < 0)
+                if (index < 0)      // not found, see if its around that date..
                 {
                     // Look for any entries where DST may have thrown off the time
                     foreach (var vi in hlfsdlist.Select((v, i) => new { v = v, i = i }).Where(vi => vi.v.System.Name.Equals(jfsd.StarSystem, StringComparison.InvariantCultureIgnoreCase)))
@@ -196,17 +209,8 @@ namespace EliteDangerousCore.EDSM
                             double hdiff = vi.v.EventTimeUTC.Subtract(jfsd.EventTimeUTC).TotalHours;
                             if (hdiff >= -2 && hdiff <= 2 && hdiff == Math.Floor(hdiff))
                             {
-                                if (vi.v.System.EDSMID <= 0)        // if we don't have a valid EDMSID..
-                                {
-                                    vi.v.System.EDSMID = 0;
-                                    hl.FillEDSM(vi.v);
-                                }
-
-                                if (vi.v.System.EDSMID <= 0 || vi.v.System.EDSMID == jfsd.EdsmID)
-                                {
-                                    index = vi.i;
-                                    break;
-                                }
+                                index = vi.i;       // same system, nearly same time.. TBD check
+                                break;
                             }
                         }
                     }
@@ -223,7 +227,6 @@ namespace EliteDangerousCore.EDSM
                     if (existingfsd != null && existingfsd.EDSMFirstDiscover != jfsd.EDSMFirstDiscover)    // if we have a FSD one, and first discover is different
                     {
                         existingfsd.UpdateFirstDiscover(jfsd.EDSMFirstDiscover);
-
                     }
 
                     previdx = index;
@@ -234,11 +237,8 @@ namespace EliteDangerousCore.EDSM
             {
                 System.Diagnostics.Debug.WriteLine($"Adding EDSM logs count {toadd.Count}");
 
-                TravelLogUnit tlu = new TravelLogUnit();    // need a tlu for it
-                tlu.type = TravelLogUnit.EDSMType;  // EDSM
-                tlu.Name = "EDSM-" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                tlu.Size = 0;
-                tlu.Path = "EDSM";
+                TravelLogUnit tlu = new TravelLogUnit("EDSM\\EDSM-" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture));    // need a tlu for it
+                tlu.Type = TravelLogUnit.EDSMType;  // EDSM
                 tlu.CommanderId = EDCommander.CurrentCmdrID;
                 tlu.Add();  // Add to Database
 
@@ -247,7 +247,7 @@ namespace EliteDangerousCore.EDSM
                     foreach (JournalFSDJump jfsd in toadd)
                     {
                         System.Diagnostics.Trace.WriteLine(string.Format("Add {0} {1}", jfsd.EventTimeUTC, jfsd.StarSystem));
-                        jfsd.SetTLUCommander(tlu.id, tlu.CommanderId.Value);        // update its TLU id to the TLU made above
+                        jfsd.SetTLUCommander(tlu.ID, tlu.CommanderId.Value);        // update its TLU id to the TLU made above
                         jfsd.Add(jfsd.CreateFSDJournalEntryJson(), cn.Connection);     // add it to the db with the JSON created
                     }
                 });

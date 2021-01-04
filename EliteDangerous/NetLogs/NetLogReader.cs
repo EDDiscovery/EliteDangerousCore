@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2016 EDDiscovery development team
+ * Copyright © 2015 - 2020 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -21,7 +21,7 @@ using System.Globalization;
 using EliteDangerousCore.DB;
 using System.IO;
 using EliteDangerousCore.JournalEvents;
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 
 namespace EliteDangerousCore
 {
@@ -33,9 +33,6 @@ namespace EliteDangerousCore
 
         // Public release date of Elite: Dangerous
         DateTime gammastart = new DateTime(2014, 11, 22, 13, 00, 00);
-
-        // Cached list of previous travel log entries
-        protected List<JournalLocOrJump> systems;
 
         // Close Quarters Combat
         public bool CQC { get; set; }
@@ -49,25 +46,13 @@ namespace EliteDangerousCore
 
         public NetLogFileReader(string filename) : base(filename)
         {
-            systems = new List<JournalLocOrJump>();
         }
 
-        public NetLogFileReader(TravelLogUnit tlu, List<JournalLocOrJump> vsclist = null) : base(tlu)
+        public NetLogFileReader(TravelLogUnit tlu) : base(tlu)
         {
-            if (vsclist != null)
-            {
-                systems = vsclist;
-            }
-            else
-            {
-                UserDatabase.Instance.ExecuteWithDatabase(cn =>
-                {
-                    systems = JournalEntry.GetAllByTLU(tlu.id, cn.Connection).OfType<JournalLocOrJump>().ToList();
-                });
-            }
         }
 
-        protected bool ParseTime(string time)
+        private bool ParseTime(string time)
         {
             TimeSpan logtime;
             TimeSpan lasttime = (LastLogTime + TimeZoneOffset).TimeOfDay;
@@ -102,7 +87,7 @@ namespace EliteDangerousCore
             return false;
         }
 
-        protected bool ParseLineTime(string line)
+        private bool ParseLineTime(string line)
         {
             if (line.Length > 11 && line[0] == '{' && line[3] == ':' && line[6] == ':' && line[9] == '}' && line[10] == ' ')
             {
@@ -116,7 +101,7 @@ namespace EliteDangerousCore
             return false;
         }
 
-        protected bool ParseVisitedSystem(DateTime time, TimeSpan tzoffset, string line, out JObject jo, out JournalLocOrJump je)
+        private bool ParseVisitedSystem(DateTime time, TimeSpan tzoffset, string line, out JObject jo, out JournalLocOrJump je)
         {
             jo = new JObject();
             jo["timestamp"] = time.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'");
@@ -221,21 +206,26 @@ namespace EliteDangerousCore
             }
         }
 
-        public bool ReadNetLogSystem(out JObject jo, out JournalLocOrJump je, Func<bool> cancelRequested = null, Stream stream = null, bool ownstream = false)
+        private bool ReadNetLogSystem(out JObject jo, out JournalLocOrJump je, Func<bool> cancelRequested = null, Stream stream = null, bool ownstream = false)
         {
             if (cancelRequested == null)
                 cancelRequested = () => false;
 
-            string line;
             try
             {
                 if (stream == null)
                 {
-                    stream = File.Open(this.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    stream = File.Open(this.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                     ownstream = true;
                 }
-                while (!cancelRequested() && this.ReadLine(out line, l => l, stream))
+
+                while (!cancelRequested() )
                 {
+                    string line = ReadLine();         // read line from TLU. Tell it if its in full read mode or play mode
+
+                    if (line == null)                       // null means finished
+                        break;
+
                     ParseLineTime(line);
 
                     if (line.Contains("[PG]"))
@@ -287,7 +277,7 @@ namespace EliteDangerousCore
             return false;
         }
 
-        public bool ReadHeader()
+        private bool ReadHeader()
         {
             DateTime lastlog;
             TimeZoneInfo tzinfo;
@@ -299,16 +289,16 @@ namespace EliteDangerousCore
                 LastLogTime = lastlog;
                 TimeZone = tzinfo;
                 TimeZoneOffset = tzoffset;
-                TravelLogUnit.type = TravelLogUnit.NetLogType;
+                TravelLogUnit.Type = TravelLogUnit.NetLogType;
                 Is23NetLog = is23netlog;
             }
             return ret;
         }
 
-        public static bool ReadLogTimeInfo(TravelLogUnit tlu, out DateTime lastlog, out TimeZoneInfo tzi, out TimeSpan tzoffset, out bool is23netlog)
+        private static bool ReadLogTimeInfo(TravelLogUnit tlu, out DateTime lastlog, out TimeZoneInfo tzi, out TimeSpan tzoffset, out bool is23netlog)
         {
             string line = null;
-            string filename = Path.Combine(tlu.Path, tlu.Name);
+            string filename = tlu.FullName;
 
             lastlog = DateTime.UtcNow;
             tzi = TimeZoneInfo.Local;
@@ -448,7 +438,7 @@ namespace EliteDangerousCore
             return false;
         }
 
-        public IEnumerable<JObject> ReadSystems(Func<bool> cancelRequested = null, int cmdrid = -1)
+        public IEnumerable<JObject> ReadSystems(JournalLocOrJump last, Func<bool> cancelRequested = null, int cmdrid = -1)
         {
             if (cancelRequested == null)
                 cancelRequested = () => false;
@@ -458,53 +448,39 @@ namespace EliteDangerousCore
                 cmdrid = EDCommander.CurrentCmdrID;
             }
 
-            JournalLocOrJump last = null;
-            long startpos = filePos;
+            long startpos = Pos;
 
             if (TimeZone == null)
             {
                 if (!ReadHeader())  // may be empty if we read it too fast.. don't worry, monitor will pick it up
                 {
-                    System.Diagnostics.Trace.WriteLine("File was empty (for now) " + FileName);
+                    System.Diagnostics.Trace.WriteLine("File was empty (for now) " + FullName);
                     yield break;
                 }
             }
 
             JObject jo;
             JournalLocOrJump je;
-            using (Stream stream = File.Open(this.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (Stream stream = File.Open(this.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                System.Diagnostics.Debug.WriteLine("ReadData " + FileName + " from " + startpos + " to " + filePos);
+                System.Diagnostics.Debug.WriteLine("ReadData " + FullName + " from " + startpos + " to " + Pos);
 
                 while (!cancelRequested() && ReadNetLogSystem(out jo, out je, cancelRequested, stream))
                 {
-                    if (last == null)
-                    {
-                        if (systems.Count == 0)
-                        {
-                            last = JournalEntry.GetLast<JournalLocOrJump>(cmdrid, je.EventTimeUTC);
-                        }
-                        else
-                        {
-                            last = systems[systems.Count - 1];
-                        }
-                    }
-
                     if (last != null && je.StarSystem.Equals(last.StarSystem, StringComparison.InvariantCultureIgnoreCase)
                                      && (!je.HasCoordinate || !last.HasCoordinate || (je.StarPos - last.StarPos).LengthSquared < 0.001))
                         continue;
 
                     if (je.EventTimeUTC.Subtract(gammastart).TotalMinutes > 0)  // Ta bara med efter gamma.
                     {
-                        systems.Add(je);
                         yield return jo;
                         last = je;
                     }
                 }
             }
 
-            if ( startpos != filePos )
-                System.Diagnostics.Debug.WriteLine("Parse ReadData " + FileName + " from " + startpos + " to " + filePos);
+            if ( startpos != Pos )
+                System.Diagnostics.Debug.WriteLine("Parse ReadData " + FullName + " from " + startpos + " to " + Pos);
         }
     }
 }

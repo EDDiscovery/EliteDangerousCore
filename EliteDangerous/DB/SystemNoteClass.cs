@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2016 EDDiscovery development team
+ * Copyright © 2015 - 2020 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -16,20 +16,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
-
 
 namespace EliteDangerousCore.DB
 {
     public class SystemNoteClass
     {
         public long id;
-        public long Journalid;              //Journalid = 0, Name set, system marker OR Journalid <>0, Name set or clear, journal marker
-        public string SystemName;           
+        public long Journalid;              // if Journalid <> 0, its a journal marker.  SystemName can be set or clear
+        public string SystemName;           // with JournalId=0, this is a system marker
         public DateTime Time;
         public string Note { get; private set; }
-        public long EdsmId;
 
         public bool Dirty;                  // NOT DB changed but uncommitted
         public bool FSDEntry;               // is a FSD entry.. used to mark it for EDSM send purposes
@@ -47,7 +44,6 @@ namespace EliteDangerousCore.DB
             SystemName = (string)dr["Name"];
             Time = (DateTime)dr["Time"];
             Note = (string)dr["Note"];
-            EdsmId = (long)dr["EdsmId"];
         }
 
 
@@ -58,13 +54,12 @@ namespace EliteDangerousCore.DB
 
         private bool AddToDbAndGlobal(SQLiteConnectionUser cn)
         {
-            using (DbCommand cmd = cn.CreateCommand("Insert into SystemNote (Name, Time, Note, journalid, edsmid) values (@name, @time, @note, @journalid, @edsmid)"))
+            using (DbCommand cmd = cn.CreateCommand("Insert into SystemNote (Name, Time, Note, journalid) values (@name, @time, @note, @journalid)"))
             {
                 cmd.AddParameterWithValue("@name", SystemName);
                 cmd.AddParameterWithValue("@time", Time);
                 cmd.AddParameterWithValue("@note", Note);
                 cmd.AddParameterWithValue("@journalid", Journalid);
-                cmd.AddParameterWithValue("@edsmid", EdsmId);
 
                 cmd.ExecuteNonQuery();
 
@@ -88,14 +83,13 @@ namespace EliteDangerousCore.DB
 
         private bool Update(SQLiteConnectionUser cn)
         {
-            using (DbCommand cmd = cn.CreateCommand("Update SystemNote set Name=@Name, Time=@Time, Note=@Note, Journalid=@journalid, EdsmId=@EdsmId  where ID=@id"))
+            using (DbCommand cmd = cn.CreateCommand("Update SystemNote set Name=@Name, Time=@Time, Note=@Note, Journalid=@journalid where ID=@id"))
             {
                 cmd.AddParameterWithValue("@ID", id);
                 cmd.AddParameterWithValue("@Name", SystemName);
                 cmd.AddParameterWithValue("@Note", Note);
                 cmd.AddParameterWithValue("@Time", Time);
                 cmd.AddParameterWithValue("@journalid", Journalid);
-                cmd.AddParameterWithValue("@EdsmId", EdsmId);
 
                 cmd.ExecuteNonQuery();
 
@@ -120,50 +114,6 @@ namespace EliteDangerousCore.DB
                 globalSystemNotes.RemoveAll(x => x.id == id);     // remove from list any containing id.
                 return true;
             }
-        }
-
-        // we update our note, time, edsmid and set dirty true.  If on a commit, we write.
-        // if commit = true, we write the note to the db, which clears the dirty flag
-        public SystemNoteClass UpdateNote(string s, bool commit , DateTime time , long edsmid , bool fsdentry )
-        {
-            Note = s;
-            Time = time;
-            EdsmId = edsmid;
-            FSDEntry = fsdentry;
-
-            Dirty = true;
-
-            if (commit)
-            {
-                if (s.Length == 0)        // empty ones delete the note
-                {
-                    System.Diagnostics.Debug.WriteLine("Delete note " + Journalid + " " + SystemName + " " + Note);
-                    Delete();           // delete and remove notes..
-                    return null;
-                }
-                else
-                {
-                    System.Diagnostics.Debug.WriteLine("Update note " + Journalid + " " + SystemName + " " + Note);
-                    Update();
-                }
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("Note edit in memory " + Journalid + " " + SystemName + " " + Note);
-            }
-
-            return this;
-        }
-
-        public static void ClearEDSMID()
-        {
-            UserDatabase.Instance.ExecuteWithDatabase(cn =>
-            {
-                using (DbCommand cmd = cn.Connection.CreateCommand("UPDATE SystemNote SET EdsmId=0"))
-                {
-                    cmd.ExecuteNonQuery();
-                }
-            });
         }
 
         public static bool GetAllSystemNotes()
@@ -220,9 +170,9 @@ namespace EliteDangerousCore.DB
             }
         }
 
-        public static SystemNoteClass GetNoteOnSystem(string name, long edsmid = -1)      // case insensitive.. null if not there
+        public static SystemNoteClass GetNoteOnSystem(string name)      // case insensitive.. null if not there
         {
-            return globalSystemNotes.FindLast(x => x.SystemName.Equals(name, StringComparison.InvariantCultureIgnoreCase) && (edsmid <= 0 || x.EdsmId <= 0 || x.EdsmId == edsmid));
+            return globalSystemNotes.FindLast(x => x.SystemName.Equals(name, StringComparison.InvariantCultureIgnoreCase) );
         }
 
         public static SystemNoteClass GetNoteOnJournalEntry(long jid)
@@ -233,44 +183,64 @@ namespace EliteDangerousCore.DB
                 return null;
         }
 
-        public static SystemNoteClass GetSystemNote(long journalid, bool fsd, ISystem sys)
+        public static SystemNoteClass GetSystemNote(long journalid, string systemname = null)
         {
             SystemNoteClass systemnote = SystemNoteClass.GetNoteOnJournalEntry(journalid);
 
-            if (systemnote == null && fsd)      // this is for older system name notes
+            if (systemnote == null && systemname != null)      // this is for older system name notes
             {
-                systemnote = SystemNoteClass.GetNoteOnSystem(sys.Name, sys.EDSMID);
-
-                if (systemnote != null)      // if found..
-                {
-                    if (sys.EDSMID > 0 && systemnote.EdsmId <= 0)    // if we have a system id, but snc not set, update it for next time.
-                    {
-                        systemnote.EdsmId = sys.EDSMID;
-                        systemnote.Dirty = true;
-                    }
-                }
-            }
-
-            if (systemnote != null)
-            {
-//                System.Diagnostics.Debug.WriteLine("HE " + Journalid + " Found note " + +snc.Journalid + " " + snc.SystemName + " " + snc.Note);
+                systemnote = SystemNoteClass.GetNoteOnSystem(systemname);  
             }
 
             return systemnote;
         }
 
-        public static SystemNoteClass MakeSystemNote(string text, DateTime time, string sysname, long journalid, long edsmid , bool fsdentry )
+//        public static SystemNoteClass MakeSystemNote(string text, DateTime time, string sysname, long journalid, long edsmid , bool fsdentry )
+        public static SystemNoteClass MakeSystemNote(string text, DateTime time, string sysname, long journalid, bool fsdentry )
         {
             SystemNoteClass sys = new SystemNoteClass();
             sys.Note = text;
             sys.Time = time;
             sys.SystemName = sysname;
             sys.Journalid = journalid;                          // any new ones gets a journal id, making the Get always lock it to a journal entry
-            sys.EdsmId = edsmid;
             sys.FSDEntry = fsdentry;
             sys.AddToDbAndGlobal();  // adds it to the global cache AND the db
             System.Diagnostics.Debug.WriteLine("made note " + sys.Journalid + " " + sys.SystemName + " " + sys.Note);
             return sys;
         }
+
+        // we update our note, time, and set dirty true.  
+        // if commit = true, we write the note to the db, which clears the dirty flag
+        public SystemNoteClass UpdateNote(string s, bool commit, DateTime time, bool fsdentry)
+        {
+            Note = s;
+            Time = time;
+            FSDEntry = fsdentry;
+
+            Dirty = true;
+
+            if (commit)
+            {
+                if (s.Length == 0)        // empty ones delete the note
+                {
+                    System.Diagnostics.Debug.WriteLine("Delete note " + Journalid + " " + SystemName + " " + Note);
+                    Delete();           // delete and remove note
+                    return null;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("Update note " + Journalid + " " + SystemName + " " + Note);
+                    Update();
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Note edit in memory " + Journalid + " " + SystemName + " " + Note);
+            }
+
+            return this;
+        }
+
+
     }
 }

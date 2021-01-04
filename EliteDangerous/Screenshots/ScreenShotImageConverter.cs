@@ -19,6 +19,7 @@ using EliteDangerousCore;
 using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 
 
 namespace EliteDangerousCore.ScreenShots
@@ -46,25 +47,35 @@ namespace EliteDangerousCore.ScreenShots
             "CMDRName\\Sysname"
         };
 
-        public static string[] FileNameFormats = new string[]
+        private static string[] FileNameCtrl = new string[]
         {
-            "Sysname (YYYYMMDD-HHMMSS)",            //0
-            "Sysname (Windows dateformat)",
-            "YYYY-MM-DD HH-MM-SS Sysname",
-            "DD-MM-YYYY HH-MM-SS Sysname",
-            "MM-DD-YYYY HH-MM-SS Sysname",          //4
-            "HH-MM-SS Sysname",
-            "HH-MM-SS",
-            "Sysname",
-            "Keep original",                        // 8
-            "Sysname BodyName (YYYYMMDD-HHMMSS)",       //9
-            "Sysname BodyName (Windows dateformat)",
-            "YYYY-MM-DD HH-MM-SS Sysname BodyName",     //11
-            "DD-MM-YYYY HH-MM-SS Sysname BodyName",
-            "MM-DD-YYYY HH-MM-SS Sysname BodyName",     //13
-            "HH-MM-SS Sysname BodyName",        //14
-            "Sysname BodyName",                 //15
+            "Sysname (YYYYMMDD-HHMMSS)",  "%S (%yyyy%MM%dd-%HH%mm%ss)%H",
+            "Sysname (Windows dateformat)", "%S (%WT)%H",
+            "YYYY-MM-DD HH-MM-SS Sysname", "%yyyy-%MM-%dd %HH-%mm-%ss %S%H",
+            "DD-MM-YYYY HH-MM-SS Sysname", "%dd-%MM-%yyyy %HH-%mm-%ss %S%H",
+            "MM-DD-YYYY HH-MM-SS Sysname", "%MM-%dd-%yyyy %HH-%mm-%ss %S%H",
+            "HH-MM-SS Sysname", "%HH-%mm-%ss %S%H",
+            "HH-MM-SS", "%HH-%mm-%ss%H",
+            "Sysname", "%S%H",
+            "Keep original", "%O",
+            "Sysname BodyName (YYYYMMDD-HHMMSS)",   "%S %B (%yyyy%MM%dd-%HH%mm%ss)%H",
+            "Sysname BodyName (Windows dateformat)", "%S %B (%WT)%H",
+            "YYYY-MM-DD HH-MM-SS Sysname-BodyName", "%yyyy-%MM-%dd %HH-%mm-%ss %S%BD%H",
+            "DD-MM-YYYY HH-MM-SS Sysname-BodyName","%dd-%MM-%yyyy %HH-%mm-%ss %S%BD%H",
+            "MM-DD-YYYY HH-MM-SS Sysname-BodyName", "%MM-%dd-%yyyy %HH-%mm-%ss %S%BD%H",
+            "HH-MM-SS Sysname-BodyName",        "%HH-%mm-%ss %S%BD%H",
+            "Sysname-BodyName",               "%S%BD%H",
+            "YYYY-MM-DD_HH-MM-SS_Sysname",    "%yyyy-%MM-%dd_%HH-%mm-%ss_%S%H",
+            "YYYY-MM-DD_HH-MM-SS_Sysname_BodyName",     "%yyyy-%MM-%dd_%HH-%mm-%ss_%S_%B%H",
+            "YYYY-MM-DD HH-MM-SS Sysname @ BodyName",   "%yyyy-%MM-%dd %HH-%mm-%ss %S @ %B%H",
+            "Sysname @ BodyName",   "%S @ %B%H",
+            "BodyName @ Sysname",   "%B @ %S%H",
+            "YYYY-MM-DD HH-MM-SS Sysname @ BodyName", "%yyyy-%MM-%dd %HH-%mm-%ss %S @ %B%H",
+            "DD-MM-YYYY HH-MM-SS Sysname @ BodyName","%dd-%MM-%yyyy %HH-%mm-%ss %S @ %B%H",
+            "MM-DD-YYYY HH-MM-SS Sysname @ BodyName", "%MM-%dd-%yyyy %HH-%mm-%ss %S @ %B%H",
         };
+
+        public static string[] FileNameFormats = FileNameCtrl.Where((s,i)=>i%2 ==0).ToArray();      // every other is a selection
 
         // Configuration
 
@@ -73,19 +84,33 @@ namespace EliteDangerousCore.ScreenShots
         public CropResizeOptions CropResizeImage2;
         public Rectangle CropResizeArea1 = new Rectangle();
         public Rectangle CropResizeArea2 = new Rectangle();
+
         public bool KeepMasterConvertedImage = false;
 
         public enum OutputTypes { png, jpg, bmp, tiff };
         public OutputTypes OutputFileExtension { get; set; } = OutputTypes.png;
 
-        public bool RemoveOriginal { get; set; } = false;
-        public bool CopyToClipboard { get; set; } = false;
+        public enum OriginalImageOptions { Leave, Delete, Move };
+        public OriginalImageOptions OriginalImageOption { get; set; } = OriginalImageOptions.Leave;
+        public string OriginalImageOptionDirectory { get; set; } = @"c:\";
+
+        public enum ClipboardOptions { NoCopy, CopyMaster, CopyImage1, CopyImage2 };
+        public ClipboardOptions ClipboardOption { get; set; } =  ClipboardOptions.NoCopy;
+
         public bool HighRes { get; set; } = false;
         public event Action<Image> OnCopyToClipboard;
 
-        public Tuple<string,Size> Convert(Bitmap bmp, string inputfilename, string outputfolder, DateTime filetime, Action<string> logit, string bodyname, string systemname, string cmdrname ) // can call independent of watcher, pass in bmp to convert
+        // convert bmp from inputfilename with filetime
+        // into outputfolder with properties body,system,cmdrname
+        // return final inputfilename, output filename, size. or null if failed.
+
+        public Tuple<string, string, Size> Convert(Bitmap bmp, string inputfilename, DateTime filetime, string outputfolder, 
+                                                   string bodyname, string systemname, string cmdrname, Action<string> logit ) // can call independent of watcher, pass in bmp to convert
         {
-            outputfolder = SubFolder(outputfolder, systemname, cmdrname, filetime);
+            outputfolder = SubFolder(FolderNameFormat, outputfolder, systemname, cmdrname, filetime);
+
+            if (!Directory.Exists(outputfolder))
+                Directory.CreateDirectory(outputfolder);
 
             // bmp is the original bitmap at full res
 
@@ -107,7 +132,7 @@ namespace EliteDangerousCore.ScreenShots
             if ( outputfilename.Equals(inputfilename,StringComparison.InvariantCultureIgnoreCase))
             {
                 logit(string.Format(("Cannot convert {0} to {1} as names clash" + Environment.NewLine + "Pick a different conversion folder or a different output format"),inputfilename, outputfilename));
-                return new Tuple<string, Size>(null,Size.Empty);
+                return null;
             }
 
             // the OutputFilename should point to the best screenshot, and FinalSize points to this
@@ -118,75 +143,102 @@ namespace EliteDangerousCore.ScreenShots
             {
                 WriteBMP(bmp, outputfilename, filetime);
                 finalsize = bmp.Size;        // this is our image to use in the rest of the system
+
+                if (ClipboardOption == ClipboardOptions.CopyMaster)
+                {
+                    CopyClipboardSafe(bmp, logit);
+                }
             }
 
-            if (CropResizeImage1 !=CropResizeOptions.Off)
+            if (CropResizeImage1 != CropResizeOptions.Off)
             {
-                string nametouse = KeepMasterConvertedImage ? secondfilename : outputfilename;     // if keep full sized off, we use this one as our image
+                Bitmap converted = null;
 
                 if (CropResizeImage1 == CropResizeOptions.Crop)
                 {
-                    Bitmap cropped = bmp.CropImage(CropResizeArea1);
-                    WriteBMP(cropped, nametouse, filetime);
-                    cropped.Dispose();
+                    converted  = bmp.CropImage(CropResizeArea1);
                 }
                 else
                 {
-                    Bitmap resized = bmp.ResizeImage(CropResizeArea1.Width, CropResizeArea1.Height);
-                    WriteBMP(resized, nametouse, filetime);
-                    resized.Dispose();
+                    converted = bmp.ResizeImage(CropResizeArea1.Width, CropResizeArea1.Height);
                 }
+
+                string nametouse = KeepMasterConvertedImage ? secondfilename : outputfilename;     // if keep full sized off, we use this one as our image
+                WriteBMP(converted, nametouse, filetime);
 
                 if (!KeepMasterConvertedImage)       // if not keeping the full sized one, its final
-                    finalsize = bmp.Size;
-            }
+                    finalsize = converted.Size;
 
-            if (CropResizeImage2 == CropResizeOptions.Crop)
-            {
-                Bitmap cropped = bmp.CropImage(CropResizeArea2);
-                WriteBMP(cropped, thirdfilename, filetime);
-                cropped.Dispose();
-            }
-            else if (CropResizeImage2 == CropResizeOptions.Resize)
-            {
-                Bitmap resized = bmp.ResizeImage(CropResizeArea2.Width, CropResizeArea2.Height);
-                WriteBMP(resized, thirdfilename, filetime);
-                resized.Dispose();
-            }
-
-            if (CopyToClipboard)
-            {
-                using (Image bmpc = Bitmap.FromFile(outputfilename))
+                if (ClipboardOption == ClipboardOptions.CopyImage1)
                 {
-                    try
-                    {
-                        OnCopyToClipboard?.Invoke(bmpc);
-                    }
-                    catch
-                    {
-                        logit("Copying image to clipboard failed");
-                    }
+                    CopyClipboardSafe(converted, logit);
                 }
+
+                converted.Dispose();
             }
 
-            if ( RemoveOriginal )
+            if (CropResizeImage2 != CropResizeOptions.Off)
+            {
+                Bitmap converted = null;
+
+                if (CropResizeImage2 == CropResizeOptions.Crop)
+                {
+                    converted = bmp.CropImage(CropResizeArea2);
+                }
+                else
+                {
+                    converted = bmp.ResizeImage(CropResizeArea2.Width, CropResizeArea2.Height);
+                }
+
+                WriteBMP(converted, thirdfilename, filetime);
+
+                if (ClipboardOption == ClipboardOptions.CopyImage2)
+                {
+                    CopyClipboardSafe(converted, logit);
+                }
+
+                converted.Dispose();
+            }
+
+            if (OriginalImageOption == OriginalImageOptions.Delete)
             {
                 try
                 {
+                    System.Diagnostics.Debug.WriteLine("Delete {0}", inputfilename);
                     File.Delete(inputfilename);
+                    inputfilename = null;
                 }
                 catch
                 {
-                    logit( $"Unable to remove file {inputfilename}");
+                    logit($"Unable to remove file {inputfilename}");
                 }
 
+            }
+            else if (OriginalImageOption == OriginalImageOptions.Move)
+            {
+                string outfile = Path.Combine(OriginalImageOptionDirectory, Path.GetFileNameWithoutExtension(outputfilename) + Path.GetExtension(inputfilename));
+                int indexi = 1;
+                while (true)
+                {
+                    try
+                    {
+                        System.Diagnostics.Debug.WriteLine("Move {0} to {1}", inputfilename, outfile);
+                        File.Move(inputfilename, outfile);
+                        inputfilename = outfile;
+                        break;
+                    }
+                    catch
+                    {
+                        outfile = Path.Combine(OriginalImageOptionDirectory, Path.GetFileNameWithoutExtension(outfile) + "-" + indexi++.ToString() + Path.GetExtension(outfile));
+                    }
+                }
             }
 
             System.Diagnostics.Debug.WriteLine("Convert " + inputfilename + " at " + systemname + " to " + outputfilename);
 
             logit(string.Format("Converted {0} to {1}".T(EDTx.ScreenShotImageConverter_CNV), Path.GetFileName(inputfilename) , outputfilename));
 
-            return new Tuple<string, Size>(outputfilename, finalsize);
+            return new Tuple<string, string, Size>(inputfilename, outputfilename, finalsize);
         }
 
         private void WriteBMP(Bitmap bmp, string filename, DateTime datetime)
@@ -217,14 +269,14 @@ namespace EliteDangerousCore.ScreenShots
 
         // helpers for above
 
-        private string SubFolder(string outputfolder, string systemname, string cmdrname, DateTime timestamp)
+        public static string SubFolder(int foldernameformat, string outputfolder, string systemname, string cmdrname, DateTime timestamp)
         {
             if (String.IsNullOrWhiteSpace(outputfolder))
             {
                 outputfolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Frontier Developments", "Elite Dangerous", "Converted");
             }
 
-            switch (FolderNameFormat)
+            switch (foldernameformat)
             {
                 case 1:     // system name
                     outputfolder = Path.Combine(outputfolder, systemname.SafeFileString());
@@ -270,9 +322,6 @@ namespace EliteDangerousCore.ScreenShots
                     break;
             }
 
-            if (!Directory.Exists(outputfolder))
-                Directory.CreateDirectory(outputfolder);
-
             return outputfolder;
         }
 
@@ -281,65 +330,79 @@ namespace EliteDangerousCore.ScreenShots
         {
             cur_sysname = cur_sysname.SafeFileString();
             cur_bodyname = cur_bodyname.SafeFileString();
+            bool hasbodyname = cur_bodyname.Length > 0;
 
-            string postfix = (hires && Path.GetFileName(inputfile).Contains("HighRes")) ? " (HighRes)" : "";
-            string bodyinsert = (formatindex >= 9 && formatindex <= 15 && cur_bodyname.Length > 0) ? ("-" + cur_bodyname) : "";
+            string ctrl = (formatindex >= 0 && formatindex < FileNameFormats.Length) ? FileNameCtrl[formatindex * 2 + 1] : "%O";    // being paranoid
 
-            switch (formatindex)
+            System.Text.StringBuilder b = new System.Text.StringBuilder();
+            for (int i = 0; i < ctrl.Length; i++)
             {
-                case 0:
-                case 9:
-                    return cur_sysname + bodyinsert + " (" + timestamp.ToString("yyyyMMdd-HHmmss") + ")" + postfix;
+                string part = ctrl.Substring(i);
+                if (part.StartsWith("%yyyy") )
+                {
+                    b.Append(timestamp.ToString("yyyy"));
+                    i += 4;
+                }
+                else if (part.StartsWith("%MM") || part.StartsWith("%dd") || part.StartsWith("%HH") || part.StartsWith("%mm") || part.StartsWith("%ss") )
+                {
+                    b.Append(timestamp.ToString(part.Substring(1,2)));
+                    i += 2;
+                }
+                else if (part.StartsWith("%WT"))
+                {
+                    string time = timestamp.ToString();
+                    time = time.Replace(":", "-");
+                    time = time.Replace("/", "-");          // Rob found it was outputting 21/2/2020 on mine, so we need more replaces
+                    time = time.Replace("\\", "-");
+                    time = time.SafeFileString();
+                    b.Append(time);
+                    i += 2;
+                }
+                else if (part.StartsWith("%BD"))
+                {
+                    if (hasbodyname)
+                        b.Append("-" + cur_bodyname);
+                    i += 2;
+                }
+                else if (part.StartsWith("%B"))
+                {
+                    b.Append(cur_bodyname);
+                    i += 1;
+                }
+                else if (part.StartsWith("%S"))
+                {
+                    b.Append(cur_sysname);
+                    i += 1;
+                }
+                else if (part.StartsWith("%H"))
+                {
+                    if (hires && Path.GetFileName(inputfile).Contains("HighRes"))
+                        b.Append(" (HighRes)");
+                    i += 1;
+                }
+                else if (part.StartsWith("%O"))
+                {
+                    b.Append(Path.GetFileNameWithoutExtension(inputfile));
+                    i += 1;
+                }
+                else
+                {
+                    b.Append(ctrl[i]);
+                }
+            }
 
-                case 1:
-                case 10:
-                    {
-                        string time = timestamp.ToString();
-                        time = time.Replace(":", "-");
-                        time = time.Replace("/", "-");          // Rob found it was outputting 21/2/2020 on mine, so we need more replaces
-                        time = time.Replace("\\", "-");
-                        return cur_sysname + bodyinsert + " (" + time + ")" + postfix;
-                    }
-                case 2:
-                case 11:
-                    {
-                        string time = timestamp.ToString("yyyy-MM-dd HH-mm-ss");
-                        return time + " " + cur_sysname + bodyinsert + postfix;
-                    }
-                case 3:
-                case 12:
-                    {
-                        string time = timestamp.ToString("dd-MM-yyyy HH-mm-ss");
-                        return time + " " + cur_sysname + bodyinsert + postfix;
-                    }
-                case 4:
-                case 13:
-                    {
-                        string time = timestamp.ToString("MM-dd-yyyy HH-mm-ss");
-                        return time + " " + cur_sysname + bodyinsert + postfix;
-                    }
+            return b.ToString();
+        }
 
-                case 5:
-                case 14:
-                    {
-                        string time = timestamp.ToString("HH-mm-ss");
-                        return time + " " + cur_sysname + bodyinsert + postfix;
-                    }
-
-                case 6:
-                    {
-                        string time = timestamp.ToString("HH-mm-ss");
-                        return time + postfix;
-                    }
-
-                case 7:
-                case 15:
-                    {
-                        return cur_sysname + bodyinsert + postfix;
-                    }
-
-                default:
-                    return Path.GetFileNameWithoutExtension(inputfile);
+        void CopyClipboardSafe(Bitmap bmp, Action<string> logit)
+        {
+            try
+            {
+                OnCopyToClipboard?.Invoke(bmp);
+            }
+            catch
+            {
+                logit("Copying image to clipboard failed");
             }
         }
     }

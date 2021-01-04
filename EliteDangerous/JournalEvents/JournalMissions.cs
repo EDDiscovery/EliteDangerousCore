@@ -14,7 +14,7 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 using EliteDangerousCore.DB;
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -193,40 +193,32 @@ namespace EliteDangerousCore.JournalEvents
             detailed = MissionDetailedInfo(true);
         }
 
-        private static HashSet<string> DeliveryMissions = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase)
-        {
-            "Mission_Delivery",
-            "Mission_Delivery_Boom",
-            "Chain_HelpFinishTheOrder",
-            "Mission_Delivery_War"
-        };
-
-        private static DateTime ED32Date = new DateTime(2018, 8, 28, 10, 0, 0);
-
         public string MissionBasicInfo(bool translate)          // MissionList::FullInfo uses this. Journal Entry info brief uses this
         {
             DateTime exp = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(Expiry);
 
             return BaseUtils.FieldBuilder.Build("", LocalisedName,
-                                      "< from ".T(translate ? EDTx.JournalMissionAccepted_from : EDTx.NoTranslate), Faction,
-                                      "System:".T(translate ? EDTx.JournalEntry_System : EDTx.NoTranslate), DestinationSystem,
-                                      "Station:".T(translate ? EDTx.JournalEntry_Station : EDTx.NoTranslate), DestinationStation,
-                                      "Expiry:".T(translate ? EDTx.JournalMissionAccepted_Expiry : EDTx.NoTranslate), exp,
-                                      "Influence:".T(translate ? EDTx.JournalMissionAccepted_Influence : EDTx.NoTranslate), Influence,
-                                      "Reputation:".T(translate ? EDTx.JournalMissionAccepted_Reputation : EDTx.NoTranslate), Reputation,
-                                      "Reward:; cr;N0".T(translate ? EDTx.JournalMissionAccepted_Reward : EDTx.NoTranslate), Reward,
-                                      "; (Wing)".T(translate ? EDTx.JournalMissionAccepted_Wing : EDTx.NoTranslate), Wing);
+                                      EDTranslatorExtensions.T(translate, "< from ", EDTx.JournalMissionAccepted_from), Faction,
+                                      EDTranslatorExtensions.T(translate, "System:",EDTx.JournalEntry_System ), DestinationSystem,
+                                      EDTranslatorExtensions.T(translate, "Station:",EDTx.JournalEntry_Station ), DestinationStation,
+                                      EDTranslatorExtensions.T(translate, "Expiry:",EDTx.JournalMissionAccepted_Expiry ), exp,
+                                      EDTranslatorExtensions.T(translate, "Influence:",EDTx.JournalMissionAccepted_Influence ), Influence,
+                                      EDTranslatorExtensions.T(translate, "Reputation:",EDTx.JournalMissionAccepted_Reputation ), Reputation,
+                                      EDTranslatorExtensions.T(translate, "Reward:; cr;N0",EDTx.JournalMissionAccepted_Reward ), Reward,
+                                      EDTranslatorExtensions.T(translate, "; (Wing)",EDTx.JournalMissionAccepted_Wing ), Wing);
         }
 
         public string MissionDetailedInfo(bool translate)          // MissionList::FullInfo (DLL uses this), Journal Entry detailed info
         {
-            return BaseUtils.FieldBuilder.Build("Deliver:".T(translate ? EDTx.JournalMissionAccepted_Deliver : EDTx.NoTranslate), CommodityLocalised,
-                                           "Target:".T(translate ? EDTx.JournalEntry_Target : EDTx.NoTranslate), TargetLocalised,
-                                           "Type:".T(translate ? EDTx.JournalEntry_Type : EDTx.NoTranslate), TargetTypeFriendly,
-                                           "Target Faction:".T(translate ? EDTx.JournalEntry_TargetFaction : EDTx.NoTranslate), TargetFaction,
-                                           "Target Type:".T(translate ? EDTx.JournalMissionAccepted_TargetType : EDTx.NoTranslate), TargetTypeLocalised,
-                                           "Kill Count:".T(translate ? EDTx.JournalMissionAccepted_KillCount : EDTx.NoTranslate), KillCount,
-                                           "Passengers:".T(translate ? EDTx.JournalMissionAccepted_Passengers : EDTx.NoTranslate), PassengerCount);
+            return BaseUtils.FieldBuilder.Build(
+                                           EDTranslatorExtensions.T(translate, "Deliver:", EDTx.JournalMissionAccepted_Deliver ), CommodityLocalised,
+                                           EDTranslatorExtensions.T(translate, "Count:", EDTx.JournalMissionAccepted_Count ), Count,
+                                           EDTranslatorExtensions.T(translate, "Target:", EDTx.JournalEntry_Target ), TargetLocalised,
+                                           EDTranslatorExtensions.T(translate, "Type:", EDTx.JournalEntry_Type ), TargetTypeFriendly,
+                                           EDTranslatorExtensions.T(translate, "Target Faction:", EDTx.JournalEntry_TargetFaction ), TargetFaction,
+                                           EDTranslatorExtensions.T(translate, "Target Type:", EDTx.JournalMissionAccepted_TargetType ), TargetTypeLocalised,
+                                           EDTranslatorExtensions.T(translate, "Kill Count:", EDTx.JournalMissionAccepted_KillCount ), KillCount,
+                                           EDTranslatorExtensions.T(translate, "Passengers:", EDTx.JournalMissionAccepted_Passengers ), PassengerCount);
         }
 
         public string MissionInfoColumn()          //  MissionList:info, used for MissionList:Info, used in mission panels.
@@ -249,16 +241,29 @@ namespace EliteDangerousCore.JournalEvents
             mlist.Accepted(this, sys, body);
         }
 
+        private static List<string> DeliveryMissions = new List<string>()
+        {
+            "Mission_Delivery",
+            "Chain_HelpFinishTheOrder",
+        };
+
+        private static DateTime ED32Date = new DateTime(2018, 8, 28, 10, 0, 0);
+
         public void UpdateCommodities(MaterialCommoditiesList mc)
         {
-            if (Commodity != null && Count != null && DeliveryMissions.Contains(FDName) && EventTimeUTC < ED32Date)
+            if (Commodity != null && Count != null && EventTimeUTC < ED32Date)           // after this we will rely on Cargo to update us, only safe way to know if something has been stowed
             {
-                mc.Change(MaterialCommodityData.CatType.Commodity, Commodity, (int)Count, 0);
+                if (DeliveryMissions.StartsWith(FDName, StringComparison.InvariantCultureIgnoreCase)>=0 )   // before, we accept only these as mission deliveries
+                {
+                    mc.Change(EventTimeUTC, MaterialCommodityData.CatType.Commodity, Commodity, (int)Count, 0);
+                }
+                else
+                {
+                 //   System.Diagnostics.Debug.WriteLine("{0} Rejected {1} {2} {3}", EventTimeUTC, FDName, Commodity, Count);
+                }
             }
         }
     }
-
-
 
     [JournalEntryType(JournalTypeEnum.MissionCompleted)]
     public class JournalMissionCompleted : JournalEntry, ICommodityJournalEntry, IMaterialJournalEntry, ILedgerJournalEntry, IMissions
@@ -287,7 +292,15 @@ namespace EliteDangerousCore.JournalEvents
             TargetLocalised = JournalFieldNaming.CheckLocalisation(evt["Target_Localised"].Str(), TargetFriendly);        // copied from Accepted.. no evidence
 
             Reward = evt["Reward"].LongNull();
-            Donation = evt["Donation"].LongNull();
+            JToken dtk = evt["Donation"];
+            if ( dtk != null )
+            {
+                if (dtk.IsString)      // some records have donations as strings incorrectly
+                    Donation = dtk.Str().InvariantParseLongNull();
+                else
+                    Donation = dtk.LongNull();
+            }
+
             MissionId = evt["MissionID"].Int();
 
             DestinationSystem = evt["DestinationSystem"].Str().Replace("$MISSIONUTIL_MULTIPLE_INNER_SEPARATOR;", ",")
@@ -321,7 +334,7 @@ namespace EliteDangerousCore.JournalEvents
         public string FDName { get; set; }
         public string Faction { get; set; }
 
-        public string Commodity { get; set; }               // FDNAME, leave, evidence of the $_name problem
+        public string Commodity { get; set; }               // The thing shipped. But in pre3.0, this could also be a commodity reward, which was not clear.
         public string CommodityLocalised { get; set; }
         public string FriendlyCommodity { get; set; }
         public int? Count { get; set; }
@@ -349,15 +362,13 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesList mc)
         {
-            if (Commodity != null && Count != null)
-            {
-                mc.Change(MaterialCommodityData.CatType.Commodity, Commodity, -(int)Count, 0);
-            }
+            // removed update on Commodity/Count (which is unreliable about if you should remove them from cargo)
+            // rely on Cargo to update stats, its emitted directly after MissionCompleted.
 
             if (CommodityReward != null)
             {
                 foreach (CommodityRewards c in CommodityReward)
-                    mc.Change(MaterialCommodityData.CatType.Commodity, c.Name, c.Count, 0);
+                    mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, c.Name, c.Count, 0);    // commodities are traded by faction
             }
         }
 
@@ -367,7 +378,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (MaterialRewards m in MaterialsReward)                 // 7/3/2018 not yet fully proven.. changed in 3.02
                 {
-                    mc.Change(m.Category.Alt("Raw"), m.Name, m.Count, 0);
+                    mc.Change( EventTimeUTC, m.Category.Alt("Raw"), m.Name, m.Count, 0);      // mats from faction of mission
                 }
             }
         }
@@ -396,6 +407,7 @@ namespace EliteDangerousCore.JournalEvents
                                         "Station:".T(EDTx.JournalEntry_Station), DestinationStation);
 
             detailed = BaseUtils.FieldBuilder.Build("Commodity:".T(EDTx.JournalEntry_Commodity), CommodityLocalised,
+                                            "Count:".T(EDTx.JournalMissionAccepted_Count), Count,
                                             "Target:".T(EDTx.JournalEntry_Target), TargetLocalised,
                                             "Type:".T(EDTx.JournalEntry_Type), TargetTypeLocalised,
                                             "Target Faction:".T(EDTx.JournalEntry_TargetFaction), TargetFaction);
@@ -417,7 +429,7 @@ namespace EliteDangerousCore.JournalEvents
             if (PermitsAwarded != null && PermitsAwarded.Length > 0)
             {
                 if (pretty)
-                    detailed += "Permits:".T(translate ? EDTx.JournalEntry_Permits: EDTx.NoTranslate);
+                    detailed += EDTranslatorExtensions.T(translate,"Permits:",EDTx.JournalEntry_Permits);
 
                 for (int i = 0; i < PermitsAwarded.Length; i++)
                     detailed += ((i > 0) ? "," : "") + PermitsAwarded[i];
@@ -434,7 +446,7 @@ namespace EliteDangerousCore.JournalEvents
             if (CommodityReward != null && CommodityReward.Length > 0)
             {
                 if (pretty)
-                    detailed += "Rewards:".T(translate ? EDTx.JournalEntry_Rewards : EDTx.NoTranslate);
+                    detailed += EDTranslatorExtensions.T(translate,"Rewards:",EDTx.JournalEntry_Rewards);
 
                 for (int i = 0; i < CommodityReward.Length; i++)
                 {
@@ -454,7 +466,7 @@ namespace EliteDangerousCore.JournalEvents
             if (MaterialsReward != null && MaterialsReward.Length > 0)
             {
                 if (pretty)
-                    detailed += "Rewards:".T(translate ? EDTx.JournalEntry_Rewards : EDTx.NoTranslate);
+                    detailed += EDTranslatorExtensions.T(translate, "Rewards:", EDTx.JournalEntry_Rewards);
 
                 for (int i = 0; i < MaterialsReward.Length; i++)
                 {

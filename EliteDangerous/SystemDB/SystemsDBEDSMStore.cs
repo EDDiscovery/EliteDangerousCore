@@ -14,14 +14,12 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
-using Newtonsoft.Json;
+using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using SQLLiteExtensions;
 using System.Data.Common;
 using System.Data;
-using Newtonsoft.Json.Linq;
 using System.IO.Compression;
 
 namespace EliteDangerousCore.DB
@@ -59,15 +57,9 @@ namespace EliteDangerousCore.DB
                 return ParseEDSMJSON(sr, grididallow, ref date, cancelRequested, reportProgress, tableposfix, presumeempty, debugoutputfile);
         }
 
-        public static long ParseEDSMJSON(TextReader sr, bool[] grididallow, ref DateTime date, Func<bool> cancelRequested, Action<string> reportProgress, string tablepostfix, bool presumeempty = false, string debugoutputfile = null)
-        {
-            using (JsonTextReader jr = new JsonTextReader(sr))
-                return ParseEDSMJSON(jr, grididallow, ref date, cancelRequested, reportProgress, tablepostfix, presumeempty, debugoutputfile);
-        }
-
         // set tempostfix to use another set of tables
 
-        public static long ParseEDSMJSON(JsonTextReader jr, 
+        public static long ParseEDSMJSON(TextReader textreader, 
                                         bool[] grididallowed,       // null = all, else grid bool value
                                         ref DateTime maxdate,       // updated with latest date
                                         Func<bool> cancelRequested,
@@ -82,7 +74,6 @@ namespace EliteDangerousCore.DB
             long updates = 0;
 
             int nextsectorid = GetNextSectorID();
-            bool jr_eof = false;
             StreamWriter sw = null;
 
             try
@@ -96,8 +87,10 @@ namespace EliteDangerousCore.DB
                 {
                 }
 #endif
+                var parser = new BaseUtils.StringParserQuickTextReader(textreader, 32768);
+                var enumerator = JToken.ParseToken(parser, JToken.ParseOptions.None).GetEnumerator();       // Parser may throw note
 
-                while (jr_eof == false)
+                while (true)
                 {
                     if (cancelRequested())
                     {
@@ -105,7 +98,7 @@ namespace EliteDangerousCore.DB
                         break;
                     }
 
-                    int recordstostore = ProcessBlock(cache, jr, grididallowed, tablesareempty, tablepostfix, ref maxdate, ref nextsectorid, ref jr_eof);
+                    int recordstostore = ProcessBlock(cache, enumerator, grididallowed, tablesareempty, tablepostfix, ref maxdate, ref nextsectorid, out bool jr_eof);
 
                     System.Diagnostics.Debug.WriteLine("Process " + BaseUtils.AppTicks.TickCountLap("L1") + "   " + updates);
 
@@ -122,6 +115,10 @@ namespace EliteDangerousCore.DB
                     System.Threading.Thread.Sleep(20);      // just sleepy for a bit to let others use the db
                 }
             }
+            catch ( Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Exception during EDSM parse " + ex);
+            }
             finally
             {
                 if (sw != null)
@@ -132,7 +129,6 @@ namespace EliteDangerousCore.DB
 
             System.Diagnostics.Debug.WriteLine("Process " + BaseUtils.AppTicks.TickCountLap("L1") + "   " + updates);
             reportProgress?.Invoke("EDSM Star database updated " + updates);
-
 
             PutNextSectorID(nextsectorid);    // and store back
 
@@ -241,7 +237,7 @@ namespace EliteDangerousCore.DB
                 }
 
                 var tres1 = BaseUtils.AppTicks.TickCountLapDelta("U1");
-                var tres2 = BaseUtils.AppTicks.TickCountFrom("UTotal");
+                var tres2 = BaseUtils.AppTicks.TickCountFromLastLap("UTotal");
                 System.Diagnostics.Debug.WriteLine("Sector " + gridid + " took " + tres1.Item1 + " store " + recordstostore + " total " + updates + " " + ((float)tres1.Item2 / (float)recordstostore) + " cumulative " + tres2);
             }
 
@@ -258,13 +254,13 @@ namespace EliteDangerousCore.DB
         #region Table Update Helpers
 
         private static int ProcessBlock(SectorCache cache,
-                                         JsonTextReader jr,
+                                         IEnumerator<JToken> enumerator,
                                          bool[] grididallowed,       // null = all, else grid bool value
                                          bool tablesareempty,
                                          string tablepostfix,
                                          ref DateTime maxdate,       // updated with latest date
                                          ref int nextsectorid,
-                                         ref bool jr_eof)
+                                         out bool jr_eof)
         {
             int recordstostore = 0;
             DbCommand selectSectorCmd = null;
@@ -273,53 +269,46 @@ namespace EliteDangerousCore.DB
             const int BlockSize = 10000;
             int Limit = int.MaxValue;
             var entries = new List<TableWriteData>();
+            jr_eof = false;
 
-            while (jr_eof == false)
+            while (true)
             {
-                try
+                if ( !enumerator.MoveNext())        // get next token, if not, stop eof
                 {
-                    if (jr.Read())
+                    jr_eof = true;
+                    break;
+                }
+
+                JToken t = enumerator.Current;
+
+                if ( t.IsObject )                   // if start of object..
+                {
+                    EDSMFileEntry d = new EDSMFileEntry();
+
+                    if (d.Deserialize(enumerator) && d.id >= 0 && d.name.HasChars() && d.z != int.MinValue)     // if we have a valid record
                     {
-                        if (jr.TokenType == JsonToken.StartObject)
+                        int gridid = GridId.Id128(d.x, d.z);
+                        if (grididallowed == null || (grididallowed.Length > gridid && grididallowed[gridid]))    // allows a null or small grid
                         {
-                            EDSMFileEntry d = new EDSMFileEntry();
+                            TableWriteData data = new TableWriteData() { edsm = d, classifier = new EliteNameClassifier(d.name), gridid = gridid };
 
-                            if (d.Deserialize(jr) && d.id >= 0 && d.name.HasChars() && d.z != int.MinValue)     // if we have a valid record
+                            if (!TryCreateNewUpdate(cache, data, tablesareempty, ref cpmaxdate, ref cpnextsectorid, out Sector sector))
                             {
-                                int gridid = GridId.Id128(d.x, d.z);
-                                if (grididallowed == null || (grididallowed.Length > gridid && grididallowed[gridid]))    // allows a null or small grid
-                                {
-                                    TableWriteData data = new TableWriteData() { edsm = d, classifier = new EliteNameClassifier(d.name), gridid = gridid };
-
-                                    if (!TryCreateNewUpdate(cache, data, tablesareempty, ref cpmaxdate, ref cpnextsectorid, out Sector sector))
-                                    {
-                                        entries.Add(data);
-                                    }
-
-                                    recordstostore++;
-                                }
+                                entries.Add(data);
                             }
 
-                            if (--Limit == 0)
-                            {
-                                jr_eof = true;
-                                break;
-                            }
-
-                            if (recordstostore >= BlockSize)
-                                break;
+                            recordstostore++;
                         }
                     }
-                    else
+
+                    if (--Limit == 0)
                     {
                         jr_eof = true;
                         break;
                     }
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine("EDSM JSON file exception " + ex.ToString());
-                    jr_eof = true;                                                                              // stop read, but let it continue to finish this section
+
+                    if (recordstostore >= BlockSize)
+                        break;
                 }
             }
 
@@ -589,31 +578,31 @@ namespace EliteDangerousCore.DB
 
         public class EDSMFileEntry
         {
-            public bool Deserialize(JsonReader rdr)
+            public bool Deserialize(IEnumerator<JToken> enumerator)
             {
-                while (rdr.Read() && rdr.TokenType == JsonToken.PropertyName)
+                while( enumerator.MoveNext() && enumerator.Current.IsProperty)   // while more tokens, and JProperty
                 {
-                    string field = rdr.Value as string;
+                    var p = enumerator.Current;
+                    string field = p.Name;
+
                     switch (field)
                     {
                         case "name":
-                            name = rdr.ReadAsString();
+                            name = p.StrNull();
                             break;
                         case "id":
-                            id = rdr.ReadAsInt32() ?? 0;
+                            id = p.Int();
                             break;
                         case "date":
-                            date = rdr.ReadAsDateTime() ?? DateTime.MinValue;
+                            date = p.DateTimeUTC();
                             break;
                         case "coords":
                             {
-                                if (rdr.TokenType != JsonToken.StartObject)
-                                    rdr.Read();
-
-                                while (rdr.Read() && rdr.TokenType == JsonToken.PropertyName)
+                                while (enumerator.MoveNext() && enumerator.Current.IsProperty)   // while more tokens, and JProperty
                                 {
-                                    field = rdr.Value as string;
-                                    double? v = rdr.ReadAsDouble();
+                                    var cp = enumerator.Current;
+                                    field = cp.Name;
+                                    double? v = cp.DoubleNull();
                                     if (v == null)
                                         return false;
                                     int vi = (int)(v * SystemClass.XYZScalar);
@@ -634,9 +623,7 @@ namespace EliteDangerousCore.DB
 
                                 break;
                             }
-                        default:
-                            rdr.Read();
-                            JToken.Load(rdr);
+                        default:        // any other, ignore
                             break;
                     }
                 }

@@ -13,7 +13,7 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -83,8 +83,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     jo = jnew;      // replace current
                     Rescan(jo);
-                    if (JsonCached != null)
-                        JsonCached = jo;
+                    UpdateJson(jo);
                 }
                 return jnew != null;
             }
@@ -99,13 +98,22 @@ namespace EliteDangerousCore.JournalEvents
             detailed = info = "";
             if ( Route != null )
             {
-                foreach( var r in Route )
+                for( int i = 1; i < Route.Length;i++)
                 {
+                    var r = Route[i];
                     string n = r.StarSystem ?? r.SystemAddress.ToStringInvariant();
-                    info = info.AppendPrePad(n, ", ");
+
+                    if (Route.Length >= 18)       // 0.14 printed, 15 = .. , -2/-1 printed
+                    {
+                        if (i < 15 || i >= Route.Length - 2)
+                            info = info.AppendPrePad(n, ", ");
+                        else if (i == 15)
+                            info += ", .. ";
+                    }
+
                     detailed = detailed.AppendPrePad(n + " @ " + r.StarPos.X.ToString("N1") + "," + r.StarPos.Y.ToString("N1") + "," + r.StarPos.Z.ToString("N1") + " " + r.StarClass, System.Environment.NewLine);
                 }
-                info = string.Format("{0} jumps: ".T(EDTx.BankAccountClass_InsuranceClaims), Route.Length) + info;
+                info = string.Format("{0} jumps: ".T(EDTx.JournalNavRoute_Jumps), Route.Length-1) + info;
             }
         }
 

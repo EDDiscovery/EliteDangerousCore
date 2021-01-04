@@ -269,6 +269,10 @@ namespace EliteDangerousCore
             {
                 { "IGR J17497-2821 X", "IGR J17497-2821 B" },
             } },
+            { "GCRV 7815", new Dictionary<string, string>
+            {
+                { "Gracie's Light", "GCRV 7815 2" }
+            } },
 
         };
 

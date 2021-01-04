@@ -7,11 +7,14 @@ namespace EliteDangerousCore.ScreenShots
 {
     public interface IScreenShotConfigureForm
     {
+        bool AutoConvert { get; }
         string InputFolder { get; }
         string OutputFolder { get; }
-        bool RemoveOriginal { get; }
         ScreenShotConverter.InputTypes InputFileExtension { get; }
         ScreenShotImageConverter.OutputTypes OutputFileExtension { get; }
+        ScreenShotImageConverter.OriginalImageOptions OriginalImageOption { get; }
+        string OriginalImageDirectory { get; }
+        ScreenShotImageConverter.ClipboardOptions ClipboardOption { get; }
         int FileNameFormat { get; }
         int FolderNameFormat { get; }
         bool KeepMasterConvertedImage { get; }
@@ -20,7 +23,6 @@ namespace EliteDangerousCore.ScreenShots
         ScreenShotImageConverter.CropResizeOptions CropResizeImage2 { get; }
         Rectangle CropResizeArea2 { get; }
         bool HighRes { get; }
-        bool CopyToClipboard { get; }
-        bool Show(ScreenShotImageConverter cf, string inputfolder, ScreenShotConverter.InputTypes it, string outputfolder);
+        bool Show(ScreenShotImageConverter cf, bool autoconvert, string inputfolder, ScreenShotConverter.InputTypes it, string outputfolder);
     }
 }

@@ -14,7 +14,6 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
-using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
 
@@ -30,8 +29,6 @@ namespace EliteDangerousCore
         static public double IntToDouble(int pos) { return (double)pos / XYZScalar; }
         static public int DoubleToInt(double pos) { return (int)(pos * XYZScalar); }
         static public double IntToDoubleSq(int pos) { double p = (float)pos / XYZScalar; return p * p; }
-
-        public long EDSMID { get; set; }
 
         public string Name { get; set; }
 
@@ -53,25 +50,22 @@ namespace EliteDangerousCore
             Xi = int.MinValue;
         }
 
-        public SystemClassBase(string name, double vx, double vy, double vz, long edsmid = 0)
+        public SystemClassBase(string name, double vx, double vy, double vz)
         {
-            EDSMID = edsmid;
             Name = name;
             X = vx; Y = vy; Z = vz;
             GridID = EliteDangerousCore.DB.GridId.Id128(Xi, Zi);
         }
 
-        public SystemClassBase(string name, int xi, int yi, int zi, long edsmid = 0 , int gridid = -1)
+        public SystemClassBase(string name, int xi, int yi, int zi, int gridid = -1)
         {
-            EDSMID = edsmid;
             Name = name;
             Xi = xi; Yi = yi; Zi = zi;
             GridID = gridid == -1 ? EliteDangerousCore.DB.GridId.Id128(Xi,Zi) : gridid;
         }
 
-        public SystemClassBase(ISystem sys)
+        public SystemClassBase(ISystemBase sys)
         {
-            this.EDSMID = sys.EDSMID;
             this.Name = sys.Name;
             this.Xi = sys.Xi;
             this.Yi = sys.Yi;
@@ -139,7 +133,7 @@ namespace EliteDangerousCore
         }
     }
 
-    [DebuggerDisplay("System {Name} ({X,nq},{Y,nq},{Z,nq})")]
+    [DebuggerDisplay("System {Name} ({X,nq},{Y,nq},{Z,nq}) {Source}")]
     public class SystemClass : SystemClassBase, ISystem
     {
         public SystemClass() : base()
@@ -148,9 +142,9 @@ namespace EliteDangerousCore
 
         public SystemClass(ISystem sys) : base(sys)
         {
-            this.source = sys.source;
+            this.EDSMID = sys.EDSMID;
+            this.Source = sys.Source;
 
-            this.EDDBID = sys.EDDBID;
             this.Population = sys.Population;
             this.Faction = sys.Faction;
             this.Government = sys.Government;
@@ -161,64 +155,43 @@ namespace EliteDangerousCore
             this.Power = sys.Power;
             this.PowerState = sys.PowerState;
             this.NeedsPermit = sys.NeedsPermit;
-            this.EDDBUpdatedAt = sys.EDDBUpdatedAt;
         }
 
         public SystemClass(string name) : base()
         {
             Name = name;
-            source = SystemSource.Synthesised;
+            Source = SystemSource.Synthesised;
         }
 
-        public SystemClass(string name, long id)
+        public SystemClass(string name, long edsmid)
         {
             Name = name;
-            EDSMID = id;
-            source = SystemSource.Synthesised;
+            EDSMID = edsmid;
+            Source = EDSMID <= 0 ? SystemSource.Synthesised : SystemSource.FromEDSM;
         }
 
-        public SystemClass(long id)
+        public SystemClass(long edsmid)
         {
             Name = "UnKnown";
-            EDSMID = id;
-            source = SystemSource.Synthesised;
+            EDSMID = edsmid;
+            Source = SystemSource.FromEDSM;
         }
 
         public SystemClass(string name, double vx, double vy, double vz) : base( name, vx,vy,vz )
         {
-            source = SystemSource.Synthesised;
+            Source = SystemSource.Synthesised;
         }
 
-        public SystemClass(string name, int xi, int yi, int zi, long edsmid, int gridid = -1) : base(name,xi,yi,zi,edsmid,gridid)
+        public SystemClass(string name, int xi, int yi, int zi, long edsmid, int gridid = -1) : base(name,xi,yi,zi,gridid)
         {
-            source = SystemSource.Synthesised;
+            EDSMID = edsmid;
+            Source = EDSMID <= 0 ? SystemSource.Synthesised : SystemSource.FromEDSM;
         }
 
-        public SystemClass(SystemSource statusv, string name, int xi, int yi, int zi, long edsmid,
-                            long eddbid, int eddbupdateat, long population, string faction,
-                            EDGovernment g, EDAllegiance a, EDState s, EDSecurity security,
-                            EDEconomy eco, string power, string powerstate, int needspermit,
-                            int gridid = -1) : base(name, xi, yi, zi, edsmid, gridid)
-        {
-            EDDBID = eddbid;
-            Population = population;
-            Faction = faction;
-            Government = g;
-            Allegiance = a;
-            State = s;
-            Security = security;
-            PrimaryEconomy = eco;
-            Power = power;
-            PowerState = powerstate;
-            NeedsPermit = needspermit;
-            EDDBUpdatedAt = eddbupdateat;
-            source = statusv;
-        }
+        public long EDSMID { get; set; }
+        public SystemSource Source { get; set; }
 
-        public SystemSource source { get; set; }
-
-        public long EDDBID { get; set; }
-        public long Population { get; set; }        // may be 0 and still be in eddb pop list
+        public long Population { get; set; }        // just because its 0 does not mean it may have other info
         public string Faction { get; set; }
         public EDGovernment Government { get; set; }
         public EDAllegiance Allegiance { get; set; }
@@ -228,9 +201,8 @@ namespace EliteDangerousCore
         public string Power { get; set; }
         public string PowerState { get; set; }
         public int NeedsPermit { get; set; }
-        public int EDDBUpdatedAt { get; set; }
 
-        public bool HasEDDBInformation
+        public bool HasSystemStateInfo
         {
             get
             {
@@ -247,10 +219,10 @@ namespace EliteDangerousCore
         public string ToStringVerbose()
         {
             string x = string.Format("{0} @ {1:N1},{2:N1},{3:N1} EDSMID:{4}", Name, X, Y, Z, EDSMID);
-            if (EDDBID != 0)
+            if (HasSystemStateInfo)
             {
-                x += " EDDBID:" + EDDBID + " " + Population + " " + Faction + " " + Government + " " + Allegiance + " " + State + " " + Security + " " + PrimaryEconomy
-                                    + " " + Power + " " + PowerState + " " + NeedsPermit + " " + EDDBUpdatedAt;
+                x += " " + Population + " " + Faction + " " + Government + " " + Allegiance + " " + State + " " + Security + " " + PrimaryEconomy
+                                    + " " + Power + " " + PowerState + " " + NeedsPermit;
             }
             return x;
         }

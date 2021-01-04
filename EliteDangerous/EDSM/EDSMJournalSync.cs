@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 EDDiscovery development team
+ * Copyright © 2016-2020 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -13,15 +13,15 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
-using System.Threading;
-using EliteDangerousCore;
-using EliteDangerousCore.JournalEvents;
+
 using EliteDangerousCore.DB;
+using EliteDangerousCore.JournalEvents;
+using BaseUtils.JSON;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace EliteDangerousCore.EDSM
 {
@@ -140,11 +140,11 @@ namespace EliteDangerousCore.EDSM
 
         private static JObject RemoveCommonKeys(JObject obj)
         {
-            foreach (JProperty prop in obj.Properties().ToList())
+            foreach (var key in obj.PropertyNames())
             {
-                if (prop.Name.StartsWith("EDD"))
+                if (key.StartsWith("EDD"))
                 {
-                    obj.Remove(prop.Name);
+                    obj.Remove(key);
                 }
             }
 
@@ -182,17 +182,11 @@ namespace EliteDangerousCore.EDSM
         }
 
         // called by onNewEntry
+                // Called by Perform, by Sync, by above.
 
-        public static bool SendEDSMEvents(Action<string> logger, params HistoryEntry[] helist)
+        public static bool SendEDSMEvents(Action<string> log, List<HistoryEntry> helist, bool manual = false)
         {
-            return SendEDSMEvents(logger, (IEnumerable<HistoryEntry>)helist);
-        }
-
-        // Called by Perform, by Sync, by above.
-
-        public static bool SendEDSMEvents(Action<string> log, IEnumerable<HistoryEntry> helist, bool manual = false)
-        {
-            System.Diagnostics.Debug.WriteLine("Send " + helist.Count());
+            System.Diagnostics.Debug.WriteLine("EDSM Send Events " + helist.Count());
 
             int eventCount = 0;
             bool hasbeta = false;
@@ -420,7 +414,7 @@ namespace EliteDangerousCore.EDSM
                     je = JournalEntry.Get(he.Journalid);
                 }
 
-                JObject json = je.GetJson();
+                JObject json = je.GetJsonCloned();
 
                 if (json == null)
                 {
@@ -428,7 +422,7 @@ namespace EliteDangerousCore.EDSM
                 }
 
                 RemoveCommonKeys(json);
-                if (je.EventTypeID == JournalTypeEnum.FSDJump && json["FuelUsed"].Empty())
+                if (je.EventTypeID == JournalTypeEnum.FSDJump && json["FuelUsed"].IsNull())
                     json["_convertedNetlog"] = true;
                 if (json["StarPosFromEDSM"].Bool(false)) // Remove star pos from EDSM
                     json.Remove("StarPos");
@@ -469,15 +463,6 @@ namespace EliteDangerousCore.EDSM
 
                             if ((msgnr >= 100 && msgnr < 200) || msgnr == 500)
                             {
-                                if (he.IsLocOrJump)
-                                {
-                                    if (systemId != 0)
-                                    {
-                                        he.System.EDSMID = systemId;
-                                        JournalEntry.UpdateEDSMIDPosJump(he.Journalid, he.System, false, 0, cn.Connection, txn);
-                                    }
-                                }
-
                                 if (he.EntryType == JournalTypeEnum.FSDJump)       // only on FSD, confirmed with Anthor.  25/4/2018
                                 {
                                     bool systemCreated = result["systemCreated"].Bool();
@@ -494,12 +479,12 @@ namespace EliteDangerousCore.EDSM
 
                                 if (msgnr == 500)
                                 {
-                                    System.Diagnostics.Trace.WriteLine($"Warning submitting event {he.Journalid} \"{he.EventSummary}\": {msgnr} {result["msg"].Str()}");
+                                    System.Diagnostics.Trace.WriteLine($"EDSM Warning submitting event {he.Journalid} \"{he.EventSummary}\": {msgnr} {result["msg"].Str()}");
                                 }
                             }
                             else
                             {
-                                System.Diagnostics.Trace.WriteLine($"Error submitting event {he.Journalid} \"{he.EventSummary}\": {msgnr} {result["msg"].Str()}");
+                                System.Diagnostics.Trace.WriteLine($"EDSM Error submitting event {he.Journalid} \"{he.EventSummary}\": {msgnr} {result["msg"].Str()}");
                             }
 
                         }

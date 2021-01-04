@@ -13,15 +13,13 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
-using System;
-using System.Linq;
-using System.Text;
+
+using BaseUtils.JSON;
 
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.Bounty)]
-    public class JournalBounty : JournalEntry, ILedgerNoCashJournalEntry
+    public class JournalBounty : JournalEntry, ILedgerNoCashJournalEntry, IStatsJournalEntry, IStatsJournalEntryBountyOrBond
     {
         public class BountyReward
         {
@@ -80,6 +78,20 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEventNoCash(Id, EventTimeUTC, EventTypeID, string.Format("{0} total {1:N0}".T(EDTx.JournalEntry_LegBounty), VictimFactionLocalised, TotalReward));
         }
 
+        public void UpdateStats(Stats stats, string unusedstationfaction)
+        {
+            //System.Diagnostics.Debug.WriteLine("Bounty Victim " + VictimFaction);
+            stats.BountyKill(VictimFaction);
+            if (Rewards != null)
+            {
+                foreach (var r in Rewards)
+                {
+                    //System.Diagnostics.Debug.WriteLine("..Bounty Reward {0} {1}" , r.Faction, r.Reward);
+                    stats.BountyRewards(r.Faction, r.Reward);
+                }
+            }
+        }
+
         public override void FillInformation(out string info, out string detailed) 
         {
             
@@ -97,10 +109,43 @@ namespace EliteDangerousCore.JournalEvents
                 }
             }
         }
+
+        public string Type { get { return "Bounty".T(EDTx.JournalEntry_Bounty); } }
+        public string TargetFaction { get { return VictimFaction; } }
+
+        public bool HasFaction(string faction)
+        {
+            if (Rewards != null)
+            {
+                foreach (var br in Rewards)
+                {
+                    if (br.Faction == faction)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public long FactionReward(string faction)
+        {
+            if (Rewards != null)
+            {
+                foreach (var br in Rewards)
+                {
+                    if (br.Faction == faction)
+                    {
+                        return br.Reward;
+                    }
+                }
+            }
+            return 0;
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.CapShipBond)]
-    public class JournalCapShipBond : JournalEntry, ILedgerNoCashJournalEntry
+    public class JournalCapShipBond : JournalEntry, ILedgerNoCashJournalEntry, IStatsJournalEntry, IStatsJournalEntryBountyOrBond
     {
         public JournalCapShipBond(JObject evt) : base(evt, JournalTypeEnum.CapShipBond)
         {
@@ -123,16 +168,35 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEventNoCash(Id, EventTimeUTC, EventTypeID, AwardingFaction_Localised.Alt(AwardingFaction) + " " + Reward);
         }
 
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            stats.CapShipAward(AwardingFaction, VictimFaction, Reward);
+        }
+
         public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("; cr;N0", Reward, "< from ".T(EDTx.JournalEntry_from), AwardingFaction_Localised,
                 "< , due to ".T(EDTx.JournalEntry_dueto), VictimFaction_Localised);
             detailed = "";
         }
+
+        public string Type { get { return "Capital Ship Bond".T(EDTx.JournalEntry_CapShipBond); } }
+        public string Target { get { return ""; } }
+        public string TargetFaction { get { return VictimFaction; } }
+
+        public bool HasFaction(string faction)
+        {
+            return faction == AwardingFaction;
+        }
+
+        public long FactionReward(string faction)
+        {
+            return faction == AwardingFaction ? Reward : 0;
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.CommitCrime)]
-    public class JournalCommitCrime : JournalEntry, ILedgerNoCashJournalEntry
+    public class JournalCommitCrime : JournalEntry, ILedgerNoCashJournalEntry, IStatsJournalEntry
     {
         public JournalCommitCrime(JObject evt) : base(evt, JournalTypeEnum.CommitCrime)
         {
@@ -167,6 +231,11 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEventNoCash(Id, EventTimeUTC, EventTypeID, string.Format("{0} on {1}".T(EDTx.JournalEntry_0), CrimeType, v));
         }
 
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            stats.CommitCrime(Faction);
+        }
+
         public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", CrimeType, "< on faction ".T(EDTx.JournalEntry_onfaction), Faction, "Against ".T(EDTx.JournalEntry_Against), VictimLocalised, "Cost:; cr;N0".T(EDTx.JournalEntry_Cost), Fine, "Bounty:; cr;N0".T(EDTx.JournalEntry_Bounty), Bounty);
@@ -175,10 +244,8 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.CrimeVictim)]
-    public class JournalCrimeVictim : JournalEntry      
+    public class JournalCrimeVictim : JournalEntry      // someone is commiting a crime against you
     {
-        // presuming its co-incident with commit crime so don't double count bounties
-
         public JournalCrimeVictim(JObject evt) : base(evt, JournalTypeEnum.CrimeVictim)
         {
             CrimeType = evt["CrimeType"].Str().SplitCapsWordFull();
@@ -199,7 +266,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.FactionKillBond)]
-    public class JournalFactionKillBond : JournalEntry, ILedgerNoCashJournalEntry
+    public class JournalFactionKillBond : JournalEntry, ILedgerNoCashJournalEntry, IStatsJournalEntry, IStatsJournalEntryBountyOrBond
     {
         public JournalFactionKillBond(JObject evt) : base(evt, JournalTypeEnum.FactionKillBond)
         {
@@ -216,17 +283,35 @@ namespace EliteDangerousCore.JournalEvents
         public string VictimFaction_Localised { get; set; }         // may be empty
         public long Reward { get; set; }
 
+        public string Type { get { return "Faction Kill Bond".T(EDTx.JournalEntry_FactionKillBond); } }
+        public string Target { get { return ""; } }
+        public string TargetFaction { get { return VictimFaction; } }
+
         public void LedgerNC(Ledger mcl)
         {
             mcl.AddEventNoCash(Id, EventTimeUTC, EventTypeID, AwardingFaction_Localised.Alt(AwardingFaction) + " " + Reward.ToString("N0"));
         }
 
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            stats.KillBond(AwardingFaction, VictimFaction, Reward);
+        }
+
         public override void FillInformation(out string info, out string detailed)
         {
-
             info = BaseUtils.FieldBuilder.Build("Reward:; cr;N0".T(EDTx.JournalEntry_Reward), Reward, "< from ".T(EDTx.JournalEntry_from), AwardingFaction_Localised,
                 "< , due to ".T(EDTx.JournalEntry_dueto), VictimFaction_Localised);
             detailed = "";
+        }
+
+        public bool HasFaction(string faction)
+        {
+            return faction == AwardingFaction;
+        }
+
+        public long FactionReward(string faction)
+        {
+            return faction == AwardingFaction ? Reward : 0;
         }
     }
 

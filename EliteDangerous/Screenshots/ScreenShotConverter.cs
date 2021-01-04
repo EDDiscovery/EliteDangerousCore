@@ -27,8 +27,10 @@ namespace EliteDangerousCore.ScreenShots
         public InputTypes InputFileExtension { get; set; } = InputTypes.bmp;
         public string OutputFolder { get; set; }
         public bool AutoConvert { get; set; }
-        public Action<string, Size> OnScreenShot;
         private Func<IScreenShotConfigureForm> ConfigureFormCreator;
+
+        // called on screenshot. inputfilename location (may be null if deleted), outputfilename location, image size, screenshot (may be null)
+        public event Action<string, string, Size, JournalEvents.JournalScreenshot> OnScreenshot;     
 
         public ScreenShotImageConverter converter;
         private ScreenshotDirectoryWatcher watcher;
@@ -54,12 +56,31 @@ namespace EliteDangerousCore.ScreenShots
                 OutputFolder = outputDirdefault;
 
             AutoConvert = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingBool("ImageHandlerAutoconvert", false);
-            converter.RemoveOriginal = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingBool("checkBoxRemove", false);
-            converter.HighRes = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingBool("checkBoxHires", false);
-            converter.CopyToClipboard = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingBool("ImageHandlerClipboard", false);
+
 
             try
             {       // just in case
+                if (EliteDangerousCore.DB.UserDatabase.Instance.GetSettingBool("checkBoxRemove", false))    // backward compatible
+                {
+                    converter.OriginalImageOption = ScreenShotImageConverter.OriginalImageOptions.Delete;
+                }
+                else
+                    converter.OriginalImageOption = (ScreenShotImageConverter.OriginalImageOptions)EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("ImageHandlerOriginalImageOption", 0);
+
+                EliteDangerousCore.DB.UserDatabase.Instance.DeleteKey("checkBoxRemove");
+
+                converter.OriginalImageOptionDirectory = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingString("ImageHandlerOriginalDirectory", @"c:\");
+
+                if (EliteDangerousCore.DB.UserDatabase.Instance.GetSettingBool("ImageHandlerClipboard", false))    // backward compatible
+                {
+                    converter.ClipboardOption = ScreenShotImageConverter.ClipboardOptions.CopyMaster;
+                }
+                else
+                    converter.ClipboardOption = (ScreenShotImageConverter.ClipboardOptions)EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("ImageHandlerClipboardOption", 0);
+
+                EliteDangerousCore.DB.UserDatabase.Instance.DeleteKey("ImageHandlerClipboard");
+
+                converter.HighRes = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingBool("checkBoxHires", false);
                 if (EliteDangerousCore.DB.UserDatabase.Instance.KeyExists("ImageHandlerCropImage"))
                 {
                     converter.CropResizeImage1 = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingBool("ImageHandlerCropImage", false) ? ScreenShotImageConverter.CropResizeOptions.Crop : ScreenShotImageConverter.CropResizeOptions.Off;
@@ -93,9 +114,10 @@ namespace EliteDangerousCore.ScreenShots
             DB.UserDatabase.Instance.PutSettingString("ImageHandlerOutputDir", OutputFolder);
             DB.UserDatabase.Instance.PutSettingString("ImageHandlerScreenshotsDir", InputFolder);
             DB.UserDatabase.Instance.PutSettingBool("ImageHandlerAutoconvert", AutoConvert );      // names are all over the place.. historical
-            DB.UserDatabase.Instance.PutSettingBool("checkBoxRemove", converter.RemoveOriginal );
+            DB.UserDatabase.Instance.PutSettingInt("ImageHandlerOriginalImageOption", (int)converter.OriginalImageOption);
+            EliteDangerousCore.DB.UserDatabase.Instance.PutSettingString("ImageHandlerOriginalDirectory", converter.OriginalImageOptionDirectory);
+            DB.UserDatabase.Instance.PutSettingInt("ImageHandlerClipboardOption", (int)converter.ClipboardOption);
             DB.UserDatabase.Instance.PutSettingBool("checkBoxHires", converter.HighRes );
-            DB.UserDatabase.Instance.PutSettingBool("ImageHandlerClipboard", converter.CopyToClipboard);
             DB.UserDatabase.Instance.PutSettingBool("ImageHandlerKeepFullSized", converter.KeepMasterConvertedImage);
 
             DB.UserDatabase.Instance.PutSettingInt("ImageHandlerCropResizeImage1", (int)converter.CropResizeImage1);      // fires the checked handler which sets the readonly mode of the controls
@@ -121,14 +143,16 @@ namespace EliteDangerousCore.ScreenShots
         {
             IScreenShotConfigureForm frm = ConfigureFormCreator();
 
-            if (frm.Show(converter, InputFolder, InputFileExtension, OutputFolder))
+            if (frm.Show(converter, AutoConvert, InputFolder, InputFileExtension, OutputFolder))
             {
                 if (watcher != null)
                     watcher.Stop();
-                
+
+                AutoConvert = frm.AutoConvert;
                 InputFolder = frm.InputFolder;
                 OutputFolder = frm.OutputFolder;
-                converter.RemoveOriginal = frm.RemoveOriginal;
+                converter.OriginalImageOption = frm.OriginalImageOption;
+                converter.OriginalImageOptionDirectory = frm.OriginalImageDirectory;
                 InputFileExtension = frm.InputFileExtension;
                 converter.OutputFileExtension = frm.OutputFileExtension;
                 converter.FolderNameFormat = frm.FolderNameFormat;
@@ -139,7 +163,7 @@ namespace EliteDangerousCore.ScreenShots
                 converter.CropResizeArea1 = frm.CropResizeArea1;
                 converter.CropResizeArea2 = frm.CropResizeArea2;
                 converter.HighRes = frm.HighRes;
-                converter.CopyToClipboard = frm.CopyToClipboard;
+                converter.ClipboardOption = frm.ClipboardOption;
 
                 if (watcher != null)
                     watcher.Start(InputFolder,InputFileExtension.ToString(),OutputFolder);
@@ -186,9 +210,9 @@ namespace EliteDangerousCore.ScreenShots
             });
         }
 
-        private void ConvertCompleted(string file,Size sz) // Called by the watcher when a convert had completed, in UI thread
+        private void ConvertCompleted(string infile, string outfile, Size sz, JournalEvents.JournalScreenshot ss) // Called by the watcher when a convert had completed, in UI thread
         {
-            OnScreenShot?.Invoke(file,sz);
+            OnScreenshot?.Invoke(infile,outfile, sz, ss);
         }
     }
 }

@@ -13,7 +13,9 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
@@ -42,7 +44,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.BuyDrones)]
-    public class JournalBuyDrones : JournalEntry, ILedgerJournalEntry, ICommodityJournalEntry
+    public class JournalBuyDrones : JournalEntry, ILedgerJournalEntry, ICommodityJournalEntry, IStatsJournalEntryMatCommod
     {
         public JournalBuyDrones(JObject evt) : base(evt, JournalTypeEnum.BuyDrones)
         {
@@ -57,9 +59,20 @@ namespace EliteDangerousCore.JournalEvents
         public long BuyPrice { get; set; }
         public long TotalCost { get; set; }
 
+        // Istats
+        public List<Tuple<string, int>> ItemsList { get { return new List<Tuple<string, int>>() { new Tuple<string, int>(Type, Count) }; } }
+
+        public string FDNameOfItem { get { return Type; } }        // implement IStatsJournalEntryMatCommod
+        public int CountOfItem { get { return Count; } }
+
         public void UpdateCommodities(MaterialCommoditiesList mc)
         {
-            mc.Change(MaterialCommodityData.CatType.Commodity, "drones", Count, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, "drones", Count, 0);
+        }
+
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            stats.UpdateCommodity("drones", Count, stationfaction);
         }
 
         public void Ledger(Ledger mcl)
@@ -76,7 +89,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.SellDrones)]
-    public class JournalSellDrones : JournalEntry, ILedgerJournalEntry, ICommodityJournalEntry
+    public class JournalSellDrones : JournalEntry, ILedgerJournalEntry, ICommodityJournalEntry, IStatsJournalEntryMatCommod
     {
         public JournalSellDrones(JObject evt) : base(evt, JournalTypeEnum.SellDrones)
         {
@@ -90,9 +103,17 @@ namespace EliteDangerousCore.JournalEvents
         public long SellPrice { get; set; }
         public long TotalSale { get; set; }
 
+        // Istats
+        public List<Tuple<string, int>> ItemsList { get { return new List<Tuple<string, int>>() { new Tuple<string, int>(Type, -Count) }; } }
+
         public void UpdateCommodities(MaterialCommoditiesList mc)
         {
-            mc.Change(MaterialCommodityData.CatType.Commodity, "drones", -Count, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, "drones", -Count, 0);
+        }
+
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            stats.UpdateCommodity("drones", -Count, stationfaction);
         }
 
         public void Ledger(Ledger mcl)
@@ -112,16 +133,18 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalLaunchDrone(JObject evt) : base(evt, JournalTypeEnum.LaunchDrone)
         {
-            Type = evt["Type"].Str();
-            FriendlyType = Type.SplitCapsWordFull();
+            Type = evt["Type"].Enumeration<DroneType>(DroneType.Prospector);
+            FriendlyType = Type.ToString();
         }
 
-        public string Type { get; set; }
+        public enum DroneType { Prospector, Collection, Hatchbreaker, FuelTransfer, Repair, Research, Decontamination }
+
+        public DroneType Type { get; set; }
         public string FriendlyType { get; set; }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesList mc) 
         {
-            mc.Change(MaterialCommodityData.CatType.Commodity, "drones", -1, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, "drones", -1, 0);
         }
 
         public override void FillInformation(out string info, out string detailed)

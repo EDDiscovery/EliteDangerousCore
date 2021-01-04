@@ -16,7 +16,7 @@
 
 using EliteDangerousCore.DB;
 using EliteDangerousCore.JournalEvents;
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -30,24 +30,6 @@ namespace EliteDangerousCore
 
     public abstract partial class JournalEntry
     {
-        static protected JournalEntry CreateJournalEntry(DataRow dr)
-        {
-            string EDataString = (string)dr["EventData"];
-
-            JournalEntry jr = JournalEntry.CreateJournalEntry(EDataString);     // this sets EventTypeId, EventTypeStr and UTC via constructor above.. 
-
-            jr.Id = (int)(long)dr["Id"];
-            jr.TLUId = (int)(long)dr["TravelLogId"];
-            jr.CommanderId = (int)(long)dr["CommanderId"];
-            if (jr.EventTimeUTC == default(DateTime))
-                jr.EventTimeUTC = (DateTime)dr["EventTime"];
-            if (jr.EventTypeID == JournalTypeEnum.Unknown)
-                jr.EventTypeID = (JournalTypeEnum)(long)dr["eventTypeID"];
-            jr.EdsmID = (long)dr["EdsmID"];
-            jr.Synced = (int)(long)dr["Synced"];
-            return jr;
-        }
-
         static protected JournalEntry CreateJournalEntry(DbDataReader dr)
         {
             string EDataString = (string)dr["EventData"];
@@ -61,7 +43,6 @@ namespace EliteDangerousCore
                 jr.EventTimeUTC = ((DateTime)dr["EventTime"]).ToUniversalTime();
             if (jr.EventTypeID == JournalTypeEnum.Unknown)
                 jr.EventTypeID = (JournalTypeEnum)(long)dr["eventTypeID"];
-            jr.EdsmID = (long)dr["EdsmID"];
             jr.Synced = (int)(long)dr["Synced"];
             return jr;
         }
@@ -74,7 +55,7 @@ namespace EliteDangerousCore
 
         internal bool Add(JObject jo, SQLiteConnectionUser cn, DbTransaction tn = null)
         {
-            using (DbCommand cmd = cn.CreateCommand("Insert into JournalEntries (EventTime, TravelLogID, CommanderId, EventTypeId , EventType, EventData, EdsmId, Synced) values (@EventTime, @TravelLogID, @CommanderID, @EventTypeId , @EventStrName, @EventData, @EdsmId, @Synced)", tn))
+            using (DbCommand cmd = cn.CreateCommand("Insert into JournalEntries (EventTime, TravelLogID, CommanderId, EventTypeId , EventType, EventData, Synced) values (@EventTime, @TravelLogID, @CommanderID, @EventTypeId , @EventStrName, @EventData, @Synced)", tn))
             {
                 cmd.AddParameterWithValue("@EventTime", EventTimeUTC);           // MUST use UTC connection
                 cmd.AddParameterWithValue("@TravelLogID", TLUId);
@@ -82,7 +63,6 @@ namespace EliteDangerousCore
                 cmd.AddParameterWithValue("@EventTypeId", EventTypeID);
                 cmd.AddParameterWithValue("@EventStrName", EventTypeStr);
                 cmd.AddParameterWithValue("@EventData", jo.ToString());
-                cmd.AddParameterWithValue("@EdsmId", EdsmID);
                 cmd.AddParameterWithValue("@Synced", Synced);
 
                 cmd.ExecuteNonQuery();
@@ -102,7 +82,7 @@ namespace EliteDangerousCore
 
         private bool Update(SQLiteConnectionUser cn, DbTransaction tn = null)
         {
-            using (DbCommand cmd = cn.CreateCommand("Update JournalEntries set EventTime=@EventTime, TravelLogID=@TravelLogID, CommanderID=@CommanderID, EventTypeId=@EventTypeId, EventType=@EventStrName, EdsmId=@EdsmId, Synced=@Synced where ID=@id", tn))
+            using (DbCommand cmd = cn.CreateCommand("Update JournalEntries set EventTime=@EventTime, TravelLogID=@TravelLogID, CommanderID=@CommanderID, EventTypeId=@EventTypeId, EventType=@EventStrName, Synced=@Synced where ID=@id", tn))
             {
                 cmd.AddParameterWithValue("@ID", Id);
                 cmd.AddParameterWithValue("@EventTime", EventTimeUTC);  // MUST use UTC connection
@@ -110,7 +90,6 @@ namespace EliteDangerousCore
                 cmd.AddParameterWithValue("@CommanderID", CommanderId);
                 cmd.AddParameterWithValue("@EventTypeId", EventTypeID);
                 cmd.AddParameterWithValue("@EventStrName", EventTypeStr);
-                cmd.AddParameterWithValue("@EdsmId", EdsmID);
                 cmd.AddParameterWithValue("@Synced", Synced);
                 cmd.ExecuteNonQuery();
 
@@ -120,6 +99,11 @@ namespace EliteDangerousCore
 
         internal void UpdateJsonEntry(JObject jo, SQLiteConnectionUser cn, DbTransaction tn = null)
         {
+            if ( JsonCached != null )
+            {
+                JsonCached = jo;
+            }
+
             using (DbCommand cmd = cn.CreateCommand("Update JournalEntries set EventData=@EventData where ID=@id", tn))
             {
                 cmd.AddParameterWithValue("@ID", Id);
@@ -149,40 +133,19 @@ namespace EliteDangerousCore
                 fsd.SetMapColour(v);
         }
 
-        //dist >0 to update
-        internal static void UpdateEDSMIDPosJump(long journalid, ISystem system, bool jsonpos, double dist, SQLiteConnectionUser cn, DbTransaction tn = null)
+        internal void UpdateStarPosition(ISystem pos, SQLiteConnectionUser cn, DbTransaction tn = null)
         {
-            bool updatejson = jsonpos || dist > 0;
-
-            JObject jo = updatejson ? GetJson(journalid, cn, tn) : null;       // if JSON pos update, get it, else null
-                                                                                // no need to JSON read if just doing an EDSM update
-            if (jo != null || !updatejson)        // if got it, or no pos
+            JObject jo = GetJson();
+                                                                                
+            if (jo != null )
             {
-                if (jsonpos)
+                jo["StarPos"] = new JArray() { pos.X, pos.Y, pos.Z };
+                jo["StarPosFromEDSM"] = true;
+
+                using (DbCommand cmd2 = cn.CreateCommand("Update JournalEntries set EventData = @EventData where ID = @ID", tn))
                 {
-                    jo["StarPos"] = new JArray() { system.X, system.Y, system.Z };
-                    jo["StarPosFromEDSM"] = true;
-                }
-
-                if (dist > 0)
-                    jo["JumpDist"] = dist;
-
-                using (DbCommand cmd2 = cn.CreateCommand("Update JournalEntries set EdsmId = @EdsmId where ID = @ID", tn))
-                {
-                    if (updatejson)
-                    {
-                        cmd2.CommandText = "Update JournalEntries set EventData = @EventData, EdsmId = @EdsmId where ID = @ID";
-                        cmd2.AddParameterWithValue("@EventData", jo.ToString());
-                        System.Diagnostics.Trace.WriteLine(string.Format("Update journal ID {0} with pos/edsmid {1} dist {2}", journalid, system.EDSMID, dist));
-                    }
-                    else
-                    {
-                        System.Diagnostics.Trace.WriteLine(string.Format("Update journal ID {0} with edsmid {1}", journalid, system.EDSMID));
-                    }
-
-                    cmd2.AddParameterWithValue("@ID", journalid);
-                    cmd2.AddParameterWithValue("@EdsmId", system.EDSMID);
-
+                    cmd2.AddParameterWithValue("@EventData", jo.ToString());
+                    cmd2.AddParameterWithValue("@ID", Id);
                     cmd2.ExecuteNonQuery();
                 }
             }
@@ -242,9 +205,30 @@ namespace EliteDangerousCore
             return true;
         }
 
-        public JObject GetJson()
+        private JObject JsonCached { get; set; }             // New entries scanned thru the readers get this, ones from history rely on looking up in DB 
+
+        public string GetJsonString()       // null if no JSON - not likely.
         {
-            return JsonCached != null ? JsonCached : UserDatabase.Instance.ExecuteWithDatabase<JObject>(cn => { return GetJson(Id, cn.Connection); });
+            return GetJson()?.ToString();
+        }
+
+        public JObject GetJsonCloned()      // you may modify this
+        {
+            return (JObject)GetJson().Clone();
+        }
+
+        public JObject GetJson()            // do not modify
+        {
+            if (JsonCached == null)
+            {
+                JsonCached = UserDatabase.Instance.ExecuteWithDatabase<JObject>(cn => { return GetJson(Id, cn.Connection); });
+            }
+            return JsonCached;
+        }
+
+        public void UpdateJson(JObject jo)
+        {
+            JsonCached = jo;
         }
 
         static internal JObject GetJson(long journalid, SQLiteConnectionUser cn, DbTransaction tn = null)
@@ -261,7 +245,7 @@ namespace EliteDangerousCore
 
                         try
                         {
-                            return JObject.Parse(EDataString);
+                            return JObject.ParseThrowCommaEOL(EDataString);       
                         }
                         catch (Exception ex)
                         {
@@ -305,7 +289,7 @@ namespace EliteDangerousCore
 
         static internal List<JournalEntry> Get(string eventtype, SQLiteConnectionUser cn, DbTransaction tn = null)
         {
-            Dictionary<long, TravelLogUnit> tlus = TravelLogUnit.GetAll().ToDictionary(t => t.id);
+            Dictionary<long, TravelLogUnit> tlus = TravelLogUnit.GetAll().ToDictionary(t => t.ID);
 
             using (DbCommand cmd = cn.CreateCommand("select * from JournalEntries where EventType=@ev", tn))
             {
@@ -327,10 +311,14 @@ namespace EliteDangerousCore
             }
         }
 
+        // ordered in time, id order, ascending, oldest first
+
         static public List<JournalEntry> GetAll(int commander = -999, DateTime? afterutc = null, DateTime? beforeutc = null,
                             JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null)
         {
-            Dictionary<long, TravelLogUnit> tlus = TravelLogUnit.GetAll().ToDictionary(t => t.id);
+            var tluslist = TravelLogUnit.GetAll();
+            Dictionary<long, TravelLogUnit> tlus = tluslist.ToDictionary(t => t.ID);
+
             DbCommand cmd = null;
             DbDataReader reader = null;
             List<JournalEntry> entries = new List<JournalEntry>();
@@ -373,7 +361,7 @@ namespace EliteDangerousCore
                     if (cnd.HasChars())
                         cmd.CommandText += " where " + cnd;
 
-                    cmd.CommandText += " Order By EventTime ASC";
+                    cmd.CommandText += " Order By EventTime,Id ASC";
 
                     return cmd.ExecuteReader();
                 });
@@ -382,13 +370,16 @@ namespace EliteDangerousCore
 
                 do
                 {
-                    retlist = UserDatabase.Instance.ExecuteWithDatabase(cn =>
+                    // experiments state that reading the DL takes 270/4000ms, reading json -> 1250, then the rest is creating and decoding the fields
+                    // not much scope to improve it outside of the core json speed.
+
+                    retlist = UserDatabase.Instance.ExecuteWithDatabase(cn =>       // split into smaller chunks to allow other things access..
                     {
                         List<JournalEntry> list = new List<JournalEntry>();
 
                         while (list.Count < 1000 && reader.Read())
                         {
-                            JournalEntry sys = JournalEntry.CreateJournalEntry(reader);
+                            JournalEntry sys = JournalEntry.CreateJournalEntry(reader);     
                             sys.beta = tlus.ContainsKey(sys.TLUId) ? tlus[sys.TLUId].Beta : false;
                             list.Add(sys);
                         }
@@ -399,8 +390,10 @@ namespace EliteDangerousCore
                     entries.AddRange(retlist);
                 }
                 while (retlist != null && retlist.Count != 0);
-
-                return entries;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Getall Exception " + ex);
             }
             finally
             {
@@ -413,12 +406,14 @@ namespace EliteDangerousCore
                     });
                 }
             }
+
+            return entries;
         }
 
 
         public static List<JournalEntry> GetByEventType(JournalTypeEnum eventtype, int commanderid, DateTime startutc, DateTime stoputc)
         {
-            Dictionary<long, TravelLogUnit> tlus = TravelLogUnit.GetAll().ToDictionary(t => t.id);
+            Dictionary<long, TravelLogUnit> tlus = TravelLogUnit.GetAll().ToDictionary(t => t.ID);
             DbCommand cmd = null;
             DbDataReader reader = null;
             List<JournalEntry> entries = new List<JournalEntry>();
@@ -474,7 +469,7 @@ namespace EliteDangerousCore
                
         internal static List<JournalEntry> GetAllByTLU(long tluid, SQLiteConnectionUser cn)
         {
-            TravelLogUnit tlu = TravelLogUnit.Get(tluid, cn);
+            TravelLogUnit tlu = TravelLogUnit.Get(tluid);
             List<JournalEntry> vsc = new List<JournalEntry>();
 
             using (DbCommand cmd = cn.CreateCommand("SELECT * FROM JournalEntries WHERE TravelLogId = @source ORDER BY EventTime ASC"))
@@ -615,22 +610,6 @@ namespace EliteDangerousCore
             return count;
         }
 
-        public static void ClearEDSMID(int currentcmdrid = -2)      // -2 is all
-        {
-            UserDatabase.Instance.ExecuteWithDatabase(cn =>
-            {
-                using (DbCommand cmd = cn.Connection.CreateCommand("UPDATE JournalEntries SET EdsmId=0"))
-                {
-                    if (currentcmdrid != -2)
-                    {
-                        cmd.CommandText = "UPDATE JournalEntries SET EdsmId=0 WHERE CommanderId==@cmd";
-                        cmd.AddParameterWithValue("@cmd", currentcmdrid);
-                    }
-
-                    cmd.ExecuteNonQuery();
-                }
-            });
-        }
     }
 }
 

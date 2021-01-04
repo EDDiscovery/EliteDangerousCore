@@ -13,8 +13,9 @@
  * 
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System;
+using System.Collections.Generic;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -266,11 +267,17 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierDepositFuel)]
-    public class JournalCarrierDepositFuel : JournalEntry, ICommodityJournalEntry
+    public class JournalCarrierDepositFuel : JournalEntry, ICommodityJournalEntry, IStatsJournalEntryMatCommod
     {
         public long CarrierID { get; set; }
         public int Amount { get; set; }      // being paranoid about this .. don't trust they will be ints forever.
         public int Total { get; set; }
+
+        // Istats
+        public List<Tuple<string, int>> ItemsList { get { return new List<Tuple<string, int>>() { new Tuple<string, int>("tritium", -Amount) }; } }
+
+        public string FDNameOfItem { get { return "Carrier"; } }        // implement IStatsJournalEntryMatCommod
+        public int CountOfItem { get { return Amount; } }
 
         public JournalCarrierDepositFuel(JObject evt) : base(evt, JournalTypeEnum.CarrierDepositFuel)
         {
@@ -288,7 +295,12 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesList mc)
         {
-            mc.Change(MaterialCommodityData.CatType.Commodity, "tritium", -Amount, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, "tritium", -Amount, 0);
+        }
+
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            stats.UpdateCommodity("tritium", -Amount, stationfaction);
         }
     }
 

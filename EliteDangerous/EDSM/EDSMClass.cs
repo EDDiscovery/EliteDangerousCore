@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 EDDiscovery development team
+ * Copyright © 2016-2020 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -13,19 +13,19 @@
  * 
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using EliteDangerousCore;
+
 using EliteDangerousCore.DB;
 using EliteDangerousCore.JournalEvents;
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Web;
-using System.Linq;
 
 namespace EliteDangerousCore.EDSM
 {
@@ -87,7 +87,6 @@ namespace EliteDangerousCore.EDSM
                 query += " { \"name\": \"" + to + "\",  \"dist\": " + distance + " } ";
             }
 
-
             query += "] } ";
 
             MimeType = "application/json; charset=utf-8";
@@ -112,7 +111,7 @@ namespace EliteDangerousCore.EDSM
                 if (json == null)
                     return false;
 
-                edsm = (JObject)JObject.Parse(json);
+                edsm = JObject.Parse(json);
 
                 if (edsm == null)
                     return false;
@@ -120,23 +119,22 @@ namespace EliteDangerousCore.EDSM
                 JObject basesystem = (JObject)edsm["basesystem"];
                 JArray distances = (JArray)edsm["distances"];
 
-
                 if (distances != null)
+                {
                     foreach (var st in distances)
                     {
-                        int statusnum = st["msgnum"].Value<int>();
+                        int statusnum = st["msgnum"].Int();
 
                         if (statusnum == 201)
                             retval = false;
 
-                        respstr += "Status " + statusnum.ToString() + " : " + st["msg"].Value<string>() + Environment.NewLine;
-
+                        respstr += "Status " + statusnum.ToString() + " : " + st["msg"].Str() + Environment.NewLine;
                     }
+                }
 
                 if (basesystem != null)
                 {
-
-                    int statusnum = basesystem["msgnum"].Value<int>();
+                    int statusnum = basesystem["msgnum"].Int();
 
                     if (statusnum == 101)
                         retval = false;
@@ -144,7 +142,7 @@ namespace EliteDangerousCore.EDSM
                     if (statusnum == 102 || statusnum == 104)
                         trilOK = true;
 
-                    respstr += "System " + statusnum.ToString() + " : " + basesystem["msg"].Value<string>() + Environment.NewLine;
+                    respstr += "System " + statusnum.ToString() + " : " + basesystem["msg"].Str() + Environment.NewLine;
                 }
 
                 return retval;
@@ -157,7 +155,7 @@ namespace EliteDangerousCore.EDSM
         }
 
 
-        public bool IsKnownSystem(string sysName)
+        public bool IsKnownSystem(string sysName)       // Verified Nov 20
         {
             string query = "system?sysname=" + Uri.EscapeDataString(sysName);
             string json = null;
@@ -172,7 +170,7 @@ namespace EliteDangerousCore.EDSM
             return json.ToString().Contains("\"name\":");
         }
 
-        public List<string> CheckForNewCoordinates(List<string> sysNames)
+        public List<string> CheckForNewCoordinates(List<string> sysNames)       // Verified Nov 20
         {
             List<string> nowKnown = new List<string>();
             string query = "api-v1/systems?onlyKnownCoordinates=1&";
@@ -198,27 +196,27 @@ namespace EliteDangerousCore.EDSM
             {
                 foreach (JObject sysname in msg)
                 {
-                    nowKnown.Add(sysname["name"].ToString());
+                    nowKnown.Add(sysname["name"].Str("Unknown"));
                 }
             }
 
             return nowKnown;
         }
 
-        public List<string> GetPushedSystems()
+        public List<string> GetPushedSystems()                                  // Verified Nov 20
         {
             string query = "api-v1/systems?pushed=1";
             return getSystemsForQuery(query);
         }
 
-        public List<string> GetUnknownSystemsForSector(string sectorName)
+        public List<string> GetUnknownSystemsForSector(string sectorName)       // Verified Nov 20
         {
             string query = $"api-v1/systems?systemName={Uri.EscapeDataString(sectorName)}%20&onlyUnknownCoordinates=1";
             // 5s is occasionally slightly short for core sectors returning the max # systems (1000)
             return getSystemsForQuery(query, 10000);
         }
 
-        List<string> getSystemsForQuery(string query, int timeout = 5000)
+        List<string> getSystemsForQuery(string query, int timeout = 5000)       // Verified Nov 20
         {
             List<string> systems = new List<string>();
 
@@ -236,7 +234,7 @@ namespace EliteDangerousCore.EDSM
             {
                 foreach (JObject sysname in msg)
                 {
-                    systems.Add(sysname["name"].ToString());
+                    systems.Add(sysname["name"].Str("Unknown"));
                 }
             }
 
@@ -247,6 +245,7 @@ namespace EliteDangerousCore.EDSM
 
         #region For System DB update
 
+        // Verified Nov 20 - EDSM update working
         public BaseUtils.ResponseData RequestSystemsData(DateTime startdate, DateTime enddate, int timeout = 5000)      // protect yourself against JSON errors!
         {
             DateTime gammadate = new DateTime(2015, 5, 10, 0, 0, 0, DateTimeKind.Utc);
@@ -262,16 +261,7 @@ namespace EliteDangerousCore.EDSM
             return RequestGet(query, handleException: true, timeout: timeout);
         }
 
-        public string RequestSystems(DateTime startdate, DateTime enddate, int timeout = 5000)
-        {
-            var response = RequestSystemsData(startdate, enddate, timeout);
-            if (response.Error)
-                return null;
-
-            return response.Body;
-        }
-
-        public string GetHiddenSystems()   // protect yourself against JSON errors!
+        public string GetHiddenSystems()   // Verfied Nov 20
         {
             try
             {
@@ -305,7 +295,6 @@ namespace EliteDangerousCore.EDSM
                 return null;
 
             string query = "get-comments?startdatetime=" + Uri.EscapeDataString(starttime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)) + "&apiKey=" + apiKey + "&commanderName=" + Uri.EscapeDataString(commanderName) + "&showId=1";
-            //string query = "get-comments?apiKey=" + apiKey + "&commanderName=" + HttpUtility.UrlEncode(commanderName);
             var response = RequestGet("api-logs-v1/" + query, handleException: true);
 
             if (response.Error)
@@ -314,7 +303,7 @@ namespace EliteDangerousCore.EDSM
             return response.Body;
         }
 
-        public void GetComments(Action<string> logout = null)           // Protected against bad JSON
+        public void GetComments(Action<string> logout = null)           // Protected against bad JSON.. Verified Nov 2020
         {
             var json = GetComments(new DateTime(2011, 1, 1));
 
@@ -322,8 +311,8 @@ namespace EliteDangerousCore.EDSM
             {
                 try
                 {
-                    JObject msg = JObject.Parse(json);                  // protect against bad json - seen in the wild
-                    int msgnr = msg["msgnum"].Value<int>();
+                    JObject msg = JObject.ParseThrowCommaEOL(json);                  // protect against bad json - seen in the wild
+                    int msgnr = msg["msgnum"].Int();
 
                     JArray comments = (JArray)msg["comments"];
                     if (comments != null)
@@ -332,30 +321,25 @@ namespace EliteDangerousCore.EDSM
 
                         foreach (JObject jo in comments)
                         {
-                            string name = jo["system"].Value<string>();
-                            string note = jo["comment"].Value<string>();
-                            string utctime = jo["lastUpdate"].Value<string>();
-                            int edsmid = 0;
+                            string name = jo["system"].Str();
+                            string note = jo["comment"].Str();
+                            DateTime utctime = jo["lastUpdate"].DateTime(DateTime.UtcNow, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
+                            int edsmid = jo["systemId"].Int(0);
+                            var localtime = utctime.ToLocalTime();
 
-                            if (!Int32.TryParse(jo["systemId"].Str("0"), out edsmid))
-                                edsmid = 0;
-
-                            DateTime localtime = DateTime.ParseExact(utctime, "yyyy-MM-dd HH:mm:ss",
-                                        CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToLocalTime();
-
-                            SystemNoteClass curnote = SystemNoteClass.GetNoteOnSystem(name, edsmid);
+                            SystemNoteClass curnote = SystemNoteClass.GetNoteOnSystem(name);
 
                             if (curnote != null)                // curnote uses local time to store
                             {
                                 if (localtime.Ticks > curnote.Time.Ticks)   // if newer, add on (verified with EDSM 29/9/2016)
                                 {
-                                    curnote.UpdateNote(curnote.Note + ". EDSM: " + note, true, localtime, edsmid, true);
+                                    curnote.UpdateNote(curnote.Note + ". EDSM: " + note, true, localtime, true);
                                     commentsadded++;
                                 }
                             }
                             else
                             {
-                                SystemNoteClass.MakeSystemNote(note, localtime, name, 0, edsmid, true);   // new one!  its an FSD one as well
+                                SystemNoteClass.MakeSystemNote(note, localtime, name, 0, true);   // new one!  its an FSD one as well
                                 commentsadded++;
                             }
                         }
@@ -370,7 +354,7 @@ namespace EliteDangerousCore.EDSM
             }
         }
 
-        private string SetComment(string systemName, string note, long edsmid = 0)
+        public string SetComment(string systemName, string note, long edsmid = 0)  // Verified Nov 20
         {
             if (!ValidCredentials)
                 return null;
@@ -411,7 +395,7 @@ namespace EliteDangerousCore.EDSM
 
         #region Log Sync for log fetcher
 
-        // Protected against bad JSON
+        // Protected against bad JSON  Visual Inspection Nov 2020 - using Int()
 
         public int GetLogs(DateTime? starttimeutc, DateTime? endtimeutc, out List<JournalFSDJump> log, out DateTime logstarttime, out DateTime logendtime, out BaseUtils.ResponseData response)
         {
@@ -449,15 +433,15 @@ namespace EliteDangerousCore.EDSM
             try
             {
 
-                JObject msg = JObject.Parse(json);
+                JObject msg = JObject.ParseThrowCommaEOL(json);
                 int msgnr = msg["msgnum"].Int(0);
 
                 JArray logs = (JArray)msg["logs"];
 
                 if (logs != null)
                 {
-                    string startdatestr = msg["startDateTime"].Value<string>();
-                    string enddatestr = msg["endDateTime"].Value<string>();
+                    string startdatestr = msg["startDateTime"].Str();
+                    string enddatestr = msg["endDateTime"].Str();
                     if (startdatestr == null || !DateTime.TryParseExact(startdatestr, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out logstarttime))
                         logstarttime = DateTime.MaxValue;
                     if (enddatestr == null || !DateTime.TryParseExact(enddatestr, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out logendtime))
@@ -469,9 +453,9 @@ namespace EliteDangerousCore.EDSM
 
                         foreach (JObject jo in logs)
                         {
-                            string name = jo["system"].Value<string>();
-                            string ts = jo["date"].Value<string>();
-                            long id = jo["systemId"].Value<long>();
+                            string name = jo["system"].Str();
+                            string ts = jo["date"].Str();
+                            long id = jo["systemId"].Long();
                             DateTime etutc = DateTime.ParseExact(ts, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal); // UTC time
 
                             ISystem sc = DB.SystemCache.FindSystem(name, id, db);
@@ -488,10 +472,10 @@ namespace EliteDangerousCore.EDSM
                     {
                         var jo = js.Item1;
                         var sc = js.Item2;
-                        string name = jo["system"].Value<string>();
-                        string ts = jo["date"].Value<string>();
-                        long id = jo["systemId"].Value<long>();
-                        bool firstdiscover = jo["firstDiscover"].Value<bool>();
+                        string name = jo["system"].Str();
+                        string ts = jo["date"].Str();
+                        long id = jo["systemId"].Long();
+                        bool firstdiscover = jo["firstDiscover"].Bool();
                         DateTime etutc = DateTime.ParseExact(ts, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal); // UTC time
 
                         if (sc == null)
@@ -524,6 +508,7 @@ namespace EliteDangerousCore.EDSM
             }
         }
 
+        // Visual inspection Nov 20 - using Int() 
         private List<ISystem> GetSystemsByName(string systemName, bool uselike = false)     // Protect yourself against bad JSON
         {
             string query = String.Format("api-v1/systems?systemName={0}&showCoordinates=1&showId=1&showInformation=1&showPermit=1", Uri.EscapeDataString(systemName));
@@ -590,13 +575,13 @@ namespace EliteDangerousCore.EDSM
 
         #region System Information
 
-        // protected against bad JSON
+        // Verified Nov 20
 
         public List<Tuple<ISystem,double>> GetSphereSystems(String systemName, double maxradius, double minradius)      // may return null
         {
             string query = String.Format("api-v1/sphere-systems?systemName={0}&radius={1}&minRadius={2}&showCoordinates=1&showId=1", Uri.EscapeDataString(systemName), maxradius , minradius);
 
-            var response = RequestGet(query, handleException: true);
+            var response = RequestGet(query, handleException: true, timeout: 30000);
             if (response.Error)
                 return null;
 
@@ -638,7 +623,54 @@ namespace EliteDangerousCore.EDSM
             return null;
         }
 
-        public bool ShowSystemInEDSM(string sysName, long? id_edsm = null)
+        // Verified Nov 20
+        public List<Tuple<ISystem, double>> GetSphereSystems(double x, double y, double z, double maxradius, double minradius)      // may return null
+        {
+            string query = String.Format("api-v1/sphere-systems?x={0}&y={1}&z={2}&radius={3}&minRadius={4}&showCoordinates=1&showId=1", x, y, z, maxradius, minradius);
+
+            var response = RequestGet(query, handleException: true, timeout: 30000);
+            if (response.Error)
+                return null;
+
+            var json = response.Body;
+            if (json != null)
+            {
+                try
+                {
+                    List<Tuple<ISystem, double>> systems = new List<Tuple<ISystem, double>>();
+
+                    JArray msg = JArray.Parse(json);        // allow for crap from EDSM or empty list
+
+                    if (msg != null)
+                    {
+                        foreach (JObject sysname in msg)
+                        {
+                            ISystem sys = new SystemClass();
+                            sys.Name = sysname["name"].Str("Unknown");
+                            sys.EDSMID = sysname["id"].Long(0);
+                            JObject co = (JObject)sysname["coords"];
+                            if (co != null)
+                            {
+                                sys.X = co["x"].Double();
+                                sys.Y = co["y"].Double();
+                                sys.Z = co["z"].Double();
+                            }
+                            systems.Add(new Tuple<ISystem, double>(sys, sysname["distance"].Double()));
+                        }
+
+                        return systems;
+                    }
+                }
+                catch (Exception e)      // json may be garbage
+                {
+                    System.Diagnostics.Debug.WriteLine("Failed due to " + e.ToString());
+                }
+            }
+
+            return null;
+        }
+
+        public bool ShowSystemInEDSM(string sysName, long? id_edsm = null)      // Verified Nov 20
         {
             string url = GetUrlToEDSMSystem(sysName, id_edsm);
             if (string.IsNullOrEmpty(url))
@@ -652,14 +684,14 @@ namespace EliteDangerousCore.EDSM
             return true;
         }
 
-        public string GetUrlToEDSMSystem(string sysName, long? id_edsm = null)
+        public string GetUrlToEDSMSystem(string sysName, long? id_edsm = null)      // Verified Nov 20
         {
-            string sysID;
+            long id = -1;
             string encodedSys = Uri.EscapeDataString(sysName);
 
-            if (id_edsm != null && id_edsm > 0)
+            if (id_edsm.HasValue && id_edsm > 0)
             {
-                sysID = id_edsm.ToString();
+                id = id_edsm.Value;
             }
             else
             {
@@ -668,16 +700,32 @@ namespace EliteDangerousCore.EDSM
                 if (response.Error)
                     return "";
 
-                var json = response.Body;
-                if (json == null || !json.ToString().Contains("\"name\":"))
-                    return "";
+                JObject jo = response.Body?.JSONParseObject(JToken.ParseOptions.CheckEOL);   // null if no body, or not object
 
-                JObject msg = JObject.Parse(json);
-                sysID = msg["id"].Value<string>();
+                if (jo != null)
+                    id = jo["id"].Long(-1);
+
+                if (id == -1)
+                    return "";
             }
 
-            string url = base.httpserveraddress + "system/id/" + sysID + "/name/" + encodedSys;
+            string url = base.httpserveraddress + "system/id/" + id.ToStringInvariant() + "/name/" + encodedSys;
             return url;
+        }
+
+        public JObject GetSystemByAddress(long id64)
+        {
+            string query = "?systemId64=" + id64.ToString() + "&showInformation=1&includeHidden=1";
+            var response = RequestGet("api-v1/system" + query, handleException: true);
+            if (response.Error)
+                return null;
+
+            var json = response.Body;
+            if (json == null || json.ToString() == "[]")
+                return null;
+
+            JObject msg = JObject.Parse(json);
+            return msg;
         }
 
         // https://www.edsm.net/api-system-v1/bodies?systemName=Colonia
@@ -687,7 +735,7 @@ namespace EliteDangerousCore.EDSM
 
         #region Body info
 
-        private JObject GetBodies(string sysName)       // protect yourself from bad JSON
+        private JObject GetBodies(string sysName)       // Verified Nov 20, null if bad json
         {
             string encodedSys = Uri.EscapeDataString(sysName);
 
@@ -704,7 +752,7 @@ namespace EliteDangerousCore.EDSM
             return msg;
         }
 
-        private JObject GetBodiesByID64(long id64)       // protect yourself from bad JSON
+        private JObject GetBodiesByID64(long id64)       // Verified Nov 20, null if bad json
         {
             string query = "bodies?systemId64=" + id64.ToString();
             var response = RequestGet("api-system-v1/" + query, handleException: true);
@@ -719,7 +767,7 @@ namespace EliteDangerousCore.EDSM
             return msg;
         }
 
-        private JObject GetBodies(long edsmID)          // protect yourself from bad JSON
+        private JObject GetBodies(long edsmID)          // Verified Nov 20, null if bad json
         {
             string query = "bodies?systemId=" + edsmID.ToString();
             var response = RequestGet("api-system-v1/" + query, handleException: true);
@@ -748,6 +796,7 @@ namespace EliteDangerousCore.EDSM
         // all this is done in a lock inside a task - the only way to sequence the code and prevent multiple lookups in an await structure
         // so we must pass back all the info we can to tell the caller what happened.
         // optional call back is allowed in lock - may not be used.
+        // Verified Nov 20
 
         public static Tuple<List<JournalScan>, bool> GetBodiesList(ISystem sys, bool edsmweblookup = true, Action<List<JournalScan>, ISystem> onnewbodies = null) 
         {
@@ -793,7 +842,8 @@ namespace EliteDangerousCore.EDSM
                             try
                             {
                                 JObject jbody = EDSMClass.ConvertFromEDSMBodies(edsmbody);
-                                JournalScan js = new JournalScan(jbody, sys.EDSMID);
+
+                                JournalScan js = new JournalScan(jbody);//TBD, sys.EDSMID);
 
                                 bodies.Add(js);
                             }
@@ -845,6 +895,7 @@ namespace EliteDangerousCore.EDSM
             return null;
         }
 
+        // Verified Nov 20,  by scan panel
         private static JObject ConvertFromEDSMBodies(JObject jo)        // protect yourself against bad JSON
         {
             JObject jout = new JObject
@@ -855,7 +906,7 @@ namespace EliteDangerousCore.EDSM
                 ["BodyName"] = jo["name"],
             };
 
-            if (jo["discovery"] != null && jo["discovery"].HasValues)       // much more defense around this.. EDSM gives discovery=null back
+            if (!jo["discovery"].IsNull())       // much more defense around this.. EDSM gives discovery=null back
             {
                 jout["discovery"] = jo["discovery"];
             }
@@ -873,16 +924,16 @@ namespace EliteDangerousCore.EDSM
             if (jo["parents"] != null) jout["Parents"] = jo["parents"];
             if (jo["id64"] != null) jout["BodyID"] = jo["id64"].Long() >> 55;
 
-            if (!jo["type"].Empty())
+            if (!jo["type"].IsNull())
             {
-                if (jo["type"].Value<string>().Equals("Star"))
+                if (jo["type"].Str().Equals("Star"))
                 {
                     jout["StarType"] = EDSMStar2JournalName(jo["subType"].StrNull());           // pass thru null to code, it will cope with it
                     jout["Age_MY"] = jo["age"];
                     jout["StellarMass"] = jo["solarMasses"];
                     jout["Radius"] = jo["solarRadius"].Double() * JournalScan.oneSolRadius_m; // solar-rad -> metres
                 }
-                else if (jo["type"].Value<string>().Equals("Planet"))
+                else if (jo["type"].Str().Equals("Planet"))
                 {
                     jout["Landable"] = jo["isLandable"];
                     jout["MassEM"] = jo["earthMasses"];
@@ -906,7 +957,7 @@ namespace EliteDangerousCore.EDSM
 
             JArray rings = (jo["belts"] ?? jo["rings"]) as JArray;
 
-            if (!rings.Empty())
+            if (!rings.IsNull())
             {
                 JArray jring = new JArray();
 
@@ -925,7 +976,7 @@ namespace EliteDangerousCore.EDSM
                 jout["Rings"] = jring;
             }
 
-            if (!jo["materials"].Empty())  // Check if materials has null
+            if (!jo["materials"].IsNull())  // Check if materials has stuff
             {
                 Dictionary<string, double?> mats;
                 Dictionary<string, double> mats2;
@@ -1023,6 +1074,8 @@ namespace EliteDangerousCore.EDSM
             return JArray.Parse(response.Body).Select(v => v.Str()).ToList();
         }
 
+        // Visual inspection Nov 20
+
         public List<JObject> SendJournalEvents(List<JObject> entries, out string errmsg)    // protected against bad JSON
         {
             JArray message = new JArray(entries);
@@ -1031,9 +1084,9 @@ namespace EliteDangerousCore.EDSM
                               "&apiKey=" + Uri.EscapeDataString(apiKey) +
                               "&fromSoftware=" + Uri.EscapeDataString(SoftwareName) +
                               "&fromSoftwareVersion=" + Uri.EscapeDataString(fromSoftwareVersion) +
-                              "&message=" + EscapeLongDataString(message.ToString(Newtonsoft.Json.Formatting.None));
+                              "&message=" + EscapeLongDataString(message.ToString());
 
-          //  BaseUtils.HttpCom.WriteLog(message.ToString(Newtonsoft.Json.Formatting.Indented), "");
+          //  BaseUtils.HttpCom.WriteLog(message.ToString(), "");
 
             MimeType = "application/x-www-form-urlencoded";
             var response = RequestPost(postdata, "api-journal-v1", handleException: true);
@@ -1046,9 +1099,8 @@ namespace EliteDangerousCore.EDSM
 
             try
             {
-
-                JObject resp = JObject.Parse(response.Body);
-                errmsg = resp["msg"]?.ToString();
+                JObject resp = JObject.ParseThrowCommaEOL(response.Body);
+                errmsg = resp["msg"].Str();
 
                 int msgnr = resp["msgnum"].Int();
 

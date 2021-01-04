@@ -21,7 +21,12 @@ namespace EliteDangerousCore.DB
 {
     internal class SQLiteConnectionSystem : SQLExtConnectionRegister<SQLiteConnectionSystem>
     {
-        const string tablepostfix = "temp"; // postfix for temp tables
+        public class SystemDBUpgradeException : Exception
+        {
+            public SystemDBUpgradeException(Exception ex) : base("UpgradeSystemDB error: " + ex.Message, ex)
+            {
+            }
+        }
 
         public SQLiteConnectionSystem() : this(false)
         {
@@ -32,6 +37,8 @@ namespace EliteDangerousCore.DB
         }
 
         #region Init
+
+        const string tablepostfix = "temp"; // postfix for temp tables
 
         public bool UpgradeSystemsDB()
         {
@@ -44,8 +51,9 @@ namespace EliteDangerousCore.DB
                 SQLExtRegister reg = new SQLExtRegister(this);
                 int dbver = reg.GetSettingInt("DBVer", 0);      // use reg, don't use the built in func as they create new connections and confuse the schema
 
-                ExecuteNonQueries(new string[]             // always kill these old tables and make EDDB new table
+                ExecuteNonQueries(new string[]                  // always set up
                     {
+                    "DROP TABLE IF EXISTS EDDB",                // New Dec 20 - no more EDDB
                     "DROP TABLE IF EXISTS Distances",
                     "DROP TABLE IF EXISTS EddbSystems",
                     // keep edsmsystems
@@ -53,7 +61,6 @@ namespace EliteDangerousCore.DB
                     "DROP TABLE IF EXISTS SystemAliases",
                     // don't drop Systemnames
                     "DROP TABLE IF EXISTS station_commodities",
-                    "CREATE TABLE IF NOT EXISTS EDDB (edsmid INTEGER PRIMARY KEY NOT NULL, eddbid INTEGER, eddbupdatedat INTEGER, population INTEGER, faction TEXT, government INTEGER, allegiance INTEGER, state INTEGER, security INTEGER, primaryeconomy INTEGER, needspermit INTEGER, power TEXT, powerstate TEXT, properties TEXT)",
                     "CREATE TABLE IF NOT EXISTS Aliases (edsmid INTEGER PRIMARY KEY NOT NULL, edsmid_mergedto INTEGER, name TEXT COLLATE NOCASE)"
                     });
 
@@ -63,7 +70,7 @@ namespace EliteDangerousCore.DB
 
                 if ( dbver < 200 || oldsystems)
                 {
-                    ExecuteNonQueries(new string[]             // always kill these old tables and make EDDB new table
+                    ExecuteNonQueries(new string[]             // always kill these old tables 
                     {
                     "DROP TABLE IF EXISTS Systems", // New! this is an hold over which never got deleted when we moved to the 102 schema
                     });
@@ -89,15 +96,13 @@ namespace EliteDangerousCore.DB
                 if (dbver < 200)
                 {
                     reg.PutSettingInt("DBVer", 200);
-                    reg.DeleteKey("EDDBSystemsTime");       // force a reload of EDDB
                 }
 
                 return true;
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("UpgradeSystemsDB error: " + ex.Message + Environment.NewLine + ex.StackTrace);
-                return false;
+                throw new SystemDBUpgradeException(ex);
             }
         }
 

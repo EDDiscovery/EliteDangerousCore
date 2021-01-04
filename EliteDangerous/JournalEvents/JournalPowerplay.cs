@@ -13,7 +13,7 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using Newtonsoft.Json.Linq;
+using BaseUtils.JSON;
 using System;
 
 namespace EliteDangerousCore.JournalEvents
@@ -48,12 +48,12 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.PowerplayCollect)]
-    public class JournalPowerplayCollect : JournalEntry
+    public class JournalPowerplayCollect : JournalEntry, ICommodityJournalEntry
     {
         public JournalPowerplayCollect(JObject evt) : base(evt, JournalTypeEnum.PowerplayCollect)
         {
             Power = evt["Power"].Str();
-            Type = evt["Type"].Str();
+            Type = JournalFieldNaming.FixCommodityName(evt["Type"].Str());
             Type_Localised = JournalFieldNaming.CheckLocalisation(evt["Type_Localised"].Str(), Type);
             Count = evt["Count"].Int();
 
@@ -67,6 +67,11 @@ namespace EliteDangerousCore.JournalEvents
         {
             info = BaseUtils.FieldBuilder.Build("", Power, "Type:".T(EDTx.JournalEntry_Type), Type_Localised, "Count:".T(EDTx.JournalEntry_Count), Count);
             detailed = "";
+        }
+
+        public void UpdateCommodities(MaterialCommoditiesList mc)
+        {
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, Count, 0);
         }
     }
 
@@ -90,12 +95,12 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.PowerplayDeliver)]
-    public class JournalPowerplayDeliver : JournalEntry
+    public class JournalPowerplayDeliver : JournalEntry, ICommodityJournalEntry
     {
         public JournalPowerplayDeliver(JObject evt) : base(evt, JournalTypeEnum.PowerplayDeliver)
         {
             Power = evt["Power"].Str();
-            Type = evt["Type"].Str();
+            Type = JournalFieldNaming.FixCommodityName(evt["Type"].Str());
             Type_Localised = JournalFieldNaming.CheckLocalisation(evt["Type_Localised"].Str(), Type);
             Count = evt["Count"].Int();
         }
@@ -109,6 +114,11 @@ namespace EliteDangerousCore.JournalEvents
         {
             info = BaseUtils.FieldBuilder.Build("", Power, "Type:".T(EDTx.JournalEntry_Type), Type_Localised, "Count:".T(EDTx.JournalEntry_Count), Count);
             detailed = "";
+        }
+
+        public void UpdateCommodities(MaterialCommoditiesList mc)
+        {
+            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, -Count, 0 );
         }
     }
 
