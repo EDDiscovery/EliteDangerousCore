@@ -9,6 +9,9 @@
     <Company>EDDiscovery</Company>
     <Version>1.1.0.0</Version>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(NETCoreSdkVersion)' != '' and '$(NETCoreSdkVersion.Substring(0, 1))' == '5'">
+    <TargetFrameworks>net461;netstandard20;net5.0</TargetFrameworks>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>

@@ -24,7 +24,7 @@ namespace EliteDangerousCore.DLL
         public string Version { get; private set; }
         public string[] DLLOptions { get; private set; }
         public string Name { get; private set; }
-        public bool HasConfig { get { return pConfigParameters != null; } }
+        public bool HasConfig { get { return pConfigParameters != IntPtr.Zero; } }
 
         // for a standard DLL
         private IntPtr pDll = IntPtr.Zero;
