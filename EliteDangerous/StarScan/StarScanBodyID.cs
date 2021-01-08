@@ -124,6 +124,8 @@ namespace EliteDangerousCore
                 return false;
             }
 
+            //System.Diagnostics.Debug.WriteLine("Made bodyID " + sc.Body);
+
             // Get custom name if different to designation
             string customname = GetCustomNameBodyAndID(sc, sys);
 
@@ -134,6 +136,8 @@ namespace EliteDangerousCore
             {
                 sn.NodesByID[(int)node.BodyID] = node;
             }
+
+            ProcessedSaved(sn);  // any saved JEs due to no scan, add
 
             return true;
         }

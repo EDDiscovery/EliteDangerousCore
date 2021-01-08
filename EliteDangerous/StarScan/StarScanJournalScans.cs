@@ -95,6 +95,8 @@ namespace EliteDangerousCore
                 return false;
             }
 
+            //System.Diagnostics.Debug.WriteLine("Made body JS " + sc.BodyName);
+
             // Get custom name if different to designation
             string customname = GetCustomNameJournalScan(sc, sys);
 
@@ -124,6 +126,8 @@ namespace EliteDangerousCore
                     }
                 }
             }
+
+            ProcessedSaved(sn);  // any saved JEs due to no scan, add
 
             return true;
         }

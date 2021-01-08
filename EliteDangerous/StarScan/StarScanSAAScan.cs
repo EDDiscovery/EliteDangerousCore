@@ -37,7 +37,7 @@ namespace EliteDangerousCore
                     if (IsStarNameRelated(he.System.Name, designation))       // if its part of the name, use it
                     {
                         jsaa.BodyDesignation = designation;
-                        return ProcessSAAScan(jsaa, he.System, true);
+                        return ProcessSAAScan(jsaa, he.System);
                     }
                     else if (jl != null && IsStarNameRelated(jl.StarSystem, designation))
                     {
@@ -48,10 +48,10 @@ namespace EliteDangerousCore
             }
 
             jsaa.BodyDesignation = GetBodyDesignationSAAScan(jsaa, hl[startindex].System.Name);
-            return ProcessSAAScan(jsaa, hl[startindex].System, true);         // no relationship, add..
+            return ProcessSAAScan(jsaa, hl[startindex].System);         // no relationship, add..
         }
 
-        private bool ProcessSAAScan(JournalSAAScanComplete jsaa, ISystem sys, bool reprocessPrimary = false)  // background or foreground.. FALSE if you can't process it
+        private bool ProcessSAAScan(JournalSAAScanComplete jsaa, ISystem sys, bool saveprocessinglater = true)  // background or foreground.. FALSE if you can't process it
         {
             SystemNode sn = GetOrCreateSystemNode(sys);
             ScanNode relatednode = null;
@@ -93,7 +93,7 @@ namespace EliteDangerousCore
             {
                 relatednode.IsMapped = true;        // keep data here since we can get scans replaced later..
                 relatednode.WasMappedEfficiently = jsaa.ProbesUsed <= jsaa.EfficiencyTarget;
-                //System.Diagnostics.Debug.WriteLine("Setting SAA Scan for " + jsaa.BodyName + " " + sys.Name + " to Mapped: " + relatedScan.WasMappedEfficiently);
+                //System.Diagnostics.Debug.WriteLine("Setting SAA Scan for " + jsaa.BodyName + " " + sys.Name + " to Mapped: " + relatednode.WasMappedEfficiently);
 
                 if (relatednode.ScanData != null)       // if we have a scan, set its values - this keeps the calculation self contained in the class.
                 {
@@ -102,6 +102,12 @@ namespace EliteDangerousCore
                 }
 
                 return true; // We already have the scan
+            }
+            else
+            {
+                if (saveprocessinglater)
+                    sn.SaveForProcessing(jsaa,sys);
+                //System.Diagnostics.Debug.WriteLine("No body to attach data found for " + jsaa.BodyName + " @ " + sys.Name + " body " + jsaa.BodyDesignation);
             }
 
             return false;

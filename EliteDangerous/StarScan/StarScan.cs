@@ -40,6 +40,7 @@ namespace EliteDangerousCore
             public int MinPlanetBodyID = 512;
             public int? FSSTotalBodies;
 
+            public List<Tuple<JournalEntry, ISystem>> ToProcess;     // entries seen but yet to be processed due to no scan node
             
             public IEnumerable<ScanNode> Bodies
             {
@@ -104,6 +105,13 @@ namespace EliteDangerousCore
                         return b;
                 }
                 return null;
+            }
+
+            public void SaveForProcessing(JournalEntry je, ISystem sys)
+            {
+                if (ToProcess == null)
+                    ToProcess = new List<Tuple<JournalEntry, ISystem>>();
+                ToProcess.Add(new Tuple<JournalEntry, ISystem>(je,sys));
             }
         };
 
@@ -393,6 +401,35 @@ namespace EliteDangerousCore
            }
 
         };
+
+        // this tries to reprocess any JEs associated with a system node which did not have scan data at the time.
+        // Seen to work with log from Issue #2983
+
+        private void ProcessedSaved(SystemNode sn)
+        {
+            if (sn.ToProcess != null)
+            {
+                List<Tuple<JournalEntry, ISystem>> todelete = new List<Tuple<JournalEntry, ISystem>>();
+                foreach (var e in sn.ToProcess)
+                {
+                    JournalSAAScanComplete jsaasc = e.Item1 as JournalSAAScanComplete;
+                    if (jsaasc != null)
+                    {
+                        if (ProcessSAAScan(jsaasc, e.Item2, false))
+                            todelete.Add(e);
+                    }
+                    JournalSAASignalsFound jsaasf = e.Item1 as JournalSAASignalsFound;
+                    if (jsaasf != null)
+                    {
+                        if (ProcessSAASignalsFound(jsaasf, e.Item2, false))
+                            todelete.Add(e);
+                    }
+                }
+
+                foreach (var je in todelete)
+                    sn.ToProcess.Remove(je);
+            }
+        }
 
         public bool HasWebLookupOccurred(ISystem sys)       // have we had a web checkup on this system?  false if sys does not exist
         {

@@ -40,7 +40,7 @@ namespace EliteDangerousCore
                     if (IsStarNameRelated(he.System.Name, designation))       // if its part of the name, use it
                     {
                         jsaa.BodyDesignation = designation;
-                        return ProcessSAASignalsFound(jsaa, he.System, true);
+                        return ProcessSAASignalsFound(jsaa, he.System);
                     }
                     else if (jl != null && IsStarNameRelated(jl.StarSystem, designation))
                     {
@@ -51,10 +51,10 @@ namespace EliteDangerousCore
             }
 
             jsaa.BodyDesignation = GetBodyDesignationSAASignalsFound(jsaa, hl[startindex].System.Name);
-            return ProcessSAASignalsFound(jsaa, hl[startindex].System, true);         // no relationship, add..
+            return ProcessSAASignalsFound(jsaa, hl[startindex].System);         // no relationship, add..
         }
 
-        private bool ProcessSAASignalsFound(JournalSAASignalsFound jsaa, ISystem sys, bool reprocessPrimary = false)  // background or foreground.. FALSE if you can't process it
+        private bool ProcessSAASignalsFound(JournalSAASignalsFound jsaa, ISystem sys, bool saveprocessinglater = true)  // background or foreground.. FALSE if you can't process it
         {
             SystemNode sn = GetOrCreateSystemNode(sys);
             ScanNode relatednode = null;
@@ -107,8 +107,7 @@ namespace EliteDangerousCore
 
             if (relatednode != null )
             {
-                //System.Diagnostics.Debug.WriteLine("Setting SAA Signals Found for " + jsaa.BodyName + " @ " + sys.Name + " body "  + jsaa.BodyDesignation);
-
+              //  System.Diagnostics.Debug.WriteLine("Setting SAA Signals Found for " + jsaa.BodyName + " @ " + sys.Name + " body "  + jsaa.BodyDesignation);
                 if (relatednode.Signals == null)
                     relatednode.Signals = new List<JournalSAASignalsFound.SAASignal>();
 
@@ -116,9 +115,16 @@ namespace EliteDangerousCore
 
                 return true; // all ok
             }
+            else
+            {
+                if (saveprocessinglater)
+                    sn.SaveForProcessing(jsaa,sys);
+              //  System.Diagnostics.Debug.WriteLine("No body to attach data found for " + jsaa.BodyName + " @ " + sys.Name + " body " + jsaa.BodyDesignation);
+            }
 
             return false;
         }
+
 
         private string GetBodyDesignationSAASignalsFound(JournalSAASignalsFound je, string system)
         {
