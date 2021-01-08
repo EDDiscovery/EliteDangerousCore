@@ -56,10 +56,12 @@ namespace EliteDangerousCore.JournalEvents
         public bool IsOrbitingStar { get { return Parents?.FirstOrDefault()?.Type == "Star"; } }
 
         public bool? WasDiscovered { get; set; }                    // direct, 3.4, indicates whether the body has already been discovered
-        public bool IsNotDiscovered { get { return WasDiscovered.HasValue && WasDiscovered == false; } }
+        public bool IsNotPreviouslyDiscovered { get { return WasDiscovered.HasValue && WasDiscovered == false; } } // true if its there, and its not mapped
+        public bool IsPreviouslyDiscovered { get { return WasDiscovered.HasValue && WasDiscovered == true; } } // true if its there, and its discovered
 
         public bool? WasMapped { get; set; }                        // direct, 3.4, indicates whether the body has already been mapped
-        public bool IsNotMapped { get { return WasMapped.HasValue && WasMapped == false; } }
+        public bool IsNotPreviouslyMapped { get { return WasMapped.HasValue && WasMapped == false; } }    // true if its there, and its not mapped
+        public bool IsPreviouslyMapped { get { return WasMapped.HasValue && WasMapped == true; } }    // true if its there, and its mapped
 
         // STAR
         public string StarType { get; set; }                        // null if no StarType, direct from journal, K, A, B etc
@@ -160,19 +162,29 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public bool Mapped { get { return mapped;}  }                          // affects prices
-        public bool EfficientMapped { get { return efficientmapped; } }                          // affects prices
+        public bool Mapped { get; private set; }                        // WE Mapped it - affects prices
+        public bool EfficientMapped { get; private set; }               // WE efficiently mapped it - affects prices
 
         public int EstimatedValue { get // best guess based on discovered/wasmapped and Mapped flags
             {
                 if (EstimatedValueFirstDiscovered > 0)      // for previous scans before 3.3 and stars, these are not set.
                 {
-                    if (IsNotDiscovered && IsNotMapped && Mapped)
-                        return EfficientMapped ? EstimatedValueFirstDiscoveredFirstMappedEfficiently : EstimatedValueFirstDiscoveredFirstMapped;
-                    else if (IsNotMapped && Mapped)
+                    if ( IsNotPreviouslyDiscovered && WasMapped == true )       // this is the situation pointed out in PR#31, discovered is there and false, but mapped is true
                         return EfficientMapped ? EstimatedValueFirstMappedEfficiently : EstimatedValueFirstMapped;
-                    else if (IsNotDiscovered)
+
+                    // if def not discovered (flag is there) and not mapped (flag is there), and we mapped it
+                    if (IsNotPreviouslyDiscovered && IsNotPreviouslyMapped && Mapped)
+                        return EfficientMapped ? EstimatedValueFirstDiscoveredFirstMappedEfficiently : EstimatedValueFirstDiscoveredFirstMapped;
+
+                    // if def not mapped, and we mapped it
+                    else if (IsNotPreviouslyMapped && Mapped)
+                        return EfficientMapped ? EstimatedValueFirstMappedEfficiently : EstimatedValueFirstMapped;
+
+                    // if def not discovered
+                    else if (IsNotPreviouslyDiscovered)
                         return EstimatedValueFirstDiscovered;
+
+                    // if we mapped it, it was discovered/mapped before
                     else if (Mapped)
                         return EfficientMapped ? EstimatedValueMappedEfficiently : EstimatedValueMapped;
                 }
@@ -193,7 +205,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void SetMapped(bool m, bool e)
         {
-            mapped = m; efficientmapped = e;
+            Mapped = m; EfficientMapped = e;
         }
 
         public int HasSameParents(JournalScan other)     // return -1 if not, or index of last match , 0,1,2
@@ -218,7 +230,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string ParentList() { return Parents != null ? string.Join(",", Parents.Select(x => x.Type + ":" + x.BodyID)) : ""; }     // not get on purpose
 
-        private bool mapped, efficientmapped;
+        //private bool mapped, efficientmapped;
 
         // Constants:
 
@@ -787,7 +799,7 @@ namespace EliteDangerousCore.JournalEvents
                 scanText.AppendFormat(msg, EstimatedValueFirstDiscoveredFirstMapped, EstimatedValueFirstDiscoveredFirstMappedEfficiently);
             }
 
-            if (EstimatedValueFirstMapped > 0 && (!WasMapped.HasValue || !WasMapped.Value))    // if was discovered, but not mapped 
+            if (EstimatedValueFirstMapped > 0 && (!WasMapped.HasValue || !WasMapped.Value))    // if was not mapped 
             {
                 scanText.AppendFormat("First Mapped value: {0:N0}/{1:N0}e".T(EDTx.JournalScan_EVFM) + "\n", EstimatedValueFirstMapped, EstimatedValueFirstMappedEfficiently);
             }
