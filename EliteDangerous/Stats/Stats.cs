@@ -73,9 +73,14 @@ namespace EliteDangerousCore
             history = other.history;
         }
 
-        public Dictionary<string,FactionInfo> GetAtGeneration(uint g)
+        public Dictionary<string, FactionInfo> GetAtGeneration(uint g)
         {
             return history.GetGenerationUpTo(g);
+        }
+
+        public Dictionary<string, FactionInfo> GetLastEntries()
+        {
+            return history.GetLastEntries();
         }
 
         private FactionInfo Clone(string faction, bool incrgen = true)               // clone both FactionInformation structure and a faction
