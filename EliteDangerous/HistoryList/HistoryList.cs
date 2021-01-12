@@ -28,6 +28,7 @@ namespace EliteDangerousCore
     {
         private List<HistoryEntry> historylist = new List<HistoryEntry>();  // oldest first here
         private MissionListAccumulator missionlistaccumulator = new MissionListAccumulator(); // and mission list..
+        private Stats statisticsaccumulator = new Stats();
 
         public HistoryList() { }
 
@@ -48,10 +49,16 @@ namespace EliteDangerousCore
             ShipInformationList = other.ShipInformationList;
             CommanderId = other.CommanderId;
             missionlistaccumulator = other.missionlistaccumulator;
+            statisticsaccumulator = other.statisticsaccumulator;
             Shipyards = other.Shipyards;
             Outfitting = other.Outfitting;
             Visited = other.Visited;
             LastSystem = other.LastSystem;
+        }
+
+        public Dictionary<string,Stats.FactionInfo> GetStatsAtGeneration(uint g)
+        {
+            return statisticsaccumulator.GetAtGeneration(g);
         }
 
         #region Entry processing
@@ -70,7 +77,7 @@ namespace EliteDangerousCore
             if (CheckForRemoval(he, hprev))                                     // check here to see if we want to remove the entry.. can move this lower later, but at first point where we have the data
                 return null;
 
-            he.UpdateStats(je, hprev?.Stats, he.StationFaction);
+            he.UpdateStats(je, statisticsaccumulator, he.StationFaction);
             he.UpdateSystemNote();
 
             CashLedger.Process(je);
@@ -183,20 +190,20 @@ namespace EliteDangerousCore
                 if (CheckForRemoval(he, hprev))                                     // check here to see if we want to remove the entry.. can move this lower later, but at first point where we have the data
                     continue;
 
-                he.UpdateStats(je, hprev?.Stats, he.StationFaction);
-                he.UpdateSystemNote();
+                he.UpdateStats(je, hist.statisticsaccumulator, he.StationFaction);
+                //he.UpdateSystemNote();
 
-                hist.CashLedger.Process(je);            // update the ledger     
-                he.Credits = hist.CashLedger.CashTotal;
+                //hist.CashLedger.Process(je);            // update the ledger     
+                //he.Credits = hist.CashLedger.CashTotal;
 
-                hist.Shipyards.Process(je);
-                hist.Outfitting.Process(je);
+                //hist.Shipyards.Process(je);
+                //hist.Outfitting.Process(je);
 
-                Tuple<ShipInformation, ModulesInStore> ret = hist.ShipInformationList.Process(je, he.WhereAmI, he.System);  // the ships
-                he.UpdateShipInformation(ret.Item1);
-                he.UpdateShipStoredModules(ret.Item2);
+                //Tuple<ShipInformation, ModulesInStore> ret = hist.ShipInformationList.Process(je, he.WhereAmI, he.System);  // the ships
+                //he.UpdateShipInformation(ret.Item1);
+                //he.UpdateShipStoredModules(ret.Item2);
 
-                he.UpdateMissionList(hist.missionlistaccumulator.Process(je, he.System, he.WhereAmI));
+                //he.UpdateMissionList(hist.missionlistaccumulator.Process(je, he.System, he.WhereAmI));
 
                 hist.historylist.Add(he);           // now add it to the history
 
@@ -211,6 +218,7 @@ namespace EliteDangerousCore
 
             // now database has been updated due to initial fill, now fill in stuff which needs the user database
 
+            Trace.WriteLine(BaseUtils.AppTicks.TickCountLap() + " HE created");
             hist.CommanderId = CurrentCommander;
 
             EDCommander.Current.FID = hist.GetCommanderFID();               // ensure FID is set.. the other place it gets changed is a read of LoadGame.
