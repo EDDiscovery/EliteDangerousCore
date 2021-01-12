@@ -201,7 +201,7 @@ namespace EliteDangerousCore
                 if ( lastcargo != null )
                 {
                     toosoon = lastcargo.SameAs(cargo);     // if exactly the same, swallow.
-                    System.Diagnostics.Debug.WriteLine("Cargo vs last " + toosoon);
+                    //System.Diagnostics.Debug.WriteLine("Cargo vs last " + toosoon);
                 }
                 lastcargo = cargo;
             }

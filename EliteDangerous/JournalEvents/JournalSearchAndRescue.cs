@@ -19,7 +19,7 @@ using System.Linq;
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.SearchAndRescue)]
-    public class JournalSearchAndRescue : JournalEntry, ICommodityJournalEntry
+    public class JournalSearchAndRescue : JournalEntry, ICommodityJournalEntry, ILedgerJournalEntry
     {
         public JournalSearchAndRescue(JObject evt) : base(evt, JournalTypeEnum.SearchAndRescue)
         {
@@ -48,6 +48,14 @@ namespace EliteDangerousCore.JournalEvents
         {
             info = BaseUtils.FieldBuilder.Build("",Name_Localised , "Num:".T(EDTx.JournalEntry_Num), Count, "Reward:".T(EDTx.JournalSearchAndRescue_Reward), Reward);
             detailed = "";
+        }
+
+        public void Ledger(Ledger mcl)
+        {
+            if (Reward > 0)
+            {
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name_Localised + " " + Count, Reward);
+            }
         }
     }
 }
