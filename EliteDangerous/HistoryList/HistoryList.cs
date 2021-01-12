@@ -191,19 +191,19 @@ namespace EliteDangerousCore
                     continue;
 
                 he.UpdateStats(je, hist.statisticsaccumulator, he.StationFaction);
-                //he.UpdateSystemNote();
+                he.UpdateSystemNote();
 
-                //hist.CashLedger.Process(je);            // update the ledger     
-                //he.Credits = hist.CashLedger.CashTotal;
+                hist.CashLedger.Process(je);            // update the ledger     
+                he.Credits = hist.CashLedger.CashTotal;
 
-                //hist.Shipyards.Process(je);
-                //hist.Outfitting.Process(je);
+                hist.Shipyards.Process(je);
+                hist.Outfitting.Process(je);
 
-                //Tuple<ShipInformation, ModulesInStore> ret = hist.ShipInformationList.Process(je, he.WhereAmI, he.System);  // the ships
-                //he.UpdateShipInformation(ret.Item1);
-                //he.UpdateShipStoredModules(ret.Item2);
+                Tuple<ShipInformation, ModulesInStore> ret = hist.ShipInformationList.Process(je, he.WhereAmI, he.System);  // the ships
+                he.UpdateShipInformation(ret.Item1);
+                he.UpdateShipStoredModules(ret.Item2);
 
-                //he.UpdateMissionList(hist.missionlistaccumulator.Process(je, he.System, he.WhereAmI));
+                he.UpdateMissionList(hist.missionlistaccumulator.Process(je, he.System, he.WhereAmI));
 
                 hist.historylist.Add(he);           // now add it to the history
 
