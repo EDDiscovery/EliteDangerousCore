@@ -14,13 +14,14 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
+using System.Collections.Generic;
 using System.Linq;
 
 namespace EliteDangerousCore.DLL
 {
     static public class EDDDLLCallerHE
     {
-        static public EDDDLLInterfaces.EDDDLLIF.JournalEntry CreateFromHistoryEntry(EliteDangerousCore.HistoryEntry he, bool storedflag = false)
+        static public EDDDLLInterfaces.EDDDLLIF.JournalEntry CreateFromHistoryEntry(EliteDangerousCore.HistoryList hl, EliteDangerousCore.HistoryEntry he, bool storedflag = false)
         {
             if (he == null)
             {
@@ -63,7 +64,9 @@ namespace EliteDangerousCore.DLL
 
                 je.materials = (from x in he.MaterialCommodity.Sort(false) select x.Details.Name + ":" + x.Count.ToStringInvariant() + ":" + x.Details.FDName).ToArray();
                 je.commodities = (from x in he.MaterialCommodity.Sort(true) select x.Details.Name + ":" + x.Count.ToStringInvariant() + ":" + x.Details.FDName).ToArray();
-                je.currentmissions = he.MissionList.GetAllCurrentMissions(he.EventTimeUTC).Select(x=>x.DLLInfo()).ToArray();
+
+                var ml = hl.MissionListAccumulator.GetAllCurrentMissions(he.MissionList, he.EventTimeUTC);
+                je.currentmissions = ml.Select(x=>x.DLLInfo()).ToArray();
                 return je;
             }
         }

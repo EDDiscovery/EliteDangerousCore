@@ -26,8 +26,9 @@ namespace EliteDangerousCore
 {
     public partial class HistoryList //: IEnumerable<HistoryEntry>
     {
+        public MissionListAccumulator MissionListAccumulator { get; private set; } = new MissionListAccumulator(); // and mission list..
+
         private List<HistoryEntry> historylist = new List<HistoryEntry>();  // oldest first here
-        private MissionListAccumulator missionlistaccumulator = new MissionListAccumulator(); // and mission list..
         private Stats statisticsaccumulator = new Stats();
 
         public HistoryList() { }
@@ -48,7 +49,7 @@ namespace EliteDangerousCore
             StarScan = other.StarScan;
             ShipInformationList = other.ShipInformationList;
             CommanderId = other.CommanderId;
-            missionlistaccumulator = other.missionlistaccumulator;
+            MissionListAccumulator = other.MissionListAccumulator;
             statisticsaccumulator = other.statisticsaccumulator;
             Shipyards = other.Shipyards;
             Outfitting = other.Outfitting;
@@ -60,6 +61,7 @@ namespace EliteDangerousCore
         {
             return statisticsaccumulator.GetAtGeneration(g);
         }
+
 
         #region Entry processing
 
@@ -90,7 +92,7 @@ namespace EliteDangerousCore
             he.UpdateShipInformation(ret.Item1);
             he.UpdateShipStoredModules(ret.Item2);
             
-            he.UpdateMissionList(missionlistaccumulator.Process(je, he.System, he.WhereAmI));
+            he.UpdateMissionList(MissionListAccumulator.Process(je, he.System, he.WhereAmI));
 
             historylist.Add(he);        // then add to history
 
@@ -203,7 +205,7 @@ namespace EliteDangerousCore
                 he.UpdateShipInformation(ret.Item1);
                 he.UpdateShipStoredModules(ret.Item2);
 
-                he.UpdateMissionList(hist.missionlistaccumulator.Process(je, he.System, he.WhereAmI));
+                he.UpdateMissionList(hist.MissionListAccumulator.Process(je, he.System, he.WhereAmI));
 
                 hist.historylist.Add(he);           // now add it to the history
 

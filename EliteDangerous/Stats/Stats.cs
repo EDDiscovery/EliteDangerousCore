@@ -75,12 +75,12 @@ namespace EliteDangerousCore
 
         public Dictionary<string, FactionInfo> GetAtGeneration(uint g)
         {
-            return history.GetGenerationUpTo(g);
+            return history.Get(g);
         }
 
         public Dictionary<string, FactionInfo> GetLastEntries()
         {
-            return history.GetLastEntries();
+            return history.GetLast();
         }
 
         private FactionInfo Clone(string faction, bool incrgen = true)               // clone both FactionInformation structure and a faction
@@ -208,14 +208,14 @@ namespace EliteDangerousCore
             }
         }
 
-        public static uint Process(JournalEntry je, Stats stats, string stationfaction)
+        public uint Process(JournalEntry je, string stationfaction)
         {
             if (je is IStatsJournalEntry)
             {
-                ((IStatsJournalEntry)je).UpdateStats(stats, stationfaction);
+                ((IStatsJournalEntry)je).UpdateStats(this, stationfaction);
             }
 
-            return stats.history.Generation;
+            return history.Generation;
         }
     }
 }

@@ -121,7 +121,7 @@ namespace EliteDangerousCore
         public MaterialCommoditiesList MaterialCommodity { get; private set; }
         public ShipInformation ShipInformation { get; private set; }     // may be null if not set up yet
         public ModulesInStore StoredModules { get; private set; }
-        public MissionList MissionList { get; private set; }
+        public uint MissionList { get; private set; }       // generation index
         public uint Statistics { get; private set; }     // generation index
 
         public SystemNoteClass snc;     // system note class found attached to this entry. May be null
@@ -211,7 +211,7 @@ namespace EliteDangerousCore
 
         public void UpdateStats(JournalEntry je, Stats stats, string station)
         {
-            Statistics = Stats.Process(je, stats, station);
+            Statistics = stats.Process(je, station);
         }
 
         public void UpdateSystemNote()
@@ -270,7 +270,7 @@ namespace EliteDangerousCore
             StoredModules = ms;
         }
 
-        public void UpdateMissionList(MissionList ml)
+        public void UpdateMissionList(uint ml)
         {
             MissionList = ml;
         }

@@ -14,6 +14,7 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
+using BaseUtils;
 using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Generic;
@@ -142,7 +143,6 @@ namespace EliteDangerousCore
             body = other.body;
         }
 
-
         public MissionState(MissionState other, StateTypes type, DateTime? endtime)           // changed to another state..
         {
             Mission = other.Mission;
@@ -156,209 +156,189 @@ namespace EliteDangerousCore
         }
     }
 
-    public class MissionList
-    {
-        public Dictionary<string, MissionState> Missions { get; private set; }      // indiced by MissionUniqueID
 
-        public MissionList()
+    public class MissionListAccumulator
+    {
+        public List<MissionState> GetAllMissions()  // all missions stored, always return array
         {
-            Missions = new Dictionary<string, MissionState>();
+            return history.GetLastValues();
         }
 
-        public MissionList( MissionList other)
+        public List<MissionState> GetMissionList(uint generation)   // missions at a generation. Always return array
         {
-            Missions = new Dictionary<string, MissionState>(other.Missions);
+            return history.GetValues(generation).ToList();
+        }
+
+        public List<MissionState> GetAllCurrentMissions(uint generation, DateTime utc)  // ones current at this time in a generation. Always return array
+        {
+            return history.GetValues(generation, x => x.InProgressDateTime(utc)).OrderByDescending(y => y.Mission.EventTimeUTC).ToList();
+        }
+
+        public MissionState GetMission(string key) // null if not present
+        {
+            return history.GetLast(key);
+        }
+
+        public MissionState GetMission(uint generation, string key) // null if not present at that generation
+        {
+            return history.Get(key, generation);
+        }
+
+        static public List<MissionState> GetAllCombatMissionsLatestFirst(List<MissionState> ms)
+        {
+            return ms.Where(x => x.Mission.TargetType.Length > 0 && x.Mission.ExpiryValid).OrderByDescending(y => y.Mission.EventTimeUTC).ToList();
+        }
+
+        static public List<MissionState> GetAllCurrentMissions(List<MissionState> ms, DateTime curtime)
+        {
+            return ms.Where(x => x.InProgressDateTime(curtime)).OrderByDescending(y => y.Mission.EventTimeUTC).ToList();
+        }
+
+        static public List<MissionState> GetAllExpiredMissions(List<MissionState> ms, DateTime curtime)
+        {
+            return ms.Where(x => !x.InProgressDateTime(curtime)).OrderByDescending(y => y.Mission.EventTimeUTC).ToList();
+        }
+
+        public MissionListAccumulator()
+        {
+            history = new GenerationalDictionary<string, MissionState>();
+        }
+
+        public MissionListAccumulator(MissionListAccumulator other)
+        {
+            history = other.history;
         }
 
         public void Accepted(JournalMissionAccepted m, ISystem sys, string body)
         {
-            Missions[Key(m)] = new MissionState(m, sys, body); // add a new one..
+            string key = Key(m);
+            history.AddGeneration(key, new MissionState(m, sys, body));
         }
 
         public void Completed(JournalMissionCompleted c)
         {
-            Missions[Key(c)] = new MissionState(Missions[Key(c)], c); // copy previous mission state, add completed
+            string key = Key(c);
+            MissionState m = history.GetLast(key);       // we must have a last entry to add
+            if (m != null)
+            {
+                history.AddGeneration(key, new MissionState(m, c));
+            }
+            else
+                System.Diagnostics.Debug.WriteLine("Missions: Unknown " + key);
         }
 
-        public void CargoDepot(string key, JournalCargoDepot cd)
+        public void CargoDepot(JournalCargoDepot cd)
         {
-            Missions[key] = new MissionState(Missions[key], cd); // copy previous mission state, add completed
+            string key = GetExistingKeyFromID(cd.MissionId);
+
+            MissionState m = history.GetLast(key);       // we must have a last entry to add
+            if (m != null)
+            {
+                history.AddGeneration(key, new MissionState(m, cd));
+            }
+            else
+                System.Diagnostics.Debug.WriteLine("Missions: Unknown " + key);
         }
 
         public void Abandoned(JournalMissionAbandoned a)
         {
-            Missions[Key(a)] = new MissionState(Missions[Key(a)], MissionState.StateTypes.Abandoned, a.EventTimeUTC); // copy previous mission state, add abandonded
+            string key = Key(a);
+            MissionState m = history.GetLast(key);       // we must have a last entry to add
+            if (m != null)
+            {
+                history.AddGeneration(key, new MissionState(m, MissionState.StateTypes.Abandoned, a.EventTimeUTC));
+            }
+            else
+                System.Diagnostics.Debug.WriteLine("Missions: Unknown " + key);
         }
 
         public void Failed(JournalMissionFailed f)
         {
-            Missions[Key(f)] = new MissionState(Missions[Key(f)], MissionState.StateTypes.Failed, f.EventTimeUTC); // copy previous mission state, add failed
+            string key = Key(f);
+            MissionState m = history.GetLast(key);       // we must have a last entry to add
+            if (m != null)
+            {
+                history.AddGeneration(key, new MissionState(m, MissionState.StateTypes.Failed, f.EventTimeUTC));
+            }
+            else
+                System.Diagnostics.Debug.WriteLine("Missions: Unknown " + key);
         }
 
         public void Redirected(JournalMissionRedirected r)
         {
-            Missions[Key(r)] = new MissionState(Missions[Key(r)], r); // copy previous, add redirected
+            string key = Key(r);
+            MissionState m = history.GetLast(key);       // we must have a last entry to add
+            if (m != null)
+            {
+                history.AddGeneration(key, new MissionState(m,r));
+            }
+            else
+                System.Diagnostics.Debug.WriteLine("Missions: Unknown " + key);
         }
 
         public void Died(DateTime diedtimeutc)
         {
             List<MissionState> affected = new List<MissionState>();
-            foreach (var m in Missions)
+            foreach (var m in history.GetLast())
             {
                 if (m.Value.InProgressDateTime(diedtimeutc))
                     affected.Add(m.Value);
             }
 
-            foreach (var m in affected)
-                Missions[Key(m.Mission)] = new MissionState(Missions[Key(m.Mission)], MissionState.StateTypes.Died, diedtimeutc); // copy previous mission info, set died, now!
+            if (affected.Count > 0)
+            {
+                history.NextGeneration();
+                foreach (var m in affected)
+                {
+                    string key = Key(m.Mission);
+                    history.Add(key, new MissionState(history.GetLast(key), MissionState.StateTypes.Died, diedtimeutc));
+                }
+            }
         }
 
         public void Resurrect(List<string> keys)
         {
-            foreach( string k in keys)
+            history.NextGeneration();
+            foreach (string key in keys)
             {
-                if (Missions.ContainsKey(k))
+                MissionState m = history.GetLast(key);       // we must have a last entry to resurrect
+                if (m != null)
                 {
-                    Missions[k] = new MissionState(Missions[k], MissionState.StateTypes.InProgress, null); // copy previous mission info, resurrected, now!
+                    history.Add(key, new MissionState(m, MissionState.StateTypes.InProgress, null)); // copy previous mission info, resurrected, now!
                 }
             }
         }
 
         public void ChangeStateIfInProgress(List<string> keys, MissionState.StateTypes state, DateTime missingtime)
         {
-            foreach (string k in keys)
+            history.NextGeneration();
+            foreach (string key in keys)
             {
-                if (Missions.ContainsKey(k) && Missions[k].State == MissionState.StateTypes.InProgress)
+                MissionState m = history.GetLast(key);       // we must have a last entry to resurrect
+                if (m != null && m.State == MissionState.StateTypes.InProgress)
                 {
-                    Missions[k] = new MissionState(Missions[k], state, missingtime);
+                    history.Add(key, new MissionState(m, state, missingtime));
                 }
             }
         }
 
         public void Disappeared(List<string> keys, DateTime missingtime)
         {
-            foreach (string k in keys)
+            history.NextGeneration();
+            foreach (string key in keys)
             {
-                if (Missions.ContainsKey(k) && Missions[k].State == MissionState.StateTypes.InProgress)
+                MissionState m = history.GetLast(key);       // we must have a last entry to resurrect
+
+                if (m != null && m.State == MissionState.StateTypes.InProgress)
                 {
                     // permits seem to be only 1 journal entry.. so its completed.
-                    MissionState.StateTypes st = Missions[k].Mission.Name.Contains("permit", StringComparison.InvariantCultureIgnoreCase) ? MissionState.StateTypes.Completed : MissionState.StateTypes.Abandoned;
-                    Missions[k] = new MissionState(Missions[k], st, missingtime);
+                    MissionState.StateTypes st = m.Mission.Name.Contains("permit", StringComparison.InvariantCultureIgnoreCase) ? MissionState.StateTypes.Completed : MissionState.StateTypes.Abandoned;
+                    history.Add(key, new MissionState(m, st, missingtime));
                 }
             }
         }
 
-
-        public List<MissionState> GetAllCombatMissionsLatestFirst() { return (from x in Missions.Values where x.Mission.TargetType.Length > 0 && x.Mission.ExpiryValid orderby x.Mission.EventTimeUTC descending select x).ToList(); }
-
-        public List<MissionState> GetAllCurrentMissions(DateTime curtime) { return (from MissionState ms in Missions.Values where ms.InProgressDateTime(curtime) orderby ms.Mission.EventTimeUTC descending select ms).ToList(); }
-        public List<MissionState> GetAllExpiredMissions(DateTime curtime) { return (from MissionState ms in Missions.Values where !ms.InProgressDateTime(curtime) orderby ms.Mission.EventTimeUTC descending select ms).ToList(); }
-
-        // can't think of a better way, don't want to put it in the actual entries since it should all be here.. can't be bothered to refactor so they have a common ancestor.
-        public static string Key(JournalMissionFailed m) { return m.MissionId.ToStringInvariant() + ":" + m.Name; }
-        public static string Key(JournalMissionCompleted m) { return m.MissionId.ToStringInvariant() + ":" + m.Name; }
-        public static string Key(JournalMissionAccepted m) { return m.MissionId.ToStringInvariant() + ":" + m.Name; }
-        public static string Key(JournalMissionRedirected m) { return m.MissionId.ToStringInvariant() + ":" + m.Name; }
-        public static string Key(JournalMissionAbandoned m) { return m.MissionId.ToStringInvariant() + ":" + m.Name; }
-        public static string Key(int id, string name) { return id.ToStringInvariant() + ":" + name; }
-
-        public string GetExistingKeyFromID(int id)       // some only have mission ID, generated after accept. Find on key
-        {
-            string frontpart = id.ToStringInvariant() + ":";
-            foreach( var x in Missions )
-            {
-                if (x.Key.StartsWith(frontpart))
-                    return x.Key;
-            }
-
-            return null;
-        }
-    }
-
-    [System.Diagnostics.DebuggerDisplay("Total {current.Missions.Count}")]
-    public class MissionListAccumulator
-    {
-        private MissionList missionlist;
-
-        public MissionListAccumulator()
-        {
-            missionlist = new MissionList();
-        }
-
-        public void Accepted(JournalMissionAccepted m, ISystem sys, string body)
-        {
-            if (!missionlist.Missions.ContainsKey(MissionList.Key(m)))        // make sure not repeating, ignore if so
-            {
-                missionlist = new MissionList(missionlist);     // shallow copy
-                missionlist.Accepted(m, sys, body);
-              //  System.Diagnostics.Debug.WriteLine(m.EventTimeUTC.ToStringZulu() + " Missions Accepted " + MissionList.Key(m));
-            }
-            else
-                System.Diagnostics.Debug.WriteLine("Missions: Duplicate " + MissionList.Key(m));
-        }
-
-        public void Completed(JournalMissionCompleted m)
-        {
-            if (missionlist.Missions.ContainsKey(MissionList.Key(m)))        // make sure not repeating, ignore if so
-            {
-                missionlist = new MissionList(missionlist);     // shallow copy
-                missionlist.Completed(m);
-               // System.Diagnostics.Debug.WriteLine(m.EventTimeUTC.ToStringZulu() + " Missions Completed " + MissionList.Key(m));
-            }
-            else
-                System.Diagnostics.Debug.WriteLine("Missions: Unknown " + MissionList.Key(m));
-        }
-
-        public void Abandoned(JournalMissionAbandoned m)
-        {
-            if (missionlist.Missions.ContainsKey(MissionList.Key(m)))        // make sure not repeating, ignore if so
-            {
-                missionlist = new MissionList(missionlist);     // shallow copy
-                missionlist.Abandoned(m);
-              //  System.Diagnostics.Debug.WriteLine(m.EventTimeUTC.ToStringZulu() + " Missions Abandoned " + MissionList.Key(m));
-            }
-            else
-                System.Diagnostics.Debug.WriteLine("Missions: Unknown " + MissionList.Key(m));
-        }
-
-        public void Failed(JournalMissionFailed m)
-        {
-            if (missionlist.Missions.ContainsKey(MissionList.Key(m)))        // make sure not repeating, ignore if so
-            {
-                missionlist = new MissionList(missionlist);     // shallow copy
-                missionlist.Failed(m);
-               // System.Diagnostics.Debug.WriteLine(m.EventTimeUTC.ToStringZulu() + " Missions Failed " + MissionList.Key(m));
-            }
-            else
-                System.Diagnostics.Debug.WriteLine("Missions: Unknown " + MissionList.Key(m));
-        }
-
-        public void Redirected(JournalMissionRedirected m)
-        {
-            if (missionlist.Missions.ContainsKey(MissionList.Key(m)))        // make sure not repeating, ignore if so
-            {
-                missionlist = new MissionList(missionlist);     // shallow copy
-                missionlist.Redirected(m);
-               // System.Diagnostics.Debug.WriteLine(m.EventTimeUTC.ToStringZulu() + " Missions Redirected " + MissionList.Key(m));
-            }
-            else
-                System.Diagnostics.Debug.WriteLine("Missions: Unknown " + MissionList.Key(m));
-        }
-
-        public void CargoDepot(JournalCargoDepot m)
-        {
-            string key = missionlist.GetExistingKeyFromID(m.MissionId);
-            if ( key != null )
-            { 
-                missionlist = new MissionList(missionlist);     // shallow copy
-                missionlist.CargoDepot(key,m);
-              //  System.Diagnostics.Debug.WriteLine(m.EventTimeUTC.ToStringZulu() + " Cargo depot " + key);
-            }
-            else
-                System.Diagnostics.Debug.WriteLine("Missions: Unknown " + m.MissionId);
-        }
-
-        public void Missions( JournalMissions m )
+        public void Missions(JournalMissions m)
         {
             List<string> toresurrect = new List<string>();
             HashSet<string> active = new HashSet<string>();
@@ -366,17 +346,17 @@ namespace EliteDangerousCore
             List<string> completed = new List<string>();
             List<string> disappeared = new List<string>();
 
-            foreach ( var mi in m.ActiveMissions )
+            foreach (var mi in m.ActiveMissions)
             {
-                string kn = MissionList.Key(mi.MissionID, mi.Name);
+                string kn = Key(mi.MissionID, mi.Name);
                 active.Add(kn);
                 //System.Diagnostics.Debug.WriteLine(m.EventTimeUTC.ToStringZulu() + " Mission " + kn + " is active");
 
-                if (missionlist.Missions.ContainsKey(kn))
+                if (history.ContainsKey(kn))
                 {
-                    MissionState ms = missionlist.Missions[kn];
+                    MissionState ms = history.GetLast(kn);
 
-                    if ( ms.State == MissionState.StateTypes.Died)  // if marked died... 
+                    if (ms.State == MissionState.StateTypes.Died)  // if marked died... 
                     {
                         System.Diagnostics.Debug.WriteLine("Missions in active list but marked died" + kn);
                         toresurrect.Add(kn);
@@ -386,17 +366,17 @@ namespace EliteDangerousCore
 
             foreach (var mi in m.FailedMissions)
             {
-                string kn = MissionList.Key(mi.MissionID, mi.Name);
+                string kn = Key(mi.MissionID, mi.Name);
                 failed.Add(kn);
             }
 
             foreach (var mi in m.CompletedMissions)
             {
-                string kn = MissionList.Key(mi.MissionID, mi.Name);
+                string kn = Key(mi.MissionID, mi.Name);
                 completed.Add(kn);
             }
 
-            foreach (var kvp in missionlist.Missions)
+            foreach (var kvp in history.GetLast())
             {
                 if (!active.Contains(kvp.Key) && !failed.Contains(kvp.Key) && !completed.Contains(kvp.Key) && kvp.Value.State == MissionState.StateTypes.InProgress)
                 {
@@ -405,52 +385,59 @@ namespace EliteDangerousCore
                 }
             }
 
-            if ( toresurrect.Count>0)       // if any..
+            if (toresurrect.Count > 0)       // if any..
             {
-                missionlist = new MissionList(missionlist);     // shallow copy
-                missionlist.Resurrect(toresurrect);
+                Resurrect(toresurrect);
             }
 
             if (disappeared.Count > 0)
             {
-                missionlist = new MissionList(missionlist);
-                missionlist.Disappeared(disappeared, m.EventTimeUTC);
+                Disappeared(disappeared, m.EventTimeUTC);
             }
 
             if (failed.Count > 0)
             {
-                missionlist = new MissionList(missionlist);
-                missionlist.ChangeStateIfInProgress(failed, MissionState.StateTypes.Failed, m.EventTimeUTC);
+                ChangeStateIfInProgress(failed, MissionState.StateTypes.Failed, m.EventTimeUTC);
             }
 
             if (completed.Count > 0)
             {
-                missionlist = new MissionList(missionlist);
-                missionlist.ChangeStateIfInProgress(failed, MissionState.StateTypes.Completed, m.EventTimeUTC);
+                ChangeStateIfInProgress(failed, MissionState.StateTypes.Completed, m.EventTimeUTC);
             }
         }
 
-        public void Died(DateTime diedtime)
+        public string GetExistingKeyFromID(int id)       // some only have mission ID, generated after accept. Find on key
         {
-            missionlist = new MissionList(missionlist);     // shallow copy
-            missionlist.Died(diedtime);
+            string frontpart = id.ToStringInvariant() + ":";
+            foreach (var kvp in history.GetLast())
+            {
+                if (kvp.Key.StartsWith(frontpart))
+                    return kvp.Key;
+            }
+
+            return null;
         }
 
-        #region process
-
-        public MissionList Process(JournalEntry je, ISystem sys, string body )
+        public uint Process(JournalEntry je, ISystem sys, string body)
         {
             if (je is IMissions)
             {
                 IMissions e = je as IMissions;
-                e.UpdateMissions(this, sys , body);                                   // not cloned.. up to callers to see if they need to
+                e.UpdateMissions(this, sys, body);                                   // not cloned.. up to callers to see if they need to
             }
 
-            return missionlist;
+            return history.Generation;
         }
 
-        #endregion
+        public static string Key(JournalMissionFailed m) { return m.MissionId.ToStringInvariant() + ":" + m.Name; }
+        public static string Key(JournalMissionCompleted m) { return m.MissionId.ToStringInvariant() + ":" + m.Name; }
+        public static string Key(JournalMissionAccepted m) { return m.MissionId.ToStringInvariant() + ":" + m.Name; }
+        public static string Key(JournalMissionRedirected m) { return m.MissionId.ToStringInvariant() + ":" + m.Name; }
+        public static string Key(JournalMissionAbandoned m) { return m.MissionId.ToStringInvariant() + ":" + m.Name; }
+        public static string Key(int id, string name) { return id.ToStringInvariant() + ":" + name; }
 
+        private GenerationalDictionary<string, MissionState> history;
     }
+
 }
 
