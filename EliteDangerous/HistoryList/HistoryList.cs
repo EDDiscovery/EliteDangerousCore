@@ -131,7 +131,7 @@ namespace EliteDangerousCore
 
             List<JournalEntry> jlist;       // returned in date ascending, oldest first order.
 
-            System.Diagnostics.Debug.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL", true) + "History Load");
+            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL", true).Item1 + " History Load");
 
             if (fullhistoryloaddaylimit > 0)
             {
@@ -149,9 +149,7 @@ namespace EliteDangerousCore
             else
                 jlist = JournalEntry.GetAll(CurrentCommander);
 
-            System.Diagnostics.Debug.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL") + "History Load END");
-
-            Trace.WriteLine(BaseUtils.AppTicks.TickCountLap() + " Database read " + jlist.Count);
+            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " History Load END");
 
             HistoryEntry hprev = null;
             JournalEntry jprev = null;
@@ -220,7 +218,8 @@ namespace EliteDangerousCore
 
             // now database has been updated due to initial fill, now fill in stuff which needs the user database
 
-            Trace.WriteLine(BaseUtils.AppTicks.TickCountLap() + " HE created");
+            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " History Entries END");
+
             hist.CommanderId = CurrentCommander;
 
             EDCommander.Current.FID = hist.GetCommanderFID();               // ensure FID is set.. the other place it gets changed is a read of LoadGame.
