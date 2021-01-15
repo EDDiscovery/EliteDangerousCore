@@ -143,7 +143,11 @@ namespace EliteDangerousCore
                         EDCommander.Update(new List<EDCommander> { commander }, false);
                     }
                     else
-                        commander = EDCommander.Create(name:newname, journalpath:EDJournalUIScanner.GetDefaultJournalDir().Equals(TravelLogUnit.Path) ? "" : TravelLogUnit.Path);
+                    {
+                        string defpath = EDJournalUIScanner.GetDefaultJournalDir();     // may be null if the system is not known
+                        string jp = defpath != null && defpath.Equals(TravelLogUnit.Path) ? "" : TravelLogUnit.Path;
+                        commander = EDCommander.Create(name: newname, journalpath: jp);
+                    }
 
                 }
 

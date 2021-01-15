@@ -34,7 +34,7 @@ namespace EliteDangerousCore
         private Action<Action> InvokeAsyncOnUiThread;
         private List<JournalMonitorWatcher> watchers = new List<JournalMonitorWatcher>();
         private List<StatusMonitorWatcher> statuswatchers = new List<StatusMonitorWatcher>();
-        private string frontierfolder;
+        private string frontierfolder;      // this can be null if non exists on system
         private static Guid Win32FolderId_SavedGames = new Guid("4C5C32FF-BB9D-43b0-B5B4-2D72E54EAAA4");
 
         const int ScanTick = 100;       // tick time to check journals and status
@@ -45,7 +45,7 @@ namespace EliteDangerousCore
             frontierfolder = GetDefaultJournalDir();
         }
 
-        public static string GetDefaultJournalDir()
+        public static string GetDefaultJournalDir() // may return null if not known on system
         {
             string path;
 
