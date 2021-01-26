@@ -124,6 +124,7 @@
     <Compile Include="StarScan\StarScanDesignationMaps.cs" />
     <Compile Include="StarScan\StarScanJournalScans.cs" />
     <Compile Include="StarScan\StarScanBodyID.cs" />
+    <Compile Include="StarScan\StarScanFSSSignalsDiscovered.cs" />
     <Compile Include="StarScan\StarScanSAASignalsFound.cs" />
     <Compile Include="StarScan\StarScanSAAScan.cs" />
     <Compile Include="Stats\Stats.cs" />

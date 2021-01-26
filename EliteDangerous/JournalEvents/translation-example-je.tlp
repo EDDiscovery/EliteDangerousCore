@@ -271,7 +271,10 @@ SECTION FSSSignal
 .Faction: "Faction:" @
 .USSType: "USS Type:" @
 .ThreatLevel: "Threat Level:" @
-.StationBool: ";Station" @
+.StationBool: ";Station: " @
+.CarrierBool: ";Carrier: " @
+.InstallationBool: ";Installation: " @
+.LastSeen: "Last Seen:" @
 
 SECTION JournalFSSDiscoveryScan
 .Progress: "Progress:;%;N1" @

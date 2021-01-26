@@ -152,16 +152,12 @@ namespace EliteDangerousCore
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " History Load END");
 
             HistoryEntry hprev = null;
-            JournalEntry jprev = null;
 
             reportProgress(-1, "Creating History");
 
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-
             foreach (JournalEntry je in jlist)
             {
-                if (MergeEntries(jprev, je))        // if we merge, don't store into HE
+                if (MergeEntries(hprev?.journalEntry, je))        // if we merge, don't store into HE
                 {
                     continue;
                 }
@@ -179,16 +175,24 @@ namespace EliteDangerousCore
                     continue;
                 }
 
-                long timetoload = sw.ElapsedMilliseconds;
-                HistoryEntry he = HistoryEntry.FromJournalEntry(je, hprev);
+                HistoryEntry he = HistoryEntry.FromJournalEntry(je, hprev);     // create entry
 
-                // **** REMEMBER NEW Journal entry needs this too *****************
-
-                he.UpdateMaterialsCommodities(je, hprev?.MaterialCommodity);        // update material commodities
+                he.UpdateMaterialsCommodities(je, hprev?.MaterialCommodity);    // update material commodities BEFORE we possibly remove entries, as Cargo is one of the removal options
                 Debug.Assert(he.MaterialCommodity != null);
 
-                if (CheckForRemoval(he, hprev))                                     // check here to see if we want to remove the entry.. can move this lower later, but at first point where we have the data
+                if (CheckForRemoval(he, hprev))                                 // check here to see if we want to remove the entry.. can move this lower later, but at first point where we have the data
                     continue;
+
+                hist.historylist.Add(he);                                       // now add it to the history
+
+                hprev = he;
+            }
+
+            reportProgress(-1, "Analysing History");
+
+            foreach ( HistoryEntry he in hist.historylist)                      // now complete the history analysis, this is done After merging/checkForRemoval
+            {
+                JournalEntry je = he.journalEntry;
 
                 he.UpdateStats(je, hist.statisticsaccumulator, he.StationFaction);
                 he.UpdateSystemNote();
@@ -205,18 +209,12 @@ namespace EliteDangerousCore
 
                 he.UpdateMissionList(hist.MissionListAccumulator.Process(je, he.System, he.WhereAmI));
 
-                hist.historylist.Add(he);           // now add it to the history
-
                 AddToVisitsScan(hist, he, null);          // add to scan but don't complain if can't add.  Do this AFTER add, as it uses the history list
-
-                hprev = he;
-                jprev = je;
-
             }
 
-            //for (int i = hist.Count - 10; i < hist.Count; i++)  System.Diagnostics.Debug.WriteLine("Hist {0} {1} {2}", hist[i].EventTimeUTC, hist[i].Indexno , hist[i].EventSummary);
+        //for (int i = hist.Count - 10; i < hist.Count; i++)  System.Diagnostics.Debug.WriteLine("Hist {0} {1} {2}", hist[i].EventTimeUTC, hist[i].Indexno , hist[i].EventSummary);
 
-            // now database has been updated due to initial fill, now fill in stuff which needs the user database
+        // now database has been updated due to initial fill, now fill in stuff which needs the user database
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " History Entries END");
 
@@ -317,9 +315,13 @@ namespace EliteDangerousCore
             {
                 hist.StarScan.AddSAASignalsFoundToBestSystem((JournalSAASignalsFound)he.journalEntry, hist.historylist.Count - 1, hist.historylist);
             }
-            else if (he.EntryType == JournalTypeEnum.FSSDiscoveryScan && he.System != null)
+            else if (he.EntryType == JournalTypeEnum.FSSDiscoveryScan)
             {
                 hist.StarScan.SetFSSDiscoveryScan((JournalFSSDiscoveryScan)he.journalEntry, he.System);
+            }
+            else if (he.EntryType == JournalTypeEnum.FSSSignalDiscovered)
+            {
+                hist.StarScan.AddFSSSignalsDiscoveredToSystem((JournalFSSSignalDiscovered)he.journalEntry, he.System);
             }
             else if (he.journalEntry is IBodyNameAndID)
             {

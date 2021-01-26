@@ -38,6 +38,7 @@ namespace EliteDangerousCore.EDSM
         deepSpaceOutpost,
         mysteryPOI,
         restrictedSectors,
+        independentOutpost,
     }
 
     public class GalMapType
@@ -89,6 +90,7 @@ namespace EliteDangerousCore.EDSM
             type.Add(new GalMapType("deepSpaceOutpost", "Deep space outpost", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.deepSpaceOutpost], index++));
             type.Add(new GalMapType("mysteryPOI", "Mystery POI", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.mysteryPOI], index++));
             type.Add(new GalMapType("restrictedSectors", "Restricted Sectors", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.restrictedSectors], index++));
+            type.Add(new GalMapType("independentOutpost", "Independent Outpost", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.minorPOI], index++));
 
             type.Add(new GalMapType("travelRoute", "Travel Route", GalMapGroup.Routes , null, index++));
             type.Add(new GalMapType("historicalRoute", "Historical Route", GalMapGroup.Routes , null, index++));

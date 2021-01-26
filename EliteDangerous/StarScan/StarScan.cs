@@ -39,9 +39,8 @@ namespace EliteDangerousCore
             public int MaxTopLevelBodyID = 0;
             public int MinPlanetBodyID = 512;
             public int? FSSTotalBodies;
+            public List<JournalFSSSignalDiscovered.FSSSignal> FSSSignalList = new List<JournalFSSSignalDiscovered.FSSSignal>();
 
-            public List<Tuple<JournalEntry, ISystem>> ToProcess;     // entries seen but yet to be processed due to no scan node
-            
             public IEnumerable<ScanNode> Bodies
             {
                 get
@@ -106,6 +105,8 @@ namespace EliteDangerousCore
                 }
                 return null;
             }
+
+            public List<Tuple<JournalEntry, ISystem>> ToProcess;     // entries seen but yet to be processed due to no scan node
 
             public void SaveForProcessing(JournalEntry je, ISystem sys)
             {

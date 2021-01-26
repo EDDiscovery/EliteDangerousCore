@@ -475,7 +475,10 @@ namespace EliteDangerousCore
         FSSSignal_Faction, // Faction:
         FSSSignal_USSType, // USS Type:
         FSSSignal_ThreatLevel, //  Threat Level:
-        FSSSignal_StationBool, // ;Station
+        FSSSignal_StationBool, // ;Station:
+        FSSSignal_CarrierBool, // ;Carrier:
+        FSSSignal_InstallationBool, // ;Installation:
+        FSSSignal_LastSeen, // Last Seen
 
         JournalEntry_Hyperspace,
         JournalEntry_Supercruise,
