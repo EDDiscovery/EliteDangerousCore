@@ -473,6 +473,22 @@ namespace EliteDangerousCore.DB
             PerformUpgrade(125, true, false, new[] { query1, query2 });
         }
 
+        private void UpgradeUserDB126()         // Oh dear put this back for backwards compat
+        {
+            string query1 = "CREATE TABLE MaterialsCommodities ( " +
+                "Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                "Category TEXT NOT NULL, " +
+                "Name TEXT NOT NULL COLLATE NOCASE, " +
+                "FDName TEXT NOT NULL COLLATE NOCASE DEFAULT '', " +
+                "Type TEXT NOT NULL COLLATE NOCASE, " +
+                "ShortName TEXT NOT NULL COLLATE NOCASE DEFAULT '', " +
+                "Flags INT NOT NULL DEFAULT 0, " +
+                "Colour INT NOT NULL DEFAULT 15728640, " +
+                "UNIQUE(Category,Name)" +
+                ") ";
+            PerformUpgrade(126, true, false, new[] { query1 });
+        }
+
         private void DropOldUserTables()
         {
             string[] queries = new[]
