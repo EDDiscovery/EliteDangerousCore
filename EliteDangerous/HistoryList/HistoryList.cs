@@ -96,7 +96,7 @@ namespace EliteDangerousCore
 
             historylist.Add(he);        // then add to history
 
-            AddToVisitsScan(this, he, logerror);  // add to scan database and complain if can't add. Do this after history add, so it has a list.
+            AddToVisitsScan(this, this.historylist.Count-1, logerror);  // add to scan database and complain if can't add. Do this after history add, so it has a list.
             
             return he;
         }
@@ -190,8 +190,9 @@ namespace EliteDangerousCore
 
             reportProgress(-1, "Analysing History");
 
-            foreach ( HistoryEntry he in hist.historylist)                      // now complete the history analysis, this is done After merging/checkForRemoval
+            for( int i = 0; i < hist.historylist.Count; i++ )
             {
+                HistoryEntry he = hist.historylist[i];
                 JournalEntry je = he.journalEntry;
 
                 he.UpdateStats(je, hist.statisticsaccumulator, he.StationFaction);
@@ -209,7 +210,7 @@ namespace EliteDangerousCore
 
                 he.UpdateMissionList(hist.MissionListAccumulator.Process(je, he.System, he.WhereAmI));
 
-                AddToVisitsScan(hist, he, null);          // add to scan but don't complain if can't add.  Do this AFTER add, as it uses the history list
+                AddToVisitsScan(hist, i, null);          // add to scan but don't complain if can't add
             }
 
         //for (int i = hist.Count - 10; i < hist.Count; i++)  System.Diagnostics.Debug.WriteLine("Hist {0} {1} {2}", hist[i].EventTimeUTC, hist[i].Indexno , hist[i].EventSummary);
@@ -258,8 +259,10 @@ namespace EliteDangerousCore
         }
 
 
-        public static void AddToVisitsScan(HistoryList hist, HistoryEntry he, Action<string> logerror)
+        public static void AddToVisitsScan(HistoryList hist, int pos, Action<string> logerror)
         {
+            HistoryEntry he = hist[pos];
+
             if ((hist.LastSystem == null || he.System.Name != hist.LastSystem ) && he.System.Name != "Unknown" )   // if system is not last, we moved somehow (FSD, location, carrier jump), add
             {
                 if (hist.Visited.TryGetValue(he.System.Name, out var value))
@@ -272,6 +275,7 @@ namespace EliteDangerousCore
                     he.Visits = 1;                              // first visit
                     hist.Visited[he.System.Name] = he;          // point to he
                 }
+
                 hist.LastSystem = he.System.Name;
             }
 
@@ -281,7 +285,7 @@ namespace EliteDangerousCore
 
                 JournalScan js = he.journalEntry as JournalScan;
 
-                if (!hist.StarScan.AddScanToBestSystem(js, hist.historylist.Count - 1, hist.historylist, out HistoryEntry jlhe, out JournalLocOrJump jl))
+                if (!hist.StarScan.AddScanToBestSystem(js, pos - 1, hist.historylist, out HistoryEntry jlhe, out JournalLocOrJump jl))
                 {
                     if (logerror != null)
                     {
@@ -309,11 +313,11 @@ namespace EliteDangerousCore
             }
             else if (he.EntryType == JournalTypeEnum.SAAScanComplete)
             {
-                hist.StarScan.AddSAAScanToBestSystem((JournalSAAScanComplete)he.journalEntry, hist.historylist.Count - 1, hist.historylist);
+                hist.StarScan.AddSAAScanToBestSystem((JournalSAAScanComplete)he.journalEntry, pos , hist.historylist);
             }
             else if (he.EntryType == JournalTypeEnum.SAASignalsFound)
             {
-                hist.StarScan.AddSAASignalsFoundToBestSystem((JournalSAASignalsFound)he.journalEntry, hist.historylist.Count - 1, hist.historylist);
+                hist.StarScan.AddSAASignalsFoundToBestSystem((JournalSAASignalsFound)he.journalEntry, pos , hist.historylist);
             }
             else if (he.EntryType == JournalTypeEnum.FSSDiscoveryScan)
             {
@@ -325,7 +329,7 @@ namespace EliteDangerousCore
             }
             else if (he.journalEntry is IBodyNameAndID)
             {
-                hist.StarScan.AddBodyToBestSystem((IBodyNameAndID)he.journalEntry, hist.historylist.Count - 1, hist.historylist);
+                hist.StarScan.AddBodyToBestSystem((IBodyNameAndID)he.journalEntry, pos, hist.historylist);
             }
         }
 
