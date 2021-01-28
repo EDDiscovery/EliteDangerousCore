@@ -138,6 +138,9 @@ namespace EliteDangerousCore.DB
                 if (dbver < 125)
                     UpgradeUserDB125();
 
+                if (dbver < 126)
+                    UpgradeUserDB126();
+
                 CreateUserDBTableIndexes();
 
                 return true;
