@@ -231,13 +231,18 @@ namespace EliteDangerousCore
         {
             string key = GetExistingKeyFromID(cd.MissionId);
 
-            MissionState m = history.GetLast(key);       // we must have a last entry to add
-            if (m != null)
+            if (key != null)
             {
-                history.AddGeneration(key, new MissionState(m, cd));
+                MissionState m = history.GetLast(key);       // we must have a last entry to add
+                if (m != null)
+                {
+                    history.AddGeneration(key, new MissionState(m, cd));
+                }
+                else
+                    System.Diagnostics.Debug.WriteLine("Missions: Unknown " + key);
             }
             else
-                System.Diagnostics.Debug.WriteLine("Missions: Unknown " + key);
+                System.Diagnostics.Debug.WriteLine("Missions: Not found " + cd.MissionId);
         }
 
         public void Abandoned(JournalMissionAbandoned a)
