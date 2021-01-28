@@ -46,7 +46,6 @@ namespace EliteDangerousCore.DB
 
                 ExecuteNonQueries(new string[]                  // always set up
                     {
-                    "DROP TABLE IF EXISTS EDDB",                // New Dec 20 - no more EDDB
                     "DROP TABLE IF EXISTS Distances",
                     "DROP TABLE IF EXISTS EddbSystems",
                     // keep edsmsystems
