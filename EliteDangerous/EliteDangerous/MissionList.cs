@@ -367,6 +367,10 @@ namespace EliteDangerousCore
                         toresurrect.Add(kn);
                     }
                 }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("Active mission '" + kn + "' But no Mission accepted");
+                }
             }
 
             foreach (var mi in m.FailedMissions)
@@ -411,14 +415,17 @@ namespace EliteDangerousCore
             }
         }
 
-        public string GetExistingKeyFromID(int id)       // some only have mission ID, generated after accept. Find on key
+        public string GetExistingKeyFromID(int id)       // some only have mission ID, generated after accept. Find on key, may return null
         {
             string frontpart = id.ToStringInvariant() + ":";
+
             foreach (var kvp in history.GetLast())
             {
                 if (kvp.Key.StartsWith(frontpart))
                     return kvp.Key;
             }
+
+//            System.Diagnostics.Debug.WriteLine("KEY MISSING "+ frontpart);
 
             return null;
         }
