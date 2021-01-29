@@ -281,8 +281,6 @@ namespace EliteDangerousCore
 
             if (he.EntryType == JournalTypeEnum.Scan)
             {
-                if (logerror != null) BaseUtils.AppTicks.TickCountLapDelta("Scan", true);
-
                 JournalScan js = he.journalEntry as JournalScan;
 
                 if (!hist.StarScan.AddScanToBestSystem(js, pos - 1, hist.historylist, out HistoryEntry jlhe, out JournalLocOrJump jl))
@@ -308,8 +306,6 @@ namespace EliteDangerousCore
                         System.Diagnostics.Debug.WriteLine("******** Cannot add scan to system " + (he.journalEntry as JournalScan).BodyName + " in " + he.System.Name);
                     }
                 }
-
-                if (logerror != null) System.Diagnostics.Debug.WriteLine(BaseUtils.AppTicks.TickCountLap("Scan") + " Scan End");
             }
             else if (he.EntryType == JournalTypeEnum.SAAScanComplete)
             {
