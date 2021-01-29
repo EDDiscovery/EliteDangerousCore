@@ -317,8 +317,6 @@ namespace EliteDangerousCore.JournalEvents
             public int BodyID;
         }
 
-//TBD        public JournalScan(JObject evt, long edsmid) : this(evt)  {  EdsmID = edsmid;}
-
         public JournalScan(JObject evt) : base(evt, JournalTypeEnum.Scan)
         {
             ScanType = evt["ScanType"].Str();
@@ -360,7 +358,7 @@ namespace EliteDangerousCore.JournalEvents
             if ( nAxialTilt!= null)
                 nAxialTiltDeg = nAxialTilt.Value * 180.0 / Math.PI;
 
-            Rings = evt["Rings"]?.ToObjectProtected<StarPlanetRing[]>(); // may be Null
+            Rings = evt["Rings"]?.ToObjectQ<StarPlanetRing[]>(); // may be Null
 
             nTidalLock = evt["TidalLock"].Bool();
             TerraformState = evt["TerraformState"].StrNull();
@@ -443,7 +441,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if (mats.IsObject)
                 {
-                    Materials = mats.ToObjectProtected<Dictionary<string, double>>();  // name in fd logs is lower case
+                    Materials = mats.ToObjectQ<Dictionary<string, double>>();  // name in fd logs is lower case
                 }
                 else if ( mats.IsArray)
                 {
@@ -466,7 +464,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if (atmos.IsObject)
                 {
-                    AtmosphereComposition = atmos?.ToObjectProtected<Dictionary<string, double>>();
+                    AtmosphereComposition = atmos?.ToObjectQ<Dictionary<string, double>>();
                 }
                 else if ( atmos.IsArray)
                 {

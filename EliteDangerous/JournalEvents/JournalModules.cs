@@ -597,7 +597,7 @@ namespace EliteDangerousCore.JournalEvents
             StarSystem = evt["StarSystem"].Str();
             MarketID = evt["MarketID"].LongNull();
 
-            ModuleItems = evt["Items"]?.ToObjectProtected<ModulesInStore.StoredModule[]>();
+            ModuleItems = evt["Items"]?.ToObjectQ<ModulesInStore.StoredModule[]>();
 
             if (ModuleItems != null)
             {
@@ -644,7 +644,7 @@ namespace EliteDangerousCore.JournalEvents
             ShipFD = JournalFieldNaming.NormaliseFDShipName(evt["Ship"].Str());
             Ship = JournalFieldNaming.GetBetterShipName(ShipFD);
             ShipId = evt["ShipID"].Int();
-            ModuleItems = evt["Items"]?.ToObjectProtected<ModuleItem[]>();
+            ModuleItems = evt["Items"]?.ToObjectQ<ModuleItem[]>();
             MarketID = evt["MarketID"].LongNull();
 
             if (ModuleItems != null)

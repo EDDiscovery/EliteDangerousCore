@@ -231,7 +231,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalPowerplayVoucher(JObject evt) : base(evt, JournalTypeEnum.PowerplayVoucher)
         {
             Power = evt["Power"].Str();
-            Systems = evt["Systems"]?.ToObjectProtected<string[]>();
+            Systems = evt["Systems"]?.ToObjectQ<string[]>();
         }
 
         public string Power { get; set; }

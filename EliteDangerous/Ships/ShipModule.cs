@@ -201,7 +201,7 @@ namespace EliteDangerousCore
                 ExperimentalEffect = evt.MultiStr(new string[] { "ExperimentalEffect", "ApplyExperimentalEffect" });
                 ExperimentalEffect_Localised = JournalFieldNaming.CheckLocalisation(evt["ExperimentalEffect_Localised"].Str(),ExperimentalEffect);
 
-                Modifiers = evt["Modifiers"]?.ToObjectProtected<EngineeringModifiers[]>(ignoretypeerrors:true);     // instances of Value being wrong type - ignore and continue
+                Modifiers = evt["Modifiers"]?.ToObject<EngineeringModifiers[]>(ignoretypeerrors:true,checkcustomattr:false);     // instances of Value being wrong type - ignore and continue
 
                 if (Modifiers != null)
                 {

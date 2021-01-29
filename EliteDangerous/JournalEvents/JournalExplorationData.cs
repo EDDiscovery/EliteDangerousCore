@@ -50,8 +50,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public JournalSellExplorationData(JObject evt) : base(evt, JournalTypeEnum.SellExplorationData)
         {
-            Systems = evt["Systems"]?.ToObjectProtected<string[]>() ?? new string[0];
-            Discovered = evt["Discovered"]?.ToObjectProtected<string[]>() ?? new string[0];
+            Systems = evt["Systems"]?.ToObjectQ<string[]>() ?? new string[0];
+            Discovered = evt["Discovered"]?.ToObjectQ<string[]>() ?? new string[0];
             BaseValue = evt["BaseValue"].Long();
             Bonus = evt["Bonus"].Long();
             TotalEarnings = evt["TotalEarnings"].Long(0);        // may not be present - get 0. also 3.02 has a bug with incorrect value - actually fed from the FD web server so may not be version tied
@@ -98,7 +98,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalMultiSellExplorationData(JObject evt) : base(evt, JournalTypeEnum.MultiSellExplorationData)   // 3.3
         {
-            Systems = evt["Discovered"]?.ToObjectProtected<Discovered[]>();
+            Systems = evt["Discovered"]?.ToObjectQ<Discovered[]>();
             BaseValue = evt["BaseValue"].Long();
             Bonus = evt["Bonus"].Long();
             TotalEarnings = evt["TotalEarnings"].Long(0);       

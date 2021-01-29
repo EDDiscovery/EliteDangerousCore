@@ -35,7 +35,7 @@ namespace EliteDangerousCore.JournalEvents
             VictimFactionLocalised = JournalFieldNaming.CheckLocalisation(evt["VictimFaction_Localised"].Str(),VictimFaction);
 
             SharedWithOthers = evt["SharedWithOthers"].Bool(false);
-            Rewards = evt["Rewards"]?.ToObjectProtected<BountyReward[]>();
+            Rewards = evt["Rewards"]?.ToObjectQ<BountyReward[]>();
 
             TargetLocalised = Target = evt["Target"].StrNull();       // only set for skimmer target missions
 

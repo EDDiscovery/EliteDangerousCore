@@ -42,7 +42,7 @@ namespace EliteDangerousCore.JournalEvents
             NearestDestination = evt["NearestDestination"].StrNull();
             NearestDestination_Localised = JournalFieldNaming.CheckLocalisation(evt["NearestDestination_Localised"].StrNull(), NearestDestination);
             if ( evt["Traits"] != null )
-                Traits = evt["Traits"].ToObjectProtected<string[]>();
+                Traits = evt["Traits"].ToObjectQ<string[]>();
             VoucherAmount = evt["VoucherAmount"].LongNull();
         }
 

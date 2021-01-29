@@ -30,7 +30,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void Rescan(JObject evt)
         {
-            ItemList = new Outfitting(evt["StationName"].Str(), evt["StarSystem"].Str(), EventTimeUTC, evt["Items"]?.ToObjectProtected<Outfitting.OutfittingItem[]>());
+            ItemList = new Outfitting(evt["StationName"].Str(), evt["StarSystem"].Str(), EventTimeUTC, evt["Items"]?.ToObjectQ<Outfitting.OutfittingItem[]>());
             MarketID = evt["MarketID"].LongNull();
             Horizons = evt["Horizons"].BoolNull();
         }

@@ -14,6 +14,8 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
+//#define TIMESCAN
+
 using EliteDangerousCore.DB;
 using EliteDangerousCore.JournalEvents;
 using BaseUtils.JSON;
@@ -312,6 +314,14 @@ namespace EliteDangerousCore
         }
 
         // ordered in time, id order, ascending, oldest first
+#if TIMESCAN
+        class Results
+        {
+            public string name;
+            public double avg, min, max, total, avgtime, sumtime;
+            public int count;
+        };
+#endif
 
         static public List<JournalEntry> GetAll(int commander = -999, DateTime? afterutc = null, DateTime? beforeutc = null,
                             JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null)
@@ -368,6 +378,11 @@ namespace EliteDangerousCore
 
                 List<JournalEntry> retlist = null;
 
+#if TIMESCAN
+                Dictionary<string, List<long>> times = new Dictionary<string, List<long>>();
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+#endif
                 do
                 {
                     // experiments state that reading the DL takes 270/4000ms, reading json -> 1250, then the rest is creating and decoding the fields
@@ -379,9 +394,20 @@ namespace EliteDangerousCore
 
                         while (list.Count < 1000 && reader.Read())
                         {
+#if TIMESCAN
+                            long t = sw.ElapsedTicks;
+#endif
+
                             JournalEntry sys = JournalEntry.CreateJournalEntry(reader);     
                             sys.beta = tlus.ContainsKey(sys.TLUId) ? tlus[sys.TLUId].Beta : false;
                             list.Add(sys);
+
+#if TIMESCAN
+                            long tw = sw.ElapsedTicks - t;
+                            if ( !times.TryGetValue(sys.EventTypeStr, out var x))
+                                times[sys.EventTypeStr] = new List<long>();
+                            times[sys.EventTypeStr].Add(tw);
+#endif
                         }
 
                         return list;
@@ -390,6 +416,31 @@ namespace EliteDangerousCore
                     entries.AddRange(retlist);
                 }
                 while (retlist != null && retlist.Count != 0);
+
+#if TIMESCAN
+                List<Results> res = new List<Results>();
+
+                foreach( var kvp in times)
+                {
+                    Results r = new Results();
+                    r.name = kvp.Key;
+                    r.avg = kvp.Value.Average();
+                    r.min = kvp.Value.Min();
+                    r.max = kvp.Value.Max();
+                    r.total = kvp.Value.Sum();
+                    r.avgtime = ((double)r.avg / Stopwatch.Frequency * 1000);
+                    r.sumtime = ((double)r.total / Stopwatch.Frequency * 1000);
+                    r.count = kvp.Value.Count;
+                    res.Add(r);
+                }
+
+                res.Sort(delegate (Results l, Results r) { return l.sumtime.CompareTo(r.sumtime); });
+
+                foreach (var r in res)
+                {
+                    System.Diagnostics.Debug.WriteLine("Time {0} min {1} max {2} avg {3} ms count {4} totaltime {5} ms", r.name, r.min, r.max, r.avgtime.ToString("#.#########"), r.count, r.sumtime.ToString("#.#######"));
+                }
+#endif
             }
             catch (Exception ex)
             {

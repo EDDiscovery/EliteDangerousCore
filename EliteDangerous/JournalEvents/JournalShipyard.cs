@@ -29,7 +29,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void Rescan(JObject evt)
         {
-            Yard = new ShipYard(evt["StationName"].Str(), evt["StarSystem"].Str(), EventTimeUTC, evt["PriceList"]?.ToObjectProtected<ShipYard.ShipyardItem[]>());
+            Yard = new ShipYard(evt["StationName"].Str(), evt["StarSystem"].Str(), EventTimeUTC, evt["PriceList"]?.ToObjectQ<ShipYard.ShipyardItem[]>());
             MarketID = evt["MarketID"].LongNull();
             Horizons = evt["Horizons"].BoolNull();
             AllowCobraMkIV = evt["AllowCobraMkIV"].BoolNull();
@@ -340,7 +340,7 @@ namespace EliteDangerousCore.JournalEvents
             StarSystem = evt["StarSystem"].Str();
             MarketID = evt["MarketID"].LongNull();
 
-            ShipsHere = evt["ShipsHere"]?.ToObjectProtected<StoredShipInformation[]>();
+            ShipsHere = evt["ShipsHere"]?.ToObjectQ<StoredShipInformation[]>();
             Normalise(ShipsHere);
 
             if (ShipsHere != null)
@@ -352,7 +352,7 @@ namespace EliteDangerousCore.JournalEvents
                 }
             }
 
-            ShipsRemote = evt["ShipsRemote"]?.ToObjectProtected<StoredShipInformation[]>();
+            ShipsRemote = evt["ShipsRemote"]?.ToObjectQ<StoredShipInformation[]>();
             Normalise(ShipsRemote);
         }
 

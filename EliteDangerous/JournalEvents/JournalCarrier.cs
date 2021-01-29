@@ -122,9 +122,9 @@ namespace EliteDangerousCore.JournalEvents
                 Finance_TaxRate = finance["TaxRate"].Double();
             }
 
-            Crew = evt["Crew"]?.ToObjectProtected<CrewClass[]>();
-            ShipPacks = evt["ShipPacks"]?.ToObjectProtected<PackClass[]>();
-            ModulePacks = evt["ModulePacks"]?.ToObjectProtected<PackClass[]>();
+            Crew = evt["Crew"]?.ToObjectQ<CrewClass[]>();
+            ShipPacks = evt["ShipPacks"]?.ToObjectQ<PackClass[]>();
+            ModulePacks = evt["ModulePacks"]?.ToObjectQ<PackClass[]>();
         }
 
         public class CrewClass

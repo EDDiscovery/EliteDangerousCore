@@ -126,8 +126,8 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalEDDItemSet(JObject evt) : base(evt, JournalTypeEnum.EDDItemSet)
         {
-            Materials = new MaterialListClass(evt["Materials"]?.ToObjectProtected<MaterialItem[]>().ToList());
-            Commodities = new CommodityListClass(evt["Commodities"]?.ToObjectProtected<CommodityItem[]>().ToList());
+            Materials = new MaterialListClass(evt["Materials"]?.ToObjectQ<MaterialItem[]>().ToList());
+            Commodities = new CommodityListClass(evt["Commodities"]?.ToObjectQ<CommodityItem[]>().ToList());
         }
 
         public MaterialListClass Materials { get; set; }             // FDNAMES

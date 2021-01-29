@@ -53,7 +53,7 @@ namespace EliteDangerousCore.DB
                 JObject jo = JObject.ParseThrowCommaEOL(json);
                 if (jo["Marks"] != null)
                 {
-                    Planets = jo["Marks"].ToObjectProtected<List<Planet>>();        //verified with basutils.json
+                    Planets = jo["Marks"].ToObject<List<Planet>>();        //verified with basutils.json 
                 }
             }
             catch (Exception ex)

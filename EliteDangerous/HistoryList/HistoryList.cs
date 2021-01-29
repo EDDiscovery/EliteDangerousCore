@@ -188,6 +188,7 @@ namespace EliteDangerousCore
                 hprev = he;
             }
 
+            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " History List END");
             reportProgress(-1, "Analysing History");
 
             for( int i = 0; i < hist.historylist.Count; i++ )

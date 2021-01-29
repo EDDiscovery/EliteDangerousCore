@@ -101,7 +101,7 @@ namespace EliteDangerousCore.JournalEvents
             MotherlodeMaterial_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["MotherlodeMaterial_Localised"].Str(),FriendlyMotherlodeMaterial);
 
             Remaining = evt["Remaining"].Double();      // 0-100
-            Materials = evt["Materials"]?.ToObjectProtected<Material[]>().OrderBy(x => x.Name)?.ToArray();
+            Materials = evt["Materials"]?.ToObjectQ<Material[]>().OrderBy(x => x.Name)?.ToArray();
 
             if ( Materials != null )
             {

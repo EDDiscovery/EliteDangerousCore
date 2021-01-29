@@ -144,7 +144,7 @@ namespace EliteDangerousCore.JournalEvents
                 FactionState = evt["FactionState"].Str();           // PRE 2.3 .. not present in newer files, fixed up in next bit of code (but see 3.3.2 as its been incorrectly reintroduced)
             }
 
-            Factions = evt["Factions"]?.ToObjectProtected<FactionInformation[]>()?.OrderByDescending(x => x.Influence)?.ToArray();  // POST 2.3
+            Factions = evt["Factions"]?.ToObjectQ<FactionInformation[]>()?.OrderByDescending(x => x.Influence)?.ToArray();  // POST 2.3
 
             if (Factions != null)
             {
@@ -173,9 +173,9 @@ namespace EliteDangerousCore.JournalEvents
             Wanted = evt["Wanted"].Bool();      // if absence, your not wanted, by definition of frontier in journal (only present if wanted, see docked)
 
             PowerplayState = evt["PowerplayState"].Str();            // NO evidence
-            PowerplayPowers = evt["Powers"]?.ToObjectProtected<string[]>();
+            PowerplayPowers = evt["Powers"]?.ToObjectQ<string[]>();
 
-            Conflicts = evt["Conflicts"]?.ToObjectProtected<ConflictInfo[]>();   // 3.4
+            Conflicts = evt["Conflicts"]?.ToObjectQ<ConflictInfo[]>();   // 3.4
 
             // Allegiance without Faction only occurs in Training
             if (!String.IsNullOrEmpty(Allegiance) && Faction == null && EventTimeUTC <= ED_No_Training_Timestamp && (EventTimeUTC <= ED_No_Faction_Timestamp || EventTypeID != JournalTypeEnum.FSDJump || StarSystem == "Eranin"))
@@ -304,8 +304,8 @@ namespace EliteDangerousCore.JournalEvents
             StationGovernment_Localised = evt["StationGovernment_Localised"].Str();       // 3.3.2 empty before
             StationAllegiance = evt["StationAllegiance"].Str();       // 3.3.2 empty before
                                                                       // tbd bug in journal over FactionState - its repeated twice..
-            StationServices = evt["StationServices"]?.ToObjectProtected<string[]>();
-            StationEconomyList = evt["StationEconomies"]?.ToObjectProtected<JournalDocked.Economies[]>();
+            StationServices = evt["StationServices"]?.ToObjectQ<string[]>();
+            StationEconomyList = evt["StationEconomies"]?.ToObjectQ<JournalDocked.Economies[]>();
         }
 
         public bool Docked { get; set; }
@@ -438,8 +438,8 @@ namespace EliteDangerousCore.JournalEvents
             StationGovernment_Localised = evt["StationGovernment_Localised"].Str();       // 3.3.2 empty before
             StationAllegiance = evt["StationAllegiance"].Str();       // 3.3.2 empty before
                                                                       // tbd bug in journal over FactionState - its repeated twice..
-            StationServices = evt["StationServices"]?.ToObjectProtected<string[]>();
-            StationEconomyList = evt["StationEconomies"]?.ToObjectProtected<JournalDocked.Economies[]>();
+            StationServices = evt["StationServices"]?.ToObjectQ<string[]>();
+            StationEconomyList = evt["StationEconomies"]?.ToObjectQ<JournalDocked.Economies[]>();
 
             JToken jm = evt["EDDMapColor"];
             MapColor = jm.Int(EDCommander.Current.MapColour);

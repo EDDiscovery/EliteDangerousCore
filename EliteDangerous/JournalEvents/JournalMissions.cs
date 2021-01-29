@@ -26,11 +26,11 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalMissions(JObject evt) : base(evt, JournalTypeEnum.Missions)
         {
-            ActiveMissions = evt["Active"]?.ToObjectProtected<MissionItem[]>();
+            ActiveMissions = evt["Active"]?.ToObjectQ<MissionItem[]>();
             Normalise(ActiveMissions);
-            FailedMissions = evt["Failed"]?.ToObjectProtected<MissionItem[]>();
+            FailedMissions = evt["Failed"]?.ToObjectQ<MissionItem[]>();
             Normalise(FailedMissions);
-            CompletedMissions = evt["Complete"]?.ToObjectProtected<MissionItem[]>();
+            CompletedMissions = evt["Complete"]?.ToObjectQ<MissionItem[]>();
             Normalise(CompletedMissions);
         }
 
@@ -307,11 +307,11 @@ namespace EliteDangerousCore.JournalEvents
                                                               .Replace("$MISSIONUTIL_MULTIPLE_FINAL_SEPARATOR;", ",");       // multi missions get this strange list;
             DestinationStation = evt["DestinationStation"].Str();
 
-            PermitsAwarded = evt["PermitsAwarded"]?.ToObjectProtected<string[]>();
+            PermitsAwarded = evt["PermitsAwarded"]?.ToObjectQ<string[]>();
 
             // 7/3/2018 journal 16 3.02
 
-            CommodityReward = evt["CommodityReward"]?.ToObjectProtected<CommodityRewards[]>();
+            CommodityReward = evt["CommodityReward"]?.ToObjectQ<CommodityRewards[]>();
 
             if (CommodityReward != null)
             {
@@ -319,7 +319,7 @@ namespace EliteDangerousCore.JournalEvents
                     c.Normalise();
             }
 
-            MaterialsReward = evt["MaterialsReward"]?.ToObjectProtected<MaterialRewards[]>();
+            MaterialsReward = evt["MaterialsReward"]?.ToObjectQ<MaterialRewards[]>();
 
             if (MaterialsReward != null)
             {
@@ -327,7 +327,7 @@ namespace EliteDangerousCore.JournalEvents
                     m.Normalise();
             }
 
-            FactionEffects = evt["FactionEffects"]?.ToObjectProtected<FactionEffectsEntry[]>();      // NEEDS TEST
+            FactionEffects = evt["FactionEffects"]?.ToObjectQ<FactionEffectsEntry[]>();      // NEEDS TEST
         }
 
         public string Name { get; set; }

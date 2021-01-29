@@ -275,7 +275,7 @@ namespace EliteDangerousCore.JournalEvents
             SystemAddress = evt["SystemAddress"].Long();
             BodyName = evt["BodyName"].Str();
             BodyID = evt["BodyID"].Int();
-            Signals = evt["Signals"].ToObjectProtected<List<SAASignal>>();
+            Signals = evt["Signals"].ToObjectQ<List<SAASignal>>();
             if ( Signals != null )
             {
                 foreach (var s in Signals)      // some don't have localisation

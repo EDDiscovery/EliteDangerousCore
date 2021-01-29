@@ -137,7 +137,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalRebootRepair(JObject evt) : base(evt, JournalTypeEnum.RebootRepair)
         {
-            Slots = evt["Modules"]?.ToObjectProtected<string[]>();
+            Slots = evt["Modules"]?.ToObjectQ<string[]>();
 
             if (Slots != null)
             {

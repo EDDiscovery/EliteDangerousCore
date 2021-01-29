@@ -144,7 +144,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (mats.IsObject)
                 {
-                    Dictionary<string, int> temp = mats?.ToObjectProtected<Dictionary<string, int>>();
+                    Dictionary<string, int> temp = mats?.ToObjectQ<Dictionary<string, int>>();
 
                     if (temp != null)
                     {
@@ -239,7 +239,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public JournalEngineerProgress(JObject evt) : base(evt, JournalTypeEnum.EngineerProgress)
         {
-            Engineers = evt["Engineers"]?.ToObjectProtected<ProgressInformation[]>()?.OrderBy(x => x.Engineer)?.ToArray();       // 3.3 introduced this at startup
+            Engineers = evt["Engineers"]?.ToObjectQ<ProgressInformation[]>()?.OrderBy(x => x.Engineer)?.ToArray();       // 3.3 introduced this at startup
 
             if (Engineers == null)
             {

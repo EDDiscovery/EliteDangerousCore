@@ -48,14 +48,14 @@ namespace EliteDangerousCore.JournalEvents
 
             Economy = evt.MultiStr(new string[] { "StationEconomy", "Economy" });
             Economy_Localised = JournalFieldNaming.CheckLocalisation(evt.MultiStr(new string[] { "StationEconomy_Localised", "Economy_Localised" }),Economy);
-            EconomyList = evt["StationEconomies"]?.ToObjectProtected<Economies[]>();
+            EconomyList = evt["StationEconomies"]?.ToObjectQ<Economies[]>();
 
             Government = evt.MultiStr(new string[] { "StationGovernment", "Government" });
             Government_Localised = JournalFieldNaming.CheckLocalisation(evt.MultiStr(new string[] { "StationGovernment_Localised", "Government_Localised" }),Government);
 
             Wanted = evt["Wanted"].Bool();
 
-            StationServices = evt["StationServices"]?.ToObjectProtected<string[]>();
+            StationServices = evt["StationServices"]?.ToObjectQ<string[]>();
 
             ActiveFine = evt["ActiveFine"].BoolNull();
 

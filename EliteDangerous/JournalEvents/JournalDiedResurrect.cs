@@ -35,7 +35,7 @@ namespace EliteDangerousCore.JournalEvents
             if (string.IsNullOrEmpty(killerName))
             {
                 if (evt["Killers"] != null)
-                    Killers = evt["Killers"].ToObjectProtected<Killer[]>();
+                    Killers = evt["Killers"].ToObjectQ<Killer[]>();
             }
             else
             {

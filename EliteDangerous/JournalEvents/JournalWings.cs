@@ -56,7 +56,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalWingJoin(JObject evt) : base(evt, JournalTypeEnum.WingJoin)
         {
-            Others = evt["Others"]?.ToObjectProtected<string[]>();
+            Others = evt["Others"]?.ToObjectQ<string[]>();
         }
 
         public string[] Others { get; set; }

@@ -49,7 +49,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             Vessel = evt["Vessel"].Str("Ship");         // ship is the default.. present in 3.3 only.  Other value SRV
 
-            Inventory = evt["Inventory"]?.ToObjectProtected<Cargo[]>().OrderBy(x => x.Name)?.ToArray();
+            Inventory = evt["Inventory"]?.ToObjectQ<Cargo[]>().OrderBy(x => x.Name)?.ToArray();
 
             EDDFromFile = evt["EDDFromFile"].Bool(false);  // EDD marker its from file - will only be present if cargo > Nov 20 and it was read from file
 
@@ -330,7 +330,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public JournalCargoTransfer(JObject evt) : base(evt, JournalTypeEnum.CargoTransfer)
         {
-            Transfers = evt["Transfers"].ToObjectProtected<TransferClass[]>();
+            Transfers = evt["Transfers"].ToObjectQ<TransferClass[]>();
             if (Transfers != null)
             {
                 foreach (var t in Transfers)
