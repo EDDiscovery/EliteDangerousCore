@@ -426,11 +426,6 @@ namespace EliteDangerousCore
         JournalScan_Materials, // Materials:
         JournalScan_AtmosphericComposition, // Atmospheric Composition:
         JournalScan_PlanetaryComposition, // Planetary Composition:
-        JournalScan_MRP, // Metal Rich Planets: {0} ({1}-{2} AU)
-        JournalScan_WWP, // Water Worlds: {0} ({1}-{2} AU)
-        JournalScan_ELWP, // Earth Like Worlds: {0} ({1}-{2} AU)
-        JournalScan_AWP, // Ammonia Worlds: {0} ({1}-{2} AU)
-        JournalScan_ICYP, // Icy Planets: {0} ({1} AU to {2})
         JournalScan_HabitableZone, //  - Habitable Zone, {0} ({1}-{2} AU),
         JournalScan_MetalRichplanets, //  - Metal Rich planets, {0} ({1}-{2} AU),
         JournalScan_WaterWorlds, //  - Water Worlds, {0} ({1}-{2} AU),

@@ -25,6 +25,7 @@ using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
+using System.IO;
 
 namespace EliteDangerousCore
 {
@@ -436,10 +437,14 @@ namespace EliteDangerousCore
 
                 res.Sort(delegate (Results l, Results r) { return l.sumtime.CompareTo(r.sumtime); });
 
+                string rs = "";
                 foreach (var r in res)
                 {
-                    System.Diagnostics.Debug.WriteLine("Time {0} min {1} max {2} avg {3} ms count {4} totaltime {5} ms", r.name, r.min, r.max, r.avgtime.ToString("#.#########"), r.count, r.sumtime.ToString("#.#######"));
+                    rs = rs + Environment.NewLine + string.Format("Time {0} min {1} max {2} avg {3} ms count {4} totaltime {5} ms", r.name, r.min, r.max, r.avgtime.ToString("#.#########"), r.count, r.sumtime.ToString("#.#######"));
                 }
+
+                System.Diagnostics.Trace.WriteLine(rs);
+                //File.WriteAllText(@"c:\code\times.txt", rs);
 #endif
             }
             catch (Exception ex)

@@ -149,7 +149,7 @@ namespace EliteDangerousCore
             else
                 jlist = JournalEntry.GetAll(CurrentCommander);
 
-            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " History Load END");
+            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Journals read from DB");
 
             HistoryEntry hprev = null;
 
@@ -188,7 +188,7 @@ namespace EliteDangerousCore
                 hprev = he;
             }
 
-            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " History List END");
+            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " History List Created");
             reportProgress(-1, "Analysing History");
 
             for( int i = 0; i < hist.historylist.Count; i++ )
@@ -218,7 +218,7 @@ namespace EliteDangerousCore
 
         // now database has been updated due to initial fill, now fill in stuff which needs the user database
 
-            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " History Entries END");
+            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Anaylsis End");
 
             hist.CommanderId = CurrentCommander;
 
