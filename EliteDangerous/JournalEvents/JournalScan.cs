@@ -39,7 +39,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StarSystem { get; set; }                      // direct (3.5)
         public long? SystemAddress { get; set; }                    // direct (3.5)
         public double DistanceFromArrivalLS { get; set; }           // direct
-        public double DistanceFromArrivalm { get { return DistanceFromArrivalLS * oneLS_m; } }           
+        public double DistanceFromArrivalm { get { return DistanceFromArrivalLS * oneLS_m; } }
         public string DistanceFromArrivalText { get { return string.Format("{0:0.00}AU ({1:0.0}ls)", DistanceFromArrivalLS / JournalScan.oneAU_LS, DistanceFromArrivalLS); } }
         public double? nRotationPeriod { get; set; }                // direct
         public double? nRotationPeriodDays { get { if (nRotationPeriod.HasValue) return nRotationPeriod.Value / oneDay_s; else return null; } }
@@ -144,48 +144,12 @@ namespace EliteDangerousCore.JournalEvents
         public bool Mapped { get; private set; }                        // WE Mapped it - affects prices
         public bool EfficientMapped { get; private set; }               // WE efficiently mapped it - affects prices
 
-        public int EstimatedValue { get // best guess based on discovered/wasmapped and Mapped flags
-            {
-                if (EstimatedValueFirstDiscovered > 0)      // for previous scans before 3.3 and stars, these are not set.
-                {
-                    if ( IsNotPreviouslyDiscovered && WasMapped == true )       // this is the situation pointed out in PR#31, discovered is there and false, but mapped is true
-                        return EfficientMapped ? EstimatedValueFirstMappedEfficiently : EstimatedValueFirstMapped;
-
-                    // if def not discovered (flag is there) and not mapped (flag is there), and we mapped it
-                    if (IsNotPreviouslyDiscovered && IsNotPreviouslyMapped && Mapped)
-                        return EfficientMapped ? EstimatedValueFirstDiscoveredFirstMappedEfficiently : EstimatedValueFirstDiscoveredFirstMapped;
-
-                    // if def not mapped, and we mapped it
-                    else if (IsNotPreviouslyMapped && Mapped)
-                        return EfficientMapped ? EstimatedValueFirstMappedEfficiently : EstimatedValueFirstMapped;
-
-                    // if def not discovered
-                    else if (IsNotPreviouslyDiscovered)
-                        return EstimatedValueFirstDiscovered;
-
-                    // if we mapped it, it was discovered/mapped before
-                    else if (Mapped)
-                        return EfficientMapped ? EstimatedValueMappedEfficiently : EstimatedValueMapped;
-                }
-
-                return EstimatedValueBase;
-            }
-        }
-
-        public int EstimatedValueBase { get; private set; }     // Estimated value without mapping or first discovery - all types, all versions
-
-        public int EstimatedValueFirstDiscovered { get; private set; }     // Estimated value with first discovery  - 3.3 onwards for these for planets only
-        public int EstimatedValueFirstDiscoveredFirstMapped { get; private set; }           // with both
-        public int EstimatedValueFirstDiscoveredFirstMappedEfficiently { get; private set; }           // with both efficiently
-        public int EstimatedValueFirstMapped { get; private set; }             // with just mapped                 
-        public int EstimatedValueFirstMappedEfficiently { get; private set; }             // with just mapped                 
-        public int EstimatedValueMapped { get; private set; }             // with just mapped
-        public int EstimatedValueMappedEfficiently { get; private set; }             // with just mapped
-
         public void SetMapped(bool m, bool e)
         {
             Mapped = m; EfficientMapped = e;
         }
+
+        public int EstimatedValue { get { return GetEstimatedValues().EstimatedValue(); } }     // Direct access to its current EstimatedValue, provides backwards compatibility for code and action packs.
 
         public int HasSameParents(JournalScan other)     // return -1 if not, or index of last match , 0,1,2
         {
@@ -209,7 +173,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string ParentList() { return Parents != null ? string.Join(",", Parents.Select(x => x.Type + ":" + x.BodyID)) : ""; }     // not get on purpose
 
-         // Constants:
+        // Constants:
 
         // stellar references
         public const double oneSolRadius_m = 695700000; // 695,700km
@@ -220,7 +184,7 @@ namespace EliteDangerousCore.JournalEvents
         public const double oneGee_m_s2 = 9.80665;
         public const double oneEarth_MT = 5.972e15;        // mega tons, 1 meta ton = 1e6 tons = 1e9 kg (google 5.972e21 tons)
         public const double oneMoon_MT = 7.34767309e13;     // mega tons, 1 meta ton = 1e6 tons = 1e9 kg
-        public const double EarthMoonMassRatio = oneEarth_MT/oneMoon_MT; 
+        public const double EarthMoonMassRatio = oneEarth_MT / oneMoon_MT;
 
         // astrometric
         public const double oneLS_m = 299792458;
@@ -449,8 +413,6 @@ namespace EliteDangerousCore.JournalEvents
                 EDSMDiscoveryCommander = discovery["commander"].StrNull();
                 EDSMDiscoveryUTC = discovery["date"].DateTimeUTC();
             }
-
-            EstimateScanValue();                        // do the basic no mapped no efficency map as the basic formula
         }
 
         #region Information Returns
@@ -500,7 +462,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             get
             {
-                if (ScanType == "AutoScan" )
+                if (ScanType == "AutoScan")
                     return "Scan Auto";
                 else if (ScanType == "Basic")
                     return "Scan Basic";
@@ -521,7 +483,7 @@ namespace EliteDangerousCore.JournalEvents
             };
         }
 
-        public override void FillInformation(out string info, out string detailed)      
+        public override void FillInformation(out string info, out string detailed)
         {
             if (IsStar)
             {
@@ -726,28 +688,30 @@ namespace EliteDangerousCore.JournalEvents
                 scanText.Append("\n");
             }
 
-            scanText.AppendFormat("Current value: {0:N0}".T(EDTx.JournalScan_CV) + "\n", EstimatedValue);
+            EstimatedValuesClass ev = GetEstimatedValues();
 
-            if (EstimatedValueFirstDiscoveredFirstMapped > 0 && (!WasDiscovered.HasValue || !WasDiscovered.Value))  // if we don't know, or its not discovered
+            scanText.AppendFormat("Current value: {0:N0}".T(EDTx.JournalScan_CV) + "\n", ev.EstimatedValue());
+
+            if (ev.EstimatedValueFirstDiscoveredFirstMapped > 0 && (!WasDiscovered.HasValue || !WasDiscovered.Value))  // if we don't know, or its not discovered
             {
                 string msg = "First Discovered+Mapped value: {0:N0}/{1:N0}e".T(EDTx.JournalScan_EVFD) + "\n";
-                scanText.AppendFormat(msg, EstimatedValueFirstDiscoveredFirstMapped, EstimatedValueFirstDiscoveredFirstMappedEfficiently);
+                scanText.AppendFormat(msg, ev.EstimatedValueFirstDiscoveredFirstMapped, ev.EstimatedValueFirstDiscoveredFirstMappedEfficiently);
             }
 
-            if (EstimatedValueFirstMapped > 0 && (!WasMapped.HasValue || !WasMapped.Value))    // if was not mapped 
+            if (ev.EstimatedValueFirstMapped > 0 && (!WasMapped.HasValue || !WasMapped.Value))    // if was not mapped
             {
-                scanText.AppendFormat("First Mapped value: {0:N0}/{1:N0}e".T(EDTx.JournalScan_EVFM) + "\n", EstimatedValueFirstMapped, EstimatedValueFirstMappedEfficiently);
+                scanText.AppendFormat("First Mapped value: {0:N0}/{1:N0}e".T(EDTx.JournalScan_EVFM) + "\n", ev.EstimatedValueFirstMapped, ev.EstimatedValueFirstMappedEfficiently);
             }
 
-            if (EstimatedValueFirstDiscovered > 0 && (!WasDiscovered.HasValue || !WasDiscovered.Value))  // if we don't know, or its not discovered
+            if (ev.EstimatedValueFirstDiscovered > 0 && (!WasDiscovered.HasValue || !WasDiscovered.Value))  // if we don't know, or its not discovered
             {
-                scanText.AppendFormat("First Discovered value: {0:N0}".T(EDTx.JournalScan_FDV) + "\n", EstimatedValueFirstDiscovered);
+                scanText.AppendFormat("First Discovered value: {0:N0}".T(EDTx.JournalScan_FDV) + "\n", ev.EstimatedValueFirstDiscovered);
             }
 
-            if (EstimatedValueFirstDiscovered > 0 ) // if we have extra details, on planets, show the base value
+            if (ev.EstimatedValueFirstDiscovered > 0) // if we have extra details, on planets, show the base value
             {
-                scanText.AppendFormat("Mapped value: {0:N0}/{1:N0}e".T(EDTx.JournalScan_EVM) + "\n", EstimatedValueMapped, EstimatedValueMappedEfficiently);
-                scanText.AppendFormat("Base Estimated value: {0:N0}".T(EDTx.JournalScan_EV) + "\n", EstimatedValueBase);
+                scanText.AppendFormat("Mapped value: {0:N0}/{1:N0}e".T(EDTx.JournalScan_EVM) + "\n", ev.EstimatedValueMapped, ev.EstimatedValueMappedEfficiently);
+                scanText.AppendFormat("Base Estimated value: {0:N0}".T(EDTx.JournalScan_EV) + "\n", ev.EstimatedValueBase);
             }
 
             if (WasDiscovered.HasValue && WasDiscovered.Value)
@@ -791,7 +755,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 // values initially calculated by Jackie Silver (https://forums.frontier.co.uk/member.php/37962-Jackie-Silver)
 
-                hz.HabitableZoneInner = DistanceForBlackBodyTemperature(315); // this is the goldilocks zone, where is possible to expect to find planets with liquid water. 
+                hz.HabitableZoneInner = DistanceForBlackBodyTemperature(315); // this is the goldilocks zone, where is possible to expect to find planets with liquid water.
                 hz.HabitableZoneOuter = DistanceForBlackBodyTemperature(223);
                 hz.MetalRichZoneInner = DistanceForNoMaxTemperatureBody(oneSolRadius_m); // we don't know the maximum temperature that the galaxy simulation take as possible...
                 hz.MetalRichZoneOuter = DistanceForBlackBodyTemperature(1100);
@@ -885,7 +849,7 @@ namespace EliteDangerousCore.JournalEvents
                 }
                 else
                 {
-                    if (habZone.Length > 2)         
+                    if (habZone.Length > 2)
                         habZone.Remove(habZone.Length - 2, 2);      // remove ,\n
 
                     string s = habZone.ToNullSafeString();
@@ -934,7 +898,7 @@ namespace EliteDangerousCore.JournalEvents
             return scanText.ToNullSafeString();
         }
 
-        public string DisplayMaterial(string fdname, double percent, MaterialCommoditiesList historicmatlist = null, 
+        public string DisplayMaterial(string fdname, double percent, MaterialCommoditiesList historicmatlist = null,
                                         MaterialCommoditiesList currentmatlist = null)  // has trailing LF
         {
             StringBuilder scanText = new StringBuilder();
@@ -944,14 +908,14 @@ namespace EliteDangerousCore.JournalEvents
             if (mc != null && (historicmatlist != null || currentmatlist != null))
             {
                 MaterialCommodities historic = historicmatlist?.Find(mc);
-                MaterialCommodities current = ReferenceEquals(historicmatlist,currentmatlist) ? null : currentmatlist?.Find(mc);
+                MaterialCommodities current = ReferenceEquals(historicmatlist, currentmatlist) ? null : currentmatlist?.Find(mc);
                 int? limit = mc.MaterialLimit();
 
                 string matinfo = historic?.Count.ToString() ?? "0";
                 if (limit != null)
                     matinfo += "/" + limit.Value.ToString();
 
-                if (current != null && (historic == null || historic.Count != current.Count) )
+                if (current != null && (historic == null || historic.Count != current.Count))
                     matinfo += " Cur " + current.Count.ToString();
 
                 scanText.AppendFormat("{0} ({1}) {2} {3}% {4}\n", mc.Name, mc.Shortname, mc.TranslatedType, percent.ToString("N1"), matinfo);
@@ -1002,7 +966,7 @@ namespace EliteDangerousCore.JournalEvents
         public StarPlanetRing FindRing(string name)
         {
             if (Rings != null)
-                return Array.Find(Rings,x => x.Name.Equals(name,StringComparison.InvariantCultureIgnoreCase));
+                return Array.Find(Rings, x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             else
                 return null;
         }
@@ -1016,7 +980,7 @@ namespace EliteDangerousCore.JournalEvents
 
             string iconName = StarTypeID.ToString(); // fallback
 
-            // black holes variations. According to theorethical papers, we should find four classes of black holes: 
+            // black holes variations. According to theorethical papers, we should find four classes of black holes:
             // supermassive, intermediate, stellar and micro (https://en.wikipedia.org/wiki/Black_hole) gravitional collapses.
             // The in-game black hole population do not really fit quite well that nomenclature, they are somewhat capped, so we have to quantize the masses ranges to more reasonable limits.
             // For example, SagA* is known to have at least 4 millions solar masses, in real life: the in-game stats shows only 516.608, way smaller! The same for Great Annihilator: the biggest
@@ -1035,7 +999,7 @@ namespace EliteDangerousCore.JournalEvents
             if (StarTypeID == EDStar.SuperMassiveBlackHole)
                 iconName = "SuperMassiveBlackHole";
 
-            // neutron stars variations. 
+            // neutron stars variations.
             // Uses theorethical masses: https://en.wikipedia.org/wiki/Neutron_star
             if (StarTypeID == EDStar.N)
             {
@@ -1140,7 +1104,7 @@ namespace EliteDangerousCore.JournalEvents
                     iconName = "A";
                 if (st < 140000)
                     iconName = "B";
-                if (st > 140000)    
+                if (st > 140000)
                     iconName = "O";
             }
 
@@ -1155,12 +1119,12 @@ namespace EliteDangerousCore.JournalEvents
 
             if (StarTypeID == EDStar.X || StarTypeID == EDStar.RoguePlanet)
             {
-               // System.Diagnostics.Debug.WriteLine(StarTypeID + ": " + iconName);
+                // System.Diagnostics.Debug.WriteLine(StarTypeID + ": " + iconName);
                 return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Unknown");
             }
             else
             {
-             //   System.Diagnostics.Debug.WriteLine(StarTypeID + ": " + iconName);
+                //   System.Diagnostics.Debug.WriteLine(StarTypeID + ": " + iconName);
                 return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Stars.{iconName}");
             }
         }
@@ -1280,8 +1244,8 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     if (st < 110)
                     {
-                        if (AtmosphereComposition.ToNullSafeString().ToLowerInvariant().Contains("antimony") || 
-                            AtmosphereComposition.ToNullSafeString().ToLowerInvariant().Contains("cadmium") || 
+                        if (AtmosphereComposition.ToNullSafeString().ToLowerInvariant().Contains("antimony") ||
+                            AtmosphereComposition.ToNullSafeString().ToLowerInvariant().Contains("cadmium") ||
                             AtmosphereComposition.ToNullSafeString().ToLowerInvariant().Contains("niobium"))
                             iconName = "GGHv7";
                         else
@@ -1394,8 +1358,8 @@ namespace EliteDangerousCore.JournalEvents
                         iconName = "GG3v11";
                     else if (st < 760)
                         iconName = "GG3v13";
-                    else                    
-                        iconName = "GG3v6";                    
+                    else
+                        iconName = "GG3v6";
                 }
 
                 if (PlanetTypeID == EDPlanet.Sudarsky_class_IV_gas_giant)
@@ -1412,7 +1376,7 @@ namespace EliteDangerousCore.JournalEvents
                         iconName = "GG4v3";
                     else if (st < 1070)
                         iconName = "GG4v1";
-                    else if (st < 1125)                    
+                    else if (st < 1125)
                         iconName = "GG4v7";
                     else if (st < 1200)
                         iconName = "GG4v2";
@@ -1466,10 +1430,10 @@ namespace EliteDangerousCore.JournalEvents
 
             // Terrestrial planets variants
 
-            // Ammonia world 
+            // Ammonia world
             if (PlanetTypeID == EDPlanet.Ammonia_world)
             {
-                iconName = "AMWv1"; // fallback                
+                iconName = "AMWv1"; // fallback
 
                 if (Terraformable) // extremely rare, but they exists
                     iconName = "AMWv2";
@@ -1631,7 +1595,7 @@ namespace EliteDangerousCore.JournalEvents
                         iconName = "HMCv3"; // fallback
                 }
                 else
-                    iconName = "HMCv3"; // fallback                                
+                    iconName = "HMCv3"; // fallback
             }
 
             if (PlanetTypeID == EDPlanet.Icy_body)
@@ -1812,7 +1776,7 @@ namespace EliteDangerousCore.JournalEvents
                             iconName = "WTRv8";
                     }
                     else
-                        iconName = "WTRv7"; // fallback                                
+                        iconName = "WTRv7"; // fallback
                 }
             }
 
@@ -1915,481 +1879,534 @@ namespace EliteDangerousCore.JournalEvents
 
         #region Estimated Value
 
-        private void EstimateScanValue()       // call to estimate scan value given these parameters. Updates EstimatedValue
+        private EstimatedValuesClass EstimatedValues = null;
+
+        public EstimatedValuesClass GetEstimatedValues()
         {
-            // see https://forums.frontier.co.uk/showthread.php/232000-Exploration-value-formulae/ for detail
+            if (EstimatedValues == null)
+                EstimatedValues = new EstimatedValuesClass(this);
+            return EstimatedValues;
+        }
 
-            if (EventTimeUTC < new DateTime(2017, 4, 11, 12, 0, 0, 0, DateTimeKind.Utc))
+        public class EstimatedValuesClass
+        {
+            public EstimatedValuesClass(JournalScan spw)
             {
-                EstimatedValueBase = EstimatedValueED22();
-                return;
-            }
+                sp = spw;
 
-            if (EventTimeUTC < new DateTime(2018, 12, 11, 9, 0, 0, DateTimeKind.Utc))
-            {
-                EstimatedValueBase = EstimatedValue32();
-                return;
-            }
+                // see https://forums.frontier.co.uk/showthread.php/232000-Exploration-value-formulae/ for detail
 
-            // 3.3 onwards
-
-            //System.Diagnostics.Debug.WriteLine("Scan calc " + mapped + " ef " + efficient + " Current " + EstimatedValue);
-
-            double kValue;
-
-            if (IsStar)
-            {
-                switch (StarTypeID)
+                if (sp.EventTimeUTC < new DateTime(2017, 4, 11, 12, 0, 0, 0, DateTimeKind.Utc))
                 {
-                    // white dwarf
-                    case EDStar.D:
-                    case EDStar.DA:
-                    case EDStar.DAB:
-                    case EDStar.DAO:
-                    case EDStar.DAZ:
-                    case EDStar.DAV:
-                    case EDStar.DB:
-                    case EDStar.DBZ:
-                    case EDStar.DBV:
-                    case EDStar.DO:
-                    case EDStar.DOV:
-                    case EDStar.DQ:
-                    case EDStar.DC:
-                    case EDStar.DCV:
-                    case EDStar.DX:
-                        kValue = 14057;
-                        break;
-
-                    case EDStar.N:
-                    case EDStar.H:
-                        kValue = 22628;
-                        break;
-
-                    case EDStar.SuperMassiveBlackHole:
-                        // this is applying the same scaling to the 3.2 value as a normal black hole, not confirmed in game
-                        kValue = 33.5678;   
-                        break;
-
-                    default:
-                        kValue = 1200;
-                        break;
+                    EstimatedValueBase = EstimatedValueED22();
+                    return;
                 }
 
-                EstimatedValueBase = (int)StarValue32And33(kValue, nStellarMass.HasValue ? nStellarMass.Value : 1.0);
-            }
-            else
-            {
-                EstimatedValueBase = 0;
-
-                if (PlanetClass != null)  //Asteroid belt is null
+                if (sp.EventTimeUTC < new DateTime(2018, 12, 11, 9, 0, 0, DateTimeKind.Utc))
                 {
-                    switch (PlanetTypeID)
+                    EstimatedValueBase = EstimatedValue32();
+                    return;
+                }
+
+                // 3.3 onwards
+
+                //System.Diagnostics.Debug.WriteLine("Scan calc " + mapped + " ef " + efficient + " Current " + EstimatedValue);
+
+                double kValue;
+
+                if (sp.IsStar)
+                {
+                    switch (sp.StarTypeID)
                     {
-                        case EDPlanet.Metal_rich_body:
-                            // CFT value is scaled same as WW/ELW from 3.2, not confirmed in game
-                            // They're like hen's teeth anyway....
-                            kValue = 21790;
-                            if (Terraformable) kValue += 65631;
+                        // white dwarf
+                        case EDStar.D:
+                        case EDStar.DA:
+                        case EDStar.DAB:
+                        case EDStar.DAO:
+                        case EDStar.DAZ:
+                        case EDStar.DAV:
+                        case EDStar.DB:
+                        case EDStar.DBZ:
+                        case EDStar.DBV:
+                        case EDStar.DO:
+                        case EDStar.DOV:
+                        case EDStar.DQ:
+                        case EDStar.DC:
+                        case EDStar.DCV:
+                        case EDStar.DX:
+                            kValue = 14057;
                             break;
-                        case EDPlanet.Ammonia_world:
-                            kValue = 96932;
+
+                        case EDStar.N:
+                        case EDStar.H:
+                            kValue = 22628;
                             break;
-                        case EDPlanet.Sudarsky_class_I_gas_giant:
-                            kValue = 1656;
+
+                        case EDStar.SuperMassiveBlackHole:
+                            // this is applying the same scaling to the 3.2 value as a normal black hole, not confirmed in game
+                            kValue = 33.5678;
                             break;
-                        case EDPlanet.Sudarsky_class_II_gas_giant:
-                        case EDPlanet.High_metal_content_body:
-                            kValue = 9654;
-                            if (Terraformable) kValue += 100677;
-                            break;
-                        case EDPlanet.Water_world:
-                            kValue = 64831;
-                            if (Terraformable) kValue += 116295;
-                            break;
-                        case EDPlanet.Earthlike_body:
-                            // Always terraformable so WW + bonus
-                            kValue = 64831 + 116295;
-                            break;
+
                         default:
-                            kValue = 300;
-                            if (Terraformable) kValue += 93328;
+                            kValue = 1200;
                             break;
                     }
 
-                    double mass = nMassEM.HasValue ? nMassEM.Value : 1.0;
-                    double effmapped = 1.25;
-                    double firstdiscovery = 2.6;
-
-                    double basevalue = PlanetValue33(kValue, mass);
-
-                    EstimatedValueBase = (int)basevalue;
-
-                    EstimatedValueFirstDiscovered = (int)(basevalue*firstdiscovery);
-
-                    EstimatedValueFirstDiscoveredFirstMapped = (int)(basevalue * firstdiscovery * 3.699622554);
-                    EstimatedValueFirstDiscoveredFirstMappedEfficiently = (int)(basevalue * firstdiscovery * 3.699622554 * effmapped);
-
-                    EstimatedValueFirstMapped = (int)(basevalue * 8.0956);
-                    EstimatedValueFirstMappedEfficiently = (int)(basevalue * 8.0956 * effmapped);
-
-                    EstimatedValueMapped = (int)(basevalue * 3.3333333333);
-                    EstimatedValueMappedEfficiently = (int)(basevalue * 3.3333333333 * effmapped);
+                    EstimatedValueBase = (int)StarValue32And33(kValue, sp.nStellarMass.HasValue ? sp.nStellarMass.Value : 1.0);
                 }
-            }
-        }
-
-        private double StarValue32And33(double k, double m)
-        {
-            return k + (m * k / 66.25);
-        }
-
-        private double PlanetValue33(double k, double m)
-        {
-            const double q = 0.56591828;
-            return Math.Max((k + (k * Math.Pow(m, 0.2) * q)), 500);
-        }
-
-        #endregion
-
-        #region ED 3.2 values
-
-        private int EstimatedValue32()
-        {
-            double kValue;
-            double kBonus = 0;
-
-            if (IsStar)
-            {
-                switch (StarTypeID)      // http://elite-dangerous.wikia.com/wiki/Explorer
+                else
                 {
-                    // white dwarf
-                    case EDStar.D:
-                    case EDStar.DA:
-                    case EDStar.DAB:
-                    case EDStar.DAO:
-                    case EDStar.DAZ:
-                    case EDStar.DAV:
-                    case EDStar.DB:
-                    case EDStar.DBZ:
-                    case EDStar.DBV:
-                    case EDStar.DO:
-                    case EDStar.DOV:
-                    case EDStar.DQ:
-                    case EDStar.DC:
-                    case EDStar.DCV:
-                    case EDStar.DX:
-                        kValue = 33737;
-                        break;
+                    EstimatedValueBase = 0;
 
-                    case EDStar.N:
-                    case EDStar.H:
-                        kValue = 54309;
-                        break;
-
-                    case EDStar.SuperMassiveBlackHole:
-                        kValue = 80.5654;
-                        break;
-
-                    default:
-                        kValue = 2880;
-                        break;
-                }
-
-                return (int)StarValue32And33(kValue, nStellarMass.HasValue ? nStellarMass.Value : 1.0);
-            }
-            else if (PlanetClass == null)  //Asteroid belt
-                return 0;
-            else   // Planet
-            {
-                switch (PlanetTypeID)      // http://elite-dangerous.wikia.com/wiki/Explorer
-                {
-                    
-                    case EDPlanet.Metal_rich_body:
-                        kValue = 52292;
-                        if (Terraformable) { kBonus = 245306; }
-                        break;
-                    case EDPlanet.High_metal_content_body:
-                    case EDPlanet.Sudarsky_class_II_gas_giant:
-                        kValue = 23168;
-                        if (Terraformable) { kBonus = 241607; }
-                        break;
-                    case EDPlanet.Earthlike_body:
-                        kValue = 155581;
-                        kBonus = 279088;
-                        break;
-                    case EDPlanet.Water_world:
-                        kValue = 155581;
-                        if (Terraformable) { kBonus = 279088; }
-                        break;
-                    case EDPlanet.Ammonia_world:
-                        kValue = 232619;
-                        break;
-                    case EDPlanet.Sudarsky_class_I_gas_giant:
-                        kValue = 3974;
-                        break;
-                    default:
-                        kValue = 720;
-                        if (Terraformable) { kBonus = 223971; }
-                        break;
-                }
-
-                double mass = nMassEM.HasValue ? nMassEM.Value : 1.0;       // some old entries don't have mass, so just presume 1
-
-                int val = (int)PlanetValueED32(kValue, mass);
-                if (Terraformable || PlanetTypeID == EDPlanet.Earthlike_body)
-                {
-                    val += (int)PlanetValueED32(kBonus, mass);
-                }
-
-                return val;
-            }
-        }
-
-        private double PlanetValueED32(double k, double m)
-        {
-            return k + (3 * k * Math.Pow(m, 0.199977) / 5.3);
-        }
-
-        #endregion
-
-        #region ED 22 
-
-        private int EstimatedValueED22()
-        {
-            if (IsStar)
-            {
-                switch (StarTypeID)      // http://elite-dangerous.wikia.com/wiki/Explorer
-                {
-                    case EDStar.O:
-                        //low = 3677;
-                        //high = 4465;
-                        return 4170;
-
-                    case EDStar.B:
-                        //low = 2992;
-                        //high = 3456;
-                        return 3098;
-
-                    case EDStar.A:
-                        //low = 2938;
-                        //high = 2986;
-                        return 2950;
-
-                    case EDStar.F:
-                        //low = 2915;
-                        //high = 2957;
-                        return 2932;
-
-                    case EDStar.G:
-                        //low = 2912;
-                        //high = 2935;
-                        // also have a G8V
-                        return 2923;
-
-                    case EDStar.K:
-                        //low = 2898;
-                        //high = 2923;
-                        return 2911;
-                    case EDStar.M:
-                        //low = 2887;
-                        //high = 2905;
-                        return 2911;
-
-                    // dwarfs
-                    case EDStar.L:
-                        //low = 2884;
-                        //high = 2890;
-                        return 2887;
-                    case EDStar.T:
-                        //low = 2881;
-                        //high = 2885;
-                        return 2883;
-                    case EDStar.Y:
-                        //low = 2880;
-                        //high = 2882;
-                        return 2881;
-
-                    // proto stars
-                    case EDStar.AeBe:    // Herbig
-                        //                ??
-                        //low = //high = 0;
-                        return 2500;
-                    case EDStar.TTS:
-                        //low = 2881;
-                        //high = 2922;
-                        return 2900;
-
-                    // wolf rayet
-                    case EDStar.W:
-                    case EDStar.WN:
-                    case EDStar.WNC:
-                    case EDStar.WC:
-                    case EDStar.WO:
-                        //low = //high = 7794;
-                        return 7794;
-
-                    // Carbon
-                    case EDStar.CS:
-                    case EDStar.C:
-                    case EDStar.CN:
-                    case EDStar.CJ:
-                    case EDStar.CHd:
-                        //low = //high = 2920;
-                        return 2920;
-
-                    case EDStar.MS: //seen in log
-                    case EDStar.S:   // seen in log
-                                     //                ??
-                                     //low = //high = 0;
-                        return 2000;
-
-
-                    // white dwarf
-                    case EDStar.D:
-                    case EDStar.DA:
-                    case EDStar.DAB:
-                    case EDStar.DAO:
-                    case EDStar.DAZ:
-                    case EDStar.DAV:
-                    case EDStar.DB:
-                    case EDStar.DBZ:
-                    case EDStar.DBV:
-                    case EDStar.DO:
-                    case EDStar.DOV:
-                    case EDStar.DQ:
-                    case EDStar.DC:
-                    case EDStar.DCV:
-                    case EDStar.DX:
-                        //low = 25000;
-                        //high = 27000;
-
-                        return 26000;
-
-                    case EDStar.N:
-                        //low = 43276;
-                        //high = 44619;
-                        return 43441;
-
-                    case EDStar.H:
-                        //low = 44749;
-                        //high = 80305;
-                        return 61439;
-
-                    case EDStar.X:
-                    case EDStar.A_BlueWhiteSuperGiant:
-                    case EDStar.F_WhiteSuperGiant:
-                    case EDStar.M_RedSuperGiant:
-                    case EDStar.M_RedGiant:
-                    case EDStar.K_OrangeGiant:
-                    case EDStar.RoguePlanet:
-
-                    default:
-                        //low = 0;
-                        //high = 0;
-                        return 2000;
-                }
-            }
-            else   // Planet
-            {
-                switch (PlanetTypeID)      // http://elite-dangerous.wikia.com/wiki/Explorer
-                {
-                    case EDPlanet.Icy_body:
-                        //low = 792; // (0.0001 EM)
-                        //high = 1720; // 89.17
-                        return 933; // 0.04
-
-                    case EDPlanet.Rocky_ice_body:
-                        //low = 792; // (0.0001 EM)
-                        //high = 1720; // 89.17
-                        return 933; // 0.04
-
-                    case EDPlanet.Rocky_body:
-                        if (TerraformState != null && TerraformState.ToLowerInvariant().Equals("terraformable"))
+                    if (sp.PlanetClass != null)  //Asteroid belt is null
+                    {
+                        switch (sp.PlanetTypeID)
                         {
-                            //low = 36000;
-                            //high = 36500;
-                            return 37000;
+                            case EDPlanet.Metal_rich_body:
+                                // CFT value is scaled same as WW/ELW from 3.2, not confirmed in game
+                                // They're like hen's teeth anyway....
+                                kValue = 21790;
+                                if (sp.Terraformable) kValue += 65631;
+                                break;
+                            case EDPlanet.Ammonia_world:
+                                kValue = 96932;
+                                break;
+                            case EDPlanet.Sudarsky_class_I_gas_giant:
+                                kValue = 1656;
+                                break;
+                            case EDPlanet.Sudarsky_class_II_gas_giant:
+                            case EDPlanet.High_metal_content_body:
+                                kValue = 9654;
+                                if (sp.Terraformable) kValue += 100677;
+                                break;
+                            case EDPlanet.Water_world:
+                                kValue = 64831;
+                                if (sp.Terraformable) kValue += 116295;
+                                break;
+                            case EDPlanet.Earthlike_body:
+                                // Always terraformable so WW + bonus
+                                kValue = 64831 + 116295;
+                                break;
+                            default:
+                                kValue = 300;
+                                if (sp.Terraformable) kValue += 93328;
+                                break;
                         }
-                        else
-                        {
+
+                        double mass = sp.nMassEM.HasValue ? sp.nMassEM.Value : 1.0;
+                        double effmapped = 1.25;
+                        double firstdiscovery = 2.6;
+
+                        double basevalue = PlanetValue33(kValue, mass);
+
+                        EstimatedValueBase = (int)basevalue;
+
+                        EstimatedValueFirstDiscovered = (int)(basevalue * firstdiscovery);
+
+                        EstimatedValueFirstDiscoveredFirstMapped = (int)(basevalue * firstdiscovery * 3.699622554);
+                        EstimatedValueFirstDiscoveredFirstMappedEfficiently = (int)(basevalue * firstdiscovery * 3.699622554 * effmapped);
+
+                        EstimatedValueFirstMapped = (int)(basevalue * 8.0956);
+                        EstimatedValueFirstMappedEfficiently = (int)(basevalue * 8.0956 * effmapped);
+
+                        EstimatedValueMapped = (int)(basevalue * 3.3333333333);
+                        EstimatedValueMappedEfficiently = (int)(basevalue * 3.3333333333 * effmapped);
+                    }
+                }
+            }
+
+            private double StarValue32And33(double k, double m)
+            {
+                return k + (m * k / 66.25);
+            }
+
+            private double PlanetValue33(double k, double m)
+            {
+                const double q = 0.56591828;
+                return Math.Max((k + (k * Math.Pow(m, 0.2) * q)), 500);
+            }
+
+            #endregion
+
+            #region ED 3.2 values
+
+            private int EstimatedValue32()
+            {
+                double kValue;
+                double kBonus = 0;
+
+                if (sp.IsStar)
+                {
+                    switch (sp.StarTypeID)      // http://elite-dangerous.wikia.com/wiki/Explorer
+                    {
+                        // white dwarf
+                        case EDStar.D:
+                        case EDStar.DA:
+                        case EDStar.DAB:
+                        case EDStar.DAO:
+                        case EDStar.DAZ:
+                        case EDStar.DAV:
+                        case EDStar.DB:
+                        case EDStar.DBZ:
+                        case EDStar.DBV:
+                        case EDStar.DO:
+                        case EDStar.DOV:
+                        case EDStar.DQ:
+                        case EDStar.DC:
+                        case EDStar.DCV:
+                        case EDStar.DX:
+                            kValue = 33737;
+                            break;
+
+                        case EDStar.N:
+                        case EDStar.H:
+                            kValue = 54309;
+                            break;
+
+                        case EDStar.SuperMassiveBlackHole:
+                            kValue = 80.5654;
+                            break;
+
+                        default:
+                            kValue = 2880;
+                            break;
+                    }
+
+                    return (int)StarValue32And33(kValue, sp.nStellarMass.HasValue ? sp.nStellarMass.Value : 1.0);
+                }
+                else if (sp.PlanetClass == null)  //Asteroid belt
+                    return 0;
+                else   // Planet
+                {
+                    switch (sp.PlanetTypeID)      // http://elite-dangerous.wikia.com/wiki/Explorer
+                    {
+
+                        case EDPlanet.Metal_rich_body:
+                            kValue = 52292;
+                            if (sp.Terraformable) { kBonus = 245306; }
+                            break;
+                        case EDPlanet.High_metal_content_body:
+                        case EDPlanet.Sudarsky_class_II_gas_giant:
+                            kValue = 23168;
+                            if (sp.Terraformable) { kBonus = 241607; }
+                            break;
+                        case EDPlanet.Earthlike_body:
+                            kValue = 155581;
+                            kBonus = 279088;
+                            break;
+                        case EDPlanet.Water_world:
+                            kValue = 155581;
+                            if (sp.Terraformable) { kBonus = 279088; }
+                            break;
+                        case EDPlanet.Ammonia_world:
+                            kValue = 232619;
+                            break;
+                        case EDPlanet.Sudarsky_class_I_gas_giant:
+                            kValue = 3974;
+                            break;
+                        default:
+                            kValue = 720;
+                            if (sp.Terraformable) { kBonus = 223971; }
+                            break;
+                    }
+
+                    double mass = sp.nMassEM.HasValue ? sp.nMassEM.Value : 1.0;       // some old entries don't have mass, so just presume 1
+
+                    int val = (int)PlanetValueED32(kValue, mass);
+                    if (sp.Terraformable || sp.PlanetTypeID == EDPlanet.Earthlike_body)
+                    {
+                        val += (int)PlanetValueED32(kBonus, mass);
+                    }
+
+                    return val;
+                }
+            }
+
+            private double PlanetValueED32(double k, double m)
+            {
+                return k + (3 * k * Math.Pow(m, 0.199977) / 5.3);
+            }
+
+            #endregion
+
+            #region ED 22
+
+            private int EstimatedValueED22()
+            {
+                if (sp.IsStar)
+                {
+                    switch (sp.StarTypeID)      // http://elite-dangerous.wikia.com/wiki/Explorer
+                    {
+                        case EDStar.O:
+                            //low = 3677;
+                            //high = 4465;
+                            return 4170;
+
+                        case EDStar.B:
+                            //low = 2992;
+                            //high = 3456;
+                            return 3098;
+
+                        case EDStar.A:
+                            //low = 2938;
+                            //high = 2986;
+                            return 2950;
+
+                        case EDStar.F:
+                            //low = 2915;
+                            //high = 2957;
+                            return 2932;
+
+                        case EDStar.G:
+                            //low = 2912;
+                            //high = 2935;
+                            // also have a G8V
+                            return 2923;
+
+                        case EDStar.K:
+                            //low = 2898;
+                            //high = 2923;
+                            return 2911;
+                        case EDStar.M:
+                            //low = 2887;
+                            //high = 2905;
+                            return 2911;
+
+                        // dwarfs
+                        case EDStar.L:
+                            //low = 2884;
+                            //high = 2890;
+                            return 2887;
+                        case EDStar.T:
+                            //low = 2881;
+                            //high = 2885;
+                            return 2883;
+                        case EDStar.Y:
+                            //low = 2880;
+                            //high = 2882;
+                            return 2881;
+
+                        // proto stars
+                        case EDStar.AeBe:    // Herbig
+                                             //                ??
+                                             //low = //high = 0;
+                            return 2500;
+                        case EDStar.TTS:
+                            //low = 2881;
+                            //high = 2922;
+                            return 2900;
+
+                        // wolf rayet
+                        case EDStar.W:
+                        case EDStar.WN:
+                        case EDStar.WNC:
+                        case EDStar.WC:
+                        case EDStar.WO:
+                            //low = //high = 7794;
+                            return 7794;
+
+                        // Carbon
+                        case EDStar.CS:
+                        case EDStar.C:
+                        case EDStar.CN:
+                        case EDStar.CJ:
+                        case EDStar.CHd:
+                            //low = //high = 2920;
+                            return 2920;
+
+                        case EDStar.MS: //seen in log
+                        case EDStar.S:   // seen in log
+                                         //                ??
+                                         //low = //high = 0;
+                            return 2000;
+
+
+                        // white dwarf
+                        case EDStar.D:
+                        case EDStar.DA:
+                        case EDStar.DAB:
+                        case EDStar.DAO:
+                        case EDStar.DAZ:
+                        case EDStar.DAV:
+                        case EDStar.DB:
+                        case EDStar.DBZ:
+                        case EDStar.DBV:
+                        case EDStar.DO:
+                        case EDStar.DOV:
+                        case EDStar.DQ:
+                        case EDStar.DC:
+                        case EDStar.DCV:
+                        case EDStar.DX:
+                            //low = 25000;
+                            //high = 27000;
+
+                            return 26000;
+
+                        case EDStar.N:
+                            //low = 43276;
+                            //high = 44619;
+                            return 43441;
+
+                        case EDStar.H:
+                            //low = 44749;
+                            //high = 80305;
+                            return 61439;
+
+                        case EDStar.X:
+                        case EDStar.A_BlueWhiteSuperGiant:
+                        case EDStar.F_WhiteSuperGiant:
+                        case EDStar.M_RedSuperGiant:
+                        case EDStar.M_RedGiant:
+                        case EDStar.K_OrangeGiant:
+                        case EDStar.RoguePlanet:
+
+                        default:
+                            //low = 0;
+                            //high = 0;
+                            return 2000;
+                    }
+                }
+                else   // Planet
+                {
+                    switch (sp.PlanetTypeID)      // http://elite-dangerous.wikia.com/wiki/Explorer
+                    {
+                        case EDPlanet.Icy_body:
                             //low = 792; // (0.0001 EM)
                             //high = 1720; // 89.17
                             return 933; // 0.04
-                        }
-                    case EDPlanet.Metal_rich_body:
-                        //low = 9145; // (0.0002 EM)
-                        //high = 14562; // (4.03 EM)
-                        return 12449; // 0.51 EM
-                    case EDPlanet.High_metal_content_body:
-                        if (TerraformState != null && TerraformState.ToLowerInvariant().Equals("terraformable"))
-                        {
-                            //low = 36000;
-                            //high = 54000;
-                            return 42000;
-                        }
-                        else
-                        {
-                            //low = 4966; // (0.0015 EM)
-                            //high = 9632;  // 31.52 EM
-                            return 6670; // 0.41
-                        }
 
-                    case EDPlanet.Earthlike_body:
-                        //low = 65000; // 0.24 EM
-                        //high = 71885; // 196.60 EM
-                        return 67798; // 0.47 EM
+                        case EDPlanet.Rocky_ice_body:
+                            //low = 792; // (0.0001 EM)
+                            //high = 1720; // 89.17
+                            return 933; // 0.04
 
-                    case EDPlanet.Water_world:
-                        //low = 26589; // (0.09 EM)
-                        //high = 43437; // (42.77 EM)
-                        return 30492; // (0.82 EM)
-                    case EDPlanet.Ammonia_world:
-                        //low = 37019; // 0.09 EM
-                        //high = 71885; //(196.60 EM)
-                        return 40322; // (0.41 EM)
-                    case EDPlanet.Sudarsky_class_I_gas_giant:
-                        //low = 2472; // (2.30 EM)
-                        //high = 4514; // (620.81 EM
-                        return 3400;  // 62.93 EM
+                        case EDPlanet.Rocky_body:
+                            if (sp.TerraformState != null && sp.TerraformState.ToLowerInvariant().Equals("terraformable"))
+                            {
+                                //low = 36000;
+                                //high = 36500;
+                                return 37000;
+                            }
+                            else
+                            {
+                                //low = 792; // (0.0001 EM)
+                                //high = 1720; // 89.17
+                                return 933; // 0.04
+                            }
+                        case EDPlanet.Metal_rich_body:
+                            //low = 9145; // (0.0002 EM)
+                            //high = 14562; // (4.03 EM)
+                            return 12449; // 0.51 EM
+                        case EDPlanet.High_metal_content_body:
+                            if (sp.TerraformState != null && sp.TerraformState.ToLowerInvariant().Equals("terraformable"))
+                            {
+                                //low = 36000;
+                                //high = 54000;
+                                return 42000;
+                            }
+                            else
+                            {
+                                //low = 4966; // (0.0015 EM)
+                                //high = 9632;  // 31.52 EM
+                                return 6670; // 0.41
+                            }
 
-                    case EDPlanet.Sudarsky_class_II_gas_giant:
-                        //low = 8110; // (5.37 EM)
-                        //high = 14618; // (949.98 EM)
-                        return 12319;  // 260.84 EM
+                        case EDPlanet.Earthlike_body:
+                            //low = 65000; // 0.24 EM
+                            //high = 71885; // 196.60 EM
+                            return 67798; // 0.47 EM
 
-                    case EDPlanet.Sudarsky_class_III_gas_giant:
-                        //low = 1368; // (10.16 EM)
-                        //high = 2731; // (2926 EM)
-                        return 2339; // 990.92 EM
+                        case EDPlanet.Water_world:
+                            //low = 26589; // (0.09 EM)
+                            //high = 43437; // (42.77 EM)
+                            return 30492; // (0.82 EM)
+                        case EDPlanet.Ammonia_world:
+                            //low = 37019; // 0.09 EM
+                            //high = 71885; //(196.60 EM)
+                            return 40322; // (0.41 EM)
+                        case EDPlanet.Sudarsky_class_I_gas_giant:
+                            //low = 2472; // (2.30 EM)
+                            //high = 4514; // (620.81 EM
+                            return 3400;  // 62.93 EM
 
-                    case EDPlanet.Sudarsky_class_IV_gas_giant:
-                        //low = 2739; //(2984 EM)
-                        //high = 2827; // (3697 EM)
-                        return 2782; // 3319 em
+                        case EDPlanet.Sudarsky_class_II_gas_giant:
+                            //low = 8110; // (5.37 EM)
+                            //high = 14618; // (949.98 EM)
+                            return 12319;  // 260.84 EM
 
-                    case EDPlanet.Sudarsky_class_V_gas_giant:
-                        //low = 2225; // 688.2 EM
-                        //high = 2225;
-                        return 2225;
+                        case EDPlanet.Sudarsky_class_III_gas_giant:
+                            //low = 1368; // (10.16 EM)
+                            //high = 2731; // (2926 EM)
+                            return 2339; // 990.92 EM
 
-                    case EDPlanet.Water_giant:
-                    case EDPlanet.Water_giant_with_life:
-                    case EDPlanet.Gas_giant_with_water_based_life:
-                    case EDPlanet.Gas_giant_with_ammonia_based_life:
-                    case EDPlanet.Helium_rich_gas_giant:
-                    case EDPlanet.Helium_gas_giant:
-                        //low = 0;
-                        //high = 0;
-                        return 2000;
+                        case EDPlanet.Sudarsky_class_IV_gas_giant:
+                            //low = 2739; //(2984 EM)
+                            //high = 2827; // (3697 EM)
+                            return 2782; // 3319 em
 
-                    default:
-                        //low = 0;
-                        //high = 2000;
-                        return 0;
+                        case EDPlanet.Sudarsky_class_V_gas_giant:
+                            //low = 2225; // 688.2 EM
+                            //high = 2225;
+                            return 2225;
+
+                        case EDPlanet.Water_giant:
+                        case EDPlanet.Water_giant_with_life:
+                        case EDPlanet.Gas_giant_with_water_based_life:
+                        case EDPlanet.Gas_giant_with_ammonia_based_life:
+                        case EDPlanet.Helium_rich_gas_giant:
+                        case EDPlanet.Helium_gas_giant:
+                            //low = 0;
+                            //high = 0;
+                            return 2000;
+
+                        default:
+                            //low = 0;
+                            //high = 2000;
+                            return 0;
+                    }
                 }
+
             }
 
+            public int EstimatedValue()
+            {
+                if (EstimatedValueFirstDiscovered > 0)      // for previous scans before 3.3 and stars, these are not set.
+                {
+                    if (sp.IsNotPreviouslyDiscovered && sp.WasMapped == true)       // this is the situation pointed out in PR#31, discovered is there and false, but mapped is true
+                        return sp.EfficientMapped ? EstimatedValueFirstMappedEfficiently : EstimatedValueFirstMapped;
+
+                    // if def not discovered (flag is there) and not mapped (flag is there), and we mapped it
+                    if (sp.IsNotPreviouslyDiscovered && sp.IsNotPreviouslyMapped && sp.Mapped)
+                        return sp.EfficientMapped ? EstimatedValueFirstDiscoveredFirstMappedEfficiently : EstimatedValueFirstDiscoveredFirstMapped;
+
+                    // if def not mapped, and we mapped it
+                    else if (sp.IsNotPreviouslyMapped && sp.Mapped)
+                        return sp.EfficientMapped ? EstimatedValueFirstMappedEfficiently : EstimatedValueFirstMapped;
+
+                    // if def not discovered
+                    else if (sp.IsNotPreviouslyDiscovered)
+                        return EstimatedValueFirstDiscovered;
+
+                    // if we mapped it, it was discovered/mapped before
+                    else if (sp.Mapped)
+                        return sp.EfficientMapped ? EstimatedValueMappedEfficiently : EstimatedValueMapped;
+                }
+
+                return EstimatedValueBase;
+            }
+
+            public int EstimatedValueBase { get; private set; }     // Estimated value without mapping or first discovery - all types, all versions
+            public int EstimatedValueFirstDiscovered { get; private set; }     // Estimated value with first discovery  - 3.3 onwards for these for planets only
+            public int EstimatedValueFirstDiscoveredFirstMapped { get; private set; }           // with both
+            public int EstimatedValueFirstDiscoveredFirstMappedEfficiently { get; private set; }           // with both efficiently
+            public int EstimatedValueFirstMapped { get; private set; }             // with just mapped
+            public int EstimatedValueFirstMappedEfficiently { get; private set; }             // with just mapped
+            public int EstimatedValueMapped { get; private set; }             // with just mapped
+            public int EstimatedValueMappedEfficiently { get; private set; }             // with just mapped
+
+            private JournalScan sp;
         }
+
     }
 
     #endregion
