@@ -36,7 +36,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, System, -Cost);
         }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("System:".T(EDTx.JournalEntry_System), System, "Cost:; cr;N0".T(EDTx.JournalEntry_Cost), Cost);
             detailed = "";
@@ -72,7 +72,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, count + " systems", TotalEarnings);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Amount:; cr;N0".T(EDTx.JournalEntry_Amount), BaseValue, "Bonus:; cr;N0".T(EDTx.JournalEntry_Bonus), Bonus,
                                 "Total:; cr;N0".T(EDTx.JournalSellExplorationData_Total), TotalEarnings);
@@ -121,7 +121,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, count + " systems", TotalEarnings);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Amount:; cr;N0".T(EDTx.JournalEntry_Amount), BaseValue, "Bonus:; cr;N0".T(EDTx.JournalEntry_Bonus), Bonus,
                                 "Total:; cr;N0".T(EDTx.JournalMultiSellExplorationData_Total), TotalEarnings);

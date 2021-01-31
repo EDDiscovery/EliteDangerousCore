@@ -29,7 +29,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string ScanType { get; set; }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
             info = ScanType;
             detailed = "";
@@ -94,7 +94,7 @@ namespace EliteDangerousCore.JournalEvents
             MergedEntries.Add(next);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             detailed = "";
             if (MergedEntries == null)
@@ -167,7 +167,7 @@ namespace EliteDangerousCore.JournalEvents
         public List<string> MergedEntries { get; set; }     // if verbose.. doing it this way does not break action packs as the variables are maintained
                                                             // This is second, third merge etc.  First one is in above variables
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             detailed = "";
             if (MergedEntries != null)
@@ -204,7 +204,7 @@ namespace EliteDangerousCore.JournalEvents
 
         protected override JournalTypeEnum IconEventType { get { return ShieldsUp ? JournalTypeEnum.ShieldState_ShieldsUp : JournalTypeEnum.ShieldState_ShieldsDown; } }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Shields Down;Shields Up".T(EDTx.JournalEntry_ShieldsDown), ShieldsUp);
             detailed = "";

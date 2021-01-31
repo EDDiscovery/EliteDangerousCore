@@ -219,6 +219,26 @@ namespace EliteDangerousCore
             snc = SystemNoteClass.GetSystemNote(Journalid, IsFSDCarrierJump ?  System.Name : null);       // may be null
         }
 
+        public void UpdateShipInformation(ShipInformation si)       // something externally updated SI
+        {
+            ShipInformation = si;
+        }
+
+        public void UpdateShipStoredModules(ModulesInStore ms)
+        {
+            StoredModules = ms;
+        }
+
+        public void UpdateMissionList(uint ml)
+        {
+            MissionList = ml;
+        }
+
+        public void UpdateMaterialCommodity(MaterialCommoditiesList mc)
+        {
+            MaterialCommodity = mc;
+        }
+
         #endregion
 
         #region Interaction
@@ -260,25 +280,11 @@ namespace EliteDangerousCore
             return null;
         }
 
-        public void UpdateShipInformation(ShipInformation si)       // something externally updated SI
+        public void FillInformation(out string EventDescription, out string EventDetailedInfo)
         {
-            ShipInformation = si;
+            journalEntry.FillInformation(System, out EventDescription, out EventDetailedInfo);
         }
 
-        public void UpdateShipStoredModules( ModulesInStore ms )
-        {
-            StoredModules = ms;
-        }
-
-        public void UpdateMissionList(uint ml)
-        {
-            MissionList = ml;
-        }
-
-        public void UpdateMaterialCommodity(MaterialCommoditiesList mc)
-        {
-            MaterialCommodity = mc;
-        }
 
         #endregion
     }

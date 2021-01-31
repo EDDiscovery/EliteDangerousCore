@@ -61,7 +61,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(out string info, out string detailed)  
+        public override void FillInformation(ISystem sys, out string info, out string detailed)  
         {
            
             info = "";
@@ -143,7 +143,7 @@ namespace EliteDangerousCore.JournalEvents
             Total = mc.FindFDName(Name)?.Count ?? 0;
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             MaterialCommodityData mcd = MaterialCommodityData.GetByFDName(Name);
             if (mcd != null)
@@ -179,7 +179,7 @@ namespace EliteDangerousCore.JournalEvents
             Total = mc.FindFDName(Name)?.Count ?? 0;
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             MaterialCommodityData mcd = MaterialCommodityData.GetByFDName(Name);
             if (mcd != null)
@@ -207,7 +207,7 @@ namespace EliteDangerousCore.JournalEvents
         public string FriendlyName { get; set; }
         public int DiscoveryNumber { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", FriendlyName);
             MaterialCommodityData mcd = MaterialCommodityData.GetByFDName(Name);
@@ -285,7 +285,7 @@ namespace EliteDangerousCore.JournalEvents
             stats.UpdateMaterial(Received.Material, Received.Quantity, stationfaction);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = detailed = "";
 
@@ -348,7 +348,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = Name;
             if (Materials != null)

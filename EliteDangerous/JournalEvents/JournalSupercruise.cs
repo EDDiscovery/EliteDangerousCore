@@ -31,7 +31,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StarSystem { get; set; }
         public long? SystemAddress { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = StarSystem;
             detailed = "";
@@ -62,7 +62,7 @@ namespace EliteDangerousCore.JournalEvents
         public string BodyType { get; set; }
         public string BodyDesignation { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("At ".T(EDTx.JournalSupercruiseExit_At), Body, "< in ".T(EDTx.JournalSupercruiseExit_in), StarSystem, "Type:".T(EDTx.JournalEntry_Type), BodyType);
             detailed = "";

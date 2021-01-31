@@ -64,7 +64,7 @@ namespace EliteDangerousCore.JournalEvents
         public string NearestDestination { get; set; }
         public string NearestDestination_Localised { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("At ".T(EDTx.JournalCodexEntry_At), System,
                                                 "in ".T(EDTx.JournalCodexEntry_in), Region_Localised,

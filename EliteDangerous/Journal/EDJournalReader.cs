@@ -58,22 +58,15 @@ namespace EliteDangerousCore
             if (line.Length == 0)
                 return null;
 
-            JObject jo = JObject.Parse(line, JToken.ParseOptions.AllowTrailingCommas | JToken.ParseOptions.CheckEOL);  // parse, null if failed
-
-            if (jo == null)     // decode failed, gently return null
-            {
-                System.Diagnostics.Trace.WriteLine($"{TravelLogUnit.FullName} Bad journal line: {line}");
-                return null;
-            }
-
             JournalEntry je = null;
 
             try
             {           // use a try block in case anything in the creation goes tits up
-                je = JournalEntry.CreateJournalEntry(jo, true);
+                je = JournalEntry.CreateJournalEntry(line, true);       // save JSON
             }
             catch
             {
+                System.Diagnostics.Trace.WriteLine($"{TravelLogUnit.FullName} Bad journal line: {line}");
                 je = null;
             }
 
@@ -169,7 +162,7 @@ namespace EliteDangerousCore
 
             if (je is IAdditionalFiles)
             {
-                if ((je as IAdditionalFiles).ReadAdditionalFiles(TravelLogUnit.Path, inhistoryrefreshparse, ref jo) == false)     // if failed
+                if ((je as IAdditionalFiles).ReadAdditionalFiles(TravelLogUnit.Path, inhistoryrefreshparse) == false)     // if failed
                     return null;
             }
 

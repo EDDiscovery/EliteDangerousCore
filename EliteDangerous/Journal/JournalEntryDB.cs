@@ -14,18 +14,17 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
-//#define TIMESCAN
+#define TIMESCAN
 
+using BaseUtils.JSON;
 using EliteDangerousCore.DB;
 using EliteDangerousCore.JournalEvents;
-using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
-using System.IO;
 
 namespace EliteDangerousCore
 {
@@ -35,21 +34,27 @@ namespace EliteDangerousCore
     {
         static protected JournalEntry CreateJournalEntry(DbDataReader dr)
         {
-            string EDataString = (string)dr["EventData"];
+            string json = (string)dr["EventData"];
 
-            JournalEntry jr = JournalEntry.CreateJournalEntry(EDataString);
+            JournalEntry jr = JournalEntry.CreateJournalEntry(json);
 
             jr.Id = (int)(long)dr["Id"];
             jr.TLUId = (int)(long)dr["TravelLogId"];
             jr.CommanderId = (int)(long)dr["CommanderId"];
-            if (jr.EventTimeUTC == default(DateTime))
-                jr.EventTimeUTC = ((DateTime)dr["EventTime"]).ToUniversalTime();
-            if (jr.EventTypeID == JournalTypeEnum.Unknown)
-                jr.EventTypeID = (JournalTypeEnum)(long)dr["eventTypeID"];
             jr.Synced = (int)(long)dr["Synced"];
             return jr;
         }
 
+        static protected JournalEntry CreateJournalEntryFixedPos(DbDataReader dr)       // table is Id,TravelLogId,CommanderId,EventData,Sycned
+        {
+            string json = (string)dr[3];
+            JournalEntry jr = JournalEntry.CreateJournalEntry(json);
+            jr.Id = (int)(long)dr[0];
+            jr.TLUId = (int)(long)dr[1];
+            jr.CommanderId = (int)(long)dr[2];
+            jr.Synced = (int)(long)dr[4];
+            return jr;
+        }
 
         public bool Add(JObject jo)
         {
@@ -336,7 +341,7 @@ namespace EliteDangerousCore
 
             try
             {
-                cmd = UserDatabase.Instance.ExecuteWithDatabase(cn => cn.Connection.CreateCommand("select * from JournalEntries"));
+                cmd = UserDatabase.Instance.ExecuteWithDatabase(cn => cn.Connection.CreateCommand("select Id,TravelLogId,CommanderId,EventData,Synced from JournalEntries"));
                 reader = UserDatabase.Instance.ExecuteWithDatabase(cn =>
                 {
                     string cnd = "";
@@ -384,6 +389,7 @@ namespace EliteDangerousCore
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
 #endif
+
                 do
                 {
                     // experiments state that reading the DL takes 270/4000ms, reading json -> 1250, then the rest is creating and decoding the fields
@@ -399,16 +405,17 @@ namespace EliteDangerousCore
                             long t = sw.ElapsedTicks;
 #endif
 
-                            JournalEntry sys = JournalEntry.CreateJournalEntry(reader);     
+                            JournalEntry sys = JournalEntry.CreateJournalEntryFixedPos(reader);
                             sys.beta = tlus.ContainsKey(sys.TLUId) ? tlus[sys.TLUId].Beta : false;
                             list.Add(sys);
 
 #if TIMESCAN
                             long tw = sw.ElapsedTicks - t;
-                            if ( !times.TryGetValue(sys.EventTypeStr, out var x))
+                            if (!times.TryGetValue(sys.EventTypeStr, out var x))
                                 times[sys.EventTypeStr] = new List<long>();
                             times[sys.EventTypeStr].Add(tw);
 #endif
+
                         }
 
                         return list;
@@ -435,7 +442,8 @@ namespace EliteDangerousCore
                     res.Add(r);
                 }
 
-                res.Sort(delegate (Results l, Results r) { return l.sumtime.CompareTo(r.sumtime); });
+                //res.Sort(delegate (Results l, Results r) { return l.sumtime.CompareTo(r.sumtime); });
+                res.Sort(delegate (Results l, Results r) { return l.avgtime.CompareTo(r.avgtime); });
 
                 string rs = "";
                 foreach (var r in res)

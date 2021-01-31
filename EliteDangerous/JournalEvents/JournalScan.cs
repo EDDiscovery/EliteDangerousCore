@@ -26,9 +26,9 @@ namespace EliteDangerousCore.JournalEvents
     [JournalEntryType(JournalTypeEnum.Scan)]
     public class JournalScan : JournalEntry, IScanDataChanges
     {
-        public bool IsStar { get { return !String.IsNullOrEmpty(StarType); } }
-        public bool IsPlanet { get { return !IsStar && !IsBeltCluster; } }
-        public bool IsBeltCluster { get { return !IsStar && PlanetClass == null; } }
+        public bool IsStar { get { return StarType!=null; } }
+        public bool IsBeltCluster { get { return StarType == null && PlanetClass == null; } }
+        public bool IsPlanet { get { return PlanetClass != null; } }
 
         public string BodyDesignation { get; set; }
 
@@ -260,21 +260,18 @@ namespace EliteDangerousCore.JournalEvents
 
         public JournalScan(JObject evt) : base(evt, JournalTypeEnum.Scan)
         {
-            // ALL
+            
 
-            ScanType = evt["ScanType"].Str();
-            BodyName = evt["BodyName"].Str();
-            BodyID = evt["BodyID"].IntNull();
-            StarSystem = evt["StarSystem"].StrNull();
-            SystemAddress = evt["SystemAddress"].LongNull();
-            DistanceFromArrivalLS = evt["DistanceFromArrivalLS"].Double();
-            nRotationPeriod = evt["RotationPeriod"].DoubleNull();
-            nSurfaceTemperature = evt["SurfaceTemperature"].DoubleNull();
-            nRadius = evt["Radius"].DoubleNull();
+            ScanType = evt["ScanType"].Str();                               // ALL
+            BodyName = evt["BodyName"].Str();                               // ALL
+            BodyID = evt["BodyID"].IntNull();                               // ALL
+            StarSystem = evt["StarSystem"].StrNull();                       // ALL    
+            SystemAddress = evt["SystemAddress"].LongNull();                // ALL    
+            DistanceFromArrivalLS = evt["DistanceFromArrivalLS"].Double();  // ALL 
+            WasDiscovered = evt["WasDiscovered"].BoolNull();                // ALL new 3.4
+            WasMapped = evt["WasMapped"].BoolNull();                        // ALL new 3.4
 
-            Rings = evt["Rings"]?.ToObjectQ<StarPlanetRing[]>(); // may be Null
-
-            JArray parents = evt["Parents"].Array();            // will be null if parents is not an array (also if its Null)
+            JArray parents = evt["Parents"].Array();                        // ALL will be null if parents is not an array (also if its Null)
             if (!parents.IsNull() && parents.IsArray)
             {
                 Parents = new List<BodyParent>();
@@ -291,11 +288,13 @@ namespace EliteDangerousCore.JournalEvents
                 }
             }
 
-            WasDiscovered = evt["WasDiscovered"].BoolNull();        // new 3.4
-            WasMapped = evt["WasMapped"].BoolNull();            // new 3.4
+            nRotationPeriod = evt["RotationPeriod"].DoubleNull();           // Stars/Planets, not belt clusters
+            nSurfaceTemperature = evt["SurfaceTemperature"].DoubleNull();   // Stars/Planets, not belt clusters
+            nRadius = evt["Radius"].DoubleNull();                           // Stars/Planets, not belt clusters    
 
-            // STAR
-            StarType = evt["StarType"].StrNull();
+            Rings = evt["Rings"]?.ToObjectQ<StarPlanetRing[]>();            // Stars/Planets, may be Null, not belt clusters
+
+            StarType = evt["StarType"].StrNull();                           // stars have this field
 
             if (IsStar)     // based on StarType
             {
@@ -309,11 +308,11 @@ namespace EliteDangerousCore.JournalEvents
 
             }
             else
-                PlanetClass = evt["PlanetClass"].StrNull();         // try and read planet class, this might be null as well, in which case its a belt cluster
+                PlanetClass = evt["PlanetClass"].StrNull();                 // try and read planet class, this might be null as well, in which case its a belt cluster
 
             // All orbiting bodies
 
-            nSemiMajorAxis = evt["SemiMajorAxis"].DoubleNull();
+            nSemiMajorAxis = evt["SemiMajorAxis"].DoubleNull();             // Stars/Planets
 
             if (nSemiMajorAxis.HasValue)
             {
@@ -483,7 +482,7 @@ namespace EliteDangerousCore.JournalEvents
             };
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             if (IsStar)
             {
@@ -491,7 +490,7 @@ namespace EliteDangerousCore.JournalEvents
                                                 "Age:;my;0.0".T(EDTx.JournalScan_Age), nAge,
                                                 "Radius:".T(EDTx.JournalScan_RS), RadiusText(),
                                                 "Dist:;ls;0.0".T(EDTx.JournalScan_DISTA), DistanceFromArrivalLS,
-                                                "Name:".T(EDTx.JournalScan_BNME), BodyName);
+                                                "Name:".T(EDTx.JournalScan_BNME), BodyName.ReplaceIfStartsWith(sys.Name));
             }
             else
             {
@@ -501,7 +500,7 @@ namespace EliteDangerousCore.JournalEvents
                                                  "Gravity:;G;0.00".T(EDTx.JournalScan_Gravity), nSurfaceGravityG,
                                                  "Radius:".T(EDTx.JournalScan_RS), RadiusText(),
                                                  "Dist:;ls;0.0".T(EDTx.JournalScan_DISTA), DistanceFromArrivalLS,
-                                                 "Name:".T(EDTx.JournalScan_SNME), BodyName);
+                                                 "Name:".T(EDTx.JournalScan_SNME), BodyName.ReplaceIfStartsWith(sys.Name));
             }
 
             detailed = DisplayString(0, includefront: false);

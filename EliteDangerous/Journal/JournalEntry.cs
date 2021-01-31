@@ -25,6 +25,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace EliteDangerousCore
 {
@@ -66,7 +67,7 @@ namespace EliteDangerousCore
             }
         }
 
-        public abstract void FillInformation(out string info, out string detailed);     // all entries must implement
+        public abstract void FillInformation(ISystem sys, out string info, out string detailed);     // all entries must implement
 
         // the long name of it, such as Approach Body. May be overridden, is translated
         public virtual string SummaryName(ISystem sys) { return TranslatedEventNames.ContainsKey(EventTypeID) ? TranslatedEventNames[EventTypeID] : EventTypeID.ToString(); }  // entry may be overridden for specialist output
@@ -206,45 +207,30 @@ namespace EliteDangerousCore
             return CreateJournalEntry(jo.ToString());
         }
 
-        static public JournalEntry CreateJournalEntry(string text)
+        static public JournalEntry CreateJournalEntry(string text, bool savejson = false)
         {
-            JObject jo;
+            JObject jo = JToken.Parse(text, JToken.ParseOptions.AllowTrailingCommas | JToken.ParseOptions.CheckEOL).Object();
 
-            try
+            if (jo != null)
             {
-                jo = JObject.ParseThrowCommaEOL(text);
-                return CreateJournalEntry(jo);
+                string eventname = jo["event"].StrNull();
+
+                JournalEntry ret = null;
+                if (eventname != null && ClassActivators.TryGetValue(eventname, out var act))
+                    ret = act(jo);
+                else
+                    ret = new JournalUnknown(jo);      // MUST return something
+
+                if (savejson)
+                    ret.JsonCached = jo;
+
+                return ret;
             }
-            catch (Exception ex)
-            {
-                Trace.WriteLine($"Error parsing journal entry\n{text}\n{ex.ToString()}");
-                return new JournalUnknown(new JObject());
-            }
-        }
-
-        static public JournalEntry CreateJournalEntry(JObject jo, bool savejson = false)
-        {
-            string Eventstr = jo["event"].StrNull();
-
-            JournalEntry ret = null;
-
-            if (Eventstr == null)  // Should normaly not happend unless corrupt string.
-                ret = new JournalUnknown(jo);      // MUST return something
             else
             {
-                JournalTypeEnum jte = JournalTypeEnum.Unknown;
-                Type jtype = Enum.TryParse(Eventstr, out jte) ? TypeOfJournalEntry(jte) : TypeOfJournalEntry(Eventstr);
-
-                if (jtype == null)
-                    ret = new JournalUnknown(jo);
-                else
-                    ret = (JournalEntry)Activator.CreateInstance(jtype, jo);
+                Trace.WriteLine($"Error parsing journal entry\n{text}\n");
+                return new JournalUnknown(new JObject());
             }
-
-            if (savejson)
-                ret.JsonCached = jo;
-
-            return ret;
         }
 
         #endregion
@@ -340,6 +326,35 @@ namespace EliteDangerousCore
 
             return typedict;
         }
+
+        //Activators are delegates which can make a specific JournalEntry type.  Deep c# stuff here
+
+        private static Dictionary<string, BaseUtils.ObjectActivator.Activator<JournalEntry>> ClassActivators = GetClassActivators();
+
+        private static Dictionary<string, BaseUtils.ObjectActivator.Activator<JournalEntry>> GetClassActivators()
+        {
+            var actlist = new Dictionary<string, BaseUtils.ObjectActivator.Activator<JournalEntry>> ();
+
+            var asm = System.Reflection.Assembly.GetExecutingAssembly();
+            var types = asm.GetTypes().Where(t => typeof(JournalEntry).IsAssignableFrom(t) && !t.IsAbstract).ToList();
+
+            foreach (Type type in types)
+            {
+                JournalEntryTypeAttribute typeattrib = type.GetCustomAttributes(false).OfType<JournalEntryTypeAttribute>().FirstOrDefault();
+                if (typeattrib != null)
+                {
+                    System.Reflection.ConstructorInfo ctor = type.GetConstructors().First();        // this is freaking deep c# here.
+                    var r = ctor.GetParameters();
+                    System.Diagnostics.Debug.Assert(r.Count() == 1);
+                    var r0t = r[0].GetType();
+                    System.Diagnostics.Debug.Assert(r[0].ParameterType.Name == "JObject");      // checking we are picking the correct ctor
+                    actlist[typeattrib.EntryType.ToString()] = BaseUtils.ObjectActivator.GetActivator<JournalEntry>(ctor);
+                }
+            }
+
+            return actlist;
+        }
+
 
         #endregion
 

@@ -35,14 +35,13 @@ namespace EliteDangerousCore.JournalEvents
             Horizons = evt["Horizons"].BoolNull();
         }
 
-        public bool ReadAdditionalFiles(string directory, bool historyrefreshparse, ref JObject jo)
+        public bool ReadAdditionalFiles(string directory, bool historyrefreshparse)
         {
             JObject jnew = ReadAdditionalFile(System.IO.Path.Combine(directory, "Outfitting.json"), waitforfile: !historyrefreshparse, checktimestamptype: true);
             if (jnew != null)        // new json, rescan
             {
-                jo = jnew;      // replace current
-                Rescan(jo);
-                UpdateJson(jo);
+                Rescan(jnew);
+                UpdateJson(jnew);
             }
             return jnew != null;
         }
@@ -53,7 +52,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? Horizons { get; set; }
         public bool? AllowCobraMkIV { get; set; }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
             info = "";
             detailed = "";

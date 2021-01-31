@@ -36,7 +36,7 @@ namespace EliteDangerousCore.JournalEvents
         public int Level { get; set; }
         public string Override { get; set; }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
             
             info = BaseUtils.FieldBuilder.Build("", Engineer, "Blueprint:".T(EDTx.JournalEntry_Blueprint), Blueprint, "Level:".T(EDTx.JournalEntry_Level), Level, "Override:".T(EDTx.JournalEntry_Override), Override);
@@ -111,7 +111,7 @@ namespace EliteDangerousCore.JournalEvents
                 mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "Engineer Contribution Credits", -Quantity);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Engineer, "Type:".T(EDTx.JournalEntry_Type), Type, "Commodity:".T(EDTx.JournalEntry_Commodity), Commodity_Localised,
                     "Material:".T(EDTx.JournalEntry_Material), Material_Localised, "Quantity:".T(EDTx.JournalEntry_Quantity), Quantity, "TotalQuantity:".T(EDTx.JournalEntry_TotalQuantity), TotalQuantity);
@@ -191,7 +191,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("In Slot:".T(EDTx.JournalEntry_InSlot), Slot, "", Module, "By:".T(EDTx.JournalEntry_By), Engineering.Engineer, "Blueprint:".T(EDTx.JournalEntry_Blueprint), Engineering.FriendlyBlueprintName, "Level:".T(EDTx.JournalEntry_Level), Engineering.Level);
 
@@ -255,7 +255,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public ProgressInformation[] Engineers { get; set; }      // may be NULL if not startup or pre 3.3
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             string enginfo = "";
             foreach (var p in Engineers)

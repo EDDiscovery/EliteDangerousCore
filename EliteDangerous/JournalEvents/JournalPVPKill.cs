@@ -30,7 +30,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Victim { get; set; }
         public CombatRank CombatRank { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)  
+        public override void FillInformation(ISystem sys, out string info, out string detailed)  
         {
             info = BaseUtils.FieldBuilder.Build("",Victim, "Rank:".T(EDTx.JournalEntry_Rank) , CombatRank.ToString().SplitCapsWord());
             detailed = "";

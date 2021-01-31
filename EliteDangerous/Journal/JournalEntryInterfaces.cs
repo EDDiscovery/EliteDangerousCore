@@ -67,7 +67,7 @@ namespace EliteDangerousCore
 
     public interface IAdditionalFiles
     {
-        bool ReadAdditionalFiles(string directory, bool inhistoryparse, ref BaseUtils.JSON.JObject jo);     // true if your happy, you can replace jo..
+        bool ReadAdditionalFiles(string directory, bool inhistoryparse);     // true if your happy
     }
 
     public interface IScanDataChanges       // no functions, just marks entries which change scan data. IBodyNameAndID also changes starscan

@@ -60,7 +60,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
         
-        public bool ReadAdditionalFiles(string directory, bool historyrefreshparse, ref JObject jo)
+        public bool ReadAdditionalFiles(string directory, bool historyrefreshparse)
         {
             if (Inventory == null)  // so, if cargo contained info, we use that.. else we try for cargo.json.
             {
@@ -69,10 +69,9 @@ namespace EliteDangerousCore.JournalEvents
                 JObject jnew = ReadAdditionalFile(System.IO.Path.Combine(directory, "Cargo.json"), waitforfile: !historyrefreshparse, checktimestamptype: true);  // check timestamp..
                 if (jnew != null)        // new json, rescan. returns null if cargo in the folder is not related to this entry by time.
                 {
-                    jo = jnew;      // replace current
-                    jo["EDDFromFile"] = true;  // mark its from file
-                    Rescan(jo);
-                    UpdateJson(jo);
+                    jnew["EDDFromFile"] = true;  // mark its from file
+                    Rescan(jnew);
+                    UpdateJson(jnew);
                 }
                 return jnew != null;
             }
@@ -107,7 +106,7 @@ namespace EliteDangerousCore.JournalEvents
         public Cargo[] Inventory { get; set; }      // may be NULL
         public bool EDDFromFile { get; set; }       // set if from file, but only from nov 2020
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
             info = "No Cargo".T(EDTx.JournalEntry_NoCargo);
             detailed = "";
@@ -188,7 +187,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEventNoCash(Id, EventTimeUTC, EventTypeID, FriendlyType + " " + Count);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Type_Localised, "Count:".T(EDTx.JournalEntry_Count), Count,
                             "<; (Mission Cargo)".T(EDTx.JournalEntry_MissionCargo), MissionID != null,
@@ -254,7 +253,7 @@ namespace EliteDangerousCore.JournalEvents
             mlist.CargoDepot(this);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             if (UpdateEnum == UpdateTypeEnum.Collect)
             {
@@ -307,7 +306,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEventNoCash(Id, EventTimeUTC, EventTypeID, FriendlyType);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Type_Localised, ";Stolen".T(EDTx.JournalEntry_Stolen), Stolen, "<; (Mission Cargo)".T(EDTx.JournalEntry_MissionCargo), MissionID != null);
             detailed = "";
@@ -338,7 +337,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = "";
             detailed = "";

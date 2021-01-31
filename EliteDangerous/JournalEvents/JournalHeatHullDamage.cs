@@ -28,7 +28,7 @@ namespace EliteDangerousCore.JournalEvents
             ID = evt["ID"].IntNull();
         }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
             info = "";
             detailed = "";
@@ -42,7 +42,7 @@ namespace EliteDangerousCore.JournalEvents
         {
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = "";
             detailed = "";
@@ -60,7 +60,7 @@ namespace EliteDangerousCore.JournalEvents
         }
         public double Health { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build(";%", (int)(Health * 100));
             detailed = "";

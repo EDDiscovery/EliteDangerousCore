@@ -60,7 +60,7 @@ namespace EliteDangerousCore.DLL
                     stored = storedflag
                 };
 
-                he.journalEntry.FillInformation(out je.info, out je.detailedinfo);
+                he.journalEntry.FillInformation(he.System, out je.info, out je.detailedinfo);
 
                 je.materials = (from x in he.MaterialCommodity.Sort(false) select x.Details.Name + ":" + x.Count.ToStringInvariant() + ":" + x.Details.FDName).ToArray();
                 je.commodities = (from x in he.MaterialCommodity.Sort(true) select x.Details.Name + ":" + x.Count.ToStringInvariant() + ":" + x.Details.FDName).ToArray();

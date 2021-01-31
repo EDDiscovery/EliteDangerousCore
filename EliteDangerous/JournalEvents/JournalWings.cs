@@ -28,7 +28,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Name { get; set; }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
             info = Name;
             detailed = "";
@@ -43,7 +43,7 @@ namespace EliteDangerousCore.JournalEvents
         {
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = "";
             detailed = "";
@@ -61,7 +61,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string[] Others { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = "";
             if (Others != null)
@@ -85,7 +85,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Name { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = Name;
             detailed = "";
