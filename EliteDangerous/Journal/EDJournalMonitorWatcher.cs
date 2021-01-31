@@ -189,11 +189,11 @@ namespace EliteDangerousCore
                         {
                             if (entries.Count > 0)
                             {
-                                entries = entries.Where(jre => JournalEntry.FindEntry(jre, cn, jre.GetJson()).Count == 0).ToList();
+                                entries = entries.Where(jre => JournalEntry.FindEntry(jre, cn, jre.GetJson(cn.Connection,txn)).Count == 0).ToList();
 
                                 foreach (JournalEntry jre in entries)
                                 {
-                                    jre.Add(jre.GetJson(), cn.Connection, txn);
+                                    jre.Add(jre.GetJson(cn.Connection, txn));
                                 }
                             }
 
@@ -324,11 +324,12 @@ namespace EliteDangerousCore
                             {
                                 //System.Diagnostics.Trace.WriteLine(string.Format("--- Check {0} {1} Existing {2} : {3}", jre.EventTimeUTC, jre.EventTypeStr, existing[jre.EventTimeUTC].Count(), jre.GetJson().ToString()));
 
-                                if (!existing[jre.EventTimeUTC].Any(e => JournalEntry.AreSameEntry(jre, e, cn.Connection, ent1jo: jre.GetJson())))
+                                if (!existing[jre.EventTimeUTC].Any(e => JournalEntry.AreSameEntry(jre, e, cn.Connection, ent1jo: jre.GetJson(cn.Connection,tn))))
                                 {
                                     //foreach (var x in existing[jre.EventTimeUTC]) { System.Diagnostics.Trace.WriteLine(string.Format(" passed vs {0} Deepequals {1}", x.GetJson().ToString(), x.GetJson().DeepEquals(jre.GetJson()))); }
 
-                                    jre.Add(jre.GetJson(), cn.Connection, tn);
+                                    BaseUtils.JSON.JObject jo = jre.GetJson(cn.Connection, tn);
+                                    jre.Add(jo, cn.Connection, tn);
 
                                     //System.Diagnostics.Trace.WriteLine(string.Format("Write Journal to db {0} {1}", jre.EventTimeUTC, jre.EventTypeStr));
                                 }

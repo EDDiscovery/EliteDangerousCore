@@ -199,7 +199,7 @@ namespace EliteDangerousCore
 
         #region Factory creation
 
-        static public JournalEntry CreateJournalEntry(string events, DateTime t)
+        static public JournalEntry CreateJournalEntry(string events, DateTime t)            
         {
             JObject jo = new JObject();
             jo.Add("event", events);
@@ -207,30 +207,35 @@ namespace EliteDangerousCore
             return CreateJournalEntry(jo.ToString());
         }
 
-        static public JournalEntry CreateJournalEntry(string text, bool savejson = false)
+        static public JournalEntry CreateJournalEntry(string text, bool savejson = false)       // always returns a Journal Entry, Unknown if bad
         {
             JObject jo = JToken.Parse(text, JToken.ParseOptions.AllowTrailingCommas | JToken.ParseOptions.CheckEOL).Object();
+
+            JournalEntry ret = null;
 
             if (jo != null)
             {
                 string eventname = jo["event"].StrNull();
 
-                JournalEntry ret = null;
                 if (eventname != null && ClassActivators.TryGetValue(eventname, out var act))
                     ret = act(jo);
                 else
-                    ret = new JournalUnknown(jo);      // MUST return something
-
-                if (savejson)
-                    ret.JsonCached = jo;
-
-                return ret;
+                {
+                    ret = new JournalUnknown(jo);
+                    System.Diagnostics.Debug.WriteLine("Not Recognised event " + jo.ToString());
+                }
             }
             else
             {
-                Trace.WriteLine($"Error parsing journal entry\n{text}\n");
-                return new JournalUnknown(new JObject());
+                ret.JsonCached = new JObject();     // need to keep this JSON as its not part of the main system
+                ret = new JournalUnknown(ret.JsonCached);
+                System.Diagnostics.Debug.WriteLine("Bad JSON" + text);
             }
+
+            if (savejson)
+                ret.JsonCached = jo;
+
+            return ret;
         }
 
         #endregion
@@ -349,6 +354,7 @@ namespace EliteDangerousCore
                     var r0t = r[0].GetType();
                     System.Diagnostics.Debug.Assert(r[0].ParameterType.Name == "JObject");      // checking we are picking the correct ctor
                     actlist[typeattrib.EntryType.ToString()] = BaseUtils.ObjectActivator.GetActivator<JournalEntry>(ctor);
+                 //   System.Diagnostics.Debug.WriteLine("Activator " + typeattrib.EntryType.ToString());
                 }
             }
 

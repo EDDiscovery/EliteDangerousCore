@@ -14,7 +14,7 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
-#define TIMESCAN
+//#define TIMESCAN
 
 using BaseUtils.JSON;
 using EliteDangerousCore.DB;
@@ -143,7 +143,7 @@ namespace EliteDangerousCore
 
         internal void UpdateStarPosition(ISystem pos, SQLiteConnectionUser cn, DbTransaction tn = null)
         {
-            JObject jo = GetJson();
+            JObject jo = GetJson(cn,tn);
                                                                                 
             if (jo != null )
             {
@@ -225,11 +225,16 @@ namespace EliteDangerousCore
             return (JObject)GetJson().Clone();
         }
 
-        public JObject GetJson()            // do not modify
+        public JObject GetJson()
+        {
+            return UserDatabase.Instance.ExecuteWithDatabase<JObject>(cn => { return GetJson(cn.Connection); });
+        }
+
+        internal JObject GetJson(SQLiteConnectionUser cn, DbTransaction tn = null)            // do not modify
         {
             if (JsonCached == null)
             {
-                JsonCached = UserDatabase.Instance.ExecuteWithDatabase<JObject>(cn => { return GetJson(Id, cn.Connection); });
+                JsonCached = GetJson(Id, cn, tn);
             }
             return JsonCached;
         }
@@ -249,17 +254,8 @@ namespace EliteDangerousCore
                 {
                     while (reader.Read())
                     {
-                        string EDataString = (string)reader["EventData"];
-
-                        try
-                        {
-                            return JObject.ParseThrowCommaEOL(EDataString);       
-                        }
-                        catch (Exception ex)
-                        {
-                            Trace.WriteLine($"Error parsing journal entry\n{EDataString}\n{ex.ToString()}");
-                            return null;
-                        }
+                        string json = (string)reader["EventData"];
+                        return JObject.Parse(json, JToken.ParseOptions.AllowTrailingCommas | JToken.ParseOptions.CheckEOL);
                     }
                 }
             }
