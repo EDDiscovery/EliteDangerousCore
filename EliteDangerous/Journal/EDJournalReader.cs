@@ -62,9 +62,15 @@ namespace EliteDangerousCore
 
             try
             {           // use a try block in case anything in the creation goes tits up
-                je = JournalEntry.CreateJournalEntry(line, true);       // save JSON, always returns an object
+                je = JournalEntry.CreateJournalEntry(line, true, true);       // save JSON, save json, don't return if bad
             }
-            catch
+            catch ( Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine($"{TravelLogUnit.FullName} Exception Bad journal line: {line} {ex.Message} {ex.StackTrace}");
+                return null;
+            }
+
+            if ( je == null )
             {
                 System.Diagnostics.Trace.WriteLine($"{TravelLogUnit.FullName} Bad journal line: {line}");
                 return null;

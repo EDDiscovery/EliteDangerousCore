@@ -124,6 +124,20 @@ namespace EliteDangerousCore
             UserDatabase.Instance.ExecuteWithDatabase( cn => UpdateSyncFlagBit(SyncFlags.EDDN, true, SyncFlags.NoBit, false, cn.Connection));
         }
 
+        public static void SetEdsmSyncList(List<JournalEntry> jlist)
+        {
+            UserDatabase.Instance.ExecuteWithDatabase(cn =>
+            {
+                using (var txn = cn.Connection.BeginTransaction())
+                {
+                    foreach (var he in jlist)
+                        he.SetEdsmSync(cn.Connection, txn);
+                    txn.Commit();
+                }
+            });
+        }
+
+
         #endregion
 
         #region Event Information - return event enums/icons/text etc.
@@ -207,28 +221,37 @@ namespace EliteDangerousCore
             return CreateJournalEntry(jo.ToString());
         }
 
-        static public JournalEntry CreateJournalEntry(string text, bool savejson = false)       // always returns a Journal Entry, Unknown if bad
+        // Decode text, to journal entry, or Unknown/Null if bad
+        static public JournalEntry CreateJournalEntry(string text, bool savejson = false, bool returnnullifbadjson = false)       
         {
             JObject jo = JToken.Parse(text, JToken.ParseOptions.AllowTrailingCommas | JToken.ParseOptions.CheckEOL).Object();
-
             JournalEntry ret = null;
 
-            if (jo != null)
+            if (jo != null)         // good json
             {
                 string eventname = jo["event"].StrNull();
 
-                if (eventname != null && ClassActivators.TryGetValue(eventname, out var act))
-                    ret = act(jo);
-                else
+                if (eventname != null)  // has an event name, therefore worth keeping
                 {
-                    ret = new JournalUnknown(jo);
-                    System.Diagnostics.Debug.WriteLine("Not Recognised event " + jo.ToString());
+                    if (ClassActivators.TryGetValue(eventname, out var act))        // if known, make it
+                        ret = act(jo);
+                    else
+                    {
+                        ret = new JournalUnknown(jo);           // else make a unknown one
+                        System.Diagnostics.Debug.WriteLine("Not Recognised event " + jo.ToString());
+                    }
                 }
             }
-            else
+
+            if ( ret == null )                      // no journal line
             {
-                ret.JsonCached = new JObject();     // need to keep this JSON as its not part of the main system
-                ret = new JournalUnknown(ret.JsonCached);
+                if (returnnullifbadjson)            // if we just want to dump it, return null
+                    return null;
+
+                jo = new JObject();                 // otherwise, make a JSON for display purposes with BadJSON with the text in
+                jo["BadJSON"] = text;               // used if we read bad JSON from the DB
+                ret = new JournalUnknown(jo);       // unknown
+                savejson = true;                    // need to keep this JSON as we made this up
                 System.Diagnostics.Debug.WriteLine("Bad JSON" + text);
             }
 

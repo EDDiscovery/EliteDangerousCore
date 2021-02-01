@@ -29,7 +29,6 @@ namespace EliteDangerousCore.EDSM
     {
         private class HistoryQueueEntry
         {
-            public bool ManualSync = false;
             public Action<string> Logger;
             public HistoryEntry HistoryEntry;
         }
@@ -181,68 +180,72 @@ namespace EliteDangerousCore.EDSM
             }
         }
 
-        // called by onNewEntry
-                // Called by Perform, by Sync, by above.
+        public static List<HistoryEntry> GetListToSend(List<HistoryEntry> helist) // get the ones to send
+        {
+            lock (alwaysDiscard)        // use this as a perm proxy to lock discardEvents
+            {
+                var lastset = helist.FindLast(x => x.EdsmSync == true);
+                int nexttosend = (lastset != null) ? (lastset.Indexno - 1) + 1 : 0;
 
-        public static bool SendEDSMEvents(Action<string> log, List<HistoryEntry> helist, bool manual = false)
+                List<HistoryEntry> list = new List<HistoryEntry>();
+
+                bool hasbeta = false;
+
+                for ( int i = nexttosend; i < helist.Count; i++ )
+                {
+                    HistoryEntry he = helist[i];
+                    string eventtype = he.EntryType.ToString();
+
+                    if (he.Commander.Name.StartsWith("[BETA]", StringComparison.InvariantCultureIgnoreCase) || he.IsBetaMessage)
+                    {
+                        he.journalEntry.SetEdsmSync();       // crappy slow but unusual, but lets mark them as sent..
+                        hasbeta = true;
+                    }
+                    else if (!(he.MultiPlayer || discardEvents.Contains(eventtype) || alwaysDiscard.Contains(eventtype)))
+                    {
+                        list.Add(he);
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+                return hasbeta ? new List<HistoryEntry>() : list;
+            }
+        }
+
+        public static bool SendHE(HistoryEntry he)
+        {
+            lock (alwaysDiscard)        // use this as a perm proxy to lock discardEvents
+            {
+                string eventtype = he.EntryType.ToString();
+                return !(he.Commander.Name.StartsWith("[BETA]", StringComparison.InvariantCultureIgnoreCase) || he.IsBetaMessage || he.MultiPlayer ||
+                            discardEvents.Contains(eventtype) || alwaysDiscard.Contains(eventtype));
+            }
+        }
+
+        // called by onNewEntry
+        // Called by Perform, by Sync, by above.
+
+        public static bool SendEDSMEvents(Action<string> log, List<HistoryEntry> helist)
         {
             System.Diagnostics.Debug.WriteLine("EDSM Send Events " + helist.Count());
 
-            int eventCount = 0;
-            bool hasbeta = false;
-            DateTime betatime = DateTime.MinValue;
+            foreach( var he in helist )
+                historylist.Enqueue(new HistoryQueueEntry { HistoryEntry = he, Logger = log });
 
-            lock (alwaysDiscard)        // use this as a perm proxy to lock discardEvents
+            historyevent.Set();
+
+            // Start the sync thread if it's not already running
+            if (Interlocked.CompareExchange(ref running, 1, 0) == 0)
             {
-                foreach (HistoryEntry he in helist)     // push list of events to historylist queue..
-                {
-                    if (!he.EdsmSync)     // if we have not sent it..
-                    {
-                        string eventtype = he.EntryType.ToString();
-
-                        if (he.Commander.Name.StartsWith("[BETA]", StringComparison.InvariantCultureIgnoreCase) || he.IsBetaMessage)
-                        {
-                            hasbeta = true;
-                            betatime = he.EventTimeUTC;
-                            he.journalEntry.SetEdsmSync();       // crappy slow but unusual, but lets mark them as sent..
-                        }
-                        else if (!(he.MultiPlayer || discardEvents.Contains(eventtype) || alwaysDiscard.Contains(eventtype)))
-                        {
-                            historylist.Enqueue(new HistoryQueueEntry { HistoryEntry = he, Logger = log, ManualSync = manual });
-                            eventCount++;
-                        }
-                    }
-                }
-            }
-
-            if (hasbeta && eventCount == 0)
-            {
-                log?.Invoke($"Cannot send Beta logs to EDSM - most recent timestamp: {betatime.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'")}");
-            }
-
-            if (manual )    // if in manual mode, we want to tell the user the end, so push an end marker
-            {
-                string logline = (eventCount > 0) ? $"Sending {eventCount} journal event(s) to EDSM" : "No new events to send to EDSM";
-                log?.Invoke(logline);
-
-                if ( eventCount>0)      // push end of sync event.
-                    historylist.Enqueue(new HistoryQueueEntry { HistoryEntry = null, Logger = log, ManualSync = manual });      
-            }
-
-            if (eventCount > 0)
-            {
-                historyevent.Set();
-
-                // Start the sync thread if it's not already running
-                if (Interlocked.CompareExchange(ref running, 1, 0) == 0)
-                {
-                    Exit = false;
-                    exitevent.Reset();
-                    ThreadEDSMSync = new System.Threading.Thread(new System.Threading.ThreadStart(SyncThread));
-                    ThreadEDSMSync.Name = "EDSM Journal Sync";
-                    ThreadEDSMSync.IsBackground = true;
-                    ThreadEDSMSync.Start();
-                }
+                Exit = false;
+                exitevent.Reset();
+                ThreadEDSMSync = new System.Threading.Thread(new System.Threading.ThreadStart(SyncThread));
+                ThreadEDSMSync.Name = "EDSM Journal Sync";
+                ThreadEDSMSync.IsBackground = true;
+                ThreadEDSMSync.Start();
             }
 
             return true;
@@ -256,8 +259,6 @@ namespace EliteDangerousCore.EDSM
 
                 running = 1;
 
-                int manualcount = 0;
-
                 while (historylist.Count != 0)      // while stuff to send
                 {
                     HistoryQueueEntry hqe = null;
@@ -265,34 +266,11 @@ namespace EliteDangerousCore.EDSM
                     if (historylist.TryDequeue(out hqe))        // next history event...
                     {
                         HistoryEntry first = hqe.HistoryEntry;
-                        bool manual = hqe.ManualSync;
-
-                        if (!manual)
-                        {
-                            manualcount = 0;
-                        }
-                        else if (first == null)
-                        {
-                            hqe.Logger?.Invoke("Manual EDSM journal sync complete");
-                            continue; // Discard end-of-sync event
-                        }
-                        else if (discardEvents.Contains(first.EntryType.ToString()))
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            manualcount++;
-                        }
 
                         historyevent.Reset();
                         Action<string> logger = hqe.Logger;
 
                         List<HistoryEntry> hl = new List<HistoryEntry>() { first };
-
-                        string logline = $"Adding {first.EntryType.ToString()} event to EDSM journal sync ({first.EventSummary})";
-                        System.Diagnostics.Trace.WriteLine(logline);
-                        //removed too verbose if (!manual)  hqe.Logger?.Invoke(logline);
 
                         if (holdEvents.Contains(first.EntryType) || (first.EntryType == JournalTypeEnum.Location && first.IsDocked))
                         {
@@ -307,7 +285,7 @@ namespace EliteDangerousCore.EDSM
                         while (hl.Count < maxEventsPerMessage && historylist.TryPeek(out hqe)) // Leave event in queue if commander changes
                         {
                             HistoryEntry he = hqe.HistoryEntry;
-                            if (he == null || he.Commander != first.Commander || hqe.ManualSync != manual)
+                            if (he == null || he.Commander != first.Commander)
                             {
                                 break;
                             }
@@ -319,14 +297,6 @@ namespace EliteDangerousCore.EDSM
                             {
                                 continue;
                             }
-
-                            logline = $"Adding {he.EntryType.ToString()} event to EDSM journal sync ({he.EventSummary})";
-                            System.Diagnostics.Trace.WriteLine(logline);
-
-                            if (manual)
-                                manualcount++;
-                            else
-                                hqe.Logger?.Invoke(logline);
 
                             hl.Add(he);
 
@@ -365,12 +335,9 @@ namespace EliteDangerousCore.EDSM
                         }
                         else
                         {
-                            if (manual)
-                            {
-                                logger?.Invoke($"Sent {manualcount} events to EDSM so far for commander {first.Commander.Name}");
-                            }
-
                             SentEvents?.Invoke(hl.Count,firstdiscovery);       // finished sending everything, tell..
+                            if ( hl.Count>=5)
+                                logger?.Invoke($"Sent {hl.Count} Events to EDSM");
                         }
                     }
 
@@ -439,9 +406,12 @@ namespace EliteDangerousCore.EDSM
                 }
                 json["_shipId"] = he.ShipId;
                 entries.Add(json);
+
+                System.Diagnostics.Debug.WriteLine("EDSM send " + (he.Indexno-1) + " " + je.EventTypeStr + " "+ je.EventTimeUTC );
             }
 
             List<JObject> results = edsm.SendJournalEvents(entries, out errmsg);
+            //List<JObject> results = new List<JObject>();    for( int i = 0; i < hl.Count; i++ ) results.Add(new JObject { ["msgnum"] = 100, ["systemId"] = 200 }); //debug
 
             if (results == null)
             {
@@ -475,6 +445,7 @@ namespace EliteDangerousCore.EDSM
                                     }
                                 }
 
+//                                System.Diagnostics.Debug.WriteLine("Setting sync on " + (he.Indexno-1));
                                 he.journalEntry.SetEdsmSync(cn.Connection, txn);
 
                                 if (msgnr == 500)
