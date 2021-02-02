@@ -84,7 +84,7 @@ namespace EliteDangerousCore.EDSM
 
         public static bool SendEDSMEvents(Action<string> log, List<HistoryEntry> helist)
         {
-            System.Diagnostics.Debug.WriteLine("EDSM Send Events " + helist.Count());
+            System.Diagnostics.Debug.WriteLine("EDSM Send Events " + helist.Count() + " " + String.Join(",", helist.Select(x => x.EntryType)));
 
             foreach( var he in helist )
                 historylist.Enqueue(new HistoryQueueEntry { HistoryEntry = he, Logger = log });
@@ -306,12 +306,12 @@ namespace EliteDangerousCore.EDSM
 
                                 if (msgnr == 500)
                                 {
-                                    System.Diagnostics.Trace.WriteLine($"EDSM Warning submitting event {he.Journalid} \"{he.EventSummary}\": {msgnr} {result["msg"].Str()}");
+                                    System.Diagnostics.Trace.WriteLine($"EDSM Server error {he.Journalid} '{he.EventSummary}': {msgnr} {result["msg"].Str()}");
                                 }
                             }
                             else
                             {
-                                System.Diagnostics.Trace.WriteLine($"EDSM Error submitting event {he.Journalid} \"{he.EventSummary}\": {msgnr} {result["msg"].Str()}");
+                                System.Diagnostics.Trace.WriteLine($"EDSM Reports {he.Journalid} '{he.EventSummary}'': {msgnr} {result["msg"].Str()}");
                             }
 
                         }
@@ -349,15 +349,20 @@ namespace EliteDangerousCore.EDSM
                 try
                 {
                     EDSMClass edsm = new EDSMClass();
-                    var newdiscardEvents = new HashSet<string>(edsm.GetJournalEventsToDiscard());
-                    System.Diagnostics.Debug.WriteLine("EDSM Discard list updated " + string.Join(",", newdiscardEvents));
+                    var discardlist = edsm.GetJournalEventsToDiscard();
 
-                    lock (alwaysDiscard)        // use this as a perm proxy to lock discardEvents
+                    if (discardlist != null)        // if got one
                     {
-                        discardEvents = newdiscardEvents;
+                        var newdiscardEvents = new HashSet<string>(discardlist);
+                        System.Diagnostics.Debug.WriteLine("EDSM Discard list updated " + string.Join(",", newdiscardEvents));
+
+                        lock (alwaysDiscard)        // use this as a perm proxy to lock discardEvents
+                        {
+                            discardEvents = newdiscardEvents;
+                        }
                     }
 
-                    lastDiscardFetch = DateTime.UtcNow;
+                    lastDiscardFetch = DateTime.UtcNow; // try again later
                 }
                 catch (Exception ex)
                 {

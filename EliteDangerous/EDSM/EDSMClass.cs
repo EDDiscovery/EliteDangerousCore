@@ -1071,7 +1071,10 @@ namespace EliteDangerousCore.EDSM
         {
             string action = "api-journal-v1/discard";
             var response = RequestGet(action);
-            return JArray.Parse(response.Body).Select(v => v.Str()).ToList();
+            if (response.Body != null)
+                return JArray.Parse(response.Body).Select(v => v.Str()).ToList();
+            else
+                return null;
         }
 
         // Visual inspection Nov 20
