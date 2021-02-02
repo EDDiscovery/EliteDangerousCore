@@ -193,7 +193,8 @@ namespace EliteDangerousCore
 
                                 foreach (JournalEntry jre in entries)
                                 {
-                                    jre.Add(jre.GetJson(cn.Connection, txn));
+                                    var json = jre.GetJson(cn.Connection, txn);
+                                    jre.Add(json,cn.Connection,txn);
                                 }
                             }
 

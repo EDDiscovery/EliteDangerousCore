@@ -1086,7 +1086,7 @@ namespace EliteDangerousCore.EDSM
                               "&fromSoftwareVersion=" + Uri.EscapeDataString(fromSoftwareVersion) +
                               "&message=" + EscapeLongDataString(message.ToString());
 
-          //  BaseUtils.HttpCom.WriteLog(message.ToString(), "");
+           // System.Diagnostics.Debug.WriteLine("EDSM Send " + message.ToString());
 
             MimeType = "application/x-www-form-urlencoded";
             var response = RequestPost(postdata, "api-journal-v1", handleException: true);

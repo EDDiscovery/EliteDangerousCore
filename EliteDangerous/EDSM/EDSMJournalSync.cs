@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2020 EDDiscovery development team
+ * Copyright © 2016-2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -27,129 +27,6 @@ namespace EliteDangerousCore.EDSM
 {
     public static class EDSMJournalSync
     {
-        private class HistoryQueueEntry
-        {
-            public Action<string> Logger;
-            public HistoryEntry HistoryEntry;
-        }
-
-        static public Action<int,string> SentEvents;       // called in thread when sync thread has finished and is terminating. first discovery list
-
-        private static Thread ThreadEDSMSync;
-        private static int running = 0;
-        private static bool Exit = false;
-        private static ConcurrentQueue<HistoryQueueEntry> historylist = new ConcurrentQueue<HistoryQueueEntry>();
-        private static AutoResetEvent historyevent = new AutoResetEvent(false);
-        private static ManualResetEvent exitevent = new ManualResetEvent(false);
-        private static DateTime lastDiscardFetch;
-        private static int maxEventsPerMessage = 200;
-        private static HashSet<string> discardEvents = new HashSet<string>
-        { // Default events to discard
-            "ShutDown",
-            "Fileheader",
-            "NewCommander",
-            "ClearSavedGame",
-            "Music",
-            "Continued",
-            "Passengers",
-            "DockingCancelled",
-            "DockingDenied",
-            "DockingGranted",
-            "DockingRequested",
-            "DockingTimeout",
-            "StartJump",
-            "Touchdown",
-            "Liftoff",
-            "ApproachSettlement",
-            "NavBeaconScan",
-            "Scan",
-            "SupercruiseEntry",
-            "SupercruiseExit",
-            "Scanned",
-            "DataScanned",
-            "DatalinkScan",
-            "EngineerApply",
-            "FactionKillBond",
-            "Bounty",
-            "DatalinkVoucher",
-            "SystemsShutdown",
-            "EscapeInterdiction",
-            "HeatDamage",
-            "HeatWarning",
-            "HullDamage",
-            "ShieldState",
-            "FuelScoop",
-            "MaterialDiscovered",
-            "Screenshot",
-            "CrewAssign",
-            "CrewFire",
-            "ShipyardNew",
-            "MassModuleStore",
-            "ModuleStore",
-            "ModuleSwap",
-            "PowerplayVote",
-            "PowerplayVoucher",
-            "AfmuRepairs",
-            "CockpitBreached",
-            "ChangeCrewRole",
-            "CrewLaunchFighter",
-            "CrewMemberJoins",
-            "CrewMemberQuits",
-            "CrewMemberRoleChange",
-            "KickCrewMember",
-            "EndCrewSession",
-            "LaunchFighter",
-            "DockFighter",
-            "VehicleSwitch",
-            "LaunchSRV",
-            "DockSRV",
-            "JetConeBoost",
-            "JetConeDamage",
-            "RebootRepair",
-            "RepairDrone",
-            "WingAdd",
-            "WingInvite",
-            "WingJoin",
-            "WingLeave",
-            "ReceiveText",
-            "SendText",
-        };
-        private static HashSet<string> alwaysDiscard = new HashSet<string>
-        { // Discard spammy events
-            "CommunityGoal",
-            "ReceiveText",
-            "SendText",
-            "FuelScoop",
-            "Friends",
-            "UnderAttack",
-            "FSDTarget"     // disabled 28/2/2019 due to it creating a system entry and preventing systemcreated from working
-        };
-        private static HashSet<JournalTypeEnum> holdEvents = new HashSet<JournalTypeEnum>
-        {
-            JournalTypeEnum.Cargo,
-            JournalTypeEnum.Loadout,
-            JournalTypeEnum.Materials,
-            JournalTypeEnum.LoadGame,
-            JournalTypeEnum.Rank,
-            JournalTypeEnum.Progress,
-            JournalTypeEnum.ShipyardBuy,
-            JournalTypeEnum.ShipyardNew,
-            JournalTypeEnum.ShipyardSwap
-        };
-
-        private static JObject RemoveCommonKeys(JObject obj)
-        {
-            foreach (var key in obj.PropertyNames())
-            {
-                if (key.StartsWith("EDD"))
-                {
-                    obj.Remove(key);
-                }
-            }
-
-            return obj;
-        }
-
         public static void StopSync()
         {
             Exit = true;
@@ -157,30 +34,7 @@ namespace EliteDangerousCore.EDSM
             historyevent.Set();     // also trigger in case we are in thread hold
         }
 
-        public static void UpdateDiscardList()
-        {
-            if (lastDiscardFetch < DateTime.UtcNow.AddMinutes(-120))     // check if we need a new discard list
-            {
-                try
-                {
-                    EDSMClass edsm = new EDSMClass();
-                    var newdiscardEvents = new HashSet<string>(edsm.GetJournalEventsToDiscard());
-
-                    lock (alwaysDiscard)        // use this as a perm proxy to lock discardEvents
-                    {
-                        discardEvents = newdiscardEvents;
-                    }
-
-                    lastDiscardFetch = DateTime.UtcNow;
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Trace.WriteLine($"Unable to retrieve events to be discarded: {ex.ToString()}");
-                }
-            }
-        }
-
-        public static List<HistoryEntry> GetListToSend(List<HistoryEntry> helist) // get the ones to send
+        public static List<HistoryEntry> GetListToSend(List<HistoryEntry> helist) // get the ones to send - the discard list may be slightly 
         {
             lock (alwaysDiscard)        // use this as a perm proxy to lock discardEvents
             {
@@ -215,7 +69,7 @@ namespace EliteDangerousCore.EDSM
             }
         }
 
-        public static bool SendHE(HistoryEntry he)
+        public static bool OkayToSend(HistoryEntry he)
         {
             lock (alwaysDiscard)        // use this as a perm proxy to lock discardEvents
             {
@@ -255,7 +109,7 @@ namespace EliteDangerousCore.EDSM
         {
             try
             {
-                UpdateDiscardList();
+                UpdateDiscardList();                // make sure the list is up to date
 
                 running = 1;
 
@@ -274,7 +128,7 @@ namespace EliteDangerousCore.EDSM
 
                         if (holdEvents.Contains(first.EntryType) || (first.EntryType == JournalTypeEnum.Location && first.IsDocked))
                         {
-                            System.Diagnostics.Debug.WriteLine("Holding for another event");
+                            System.Diagnostics.Debug.WriteLine("EDSM Holding for another event");
 
                             if (historylist.IsEmpty)
                             {
@@ -285,6 +139,7 @@ namespace EliteDangerousCore.EDSM
                         while (hl.Count < maxEventsPerMessage && historylist.TryPeek(out hqe)) // Leave event in queue if commander changes
                         {
                             HistoryEntry he = hqe.HistoryEntry;
+
                             if (he == null || he.Commander != first.Commander)
                             {
                                 break;
@@ -293,8 +148,11 @@ namespace EliteDangerousCore.EDSM
                             historylist.TryDequeue(out hqe);
                             historyevent.Reset();
 
+                            // now we have an updated discard list, 
+
                             if (hqe.HistoryEntry != null && discardEvents.Contains(hqe.HistoryEntry.EntryType.ToString()))
                             {
+                                System.Diagnostics.Debug.WriteLine("EDSM Discarding in sync " + hqe.HistoryEntry.EventSummary);
                                 continue;
                             }
 
@@ -406,8 +264,6 @@ namespace EliteDangerousCore.EDSM
                 }
                 json["_shipId"] = he.ShipId;
                 entries.Add(json);
-
-                System.Diagnostics.Debug.WriteLine("EDSM send " + (he.Indexno-1) + " " + je.EventTypeStr + " "+ je.EventTimeUTC );
             }
 
             List<JObject> results = edsm.SendJournalEvents(entries, out errmsg);
@@ -468,5 +324,257 @@ namespace EliteDangerousCore.EDSM
                 return true;
             }
         }
+
+        private static JObject RemoveCommonKeys(JObject obj)
+        {
+            foreach (var key in obj.PropertyNames())
+            {
+                if (key.StartsWith("EDD"))
+                {
+                    obj.Remove(key);
+                }
+            }
+
+            return obj;
+        }
+
+        // the discard list removes the ones to send
+        // since the discard list may be the default one above, on first check, it may include some which are on the current discard list. 
+        // this is not a problem as it will be removed in the sync process
+
+        public static void UpdateDiscardList()
+        {
+            if (lastDiscardFetch < DateTime.UtcNow.AddMinutes(-120))     // check if we need a new discard list
+            {
+                try
+                {
+                    EDSMClass edsm = new EDSMClass();
+                    var newdiscardEvents = new HashSet<string>(edsm.GetJournalEventsToDiscard());
+                    System.Diagnostics.Debug.WriteLine("EDSM Discard list updated " + string.Join(",", newdiscardEvents));
+
+                    lock (alwaysDiscard)        // use this as a perm proxy to lock discardEvents
+                    {
+                        discardEvents = newdiscardEvents;
+                    }
+
+                    lastDiscardFetch = DateTime.UtcNow;
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Trace.WriteLine($"Unable to retrieve events to be discarded: {ex.ToString()}");
+                }
+            }
+        }
+
+        private static HashSet<string> discardEvents = new HashSet<string>
+        {   // From https://github.com/EDSM-NET/Journal-Events/blob/master/Discard.php on 2/2/2021
+
+        //"StartUp", // Give first system response to EDMC
+        "ShutDown",
+        "EDDItemSet",
+        "EDDCommodityPrices",
+        "ModuleArrived",
+        "ShipArrived",
+        "Coriolis",
+        "EDShipyard",
+
+        // Extra files (Taking them from EDDN)
+        "Market",
+        "Shipyard",
+        "Outfitting",
+        "ModuleInfo",
+        "Status",
+
+        // Squadron
+        "SquadronCreated",
+        "SquadronStartup",
+        "DisbandedSquadron",
+
+        "InvitedToSquadron",
+        "AppliedToSquadron",
+        "JoinedSquadron",
+        "LeftSquadron",
+
+        "SharedBookmarkToSquadron",
+
+
+        // Fleet Carrier
+        "CarrierStats",
+        "CarrierTradeOrder",
+        "CarrierFinance",
+        "CarrierBankTransfer",
+        "CarrierCrewServices",
+
+        "CarrierJumpRequest",
+        "CarrierJumpCancelled",
+        "CarrierDepositFuel",
+        "CarrierDockingPermission",
+        "CarrierModulePack",
+
+        "CarrierBuy",
+        "CarrierNameChange",
+        "CarrierDecommission",
+
+        // Load events
+        "Fileheader",
+        "Commander",
+        "NewCommander",
+        "ClearSavedGame",
+        "Music",
+        "Continued",
+        "Passengers",
+
+        // Docking events
+        "DockingCancelled",
+        "DockingDenied",
+        "DockingGranted",
+        "DockingRequested",
+        "DockingTimeout",
+
+        // Fly events
+        "StartJump",
+        "Touchdown",
+        "Liftoff",
+        "NavBeaconScan",
+        "SupercruiseEntry",
+        "SupercruiseExit",
+        "NavRoute",
+
+        // We might reconsider this, and see if we can do something about crime report?
+        "PVPKill",
+        "CrimeVictim",
+        "UnderAttack",
+        "ShipTargeted",
+        "Scanned",
+        "DataScanned",
+        "DatalinkScan",
+
+        // Engineer
+        "EngineerApply",
+        "EngineerLegacyConvert",
+
+        // Reward (See RedeemVoucher for credits)
+        "FactionKillBond",
+        "Bounty",
+        "CapShipBond",
+        "DatalinkVoucher",
+
+        // Ship events
+        "SystemsShutdown",
+        "EscapeInterdiction",
+        "HeatDamage",
+        "HeatWarning",
+        "HullDamage",
+        "ShieldState",
+        "FuelScoop",
+        "LaunchDrone",
+        "AfmuRepairs",
+        "CockpitBreached",
+        "ReservoirReplenished",
+        "CargoTransfer", //TODO: Synched in Cargo?!
+
+        "ApproachBody",
+        "LeaveBody",
+        "DiscoveryScan",
+        "MaterialDiscovered",
+        "Screenshot",
+
+        // NPC Crew
+        "CrewAssign",
+        "CrewFire",
+        "NpcCrewRank",
+
+        // Shipyard / Outfitting
+        "ShipyardNew",
+        "StoredModules",
+        "MassModuleStore",
+        "ModuleStore",
+        "ModuleSwap",
+
+        // Powerplay
+        "PowerplayVote",
+        "PowerplayVoucher",
+
+        "ChangeCrewRole",
+        "CrewLaunchFighter",
+        "CrewMemberJoins",
+        "CrewMemberQuits",
+        "CrewMemberRoleChange",
+        "KickCrewMember",
+        "EndCrewSession", // ??
+
+        "LaunchFighter",
+        "DockFighter",
+        "FighterDestroyed",
+        "FighterRebuilt",
+        "VehicleSwitch",
+        "LaunchSRV",
+        "DockSRV",
+        "SRVDestroyed",
+
+        "JetConeBoost",
+        "JetConeDamage",
+
+        "RebootRepair",
+        "RepairDrone",
+
+        // Wings
+        "WingAdd",
+        "WingInvite",
+        "WingJoin",
+        "WingLeave",
+
+        // Chat
+        "ReceiveText",
+        "SendText",
+
+        // End of game
+        "Shutdown",
+
+        // Temp Discard...
+        "FSSSignalDiscovered",
+        "AsteroidCracked",
+        "ProspectedAsteroid",
+        };
+
+        private static HashSet<string> alwaysDiscard = new HashSet<string>
+        { // Discard spammy events
+            "CommunityGoal",
+            "ReceiveText",
+            "SendText",
+            "FuelScoop",
+            "Friends",
+            "UnderAttack",
+            "FSDTarget"     // disabled 28/2/2019 due to it creating a system entry and preventing systemcreated from working
+        };
+        private static HashSet<JournalTypeEnum> holdEvents = new HashSet<JournalTypeEnum>
+        {
+            JournalTypeEnum.Cargo,
+            JournalTypeEnum.Loadout,
+            JournalTypeEnum.Materials,
+            JournalTypeEnum.LoadGame,
+            JournalTypeEnum.Rank,
+            JournalTypeEnum.Progress,
+            JournalTypeEnum.ShipyardBuy,
+            JournalTypeEnum.ShipyardNew,
+            JournalTypeEnum.ShipyardSwap
+        };
+
+        private class HistoryQueueEntry
+        {
+            public Action<string> Logger;
+            public HistoryEntry HistoryEntry;
+        }
+
+        static public Action<int, string> SentEvents;       // called in thread when sync thread has finished and is terminating. first discovery list
+
+        private static Thread ThreadEDSMSync;
+        private static int running = 0;
+        private static bool Exit = false;
+        private static ConcurrentQueue<HistoryQueueEntry> historylist = new ConcurrentQueue<HistoryQueueEntry>();
+        private static AutoResetEvent historyevent = new AutoResetEvent(false);
+        private static ManualResetEvent exitevent = new ManualResetEvent(false);
+        private static DateTime lastDiscardFetch;
+        private static int maxEventsPerMessage = 200;
     }
 }

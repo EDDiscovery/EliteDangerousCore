@@ -63,7 +63,9 @@ namespace EliteDangerousCore
 
         internal bool Add(JObject jo, SQLiteConnectionUser cn, DbTransaction tn = null)
         {
-            using (DbCommand cmd = cn.CreateCommand("Insert into JournalEntries (EventTime, TravelLogID, CommanderId, EventTypeId , EventType, EventData, Synced) values (@EventTime, @TravelLogID, @CommanderID, @EventTypeId , @EventStrName, @EventData, @Synced)", tn))
+            // note we don't use EDMSID any more, but we write a zero into it to keep 11.9.3 and before happy
+
+            using (DbCommand cmd = cn.CreateCommand("Insert into JournalEntries (EventTime, TravelLogID, CommanderId, EventTypeId , EventType, EventData, Synced, EdsmId) values (@EventTime, @TravelLogID, @CommanderID, @EventTypeId , @EventStrName, @EventData, @Synced, 0)", tn))
             {
                 cmd.AddParameterWithValue("@EventTime", EventTimeUTC);           // MUST use UTC connection
                 cmd.AddParameterWithValue("@TravelLogID", TLUId);
@@ -175,7 +177,7 @@ namespace EliteDangerousCore
             {
                 cmd.AddParameterWithValue("@journalid", Id);
                 cmd.AddParameterWithValue("@sync", Synced);
-                System.Diagnostics.Trace.WriteLine(string.Format("Update sync flag ID {0} with {1}", Id, Synced));
+                //System.Diagnostics.Trace.WriteLine(string.Format("Update sync flag ID {0} with {1}", Id, Synced));
                 cmd.ExecuteNonQuery();
             }
         }

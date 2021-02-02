@@ -188,8 +188,12 @@ namespace EliteDangerousCore.JournalEvents
             System = evt["System"].Str();
         }
 
-        public JournalShipyardSell(DateTime utc) : base(utc, JournalTypeEnum.ShipyardSell, false)
+        public JournalShipyardSell(DateTime utc, string fdtype, int id, long price, int cmdrid) : base(utc, JournalTypeEnum.ShipyardSell, false)
         {
+            ShipTypeFD = fdtype;
+            SellShipId = id;
+            ShipPrice = price;
+            SetCommander(cmdrid);
         }
 
         public string ShipTypeFD { get; set; }
