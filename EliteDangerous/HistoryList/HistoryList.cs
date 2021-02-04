@@ -458,7 +458,7 @@ namespace EliteDangerousCore
                         {
                             System.Diagnostics.Debug.WriteLine("Update {0} with pos", hesys.Item1.System.Name);
                             hesys.Item1.journalEntry.UpdateStarPosition(hesys.Item2, cn.Connection, txn);
-                            hesys.Item1.System = hesys.Item2;
+                            hesys.Item1.UpdateSystem(hesys.Item2);
                         }
 
                         txn.Commit();

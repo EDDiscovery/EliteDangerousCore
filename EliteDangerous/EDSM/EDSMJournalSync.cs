@@ -39,7 +39,7 @@ namespace EliteDangerousCore.EDSM
             lock (alwaysDiscard)        // use this as a perm proxy to lock discardEvents
             {
                 var lastset = helist.FindLast(x => x.EdsmSync == true);
-                int nexttosend = (lastset != null) ? (lastset.Indexno - 1) + 1 : 0;
+                int nexttosend = (lastset != null) ? (lastset.EntryNumber - 1) + 1 : 0;
 
                 List<HistoryEntry> list = new List<HistoryEntry>();
 

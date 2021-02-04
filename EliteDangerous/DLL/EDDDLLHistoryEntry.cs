@@ -32,7 +32,7 @@ namespace EliteDangerousCore.DLL
                 EDDDLLInterfaces.EDDDLLIF.JournalEntry je = new EDDDLLInterfaces.EDDDLLIF.JournalEntry()
                 {
                     ver = 2,
-                    indexno = he.Indexno,
+                    indexno = he.EntryNumber,
                     utctime = he.EventTimeUTC.ToStringZulu(),
                     name = he.EventSummary,
                     systemname = he.System.Name,

@@ -45,7 +45,7 @@ namespace EliteDangerousCore
         public HistoryEntry this[int i] { get {return historylist[i]; } }       
 
         // combat, spanel,stats, history filter
-        public List<HistoryEntry> LatestFirst() { return historylist.OrderByDescending(s => s.Indexno).ToList(); }
+        public List<HistoryEntry> LatestFirst() { return historylist.OrderByDescending(s => s.EntryNumber).ToList(); }
 
         #endregion
 
@@ -54,7 +54,7 @@ namespace EliteDangerousCore
         // history filter
         static public List<HistoryEntry> LatestFirst(List<HistoryEntry> list)
         {
-            return list.OrderByDescending(s=>s.Indexno).ToList();
+            return list.OrderByDescending(s=>s.EntryNumber).ToList();
         }
 
         // history filter
@@ -115,9 +115,9 @@ namespace EliteDangerousCore
 
             if (heabove != null && hebelow != null)
             {
-                int hebelowix = hebelow.Indexno;
-                int heaboveix = heabove.Indexno;
-                return list.Where(x => x.Indexno >= hebelowix && x.Indexno <= heaboveix && where(x) == true).ToList();
+                int hebelowix = hebelow.EntryNumber;
+                int heaboveix = heabove.EntryNumber;
+                return list.Where(x => x.EntryNumber >= hebelowix && x.EntryNumber <= heaboveix && where(x) == true).ToList();
             }
             else
                 return null;
@@ -126,9 +126,9 @@ namespace EliteDangerousCore
         // factions, List should be in entry order.
         static public List<HistoryEntry> FilterBefore(List<HistoryEntry> list, HistoryEntry pos, Predicate<HistoryEntry> where)         // from and including pos, go back in time, and return all which match where
         {
-            int indexno = pos.Indexno-1;        // position in HElist..
+            int indexno = pos.EntryNumber-1;        // position in HElist..
             List<HistoryEntry> helist = new List<HistoryEntry>();
-            while (indexno >= 0)
+            while (indexno >= 0 && indexno < list.Count)        // check within range.
             {
                 if (where(list[indexno]))
                 {
@@ -243,9 +243,9 @@ namespace EliteDangerousCore
             return historylist.Find(x => x.Journalid == jid);
         }
 
-        public HistoryEntry GetByIndex(int index)
+        public HistoryEntry GetByEntryNo(int entryno)
         {
-            return (index >= 1 && index <= historylist.Count) ? historylist[index - 1] : null;
+            return (entryno >= 1 && entryno <= historylist.Count) ? historylist[entryno - 1] : null;
         }
 
         public int GetIndex(long jid)
@@ -273,7 +273,7 @@ namespace EliteDangerousCore
             if (list.Count == 0 || athe == null)
                 return null;
 
-            for (int i = (athe.Indexno - 1) + (usecurrent ? 0 : dir); dir > 0 ? (i < list.Count) : (i >= 0); i += dir )        // indexno is +1 due to historic reasons, start from one on
+            for (int i = (athe.EntryNumber - 1) + (usecurrent ? 0 : dir); dir > 0 ? (i < list.Count) : (i >= 0 && i < list.Count); i += dir )        // indexno is +1 due to historic reasons, start from one on
             {
                 if (where(list[i]))
                     return list[i];
@@ -300,13 +300,14 @@ namespace EliteDangerousCore
         {
             if (frominclusive is null)
                 return GetLastHistoryEntry(where);
-            else
+            else 
             {
-                for( int i = frominclusive.Indexno-1; i>=0; i-- )       // quicker search than previous
+                for (int index = frominclusive.EntryNumber - 1; index >= 0 && index < historylist.Count; index--)
                 {
-                    if (where(historylist[i]))
-                        return historylist[i];
+                    if (where(historylist[index]))
+                        return historylist[index];
                 }
+
                 return null;
             }
         }
@@ -492,19 +493,19 @@ namespace EliteDangerousCore
         // stats
         public bool IsBetween(HistoryEntry first, HistoryEntry last, Predicate<HistoryEntry> predicate)     // either direction
         {
-            if (first.Indexno < last.Indexno)
-                return historylist.Where(h => h.Indexno > first.Indexno && h.Indexno <= last.Indexno && predicate(h)).Any();
+            if (first.EntryNumber < last.EntryNumber)
+                return historylist.Where(h => h.EntryNumber > first.EntryNumber && h.EntryNumber <= last.EntryNumber && predicate(h)).Any();
             else
-                return historylist.Where(h => h.Indexno >= first.Indexno && h.Indexno < last.Indexno && predicate(h)).Any();
+                return historylist.Where(h => h.EntryNumber >= first.EntryNumber && h.EntryNumber < last.EntryNumber && predicate(h)).Any();
         }
 
         // stats
         public bool AnyBetween(HistoryEntry first, HistoryEntry last, IEnumerable<JournalTypeEnum> journalTypes)
         {
-            if (first.Indexno < last.Indexno)
-                return historylist.Where(h => h.Indexno > first.Indexno && h.Indexno <= last.Indexno && journalTypes.Contains(h.EntryType)).Any();
+            if (first.EntryNumber < last.EntryNumber)
+                return historylist.Where(h => h.EntryNumber > first.EntryNumber && h.EntryNumber <= last.EntryNumber && journalTypes.Contains(h.EntryType)).Any();
             else
-                return historylist.Where(h => h.Indexno >= first.Indexno && h.Indexno < last.Indexno && journalTypes.Contains(h.EntryType)).Any();
+                return historylist.Where(h => h.EntryNumber >= first.EntryNumber && h.EntryNumber < last.EntryNumber && journalTypes.Contains(h.EntryType)).Any();
         }
 
         // map3d

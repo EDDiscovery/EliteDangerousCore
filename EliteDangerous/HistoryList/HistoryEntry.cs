@@ -28,19 +28,13 @@ namespace EliteDangerousCore
     {
         #region Public Variables
 
-        public int Indexno;            // for display purposes.  from 1 to number of records
+        public int EntryNumber { get; private set; }   // for display purposes.  from 1 to number of records
 
-        public JournalEntry journalEntry;       // MUST be present
+        public JournalEntry journalEntry { get; private set; }       // MUST be present
 
-        public ISystem System;         // Must be set! All entries, even if they are not FSD entries.
-                                       // The Minimum is name and edsm_id 
+        public ISystem System { get; private set; }         // Must be set! All entries, even if they are not FSD entries.
+                                       // The Minimum is name 
                                        // x/y/z can be NANs or position. 
-                                       // if edsm_id = 0, no edsm match was found.
-                                       // when the front end needs to use it, it will call EnsureSystemEDSM/FillInPositions to see if it can be filled up
-                                       // if System.status != SystemStatusEnum.EDSC then its presumed its an inmemory load and the system table can be checked
-                                       //       and if edsm_id>0 a load from SystemTable will occur with the edsm_id used
-                                       //       if edsm_id=-1 a load from SystemTable will occur with the name used
-                                       // SO the journal reader can just read data in that table only, does not need to do a system match
 
         public JournalTypeEnum EntryType { get { return journalEntry.EventTypeID; } }
         public long Journalid { get { return journalEntry.Id; } }
@@ -144,7 +138,7 @@ namespace EliteDangerousCore
         public static HistoryEntry FromJournalEntry(JournalEntry je, HistoryEntry prev)
         {
             ISystem isys = prev == null ? new SystemClass("Unknown") : prev.System;
-            int indexno = prev == null ? 1 : prev.Indexno + 1;
+            int entryno = prev == null ? 1 : prev.EntryNumber + 1;
 
             if (je.EventTypeID == JournalTypeEnum.Location || je.EventTypeID == JournalTypeEnum.FSDJump || je.EventTypeID == JournalTypeEnum.CarrierJump)
             {
@@ -193,7 +187,7 @@ namespace EliteDangerousCore
 
             HistoryEntry he = new HistoryEntry
             {
-                Indexno = indexno,
+                EntryNumber = entryno,
                 journalEntry = je,
                 System = isys,
                 EntryStatus = HistoryEntryStatus.Update(prev?.EntryStatus, je, isys.Name)
@@ -203,6 +197,8 @@ namespace EliteDangerousCore
             
             return he;
         }
+
+        // these are done purposely this way for ease of finding out who is updating these elements
 
         public void UpdateMaterialsCommodities(JournalEntry je, MaterialCommoditiesList prev)
         {
@@ -237,6 +233,11 @@ namespace EliteDangerousCore
         public void UpdateMaterialCommodity(MaterialCommoditiesList mc)
         {
             MaterialCommodity = mc;
+        }
+
+        public void UpdateSystem(ISystem sys)
+        {
+            System = sys;
         }
 
         #endregion
