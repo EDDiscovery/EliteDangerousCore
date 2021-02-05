@@ -252,8 +252,6 @@ namespace EliteDangerousCore.JournalEvents
             StoreShipId = evt["StoreShipID"].IntNull();
 
             MarketID = evt["MarketID"].LongNull();
-
-            //•	SellShipID -- NO EVIDENCE seen
         }
 
         public string ShipFD { get; set; }

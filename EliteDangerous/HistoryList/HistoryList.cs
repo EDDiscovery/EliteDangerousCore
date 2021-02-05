@@ -435,7 +435,11 @@ namespace EliteDangerousCore
                 {
                     foreach (HistoryEntry he in historylist)
                     {
-                        if (he.IsFSDCarrierJump && !he.System.HasCoordinate)// try and load ones without position.. if its got pos we are happy
+                        // try and load ones without position.. if its got pos we are happy.  If its 0,0,0 and its not sol, it may just be a stay entry
+
+                        bool fakesol = Math.Abs(he.System.X) < 1 && Math.Abs(he.System.Y) < 1 && Math.Abs(he.System.Z) < 0 && he.System.Name != "Sol";
+
+                        if (he.IsFSDCarrierJump && (!he.System.HasCoordinate || fakesol) )
                         {           // done in two IFs for debugging, in case your wondering why!
                             if (he.System.Source != SystemSource.FromEDSM)   // and its not from EDSM 
                             {

@@ -229,7 +229,10 @@ namespace EliteDangerousCore
 
         public JObject GetJson()
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<JObject>(cn => { return GetJson(cn.Connection); });
+            if (JsonCached == null)
+                return UserDatabase.Instance.ExecuteWithDatabase<JObject>(cn => { return GetJson(cn.Connection); });
+            else
+                return JsonCached;
         }
 
         internal JObject GetJson(SQLiteConnectionUser cn, DbTransaction tn = null)            // do not modify
@@ -326,9 +329,14 @@ namespace EliteDangerousCore
             public int count;
         };
 #endif
+    
+        // Primary method to fill historylist
+        // Get All journals matching parameters. 
+        // if callback set, then each JE is passed back thru callback and not accumulated. Callback is in a thread. Callback can stop the accumulation if it returns false
 
-        static public List<JournalEntry> GetAll(int commander = -999, DateTime? afterutc = null, DateTime? beforeutc = null,
-                            JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null)
+        static public List<JournalEntry> GetAll(int commander = -999, DateTime? startdateutc = null, DateTime? enddateutc = null,
+                            JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null, Func<JournalEntry,Object,bool> callback = null, Object callbackobj = null,
+                            int chunksize = 1000)
         {
             var tluslist = TravelLogUnit.GetAll();
             Dictionary<long, TravelLogUnit> tlus = tluslist.ToDictionary(t => t.ID);
@@ -348,15 +356,15 @@ namespace EliteDangerousCore
                         cnd = cnd.AppendPrePad("CommanderID = @commander", " and ");
                         cmd.AddParameterWithValue("@commander", commander);
                     }
-                    if (afterutc != null)
+                    if (startdateutc != null)
                     {
                         cnd = cnd.AppendPrePad("EventTime >= @after", " and ");
-                        cmd.AddParameterWithValue("@after", afterutc.Value);
+                        cmd.AddParameterWithValue("@after", startdateutc.Value);
                     }
-                    if (beforeutc != null)
+                    if (enddateutc != null)
                     {
                         cnd = cnd.AppendPrePad("EventTime <= @before", " and ");
-                        cmd.AddParameterWithValue("@before", beforeutc.Value);
+                        cmd.AddParameterWithValue("@before", enddateutc.Value);
                     }
                     if (ids != null)
                     {
@@ -387,25 +395,23 @@ namespace EliteDangerousCore
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
 #endif
-
                 do
                 {
-                    // experiments state that reading the DL takes 270/4000ms, reading json -> 1250, then the rest is creating and decoding the fields
-                    // not much scope to improve it outside of the core json speed.
+                    // experiments state that reading the DL is not the time sink, its creating the journal entries
 
                     retlist = UserDatabase.Instance.ExecuteWithDatabase(cn =>       // split into smaller chunks to allow other things access..
                     {
                         List<JournalEntry> list = new List<JournalEntry>();
 
-                        while (list.Count < 1000 && reader.Read())
+                        while (list.Count < chunksize && reader.Read())
                         {
 #if TIMESCAN
                             long t = sw.ElapsedTicks;
 #endif
 
-                            JournalEntry sys = JournalEntry.CreateJournalEntryFixedPos(reader);
-                            sys.beta = tlus.ContainsKey(sys.TLUId) ? tlus[sys.TLUId].Beta : false;
-                            list.Add(sys);
+                            JournalEntry je = JournalEntry.CreateJournalEntryFixedPos(reader);
+                            je.beta = tlus.ContainsKey(je.TLUId) ? tlus[je.TLUId].Beta : false;
+                            list.Add(je);
 
 #if TIMESCAN
                             long tw = sw.ElapsedTicks - t;
@@ -419,7 +425,21 @@ namespace EliteDangerousCore
                         return list;
                     });
 
-                    entries.AddRange(retlist);
+                    if (callback != null)               // collated, now process them, if callback, feed them thru callback procedure
+                    {
+                        foreach (var e in retlist)
+                        {
+                            if (!callback.Invoke(e, callbackobj))     // if indicate stop
+                            {
+                                retlist = null;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        entries.AddRange(retlist);
+                    }
                 }
                 while (retlist != null && retlist.Count != 0);
 
