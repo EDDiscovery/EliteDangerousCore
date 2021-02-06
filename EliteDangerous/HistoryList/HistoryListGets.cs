@@ -291,11 +291,13 @@ namespace EliteDangerousCore
         // trilat
         public HistoryEntry GetLastFSDOnly() { return historylist.FindLast(x => x.EntryType == JournalTypeEnum.FSDJump); }
 
+        // trippanel
         public HistoryEntry GetLastHistoryEntry(Predicate<HistoryEntry> where)
         {
             return historylist.FindLast(where);
         }
 
+        // spanel, outfitting, shipyards, marketdata, sysinfo
         public HistoryEntry GetLastHistoryEntry(Predicate<HistoryEntry> where, HistoryEntry frominclusive)
         {
             if (frominclusive is null)
@@ -324,53 +326,6 @@ namespace EliteDangerousCore
                 return 0;
         }
 
-         // stats
-        public int GetFSDCarrierJumps(string forShipKey)
-        {
-            return (from s in historylist where s.IsFSDCarrierJump && $"{s.ShipTypeFD.ToLowerInvariant()}:{s.ShipId}" == forShipKey select s).Count();
-        }
-
-        // stats
-        public int GetNrMappedUTC(DateTime startutc, DateTime toutc)
-        {
-            return (from s in historylist where s.journalEntry.EventTypeID == JournalTypeEnum.SAAScanComplete && s.EventTimeUTC >= startutc && s.EventTimeUTC < toutc select s).Count();
-        }
-
-        // stats
-        public Tuple<int, long> GetScanCountAndValueUTC(DateTime startutc, DateTime toutc)
-        {
-            var scans = historylist
-                .Where(s => s.EntryType == JournalTypeEnum.Scan && s.EventTimeUTC >= startutc && s.EventTimeUTC < toutc)
-                .Select(h => h.journalEntry as JournalScan)
-                .Distinct(new ScansAreForSameBody()).ToArray();
-
-            var total = scans.Sum(scan => (long)scan.EstimatedValue);
-
-            return new Tuple<int, long>(scans.Length, total);
-        }
-
-        //stats
-        public int GetJetConeBoostUTC(DateTime startutc, DateTime toutc)
-        {
-            return (from s in historylist where s.EntryType == JournalTypeEnum.JetConeBoost && s.EventTimeUTC >= startutc && s.EventTimeUTC < toutc select s).Count();
-        }
-        
-        //stats
-        public HistoryFsdJumpStatistics GetFsdJumpStatistics(DateTime startUtc, DateTime toUtc)
-        {
-            var jumps = historylist
-                .Where(s => s.EntryType == JournalTypeEnum.FSDJump && s.EventTimeUTC >= startUtc && s.EventTimeUTC < toUtc)
-                .Select(h => h.journalEntry as JournalFSDJump)
-                .ToArray();
-
-            return new HistoryFsdJumpStatistics(
-                jumps.Length,
-                jumps.Sum(j => j.JumpDist),
-                jumps.Where(j => j.BoostValue == 1).Count(),
-                jumps.Where(j => j.BoostValue == 2).Count(),
-                jumps.Where(j => j.BoostValue == 3).Count());
-        }
-
         //stats
         public bool IsTravellingUTC(out DateTime startTimeutc)
         {
@@ -387,127 +342,14 @@ namespace EliteDangerousCore
             return inTrip;
         }
 
-        // stats
-        public double GetTraveledLy(string forShipKey)
-        {
-            var list = (from s in historylist where s.EntryType == JournalTypeEnum.FSDJump && $"{s.ShipTypeFD.ToLowerInvariant()}:{s.ShipId}" == forShipKey select s.journalEntry as JournalFSDJump).ToList<JournalFSDJump>();
-
-            return (from s in list select s.JumpDist).Sum();
-        }
-
-        // stats
-        public List<JournalScan> GetScanListUTC(DateTime startutc, DateTime toutc)
-        {
-            return (from s in historylist where s.EntryType == JournalTypeEnum.Scan && s.EventTimeUTC >= startutc && s.EventTimeUTC < toutc select s.journalEntry as JournalScan)
-                .Distinct(new ScansAreForSameBody()).ToList();
-        }
-
-        // stats
-        public int GetTonnesBought(string forShipKey)
-        {
-            var list = (from s in historylist where s.EntryType == JournalTypeEnum.MarketBuy && $"{s.ShipTypeFD.ToLowerInvariant()}:{s.ShipId}" == forShipKey select s.journalEntry as JournalMarketBuy).ToList();
-
-            return (from s in list select s.Count).Sum();
-        }
-
-        // stats
-        public int GetTonnesSold(string forShipKey)
-        {
-            var list = (from s in historylist where s.EntryType == JournalTypeEnum.MarketSell && $"{s.ShipTypeFD.ToLowerInvariant()}:{s.ShipId}" == forShipKey select s.journalEntry as JournalMarketSell).ToList();
-
-            return (from s in list select s.Count).Sum();
-        }
-
-        // stats
-        public int GetDeathCount(string forShipKey)
-        {
-            return (from s in historylist where s.EntryType == JournalTypeEnum.Died && $"{s.ShipTypeFD.ToLowerInvariant()}:{s.ShipId}" == forShipKey select s).Count();
-        }
-
-        // stats
-        public int GetBodiesScanned(string forShipKey)
-        {
-            return (from s in historylist where s.EntryType == JournalTypeEnum.Scan && $"{s.ShipTypeFD.ToLowerInvariant()}:{s.ShipId}" == forShipKey select s.journalEntry as JournalScan)
-                .Distinct(new ScansAreForSameBody()).Count();
-        }
-
-        // historylist
+       // historylist
         public string GetCommanderFID()     // may be null
         {
             var cmdr = historylist.FindLast(x => x.EntryType == JournalTypeEnum.Commander);
             return (cmdr?.journalEntry as JournalCommander)?.FID;
         }
 
-        // stats
-
-        public void GetJumpStats(out int numberjumps, out int last24hours, out int lastweek, out int last30days, out int last365days,
-                                   out HistoryEntry north, out HistoryEntry south, out HistoryEntry east, out HistoryEntry west, out HistoryEntry up, out HistoryEntry down)
-        {
-            north = south = east = west = up = down = null;
-            numberjumps = last24hours = lastweek = last30days = last365days = 0;
-            DateTime cur = DateTime.UtcNow;
-            foreach( var he in historylist)
-            {
-                if (he.IsFSDCarrierJump)
-                {
-                    numberjumps++;
-
-                    TimeSpan age = cur - he.EventTimeUTC;
-                    if (age.Days < 365)
-                    {
-                        last365days++;
-                        if (age.Days < 30)
-                        {
-                            last30days++;
-                            if (age.Days < 7)
-                            {
-                                lastweek++;
-                                if (age.Hours <= 24)
-                                {
-                                    last24hours++;
-                                }
-                            }
-                        }
-                    }
-
-                    if (he.System.HasCoordinate)
-                    {
-                        if (north == null || north.System.Z < he.System.Z)
-                            north = he;
-                        if (south == null || south.System.Z > he.System.Z)
-                            south = he;
-                        if (east == null || east.System.X < he.System.X)
-                            east = he;
-                        if (west == null || west.System.X > he.System.X)
-                            west = he;
-                        if (up == null || up.System.Y < he.System.Y)
-                            up = he;
-                        if (down == null || down.System.Y > he.System.Y)
-                            down = he;
-                    }
-                }
-            }
-
-        }
-
-        // stats
-        public bool IsBetween(HistoryEntry first, HistoryEntry last, Predicate<HistoryEntry> predicate)     // either direction
-        {
-            if (first.EntryNumber < last.EntryNumber)
-                return historylist.Where(h => h.EntryNumber > first.EntryNumber && h.EntryNumber <= last.EntryNumber && predicate(h)).Any();
-            else
-                return historylist.Where(h => h.EntryNumber >= first.EntryNumber && h.EntryNumber < last.EntryNumber && predicate(h)).Any();
-        }
-
-        // stats
-        public bool AnyBetween(HistoryEntry first, HistoryEntry last, IEnumerable<JournalTypeEnum> journalTypes)
-        {
-            if (first.EntryNumber < last.EntryNumber)
-                return historylist.Where(h => h.EntryNumber > first.EntryNumber && h.EntryNumber <= last.EntryNumber && journalTypes.Contains(h.EntryType)).Any();
-            else
-                return historylist.Where(h => h.EntryNumber >= first.EntryNumber && h.EntryNumber < last.EntryNumber && journalTypes.Contains(h.EntryType)).Any();
-        }
-
+  
         // map3d
         public static HistoryEntry FindLastKnownPosition(List<HistoryEntry> syslist)        // can return FSD, Carrier or Location
         {

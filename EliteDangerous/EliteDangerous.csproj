@@ -100,7 +100,6 @@
     <Compile Include="Forms\CommanderForm.Designer.cs">
       <DependentUpon>CommanderForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="HistoryList\HistoryFsdJumpStatistics.cs" />
     <Compile Include="HistoryList\HistoryList.cs" />
     <Compile Include="IGAU\IGAUSync.cs" />
     <Compile Include="IGAU\IGAUClass.cs" />
