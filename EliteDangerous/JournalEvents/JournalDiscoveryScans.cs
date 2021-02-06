@@ -84,8 +84,10 @@ namespace EliteDangerousCore.JournalEvents
             public System.DateTime ExpiryUTC { get; set; }
             public System.DateTime ExpiryLocal { get; set; }
 
-            public enum Classification { Station, Carrier, Installation, NotableStellarPhenomena, ResourceExtraction, USS, ConflictZone, Other};
+            public enum Classification { Station,Installation, NotableStellarPhenomena, ConflictZone, ResourceExtraction, Carrier, USS, Other};
             public Classification ClassOfSignal { get; set; }
+
+            const int CarrierExpiryTime = 10 * (60 * 60 * 24);              // days till we consider the carrier signal expired..
 
             public FSSSignal(JObject evt, System.DateTime EventTimeUTC)
             {
@@ -114,7 +116,10 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     int dash = SignalName.LastIndexOf('-');
                     if (dash == SignalName.Length - 4 && char.IsLetterOrDigit(SignalName[dash + 1]) && char.IsLetterOrDigit(SignalName[dash - 1]))
+                    {
                         ClassOfSignal = Classification.Carrier;
+                        TimeRemaining = CarrierExpiryTime;
+                    }
                     else
                         ClassOfSignal = Classification.Station;
                 }
