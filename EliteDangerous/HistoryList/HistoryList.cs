@@ -102,38 +102,20 @@ namespace EliteDangerousCore
             return he;
         }
 
-        public static HistoryList LoadHistory(EDJournalUIScanner journalmonitor, Func<bool> cancelRequested, 
-                                    Action<int, string> reportProgress, Action<string> logline,
-                                    string NetLogPath = null,
-                                    bool ForceNetLogReload = false,
-                                    bool ForceJournalReload = false,
-                                    int CurrentCommander = Int32.MinValue,
-                                    int fullhistoryloaddaylimit = 0,
-                                    string essentialitems = ""
-                                    )
+        // History load system, read DB for entries and make a history up
+
+        public static HistoryList LoadHistory(  Action<string> reportProgress, 
+                                                int CurrentCommander, 
+                                                int fullhistoryloaddaylimit, string essentialitems
+                                             )
         {
             HistoryList hist = new HistoryList();
 
-            if (CurrentCommander >= 0)
-            {
-                journalmonitor.SetupWatchers();   // Parse files stop monitor..
-                int forcereloadoflastn = ForceJournalReload ? int.MaxValue / 2 : 0;     // if forcing a reload, we indicate that by setting the reload count to a very high value, but not enough to cause int wrap
-                journalmonitor.ParseJournalFilesOnWatchers((p, s) => reportProgress(p, s), forcereloadoflastn );
+            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL", true).Item1 + " History Load");
 
-                if (NetLogPath != null)
-                {
-                    string errstr = null;
-                    NetLogClass.ParseFiles(NetLogPath, out errstr, EDCommander.Current.MapColour, () => cancelRequested(), (p, s) => reportProgress(p, s), ForceNetLogReload, currentcmdrid: CurrentCommander);
-                }
-            }
-
-            Trace.WriteLine(BaseUtils.AppTicks.TickCountLap() + " Files read ");
-
-            reportProgress(-1, "Reading Database");
+            reportProgress("Reading Database");
 
             List<JournalEntry> jlist;       // returned in date ascending, oldest first order.
-
-            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL", true).Item1 + " History Load");
 
             if (fullhistoryloaddaylimit > 0)
             {
@@ -149,14 +131,16 @@ namespace EliteDangerousCore
                     );
             }
             else
+            {
                 jlist = JournalEntry.GetAll(CurrentCommander);
+            }
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Journals read from DB");
 
+            reportProgress( "Creating History");
+
             HistoryEntry hprev = null;
-
-            reportProgress(-1, "Creating History");
-
+            
             foreach (JournalEntry je in jlist)
             {
                 if (MergeEntries(hprev?.journalEntry, je))        // if we merge, don't store into HE
@@ -191,7 +175,7 @@ namespace EliteDangerousCore
             }
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " History List Created");
-            reportProgress(-1, "Analysing History");
+            reportProgress( "Analysing History");
 
             for( int i = 0; i < hist.historylist.Count; i++ )
             {
@@ -224,16 +208,6 @@ namespace EliteDangerousCore
 
             hist.CommanderId = CurrentCommander;
 
-            EDCommander.Current.FID = hist.GetCommanderFID();               // ensure FID is set.. the other place it gets changed is a read of LoadGame.
-
-            if (NetLogPath != null)
-            {
-                reportProgress(-1,"Netlog Updating System Positions");
-                hist.FillInPositionsFSDJumps(logline);                         // if netlog reading, try and resolve systems..
-            }
-
-            reportProgress(-1, "Done");
-
             return hist;
         }
 
@@ -260,6 +234,7 @@ namespace EliteDangerousCore
 
             return false;
         }
+
 
 
         public static void AddToVisitsScan(HistoryList hist, int pos, Action<string> logerror)
