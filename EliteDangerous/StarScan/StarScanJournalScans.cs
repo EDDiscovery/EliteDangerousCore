@@ -26,21 +26,20 @@ namespace EliteDangerousCore
         // used by historylist directly for a single update during play, in foreground..  Also used by above.. so can be either in fore/back
         public bool AddScanToBestSystem(JournalScan je, int startindex, List<HistoryEntry> hl, out HistoryEntry he, out JournalLocOrJump jl)
         {
-            if (je?.BodyName == null)
-            {
-                he = null;
-                jl = null;
-                return false;
-            }
+            he = null;
+            jl = null;
 
-            for (int j = startindex; j >= 0; j--)
+            if (je?.BodyName == null)
+                return false;
+
+            for (int j = startindex; j >= 0; j--)   // same as FindBestSystem
             {
                 he = hl[j];
 
                 if (he.IsLocOrJump)
                 {
                     jl = (JournalLocOrJump)he.journalEntry;
-                    string designation = GetBodyDesignation(je, he.System.Name);
+                    string designation = BodyDesignations.GetBodyDesignation(je, he.System.Name);
 
                     if (je.IsStarNameRelated(he.System.Name, designation, he.System.SystemAddress))       // if its part of the name, use it
                     {
@@ -56,10 +55,7 @@ namespace EliteDangerousCore
                 }
             }
 
-            jl = null;
-            he = null;
-
-            je.BodyDesignation = GetBodyDesignation(je, hl[startindex].System.Name);
+            je.BodyDesignation = BodyDesignations.GetBodyDesignation(je, hl[startindex].System.Name);
             return ProcessJournalScan(je, hl[startindex].System, true);         // no relationship, add..
         }
 
@@ -117,7 +113,7 @@ namespace EliteDangerousCore
                 // Process primary star in multi-star system
                 if (elements[0].Equals("A", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    CachePrimaryStar(sc, sys);
+                    BodyDesignations.CachePrimaryStar(sc, sys);
 
                     // Reprocess if we've encountered the primary (A) star and we already have a "Main Star"
                     if (reprocessPrimary && sn.starnodes.Any(n => n.Key.Length > 1 && n.Value.type == ScanNodeType.star))
@@ -140,7 +136,7 @@ namespace EliteDangerousCore
 
             foreach (JournalScan sn in bodies)
             {
-                sn.BodyDesignation = GetBodyDesignation(sn, sysnode.system.Name);
+                sn.BodyDesignation = BodyDesignations.GetBodyDesignation(sn, sysnode.system.Name);
                 ProcessJournalScan(sn, sysnode.system);
             }
         }

@@ -26,42 +26,22 @@ namespace EliteDangerousCore
     {
         public bool AddBodyToBestSystem(IBodyNameAndID je, int startindex, List<HistoryEntry> hl)
         {
-            HistoryEntry he;
-            JournalLocOrJump jl;
-
             if (je.Body == null || je.BodyType == "Station" || je.BodyType == "StellarRing" || je.BodyType == "PlanetaryRing" || je.BodyType == "SmallBody")
             {
                 return false;
             }
 
-            for (int j = startindex; j >= 0; j--)
-            {
-                he = hl[j];
+            var best = FindBestSystem(startindex, hl, je.Body, je.BodyID, je.BodyType == "Star");
 
-                if (he.IsLocOrJump && he.System.Name == je.StarSystem && (he.System.SystemAddress == null || je.SystemAddress == null || he.System.SystemAddress == je.SystemAddress))
-                {
-                    jl = (JournalLocOrJump)he.journalEntry;
-                    string designation = GetBodyDesignation(je);
+            if (best == null)
+                return false;
 
-                    if (IsStarNameRelated(he.System.Name, je.Body, designation))       // if its part of the name, use it
-                    {
-                        je.BodyDesignation = designation;
+            je.BodyDesignation = best.Item1;
 
-                        return ProcessBodyAndID(je, he.System, true);
-                    }
-                    else if (jl != null && IsStarNameRelated(jl.StarSystem, je.Body, designation))
-                    {
-                        // Ignore scans where the system name has changed
-                        return false;
-                    }
-                }
-            }
-
-            je.BodyDesignation = GetBodyDesignation(je);
-            return ProcessBodyAndID(je, hl[startindex].System, true);         // no relationship, add..
+            return ProcessBodyAndID(je, best.Item2);         
         }
 
-        private bool ProcessBodyAndID(IBodyNameAndID sc, ISystem sys, bool reprocessPrimary = false)  // background or foreground.. FALSE if you can't process it
+        private bool ProcessBodyAndID(IBodyNameAndID sc, ISystem sys)  // background or foreground.. 
         {
             SystemNode sn = GetOrCreateSystemNode(sys);
             ScanNode relatedScan = null;
@@ -280,52 +260,5 @@ namespace EliteDangerousCore
             return node;
         }
 
-        private string GetBodyDesignation(IBodyNameAndID je)
-        {
-            if (je.Body == null || je.BodyType == null || je.StarSystem == null)
-                return null;
-
-            string system = je.StarSystem;
-            string bodyname = je.Body;
-            bool isstar = je.BodyType == "Star";
-            int bodyid = je.BodyID ?? -1;
-
-            if (je.BodyID != null && bodyIdDesignationMap.ContainsKey(system) && bodyIdDesignationMap[system].ContainsKey(bodyid) && bodyIdDesignationMap[system][bodyid].NameEquals(bodyname))
-            {
-                return bodyIdDesignationMap[system][bodyid].Designation;
-            }
-
-            Dictionary<string, Dictionary<string, string>> desigmap = isstar ? starDesignationMap : planetDesignationMap;
-
-            // Special case for m Centauri
-            if (isstar && system.ToLowerInvariant() == "m centauri")
-            {
-                if (bodyname == "m Centauri")
-                {
-                    return "m Centauri A";
-                }
-                else if (bodyname == "M Centauri")
-                {
-                    return "m Centauri B";
-                }
-            }
-            // Special case for Castellan Belt
-            else if (system.ToLowerInvariant() == "lave" && bodyname.StartsWith("Castellan Belt ", StringComparison.InvariantCultureIgnoreCase))
-            {
-                return "Lave A Belt " + bodyname.Substring("Castellan Belt ".Length);
-            }
-
-            if (desigmap.ContainsKey(system) && desigmap[system].ContainsKey(bodyname))
-            {
-                return desigmap[system][bodyname];
-            }
-
-            if (bodyname.Equals(system, StringComparison.InvariantCultureIgnoreCase) || bodyname.StartsWith(system + " ", StringComparison.InvariantCultureIgnoreCase))
-            {
-                return bodyname;
-            }
-
-            return bodyname;
-        }
     }
 }

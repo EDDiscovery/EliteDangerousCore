@@ -245,13 +245,13 @@ namespace EliteDangerousCore.JournalEvents
         public JournalSAAScanComplete(JObject evt) : base(evt, JournalTypeEnum.SAAScanComplete)
         {
             BodyName = evt["BodyName"].Str();
-            BodyID = evt["BodyID"].Long();
+            BodyID = evt["BodyID"].Int();
             ProbesUsed = evt["ProbesUsed"].Int();
             EfficiencyTarget = evt["EfficiencyTarget"].Int();
             SystemAddress = evt["SystemAddress"].LongNull();
         }
 
-        public long BodyID { get; set; }
+        public int BodyID { get; set; }
         public string BodyName { get; set; }
         public int ProbesUsed { get; set; }
         public int EfficiencyTarget { get; set; }

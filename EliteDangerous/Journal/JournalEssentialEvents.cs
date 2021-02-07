@@ -48,7 +48,7 @@ namespace EliteDangerousCore
                 JournalTypeEnum.ShipyardSwap , JournalTypeEnum.ShipyardTransfer, JournalTypeEnum.StoredModules, JournalTypeEnum.StoredShips,
 
                 // scan
-                JournalTypeEnum.Scan, JournalTypeEnum.SellExplorationData, 
+                JournalTypeEnum.Scan, JournalTypeEnum.SellExplorationData, JournalTypeEnum.SAASignalsFound, 
 
                 // misc
                 JournalTypeEnum.ClearSavedGame,

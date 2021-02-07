@@ -28,8 +28,6 @@ namespace EliteDangerousCore
 
     public partial class StarScan
     {
-        private static Dictionary<string, List<JournalScan>> primaryStarScans = new Dictionary<string, List<JournalScan>>(StringComparer.InvariantCultureIgnoreCase);
-
         // make or get a system node for a system  
 
         private SystemNode GetOrCreateSystemNode(ISystem sys)
@@ -75,59 +73,49 @@ namespace EliteDangerousCore
             return sn;
         }
 
-        private static bool CompareEpsilon(double? a, double? b, bool acceptNull = false, double epsilon = 0.001, Func<double?, double> fb = null)
+        // bodyid can be null, bodyname must be set.
+
+        private static Tuple<string, ISystem> FindBestSystem(int startindex, List<HistoryEntry> hl, string bodyname, int? bodyid, bool isstar )
         {
-            if (a == null || b == null)
+            System.Diagnostics.Debug.Assert(bodyname != null);
+
+            for (int j = startindex; j >= 0; j--)
             {
-                return !acceptNull;
+                HistoryEntry he = hl[j];
+
+                if (he.IsLocOrJump)
+                {
+                    JournalLocOrJump jl = (JournalLocOrJump)he.journalEntry;
+                    string designation = BodyDesignations.GetBodyDesignation(bodyname, bodyid, isstar, he.System.Name);
+
+                    if (IsStarNameRelated(he.System.Name, designation))       // if its part of the name, use it
+                    {
+                        return new Tuple<string, ISystem>(designation, he.System);
+                    }
+                    else if (jl != null && IsStarNameRelated(jl.StarSystem, designation))
+                    {
+                        // Ignore scans where the system name has changed
+                        System.Diagnostics.Trace.WriteLine($"Rejecting body {designation} ({bodyname}) in system {he.System.Name} => {jl.StarSystem} due to system rename");
+                        return null;
+                    }
+                }
             }
 
-            double _a = (double)a;
-            double _b = fb == null ? (double)b : fb(b);
-
-            return _a == _b || (_a + _b != 0 && Math.Sign(_a + _b) == Math.Sign(_a) && Math.Abs((_a - _b) / (_a + _b)) < epsilon);
+            return new Tuple<string, ISystem>(BodyDesignations.GetBodyDesignation(bodyname, bodyid, false, hl[startindex].System.Name), hl[startindex].System);
         }
 
-        private void CachePrimaryStar(JournalScan je, ISystem sys)
+        private static bool IsStarNameRelated(string starname, string bodyname )
         {
-            string system = sys.Name;
-
-            if (!primaryStarScans.ContainsKey(system))
+            if (bodyname.Length >= starname.Length)
             {
-                primaryStarScans[system] = new List<JournalScan>();
-            }
-
-            if (!primaryStarScans[system].Any(s => CompareEpsilon(s.nAge, je.nAge) &&
-                                                   CompareEpsilon(s.nEccentricity, je.nEccentricity) &&
-                                                   CompareEpsilon(s.nOrbitalInclination, je.nOrbitalInclination) &&
-                                                   CompareEpsilon(s.nOrbitalPeriod, je.nOrbitalPeriod) &&
-                                                   CompareEpsilon(s.nPeriapsis, je.nPeriapsis) &&
-                                                   CompareEpsilon(s.nRadius, je.nRadius) &&
-                                                   CompareEpsilon(s.nRotationPeriod, je.nRotationPeriod) &&
-                                                   CompareEpsilon(s.nSemiMajorAxis, je.nSemiMajorAxis) &&
-                                                   CompareEpsilon(s.nStellarMass, je.nStellarMass)))
-            {
-                primaryStarScans[system].Add(je);
-            }
-        }
-
-        private static bool IsStarNameRelated(string starname, string bodyname, string designation = null)
-        {
-            if (designation == null)
-            {
-                designation = bodyname;
-            }
-
-            if (designation.Length >= starname.Length)
-            {
-                string s = designation.Substring(0, starname.Length);
+                string s = bodyname.Substring(0, starname.Length);
                 return starname.Equals(s, StringComparison.InvariantCultureIgnoreCase);
             }
             else
                 return false;
         }
 
-        public static string IsStarNameRelatedReturnRest(string starname, string bodyname, string designation = null)          // null if not related, else rest of string
+        public static string IsStarNameRelatedReturnRest(string starname, string bodyname, string designation )          // null if not related, else rest of string
         {
             if (designation == null)
             {
@@ -163,86 +151,6 @@ namespace EliteDangerousCore
             }
 
             return null;
-        }
-
-        // look to see if there is a better body designation for a scan.. using lookup tables (bodyDesignationMap) and direct code
-
-        private string GetBodyDesignation(JournalScan je, string system)
-        {
-            Dictionary<string, Dictionary<string, string>> desigmap = je.IsStar ? starDesignationMap : planetDesignationMap;
-            int bodyid = je.BodyID ?? -1;
-
-            if (je.BodyID != null && bodyIdDesignationMap.ContainsKey(system) && bodyIdDesignationMap[system].ContainsKey(bodyid) && bodyIdDesignationMap[system][bodyid].NameEquals(je.BodyName))
-            {
-                return bodyIdDesignationMap[system][bodyid].Designation;
-            }
-
-            // Special case for m Centauri
-            if (je.IsStar && system.ToLowerInvariant() == "m centauri")
-            {
-                if (je.BodyName == "m Centauri")
-                {
-                    return "m Centauri A";
-                }
-                else if (je.BodyName == "M Centauri")
-                {
-                    return "m Centauri B";
-                }
-            }
-
-            // Special case for Castellan Belt
-            if (system.ToLowerInvariant() == "lave" && je.BodyName.StartsWith("Castellan Belt ", StringComparison.InvariantCultureIgnoreCase))
-            {
-                return "Lave A Belt " + je.BodyName.Substring("Castellan Belt ".Length);
-            }
-
-            // Special case for 9 Aurigae
-            if (je.IsStar && system.ToLowerInvariant() == "9 Aurigae")
-            {
-                if (je.BodyName == "9 Aurigae C")
-                {
-                    if (je.nSemiMajorAxis > 1e13)
-                    {
-                        return "9 Aurigae D";
-                    }
-                    else
-                    {
-                        return "9 Aurigae C";
-                    }
-                }
-            }
-
-            if (desigmap.ContainsKey(system) && desigmap[system].ContainsKey(je.BodyName))
-            {
-                return desigmap[system][je.BodyName];
-            }
-
-            if (je.IsStar && je.BodyName.Equals(system, StringComparison.InvariantCultureIgnoreCase) && je.nOrbitalPeriod != null)
-            {
-                return system + " A";
-            }
-
-            if (je.BodyName.Equals(system, StringComparison.InvariantCultureIgnoreCase) || je.BodyName.StartsWith(system + " ", StringComparison.InvariantCultureIgnoreCase))
-            {
-                return je.BodyName;
-            }
-
-            if (je.IsStar && primaryStarScans.ContainsKey(system))
-            {
-                foreach (JournalScan primary in primaryStarScans[system])
-                {
-                    if (CompareEpsilon(je.nOrbitalPeriod, primary.nOrbitalPeriod) &&
-                        CompareEpsilon(je.nPeriapsis, primary.nPeriapsis, acceptNull: true, fb: b => ((double)b + 180) % 360.0) &&
-                        CompareEpsilon(je.nOrbitalInclination, primary.nOrbitalInclination) &&
-                        CompareEpsilon(je.nEccentricity, primary.nEccentricity) &&
-                        !je.BodyName.Equals(primary.BodyName, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        return system + " B";
-                    }
-                }
-            }
-
-            return je.BodyName;
         }
 
         private class DuplicateKeyComparer<TKey> : IComparer<string> where TKey : IComparable      // special compare for sortedlist

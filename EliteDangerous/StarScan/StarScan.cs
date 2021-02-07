@@ -459,7 +459,7 @@ namespace EliteDangerousCore
                 {
                     foreach (JournalScan js in jl.Item1)
                     {
-                        js.BodyDesignation = GetBodyDesignation(js, sys.Name);
+                        js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
                         ProcessJournalScan(js, sys, true);
                     }
                 }
@@ -515,7 +515,7 @@ namespace EliteDangerousCore
                         System.Diagnostics.Debug.WriteLine("Process bodies from EDSM " + trace + " " + sys.Name + " " + sys.EDSMID + " result " + (jl.Item1?.Count ?? -1));
                         foreach (JournalScan js in jl.Item1)
                         {
-                            js.BodyDesignation = GetBodyDesignation(js, sys.Name);
+                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
                             ProcessJournalScan(js, sys, true);
                         }
                     }
