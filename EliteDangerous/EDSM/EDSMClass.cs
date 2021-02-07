@@ -485,10 +485,7 @@ namespace EliteDangerousCore.EDSM
 
                             if (sc == null)
                             {
-                                sc = new SystemClass(name)
-                                {
-                                    EDSMID = id
-                                };
+                                sc = new SystemClass(name, id);     // make an EDSM system
                             }
                         }
 
@@ -509,7 +506,7 @@ namespace EliteDangerousCore.EDSM
         }
 
         // Visual inspection Nov 20 - using Int() 
-        private List<ISystem> GetSystemsByName(string systemName, bool uselike = false)     // Protect yourself against bad JSON
+        public List<ISystem> GetSystemsByName(string systemName, bool uselike = false)     // Protect yourself against bad JSON
         {
             string query = String.Format("api-v1/systems?systemName={0}&showCoordinates=1&showId=1&showInformation=1&showPermit=1", Uri.EscapeDataString(systemName));
 
@@ -529,9 +526,7 @@ namespace EliteDangerousCore.EDSM
             {
                 foreach (JObject sysname in msg)
                 {
-                    ISystem sys = new SystemClass();
-                    sys.Name = sysname["name"].Str("Unknown");
-                    sys.EDSMID = sysname["id"].Long(0);
+                    ISystem sys = new SystemClass(sysname["name"].Str("Unknown"), sysname["id"].Long(0));
                     JObject co = (JObject)sysname["coords"];
 
                     if (co != null)
@@ -598,9 +593,7 @@ namespace EliteDangerousCore.EDSM
                     {
                         foreach (JObject sysname in msg)
                         {
-                            ISystem sys = new SystemClass();
-                            sys.Name = sysname["name"].Str("Unknown");
-                            sys.EDSMID = sysname["id"].Long(0);
+                            ISystem sys = new SystemClass(sysname["name"].Str("Unknown"), sysname["id"].Long(0));        // make a system from EDSM
                             JObject co = (JObject)sysname["coords"];
                             if (co != null)
                             {
@@ -645,9 +638,7 @@ namespace EliteDangerousCore.EDSM
                     {
                         foreach (JObject sysname in msg)
                         {
-                            ISystem sys = new SystemClass();
-                            sys.Name = sysname["name"].Str("Unknown");
-                            sys.EDSMID = sysname["id"].Long(0);
+                            ISystem sys = new SystemClass(sysname["name"].Str("Unknown"), sysname["id"].Long(0));   // make a EDSM system
                             JObject co = (JObject)sysname["coords"];
                             if (co != null)
                             {

@@ -167,7 +167,7 @@ namespace EliteDangerousCore.DB
         {
             var found = FindCachedSystem(system);
 
-            if ((found == null || (found.Source != SystemSource.FromJournal && found.Source != SystemSource.FromEDSM)) && system.HasCoordinate == true && system.Name != "")
+            if ((found == null || (found.Source != SystemSource.FromJournal && found.Source != SystemSource.FromEDSM)) && system.HasCoordinate == true && system.Name.HasChars())
             {
                 AddToCache(system, found);
                 found = system;

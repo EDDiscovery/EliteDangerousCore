@@ -15,6 +15,7 @@
  */
 
 using EliteDangerousCore.DB;
+using EliteDangerousCore.EDSM;
 using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Generic;
@@ -101,7 +102,8 @@ namespace EliteDangerousCore
             return he;
         }
 
-        public static HistoryList LoadHistory(EDJournalUIScanner journalmonitor, Func<bool> cancelRequested, Action<int, string> reportProgress,
+        public static HistoryList LoadHistory(EDJournalUIScanner journalmonitor, Func<bool> cancelRequested, 
+                                    Action<int, string> reportProgress, Action<string> logline,
                                     string NetLogPath = null,
                                     bool ForceNetLogReload = false,
                                     bool ForceJournalReload = false,
@@ -227,7 +229,7 @@ namespace EliteDangerousCore
             if (NetLogPath != null)
             {
                 reportProgress(-1,"Netlog Updating System Positions");
-                hist.FillInPositionsFSDJumps();         // if netlog reading, try and resolve systems..
+                hist.FillInPositionsFSDJumps(logline);                         // if netlog reading, try and resolve systems..
             }
 
             reportProgress(-1, "Done");
@@ -425,7 +427,7 @@ namespace EliteDangerousCore
 
         #region EDSM
 
-        public void FillInPositionsFSDJumps()       // call if you want to ensure we have the best posibile position data on FSD Jumps.  Only occurs on pre 2.1 netlogs
+        public void FillInPositionsFSDJumps(Action<string> logger)       // call if you want to ensure we have the best posibile position data on FSD Jumps.  Only occurs on pre 2.1 netlogs
         {
             List<Tuple<HistoryEntry, ISystem>> updatesystems = new List<Tuple<HistoryEntry, ISystem>>();
 
@@ -437,15 +439,32 @@ namespace EliteDangerousCore
                     {
                         // try and load ones without position.. if its got pos we are happy.  If its 0,0,0 and its not sol, it may just be a stay entry
 
-                        bool fakesol = Math.Abs(he.System.X) < 1 && Math.Abs(he.System.Y) < 1 && Math.Abs(he.System.Z) < 0 && he.System.Name != "Sol";
+                        if (he.IsFSDCarrierJump)
+                        {
+                            //logger?.Invoke($"Checking system {he.System.Name}");
 
-                        if (he.IsFSDCarrierJump && (!he.System.HasCoordinate || fakesol) )
-                        {           // done in two IFs for debugging, in case your wondering why!
-                            if (he.System.Source != SystemSource.FromEDSM)   // and its not from EDSM 
+                            if (!he.System.HasCoordinate || (Math.Abs(he.System.X) < 1 && Math.Abs(he.System.Y) < 1 && Math.Abs(he.System.Z) < 0 && he.System.Name != "Sol"))
                             {
                                 ISystem found = SystemCache.FindSystem(he.System, cn);
+
+                                if ( found == null )        // if not found, try edsm
+                                {
+                                    EDSMClass edsm = new EDSMClass();
+                                    var syslist = edsm.GetSystemsByName(he.System.Name);
+                                    if (syslist != null)
+                                    {
+                                        found = syslist.First();
+                                        SystemCache.FindCachedJournalSystem(found); // put it in the cache
+                                    }
+                                }
+                                    
                                 if (found != null)
+                                {
+                                    logger?.Invoke($"System {he.System.Name} found system in EDSM");
                                     updatesystems.Add(new Tuple<HistoryEntry, ISystem>(he, found));
+                                }
+                                else
+                                    logger?.Invoke($"System {he.System.Name} failed to find system in EDSM");
                             }
                         }
                     }
@@ -460,7 +479,7 @@ namespace EliteDangerousCore
                     {
                         foreach (Tuple<HistoryEntry, ISystem> hesys in updatesystems)
                         {
-                            System.Diagnostics.Debug.WriteLine("Update {0} with pos", hesys.Item1.System.Name);
+                            logger?.Invoke($"Update position of {hesys.Item1.System.Name} at {hesys.Item1.EntryNumber} in journal");
                             hesys.Item1.journalEntry.UpdateStarPosition(hesys.Item2, cn.Connection, txn);
                             hesys.Item1.UpdateSystem(hesys.Item2);
                         }
