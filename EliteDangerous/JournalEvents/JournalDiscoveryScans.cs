@@ -155,7 +155,7 @@ namespace EliteDangerousCore.JournalEvents
             public string ToString( bool showseentime)
             {
                 DateTime? outoftime = null;
-                if (TimeRemaining != null)
+                if (TimeRemaining != null && ClassOfSignal != Classification.Carrier)       // ignore carrier timeout for printing
                     outoftime = ExpiryLocal;
 
                 DateTime? seen = null;

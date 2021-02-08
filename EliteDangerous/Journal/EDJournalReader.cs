@@ -140,6 +140,9 @@ namespace EliteDangerousCore
                         string defpath = EDJournalUIScanner.GetDefaultJournalDir();     // may be null if the system is not known
                         string jp = defpath != null && defpath.Equals(TravelLogUnit.Path) ? "" : TravelLogUnit.Path;
                         commander = EDCommander.Create(name: newname, journalpath: jp);
+
+                        if (EDCommander.Current.Name.Contains("[BETA]") && !newname.Contains("[BETA]"))        // if current commander is beta, and we dont, swap to it
+                            EDCommander.CurrentCmdrID = commander.Nr;
                     }
 
                 }
