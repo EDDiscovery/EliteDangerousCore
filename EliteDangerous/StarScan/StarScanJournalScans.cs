@@ -40,6 +40,7 @@ namespace EliteDangerousCore
                 {
                     jl = (JournalLocOrJump)he.journalEntry;
                     string designation = BodyDesignations.GetBodyDesignation(je, he.System.Name);
+                    System.Diagnostics.Debug.Assert(designation != null);
 
                     if (je.IsStarNameRelated(he.System.Name, designation, he.System.SystemAddress))       // if its part of the name, use it
                     {
@@ -71,12 +72,8 @@ namespace EliteDangerousCore
             // handle Aurioum B A BELT
             // Kyloasly OY-Q d5-906 13 1
 
-            ScanNodeType starscannodetype = ScanNodeType.star;          // presuming.. 
-            bool isbeltcluster = false;
-            bool isring = false;
-
             // Extract elements from name
-            List<string> elements = ExtractElementsJournalScan(sc, sys, out isbeltcluster, out starscannodetype, out isring);
+            List<string> elements = ExtractElementsJournalScan(sc, sys, out bool isbeltcluster, out ScanNodeType starscannodetype, out bool isring);
 
             // Bail out if no elements extracted
             if (elements.Count == 0)
@@ -116,6 +113,7 @@ namespace EliteDangerousCore
                     BodyDesignations.CachePrimaryStar(sc, sys);
 
                     // Reprocess if we've encountered the primary (A) star and we already have a "Main Star"
+
                     if (reprocessPrimary && sn.starnodes.Any(n => n.Key.Length > 1 && n.Value.type == ScanNodeType.star))
                     {
                         ReProcess(sn);
@@ -128,16 +126,19 @@ namespace EliteDangerousCore
             return true;
         }
 
-        private void ReProcess(SystemNode sysnode)
+        private void ReProcess(SystemNode sn)
         {
-            List<JournalScan> bodies = sysnode.Bodies.Where(b => b.ScanData != null).Select(b => b.ScanData).ToList();
-            sysnode.starnodes = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());
-            sysnode.NodesByID = new SortedList<int, ScanNode>();
+            // get bodies with scans
+            List<JournalScan> bodies = sn.Bodies.Where(b => b.ScanData != null).Select(b => b.ScanData).ToList();
 
-            foreach (JournalScan sn in bodies)
+            // reset the nodes to zero
+            sn.starnodes = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());
+            sn.NodesByID = new SortedList<int, ScanNode>();
+
+            foreach (JournalScan js in bodies)              // replay into process the body scans
             {
-                sn.BodyDesignation = BodyDesignations.GetBodyDesignation(sn, sysnode.system.Name);
-                ProcessJournalScan(sn, sysnode.system);
+                js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sn.system.Name);
+                ProcessJournalScan(js, sn.system);
             }
         }
 

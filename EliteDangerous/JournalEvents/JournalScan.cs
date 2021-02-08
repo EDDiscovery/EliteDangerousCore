@@ -1827,19 +1827,21 @@ namespace EliteDangerousCore.JournalEvents
             return PlanetComposition[c] * 100;
         }
 
-        public bool IsStarNameRelated(string starname, string designation = null, long? sysaddr = null)
+        // is the name in starname 
+
+        public bool IsStarNameRelated(string starname, string designation , long? sysaddr )
         {
-            if (StarSystem != null && SystemAddress != null && sysaddr != null)
+            if (StarSystem != null && SystemAddress != null && sysaddr != null)     // if we are a star system AND sysaddr in the scan is set, and we got passed a system addr, direct compare
             {
-                return starname.Equals(StarSystem, StringComparison.InvariantCultureIgnoreCase) && sysaddr == SystemAddress;
+                return starname.Equals(StarSystem, StringComparison.InvariantCultureIgnoreCase) && sysaddr == SystemAddress;    // star is the same name and sys addr same
             }
 
-            if (designation == null)
+            if (designation == null)        // no designation, use bodyname
             {
                 designation = BodyName;
             }
 
-            if (designation.Length >= starname.Length)
+            if (designation.Length >= starname.Length)      // and compare against starname root
             {
                 string s = designation.Substring(0, starname.Length);
                 return starname.Equals(s, StringComparison.InvariantCultureIgnoreCase);
@@ -1848,7 +1850,7 @@ namespace EliteDangerousCore.JournalEvents
                 return false;
         }
 
-        public string IsStarNameRelatedReturnRest(string starname, long? sysaddr = null)          // null if not related, else rest of string
+        public string IsStarNameRelatedReturnRest(string starname, long? sysaddr )          // null if not related, else rest of string
         {
             string designation = BodyDesignation ?? BodyName;
             string desigrest = null;
