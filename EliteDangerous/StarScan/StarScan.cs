@@ -131,6 +131,8 @@ namespace EliteDangerousCore
             public bool IsMapped;                   // recorded here since the scan data can be replaced by a better version later.
             public bool WasMappedEfficiently;
 
+            public string CustomNameOrOwnname { get { return customname ?? ownname; } }
+
             public bool IsTopLevelNode;
 
             private JournalScan scandata;            // can be null if no scan, its a place holder, else its a journal scan

@@ -30,7 +30,9 @@ namespace EliteDangerousCore.JournalEvents
         public bool IsBeltCluster { get { return StarType == null && PlanetClass == null; } }
         public bool IsPlanet { get { return PlanetClass != null; } }
 
-        public string BodyDesignation { get; set; }
+        public string BodyDesignation { get; set; }     // nerfed name
+
+        public string BodyDesignationOrName { get { return BodyDesignation ?? BodyName; } }
 
         // ALL
         public string ScanType { get; set; }                        // 3.0 scan type  Basic, Detailed, NavBeacon, NavBeaconDetail, (3.3) AutoScan, or empty for older ones
