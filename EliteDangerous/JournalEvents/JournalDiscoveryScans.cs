@@ -148,7 +148,8 @@ namespace EliteDangerousCore.JournalEvents
             public bool IsSame(FSSSignal other)     // is this signal the same as the other one
             {
                 return SignalName.Equals(other.SignalName) && SpawningFaction.Equals(other.SpawningFaction) && SpawningState.Equals(other.SpawningState) &&
-                       USSType.Equals(other.USSType) && ThreatLevel == other.ThreatLevel && ClassOfSignal == other.ClassOfSignal && ExpiryUTC == other.ExpiryUTC;
+                       USSType.Equals(other.USSType) && ThreatLevel == other.ThreatLevel && ClassOfSignal == other.ClassOfSignal &&
+                       (ClassOfSignal == Classification.Carrier || ExpiryUTC == other.ExpiryUTC);       // note carriers have our own expiry on it, so we don't
             }
 
             public string ToString( bool showseentime)
