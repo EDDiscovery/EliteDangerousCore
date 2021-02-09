@@ -55,7 +55,7 @@ namespace EliteDangerousCore
             {
                 foreach (var body in sn.Bodies)
                 {
-                    if (body.fullname == jsaa.BodyDesignation)
+                    if (body.FullName == jsaa.BodyDesignation)
                     {
                         relatednode = body;
                         break;
@@ -67,8 +67,8 @@ namespace EliteDangerousCore
             {
                 foreach (var body in sn.Bodies)
                 {
-                    if ((body.fullname == jsaa.BodyName || body.customname == jsaa.BodyName) &&
-                        (body.fullname != sys.Name || body.level != 0))
+                    if ((body.FullName == jsaa.BodyName || body.CustomName == jsaa.BodyName) &&
+                        (body.FullName != sys.Name || body.Level != 0))
                     {
                         relatednode = body;
                         break;

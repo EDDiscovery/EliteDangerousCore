@@ -120,6 +120,8 @@
     <Compile Include="Screenshots\ScreenShotConverter.cs" />
     <Compile Include="Screenshots\ScreenShotDirectoryWatcher.cs" />
     <Compile Include="Screenshots\ScreenShotImageConverter.cs" />
+    <Compile Include="StarScan\StarSystemNode.cs" />
+    <Compile Include="StarScan\StarScanNode.cs" />
     <Compile Include="StarScan\StarScanHelpers.cs" />
     <Compile Include="BodyDesignations\BodyDesignation.cs" />
     <Compile Include="StarScan\StarScanJournalScans.cs" />

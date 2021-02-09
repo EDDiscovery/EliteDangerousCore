@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2019 EDDiscovery development team
+ * Copyright © 2015 - 2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -50,11 +50,11 @@ namespace EliteDangerousCore
             {
                 foreach (var body in sn.Bodies)
                 {
-                    if ((body.fullname == sc.Body || body.customname == sc.Body) &&
-                        (body.fullname != sc.StarSystem || (sc.BodyType == "Star" && body.level == 0) || (sc.BodyType != "Star" && body.level != 0)))
+                    if ((body.FullName == sc.Body || body.CustomName == sc.Body) &&
+                        (body.FullName != sc.StarSystem || (sc.BodyType == "Star" && body.Level == 0) || (sc.BodyType != "Star" && body.Level != 0)))
                     {
                         relatedScan = body;
-                        sc.BodyDesignation = body.fullname;
+                        sc.BodyDesignation = body.FullName;
                         break;
                     }
                 }
@@ -64,8 +64,8 @@ namespace EliteDangerousCore
             {
                 foreach (var body in sn.Bodies)
                 {
-                    if ((body.fullname == sc.Body || body.customname == sc.Body) &&
-                        (body.fullname != sc.StarSystem || (sc.BodyType == "Star" && body.level == 0) || (sc.BodyType != "Star" && body.level != 0)))
+                    if ((body.FullName == sc.Body || body.CustomName == sc.Body) &&
+                        (body.FullName != sc.StarSystem || (sc.BodyType == "Star" && body.Level == 0) || (sc.BodyType != "Star" && body.Level != 0)))
                     {
                         relatedScan = body;
                         break;
@@ -75,7 +75,6 @@ namespace EliteDangerousCore
 
             if (relatedScan != null && relatedScan.ScanData == null)
             {
-                relatedScan.BodyLoc = sc;
                 return true; // We already have the scan
             }
 
@@ -199,7 +198,7 @@ namespace EliteDangerousCore
 
         private ScanNode ProcessElementsBodyAndID(IBodyNameAndID sc, ISystem sys, SystemNode sn, string customname, List<string> elements, ScanNodeType starscannodetype, bool isbeltcluster)
         {
-            SortedList<string, ScanNode> cnodes = sn.starnodes;
+            SortedList<string, ScanNode> cnodes = sn.StarNodes;
             ScanNode node = null;
 
             for (int lvl = 0; lvl < elements.Count; lvl++)
@@ -217,20 +216,20 @@ namespace EliteDangerousCore
 
                 if (cnodes == null || !cnodes.TryGetValue(elements[lvl], out sublv))
                 {
-                    if (node != null && node.children == null)
+                    if (node != null && node.Children == null)
                     {
-                        node.children = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());
-                        cnodes = node.children;
+                        node.Children = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());
+                        cnodes = node.Children;
                     }
 
                     sublv = new ScanNode
                     {
-                        ownname = ownname,
-                        fullname = lvl == 0 ? (sys.Name + (ownname.Contains("Main") ? "" : (" " + ownname))) : node.fullname + " " + ownname,
+                        OwnName = ownname,
+                        FullName = lvl == 0 ? (sys.Name + (ownname.Contains("Main") ? "" : (" " + ownname))) : node.FullName + " " + ownname,
                         ScanData = null,
-                        children = null,
-                        type = sublvtype,
-                        level = lvl,
+                        Children = null,
+                        NodeType = sublvtype,
+                        Level = lvl,
                         IsTopLevelNode = lvl == 0
                     };
 
@@ -238,12 +237,12 @@ namespace EliteDangerousCore
                 }
 
                 node = sublv;
-                cnodes = node.children;
+                cnodes = node.Children;
 
                 if (lvl == elements.Count - 1)
                 {
-                    node.BodyLoc = sc;
-                    node.customname = customname;
+                    node.CustomName = customname;
+                    //if (customname != null)    System.Diagnostics.Debug.WriteLine("Custom name " + customname);
 
                     if (sc.BodyID != null)
                     {
@@ -251,9 +250,9 @@ namespace EliteDangerousCore
                     }
 
                     if (sc.BodyType == "" || sc.BodyType == "Null" || sc.BodyType == "Barycentre")
-                        node.type = ScanNodeType.barycentre;
+                        node.NodeType = ScanNodeType.barycentre;
                     else if (sc.BodyType == "Belt")
-                        node.type = ScanNodeType.belt;
+                        node.NodeType = ScanNodeType.belt;
                 }
             }
 

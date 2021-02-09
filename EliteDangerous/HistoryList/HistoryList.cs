@@ -14,6 +14,8 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
+//#define LISTSCANS
+
 using EliteDangerousCore.DB;
 using EliteDangerousCore.EDSM;
 using EliteDangerousCore.JournalEvents;
@@ -22,6 +24,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
+
 
 namespace EliteDangerousCore
 {
@@ -212,12 +215,12 @@ namespace EliteDangerousCore
             {
                 using (var fileout = new System.IO.StreamWriter(@"c:\code\scans.csv"))
                 {
-                    fileout.WriteLine($"System,fullname,ownname,customname,bodyname,bodydesignation");
+                    fileout.WriteLine($"System,0,fullname,ownname,customname,bodyname,bodydesignation");
                     foreach (var sn in hist.StarScan.ScansSortedByName())
                     {
                         foreach (var body in sn.Bodies)
                         {
-                            fileout.WriteLine($"{sn.system.Name},0, {body.fullname},{body.ownname},{body.customname},{body.ScanData?.BodyName},{body.ScanData?.BodyDesignation}");
+                            fileout.WriteLine($"{sn.System.Name},0, {body.FullName},{body.OwnName},{body.CustomName},{body.ScanData?.BodyName},{body.ScanData?.BodyDesignation}");
                         }
                     }
                 }

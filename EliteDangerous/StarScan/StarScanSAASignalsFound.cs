@@ -55,7 +55,7 @@ namespace EliteDangerousCore
             {
                 foreach (var body in sn.Bodies)
                 {
-                    if (body.fullname == jsaa.BodyDesignation)
+                    if (body.FullName == jsaa.BodyDesignation)
                     {
                         relatednode = body;
                         break;
@@ -63,25 +63,25 @@ namespace EliteDangerousCore
                 }
             }
 
-            if (relatednode != null && relatednode.type == ScanNodeType.ring && relatednode.ScanData != null && relatednode.ScanData.Parents != null && sn.NodesByID.ContainsKey(relatednode.ScanData.Parents[0].BodyID))
+            if (relatednode != null && relatednode.NodeType == ScanNodeType.ring && relatednode.ScanData != null && relatednode.ScanData.Parents != null && sn.NodesByID.ContainsKey(relatednode.ScanData.Parents[0].BodyID))
             {
                 relatednode = sn.NodesByID[relatednode.ScanData.Parents[0].BodyID];
             }
 
-            if (relatednode == null || relatednode.type == ScanNodeType.ring)
+            if (relatednode == null || relatednode.NodeType == ScanNodeType.ring)
             {
                 bool ringname = jsaa.BodyName.EndsWith("A Ring") || jsaa.BodyName.EndsWith("B Ring") || jsaa.BodyName.EndsWith("C Ring") || jsaa.BodyName.EndsWith("D Ring");
                 string ringcutname = ringname ? jsaa.BodyName.Left(jsaa.BodyName.Length - 6).TrimEnd() : null;
 
                 foreach (var body in sn.Bodies)
                 {
-                    if ((body.fullname == jsaa.BodyName || body.customname == jsaa.BodyName) &&
-                        (body.fullname != sys.Name || body.level != 0))
+                    if ((body.FullName == jsaa.BodyName || body.CustomName == jsaa.BodyName) &&
+                        (body.FullName != sys.Name || body.Level != 0))
                     {
                         relatednode = body;
                         break;
                     }
-                    else if (ringcutname != null && body.fullname.Equals(ringcutname))
+                    else if (ringcutname != null && body.FullName.Equals(ringcutname))
                     {
                         relatednode = body;
                         break;

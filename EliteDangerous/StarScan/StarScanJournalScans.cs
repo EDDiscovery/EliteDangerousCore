@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2016 EDDiscovery development team
+ * Copyright © 2015 - 2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -114,7 +114,7 @@ namespace EliteDangerousCore
 
                     // Reprocess if we've encountered the primary (A) star and we already have a "Main Star"
 
-                    if (reprocessPrimary && sn.starnodes.Any(n => n.Key.Length > 1 && n.Value.type == ScanNodeType.star))
+                    if (reprocessPrimary && sn.StarNodes.Any(n => n.Key.Length > 1 && n.Value.NodeType == ScanNodeType.star))
                     {
                         ReProcess(sn);
                     }
@@ -132,13 +132,13 @@ namespace EliteDangerousCore
             List<JournalScan> bodies = sn.Bodies.Where(b => b.ScanData != null).Select(b => b.ScanData).ToList();
 
             // reset the nodes to zero
-            sn.starnodes = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());
+            sn.StarNodes = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());
             sn.NodesByID = new SortedList<int, ScanNode>();
 
             foreach (JournalScan js in bodies)              // replay into process the body scans
             {
-                js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sn.system.Name);
-                ProcessJournalScan(js, sn.system);
+                js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sn.System.Name);
+                ProcessJournalScan(js, sn.System);
             }
         }
 
@@ -238,7 +238,7 @@ namespace EliteDangerousCore
 
         private ScanNode ProcessElementsJournalScan(JournalScan sc, ISystem sys, SystemNode sn, string customname, List<string> elements, ScanNodeType starscannodetype, bool isbeltcluster, bool isring = false)
         {
-            SortedList<string, ScanNode> cnodes = sn.starnodes;
+            SortedList<string, ScanNode> cnodes = sn.StarNodes;
             ScanNode node = null;
             List<JournalScan.BodyParent> ancestors = sc.Parents?.AsEnumerable()?.ToList();
             List<JournalScan.BodyParent> ancestorbodies = ancestors?.Where(a => a.Type == "Star" || a.Type == "Planet" || a.Type == "Belt")?.Reverse()?.ToList();
@@ -273,20 +273,20 @@ namespace EliteDangerousCore
 
                 if (cnodes == null || !cnodes.TryGetValue(elements[lvl], out sublv))
                 {
-                    if (node != null && node.children == null)
+                    if (node != null && node.Children == null)
                     {
-                        node.children = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());
-                        cnodes = node.children;
+                        node.Children = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());
+                        cnodes = node.Children;
                     }
 
                     sublv = new ScanNode
                     {
-                        ownname = ownname,
-                        fullname = lvl == 0 ? (sys.Name + (ownname.Contains("Main") ? "" : (" " + ownname))) : node.fullname + " " + ownname,
+                        OwnName = ownname,
+                        FullName = lvl == 0 ? (sys.Name + (ownname.Contains("Main") ? "" : (" " + ownname))) : node.FullName + " " + ownname,
                         ScanData = null,
-                        children = null,
-                        type = sublvtype,
-                        level = lvl,
+                        Children = null,
+                        NodeType = sublvtype,
+                        Level = lvl,
                         IsTopLevelNode = lvl == 0
                     };
 
@@ -303,13 +303,13 @@ namespace EliteDangerousCore
                 }
 
                 node = sublv;
-                cnodes = node.children;
+                cnodes = node.Children;
 
                 if (lvl == elements.Count - 1)
                 {
                     node.ScanData = sc;     // only overwrites if scan is better
                     node.ScanData.SetMapped(node.IsMapped, node.WasMappedEfficiently);      // pass this data to node, as we may have previously had a SAA Scan
-                    node.customname = customname;
+                    node.CustomName = customname;
 
                     if (sc.BodyID != null)
                     {
@@ -371,24 +371,24 @@ namespace EliteDangerousCore
                         beltname = "A Belt";
                     }
 
-                    if (node.children == null || !node.children.TryGetValue(beltname, out belt))
+                    if (node.Children == null || !node.Children.TryGetValue(beltname, out belt))
                     {
-                        if (node.children == null)
-                            node.children = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());
+                        if (node.Children == null)
+                            node.Children = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());
 
                         belt = new ScanNode
                         {
-                            ownname = beltname,
-                            fullname = node.fullname + " " + beltname,
-                            customname = ring.Name,
+                            OwnName = beltname,
+                            FullName = node.FullName + " " + beltname,
+                            CustomName = ring.Name,
                             ScanData = null,
                             BeltData = ring,
-                            children = null,
-                            type = ScanNodeType.belt,
-                            level = 1
+                            Children = null,
+                            NodeType = ScanNodeType.belt,
+                            Level = 1
                         };
 
-                        node.children.Add(beltname, belt);
+                        node.Children.Add(beltname, belt);
                     }
 
                     belt.BeltData = ring;

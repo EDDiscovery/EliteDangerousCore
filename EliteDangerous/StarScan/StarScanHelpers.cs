@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2016 EDDiscovery development team
+ * Copyright © 2015 - 2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -40,7 +40,7 @@ namespace EliteDangerousCore
                 return sn;
 
             // not found, make a new node
-            sn = new SystemNode() { system = sys, starnodes = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>()) };
+            sn = new SystemNode() { System = sys, StarNodes = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>()) };
 
             // if it has a system address, add it to that list, else add to name list
             if (sys.SystemAddress.HasValue)
