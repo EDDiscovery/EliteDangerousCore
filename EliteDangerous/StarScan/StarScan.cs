@@ -24,8 +24,19 @@ namespace EliteDangerousCore
 {
     public partial class StarScan
     {
-        private Dictionary<Tuple<string, long>, SystemNode> scandata = new Dictionary<Tuple<string, long>, SystemNode>();
-        private Dictionary<string, List<SystemNode>> scandataByName = new Dictionary<string, List<SystemNode>>();
+        // we store by sys/addr if it has an address, else we store by name only. We search by name first, then the tuple. This copes with old entries having no sys addr
+
+        public Dictionary<Tuple<string, long?>, SystemNode> ScanDataByNameSysaddr { get; private set; } = new Dictionary<Tuple<string, long?>, SystemNode>();
+        public Dictionary<string, SystemNode> scanDataByName { get; private set; } = new Dictionary<string, SystemNode>();
+
+        public List<SystemNode> ScansSortedByName()
+        {
+            List<SystemNode> scans = scanDataByName.Values.ToList();
+            scans.AddRange(ScanDataByNameSysaddr.Values.ToList());
+            scans.Sort(delegate (SystemNode l, SystemNode r) { return l.system.Name.CompareTo(r.system.Name); });
+            return scans;
+        }
+
         private const string MainStar = "Main Star";
 
         [DebuggerDisplay("SN {system.Name}")]
@@ -124,7 +135,7 @@ namespace EliteDangerousCore
             public ScanNodeType type;
             public string fullname;                 // full name
             public string ownname;                  // own name              
-            public string customname;               // e.g. Earth
+            public string customname;               //
             public SortedList<string, ScanNode> children;         // kids
             public int level;                       // level within SystemNode
             public int? BodyID;

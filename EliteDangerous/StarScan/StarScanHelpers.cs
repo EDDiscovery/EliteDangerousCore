@@ -32,45 +32,35 @@ namespace EliteDangerousCore
 
         private SystemNode GetOrCreateSystemNode(ISystem sys)
         {
-            Tuple<string, long> withedsm = new Tuple<string, long>(sys.Name, sys.EDSMID);
+            if (scanDataByName.TryGetValue(sys.Name, out SystemNode sn))            // try name
+                return sn;
 
-            SystemNode sn = null;
-            if (scandata.ContainsKey(withedsm))         // if with edsm (if id_edsm=0, then thats okay)
-                sn = scandata[withedsm];
-            else if (scandataByName.ContainsKey(sys.Name))  // if we now have an edsm id, see if we have one without it 
-            {
-                foreach (SystemNode _sn in scandataByName[sys.Name])
-                {
-                    if (_sn.system.Equals(sys))
-                    {
-                        if (sys.EDSMID != 0)             // yep, replace
-                        {
-                            scandata.Add(new Tuple<string, long>(sys.Name, sys.EDSMID), _sn);
-                        }
-                        sn = _sn;
-                        break;
-                    }
-                }
-            }
+            // try tuple name, sysaddr
+            if (sys.SystemAddress.HasValue && ScanDataByNameSysaddr.TryGetValue(sys.NameSystemAddress, out sn))
+                return sn;
 
-            if (sn == null)
-            {
-                sn = new SystemNode() { system = sys, starnodes = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>()) };
+            // not found, make a new node
+            sn = new SystemNode() { system = sys, starnodes = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>()) };
 
-                if (!scandataByName.ContainsKey(sys.Name))
-                {
-                    scandataByName[sys.Name] = new List<SystemNode>();
-                }
-
-                scandataByName[sys.Name].Add(sn);
-
-                if (sys.EDSMID != 0)
-                {
-                    scandata.Add(new Tuple<string, long>(sys.Name, sys.EDSMID), sn);
-                }
-            }
+            // if it has a system address, add it to that list, else add to name list
+            if (sys.SystemAddress.HasValue)
+                ScanDataByNameSysaddr[sys.NameSystemAddress] = sn;
+            else
+                scanDataByName[sys.Name] = sn;
 
             return sn;
+        }
+
+        private SystemNode FindSystemNode(ISystem sys)
+        {
+            if (scanDataByName.TryGetValue(sys.Name, out SystemNode sn))            // try name
+                return sn;
+
+            // try tuple name, sysaddr
+            if (sys.SystemAddress.HasValue && ScanDataByNameSysaddr.TryGetValue(sys.NameSystemAddress, out sn))
+                return sn;
+
+            return null;
         }
 
         // bodyid can be null, bodyname must be set.
@@ -127,27 +117,6 @@ namespace EliteDangerousCore
                 string s = designation.Substring(0, starname.Length);
                 if (starname.Equals(s, StringComparison.InvariantCultureIgnoreCase))
                     return designation.Substring(starname.Length).Trim();
-            }
-
-            return null;
-        }
-
-        private SystemNode FindSystemNode(ISystem sys)
-        {
-            Tuple<string, long> withedsm = new Tuple<string, long>(sys.Name, sys.EDSMID);
-
-            if (scandata.ContainsKey(withedsm))         // if with edsm (if id_edsm=0, then thats okay)
-                return scandata[withedsm];
-
-            if (scandataByName.ContainsKey(sys.Name))
-            {
-                foreach (SystemNode sn in scandataByName[sys.Name])
-                {
-                    if (sn.system.Equals(sys))
-                    {
-                        return sn;
-                    }
-                }
             }
 
             return null;

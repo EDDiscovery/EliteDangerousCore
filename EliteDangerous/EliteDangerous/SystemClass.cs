@@ -45,6 +45,8 @@ namespace EliteDangerousCore
         public int GridID { get; set; }
         public long? SystemAddress { get; set; }
 
+        public Tuple<string, long?> NameSystemAddress { get { return new Tuple<string, long?>(Name, SystemAddress); } }
+
         public SystemClassBase()
         {
             Xi = int.MinValue;

@@ -208,6 +208,22 @@ namespace EliteDangerousCore
 
             hist.CommanderId = CurrentCommander;
 
+#if LISTSCANS
+            {
+                using (var fileout = new System.IO.StreamWriter(@"c:\code\scans.csv"))
+                {
+                    fileout.WriteLine($"System,fullname,ownname,customname,bodyname,bodydesignation");
+                    foreach (var sn in hist.StarScan.ScansSortedByName())
+                    {
+                        foreach (var body in sn.Bodies)
+                        {
+                            fileout.WriteLine($"{sn.system.Name},0, {body.fullname},{body.ownname},{body.customname},{body.ScanData?.BodyName},{body.ScanData?.BodyDesignation}");
+                        }
+                    }
+                }
+            }
+#endif
+
             return hist;
         }
 
@@ -398,9 +414,9 @@ namespace EliteDangerousCore
             return false;
         }
 
-        #endregion
+#endregion
 
-        #region EDSM
+#region EDSM
 
         public void FillInPositionsFSDJumps(Action<string> logger)       // call if you want to ensure we have the best posibile position data on FSD Jumps.  Only occurs on pre 2.1 netlogs
         {
@@ -465,7 +481,7 @@ namespace EliteDangerousCore
             }
         }
 
-        #endregion
+#endregion
 
     }
 }

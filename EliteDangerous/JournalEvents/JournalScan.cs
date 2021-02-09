@@ -23,6 +23,7 @@ using System.Text;
 
 namespace EliteDangerousCore.JournalEvents
 {
+    [System.Diagnostics.DebuggerDisplay("Event {EventTypeStr} {EventTimeUTC} {BodyName} {BodyDesignation}")]
     [JournalEntryType(JournalTypeEnum.Scan)]
     public class JournalScan : JournalEntry, IScanDataChanges
     {
@@ -262,8 +263,6 @@ namespace EliteDangerousCore.JournalEvents
 
         public JournalScan(JObject evt) : base(evt, JournalTypeEnum.Scan)
         {
-
-
             ScanType = evt["ScanType"].Str();                               // ALL
             BodyName = evt["BodyName"].Str();                               // ALL
             BodyID = evt["BodyID"].IntNull();                               // ALL
