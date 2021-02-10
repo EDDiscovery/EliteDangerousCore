@@ -24,12 +24,12 @@ namespace EliteDangerousCore
 {
     public partial class StarScan
     {
-        [DebuggerDisplay("SN {system.Name}")]
+        [DebuggerDisplay("SN {System.Name} {System.SystemAddress}")]
         public class SystemNode
         {
             public ISystem System;
 
-            public SortedList<string, ScanNode> StarNodes;                                              // node list
+            public SortedList<string, ScanNode> StarNodes = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());   // node list
             public SortedList<int, ScanNode> NodesByID = new SortedList<int, ScanNode>();               // by ID list
 
             public bool EDSMCacheCheck = false; // check flags
@@ -39,10 +39,12 @@ namespace EliteDangerousCore
 
             public List<JournalFSSSignalDiscovered.FSSSignal> FSSSignalList = new List<JournalFSSSignalDiscovered.FSSSignal>();     // set by FSSSignalsDiscovered
 
-            public int MaxTopLevelBodyID = 0;       // body Ids seen
-            public int MinPlanetBodyID = 512;
-
             public List<Tuple<JournalEntry, ISystem>> ToProcess;     // entries seen but yet to be processed due to no scan node (used by reports which do not create scan nodes)
+
+            public SystemNode(ISystem sys)
+            {
+                System = sys;
+            }
 
             public IEnumerable<ScanNode> Bodies
             {

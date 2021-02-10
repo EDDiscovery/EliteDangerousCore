@@ -40,7 +40,7 @@ namespace EliteDangerousCore
                 return sn;
 
             // not found, make a new node
-            sn = new SystemNode() { System = sys, StarNodes = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>()) };
+            sn = new SystemNode(sys);
 
             // if it has a system address, add it to that list, else add to name list
             if (sys.SystemAddress.HasValue)

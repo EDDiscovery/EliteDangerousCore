@@ -23,7 +23,6 @@ namespace EliteDangerousCore
 {
     public partial class StarScan
     {
-        // used by historylist directly for a single update during play, in foreground..  Also used by above.. so can be either in fore/back
         public bool AddScanToBestSystem(JournalScan je, int startindex, List<HistoryEntry> hl, out HistoryEntry he, out JournalLocOrJump jl)
         {
             he = null;
@@ -32,6 +31,8 @@ namespace EliteDangerousCore
             if (je?.BodyName == null)
                 return false;
 
+            // go thru the list of history entries looking for a Loc 
+
             for (int j = startindex; j >= 0; j--)   // same as FindBestSystem
             {
                 he = hl[j];
@@ -39,17 +40,20 @@ namespace EliteDangerousCore
                 if (he.IsLocOrJump)
                 {
                     jl = (JournalLocOrJump)he.journalEntry;
+
+                    // get the body designation, given the je/system name
+
                     string designation = BodyDesignations.GetBodyDesignation(je, he.System.Name);
                     System.Diagnostics.Debug.Assert(designation != null);
 
-                    if (je.IsStarNameRelated(he.System.Name, designation, he.System.SystemAddress))       // if its part of the name, use it
+                    // either the name/sys address matches, or the designation matches the star of the system name
+                    if (je.IsStarNameRelated(he.System.Name,he.System.SystemAddress, designation))       
                     {
                         je.BodyDesignation = designation;
                         return ProcessJournalScan(je, he.System, true);
                     }
-                    else if (jl != null && je.IsStarNameRelated(jl.StarSystem, designation, jl.SystemAddress))
+                    else if (jl.StarSystem != null && je.IsStarNameRelated(jl.StarSystem, jl.SystemAddress, designation)) // if we have a starsystem name, and its related, its a rename, ignore it
                     {
-                        // Ignore scans where the system name has changed
                         System.Diagnostics.Trace.WriteLine($"Rejecting body {designation} ({je.BodyName}) in system {he.System.Name} => {jl.StarSystem} due to system rename");
                         return false;
                     }
@@ -72,8 +76,8 @@ namespace EliteDangerousCore
             // handle Aurioum B A BELT
             // Kyloasly OY-Q d5-906 13 1
 
-            // Extract elements from name
-            List<string> elements = ExtractElementsJournalScan(sc, sys, out bool isbeltcluster, out ScanNodeType starscannodetype, out bool isring);
+            // Extract elements from name, and extract if belt, top node type, if ring 
+            List<string> elements = ExtractElementsJournalScan(sc, sys, out ScanNodeType starscannodetype, out bool isbeltcluster, out bool isring);
 
             // Bail out if no elements extracted
             if (elements.Count == 0)
@@ -93,7 +97,7 @@ namespace EliteDangerousCore
             // Get custom name if different to designation
             string customname = GetCustomNameJournalScan(sc, sys);
 
-            // Process elements
+            // Process elements, 
             ScanNode node = ProcessElementsJournalScan(sc, sys, sn, customname, elements, starscannodetype, isbeltcluster, isring);
 
             if (node.BodyID != null)
@@ -112,11 +116,23 @@ namespace EliteDangerousCore
                 {
                     BodyDesignations.CachePrimaryStar(sc, sys);
 
-                    // Reprocess if we've encountered the primary (A) star and we already have a "Main Star"
+                    // Reprocess if we've encountered the primary (A) star and we already have a "Main Star", we reprocess to 
+                    // allow any updates to PrimaryCache to make a difference
 
-                    if (reprocessPrimary && sn.StarNodes.Any(n => n.Key.Length > 1 && n.Value.NodeType == ScanNodeType.star))
+                    if (reprocessPrimary && sn.StarNodes.Any(n => n.Key.Length > 1 && n.Value.NodeType == ScanNodeType.star))       
                     {
-                        ReProcess(sn);
+                        // get bodies with scans
+                        List<JournalScan> bodies = sn.Bodies.Where(b => b.ScanData != null).Select(b => b.ScanData).ToList();
+
+                        // reset the nodes to zero
+                        sn.StarNodes = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());
+                        sn.NodesByID = new SortedList<int, ScanNode>();
+
+                        foreach (JournalScan js in bodies)              // replay into process the body scans.. using the newly updated body designation (primary star cache) to correct any errors
+                        {
+                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sn.System.Name);
+                            ProcessJournalScan(js, sn.System);
+                        }
                     }
                 }
             }
@@ -126,228 +142,168 @@ namespace EliteDangerousCore
             return true;
         }
 
-        private void ReProcess(SystemNode sn)
-        {
-            // get bodies with scans
-            List<JournalScan> bodies = sn.Bodies.Where(b => b.ScanData != null).Select(b => b.ScanData).ToList();
+        // extract elements of the name and form into an element array
+        // element[0] is the star or barycentre
+        // element[0] star/barycentre [ element[1] planet [ element[2] submoon [ element[3] subsubmoon ]]]
+        // if belt cluster, we get [0] = star, [1] = belt, [2] = cluster N
+        // if ring, we get [0] = star, [2] = body, ... [last-1] = ring name
 
-            // reset the nodes to zero
-            sn.StarNodes = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());
-            sn.NodesByID = new SortedList<int, ScanNode>();
-
-            foreach (JournalScan js in bodies)              // replay into process the body scans
-            {
-                js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sn.System.Name);
-                ProcessJournalScan(js, sn.System);
-            }
-        }
-
-        private List<string> ExtractElementsJournalScan(JournalScan sc, ISystem sys, out bool isbeltcluster, out ScanNodeType starscannodetype, out bool isring)
+        private List<string> ExtractElementsJournalScan(JournalScan sc, ISystem sys, out ScanNodeType starscannodetype, out bool isbeltcluster, out bool isring)
         {
             starscannodetype = ScanNodeType.star;
             isbeltcluster = false;
             isring = false;
             List<string> elements;
-            string rest = sc.IsStarNameRelatedReturnRest(sys.Name, sys.SystemAddress);
+                
+            string rest = sc.IsStarNameRelatedReturnRest(sys.Name, sys.SystemAddress);      // extract any relationship between the system we are in and the name, and return it if so
 
-            if (rest != null)                                   // if we have a relationship..
+            if (rest != null)                                   // if we have a relationship between the system name and the body name
             {
-                if (sc.IsStar && !sc.IsEDSMBody && sc.DistanceFromArrivalLS == 0 && rest.Length >= 2)
+                if (sc.IsStar && !sc.IsEDSMBody && sc.DistanceFromArrivalLS == 0 && rest.Length >= 2)       // star, primary, with name >= 2 (AB)
                 {
-                    elements = new List<string> { rest };
-                    starscannodetype = ScanNodeType.star;
+                    elements = new List<string> { rest };       // its a star, default
                 }
-                else if (rest.Length > 0)
+                else if (rest.Length > 0)                       // we have characters in rest, and its related to the system name
                 {
-                    elements = rest.Split(' ').ToList();
+                    elements = rest.Split(' ').ToList();        // split into spaced parts
 
-                    if (elements.Count == 4 && elements[0].Length == 1 && char.IsLetter(elements[0][0]) &&
+                    if (elements.Count == 4 && elements[0].Length == 1 && char.IsLetter(elements[0][0]) &&          // A belt cluster N
                             elements[1].Equals("belt", StringComparison.InvariantCultureIgnoreCase) &&
                             elements[2].Equals("cluster", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        elements = new List<string> { MainStar, elements[0] + " " + elements[1], elements[2] + " " + elements[3] };
+                        elements = new List<string> { MainStar, elements[0] + " " + elements[1], elements[2] + " " + elements[3] };     // reform into Main Star | A belt | Cluster N
                         isbeltcluster = true;
                     }
-                    else if (elements.Count == 5 && elements[0].Length >= 1 &&
+                    else if (elements.Count == 5 && elements[0].Length >= 1 &&                                      // AA A belt cluster N
                             elements[1].Length == 1 && char.IsLetter(elements[1][0]) &&
                             elements[2].Equals("belt", StringComparison.InvariantCultureIgnoreCase) &&
                             elements[3].Equals("cluster", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        elements = new List<string> { elements[0], elements[1] + " " + elements[2], elements[3] + " " + elements[4] };
+                        elements = new List<string> { elements[0], elements[1] + " " + elements[2], elements[3] + " " + elements[4] };      // reform into <star> | A belt | Cluster N
                         isbeltcluster = true;
                     }
                     else if (elements.Count >= 3 &&
-                             elements[elements.Count - 1].Equals("ring", StringComparison.InvariantCultureIgnoreCase) &&
+                             elements[elements.Count - 1].Equals("ring", StringComparison.InvariantCultureIgnoreCase) &&        // A 2 A ring
                              elements[elements.Count - 2].Length == 1 &&
                              char.IsLetter(elements[elements.Count - 2][0]))
-                    {
+                    {                                                                                               // reform into A | 2 | A ring three level or A A ring
                         elements = elements.Take(elements.Count - 2).Concat(new string[] { elements[elements.Count - 2] + " " + elements[elements.Count - 1] }).ToList();
                         isring = true;
                     }
 
-                    if (char.IsDigit(elements[0][0]))       // if digits, planet number, no star designator
-                        elements.Insert(0, MainStar);         // no star designator, main star, add MAIN
-                    else if (elements[0].Length > 1 && elements[0] != MainStar)        // designator, is it multiple chars.. 
-                        starscannodetype = ScanNodeType.barycentre;
+                    if (char.IsDigit(elements[0][0]))                                   // if digits, planet number, no star designator
+                        elements.Insert(0, MainStar);                                   // no star designator, main star, add MAIN
+                    else if (elements[0].Length > 1 && elements[0] != MainStar)         // designator, is it multiple chars.. its a barycentre ABC
+                        starscannodetype = ScanNodeType.barycentre;                     // override node type to barycentre
                 }
                 else
                 {
-                    elements = new List<string>();          // only 1 item, the star, which is the same as the system name..
-                    elements.Add(MainStar);              // Sol / SN:Sol should come thru here
+                    elements = new List<string>();                                      // only 1 item, the star, which is the same as the system name..
+                    elements.Add(MainStar);                                             // Sol / SN:Sol should come thru here
                 }
             }
-            else if (sc.IsStar && !sc.IsEDSMBody && sc.DistanceFromArrivalLS == 0)
+            else if (sc.IsStar && !sc.IsEDSMBody && sc.DistanceFromArrivalLS == 0)      // name has no relationship to system (Gliese..) and its a star at LS=0
             {
-                elements = new List<string> { sc.BodyName };
-                starscannodetype = ScanNodeType.star;
+                elements = new List<string> { sc.BodyName };                            // its a star
             }
             else
-            {                                               // so not part of starname        
-                elements = sc.BodyName.Split(' ').ToList();     // not related in any way (earth) so assume all bodyparts, and 
-                elements.Insert(0, MainStar);                     // insert the MAIN designator as the star designator
+            {                                                                           // name has no relationship to system (Earth) but its not at LS=0
+                elements = sc.BodyName.Split(' ').ToList();                             // use all bodyparts, and 
+                elements.Insert(0, MainStar);                                           // insert the MAIN designator as the star designator
             }
 
             return elements;
         }
 
-        private string GetCustomNameJournalScan(JournalScan sc, ISystem sys)
+        // see above for elements
+
+        private ScanNode ProcessElementsJournalScan(JournalScan sc, ISystem sys, SystemNode systemnode, string customname, List<string> elements, 
+                                                    ScanNodeType starscannodetype, bool isbeltcluster, bool isring)
         {
-            string rest = sc.IsStarNameRelatedReturnRest(sys.Name, sys.SystemAddress);
-            string customname = null;
 
-            if (sc.BodyName.StartsWith(sys.Name, StringComparison.InvariantCultureIgnoreCase))
-            {
-                customname = sc.BodyName.Substring(sys.Name.Length).TrimStart(' ', '-');
+            List<JournalScan.BodyParent> ancestors = sc.Parents?.AsEnumerable()?.ToList();      // this includes Rings, Barycentres(Nulls) that frontier put into the list..
 
-                if (customname == "" && !sc.IsStar)
-                {
-                    customname = sc.BodyName;
-                }
-                else if (customname == "" || customname == rest)
-                {
-                    customname = null;
-                }
-            }
-            else if (rest == null || !sc.BodyName.EndsWith(rest))
-            {
-                customname = sc.BodyName;
-            }
-
-            return customname;
-        }
-
-        private ScanNode ProcessElementsJournalScan(JournalScan sc, ISystem sys, SystemNode sn, string customname, List<string> elements, ScanNodeType starscannodetype, bool isbeltcluster, bool isring = false)
-        {
-            SortedList<string, ScanNode> cnodes = sn.StarNodes;
-            ScanNode node = null;
-            List<JournalScan.BodyParent> ancestors = sc.Parents?.AsEnumerable()?.ToList();
+            // remove all rings and barycenters first, since thats not in our element list. We just want the bodies and belts
             List<JournalScan.BodyParent> ancestorbodies = ancestors?.Where(a => a.Type == "Star" || a.Type == "Planet" || a.Type == "Belt")?.Reverse()?.ToList();
-            ScanNode toplevelnode = null;
 
-            if ((ancestorbodies != null) && (starscannodetype != ScanNodeType.star))
-            {
-                ancestorbodies.Insert(0, null);
+            // but we need to add back the barycenter at the top, since we do add that that in the element list
+            if (ancestorbodies != null && starscannodetype == ScanNodeType.barycentre)      
+            {                                                                               
+                System.Diagnostics.Debug.Assert(ancestors[ancestors.Count - 1].Type == "Null");     // double check its a barycentre, it should be
+                ancestorbodies.Insert(0, ancestors[ancestors.Count - 1]);
             }
+
+            // for each element we process into the tree
+
+            SortedList<string, ScanNode> currentnodelist = systemnode.StarNodes;            // current operating node list, always made
+            ScanNode previousnode = null;                                                   // trails subnode by 1 to point to previous node
 
             for (int lvl = 0; lvl < elements.Count; lvl++)
             {
-                ScanNode sublv;
-                ScanNodeType sublvtype;
-                string ownname = elements[lvl];
+                ScanNodeType sublvtype = starscannodetype;                                  // top level, element[0] type is starscannode (star/barycentre)    
 
-                if (lvl == 0)
-                    sublvtype = starscannodetype;
-                else if (isbeltcluster)
+                if (lvl > 0)                                                                // levels pass 0, we need to determine what it is    
                 {
-                    if (lvl == 1)
-                        sublvtype = ScanNodeType.belt;          // A Belt
-                    else
-                        sublvtype = ScanNodeType.beltcluster;   // A Belt Cluster 1
-                }
-                else if (isring && lvl == elements.Count - 1)       // detailed scans of rings.. placed under planets
-                {
-                    sublvtype = ScanNodeType.ring;
-                }
-                else
-                    sublvtype = ScanNodeType.body;
-
-                if (cnodes == null || !cnodes.TryGetValue(elements[lvl], out sublv))
-                {
-                    if (node != null && node.Children == null)
+                    if (isbeltcluster)                                                      // a belt cluster is in three levels (star, belt, cluster number)
                     {
-                        node.Children = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());
-                        cnodes = node.Children;
+                        if (lvl == 1)                                                       // next level, its a belt
+                            sublvtype = ScanNodeType.belt;              
+                        else
+                            sublvtype = ScanNodeType.beltcluster;                           // third level, cluster
                     }
+                    else if (isring && lvl == elements.Count - 1)                           // and level, and a ring, mark as a ring
+                    {
+                        sublvtype = ScanNodeType.ring;
+                    }
+                    else
+                        sublvtype = ScanNodeType.body;                                      // default is body for levels 1 on
+                }
 
-                    sublv = new ScanNode
+                // if not got a node list (only happens when we have a scannode from another scannode), or we are not in the node list
+
+                if (currentnodelist == null || !currentnodelist.TryGetValue(elements[lvl], out ScanNode subnode)) // either no nodes, or not found the element name in the node list.
+                {
+                    if ( currentnodelist == null)    // no node list, happens when we are at least 1 level down as systemnode always has a node list, make one 
+                        currentnodelist = previousnode.Children = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>()); 
+
+                    string ownname = elements[lvl];
+
+                    subnode = new ScanNode            
                     {
                         OwnName = ownname,
-                        FullName = lvl == 0 ? (sys.Name + (ownname.Contains("Main") ? "" : (" " + ownname))) : node.FullName + " " + ownname,
+                        FullName = previousnode == null ? (sys.Name + (ownname.Contains("Main") ? "" : (" " + ownname))) : previousnode.FullName + " " + ownname,
                         ScanData = null,
                         Children = null,
                         NodeType = sublvtype,
                         Level = lvl,
-                        IsTopLevelNode = lvl == 0
                     };
 
-                    cnodes.Add(ownname, sublv);
+                    currentnodelist.Add(ownname, subnode);
                 }
 
-                if (ancestorbodies != null && lvl < ancestorbodies.Count && ancestorbodies[lvl] != null)
+                if (ancestorbodies != null && lvl < ancestorbodies.Count)       // if we have the ancestor list, we can fill in the bodyid for each part.
                 {
-                    if (sublv.BodyID == null)
+                    subnode.BodyID = ancestorbodies[lvl].BodyID;
+                    systemnode.NodesByID[(int)subnode.BodyID] = subnode;
+                }
+                    
+                if (lvl == elements.Count - 1)                                  // if we are at the end node..
+                {
+                    subnode.ScanData = sc;                                      // only overwrites if scan is better
+                    subnode.ScanData.SetMapped(subnode.IsMapped, subnode.WasMappedEfficiently);      // pass this data to node, as we may have previously had a SAA Scan
+                    subnode.CustomName = customname;                            // and its custom name
+
+                    if (sc.BodyID != null)                                      // if scan has a body ID, pass it to the node
                     {
-                        sublv.BodyID = ancestorbodies[lvl].BodyID;
-                        sn.NodesByID[(int)sublv.BodyID] = sublv;
+                        subnode.BodyID = sc.BodyID;
                     }
                 }
 
-                node = sublv;
-                cnodes = node.Children;
-
-                if (lvl == elements.Count - 1)
-                {
-                    node.ScanData = sc;     // only overwrites if scan is better
-                    node.ScanData.SetMapped(node.IsMapped, node.WasMappedEfficiently);      // pass this data to node, as we may have previously had a SAA Scan
-                    node.CustomName = customname;
-
-                    if (sc.BodyID != null)
-                    {
-                        node.BodyID = sc.BodyID;
-                    }
-                }
-
-                if (lvl == 0)
-                {
-                    toplevelnode = node;
-                }
-
-                if (node.BodyID != null)
-                {
-                    if (lvl == 0 && node.BodyID > sn.MaxTopLevelBodyID)
-                    {
-                        sn.MaxTopLevelBodyID = (int)node.BodyID;
-                    }
-                    else if (lvl > 0 && node.BodyID < sn.MinPlanetBodyID)
-                    {
-                        sn.MinPlanetBodyID = (int)node.BodyID;
-                    }
-                }
+                previousnode = subnode;                                         // move forward 1 step
+                currentnodelist = previousnode.Children;
             }
 
-            if (ancestors != null && ancestorbodies != null && ancestorbodies.Count > 0 && ancestorbodies[0] == null && toplevelnode.BodyID == null)
-            {
-                for (int lvl = 1; lvl < ancestors.Count; lvl++)
-                {
-                    if (ancestors[lvl - 1].BodyID >= sn.MinPlanetBodyID && ancestors[lvl].BodyID <= sn.MaxTopLevelBodyID)
-                    {
-                        toplevelnode.BodyID = ancestors[lvl].BodyID;
-                        sn.NodesByID[(int)toplevelnode.BodyID] = toplevelnode;
-                    }
-                }
-            }
-
-            return node;
+            return previousnode;
         }
 
         // asteroid belts, not rings, are assigned to sub nodes of the star in the node heirarchy as type==belt.
@@ -358,7 +314,6 @@ namespace EliteDangerousCore
             {
                 foreach (JournalScan.StarPlanetRing ring in sc.Rings)
                 {
-                    ScanNode belt;
                     string beltname = ring.Name;
                     string stardesig = sc.BodyDesignation ?? sc.BodyName;
 
@@ -371,7 +326,7 @@ namespace EliteDangerousCore
                         beltname = "A Belt";
                     }
 
-                    if (node.Children == null || !node.Children.TryGetValue(beltname, out belt))
+                    if (node.Children == null || !node.Children.TryGetValue(beltname, out ScanNode belt))
                     {
                         if (node.Children == null)
                             node.Children = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());
@@ -396,5 +351,32 @@ namespace EliteDangerousCore
             }
         }
 
+        // find a better name for the body
+
+        private string GetCustomNameJournalScan(JournalScan sc, ISystem sys)
+        {
+            string rest = sc.IsStarNameRelatedReturnRest(sys.Name, sys.SystemAddress);      // this can be null
+            string customname = null;
+
+            if (sc.BodyName.StartsWith(sys.Name, StringComparison.InvariantCultureIgnoreCase))  // if body starts with system name
+            {
+                customname = sc.BodyName.Substring(sys.Name.Length).TrimStart(' ', '-');    // cut out system name
+
+                if (customname == "" && !sc.IsStar)                                         // if empty, and not star, customname is just the body name
+                {
+                    customname = sc.BodyName;
+                }
+                else if (customname == "" || customname == rest)                            // if empty, or its the same as the star name related, its not got a customname
+                {
+                    customname = null;
+                }
+            }
+            else if (rest == null || !sc.BodyName.EndsWith(rest))                           // not related to star, or not related to bodyname, set back to body name
+            {
+                customname = sc.BodyName;
+            }
+
+            return customname;
+        }
     }
 }

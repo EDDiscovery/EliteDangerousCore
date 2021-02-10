@@ -26,13 +26,13 @@ namespace EliteDangerousCore
     {
         public enum ScanNodeType { star, barycentre, body, belt, beltcluster, ring };
 
-        [DebuggerDisplay("SN {fullname} {type} {level}")]
+        [DebuggerDisplay("SN {FullName} {NodeType} lv {Level} bid {BodyID}")]
         public class ScanNode
         {
             public ScanNodeType NodeType;
             public string FullName;                 // full name including star system
             public string OwnName;                  // own name excluding star system
-            public string CustomName;               //
+            public string CustomName;               // if we can extract from the journals a custom name of it, this holds it. Mostly null
             public SortedList<string, ScanNode> Children;         // kids
             public int Level;                       // level within SystemNode
             public int? BodyID;
@@ -40,8 +40,6 @@ namespace EliteDangerousCore
             public bool WasMappedEfficiently;
 
             public string CustomNameOrOwnname { get { return CustomName ?? OwnName; } }
-
-            public bool IsTopLevelNode;
 
             private JournalScan scandata;            // can be null if no scan, its a place holder, else its a journal scan
             private JournalScan.StarPlanetRing beltdata;    // can be null if not belt. if its a type==belt, it is populated with belt data

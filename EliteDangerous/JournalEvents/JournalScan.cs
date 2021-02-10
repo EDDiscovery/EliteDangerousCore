@@ -23,7 +23,7 @@ using System.Text;
 
 namespace EliteDangerousCore.JournalEvents
 {
-    [System.Diagnostics.DebuggerDisplay("Event {EventTypeStr} {EventTimeUTC} {BodyName} {BodyDesignation}")]
+    [System.Diagnostics.DebuggerDisplay("Event {EventTypeStr} {EventTimeUTC} {BodyName} {BodyDesignation} s{IsStar} p{IsPlanet}")]
     [JournalEntryType(JournalTypeEnum.Scan)]
     public class JournalScan : JournalEntry, IScanDataChanges
     {
@@ -1830,16 +1830,11 @@ namespace EliteDangerousCore.JournalEvents
 
         // is the name in starname 
 
-        public bool IsStarNameRelated(string starname, string designation , long? sysaddr )
+        public bool IsStarNameRelated(string starname,  long? sysaddr, string designation )
         {
             if (StarSystem != null && SystemAddress != null && sysaddr != null)     // if we are a star system AND sysaddr in the scan is set, and we got passed a system addr, direct compare
             {
                 return starname.Equals(StarSystem, StringComparison.InvariantCultureIgnoreCase) && sysaddr == SystemAddress;    // star is the same name and sys addr same
-            }
-
-            if (designation == null)        // no designation, use bodyname
-            {
-                designation = BodyName;
             }
 
             if (designation.Length >= starname.Length)      // and compare against starname root
@@ -1856,11 +1851,11 @@ namespace EliteDangerousCore.JournalEvents
             string designation = BodyDesignation ?? BodyName;
             string desigrest = null;
 
-            if (StarSystem != null && SystemAddress != null && sysaddr != null)
+            if (this.StarSystem != null && this.SystemAddress != null && sysaddr != null)
             {
-                if (starname != StarSystem || sysaddr != SystemAddress)
+                if (starname != this.StarSystem || sysaddr != this.SystemAddress)
                 {
-                    return null;
+                    return null;        // no relationship between starname and system in JE
                 }
 
                 desigrest = designation;

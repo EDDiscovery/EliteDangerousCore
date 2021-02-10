@@ -133,27 +133,38 @@ namespace EliteDangerousCore
 
             if (s == null)  // continue..
             {
+                // catch a star with the same name as the system, if so, its the primary A star
+
                 if (je.IsStar && je.BodyName.Equals(system, StringComparison.InvariantCultureIgnoreCase) && je.nOrbitalPeriod != null)
                 {
                     return system + " A";
                 }
+
+                // if the bodyname == system, or bodyname starts with system name + " ", its the best
 
                 if (je.BodyName.Equals(system, StringComparison.InvariantCultureIgnoreCase) || je.BodyName.StartsWith(system + " ", StringComparison.InvariantCultureIgnoreCase))
                 {
                     return je.BodyName;
                 }
 
+                // this catches systems like Pachamana/Gliese 893.3 B
+                // both are in system Pachamana, when Pachamana A is added its caught by line 105 of journalscans.cs, and adds it as a primary body
+                // it then does a reprocess of the existing nodes to catch any names which need nerfing
+                // Gliese 839.3 B, with the same orbital parameters, is then recognised as the B star of the system
+
                 if (je.IsStar && primaryStarScans.ContainsKey(system))
                 {
                     foreach (JournalScan primary in primaryStarScans[system])
                     {
+                        // see if the cached primary star matches the orbital parameters of the JE, and its not the primary system itself.
+
                         if (CompareEpsilon(je.nOrbitalPeriod, primary.nOrbitalPeriod) &&
                             CompareEpsilon(je.nPeriapsis, primary.nPeriapsis, acceptNull: true, fb: b => ((double)b + 180) % 360.0) &&
                             CompareEpsilon(je.nOrbitalInclination, primary.nOrbitalInclination) &&
                             CompareEpsilon(je.nEccentricity, primary.nEccentricity) &&
                             !je.BodyName.Equals(primary.BodyName, StringComparison.InvariantCultureIgnoreCase))
                         {
-                            return system + " B";
+                            return system + " B";       // if so, its really the B star of the system
                         }
                     }
                 }
@@ -169,6 +180,9 @@ namespace EliteDangerousCore
         internal static string GetBodyDesignation(string bodyname, int? bodyid, bool isstar, string system, bool returnnullifnomatch = false)
         {
             System.Diagnostics.Debug.Assert(bodyname != null);
+
+            // fixed nerfs by body id
+            // if the body id exists, the body map has the system, the inner dictionary has the bodyid, and the name is equal, return its designation
 
             if (bodyid != null && bodyIdDesignationMap.ContainsKey(system) && bodyIdDesignationMap[system].ContainsKey(bodyid.Value) && bodyIdDesignationMap[system][bodyid.Value].NameEquals(bodyname))
             {
@@ -194,7 +208,11 @@ namespace EliteDangerousCore
                 return "Lave A Belt " + bodyname.Substring("Castellan Belt ".Length);
             }
 
+            // use either the star or planet designation nerfs..
+
             Dictionary<string, Dictionary<string, string>> desigmap = isstar ? starDesignationMap : planetDesignationMap;
+
+            // if we have a nerf matching the bodyname, use it
 
             if (desigmap.ContainsKey(system) && desigmap[system].ContainsKey(bodyname))
             {
