@@ -183,19 +183,14 @@ namespace EliteDangerousCore.DB
                 return null;
         }
 
-        public static SystemNoteClass GetSystemNote(long journalid, string systemname = null)
+        public static SystemNoteClass GetSystemNote(long jid, string systemname = null)
         {
-            SystemNoteClass systemnote = SystemNoteClass.GetNoteOnJournalEntry(journalid);
-
-            if (systemnote == null && systemname != null)      // this is for older system name notes
-            {
-                systemnote = SystemNoteClass.GetNoteOnSystem(systemname);  
-            }
-
-            return systemnote;
+            if (systemname != null)  // if we have a name, find the old ones with no JID but at system
+                return globalSystemNotes.FindLast(x => x.Journalid == jid || (x.Journalid <= 0 && systemname.Equals(x.SystemName, StringComparison.InvariantCultureIgnoreCase)));
+            else
+                return globalSystemNotes.FindLast(x => x.Journalid == jid);
         }
 
-//        public static SystemNoteClass MakeSystemNote(string text, DateTime time, string sysname, long journalid, long edsmid , bool fsdentry )
         public static SystemNoteClass MakeSystemNote(string text, DateTime time, string sysname, long journalid, bool fsdentry )
         {
             SystemNoteClass sys = new SystemNoteClass();

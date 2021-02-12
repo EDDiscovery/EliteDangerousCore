@@ -124,7 +124,7 @@ namespace EliteDangerousCore
 
             SystemNode sn = FindSystemNode(sys);
 
-            string trace = Environment.StackTrace.StackTrace("FindSystemAsync", 4);
+            //string trace = Environment.StackTrace.StackTrace("FindSystemAsync", 4);
 
             //System.Diagnostics.Debug.WriteLine("Scan Lookup " + trace + " " + sys.Name + " found " + (sn != null) + " web? " + edsmweblookup + " edsm lookup " + (sn?.EDSMWebChecked ?? false));
 
@@ -147,7 +147,7 @@ namespace EliteDangerousCore
                 {
                     // removed - can't guarantee if (jl.Item2 == false)      // only want them if not previously cached
                     {
-                        System.Diagnostics.Debug.WriteLine("Process bodies from EDSM " + trace + " " + sys.Name + " " + sys.EDSMID + " result " + (jl.Item1?.Count ?? -1));
+                        //System.Diagnostics.Debug.WriteLine("Process bodies from EDSM " + trace + " " + sys.Name + " " + sys.EDSMID + " result " + (jl.Item1?.Count ?? -1));
                         foreach (JournalScan js in jl.Item1)
                         {
                             js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
@@ -156,7 +156,7 @@ namespace EliteDangerousCore
                     }
                 }
 
-                System.Diagnostics.Debug.WriteLine("Lookup System node again");
+                //System.Diagnostics.Debug.WriteLine("Lookup System node again");
                 if (sn == null) // refind to make sure SN is set
                     sn = FindSystemNode(sys);
 

@@ -29,6 +29,7 @@ namespace EliteDangerousCore
         #region Public Variables
 
         public int EntryNumber { get; private set; }   // for display purposes.  from 1 to number of records
+        public int Index { get { return EntryNumber - 1; } }  // zero based index number
 
         public JournalEntry journalEntry { get; private set; }       // MUST be present
 
@@ -118,7 +119,7 @@ namespace EliteDangerousCore
         public uint MissionList { get; private set; }       // generation index
         public uint Statistics { get; private set; }     // generation index
 
-        public SystemNoteClass snc;     // system note class found attached to this entry. May be null
+        public SystemNoteClass SNC;     // system note class found attached to this entry. May be null
 
         #endregion
 
@@ -212,7 +213,7 @@ namespace EliteDangerousCore
 
         public void UpdateSystemNote()
         { 
-            snc = SystemNoteClass.GetSystemNote(Journalid, IsFSDCarrierJump ?  System.Name : null);       // may be null
+            SNC = SystemNoteClass.GetSystemNote(Journalid, IsFSDCarrierJump ?  System.Name : null);       // may be null
         }
 
         public void UpdateShipInformation(ShipInformation si)       // something externally updated SI
@@ -246,14 +247,14 @@ namespace EliteDangerousCore
 
         public void SetJournalSystemNoteText(string text, bool commit, bool sendtoedsm)
         {
-            if (snc == null || snc.Journalid == 0)           // if no system note, or its one on a system, from now on we assign journal system notes only from this IF
-                snc = SystemNoteClass.MakeSystemNote("", DateTime.Now, System.Name, Journalid, IsFSDCarrierJump);
+            if (SNC == null || SNC.Journalid == 0)           // if no system note, or its one on a system, from now on we assign journal system notes only from this IF
+                SNC = SystemNoteClass.MakeSystemNote("", DateTime.Now, System.Name, Journalid, IsFSDCarrierJump);
 
-            snc = snc.UpdateNote(text, commit, DateTime.Now, IsFSDCarrierJump);        // and update info, and update our ref in case it has changed or gone null
+            SNC = SNC.UpdateNote(text, commit, DateTime.Now, IsFSDCarrierJump);        // and update info, and update our ref in case it has changed or gone null
                                                                                        // remember for EDSM send purposes if its an FSD entry
 
-            if (snc != null && commit && sendtoedsm && snc.FSDEntry)                   // if still have a note, and commiting, and send to esdm, and FSD jump
-                EDSMClass.SendComments(snc.SystemName, snc.Note);
+            if (SNC != null && commit && sendtoedsm && SNC.FSDEntry)                   // if still have a note, and commiting, and send to esdm, and FSD jump
+                EDSMClass.SendComments(SNC.SystemName, SNC.Note);
         }
 
         public bool IsJournalEventInEventFilter(string[] events)

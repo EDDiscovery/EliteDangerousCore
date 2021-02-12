@@ -227,9 +227,9 @@ namespace EliteDangerousCore
             List<JournalScan.BodyParent> ancestorbodies = ancestors?.Where(a => a.Type == "Star" || a.Type == "Planet" || a.Type == "Belt")?.Reverse()?.ToList();
 
             // but we need to add back the barycenter at the top, since we do add that that in the element list
-            if (ancestorbodies != null && starscannodetype == ScanNodeType.barycentre)      
+            if (ancestorbodies != null && ancestorbodies.Count>0 && starscannodetype == ScanNodeType.barycentre)      
             {                                                                               
-                System.Diagnostics.Debug.Assert(ancestors[ancestors.Count - 1].Type == "Null");     // double check its a barycentre, it should be
+               // this checks out, but disable for safety.  System.Diagnostics.Debug.Assert(ancestors[ancestors.Count - 1].Type == "Null");     // double check its a barycentre, it should be
                 ancestorbodies.Insert(0, ancestors[ancestors.Count - 1]);
             }
 
