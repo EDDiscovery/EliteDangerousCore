@@ -14,7 +14,7 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
-#define LISTSCANS
+//#define LISTSCANS
 
 using EliteDangerousCore.DB;
 using EliteDangerousCore.EDSM;

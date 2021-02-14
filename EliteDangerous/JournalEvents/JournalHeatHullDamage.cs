@@ -56,9 +56,13 @@ namespace EliteDangerousCore.JournalEvents
         public JournalHullDamage(JObject evt) : base(evt, JournalTypeEnum.HullDamage)
         {
             Health = evt["Health"].Double();
-
+            PlayerPilot = evt["PlayerPilot"].BoolNull();
+            Fighter = evt["Fighter"].BoolNull();
         }
+
         public double Health { get; set; }
+        public bool? PlayerPilot { get; set; }      // 2.4+
+        public bool? Fighter { get; set; }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
