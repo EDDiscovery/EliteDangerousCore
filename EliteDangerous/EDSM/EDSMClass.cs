@@ -670,7 +670,7 @@ namespace EliteDangerousCore.EDSM
             }
             else
             {
-                System.Diagnostics.Process.Start(url);
+                BaseUtils.BrowserInfo.LaunchBrowser(url);
             }
             return true;
         }
