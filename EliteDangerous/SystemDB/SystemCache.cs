@@ -18,8 +18,6 @@ using EMK.LightGeometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EliteDangerousCore.DB
 {
@@ -32,57 +30,49 @@ namespace EliteDangerousCore.DB
 
         #region Public Interface for Find System
 
-        public static ISystem FindSystem(long edsmid)
+        public static ISystem FindSystem(string name, bool checkedsm = false)
         {
-            return FindSystem(new SystemClass(edsmid));
+            return FindSystem(new SystemClass(name), checkedsm);
         }
 
-        public static ISystem FindSystem(string name, long edsmid)
-        {
-            return FindSystem(new SystemClass(name, edsmid));
-        }
-
-        public static ISystem FindSystem(string name)
-        {
-            return FindSystem(new SystemClass(name));
-        }
-
-        public static ISystem FindSystem(ISystem find)
+        public static ISystem FindSystem(ISystem find, bool checkedsm = false)
         {
             if (SystemsDatabase.Instance.RebuildRunning) // Find the system in the cache if a rebuild is running
             {
-                return FindSystem(find, null);
+                return FindSystem(find, null, checkedsm);
             }
             else 
             {
-                return SystemsDatabase.Instance.ExecuteWithDatabase(conn => FindSystem(find, conn));
+                return SystemsDatabase.Instance.ExecuteWithDatabase(conn => FindSystem(find, conn, checkedsm));
             }
         }
 
-        internal static ISystem FindSystem(string name, long edsmid, SystemsDatabaseConnection cn)
-        {
-            return FindSystem(new SystemClass(name, edsmid), cn);
-        }
-
-        internal static ISystem FindSystem(ISystem find, SystemsDatabaseConnection cn)
+        internal static ISystem FindSystem(ISystem find, SystemsDatabaseConnection cn, bool checkedsm)
         {
             ISystem orgsys = find;
 
+            // Find it from the cache
+
             ISystem found = FindCachedSystem(find);
 
-            if ((found == null || found.Source != SystemSource.FromEDSM) && cn != null && !SystemsDatabase.Instance.RebuildRunning)   // not cached, connection and not rebuilding, try db
+            // not found, or not from EDSM, AND we have a database and its not rebuilding
+            // see if we can find it in the DB
+
+            if ((found == null || found.Source != SystemSource.FromEDSM) && cn != null && !SystemsDatabase.Instance.RebuildRunning)   
             {
                 //System.Diagnostics.Debug.WriteLine("Look up from DB " + sys.name + " " + sys.id_edsm);
+
+                bool findnameok = find.Name.HasChars() && find.Name != "UnKnown";
 
                 if (find.EDSMID > 0)        // if we have an ID, look it up
                 {
                     found = DB.SystemsDB.FindStar(find.EDSMID,cn.Connection);
 
-                    if (found != null && find.Name.HasChars() && find.Name != "UnKnown")      // if we find it, use the find name in the return as the EDSM name may be out of date..
+                    if (found != null && findnameok )      // if we find it, use the find name in the return as the EDSM name may be out of date..
                         found.Name = find.Name;
                 }
 
-                if (found == null && find.Name.HasChars() && find.Name != "UnKnown")      // if not found by has a name
+                if (found == null && findnameok)            // if not found but has a good name
                     found = DB.SystemsDB.FindStar(find.Name,cn.Connection);   // find by name, no wildcards
 
                 if (found == null && find.HasCoordinate)        // finally, not found, but we have a co-ord, find it from the db  by distance
@@ -95,6 +85,12 @@ namespace EliteDangerousCore.DB
                         found = DB.SystemsDB.FindStar(newid,cn.Connection);  // find it using the new id
                 }
 
+                if ( found == null && checkedsm && findnameok )      // still nothing, last hope, direct edsm query
+                {
+                    EDSM.EDSMClass edsm = new EDSM.EDSMClass();
+                    found = edsm.GetSystemsByName(find.Name)?.FirstOrDefault();     // this may return an empty list, so first or default, or it may return null
+                }
+
                 if (found != null)                              // if we have a good db, go for it
                 {
                     if (find.HasCoordinate)                     // if find has co-ordinate, it may be more up to date than the DB, so use it
@@ -102,7 +98,7 @@ namespace EliteDangerousCore.DB
                         found.X = find.X; found.Y = find.Y; found.Z = find.Z;
                     }
 
-                    lock (systemsByEdsmId)          // lock to prevent multi change over these classes
+                    lock(lockobject)          // lock to prevent multi change over these classes
                     {
                         if (systemsByName.ContainsKey(orgsys.Name))   // so, if name database already has name
                             systemsByName[orgsys.Name].Remove(orgsys);  // and remove the ISystem if present on that orgsys
@@ -116,11 +112,13 @@ namespace EliteDangerousCore.DB
                 return found;
             }
             else
-            {                                               // FROM CACHE
-                if (found != null)
+            {                                               // from cache, or database is rebuilding
+                if (found != null)                          // its in the cache, return it
                 {
                     return found;
                 }
+
+                // not in the cache, see if the request has enough data to be added to the cache
 
                 if (find.Source == SystemSource.FromJournal && find.Name != null && find.HasCoordinate == true)
                 {
@@ -138,7 +136,7 @@ namespace EliteDangerousCore.DB
             List<ISystem> foundlist = new List<ISystem>();
             ISystem found = null;
 
-            lock (systemsByEdsmId)          // Rob seen instances of it being locked together in multiple star distance threads, we need to serialise access to these two dictionaries
+            lock(lockobject)          // Rob seen instances of it being locked together in multiple star distance threads, we need to serialise access to these two dictionaries
             {                               // Concurrent dictionary no good, they could both be about to add the same thing at the same time and pass the contains test.
 
                 if (find.EDSMID > 0 && systemsByEdsmId.ContainsKey(find.EDSMID))        // add to list
@@ -180,7 +178,7 @@ namespace EliteDangerousCore.DB
         {
             if (SystemsDatabase.Instance.RebuildRunning) // use the cache is db is updating
             {
-                lock (systemsByEdsmId)
+                lock(lockobject)
                 {
                     name = name.ToLowerInvariant();
 
@@ -214,7 +212,7 @@ namespace EliteDangerousCore.DB
         {
             if (SystemsDatabase.Instance.RebuildRunning) // Return from cache if rebuild is running
             {
-                lock (systemsByEdsmId)
+                lock(lockobject)
                 {
                     var sysdist = systemsByName.Values
                                                .SelectMany(s => s)
@@ -260,7 +258,7 @@ namespace EliteDangerousCore.DB
         {
             if (SystemsDatabase.Instance.RebuildRunning) // Return from cache if rebuild is running
             {
-                lock (systemsByEdsmId)
+                lock(lockobject)
                 {
                     return systemsByName.Values
                                         .SelectMany(s => s)
@@ -295,7 +293,7 @@ namespace EliteDangerousCore.DB
         {
             if (SystemsDatabase.Instance.RebuildRunning)    // return from cache is rebuild is running
             {
-                lock (systemsByEdsmId)
+                lock(lockobject)
                 {
                     var candidates =
                         systemsByName.Values
@@ -382,7 +380,7 @@ namespace EliteDangerousCore.DB
             {
                 if (SystemsDatabase.Instance.RebuildRunning)
                 {
-                    lock (systemsByEdsmId)
+                    lock(lockobject)
                     {
                         input = input.ToLowerInvariant();
 
@@ -425,7 +423,7 @@ namespace EliteDangerousCore.DB
 
         static private void AddToCache(ISystem found, ISystem orgsys = null)
         {
-            lock (systemsByEdsmId)
+            lock(lockobject)
             {
                 if (found.EDSMID > 0)
                     systemsByEdsmId[found.EDSMID] = found;  // must be definition the best ID found.. and if the update date of sys is better, its now been updated
@@ -485,6 +483,8 @@ namespace EliteDangerousCore.DB
 
             return nearest;
         }
+
+        private static Object lockobject = new object();        // so we are agnostic about systemsbyEDSM/Name as the locker
 
         private static Dictionary<long, ISystem> systemsByEdsmId = new Dictionary<long, ISystem>();
         private static Dictionary<string, List<ISystem>> systemsByName = new Dictionary<string, List<ISystem>>(StringComparer.InvariantCultureIgnoreCase);

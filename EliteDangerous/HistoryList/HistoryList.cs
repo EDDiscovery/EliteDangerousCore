@@ -441,18 +441,7 @@ namespace EliteDangerousCore
 
                             if (!he.System.HasCoordinate || (Math.Abs(he.System.X) < 1 && Math.Abs(he.System.Y) < 1 && Math.Abs(he.System.Z) < 0 && he.System.Name != "Sol"))
                             {
-                                ISystem found = SystemCache.FindSystem(he.System, cn);
-
-                                if ( found == null )        // if not found, try edsm
-                                {
-                                    EDSMClass edsm = new EDSMClass();
-                                    var syslist = edsm.GetSystemsByName(he.System.Name);
-                                    if (syslist != null)
-                                    {
-                                        found = syslist.First();
-                                        SystemCache.FindCachedJournalSystem(found); // put it in the cache
-                                    }
-                                }
+                                ISystem found = SystemCache.FindSystem(he.System, cn, true);        // find, thru edsm if required
                                     
                                 if (found != null)
                                 {

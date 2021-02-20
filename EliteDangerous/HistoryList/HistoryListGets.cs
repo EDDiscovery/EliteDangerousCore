@@ -230,7 +230,7 @@ namespace EliteDangerousCore
         public double DistanceCurrentTo(string system)          // from current, if we have one, to system, if its found.
         {
             ISystem cursys = CurrentSystem();
-            ISystem other = SystemCache.FindSystem(system);
+            ISystem other = FindSystem(system, null, false);    // does not use EDSM for this, just DB and history
             return cursys != null ? cursys.Distance(other) : -1;  // current can be null, shipsystem can be null, cursys can not have co-ord, -1 if failed.
         }
 
@@ -435,9 +435,11 @@ namespace EliteDangerousCore
                 return historylist.FindLast(x => x.IsFSDCarrierJump && x.System.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        public ISystem FindSystem(string name, EDSM.GalacticMapping glist = null)        // in system or name
+        // Checks Cache, Database, History, Galactic map if required, and EDSM directly if required
+
+        public ISystem FindSystem(string name, EDSM.GalacticMapping glist , bool checkedsm)        // in system or name
         {
-            ISystem ds1 = SystemCache.FindSystem(name);     // now go thru the cache..
+            ISystem ds1 = SystemCache.FindSystem(name, checkedsm);     // go thru the cache..
 
             if (ds1 == null)
             {

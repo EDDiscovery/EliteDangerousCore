@@ -458,7 +458,7 @@ namespace EliteDangerousCore.EDSM
                             long id = jo["systemId"].Long();
                             DateTime etutc = DateTime.ParseExact(ts, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal); // UTC time
 
-                            ISystem sc = DB.SystemCache.FindSystem(name, id, db);
+                            ISystem sc = DB.SystemCache.FindSystem(new SystemClass(name, id), db, false);
 
                             xtofetch.Add(new Tuple<JObject, ISystem>(jo, sc));
                         }
@@ -506,7 +506,8 @@ namespace EliteDangerousCore.EDSM
         }
 
         // Visual inspection Nov 20 - using Int() 
-        public List<ISystem> GetSystemsByName(string systemName, bool uselike = false)     // Protect yourself against bad JSON
+        // may return empty list, or null - protect yourself
+        public List<ISystem> GetSystemsByName(string systemName, bool uselike = false)     
         {
             string query = String.Format("api-v1/systems?systemName={0}&showCoordinates=1&showId=1&showInformation=1&showPermit=1", Uri.EscapeDataString(systemName));
 
