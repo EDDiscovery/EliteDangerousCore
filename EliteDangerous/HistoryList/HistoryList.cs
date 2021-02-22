@@ -429,31 +429,28 @@ namespace EliteDangerousCore
 
             if (!SystemsDatabase.Instance.RebuildRunning)       // only run this when the system db is stable.. this prevents the UI from slowing to a standstill
             {
-                SystemsDatabase.Instance.ExecuteWithDatabase(cn =>
+                foreach (HistoryEntry he in historylist)
                 {
-                    foreach (HistoryEntry he in historylist)
+                    // try and load ones without position.. if its got pos we are happy.  If its 0,0,0 and its not sol, it may just be a stay entry
+
+                    if (he.IsFSDCarrierJump)
                     {
-                        // try and load ones without position.. if its got pos we are happy.  If its 0,0,0 and its not sol, it may just be a stay entry
+                        //logger?.Invoke($"Checking system {he.System.Name}");
 
-                        if (he.IsFSDCarrierJump)
+                        if (!he.System.HasCoordinate || (Math.Abs(he.System.X) < 1 && Math.Abs(he.System.Y) < 1 && Math.Abs(he.System.Z) < 0 && he.System.Name != "Sol"))
                         {
-                            //logger?.Invoke($"Checking system {he.System.Name}");
-
-                            if (!he.System.HasCoordinate || (Math.Abs(he.System.X) < 1 && Math.Abs(he.System.Y) < 1 && Math.Abs(he.System.Z) < 0 && he.System.Name != "Sol"))
-                            {
-                                ISystem found = SystemCache.FindSystem(he.System, cn, true);        // find, thru edsm if required
+                            ISystem found = SystemCache.FindSystem(he.System, true);        // find, thru edsm if required
                                     
-                                if (found != null)
-                                {
-                                    logger?.Invoke($"System {he.System.Name} found system in EDSM");
-                                    updatesystems.Add(new Tuple<HistoryEntry, ISystem>(he, found));
-                                }
-                                else
-                                    logger?.Invoke($"System {he.System.Name} failed to find system in EDSM");
+                            if (found != null)
+                            {
+                                logger?.Invoke($"System {he.System.Name} found system in EDSM");
+                                updatesystems.Add(new Tuple<HistoryEntry, ISystem>(he, found));
                             }
+                            else
+                                logger?.Invoke($"System {he.System.Name} failed to find system in EDSM");
                         }
                     }
-                });
+                }
             }
 
             if (updatesystems.Count > 0)

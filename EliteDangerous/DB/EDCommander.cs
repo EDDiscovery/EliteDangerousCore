@@ -482,6 +482,8 @@ namespace EliteDangerousCore
         private ISystem lookuphomesys = null;
         private string lastlookuphomename = null;
         public string HomeSystem { get { return homesystem; } set { homesystem = value; lookuphomesys = null; lastlookuphomename = null; } }
+        public string HomeSystemTextOrSol { get { return homesystem.HasChars() ? homesystem : "Sol"; } }
+
         public ISystem HomeSystemI
         {
             get
@@ -491,7 +493,7 @@ namespace EliteDangerousCore
                     if (lastlookuphomename != homesystem)
                     {
                         lastlookuphomename = homesystem;
-                        lookuphomesys = SystemCache.FindSystem(homesystem);
+                        lookuphomesys = SystemCache.FindSystem(homesystem, true );      // look up thru edsm. note we cache ISystem so once done, it won't be checked again
                     }
                 }
 
@@ -499,7 +501,6 @@ namespace EliteDangerousCore
             }
         }
 
-        public string HomeSystemTextOrSol { get { return homesystem.HasChars() ? homesystem : "Sol"; } }
         public ISystem HomeSystemIOrSol {  get { return HomeSystemI ?? new SystemClass("Sol", 0, 0, 0); } }
 
         public float MapZoom { set; get; } = 1.0f;

@@ -179,10 +179,17 @@ namespace EliteDangerousCore
             Source = SystemSource.FromEDSM;
         }
 
-        public SystemClass(string name, double vx, double vy, double vz) : base( name, vx,vy,vz )
+        public SystemClass(string name, double vx, double vy, double vz, long edsmid) : base(name, vx, vy, vz)
+        {
+            EDSMID = edsmid;
+            Source = SystemSource.FromEDSM;
+        }
+
+        public SystemClass(string name, double vx, double vy, double vz) : base(name, vx, vy, vz)
         {
             Source = SystemSource.Synthesised;
         }
+
 
         public SystemClass(string name, int xi, int yi, int zi, long edsmid, int gridid = -1) : base(name,xi,yi,zi,gridid)
         {

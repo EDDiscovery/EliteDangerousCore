@@ -439,7 +439,7 @@ namespace EliteDangerousCore
 
         public ISystem FindSystem(string name, EDSM.GalacticMapping glist , bool checkedsm)        // in system or name
         {
-            ISystem ds1 = SystemCache.FindSystem(name, checkedsm);     // go thru the cache..
+            ISystem ds1 = SystemCache.FindSystem(name, checkedsm);     // go thru the cache and edsm if required
 
             if (ds1 == null)
             {
@@ -453,7 +453,7 @@ namespace EliteDangerousCore
 
                     if (gmo != null && gmo.points.Count > 0)
                     {
-                        ds1 = SystemCache.FindSystem(gmo.galMapSearch);
+                        ds1 = SystemCache.FindSystem(gmo.galMapSearch);     // only thru the db/cache, as we checked above for edsm direct
 
                         if (ds1 != null)
                         {

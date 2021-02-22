@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2019 EDDiscovery development team
+ * Copyright © 2015 - 2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -37,17 +37,54 @@ namespace EliteDangerousCore.DB
 
         public static ISystem FindSystem(ISystem find, bool checkedsm = false)
         {
+            ISystem found;
+
             if (SystemsDatabase.Instance.RebuildRunning) // Find the system in the cache if a rebuild is running
             {
-                return FindSystem(find, null, checkedsm);
+                found = FindSystem(find, null);
             }
-            else 
+            else
             {
-                return SystemsDatabase.Instance.ExecuteWithDatabase(conn => FindSystem(find, conn, checkedsm));
+                found = SystemsDatabase.Instance.ExecuteWithDatabase(conn => FindSystem(find, conn));
+
+                // we need to do this after the normal connection above, as if we find something, we need to go into read write mode (took a moment to realise this)
+
+                // if not found, checking edsm, and its a good name
+
+                if (found == null && checkedsm && find.Name.HasChars() && find.Name != "UnKnown")
+                {
+                    lock (edsmnotfoundlist)                                // lock it against threads
+                    {
+                        if (!edsmnotfoundlist.Contains(find.Name))        // if not in not found list
+                        {
+                            EDSM.EDSMClass edsm = new EDSM.EDSMClass();
+                            found = edsm.GetSystem(find.Name)?.FirstOrDefault();     // this may return an empty list, so first or default, or it may return null
+
+                            // if found one, and EDSM ID/coords (paranoia), and not rebuilding, add back to our db so next time we have it
+
+                            if (found != null && found.EDSMID > 0 && found.HasCoordinate)       // if its a good system
+                            {
+                                if (!SystemsDatabase.Instance.RebuildRunning)               // if we are not rebuilding, store it. if we are, it won't be saved and will be checked again, which is fine
+                                {
+                                    SystemsDatabase.Instance.WithReadWrite(() => { SystemsDB.StoreSystems(new List<ISystem> { found }); });        // we need to go into read write mode, then write system to db
+                                }
+                            }
+                            else
+                            {
+                                edsmnotfoundlist.Add(find.Name);            // else exclude from futher checks. Checked 22/2/21
+                            }
+                        }
+                    }
+                }
             }
+
+            return found;
         }
 
-        internal static ISystem FindSystem(ISystem find, SystemsDatabaseConnection cn, bool checkedsm)
+        // core find, with database
+        // find in cache, find in db, add to cache
+
+        public static ISystem FindSystem(ISystem find, SystemsDatabaseConnection cn)
         {
             ISystem orgsys = find;
 
@@ -85,12 +122,6 @@ namespace EliteDangerousCore.DB
                         found = DB.SystemsDB.FindStar(newid,cn.Connection);  // find it using the new id
                 }
 
-                if ( found == null && checkedsm && findnameok )      // still nothing, last hope, direct edsm query
-                {
-                    EDSM.EDSMClass edsm = new EDSM.EDSMClass();
-                    found = edsm.GetSystemsByName(find.Name)?.FirstOrDefault();     // this may return an empty list, so first or default, or it may return null
-                }
-
                 if (found != null)                              // if we have a good db, go for it
                 {
                     if (find.HasCoordinate)                     // if find has co-ordinate, it may be more up to date than the DB, so use it
@@ -98,7 +129,7 @@ namespace EliteDangerousCore.DB
                         found.X = find.X; found.Y = find.Y; found.Z = find.Z;
                     }
 
-                    lock(lockobject)          // lock to prevent multi change over these classes
+                    lock(cachelockobject)          // lock to prevent multi change over these classes
                     {
                         if (systemsByName.ContainsKey(orgsys.Name))   // so, if name database already has name
                             systemsByName[orgsys.Name].Remove(orgsys);  // and remove the ISystem if present on that orgsys
@@ -131,12 +162,12 @@ namespace EliteDangerousCore.DB
             }
         }
 
-        private static ISystem FindCachedSystem(ISystem find)
+        public static ISystem FindCachedSystem(ISystem find)
         {
             List<ISystem> foundlist = new List<ISystem>();
             ISystem found = null;
 
-            lock(lockobject)          // Rob seen instances of it being locked together in multiple star distance threads, we need to serialise access to these two dictionaries
+            lock(cachelockobject)          // Rob seen instances of it being locked together in multiple star distance threads, we need to serialise access to these two dictionaries
             {                               // Concurrent dictionary no good, they could both be about to add the same thing at the same time and pass the contains test.
 
                 if (find.EDSMID > 0 && systemsByEdsmId.ContainsKey(find.EDSMID))        // add to list
@@ -178,7 +209,7 @@ namespace EliteDangerousCore.DB
         {
             if (SystemsDatabase.Instance.RebuildRunning) // use the cache is db is updating
             {
-                lock(lockobject)
+                lock(cachelockobject)
                 {
                     name = name.ToLowerInvariant();
 
@@ -206,13 +237,59 @@ namespace EliteDangerousCore.DB
             return list;
         }
 
+        // given a list of systems, check to see if in DB, if not, ask EDSM for them as long as they are not on the not found list
+        // checked feb 21
+
+        public static void UpdateDBWithSystems(List<string> sysnames)
+        {
+            if (SystemsDatabase.Instance.RebuildRunning)               // if we are not rebuilding, store it. if we are, it won't be saved and will be checked again, which is fine
+                return;
+
+            List<string> tolookup = new List<string>();
+
+            SystemsDatabase.Instance.ExecuteWithDatabase(conn =>
+            {
+                foreach (var s in sysnames)
+                {
+                    if (FindSystem(new SystemClass(s), conn) == null)     // if not found..
+                    {
+                        lock (edsmnotfoundlist)                         
+                        {
+                            if (!edsmnotfoundlist.Contains(s))          // if not present in previous edsm not found list, add it for lookup
+                                tolookup.Add(s);
+                        }
+                    }
+                }
+            });
+
+            if (tolookup.Count > 0)                                 // something to do
+            {
+                EDSM.EDSMClass edsm = new EDSM.EDSMClass();
+                var s = edsm.GetSystems(tolookup);                      // find them!
+                if (s != null)
+                {
+                    if (s.Count > 0)                                // any found, write back to db
+                        SystemsDatabase.Instance.WithReadWrite(() => { SystemsDB.StoreSystems(s); });        // we need to go into read write mode, then write system to db
+
+                    var except = tolookup.Except(s.Select(x => x.Name));        // give me ones which i tried to lookup but failed on, 
+
+                    lock (edsmnotfoundlist)
+                    {
+                        foreach (var e in except)                               // add to except list
+                            edsmnotfoundlist.Add(e);
+                    }
+                }
+            }
+        }
+
+
         public static void GetSystemListBySqDistancesFrom(BaseUtils.SortedListDoubleDuplicate<ISystem> distlist, double x, double y, double z,
                                                     int maxitems,
                                                     double mindist, double maxdist, bool spherical)
         {
             if (SystemsDatabase.Instance.RebuildRunning) // Return from cache if rebuild is running
             {
-                lock(lockobject)
+                lock(cachelockobject)
                 {
                     var sysdist = systemsByName.Values
                                                .SelectMany(s => s)
@@ -258,7 +335,7 @@ namespace EliteDangerousCore.DB
         {
             if (SystemsDatabase.Instance.RebuildRunning) // Return from cache if rebuild is running
             {
-                lock(lockobject)
+                lock(cachelockobject)
                 {
                     return systemsByName.Values
                                         .SelectMany(s => s)
@@ -293,7 +370,7 @@ namespace EliteDangerousCore.DB
         {
             if (SystemsDatabase.Instance.RebuildRunning)    // return from cache is rebuild is running
             {
-                lock(lockobject)
+                lock(cachelockobject)
                 {
                     var candidates =
                         systemsByName.Values
@@ -380,7 +457,7 @@ namespace EliteDangerousCore.DB
             {
                 if (SystemsDatabase.Instance.RebuildRunning)
                 {
-                    lock(lockobject)
+                    lock(cachelockobject)
                     {
                         input = input.ToLowerInvariant();
 
@@ -423,7 +500,7 @@ namespace EliteDangerousCore.DB
 
         static private void AddToCache(ISystem found, ISystem orgsys = null)
         {
-            lock(lockobject)
+            lock(cachelockobject)
             {
                 if (found.EDSMID > 0)
                     systemsByEdsmId[found.EDSMID] = found;  // must be definition the best ID found.. and if the update date of sys is better, its now been updated
@@ -484,10 +561,12 @@ namespace EliteDangerousCore.DB
             return nearest;
         }
 
-        private static Object lockobject = new object();        // so we are agnostic about systemsbyEDSM/Name as the locker
+        private static Object cachelockobject = new object();        // so we are agnostic about systemsbyEDSM/Name as the locker
 
         private static Dictionary<long, ISystem> systemsByEdsmId = new Dictionary<long, ISystem>();
         private static Dictionary<string, List<ISystem>> systemsByName = new Dictionary<string, List<ISystem>>(StringComparer.InvariantCultureIgnoreCase);
+
+        private static HashSet<string> edsmnotfoundlist = new HashSet<string>();
 
         private static List<string> AutoCompleteAdditionalList = new List<string>();
 
