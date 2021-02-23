@@ -23,7 +23,12 @@ namespace EliteDangerousCore
 {
     public partial class StarScan
     {
-        // we store by sys/addr if it has an address, else we store by name only. We search by name first, then the tuple. This copes with old entries having no sys addr
+        // we store by the tuple<name:sysaddr> if it has an address, else we store by name only. We use the tuple just to distinguish it more
+        //      names are searched first during store to see if we have an older entry there without a system address 
+        //      then we search for name:sysaddr if we have a sys addr 
+        //      then we search for name in ByNameSysAddr as the last resort, in case the Find Isystem is synthesised without a system address being available
+        // we do not store all names in ByName, because we want to store ones with system address in it. We want maximum distiguishing of systems
+        // star names are case sensitive.
 
         public Dictionary<Tuple<string, long?>, SystemNode> ScanDataByNameSysaddr { get; private set; } = new Dictionary<Tuple<string, long?>, SystemNode>();
         public Dictionary<string, SystemNode> scanDataByName { get; private set; } = new Dictionary<string, SystemNode>();

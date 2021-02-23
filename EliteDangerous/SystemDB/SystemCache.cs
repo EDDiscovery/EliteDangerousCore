@@ -64,10 +64,7 @@ namespace EliteDangerousCore.DB
 
                             if (found != null && found.EDSMID > 0 && found.HasCoordinate)       // if its a good system
                             {
-                                if (!SystemsDatabase.Instance.RebuildRunning)               // if we are not rebuilding, store it. if we are, it won't be saved and will be checked again, which is fine
-                                {
-                                    SystemsDatabase.Instance.WithReadWrite(() => { SystemsDB.StoreSystems(new List<ISystem> { found }); });        // we need to go into read write mode, then write system to db
-                                }
+                                SystemsDatabase.Instance.StoreSystems(new List<ISystem> { found });     // won't do anything if rebuilding
                             }
                             else
                             {
@@ -265,13 +262,13 @@ namespace EliteDangerousCore.DB
             if (tolookup.Count > 0)                                 // something to do
             {
                 EDSM.EDSMClass edsm = new EDSM.EDSMClass();
-                var s = edsm.GetSystems(tolookup);                      // find them!
-                if (s != null)
+                var slist = edsm.GetSystems(tolookup);                      // find them!
+                if (slist != null)
                 {
-                    if (s.Count > 0)                                // any found, write back to db
-                        SystemsDatabase.Instance.WithReadWrite(() => { SystemsDB.StoreSystems(s); });        // we need to go into read write mode, then write system to db
+                    if (slist.Count > 0)                                // any found, write back to db
+                        SystemsDatabase.Instance.StoreSystems(slist);     // won't do anything if rebuilding
 
-                    var except = tolookup.Except(s.Select(x => x.Name));        // give me ones which i tried to lookup but failed on, 
+                    var except = tolookup.Except(slist.Select(x => x.Name));        // give me ones which i tried to lookup but failed on, 
 
                     lock (edsmnotfoundlist)
                     {

@@ -165,18 +165,18 @@ namespace EliteDangerousCore
             Source = SystemSource.Synthesised;
         }
 
+        public SystemClass(long? sysaddr, string name) : base()
+        {
+            Name = name;
+            SystemAddress = sysaddr;
+            Source = SystemSource.Synthesised;
+        }
+
         public SystemClass(string name, long edsmid)
         {
             Name = name;
             EDSMID = edsmid;
             Source = EDSMID <= 0 ? SystemSource.Synthesised : SystemSource.FromEDSM;
-        }
-
-        public SystemClass(long edsmid)
-        {
-            Name = "UnKnown";
-            EDSMID = edsmid;
-            Source = SystemSource.FromEDSM;
         }
 
         public SystemClass(string name, double vx, double vy, double vz, long edsmid) : base(name, vx, vy, vz)
@@ -189,7 +189,6 @@ namespace EliteDangerousCore
         {
             Source = SystemSource.Synthesised;
         }
-
 
         public SystemClass(string name, int xi, int yi, int zi, long edsmid, int gridid = -1) : base(name,xi,yi,zi,gridid)
         {
