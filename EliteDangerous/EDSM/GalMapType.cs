@@ -55,7 +55,7 @@ namespace EliteDangerousCore.EDSM
         public string Description;
         public Image Image;
         public GalMapGroup Group;
-        public bool Enabled;
+        public int Index;
 
         public GalMapType(string id, string desc, GalMapGroup g, Image b, int i)
         {
@@ -63,7 +63,7 @@ namespace EliteDangerousCore.EDSM
             Description = desc;
             Group = g;
             Image = b;
-            Enabled = false;
+            Index = i;
         }
 
         public static IReadOnlyDictionary<GalMapTypeEnum, Image> GalMapTypeIcons { get; } = new BaseUtils.Icons.IconGroup<GalMapTypeEnum>("GalMap");

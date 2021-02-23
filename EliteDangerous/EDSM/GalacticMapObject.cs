@@ -18,9 +18,11 @@ using EMK.LightGeometry;
 using System;
 using System.Collections.Generic;
 using BaseUtils.JSON;
+using System.Diagnostics;
 
 namespace EliteDangerousCore.EDSM
 {
+    [DebuggerDisplay("GMO {name} {type}")]
     public class GalacticMapObject
     {
         public int id;
@@ -89,6 +91,13 @@ namespace EliteDangerousCore.EDSM
             }
         }
 
+        public GalacticMapSystem GetSystem(ISystem sys = null)
+        {
+            if (sys != null)
+                return new EDSM.GalacticMapSystem(sys, this);
+            else
+                return new EDSM.GalacticMapSystem(this);
+        }
     }
 }
 
