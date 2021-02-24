@@ -32,18 +32,11 @@ namespace EliteDangerousCore
         private static Dictionary<string, Dictionary<int, BodyDesignations.DesigMap>> bodyIdDesignationMap = new Dictionary<string, Dictionary<int, BodyDesignations.DesigMap>>(StringComparer.InvariantCultureIgnoreCase);
         private static Dictionary<string, List<JournalScan>> primaryStarScans = new Dictionary<string, List<JournalScan>>(StringComparer.InvariantCultureIgnoreCase);
 
-        public static void LoadBodyDesignationMap()
+        public static void LoadBodyDesignationMap(string desigmapfile)
         {
-            string desigmappath = Path.Combine(EliteConfigInstance.InstanceOptions.AppDataDirectory, "bodydesignations.csv");
-
-            if (!File.Exists(desigmappath))
+            if (File.Exists(desigmapfile))
             {
-                desigmappath = Path.Combine(Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), "bodydesignations.csv");
-            }
-
-            if (File.Exists(desigmappath))
-            {
-                foreach (string line in File.ReadLines(desigmappath))
+                foreach (string line in File.ReadLines(desigmapfile))
                 {
                     string[] fields = line.Split(',').Select(s => s.Trim('"')).ToArray();
                     if (fields.Length == 3)

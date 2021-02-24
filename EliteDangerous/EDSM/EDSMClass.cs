@@ -228,15 +228,13 @@ namespace EliteDangerousCore.EDSM
             return RequestGet(query, handleException: true, timeout: timeout);
         }
 
-        public string GetHiddenSystems()   // Verfied Nov 20
+        public string GetHiddenSystems(string file)   // Verfied Nov 20
         {
             try
             {
-                string edsmhiddensystems = Path.Combine(EliteConfigInstance.InstanceOptions.AppDataDirectory, "edsmhiddensystems.json");
-
-                if (BaseUtils.DownloadFile.HTTPDownloadFile(base.httpserveraddress + "api-v1/hidden-systems?showId=1", edsmhiddensystems, false, out bool newfile))
+                if (BaseUtils.DownloadFile.HTTPDownloadFile(base.httpserveraddress + "api-v1/hidden-systems?showId=1", file, false, out bool newfile))
                 {
-                    string json = BaseUtils.FileHelpers.TryReadAllTextFromFile(edsmhiddensystems);
+                    string json = BaseUtils.FileHelpers.TryReadAllTextFromFile(file);
                     return json;
                 }
                 else

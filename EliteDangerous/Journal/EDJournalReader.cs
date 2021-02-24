@@ -142,14 +142,14 @@ namespace EliteDangerousCore
                         commander = EDCommander.Create(name: newname, journalpath: jp);
 
                         if (EDCommander.Current.Name.Contains("[BETA]") && !newname.Contains("[BETA]"))        // if current commander is beta, and we dont, swap to it
-                            EDCommander.CurrentCmdrID = commander.Nr;
+                            EDCommander.CurrentCmdrID = commander.Id;
                     }
 
                 }
 
                 commander.FID = jlg.FID;
 
-                cmdrid = commander.Nr;
+                cmdrid = commander.Id;
 
                 if (!TravelLogUnit.CommanderId.HasValue)        // we do not need to write to DB the TLU at this point, since we read something the upper layers will do that
                 {

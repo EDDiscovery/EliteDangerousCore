@@ -49,6 +49,9 @@ namespace EliteDangerousCore
         {
             string path;
 
+            if (EliteConfigInstance.InstanceOptions.DefaultJournalFolder.HasChars())       // journal override
+                return EliteConfigInstance.InstanceOptions.DefaultJournalFolder;
+
             // Windows Saved Games path (Vista and above)
             if (Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version.Major >= 6)
             {

@@ -38,7 +38,7 @@ namespace EliteDangerousCore.EDSM
         public event EDSMDownloadedSystems OnDownloadedSystems;
 
         private EDCommander Commander = null;
-        private int CommanderId { get { return Commander.Nr; } }
+        private int CommanderId { get { return Commander.Id; } }
 
         public EDSMLogFetcher(Action<string> logline)
         {
@@ -49,7 +49,7 @@ namespace EliteDangerousCore.EDSM
         {
             ExitRequested.Reset();
 
-            Trace.WriteLine($"EDSM Fetch logs start with cmdr {cmdr.Nr}");
+            Trace.WriteLine($"EDSM Fetch logs start with cmdr {cmdr.Id}");
 
             if ( !object.ReferenceEquals(Commander,cmdr) )
             {
@@ -188,7 +188,7 @@ namespace EliteDangerousCore.EDSM
             // Moved here to avoid the race that could have been causing duplicate entries
             // EDSM only returns FSD entries, so only look for them.  Tested 27/4/2018 after the HE optimisations
 
-            List<HistoryEntry> hlfsdlist = JournalEntry.GetAll(Commander.Nr, logstarttime.AddDays(-1), logendtime.AddDays(1)).
+            List<HistoryEntry> hlfsdlist = JournalEntry.GetAll(Commander.Id, logstarttime.AddDays(-1), logendtime.AddDays(1)).
                 OfType<JournalLocOrJump>().OrderBy(je => je.EventTimeUTC).
                 Select(je => HistoryEntry.FromJournalEntry(je, null)).ToList();   
 
