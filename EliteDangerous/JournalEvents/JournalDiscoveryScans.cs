@@ -115,7 +115,7 @@ namespace EliteDangerousCore.JournalEvents
                 if (isstation == true)          // station flag
                 {
                     int dash = SignalName.LastIndexOf('-');
-                    if (dash == SignalName.Length - 4 && char.IsLetterOrDigit(SignalName[dash + 1]) && char.IsLetterOrDigit(SignalName[dash - 1]))
+                    if (SignalName.Length >= 5 && dash == SignalName.Length - 4 && char.IsLetterOrDigit(SignalName[dash + 1]) && char.IsLetterOrDigit(SignalName[dash - 1]))
                     {
                         ClassOfSignal = Classification.Carrier;
                         TimeRemaining = CarrierExpiryTime;
