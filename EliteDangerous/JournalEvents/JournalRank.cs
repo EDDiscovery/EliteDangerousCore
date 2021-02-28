@@ -38,7 +38,7 @@ namespace EliteDangerousCore.JournalEvents
         public FederationRank Federation { get; set; }
         public CQCRank CQC { get; set; }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("", Combat.ToString().SplitCapsWord(),
                                       "", Trade.ToString().SplitCapsWord(),
@@ -88,7 +88,7 @@ namespace EliteDangerousCore.JournalEvents
         public FederationRank? Federation { get; set; }
         public EmpireRank? Empire { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Combat:".T(EDTx.JournalPromotion_Combat), Combat.HasValue ? Combat.ToString() : null,
                                       "Trade:".T(EDTx.JournalPromotion_Trade), Trade.HasValue ? Trade.ToString() : null,

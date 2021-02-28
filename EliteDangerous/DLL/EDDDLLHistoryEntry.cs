@@ -14,13 +14,14 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
+using System.Collections.Generic;
 using System.Linq;
 
 namespace EliteDangerousCore.DLL
 {
     static public class EDDDLLCallerHE
     {
-        static public EDDDLLInterfaces.EDDDLLIF.JournalEntry CreateFromHistoryEntry(EliteDangerousCore.HistoryEntry he, bool storedflag = false)
+        static public EDDDLLInterfaces.EDDDLLIF.JournalEntry CreateFromHistoryEntry(EliteDangerousCore.HistoryList hl, EliteDangerousCore.HistoryEntry he, bool storedflag = false)
         {
             if (he == null)
             {
@@ -31,7 +32,7 @@ namespace EliteDangerousCore.DLL
                 EDDDLLInterfaces.EDDDLLIF.JournalEntry je = new EDDDLLInterfaces.EDDDLLIF.JournalEntry()
                 {
                     ver = 2,
-                    indexno = he.Indexno,
+                    indexno = he.EntryNumber,
                     utctime = he.EventTimeUTC.ToStringZulu(),
                     name = he.EventSummary,
                     systemname = he.System.Name,
@@ -59,11 +60,13 @@ namespace EliteDangerousCore.DLL
                     stored = storedflag
                 };
 
-                he.journalEntry.FillInformation(out je.info, out je.detailedinfo);
+                he.journalEntry.FillInformation(he.System, out je.info, out je.detailedinfo);
 
                 je.materials = (from x in he.MaterialCommodity.Sort(false) select x.Details.Name + ":" + x.Count.ToStringInvariant() + ":" + x.Details.FDName).ToArray();
                 je.commodities = (from x in he.MaterialCommodity.Sort(true) select x.Details.Name + ":" + x.Count.ToStringInvariant() + ":" + x.Details.FDName).ToArray();
-                je.currentmissions = he.MissionList.GetAllCurrentMissions(he.EventTimeUTC).Select(x=>x.DLLInfo()).ToArray();
+
+                var ml = hl.MissionListAccumulator.GetAllCurrentMissions(he.MissionList, he.EventTimeUTC);
+                je.currentmissions = ml.Select(x=>x.DLLInfo()).ToArray();
                 return je;
             }
         }

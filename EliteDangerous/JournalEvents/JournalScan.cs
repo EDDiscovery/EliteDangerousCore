@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 - 2017 EDDiscovery development team
+ * Copyright © 2016 - 2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -13,40 +13,49 @@
  *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
+
 using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
 using System.Text;
+using static BaseUtils.TypeHelpers;
 
 namespace EliteDangerousCore.JournalEvents
 {
+    [System.Diagnostics.DebuggerDisplay("Event {EventTypeStr} {EventTimeUTC} {BodyName} {BodyDesignation} s{IsStar} p{IsPlanet}")]
     [JournalEntryType(JournalTypeEnum.Scan)]
     public class JournalScan : JournalEntry, IScanDataChanges
     {
-        public bool IsStar { get { return !String.IsNullOrEmpty(StarType); } }
-        public bool IsPlanet { get { return !IsStar && !IsBeltCluster; } }
-        public bool IsBeltCluster { get { return !IsStar && PlanetClass == null; } }
+        public bool IsStar { get { return StarType != null; } }
+        public bool IsBeltCluster { get { return StarType == null && PlanetClass == null; } }
+        public bool IsPlanet { get { return PlanetClass != null; } }
 
-        public string BodyDesignation { get; set; }
+        public string BodyDesignation { get; set; }     // nerfed name
+
+        public string BodyDesignationOrName { get { return BodyDesignation ?? BodyName; } }
 
         // ALL
+        [PropertyNameAttribute("Scan type, Basic, Detailed, NavBeacon, NavBeaconDetail, AutoScan, may be empty for very old scans")]
         public string ScanType { get; set; }                        // 3.0 scan type  Basic, Detailed, NavBeacon, NavBeaconDetail, (3.3) AutoScan, or empty for older ones
         public string BodyName { get; set; }                        // direct (meaning no translation)
         public int? BodyID { get; set; }                            // direct
         public string StarSystem { get; set; }                      // direct (3.5)
         public long? SystemAddress { get; set; }                    // direct (3.5)
         public double DistanceFromArrivalLS { get; set; }           // direct
-        public double DistanceFromArrivalm { get { return DistanceFromArrivalLS * oneLS_m; } }           
+        public double DistanceFromArrivalm { get { return DistanceFromArrivalLS * oneLS_m; } }
         public string DistanceFromArrivalText { get { return string.Format("{0:0.00}AU ({1:0.0}ls)", DistanceFromArrivalLS / JournalScan.oneAU_LS, DistanceFromArrivalLS); } }
+        [PropertyNameAttribute("Seconds")]
         public double? nRotationPeriod { get; set; }                // direct
-        public double? nRotationPeriodDays { get; set; }      
+        public double? nRotationPeriodDays { get { if (nRotationPeriod.HasValue) return nRotationPeriod.Value / oneDay_s; else return null; } }
+        [PropertyNameAttribute("K")]
         public double? nSurfaceTemperature { get; set; }            // direct
+        [PropertyNameAttribute("Meters")]
         public double? nRadius { get; set; }                        // direct
-        public double? nRadiusSols { get; set; }
-        public double? nRadiusEarths { get; set; }
+        public double? nRadiusSols { get { if (nRadius.HasValue) return nRadius.Value / oneSolRadius_m; else return null; } }
+        public double? nRadiusEarths { get { if (nRadius.HasValue) return nRadius.Value / oneEarthRadius_m; else return null; } }
+
         public bool HasRings { get { return Rings != null && Rings.Length > 0; } }
         public StarPlanetRing[] Rings { get; set; }
 
@@ -56,50 +65,49 @@ namespace EliteDangerousCore.JournalEvents
         public bool IsOrbitingStar { get { return Parents?.FirstOrDefault()?.Type == "Star"; } }
 
         public bool? WasDiscovered { get; set; }                    // direct, 3.4, indicates whether the body has already been discovered
-        public bool IsNotDiscovered { get { return WasDiscovered.HasValue && WasDiscovered == false; } }
+        public bool IsNotPreviouslyDiscovered { get { return WasDiscovered.HasValue && WasDiscovered == false; } } // true if its there, and its not mapped
+        public bool IsPreviouslyDiscovered { get { return WasDiscovered.HasValue && WasDiscovered == true; } } // true if its there, and its discovered
 
         public bool? WasMapped { get; set; }                        // direct, 3.4, indicates whether the body has already been mapped
-        public bool IsNotMapped { get { return WasMapped.HasValue && WasMapped == false; } }
+        public bool IsNotPreviouslyMapped { get { return WasMapped.HasValue && WasMapped == false; } }    // true if its there, and its not mapped
+        public bool IsPreviouslyMapped { get { return WasMapped.HasValue && WasMapped == true; } }    // true if its there, and its mapped
 
         // STAR
         public string StarType { get; set; }                        // null if no StarType, direct from journal, K, A, B etc
+        [PropertyNameAttribute("OBAFGAKM,LTY,AeBe,N Neutron,H Black Hole,Proto (TTS,AeBe), Wolf (W,WN,WNC,WC,WO), Carbon (CS,C,CN,CJ,CHD), White Dwarfs (D,DA,DAB,DAO,DAZ,DAV,DB,DBZ,DBV,DO,DOV,DQ,DC,DCV,DX), others")]
         public EDStar StarTypeID { get; }                           // star type -> identifier
         public string StarTypeText { get { return IsStar ? Bodies.StarName(StarTypeID) : ""; } }   // Long form star name, from StarTypeID
+        [PropertyNameAttribute("Ratio of Sol")]
         public double? nStellarMass { get; set; }                   // direct
         public double? nAbsoluteMagnitude { get; set; }             // direct
         public string Luminosity { get; set; }                      // character string (I,II,.. V)
+        public int? StarSubclass { get; set; }                      // star Subclass, direct, 3.4
         public string StarClassification { get { return (StarType ?? "") + (StarSubclass?.ToStringInvariant() ?? "") + (Luminosity ?? ""); } }
         public string StarClassificationAbv { get { return new string((StarType ?? "").Where(x => char.IsUpper(x) || x == '_').Select(x => x).ToArray()) + (StarSubclass?.ToStringInvariant() ?? "") + (Luminosity ?? ""); } }
+        [PropertyNameAttribute("Million Years")]
         public double? nAge { get; set; }                           // direct, in million years
-        public double? HabitableZoneInner { get; set; }             // in AU
-        public double? HabitableZoneOuter { get; set; }             // in AU
-        public double? MetalRichZoneInner { get; set; }             // in AU etc
-        public double? MetalRichZoneOuter { get; set; }
-        public double? WaterWrldZoneInner { get; set; }
-        public double? WaterWrldZoneOuter { get; set; }
-        public double? EarthLikeZoneInner { get; set; }
-        public double? EarthLikeZoneOuter { get; set; }
-        public double? AmmonWrldZoneInner { get; set; }
-        public double? AmmonWrldZoneOuter { get; set; }
-        public double? IcyPlanetZoneInner { get; set; }
-        public string IcyPlanetZoneOuter { get; set; }              // in AU
 
         // All orbiting bodies (Stars/Planets), not main star
 
         public double DistanceAccountingForBarycentre { get { return nSemiMajorAxis.HasValue && !IsOrbitingBaryCentre ? nSemiMajorAxis.Value : DistanceFromArrivalLS * oneLS_m; } } // in metres
 
+        [PropertyNameAttribute("Meters")]
         public double? nSemiMajorAxis { get; set; }                 // direct, m
-        public double? nSemiMajorAxisAU { get; set; }               // direct
+        public double? nSemiMajorAxisAU { get { if (nSemiMajorAxis.HasValue) return nSemiMajorAxis.Value / oneAU_m; else return null; } }
         public string SemiMajorAxisLSKM { get { return nSemiMajorAxis.HasValue ? (nSemiMajorAxis >= oneLS_m / 10 ? ((nSemiMajorAxis.Value / oneLS_m).ToString("N1") + "ls") : ((nSemiMajorAxis.Value / 1000).ToString("N0") + "km")) : ""; } }
 
         public double? nEccentricity { get; set; }                  // direct
+        [PropertyNameAttribute("Radians")]
         public double? nOrbitalInclination { get; set; }            // direct
+        [PropertyNameAttribute("Radians")]
         public double? nPeriapsis { get; set; }                     // direct
+        [PropertyNameAttribute("Seconds")]
         public double? nOrbitalPeriod { get; set; }                 // direct
-        public double? nOrbitalPeriodDays { get; set; }
+        public double? nOrbitalPeriodDays { get { if (nOrbitalPeriod.HasValue) return nOrbitalPeriod.Value / oneDay_s; else return null; } }
+        [PropertyNameAttribute("Radians")]
         public double? nAxialTilt { get; set; }                     // direct, radians
-        public double? nAxialTiltDeg { get; set; }      
-        public int? StarSubclass { get; set; }                      // star Subclass, direct, 3.4
+        public double? nAxialTiltDeg { get { if (nAxialTilt.HasValue) return nAxialTilt.Value * 180.0 / Math.PI; else return null; } }
+        public bool? nTidalLock { get; set; }                       // direct
 
         // Planets
         public string PlanetClass { get; set; }                     // planet class, direct. If belt cluster, null
@@ -114,14 +122,16 @@ namespace EliteDangerousCore.JournalEvents
         public bool WaterGiant { get { return Bodies.WaterGiant(PlanetTypeID); } }
         public bool HeliumGasGiant { get { return Bodies.HeliumGasGiant(PlanetTypeID); } }
 
-        public bool? nTidalLock { get; set; }                       // direct
+        [PropertyNameAttribute("Empty, Terraformable")]
         public string TerraformState { get; set; }                  // direct, can be empty or a string
         public bool Terraformable { get { return TerraformState != null && TerraformState.ToLowerInvariant().Equals("terraformable"); } }
         public string Atmosphere { get; set; }                      // direct from journal, if not there or blank, tries AtmosphereType (Earthlikes)
         public EDAtmosphereType AtmosphereID { get; }               // Atmosphere -> ID (Ammonia, Carbon etc)
         public EDAtmosphereProperty AtmosphereProperty { get; set; }             // Atomsphere -> Property (None, Rich, Thick , Thin, Hot)
         public bool HasAtmosphericComposition { get { return AtmosphereComposition != null && AtmosphereComposition.Any(); } }
+        [PropertyNameAttribute("Not Searchable")]
         public Dictionary<string, double> AtmosphereComposition { get; set; }
+        [PropertyNameAttribute("Not Searchable")]
         public Dictionary<string, double> PlanetComposition { get; set; }
         public bool HasPlanetaryComposition { get { return PlanetComposition != null && PlanetComposition.Any(); } }
 
@@ -129,72 +139,40 @@ namespace EliteDangerousCore.JournalEvents
         public EDVolcanism VolcanismID { get; }                     // Volcanism -> ID (Water_Magma, Nitrogen_Magma etc)
         public bool HasMeaningfulVolcanism { get { return VolcanismID != EDVolcanism.None && VolcanismID != EDVolcanism.Unknown; } }
         public EDVolcanismProperty VolcanismProperty { get; set; }               // Volcanism -> Property (None, Major, Minor)
+        [PropertyNameAttribute("m/s")]
         public double? nSurfaceGravity { get; set; }                // direct
-        public double? nSurfaceGravityG { get; set; }
+        public double? nSurfaceGravityG { get { if (nSurfaceGravity.HasValue) return nSurfaceGravity.Value / oneGee_m_s2; else return null; } }
+        [PropertyNameAttribute("Pascals")]
         public double? nSurfacePressure { get; set; }               // direct
-        public double? nSurfacePressureEarth { get; set; }   
+        public double? nSurfacePressureEarth { get { if (nSurfacePressure.HasValue) return nSurfacePressure.Value / oneAtmosphere_Pa; else return null; } }
         public bool? nLandable { get; set; }                        // direct
         public bool IsLandable { get { return nLandable.HasValue && nLandable.Value; } }
+        [PropertyNameAttribute("Earths")]
         public double? nMassEM { get; set; }                        // direct, not in description of event, mass in EMs
-        public double? nMassMM { get; set; }                        // only if nMassEM is set, moon mass in MMs
+        [PropertyNameAttribute("Moons")]
+        public double? nMassMM { get { if (nMassEM.HasValue) return nMassEM * EarthMoonMassRatio; else return null; } }
 
         public bool HasMaterials { get { return Materials != null && Materials.Any(); } }
         public Dictionary<string, double> Materials { get; set; }       // fdname and name is the same for materials on planets.  name is lower case
         public bool HasMaterial(string name) { return Materials != null && Materials.ContainsKey(name.ToLowerInvariant()); }
-        public string MaterialList { get; private set; }                         // material list, names, comma separ, or null
+        public string MaterialList { get { if (Materials != null) { var na = (from x in Materials select x.Key).ToArray(); return String.Join(",", na); } else return null; } }
 
+        public EDReserve ReserveLevel { get; set; }
+
+        // EDD additions
         public bool IsEDSMBody { get; private set; }
         public string EDSMDiscoveryCommander { get; private set; }      // may be null if not known
         public DateTime EDSMDiscoveryUTC { get; private set; }
 
-        public EDReserve ReserveLevel { get; set; }
-        public string ReserveLevelStr
-        {
-            get
-            {
-                return ReserveLevel.ToString();
-            }
-            set
-            {
-                ReserveLevel = Bodies.ReserveStr2Enum(value);
-            }
-        }
-
-        public bool Mapped { get { return mapped;}  }                          // affects prices
-        public bool EfficientMapped { get { return efficientmapped; } }                          // affects prices
-
-        public int EstimatedValue { get // best guess based on discovered/wasmapped and Mapped flags
-            {
-                if (EstimatedValueFirstDiscovered > 0)      // for previous scans before 3.3 and stars, these are not set.
-                {
-                    if (IsNotDiscovered && IsNotMapped && Mapped)
-                        return EfficientMapped ? EstimatedValueFirstDiscoveredFirstMappedEfficiently : EstimatedValueFirstDiscoveredFirstMapped;
-                    else if (IsNotMapped && Mapped)
-                        return EfficientMapped ? EstimatedValueFirstMappedEfficiently : EstimatedValueFirstMapped;
-                    else if (IsNotDiscovered)
-                        return EstimatedValueFirstDiscovered;
-                    else if (Mapped)
-                        return EfficientMapped ? EstimatedValueMappedEfficiently : EstimatedValueMapped;
-                }
-
-                return EstimatedValueBase;
-            }
-        }
-
-        public int EstimatedValueBase { get; private set; }     // Estimated value without mapping or first discovery - all types, all versions
-
-        public int EstimatedValueFirstDiscovered { get; private set; }     // Estimated value with first discovery  - 3.3 onwards for these for planets only
-        public int EstimatedValueFirstDiscoveredFirstMapped { get; private set; }           // with both
-        public int EstimatedValueFirstDiscoveredFirstMappedEfficiently { get; private set; }           // with both efficiently
-        public int EstimatedValueFirstMapped { get; private set; }             // with just mapped                 
-        public int EstimatedValueFirstMappedEfficiently { get; private set; }             // with just mapped                 
-        public int EstimatedValueMapped { get; private set; }             // with just mapped
-        public int EstimatedValueMappedEfficiently { get; private set; }             // with just mapped
+        public bool Mapped { get; private set; }                        // WE Mapped it - affects prices
+        public bool EfficientMapped { get; private set; }               // WE efficiently mapped it - affects prices
 
         public void SetMapped(bool m, bool e)
         {
-            mapped = m; efficientmapped = e;
+            Mapped = m; EfficientMapped = e;
         }
+
+        public int EstimatedValue { get { return GetEstimatedValues().EstimatedValue(WasDiscovered, WasMapped, Mapped, EfficientMapped); } }     // Direct access to its current EstimatedValue, provides backwards compatibility for code and action packs.
 
         public int HasSameParents(JournalScan other)     // return -1 if not, or index of last match , 0,1,2
         {
@@ -218,8 +196,6 @@ namespace EliteDangerousCore.JournalEvents
 
         public string ParentList() { return Parents != null ? string.Join(",", Parents.Select(x => x.Type + ":" + x.BodyID)) : ""; }     // not get on purpose
 
-        private bool mapped, efficientmapped;
-
         // Constants:
 
         // stellar references
@@ -231,7 +207,7 @@ namespace EliteDangerousCore.JournalEvents
         public const double oneGee_m_s2 = 9.80665;
         public const double oneEarth_MT = 5.972e15;        // mega tons, 1 meta ton = 1e6 tons = 1e9 kg (google 5.972e21 tons)
         public const double oneMoon_MT = 7.34767309e13;     // mega tons, 1 meta ton = 1e6 tons = 1e9 kg
-        public const double EarthMoonMassRatio = oneEarth_MT/oneMoon_MT; 
+        public const double EarthMoonMassRatio = oneEarth_MT / oneMoon_MT;
 
         // astrometric
         public const double oneLS_m = 299792458;
@@ -305,179 +281,19 @@ namespace EliteDangerousCore.JournalEvents
             public int BodyID;
         }
 
-//TBD        public JournalScan(JObject evt, long edsmid) : this(evt)  {  EdsmID = edsmid;}
-
         public JournalScan(JObject evt) : base(evt, JournalTypeEnum.Scan)
         {
-            ScanType = evt["ScanType"].Str();
-            BodyName = evt["BodyName"].Str();
-            BodyID = evt["BodyID"].IntNull();
-            StarSystem = evt["StarSystem"].StrNull();
-            SystemAddress = evt["SystemAddress"].LongNull();
-            StarType = evt["StarType"].StrNull();
+            ScanType = evt["ScanType"].Str();                               // ALL
+            BodyName = evt["BodyName"].Str();                               // ALL
+            BodyID = evt["BodyID"].IntNull();                               // ALL
+            StarSystem = evt["StarSystem"].StrNull();                       // ALL    
+            SystemAddress = evt["SystemAddress"].LongNull();                // ALL    
+            DistanceFromArrivalLS = evt["DistanceFromArrivalLS"].Double();  // ALL 
+            WasDiscovered = evt["WasDiscovered"].BoolNull();                // ALL new 3.4
+            WasMapped = evt["WasMapped"].BoolNull();                        // ALL new 3.4
 
-            DistanceFromArrivalLS = evt["DistanceFromArrivalLS"].Double();
-
-            nAge = evt["Age_MY"].DoubleNull();
-            nStellarMass = evt["StellarMass"].DoubleNull();
-            nRadius = evt["Radius"].DoubleNull();
-            if (nRadius != null)
-            {
-                nRadiusSols = nRadius.Value / oneSolRadius_m;
-                nRadiusEarths = nRadius.Value / oneEarthRadius_m;
-            }
-            nAbsoluteMagnitude = evt["AbsoluteMagnitude"].DoubleNull();
-            Luminosity = evt["Luminosity"].StrNull();
-
-            nRotationPeriod = evt["RotationPeriod"].DoubleNull();
-            if (nRotationPeriod != null)
-                nRotationPeriodDays = nRotationPeriod.Value / oneDay_s;
-
-            nOrbitalPeriod = evt["OrbitalPeriod"].DoubleNull();
-            if (nOrbitalPeriod != null)
-                nOrbitalPeriodDays = nOrbitalPeriod.Value / oneDay_s;
-
-            nSemiMajorAxis = evt["SemiMajorAxis"].DoubleNull();
-            if (nSemiMajorAxis != null)
-                nSemiMajorAxisAU = nSemiMajorAxis.Value / oneAU_m;
-
-            nEccentricity = evt["Eccentricity"].DoubleNull();
-            nOrbitalInclination = evt["OrbitalInclination"].DoubleNull();
-            nPeriapsis = evt["Periapsis"].DoubleNull();
-            nAxialTilt = evt["AxialTilt"].DoubleNull();
-            if ( nAxialTilt!= null)
-                nAxialTiltDeg = nAxialTilt.Value * 180.0 / Math.PI;
-
-            Rings = evt["Rings"]?.ToObjectProtected<StarPlanetRing[]>(); // may be Null
-
-            nTidalLock = evt["TidalLock"].Bool();
-            TerraformState = evt["TerraformState"].StrNull();
-            if (TerraformState != null && TerraformState.Equals("Not Terraformable", StringComparison.InvariantCultureIgnoreCase)) // EDSM returns this, normalise to journal
-                TerraformState = String.Empty;
-            PlanetClass = evt["PlanetClass"].StrNull();
-
-            Atmosphere = evt["Atmosphere"].StrNull();
-            if (Atmosphere == null || Atmosphere.Length == 0)             // Earthlikes appear to have empty atmospheres but AtmosphereType
-                Atmosphere = evt["AtmosphereType"].StrNull();
-            if (Atmosphere != null)
-                Atmosphere = Atmosphere.SplitCapsWordFull();
-
-            AtmosphereID = Bodies.AtmosphereStr2Enum(Atmosphere, out EDAtmosphereProperty ap);
-            AtmosphereProperty = ap;
-
-            Volcanism = evt["Volcanism"].StrNull();
-            VolcanismID = Bodies.VolcanismStr2Enum(Volcanism, out EDVolcanismProperty vp);
-            VolcanismProperty = vp;
-
-            nMassEM = evt["MassEM"].DoubleNull();
-            if (nMassEM.HasValue)
-                nMassMM = nMassEM.Value * EarthMoonMassRatio;
-            nSurfaceGravity = evt["SurfaceGravity"].DoubleNull();
-            if (nSurfaceGravity.HasValue)
-                nSurfaceGravityG = nSurfaceGravity / oneGee_m_s2;
-            nSurfaceTemperature = evt["SurfaceTemperature"].DoubleNull();
-            nSurfacePressure = evt["SurfacePressure"].DoubleNull();
-            if (nSurfacePressure != null)
-                nSurfacePressureEarth = nSurfacePressure.Value / oneAtmosphere_Pa;
-
-            nLandable = evt["Landable"].BoolNull();
-
-            WasMapped = evt["WasMapped"].BoolNull();            // new 3.4
-            WasDiscovered = evt["WasDiscovered"].BoolNull();        // new 3.4
-
-            ReserveLevelStr = evt["ReserveLevel"].Str();
-
-            if (IsStar)
-            {
-                StarTypeID = Bodies.StarStr2Enum(StarType);
-                StarSubclass = evt["Subclass"].IntNull();
-
-                if (nRadius.HasValue && nSurfaceTemperature.HasValue)
-                {
-                    // values initially calculated by Jackie Silver (https://forums.frontier.co.uk/member.php/37962-Jackie-Silver)
-
-                    HabitableZoneInner = DistanceForBlackBodyTemperature(315); // this is the goldilocks zone, where is possible to expect to find planets with liquid water. 
-                    HabitableZoneOuter = DistanceForBlackBodyTemperature(223);
-                    MetalRichZoneInner = DistanceForNoMaxTemperatureBody(oneSolRadius_m); // we don't know the maximum temperature that the galaxy simulation take as possible...
-                    MetalRichZoneOuter = DistanceForBlackBodyTemperature(1100);
-                    WaterWrldZoneInner = DistanceForBlackBodyTemperature(307);
-                    WaterWrldZoneOuter = DistanceForBlackBodyTemperature(156);
-                    EarthLikeZoneInner = DistanceForBlackBodyTemperature(281); // I enlarged a bit the range to fit my and other CMDRs discoveries.
-                    EarthLikeZoneOuter = DistanceForBlackBodyTemperature(227);
-                    AmmonWrldZoneInner = DistanceForBlackBodyTemperature(193);
-                    AmmonWrldZoneOuter = DistanceForBlackBodyTemperature(117);
-                    IcyPlanetZoneInner = DistanceForBlackBodyTemperature(150);
-                    IcyPlanetZoneOuter = "\u221E"; // practically infinite, at least until the body suffer from the gravitational bond with its host star
-                }
-
-                //var f = System.IO.File.AppendText(@"c:\code\stars.lst"); f.Write("{0} / {1} / {2} : {3} / {4}" +Environment.NewLine, StarType, StarSubclass, Luminosity, StarClassification, StarClassificationAbv);// f.Close();
-
-            }
-            else if (PlanetClass != null)
-            {
-                PlanetTypeID = Bodies.PlanetStr2Enum(PlanetClass);
-                // Fix naming to standard and fix case..
-                PlanetClass = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.
-                                        ToTitleCase(PlanetClass.ToLowerInvariant()).Replace("Ii ", "II ").Replace("Iv ", "IV ").Replace("Iii ", "III ");
-            }
-            else
-            {
-                PlanetTypeID = EDPlanet.Unknown_Body_Type;
-            }
-
-            JToken mats = evt["Materials"];
-
-            if (mats != null)
-            {
-                if (mats.IsObject)
-                {
-                    Materials = mats.ToObjectProtected<Dictionary<string, double>>();  // name in fd logs is lower case
-                }
-                else if ( mats.IsArray)
-                {
-                    Materials = new Dictionary<string, double>();
-                    foreach (JObject jo in mats)                                        // name in fd logs is lower case
-                    {
-                        Materials[jo["Name"].Str("Default").ToLowerInvariant()] = jo["Percent"].Double();
-                    }
-                }
-
-                if (Materials != null)
-                {
-                    var na = (from x in Materials select x.Key).ToArray();
-                    MaterialList = String.Join(",", na);
-                }
-            }
-
-            JToken atmos = evt["AtmosphereComposition"];
-            if (!atmos.IsNull())
-            {
-                if (atmos.IsObject)
-                {
-                    AtmosphereComposition = atmos?.ToObjectProtected<Dictionary<string, double>>();
-                }
-                else if ( atmos.IsArray)
-                {
-                    AtmosphereComposition = new Dictionary<string, double>();
-                    foreach (JObject jo in atmos)
-                    {
-                        AtmosphereComposition[jo["Name"].Str("Default")] = jo["Percent"].Double();
-                    }
-                }
-            }
-
-            JObject composition = evt["Composition"].Object();
-            if (!composition.IsNull() && composition.IsObject)
-            {
-                PlanetComposition = new Dictionary<string, double>();
-                foreach (var kvp in composition)
-                {
-                    PlanetComposition[kvp.Key] = kvp.Value.Double();
-                }
-            }
-
-            JArray parents = evt["Parents"].Array();            // will be null if parents is not an array (also if its Null)
-            if (!parents.IsNull() && parents.IsArray )
+            JArray parents = evt["Parents"].Array();                        // ALL will be null if parents is not an array (also if its Null)
+            if (!parents.IsNull() && parents.IsArray)
             {
                 Parents = new List<BodyParent>();
 
@@ -493,6 +309,120 @@ namespace EliteDangerousCore.JournalEvents
                 }
             }
 
+            nRotationPeriod = evt["RotationPeriod"].DoubleNull();           // Stars/Planets, not belt clusters
+            nSurfaceTemperature = evt["SurfaceTemperature"].DoubleNull();   // Stars/Planets, not belt clusters
+            nRadius = evt["Radius"].DoubleNull();                           // Stars/Planets, not belt clusters    
+
+            Rings = evt["Rings"]?.ToObjectQ<StarPlanetRing[]>();            // Stars/Planets, may be Null, not belt clusters
+
+            StarType = evt["StarType"].StrNull();                           // stars have this field
+
+            if (IsStar)     // based on StarType
+            {
+                StarTypeID = Bodies.StarStr2Enum(StarType);
+
+                nStellarMass = evt["StellarMass"].DoubleNull();
+                nAbsoluteMagnitude = evt["AbsoluteMagnitude"].DoubleNull();
+                Luminosity = evt["Luminosity"].StrNull();
+                StarSubclass = evt["Subclass"].IntNull();
+                nAge = evt["Age_MY"].DoubleNull();
+
+            }
+            else
+                PlanetClass = evt["PlanetClass"].StrNull();                 // try and read planet class, this might be null as well, in which case its a belt cluster
+
+            // All orbiting bodies
+
+            nSemiMajorAxis = evt["SemiMajorAxis"].DoubleNull();             // Stars/Planets
+
+            if (nSemiMajorAxis.HasValue)
+            {
+                nEccentricity = evt["Eccentricity"].DoubleNull();
+                nOrbitalInclination = evt["OrbitalInclination"].DoubleNull();
+                nPeriapsis = evt["Periapsis"].DoubleNull();
+                nOrbitalPeriod = evt["OrbitalPeriod"].DoubleNull();
+                nAxialTilt = evt["AxialTilt"].DoubleNull();
+                nTidalLock = evt["TidalLock"].Bool();
+            }
+
+            if (IsPlanet)
+            {
+                PlanetTypeID = Bodies.PlanetStr2Enum(PlanetClass);
+                // Fix naming to standard and fix case..
+                PlanetClass = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.
+                                        ToTitleCase(PlanetClass.ToLowerInvariant()).Replace("Ii ", "II ").Replace("Iv ", "IV ").Replace("Iii ", "III ");
+
+                TerraformState = evt["TerraformState"].StrNull();
+                if (TerraformState != null && TerraformState.Equals("Not Terraformable", StringComparison.InvariantCultureIgnoreCase)) // EDSM returns this, normalise to journal
+                    TerraformState = String.Empty;
+
+                Atmosphere = evt["Atmosphere"].StrNull();
+                if (Atmosphere == null || Atmosphere.Length == 0)             // Earthlikes appear to have empty atmospheres but AtmosphereType
+                    Atmosphere = evt["AtmosphereType"].StrNull();
+                if (Atmosphere != null)
+                    Atmosphere = Atmosphere.SplitCapsWordFull();
+
+                AtmosphereID = Bodies.AtmosphereStr2Enum(Atmosphere, out EDAtmosphereProperty ap);
+                AtmosphereProperty = ap;
+
+                JToken atmos = evt["AtmosphereComposition"];
+                if (!atmos.IsNull())
+                {
+                    if (atmos.IsObject)
+                    {
+                        AtmosphereComposition = atmos?.ToObjectQ<Dictionary<string, double>>();
+                    }
+                    else if (atmos.IsArray)
+                    {
+                        AtmosphereComposition = new Dictionary<string, double>();
+                        foreach (JObject jo in atmos)
+                        {
+                            AtmosphereComposition[jo["Name"].Str("Default")] = jo["Percent"].Double();
+                        }
+                    }
+                }
+
+                JObject composition = evt["Composition"].Object();
+                if (!composition.IsNull() && composition.IsObject)
+                {
+                    PlanetComposition = new Dictionary<string, double>();
+                    foreach (var kvp in composition)
+                    {
+                        PlanetComposition[kvp.Key] = kvp.Value.Double();
+                    }
+                }
+
+                Volcanism = evt["Volcanism"].StrNull();
+                VolcanismID = Bodies.VolcanismStr2Enum(Volcanism, out EDVolcanismProperty vp);
+                VolcanismProperty = vp;
+
+                nSurfaceGravity = evt["SurfaceGravity"].DoubleNull();
+                nSurfacePressure = evt["SurfacePressure"].DoubleNull();
+                nLandable = evt["Landable"].BoolNull();
+                nMassEM = evt["MassEM"].DoubleNull();
+
+                JToken mats = evt["Materials"];
+                if (mats != null)
+                {
+                    if (mats.IsObject)
+                    {
+                        Materials = mats.ToObjectQ<Dictionary<string, double>>();  // name in fd logs is lower case
+                    }
+                    else if (mats.IsArray)
+                    {
+                        Materials = new Dictionary<string, double>();
+                        foreach (JObject jo in mats)                                        // name in fd logs is lower case
+                        {
+                            Materials[jo["Name"].Str("Default").ToLowerInvariant()] = jo["Percent"].Double();
+                        }
+                    }
+                }
+
+                ReserveLevel = Bodies.ReserveStr2Enum(evt["ReserveLevel"].Str());
+            }
+            else
+                PlanetTypeID = EDPlanet.Unknown_Body_Type;
+
             // EDSM bodies fields
 
             IsEDSMBody = evt["EDDFromEDSMBodie"].Bool(false);           // Bodie? Who is bodie?  Did you mean Body Finwen ;-)
@@ -503,8 +433,6 @@ namespace EliteDangerousCore.JournalEvents
                 EDSMDiscoveryCommander = discovery["commander"].StrNull();
                 EDSMDiscoveryUTC = discovery["date"].DateTimeUTC();
             }
-
-            EstimateScanValue();                        // do the basic no mapped no efficency map as the basic formula
         }
 
         #region Information Returns
@@ -554,7 +482,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             get
             {
-                if (ScanType == "AutoScan" )
+                if (ScanType == "AutoScan")
                     return "Scan Auto";
                 else if (ScanType == "Basic")
                     return "Scan Basic";
@@ -575,7 +503,7 @@ namespace EliteDangerousCore.JournalEvents
             };
         }
 
-        public override void FillInformation(out string info, out string detailed)      
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             if (IsStar)
             {
@@ -583,7 +511,7 @@ namespace EliteDangerousCore.JournalEvents
                                                 "Age:;my;0.0".T(EDTx.JournalScan_Age), nAge,
                                                 "Radius:".T(EDTx.JournalScan_RS), RadiusText(),
                                                 "Dist:;ls;0.0".T(EDTx.JournalScan_DISTA), DistanceFromArrivalLS,
-                                                "Name:".T(EDTx.JournalScan_BNME), BodyName);
+                                                "Name:".T(EDTx.JournalScan_BNME), BodyName.ReplaceIfStartsWith(sys.Name));
             }
             else
             {
@@ -593,7 +521,7 @@ namespace EliteDangerousCore.JournalEvents
                                                  "Gravity:;G;0.00".T(EDTx.JournalScan_Gravity), nSurfaceGravityG,
                                                  "Radius:".T(EDTx.JournalScan_RS), RadiusText(),
                                                  "Dist:;ls;0.0".T(EDTx.JournalScan_DISTA), DistanceFromArrivalLS,
-                                                 "Name:".T(EDTx.JournalScan_SNME), BodyName);
+                                                 "Name:".T(EDTx.JournalScan_SNME), BodyName.ReplaceIfStartsWith(sys.Name));
             }
 
             detailed = DisplayString(0, includefront: false);
@@ -765,11 +693,12 @@ namespace EliteDangerousCore.JournalEvents
                 scanText.Append(DisplayMaterials(4, historicmatlist, currentmatlist));
             }
 
-            if (CircumstellarZonesString() != null)
-                scanText.Append(CircumstellarZonesString());
-
-            if (IsStar && HabZoneOtherStarsString() != null)
-                scanText.Append(HabZoneOtherStarsString());
+            if (IsStar)
+            {
+                string czs = CircumstellarZonesString(true, CZPrint.CZAll);
+                if (czs != null)
+                    scanText.Append(czs);
+            }
 
             if (Mapped)
             {
@@ -779,28 +708,30 @@ namespace EliteDangerousCore.JournalEvents
                 scanText.Append("\n");
             }
 
-            scanText.AppendFormat("Current value: {0:N0}".T(EDTx.JournalScan_CV) + "\n", EstimatedValue);
+            ScanEstimatedValues ev = GetEstimatedValues();
 
-            if (EstimatedValueFirstDiscoveredFirstMapped > 0 && (!WasDiscovered.HasValue || !WasDiscovered.Value))  // if we don't know, or its not discovered
+            scanText.AppendFormat("Current value: {0:N0}".T(EDTx.JournalScan_CV) + "\n", ev.EstimatedValue(WasDiscovered, WasMapped, Mapped, EfficientMapped));
+
+            if (ev.EstimatedValueFirstDiscoveredFirstMapped > 0 && (!WasDiscovered.HasValue || !WasDiscovered.Value))  // if we don't know, or its not discovered
             {
                 string msg = "First Discovered+Mapped value: {0:N0}/{1:N0}e".T(EDTx.JournalScan_EVFD) + "\n";
-                scanText.AppendFormat(msg, EstimatedValueFirstDiscoveredFirstMapped, EstimatedValueFirstDiscoveredFirstMappedEfficiently);
+                scanText.AppendFormat(msg, ev.EstimatedValueFirstDiscoveredFirstMapped, ev.EstimatedValueFirstDiscoveredFirstMappedEfficiently);
             }
 
-            if (EstimatedValueFirstMapped > 0 && (!WasMapped.HasValue || !WasMapped.Value))    // if was discovered, but not mapped 
+            if (ev.EstimatedValueFirstMapped > 0 && (!WasMapped.HasValue || !WasMapped.Value))    // if was not mapped
             {
-                scanText.AppendFormat("First Mapped value: {0:N0}/{1:N0}e".T(EDTx.JournalScan_EVFM) + "\n", EstimatedValueFirstMapped, EstimatedValueFirstMappedEfficiently);
+                scanText.AppendFormat("First Mapped value: {0:N0}/{1:N0}e".T(EDTx.JournalScan_EVFM) + "\n", ev.EstimatedValueFirstMapped, ev.EstimatedValueFirstMappedEfficiently);
             }
 
-            if (EstimatedValueFirstDiscovered > 0 && (!WasDiscovered.HasValue || !WasDiscovered.Value))  // if we don't know, or its not discovered
+            if (ev.EstimatedValueFirstDiscovered > 0 && (!WasDiscovered.HasValue || !WasDiscovered.Value))  // if we don't know, or its not discovered
             {
-                scanText.AppendFormat("First Discovered value: {0:N0}".T(EDTx.JournalScan_FDV) + "\n", EstimatedValueFirstDiscovered);
+                scanText.AppendFormat("First Discovered value: {0:N0}".T(EDTx.JournalScan_FDV) + "\n", ev.EstimatedValueFirstDiscovered);
             }
 
-            if (EstimatedValueFirstDiscovered > 0 ) // if we have extra details, on planets, show the base value
+            if (ev.EstimatedValueFirstDiscovered > 0) // if we have extra details, on planets, show the base value
             {
-                scanText.AppendFormat("Mapped value: {0:N0}/{1:N0}e".T(EDTx.JournalScan_EVM) + "\n", EstimatedValueMapped, EstimatedValueMappedEfficiently);
-                scanText.AppendFormat("Base Estimated value: {0:N0}".T(EDTx.JournalScan_EV) + "\n", EstimatedValueBase);
+                scanText.AppendFormat("Mapped value: {0:N0}/{1:N0}e".T(EDTx.JournalScan_EVM) + "\n", ev.EstimatedValueMapped, ev.EstimatedValueMappedEfficiently);
+                scanText.AppendFormat("Base Estimated value: {0:N0}".T(EDTx.JournalScan_EV) + "\n", ev.EstimatedValueBase);
             }
 
             if (WasDiscovered.HasValue && WasDiscovered.Value)
@@ -821,211 +752,152 @@ namespace EliteDangerousCore.JournalEvents
             return scanText.ToNullSafeString().Replace("\n", "\n" + inds);
         }
 
-		// goldilocks zone. No trailing LF
-        public string GetHabZoneStringLs()
+        public class HabZones
         {
-            if (IsStar && HabitableZoneInner.HasValue && HabitableZoneOuter.HasValue)
-            {
-                return $"{HabitableZoneInner:N0}-{HabitableZoneOuter:N0}ls";
-            }
-            else
-            {
-                return string.Empty;
-            }
+            public double HabitableZoneInner { get; set; }             // in AU
+            public double HabitableZoneOuter { get; set; }             // in AU
+            public double MetalRichZoneInner { get; set; }             // in AU etc
+            public double MetalRichZoneOuter { get; set; }
+            public double WaterWrldZoneInner { get; set; }
+            public double WaterWrldZoneOuter { get; set; }
+            public double EarthLikeZoneInner { get; set; }
+            public double EarthLikeZoneOuter { get; set; }
+            public double AmmonWrldZoneInner { get; set; }
+            public double AmmonWrldZoneOuter { get; set; }
+            public double IcyPlanetZoneInner { get; set; }
         }
 
-        private string CircumstellarZonesString()    // has trailing LF
+        public HabZones GetHabZones()
         {
-            if (IsStar && HabitableZoneInner.HasValue && HabitableZoneOuter.HasValue)
+            if (IsStar && nRadius.HasValue && nSurfaceTemperature.HasValue)
             {
-                StringBuilder habZone = new StringBuilder();
+                HabZones hz = new HabZones();
 
-				habZone.Append("Inferred Circumstellar zones:\n".T(EDTx.JournalScan_InferredCircumstellarzones));
+                // values initially calculated by Jackie Silver (https://forums.frontier.co.uk/member.php/37962-Jackie-Silver)
 
-				habZone.AppendFormat(" - Habitable Zone, {0} ({1}-{2} AU),\n".T(EDTx.JournalScan_HabitableZone),
-									 GetHabZoneStringLs(),
-									 (HabitableZoneInner.Value / oneAU_LS).ToString("N2"),
-									 (HabitableZoneOuter.Value / oneAU_LS).ToString("N2"));
-
-				habZone.AppendFormat(" - Metal Rich planets, {0} ({1}-{2} AU),\n".T(EDTx.JournalScan_MetalRichplanets),
-									 GetMetalRichZoneStringLs(),
-									 (MetalRichZoneInner.Value / oneAU_LS).ToString("N2"),
-									 (MetalRichZoneInner.Value / oneAU_LS).ToString("N2"));
-				
-				habZone.AppendFormat(" - Water Worlds, {0} ({1}-{2} AU),\n".T(EDTx.JournalScan_WaterWorlds),
-									 GetWaterWorldZoneStringLs(),
-									 (WaterWrldZoneInner.Value / oneAU_LS).ToString("N2"),
-									 (WaterWrldZoneOuter.Value / oneAU_LS).ToString("N2"));
-				
-				habZone.AppendFormat(" - Earth Like Worlds, {0} ({1}-{2} AU),\n".T(EDTx.JournalScan_EarthLikeWorlds),
-									 GetEarthLikeZoneStringLs(),
-									 (EarthLikeZoneInner.Value / oneAU_LS).ToString("N2"),
-									 (EarthLikeZoneOuter.Value / oneAU_LS).ToString("N2"));
-				
-				habZone.AppendFormat(" - Ammonia Worlds, {0} ({1}-{2} AU),\n".T(EDTx.JournalScan_AmmoniaWorlds),
-									 GetAmmoniaWorldZoneStringLs(),
-									 (AmmonWrldZoneInner.Value / oneAU_LS).ToString("N2"),
-									 (AmmonWrldZoneOuter.Value / oneAU_LS).ToString("N2"));
-				
-				habZone.AppendFormat(" - Icy Planets, {0} (from {1} AU)\n".T(EDTx.JournalScan_IcyPlanets),
-									 GetIcyPlanetsZoneStringLs(),
-				(IcyPlanetZoneInner.Value / oneAU_LS).ToString("N2"));
-
-                return habZone.ToNullSafeString();
+                hz.HabitableZoneInner = DistanceForBlackBodyTemperature(315); // this is the goldilocks zone, where is possible to expect to find planets with liquid water.
+                hz.HabitableZoneOuter = DistanceForBlackBodyTemperature(223);
+                hz.MetalRichZoneInner = DistanceForNoMaxTemperatureBody(oneSolRadius_m); // we don't know the maximum temperature that the galaxy simulation take as possible...
+                hz.MetalRichZoneOuter = DistanceForBlackBodyTemperature(1100);
+                hz.WaterWrldZoneInner = DistanceForBlackBodyTemperature(307);
+                hz.WaterWrldZoneOuter = DistanceForBlackBodyTemperature(156);
+                hz.EarthLikeZoneInner = DistanceForBlackBodyTemperature(281); // I enlarged a bit the range to fit my and other CMDRs discoveries.
+                hz.EarthLikeZoneOuter = DistanceForBlackBodyTemperature(227);
+                hz.AmmonWrldZoneInner = DistanceForBlackBodyTemperature(193);
+                hz.AmmonWrldZoneOuter = DistanceForBlackBodyTemperature(117);
+                hz.IcyPlanetZoneInner = DistanceForBlackBodyTemperature(150);
+                return hz;
             }
             else
                 return null;
         }
 
-		// string which tell us that other stars are not considered in the habitable zone calculations.
-		public string HabZoneOtherStarsString() // has trailing LF 
-		{
-			StringBuilder habZoneAddend = new StringBuilder();
-			if (nSemiMajorAxis.HasValue && nSemiMajorAxis.Value > 0)
-				habZoneAddend.Append(" - Others stars not considered\n".T(EDTx.JournalScan_Othersstarsnotconsidered));
-			
-			return habZoneAddend.ToNullSafeString();
-		}
-
-		// metal rich zone
-		public string GetMetalRichZoneStringLs() // no trailing LF
+        // goldilocks zone. No trailing LF
+        public string GetHabZoneStringLs()
         {
-			if (IsStar && MetalRichZoneInner.HasValue && MetalRichZoneOuter.HasValue)
-			{
-				return $"{MetalRichZoneInner:N0}-{MetalRichZoneOuter:N0}ls";
-			}
-			else
-			{
-				return string.Empty;
-			}
-		}
+            HabZones hz = GetHabZones();
+            return hz != null ? $"{hz.HabitableZoneInner:N0}-{hz.HabitableZoneOuter:N0}ls" : "";
+        }
 
-		public string MetalRichZoneString() // no trailing LF
+        public enum CZPrint { CZAll, CZHab, CZMR, CZWW, CZEL, CZAW, CZIP };
+
+        // trailing LF if titles are on, else not.
+        public string CircumstellarZonesString(bool titles, CZPrint p)
         {
-			if (IsStar && MetalRichZoneInner.HasValue && MetalRichZoneOuter.HasValue)
-			{
-				StringBuilder habZone = new StringBuilder();
-				habZone.AppendFormat("Metal Rich Planets: {0} ({1}-{2} AU)\n".T(EDTx.JournalScan_MRP),
-									 GetMetalRichZoneStringLs(), 
-									 (MetalRichZoneInner.Value / oneAU_LS).ToString("N2"), 
-									 (MetalRichZoneOuter.Value / oneAU_LS).ToString("N2"));
-				return habZone.ToNullSafeString();
-			}
-			else
-				return null;
-		}
+            HabZones hz = GetHabZones();
 
-		// water world zone
-		public string GetWaterWorldZoneStringLs() // no trailing LF
+            if (hz != null)
+            {
+                StringBuilder habZone = new StringBuilder();
+
+                if (titles)
+                    habZone.Append("Inferred Circumstellar zones:\n".T(EDTx.JournalScan_InferredCircumstellarzones));
+
+                if (p == CZPrint.CZAll || p == CZPrint.CZHab)
+                {
+                    habZone.AppendFormat(" - Habitable Zone, {0} ({1}-{2} AU),\n".T(EDTx.JournalScan_HabitableZone),
+                                     $"{hz.HabitableZoneInner:N0}-{hz.HabitableZoneOuter:N0}ls",
+                                     (hz.HabitableZoneInner / oneAU_LS).ToString("N2"),
+                                     (hz.HabitableZoneOuter / oneAU_LS).ToString("N2"));
+                }
+
+                if (p == CZPrint.CZAll || p == CZPrint.CZMR)
+                {
+                    habZone.AppendFormat(" - Metal Rich planets, {0} ({1}-{2} AU),\n".T(EDTx.JournalScan_MetalRichplanets),
+                                     $"{hz.MetalRichZoneInner:N0}-{hz.MetalRichZoneOuter:N0}ls",
+                                     (hz.MetalRichZoneInner / oneAU_LS).ToString("N2"),
+                                     (hz.MetalRichZoneInner / oneAU_LS).ToString("N2"));
+                }
+
+                if (p == CZPrint.CZAll || p == CZPrint.CZWW)
+                {
+                    habZone.AppendFormat(" - Water Worlds, {0} ({1}-{2} AU),\n".T(EDTx.JournalScan_WaterWorlds),
+                                     $"{hz.WaterWrldZoneInner:N0}-{hz.WaterWrldZoneOuter:N0}ls",
+                                     (hz.WaterWrldZoneInner / oneAU_LS).ToString("N2"),
+                                     (hz.WaterWrldZoneOuter / oneAU_LS).ToString("N2"));
+                }
+
+                if (p == CZPrint.CZAll || p == CZPrint.CZEL)
+                {
+                    habZone.AppendFormat(" - Earth Like Worlds, {0} ({1}-{2} AU),\n".T(EDTx.JournalScan_EarthLikeWorlds),
+                                     $"{hz.EarthLikeZoneInner:N0}-{hz.EarthLikeZoneOuter:N0}ls",
+                                     (hz.EarthLikeZoneInner / oneAU_LS).ToString("N2"),
+                                     (hz.EarthLikeZoneOuter / oneAU_LS).ToString("N2"));
+                }
+
+                if (p == CZPrint.CZAll || p == CZPrint.CZAW)
+                {
+                    habZone.AppendFormat(" - Ammonia Worlds, {0} ({1}-{2} AU),\n".T(EDTx.JournalScan_AmmoniaWorlds),
+                                     $"{hz.AmmonWrldZoneInner:N0}-{hz.AmmonWrldZoneOuter:N0}ls",
+                                     (hz.AmmonWrldZoneInner / oneAU_LS).ToString("N2"),
+                                     (hz.AmmonWrldZoneOuter / oneAU_LS).ToString("N2"));
+                }
+
+                if (p == CZPrint.CZAll || p == CZPrint.CZIP)
+                {
+                    habZone.AppendFormat(" - Icy Planets, {0} (from {1} AU)\n".T(EDTx.JournalScan_IcyPlanets),
+                                     $"{hz.IcyPlanetZoneInner:N0}ls to ~",
+                                     (hz.IcyPlanetZoneInner / oneAU_LS).ToString("N2"));
+                }
+
+                if (titles)
+                {
+                    if (nSemiMajorAxis.HasValue && nSemiMajorAxis.Value > 0)
+                        habZone.Append(" - Others stars not considered\n".T(EDTx.JournalScan_Othersstarsnotconsidered));
+
+                    return habZone.ToNullSafeString();
+                }
+                else
+                {
+                    if (habZone.Length > 2)
+                        habZone.Remove(habZone.Length - 2, 2);      // remove ,\n
+
+                    string s = habZone.ToNullSafeString();
+                    if (s.StartsWith(" - "))        // mangle the translated string - can't do it above for backwards compat reasons
+                        s = s.Substring(3);
+
+                    return s;
+                }
+
+            }
+            else
+                return null;
+        }
+
+        // Habitable zone calculations, formula cribbed from JackieSilver's HabZone Calculator with permission
+        private double DistanceForBlackBodyTemperature(double targetTemp)
         {
-			if (IsStar && WaterWrldZoneInner.HasValue && WaterWrldZoneOuter.HasValue)
-			{
-				return $"{WaterWrldZoneInner:N0}-{WaterWrldZoneOuter:N0}ls";
-			}
-			else
-			{
-				return string.Empty;
-			}
-		}
+            double top = Math.Pow(nRadius.Value, 2.0) * Math.Pow(nSurfaceTemperature.Value, 4.0);
+            double bottom = 4.0 * Math.Pow(targetTemp, 4.0);
+            double radius_metres = Math.Pow(top / bottom, 0.5);
+            return radius_metres / oneLS_m;
+        }
 
-		public string WaterWorldZoneString() // has trailing LF
+        private double DistanceForNoMaxTemperatureBody(double radius)
         {
-			if (IsStar && WaterWrldZoneInner.HasValue && WaterWrldZoneOuter.HasValue)
-			{
-				StringBuilder habZone = new StringBuilder();
-				habZone.AppendFormat("Water Worlds: {0} ({1}-{2} AU)\n".T(EDTx.JournalScan_WWP),
-									 GetWaterWorldZoneStringLs(), 
-									 (WaterWrldZoneInner.Value / oneAU_LS).ToString("N2"), 
-									 (WaterWrldZoneOuter.Value / oneAU_LS).ToString("N2"));
-				return habZone.ToNullSafeString();
-			}
-			else
-				return null;
-		}
+            return radius / oneLS_m;
+        }
 
-        // earth like world zone. No trailing LF
-        public string GetEarthLikeZoneStringLs()
-		{
-			if (IsStar && EarthLikeZoneInner.HasValue && EarthLikeZoneOuter.HasValue)
-			{
-				return $"{EarthLikeZoneInner:N0}-{EarthLikeZoneOuter:N0}ls";
-			}
-			else
-			{
-				return string.Empty;
-			}
-		}
-
-		public string EarthLikeZoneString() // has trailing LF
-		{
-			if (IsStar && EarthLikeZoneInner.HasValue && EarthLikeZoneOuter.HasValue)
-			{
-				StringBuilder habZone = new StringBuilder();
-				habZone.AppendFormat("Earth Like Worlds: {0} ({1}-{2} AU)\n".T(EDTx.JournalScan_ELWP),
-									 GetEarthLikeZoneStringLs(), 
-									 (EarthLikeZoneInner.Value / oneAU_LS).ToString("N2"), 
-									 (EarthLikeZoneOuter.Value / oneAU_LS).ToString("N2"));
-				return habZone.ToNullSafeString();
-			}
-			else
-				return null;
-		}
-
-		// ammonia world zone. No trailing LF
-		public string GetAmmoniaWorldZoneStringLs()
-		{
-			if (IsStar && AmmonWrldZoneInner.HasValue && AmmonWrldZoneOuter.HasValue)
-			{
-				return $"{AmmonWrldZoneInner:N0}-{AmmonWrldZoneOuter:N0}ls";
-			}
-			else
-			{
-				return string.Empty;
-			}
-		}
-
-		public string AmmoniaWorldZoneString() // has trailing LF
-		{
-			if (IsStar && AmmonWrldZoneInner.HasValue && AmmonWrldZoneOuter.HasValue)
-			{
-				StringBuilder habZone = new StringBuilder();
-				habZone.AppendFormat("Ammonia Worlds: {0} ({1}-{2} AU)\n".T(EDTx.JournalScan_AWP),
-									 GetAmmoniaWorldZoneStringLs(), 
-									 (AmmonWrldZoneInner.Value / oneAU_LS).ToString("N2"), 
-									 (AmmonWrldZoneOuter.Value / oneAU_LS).ToString("N2"));
-				return habZone.ToNullSafeString();
-			}
-			else
-				return null;
-		}
-
-		// icy planets zone. No trailing LF
-		public string GetIcyPlanetsZoneStringLs()
-		{
-			if (IsStar && IcyPlanetZoneInner.HasValue && IcyPlanetZoneOuter != null)
-			{
-				return $"{IcyPlanetZoneInner:N0}ls to {IcyPlanetZoneOuter:N0}";
-			}
-			else
-			{
-				return string.Empty;
-			}
-		}
-
-		public string IcyPlanetsZoneString()    // has trailing LF
-        {
-			if (IsStar && IcyPlanetZoneInner.HasValue && IcyPlanetZoneOuter != null)
-			{
-				StringBuilder habZone = new StringBuilder();
-				habZone.AppendFormat("Icy Planets: {0} ({1} AU to {2})\n".T(EDTx.JournalScan_ICYP),
-									 GetIcyPlanetsZoneStringLs(), 
-									 (IcyPlanetZoneInner.Value / oneAU_LS).ToString("N2"),
-									 IcyPlanetZoneOuter);
-				return habZone.ToNullSafeString();
-			}
-			else
-				return null;
-		}
 
         // show material counts at the historic point and current.  Has trailing LF if text present.
         public string DisplayMaterials(int indent = 0, MaterialCommoditiesList historicmatlist = null, MaterialCommoditiesList currentmatlist = null)
@@ -1046,7 +918,7 @@ namespace EliteDangerousCore.JournalEvents
             return scanText.ToNullSafeString();
         }
 
-        public string DisplayMaterial(string fdname, double percent, MaterialCommoditiesList historicmatlist = null, 
+        public string DisplayMaterial(string fdname, double percent, MaterialCommoditiesList historicmatlist = null,
                                         MaterialCommoditiesList currentmatlist = null)  // has trailing LF
         {
             StringBuilder scanText = new StringBuilder();
@@ -1056,14 +928,14 @@ namespace EliteDangerousCore.JournalEvents
             if (mc != null && (historicmatlist != null || currentmatlist != null))
             {
                 MaterialCommodities historic = historicmatlist?.Find(mc);
-                MaterialCommodities current = ReferenceEquals(historicmatlist,currentmatlist) ? null : currentmatlist?.Find(mc);
+                MaterialCommodities current = ReferenceEquals(historicmatlist, currentmatlist) ? null : currentmatlist?.Find(mc);
                 int? limit = mc.MaterialLimit();
 
                 string matinfo = historic?.Count.ToString() ?? "0";
                 if (limit != null)
                     matinfo += "/" + limit.Value.ToString();
 
-                if (current != null && (historic == null || historic.Count != current.Count) )
+                if (current != null && (historic == null || historic.Count != current.Count))
                     matinfo += " Cur " + current.Count.ToString();
 
                 scanText.AppendFormat("{0} ({1}) {2} {3}% {4}\n", mc.Name, mc.Shortname, mc.TranslatedType, percent.ToString("N1"), matinfo);
@@ -1114,7 +986,7 @@ namespace EliteDangerousCore.JournalEvents
         public StarPlanetRing FindRing(string name)
         {
             if (Rings != null)
-                return Array.Find(Rings,x => x.Name.Equals(name,StringComparison.InvariantCultureIgnoreCase));
+                return Array.Find(Rings, x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             else
                 return null;
         }
@@ -1128,7 +1000,7 @@ namespace EliteDangerousCore.JournalEvents
 
             string iconName = StarTypeID.ToString(); // fallback
 
-            // black holes variations. According to theorethical papers, we should find four classes of black holes: 
+            // black holes variations. According to theorethical papers, we should find four classes of black holes:
             // supermassive, intermediate, stellar and micro (https://en.wikipedia.org/wiki/Black_hole) gravitional collapses.
             // The in-game black hole population do not really fit quite well that nomenclature, they are somewhat capped, so we have to quantize the masses ranges to more reasonable limits.
             // For example, SagA* is known to have at least 4 millions solar masses, in real life: the in-game stats shows only 516.608, way smaller! The same for Great Annihilator: the biggest
@@ -1147,7 +1019,7 @@ namespace EliteDangerousCore.JournalEvents
             if (StarTypeID == EDStar.SuperMassiveBlackHole)
                 iconName = "SuperMassiveBlackHole";
 
-            // neutron stars variations. 
+            // neutron stars variations.
             // Uses theorethical masses: https://en.wikipedia.org/wiki/Neutron_star
             if (StarTypeID == EDStar.N)
             {
@@ -1252,7 +1124,7 @@ namespace EliteDangerousCore.JournalEvents
                     iconName = "A";
                 if (st < 140000)
                     iconName = "B";
-                if (st > 140000)    
+                if (st > 140000)
                     iconName = "O";
             }
 
@@ -1267,12 +1139,12 @@ namespace EliteDangerousCore.JournalEvents
 
             if (StarTypeID == EDStar.X || StarTypeID == EDStar.RoguePlanet)
             {
-               // System.Diagnostics.Debug.WriteLine(StarTypeID + ": " + iconName);
+                // System.Diagnostics.Debug.WriteLine(StarTypeID + ": " + iconName);
                 return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Unknown");
             }
             else
             {
-             //   System.Diagnostics.Debug.WriteLine(StarTypeID + ": " + iconName);
+                //   System.Diagnostics.Debug.WriteLine(StarTypeID + ": " + iconName);
                 return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Stars.{iconName}");
             }
         }
@@ -1392,8 +1264,8 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     if (st < 110)
                     {
-                        if (AtmosphereComposition.ToNullSafeString().ToLowerInvariant().Contains("antimony") || 
-                            AtmosphereComposition.ToNullSafeString().ToLowerInvariant().Contains("cadmium") || 
+                        if (AtmosphereComposition.ToNullSafeString().ToLowerInvariant().Contains("antimony") ||
+                            AtmosphereComposition.ToNullSafeString().ToLowerInvariant().Contains("cadmium") ||
                             AtmosphereComposition.ToNullSafeString().ToLowerInvariant().Contains("niobium"))
                             iconName = "GGHv7";
                         else
@@ -1506,8 +1378,8 @@ namespace EliteDangerousCore.JournalEvents
                         iconName = "GG3v11";
                     else if (st < 760)
                         iconName = "GG3v13";
-                    else                    
-                        iconName = "GG3v6";                    
+                    else
+                        iconName = "GG3v6";
                 }
 
                 if (PlanetTypeID == EDPlanet.Sudarsky_class_IV_gas_giant)
@@ -1524,7 +1396,7 @@ namespace EliteDangerousCore.JournalEvents
                         iconName = "GG4v3";
                     else if (st < 1070)
                         iconName = "GG4v1";
-                    else if (st < 1125)                    
+                    else if (st < 1125)
                         iconName = "GG4v7";
                     else if (st < 1200)
                         iconName = "GG4v2";
@@ -1578,10 +1450,10 @@ namespace EliteDangerousCore.JournalEvents
 
             // Terrestrial planets variants
 
-            // Ammonia world 
+            // Ammonia world
             if (PlanetTypeID == EDPlanet.Ammonia_world)
             {
-                iconName = "AMWv1"; // fallback                
+                iconName = "AMWv1"; // fallback
 
                 if (Terraformable) // extremely rare, but they exists
                     iconName = "AMWv2";
@@ -1743,7 +1615,7 @@ namespace EliteDangerousCore.JournalEvents
                         iconName = "HMCv3"; // fallback
                 }
                 else
-                    iconName = "HMCv3"; // fallback                                
+                    iconName = "HMCv3"; // fallback
             }
 
             if (PlanetTypeID == EDPlanet.Icy_body)
@@ -1924,7 +1796,7 @@ namespace EliteDangerousCore.JournalEvents
                             iconName = "WTRv8";
                     }
                     else
-                        iconName = "WTRv7"; // fallback                                
+                        iconName = "WTRv7"; // fallback
                 }
             }
 
@@ -1976,19 +1848,16 @@ namespace EliteDangerousCore.JournalEvents
             return PlanetComposition[c] * 100;
         }
 
-        public bool IsStarNameRelated(string starname, string designation = null, long? sysaddr = null)
+        // is the name in starname 
+
+        public bool IsStarNameRelated(string starname,  long? sysaddr, string designation )
         {
-            if (StarSystem != null && SystemAddress != null && sysaddr != null)
+            if (StarSystem != null && SystemAddress != null && sysaddr != null)     // if we are a star system AND sysaddr in the scan is set, and we got passed a system addr, direct compare
             {
-                return starname.Equals(StarSystem, StringComparison.InvariantCultureIgnoreCase) && sysaddr == SystemAddress;
+                return starname.Equals(StarSystem, StringComparison.InvariantCultureIgnoreCase) && sysaddr == SystemAddress;    // star is the same name and sys addr same
             }
 
-            if (designation == null)
-            {
-                designation = BodyName;
-            }
-
-            if (designation.Length >= starname.Length)
+            if (designation.Length >= starname.Length)      // and compare against starname root
             {
                 string s = designation.Substring(0, starname.Length);
                 return starname.Equals(s, StringComparison.InvariantCultureIgnoreCase);
@@ -1997,16 +1866,16 @@ namespace EliteDangerousCore.JournalEvents
                 return false;
         }
 
-        public string IsStarNameRelatedReturnRest(string starname, long? sysaddr = null)          // null if not related, else rest of string
+        public string IsStarNameRelatedReturnRest(string starname, long? sysaddr )          // null if not related, else rest of string
         {
             string designation = BodyDesignation ?? BodyName;
             string desigrest = null;
 
-            if (StarSystem != null && SystemAddress != null && sysaddr != null)
+            if (this.StarSystem != null && this.SystemAddress != null && sysaddr != null)
             {
-                if (starname != StarSystem || sysaddr != SystemAddress)
+                if (starname != this.StarSystem || sysaddr != this.SystemAddress)
                 {
-                    return null;
+                    return null;        // no relationship between starname and system in JE
                 }
 
                 desigrest = designation;
@@ -2022,499 +1891,20 @@ namespace EliteDangerousCore.JournalEvents
             return desigrest;
         }
 
-        // Habitable zone calculations, formula cribbed from JackieSilver's HabZone Calculator with permission
-        private double DistanceForBlackBodyTemperature(double targetTemp)
-        {
-            double top = Math.Pow(nRadius.Value, 2.0) * Math.Pow(nSurfaceTemperature.Value, 4.0);
-            double bottom = 4.0 * Math.Pow(targetTemp, 4.0);
-            double radius_metres = Math.Pow(top / bottom, 0.5);
-            return radius_metres / oneLS_m;
-        }
-
-		private double DistanceForNoMaxTemperatureBody(double radius)
-		{
-			return radius / oneLS_m;
-		}
 
         #endregion
 
         #region Estimated Value
 
-        private void EstimateScanValue()       // call to estimate scan value given these parameters. Updates EstimatedValue
+        private ScanEstimatedValues EstimatedValues = null;
+
+        public ScanEstimatedValues GetEstimatedValues()
         {
-            // see https://forums.frontier.co.uk/showthread.php/232000-Exploration-value-formulae/ for detail
-
-            if (EventTimeUTC < new DateTime(2017, 4, 11, 12, 0, 0, 0, DateTimeKind.Utc))
-            {
-                EstimatedValueBase = EstimatedValueED22();
-                return;
-            }
-
-            if (EventTimeUTC < new DateTime(2018, 12, 11, 9, 0, 0, DateTimeKind.Utc))
-            {
-                EstimatedValueBase = EstimatedValue32();
-                return;
-            }
-
-            // 3.3 onwards
-
-            //System.Diagnostics.Debug.WriteLine("Scan calc " + mapped + " ef " + efficient + " Current " + EstimatedValue);
-
-            double kValue;
-
-            if (IsStar)
-            {
-                switch (StarTypeID)
-                {
-                    // white dwarf
-                    case EDStar.D:
-                    case EDStar.DA:
-                    case EDStar.DAB:
-                    case EDStar.DAO:
-                    case EDStar.DAZ:
-                    case EDStar.DAV:
-                    case EDStar.DB:
-                    case EDStar.DBZ:
-                    case EDStar.DBV:
-                    case EDStar.DO:
-                    case EDStar.DOV:
-                    case EDStar.DQ:
-                    case EDStar.DC:
-                    case EDStar.DCV:
-                    case EDStar.DX:
-                        kValue = 14057;
-                        break;
-
-                    case EDStar.N:
-                    case EDStar.H:
-                        kValue = 22628;
-                        break;
-
-                    case EDStar.SuperMassiveBlackHole:
-                        // this is applying the same scaling to the 3.2 value as a normal black hole, not confirmed in game
-                        kValue = 33.5678;   
-                        break;
-
-                    default:
-                        kValue = 1200;
-                        break;
-                }
-
-                EstimatedValueBase = (int)StarValue32And33(kValue, nStellarMass.HasValue ? nStellarMass.Value : 1.0);
-            }
-            else
-            {
-                EstimatedValueBase = 0;
-
-                if (PlanetClass != null)  //Asteroid belt is null
-                {
-                    switch (PlanetTypeID)
-                    {
-                        case EDPlanet.Metal_rich_body:
-                            // CFT value is scaled same as WW/ELW from 3.2, not confirmed in game
-                            // They're like hen's teeth anyway....
-                            kValue = 21790;
-                            if (Terraformable) kValue += 65631;
-                            break;
-                        case EDPlanet.Ammonia_world:
-                            kValue = 96932;
-                            break;
-                        case EDPlanet.Sudarsky_class_I_gas_giant:
-                            kValue = 1656;
-                            break;
-                        case EDPlanet.Sudarsky_class_II_gas_giant:
-                        case EDPlanet.High_metal_content_body:
-                            kValue = 9654;
-                            if (Terraformable) kValue += 100677;
-                            break;
-                        case EDPlanet.Water_world:
-                            kValue = 64831;
-                            if (Terraformable) kValue += 116295;
-                            break;
-                        case EDPlanet.Earthlike_body:
-                            // Always terraformable so WW + bonus
-                            kValue = 64831 + 116295;
-                            break;
-                        default:
-                            kValue = 300;
-                            if (Terraformable) kValue += 93328;
-                            break;
-                    }
-
-                    double mass = nMassEM.HasValue ? nMassEM.Value : 1.0;
-                    double effmapped = 1.25;
-                    double firstdiscovery = 2.6;
-
-                    double basevalue = PlanetValue33(kValue, mass);
-
-                    EstimatedValueBase = (int)basevalue;
-
-                    EstimatedValueFirstDiscovered = (int)(basevalue*firstdiscovery);
-
-                    EstimatedValueFirstDiscoveredFirstMapped = (int)(basevalue * firstdiscovery * 3.699622554);
-                    EstimatedValueFirstDiscoveredFirstMappedEfficiently = (int)(basevalue * firstdiscovery * 3.699622554 * effmapped);
-
-                    EstimatedValueFirstMapped = (int)(basevalue * 8.0956);
-                    EstimatedValueFirstMappedEfficiently = (int)(basevalue * 8.0956 * effmapped);
-
-                    EstimatedValueMapped = (int)(basevalue * 3.3333333333);
-                    EstimatedValueMappedEfficiently = (int)(basevalue * 3.3333333333 * effmapped);
-                }
-            }
+            if (EstimatedValues == null)
+                EstimatedValues = new ScanEstimatedValues(EventTimeUTC, IsStar, StarTypeID, IsPlanet, PlanetTypeID, Terraformable, nStellarMass, nMassEM);
+            return EstimatedValues;
         }
 
-        private double StarValue32And33(double k, double m)
-        {
-            return k + (m * k / 66.25);
-        }
-
-        private double PlanetValue33(double k, double m)
-        {
-            const double q = 0.56591828;
-            return Math.Max((k + (k * Math.Pow(m, 0.2) * q)), 500);
-        }
-
-        #endregion
-
-        #region ED 3.2 values
-
-        private int EstimatedValue32()
-        {
-            double kValue;
-            double kBonus = 0;
-
-            if (IsStar)
-            {
-                switch (StarTypeID)      // http://elite-dangerous.wikia.com/wiki/Explorer
-                {
-                    // white dwarf
-                    case EDStar.D:
-                    case EDStar.DA:
-                    case EDStar.DAB:
-                    case EDStar.DAO:
-                    case EDStar.DAZ:
-                    case EDStar.DAV:
-                    case EDStar.DB:
-                    case EDStar.DBZ:
-                    case EDStar.DBV:
-                    case EDStar.DO:
-                    case EDStar.DOV:
-                    case EDStar.DQ:
-                    case EDStar.DC:
-                    case EDStar.DCV:
-                    case EDStar.DX:
-                        kValue = 33737;
-                        break;
-
-                    case EDStar.N:
-                    case EDStar.H:
-                        kValue = 54309;
-                        break;
-
-                    case EDStar.SuperMassiveBlackHole:
-                        kValue = 80.5654;
-                        break;
-
-                    default:
-                        kValue = 2880;
-                        break;
-                }
-
-                return (int)StarValue32And33(kValue, nStellarMass.HasValue ? nStellarMass.Value : 1.0);
-            }
-            else if (PlanetClass == null)  //Asteroid belt
-                return 0;
-            else   // Planet
-            {
-                switch (PlanetTypeID)      // http://elite-dangerous.wikia.com/wiki/Explorer
-                {
-                    
-                    case EDPlanet.Metal_rich_body:
-                        kValue = 52292;
-                        if (Terraformable) { kBonus = 245306; }
-                        break;
-                    case EDPlanet.High_metal_content_body:
-                    case EDPlanet.Sudarsky_class_II_gas_giant:
-                        kValue = 23168;
-                        if (Terraformable) { kBonus = 241607; }
-                        break;
-                    case EDPlanet.Earthlike_body:
-                        kValue = 155581;
-                        kBonus = 279088;
-                        break;
-                    case EDPlanet.Water_world:
-                        kValue = 155581;
-                        if (Terraformable) { kBonus = 279088; }
-                        break;
-                    case EDPlanet.Ammonia_world:
-                        kValue = 232619;
-                        break;
-                    case EDPlanet.Sudarsky_class_I_gas_giant:
-                        kValue = 3974;
-                        break;
-                    default:
-                        kValue = 720;
-                        if (Terraformable) { kBonus = 223971; }
-                        break;
-                }
-
-                double mass = nMassEM.HasValue ? nMassEM.Value : 1.0;       // some old entries don't have mass, so just presume 1
-
-                int val = (int)PlanetValueED32(kValue, mass);
-                if (Terraformable || PlanetTypeID == EDPlanet.Earthlike_body)
-                {
-                    val += (int)PlanetValueED32(kBonus, mass);
-                }
-
-                return val;
-            }
-        }
-
-        private double PlanetValueED32(double k, double m)
-        {
-            return k + (3 * k * Math.Pow(m, 0.199977) / 5.3);
-        }
-
-        #endregion
-
-        #region ED 22 
-
-        private int EstimatedValueED22()
-        {
-            if (IsStar)
-            {
-                switch (StarTypeID)      // http://elite-dangerous.wikia.com/wiki/Explorer
-                {
-                    case EDStar.O:
-                        //low = 3677;
-                        //high = 4465;
-                        return 4170;
-
-                    case EDStar.B:
-                        //low = 2992;
-                        //high = 3456;
-                        return 3098;
-
-                    case EDStar.A:
-                        //low = 2938;
-                        //high = 2986;
-                        return 2950;
-
-                    case EDStar.F:
-                        //low = 2915;
-                        //high = 2957;
-                        return 2932;
-
-                    case EDStar.G:
-                        //low = 2912;
-                        //high = 2935;
-                        // also have a G8V
-                        return 2923;
-
-                    case EDStar.K:
-                        //low = 2898;
-                        //high = 2923;
-                        return 2911;
-                    case EDStar.M:
-                        //low = 2887;
-                        //high = 2905;
-                        return 2911;
-
-                    // dwarfs
-                    case EDStar.L:
-                        //low = 2884;
-                        //high = 2890;
-                        return 2887;
-                    case EDStar.T:
-                        //low = 2881;
-                        //high = 2885;
-                        return 2883;
-                    case EDStar.Y:
-                        //low = 2880;
-                        //high = 2882;
-                        return 2881;
-
-                    // proto stars
-                    case EDStar.AeBe:    // Herbig
-                        //                ??
-                        //low = //high = 0;
-                        return 2500;
-                    case EDStar.TTS:
-                        //low = 2881;
-                        //high = 2922;
-                        return 2900;
-
-                    // wolf rayet
-                    case EDStar.W:
-                    case EDStar.WN:
-                    case EDStar.WNC:
-                    case EDStar.WC:
-                    case EDStar.WO:
-                        //low = //high = 7794;
-                        return 7794;
-
-                    // Carbon
-                    case EDStar.CS:
-                    case EDStar.C:
-                    case EDStar.CN:
-                    case EDStar.CJ:
-                    case EDStar.CHd:
-                        //low = //high = 2920;
-                        return 2920;
-
-                    case EDStar.MS: //seen in log
-                    case EDStar.S:   // seen in log
-                                     //                ??
-                                     //low = //high = 0;
-                        return 2000;
-
-
-                    // white dwarf
-                    case EDStar.D:
-                    case EDStar.DA:
-                    case EDStar.DAB:
-                    case EDStar.DAO:
-                    case EDStar.DAZ:
-                    case EDStar.DAV:
-                    case EDStar.DB:
-                    case EDStar.DBZ:
-                    case EDStar.DBV:
-                    case EDStar.DO:
-                    case EDStar.DOV:
-                    case EDStar.DQ:
-                    case EDStar.DC:
-                    case EDStar.DCV:
-                    case EDStar.DX:
-                        //low = 25000;
-                        //high = 27000;
-
-                        return 26000;
-
-                    case EDStar.N:
-                        //low = 43276;
-                        //high = 44619;
-                        return 43441;
-
-                    case EDStar.H:
-                        //low = 44749;
-                        //high = 80305;
-                        return 61439;
-
-                    case EDStar.X:
-                    case EDStar.A_BlueWhiteSuperGiant:
-                    case EDStar.F_WhiteSuperGiant:
-                    case EDStar.M_RedSuperGiant:
-                    case EDStar.M_RedGiant:
-                    case EDStar.K_OrangeGiant:
-                    case EDStar.RoguePlanet:
-
-                    default:
-                        //low = 0;
-                        //high = 0;
-                        return 2000;
-                }
-            }
-            else   // Planet
-            {
-                switch (PlanetTypeID)      // http://elite-dangerous.wikia.com/wiki/Explorer
-                {
-                    case EDPlanet.Icy_body:
-                        //low = 792; // (0.0001 EM)
-                        //high = 1720; // 89.17
-                        return 933; // 0.04
-
-                    case EDPlanet.Rocky_ice_body:
-                        //low = 792; // (0.0001 EM)
-                        //high = 1720; // 89.17
-                        return 933; // 0.04
-
-                    case EDPlanet.Rocky_body:
-                        if (TerraformState != null && TerraformState.ToLowerInvariant().Equals("terraformable"))
-                        {
-                            //low = 36000;
-                            //high = 36500;
-                            return 37000;
-                        }
-                        else
-                        {
-                            //low = 792; // (0.0001 EM)
-                            //high = 1720; // 89.17
-                            return 933; // 0.04
-                        }
-                    case EDPlanet.Metal_rich_body:
-                        //low = 9145; // (0.0002 EM)
-                        //high = 14562; // (4.03 EM)
-                        return 12449; // 0.51 EM
-                    case EDPlanet.High_metal_content_body:
-                        if (TerraformState != null && TerraformState.ToLowerInvariant().Equals("terraformable"))
-                        {
-                            //low = 36000;
-                            //high = 54000;
-                            return 42000;
-                        }
-                        else
-                        {
-                            //low = 4966; // (0.0015 EM)
-                            //high = 9632;  // 31.52 EM
-                            return 6670; // 0.41
-                        }
-
-                    case EDPlanet.Earthlike_body:
-                        //low = 65000; // 0.24 EM
-                        //high = 71885; // 196.60 EM
-                        return 67798; // 0.47 EM
-
-                    case EDPlanet.Water_world:
-                        //low = 26589; // (0.09 EM)
-                        //high = 43437; // (42.77 EM)
-                        return 30492; // (0.82 EM)
-                    case EDPlanet.Ammonia_world:
-                        //low = 37019; // 0.09 EM
-                        //high = 71885; //(196.60 EM)
-                        return 40322; // (0.41 EM)
-                    case EDPlanet.Sudarsky_class_I_gas_giant:
-                        //low = 2472; // (2.30 EM)
-                        //high = 4514; // (620.81 EM
-                        return 3400;  // 62.93 EM
-
-                    case EDPlanet.Sudarsky_class_II_gas_giant:
-                        //low = 8110; // (5.37 EM)
-                        //high = 14618; // (949.98 EM)
-                        return 12319;  // 260.84 EM
-
-                    case EDPlanet.Sudarsky_class_III_gas_giant:
-                        //low = 1368; // (10.16 EM)
-                        //high = 2731; // (2926 EM)
-                        return 2339; // 990.92 EM
-
-                    case EDPlanet.Sudarsky_class_IV_gas_giant:
-                        //low = 2739; //(2984 EM)
-                        //high = 2827; // (3697 EM)
-                        return 2782; // 3319 em
-
-                    case EDPlanet.Sudarsky_class_V_gas_giant:
-                        //low = 2225; // 688.2 EM
-                        //high = 2225;
-                        return 2225;
-
-                    case EDPlanet.Water_giant:
-                    case EDPlanet.Water_giant_with_life:
-                    case EDPlanet.Gas_giant_with_water_based_life:
-                    case EDPlanet.Gas_giant_with_ammonia_based_life:
-                    case EDPlanet.Helium_rich_gas_giant:
-                    case EDPlanet.Helium_gas_giant:
-                        //low = 0;
-                        //high = 0;
-                        return 2000;
-
-                    default:
-                        //low = 0;
-                        //high = 2000;
-                        return 0;
-                }
-            }
-
-        }
     }
 
     #endregion
@@ -2531,6 +1921,7 @@ namespace EliteDangerousCore.JournalEvents
             return obj.BodyName.GetHashCode();
         }
     }
+
 }
 
 

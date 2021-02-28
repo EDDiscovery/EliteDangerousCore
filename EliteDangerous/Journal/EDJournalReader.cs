@@ -58,28 +58,21 @@ namespace EliteDangerousCore
             if (line.Length == 0)
                 return null;
 
-            JObject jo = JObject.Parse(line, JToken.ParseOptions.AllowTrailingCommas | JToken.ParseOptions.CheckEOL);  // parse, null if failed
-
-            if (jo == null)     // decode failed, gently return null
-            {
-                System.Diagnostics.Trace.WriteLine($"{TravelLogUnit.FullName} Bad journal line: {line}");
-                return null;
-            }
-
             JournalEntry je = null;
 
             try
             {           // use a try block in case anything in the creation goes tits up
-                je = JournalEntry.CreateJournalEntry(jo, true);
+                je = JournalEntry.CreateJournalEntry(line, true, true);       // save JSON, save json, don't return if bad
             }
-            catch
+            catch ( Exception ex)
             {
-                je = null;
+                System.Diagnostics.Trace.WriteLine($"{TravelLogUnit.FullName} Exception Bad journal line: {line} {ex.Message} {ex.StackTrace}");
+                return null;
             }
 
-            if (je == null)
+            if ( je == null )
             {
-                System.Diagnostics.Trace.WriteLine($"{TravelLogUnit.FullName} Bad journal creation: {line}");
+                System.Diagnostics.Trace.WriteLine($"{TravelLogUnit.FullName} Bad journal line: {line}");
                 return null;
             }
 
@@ -143,13 +136,20 @@ namespace EliteDangerousCore
                         EDCommander.Update(new List<EDCommander> { commander }, false);
                     }
                     else
-                        commander = EDCommander.Create(name:newname, journalpath:EDJournalUIScanner.GetDefaultJournalDir().Equals(TravelLogUnit.Path) ? "" : TravelLogUnit.Path);
+                    {
+                        string defpath = EDJournalUIScanner.GetDefaultJournalDir();     // may be null if the system is not known
+                        string jp = defpath != null && defpath.Equals(TravelLogUnit.Path) ? "" : TravelLogUnit.Path;
+                        commander = EDCommander.Create(name: newname, journalpath: jp);
+
+                        if (EDCommander.Current.Name.Contains("[BETA]") && !newname.Contains("[BETA]"))        // if current commander is beta, and we dont, swap to it
+                            EDCommander.CurrentCmdrID = commander.Id;
+                    }
 
                 }
 
                 commander.FID = jlg.FID;
 
-                cmdrid = commander.Nr;
+                cmdrid = commander.Id;
 
                 if (!TravelLogUnit.CommanderId.HasValue)        // we do not need to write to DB the TLU at this point, since we read something the upper layers will do that
                 {
@@ -165,7 +165,7 @@ namespace EliteDangerousCore
 
             if (je is IAdditionalFiles)
             {
-                if ((je as IAdditionalFiles).ReadAdditionalFiles(TravelLogUnit.Path, inhistoryrefreshparse, ref jo) == false)     // if failed
+                if ((je as IAdditionalFiles).ReadAdditionalFiles(TravelLogUnit.Path, inhistoryrefreshparse) == false)     // if failed
                     return null;
             }
 
@@ -201,7 +201,7 @@ namespace EliteDangerousCore
                 if ( lastcargo != null )
                 {
                     toosoon = lastcargo.SameAs(cargo);     // if exactly the same, swallow.
-                    System.Diagnostics.Debug.WriteLine("Cargo vs last " + toosoon);
+                    //System.Diagnostics.Debug.WriteLine("Cargo vs last " + toosoon);
                 }
                 lastcargo = cargo;
             }

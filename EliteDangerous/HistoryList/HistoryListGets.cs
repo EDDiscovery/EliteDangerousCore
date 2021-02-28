@@ -45,7 +45,7 @@ namespace EliteDangerousCore
         public HistoryEntry this[int i] { get {return historylist[i]; } }       
 
         // combat, spanel,stats, history filter
-        public List<HistoryEntry> LatestFirst() { return historylist.OrderByDescending(s => s.Indexno).ToList(); }
+        public List<HistoryEntry> LatestFirst() { return historylist.OrderByDescending(s => s.EntryNumber).ToList(); }
 
         #endregion
 
@@ -54,7 +54,7 @@ namespace EliteDangerousCore
         // history filter
         static public List<HistoryEntry> LatestFirst(List<HistoryEntry> list)
         {
-            return list.OrderByDescending(s=>s.Indexno).ToList();
+            return list.OrderByDescending(s=>s.EntryNumber).ToList();
         }
 
         // history filter
@@ -115,9 +115,9 @@ namespace EliteDangerousCore
 
             if (heabove != null && hebelow != null)
             {
-                int hebelowix = hebelow.Indexno;
-                int heaboveix = heabove.Indexno;
-                return list.Where(x => x.Indexno >= hebelowix && x.Indexno <= heaboveix && where(x) == true).ToList();
+                int hebelowix = hebelow.EntryNumber;
+                int heaboveix = heabove.EntryNumber;
+                return list.Where(x => x.EntryNumber >= hebelowix && x.EntryNumber <= heaboveix && where(x) == true).ToList();
             }
             else
                 return null;
@@ -126,9 +126,9 @@ namespace EliteDangerousCore
         // factions, List should be in entry order.
         static public List<HistoryEntry> FilterBefore(List<HistoryEntry> list, HistoryEntry pos, Predicate<HistoryEntry> where)         // from and including pos, go back in time, and return all which match where
         {
-            int indexno = pos.Indexno-1;        // position in HElist..
+            int indexno = pos.EntryNumber-1;        // position in HElist..
             List<HistoryEntry> helist = new List<HistoryEntry>();
-            while (indexno >= 0)
+            while (indexno >= 0 && indexno < list.Count)        // check within range.
             {
                 if (where(list[indexno]))
                 {
@@ -230,7 +230,7 @@ namespace EliteDangerousCore
         public double DistanceCurrentTo(string system)          // from current, if we have one, to system, if its found.
         {
             ISystem cursys = CurrentSystem();
-            ISystem other = SystemCache.FindSystem(system);
+            ISystem other = FindSystem(system, null, false);    // does not use EDSM for this, just DB and history
             return cursys != null ? cursys.Distance(other) : -1;  // current can be null, shipsystem can be null, cursys can not have co-ord, -1 if failed.
         }
 
@@ -243,9 +243,9 @@ namespace EliteDangerousCore
             return historylist.Find(x => x.Journalid == jid);
         }
 
-        public HistoryEntry GetByIndex(int index)
+        public HistoryEntry GetByEntryNo(int entryno)
         {
-            return (index >= 1 && index <= historylist.Count) ? historylist[index - 1] : null;
+            return (entryno >= 1 && entryno <= historylist.Count) ? historylist[entryno - 1] : null;
         }
 
         public int GetIndex(long jid)
@@ -273,7 +273,7 @@ namespace EliteDangerousCore
             if (list.Count == 0 || athe == null)
                 return null;
 
-            for (int i = (athe.Indexno - 1) + (usecurrent ? 0 : dir); dir > 0 ? (i < list.Count) : (i >= 0); i += dir )        // indexno is +1 due to historic reasons, start from one on
+            for (int i = (athe.EntryNumber - 1) + (usecurrent ? 0 : dir); dir > 0 ? (i < list.Count) : (i >= 0 && i < list.Count); i += dir )        // indexno is +1 due to historic reasons, start from one on
             {
                 if (where(list[i]))
                     return list[i];
@@ -291,22 +291,25 @@ namespace EliteDangerousCore
         // trilat
         public HistoryEntry GetLastFSDOnly() { return historylist.FindLast(x => x.EntryType == JournalTypeEnum.FSDJump); }
 
+        // trippanel
         public HistoryEntry GetLastHistoryEntry(Predicate<HistoryEntry> where)
         {
             return historylist.FindLast(where);
         }
 
+        // spanel, outfitting, shipyards, marketdata, sysinfo
         public HistoryEntry GetLastHistoryEntry(Predicate<HistoryEntry> where, HistoryEntry frominclusive)
         {
             if (frominclusive is null)
                 return GetLastHistoryEntry(where);
-            else
+            else 
             {
-                for( int i = frominclusive.Indexno-1; i>=0; i-- )       // quicker search than previous
+                for (int index = frominclusive.EntryNumber - 1; index >= 0 && index < historylist.Count; index--)
                 {
-                    if (where(historylist[i]))
-                        return historylist[i];
+                    if (where(historylist[index]))
+                        return historylist[index];
                 }
+
                 return null;
             }
         }
@@ -321,53 +324,6 @@ namespace EliteDangerousCore
                 return he.Visits;
             else
                 return 0;
-        }
-
-         // stats
-        public int GetFSDCarrierJumps(string forShipKey)
-        {
-            return (from s in historylist where s.IsFSDCarrierJump && $"{s.ShipTypeFD.ToLowerInvariant()}:{s.ShipId}" == forShipKey select s).Count();
-        }
-
-        // stats
-        public int GetNrMappedUTC(DateTime startutc, DateTime toutc)
-        {
-            return (from s in historylist where s.journalEntry.EventTypeID == JournalTypeEnum.SAAScanComplete && s.EventTimeUTC >= startutc && s.EventTimeUTC < toutc select s).Count();
-        }
-
-        // stats
-        public Tuple<int, long> GetScanCountAndValueUTC(DateTime startutc, DateTime toutc)
-        {
-            var scans = historylist
-                .Where(s => s.EntryType == JournalTypeEnum.Scan && s.EventTimeUTC >= startutc && s.EventTimeUTC < toutc)
-                .Select(h => h.journalEntry as JournalScan)
-                .Distinct(new ScansAreForSameBody()).ToArray();
-
-            var total = scans.Sum(scan => (long)scan.EstimatedValue);
-
-            return new Tuple<int, long>(scans.Length, total);
-        }
-
-        //stats
-        public int GetJetConeBoostUTC(DateTime startutc, DateTime toutc)
-        {
-            return (from s in historylist where s.EntryType == JournalTypeEnum.JetConeBoost && s.EventTimeUTC >= startutc && s.EventTimeUTC < toutc select s).Count();
-        }
-        
-        //stats
-        public HistoryFsdJumpStatistics GetFsdJumpStatistics(DateTime startUtc, DateTime toUtc)
-        {
-            var jumps = historylist
-                .Where(s => s.EntryType == JournalTypeEnum.FSDJump && s.EventTimeUTC >= startUtc && s.EventTimeUTC < toUtc)
-                .Select(h => h.journalEntry as JournalFSDJump)
-                .ToArray();
-
-            return new HistoryFsdJumpStatistics(
-                jumps.Length,
-                jumps.Sum(j => j.JumpDist),
-                jumps.Where(j => j.BoostValue == 1).Count(),
-                jumps.Where(j => j.BoostValue == 2).Count(),
-                jumps.Where(j => j.BoostValue == 3).Count());
         }
 
         //stats
@@ -386,127 +342,14 @@ namespace EliteDangerousCore
             return inTrip;
         }
 
-        // stats
-        public double GetTraveledLy(string forShipKey)
-        {
-            var list = (from s in historylist where s.EntryType == JournalTypeEnum.FSDJump && $"{s.ShipTypeFD.ToLowerInvariant()}:{s.ShipId}" == forShipKey select s.journalEntry as JournalFSDJump).ToList<JournalFSDJump>();
-
-            return (from s in list select s.JumpDist).Sum();
-        }
-
-        // stats
-        public List<JournalScan> GetScanListUTC(DateTime startutc, DateTime toutc)
-        {
-            return (from s in historylist where s.EntryType == JournalTypeEnum.Scan && s.EventTimeUTC >= startutc && s.EventTimeUTC < toutc select s.journalEntry as JournalScan)
-                .Distinct(new ScansAreForSameBody()).ToList();
-        }
-
-        // stats
-        public int GetTonnesBought(string forShipKey)
-        {
-            var list = (from s in historylist where s.EntryType == JournalTypeEnum.MarketBuy && $"{s.ShipTypeFD.ToLowerInvariant()}:{s.ShipId}" == forShipKey select s.journalEntry as JournalMarketBuy).ToList();
-
-            return (from s in list select s.Count).Sum();
-        }
-
-        // stats
-        public int GetTonnesSold(string forShipKey)
-        {
-            var list = (from s in historylist where s.EntryType == JournalTypeEnum.MarketSell && $"{s.ShipTypeFD.ToLowerInvariant()}:{s.ShipId}" == forShipKey select s.journalEntry as JournalMarketSell).ToList();
-
-            return (from s in list select s.Count).Sum();
-        }
-
-        // stats
-        public int GetDeathCount(string forShipKey)
-        {
-            return (from s in historylist where s.EntryType == JournalTypeEnum.Died && $"{s.ShipTypeFD.ToLowerInvariant()}:{s.ShipId}" == forShipKey select s).Count();
-        }
-
-        // stats
-        public int GetBodiesScanned(string forShipKey)
-        {
-            return (from s in historylist where s.EntryType == JournalTypeEnum.Scan && $"{s.ShipTypeFD.ToLowerInvariant()}:{s.ShipId}" == forShipKey select s.journalEntry as JournalScan)
-                .Distinct(new ScansAreForSameBody()).Count();
-        }
-
-        // historylist
+       // historylist
         public string GetCommanderFID()     // may be null
         {
             var cmdr = historylist.FindLast(x => x.EntryType == JournalTypeEnum.Commander);
             return (cmdr?.journalEntry as JournalCommander)?.FID;
         }
 
-        // stats
-
-        public void GetJumpStats(out int numberjumps, out int last24hours, out int lastweek, out int last30days, out int last365days,
-                                   out HistoryEntry north, out HistoryEntry south, out HistoryEntry east, out HistoryEntry west, out HistoryEntry up, out HistoryEntry down)
-        {
-            north = south = east = west = up = down = null;
-            numberjumps = last24hours = lastweek = last30days = last365days = 0;
-            DateTime cur = DateTime.UtcNow;
-            foreach( var he in historylist)
-            {
-                if (he.IsFSDCarrierJump)
-                {
-                    numberjumps++;
-
-                    TimeSpan age = cur - he.EventTimeUTC;
-                    if (age.Days < 365)
-                    {
-                        last365days++;
-                        if (age.Days < 30)
-                        {
-                            last30days++;
-                            if (age.Days < 7)
-                            {
-                                lastweek++;
-                                if (age.Hours <= 24)
-                                {
-                                    last24hours++;
-                                }
-                            }
-                        }
-                    }
-
-                    if (he.System.HasCoordinate)
-                    {
-                        if (north == null || north.System.Z < he.System.Z)
-                            north = he;
-                        if (south == null || south.System.Z > he.System.Z)
-                            south = he;
-                        if (east == null || east.System.X < he.System.X)
-                            east = he;
-                        if (west == null || west.System.X > he.System.X)
-                            west = he;
-                        if (up == null || up.System.Y < he.System.Y)
-                            up = he;
-                        if (down == null || down.System.Y > he.System.Y)
-                            down = he;
-                    }
-                }
-            }
-
-        }
-
-        // stats
-        public bool IsBetween(HistoryEntry first, HistoryEntry last, Predicate<HistoryEntry> predicate)     // either direction
-        {
-            if (first.Indexno < last.Indexno)
-                return historylist.Where(h => h.Indexno > first.Indexno && h.Indexno <= last.Indexno && predicate(h)).Any();
-            else
-                return historylist.Where(h => h.Indexno >= first.Indexno && h.Indexno < last.Indexno && predicate(h)).Any();
-        }
-
-        // stats
-        public bool AnyBetween(HistoryEntry first, HistoryEntry last, IEnumerable<JournalTypeEnum> journalTypes)
-        {
-            if (first.Indexno < last.Indexno)
-                return historylist.Where(h => h.Indexno > first.Indexno && h.Indexno <= last.Indexno && journalTypes.Contains(h.EntryType)).Any();
-            else
-                return historylist.Where(h => h.Indexno >= first.Indexno && h.Indexno < last.Indexno && journalTypes.Contains(h.EntryType)).Any();
-        }
-
+  
         // map3d
         public static HistoryEntry FindLastKnownPosition(List<HistoryEntry> syslist)        // can return FSD, Carrier or Location
         {
@@ -592,9 +435,11 @@ namespace EliteDangerousCore
                 return historylist.FindLast(x => x.IsFSDCarrierJump && x.System.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        public ISystem FindSystem(string name, EDSM.GalacticMapping glist = null)        // in system or name
+        // Checks Cache, Database, History, Galactic map if required, and EDSM directly if required
+
+        public ISystem FindSystem(string name, EDSM.GalacticMapping glist , bool checkedsm)        // in system or name
         {
-            ISystem ds1 = SystemCache.FindSystem(name);     // now go thru the cache..
+            ISystem ds1 = SystemCache.FindSystem(name, checkedsm);     // go thru the cache and edsm if required
 
             if (ds1 == null)
             {
@@ -604,20 +449,13 @@ namespace EliteDangerousCore
                     ds1 = vs.System;
                 else if (glist != null)                     // if we have a galmap
                 {
-                    EDSM.GalacticMapObject gmo = glist.Find(name, true, true);
+                    EDSM.GalacticMapObject gmo = glist.Find(name, true);
 
-                    if (gmo != null && gmo.points.Count > 0)
+                    if (gmo != null && gmo.points.Count > 0)                // valid item, and has position
                     {
-                        ds1 = SystemCache.FindSystem(gmo.galMapSearch);
+                        ds1 = SystemCache.FindSystem(gmo.galMapSearch);     // only thru the db/cache, as we checked above for edsm direct, may be null
 
-                        if (ds1 != null)
-                        {
-                            return new EDSM.GalacticMapSystem(ds1, gmo);
-                        }
-                        else
-                        {
-                            return new EDSM.GalacticMapSystem(gmo);
-                        }
+                        return gmo.GetSystem(ds1);                          // and return a ISystem.  If ds1=null, we use the points pos, if ds1 is found, we use the cache position 
                     }
                 }
             }

@@ -41,7 +41,7 @@ namespace EliteDangerousCore.JournalEvents
             Callsign = evt["Callsign"].Str();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("At ".T(EDTx.JournalCarrier_At), Location,
                                               "Cost:; cr;N0".T(EDTx.JournalEntry_Cost), Price,
@@ -122,9 +122,9 @@ namespace EliteDangerousCore.JournalEvents
                 Finance_TaxRate = finance["TaxRate"].Double();
             }
 
-            Crew = evt["Crew"]?.ToObjectProtected<CrewClass[]>();
-            ShipPacks = evt["ShipPacks"]?.ToObjectProtected<PackClass[]>();
-            ModulePacks = evt["ModulePacks"]?.ToObjectProtected<PackClass[]>();
+            Crew = evt["Crew"]?.ToObjectQ<CrewClass[]>();
+            ShipPacks = evt["ShipPacks"]?.ToObjectQ<PackClass[]>();
+            ModulePacks = evt["ModulePacks"]?.ToObjectQ<PackClass[]>();
         }
 
         public class CrewClass
@@ -141,7 +141,7 @@ namespace EliteDangerousCore.JournalEvents
             public int PackTier { get; set; }
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Name:".T(EDTx.JournalCarrier_Name), Name,
                                                 "Call Sign:".T(EDTx.JournalCarrier_Callsign), Callsign,
@@ -182,7 +182,7 @@ namespace EliteDangerousCore.JournalEvents
             BodyID = evt["BodyID"].Int();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("To ".T(EDTx.JournalCarrier_ToSystem), SystemName,
                                                 "Body ".T(EDTx.JournalCarrier_Body), Body
@@ -207,7 +207,7 @@ namespace EliteDangerousCore.JournalEvents
             ScrapDateTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(ScrapTime);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Refund:; cr;N0".T(EDTx.JournalCarrier_Refund), ScrapRefund,
                                                 "at UTC ".T(EDTx.JournalCarrier_RefundTime), ScrapDateTime
@@ -226,7 +226,7 @@ namespace EliteDangerousCore.JournalEvents
             CarrierID = evt["CarrierID"].Long();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = "";
             detailed = "";
@@ -251,7 +251,7 @@ namespace EliteDangerousCore.JournalEvents
             CarrierBalance = evt["CarrierBalance"].Long();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             if (Deposit > 0)
                 info = BaseUtils.FieldBuilder.Build("Deposit:; cr;N0".T(EDTx.JournalCarrier_Deposit), Deposit, "Carrier Balance:; cr;N0".T(EDTx.JournalCarrier_Balance), CarrierBalance);
@@ -286,7 +286,7 @@ namespace EliteDangerousCore.JournalEvents
             Total = evt["Total"].Int();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Amount:;;N0".T(EDTx.JournalCarrier_Amount), Amount,
                                                 "Fuel Level:;;N0".T(EDTx.JournalCarrier_FuelLevel), Total);
@@ -320,7 +320,7 @@ namespace EliteDangerousCore.JournalEvents
             CrewName = evt["CrewName"].Str();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Role:".T(EDTx.JournalEntry_Role), CrewRole.SplitCapsWordFull(),
                                                 "Operation:".T(EDTx.JournalCarrier_Operation), Operation,
@@ -350,7 +350,7 @@ namespace EliteDangerousCore.JournalEvents
             Finance_ReservePercent = evt["ReservePercent"].Double();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Carrier Balance:; cr;N0".T(EDTx.JournalCarrier_Balance), Finance_CarrierBalance,
                                                 "Reserve Balance:; cr;N0".T(EDTx.JournalCarrier_ReserveBalance), Finance_ReserveBalance,
@@ -382,7 +382,7 @@ namespace EliteDangerousCore.JournalEvents
             Refund = evt["Refund"].LongNull();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build(
                                                 "", Operation.SplitCapsWordFull(),
@@ -421,7 +421,7 @@ namespace EliteDangerousCore.JournalEvents
             Refund = evt["Refund"].LongNull();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Operation.SplitCapsWordFull(),
                                                 "", PackTheme,
@@ -463,7 +463,7 @@ namespace EliteDangerousCore.JournalEvents
             Price = evt["Price"].Int();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             if (PurchaseOrder != null)
             {
@@ -504,7 +504,7 @@ namespace EliteDangerousCore.JournalEvents
             AllowNotorious = evt["AllowNotorious"].Bool();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Access:".T(EDTx.JournalCarrier_Access), DockingAccess, 
                                                 ";Allow Notorious".T(EDTx.JournalCarrier_AllowNotorious), AllowNotorious);
@@ -526,7 +526,7 @@ namespace EliteDangerousCore.JournalEvents
             Name = evt["Name"].Str();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Name:".T(EDTx.JournalCarrier_Name), Name, "Call Sign:".T(EDTx.JournalCarrier_Callsign), Callsign);
             detailed = "";
@@ -543,7 +543,7 @@ namespace EliteDangerousCore.JournalEvents
             CarrierID = evt["CarrierID"].Long();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = "";
             detailed = "";

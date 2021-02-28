@@ -53,14 +53,13 @@ namespace EliteDangerousCore.JournalEvents
             return string.Compare(Station, other.Station) == 0 && string.Compare(StarSystem, other.StarSystem) == 0 && CollectionStaticHelpers.Equals(Commodities, other.Commodities);
         }
 
-        public bool ReadAdditionalFiles(string directory, bool historyrefreshparse, ref JObject jo)
+        public bool ReadAdditionalFiles(string directory, bool historyrefreshparse)
         {
             JObject jnew = ReadAdditionalFile(System.IO.Path.Combine(directory, "Market.json"), waitforfile: !historyrefreshparse, checktimestamptype: true);
             if (jnew != null)        // new json, rescan
             {
-                jo = jnew;      // replace current
-                Rescan(jo);
-                UpdateJson(jo);
+                Rescan(jnew);
+                UpdateJson(jnew);
             }
             return jnew != null;
         }
@@ -109,7 +108,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, FriendlyType + " " + Count, -TotalCost);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Type_Localised, "", Count, "< buy price ; cr;N0".T(EDTx.JournalEntry_buyprice), BuyPrice, "Total Cost:; cr;N0".T(EDTx.JournalEntry_TotalCost), TotalCost);
             detailed = "";
@@ -167,7 +166,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, FriendlyType + " " + Count + " Avg " + AvgPricePaid, TotalSale, (double)(SellPrice - AvgPricePaid));
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             long profit = TotalSale - (AvgPricePaid * Count);
             info = BaseUtils.FieldBuilder.Build("", Type_Localised, "", Count, "< sell price ; cr;N0".T(EDTx.JournalEntry_sellprice), SellPrice, "Total Cost:; cr;N0".T(EDTx.JournalEntry_TotalCost), TotalSale, "Profit:; cr;N0".T(EDTx.JournalEntry_Profit), profit);

@@ -101,6 +101,15 @@ namespace EliteDangerousCore.DB
             }
         }
 
+        public long StoreSystems( List<ISystem> systems)            // dynamically update db
+        {
+            long count = 0;
+            if (!RebuildRunning)
+                WithReadWrite(() => { RebuildRunning = true; count = SystemsDB.StoreSystems(systems); RebuildRunning = false; });
+
+            return count;
+        }
+
         public void UpgradeSystemTableFrom102TypeDB(Func<bool> cancelRequested, Action<string> reportProgress, bool fullsyncrequested)
         {
             bool executeupgrade = false;

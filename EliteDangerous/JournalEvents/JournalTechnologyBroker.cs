@@ -26,9 +26,9 @@ namespace EliteDangerousCore.JournalEvents
             BrokerType = evt["BrokerType"].Str("Unknown");
             MarketID = evt["MarketID"].LongNull();
 
-            ItemsUnlocked = evt["ItemsUnlocked"]?.ToObjectProtected<Unlocked[]>();      //3.03 entry
-            CommodityList = evt["Commodities"]?.ToObjectProtected<Commodities[]>();
-            MaterialList = evt["Materials"]?.ToObjectProtected<Materials[]>();
+            ItemsUnlocked = evt["ItemsUnlocked"]?.ToObjectQ<Unlocked[]>();      //3.03 entry
+            CommodityList = evt["Commodities"]?.ToObjectQ<Commodities[]>();
+            MaterialList = evt["Materials"]?.ToObjectQ<Materials[]>();
 
             if (ItemsUnlocked != null)
                 foreach (Unlocked u in ItemsUnlocked)
@@ -79,7 +79,7 @@ namespace EliteDangerousCore.JournalEvents
             public int Count;
         }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("Type:".T(EDTx.JournalEntry_Type), BrokerType);
 

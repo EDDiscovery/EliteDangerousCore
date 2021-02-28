@@ -1,12 +1,24 @@
-﻿using System;
+﻿/*
+ * Copyright © 2021 EDDiscovery development team
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ * 
+ * EDDiscovery is not affiliated with Frontier Developments plc.
+ */
+ 
+using BaseUtils;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EliteDangerousCore
 {
-
     public class Stats
     {
         public class FactionInfo
@@ -49,37 +61,37 @@ namespace EliteDangerousCore
             public int KillBondAwardAsVictimFaction { get; set; }
         }
 
-        public Dictionary<string, FactionInfo> FactionInformation { get; private set; }
+        private GenerationalDictionary<string, FactionInfo> history;
 
         public Stats()
         {
-            FactionInformation = new Dictionary<string, FactionInfo>();
+            history = new GenerationalDictionary<string, FactionInfo>();
         }
 
         public Stats(Stats other)
         {
-            FactionInformation = other.FactionInformation;      // not changed yet, still pointing to the same dictionary
+            history = other.history;
         }
 
-        private FactionInfo Clone(string faction)               // clone both FactionInformation structure and a faction
+        public Dictionary<string, FactionInfo> GetAtGeneration(uint g)
+        {
+            return history.Get(g);
+        }
+
+        public Dictionary<string, FactionInfo> GetLastEntries()
+        {
+            return history.GetLast();
+        }
+
+        private FactionInfo Clone(string faction, bool incrgen = true)               // clone both FactionInformation structure and a faction
         {
             if (faction.HasChars() && faction != "$faction_none;")
             {
-                FactionInformation = new Dictionary<string, FactionInfo>(FactionInformation);       // create a copy so we can modify
-                var newfi = FactionInformation.ContainsKey(faction) ? new FactionInfo(FactionInformation[faction]) : new FactionInfo(faction);
-                FactionInformation[faction] = newfi;
-                return newfi;
-            }
-            else
-                return null;
-        }
-
-        private FactionInfo CloneFaction(string faction)        // clone only a Faction
-        {
-            if (faction.HasChars() && faction != "$faction_none;")
-            {
-                var newfi = FactionInformation.ContainsKey(faction) ? new FactionInfo(FactionInformation[faction]) : new FactionInfo(faction);
-                FactionInformation[faction] = newfi;
+                FactionInfo newfi = history.GetLast(faction);        // get the last one, or null
+                newfi = newfi != null ? new FactionInfo(newfi) : new FactionInfo(faction);  // make a new copy, or an empty copy
+                if ( incrgen )
+                    history.NextGeneration();
+                history.Add(faction, newfi);                    // add this new one to the history list
                 return newfi;
             }
             else
@@ -145,7 +157,7 @@ namespace EliteDangerousCore
             var vnewfi = Clone(victimfaction);
             if (vnewfi != null)
             {
-                var anewfi = CloneFaction(awardingfaction);
+                var anewfi = Clone(awardingfaction,false);      // not a new generation, part of this generation
                 if (anewfi != null)
                 {
                     anewfi.CapShipAwardAsAwaringFaction++;
@@ -186,7 +198,7 @@ namespace EliteDangerousCore
             var vnewfi = Clone(victimfaction);
             if (vnewfi != null)
             {
-                var anewfi = CloneFaction(awardingfaction);
+                var anewfi = Clone(awardingfaction,false);
                 if (anewfi != null)
                 {
                     anewfi.KillBondAwardAsAwaringFaction++;
@@ -196,16 +208,14 @@ namespace EliteDangerousCore
             }
         }
 
-        public static Stats Process(JournalEntry je, Stats prev, string stationfaction)
+        public uint Process(JournalEntry je, string stationfaction)
         {
             if (je is IStatsJournalEntry)
             {
-                Stats news = prev != null ? new Stats(prev) : new Stats();
-                ((IStatsJournalEntry)je).UpdateStats(news, stationfaction);
-                return news;
+                ((IStatsJournalEntry)je).UpdateStats(this, stationfaction);
             }
-            else
-                return prev ?? new Stats();
+
+            return history.Generation;
         }
     }
 }

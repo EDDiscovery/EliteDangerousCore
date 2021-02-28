@@ -25,6 +25,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace EliteDangerousCore
 {
@@ -66,7 +67,7 @@ namespace EliteDangerousCore
             }
         }
 
-        public abstract void FillInformation(out string info, out string detailed);     // all entries must implement
+        public abstract void FillInformation(ISystem sys, out string info, out string detailed);     // all entries must implement
 
         // the long name of it, such as Approach Body. May be overridden, is translated
         public virtual string SummaryName(ISystem sys) { return TranslatedEventNames.ContainsKey(EventTypeID) ? TranslatedEventNames[EventTypeID] : EventTypeID.ToString(); }  // entry may be overridden for specialist output
@@ -122,6 +123,20 @@ namespace EliteDangerousCore
         {
             UserDatabase.Instance.ExecuteWithDatabase( cn => UpdateSyncFlagBit(SyncFlags.EDDN, true, SyncFlags.NoBit, false, cn.Connection));
         }
+
+        public static void SetEdsmSyncList(List<JournalEntry> jlist)
+        {
+            UserDatabase.Instance.ExecuteWithDatabase(cn =>
+            {
+                using (var txn = cn.Connection.BeginTransaction())
+                {
+                    foreach (var he in jlist)
+                        he.SetEdsmSync(cn.Connection, txn);
+                    txn.Commit();
+                }
+            });
+        }
+
 
         #endregion
 
@@ -198,7 +213,7 @@ namespace EliteDangerousCore
 
         #region Factory creation
 
-        static public JournalEntry CreateJournalEntry(string events, DateTime t)
+        static public JournalEntry CreateJournalEntry(string events, DateTime t)            
         {
             JObject jo = new JObject();
             jo.Add("event", events);
@@ -206,39 +221,38 @@ namespace EliteDangerousCore
             return CreateJournalEntry(jo.ToString());
         }
 
-        static public JournalEntry CreateJournalEntry(string text)
+        // Decode text, to journal entry, or Unknown/Null if bad
+        static public JournalEntry CreateJournalEntry(string text, bool savejson = false, bool returnnullifbadjson = false)       
         {
-            JObject jo;
-
-            try
-            {
-                jo = JObject.ParseThrowCommaEOL(text);
-                return CreateJournalEntry(jo);
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine($"Error parsing journal entry\n{text}\n{ex.ToString()}");
-                return new JournalUnknown(new JObject());
-            }
-        }
-
-        static public JournalEntry CreateJournalEntry(JObject jo, bool savejson = false)
-        {
-            string Eventstr = jo["event"].StrNull();
-
+            JObject jo = JToken.Parse(text, JToken.ParseOptions.AllowTrailingCommas | JToken.ParseOptions.CheckEOL).Object();
             JournalEntry ret = null;
 
-            if (Eventstr == null)  // Should normaly not happend unless corrupt string.
-                ret = new JournalUnknown(jo);      // MUST return something
-            else
+            if (jo != null)         // good json
             {
-                JournalTypeEnum jte = JournalTypeEnum.Unknown;
-                Type jtype = Enum.TryParse(Eventstr, out jte) ? TypeOfJournalEntry(jte) : TypeOfJournalEntry(Eventstr);
+                string eventname = jo["event"].StrNull();
 
-                if (jtype == null)
-                    ret = new JournalUnknown(jo);
-                else
-                    ret = (JournalEntry)Activator.CreateInstance(jtype, jo);
+                if (eventname != null)  // has an event name, therefore worth keeping
+                {
+                    if (ClassActivators.TryGetValue(eventname, out var act))        // if known, make it
+                        ret = act(jo);
+                    else
+                    {
+                        ret = new JournalUnknown(jo);           // else make a unknown one
+                        System.Diagnostics.Debug.WriteLine("Not Recognised event " + jo.ToString());
+                    }
+                }
+            }
+
+            if ( ret == null )                      // no journal line
+            {
+                if (returnnullifbadjson)            // if we just want to dump it, return null
+                    return null;
+
+                jo = new JObject();                 // otherwise, make a JSON for display purposes with BadJSON with the text in
+                jo["BadJSON"] = text;               // used if we read bad JSON from the DB
+                ret = new JournalUnknown(jo);       // unknown
+                savejson = true;                    // need to keep this JSON as we made this up
+                System.Diagnostics.Debug.WriteLine("Bad JSON" + text);
             }
 
             if (savejson)
@@ -340,6 +354,36 @@ namespace EliteDangerousCore
 
             return typedict;
         }
+
+        //Activators are delegates which can make a specific JournalEntry type.  Deep c# stuff here
+
+        private static Dictionary<string, BaseUtils.ObjectActivator.Activator<JournalEntry>> ClassActivators = GetClassActivators();
+
+        private static Dictionary<string, BaseUtils.ObjectActivator.Activator<JournalEntry>> GetClassActivators()
+        {
+            var actlist = new Dictionary<string, BaseUtils.ObjectActivator.Activator<JournalEntry>> ();
+
+            var asm = System.Reflection.Assembly.GetExecutingAssembly();
+            var types = asm.GetTypes().Where(t => typeof(JournalEntry).IsAssignableFrom(t) && !t.IsAbstract).ToList();
+
+            foreach (Type type in types)
+            {
+                JournalEntryTypeAttribute typeattrib = type.GetCustomAttributes(false).OfType<JournalEntryTypeAttribute>().FirstOrDefault();
+                if (typeattrib != null)
+                {
+                    System.Reflection.ConstructorInfo ctor = type.GetConstructors().First();        // this is freaking deep c# here.
+                    var r = ctor.GetParameters();
+                    System.Diagnostics.Debug.Assert(r.Count() == 1);
+                    var r0t = r[0].GetType();
+                    System.Diagnostics.Debug.Assert(r[0].ParameterType.Name == "JObject");      // checking we are picking the correct ctor
+                    actlist[typeattrib.EntryType.ToString()] = BaseUtils.ObjectActivator.GetActivator<JournalEntry>(ctor);
+                 //   System.Diagnostics.Debug.WriteLine("Activator " + typeattrib.EntryType.ToString());
+                }
+            }
+
+            return actlist;
+        }
+
 
         #endregion
 

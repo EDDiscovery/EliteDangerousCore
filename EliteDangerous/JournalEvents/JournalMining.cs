@@ -46,7 +46,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEventNoCash(Id, EventTimeUTC, EventTypeID, Type_Localised);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             MaterialCommodityData mcd = MaterialCommodityData.GetByFDName(Type);
             if (mcd != null)
@@ -67,7 +67,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Body { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = Body;
             detailed = "";
@@ -101,7 +101,7 @@ namespace EliteDangerousCore.JournalEvents
             MotherlodeMaterial_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["MotherlodeMaterial_Localised"].Str(),FriendlyMotherlodeMaterial);
 
             Remaining = evt["Remaining"].Double();      // 0-100
-            Materials = evt["Materials"]?.ToObjectProtected<Material[]>().OrderBy(x => x.Name)?.ToArray();
+            Materials = evt["Materials"]?.ToObjectQ<Material[]>().OrderBy(x => x.Name)?.ToArray();
 
             if ( Materials != null )
             {
@@ -122,7 +122,7 @@ namespace EliteDangerousCore.JournalEvents
         public double Remaining { get; set; }
         public Material[] Materials { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", FriendlyMotherlodeMaterial, "", Content_Localised, "Remaining:;%;N1".T(EDTx.JournalProspectedAsteroid_Remaining), Remaining);
             

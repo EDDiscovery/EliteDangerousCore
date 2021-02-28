@@ -96,7 +96,7 @@ namespace EliteDangerousCore
 
         static public string ShortenMissionName(string inname)
         {
-            return inname.Replace("Mission ", "",StringComparison.InvariantCultureIgnoreCase).SplitCapsWordFull();
+            return inname.Replace("Mission ", "", StringComparison.InvariantCultureIgnoreCase);
         }
 
         static Dictionary<string, string> replaceslots = new Dictionary<string, string>

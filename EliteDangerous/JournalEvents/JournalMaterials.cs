@@ -40,11 +40,11 @@ namespace EliteDangerousCore.JournalEvents
 
         public JournalMaterials(JObject evt) : base(evt, JournalTypeEnum.Materials)
         {
-            Raw = evt["Raw"]?.ToObjectProtected<Material[]>().OrderBy(x => x.Name)?.ToArray();
+            Raw = evt["Raw"]?.ToObjectQ<Material[]>().OrderBy(x => x.Name)?.ToArray();
             FixNames(Raw);
-            Manufactured = evt["Manufactured"]?.ToObjectProtected<Material[]>().OrderBy(x => x.Name)?.ToArray();
+            Manufactured = evt["Manufactured"]?.ToObjectQ<Material[]>().OrderBy(x => x.Name)?.ToArray();
             FixNames(Manufactured);
-            Encoded = evt["Encoded"]?.ToObjectProtected<Material[]>().OrderBy(x => x.Name)?.ToArray();
+            Encoded = evt["Encoded"]?.ToObjectQ<Material[]>().OrderBy(x => x.Name)?.ToArray();
             FixNames(Encoded);
         }
 
@@ -61,9 +61,9 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(out string info, out string detailed)  
+        public override void FillInformation(ISystem sys, out string info, out string detailed)  
         {
-            
+           
             info = "";
             detailed = "";
             if (Raw != null && Raw.Length>0)
@@ -143,7 +143,7 @@ namespace EliteDangerousCore.JournalEvents
             Total = mc.FindFDName(Name)?.Count ?? 0;
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             MaterialCommodityData mcd = MaterialCommodityData.GetByFDName(Name);
             if (mcd != null)
@@ -179,7 +179,7 @@ namespace EliteDangerousCore.JournalEvents
             Total = mc.FindFDName(Name)?.Count ?? 0;
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             MaterialCommodityData mcd = MaterialCommodityData.GetByFDName(Name);
             if (mcd != null)
@@ -207,7 +207,7 @@ namespace EliteDangerousCore.JournalEvents
         public string FriendlyName { get; set; }
         public int DiscoveryNumber { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", FriendlyName);
             MaterialCommodityData mcd = MaterialCommodityData.GetByFDName(Name);
@@ -229,11 +229,11 @@ namespace EliteDangerousCore.JournalEvents
             MarketID = evt["MarketID"].LongNull();
             TraderType = evt["TraderType"].Str();
 
-            Paid = evt["Paid"]?.ToObjectProtected<Traded>();
+            Paid = evt["Paid"]?.ToObjectQ<Traded>();
             if (Paid != null)
                 Paid.Normalise();
 
-            Received = evt["Received"]?.ToObjectProtected<Traded>();
+            Received = evt["Received"]?.ToObjectQ<Traded>();
             if (Received != null)
                 Received.Normalise();
         }
@@ -285,7 +285,7 @@ namespace EliteDangerousCore.JournalEvents
             stats.UpdateMaterial(Received.Material, Received.Quantity, stationfaction);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = detailed = "";
 
@@ -314,7 +314,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (mats.IsObject)
                 {
-                    Dictionary<string, int> temp = mats?.ToObjectProtected<Dictionary<string, int>>();
+                    Dictionary<string, int> temp = mats?.ToObjectQ<Dictionary<string, int>>();
 
                     if (temp != null)
                     {
@@ -348,7 +348,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = Name;
             if (Materials != null)

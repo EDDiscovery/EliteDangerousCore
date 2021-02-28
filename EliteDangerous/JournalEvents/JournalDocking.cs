@@ -48,14 +48,14 @@ namespace EliteDangerousCore.JournalEvents
 
             Economy = evt.MultiStr(new string[] { "StationEconomy", "Economy" });
             Economy_Localised = JournalFieldNaming.CheckLocalisation(evt.MultiStr(new string[] { "StationEconomy_Localised", "Economy_Localised" }),Economy);
-            EconomyList = evt["StationEconomies"]?.ToObjectProtected<Economies[]>();
+            EconomyList = evt["StationEconomies"]?.ToObjectQ<Economies[]>();
 
             Government = evt.MultiStr(new string[] { "StationGovernment", "Government" });
             Government_Localised = JournalFieldNaming.CheckLocalisation(evt.MultiStr(new string[] { "StationGovernment_Localised", "Government_Localised" }),Government);
 
             Wanted = evt["Wanted"].Bool();
 
-            StationServices = evt["StationServices"]?.ToObjectProtected<string[]>();
+            StationServices = evt["StationServices"]?.ToObjectQ<string[]>();
 
             ActiveFine = evt["ActiveFine"].BoolNull();
 
@@ -95,7 +95,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys) { return string.Format("At {0}".T(EDTx.JournalDocked_At), StationName); }
 
-        public override void FillInformation(out string info, out string detailed)      
+        public override void FillInformation(ISystem sys, out string info, out string detailed)      
         {
             info = BaseUtils.FieldBuilder.Build("Type:".T(EDTx.JournalEntry_Type), StationType, "< in system ".T(EDTx.JournalEntry_insystem), StarSystem, ";(Wanted)".T(EDTx.JournalEntry_Wanted), Wanted, 
                 ";Active Fine".T(EDTx.JournalEntry_ActiveFine),ActiveFine,
@@ -135,7 +135,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationType { get; set; }
         public long? MarketID { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = StationName;
             detailed = "";
@@ -158,7 +158,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationType { get; set; }
         public long? MarketID { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", StationName, "", Reason);
             detailed = "";
@@ -181,7 +181,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationType { get; set; }
         public long? MarketID { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", StationName, "< on pad ".T(EDTx.JournalEntry_onpad), LandingPad, "Type:".T(EDTx.JournalEntry_Type), StationType);
             detailed = "";
@@ -202,7 +202,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationType { get; set; }
         public long? MarketID { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = StationName;
             detailed = "";
@@ -223,7 +223,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationType { get; set; }
         public long? MarketID { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = StationName;
             detailed = "";
@@ -245,7 +245,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationType { get; set; }
         public long? MarketID { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", StationName, "Type:".T(EDTx.JournalEntry_Type), StationType);
             detailed = "";

@@ -28,19 +28,14 @@ namespace EliteDangerousCore
     {
         #region Public Variables
 
-        public int Indexno;            // for display purposes.  from 1 to number of records
+        public int EntryNumber { get; private set; }   // for display purposes.  from 1 to number of records
+        public int Index { get { return EntryNumber - 1; } }  // zero based index number
 
-        public JournalEntry journalEntry;       // MUST be present
+        public JournalEntry journalEntry { get; private set; }       // MUST be present
 
-        public ISystem System;         // Must be set! All entries, even if they are not FSD entries.
-                                       // The Minimum is name and edsm_id 
+        public ISystem System { get; private set; }         // Must be set! All entries, even if they are not FSD entries.
+                                       // The Minimum is name 
                                        // x/y/z can be NANs or position. 
-                                       // if edsm_id = 0, no edsm match was found.
-                                       // when the front end needs to use it, it will call EnsureSystemEDSM/FillInPositions to see if it can be filled up
-                                       // if System.status != SystemStatusEnum.EDSC then its presumed its an inmemory load and the system table can be checked
-                                       //       and if edsm_id>0 a load from SystemTable will occur with the edsm_id used
-                                       //       if edsm_id=-1 a load from SystemTable will occur with the name used
-                                       // SO the journal reader can just read data in that table only, does not need to do a system match
 
         public JournalTypeEnum EntryType { get { return journalEntry.EventTypeID; } }
         public long Journalid { get { return journalEntry.Id; } }
@@ -121,10 +116,10 @@ namespace EliteDangerousCore
         public MaterialCommoditiesList MaterialCommodity { get; private set; }
         public ShipInformation ShipInformation { get; private set; }     // may be null if not set up yet
         public ModulesInStore StoredModules { get; private set; }
-        public MissionList MissionList { get; private set; }
-        public Stats Stats { get; private set; }
+        public uint MissionList { get; private set; }       // generation index
+        public uint Statistics { get; private set; }     // generation index
 
-        public SystemNoteClass snc;     // system note class found attached to this entry. May be null
+        public SystemNoteClass SNC;     // system note class found attached to this entry. May be null
 
         #endregion
 
@@ -144,7 +139,7 @@ namespace EliteDangerousCore
         public static HistoryEntry FromJournalEntry(JournalEntry je, HistoryEntry prev)
         {
             ISystem isys = prev == null ? new SystemClass("Unknown") : prev.System;
-            int indexno = prev == null ? 1 : prev.Indexno + 1;
+            int entryno = prev == null ? 1 : prev.EntryNumber + 1;
 
             if (je.EventTypeID == JournalTypeEnum.Location || je.EventTypeID == JournalTypeEnum.FSDJump || je.EventTypeID == JournalTypeEnum.CarrierJump)
             {
@@ -170,7 +165,7 @@ namespace EliteDangerousCore
                         Source = jl.StarPosFromEDSM ? SystemSource.FromEDSM : SystemSource.FromJournal,
                     };
 
-                    SystemCache.FindCachedJournalSystem(newsys);
+                    SystemCache.FindCachedJournalSystem(newsys);        // this puts it in the cache
 
                     // If it was a new system, pass the coords back to the StartJump
                     if (prev != null && prev.journalEntry is JournalStartJump)
@@ -193,7 +188,7 @@ namespace EliteDangerousCore
 
             HistoryEntry he = new HistoryEntry
             {
-                Indexno = indexno,
+                EntryNumber = entryno,
                 journalEntry = je,
                 System = isys,
                 EntryStatus = HistoryEntryStatus.Update(prev?.EntryStatus, je, isys.Name)
@@ -204,19 +199,46 @@ namespace EliteDangerousCore
             return he;
         }
 
+        // these are done purposely this way for ease of finding out who is updating these elements
+
         public void UpdateMaterialsCommodities(JournalEntry je, MaterialCommoditiesList prev)
         {
             MaterialCommodity = MaterialCommoditiesList.Process(je, prev);
         }
 
-        public void UpdateStats(JournalEntry je, Stats prev, string station)
+        public void UpdateStats(JournalEntry je, Stats stats, string station)
         {
-            Stats = Stats.Process(je, prev, station);
+            Statistics = stats.Process(je, station);
         }
 
         public void UpdateSystemNote()
         { 
-            snc = SystemNoteClass.GetSystemNote(Journalid, IsFSDCarrierJump ?  System.Name : null);       // may be null
+            SNC = SystemNoteClass.GetSystemNote(Journalid, IsFSDCarrierJump ?  System.Name : null);       // may be null
+        }
+
+        public void UpdateShipInformation(ShipInformation si)       // something externally updated SI
+        {
+            ShipInformation = si;
+        }
+
+        public void UpdateShipStoredModules(ModulesInStore ms)
+        {
+            StoredModules = ms;
+        }
+
+        public void UpdateMissionList(uint ml)
+        {
+            MissionList = ml;
+        }
+
+        public void UpdateMaterialCommodity(MaterialCommoditiesList mc)
+        {
+            MaterialCommodity = mc;
+        }
+
+        public void UpdateSystem(ISystem sys)
+        {
+            System = sys;
         }
 
         #endregion
@@ -225,14 +247,14 @@ namespace EliteDangerousCore
 
         public void SetJournalSystemNoteText(string text, bool commit, bool sendtoedsm)
         {
-            if (snc == null || snc.Journalid == 0)           // if no system note, or its one on a system, from now on we assign journal system notes only from this IF
-                snc = SystemNoteClass.MakeSystemNote("", DateTime.Now, System.Name, Journalid, IsFSDCarrierJump);
+            if (SNC == null || SNC.Journalid == 0)           // if no system note, or its one on a system, from now on we assign journal system notes only from this IF
+                SNC = SystemNoteClass.MakeSystemNote("", DateTime.Now, System.Name, Journalid, IsFSDCarrierJump);
 
-            snc = snc.UpdateNote(text, commit, DateTime.Now, IsFSDCarrierJump);        // and update info, and update our ref in case it has changed or gone null
+            SNC = SNC.UpdateNote(text, commit, DateTime.Now, IsFSDCarrierJump);        // and update info, and update our ref in case it has changed or gone null
                                                                                        // remember for EDSM send purposes if its an FSD entry
 
-            if (snc != null && commit && sendtoedsm && snc.FSDEntry)                   // if still have a note, and commiting, and send to esdm, and FSD jump
-                EDSMClass.SendComments(snc.SystemName, snc.Note);
+            if (SNC != null && commit && sendtoedsm && SNC.FSDEntry)                   // if still have a note, and commiting, and send to esdm, and FSD jump
+                EDSMClass.SendComments(SNC.SystemName, SNC.Note);
         }
 
         public bool IsJournalEventInEventFilter(string[] events)
@@ -260,25 +282,11 @@ namespace EliteDangerousCore
             return null;
         }
 
-        public void UpdateShipInformation(ShipInformation si)       // something externally updated SI
+        public void FillInformation(out string EventDescription, out string EventDetailedInfo)
         {
-            ShipInformation = si;
+            journalEntry.FillInformation(System, out EventDescription, out EventDetailedInfo);
         }
 
-        public void UpdateShipStoredModules( ModulesInStore ms )
-        {
-            StoredModules = ms;
-        }
-
-        public void UpdateMissionList(MissionList ml)
-        {
-            MissionList = ml;
-        }
-
-        public void UpdateMaterialCommodity(MaterialCommoditiesList mc)
-        {
-            MaterialCommodity = mc;
-        }
 
         #endregion
     }

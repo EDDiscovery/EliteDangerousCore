@@ -74,16 +74,15 @@ namespace EliteDangerousCore.JournalEvents
 
         public NavRouteEntry[] Route { get; set; }      // check route is not null
 
-        public bool ReadAdditionalFiles(string directory, bool inhistoryparse, ref JObject jo)
+        public bool ReadAdditionalFiles(string directory, bool inhistoryparse)
         {
             if (Route == null)
             {
                 JObject jnew = ReadAdditionalFile(System.IO.Path.Combine(directory, "NavRoute.json"), waitforfile: !inhistoryparse, checktimestamptype: true);  // check timestamp..
                 if (jnew != null)        // new json, rescan. returns null if cargo in the folder is not related to this entry by time.
                 {
-                    jo = jnew;      // replace current
-                    Rescan(jo);
-                    UpdateJson(jo);
+                    Rescan(jnew);
+                    UpdateJson(jnew);
                 }
                 return jnew != null;
             }
@@ -93,7 +92,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             detailed = info = "";
             if ( Route != null )

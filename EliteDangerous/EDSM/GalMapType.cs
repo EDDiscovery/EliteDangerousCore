@@ -38,6 +38,7 @@ namespace EliteDangerousCore.EDSM
         deepSpaceOutpost,
         mysteryPOI,
         restrictedSectors,
+        independentOutpost,
     }
 
     public class GalMapType
@@ -54,7 +55,7 @@ namespace EliteDangerousCore.EDSM
         public string Description;
         public Image Image;
         public GalMapGroup Group;
-        public bool Enabled;
+        public int Index;
 
         public GalMapType(string id, string desc, GalMapGroup g, Image b, int i)
         {
@@ -62,7 +63,7 @@ namespace EliteDangerousCore.EDSM
             Description = desc;
             Group = g;
             Image = b;
-            Enabled = false;
+            Index = i;
         }
 
         public static IReadOnlyDictionary<GalMapTypeEnum, Image> GalMapTypeIcons { get; } = new BaseUtils.Icons.IconGroup<GalMapTypeEnum>("GalMap");
@@ -89,6 +90,7 @@ namespace EliteDangerousCore.EDSM
             type.Add(new GalMapType("deepSpaceOutpost", "Deep space outpost", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.deepSpaceOutpost], index++));
             type.Add(new GalMapType("mysteryPOI", "Mystery POI", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.mysteryPOI], index++));
             type.Add(new GalMapType("restrictedSectors", "Restricted Sectors", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.restrictedSectors], index++));
+            type.Add(new GalMapType("independentOutpost", "Independent Outpost", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.minorPOI], index++));
 
             type.Add(new GalMapType("travelRoute", "Travel Route", GalMapGroup.Routes , null, index++));
             type.Add(new GalMapType("historicalRoute", "Historical Route", GalMapGroup.Routes , null, index++));

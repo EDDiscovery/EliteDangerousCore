@@ -47,7 +47,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public JournalPassengers(JObject evt) : base(evt, JournalTypeEnum.Passengers)
         {
-            Manifest = evt["Manifest"]?.ToObjectProtected<Passengers[]>();
+            Manifest = evt["Manifest"]?.ToObjectQ<Passengers[]>();
 
             if (Manifest != null )
             {
@@ -58,7 +58,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public Passengers[] Manifest { get; set; }
 
-        public override void FillInformation(out string info, out string detailed) //U
+        public override void FillInformation(ISystem sys, out string info, out string detailed) //U
         {
             info = "No Passengers".T(EDTx.JournalEntry_NoPassengers);
 

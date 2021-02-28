@@ -32,7 +32,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Name { get; set; }
         public long Amount { get; set; }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {           
             info = BaseUtils.FieldBuilder.Build("<", Name , "; Cr;N0" , Amount);
             detailed = "";
@@ -58,7 +58,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Name { get; set; }
         public CombatRank RankCombat { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("<", Name, "Rank:".T(EDTx.JournalEntry_Rank), RankCombat.ToString().SplitCapsWord());
             detailed = "";

@@ -142,6 +142,12 @@ namespace EliteDangerousCore.DB
                 if (dbver < 124)
                     UpgradeUserDB124();
 
+                if (dbver < 125)
+                    UpgradeUserDB125();
+
+                if (dbver < 126)
+                    UpgradeUserDB126();
+
                 CreateUserDBTableIndexes();
 
                 return true;
@@ -462,8 +468,31 @@ namespace EliteDangerousCore.DB
         {
             string query1 = "DROP TABLE IF EXISTS MaterialsCommodities";
             string query2 = "ALTER TABLE JournalEntries RENAME EdsmId TO Unused1";          // SQLite does not have a remove column command, best we can do
-            string query3 = "ALTER TABLE SystemNote RENAME EdsmId TO Unused1";          
+            string query3 = "ALTER TABLE SystemNote RENAME EdsmId TO Unused1";
             PerformUpgrade(124, true, false, new[] { query1, query2, query3 });
+        }
+
+        private void UpgradeUserDB125()
+        {
+            string query1 = "ALTER TABLE JournalEntries RENAME Unused1 TO EdsmId";          // Decided its stupid - ruins back compatibility
+            string query2 = "ALTER TABLE SystemNote RENAME Unused1 TO EdsmId";
+            PerformUpgrade(125, true, false, new[] { query1, query2 });
+        }
+
+        private void UpgradeUserDB126()         // Oh dear put this back for backwards compat
+        {
+            string query1 = "CREATE TABLE MaterialsCommodities ( " +
+                "Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                "Category TEXT NOT NULL, " +
+                "Name TEXT NOT NULL COLLATE NOCASE, " +
+                "FDName TEXT NOT NULL COLLATE NOCASE DEFAULT '', " +
+                "Type TEXT NOT NULL COLLATE NOCASE, " +
+                "ShortName TEXT NOT NULL COLLATE NOCASE DEFAULT '', " +
+                "Flags INT NOT NULL DEFAULT 0, " +
+                "Colour INT NOT NULL DEFAULT 15728640, " +
+                "UNIQUE(Category,Name)" +
+                ") ";
+            PerformUpgrade(126, true, false, new[] { query1 });
         }
 
         private void DropOldUserTables()

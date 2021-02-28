@@ -45,6 +45,8 @@ namespace EliteDangerousCore
         public int GridID { get; set; }
         public long? SystemAddress { get; set; }
 
+        public Tuple<string, long?> NameSystemAddress { get { return new Tuple<string, long?>(Name, SystemAddress); } }
+
         public SystemClassBase()
         {
             Xi = int.MinValue;
@@ -163,6 +165,13 @@ namespace EliteDangerousCore
             Source = SystemSource.Synthesised;
         }
 
+        public SystemClass(long? sysaddr, string name) : base()
+        {
+            Name = name;
+            SystemAddress = sysaddr;
+            Source = SystemSource.Synthesised;
+        }
+
         public SystemClass(string name, long edsmid)
         {
             Name = name;
@@ -170,14 +179,13 @@ namespace EliteDangerousCore
             Source = EDSMID <= 0 ? SystemSource.Synthesised : SystemSource.FromEDSM;
         }
 
-        public SystemClass(long edsmid)
+        public SystemClass(string name, double vx, double vy, double vz, long edsmid) : base(name, vx, vy, vz)
         {
-            Name = "UnKnown";
             EDSMID = edsmid;
             Source = SystemSource.FromEDSM;
         }
 
-        public SystemClass(string name, double vx, double vy, double vz) : base( name, vx,vy,vz )
+        public SystemClass(string name, double vx, double vy, double vz) : base(name, vx, vy, vz)
         {
             Source = SystemSource.Synthesised;
         }

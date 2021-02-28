@@ -35,7 +35,7 @@ namespace EliteDangerousCore.JournalEvents
         public string NearestDestination { get; set; }
         public string NearestDestination_Localised { get; set; }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
             info = JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude) + BaseUtils.FieldBuilder.Build(", NPC Controlled;".T(EDTx.JournalEntry_NPCControlled), PlayerControlled, ", " + "Nearest:".T(EDTx.JournalEntry_Nearest), NearestDestination_Localised);
             detailed = "";
@@ -60,7 +60,7 @@ namespace EliteDangerousCore.JournalEvents
         public string NearestDestination { get; set; }
         public string NearestDestination_Localised { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude) + BaseUtils.FieldBuilder.Build(", NPC Controlled;".T(EDTx.JournalEntry_NPCControlled), PlayerControlled, ", " + "Nearest:".T(EDTx.JournalEntry_Nearest), NearestDestination_Localised);
             detailed = "";

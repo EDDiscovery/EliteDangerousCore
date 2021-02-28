@@ -25,22 +25,22 @@ namespace EliteDangerousCore.JournalEvents
         public JournalStatistics(JObject evt ) : base(evt, JournalTypeEnum.Statistics)
         {
             var s1 = evt["Bank_Account"].RenameObjectFieldsUnderscores();
-            BankAccount = evt["Bank_Account"]?.RenameObjectFieldsUnderscores()?.ToObjectProtected<BankAccountClass>() ?? new BankAccountClass();
+            BankAccount = evt["Bank_Account"]?.RenameObjectFieldsUnderscores()?.ToObjectQ<BankAccountClass>() ?? new BankAccountClass();
             var c1 = evt["Combat"]?.RenameObjectFieldsUnderscores();
 
-            Combat = evt["Combat"]?.RenameObjectFieldsUnderscores()?.ToObjectProtected<CombatClass>() ?? new CombatClass();
-            Crime = evt["Crime"]?.RenameObjectFieldsUnderscores()?.ToObjectProtected<CrimeClass>() ?? new CrimeClass();
-            Smuggling = evt["Smuggling"]?.RenameObjectFieldsUnderscores()?.ToObjectProtected<SmugglingClass>() ?? new SmugglingClass();
-            Trading = evt["Trading"]?.RenameObjectFieldsUnderscores()?.ToObjectProtected<TradingClass>() ?? new TradingClass();
-            Mining = evt["Mining"]?.RenameObjectFieldsUnderscores()?.ToObjectProtected<MiningClass>() ?? new MiningClass();
-            Exploration = evt["Exploration"]?.RenameObjectFieldsUnderscores()?.ToObjectProtected<ExplorationClass>() ?? new ExplorationClass();
-            PassengerMissions = evt["Passengers"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("PassengersMissions")?.ToObjectProtected<PassengerMissionsClass>() ?? new PassengerMissionsClass();
-            SearchAndRescue = evt["Search_And_Rescue"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("SearchRescue")?.ToObjectProtected<SearchAndRescueClass>() ?? new SearchAndRescueClass();
-            Crafting = evt["Crafting"]?.RenameObjectFieldsUnderscores()?.ToObjectProtected<CraftingClass>() ?? new CraftingClass();
-            Crew = evt["Crew"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("NpcCrew")?.ToObjectProtected<CrewClass>() ?? new CrewClass();
-            Multicrew = evt["Multicrew"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("Multicrew")?.ToObjectProtected<MulticrewClass>() ?? new MulticrewClass();
-            MaterialTraderStats = evt["Material_Trader_Stats"]?.RenameObjectFieldsUnderscores()?.ToObjectProtected<MaterialTraderStatsClass>() ?? new MaterialTraderStatsClass();
-            CQC = evt["CQC"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("CQC")?.ToObjectProtected<CQCClass>() ?? new CQCClass();
+            Combat = evt["Combat"]?.RenameObjectFieldsUnderscores()?.ToObjectQ<CombatClass>() ?? new CombatClass();
+            Crime = evt["Crime"]?.RenameObjectFieldsUnderscores()?.ToObjectQ<CrimeClass>() ?? new CrimeClass();
+            Smuggling = evt["Smuggling"]?.RenameObjectFieldsUnderscores()?.ToObjectQ<SmugglingClass>() ?? new SmugglingClass();
+            Trading = evt["Trading"]?.RenameObjectFieldsUnderscores()?.ToObjectQ<TradingClass>() ?? new TradingClass();
+            Mining = evt["Mining"]?.RenameObjectFieldsUnderscores()?.ToObjectQ<MiningClass>() ?? new MiningClass();
+            Exploration = evt["Exploration"]?.RenameObjectFieldsUnderscores()?.ToObjectQ<ExplorationClass>() ?? new ExplorationClass();
+            PassengerMissions = evt["Passengers"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("PassengersMissions")?.ToObjectQ<PassengerMissionsClass>() ?? new PassengerMissionsClass();
+            SearchAndRescue = evt["Search_And_Rescue"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("SearchRescue")?.ToObjectQ<SearchAndRescueClass>() ?? new SearchAndRescueClass();
+            Crafting = evt["Crafting"]?.RenameObjectFieldsUnderscores()?.ToObjectQ<CraftingClass>() ?? new CraftingClass();
+            Crew = evt["Crew"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("NpcCrew")?.ToObjectQ<CrewClass>() ?? new CrewClass();
+            Multicrew = evt["Multicrew"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("Multicrew")?.ToObjectQ<MulticrewClass>() ?? new MulticrewClass();
+            MaterialTraderStats = evt["Material_Trader_Stats"]?.RenameObjectFieldsUnderscores()?.ToObjectQ<MaterialTraderStatsClass>() ?? new MaterialTraderStatsClass();
+            CQC = evt["CQC"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("CQC")?.ToObjectQ<CQCClass>() ?? new CQCClass();
         }
 
         public BankAccountClass BankAccount { get; set; }
@@ -58,7 +58,7 @@ namespace EliteDangerousCore.JournalEvents
         public MaterialTraderStatsClass MaterialTraderStats { get; set; }
         public CQCClass CQC { get; set; }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("Wealth:;cr;N0".T(EDTx.JournalEntry_Wealth), BankAccount.CurrentWealth, "Notoriety Index:;;N0".T(EDTx.JournalEntry_NotorietyIndex), Crime.Notoriety);
 

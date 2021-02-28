@@ -48,7 +48,7 @@ namespace EliteDangerousCore
                 JournalTypeEnum.ShipyardSwap , JournalTypeEnum.ShipyardTransfer, JournalTypeEnum.StoredModules, JournalTypeEnum.StoredShips,
 
                 // scan
-                JournalTypeEnum.Scan, JournalTypeEnum.SellExplorationData, 
+                JournalTypeEnum.Scan, JournalTypeEnum.SellExplorationData, JournalTypeEnum.SAASignalsFound, 
 
                 // misc
                 JournalTypeEnum.ClearSavedGame,
@@ -69,12 +69,12 @@ namespace EliteDangerousCore
 
         static public JournalTypeEnum[] JumpScanEssentialEvents = new JournalTypeEnum[]     // 
             {
-                JournalTypeEnum.FSDJump,JournalTypeEnum.CarrierJump,
+                JournalTypeEnum.FSDJump,JournalTypeEnum.CarrierJump, JournalTypeEnum.Location,
                 JournalTypeEnum.Scan,
             };
         static public JournalTypeEnum[] JumpEssentialEvents = new JournalTypeEnum[]     // 
             {
-                JournalTypeEnum.FSDJump,JournalTypeEnum.CarrierJump
+                JournalTypeEnum.FSDJump,JournalTypeEnum.CarrierJump,JournalTypeEnum.Location,
             };
 
         static public JournalTypeEnum[] NoEssentialEvents = new JournalTypeEnum[]     // 

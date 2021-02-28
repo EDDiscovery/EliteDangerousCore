@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2019 EDDiscovery development team
+ * Copyright © 2015 - 2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -28,6 +28,40 @@ namespace EliteDangerousCore.DB
     {
         #region Table Update from JSON FILE
 
+        // All of these needs the systems DB to be in write mode. Make sure it is
+        // and check the system db rebuilding flag before using them - its above this level so can't logically be checked here
+
+        // store single system to DB
+
+        public static long StoreSystems(List<ISystem> systems)
+        {
+            JArray jlist = new JArray();
+
+            foreach (var sys in systems)
+            {
+                if (sys.EDSMID > 0 && sys.HasCoordinate)
+                {
+                    JObject jo = new JObject
+                    {
+                        ["name"] = sys.Name,
+                        ["id"] = sys.EDSMID,
+                        ["date"] = DateTime.UtcNow,
+                        ["coords"] = new JObject { ["x"] = sys.X, ["y"] = sys.Y, ["z"] = sys.Z }
+                    };
+
+                    jlist.Add(jo);
+                }
+            }
+
+            if ( jlist.Count>0)
+            { 
+                DateTime unusedate = DateTime.UtcNow;
+                // we need rewrite access, and run it with the cn passed to us
+                return SystemsDB.ParseEDSMJSONString(jlist.ToString(), null, ref unusedate, () => false, (t) => { }, "");
+            }
+
+            return 0;
+        }
         public static long ParseEDSMJSONFile(string filename, bool[] grididallow, ref DateTime date, Func<bool> cancelRequested, Action<string> reportProgress, string tableposfix, bool presumeempty = false, string debugoutputfile = null)
         {
             // if the filename ends in .gz, then decompress it on the fly

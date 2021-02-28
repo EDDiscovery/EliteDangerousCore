@@ -41,7 +41,7 @@ namespace EliteDangerousCore.JournalEvents
             shp.SetUserShipName(this);
         }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("",ShipName,"", ShipIdent, "On:".T(EDTx.JournalSetUserShipName_On) , Ship);
             detailed = "";

@@ -24,8 +24,6 @@ namespace EliteDangerousCore.EDSM
 {
     public class GalacticMapping
     {
-        private string GalacticMappingFile { get { return Path.Combine(EliteConfigInstance.InstanceOptions.AppDataDirectory, "galacticmapping.json"); } }
-
         public List<GalacticMapObject> galacticMapObjects = null;
         public List<GalMapType> galacticMapTypes = null;
 
@@ -34,16 +32,9 @@ namespace EliteDangerousCore.EDSM
         public GalacticMapping()
         {
             galacticMapTypes = GalMapType.GetTypes();          // we always have the types.
-
-            int sel = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("GalObjectsEnable", int.MaxValue);
-            foreach (GalMapType tp in galacticMapTypes)
-            {
-                tp.Enabled = (sel & 1) != 0;
-                sel >>= 1;
-            }
         }
 
-        public bool DownloadFromEDSM()
+        public bool DownloadFromEDSM(string file)
         {
             try
             {
@@ -51,7 +42,7 @@ namespace EliteDangerousCore.EDSM
                 string url = EDSMClass.ServerAddress + "en/galactic-mapping/json-edd";
                 bool newfile;
 
-                return BaseUtils.DownloadFile.HTTPDownloadFile(url, GalacticMappingFile, false, out newfile);
+                return BaseUtils.DownloadFile.HTTPDownloadFile(url, file, false, out newfile);
             }
             catch (Exception ex)
             {
@@ -61,22 +52,18 @@ namespace EliteDangerousCore.EDSM
             return false;
         }
 
-        public bool GalMapFilePresent()
-        {
-            return File.Exists(GalacticMappingFile);
-        }
-
-        public bool ParseData()
+        public bool Parse(string file)
         {
             var gmobjects = new List<GalacticMapObject>();
 
             try
             {
-                string json = BaseUtils.FileHelpers.TryReadAllTextFromFile(GalacticMappingFile);
+                string json = BaseUtils.FileHelpers.TryReadAllTextFromFile(file);
 
                 if (json != null)
                 {
                     JArray galobjects = JArray.ParseThrowCommaEOL(json);
+
                     foreach (JObject jo in galobjects)
                     {
                         GalacticMapObject galobject = new GalacticMapObject(jo);
@@ -86,7 +73,7 @@ namespace EliteDangerousCore.EDSM
                         if (ty == null)
                         {
                             ty = galacticMapTypes[galacticMapTypes.Count - 1];      // last one is default..
-                            System.Diagnostics.Trace.WriteLine("Unknown Gal Map object " + galobject.type);
+                            System.Diagnostics.Trace.WriteLine("Unknown Gal Map object " + galobject.type + " " + galobject.name);
                         }
 
                         galobject.galMapType = ty;
@@ -112,48 +99,44 @@ namespace EliteDangerousCore.EDSM
             return false;
         }
 
-        public void ToggleEnable(GalMapType tpsel = null)
+        public GalacticMapObject Find(string name, bool contains = false)
         {
-            GalMapType tpon = galacticMapTypes.Find(x => x.Enabled == true);  // find if any are on
-
-            foreach (GalMapType tp in galacticMapTypes)
-            {
-                if (tpsel == null)                              // if toggle all..
-                    tp.Enabled = (tpon == null);                // enabled if all are OFF, else disabled if any are on
-                else if (tpsel == tp)
-                    tp.Enabled = !tp.Enabled;
-            }
-        }
-
-        public void SaveSettings()
-        {
-            int index = 0;
-            int sel = 0;
-
-            foreach (GalMapType tp in galacticMapTypes)
-            {
-                sel |= (tp.Enabled ? 1 : 0) << index;
-                index++;
-            }
-
-            EliteDangerousCore.DB.UserDatabase.Instance.PutSettingInt("GalObjectsEnable", sel);
-        }
-
-        public GalacticMapObject Find(string name, bool contains = false , bool disregardenable = false)
-        {
-            if (galacticMapObjects != null && name.Length>0)
+            if (galacticMapObjects != null && name.HasChars())
             {
                 foreach (GalacticMapObject gmo in galacticMapObjects)
                 {
-                    if ( gmo.name.Equals(name,StringComparison.InvariantCultureIgnoreCase) || (contains && gmo.name.IndexOf(name,StringComparison.InvariantCultureIgnoreCase)>=0))
+                    if (gmo.name.Equals(name, StringComparison.InvariantCultureIgnoreCase) || (contains && gmo.name.IndexOf(name, StringComparison.InvariantCultureIgnoreCase) >= 0))
                     {
-                        if ( gmo.galMapType.Enabled || disregardenable )
-                            return gmo;
+                        return gmo;
                     }
                 }
             }
 
             return null;
+        }
+
+        public GalacticMapObject FindNearest(double x, double y, double z)
+        {
+            GalacticMapObject nearest = null;
+
+            if (galacticMapObjects != null)
+            {
+                double mindist = double.MaxValue;
+                foreach (GalacticMapObject gmo in galacticMapObjects)
+                {
+                    if ( gmo.points.Count == 1 )        // only for single point  bits
+                    {
+                        double distsq = (gmo.points[0].X - x) * (gmo.points[0].X - x) + (gmo.points[0].Y - y) * (gmo.points[0].Y - y) + (gmo.points[0].Z - z) * (gmo.points[0].Z - z);
+                        if ( distsq < mindist)
+                        {
+                            mindist = distsq;
+                            nearest = gmo;
+                        }
+                    }
+                }
+            }
+
+            return nearest;
         }
 
         public List<string> GetGMONames()

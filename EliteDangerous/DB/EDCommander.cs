@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2016 EDDiscovery development team
+ * Copyright © 2015 - 2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -28,6 +28,72 @@ namespace EliteDangerousCore
 
     public class EDCommander
     {
+        #region Instance
+
+        public int Id { set; get; }
+        public string Name { set; get; } = "";
+        public bool Deleted { set; get; }
+
+        public string JournalDir { set; get; } = "";
+
+        public bool SyncToEdsm { set; get; }
+        public bool SyncFromEdsm { set; get; }
+        public string EdsmName { set; get; } = "";
+        public string EDSMAPIKey { set; get; } = "";
+
+        private bool SyncToEGO { get { return false; } set { } }    // now withdrawn, kept in DB as its in the users DB fields.
+        private string EGOName { set; get; } = "";
+        private string EGOAPIKey { set; get; } = "";
+
+        public bool SyncToInara { set; get; }
+        public string InaraName { set; get; } = "";
+        public string InaraAPIKey { set; get; } = "";
+
+        public bool SyncToEddn { set; get; }
+
+        private string homesystem = "";
+        private ISystem lookuphomesys = null;
+        private string lastlookuphomename = null;
+        public string HomeSystem { get { return homesystem; } set { homesystem = value; lookuphomesys = null; lastlookuphomename = null; } }
+        public string HomeSystemTextOrSol { get { return homesystem.HasChars() ? homesystem : "Sol"; } }
+
+        public ISystem HomeSystemI
+        {
+            get
+            {
+                if (homesystem.HasChars())
+                {
+                    if (lastlookuphomename != homesystem)
+                    {
+                        lastlookuphomename = homesystem;
+                        lookuphomesys = SystemCache.FindSystem(homesystem, true);      // look up thru edsm. note we cache ISystem so once done, it won't be checked again
+                    }
+                }
+
+                return lookuphomesys;
+            }
+        }
+
+        public ISystem HomeSystemIOrSol { get { return HomeSystemI ?? new SystemClass("Sol", 0, 0, 0); } }
+
+        public float MapZoom { set; get; } = 1.0f;
+        public int MapColour { set; get; } = System.Drawing.Color.Red.ToArgb();
+        public bool MapCentreOnSelection { set; get; } = true;
+
+        public bool SyncToIGAU { set; get; }
+
+        public string Info
+        {
+            get
+            {
+                return BaseUtils.FieldBuilder.Build(";To EDDN", SyncToEddn, ";To EDSM", SyncToEdsm, ";From EDSM", SyncFromEdsm, ";To Inara", SyncToInara, ";To EGO", SyncToEGO, ";To IGAU", SyncToIGAU);
+            }
+        }
+
+        public string FID { get; set; }      // Frontier ID, not persistent.
+
+        #endregion
+
         #region Static interface
 
         #region Properties
@@ -43,7 +109,7 @@ namespace EliteDangerousCore
 
                 if (commanderID >= 0 && !commanders.ContainsKey(commanderID) && commanders.Count != 0)
                 {
-                    commanderID = commanders.Values.First().Nr;
+                    commanderID = commanders.Values.First().Id;
                 }
 
                 return commanderID;
@@ -81,13 +147,62 @@ namespace EliteDangerousCore
 
         #endregion
 
+        #region Construction
+
+        public EDCommander()
+        {
+            SyncToEddn = true;          // set it default to try and make them send it.
+        }
+
+        public EDCommander(DbDataReader reader)
+        {
+            Id = Convert.ToInt32(reader["Id"]);
+            Name = Convert.ToString(reader["Name"]);
+            Deleted = Convert.ToBoolean(reader["Deleted"]);
+
+            JournalDir = Convert.ToString(reader["JournalDir"]);
+
+            SyncToEdsm = Convert.ToBoolean(reader["SyncToEdsm"]);
+            SyncFromEdsm = Convert.ToBoolean(reader["SyncFromEdsm"]);
+            EdsmName = reader["EDSMName"] == DBNull.Value ? Name : Convert.ToString(reader["EDSMName"]) ?? Name;
+            EDSMAPIKey = Convert.ToString(reader["EdsmApiKey"]);
+
+            SyncToEGO = false; // currently disabled. Convert.ToBoolean(reader["SyncToEGO"]);
+
+            EGOName = Convert.ToString(reader["EGOName"]);
+            EGOAPIKey = Convert.ToString(reader["EGOAPIKey"]);
+
+            SyncToInara = Convert.ToBoolean(reader["SyncToInara"]);
+            InaraName = Convert.ToString(reader["InaraName"]);
+            InaraAPIKey = Convert.ToString(reader["InaraAPIKey"]);
+
+            SyncToEddn = Convert.ToBoolean(reader["SyncToEddn"]);
+
+            HomeSystem = Convert.ToString(reader["HomeSystem"]) ?? "";        // may be null
+
+            MapZoom = reader["MapZoom"] is System.DBNull ? 1.0f : (float)Convert.ToDouble(reader["MapZoom"]);
+            MapColour = reader["MapColour"] is System.DBNull ? System.Drawing.Color.Red.ToArgb() : Convert.ToInt32(reader["MapColour"]);
+            MapCentreOnSelection = reader["MapCentreOnSelection"] is System.DBNull ? true : Convert.ToBoolean(reader["MapCentreOnSelection"]);
+
+            SyncToIGAU = Convert.ToBoolean(reader["SyncToIGAU"]);
+
+        }
+
+        public EDCommander(int id, string Name)
+        {
+            this.Id = id;
+            this.Name = Name;
+        }
+
+        #endregion
+
         #region Methods
 
-        public static EDCommander GetCommander(int nr)      // null if not valid - cope with it. Hidden gets returned.
+        public static EDCommander GetCommander(int id)      // null if not valid - cope with it. Hidden gets returned.
         {
-            if (commanders.ContainsKey(nr))
+            if (commanders.ContainsKey(id))
             {
-                return commanders[nr];
+                return commanders[id];
             }
             else
             {
@@ -107,12 +222,12 @@ namespace EliteDangerousCore
 
         public static List<EDCommander> GetListInclHidden()
         {
-            return commanders.Values.OrderBy(v => v.Nr).ToList();
+            return commanders.Values.OrderBy(v => v.Id).ToList();
         }
 
         public static List<EDCommander> GetListCommanders()
         {
-            return commanders.Values.Where(v=>v.Nr>=0).OrderBy(v => v.Nr).ToList();
+            return commanders.Values.Where(v=>v.Id>=0).OrderBy(v => v.Id).ToList();
         }
 
         public static void Delete(int cmdrid)
@@ -131,7 +246,7 @@ namespace EliteDangerousCore
 
         public static void Delete(EDCommander cmdr)
         {
-            Delete(cmdr.Nr);
+            Delete(cmdr.Id);
         }
 
         public static EDCommander Create(EDCommander other )
@@ -210,7 +325,7 @@ namespace EliteDangerousCore
                 return cmdr;
             });
 
-            commanders[cmdr.Nr] = cmdr;
+            commanders[cmdr.Id] = cmdr;
 
             return cmdr;
         }
@@ -249,7 +364,7 @@ namespace EliteDangerousCore
 
                     foreach (EDCommander edcmdr in cmdrlist) // potential NRE
                     {
-                        cmd.Parameters["@Id"].Value = edcmdr.Nr;
+                        cmd.Parameters["@Id"].Value = edcmdr.Id;
                         cmd.Parameters["@Name"].Value = edcmdr.Name;
                         cmd.Parameters["@EdsmName"].Value = edcmdr.EdsmName;
                         cmd.Parameters["@EdsmApiKey"].Value = edcmdr.EDSMAPIKey != null ? edcmdr.EDSMAPIKey : "";
@@ -271,30 +386,13 @@ namespace EliteDangerousCore
                         cmd.Parameters["@SyncToIGAU"].Value = edcmdr.SyncToIGAU;
                         cmd.ExecuteNonQuery();
 
-                        commanders[edcmdr.Nr] = edcmdr;
+                        commanders[edcmdr.Id] = edcmdr;
                     }
                 }
             });
 
             if (reload)
                 Load(true);       // refresh in-memory copy
-
-            // For  some people sharing their user DB between different computers and having different paths to their journals on those computers.
-            JObject jo = new JObject();
-            foreach (EDCommander cmdr in commandersDict.Values)
-            {
-                JObject j = new JObject();
-                if (cmdr.JournalDir != null)
-                    jo["JournalDir"] = cmdr.JournalDir;
-                jo[cmdr.Name] = j;
-            }
-
-            string tmpfile = Path.Combine(EliteDangerousCore.EliteConfigInstance.InstanceOptions.AppDataDirectory, "CommanderPaths.json.tmp");
-            string cmdfile = Path.Combine(EliteDangerousCore.EliteConfigInstance.InstanceOptions.AppDataDirectory, "CommanderPaths.json");
-
-            File.WriteAllText(tmpfile, jo.ToString());
-            File.Delete(cmdfile);
-            File.Move(tmpfile, cmdfile);
         }
 
 
@@ -308,13 +406,13 @@ namespace EliteDangerousCore
                 commandersDict.Clear();
 
                 var cmdrs = GetCommanders();
-                int maxnr = cmdrs.Count == 0 ? 0 : cmdrs.Max(c => c.Nr);
+                int maxnr = cmdrs.Count == 0 ? 0 : cmdrs.Max(c => c.Id);
 
                 foreach (EDCommander cmdr in cmdrs)
                 {
                     if (!cmdr.Deleted)
                     {
-                        commandersDict[cmdr.Nr] = cmdr;
+                        commandersDict[cmdr.Id] = cmdr;
                     }
                 }
 
@@ -333,30 +431,7 @@ namespace EliteDangerousCore
                 EDCommander hidden = new EDCommander(-1, "Hidden Log");     // -1 is the hidden commander, add to list to make it
                 commandersDict[-1] = hidden;        // so we give back a valid entry when its selected
             }
-
-            string cmdfile = Path.Combine(EliteDangerousCore.EliteConfigInstance.InstanceOptions.AppDataDirectory, "CommanderPaths.json");
-
-            // For  some people sharing their user DB between different computers and having different paths to their journals on those computers.
-            if (File.Exists(cmdfile))
-            {
-                string text = File.ReadAllText(cmdfile);
-                JObject jo = JObject.Parse(text);
-
-                if (jo != null)
-                {
-                    foreach (var kvp in jo)
-                    {
-                        string name = kvp.Key;
-                        EDCommander cmdr = GetCommander(name);
-                        if (kvp.Value is JObject props && cmdr != null)
-                        {
-                            cmdr.JournalDir = props["JournalDir"].Str(cmdr.JournalDir);
-                        }
-                    }
-                }
-            }
         }
-
 
         public static List<EDCommander> GetCommanders()
         {
@@ -393,6 +468,7 @@ namespace EliteDangerousCore
         #endregion
 
         #region Private properties and methods
+
         private static Dictionary<int, EDCommander> commandersDict;
         private static int commanderID = Int32.MinValue;
 
@@ -408,113 +484,7 @@ namespace EliteDangerousCore
             }
         }
 
-#endregion
-
-#region Instance
-
-        public EDCommander()
-        {
-            SyncToEddn = true;          // set it default to try and make them send it.
-        }
-
-        public EDCommander(DbDataReader reader)
-        {
-            Nr = Convert.ToInt32(reader["Id"]);
-            Name = Convert.ToString(reader["Name"]);
-            Deleted = Convert.ToBoolean(reader["Deleted"]);
-
-            JournalDir = Convert.ToString(reader["JournalDir"]);
-
-            SyncToEdsm = Convert.ToBoolean(reader["SyncToEdsm"]);
-            SyncFromEdsm = Convert.ToBoolean(reader["SyncFromEdsm"]);
-            EdsmName = reader["EDSMName"] == DBNull.Value ? Name : Convert.ToString(reader["EDSMName"]) ?? Name;
-            EDSMAPIKey = Convert.ToString(reader["EdsmApiKey"]);
-
-            SyncToEGO = false; // currently disabled. Convert.ToBoolean(reader["SyncToEGO"]);
-
-            EGOName = Convert.ToString(reader["EGOName"]);
-            EGOAPIKey = Convert.ToString(reader["EGOAPIKey"]);
-
-            SyncToInara = Convert.ToBoolean(reader["SyncToInara"]);
-            InaraName = Convert.ToString(reader["InaraName"]);
-            InaraAPIKey = Convert.ToString(reader["InaraAPIKey"]);
-
-            SyncToEddn = Convert.ToBoolean(reader["SyncToEddn"]);
-
-            HomeSystem = Convert.ToString(reader["HomeSystem"]) ?? "";        // may be null
-
-            MapZoom = reader["MapZoom"] is System.DBNull ? 1.0f : (float)Convert.ToDouble(reader["MapZoom"]);
-            MapColour = reader["MapColour"] is System.DBNull ? System.Drawing.Color.Red.ToArgb() : Convert.ToInt32(reader["MapColour"]);
-            MapCentreOnSelection = reader["MapCentreOnSelection"] is System.DBNull ? true : Convert.ToBoolean(reader["MapCentreOnSelection"]);
-
-            SyncToIGAU = Convert.ToBoolean(reader["SyncToIGAU"]);
-
-        }
-
-        public EDCommander(int id, string Name )
-        {
-            this.Nr = id;
-            this.Name = Name;
-        }
-
-        public int Nr { set; get; }
-        public string Name { set; get; } = "";
-        public bool Deleted { set; get; }
-
-        public string JournalDir { set; get; } = "";
-
-        public bool SyncToEdsm { set; get; }
-        public bool SyncFromEdsm { set; get; }
-        public string EdsmName { set; get; } = "";
-        public string EDSMAPIKey { set; get; } = "";
-
-        private bool SyncToEGO { get { return false; } set { } }    // now withdrawn, kept in DB as its in the users DB fields.
-        private string EGOName { set; get; } = "";
-        private string EGOAPIKey { set; get; } = "";
-
-        public bool SyncToInara { set; get; }
-        public string InaraName { set; get; } = "";
-        public string InaraAPIKey { set; get; } = "";
-
-        public bool SyncToEddn { set; get; }
-
-        private string homesystem = "";
-        private ISystem lookuphomesys = null;
-        private string lastlookuphomename = null;
-        public string HomeSystem { get { return homesystem; } set { homesystem = value; lookuphomesys = null; lastlookuphomename = null; } }
-        public ISystem HomeSystemI
-        {
-            get
-            {
-                if (homesystem.HasChars())
-                {
-                    if (lastlookuphomename != homesystem)
-                    {
-                        lastlookuphomename = homesystem;
-                        lookuphomesys = SystemCache.FindSystem(homesystem);
-                    }
-                }
-
-                return lookuphomesys;
-            }
-        }
-
-        public string HomeSystemTextOrSol { get { return homesystem.HasChars() ? homesystem : "Sol"; } }
-        public ISystem HomeSystemIOrSol {  get { return HomeSystemI ?? new SystemClass("Sol", 0, 0, 0); } }
-
-        public float MapZoom { set; get; } = 1.0f;
-        public int MapColour { set; get; } = System.Drawing.Color.Red.ToArgb();
-        public bool MapCentreOnSelection { set; get; } = true;
-
-        public bool SyncToIGAU { set; get; }
-
-        public string Info { get
-            {
-                return BaseUtils.FieldBuilder.Build(";To EDDN", SyncToEddn, ";To EDSM", SyncToEdsm, ";From EDSM", SyncFromEdsm, ";To Inara" , SyncToInara, ";To EGO", SyncToEGO, ";To IGAU", SyncToIGAU);
-            } }
-
-        public string FID { get; set; }      // Frontier ID, not persistent.
-
         #endregion
+
     }
 }

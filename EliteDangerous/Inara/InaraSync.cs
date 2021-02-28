@@ -609,7 +609,7 @@ namespace EliteDangerousCore.Inara
                         bool verbose = false;
 
                         // if not too many, and we have another, and the commander is the same 
-                        while (tosend.Count < maxpergo && eventqueue.TryPeek(out InaraQueueEntry nextheq) && nextheq.cmdr.Nr == firstheq.cmdr.Nr)
+                        while (tosend.Count < maxpergo && eventqueue.TryPeek(out InaraQueueEntry nextheq) && nextheq.cmdr.Id == firstheq.cmdr.Id)
                         {
                             eventqueue.TryDequeue(out nextheq);     // and remove it
                             tosend.Add(nextheq.eventinfo);

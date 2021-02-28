@@ -14,7 +14,10 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
+//#define LISTSCANS
+
 using EliteDangerousCore.DB;
+using EliteDangerousCore.EDSM;
 using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Generic;
@@ -22,12 +25,15 @@ using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
 
+
 namespace EliteDangerousCore
 {
     public partial class HistoryList //: IEnumerable<HistoryEntry>
     {
+        public MissionListAccumulator MissionListAccumulator { get; private set; } = new MissionListAccumulator(); // and mission list..
+
         private List<HistoryEntry> historylist = new List<HistoryEntry>();  // oldest first here
-        private MissionListAccumulator missionlistaccumulator = new MissionListAccumulator(); // and mission list..
+        private Stats statisticsaccumulator = new Stats();
 
         public HistoryList() { }
 
@@ -47,12 +53,19 @@ namespace EliteDangerousCore
             StarScan = other.StarScan;
             ShipInformationList = other.ShipInformationList;
             CommanderId = other.CommanderId;
-            missionlistaccumulator = other.missionlistaccumulator;
+            MissionListAccumulator = other.MissionListAccumulator;
+            statisticsaccumulator = other.statisticsaccumulator;
             Shipyards = other.Shipyards;
             Outfitting = other.Outfitting;
             Visited = other.Visited;
             LastSystem = other.LastSystem;
         }
+
+        public Dictionary<string,Stats.FactionInfo> GetStatsAtGeneration(uint g)
+        {
+            return statisticsaccumulator.GetAtGeneration(g);
+        }
+
 
         #region Entry processing
 
@@ -70,7 +83,7 @@ namespace EliteDangerousCore
             if (CheckForRemoval(he, hprev))                                     // check here to see if we want to remove the entry.. can move this lower later, but at first point where we have the data
                 return null;
 
-            he.UpdateStats(je, hprev?.Stats, he.StationFaction);
+            he.UpdateStats(je, statisticsaccumulator, he.StationFaction);
             he.UpdateSystemNote();
 
             CashLedger.Process(je);
@@ -83,46 +96,29 @@ namespace EliteDangerousCore
             he.UpdateShipInformation(ret.Item1);
             he.UpdateShipStoredModules(ret.Item2);
             
-            he.UpdateMissionList(missionlistaccumulator.Process(je, he.System, he.WhereAmI));
+            he.UpdateMissionList(MissionListAccumulator.Process(je, he.System, he.WhereAmI));
 
             historylist.Add(he);        // then add to history
 
-            AddToVisitsScan(this, he, logerror);  // add to scan database and complain if can't add. Do this after history add, so it has a list.
+            AddToVisitsScan(this, this.historylist.Count-1, logerror);  // add to scan database and complain if can't add. Do this after history add, so it has a list.
             
             return he;
         }
 
-        public static HistoryList LoadHistory(EDJournalUIScanner journalmonitor, Func<bool> cancelRequested, Action<int, string> reportProgress,
-                                    string NetLogPath = null,
-                                    bool ForceNetLogReload = false,
-                                    bool ForceJournalReload = false,
-                                    int CurrentCommander = Int32.MinValue,
-                                    int fullhistoryloaddaylimit = 0,
-                                    string essentialitems = ""
-                                    )
+        // History load system, read DB for entries and make a history up
+
+        public static HistoryList LoadHistory(  Action<string> reportProgress, 
+                                                int CurrentCommander, 
+                                                int fullhistoryloaddaylimit, string essentialitems
+                                             )
         {
             HistoryList hist = new HistoryList();
 
-            if (CurrentCommander >= 0)
-            {
-                journalmonitor.SetupWatchers();   // Parse files stop monitor..
-                int forcereloadoflastn = ForceJournalReload ? int.MaxValue / 2 : 0;     // if forcing a reload, we indicate that by setting the reload count to a very high value, but not enough to cause int wrap
-                journalmonitor.ParseJournalFilesOnWatchers((p, s) => reportProgress(p, s), forcereloadoflastn );
+            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL", true).Item1 + " History Load");
 
-                if (NetLogPath != null)
-                {
-                    string errstr = null;
-                    NetLogClass.ParseFiles(NetLogPath, out errstr, EDCommander.Current.MapColour, () => cancelRequested(), (p, s) => reportProgress(p, s), ForceNetLogReload, currentcmdrid: CurrentCommander);
-                }
-            }
-
-            Trace.WriteLine(BaseUtils.AppTicks.TickCountLap() + " Files read ");
-
-            reportProgress(-1, "Reading Database");
+            reportProgress("Reading Database");
 
             List<JournalEntry> jlist;       // returned in date ascending, oldest first order.
-
-            System.Diagnostics.Debug.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL", true) + "History Load");
 
             if (fullhistoryloaddaylimit > 0)
             {
@@ -138,23 +134,19 @@ namespace EliteDangerousCore
                     );
             }
             else
+            {
                 jlist = JournalEntry.GetAll(CurrentCommander);
+            }
 
-            System.Diagnostics.Debug.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL") + "History Load END");
+            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Journals read from DB");
 
-            Trace.WriteLine(BaseUtils.AppTicks.TickCountLap() + " Database read " + jlist.Count);
+            reportProgress( "Creating History");
 
             HistoryEntry hprev = null;
-            JournalEntry jprev = null;
-
-            reportProgress(-1, "Creating History");
-
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-
+            
             foreach (JournalEntry je in jlist)
             {
-                if (MergeEntries(jprev, je))        // if we merge, don't store into HE
+                if (MergeEntries(hprev?.journalEntry, je))        // if we merge, don't store into HE
                 {
                     continue;
                 }
@@ -172,18 +164,28 @@ namespace EliteDangerousCore
                     continue;
                 }
 
-                long timetoload = sw.ElapsedMilliseconds;
-                HistoryEntry he = HistoryEntry.FromJournalEntry(je, hprev);
+                HistoryEntry he = HistoryEntry.FromJournalEntry(je, hprev);     // create entry
 
-                // **** REMEMBER NEW Journal entry needs this too *****************
-
-                he.UpdateMaterialsCommodities(je, hprev?.MaterialCommodity);        // update material commodities
+                he.UpdateMaterialsCommodities(je, hprev?.MaterialCommodity);    // update material commodities BEFORE we possibly remove entries, as Cargo is one of the removal options
                 Debug.Assert(he.MaterialCommodity != null);
 
-                if (CheckForRemoval(he, hprev))                                     // check here to see if we want to remove the entry.. can move this lower later, but at first point where we have the data
+                if (CheckForRemoval(he, hprev))                                 // check here to see if we want to remove the entry.. can move this lower later, but at first point where we have the data
                     continue;
 
-                he.UpdateStats(je, hprev?.Stats, he.StationFaction);
+                hist.historylist.Add(he);                                       // now add it to the history
+
+                hprev = he;
+            }
+
+            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " History List Created");
+            reportProgress( "Analysing History");
+
+            for( int i = 0; i < hist.historylist.Count; i++ )
+            {
+                HistoryEntry he = hist.historylist[i];
+                JournalEntry je = he.journalEntry;
+
+                he.UpdateStats(je, hist.statisticsaccumulator, he.StationFaction);
                 he.UpdateSystemNote();
 
                 hist.CashLedger.Process(je);            // update the ledger     
@@ -196,32 +198,36 @@ namespace EliteDangerousCore
                 he.UpdateShipInformation(ret.Item1);
                 he.UpdateShipStoredModules(ret.Item2);
 
-                he.UpdateMissionList(hist.missionlistaccumulator.Process(je, he.System, he.WhereAmI));
+                he.UpdateMissionList(hist.MissionListAccumulator.Process(je, he.System, he.WhereAmI));
 
-                hist.historylist.Add(he);           // now add it to the history
-
-                AddToVisitsScan(hist, he, null);          // add to scan but don't complain if can't add.  Do this AFTER add, as it uses the history list
-
-                hprev = he;
-                jprev = je;
-
+                AddToVisitsScan(hist, i, null);          // add to scan but don't complain if can't add
             }
 
-            //for (int i = hist.Count - 10; i < hist.Count; i++)  System.Diagnostics.Debug.WriteLine("Hist {0} {1} {2}", hist[i].EventTimeUTC, hist[i].Indexno , hist[i].EventSummary);
+        //for (int i = hist.Count - 10; i < hist.Count; i++)  System.Diagnostics.Debug.WriteLine("Hist {0} {1} {2}", hist[i].EventTimeUTC, hist[i].Indexno , hist[i].EventSummary);
 
-            // now database has been updated due to initial fill, now fill in stuff which needs the user database
+        // now database has been updated due to initial fill, now fill in stuff which needs the user database
+
+            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Anaylsis End");
 
             hist.CommanderId = CurrentCommander;
 
-            EDCommander.Current.FID = hist.GetCommanderFID();               // ensure FID is set.. the other place it gets changed is a read of LoadGame.
-
-            if (NetLogPath != null)
+#if LISTSCANS
             {
-                reportProgress(-1,"Netlog Updating System Positions");
-                hist.FillInPositionsFSDJumps();         // if netlog reading, try and resolve systems..
-            }
+                using (var fileout = new System.IO.StreamWriter(@"c:\code\scans.csv"))
+                {
+                    fileout.WriteLine($"System,0,fullname,ownname,customname,bodyname,bodydesignation, bodyid,parentlist");
+                    foreach (var sn in hist.StarScan.ScansSortedByName())
+                    {
+                        foreach (var body in sn.Bodies)
+                        {
+                            string pl = body.ScanData?.ParentList();
 
-            reportProgress(-1, "Done");
+                            fileout.WriteLine($"{sn.System.Name},0, {body.FullName},{body.OwnName},{body.CustomName},{body.ScanData?.BodyName},{body.ScanData?.BodyDesignation},{body.BodyID},{pl}");
+                        }
+                    }
+                }
+            }
+#endif
 
             return hist;
         }
@@ -251,8 +257,11 @@ namespace EliteDangerousCore
         }
 
 
-        public static void AddToVisitsScan(HistoryList hist, HistoryEntry he, Action<string> logerror)
+
+        public static void AddToVisitsScan(HistoryList hist, int pos, Action<string> logerror)
         {
+            HistoryEntry he = hist[pos];
+
             if ((hist.LastSystem == null || he.System.Name != hist.LastSystem ) && he.System.Name != "Unknown" )   // if system is not last, we moved somehow (FSD, location, carrier jump), add
             {
                 if (hist.Visited.TryGetValue(he.System.Name, out var value))
@@ -265,16 +274,15 @@ namespace EliteDangerousCore
                     he.Visits = 1;                              // first visit
                     hist.Visited[he.System.Name] = he;          // point to he
                 }
+
                 hist.LastSystem = he.System.Name;
             }
 
             if (he.EntryType == JournalTypeEnum.Scan)
             {
-                if (logerror != null) BaseUtils.AppTicks.TickCountLapDelta("Scan", true);
-
                 JournalScan js = he.journalEntry as JournalScan;
 
-                if (!hist.StarScan.AddScanToBestSystem(js, hist.historylist.Count - 1, hist.historylist, out HistoryEntry jlhe, out JournalLocOrJump jl))
+                if (!hist.StarScan.AddScanToBestSystem(js, pos - 1, hist.historylist, out HistoryEntry jlhe, out JournalLocOrJump jl))
                 {
                     if (logerror != null)
                     {
@@ -297,24 +305,26 @@ namespace EliteDangerousCore
                         System.Diagnostics.Debug.WriteLine("******** Cannot add scan to system " + (he.journalEntry as JournalScan).BodyName + " in " + he.System.Name);
                     }
                 }
-
-                if (logerror != null) System.Diagnostics.Debug.WriteLine(BaseUtils.AppTicks.TickCountLap("Scan") + " Scan End");
             }
             else if (he.EntryType == JournalTypeEnum.SAAScanComplete)
             {
-                hist.StarScan.AddSAAScanToBestSystem((JournalSAAScanComplete)he.journalEntry, hist.historylist.Count - 1, hist.historylist);
+                hist.StarScan.AddSAAScanToBestSystem((JournalSAAScanComplete)he.journalEntry, pos , hist.historylist);
             }
             else if (he.EntryType == JournalTypeEnum.SAASignalsFound)
             {
-                hist.StarScan.AddSAASignalsFoundToBestSystem((JournalSAASignalsFound)he.journalEntry, hist.historylist.Count - 1, hist.historylist);
+                hist.StarScan.AddSAASignalsFoundToBestSystem((JournalSAASignalsFound)he.journalEntry, pos , hist.historylist);
             }
-            else if (he.EntryType == JournalTypeEnum.FSSDiscoveryScan && he.System != null)
+            else if (he.EntryType == JournalTypeEnum.FSSDiscoveryScan)
             {
                 hist.StarScan.SetFSSDiscoveryScan((JournalFSSDiscoveryScan)he.journalEntry, he.System);
             }
+            else if (he.EntryType == JournalTypeEnum.FSSSignalDiscovered)
+            {
+                hist.StarScan.AddFSSSignalsDiscoveredToSystem((JournalFSSSignalDiscovered)he.journalEntry, he.System);
+            }
             else if (he.journalEntry is IBodyNameAndID)
             {
-                hist.StarScan.AddBodyToBestSystem((IBodyNameAndID)he.journalEntry, hist.historylist.Count - 1, hist.historylist);
+                hist.StarScan.AddBodyToBestSystem((IBodyNameAndID)he.journalEntry, pos, hist.historylist);
             }
         }
 
@@ -409,31 +419,38 @@ namespace EliteDangerousCore
             return false;
         }
 
-        #endregion
+#endregion
 
-        #region EDSM
+#region EDSM
 
-        public void FillInPositionsFSDJumps()       // call if you want to ensure we have the best posibile position data on FSD Jumps.  Only occurs on pre 2.1 netlogs
+        public void FillInPositionsFSDJumps(Action<string> logger)       // call if you want to ensure we have the best posibile position data on FSD Jumps.  Only occurs on pre 2.1 netlogs
         {
             List<Tuple<HistoryEntry, ISystem>> updatesystems = new List<Tuple<HistoryEntry, ISystem>>();
 
             if (!SystemsDatabase.Instance.RebuildRunning)       // only run this when the system db is stable.. this prevents the UI from slowing to a standstill
             {
-                SystemsDatabase.Instance.ExecuteWithDatabase(cn =>
+                foreach (HistoryEntry he in historylist)
                 {
-                    foreach (HistoryEntry he in historylist)
+                    // try and load ones without position.. if its got pos we are happy.  If its 0,0,0 and its not sol, it may just be a stay entry
+
+                    if (he.IsFSDCarrierJump)
                     {
-                        if (he.IsFSDCarrierJump && !he.System.HasCoordinate)// try and load ones without position.. if its got pos we are happy
-                        {           // done in two IFs for debugging, in case your wondering why!
-                            if (he.System.Source != SystemSource.FromEDSM)   // and its not from EDSM 
+                        //logger?.Invoke($"Checking system {he.System.Name}");
+
+                        if (!he.System.HasCoordinate || (Math.Abs(he.System.X) < 1 && Math.Abs(he.System.Y) < 1 && Math.Abs(he.System.Z) < 0 && he.System.Name != "Sol"))
+                        {
+                            ISystem found = SystemCache.FindSystem(he.System, true);        // find, thru edsm if required
+                                    
+                            if (found != null)
                             {
-                                ISystem found = SystemCache.FindSystem(he.System, cn);
-                                if (found != null)
-                                    updatesystems.Add(new Tuple<HistoryEntry, ISystem>(he, found));
+                                logger?.Invoke($"System {he.System.Name} found system in EDSM");
+                                updatesystems.Add(new Tuple<HistoryEntry, ISystem>(he, found));
                             }
+                            else
+                                logger?.Invoke($"System {he.System.Name} failed to find system in EDSM");
                         }
                     }
-                });
+                }
             }
 
             if (updatesystems.Count > 0)
@@ -444,9 +461,9 @@ namespace EliteDangerousCore
                     {
                         foreach (Tuple<HistoryEntry, ISystem> hesys in updatesystems)
                         {
-                            System.Diagnostics.Debug.WriteLine("Update {0} with pos", hesys.Item1.System.Name);
+                            logger?.Invoke($"Update position of {hesys.Item1.System.Name} at {hesys.Item1.EntryNumber} in journal");
                             hesys.Item1.journalEntry.UpdateStarPosition(hesys.Item2, cn.Connection, txn);
-                            hesys.Item1.System = hesys.Item2;
+                            hesys.Item1.UpdateSystem(hesys.Item2);
                         }
 
                         txn.Commit();
@@ -455,7 +472,7 @@ namespace EliteDangerousCore
             }
         }
 
-        #endregion
+#endregion
 
     }
 }

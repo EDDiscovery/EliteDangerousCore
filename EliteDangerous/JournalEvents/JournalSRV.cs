@@ -33,7 +33,7 @@ namespace EliteDangerousCore.JournalEvents
             shp.DockSRV();
         }
 
-        public override void FillInformation(out string info, out string detailed)  
+        public override void FillInformation(ISystem sys, out string info, out string detailed)  
         {
             info = "";
             detailed = "";
@@ -58,7 +58,7 @@ namespace EliteDangerousCore.JournalEvents
             shp.LaunchSRV();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Loadout:".T(EDTx.JournalEntry_Loadout), Loadout) + BaseUtils.FieldBuilder.Build(", NPC Controlled;".T(EDTx.JournalEntry_NPCControlled), PlayerControlled);
             detailed = "";
@@ -81,7 +81,7 @@ namespace EliteDangerousCore.JournalEvents
             shp.DestroyedSRV();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = "";
             detailed = "";

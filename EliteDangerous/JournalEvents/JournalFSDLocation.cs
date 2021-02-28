@@ -144,7 +144,7 @@ namespace EliteDangerousCore.JournalEvents
                 FactionState = evt["FactionState"].Str();           // PRE 2.3 .. not present in newer files, fixed up in next bit of code (but see 3.3.2 as its been incorrectly reintroduced)
             }
 
-            Factions = evt["Factions"]?.ToObjectProtected<FactionInformation[]>()?.OrderByDescending(x => x.Influence)?.ToArray();  // POST 2.3
+            Factions = evt["Factions"]?.ToObjectQ<FactionInformation[]>()?.OrderByDescending(x => x.Influence)?.ToArray();  // POST 2.3
 
             if (Factions != null)
             {
@@ -173,9 +173,9 @@ namespace EliteDangerousCore.JournalEvents
             Wanted = evt["Wanted"].Bool();      // if absence, your not wanted, by definition of frontier in journal (only present if wanted, see docked)
 
             PowerplayState = evt["PowerplayState"].Str();            // NO evidence
-            PowerplayPowers = evt["Powers"]?.ToObjectProtected<string[]>();
+            PowerplayPowers = evt["Powers"]?.ToObjectQ<string[]>();
 
-            Conflicts = evt["Conflicts"]?.ToObjectProtected<ConflictInfo[]>();   // 3.4
+            Conflicts = evt["Conflicts"]?.ToObjectQ<ConflictInfo[]>();   // 3.4
 
             // Allegiance without Faction only occurs in Training
             if (!String.IsNullOrEmpty(Allegiance) && Faction == null && EventTimeUTC <= ED_No_Training_Timestamp && (EventTimeUTC <= ED_No_Faction_Timestamp || EventTypeID != JournalTypeEnum.FSDJump || StarSystem == "Eranin"))
@@ -304,8 +304,8 @@ namespace EliteDangerousCore.JournalEvents
             StationGovernment_Localised = evt["StationGovernment_Localised"].Str();       // 3.3.2 empty before
             StationAllegiance = evt["StationAllegiance"].Str();       // 3.3.2 empty before
                                                                       // tbd bug in journal over FactionState - its repeated twice..
-            StationServices = evt["StationServices"]?.ToObjectProtected<string[]>();
-            StationEconomyList = evt["StationEconomies"]?.ToObjectProtected<JournalDocked.Economies[]>();
+            StationServices = evt["StationServices"]?.ToObjectQ<string[]>();
+            StationEconomyList = evt["StationEconomies"]?.ToObjectQ<JournalDocked.Economies[]>();
         }
 
         public bool Docked { get; set; }
@@ -346,7 +346,7 @@ namespace EliteDangerousCore.JournalEvents
 
         }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
             if (Docked)
             {
@@ -438,8 +438,8 @@ namespace EliteDangerousCore.JournalEvents
             StationGovernment_Localised = evt["StationGovernment_Localised"].Str();       // 3.3.2 empty before
             StationAllegiance = evt["StationAllegiance"].Str();       // 3.3.2 empty before
                                                                       // tbd bug in journal over FactionState - its repeated twice..
-            StationServices = evt["StationServices"]?.ToObjectProtected<string[]>();
-            StationEconomyList = evt["StationEconomies"]?.ToObjectProtected<JournalDocked.Economies[]>();
+            StationServices = evt["StationServices"]?.ToObjectQ<string[]>();
+            StationEconomyList = evt["StationEconomies"]?.ToObjectQ<JournalDocked.Economies[]>();
 
             JToken jm = evt["EDDMapColor"];
             MapColor = jm.Int(EDCommander.Current.MapColour);
@@ -475,7 +475,7 @@ namespace EliteDangerousCore.JournalEvents
             return string.Format("Jumped with carrier {0} to {1}".T(EDTx.JournalCarrierJump_JumpedWith), StationName, Body);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Type ".T(EDTx.JournalLocOrJump_Type), StationType, "< in system ".T(EDTx.JournalLocOrJump_insystem), StarSystem);
 
@@ -562,7 +562,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys) { return string.Format("Jump to {0}".T(EDTx.JournalFSDJump_Jumpto), StarSystem); }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             StringBuilder sb = new StringBuilder();
             if (JumpDist > 0)
@@ -703,7 +703,7 @@ namespace EliteDangerousCore.JournalEvents
         public int? RemainingJumpsInRoute { get; set; }
         public string FriendlyStarClass { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", StarSystem,"",StarClass,"Remaining Jumps".T(EDTx.JournalEntry_RemainingJumps), RemainingJumpsInRoute);
             detailed = "";
@@ -734,7 +734,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys) { return "Charging FSD".T(EDTx.JournalStartJump_ChargingFSD); }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             if (IsHyperspace)
                 info = "Hyperspace".T(EDTx.JournalEntry_Hyperspace) + " " + BaseUtils.FieldBuilder.Build("<to ".T(EDTx.JournalEntry_to), StarSystem, "", FriendlyStarClass);

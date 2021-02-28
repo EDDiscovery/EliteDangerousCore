@@ -217,7 +217,7 @@ namespace EliteDangerousCore
                             fireoverall = true;
                         }
 
-                        int[] pips = jo["Pips"]?.ToObjectProtected<int[]>();
+                        int[] pips = jo["Pips"]?.ToObjectQ<int[]>();
 
                         if (pips != null)
                         {

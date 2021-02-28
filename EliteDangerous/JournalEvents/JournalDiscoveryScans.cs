@@ -14,6 +14,7 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 using BaseUtils.JSON;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -31,7 +32,7 @@ namespace EliteDangerousCore.JournalEvents
         public long SystemAddress { get; set; }
         public int Bodies { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("New bodies discovered:".T(EDTx.JournalEntry_Dscan), Bodies);
             detailed = "";
@@ -52,7 +53,7 @@ namespace EliteDangerousCore.JournalEvents
         public int BodyCount { get; set; }
         public int NonBodyCount { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Progress:;%;N1".T(EDTx.JournalFSSDiscoveryScan_Progress), Progress, 
                 "Bodies:".T(EDTx.JournalFSSDiscoveryScan_Bodies), BodyCount, "Others:".T(EDTx.JournalFSSDiscoveryScan_Others), NonBodyCount);
@@ -67,40 +68,75 @@ namespace EliteDangerousCore.JournalEvents
         {
             public string SignalName { get; set; }
             public string SignalName_Localised { get; set; }
-            public string SpawingState { get; set; }            // keep the typo - its in the voice pack
-            public string SpawingState_Localised { get; set; }
-            public string SpawingFaction { get; set; }          // keep the typo - its in the voice pack
-            public string SpawingFaction_Localised { get; set; }
+            public string SpawningState { get; set; }            // keep the typo - its in the voice pack
+            public string SpawningState_Localised { get; set; }
+            public string SpawningFaction { get; set; }          // keep the typo - its in the voice pack
+            public string SpawningFaction_Localised { get; set; }
             public double? TimeRemaining { get; set; }          // null if not expiring
             public long? SystemAddress { get; set; }
 
             public int? ThreatLevel { get; set; }
             public string USSType { get; set; }
             public string USSTypeLocalised { get; set; }
-            public bool? IsStation { get; set; }
+
+            public System.DateTime RecordedUTC { get; set; }        // when it was recorded
 
             public System.DateTime ExpiryUTC { get; set; }
             public System.DateTime ExpiryLocal { get; set; }
 
+            public enum Classification { Station,Installation, NotableStellarPhenomena, ConflictZone, ResourceExtraction, Carrier, USS, Other};
+            public Classification ClassOfSignal { get; set; }
+
+            const int CarrierExpiryTime = 10 * (60 * 60 * 24);              // days till we consider the carrier signal expired..
+
             public FSSSignal(JObject evt, System.DateTime EventTimeUTC)
             {
                 SignalName = evt["SignalName"].Str();
-                SignalName_Localised = JournalFieldNaming.CheckLocalisation(evt["SignalName_Localised"].Str(), SignalName);
+                string loc = evt["SignalName_Localised"].Str();     // not present for stations/installations
+                SignalName_Localised = loc.Alt(SignalName);         // don't mangle if no localisation, its prob not there because its a proper name
 
-                SpawingState = evt["SpawningState"].Str();
-                SpawingState_Localised = JournalFieldNaming.CheckLocalisation(evt["SpawningState_Localised"].Str(), SpawingState);
+                SpawningState = evt["SpawningState"].Str();          // USS only, checked
+                SpawningState_Localised = JournalFieldNaming.CheckLocalisation(evt["SpawningState_Localised"].Str(), SpawningState);
 
-                SpawingFaction = evt["SpawningFaction"].Str();
-                SpawingFaction_Localised = JournalFieldNaming.CheckLocalisation(evt["SpawningFaction_Localised"].Str(), SpawingFaction);
+                SpawningFaction = evt["SpawningFaction"].Str();      // USS only, checked
+                SpawningFaction_Localised = JournalFieldNaming.CheckLocalisation(evt["SpawningFaction_Localised"].Str(), SpawningFaction);
 
-                TimeRemaining = evt["TimeRemaining"].DoubleNull();
+                USSType = evt["USSType"].Str();                     // USS Only, checked
+                USSTypeLocalised = JournalFieldNaming.CheckLocalisation(evt["USSType_Localised"].Str(), USSType);
+
+                ThreatLevel = evt["ThreatLevel"].IntNull();         // USS only, checked
+
+                TimeRemaining = evt["TimeRemaining"].DoubleNull();  // USS only, checked
 
                 SystemAddress = evt["SystemAddress"].LongNull();
 
-                ThreatLevel = evt["ThreatLevel"].IntNull();
-                USSType = evt["USSType"].Str();
-                USSTypeLocalised = JournalFieldNaming.CheckLocalisation(evt["USSType_Localised"].Str(), USSType);
-                IsStation = evt["IsStation"].BoolNull();
+                bool? isstation = evt["IsStation"].BoolNull();
+
+                if (isstation == true)          // station flag
+                {
+                    int dash = SignalName.LastIndexOf('-');
+                    if (dash == SignalName.Length - 4 && char.IsLetterOrDigit(SignalName[dash + 1]) && char.IsLetterOrDigit(SignalName[dash - 1]))
+                    {
+                        ClassOfSignal = Classification.Carrier;
+                        TimeRemaining = CarrierExpiryTime;
+                    }
+                    else
+                        ClassOfSignal = Classification.Station;
+                }
+                else if (loc.Length == 0 )      // other types, and old station entries, don't have localisation, so its an installation
+                    ClassOfSignal = Classification.Installation;
+                else if (SignalName.StartsWith("$USS", StringComparison.InvariantCultureIgnoreCase) || SignalName.StartsWith("$RANDOM", StringComparison.InvariantCultureIgnoreCase))
+                    ClassOfSignal = Classification.USS;
+                else if (SignalName.StartsWith("$Warzone", StringComparison.InvariantCultureIgnoreCase))
+                    ClassOfSignal = Classification.ConflictZone;
+                else if (SignalName.StartsWith("$Fixed_Event_Life", StringComparison.InvariantCultureIgnoreCase))
+                    ClassOfSignal = Classification.NotableStellarPhenomena;
+                else if (SignalName.StartsWith("$MULTIPLAYER_SCENARIO14", StringComparison.InvariantCultureIgnoreCase) || SignalName.StartsWith("$MULTIPLAYER_SCENARIO7", StringComparison.InvariantCultureIgnoreCase))
+                    ClassOfSignal = Classification.ResourceExtraction;
+                else
+                    ClassOfSignal = Classification.Other;
+
+                RecordedUTC = EventTimeUTC;
 
                 if (TimeRemaining != null)
                 {
@@ -109,27 +145,39 @@ namespace EliteDangerousCore.JournalEvents
                 }
             }
 
-            public override string ToString()
+            public bool IsSame(FSSSignal other)     // is this signal the same as the other one
             {
-                if (SignalName.StartsWith("$USS_"))
-                {
-                    return BaseUtils.FieldBuilder.Build("", USSTypeLocalised, 
-                                "Threat Level:".T(EDTx.FSSSignal_ThreatLevel), ThreatLevel,
-                                "Faction:".T(EDTx.FSSSignal_Faction), SpawingFaction_Localised,
-                                ";Station".T(EDTx.FSSSignal_StationBool), IsStation,
-                                "State:".T(EDTx.FSSSignal_State), SpawingState_Localised
-                                );
-                }
-                else
-                {
-                    return BaseUtils.FieldBuilder.Build("", SignalName_Localised, 
-                                "USS Type:".T(EDTx.FSSSignal_USSType), USSTypeLocalised, 
-                                "Threat Level:".T(EDTx.FSSSignal_ThreatLevel), ThreatLevel,
-                                "Faction:".T(EDTx.FSSSignal_Faction), SpawingFaction_Localised,
-                                ";Station".T(EDTx.FSSSignal_StationBool), IsStation,
-                                "State:".T(EDTx.FSSSignal_State), SpawingState_Localised
-                                );
-                }
+                return SignalName.Equals(other.SignalName) && SpawningFaction.Equals(other.SpawningFaction) && SpawningState.Equals(other.SpawningState) &&
+                       USSType.Equals(other.USSType) && ThreatLevel == other.ThreatLevel && ClassOfSignal == other.ClassOfSignal &&
+                       (ClassOfSignal == Classification.Carrier || ExpiryUTC == other.ExpiryUTC);       // note carriers have our own expiry on it, so we don't
+            }
+
+            public string ToString( bool showseentime)
+            {
+                DateTime? outoftime = null;
+                if (TimeRemaining != null && ClassOfSignal != Classification.Carrier)       // ignore carrier timeout for printing
+                    outoftime = ExpiryLocal;
+
+                DateTime? seen = null;
+                if (showseentime && ClassOfSignal == Classification.Carrier)
+                    seen = RecordedUTC;
+
+                string signname = ClassOfSignal == Classification.USS ? null : SignalName_Localised;        // signal name for USS is boring, remove
+
+                string spstate = SpawningState_Localised != null ? SpawningState_Localised.Truncate(0, 32, "..") : null;
+
+                return BaseUtils.FieldBuilder.Build(
+                            ";Station: ".T(EDTx.FSSSignal_StationBool), ClassOfSignal == Classification.Station,
+                            ";Carrier: ".T(EDTx.FSSSignal_CarrierBool), ClassOfSignal == Classification.Carrier,
+                            ";Installation: ".T(EDTx.FSSSignal_InstallationBool), ClassOfSignal == Classification.Installation,
+                            "<", signname,
+                            "", USSTypeLocalised,
+                            "Threat Level:".T(EDTx.FSSSignal_ThreatLevel), ThreatLevel,
+                            "Faction:".T(EDTx.FSSSignal_Faction), SpawningFaction_Localised,
+                            "State:".T(EDTx.FSSSignal_State), spstate,
+                            "Time:".T(EDTx.Time), outoftime,
+                            "Last Seen:".T(EDTx.FSSSignal_LastSeen), seen
+                            );
             }
         }
 
@@ -146,7 +194,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public List<FSSSignal> Signals;
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             detailed = "";
 
@@ -163,11 +211,11 @@ namespace EliteDangerousCore.JournalEvents
                 }
 
                 foreach (var s in Signals)
-                    detailed = detailed.AppendPrePad(s.ToString(), System.Environment.NewLine);
+                    detailed = detailed.AppendPrePad(s.ToString(false), System.Environment.NewLine);
             }
             else
             {
-                info = Signals[0].ToString();
+                info = Signals[0].ToString(false);
             }
         }
     }
@@ -185,7 +233,7 @@ namespace EliteDangerousCore.JournalEvents
         public int NumBodies { get; set; }
         public long? SystemAddress { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Bodies:".T(EDTx.JournalEntry_Bodies), NumBodies);
             detailed = "";
@@ -198,13 +246,13 @@ namespace EliteDangerousCore.JournalEvents
         public JournalSAAScanComplete(JObject evt) : base(evt, JournalTypeEnum.SAAScanComplete)
         {
             BodyName = evt["BodyName"].Str();
-            BodyID = evt["BodyID"].Long();
+            BodyID = evt["BodyID"].Int();
             ProbesUsed = evt["ProbesUsed"].Int();
             EfficiencyTarget = evt["EfficiencyTarget"].Int();
             SystemAddress = evt["SystemAddress"].LongNull();
         }
 
-        public long BodyID { get; set; }
+        public int BodyID { get; set; }
         public string BodyName { get; set; }
         public int ProbesUsed { get; set; }
         public int EfficiencyTarget { get; set; }
@@ -217,7 +265,7 @@ namespace EliteDangerousCore.JournalEvents
             return base.SummaryName(sys) + " " + "of ".T(EDTx.JournalEntry_ofa) + BodyName.ReplaceIfStartsWith(sys.Name);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Probes:".T(EDTx.JournalSAAScanComplete_Probes), ProbesUsed,
                                                 "Efficiency Target:".T(EDTx.JournalSAAScanComplete_EfficiencyTarget), EfficiencyTarget);
@@ -233,7 +281,7 @@ namespace EliteDangerousCore.JournalEvents
             SystemAddress = evt["SystemAddress"].Long();
             BodyName = evt["BodyName"].Str();
             BodyID = evt["BodyID"].Int();
-            Signals = evt["Signals"].ToObjectProtected<List<SAASignal>>();
+            Signals = evt["Signals"].ToObjectQ<List<SAASignal>>();
             if ( Signals != null )
             {
                 foreach (var s in Signals)      // some don't have localisation
@@ -277,7 +325,7 @@ namespace EliteDangerousCore.JournalEvents
             return info;
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = SignalList(Signals);
             detailed = "";
@@ -310,7 +358,7 @@ namespace EliteDangerousCore.JournalEvents
         public string SystemName { get; set; }
         public int Count { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = Count.ToString() + " @ " + SystemName;
             detailed = "";

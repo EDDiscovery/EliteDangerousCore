@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2016 EDDiscovery development team
+ * Copyright © 2015 - 2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -28,106 +28,98 @@ namespace EliteDangerousCore
 
     public partial class StarScan
     {
-        private static Dictionary<string, List<JournalScan>> primaryStarScans = new Dictionary<string, List<JournalScan>>(StringComparer.InvariantCultureIgnoreCase);
-
-        // make or get a system node for a system  
+        // make or get a system node for a system. See starsystemnode for the rules on using these two structures for lookups
 
         private SystemNode GetOrCreateSystemNode(ISystem sys)
         {
-            Tuple<string, long> withedsm = new Tuple<string, long>(sys.Name, sys.EDSMID);
+            if (scanDataByName.TryGetValue(sys.Name, out SystemNode sn))            // try name, it may have been stored with an old entry without sys address 
+                return sn;                                                          // so we check to see if we already have that first
 
-            SystemNode sn = null;
-            if (scandata.ContainsKey(withedsm))         // if with edsm (if id_edsm=0, then thats okay)
-                sn = scandata[withedsm];
-            else if (scandataByName.ContainsKey(sys.Name))  // if we now have an edsm id, see if we have one without it 
-            {
-                foreach (SystemNode _sn in scandataByName[sys.Name])
-                {
-                    if (_sn.system.Equals(sys))
-                    {
-                        if (sys.EDSMID != 0)             // yep, replace
-                        {
-                            scandata.Add(new Tuple<string, long>(sys.Name, sys.EDSMID), _sn);
-                        }
-                        sn = _sn;
-                        break;
-                    }
-                }
-            }
+            // then try sysaddr
+            if (sys.SystemAddress.HasValue && ScanDataByNameSysaddr.TryGetValue(sys.NameSystemAddress, out sn))
+                return sn;
 
-            if (sn == null)
-            {
-                sn = new SystemNode() { system = sys, starnodes = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>()) };
+            // not found, make a new node
+            sn = new SystemNode(sys);
 
-                if (!scandataByName.ContainsKey(sys.Name))
-                {
-                    scandataByName[sys.Name] = new List<SystemNode>();
-                }
-
-                scandataByName[sys.Name].Add(sn);
-
-                if (sys.EDSMID != 0)
-                {
-                    scandata.Add(new Tuple<string, long>(sys.Name, sys.EDSMID), sn);
-                }
-            }
+            // if it has a system address, we store it to the list that way. Else we add to name list
+            if (sys.SystemAddress.HasValue)
+                ScanDataByNameSysaddr[sys.NameSystemAddress] = sn;
+            else
+                scanDataByName[sys.Name] = sn;
 
             return sn;
         }
 
-        private static bool CompareEpsilon(double? a, double? b, bool acceptNull = false, double epsilon = 0.001, Func<double?, double> fb = null)
+        private SystemNode FindSystemNode(ISystem sys)
         {
-            if (a == null || b == null)
+            if (scanDataByName.TryGetValue(sys.Name, out SystemNode sn))            // try name first, in case the entry is old enough not to have a system address
+                return sn;
+
+            if (sys.SystemAddress.HasValue)                                         // if the find has a system address, then we should now only check the system address table
             {
-                return !acceptNull;
+                if (ScanDataByNameSysaddr.TryGetValue(sys.NameSystemAddress, out sn)) // try system address
+                    return sn;
+            }
+            else
+            {                                                                       // find does not have system address, and was not found in DataByName
+                                                                                    // it could be an old journal system with no sysaddr, in which case its probably has no data
+                                                                                    //      as it should have been picked up by the DataByName if it did. But we can't distinguish so can't screen that out
+                                                                                    // Or its synthesised with just the name available
+                                                                                    // Either way, last check for sysaddr by name
+                                                                                    // this is unlikely to be used now, probably just by Action system
+                sn = ScanDataByNameSysaddr.Values.ToList().Find(x => x.System.Name.Equals(sys.Name));     // try and find it in the system by address by name
+                if (sn != null)
+                    return sn;
             }
 
-            double _a = (double)a;
-            double _b = fb == null ? (double)b : fb(b);
-
-            return _a == _b || (_a + _b != 0 && Math.Sign(_a + _b) == Math.Sign(_a) && Math.Abs((_a - _b) / (_a + _b)) < epsilon);
+            return null;
         }
 
-        private void CachePrimaryStar(JournalScan je, ISystem sys)
+        // bodyid can be null, bodyname must be set.
+        // scan the history and try and find the best star system this bodyname is associated with
+
+        private static Tuple<string, ISystem> FindBestSystem(int startindex, List<HistoryEntry> hl, string bodyname, int? bodyid, bool isstar )
         {
-            string system = sys.Name;
+            System.Diagnostics.Debug.Assert(bodyname != null);
 
-            if (!primaryStarScans.ContainsKey(system))
+            for (int j = startindex; j >= 0; j--)
             {
-                primaryStarScans[system] = new List<JournalScan>();
+                HistoryEntry he = hl[j];
+
+                if (he.IsLocOrJump)
+                {
+                    JournalLocOrJump jl = (JournalLocOrJump)he.journalEntry;
+                    string designation = BodyDesignations.GetBodyDesignation(bodyname, bodyid, isstar, he.System.Name);
+
+                    if (IsStarNameRelated(he.System.Name, designation))       // if its part of the name, use it
+                    {
+                        return new Tuple<string, ISystem>(designation, he.System);
+                    }
+                    else if (jl != null && IsStarNameRelated(jl.StarSystem, designation))
+                    {
+                        // Ignore scans where the system name has changed
+                        System.Diagnostics.Trace.WriteLine($"Rejecting body {designation} ({bodyname}) in system {he.System.Name} => {jl.StarSystem} due to system rename");
+                        return null;
+                    }
+                }
             }
 
-            if (!primaryStarScans[system].Any(s => CompareEpsilon(s.nAge, je.nAge) &&
-                                                   CompareEpsilon(s.nEccentricity, je.nEccentricity) &&
-                                                   CompareEpsilon(s.nOrbitalInclination, je.nOrbitalInclination) &&
-                                                   CompareEpsilon(s.nOrbitalPeriod, je.nOrbitalPeriod) &&
-                                                   CompareEpsilon(s.nPeriapsis, je.nPeriapsis) &&
-                                                   CompareEpsilon(s.nRadius, je.nRadius) &&
-                                                   CompareEpsilon(s.nRotationPeriod, je.nRotationPeriod) &&
-                                                   CompareEpsilon(s.nSemiMajorAxis, je.nSemiMajorAxis) &&
-                                                   CompareEpsilon(s.nStellarMass, je.nStellarMass)))
-            {
-                primaryStarScans[system].Add(je);
-            }
+            return new Tuple<string, ISystem>(BodyDesignations.GetBodyDesignation(bodyname, bodyid, false, hl[startindex].System.Name), hl[startindex].System);
         }
 
-        private static bool IsStarNameRelated(string starname, string bodyname, string designation = null)
+        private static bool IsStarNameRelated(string starname, string bodyname )
         {
-            if (designation == null)
+            if (bodyname.Length >= starname.Length)
             {
-                designation = bodyname;
-            }
-
-            if (designation.Length >= starname.Length)
-            {
-                string s = designation.Substring(0, starname.Length);
+                string s = bodyname.Substring(0, starname.Length);
                 return starname.Equals(s, StringComparison.InvariantCultureIgnoreCase);
             }
             else
                 return false;
         }
 
-        public static string IsStarNameRelatedReturnRest(string starname, string bodyname, string designation = null)          // null if not related, else rest of string
+        public static string IsStarNameRelatedReturnRest(string starname, string bodyname, string designation )          // null if not related, else rest of string
         {
             if (designation == null)
             {
@@ -142,107 +134,6 @@ namespace EliteDangerousCore
             }
 
             return null;
-        }
-
-        private SystemNode FindSystemNode(ISystem sys)
-        {
-            Tuple<string, long> withedsm = new Tuple<string, long>(sys.Name, sys.EDSMID);
-
-            if (scandata.ContainsKey(withedsm))         // if with edsm (if id_edsm=0, then thats okay)
-                return scandata[withedsm];
-
-            if (scandataByName.ContainsKey(sys.Name))
-            {
-                foreach (SystemNode sn in scandataByName[sys.Name])
-                {
-                    if (sn.system.Equals(sys))
-                    {
-                        return sn;
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        // look to see if there is a better body designation for a scan.. using lookup tables (bodyDesignationMap) and direct code
-
-        private string GetBodyDesignation(JournalScan je, string system)
-        {
-            Dictionary<string, Dictionary<string, string>> desigmap = je.IsStar ? starDesignationMap : planetDesignationMap;
-            int bodyid = je.BodyID ?? -1;
-
-            if (je.BodyID != null && bodyIdDesignationMap.ContainsKey(system) && bodyIdDesignationMap[system].ContainsKey(bodyid) && bodyIdDesignationMap[system][bodyid].NameEquals(je.BodyName))
-            {
-                return bodyIdDesignationMap[system][bodyid].Designation;
-            }
-
-            // Special case for m Centauri
-            if (je.IsStar && system.ToLowerInvariant() == "m centauri")
-            {
-                if (je.BodyName == "m Centauri")
-                {
-                    return "m Centauri A";
-                }
-                else if (je.BodyName == "M Centauri")
-                {
-                    return "m Centauri B";
-                }
-            }
-
-            // Special case for Castellan Belt
-            if (system.ToLowerInvariant() == "lave" && je.BodyName.StartsWith("Castellan Belt ", StringComparison.InvariantCultureIgnoreCase))
-            {
-                return "Lave A Belt " + je.BodyName.Substring("Castellan Belt ".Length);
-            }
-
-            // Special case for 9 Aurigae
-            if (je.IsStar && system.ToLowerInvariant() == "9 Aurigae")
-            {
-                if (je.BodyName == "9 Aurigae C")
-                {
-                    if (je.nSemiMajorAxis > 1e13)
-                    {
-                        return "9 Aurigae D";
-                    }
-                    else
-                    {
-                        return "9 Aurigae C";
-                    }
-                }
-            }
-
-            if (desigmap.ContainsKey(system) && desigmap[system].ContainsKey(je.BodyName))
-            {
-                return desigmap[system][je.BodyName];
-            }
-
-            if (je.IsStar && je.BodyName.Equals(system, StringComparison.InvariantCultureIgnoreCase) && je.nOrbitalPeriod != null)
-            {
-                return system + " A";
-            }
-
-            if (je.BodyName.Equals(system, StringComparison.InvariantCultureIgnoreCase) || je.BodyName.StartsWith(system + " ", StringComparison.InvariantCultureIgnoreCase))
-            {
-                return je.BodyName;
-            }
-
-            if (je.IsStar && primaryStarScans.ContainsKey(system))
-            {
-                foreach (JournalScan primary in primaryStarScans[system])
-                {
-                    if (CompareEpsilon(je.nOrbitalPeriod, primary.nOrbitalPeriod) &&
-                        CompareEpsilon(je.nPeriapsis, primary.nPeriapsis, acceptNull: true, fb: b => ((double)b + 180) % 360.0) &&
-                        CompareEpsilon(je.nOrbitalInclination, primary.nOrbitalInclination) &&
-                        CompareEpsilon(je.nEccentricity, primary.nEccentricity) &&
-                        !je.BodyName.Equals(primary.BodyName, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        return system + " B";
-                    }
-                }
-            }
-
-            return je.BodyName;
         }
 
         private class DuplicateKeyComparer<TKey> : IComparer<string> where TKey : IComparable      // special compare for sortedlist

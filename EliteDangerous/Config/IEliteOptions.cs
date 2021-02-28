@@ -18,11 +18,12 @@ namespace EliteDangerousCore
 {
     public interface IEliteOptions
     {
-        string AppDataDirectory { get; }
+     //   string AppDataDirectory { get; }
         string SystemDatabasePath { get; }
         string UserDatabasePath { get; }
         bool ForceBetaOnCommander { get; }
         bool DisableMerge { get; }
         bool DisableBetaCommanderCheck { get; }
+        string DefaultJournalFolder { get; }
     }
 }

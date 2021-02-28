@@ -14,9 +14,11 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
+//#define TIMESCAN
+
+using BaseUtils.JSON;
 using EliteDangerousCore.DB;
 using EliteDangerousCore.JournalEvents;
-using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -32,21 +34,27 @@ namespace EliteDangerousCore
     {
         static protected JournalEntry CreateJournalEntry(DbDataReader dr)
         {
-            string EDataString = (string)dr["EventData"];
+            string json = (string)dr["EventData"];
 
-            JournalEntry jr = JournalEntry.CreateJournalEntry(EDataString);
+            JournalEntry jr = JournalEntry.CreateJournalEntry(json);
 
             jr.Id = (int)(long)dr["Id"];
             jr.TLUId = (int)(long)dr["TravelLogId"];
             jr.CommanderId = (int)(long)dr["CommanderId"];
-            if (jr.EventTimeUTC == default(DateTime))
-                jr.EventTimeUTC = ((DateTime)dr["EventTime"]).ToUniversalTime();
-            if (jr.EventTypeID == JournalTypeEnum.Unknown)
-                jr.EventTypeID = (JournalTypeEnum)(long)dr["eventTypeID"];
             jr.Synced = (int)(long)dr["Synced"];
             return jr;
         }
 
+        static protected JournalEntry CreateJournalEntryFixedPos(DbDataReader dr)       // table is Id,TravelLogId,CommanderId,EventData,Sycned
+        {
+            string json = (string)dr[3];
+            JournalEntry jr = JournalEntry.CreateJournalEntry(json);
+            jr.Id = (int)(long)dr[0];
+            jr.TLUId = (int)(long)dr[1];
+            jr.CommanderId = (int)(long)dr[2];
+            jr.Synced = (int)(long)dr[4];
+            return jr;
+        }
 
         public bool Add(JObject jo)
         {
@@ -55,7 +63,9 @@ namespace EliteDangerousCore
 
         internal bool Add(JObject jo, SQLiteConnectionUser cn, DbTransaction tn = null)
         {
-            using (DbCommand cmd = cn.CreateCommand("Insert into JournalEntries (EventTime, TravelLogID, CommanderId, EventTypeId , EventType, EventData, Synced) values (@EventTime, @TravelLogID, @CommanderID, @EventTypeId , @EventStrName, @EventData, @Synced)", tn))
+            // note we don't use EDMSID any more, but we write a zero into it to keep 11.9.3 and before happy
+
+            using (DbCommand cmd = cn.CreateCommand("Insert into JournalEntries (EventTime, TravelLogID, CommanderId, EventTypeId , EventType, EventData, Synced, EdsmId) values (@EventTime, @TravelLogID, @CommanderID, @EventTypeId , @EventStrName, @EventData, @Synced, 0)", tn))
             {
                 cmd.AddParameterWithValue("@EventTime", EventTimeUTC);           // MUST use UTC connection
                 cmd.AddParameterWithValue("@TravelLogID", TLUId);
@@ -135,7 +145,7 @@ namespace EliteDangerousCore
 
         internal void UpdateStarPosition(ISystem pos, SQLiteConnectionUser cn, DbTransaction tn = null)
         {
-            JObject jo = GetJson();
+            JObject jo = GetJson(cn,tn);
                                                                                 
             if (jo != null )
             {
@@ -167,7 +177,7 @@ namespace EliteDangerousCore
             {
                 cmd.AddParameterWithValue("@journalid", Id);
                 cmd.AddParameterWithValue("@sync", Synced);
-                System.Diagnostics.Trace.WriteLine(string.Format("Update sync flag ID {0} with {1}", Id, Synced));
+                //System.Diagnostics.Trace.WriteLine(string.Format("Update sync flag ID {0} with {1}", Id, Synced));
                 cmd.ExecuteNonQuery();
             }
         }
@@ -217,11 +227,19 @@ namespace EliteDangerousCore
             return (JObject)GetJson().Clone();
         }
 
-        public JObject GetJson()            // do not modify
+        public JObject GetJson()
+        {
+            if (JsonCached == null)
+                return UserDatabase.Instance.ExecuteWithDatabase<JObject>(cn => { return GetJson(cn.Connection); });
+            else
+                return JsonCached;
+        }
+
+        internal JObject GetJson(SQLiteConnectionUser cn, DbTransaction tn = null)            // do not modify
         {
             if (JsonCached == null)
             {
-                JsonCached = UserDatabase.Instance.ExecuteWithDatabase<JObject>(cn => { return GetJson(Id, cn.Connection); });
+                JsonCached = GetJson(Id, cn, tn);
             }
             return JsonCached;
         }
@@ -241,17 +259,8 @@ namespace EliteDangerousCore
                 {
                     while (reader.Read())
                     {
-                        string EDataString = (string)reader["EventData"];
-
-                        try
-                        {
-                            return JObject.ParseThrowCommaEOL(EDataString);       
-                        }
-                        catch (Exception ex)
-                        {
-                            Trace.WriteLine($"Error parsing journal entry\n{EDataString}\n{ex.ToString()}");
-                            return null;
-                        }
+                        string json = (string)reader["EventData"];
+                        return JObject.Parse(json, JToken.ParseOptions.AllowTrailingCommas | JToken.ParseOptions.CheckEOL);
                     }
                 }
             }
@@ -312,9 +321,22 @@ namespace EliteDangerousCore
         }
 
         // ordered in time, id order, ascending, oldest first
+#if TIMESCAN
+        class Results
+        {
+            public string name;
+            public double avg, min, max, total, avgtime, sumtime;
+            public int count;
+        };
+#endif
+    
+        // Primary method to fill historylist
+        // Get All journals matching parameters. 
+        // if callback set, then each JE is passed back thru callback and not accumulated. Callback is in a thread. Callback can stop the accumulation if it returns false
 
-        static public List<JournalEntry> GetAll(int commander = -999, DateTime? afterutc = null, DateTime? beforeutc = null,
-                            JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null)
+        static public List<JournalEntry> GetAll(int commander = -999, DateTime? startdateutc = null, DateTime? enddateutc = null,
+                            JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null, Func<JournalEntry,Object,bool> callback = null, Object callbackobj = null,
+                            int chunksize = 1000)
         {
             var tluslist = TravelLogUnit.GetAll();
             Dictionary<long, TravelLogUnit> tlus = tluslist.ToDictionary(t => t.ID);
@@ -325,7 +347,7 @@ namespace EliteDangerousCore
 
             try
             {
-                cmd = UserDatabase.Instance.ExecuteWithDatabase(cn => cn.Connection.CreateCommand("select * from JournalEntries"));
+                cmd = UserDatabase.Instance.ExecuteWithDatabase(cn => cn.Connection.CreateCommand("select Id,TravelLogId,CommanderId,EventData,Synced from JournalEntries"));
                 reader = UserDatabase.Instance.ExecuteWithDatabase(cn =>
                 {
                     string cnd = "";
@@ -334,15 +356,15 @@ namespace EliteDangerousCore
                         cnd = cnd.AppendPrePad("CommanderID = @commander", " and ");
                         cmd.AddParameterWithValue("@commander", commander);
                     }
-                    if (afterutc != null)
+                    if (startdateutc != null)
                     {
                         cnd = cnd.AppendPrePad("EventTime >= @after", " and ");
-                        cmd.AddParameterWithValue("@after", afterutc.Value);
+                        cmd.AddParameterWithValue("@after", startdateutc.Value);
                     }
-                    if (beforeutc != null)
+                    if (enddateutc != null)
                     {
                         cnd = cnd.AppendPrePad("EventTime <= @before", " and ");
-                        cmd.AddParameterWithValue("@before", beforeutc.Value);
+                        cmd.AddParameterWithValue("@before", enddateutc.Value);
                     }
                     if (ids != null)
                     {
@@ -368,28 +390,88 @@ namespace EliteDangerousCore
 
                 List<JournalEntry> retlist = null;
 
+#if TIMESCAN
+                Dictionary<string, List<long>> times = new Dictionary<string, List<long>>();
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+#endif
                 do
                 {
-                    // experiments state that reading the DL takes 270/4000ms, reading json -> 1250, then the rest is creating and decoding the fields
-                    // not much scope to improve it outside of the core json speed.
+                    // experiments state that reading the DL is not the time sink, its creating the journal entries
 
                     retlist = UserDatabase.Instance.ExecuteWithDatabase(cn =>       // split into smaller chunks to allow other things access..
                     {
                         List<JournalEntry> list = new List<JournalEntry>();
 
-                        while (list.Count < 1000 && reader.Read())
+                        while (list.Count < chunksize && reader.Read())
                         {
-                            JournalEntry sys = JournalEntry.CreateJournalEntry(reader);     
-                            sys.beta = tlus.ContainsKey(sys.TLUId) ? tlus[sys.TLUId].Beta : false;
-                            list.Add(sys);
+#if TIMESCAN
+                            long t = sw.ElapsedTicks;
+#endif
+
+                            JournalEntry je = JournalEntry.CreateJournalEntryFixedPos(reader);
+                            je.beta = tlus.ContainsKey(je.TLUId) ? tlus[je.TLUId].Beta : false;
+                            list.Add(je);
+
+#if TIMESCAN
+                            long tw = sw.ElapsedTicks - t;
+                            if (!times.TryGetValue(sys.EventTypeStr, out var x))
+                                times[sys.EventTypeStr] = new List<long>();
+                            times[sys.EventTypeStr].Add(tw);
+#endif
+
                         }
 
                         return list;
                     });
 
-                    entries.AddRange(retlist);
+                    if (callback != null)               // collated, now process them, if callback, feed them thru callback procedure
+                    {
+                        foreach (var e in retlist)
+                        {
+                            if (!callback.Invoke(e, callbackobj))     // if indicate stop
+                            {
+                                retlist = null;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        entries.AddRange(retlist);
+                    }
                 }
                 while (retlist != null && retlist.Count != 0);
+
+#if TIMESCAN
+                List<Results> res = new List<Results>();
+
+                foreach( var kvp in times)
+                {
+                    Results r = new Results();
+                    r.name = kvp.Key;
+                    r.avg = kvp.Value.Average();
+                    r.min = kvp.Value.Min();
+                    r.max = kvp.Value.Max();
+                    r.total = kvp.Value.Sum();
+                    r.avgtime = ((double)r.avg / Stopwatch.Frequency * 1000);
+                    r.sumtime = ((double)r.total / Stopwatch.Frequency * 1000);
+                    r.count = kvp.Value.Count;
+                    res.Add(r);
+                }
+
+                //res.Sort(delegate (Results l, Results r) { return l.sumtime.CompareTo(r.sumtime); });
+                res.Sort(delegate (Results l, Results r) { return l.avgtime.CompareTo(r.avgtime); });
+
+                string rs = "";
+                foreach (var r in res)
+                {
+                    rs = rs + Environment.NewLine + string.Format("Time {0} min {1} max {2} avg {3} ms count {4} totaltime {5} ms", r.name, r.min, r.max, r.avgtime.ToString("#.#########"), r.count, r.sumtime.ToString("#.#######"));
+                }
+
+                System.Diagnostics.Trace.WriteLine(rs);
+                //File.WriteAllText(@"c:\code\times.txt", rs);
+#endif
             }
             catch (Exception ex)
             {

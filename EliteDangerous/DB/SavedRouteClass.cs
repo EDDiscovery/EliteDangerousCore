@@ -254,21 +254,17 @@ namespace EliteDangerousCore.DB
             return retVal;
         }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual string DebugDisplay
-        {
-            get
-            {
-                return $"\"{(Name ?? "(null)")}\" [{Id:n0}]: " + ((Systems == null || Systems.Count == 0) ? "no systems" : ((Systems?.Count == 1) ? "1 system" : (Systems.Count.ToString("n0") + " systems")));
-            }
-        }
 
-        public List<Tuple<ISystem,int>> KnownSystemList()          // list of known system only.  ID holds original index of entry from Systems
+        // Feb20 - everything should be in the DB, since the expedition system uses FindSystem(,true) to get edsm to fill them in
+        // and importing routes also tries to fill in the db
+        // list of known system only.  ID holds original index of entry from Systems
+
+        public List<Tuple<ISystem,int>> KnownSystemList()          
         {
             List<Tuple<ISystem, int>> list = new List<Tuple<ISystem, int>>();
             for (int i = 0; i < Systems.Count; i++)
             {
-                ISystem s = SystemCache.FindSystem(Systems[i]);
+                ISystem s = SystemCache.FindSystem(Systems[i]);     // don't edsm find it, its already should have been cached into the DB
                 if (s != null)
                 {
                     list.Add(new Tuple<ISystem,int>(s,i));
@@ -277,7 +273,6 @@ namespace EliteDangerousCore.DB
 
             return list;
         }
-
 
         public double CumulativeDistance(ISystem start = null, List<Tuple<ISystem, int>> knownsystems = null)   // optional first system to measure from
         {
