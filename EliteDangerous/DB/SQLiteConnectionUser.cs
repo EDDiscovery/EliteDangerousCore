@@ -35,7 +35,7 @@ namespace EliteDangerousCore.DB
             {
                 ExecuteNonQuery("CREATE TABLE IF NOT EXISTS Register (ID TEXT PRIMARY KEY NOT NULL, ValueInt INTEGER, ValueDouble DOUBLE, ValueString TEXT, ValueBlob BLOB)");
 
-                dbver = GetSettingInt("DBVer", 1);        // use the constring one, as don't want to go back into ConnectionString code
+                dbver = RegisterClass.GetSetting("DBVer", (int)1);        // use the constring one, as don't want to go back into ConnectionString code. Int is to force type
 
                 DropOldUserTables();
 

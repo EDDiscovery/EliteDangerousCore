@@ -52,62 +52,72 @@ namespace EliteDangerousCore.DB
 
         public bool KeyExists(string key)
         {
-            return ExecuteWithDatabase(db => db.Connection.keyExists(key));
+            return ExecuteWithDatabase(db => db.Connection.RegisterClass.keyExists(key));
         }
 
         public bool DeleteKey(string key)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.DeleteKey(key));
+            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.DeleteKey(key));
+        }
+
+        public T GetSetting<T>(string key, T defaultvalue)
+        {
+            return ExecuteWithDatabase(db => db.Connection.RegisterClass.GetSetting(key, defaultvalue));
+        }
+
+        public bool PutSetting<T>(string key, T defaultvalue)
+        {
+            return ExecuteWithDatabase(db => db.Connection.RegisterClass.PutSetting(key, defaultvalue));
         }
 
         public int GetSettingInt(string key, int defaultvalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.GetSettingInt(key, defaultvalue));
+            return ExecuteWithDatabase(db => db.Connection.RegisterClass.GetSetting(key, defaultvalue));
         }
 
         public bool PutSettingInt(string key, int intvalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.PutSettingInt(key, intvalue));
+            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.PutSetting(key, intvalue));
         }
 
         public double GetSettingDouble(string key, double defaultvalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.GetSettingDouble(key, defaultvalue));
+            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.GetSetting(key, defaultvalue));
         }
 
         public bool PutSettingDouble(string key, double doublevalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.PutSettingDouble(key, doublevalue));
+            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.PutSetting(key, doublevalue));
         }
 
         public bool GetSettingBool(string key, bool defaultvalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.GetSettingBool(key, defaultvalue));
+            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.GetSetting(key, defaultvalue));
         }
 
         public bool PutSettingBool(string key, bool boolvalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.PutSettingBool(key, boolvalue));
+            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.PutSetting(key, boolvalue));
         }
 
         public string GetSettingString(string key, string defaultvalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.GetSettingString(key, defaultvalue));
+            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.GetSetting(key, defaultvalue));
         }
 
         public bool PutSettingString(string key, string strvalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.PutSettingString(key, strvalue));
+            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.PutSetting(key, strvalue));
         }
 
         public DateTime GetSettingDate(string key, DateTime defaultvalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.GetSettingDate(key, defaultvalue));
+            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.GetSetting(key, defaultvalue));
         }
 
         public bool PutSettingDate(string key, DateTime value)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.PutSettingDate(key, value));
+            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.PutSetting(key, value));
         }
 
         public void RebuildIndexes(Action<string> logger)
