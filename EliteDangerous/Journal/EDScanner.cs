@@ -19,6 +19,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -34,7 +35,6 @@ namespace EliteDangerousCore
         private Action<Action> InvokeAsyncOnUiThread;
         private List<JournalMonitorWatcher> watchers = new List<JournalMonitorWatcher>();
         private List<StatusMonitorWatcher> statuswatchers = new List<StatusMonitorWatcher>();
-        private string frontierfolder;      // this can be null if non exists on system
         private static Guid Win32FolderId_SavedGames = new Guid("4C5C32FF-BB9D-43b0-B5B4-2D72E54EAAA4");
 
         const int ScanTick = 100;       // tick time to check journals and status
@@ -42,7 +42,6 @@ namespace EliteDangerousCore
         public EDJournalUIScanner(Action<Action> invokeAsyncOnUiThread)
         {
             InvokeAsyncOnUiThread = invokeAsyncOnUiThread;
-            frontierfolder = GetDefaultJournalDir();
         }
 
         public static string GetDefaultJournalDir() // may return null if not known on system
@@ -76,11 +75,6 @@ namespace EliteDangerousCore
             }
 
             return null;
-        }
-
-        public string GetWatchFolder(string d)
-        {
-            return (d == null || d.Length == 0) ? frontierfolder : d;
         }
 
         #region Start stop and scan
@@ -206,17 +200,19 @@ namespace EliteDangerousCore
 
         public void SetupWatchers()
         {
+            string frontierfolder = GetDefaultJournalDir();
+
             System.Diagnostics.Debug.Assert(ScanThread == null);        // double check we are not scanning.
 
             List<EDCommander> listCommanders = EDCommander.GetListCommanders();
 
             // add the default frontier folder in
 
-            if (!string.IsNullOrEmpty(frontierfolder) && Directory.Exists(frontierfolder))  // if it exists..
+            if ( frontierfolder.HasChars() && Directory.Exists(frontierfolder))  // if it exists..
             {
-                if (watchers.FindIndex(x => x.WatcherFolder.Equals(frontierfolder)) < 0)  // and we are not watching it..
+                if (watchers.FindIndex(x => x.WatcherFolder.Equals(frontierfolder, StringComparison.InvariantCultureIgnoreCase)) < 0)  // and we are not watching it..
                 {
-                    System.Diagnostics.Trace.WriteLine(string.Format("New watch on {0}", frontierfolder));
+                    System.Diagnostics.Trace.WriteLine(string.Format("New frontier watch on {0}", frontierfolder));
                     JournalMonitorWatcher mw = new JournalMonitorWatcher(frontierfolder);
                     watchers.Add(mw);
 
@@ -226,21 +222,26 @@ namespace EliteDangerousCore
                 }
             }
 
-            for (int i = 0; i < listCommanders.Count; i++)             // see if new watchers are needed
+            // compute datapaths for each commander, making sure its set and exists. If not, use frontier folder
+
+            List<string> datapaths = listCommanders.Select(x => (x.JournalDir.HasChars() && Directory.Exists(x.JournalDir)) ? x.JournalDir : frontierfolder).ToList();
+
+            // see if new watchers are needed
+
+            for (int i = 0; i < listCommanders.Count; i++)             
             {
-                string datapath = GetWatchFolder(listCommanders[i].JournalDir);
-
-                if (string.IsNullOrEmpty(datapath) || !Directory.Exists(datapath))  // not exist, ignore
-                    continue;
-
-                if (watchers.FindIndex(x => x.WatcherFolder.Equals(datapath)) >= 0)       // if we already have a watch on this folder..
+                // if we already have a watch on this folder..
+                if (watchers.FindIndex(x => x.WatcherFolder.Equals(datapaths[i], StringComparison.InvariantCultureIgnoreCase)) >= 0)       
+                {
+                    System.Diagnostics.Trace.WriteLine(string.Format("Duplicate watch on {0}", datapaths[i]));
                     continue;       // already done
+                }
 
-                System.Diagnostics.Trace.WriteLine(string.Format("New watch on {0}", datapath));
-                JournalMonitorWatcher mw = new JournalMonitorWatcher(datapath);
+                System.Diagnostics.Trace.WriteLine(string.Format("New watch on {0}", datapaths[i]));
+                JournalMonitorWatcher mw = new JournalMonitorWatcher(datapaths[i]);
                 watchers.Add(mw);
 
-                StatusMonitorWatcher sw = new StatusMonitorWatcher(datapath, ScanTick);
+                StatusMonitorWatcher sw = new StatusMonitorWatcher(datapaths[i], ScanTick);
                 sw.UIEventCallBack += UIEvent;
                 statuswatchers.Add(sw);
 
@@ -253,11 +254,11 @@ namespace EliteDangerousCore
                 {
                     bool found = false;
 
-                    if (frontierfolder != null && watchers[i].WatcherFolder.Equals(frontierfolder))
+                    if (frontierfolder != null && watchers[i].WatcherFolder.Equals(frontierfolder, StringComparison.InvariantCultureIgnoreCase))
                         found = true;
 
                     for (int j = 0; j < listCommanders.Count; j++)          // all commanders, see if this watch folder is present
-                        found |= watchers[i].WatcherFolder.Equals(GetWatchFolder(listCommanders[j].JournalDir));
+                        found |= watchers[i].WatcherFolder.Equals(datapaths[j], StringComparison.InvariantCultureIgnoreCase);
 
                     if (!found)
                         tobedeleted.Add(i);
@@ -279,11 +280,11 @@ namespace EliteDangerousCore
                 {
                     bool found = false;
 
-                    if (frontierfolder != null && statuswatchers[i].WatcherFolder.Equals(frontierfolder))
+                    if (frontierfolder != null && statuswatchers[i].WatcherFolder.Equals(frontierfolder, StringComparison.InvariantCultureIgnoreCase))
                         found = true;
 
                     for (int j = 0; j < listCommanders.Count; j++)          // all commanders, see if this watch folder is present
-                        found |= statuswatchers[i].WatcherFolder.Equals(GetWatchFolder(listCommanders[j].JournalDir));
+                        found |= statuswatchers[i].WatcherFolder.Equals(datapaths[j],StringComparison.InvariantCultureIgnoreCase);
 
                     if (!found)
                         statustobedeleted.Add(i);
