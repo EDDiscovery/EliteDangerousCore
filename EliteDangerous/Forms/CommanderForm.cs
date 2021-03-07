@@ -15,25 +15,30 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace EliteDangerousCore.Forms
 {
     public partial class CommanderForm : ExtendedControls.DraggableForm
     {
-        public CommanderForm()
+        public bool Valid { get { return textBoxBorderCmdr.Text != ""; } }
+        public string CommanderName { get { return textBoxBorderCmdr.Text; } }
+
+        public CommanderForm(List<ExtendedControls.ExtGroupBox> additionalcontrols = null)
         {
             InitializeComponent();
+
+            foreach (var c in additionalcontrols)
+                c.Dock = DockStyle.Top;
+            Controls.InsertRangeBefore(groupBoxCustomInara, additionalcontrols);
+
             var theme = ExtendedControls.ThemeableFormsInstance.Instance;
             bool winborder = theme.ApplyDialog(this);
             panelTop.Visible = panelTop.Enabled = !winborder;
 
             BaseUtils.Translator.Instance.Translate(this);
             BaseUtils.Translator.Instance.Translate(toolTip,this);
-        }
-
-        private void CommanderForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
         }
 
         public void Init(bool enablecmdredit, bool disablefromedsm = false, bool disable3dmapsettings = false)
@@ -101,10 +106,6 @@ namespace EliteDangerousCore.Forms
             return update;
         }
 
-
-        public bool Valid { get { return textBoxBorderCmdr.Text != ""; } }
-        public string CommanderName { get { return textBoxBorderCmdr.Text; } }
-
         #region UI
 
         private void Panel_defaultmapcolor_Click(object sender, EventArgs e)
@@ -166,13 +167,6 @@ namespace EliteDangerousCore.Forms
             Refresh();
         }
 
-
-
         #endregion
-
-        private void CommanderForm_Load(object sender, EventArgs e)
-        {
-
-        }
     }
 }

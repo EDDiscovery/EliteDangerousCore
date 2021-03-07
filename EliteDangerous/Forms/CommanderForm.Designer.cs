@@ -877,6 +877,7 @@
             this.extTextBoxAutoCompleteHomeSystem.Size = new System.Drawing.Size(152, 23);
             this.extTextBoxAutoCompleteHomeSystem.TabIndex = 3;
             this.extTextBoxAutoCompleteHomeSystem.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.extTextBoxAutoCompleteHomeSystem.TextChangedEvent = "";
             this.extTextBoxAutoCompleteHomeSystem.WordWrap = true;
             // 
             // HomeSys
@@ -946,8 +947,6 @@
             this.Name = "CommanderForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "CommanderForm";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.CommanderForm_FormClosed);
-            this.Load += new System.EventHandler(this.CommanderForm_Load);
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
             this.groupBoxCustomEDDN.ResumeLayout(false);

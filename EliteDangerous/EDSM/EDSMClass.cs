@@ -157,7 +157,7 @@ namespace EliteDangerousCore.EDSM
 
         public bool IsKnownSystem(string sysName)       // Verified Nov 20
         {
-            string query = "system?sysname=" + HttpUtility.UrlEncode(sysName);
+            string query = "system?systemName=" + HttpUtility.UrlEncode(sysName);
             string json = null;
             var response = RequestGet("api-v1/" + query, handleException: true);
             if (response.Error)
@@ -689,7 +689,7 @@ namespace EliteDangerousCore.EDSM
         public string GetUrlToSystem(string sysName)            // get a direct name, no check if exists
         {
             string encodedSys = HttpUtility.UrlEncode(sysName);
-            string url = base.httpserveraddress + "system?sysname=" + encodedSys;
+            string url = base.httpserveraddress + "system?systemName=" + encodedSys;
             return url;
         }
 
@@ -712,7 +712,7 @@ namespace EliteDangerousCore.EDSM
             long id = -1;
             string encodedSys = HttpUtility.UrlEncode(sysName);
 
-            string query = "system?sysname=" + encodedSys + "&showId=1";
+            string query = "system?systemName=" + encodedSys + "&showId=1";
             var response = RequestGet("api-v1/" + query, handleException: true);
             if (response.Error)
                 return "";
