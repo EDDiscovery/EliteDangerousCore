@@ -1117,7 +1117,7 @@ namespace EliteDangerousCore
             new TechBrokerUnlockRecipe("Flechette Launcher Turret Medium","Human","28Fe,28Mo,20Re,24Ge,10AM"),
             new TechBrokerUnlockRecipe("Guardian FSD Booster  Size 1","Guardian","1GMBS,21GPCe,21GTC,24FoC,8HNSM"),
             new TechBrokerUnlockRecipe("Guardian Gauss Cannon Fixed Small","Guardian","1GWBS,12GPC,12GSWC,15GSWP"),
-            new TechBrokerUnlockRecipe("Guardian Gausscannon Fixed Medium","Guardian","1GWBS,18GPCe,20GTC,15Mn,6MEC"),
+            new TechBrokerUnlockRecipe("Guardian Gauss Cannon Fixed Medium","Guardian","1GWBS,18GPCe,20GTC,15Mn,6MEC"),
             new TechBrokerUnlockRecipe("Guardian Hull Reinforcement Size 1 Class 1","Guardian","1GMBS,21GSWC,16PBOD,16PGOD,12RMP"),
             new TechBrokerUnlockRecipe("Guardian Hybrid Fighter V 1","Guardian","1GMVB,25GPCe,26PEOD,18PBOD,25GTC"),
             new TechBrokerUnlockRecipe("Guardian Hybrid Fighter V 2","Guardian","1GMVB,25GPCe,26PEOD,18GSWC,25GTC"),
