@@ -55,17 +55,16 @@ namespace EliteDangerousCore.EDDN
             return header;
         }
 
-        static public bool IsEDDNMessage( JournalTypeEnum EntryType, DateTime EventTimeUTC )
+        static public bool IsEDDNMessage( JournalTypeEnum EntryType)
         {
-            DateTime ed22 = new DateTime(2016, 10, 25, 12, 0, 0);
-            if ((EntryType == JournalTypeEnum.Scan ||
+            return (EntryType == JournalTypeEnum.Scan ||
                  EntryType == JournalTypeEnum.Docked ||
                  EntryType == JournalTypeEnum.FSDJump || EntryType == JournalTypeEnum.CarrierJump || EntryType == JournalTypeEnum.Location ||
                  EntryType == JournalTypeEnum.Market ||
                  EntryType == JournalTypeEnum.Shipyard ||
                  EntryType == JournalTypeEnum.SAASignalsFound ||
-                 EntryType == JournalTypeEnum.Outfitting) && EventTimeUTC > ed22) return true;
-            else return false;
+                 EntryType == JournalTypeEnum.EDDCommodityPrices ||
+                 EntryType == JournalTypeEnum.Outfitting);
         }
 
         static public bool IsDelayableEDDNMessage(JournalTypeEnum EntryType, DateTime EventTimeUTC)
@@ -363,7 +362,7 @@ namespace EliteDangerousCore.EDDN
             {
                 string mpath = $"{path}.{kvp.Key}";
 
-                if (allowedFields.ContainsKey(kvp.Key))
+                if (allowedFields.Contains(kvp.Key))
                 {
                     JToken allowedField = allowedFields[kvp.Key];
 
@@ -813,9 +812,9 @@ namespace EliteDangerousCore.EDDN
                 jo["demand"] = commodity.demand;
                 jo["demandBracket"] = commodity.demandBracket;
 
-                if (commodity.StatusFlags!=null && commodity.StatusFlags.Count > 0)
+                if (commodity.statusFlags!=null && commodity.statusFlags.Count > 0)
                 {
-                    jo["statusFlags"] = new JArray(commodity.StatusFlags);
+                    jo["statusFlags"] = new JArray(commodity.statusFlags);
                 }
 
                 JAcommodities.Add(jo);

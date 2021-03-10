@@ -209,12 +209,19 @@ namespace EliteDangerousCore.EDDN
                 JournalMarket jm = je as JournalMarket;
                 msg = eddn.CreateEDDNCommodityMessage(jm.Commodities, jm.StarSystem, jm.Station, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned
             }
+            else if (je.EventTypeID == JournalTypeEnum.EDDCommodityPrices)
+            {
+                JournalEDDCommodityPrices jm = je as JournalEDDCommodityPrices;
+
+                // not yet, need further debugging
+              //  msg = eddn.CreateEDDNCommodityMessage(jm.Commodities, jm.StarSystem, jm.Station, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned
+            }
 
             if (msg != null)
             {
                 System.Diagnostics.Debug.WriteLine("Send to EDDN " + msg.ToString(true));
 
-                if (!debugonly && eddn.PostMessage(msg))
+                if (!debugonly && eddn.PostMessage(msg) )
                 {
                     he.journalEntry.SetEddnSync();
                     return true;

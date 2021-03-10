@@ -15,7 +15,6 @@
  */
 using BaseUtils.JSON;
 using System.Collections.Generic;
-using EliteDangerousCore;
 using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
@@ -25,33 +24,67 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalEDDCommodityPrices(JObject evt) : base(evt, JournalTypeEnum.EDDCommodityPrices)
         {
-            Station = evt["station"].Str();
-            Faction = evt["faction"].Str();
-            Commodities = new List<CCommodities>();
+            Station = evt["station"].Str();         // these are the old names used in EDD CP, not aligned to market (introduced before). keep
+            StarSystem = evt["starsystem"].Str();
+            MarketID = evt["MarketID"].LongNull();
+            Rescan(evt["commodities"].Array());
+        }
 
-            JArray jcommodities = evt["commodities"].Array();
+        public void Rescan(JArray jcommodities)
+        {
+            Commodities = new List<CCommodities>();
 
             if (jcommodities != null)
             {
                 foreach (JObject commodity in jcommodities)
                 {
-                    CCommodities com = new CCommodities(commodity);
+                    CCommodities com = new CCommodities(commodity, false);
                     Commodities.Add(com);
                 }
 
                 Commodities.Sort((l, r) => l.locName.CompareTo(r.locName));
             }
         }
+
+        public JournalEDDCommodityPrices(System.DateTime utc, long? marketid, string station, string starsystem, int cmdrid, JArray commds) : 
+                                        base(utc, JournalTypeEnum.EDDCommodityPrices, marketid, station, starsystem, cmdrid)
+        {
+            Rescan(commds);
+        }
+
+        public JObject ToJSON()
+        {
+            JObject j = new JObject()
+            {
+                ["timestamp"] = EventTimeUTC.ToStringZulu(),
+                ["event"] = EventTypeStr,
+                ["starsystem"] = StarSystem,
+                ["station"] = Station,
+                ["MarketID"] = MarketID,
+                ["commodities"] = JToken.FromObject(Commodities, true)
+            };
+
+            return j;
+        }
     }
 
     public class JournalCommodityPricesBase : JournalEntry
     {
-        public JournalCommodityPricesBase(JObject evt, JournalTypeEnum en) : base(evt,en)
+        public JournalCommodityPricesBase(JObject evt, JournalTypeEnum en) : base(evt, en)
         {
         }
 
+        public JournalCommodityPricesBase(System.DateTime utc, JournalTypeEnum type, long? marketid, string station, string starsystem, int cmdrid) 
+                                            : base(utc, type, false)
+        {
+            MarketID = marketid;
+            Station = station;
+            StarSystem = starsystem;
+            Commodities = new List<CCommodities>(); // always made..
+            SetCommander(cmdrid);
+        }
+
         public string Station { get; protected set; }
-        public string Faction { get; protected set; }
         public string StarSystem { get; set; }
         public long? MarketID { get; set; }
         public List<CCommodities> Commodities { get; protected set; }   // never null

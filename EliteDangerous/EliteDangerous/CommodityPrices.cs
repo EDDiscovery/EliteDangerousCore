@@ -23,10 +23,14 @@ namespace EliteDangerousCore
     {
         public int id { get; private set; }
 
-        public string fdname { get; private set; }            // EDDN use : name is lower cased in CAPI but thats all to match Marketing use of it
+        [JsonName("name")]                                  // Maintain CAPI output names when emitting, even though we use a different naming
+        public string fdname { get; private set; }          // EDDN use : name is lower cased in CAPI but thats all to match Marketing use of it
         public string locName { get; private set; }
-        public string category { get; private set; }                // in this context, it means, its type (Metals).. as per MaterialCommoditiesDB
-        public string loccategory { get; private set; }       // in this context, it means, its type (Metals).. as per MaterialCommoditiesDB
+
+        [JsonName("categoryname")]
+        public string category { get; private set; }        // in this context, it means, its type (Metals).. as per MaterialCommoditiesDB
+        public string loccategory { get; private set; }     // in this context, it means, its type (Metals).. as per MaterialCommoditiesDB
+        public string legality { get; private set; }        // CAPI only
 
         public int buyPrice { get; private set; }
         public int sellPrice { get; private set; }
@@ -36,15 +40,20 @@ namespace EliteDangerousCore
         public int stock { get; private set; }
         public int demand { get; private set; }
 
-        public List<string> StatusFlags { get; private set; }
+        public List<string> statusFlags { get; private set; }
 
+        [JsonIgnore]
         public string ComparisionLR { get; private set; }       // NOT in Frontier data, used for market data UC during merge
+        [JsonIgnore]
         public string ComparisionRL { get; private set; }       // NOT in Frontier data, used for market data UC during merge
+        [JsonIgnore]
         public bool ComparisionRightOnly { get; private set; }  // NOT in Frontier data, Exists in right data only
+        [JsonIgnore]
         public bool ComparisionBuy { get; private set; }        // NOT in Frontier data, its for sale at either left or right
+        [JsonIgnore]
         public int CargoCarried { get; set; }                  // NOT in Frontier data, cargo currently carried for this item
 
-        public CCommodities(JObject jo, bool market = false)
+        public CCommodities(JObject jo, bool market )
         {
             if ( market )
                 FromJsonMarket(jo);
@@ -69,7 +78,7 @@ namespace EliteDangerousCore
             stock = other.stock;
             demand = other.demand;
 
-            StatusFlags = new List<string>(other.StatusFlags);
+            statusFlags = new List<string>(other.statusFlags);
 
             ComparisionLR = ComparisionRL = "";
         }
@@ -88,11 +97,26 @@ namespace EliteDangerousCore
             {
                 id = jo["id"].Int();
                 fdname = jo["name"].Str().ToLowerInvariant();
+
                 locName = jo["locName"].Str();
-                loccategory = category = jo["categoryname"].Str();
-                category = "$MARKET_category_" + category.ToLowerInvariant().Replace(" ","_").Replace("narcotics","drugs");
-               // System.Diagnostics.Debug.WriteLine("CAPI field fd:'{0}' loc:'{1}' of type '{2}' '{3}'", fdname, locName, category , loccategory);
                 locName = locName.Alt(fdname.SplitCapsWord());      // use locname, if not there, make best loc name possible
+
+                category = jo["categoryname"].Str();
+                loccategory = jo["loccategory"].StrNull();
+
+                if (loccategory == null)          // CAPI does not have this, so make it up.
+                {
+                    loccategory = category;
+                    category = category.Replace(" ", "_").ToLowerInvariant().Replace("narcotics", "drugs"); // CAPI does not have a loccategory unlike market
+                }
+
+                const string marketmarker = "$MARKET_category_";
+                // this normalises the category name to the same used in the market Journal entry
+                if (!category.StartsWith(marketmarker))     // check its not already been fixed.. will happen when EDD entry is reread
+                    category = marketmarker + category;
+
+                legality = jo["legality"].Str();
+
 
                 buyPrice = jo["buyPrice"].Int();
                 sellPrice = jo["sellPrice"].Int();
@@ -102,15 +126,15 @@ namespace EliteDangerousCore
                 stock = jo["stock"].Int();
                 demand = jo["demand"].Int();
 
-
-                List<string> StatusFlags = new List<string>();
+                this.statusFlags = new List<string>();
                 foreach (dynamic statusFlag in jo["statusFlags"])
                 {
-                    StatusFlags.Add((string)statusFlag);
+                    statusFlags.Add((string)statusFlag);
                 }
-                this.StatusFlags = StatusFlags;
 
                 ComparisionLR = ComparisionRL = "";
+
+                // System.Diagnostics.Debug.WriteLine("CAPI field fd:'{0}' loc:'{1}' of type '{2}' '{3}'", fdname, locName, category , loccategory);
                 return true;
             }
             catch
@@ -132,6 +156,8 @@ namespace EliteDangerousCore
                 loccategory = jo["Category_Localised"].Str();
                 category = jo["Category"].Str();
 
+                legality = "";  // not in market data
+
                 buyPrice = jo["BuyPrice"].Int();
                 sellPrice = jo["SellPrice"].Int();
                 meanPrice = jo["MeanPrice"].Int();
@@ -151,7 +177,7 @@ namespace EliteDangerousCore
                 if (jo["Rare"].Bool())
                     StatusFlags.Add("Rare");
 
-                this.StatusFlags = StatusFlags;
+                this.statusFlags = StatusFlags;
                 //System.Diagnostics.Debug.WriteLine("Market field fd:'{0}' loc:'{1}' of type '{2}' '{3}'", fdname, locName, category, loccategory);
 
                 ComparisionLR = ComparisionRL = "";
@@ -166,7 +192,9 @@ namespace EliteDangerousCore
         public override string ToString()
         {
             return string.Format("{0} : {1} Buy {2} Sell {3} Mean {4}" + System.Environment.NewLine +
-                                 "Stock {5} Demand {6}", loccategory, locName, buyPrice, sellPrice, meanPrice, stock, demand);
+                                 "Stock {5} Demand {6} " + System.Environment.NewLine + 
+                                 "Stock Bracket {6} Demand Bracket {7}"
+                                 , loccategory, locName, buyPrice, sellPrice, meanPrice, stock, demand, stockBracket, demandBracket );
         }
 
         public static void Sort(List<CCommodities> list)
