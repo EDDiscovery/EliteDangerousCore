@@ -24,6 +24,7 @@ using System.Threading;
 
 namespace EliteDangerousCore
 {
+    [System.Diagnostics.DebuggerDisplay("{WatcherFolder}")]
     public class StatusMonitorWatcher
     {
         public Action<ConcurrentQueue<UIEvent>,string> UIEventCallBack;           // action passing event list.. in thread, not in UI

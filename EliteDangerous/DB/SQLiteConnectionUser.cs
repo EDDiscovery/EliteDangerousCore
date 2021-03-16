@@ -141,6 +141,9 @@ namespace EliteDangerousCore.DB
                 if (dbver < 126)
                     UpgradeUserDB126();
 
+                if (dbver < 127)
+                    UpgradeUserDB127();
+
                 CreateUserDBTableIndexes();
 
                 return true;
@@ -487,6 +490,12 @@ namespace EliteDangerousCore.DB
                 "UNIQUE(Category,Name)" +
                 ") ";
             PerformUpgrade(126, true, false, new[] { query1 });
+        }
+
+        private void UpgradeUserDB127()
+        {
+            string query1 = "ALTER TABLE Commanders ADD COLUMN Options TEXT NOT NULL DEFAULT \"{}\"";
+            PerformUpgrade(127, true, false, new[] { query1 });
         }
 
         private void DropOldUserTables()

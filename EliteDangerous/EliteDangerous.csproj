@@ -93,6 +93,7 @@
     <Compile Include="EliteDangerous\EDCalculations.cs" />
     <Compile Include="DB\EDCommander.cs" />
     <Compile Include="EliteDangerous\EstimatedValues.cs" />
+    <Compile Include="EliteDangerous\FrontierFolder.cs" />
     <Compile Include="EliteDangerous\Translations.cs" />
     <Compile Include="Forms\CommanderForm.cs">
       <SubType>Form</SubType>

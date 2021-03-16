@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
 
 namespace EliteDangerousCore.Forms
@@ -23,7 +24,7 @@ namespace EliteDangerousCore.Forms
     public partial class CommanderForm : ExtendedControls.DraggableForm
     {
         public bool Valid { get { return textBoxBorderCmdr.Text != ""; } }
-        public string CommanderName { get { return textBoxBorderCmdr.Text; } }
+        public string CommanderName { get { return (extCheckBoxConsoleCommander.Checked ? "[C] " : "" ) + textBoxBorderCmdr.Text; } }
 
         public CommanderForm(List<ExtendedControls.ExtGroupBox> additionalcontrols = null)
         {
@@ -41,21 +42,38 @@ namespace EliteDangerousCore.Forms
             BaseUtils.Translator.Instance.Translate(toolTip,this);
         }
 
-        public void Init(bool enablecmdredit, bool disablefromedsm = false, bool disable3dmapsettings = false)
+        private void InitInt(bool enablecmdredit, bool disablefromedsm, bool disable3dmapsettings, bool disableconsolesupport)
         {
             textBoxBorderCmdr.Enabled = enablecmdredit;
             checkBoxCustomEDSMFrom.Visible = !disablefromedsm;
             extGroupBoxCommanderInfo.Visible = !disable3dmapsettings;
             Height -= extGroupBoxCommanderInfo.Height;
             checkBoxCustomEDDNTo.Checked = true;        // default EDDN on
+            extCheckBoxConsoleCommander.Visible = !disableconsolesupport;
         }
 
-        public void Init(EDCommander cmdr, bool enablecmdredit, bool disablefromedsm = false, bool disable3dmapsettings = false)
+        public void Init(bool enablecmdredit, bool disablefromedsm = false, bool disable3dmapsettings = false, bool disableconsolesupport = false)
         {
-            Init(enablecmdredit, disablefromedsm, disable3dmapsettings);
+            InitInt(enablecmdredit, disablefromedsm, disable3dmapsettings, disableconsolesupport);
+            extCheckBoxConsoleCommander.CheckedChanged += ExtCheckBoxConsoleCommander_CheckedChanged;
+        }
 
-            textBoxBorderCmdr.Text = cmdr.Name;
-            textBoxBorderJournal.Text = cmdr.JournalDir;
+        public void Init(EDCommander cmdr, bool enablecmdredit, bool disablefromedsm = false, bool disable3dmapsettings = false, bool disableconsolesupport = false)
+        {
+            InitInt(enablecmdredit, disablefromedsm, disable3dmapsettings, disableconsolesupport);
+
+            textBoxBorderCmdr.Text = cmdr.Name.ReplaceIfStartsWith("[C] ", "");
+
+            if (!disableconsolesupport)
+            {
+                extCheckBoxConsoleCommander.Checked = cmdr.ConsoleCommander;
+                extCheckBoxConsoleCommander.Enabled = false;
+                if (cmdr.ConsoleCommander)
+                    textBoxBorderJournal.Enabled = buttonExtBrowse.Enabled = false;
+                else
+                    textBoxBorderJournal.Text = cmdr.JournalDir;
+            }
+
             textBoxBorderEDSMName.Text = cmdr.EdsmName;
             textBoxBorderEDSMAPI.Text = cmdr.EDSMAPIKey;
             checkBoxCustomEDSMFrom.Checked = cmdr.SyncFromEdsm;
@@ -87,8 +105,11 @@ namespace EliteDangerousCore.Forms
                           cmdr.SyncFromEdsm != checkBoxCustomEDSMFrom.Checked ||
                           cmdr.SyncToEdsm != checkBoxCustomEDSMTo.Checked;
 
-            cmdr.Name = textBoxBorderCmdr.Text;
-            cmdr.JournalDir = textBoxBorderJournal.Text;
+            cmdr.Name = CommanderName;
+            if (extCheckBoxConsoleCommander.Checked)
+                cmdr.ConsoleCommander = true;
+            else
+                cmdr.JournalDir = textBoxBorderJournal.Text;
             cmdr.EdsmName = textBoxBorderEDSMName.Text;
             cmdr.EDSMAPIKey = textBoxBorderEDSMAPI.Text;
             cmdr.SyncFromEdsm = checkBoxCustomEDSMFrom.Checked;
@@ -132,8 +153,15 @@ namespace EliteDangerousCore.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.OK;
-            Close();
+            if (textBoxBorderJournal.Text.HasChars() && !Directory.Exists(textBoxBorderJournal.Text))
+            {
+                ExtendedControls.MessageBoxTheme.Show(this, "Folder does not exist".T(EDTx.CommanderForm_ND), "Warning".Tx(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                DialogResult = DialogResult.OK;
+                Close();
+            }
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -154,6 +182,14 @@ namespace EliteDangerousCore.Forms
         private void panel_minimize_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void ExtCheckBoxConsoleCommander_CheckedChanged(object sender, EventArgs e)
+        {
+            if (extCheckBoxConsoleCommander.Checked)
+                textBoxBorderJournal.Text = "";
+
+            textBoxBorderJournal.Enabled = buttonExtBrowse.Enabled = !extCheckBoxConsoleCommander.Checked;
         }
 
         private void panel_close_Click(object sender, EventArgs e)

@@ -26,6 +26,7 @@ namespace EliteDangerousCore
 {
     // watches a journal for changes, reads it, 
 
+    [System.Diagnostics.DebuggerDisplay("{WatcherFolder}")]
     public class JournalMonitorWatcher
     {
         public string WatcherFolder { get; set; }

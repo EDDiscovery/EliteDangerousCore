@@ -737,6 +737,7 @@ namespace EliteDangerousCore
         EDPlanet_Unknown, // Unknown planet type
 
         CommanderForm_LF, // Select folder where Journal*.log files are stored by Frontier in
+        CommanderForm_ND, // Folder does not exist
 
 
     }

@@ -133,13 +133,12 @@ namespace EliteDangerousCore
                     {
                         commander.Name = newname;
                         commander.EdsmName = newname;
-                        EDCommander.Update(new List<EDCommander> { commander }, false);
+                        commander.JournalDir = TravelLogUnit.Path;
+                        EDCommander.Update(commander);
                     }
                     else
                     {
-                        string defpath = EDJournalUIScanner.GetDefaultJournalDir();     // may be null if the system is not known
-                        string jp = defpath != null && defpath.Equals(TravelLogUnit.Path) ? "" : TravelLogUnit.Path;
-                        commander = EDCommander.Create(name: newname, journalpath: jp);
+                        commander = EDCommander.Add(name: newname, journalpath: TravelLogUnit.Path);            // always add the path from now on
 
                         if (EDCommander.Current.Name.Contains("[BETA]") && !newname.Contains("[BETA]"))        // if current commander is beta, and we dont, swap to it
                             EDCommander.CurrentCmdrID = commander.Id;
@@ -163,7 +162,9 @@ namespace EliteDangerousCore
                 return null;
             }
 
-            if (je is IAdditionalFiles)
+            // if additional files, and we are NOT a console commander, see if we can pick up extra info
+
+            if (je is IAdditionalFiles && !(EDCommander.GetCommander(cmdrid)?.ConsoleCommander ?? false))
             {
                 if ((je as IAdditionalFiles).ReadAdditionalFiles(TravelLogUnit.Path, inhistoryrefreshparse) == false)     // if failed
                     return null;

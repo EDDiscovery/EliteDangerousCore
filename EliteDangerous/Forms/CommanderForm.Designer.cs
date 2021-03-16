@@ -64,17 +64,18 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.labelCN = new System.Windows.Forms.Label();
             this.labelJL = new System.Windows.Forms.Label();
+            this.extCheckBoxConsoleCommander = new ExtendedControls.ExtCheckBox();
             this.buttonCancel = new ExtendedControls.ExtButton();
             this.buttonOK = new ExtendedControls.ExtButton();
             this.groupBoxCustomInara = new ExtendedControls.ExtGroupBox();
-            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanelInara = new System.Windows.Forms.TableLayoutPanel();
             this.labelINARAN = new System.Windows.Forms.Label();
             this.labelInaraAPI = new System.Windows.Forms.Label();
             this.panelI6 = new System.Windows.Forms.Panel();
             this.panelOK = new System.Windows.Forms.Panel();
             this.statusStripCustom = new ExtendedControls.ExtStatusStrip();
             this.extGroupBoxCommanderInfo = new ExtendedControls.ExtGroupBox();
-            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanelCommanderInfo = new System.Windows.Forms.TableLayoutPanel();
             this.labelMapCol = new System.Windows.Forms.Label();
             this.extTextBoxAutoCompleteHomeSystem = new ExtendedControls.ExtTextBoxAutoComplete();
             this.HomeSys = new System.Windows.Forms.Label();
@@ -88,10 +89,10 @@
             this.groupBoxCustomJournal.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBoxCustomInara.SuspendLayout();
-            this.tableLayoutPanel5.SuspendLayout();
+            this.tableLayoutPanelInara.SuspendLayout();
             this.panelOK.SuspendLayout();
             this.extGroupBoxCommanderInfo.SuspendLayout();
-            this.tableLayoutPanel4.SuspendLayout();
+            this.tableLayoutPanelCommanderInfo.SuspendLayout();
             this.groupBoxCustomIGAU.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -165,7 +166,7 @@
             // panelI3
             // 
             this.panelI3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelI3.Location = new System.Drawing.Point(0, 195);
+            this.panelI3.Location = new System.Drawing.Point(0, 201);
             this.panelI3.Name = "panelI3";
             this.panelI3.Size = new System.Drawing.Size(615, 10);
             this.panelI3.TabIndex = 10;
@@ -173,7 +174,7 @@
             // panelI4
             // 
             this.panelI4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelI4.Location = new System.Drawing.Point(0, 269);
+            this.panelI4.Location = new System.Drawing.Point(0, 275);
             this.panelI4.Name = "panelI4";
             this.panelI4.Size = new System.Drawing.Size(615, 10);
             this.panelI4.TabIndex = 11;
@@ -213,7 +214,7 @@
             this.checkBoxCustomEDDNTo.MouseOverColor = System.Drawing.Color.CornflowerBlue;
             this.checkBoxCustomEDDNTo.Name = "checkBoxCustomEDDNTo";
             this.checkBoxCustomEDDNTo.Size = new System.Drawing.Size(183, 17);
-            this.checkBoxCustomEDDNTo.TabIndex = 4;
+            this.checkBoxCustomEDDNTo.TabIndex = 0;
             this.checkBoxCustomEDDNTo.Text = "Send Event Information to EDDN";
             this.checkBoxCustomEDDNTo.TickBoxReductionRatio = 0.75F;
             this.toolTip.SetToolTip(this.checkBoxCustomEDDNTo, "Click to send journal information to EDDN. EDDN feeds tools such as EDDB, EDSM, I" +
@@ -231,11 +232,11 @@
             this.checkBoxCustomEDSMFrom.ImageIndeterminate = null;
             this.checkBoxCustomEDSMFrom.ImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.checkBoxCustomEDSMFrom.ImageUnchecked = null;
-            this.checkBoxCustomEDSMFrom.Location = new System.Drawing.Point(409, 29);
+            this.checkBoxCustomEDSMFrom.Location = new System.Drawing.Point(409, 32);
             this.checkBoxCustomEDSMFrom.MouseOverColor = System.Drawing.Color.CornflowerBlue;
             this.checkBoxCustomEDSMFrom.Name = "checkBoxCustomEDSMFrom";
             this.checkBoxCustomEDSMFrom.Size = new System.Drawing.Size(110, 17);
-            this.checkBoxCustomEDSMFrom.TabIndex = 4;
+            this.checkBoxCustomEDSMFrom.TabIndex = 3;
             this.checkBoxCustomEDSMFrom.Text = "Sync From EDSM";
             this.checkBoxCustomEDSMFrom.TickBoxReductionRatio = 0.75F;
             this.toolTip.SetToolTip(this.checkBoxCustomEDSMFrom, "Receive any FSD jumps from EDSM that are on their database but not in EDDiscovery" +
@@ -257,7 +258,7 @@
             this.checkBoxCustomEDSMTo.MouseOverColor = System.Drawing.Color.CornflowerBlue;
             this.checkBoxCustomEDSMTo.Name = "checkBoxCustomEDSMTo";
             this.checkBoxCustomEDSMTo.Size = new System.Drawing.Size(96, 17);
-            this.checkBoxCustomEDSMTo.TabIndex = 4;
+            this.checkBoxCustomEDSMTo.TabIndex = 2;
             this.checkBoxCustomEDSMTo.Text = "Sync to EDSM";
             this.checkBoxCustomEDSMTo.TickBoxReductionRatio = 0.75F;
             this.toolTip.SetToolTip(this.checkBoxCustomEDSMTo, "Send your travel and ship data to EDSM");
@@ -295,8 +296,8 @@
             this.textBoxBorderEDSMName.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.textBoxBorderEDSMName.SelectionLength = 0;
             this.textBoxBorderEDSMName.SelectionStart = 0;
-            this.textBoxBorderEDSMName.Size = new System.Drawing.Size(197, 20);
-            this.textBoxBorderEDSMName.TabIndex = 3;
+            this.textBoxBorderEDSMName.Size = new System.Drawing.Size(197, 23);
+            this.textBoxBorderEDSMName.TabIndex = 0;
             this.textBoxBorderEDSMName.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.toolTip.SetToolTip(this.textBoxBorderEDSMName, "Give the name this commander is known as in EDSM");
             this.textBoxBorderEDSMName.WordWrap = true;
@@ -315,15 +316,15 @@
             this.textBoxBorderEDSMAPI.EndButtonImage = ((System.Drawing.Image)(resources.GetObject("textBoxBorderEDSMAPI.EndButtonImage")));
             this.textBoxBorderEDSMAPI.EndButtonVisible = false;
             this.textBoxBorderEDSMAPI.InErrorCondition = false;
-            this.textBoxBorderEDSMAPI.Location = new System.Drawing.Point(206, 29);
+            this.textBoxBorderEDSMAPI.Location = new System.Drawing.Point(206, 32);
             this.textBoxBorderEDSMAPI.Multiline = false;
             this.textBoxBorderEDSMAPI.Name = "textBoxBorderEDSMAPI";
             this.textBoxBorderEDSMAPI.ReadOnly = false;
             this.textBoxBorderEDSMAPI.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.textBoxBorderEDSMAPI.SelectionLength = 0;
             this.textBoxBorderEDSMAPI.SelectionStart = 0;
-            this.textBoxBorderEDSMAPI.Size = new System.Drawing.Size(197, 20);
-            this.textBoxBorderEDSMAPI.TabIndex = 3;
+            this.textBoxBorderEDSMAPI.Size = new System.Drawing.Size(197, 23);
+            this.textBoxBorderEDSMAPI.TabIndex = 1;
             this.textBoxBorderEDSMAPI.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.toolTip.SetToolTip(this.textBoxBorderEDSMAPI, "Enter the API key from the EDSM Website\\nGet an EDSM API key from https://www.eds" +
         "m.net in \"My account\" menu");
@@ -350,8 +351,8 @@
             this.textBoxBorderJournal.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.textBoxBorderJournal.SelectionLength = 0;
             this.textBoxBorderJournal.SelectionStart = 0;
-            this.textBoxBorderJournal.Size = new System.Drawing.Size(197, 20);
-            this.textBoxBorderJournal.TabIndex = 3;
+            this.textBoxBorderJournal.Size = new System.Drawing.Size(197, 23);
+            this.textBoxBorderJournal.TabIndex = 1;
             this.textBoxBorderJournal.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.toolTip.SetToolTip(this.textBoxBorderJournal, resources.GetString("textBoxBorderJournal.ToolTip"));
             this.textBoxBorderJournal.WordWrap = true;
@@ -378,7 +379,7 @@
             this.textBoxBorderCmdr.SelectionLength = 0;
             this.textBoxBorderCmdr.SelectionStart = 0;
             this.textBoxBorderCmdr.Size = new System.Drawing.Size(197, 20);
-            this.textBoxBorderCmdr.TabIndex = 3;
+            this.textBoxBorderCmdr.TabIndex = 0;
             this.textBoxBorderCmdr.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.toolTip.SetToolTip(this.textBoxBorderCmdr, "Enter commander name as used in Elite Dangerous");
             this.textBoxBorderCmdr.WordWrap = true;
@@ -398,7 +399,7 @@
             this.checkBoxCustomInara.MouseOverColor = System.Drawing.Color.CornflowerBlue;
             this.checkBoxCustomInara.Name = "checkBoxCustomInara";
             this.checkBoxCustomInara.Size = new System.Drawing.Size(89, 17);
-            this.checkBoxCustomInara.TabIndex = 4;
+            this.checkBoxCustomInara.TabIndex = 2;
             this.checkBoxCustomInara.Text = "Sync to Inara";
             this.checkBoxCustomInara.TickBoxReductionRatio = 0.75F;
             this.toolTip.SetToolTip(this.checkBoxCustomInara, "Sync with Inara");
@@ -425,8 +426,8 @@
             this.textBoxBorderInaraName.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.textBoxBorderInaraName.SelectionLength = 0;
             this.textBoxBorderInaraName.SelectionStart = 0;
-            this.textBoxBorderInaraName.Size = new System.Drawing.Size(197, 19);
-            this.textBoxBorderInaraName.TabIndex = 3;
+            this.textBoxBorderInaraName.Size = new System.Drawing.Size(197, 23);
+            this.textBoxBorderInaraName.TabIndex = 0;
             this.textBoxBorderInaraName.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.toolTip.SetToolTip(this.textBoxBorderInaraName, "Give the user name for this commander on Inara");
             this.textBoxBorderInaraName.WordWrap = true;
@@ -445,15 +446,15 @@
             this.textBoxBorderInaraAPIKey.EndButtonImage = ((System.Drawing.Image)(resources.GetObject("textBoxBorderInaraAPIKey.EndButtonImage")));
             this.textBoxBorderInaraAPIKey.EndButtonVisible = false;
             this.textBoxBorderInaraAPIKey.InErrorCondition = false;
-            this.textBoxBorderInaraAPIKey.Location = new System.Drawing.Point(206, 28);
+            this.textBoxBorderInaraAPIKey.Location = new System.Drawing.Point(206, 32);
             this.textBoxBorderInaraAPIKey.Multiline = false;
             this.textBoxBorderInaraAPIKey.Name = "textBoxBorderInaraAPIKey";
             this.textBoxBorderInaraAPIKey.ReadOnly = false;
             this.textBoxBorderInaraAPIKey.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.textBoxBorderInaraAPIKey.SelectionLength = 0;
             this.textBoxBorderInaraAPIKey.SelectionStart = 0;
-            this.textBoxBorderInaraAPIKey.Size = new System.Drawing.Size(197, 20);
-            this.textBoxBorderInaraAPIKey.TabIndex = 3;
+            this.textBoxBorderInaraAPIKey.Size = new System.Drawing.Size(197, 23);
+            this.textBoxBorderInaraAPIKey.TabIndex = 1;
             this.textBoxBorderInaraAPIKey.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.toolTip.SetToolTip(this.textBoxBorderInaraAPIKey, "Enter the API key from the Inara Website\\nGet an Inara API key from https://inara" +
         ".cz");
@@ -485,7 +486,7 @@
             this.textBoxDefaultZoom.SelectionLength = 0;
             this.textBoxDefaultZoom.SelectionStart = 0;
             this.textBoxDefaultZoom.Size = new System.Drawing.Size(51, 14);
-            this.textBoxDefaultZoom.TabIndex = 11;
+            this.textBoxDefaultZoom.TabIndex = 3;
             this.textBoxDefaultZoom.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.toolTip.SetToolTip(this.textBoxDefaultZoom, "Set the zoom level of the map. 1 is normal");
             this.textBoxDefaultZoom.Value = 0D;
@@ -502,7 +503,7 @@
             this.radioButtonHistorySelection.SelectedColor = System.Drawing.Color.DarkBlue;
             this.radioButtonHistorySelection.SelectedColorRing = System.Drawing.Color.Black;
             this.radioButtonHistorySelection.Size = new System.Drawing.Size(126, 17);
-            this.radioButtonHistorySelection.TabIndex = 9;
+            this.radioButtonHistorySelection.TabIndex = 2;
             this.radioButtonHistorySelection.TabStop = true;
             this.radioButtonHistorySelection.Text = "History Grid Selection";
             this.toolTip.SetToolTip(this.radioButtonHistorySelection, "Select history entry as opening location");
@@ -519,7 +520,7 @@
             this.radioButtonCentreHome.SelectedColor = System.Drawing.Color.DarkBlue;
             this.radioButtonCentreHome.SelectedColorRing = System.Drawing.Color.Black;
             this.radioButtonCentreHome.Size = new System.Drawing.Size(90, 17);
-            this.radioButtonCentreHome.TabIndex = 8;
+            this.radioButtonCentreHome.TabIndex = 1;
             this.radioButtonCentreHome.TabStop = true;
             this.radioButtonCentreHome.Text = "Home System";
             this.toolTip.SetToolTip(this.radioButtonCentreHome, "Select home system as opening location");
@@ -532,7 +533,7 @@
             this.panel_defaultmapcolor.Location = new System.Drawing.Point(206, 85);
             this.panel_defaultmapcolor.Name = "panel_defaultmapcolor";
             this.panel_defaultmapcolor.Size = new System.Drawing.Size(28, 15);
-            this.panel_defaultmapcolor.TabIndex = 12;
+            this.panel_defaultmapcolor.TabIndex = 4;
             this.panel_defaultmapcolor.Tag = "";
             this.toolTip.SetToolTip(this.panel_defaultmapcolor, "New travel entries get this colour on the map");
             // 
@@ -547,11 +548,11 @@
             this.checkBoxIGAUSync.ImageIndeterminate = null;
             this.checkBoxIGAUSync.ImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.checkBoxIGAUSync.ImageUnchecked = null;
-            this.checkBoxIGAUSync.Location = new System.Drawing.Point(6, 23);
+            this.checkBoxIGAUSync.Location = new System.Drawing.Point(9, 19);
             this.checkBoxIGAUSync.MouseOverColor = System.Drawing.Color.CornflowerBlue;
             this.checkBoxIGAUSync.Name = "checkBoxIGAUSync";
             this.checkBoxIGAUSync.Size = new System.Drawing.Size(228, 17);
-            this.checkBoxIGAUSync.TabIndex = 38;
+            this.checkBoxIGAUSync.TabIndex = 0;
             this.checkBoxIGAUSync.Text = "Send Codex Entry Discovery Data to IGAU";
             this.checkBoxIGAUSync.TickBoxReductionRatio = 0.75F;
             this.toolTip.SetToolTip(this.checkBoxIGAUSync, "https://github.com/Elite-IGAU/publications/blob/master/IGAU_Codex.csv");
@@ -565,7 +566,7 @@
             this.groupBoxCustomEDDN.BorderColorScaling = 0.5F;
             this.groupBoxCustomEDDN.Controls.Add(this.checkBoxCustomEDDNTo);
             this.groupBoxCustomEDDN.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBoxCustomEDDN.Location = new System.Drawing.Point(0, 205);
+            this.groupBoxCustomEDDN.Location = new System.Drawing.Point(0, 211);
             this.groupBoxCustomEDDN.Name = "groupBoxCustomEDDN";
             this.groupBoxCustomEDDN.Size = new System.Drawing.Size(615, 64);
             this.groupBoxCustomEDDN.TabIndex = 5;
@@ -585,7 +586,7 @@
             this.groupBoxCustomEDSM.Location = new System.Drawing.Point(0, 124);
             this.groupBoxCustomEDSM.Margin = new System.Windows.Forms.Padding(10);
             this.groupBoxCustomEDSM.Name = "groupBoxCustomEDSM";
-            this.groupBoxCustomEDSM.Size = new System.Drawing.Size(615, 71);
+            this.groupBoxCustomEDSM.Size = new System.Drawing.Size(615, 77);
             this.groupBoxCustomEDSM.TabIndex = 4;
             this.groupBoxCustomEDSM.TabStop = false;
             this.groupBoxCustomEDSM.Text = "EDSM Information (optional)";
@@ -611,13 +612,13 @@
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(609, 52);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(609, 58);
             this.tableLayoutPanel2.TabIndex = 5;
             // 
             // labelEDSMAPI
             // 
             this.labelEDSMAPI.AutoSize = true;
-            this.labelEDSMAPI.Location = new System.Drawing.Point(3, 26);
+            this.labelEDSMAPI.Location = new System.Drawing.Point(3, 29);
             this.labelEDSMAPI.Name = "labelEDSMAPI";
             this.labelEDSMAPI.Size = new System.Drawing.Size(82, 13);
             this.labelEDSMAPI.TabIndex = 2;
@@ -657,16 +658,18 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel1.Controls.Add(this.labelCN, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.buttonExtBrowse, 2, 1);
             this.tableLayoutPanel1.Controls.Add(this.textBoxBorderCmdr, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.textBoxBorderJournal, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.labelJL, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.buttonExtBrowse, 2, 1);
+            this.tableLayoutPanel1.Controls.Add(this.textBoxBorderJournal, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.extCheckBoxConsoleCommander, 2, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 16);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(609, 58);
             this.tableLayoutPanel1.TabIndex = 5;
             // 
@@ -687,6 +690,26 @@
             this.labelJL.Size = new System.Drawing.Size(88, 13);
             this.labelJL.TabIndex = 2;
             this.labelJL.Text = "Journal Location:";
+            // 
+            // extCheckBoxConsoleCommander
+            // 
+            this.extCheckBoxConsoleCommander.AutoSize = true;
+            this.extCheckBoxConsoleCommander.CheckBoxColor = System.Drawing.Color.Gray;
+            this.extCheckBoxConsoleCommander.CheckBoxDisabledScaling = 0.5F;
+            this.extCheckBoxConsoleCommander.CheckBoxInnerColor = System.Drawing.Color.White;
+            this.extCheckBoxConsoleCommander.CheckColor = System.Drawing.Color.DarkBlue;
+            this.extCheckBoxConsoleCommander.ImageButtonDisabledScaling = 0.5F;
+            this.extCheckBoxConsoleCommander.ImageIndeterminate = null;
+            this.extCheckBoxConsoleCommander.ImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.extCheckBoxConsoleCommander.ImageUnchecked = null;
+            this.extCheckBoxConsoleCommander.Location = new System.Drawing.Point(409, 3);
+            this.extCheckBoxConsoleCommander.MouseOverColor = System.Drawing.Color.CornflowerBlue;
+            this.extCheckBoxConsoleCommander.Name = "extCheckBoxConsoleCommander";
+            this.extCheckBoxConsoleCommander.Size = new System.Drawing.Size(123, 17);
+            this.extCheckBoxConsoleCommander.TabIndex = 5;
+            this.extCheckBoxConsoleCommander.Text = "Console Commander";
+            this.extCheckBoxConsoleCommander.TickBoxReductionRatio = 0.75F;
+            this.extCheckBoxConsoleCommander.UseVisualStyleBackColor = true;
             // 
             // buttonCancel
             // 
@@ -716,38 +739,38 @@
             this.groupBoxCustomInara.BackColorScaling = 0.5F;
             this.groupBoxCustomInara.BorderColor = System.Drawing.Color.LightGray;
             this.groupBoxCustomInara.BorderColorScaling = 0.5F;
-            this.groupBoxCustomInara.Controls.Add(this.tableLayoutPanel5);
+            this.groupBoxCustomInara.Controls.Add(this.tableLayoutPanelInara);
             this.groupBoxCustomInara.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBoxCustomInara.Location = new System.Drawing.Point(0, 279);
+            this.groupBoxCustomInara.Location = new System.Drawing.Point(0, 285);
             this.groupBoxCustomInara.Margin = new System.Windows.Forms.Padding(10);
             this.groupBoxCustomInara.Name = "groupBoxCustomInara";
-            this.groupBoxCustomInara.Size = new System.Drawing.Size(615, 70);
+            this.groupBoxCustomInara.Size = new System.Drawing.Size(615, 80);
             this.groupBoxCustomInara.TabIndex = 34;
             this.groupBoxCustomInara.TabStop = false;
             this.groupBoxCustomInara.Text = "Inara Information (optional)";
             this.groupBoxCustomInara.TextPadding = 0;
             this.groupBoxCustomInara.TextStartPosition = -1;
             // 
-            // tableLayoutPanel5
+            // tableLayoutPanelInara
             // 
-            this.tableLayoutPanel5.AutoSize = true;
-            this.tableLayoutPanel5.ColumnCount = 3;
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel5.Controls.Add(this.labelINARAN, 0, 0);
-            this.tableLayoutPanel5.Controls.Add(this.textBoxBorderInaraName, 1, 0);
-            this.tableLayoutPanel5.Controls.Add(this.labelInaraAPI, 0, 1);
-            this.tableLayoutPanel5.Controls.Add(this.checkBoxCustomInara, 2, 0);
-            this.tableLayoutPanel5.Controls.Add(this.textBoxBorderInaraAPIKey, 1, 1);
-            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 16);
-            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-            this.tableLayoutPanel5.RowCount = 2;
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 49.01961F));
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.98039F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(609, 51);
-            this.tableLayoutPanel5.TabIndex = 37;
+            this.tableLayoutPanelInara.AutoSize = true;
+            this.tableLayoutPanelInara.ColumnCount = 3;
+            this.tableLayoutPanelInara.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanelInara.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanelInara.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanelInara.Controls.Add(this.labelINARAN, 0, 0);
+            this.tableLayoutPanelInara.Controls.Add(this.labelInaraAPI, 0, 1);
+            this.tableLayoutPanelInara.Controls.Add(this.checkBoxCustomInara, 2, 0);
+            this.tableLayoutPanelInara.Controls.Add(this.textBoxBorderInaraAPIKey, 1, 1);
+            this.tableLayoutPanelInara.Controls.Add(this.textBoxBorderInaraName, 1, 0);
+            this.tableLayoutPanelInara.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanelInara.Location = new System.Drawing.Point(3, 16);
+            this.tableLayoutPanelInara.Name = "tableLayoutPanelInara";
+            this.tableLayoutPanelInara.RowCount = 2;
+            this.tableLayoutPanelInara.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 49.01961F));
+            this.tableLayoutPanelInara.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.98039F));
+            this.tableLayoutPanelInara.Size = new System.Drawing.Size(609, 61);
+            this.tableLayoutPanelInara.TabIndex = 37;
             // 
             // labelINARAN
             // 
@@ -761,7 +784,7 @@
             // labelInaraAPI
             // 
             this.labelInaraAPI.AutoSize = true;
-            this.labelInaraAPI.Location = new System.Drawing.Point(3, 25);
+            this.labelInaraAPI.Location = new System.Drawing.Point(3, 29);
             this.labelInaraAPI.Name = "labelInaraAPI";
             this.labelInaraAPI.Size = new System.Drawing.Size(75, 13);
             this.labelInaraAPI.TabIndex = 2;
@@ -771,7 +794,7 @@
             // 
             this.panelI6.AutoSize = true;
             this.panelI6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelI6.Location = new System.Drawing.Point(0, 279);
+            this.panelI6.Location = new System.Drawing.Point(0, 285);
             this.panelI6.Name = "panelI6";
             this.panelI6.Size = new System.Drawing.Size(615, 0);
             this.panelI6.TabIndex = 35;
@@ -800,9 +823,9 @@
             this.extGroupBoxCommanderInfo.BackColorScaling = 0.5F;
             this.extGroupBoxCommanderInfo.BorderColor = System.Drawing.Color.LightGray;
             this.extGroupBoxCommanderInfo.BorderColorScaling = 0.5F;
-            this.extGroupBoxCommanderInfo.Controls.Add(this.tableLayoutPanel4);
+            this.extGroupBoxCommanderInfo.Controls.Add(this.tableLayoutPanelCommanderInfo);
             this.extGroupBoxCommanderInfo.Dock = System.Windows.Forms.DockStyle.Top;
-            this.extGroupBoxCommanderInfo.Location = new System.Drawing.Point(0, 408);
+            this.extGroupBoxCommanderInfo.Location = new System.Drawing.Point(0, 420);
             this.extGroupBoxCommanderInfo.Name = "extGroupBoxCommanderInfo";
             this.extGroupBoxCommanderInfo.Size = new System.Drawing.Size(615, 122);
             this.extGroupBoxCommanderInfo.TabIndex = 37;
@@ -811,31 +834,31 @@
             this.extGroupBoxCommanderInfo.TextPadding = 0;
             this.extGroupBoxCommanderInfo.TextStartPosition = -1;
             // 
-            // tableLayoutPanel4
+            // tableLayoutPanelCommanderInfo
             // 
-            this.tableLayoutPanel4.ColumnCount = 3;
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel4.Controls.Add(this.radioButtonHistorySelection, 2, 1);
-            this.tableLayoutPanel4.Controls.Add(this.textBoxDefaultZoom, 1, 2);
-            this.tableLayoutPanel4.Controls.Add(this.labelMapCol, 0, 3);
-            this.tableLayoutPanel4.Controls.Add(this.radioButtonCentreHome, 1, 1);
-            this.tableLayoutPanel4.Controls.Add(this.extTextBoxAutoCompleteHomeSystem, 1, 0);
-            this.tableLayoutPanel4.Controls.Add(this.HomeSys, 0, 0);
-            this.tableLayoutPanel4.Controls.Add(this.labelZoom, 0, 2);
-            this.tableLayoutPanel4.Controls.Add(this.labelOpenOn, 0, 1);
-            this.tableLayoutPanel4.Controls.Add(this.panel_defaultmapcolor, 1, 3);
-            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 16);
-            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 4;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(609, 103);
-            this.tableLayoutPanel4.TabIndex = 14;
+            this.tableLayoutPanelCommanderInfo.ColumnCount = 3;
+            this.tableLayoutPanelCommanderInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanelCommanderInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanelCommanderInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanelCommanderInfo.Controls.Add(this.radioButtonHistorySelection, 2, 1);
+            this.tableLayoutPanelCommanderInfo.Controls.Add(this.textBoxDefaultZoom, 1, 2);
+            this.tableLayoutPanelCommanderInfo.Controls.Add(this.labelMapCol, 0, 3);
+            this.tableLayoutPanelCommanderInfo.Controls.Add(this.radioButtonCentreHome, 1, 1);
+            this.tableLayoutPanelCommanderInfo.Controls.Add(this.extTextBoxAutoCompleteHomeSystem, 1, 0);
+            this.tableLayoutPanelCommanderInfo.Controls.Add(this.HomeSys, 0, 0);
+            this.tableLayoutPanelCommanderInfo.Controls.Add(this.labelZoom, 0, 2);
+            this.tableLayoutPanelCommanderInfo.Controls.Add(this.labelOpenOn, 0, 1);
+            this.tableLayoutPanelCommanderInfo.Controls.Add(this.panel_defaultmapcolor, 1, 3);
+            this.tableLayoutPanelCommanderInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanelCommanderInfo.Location = new System.Drawing.Point(3, 16);
+            this.tableLayoutPanelCommanderInfo.Name = "tableLayoutPanelCommanderInfo";
+            this.tableLayoutPanelCommanderInfo.RowCount = 4;
+            this.tableLayoutPanelCommanderInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanelCommanderInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanelCommanderInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanelCommanderInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanelCommanderInfo.Size = new System.Drawing.Size(609, 103);
+            this.tableLayoutPanelCommanderInfo.TabIndex = 14;
             // 
             // labelMapCol
             // 
@@ -875,7 +898,7 @@
             this.extTextBoxAutoCompleteHomeSystem.SelectionLength = 0;
             this.extTextBoxAutoCompleteHomeSystem.SelectionStart = 0;
             this.extTextBoxAutoCompleteHomeSystem.Size = new System.Drawing.Size(152, 23);
-            this.extTextBoxAutoCompleteHomeSystem.TabIndex = 3;
+            this.extTextBoxAutoCompleteHomeSystem.TabIndex = 0;
             this.extTextBoxAutoCompleteHomeSystem.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.extTextBoxAutoCompleteHomeSystem.TextChangedEvent = "";
             this.extTextBoxAutoCompleteHomeSystem.WordWrap = true;
@@ -915,9 +938,9 @@
             this.groupBoxCustomIGAU.BorderColorScaling = 0.5F;
             this.groupBoxCustomIGAU.Controls.Add(this.checkBoxIGAUSync);
             this.groupBoxCustomIGAU.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBoxCustomIGAU.Location = new System.Drawing.Point(0, 349);
+            this.groupBoxCustomIGAU.Location = new System.Drawing.Point(0, 365);
             this.groupBoxCustomIGAU.Name = "groupBoxCustomIGAU";
-            this.groupBoxCustomIGAU.Size = new System.Drawing.Size(615, 59);
+            this.groupBoxCustomIGAU.Size = new System.Drawing.Size(615, 55);
             this.groupBoxCustomIGAU.TabIndex = 39;
             this.groupBoxCustomIGAU.TabStop = false;
             this.groupBoxCustomIGAU.Text = "Intergalactic Astronomical Union [IGAU]";
@@ -961,12 +984,12 @@
             this.tableLayoutPanel1.PerformLayout();
             this.groupBoxCustomInara.ResumeLayout(false);
             this.groupBoxCustomInara.PerformLayout();
-            this.tableLayoutPanel5.ResumeLayout(false);
-            this.tableLayoutPanel5.PerformLayout();
+            this.tableLayoutPanelInara.ResumeLayout(false);
+            this.tableLayoutPanelInara.PerformLayout();
             this.panelOK.ResumeLayout(false);
             this.extGroupBoxCommanderInfo.ResumeLayout(false);
-            this.tableLayoutPanel4.ResumeLayout(false);
-            this.tableLayoutPanel4.PerformLayout();
+            this.tableLayoutPanelCommanderInfo.ResumeLayout(false);
+            this.tableLayoutPanelCommanderInfo.PerformLayout();
             this.groupBoxCustomIGAU.ResumeLayout(false);
             this.groupBoxCustomIGAU.PerformLayout();
             this.ResumeLayout(false);
@@ -1012,7 +1035,7 @@
         private System.Windows.Forms.Panel panelOK;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelInara;
         private ExtendedControls.ExtStatusStrip statusStripCustom;
         private ExtendedControls.ExtGroupBox extGroupBoxCommanderInfo;
         private ExtendedControls.ExtTextBoxAutoComplete extTextBoxAutoCompleteHomeSystem;
@@ -1024,8 +1047,9 @@
         private System.Windows.Forms.Label labelOpenOn;
         private System.Windows.Forms.Label labelMapCol;
         private ExtendedControls.PanelNoTheme panel_defaultmapcolor;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelCommanderInfo;
         private ExtendedControls.ExtGroupBox groupBoxCustomIGAU;
         private ExtendedControls.ExtCheckBox checkBoxIGAUSync;
+        private ExtendedControls.ExtCheckBox extCheckBoxConsoleCommander;
     }
 }
