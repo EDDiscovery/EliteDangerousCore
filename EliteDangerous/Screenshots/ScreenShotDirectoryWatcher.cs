@@ -40,13 +40,15 @@ namespace EliteDangerousCore.ScreenShots
 
         private string outputfolder;
         private string watchedfolder;
+        private int watchdelay;
 
         public ScreenshotDirectoryWatcher(Action<Action<ScreenShotImageConverter>> invokeonuip, Action<string> logger, 
-                                        Func<Tuple<string,string,string>> currentloccmdr)
+                                        Func<Tuple<string,string,string>> currentloccmdr, int watchdelaytime)
         {
             invokeonui = invokeonuip;
             logit = logger;
             getcurinfo = currentloccmdr;
+            watchdelay = watchdelaytime;
         }
 
         public bool Start(string watchedfolderp, string ext, string outputfolderp)
@@ -124,7 +126,7 @@ namespace EliteDangerousCore.ScreenShots
             {
                 System.Diagnostics.Debug.WriteLine("File watch start a timer to wait for SS entry");
 
-                System.Timers.Timer t = new System.Timers.Timer(5000);  // use a timer since we can set it up slowly before we start it
+                System.Timers.Timer t = new System.Timers.Timer(watchdelay);  // use a timer since we can set it up slowly before we start it
                 t.Elapsed += T_Elapsed;
                 filewatchTimers[t] = e.FullPath;
                 t.Start();

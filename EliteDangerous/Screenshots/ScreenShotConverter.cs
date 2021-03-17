@@ -170,13 +170,13 @@ namespace EliteDangerousCore.ScreenShots
 
 
         public bool Start(Action<Action> invokeOnUiThreadp, Action<string> logger,
-                                        Func<Tuple<string, string, string>> currentloccmdr)
+                                        Func<Tuple<string, string, string>> currentloccmdr, int watchdelaytime)
         {
             Stop();
 
             invokeOnUiThread = invokeOnUiThreadp;
 
-            watcher = new ScreenshotDirectoryWatcher(CallWithConverter,logger,currentloccmdr);   // pass function to get the convert going
+            watcher = new ScreenshotDirectoryWatcher(CallWithConverter,logger,currentloccmdr, watchdelaytime);   // pass function to get the convert going
             watcher.OnScreenshot += ConvertCompleted;  // and function for it to call when its over..
 
             return watcher.Start(InputFolder, InputFileExtension.ToString(),OutputFolder);       // you can restart a watcher without stopping it..
