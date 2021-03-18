@@ -23,7 +23,11 @@ namespace EliteDangerousCore.UIEvents
 {
     public class UIFsdMassLocked : UIEvent
     {
-        public UIFsdMassLocked(bool state, DateTime time, bool refresh): base(UITypeEnum.FsdMassLocked, time, refresh)
+        public UIFsdMassLocked(DateTime time, bool refresh) : base(UITypeEnum.FsdMassLocked, time, refresh)
+        {
+        }
+
+        public UIFsdMassLocked(bool state, DateTime time, bool refresh) : this( time, refresh)
         {
             MassLocked = state;
         }

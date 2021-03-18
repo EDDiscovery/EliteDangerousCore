@@ -19,7 +19,11 @@ namespace EliteDangerousCore.UIEvents
 {
     public class UIFSDTarget : UIEvent           
     {
-        public UIFSDTarget(JournalEvents.JournalFSDTarget item, DateTime time, bool refresh) : base(UITypeEnum.FSDTarget, time, refresh)
+        public UIFSDTarget( DateTime time, bool refresh) : base(UITypeEnum.FSDTarget, time, refresh)
+        {
+        }
+
+        public UIFSDTarget(JournalEvents.JournalFSDTarget item, DateTime time, bool refresh) : this(time, refresh)
         {
             FSDTarget = item;
         }

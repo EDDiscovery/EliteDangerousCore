@@ -23,7 +23,11 @@ namespace EliteDangerousCore.UIEvents
 {
     public class UISrvHandbrake: UIEvent
     {
-        public UISrvHandbrake(bool state, DateTime time, bool refresh): base(UITypeEnum.SrvHandbrake, time, refresh)
+        public UISrvHandbrake( DateTime time, bool refresh) : base(UITypeEnum.SrvHandbrake, time, refresh)
+        {
+        }
+
+        public UISrvHandbrake(bool state, DateTime time, bool refresh) : this( time, refresh)
         {
             Handbrake = state;
         }

@@ -20,7 +20,11 @@ namespace EliteDangerousCore.UIEvents
 {
     public class UICommand : UIEvent
     {
-        public UICommand(string text, string auxtext, DateTime time, bool refresh): base(UITypeEnum.Command, time, refresh)
+        public UICommand(DateTime time, bool refresh) : base(UITypeEnum.Command, time, refresh)
+        {
+        }
+
+        public UICommand(string text, string auxtext, DateTime time, bool refresh) : this(time, refresh)
         {
             Command = text;
             AuxText = auxtext;

@@ -39,7 +39,11 @@ namespace EliteDangerousCore.UIEvents
             Codex =11,//3.3
         }
 
-        public UIGUIFocus(int focus, DateTime time, bool refresh): base(UITypeEnum.GUIFocus, time, refresh)
+        public UIGUIFocus(DateTime time, bool refresh) : base(UITypeEnum.GUIFocus, time, refresh)
+        {
+        }
+
+        public UIGUIFocus(int focus, DateTime time, bool refresh) : this( time, refresh)
         {
             GUIFocus = (Focus)focus;
         }

@@ -19,7 +19,11 @@ namespace EliteDangerousCore.UIEvents
 {
     public class UIShipTargeted : UIEvent           // used for some ShipTargeted events which blam us
     {
-        public UIShipTargeted(JournalEvents.JournalShipTargeted target, DateTime time, bool refresh): base(UITypeEnum.ShipTargeted, time, refresh)
+        public UIShipTargeted(DateTime time, bool refresh) : base(UITypeEnum.ShipTargeted, time, refresh)
+        {
+        }
+
+        public UIShipTargeted(JournalEvents.JournalShipTargeted target, DateTime time, bool refresh) : this( time, refresh)
         {
             ShipTargeted = target;
         }

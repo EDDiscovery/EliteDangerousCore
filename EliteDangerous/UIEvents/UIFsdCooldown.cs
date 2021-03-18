@@ -23,7 +23,11 @@ namespace EliteDangerousCore.UIEvents
 {
     public class UIFsdCooldown : UIEvent
     {
-        public UIFsdCooldown(bool state, DateTime time, bool refresh): base(UITypeEnum.FsdCooldown, time, refresh)
+        public UIFsdCooldown(DateTime time, bool refresh) : base(UITypeEnum.FsdCooldown, time, refresh)
+        {
+        }
+
+        public UIFsdCooldown(bool state, DateTime time, bool refresh) : this(time, refresh)
         {
             CoolDown = state;
         }

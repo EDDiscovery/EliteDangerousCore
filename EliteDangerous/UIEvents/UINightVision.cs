@@ -23,7 +23,11 @@ namespace EliteDangerousCore.UIEvents
 {
     public class UINightVision : UIEvent
     {
-        public UINightVision(bool state, DateTime time, bool refresh): base(UITypeEnum.NightVision, time, refresh)
+        public UINightVision(DateTime time, bool refresh) : base(UITypeEnum.NightVision, time, refresh)
+        {
+        }
+
+        public UINightVision(bool state, DateTime time, bool refresh) : this(time, refresh)
         {
             State = state;
         }

@@ -23,7 +23,11 @@ namespace EliteDangerousCore.UIEvents
 {
     public class UIOverHeating: UIEvent
     {
-        public UIOverHeating(bool state, DateTime time, bool refresh): base(UITypeEnum.OverHeating, time, refresh)
+        public UIOverHeating(DateTime time, bool refresh) : base(UITypeEnum.OverHeating, time, refresh)
+        {
+        }
+
+        public UIOverHeating(bool state, DateTime time, bool refresh) : this(time, refresh)
         {
             OverHeating = state;
         }

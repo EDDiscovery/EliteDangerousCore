@@ -20,7 +20,11 @@ namespace EliteDangerousCore.UIEvents
 {
     public class UILegalStatus : UIEvent
     {
-        public UILegalStatus(string status, DateTime time, bool refresh): base(UITypeEnum.LegalStatus, time, refresh)
+        public UILegalStatus(DateTime time, bool refresh) : base(UITypeEnum.LegalStatus, time, refresh)
+        {
+        }
+
+        public UILegalStatus(string status, DateTime time, bool refresh) : this(time, refresh)
         {
             LegalStatus = status;
         }

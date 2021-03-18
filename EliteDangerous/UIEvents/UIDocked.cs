@@ -23,7 +23,11 @@ namespace EliteDangerousCore.UIEvents
 {
     public class UIDocked : UIEvent
     {
-        public UIDocked(bool state, DateTime time, bool refresh): base(UITypeEnum.Docked, time, refresh)
+        public UIDocked(DateTime time, bool refresh) : base(UITypeEnum.Docked, time, refresh)
+        {
+        }
+
+        public UIDocked(bool state, DateTime time, bool refresh) : this( time, refresh)
         {
             Docked = state;
         }

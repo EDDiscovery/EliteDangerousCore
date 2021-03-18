@@ -367,7 +367,7 @@ namespace EliteDangerousCore
                 if (((delta >> v) & 1) != 0)
                 {
                     //  System.Diagnostics.Debug.WriteLine("..Flag " + n + " changed to " + flag);
-                    events.Add(UIEvent.CreateFlagEvent(n, flag, EventTimeUTC, refresh));
+                    events.Add(UIEvent.CreateEvent(n, EventTimeUTC, refresh, flag));
                 }
             }
 

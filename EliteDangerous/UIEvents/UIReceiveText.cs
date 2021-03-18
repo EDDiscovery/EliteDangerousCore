@@ -19,7 +19,11 @@ namespace EliteDangerousCore.UIEvents
 {
     public class UIReceiveText : UIEvent           // used for some ShipTargeted events which blam us
     {
-        public UIReceiveText(JournalEvents.JournalReceiveText text, DateTime time, bool refresh) : base(UITypeEnum.ReceiveText, time, refresh)
+        public UIReceiveText(DateTime time, bool refresh) : base(UITypeEnum.ReceiveText, time, refresh)
+        {
+        }
+
+        public UIReceiveText(JournalEvents.JournalReceiveText text, DateTime time, bool refresh) : this(time, refresh)
         {
             Text = text;
         }

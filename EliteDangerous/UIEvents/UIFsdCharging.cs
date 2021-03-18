@@ -23,7 +23,11 @@ namespace EliteDangerousCore.UIEvents
 {
     public class UIFsdCharging : UIEvent
     {
-        public UIFsdCharging(bool state, DateTime time, bool refresh): base(UITypeEnum.FsdCharging, time, refresh)
+        public UIFsdCharging(DateTime time, bool refresh) : base(UITypeEnum.FsdCharging, time, refresh)
+        {
+        }
+
+        public UIFsdCharging(bool state, DateTime time, bool refresh) : this(time, refresh)
         {
             Charging = state;
         }

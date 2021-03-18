@@ -23,7 +23,10 @@ namespace EliteDangerousCore.UIEvents
 {
     public class UIFireGroup : UIEvent
     {
-        public UIFireGroup(int group, DateTime time, bool refresh): base(UITypeEnum.FireGroup, time, refresh)
+        public UIFireGroup(DateTime time, bool refresh) : base(UITypeEnum.FireGroup, time, refresh)
+        {
+        }
+        public UIFireGroup(int group, DateTime time, bool refresh) : this(time, refresh)
         {
             Group = group;
         }

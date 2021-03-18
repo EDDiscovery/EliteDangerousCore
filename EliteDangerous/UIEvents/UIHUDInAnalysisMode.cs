@@ -23,7 +23,11 @@ namespace EliteDangerousCore.UIEvents
 {
     public class UIHUDInAnalysisMode : UIEvent
     {
-        public UIHUDInAnalysisMode(bool state, DateTime time, bool refresh): base(UITypeEnum.HUDInAnalysisMode, time, refresh)
+        public UIHUDInAnalysisMode(DateTime time, bool refresh) : base(UITypeEnum.HUDInAnalysisMode, time, refresh)
+        {
+        }
+
+        public UIHUDInAnalysisMode(bool state, DateTime time, bool refresh) : this( time, refresh)
         {
             State = state;
         }

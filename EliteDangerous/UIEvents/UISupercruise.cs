@@ -23,7 +23,11 @@ namespace EliteDangerousCore.UIEvents
 {
     public class UISupercruise : UIEvent
     {
-        public UISupercruise(bool state, DateTime time, bool refresh): base(UITypeEnum.Supercruise, time, refresh)
+        public UISupercruise(DateTime time, bool refresh) : base(UITypeEnum.Supercruise, time, refresh)
+        {
+        }
+
+        public UISupercruise(bool state, DateTime time, bool refresh) : this(time, refresh)
         {
             Supercruise = state;
         }

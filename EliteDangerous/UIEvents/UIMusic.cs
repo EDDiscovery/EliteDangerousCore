@@ -20,7 +20,11 @@ namespace EliteDangerousCore.UIEvents
 {
     public class UIMusic : UIEvent
     {
-        public UIMusic(string track, JournalEvents.EDMusicTrackEnum id, DateTime time, bool refresh): base(UITypeEnum.Music, time, refresh)
+        public UIMusic(DateTime time, bool refresh) : base(UITypeEnum.Music, time, refresh)
+        {
+        }
+
+        public UIMusic(string track, JournalEvents.EDMusicTrackEnum id, DateTime time, bool refresh) : this( time, refresh)
         {
             Track = track;
             MusicTrackID = id;

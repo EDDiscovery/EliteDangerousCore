@@ -23,7 +23,11 @@ namespace EliteDangerousCore.UIEvents
 {
     public class UIInWing : UIEvent
     {
-        public UIInWing(bool state, DateTime time, bool refresh): base(UITypeEnum.InWing, time, refresh)
+        public UIInWing(DateTime time, bool refresh) : base(UITypeEnum.InWing, time, refresh)
+        {
+        }
+
+        public UIInWing(bool state, DateTime time, bool refresh) : this(time, refresh)
         {
             Winged = state;
         }

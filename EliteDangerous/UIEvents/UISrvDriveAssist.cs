@@ -23,7 +23,11 @@ namespace EliteDangerousCore.UIEvents
 {
     public class UISrvDriveAssist : UIEvent
     {
-        public UISrvDriveAssist(bool state, DateTime time, bool refresh): base(UITypeEnum.SrvDriveAssist, time, refresh)
+        public UISrvDriveAssist(DateTime time, bool refresh) : base(UITypeEnum.SrvDriveAssist, time, refresh)
+        {
+        }
+
+        public UISrvDriveAssist(bool state, DateTime time, bool refresh) : this( time, refresh)
         {
             Assist = state;
         }

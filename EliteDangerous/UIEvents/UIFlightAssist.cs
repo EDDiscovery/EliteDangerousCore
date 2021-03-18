@@ -23,9 +23,13 @@ namespace EliteDangerousCore.UIEvents
 {
     public class UIFlightAssist : UIEvent
     {
-        public UIFlightAssist(bool state, DateTime time, bool refresh): base(UITypeEnum.FlightAssist, time, refresh)
+        public UIFlightAssist(DateTime time, bool refresh) : base(UITypeEnum.FlightAssist, time, refresh)
         {
-            Assist= state;
+        }
+
+        public UIFlightAssist(bool state, DateTime time, bool refresh) : this(time, refresh)
+        {
+            Assist = state;
         }
 
         public bool Assist { get; private set; }

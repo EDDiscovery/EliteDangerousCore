@@ -19,7 +19,11 @@ namespace EliteDangerousCore.UIEvents
 {
     public class UIUnderAttack : UIEvent           // used for some ShipTargeted events which blam us
     {
-        public UIUnderAttack( string target, DateTime time, bool refresh): base(UITypeEnum.UnderAttack, time, refresh)
+        public UIUnderAttack(DateTime time, bool refresh) : base(UITypeEnum.UnderAttack, time, refresh)
+        {
+        }
+
+        public UIUnderAttack(string target, DateTime time, bool refresh) : this( time, refresh)
         {
             Target = target;
         }

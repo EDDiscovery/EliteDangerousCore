@@ -24,8 +24,7 @@ namespace EliteDangerousCore
 {
     public enum UITypeEnum
     {
-        Unknown = 0,
-        GUIFocus,
+        GUIFocus = 1,
         Music,
         Pips,
         Position,
@@ -99,19 +98,22 @@ namespace EliteDangerousCore
             return Type.GetType(UIRootClassname + "." + name, false, true); // no exception, ignore case here
         }
 
-        static public UIEvent CreateFlagEvent(string name, bool value, DateTime time, bool refresh)
+        static public UIEvent CreateEvent(string name, DateTime time, bool refresh, bool? value = null)
         {
             string evname = "UI" + name;
             Type t = Type.GetType(UIRootClassname + "." + evname, false, true);
             if (t != null)
             {
-                UIEvent e = (UIEvent)Activator.CreateInstance(t, new Object[] { value, time , refresh });
-                return e;
+                if ( value != null )
+                    return (UIEvent)Activator.CreateInstance(t, new Object[] { value, time, refresh });
+                else
+                    return (UIEvent)Activator.CreateInstance(t, new Object[] { time, refresh });
             }
             else
                 System.Diagnostics.Debug.Assert(true);
 
             return null;
         }
+
     }
 }

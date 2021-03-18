@@ -20,9 +20,14 @@ namespace EliteDangerousCore.UIEvents
 {
     public class UIOverallStatus : UIEvent
     {
+        public UIOverallStatus( DateTime time, bool refresh) : base(UITypeEnum.OverallStatus, time, refresh)
+        {
+
+        }
+
         public UIOverallStatus(UIEvents.UIShipType.Shiptype st, List<UITypeEnum> list, int focus, UIEvents.UIPips.Pips pips, int fg, double fuel, double res, int cargo,
             UIEvents.UIPosition.Position pos, double heading, double radius, string legalstate,
-            DateTime time, bool refresh): base(UITypeEnum.OverallStatus, time, refresh)
+            DateTime time, bool refresh) : this(time, refresh)
         {
             ShipType = st;
             Flags = list;

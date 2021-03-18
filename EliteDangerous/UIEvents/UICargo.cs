@@ -23,7 +23,11 @@ namespace EliteDangerousCore.UIEvents
 {
     public class UICargo : UIEvent
     {
-        public UICargo(int value, UIShipType.Shiptype shiptype, DateTime time, bool refresh) : base(UITypeEnum.Cargo, time, refresh)
+        public UICargo(DateTime time, bool refresh) : base(UITypeEnum.Cargo, time, refresh)
+        {
+        }
+
+        public UICargo(int value, UIShipType.Shiptype shiptype, DateTime time, bool refresh) : this(time, refresh)
         {
             Count = value;
             ShipType = shiptype;
