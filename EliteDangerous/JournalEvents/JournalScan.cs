@@ -124,7 +124,7 @@ namespace EliteDangerousCore.JournalEvents
 
         [PropertyNameAttribute("Empty, Terraformable")]
         public string TerraformState { get; set; }                  // direct, can be empty or a string
-        public bool Terraformable { get { return TerraformState != null && TerraformState.ToLowerInvariant().Equals("terraformable"); } }
+        public bool Terraformable { get { return TerraformState != null && new[] { "terraformable", "terraforming", "terraformed" }.Contains(TerraformState, StringComparer.InvariantCultureIgnoreCase); } }
         public string Atmosphere { get; set; }                      // direct from journal, if not there or blank, tries AtmosphereType (Earthlikes)
         public EDAtmosphereType AtmosphereID { get; }               // Atmosphere -> ID (Ammonia, Carbon etc)
         public EDAtmosphereProperty AtmosphereProperty { get; set; }             // Atomsphere -> Property (None, Rich, Thick , Thin, Hot)
