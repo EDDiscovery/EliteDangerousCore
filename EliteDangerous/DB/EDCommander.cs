@@ -54,6 +54,8 @@ namespace EliteDangerousCore
 
         public bool ConsoleCommander { get { return Options.Contains("CONSOLE"); } set { if (value) Options["CONSOLE"] = true; else Options.Remove("CONSOLE"); } }
 
+        public bool SyncToEDAstro { get { return Options["EDASTRO"].Bool(false); } set { Options["EDASTRO"] = value; } }
+
         // may be null
         public JObject ConsoleUploadHistory { get { return Options["ConsoleUpload"].Object(); } set { Options["ConsoleUpload"] = value; } }
 

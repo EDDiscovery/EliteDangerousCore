@@ -29,10 +29,21 @@ namespace EliteDangerousCore.Forms
         public CommanderForm(List<ExtendedControls.ExtGroupBox> additionalcontrols = null)
         {
             InitializeComponent();
+            //extPanelScroll.Controls.AddRange(additionalcontrols.ToArray());
+                //InsertRangeBefore(groupBoxCustomInara, );
 
-            foreach (var c in additionalcontrols)
-                c.Dock = DockStyle.Top;
-            Controls.InsertRangeBefore(groupBoxCustomInara, additionalcontrols);
+            int vpos = 0;
+            foreach (var c in extPanelScroll.Controls)
+            {
+
+                if (c != extScrollBar)
+                {
+                    Control ctrl = c as Control;
+                    ctrl.Location = new System.Drawing.Point(0, vpos);
+                    ctrl.Width = 790;
+                    vpos += ctrl.Height + 8;
+                }
+            }
 
             var theme = ExtendedControls.ThemeableFormsInstance.Instance;
             bool winborder = theme.ApplyDialog(this);
@@ -47,7 +58,6 @@ namespace EliteDangerousCore.Forms
             textBoxBorderCmdr.Enabled = enablecmdredit;
             checkBoxCustomEDSMFrom.Visible = !disablefromedsm;
             extGroupBoxCommanderInfo.Visible = !disable3dmapsettings;
-            Height -= extGroupBoxCommanderInfo.Height;
             checkBoxCustomEDDNTo.Checked = true;        // default EDDN on
             extCheckBoxConsoleCommander.Visible = !disableconsolesupport;
         }
@@ -197,11 +207,11 @@ namespace EliteDangerousCore.Forms
             Close();
         }
 
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            Refresh();
-        }
+        //protected override void OnResize(EventArgs e)
+        //{
+        //    base.OnResize(e);
+        //    Refresh();
+        //}
 
         #endregion
     }
