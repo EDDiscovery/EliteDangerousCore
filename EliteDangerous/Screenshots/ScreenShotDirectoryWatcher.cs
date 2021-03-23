@@ -185,12 +185,12 @@ namespace EliteDangerousCore.ScreenShots
 
             try
             {
-                string filein = TryGetScreenshot(filenamepart, out Bitmap bmp, out DateTime timestamp);
+                string filein = TryGetScreenshot(filenamepart, out Bitmap bmp, out DateTime timestamputc);
 
                 if (filein != null)
                 {
                     // return input filename now, output filename and size
-                    var fs = cp.Convert(bmp, filein, timestamp, outputfolder, bodyname, sysname, cmdrname, logit);
+                    var fs = cp.Convert(bmp, filein, timestamputc, outputfolder, bodyname, sysname, cmdrname, logit);
 
                     if ( fs != null )
                         OnScreenshot?.Invoke(fs.Item1, fs.Item2, fs.Item3, ss);
@@ -212,9 +212,9 @@ namespace EliteDangerousCore.ScreenShots
         // given a filepart, try and read the file and datetime to bmp/timestamp
         // return null or filenamein
 
-        private string TryGetScreenshot(string filepart, out Bitmap bmp, out DateTime timestamp)//, ref string store_name, ref Point finalsize, ref DateTime timestamp, out Bitmap bmp, out string readfilename, Action<string> logit, bool throwOnError = false)
+        private string TryGetScreenshot(string filepart, out Bitmap bmp, out DateTime timestamputc)//, ref string store_name, ref Point finalsize, ref DateTime timestamp, out Bitmap bmp, out string readfilename, Action<string> logit, bool throwOnError = false)
         {
-            timestamp = DateTime.Now;
+            timestamputc = DateTime.UtcNow;
             string filenameout = null;
             bmp = null;
 
@@ -241,7 +241,7 @@ namespace EliteDangerousCore.ScreenShots
                     {
                         using (FileStream testfile = File.Open(filenameout, FileMode.Open, FileAccess.Read, FileShare.Read))        // throws if can't open
                         {
-                            timestamp = new FileInfo(filenameout).CreationTimeUtc;
+                            timestamputc = new FileInfo(filenameout).CreationTimeUtc;
                             MemoryStream memstrm = new MemoryStream(); // will be owned by bitmap
                             testfile.CopyTo(memstrm);
                             memstrm.Seek(0, SeekOrigin.Begin);

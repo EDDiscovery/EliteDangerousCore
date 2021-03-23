@@ -40,10 +40,13 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Scan type, Basic, Detailed, NavBeacon, NavBeaconDetail, AutoScan, may be empty for very old scans")]
         public string ScanType { get; set; }                        // 3.0 scan type  Basic, Detailed, NavBeacon, NavBeaconDetail, (3.3) AutoScan, or empty for older ones
         public string BodyName { get; set; }                        // direct (meaning no translation)
+        [PropertyNameAttribute("Internal Frontier ID, is empty for older scans")]
         public int? BodyID { get; set; }                            // direct
         public string StarSystem { get; set; }                      // direct (3.5)
+        [PropertyNameAttribute("Internal Frontier ID, is empty for older scans")]
         public long? SystemAddress { get; set; }                    // direct (3.5)
         public double DistanceFromArrivalLS { get; set; }           // direct
+        [PropertyNameAttribute("In meters")]
         public double DistanceFromArrivalm { get { return DistanceFromArrivalLS * oneLS_m; } }
         public string DistanceFromArrivalText { get { return string.Format("{0:0.00}AU ({1:0.0}ls)", DistanceFromArrivalLS / JournalScan.oneAU_LS, DistanceFromArrivalLS); } }
         [PropertyNameAttribute("Seconds")]
@@ -57,8 +60,10 @@ namespace EliteDangerousCore.JournalEvents
         public double? nRadiusEarths { get { if (nRadius.HasValue) return nRadius.Value / oneEarthRadius_m; else return null; } }
 
         public bool HasRings { get { return Rings != null && Rings.Length > 0; } }
+        [PropertyNameAttribute("Rings[1 to N] _Name, _RingClass, _MassMT, _InnerRad (m), _OuterRad. Also RingCount")]
         public StarPlanetRing[] Rings { get; set; }
 
+        [PropertyNameAttribute("Parents[1 to N] _Type (Null=Barycentre, Star, Planet), _BodyID. Also ParentsCount. First is nearest body")]
         public List<BodyParent> Parents { get; set; }
         public bool IsOrbitingBaryCentre { get { return Parents?.FirstOrDefault()?.Type == "Null"; } }
         public bool IsOrbitingPlanet { get { return Parents?.FirstOrDefault()?.Type == "Planet"; } }
@@ -73,16 +78,21 @@ namespace EliteDangerousCore.JournalEvents
         public bool IsPreviouslyMapped { get { return WasMapped.HasValue && WasMapped == true; } }    // true if its there, and its mapped
 
         // STAR
+        [PropertyNameAttribute("Short Name (K,O etc)")]
         public string StarType { get; set; }                        // null if no StarType, direct from journal, K, A, B etc
         [PropertyNameAttribute("OBAFGAKM,LTY,AeBe,N Neutron,H Black Hole,Proto (TTS,AeBe), Wolf (W,WN,WNC,WC,WO), Carbon (CS,C,CN,CJ,CHD), White Dwarfs (D,DA,DAB,DAO,DAZ,DAV,DB,DBZ,DBV,DO,DOV,DQ,DC,DCV,DX), others")]
         public EDStar StarTypeID { get; }                           // star type -> identifier
+        [PropertyNameAttribute("Long Name (Orange Main Sequence..) localised")]
         public string StarTypeText { get { return IsStar ? Bodies.StarName(StarTypeID) : ""; } }   // Long form star name, from StarTypeID
         [PropertyNameAttribute("Ratio of Sol")]
         public double? nStellarMass { get; set; }                   // direct
         public double? nAbsoluteMagnitude { get; set; }             // direct
+        [PropertyNameAttribute("Yerkes Spectral Classification")]
         public string Luminosity { get; set; }                      // character string (I,II,.. V)
         public int? StarSubclass { get; set; }                      // star Subclass, direct, 3.4
+        [PropertyNameAttribute("StarType (long) Subclass Luminosity (K3Vab)")]
         public string StarClassification { get { return (StarType ?? "") + (StarSubclass?.ToStringInvariant() ?? "") + (Luminosity ?? ""); } }
+        [PropertyNameAttribute("StarType (Abreviated) Subclass Luminosity (K3Vab)")]
         public string StarClassificationAbv { get { return new string((StarType ?? "").Where(x => char.IsUpper(x) || x == '_').Select(x => x).ToArray()) + (StarSubclass?.ToStringInvariant() ?? "") + (Luminosity ?? ""); } }
         [PropertyNameAttribute("Million Years")]
         public double? nAge { get; set; }                           // direct, in million years
@@ -110,8 +120,10 @@ namespace EliteDangerousCore.JournalEvents
         public bool? nTidalLock { get; set; }                       // direct
 
         // Planets
+        [PropertyNameAttribute("Long text name from journal")]
         public string PlanetClass { get; set; }                     // planet class, direct. If belt cluster, null
         public EDPlanet PlanetTypeID { get; }                       // planet class -> ID
+        [PropertyNameAttribute("Localised Name")]
         public string PlanetTypeText { get { return IsStar || IsBeltCluster ? "" : Bodies.PlanetTypeName(PlanetTypeID); } }   // Long form star name, from StarTypeID
 
         public bool AmmoniaWorld { get { return Bodies.AmmoniaWorld(PlanetTypeID); } }
@@ -122,7 +134,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool WaterGiant { get { return Bodies.WaterGiant(PlanetTypeID); } }
         public bool HeliumGasGiant { get { return Bodies.HeliumGasGiant(PlanetTypeID); } }
 
-        [PropertyNameAttribute("Empty, Terraformable")]
+        [PropertyNameAttribute("Empty, Terraformable, Terraformed, Terraforming")]
         public string TerraformState { get; set; }                  // direct, can be empty or a string
         public bool Terraformable { get { return TerraformState != null && new[] { "terraformable", "terraforming", "terraformed" }.Contains(TerraformState, StringComparer.InvariantCultureIgnoreCase); } }
         public string Atmosphere { get; set; }                      // direct from journal, if not there or blank, tries AtmosphereType (Earthlikes)
@@ -153,15 +165,20 @@ namespace EliteDangerousCore.JournalEvents
         public double? nMassMM { get { if (nMassEM.HasValue) return nMassEM * EarthMoonMassRatio; else return null; } }
 
         public bool HasMaterials { get { return Materials != null && Materials.Any(); } }
+        [PropertyNameAttribute("Not Searchable")]
         public Dictionary<string, double> Materials { get; set; }       // fdname and name is the same for materials on planets.  name is lower case
         public bool HasMaterial(string name) { return Materials != null && Materials.ContainsKey(name.ToLowerInvariant()); }
+        [PropertyNameAttribute("List of materials, comma separated")]
         public string MaterialList { get { if (Materials != null) { var na = (from x in Materials select x.Key).ToArray(); return String.Join(",", na); } else return null; } }
 
         public EDReserve ReserveLevel { get; set; }
 
         // EDD additions
+        [PropertyNameAttribute("Body loaded from ESDM")]
         public bool IsEDSMBody { get; private set; }
+        [PropertyNameAttribute("EDSM first commander")]
         public string EDSMDiscoveryCommander { get; private set; }      // may be null if not known
+        [PropertyNameAttribute("EDSM first reported time UTC")]
         public DateTime EDSMDiscoveryUTC { get; private set; }
 
         public bool Mapped { get; private set; }                        // WE Mapped it - affects prices
@@ -463,6 +480,7 @@ namespace EliteDangerousCore.JournalEvents
                 return null;
         }
 
+
         public override string SummaryName(ISystem sys)
         {
             string text = "Scan of {0}".T(EDTx.JournalScan_Scanof);
@@ -478,6 +496,7 @@ namespace EliteDangerousCore.JournalEvents
             return string.Format(text, BodyName.ReplaceIfStartsWith(sys.Name));
         }
 
+        [PropertyNameAttribute("Scan Auto, Scan Basic, Scan Nav, Scan")]
         public override string EventFilterName
         {
             get
@@ -1903,6 +1922,11 @@ namespace EliteDangerousCore.JournalEvents
             if (EstimatedValues == null)
                 EstimatedValues = new ScanEstimatedValues(EventTimeUTC, IsStar, StarTypeID, IsPlanet, PlanetTypeID, Terraformable, nStellarMass, nMassEM);
             return EstimatedValues;
+        }
+
+        public ScanEstimatedValues RecalcEstimatedValues()
+        {
+            return new ScanEstimatedValues(EventTimeUTC, IsStar, StarTypeID, IsPlanet, PlanetTypeID, Terraformable, nStellarMass, nMassEM);
         }
 
     }

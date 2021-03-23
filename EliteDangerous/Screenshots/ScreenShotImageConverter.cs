@@ -240,7 +240,7 @@ namespace EliteDangerousCore.ScreenShots
             return new Tuple<string, string, Size>(inputfilename, outputfilename, finalsize);
         }
 
-        private void WriteBMP(Bitmap bmp, string filename, DateTime datetime)
+        private void WriteBMP(Bitmap bmp, string filename, DateTime datetimeutc)
         {
             using (var memstream = new MemoryStream())
             {
@@ -262,14 +262,16 @@ namespace EliteDangerousCore.ScreenShots
                 }
 
                 File.WriteAllBytes(filename, memstream.ToArray());
-                File.SetCreationTime(filename, datetime);
+                File.SetCreationTime(filename, datetimeutc);
             }
         }
 
         // helpers for above
 
-        public static string SubFolder(int foldernameformat, string outputfolder, string systemname, string cmdrname, DateTime timestamp)
+        public static string SubFolder(int foldernameformat, string outputfolder, string systemname, string cmdrname, DateTime timestamputc)
         {
+            timestamputc = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(timestamputc);       // convert UTC to selected local time
+
             if (String.IsNullOrWhiteSpace(outputfolder))
             {
                 outputfolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Frontier Developments", "Elite Dangerous", "Converted");
@@ -282,25 +284,25 @@ namespace EliteDangerousCore.ScreenShots
                     break;
 
                 case 2:     // "YYYY-MM-DD"
-                    outputfolder = Path.Combine(outputfolder, timestamp.ToString("yyyy-MM-dd"));
+                    outputfolder = Path.Combine(outputfolder, timestamputc.ToString("yyyy-MM-dd"));
                     break;
                 case 3:     // "DD-MM-YYYY"
-                    outputfolder = Path.Combine(outputfolder, timestamp.ToString("dd-MM-yyyy"));
+                    outputfolder = Path.Combine(outputfolder, timestamputc.ToString("dd-MM-yyyy"));
                     break;
                 case 4:     // "MM-DD-YYYY"
-                    outputfolder = Path.Combine(outputfolder, timestamp.ToString("MM-dd-yyyy"));
+                    outputfolder = Path.Combine(outputfolder, timestamputc.ToString("MM-dd-yyyy"));
                     break;
 
                 case 5:  //"YYYY-MM-DD Sysname",
-                    outputfolder = Path.Combine(outputfolder, timestamp.ToString("yyyy-MM-dd") + " " + systemname.SafeFileString());
+                    outputfolder = Path.Combine(outputfolder, timestamputc.ToString("yyyy-MM-dd") + " " + systemname.SafeFileString());
                     break;
 
                 case 6:  //"DD-MM-YYYY Sysname",
-                    outputfolder = Path.Combine(outputfolder, timestamp.ToString("dd-MM-yyyy") + " " + systemname.SafeFileString());
+                    outputfolder = Path.Combine(outputfolder, timestamputc.ToString("dd-MM-yyyy") + " " + systemname.SafeFileString());
                     break;
 
                 case 7: //"MM-DD-YYYY Sysname"
-                    outputfolder = Path.Combine(outputfolder, timestamp.ToString("MM-dd-yyyy") + " " + systemname.SafeFileString());
+                    outputfolder = Path.Combine(outputfolder, timestamputc.ToString("MM-dd-yyyy") + " " + systemname.SafeFileString());
                     break;
 
                 case 8: // CMDR name
@@ -312,7 +314,7 @@ namespace EliteDangerousCore.ScreenShots
                     break;
 
                 case 10: // YYYY - MM - DD CMDR name at sysname
-                    outputfolder = Path.Combine(outputfolder, timestamp.ToString("yyyy-MM-dd") + " " +
+                    outputfolder = Path.Combine(outputfolder, timestamputc.ToString("yyyy-MM-dd") + " " +
                           cmdrname.SafeFileString() + " at " + systemname.SafeFileString());
                     break;
 
@@ -325,8 +327,10 @@ namespace EliteDangerousCore.ScreenShots
         }
 
 
-        public static string CreateFileName(string cur_sysname, string cur_bodyname, string inputfile, int formatindex, bool hires, DateTime timestamp)
+        public static string CreateFileName(string cur_sysname, string cur_bodyname, string inputfile, int formatindex, bool hires, DateTime timestamputc)
         {
+            timestamputc = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(timestamputc);       // convert UTC to selected local time
+
             cur_sysname = cur_sysname.SafeFileString();
             cur_bodyname = cur_bodyname.SafeFileString();
             bool hasbodyname = cur_bodyname.Length > 0;
@@ -339,17 +343,17 @@ namespace EliteDangerousCore.ScreenShots
                 string part = ctrl.Substring(i);
                 if (part.StartsWith("%yyyy") )
                 {
-                    b.Append(timestamp.ToString("yyyy"));
+                    b.Append(timestamputc.ToString("yyyy"));
                     i += 4;
                 }
                 else if (part.StartsWith("%MM") || part.StartsWith("%dd") || part.StartsWith("%HH") || part.StartsWith("%mm") || part.StartsWith("%ss") )
                 {
-                    b.Append(timestamp.ToString(part.Substring(1,2)));
+                    b.Append(timestamputc.ToString(part.Substring(1,2)));
                     i += 2;
                 }
                 else if (part.StartsWith("%WT"))
                 {
-                    string time = timestamp.ToString();
+                    string time = timestamputc.ToString();
                     time = time.Replace(":", "-");
                     time = time.Replace("/", "-");          // Rob found it was outputting 21/2/2020 on mine, so we need more replaces
                     time = time.Replace("\\", "-");
