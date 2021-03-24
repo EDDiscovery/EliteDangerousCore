@@ -79,6 +79,9 @@
             this.groupBoxCustomIGAU = new ExtendedControls.ExtGroupBox();
             this.extPanelScroll = new ExtendedControls.ExtPanelScroll();
             this.extScrollBar = new ExtendedControls.ExtScrollBar();
+            this.extGroupBoxEDAstro = new ExtendedControls.ExtGroupBox();
+            this.extCheckBoxEDAstro = new ExtendedControls.ExtCheckBox();
+            this.panelGroups = new System.Windows.Forms.Panel();
             this.panelTop.SuspendLayout();
             this.groupBoxCustomEDDN.SuspendLayout();
             this.groupBoxCustomEDSM.SuspendLayout();
@@ -92,6 +95,8 @@
             this.tableLayoutPanelCommanderInfo.SuspendLayout();
             this.groupBoxCustomIGAU.SuspendLayout();
             this.extPanelScroll.SuspendLayout();
+            this.extGroupBoxEDAstro.SuspendLayout();
+            this.panelGroups.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelTop
@@ -103,7 +108,7 @@
             this.panelTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelTop.Location = new System.Drawing.Point(0, 0);
             this.panelTop.Name = "panelTop";
-            this.panelTop.Size = new System.Drawing.Size(806, 27);
+            this.panelTop.Size = new System.Drawing.Size(713, 27);
             this.panelTop.TabIndex = 31;
             this.panelTop.MouseDown += new System.Windows.Forms.MouseEventHandler(this.label_index_MouseDown);
             // 
@@ -114,7 +119,7 @@
             this.panel_close.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.panel_close.Image = null;
             this.panel_close.ImageSelected = ExtendedControls.ExtButtonDrawn.ImageType.Close;
-            this.panel_close.Location = new System.Drawing.Point(783, 0);
+            this.panel_close.Location = new System.Drawing.Point(690, 0);
             this.panel_close.MouseOverColor = System.Drawing.Color.White;
             this.panel_close.MouseSelectedColor = System.Drawing.Color.Green;
             this.panel_close.MouseSelectedColorEnable = true;
@@ -136,7 +141,7 @@
             this.panel_minimize.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.panel_minimize.Image = null;
             this.panel_minimize.ImageSelected = ExtendedControls.ExtButtonDrawn.ImageType.Minimize;
-            this.panel_minimize.Location = new System.Drawing.Point(753, 0);
+            this.panel_minimize.Location = new System.Drawing.Point(660, 0);
             this.panel_minimize.MouseOverColor = System.Drawing.Color.White;
             this.panel_minimize.MouseSelectedColor = System.Drawing.Color.Green;
             this.panel_minimize.MouseSelectedColorEnable = true;
@@ -176,7 +181,7 @@
             this.checkBoxCustomEDDNTo.ImageIndeterminate = null;
             this.checkBoxCustomEDDNTo.ImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.checkBoxCustomEDDNTo.ImageUnchecked = null;
-            this.checkBoxCustomEDDNTo.Location = new System.Drawing.Point(9, 28);
+            this.checkBoxCustomEDDNTo.Location = new System.Drawing.Point(9, 19);
             this.checkBoxCustomEDDNTo.MouseOverColor = System.Drawing.Color.CornflowerBlue;
             this.checkBoxCustomEDDNTo.Name = "checkBoxCustomEDDNTo";
             this.checkBoxCustomEDDNTo.Size = new System.Drawing.Size(183, 17);
@@ -198,7 +203,7 @@
             this.checkBoxCustomEDSMFrom.ImageIndeterminate = null;
             this.checkBoxCustomEDSMFrom.ImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.checkBoxCustomEDSMFrom.ImageUnchecked = null;
-            this.checkBoxCustomEDSMFrom.Location = new System.Drawing.Point(525, 32);
+            this.checkBoxCustomEDSMFrom.Location = new System.Drawing.Point(459, 32);
             this.checkBoxCustomEDSMFrom.MouseOverColor = System.Drawing.Color.CornflowerBlue;
             this.checkBoxCustomEDSMFrom.Name = "checkBoxCustomEDSMFrom";
             this.checkBoxCustomEDSMFrom.Size = new System.Drawing.Size(110, 17);
@@ -220,7 +225,7 @@
             this.checkBoxCustomEDSMTo.ImageIndeterminate = null;
             this.checkBoxCustomEDSMTo.ImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.checkBoxCustomEDSMTo.ImageUnchecked = null;
-            this.checkBoxCustomEDSMTo.Location = new System.Drawing.Point(525, 3);
+            this.checkBoxCustomEDSMTo.Location = new System.Drawing.Point(459, 3);
             this.checkBoxCustomEDSMTo.MouseOverColor = System.Drawing.Color.CornflowerBlue;
             this.checkBoxCustomEDSMTo.Name = "checkBoxCustomEDSMTo";
             this.checkBoxCustomEDSMTo.Size = new System.Drawing.Size(96, 17);
@@ -232,7 +237,7 @@
             // 
             // buttonExtBrowse
             // 
-            this.buttonExtBrowse.Location = new System.Drawing.Point(525, 32);
+            this.buttonExtBrowse.Location = new System.Drawing.Point(459, 32);
             this.buttonExtBrowse.Name = "buttonExtBrowse";
             this.buttonExtBrowse.Size = new System.Drawing.Size(100, 23);
             this.buttonExtBrowse.TabIndex = 4;
@@ -255,7 +260,7 @@
             this.textBoxBorderEDSMName.EndButtonImage = ((System.Drawing.Image)(resources.GetObject("textBoxBorderEDSMName.EndButtonImage")));
             this.textBoxBorderEDSMName.EndButtonVisible = false;
             this.textBoxBorderEDSMName.InErrorCondition = false;
-            this.textBoxBorderEDSMName.Location = new System.Drawing.Point(264, 3);
+            this.textBoxBorderEDSMName.Location = new System.Drawing.Point(231, 3);
             this.textBoxBorderEDSMName.Multiline = false;
             this.textBoxBorderEDSMName.Name = "textBoxBorderEDSMName";
             this.textBoxBorderEDSMName.ReadOnly = false;
@@ -282,7 +287,7 @@
             this.textBoxBorderEDSMAPI.EndButtonImage = ((System.Drawing.Image)(resources.GetObject("textBoxBorderEDSMAPI.EndButtonImage")));
             this.textBoxBorderEDSMAPI.EndButtonVisible = false;
             this.textBoxBorderEDSMAPI.InErrorCondition = false;
-            this.textBoxBorderEDSMAPI.Location = new System.Drawing.Point(264, 32);
+            this.textBoxBorderEDSMAPI.Location = new System.Drawing.Point(231, 32);
             this.textBoxBorderEDSMAPI.Multiline = false;
             this.textBoxBorderEDSMAPI.Name = "textBoxBorderEDSMAPI";
             this.textBoxBorderEDSMAPI.ReadOnly = false;
@@ -310,7 +315,7 @@
             this.textBoxBorderJournal.EndButtonImage = ((System.Drawing.Image)(resources.GetObject("textBoxBorderJournal.EndButtonImage")));
             this.textBoxBorderJournal.EndButtonVisible = false;
             this.textBoxBorderJournal.InErrorCondition = false;
-            this.textBoxBorderJournal.Location = new System.Drawing.Point(264, 32);
+            this.textBoxBorderJournal.Location = new System.Drawing.Point(231, 32);
             this.textBoxBorderJournal.Multiline = false;
             this.textBoxBorderJournal.Name = "textBoxBorderJournal";
             this.textBoxBorderJournal.ReadOnly = false;
@@ -337,7 +342,7 @@
             this.textBoxBorderCmdr.EndButtonImage = ((System.Drawing.Image)(resources.GetObject("textBoxBorderCmdr.EndButtonImage")));
             this.textBoxBorderCmdr.EndButtonVisible = false;
             this.textBoxBorderCmdr.InErrorCondition = false;
-            this.textBoxBorderCmdr.Location = new System.Drawing.Point(264, 3);
+            this.textBoxBorderCmdr.Location = new System.Drawing.Point(231, 3);
             this.textBoxBorderCmdr.Multiline = false;
             this.textBoxBorderCmdr.Name = "textBoxBorderCmdr";
             this.textBoxBorderCmdr.ReadOnly = false;
@@ -361,7 +366,7 @@
             this.checkBoxCustomInara.ImageIndeterminate = null;
             this.checkBoxCustomInara.ImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.checkBoxCustomInara.ImageUnchecked = null;
-            this.checkBoxCustomInara.Location = new System.Drawing.Point(525, 3);
+            this.checkBoxCustomInara.Location = new System.Drawing.Point(459, 3);
             this.checkBoxCustomInara.MouseOverColor = System.Drawing.Color.CornflowerBlue;
             this.checkBoxCustomInara.Name = "checkBoxCustomInara";
             this.checkBoxCustomInara.Size = new System.Drawing.Size(89, 17);
@@ -385,14 +390,14 @@
             this.textBoxBorderInaraName.EndButtonImage = ((System.Drawing.Image)(resources.GetObject("textBoxBorderInaraName.EndButtonImage")));
             this.textBoxBorderInaraName.EndButtonVisible = false;
             this.textBoxBorderInaraName.InErrorCondition = false;
-            this.textBoxBorderInaraName.Location = new System.Drawing.Point(264, 3);
+            this.textBoxBorderInaraName.Location = new System.Drawing.Point(231, 3);
             this.textBoxBorderInaraName.Multiline = false;
             this.textBoxBorderInaraName.Name = "textBoxBorderInaraName";
             this.textBoxBorderInaraName.ReadOnly = false;
             this.textBoxBorderInaraName.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.textBoxBorderInaraName.SelectionLength = 0;
             this.textBoxBorderInaraName.SelectionStart = 0;
-            this.textBoxBorderInaraName.Size = new System.Drawing.Size(197, 22);
+            this.textBoxBorderInaraName.Size = new System.Drawing.Size(197, 21);
             this.textBoxBorderInaraName.TabIndex = 0;
             this.textBoxBorderInaraName.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.toolTip.SetToolTip(this.textBoxBorderInaraName, "Give the user name for this commander on Inara");
@@ -412,7 +417,7 @@
             this.textBoxBorderInaraAPIKey.EndButtonImage = ((System.Drawing.Image)(resources.GetObject("textBoxBorderInaraAPIKey.EndButtonImage")));
             this.textBoxBorderInaraAPIKey.EndButtonVisible = false;
             this.textBoxBorderInaraAPIKey.InErrorCondition = false;
-            this.textBoxBorderInaraAPIKey.Location = new System.Drawing.Point(264, 31);
+            this.textBoxBorderInaraAPIKey.Location = new System.Drawing.Point(231, 30);
             this.textBoxBorderInaraAPIKey.Multiline = false;
             this.textBoxBorderInaraAPIKey.Name = "textBoxBorderInaraAPIKey";
             this.textBoxBorderInaraAPIKey.ReadOnly = false;
@@ -442,7 +447,7 @@
             this.textBoxDefaultZoom.EndButtonVisible = false;
             this.textBoxDefaultZoom.Format = "0.#######";
             this.textBoxDefaultZoom.InErrorCondition = true;
-            this.textBoxDefaultZoom.Location = new System.Drawing.Point(264, 65);
+            this.textBoxDefaultZoom.Location = new System.Drawing.Point(231, 65);
             this.textBoxDefaultZoom.Maximum = 300D;
             this.textBoxDefaultZoom.Minimum = 0.01D;
             this.textBoxDefaultZoom.Multiline = false;
@@ -461,7 +466,7 @@
             // radioButtonHistorySelection
             // 
             this.radioButtonHistorySelection.AutoSize = true;
-            this.radioButtonHistorySelection.Location = new System.Drawing.Point(525, 34);
+            this.radioButtonHistorySelection.Location = new System.Drawing.Point(459, 34);
             this.radioButtonHistorySelection.MouseOverColor = System.Drawing.Color.CornflowerBlue;
             this.radioButtonHistorySelection.Name = "radioButtonHistorySelection";
             this.radioButtonHistorySelection.RadioButtonColor = System.Drawing.Color.Gray;
@@ -478,7 +483,7 @@
             // radioButtonCentreHome
             // 
             this.radioButtonCentreHome.AutoSize = true;
-            this.radioButtonCentreHome.Location = new System.Drawing.Point(264, 34);
+            this.radioButtonCentreHome.Location = new System.Drawing.Point(231, 34);
             this.radioButtonCentreHome.MouseOverColor = System.Drawing.Color.CornflowerBlue;
             this.radioButtonCentreHome.Name = "radioButtonCentreHome";
             this.radioButtonCentreHome.RadioButtonColor = System.Drawing.Color.Gray;
@@ -496,7 +501,7 @@
             // 
             this.panel_defaultmapcolor.AccessibleDescription = "";
             this.panel_defaultmapcolor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel_defaultmapcolor.Location = new System.Drawing.Point(264, 85);
+            this.panel_defaultmapcolor.Location = new System.Drawing.Point(231, 85);
             this.panel_defaultmapcolor.Name = "panel_defaultmapcolor";
             this.panel_defaultmapcolor.Size = new System.Drawing.Size(28, 15);
             this.panel_defaultmapcolor.TabIndex = 4;
@@ -531,9 +536,10 @@
             this.groupBoxCustomEDDN.BorderColor = System.Drawing.Color.LightGray;
             this.groupBoxCustomEDDN.BorderColorScaling = 0.5F;
             this.groupBoxCustomEDDN.Controls.Add(this.checkBoxCustomEDDNTo);
-            this.groupBoxCustomEDDN.Location = new System.Drawing.Point(0, 81);
+            this.groupBoxCustomEDDN.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBoxCustomEDDN.Location = new System.Drawing.Point(0, 97);
             this.groupBoxCustomEDDN.Name = "groupBoxCustomEDDN";
-            this.groupBoxCustomEDDN.Size = new System.Drawing.Size(790, 64);
+            this.groupBoxCustomEDDN.Size = new System.Drawing.Size(691, 55);
             this.groupBoxCustomEDDN.TabIndex = 5;
             this.groupBoxCustomEDDN.TabStop = false;
             this.groupBoxCustomEDDN.Text = "EDDN";
@@ -547,10 +553,11 @@
             this.groupBoxCustomEDSM.BorderColor = System.Drawing.Color.LightGray;
             this.groupBoxCustomEDSM.BorderColorScaling = 0.5F;
             this.groupBoxCustomEDSM.Controls.Add(this.tableLayoutPanel2);
-            this.groupBoxCustomEDSM.Location = new System.Drawing.Point(3, 155);
+            this.groupBoxCustomEDSM.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBoxCustomEDSM.Location = new System.Drawing.Point(0, 152);
             this.groupBoxCustomEDSM.Margin = new System.Windows.Forms.Padding(10);
             this.groupBoxCustomEDSM.Name = "groupBoxCustomEDSM";
-            this.groupBoxCustomEDSM.Size = new System.Drawing.Size(790, 77);
+            this.groupBoxCustomEDSM.Size = new System.Drawing.Size(691, 77);
             this.groupBoxCustomEDSM.TabIndex = 4;
             this.groupBoxCustomEDSM.TabStop = false;
             this.groupBoxCustomEDSM.Text = "EDSM Information (optional)";
@@ -576,7 +583,7 @@
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(784, 58);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(685, 58);
             this.tableLayoutPanel2.TabIndex = 5;
             // 
             // labelEDSMAPI
@@ -604,9 +611,10 @@
             this.groupBoxCustomJournal.BorderColor = System.Drawing.Color.LightGray;
             this.groupBoxCustomJournal.BorderColorScaling = 0.5F;
             this.groupBoxCustomJournal.Controls.Add(this.tableLayoutPanel1);
-            this.groupBoxCustomJournal.Location = new System.Drawing.Point(0, 4);
+            this.groupBoxCustomJournal.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBoxCustomJournal.Location = new System.Drawing.Point(0, 0);
             this.groupBoxCustomJournal.Name = "groupBoxCustomJournal";
-            this.groupBoxCustomJournal.Size = new System.Drawing.Size(790, 77);
+            this.groupBoxCustomJournal.Size = new System.Drawing.Size(691, 97);
             this.groupBoxCustomJournal.TabIndex = 3;
             this.groupBoxCustomJournal.TabStop = false;
             this.groupBoxCustomJournal.Text = "Journal Related Information";
@@ -629,11 +637,11 @@
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 16);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowCount = 3;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(784, 58);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(685, 78);
             this.tableLayoutPanel1.TabIndex = 5;
             // 
             // labelCN
@@ -665,7 +673,7 @@
             this.extCheckBoxConsoleCommander.ImageIndeterminate = null;
             this.extCheckBoxConsoleCommander.ImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.extCheckBoxConsoleCommander.ImageUnchecked = null;
-            this.extCheckBoxConsoleCommander.Location = new System.Drawing.Point(525, 3);
+            this.extCheckBoxConsoleCommander.Location = new System.Drawing.Point(459, 3);
             this.extCheckBoxConsoleCommander.MouseOverColor = System.Drawing.Color.CornflowerBlue;
             this.extCheckBoxConsoleCommander.Name = "extCheckBoxConsoleCommander";
             this.extCheckBoxConsoleCommander.Size = new System.Drawing.Size(123, 17);
@@ -677,7 +685,7 @@
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCancel.Location = new System.Drawing.Point(573, 3);
+            this.buttonCancel.Location = new System.Drawing.Point(480, 3);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(100, 23);
             this.buttonCancel.TabIndex = 1;
@@ -688,7 +696,7 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(694, 3);
+            this.buttonOK.Location = new System.Drawing.Point(601, 3);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(100, 23);
             this.buttonOK.TabIndex = 0;
@@ -703,10 +711,11 @@
             this.groupBoxCustomInara.BorderColor = System.Drawing.Color.LightGray;
             this.groupBoxCustomInara.BorderColorScaling = 0.5F;
             this.groupBoxCustomInara.Controls.Add(this.tableLayoutPanelInara);
-            this.groupBoxCustomInara.Location = new System.Drawing.Point(3, 239);
+            this.groupBoxCustomInara.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBoxCustomInara.Location = new System.Drawing.Point(0, 229);
             this.groupBoxCustomInara.Margin = new System.Windows.Forms.Padding(10);
             this.groupBoxCustomInara.Name = "groupBoxCustomInara";
-            this.groupBoxCustomInara.Size = new System.Drawing.Size(790, 78);
+            this.groupBoxCustomInara.Size = new System.Drawing.Size(691, 76);
             this.groupBoxCustomInara.TabIndex = 400;
             this.groupBoxCustomInara.TabStop = false;
             this.groupBoxCustomInara.Text = "Inara Information (optional)";
@@ -731,7 +740,7 @@
             this.tableLayoutPanelInara.RowCount = 2;
             this.tableLayoutPanelInara.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 49.01961F));
             this.tableLayoutPanelInara.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.98039F));
-            this.tableLayoutPanelInara.Size = new System.Drawing.Size(784, 59);
+            this.tableLayoutPanelInara.Size = new System.Drawing.Size(685, 57);
             this.tableLayoutPanelInara.TabIndex = 37;
             // 
             // labelINARAN
@@ -746,7 +755,7 @@
             // labelInaraAPI
             // 
             this.labelInaraAPI.AutoSize = true;
-            this.labelInaraAPI.Location = new System.Drawing.Point(3, 28);
+            this.labelInaraAPI.Location = new System.Drawing.Point(3, 27);
             this.labelInaraAPI.Name = "labelInaraAPI";
             this.labelInaraAPI.Size = new System.Drawing.Size(75, 13);
             this.labelInaraAPI.TabIndex = 2;
@@ -758,17 +767,17 @@
             this.panelOK.Controls.Add(this.buttonCancel);
             this.panelOK.Controls.Add(this.buttonOK);
             this.panelOK.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelOK.Location = new System.Drawing.Point(0, 635);
+            this.panelOK.Location = new System.Drawing.Point(0, 647);
             this.panelOK.Margin = new System.Windows.Forms.Padding(10);
             this.panelOK.Name = "panelOK";
-            this.panelOK.Size = new System.Drawing.Size(806, 29);
+            this.panelOK.Size = new System.Drawing.Size(713, 29);
             this.panelOK.TabIndex = 36;
             // 
             // statusStripCustom
             // 
-            this.statusStripCustom.Location = new System.Drawing.Point(0, 664);
+            this.statusStripCustom.Location = new System.Drawing.Point(0, 676);
             this.statusStripCustom.Name = "statusStripCustom";
-            this.statusStripCustom.Size = new System.Drawing.Size(806, 22);
+            this.statusStripCustom.Size = new System.Drawing.Size(713, 22);
             this.statusStripCustom.TabIndex = 32;
             // 
             // extGroupBoxCommanderInfo
@@ -777,9 +786,10 @@
             this.extGroupBoxCommanderInfo.BorderColor = System.Drawing.Color.LightGray;
             this.extGroupBoxCommanderInfo.BorderColorScaling = 0.5F;
             this.extGroupBoxCommanderInfo.Controls.Add(this.tableLayoutPanelCommanderInfo);
-            this.extGroupBoxCommanderInfo.Location = new System.Drawing.Point(4, 366);
+            this.extGroupBoxCommanderInfo.Dock = System.Windows.Forms.DockStyle.Top;
+            this.extGroupBoxCommanderInfo.Location = new System.Drawing.Point(0, 408);
             this.extGroupBoxCommanderInfo.Name = "extGroupBoxCommanderInfo";
-            this.extGroupBoxCommanderInfo.Size = new System.Drawing.Size(790, 122);
+            this.extGroupBoxCommanderInfo.Size = new System.Drawing.Size(691, 122);
             this.extGroupBoxCommanderInfo.TabIndex = 37;
             this.extGroupBoxCommanderInfo.TabStop = false;
             this.extGroupBoxCommanderInfo.Text = "Other";
@@ -809,7 +819,7 @@
             this.tableLayoutPanelCommanderInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanelCommanderInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanelCommanderInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanelCommanderInfo.Size = new System.Drawing.Size(784, 103);
+            this.tableLayoutPanelCommanderInfo.Size = new System.Drawing.Size(685, 103);
             this.tableLayoutPanelCommanderInfo.TabIndex = 14;
             // 
             // labelMapCol
@@ -842,7 +852,7 @@
             this.extTextBoxAutoCompleteHomeSystem.EndButtonVisible = false;
             this.extTextBoxAutoCompleteHomeSystem.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.extTextBoxAutoCompleteHomeSystem.InErrorCondition = false;
-            this.extTextBoxAutoCompleteHomeSystem.Location = new System.Drawing.Point(264, 3);
+            this.extTextBoxAutoCompleteHomeSystem.Location = new System.Drawing.Point(231, 3);
             this.extTextBoxAutoCompleteHomeSystem.Multiline = false;
             this.extTextBoxAutoCompleteHomeSystem.Name = "extTextBoxAutoCompleteHomeSystem";
             this.extTextBoxAutoCompleteHomeSystem.ReadOnly = false;
@@ -888,9 +898,10 @@
             this.groupBoxCustomIGAU.BorderColor = System.Drawing.Color.LightGray;
             this.groupBoxCustomIGAU.BorderColorScaling = 0.5F;
             this.groupBoxCustomIGAU.Controls.Add(this.checkBoxIGAUSync);
-            this.groupBoxCustomIGAU.Location = new System.Drawing.Point(6, 320);
+            this.groupBoxCustomIGAU.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBoxCustomIGAU.Location = new System.Drawing.Point(0, 358);
             this.groupBoxCustomIGAU.Name = "groupBoxCustomIGAU";
-            this.groupBoxCustomIGAU.Size = new System.Drawing.Size(790, 40);
+            this.groupBoxCustomIGAU.Size = new System.Drawing.Size(691, 50);
             this.groupBoxCustomIGAU.TabIndex = 39;
             this.groupBoxCustomIGAU.TabStop = false;
             this.groupBoxCustomIGAU.Text = "Intergalactic Astronomical Union [IGAU]";
@@ -899,18 +910,13 @@
             // 
             // extPanelScroll
             // 
+            this.extPanelScroll.Controls.Add(this.panelGroups);
             this.extPanelScroll.Controls.Add(this.extScrollBar);
-            this.extPanelScroll.Controls.Add(this.groupBoxCustomJournal);
-            this.extPanelScroll.Controls.Add(this.groupBoxCustomEDDN);
-            this.extPanelScroll.Controls.Add(this.groupBoxCustomEDSM);
-            this.extPanelScroll.Controls.Add(this.groupBoxCustomIGAU);
-            this.extPanelScroll.Controls.Add(this.groupBoxCustomInara);
-            this.extPanelScroll.Controls.Add(this.extGroupBoxCommanderInfo);
             this.extPanelScroll.Dock = System.Windows.Forms.DockStyle.Fill;
             this.extPanelScroll.FlowControlsLeftToRight = false;
             this.extPanelScroll.Location = new System.Drawing.Point(0, 27);
             this.extPanelScroll.Name = "extPanelScroll";
-            this.extPanelScroll.Size = new System.Drawing.Size(806, 608);
+            this.extPanelScroll.Size = new System.Drawing.Size(713, 620);
             this.extPanelScroll.TabIndex = 40;
             this.extPanelScroll.VerticalScrollBarDockRight = true;
             // 
@@ -925,13 +931,13 @@
             this.extScrollBar.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.extScrollBar.HideScrollBar = false;
             this.extScrollBar.LargeChange = 10;
-            this.extScrollBar.Location = new System.Drawing.Point(790, 0);
-            this.extScrollBar.Maximum = -111;
+            this.extScrollBar.Location = new System.Drawing.Point(697, 0);
+            this.extScrollBar.Maximum = -95;
             this.extScrollBar.Minimum = 0;
             this.extScrollBar.MouseOverButtonColor = System.Drawing.Color.Green;
             this.extScrollBar.MousePressedButtonColor = System.Drawing.Color.Red;
             this.extScrollBar.Name = "extScrollBar";
-            this.extScrollBar.Size = new System.Drawing.Size(16, 608);
+            this.extScrollBar.Size = new System.Drawing.Size(16, 620);
             this.extScrollBar.SliderColor = System.Drawing.Color.DarkGray;
             this.extScrollBar.SmallChange = 1;
             this.extScrollBar.TabIndex = 0;
@@ -940,14 +946,65 @@
             this.extScrollBar.ThumbButtonColor = System.Drawing.Color.DarkBlue;
             this.extScrollBar.ThumbColorScaling = 0.5F;
             this.extScrollBar.ThumbDrawAngle = 0F;
-            this.extScrollBar.Value = -111;
-            this.extScrollBar.ValueLimited = -111;
+            this.extScrollBar.Value = -95;
+            this.extScrollBar.ValueLimited = -95;
+            // 
+            // extGroupBoxEDAstro
+            // 
+            this.extGroupBoxEDAstro.BackColorScaling = 0.5F;
+            this.extGroupBoxEDAstro.BorderColor = System.Drawing.Color.LightGray;
+            this.extGroupBoxEDAstro.BorderColorScaling = 0.5F;
+            this.extGroupBoxEDAstro.Controls.Add(this.extCheckBoxEDAstro);
+            this.extGroupBoxEDAstro.Dock = System.Windows.Forms.DockStyle.Top;
+            this.extGroupBoxEDAstro.Location = new System.Drawing.Point(0, 305);
+            this.extGroupBoxEDAstro.Name = "extGroupBoxEDAstro";
+            this.extGroupBoxEDAstro.Size = new System.Drawing.Size(691, 53);
+            this.extGroupBoxEDAstro.TabIndex = 39;
+            this.extGroupBoxEDAstro.TabStop = false;
+            this.extGroupBoxEDAstro.Text = "EDAstro";
+            this.extGroupBoxEDAstro.TextPadding = 0;
+            this.extGroupBoxEDAstro.TextStartPosition = -1;
+            // 
+            // extCheckBoxEDAstro
+            // 
+            this.extCheckBoxEDAstro.AutoSize = true;
+            this.extCheckBoxEDAstro.CheckBoxColor = System.Drawing.Color.Gray;
+            this.extCheckBoxEDAstro.CheckBoxDisabledScaling = 0.5F;
+            this.extCheckBoxEDAstro.CheckBoxInnerColor = System.Drawing.Color.White;
+            this.extCheckBoxEDAstro.CheckColor = System.Drawing.Color.DarkBlue;
+            this.extCheckBoxEDAstro.ImageButtonDisabledScaling = 0.5F;
+            this.extCheckBoxEDAstro.ImageIndeterminate = null;
+            this.extCheckBoxEDAstro.ImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.extCheckBoxEDAstro.ImageUnchecked = null;
+            this.extCheckBoxEDAstro.Location = new System.Drawing.Point(9, 19);
+            this.extCheckBoxEDAstro.MouseOverColor = System.Drawing.Color.CornflowerBlue;
+            this.extCheckBoxEDAstro.Name = "extCheckBoxEDAstro";
+            this.extCheckBoxEDAstro.Size = new System.Drawing.Size(141, 17);
+            this.extCheckBoxEDAstro.TabIndex = 0;
+            this.extCheckBoxEDAstro.Text = "Send Events to EDAstro";
+            this.extCheckBoxEDAstro.TickBoxReductionRatio = 0.75F;
+            this.extCheckBoxEDAstro.UseVisualStyleBackColor = true;
+            // 
+            // panelGroups
+            // 
+            this.panelGroups.AutoSize = true;
+            this.panelGroups.Controls.Add(this.extGroupBoxCommanderInfo);
+            this.panelGroups.Controls.Add(this.groupBoxCustomIGAU);
+            this.panelGroups.Controls.Add(this.extGroupBoxEDAstro);
+            this.panelGroups.Controls.Add(this.groupBoxCustomInara);
+            this.panelGroups.Controls.Add(this.groupBoxCustomEDSM);
+            this.panelGroups.Controls.Add(this.groupBoxCustomEDDN);
+            this.panelGroups.Controls.Add(this.groupBoxCustomJournal);
+            this.panelGroups.Location = new System.Drawing.Point(0, 0);
+            this.panelGroups.Name = "panelGroups";
+            this.panelGroups.Size = new System.Drawing.Size(691, 530);
+            this.panelGroups.TabIndex = 1;
             // 
             // CommanderForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(806, 686);
+            this.ClientSize = new System.Drawing.Size(713, 698);
             this.Controls.Add(this.extPanelScroll);
             this.Controls.Add(this.panelOK);
             this.Controls.Add(this.panelTop);
@@ -979,6 +1036,10 @@
             this.groupBoxCustomIGAU.PerformLayout();
             this.extPanelScroll.ResumeLayout(false);
             this.extPanelScroll.PerformLayout();
+            this.extGroupBoxEDAstro.ResumeLayout(false);
+            this.extGroupBoxEDAstro.PerformLayout();
+            this.panelGroups.ResumeLayout(false);
+            this.panelGroups.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1035,5 +1096,8 @@
         private ExtendedControls.ExtCheckBox extCheckBoxConsoleCommander;
         private ExtendedControls.ExtPanelScroll extPanelScroll;
         private ExtendedControls.ExtScrollBar extScrollBar;
+        private ExtendedControls.ExtGroupBox extGroupBoxEDAstro;
+        private ExtendedControls.ExtCheckBox extCheckBoxEDAstro;
+        private System.Windows.Forms.Panel panelGroups;
     }
 }

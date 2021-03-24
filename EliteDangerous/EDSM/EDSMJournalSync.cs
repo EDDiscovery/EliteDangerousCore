@@ -109,9 +109,9 @@ namespace EliteDangerousCore.EDSM
         {
             try
             {
-                UpdateDiscardList();                // make sure the list is up to date
-
                 running = 1;
+
+                UpdateDiscardList();                // make sure the list is up to date
 
                 while (historylist.Count != 0)      // while stuff to send
                 {

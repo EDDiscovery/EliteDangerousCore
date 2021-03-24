@@ -77,6 +77,8 @@
     <Compile Include="DLL\EDDDLLCaller.cs" />
     <Compile Include="DLL\EDDDLLHistoryEntry.cs" />
     <Compile Include="DLL\EDDDLLManager.cs" />
+    <Compile Include="EDAstro\EDAstroSync.cs" />
+    <Compile Include="EDAstro\EDAstroClass.cs" />
     <Compile Include="EDDN\EDDNClass.cs" />
     <Compile Include="EDDN\EDDNSync.cs" />
     <Compile Include="EDSM\EDSMJournalSync.cs" />

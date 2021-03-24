@@ -29,21 +29,11 @@ namespace EliteDangerousCore.Forms
         public CommanderForm(List<ExtendedControls.ExtGroupBox> additionalcontrols = null)
         {
             InitializeComponent();
-            //extPanelScroll.Controls.AddRange(additionalcontrols.ToArray());
-                //InsertRangeBefore(groupBoxCustomInara, );
 
-            int vpos = 0;
-            foreach (var c in extPanelScroll.Controls)
-            {
+            foreach (Control c in additionalcontrols)
+                c.Dock = DockStyle.Top;
 
-                if (c != extScrollBar)
-                {
-                    Control ctrl = c as Control;
-                    ctrl.Location = new System.Drawing.Point(0, vpos);
-                    ctrl.Width = 790;
-                    vpos += ctrl.Height + 8;
-                }
-            }
+            panelGroups.Controls.InsertRangeBefore(groupBoxCustomInara,additionalcontrols );
 
             var theme = ExtendedControls.ThemeableFormsInstance.Instance;
             bool winborder = theme.ApplyDialog(this);
@@ -93,6 +83,7 @@ namespace EliteDangerousCore.Forms
             textBoxBorderInaraAPIKey.Text = cmdr.InaraAPIKey;
             textBoxBorderInaraName.Text = cmdr.InaraName;
             checkBoxCustomInara.Checked = cmdr.SyncToInara;
+            extCheckBoxEDAstro.Checked = cmdr.SyncToEDAstro;
 
             extTextBoxAutoCompleteHomeSystem.Text = cmdr.HomeSystem;
             extTextBoxAutoCompleteHomeSystem.SetAutoCompletor(EliteDangerousCore.DB.SystemCache.ReturnSystemAutoCompleteList, true);
@@ -129,6 +120,7 @@ namespace EliteDangerousCore.Forms
             cmdr.InaraAPIKey = textBoxBorderInaraAPIKey.Text;
             cmdr.InaraName = textBoxBorderInaraName.Text;
             cmdr.SyncToInara = checkBoxCustomInara.Checked;
+            cmdr.SyncToEDAstro = extCheckBoxEDAstro.Checked;
             cmdr.HomeSystem = extTextBoxAutoCompleteHomeSystem.Text;
             cmdr.MapZoom = float.TryParse(textBoxDefaultZoom.Text, out float res) ? res : 1.0f;
             cmdr.MapCentreOnSelection = radioButtonHistorySelection.Checked;
