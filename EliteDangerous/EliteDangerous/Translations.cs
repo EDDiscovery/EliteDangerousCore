@@ -28,9 +28,7 @@ namespace EliteDangerousCore
         Information, // Information
         NoPos, // No Pos
 
-        ScreenShotImageConverter_FolderErr, // Cannot convert {0} into the same folder as they are stored into
-        ScreenShotImageConverter_CNV, // Converted {0} to {1}
-        ScreenShotImageConverter_ERRF, // Unable to open screenshot '{0}': {1}
+        ScreenShotImageConverter_CNV, 
         ScreenshotDirectoryWatcher_Scan,
         ScreenshotDirectoryWatcher_NOF,
         ScreenshotDirectoryWatcher_Excp,

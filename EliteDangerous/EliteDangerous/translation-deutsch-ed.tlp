@@ -713,3 +713,45 @@ CommanderForm: "CommanderForm" @
 .textBoxBorderCmdr.ToolTip: "Enter commander name as used in Elite Dangerous" => "In Elite Dangerous benutzter Kommandanten-Name eingeben"
 .textBoxBorderJournal.ToolTip: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\nLeave override journal location blank to use the standard Frontier location for journals" => "Journal-Verzeichnis auswählen. Normalerweise kann diese Feld leer bleiben, ausser wenn Sie EDD auf einem anderen Rechner verwenden als auf dem Rechner, den Sie zum Spielen benutzen\nWenn Sie dieses Feld freilassen, wird das Standard-Journal-Verzeichnis verwendet"
 .LF: "Select folder where Journal*.log files are stored by Frontier in" => "Wählen Sie das Verzeichnis, wo die Journal*.log Dateien von Frontier gespeichert werden"
+
+
+SECTION ScreenshotDirectoryWatcher
+
+.Scan: "Scanning for {0} screenshots in {1}" => "Scanne nach {0} Screenshots in {1}"
+.NOF: "Folder specified for image conversion does not exist, check settings in the Screenshots tab" => "Für Screenshotkonvertierung spezifizierter Ordner existiert nicht, überprüfe die Einstellungen im Screenshotbereich des Einstellungspaneels."
+.Excp: "Error in executing image conversion, try another screenshot, check output path settings. (Exception " => "Fehler beim Ausführen der Screenshotkonvertierung, versuche einen anderen Screenshot oder überprüfe die Einstellungen des Ausgabepfads. (Ausnahme "
+
+SECTION ScreenShotImageConverter
+
+.CNV: "Converted {0} to {1}" => "Konvertierte {0} zu {1}"
+
+SECTION ScreenShotConfigureForm
+
+ScreenShotConfigureForm: "Screen Shot Configure" => "Screenshotkonfiguration"
+.buttonExtCancel: "Cancel" => "Abbrechen"
+.buttonExtOK: "OK" => "OK"
+.groupBoxCropSettings: "Crop Settings" => "Beschneidungseinstellungen"
+.extGroupBox1: "Crop/Resize Settings" => "Einstellungen zum Beschneiden/Größe verändern"
+.labelHeight: "Height" => "Höhe"
+.labelWidth: "Width" => "Breite"
+.labelLeft: "Left" => "Links"
+.labelTop: "Top" => "Oben"
+.checkBoxCropImage: "Crop Image" => "Bild beschneiden" 
+.labelFolder: "ED/Steam Screenshot folder" => "ED/Steam-Screenshotordner"
+.buttonChangeScreenshotsFolder: "Browse" => "Durchsuchen"
+.labelSubfolder: "In Sub folder" => "Im Unterordner"
+.labelFileNameFormat: "In Filename format" => "Im Dateinamenformat"
+.labelStoreFolder: "Store Converted pictures" => "Speichere konvertierte Bilder"
+.buttonEDChangeOutputFolder: "Browse" => "Durchsuchen"
+.labelScanFor: "Scan for" => "Suche nach"
+.labelSaveAs: "Save as" => "Speichern als"
+.extCheckBoxRemoveOriginal: "Remove Original Elite Image" => "Entferne Elite-Originalbilder"
+.extCheckBoxKeepMasterConvertedImage: "Keep master converted image" => "Behalte konvertiertes Masterbild"
+.labelImage2: "Image 2" => "Bild 1"
+.labelImage1: "Image 1" => "Bild 2"
+.labelHeight2: "Height" => "Höhe"
+.labelWidth2: "Width" => "Breite"
+.labelLeft2: "Left" => "Links"
+.labelTop2: "Top" => "Oben"
+.labelCropResizeOptions: "Crop/Resize Options" => "Optionen für Beschneiden/Größe verändern"
+

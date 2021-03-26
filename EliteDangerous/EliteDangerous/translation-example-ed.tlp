@@ -718,4 +718,54 @@ CommanderForm: "CommanderForm" @
 .extCheckBoxConsoleCommander: "Console Commander" @
 
 
+SECTION ScreenshotDirectoryWatcher
 
+.Scan: "Scanning for {0} screenshots in {1}" @
+.NOF: "Folder specified for image conversion does not exist, check screenshot settings in the settings panel" @
+.Excp: "Error in executing image conversion, try another screenshot, check output path settings. (Exception " @
+
+SECTION ScreenShotImageConverter
+
+.CNV: "Converted {0} to {1}" @
+
+SECTION ScreenShotConfigureForm
+
+ScreenShotConfigureForm: "Screen Shot Configure" @
+.buttonExtCancel: "Cancel" @
+.buttonExtOK: "OK" @
+.groupBoxCropSettings: "Crop Settings" @
+.extGroupBox1: "Crop/Resize Settings" @
+.labelHeight: "Height" @
+.labelWidth: "Width" @
+.labelLeft: "Left" @
+.labelTop: "Top" @
+.labelHeight2: "Height" @
+.labelWidth2: "Width" @
+.labelLeft2: "Left" @
+.labelTop2: "Top" @
+.checkBoxCropImage: "Crop Image" @
+.labelFolder: "ED/Steam Screenshot folder" @
+.buttonChangeScreenshotsFolder: "Browse" @
+.labelSubfolder: "In Sub folder" @
+.labelFileNameFormat: "In Filename format" @
+.labelStoreFolder: "Store Converted pictures" @
+.buttonEDChangeOutputFolder: "Browse" @
+.labelScanFor: "Scan for" @
+.labelSaveAs: "Save as" @
+.extCheckBoxRemoveOriginal: "Remove Original Elite Image" @
+.extCheckBoxKeepMasterConvertedImage: "Keep master converted image" @
+.labelImage2: "Image 2" @
+.labelImage1: "Image 1" @
+.labelHeight2: "Height" @
+.labelWidth2: "Width" @
+.labelLeft2: "Left" @
+.labelTop2: "Top" @
+.labelCropResizeOptions: "Crop/Resize Options" @
+
+
+ScreenShotConfigureForm.extCheckBoxEnabled: "Conversion Enabled" @
+ScreenShotConfigureForm.extCheckBoxHiRes: "Mark HiRes Files" @
+ScreenShotConfigureForm.extButtonBrowseMoveOrg: "Browse" @
+ScreenShotConfigureForm.labelClipboard: "Clipboard" @
+ScreenShotConfigureForm.labelOriginal: "Original Image" @
+ScreenShotConfigureForm.labelEnabled: "Enable" @

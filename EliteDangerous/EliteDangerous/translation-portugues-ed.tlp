@@ -713,3 +713,44 @@ CommanderForm: "CommanderForm" => "Ficha"
 .textBoxBorderCmdr.ToolTip: "Enter commander name as used in Elite Dangerous" => "Insira o nome do comandante como é em Elite Dangerous"
 .textBoxBorderJournal.ToolTip: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\nLeave override journal location blank to use the standard Frontier location for journals" => "Insira a localização do jornal. Geralmente, é suficiente deixar este campo em branco para usar a localização normal usada da Frontier"
 .LF: "Select folder where Journal*.log files are stored by Frontier in" => "Selecionar onde ficam os arquivos de Journal*.log criados da Frontier"
+
+SECTION ScreenshotDirectoryWatcher
+
+.Scan: "Scanning for {0} screenshots in {1}" => "Escaneando por {0} screenshots in {1}"
+.NOF: "Folder specified for image conversion does not exist, check settings in the Screenshots tab" => "Pasta especificada para conversão inexistente, verificar ajuste nos Screenshots"
+.Excp: "Error in executing image conversion, try another screenshot, check output path settings. (Exception " => "Erro na execução da conversão das imagens, tenta outroi screenshot, ou verifica as impostações"
+
+SECTION ScreenShotImageConverter
+
+.CNV: "Converted {0} to {1}" => "Convertido {0} to {1}"
+
+SECTION ScreenShotConfigureForm
+
+ScreenShotConfigureForm: "Screen Shot Configure" => "Impostar SCreen Shot"
+.buttonExtCancel: "Cancel" => "Cancelar"
+.buttonExtOK: "OK" @
+.groupBoxCropSettings: "Crop Settings" => "Ajustes de recorte"
+.extGroupBox1: "Crop/Resize Settings" @
+.labelHeight: "Height" => "Altura"
+.labelWidth: "Width" => "Largura"
+.labelLeft: "Left" => "Canto esquerdo"
+.labelTop: "Top" => "Canto superior"
+.checkBoxCropImage: "Crop Image" => "Recortar imagem"
+.labelFolder: "ED/Steam Screenshot folder" => "Pasta screenshot ED/Steam"
+.buttonChangeScreenshotsFolder: "Browse" => "Navegar"
+.labelSubfolder: "In Sub folder" => "Em sub pastas"
+.labelFileNameFormat: "In Filename format" => "No formato do nome"
+.labelStoreFolder: "Store Converted pictures" => "Armazena imagens convertidas"
+.buttonEDChangeOutputFolder: "Browse" => "Navegar"
+.labelScanFor: "Scan for" => "Escanear para"
+.labelSaveAs: "Save as" => "Salvar como"
+.extCheckBoxRemoveOriginal: "Remove Original Elite Image" => "Remove imagem original"
+.extCheckBoxKeepMasterConvertedImage: "Keep master converted image" => "Mantém imagem convertida"
+.labelImage2: "Image 2" => "Imagem 2"
+.labelImage1: "Image 1" => "Imagem 1"
+.labelHeight2: "Height" => "Altura"
+.labelWidth2: "Width" => "Largura"
+.labelLeft2: "Left" => "Esquerda"
+.labelTop2: "Top" => "Alto"
+.labelCropResizeOptions: "Crop/Resize Options" => "Opções de Corte/Redimensionamento"
+

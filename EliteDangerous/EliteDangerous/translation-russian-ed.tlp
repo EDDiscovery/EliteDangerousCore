@@ -713,3 +713,44 @@ CommanderForm: "CommanderForm" => "Командир"
 .textBoxBorderCmdr.ToolTip: "Enter commander name as used in Elite Dangerous" => "Введите имя командира, используемое в Elite Dangerous"
 .textBoxBorderJournal.ToolTip: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\nLeave override journal location blank to use the standard Frontier location for journals" => "Выберите папку с файлами журнала. Обычно, если вы используете EDD на том же компьютере, на котором играете, это поле можно оставить пустым.\nВ этом случае будет использоваться папка журнала по умолчанию"
 .LF: "Select folder where Journal*.log files are stored by Frontier in" => "Выберите папку, в которой хранятся файлы журнала *.log Frontier"
+
+SECTION ScreenshotDirectoryWatcher
+
+.Scan: "Scanning for {0} screenshots in {1}" => "Поиск {0} скриншотов в {1}"
+.NOF: "Folder specified for image conversion does not exist, check settings in the Screenshots tab" => "Отсутствует папка для преобразованных изображений, пожалуйста, проверьте настройки на вкладке «Скриншоты»"
+.Excp: "Error in executing image conversion, try another screenshot, check output path settings. (Exception " => "Ошибка преобразования изображения, попробуйте другой скриншот и проверьте настройки исходящей папки. (Ошибка "
+
+SECTION ScreenShotImageConverter
+
+.CNV: "Converted {0} to {1}" => "{0} преобразован в {1} "
+
+SECTION ScreenShotConfigureForm
+
+ScreenShotConfigureForm: "Screen Shot Configure" => "Настройки скриншотов"
+.buttonExtCancel: "Cancel" => "Отмена"
+.buttonExtOK: "OK" @
+.groupBoxCropSettings: "Crop Settings" => "Настройки кадрирования"
+.extGroupBox1: "Crop/Resize Settings" @
+.labelHeight: "Height" => "Высота"
+.labelWidth: "Width" => "Ширина"
+.labelLeft: "Left" => "Лево"
+.labelTop: "Top" => "Верх"
+.checkBoxCropImage: "Crop Image" => "Кадрировать изображение"
+.labelFolder: "ED/Steam Screenshot folder" => "Папка сриншотов ED/Steam"
+.buttonChangeScreenshotsFolder: "Browse" => "Обзор"
+.labelSubfolder: "In Sub folder" => "В подпапке"
+.labelFileNameFormat: "In Filename format" => "Формат имени файла"
+.labelStoreFolder: "Store Converted pictures" => "Сохранить преобразованные изображения"
+.buttonEDChangeOutputFolder: "Browse" => "Обзор"
+.labelScanFor: "Scan for" => "Искать"
+.labelSaveAs: "Save as" => "Сохранить как"
+.extCheckBoxRemoveOriginal: "Remove Original Elite Image" @
+.extCheckBoxKeepMasterConvertedImage: "Keep master converted image" @
+.labelImage2: "Image 2" @
+.labelImage1: "Image 1" @
+.labelHeight2: "Height" @
+.labelWidth2: "Width" @
+.labelLeft2: "Left" @
+.labelTop2: "Top" @
+.labelCropResizeOptions: "Crop/Resize Options" @
+
