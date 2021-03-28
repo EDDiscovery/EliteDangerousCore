@@ -212,9 +212,7 @@ namespace EliteDangerousCore.EDDN
             else if (je.EventTypeID == JournalTypeEnum.EDDCommodityPrices)
             {
                 JournalEDDCommodityPrices jm = je as JournalEDDCommodityPrices;
-
-                // not yet, need further debugging
-              //  msg = eddn.CreateEDDNCommodityMessage(jm.Commodities, jm.StarSystem, jm.Station, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned
+                msg = eddn.CreateEDDNCommodityMessage(jm.Commodities, jm.StarSystem, jm.Station, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned
             }
 
             if (msg != null)
