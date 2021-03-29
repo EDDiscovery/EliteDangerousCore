@@ -270,7 +270,10 @@ SECTION FSSSignal
 .Faction: "Faction:" @
 .USSType: "USS Type:" => "Type de SNI:"
 .ThreatLevel: "Threat Level:" => "Niveau de menace:"
-.StationBool: ";Station" @
+.StationBool: ";Station: " @
+.CarrierBool: ";Carrier: " @
+.InstallationBool: ";Installation: " @
+.LastSeen: "Last Seen:" @
 
 SECTION JournalFSSDiscoveryScan
 
@@ -305,7 +308,7 @@ SECTION JournalEngineerCraftBase
 
 SECTION JournalEngineerProgress
 
-.Progress: "Progress:" => "Progression:\\""
+.Progress: "Progress:" => "Progression:\\"
 .Progresson: "Progress on ; Engineers" => "Progression sur ; ingénieurs"
 .Rank: "Rank:" => "Rang:"
 
@@ -525,11 +528,6 @@ SECTION JournalScan
 .Materials: "Materials:\n" => "Matériaux:\n"
 .AtmosphericComposition: "Atmospheric Composition:\n" => "Athmosphére:\n"
 .PlanetaryComposition: "Planetary Composition:\n" => "Composition:\n"
-.MRP: "Metal Rich Planets: {0} ({1}-{2} AU)\n" => "Planètes riches en métaux: {0} ({1}-{2} UA)\n"
-.WWP: "Water Worlds: {0} ({1}-{2} AU)\n" => "Mondes aquatiques: {0} ({1}-{2} UA)\n"
-.ELWP: "Earth Like Worlds: {0} ({1}-{2} AU)\n" => "Mondes telluriques: {0} ({1}-{2} UA)\n"
-.AWP: "Ammonia Worlds: {0} ({1}-{2} AU)\n" => "Mondes Ammoniaques: {0} ({1}-{2} UA)\n"
-.ICYP: "Icy Planets: {0} ({1} AU to {2})\n" => "Planètes glacées: {0} ({1} UA à {2})\n"
 .HabitableZone: " - Habitable Zone, {0} ({1}-{2} AU),\n" => " - Zone habitable, {0} ({1}-{2} UA),\n"
 .MetalRichplanets: " - Metal Rich planets, {0} ({1}-{2} AU),\n" => " - Planètes riches en métaux:, {0} ({1}-{2} UA),\n"
 .WaterWorlds: " - Water Worlds, {0} ({1}-{2} AU),\n" => " - Mondes aquatiques: {0} ({1}-{2} UA)\n"

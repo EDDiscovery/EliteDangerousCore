@@ -707,17 +707,21 @@ CommanderForm: "CommanderForm" => "Ficha"
 .checkBoxCustomEDDNTo.ToolTip: "Click to send journal information to EDDN. EDDN feeds tools such as EDDB, EDSM, Inara with data from commanders. All data is made anonymised" => "Pressiona pare enviar as informações do jornal a EDDN. EDDN alimenta ulteriores progetos (EDDB, EDSM, Inara, etc...) com dados sobre comandante. Todos os dados são anónimos!"
 .checkBoxCustomEDSMFrom.ToolTip: "Receive any FSD jumps from EDSM that are on their database but not in EDDiscovery" => "Receba todos os dados sobre saltos FSD da EDSM que estejam em seu banco dados mas não em EDDiscovery"
 .checkBoxCustomEDSMTo.ToolTip: "Send your travel and ship data to EDSM" => "Envia os teu histórico de viajem e de espaçonaves a EDSM"
-.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \\"My account\\" menu" => "Insira a chave API de EDSM\nObtém uma chave API em https://www.edsm.net, no menu de usuário"
+.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \\"My account\\" menu" @
 .textBoxBorderEDSMName.ToolTip: "Give the name this commander is known as in EDSM" => "Insira o nome como este comandante é conhecido em EDSM"
 .buttonExtBrowse.ToolTip: "Browse to the the journal folder" => "Navega a localização do jornal"
 .textBoxBorderCmdr.ToolTip: "Enter commander name as used in Elite Dangerous" => "Insira o nome do comandante como é em Elite Dangerous"
 .textBoxBorderJournal.ToolTip: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\nLeave override journal location blank to use the standard Frontier location for journals" => "Insira a localização do jornal. Geralmente, é suficiente deixar este campo em branco para usar a localização normal usada da Frontier"
 .LF: "Select folder where Journal*.log files are stored by Frontier in" => "Selecionar onde ficam os arquivos de Journal*.log criados da Frontier"
+.ND: "Folder does not exist" @
+.extCheckBoxConsoleCommander: "Console Commander" @
+.extGroupBoxEDAstro: "EDAstro" @
+.extCheckBoxEDAstro: "Send Events to EDAstro" @
 
 SECTION ScreenshotDirectoryWatcher
 
 .Scan: "Scanning for {0} screenshots in {1}" => "Escaneando por {0} screenshots in {1}"
-.NOF: "Folder specified for image conversion does not exist, check settings in the Screenshots tab" => "Pasta especificada para conversão inexistente, verificar ajuste nos Screenshots"
+.NOF: "Folder specified for image conversion does not exist, check screenshot settings in the settings panel" => "Pasta especificada para conversão inexistente, verificar ajuste nos Screenshots"
 .Excp: "Error in executing image conversion, try another screenshot, check output path settings. (Exception " => "Erro na execução da conversão das imagens, tenta outroi screenshot, ou verifica as impostações"
 
 SECTION ScreenShotImageConverter
@@ -735,6 +739,10 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Impostar SCreen Shot"
 .labelWidth: "Width" => "Largura"
 .labelLeft: "Left" => "Canto esquerdo"
 .labelTop: "Top" => "Canto superior"
+.labelHeight2: "Height" => "Altura"
+.labelWidth2: "Width" => "Largura"
+.labelLeft2: "Left" => "Esquerda"
+.labelTop2: "Top" => "Alto"
 .checkBoxCropImage: "Crop Image" => "Recortar imagem"
 .labelFolder: "ED/Steam Screenshot folder" => "Pasta screenshot ED/Steam"
 .buttonChangeScreenshotsFolder: "Browse" => "Navegar"
@@ -748,9 +756,10 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Impostar SCreen Shot"
 .extCheckBoxKeepMasterConvertedImage: "Keep master converted image" => "Mantém imagem convertida"
 .labelImage2: "Image 2" => "Imagem 2"
 .labelImage1: "Image 1" => "Imagem 1"
-.labelHeight2: "Height" => "Altura"
-.labelWidth2: "Width" => "Largura"
-.labelLeft2: "Left" => "Esquerda"
-.labelTop2: "Top" => "Alto"
 .labelCropResizeOptions: "Crop/Resize Options" => "Opções de Corte/Redimensionamento"
-
+.extCheckBoxEnabled: "Conversion Enabled" @
+.extCheckBoxHiRes: "Mark HiRes Files" @
+.extButtonBrowseMoveOrg: "Browse" @
+.labelClipboard: "Clipboard" @
+.labelOriginal: "Original Image" @
+.labelEnabled: "Enable" @

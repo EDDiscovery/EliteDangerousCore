@@ -465,7 +465,7 @@ SECTION MaterialCommodityData
 .neritusberries: "Neritus Berries" => "Neritus-Beeren"
 .ochoengchillies: "Ochoeng Chillies" => "Ochoeng-Chili"
 .deuringastruffles: "Deuringas Truffles" => "Deuringas-Trüffel"
-.hr7221wheat: "HR 7221 Wheat" => "\"HR 7221\" Weizen"
+.hr7221wheat: "HR 7221 Wheat" => "\\"HR 7221\\" Weizen"
 .jarouarice: "Jaroua Rice" => "Jaroua-Reis"
 .belalansrayleather: "Belalans Ray Leather" => "Belalans-Rochenleder"
 .damnacarapaces: "Damna Carapaces" => "Damna-Schildpanzer"
@@ -707,17 +707,21 @@ CommanderForm: "CommanderForm" => "Kommandantenformular"
 .checkBoxCustomEDDNTo.ToolTip: "Click to send journal information to EDDN. EDDN feeds tools such as EDDB, EDSM, Inara with data from commanders. All data is made anonymised" => "Klicken, um Journal-Informationen an EDDN zu senden. EDDN beliefert Applikation wie EDDB, EDSM, und Inara mit Daten. Alle Daten sind anonymisiert"
 .checkBoxCustomEDSMFrom.ToolTip: "Receive any FSD jumps from EDSM that are on their database but not in EDDiscovery" => "Erhält alle FSA-Sprünge von EDSM die in dessen Datenbank aber nicht in EDDiscovery sind"
 .checkBoxCustomEDSMTo.ToolTip: "Send your travel and ship data to EDSM" => "Reise- und Schiffsdaten an EDSM schicken"
-.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \\"My account\\" menu" => "API-Schlüssel von der EDSM-Webseite eingeben\nDen Schlüssel bekommst du auf https://www.edsm.net/de/settings/api"
+.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \\"My account\\" menu" @
 .textBoxBorderEDSMName.ToolTip: "Give the name this commander is known as in EDSM" => "Name des Kommandanten auf EDSM"
 .buttonExtBrowse.ToolTip: "Browse to the the journal folder" => "Journal-Verzeichnis auswählen"
 .textBoxBorderCmdr.ToolTip: "Enter commander name as used in Elite Dangerous" => "In Elite Dangerous benutzter Kommandanten-Name eingeben"
 .textBoxBorderJournal.ToolTip: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\nLeave override journal location blank to use the standard Frontier location for journals" => "Journal-Verzeichnis auswählen. Normalerweise kann dieses Feld leer bleiben, ausser wenn du EDD auf einem anderen Rechner verwendest als auf dem Rechner, den du zum Spielen benutzt\nWenn du dieses Feld freilässt, wird das Standard-Journal-Verzeichnis verwendet"
 .LF: "Select folder where Journal*.log files are stored by Frontier in" => "Wähle das Verzeichnis, in dem die Journal*.log Dateien von Frontier gespeichert werden"
+.ND: "Folder does not exist" @
+.extCheckBoxConsoleCommander: "Console Commander" @
+.extGroupBoxEDAstro: "EDAstro" @
+.extCheckBoxEDAstro: "Send Events to EDAstro" @
 
 SECTION ScreenshotDirectoryWatcher
 
 .Scan: "Scanning for {0} screenshots in {1}" => "Scanne nach {0} Screenshots in {1}"
-.NOF: "Folder specified for image conversion does not exist, check settings in the Screenshots tab" => "Für Screenshotkonvertierung spezifizierter Ordner existiert nicht, überprüfe die Einstellungen im Screenshotbereich des Einstellungspaneels."
+.NOF: "Folder specified for image conversion does not exist, check screenshot settings in the settings panel" => "Für Screenshotkonvertierung spezifizierter Ordner existiert nicht, überprüfe die Einstellungen im Screenshotbereich des Einstellungspaneels."
 .Excp: "Error in executing image conversion, try another screenshot, check output path settings. (Exception " => "Fehler beim Ausführen der Screenshotkonvertierung, versuche einen anderen Screenshot oder überprüfe die Einstellungen des Ausgabepfads. (Ausnahme "
 
 SECTION ScreenShotImageConverter
@@ -735,7 +739,11 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Screenshotkonfiguration"
 .labelWidth: "Width" => "Breite"
 .labelLeft: "Left" => "Links"
 .labelTop: "Top" => "Oben"
-.checkBoxCropImage: "Crop Image" => "Bild beschneiden" 
+.labelHeight2: "Height" => "Höhe"
+.labelWidth2: "Width" => "Breite"
+.labelLeft2: "Left" => "Links"
+.labelTop2: "Top" => "Oben"
+.checkBoxCropImage: "Crop Image" => "Bild beschneiden"
 .labelFolder: "ED/Steam Screenshot folder" => "ED/Steam-Screenshotordner"
 .buttonChangeScreenshotsFolder: "Browse" => "Durchsuchen"
 .labelSubfolder: "In Sub folder" => "Im Unterordner"
@@ -748,9 +756,10 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Screenshotkonfiguration"
 .extCheckBoxKeepMasterConvertedImage: "Keep master converted image" => "Behalte konvertiertes Masterbild"
 .labelImage2: "Image 2" => "Bild 1"
 .labelImage1: "Image 1" => "Bild 2"
-.labelHeight2: "Height" => "Höhe"
-.labelWidth2: "Width" => "Breite"
-.labelLeft2: "Left" => "Links"
-.labelTop2: "Top" => "Oben"
 .labelCropResizeOptions: "Crop/Resize Options" => "Optionen für Beschneiden/Größe verändern"
-
+.extCheckBoxEnabled: "Conversion Enabled" @
+.extCheckBoxHiRes: "Mark HiRes Files" @
+.extButtonBrowseMoveOrg: "Browse" @
+.labelClipboard: "Clipboard" @
+.labelOriginal: "Original Image" @
+.labelEnabled: "Enable" @

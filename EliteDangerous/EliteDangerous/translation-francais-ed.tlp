@@ -707,17 +707,21 @@ CommanderForm: "CommanderForm" @
 .checkBoxCustomEDDNTo.ToolTip: "Click to send journal information to EDDN. EDDN feeds tools such as EDDB, EDSM, Inara with data from commanders. All data is made anonymised" => "Cocher pour envoyer les informations du journal à EDDN.\r\nEDDN sert à alimenter les outils tels que EDDB, EDSM, Inara avec les données des commandants. Toutes les données sont anonymisées."
 .checkBoxCustomEDSMFrom.ToolTip: "Receive any FSD jumps from EDSM that are on their database but not in EDDiscovery" => "Recevoir les données de sauts FSD d'EDSM qui sont sur leur base de données mais pas dans EDDiscovery"
 .checkBoxCustomEDSMTo.ToolTip: "Send your travel and ship data to EDSM" => "Envoyer vos voyages et données de vaisseau à EDSM"
-.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \\"My account\\" menu" => "Entrer la clé API obbtenu sur le site d'EDSM\r\nhttps://www.edsm.net"
+.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \\"My account\\" menu" @
 .textBoxBorderEDSMName.ToolTip: "Give the name this commander is known as in EDSM" => "Indiquer le nom de ce commandant tel qu'il est connu sur EDSM"
 .buttonExtBrowse.ToolTip: "Browse to the the journal folder" => "Selectionner le fichier de journal sur l'ordinateur"
 .textBoxBorderCmdr.ToolTip: "Enter commander name as used in Elite Dangerous" => "Entrer le nom de commandant utilisé dans Elite Dangerous"
 .textBoxBorderJournal.ToolTip: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\nLeave override journal location blank to use the standard Frontier location for journals" => "En principe il faut laisser ce champs vide, sauf si vous jouez depuis un autre ordinateur que celui ci. Si vous laissez vite, le répertoire standard d'Elite Dangerous sera utilisé."
 .LF: "Select folder where Journal*.log files are stored by Frontier in" => "Choisir le répertoire ou les fichiers journal*.log sont stockés"
+.ND: "Folder does not exist" @
+.extCheckBoxConsoleCommander: "Console Commander" @
+.extGroupBoxEDAstro: "EDAstro" @
+.extCheckBoxEDAstro: "Send Events to EDAstro" @
 
 SECTION ScreenshotDirectoryWatcher
 
 .Scan: "Scanning for {0} screenshots in {1}" => "Analyse de {0} captures d'écran dans {1}"
-.NOF: "Folder specified for image conversion does not exist, check settings in the Screenshots tab" => "Le dossier spécifié pour la conversion d'image n'existe pas, vérifiez les paramètres dans l'onglet Captures d'écran."
+.NOF: "Folder specified for image conversion does not exist, check screenshot settings in the settings panel" => "Le dossier spécifié pour la conversion d'image n'existe pas, vérifiez les paramètres dans l'onglet Captures d'écran."
 .Excp: "Error in executing image conversion, try another screenshot, check output path settings. (Exception " => "Erreur dans l'éxécution de la conversion d'image, essayez avec une autre capture d'écran, vérifiez le paramètre de dossier de sortie. (Exception)"
 
 SECTION ScreenShotImageConverter
@@ -735,6 +739,10 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Configuration des captures 
 .labelWidth: "Width" => "Largeur"
 .labelLeft: "Left" => "Gauche"
 .labelTop: "Top" => "Haut"
+.labelHeight2: "Height" => "Hauteur"
+.labelWidth2: "Width" => "Largeur"
+.labelLeft2: "Left" => "Gauche"
+.labelTop2: "Top" => "Haut"
 .checkBoxCropImage: "Crop Image" => "Rogner l'image"
 .labelFolder: "ED/Steam Screenshot folder" => "Dossier des captures d'écran ED/Steam"
 .buttonChangeScreenshotsFolder: "Browse" => "Parcourir"
@@ -748,9 +756,10 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Configuration des captures 
 .extCheckBoxKeepMasterConvertedImage: "Keep master converted image" => "Conserver la capture originale"
 .labelImage2: "Image 2" @
 .labelImage1: "Image 1" @
-.labelHeight2: "Height" => "Hauteur"
-.labelWidth2: "Width" => "Largeur"
-.labelLeft2: "Left" => "Gauche"
-.labelTop2: "Top" => "Haut"
 .labelCropResizeOptions: "Crop/Resize Options" => "Options de rognage/redimensionnnement"
-
+.extCheckBoxEnabled: "Conversion Enabled" @
+.extCheckBoxHiRes: "Mark HiRes Files" @
+.extButtonBrowseMoveOrg: "Browse" @
+.labelClipboard: "Clipboard" @
+.labelOriginal: "Original Image" @
+.labelEnabled: "Enable" @

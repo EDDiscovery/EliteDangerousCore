@@ -270,7 +270,10 @@ SECTION FSSSignal
 .Faction: "Faction:" => "фракция: "
 .USSType: "USS Type:" => "тип сигнала: "
 .ThreatLevel: "Threat Level:" => " уровень угрозы: "
-.StationBool: ";Station" => "; станция"
+.StationBool: ";Station: " => "; станция"
+.CarrierBool: ";Carrier: " @
+.InstallationBool: ";Installation: " @
+.LastSeen: "Last Seen:" @
 
 SECTION JournalFSSDiscoveryScan
 
@@ -525,11 +528,6 @@ SECTION JournalScan
 .Materials: "Materials:\n" => "Материалы:\n"
 .AtmosphericComposition: "Atmospheric Composition:\n" => "Состав атмосферы:\n"
 .PlanetaryComposition: "Planetary Composition:\n" => "Состав планеты:\n"
-.MRP: "Metal Rich Planets: {0} ({1}-{2} AU)\n" => "Богатые металлами планеты: {0} ({1}-{2} а. е.)\n"
-.WWP: "Water Worlds: {0} ({1}-{2} AU)\n" => "Водные планеты: {0} ({1}-{2} а. е.)\n"
-.ELWP: "Earth Like Worlds: {0} ({1}-{2} AU)\n" => "Землеподобные планеты: {0} ({1}-{2} а. е.)\n"
-.AWP: "Ammonia Worlds: {0} ({1}-{2} AU)\n" => "Аммиачные планеты: {0} ({1}-{2} а. е.)\n"
-.ICYP: "Icy Planets: {0} ({1} AU to {2})\n" => "Ледяные планеты: {0} ({1} а. е. to {2})\n"
 .HabitableZone: " - Habitable Zone, {0} ({1}-{2} AU),\n" => " - обитаемая зона, {0} ({1}-{2} а. е.),\n"
 .MetalRichplanets: " - Metal Rich planets, {0} ({1}-{2} AU),\n" => " - богатые металлами планеты, {0} ({1}-{2} а. е.),\n"
 .WaterWorlds: " - Water Worlds, {0} ({1}-{2} AU),\n" => " - водные планеты:, {0} ({1}-{2} а. е.),\n"

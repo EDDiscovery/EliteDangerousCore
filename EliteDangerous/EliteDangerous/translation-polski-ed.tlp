@@ -707,17 +707,21 @@ CommanderForm: "CommanderForm" => "Ustawienia Dowódcy"
 .checkBoxCustomEDDNTo.ToolTip: "Click to send journal information to EDDN. EDDN feeds tools such as EDDB, EDSM, Inara with data from commanders. All data is made anonymised" => "Zaznacz, aby przesyłać informacje z dzienników do EDDN. EDDN przekazuje dane od dowódców narzędziom takim jak EDDB, EDSM, Inara. Dane są przekazywane anonimowo"
 .checkBoxCustomEDSMFrom.ToolTip: "Receive any FSD jumps from EDSM that are on their database but not in EDDiscovery" => "Pobierz wszystkie wpisy skoków FSD, które są w bazie danych EDSM, ale nie ma ich w bazie danych EDDiscovery"
 .checkBoxCustomEDSMTo.ToolTip: "Send your travel and ship data to EDSM" => "Przesyłaj swoje dane podróży i statków do EDSM"
-.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \\"My account\\" menu" => "Wprowadź klucz API ze strony EDSM\nKlucz API można otrzymać na https://www.edsm.net w menu konta"
+.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \\"My account\\" menu" @
 .textBoxBorderEDSMName.ToolTip: "Give the name this commander is known as in EDSM" => "Podaj nazwę tego Dowódcy z EDSM"
 .buttonExtBrowse.ToolTip: "Browse to the the journal folder" => "Przeglądaj, aby wybrać ścieżkę folderu dzienników"
 .textBoxBorderCmdr.ToolTip: "Enter commander name as used in Elite Dangerous" => "Wprowadź nazwę Dowódcy, której używasz w Elite Dangerous"
 .textBoxBorderJournal.ToolTip: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\nLeave override journal location blank to use the standard Frontier location for journals" => "Wprowadź lokalizację dzienników. Zostaw to pole puste, chyba że używasz EDD na innym komputerze niż ten, na którym grasz.\nPole niestandardowej lokalizacji dzienników należy zostawić puste, aby użyć domyślnej lokalizacji dzienników Frontier."
 .LF: "Select folder where Journal*.log files are stored by Frontier in" => "Wybierz folder, w którym pliki Journal*.log są przechowywane przez Frontier"
+.ND: "Folder does not exist" @
+.extCheckBoxConsoleCommander: "Console Commander" @
+.extGroupBoxEDAstro: "EDAstro" @
+.extCheckBoxEDAstro: "Send Events to EDAstro" @
 
 SECTION ScreenshotDirectoryWatcher
 
 .Scan: "Scanning for {0} screenshots in {1}" => "Skanowanie zrzutów ekranu {0} w {1}"
-.NOF: "Folder specified for image conversion does not exist, check settings in the Screenshots tab" => "Folder przeznaczony na konwersję obrazów nie istnieje, sprawdź ustawienia w sekcji Zrzuty Ekranu"
+.NOF: "Folder specified for image conversion does not exist, check screenshot settings in the settings panel" => "Folder przeznaczony na konwersję obrazów nie istnieje, sprawdź ustawienia w sekcji Zrzuty Ekranu"
 .Excp: "Error in executing image conversion, try another screenshot, check output path settings. (Exception " => "Błąd przetwarzania obrazu, sprawdź z innym zrzutem ekranu, sprawdź ustawienia ścieżki wyjściowej. (Wyjątek "
 
 SECTION ScreenShotImageConverter
@@ -735,6 +739,10 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Konfiguracja Zrzutów Ekran
 .labelWidth: "Width" => "Szerokość"
 .labelLeft: "Left" => "Lewa strona"
 .labelTop: "Top" => "Góra"
+.labelHeight2: "Height" @
+.labelWidth2: "Width" @
+.labelLeft2: "Left" @
+.labelTop2: "Top" @
 .checkBoxCropImage: "Crop Image" => "Przytnij Obraz"
 .labelFolder: "ED/Steam Screenshot folder" => "Folder Zrzutów Ekranu ED/Steam"
 .buttonChangeScreenshotsFolder: "Browse" => "Przeglądaj"
@@ -748,8 +756,10 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Konfiguracja Zrzutów Ekran
 .extCheckBoxKeepMasterConvertedImage: "Keep master converted image" @
 .labelImage2: "Image 2" @
 .labelImage1: "Image 1" @
-.labelHeight2: "Height" @
-.labelWidth2: "Width" @
-.labelLeft2: "Left" @
-.labelTop2: "Top" @
 .labelCropResizeOptions: "Crop/Resize Options" @
+.extCheckBoxEnabled: "Conversion Enabled" @
+.extCheckBoxHiRes: "Mark HiRes Files" @
+.extButtonBrowseMoveOrg: "Browse" @
+.labelClipboard: "Clipboard" @
+.labelOriginal: "Original Image" @
+.labelEnabled: "Enable" @

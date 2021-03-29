@@ -270,7 +270,10 @@ SECTION FSSSignal
 .Faction: "Faction:" => "Frakcja:"
 .USSType: "USS Type:" => "Typ USS:"
 .ThreatLevel: "Threat Level:" => " Poziom Zagrożenia:"
-.StationBool: ";Station" => ";Stacja"
+.StationBool: ";Station: " => ";Stacja"
+.CarrierBool: ";Carrier: " @
+.InstallationBool: ";Installation: " @
+.LastSeen: "Last Seen:" @
 
 SECTION JournalFSSDiscoveryScan
 
@@ -525,11 +528,6 @@ SECTION JournalScan
 .Materials: "Materials:\n" => "Materiały: \n"
 .AtmosphericComposition: "Atmospheric Composition:\n" => "Skład Atmosfery:\n"
 .PlanetaryComposition: "Planetary Composition:\n" => "Skład Planety:\n"
-.MRP: "Metal Rich Planets: {0} ({1}-{2} AU)\n" => "Planety Bogate w Metale: {0} ({1}-{2} AU)\n"
-.WWP: "Water Worlds: {0} ({1}-{2} AU)\n" => "Planety Oceaniczne: {0} ({1}-{2} AU)\n"
-.ELWP: "Earth Like Worlds: {0} ({1}-{2} AU)\n" => "Planety Ziemiopodobne: {0} ({1}-{2} AU)\n"
-.AWP: "Ammonia Worlds: {0} ({1}-{2} AU)\n" => "Planety Amoniakowe: {0} ({1}-{2} AU)\n"
-.ICYP: "Icy Planets: {0} ({1} AU to {2})\n" => "Planety Lodowe: {0} ({1} AU do {2})\n"
 .HabitableZone: " - Habitable Zone, {0} ({1}-{2} AU),\n" => " - Ekosfera, {0} ({1}-{2} AU),\n"
 .MetalRichplanets: " - Metal Rich planets, {0} ({1}-{2} AU),\n" => " - Planety Bogate w Metale, {0} ({1}-{2} AU),\n"
 .WaterWorlds: " - Water Worlds, {0} ({1}-{2} AU),\n" => " - Planety Oceaniczne, {0} ({1}-{2} AU),\n"

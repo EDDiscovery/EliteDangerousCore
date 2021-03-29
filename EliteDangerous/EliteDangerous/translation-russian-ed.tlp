@@ -707,17 +707,21 @@ CommanderForm: "CommanderForm" => "Командир"
 .checkBoxCustomEDDNTo.ToolTip: "Click to send journal information to EDDN. EDDN feeds tools such as EDDB, EDSM, Inara with data from commanders. All data is made anonymised" => "Нажмите, чтобы отправить информацию из журнала в EDDN. EDDN работает с такими приложениями, как EDDB, EDSM и Inara. Все данные анонимны"
 .checkBoxCustomEDSMFrom.ToolTip: "Receive any FSD jumps from EDSM that are on their database but not in EDDiscovery" => "Получать данные о FSD-прыжках, которые есть в EDSM, но нет в EDDiscovery"
 .checkBoxCustomEDSMTo.ToolTip: "Send your travel and ship data to EDSM" => "Отправить данные о полетах и кораблях в EDSM"
-.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \\"My account\\" menu" => "Укажите Api-ключ EDSM\nЕго можно узнать на https://www.edsm.net в разделе «My account»"
+.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \\"My account\\" menu" @
 .textBoxBorderEDSMName.ToolTip: "Give the name this commander is known as in EDSM" => "Укажите имя этого командира в EDSM"
 .buttonExtBrowse.ToolTip: "Browse to the the journal folder" => "Выберите папку с файлами журнала"
 .textBoxBorderCmdr.ToolTip: "Enter commander name as used in Elite Dangerous" => "Введите имя командира, используемое в Elite Dangerous"
 .textBoxBorderJournal.ToolTip: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\nLeave override journal location blank to use the standard Frontier location for journals" => "Выберите папку с файлами журнала. Обычно, если вы используете EDD на том же компьютере, на котором играете, это поле можно оставить пустым.\nВ этом случае будет использоваться папка журнала по умолчанию"
 .LF: "Select folder where Journal*.log files are stored by Frontier in" => "Выберите папку, в которой хранятся файлы журнала *.log Frontier"
+.ND: "Folder does not exist" @
+.extCheckBoxConsoleCommander: "Console Commander" @
+.extGroupBoxEDAstro: "EDAstro" @
+.extCheckBoxEDAstro: "Send Events to EDAstro" @
 
 SECTION ScreenshotDirectoryWatcher
 
 .Scan: "Scanning for {0} screenshots in {1}" => "Поиск {0} скриншотов в {1}"
-.NOF: "Folder specified for image conversion does not exist, check settings in the Screenshots tab" => "Отсутствует папка для преобразованных изображений, пожалуйста, проверьте настройки на вкладке «Скриншоты»"
+.NOF: "Folder specified for image conversion does not exist, check screenshot settings in the settings panel" => "Отсутствует папка для преобразованных изображений, пожалуйста, проверьте настройки на вкладке «Скриншоты»"
 .Excp: "Error in executing image conversion, try another screenshot, check output path settings. (Exception " => "Ошибка преобразования изображения, попробуйте другой скриншот и проверьте настройки исходящей папки. (Ошибка "
 
 SECTION ScreenShotImageConverter
@@ -735,6 +739,10 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Настройки скри
 .labelWidth: "Width" => "Ширина"
 .labelLeft: "Left" => "Лево"
 .labelTop: "Top" => "Верх"
+.labelHeight2: "Height" @
+.labelWidth2: "Width" @
+.labelLeft2: "Left" @
+.labelTop2: "Top" @
 .checkBoxCropImage: "Crop Image" => "Кадрировать изображение"
 .labelFolder: "ED/Steam Screenshot folder" => "Папка сриншотов ED/Steam"
 .buttonChangeScreenshotsFolder: "Browse" => "Обзор"
@@ -748,9 +756,10 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Настройки скри
 .extCheckBoxKeepMasterConvertedImage: "Keep master converted image" @
 .labelImage2: "Image 2" @
 .labelImage1: "Image 1" @
-.labelHeight2: "Height" @
-.labelWidth2: "Width" @
-.labelLeft2: "Left" @
-.labelTop2: "Top" @
 .labelCropResizeOptions: "Crop/Resize Options" @
-
+.extCheckBoxEnabled: "Conversion Enabled" @
+.extCheckBoxHiRes: "Mark HiRes Files" @
+.extButtonBrowseMoveOrg: "Browse" @
+.labelClipboard: "Clipboard" @
+.labelOriginal: "Original Image" @
+.labelEnabled: "Enable" @

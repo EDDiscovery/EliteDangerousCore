@@ -707,17 +707,21 @@ CommanderForm: "CommanderForm" => "指挥官配置"
 .checkBoxCustomEDDNTo.ToolTip: "Click to send journal information to EDDN. EDDN feeds tools such as EDDB, EDSM, Inara with data from commanders. All data is made anonymised" => "勾选以将日志信息发送到EDDN。 EDDN使用从指挥官们那里收集到的信息向EDDB，EDSM，Inara等工具提供数据。 所有数据都是匿名的。"
 .checkBoxCustomEDSMFrom.ToolTip: "Receive any FSD jumps from EDSM that are on their database but not in EDDiscovery" => "从 EDSM 获取 EDDiscovery 上不存在的FSD跳跃信息。"
 .checkBoxCustomEDSMTo.ToolTip: "Send your travel and ship data to EDSM" => "向 EDSM 发送你的航行已经飞船数据。"
-.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \\"My account\\" menu" => "输入 EDSM 网站的 API Key\n从  https://www.edsm.net/zh 获取 API Key"
+.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \\"My account\\" menu" @
 .textBoxBorderEDSMName.ToolTip: "Give the name this commander is known as in EDSM" => "输入此指挥官在 EDSM 上对应的用户名"
 .buttonExtBrowse.ToolTip: "Browse to the the journal folder" => "选择游戏日志所在的文件夹"
 .textBoxBorderCmdr.ToolTip: "Enter commander name as used in Elite Dangerous" => "输入游戏中的指挥官名称"
 .textBoxBorderJournal.ToolTip: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\nLeave override journal location blank to use the standard Frontier location for journals" => "输入游戏日志所在的路径。通常这项可以留空白，除非你想加载的游戏日志不在默认位置。\n将这项留空白以使用默认游戏日志路径。"
 .LF: "Select folder where Journal*.log files are stored by Frontier in" => "选择Frontier存放游戏日志文件 *.log 所在的文件夹"
+.ND: "Folder does not exist" @
+.extCheckBoxConsoleCommander: "Console Commander" @
+.extGroupBoxEDAstro: "EDAstro" @
+.extCheckBoxEDAstro: "Send Events to EDAstro" @
 
 SECTION ScreenshotDirectoryWatcher
 
 .Scan: "Scanning for {0} screenshots in {1}" => "当前正在监测位于{1}文件夹的{0}格式的截图"
-.NOF: "Folder specified for image conversion does not exist, check screenshot settings in the screenshots panel" => "指定的图片格式转换文件夹不存在，请检查设置里的截图选项卡"
+.NOF: "Folder specified for image conversion does not exist, check screenshot settings in the settings panel" => "指定的图片格式转换文件夹不存在，请检查设置里的截图选项卡"
 .Excp: "Error in executing image conversion, try another screenshot, check output path settings. (Exception " => "执行图片格式转换时发生错误，请尝试其他的截图，检查输出路径的设置（例外"
 
 SECTION ScreenShotImageConverter
@@ -735,6 +739,10 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "截图配置"
 .labelWidth: "Width" => "宽度"
 .labelLeft: "Left" => "左"
 .labelTop: "Top" => "上"
+.labelHeight2: "Height" @
+.labelWidth2: "Width" @
+.labelLeft2: "Left" @
+.labelTop2: "Top" @
 .checkBoxCropImage: "Crop Image" => "裁剪图片"
 .labelFolder: "ED/Steam Screenshot folder" => "ED/Steam截图文件夹"
 .buttonChangeScreenshotsFolder: "Browse" => "浏览"
@@ -748,8 +756,10 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "截图配置"
 .extCheckBoxKeepMasterConvertedImage: "Keep master converted image" @
 .labelImage2: "Image 2" @
 .labelImage1: "Image 1" @
-.labelHeight2: "Height" @
-.labelWidth2: "Width" @
-.labelLeft2: "Left" @
-.labelTop2: "Top" @
 .labelCropResizeOptions: "Crop/Resize Options" @
+.extCheckBoxEnabled: "Conversion Enabled" @
+.extCheckBoxHiRes: "Mark HiRes Files" @
+.extButtonBrowseMoveOrg: "Browse" @
+.labelClipboard: "Clipboard" @
+.labelOriginal: "Original Image" @
+.labelEnabled: "Enable" @
