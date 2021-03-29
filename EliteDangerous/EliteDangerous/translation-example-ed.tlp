@@ -716,7 +716,8 @@ CommanderForm: "CommanderForm" @
 .LF: "Select folder where Journal*.log files are stored by Frontier in" @
 .ND: "Folder does not exist" @
 .extCheckBoxConsoleCommander: "Console Commander" @
-
+.extGroupBoxEDAstro: "EDAstro" @
+.extCheckBoxEDAstro: "Send Events to EDAstro" @
 
 SECTION ScreenshotDirectoryWatcher
 
@@ -756,16 +757,10 @@ ScreenShotConfigureForm: "Screen Shot Configure" @
 .extCheckBoxKeepMasterConvertedImage: "Keep master converted image" @
 .labelImage2: "Image 2" @
 .labelImage1: "Image 1" @
-.labelHeight2: "Height" @
-.labelWidth2: "Width" @
-.labelLeft2: "Left" @
-.labelTop2: "Top" @
 .labelCropResizeOptions: "Crop/Resize Options" @
-
-
-ScreenShotConfigureForm.extCheckBoxEnabled: "Conversion Enabled" @
-ScreenShotConfigureForm.extCheckBoxHiRes: "Mark HiRes Files" @
-ScreenShotConfigureForm.extButtonBrowseMoveOrg: "Browse" @
-ScreenShotConfigureForm.labelClipboard: "Clipboard" @
-ScreenShotConfigureForm.labelOriginal: "Original Image" @
-ScreenShotConfigureForm.labelEnabled: "Enable" @
+.extCheckBoxEnabled: "Conversion Enabled" @
+.extCheckBoxHiRes: "Mark HiRes Files" @
+.extButtonBrowseMoveOrg: "Browse" @
+.labelClipboard: "Clipboard" @
+.labelOriginal: "Original Image" @
+.labelEnabled: "Enable" @
