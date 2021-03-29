@@ -10,63 +10,63 @@ SECTION Bodies
 .RMS: "Red Main Sequence {0} star" => "Roter Hauptreihenstern {0}"
 .DRNS: "Dark Red Non Main Sequence {0} star" => "Dunkelroter Nicht-Hauptreihenstern {0}"
 .MD: "Methane Dwarf star" => "Methan-Zwergstern"
-.BD: "Brown Dwarf star" => "Brauner Zwergstern"
-.WR: "Wolf-Rayet {0} star" => "Wolf-Rayet {0} Stern"
+.BD: "Brown Dwarf star" => "Brauner Zwerg"
+.WR: "Wolf-Rayet {0} star" => "Wolf-Rayet {0}-Stern"
 .C: "Carbon {0} star" => "Kohlenstoffstern {0}"
 .IZ: "Intermediate low Zirconium Monoxide Type star" => "Stern mittlerer Masse mit niedrigem Zirkoniummonoxidanteil"
-.CGZ: "Cool Giant Zirconium Monoxide rich Type star" => "Kalter Risenstern mit hohem Zirkoniummonoxidanteil"
-.WD: "White Dwarf {0} star" => "Weisser Zwergstern {0}"
+.CGZ: "Cool Giant Zirconium Monoxide rich Type star" => "Kalter Riesenstern mit hohem Zirkoniummonoxidanteil"
+.WD: "White Dwarf {0} star" => "Weisser Zwerg {0}"
 .NS: "Neutron Star" => "Neutronenstern"
 .BH: "Black Hole" => "Schwarzes Loch"
 .EX: "Exotic" => "Exotisch"
 .SMBH: "Super Massive Black Hole" => "Supermassives schwarzes Loch"
-.BSG: "Blue White Super Giant" => "Blauweisser Superriese"
-.WSG: "F White Super Giant" => "F Weisser Superriese"
-.MSR: "M Red Super Giant" => "M Roter Superriese"
+.BSG: "Blue White Super Giant" => "Blauweisser Überriese"
+.WSG: "F White Super Giant" => "F Weisser Überriese"
+.MSR: "M Red Super Giant" => "M Roter Überriese"
 .MOG: "M Red Giant" => "M Roter Riese"
 .KOG: "K Orange Giant" => "K Orangener Riese"
-.RP: "Rogue Planet" => "Waisenplanet"
-.UNK: "Class {0} star" @
-.Herbig: "Herbig Ae/Be" @
-.TTauri: "T Tauri" @
+.RP: "Rogue Planet" => "Einzelgänger-Planet"
+.UNK: "Class {0} star" => "Klasse {0}-Stern"
+.Herbig: "Herbig Ae/Be" => "Herbig Ae/Be"
+.TTauri: "T Tauri" => "T-Tauri"
 
 SECTION EDPlanet
 
-.Metalrichbody: "Metal-rich body" @
-.Highmetalcontentbody: "High metal content world" @
-.Rockybody: "Rocky body" @
-.Icybody: "Icy body" @
-.Rockyicebody: "Rocky ice world" @
-.Earthlikebody: "Earth-like world" @
-.Waterworld: "Water world" @
-.Ammoniaworld: "Ammonia world" @
-.Watergiant: "Water giant" @
-.Watergiantwithlife: "Water giant with life" @
-.Gasgiantwithwaterbasedlife: "Gas giant with water-based life" @
-.Gasgiantwithammoniabasedlife: "Gas giant with ammonia-based life" @
-.SudarskyclassIgasgiant: "Class I gas giant" @
-.SudarskyclassIIgasgiant: "Class II gas giant" @
-.SudarskyclassIIIgasgiant: "Class III gas giant" @
-.SudarskyclassIVgasgiant: "Class IV gas giant" @
-.SudarskyclassVgasgiant: "Class V gas giant" @
-.Heliumrichgasgiant: "Helium-rich gas giant" @
-.Heliumgasgiant: "Helium gas giant" @
-.Unknown: "Unknown planet type" @
+.Metalrichbody: "Metal-rich body" => "Metallreicher Planet"
+.Highmetalcontentbody: "High metal content world" => "Planet mit hochwertigen Metallen"
+.Rockybody: "Rocky body" => "Steinerner Planet"
+.Icybody: "Icy body" => "Eisplanet"
+.Rockyicebody: "Rocky ice world" => "Felsiger Eisplanet"
+.Earthlikebody: "Earth-like world" => "Erdähnliche Welt"
+.Waterworld: "Water world" => "Wasserwelt"
+.Ammoniaworld: "Ammonia world" => "Ammoniak-Welt"
+.Watergiant: "Water giant" => "Wasserriese"
+.Watergiantwithlife: "Water giant with life" => "Wasserriese mit Leben"
+.Gasgiantwithwaterbasedlife: "Gas giant with water-based life" => "Gasriese mit wasserbasiertem Leben"
+.Gasgiantwithammoniabasedlife: "Gas giant with ammonia-based life" => "Gasriese mit ammoniakbasiertem Leben"
+.SudarskyclassIgasgiant: "Class I gas giant" => "Gasriese Klasse I"
+.SudarskyclassIIgasgiant: "Class II gas giant" => "Gasriese Klasse II"
+.SudarskyclassIIIgasgiant: "Class III gas giant" => "Gasriese Klasse III"
+.SudarskyclassIVgasgiant: "Class IV gas giant" => "Gasriese Klasse IV"
+.SudarskyclassVgasgiant: "Class V gas giant" => "Gasriese Klasse V"
+.Heliumrichgasgiant: "Helium-rich gas giant" => "Heliumreicher Gasriese"
+.Heliumgasgiant: "Helium gas giant" => "Helium-Gasriese"
+.Unknown: "Unknown planet type" => "Unbekannte Planetenart"
 
 SECTION MaterialCommodityData
 
 .Raw: "Raw" => "Rohmaterialien"
 .VeryCommon: "Very Common" => "Sehr häufig"
 .Common: "Common" => "Häufig"
-.Standard: "Standard" @
+.Standard: "Standard" => "Standard"
 .Rare: "Rare" => "Selten"
 .Encoded: "Encoded" => "Kodiert"
 .VeryRare: "Very Rare" => "Sehr selten"
 .Manufactured: "Manufactured" => "Hergestellt"
-.Commodity: "Commodity" => "Gebrauchsgüter"
+.Commodity: "Commodity" => "Handelswaren"
 .Salvage: "Salvage" => "Bergungsgüter"
 .Chemicals: "Chemicals" => "Chemikalien"
-.ConsumerItems: "Consumer Items" => "Handelsware"
+.ConsumerItems: "Consumer Items" => "Konsumartikel"
 .Foods: "Foods" => "Nahrungsmittel"
 .IndustrialMaterials: "Industrial Materials" => "Industrielle Materialien"
 .LegalDrugs: "Legal Drugs" => "Legale Drogen"
@@ -74,29 +74,29 @@ SECTION MaterialCommodityData
 .Medicines: "Medicines" => "Medizin"
 .Metals: "Metals" => "Metalle"
 .Minerals: "Minerals" => "Mineralien"
-.Narcotics: "Narcotics" => "Drogen"
+.Narcotics: "Narcotics" => "Betäubungsmittel"
 .Slaves: "Slaves" => "Sklaven"
 .Technology: "Technology" => "Technologie"
 .Textiles: "Textiles" => "Textilien"
 .Waste: "Waste" => "Abfall"
 .Weapons: "Weapons" => "Waffen"
-.PowerPlay: "PowerPlay" @
+.PowerPlay: "PowerPlay" => "Machtspiele"
 .Drones: "Drones" => "Drohnen"
 .carbon: "Carbon" => "Kohlenstoff"
 .iron: "Iron" => "Eisen"
-.nickel: "Nickel" @
+.nickel: "Nickel" => "Nickel"
 .phosphorus: "Phosphorus" => "Phosphor"
 .sulphur: "Sulphur" => "Schwefel"
 .lead: "Lead" => "Blei"
-.rhenium: "Rhenium" @
+.rhenium: "Rhenium" => "Rhenium"
 .chromium: "Chromium" => "Chrom"
-.germanium: "Germanium" @
+.germanium: "Germanium" => "Germanium"
 .manganese: "Manganese" => "Mangan"
-.vanadium: "Vanadium" @
+.vanadium: "Vanadium" => "Vanadium"
 .zinc: "Zinc" => "Zink"
-.zirconium: "Zirconium" @
+.zirconium: "Zirconium" => "Zirkonium"
 .arsenic: "Arsenic" => "Arsen"
-.niobium: "Niobium" @
+.niobium: "Niobium" => "Niob"
 .tungsten: "Tungsten" => "Wolfram"
 .molybdenum: "Molybdenum" => "Molibdän"
 .mercury: "Mercury" => "Quecksilber"
@@ -104,11 +104,11 @@ SECTION MaterialCommodityData
 .cadmium: "Cadmium" => "Kadmium"
 .tin: "Tin" => "Zinn"
 .selenium: "Selenium" => "Selen"
-.yttrium: "Yttrium" @
-.technetium: "Technetium" @
+.yttrium: "Yttrium" => "Yttrium"
+.technetium: "Technetium" => "Technetium"
 .tellurium: "Tellurium" => "Tellur"
-.ruthenium: "Ruthenium" @
-.polonium: "Polonium" @
+.ruthenium: "Ruthenium" => "Ruthnium"
+.polonium: "Polonium" => "Polonium"
 .antimony: "Antimony" => "Antimon"
 .bulkscandata: "Anomalous Bulk Scan Data" => "Anormale Massen-Scan-Daten"
 .disruptedwakeechoes: "Atypical Disrupted Wake Echoes" => "Atypische FSA-Stör-Aufzeichnungen"
@@ -292,33 +292,33 @@ SECTION MaterialCommodityData
 .performanceenhancers: "Performance Enhancers" => "Leistungssteigerer"
 .progenitorcells: "Progenitor Cells" => "Vorläuferzellen"
 .agriculturalmedicines: "Agri-Medicines" => "Agrar-Medikamente"
-.aluminium: "Aluminium" @
-.beryllium: "Beryllium" @
+.aluminium: "Aluminium" => "Aluminium"
+.beryllium: "Beryllium" => "Beryllium"
 .bismuth: "Bismuth" => "Bismut"
-.cobalt: "Cobalt" @
+.cobalt: "Cobalt" => "Kobalt"
 .copper: "Copper" => "Kupfer"
-.gallium: "Gallium" @
-.gold: "Gold" @
-.hafnium178: "Hafnium 178" @
-.indium: "Indium" @
+.gallium: "Gallium" => "Gallium"
+.gold: "Gold" => "Gold"
+.hafnium178: "Hafnium 178" => "Hafnium 178"
+.indium: "Indium" => "Indium"
 .lanthanum: "Lanthanum" => "Lanthan"
-.lithium: "Lithium" @
-.osmium: "Osmium" @
-.palladium: "Palladium" @
+.lithium: "Lithium" => "Lithium"
+.osmium: "Osmium" => "Osmium"
+.palladium: "Palladium" => "Palladium"
 .platinum: "Platinum" => "Platin"
 .praseodymium: "Praseodymium" => "Praseodym"
-.samarium: "Samarium" @
+.samarium: "Samarium" => "Samarium"
 .silver: "Silver" => "Silber"
 .tantalum: "Tantalum" => "Tantal"
-.thallium: "Thallium" @
-.thorium: "Thorium" @
+.thallium: "Thallium" => "Thallium"
+.thorium: "Thorium" => "Thorium"
 .titanium: "Titanium" => "Titan"
 .uranium: "Uranium" => "Uran"
 .platinumaloy: "Platinum Alloy" => "Platinlegierung"
 .bauxite: "Bauxite" => "Bauxit"
 .bertrandite: "Bertrandite" => "Bertrandit"
 .bromellite: "Bromellite" => "Bromellit"
-.coltan: "Coltan" @
+.coltan: "Coltan" => "Coltan"
 .cryolite: "Cryolite" => "Kriolyth"
 .gallite: "Gallite" => "Gallit"
 .goslarite: "Goslarite" => "Goslarit"
@@ -372,7 +372,7 @@ SECTION MaterialCommodityData
 .largeexplorationdatacash: "Large Survey Data Cache" => "Großer Erkundungsdatenspeicher"
 .smallexplorationdatacash: "Small Survey Data Cache" => "Kleiner Erkundungsdatenspeicher"
 .usscargoancientartefact: "Ancient Artefact" => "Uraltes Artefakt"
-.usscargoblackbox: "Black Box" @
+.usscargoblackbox: "Black Box" => "Blackbox"
 .comercialsamples: "Commercial Samples" => "Werbeproben"
 .encripteddatastorage: "Encrypted Data Storage" => "Verschlüsselter Datenträger"
 .usscargoexperimentalchemicals: "Experimental Chemicals" => "Experimentelle Chemikalien"
@@ -423,7 +423,7 @@ SECTION MaterialCommodityData
 .reactivearmour: "Reactive Armour" => "Reaktivrüstung"
 .nonlethalweapons: "Non-Lethal Weapons" => "Nichttödliche Waffen"
 .thehuttonmug: "The Hutton Mug" => "Hutton-Becher"
-.eraninpearlwhisky: "Eranin Pearl Whisky" @
+.eraninpearlwhisky: "Eranin Pearl Whisky" => "Eranin Pearl Whisky"
 .lavianbrandy: "Lavian Brandy" => "Lave-Brandy"
 .hip10175bushmeat: "HIP 10175 Bush Meat" => "Wildfleisch von HIP 10175"
 .albinoquechuamammoth: "Albino Quechua Mammoth Meat" => "Albinomammut-Fleisch"
@@ -434,22 +434,22 @@ SECTION MaterialCommodityData
 .baltahsinevacuumkrill: "Baltah'sine Vacuum Krill" => "Vakuumkrill von Baltah'sine"
 .cetirabbits: "Ceti Rabbits" => "Ceti-Kaninchen"
 .kachiriginleaches: "Kachirigin Filter Leeches" => "Kachirigin-Filter-Egel"
-.lyraeweed: "Lyrae Weed" @
-.onionhead: "Onionhead" @
-.tarachtorspice: "Tarach Spice" @
-.wolf1301fesh: "Wolf Fesh" @
+.lyraeweed: "Lyrae Weed" => "Lyrae Weed"
+.onionhead: "Onionhead" => "Onionhead"
+.tarachtorspice: "Tarach Spice" => "Tarach Spice"
+.wolf1301fesh: "Wolf Fesh" => "Wolf Fesh"
 .borasetanipathogenetics: "Borasetani Pathogenetics" => "Borasetani-Pathogenetika"
-.hip118311swarm: "HIP 118311 Swarm" @
-.konggaale: "Kongga Ale" @
-.wuthielokufroth: "Wuthielo Ku Froth" @
+.hip118311swarm: "HIP 118311 Swarm" => "HIP 118311 Swarm"
+.konggaale: "Kongga Ale" => "Kongga Ale"
+.wuthielokufroth: "Wuthielo Ku Froth" => "Wuthielo Ku Froth"
 .alacarakmoskinart: "Alacarakmo Skin Art" => "Alacarakmo-Hautinlays"
 .eleuthermals: "Eleu Thermals" => "Eleu-Thermotextilien"
 .eshuumbrellas: "Eshu Umbrellas" => "Eshu-Regenschirme"
-.karetiicouture: "Karetii Couture" @
+.karetiicouture: "Karetii Couture" => "Karetii Couture"
 .njangarisaddles: "Njangari Saddles" => "Njangari-Sättel"
-.anynacoffee: "Any Na Coffee" @
-.cd75catcoffee: "CD-75 Kitten Brand Coffee" @
-.gomanyauponcoffee: "Goman Yaupon Coffee" @
+.anynacoffee: "Any Na Coffee" => "Any Na Coffee"
+.cd75catcoffee: "CD-75 Kitten Brand Coffee" => "CD-75 Kitten Brand Coffee"
+.gomanyauponcoffee: "Goman Yaupon Coffee" => "Goman Yaupon Coffee"
 .volkhabbeedrones: "Volkhab Bee Drones" => "Volkhab-Bienendrohnen"
 .kinagoinstruments: "Kinago Violins" => "Kinago-Geigen"
 .ngunamodernantiques: "Nguna Modern Antiques" => "Nguna Moderne Antiquitäten"
@@ -465,14 +465,14 @@ SECTION MaterialCommodityData
 .neritusberries: "Neritus Berries" => "Neritus-Beeren"
 .ochoengchillies: "Ochoeng Chillies" => "Ochoeng-Chili"
 .deuringastruffles: "Deuringas Truffles" => "Deuringas-Trüffel"
-.hr7221wheat: "HR 7221 Wheat" => "\\"
+.hr7221wheat: "HR 7221 Wheat" => "\"HR 7221\" Weizen"
 .jarouarice: "Jaroua Rice" => "Jaroua-Reis"
 .belalansrayleather: "Belalans Ray Leather" => "Belalans-Rochenleder"
 .damnacarapaces: "Damna Carapaces" => "Damna-Schildpanzer"
 .rapabaosnakeskins: "Rapa Bao Snake Skins" => "Rapa-Bao-Schlangenhäute"
 .vanayequirhinofur: "Vanayequi Ceratomorpha Fur" => "Vanayequi-Ceratomorpha-Fell"
-.bastsnakegin: "Bast Snake Gin" @
-.thrutiscream: "Thrutis Cream" @
+.bastsnakegin: "Bast Snake Gin" => "Bast Snake Gin"
+.thrutiscream: "Thrutis Cream" => "Thrutis Cream"
 .wulpahyperboresystems: "Wulpa Hyperbore Systems" => "Wulpa-Superbohrer-Systeme"
 .aganipperush: "Aganippe Rush" => "Aganippe-Hirnhetzer"
 .terramaterbloodbores: "Terra Mater Blood Bores" => "Terra-Mater-Berserker"
@@ -480,8 +480,8 @@ SECTION MaterialCommodityData
 .kamorinhistoricweapons: "Kamorin Historic Weapons" => "Histor. Kamorin-Waffen"
 .gilyasignatureweapons: "Gilya Signature Weapons" => "Gilya-Signaturwaffen"
 .deltaphoenicispalms: "Delta Phoenicis Palms" => "Delta-Phönix-Palmen"
-.toxandjivirocide: "Toxandji Virocide" @
-.xihecompanions: "Xihe Biomorphic Companions" @
+.toxandjivirocide: "Toxandji Virocide" => "Toxandji Virocide"
+.xihecompanions: "Xihe Biomorphic Companions" => "Xihe Biomorphic Companions"
 .sanumameat: "Sanuma Decorative Meat" => "Sanuma-Dekorfleisch"
 .ethgrezeteabuds: "Ethgreze Tea Buds" => "Ethgreze-Teeknospen"
 .ceremonialheiketea: "Ceremonial Heike Tea" => "Heike-Zeremonientee"
@@ -489,15 +489,15 @@ SECTION MaterialCommodityData
 .azcancriformula42: "AZ Cancri Formula 42" => "AZ Cancri Formel 42"
 .sothiscrystallinegold: "Sothis Crystalline Gold" => "Sothis-Kristallingold"
 .kamitracigars: "Kamitra Cigars" => "Kamitra-Zigarren"
-.rusanioldsmokey: "Rusani Old Smokey" @
+.rusanioldsmokey: "Rusani Old Smokey" => "Rusani Old Smokey"
 .yasokondileaf: "Yaso Kondi Leaf" => "Yaso-Kondi-Blätter"
-.chateaudeaegaeon: "Chateau De Aegaeon" @
+.chateaudeaegaeon: "Chateau De Aegaeon" => "Chateau De Aegaeon"
 .watersofshintara: "The Waters Of Shintara" => "Shinrarta-Wasser"
 .ophiuchiexinoartefacts: "Ophiuch Exino Artefacts" => "Ophiuch-Exino-Artefakte"
 .bakedgreebles: "Baked Greebles" => "Gebackene Greebles"
 .cetiaepyornisegg: "Aepyornis Egg" => "Aepyornis-Eier"
 .saxonwine: "Saxon Wine" => "Sachsenwein"
-.centaurimegagin: "Centauri Mega Gin" @
+.centaurimegagin: "Centauri Mega Gin" => "Centauri Mega Gin"
 .anduligafireworks: "Anduliga Fire Works" => "Anduliga-Feuerwerk"
 .bankiamphibiousleather: "Banki Amphibious Leather" => "Banki-Amphibienleder"
 .cherbonesbloodcrystals: "Cherbones Blood Crystals" => "Cherbones-Blutkristalle"
@@ -517,7 +517,7 @@ SECTION MaterialCommodityData
 .mechucoshightea: "Mechucos High Tea" => "Mechucos-High-Tee"
 .medbstarlube: "Medb Starlube" => "Medb-Sternschmiere"
 .mokojingbeastfeast: "Mokojing Beast Feast" => "Mokojing Monstermüsli"
-.mukusubiichitinos: "Mukusubii Chitin-os" @
+.mukusubiichitinos: "Mukusubii Chitin-os" => "Mukusubii Chitin-os"
 .mulachigiantfungus: "Mulachi Giant Fungus" => "Mulachi-Riesenpilz"
 .ngadandarifireopals: "Ngadandari Fire Opals" => "Ngadandari-Feueropale"
 .tiegfriessynthsilk: "Tiegfries Synth Silk" => "Tiegfries-Synthetikseide"
@@ -527,9 +527,9 @@ SECTION MaterialCommodityData
 .vegaslimweed: "Vega Slimweed" => "Vega-Schlankkraut"
 .altairianskin: "Altairian Skin" => "Altair-Haut"
 .pavoniseargrubs: "Pavonis Ear Grubs" => "Pavonis-Ohrenlarven"
-.jotunmookah: "Jotun Mookah" @
+.jotunmookah: "Jotun Mookah" => "Jotun Mookah"
 .giantverrix: "Giant Verrix" => "Riesen-Verrix"
-.indibourbon: "Indi Bourbon" @
+.indibourbon: "Indi Bourbon" => "Indi Bourbon"
 .aroucaconventualsweets: "Arouca Conventual Sweets" => "Arouca-Klosterbonbons"
 .taurichimes: "Tauri Chimes" => "Tauri-Glockenspiel"
 .zeesszeantglue: "Zeessze Ant Grub Glue" => "Zeessze-Ameisenkleber"
@@ -545,16 +545,16 @@ SECTION MaterialCommodityData
 .alieneggs: "Leathery Eggs" => "Ledrige Eier"
 .alyabodilysoap: "Alya Body Soap" => "Alya-Körperseife"
 .vidavantianlace: "Vidavantian Lace" => "Vidava-Spitze"
-.transgeniconionhead: "Lucan Onionhead" @
+.transgeniconionhead: "Lucan Onionhead" => "Lucan Onionhead"
 .jaquesquinentianstill: "Jaques Quinentian Still" => "Jaques Quinent-Destille"
 .soontillrelics: "Soontill Relics" => "Soontill-Relikte"
 .onionheada: "Onionhead Alpha Strain" => "Onionhead (Alpha)"
 .onionheadb: "Onionhead Beta Strain" => "Onionhead (Beta)"
 .galactictravelguide: "Galactic Travel Guide" => "Galaktischer Reiseführer"
-.animaleffigies: "Crom Silver Fesh" @
+.animaleffigies: "Crom Silver Fesh" => "Crom Silver Fesh"
 .shanscharisorchid: "Shan's Charis Orchid" => "Shans Charis-Orchidee"
 .buckyballbeermats: "Buckyball Beer Mats" => "Buckyball-Bierdeckel"
-.masterchefs: "Master Chefs" @
+.masterchefs: "Master Chefs" => "Master Chefs"
 .personalgifts: "Personal Gifts" => "Persönliche Geschenke"
 .crystallinespheres: "Crystalline Spheres" => "Kristallkugeln"
 .advert1: "Ultra-Compact Processor Prototypes" => "Ultrakompakte Prozessorprototypen"
@@ -599,94 +599,94 @@ SECTION MaterialCommodityData
 .markedslaves: "Marked Slaves" => "Markierte Sklaven"
 .torvaldeeds: "Torval Deeds" => "Torvals Urkunden"
 .drones: "Drones" => "Drohnen"
-.guardian_vesselblueprint: "Guardian Vessel Blueprint Segment" @
-.duradrives: "Duradrives" @
-.nanomedicines: "Nanomedicines" @
-.rhodplumsite: "Rhodplumsite" @
-.serendibite: "Serendibite" @
-.monazite: "Monazite" @
-.musgravite: "Musgravite" @
-.benitoite: "Benitoite" @
-.grandidierite: "Grandidierite" @
-.alexandrite: "Alexandrite" @
-.opal: "Opal" @
-.thargoidtissuesampletype4: "Thargoid Hydra Tissue Sample" @
-.ancientkey: "Ancient Key" @
-.rockforthfertiliser: "Rockforth Fertiliser" @
-.agronomictreatment: "Agronomic Treatment" @
-.m_tissuesample_soft: "Mollusc Soft Tissue" @
-.s_tissuesample_cells: "Pod Core Tissue" @
-.s_tissuesample_surface: "Pod Dead Tissue" @
-.s_tissuesample_core: "Pod Surface Tissue" @
-.m3_tissuesample_membrane: "Mollusc Membrane" @
-.m3_tissuesample_mycelium: "Mollusc Mycelium" @
-.m3_tissuesample_spores: "Mollusc Spores" @
-.s6_tissuesample_coenosarc: "Pod Shell Tissue" @
-.apavietii: "Apa Vietii" @
-.RawCategory1: "Raw Category 1" @
-.RawCategory2: "Raw Category 2" @
-.RawCategory3: "Raw Category 3" @
-.RawCategory4: "Raw Category 4" @
-.RawCategory5: "Raw Category 5" @
-.RawCategory6: "Raw Category 6" @
-.RawCategory7: "Raw Category 7" @
-.EncodedEmissionData: "Encoded Emission Data" @
-.EncodedWakeScans: "Encoded Wake Scans" @
-.EncodedShieldData: "Encoded Shield Data" @
-.EncodedEncryptionFiles: "Encoded Encryption Files" @
-.EncodedDataArchives: "Encoded Data Archives" @
-.EncodedFirmware: "Encoded Firmware" @
-.ManufacturedChemical: "Manufactured Chemical" @
-.ManufacturedThermic: "Manufactured Thermic" @
-.ManufacturedHeat: "Manufactured Heat" @
-.ManufacturedConductive: "Manufactured Conductive" @
-.ManufacturedMechanicalComponents: "Manufactured Mechanical Components" @
-.ManufacturedCapacitors: "Manufactured Capacitors" @
-.ManufacturedShielding: "Manufactured Shielding" @
-.ManufacturedComposite: "Manufactured Composite" @
-.ManufacturedCrystals: "Manufactured Crystals" @
-.ManufacturedAlloys: "Manufactured Alloys" @
-.NA: "NA" @
-.tritium: "Tritium" @
-.s6_tissuesample_mesoglea: "Pod Mesoglea" @
-.s6_tissuesample_cells: "Pod Outer Tissue" @
+.guardian_vesselblueprint: "Guardian Vessel Blueprint Segment" => "Guardian-Schiffsbauplansegment"
+.duradrives: "Duradrives" => "Duradrives"
+.nanomedicines: "Nanomedicines" => "Nanomedizin"
+.rhodplumsite: "Rhodplumsite" => "Rhodplumsit"
+.serendibite: "Serendibite" => "Serendibit"
+.monazite: "Monazite" => "Monazit"
+.musgravite: "Musgravite" => "Musgravit"
+.benitoite: "Benitoite" => "Benitoit"
+.grandidierite: "Grandidierite" => "Grandidierit"
+.alexandrite: "Alexandrite" => "Alexandrit"
+.opal: "Opal" => "Opal"
+.thargoidtissuesampletype4: "Thargoid Hydra Tissue Sample" => "Thargoidenhydra-Gewebeprobe"
+.ancientkey: "Ancient Key" => "Uralter Schlüssel"
+.rockforthfertiliser: "Rockforth Fertiliser" => "Rockforth-Dünger"
+.agronomictreatment: "Agronomic Treatment" => "Agronomisches Mittel"
+.m_tissuesample_soft: "Mollusc Soft Tissue" => "Mollusken-Weichgewebe"
+.s_tissuesample_cells: "Pod Core Tissue" => "Hülsenkerngewebe"
+.s_tissuesample_surface: "Pod Dead Tissue" => "Hülsentotgewebe"
+.s_tissuesample_core: "Pod Surface Tissue" => "Hülsenoberflächengewebe"
+.m3_tissuesample_membrane: "Mollusc Membrane" => "Molluskenmembran"
+.m3_tissuesample_mycelium: "Mollusc Mycelium" => "Molluskenmyzel"
+.m3_tissuesample_spores: "Mollusc Spores" => "Molluskensporen"
+.s6_tissuesample_coenosarc: "Pod Shell Tissue" => "Hülsenschalengewebe"
+.apavietii: "Apa Vietii" => "Apa Vietii"
+.RawCategory1: "Raw Category 1" => "Roh Kategorie 1"
+.RawCategory2: "Raw Category 2" => "Roh Kategorie 2"
+.RawCategory3: "Raw Category 3" => "Roh Kategorie 3"
+.RawCategory4: "Raw Category 4" => "Roh Kategorie 4"
+.RawCategory5: "Raw Category 5" => "Roh Kategorie 5"
+.RawCategory6: "Raw Category 6" => "Roh Kategorie 6"
+.RawCategory7: "Raw Category 7" => "Roh Kategorie 7"
+.EncodedEmissionData: "Encoded Emission Data" => "Verschlüsselt Emissionsdaten"
+.EncodedWakeScans: "Encoded Wake Scans" => "Verschlüsselt Sogwolkenscans"
+.EncodedShieldData: "Encoded Shield Data" => "Verschlüsselt Schilddaten"
+.EncodedEncryptionFiles: "Encoded Encryption Files" => "Verschlüsselt Verschlüsselungsdateien"
+.EncodedDataArchives: "Encoded Data Archives" => "Verschlüsselt Datenarchive"
+.EncodedFirmware: "Encoded Firmware" => "Verschlüsselt Firmware"
+.ManufacturedChemical: "Manufactured Chemical" => "Gefertigt Chemisch"
+.ManufacturedThermic: "Manufactured Thermic" => "Gefertigt Thermisch"
+.ManufacturedHeat: "Manufactured Heat" => "Gefertigt Hitze"
+.ManufacturedConductive: "Manufactured Conductive" => "Gefertigt Leitfähig"
+.ManufacturedMechanicalComponents: "Manufactured Mechanical Components" => "Gefertigt Mechanische Komponenten"
+.ManufacturedCapacitors: "Manufactured Capacitors" => "Gefertigt Kondensatoren"
+.ManufacturedShielding: "Manufactured Shielding" => "Gefertigt Schilde"
+.ManufacturedComposite: "Manufactured Composite" => "Gefertigt Komposit"
+.ManufacturedCrystals: "Manufactured Crystals" => "Gefertigt Kristalle"
+.ManufacturedAlloys: "Manufactured Alloys" => "Gefertigt Legierungen"
+.NA: "NA" => "NV"
+.tritium: "Tritium" => "Tritium"
+.s6_tissuesample_mesoglea: "Pod Mesoglea" => "Hülsen-Mesoglea"
+.s6_tissuesample_cells: "Pod Outer Tissue" => "Hülsen-Aussengewebe"
 
 SECTION EngineeringData
 
-.Engineer: "Engineer:" @
-.Blueprint: "Blueprint:" @
-.Level: "Level:" @
-.Quality: "Quality:" @
-.ExperimentalEffect: "Experimental Effect:" @
-.Original: "Original:;;N2" @
-.Worse: "< (Worse); (Better)" @
+.Engineer: "Engineer:" => "Ingenieur:"
+.Blueprint: "Blueprint:" => "Blauoause:"
+.Level: "Level:" => "Grad:"
+.Quality: "Quality:" => "Qualität:"
+.ExperimentalEffect: "Experimental Effect:" => "Experimenteller Effekt"
+.Original: "Original:;;N2" => "Original:;;N2"
+.Worse: "< (Worse); (Better)" => "< (Schlechter); (Besser)"
 
 SECTION MissionState
 
-.ToGo: "To Go:" @
-.Progress: "Progress:;%;N1" @
+.ToGo: "To Go:" => "Noch übrig:"
+.Progress: "Progress:;%;N1" => "Fortschritt:;%;N1"
 
 SECTION CommanderForm
 
-CommanderForm: "CommanderForm" @
+CommanderForm: "CommanderForm" => "Kommandantenformular"
 .buttonCancel: "Cancel" => "Abbrechen"
-.buttonOK: "OK" @
-.extGroupBoxCommanderInfo: "Other" @
-.radioButtonHistorySelection: "History Grid Selection" @
-.labelMapCol: "Default Map Color" @
-.radioButtonCentreHome: "Home System" @
-.HomeSys: "Home System:" @
-.labelZoom: "Default Zoom" @
-.labelOpenOn: "Open Centred On" @
-.groupBoxCustomIGAU: "Intergalactic Astronomical Union [IGAU]" @
-.checkBoxIGAUSync: "Send Codex Entry Discovery Data to IGAU" @
+.buttonOK: "OK" => "OK"
+.extGroupBoxCommanderInfo: "Other" => "Andere"
+.radioButtonHistorySelection: "History Grid Selection" => "Historie Gitterauswahl"
+.labelMapCol: "Default Map Color" => "Standard Kartenfarbe"
+.radioButtonCentreHome: "Home System" => "Heimatsystem"
+.HomeSys: "Home System:" => "Heimatsystem:"
+.labelZoom: "Default Zoom" => "Standardzoom"
+.labelOpenOn: "Open Centred On" => "Öffne zentriert auf"
+.groupBoxCustomIGAU: "Intergalactic Astronomical Union [IGAU]" => "Intergalactic Astronomical Union [IGAU]"
+.checkBoxIGAUSync: "Send Codex Entry Discovery Data to IGAU" => "Sende Codexeintrag-Entdeckungsdaten zu IGAU"
 .groupBoxCustomInara: "Inara Information (optional)" => "Inara-Information (optional)"
 .labelINARAN: "Inara Name:" => "Inara-Name"
 .labelInaraAPI: "Inara API Key:" => "Inara API-Schlüssel"
 .checkBoxCustomInara: "Sync to Inara" => "Zu Inara synchronisieren"
-.groupBoxCustomEDDN: "EDDN" @
+.groupBoxCustomEDDN: "EDDN" => "EDDN"
 .checkBoxCustomEDDNTo: "Send Event Information to EDDN" => "Ereignisinformation an EDDN senden"
-.groupBoxCustomEDSM: "EDSM Information (optional)" @
+.groupBoxCustomEDSM: "EDSM Information (optional)" => "EDSM Information (optional)"
 .checkBoxCustomEDSMFrom: "Sync From EDSM" => "Von EDSM synchronisieren"
 .labelEDSMAPI: "EDSM API Key:" => "EDSM API-Schlüssel"
 .labelEDSMN: "EDSM Name:" => "EDSM-Name:"
@@ -696,62 +696,20 @@ CommanderForm: "CommanderForm" @
 .buttonExtBrowse: "Browse" => "Auswählen"
 .labelJL: "Journal Location:" => "Journal Ablage:"
 .label_index: "Commander Configure" => "Kommandanten konfigurieren"
-.radioButtonHistorySelection.ToolTip: "Select history entry as opening location" @
-.textBoxDefaultZoom.ToolTip: "Set the zoom level of the map. 1 is normal" @
-.radioButtonCentreHome.ToolTip: "Select home system as opening location" @
-.panel_defaultmapcolor.ToolTip: "New travel entries get this colour on the map" @
-.checkBoxIGAUSync.ToolTip: "https://github.com/Elite-IGAU/publications/blob/master/IGAU_Codex.csv" @
+.radioButtonHistorySelection.ToolTip: "Select history entry as opening location" => "Wähle Historieneintrag als Öffnungsort"
+.textBoxDefaultZoom.ToolTip: "Set the zoom level of the map. 1 is normal" => "Wähle die Zoomstufe der Karte. 1 ist normal"
+.radioButtonCentreHome.ToolTip: "Select home system as opening location" => "Wähle Heimatsystem als Öffnungsort"
+.panel_defaultmapcolor.ToolTip: "New travel entries get this colour on the map" => "Neue Reiseeinträge werden auf der Karte so gefärbt"
+.checkBoxIGAUSync.ToolTip: "https://github.com/Elite-IGAU/publications/blob/master/IGAU_Codex.csv" => "https://github.com/Elite-IGAU/publications/blob/master/IGAU_Codex.csv"
 .textBoxBorderInaraName.ToolTip: "Give the user name for this commander on Inara" => "Inara-Benutzername dieses Kommandanten angeben"
 .checkBoxCustomInara.ToolTip: "Sync with Inara" => "Mit Inara synchronisieren"
 .textBoxBorderInaraAPIKey.ToolTip: "Enter the API key from the Inara Website\nGet an Inara API key from https://inara.cz" => "API-Schlüssel von der Inara-Seite eingeben\nSie erhalten einen Inara API-Schlüssel auf https://inara.cz"
 .checkBoxCustomEDDNTo.ToolTip: "Click to send journal information to EDDN. EDDN feeds tools such as EDDB, EDSM, Inara with data from commanders. All data is made anonymised" => "Klicken, um Journal-Informationen an EDDN zu senden. EDDN beliefert Applikation wie EDDB, EDSM, und Inara mit Daten. Alle Daten sind anonymisiert"
-.checkBoxCustomEDSMFrom.ToolTip: "Receive any FSD jumps from EDSM that are on their database but not in EDDiscovery" => "Erhält alle FSA-Sprünge von EDSM die in dieser Datenbank aber nicht in EDDiscovery sind"
+.checkBoxCustomEDSMFrom.ToolTip: "Receive any FSD jumps from EDSM that are on their database but not in EDDiscovery" => "Erhält alle FSA-Sprünge von EDSM die in dessen Datenbank aber nicht in EDDiscovery sind"
 .checkBoxCustomEDSMTo.ToolTip: "Send your travel and ship data to EDSM" => "Reise- und Schiffsdaten an EDSM schicken"
-.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \\"My account\\" menu" @
+.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \\"My account\\" menu" => "API-Schlüssel von der EDSM-Webseite eingeben\nDen Schlüssel bekommst du auf https://www.edsm.net/de/settings/api"
 .textBoxBorderEDSMName.ToolTip: "Give the name this commander is known as in EDSM" => "Name des Kommandanten auf EDSM"
 .buttonExtBrowse.ToolTip: "Browse to the the journal folder" => "Journal-Verzeichnis auswählen"
 .textBoxBorderCmdr.ToolTip: "Enter commander name as used in Elite Dangerous" => "In Elite Dangerous benutzter Kommandanten-Name eingeben"
-.textBoxBorderJournal.ToolTip: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\nLeave override journal location blank to use the standard Frontier location for journals" => "Journal-Verzeichnis auswählen. Normalerweise kann diese Feld leer bleiben, ausser wenn Sie EDD auf einem anderen Rechner verwenden als auf dem Rechner, den Sie zum Spielen benutzen\nWenn Sie dieses Feld freilassen, wird das Standard-Journal-Verzeichnis verwendet"
-.LF: "Select folder where Journal*.log files are stored by Frontier in" => "Wählen Sie das Verzeichnis, wo die Journal*.log Dateien von Frontier gespeichert werden"
-
-
-SECTION ScreenshotDirectoryWatcher
-
-.Scan: "Scanning for {0} screenshots in {1}" => "Scanne nach {0} Screenshots in {1}"
-.NOF: "Folder specified for image conversion does not exist, check settings in the Screenshots tab" => "Für Screenshotkonvertierung spezifizierter Ordner existiert nicht, überprüfe die Einstellungen im Screenshotbereich des Einstellungspaneels."
-.Excp: "Error in executing image conversion, try another screenshot, check output path settings. (Exception " => "Fehler beim Ausführen der Screenshotkonvertierung, versuche einen anderen Screenshot oder überprüfe die Einstellungen des Ausgabepfads. (Ausnahme "
-
-SECTION ScreenShotImageConverter
-
-.CNV: "Converted {0} to {1}" => "Konvertierte {0} zu {1}"
-
-SECTION ScreenShotConfigureForm
-
-ScreenShotConfigureForm: "Screen Shot Configure" => "Screenshotkonfiguration"
-.buttonExtCancel: "Cancel" => "Abbrechen"
-.buttonExtOK: "OK" => "OK"
-.groupBoxCropSettings: "Crop Settings" => "Beschneidungseinstellungen"
-.extGroupBox1: "Crop/Resize Settings" => "Einstellungen zum Beschneiden/Größe verändern"
-.labelHeight: "Height" => "Höhe"
-.labelWidth: "Width" => "Breite"
-.labelLeft: "Left" => "Links"
-.labelTop: "Top" => "Oben"
-.checkBoxCropImage: "Crop Image" => "Bild beschneiden" 
-.labelFolder: "ED/Steam Screenshot folder" => "ED/Steam-Screenshotordner"
-.buttonChangeScreenshotsFolder: "Browse" => "Durchsuchen"
-.labelSubfolder: "In Sub folder" => "Im Unterordner"
-.labelFileNameFormat: "In Filename format" => "Im Dateinamenformat"
-.labelStoreFolder: "Store Converted pictures" => "Speichere konvertierte Bilder"
-.buttonEDChangeOutputFolder: "Browse" => "Durchsuchen"
-.labelScanFor: "Scan for" => "Suche nach"
-.labelSaveAs: "Save as" => "Speichern als"
-.extCheckBoxRemoveOriginal: "Remove Original Elite Image" => "Entferne Elite-Originalbilder"
-.extCheckBoxKeepMasterConvertedImage: "Keep master converted image" => "Behalte konvertiertes Masterbild"
-.labelImage2: "Image 2" => "Bild 1"
-.labelImage1: "Image 1" => "Bild 2"
-.labelHeight2: "Height" => "Höhe"
-.labelWidth2: "Width" => "Breite"
-.labelLeft2: "Left" => "Links"
-.labelTop2: "Top" => "Oben"
-.labelCropResizeOptions: "Crop/Resize Options" => "Optionen für Beschneiden/Größe verändern"
-
+.textBoxBorderJournal.ToolTip: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\nLeave override journal location blank to use the standard Frontier location for journals" => "Journal-Verzeichnis auswählen. Normalerweise kann dieses Feld leer bleiben, ausser wenn du EDD auf einem anderen Rechner verwendest als auf dem Rechner, den du zum Spielen benutzt\nWenn du dieses Feld freilässt, wird das Standard-Journal-Verzeichnis verwendet"
+.LF: "Select folder where Journal*.log files are stored by Frontier in" => "Wähle das Verzeichnis, in dem die Journal*.log Dateien von Frontier gespeichert werden"
