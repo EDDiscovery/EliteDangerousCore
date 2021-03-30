@@ -62,7 +62,7 @@ SECTION MaterialCommodityData
 .Rare: "Rare" => "Selten"
 .Encoded: "Encoded" => "Kodiert"
 .VeryRare: "Very Rare" => "Sehr selten"
-.Manufactured: "Manufactured" => "Hergestellt"
+.Manufactured: "Manufactured" => "Gefertigt"
 .Commodity: "Commodity" => "Handelswaren"
 .Salvage: "Salvage" => "Bergungsgüter"
 .Chemicals: "Chemicals" => "Chemikalien"
@@ -707,16 +707,16 @@ CommanderForm: "CommanderForm" => "Kommandantenformular"
 .checkBoxCustomEDDNTo.ToolTip: "Click to send journal information to EDDN. EDDN feeds tools such as EDDB, EDSM, Inara with data from commanders. All data is made anonymised" => "Klicken, um Journal-Informationen an EDDN zu senden. EDDN beliefert Applikation wie EDDB, EDSM, und Inara mit Daten. Alle Daten sind anonymisiert"
 .checkBoxCustomEDSMFrom.ToolTip: "Receive any FSD jumps from EDSM that are on their database but not in EDDiscovery" => "Erhält alle FSA-Sprünge von EDSM die in dessen Datenbank aber nicht in EDDiscovery sind"
 .checkBoxCustomEDSMTo.ToolTip: "Send your travel and ship data to EDSM" => "Reise- und Schiffsdaten an EDSM schicken"
-.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \\"My account\\" menu" @
+.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \\"My account\\" menu" => "Gib deinen EDSM-API-Schlüssel ein.\nDu kannst deinen Schlüssel auf https://www.edsm.net/de/settings/api finden."
 .textBoxBorderEDSMName.ToolTip: "Give the name this commander is known as in EDSM" => "Name des Kommandanten auf EDSM"
 .buttonExtBrowse.ToolTip: "Browse to the the journal folder" => "Journal-Verzeichnis auswählen"
 .textBoxBorderCmdr.ToolTip: "Enter commander name as used in Elite Dangerous" => "In Elite Dangerous benutzter Kommandanten-Name eingeben"
 .textBoxBorderJournal.ToolTip: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\nLeave override journal location blank to use the standard Frontier location for journals" => "Journal-Verzeichnis auswählen. Normalerweise kann dieses Feld leer bleiben, ausser wenn du EDD auf einem anderen Rechner verwendest als auf dem Rechner, den du zum Spielen benutzt\nWenn du dieses Feld freilässt, wird das Standard-Journal-Verzeichnis verwendet"
 .LF: "Select folder where Journal*.log files are stored by Frontier in" => "Wähle das Verzeichnis, in dem die Journal*.log Dateien von Frontier gespeichert werden"
-.ND: "Folder does not exist" @
-.extCheckBoxConsoleCommander: "Console Commander" @
-.extGroupBoxEDAstro: "EDAstro" @
-.extCheckBoxEDAstro: "Send Events to EDAstro" @
+.ND: "Folder does not exist" => "Ordner exisitert nicht"
+.extCheckBoxConsoleCommander: "Console Commander" => "Konsolenkommandant"
+.extGroupBoxEDAstro: "EDAstro" => "EDAstro"
+.extCheckBoxEDAstro: "Send Events to EDAstro" => "Sende Ereignisse an EDAstro"
 
 SECTION ScreenshotDirectoryWatcher
 
@@ -757,9 +757,9 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Screenshotkonfiguration"
 .labelImage2: "Image 2" => "Bild 1"
 .labelImage1: "Image 1" => "Bild 2"
 .labelCropResizeOptions: "Crop/Resize Options" => "Optionen für Beschneiden/Größe verändern"
-.extCheckBoxEnabled: "Conversion Enabled" @
-.extCheckBoxHiRes: "Mark HiRes Files" @
-.extButtonBrowseMoveOrg: "Browse" @
-.labelClipboard: "Clipboard" @
-.labelOriginal: "Original Image" @
-.labelEnabled: "Enable" @
+.extCheckBoxEnabled: "Conversion Enabled" => Konvertierung aktiviert"
+.extCheckBoxHiRes: "Mark HiRes Files" => "Hochauflösende Dateien markieren"
+.extButtonBrowseMoveOrg: "Browse" => "Durchsuchen"
+.labelClipboard: "Clipboard" => "Zwischenablage"
+.labelOriginal: "Original Image" => "Originalbild"
+.labelEnabled: "Enable" => "Aktivieren"
