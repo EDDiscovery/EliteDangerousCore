@@ -507,10 +507,12 @@ namespace EliteDangerousCore
         public static bool Earthlike(EDPlanet PlanetTypeID) { return PlanetTypeID == EDPlanet.Earthlike_body; } 
         public static bool WaterWorld(EDPlanet PlanetTypeID) { return PlanetTypeID == EDPlanet.Water_world; } 
         public static bool SudarskyGasGiant(EDPlanet PlanetTypeID) { return PlanetTypeID >= EDPlanet.Sudarsky_class_I_gas_giant && PlanetTypeID <= EDPlanet.Sudarsky_class_V_gas_giant; }
-        public static string SudarskyClass(EDPlanet PlanetTypeID) { return (new string[] { "I", "II", "III", "IV", "V" })[(int)(PlanetTypeID-EDPlanet.Sudarsky_class_I_gas_giant)]; }
         public static bool GasGiant(EDPlanet PlanetTypeID) { return PlanetTypeID >= EDPlanet.Gas_giant_with_water_based_life && PlanetTypeID <= EDPlanet.Gas_giant_with_ammonia_based_life; }
         public static bool WaterGiant(EDPlanet PlanetTypeID) { return PlanetTypeID >= EDPlanet.Water_giant && PlanetTypeID <= EDPlanet.Water_giant_with_life; }
         public static bool HeliumGasGiant(EDPlanet PlanetTypeID) { return PlanetTypeID >= EDPlanet.Helium_rich_gas_giant && PlanetTypeID <= EDPlanet.Helium_gas_giant; }
+        public static bool GasWorld(EDPlanet PlanetTypeID) { return PlanetTypeID >= EDPlanet.Gas_giant_with_water_based_life && PlanetTypeID <= EDPlanet.Helium_gas_giant; }
+
+        public static string SudarskyClass(EDPlanet PlanetTypeID) { return (new string[] { "I", "II", "III", "IV", "V" })[(int)(PlanetTypeID - EDPlanet.Sudarsky_class_I_gas_giant)]; }
 
         private static string[] ClassificationAbv = new string[]
         {
