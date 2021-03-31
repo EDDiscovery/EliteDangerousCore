@@ -746,9 +746,9 @@ SECTION MaterialTraderStatsClass
 SECTION CQCClass
 
 .TimePlayed: "Time Played:;;N0" @
-.KDRatio: "KD Ratio:;;N" @
+.KDRatio: "KD Ratio:;;N0" @
 .Kills: "Kills:;;N0" @
-.Win: "Win/Loss:;;N" @
+.Win: "Win/Loss:;;N0" @
 
 SECTION JournalStoredModules
 
