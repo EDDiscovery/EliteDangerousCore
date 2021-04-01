@@ -544,7 +544,7 @@ SECTION JournalScan
 .MPIE: "Efficiently" => "Effizient"
 .EVFD: "First Discovered+Mapped value: {0:N0}/{1:N0}e" => "Erstentdeckungs- und Kartographierungswert: {0:N0}/{1:N0}e"
 .EVFM: "First Mapped value: {0:N0}/{1:N0}e" => "Erstkartographierungswert: {0:N0}/{1:N0}e"
-.SCNT: "Scan Type: {0}" => "Scanart"
+.SCNT: "Scan Type: {0}" => "Scanart: {0}"
 .EVAD: "Already Discovered" => "Bereits entdeckt"
 .EVAM: "Already Mapped" => "Bereits kartographiert"
 .InferredCircumstellarzones: "Inferred Circumstellar zones:\n" => "Vermutete zirkumstellare Zonen:\n"
