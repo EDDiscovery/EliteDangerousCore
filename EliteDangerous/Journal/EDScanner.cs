@@ -55,21 +55,11 @@ namespace EliteDangerousCore
             {
                 mw.StartMonitor(storetodb);
             }
-
-            foreach (StatusMonitorWatcher mw in statuswatchers)
-            {
-                mw.StartMonitor();
-            }
         }
 
         public void StopMonitor()
         {
             foreach (JournalMonitorWatcher mw in watchers)
-            {
-                mw.StopMonitor();
-            }
-
-            foreach (StatusMonitorWatcher mw in statuswatchers)
             {
                 mw.StopMonitor();
             }
@@ -101,12 +91,12 @@ namespace EliteDangerousCore
 
                 if (jlu != null && ( jlu.Item1.Count != 0 || jlu.Item2.Count != 0) && !stopRequested.WaitOne(0))
                 {
-                    InvokeAsyncOnUiThread(() => ScanTickDone(jlu));
+                    InvokeAsyncOnUiThread(() => IssueEvents(jlu));
                 }
             }
         }
 
-        private Tuple<List<JournalEntry>, List<UIEvent>> ScanTickWorker(Func<bool> stopRequested)     // read the entries from all watcher..
+        private Tuple<List<JournalEntry>, List<UIEvent>> ScanTickWorker(Func<bool> stopRequested)     // read the entries from all watchers..
         {
             var entries = new List<JournalEntry>();
             var uientries = new List<UIEvent>();
@@ -123,10 +113,21 @@ namespace EliteDangerousCore
                 }
             }
 
+            foreach (var sw in statuswatchers)
+            {
+                var evret = sw.Scan();
+                uientries.AddRange(evret);
+
+                if (stopRequested())
+                {
+                    return null;
+                }
+            }
+
             return new Tuple<List<JournalEntry>, List<UIEvent>>(entries, uientries);
         }
 
-        private void ScanTickDone(Tuple<List<JournalEntry>, List<UIEvent>> entries)       // in UI thread..
+        private void IssueEvents(Tuple<List<JournalEntry>, List<UIEvent>> entries)       // in UI thread..
         {
             ManualResetEvent stopRequested = StopRequested;
 
@@ -139,6 +140,7 @@ namespace EliteDangerousCore
                         if (stopRequested.WaitOne(0))
                             return;
 
+                        System.Diagnostics.Debug.WriteLine("Issue " + ent.EventTypeStr);
                         OnNewJournalEntry?.Invoke(ent);
                     }
                 }
@@ -152,6 +154,7 @@ namespace EliteDangerousCore
 
                         //System.Diagnostics.Trace.WriteLine(string.Format("New UI entry from journal {0} {1}", uient.EventTimeUTC, uient.EventTypeStr));
 
+                        System.Diagnostics.Debug.WriteLine("Issue  UI" + uient.EventTypeStr);
                         OnNewUIEvent?.Invoke(uient);
                     }
                 }
@@ -180,8 +183,7 @@ namespace EliteDangerousCore
                         JournalMonitorWatcher mw = new JournalMonitorWatcher(path);
                         watchers.Add(mw);
 
-                        StatusMonitorWatcher sw = new StatusMonitorWatcher(path, ScanTick);
-                        sw.UIEventCallBack += UIEvent;
+                        StatusMonitorWatcher sw = new StatusMonitorWatcher(path);
                         statuswatchers.Add(sw);
 
                         present = watchers.Count - 1;
@@ -235,7 +237,7 @@ namespace EliteDangerousCore
                 mw.StopMonitor();          // just in case
                 watchers.Remove(mw);
                 StatusMonitorWatcher sw = statuswatchers[wi];
-                sw.StopMonitor();          // just in case
+             //   sw.StopMonitor();          // just in case
                 statuswatchers.Remove(sw);
             }
         }
