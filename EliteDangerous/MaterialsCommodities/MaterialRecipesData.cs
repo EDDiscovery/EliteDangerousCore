@@ -1115,6 +1115,7 @@ namespace EliteDangerousCore
             new TechBrokerUnlockRecipe("Enzyme Missile Rack Fixed Medium","Human","16UKEC,18UKOC,16Mo,15W,6RB"),
             new TechBrokerUnlockRecipe("Flechette Launcher Fixed Medium","Human","30Fe,24Mo,22Re,26Ge,8CMMC"),
             new TechBrokerUnlockRecipe("Flechette Launcher Turret Medium","Human","28Fe,28Mo,20Re,24Ge,10AM"),
+            new TechBrokerUnlockRecipe("Frame Shift Drive (Engineered V1)","Human","26Te,26EA,28CP,18DWEx"),
             new TechBrokerUnlockRecipe("Guardian FSD Booster  Size 1","Guardian","1GMBS,21GPCe,21GTC,24FoC,8HNSM"),
             new TechBrokerUnlockRecipe("Guardian Gauss Cannon Fixed Small","Guardian","1GWBS,12GPC,12GSWC,15GSWP"),
             new TechBrokerUnlockRecipe("Guardian Gauss Cannon Fixed Medium","Guardian","1GWBS,18GPCe,20GTC,15Mn,6MEC"),
