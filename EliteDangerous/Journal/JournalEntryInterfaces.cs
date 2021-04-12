@@ -85,9 +85,16 @@ namespace EliteDangerousCore
         void UpdateStats(Stats stats, string stationfaction);
     }
 
+    public class IStatsItemsInfo
+    {
+        public string FDName;
+        public int Count;        // neg sold
+        public long Profit;         // any profit
+    }
+
     public interface IStatsJournalEntryMatCommod : IStatsJournalEntry
     {
-        List<Tuple<string, int>> ItemsList { get; }     // negative means sold
+        List<IStatsItemsInfo> ItemsList { get; }     
     }
 
     public interface IStatsJournalEntryBountyOrBond : IStatsJournalEntry

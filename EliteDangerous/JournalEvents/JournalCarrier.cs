@@ -274,7 +274,7 @@ namespace EliteDangerousCore.JournalEvents
         public int Total { get; set; }
 
         // Istats
-        public List<Tuple<string, int>> ItemsList { get { return new List<Tuple<string, int>>() { new Tuple<string, int>("tritium", -Amount) }; } }
+        public List<IStatsItemsInfo> ItemsList { get { return new List<IStatsItemsInfo>() { new IStatsItemsInfo() { FDName = "tritium", Count = -Amount } }; } }
 
         public string FDNameOfItem { get { return "Carrier"; } }        // implement IStatsJournalEntryMatCommod
         public int CountOfItem { get { return Amount; } }
@@ -300,7 +300,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateStats(Stats stats, string stationfaction)
         {
-            stats.UpdateCommodity("tritium", -Amount, stationfaction);
+            stats.UpdateCommodity("tritium", -Amount, 0, stationfaction);
         }
     }
 

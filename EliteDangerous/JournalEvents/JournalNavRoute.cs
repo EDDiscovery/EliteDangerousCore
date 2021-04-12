@@ -100,7 +100,7 @@ namespace EliteDangerousCore.JournalEvents
                 for( int i = 1; i < Route.Length;i++)
                 {
                     var r = Route[i];
-                    string n = r.StarSystem ?? r.SystemAddress.ToStringInvariant();
+                    string n = r.StarSystem ?? r.SystemAddress.ToStringInvariant();     // star system has been seen to be empty
 
                     if (Route.Length >= 18)       // 0.14 printed, 15 = .. , -2/-1 printed
                     {
@@ -109,6 +109,8 @@ namespace EliteDangerousCore.JournalEvents
                         else if (i == 15)
                             info += ", .. ";
                     }
+                    else
+                        info = info.AppendPrePad(n, ", ");
 
                     detailed = detailed.AppendPrePad(n + " @ " + r.StarPos.X.ToString("N1") + "," + r.StarPos.Y.ToString("N1") + "," + r.StarPos.Z.ToString("N1") + " " + r.StarClass, System.Environment.NewLine);
                 }

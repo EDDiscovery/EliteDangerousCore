@@ -34,7 +34,7 @@ namespace EliteDangerousCore
         private ManualResetEvent StopRequested;
         private Action<Action> InvokeAsyncOnUiThread;
         private List<JournalMonitorWatcher> watchers = new List<JournalMonitorWatcher>();
-        private List<StatusMonitorWatcher> statuswatchers = new List<StatusMonitorWatcher>();
+        private List<StatusReader> statuswatchers = new List<StatusReader>();
 
         const int ScanTick = 100;       // tick time to check journals and status
 
@@ -183,7 +183,7 @@ namespace EliteDangerousCore
                         JournalMonitorWatcher mw = new JournalMonitorWatcher(path);
                         watchers.Add(mw);
 
-                        StatusMonitorWatcher sw = new StatusMonitorWatcher(path);
+                        StatusReader sw = new StatusReader(path);
                         statuswatchers.Add(sw);
 
                         present = watchers.Count - 1;
@@ -236,7 +236,7 @@ namespace EliteDangerousCore
                 JournalMonitorWatcher mw = watchers[wi];
                 mw.StopMonitor();          // just in case
                 watchers.Remove(mw);
-                StatusMonitorWatcher sw = statuswatchers[wi];
+                StatusReader sw = statuswatchers[wi];
              //   sw.StopMonitor();          // just in case
                 statuswatchers.Remove(sw);
             }

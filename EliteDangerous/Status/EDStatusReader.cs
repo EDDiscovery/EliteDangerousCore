@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 - 2017 EDDiscovery development team
+ * Copyright © 2016 - 2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -22,13 +22,13 @@ using System.IO;
 namespace EliteDangerousCore
 {
     [System.Diagnostics.DebuggerDisplay("{WatcherFolder}")]
-    public class StatusMonitorWatcher
+    public class StatusReader
     {
         public string StatusFolder { get; set; }
 
         private string statusfile;
     
-        public StatusMonitorWatcher(string datapath)
+        public StatusReader(string datapath)
         {
             StatusFolder = datapath;
             statusfile = Path.Combine(StatusFolder, "status.json");

@@ -244,8 +244,9 @@ namespace EliteDangerousCore.JournalEvents
         public Traded Received { get; set; } // may be null
 
         // Istats
-        public List<Tuple<string, int>> ItemsList { get { return new List<Tuple<string, int>>() { new Tuple<string, int>(Paid.Material, -Paid.Quantity), new Tuple<string, int>(Received.Material, Received.Quantity) }; } }
-
+        public List<IStatsItemsInfo> ItemsList { get { return new List<IStatsItemsInfo>() { new IStatsItemsInfo() { FDName = Paid.Material, Count = -Paid.Quantity },
+                                                                                            new IStatsItemsInfo() { FDName = Received.Material, Count = Received.Quantity }
+                                                                                            }; } }
         public class Traded
         {
             public string Material;     //fdname

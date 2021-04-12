@@ -60,7 +60,7 @@ namespace EliteDangerousCore.JournalEvents
         public long TotalCost { get; set; }
 
         // Istats
-        public List<Tuple<string, int>> ItemsList { get { return new List<Tuple<string, int>>() { new Tuple<string, int>(Type, Count) }; } }
+        public List<IStatsItemsInfo> ItemsList { get { return new List<IStatsItemsInfo>() { new IStatsItemsInfo() { FDName = Type, Count = Count } }; } }
 
         public string FDNameOfItem { get { return Type; } }        // implement IStatsJournalEntryMatCommod
         public int CountOfItem { get { return Count; } }
@@ -72,7 +72,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateStats(Stats stats, string stationfaction)
         {
-            stats.UpdateCommodity("drones", Count, stationfaction);
+            stats.UpdateCommodity("drones", Count, 0, stationfaction);
         }
 
         public void Ledger(Ledger mcl)
@@ -104,7 +104,7 @@ namespace EliteDangerousCore.JournalEvents
         public long TotalSale { get; set; }
 
         // Istats
-        public List<Tuple<string, int>> ItemsList { get { return new List<Tuple<string, int>>() { new Tuple<string, int>(Type, -Count) }; } }
+        public List<IStatsItemsInfo> ItemsList { get { return new List<IStatsItemsInfo>() { new IStatsItemsInfo() { FDName = Type, Count = -Count } }; } }
 
         public void UpdateCommodities(MaterialCommoditiesList mc)
         {
@@ -113,7 +113,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateStats(Stats stats, string stationfaction)
         {
-            stats.UpdateCommodity("drones", -Count, stationfaction);
+            stats.UpdateCommodity("drones", -Count, 0, stationfaction);
         }
 
         public void Ledger(Ledger mcl)

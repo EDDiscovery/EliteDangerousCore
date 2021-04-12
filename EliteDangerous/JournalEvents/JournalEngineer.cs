@@ -83,7 +83,7 @@ namespace EliteDangerousCore.JournalEvents
         public int TotalQuantity { get; set; }
 
         // Istats
-        public List<Tuple<string, int>> ItemsList { get { return new List<Tuple<string, int>>() { new Tuple<string, int>(Type == "Materials" ? Material : Commodity, -Quantity) }; } }
+        public List<IStatsItemsInfo> ItemsList { get { return new List<IStatsItemsInfo>() { new IStatsItemsInfo() { FDName = Type == "Materials" ? Material : Commodity, Count = -Quantity } }; } }
 
         public void UpdateMaterials(MaterialCommoditiesList mc)
         {

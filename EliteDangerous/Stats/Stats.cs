@@ -27,7 +27,8 @@ namespace EliteDangerousCore
             public FactionInfo(FactionInfo other)
             {
                 Faction = other.Faction;
-                BoughtCommodity = other.BoughtCommodity; SoldCommodity = other.SoldCommodity; BoughtMaterial = other.BoughtMaterial; SoldMaterial = other.SoldMaterial;
+                BoughtCommodity = other.BoughtCommodity; SoldCommodity = other.SoldCommodity; ProfitCommodity = other.ProfitCommodity;
+                BoughtMaterial = other.BoughtMaterial; SoldMaterial = other.SoldMaterial;
                 BountyKill = other.BountyKill;
                 BountyRewards = other.BountyRewards;
                 BountyRewardsValue = other.BountyRewardsValue;
@@ -45,6 +46,7 @@ namespace EliteDangerousCore
             public string Faction { get; set; }
             public int BoughtCommodity { get; set; }
             public int SoldCommodity { get; set; }
+            public long ProfitCommodity { get; set; }
             public int BoughtMaterial { get; set; }
             public int SoldMaterial { get; set; }
             public int BountyKill { get; set; }
@@ -98,7 +100,7 @@ namespace EliteDangerousCore
                 return null;
         }
 
-        public void UpdateCommodity(string name, int amount, string faction)
+        public void UpdateCommodity(string name, int amount, long profit, string faction)
         {
             var newfi = Clone(faction);
             if (newfi != null)
@@ -108,6 +110,8 @@ namespace EliteDangerousCore
                     newfi.SoldCommodity += -amount;
                 else
                     newfi.BoughtCommodity += amount;
+
+                newfi.ProfitCommodity += profit;
             }
         }
 
@@ -130,7 +134,7 @@ namespace EliteDangerousCore
 
         public void UpdateEngineerCommodity(string name, string namematcom, int amount)
         {
-            UpdateCommodity(namematcom, amount, name);
+            UpdateCommodity(namematcom, amount, 0, name);
         }
 
         public void BountyKill(string victimfaction)
