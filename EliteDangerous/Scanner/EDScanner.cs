@@ -15,19 +15,20 @@
  */
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace EliteDangerousCore
 {
+    // Scanner is above both the status and journal monitors
+    // it sets them up and tears them down, and runs a thread which ticks and reads new journal/status events
+    // then dispatches it thru the UI thread
+    // it also has a function to rescan the journals of the watchers for the initial load.
+
     public class EDJournalUIScanner
     {
-        public Action<JournalEntry> OnNewJournalEntry; 
+        public Action<JournalEntry> OnNewJournalEntry;
         public Action<UIEvent> OnNewUIEvent;
 
         private Thread ScanThread;
@@ -89,7 +90,7 @@ namespace EliteDangerousCore
             {
                 var jlu = ScanTickWorker(() => stopRequested.WaitOne(0));
 
-                if (jlu != null && ( jlu.Item1.Count != 0 || jlu.Item2.Count != 0) && !stopRequested.WaitOne(0))
+                if (jlu != null && (jlu.Item1.Count != 0 || jlu.Item2.Count != 0) && !stopRequested.WaitOne(0))
                 {
                     InvokeAsyncOnUiThread(() => IssueEvents(jlu));
                 }
@@ -163,11 +164,48 @@ namespace EliteDangerousCore
 
         #endregion
 
-        #region History refresh calls this for a set up of watchers.. then a global reparse of all journal event folders during load history
+        #region History refresh calls this for a set up of watchers.
 
         // call to update/create watchers on joutnal and UI.  Do it with system stopped
 
-        public int CheckAddPath(string p)           // return index of watcher (and therefore status watcher as we add in parallel)
+        public void SetupWatchers(string[] stdfolders)
+        {
+            System.Diagnostics.Debug.Assert(ScanThread == null);        // double check we are not scanning.
+
+            List<int> watchersinuse = new List<int>();
+            foreach (string std in stdfolders)          // setup the std folders
+            {
+                watchersinuse.Add(CheckAddPath(std));
+            }
+
+            foreach (var cmdr in EDCommander.GetListCommanders())       // setup any commander folders
+            {
+                if (!cmdr.ConsoleCommander && cmdr.JournalDir.HasChars())    // not console commanders, and we have a path
+                {
+                    watchersinuse.Add(CheckAddPath(cmdr.JournalDir));   // try adding
+                }
+            }
+
+            List<int> del = new List<int>();
+            for (int i = 0; i < watchers.Count; i++)           // find any watchers not in the watchersinuse list
+            {
+                if (!watchersinuse.Contains(i))
+                    del.Add(i);
+            }
+
+            for (int j = 0; j < del.Count; j++)
+            {
+                int wi = del[j];
+                System.Diagnostics.Trace.WriteLine(string.Format("Delete watch on {0}", watchers[wi].WatcherFolder));
+                JournalMonitorWatcher mw = watchers[wi];
+                mw.StopMonitor();          // just in case
+                watchers.Remove(mw);
+                StatusReader sw = statuswatchers[wi];
+                statuswatchers.Remove(sw);
+            }
+        }
+
+        private int CheckAddPath(string p)           // return index of watcher (and therefore status watcher as we add in parallel)
         {
             try
             {
@@ -196,7 +234,7 @@ namespace EliteDangerousCore
                     return present;
                 }
             }
-            catch ( Exception ex)
+            catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine("Watcher path exception" + ex);
             }
@@ -204,48 +242,14 @@ namespace EliteDangerousCore
             return -1;
         }
 
-        public void SetupWatchers(string [] stdfolders)
-        {
-            System.Diagnostics.Debug.Assert(ScanThread == null);        // double check we are not scanning.
+        #endregion
 
-            List<int> watchersinuse = new List<int>();
-            foreach (string std in stdfolders)          // setup the std folders
-            {
-                watchersinuse.Add(CheckAddPath(std));
-            }
-
-            foreach ( var cmdr in EDCommander.GetListCommanders())       // setup any commander folders
-            {
-                if (!cmdr.ConsoleCommander && cmdr.JournalDir.HasChars())    // not console commanders, and we have a path
-                {
-                    watchersinuse.Add(CheckAddPath(cmdr.JournalDir));   // try adding
-                }
-            }
-
-            List<int> del = new List<int>();
-            for( int i = 0; i < watchers.Count; i++ )           // find any watchers not in the watchersinuse list
-            {
-                if (!watchersinuse.Contains(i))
-                    del.Add(i);
-            }
-
-            for (int j = 0; j < del.Count; j++)
-            {
-                int wi = del[j];
-                System.Diagnostics.Trace.WriteLine(string.Format("Delete watch on {0}", watchers[wi].WatcherFolder));
-                JournalMonitorWatcher mw = watchers[wi];
-                mw.StopMonitor();          // just in case
-                watchers.Remove(mw);
-                StatusReader sw = statuswatchers[wi];
-             //   sw.StopMonitor();          // just in case
-                statuswatchers.Remove(sw);
-            }
-        }
+        #region History reload - scan of watchers for new files
 
         // Go thru all watchers and check to see if any new files have been found, if so, process them and either store to DB or fireback
         // options to force reload of last N files, to fireback instead of storing the last n
 
-        public void ParseJournalFilesOnWatchers(Action<int, string> updateProgress, 
+        public void ParseJournalFilesOnWatchers(Action<int, string> updateProgress,
                                                 int reloadlastn,
                                                 Action<JournalEntry, int, int, int, int> firebacknostore = null, int firebacklastn = 0)
         {
@@ -254,48 +258,8 @@ namespace EliteDangerousCore
             for (int i = 0; i < watchers.Count; i++)             // parse files of all folders being watched
             {
                 // may create new commanders at the end, but won't need any new watchers, because they will obv be in the same folder
-                var list = watchers[i].ScanJournalFiles(reloadlastn);    
-                watchers[i].ProcessDetectedNewFiles(list, updateProgress, firebacknostore, firebacklastn );
-            }
-        }
-
-        #endregion
-
-        #region UI processing
-
-        public void UIEvent(ConcurrentQueue<UIEvent> events, string folder)     // callback, in Thread.. from monitor
-        {
-            InvokeAsyncOnUiThread(() => UIEventPost(events));
-        }
-
-        public void UIEventPost(ConcurrentQueue<UIEvent> events)       // UI thread
-        {
-            ManualResetEvent stopRequested = StopRequested;
-
-            Debug.Assert(System.Windows.Forms.Application.MessageLoop);
-
-            if (stopRequested != null)
-            {
-                while (!events.IsEmpty)
-                {
-                    lock (stopRequested) // Prevent StopMonitor from returning until this method has returned
-                    {
-                        if (stopRequested.WaitOne(0))
-                            return;
-
-                        UIEvent e;
-
-                        if (events.TryDequeue(out e))
-                        {
-                            //System.Diagnostics.Trace.WriteLine(string.Format("New UI entry from status {0} {1}", e.EventTimeUTC, e.EventTypeStr));
-                            OnNewUIEvent?.Invoke(e);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                }
+                var list = watchers[i].ScanJournalFiles(reloadlastn);
+                watchers[i].ProcessDetectedNewFiles(list, updateProgress, firebacknostore, firebacklastn);
             }
         }
 

@@ -105,8 +105,6 @@ namespace EliteDangerousCore
 
             if (File.Exists(statusfile))
             {
-                // nextpolltime = ScanRate;
-
                 JObject jo = null;
 
                 Stream stream = null;
@@ -283,15 +281,6 @@ namespace EliteDangerousCore
                     }
 
                     return events;
-                    //if (events.Count > 0)
-                    //{
-                    //    foreach (UIEvent e in events)
-                    //    {
-                    //        Events.Enqueue(e);
-                    //    }
-
-                    //    UIEventCallBack?.Invoke(Events, WatcherFolder);        // and fire..
-                    //}
                 }
             }
 

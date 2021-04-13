@@ -95,7 +95,7 @@ namespace EliteDangerousCore
         }
 
 
-        // Called by EDJournalClass periodically to scan for journal entries
+        // Called by EDScanner periodically to scan for journal entries
 
         public Tuple<List<JournalEntry>, List<UIEvent>> ScanForNewEntries()
         {
