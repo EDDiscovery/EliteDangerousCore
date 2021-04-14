@@ -108,12 +108,12 @@
     <Compile Include="IGAU\IGAUClass.cs" />
     <Compile Include="JournalEvents\JournalCarrier.cs" />
     <Compile Include="JournalEvents\JournalNavRoute.cs" />
-    <Compile Include="Journal\EDScanner.cs" />
     <Compile Include="Journal\EDJournalReader.cs" />
     <Compile Include="Journal\EDJournalMonitorWatcher.cs" />
     <Compile Include="Journal\JournalEssentialEvents.cs" />
     <Compile Include="Journal\JournalEntryDB.cs" />
     <Compile Include="Journal\JournalEnums.cs" />
+    <Compile Include="Scanner\EDScanner.cs" />
     <Compile Include="Screenshots\ScreenShotConfigureForm.cs">
       <SubType>Form</SubType>
     </Compile>
