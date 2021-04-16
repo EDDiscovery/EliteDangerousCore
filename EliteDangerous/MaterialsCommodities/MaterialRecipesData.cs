@@ -273,7 +273,7 @@ namespace EliteDangerousCore
         new EngineeringRecipe("Shielded", "1C,1SHE", "AFM", "2", "Bill Turner,Lori Jameson,Petra Olmanova" ),
         new EngineeringRecipe("Shielded", "1C,1SHE,1HDC", "AFM", "3", "Bill Turner,Lori Jameson,Petra Olmanova" ),
         new EngineeringRecipe("Shielded", "1V,1SS,1FPC", "AFM", "4", "Lori Jameson,Petra Olmanova" ),
-        new EngineeringRecipe("Shielded", "1W,1CoS,1FCC", "AFM", "5", "Unknown" ),
+        new EngineeringRecipe("Shielded", "1W,1CoS,1FCC", "AFM", "5", "Petra Olmanova" ),
 
         new EngineeringRecipe("Lightweight Armour", "1Fe", "Armour", "1", "Liz Ryder,Selene Jean,Petra Olmanova" ),
         new EngineeringRecipe("Lightweight Armour", "1Fe,1CCo", "Armour", "2", "Selene Jean,Petra Olmanova" ),
@@ -398,11 +398,11 @@ namespace EliteDangerousCore
         new EngineeringRecipe("Overcharged Weapon", "1Ni,1CCo,1EA", "Cannon", "3", "The Sarge,Marsha Hicks" ),
         new EngineeringRecipe("Overcharged Weapon", "1Zn,1CCe,1PCa", "Cannon", "4", "The Sarge,Marsha Hicks" ),
         new EngineeringRecipe("Overcharged Weapon", "1Zr,1CPo,1EFW", "Cannon", "5", "The Sarge" ),
-        new EngineeringRecipe("Rapid Fire Modification", "1MS", "Cannon", "1", "Unknown,Marsha Hicks" ),
-        new EngineeringRecipe("Rapid Fire Modification", "1MS,1HDP", "Cannon", "2", "Unknown,Marsha Hicks" ),
-        new EngineeringRecipe("Rapid Fire Modification", "1SLF,1ME,1PAll", "Cannon", "3", "Unknown,Marsha Hicks" ),
-        new EngineeringRecipe("Rapid Fire Modification", "1MCF,1MC,1ThA", "Cannon", "4", "Unknown,Marsha Hicks" ),
-        new EngineeringRecipe("Rapid Fire Modification", "1PAll,1CCom,1Tc", "Cannon", "5", "Unknown" ),
+        new EngineeringRecipe("Rapid Fire Modification", "1MS", "Cannon", "1", "Marsha Hicks,Tod Mcquinn,The Sarge" ),
+        new EngineeringRecipe("Rapid Fire Modification", "1MS,1HDP", "Cannon", "2", "Marsha Hicks,Tod Mcquinn,The Sarge" ),
+        new EngineeringRecipe("Rapid Fire Modification", "1SLF,1ME,1PAll", "Cannon", "3", "Marsha Hicks,The Sarge" ),
+        new EngineeringRecipe("Rapid Fire Modification", "1MCF,1MC,1ThA", "Cannon", "4", "Marsha Hicks,The Sarge" ),
+        new EngineeringRecipe("Rapid Fire Modification", "1PAll,1CCom,1Tc", "Cannon", "5", "Marsha Hicks,The Sarge" ),
         new EngineeringRecipe("Short-Range Blaster", "1Ni", "Cannon", "1", "The Sarge,Tod McQuinn,Marsha Hicks" ),
         new EngineeringRecipe("Short-Range Blaster", "1Ni,1MCF", "Cannon", "2", "The Sarge,Tod McQuinn,Marsha Hicks" ),
         new EngineeringRecipe("Short-Range Blaster", "1Ni,1MCF,1EA", "Cannon", "3", "The Sarge,Marsha Hicks" ),
@@ -1093,11 +1093,11 @@ namespace EliteDangerousCore
         new EngineeringRecipe("Wide Angle Scanner", "1ME,1Nb,1DSD", "Wake Scanner", "4", "Tiana Fortune,Etienne Dorn" ),
         new EngineeringRecipe("Wide Angle Scanner", "1MC,1Sn,1CFSD", "Wake Scanner", "5", "Tiana Fortune" ),
 
-        new EngineeringRecipe("Expanded Probe Scanning Radius", "1MS", "Surface Scanner", "1", "Not Known" ),
-        new EngineeringRecipe("Expanded Probe Scanning Radius", "1MS,1Ge", "Surface Scanner", "2", "Not Known" ),
-        new EngineeringRecipe("Expanded Probe Scanning Radius", "1MS,1Ge,1PA", "Surface Scanner", "3", "Not Known" ),
-        new EngineeringRecipe("Expanded Probe Scanning Radius", "1ME,1Nb,1PLA", "Surface Scanner", "4", "Not Known" ),
-        new EngineeringRecipe("Expanded Probe Scanning Radius", "1MC,1Sn,1PRA", "Surface Scanner", "5", "Not Known" ),
+        new EngineeringRecipe("Expanded Probe Scanning Radius", "1MS", "Surface Scanner", "1", "Etienne Dorn,Bill Turner,Juri Ishmaak,Lei Cheung,Lori Jameson,Tiana Fortune,Felicity Farseer,Hera Tani" ),
+        new EngineeringRecipe("Expanded Probe Scanning Radius", "1MS,1Ge", "Surface Scanner", "2", "Etienne Dorn,Bill Turner,Juri Ishmaak,Lei Cheung,Lori Jameson,Tiana Fortune,Felicity Farseer,Hera Tani" ),
+        new EngineeringRecipe("Expanded Probe Scanning Radius", "1MS,1Ge,1PA", "Surface Scanner", "3", "Etienne Dorn,Bill Turner,Juri Ishmaak,Lei Cheung,Lori Jameson,Tiana Fortune,Felicity Farseer,Hera Tani" ),
+        new EngineeringRecipe("Expanded Probe Scanning Radius", "1ME,1Nb,1PLA", "Surface Scanner", "4", "Etienne Dorn,Bill Turner,Juri Ishmaak,Lei Cheung,Lori Jameson,Hera Tani" ),
+        new EngineeringRecipe("Expanded Probe Scanning Radius", "1MC,1Sn,1PRA", "Surface Scanner", "5", "Etienne Dorn,Bill Turner,Juri Ishmaak,Lei Cheung,Lori Jameson,Hera Tani" ),
 
 #endregion
         };
