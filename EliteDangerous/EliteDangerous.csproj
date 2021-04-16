@@ -313,6 +313,7 @@
     <None Include="EliteDangerous\translation-polski-ed.tlp" />
     <None Include="EliteDangerous\translation-portugues-ed.tlp" />
     <None Include="EliteDangerous\translation-russian-ed.tlp" />
+    <None Include="EliteDangerous\translation-spanish-ed.tlp" />
     <None Include="JournalEvents\translation-chinese-je.tlp" />
     <None Include="JournalEvents\translation-deutsch-je.tlp" />
     <None Include="JournalEvents\translation-example-je.tlp" />
@@ -320,6 +321,7 @@
     <None Include="JournalEvents\translation-polski-je.tlp" />
     <None Include="JournalEvents\translation-portugues-je.tlp" />
     <None Include="JournalEvents\translation-russian-je.tlp" />
+    <None Include="JournalEvents\translation-spanish-ed.tlp" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
