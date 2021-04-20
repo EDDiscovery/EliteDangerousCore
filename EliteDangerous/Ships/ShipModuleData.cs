@@ -143,6 +143,11 @@ namespace EliteDangerousCore
             return Array.Find(vlist, x => ifd.Contains(x)) != null;
         }
 
+        static public bool IsShip(string ifd)       // any which are not SRV/Fighter is called a ship, to allow for new unknown ships
+        {
+            return !IsSRVOrFighter(ifd);
+        }
+
         static public bool IsSRV(string ifd)
         {
             return ifd.Equals("testbuggy", StringComparison.InvariantCultureIgnoreCase);

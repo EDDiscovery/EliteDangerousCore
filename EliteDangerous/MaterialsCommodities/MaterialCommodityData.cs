@@ -60,11 +60,12 @@ namespace EliteDangerousCore
         public bool Rarity { get; private set; }                    // if it is a rare commodity
 
         public bool IsCommodity { get { return Category == CatType.Commodity; } }
+        public bool IsMaterial { get { return Category == CatType.Encoded || Category == CatType.Manufactured || Category == CatType.Raw; } }
         public bool IsRaw { get { return Category == CatType.Raw; } }
         public bool IsEncoded { get { return Category == CatType.Encoded; } }
         public bool IsManufactured { get { return Category == CatType.Manufactured; } }
         public bool IsEncodedOrManufactured { get { return Category == CatType.Encoded || Category == CatType.Manufactured; } }
-        public bool IsRareCommodity { get { return Rarity && Category.Equals(CatType.Commodity); } }
+        public bool IsRareCommodity { get { return Rarity && IsCommodity; } }
         public bool IsCommonMaterial { get { return Type == ItemType.Common || Type == ItemType.VeryCommon; } }
         public bool IsJumponium
         {
@@ -175,12 +176,12 @@ namespace EliteDangerousCore
 
         public static MaterialCommodityData[] GetCommodities(bool sorted)
         {
-            return Get(x => x.Category == CatType.Commodity, sorted);
+            return Get(x => x.IsCommodity, sorted);
         }
 
         public static MaterialCommodityData[] GetMaterials(bool sorted)
         {
-            return Get(x => x.Category != CatType.Commodity, sorted);
+            return Get(x => x.IsMaterial, sorted);
         }
 
         public static Tuple<ItemType, string>[] GetTypes(Func<MaterialCommodityData, bool> func, bool sorted)        // given predate, return type/translated types combos.

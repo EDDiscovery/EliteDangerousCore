@@ -122,17 +122,17 @@ namespace EliteDangerousCore
                     };
                 case JournalTypeEnum.LoadGame:
                     JournalLoadGame jlg = je as JournalLoadGame;
-                    bool isbuggy = ShipModuleData.IsSRV(jlg.ShipFD);
-                    string shiptype = isbuggy ? prev.ShipType : jlg.Ship;
-                    string shiptypefd = isbuggy ? prev.ShipTypeFD : jlg.ShipFD;
-                    int shipid = isbuggy ? prev.ShipID : jlg.ShipId;
+                    bool isnotship = !ShipModuleData.IsShip(jlg.ShipFD);
+                    string shiptype = isnotship ? prev.ShipType : jlg.Ship;
+                    string shiptypefd = isnotship ? prev.ShipTypeFD : jlg.ShipFD;
+                    int shipid = isnotship ? prev.ShipID : jlg.ShipId;
 
                     return new HistoryEntryStatus(prev) // Bodyapproach copy over we should be in the same state as last..
                     {
                         OnCrewWithCaptain = null,    // can't be in a crew at this point
                         GameMode = jlg.GameMode,      // set game mode
                         Group = jlg.Group,            // and group, may be empty
-                        TravelState = (jlg.StartLanded || isbuggy) ? TravelStateType.Landed : prev.TravelState,
+                        TravelState = (jlg.StartLanded || isnotship) ? TravelStateType.Landed : prev.TravelState,
                         ShipType = shiptype,
                         ShipID = shipid,
                         ShipTypeFD = shiptypefd,
@@ -283,7 +283,7 @@ namespace EliteDangerousCore
                     };
                 case JournalTypeEnum.Loadout:
                     var jloadout = (JournalLoadout)je;
-                    if (!ShipModuleData.IsSRV(jloadout.ShipFD))     // just double checking!
+                    if (ShipModuleData.IsShip(jloadout.ShipFD))     // if ship, make a new entry
                     {
                         return new HistoryEntryStatus(prev)
                         {

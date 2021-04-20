@@ -141,7 +141,7 @@ namespace EliteDangerousCore
 
             //System.Diagnostics.Debug.WriteLine("Load Game " + sid);
 
-            if (!ShipModuleData.IsSRVOrFighter(shipfd))
+            if (ShipModuleData.IsShip(shipfd))
                 currentid = sid;
             VerifyList();
         }

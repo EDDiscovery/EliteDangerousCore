@@ -119,7 +119,7 @@ namespace EliteDangerousCore.Inara
                 foreach( var s in history.ShipInformationList.Ships )
                 {
                     ShipInformation si = s.Value;
-                    if ( si.State == ShipInformation.ShipState.Owned && !ShipModuleData.IsSRVOrFighter(si.ShipFD))
+                    if ( si.State == ShipInformation.ShipState.Owned && ShipModuleData.IsShip(si.ShipFD))
                     {
                         // loadout may be null if nothing in it.
                         eventstosend.Add(InaraClass.setCommanderShipLoadout(si.ShipFD, si.ID, si.Modules.Values, DateTime.UtcNow));
@@ -195,7 +195,7 @@ namespace EliteDangerousCore.Inara
                     {
                         var je = he.journalEntry as JournalLoadout;
                         var si = he.ShipInformation;
-                        if (si != null && je.ShipFD.HasChars() && !ShipModuleData.IsSRVOrFighter(je.ShipFD)) // if it has an FDname (defensive) and is not SRV/Fighter
+                        if (si != null && je.ShipFD.HasChars() && ShipModuleData.IsShip(je.ShipFD)) // if it has an FDname (defensive) and is not SRV/Fighter
                         {
                             if (je.ShipId == si.ID)
                             {
