@@ -256,7 +256,7 @@ SECTION CommunityGoal
 .CurrentTotal: "Current Total:" => "Total actual:"
 .Contribution: "Contribution:" => "Contribución:"
 .NumContributors: "Num Contributors:" => "Número de colaboradores:"
-.Player: "Player % Band:" @
+.Player: "Player % Band:" => "Banda % del jugador:"
 .TopRank: "Top Rank:" => "Bromear:"
 .NotInTopRank: "Not In Top Rank;In Top Rank" => "No en el rango superior;en el rango superior"
 .TierReached: "Tier Reached:" => "Nivel alcanzado:"
@@ -383,9 +383,9 @@ SECTION JournalMaterialDiscovered
 
 SECTION JournalMaterials
 
-.Raw: "Raw:" => "Crudo:"
-.Manufactured: "Manufactured:" => "Fabricado:"
-.Encoded: "Encoded:" => "Codificado:"
+.Raw: "Raw:" => "Elemento:"
+.Manufactured: "Manufactured:" => "Manufacturado:"
+.Encoded: "Encoded:" => "Datos Codificados:"
 
 SECTION JournalMissionRedirected
 
@@ -897,7 +897,7 @@ SECTION JournalEntry
 .Online: "Online:" => "En línea:"
 .Offline: "Offline:" => "Sin conexión:"
 .Submitted: ";Submitted" => ";Enviado"
-.NPC: "< (NPC);(Player)" @
+.NPC: "< (NPC);(Player)" => "< (NPC);(Player)"
 .Power: "Power:" => "Energía:"
 .Failedtointerdict: "Failed to interdict;Interdicted" => "No se pudo interceptar;interceptado"
 .Boost: "Boost:;;0.0" => "Impulsar:;;0.0"

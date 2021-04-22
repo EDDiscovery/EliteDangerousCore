@@ -55,14 +55,14 @@ SECTION EDPlanet
 
 SECTION MaterialCommodityData
 
-.Raw: "Raw" => "Crudo"
+.Raw: "Raw" => "Elemento"
 .VeryCommon: "Very Common" => "Muy común"
 .Common: "Common" => "Común"
 .Standard: "Standard" => "Estándar"
 .Rare: "Rare" => "Raro"
-.Encoded: "Encoded" => "Codificado"
+.Encoded: "Encoded" => "Datos Codificados"
 .VeryRare: "Very Rare" => "Muy raro"
-.Manufactured: "Manufactured" => "Fabricado"
+.Manufactured: "Manufactured" => "Manufacturado"
 .Commodity: "Commodity" => "Producto"
 .Salvage: "Salvage" => "Salvamento"
 .Chemicals: "Chemicals" => "Productos químicos"
@@ -83,11 +83,11 @@ SECTION MaterialCommodityData
 .PowerPlay: "PowerPlay" => "PowerPlay"
 .Drones: "Drones" => "Drones"
 .carbon: "Carbon" => "Carbono"
-.iron: "Iron" => "Planchar"
+.iron: "Iron" => "Hierro"
 .nickel: "Nickel" => "Níquel"
 .phosphorus: "Phosphorus" => "Fósforo"
 .sulphur: "Sulphur" => "Azufre"
-.lead: "Lead" => "Dirigir"
+.lead: "Lead" => "Plomo"
 .rhenium: "Rhenium" => "Renio"
 .chromium: "Chromium" => "Cromo"
 .germanium: "Germanium" => "Germanio"
@@ -553,7 +553,7 @@ SECTION MaterialCommodityData
 .galactictravelguide: "Galactic Travel Guide" => "Guía de viaje galáctico"
 .animaleffigies: "Crom Silver Fesh" => "Crom Silver Fesh"
 .shanscharisorchid: "Shan's Charis Orchid" => "Orquídea Charis de Shan"
-.buckyballbeermats: "Buckyball Beer Mats" => "Alfombrillas de cerveza Buckyball"
+.buckyballbeermats: "Buckyball Beer Mats" => "Materiales de cerveza Buckyball"
 .masterchefs: "Master Chefs" => "Maestros cocineros"
 .personalgifts: "Personal Gifts" => "Regalos personales"
 .crystallinespheres: "Crystalline Spheres" => "Esferas cristalinas"
@@ -713,10 +713,10 @@ CommanderForm: "CommanderForm" => "CommanderForm"
 .textBoxBorderCmdr.ToolTip: "Enter commander name as used in Elite Dangerous" => "Ingrese el nombre del comandante como se usa en Elite Dangerous"
 .textBoxBorderJournal.ToolTip: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\nLeave override journal location blank to use the standard Frontier location for journals" => "Ingrese la carpeta de ubicación de la revista. Normalmente deje este campo en blanco solo si está usando EDD en otra computadora que no sea su computadora de juego\nDeje la ubicación de anulación de la revista en blanco para usar la ubicación estándar de Frontier para las revistas"
 .LF: "Select folder where Journal*.log files are stored by Frontier in" => "Seleccione la carpeta donde Frontier almacena los archivos de Journal * .log en"
-.ND: "Folder does not exist" @
-.extCheckBoxConsoleCommander: "Console Commander" @
-.extGroupBoxEDAstro: "EDAstro" @
-.extCheckBoxEDAstro: "Send Events to EDAstro" @
+.ND: "Folder does not exist" => "La carpeta no existe"
+.extCheckBoxConsoleCommander: "Console Commander" => "Comandante de consola"
+.extGroupBoxEDAstro: "EDAstro" => "EDAstro"
+.extCheckBoxEDAstro: "Send Events to EDAstro" => "Enviar eventos a EDAstro"
 
 SECTION ScreenshotDirectoryWatcher
 
@@ -757,9 +757,9 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Configurar captura de panta
 .labelImage2: "Image 2" => "Imagen 2"
 .labelImage1: "Image 1" => "Imagen 1"
 .labelCropResizeOptions: "Crop/Resize Options" => "Opciones de recorte/cambio de tamaño"
-.extCheckBoxEnabled: "Conversion Enabled" @
-.extCheckBoxHiRes: "Mark HiRes Files" @
-.extButtonBrowseMoveOrg: "Browse" @
-.labelClipboard: "Clipboard" @
-.labelOriginal: "Original Image" @
-.labelEnabled: "Enable" @
+.extCheckBoxEnabled: "Conversion Enabled" => "Conversión habilitada"
+.extCheckBoxHiRes: "Mark HiRes Files" => "Marcar archivos HiRes"
+.extButtonBrowseMoveOrg: "Browse" => "Navegar"
+.labelClipboard: "Clipboard" => "Portapapeles"
+.labelOriginal: "Original Image" => "Imagen original"
+.labelEnabled: "Enable" => "Habilitar"
