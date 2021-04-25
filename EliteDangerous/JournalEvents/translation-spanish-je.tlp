@@ -11,7 +11,7 @@ SECTION JournalTypeEnum
 .BuyExplorationData: "Buy Exploration Data" => "Comprar datos de exploración"
 .BuyTradeData: "Buy Trade Data" => "Comprar datos comerciales"
 .CapShipBond: "Cap Ship Bond" => "Cap Ship Bond"
-.Cargo: "Cargo" => "Cargo"
+.Cargo: "Cargo" => "Carga"
 .CargoDepot: "Cargo Depot" => "Depósito de carga"
 .ChangeCrewRole: "Change Crew Role" => "Cambiar el rol de la tripulación"
 .ClearSavedGame: "Clear Saved Game" => "Borrar partida guardada"
@@ -266,7 +266,7 @@ SECTION CommunityGoal
 
 SECTION FSSSignal
 
-.State: "State:" => "Expresar:"
+.State: "State:" => "Estado:"
 .Faction: "Faction:" => "Facción:"
 .USSType: "USS Type:" => "Tipo de USS:"
 .ThreatLevel: "Threat Level:" => "Nivel de amenaza:"
@@ -315,7 +315,7 @@ SECTION JournalEngineerProgress
 SECTION JournalFSDJump
 
 .Jumpto: "Jump to {0}" => "Ir a {0}"
-.Fuel: ", Fuel " => ", Gasolina "
+.Fuel: ", Fuel " => ", Combustible "
 .left: " left " => " izquierda "
 
 SECTION JournalLeaveBody
@@ -326,7 +326,7 @@ SECTION JournalLocOrJump
 
 .Faction: "Faction:" => "Facción:"
 .Wanted: "<;(Wanted) " => "<;(Se busca)"
-.State: "State:" => "Expresar:"
+.State: "State:" => "Estado:"
 .Allegiance: "Allegiance:" => "Lealtad:"
 .Economy: "Economy:" => "Economía:"
 .Population: "Population:" => "Población:"
@@ -369,7 +369,7 @@ SECTION JournalMissionAccepted
 .Expiry: "Expiry:" => "Caducidad:"
 .Influence: "Influence:" => "Influencia:"
 .Reputation: "Reputation:" => "Reputación:"
-.Reward: "Reward:; cr;N0" => "Recompensa:;cr;N0"
+.Reward: "Reward:; cr;N0" => "Recompensa:; cr;N0"
 .Wing: "; (Wing)" => "; (Ala)"
 .Deliver: "Deliver:" => "Entregar:"
 .TargetType: "Target Type:" => "Tipo de objetivo:"
@@ -403,7 +403,7 @@ SECTION JournalModuleInfo
 
 SECTION JournalMultiSellExplorationData
 
-.Total: "Total:; cr;N0" => "Total:;cr;N0"
+.Total: "Total:; cr;N0" => "Total:; cr;N0"
 
 SECTION JournalProgress
 
@@ -438,7 +438,7 @@ SECTION JournalReceiveText
 
 SECTION JournalEntry
 
-.Fuel: "Fuel:; tons;0.0" => "Combustible:;toneladas;0.0"
+.Fuel: "Fuel:; tons;0.0" => "Combustible:; toneladas;0.0"
 
 SECTION JournalRepairDrone
 
@@ -569,7 +569,7 @@ SECTION JournalSearchAndRescue
 
 SECTION JournalSellExplorationData
 
-.Total: "Total:; cr;N0" => "Total:;cr;N0"
+.Total: "Total:; cr;N0" => "Total:; cr;N0"
 
 SECTION JournalSendText
 
@@ -607,7 +607,7 @@ SECTION JournalSquadronBase
 
 SECTION JournalStartJump
 
-.ChargingFSD: "Charging FSD" => "Cargando FSD"
+.ChargingFSD: "Charging FSD" => "Cargando MDD"
 
 SECTION JournalEntry
 
@@ -804,14 +804,14 @@ SECTION JournalEntry
 .0: "{0} on {1}" => "{0} en {1}"
 .onfaction: "< on faction " => "< en la facción"
 .Against: "Against " => "Contra "
-.Cost: "Cost:; cr;N0" => "Costo:;cr;N0"
-.Bounty: "Bounty:; cr;N0" => "Recompensa:;cr;N0"
+.Cost: "Cost:; cr;N0" => "Costo:; cr;N0"
+.Bounty: "Bounty:; cr;N0" => "Recompensa:; cr;N0"
 .Offender: "Offender " => "Delincuente"
-.Reward: "Reward:; cr;N0" => "Recompensa:;cr;N0"
+.Reward: "Reward:; cr;N0" => "Recompensa:; cr;N0"
 .to: "< to " => "< a "
 .Brokertook: ", Broker took {0:N0}%" => ", El corredor tomó {0:N0}%"
 .Type: "Type:" => "Tipo:"
-.Amount: "Amount:; cr;N0" => "Importe:;cr;N0"
+.Amount: "Amount:; cr;N0" => "Importe:; cr;N0"
 .System: "System:" => "Sistema:"
 .NoCargo: "No Cargo" => "Sin carga"
 .Cargo: "Cargo, {0} items" => "Carga, {0} artículos"
@@ -845,7 +845,7 @@ SECTION JournalEntry
 .fromfaction: "< from faction " => "< de la facción"
 .Died: "{0} in ship type {1} rank {2}" => "{0} en el tipo de Nave {1} rango {2}"
 .Killedby: "Killed by " => "Asesinado por "
-.Boom: "Boom!" => "¡Auge!"
+.Boom: "Boom!" => "¡Boom!"
 .Option: "Option:" => "Opción:"
 .Bankrupt: ";Bankrupt" => ";Quiebra"
 .Dscan: "New bodies discovered:" => "Nuevos cuerpos descubiertos:"
@@ -862,10 +862,10 @@ SECTION JournalEntry
 .onpad: "< on pad " => "< en el pad "
 .Cockpit: "Cockpit:" => "Cabina:"
 .Corrosion: "Corrosion:" => "Corrosión:"
-.TotalCost: "Total Cost:; cr;N0" => "Costo total:;cr;N0"
-.each: "each:; cr;N0" => "cada uno:;cr;N0"
+.TotalCost: "Total Cost:; cr;N0" => "Costo total:; cr;N0"
+.each: "each:; cr;N0" => "cada uno:; cr;N0"
 .Drones: "Drones" => "Drones"
-.Price: "Price:; cr;N0" => "Precio:;cr;N0"
+.Price: "Price:; cr;N0" => "Precio:; cr;N0"
 .Name: "Name:" => "Nombre:"
 .Blueprint: "Blueprint:" => "Plano:"
 .Level: "Level:" => "Nivel:"
@@ -876,7 +876,7 @@ SECTION JournalEntry
 .TotalQuantity: "TotalQuantity:" => "Cantidad total:"
 .InSlot: "In Slot:" => "En el espacio:"
 .By: "By:" => "Por:"
-.Bonus: "Bonus:; cr;N0" => "Bonificación:;cr;N0"
+.Bonus: "Bonus:; cr;N0" => "Bonificación:; cr;N0"
 .Scanned: "Scanned:" => "Escaneado:"
 .Discovered: "Discovered:" => "Descubierto:"
 .Loadout: "Loadout:" => "Equipamiento:"
@@ -903,7 +903,7 @@ SECTION JournalEntry
 .Boost: "Boost:;;0.0" => "Impulsar:;;0.0"
 .buyprice: "< buy price ; cr;N0" => "< precio de compra ; cr;N0"
 .sellprice: "< sell price ; cr;N0" => "< precio de venta; cr;N0"
-.Profit: "Profit:; cr;N0" => "Beneficio:;cr;N0"
+.Profit: "Profit:; cr;N0" => "Beneficio:; cr;N0"
 .Legal: "Legal;Illegal" => "Legal;ilegal"
 .NotStolen: "Not Stolen;Stolen" => "No robado;Robado"
 .Market: "Market;BlackMarket" => "Mercado;Mercado Negro"
@@ -922,9 +922,9 @@ SECTION JournalEntry
 .Missionname: "Mission name:" => "Nombre de la misión:"
 .Hot: ";(Hot)" => ";(Caliente)"
 .HullHealth: "Hull Health:;%;N1" => "Salud del casco:;%;N1"
-.Hull: "Hull:; cr;N0" => "Casco:;cr;N0"
-.Modules: "Modules:; cr;N0" => "Módulos:;cr;N0"
-.Rebuy: "Rebuy:; cr;N0" => "Recompra:;cr;N0"
+.Hull: "Hull:; cr;N0" => "Casco:; cr;N0"
+.Modules: "Modules:; cr;N0" => "Módulos:; cr;N0"
+.Rebuy: "Rebuy:; cr;N0" => "Recompra:; cr;N0"
 .into: "< into " => "< en "
 .Stored: "Stored:" => "Almacenado:"
 .Item: "Item:" => "Artículo:"
@@ -933,9 +933,9 @@ SECTION JournalEntry
 .Modifications: "Modifications:" => "Modificaciones:"
 .Slot: "Slot:" => "Ranura:"
 .Swappedwith: ", Swapped with " => ", Intercambiado con"
-.TransferCost: "Transfer Cost:; cr;N0" => "Costo de transferencia:;cr;N0"
+.TransferCost: "Transfer Cost:; cr;N0" => "Costo de transferencia:; cr;N0"
 .Time: "Time:" => "Tiempo:"
-.Value: "Value:; cr;N0" => "Valor:;cr;N0"
+.Value: "Value:; cr;N0" => "Valor:; cr;N0"
 .Totalmodules: "Total modules:" => "Total de módulos:"
 .Intoship: "Into ship:" => "En Nave:"
 .TransferTime: "Transfer Time:" => "Tiempo de transferencia:"
@@ -957,7 +957,7 @@ SECTION JournalEntry
 .Longitude: "Longitude:" => "Longitud:"
 .Num: "Num:" => "Num:"
 .Ships: "Ships" => "Buques"
-.Distance: "Distance:; ly;0.0" => "Distancia:;ly;0.0"
+.Distance: "Distance:; ly;0.0" => "Distancia:; ly;0.0"
 .Threat: "Threat:" => "Amenaza:"
 .RemainingJumps: "Remaining Jumps" => "Saltos restantes"
 .Nearest: "Nearest:" => "Más cercano:"
@@ -974,9 +974,9 @@ SECTION JournalCarrier
 .Callsign: "Call Sign:" => "Señal de llamada:"
 .Name: "Name:" => "Nombre:"
 .JumpRange: "Jump Range:;ly;0.0" => "Rango de salto:;ly;0.0"
-.Balance: "Carrier Balance:; cr;N0" => "Saldo del portador:;cr;N0"
-.ReserveBalance: "Reserve Balance:; cr;N0" => "Saldo de reserva:;cr;N0"
-.AvailableBalance: "Available Balance:; cr;N0" => "Saldo disponible:;cr;N0"
+.Balance: "Carrier Balance:; cr;N0" => "Saldo del portador:; cr;N0"
+.ReserveBalance: "Reserve Balance:; cr;N0" => "Saldo de reserva:; cr;N0"
+.AvailableBalance: "Available Balance:; cr;N0" => "Saldo disponible:; cr;N0"
 .ReservePercent: "Reserve Percent:;;N1" => "Porcentaje de reserva:;;N1"
 .TaxRate: "Tax Rate:;;N1" => "Tasa impositiva:;;N1"
 .TotalCapacity: "Total Capacity:" => "Capacidad total:"
@@ -988,10 +988,10 @@ SECTION JournalCarrier
 .FreeSpace: "Free Space:" => "Espacio libre:"
 .ToSystem: "To " => "Para "
 .Body: "Body " => "Cuerpo "
-.Refund: "Refund:; cr;N0" => "Reembolso:;cr;N0"
+.Refund: "Refund:; cr;N0" => "Reembolso:; cr;N0"
 .RefundTime: "at UTC " => "en UTC"
-.Deposit: "Deposit:; cr;N0" => "Depósito:;cr;N0"
-.Withdraw: "Withdraw:; cr;N0" => "Retirar:;cr;N0"
+.Deposit: "Deposit:; cr;N0" => "Depósito:; cr;N0"
+.Withdraw: "Withdraw:; cr;N0" => "Retirar:; cr;N0"
 .Operation: "Operation:" => "Operación:"
 .Tier: "Tier:" => "Nivel:"
 .Purchase: "Purchase:" => "Compra:"
