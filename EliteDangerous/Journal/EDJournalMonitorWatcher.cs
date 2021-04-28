@@ -382,6 +382,13 @@ namespace EliteDangerousCore
             {
                 reader = new EDJournalReader(filepath);
                 reader.TravelLogUnit.Type = TravelLogUnit.JournalType;
+                var filename = Path.GetFileName(filepath);
+                if (filename.StartsWith("JournalBeta.", StringComparison.InvariantCultureIgnoreCase) ||
+                    filename.StartsWith("JournalAlpha.", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    reader.TravelLogUnit.Type |= TravelLogUnit.BetaMarker;
+                }
+
                 if (!delayadd)
                     reader.TravelLogUnit.Add();
                 netlogreaders[filepath] = reader;
