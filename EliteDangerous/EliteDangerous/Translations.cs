@@ -737,6 +737,9 @@ namespace EliteDangerousCore
         CommanderForm_LF, // Select folder where Journal*.log files are stored by Frontier in
         CommanderForm_ND, // Folder does not exist
 
+        Screenshot_Folder, // Select screenshot folder
+        Screenshot_Identical, // Cannot set input..
+        Screenshot_FolderNotExist, // Folder specified does not exist
 
     }
 
