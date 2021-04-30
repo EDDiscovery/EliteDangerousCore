@@ -145,7 +145,7 @@ namespace EliteDangerousCore.ScreenShots
         {
             using (var dlg = new FolderBrowserDialog())
             {
-                dlg.Description = "Select ED screenshot folder";
+                dlg.Description = "Select screenshot folder".T(EDTx.Screenshot_Folder);
                 dlg.SelectedPath = textBoxScreenshotsDir.Text;
 
                 if (dlg.ShowDialog(this) == DialogResult.OK)
@@ -159,7 +159,7 @@ namespace EliteDangerousCore.ScreenShots
         {
             FolderBrowserDialog dlg = new FolderBrowserDialog();
 
-            dlg.Description = "Select converted screenshot folder";
+            dlg.Description = "Select screenshot folder".T(EDTx.Screenshot_Folder);
             dlg.SelectedPath = textBoxOutputDir.Text;
 
             if (dlg.ShowDialog(this) == DialogResult.OK)
@@ -172,7 +172,7 @@ namespace EliteDangerousCore.ScreenShots
         {
             if (!Directory.Exists(textBoxScreenshotsDir.Text))
             {
-                ExtendedControls.MessageBoxTheme.Show(this, "Folder specified does not exist");
+                ExtendedControls.MessageBoxTheme.Show(this, "Folder specified does not exist".T(EDTx.Screenshot_FolderNotExist));
                 textBoxScreenshotsDir.Text = initialssfolder;
             }
             else
@@ -189,13 +189,29 @@ namespace EliteDangerousCore.ScreenShots
 
         private void buttonExtOK_Click(object sender, EventArgs e)
         {
-            if (Directory.Exists(textBoxScreenshotsDir.Text))
+            if (Directory.Exists(textBoxScreenshotsDir.Text) && Directory.Exists(textBoxOutputDir.Text))        // if both  input and output folders exist
             {
-                DialogResult = DialogResult.OK;
-                Close();
+                try
+                {
+                    bool diffdir = !Path.GetFullPath(textBoxScreenshotsDir.Text).Equals(Path.GetFullPath(textBoxOutputDir.Text), StringComparison.InvariantCultureIgnoreCase);
+                    bool diffext = !comboBoxScanFor.SelectedItem.ToString().Equals(comboBoxOutputAs.SelectedItem.ToString(), StringComparison.InvariantCultureIgnoreCase);
+
+                    if (diffdir || diffext)
+                    {
+                        DialogResult = DialogResult.OK;
+                        Close();
+                    }
+                    else
+                        ExtendedControls.MessageBoxTheme.Show(this, "Cannot set input and output to identical types and the same folder".T(EDTx.Screenshot_Identical));
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine("Exception in OK" + ex);
+                    Close();
+                }
             }
             else
-                ExtendedControls.MessageBoxTheme.Show(this, "Folder specified for scanning does not exist, correct or cancel");
+                ExtendedControls.MessageBoxTheme.Show(this, "Folder specified does not exist".T(EDTx.Screenshot_FolderNotExist));
         }
 
         private void buttonExtCancel_Click(object sender, EventArgs e)
@@ -239,7 +255,7 @@ namespace EliteDangerousCore.ScreenShots
         {
             FolderBrowserDialog dlg = new FolderBrowserDialog();
 
-            dlg.Description = "Select folder to move to";
+            dlg.Description = "Select screenshot folder".T(EDTx.Screenshot_Folder);
             dlg.SelectedPath = OriginalImageDirectory;
 
             if (dlg.ShowDialog(this) == DialogResult.OK)

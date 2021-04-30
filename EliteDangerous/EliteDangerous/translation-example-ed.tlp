@@ -764,3 +764,9 @@ ScreenShotConfigureForm: "Screen Shot Configure" @
 .labelClipboard: "Clipboard" @
 .labelOriginal: "Original Image" @
 .labelEnabled: "Enable" @
+
+SECTION Screenshot
+.FolderNotExist: "Folder specified does not exist" @
+.Folder: "Select screenshot folder" @
+.Identical: "Cannot set input and output to identical types and the same folder" @
+
