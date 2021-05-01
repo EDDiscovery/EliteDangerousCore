@@ -30,6 +30,7 @@ SECTION Bodies
 .Herbig: "Herbig Ae/Be" => "Herbig Ae/Be"
 .TTauri: "T Tauri" => "T-Tauri"
 
+
 SECTION EDPlanet
 
 .Metalrichbody: "Metal-rich body" => "Metallreicher Planet"
@@ -623,6 +624,7 @@ SECTION MaterialCommodityData
 .m3_tissuesample_spores: "Mollusc Spores" => "Molluskensporen"
 .s6_tissuesample_coenosarc: "Pod Shell Tissue" => "Hülsenschalengewebe"
 .apavietii: "Apa Vietii" => "Apa Vietii"
+
 .RawCategory1: "Raw Category 1" => "Roh Kategorie 1"
 .RawCategory2: "Raw Category 2" => "Roh Kategorie 2"
 .RawCategory3: "Raw Category 3" => "Roh Kategorie 3"
@@ -667,7 +669,6 @@ SECTION MissionState
 .Progress: "Progress:;%;N1" => "Fortschritt:;%;N1"
 
 SECTION CommanderForm
-
 CommanderForm: "CommanderForm" => "Kommandantenformular"
 .buttonCancel: "Cancel" => "Abbrechen"
 .buttonOK: "OK" => "OK"
@@ -763,3 +764,8 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Screenshotkonfiguration"
 .labelClipboard: "Clipboard" => "Zwischenablage"
 .labelOriginal: "Original Image" => "Originalbild"
 .labelEnabled: "Enable" => "Aktivieren"
+
+SECTION Screenshot
+.FolderNotExist: "Folder specified does not exist" => "Spezifizierter Ordner existiert nicht"
+.Folder: "Select screenshot folder" => "Wähle Screenshotordner"
+.Identical: "Cannot set input and output to identical types and the same folder" => "Eingag und Ausgang können nicht der identische Dateityp oder Ordner sein."
