@@ -177,7 +177,7 @@ SECTION JournalTypeEnum
 .CrewMemberQuits: "Crew Member Quits" => "Miembro de la tripulación renuncia"
 .CrewMemberRoleChange: "Crew Member Role Change" => "Cambio de rol de miembro de la tripulación"
 .EDDItemSet: "EDD Item Set" => "Conjunto de elementos EDD"
-.EDDCommodityPrices: "EDD Commodity Prices" => "Precios de productos básicos del EDD"
+.EDDCommodityPrices: "EDD Commodity Prices" => "Precios de Mercancías del EDD"
 .EngineerContribution_Unknown: "Engineer Contribution_Unknown" => "Contribución del ingeniero_desconocida"
 .EngineerContribution_MatCommod: "Engineer Contribution_Mat Commod" => "Engineer Contribution_Mat Commod"
 .RestockVehicle_SRV: "Restock Vehicle_SRV" => "Reabastecer Vehicle_SRV"
@@ -243,8 +243,8 @@ SECTION JournalCodexEntry
 
 SECTION JournalCommitCrime
 
-.Fine: " Fine {0:N0}" => "Bien {0:N0}"
-.Bounty: " Bounty {0:N0}" => "Recompensa {0:N0}"
+.Fine: " Fine {0:N0}" => " Bien {0:N0}"
+.Bounty: " Bounty {0:N0}" => " Recompensa {0:N0}"
 
 SECTION CommunityGoal
 
@@ -272,7 +272,7 @@ SECTION FSSSignal
 .ThreatLevel: "Threat Level:" => "Nivel de amenaza:"
 .StationBool: ";Station: " => ";Estación: "
 .CarrierBool: ";Carrier: " => ";Transportador: "
-.InstallationBool: ";Installation: " => ";Instalación:"
+.InstallationBool: ";Installation: " => ";Instalación: "
 .LastSeen: "Last Seen:" => "Ultima vez visto:"
 
 SECTION JournalFSSDiscoveryScan
@@ -295,8 +295,8 @@ SECTION JournalCommodityPricesBase
 .CPBat: "< at " => "< en "
 .CPBin: "< in " => "< en "
 .Itemstobuy: "Items to buy:" => "Artículos para comprar:"
-.CPBBuySell: "{0}: {1} sell {2} Diff {3} {4}%  " => "{0}: {1} vender {2} Diferencia {3} {4}%"
-.CPBBuy: "{0}: {1}  " => "{0}: {1}"
+.CPBBuySell: "{0}: {1} sell {2} Diff {3} {4}%  " => "{0}: {1} vender {2} Diferencia {3} {4}%  "
+.CPBBuy: "{0}: {1}  " => "{0}: {1}  "
 .SO: "Sell only Items:" => "Vender solo artículos:"
 
 SECTION JournalEngineerCraftBase
@@ -325,7 +325,7 @@ SECTION JournalLeaveBody
 SECTION JournalLocOrJump
 
 .Faction: "Faction:" => "Facción:"
-.Wanted: "<;(Wanted) " => "<;(Se busca)"
+.Wanted: "<;(Wanted) " => "<;(Se busca) "
 .State: "State:" => "Estado:"
 .Allegiance: "Allegiance:" => "Lealtad:"
 .Economy: "Economy:" => "Economía:"
@@ -352,10 +352,10 @@ SECTION JournalLocation
 SECTION JournalLocOrJump
 
 .Type: "Type " => "Tipo "
-.insystem: "< in system " => "< en el sistema"
+.insystem: "< in system " => "< en el sistema "
 .Security: "Security:" => "Seguridad:"
-.Inspacenear: "In space near " => "En el espacio cerca"
-.oftype: "< of type " => "< de tipo"
+.Inspacenear: "In space near " => "En el espacio cerca "
+.oftype: "< of type " => "< de tipo "
 .Happiness: "Happiness:" => "Felicidad:"
 .Reputation: "Reputation:;%;N1" => "Reputación:;%;N1"
 .SquadronSystem: ";Squadron System" => ";Sistema de escuadrón"
@@ -458,12 +458,12 @@ SECTION JournalReservoirReplenished
 
 SECTION StarPlanetRing
 
-.Mass: "  Mass: {0:N4}{1}\n" => "Misa: {0:N4} {1}\n"
-.InnerRadius: "  Inner Radius: {0:0.00}ls\n" => "Radio interior: {0:0.00} ls\n"
-.OuterRadius: "  Outer Radius: {0:0.00}ls\n" => "Radio exterior: {0:0.00} ls\n"
-.IK: "  Inner Radius: {0}km\n" => "Radio interior: {0}km\n"
-.OK: "  Outer Radius: {0}km\n" => "Radio exterior: {0}km\n"
-.Moons: " Moons" => "Lunas"
+.Mass: "  Mass: {0:N4}{1}\n" => "  Masa: {0:N4} {1}\n"
+.InnerRadius: "  Inner Radius: {0:0.00}ls\n" => "  Radio interior: {0:0.00} ls\n"
+.OuterRadius: "  Outer Radius: {0:0.00}ls\n" => "  Radio exterior: {0:0.00} ls\n"
+.IK: "  Inner Radius: {0}km\n" => "  Radio interior: {0}km\n"
+.OK: "  Outer Radius: {0}km\n" => "  Radio exterior: {0}km\n"
+.Moons: " Moons" => " Lunas"
 .Icy: "Icy" => "Glacial"
 .Rocky: "Rocky" => "Rocky"
 .MetalRich: "Metal Rich" => "Rico en metales"
@@ -486,12 +486,12 @@ SECTION JournalScan
 .Age: "Age:;my;0.0" => "Edad:;mi;0.0"
 .RS: "Radius:" => "Radio:"
 .MEM: "Mass:;EM;0.00" => "Masa:;EM;0.00"
-.Landable: "<;, Landable" => "<;, Landable"
+.Landable: "<;, Landable" => "<;, Aterrizable"
 .Terraformable: "<;, Terraformable" => "<;, Terraformable"
 .Gravity: "Gravity:;G;0.00" => "Gravedad:;G;0.00"
 .RK: "Radius:;km;0" => "Radio:;km;0"
 .NoAtmosphere: ", No Atmosphere" => ", Sin atmósfera"
-.LandC: ", Landable" => ", Landable"
+.LandC: ", Landable" => ", Aterrizable"
 .AMY: "Age: {0} my\n" => "Edad: {0} mi\n"
 .SolarMasses: "Solar Masses: {0:0.00}\n" => "Masas solares: {0:0.00}\n"
 .EarthMasses: "Earth Masses: {0:0.0000}\n" => "Masas de la Tierra: {0:0.0000}\n"
@@ -515,7 +515,7 @@ SECTION JournalScan
 .RotationPeriod: "Rotation Period: {0} days\n" => "Período de rotación: {0} días\n"
 .Tidallylocked: "Tidally locked\n" => "Bloqueado por mareas\n"
 .Candidateforterraforming: "Candidate for terraforming\n" => "Candidato a la terraformación\n"
-.Moons: " Moons" => "Lunas"
+.Moons: " Moons" => " Lunas"
 .Belt: "Belt" => "Cinturón"
 .Belts: "Belts" => "Cinturones"
 .Ring: "Ring" => "Anillo"
@@ -524,16 +524,16 @@ SECTION JournalScan
 .EVM: "Mapped value: {0:N0}/{1:N0}e" => "Valor asignado: {0:N0}/{1:N0}e"
 .DB: "Discovered by {0} on {1}" => "Descubierto por {0} el {1}"
 .HabitableZoneApprox: "Habitable Zone Approx. {0} ({1}-{2} AU)\n" => "Zona habitable aprox. {0} ({1}-{2} AU)\n"
-.Othersstarsnotconsidered: " - Others stars not considered\n" => "- Otras estrellas no consideradas\n"
+.Othersstarsnotconsidered: " - Others stars not considered\n" => " - Otras estrellas no consideradas\n"
 .Materials: "Materials:\n" => "Materiales:\n"
 .AtmosphericComposition: "Atmospheric Composition:\n" => "Composición atmosférica:\n"
 .PlanetaryComposition: "Planetary Composition:\n" => "Composición planetaria:\n"
-.HabitableZone: " - Habitable Zone, {0} ({1}-{2} AU),\n" => "- Zona habitable, {0} ({1}-{2} AU),\n"
-.MetalRichplanets: " - Metal Rich planets, {0} ({1}-{2} AU),\n" => "- Planetas ricos en metales, {0} ({1}-{2} AU),\n"
-.WaterWorlds: " - Water Worlds, {0} ({1}-{2} AU),\n" => "- Water Worlds, {0} ({1}-{2} AU),\n"
-.EarthLikeWorlds: " - Earth Like Worlds, {0} ({1}-{2} AU),\n" => "- Earth Like Worlds, {0} ({1}-{2}AU),\n"
-.AmmoniaWorlds: " - Ammonia Worlds, {0} ({1}-{2} AU),\n" => "- Mundos de amoníaco, {0} ({1}-{2} AU),\n"
-.IcyPlanets: " - Icy Planets, {0} (from {1} AU)\n" => "- Planetas helados, {0} (de {1} AU)\n"
+.HabitableZone: " - Habitable Zone, {0} ({1}-{2} AU),\n" => " - Zona habitable, {0} ({1}-{2} AU),\n"
+.MetalRichplanets: " - Metal Rich planets, {0} ({1}-{2} AU),\n" => " - Planetas ricos en metales, {0} ({1}-{2} AU),\n"
+.WaterWorlds: " - Water Worlds, {0} ({1}-{2} AU),\n" => " - Water Worlds, {0} ({1}-{2} AU),\n"
+.EarthLikeWorlds: " - Earth Like Worlds, {0} ({1}-{2} AU),\n" => " - Earth Like Worlds, {0} ({1}-{2}AU),\n"
+.AmmoniaWorlds: " - Ammonia Worlds, {0} ({1}-{2} AU),\n" => " - Mundos de amoníaco, {0} ({1}-{2} AU),\n"
+.IcyPlanets: " - Icy Planets, {0} (from {1} AU)\n" => " - Planetas helados, {0} (de {1} AU)\n"
 .DISTA: "Dist:;ls;0.0" => "Dist:;ls;0.0"
 .DIST: "Dist:" => "Dist:"
 .BNME: "Name:" => "Nombre:"
@@ -594,7 +594,7 @@ SECTION JournalShipyardSell
 SECTION JournalShipyardSwap
 
 .Swap: "Swap " => "Intercambio "
-.fora: "< for a " => "< para un"
+.fora: "< for a " => "< para un "
 
 SECTION JournalShipyardTransfer
 
@@ -628,7 +628,7 @@ SECTION JournalStatistics
 .Engineers: "Engineers" => "Ingenieros"
 .Crew: "Crew" => "Tripulación"
 .Multicrew: "Multicrew" => "Multitripulación"
-.MaterialsandCommodityTrading: "Materials and Commodity Trading" => "Comercio de materiales y productos básicos"
+.MaterialsandCommodityTrading: "Materials and Commodity Trading" => "Comercio de materiales y Mercancías"
 .CQC: "CQC" => "CQC"
 
 SECTION BankAccountClass
@@ -740,7 +740,7 @@ SECTION MulticrewClass
 
 SECTION MaterialTraderStatsClass
 
-.CommodityTrades: "Commodity Trades:;;N0" => "Operaciones con productos básicos:;;N0"
+.CommodityTrades: "Commodity Trades:;;N0" => "Operaciones con Mercancías:;;N0"
 .MaterialTraded: "Material Traded:;;N0" => "Material negociado:;;N0"
 
 SECTION CQCClass
@@ -781,11 +781,11 @@ SECTION JournalUnderAttack
 
 SECTION JournalUnknown
 
-.UnhandledJournalevent: "Unhandled Journal event, Report to EDDiscovery team. " => "Evento de diario no controlado, informe al equipo de EDDiscovery"
+.UnhandledJournalevent: "Unhandled Journal event, Report to EDDiscovery team. " => "Evento de diario no controlado, informe al equipo de EDDiscovery. "
 
 SECTION JournalNavRoute
 
-.Jumps: "{0} jumps: " => "{0} saltos:"
+.Jumps: "{0} jumps: " => "{0} saltos: "
 
 SECTION JournalApproachBody
 
@@ -802,11 +802,11 @@ SECTION JournalEntry
 .from: "< from " => "< de "
 .dueto: "< , due to " => "< , debido a "
 .0: "{0} on {1}" => "{0} en {1}"
-.onfaction: "< on faction " => "< en la facción"
+.onfaction: "< on faction " => "< en la facción "
 .Against: "Against " => "Contra "
 .Cost: "Cost:; cr;N0" => "Costo:; cr;N0"
 .Bounty: "Bounty:; cr;N0" => "Recompensa:; cr;N0"
-.Offender: "Offender " => "Delincuente"
+.Offender: "Offender " => "Delincuente "
 .Reward: "Reward:; cr;N0" => "Recompensa:; cr;N0"
 .to: "< to " => "< a "
 .Brokertook: ", Broker took {0:N0}%" => ", El corredor tomó {0:N0}%"
@@ -835,14 +835,14 @@ SECTION JournalEntry
 .torole: "< to role ;" => "< al rol ;"
 .fired: "; fired" => "; despedido"
 .Hired: "Hired:;" => "Contratado:;"
-.offaction: "< of faction " => "< de la facción"
+.offaction: "< of faction " => "< de la facción "
 .Rank: "Rank:" => "Rango:"
 .Crew: "Crew:" => "Tripulación:"
 .Role: "Role:" => "Rol:"
 .CrewMember: "Crew Member:" => "Miembro de la tripulación:"
 .DuetoCrime: "; Due to Crime" => "; Debido a la delincuencia"
 .Captain: "Captain:" => "Capitán:"
-.fromfaction: "< from faction " => "< de la facción"
+.fromfaction: "< from faction " => "< de la facción "
 .Died: "{0} in ship type {1} rank {2}" => "{0} en el tipo de Nave {1} rango {2}"
 .Killedby: "Killed by " => "Asesinado por "
 .Boom: "Boom!" => "¡Boom!"
@@ -850,7 +850,7 @@ SECTION JournalEntry
 .Bankrupt: ";Bankrupt" => ";Quiebra"
 .Dscan: "New bodies discovered:" => "Nuevos cuerpos descubiertos:"
 .Bodies: "Bodies:" => "Cuerpos:"
-.insystem: "< in system " => "< en el sistema"
+.insystem: "< in system " => "< en el sistema "
 .Wanted: ";(Wanted)" => ";(Buscado)"
 .ActiveFine: ";Active Fine" => ";Activo fino"
 .instate: "< in state " => "< en estado "
@@ -932,7 +932,7 @@ SECTION JournalEntry
 .Replacedby: "Replaced by:" => "Reemplazado por:"
 .Modifications: "Modifications:" => "Modificaciones:"
 .Slot: "Slot:" => "Ranura:"
-.Swappedwith: ", Swapped with " => ", Intercambiado con"
+.Swappedwith: ", Swapped with " => ", Intercambiado con "
 .TransferCost: "Transfer Cost:; cr;N0" => "Costo de transferencia:; cr;N0"
 .Time: "Time:" => "Tiempo:"
 .Value: "Value:; cr;N0" => "Valor:; cr;N0"
@@ -940,8 +940,8 @@ SECTION JournalEntry
 .Intoship: "Into ship:" => "En Nave:"
 .TransferTime: "Transfer Time:" => "Tiempo de transferencia:"
 .MusicTrack: "Music Track:" => "Pista de música:"
-.Wagesfor: "Wages for " => "Salarios para"
-.itemsavailable: " items available" => "artículos disponibles"
+.Wagesfor: "Wages for " => "Salarios para "
+.itemsavailable: " items available" => " artículos disponibles"
 .NoPassengers: "No Passengers" => "No hay pasajeros"
 .Merits: "Merits:" => "Méritos:"
 .Votes: "Votes:" => "Votos:"
@@ -989,7 +989,7 @@ SECTION JournalCarrier
 .ToSystem: "To " => "Para "
 .Body: "Body " => "Cuerpo "
 .Refund: "Refund:; cr;N0" => "Reembolso:; cr;N0"
-.RefundTime: "at UTC " => "en UTC"
+.RefundTime: "at UTC " => "en UTC "
 .Deposit: "Deposit:; cr;N0" => "Depósito:; cr;N0"
 .Withdraw: "Withdraw:; cr;N0" => "Retirar:; cr;N0"
 .Operation: "Operation:" => "Operación:"
