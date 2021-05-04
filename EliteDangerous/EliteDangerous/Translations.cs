@@ -73,6 +73,7 @@ namespace EliteDangerousCore
         EngineeringData_Original, // Original:;;N2
         EngineeringData_Worse, // < (Worse); (Better)
 
+        JournalEntry_Taxi, // Taxi
 
         JournalEntry_LegBounty, // {0} total {1:N0}
         JournalEntry_Target, // Target:
@@ -581,6 +582,10 @@ namespace EliteDangerousCore
 
         JournalMaterialDiscovered_DN, // , Discovery {0}
 
+        JournalMicroResources_Items, 
+        JournalMicroResources_Components, 
+        JournalMicroResources_Consumables, 
+        JournalMicroResources_Data, 
 
         JournalMaterials_Raw, // Raw:
         JournalMaterials_Manufactured, // Manufactured:
@@ -737,6 +742,7 @@ namespace EliteDangerousCore
         CommanderForm_LF, // Select folder where Journal*.log files are stored by Frontier in
         CommanderForm_ND, // Folder does not exist
 
+        TBD, // to be done!
 
     }
 

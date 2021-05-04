@@ -25,14 +25,14 @@ namespace EliteDangerousCore.JournalEvents
         {
             ShipFD = JournalFieldNaming.NormaliseFDShipName(evt["Ship"].Str());
             Ship = JournalFieldNaming.GetBetterShipName(ShipFD);
-            ShipID = evt["ShipID"].Int();
+            ShipID = evt["ShipID"].ULong();
             ShipName = evt["UserShipName"].Str();// name to match LoadGame
             ShipIdent = evt["UserShipId"].Str();     // name to match LoadGame
         }
 
         public string Ship { get; set; }
         public string ShipFD { get; set; }
-        public int ShipID { get; set; }
+        public ulong ShipID { get; set; }
         public string ShipName { get; set; }
         public string ShipIdent { get; set; }
 

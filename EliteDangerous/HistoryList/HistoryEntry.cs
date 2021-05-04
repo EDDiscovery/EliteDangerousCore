@@ -34,8 +34,8 @@ namespace EliteDangerousCore
         public JournalEntry journalEntry { get; private set; }       // MUST be present
 
         public ISystem System { get; private set; }         // Must be set! All entries, even if they are not FSD entries.
-                                       // The Minimum is name 
-                                       // x/y/z can be NANs or position. 
+                                                            // The Minimum is name 
+                                                            // x/y/z can be NANs or position. 
 
         public JournalTypeEnum EntryType { get { return journalEntry.EventTypeID; } }
         public long Journalid { get { return journalEntry.Id; } }
@@ -63,14 +63,18 @@ namespace EliteDangerousCore
         public string TravelInfo() { return TravelStatus.ToString("TT: "); }
         public string TravelledJumpsAndMisses { get { return Travelledjumps.ToString() + ((TravelledMissingjump > 0) ? (" (" + TravelledMissingjump.ToString() + ")") : ""); } }
 
-        public bool IsLanded { get { return EntryStatus.TravelState == HistoryEntryStatus.TravelStateType.Landed; } }
+        public HistoryEntryStatus Status { get { return EntryStatus; } }
+
+        public bool IsLanded { get { return EntryStatus.TravelState == HistoryEntryStatus.TravelStateType.Landed || EntryStatus.TravelState == HistoryEntryStatus.TravelStateType.SRV; } }
         public bool IsDocked { get { return EntryStatus.TravelState == HistoryEntryStatus.TravelStateType.Docked; } }
-        public bool IsInHyperSpace { get { return EntryStatus.TravelState == HistoryEntryStatus.TravelStateType.Hyperspace; } }
+        public bool IsInHyperSpace { get { return EntryStatus.TravelState == HistoryEntryStatus.TravelStateType.Supercruise; } }
+        public HistoryEntryStatus.TravelStateType TravelState { get { return EntryStatus.TravelState; } }
+
         public string WhereAmI { get { return EntryStatus.StationName ?? EntryStatus.BodyName ?? "Unknown"; } }
         public string BodyType { get { return EntryStatus.BodyType ?? "Unknown"; } }
         public string ShipType { get { return EntryStatus.ShipType ?? "Unknown"; } }         // NOT FD - translated name
         public string ShipTypeFD { get { return EntryStatus.ShipTypeFD ?? "unknown"; } }
-        public int ShipId { get { return EntryStatus.ShipID; } }
+        public ulong ShipId { get { return EntryStatus.ShipID; } }
         public bool MultiPlayer { get { return EntryStatus.OnCrewWithCaptain != null; } }
         public string GameMode { get { return EntryStatus.GameMode ?? ""; } }
         public string Group { get { return EntryStatus.Group ?? ""; } }
@@ -87,37 +91,35 @@ namespace EliteDangerousCore
                     return System.SystemAddress.Value | ((long)EntryStatus.BodyID.Value << 55);
                 else
                     return null;
-            }}
+            } }
 
         public string DebugStatus { get {      // Use as a replacement for note in travel grid to debug
                 return
                      WhereAmI
-                     + ", " +  (EntryStatus.BodyType ?? "Null")
+                     + ", " + (EntryStatus.BodyType ?? "Null")
                      + "," + (EntryStatus.BodyName ?? "Null")
-                     + " SN:" + (EntryStatus.StationName ?? "Null") 
+                     + " SN:" + (EntryStatus.StationName ?? "Null")
                      + " ST:" + (EntryStatus.StationType ?? "Null")
                      + " T:" + EntryStatus.TravelState
                      + " S:" + EntryStatus.ShipID + "," + EntryStatus.ShipType
                      + " GM:" + EntryStatus.GameMode
                      + " W:" + EntryStatus.Wanted
-                     + " BA:" + EntryStatus.BodyApproached 
+                     + " BA:" + EntryStatus.BodyApproached
                      ;
             } }
-  
+
         public long Credits { get; set; }       // set up by Historylist during ledger accumulation
 
-        public bool ContainsRares() // function due to debugger and cost of working out
-        {
-            return MaterialCommodity != null && MaterialCommodity.ContainsRares();
-        }
 
         // Calculated values, not from JE
 
-        public MaterialCommoditiesList MaterialCommodity { get; private set; }
+        public uint MaterialCommodity { get; private set; } // generation index
         public ShipInformation ShipInformation { get; private set; }     // may be null if not set up yet
         public ModulesInStore StoredModules { get; private set; }
         public uint MissionList { get; private set; }       // generation index
         public uint Statistics { get; private set; }     // generation index
+        public SuitWeaponList Weapons { get; private set; }
+        public SuitInformationList Suits { get; private set; }
 
         public SystemNoteClass SNC;     // system note class found attached to this entry. May be null
 
@@ -201,9 +203,9 @@ namespace EliteDangerousCore
 
         // these are done purposely this way for ease of finding out who is updating these elements
 
-        public void UpdateMaterialsCommodities(JournalEntry je, MaterialCommoditiesList prev)
+        public void UpdateMaterialsCommodities(uint gen)
         {
-            MaterialCommodity = MaterialCommoditiesList.Process(je, prev);
+            MaterialCommodity = gen;
         }
 
         public void UpdateStats(JournalEntry je, Stats stats, string station)
@@ -231,9 +233,10 @@ namespace EliteDangerousCore
             MissionList = ml;
         }
 
-        public void UpdateMaterialCommodity(MaterialCommoditiesList mc)
+        public void UpdateSuits(SuitWeaponList wp, SuitInformationList sl)
         {
-            MaterialCommodity = mc;
+            Weapons = wp;
+            Suits = sl;
         }
 
         public void UpdateSystem(ISystem sys)
@@ -267,7 +270,7 @@ namespace EliteDangerousCore
             return eventstr == "All" || IsJournalEventInEventFilter(eventstr.Split(';'));
         }
 
-        public EliteDangerousCalculations.FSDSpec.JumpInfo GetJumpInfo()      // can we calc jump range? null if we don't have the info
+        public EliteDangerousCalculations.FSDSpec.JumpInfo GetJumpInfo(int cargo)      // can we calc jump range? null if we don't have the info
         {
             EliteDangerousCalculations.FSDSpec fsdspec = ShipInformation?.GetFSDSpec();
 
@@ -276,7 +279,7 @@ namespace EliteDangerousCore
                 double mass = ShipInformation.HullMass() + ShipInformation.ModuleMass();
 
                 if (mass > 0)
-                    return fsdspec.GetJumpInfo(MaterialCommodity.CargoCount, mass, ShipInformation.FuelLevel, ShipInformation.FuelCapacity/2);
+                    return fsdspec.GetJumpInfo(cargo, mass, ShipInformation.FuelLevel, ShipInformation.FuelCapacity/2);
             }
 
             return null;

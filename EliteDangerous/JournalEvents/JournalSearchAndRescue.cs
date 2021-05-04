@@ -25,7 +25,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             FDName = evt["Name"].Str();
             FDName = JournalFieldNaming.FDNameTranslation(FDName); // some premangling
-            FriendlyName = MaterialCommodityData.GetNameByFDName(FDName);
+            FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(FDName);
             Name_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Name_Localised"].Str(), FriendlyName);         // always ensure we have one
             Count = evt["Count"].Int();
             Reward = evt["Reward"].Long();
@@ -39,9 +39,9 @@ namespace EliteDangerousCore.JournalEvents
         public long Reward { get; set; }
         public long? MarketID { get; set; }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc)
         {
-            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, FDName, -Count, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, FDName, -Count, 0);
         }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed) 

@@ -69,9 +69,9 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc)
         {
-            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, Count, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Type, Count, 0);
         }
     }
 
@@ -116,9 +116,9 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc)
         {
-            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, -Count, 0 );
+            mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Type, -Count, 0 );
         }
     }
 

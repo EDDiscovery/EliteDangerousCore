@@ -36,12 +36,13 @@ namespace EliteDangerousCore
         private FileSystemWatcher m_Watcher;
         private int ticksNoActivity = 0;
         private ConcurrentQueue<string> m_netLogFileQueue;
-        private const string journalfilematch = "Journal*.log";       // this picks up beta and normal logs
         private bool StoreToDBDuringUpdateRead = false;
+        private string journalfilematch;
 
-        public JournalMonitorWatcher(string folder)
+        public JournalMonitorWatcher(string folder, string journalmatchpattern)
         {
             WatcherFolder = folder;
+            journalfilematch = journalmatchpattern;
         }
 
         #region Scan start stop and monitor

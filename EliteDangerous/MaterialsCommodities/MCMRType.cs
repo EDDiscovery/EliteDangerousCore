@@ -22,9 +22,11 @@ using System.Linq;
 namespace EliteDangerousCore
 {
     [System.Diagnostics.DebuggerDisplay("Mat {Category} {Type} {MaterialGroup} {Name} {FDName} {Shortname}")]
-    public class MaterialCommodityData
+    public class MaterialCommodityMicroResourceType
     {
-        public enum CatType { Commodity, Raw, Encoded, Manufactured };
+        public enum CatType { Commodity, Raw, Encoded, Manufactured,        // all
+                                Item, Component, Data, Consumable,          // odyssey 4.0
+                            };
         public CatType Category { get; private set; }                // either Commodity, Encoded, Manufactured, Raw
 
         public string TranslatedCategory { get; private set; }      // translation of above..
@@ -35,12 +37,12 @@ namespace EliteDangerousCore
         public enum ItemType
         {
             VeryCommon, Common, Standard, Rare, VeryRare,           // materials
-            Unknown,   
+            Unknown,                                                // used for microresources
             ConsumerItems, Chemicals, Drones, Foods, IndustrialMaterials, LegalDrugs, Machinery, Medicines, Metals, Minerals, Narcotics, PowerPlay,     // commodities..
             Salvage, Slaves, Technology, Textiles, Waste, Weapons,
         };
 
-        public ItemType Type { get; private set; }                  // and its type, for materials its commonality, for commodities its group ("Metals" etc).
+        public ItemType Type { get; private set; }                  // and its type, for materials its commonality, for commodities its group ("Metals" etc), for microresources Unknown
         public string TranslatedType { get; private set; }          // translation of above..        
 
         public enum MaterialGroupType
@@ -67,6 +69,13 @@ namespace EliteDangerousCore
         public bool IsEncodedOrManufactured { get { return Category == CatType.Encoded || Category == CatType.Manufactured; } }
         public bool IsRareCommodity { get { return Rarity && IsCommodity; } }
         public bool IsCommonMaterial { get { return Type == ItemType.Common || Type == ItemType.VeryCommon; } }
+
+        public bool IsMicroResources { get { return Category >= CatType.Item; } }     // odyssey 4.0
+        public bool IsConsumable { get { return Category == CatType.Consumable; } }     // odyssey 4.0
+        public bool IsData { get { return Category == CatType.Data; } }
+        public bool IsItem { get { return Category == CatType.Item; } }
+        public bool IsComponent { get { return Category == CatType.Component; } }
+
         public bool IsJumponium
         {
             get
@@ -104,9 +113,9 @@ namespace EliteDangerousCore
         #region Static interface
 
         // name key is lower case normalised
-        private static Dictionary<string, MaterialCommodityData> cachelist = null;
+        private static Dictionary<string, MaterialCommodityMicroResourceType> cachelist = null;
 
-        public static MaterialCommodityData GetByFDName(string fdname)
+        public static MaterialCommodityMicroResourceType GetByFDName(string fdname)
         {
             if (cachelist == null)
                 FillTable();
@@ -115,7 +124,7 @@ namespace EliteDangerousCore
             return cachelist.ContainsKey(fdname) ? cachelist[fdname] : null;
         }
 
-        public static string GetNameByFDName(string fdname) // if we have it, give name, else give alt.  Also see RMat in journal field naming
+        public static string GetNameByFDName(string fdname) // if we have it, give name, else give alt or splitcaps.  
         {
             if (cachelist == null)
                 FillTable();
@@ -124,28 +133,28 @@ namespace EliteDangerousCore
             return cachelist.ContainsKey(fdname) ? cachelist[fdname].Name : fdname.SplitCapsWordFull();
         }
 
-        public static MaterialCommodityData GetByShortName(string shortname)
+        public static MaterialCommodityMicroResourceType GetByShortName(string shortname)
         {
             if (cachelist == null)
                 FillTable();
 
-            List<MaterialCommodityData> lst = cachelist.Values.ToList();
+            List<MaterialCommodityMicroResourceType> lst = cachelist.Values.ToList();
             int i = lst.FindIndex(x => x.Shortname.Equals(shortname));
             return i >= 0 ? lst[i] : null;
         }
 
-        public static MaterialCommodityData GetByName(string longname)
+        public static MaterialCommodityMicroResourceType GetByName(string longname)
         {
             if (cachelist == null)
                 FillTable();
 
-            List<MaterialCommodityData> lst = cachelist.Values.ToList();
+            List<MaterialCommodityMicroResourceType> lst = cachelist.Values.ToList();
             int i = lst.FindIndex(x => x.Name.Equals(longname));
             return i >= 0 ? lst[i] : null;
         }
 
 
-        public static MaterialCommodityData[] GetAll()
+        public static MaterialCommodityMicroResourceType[] GetAll()
         {
             if (cachelist == null)
                 FillTable();
@@ -155,16 +164,16 @@ namespace EliteDangerousCore
 
 
         // use this delegate to find them
-        public static MaterialCommodityData[] Get(Func<MaterialCommodityData, bool> func, bool sorted)
+        public static MaterialCommodityMicroResourceType[] Get(Func<MaterialCommodityMicroResourceType, bool> func, bool sorted)
         {
             if (cachelist == null)
                 FillTable();
 
-            MaterialCommodityData[] items = cachelist.Values.Where(func).ToArray();
+            MaterialCommodityMicroResourceType[] items = cachelist.Values.Where(func).ToArray();
 
             if (sorted)
             {
-                Array.Sort(items, delegate (MaterialCommodityData left, MaterialCommodityData right)     // in order, name
+                Array.Sort(items, delegate (MaterialCommodityMicroResourceType left, MaterialCommodityMicroResourceType right)     // in order, name
                 {
                     return left.Name.CompareTo(right.Name.ToString());
                 });
@@ -174,44 +183,49 @@ namespace EliteDangerousCore
             return items;
         }
 
-        public static MaterialCommodityData[] GetCommodities(bool sorted)
+        public static MaterialCommodityMicroResourceType[] GetCommodities(bool sorted)
         {
             return Get(x => x.IsCommodity, sorted);
         }
 
-        public static MaterialCommodityData[] GetMaterials(bool sorted)
+        public static MaterialCommodityMicroResourceType[] GetMaterials(bool sorted)
         {
             return Get(x => x.IsMaterial, sorted);
         }
 
-        public static Tuple<ItemType, string>[] GetTypes(Func<MaterialCommodityData, bool> func, bool sorted)        // given predate, return type/translated types combos.
+        public static MaterialCommodityMicroResourceType[] GetMicroResources(bool sorted)
         {
-            MaterialCommodityData[] mcs = GetAll();
+            return Get(x => x.IsMicroResources, sorted);
+        }
+
+        public static Tuple<ItemType, string>[] GetTypes(Func<MaterialCommodityMicroResourceType, bool> func, bool sorted)        // given predate, return type/translated types combos.
+        {
+            MaterialCommodityMicroResourceType[] mcs = GetAll();
             var types = mcs.Where(func).Select(x => new Tuple<ItemType, string>(x.Type, x.TranslatedType)).Distinct().ToArray();
             if (sorted)
                 Array.Sort(types, delegate (Tuple<ItemType, string> l, Tuple<ItemType, string> r) { return l.Item2.CompareTo(r.Item2); });
             return types;
         }
 
-        public static Tuple<CatType, string>[] GetCategories(Func<MaterialCommodityData, bool> func, bool sorted)   // given predate, return cat/translated cat combos.
+        public static Tuple<CatType, string>[] GetCategories(Func<MaterialCommodityMicroResourceType, bool> func, bool sorted)   // given predate, return cat/translated cat combos.
         {
-            MaterialCommodityData[] mcs = GetAll();
+            MaterialCommodityMicroResourceType[] mcs = GetAll();
             var types = mcs.Where(func).Select(x => new Tuple<CatType, string>(x.Category, x.TranslatedCategory)).Distinct().ToArray();
             if (sorted)
                 Array.Sort(types, delegate (Tuple<CatType, string> l, Tuple<CatType, string> r) { return l.Item2.CompareTo(r.Item2); });
             return types;
         }
 
-        public static MaterialCommodityData[] Get(Func<MaterialCommodityData, bool> func)   // given predate, return matching items
+        public static MaterialCommodityMicroResourceType[] Get(Func<MaterialCommodityMicroResourceType, bool> func)   // given predate, return matching items
         {
-            MaterialCommodityData[] mcs = GetAll();
+            MaterialCommodityMicroResourceType[] mcs = GetAll();
             var group = mcs.Where(func).Select(x => x).ToArray();
             return group;
         }
 
         public static string[] GetMembersOfType(ItemType typename, bool sorted)
         {
-            MaterialCommodityData[] mcs = GetAll();
+            MaterialCommodityMicroResourceType[] mcs = GetAll();
             var members = mcs.Where(x => x.Type == typename).Select(x => x.Name).ToArray();
             if (sorted)
                 Array.Sort(members);
@@ -220,7 +234,7 @@ namespace EliteDangerousCore
 
         public static string[] GetFDNameMembersOfType(ItemType typename, bool sorted)
         {
-            MaterialCommodityData[] mcs = GetAll();
+            MaterialCommodityMicroResourceType[] mcs = GetAll();
             string[] members = mcs.Where(x => x.Type == typename).Select(x => x.FDName).ToArray();
             if (sorted)
                 Array.Sort(members);
@@ -230,7 +244,7 @@ namespace EliteDangerousCore
 
         public static string[] GetFDNameMembersOfCategory(CatType catname, bool sorted)
         {
-            MaterialCommodityData[] mcs = GetAll();
+            MaterialCommodityMicroResourceType[] mcs = GetAll();
             string[] members = mcs.Where(x => x.Category == catname).Select(x => x.FDName).ToArray();
             if (sorted)
                 Array.Sort(members);
@@ -239,21 +253,21 @@ namespace EliteDangerousCore
 
         #endregion
 
-        public MaterialCommodityData()
+        public MaterialCommodityMicroResourceType()
         {
         }
 
-        public MaterialCommodityData(CatType cs, string n, string fd, ItemType t, MaterialGroupType mtg, string shortn, Color cl, bool rare)
+        public MaterialCommodityMicroResourceType(CatType cs, string n, string fd, ItemType t, MaterialGroupType mtg, string shortn, Color cl, bool rare)
         {
             Category = cs;
-            TranslatedCategory = Category.ToString().Tx(typeof(MaterialCommodityData));        // valid to pass this thru the Tx( system
+            TranslatedCategory = Category.ToString().Tx(typeof(MaterialCommodityMicroResourceType));        // valid to pass this thru the Tx( system
             Name = n;
             FDName = fd;
             Type = t;
             string tn = Type.ToString().SplitCapsWord();
-            TranslatedType = tn.Tx(typeof(MaterialCommodityData));                // valid to pass this thru the Tx( system
+            TranslatedType = tn.Tx(typeof(MaterialCommodityMicroResourceType));                // valid to pass this thru the Tx( system
             MaterialGroup = mtg;
-            TranslatedMaterialGroup = MaterialGroup.ToString().SplitCapsWordFull().Tx(typeof(MaterialCommodityData));                // valid to pass this thru the Tx( system
+            TranslatedMaterialGroup = MaterialGroup.ToString().SplitCapsWordFull().Tx(typeof(MaterialCommodityMicroResourceType));                // valid to pass this thru the Tx( system
             Shortname = shortn;
             Colour = cl;
             Rarity = rare;
@@ -264,13 +278,32 @@ namespace EliteDangerousCore
             cachelist[this.FDName.ToLowerInvariant()] = this;
         }
 
-        public static MaterialCommodityData EnsurePresent(CatType cat, string fdname)  // By FDNAME
+        public static MaterialCommodityMicroResourceType EnsurePresent(string catname, string fdname, string locname = "")  // By FDNAME
+        {
+            var cat = CategoryFrom(catname);
+            if (cat.HasValue)
+                return EnsurePresent(cat.Value, fdname, locname);
+            else
+                return null;
+        }
+
+
+        public static MaterialCommodityMicroResourceType EnsurePresent(CatType cat, string fdname, string locname = "")  // By FDNAME
         {
             if (!cachelist.ContainsKey(fdname.ToLowerInvariant()))
             {
-                MaterialCommodityData mcdb = new MaterialCommodityData(cat, fdname.SplitCapsWordFull(), fdname, ItemType.Unknown, MaterialGroupType.NA, "", Color.Green, false );
+                MaterialCommodityMicroResourceType mcdb = new MaterialCommodityMicroResourceType(cat, fdname.SplitCapsWordFull(), fdname, ItemType.Unknown, MaterialGroupType.NA, "", Color.Green, false);
                 mcdb.SetCache();
-                System.Diagnostics.Debug.WriteLine("Material not present: " + cat + "," + fdname);
+
+                string shortnameguess = "MR"+cat.ToString()[0];
+                foreach(var c in locname)
+                {
+                    if (char.IsUpper(c))
+                        shortnameguess += c;
+                }
+
+                System.Diagnostics.Debug.WriteLine("** Made MCD: {0},{1},{2},{3}", "?", fdname, cat.ToString(), locname);
+                System.Diagnostics.Debug.WriteLine("** AddMicroResource(CatType.{0},\"{1}\",\"{2}\",\"{3}\");" ,cat.ToString(), locname, fdname , shortnameguess);
             }
 
             return cachelist[fdname.ToLowerInvariant()];
@@ -349,6 +382,15 @@ namespace EliteDangerousCore
             return true;
         }
 
+        // Odyssey microresources
+
+        private static bool AddMicroResource(CatType cat, string locname, string fdname, string shortname)
+        {
+            return AddEntry(cat, Color.Green, locname, ItemType.Unknown, MaterialGroupType.NA, shortname, fdname);
+        }
+
+        // common adds
+
         public static string FDNameCnv(string normal)
         {
             string n = new string(normal.ToCharArray().Where(c => !Char.IsWhiteSpace(c)).ToArray());
@@ -357,12 +399,15 @@ namespace EliteDangerousCore
 
         private static bool AddEntry(CatType catname, Color colour, string aliasname, ItemType typeofit, MaterialGroupType mtg, string shortname, string fdName, bool comrare = false)
         {
-            System.Diagnostics.Debug.Assert(!shortname.HasChars() || cachelist.Values.ToList().Find(x => x.Shortname.Equals(shortname, StringComparison.InvariantCultureIgnoreCase)) == null, "ShortName repeat " + aliasname + " " + shortname);
+            if (shortname.HasChars() && cachelist.Values.ToList().Find(x => x.Shortname.Equals(shortname, StringComparison.InvariantCultureIgnoreCase)) != null)
+            {
+                System.Diagnostics.Debug.WriteLine("**** Shortname repeat for " + fdName);
+            }
             System.Diagnostics.Debug.Assert(cachelist.ContainsKey(fdName) == false, "Repeated entry " + fdName);
 
             string fdn = (fdName.Length > 0) ? fdName.ToLowerInvariant() : FDNameCnv(aliasname);       // always lower case fdname
 
-            MaterialCommodityData mc = new MaterialCommodityData(catname, aliasname, fdn, typeofit, mtg, shortname, colour, comrare);
+            MaterialCommodityMicroResourceType mc = new MaterialCommodityMicroResourceType(catname, aliasname, fdn, typeofit, mtg, shortname, colour, comrare);
             mc.SetCache();
             return true;
         }
@@ -371,7 +416,7 @@ namespace EliteDangerousCore
         {
             #region Materials  
 
-            cachelist = new Dictionary<string, MaterialCommodityData>();
+            cachelist = new Dictionary<string, MaterialCommodityMicroResourceType>();
 
             // NOTE KEEP IN ORDER BY Rarity and then Material Group Type
 
@@ -906,6 +951,128 @@ namespace EliteDangerousCore
             AddCommodity("Torval Deeds", ItemType.PowerPlay, "TorvalDeeds");
 
             #endregion
+
+            #region Microresources
+
+            AddMicroResource(CatType.Consumable, "E-Breach", "bypass", "MRCEB");
+            AddMicroResource(CatType.Consumable, "Energy Cell", "energycell", "MRCEC");
+            AddMicroResource(CatType.Consumable, "Medkit", "healthpack", "MRCM");
+            AddMicroResource(CatType.Consumable, "Frag Grenade", "amm_grenade_frag", "MRCFG");
+            AddMicroResource(CatType.Consumable, "Shield Disruptor", "amm_grenade_emp", "MRCSD");
+            AddMicroResource(CatType.Consumable, "Shield Projector", "amm_grenade_shield", "MRCSP");
+
+            AddMicroResource(CatType.Item, "Power Regulator", "largecapacitypowerregulator", "MRIPR");
+            AddMicroResource(CatType.Item, "Compact Library", "compactlibrary", "MRICL");
+            AddMicroResource(CatType.Item, "Infinity", "infinity", "MRII");
+            AddMicroResource(CatType.Item, "Insight Entertainment Suite", "insightentertainmentsuite", "MRIIES");
+            AddMicroResource(CatType.Item, "Lazarus", "lazarus", "MRIL");
+            AddMicroResource(CatType.Item, "Universal Translator", "universaltranslator", "MRIUT");
+            AddMicroResource(CatType.Item, "Biochemical Agent", "biochemicalagent", "MRIBA");
+            AddMicroResource(CatType.Item, "Degraded Power Regulator", "degradedpowerregulator", "MRIDPR");
+            AddMicroResource(CatType.Item, "Hush", "hush", "MRIH");
+            AddMicroResource(CatType.Item, "Push", "push", "MRIP");
+            AddMicroResource(CatType.Item, "Synthetic Pathogen", "syntheticpathogen", "MRISP");
+            AddMicroResource(CatType.Item, "Building Schematic", "buildingschematic", "MRIBS");
+            AddMicroResource(CatType.Item, "Insight", "insight", "MRInsight");
+            AddMicroResource(CatType.Item, "Compression-Liquefied Gas", "compressionliquefiedgas", "MRICLG");
+            AddMicroResource(CatType.Item, "Health Monitor", "healthmonitor", "MRIHM");
+            AddMicroResource(CatType.Item, "Inertia Canister", "inertiacanister", "MRIIC");
+            AddMicroResource(CatType.Item, "Ionised Gas", "ionisedgas", "MRIIG");
+            AddMicroResource(CatType.Item, "Ship Schematic", "shipschematic", "MRIShipSch");
+            AddMicroResource(CatType.Item, "Suit Schematic", "suitschematic", "MRISuitSch");
+            AddMicroResource(CatType.Item, "Vehicle Schematic", "vehicleschematic", "MRIVS");
+            AddMicroResource(CatType.Item, "Weapon Schematic", "weaponschematic", "MRIWS");
+
+            AddMicroResource(CatType.Component, "Carbon Fibre Plating", "carbonfibreplating", "MRCCFP");
+            AddMicroResource(CatType.Component, "Encrypted Memory Chip", "encryptedmemorychip", "MRCEMC");
+            AddMicroResource(CatType.Component, "Epoxy Adhesive", "epoxyadhesive", "MRCEA");
+            AddMicroResource(CatType.Component, "Graphene", "graphene", "MRCG");
+            AddMicroResource(CatType.Component, "Memory Chip", "memorychip", "MRCMC");
+            AddMicroResource(CatType.Component, "Microelectrode", "microelectrode", "MRCMICROELEC");
+            AddMicroResource(CatType.Component, "Micro Hydraulics", "microhydraulics", "MRCMH");
+            AddMicroResource(CatType.Component, "Micro Thrusters", "microthrusters", "MRCMT");
+            AddMicroResource(CatType.Component, "Optical Fibre", "opticalfibre", "MRCOF");
+            AddMicroResource(CatType.Component, "Optical Lens", "opticallens", "MRCOL");
+            AddMicroResource(CatType.Component, "Rdx", "rdx", "MRCR");
+            AddMicroResource(CatType.Component, "Titanium Plating", "titaniumplating", "MRCTP");
+            AddMicroResource(CatType.Component, "Tungsten Carbide", "tungstencarbide", "MRCTC");
+            AddMicroResource(CatType.Component, "Weapon Component", "weaponcomponent", "MRCWC");
+            AddMicroResource(CatType.Component, "Aerogel", "aerogel", "MRCA");
+            AddMicroResource(CatType.Component, "Chemical Superbase", "chemicalsuperbase", "MRCCS");
+            AddMicroResource(CatType.Component, "Circuit Board", "circuitboard", "MRCCB");
+            AddMicroResource(CatType.Component, "Circuit Switch", "circuitswitch", "MRCCIRSWITCH");
+            AddMicroResource(CatType.Component, "Electrical Wiring", "electricalwiring", "MRCEW");
+            AddMicroResource(CatType.Component, "Electromagnet", "electromagnet", "MRCE");
+            AddMicroResource(CatType.Component, "Metal Coil", "metalcoil", "MRCMETALCOIL");
+            AddMicroResource(CatType.Component, "Motor", "motor", "MRCMOTOR");
+            AddMicroResource(CatType.Component, "Chemical Catalyst", "chemicalcatalyst", "MRCCC");
+            AddMicroResource(CatType.Component, "Micro Transformer", "microtransformer", "MRCMICTRANS");
+            AddMicroResource(CatType.Component, "Electrical Fuse", "electricalfuse", "MRCEF");
+            AddMicroResource(CatType.Component, "Micro Supercapacitor", "microsupercapacitor", "MRCMS");
+            AddMicroResource(CatType.Component, "Viscoelastic Polymer", "viscoelasticpolymer", "MRCVP");
+
+            AddMicroResource(CatType.Data, "Chemical Inventory", "chemicalinventory", "MRDCI");
+            AddMicroResource(CatType.Data, "Duty Rota", "dutyrota", "MRDDR");
+            AddMicroResource(CatType.Data, "Evacuation Protocols", "evacuationprotocols", "MRDEP");
+            AddMicroResource(CatType.Data, "Exploration Journals", "explorationjournals", "MRDEJ");
+            AddMicroResource(CatType.Data, "Faction News", "factionnews", "MRDFN");
+            AddMicroResource(CatType.Data, "Financial Projections", "financialprojections", "MRDFP");
+            AddMicroResource(CatType.Data, "Sales Records", "salesrecords", "MRDSR");
+            AddMicroResource(CatType.Data, "Union Membership", "unionmembership", "MRDUM");
+            AddMicroResource(CatType.Data, "Maintenance Logs", "maintenancelogs", "MRDML");
+            AddMicroResource(CatType.Data, "Patrol Routes", "patrolroutes", "MRDPATR");
+            AddMicroResource(CatType.Data, "Settlement Defence Plans", "settlementdefenceplans", "MRDSDP");
+            AddMicroResource(CatType.Data, "Surveillance Logs", "surveilleancelogs", "MRDSL");
+            AddMicroResource(CatType.Data, "Operational Manual", "operationalmanual", "MRDOM");
+            AddMicroResource(CatType.Data, "Blacklist Data", "blacklistdata", "MRDBD");
+            AddMicroResource(CatType.Data, "Air Quality Reports", "airqualityreports", "MRDAQR");
+            AddMicroResource(CatType.Data, "Employee Directory", "employeedirectory", "MRDED");
+            AddMicroResource(CatType.Data, "Faction Associates", "factionassociates", "MRDFA");
+            AddMicroResource(CatType.Data, "Meeting Minutes", "meetingminutes", "MRDMM");
+            AddMicroResource(CatType.Data, "Multimedia Entertainment", "multimediaentertainment", "MRDME");
+            AddMicroResource(CatType.Data, "Network Access History", "networkaccesshistory", "MRDNAH");
+            AddMicroResource(CatType.Data, "Purchase Records", "purchaserecords", "MRDPRCD");
+            AddMicroResource(CatType.Data, "Radioactivity Data", "radioactivitydata", "MRDRD");
+            AddMicroResource(CatType.Data, "Residential Directory", "residentialdirectory", "MRDRDIR");
+            AddMicroResource(CatType.Data, "Shareholder Information", "shareholderinformation", "MRDSI");
+            AddMicroResource(CatType.Data, "Travel Permits", "travelpermits", "MRDTP");
+            AddMicroResource(CatType.Data, "Accident Logs", "accidentlogs", "MRDAL");
+            AddMicroResource(CatType.Data, "Campaign Plans", "campaignplans", "MRDCP");
+            AddMicroResource(CatType.Data, "Combat Training Material", "combattrainingmaterial", "MRDCTM");
+            AddMicroResource(CatType.Data, "Internal Correspondence", "internalcorrespondence", "MRDIC");
+            AddMicroResource(CatType.Data, "Payroll Information", "payrollinformation", "MRDPI");
+            AddMicroResource(CatType.Data, "Personal Logs", "personallogs", "MRDPL");
+            AddMicroResource(CatType.Data, "Weapon Inventory", "weaponinventory", "MRDWI");
+            AddMicroResource(CatType.Data, "Atmospheric Data", "atmosphericdata", "MRDAD");
+            AddMicroResource(CatType.Data, "Topographical Surveys", "topographicalsurveys", "MRDTS");
+            AddMicroResource(CatType.Data, "Literary Fiction", "literaryfiction", "MRDLF");
+            AddMicroResource(CatType.Data, "Reactor Output Review", "reactoroutputreview", "MRDROR");
+            AddMicroResource(CatType.Data, "Next of Kin Records", "nextofkinrecords", "MRDNKR");
+            AddMicroResource(CatType.Data, "Purchase Requests", "purchaserequests", "MRDPR");
+            AddMicroResource(CatType.Data, "Tax Records", "taxrecords", "MRDTR");
+            AddMicroResource(CatType.Data, "Visitor Register", "visitorregister", "MRDVISREG");
+            AddMicroResource(CatType.Data, "Pharmaceutical Patents", "pharmaceuticalpatents", "MRDPP");
+            AddMicroResource(CatType.Data, "Vaccine Research", "vaccineresearch", "MRDVACRES");
+            AddMicroResource(CatType.Data, "Virology Data", "virologydata", "MRDVD");
+            AddMicroResource(CatType.Data, "Vaccination Records", "vaccinationrecords", "MRDVR");
+            AddMicroResource(CatType.Data, "Census Data", "censusdata", "MRDCD");
+            AddMicroResource(CatType.Data, "Geographical Data", "geographicaldata", "MRDGD");
+            AddMicroResource(CatType.Data, "Mineral Survey", "mineralsurvey", "MRDMS");
+            AddMicroResource(CatType.Data, "Chemical Formulae", "chemicalformulae", "MRDCF");
+            AddMicroResource(CatType.Data, "Chemical Experiment Data", "chemicalexperimentdata", "MRDCED");
+            AddMicroResource(CatType.Data, "Chemical Patents", "chemicalpatents", "MRDCHEMPAT");
+            AddMicroResource(CatType.Data, "Production Reports", "productionreports", "MRDPRODREP");
+            AddMicroResource(CatType.Data, "Production Schedule", "productionschedule", "MRDPS");
+            AddMicroResource(CatType.Data, "Blood Test Results", "bloodtestresults", "MRDBTR");
+            AddMicroResource(CatType.Data, "Combatant Performance", "combatantperformance", "MRDCOMBPERF");
+            AddMicroResource(CatType.Data, "Troop Deployment Records", "troopdeploymentrecords", "MRDTDR");
+            AddMicroResource(CatType.Data, "Cat Media", "catmedia", "MRDCATMED");
+            AddMicroResource(CatType.Data, "Employee Genetic Data", "employeegeneticdata", "MRDEGD");
+            AddMicroResource(CatType.Data, "Faction Donator List", "factiondonatorlist", "MRDFDL");
+            AddMicroResource(CatType.Data, "NOC Data", "nocdata", "MRDNOCD");
+            AddMicroResource(CatType.Item, "True Form Fossil", "trueformfossil", "MRITFF");
+            #endregion
+
 
             // seen in logs
             AddCommodity("Drones", ItemType.Drones, "Drones");

@@ -16,6 +16,7 @@
 
 using BaseUtils.JSON;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
@@ -30,12 +31,12 @@ namespace EliteDangerousCore.JournalEvents
             public string FriendlyName { get; set; }            // FDNAME
             public int Count { get; set; }
             public int Stolen { get; set; }
-            public long? MissionID { get; set; }             // if applicable
+            public ulong? MissionID { get; set; }             // if applicable
 
             public void Normalise()
             {
                 Name = JournalFieldNaming.FDNameTranslation(Name);
-                FriendlyName = MaterialCommodityData.GetNameByFDName(Name);
+                FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(Name);
             }
         }
 
@@ -135,17 +136,14 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc)
         {
             if (Vessel.Equals("Ship"))      // only want ship cargo to change lists..
             {
-                //System.Diagnostics.Debug.WriteLine("Updated at " + this.EventTimeUTC.ToString());
-                mc.Clear(true);
-
                 if (Inventory != null)
                 {
-                    foreach (Cargo c in Inventory)
-                        mc.Set(MaterialCommodityData.CatType.Commodity, c.Name, c.Count, 0);
+                    Dictionary<string, int> counts = Inventory.ToDictionary(x => x.Name.ToLower(), y => y.Count);
+                    mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, counts);
                 }
             }
         }
@@ -159,13 +157,13 @@ namespace EliteDangerousCore.JournalEvents
         {
             Type = evt["Type"].Str();       // fdname
             Type = JournalFieldNaming.FDNameTranslation(Type);     // pre-mangle to latest names, in case we are reading old journal records
-            FriendlyType = MaterialCommodityData.GetNameByFDName(Type);
+            FriendlyType = MaterialCommodityMicroResourceType.GetNameByFDName(Type);
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);         // always ensure we have one
 
             Count = evt["Count"].Int();
             Abandoned = evt["Abandoned"].Bool();
             PowerplayOrigin = evt["PowerplayOrigin"].Str();
-            MissionID = evt["MissionID"].LongNull();
+            MissionID = evt["MissionID"].ULongNull();
         }
 
         public string Type { get; set; }                    // FDName
@@ -175,11 +173,11 @@ namespace EliteDangerousCore.JournalEvents
         public int Count { get; set; }
         public bool Abandoned { get; set; }
         public string PowerplayOrigin { get; set; }
-        public long? MissionID { get; set; }             // if applicable
+        public ulong? MissionID { get; set; }             // if applicable
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc)
         {
-            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, -Count, 0);   // no faction here, we are dumping
+            mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Type, -Count, 0);   // no faction here, we are dumping
         }
 
         public void LedgerNC(Ledger mcl)
@@ -201,12 +199,12 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalCargoDepot(JObject evt) : base(evt, JournalTypeEnum.CargoDepot)
         {
-            MissionId = evt["MissionID"].Int();
+            MissionId = evt["MissionID"].ULong();
             UpdateType = evt["UpdateType"].Str();        // must be FD name
             System.Enum.TryParse<UpdateTypeEnum>(UpdateType, out UpdateTypeEnum u);
             UpdateEnum = u;
             CargoType = evt["CargoType"].Str();     // item counts
-            FriendlyCargoType = MaterialCommodityData.GetNameByFDName(CargoType);
+            FriendlyCargoType = MaterialCommodityMicroResourceType.GetNameByFDName(CargoType);
             Count = evt["Count"].Int(0);
             StartMarketID = evt["StartMarketID"].Long();
             EndMarketID = evt["EndMarketID"].Long();
@@ -223,7 +221,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public enum UpdateTypeEnum { Unknown, Collect, Deliver, WingUpdate }
 
-        public int MissionId { get; set; }
+        public ulong MissionId { get; set; }
         public string UpdateType { get; set; }
         public UpdateTypeEnum UpdateEnum { get; set; }
 
@@ -242,10 +240,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public long? MarketID { get; set; }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc)
         {
             if (CargoType.Length > 0 && Count > 0)
-                mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, CargoType, (UpdateEnum == UpdateTypeEnum.Collect) ? Count : -Count, 0);
+                mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, CargoType, (UpdateEnum == UpdateTypeEnum.Collect) ? Count : -Count, 0);
         }
 
         public void UpdateMissions(MissionListAccumulator mlist, EliteDangerousCore.ISystem sys, string body)
@@ -284,21 +282,21 @@ namespace EliteDangerousCore.JournalEvents
         {
             Type = evt["Type"].Str();                               //FDNAME
             Type = JournalFieldNaming.FDNameTranslation(Type);     // pre-mangle to latest names, in case we are reading old journal records
-            FriendlyType = MaterialCommodityData.GetNameByFDName(Type);
+            FriendlyType = MaterialCommodityMicroResourceType.GetNameByFDName(Type);
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);         // always ensure we have one
             Stolen = evt["Stolen"].Bool();
-            MissionID = evt["MissionID"].LongNull();
+            MissionID = evt["MissionID"].ULongNull();
         }
 
         public string Type { get; set; }                    // FDNAME..
         public string FriendlyType { get; set; }            // translated name
         public string Type_Localised { get; set; }            // always set
         public bool Stolen { get; set; }
-        public long? MissionID { get; set; }             // if applicable
+        public ulong? MissionID { get; set; }             // if applicable
 
-        public void UpdateCommodities(MaterialCommoditiesList mc) 
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc) 
         {
-            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, 1, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Type, 1, 0);
         }
 
         public void LedgerNC(Ledger mcl)
@@ -351,16 +349,16 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc) 
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc) 
         {
             if (Transfers != null)
             {
                 foreach (var t in Transfers)
                 {
                     if (t.Direction.Contains("ship", StringComparison.InvariantCultureIgnoreCase))     // toship, with some leaway to allow fd to change their formatting in future
-                        mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, t.Type, t.Count, 0);
+                        mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, t.Type, t.Count, 0);
                     else
-                        mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, t.Type, -t.Count, 0);
+                        mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, t.Type, -t.Count, 0);
                 }
             }
         }

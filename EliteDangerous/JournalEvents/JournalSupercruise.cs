@@ -26,10 +26,16 @@ namespace EliteDangerousCore.JournalEvents
         {
             StarSystem = evt["StarSystem"].Str();
             SystemAddress = evt["SystemAddress"].LongNull();
+            Taxi = evt["Taxi"].BoolNull();
+            Multicrew = evt["Multicrew"].BoolNull();
 
         }
+
         public string StarSystem { get; set; }
         public long? SystemAddress { get; set; }
+
+        public bool? Taxi { get; set; }             //4.0 alpha 4
+        public bool? Multicrew { get; set; }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
@@ -53,6 +59,8 @@ namespace EliteDangerousCore.JournalEvents
             Body = evt["Body"].Str();
             BodyID = evt["BodyID"].IntNull();
             BodyType = JournalFieldNaming.NormaliseBodyType(evt["BodyType"].Str());
+            Taxi = evt["Taxi"].BoolNull();
+            Multicrew = evt["Multicrew"].BoolNull();
         }
 
         public string StarSystem { get; set; }
@@ -61,6 +69,9 @@ namespace EliteDangerousCore.JournalEvents
         public int? BodyID { get; set; }
         public string BodyType { get; set; }
         public string BodyDesignation { get; set; }
+
+        public bool? Taxi { get; set; }             //4.0 alpha 4
+        public bool? Multicrew { get; set; }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {

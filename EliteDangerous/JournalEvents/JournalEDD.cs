@@ -110,7 +110,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if (c.buyPrice > 0)
                 {
-                    string name = MaterialCommodityData.GetNameByFDName(c.fdname);
+                    string name = MaterialCommodityMicroResourceType.GetNameByFDName(c.fdname);
 
                     if (c.sellPrice > 0)
                     {
@@ -138,7 +138,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if (c.buyPrice <= 0)
                 {
-                    string name = MaterialCommodityData.GetNameByFDName(c.fdname);
+                    string name = MaterialCommodityMicroResourceType.GetNameByFDName(c.fdname);
 
                     detailed += string.Format("{0}: {1}  ".T(EDTx.JournalCommodityPricesBase_CPBBuy), name, c.sellPrice);
                     if (++col == maxcol)
@@ -166,21 +166,21 @@ namespace EliteDangerousCore.JournalEvents
         public MaterialListClass Materials { get; set; }             // FDNAMES
         public CommodityListClass Commodities { get; set; }
 
-        public void UpdateMaterials(MaterialCommoditiesList mc)
+        public void UpdateMaterials(MaterialCommoditiesMicroResourceList mc)
         {
             if (Materials != null)
             {
                 foreach (MaterialItem m in Materials.Materials)
-                    mc.Set(m.Category, m.Name, m.Count, 0);
+                    mc.Set(EventTimeUTC, m.Category, m.Name, m.Count, 0);
             }
         }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc)
         { 
             if (Commodities != null)
             {
                 foreach (CommodityItem m in Commodities.Commodities)
-                    mc.Set(MaterialCommodityData.CatType.Commodity, m.Name, m.Count, m.BuyPrice);
+                    mc.Set(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, m.Name, m.Count, (long)m.BuyPrice);
             }
         }
 
@@ -196,7 +196,7 @@ namespace EliteDangerousCore.JournalEvents
                     if (comma)
                         info += ", ";
                     comma = true;
-                    info += BaseUtils.FieldBuilder.Build("Name:".T(EDTx.JournalEntry_Name), MaterialCommodityData.GetNameByFDName(m.Name), "", m.Count);
+                    info += BaseUtils.FieldBuilder.Build("Name:".T(EDTx.JournalEntry_Name), MaterialCommodityMicroResourceType.GetNameByFDName(m.Name), "", m.Count);
                 }
             }
 
@@ -207,7 +207,7 @@ namespace EliteDangerousCore.JournalEvents
                     if (comma)
                         info += ", ";
                     comma = true;
-                    info += BaseUtils.FieldBuilder.Build("Name:".T(EDTx.JournalEntry_Name), MaterialCommodityData.GetNameByFDName(m.Name), "", m.Count);
+                    info += BaseUtils.FieldBuilder.Build("Name:".T(EDTx.JournalEntry_Name), MaterialCommodityMicroResourceType.GetNameByFDName(m.Name), "", m.Count);
                 }
             }
             detailed = "";

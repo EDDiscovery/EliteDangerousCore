@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 - 2020 EDDiscovery development team
+ * Copyright © 2016 - 2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -17,20 +17,18 @@
 //#define LISTSCANS
 
 using EliteDangerousCore.DB;
-using EliteDangerousCore.EDSM;
 using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Diagnostics;
-using System.Linq;
-
 
 namespace EliteDangerousCore
 {
     public partial class HistoryList //: IEnumerable<HistoryEntry>
     {
         public MissionListAccumulator MissionListAccumulator { get; private set; } = new MissionListAccumulator(); // and mission list..
+        public MaterialCommoditiesMicroResourceList MaterialCommoditiesMicroResources { get; private set; } = new MaterialCommoditiesMicroResourceList();
 
         private List<HistoryEntry> historylist = new List<HistoryEntry>();  // oldest first here
         private Stats statisticsaccumulator = new Stats();
@@ -39,26 +37,21 @@ namespace EliteDangerousCore
 
         public HistoryList(List<HistoryEntry> hl) { historylist = hl; }         // SPECIAL USE ONLY - DOES NOT COMPUTE ALL THE OTHER STUFF
 
-        public void Copy(HistoryList other)       // Must copy all relevant items.. been caught out by this 23/6/2017
+        public void Copy(HistoryList other)       // Must copy all relevant items.. 
         {
-            historylist.Clear();
-
-            foreach (var ent in other.EntryOrder())
-            {
-                historylist.Add(ent);
-                Debug.Assert(ent.MaterialCommodity != null);
-            }
-
+            historylist = new List<HistoryEntry>(other.EntryOrder());       // clone list
             CashLedger = other.CashLedger;
             StarScan = other.StarScan;
             ShipInformationList = other.ShipInformationList;
             CommanderId = other.CommanderId;
             MissionListAccumulator = other.MissionListAccumulator;
+            MaterialCommoditiesMicroResources = other.MaterialCommoditiesMicroResources;
             statisticsaccumulator = other.statisticsaccumulator;
             Shipyards = other.Shipyards;
             Outfitting = other.Outfitting;
             Visited = other.Visited;
             LastSystem = other.LastSystem;
+            SuitWeaponsLoadouts = other.SuitWeaponsLoadouts;
         }
 
         public Dictionary<string,Stats.FactionInfo> GetStatsAtGeneration(uint g)
@@ -77,8 +70,7 @@ namespace EliteDangerousCore
 
             HistoryEntry he = HistoryEntry.FromJournalEntry(je, hprev);     // we may check edsm for this entry
 
-            he.UpdateMaterialsCommodities(je, hprev?.MaterialCommodity);           // let some processes which need the user db to work
-            Debug.Assert(he.MaterialCommodity != null);
+            he.UpdateMaterialsCommodities(MaterialCommoditiesMicroResources.Process(je));
 
             if (CheckForRemoval(he, hprev))                                     // check here to see if we want to remove the entry.. can move this lower later, but at first point where we have the data
                 return null;
@@ -97,6 +89,9 @@ namespace EliteDangerousCore
             he.UpdateShipStoredModules(ret.Item2);
             
             he.UpdateMissionList(MissionListAccumulator.Process(je, he.System, he.WhereAmI));
+
+            SuitWeaponsLoadouts.Process(je, he.WhereAmI, he.System);          // update the entries in suit entry list
+            he.UpdateSuits(SuitWeaponsLoadouts.SuitWeapons, SuitWeaponsLoadouts.Suits);               // set the HE to the current values
 
             historylist.Add(he);        // then add to history
 
@@ -166,8 +161,7 @@ namespace EliteDangerousCore
 
                 HistoryEntry he = HistoryEntry.FromJournalEntry(je, hprev);     // create entry
 
-                he.UpdateMaterialsCommodities(je, hprev?.MaterialCommodity);    // update material commodities BEFORE we possibly remove entries, as Cargo is one of the removal options
-                Debug.Assert(he.MaterialCommodity != null);
+                he.UpdateMaterialsCommodities(hist.MaterialCommoditiesMicroResources.Process(je));
 
                 if (CheckForRemoval(he, hprev))                                 // check here to see if we want to remove the entry.. can move this lower later, but at first point where we have the data
                     continue;
@@ -199,6 +193,9 @@ namespace EliteDangerousCore
                 he.UpdateShipStoredModules(ret.Item2);
 
                 he.UpdateMissionList(hist.MissionListAccumulator.Process(je, he.System, he.WhereAmI));
+
+                hist.SuitWeaponsLoadouts.Process(je, he.WhereAmI, he.System);          // update the entries in suit entry list
+                he.UpdateSuits(hist.SuitWeaponsLoadouts.SuitWeapons, hist.SuitWeaponsLoadouts.Suits);               // set the HE to the current values
 
                 AddToVisitsScan(hist, i, null);          // add to scan but don't complain if can't add
             }
@@ -244,7 +241,7 @@ namespace EliteDangerousCore
                     )
                 {
                   //  System.Diagnostics.Debug.WriteLine(he.EventTimeUTC + " Remove cargo and assign to previous entry FromFile: " + cargo.EDDFromFile);
-                    hprev.UpdateMaterialCommodity(he.MaterialCommodity);        // assign its updated commodity list to previous entry
+                    hprev.UpdateMaterialsCommodities(he.MaterialCommodity);        // assign its updated commodity list to previous entry
                     return true;
                 }
                 else

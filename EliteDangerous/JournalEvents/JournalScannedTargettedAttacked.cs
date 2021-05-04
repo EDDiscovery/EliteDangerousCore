@@ -44,7 +44,7 @@ namespace EliteDangerousCore.JournalEvents
             TargetLocked = evt["TargetLocked"].Bool();
 
             ShipFD = evt["Ship"].StrNull();
-            if (ShipFD != null)
+            if (ItemData.IsShip(ShipFD))
             {
                 ShipFD = JournalFieldNaming.NormaliseFDShipName(ShipFD);
                 Ship = JournalFieldNaming.GetBetterShipName(ShipFD);

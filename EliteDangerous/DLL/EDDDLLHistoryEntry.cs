@@ -62,8 +62,10 @@ namespace EliteDangerousCore.DLL
 
                 he.journalEntry.FillInformation(he.System, out je.info, out je.detailedinfo);
 
-                je.materials = (from x in he.MaterialCommodity.Sort(false) select x.Details.Name + ":" + x.Count.ToStringInvariant() + ":" + x.Details.FDName).ToArray();
-                je.commodities = (from x in he.MaterialCommodity.Sort(true) select x.Details.Name + ":" + x.Count.ToStringInvariant() + ":" + x.Details.FDName).ToArray();
+
+
+                je.materials = (from x in hl.MaterialCommoditiesMicroResources.GetMaterialsSorted(he.MaterialCommodity) select x.Details.Name + ":" + x.Count.ToStringInvariant() + ":" + x.Details.FDName).ToArray();
+                je.commodities = (from x in hl.MaterialCommoditiesMicroResources.GetCommoditiesSorted(he.MaterialCommodity) select x.Details.Name + ":" + x.Count.ToStringInvariant() + ":" + x.Details.FDName).ToArray();
 
                 var ml = hl.MissionListAccumulator.GetAllCurrentMissions(he.MissionList, he.EventTimeUTC);
                 je.currentmissions = ml.Select(x=>x.DLLInfo()).ToArray();

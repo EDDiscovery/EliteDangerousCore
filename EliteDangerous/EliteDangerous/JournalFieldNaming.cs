@@ -32,7 +32,7 @@ namespace EliteDangerousCore
 
         static public string FDNameTranslation(string old)
         {
-            return MaterialCommodityData.FDNameTranslation(old);
+            return MaterialCommodityMicroResourceType.FDNameTranslation(old);
         }
 
         static public string NormaliseMaterialCategory(string cat)
@@ -113,7 +113,7 @@ namespace EliteDangerousCore
         {
             if (s.Length>0)         // accept empty string, some of the fields are purposely blank from the journal because they are not set for a particular transaction
             {
-                ShipModuleData.ShipModule item = ShipModuleData.Instance.GetItemProperties(s);
+                ItemData.ShipModule item = ItemData.Instance.GetShipModuleProperties(s);
                 return item.ModName;
             }
             else
@@ -122,10 +122,10 @@ namespace EliteDangerousCore
 
         static public string GetBetterShipName(string inname)
         {
-            ShipModuleData.ShipInfo i = ShipModuleData.Instance.GetShipProperty(inname, ShipModuleData.ShipPropID.Name);
+            ItemData.IModuleInfo i = ItemData.Instance.GetShipProperty(inname, ItemData.ShipPropID.Name);
 
             if (i != null)
-                return (i as ShipModuleData.ShipInfoString).Value;
+                return (i as ItemData.ShipInfoString).Value;
             else
             {
                 System.Diagnostics.Debug.WriteLine("Unknown FD ship ID:" + inname);
@@ -178,9 +178,9 @@ namespace EliteDangerousCore
 
         static public string NormaliseFDShipName(string inname)            // FD ship names.. tend to change case.. Fix
         {
-            ShipModuleData.ShipInfo i = ShipModuleData.Instance.GetShipProperty(inname, ShipModuleData.ShipPropID.FDID);
+            ItemData.IModuleInfo i = ItemData.Instance.GetShipProperty(inname, ItemData.ShipPropID.FDID);
             if (i != null)
-                return (i as ShipModuleData.ShipInfoString).Value;
+                return (i as ItemData.ShipInfoString).Value;
             else
             {
                 System.Diagnostics.Debug.WriteLine("Unknown FD ship ID:" + inname);

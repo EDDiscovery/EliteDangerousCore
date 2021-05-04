@@ -20,8 +20,6 @@ using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EliteDangerousCore
 {
@@ -39,7 +37,7 @@ namespace EliteDangerousCore
         public ShipInformation CurrentShip { get { return (HaveCurrentShip) ? Ships[currentid] : null; } }
 
         // IDs have been repeated, need more than just that
-        private string Key(string fdname, int i) { return fdname.ToLowerInvariant() + ":" + i.ToStringInvariant(); }
+        private string Key(string fdname, ulong i) { return fdname.ToLowerInvariant() + ":" + i.ToStringInvariant(); }
 
         public ShipInformation GetShipByShortName(string sn)
         {
@@ -62,7 +60,7 @@ namespace EliteDangerousCore
             return (index >= 0) ? lst[index] : null;
         }
 
-        private int newsoldid = 30000;
+        private ulong newsoldid = ulong.MaxValue/2;
 
         public ShipInformationList()
         {
@@ -72,7 +70,7 @@ namespace EliteDangerousCore
             currentid = null;
         }
 
-        public void Loadout(int id, string ship, string shipfd, string name, string ident, List<ShipModule> modulelist,
+        public void Loadout(ulong id, string ship, string shipfd, string name, string ident, List<ShipModule> modulelist,
                         long HullValue, long ModulesValue, long Rebuy, double unladenmass, double reservefuelcap, double hullhealth, bool? Hot)
         {
             string sid = Key(shipfd, id);
@@ -131,7 +129,7 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void LoadGame(int id, string ship, string shipfd, string name, string ident, double fuellevel, double fueltotal)        // LoadGame..
+        public void LoadGame(ulong id, string ship, string shipfd, string name, string ident, double fuellevel, double fueltotal)        // LoadGame..
         {
             string sid = Key(shipfd, id);
 
@@ -141,7 +139,7 @@ namespace EliteDangerousCore
 
             //System.Diagnostics.Debug.WriteLine("Load Game " + sid);
 
-            if (ShipModuleData.IsShip(shipfd))
+            if (ItemData.IsShip(shipfd))
                 currentid = sid;
             VerifyList();
         }
@@ -251,7 +249,7 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void ShipyardNew(string ship, string shipFD, int id)
+        public void ShipyardNew(string ship, string shipFD, ulong id)
         {
             string sid = Key(shipFD, id);
             //System.Diagnostics.Debug.WriteLine(sid + " New");
@@ -262,7 +260,7 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void Sell(string ShipFD, int id)
+        public void Sell(string ShipFD, ulong id)
         {
             string sid = Key(ShipFD, id);
             if (Ships.ContainsKey(sid))       // if we don't have it, don't worry
@@ -277,7 +275,7 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void Transfer(string ship, string shipFD, int id, string fromsystem, string tosystem, string tostation, DateTime arrivaltime)
+        public void Transfer(string ship, string shipFD, ulong id, string fromsystem, string tosystem, string tostation, DateTime arrivaltime)
         {
             string sid = Key(shipFD, id);
             ShipInformation sm = EnsureShip(sid);              // this either gets current ship or makes a new one.
@@ -288,7 +286,7 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void Store(string ShipFD, int id, string station, string system)
+        public void Store(string ShipFD, ulong id, string station, string system)
         {
             string sid = Key(ShipFD, id);
             if (Ships.ContainsKey(sid))       // if we don't have it, don't worry
@@ -530,8 +528,7 @@ namespace EliteDangerousCore
 
             //System.Diagnostics.Debug.WriteLine("Made new ship " + id);
 
-            int i;
-            id.Substring(id.IndexOf(":") + 1).InvariantParse(out i);
+            ulong i = id.Substring(id.IndexOf(":") + 1).InvariantParseULong(0);
             ShipInformation smn = new ShipInformation(i);
             Ships[id] = smn;
             return smn;

@@ -43,10 +43,10 @@ namespace EliteDangerousCore.JournalEvents
             {
                 TargetLocalised = JournalFieldNaming.CheckLocalisation(evt["Target_Localised"].Str(), Target);  // 3.7 added a localised target field, so try it
 
-                var sp = ShipModuleData.Instance.GetShipProperties(Target);
+                var sp = ItemData.Instance.GetShipProperties(Target);
                 if (sp != null)
                 {
-                    TargetLocalised = ((ShipModuleData.ShipInfoString)sp[ShipModuleData.ShipPropID.Name]).Value;
+                    TargetLocalised = ((ItemData.ShipInfoString)sp[ItemData.ShipPropID.Name]).Value;
                 }
             }
 
@@ -326,7 +326,7 @@ namespace EliteDangerousCore.JournalEvents
             AllFines = evt["AllFines"].Bool();
             Faction = evt["Faction"].Str();
             Faction_Localised = JournalFieldNaming.CheckLocalisation(evt["Faction_Localised"].Str(), Faction);
-            ShipId = evt["ShipID"].Int();
+            ShipId = evt["ShipID"].ULong();
         }
 
         public long Amount { get; set; }
@@ -334,7 +334,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool AllFines { get; set; }
         public string Faction { get; set; }      // may be blank
         public string Faction_Localised { get; set; }    // may be blank
-        public int ShipId { get; set; }
+        public ulong ShipId { get; set; }
 
         public void Ledger(Ledger mcl)
         {
@@ -360,7 +360,7 @@ namespace EliteDangerousCore.JournalEvents
             AllFines = evt["AllFines"].Bool();
             Faction = evt["Faction"].Str();
             Faction_Localised = JournalFieldNaming.CheckLocalisation(evt["Faction_Localised"].Str(), Faction);
-            ShipId = evt["ShipID"].Int();
+            ShipId = evt["ShipID"].ULong();
         }
 
         public long Amount { get; set; }
@@ -368,7 +368,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool AllFines { get; set; }
         public string Faction { get; set; } // may be blank
         public string Faction_Localised { get; set; }       // may be blank
-        public int ShipId { get; set; }
+        public ulong ShipId { get; set; }
 
         public void Ledger(Ledger mcl)
         {

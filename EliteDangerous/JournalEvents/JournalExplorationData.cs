@@ -113,7 +113,7 @@ namespace EliteDangerousCore.JournalEvents
         public Discovered[] Systems { get; set; }
         public long BaseValue { get; set; }
         public long Bonus { get; set; }
-        public long TotalEarnings { get; set; }      
+        public long TotalEarnings { get; set; }
 
         public void Ledger(Ledger mcl)
         {
@@ -133,5 +133,77 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
     }
+
+    // TBD Write, Test
+    [JournalEntryType(JournalTypeEnum.SellOrganicData)]
+    public class JournalSellOrganicData : JournalEntry, ILedgerJournalEntry
+    {
+        public JournalSellOrganicData(JObject evt) : base(evt, JournalTypeEnum.SellOrganicData)
+        {
+            MarketID = evt["MarketID"].Long();
+            Bios = evt["BioData"]?.ToObjectQ<BioData[]>();
+            TotalValue = 0;
+            if ( Bios!=null)
+            {
+                foreach (var b in Bios)
+                    TotalValue = b.Value + b.Bonus;
+            }
+        }
+
+        public class BioData
+        {
+            public string Genus;
+            public string Genus_Localised;
+            public string Species;
+            public string Species_Localised;
+            public long Value;
+            public long Bonus;
+        };
+
+        public BioData[] Bios;
+        public long MarketID;
+        public long TotalValue;
+
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        {
+            info = string.Format("Sold {0} for {1}cr".T(EDTx.TBD), Bios?.Length ?? 0, TotalValue);
+            detailed = "";
+            if (Bios != null)
+            {
+                foreach (var b in Bios)
+                    detailed = detailed.AppendPrePad(string.Format("{0} {1} : {2} {3}", b.Genus_Localised, b.Species_Localised, b.Value, b.Bonus), Environment.NewLine);
+            }
+        }
+
+        public void Ledger(Ledger mcl)
+        {
+            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, (Bios?.Length??0).ToString("N0"), TotalValue);
+        }
+
+    }
+
+    [JournalEntryType(JournalTypeEnum.ScanOrganic)]
+    public class JournalScanOrganic : JournalEntry
+    {
+        public JournalScanOrganic(JObject evt) : base(evt, JournalTypeEnum.ScanOrganic)
+        {
+            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+        }
+
+        public long SystemAddress { get; set; }
+        public int Body;
+        public string Genus;
+        public string Genus_Localised;
+        public string Species;
+        public string Species_Localised;
+        public string ScanType;     //Analyse, Log, Sample
+
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        {
+            info = BaseUtils.FieldBuilder.Build("", ScanType, "<: ", Genus_Localised, "", Species_Localised);
+            detailed = "";
+        }
+    }
+
 
 }

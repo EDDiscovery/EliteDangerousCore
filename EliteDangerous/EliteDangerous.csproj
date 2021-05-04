@@ -106,10 +106,14 @@
     <Compile Include="HistoryList\HistoryList.cs" />
     <Compile Include="IGAU\IGAUSync.cs" />
     <Compile Include="IGAU\IGAUClass.cs" />
+    <Compile Include="JournalEvents\JournalEmbarkDisembark.cs" />
     <Compile Include="JournalEvents\JournalCarrier.cs" />
+    <Compile Include="JournalEvents\JournalTaxiDropShip.cs" />
+    <Compile Include="JournalEvents\JournalSuit.cs" />
     <Compile Include="JournalEvents\JournalNavRoute.cs" />
     <Compile Include="Journal\EDJournalReader.cs" />
     <Compile Include="Journal\EDJournalMonitorWatcher.cs" />
+    <Compile Include="JournalEvents\JournalMicroResources.cs" />
     <Compile Include="Journal\JournalEssentialEvents.cs" />
     <Compile Include="Journal\JournalEntryDB.cs" />
     <Compile Include="Journal\JournalEnums.cs" />
@@ -143,8 +147,8 @@
     <Compile Include="EliteDangerous\JournalFieldNaming.cs" />
     <Compile Include="EliteDangerous\Ledger.cs" />
     <Compile Include="DB\TravelLogUnitLogReader.cs" />
-    <Compile Include="MaterialsCommodities\MaterialCommodityData.cs" />
-    <Compile Include="MaterialsCommodities\MaterialCommoditiesList.cs" />
+    <Compile Include="MaterialsCommodities\MCMRType.cs" />
+    <Compile Include="MaterialsCommodities\MCMRList.cs" />
     <Compile Include="MaterialsCommodities\MaterialRecipesData.cs" />
     <Compile Include="EliteDangerous\MissionList.cs" />
     <Compile Include="EliteDangerous\Outfitting.cs" />
@@ -152,7 +156,7 @@
     <Compile Include="Ships\ShipModulesInStore.cs" />
     <Compile Include="Ships\ShipInformationList.cs" />
     <Compile Include="Ships\ShipModule.cs" />
-    <Compile Include="Ships\ShipModuleData.cs" />
+    <Compile Include="Items\ItemData.cs" />
     <Compile Include="NetLogs\NetLogClass.cs" />
     <Compile Include="NetLogs\NetLogReader.cs" />
     <Compile Include="EliteDangerous\Ranks.cs" />
@@ -236,6 +240,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Status\UIEvents.cs" />
+    <Compile Include="Suit\SuitWeapons.cs" />
+    <Compile Include="Suit\SuitLoadout.cs" />
+    <Compile Include="Suit\SuitWeaponsLoadout.cs" />
+    <Compile Include="Suit\SuitInformation.cs" />
     <Compile Include="SystemDB\EliteNameClassifier.cs" />
     <Compile Include="SystemDB\SQLiteConnectionSystem.cs" />
     <Compile Include="SystemDB\SystemCache.cs" />
@@ -321,7 +329,6 @@
     <None Include="JournalEvents\translation-polski-je.tlp" />
     <None Include="JournalEvents\translation-portugues-je.tlp" />
     <None Include="JournalEvents\translation-russian-je.tlp" />
-    <None Include="JournalEvents\translation-spanish-ed.tlp" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

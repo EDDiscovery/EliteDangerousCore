@@ -55,12 +55,12 @@ namespace EliteDangerousCore.JournalEvents
 
             Commodity = evt["Commodity"].Str();
             Commodity = JournalFieldNaming.FDNameTranslation(Commodity);     // pre-mangle to latest names, in case we are reading old journal records
-            FriendlyCommodity = MaterialCommodityData.GetNameByFDName(Commodity);
+            FriendlyCommodity = MaterialCommodityMicroResourceType.GetNameByFDName(Commodity);
             Commodity_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Commodity_Localised"].Str(), FriendlyCommodity);
 
             Material = evt["Material"].Str();
             Material = JournalFieldNaming.FDNameTranslation(Material);     // pre-mangle to latest names, in case we are reading old journal records
-            FriendlyMaterial = MaterialCommodityData.GetNameByFDName(Material);
+            FriendlyMaterial = MaterialCommodityMicroResourceType.GetNameByFDName(Material);
             Material_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Material_Localised"].Str(), FriendlyMaterial);
 
             Quantity = evt["Quantity"].Int();
@@ -85,16 +85,16 @@ namespace EliteDangerousCore.JournalEvents
         // Istats
         public List<IStatsItemsInfo> ItemsList { get { return new List<IStatsItemsInfo>() { new IStatsItemsInfo() { FDName = Type == "Materials" ? Material : Commodity, Count = -Quantity } }; } }
 
-        public void UpdateMaterials(MaterialCommoditiesList mc)
+        public void UpdateMaterials(MaterialCommoditiesMicroResourceList mc)
         {
             if (Type.Equals("Materials"))
-                mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Raw, Material, -Quantity, 0, true);
+                mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Raw, Material, -Quantity, 0);
         }
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc)
         {
             if (Type.Equals("Commodity"))
-                mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Commodity, -Quantity, 0);
+                mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Commodity, -Quantity, 0);
         }
 
         public void UpdateStats(Stats stats, string stationfaction)
@@ -174,12 +174,12 @@ namespace EliteDangerousCore.JournalEvents
 
         public Dictionary<string, int> Ingredients { get; set; }        // not for legacy convert
 
-        public void UpdateMaterials(MaterialCommoditiesList mc)
+        public void UpdateMaterials(MaterialCommoditiesMicroResourceList mc)
         {
             if (Ingredients != null)
             {
                 foreach (KeyValuePair<string, int> k in Ingredients)        // may be commodities or materials but mostly materials so we put it under this
-                    mc.Craft(k.Key, k.Value);
+                    mc.Craft(EventTimeUTC, k.Key, k.Value);
             }
         }
 
@@ -199,7 +199,7 @@ namespace EliteDangerousCore.JournalEvents
             if (Ingredients != null)
             {
                 foreach (KeyValuePair<string, int> k in Ingredients)        // may be commodities or materials
-                    detailed += BaseUtils.FieldBuilder.Build("", MaterialCommodityData.GetNameByFDName(k.Key), "", k.Value) + "; ";
+                    detailed += BaseUtils.FieldBuilder.Build("", MaterialCommodityMicroResourceType.GetNameByFDName(k.Key), "", k.Value) + "; ";
             }
 
             if (Engineering != null)

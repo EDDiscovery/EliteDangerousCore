@@ -34,6 +34,7 @@ namespace EliteDangerousCore
         public int CommanderId { get; private set; }
         public Dictionary<string, HistoryEntry> Visited { get; private set; } = new Dictionary<string, HistoryEntry>();  // not in any particular order.
         public string LastSystem { get; private set; }                          // last system seen in
+        public SuitWeaponsLoadout SuitWeaponsLoadouts = new SuitWeaponsLoadout();       // odyssey 4.0
 
         public int Count { get { return historylist.Count; } }
 
@@ -223,8 +224,7 @@ namespace EliteDangerousCore
 
         #region Status
 
-        public bool IsCurrentlyLanded() { HistoryEntry he = GetLast; return (he != null) ? he.IsLanded : false; }     //safe methods
-        public bool IsCurrentlyDocked() { HistoryEntry he = GetLast; return (he != null) ? he.IsDocked : false; }
+        public HistoryEntryStatus.TravelStateType CurrentTravelState() { HistoryEntry he = GetLast; return (he != null) ? he.TravelState : HistoryEntryStatus.TravelStateType.Unknown; }     //safe methods
         public ISystem CurrentSystem() { HistoryEntry he = GetLast; return (he != null) ? he.System : null; }  // current system
 
         public double DistanceCurrentTo(string system)          // from current, if we have one, to system, if its found.
