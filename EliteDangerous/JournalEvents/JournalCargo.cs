@@ -142,7 +142,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if (Inventory != null)
                 {
-                    Dictionary<string, int> counts = Inventory.ToDictionary(x => x.Name.ToLower(), y => y.Count);
+                    List<Tuple<string, int>> counts = Inventory.Select(x => new Tuple<string, int>(x.Name.ToLower(), x.Count)).ToList();
                     mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, counts);
                 }
             }

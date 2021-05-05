@@ -982,6 +982,7 @@ namespace EliteDangerousCore
             AddMicroResource(CatType.Item, "Suit Schematic", "suitschematic", "MRISuitSch");
             AddMicroResource(CatType.Item, "Vehicle Schematic", "vehicleschematic", "MRIVS");
             AddMicroResource(CatType.Item, "Weapon Schematic", "weaponschematic", "MRIWS");
+            AddMicroResource(CatType.Item, "True Form Fossil", "trueformfossil", "MRITFF");
 
             AddMicroResource(CatType.Component, "Carbon Fibre Plating", "carbonfibreplating", "MRCCFP");
             AddMicroResource(CatType.Component, "Encrypted Memory Chip", "encryptedmemorychip", "MRCEMC");
@@ -1010,6 +1011,8 @@ namespace EliteDangerousCore
             AddMicroResource(CatType.Component, "Electrical Fuse", "electricalfuse", "MRCEF");
             AddMicroResource(CatType.Component, "Micro Supercapacitor", "microsupercapacitor", "MRCMS");
             AddMicroResource(CatType.Component, "Viscoelastic Polymer", "viscoelasticpolymer", "MRCVP");
+            AddMicroResource(CatType.Component, "Ion Battery", "ionbattery", "MRCIB");
+            AddMicroResource(CatType.Component, "Scrambler", "scrambler", "MRCS");
 
             AddMicroResource(CatType.Data, "Chemical Inventory", "chemicalinventory", "MRDCI");
             AddMicroResource(CatType.Data, "Duty Rota", "dutyrota", "MRDDR");
@@ -1070,11 +1073,10 @@ namespace EliteDangerousCore
             AddMicroResource(CatType.Data, "Employee Genetic Data", "employeegeneticdata", "MRDEGD");
             AddMicroResource(CatType.Data, "Faction Donator List", "factiondonatorlist", "MRDFDL");
             AddMicroResource(CatType.Data, "NOC Data", "nocdata", "MRDNOCD");
-            AddMicroResource(CatType.Item, "True Form Fossil", "trueformfossil", "MRITFF");
+            AddMicroResource(CatType.Data, "Manufacturing Instructions", "manufacturinginstructions", "MRDMI");
             #endregion
 
-
-            // seen in logs
+            
             AddCommodity("Drones", ItemType.Drones, "Drones");
 
             foreach (var x in cachelist.Values)

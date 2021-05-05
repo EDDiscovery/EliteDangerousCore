@@ -171,7 +171,7 @@ namespace EliteDangerousCore.JournalEvents
             if (Materials != null)
             {
                 foreach (MaterialItem m in Materials.Materials)
-                    mc.Set(EventTimeUTC, m.Category, m.Name, m.Count, 0);
+                    mc.Change(EventTimeUTC, m.Category, m.Name, m.Count, 0, 0, true);
             }
         }
 
@@ -180,7 +180,7 @@ namespace EliteDangerousCore.JournalEvents
             if (Commodities != null)
             {
                 foreach (CommodityItem m in Commodities.Commodities)
-                    mc.Set(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, m.Name, m.Count, (long)m.BuyPrice);
+                    mc.Change(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, m.Name, m.Count, (long)m.BuyPrice, 0, true);
             }
         }
 

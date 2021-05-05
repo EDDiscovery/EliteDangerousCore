@@ -23,16 +23,19 @@ namespace EliteDangerousCore.JournalEvents
 {
     public class MicroResource
     {
-        public string Name { get; set; }
+        public const int ShipLocker = 0;                        // index into MCMRList for types
+        public const int BackPack = 1;
+
+        public string Name { get; set; }                        // normalised to lower case 
         public string Name_Localised { get; set; }
 
         public string FriendlyName { get; set; }                // computed
 
         public ulong OwnerID { get; set; }                      // Backpackmaterials, ShipLockerMaterials, CollectItems, DropItems
         public ulong MissionID { get; set; }                    // Backpackmaterials, ShipLockerMaterials, DropItems, may be -1, invalid
-        public int Count { get; set; }                          // Backpackmaterials, ShipLockerMaterials, CollectItems, DropItems
+        public int Count { get; set; }                          // Backpackmaterials, ShipLockerMaterials, CollectItems, DropItems, TransferMicroResources, TradeMicroResource
 
-        public string Category { get; set; }                    // BuyMicroResources, SellMicroResources, TradeMicroresources
+        public string Category { get; set; }                    // BuyMicroResources, SellMicroResources, TradeMicroresources, TransferMicroresources
         public string Type { get; set; }                        // UseConsumable, CollectItems, DropItems   (Type is Category, normalise moves it across, use Category)
 
         public enum DirectionType { None, ToShipLocker, ToBackpack }        // must match names in event
@@ -41,8 +44,8 @@ namespace EliteDangerousCore.JournalEvents
         public void Normalise()
         {
             Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, Name);
-            Name = JournalFieldNaming.FDNameTranslation(Name);
-            FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(Name);
+            Name = JournalFieldNaming.FDNameTranslation(Name);      // this lower cases the name
+            FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(Name);        
             Category = Category.Alt(Type);      // for some reason category is called type in places..
         }
 
@@ -128,16 +131,37 @@ namespace EliteDangerousCore.JournalEvents
     }
 
 
-    // for now, we only hold list of ship locker materials, not what your currently carrying
-
     [JournalEntryType(JournalTypeEnum.BackPackMaterials)]
     public class JournalBackPackMaterials : JournalMicroResourceState, IMicroResourceJournalEntry
     {
         public JournalBackPackMaterials(JObject evt) : base(evt, JournalTypeEnum.BackPackMaterials)
         {
         }
-        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc)    // unused for now
+        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc)
         {
+            if (Items != null)
+            {
+                List<Tuple<string, int>> counts = Items.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();      // Name is already lower cased
+                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Item, counts, MicroResource.BackPack);
+            }
+
+            if (Components != null)
+            {
+                List<Tuple<string, int>> counts = Components.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
+                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Component, counts, MicroResource.BackPack);
+            }
+
+            if (Consumables != null)
+            {
+                List<Tuple<string, int>> counts = Consumables.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
+                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Consumable, counts, MicroResource.BackPack);
+            }
+
+            if (Data != null)
+            {
+                List<Tuple<string, int>> counts = Data.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
+                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Data, counts, MicroResource.BackPack);
+            }
         }
     }
 
@@ -150,45 +174,29 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc)
         {
-            //mc.Clear(0, MaterialCommodityMicroResourceType.CatType.Item, MaterialCommodityMicroResourceType.CatType.Component,
-            //                        MaterialCommodityMicroResourceType.CatType.Consumable, MaterialCommodityMicroResourceType.CatType.Data);
+            if (Items != null)
+            {
+                List<Tuple<string, int>> counts = Items.Select(x => new Tuple<string, int>(x.Name.ToLower(), x.Count)).ToList();
+                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Item, counts, MicroResource.ShipLocker);
+            }
 
-            //if (Items != null)
-            //{
-            //    foreach (var i in Items)
-            //    {
-            //        MaterialCommodityMicroResourceType.EnsurePresent("Item", i.Name, i.Name_Localised);
-            //        mc.Set(MaterialCommodityMicroResourceType.CatType.Item, i.Name, i.Count, 0);
-            //    }
-            //}
+            if (Components != null)
+            {
+                List<Tuple<string, int>> counts = Components.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
+                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Component, counts, MicroResource.ShipLocker);
+            }
 
-            //if (Components != null)
-            //{
-            //    foreach (var i in Components)
-            //    {
-            //        MaterialCommodityMicroResourceType.EnsurePresent("Component", i.Name, i.Name_Localised);
-            //        mc.Set(MaterialCommodityMicroResourceType.CatType.Component, i.Name, i.Count, 0);
-            //    }
-            //}
+            if (Consumables != null)
+            {
+                List<Tuple<string, int>> counts = Consumables.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
+                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Consumable, counts, MicroResource.ShipLocker);
+            }
 
-            //if (Consumables != null)
-            //{
-            //    foreach (var i in Consumables)
-            //    {
-            //        MaterialCommodityMicroResourceType.EnsurePresent("Consumables", i.Name, i.Name_Localised);
-            //        mc.Set(MaterialCommodityMicroResourceType.CatType.Consumable, i.Name, i.Count, 0);
-
-            //    }
-            //}
-
-            //if (Data != null)
-            //{
-            //    foreach (var i in Data)
-            //    {
-            //        MaterialCommodityMicroResourceType.EnsurePresent("Data", i.Name, i.Name_Localised);
-            //        mc.Set(MaterialCommodityMicroResourceType.CatType.Data, i.Name, i.Count, 0);
-            //    }
-            //}
+            if (Data != null)
+            {
+                List<Tuple<string, int>> counts = Data.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
+                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Data, counts, MicroResource.ShipLocker);
+            }
         }
     }
 
@@ -222,11 +230,10 @@ namespace EliteDangerousCore.JournalEvents
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc)
         {
             MaterialCommodityMicroResourceType.EnsurePresent(Resource.Category, Resource.Name, Resource.Name_Localised);
-            mc.Change(EventTimeUTC, Resource.Category, Resource.Name, Resource.Count, Price);
+            mc.Change(EventTimeUTC, Resource.Category, Resource.Name, Resource.Count, Price, MicroResource.ShipLocker);
         }
     }
 
-    // TBD Test
     [JournalEntryType(JournalTypeEnum.CollectItems)]
     public class JournalCollectItems : JournalEntry, IMicroResourceJournalEntry
     {
@@ -251,11 +258,10 @@ namespace EliteDangerousCore.JournalEvents
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc)
         {
             MaterialCommodityMicroResourceType.EnsurePresent(Resource.Category, Resource.Name, Resource.Name_Localised);
-            mc.Change(EventTimeUTC, Resource.Category, Resource.Name, Resource.Count, 0);
+            mc.Change(EventTimeUTC, Resource.Category, Resource.Name, Resource.Count, MicroResource.BackPack);       // these go into the backpack 
         }
     }
 
-    // TBD Test
     [JournalEntryType(JournalTypeEnum.DropItems)]
     public class JournalDropItems : JournalEntry, IMicroResourceJournalEntry
     {
@@ -277,7 +283,7 @@ namespace EliteDangerousCore.JournalEvents
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc)
         {
             MaterialCommodityMicroResourceType.EnsurePresent(Resource.Category, Resource.Name, Resource.Name_Localised);
-            mc.Change(EventTimeUTC, Resource.Category, Resource.Name, -Resource.Count, 0);
+            mc.Change(EventTimeUTC, Resource.Category, Resource.Name, -Resource.Count, MicroResource.BackPack);
         }
     }
 
@@ -323,7 +329,7 @@ namespace EliteDangerousCore.JournalEvents
                 foreach (var m in Items)
                 {
                     MaterialCommodityMicroResourceType.EnsurePresent(m.Category, m.Name, m.Name_Localised);
-                    mc.Change(EventTimeUTC, m.Category, m.Name, -m.Count, 0);
+                    mc.Change(EventTimeUTC, m.Category, m.Name, -m.Count, 0, MicroResource.ShipLocker);
                 }
             }
         }
@@ -364,11 +370,23 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc)
         {
-            //TBD
+            if (Offered != null)        
+            {
+                foreach (var m in Offered)
+                {
+                    MaterialCommodityMicroResourceType.EnsurePresent(m.Category, m.Name, m.Name_Localised);
+                    mc.Change(EventTimeUTC, m.Category, m.Name, -m.Count, 0, MicroResource.ShipLocker);
+                }
+            }
+
+            if ( Received.HasChars())
+            {
+                MaterialCommodityMicroResourceType.EnsurePresent(Category, Received, Received_Localised);
+                mc.Change(EventTimeUTC, Category, Received, Count, 0, MicroResource.ShipLocker);
+            }
         }
     }
 
-    // TBD Test
     [JournalEntryType(JournalTypeEnum.TransferMicroResources)]
     public class JournalTransferMicroResources : JournalEntry, IMicroResourceJournalEntry
     {
@@ -398,10 +416,29 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc)    // unused for now
         {
+            if ( Items != null )
+            {
+                bool[] set = new bool[MaterialCommodityMicroResource.NoCounts];
+                int[] counts = new int[MaterialCommodityMicroResource.NoCounts];
+
+                foreach ( var i in Items)
+                {
+                    int countdir = i.Direction == MicroResource.DirectionType.ToShipLocker ? i.Count : -i.Count;
+                    counts[MicroResource.ShipLocker] = countdir;
+                    counts[MicroResource.BackPack] = -countdir;
+                    var cat = MaterialCommodityMicroResourceType.CategoryFrom(i.Category);
+                    if (cat.HasValue)
+                    {
+                        MaterialCommodityMicroResourceType.EnsurePresent(cat.Value, i.Name, i.Name_Localised);
+                        mc.Change(EventTimeUTC, cat.Value, i.Name, counts, set, 0);
+                    }
+                    else
+                        System.Diagnostics.Debug.WriteLine("Microresource transfer unknown cat " + i.Category);
+                }
+            }
         }
     }
 
-    // TBD Test
     [JournalEntryType(JournalTypeEnum.UseConsumable)]
     public class JournalUseConsumable : JournalEntry, IMicroResourceJournalEntry
     {
@@ -422,7 +459,7 @@ namespace EliteDangerousCore.JournalEvents
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc)
         {
             MaterialCommodityMicroResourceType.EnsurePresent(Resource.Category, Resource.Name, Resource.Name_Localised);
-            mc.Change(EventTimeUTC, Resource.Category, Resource.Name, -1, 0);
+            mc.Change(EventTimeUTC, Resource.Category, Resource.Name, -1, 0, MicroResource.BackPack);
         }
     }
 

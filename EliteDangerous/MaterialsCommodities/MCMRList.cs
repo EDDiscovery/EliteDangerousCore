@@ -22,9 +22,9 @@ using System.Linq;
 namespace EliteDangerousCore
 {
     [System.Diagnostics.DebuggerDisplay("MatC {Details.Category} {Details.Name} {Details.FDName} count {Count}")]
-    public class MaterialCommodityMicroResource           
+    public class MaterialCommodityMicroResource
     {
-        const int NoCounts = 2;
+        public const int NoCounts = 2;
 
         public int Count { get { return Counts[0]; } }       // backwards compatible with code when there was only 1 count
         public int[] Counts { get; set; }
@@ -41,7 +41,8 @@ namespace EliteDangerousCore
 
         public MaterialCommodityMicroResource(MaterialCommodityMicroResource c)
         {
-            Counts = new int[] { c.Counts[0], c.Counts[1] };
+            Counts = new int[NoCounts];
+            Array.Copy(c.Counts, Counts, NoCounts);
             Price = c.Price;
             this.Details = c.Details;       // can copy this, its fixed
         }
@@ -121,45 +122,33 @@ namespace EliteDangerousCore
         public int CargoCount(uint gen) { return Count(Get(gen), MaterialCommodityMicroResourceType.CatType.Commodity); }
 
         // change entry 0
-        public void Change(DateTime utc, string catname, string fdname, int num, long price)        
+        public void Change(DateTime utc, string catname, string fdname, int num, long price, int cnum = 0, bool setit = false)        
         {
             var cat = MaterialCommodityMicroResourceType.CategoryFrom(catname);
             if (cat.HasValue)
             {
-                Change(utc, cat.Value, fdname, new int[] { num }, false, price);
+                Change(utc, cat.Value, fdname, num, price, cnum, setit);
             }
             else
                 System.Diagnostics.Debug.WriteLine("Unknown Cat " + catname);
         }
 
         // change entry 0
-        public void Change(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, string fdname, int num, long price)
+        public void Change(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, string fdname, int num, long price, int cnum = 0, bool setit = false)
         {
-            Change(utc, cat, fdname, new int[] { num }, false, price);
+            var vsets = new bool[MaterialCommodityMicroResource.NoCounts];      // all set to false, change
+            vsets[cnum] = setit;
+            var varray = new int[MaterialCommodityMicroResource.NoCounts];      // all set to zero
+            varray[cnum] = num;
+            Change(utc, cat, fdname, varray, vsets, price);
         }
 
-        // change entry 0
-        public void Set(DateTime utc, string catname, string fdname, int num, long price)
-        {
-            var cat = MaterialCommodityMicroResourceType.CategoryFrom(catname);
-            if (cat.HasValue)
-            {
-                Change(utc, cat.Value, fdname, new int[] { num }, true, price);
-            }
-            else
-                System.Diagnostics.Debug.WriteLine("Unknown Cat " + catname);
-        }
-
-        // change entry 0
-        public void Set(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, string fdname, int num, long price)
-        {
-            Change(utc, cat, fdname, new int[] { num }, true, price);
-        }
-
-        // cat must be set.
-        // counts can be length 1 to maximum
+        // counts/set array can be of length 1 to maximum number of counts
+        // to set a value, set count/set=1 for that entry
+        // to change a value, set count/set = 0 for that entry
+        // to leave a value, set count=0,set=0 for that entry
         // set means set to value, else add to value
-        public void Change(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, string fdname, int[] counts, bool set, long price)
+        public void Change(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, string fdname, int[] counts, bool[] set, long price)
         {
             fdname = fdname.ToLower();
 
@@ -181,7 +170,7 @@ namespace EliteDangerousCore
 
             for (int i = 0; i < counts.Length; i++)
             {
-                int newcount = set ? counts[i] : Math.Max(mc.Counts[i] + counts[i], 0);       // don't let it go below zero if changing
+                int newcount = set[i] ? counts[i] : Math.Max(mc.Counts[i] + counts[i], 0);       // don't let it go below zero if changing
                 changed |= newcount != mc.Counts[i];                        // have we changed
                 mc.Counts[i] = newcount;
             }
@@ -228,18 +217,23 @@ namespace EliteDangerousCore
         }
 
         // make sure values has name lower case.
-        public void Update(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, Dictionary<string,int> values, int cnum = 0)
+        public void Update(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, List<Tuple<string,int>> values, int cnum = 0)
         {
             var curlist = items.GetLastValues((x) => x.Details.Category == cat && x.Counts[cnum]>0);     // find all of this cat with a count >0
 
+            var varray = new int[MaterialCommodityMicroResource.NoCounts];      // all set to zero
+            var vsets = new bool[MaterialCommodityMicroResource.NoCounts];      // all set to false, change
+            vsets[cnum] = true;                                                 // set the cnum to set.
+
             foreach (var v in values)           
             {
-                Set(utc, cat, v.Key, v.Value, 0);        // set the values. Will not do anything if same
+                varray[cnum] = v.Item2;                         // set cnum value
+                Change(utc, cat, v.Item1, varray, vsets, 0);      // set entry 
             }
 
             foreach( var c in curlist)
             {
-                if ( !values.ContainsKey(c.Details.FDName.ToLower()))       // if not in updated list
+                if ( values.Find(x=>x.Item1.Equals(c.Details.FDName,StringComparison.InvariantCultureIgnoreCase)) == null)       // if not in updated list
                 {
                     var mc = new MaterialCommodityMicroResource(c);     // clone it
                     mc.Counts[cnum] = 0;            // zero cnum
