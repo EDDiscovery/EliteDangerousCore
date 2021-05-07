@@ -49,13 +49,14 @@ namespace EliteDangerousCore
         public void StartMonitor(bool storetodb)
         {
             StopRequested = new ManualResetEvent(false);
-            ScanThread = new Thread(ScanThreadProc) { Name = "Journal Monitor Thread", IsBackground = true };
-            ScanThread.Start();
 
             foreach (JournalMonitorWatcher mw in watchers)
             {
                 mw.StartMonitor(storetodb);
             }
+
+            ScanThread = new Thread(ScanThreadProc) { Name = "Journal Monitor Thread", IsBackground = true };
+            ScanThread.Start();
         }
 
         public void StopMonitor()
