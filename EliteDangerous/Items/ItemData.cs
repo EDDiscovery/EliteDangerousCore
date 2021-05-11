@@ -181,16 +181,43 @@ namespace EliteDangerousCore
             return IsSRV(ifd) || IsFighter(ifd);
         }
 
-        static public Actor GetActor(string fdname)
+        static public Actor GetActor(string fdname, string locname = null)         // actors are thinks like skimmer drones
         {
             fdname = fdname.ToLowerInvariant();
             if (actors.TryGetValue(fdname, out Actor var))
                 return var;
             else
+            {
+                System.Diagnostics.Debug.WriteLine("Unknown Actor: {{ \"{0}\", new Weapon(\"{1}\") }},", fdname, locname ?? fdname.SplitCapsWordFull());
                 return null;
+            }
         }
 
-        
+        static public Weapon GetWeapon(string fdname, string locname = null)         // suit weapons
+        {
+            fdname = fdname.ToLowerInvariant();
+            if (weapons.TryGetValue(fdname, out Weapon var))
+                return var;
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Unknown Weapon: {{ \"{0}\", new Weapon(\"{1}\",0.0) }},", fdname, locname ?? fdname.SplitCapsWordFull());
+                return null;
+            }
+        }
+
+        static public Suit GetSuit(string fdname, string locname = null)         // suit weapons
+        {
+            fdname = fdname.ToLowerInvariant();
+            if (suit.TryGetValue(fdname, out Suit var))
+                return var;
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Unknown Suit: {{ \"{0}\", new Suit(\"{1}\") }},", fdname, locname ?? fdname.SplitCapsWordFull());
+                return null;
+            }
+        }
+
+
         #region classes
 
         public interface IModuleInfo
@@ -239,6 +266,19 @@ namespace EliteDangerousCore
         {
             public string Name;
             public Actor(string name) { Name = name; }
+        }
+
+        public class Weapon : IModuleInfo
+        {
+            public string Name;
+            public double DPS;
+            public Weapon(string name, double dps) { Name = name; DPS = dps; }
+        }
+
+        public class Suit : IModuleInfo
+        {
+            public string Name;
+            public Suit(string name) { Name = name;  }
         }
 
         #endregion
@@ -347,6 +387,25 @@ namespace EliteDangerousCore
         public static Dictionary<string, Actor> actors = new Dictionary<string, Actor>   // DO NOT USE DIRECTLY - public is for checking only
         {
              { "skimmerdrone", new Actor("Skimmer Drone") },
+           //  { "ps_turretbasemedium02_6m", new Actor("Turret medium 2-6-M") },
+        };
+
+        public static Dictionary<string, Weapon> weapons = new Dictionary<string, Weapon>   // DO NOT USE DIRECTLY - public is for checking only
+        {
+             { "wpn_m_submachinegun_laser_fauto", new Weapon("TK Eclipse",90.0) },
+             { "wpn_m_launcher_rocket_sauto", new Weapon("Karma L-6",0.0) },
+             { "wpn_m_submachinegun_kinetic_fauto", new Weapon("Karma C-44",0.0) },
+             { "wpn_m_assaultrifle_kinetic_fauto", new Weapon("Karma AR-50",0.0) },
+             { "wpn_s_pistol_kinetic_sauto", new Weapon("Karma P-15",0.0) },
+             { "wpn_m_assaultrifle_laser_fauto", new Weapon("TK Aphelion",0.0) },
+             { "wpn_s_pistol_laser_sauto", new Weapon("TK Zenith",0.0) },
+        };
+
+        public static Dictionary<string, Suit> suit = new Dictionary<string, Suit>   // DO NOT USE DIRECTLY - public is for checking only
+        {
+            { "utilitysuit_class1", new Suit("Maverick Suit") },
+            { "explorationsuit_class1", new Suit("Artemis Suit") },
+            { "tacticalsuit_class1", new Suit("Dominator Suit") },
         };
 
         #endregion
@@ -1009,6 +1068,8 @@ namespace EliteDangerousCore
              { "decal_powerplay_utopia", new ShipModule(-1,0, "Decal Power Play Utopia", VanityType ) },
              { "nameplate_wings03_black", new ShipModule(-1,0, "Nameplate Wings 3 Black", VanityType ) },
              { "nameplate_explorer02_grey", new ShipModule(-1,0, "Nameplate Explorer 2 Grey", VanityType ) },
+
+            { "paintjob_krait_mkii_vibrant_red", new ShipModule(-1,0, "Paintjob Krait Mkii Vibrant Red", VanityType ) },
         };
 
         #endregion
@@ -1703,6 +1764,7 @@ namespace EliteDangerousCore
             { "int_lifesupport_size1_class3", new ShipModule(128064140, 1.3F, 0.4F, "Time:600s","Life Support Class 1 Rating C", "Life Support")},
             { "int_lifesupport_size1_class4", new ShipModule(128064141, 2, 0.44F, "Time:900s","Life Support Class 1 Rating B", "Life Support")},
             { "int_lifesupport_size1_class5", new ShipModule(128064142, 1.3F, 0.48F, "Time:1500s","Life Support Class 1 Rating A", "Life Support")},
+            { "int_planetapproachsuite_advanced", new ShipModule(-1,0,0,null, "Advanced Planet Approach Suite", "Planet Approach Suite" ) },
             { "int_planetapproachsuite", new ShipModule(128672317, 0, 0, null,"Planet Approach Suite", "Planet Approach Suite")},
             { "int_powerdistributor_size8_class1", new ShipModule(128064213, 160, 0.64F, "Sys:3.2MW, Eng:3.2MW, Wep:4.8MW","Power Distributor Class 8 Rating E", "Power Distributor")},
             { "int_powerdistributor_size8_class2", new ShipModule(128064214, 64, 0.72F, "Sys:3.6MW, Eng:3.6MW, Wep:5.4MW","Power Distributor Class 8 Rating D", "Power Distributor")},

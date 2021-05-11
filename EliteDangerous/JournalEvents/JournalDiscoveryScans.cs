@@ -202,12 +202,15 @@ namespace EliteDangerousCore.JournalEvents
             {
                 info = BaseUtils.FieldBuilder.Build("Detected ; signals".T(EDTx.JournalFSSSignalDiscovered_Detected), Signals.Count);
 
-                foreach (var s in Signals)
+                if (Signals.Count < 20)
                 {
-                    if (s.SignalName.StartsWith("$USS_"))
-                        info += ", " + s.USSTypeLocalised;
-                    else
-                        info += ", " + s.SignalName_Localised;
+                    foreach (var s in Signals)
+                    {
+                        if (s.SignalName.StartsWith("$USS_"))
+                            info += ", " + s.USSTypeLocalised;
+                        else
+                            info += ", " + s.SignalName_Localised;
+                    }
                 }
 
                 foreach (var s in Signals)

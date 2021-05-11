@@ -29,6 +29,9 @@ namespace EliteDangerousCore
     {
         public MissionListAccumulator MissionListAccumulator { get; private set; } = new MissionListAccumulator(); // and mission list..
         public MaterialCommoditiesMicroResourceList MaterialCommoditiesMicroResources { get; private set; } = new MaterialCommoditiesMicroResourceList();
+        public SuitWeaponList WeaponList { get; private set; } = new SuitWeaponList();
+        public SuitList SuitList { get; private set; } = new SuitList();
+        public SuitLoadoutList SuitLoadoutList { get; private set; } = new SuitLoadoutList();
 
         private List<HistoryEntry> historylist = new List<HistoryEntry>();  // oldest first here
         private Stats statisticsaccumulator = new Stats();
@@ -46,12 +49,14 @@ namespace EliteDangerousCore
             CommanderId = other.CommanderId;
             MissionListAccumulator = other.MissionListAccumulator;
             MaterialCommoditiesMicroResources = other.MaterialCommoditiesMicroResources;
+            WeaponList = other.WeaponList;
+            SuitList = other.SuitList;
+            SuitLoadoutList = other.SuitLoadoutList;
             statisticsaccumulator = other.statisticsaccumulator;
             Shipyards = other.Shipyards;
             Outfitting = other.Outfitting;
             Visited = other.Visited;
             LastSystem = other.LastSystem;
-            SuitWeaponsLoadouts = other.SuitWeaponsLoadouts;
         }
 
         public Dictionary<string,Stats.FactionInfo> GetStatsAtGeneration(uint g)
@@ -90,8 +95,9 @@ namespace EliteDangerousCore
             
             he.UpdateMissionList(MissionListAccumulator.Process(je, he.System, he.WhereAmI));
 
-            SuitWeaponsLoadouts.Process(je, he.WhereAmI, he.System);          // update the entries in suit entry list
-            he.UpdateSuits(SuitWeaponsLoadouts.SuitWeapons, SuitWeaponsLoadouts.Suits);               // set the HE to the current values
+            he.UpdateWeapons(WeaponList.Process(je, he.WhereAmI, he.System));          // update the entries in suit entry list
+            he.UpdateSuits(SuitList.Process(je, he.WhereAmI, he.System));
+            he.UpdateLoadouts(SuitLoadoutList.Process(je, WeaponList, he.WhereAmI, he.System));
 
             historylist.Add(he);        // then add to history
 
@@ -194,8 +200,9 @@ namespace EliteDangerousCore
 
                 he.UpdateMissionList(hist.MissionListAccumulator.Process(je, he.System, he.WhereAmI));
 
-                hist.SuitWeaponsLoadouts.Process(je, he.WhereAmI, he.System);          // update the entries in suit entry list
-                he.UpdateSuits(hist.SuitWeaponsLoadouts.SuitWeapons, hist.SuitWeaponsLoadouts.Suits);               // set the HE to the current values
+                he.UpdateWeapons(hist.WeaponList.Process(je, he.WhereAmI, he.System));          // update the entries in suit entry list
+                he.UpdateSuits(hist.SuitList.Process(je, he.WhereAmI, he.System));
+                he.UpdateLoadouts(hist.SuitLoadoutList.Process(je, hist.WeaponList, he.WhereAmI, he.System));
 
                 AddToVisitsScan(hist, i, null);          // add to scan but don't complain if can't add
             }

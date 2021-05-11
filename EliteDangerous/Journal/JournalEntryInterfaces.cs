@@ -113,6 +113,16 @@ namespace EliteDangerousCore
 
     public interface ISuitInformation
     {
-        void SuitInformation(SuitWeaponsLoadout shp, string whereami, ISystem system);
+        void SuitInformation(SuitList shp, string whereami, ISystem system);
+    }
+
+    public interface ISuitLoadoutInformation
+    {
+        void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system);
+    }
+
+    public interface IWeaponInformation
+    {
+        void WeaponInformation(SuitWeaponList shp, string whereami, ISystem system);
     }
 }

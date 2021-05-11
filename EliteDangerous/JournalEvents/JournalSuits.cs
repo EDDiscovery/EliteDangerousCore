@@ -13,6 +13,7 @@
  * 
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
+using BaseUtils;
 using BaseUtils.JSON;
 using System;
 using System.Linq;
@@ -20,7 +21,6 @@ using System.Text;
 
 namespace EliteDangerousCore.JournalEvents
 {
-    // TBD Write, Test
     [JournalEntryType(JournalTypeEnum.BuySuit)]
     public class JournalBuySuit : JournalEntry, ISuitInformation
     {
@@ -29,326 +29,340 @@ namespace EliteDangerousCore.JournalEvents
             SuitID = ulong.MaxValue;        // pre alpha 4 this was missing.
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
+            Name = Name.ToLower(); // normalise
         }
 
         public ulong SuitID { get; set; }
         public string Name { get; set; }
         public string Name_Localised { get; set; }
+        public string FriendlyName { get; set; }
         public long Price { get; set; }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", Name_Localised, "< buy price ; cr;N0".T(EDTx.JournalEntry_buyprice), Price);
+            info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< buy price ; cr;N0".T(EDTx.JournalEntry_buyprice), Price);
             detailed = "";
         }
 
-        public void SuitInformation(SuitWeaponsLoadout shp, string whereami, ISystem system)
+        public void SuitInformation(SuitList shp, string whereami, ISystem system)
         {
             if (SuitID != ulong.MaxValue)
             {
-                shp.BuySuit(SuitID, Name, Name_Localised, Price);
+                shp.Buy(EventTimeUTC, SuitID, Name, Name_Localised, Price);
             }
         }
     }
 
-    // TBD Write, Test
     [JournalEntryType(JournalTypeEnum.SellSuit)]
-    public class JournalSellSuit : JournalEntry, ISuitInformation
+    public class JournalSellSuit : JournalEntry, ISuitInformation, ISuitLoadoutInformation
     {
         public JournalSellSuit(JObject evt) : base(evt, JournalTypeEnum.SellSuit)
         {
             SuitID = ulong.MaxValue;        // pre alpha 4 this was missing
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
+            Name = Name.ToLower(); // normalise
+        }
+
+        public JournalSellSuit(DateTime utc, ulong id, string fdname, string locname, long price, int cmdrid) : base(utc,JournalTypeEnum.SellSuit,false)
+        {
+            SuitID = id; Name = fdname; Name_Localised = locname; price = Price;
+            SetCommander(cmdrid);
         }
 
         public ulong SuitID { get; set; }
         public string Name { get; set; }
         public string Name_Localised { get; set; }
+        public string FriendlyName { get; set; }
         public long Price { get; set; }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", Name_Localised, "< sell price ; cr;N0".T(EDTx.JournalEntry_sellprice), Price);
+            info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< sell price ; cr;N0".T(EDTx.JournalEntry_sellprice), Price);
             detailed = "";
         }
 
-        public void SuitInformation(SuitWeaponsLoadout shp, string whereami, ISystem system)
+        public void SuitInformation(SuitList shp, string whereami, ISystem system)
         {
             if (SuitID != ulong.MaxValue)
             {
-                shp.SellSuit(SuitID);
+                shp.Sell(EventTimeUTC, SuitID);
             }
         }
-    }
 
-    // TBD Write, Test
-    [JournalEntryType(JournalTypeEnum.BuyWeapon)]
-    public class JournalBuyWeapon : JournalEntry, ISuitInformation
-    {
-        public JournalBuyWeapon(JObject evt) : base(evt, JournalTypeEnum.BuyWeapon)
+        public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)
         {
-            SuitModuleID = ulong.MaxValue;
-            // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
-        }
-
-        public ulong SuitModuleID { get; set; }
-        public string Name { get; set; }
-        public string Name_Localised { get; set; }
-        public long Price { get; set; }
-
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
-        {
-            info = BaseUtils.FieldBuilder.Build("", Name_Localised, "< buy price ; cr;N0".T(EDTx.JournalEntry_buyprice), Price);
-            detailed = "";
-        }
-
-        public void SuitInformation(SuitWeaponsLoadout shp, string whereami, ISystem system)
-        {
-            if (SuitModuleID != ulong.MaxValue)
+            if (SuitID != ulong.MaxValue)
             {
-                shp.BuyWeapon(SuitModuleID, Name, Name_Localised, Price);
+                shp.DeleteLoadouts(EventTimeUTC, SuitID);   // all loadouts for this suit deleted
             }
         }
-    }
 
-    // TBD Write, Test
-    [JournalEntryType(JournalTypeEnum.SellWeapon)]
-    public class JournalSellWeapon : JournalEntry, ISuitInformation
-    {
-        public JournalSellWeapon(JObject evt) : base(evt, JournalTypeEnum.SellWeapon)
+        public JObject Json()            // create JSON of this record..
         {
-            SuitModuleID = ulong.MaxValue;
-            // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
-        }
-
-        public string Name { get; set; }
-        public string Name_Localised { get; set; }
-        public long Price { get; set; }
-        public ulong SuitModuleID { get; set; }
-
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
-        {
-            info = BaseUtils.FieldBuilder.Build("", Name_Localised, "< sell price ; cr;N0".T(EDTx.JournalEntry_sellprice), Price);
-            detailed = "";
-        }
-
-        public void SuitInformation(SuitWeaponsLoadout shp, string whereami, ISystem system)
-        {
-            if (SuitModuleID != ulong.MaxValue)
-            {
-                shp.SellWeapon(SuitModuleID);
-            }
+            JObject evt = new JObject();
+            evt["timestamp"] = EventTimeUTC;
+            evt["event"] = EventTypeStr;
+            evt["SuitID"] = SuitID;
+            evt["Name"] = Name;
+            evt["Name_Localised"] = Name_Localised;
+            evt["Price"] = Price;
+            return evt;
         }
 
     }
 
-    // TBD Write, Test
     [JournalEntryType(JournalTypeEnum.CreateSuitLoadout)]
-    public class JournalCreateSuitLoadout : JournalEntry, ISuitInformation
+    public class JournalCreateSuitLoadout : JournalEntry, ISuitLoadoutInformation
     {
         public JournalCreateSuitLoadout(JObject evt) : base(evt, JournalTypeEnum.CreateSuitLoadout)
         {
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+
+            SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+            SuitName = SuitName.ToLower(); // normalise
+
+            SuitLoadout.NormaliseModules(Modules);
+          
         }
 
         public ulong SuitID { get; set; }
         public string SuitName { get; set; }
         public string SuitName_Localised { get; set; }
+        public string SuitFriendlyName { get; set; }
         public string LoadoutName { get; set; }
         public ulong LoadoutID { get; set; }
 
-        // TBD Modules
+        public SuitLoadout.LoadoutModule[] Modules;
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", LoadoutName);       //TBD
+            info = BaseUtils.FieldBuilder.Build("", LoadoutName, "< ++> ", SuitFriendlyName);
             detailed = "";
         }
 
-        public void SuitInformation(SuitWeaponsLoadout shp, string whereami, ISystem system)
+        public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)
         {
             if (SuitID != ulong.MaxValue)
             {
-
+                shp.CreateLoadout(EventTimeUTC, LoadoutID, LoadoutName, SuitID, Modules);
             }
         }
-
     }
 
     // TBD Write, Test
     [JournalEntryType(JournalTypeEnum.DeleteSuitLoadout)]
-    public class JournalDeleteSuitLoadout : JournalEntry, ISuitInformation
+    public class JournalDeleteSuitLoadout : JournalEntry, ISuitLoadoutInformation
     {
         public JournalDeleteSuitLoadout(JObject evt) : base(evt, JournalTypeEnum.DeleteSuitLoadout)
         {
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+            SuitName = SuitName.ToLower(); // normalise
         }
 
         public ulong SuitID { get; set; }
         public string SuitName { get; set; }
         public string SuitName_Localised { get; set; }
+        public string SuitFriendlyName { get; set; }
         public string LoadoutName { get; set; }
         public ulong LoadoutID { get; set; }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", LoadoutName);       //TBD
+            info = BaseUtils.FieldBuilder.Build("", LoadoutName, "< --> ", SuitFriendlyName);
             detailed = "";
         }
 
-        public void SuitInformation(SuitWeaponsLoadout shp, string whereami, ISystem system)
+        public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)
         {
             if (SuitID != ulong.MaxValue)
             {
-
+                shp.DeleteLoadout(EventTimeUTC, LoadoutID);
             }
         }
     }
 
     // TBD Write, Test
     [JournalEntryType(JournalTypeEnum.LoadoutEquipModule)]
-    public class JournalLoadoutEquipModule : JournalEntry, ISuitInformation
+    public class JournalLoadoutEquipModule : JournalEntry, ISuitLoadoutInformation
     {
         public JournalLoadoutEquipModule(JObject evt) : base(evt, JournalTypeEnum.LoadoutEquipModule)
         {
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+
+            SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+            SuitName = SuitName.ToLower(); // normalise
+            ModuleNameFriendly = ItemData.GetWeapon(ModuleName, ModuleName_Localised)?.Name ?? ModuleName_Localised;
+            SlotName = SlotName.ToLower();
+            ModuleName = ModuleName.ToLower();
         }
 
+        public string LoadoutName { get; set; }
         public ulong SuitID { get; set; }
         public string SuitName { get; set; }
         public string SuitName_Localised { get; set; }
+        public string SuitFriendlyName { get; set; }
         public ulong LoadoutID { get; set; }
-        public string LoadoutName { get; set; }
-        public string ModuleName { get; set; }
+        public string SlotName { get; set; }        // lower normalised
+        public string ModuleName { get; set; }      // lower normalised
         public string ModuleName_Localised { get; set; }
-        public ulong SuitModuleID { get; set; }
+        public string ModuleNameFriendly { get; set; }
+        public ulong SuitModuleID { get; set; }         // aka weapon ID
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = "";  // tbd
+            info = BaseUtils.FieldBuilder.Build("", ModuleNameFriendly, "< ++> ", LoadoutName);       
             detailed = "";
         }
 
-        public void SuitInformation(SuitWeaponsLoadout shp, string whereami, ISystem system)
+        public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)
         {
             if (SuitID != ulong.MaxValue)
             {
-
+                System.Diagnostics.Debug.WriteLine("{0} Equip suit {1} Loadout {2} slot {3} with {4}", EventTimeUTC.ToString(), SuitID, LoadoutID, SlotName, ModuleName);
+                shp.Equip(LoadoutID, SlotName, new SuitLoadout.LoadoutModule(SlotName, SuitModuleID, ModuleName, ModuleName_Localised));
             }
         }
 
     }
 
-    // TBD Write, Test
     [JournalEntryType(JournalTypeEnum.LoadoutRemoveModule)]
-    public class JournalLoadoutRemoveModule : JournalEntry, ISuitInformation
+    public class JournalLoadoutRemoveModule : JournalEntry, ISuitLoadoutInformation
     {
         public JournalLoadoutRemoveModule(JObject evt) : base(evt, JournalTypeEnum.LoadoutRemoveModule)
         {
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+            SuitName = SuitName.ToLower(); // normalise
+            ModuleNameFriendly = ItemData.GetWeapon(ModuleName, ModuleName_Localised)?.Name ?? ModuleName_Localised;
+            SlotName = SlotName.ToLower();
+            ModuleName = ModuleName.ToLower();
         }
 
+        public string LoadoutName { get; set; }
         public ulong SuitID { get; set; }
         public string SuitName { get; set; }
         public string SuitName_Localised { get; set; }
+        public string SuitFriendlyName { get; set; }
         public ulong LoadoutID { get; set; }
-        public string LoadoutName { get; set; }
-        public string ModuleName { get; set; }
+        public string SlotName { get; set; }        // lower normalised
+        public string ModuleName { get; set; }      // lower normalised
+        public string ModuleNameFriendly { get; set; }
         public string ModuleName_Localised { get; set; }
-        public ulong SuitModuleID { get; set; }
+        public ulong SuitModuleID { get; set; }         // aka weapon ID
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = "";
+            info = BaseUtils.FieldBuilder.Build("", ModuleNameFriendly, "< --> ", LoadoutName);    
             detailed = "";
         }
 
-        public void SuitInformation(SuitWeaponsLoadout shp, string whereami, ISystem system)
+        public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)
         {
             if (SuitID != ulong.MaxValue)
             {
-
+                var w = weap.Weapons.GetLast(SuitModuleID);
+                if (w != null && w.Sold == false)
+                {
+                    shp.Remove(LoadoutID, SlotName, w);
+                }
+                else
+                    System.Diagnostics.Debug.WriteLine("No weapon in list found to remove " + SuitModuleID);
             }
         }
     }
-    // TBD Write, Test
+
     [JournalEntryType(JournalTypeEnum.RenameSuitLoadout)]
-    public class JournalRenameSuitLoadout : JournalEntry, ISuitInformation
+    public class JournalRenameSuitLoadout : JournalEntry, ISuitLoadoutInformation
     {
         public JournalRenameSuitLoadout(JObject evt) : base(evt, JournalTypeEnum.RenameSuitLoadout)
         {
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+            SuitName = SuitName.ToLower(); // normalise
         }
-
 
         public ulong SuitID { get; set; }
         public string SuitName { get; set; }
         public string SuitName_Localised { get; set; }
+        public string SuitFriendlyName { get; set; }
         public ulong LoadoutID { get; set; }
         public string LoadoutName { get; set; }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = "";
-            detailed = BaseUtils.FieldBuilder.Build("<to ".T(EDTx.JournalEntry_to), "");
+            info = BaseUtils.FieldBuilder.Build("", LoadoutName);
+            detailed = "";
         }
 
-        public void SuitInformation(SuitWeaponsLoadout shp, string whereami, ISystem system)
+        public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)
         {
             if (SuitID != ulong.MaxValue)
             {
-
+                shp.Rename(LoadoutID, LoadoutName);
             }
         }
 
     }
-    // TBD Write, Test
+
     [JournalEntryType(JournalTypeEnum.SwitchSuitLoadout)]
-    public class JournalSwitchSuitLoadout : JournalEntry, ISuitInformation
+    public class JournalSwitchSuitLoadout : JournalEntry, ISuitInformation, ISuitLoadoutInformation
     {
         public JournalSwitchSuitLoadout(JObject evt) : base(evt, JournalTypeEnum.SwitchSuitLoadout)
         {
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+            SuitName = SuitName.ToLower(); // normalise
+            SuitLoadout.NormaliseModules(Modules);
         }
 
         public ulong SuitID { get; set; }
         public string SuitName { get; set; }
         public string SuitName_Localised { get; set; }
+        public string SuitFriendlyName { get; set; }
         public ulong LoadoutID { get; set; }
         public string LoadoutName { get; set; }
-        // TBD Modules
+
+        public SuitLoadout.LoadoutModule[] Modules;
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = "";
+            info = BaseUtils.FieldBuilder.Build("", LoadoutName, "< ==> " , SuitFriendlyName);
             detailed = "";
         }
 
-        public void SuitInformation(SuitWeaponsLoadout shp, string whereami, ISystem system)
+        public void SuitInformation(SuitList shp, string whereami, ISystem system)
         {
             if (SuitID != ulong.MaxValue)
             {
-
+                shp.SwitchTo(SuitID);
             }
         }
 
+        public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)
+        {
+            if (SuitID != ulong.MaxValue)
+            {
+                shp.SwitchTo(LoadoutID);
+            }
+        }
     }
-    // TBD Write, Test
+
     [JournalEntryType(JournalTypeEnum.UpgradeSuit)]
     public class JournalUpgradeSuit : JournalEntry, ISuitInformation
     {
@@ -357,60 +371,31 @@ namespace EliteDangerousCore.JournalEvents
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
+            Name = Name.ToLower(); // normalise
         }
 
         public ulong SuitID { get; set; }
         public string Name { get; set; }
         public string Name_Localised { get; set; }
+        public string FriendlyName { get; set; }
         public int Class { get; set; }
         public long Price { get; set; }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = "";
+            info = "TBD awaiting journal record please submit";
             detailed = "";
         }
 
-        public void SuitInformation(SuitWeaponsLoadout shp, string whereami, ISystem system)
+        public void SuitInformation(SuitList shp, string whereami, ISystem system)
         {
             if (SuitID != ulong.MaxValue)
             {
-
             }
         }
 
 
-    }
-    // TBD Write, Test
-    [JournalEntryType(JournalTypeEnum.UpgradeWeapon)]
-    public class JournalUpgradeWeapon : JournalEntry, ISuitInformation
-    {
-        public JournalUpgradeWeapon(JObject evt) : base(evt, JournalTypeEnum.UpgradeWeapon)
-        {
-            SuitModuleID = ulong.MaxValue;
-            // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
-        }
-
-        public ulong SuitModuleID { get; set; }
-        public string Name { get; set; }
-        public string Name_Localised { get; set; }
-        public int Class { get; set; }
-        public long Cost { get; set; }
-
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
-        {
-            info = "";
-            detailed = "";
-        }
-
-        public void SuitInformation(SuitWeaponsLoadout shp, string whereami, ISystem system)
-        {
-            if (SuitModuleID != ulong.MaxValue)
-            {
-
-            }
-        }
     }
 
 }

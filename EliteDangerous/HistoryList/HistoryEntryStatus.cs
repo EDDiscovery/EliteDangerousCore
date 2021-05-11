@@ -278,7 +278,7 @@ namespace EliteDangerousCore
                     hes = new HistoryEntryStatus(prev)
                     {
                         TravelState = disem.SRV ? TravelStateType.OnFootPlanet :
-                                        disem.Taxi || disem.StationType.HasChars() ? TravelStateType.OnFootStation :       // taxi's or if it has station name, your at a station
+                                        disem.Taxi || disem.StationType.HasChars() || prev.StationType.HasChars() ? TravelStateType.OnFootStation :       // taxi's or if it has station name, your at a station
                                             TravelStateType.OnFootPlanet,
                         StationName = disem.StationType.HasChars() ? disem.StationName.Alt("Unknown") : prev.StationName,       // copying it over due to bug in alpha4
                         StationType = disem.StationType.HasChars() ? disem.StationType : prev.StationType,

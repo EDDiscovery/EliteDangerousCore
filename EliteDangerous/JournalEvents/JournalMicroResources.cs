@@ -45,17 +45,14 @@ namespace EliteDangerousCore.JournalEvents
         {
             Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, Name);
             Name = JournalFieldNaming.FDNameTranslation(Name);      // this lower cases the name
-            FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(Name);        
+            FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(Name);      // normalises to lower case  
             Category = Category.Alt(Type);      // for some reason category is called type in places..
         }
 
         static public void Normalise(MicroResource[] a)
         {
-            if (a != null)
-            {
-                foreach (MicroResource m in a)
-                    m.Normalise();
-            }
+            foreach (MicroResource m in a.EmptyIfNull())
+                m.Normalise();
         }
 
         static public string List(MicroResource[] mat)
@@ -176,7 +173,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (Items != null)
             {
-                List<Tuple<string, int>> counts = Items.Select(x => new Tuple<string, int>(x.Name.ToLower(), x.Count)).ToList();
+                List<Tuple<string, int>> counts = Items.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
                 mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Item, counts, MicroResource.ShipLocker);
             }
 
@@ -370,13 +367,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc)
         {
-            if (Offered != null)        
+            foreach (var m in Offered.EmptyIfNull())
             {
-                foreach (var m in Offered)
-                {
-                    MaterialCommodityMicroResourceType.EnsurePresent(m.Category, m.Name, m.Name_Localised);
-                    mc.Change(EventTimeUTC, m.Category, m.Name, -m.Count, 0, MicroResource.ShipLocker);
-                }
+                MaterialCommodityMicroResourceType.EnsurePresent(m.Category, m.Name, m.Name_Localised);
+                mc.Change(EventTimeUTC, m.Category, m.Name, -m.Count, 0, MicroResource.ShipLocker);
             }
 
             if ( Received.HasChars())
@@ -418,7 +412,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if ( Items != null )
             {
-                bool[] set = new bool[MaterialCommodityMicroResource.NoCounts];
+                bool[] set = new bool[MaterialCommodityMicroResource.NoCounts];     // all change, not set
                 int[] counts = new int[MaterialCommodityMicroResource.NoCounts];
 
                 foreach ( var i in Items)

@@ -108,8 +108,9 @@
     <Compile Include="IGAU\IGAUClass.cs" />
     <Compile Include="JournalEvents\JournalEmbarkDisembark.cs" />
     <Compile Include="JournalEvents\JournalCarrier.cs" />
+    <Compile Include="JournalEvents\JournalWeapons.cs" />
     <Compile Include="JournalEvents\JournalTaxiDropShip.cs" />
-    <Compile Include="JournalEvents\JournalSuit.cs" />
+    <Compile Include="JournalEvents\JournalSuits.cs" />
     <Compile Include="JournalEvents\JournalNavRoute.cs" />
     <Compile Include="Journal\EDJournalReader.cs" />
     <Compile Include="Journal\EDJournalMonitorWatcher.cs" />
@@ -240,9 +241,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Status\UIEvents.cs" />
+    <Compile Include="Suit\SuitLoadouts.cs" />
     <Compile Include="Suit\SuitWeapons.cs" />
-    <Compile Include="Suit\SuitLoadout.cs" />
-    <Compile Include="Suit\SuitWeaponsLoadout.cs" />
     <Compile Include="Suit\SuitInformation.cs" />
     <Compile Include="SystemDB\EliteNameClassifier.cs" />
     <Compile Include="SystemDB\SQLiteConnectionSystem.cs" />

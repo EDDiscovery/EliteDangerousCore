@@ -20,47 +20,88 @@ using System.Linq;
 using System.Text;
 using EliteDangerousCore.JournalEvents;
 using BaseUtils.JSON;
+using BaseUtils;
 
 namespace EliteDangerousCore
 {
-    [System.Diagnostics.DebuggerDisplay("{ID}:{FDName}")]
-    public class SuitInformation
+    [System.Diagnostics.DebuggerDisplay("{ID}:{FDName}:{Name}")]
+    public class Suit
     {
+        public DateTime EventTime { get; private set; }
         public ulong ID { get; private set; }                // its Frontier SuitID   
         public string FDName { get; private set; }          // suit type
         public string Name_Localised { get; private set; }         // localised
+        public string FriendlyName { get; private set; }
         public long Price { get; private set; }             // may be 0, not known
-        //public List<SuitLoadout> Loadouts { get; private set; }
+        public bool Sold { get; private set; }
 
-        public SuitInformation(ulong id, string fdname, string locname, long price)
+        public Suit(DateTime time, ulong id, string fdname, string locname, long price, bool sold)
         {
-            ID = id;FDName = fdname;Name_Localised = locname;Price = price;
+            EventTime = time; ID = id; FDName = fdname; Name_Localised = locname; Price = price; Sold = sold;
+            FriendlyName = ItemData.GetSuit(fdname, Name_Localised)?.Name ?? Name_Localised;
         }
     }
 
-    public class SuitInformationList
+    public class SuitList
     {
-        public Dictionary<ulong, SuitInformation> SuitList { get; private set; } = new Dictionary<ulong, SuitInformation>();
+        public GenerationalDictionary<ulong, Suit> Suits { get; private set; } = new GenerationalDictionary<ulong, Suit>();
+        public ulong CurrentSuitID { get; private set; } = 0;       // may be zero if can't find suit
 
-        public SuitInformationList()
+        public SuitList()
         {
-            SuitList = new Dictionary<ulong, SuitInformation>();
         }
 
-        public SuitInformationList(SuitInformationList other)
+        public void Buy(DateTime time, ulong id, string fdname, string namelocalised, long price)
         {
-            SuitList = new Dictionary<ulong, SuitInformation>(other.SuitList);
+            Suits.Add(id, new Suit(time, id, fdname, namelocalised, price, false));
         }
 
-        public void Buy(ulong id, string fdname, string namelocalised, long price)
+        public void Sell(DateTime time, ulong id)
         {
-            SuitList[id] = new SuitInformation(id, fdname, namelocalised, price);
+            if (Suits.ContainsKey(id))
+            {
+                var last = Suits.GetLast(id);
+                if (last.Sold == false)       // if not sold
+                {
+                    Suits.Add(id, new Suit(time, id, last.FDName, last.Name_Localised, last.Price, true));               // new entry with this time but sold
+                }
+                else
+                    System.Diagnostics.Debug.WriteLine("Suits sold a suit already sold " + id);
+            }
+            else
+                System.Diagnostics.Debug.WriteLine("Suits sold a suit not seen " + id);
         }
 
-        public void Sell(ulong id)
+        public void SwitchTo(ulong id)
         {
-            SuitList.Remove(id);
+            CurrentSuitID = Suits.ContainsKey(id) ? id : 0;
         }
+
+        public uint Process(JournalEntry je, string whereami, ISystem system)
+        {
+            if (je is ISuitInformation)
+            {
+                Suits.NextGeneration();     // increment number, its cheap operation even if nothing gets changed
+
+                //System.Diagnostics.Debug.WriteLine("***********************" + je.EventTimeUTC + " GENERATION " + items.Generation);
+
+                var e = je as ISuitInformation;
+                e.SuitInformation(this, whereami, system);
+
+                if (Suits.UpdatesAtThisGeneration == 0)         // if nothing changed, abandon it.
+                {
+                  //  System.Diagnostics.Debug.WriteLine("{0} {1} No changes for Suit Generation {2} Abandon", je.EventTimeUTC.ToString(), je.EventTypeStr, Suits.Generation);
+                    Suits.AbandonGeneration();
+                }
+                else
+                {
+                  //  System.Diagnostics.Debug.WriteLine("{0} {1} Suit List Generation {2} Changes {3}", je.EventTimeUTC.ToString(), je.EventTypeStr, Suits.Generation, Suits.UpdatesAtThisGeneration);
+                }
+            }
+
+            return Suits.Generation;        // return the generation we are on.
+        }
+
     }
 
 

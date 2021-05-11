@@ -14,54 +14,84 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
+using BaseUtils;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using EliteDangerousCore.JournalEvents;
-using BaseUtils.JSON;
 
 namespace EliteDangerousCore
 {
-    [System.Diagnostics.DebuggerDisplay("{ID}:{FDName}")]
+    [System.Diagnostics.DebuggerDisplay("{ID}:{FDName}:{Name}")]
     public class SuitWeapon
     {
+        public DateTime EventTime { get; private set; }
         public ulong ID { get; private set; }              // its Frontier ID LoadoutID
         public string FDName { get; private set; }          // Loadout user name
         public string Name_Localised { get; private set; }
+        public string FriendlyName { get; private set; }
         public long Price { get; private set; }
+        public bool Sold { get; private set; }
 
-        public SuitWeapon(ulong id, string fdname, string namelocalised, long price)
+        public SuitWeapon(DateTime time, ulong id, string fdname, string namelocalised, long price, bool sold)
         {
-            ID = id;FDName = fdname; Name_Localised = namelocalised; Price = price;
+            EventTime = time; ID = id;FDName = fdname; Name_Localised = namelocalised; Price = price; Sold = sold;
+            FriendlyName = ItemData.GetWeapon(fdname, Name_Localised)?.Name ?? Name_Localised;
         }
     }
 
     public class SuitWeaponList
     {
-        public Dictionary<ulong, SuitWeapon> WeaponList { get; private set; } = new Dictionary<ulong, SuitWeapon>();
+        public GenerationalDictionary<ulong, SuitWeapon> Weapons { get; private set; } = new GenerationalDictionary<ulong, SuitWeapon>();
 
         public SuitWeaponList()
         {
-            WeaponList = new Dictionary<ulong, SuitWeapon>();
         }
 
-        public SuitWeaponList(SuitWeaponList other)
+        public void Buy(DateTime time, ulong id, string fdname, string namelocalised, long price)
         {
-            WeaponList = new Dictionary<ulong, SuitWeapon>(other.WeaponList);
+            Weapons.Add(id, new SuitWeapon(time, id, fdname, namelocalised, price,false));
         }
 
-        public void Buy(ulong id, string fdname, string namelocalised, long price)
+        public void Sell(DateTime time, ulong id)
         {
-            WeaponList[id] = new SuitWeapon(id, fdname, namelocalised, price);
+            if (Weapons.ContainsKey(id))
+            {
+                var last = Weapons.GetLast(id);
+                if (last.Sold == false)       // if not sold
+                {
+                    Weapons.Add(id, new SuitWeapon(time, id, last.FDName, last.Name_Localised, last.Price, true));               // new entry with this time but sold
+                }
+                else
+                    System.Diagnostics.Debug.WriteLine("Weapons sold a weapon already sold " + id);
+            }
+            else
+                System.Diagnostics.Debug.WriteLine("Weapons sold a weapon not seen " + id);
         }
 
-        public void Sell(ulong id)
+        public uint Process(JournalEntry je, string whereami, ISystem system)
         {
-            WeaponList.Remove(id);
+            if (je is IWeaponInformation )
+            {
+                Weapons.NextGeneration();     // increment number, its cheap operation even if nothing gets changed
+
+                //System.Diagnostics.Debug.WriteLine("***********************" + je.EventTimeUTC + " GENERATION " + items.Generation);
+
+                IWeaponInformation e = je as IWeaponInformation;
+                e.WeaponInformation(this,whereami,system);
+
+                if (Weapons.UpdatesAtThisGeneration == 0)         // if nothing changed, abandon it.
+                {
+                  //  System.Diagnostics.Debug.WriteLine("{0} {1} No changes for Weapon Generation {2} Abandon", je.EventTimeUTC.ToString(), je.EventTypeStr, Weapons.Generation);
+                    Weapons.AbandonGeneration();
+                }
+                else
+                {
+               //     System.Diagnostics.Debug.WriteLine("{0} {1} Weapon List Generation {2} Changes {3}", je.EventTimeUTC.ToString(), je.EventTypeStr, Weapons.Generation, Weapons.UpdatesAtThisGeneration);
+                }
+            }
+
+            return Weapons.Generation;        // return the generation we are on.
         }
+
     }
-
 }
 
 //

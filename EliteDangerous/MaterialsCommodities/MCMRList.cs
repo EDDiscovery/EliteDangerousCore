@@ -58,12 +58,12 @@ namespace EliteDangerousCore
 
         public MaterialCommodityMicroResource Get(uint gen, string fdname)
         {
-            return items.Get(fdname.ToLower(), gen);
+            return items.Get(fdname.ToLowerInvariant(), gen);
         }
 
         public MaterialCommodityMicroResource GetLast(string fdname)
         {
-            return items.GetLast(fdname.ToLower());
+            return items.GetLast(fdname.ToLowerInvariant());
         }
 
         public List<MaterialCommodityMicroResource> GetLast()
@@ -137,9 +137,9 @@ namespace EliteDangerousCore
         public void Change(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, string fdname, int num, long price, int cnum = 0, bool setit = false)
         {
             var vsets = new bool[MaterialCommodityMicroResource.NoCounts];      // all set to false, change
-            vsets[cnum] = setit;
+            vsets[cnum] = setit;                                                // set cnum to change/set
             var varray = new int[MaterialCommodityMicroResource.NoCounts];      // all set to zero
-            varray[cnum] = num;
+            varray[cnum] = num;                                                 // set value on cnum
             Change(utc, cat, fdname, varray, vsets, price);
         }
 
@@ -150,7 +150,7 @@ namespace EliteDangerousCore
         // set means set to value, else add to value
         public void Change(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, string fdname, int[] counts, bool[] set, long price)
         {
-            fdname = fdname.ToLower();
+            fdname = fdname.ToLowerInvariant();
 
             MaterialCommodityMicroResource mc = items.GetLast(fdname);      // find last entry, may return null if none stored
 
@@ -171,7 +171,7 @@ namespace EliteDangerousCore
             for (int i = 0; i < counts.Length; i++)
             {
                 int newcount = set[i] ? counts[i] : Math.Max(mc.Counts[i] + counts[i], 0);       // don't let it go below zero if changing
-                changed |= newcount != mc.Counts[i];                        // have we changed
+                changed |= newcount != mc.Counts[i];                        // have we changed? we are trying to minimise deltas to the gen dictionary, so don't add if nothing changed
                 mc.Counts[i] = newcount;
             }
 
@@ -192,12 +192,12 @@ namespace EliteDangerousCore
         //always changes entry 0
         public void Craft(DateTime utc, string fdname, int num)       
         {
-            MaterialCommodityMicroResource mc = items.GetLast(fdname.ToLower());      // find last entry, may return null if none stored
+            MaterialCommodityMicroResource mc = items.GetLast(fdname.ToLowerInvariant());      // find last entry, may return null if none stored
             if ( mc != null )
             {
                 mc = new MaterialCommodityMicroResource(mc);      // new clone of
                 mc.Counts[0] = Math.Max(mc.Counts[0] - num, 0);
-                items.Add(mc.Details.FDName.ToLower(), mc);
+                items.Add(mc.Details.FDName.ToLowerInvariant(), mc);
                 System.Diagnostics.Debug.WriteLine("{0} Craft {1} {2}", utc, mc.Details.FDName, num);
             }
         }
@@ -211,7 +211,7 @@ namespace EliteDangerousCore
                 {
                     var mc = new MaterialCommodityMicroResource(e);     // clone it
                     mc.Counts[cnum] = 0;
-                    items.Add(e.Details.FDName.ToLower(), mc);        // and add to end of list
+                    items.Add(e.Details.FDName.ToLowerInvariant(), mc);        // and add to end of list
                 }
             }
         }
@@ -237,7 +237,7 @@ namespace EliteDangerousCore
                 {
                     var mc = new MaterialCommodityMicroResource(c);     // clone it
                     mc.Counts[cnum] = 0;            // zero cnum
-                    items.Add(c.Details.FDName.ToLower(), mc);
+                    items.Add(c.Details.FDName.ToLowerInvariant(), mc);
                     System.Diagnostics.Debug.WriteLine("{0} Found {1} not in update list, zeroing", utc, mc.Details.FDName);
                 }
             }
@@ -271,12 +271,12 @@ namespace EliteDangerousCore
 
                 if (items.UpdatesAtThisGeneration == 0)         // if nothing changed, abandon it.
                 {
-                    System.Diagnostics.Debug.WriteLine("*********************** {0} {1} No changes for Generation {2} Abandon", je.EventTimeUTC.ToString(), je.EventTypeStr, items.Generation);
+                   // System.Diagnostics.Debug.WriteLine("*********************** {0} {1} No changes for Generation {2} Abandon", je.EventTimeUTC.ToString(), je.EventTypeStr, items.Generation);
                     items.AbandonGeneration();
                 }
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine("*********************** {0} {1} Generation {2} Changes {3}",je.EventTimeUTC.ToString(), je.EventTypeStr, items.Generation,items.UpdatesAtThisGeneration);
+                 //   System.Diagnostics.Debug.WriteLine("*********************** {0} {1} Generation {2} Changes {3}",je.EventTimeUTC.ToString(), je.EventTypeStr, items.Generation,items.UpdatesAtThisGeneration);
                 }
             }
 

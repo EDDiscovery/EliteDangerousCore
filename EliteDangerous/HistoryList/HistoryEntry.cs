@@ -117,9 +117,10 @@ namespace EliteDangerousCore
         public ShipInformation ShipInformation { get; private set; }     // may be null if not set up yet
         public ModulesInStore StoredModules { get; private set; }
         public uint MissionList { get; private set; }       // generation index
-        public uint Statistics { get; private set; }     // generation index
-        public SuitWeaponList Weapons { get; private set; }
-        public SuitInformationList Suits { get; private set; }
+        public uint Statistics { get; private set; }        // generation index
+        public uint Weapons { get; private set; }           // generation index
+        public uint Suits { get; private set; }             // generation index
+        public uint Loadouts { get; private set; }          // generation index
 
         public SystemNoteClass SNC;     // system note class found attached to this entry. May be null
 
@@ -233,10 +234,19 @@ namespace EliteDangerousCore
             MissionList = ml;
         }
 
-        public void UpdateSuits(SuitWeaponList wp, SuitInformationList sl)
+        public void UpdateSuits(uint gen)
         {
-            Weapons = wp;
-            Suits = sl;
+            Suits = gen;
+        }
+
+        public void UpdateLoadouts(uint gen)
+        {
+            Loadouts = gen;
+        }
+
+        public void UpdateWeapons(uint gen)
+        {
+            Weapons = gen;
         }
 
         public void UpdateSystem(ISystem sys)

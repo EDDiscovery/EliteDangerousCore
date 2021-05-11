@@ -34,7 +34,6 @@ namespace EliteDangerousCore
         public int CommanderId { get; private set; }
         public Dictionary<string, HistoryEntry> Visited { get; private set; } = new Dictionary<string, HistoryEntry>();  // not in any particular order.
         public string LastSystem { get; private set; }                          // last system seen in
-        public SuitWeaponsLoadout SuitWeaponsLoadouts = new SuitWeaponsLoadout();       // odyssey 4.0
 
         public int Count { get { return historylist.Count; } }
 
