@@ -743,6 +743,9 @@ namespace EliteDangerousCore
         CommanderForm_ND, // Folder does not exist
 
         TBD, // to be done!
+        Screenshot_Folder, // Select screenshot folder
+        Screenshot_Identical, // Cannot set input..
+        Screenshot_FolderNotExist, // Folder specified does not exist
 
     }
 

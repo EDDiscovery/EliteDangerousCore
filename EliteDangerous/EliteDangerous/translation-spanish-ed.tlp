@@ -55,14 +55,14 @@ SECTION EDPlanet
 
 SECTION MaterialCommodityData
 
-.Raw: "Raw" => "Crudo"
+.Raw: "Raw" => "Elemento"
 .VeryCommon: "Very Common" => "Muy común"
 .Common: "Common" => "Común"
 .Standard: "Standard" => "Estándar"
 .Rare: "Rare" => "Raro"
-.Encoded: "Encoded" => "Codificado"
+.Encoded: "Encoded" => "Datos Codificados"
 .VeryRare: "Very Rare" => "Muy raro"
-.Manufactured: "Manufactured" => "Fabricado"
+.Manufactured: "Manufactured" => "Manufacturado"
 .Commodity: "Commodity" => "Producto"
 .Salvage: "Salvage" => "Salvamento"
 .Chemicals: "Chemicals" => "Productos químicos"
@@ -83,11 +83,11 @@ SECTION MaterialCommodityData
 .PowerPlay: "PowerPlay" => "PowerPlay"
 .Drones: "Drones" => "Drones"
 .carbon: "Carbon" => "Carbono"
-.iron: "Iron" => "Planchar"
+.iron: "Iron" => "Hierro"
 .nickel: "Nickel" => "Níquel"
 .phosphorus: "Phosphorus" => "Fósforo"
 .sulphur: "Sulphur" => "Azufre"
-.lead: "Lead" => "Dirigir"
+.lead: "Lead" => "Plomo"
 .rhenium: "Rhenium" => "Renio"
 .chromium: "Chromium" => "Cromo"
 .germanium: "Germanium" => "Germanio"
@@ -210,20 +210,20 @@ SECTION MaterialCommodityData
 .protoradiolicalloys: "Proto Radiolic Alloys" => "Proto Radiolic Alloys"
 .unknownartifact: "Thargoid Sensor" => "Sensor targoideo"
 .unknownartifact2: "Thargoid Probe" => "Sonda targoidea"
-.unknownartifact3: "Thargoid Link" => "Enlace Thargoid"
-.unknownresin: "Thargoid Resin" => "Resina Thargoide"
-.unknownbiologicalmatter: "Thargoid Biological Matter" => "Materia Biológica Thargoide"
-.unknowntechnologysamples: "Thargoid Technology Samples" => "Muestras de tecnología Thargoid"
-.unknowncarapace: "Thargoid Carapace" => "Caparazón de Thargoid"
-.unknownenergycell: "Thargoid Energy Cell" => "Célula de energía thargoide"
-.unknownorganiccircuitry: "Thargoid Organic Circuitry" => "Circuito orgánico de Thargoid"
-.unknowntechnologycomponents: "Thargoid Technological Components" => "Componentes Tecnológicos Thargoides"
+.unknownartifact3: "Thargoid Link" => "Enlace Targoide"
+.unknownresin: "Thargoid Resin" => "Resina Targoide"
+.unknownbiologicalmatter: "Thargoid Biological Matter" => "Materia Biológico Targoide"
+.unknowntechnologysamples: "Thargoid Technology Samples" => "Muestras de tecnología Targoideo"
+.unknowncarapace: "Thargoid Carapace" => "Caparazón de Targoide"
+.unknownenergycell: "Thargoid Energy Cell" => "Célula de energía targoide"
+.unknownorganiccircuitry: "Thargoid Organic Circuitry" => "Circuito orgánico de Targoid"
+.unknowntechnologycomponents: "Thargoid Technological Components" => "Componentes Tecnológicos Targoides"
 .unknownenergysource: "Sensor Fragment" => "Fragmento de sensor"
-.tg_compositiondata: "Thargoid Material Composition Data" => "Datos de composición del material thargoideo"
-.tg_structuraldata: "Thargoid Structural Data" => "Datos estructurales de Thargoid"
+.tg_compositiondata: "Thargoid Material Composition Data" => "Datos de composición del material targoideo"
+.tg_structuraldata: "Thargoid Structural Data" => "Datos estructurales de Targoide"
 .tg_residuedata: "Thargoid Residue Data" => "Datos de residuos de targoides"
-.unknownshipsignature: "Thargoid Ship Signature" => "Firma del Nave Thargoid"
-.unknownwakedata: "Thargoid Wake Data" => "Datos de despertar de Thargoid"
+.unknownshipsignature: "Thargoid Ship Signature" => "Firma del Nave Targoide"
+.unknownwakedata: "Thargoid Wake Data" => "Datos de despertar de Targoide"
 .explosives: "Explosives" => "Explosivos"
 .hydrogenfuel: "Hydrogen Fuel" => "Combustible de hidrógeno"
 .hydrogenperoxide: "Hydrogen Peroxide" => "Peróxido de hidrógeno"
@@ -339,11 +339,11 @@ SECTION MaterialCommodityData
 .genebank: "Gene Bank" => "Banco de genes"
 .timecapsule: "Time Capsule" => "Cápsula del tiempo"
 .damagedescapepod: "Damaged Escape Pod" => "Cápsula de escape dañada"
-.thargoidheart: "Thargoid Heart" => "Corazón de Thargoid"
-.thargoidtissuesampletype1: "Thargoid Cyclops Tissue Sample" => "Muestra de tejido de cíclope thargoideo"
-.thargoidtissuesampletype2: "Thargoid Basilisk Tissue Sample" => "Muestra de tejido de basilisco thargoideo"
-.thargoidtissuesampletype3: "Thargoid Medusa Tissue Sample" => "Muestra de tejido de medusa thargoidea"
-.thargoidscouttissuesample: "Thargoid Scout Tissue Sample" => "Muestra de tejido Thargoid Scout"
+.thargoidheart: "Thargoid Heart" => "Corazón Targoide"
+.thargoidtissuesampletype1: "Thargoid Cyclops Tissue Sample" => "Muestra de tejido de cíclope targoideo"
+.thargoidtissuesampletype2: "Thargoid Basilisk Tissue Sample" => "Muestra de tejido de basilisco targoideo"
+.thargoidtissuesampletype3: "Thargoid Medusa Tissue Sample" => "Muestra de tejido de medusa targoidea"
+.thargoidscouttissuesample: "Thargoid Scout Tissue Sample" => "Muestra de tejido de Scout targoide"
 .wreckagecomponents: "Wreckage Components" => "Componentes de los restos"
 .antiquejewellery: "Antique Jewellery" => "Joyería antigua"
 .airelics: "Ai Relics" => "Reliquias de Ai"
@@ -553,7 +553,7 @@ SECTION MaterialCommodityData
 .galactictravelguide: "Galactic Travel Guide" => "Guía de viaje galáctico"
 .animaleffigies: "Crom Silver Fesh" => "Crom Silver Fesh"
 .shanscharisorchid: "Shan's Charis Orchid" => "Orquídea Charis de Shan"
-.buckyballbeermats: "Buckyball Beer Mats" => "Alfombrillas de cerveza Buckyball"
+.buckyballbeermats: "Buckyball Beer Mats" => "Materiales de cerveza Buckyball"
 .masterchefs: "Master Chefs" => "Maestros cocineros"
 .personalgifts: "Personal Gifts" => "Regalos personales"
 .crystallinespheres: "Crystalline Spheres" => "Esferas cristalinas"
@@ -610,7 +610,7 @@ SECTION MaterialCommodityData
 .grandidierite: "Grandidierite" => "Grandidierita"
 .alexandrite: "Alexandrite" => "Alejandrita"
 .opal: "Opal" => "Ópalo"
-.thargoidtissuesampletype4: "Thargoid Hydra Tissue Sample" => "Muestra de tejido de Hydra Thargoid"
+.thargoidtissuesampletype4: "Thargoid Hydra Tissue Sample" => "Muestra de tejido de Hydra Thargoide"
 .ancientkey: "Ancient Key" => "Llave antigua"
 .rockforthfertiliser: "Rockforth Fertiliser" => "Fertilizante Rockforth"
 .agronomictreatment: "Agronomic Treatment" => "Tratamiento agronómico"
@@ -713,16 +713,16 @@ CommanderForm: "CommanderForm" => "CommanderForm"
 .textBoxBorderCmdr.ToolTip: "Enter commander name as used in Elite Dangerous" => "Ingrese el nombre del comandante como se usa en Elite Dangerous"
 .textBoxBorderJournal.ToolTip: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\nLeave override journal location blank to use the standard Frontier location for journals" => "Ingrese la carpeta de ubicación de la revista. Normalmente deje este campo en blanco solo si está usando EDD en otra computadora que no sea su computadora de juego\nDeje la ubicación de anulación de la revista en blanco para usar la ubicación estándar de Frontier para las revistas"
 .LF: "Select folder where Journal*.log files are stored by Frontier in" => "Seleccione la carpeta donde Frontier almacena los archivos de Journal * .log en"
-.ND: "Folder does not exist" @
-.extCheckBoxConsoleCommander: "Console Commander" @
-.extGroupBoxEDAstro: "EDAstro" @
-.extCheckBoxEDAstro: "Send Events to EDAstro" @
+.ND: "Folder does not exist" => "La carpeta no existe"
+.extCheckBoxConsoleCommander: "Console Commander" => "Comandante de consola"
+.extGroupBoxEDAstro: "EDAstro" => "EDAstro"
+.extCheckBoxEDAstro: "Send Events to EDAstro" => "Enviar eventos a EDAstro"
 
 SECTION ScreenshotDirectoryWatcher
 
 .Scan: "Scanning for {0} screenshots in {1}" => "Buscando {0} capturas de pantalla en {1}"
 .NOF: "Folder specified for image conversion does not exist, check screenshot settings in the settings panel" => "La carpeta especificada para la conversión de imágenes no existe, verifique la configuración en la pestaña Capturas de pantalla"
-.Excp: "Error in executing image conversion, try another screenshot, check output path settings. (Exception " => "Error al ejecutar la conversión de imagen, pruebe con otra captura de pantalla, verifique la configuración de la ruta de salida. (Excepción"
+.Excp: "Error in executing image conversion, try another screenshot, check output path settings. (Exception " => "Error al ejecutar la conversión de imagen, pruebe con otra captura de pantalla, verifique la configuración de la ruta de salida. (Excepción "
 
 SECTION ScreenShotImageConverter
 
@@ -757,9 +757,14 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Configurar captura de panta
 .labelImage2: "Image 2" => "Imagen 2"
 .labelImage1: "Image 1" => "Imagen 1"
 .labelCropResizeOptions: "Crop/Resize Options" => "Opciones de recorte/cambio de tamaño"
-.extCheckBoxEnabled: "Conversion Enabled" @
-.extCheckBoxHiRes: "Mark HiRes Files" @
-.extButtonBrowseMoveOrg: "Browse" @
-.labelClipboard: "Clipboard" @
-.labelOriginal: "Original Image" @
-.labelEnabled: "Enable" @
+.extCheckBoxEnabled: "Conversion Enabled" => "Conversión habilitada"
+.extCheckBoxHiRes: "Mark HiRes Files" => "Marcar archivos HiRes"
+.extButtonBrowseMoveOrg: "Browse" => "Navegar"
+.labelClipboard: "Clipboard" => "Portapapeles"
+.labelOriginal: "Original Image" => "Imagen original"
+.labelEnabled: "Enable" => "Habilitar"
+
+SECTION Screenshot
+.FolderNotExist: "Folder specified does not exist" => "La carpeta especificada no existe"
+.Folder: "Select screenshot folder" => "Seleccionar carpeta de captura de pantalla"
+.Identical: "Cannot set input and output to identical types and the same folder" => "No se puede establecer la entrada y la salida en tipos idénticos y la misma carpeta"
