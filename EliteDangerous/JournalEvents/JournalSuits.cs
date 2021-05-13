@@ -141,7 +141,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", LoadoutName, "< ++> ", SuitFriendlyName);
+            info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "< ++> ", LoadoutName);
             detailed = "";
         }
 
@@ -176,7 +176,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", LoadoutName, "< --> ", SuitFriendlyName);
+            info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "< --> ", LoadoutName);
             detailed = "";
         }
 
@@ -202,6 +202,7 @@ namespace EliteDangerousCore.JournalEvents
             SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
             SuitName = SuitName.ToLower(); // normalise
             ModuleNameFriendly = ItemData.GetWeapon(ModuleName, ModuleName_Localised)?.Name ?? ModuleName_Localised;
+            SlotFriendlyName = SlotName.SplitCapsWordFull();
             SlotName = SlotName.ToLower();
             ModuleName = ModuleName.ToLower();
         }
@@ -213,6 +214,7 @@ namespace EliteDangerousCore.JournalEvents
         public string SuitFriendlyName { get; set; }
         public ulong LoadoutID { get; set; }
         public string SlotName { get; set; }        // lower normalised
+        public string SlotFriendlyName { get; set; }
         public string ModuleName { get; set; }      // lower normalised
         public string ModuleName_Localised { get; set; }
         public string ModuleNameFriendly { get; set; }
@@ -220,7 +222,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", ModuleNameFriendly, "< ++> ", LoadoutName);       
+            info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "<: ", LoadoutName, "<: ", SlotFriendlyName, "< ++> ", ModuleNameFriendly);
             detailed = "";
         }
 
@@ -246,6 +248,7 @@ namespace EliteDangerousCore.JournalEvents
             SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
             SuitName = SuitName.ToLower(); // normalise
             ModuleNameFriendly = ItemData.GetWeapon(ModuleName, ModuleName_Localised)?.Name ?? ModuleName_Localised;
+            SlotFriendlyName = SlotName.SplitCapsWordFull();
             SlotName = SlotName.ToLower();
             ModuleName = ModuleName.ToLower();
         }
@@ -257,6 +260,7 @@ namespace EliteDangerousCore.JournalEvents
         public string SuitFriendlyName { get; set; }
         public ulong LoadoutID { get; set; }
         public string SlotName { get; set; }        // lower normalised
+        public string SlotFriendlyName { get; set; }
         public string ModuleName { get; set; }      // lower normalised
         public string ModuleNameFriendly { get; set; }
         public string ModuleName_Localised { get; set; }
@@ -264,7 +268,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", ModuleNameFriendly, "< --> ", LoadoutName);    
+            info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "<: ", LoadoutName, "<: ", SlotFriendlyName, "< --> ", ModuleNameFriendly);
             detailed = "";
         }
 
@@ -304,7 +308,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", LoadoutName);
+            info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "<: ==> ", LoadoutName);
             detailed = "";
         }
 
@@ -342,7 +346,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", LoadoutName, "< ==> " , SuitFriendlyName);
+            info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "< ==> ", LoadoutName);
             detailed = "";
         }
 

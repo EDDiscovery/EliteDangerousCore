@@ -13,21 +13,22 @@
  * 
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
+
 using System;
 
 namespace EliteDangerousCore.UIEvents
 {
-    public class UIHUDInAnalysisMode : UIEvent
+    public class UIBodyName : UIEvent
     {
-        public UIHUDInAnalysisMode(DateTime time, bool refresh) : base(UITypeEnum.HUDInAnalysisMode, time, refresh)
+        public UIBodyName(DateTime time, bool refresh) : base(UITypeEnum.BodyName, time, refresh)
         {
         }
 
-        public UIHUDInAnalysisMode(bool state, DateTime time, bool refresh) : this( time, refresh)
+        public UIBodyName(string status, DateTime time, bool refresh) : this(time, refresh)
         {
-            State = state;
+            BodyName = status;
         }
 
-        public bool State { get; private set; }
+        public string BodyName { get; private set; } // may be null, meaning not known
     }
 }

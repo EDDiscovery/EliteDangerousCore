@@ -17,17 +17,17 @@ using System;
 
 namespace EliteDangerousCore.UIEvents
 {
-    public class UIHUDInAnalysisMode : UIEvent
+    public class UIAimDownSight : UIEvent
     {
-        public UIHUDInAnalysisMode(DateTime time, bool refresh) : base(UITypeEnum.HUDInAnalysisMode, time, refresh)
+        public UIAimDownSight(DateTime time, bool refresh) : base(UITypeEnum.AimDownSight, time, refresh)
         {
         }
 
-        public UIHUDInAnalysisMode(bool state, DateTime time, bool refresh) : this( time, refresh)
+        public UIAimDownSight(bool state, DateTime time, bool refresh) : this( time, refresh)
         {
-            State = state;
+            AimDownSight = state;
         }
 
-        public bool State { get; private set; }
+        public bool AimDownSight { get; private set; }
     }
 }

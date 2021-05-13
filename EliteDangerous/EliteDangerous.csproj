@@ -257,7 +257,14 @@
     <Compile Include="SystemDB\SystemsDBGetLists.cs" />
     <Compile Include="SystemDB\SystemsDBGetStars.cs" />
     <Compile Include="DB\UserDatabase.cs" />
+    <Compile Include="UIEvents\UIHealth.cs" />
+    <Compile Include="UIEvents\UIBodyName.cs" />
+    <Compile Include="UIEvents\UISelectedWeapon.cs" />
+    <Compile Include="UIEvents\UITemperature.cs" />
+    <Compile Include="UIEvents\UIGravity.cs" />
+    <Compile Include="UIEvents\UIOxygen.cs" />
     <Compile Include="UIEvents\UICommand.cs" />
+    <Compile Include="UIEvents\UIAimDownSight.cs" />
     <Compile Include="UIEvents\UILegalStatus.cs" />
     <Compile Include="UIEvents\UIMusic.cs" />
     <Compile Include="UIEvents\UIOverallStatus.cs" />

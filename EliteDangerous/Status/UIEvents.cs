@@ -73,6 +73,19 @@ namespace EliteDangerousCore
         UnderAttack,
         ReceiveText,
         FSDTarget,
+
+        // Odyssey new
+
+        AimDownSight,
+        Oxygen,
+        Health,
+        Temperature,
+        Weapon,
+        Gravity,
+        SelectedWeapon,
+
+        BodyName,
+
     }
 
     public abstract class UIEvent

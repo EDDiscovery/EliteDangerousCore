@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 - 2017 EDDiscovery development team
+ * Copyright © 2016 - 2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -14,10 +14,6 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EliteDangerousCore.UIEvents
 {
@@ -32,7 +28,7 @@ namespace EliteDangerousCore.UIEvents
             ShipType = type;
         }
 
-        public enum Shiptype { None, MainShip, Fighter, SRV };
+        public enum Shiptype { None, MainShip, Fighter, SRV, InTaxi, Multicrew, OnFootStation, OnFootPlanet };
 
         public Shiptype ShipType { get; private set; }
 

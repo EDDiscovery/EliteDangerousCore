@@ -17,17 +17,21 @@ using System;
 
 namespace EliteDangerousCore.UIEvents
 {
-    public class UIHUDInAnalysisMode : UIEvent
+    public class UITemperature : UIEvent
     {
-        public UIHUDInAnalysisMode(DateTime time, bool refresh) : base(UITypeEnum.HUDInAnalysisMode, time, refresh)
+        public UITemperature(DateTime time, bool refresh) : base(UITypeEnum.Temperature, time, refresh)
         {
         }
 
-        public UIHUDInAnalysisMode(bool state, DateTime time, bool refresh) : this( time, refresh)
+        public UITemperature(double temp, TempState state, DateTime time, bool refresh) : this( time, refresh)
         {
+            Temperature = temp;
             State = state;
         }
 
-        public bool State { get; private set; }
+        public enum TempState { VeryCold, Cold, Normal, Hot, VeryHot }
+
+        public double Temperature { get; private set; }     // K
+        public TempState State { get; private set; }
     }
 }

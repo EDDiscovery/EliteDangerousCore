@@ -26,7 +26,9 @@ namespace EliteDangerousCore.UIEvents
         }
 
         public UIOverallStatus(UIEvents.UIShipType.Shiptype st, List<UITypeEnum> list, int focus, UIEvents.UIPips.Pips pips, int fg, double fuel, double res, int cargo,
-            UIEvents.UIPosition.Position pos, double heading, double radius, string legalstate,
+            UIEvents.UIPosition.Position pos, double heading, double radius, string legalstate, string bodyname,
+            double health, bool lowh, double gravity, double temp, UITemperature.TempState tempstate, double oxygen, bool lowox,
+            string selw, string selwloc,
             DateTime time, bool refresh) : this(time, refresh)
         {
             ShipType = st;
@@ -41,6 +43,16 @@ namespace EliteDangerousCore.UIEvents
             Heading = heading;
             PlanetRadius = radius;
             LegalState = legalstate;
+            BodyName = bodyname;
+            Health = health;
+            LowHealth = lowh;
+            Gravity = gravity;
+            Temperature = temp;
+            TemperatureState = tempstate;
+            Oxygen = oxygen;
+            LowOxygen = lowox;
+            SelectedWeapon = selw;
+            SelectedWeapon_Localised = selwloc;
         }
 
         public UIEvents.UIShipType.Shiptype ShipType { get; private set; }
@@ -57,5 +69,17 @@ namespace EliteDangerousCore.UIEvents
         public double PlanetRadius { get; private set; }
         public bool ValidRadius { get { return PlanetRadius != UIEvents.UIPosition.InvalidValue; } }
         public string LegalState { get; private set; }      // may be null
+        public string BodyName { get; private set; }      // may be null
+        // odyssey
+        public double Health { get; private set; }
+        public bool LowHealth { get; private set; }
+        public double Gravity { get; private set; }
+        public double Temperature { get; private set; }
+        public UITemperature.TempState TemperatureState { get; private set; }
+        public double Oxygen { get; private set; }
+        public bool LowOxygen { get; private set; }
+        public string SelectedWeapon { get; private set; }      // may be null
+        public string SelectedWeapon_Localised { get; private set; }      // may be null
+
     }
 }

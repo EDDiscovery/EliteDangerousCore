@@ -17,17 +17,19 @@ using System;
 
 namespace EliteDangerousCore.UIEvents
 {
-    public class UIHUDInAnalysisMode : UIEvent
+    public class UIHealth : UIEvent
     {
-        public UIHUDInAnalysisMode(DateTime time, bool refresh) : base(UITypeEnum.HUDInAnalysisMode, time, refresh)
+        public UIHealth(DateTime time, bool refresh) : base(UITypeEnum.Health, time, refresh)
         {
         }
 
-        public UIHUDInAnalysisMode(bool state, DateTime time, bool refresh) : this( time, refresh)
+        public UIHealth(double state, bool lowhealth, DateTime time, bool refresh) : this( time, refresh)
         {
-            State = state;
+            Health = state;
+            LowHealth = lowhealth;
         }
 
-        public bool State { get; private set; }
+        public double Health { get; private set; }
+        public bool LowHealth { get; private set; }
     }
 }

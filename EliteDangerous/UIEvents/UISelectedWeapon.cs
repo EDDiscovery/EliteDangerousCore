@@ -13,21 +13,24 @@
  * 
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
+
 using System;
 
 namespace EliteDangerousCore.UIEvents
 {
-    public class UIHUDInAnalysisMode : UIEvent
+    public class UISelectedWeapon : UIEvent
     {
-        public UIHUDInAnalysisMode(DateTime time, bool refresh) : base(UITypeEnum.HUDInAnalysisMode, time, refresh)
+        public UISelectedWeapon(DateTime time, bool refresh) : base(UITypeEnum.SelectedWeapon, time, refresh)
         {
         }
 
-        public UIHUDInAnalysisMode(bool state, DateTime time, bool refresh) : this( time, refresh)
+        public UISelectedWeapon(string status, string loc, DateTime time, bool refresh) : this(time, refresh)
         {
-            State = state;
+            SelectedWeapon = status;
+            SelectedWeapon_Localised = loc;
         }
 
-        public bool State { get; private set; }
+        public string SelectedWeapon { get; private set; } // may be null, meaning not known
+        public string SelectedWeapon_Localised { get; private set; } // may be null, meaning not known
     }
 }

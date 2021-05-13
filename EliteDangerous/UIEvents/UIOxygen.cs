@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 - 2021 EDDiscovery development team
+ * Copyright © 2021 - 2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -17,17 +17,19 @@ using System;
 
 namespace EliteDangerousCore.UIEvents
 {
-    public class UIHUDInAnalysisMode : UIEvent
+    public class UIOxygen : UIEvent
     {
-        public UIHUDInAnalysisMode(DateTime time, bool refresh) : base(UITypeEnum.HUDInAnalysisMode, time, refresh)
+        public UIOxygen(DateTime time, bool refresh) : base(UITypeEnum.Oxygen, time, refresh)
         {
         }
 
-        public UIHUDInAnalysisMode(bool state, DateTime time, bool refresh) : this( time, refresh)
+        public UIOxygen(double oxygen, bool lowox, DateTime time, bool refresh) : this( time, refresh)
         {
-            State = state;
+            Oxygen = oxygen;
+            LowOxygen = lowox;
         }
 
-        public bool State { get; private set; }
+        public double Oxygen { get; private set; }  // 0-100%
+        public bool LowOxygen { get; private set; }
     }
 }

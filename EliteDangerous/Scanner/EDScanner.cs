@@ -141,7 +141,7 @@ namespace EliteDangerousCore
                         if (stopRequested.WaitOne(0))
                             return;
 
-                        System.Diagnostics.Debug.WriteLine("Issue " + ent.EventTypeStr);
+                       // System.Diagnostics.Debug.WriteLine("Issue " + ent.EventTypeStr);
                         OnNewJournalEntry?.Invoke(ent);
                     }
                 }
@@ -153,9 +153,7 @@ namespace EliteDangerousCore
                         if (stopRequested.WaitOne(0))
                             return;
 
-                        //System.Diagnostics.Trace.WriteLine(string.Format("New UI entry from journal {0} {1}", uient.EventTimeUTC, uient.EventTypeStr));
-
-                        System.Diagnostics.Debug.WriteLine("Issue  UI" + uient.EventTypeStr);
+                      //  System.Diagnostics.Debug.WriteLine("Issue  UI" + uient.EventTypeStr);
                         OnNewUIEvent?.Invoke(uient);
                     }
                 }

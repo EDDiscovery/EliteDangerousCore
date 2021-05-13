@@ -17,17 +17,17 @@ using System;
 
 namespace EliteDangerousCore.UIEvents
 {
-    public class UIHUDInAnalysisMode : UIEvent
+    public class UIGravity : UIEvent
     {
-        public UIHUDInAnalysisMode(DateTime time, bool refresh) : base(UITypeEnum.HUDInAnalysisMode, time, refresh)
+        public UIGravity(DateTime time, bool refresh) : base(UITypeEnum.Gravity, time, refresh)
         {
         }
 
-        public UIHUDInAnalysisMode(bool state, DateTime time, bool refresh) : this( time, refresh)
+        public UIGravity(double g, DateTime time, bool refresh) : this( time, refresh)
         {
-            State = state;
+            Gravity = g;
         }
 
-        public bool State { get; private set; }
+        public double Gravity { get; private set; }
     }
 }
