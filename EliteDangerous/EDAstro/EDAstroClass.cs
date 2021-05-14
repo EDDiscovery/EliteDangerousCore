@@ -35,12 +35,13 @@ namespace EliteDangerousCore.EDAstro
             httpserveraddress = EDAstroServer;
         }
 
-        private JObject Header()
+        private JObject Header(bool ody)
         {
             JObject header = new JObject();
 
             header["appName"] = SoftwareName;
             header["appVersion"] = fromSoftwareVersion;
+            header["odyssey"] = ody;
 
             return header;
         }
@@ -55,9 +56,9 @@ namespace EliteDangerousCore.EDAstro
                 return null;
         }
 
-        public bool SendJournalEvents(List<JObject> entries)    // protected against bad JSON
+        public bool SendJournalEvents(List<JObject> entries, bool ody)    // protected against bad JSON
         {
-            JArray message = new JArray(Header());
+            JArray message = new JArray(Header(ody));
             message.AddRange(entries);
 
             System.Diagnostics.Debug.WriteLine("EDAstro send " + message.ToString(true));

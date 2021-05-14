@@ -311,7 +311,6 @@ namespace EliteDangerousCore
                     while (reader.Read())
                     {
                         JournalEntry je = CreateJournalEntry(reader);
-                        je.beta = tlus.ContainsKey(je.TLUId) ? tlus[je.TLUId].Beta : false;
                         entries.Add(je);
                     }
 
@@ -410,7 +409,6 @@ namespace EliteDangerousCore
 #endif
 
                             JournalEntry je = JournalEntry.CreateJournalEntryFixedPos(reader);
-                            je.beta = tlus.ContainsKey(je.TLUId) ? tlus[je.TLUId].Beta : false;
                             list.Add(je);
 
 #if TIMESCAN
@@ -523,7 +521,6 @@ namespace EliteDangerousCore
                         while (vsc.Count < 1000 && reader.Read())
                         {
                             JournalEntry je = CreateJournalEntry(reader);
-                            je.beta = tlus.ContainsKey(je.TLUId) ? tlus[je.TLUId].Beta : false;
                             vsc.Add(je);
                         }
 
@@ -562,7 +559,6 @@ namespace EliteDangerousCore
                     while (reader.Read())
                     {
                         JournalEntry je = CreateJournalEntry(reader);
-                        je.beta = tlu?.Beta ?? false;
                         vsc.Add(je);
                     }
                 }

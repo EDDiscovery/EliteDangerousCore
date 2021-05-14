@@ -29,9 +29,11 @@ namespace EliteDangerousCore.DB
         public const int JournalType = 3;
         public const int TypeMask = 0xff;
         public const int BetaMarker = 0x8000;
+        public const int OdysseyMarker = 0x4000;
+        public const int HorizonsMarker = 0x2000;
 
         public long ID;
-        public int Type;            // bit 15 = BETA.  Type = 2 EDSM log, 3 = Journal, 1 = Old pre 2.1 logs.
+        public int Type;            // bit 15-8 are flags, bits 0-7 are type, see above
         public int Size;
         public int? CommanderId;
         public string FullName { get { return System.IO.Path.Combine(Path, FileName); } }
@@ -66,17 +68,9 @@ namespace EliteDangerousCore.DB
                 CommanderId = (int)(long)dr["CommanderId"];
         }
 
-        public bool Beta
-        {
-            get
-            {
-                if ((Path != null && Path.Contains("PUBLIC_TEST_SERVER")) || (Type & BetaMarker) == BetaMarker)
-                    return true;
-                else
-                    return false;
-            }
-        }
-
+        public bool Beta { get { return ((Path != null && Path.Contains("PUBLIC_TEST_SERVER")) || (Type & BetaMarker) == BetaMarker); } }
+        public bool Horizons { get { return (Type & HorizonsMarker) != 0; } }
+        public bool Odyssey { get { return (Type & OdysseyMarker) != 0; } }
 
         public bool Add()
         {

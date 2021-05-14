@@ -508,6 +508,9 @@ namespace EliteDangerousCore.EDDN
 
             message = FilterJournalEvent(message, AllowedFieldsFSDJump);
 
+            message["odyssey"] = journal.IsOdyssey;     // new may 21
+            message["horizons"] = journal.IsHorizons;
+
             msg["message"] = message;
             return msg;
         }
@@ -542,6 +545,9 @@ namespace EliteDangerousCore.EDDN
             message.Remove("ActiveFine");
 
             message = FilterJournalEvent(message, AllowedFieldsLocation);
+
+            message["odyssey"] = journal.IsOdyssey;     // new may 21
+            message["horizons"] = journal.IsHorizons;
 
             msg["message"] = message;
             return msg;
@@ -578,6 +584,9 @@ namespace EliteDangerousCore.EDDN
 
             message = FilterJournalEvent(message, AllowedFieldsLocation);
 
+            message["odyssey"] = journal.IsOdyssey;     // new may 21
+            message["horizons"] = journal.IsHorizons;
+
             msg["message"] = message;
             return msg;
         }
@@ -612,6 +621,9 @@ namespace EliteDangerousCore.EDDN
 
             message = FilterJournalEvent(message, AllowedFieldsDocked);
 
+            message["odyssey"] = journal.IsOdyssey;     // new may 21
+            message["horizons"] = journal.IsHorizons;
+
             msg["message"] = message;
             return msg;
         }
@@ -635,13 +647,8 @@ namespace EliteDangerousCore.EDDN
                 ["modules"] = new JArray(journal.ItemList.Items.Select(m => JournalFieldNaming.NormaliseFDItemName(m.FDName)))
             };
 
-            if (journal.Horizons != null)
-            {
-                message["horizons"] = journal.Horizons;
-            }
-
-            //if (systemAddress != null)
-            //    message["systemAddress"] = systemAddress;
+            message["odyssey"] = journal.IsOdyssey;     // new may 21
+            message["horizons"] = journal.IsHorizons;
 
             msg["message"] = message;
             return msg;
@@ -666,13 +673,8 @@ namespace EliteDangerousCore.EDDN
                 ["ships"] = new JArray(journal.Yard.Ships.Select(m => m.FDShipType))
             };
 
-            if (journal.Horizons != null)
-            {
-                message["horizons"] = journal.Horizons;
-            }
-
-            //if (systemAddress != null)
-            //    message["SystemAddress"] = systemAddress;
+            message["odyssey"] = journal.IsOdyssey;     // new may 21
+            message["horizons"] = journal.IsHorizons;
 
             msg["message"] = message;
             return msg;
@@ -729,6 +731,9 @@ namespace EliteDangerousCore.EDDN
                 msg["$schemaRef"] = GetEDDNJournalSchemaRef(true);
             }
 
+            message["odyssey"] = journal.IsOdyssey;     // new may 21
+            message["horizons"] = journal.IsHorizons;
+
             msg["message"] = message;
             return msg;
         }
@@ -770,12 +775,15 @@ namespace EliteDangerousCore.EDDN
 
             message = FilterJournalEvent(message, AllowedFieldsSAASignalsFound);
 
+            message["odyssey"] = journal.IsOdyssey;     // new may 21
+            message["horizons"] = journal.IsHorizons;
+
             msg["message"] = message;
             return msg;
         }
 
 
-        public JObject CreateEDDNCommodityMessage(List<CCommodities> commodities, string systemName, string stationName, long? marketID, DateTime time)
+        public JObject CreateEDDNCommodityMessage(List<CCommodities> commodities, bool odyssey, bool horizons, string systemName, string stationName, long? marketID, DateTime time)
         {
             if (commodities == null || commodities.Count == 0)
                 return null;
@@ -821,6 +829,11 @@ namespace EliteDangerousCore.EDDN
             }
 
             message["commodities"] = JAcommodities;
+
+            message["odyssey"] = odyssey;
+            message["horizons"] = horizons;
+
+
             msg["message"] = message;
             return msg;
         }

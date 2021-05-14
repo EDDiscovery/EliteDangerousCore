@@ -53,7 +53,6 @@ namespace EliteDangerousCore
         public bool IsLocOrJump { get { return EntryType == JournalTypeEnum.FSDJump || EntryType == JournalTypeEnum.Location || EntryType == JournalTypeEnum.CarrierJump; } }
         public bool IsFuelScoop { get { return EntryType == JournalTypeEnum.FuelScoop; } }
         public bool IsShipChange { get { return (EntryType == JournalTypeEnum.LoadGame || EntryType == JournalTypeEnum.Docked) && ShipInformation != null; } }
-        public bool IsBetaMessage { get { return journalEntry?.Beta ?? false; } }
 
         public double TravelledDistance { get { return TravelStatus.TravelledDistance; } }
         public TimeSpan TravelledSeconds { get { return TravelStatus.TravelledSeconds; } }

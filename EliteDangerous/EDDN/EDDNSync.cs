@@ -160,7 +160,7 @@ namespace EliteDangerousCore.EDDN
                     eddn.isBeta = true;
             }
 
-            if (he.IsBetaMessage)
+            if (he.journalEntry.IsBeta)
                 eddn.isBeta = true;
 
             JournalEntry je = he.journalEntry;
@@ -207,12 +207,12 @@ namespace EliteDangerousCore.EDDN
             else if (je.EventTypeID == JournalTypeEnum.Market)
             {
                 JournalMarket jm = je as JournalMarket;
-                msg = eddn.CreateEDDNCommodityMessage(jm.Commodities, jm.StarSystem, jm.Station, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned
+                msg = eddn.CreateEDDNCommodityMessage(jm.Commodities, jm.IsOdyssey, jm.IsHorizons, jm.StarSystem, jm.Station, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned
             }
             else if (je.EventTypeID == JournalTypeEnum.EDDCommodityPrices)
             {
                 JournalEDDCommodityPrices jm = je as JournalEDDCommodityPrices;
-                msg = eddn.CreateEDDNCommodityMessage(jm.Commodities, jm.StarSystem, jm.Station, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned
+                msg = eddn.CreateEDDNCommodityMessage(jm.Commodities, jm.IsOdyssey, jm.IsHorizons, jm.StarSystem, jm.Station, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned
             }
 
             if (msg != null)

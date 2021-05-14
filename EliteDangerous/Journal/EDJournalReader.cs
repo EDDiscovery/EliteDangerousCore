@@ -80,7 +80,7 @@ namespace EliteDangerousCore
             {
                 JournalEvents.JournalFileheader header = (JournalEvents.JournalFileheader)je;
 
-                if ((header.Beta && !EliteConfigInstance.InstanceOptions.DisableBetaCommanderCheck) || EliteConfigInstance.InstanceOptions.ForceBetaOnCommander) // if beta, and not disabled, or force beta
+                if ((header.IsBeta && !EliteConfigInstance.InstanceOptions.DisableBetaCommanderCheck) || EliteConfigInstance.InstanceOptions.ForceBetaOnCommander) // if beta, and not disabled, or force beta
                 {
                     TravelLogUnit.Type |= TravelLogUnit.BetaMarker;
                 }
@@ -120,6 +120,11 @@ namespace EliteDangerousCore
                 {
                     newname = "[BETA] " + newname;
                 }
+
+                if (jlg.IsOdyssey == true)                                                    // new! mark TLU with odyssey and horizons markers
+                    TravelLogUnit.Type |= TravelLogUnit.OdysseyMarker;
+                if (jlg.IsHorizons == true)
+                    TravelLogUnit.Type |= TravelLogUnit.HorizonsMarker;
 
                 EDCommander commander = EDCommander.GetCommander(newname);
 

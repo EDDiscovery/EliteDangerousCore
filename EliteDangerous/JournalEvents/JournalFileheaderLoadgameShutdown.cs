@@ -37,7 +37,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Language { get; set; }
         public int Part { get; set; }
 
-        public override bool Beta
+        public override bool IsBeta
         {
             get
             {
@@ -97,8 +97,8 @@ namespace EliteDangerousCore.JournalEvents
             FuelLevel = evt["FuelLevel"].Double();
             FuelCapacity = evt["FuelCapacity"].Double();
 
-            Horizons = evt["Horizons"].BoolNull();
-            Odyssey = evt["Odyssey"].BoolNull();
+            Horizons = evt["Horizons"].Bool();
+            Odyssey = evt["Odyssey"].Bool();
 
             FID = JournalFieldNaming.SubsituteCommanderFID(evt["FID"].Str());     // 3.3 on
         }
@@ -119,8 +119,9 @@ namespace EliteDangerousCore.JournalEvents
         public double FuelLevel { get; set; }
         public double FuelCapacity { get; set; }
 
-        public bool? Horizons { get; set; }
-        public bool? Odyssey { get; set; }
+        public override bool IsHorizons { get { return Horizons; } }     // override base to get value of private value
+        public override bool IsOdyssey { get { return Odyssey; } }
+
         public string FID { get; set; }
 
         public bool InShip { get { return ItemData.IsShip(ShipFD); } }
@@ -149,6 +150,9 @@ namespace EliteDangerousCore.JournalEvents
             if (InShipSRVOrFighter)        // only call if in these types from 4.0 we can be on foot or in a taxi
                 shp.LoadGame(ShipId, Ship, ShipFD, ShipName, ShipIdent, FuelLevel, FuelCapacity);
         }
+
+        private bool Horizons { get; set; }
+        private bool Odyssey { get; set; }
     }
 
     [JournalEntryType(JournalTypeEnum.Shutdown)]

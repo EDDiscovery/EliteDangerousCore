@@ -383,10 +383,10 @@ namespace EliteDangerousCore
                     double temperature = jo["Temperature"].Double(NotPresent);       //-1 is not present
 
                     UIEvents.UITemperature.TempState tempstate =
-                        (curflags2 & (1L << (int)StatusFlags2OtherFlags.VeryCold)) != 0 ? UIEvents.UITemperature.TempState.VeryCold :
+                        (curflags2 & (1L << (int)StatusFlags2OtherFlags.VeryCold)) != 0 ? UIEvents.UITemperature.TempState.VeryCold :       // order important, you can get Cold | VeryCold
+                        (curflags2 & (1L << (int)StatusFlags2OtherFlags.VeryHot)) != 0 ? UIEvents.UITemperature.TempState.VeryHot :
                         (curflags2 & (1L << (int)StatusFlags2OtherFlags.Cold)) != 0 ? UIEvents.UITemperature.TempState.Cold :
                         (curflags2 & (1L << (int)StatusFlags2OtherFlags.Hot)) != 0 ? UIEvents.UITemperature.TempState.Hot :
-                        (curflags2 & (1L << (int)StatusFlags2OtherFlags.VeryHot)) != 0 ? UIEvents.UITemperature.TempState.VeryHot :
                                                             UIEvents.UITemperature.TempState.Normal;
 
                     if (temperature != prev_temperature || (flagsdelta2 & (long)StatusFlags2OtherFlags.TempBits) != 0)
