@@ -105,11 +105,20 @@ namespace EliteDangerousCore
 
         // name key is lower case normalised
         private static Dictionary<string, MaterialCommodityData> cachelist = null;
+        private static object cachelistlock = new object();
+
+        private static void EnsureTableFilled()
+        {
+            lock (cachelistlock)
+            {
+                if (cachelist == null)
+                    FillTable();
+            }
+        }
 
         public static MaterialCommodityData GetByFDName(string fdname)
         {
-            if (cachelist == null)
-                FillTable();
+            EnsureTableFilled();
 
             fdname = fdname.ToLowerInvariant();
             return cachelist.ContainsKey(fdname) ? cachelist[fdname] : null;
@@ -117,8 +126,7 @@ namespace EliteDangerousCore
 
         public static string GetNameByFDName(string fdname) // if we have it, give name, else give alt.  Also see RMat in journal field naming
         {
-            if (cachelist == null)
-                FillTable();
+            EnsureTableFilled();
 
             fdname = fdname.ToLowerInvariant();
             return cachelist.ContainsKey(fdname) ? cachelist[fdname].Name : fdname.SplitCapsWordFull();
@@ -126,8 +134,7 @@ namespace EliteDangerousCore
 
         public static MaterialCommodityData GetByShortName(string shortname)
         {
-            if (cachelist == null)
-                FillTable();
+            EnsureTableFilled();
 
             List<MaterialCommodityData> lst = cachelist.Values.ToList();
             int i = lst.FindIndex(x => x.Shortname.Equals(shortname));
@@ -136,8 +143,7 @@ namespace EliteDangerousCore
 
         public static MaterialCommodityData GetByName(string longname)
         {
-            if (cachelist == null)
-                FillTable();
+            EnsureTableFilled();
 
             List<MaterialCommodityData> lst = cachelist.Values.ToList();
             int i = lst.FindIndex(x => x.Name.Equals(longname));
@@ -147,8 +153,7 @@ namespace EliteDangerousCore
 
         public static MaterialCommodityData[] GetAll()
         {
-            if (cachelist == null)
-                FillTable();
+            EnsureTableFilled();
 
             return cachelist.Values.ToArray();
         }
@@ -157,8 +162,7 @@ namespace EliteDangerousCore
         // use this delegate to find them
         public static MaterialCommodityData[] Get(Func<MaterialCommodityData, bool> func, bool sorted)
         {
-            if (cachelist == null)
-                FillTable();
+            EnsureTableFilled();
 
             MaterialCommodityData[] items = cachelist.Values.Where(func).ToArray();
 
@@ -266,6 +270,8 @@ namespace EliteDangerousCore
 
         public static MaterialCommodityData EnsurePresent(CatType cat, string fdname)  // By FDNAME
         {
+            EnsureTableFilled();
+
             if (!cachelist.ContainsKey(fdname.ToLowerInvariant()))
             {
                 MaterialCommodityData mcdb = new MaterialCommodityData(cat, fdname.SplitCapsWordFull(), fdname, ItemType.Unknown, MaterialGroupType.NA, "", Color.Green, false );
