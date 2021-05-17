@@ -223,8 +223,7 @@ namespace EliteDangerousCore
 
         #region Status
 
-        public bool IsCurrentlyLanded() { HistoryEntry he = GetLast; return (he != null) ? he.IsLanded : false; }     //safe methods
-        public bool IsCurrentlyDocked() { HistoryEntry he = GetLast; return (he != null) ? he.IsDocked : false; }
+        public HistoryEntryStatus.TravelStateType CurrentTravelState() { HistoryEntry he = GetLast; return (he != null) ? he.TravelState : HistoryEntryStatus.TravelStateType.Unknown; }     //safe methods
         public ISystem CurrentSystem() { HistoryEntry he = GetLast; return (he != null) ? he.System : null; }  // current system
 
         public double DistanceCurrentTo(string system)          // from current, if we have one, to system, if its found.

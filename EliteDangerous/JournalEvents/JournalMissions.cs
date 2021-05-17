@@ -78,7 +78,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public class MissionItem
         {
-            public int MissionID;
+            public ulong MissionID;  
             public string Name;
             public bool PassengerMission;
             public int Expires;
@@ -128,10 +128,10 @@ namespace EliteDangerousCore.JournalEvents
             Influence = evt["Influence"].Str();
             Reputation = evt["Reputation"].Str();
 
-            MissionId = evt["MissionID"].Int();
+            MissionId = evt["MissionID"].ULong();
 
             Commodity = JournalFieldNaming.FixCommodityName(evt["Commodity"].Str());        // instances of $_name, fix to fdname
-            FriendlyCommodity = MaterialCommodityData.GetNameByFDName(Commodity);
+            FriendlyCommodity = MaterialCommodityMicroResourceType.GetNameByFDName(Commodity);
             CommodityLocalised = JournalFieldNaming.CheckLocalisationTranslation(evt["Commodity_Localised"].Str(), FriendlyCommodity);
 
             Count = evt["Count"].IntNull();
@@ -148,7 +148,7 @@ namespace EliteDangerousCore.JournalEvents
 
         }
 
-        public int MissionId { get; private set; }
+        public ulong MissionId { get; private set; }
 
         public string Faction { get; private set; }                 // in MissionAccepted order
         public string Name { get; private set; }
@@ -249,13 +249,13 @@ namespace EliteDangerousCore.JournalEvents
 
         private static DateTime ED32Date = new DateTime(2018, 8, 28, 10, 0, 0);
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc)
         {
             if (Commodity != null && Count != null && EventTimeUTC < ED32Date)           // after this we will rely on Cargo to update us, only safe way to know if something has been stowed
             {
                 if (DeliveryMissions.StartsWith(FDName, StringComparison.InvariantCultureIgnoreCase)>=0 )   // before, we accept only these as mission deliveries
                 {
-                    mc.Change(EventTimeUTC, MaterialCommodityData.CatType.Commodity, Commodity, (int)Count, 0);
+                    mc.Change(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Commodity, (int)Count, 0);
                 }
                 else
                 {
@@ -276,7 +276,7 @@ namespace EliteDangerousCore.JournalEvents
 
             Commodity = JournalFieldNaming.FixCommodityName(evt["Commodity"].Str());             // evidence of $_name problem, fix to fdname
             Commodity = JournalFieldNaming.FDNameTranslation(Commodity);     // pre-mangle to latest names, in case we are reading old journal records
-            FriendlyCommodity = MaterialCommodityData.GetNameByFDName(Commodity);
+            FriendlyCommodity = MaterialCommodityMicroResourceType.GetNameByFDName(Commodity);
             CommodityLocalised = JournalFieldNaming.CheckLocalisationTranslation(evt["Commodity_Localised"].Str(), FriendlyCommodity);
 
             Count = evt["Count"].IntNull();
@@ -301,7 +301,7 @@ namespace EliteDangerousCore.JournalEvents
                     Donation = dtk.LongNull();
             }
 
-            MissionId = evt["MissionID"].Int();
+            MissionId = evt["MissionID"].ULong();
 
             DestinationSystem = evt["DestinationSystem"].Str().Replace("$MISSIONUTIL_MULTIPLE_INNER_SEPARATOR;", ",")
                                                               .Replace("$MISSIONUTIL_MULTIPLE_FINAL_SEPARATOR;", ",");       // multi missions get this strange list;
@@ -353,14 +353,14 @@ namespace EliteDangerousCore.JournalEvents
         public long? Reward { get; set; }
         public long? Donation { get; set; }
         public string[] PermitsAwarded { get; set; }
-        public int MissionId { get; set; }
+        public ulong MissionId { get; set; }
 
         public CommodityRewards[] CommodityReward { get; set; }
         public MaterialRewards[] MaterialsReward { get; set; }
 
         public FactionEffectsEntry[] FactionEffects;
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc)
         {
             // removed update on Commodity/Count (which is unreliable about if you should remove them from cargo)
             // rely on Cargo to update stats, its emitted directly after MissionCompleted.
@@ -368,11 +368,11 @@ namespace EliteDangerousCore.JournalEvents
             if (CommodityReward != null)
             {
                 foreach (CommodityRewards c in CommodityReward)
-                    mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, c.Name, c.Count, 0);    // commodities are traded by faction
+                    mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, c.Name, c.Count, 0);    // commodities are traded by faction
             }
         }
 
-        public void UpdateMaterials(MaterialCommoditiesList mc)
+        public void UpdateMaterials(MaterialCommoditiesMicroResourceList mc)
         {
             if (MaterialsReward != null)
             {
@@ -546,7 +546,7 @@ namespace EliteDangerousCore.JournalEvents
             public void Normalise()
             {
                 Name = JournalFieldNaming.FDNameTranslation(Name);
-                FriendlyName = MaterialCommodityData.GetNameByFDName(Name);
+                FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(Name);
                 Name_Localised = JournalFieldNaming.CheckLocalisationTranslation(Name_Localised ?? "", FriendlyName);
 
                 if (Category != null)
@@ -567,7 +567,7 @@ namespace EliteDangerousCore.JournalEvents
             public void Normalise()
             {
                 Name = JournalFieldNaming.FDNameTranslation(Name);
-                FriendlyName = MaterialCommodityData.GetNameByFDName(Name);
+                FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(Name);
                 Name_Localised = Name_Localised.Alt(FriendlyName);
             }
         }
@@ -604,13 +604,13 @@ namespace EliteDangerousCore.JournalEvents
         {
             FDName = evt["Name"].Str();
             Name = JournalFieldNaming.GetBetterMissionName(FDName);
-            MissionId = evt["MissionID"].Int();
+            MissionId = evt["MissionID"].ULong();
             Fine = evt["Fine"].LongNull();
         }
 
         public string Name { get; set; }
         public string FDName { get; set; }
-        public int MissionId { get; set; }
+        public ulong MissionId { get; set; }
         public long? Fine { get; set; }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
@@ -635,7 +635,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             FDName = evt["Name"].Str();
             Name = JournalFieldNaming.GetBetterMissionName(FDName);
-            MissionId = evt["MissionID"].Int();
+            MissionId = evt["MissionID"].ULong();
             NewDestinationStation = evt["NewDestinationStation"].Str();
             OldDestinationStation = evt["OldDestinationStation"].Str();
             NewDestinationSystem = evt["NewDestinationSystem"].Str();
@@ -647,7 +647,7 @@ namespace EliteDangerousCore.JournalEvents
         public string NewDestinationSystem { get; set; }
         public string OldDestinationSystem { get; set; }
 
-        public int MissionId { get; set; }
+        public ulong MissionId { get; set; }
         public string Name { get; set; }
         public string FDName { get; set; }
 
@@ -678,13 +678,13 @@ namespace EliteDangerousCore.JournalEvents
         {
             FDName = evt["Name"].Str();
             Name = JournalFieldNaming.GetBetterMissionName(FDName);
-            MissionId = evt["MissionID"].Int();
+            MissionId = evt["MissionID"].ULong();
             Fine = evt["Fine"].LongNull();
         }
 
         public string Name { get; set; }
         public string FDName { get; set; }
-        public int MissionId { get; set; }
+        public ulong MissionId { get; set; }
         public long? Fine { get; set; }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)

@@ -24,7 +24,7 @@ namespace EliteDangerousCore
 {
     public class StoredShipInformation : IEquatable<StoredShipInformation>
     {
-        public int ShipID;      // both
+        public ulong ShipID;      // both
         public string ShipType; // both
         public string ShipType_Localised; // both
         public string Name;     // Both

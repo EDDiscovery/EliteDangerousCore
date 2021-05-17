@@ -28,7 +28,7 @@ namespace EliteDangerousCore
     {
         #region Information interface
 
-        public int ID { get; private set; }                 // its Frontier ID.     ID's are moved to high range when sold
+        public ulong ID { get; private set; }                 // its Frontier ID.     ID's are moved to high range when sold
         public enum ShipState { Owned, Sold, Destroyed};
         public ShipState State { get; set; } = ShipState.Owned; // if owned, sold, destroyed. Default owned
         public string ShipType { get; private set; }        // ship type name, nice, fer-de-lance, etc. can be null
@@ -217,22 +217,22 @@ namespace EliteDangerousCore
 
         public double HullMass()
         {
-            ShipModuleData.ShipInfo md = ShipModuleData.Instance.GetShipProperty(ShipFD, ShipModuleData.ShipPropID.HullMass);
-            return md != null ? (md as ShipModuleData.ShipInfoDouble).Value : 0;
+            ItemData.IModuleInfo md = ItemData.Instance.GetShipProperty(ShipFD, ItemData.ShipPropID.HullMass);
+            return md != null ? (md as ItemData.ShipInfoDouble).Value : 0;
         }
 
         public double FuelWarningPercent
         {
-            get { return EliteDangerousCore.DB.UserDatabase.Instance.GetSettingDouble("ShipInformation:" + ShipFD + ID + "Warninglevel", 0); }
-            set { EliteDangerousCore.DB.UserDatabase.Instance.PutSettingDouble("ShipInformation:" + ShipFD + ID + "Warninglevel", value); }
+            get { return EliteDangerousCore.DB.UserDatabase.Instance.GetSettingDouble("ShipInformation:" + ShipFD + ID.ToStringInvariant() + "Warninglevel", 0); }
+            set { EliteDangerousCore.DB.UserDatabase.Instance.PutSettingDouble("ShipInformation:" + ShipFD + ID.ToStringInvariant() + "Warninglevel", value); }
         }
 
         public string Manufacturer
         {
             get
             {
-                ShipModuleData.ShipInfo md = ShipModuleData.Instance.GetShipProperty(ShipFD, ShipModuleData.ShipPropID.Manu);
-                return md != null ? (md as ShipModuleData.ShipInfoString).Value : "Unknown";
+                ItemData.IModuleInfo md = ItemData.Instance.GetShipProperty(ShipFD, ItemData.ShipPropID.Manu);
+                return md != null ? (md as ItemData.ShipInfoString).Value : "Unknown";
             }
         }
 
@@ -240,8 +240,8 @@ namespace EliteDangerousCore
         {
             get
             {
-                ShipModuleData.ShipInfo md = ShipModuleData.Instance.GetShipProperty(ShipFD, ShipModuleData.ShipPropID.Boost);
-                double v = md != null ? (md as ShipModuleData.ShipInfoInt).Value : 0;
+                ItemData.IModuleInfo md = ItemData.Instance.GetShipProperty(ShipFD, ItemData.ShipPropID.Boost);
+                double v = md != null ? (md as ItemData.ShipInfoInt).Value : 0;
                 ShipModule.EngineeringData ed = GetEngineering("Main Thrusters"); // aka "MainEngines" in fd speak, but we use a slot naming conversion
                 ed?.EngineerThrusters(ref v);
                 return v;
@@ -252,8 +252,8 @@ namespace EliteDangerousCore
         {
             get
             {
-                ShipModuleData.ShipInfo md = ShipModuleData.Instance.GetShipProperty(ShipFD, ShipModuleData.ShipPropID.Speed);
-                double v = md != null ? (md as ShipModuleData.ShipInfoInt).Value : 0;
+                ItemData.IModuleInfo md = ItemData.Instance.GetShipProperty(ShipFD, ItemData.ShipPropID.Speed);
+                double v = md != null ? (md as ItemData.ShipInfoInt).Value : 0;
                 ShipModule.EngineeringData ed = GetEngineering("Main Thrusters");
                 ed?.EngineerThrusters(ref v);
                 return v;
@@ -264,12 +264,12 @@ namespace EliteDangerousCore
         {
             get
             {
-                ShipModuleData.ShipInfo md = ShipModuleData.Instance.GetShipProperty(ShipFD, ShipModuleData.ShipPropID.Class);
+                ItemData.IModuleInfo md = ItemData.Instance.GetShipProperty(ShipFD, ItemData.ShipPropID.Class);
                 if (md == null)
                     return "Unknown";
                 else
                 {
-                    int i = (md as ShipModuleData.ShipInfoInt).Value;
+                    int i = (md as ItemData.ShipInfoInt).Value;
                     if (i == 1)
                         return "Small";
                     else if (i == 2)
@@ -298,7 +298,7 @@ namespace EliteDangerousCore
 
         #region Creating and changing
 
-        public ShipInformation(int id)
+        public ShipInformation(ulong id)
         {
             ID = id;
             Modules = new Dictionary<string, ShipModule>();
@@ -659,7 +659,7 @@ namespace EliteDangerousCore
             {
                 JObject module = new JObject();
 
-                ShipModuleData.ShipModule si = ShipModuleData.Instance.GetItemProperties(sm.ItemFD);
+                ItemData.ShipModule si = ItemData.Instance.GetShipModuleProperties(sm.ItemFD);
 
                 if (si.ModuleID == 0)
                 {

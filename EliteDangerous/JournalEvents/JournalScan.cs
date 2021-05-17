@@ -570,7 +570,9 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         // has no trailing LF
-        public string DisplayString(int indent = 0, MaterialCommoditiesList historicmatlist = null, MaterialCommoditiesList currentmatlist = null, bool includefront = true)//, bool mapped = false, bool efficiencyBonus = false)
+        public string DisplayString(int indent = 0,     List<MaterialCommodityMicroResource> historicmatlist = null, 
+                                                        List<MaterialCommodityMicroResource> currentmatlist = null, 
+                                                        bool includefront = true)//, bool mapped = false, bool efficiencyBonus = false)
         {
             string inds = new string(' ', indent);
 
@@ -920,7 +922,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
         // show material counts at the historic point and current.  Has trailing LF if text present.
-        public string DisplayMaterials(int indent = 0, MaterialCommoditiesList historicmatlist = null, MaterialCommoditiesList currentmatlist = null)
+        public string DisplayMaterials(int indent = 0, List<MaterialCommodityMicroResource> historicmatlist = null, List<MaterialCommodityMicroResource> currentmatlist = null)
         {
             StringBuilder scanText = new StringBuilder();
 
@@ -938,17 +940,17 @@ namespace EliteDangerousCore.JournalEvents
             return scanText.ToNullSafeString();
         }
 
-        public string DisplayMaterial(string fdname, double percent, MaterialCommoditiesList historicmatlist = null,
-                                        MaterialCommoditiesList currentmatlist = null)  // has trailing LF
+        public string DisplayMaterial(string fdname, double percent, List<MaterialCommodityMicroResource> historicmatlist = null,
+                                                                      List<MaterialCommodityMicroResource> currentmatlist = null)  // has trailing LF
         {
             StringBuilder scanText = new StringBuilder();
 
-            MaterialCommodityData mc = MaterialCommodityData.GetByFDName(fdname);
+            MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);
 
             if (mc != null && (historicmatlist != null || currentmatlist != null))
             {
-                MaterialCommodities historic = historicmatlist?.Find(mc);
-                MaterialCommodities current = ReferenceEquals(historicmatlist, currentmatlist) ? null : currentmatlist?.Find(mc);
+                MaterialCommodityMicroResource historic = historicmatlist?.Find(x=>x.Details == mc);
+                MaterialCommodityMicroResource current = ReferenceEquals(historicmatlist, currentmatlist) ? null : currentmatlist?.Find(x=>x.Details == mc);
                 int? limit = mc.MaterialLimit();
 
                 string matinfo = historic?.Count.ToString() ?? "0";

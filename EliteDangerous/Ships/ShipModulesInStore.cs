@@ -50,7 +50,7 @@ namespace EliteDangerousCore
             {
                 get
                 {
-                    ShipModuleData.ShipModule smd = ShipModuleData.Instance.GetItemProperties(Name);
+                    ItemData.ShipModule smd = ItemData.Instance.GetShipModuleProperties(Name);
                     return smd?.Mass ?? 0;
                 }
             }

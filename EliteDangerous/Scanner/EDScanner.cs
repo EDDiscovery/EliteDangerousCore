@@ -142,7 +142,7 @@ namespace EliteDangerousCore
                         if (stopRequested.WaitOne(0))
                             return;
 
-                        System.Diagnostics.Debug.WriteLine("Issue " + ent.EventTypeStr);
+                       // System.Diagnostics.Debug.WriteLine("Issue " + ent.EventTypeStr);
                         OnNewJournalEntry?.Invoke(ent);
                     }
                 }
@@ -154,9 +154,7 @@ namespace EliteDangerousCore
                         if (stopRequested.WaitOne(0))
                             return;
 
-                        //System.Diagnostics.Trace.WriteLine(string.Format("New UI entry from journal {0} {1}", uient.EventTimeUTC, uient.EventTypeStr));
-
-                        System.Diagnostics.Debug.WriteLine("Issue  UI" + uient.EventTypeStr);
+                      //  System.Diagnostics.Debug.WriteLine("Issue  UI" + uient.EventTypeStr);
                         OnNewUIEvent?.Invoke(uient);
                     }
                 }
@@ -169,21 +167,21 @@ namespace EliteDangerousCore
 
         // call to update/create watchers on joutnal and UI.  Do it with system stopped
 
-        public void SetupWatchers(string[] stdfolders)
+        public void SetupWatchers(string[] stdfolders, string journalmatchpattern)
         {
             System.Diagnostics.Debug.Assert(ScanThread == null);        // double check we are not scanning.
 
             List<int> watchersinuse = new List<int>();
             foreach (string std in stdfolders)          // setup the std folders
             {
-                watchersinuse.Add(CheckAddPath(std));
+                watchersinuse.Add(CheckAddPath(std,journalmatchpattern));
             }
 
             foreach (var cmdr in EDCommander.GetListCommanders())       // setup any commander folders
             {
                 if (!cmdr.ConsoleCommander && cmdr.JournalDir.HasChars())    // not console commanders, and we have a path
                 {
-                    watchersinuse.Add(CheckAddPath(cmdr.JournalDir));   // try adding
+                    watchersinuse.Add(CheckAddPath(cmdr.JournalDir,journalmatchpattern));   // try adding
                 }
             }
 
@@ -206,7 +204,7 @@ namespace EliteDangerousCore
             }
         }
 
-        private int CheckAddPath(string p)           // return index of watcher (and therefore status watcher as we add in parallel)
+        private int CheckAddPath(string p, string journalmatchpattern)           // return index of watcher (and therefore status watcher as we add in parallel)
         {
             try
             {
@@ -219,7 +217,7 @@ namespace EliteDangerousCore
                     if (present < 0)  // and we are not watching it, add it
                     {
                         System.Diagnostics.Trace.WriteLine(string.Format("New watch on {0}", path));
-                        JournalMonitorWatcher mw = new JournalMonitorWatcher(path);
+                        JournalMonitorWatcher mw = new JournalMonitorWatcher(path,journalmatchpattern);
                         watchers.Add(mw);
 
                         StatusReader sw = new StatusReader(path);

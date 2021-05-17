@@ -92,18 +92,20 @@ namespace EliteDangerousCore.EDAstro
                         historyevent.Reset();
 
                         var jo = new List<JObject>();
+                        bool odyssey = false;
 
                         do
                         {
                             if (acceptevents.Count == 0 || acceptevents.Contains(he.journalEntry.EventTypeStr))       // no need to lock, this thread only one which changes it
                             {
                                 JObject json = he.journalEntry.GetJson();
+                                odyssey |= he.journalEntry.IsOdyssey;
                                 jo.Add(json);
                             }
                         } while (jo.Count < maxEventsPerMessage && historylist.TryDequeue(out he));
 
                         EDAstroClass ac = new EDAstroClass();
-                        ac.SendJournalEvents(jo);
+                        ac.SendJournalEvents(jo, odyssey);
                     }
 
                     exitevent.WaitOne(10000);        // ms between groups

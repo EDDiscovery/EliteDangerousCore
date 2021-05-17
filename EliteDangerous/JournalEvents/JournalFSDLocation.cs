@@ -306,6 +306,11 @@ namespace EliteDangerousCore.JournalEvents
                                                                       // tbd bug in journal over FactionState - its repeated twice..
             StationServices = evt["StationServices"]?.ToObjectQ<string[]>();
             StationEconomyList = evt["StationEconomies"]?.ToObjectQ<JournalDocked.Economies[]>();
+
+            Taxi = evt["Taxi"].BoolNull();
+            Multicrew = evt["Multicrew"].BoolNull();
+            InSRV = evt["InSRV"].BoolNull();
+            OnFoot = evt["OnFoot"].BoolNull();
         }
 
         public bool Docked { get; set; }
@@ -331,6 +336,12 @@ namespace EliteDangerousCore.JournalEvents
         public string[] StationServices { get; set; }
         public JournalDocked.Economies[] StationEconomyList { get; set; }        // may be null
 
+        //4.0 alpha 4
+        public bool? Taxi { get; set; }
+        public bool? Multicrew { get; set; }
+        public bool? InSRV { get; set; }
+        public bool? OnFoot { get; set; }
+
         public override string SummaryName(ISystem sys) 
         {
             if (Docked)
@@ -338,7 +349,9 @@ namespace EliteDangerousCore.JournalEvents
             else
             {
                 string bodyname = Body.HasChars() ? Body.ReplaceIfStartsWith(StarSystem) : StarSystem;
-                if (Latitude.HasValue && Longitude.HasValue)
+                if ( OnFoot == true )
+                    return string.Format("On Foot at {0}".T(EDTx.TBD), bodyname);
+                else if (Latitude.HasValue && Longitude.HasValue)
                     return string.Format("Landed on {0}".T(EDTx.JournalLocation_LND), bodyname);
                 else
                     return string.Format("At {0}".T(EDTx.JournalLocation_AtStar), bodyname);
@@ -395,9 +408,9 @@ namespace EliteDangerousCore.JournalEvents
                 info = "At " + JournalFieldNaming.RLat(Latitude.Value) + " " + JournalFieldNaming.RLong(Longitude.Value);
                 detailed = "";
             }
-            else
+            else 
             {
-                info = "In space near ".T(EDTx.JournalLocOrJump_Inspacenear) + BodyType + " " + Body;
+                info = "Near ".T(EDTx.TBD) + BodyType + " " + Body;     // remove JournalLocOrJump_Inspacenear
                 detailed = "";
             }
         }
@@ -535,6 +548,9 @@ namespace EliteDangerousCore.JournalEvents
             BodyID = evt["BodyID"].IntNull();
             BodyType = JournalFieldNaming.NormaliseBodyType(evt["BodyType"].Str());
 
+            Taxi = evt["Taxi"].BoolNull();
+            Multicrew = evt["Multicrew"].BoolNull();
+
             JToken jm = evt["EDDMapColor"];
             MapColor = jm.Int(EDCommander.Current.MapColour);
             if (jm.IsNull())
@@ -559,6 +575,9 @@ namespace EliteDangerousCore.JournalEvents
         public string Body { get; set; }
         public int? BodyID { get; set; }
         public string BodyType { get; set; }
+
+        public bool? Taxi { get; set; }
+        public bool? Multicrew { get; set; }
 
         public override string SummaryName(ISystem sys) { return string.Format("Jump to {0}".T(EDTx.JournalFSDJump_Jumpto), StarSystem); }
 

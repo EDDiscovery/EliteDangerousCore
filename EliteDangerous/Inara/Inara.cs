@@ -255,9 +255,8 @@ namespace EliteDangerousCore.Inara
             return Event("setCommanderInventoryMaterialsItem", dt, eventData);
         }
 
-        static public JToken setCommanderInventoryItem(MaterialCommoditiesList list, string name, DateTime dt)
+        static public JToken setCommanderInventoryItem(MaterialCommodityMicroResource item, DateTime dt)
         {
-            var item = list.FindFDName(name);
             if (item != null)
             {
                 if (item.Details.IsCommodity)
@@ -267,9 +266,10 @@ namespace EliteDangerousCore.Inara
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("Can't find " + name + " in mat db");
+                System.Diagnostics.Debug.WriteLine("INARA Can't find item");
                 return null;
             }
+               
         }
 
         static public JToken setCommanderStorageModules(IEnumerable<ModulesInStore.StoredModule> list, DateTime dt)
@@ -299,7 +299,7 @@ namespace EliteDangerousCore.Inara
             return Event("setCommanderStorageModules", dt, items);
         }
 
-        static public JToken addCommanderShip(string fdname, int id, string starsystem, string station, DateTime dt)
+        static public JToken addCommanderShip(string fdname, ulong id, string starsystem, string station, DateTime dt)
         {
             JObject eventData = new JObject();
             eventData["shipType"] = fdname;
@@ -309,7 +309,7 @@ namespace EliteDangerousCore.Inara
             return Event("addCommanderShip", dt, eventData);
         }
 
-        static public JToken delCommanderShip(string fdname, int id, DateTime dt)
+        static public JToken delCommanderShip(string fdname, ulong id, DateTime dt)
         {
             JObject eventData = new JObject();
             eventData["shipType"] = fdname;
@@ -317,7 +317,7 @@ namespace EliteDangerousCore.Inara
             return Event("delCommanderShip", dt, eventData);
         }
 
-        static public JToken setCommanderShip(string fdname, int id, DateTime dt,
+        static public JToken setCommanderShip(string fdname, ulong id, DateTime dt,
                                               string username = null, string userid = null, bool? curship = null,
                                               bool? ishot = null,
                                               long? shipHullValue = null, long? shipModulesValue = null, long? shipRebuyCost = null,
@@ -350,7 +350,7 @@ namespace EliteDangerousCore.Inara
             return Event("setCommanderShip", dt, eventData);
         }
 
-        static public JToken setCommanderShipLoadout(string fdname, int id, IEnumerable<ShipModule> list, DateTime dt)
+        static public JToken setCommanderShipLoadout(string fdname, ulong id, IEnumerable<ShipModule> list, DateTime dt)
         {
             if (list.Count() == 0)      // no loadout, nothing to send..
                 return null;
@@ -418,7 +418,7 @@ namespace EliteDangerousCore.Inara
             return Event("setCommanderShipLoadout", dt, eventData);
         }
 
-        static public JToken setCommanderShipTransfer(string fdname, int id, string starsystem, string station, long? marketid, int transfertimesec, DateTime dt)
+        static public JToken setCommanderShipTransfer(string fdname, ulong id, string starsystem, string station, long? marketid, int transfertimesec, DateTime dt)
         {
             JObject eventData = new JObject();
             eventData["shipType"] = fdname;
@@ -432,7 +432,7 @@ namespace EliteDangerousCore.Inara
             return Event("setCommanderShipTransfer", dt, eventData);
         }
 
-        static public JToken addCommanderTravelDock(string fdname, int id, string starsystem, string station, long ? marketid, DateTime dt)
+        static public JToken addCommanderTravelDock(string fdname, ulong id, string starsystem, string station, long ? marketid, DateTime dt)
         {
             JObject eventData = new JObject();
             eventData["shipType"] = fdname;
@@ -444,7 +444,7 @@ namespace EliteDangerousCore.Inara
             return Event("addCommanderTravelDock", dt, eventData);
         }
 
-        static public JToken addCommanderTravelFSDJump(string fdname, int id, string starsystem, double distance, DateTime dt)
+        static public JToken addCommanderTravelFSDJump(string fdname, ulong id, string starsystem, double distance, DateTime dt)
         {
             JObject eventData = new JObject();
             eventData["shipType"] = fdname;
@@ -454,7 +454,7 @@ namespace EliteDangerousCore.Inara
             return Event("addCommanderTravelFSDJump", dt, eventData);
         }
 
-        static public JToken addCommanderTravelCarrierJump(string fdname, int id, string starsystem, DateTime dt)
+        static public JToken addCommanderTravelCarrierJump(string fdname, ulong id, string starsystem, DateTime dt)
         {
             JObject eventData = new JObject();
             eventData["shipType"] = fdname;
@@ -524,7 +524,7 @@ namespace EliteDangerousCore.Inara
             return Event("addCommanderMission", mission.EventTimeUTC, eventData);
         }
 
-        static public JToken setCommanderMissionAbandoned(int id, DateTime dt)
+        static public JToken setCommanderMissionAbandoned(ulong id, DateTime dt)
         {
             JObject eventData = new JObject();
             eventData["missionGameID"] = id;
@@ -598,7 +598,7 @@ namespace EliteDangerousCore.Inara
             return Event("setCommanderMissionCompleted", mission.EventTimeUTC, eventData);
         }
 
-        static public JToken setCommanderMissionFailed(int id, DateTime dt)
+        static public JToken setCommanderMissionFailed(ulong id, DateTime dt)
         {
             JObject eventData = new JObject();
             eventData["missionGameID"] = id;

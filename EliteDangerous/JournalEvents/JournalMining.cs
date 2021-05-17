@@ -25,7 +25,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             Type = JournalFieldNaming.FixCommodityName(evt["Type"].Str());          // instances of $.._name, translate to FDNAME
             Type = JournalFieldNaming.FDNameTranslation(Type);     // pre-mangle to latest names, in case we are reading old journal records
-            FriendlyType = MaterialCommodityData.GetNameByFDName(Type);
+            FriendlyType = MaterialCommodityMicroResourceType.GetNameByFDName(Type);
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);
         }
 
@@ -35,10 +35,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public int Total { get; set; }      // found from MCL
 
-        public void UpdateCommodities(MaterialCommoditiesList mc)
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc)
         {
-            mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, Type, 1, 0);
-            Total = mc.FindFDName(Type)?.Count ?? 0;
+            mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Type, 1, 0);
+            Total = mc.GetLast(Type)?.Count ?? 0;
         }
 
         public void LedgerNC(Ledger mcl)
@@ -48,7 +48,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            MaterialCommodityData mcd = MaterialCommodityData.GetByFDName(Type);
+            MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Type);
             if (mcd != null)
                 info = BaseUtils.FieldBuilder.Build("", Type_Localised, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "Total:".T(EDTx.JournalEntry_Total), Total);
             else
@@ -87,7 +87,7 @@ namespace EliteDangerousCore.JournalEvents
             public void Normalise()
             {
                 Name = JournalFieldNaming.FDNameTranslation(Name);
-                FriendlyName = MaterialCommodityData.GetNameByFDName(Name);
+                FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(Name);
             }
         }
 
@@ -97,7 +97,7 @@ namespace EliteDangerousCore.JournalEvents
             Content_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Content_Localised"].Str(), Content.ToString());
 
             MotherlodeMaterial = JournalFieldNaming.FDNameTranslation(evt["MotherlodeMaterial"].Str());
-            FriendlyMotherlodeMaterial = MaterialCommodityData.GetNameByFDName(MotherlodeMaterial);
+            FriendlyMotherlodeMaterial = MaterialCommodityMicroResourceType.GetNameByFDName(MotherlodeMaterial);
             MotherlodeMaterial_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["MotherlodeMaterial_Localised"].Str(),FriendlyMotherlodeMaterial);
 
             Remaining = evt["Remaining"].Double();      // 0-100

@@ -24,6 +24,7 @@ namespace EliteDangerousCore.JournalEvents
     [JournalEntryType(JournalTypeEnum.Materials)]
     public class JournalMaterials : JournalEntry, IMaterialJournalEntry
     {
+        [System.Diagnostics.DebuggerDisplay("Mat {Name} {Count}")]
         public class Material
         {
             public string Name { get; set; }        //FDNAME
@@ -34,17 +35,17 @@ namespace EliteDangerousCore.JournalEvents
             public void Normalise()
             {
                 Name = JournalFieldNaming.FDNameTranslation(Name);
-                FriendlyName = MaterialCommodityData.GetNameByFDName(Name);
+                FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(Name);
             }
         }
 
         public JournalMaterials(JObject evt) : base(evt, JournalTypeEnum.Materials)
         {
-            Raw = evt["Raw"]?.ToObjectQ<Material[]>().OrderBy(x => x.Name)?.ToArray();
+            Raw = evt["Raw"]?.ToObjectQ<Material[]>()?.OrderBy(x => x.Name)?.ToArray();
             FixNames(Raw);
-            Manufactured = evt["Manufactured"]?.ToObjectQ<Material[]>().OrderBy(x => x.Name)?.ToArray();
+            Manufactured = evt["Manufactured"]?.ToObjectQ<Material[]>()?.OrderBy(x => x.Name)?.ToArray();
             FixNames(Manufactured);
-            Encoded = evt["Encoded"]?.ToObjectQ<Material[]>().OrderBy(x => x.Name)?.ToArray();
+            Encoded = evt["Encoded"]?.ToObjectQ<Material[]>()?.OrderBy(x => x.Name)?.ToArray();
             FixNames(Encoded);
         }
 
@@ -99,22 +100,23 @@ namespace EliteDangerousCore.JournalEvents
             return sb.ToString();
         }
 
-        public void UpdateMaterials(MaterialCommoditiesList mc)
+        public void UpdateMaterials(MaterialCommoditiesMicroResourceList mc)
         {
-            //System.Diagnostics.Debug.WriteLine("Updated at " + this.EventTimeUTC.ToString());
-            mc.Clear(false);
-
-            if ( Raw != null )
-                foreach (Material m in Raw)
-                    mc.Set(MaterialCommodityData.CatType.Raw, m.Name, m.Count, 0);
-
+            if (Raw != null)
+            {
+                List<Tuple<string, int>> counts = Raw.Select(x => new Tuple<string, int>(x.Name.ToLower(), x.Count)).ToList();
+                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Raw, counts);
+            }
             if ( Manufactured != null )
-                foreach (Material m in Manufactured)
-                    mc.Set(MaterialCommodityData.CatType.Manufactured, m.Name, m.Count, 0);
-
+            {
+                List<Tuple<string, int>> counts = Manufactured.Select(x => new Tuple<string, int>(x.Name.ToLower(), x.Count)).ToList();
+                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Manufactured, counts);
+            }
             if ( Encoded != null )
-                foreach (Material m in Encoded)
-                    mc.Set(MaterialCommodityData.CatType.Encoded, m.Name, m.Count, 0);
+            {
+                List<Tuple<string, int>> counts = Encoded.Select(x => new Tuple<string, int>(x.Name.ToLower(), x.Count)).ToList();
+                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Encoded, counts);
+            }
         }
     }
 
@@ -126,7 +128,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             Category = JournalFieldNaming.NormaliseMaterialCategory(evt["Category"].Str());
             Name = JournalFieldNaming.FDNameTranslation(evt["Name"].Str());     // pre-mangle to latest names, in case we are reading old journal records
-            FriendlyName = MaterialCommodityData.GetNameByFDName(Name);
+            FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(Name);
             Count = evt["Count"].Int(1);
         }
         public string Category { get; set; }
@@ -136,16 +138,16 @@ namespace EliteDangerousCore.JournalEvents
 
         public int Total { get; set; }      // found from MCL
 
-        public void UpdateMaterials(MaterialCommoditiesList mc)
+        public void UpdateMaterials(MaterialCommoditiesMicroResourceList mc)
         {
             mc.Change( EventTimeUTC, Category, Name, Count, 0);
 
-            Total = mc.FindFDName(Name)?.Count ?? 0;
+            Total = mc.GetLast(Name)?.Count ?? 0;
         }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            MaterialCommodityData mcd = MaterialCommodityData.GetByFDName(Name);
+            MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Name);
             if (mcd != null)
                 info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".T(EDTx.JournalEntry_MatC), Count, "Total:".T(EDTx.JournalEntry_Total), Total);
             else
@@ -162,7 +164,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             Category = JournalFieldNaming.NormaliseMaterialCategory(evt["Category"].Str());
             Name = JournalFieldNaming.FDNameTranslation(evt["Name"].Str());     // pre-mangle to latest names, in case we are reading old journal records
-            FriendlyName = MaterialCommodityData.GetNameByFDName(Name);
+            FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(Name);
             Count = evt["Count"].Int();
         }
 
@@ -173,15 +175,15 @@ namespace EliteDangerousCore.JournalEvents
 
         public int Total { get; set; }      // found from MCL
 
-        public void UpdateMaterials(MaterialCommoditiesList mc)
+        public void UpdateMaterials(MaterialCommoditiesMicroResourceList mc)
         {
             mc.Change( EventTimeUTC, Category, Name, -Count, 0);
-            Total = mc.FindFDName(Name)?.Count ?? 0;
+            Total = mc.GetLast(Name)?.Count ?? 0;
         }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            MaterialCommodityData mcd = MaterialCommodityData.GetByFDName(Name);
+            MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Name);
             if (mcd != null)
                 info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".T(EDTx.JournalEntry_MatC), Count, "Total:".T(EDTx.JournalEntry_Total), Total);
             else
@@ -198,7 +200,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             Category = JournalFieldNaming.NormaliseMaterialCategory(evt["Category"].Str());
             Name = JournalFieldNaming.FDNameTranslation(evt["Name"].Str());     // pre-mangle to latest names, in case we are reading old journal records
-            FriendlyName = MaterialCommodityData.GetNameByFDName(Name);
+            FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(Name);
             DiscoveryNumber = evt["DiscoveryNumber"].Int();
         }
 
@@ -210,7 +212,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", FriendlyName);
-            MaterialCommodityData mcd = MaterialCommodityData.GetByFDName(Name);
+            MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Name);
             if (mcd != null)
                 info += BaseUtils.FieldBuilder.Build(" (", mcd.TranslatedCategory, ";)", mcd.TranslatedType);
 
@@ -259,7 +261,7 @@ namespace EliteDangerousCore.JournalEvents
             public void Normalise()
             {
                 Material = JournalFieldNaming.FDNameTranslation(Material);
-                FriendlyMaterial = MaterialCommodityData.GetNameByFDName(Material);
+                FriendlyMaterial = MaterialCommodityMicroResourceType.GetNameByFDName(Material);
                 Material_Localised = JournalFieldNaming.CheckLocalisationTranslation(Material_Localised ?? "", FriendlyMaterial);       // ensure.
 
                 if (Category != null)       // some entries do not have this
@@ -270,7 +272,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void UpdateMaterials(MaterialCommoditiesList mc)
+        public void UpdateMaterials(MaterialCommoditiesMicroResourceList mc)
         {
             if (Paid != null && Received != null)
             {
@@ -335,17 +337,17 @@ namespace EliteDangerousCore.JournalEvents
         public string Name { get; set; }
         public Dictionary<string, int> Materials { get; set; }
 
-        public void UpdateMaterials(MaterialCommoditiesList mc)
+        public void UpdateMaterials(MaterialCommoditiesMicroResourceList mc)
         {
             if (Materials != null)
             {
                 foreach (KeyValuePair<string, int> k in Materials)        // may be commodities or materials
-                    mc.Craft(k.Key, k.Value);        // same as this, uses up materials
+                    mc.Craft(EventTimeUTC, k.Key, k.Value);        // same as this, uses up materials
             }
 
             if (Name.Contains("Limpet", StringComparison.InvariantCultureIgnoreCase) )      // hard code limpets mean 1 more cargo of them
             {
-                mc.Change( EventTimeUTC, MaterialCommodityData.CatType.Commodity, "drones", 1, 0);   // ignore faction - synthesis
+                mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, "drones", 1, 0);   // ignore faction - synthesis
             }
         }
 
@@ -354,7 +356,7 @@ namespace EliteDangerousCore.JournalEvents
             info = Name;
             if (Materials != null)
                 foreach (KeyValuePair<string, int> k in Materials)
-                    info += ", " + MaterialCommodityData.GetNameByFDName(k.Key) + ":" + k.Value.ToString();
+                    info += ", " + MaterialCommodityMicroResourceType.GetNameByFDName(k.Key) + ":" + k.Value.ToString();
 
             detailed = "";
         }

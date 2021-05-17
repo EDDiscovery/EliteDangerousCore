@@ -22,12 +22,17 @@ namespace EliteDangerousCore
 {
     public interface IMaterialJournalEntry
     {
-        void UpdateMaterials(MaterialCommoditiesList mc);
+        void UpdateMaterials(MaterialCommoditiesMicroResourceList mc);
     }
 
     public interface ICommodityJournalEntry
     {
-        void UpdateCommodities(MaterialCommoditiesList mc);
+        void UpdateCommodities(MaterialCommoditiesMicroResourceList mc);
+    }
+
+    public interface IMicroResourceJournalEntry
+    {
+        void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc);
     }
 
     public interface ILedgerJournalEntry
@@ -104,5 +109,20 @@ namespace EliteDangerousCore
         string TargetFaction { get; }
         bool HasFaction(string faction);
         long FactionReward(string faction);
+    }
+
+    public interface ISuitInformation
+    {
+        void SuitInformation(SuitList shp, string whereami, ISystem system);
+    }
+
+    public interface ISuitLoadoutInformation
+    {
+        void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system);
+    }
+
+    public interface IWeaponInformation
+    {
+        void WeaponInformation(SuitWeaponList shp, string whereami, ISystem system);
     }
 }

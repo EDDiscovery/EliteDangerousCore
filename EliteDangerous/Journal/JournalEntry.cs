@@ -53,19 +53,9 @@ namespace EliteDangerousCore
         public bool StartMarker { get { return (Synced & (int)SyncFlags.StartMarker) != 0; } }
         public bool StopMarker { get { return (Synced & (int)SyncFlags.StopMarker) != 0; } }
 
-        public virtual bool Beta
-        {
-            get
-            {
-                if (beta == null)
-                {
-                    TravelLogUnit tlu = TravelLogUnit.Get(TLUId);
-                    beta = tlu?.Beta ?? false;
-                }
-
-                return beta ?? false;
-            }
-        }
+        public virtual bool IsBeta { get { return TravelLogUnit.Get(TLUId)?.Beta ?? false; } }        // TLUs are cached via the dictionary, no point also holding a local copy
+        public virtual bool IsHorizons { get { return TravelLogUnit.Get(TLUId)?.Horizons ?? false; } }     
+        public virtual bool IsOdyssey { get { return TravelLogUnit.Get(TLUId)?.Odyssey ?? false; } }       
 
         public abstract void FillInformation(ISystem sys, out string info, out string detailed);     // all entries must implement
 
@@ -287,8 +277,6 @@ namespace EliteDangerousCore
 
 
         #region Private variables
-
-        private bool? beta;                        // True if journal entry is from beta
 
         private enum SyncFlags
         {

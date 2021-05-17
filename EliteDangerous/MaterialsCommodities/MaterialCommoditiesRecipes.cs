@@ -23,7 +23,7 @@ namespace EliteDangerousCore
 
     public static class MaterialCommoditiesRecipe
     {
-        static public Dictionary<string, int> TotalList(List<MaterialCommodities> mcl)      // holds totals list by FDName, used during computation of below functions
+        static public Dictionary<string, int> TotalList(List<MaterialCommodityMicroResource> mcl)      // holds totals list by FDName, used during computation of below functions
         {
             var used = new Dictionary<string, int>();
             foreach (var x in mcl)
@@ -33,7 +33,7 @@ namespace EliteDangerousCore
 
         //return maximum can make, how many made, needed string, needed string long format
 
-        static public Tuple<int, int, string, string> HowManyLeft(List<MaterialCommodities> list, Dictionary<string, int> totals, Recipes.Recipe r, int tomake = 0)
+        static public Tuple<int, int, string, string> HowManyLeft(List<MaterialCommodityMicroResource> list, Dictionary<string, int> totals, Recipes.Recipe r, int tomake = 0)
         {
             int max = int.MaxValue;
             System.Text.StringBuilder needed = new System.Text.StringBuilder(256);
@@ -62,8 +62,8 @@ namespace EliteDangerousCore
                     }
                     else
                     {
-                        MaterialCommodityData db = MaterialCommodityData.GetByShortName(ingredient);
-                        dispshort = (db.Category == MaterialCommodityData.CatType.Encoded || db.Category == MaterialCommodityData.CatType.Manufactured) ? " " + db.Name : db.Shortname;
+                        MaterialCommodityMicroResourceType db = MaterialCommodityMicroResourceType.GetByShortName(ingredient);
+                        dispshort = (db.Category == MaterialCommodityMicroResourceType.CatType.Encoded || db.Category == MaterialCommodityMicroResourceType.CatType.Manufactured) ? " " + db.Name : db.Shortname;
                         displong = " " + db.Name;
                     }
 
@@ -115,9 +115,9 @@ namespace EliteDangerousCore
 
         // return shopping list/count given receipe list, list of current materials.
 
-        static public List<Tuple<MaterialCommodities,int>> GetShoppingList(List<Tuple<Recipes.Recipe, int>> wantedrecipes, List<MaterialCommodities> list)
+        static public List<Tuple<MaterialCommodityMicroResource,int>> GetShoppingList(List<Tuple<Recipes.Recipe, int>> wantedrecipes, List<MaterialCommodityMicroResource> list)
         {
-            var shoppingList = new List<Tuple<MaterialCommodities, int>>();
+            var shoppingList = new List<Tuple<MaterialCommodityMicroResource, int>>();
             var totals = TotalList(list);
 
             foreach (Tuple<Recipes.Recipe, int> want in wantedrecipes)
@@ -131,7 +131,7 @@ namespace EliteDangerousCore
 
                     int mi = list.FindIndex(x => x.Details.Shortname.Equals(ingredient));   // see if we have any in list
 
-                    MaterialCommodities matc = mi != -1 ? list[mi] : new MaterialCommodities( MaterialCommodityData.GetByShortName(ingredient) );   // if not there, make one
+                    MaterialCommodityMicroResource matc = mi != -1 ? list[mi] : new MaterialCommodityMicroResource( MaterialCommodityMicroResourceType.GetByShortName(ingredient) );   // if not there, make one
                     if (mi == -1)               // if not there, make an empty total entry
                         totals[matc.Details.FDName] = 0;
 
@@ -145,11 +145,11 @@ namespace EliteDangerousCore
 
                         if (shopentry >= 0)     // found, update list with new wanted total
                         {
-                            shoppingList[shopentry] = new Tuple<MaterialCommodities, int>(shoppingList[shopentry].Item1, shoppingList[shopentry].Item2 - left);       // need this more
+                            shoppingList[shopentry] = new Tuple<MaterialCommodityMicroResource, int>(shoppingList[shopentry].Item1, shoppingList[shopentry].Item2 - left);       // need this more
                         }
                         else
                         {
-                            shoppingList.Add(new Tuple<MaterialCommodities, int>(matc, -left));  // a new shop entry with this many needed
+                            shoppingList.Add(new Tuple<MaterialCommodityMicroResource, int>(matc, -left));  // a new shop entry with this many needed
                         }
 
                         totals[matc.Details.FDName] = 0;            // clear count
@@ -161,7 +161,7 @@ namespace EliteDangerousCore
                 }
             }
 
-            shoppingList.Sort(delegate (Tuple<MaterialCommodities,int> left, Tuple<MaterialCommodities,int> right) { return left.Item1.Details.Name.CompareTo(right.Item1.Details.Name); });
+            shoppingList.Sort(delegate (Tuple<MaterialCommodityMicroResource,int> left, Tuple<MaterialCommodityMicroResource,int> right) { return left.Item1.Details.Name.CompareTo(right.Item1.Details.Name); });
 
             return shoppingList;
         }

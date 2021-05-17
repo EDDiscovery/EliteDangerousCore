@@ -26,7 +26,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public class Passengers
         {
-            public int MissionID { get; set; }
+            public ulong MissionID { get; set; }
             public string Type { get; set; }
             public bool VIP { get; set; }
             public bool Wanted { get; set; }
@@ -35,7 +35,7 @@ namespace EliteDangerousCore.JournalEvents
             public Passengers()
             { }
 
-            public Passengers(int i, string t, bool v, bool w, int c)
+            public Passengers(ulong i, string t, bool v, bool w, int c)
             {
                 MissionID = i; Type = t; VIP = v; Wanted = w; Count = c;
             }

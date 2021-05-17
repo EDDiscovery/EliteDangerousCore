@@ -39,7 +39,7 @@ namespace EliteDangerousCore
 
         public bool InProgress { get { return (State == StateTypes.InProgress); } }
         public bool InProgressDateTime(DateTime compare) { return InProgress && DateTime.Compare(compare, Mission.Expiry)<0; }
-        public int Id { get { return Mission.MissionId; } }                         // id of entry
+        public ulong Id { get { return Mission.MissionId; } }                         // id of entry
         public string OriginatingSystem { get { return sys.Name; } }
         public string OriginatingStation { get { return body; } }
 
@@ -415,7 +415,7 @@ namespace EliteDangerousCore
             }
         }
 
-        public string GetExistingKeyFromID(int id)       // some only have mission ID, generated after accept. Find on key, may return null
+        public string GetExistingKeyFromID(ulong id)       // some only have mission ID, generated after accept. Find on key, may return null
         {
             string frontpart = id.ToStringInvariant() + ":";
 
@@ -446,7 +446,7 @@ namespace EliteDangerousCore
         public static string Key(JournalMissionAccepted m) { return m.MissionId.ToStringInvariant() + ":" + m.Name; }
         public static string Key(JournalMissionRedirected m) { return m.MissionId.ToStringInvariant() + ":" + m.Name; }
         public static string Key(JournalMissionAbandoned m) { return m.MissionId.ToStringInvariant() + ":" + m.Name; }
-        public static string Key(int id, string name) { return id.ToStringInvariant() + ":" + name; }
+        public static string Key(ulong id, string name) { return id.ToStringInvariant() + ":" + name; }
 
         private GenerationalDictionary<string, MissionState> history;
     }
