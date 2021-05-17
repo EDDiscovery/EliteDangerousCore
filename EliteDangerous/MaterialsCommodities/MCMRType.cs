@@ -117,27 +117,18 @@ namespace EliteDangerousCore
 
         public static MaterialCommodityMicroResourceType GetByFDName(string fdname)
         {
-            if (cachelist == null)
-                FillTable();
-
             fdname = fdname.ToLowerInvariant();
             return cachelist.ContainsKey(fdname) ? cachelist[fdname] : null;
         }
 
         public static string GetNameByFDName(string fdname) // if we have it, give name, else give alt or splitcaps.  
         {
-            if (cachelist == null)
-                FillTable();
-
             fdname = fdname.ToLowerInvariant();
             return cachelist.ContainsKey(fdname) ? cachelist[fdname].Name : fdname.SplitCapsWordFull();
         }
 
         public static MaterialCommodityMicroResourceType GetByShortName(string shortname)
         {
-            if (cachelist == null)
-                FillTable();
-
             List<MaterialCommodityMicroResourceType> lst = cachelist.Values.ToList();
             int i = lst.FindIndex(x => x.Shortname.Equals(shortname));
             return i >= 0 ? lst[i] : null;
@@ -145,9 +136,6 @@ namespace EliteDangerousCore
 
         public static MaterialCommodityMicroResourceType GetByName(string longname)
         {
-            if (cachelist == null)
-                FillTable();
-
             List<MaterialCommodityMicroResourceType> lst = cachelist.Values.ToList();
             int i = lst.FindIndex(x => x.Name.Equals(longname));
             return i >= 0 ? lst[i] : null;
@@ -156,19 +144,12 @@ namespace EliteDangerousCore
 
         public static MaterialCommodityMicroResourceType[] GetAll()
         {
-            if (cachelist == null)
-                FillTable();
-
             return cachelist.Values.ToArray();
         }
-
 
         // use this delegate to find them
         public static MaterialCommodityMicroResourceType[] Get(Func<MaterialCommodityMicroResourceType, bool> func, bool sorted)
         {
-            if (cachelist == null)
-                FillTable();
-
             MaterialCommodityMicroResourceType[] items = cachelist.Values.Where(func).ToArray();
 
             if (sorted)
@@ -412,7 +393,7 @@ namespace EliteDangerousCore
             return true;
         }
 
-        private static void FillTable()
+        public static void FillTable()
         {
             #region Materials  
 
