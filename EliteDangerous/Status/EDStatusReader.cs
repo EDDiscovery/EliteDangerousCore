@@ -197,7 +197,7 @@ namespace EliteDangerousCore
                     {
                         UIEvents.UIShipType.Shiptype nextshiptype = ShipType(curflags, curflags2);
 
-                        System.Diagnostics.Debug.WriteLine("UI Flags changed {0} {1} {2} -> {3} {4} {5}", prev_flags.Value, prev_flags2.Value, shiptype, curflags, curflags2, nextshiptype);
+                        //System.Diagnostics.Debug.WriteLine("UI Flags changed {0} {1} {2} -> {3} {4} {5}", prev_flags.Value, prev_flags2.Value, shiptype, curflags, curflags2, nextshiptype);
 
                         bool refresh = shiptype == UIEvents.UIShipType.Shiptype.None;   // refresh if prev ship was none..
 
@@ -232,7 +232,7 @@ namespace EliteDangerousCore
                         fireoverall = true;
                     }
 
-                    int curguifocus = jo["GuiFocus"].Int();
+                    int curguifocus = jo["GuiFocus"].Int(NotPresent);
                     if (curguifocus != prev_guifocus)
                     {
                         events.Add(new UIEvents.UIGUIFocus(curguifocus, EventTimeUTC, prev_guifocus == NotPresent));
@@ -412,14 +412,15 @@ namespace EliteDangerousCore
                                                                 EventTimeUTC, fireoverallrefresh));        // overall list of flags set
                     }
 
-                    foreach( var uient in events)
-                    {
-                        BaseUtils.Variables v = new BaseUtils.Variables();
-                        v.AddPropertiesFieldsOfClass(uient, "", null, 2);
-                        System.Diagnostics.Trace.WriteLine(string.Format("New UI entry from journal {0} {1}", uient.EventTimeUTC, uient.EventTypeStr));
-                        foreach ( var x in v.NameEnumuerable)
-                            System.Diagnostics.Trace.WriteLine(string.Format("  {0} = {1}", x, v[x] ));
-                    }
+                    // for debugging, keep
+                    //foreach( var uient in events)
+                    //{
+                    //    BaseUtils.Variables v = new BaseUtils.Variables();
+                    //    v.AddPropertiesFieldsOfClass(uient, "", null, 2);
+                    //    System.Diagnostics.Trace.WriteLine(string.Format("New UI entry from journal {0} {1}", uient.EventTimeUTC, uient.EventTypeStr));
+                    //    foreach ( var x in v.NameEnumuerable)
+                    //        System.Diagnostics.Trace.WriteLine(string.Format("  {0} = {1}", x, v[x] ));
+                    //}
 
                     return events;
                 }
@@ -458,7 +459,7 @@ namespace EliteDangerousCore
 
                 if (((delta >> v) & 1) != 0)
                 {
-                    System.Diagnostics.Debug.WriteLine("..Flag " + n + " at " +v +" changed to " + flag);
+                   // System.Diagnostics.Debug.WriteLine("..Flag " + n + " at " +v +" changed to " + flag);
                     var e = UIEvent.CreateEvent(n, EventTimeUTC, refresh, flag);
                     System.Diagnostics.Debug.Assert(e != null);
                     events.Add(e);
