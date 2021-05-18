@@ -1,4 +1,4 @@
-﻿
+
 SECTION JournalTypeEnum
 
 .Unknown: "Unknown" => "Unbekannt"
@@ -369,7 +369,7 @@ SECTION JournalMissionAccepted
 .Expiry: "Expiry:" => "Ablaufdatum:"
 .Influence: "Influence:" => "Einfluss:"
 .Reputation: "Reputation:" => "Ruf:"
-.Reward: "Reward:; cr;N0" => "Belohnung:; Cr;N0"
+.Reward: "Reward: ; cr;N0" => "Belohnung: ; Cr;N0"
 .Wing: "; (Wing)" => "; (Geschwader)"
 .Deliver: "Deliver:" => "Liefern:"
 .TargetType: "Target Type:" => "Zielart:"
@@ -651,7 +651,7 @@ SECTION CombatClass
 .CombatBondProfits: "Combat Bond Profits:;cr;N0" => "Einnahmen aus Kampfbelohnungen:;Cr;N0"
 .Assassinations: "Assassinations:;;N0" => "Mordaufträge:;;N0"
 .AssassinationProfits: "Assassination Profits:;cr;N0" => "Einnahmen aus Mordaufträge:;Cr;N0"
-.HighestReward: "Highest Reward:;cr;N0" => "Höchste Belohnung:;Cr;N0"
+.HighestReward: "Highest Reward: ;cr;N0" => "Höchste Belohnung: ;Cr;N0"
 .SkimmersKilled: "Skimmers Killed:;;N0" => "OF-Drohnen ausgeschaltet:;;N0"
 
 SECTION CrimeClass
@@ -799,14 +799,14 @@ SECTION JournalEntry
 .Victimfaction: "Victim faction:" => "Opferfraktion:"
 .Faction: "Faction:" => "Fraktion:"
 .from: "< from " => "< von "
-.dueto: "< , due to " => "< , wegen "
+.dueto: "<, due to " => "<, wegen "
 .0: "{0} on {1}" => "{0} auf {1}"
 .onfaction: "< on faction " => "< auf Fraktion "
 .Against: "Against " => "Gegen "
 .Cost: "Cost:; cr;N0" => "Kosten:; Cr;N0"
 .Bounty: "Bounty:; cr;N0" => "Kopfgeld:; Cr;N0"
 .Offender: "Offender " => "Täter "
-.Reward: "Reward:; cr;N0" => "Belohnung:; Cr;N0"
+.Reward: "Reward: ; cr;N0" => "Belohnung: ; Cr;N0"
 .to: "< to " => "< nach "
 .Brokertook: ", Broker took {0:N0}%" => ", Händler nahm {0:N0}%"
 .Type: "Type:" => "Art:"

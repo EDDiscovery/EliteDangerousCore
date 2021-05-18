@@ -400,7 +400,7 @@ SECTION JournalMissionAccepted
 .Expiry: "Expiry:" @
 .Influence: "Influence:" @
 .Reputation: "Reputation:" @
-.Reward: "Reward:; cr;N0" @
+.Reward: "Reward: ; cr;N0" @
 .Wing: "; (Wing)" @
 .Deliver: "Deliver:" @
 .TargetType: "Target Type:" @
@@ -673,7 +673,7 @@ SECTION CombatClass
 .CombatBondProfits: "Combat Bond Profits:;cr;N0" @
 .Assassinations: "Assassinations:;;N0" @
 .AssassinationProfits: "Assassination Profits:;cr;N0" @
-.HighestReward: "Highest Reward:;cr;N0" @
+.HighestReward: "Highest Reward: ;cr;N0" @
 .SkimmersKilled: "Skimmers Killed:;;N0" @
 
 SECTION CrimeClass
@@ -821,14 +821,14 @@ SECTION JournalEntry
 .Victimfaction: "Victim faction:" @
 .Faction: "Faction:" @
 .from: "< from " @
-.dueto: "< , due to " @
+.dueto: "<, due to " @
 .0: "{0} on {1}" @
 .onfaction: "< on faction " @
 .Against: "Against " @
 .Cost: "Cost:; cr;N0" @
 .Bounty: "Bounty:; cr;N0" @
 .Offender: "Offender " @
-.Reward: "Reward:; cr;N0" @
+.Reward: "Reward: ; cr;N0" @
 .to: "< to " @
 .Brokertook: ", Broker took {0:N0}%" @
 .Type: "Type:" @
