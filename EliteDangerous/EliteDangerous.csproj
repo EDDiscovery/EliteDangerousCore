@@ -257,6 +257,8 @@
     <Compile Include="SystemDB\SystemsDBGetLists.cs" />
     <Compile Include="SystemDB\SystemsDBGetStars.cs" />
     <Compile Include="DB\UserDatabase.cs" />
+    <Compile Include="UIEvents\UIGlideMode.cs" />
+    <Compile Include="UIEvents\UIBreathableAtmosphere.cs" />
     <Compile Include="UIEvents\UIHealth.cs" />
     <Compile Include="UIEvents\UIBodyName.cs" />
     <Compile Include="UIEvents\UISelectedWeapon.cs" />

@@ -29,6 +29,7 @@ namespace EliteDangerousCore.UIEvents
             UIEvents.UIPosition.Position pos, double heading, double radius, string legalstate, string bodyname,
             double health, bool lowh, double gravity, double temp, UITemperature.TempState tempstate, double oxygen, bool lowox,
             string selw, string selwloc,
+            bool glide, bool breathableatmosphere,
             DateTime time, bool refresh) : this(time, refresh)
         {
             ShipType = st;
@@ -51,6 +52,8 @@ namespace EliteDangerousCore.UIEvents
             TemperatureState = tempstate;
             Oxygen = oxygen;
             LowOxygen = lowox;
+            GlideMode = glide;
+            BreathableAtmosphere = breathableatmosphere;
             SelectedWeapon = selw;
             SelectedWeapon_Localised = selwloc;
         }
@@ -78,6 +81,8 @@ namespace EliteDangerousCore.UIEvents
         public UITemperature.TempState TemperatureState { get; private set; }
         public double Oxygen { get; private set; }
         public bool LowOxygen { get; private set; }
+        public bool GlideMode { get; private set; }
+        public bool BreathableAtmosphere { get; private set; }
         public string SelectedWeapon { get; private set; }      // may be null
         public string SelectedWeapon_Localised { get; private set; }      // may be null
 

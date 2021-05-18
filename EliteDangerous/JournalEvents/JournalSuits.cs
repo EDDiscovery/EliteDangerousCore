@@ -354,7 +354,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (SuitID != ulong.MaxValue)
             {
-                shp.SwitchTo(SuitID);
+                shp.SwitchTo(EventTimeUTC, SuitID);
             }
         }
 
@@ -362,7 +362,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (SuitID != ulong.MaxValue)
             {
-                shp.SwitchTo(LoadoutID);
+                shp.SwitchTo(EventTimeUTC, LoadoutID);
             }
         }
     }

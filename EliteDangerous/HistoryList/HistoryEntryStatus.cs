@@ -21,6 +21,8 @@ namespace EliteDangerousCore
     public class HistoryEntryStatus
     {
         public enum TravelStateType {
+            Unknown,
+
             Docked,         // in ship
             NormalSpace,
             Supercruise,    
@@ -41,9 +43,9 @@ namespace EliteDangerousCore
             MulticrewSRV,
 
             SRV,            // in srv
+
             OnFootStation,          // on foot
             OnFootPlanet,
-            Unknown
         };       
 
         public string BodyName { get; private set; }
@@ -54,6 +56,7 @@ namespace EliteDangerousCore
         public string StationType { get; private set; }
         public long? MarketId { get; private set; }
         public TravelStateType TravelState { get; private set; } = TravelStateType.Unknown;  // travel state
+        public bool OnFoot { get { return TravelState >= TravelStateType.OnFootStation; } }
         public ulong ShipID { get; private set; } = ulong.MaxValue;
         public string ShipType { get; private set; } = "Unknown";         // and the ship
         public string ShipTypeFD { get; private set; } = "unknown";
