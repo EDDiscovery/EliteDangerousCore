@@ -434,7 +434,7 @@ SECTION JournalReceiveText
 .Channel: "Channel: " => "Kanal: "
 .Text: " Texts" => " Texte"
 .FC: "from " => "von "
-.on: "< on " => "< an"
+.on: "< on " => "< an "
 
 SECTION JournalEntry
 
