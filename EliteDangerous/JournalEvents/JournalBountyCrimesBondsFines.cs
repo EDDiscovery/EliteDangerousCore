@@ -24,6 +24,7 @@ namespace EliteDangerousCore.JournalEvents
         public class BountyReward
         {
             public string Faction;
+            public string Faction_Localised;
             public long Reward;
         }
 
@@ -32,7 +33,7 @@ namespace EliteDangerousCore.JournalEvents
             TotalReward = evt["TotalReward"].Long();     // others of them..
 
             VictimFaction = evt["VictimFaction"].Str();
-            VictimFactionLocalised = JournalFieldNaming.CheckLocalisation(evt["VictimFaction_Localised"].Str(),VictimFaction);
+            VictimFactionLocalised = JournalFieldNaming.CheckLocalisation(evt["VictimFaction_Localised"].Str(), VictimFaction);
 
             SharedWithOthers = evt["SharedWithOthers"].Bool(false);
             Rewards = evt["Rewards"]?.ToObjectQ<BountyReward[]>();
@@ -58,9 +59,17 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (faction != null && reward != null)
                 {
+                    string factionloc = JournalFieldNaming.CheckLocalisation(evt["Faction_Localised"].Str(), faction);      // not mentioned in frontiers documents, but seen with $alliance, $fed etc
                     Rewards = new BountyReward[1];
-                    Rewards[0] = new BountyReward() { Faction = faction, Reward = reward.Value };
+                    Rewards[0] = new BountyReward() { Faction = faction, Faction_Localised = factionloc,  Reward = reward.Value };
                     TotalReward = reward.Value;
+                }
+            }
+            else
+            {
+                foreach( var r in Rewards)
+                {
+                    r.Faction_Localised = JournalFieldNaming.CheckLocalisation(r.Faction_Localised, r.Faction);
                 }
             }
         }
@@ -80,14 +89,14 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateStats(Stats stats, string unusedstationfaction)
         {
-            //System.Diagnostics.Debug.WriteLine("Bounty Victim " + VictimFaction);
-            stats.BountyKill(VictimFaction);
+//            System.Diagnostics.Debug.WriteLine("Bounty Victim " + VictimFactionLocalised);
+            stats.BountyKill(VictimFactionLocalised);
             if (Rewards != null)
             {
                 foreach (var r in Rewards)
                 {
-                    //System.Diagnostics.Debug.WriteLine("..Bounty Reward {0} {1}" , r.Faction, r.Reward);
-                    stats.BountyRewards(r.Faction, r.Reward);
+  //                  System.Diagnostics.Debug.WriteLine("..Bounty Reward {0} {1}" , r.Faction, r.Reward);
+                    stats.BountyRewards(r.Faction_Localised, r.Reward);
                 }
             }
         }
@@ -170,7 +179,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateStats(Stats stats, string stationfaction)
         {
-            stats.CapShipAward(AwardingFaction, VictimFaction, Reward);
+            stats.CapShipAward(AwardingFaction_Localised, VictimFaction_Localised, Reward);
         }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
@@ -294,7 +303,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateStats(Stats stats, string stationfaction)
         {
-            stats.KillBond(AwardingFaction, VictimFaction, Reward);
+            stats.KillBond(AwardingFaction_Localised, VictimFaction_Localised, Reward);
         }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
