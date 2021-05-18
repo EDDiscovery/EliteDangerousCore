@@ -784,7 +784,6 @@ SECTION JournalUnknown
 .UnhandledJournalevent: "Unhandled Journal event, Report to EDDiscovery team. " => "Unbekanntes Journalereignis, Bitte dem EDDiscovery Team melden"
 
 SECTION JournalNavRoute
-
 .Jumps: "{0} jumps: " => "{0} Sprünge: "
 
 SECTION JournalApproachBody
@@ -965,11 +964,9 @@ SECTION JournalEntry
 .New: "New:" => "Neu:"
 
 SECTION JournalCarrierJump
-
 .JumpedWith: "Jumped with carrier {0} to {1}" => "Mit Carrier {0} nach {1} gesprungen"
 
 SECTION JournalCarrier
-
 .At: "At " => "Bei "
 .Callsign: "Call Sign:" => "Rufzeichen:"
 .Name: "Name:" => "Name"
