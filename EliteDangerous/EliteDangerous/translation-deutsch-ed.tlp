@@ -661,7 +661,7 @@ SECTION MaterialCommodityMicroResourceType
 SECTION EngineeringData
 
 .Engineer: "Engineer: " => "Ingenieur: "
-.Blueprint: "Blueprint: " => "Blauoause: "
+.Blueprint: "Blueprint: " => "Blaupause: "
 .Level: "Level: " => "Grad: "
 .Quality: "Quality: " => "Qualität: "
 .ExperimentalEffect: "Experimental Effect: " => "Experimenteller Effekt"
