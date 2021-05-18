@@ -1,4 +1,4 @@
-﻿
+
 SECTION JournalTypeEnum
 
 .Unknown: "Unknown" => "Unbekannt"
@@ -799,7 +799,7 @@ SECTION JournalEntry
 .Victimfaction: "Victim faction:" => "Opferfraktion:"
 .Faction: "Faction:" => "Fraktion:"
 .from: "< from " => "< von "
-.dueto: "< , due to " => "< , wegen "
+.dueto: "<, due to " => "<, wegen "
 .0: "{0} on {1}" => "{0} auf {1}"
 .onfaction: "< on faction " => "< auf Fraktion "
 .Against: "Against " => "Gegen "

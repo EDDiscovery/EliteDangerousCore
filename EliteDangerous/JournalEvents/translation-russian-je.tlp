@@ -800,7 +800,7 @@ SECTION JournalEntry
 .Victimfaction: "Victim faction:" => "фракция цели: "
 .Faction: "Faction:" => "фракция: "
 .from: "< from " => "< из "
-.dueto: "< , due to " => "< , из-за "
+.dueto: "<, due to " => "<, из-за "
 .0: "{0} on {1}" => "{0} на {1}"
 .onfaction: "< on faction " => "<, фракция: "
 .Against: "Against " => "цель: "

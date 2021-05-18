@@ -800,7 +800,7 @@ SECTION JournalEntry
 .Victimfaction: "Victim faction:" => "Frakcja Celu:"
 .Faction: "Faction:" => "Frakcja:"
 .from: "< from " => "< z "
-.dueto: "< , due to " => "< , z powodu "
+.dueto: "<, due to " => "<, z powodu "
 .0: "{0} on {1}" => "{0} w {1}"
 .onfaction: "< on faction " => "< we frakcji "
 .Against: "Against " => "Przeciwko "

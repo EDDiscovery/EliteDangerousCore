@@ -799,7 +799,7 @@ SECTION JournalEntry
 .Victimfaction: "Victim faction:" @
 .Faction: "Faction:" @
 .from: "< from " @
-.dueto: "< , due to " @
+.dueto: "<, due to " @
 .0: "{0} on {1}" @
 .onfaction: "< on faction " @
 .Against: "Against " @
