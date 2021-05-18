@@ -653,17 +653,17 @@ SECTION MaterialCommodityData
 
 SECTION EngineeringData
 
-.Engineer: "Engineer:" => "Ingénieur:"
-.Blueprint: "Blueprint:" => "Plan:"
-.Level: "Level:" => "Niveau:"
-.Quality: "Quality:" => "Qualité:"
-.ExperimentalEffect: "Experimental Effect:" => "Effet expérimental:"
+.Engineer: "Engineer: " => "Ingénieur: "
+.Blueprint: "Blueprint: " => "Plan: "
+.Level: "Level: " => "Niveau: "
+.Quality: "Quality: " => "Qualité: "
+.ExperimentalEffect: "Experimental Effect: " => "Effet expérimental: "
 .Original: "Original:;;N2" @
 .Worse: "< (Worse); (Better)" => "< (Pire); (Meilleur)"
 
 SECTION MissionState
 
-.ToGo: "To Go:" => "Reste:"
+.ToGo: "To Go: " => "Reste: "
 .Progress: "Progress:;%;N1" => "Progression:;%;N1"
 
 SECTION CommanderForm
@@ -675,26 +675,26 @@ CommanderForm: "CommanderForm" @
 .radioButtonHistorySelection: "History Grid Selection" => "Selection de la grille d'historique"
 .labelMapCol: "Default Map Color" => "Couleur par défaut de la carte"
 .radioButtonCentreHome: "Home System" => "Système de base"
-.HomeSys: "Home System:" => "Système de base"
+.HomeSys: "Home System: " => "Système de base"
 .labelZoom: "Default Zoom" => "Zoom par défaut"
 .labelOpenOn: "Open Centred On" => "Ouvrir centré sur"
 .groupBoxCustomIGAU: "Intergalactic Astronomical Union [IGAU]" @
 .checkBoxIGAUSync: "Send Codex Entry Discovery Data to IGAU" => "Envoyer les données découvertes du Codex à l'IGAU"
 .groupBoxCustomInara: "Inara Information (optional)" => "Information Inara (Optionnel)"
-.labelINARAN: "Inara Name:" => "Nom sur Inara :"
-.labelInaraAPI: "Inara API Key:" => "Clé API Inara"
+.labelINARAN: "Inara Name: " => "Nom sur Inara : "
+.labelInaraAPI: "Inara API Key: " => "Clé API Inara"
 .checkBoxCustomInara: "Sync to Inara" => "Synchroniser avec Inara"
 .groupBoxCustomEDDN: "EDDN" @
 .checkBoxCustomEDDNTo: "Send Event Information to EDDN" => "Envoyer les événements à EDDN"
 .groupBoxCustomEDSM: "EDSM Information (optional)" => "Information EDSM (optionnnel)"
 .checkBoxCustomEDSMFrom: "Sync From EDSM" => "Synchroniser avec EDSM"
-.labelEDSMAPI: "EDSM API Key:" => "Clé API EDSM"
-.labelEDSMN: "EDSM Name:" => "Nom sur EDSM"
+.labelEDSMAPI: "EDSM API Key: " => "Clé API EDSM"
+.labelEDSMN: "EDSM Name: " => "Nom sur EDSM"
 .checkBoxCustomEDSMTo: "Sync to EDSM" => "Synchroniser avec EDSM"
 .groupBoxCustomJournal: "Journal Related Information" => "Information du journal"
-.labelCN: "Commander Name:" => "Nom du commandant"
+.labelCN: "Commander Name: " => "Nom du commandant"
 .buttonExtBrowse: "Browse" => "Parcourir"
-.labelJL: "Journal Location:" => "Emplacement du journal"
+.labelJL: "Journal Location: " => "Emplacement du journal"
 .label_index: "Commander Configure" => "Configuration du commandant"
 .radioButtonHistorySelection.ToolTip: "Select history entry as opening location" => "Selectionne l'entrée d'historique lors de l'ouverture"
 .textBoxDefaultZoom.ToolTip: "Set the zoom level of the map. 1 is normal" => "Définir le niveau de zoom de la carte. 1 = normal."

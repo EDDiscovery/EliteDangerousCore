@@ -653,17 +653,17 @@ SECTION MaterialCommodityData
 
 SECTION EngineeringData
 
-.Engineer: "Engineer:" => "Инженер: "
-.Blueprint: "Blueprint:" => "Чертеж: "
-.Level: "Level:" => "Уровень: "
-.Quality: "Quality:" => "Качество: "
-.ExperimentalEffect: "Experimental Effect:" => "Экспериментальный эффект: "
+.Engineer: "Engineer: " => "Инженер: "
+.Blueprint: "Blueprint: " => "Чертеж: "
+.Level: "Level: " => "Уровень: "
+.Quality: "Quality: " => "Качество: "
+.ExperimentalEffect: "Experimental Effect: " => "Экспериментальный эффект: "
 .Original: "Original:;;N2" => "исходн.: ;;N2"
 .Worse: "< (Worse); (Better)" => "< (хуже); (лучше)"
 
 SECTION MissionState
 
-.ToGo: "To Go:" => "осталось: "
+.ToGo: "To Go: " => "осталось: "
 .Progress: "Progress:;%;N1" => "прогресс: ;%;N1"
 
 SECTION CommanderForm
@@ -675,26 +675,26 @@ CommanderForm: "CommanderForm" => "Командир"
 .radioButtonHistorySelection: "History Grid Selection" @
 .labelMapCol: "Default Map Color" @
 .radioButtonCentreHome: "Home System" @
-.HomeSys: "Home System:" @
+.HomeSys: "Home System: " @
 .labelZoom: "Default Zoom" @
 .labelOpenOn: "Open Centred On" @
 .groupBoxCustomIGAU: "Intergalactic Astronomical Union [IGAU]" @
 .checkBoxIGAUSync: "Send Codex Entry Discovery Data to IGAU" @
 .groupBoxCustomInara: "Inara Information (optional)" => "Inara (необязательно)"
-.labelINARAN: "Inara Name:" => "Имя пользователя Inara"
-.labelInaraAPI: "Inara API Key:" => "Api-ключ Inara"
+.labelINARAN: "Inara Name: " => "Имя пользователя Inara"
+.labelInaraAPI: "Inara API Key: " => "Api-ключ Inara"
 .checkBoxCustomInara: "Sync to Inara" => "Синхронизация с Inara"
 .groupBoxCustomEDDN: "EDDN" @
 .checkBoxCustomEDDNTo: "Send Event Information to EDDN" => "Отправлять информацию о событиях в EDDN"
 .groupBoxCustomEDSM: "EDSM Information (optional)" => "EDSM (необязательно)"
 .checkBoxCustomEDSMFrom: "Sync From EDSM" => "Входящая синхронизация из EDSM"
-.labelEDSMAPI: "EDSM API Key:" => "Api-ключ EDSM"
-.labelEDSMN: "EDSM Name:" => "Имя пользователя EDSM"
+.labelEDSMAPI: "EDSM API Key: " => "Api-ключ EDSM"
+.labelEDSMN: "EDSM Name: " => "Имя пользователя EDSM"
 .checkBoxCustomEDSMTo: "Sync to EDSM" => "Синхронизация с EDSM"
 .groupBoxCustomJournal: "Journal Related Information" => "Журнал"
-.labelCN: "Commander Name:" => "Имя командира"
+.labelCN: "Commander Name: " => "Имя командира"
 .buttonExtBrowse: "Browse" => "Обзор"
-.labelJL: "Journal Location:" => "Путь к файлам журнала"
+.labelJL: "Journal Location: " => "Путь к файлам журнала"
 .label_index: "Commander Configure" => "Настройки командира"
 .radioButtonHistorySelection.ToolTip: "Select history entry as opening location" @
 .textBoxDefaultZoom.ToolTip: "Set the zoom level of the map. 1 is normal" @

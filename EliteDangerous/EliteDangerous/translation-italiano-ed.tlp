@@ -653,17 +653,17 @@ SECTION MaterialCommodityData
 
 SECTION EngineeringData
 
-.Engineer: "Engineer:" => "Ingegnere"
-.Blueprint: "Blueprint:" => "Progetto"
-.Level: "Level:" => "Livello"
-.Quality: "Quality:" => "Qualità"
-.ExperimentalEffect: "Experimental Effect:" => "Effetto sperimental"
+.Engineer: "Engineer: " => "Ingegnere"
+.Blueprint: "Blueprint: " => "Progetto"
+.Level: "Level: " => "Livello"
+.Quality: "Quality: " => "Qualità"
+.ExperimentalEffect: "Experimental Effect: " => "Effetto sperimental"
 .Original: "Original:;;N2" => "Originale:;;N2"
 .Worse: "< (Worse); (Better)" => "< (Peggiore); (Migliore)"
 
 SECTION MissionState
 
-.ToGo: "To Go:" @
+.ToGo: "To Go: " @
 .Progress: "Progress:;%;N1" @
 
 SECTION CommanderForm
@@ -675,26 +675,26 @@ CommanderForm: "CommanderForm" => "Scheda"
 .radioButtonHistorySelection: "History Grid Selection" => "Seleziona lo Storico"
 .labelMapCol: "Default Map Color" => "Colore della mappa normale"
 .radioButtonCentreHome: "Home System" => "Sistema di Domicilio"
-.HomeSys: "Home System:" => "Domicilio:"
+.HomeSys: "Home System: " => "Domicilio: "
 .labelZoom: "Default Zoom" => "Zoom preselezionato"
 .labelOpenOn: "Open Centred On" => "Apri centrato su"
 .groupBoxCustomIGAU: "Intergalactic Astronomical Union [IGAU]" @
 .checkBoxIGAUSync: "Send Codex Entry Discovery Data to IGAU" @
 .groupBoxCustomInara: "Inara Information (optional)" => "Informazioni di Inara (opzionale)"
-.labelINARAN: "Inara Name:" => "Nome su Inara:"
-.labelInaraAPI: "Inara API Key:" => "Chiave API di Inara:"
+.labelINARAN: "Inara Name: " => "Nome su Inara: "
+.labelInaraAPI: "Inara API Key: " => "Chiave API di Inara: "
 .checkBoxCustomInara: "Sync to Inara" => "Sincronizza con Inara"
 .groupBoxCustomEDDN: "EDDN" @
 .checkBoxCustomEDDNTo: "Send Event Information to EDDN" => "Invia informazione sugli eventi a EDDN"
 .groupBoxCustomEDSM: "EDSM Information (optional)" => "Informazioni"
 .checkBoxCustomEDSMFrom: "Sync From EDSM" => "Sincronizza da EDSM"
-.labelEDSMAPI: "EDSM API Key:" => "Chiave API di EDSM:"
-.labelEDSMN: "EDSM Name:" => "Nome su EDSM:"
+.labelEDSMAPI: "EDSM API Key: " => "Chiave API di EDSM: "
+.labelEDSMN: "EDSM Name: " => "Nome su EDSM: "
 .checkBoxCustomEDSMTo: "Sync to EDSM" => "Sincronizza con EDSM"
 .groupBoxCustomJournal: "Journal Related Information" => "Informazioni relazionate al Giornale"
-.labelCN: "Commander Name:" => "Nome del Comandante"
+.labelCN: "Commander Name: " => "Nome del Comandante"
 .buttonExtBrowse: "Browse" => "Sfoglia"
-.labelJL: "Journal Location:" => "Localizzazione del Giornale"
+.labelJL: "Journal Location: " => "Localizzazione del Giornale"
 .label_index: "Commander Configure" => "Imposta il comandante"
 .radioButtonHistorySelection.ToolTip: "Select history entry as opening location" => "Centra sul registro selezionato nello storico."
 .textBoxDefaultZoom.ToolTip: "Set the zoom level of the map. 1 is normal" => "Scegli il livello di zomm della mappa. 1 é il normale."

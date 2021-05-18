@@ -1,4 +1,4 @@
-﻿
+
 SECTION Bodies
 
 .HMS: "Luminous Hot Main Sequence {0} star" @
@@ -655,17 +655,17 @@ SECTION MaterialCommodityData
 
 SECTION EngineeringData
 
-.Engineer: "Engineer:" @
-.Blueprint: "Blueprint:" @
-.Level: "Level:" @
-.Quality: "Quality:" @
-.ExperimentalEffect: "Experimental Effect:" @
+.Engineer: "Engineer: " @
+.Blueprint: "Blueprint: " @
+.Level: "Level: " @
+.Quality: "Quality: " @
+.ExperimentalEffect: "Experimental Effect: " @
 .Original: "Original:;;N2" @
 .Worse: "< (Worse); (Better)" @
 
 SECTION MissionState
 
-.ToGo: "To Go:" @
+.ToGo: "To Go: " @
 .Progress: "Progress:;%;N1" @
 
 SECTION CommanderForm
@@ -676,26 +676,26 @@ CommanderForm: "CommanderForm" @
 .radioButtonHistorySelection: "History Grid Selection" @
 .labelMapCol: "Default Map Color" @
 .radioButtonCentreHome: "Home System" @
-.HomeSys: "Home System:" @
+.HomeSys: "Home System: " @
 .labelZoom: "Default Zoom" @
 .labelOpenOn: "Open Centred On" @
 .groupBoxCustomIGAU: "Intergalactic Astronomical Union [IGAU]" @
 .checkBoxIGAUSync: "Send Codex Entry Discovery Data to IGAU" @
 .groupBoxCustomInara: "Inara Information (optional)" @
-.labelINARAN: "Inara Name:" @
-.labelInaraAPI: "Inara API Key:" @
+.labelINARAN: "Inara Name: " @
+.labelInaraAPI: "Inara API Key: " @
 .checkBoxCustomInara: "Sync to Inara" @
 .groupBoxCustomEDDN: "EDDN" @
 .checkBoxCustomEDDNTo: "Send Event Information to EDDN" @
 .groupBoxCustomEDSM: "EDSM Information (optional)" @
 .checkBoxCustomEDSMFrom: "Sync From EDSM" @
-.labelEDSMAPI: "EDSM API Key:" @
-.labelEDSMN: "EDSM Name:" @
+.labelEDSMAPI: "EDSM API Key: " @
+.labelEDSMN: "EDSM Name: " @
 .checkBoxCustomEDSMTo: "Sync to EDSM" @
 .groupBoxCustomJournal: "Journal Related Information" @
-.labelCN: "Commander Name:" @
+.labelCN: "Commander Name: " @
 .buttonExtBrowse: "Browse" @
-.labelJL: "Journal Location:" @
+.labelJL: "Journal Location: " @
 .label_index: "Commander Configure" @
 .radioButtonHistorySelection.ToolTip: "Select history entry as opening location" @
 .textBoxDefaultZoom.ToolTip: "Set the zoom level of the map. 1 is normal" @
