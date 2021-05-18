@@ -101,6 +101,13 @@ namespace EliteDangerousCore.DB
             }
         }
 
+        public void RemoveGridSystems(int[] gridids, Action<string> report = null)
+        {
+            RebuildRunning = true;
+            SystemsDB.RemoveGridSystems(gridids, report);
+            RebuildRunning = false;
+        }
+
         public long StoreSystems( List<ISystem> systems)            // dynamically update db
         {
             long count = 0;
