@@ -308,7 +308,7 @@ SECTION JournalEngineerCraftBase
 
 SECTION JournalEngineerProgress
 
-.Progress: "Progress:" => "Progression:\\"
+.Progress: "Progress:" => "Progression:"
 .Progresson: "Progress on ; Engineers" => "Progression sur ; ingénieurs"
 .Rank: "Rank:" => "Rang:"
 

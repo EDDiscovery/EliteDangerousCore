@@ -64,7 +64,7 @@ namespace EliteDangerousCore.JournalEvents
                 sb.Append(Environment.NewLine);
                 sb.Append(BaseUtils.FieldBuilder.Build(" ", m.FriendlyName, "; items".T(EDTx.JournalEntry_items), m.Count));
                 if (m.Direction != DirectionType.None)
-                    sb.Append("->" + (m.Direction == DirectionType.ToShipLocker ? "Locker".T(EDTx.TBD) : "Backpack".T(EDTx.TBD)));
+                    sb.Append("->" + (m.Direction == DirectionType.ToShipLocker ? "Locker".T(EDTx.JournalEntry_Locker) : "Backpack".T(EDTx.JournalEntry_Backpack)));
             }
             return sb.ToString();
         }
@@ -73,6 +73,11 @@ namespace EliteDangerousCore.JournalEvents
     public class JournalMicroResourceState : JournalEntry
     {
         public JournalMicroResourceState(JObject evt, JournalTypeEnum en) : base(evt, en)
+        {
+            Rescan(evt);
+        }
+
+        public void Rescan( JObject evt)
         {
             Items = evt["Items"]?.ToObjectQ<MicroResource[]>()?.OrderBy(x => x.Name)?.ToArray();
             MicroResource.Normalise(Items);
@@ -128,12 +133,25 @@ namespace EliteDangerousCore.JournalEvents
     }
 
 
-    [JournalEntryType(JournalTypeEnum.BackPackMaterials)]
-    public class JournalBackPackMaterials : JournalMicroResourceState, IMicroResourceJournalEntry
+    [JournalEntryType(JournalTypeEnum.BackPack)]
+    public class JournalBackPack : JournalMicroResourceState, IMicroResourceJournalEntry, IAdditionalFiles
     {
-        public JournalBackPackMaterials(JObject evt) : base(evt, JournalTypeEnum.BackPackMaterials)
+        public JournalBackPack(JObject evt) : base(evt, JournalTypeEnum.BackPack)
         {
+            Rescan(evt);
         }
+
+        public bool ReadAdditionalFiles(string directory, bool historyrefreshparse)
+        {
+            JObject jnew = ReadAdditionalFile(System.IO.Path.Combine(directory, "backpack.json"), waitforfile: !historyrefreshparse, checktimestamptype: true);
+            if (jnew != null)        // new json, rescan
+            {
+                Rescan(jnew);
+                UpdateJson(jnew);
+            }
+            return jnew != null;
+        }
+
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc)
         {
             if (Items != null)
@@ -248,7 +266,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Resource.Name);
-            info = BaseUtils.FieldBuilder.Build("", Resource.FriendlyName, "< (", mcd.TranslatedCategory, "< ; items".T(EDTx.JournalEntry_MatC), Resource.Count, ";Stolen".T(EDTx.TBD), Stolen);
+            info = BaseUtils.FieldBuilder.Build("", Resource.FriendlyName, "< (", mcd.TranslatedCategory, "< ; items".T(EDTx.JournalEntry_MatC), Resource.Count, ";Stolen".T(EDTx.JournalEntry_Stolen), Stolen);
             detailed = "";
         }
 

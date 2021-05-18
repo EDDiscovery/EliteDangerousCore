@@ -166,7 +166,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = string.Format("Sold {0} for {1}cr".T(EDTx.TBD), Bios?.Length ?? 0, TotalValue);
+            info = BaseUtils.FieldBuilder.Build("Count:".T(EDTx.JournalEntry_Count), Bios?.Length ?? 0, "Amount:; cr;N0".T(EDTx.JournalEntry_Amount), TotalValue);
             detailed = "";
             if (Bios != null)
             {

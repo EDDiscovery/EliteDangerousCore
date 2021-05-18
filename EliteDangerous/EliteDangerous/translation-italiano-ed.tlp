@@ -53,7 +53,12 @@ SECTION EDPlanet
 .Heliumgasgiant: "Helium gas giant" => "Gigante gassoso di elio"
 .Unknown: "Unknown planet type" => "Classe planetaria sconosciuta"
 
-SECTION MaterialCommodityData
+SECTION MaterialCommodityMicroResourceType
+.Consumable: "Consumable" @
+.Unknown: "Unknown" @
+.Item: "Item" @
+.Component: "Component" @
+.Data: "Data" @
 
 .Raw: "Raw" => "In natura"
 .VeryCommon: "Very Common" => "Molto Comune"
@@ -707,7 +712,7 @@ CommanderForm: "CommanderForm" => "Scheda"
 .checkBoxCustomEDDNTo.ToolTip: "Click to send journal information to EDDN. EDDN feeds tools such as EDDB, EDSM, Inara with data from commanders. All data is made anonymised" => "Invia"
 .checkBoxCustomEDSMFrom.ToolTip: "Receive any FSD jumps from EDSM that are on their database but not in EDDiscovery" => "Ricevi tutti i dati su salti FSD da EDSM che sono sul lora banco dati ma non in EDDiscovery"
 .checkBoxCustomEDSMTo.ToolTip: "Send your travel and ship data to EDSM" => "Invia il tuo storico di viaggio e di navi a EDSM"
-.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \\"My account\\" menu" => "Inserisci la chiave API dal sito web EDSM\nOttieni una chiave EDSM API da https://www.edsm.net nel menu \\"My account\\"
+.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \"My account\" menu" => "Inserisci la chiave API dal sito web EDSM\nOttieni una chiave EDSM API da https://www.edsm.net nel menu \"My account\"
 .textBoxBorderEDSMName.ToolTip: "Give the name this commander is known as in EDSM" => "Inserisci il nome come questo comandante è conosciuto su EDSM"
 .buttonExtBrowse.ToolTip: "Browse to the the journal folder" => "Sfoglia la localizzazione del giornale"
 .textBoxBorderCmdr.ToolTip: "Enter commander name as used in Elite Dangerous" => "Inserire il nome del comandante come è su Elite Dangerous"

@@ -53,7 +53,12 @@ SECTION EDPlanet
 .Heliumgasgiant: "Helium gas giant" @
 .Unknown: "Unknown planet type" @
 
-SECTION MaterialCommodityData
+SECTION MaterialCommodityMicroResourceType
+.Consumable: "Consumable" @
+.Unknown: "Unknown" @
+.Item: "Item" @
+.Component: "Component" @
+.Data: "Data" @
 
 .Raw: "Raw" => "Элемент"
 .VeryCommon: "Very Common" => "Очень распространенный"
@@ -707,7 +712,7 @@ CommanderForm: "CommanderForm" => "Командир"
 .checkBoxCustomEDDNTo.ToolTip: "Click to send journal information to EDDN. EDDN feeds tools such as EDDB, EDSM, Inara with data from commanders. All data is made anonymised" => "Нажмите, чтобы отправить информацию из журнала в EDDN. EDDN работает с такими приложениями, как EDDB, EDSM и Inara. Все данные анонимны"
 .checkBoxCustomEDSMFrom.ToolTip: "Receive any FSD jumps from EDSM that are on their database but not in EDDiscovery" => "Получать данные о FSD-прыжках, которые есть в EDSM, но нет в EDDiscovery"
 .checkBoxCustomEDSMTo.ToolTip: "Send your travel and ship data to EDSM" => "Отправить данные о полетах и кораблях в EDSM"
-.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \\"My account\\" menu" @
+.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \"My account\" menu" @
 .textBoxBorderEDSMName.ToolTip: "Give the name this commander is known as in EDSM" => "Укажите имя этого командира в EDSM"
 .buttonExtBrowse.ToolTip: "Browse to the the journal folder" => "Выберите папку с файлами журнала"
 .textBoxBorderCmdr.ToolTip: "Enter commander name as used in Elite Dangerous" => "Введите имя командира, используемое в Elite Dangerous"

@@ -75,6 +75,7 @@ namespace EliteDangerousCore
 
         JournalEntry_Taxi, // Taxi
 
+        JournalEntry_OnFootAt, 
         JournalEntry_LegBounty, // {0} total {1:N0}
         JournalEntry_Target, // Target:
         JournalEntry_Victimfaction, // Victim faction:
@@ -247,8 +248,11 @@ namespace EliteDangerousCore
         JournalEntry_NotorietyIndex, // Notoriety Index:;;N0
         JournalEntry_RemainingJumps,  // Remaining Jumps
         JournalEntry_Nearest, // Nearest:
+        JournalEntry_Near, // Near:
         JournalEntry_CapShipBond, // Capital Ship Bond
         JournalEntry_FactionKillBond, // Faction Kill Bond
+        JournalEntry_Locker,
+        JournalEntry_Backpack,
 
 
         JournalLocOrJump_Type, // "Type " @
@@ -742,7 +746,6 @@ namespace EliteDangerousCore
         CommanderForm_LF, // Select folder where Journal*.log files are stored by Frontier in
         CommanderForm_ND, // Folder does not exist
 
-        TBD, // to be done!
         Screenshot_Folder, // Select screenshot folder
         Screenshot_Identical, // Cannot set input..
         Screenshot_FolderNotExist, // Folder specified does not exist
