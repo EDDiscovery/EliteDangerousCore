@@ -369,7 +369,7 @@ SECTION JournalMissionAccepted
 .Expiry: "Expiry:" @
 .Influence: "Influence:" @
 .Reputation: "Reputation:" @
-.Reward: "Reward:; cr;N0" @
+.Reward: "Reward: ; cr;N0" @
 .Wing: "; (Wing)" @
 .Deliver: "Deliver:" @
 .TargetType: "Target Type:" @
@@ -651,7 +651,7 @@ SECTION CombatClass
 .CombatBondProfits: "Combat Bond Profits:;cr;N0" => "战争债券收益：;Cr;N0"
 .Assassinations: "Assassinations:;;N0" => "暗杀次数：;;N0"
 .AssassinationProfits: "Assassination Profits:;cr;N0" => "暗杀收益：;Cr;N0"
-.HighestReward: "Highest Reward:;cr;N0" => "最高赏金：;Cr;N0"
+.HighestReward: "Highest Reward: ;cr;N0" => "最高赏金：;Cr;N0"
 .SkimmersKilled: "Skimmers Killed:;;N0" => "无人机摧毁数：;;N0"
 
 SECTION CrimeClass
@@ -807,7 +807,7 @@ SECTION JournalEntry
 .Cost: "Cost:; cr;N0" => "花费：; Cr;N0"
 .Bounty: "Bounty:; cr;N0" => "悬赏：; Cr;N0"
 .Offender: "Offender " @
-.Reward: "Reward:; cr;N0" @
+.Reward: "Reward: ; cr;N0" @
 .to: "< to " => "< 至 "
 .Brokertook: ", Broker took {0:N0}%" => ", 中介人收取了{0:N0}的手续费"
 .Type: "Type:" => "类型："
