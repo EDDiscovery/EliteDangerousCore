@@ -118,11 +118,16 @@ namespace EliteDangerousCore
             InMulticrew = 2,
             OnFootInStation = 3,
             OnFootOnPlanet = 4,
+            OnFootInHangar = 13,
+            OnFootInSocialSpace = 14,
+            OnFootExterior = 15,
         }
 
-        private enum StatusFlags2OnFoot         // these are bool flags, reported sep.
+        private enum StatusFlags2               // these are bool flags, reported sep.
         {
             AimDownSight = 5,
+            GlideMode = 12,
+            BreathableAtmosphere = 16,
         }
 
         private enum StatusFlags2OtherFlags     // these are states reported as part of other messages
@@ -209,9 +214,9 @@ namespace EliteDangerousCore
                             refresh = true;
                         }
 
-                        if (nextshiptype == UIEvents.UIShipType.Shiptype.OnFootPlanet || nextshiptype == UIEvents.UIShipType.Shiptype.OnFootStation)
+                        if (UIEvents.UIShipType.OnFoot(nextshiptype))
                         {
-                            events.AddRange(ReportFlagState(typeof(StatusFlags2OnFoot), curflags2, prev_flags2.Value, EventTimeUTC, refresh));
+                            events.AddRange(ReportFlagState(typeof(StatusFlags2), curflags2, prev_flags2.Value, EventTimeUTC, refresh));
                         }
                         else
                         {
@@ -402,25 +407,29 @@ namespace EliteDangerousCore
                         List<UITypeEnum> flagsset = ReportFlagState(typeof(StatusFlagsShip), curflags);
                         flagsset.AddRange(ReportFlagState(typeof(StatusFlagsSRV), curflags));
                         flagsset.AddRange(ReportFlagState(typeof(StatusFlagsAll), curflags));
-                        flagsset.AddRange(ReportFlagState(typeof(StatusFlags2OnFoot), curflags2));
+                        flagsset.AddRange(ReportFlagState(typeof(StatusFlags2), curflags2));
+
+                        bool glidemode = (curflags2 & 1L << (int)StatusFlags2.GlideMode) != 0;
+                        bool breathableatmos = (curflags2 & 1L << (int)StatusFlags2.BreathableAtmosphere) != 0;
 
                         events.Add(new UIEvents.UIOverallStatus(shiptype, flagsset, prev_guifocus, prev_pips, prev_firegroup, 
                                                                 prev_curfuel,prev_curres, prev_cargo, prev_pos, prev_heading, prev_jpradius, prev_legalstatus, 
                                                                 prev_bodyname,
                                                                 prev_health,lowhealth,gravity,prev_temperature,tempstate,prev_oxygen,lowoxygen,
                                                                 prev_selectedweapon, prev_selectedweaponloc,
+                                                                glidemode, breathableatmos,
                                                                 EventTimeUTC, fireoverallrefresh));        // overall list of flags set
                     }
 
-                    // for debugging, keep
-                    //foreach( var uient in events)
-                    //{
-                    //    BaseUtils.Variables v = new BaseUtils.Variables();
-                    //    v.AddPropertiesFieldsOfClass(uient, "", null, 2);
-                    //    System.Diagnostics.Trace.WriteLine(string.Format("New UI entry from journal {0} {1}", uient.EventTimeUTC, uient.EventTypeStr));
-                    //    foreach ( var x in v.NameEnumuerable)
-                    //        System.Diagnostics.Trace.WriteLine(string.Format("  {0} = {1}", x, v[x] ));
-                    //}
+                    //for debugging, keep
+                    foreach (var uient in events)
+                        {
+                            BaseUtils.Variables v = new BaseUtils.Variables();
+                            v.AddPropertiesFieldsOfClass(uient, "", null, 2);
+                            System.Diagnostics.Trace.WriteLine(string.Format("New UI entry from journal {0} {1}", uient.EventTimeUTC, uient.EventTypeStr));
+                            foreach (var x in v.NameEnumuerable)
+                                System.Diagnostics.Trace.WriteLine(string.Format("  {0} = {1}", x, v[x]));
+                        }
 
                     return events;
                 }
@@ -487,7 +496,13 @@ namespace EliteDangerousCore
             else if ((flags2 & 1L << (int)StatusFlags2ShipType.OnFoot) != 0)
             {
                 if ((flags2 & 1L << (int)StatusFlags2ShipType.OnFootInStation) != 0)
-                    return UIEvents.UIShipType.Shiptype.OnFootStation;
+                    return ((flags2 & 1L << (int)StatusFlags2ShipType.OnFootInHangar) != 0) ? UIEvents.UIShipType.Shiptype.OnFootStationHangar : UIEvents.UIShipType.Shiptype.OnFootStationSocialSpace;
+                else if ((flags2 & 1L << (int)StatusFlags2ShipType.OnFootInHangar) != 0)
+                    return UIEvents.UIShipType.Shiptype.OnFootPlantaryPortHangar;
+                else if ((flags2 & 1L << (int)StatusFlags2ShipType.OnFootInSocialSpace) != 0)
+                    return UIEvents.UIShipType.Shiptype.OnFootPlantaryPortSocialSpace;
+                else if ((flags2 & 1L << (int)StatusFlags2ShipType.OnFootExterior) != 0)
+                    return UIEvents.UIShipType.Shiptype.OnFootInstallation;
                 else if ((flags2 & 1L << (int)StatusFlags2ShipType.OnFootOnPlanet) != 0)
                     return UIEvents.UIShipType.Shiptype.OnFootPlanet;
             }

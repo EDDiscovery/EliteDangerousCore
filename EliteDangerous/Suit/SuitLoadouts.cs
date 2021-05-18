@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 EDDiscovery development team
+ * Copyright © 2021 - 2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -14,13 +14,9 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
+using BaseUtils;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using EliteDangerousCore.JournalEvents;
-using BaseUtils.JSON;
-using BaseUtils;
 
 namespace EliteDangerousCore
 {
@@ -78,7 +74,11 @@ namespace EliteDangerousCore
     public class SuitLoadoutList
     {
         public GenerationalDictionary<ulong, SuitLoadout> Loadouts { get; private set; } = new GenerationalDictionary<ulong, SuitLoadout>();
-        public ulong CurrentLoadoutID { get; private set; } = 0; // may be zero if can't find loadout
+
+        public ulong CurrentID(uint gen) { return Loadouts.Get(CURLOADOUTID, gen)?.Name.InvariantParseULong(0) ?? 0; }
+        static public bool SpecialID(ulong id) { return id == CURLOADOUTID; }
+
+        public const ulong CURLOADOUTID = 1111;          // special marker to track current suit.. use to ignore the current entry marker
 
         public SuitLoadoutList()
         {
@@ -162,9 +162,9 @@ namespace EliteDangerousCore
                 System.Diagnostics.Debug.WriteLine("Suits remove an unknown loadout " + id);
         }
 
-        public void SwitchTo(ulong id)
+        public void SwitchTo(DateTime utc, ulong id)
         {
-            CurrentLoadoutID = Loadouts.ContainsKey(id) ? id : 0;
+            Loadouts.Add(CURLOADOUTID, new SuitLoadout(utc, CURLOADOUTID, id.ToStringInvariant(),0, false));
         }
 
         public Dictionary<ulong, SuitLoadout> GetLoadoutsForSuit(uint gen, ulong suitid)

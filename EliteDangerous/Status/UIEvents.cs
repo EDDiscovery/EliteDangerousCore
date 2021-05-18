@@ -83,6 +83,8 @@ namespace EliteDangerousCore
         Weapon,
         Gravity,
         SelectedWeapon,
+        BreathableAtmosphere,
+        GlideMode,
 
         BodyName,
 

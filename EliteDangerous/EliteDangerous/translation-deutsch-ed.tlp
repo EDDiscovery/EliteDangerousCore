@@ -54,7 +54,12 @@ SECTION EDPlanet
 .Heliumgasgiant: "Helium gas giant" => "Helium-Gasriese"
 .Unknown: "Unknown planet type" => "Unbekannte Planetenart"
 
-SECTION MaterialCommodityData
+SECTION MaterialCommodityMicroResourceType
+.Consumable: "Consumable" @
+.Unknown: "Unknown" @
+.Item: "Item" @
+.Component: "Component" @
+.Data: "Data" @
 
 .Raw: "Raw" => "Rohmaterialien"
 .VeryCommon: "Very Common" => "Sehr häufig"
@@ -466,7 +471,7 @@ SECTION MaterialCommodityData
 .neritusberries: "Neritus Berries" => "Neritus-Beeren"
 .ochoengchillies: "Ochoeng Chillies" => "Ochoeng-Chili"
 .deuringastruffles: "Deuringas Truffles" => "Deuringas-Trüffel"
-.hr7221wheat: "HR 7221 Wheat" => "\\"HR 7221\\" Weizen"
+.hr7221wheat: "HR 7221 Wheat" => "\"HR 7221\" Weizen"
 .jarouarice: "Jaroua Rice" => "Jaroua-Reis"
 .belalansrayleather: "Belalans Ray Leather" => "Belalans-Rochenleder"
 .damnacarapaces: "Damna Carapaces" => "Damna-Schildpanzer"
@@ -708,7 +713,7 @@ CommanderForm: "CommanderForm" => "Kommandantenformular"
 .checkBoxCustomEDDNTo.ToolTip: "Click to send journal information to EDDN. EDDN feeds tools such as EDDB, EDSM, Inara with data from commanders. All data is made anonymised" => "Klicken, um Journal-Informationen an EDDN zu senden. EDDN beliefert Applikation wie EDDB, EDSM, und Inara mit Daten. Alle Daten sind anonymisiert"
 .checkBoxCustomEDSMFrom.ToolTip: "Receive any FSD jumps from EDSM that are on their database but not in EDDiscovery" => "Erhält alle FSA-Sprünge von EDSM die in dessen Datenbank aber nicht in EDDiscovery sind"
 .checkBoxCustomEDSMTo.ToolTip: "Send your travel and ship data to EDSM" => "Reise- und Schiffsdaten an EDSM schicken"
-.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \\"My account\\" menu" => "Gib deinen EDSM-API-Schlüssel ein.\nDu kannst deinen Schlüssel auf https://www.edsm.net/de/settings/api finden."
+.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \"My account\" menu" => "Gib deinen EDSM-API-Schlüssel ein.\nDu kannst deinen Schlüssel auf https://www.edsm.net/de/settings/api finden."
 .textBoxBorderEDSMName.ToolTip: "Give the name this commander is known as in EDSM" => "Name des Kommandanten auf EDSM"
 .buttonExtBrowse.ToolTip: "Browse to the the journal folder" => "Journal-Verzeichnis auswählen"
 .textBoxBorderCmdr.ToolTip: "Enter commander name as used in Elite Dangerous" => "In Elite Dangerous benutzter Kommandanten-Name eingeben"

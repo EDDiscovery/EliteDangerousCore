@@ -45,7 +45,11 @@ namespace EliteDangerousCore
     public class SuitList
     {
         public GenerationalDictionary<ulong, Suit> Suits { get; private set; } = new GenerationalDictionary<ulong, Suit>();
-        public ulong CurrentSuitID { get; private set; } = 0;       // may be zero if can't find suit
+
+        public ulong CurrentID(uint gen) { return Suits.Get(CURSUITID, gen)?.FDName.InvariantParseULong(0) ?? 0; }
+        static public bool SpecialID(ulong id) { return id == CURSUITID; }
+
+        public const ulong CURSUITID = 1111;          // special marker to track current suit.. use to ignore the current entry marker
 
         public SuitList()
         {
@@ -72,9 +76,9 @@ namespace EliteDangerousCore
                 System.Diagnostics.Debug.WriteLine("Suits sold a suit not seen " + id);
         }
 
-        public void SwitchTo(ulong id)
+        public void SwitchTo(DateTime time, ulong id)
         {
-            CurrentSuitID = Suits.ContainsKey(id) ? id : 0;
+            Suits.Add(CURSUITID, new Suit(time, CURSUITID, id.ToStringInvariant(), "$SUITID", 0, false));
         }
 
         public uint Process(JournalEntry je, string whereami, ISystem system)

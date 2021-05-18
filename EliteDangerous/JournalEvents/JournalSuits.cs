@@ -154,6 +154,46 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
+    [JournalEntryType(JournalTypeEnum.SuitLoadout)]
+    public class JournalSuitLoadout : JournalEntry, ISuitLoadoutInformation
+    {
+        public JournalSuitLoadout(JObject evt) : base(evt, JournalTypeEnum.SuitLoadout)
+        {
+            SuitID = ulong.MaxValue;
+            // Limit search to this class only using DeclaredOnly.
+            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+
+            SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+            SuitName = SuitName.ToLower(); // normalise
+
+            SuitLoadout.NormaliseModules(Modules);
+
+        }
+
+        public ulong SuitID { get; set; }
+        public string SuitName { get; set; }
+        public string SuitName_Localised { get; set; }
+        public string SuitFriendlyName { get; set; }
+        public string LoadoutName { get; set; }
+        public ulong LoadoutID { get; set; }
+
+        public SuitLoadout.LoadoutModule[] Modules;
+
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        {
+            info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "< ++> ", LoadoutName);
+            detailed = "";
+        }
+
+        public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)
+        {
+            if (SuitID != ulong.MaxValue)
+            {
+                shp.CreateLoadout(EventTimeUTC, LoadoutID, LoadoutName, SuitID, Modules);
+            }
+        }
+    }
+
     // TBD Write, Test
     [JournalEntryType(JournalTypeEnum.DeleteSuitLoadout)]
     public class JournalDeleteSuitLoadout : JournalEntry, ISuitLoadoutInformation
@@ -354,7 +394,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (SuitID != ulong.MaxValue)
             {
-                shp.SwitchTo(SuitID);
+                shp.SwitchTo(EventTimeUTC, SuitID);
             }
         }
 
@@ -362,7 +402,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (SuitID != ulong.MaxValue)
             {
-                shp.SwitchTo(LoadoutID);
+                shp.SwitchTo(EventTimeUTC, LoadoutID);
             }
         }
     }

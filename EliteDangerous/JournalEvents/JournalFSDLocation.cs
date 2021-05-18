@@ -350,7 +350,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 string bodyname = Body.HasChars() ? Body.ReplaceIfStartsWith(StarSystem) : StarSystem;
                 if ( OnFoot == true )
-                    return string.Format("On Foot at {0}".T(EDTx.TBD), bodyname);
+                    return string.Format("On Foot at {0}".T(EDTx.JournalEntry_OnFootAt), bodyname);
                 else if (Latitude.HasValue && Longitude.HasValue)
                     return string.Format("Landed on {0}".T(EDTx.JournalLocation_LND), bodyname);
                 else
@@ -410,7 +410,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             else 
             {
-                info = "Near ".T(EDTx.TBD) + BodyType + " " + Body;     // remove JournalLocOrJump_Inspacenear
+                info = "Near:".T(EDTx.JournalEntry_Near) + " " + BodyType + " " + Body;     // remove JournalLocOrJump_Inspacenear
                 detailed = "";
             }
         }

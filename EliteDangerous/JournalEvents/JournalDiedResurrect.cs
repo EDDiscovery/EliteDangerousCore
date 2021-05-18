@@ -108,7 +108,7 @@ namespace EliteDangerousCore.JournalEvents
                     if (k.Ship.HasChars() && ItemData.IsShip(k.Ship))
                         info = info.AppendPrePad(string.Format("{0} in ship type {1} rank {2}".T(EDTx.JournalEntry_Died), k.Name_Localised, k.Ship ?? "?", k.Rank ?? "?"), ", ");
                     else
-                        info = BaseUtils.FieldBuilder.Build("",k.Name_Localised,"Rank:".T(EDTx.TBD),k.Rank);
+                        info = BaseUtils.FieldBuilder.Build("",k.Name_Localised,"Rank:".T(EDTx.JournalEntry_Rank),k.Rank);
                 }
 
                 info = "Killed by ".T(EDTx.JournalEntry_Killedby) + info;

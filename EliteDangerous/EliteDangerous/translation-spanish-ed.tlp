@@ -53,7 +53,12 @@ SECTION EDPlanet
 .Heliumgasgiant: "Helium gas giant" => "Gigante de gas helio"
 .Unknown: "Unknown planet type" => "Tipo de planeta desconocido"
 
-SECTION MaterialCommodityData
+SECTION MaterialCommodityMicroResourceType
+.Consumable: "Consumable" @
+.Unknown: "Unknown" @
+.Item: "Item" @
+.Component: "Component" @
+.Data: "Data" @
 
 .Raw: "Raw" => "Elemento"
 .VeryCommon: "Very Common" => "Muy común"
@@ -707,7 +712,7 @@ CommanderForm: "CommanderForm" => "CommanderForm"
 .checkBoxCustomEDDNTo.ToolTip: "Click to send journal information to EDDN. EDDN feeds tools such as EDDB, EDSM, Inara with data from commanders. All data is made anonymised" => "Haga clic para enviar información del diario a EDDN. EDDN alimenta herramientas como EDDB, EDSM, Inara con datos de los comandantes. Todos los datos se anonimizan"
 .checkBoxCustomEDSMFrom.ToolTip: "Receive any FSD jumps from EDSM that are on their database but not in EDDiscovery" => "Reciba todos los saltos FSD de EDSM que estén en su base de datos pero no en EDDiscovery"
 .checkBoxCustomEDSMTo.ToolTip: "Send your travel and ship data to EDSM" => "Envíe sus datos de viaje y envío a EDSM"
-.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \\"My account\\" menu" => "Introduzca la clave de API del sitio web de EDSM\nObtenga una clave de API de EDSM de https://www.edsm.net en el menú \\" Mi cuenta \\ "
+.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \"My account\" menu" => "Introduzca la clave de API del sitio web de EDSM\nObtenga una clave de API de EDSM de https://www.edsm.net en el menú \" Mi cuenta \" "
 .textBoxBorderEDSMName.ToolTip: "Give the name this commander is known as in EDSM" => "Da el nombre con el que se conoce a este comandante en EDSM"
 .buttonExtBrowse.ToolTip: "Browse to the the journal folder" => "Vaya a la carpeta de la revista"
 .textBoxBorderCmdr.ToolTip: "Enter commander name as used in Elite Dangerous" => "Ingrese el nombre del comandante como se usa en Elite Dangerous"

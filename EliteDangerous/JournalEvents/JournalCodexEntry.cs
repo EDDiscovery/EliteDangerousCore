@@ -44,6 +44,8 @@ namespace EliteDangerousCore.JournalEvents
             if ( evt["Traits"] != null )
                 Traits = evt["Traits"].ToObjectQ<string[]>();
             VoucherAmount = evt["VoucherAmount"].LongNull();
+            Latitude = evt["Latitude"].Double();        // odyssey
+            Longitude = evt["Longitude"].Double();
         }
 
         public long EntryID { get; set; }
@@ -63,6 +65,8 @@ namespace EliteDangerousCore.JournalEvents
         public string [] Traits { get; set; }
         public string NearestDestination { get; set; }
         public string NearestDestination_Localised { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {

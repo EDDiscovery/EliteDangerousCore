@@ -53,8 +53,12 @@ SECTION EDPlanet
 .Heliumgasgiant: "Helium gas giant" @
 .Unknown: "Unknown planet type" @
 
-SECTION MaterialCommodityData
-
+SECTION MaterialCommodityMicroResourceType
+.Consumable: "Consumable" @
+.Unknown: "Unknown" @
+.Item: "Item" @
+.Component: "Component" @
+.Data: "Data" @
 .Raw: "Raw" => "未加工的 (Raw)"
 .VeryCommon: "Very Common" => "非常普遍 (Very Common)"
 .Common: "Common" => "普遍 (Common)"
@@ -707,7 +711,7 @@ CommanderForm: "CommanderForm" => "指挥官配置"
 .checkBoxCustomEDDNTo.ToolTip: "Click to send journal information to EDDN. EDDN feeds tools such as EDDB, EDSM, Inara with data from commanders. All data is made anonymised" => "勾选以将日志信息发送到EDDN。 EDDN使用从指挥官们那里收集到的信息向EDDB，EDSM，Inara等工具提供数据。 所有数据都是匿名的。"
 .checkBoxCustomEDSMFrom.ToolTip: "Receive any FSD jumps from EDSM that are on their database but not in EDDiscovery" => "从 EDSM 获取 EDDiscovery 上不存在的FSD跳跃信息。"
 .checkBoxCustomEDSMTo.ToolTip: "Send your travel and ship data to EDSM" => "向 EDSM 发送你的航行已经飞船数据。"
-.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \\"My account\\" menu" @
+.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \"My account\" menu" @
 .textBoxBorderEDSMName.ToolTip: "Give the name this commander is known as in EDSM" => "输入此指挥官在 EDSM 上对应的用户名"
 .buttonExtBrowse.ToolTip: "Browse to the the journal folder" => "选择游戏日志所在的文件夹"
 .textBoxBorderCmdr.ToolTip: "Enter commander name as used in Elite Dangerous" => "输入游戏中的指挥官名称"

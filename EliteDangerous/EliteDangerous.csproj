@@ -257,6 +257,8 @@
     <Compile Include="SystemDB\SystemsDBGetLists.cs" />
     <Compile Include="SystemDB\SystemsDBGetStars.cs" />
     <Compile Include="DB\UserDatabase.cs" />
+    <Compile Include="UIEvents\UIGlideMode.cs" />
+    <Compile Include="UIEvents\UIBreathableAtmosphere.cs" />
     <Compile Include="UIEvents\UIHealth.cs" />
     <Compile Include="UIEvents\UIBodyName.cs" />
     <Compile Include="UIEvents\UISelectedWeapon.cs" />
@@ -332,10 +334,12 @@
     <None Include="JournalEvents\translation-chinese-je.tlp" />
     <None Include="JournalEvents\translation-deutsch-je.tlp" />
     <None Include="JournalEvents\translation-example-je.tlp" />
+    <None Include="JournalEvents\translation-francais-je.tlp" />
     <None Include="JournalEvents\translation-italiano-je.tlp" />
     <None Include="JournalEvents\translation-polski-je.tlp" />
     <None Include="JournalEvents\translation-portugues-je.tlp" />
     <None Include="JournalEvents\translation-russian-je.tlp" />
+    <None Include="JournalEvents\translation-spanish-je.tlp" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

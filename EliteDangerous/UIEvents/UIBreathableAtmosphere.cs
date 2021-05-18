@@ -17,25 +17,17 @@ using System;
 
 namespace EliteDangerousCore.UIEvents
 {
-    public class UIShipType : UIEvent
+    public class UIBreathableAtmosphere : UIEvent
     {
-        public UIShipType(DateTime time, bool refresh) : base(UITypeEnum.ShipType, time, refresh)
+        public UIBreathableAtmosphere(DateTime time, bool refresh) : base(UITypeEnum.BreathableAtmosphere, time, refresh)
         {
         }
 
-        public UIShipType(Shiptype type, DateTime time, bool refresh) : this(time, refresh)
+        public UIBreathableAtmosphere(bool state, DateTime time, bool refresh) : this( time, refresh)
         {
-            ShipType = type;
+            BreathableAtmosphere = state;
         }
 
-        public enum Shiptype { None, MainShip, Fighter, SRV, InTaxi, Multicrew,
-                                    OnFootStationHangar, OnFootStationSocialSpace,
-                                    OnFootPlantaryPortHangar, OnFootPlantaryPortSocialSpace,
-                                    OnFootInstallation,
-                                    OnFootPlanet };
-
-        public Shiptype ShipType { get; private set; }
-
-        static public bool OnFoot(Shiptype t ) { return t >= Shiptype.OnFootStationHangar; }
+        public bool BreathableAtmosphere { get; private set; }
     }
 }
