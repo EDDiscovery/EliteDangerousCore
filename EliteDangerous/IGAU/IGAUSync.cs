@@ -33,9 +33,9 @@ namespace EliteDangerousCore.IGAU
 
         public static bool NewEvent(Action<string> log, HistoryEntry he)
         {
-            if (he.EntryType == JournalTypeEnum.CodexEntry)
+            if (he.EntryType == JournalTypeEnum.CodexEntry || he.EntryType == JournalTypeEnum.ScanOrganic)
             {
-                System.Diagnostics.Debug.WriteLine("Send to IGAU Codex entry " + he.EventTimeUTC.ToStringZulu());
+                System.Diagnostics.Debug.WriteLine("Send to IGAU " + he.EntryType.ToString() + " " + he.EventTimeUTC.ToStringZulu());
                 logger = log;
                 hlscanunsyncedlist.Enqueue(he);
                 hlscanevent.Set();
@@ -79,15 +79,30 @@ namespace EliteDangerousCore.IGAU
                     try
                     {
                         hlscanevent.Reset();
-                        JournalCodexEntry c = he.journalEntry as JournalCodexEntry;
-                        if (c.VoucherAmount != null && c.VoucherAmount > 0)
+
+                        if (he.EntryType == JournalTypeEnum.CodexEntry)
                         {
-                            var msg = igau.CreateIGAUMessage(he.EventTimeUTC.ToStringZulu(),
-                                                              c.EntryID.ToString(), c.Name, c.Name_Localised, c.System, c.SystemAddress?.ToString() ?? "0");
+                            JournalCodexEntry c = he.journalEntry as JournalCodexEntry;
+                            if (c.VoucherAmount != null && c.VoucherAmount > 0)
+                            {
+                                var msg = igau.CreateIGAUMessageCodexMessage(he.EventTimeUTC.ToStringZulu(),
+                                                                  c.EntryID.ToString(), c.Name, c.Name_Localised, c.System, c.SystemAddress?.ToString() ?? "0");
+
+                                System.Diagnostics.Debug.WriteLine("IGAU Post " + msg.ToString(true));
+
+                                if (igau.PostMessage(msg))
+                                {
+                                    logger?.Invoke("IGAU Message transmitted " + he.EventTimeUTC.ToStringZulu());
+                                }
+                            }
+                        }
+                        else if ( he.EntryType == JournalTypeEnum.ScanOrganic)
+                        {
+                            JournalScanOrganic c = he.journalEntry as JournalScanOrganic;
+
+                            var msg = igau.CreateIGAUMessageScanOrganicMessage(he.EventTimeUTC.ToStringZulu(), c.Genus, c.Genus_Localised, c.Species, he.System.Name, he.System.SystemAddress?.ToString() ?? "0");
 
                             System.Diagnostics.Debug.WriteLine("IGAU Post " + msg.ToString(true));
-
-                            // comment ball the ack in when your ready to try!
 
                             if (igau.PostMessage(msg))
                             {

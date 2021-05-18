@@ -38,7 +38,7 @@ namespace EliteDangerousCore.IGAU
         public string Name_Stripped { get; private set; }
         public string Name_Lower { get; private set; }
 
-        public JObject CreateIGAUMessage(string timestamp, string EntryID, string Name, string Name_Localised, string System, string SystemAddress)
+        public JObject CreateIGAUMessageCodexMessage(string timestamp, string EntryID, string Name, string Name_Localised, string System, string SystemAddress)
         {
             var stripped = Name?.ToLowerInvariant()?.Replace("$", "")?.Replace("_name;", "");
 
@@ -47,6 +47,20 @@ namespace EliteDangerousCore.IGAU
             detail["EntryID"] = EntryID.ToString();
             detail["Name"] = stripped;
             detail["Name_Localised"] = Name_Localised;
+            detail["System"] = System;
+            detail["SystemAddress"] = SystemAddress.ToString();
+            detail["App_Name"] = SoftwareName;
+            detail["App_Version"] = App_Version;
+            return detail;
+        }
+
+        public JObject CreateIGAUMessageScanOrganicMessage(string timestamp, string genus, string genusloc, string species, string System, string SystemAddress)
+        {
+            JObject detail = new JObject();
+            detail["timestamp"] = timestamp;
+            detail["EntryID"] = species;
+            detail["Name"] = genus;
+            detail["Name_Localised"] = genusloc;
             detail["System"] = System;
             detail["SystemAddress"] = SystemAddress.ToString();
             detail["App_Name"] = SoftwareName;

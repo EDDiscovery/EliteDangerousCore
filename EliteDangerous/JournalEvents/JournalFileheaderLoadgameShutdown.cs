@@ -30,12 +30,14 @@ namespace EliteDangerousCore.JournalEvents
             Build = evt["build"].Str();
             Language = evt["language"].Str();
             Part = evt["part"].Int();
+            Odyssey = evt["odyssey"].Bool();
         }
 
         public string GameVersion { get; set; }
         public string Build { get; set; }
         public string Language { get; set; }
         public int Part { get; set; }
+        public bool Odyssey { get; set; }
 
         public override bool IsBeta
         {
