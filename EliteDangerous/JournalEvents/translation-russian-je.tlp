@@ -277,7 +277,7 @@ SECTION FSSSignal
 
 SECTION JournalFSSDiscoveryScan
 
-.Progress: "Progress:;%;N1" => "Прогресс: ;%;N1"
+.Progress: "Progress: ;%;N1" => "Прогресс: ;%;N1"
 .Bodies: "Bodies:" @
 .Others: "Others:" => "другие: "
 
@@ -331,13 +331,13 @@ SECTION JournalLocOrJump
 .Economy: "Economy:" => "экономика: "
 .Population: "Population:" => "Население: "
 .Government: "Government:" => "форма правления: "
-.Inf: "Inf:;%" => "влияние: ;%"
+.Inf: "Inf: ;%" => "влияние: ;%"
 .PendingState: "Pending State:" => " ожидаемое состояние:"
 .RecoveringState: "Recovering State:" => " состояние восстановления:"
 
 SECTION JournalFuelScoop
 
-.Total: "Total:;t;0.0" => "всего: ; т;0.0"
+.Total: "Total: ;t;0.0" => "всего: ; т;0.0"
 
 SECTION JournalLoadout
 
@@ -357,7 +357,7 @@ SECTION JournalLocOrJump
 .Inspacenear: "In space near " => "В космосе рядом с "
 .oftype: "< of type " => "<, тип: "
 .Happiness: "Happiness:" => "удовлетворенность: "
-.Reputation: "Reputation:;%;N1" => "репутация: ;%;N1"
+.Reputation: "Reputation: ;%;N1" => "репутация: ;%;N1"
 .SquadronSystem: ";Squadron System" => ";система эскадрильи"
 .HappiestSystem: ";Happiest System" => ";самая удовлетворенная система"
 .HomeSystem: ";Home System" => ";домашняя система"
@@ -403,20 +403,20 @@ SECTION JournalModuleInfo
 
 SECTION JournalMultiSellExplorationData
 
-.Total: "Total:; cr;N0" => "всего: ; кр.;N0"
+.Total: "Total: ; cr;N0" => "всего: ; кр.;N0"
 
 SECTION JournalProgress
 
-.Combat: "Combat:;%" => "Боевой ранг: ;%"
-.Trade: "Trade:;%" => "торговый ранг: ;%"
-.Exploration: "Exploration:;%" => "исследовательский ранг: ;%"
-.Federation: "Federation:;%" => "Федерация: ;%"
-.Empire: "Empire:;%" => "Империя: ;%"
-.CQC: "CQC:;%" => "CQC: ;%"
+.Combat: "Combat: ;%" => "Боевой ранг: ;%"
+.Trade: "Trade: ;%" => "торговый ранг: ;%"
+.Exploration: "Exploration: ;%" => "исследовательский ранг: ;%"
+.Federation: "Federation: ;%" => "Федерация: ;%"
+.Empire: "Empire: ;%" => "Империя: ;%"
+.CQC: "CQC: ;%" => "CQC: ;%"
 
 SECTION JournalProspectedAsteroid
 
-.Remaining: "Remaining:;%;N1" => "осталось минералов: ;%;N1"
+.Remaining: "Remaining: ;%;N1" => "осталось минералов: ;%;N1"
 
 SECTION JournalPromotion
 
@@ -438,7 +438,7 @@ SECTION JournalReceiveText
 
 SECTION JournalEntry
 
-.Fuel: "Fuel:; tons;0.0" => "получено ;0.0 т топлива"
+.Fuel: "Fuel: ; tons;0.0" => "получено ;0.0 т топлива"
 
 SECTION JournalRepairDrone
 
@@ -446,15 +446,15 @@ SECTION JournalRepairDrone
 
 SECTION JournalReputation
 
-.Federation: "Federation:;;0.#" => "Федерация: ;;0.#"
-.Empire: "Empire:;;0.#" => "Империя: ;;0.#"
-.Independent: "Independent:;;0.#" => "Независимые: ;;0.#"
-.Alliance: "Alliance:;;0.#" => "Альянс: ;;0.#"
+.Federation: "Federation: ;;0.#" => "Федерация: ;;0.#"
+.Empire: "Empire: ;;0.#" => "Империя: ;;0.#"
+.Independent: "Independent: ;;0.#" => "Независимые: ;;0.#"
+.Alliance: "Alliance: ;;0.#" => "Альянс: ;;0.#"
 
 SECTION JournalReservoirReplenished
 
-.Main: "Main:;t;0.0" => "Основной бак: ; т;0.0"
-.Reservoir: "Reservoir:;t;0.0" => "рабочий резервуар: ; т;0.0"
+.Main: "Main: ;t;0.0" => "Основной бак: ; т;0.0"
+.Reservoir: "Reservoir: ;t;0.0" => "рабочий резервуар: ; т;0.0"
 
 SECTION StarPlanetRing
 
@@ -482,14 +482,14 @@ SECTION JournalScan
 .ScanBasic: "Scan Basic" => "Базовое сканирование"
 .ScanNav: "Scan Nav" => "Сканирование нав. маяка"
 .Scanof: "Scan of {0}" => "Сканирование {0}"
-.MSM: "Mass:;SM;0.00" => "солнечных масс: ; ;0.00"
-.Age: "Age:;my;0.0" => "возраст: ; млн лет;0.0"
+.MSM: "Mass: ;SM;0.00" => "солнечных масс: ; ;0.00"
+.Age: "Age: ;my;0.0" => "возраст: ; млн лет;0.0"
 .RS: "Radius:" => "Радиус: "
-.MEM: "Mass:;EM;0.00" => "земных масс: ; ;0.00"
+.MEM: "Mass: ;EM;0.00" => "земных масс: ; ;0.00"
 .Landable: "<;, Landable" => "<;, пригодна для посадки"
 .Terraformable: "<;, Terraformable" => "<;, пригодна для терраформирования"
-.Gravity: "Gravity:;G;0.00" => "гравитация: ; g;0.0"
-.RK: "Radius:;km;0" => "радиус: ; км;0"
+.Gravity: "Gravity: ;G;0.00" => "гравитация: ; g;0.0"
+.RK: "Radius: ;km;0" => "радиус: ; км;0"
 .NoAtmosphere: ", No Atmosphere" => ", без атмосферы"
 .LandC: ", Landable" => ", пригодна для посадки"
 .AMY: "Age: {0} my\n" => "Возраст: {0} млн лет\n"
@@ -534,10 +534,10 @@ SECTION JournalScan
 .EarthLikeWorlds: " - Earth Like Worlds, {0} ({1}-{2} AU),\n" => " - землеподобные планеты, {0} ({1}-{2} а. е.),\n"
 .AmmoniaWorlds: " - Ammonia Worlds, {0} ({1}-{2} AU),\n" => " - аммиачные планеты, {0} ({1}-{2} а. е.),\n"
 .IcyPlanets: " - Icy Planets, {0} (from {1} AU)\n" => " - ледяные планеты, {0} (от {1} а. е.)\n\n"
-.DISTA: "Dist:;ls;0.0" => "Расстояние от точки прибытия: ; св. с.;0.0"
+.DISTA: "Dist: ;ls;0.0" => "Расстояние от точки прибытия: ; св. с.;0.0"
 .DIST: "Dist:" @
 .BNME: "Name:" => "название звезды: "
-.MMoM: "Mass:;MM;0.00" => "Масса: ; лунных масс;0.00"
+.MMoM: "Mass: ;MM;0.00" => "Масса: ; лунных масс;0.00"
 .SNME: "Name:" => "название тела: "
 .MoonMasses: "Moon Masses: {0:0.00}\n" => "Лунных масс: {0:0.00}\n"
 .MPI: "Mapped" => "картографировано"
@@ -569,7 +569,7 @@ SECTION JournalSearchAndRescue
 
 SECTION JournalSellExplorationData
 
-.Total: "Total:; cr;N0" => "всего:; кр.;N0"
+.Total: "Total: ; cr;N0" => "всего: ; кр.;N0"
 
 SECTION JournalSendText
 
@@ -611,8 +611,8 @@ SECTION JournalStartJump
 
 SECTION JournalEntry
 
-.Wealth: "Wealth:;cr;N0" => "Текущие активы: ; кр.;N"
-.NotorietyIndex: "Notoriety Index:;;N0" => "плохая репутация: ;;N0"
+.Wealth: "Wealth: ;cr;N0" => "Текущие активы: ; кр.;N"
+.NotorietyIndex: "Notoriety Index: ;;N0" => "плохая репутация: ;;N0"
 
 SECTION JournalStatistics
 
@@ -633,122 +633,122 @@ SECTION JournalStatistics
 
 SECTION BankAccountClass
 
-.Wealth: "Wealth:;cr;N0" => "Текущие активы: ; кр.;N0"
-.SpentonShips: "Spent on Ships:;cr;N0" => "Потрачено на корабли: ; кр.;N0"
-.SpentonOutfitting: "Spent on Outfitting:;cr;N0" => "Потрачено на снаряжение: ; кр.;N0"
-.SpentonRepairs: "Spent on Repairs:;cr;N0" => "Потрачено на ремонт: ; кр.;N0"
-.SpentonFuel: "Spent on Fuel:;cr;N0" => "Потрачено на топливо: ; кр.;N0"
-.SpendonAmmo: "Spent on Ammo:;cr;N0" => "Потрачено на боеприпасы: ; кр.;N0"
-.InsuranceClaims: "Insurance Claims:;;N0" => "Страховых выплат: ;;N0"
-.SpentonInsurance: "Spent on Insurance:;cr;N0" => "Потрачено на страховку: ; кр.;N0"
+.Wealth: "Wealth: ;cr;N0" => "Текущие активы: ; кр.;N0"
+.SpentonShips: "Spent on Ships: ;cr;N0" => "Потрачено на корабли: ; кр.;N0"
+.SpentonOutfitting: "Spent on Outfitting: ;cr;N0" => "Потрачено на снаряжение: ; кр.;N0"
+.SpentonRepairs: "Spent on Repairs: ;cr;N0" => "Потрачено на ремонт: ; кр.;N0"
+.SpentonFuel: "Spent on Fuel: ;cr;N0" => "Потрачено на топливо: ; кр.;N0"
+.SpendonAmmo: "Spent on Ammo: ;cr;N0" => "Потрачено на боеприпасы: ; кр.;N0"
+.InsuranceClaims: "Insurance Claims: ;;N0" => "Страховых выплат: ;;N0"
+.SpentonInsurance: "Spent on Insurance: ;cr;N0" => "Потрачено на страховку: ; кр.;N0"
 .OwnedShipCount: "Owned ships" @
 
 SECTION CombatClass
 
-.Bounties: "Bounties :;;N0" => "Наград за поимку: ;;N0"
-.BountyProfits: "Bounty Profits:;cr;N0" => "Прибыль от наград за поимку: ; кр.;N0"
-.CombatBonds: "Combat Bonds:;;N0" => "Боевые облигации: ;;N0"
-.CombatBondProfits: "Combat Bond Profits:;cr;N0" => "Прибыль от боевых облигаций: ; кр.;N0"
-.Assassinations: "Assassinations:;;N0" => "Наемные убийства: ;;N0"
-.AssassinationProfits: "Assassination Profits:;cr;N0" => "Прибыль от наемных убийств: ; кр.;N0"
+.Bounties: "Bounties : ;;N0" => "Наград за поимку: ;;N0"
+.BountyProfits: "Bounty Profits: ;cr;N0" => "Прибыль от наград за поимку: ; кр.;N0"
+.CombatBonds: "Combat Bonds: ;;N0" => "Боевые облигации: ;;N0"
+.CombatBondProfits: "Combat Bond Profits: ;cr;N0" => "Прибыль от боевых облигаций: ; кр.;N0"
+.Assassinations: "Assassinations: ;;N0" => "Наемные убийства: ;;N0"
+.AssassinationProfits: "Assassination Profits: ;cr;N0" => "Прибыль от наемных убийств: ; кр.;N0"
 .HighestReward: "Highest Reward: ;cr;N0" => "Максимальный размер награды: ; кр.;N0"
-.SkimmersKilled: "Skimmers Killed:;;N0" => "Сбито оборонных беспилотников: ;;N0"
+.SkimmersKilled: "Skimmers Killed: ;;N0" => "Сбито оборонных беспилотников: ;;N0"
 
 SECTION CrimeClass
 
-.NotorietyIndex: "Notoriety Index:;;N0" => "Плохая репутация: ;;N0"
-.Fines: "Fines:;;N0" => "Получено штрафов: ;;N0"
-.TotalFines: "Total Fines:;cr;N0" => "Общая сумма штрафов: ; кр.;N0"
-.Bounties: "Bounties:;;N0" => "Наград получено/заработано: ;;N0"
-.TotalBounties: "Total Bounties:;cr;N0" => "Общая сумма наград за поимку: ; кр.;N0"
-.HighestBounty: "Highest Bounty:;cr;N0" => "Максимальная награда за поимку: ; кр.;N0"
+.NotorietyIndex: "Notoriety Index: ;;N0" => "Плохая репутация: ;;N0"
+.Fines: "Fines: ;;N0" => "Получено штрафов: ;;N0"
+.TotalFines: "Total Fines: ;cr;N0" => "Общая сумма штрафов: ; кр.;N0"
+.Bounties: "Bounties: ;;N0" => "Наград получено/заработано: ;;N0"
+.TotalBounties: "Total Bounties: ;cr;N0" => "Общая сумма наград за поимку: ; кр.;N0"
+.HighestBounty: "Highest Bounty: ;cr;N0" => "Максимальная награда за поимку: ; кр.;N0"
 
 SECTION SmugglingClass
 
-.BlackMarkets: "Black Markets:;;N0" => "Сеть черного рынка: ;;N0"
-.BlackMarketProfits: "Black Market Profits:;cr;N0" => "Прибыль от черного рынка: ; кр.;N0"
-.ResourcesSmuggled: "Resources Smuggled:;;N0" => "Провезено контрабандой: ;;N0"
-.AverageProfit: "Average Profit:;cr;N0" => "Средний размер прибыли: ; кр.;N0"
-.HighestSingleTransaction: "Highest Single Transaction:;cr;N0" => "Максимальный размер транзакции: ; кр.;N0"
+.BlackMarkets: "Black Markets: ;;N0" => "Сеть черного рынка: ;;N0"
+.BlackMarketProfits: "Black Market Profits: ;cr;N0" => "Прибыль от черного рынка: ; кр.;N0"
+.ResourcesSmuggled: "Resources Smuggled: ;;N0" => "Провезено контрабандой: ;;N0"
+.AverageProfit: "Average Profit: ;cr;N0" => "Средний размер прибыли: ; кр.;N0"
+.HighestSingleTransaction: "Highest Single Transaction: ;cr;N0" => "Максимальный размер транзакции: ; кр.;N0"
 
 SECTION TradingClass
 
-.MarketsTraded: "Markets Traded:;;N0" => "Торговая сеть: ;;N0"
-.Profits: "Profits:;cr;N0" => "Прибыль от торговли: ; кр.;N0"
-.No: "No. of Resources:;;N0" => "Продано товаров: ;;N0"
-.AverageProfit: "Average Profit:;cr;N0" => "Средний размер прибыли: ; кр.;N0"
-.HighestSingleTransaction: "Highest Single Transaction:;cr;N0" => "Максимальный размер транзакции: ; кр.;N0"
+.MarketsTraded: "Markets Traded: ;;N0" => "Торговая сеть: ;;N0"
+.Profits: "Profits: ;cr;N0" => "Прибыль от торговли: ; кр.;N0"
+.No: "No. of Resources: ;;N0" => "Продано товаров: ;;N0"
+.AverageProfit: "Average Profit: ;cr;N0" => "Средний размер прибыли: ; кр.;N0"
+.HighestSingleTransaction: "Highest Single Transaction: ;cr;N0" => "Максимальный размер транзакции: ; кр.;N0"
 
 SECTION MiningClass
 
-.Profits: "Profits:;cr;N0" => "Прибыль от добычи ресурсов: ; кр.;N0"
-.Quantity: "Quantity:;;N0" => "Переработано материалов: ;;N0"
-.MaterialsTypesCollected: "Materials Types Collected:;;N0" => "Собрано материалов: ;;N0"
+.Profits: "Profits: ;cr;N0" => "Прибыль от добычи ресурсов: ; кр.;N0"
+.Quantity: "Quantity: ;;N0" => "Переработано материалов: ;;N0"
+.MaterialsTypesCollected: "Materials Types Collected: ;;N0" => "Собрано материалов: ;;N0"
 
 SECTION ExplorationClass
 
-.SystemsVisited: "Systems Visited:;;N0" => "Посещено систем: ;;N0"
-.Profits: "Profits:;cr;N0" => "Прибыль от исследования: ; кр.;N0"
-.Level2Scans: "Level 2 Scans:;;N0" => "Сканирования 2 уровня: ;;N0"
-.Level3Scans: "Level 3 Scans:;;N0" => "Сканирования 3 уровня: ;;N0"
-.HighestPayout: "Highest Payout:;cr;N0" => "Самая высокая выплата: ; кр.;N0"
-.TotalDistance: "Total Distance:;;N0" => "Пройдено в гиперпространстве: ;;N0"
-.NoofJumps: "No of Jumps:;;N0" => "Всего прыжков в гиперпространстве: ;;N0"
-.GreatestDistance: "Greatest Distance:;;N0" => "Макс. расстояние с начала: ;;N0"
+.SystemsVisited: "Systems Visited: ;;N0" => "Посещено систем: ;;N0"
+.Profits: "Profits: ;cr;N0" => "Прибыль от исследования: ; кр.;N0"
+.Level2Scans: "Level 2 Scans: ;;N0" => "Сканирования 2 уровня: ;;N0"
+.Level3Scans: "Level 3 Scans: ;;N0" => "Сканирования 3 уровня: ;;N0"
+.HighestPayout: "Highest Payout: ;cr;N0" => "Самая высокая выплата: ; кр.;N0"
+.TotalDistance: "Total Distance: ;;N0" => "Пройдено в гиперпространстве: ;;N0"
+.NoofJumps: "No of Jumps: ;;N0" => "Всего прыжков в гиперпространстве: ;;N0"
+.GreatestDistance: "Greatest Distance: ;;N0" => "Макс. расстояние с начала: ;;N0"
 .TimePlayed: "Time Played:" => "Время игры: "
-.EfficientScans: "Efficient Scans:;;N0" @
+.EfficientScans: "Efficient Scans: ;;N0" @
 
 SECTION PassengerMissionsClass
 
-.Accepted: "Accepted:;;N0" @
-.BulkMissionPassengers: "Bulk Mission Passengers:;;N0" => "Доставлено обычных пассажиров: ;;N0"
-.VIPMissionPassengers: "VIP Mission Passengers:;;N0" => "Доставлено VIP-персон: ;;N0"
-.PassengersDelivered: "Passengers Delivered:;;N0" => "Всего доставлено: ;;N0"
-.PassengersEjected: "Passengers Ejected:;;N0" => "Всего потеряно: ;;N0"
-.PassengersDisgrunted: "Passengers Disgrunted:;;N0" @
+.Accepted: "Accepted: ;;N0" @
+.BulkMissionPassengers: "Bulk Mission Passengers: ;;N0" => "Доставлено обычных пассажиров: ;;N0"
+.VIPMissionPassengers: "VIP Mission Passengers: ;;N0" => "Доставлено VIP-персон: ;;N0"
+.PassengersDelivered: "Passengers Delivered: ;;N0" => "Всего доставлено: ;;N0"
+.PassengersEjected: "Passengers Ejected: ;;N0" => "Всего потеряно: ;;N0"
+.PassengersDisgrunted: "Passengers Disgrunted: ;;N0" @
 
 SECTION SearchAndRescueClass
 
-.TotalItemsRescued: "Total Items Rescued:;;N0" => "Всего спасено предметов: ;;N0"
-.Profit: "Profit:;cr;N0" => "Общий доход: ; кр.;N0"
-.TotalRescueTransactions: "Total Rescue Transactions:;;N0" => "Всего спасательных операций: ;;N0"
+.TotalItemsRescued: "Total Items Rescued: ;;N0" => "Всего спасено предметов: ;;N0"
+.Profit: "Profit: ;cr;N0" => "Общий доход: ; кр.;N0"
+.TotalRescueTransactions: "Total Rescue Transactions: ;;N0" => "Всего спасательных операций: ;;N0"
 
 SECTION CraftingClass
 
-.EngineersUsed: "Engineers Used:;;N0" => "Использовано инженеров: ;;N0"
-.Blueprints: "Blueprints:;;N0" => "Всего создано улучшений: ;;N0"
-.AtLevel1: "At Level 1:;;N0" => "1-го уровня: ;;N0"
-.AtLevel2: "At Level 2:;;N0" => "2-го уровня: ;;N0"
-.AtLevel3: "At Level 3:;;N0" => "3-го уровня: ;;N0"
-.AtLevel4: "At Level 4:;;N0" => "4-го уровня: ;;N0"
-.AtLevel5: "At Level 5:;;N0" => "5-го уровня: ;;N0"
+.EngineersUsed: "Engineers Used: ;;N0" => "Использовано инженеров: ;;N0"
+.Blueprints: "Blueprints: ;;N0" => "Всего создано улучшений: ;;N0"
+.AtLevel1: "At Level 1: ;;N0" => "1-го уровня: ;;N0"
+.AtLevel2: "At Level 2: ;;N0" => "2-го уровня: ;;N0"
+.AtLevel3: "At Level 3: ;;N0" => "3-го уровня: ;;N0"
+.AtLevel4: "At Level 4: ;;N0" => "4-го уровня: ;;N0"
+.AtLevel5: "At Level 5: ;;N0" => "5-го уровня: ;;N0"
 
 SECTION CrewClass
 
-.TotalWages: "Total Wages:;cr;N0" => "Всего выплачено экипажу: ; кр.;N0"
-.Hired: "Hired:;;N0" => "Нанято членов экипажа: ;;N0"
-.Fired: "Fired:;;N0" => "Уволено членов экипажа: ;;N0"
-.KilledinAction: "Killed in Action:;;N0" => "Погибло при исполнении служебных обязанностей: ;;N0"
+.TotalWages: "Total Wages: ;cr;N0" => "Всего выплачено экипажу: ; кр.;N0"
+.Hired: "Hired: ;;N0" => "Нанято членов экипажа: ;;N0"
+.Fired: "Fired: ;;N0" => "Уволено членов экипажа: ;;N0"
+.KilledinAction: "Killed in Action: ;;N0" => "Погибло при исполнении служебных обязанностей: ;;N0"
 
 SECTION MulticrewClass
 
 .TotalTime: "Total Time:" => "Общее время: "
-.GunnerTime: "Gunner Time:;;N0" => "В роли наводчика: ;;N0"
-.FighterTime: "Fighter Time:;;N0" => "В роли летчика-истребителя: ;;N0"
-.Credits: "Credits:;cr;N0" => "Кредитов заработано: ; кр.;N0"
-.Fines: "Fines:;cr;N0" => "Штрафов получено: ; кр.;N0"
+.GunnerTime: "Gunner Time: ;;N0" => "В роли наводчика: ;;N0"
+.FighterTime: "Fighter Time: ;;N0" => "В роли летчика-истребителя: ;;N0"
+.Credits: "Credits: ;cr;N0" => "Кредитов заработано: ; кр.;N0"
+.Fines: "Fines: ;cr;N0" => "Штрафов получено: ; кр.;N0"
 
 SECTION MaterialTraderStatsClass
 
-.CommodityTrades: "Commodity Trades:;;N0" => "Сделок завершено: ;;N0"
-.MaterialTraded: "Material Traded:;;N0" => "Обменяно материалов: ;;N0"
+.CommodityTrades: "Commodity Trades: ;;N0" => "Сделок завершено: ;;N0"
+.MaterialTraded: "Material Traded: ;;N0" => "Обменяно материалов: ;;N0"
 
 SECTION CQCClass
 
-.TimePlayed: "Time Played:;;N0" => "Время игры: ;;N0"
-.KDRatio: "KD Ratio:;;N" => "Соотношение убийств и смертей: ;;N"
-.Kills: "Kills:;;N0" => "Убийства: ;;N0"
-.Win: "Win/Loss:;;N" => "Соотношение побед и поражений: ;;N"
+.TimePlayed: "Time Played: ;;N0" => "Время игры: ;;N0"
+.KDRatio: "KD Ratio: ;;N" => "Соотношение убийств и смертей: ;;N"
+.Kills: "Kills: ;;N0" => "Убийства: ;;N0"
+.Win: "Win/Loss: ;;N" => "Соотношение побед и поражений: ;;N"
 
 SECTION JournalStoredModules
 
@@ -804,14 +804,14 @@ SECTION JournalEntry
 .0: "{0} on {1}" => "{0} на {1}"
 .onfaction: "< on faction " => "<, фракция: "
 .Against: "Against " => "цель: "
-.Cost: "Cost:; cr;N0" => "сумма: ; кр.;N0"
-.Bounty: "Bounty:; cr;N0" => "награда за поимку: ; кр.;N0"
+.Cost: "Cost: ; cr;N0" => "сумма: ; кр.;N0"
+.Bounty: "Bounty: ; cr;N0" => "награда за поимку: ; кр.;N0"
 .Offender: "Offender " => "правонарушитель: "
 .Reward: "Reward: ; cr;N0" => "Награда: ; кр.;N0"
 .to: "< to " => "<: "
 .Brokertook: ", Broker took {0:N0}%" => ", комиссия брокера: {0:N0}%"
 .Type: "Type:" => "Тип: "
-.Amount: "Amount:; cr;N0" => "сумма: ; кр.;N0"
+.Amount: "Amount: ; cr;N0" => "сумма: ; кр.;N0"
 .System: "System:" => "\nСистема: "
 .NoCargo: "No Cargo" => "Нет груза"
 .Cargo: "Cargo, {0} items" => "{0} шт."
@@ -824,17 +824,17 @@ SECTION JournalEntry
 .of: "< of " => "< шт. груза "
 .ofa: "of " @
 .Total: "Total:" => "\nВсего в хранилище: "
-.Progress: "Progress:;%;N1" => "прогресс: ;%;N1"
+.Progress: "Progress: ;%;N1" => "прогресс: ;%;N1"
 .Delivered: "Delivered:" => "Доставлено: "
 .Update: "Update, Collected:" => "Обновление. Собрано: "
 .ToGo: "To Go:" => "осталось: "
-.ProgressLeft: "Progress Left:;%;N1" => "оставшийся прогресс: ;%;N1"
+.ProgressLeft: "Progress Left: ;%;N1" => "оставшийся прогресс: ;%;N1"
 .Stolen: ";Stolen" => ";украдено"
 .StartingPackage: "Starting Package:" => "стартовый пакет: "
 .CGS: "< at ; Star System" => "<, система: ;"
 .torole: "< to role ;" => "< на роль ;"
 .fired: "; fired" => "; уволен(а)"
-.Hired: "Hired:;" => "Нанят(а): ;"
+.Hired: "Hired: ;" => "Нанят(а): ;"
 .offaction: "< of faction " => "<, фракция: "
 .Rank: "Rank:" => "ранг: "
 .Crew: "Crew:" => "Член экипажа: "
@@ -862,10 +862,10 @@ SECTION JournalEntry
 .onpad: "< on pad " => "<, посадочная площадка "
 .Cockpit: "Cockpit:" => "Фонарь кабины: "
 .Corrosion: "Corrosion:" => "Коррозия: "
-.TotalCost: "Total Cost:; cr;N0" => "общая сумма: ; кр;N0"
-.each: "each:; cr;N0" => "цена за шт.: ; кр.;N0"
+.TotalCost: "Total Cost: ; cr;N0" => "общая сумма: ; кр;N0"
+.each: "each: ; cr;N0" => "цена за шт.: ; кр.;N0"
 .Drones: "Drones" => "Дроны"
-.Price: "Price:; cr;N0" => "цена: ; кр.;N0"
+.Price: "Price: ; cr;N0" => "цена: ; кр.;N0"
 .Name: "Name:" => "название: "
 .Blueprint: "Blueprint:" => "чертеж: "
 .Level: "Level:" => "Уровень:"
@@ -876,7 +876,7 @@ SECTION JournalEntry
 .TotalQuantity: "TotalQuantity:" => "общее количество: "
 .InSlot: "In Slot:" => "В слоте:"
 .By: "By:" => "Пытался перехватить пилот: "
-.Bonus: "Bonus:; cr;N0" => "бонус: ; кр.;N0"
+.Bonus: "Bonus: ; cr;N0" => "бонус: ; кр.;N0"
 .Scanned: "Scanned:" => "Системы: "
 .Discovered: "Discovered:" => "Обнаружено: "
 .Loadout: "Loadout:" => "Снаряжение:"
@@ -886,12 +886,12 @@ SECTION JournalEntry
 .Part: "Part:" => "часть: "
 .Ship: "Ship:" => "корабль: "
 .Ident: "Ident:" => "идентификатор: "
-.Credits: "Credits:;;N0" => "баланс: ;;N0"
+.Credits: "Credits: ;;N0" => "баланс: ;;N0"
 .Mode: "Mode:" => "Режим: "
 .Group: "Group:" => "группа: "
 .NotLanded: "Not Landed;Landed" => ";на поверхности"
-.FuelLevel: "Fuel Level:;;0.0" => "уровень топлива: ;;0.0"
-.Capacity: "Capacity:;;0.0" => "грузовая вместимость: ;;0.0"
+.FuelLevel: "Fuel Level: ;;0.0" => "уровень топлива: ;;0.0"
+.Capacity: "Capacity: ;;0.0" => "грузовая вместимость: ;;0.0"
 .Cashtotaldiffers: "Cash total differs, adjustment" => "Количество денег отличается, корректировка"
 .NumberofStatuses: "Number of Statuses:" => "Количество статусов: "
 .Online: "Online:" => "В сети: "
@@ -899,11 +899,11 @@ SECTION JournalEntry
 .Submitted: ";Submitted" => "Перехвачен пилотом;Сдался пилоту"
 .NPC: "< (NPC);(Player)" => "< (NPC);(Игрок)"
 .Power: "Power:" => "держава: "
-.Failedtointerdict: "Failed to interdict;Interdicted" => "Ушел от перехвата:;Успешно перехвачен:"
-.Boost: "Boost:;;0.0" => "Ускорение:;;0.0"
+.Failedtointerdict: "Failed to interdict;Interdicted" => "Ушел от перехвата: ;Успешно перехвачен:"
+.Boost: "Boost: ;;0.0" => "Ускорение: ;;0.0"
 .buyprice: "< buy price ; cr;N0" => "< цена покупки ; кр.;N0"
 .sellprice: "< sell price ; cr;N0" => "< цена продажи ; кр.;N0"
-.Profit: "Profit:; cr;N0" => "Прибыль: ; кр.;N0"
+.Profit: "Profit: ; cr;N0" => "Прибыль: ; кр.;N0"
 .Legal: "Legal;Illegal" => "законный;незаконный"
 .NotStolen: "Not Stolen;Stolen" => ";украдено"
 .Market: "Market;BlackMarket" => "Рынок;Черный рынок"
@@ -921,10 +921,10 @@ SECTION JournalEntry
 .Fine: "Fine:" => "штраф: "
 .Missionname: "Mission name:" => "Название миссии: "
 .Hot: ";(Hot)" => ";(горячий)"
-.HullHealth: "Hull Health:;%;N1" => "прочность щита: ;%;N1"
-.Hull: "Hull:; cr;N0" => "стоимость корпуса: ; кр.;N0"
-.Modules: "Modules:; cr;N0" => "стоимость модулей: ; кр.;N0"
-.Rebuy: "Rebuy:; cr;N0" => "страховка: ; кр.;N0"
+.HullHealth: "Hull Health: ;%;N1" => "прочность щита: ;%;N1"
+.Hull: "Hull: ; cr;N0" => "стоимость корпуса: ; кр.;N0"
+.Modules: "Modules: ; cr;N0" => "стоимость модулей: ; кр.;N0"
+.Rebuy: "Rebuy: ; cr;N0" => "страховка: ; кр.;N0"
 .into: "< into " => "<, установка в слот: "
 .Stored: "Stored:" => "помещено в хранилище: "
 .Item: "Item:" => "модуль: "
@@ -933,9 +933,9 @@ SECTION JournalEntry
 .Modifications: "Modifications:" => "Модификация: "
 .Slot: "Slot:" => "Слот: "
 .Swappedwith: ", Swapped with " => ", заменен на модуль: "
-.TransferCost: "Transfer Cost:; cr;N0" => "цена перемещения: ; кр.;N0"
+.TransferCost: "Transfer Cost: ; cr;N0" => "цена перемещения: ; кр.;N0"
 .Time: "Time:" => "время: "
-.Value: "Value:; cr;N0" => "стоимость: ; кр.;N0"
+.Value: "Value: ; cr;N0" => "стоимость: ; кр.;N0"
 .Totalmodules: "Total modules:" => "Всего модулей:"
 .Intoship: "Into ship:" => "для корабля: "
 .TransferTime: "Transfer Time:" => "время перемещения: "
@@ -957,7 +957,7 @@ SECTION JournalEntry
 .Longitude: "Longitude:" => "долгота: "
 .Num: "Num:" => "кол-во: "
 .Ships: "Ships" => "корабл."
-.Distance: "Distance:; ly;0.0" => "расстояние: ; св. л.;0.0"
+.Distance: "Distance: ; ly;0.0" => "расстояние: ; св. л.;0.0"
 .Threat: "Threat:" => "ур. опасности: "
 .RemainingJumps: "Remaining Jumps" @
 .Nearest: "Nearest:" @
@@ -973,12 +973,12 @@ SECTION JournalCarrier
 .At: "At " @
 .Callsign: "Call Sign:" @
 .Name: "Name:" @
-.JumpRange: "Jump Range:;ly;0.0" @
-.Balance: "Carrier Balance:; cr;N0" @
-.ReserveBalance: "Reserve Balance:; cr;N0" @
-.AvailableBalance: "Available Balance:; cr;N0" @
-.ReservePercent: "Reserve Percent:;;N1" @
-.TaxRate: "Tax Rate:;;N1" @
+.JumpRange: "Jump Range: ;ly;0.0" @
+.Balance: "Carrier Balance: ; cr;N0" @
+.ReserveBalance: "Reserve Balance: ; cr;N0" @
+.AvailableBalance: "Available Balance: ; cr;N0" @
+.ReservePercent: "Reserve Percent: ;;N1" @
+.TaxRate: "Tax Rate: ;;N1" @
 .TotalCapacity: "Total Capacity:" @
 .Crew: "Crew:" @
 .Cargo: "Cargo:" @
@@ -988,10 +988,10 @@ SECTION JournalCarrier
 .FreeSpace: "Free Space:" @
 .ToSystem: "To " @
 .Body: "Body " @
-.Refund: "Refund:; cr;N0" @
+.Refund: "Refund: ; cr;N0" @
 .RefundTime: "at UTC " @
-.Deposit: "Deposit:; cr;N0" @
-.Withdraw: "Withdraw:; cr;N0" @
+.Deposit: "Deposit: ; cr;N0" @
+.Withdraw: "Withdraw: ; cr;N0" @
 .Operation: "Operation:" @
 .Tier: "Tier:" @
 .Purchase: "Purchase:" @
@@ -999,5 +999,5 @@ SECTION JournalCarrier
 .CancelSell: "Cancel Sell of:" @
 .Access: "Access:" @
 .AllowNotorious: ";Allow Notorious" @
-.Amount: "Amount:;;N0" @
-.FuelLevel: "Fuel Level:;;N0" @
+.Amount: "Amount: ;;N0" @
+.FuelLevel: "Fuel Level: ;;N0" @
