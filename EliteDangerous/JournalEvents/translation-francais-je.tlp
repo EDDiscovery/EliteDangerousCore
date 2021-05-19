@@ -828,6 +828,7 @@ SECTION JournalEntry
 .Against: "Against " => "Contre "
 .Cost: "Cost: ; cr;N0" => "Coût: ; cr;N0"
 .Bounty: "Bounty: ; cr;N0" => "Prime: ; cr;N0"
+.BountyOnly: "Bounty" => "Prime:"
 .Offender: "Offender " => "Assaillant "
 .Reward: "Reward: ; cr;N0" => "Recompense: ; cr;N0"
 .to: "< to " => "< vers "

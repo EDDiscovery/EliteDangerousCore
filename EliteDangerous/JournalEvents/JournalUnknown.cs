@@ -41,7 +41,7 @@ namespace EliteDangerousCore.JournalEvents
             JObject jt = json.Clone().Object();
             jt.Remove("timestamp");
             jt.Remove("event");
-            info = "Unhandled:".T(EDTx.JournalUnknown_UnhandledJournalevent) + jt.ToStringLiteral();
+            info = "Unhandled: ".T(EDTx.JournalUnknown_UnhandledJournalevent) + jt.ToStringLiteral();
             detailed = "";
         }
     }

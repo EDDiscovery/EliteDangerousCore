@@ -187,9 +187,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", Type_Localised, "Count:".T(EDTx.JournalEntry_Count), Count,
+            info = BaseUtils.FieldBuilder.Build("", Type_Localised, "Count: ".T(EDTx.JournalEntry_Count), Count,
                             "<; (Mission Cargo)".T(EDTx.JournalEntry_MissionCargo), MissionID != null,
-                            ";Abandoned".T(EDTx.JournalEntry_Abandoned), Abandoned, "PowerPlay:".T(EDTx.JournalEntry_PowerPlay), PowerplayOrigin);
+                            ";Abandoned".T(EDTx.JournalEntry_Abandoned), Abandoned, "PowerPlay: ".T(EDTx.JournalEntry_PowerPlay), PowerplayOrigin);
             detailed = "";
         }
     }
@@ -255,15 +255,15 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (UpdateEnum == UpdateTypeEnum.Collect)
             {
-                info = BaseUtils.FieldBuilder.Build("Collected:".T(EDTx.JournalEntry_Collected), Count, "< of ".T(EDTx.JournalEntry_of), FriendlyCargoType, "Total:".T(EDTx.JournalEntry_Total), ItemsDelivered, "To Go:".T(EDTx.JournalEntry_ToGo), ItemsToGo, "Progress:;%;N1".T(EDTx.JournalEntry_Progress), ProgressPercent);
+                info = BaseUtils.FieldBuilder.Build("Collected: ".T(EDTx.JournalEntry_Collected), Count, "< of ".T(EDTx.JournalEntry_of), FriendlyCargoType, "Total: ".T(EDTx.JournalEntry_Total), ItemsDelivered, "To Go: ".T(EDTx.JournalEntry_ToGo), ItemsToGo, "Progress: ;%;N1".T(EDTx.JournalEntry_Progress), ProgressPercent);
             }
             else if (UpdateEnum == UpdateTypeEnum.Deliver)
             {
-                info = BaseUtils.FieldBuilder.Build("Delivered:".T(EDTx.JournalEntry_Delivered), Count, "< of ".T(EDTx.JournalEntry_of), FriendlyCargoType, "Total:".T(EDTx.JournalEntry_Total), ItemsDelivered, "To Go:".T(EDTx.JournalEntry_ToGo), ItemsToGo, "Progress:;%;N1".T(EDTx.JournalEntry_Progress), ProgressPercent);
+                info = BaseUtils.FieldBuilder.Build("Delivered: ".T(EDTx.JournalEntry_Delivered), Count, "< of ".T(EDTx.JournalEntry_of), FriendlyCargoType, "Total: ".T(EDTx.JournalEntry_Total), ItemsDelivered, "To Go: ".T(EDTx.JournalEntry_ToGo), ItemsToGo, "Progress: ;%;N1".T(EDTx.JournalEntry_Progress), ProgressPercent);
             }
             else if (UpdateEnum == UpdateTypeEnum.WingUpdate)
             {
-                info = BaseUtils.FieldBuilder.Build("Update, Collected:".T(EDTx.JournalEntry_Update), ItemsCollected, "Delivered:".T(EDTx.JournalEntry_Delivered), ItemsDelivered, "To Go:".T(EDTx.JournalEntry_ToGo), ItemsToGo, "Progress Left:;%;N1".T(EDTx.JournalEntry_ProgressLeft), ProgressPercent);
+                info = BaseUtils.FieldBuilder.Build("Update, Collected: ".T(EDTx.JournalEntry_Update), ItemsCollected, "Delivered: ".T(EDTx.JournalEntry_Delivered), ItemsDelivered, "To Go: ".T(EDTx.JournalEntry_ToGo), ItemsToGo, "Progress Left: ;%;N1".T(EDTx.JournalEntry_ProgressLeft), ProgressPercent);
             }
             else
             {

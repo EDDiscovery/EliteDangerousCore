@@ -527,21 +527,21 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (IsStar)
             {
-                info = BaseUtils.FieldBuilder.Build("", StarTypeText, "Mass:;SM;0.00".T(EDTx.JournalScan_MSM), nStellarMass,
-                                                "Age:;my;0.0".T(EDTx.JournalScan_Age), nAge,
-                                                "Radius:".T(EDTx.JournalScan_RS), RadiusText(),
-                                                "Dist:;ls;0.0".T(EDTx.JournalScan_DISTA), DistanceFromArrivalLS,
-                                                "Name:".T(EDTx.JournalScan_BNME), BodyName.ReplaceIfStartsWith(sys.Name));
+                info = BaseUtils.FieldBuilder.Build("", StarTypeText, "Mass: ;SM;0.00".T(EDTx.JournalScan_MSM), nStellarMass,
+                                                "Age: ;my;0.0".T(EDTx.JournalScan_Age), nAge,
+                                                "Radius: ".T(EDTx.JournalScan_RS), RadiusText(),
+                                                "Dist: ;ls;0.0".T(EDTx.JournalScan_DISTA), DistanceFromArrivalLS,
+                                                "Name: ".T(EDTx.JournalScan_BNME), BodyName.ReplaceIfStartsWith(sys.Name));
             }
             else
             {
-                info = BaseUtils.FieldBuilder.Build("", PlanetTypeText, "Mass:".T(EDTx.JournalScan_MASS), MassEMText(),
+                info = BaseUtils.FieldBuilder.Build("", PlanetTypeText, "Mass: ".T(EDTx.JournalScan_MASS), MassEMText(),
                                                 "<;, Landable".T(EDTx.JournalScan_Landable), IsLandable,
                                                 "<;, Terraformable".T(EDTx.JournalScan_Terraformable), TerraformState == "Terraformable", "", Atmosphere,
-                                                 "Gravity:;G;0.00".T(EDTx.JournalScan_Gravity), nSurfaceGravityG,
-                                                 "Radius:".T(EDTx.JournalScan_RS), RadiusText(),
-                                                 "Dist:;ls;0.0".T(EDTx.JournalScan_DISTA), DistanceFromArrivalLS,
-                                                 "Name:".T(EDTx.JournalScan_SNME), BodyName.ReplaceIfStartsWith(sys.Name));
+                                                 "Gravity: ;G;0.00".T(EDTx.JournalScan_Gravity), nSurfaceGravityG,
+                                                 "Radius: ".T(EDTx.JournalScan_RS), RadiusText(),
+                                                 "Dist: ;ls;0.0".T(EDTx.JournalScan_DISTA), DistanceFromArrivalLS,
+                                                 "Name: ".T(EDTx.JournalScan_SNME), BodyName.ReplaceIfStartsWith(sys.Name));
             }
 
             detailed = DisplayString(0, includefront: false);
@@ -551,21 +551,21 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (IsStar)
             {
-                return BaseUtils.FieldBuilder.Build("", StarTypeText, "Mass:;SM;0.00".T(EDTx.JournalScan_MSM), nStellarMass,
-                                                "Age:;my;0.0".T(EDTx.JournalScan_Age), nAge,
-                                                "Radius:".T(EDTx.JournalScan_RS), RadiusText(),
-                                                "Dist:".T(EDTx.JournalScan_DIST), DistanceFromArrivalText,
-                                                "Name:".T(EDTx.JournalScan_BNME), name ? BodyName : null);
+                return BaseUtils.FieldBuilder.Build("", StarTypeText, "Mass: ;SM;0.00".T(EDTx.JournalScan_MSM), nStellarMass,
+                                                "Age: ;my;0.0".T(EDTx.JournalScan_Age), nAge,
+                                                "Radius: ".T(EDTx.JournalScan_RS), RadiusText(),
+                                                "Dist: ".T(EDTx.JournalScan_DIST), DistanceFromArrivalText,
+                                                "Name: ".T(EDTx.JournalScan_BNME), name ? BodyName : null);
             }
             else
             {
-                return BaseUtils.FieldBuilder.Build("", PlanetTypeText, "Mass:".T(EDTx.JournalScan_MASS), MassEMText(),
+                return BaseUtils.FieldBuilder.Build("", PlanetTypeText, "Mass: ".T(EDTx.JournalScan_MASS), MassEMText(),
                                                 "<;, Landable".T(EDTx.JournalScan_Landable), IsLandable,
                                                 "<;, Terraformable".T(EDTx.JournalScan_Terraformable), TerraformState == "Terraformable", "", Atmosphere,
-                                                 "Gravity:;G;0.00".T(EDTx.JournalScan_Gravity), nSurfaceGravityG,
-                                                 "Radius:".T(EDTx.JournalScan_RS), RadiusText(),
-                                                 "Dist:".T(EDTx.JournalScan_DIST), DistanceFromArrivalText,
-                                                 "Name:".T(EDTx.JournalScan_SNME), name ? BodyName : null);
+                                                 "Gravity: ;G;0.00".T(EDTx.JournalScan_Gravity), nSurfaceGravityG,
+                                                 "Radius: ".T(EDTx.JournalScan_RS), RadiusText(),
+                                                 "Dist: ".T(EDTx.JournalScan_DIST), DistanceFromArrivalText,
+                                                 "Name: ".T(EDTx.JournalScan_SNME), name ? BodyName : null);
             }
         }
 
@@ -612,10 +612,10 @@ namespace EliteDangerousCore.JournalEvents
                     scanText.AppendFormat("Solar Masses: {0:0.00}\n".T(EDTx.JournalScan_SolarMasses), nStellarMass.Value);
 
                 if (nMassEM.HasValue)
-                    scanText.AppendFormat("Mass:".T(EDTx.JournalScan_MASS) + " " + MassEMText() + "\n");
+                    scanText.AppendFormat("Mass: ".T(EDTx.JournalScan_MASS) + " " + MassEMText() + "\n");
 
                 if (nRadius.HasValue)
-                    scanText.AppendFormat("Radius:".T(EDTx.JournalScan_RS) + " " + RadiusText() + "\n");
+                    scanText.AppendFormat("Radius: ".T(EDTx.JournalScan_RS) + " " + RadiusText() + "\n");
 
                 if (DistanceFromArrivalLS > 0)
                     scanText.AppendFormat("Distance from Arrival Point {0:N1}ls\n".T(EDTx.JournalScan_DistancefromArrivalPoint), DistanceFromArrivalLS);

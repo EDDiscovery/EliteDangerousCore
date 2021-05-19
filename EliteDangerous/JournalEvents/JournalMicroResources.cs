@@ -418,7 +418,7 @@ namespace EliteDangerousCore.JournalEvents
             if (Items != null && Items.Length > 0)
             {
                 if (Items.Length > 10)
-                    info += BaseUtils.FieldBuilder.Build("Count".T(EDTx.JournalEntry_Count) + ":; ", Items.Length);
+                    info += BaseUtils.FieldBuilder.Build("Count: ".T(EDTx.JournalEntry_Count), Items.Length);
                 else
                     info += string.Join(", ", Items.Select(x => x.FriendlyName).ToArray());
 

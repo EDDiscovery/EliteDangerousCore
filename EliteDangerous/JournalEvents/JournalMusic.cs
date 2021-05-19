@@ -44,7 +44,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
-            info = BaseUtils.FieldBuilder.Build("Music Track:".T(EDTx.JournalEntry_MusicTrack), MusicTrack);
+            info = BaseUtils.FieldBuilder.Build("Music Track: ".T(EDTx.JournalEntry_MusicTrack), MusicTrack);
             detailed = "";
         }
 

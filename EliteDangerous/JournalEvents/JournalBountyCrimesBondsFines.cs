@@ -104,7 +104,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
             
-            info = BaseUtils.FieldBuilder.Build("; cr;N0", TotalReward, "Target:".T(EDTx.JournalEntry_Target), TargetLocalised, "Victim faction:".T(EDTx.JournalEntry_Victimfaction), VictimFactionLocalised);
+            info = BaseUtils.FieldBuilder.Build("; cr;N0", TotalReward, "Target: ".T(EDTx.JournalEntry_Target), TargetLocalised, "Victim faction: ".T(EDTx.JournalEntry_Victimfaction), VictimFactionLocalised);
 
             detailed = "";
             if ( Rewards!=null)
@@ -114,12 +114,12 @@ namespace EliteDangerousCore.JournalEvents
                     if (detailed.Length > 0)
                         detailed += ", ";
 
-                    detailed += BaseUtils.FieldBuilder.Build("Faction:".T(EDTx.JournalEntry_Faction), r.Faction, "; cr;N0", r.Reward);
+                    detailed += BaseUtils.FieldBuilder.Build("Faction: ".T(EDTx.JournalEntry_Faction), r.Faction, "; cr;N0", r.Reward);
                 }
             }
         }
 
-        public string Type { get { return "Bounty".T(EDTx.JournalEntry_Bounty); } }
+        public string Type { get { return "Bounty".T(EDTx.JournalEntry_BountyOnly); } }
         public string TargetFaction { get { return VictimFaction; } }
 
         public bool HasFaction(string faction)
@@ -185,7 +185,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("; cr;N0", Reward, "< from ".T(EDTx.JournalEntry_from), AwardingFaction_Localised,
-                "< , due to ".T(EDTx.JournalEntry_dueto), VictimFaction_Localised);
+                "<, due to ".T(EDTx.JournalEntry_dueto), VictimFaction_Localised);
             detailed = "";
         }
 
@@ -247,7 +247,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", CrimeType, "< on faction ".T(EDTx.JournalEntry_onfaction), Faction, "Against ".T(EDTx.JournalEntry_Against), VictimLocalised, "Cost:; cr;N0".T(EDTx.JournalEntry_Cost), Fine, "Bounty:; cr;N0".T(EDTx.JournalEntry_Bounty), Bounty);
+            info = BaseUtils.FieldBuilder.Build("", CrimeType, "< on faction ".T(EDTx.JournalEntry_onfaction), Faction, "Against ".T(EDTx.JournalEntry_Against), VictimLocalised, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Fine, "Bounty: ; cr;N0".T(EDTx.JournalEntry_Bounty), Bounty);
             detailed = "";
         }
     }
@@ -269,7 +269,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", CrimeType, "Offender ".T(EDTx.JournalEntry_Offender), OffenderLocalised, "Bounty:; cr;N0".T(EDTx.JournalEntry_Bounty), Bounty);
+            info = BaseUtils.FieldBuilder.Build("", CrimeType, "Offender ".T(EDTx.JournalEntry_Offender), OffenderLocalised, "Bounty: ; cr;N0".T(EDTx.JournalEntry_Bounty), Bounty);
             detailed = "";
         }
     }
@@ -308,7 +308,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Reward:; cr;N0".T(EDTx.JournalEntry_Reward), Reward, "< from ".T(EDTx.JournalEntry_from), AwardingFaction_Localised,
+            info = BaseUtils.FieldBuilder.Build("Reward: ; cr;N0".T(EDTx.JournalEntry_Reward), Reward, "< from ".T(EDTx.JournalEntry_from), AwardingFaction_Localised,
                 "<, due to ".T(EDTx.JournalEntry_dueto), VictimFaction_Localised);
             detailed = "";
         }
@@ -352,7 +352,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Cost:; cr;N0".T(EDTx.JournalEntry_Cost), Amount, "< to ".T(EDTx.JournalEntry_to), Faction_Localised);
+            info = BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Amount, "< to ".T(EDTx.JournalEntry_to), Faction_Localised);
             if (BrokerPercentage > 0)
                 info += string.Format(", Broker took {0:N0}%".T(EDTx.JournalEntry_Brokertook), BrokerPercentage);
             detailed = "";
@@ -386,7 +386,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Cost:; cr;N0".T(EDTx.JournalEntry_Cost), Amount, "< to ".T(EDTx.JournalEntry_to), Faction_Localised);
+            info = BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Amount, "< to ".T(EDTx.JournalEntry_to), Faction_Localised);
             if (BrokerPercentage > 0)
                 info += string.Format(", Broker took {0:N0}%".T(EDTx.JournalEntry_Brokertook), BrokerPercentage);
             detailed = "";
@@ -412,7 +412,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Cost:; cr;N0".T(EDTx.JournalEntry_Cost), Amount);
+            info = BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Amount);
             if (BrokerPercentage > 0)
                 info += string.Format(", Broker took {0:N0}%".T(EDTx.JournalEntry_Brokertook), BrokerPercentage);
             detailed = "";
@@ -442,7 +442,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Type:".T(EDTx.JournalEntry_Type), Type, "Amount:; cr;N0".T(EDTx.JournalEntry_Amount), Amount, "Faction:".T(EDTx.JournalEntry_Faction), Faction);
+            info = BaseUtils.FieldBuilder.Build("Type: ".T(EDTx.JournalEntry_Type), Type, "Amount: ; cr;N0".T(EDTx.JournalEntry_Amount), Amount, "Faction: ".T(EDTx.JournalEntry_Faction), Faction);
             if (BrokerPercentage > 0)
                 info += string.Format(", Broker took {0:N0}%".T(EDTx.JournalEntry_Brokertook), BrokerPercentage);
             detailed = "";

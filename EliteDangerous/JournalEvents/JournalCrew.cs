@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2018 EDDiscovery development team
+ * Copyright © 2016-2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -14,7 +14,6 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 using BaseUtils.JSON;
-using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -84,7 +83,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Hired:;".T(EDTx.JournalEntry_Hired), Name, "< of faction ".T(EDTx.JournalEntry_offaction), Faction, "Rank:".T(EDTx.JournalEntry_Rank), CombatRank.ToString().SplitCapsWord(), "Cost:; cr;N0".T(EDTx.JournalEntry_Cost), Cost);
+            info = BaseUtils.FieldBuilder.Build("Hired: ;".T(EDTx.JournalEntry_Hired), Name, "< of faction ".T(EDTx.JournalEntry_offaction), Faction, "Rank: ".T(EDTx.JournalEntry_Rank), CombatRank.ToString().SplitCapsWord(), "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Cost);
             detailed = "";
         }
     }
@@ -156,7 +155,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Crew:".T(EDTx.JournalEntry_Crew), Crew, "Role:".T(EDTx.JournalEntry_Role), Role);
+            info = BaseUtils.FieldBuilder.Build("Crew: ".T(EDTx.JournalEntry_Crew), Crew, "Role: ".T(EDTx.JournalEntry_Role), Role);
             detailed = "";
         }
     }
@@ -175,7 +174,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Crew Member:".T(EDTx.JournalEntry_CrewMember), Crew, "; Due to Crime".T(EDTx.JournalEntry_DuetoCrime), OnCrime);
+            info = BaseUtils.FieldBuilder.Build("Crew Member: ".T(EDTx.JournalEntry_CrewMember), Crew, "; Due to Crime".T(EDTx.JournalEntry_DuetoCrime), OnCrime);
             detailed = "";
         }
     }
@@ -193,7 +192,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
 
-            info = BaseUtils.FieldBuilder.Build("Captain:".T(EDTx.JournalEntry_Captain), Captain);
+            info = BaseUtils.FieldBuilder.Build("Captain: ".T(EDTx.JournalEntry_Captain), Captain);
             detailed = "";
         }
     }
@@ -247,7 +246,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Captain:".T(EDTx.JournalEntry_Captain), Captain);
+            info = BaseUtils.FieldBuilder.Build("Captain: ".T(EDTx.JournalEntry_Captain), Captain);
             detailed = "";
         }
 

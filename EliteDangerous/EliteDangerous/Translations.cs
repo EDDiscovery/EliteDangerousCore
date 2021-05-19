@@ -87,6 +87,7 @@ namespace EliteDangerousCore
         JournalEntry_Against, // Against
         JournalEntry_Cost, // Cost:; cr;N0
         JournalEntry_Bounty, // Bounty:; cr;N0
+        JournalEntry_BountyOnly, // Bounty
         JournalEntry_Offender, // Offender
         JournalEntry_Reward, // Reward:; cr;N0
         JournalEntry_to, // < to
@@ -758,7 +759,7 @@ namespace EliteDangerousCore
         {
             return BaseUtils.Translator.Instance.Translate(s, value.ToString().Replace("_", "."));
         }
-        static public string T(bool translate, string s, EDTx value)              // use the enum.
+        static public string TCond(bool translate, string s, EDTx value)              // use the enum.
         {
             return translate ? BaseUtils.Translator.Instance.Translate(s, value.ToString().Replace("_", ".")) : s;
         }

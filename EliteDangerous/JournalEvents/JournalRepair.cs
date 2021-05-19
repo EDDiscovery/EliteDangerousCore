@@ -78,7 +78,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
-            info = BaseUtils.FieldBuilder.Build("",ItemLocalised, "Cost:; cr;N0".T(EDTx.JournalEntry_Cost) , Cost );
+            info = BaseUtils.FieldBuilder.Build("",ItemLocalised, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost) , Cost );
             detailed = "";
         }
     }
@@ -101,7 +101,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Cost:; cr;N0".T(EDTx.JournalEntry_Cost), Cost);
+            info = BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Cost);
             detailed = "";
         }
     }
@@ -127,7 +127,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", ModuleLocalised, "Health:;%", (int)Health, ";Fully Repaired", FullyRepaired);
+            info = BaseUtils.FieldBuilder.Build("", ModuleLocalised, "Health: ;%", (int)Health, ";Fully Repaired", FullyRepaired);
             detailed = "";
         }
     }

@@ -67,7 +67,7 @@ namespace EliteDangerousCore.JournalEvents
                 info = "Ship".T(EDTx.JournalCargo_CargoShip);
 
             //TBD StationName,StatioNType
-            detailed = BaseUtils.FieldBuilder.Build("<to ".T(EDTx.JournalEntry_to), StarSystem, "", Body);
+            detailed = BaseUtils.FieldBuilder.Build("< to ".T(EDTx.JournalEntry_to), StarSystem, "", Body);
         }
     }
 
@@ -120,7 +120,7 @@ namespace EliteDangerousCore.JournalEvents
                 info = "Ship".T(EDTx.JournalCargo_CargoShip);
 
             //TBD StationName,StatioNType
-            detailed = BaseUtils.FieldBuilder.Build("<to ".T(EDTx.JournalEntry_to), StarSystem, "", Body);
+            detailed = BaseUtils.FieldBuilder.Build("< to ".T(EDTx.JournalEntry_to), StarSystem, "", Body);
         }
     }
 }

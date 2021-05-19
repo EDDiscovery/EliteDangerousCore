@@ -75,7 +75,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("At ".T(EDTx.JournalSupercruiseExit_At), Body, "< in ".T(EDTx.JournalSupercruiseExit_in), StarSystem, "Type:".T(EDTx.JournalEntry_Type), BodyType);
+            info = BaseUtils.FieldBuilder.Build("At ".T(EDTx.JournalSupercruiseExit_At), Body, "< in ".T(EDTx.JournalSupercruiseExit_in), StarSystem, "Type: ".T(EDTx.JournalEntry_Type), BodyType);
             detailed = "";
         }
     }

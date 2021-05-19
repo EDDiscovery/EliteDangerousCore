@@ -110,7 +110,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", FriendlyType, "", Count, "< buy price ; cr;N0".T(EDTx.JournalEntry_buyprice), BuyPrice, "Total Cost:; cr;N0".T(EDTx.JournalEntry_TotalCost), TotalCost);
+            info = BaseUtils.FieldBuilder.Build("", FriendlyType, "", Count, "< buy price ; cr;N0".T(EDTx.JournalEntry_buyprice), BuyPrice, "Total Cost: ; cr;N0".T(EDTx.JournalEntry_TotalCost), TotalCost);
             detailed = "";
         }
     }
@@ -171,7 +171,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             long profit = TotalSale - (AvgPricePaid * Count);
-            info = BaseUtils.FieldBuilder.Build("", FriendlyType, "", Count, "< sell price ; cr;N0".T(EDTx.JournalEntry_sellprice), SellPrice, "Total Cost:; cr;N0".T(EDTx.JournalEntry_TotalCost), TotalSale, "Profit:; cr;N0".T(EDTx.JournalEntry_Profit), profit);
+            info = BaseUtils.FieldBuilder.Build("", FriendlyType, "", Count, "< sell price ; cr;N0".T(EDTx.JournalEntry_sellprice), SellPrice, "Total Cost: ; cr;N0".T(EDTx.JournalEntry_TotalCost), TotalSale, "Profit: ; cr;N0".T(EDTx.JournalEntry_Profit), profit);
             detailed = BaseUtils.FieldBuilder.Build("Legal;Illegal".T(EDTx.JournalEntry_Legal), IllegalGoods, "Not Stolen;Stolen".T(EDTx.JournalEntry_NotStolen), StolenGoods, "Market;BlackMarket".T(EDTx.JournalEntry_Market), BlackMarket);
         }
     }

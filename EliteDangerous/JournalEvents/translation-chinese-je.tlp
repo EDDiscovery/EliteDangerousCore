@@ -828,6 +828,7 @@ SECTION JournalEntry
 .Against: "Against " => "受害人："
 .Cost: "Cost: ; cr;N0" => "花费：; Cr;N0"
 .Bounty: "Bounty: ; cr;N0" => "悬赏：; Cr;N0"
+.BountyOnly: "Bounty" => "悬赏"
 .Offender: "Offender " @
 .Reward: "Reward: ; cr;N0" @
 .to: "< to " => "< 至 "

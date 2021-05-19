@@ -123,12 +123,12 @@ namespace EliteDangerousCore.JournalEvents
                 }
                 else if (ScanStage.Value == 1)
                 {
-                    info = BaseUtils.FieldBuilder.Build("", PilotName_Localised, "Rank:".T(EDTx.JournalEntry_Rank), PilotRank, "< in ".T(EDTx.JournalShipTargeted_in), Ship_Localised);
+                    info = BaseUtils.FieldBuilder.Build("", PilotName_Localised, "Rank: ".T(EDTx.JournalEntry_Rank), PilotRank, "< in ".T(EDTx.JournalShipTargeted_in), Ship_Localised);
                 }
                 else if (ScanStage.Value == 2)
                 {
                     info = BaseUtils.FieldBuilder.Build(
-                        "", PilotName_Localised, "Rank:".T(EDTx.JournalEntry_Rank), PilotRank, "< in ".T(EDTx.JournalShipTargeted_in), Ship_Localised,
+                        "", PilotName_Localised, "Rank: ".T(EDTx.JournalEntry_Rank), PilotRank, "< in ".T(EDTx.JournalShipTargeted_in), Ship_Localised,
                         "Shield ;;N1".T(EDTx.JournalEntry_Shield), ShieldHealth, "Hull ;;N1".T(EDTx.JournalShipTargeted_Hull), HullHealth);
                         
 
@@ -136,11 +136,11 @@ namespace EliteDangerousCore.JournalEvents
                 else if (ScanStage.Value == 3)
                 {
                     info = BaseUtils.FieldBuilder.Build(
-                                    "", PilotName_Localised, "<(;)", LegalStatus, "Rank:".T(EDTx.JournalEntry_Rank), PilotRank, "< in ".T(EDTx.JournalShipTargeted_in), Ship_Localised,
+                                    "", PilotName_Localised, "<(;)", LegalStatus, "Rank: ".T(EDTx.JournalEntry_Rank), PilotRank, "< in ".T(EDTx.JournalShipTargeted_in), Ship_Localised,
                                     "Shield ;;N1".T(EDTx.JournalEntry_Shield), ShieldHealth, "Hull ;;N1".T(EDTx.JournalShipTargeted_Hull), HullHealth,
-                                    "Bounty:; cr;N0".T(EDTx.JournalEntry_Bounty), Bounty,
+                                    "Bounty: ; cr;N0".T(EDTx.JournalEntry_Bounty), Bounty,
                                     "", SubSystem, "< at ;;N1".T(EDTx.JournalShipTargeted_at), SubSystemHealth,
-                                    "Power:".T(EDTx.JournalEntry_Power), Power
+                                    "Power: ".T(EDTx.JournalEntry_Power), Power
                                     );
                 }
                 else

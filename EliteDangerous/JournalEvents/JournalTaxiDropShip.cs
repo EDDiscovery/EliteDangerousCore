@@ -37,7 +37,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             long? cost = Cost > 0 ? Cost : default(long?);
-            info = BaseUtils.FieldBuilder.Build("", DestinationSystem, "<:", DestinationLocation, "Cost:; cr;N0".T(EDTx.JournalEntry_Cost), cost);
+            info = BaseUtils.FieldBuilder.Build("", DestinationSystem, "<: ", DestinationLocation, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), cost);
             detailed = "";
         }
 
@@ -81,7 +81,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = "";//     info = BaseUtils.FieldBuilder.Build("", FriendlyType, "", Count, "< sell price ; cr;N0".T(EDTx.JournalEntry_sellprice), SellPrice, "Total Cost:; cr;N0".T(EDTx.JournalEntry_TotalCost), TotalSale, "Profit:; cr;N0".T(EDTx.JournalEntry_Profit), profit);
+            info = "";//     info = BaseUtils.FieldBuilder.Build("", FriendlyType, "", Count, "< sell price ; cr;N0".T(EDTx.JournalEntry_sellprice), SellPrice, "Total Cost: ; cr;N0".T(EDTx.JournalEntry_TotalCost), TotalSale, "Profit: ; cr;N0".T(EDTx.JournalEntry_Profit), profit);
             detailed = "";
         }
     }
@@ -103,7 +103,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             long? cost = Cost > 0 ? Cost : default(long?);
-            info = BaseUtils.FieldBuilder.Build("", DestinationSystem, "<:", DestinationLocation, "Cost:; cr;N0".T(EDTx.JournalEntry_Cost), cost);
+            info = BaseUtils.FieldBuilder.Build("", DestinationSystem, "<:", DestinationLocation, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), cost);
             detailed = "";
         }
 
