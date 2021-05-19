@@ -657,17 +657,17 @@ SECTION MaterialCommodityMicroResourceType
 
 SECTION EngineeringData
 
-.Engineer: "Engineer:" @
-.Blueprint: "Blueprint:" @
-.Level: "Level:" @
-.Quality: "Quality:" @
-.ExperimentalEffect: "Experimental Effect:" @
+.Engineer: "Engineer: " @
+.Blueprint: "Blueprint: " @
+.Level: "Level: " @
+.Quality: "Quality: " @
+.ExperimentalEffect: "Experimental Effect: " @
 .Original: "Original:;;N2" @
 .Worse: "< (Worse); (Better)" @
 
 SECTION MissionState
 
-.ToGo: "To Go:" @
+.ToGo: "To Go: " @
 .Progress: "Progress:;%;N1" @
 
 SECTION CommanderForm
@@ -679,26 +679,26 @@ CommanderForm: "CommanderForm" => "指挥官配置"
 .radioButtonHistorySelection: "History Grid Selection" @
 .labelMapCol: "Default Map Color" @
 .radioButtonCentreHome: "Home System" @
-.HomeSys: "Home System:" @
+.HomeSys: "Home System: " @
 .labelZoom: "Default Zoom" @
 .labelOpenOn: "Open Centred On" @
 .groupBoxCustomIGAU: "Intergalactic Astronomical Union [IGAU]" @
 .checkBoxIGAUSync: "Send Codex Entry Discovery Data to IGAU" @
 .groupBoxCustomInara: "Inara Information (optional)" => "Inara 设置（可选）"
-.labelINARAN: "Inara Name:" => "Inara 用户名："
-.labelInaraAPI: "Inara API Key:" => "Inara API Key："
+.labelINARAN: "Inara Name: " => "Inara 用户名："
+.labelInaraAPI: "Inara API Key: " => "Inara API Key："
 .checkBoxCustomInara: "Sync to Inara" => "同步至 Inara"
 .groupBoxCustomEDDN: "EDDN" => "EDDN 设置"
 .checkBoxCustomEDDNTo: "Send Event Information to EDDN" => "向 EDDN 发送事件数据"
 .groupBoxCustomEDSM: "EDSM Information (optional)" => "EDSM 设置(可选)"
 .checkBoxCustomEDSMFrom: "Sync From EDSM" => "从 EDSM 同步"
-.labelEDSMAPI: "EDSM API Key:" => "EDSM API Key："
-.labelEDSMN: "EDSM Name:" => "EDSM 用户名："
+.labelEDSMAPI: "EDSM API Key: " => "EDSM API Key："
+.labelEDSMN: "EDSM Name: " => "EDSM 用户名："
 .checkBoxCustomEDSMTo: "Sync to EDSM" => "同步至 EDSM"
 .groupBoxCustomJournal: "Journal Related Information" => "游戏日志文件相关设置"
-.labelCN: "Commander Name:" => "指挥官名称："
+.labelCN: "Commander Name: " => "指挥官名称："
 .buttonExtBrowse: "Browse" => "浏览"
-.labelJL: "Journal Location:" => "游戏日志文件路径："
+.labelJL: "Journal Location: " => "游戏日志文件路径："
 .label_index: "Commander Configure" => "指挥官配置"
 .radioButtonHistorySelection.ToolTip: "Select history entry as opening location" @
 .textBoxDefaultZoom.ToolTip: "Set the zoom level of the map. 1 is normal" @
