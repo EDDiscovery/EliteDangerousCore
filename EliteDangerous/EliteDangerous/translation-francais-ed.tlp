@@ -12,7 +12,7 @@ SECTION Bodies
 .MD: "Methane Dwarf star" => "Naine Brune T"
 .BD: "Brown Dwarf star" => "Naine Brune"
 .WR: "Wolf-Rayet {0} star" => "Étoile Wolf-Rayet {0}"
-.C: "Carbon {0} star" => "Étoile carbonée"
+.C: "Carbon {0} star" => "Étoile carbonée {0}"
 .IZ: "Intermediate low Zirconium Monoxide Type star" @
 .CGZ: "Cool Giant Zirconium Monoxide rich Type star" @
 .WD: "White Dwarf {0} star" => "Naine Blanche {0}"
@@ -54,12 +54,12 @@ SECTION EDPlanet
 .Unknown: "Unknown planet type" => "Type de planète inconnu"
 
 SECTION MaterialCommodityMicroResourceType
+
 .Consumable: "Consumable" @
 .Unknown: "Unknown" @
 .Item: "Item" @
 .Component: "Component" @
 .Data: "Data" @
-
 .Raw: "Raw" => "Brut"
 .VeryCommon: "Very Common" => "Très courant"
 .Common: "Common" => "Courant"
@@ -655,6 +655,123 @@ SECTION MaterialCommodityMicroResourceType
 .tritium: "Tritium" @
 .s6_tissuesample_mesoglea: "Pod Mesoglea" @
 .s6_tissuesample_cells: "Pod Outer Tissue" @
+.bypass: "E-Breach" @
+.energycell: "Energy Cell" @
+.healthpack: "Medkit" @
+.amm_grenade_frag: "Frag Grenade" @
+.amm_grenade_emp: "Shield Disruptor" @
+.amm_grenade_shield: "Shield Projector" @
+.largecapacitypowerregulator: "Power Regulator" @
+.compactlibrary: "Compact Library" @
+.infinity: "Infinity" @
+.insightentertainmentsuite: "Insight Entertainment Suite" @
+.lazarus: "Lazarus" @
+.universaltranslator: "Universal Translator" @
+.biochemicalagent: "Biochemical Agent" @
+.degradedpowerregulator: "Degraded Power Regulator" @
+.hush: "Hush" @
+.push: "Push" @
+.syntheticpathogen: "Synthetic Pathogen" @
+.buildingschematic: "Building Schematic" @
+.insight: "Insight" @
+.compressionliquefiedgas: "Compression-Liquefied Gas" @
+.healthmonitor: "Health Monitor" @
+.inertiacanister: "Inertia Canister" @
+.ionisedgas: "Ionised Gas" @
+.shipschematic: "Ship Schematic" @
+.suitschematic: "Suit Schematic" @
+.vehicleschematic: "Vehicle Schematic" @
+.weaponschematic: "Weapon Schematic" @
+.trueformfossil: "True Form Fossil" @
+.carbonfibreplating: "Carbon Fibre Plating" @
+.encryptedmemorychip: "Encrypted Memory Chip" @
+.epoxyadhesive: "Epoxy Adhesive" @
+.graphene: "Graphene" @
+.memorychip: "Memory Chip" @
+.microelectrode: "Microelectrode" @
+.microhydraulics: "Micro Hydraulics" @
+.microthrusters: "Micro Thrusters" @
+.opticalfibre: "Optical Fibre" @
+.opticallens: "Optical Lens" @
+.rdx: "Rdx" @
+.titaniumplating: "Titanium Plating" @
+.tungstencarbide: "Tungsten Carbide" @
+.weaponcomponent: "Weapon Component" @
+.aerogel: "Aerogel" @
+.chemicalsuperbase: "Chemical Superbase" @
+.circuitboard: "Circuit Board" @
+.circuitswitch: "Circuit Switch" @
+.electricalwiring: "Electrical Wiring" @
+.electromagnet: "Electromagnet" @
+.metalcoil: "Metal Coil" @
+.motor: "Motor" @
+.chemicalcatalyst: "Chemical Catalyst" @
+.microtransformer: "Micro Transformer" @
+.electricalfuse: "Electrical Fuse" @
+.microsupercapacitor: "Micro Supercapacitor" @
+.viscoelasticpolymer: "Viscoelastic Polymer" @
+.ionbattery: "Ion Battery" @
+.scrambler: "Scrambler" @
+.chemicalinventory: "Chemical Inventory" @
+.dutyrota: "Duty Rota" @
+.evacuationprotocols: "Evacuation Protocols" @
+.explorationjournals: "Exploration Journals" @
+.factionnews: "Faction News" @
+.financialprojections: "Financial Projections" @
+.salesrecords: "Sales Records" @
+.unionmembership: "Union Membership" @
+.maintenancelogs: "Maintenance Logs" @
+.patrolroutes: "Patrol Routes" @
+.settlementdefenceplans: "Settlement Defence Plans" @
+.surveilleancelogs: "Surveillance Logs" @
+.operationalmanual: "Operational Manual" @
+.blacklistdata: "Blacklist Data" @
+.airqualityreports: "Air Quality Reports" @
+.employeedirectory: "Employee Directory" @
+.factionassociates: "Faction Associates" @
+.meetingminutes: "Meeting Minutes" @
+.multimediaentertainment: "Multimedia Entertainment" @
+.networkaccesshistory: "Network Access History" @
+.purchaserecords: "Purchase Records" @
+.radioactivitydata: "Radioactivity Data" @
+.residentialdirectory: "Residential Directory" @
+.shareholderinformation: "Shareholder Information" @
+.travelpermits: "Travel Permits" @
+.accidentlogs: "Accident Logs" @
+.campaignplans: "Campaign Plans" @
+.combattrainingmaterial: "Combat Training Material" @
+.internalcorrespondence: "Internal Correspondence" @
+.payrollinformation: "Payroll Information" @
+.personallogs: "Personal Logs" @
+.weaponinventory: "Weapon Inventory" @
+.atmosphericdata: "Atmospheric Data" @
+.topographicalsurveys: "Topographical Surveys" @
+.literaryfiction: "Literary Fiction" @
+.reactoroutputreview: "Reactor Output Review" @
+.nextofkinrecords: "Next of Kin Records" @
+.purchaserequests: "Purchase Requests" @
+.taxrecords: "Tax Records" @
+.visitorregister: "Visitor Register" @
+.pharmaceuticalpatents: "Pharmaceutical Patents" @
+.vaccineresearch: "Vaccine Research" @
+.virologydata: "Virology Data" @
+.vaccinationrecords: "Vaccination Records" @
+.censusdata: "Census Data" @
+.geographicaldata: "Geographical Data" @
+.mineralsurvey: "Mineral Survey" @
+.chemicalformulae: "Chemical Formulae" @
+.chemicalexperimentdata: "Chemical Experiment Data" @
+.chemicalpatents: "Chemical Patents" @
+.productionreports: "Production Reports" @
+.productionschedule: "Production Schedule" @
+.bloodtestresults: "Blood Test Results" @
+.combatantperformance: "Combatant Performance" @
+.troopdeploymentrecords: "Troop Deployment Records" @
+.catmedia: "Cat Media" @
+.employeegeneticdata: "Employee Genetic Data" @
+.factiondonatorlist: "Faction Donator List" @
+.nocdata: "NOC Data" @
+.manufacturinginstructions: "Manufacturing Instructions" @
 
 SECTION EngineeringData
 
@@ -768,3 +885,9 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Configuration des captures 
 .labelClipboard: "Clipboard" @
 .labelOriginal: "Original Image" @
 .labelEnabled: "Enable" @
+
+SECTION Screenshot
+
+.FolderNotExist: "Folder specified does not exist" @
+.Folder: "Select screenshot folder" @
+.Identical: "Cannot set input and output to identical types and the same folder" @

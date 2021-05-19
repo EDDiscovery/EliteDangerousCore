@@ -136,8 +136,10 @@ namespace EliteDangerousCore
         static public string GetBetterTargetTypeName(string s)      // has to deal with $ and underscored
         {
             //string x = s;
-            if (s.StartsWith("$"))
-                s = s.Substring(1);
+            if (s.StartsWith("$"))      // remove $ at start
+                s = s.Substring(1);         
+            if (s.EndsWith(";"))            // semi at end
+                s = s.Substring(0,s.Length-1);
             return s.SplitCapsWordFull();
         }
 

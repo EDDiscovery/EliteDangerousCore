@@ -209,7 +209,6 @@ SECTION JournalTypeEnum
 .ProspectedAsteroid: "Prospected Asteroid" => "勘探过的小行星"
 .ReservoirReplenished: "Reservoir Replenished" => "副燃料箱补满"
 .SquadronStartup: "Squadron Startup" => "中队信息"
-.ICONIDsStart: "ICONI Ds Start" @
 .CarrierBankTransfer: "Carrier Bank Transfer" @
 .CarrierBuy: "Carrier Buy" @
 .CarrierCancelDecommission: "Carrier Cancel Decommission" @
@@ -228,6 +227,38 @@ SECTION JournalTypeEnum
 .CarrierJumpCancelled: "Carrier Jump Cancelled" @
 .CargoTransfer: "Cargo Transfer" @
 .NavRoute: "Nav Route" @
+.BackPack: "Back Pack" @
+.BookDropship: "Book Dropship" @
+.BookTaxi: "Book Taxi" @
+.BuyMicroResources: "Buy Micro Resources" @
+.BuySuit: "Buy Suit" @
+.BuyWeapon: "Buy Weapon" @
+.CancelDropship: "Cancel Dropship" @
+.CancelTaxi: "Cancel Taxi" @
+.CollectItems: "Collect Items" @
+.CreateSuitLoadout: "Create Suit Loadout" @
+.DeleteSuitLoadout: "Delete Suit Loadout" @
+.Disembark: "Disembark" @
+.DropItems: "Drop Items" @
+.Embark: "Embark" @
+.LoadoutEquipModule: "Loadout Equip Module" @
+.LoadoutRemoveModule: "Loadout Remove Module" @
+.RenameSuitLoadout: "Rename Suit Loadout" @
+.ScanOrganic: "Scan Organic" @
+.SellMicroResources: "Sell Micro Resources" @
+.SellOrganicData: "Sell Organic Data" @
+.SellSuit: "Sell Suit" @
+.SellWeapon: "Sell Weapon" @
+.ShipLockerMaterials: "Ship Locker Materials" @
+.SwitchSuitLoadout: "Switch Suit Loadout" @
+.TradeMicroResources: "Trade Micro Resources" @
+.UpgradeSuit: "Upgrade Suit" @
+.UpgradeWeapon: "Upgrade Weapon" @
+.UseConsumable: "Use Consumable" @
+.TransferMicroResources: "Transfer Micro Resources" @
+.SuitLoadout: "Suit Loadout" @
+.DropshipDeploy: "Dropship Deploy" @
+.ICONIDsStart: "Don't bother with this one, its an internal ID" @
 
 SECTION JournalCargo
 
@@ -436,10 +467,6 @@ SECTION JournalReceiveText
 .FC: "from " @
 .on: "< on " @
 
-SECTION JournalEntry
-
-.Fuel: "Fuel: ; tons;0.0" => "添加的燃料量：; t;0.0"
-
 SECTION JournalRepairDrone
 
 .Hull: "Hull: " => "船体修复量："
@@ -609,11 +636,6 @@ SECTION JournalStartJump
 
 .ChargingFSD: "Charging FSD" => "FSD引擎充能"
 
-SECTION JournalEntry
-
-.Wealth: "Wealth: ;cr;N0" => "资产：;Cr;N"
-.NotorietyIndex: "Notoriety Index: ;;N0" => "恶名度：;;N0"
-
 SECTION JournalStatistics
 
 .BankAccount: "Bank Account" => "\r\n★ 银行账户"
@@ -746,9 +768,9 @@ SECTION MaterialTraderStatsClass
 SECTION CQCClass
 
 .TimePlayed: "Time Played: ;;N0" @
-.KDRatio: "KD Ratio: ;;N" @
+.KDRatio: "KD Ratio: ;;N0" @
 .Kills: "Kills: ;;N0" @
-.Win: "Win/Loss: ;;N" @
+.Win: "Win/Loss: ;;N0" @
 
 SECTION JournalStoredModules
 
@@ -800,7 +822,7 @@ SECTION JournalEntry
 .Victimfaction: "Victim faction: " => "受害者派系："
 .Faction: "Faction: " => "派系："
 .from: "< from " => "< 任务发配人："
-.dueto: "< , due to " => "<，由于"
+.dueto: "<, due to " => "<，由于"
 .0: "{0} on {1}" @
 .onfaction: "< on faction " => "< 派系："
 .Against: "Against " => "受害人："
@@ -890,8 +912,8 @@ SECTION JournalEntry
 .Mode: "Mode: " => "游戏模式："
 .Group: "Group: " => "组名："
 .NotLanded: "Not Landed;Landed" => "不在星球上;在星球上"
-.FuelLevel: "Fuel Level: ;;0.0" => "燃料量：;;0.0t"
-.Capacity: "Capacity: ;;0.0" => "燃料箱大小：;;0.0t"
+.FuelLevel: "Fuel Level: ;;0.0" => "燃料量：;;0.0"
+.Capacity: "Capacity: ;;0.0" => "燃料箱大小：;;0.0"
 .Cashtotaldiffers: "Cash total differs, adjustment" @
 .NumberofStatuses: "Number of Statuses: " @
 .Online: "Online: " @
@@ -963,6 +985,14 @@ SECTION JournalEntry
 .Nearest: "Nearest: " @
 .Old: "Old: " @
 .New: "New: " @
+.Near: "Near: " @
+.OnFootAt: "On Foot at {0}" @
+.Wealth: "Wealth: ;cr;N0" => "资产：;Cr;N0"
+.NotorietyIndex: "Notoriety Index: ;;N0" => "恶名度：;;N0"
+.Fuel: "Fuel: ; tons;0.0" => "添加的燃料量：; t;0.0"
+.Taxi: "Taxi" @
+.Backpack: "Backpack" @
+.Locker: "Locker" @
 
 SECTION JournalCarrierJump
 
@@ -1001,3 +1031,10 @@ SECTION JournalCarrier
 .AllowNotorious: ";Allow Notorious" @
 .Amount: "Amount: ;;N0" @
 .FuelLevel: "Fuel Level: ;;N0" @
+
+SECTION JournalMicroResources
+
+.Items: "Items" @
+.Components: "Components" @
+.Consumables: "Consumables" @
+.Data: "Data" @
