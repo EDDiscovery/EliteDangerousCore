@@ -1,4 +1,4 @@
-
+﻿
 SECTION JournalTypeEnum
 
 .Unknown: "Unknown" => "Unbekannt"
@@ -209,7 +209,6 @@ SECTION JournalTypeEnum
 .ProspectedAsteroid: "Prospected Asteroid" => "Prospektierter Asteroid"
 .ReservoirReplenished: "Reservoir Replenished" => "Tank wiederbefüllt"
 .SquadronStartup: "Squadron Startup" => "Staffel hochfahren"
-.ICONIDsStart: "ICON IDs Start" => "Symbol IDs Start"
 .CarrierBankTransfer: "Carrier Bank Transfer" => "Carrier Banktransfer"
 .CarrierBuy: "Carrier Buy" => "Carrier kaufen"
 .CarrierCancelDecommission: "Carrier Cancel Decommission" => "Carrier Stillegung abbrechen"
@@ -228,6 +227,38 @@ SECTION JournalTypeEnum
 .CarrierJumpCancelled: "Carrier Jump Cancelled" => "Carrier Sprung abgebrochen"
 .CargoTransfer: "Cargo Transfer" => "Frachttransfer"
 .NavRoute: "Nav Route" => "Nav-Route"
+.BackPack: "Back Pack" @
+.BookDropship: "Book Dropship" @
+.BookTaxi: "Book Taxi" @
+.BuyMicroResources: "Buy Micro Resources" @
+.BuySuit: "Buy Suit" @
+.BuyWeapon: "Buy Weapon" @
+.CancelDropship: "Cancel Dropship" @
+.CancelTaxi: "Cancel Taxi" @
+.CollectItems: "Collect Items" @
+.CreateSuitLoadout: "Create Suit Loadout" @
+.DeleteSuitLoadout: "Delete Suit Loadout" @
+.Disembark: "Disembark" @
+.DropItems: "Drop Items" @
+.Embark: "Embark" @
+.LoadoutEquipModule: "Loadout Equip Module" @
+.LoadoutRemoveModule: "Loadout Remove Module" @
+.RenameSuitLoadout: "Rename Suit Loadout" @
+.ScanOrganic: "Scan Organic" @
+.SellMicroResources: "Sell Micro Resources" @
+.SellOrganicData: "Sell Organic Data" @
+.SellSuit: "Sell Suit" @
+.SellWeapon: "Sell Weapon" @
+.ShipLockerMaterials: "Ship Locker Materials" @
+.SwitchSuitLoadout: "Switch Suit Loadout" @
+.TradeMicroResources: "Trade Micro Resources" @
+.UpgradeSuit: "Upgrade Suit" @
+.UpgradeWeapon: "Upgrade Weapon" @
+.UseConsumable: "Use Consumable" @
+.TransferMicroResources: "Transfer Micro Resources" @
+.SuitLoadout: "Suit Loadout" @
+.DropshipDeploy: "Dropship Deploy" @
+.ICONIDsStart: "Don't bother with this one, its an internal ID" => "Symbol IDs Start"
 
 SECTION JournalCargo
 
@@ -436,10 +467,6 @@ SECTION JournalReceiveText
 .FC: "from " => "von "
 .on: "< on " => "< an "
 
-SECTION JournalEntry
-
-.Fuel: "Fuel: ; tons;0.0" => "Treibstoff: ; Tonnen;0.0"
-
 SECTION JournalRepairDrone
 
 .Hull: "Hull: " => "Hülle: "
@@ -608,11 +635,6 @@ SECTION JournalSquadronBase
 SECTION JournalStartJump
 
 .ChargingFSD: "Charging FSD" => "FSA laden"
-
-SECTION JournalEntry
-
-.Wealth: "Wealth: ;cr;N0" => "Vermögen: ;Cr;N0"
-.NotorietyIndex: "Notoriety Index: ;;N0" => "Berüchtigkeitsindex: ;;N0"
 
 SECTION JournalStatistics
 
@@ -784,6 +806,7 @@ SECTION JournalUnknown
 .UnhandledJournalevent: "Unhandled Journal event, Report to EDDiscovery team. " => "Unbekanntes Journalereignis, Bitte dem EDDiscovery Team melden"
 
 SECTION JournalNavRoute
+
 .Jumps: "{0} jumps: " => "{0} Sprünge: "
 
 SECTION JournalApproachBody
@@ -962,11 +985,21 @@ SECTION JournalEntry
 .Nearest: "Nearest: " => "Näheste: "
 .Old: "Old: " => "Alt: "
 .New: "New: " => "Neu: "
+.Near: "Near: " @
+.OnFootAt: "On Foot at {0}" @
+.Wealth: "Wealth: ;cr;N0" => "Vermögen: ;Cr;N0"
+.NotorietyIndex: "Notoriety Index: ;;N0" => "Berüchtigkeitsindex: ;;N0"
+.Fuel: "Fuel: ; tons;0.0" => "Treibstoff: ; Tonnen;0.0"
+.Taxi: "Taxi" @
+.Backpack: "Backpack" @
+.Locker: "Locker" @
 
 SECTION JournalCarrierJump
+
 .JumpedWith: "Jumped with carrier {0} to {1}" => "Mit Carrier {0} nach {1} gesprungen"
 
 SECTION JournalCarrier
+
 .At: "At " => "Bei "
 .Callsign: "Call Sign: " => "Rufzeichen: "
 .Name: "Name: " => "Name"
@@ -998,3 +1031,10 @@ SECTION JournalCarrier
 .AllowNotorious: ";Allow Notorious" => ";Erlaube berüchtigt"
 .Amount: "Amount: ;;N0" => "Menge: ;;N0"
 .FuelLevel: "Fuel Level: ;;N0" => "Treibstofffüllstand: ;;N0"
+
+SECTION JournalMicroResources
+
+.Items: "Items" @
+.Components: "Components" @
+.Consumables: "Consumables" @
+.Data: "Data" @

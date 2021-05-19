@@ -209,7 +209,6 @@ SECTION JournalTypeEnum
 .ProspectedAsteroid: "Prospected Asteroid" => "Астероид исследован"
 .ReservoirReplenished: "Reservoir Replenished" => "Пополнение резервуара"
 .SquadronStartup: "Squadron Startup" => "Эскадрилья"
-.ICONIDsStart: "ICONI Ds Start" @
 .CarrierBankTransfer: "Carrier Bank Transfer" @
 .CarrierBuy: "Carrier Buy" @
 .CarrierCancelDecommission: "Carrier Cancel Decommission" @
@@ -228,6 +227,38 @@ SECTION JournalTypeEnum
 .CarrierJumpCancelled: "Carrier Jump Cancelled" @
 .CargoTransfer: "Cargo Transfer" @
 .NavRoute: "Nav Route" @
+.BackPack: "Back Pack" @
+.BookDropship: "Book Dropship" @
+.BookTaxi: "Book Taxi" @
+.BuyMicroResources: "Buy Micro Resources" @
+.BuySuit: "Buy Suit" @
+.BuyWeapon: "Buy Weapon" @
+.CancelDropship: "Cancel Dropship" @
+.CancelTaxi: "Cancel Taxi" @
+.CollectItems: "Collect Items" @
+.CreateSuitLoadout: "Create Suit Loadout" @
+.DeleteSuitLoadout: "Delete Suit Loadout" @
+.Disembark: "Disembark" @
+.DropItems: "Drop Items" @
+.Embark: "Embark" @
+.LoadoutEquipModule: "Loadout Equip Module" @
+.LoadoutRemoveModule: "Loadout Remove Module" @
+.RenameSuitLoadout: "Rename Suit Loadout" @
+.ScanOrganic: "Scan Organic" @
+.SellMicroResources: "Sell Micro Resources" @
+.SellOrganicData: "Sell Organic Data" @
+.SellSuit: "Sell Suit" @
+.SellWeapon: "Sell Weapon" @
+.ShipLockerMaterials: "Ship Locker Materials" @
+.SwitchSuitLoadout: "Switch Suit Loadout" @
+.TradeMicroResources: "Trade Micro Resources" @
+.UpgradeSuit: "Upgrade Suit" @
+.UpgradeWeapon: "Upgrade Weapon" @
+.UseConsumable: "Use Consumable" @
+.TransferMicroResources: "Transfer Micro Resources" @
+.SuitLoadout: "Suit Loadout" @
+.DropshipDeploy: "Dropship Deploy" @
+.ICONIDsStart: "Don't bother with this one, its an internal ID" @
 
 SECTION JournalCargo
 
@@ -436,10 +467,6 @@ SECTION JournalReceiveText
 .FC: "from " => "на канале "
 .on: "< on " => "<, канал: "
 
-SECTION JournalEntry
-
-.Fuel: "Fuel: ; tons;0.0" => "получено ;0.0 т топлива"
-
 SECTION JournalRepairDrone
 
 .Hull: "Hull: " => "Корпус: "
@@ -488,7 +515,7 @@ SECTION JournalScan
 .MEM: "Mass: ;EM;0.00" => "земных масс: ; ;0.00"
 .Landable: "<;, Landable" => "<;, пригодна для посадки"
 .Terraformable: "<;, Terraformable" => "<;, пригодна для терраформирования"
-.Gravity: "Gravity: ;G;0.00" => "гравитация: ; g;0.0"
+.Gravity: "Gravity: ;G;0.00" => "гравитация: ; g;0.00"
 .RK: "Radius: ;km;0" => "радиус: ; км;0"
 .NoAtmosphere: ", No Atmosphere" => ", без атмосферы"
 .LandC: ", Landable" => ", пригодна для посадки"
@@ -498,7 +525,7 @@ SECTION JournalScan
 .SolarRadius: "Solar Radius: {0:0.00} Sols\n" => "Солнечных радиусов: {0:0.00}\n"
 .BodyRadius: "Body Radius: {0:0.00}km\n" => "Радиус: {0:0.00} км\n"
 .SurfaceTemp: "Surface Temp: {0}K\n" => "Температура поверхности: {0} K\n"
-.GV: "Gravity: {0:0.00}g\n" => "Гравитация: {0:0.0} g\n"
+.GV: "Gravity: {0:0.00}g\n" => "Гравитация: {0:0.00} g\n"
 .SPA: "Surface Pressure: {0} Atmospheres\n" => "Атмосферное давление: {0} ат\n"
 .SPP: "Surface Pressure: {0} Pa\n" => "Атмосферное давление: {0} Па\n"
 .Volcanism: "Volcanism: {0}\n" => "Вулканизм: {0}\n"
@@ -608,11 +635,6 @@ SECTION JournalSquadronBase
 SECTION JournalStartJump
 
 .ChargingFSD: "Charging FSD" => "Зарядка FSD"
-
-SECTION JournalEntry
-
-.Wealth: "Wealth: ;cr;N0" => "Текущие активы: ; кр.;N"
-.NotorietyIndex: "Notoriety Index: ;;N0" => "плохая репутация: ;;N0"
 
 SECTION JournalStatistics
 
@@ -746,9 +768,9 @@ SECTION MaterialTraderStatsClass
 SECTION CQCClass
 
 .TimePlayed: "Time Played: ;;N0" => "Время игры: ;;N0"
-.KDRatio: "KD Ratio: ;;N" => "Соотношение убийств и смертей: ;;N"
+.KDRatio: "KD Ratio: ;;N0" => "Соотношение убийств и смертей: ;;N0"
 .Kills: "Kills: ;;N0" => "Убийства: ;;N0"
-.Win: "Win/Loss: ;;N" => "Соотношение побед и поражений: ;;N"
+.Win: "Win/Loss: ;;N0" => "Соотношение побед и поражений: ;;N0"
 
 SECTION JournalStoredModules
 
@@ -963,6 +985,14 @@ SECTION JournalEntry
 .Nearest: "Nearest: " @
 .Old: "Old: " @
 .New: "New: " @
+.Near: "Near: " @
+.OnFootAt: "On Foot at {0}" @
+.Wealth: "Wealth: ;cr;N0" => "Текущие активы: ; кр.;N0"
+.NotorietyIndex: "Notoriety Index: ;;N0" => "плохая репутация: ;;N0"
+.Fuel: "Fuel: ; tons;0.0" => "получено ;0.0 т топлива"
+.Taxi: "Taxi" @
+.Backpack: "Backpack" @
+.Locker: "Locker" @
 
 SECTION JournalCarrierJump
 
@@ -1001,3 +1031,10 @@ SECTION JournalCarrier
 .AllowNotorious: ";Allow Notorious" @
 .Amount: "Amount: ;;N0" @
 .FuelLevel: "Fuel Level: ;;N0" @
+
+SECTION JournalMicroResources
+
+.Items: "Items" @
+.Components: "Components" @
+.Consumables: "Consumables" @
+.Data: "Data" @

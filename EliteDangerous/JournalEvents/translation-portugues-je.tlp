@@ -209,7 +209,6 @@ SECTION JournalTypeEnum
 .ProspectedAsteroid: "Prospected Asteroid" @
 .ReservoirReplenished: "Reservoir Replenished" @
 .SquadronStartup: "Squadron Startup" @
-.ICONIDsStart: "ICONI Ds Start" @
 .CarrierBankTransfer: "Carrier Bank Transfer" @
 .CarrierBuy: "Carrier Buy" @
 .CarrierCancelDecommission: "Carrier Cancel Decommission" @
@@ -228,6 +227,38 @@ SECTION JournalTypeEnum
 .CarrierJumpCancelled: "Carrier Jump Cancelled" @
 .CargoTransfer: "Cargo Transfer" @
 .NavRoute: "Nav Route" @
+.BackPack: "Back Pack" @
+.BookDropship: "Book Dropship" @
+.BookTaxi: "Book Taxi" @
+.BuyMicroResources: "Buy Micro Resources" @
+.BuySuit: "Buy Suit" @
+.BuyWeapon: "Buy Weapon" @
+.CancelDropship: "Cancel Dropship" @
+.CancelTaxi: "Cancel Taxi" @
+.CollectItems: "Collect Items" @
+.CreateSuitLoadout: "Create Suit Loadout" @
+.DeleteSuitLoadout: "Delete Suit Loadout" @
+.Disembark: "Disembark" @
+.DropItems: "Drop Items" @
+.Embark: "Embark" @
+.LoadoutEquipModule: "Loadout Equip Module" @
+.LoadoutRemoveModule: "Loadout Remove Module" @
+.RenameSuitLoadout: "Rename Suit Loadout" @
+.ScanOrganic: "Scan Organic" @
+.SellMicroResources: "Sell Micro Resources" @
+.SellOrganicData: "Sell Organic Data" @
+.SellSuit: "Sell Suit" @
+.SellWeapon: "Sell Weapon" @
+.ShipLockerMaterials: "Ship Locker Materials" @
+.SwitchSuitLoadout: "Switch Suit Loadout" @
+.TradeMicroResources: "Trade Micro Resources" @
+.UpgradeSuit: "Upgrade Suit" @
+.UpgradeWeapon: "Upgrade Weapon" @
+.UseConsumable: "Use Consumable" @
+.TransferMicroResources: "Transfer Micro Resources" @
+.SuitLoadout: "Suit Loadout" @
+.DropshipDeploy: "Dropship Deploy" @
+.ICONIDsStart: "Don't bother with this one, its an internal ID" @
 
 SECTION JournalCargo
 
@@ -436,10 +467,6 @@ SECTION JournalReceiveText
 .FC: "from " @
 .on: "< on " @
 
-SECTION JournalEntry
-
-.Fuel: "Fuel: ; tons;0.0" @
-
 SECTION JournalRepairDrone
 
 .Hull: "Hull: " @
@@ -609,11 +636,6 @@ SECTION JournalStartJump
 
 .ChargingFSD: "Charging FSD" @
 
-SECTION JournalEntry
-
-.Wealth: "Wealth: ;cr;N0" @
-.NotorietyIndex: "Notoriety Index: ;;N0" @
-
 SECTION JournalStatistics
 
 .BankAccount: "Bank Account" @
@@ -746,9 +768,9 @@ SECTION MaterialTraderStatsClass
 SECTION CQCClass
 
 .TimePlayed: "Time Played: ;;N0" @
-.KDRatio: "KD Ratio: ;;N" @
+.KDRatio: "KD Ratio: ;;N0" @
 .Kills: "Kills: ;;N0" @
-.Win: "Win/Loss: ;;N" @
+.Win: "Win/Loss: ;;N0" @
 
 SECTION JournalStoredModules
 
@@ -963,6 +985,14 @@ SECTION JournalEntry
 .Nearest: "Nearest: " @
 .Old: "Old: " @
 .New: "New: " @
+.Near: "Near: " @
+.OnFootAt: "On Foot at {0}" @
+.Wealth: "Wealth: ;cr;N0" @
+.NotorietyIndex: "Notoriety Index: ;;N0" @
+.Fuel: "Fuel: ; tons;0.0" @
+.Taxi: "Taxi" @
+.Backpack: "Backpack" @
+.Locker: "Locker" @
 
 SECTION JournalCarrierJump
 
@@ -1001,3 +1031,10 @@ SECTION JournalCarrier
 .AllowNotorious: ";Allow Notorious" @
 .Amount: "Amount: ;;N0" @
 .FuelLevel: "Fuel Level: ;;N0" @
+
+SECTION JournalMicroResources
+
+.Items: "Items" @
+.Components: "Components" @
+.Consumables: "Consumables" @
+.Data: "Data" @
