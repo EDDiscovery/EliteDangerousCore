@@ -176,6 +176,7 @@ namespace EliteDangerousCore.DLL
                 if (AssemblyMainType.GetType().GetMethod("EDDRefresh") != null)
                 {
                     AssemblyMainType.EDDRefresh(cmdr, je);
+                    return true;
                 }
             }
             else if (pDll != IntPtr.Zero)
@@ -205,6 +206,7 @@ namespace EliteDangerousCore.DLL
                 if (AssemblyMainType.GetType().GetMethod("EDDNewJournalEntry") != null)
                 {
                     AssemblyMainType.EDDNewJournalEntry(nje);
+                    return true;
                 }
             }
             else if (pDll != IntPtr.Zero && pNewJournalEntry != IntPtr.Zero)
@@ -228,6 +230,7 @@ namespace EliteDangerousCore.DLL
                 if (AssemblyMainType.GetType().GetMethod("EDDActionJournalEntry") != null)
                 {
                     AssemblyMainType.EDDActionJournalEntry(je);
+                    return true;
                 }
             }
             else if (pDll != IntPtr.Zero && pActionJournalEntry != IntPtr.Zero)
@@ -250,7 +253,7 @@ namespace EliteDangerousCore.DLL
             {
                 if (AssemblyMainType.GetType().GetMethod("EDDActionCommand") != null)
                 {
-                    AssemblyMainType.EDDActionCommand(cmd, paras);
+                    return AssemblyMainType.EDDActionCommand(cmd, paras);
                 }
             }
             else if (pDll != IntPtr.Zero && pActionCommand != IntPtr.Zero)
@@ -315,6 +318,7 @@ namespace EliteDangerousCore.DLL
                 if (AssemblyMainType.GetType().GetMethod("EDDNewUIEvent") != null)
                 {
                     AssemblyMainType.EDDNewUIEvent(json);
+                    return true;
                 }
             }
             else if (pDll != IntPtr.Zero && pNewUIEvent != IntPtr.Zero)
