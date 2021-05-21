@@ -189,7 +189,7 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public string Type { get { return "Capital Ship Bond".T(EDTx.JournalEntry_CapShipBond); } }
+        public string Type { get { return "Capital Ship Bond".T(EDTx.JournalTypeEnum_CapShipBond); } }
         public string Target { get { return ""; } }
         public string TargetFaction { get { return VictimFaction; } }
 
@@ -292,7 +292,7 @@ namespace EliteDangerousCore.JournalEvents
         public string VictimFaction_Localised { get; set; }         // may be empty
         public long Reward { get; set; }
 
-        public string Type { get { return "Faction Kill Bond".T(EDTx.JournalEntry_FactionKillBond); } }
+        public string Type { get { return "Faction Kill Bond".T(EDTx.JournalTypeEnum_FactionKillBond); } }
         public string Target { get { return ""; } }
         public string TargetFaction { get { return VictimFaction; } }
 

@@ -399,6 +399,8 @@ namespace EliteDangerousCore
              { "wpn_s_pistol_kinetic_sauto", new Weapon("Karma P-15",0.0) },
              { "wpn_m_assaultrifle_laser_fauto", new Weapon("TK Aphelion",0.0) },
              { "wpn_s_pistol_laser_sauto", new Weapon("TK Zenith",0.0) },
+             { "wpn_m_shotgun_plasma_doublebarrel", new Weapon("Manticore Intimidator",0.0) },
+             { "wpn_m_assaultrifle_plasma_fauto", new Weapon("Manticore Oppressor",0.0) },
         };
 
         public static Dictionary<string, Suit> suit = new Dictionary<string, Suit>   // DO NOT USE DIRECTLY - public is for checking only
@@ -406,6 +408,7 @@ namespace EliteDangerousCore
             { "utilitysuit_class1", new Suit("Maverick Suit") },
             { "explorationsuit_class1", new Suit("Artemis Suit") },
             { "tacticalsuit_class1", new Suit("Dominator Suit") },
+            { "flightsuit", new Suit("Flight Suit") },
         };
 
         #endregion

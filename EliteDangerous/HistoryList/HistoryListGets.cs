@@ -52,22 +52,22 @@ namespace EliteDangerousCore
         #region Output filters
 
         // history filter
-        static public List<HistoryEntry> LatestFirst(List<HistoryEntry> list)
+        static public List<HistoryEntry> LatestFirst(List<HistoryEntry> list) // list should be in entry order (oldest first)
         {
-            return list.OrderByDescending(s=>s.EntryNumber).ToList();
+            return Enumerable.Reverse(list).ToList();
         }
 
         // history filter
-        static public List<HistoryEntry> LatestFirstLimitNumber(List<HistoryEntry> list, int max)
+        static public List<HistoryEntry> LatestFirstLimitNumber(List<HistoryEntry> list, int max) // list should be in entry order (oldest first)
         {
-            return list.OrderByDescending(s => s.EventTimeUTC).Take(max).ToList();
+            return Enumerable.Reverse(list).Take(max).ToList();
         }
 
         // history filter
-        static public List<HistoryEntry> LatestFirstLimitByDate(List<HistoryEntry> list, TimeSpan days)
+        static public List<HistoryEntry> LatestFirstLimitByDate(List<HistoryEntry> list, TimeSpan days)     // list should be in entry order (oldest first)
         {
             var oldestData = DateTime.UtcNow.Subtract(days);
-            return (from systems in list where systems.EventTimeUTC >= oldestData orderby systems.EventTimeUTC descending select systems).ToList();
+            return Enumerable.Reverse(list.Where(x => x.EventTimeUTC >= oldestData)).ToList();
         }
 
         // history filter List should be in entry order.
@@ -89,7 +89,7 @@ namespace EliteDangerousCore
                         started = false;
                 }
             }
-            return entries.OrderByDescending(s => s.EventTimeUTC).ToList();
+            return Enumerable.Reverse(entries).ToList();
         }
 
         // history filter, combat panel.  List should be in entry order.

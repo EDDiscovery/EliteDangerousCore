@@ -28,14 +28,35 @@ namespace EliteDangerousCore.UIEvents
             ShipType = type;
         }
 
-        public enum Shiptype { None, MainShip, Fighter, SRV, InTaxi, Multicrew,
-                                    OnFootStationHangar, OnFootStationSocialSpace,
-                                    OnFootPlantaryPortHangar, OnFootPlantaryPortSocialSpace,
-                                    OnFootInstallation,
-                                    OnFootPlanet };
+        public enum Shiptype {
+            None,
+            MainShipNormalSpace,
+            MainShipDockedStarPort,
+            MainShipDockedPlanet,
+            MainShipSupercruise,
+            MainShipLanded,
+            TaxiDocked,
+            TaxiNormalSpace,
+            TaxiSupercruise,
+            TaxiDockedPlanet,
+            MulticrewDockedStarPort,
+            MulticrewDockedPlanet,
+            MulticrewNormalSpace,
+            MulticrewSupercruise,
+            MulticrewLanded,
+            MulticrewSRV,
+            SRV,
+            Fighter,
+            OnFootStarPortHangar,
+            OnFootStarPortSocialSpace,
+            OnFootPlantaryPortHangar,
+            OnFootPlantaryPortSocialSpace,
+            OnFootInstallationInside,
+            OnFootPlanet
+        };
 
         public Shiptype ShipType { get; private set; }
 
-        static public bool OnFoot(Shiptype t ) { return t >= Shiptype.OnFootStationHangar; }
+        static public bool OnFoot(Shiptype t ) { return t >= Shiptype.OnFootStarPortHangar; }
     }
 }

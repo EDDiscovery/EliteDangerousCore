@@ -55,10 +55,9 @@ namespace EliteDangerousCore.UIEvents
             // you MAY get position without Altitude.. seen in SRV it doing that.  Code defensively
 
             public bool ValidPosition { get { return Latitude != InvalidValue && Latitude != InvalidValue; } }
-            public bool ValidAltitude { get { return Altitude != InvalidValue; } }
-
             public double Latitude;
             public double Longitude;
+            public bool ValidAltitude { get { return Altitude != InvalidValue; } }
             public double Altitude;
             public bool AltitudeFromAverageRadius;
         }

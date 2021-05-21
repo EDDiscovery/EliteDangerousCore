@@ -102,83 +102,36 @@ namespace EliteDangerousCore.JournalEvents
             if (Items != null && Items.Length > 0)
             {
                 if ( Items.Length>10 )
-                    info = BaseUtils.FieldBuilder.Build("Items".T(EDTx.JournalMicroResources_Items) + ":; ", Items.Length);
+                    info = BaseUtils.FieldBuilder.Build("Items".T(EDTx.JournalMicroResources_Items) + ": ; ", Items.Length);
 
-                detailed = "Items".T(EDTx.JournalMicroResources_Items) + ":" + MicroResource.List(Items) + Environment.NewLine;
+                detailed = "Items".T(EDTx.JournalMicroResources_Items) + ": " + MicroResource.List(Items) + Environment.NewLine;
             }
 
             if (Components != null && Components.Length > 0)
             {
-                info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("Components".T(EDTx.JournalMicroResources_Components) + ":; ", Components.Length), "; ");
-                detailed += "Components".T(EDTx.JournalMicroResources_Components) + ":" + MicroResource.List(Components) + Environment.NewLine;
+                info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("Components".T(EDTx.JournalMicroResources_Components) + ": ; ", Components.Length), "; ");
+                detailed += "Components".T(EDTx.JournalMicroResources_Components) + ": " + MicroResource.List(Components) + Environment.NewLine;
             }
 
             if (Consumables != null && Consumables.Length > 0)
             {
                 if (Items.Length > 10)
-                    info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("Consumables".T(EDTx.JournalMicroResources_Consumables) + ":; ", Consumables.Length), "; ");
+                    info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("Consumables".T(EDTx.JournalMicroResources_Consumables) + ": ; ", Consumables.Length), "; ");
                 else
                     info = info.AppendPrePad(string.Join(", ", Consumables.Select(x => x.FriendlyName).ToArray()), "; ");
 
-                detailed += "Consumables".T(EDTx.JournalMicroResources_Consumables) + ":" + MicroResource.List(Consumables) + Environment.NewLine;
+                detailed += "Consumables".T(EDTx.JournalMicroResources_Consumables) + ": " + MicroResource.List(Consumables) + Environment.NewLine;
             }
 
             if (Data != null && Data.Length > 0)
             {
-                info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("Data".T(EDTx.JournalMicroResources_Data) + ":; ", Data.Length), "; ");
-                detailed += "Data".T(EDTx.JournalMicroResources_Data) + ":" + MicroResource.List(Data);
+                info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("Data".T(EDTx.JournalMicroResources_Data) + ": ; ", Data.Length), "; ");
+                detailed += "Data".T(EDTx.JournalMicroResources_Data) + ": " + MicroResource.List(Data);
             }
 
         }
     }
 
-
-    [JournalEntryType(JournalTypeEnum.BackPack)]
-    public class JournalBackPack : JournalMicroResourceState, IMicroResourceJournalEntry, IAdditionalFiles
-    {
-        public JournalBackPack(JObject evt) : base(evt, JournalTypeEnum.BackPack)
-        {
-            Rescan(evt);
-        }
-
-        public bool ReadAdditionalFiles(string directory, bool historyrefreshparse)
-        {
-            JObject jnew = ReadAdditionalFile(System.IO.Path.Combine(directory, "backpack.json"), waitforfile: !historyrefreshparse, checktimestamptype: true);
-            if (jnew != null)        // new json, rescan
-            {
-                Rescan(jnew);
-                UpdateJson(jnew);
-            }
-            return jnew != null;
-        }
-
-        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc)
-        {
-            if (Items != null)
-            {
-                List<Tuple<string, int>> counts = Items.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();      // Name is already lower cased
-                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Item, counts, MicroResource.BackPack);
-            }
-
-            if (Components != null)
-            {
-                List<Tuple<string, int>> counts = Components.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
-                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Component, counts, MicroResource.BackPack);
-            }
-
-            if (Consumables != null)
-            {
-                List<Tuple<string, int>> counts = Consumables.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
-                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Consumable, counts, MicroResource.BackPack);
-            }
-
-            if (Data != null)
-            {
-                List<Tuple<string, int>> counts = Data.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
-                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Data, counts, MicroResource.BackPack);
-            }
-        }
-    }
 
     [JournalEntryType(JournalTypeEnum.ShipLockerMaterials)]
     public class JournalShipLockerMaterials : JournalMicroResourceState, IMicroResourceJournalEntry
@@ -249,59 +202,6 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
-    [JournalEntryType(JournalTypeEnum.CollectItems)]
-    public class JournalCollectItems : JournalEntry, IMicroResourceJournalEntry
-    {
-        public JournalCollectItems(JObject evt) : base(evt, JournalTypeEnum.CollectItems)
-        {
-            evt.ToObjectProtected(Resource.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, Resource);        // read fields named in this structure matching JSON names
-            Resource.Normalise();
-            Stolen = evt["Stolen"].Bool();
-        }
-
-        public MicroResource Resource { get; set; } = new MicroResource();
-
-        public bool Stolen { get; set; }
-
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
-        {
-            MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Resource.Name);
-            info = BaseUtils.FieldBuilder.Build("", Resource.FriendlyName, "< (", mcd.TranslatedCategory, "< ; items".T(EDTx.JournalEntry_MatC), Resource.Count, ";Stolen".T(EDTx.JournalEntry_Stolen), Stolen);
-            detailed = "";
-        }
-
-        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc)
-        {
-            MaterialCommodityMicroResourceType.EnsurePresent(Resource.Category, Resource.Name, Resource.Name_Localised);
-            mc.Change(EventTimeUTC, Resource.Category, Resource.Name, Resource.Count, MicroResource.BackPack);       // these go into the backpack 
-        }
-    }
-
-    [JournalEntryType(JournalTypeEnum.DropItems)]
-    public class JournalDropItems : JournalEntry, IMicroResourceJournalEntry
-    {
-        public JournalDropItems(JObject evt) : base(evt, JournalTypeEnum.DropItems)
-        {
-            evt.ToObjectProtected(Resource.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, Resource);        // read fields named in this structure matching JSON names
-            Resource.Normalise();
-        }
-
-        public MicroResource Resource { get; set; } = new MicroResource();
-
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
-        {
-            MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Resource.Name);
-            info = BaseUtils.FieldBuilder.Build("", Resource.FriendlyName, "< (;)", mcd.TranslatedCategory, "< ; items".T(EDTx.JournalEntry_MatC), Resource.Count);
-            detailed = "";
-        }
-
-        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc)
-        {
-            MaterialCommodityMicroResourceType.EnsurePresent(Resource.Category, Resource.Name, Resource.Name_Localised);
-            mc.Change(EventTimeUTC, Resource.Category, Resource.Name, -Resource.Count, MicroResource.BackPack);
-        }
-    }
-
     [JournalEntryType(JournalTypeEnum.SellMicroResources)]
     public class JournalSellMicroResources : JournalEntry, IMicroResourceJournalEntry, ILedgerJournalEntry
     {
@@ -350,7 +250,6 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
-    // TBD Test
     [JournalEntryType(JournalTypeEnum.TradeMicroResources)]
     public class JournalTradeMicroResources : JournalEntry, IMicroResourceJournalEntry
     {
@@ -428,53 +327,208 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc)    // unused for now
         {
-            if ( Items != null )
+            if (Items != null)
             {
                 bool[] set = new bool[MaterialCommodityMicroResource.NoCounts];     // all change, not set
                 int[] counts = new int[MaterialCommodityMicroResource.NoCounts];
 
-                foreach ( var i in Items)
+                foreach (var i in Items)
                 {
-                    int countdir = i.Direction == MicroResource.DirectionType.ToShipLocker ? i.Count : -i.Count;
-                    counts[MicroResource.ShipLocker] = countdir;
-                    counts[MicroResource.BackPack] = -countdir;
-                    var cat = MaterialCommodityMicroResourceType.CategoryFrom(i.Category);
-                    if (cat.HasValue)
-                    {
-                        MaterialCommodityMicroResourceType.EnsurePresent(cat.Value, i.Name, i.Name_Localised);
-                        mc.Change(EventTimeUTC, cat.Value, i.Name, counts, set, 0);
-                    }
-                    else
-                        System.Diagnostics.Debug.WriteLine("Microresource transfer unknown cat " + i.Category);
+                    // as of 21/5/21, this does not make sense, sometimes its indicating this is
+
+                    //if (i.Direction == MicroResource.DirectionType.ToShipLocker)
+                    //{
+                    //    mc.Change(EventTimeUTC, i.Category, i.Name, i.Count, 0, MicroResource.ShipLocker, true);
+                    //}
+
+                    //        int countdir = i.Direction == MicroResource.DirectionType.ToShipLocker ? i.Count : -i.Count;
+                    //        counts[MicroResource.ShipLocker] = countdir;
+                    //        counts[MicroResource.BackPack] = -countdir;
+                    //        var cat = MaterialCommodityMicroResourceType.CategoryFrom(i.Category);
+                    //        if (cat.HasValue)
+                    //        {
+                    //            MaterialCommodityMicroResourceType.EnsurePresent(cat.Value, i.Name, i.Name_Localised);
+                    //            mc.Change(EventTimeUTC, cat.Value, i.Name, counts, set, 0);
+                    //        }
+                    //        else
+                    //            System.Diagnostics.Debug.WriteLine("Microresource transfer unknown cat " + i.Category);
+                    //    }
                 }
             }
         }
+
+        #region Backpack changes
+
+        [JournalEntryType(JournalTypeEnum.BackPack)]
+        public class JournalBackPack : JournalMicroResourceState, IMicroResourceJournalEntry, IAdditionalFiles
+        {
+            public JournalBackPack(JObject evt) : base(evt, JournalTypeEnum.BackPack)
+            {
+                Rescan(evt);
+            }
+
+            public bool ReadAdditionalFiles(string directory, bool historyrefreshparse)
+            {
+                JObject jnew = ReadAdditionalFile(System.IO.Path.Combine(directory, "backpack.json"), waitforfile: !historyrefreshparse, checktimestamptype: true);
+                if (jnew != null)        // new json, rescan
+                {
+                    Rescan(jnew);
+                    UpdateJson(jnew);
+                }
+                return jnew != null;
+            }
+
+            public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc)
+            {
+                if (Items != null)
+                {
+                    List<Tuple<string, int>> counts = Items.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();      // Name is already lower cased
+                    mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Item, counts, MicroResource.BackPack);
+                }
+
+                if (Components != null)
+                {
+                    List<Tuple<string, int>> counts = Components.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
+                    mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Component, counts, MicroResource.BackPack);
+                }
+
+                if (Consumables != null)
+                {
+                    List<Tuple<string, int>> counts = Consumables.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
+                    mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Consumable, counts, MicroResource.BackPack);
+                }
+
+                if (Data != null)
+                {
+                    List<Tuple<string, int>> counts = Data.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
+                    mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Data, counts, MicroResource.BackPack);
+                }
+            }
+        }
+
+
+        [JournalEntryType(JournalTypeEnum.BackpackChange)]
+        public class JournalBackpackChange : JournalEntry, IMicroResourceJournalEntry
+        {
+            public JournalBackpackChange(JObject evt) : base(evt, JournalTypeEnum.BackpackChange)
+            {
+                Added = evt["Added"]?.ToObjectQ<MicroResource[]>()?.OrderBy(x => x.Name)?.ToArray();
+                MicroResource.Normalise(Added);
+                Removed = evt["Removed"]?.ToObjectQ<MicroResource[]>()?.OrderBy(x => x.Name)?.ToArray();
+                MicroResource.Normalise(Removed);
+            }
+
+            public MicroResource[] Added { get; set; }
+            public MicroResource[] Removed { get; set; }
+
+            public override void FillInformation(ISystem sys, out string info, out string detailed)
+            {
+                info = "";
+                detailed = "";
+                if (Added != null)
+                {
+                    foreach (var i in Added)
+                    {
+                        int? c = i.Count > 1 ? i.Count : default(int?);
+                        info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("+ ", i.FriendlyName, "<:", c), ", ");
+                    }
+                }
+                if (Removed != null)
+                {
+                    foreach (var i in Removed)
+                    {
+                        int? c = i.Count > 1 ? i.Count : default(int?);
+                        info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("- ", i.FriendlyName, "<:", c), ", ");
+
+                    }
+                }
+            }
+
+            public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc)
+            {
+                if (Added != null)
+                {
+                    foreach (var i in Added)
+                    {
+                        mc.Change(EventTimeUTC, i.Category, i.Name, i.Count, 0, MicroResource.BackPack, false);
+                    }
+                }
+                if (Removed != null)
+                {
+                    foreach (var i in Removed)
+                    {
+                        mc.Change(EventTimeUTC, i.Category, i.Name, -i.Count, 0, MicroResource.BackPack, false);
+                    }
+                }
+
+            }
+        }
+
+        // we rely for these below on BackpackChange to record deltas. See CheckForRemoval in historylist.
+
+        [JournalEntryType(JournalTypeEnum.CollectItems)]
+        public class JournalCollectItems : JournalEntry
+        {
+            public JournalCollectItems(JObject evt) : base(evt, JournalTypeEnum.CollectItems)
+            {
+                evt.ToObjectProtected(Resource.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, Resource);        // read fields named in this structure matching JSON names
+                Resource.Normalise();
+                Stolen = evt["Stolen"].Bool();
+            }
+
+            public MicroResource Resource { get; set; } = new MicroResource();
+
+            public bool Stolen { get; set; }
+
+            public override void FillInformation(ISystem sys, out string info, out string detailed)
+            {
+                MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Resource.Name);
+                info = BaseUtils.FieldBuilder.Build("", Resource.FriendlyName, "< (", mcd.TranslatedCategory, "< ; items".T(EDTx.JournalEntry_MatC), Resource.Count, ";Stolen".T(EDTx.JournalEntry_Stolen), Stolen);
+                detailed = "";
+            }
+        }
+
+        [JournalEntryType(JournalTypeEnum.DropItems)]
+        public class JournalDropItems : JournalEntry
+        {
+            public JournalDropItems(JObject evt) : base(evt, JournalTypeEnum.DropItems)
+            {
+                evt.ToObjectProtected(Resource.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, Resource);        // read fields named in this structure matching JSON names
+                Resource.Normalise();
+            }
+
+            public MicroResource Resource { get; set; } = new MicroResource();
+
+            public override void FillInformation(ISystem sys, out string info, out string detailed)
+            {
+                MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Resource.Name);
+                info = BaseUtils.FieldBuilder.Build("", Resource.FriendlyName, "< (;)", mcd.TranslatedCategory, "< ; items".T(EDTx.JournalEntry_MatC), Resource.Count);
+                detailed = "";
+            }
+
+        }
+
+        [JournalEntryType(JournalTypeEnum.UseConsumable)]
+        public class JournalUseConsumable : JournalEntry
+        {
+            public JournalUseConsumable(JObject evt) : base(evt, JournalTypeEnum.UseConsumable)
+            {
+                evt.ToObjectProtected(Resource.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, Resource);        // read fields named in this structure matching JSON names
+                Resource.Normalise();
+            }
+
+            public MicroResource Resource { get; set; } = new MicroResource();
+
+            public override void FillInformation(ISystem sys, out string info, out string detailed)
+            {
+                info = Resource.FriendlyName;
+                detailed = "";
+            }
+        }
+
+        #endregion
+
     }
-
-    [JournalEntryType(JournalTypeEnum.UseConsumable)]
-    public class JournalUseConsumable : JournalEntry, IMicroResourceJournalEntry
-    {
-        public JournalUseConsumable(JObject evt) : base(evt, JournalTypeEnum.UseConsumable)
-        {
-            evt.ToObjectProtected(Resource.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, Resource);        // read fields named in this structure matching JSON names
-            Resource.Normalise();
-        }
-
-        public MicroResource Resource { get; set; } = new MicroResource();
-
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
-        {
-            info = Resource.FriendlyName;
-            detailed = "";
-        }
-
-        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc)
-        {
-            MaterialCommodityMicroResourceType.EnsurePresent(Resource.Category, Resource.Name, Resource.Name_Localised);
-            mc.Change(EventTimeUTC, Resource.Category, Resource.Name, -1, 0, MicroResource.BackPack);
-        }
-    }
-
 }
 
 

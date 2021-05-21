@@ -86,6 +86,9 @@ namespace EliteDangerousCore
         BreathableAtmosphere,
         GlideMode,
 
+        SrvHighBeam,
+        FsdJump,
+
         BodyName,
 
     }

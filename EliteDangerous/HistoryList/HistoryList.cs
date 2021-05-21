@@ -147,7 +147,7 @@ namespace EliteDangerousCore
             
             foreach (JournalEntry je in jlist)
             {
-                if (MergeEntries(hprev?.journalEntry, je))        // if we merge, don't store into HE
+                if (MergeOrDiscardEntries(hprev?.journalEntry, je))        // if we merge, don't store into HE
                 {
                     continue;
                 }
@@ -236,32 +236,6 @@ namespace EliteDangerousCore
             return hist;
         }
 
-        public static bool CheckForRemoval(HistoryEntry he, HistoryEntry hprev)
-        {
-            if (he.EntryType == JournalTypeEnum.Cargo && hprev != null)       // we generally try and remove cargo as spam, but we need to keep its updated MC
-            {
-                var cargo = he.journalEntry as JournalCargo;
-
-                if (cargo.EDDFromFile == true ||       // if from file, its a newer entry, after nov 20, so we remove it
-                                                       // else if older than when this flag was introduced, we remove if its not following the two types below
-                     (cargo.EventTimeUTC < new DateTime(2020, 11, 20) && hprev.EntryType != JournalTypeEnum.Statistics && hprev.EntryType != JournalTypeEnum.Friends)
-                    )
-                {
-                  //  System.Diagnostics.Debug.WriteLine(he.EventTimeUTC + " Remove cargo and assign to previous entry FromFile: " + cargo.EDDFromFile);
-                    hprev.UpdateMaterialsCommodities(he.MaterialCommodity);        // assign its updated commodity list to previous entry
-                    return true;
-                }
-                else
-                {
-                  //  System.Diagnostics.Debug.WriteLine(he.EventTimeUTC + " Keep cargo entry FromFile: " + cargo.EDDFromFile);
-                }
-            }
-
-            return false;
-        }
-
-
-
         public static void AddToVisitsScan(HistoryList hist, int pos, Action<string> logerror)
         {
             HistoryEntry he = hist[pos];
@@ -346,8 +320,9 @@ namespace EliteDangerousCore
                 return 0;
         }
 
-        // true if merged back to previous..
-        public static bool MergeEntries(JournalEntry prev, JournalEntry je)
+        // this allows entries to be merged or discarded before any processing
+        // true if to discard
+        public static bool MergeOrDiscardEntries(JournalEntry prev, JournalEntry je)
         {
             if (prev != null && !EliteConfigInstance.InstanceOptions.DisableMerge)
             {
@@ -423,9 +398,51 @@ namespace EliteDangerousCore
             return false;
         }
 
-#endregion
+        // this allows for discarding after materialcommodities processing
 
-#region EDSM
+        public static bool CheckForRemoval(HistoryEntry he, HistoryEntry hprev)
+        {
+            // we generally try and remove cargo as spam, but we need to keep its updated MC
+
+            if (he.EntryType == JournalTypeEnum.Cargo && hprev != null)       
+            {
+                var cargo = he.journalEntry as JournalCargo;
+
+                if (cargo.EDDFromFile == true ||       // if from file, its a newer entry, after nov 20, so we remove it
+                                                       // else if older than when this flag was introduced, we remove if its not following the two types below
+                     (cargo.EventTimeUTC < new DateTime(2020, 11, 20) && hprev.EntryType != JournalTypeEnum.Statistics && hprev.EntryType != JournalTypeEnum.Friends)
+                    )
+                {
+                    //  System.Diagnostics.Debug.WriteLine(he.EventTimeUTC + " Remove cargo and assign to previous entry FromFile: " + cargo.EDDFromFile);
+                    hprev.UpdateMaterialsCommodities(he.MaterialCommodity);        // assign its updated commodity list to previous entry
+                    return true;
+                }
+                else
+                {
+                    //  System.Diagnostics.Debug.WriteLine(he.EventTimeUTC + " Keep cargo entry FromFile: " + cargo.EDDFromFile);
+                }
+            }
+            else if ( he.EntryType == JournalTypeEnum.BackpackChange)
+            {
+                // backpack change get spammed next to these, if so, use these, and remove backpack change
+
+                if ( hprev != null && ( hprev.EntryType == JournalTypeEnum.UseConsumable || hprev.EntryType == JournalTypeEnum.DropItems || hprev.EntryType == JournalTypeEnum.CollectItems))
+                {
+                    System.Diagnostics.Debug.WriteLine("Backpackchange, previous is consume, update it");
+                    hprev.UpdateMaterialsCommodities(he.MaterialCommodity);        // assign its updated commodity list to previous entry
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
+
+
+        #endregion
+
+        #region EDSM
 
         public void FillInPositionsFSDJumps(Action<string> logger)       // call if you want to ensure we have the best posibile position data on FSD Jumps.  Only occurs on pre 2.1 netlogs
         {

@@ -26,6 +26,7 @@ namespace EliteDangerousCore
         AppliedToSquadron = 6,
         AsteroidCracked = 7,
         BackPack = 4000,
+        BackpackChange = 4030,
         BookDropship = 4001,
         BookTaxi = 4002,
         Bounty = 10,

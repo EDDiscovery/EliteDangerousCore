@@ -43,8 +43,10 @@ namespace EliteDangerousCore
             MulticrewSRV,
 
             SRV,            // in srv
+            Fighter,            // in fighter
 
-            OnFootStation,          // on foot
+            OnFootStarPort,      
+            OnFootPlanetaryPort, 
             OnFootPlanet,
         };       
 
@@ -56,7 +58,7 @@ namespace EliteDangerousCore
         public string StationType { get; private set; }
         public long? MarketId { get; private set; }
         public TravelStateType TravelState { get; private set; } = TravelStateType.Unknown;  // travel state
-        public bool OnFoot { get { return TravelState >= TravelStateType.OnFootStation; } }
+        public bool OnFoot { get { return TravelState >= TravelStateType.OnFootStarPort; } }
         public ulong ShipID { get; private set; } = ulong.MaxValue;
         public string ShipType { get; private set; } = "Unknown";         // and the ship
         public string ShipTypeFD { get; private set; } = "unknown";
@@ -114,8 +116,8 @@ namespace EliteDangerousCore
                                                 ((jloc.InSRV == null && jloc.Latitude.HasValue) || jloc.InSRV == true) ? (jloc.Multicrew == true ? TravelStateType.MulticrewSRV : TravelStateType.SRV) :      // lat is pre 4.0 check
                                                     jloc.Taxi == true ? TravelStateType.TaxiNormalSpace :          // can't be in dropship, must be in normal space.
                                                         jloc.Multicrew == true ? TravelStateType.MulticrewNormalSpace :
-                                                            jloc.OnFoot == true ? (locinstation ? TravelStateType.OnFootStation : TravelStateType.OnFootPlanet) :
-                                                                prev.TravelState == TravelStateType.OnFootPlanet && locinstation ? TravelStateType.OnFootStation :
+                                                            jloc.OnFoot == true ? (locinstation ? TravelStateType.OnFootStarPort : TravelStateType.OnFootPlanet) :
+                                                                // removed prev.TravelState == TravelStateType.OnFootPlanet && locinstation ? TravelStateType.OnFootStation :
                                                                     TravelStateType.NormalSpace;
 
                         hes = new HistoryEntryStatus(prev)     // Bodyapproach copy over we should be in the same state as last..
@@ -213,7 +215,7 @@ namespace EliteDangerousCore
                         OnCrewWithCaptain = null,    // can't be in a crew at this point
                         GameMode = jlg.GameMode,      // set game mode
                         Group = jlg.Group,            // and group, may be empty
-                        TravelState = jlg.InSuit ? (prev.TravelState != TravelStateType.OnFootPlanet && prev.TravelState!=TravelStateType.OnFootStation ? TravelStateType.OnFootStation: prev.TravelState) : 
+                        TravelState = jlg.InSuit ? (prev.TravelState) : 
                                          jlg.InTaxi ? TravelStateType.TaxiNormalSpace :
                                              jlg.InSRV ? TravelStateType.SRV : 
                                                     prev.TravelState != TravelStateType.Unknown ? prev.TravelState :
@@ -278,10 +280,13 @@ namespace EliteDangerousCore
                 case JournalTypeEnum.Disembark:     // SRV/Ship -> on foot
                     var disem = (JournalDisembark)je;
 
+                    bool instation = disem.StationType.HasChars() || prev.StationType.HasChars();
+
                     hes = new HistoryEntryStatus(prev)
                     {
                         TravelState = disem.SRV ? TravelStateType.OnFootPlanet :
-                                        disem.Taxi || disem.StationType.HasChars() || prev.StationType.HasChars() ? TravelStateType.OnFootStation :       // taxi's or if it has station name, your at a station
+                                        disem.OnStation == true ?  TravelStateType.OnFootStarPort :
+                                            disem.OnPlanet == true && instation ? TravelStateType.OnFootPlanetaryPort :
                                             TravelStateType.OnFootPlanet,
                         StationName = disem.StationType.HasChars() ? disem.StationName.Alt("Unknown") : prev.StationName,       // copying it over due to bug in alpha4
                         StationType = disem.StationType.HasChars() ? disem.StationType : prev.StationType,
@@ -336,6 +341,34 @@ namespace EliteDangerousCore
                     else
                         hes = prev;
                     break;
+
+
+                case JournalTypeEnum.FighterDestroyed:
+                case JournalTypeEnum.DockFighter:
+                    {
+                        if ( prev.TravelState == TravelStateType.Fighter)
+                        {
+                            hes = new HistoryEntryStatus(prev)
+                            {
+                                TravelState = TravelStateType.NormalSpace
+                            };
+                        }
+                        break;
+                    }
+
+
+                case JournalTypeEnum.LaunchFighter:
+                {
+                    var j = je as JournalLaunchFighter;
+                    if (j.PlayerControlled)
+                    {
+                        hes = new HistoryEntryStatus(prev)
+                        {
+                            TravelState = TravelStateType.Fighter,
+                        };
+                    }
+                    break;
+                }
 
                 case JournalTypeEnum.ApproachBody:
                     JournalApproachBody jappbody = (JournalApproachBody)je;

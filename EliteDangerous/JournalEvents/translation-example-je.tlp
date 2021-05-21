@@ -256,6 +256,9 @@ SECTION JournalTypeEnum
 .TransferMicroResources: "Transfer Micro Resources" @
 .SuitLoadout: "Suit Loadout" @
 .DropshipDeploy: "Dropship Deploy" @
+.FactionKillBond: "Faction Kill Bond" @
+.CapShipBond: "Capital Ship Bond" @
+.BackpackChange: "Backpack Change" @
 .ICONIDsStart: "Don't bother with this one, its an internal ID" @
 
 SECTION JournalCargo
@@ -798,10 +801,6 @@ SECTION JournalUnderAttack
 
 .ACOUNT: "times" @
 
-SECTION JournalUnknown
-
-.UnhandledJournalevent: "Unhandled: " @
-
 SECTION JournalNavRoute
 .Jumps: "{0} jumps: " @
 
@@ -811,8 +810,6 @@ SECTION JournalApproachBody
 
 SECTION JournalEntry
 
-.FactionKillBond: "Faction Kill Bond" @
-.CapShipBond: "Capital Ship Bond" @
 .Hyperspace: "Hyperspace" @
 .Supercruise: "Supercruise" @
 .LegBounty: "{0} total {1:N0}" @
@@ -917,6 +914,10 @@ SECTION JournalEntry
 .NumberofStatuses: "Number of Statuses: " @
 .Online: "Online: " @
 .Offline: "Offline: " @
+.Unfriended: "Unfriended: " @
+.Declined: "Declined: " @
+.RequestedFriend: "Requested friend: " @
+.Addedfriend: "Added Friend: " @
 .Submitted: ";Submitted" @
 .NPC: "< (NPC);(Player)" @
 .Power: "Power: " @

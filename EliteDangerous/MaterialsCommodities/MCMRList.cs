@@ -28,6 +28,7 @@ namespace EliteDangerousCore
 
         public int Count { get { return Counts[0]; } }       // backwards compatible with code when there was only 1 count
         public int[] Counts { get; set; }
+        public bool NonZero { get { return Counts[0] != 0 || Counts[1] != 0; } }
 
         public double Price { get; set; }
         public MaterialCommodityMicroResourceType Details { get; set; }

@@ -17,31 +17,17 @@ using System;
 
 namespace EliteDangerousCore.UIEvents
 {
-    public class UIPips : UIEvent
+    public class UIFsdJump : UIEvent
     {
-        public UIPips(DateTime time, bool refresh) : base(UITypeEnum.Pips, time, refresh)
+        public UIFsdJump(DateTime time, bool refresh) : base(UITypeEnum.FsdJump, time, refresh)
         {
         }
 
-        public UIPips(Pips value, DateTime time, bool refresh) : this( time, refresh)
+        public UIFsdJump(bool state, DateTime time, bool refresh) : this(time, refresh)
         {
-            Value = value;
+            Jumping = state;
         }
 
-        public Pips Value { get; private set; }     // these are in PIPS, not in half pips like the journal gives us.
-
-        public class Pips
-        {
-            public Pips()
-            {
-                Systems = Engines = Weapons = double.MinValue;
-            }
-
-            public bool Valid { get { return Systems > double.MinValue; } }
-            public double Systems;
-            public double Engines;
-            public double Weapons;
-
-        }
+        public bool Jumping { get; private set; }
     }
 }
