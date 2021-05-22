@@ -212,7 +212,8 @@ namespace EliteDangerousCore
         public void Accepted(JournalMissionAccepted m, ISystem sys, string body)
         {
             string key = Key(m);
-            history.AddGeneration(key, new MissionState(m, sys, body));
+            history.NextGeneration();
+            history[key] = new MissionState(m, sys, body);
         }
 
         public void Completed(JournalMissionCompleted c)
@@ -221,7 +222,8 @@ namespace EliteDangerousCore
             MissionState m = history.GetLast(key);       // we must have a last entry to add
             if (m != null)
             {
-                history.AddGeneration(key, new MissionState(m, c));
+                history.NextGeneration();
+                history[key] = new MissionState(m, c);
             }
             else
                 System.Diagnostics.Debug.WriteLine("Missions: Unknown " + key);
@@ -236,7 +238,8 @@ namespace EliteDangerousCore
                 MissionState m = history.GetLast(key);       // we must have a last entry to add
                 if (m != null)
                 {
-                    history.AddGeneration(key, new MissionState(m, cd));
+                    history.NextGeneration();
+                    history[key] = new MissionState(m, cd);
                 }
                 else
                     System.Diagnostics.Debug.WriteLine("Missions: Unknown " + key);
@@ -251,7 +254,8 @@ namespace EliteDangerousCore
             MissionState m = history.GetLast(key);       // we must have a last entry to add
             if (m != null)
             {
-                history.AddGeneration(key, new MissionState(m, MissionState.StateTypes.Abandoned, a.EventTimeUTC));
+                history.NextGeneration();
+                history[key] = new MissionState(m, MissionState.StateTypes.Abandoned, a.EventTimeUTC);
             }
             else
                 System.Diagnostics.Debug.WriteLine("Missions: Unknown " + key);
@@ -263,7 +267,8 @@ namespace EliteDangerousCore
             MissionState m = history.GetLast(key);       // we must have a last entry to add
             if (m != null)
             {
-                history.AddGeneration(key, new MissionState(m, MissionState.StateTypes.Failed, f.EventTimeUTC));
+                history.NextGeneration();
+                history[key] = new MissionState(m, MissionState.StateTypes.Failed, f.EventTimeUTC);
             }
             else
                 System.Diagnostics.Debug.WriteLine("Missions: Unknown " + key);
@@ -275,7 +280,8 @@ namespace EliteDangerousCore
             MissionState m = history.GetLast(key);       // we must have a last entry to add
             if (m != null)
             {
-                history.AddGeneration(key, new MissionState(m,r));
+                history.NextGeneration();
+                history[key] = new MissionState(m,r);
             }
             else
                 System.Diagnostics.Debug.WriteLine("Missions: Unknown " + key);
@@ -296,7 +302,7 @@ namespace EliteDangerousCore
                 foreach (var m in affected)
                 {
                     string key = Key(m.Mission);
-                    history.Add(key, new MissionState(history.GetLast(key), MissionState.StateTypes.Died, diedtimeutc));
+                    history[key] = new MissionState(history.GetLast(key), MissionState.StateTypes.Died, diedtimeutc);
                 }
             }
         }
@@ -309,7 +315,7 @@ namespace EliteDangerousCore
                 MissionState m = history.GetLast(key);       // we must have a last entry to resurrect
                 if (m != null)
                 {
-                    history.Add(key, new MissionState(m, MissionState.StateTypes.InProgress, null)); // copy previous mission info, resurrected, now!
+                    history[key] = new MissionState(m, MissionState.StateTypes.InProgress, null); // copy previous mission info, resurrected, now!
                 }
             }
         }
@@ -322,7 +328,7 @@ namespace EliteDangerousCore
                 MissionState m = history.GetLast(key);       // we must have a last entry to resurrect
                 if (m != null && m.State == MissionState.StateTypes.InProgress)
                 {
-                    history.Add(key, new MissionState(m, state, missingtime));
+                    history[key] = new MissionState(m, state, missingtime);
                 }
             }
         }
@@ -338,7 +344,7 @@ namespace EliteDangerousCore
                 {
                     // permits seem to be only 1 journal entry.. so its completed.
                     MissionState.StateTypes st = m.Mission.Name.Contains("permit", StringComparison.InvariantCultureIgnoreCase) ? MissionState.StateTypes.Completed : MissionState.StateTypes.Abandoned;
-                    history.Add(key, new MissionState(m, st, missingtime));
+                    history[key] = new MissionState(m, st, missingtime);
                 }
             }
         }

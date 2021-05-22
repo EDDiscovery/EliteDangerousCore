@@ -54,7 +54,7 @@ namespace EliteDangerousCore
 
         public void Buy(DateTime time, ulong id, string fdname, string namelocalised, long price)
         {
-            suits.Add(id, new Suit(time, id, fdname, namelocalised, price, false));
+            suits[id] = new Suit(time, id, fdname, namelocalised, price, false);
         }
 
         public void Sell(DateTime time, ulong id)
@@ -64,7 +64,7 @@ namespace EliteDangerousCore
                 var last = suits.GetLast(id);
                 if (last.Sold == false)       // if not sold
                 {
-                    suits.Add(id, new Suit(time, id, last.FDName, last.Name_Localised, last.Price, true));               // new entry with this time but sold
+                    suits[id] = new Suit(time, id, last.FDName, last.Name_Localised, last.Price, true);               // new entry with this time but sold
                 }
                 else
                     System.Diagnostics.Debug.WriteLine("Suits sold a suit already sold " + id);
@@ -75,7 +75,7 @@ namespace EliteDangerousCore
 
         public void SwitchTo(DateTime time, ulong id)
         {
-            suits.Add(CURSUITID, new Suit(time, id, null, null, 0, false));
+            suits[CURSUITID] = new Suit(time, id, null, null, 0, false);
         }
 
         public uint Process(JournalEntry je, string whereami, ISystem system)

@@ -93,7 +93,7 @@ namespace EliteDangerousCore
                 newfi = newfi != null ? new FactionInfo(newfi) : new FactionInfo(faction);  // make a new copy, or an empty copy
                 if ( incrgen )
                     history.NextGeneration();
-                history.Add(faction, newfi);                    // add this new one to the history list
+                history[faction] = newfi;                    // add this new one to the history list
                 return newfi;
             }
             else

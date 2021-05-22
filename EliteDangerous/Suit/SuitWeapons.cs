@@ -47,7 +47,7 @@ namespace EliteDangerousCore
 
         public void Buy(DateTime time, ulong id, string fdname, string namelocalised, long price)
         {
-            Weapons.Add(id, new SuitWeapon(time, id, fdname, namelocalised, price,false));
+            Weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, price,false);
         }
 
         public void Sell(DateTime time, ulong id)
@@ -57,7 +57,7 @@ namespace EliteDangerousCore
                 var last = Weapons.GetLast(id);
                 if (last.Sold == false)       // if not sold
                 {
-                    Weapons.Add(id, new SuitWeapon(time, id, last.FDName, last.Name_Localised, last.Price, true));               // new entry with this time but sold
+                    Weapons[id] = new SuitWeapon(time, id, last.FDName, last.Name_Localised, last.Price, true);               // new entry with this time but sold
                 }
                 else
                     System.Diagnostics.Debug.WriteLine("Weapons sold a weapon already sold " + id);

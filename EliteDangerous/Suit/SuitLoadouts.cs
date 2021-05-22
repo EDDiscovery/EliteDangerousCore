@@ -89,7 +89,7 @@ namespace EliteDangerousCore
             var s = new SuitLoadout(time, id, name, suitid, false);
             foreach (var m in modules.EmptyIfNull())
                 s.Modules[m.ModuleName] = m;
-            loadouts.Add(id,s);
+            loadouts[id] =s;
         }
 
         public void DeleteLoadout(DateTime time, ulong id)
@@ -99,7 +99,7 @@ namespace EliteDangerousCore
                 var last = loadouts.GetLast(id);
                 if (last.Deleted == false)       // if not deleted
                 {
-                    loadouts.Add(id, new SuitLoadout(time, id, last.Name, last.SuitID, true));               // new entry with this time but sold
+                    loadouts[id] = new SuitLoadout(time, id, last.Name, last.SuitID, true);               // new entry with this time but sold
                 }
                 else
                     System.Diagnostics.Debug.WriteLine("Suits deleted a loadout already deleted " + id);
@@ -122,7 +122,7 @@ namespace EliteDangerousCore
                 var last = loadouts.GetLast(id);
                 var ld = new SuitLoadout(last);
                 ld.Modules[slotname] = weap;
-                loadouts.Add(id, ld);
+                loadouts[id] = ld;
                 System.Diagnostics.Debug.WriteLine("Suits Equip {0}-{1}-{2} with {3}", last.ID, last.Name, slotname, weap.ModuleName_Localised);
             }
             else
@@ -139,7 +139,7 @@ namespace EliteDangerousCore
                 {
                     var ld = new SuitLoadout(last);
                     ld.Modules.Remove(slotname);
-                    loadouts.Add(id, ld);
+                    loadouts[id] = ld;
                     System.Diagnostics.Debug.WriteLine("Suits Remove {0}-{1}-{2} with {3}", last.ID, last.Name, slotname, weap.Name_Localised);
                 }
                 else
@@ -156,7 +156,7 @@ namespace EliteDangerousCore
                 var last = loadouts.GetLast(id);
                 var ld = new SuitLoadout(last);
                 ld.Name = newname;
-                loadouts.Add(id, ld);
+                loadouts[id] = ld;
             }
             else
                 System.Diagnostics.Debug.WriteLine("Suits remove an unknown loadout " + id);
@@ -164,7 +164,7 @@ namespace EliteDangerousCore
 
         public void SwitchTo(DateTime utc, ulong id)
         {
-            loadouts.Add(CURLOADOUTID, new SuitLoadout(utc, id, null, 0, false));
+            loadouts[CURLOADOUTID] = new SuitLoadout(utc, id, null, 0, false);
         }
 
         public Dictionary<ulong, SuitLoadout> GetLoadoutsForSuit(uint gen, ulong suitid)

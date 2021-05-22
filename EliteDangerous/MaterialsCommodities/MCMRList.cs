@@ -181,7 +181,7 @@ namespace EliteDangerousCore
                 if (mc.Counts[0] > 0 && counts[0] > 0)                      // if bought (defensive with mc.counts)
                     mc.Price = (costprev + costofnew) / mc.Counts[0];       // price is now a combination of the current cost and the new cost. in case we buy in tranches
 
-                items.Add(fdname, mc);  // and add a new fresh mc to the dictionary
+                items[fdname] = mc;                                         // and set fdname to mc - this allows for any repeat adds due to frontier data repeating stuff in things like cargo
                // System.Diagnostics.Debug.WriteLine("{0} Changed {1} {2} {3}", utc, items.Generation, mc.Details.FDName, mc.Count);
             }
             else
@@ -198,7 +198,7 @@ namespace EliteDangerousCore
             {
                 mc = new MaterialCommodityMicroResource(mc);      // new clone of
                 mc.Counts[0] = Math.Max(mc.Counts[0] - num, 0);
-                items.Add(mc.Details.FDName.ToLowerInvariant(), mc);
+                items[mc.Details.FDName.ToLowerInvariant()] = mc;
                 System.Diagnostics.Debug.WriteLine("{0} Craft {1} {2}", utc, mc.Details.FDName, num);
             }
         }
@@ -212,7 +212,7 @@ namespace EliteDangerousCore
                 {
                     var mc = new MaterialCommodityMicroResource(e);     // clone it
                     mc.Counts[cnum] = 0;
-                    items.Add(e.Details.FDName.ToLowerInvariant(), mc);        // and add to end of list
+                    items[e.Details.FDName.ToLowerInvariant()] = mc;        // and add to end of list
                 }
             }
         }
@@ -238,7 +238,7 @@ namespace EliteDangerousCore
                 {
                     var mc = new MaterialCommodityMicroResource(c);     // clone it
                     mc.Counts[cnum] = 0;            // zero cnum
-                    items.Add(c.Details.FDName.ToLowerInvariant(), mc);
+                    items[c.Details.FDName.ToLowerInvariant()] = mc;
                     System.Diagnostics.Debug.WriteLine("{0} Found {1} not in update list, zeroing", utc, mc.Details.FDName);
                 }
             }
