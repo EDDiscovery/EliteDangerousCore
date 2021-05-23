@@ -111,7 +111,7 @@ namespace EliteDangerousCore
                 sn.NodesByID[(int)node.BodyID] = node;
             }
 
-            ProcessedSaved(sn);  // any saved JEs due to no scan, add
+            ProcessedSaved();  // any saved JEs due to no scan, add
 
             return true;
         }

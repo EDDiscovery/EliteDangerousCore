@@ -54,13 +54,13 @@ namespace EliteDangerousCore.IGAU
             return detail;
         }
 
-        public JObject CreateIGAUMessageScanOrganicMessage(string timestamp, string genus, string genusloc, string species, string System, string SystemAddress)
+        public JObject CreateIGAUMessageScanOrganicMessage(string timestamp, string species, string speciesloc, string System, string SystemAddress)
         {
             JObject detail = new JObject();
             detail["timestamp"] = timestamp;
-            detail["EntryID"] = species;
-            detail["Name"] = genus;
-            detail["Name_Localised"] = genusloc;
+            detail["EntryID"] = "-";
+            detail["Name"] = species;
+            detail["Name_Localised"] = speciesloc;
             detail["System"] = System;
             detail["SystemAddress"] = SystemAddress.ToString();
             detail["App_Name"] = SoftwareName;

@@ -46,30 +46,40 @@ namespace EliteDangerousCore
         // this tries to reprocess any JEs associated with a system node which did not have scan data at the time.
         // Seen to work with log from Issue #2983
 
-        private void ProcessedSaved(SystemNode sn)
-        {
-            if (sn.ToProcess != null)
-            {
-                List<Tuple<JournalEntry, ISystem>> todelete = new List<Tuple<JournalEntry, ISystem>>();
-                foreach (var e in sn.ToProcess)
-                {
-                    JournalSAAScanComplete jsaasc = e.Item1 as JournalSAAScanComplete;
-                    if (jsaasc != null)
-                    {
-                        if (ProcessSAAScan(jsaasc, e.Item2, false))
-                            todelete.Add(e);
-                    }
-                    JournalSAASignalsFound jsaasf = e.Item1 as JournalSAASignalsFound;
-                    if (jsaasf != null)
-                    {
-                        if (ProcessSAASignalsFound(jsaasf, e.Item2, false))
-                            todelete.Add(e);
-                    }
-                }
+        public List<Tuple<JournalEntry, ISystem>> ToProcess = new List<Tuple<JournalEntry, ISystem>>();     // entries seen but yet to be processed due to no scan node (used by reports which do not create scan nodes)
 
-                foreach (var je in todelete)
-                    sn.ToProcess.Remove(je);
+        public void SaveForProcessing(JournalEntry je, ISystem sys)
+        {
+            ToProcess.Add(new Tuple<JournalEntry, ISystem>(je, sys));
+        }
+
+        private void ProcessedSaved()
+        {
+            List<Tuple<JournalEntry, ISystem>> todelete = new List<Tuple<JournalEntry, ISystem>>();
+            foreach (var e in ToProcess)
+            {
+                JournalSAAScanComplete jsaasc = e.Item1 as JournalSAAScanComplete;
+                if (jsaasc != null)
+                {
+                    if (ProcessSAAScan(jsaasc, e.Item2, false))
+                        todelete.Add(e);
+                }
+                JournalSAASignalsFound jsaasf = e.Item1 as JournalSAASignalsFound;
+                if (jsaasf != null)
+                {
+                    if (ProcessSAASignalsFound(jsaasf, e.Item2, false))
+                        todelete.Add(e);
+                }
+                JournalFSSSignalDiscovered jssdis = e.Item1 as JournalFSSSignalDiscovered;
+                if ( jssdis != null )
+                {
+                    if (AddFSSSignalsDiscoveredToSystem(jssdis, null, false))
+                        todelete.Add(e);
+                }
             }
+
+            foreach (var je in todelete)
+                ToProcess.Remove(je);
         }
 
         public bool HasWebLookupOccurred(ISystem sys)       // have we had a web checkup on this system?  false if sys does not exist
