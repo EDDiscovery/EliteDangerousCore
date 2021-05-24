@@ -88,7 +88,7 @@ namespace EliteDangerousCore
         {
             var s = new SuitLoadout(time, id, name, suitid, false);
             foreach (var m in modules.EmptyIfNull())
-                s.Modules[m.ModuleName] = m;
+                s.Modules[m.SlotName] = m;
             loadouts[id] =s;
         }
 
