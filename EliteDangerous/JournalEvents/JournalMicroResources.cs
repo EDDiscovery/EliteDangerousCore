@@ -43,10 +43,13 @@ namespace EliteDangerousCore.JournalEvents
 
         public void Normalise()
         {
-            Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, Name);
-            Name = JournalFieldNaming.FDNameTranslation(Name);      // this lower cases the name
-            FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(Name);      // normalises to lower case  
-            Category = Category.Alt(Type);      // for some reason category is called type in places..
+            if (Name.HasChars())
+            {
+                Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, Name);
+                Name = JournalFieldNaming.FDNameTranslation(Name);      // this lower cases the name
+                FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(Name);      // normalises to lower case  
+                Category = Category.Alt(Type);      // for some reason category is called type in places..
+            }
         }
 
         static public void Normalise(MicroResource[] a)

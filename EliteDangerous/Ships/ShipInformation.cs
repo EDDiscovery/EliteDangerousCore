@@ -450,9 +450,9 @@ namespace EliteDangerousCore
             return this;
         }
 
-        public ShipInformation SetFuelLevel(double fuellevel, double reserve)
+        public ShipInformation SetFuelLevel(double fuellevel, double reserve)       // fuellevel >=0 to set
         {
-            if (fuellevel != 0 && ( Math.Abs(FuelLevel - fuellevel) > 0.01 || Math.Abs(ReserveFuelCapacity - reserve) > 0.01))
+            if (fuellevel >= 0 && ( Math.Abs(FuelLevel - fuellevel) > 0.01 || Math.Abs(ReserveFuelCapacity - reserve) > 0.01))
             {
                 //System.Diagnostics.Debug.WriteLine("Update ship fuel to " + fuellevel + " " + reserve);
 

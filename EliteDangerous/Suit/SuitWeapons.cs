@@ -29,10 +29,11 @@ namespace EliteDangerousCore
         public string FriendlyName { get; private set; }
         public long Price { get; private set; }
         public bool Sold { get; private set; }
+        public int Class { get; private set; }
 
-        public SuitWeapon(DateTime time, ulong id, string fdname, string namelocalised, long price, bool sold)
+        public SuitWeapon(DateTime time, ulong id, string fdname, string namelocalised, long price, int cls, bool sold)
         {
-            EventTime = time; ID = id;FDName = fdname; Name_Localised = namelocalised; Price = price; Sold = sold;
+            EventTime = time; ID = id;FDName = fdname; Name_Localised = namelocalised; Price = price; Sold = sold; Class = cls;
             FriendlyName = ItemData.GetWeapon(fdname, Name_Localised)?.Name ?? Name_Localised;
         }
     }
@@ -45,9 +46,9 @@ namespace EliteDangerousCore
         {
         }
 
-        public void Buy(DateTime time, ulong id, string fdname, string namelocalised, long price)
+        public void Buy(DateTime time, ulong id, string fdname, string namelocalised, long price, int cls)
         {
-            Weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, price,false);
+            Weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, price, cls, false);
         }
 
         public void Sell(DateTime time, ulong id)
@@ -57,13 +58,29 @@ namespace EliteDangerousCore
                 var last = Weapons.GetLast(id);
                 if (last.Sold == false)       // if not sold
                 {
-                    Weapons[id] = new SuitWeapon(time, id, last.FDName, last.Name_Localised, last.Price, true);               // new entry with this time but sold
+                    Weapons[id] = new SuitWeapon(time, id, last.FDName, last.Name_Localised, last.Price, last.Class, true);               // new entry with this time but sold
                 }
                 else
                     System.Diagnostics.Debug.WriteLine("Weapons sold a weapon already sold " + id);
             }
             else
                 System.Diagnostics.Debug.WriteLine("Weapons sold a weapon not seen " + id);
+        }
+
+        public void Upgrade(DateTime time, ulong id, int cls)
+        {
+            if (Weapons.ContainsKey(id))
+            {
+                var last = Weapons.GetLast(id);
+                if (last.Sold == false)       // if not sold
+                {                   // new entry with the new class
+                    Weapons[id] = new SuitWeapon(time, id, last.FDName, last.Name_Localised, last.Price, cls, false);
+                }
+                else
+                    System.Diagnostics.Debug.WriteLine("Weapons upgrade but already sold " + id);
+            }
+            else
+                System.Diagnostics.Debug.WriteLine("Weapons upgrade a weapon not seen " + id);
         }
 
         public uint Process(JournalEntry je, string whereami, ISystem system)

@@ -337,9 +337,6 @@ namespace EliteDangerousCore
                             JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null, Func<JournalEntry,Object,bool> callback = null, Object callbackobj = null,
                             int chunksize = 1000)
         {
-            var tluslist = TravelLogUnit.GetAll();
-            Dictionary<long, TravelLogUnit> tlus = tluslist.ToDictionary(t => t.ID);
-
             DbCommand cmd = null;
             DbDataReader reader = null;
             List<JournalEntry> entries = new List<JournalEntry>();

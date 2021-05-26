@@ -171,10 +171,11 @@ namespace EliteDangerousCore
         {
             System.Diagnostics.Debug.Assert(ScanThread == null);        // double check we are not scanning.
 
-            List<int> watchersinuse = new List<int>();
+            List<int> watchersinuse = new List<int>();          // may contain -1s for rejected paths
+
             foreach (string std in stdfolders)          // setup the std folders
             {
-                watchersinuse.Add(CheckAddPath(std,journalmatchpattern));
+                watchersinuse.Add(CheckAddPath(std, journalmatchpattern));
             }
 
             foreach (var cmdr in EDCommander.GetListCommanders())       // setup any commander folders
@@ -186,7 +187,7 @@ namespace EliteDangerousCore
             }
 
             List<int> del = new List<int>();
-            for (int i = 0; i < watchers.Count; i++)           // find any watchers not in the watchersinuse list
+            for (int i = 0; i < watchers.Count; i++)           // for all current watchers, are we still in use?
             {
                 if (!watchersinuse.Contains(i))
                     del.Add(i);
@@ -204,7 +205,9 @@ namespace EliteDangerousCore
             }
         }
 
-        private int CheckAddPath(string p, string journalmatchpattern)           // return index of watcher (and therefore status watcher as we add in parallel)
+        // check path exists, and if not already in watchers folder, add it
+        // return -1 if not good, else return index of watcher (and therefore status watcher as we add in parallel)
+        private int CheckAddPath(string p, string journalmatchpattern)         
         {
             try
             {

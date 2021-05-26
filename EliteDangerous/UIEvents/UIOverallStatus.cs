@@ -25,16 +25,17 @@ namespace EliteDangerousCore.UIEvents
 
         }
 
-        public UIOverallStatus(UIEvents.UIShipType.Shiptype st, List<UITypeEnum> list, int focus, UIEvents.UIPips.Pips pips, int fg, double fuel, double res, int cargo,
-            UIEvents.UIPosition.Position pos, double heading, double radius, string legalstate, string bodyname,
+        public UIOverallStatus(UIMode.MajorModeType mm, UIMode.ModeType mt, List<UITypeEnum> list, int focus, UIPips.Pips pips, int fg, double fuel, double res, int cargo,
+            UIPosition.Position pos, double heading, double radius, string legalstate, string bodyname,
             double health, bool lowh, double gravity, double temp, UITemperature.TempState tempstate, double oxygen, bool lowox,
             string selw, string selwloc,
             FSDStateType fsd, bool breathableatmosphere,
             DateTime time, bool refresh) : this(time, refresh)
         {
-            ShipType = st;
+            MajorMode = mm;
+            Mode = mt;
             Flags = list;
-            Focus = (UIEvents.UIGUIFocus.Focus)focus;
+            Focus = (UIGUIFocus.Focus)focus;
             Pips = pips;
             Firegroup = fg;
             Fuel = fuel;
@@ -58,18 +59,19 @@ namespace EliteDangerousCore.UIEvents
             SelectedWeapon_Localised = selwloc;
         }
 
-        public UIEvents.UIShipType.Shiptype ShipType { get; private set; }
+        public UIMode.MajorModeType MajorMode { get; private set; }
+        public UIMode.ModeType Mode { get; private set; }
         public List<UITypeEnum> Flags { get; private set; }
-        public UIEvents.UIGUIFocus.Focus Focus { get; private set; }
-        public UIEvents.UIPips.Pips Pips { get; private set; }
+        public UIGUIFocus.Focus Focus { get; private set; }
+        public UIPips.Pips Pips { get; private set; }
         public int Firegroup { get; private set; }
         public double Fuel { get; private set; }
         public double Reserve { get; private set; }
         public int Cargo { get; private set; }
-        public UIEvents.UIPosition.Position Pos { get; private set; }
-        public bool ValidHeading { get { return Heading != UIEvents.UIPosition.InvalidValue; } }
+        public UIPosition.Position Pos { get; private set; }
+        public bool ValidHeading { get { return Heading != UIPosition.InvalidValue; } }
         public double Heading { get; private set; }
-        public bool ValidRadius { get { return PlanetRadius != UIEvents.UIPosition.InvalidValue; } }
+        public bool ValidRadius { get { return PlanetRadius != UIPosition.InvalidValue; } }
         public double PlanetRadius { get; private set; }
         public string LegalState { get; private set; }      // may be null
         public string BodyName { get; private set; }      // may be null
@@ -82,7 +84,7 @@ namespace EliteDangerousCore.UIEvents
         public double Oxygen { get; private set; }
         public bool LowOxygen { get; private set; }
         public bool BreathableAtmosphere { get; private set; }
-        public enum FSDStateType { Normal, Charging, Jumping, Gliding, Cooldown };
+        public enum FSDStateType { Normal, Charging, Jumping, Gliding, Cooldown , MassLock};
         public FSDStateType FSDState { get; private set; }
         public string SelectedWeapon { get; private set; }      // may be null
         public string SelectedWeapon_Localised { get; private set; }      // may be null

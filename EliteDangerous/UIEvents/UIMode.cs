@@ -17,18 +17,26 @@ using System;
 
 namespace EliteDangerousCore.UIEvents
 {
-    public class UIShipType : UIEvent
+    [System.Diagnostics.DebuggerDisplay("Mode {Mode} {MajorMode}")]
+    public class UIMode : UIEvent
     {
-        public UIShipType(DateTime time, bool refresh) : base(UITypeEnum.ShipType, time, refresh)
+        public UIMode(DateTime time, bool refresh) : base(UITypeEnum.Mode, time, refresh)
         {
         }
 
-        public UIShipType(Shiptype type, DateTime time, bool refresh) : this(time, refresh)
+        public UIMode(ModeType type, MajorModeType mode) : base(UITypeEnum.Mode, DateTime.MinValue,false)
         {
-            ShipType = type;
+            Mode = type;
+            MajorMode = mode;
         }
 
-        public enum Shiptype {
+        public UIMode(ModeType type, MajorModeType mode, DateTime time, bool refresh) : this(time, refresh)
+        {
+            Mode = type;
+            MajorMode = mode;
+        }
+
+        public enum ModeType {
             None,
             MainShipNormalSpace,
             MainShipDockedStarPort,
@@ -55,8 +63,18 @@ namespace EliteDangerousCore.UIEvents
             OnFootPlanet
         };
 
-        public Shiptype ShipType { get; private set; }
+        public enum MajorModeType
+        {
+            None,
+            Ship,
+            Taxi,
+            Multicrew,
+            SRV,
+            Fighter,
+            OnFoot, 
+        }
 
-        static public bool OnFoot(Shiptype t ) { return t >= Shiptype.OnFootStarPortHangar; }
+        public ModeType Mode { get; private set; }
+        public MajorModeType MajorMode { get; private set; }
     }
 }

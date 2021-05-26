@@ -29,8 +29,11 @@ namespace EliteDangerousCore.JournalEvents
             SuitID = ulong.MaxValue;        // pre alpha 4 this was missing.
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
-            FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
-            Name = Name.ToLower(); // normalise
+            if (Name.HasChars())    // protect against bad json
+            {
+                FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
+                Name = Name.ToLower(); // normalise
+            }
         }
 
         public ulong SuitID { get; set; }
@@ -62,8 +65,11 @@ namespace EliteDangerousCore.JournalEvents
             SuitID = ulong.MaxValue;        // pre alpha 4 this was missing
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
-            FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
-            Name = Name.ToLower(); // normalise
+            if (Name.HasChars())    // protect against bad json
+            {
+                FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
+                Name = Name.ToLower(); // normalise
+            }
         }
 
         public JournalSellSuit(DateTime utc, ulong id, string fdname, string locname, long price, int cmdrid) : base(utc,JournalTypeEnum.SellSuit,false)
@@ -123,11 +129,12 @@ namespace EliteDangerousCore.JournalEvents
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
 
-            SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
-            SuitName = SuitName.ToLower(); // normalise
-
-            SuitLoadout.NormaliseModules(Modules);
-          
+            if (SuitName.HasChars())    // protect against bad json
+            {
+                SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+                SuitName = SuitName.ToLower(); // normalise
+                SuitLoadout.NormaliseModules(Modules);
+            }
         }
 
         public ulong SuitID { get; set; }
@@ -137,7 +144,7 @@ namespace EliteDangerousCore.JournalEvents
         public string LoadoutName { get; set; }
         public ulong LoadoutID { get; set; }
 
-        public SuitLoadout.LoadoutModule[] Modules;
+        public SuitLoadout.LoadoutModule[] Modules { get; set; }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
@@ -163,11 +170,12 @@ namespace EliteDangerousCore.JournalEvents
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
 
-            SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
-            SuitName = SuitName.ToLower(); // normalise
-
-            SuitLoadout.NormaliseModules(Modules);
-
+            if (SuitName.HasChars())
+            {
+                SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+                SuitName = SuitName.ToLower(); // normalise
+                SuitLoadout.NormaliseModules(Modules);
+            }
         }
 
         public ulong SuitID { get; set; }
@@ -177,7 +185,7 @@ namespace EliteDangerousCore.JournalEvents
         public string LoadoutName { get; set; }
         public ulong LoadoutID { get; set; }
 
-        public SuitLoadout.LoadoutModule[] Modules;
+        public SuitLoadout.LoadoutModule[] Modules { get; set; }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
@@ -203,8 +211,11 @@ namespace EliteDangerousCore.JournalEvents
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
-            SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
-            SuitName = SuitName.ToLower(); // normalise
+            if (SuitName.HasChars())
+            {
+                SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+                SuitName = SuitName.ToLower(); // normalise
+            }
         }
 
         public ulong SuitID { get; set; }
@@ -239,12 +250,15 @@ namespace EliteDangerousCore.JournalEvents
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
 
-            SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
-            SuitName = SuitName.ToLower(); // normalise
-            ModuleNameFriendly = ItemData.GetWeapon(ModuleName, ModuleName_Localised)?.Name ?? ModuleName_Localised;
-            SlotFriendlyName = SlotName.SplitCapsWordFull();
-            SlotName = SlotName.ToLower();
-            ModuleName = ModuleName.ToLower();
+            if (SuitName.HasChars() && ModuleName.HasChars())
+            {
+                SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+                SuitName = SuitName.ToLower(); // normalise
+                ModuleNameFriendly = ItemData.GetWeapon(ModuleName, ModuleName_Localised)?.Name ?? ModuleName_Localised;
+                SlotFriendlyName = SlotName.SplitCapsWordFull();
+                SlotName = SlotName.ToLower();
+                ModuleName = ModuleName.ToLower();
+            }
         }
 
         public string LoadoutName { get; set; }
@@ -285,12 +299,16 @@ namespace EliteDangerousCore.JournalEvents
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
-            SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
-            SuitName = SuitName.ToLower(); // normalise
-            ModuleNameFriendly = ItemData.GetWeapon(ModuleName, ModuleName_Localised)?.Name ?? ModuleName_Localised;
-            SlotFriendlyName = SlotName.SplitCapsWordFull();
-            SlotName = SlotName.ToLower();
-            ModuleName = ModuleName.ToLower();
+
+            if (SuitName.HasChars() && ModuleName.HasChars())
+            {
+                SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+                SuitName = SuitName.ToLower(); // normalise
+                ModuleNameFriendly = ItemData.GetWeapon(ModuleName, ModuleName_Localised)?.Name ?? ModuleName_Localised;
+                SlotFriendlyName = SlotName.SplitCapsWordFull();
+                SlotName = SlotName.ToLower();
+                ModuleName = ModuleName.ToLower();
+            }
         }
 
         public string LoadoutName { get; set; }
@@ -335,8 +353,12 @@ namespace EliteDangerousCore.JournalEvents
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
-            SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
-            SuitName = SuitName.ToLower(); // normalise
+
+            if (SuitName.HasChars())
+            {
+                SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+                SuitName = SuitName.ToLower(); // normalise
+            }
         }
 
         public ulong SuitID { get; set; }
@@ -370,9 +392,12 @@ namespace EliteDangerousCore.JournalEvents
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
-            SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
-            SuitName = SuitName.ToLower(); // normalise
-            SuitLoadout.NormaliseModules(Modules);
+            if (SuitName.HasChars())
+            {
+                SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+                SuitName = SuitName.ToLower(); // normalise
+                SuitLoadout.NormaliseModules(Modules);
+            }
         }
 
         public ulong SuitID { get; set; }
@@ -415,8 +440,11 @@ namespace EliteDangerousCore.JournalEvents
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
-            FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
-            Name = Name.ToLower(); // normalise
+            if (Name.HasChars())
+            {
+                FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
+                Name = Name.ToLower(); // normalise
+            }
         }
 
         public ulong SuitID { get; set; }
@@ -424,11 +452,12 @@ namespace EliteDangerousCore.JournalEvents
         public string Name_Localised { get; set; }
         public string FriendlyName { get; set; }
         public int Class { get; set; }
-        public long Price { get; set; }
+        public long Cost { get; set; }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = "TBD awaiting journal record please submit";
+            long? p = Cost > 0 ? Cost : default(long?);
+            info = BaseUtils.FieldBuilder.Build("", Name_Localised, "< => ", Class, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), p);
             detailed = "";
         }
 

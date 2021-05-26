@@ -809,7 +809,6 @@ SECTION JournalApproachBody
 .In: "In " @
 
 SECTION JournalEntry
-
 .Hyperspace: "Hyperspace" @
 .Supercruise: "Supercruise" @
 .LegBounty: "{0} total {1:N0}" @
@@ -917,7 +916,7 @@ SECTION JournalEntry
 .Unfriended: "Unfriended: " @
 .Declined: "Declined: " @
 .RequestedFriend: "Requested friend: " @
-.Addedfriend: "Added Friend: " @
+.AddedFriend: "Added Friend: " @
 .Submitted: ";Submitted" @
 .NPC: "< (NPC);(Player)" @
 .Power: "Power: " @

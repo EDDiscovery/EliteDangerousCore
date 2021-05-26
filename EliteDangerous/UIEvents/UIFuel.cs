@@ -23,15 +23,18 @@ namespace EliteDangerousCore.UIEvents
         {
         }
 
-        public UIFuel(double value, double res, UIShipType.Shiptype shiptype, DateTime time, bool refresh) : this( time, refresh)
+        public UIFuel(double value, double res, UIMode.ModeType shiptype, DateTime time, bool refresh) : this( time, refresh)
         {
             Fuel = value;
             FuelRes = res;
-            ShipType = shiptype;
+            Mode = shiptype;
         }
 
-        public double Fuel { get; private set; }     // level
+        public double Fuel { get; private set; }     // level,
         public double FuelRes { get; private set; }     // level 3.3.2
-        public UIShipType.Shiptype ShipType { get; private set; }   // Ship type flags.. per flags
+
+        public bool Valid { get { return Fuel >= 0; } }
+
+        public UIMode.ModeType Mode { get; private set; }   // Ship type flags.. per flags
     }
 }

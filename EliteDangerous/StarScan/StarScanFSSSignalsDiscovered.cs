@@ -56,18 +56,18 @@ namespace EliteDangerousCore
                     {
                         if (saveprocessinglater == true)           // if saving to list, store with a null system address
                         {
-                            System.Diagnostics.Debug.WriteLine("FSS Signals Can't find - storing for later " + fs.SystemAddress);
+                           // System.Diagnostics.Debug.WriteLine("FSS Signals Can't find - storing for later " + fs.SystemAddress);
                             SaveForProcessing(jsd, new SystemClass(fs.SystemAddress, null));
                         }
                         else
                         {
-                            System.Diagnostics.Debug.WriteLine("FSS Signals process later can't find" + fs.SystemAddress);
+                            System.Diagnostics.Debug.WriteLine("FSS Signals can't find now" + fs.SystemAddress);
                         }
                         return false;
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine("FSS Signals sys address differs in {0} {1} found {2}", jsd.EventTimeUTC, oldsys?.Name, sys.Name);
+                        //System.Diagnostics.Debug.WriteLine("FSS Signals sys address differs in {0} {1} found {2}", jsd.EventTimeUTC, oldsys?.Name, sys.Name);
                     }
                 }
 
