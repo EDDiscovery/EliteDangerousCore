@@ -13,11 +13,8 @@
  * 
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
-using BaseUtils;
 using BaseUtils.JSON;
 using System;
-using System.Linq;
-using System.Text;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -41,10 +38,12 @@ namespace EliteDangerousCore.JournalEvents
         public string Name_Localised { get; set; }
         public string FriendlyName { get; set; }
         public long Price { get; set; }
+        public string[] SuitMods { get; set; }          // may be null or empty
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< buy price ; cr;N0".T(EDTx.JournalEntry_buyprice), Price);
+            string smod = SuitMods != null ? string.Join(", ", SuitMods) : null;
+            info = BaseUtils.FieldBuilder.Build("", FriendlyName, "Mods: ".T(EDTx.JournalEntry_Mods), smod, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Price);
             detailed = "";
         }
 
@@ -52,7 +51,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (SuitID != ulong.MaxValue)
             {
-                shp.Buy(EventTimeUTC, SuitID, Name, Name_Localised, Price);
+                shp.Buy(EventTimeUTC, SuitID, Name, Name_Localised, Price, SuitMods);
             }
         }
     }
@@ -121,7 +120,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.CreateSuitLoadout)]
-    public class JournalCreateSuitLoadout : JournalEntry, ISuitLoadoutInformation
+    public class JournalCreateSuitLoadout : JournalEntry, ISuitInformation, ISuitLoadoutInformation, IWeaponInformation
     {
         public JournalCreateSuitLoadout(JObject evt) : base(evt, JournalTypeEnum.CreateSuitLoadout)
         {
@@ -141,6 +140,7 @@ namespace EliteDangerousCore.JournalEvents
         public string SuitName { get; set; }
         public string SuitName_Localised { get; set; }
         public string SuitFriendlyName { get; set; }
+        public string[] SuitMods { get; set; }          // may be null or empty
         public string LoadoutName { get; set; }
         public ulong LoadoutID { get; set; }
 
@@ -152,6 +152,22 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
+        public void SuitInformation(SuitList shp, string whereami, ISystem system)      // executed first
+        {
+            if (SuitID != ulong.MaxValue)
+            {
+                shp.VerifyPresence(EventTimeUTC, SuitID, SuitName, SuitName_Localised, 0, SuitMods);
+            }
+        }
+
+        public void WeaponInformation(SuitWeaponList shp, string whereami, ISystem system)
+        {
+            foreach (var m in Modules.EmptyIfNull())
+            {
+                shp.VerifyPresence(EventTimeUTC, m.SuitModuleID, m.ModuleName, m.ModuleName_Localised, 0, m.Class, m.WeaponMods);
+            }
+        }
+
         public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)
         {
             if (SuitID != ulong.MaxValue)
@@ -159,10 +175,11 @@ namespace EliteDangerousCore.JournalEvents
                 shp.CreateLoadout(EventTimeUTC, LoadoutID, LoadoutName, SuitID, Modules);
             }
         }
+
     }
 
     [JournalEntryType(JournalTypeEnum.SuitLoadout)]
-    public class JournalSuitLoadout : JournalEntry, ISuitLoadoutInformation
+    public class JournalSuitLoadout : JournalEntry, IWeaponInformation, ISuitInformation, ISuitLoadoutInformation
     {
         public JournalSuitLoadout(JObject evt) : base(evt, JournalTypeEnum.SuitLoadout)
         {
@@ -182,24 +199,41 @@ namespace EliteDangerousCore.JournalEvents
         public string SuitName { get; set; }
         public string SuitName_Localised { get; set; }
         public string SuitFriendlyName { get; set; }
+        public string[] SuitMods { get; set; }          // may be null or empty
         public string LoadoutName { get; set; }
         public ulong LoadoutID { get; set; }
-
         public SuitLoadout.LoadoutModule[] Modules { get; set; }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "< ++> ", LoadoutName);
+            info = BaseUtils.FieldBuilder.Build("", SuitID % 10000, "", LoadoutID % 10000, "", SuitFriendlyName, "< ==> ", LoadoutName);
             detailed = "";
+        }
+
+        public void SuitInformation(SuitList shp, string whereami, ISystem system)      // executed first
+        {
+            if (SuitID != ulong.MaxValue)
+            {
+                shp.VerifyPresence(EventTimeUTC, SuitID, SuitName, SuitName_Localised, 0, SuitMods);
+            }
+        }
+
+        public void WeaponInformation(SuitWeaponList shp, string whereami, ISystem system)
+        {
+            foreach (var m in Modules.EmptyIfNull())
+            {
+                shp.VerifyPresence(EventTimeUTC, m.SuitModuleID, m.ModuleName, m.ModuleName_Localised, 0, m.Class, m.WeaponMods);
+            }
         }
 
         public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)
         {
             if (SuitID != ulong.MaxValue)
             {
-                shp.CreateLoadout(EventTimeUTC, LoadoutID, LoadoutName, SuitID, Modules);
+                shp.VerifyPresence(EventTimeUTC, LoadoutID, LoadoutName, SuitID, Modules);
             }
         }
+
     }
 
     // TBD Write, Test
@@ -242,7 +276,7 @@ namespace EliteDangerousCore.JournalEvents
 
     // TBD Write, Test
     [JournalEntryType(JournalTypeEnum.LoadoutEquipModule)]
-    public class JournalLoadoutEquipModule : JournalEntry, ISuitLoadoutInformation
+    public class JournalLoadoutEquipModule : JournalEntry, ISuitLoadoutInformation, ISuitInformation, IWeaponInformation
     {
         public JournalLoadoutEquipModule(JObject evt) : base(evt, JournalTypeEnum.LoadoutEquipModule)
         {
@@ -272,24 +306,46 @@ namespace EliteDangerousCore.JournalEvents
         public string ModuleName { get; set; }      // lower normalised
         public string ModuleName_Localised { get; set; }
         public string ModuleNameFriendly { get; set; }
+        public int Class { get; set; }        // may not be there
+        public string[] WeaponMods { get; set; }    // may be null or empty
         public ulong SuitModuleID { get; set; }         // aka weapon ID
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "<: ", LoadoutName, "<: ", SlotFriendlyName, "< ++> ", ModuleNameFriendly);
+            string wmod = WeaponMods != null ? string.Join(", ", WeaponMods) : null;
+            info = BaseUtils.FieldBuilder.Build("", SuitID % 10000, "", LoadoutID%10000, "", SuitFriendlyName, "<: ", LoadoutName, "<: ", SlotFriendlyName, "< ++> ", ModuleNameFriendly, "Class: ".T(EDTx.JournalEntry_Class), Class, "Mods: ".T(EDTx.JournalEntry_Mods), wmod);
             detailed = "";
         }
 
-        public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)
+        public void SuitInformation(SuitList shp, string whereami, ISystem system)      // executed first
         {
             if (SuitID != ulong.MaxValue)
             {
-                System.Diagnostics.Debug.WriteLine("{0} Equip suit {1} Loadout {2} slot {3} with {4}", EventTimeUTC.ToString(), SuitID, LoadoutID, SlotName, ModuleName);
-                shp.Equip(LoadoutID, SlotName, new SuitLoadout.LoadoutModule(SlotName, SuitModuleID, ModuleName, ModuleName_Localised));
+                shp.VerifyPresence(EventTimeUTC, SuitID, SuitName, SuitName_Localised, 0, new string[] { });
+            }
+        }
+
+        public void WeaponInformation(SuitWeaponList shp, string whereami, ISystem system)      // executed second
+        {
+            if (SuitID != ulong.MaxValue)
+            {
+                shp.VerifyPresence(EventTimeUTC, SuitModuleID, ModuleName, ModuleName_Localised, 0, Class, WeaponMods);
+            }
+        }
+
+        public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)   // excuted third
+        {
+            if (SuitID != ulong.MaxValue)
+            {
+                shp.VerifyPresence(EventTimeUTC, LoadoutID, LoadoutName, SuitID, null);
+
+                System.Diagnostics.Debug.WriteLine("{0} Equip suit {1} Loadout {2} slot {3} with {4} {5} {6}", EventTimeUTC.ToString(), SuitID, LoadoutID, SlotName, ModuleName, Class, string.Join(",", WeaponMods??new string[] { }) );
+                shp.Equip(LoadoutID, SlotName, new SuitLoadout.LoadoutModule(SlotName, SuitModuleID, ModuleName, ModuleName_Localised, Class, WeaponMods));
             }
         }
 
     }
+
 
     [JournalEntryType(JournalTypeEnum.LoadoutRemoveModule)]
     public class JournalLoadoutRemoveModule : JournalEntry, ISuitLoadoutInformation
@@ -337,6 +393,7 @@ namespace EliteDangerousCore.JournalEvents
                 var w = weap.Weapons.GetLast(SuitModuleID);
                 if (w != null && w.Sold == false)
                 {
+                    shp.VerifyPresence(EventTimeUTC, LoadoutID, LoadoutName, SuitID, null);
                     shp.Remove(LoadoutID, SlotName, w);
                 }
                 else
@@ -378,6 +435,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (SuitID != ulong.MaxValue)
             {
+                shp.VerifyPresence(EventTimeUTC, LoadoutID, LoadoutName, SuitID, null);
                 shp.Rename(LoadoutID, LoadoutName);
             }
         }
@@ -404,6 +462,7 @@ namespace EliteDangerousCore.JournalEvents
         public string SuitName { get; set; }
         public string SuitName_Localised { get; set; }
         public string SuitFriendlyName { get; set; }
+        public string[] SuitMods { get; set; }          // may be null or empty
         public ulong LoadoutID { get; set; }
         public string LoadoutName { get; set; }
 
@@ -419,6 +478,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (SuitID != ulong.MaxValue)
             {
+                shp.VerifyPresence(EventTimeUTC, SuitID, SuitName, SuitName_Localised, 0, SuitMods);
                 shp.SwitchTo(EventTimeUTC, SuitID);
             }
         }
@@ -427,6 +487,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (SuitID != ulong.MaxValue)
             {
+                shp.VerifyPresence(EventTimeUTC, LoadoutID, LoadoutName, SuitID, Modules);
                 shp.SwitchTo(EventTimeUTC, LoadoutID);
             }
         }
@@ -451,18 +512,21 @@ namespace EliteDangerousCore.JournalEvents
         public string Name { get; set; }
         public string Name_Localised { get; set; }
         public string FriendlyName { get; set; }
-        public int Class { get; set; }
         public long Cost { get; set; }
+        public int Class { get; set; }
+        public string[] SuitMods { get; set; }          // may be null or empty
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             long? p = Cost > 0 ? Cost : default(long?);
-            info = BaseUtils.FieldBuilder.Build("", Name_Localised, "< => ", Class, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), p);
+            string smod = SuitMods != null ? string.Join(", ", SuitMods) : null;
+            info = BaseUtils.FieldBuilder.Build("", Name_Localised, "< => ", Class, "Mods: ".T(EDTx.JournalEntry_Mods), smod, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), p);
             detailed = "";
         }
 
         public void SuitInformation(SuitList shp, string whereami, ISystem system)
         {
+            // tbd need one in the wild
             if (SuitID != ulong.MaxValue)
             {
             }

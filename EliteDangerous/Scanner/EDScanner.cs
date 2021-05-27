@@ -167,7 +167,7 @@ namespace EliteDangerousCore
 
         // call to update/create watchers on joutnal and UI.  Do it with system stopped
 
-        public void SetupWatchers(string[] stdfolders, string journalmatchpattern)
+        public void SetupWatchers(string[] stdfolders, string journalmatchpattern, DateTime mindateutc)
         {
             System.Diagnostics.Debug.Assert(ScanThread == null);        // double check we are not scanning.
 
@@ -175,14 +175,14 @@ namespace EliteDangerousCore
 
             foreach (string std in stdfolders)          // setup the std folders
             {
-                watchersinuse.Add(CheckAddPath(std, journalmatchpattern));
+                watchersinuse.Add(CheckAddPath(std, journalmatchpattern, mindateutc));
             }
 
             foreach (var cmdr in EDCommander.GetListCommanders())       // setup any commander folders
             {
                 if (!cmdr.ConsoleCommander && cmdr.JournalDir.HasChars())    // not console commanders, and we have a path
                 {
-                    watchersinuse.Add(CheckAddPath(cmdr.JournalDir,journalmatchpattern));   // try adding
+                    watchersinuse.Add(CheckAddPath(cmdr.JournalDir,journalmatchpattern, mindateutc));   // try adding
                 }
             }
 
@@ -207,7 +207,7 @@ namespace EliteDangerousCore
 
         // check path exists, and if not already in watchers folder, add it
         // return -1 if not good, else return index of watcher (and therefore status watcher as we add in parallel)
-        private int CheckAddPath(string p, string journalmatchpattern)         
+        private int CheckAddPath(string p, string journalmatchpattern, DateTime mindateutc)         
         {
             try
             {
@@ -220,7 +220,7 @@ namespace EliteDangerousCore
                     if (present < 0)  // and we are not watching it, add it
                     {
                         System.Diagnostics.Trace.WriteLine(string.Format("New watch on {0}", path));
-                        JournalMonitorWatcher mw = new JournalMonitorWatcher(path,journalmatchpattern);
+                        JournalMonitorWatcher mw = new JournalMonitorWatcher(path,journalmatchpattern, mindateutc);
                         watchers.Add(mw);
 
                         StatusReader sw = new StatusReader(path);
@@ -252,7 +252,7 @@ namespace EliteDangerousCore
         // options to force reload of last N files, to fireback instead of storing the last n
 
         public void ParseJournalFilesOnWatchers(Action<int, string> updateProgress,
-                                                int reloadlastn,
+                                                DateTime minjournaldateutc, int reloadlastn,
                                                 Action<JournalEntry, int, int, int, int> firebacknostore = null, int firebacklastn = 0)
         {
             System.Diagnostics.Debug.Assert(ScanThread == null);        // double check we are not scanning.
@@ -260,7 +260,7 @@ namespace EliteDangerousCore
             for (int i = 0; i < watchers.Count; i++)             // parse files of all folders being watched
             {
                 // may create new commanders at the end, but won't need any new watchers, because they will obv be in the same folder
-                var list = watchers[i].ScanJournalFiles(reloadlastn);
+                var list = watchers[i].ScanJournalFiles(minjournaldateutc,reloadlastn);
                 watchers[i].ProcessDetectedNewFiles(list, updateProgress, firebacknostore, firebacklastn);
             }
         }

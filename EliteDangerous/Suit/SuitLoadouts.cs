@@ -17,6 +17,7 @@
 using BaseUtils;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EliteDangerousCore
 {
@@ -36,17 +37,20 @@ namespace EliteDangerousCore
             public ulong SuitModuleID;
             public string ModuleName;
             public string ModuleName_Localised;
+            public int Class;               // may be zero meaning not there
+            public string[] WeaponMods;     // may be empty/null
             public string FriendlyName;
 
             public LoadoutModule() { }
-            public LoadoutModule(string slot, ulong suitmoduleid,string modulename, string locname)
+            public LoadoutModule(string slot, ulong suitmoduleid,string modulename, string locname, int cls, string[] weaponmods)
             {
                 SlotName = slot; SuitModuleID = suitmoduleid; ModuleName = modulename; ModuleName_Localised = locname;
+                Class = cls; WeaponMods = weaponmods;
                 FriendlyName = ItemData.GetWeapon(ModuleName)?.Name ?? ModuleName_Localised;
             }
         }
 
-        public Dictionary<string, LoadoutModule> Modules { get; private set; }
+        public Dictionary<string, LoadoutModule> Modules { get; private set; }      // may be empty if not known, never null
 
         static public void NormaliseModules( LoadoutModule [] list)
         {
@@ -56,6 +60,28 @@ namespace EliteDangerousCore
                 m.SlotName = m.SlotName.ToLower();
                 m.FriendlyName = ItemData.GetWeapon(m.ModuleName)?.Name ?? m.ModuleName_Localised;
             }
+        }
+
+        public bool CompareModules(LoadoutModule[] other)
+        {
+            var mlist = Modules.Values.ToList();
+            foreach( var m in other)
+            {
+                var o = Array.Find(other, x => m.SlotName.Equals(x.SlotName));
+                if (o == null || o.Class != m.Class || o.ModuleName != m.ModuleName)        // TBD Maybe more
+                    return false;
+            }
+            return true;
+        }
+
+        public string GetModuleDescription( string slotname )
+        {
+            if ( Modules.TryGetValue(slotname, out LoadoutModule m))
+            {
+                return m.FriendlyName + ":" + m.Class.ToStringInvariant();
+            }
+
+            return "";
         }
 
         public SuitLoadout(DateTime time, ulong id, string name, ulong suitID, bool deleted)
@@ -84,12 +110,41 @@ namespace EliteDangerousCore
         {
         }
 
-        public void CreateLoadout(DateTime time, ulong id, string name, ulong suitid, SuitLoadout.LoadoutModule[] modules)
+        public void CreateLoadout(DateTime time, ulong id, string name, ulong suitid, SuitLoadout.LoadoutModule[] modules) // modules may be null
         {
             var s = new SuitLoadout(time, id, name, suitid, false);
             foreach (var m in modules.EmptyIfNull())
                 s.Modules[m.SlotName] = m;
-            loadouts[id] =s;
+            loadouts[id] = s;
+        }
+
+        public bool VerifyPresence(DateTime time, ulong id, string name, ulong suitid, SuitLoadout.LoadoutModule[] modules)// modules may be null
+        {
+            var s = loadouts.GetLast(id);
+
+            if ( s == null )
+            {
+                System.Diagnostics.Debug.WriteLine("Missing Loadout {0} {1} {2}", id, name, suitid);
+                s = new SuitLoadout(time, id, name, suitid, false);
+                foreach (var m in modules.EmptyIfNull())
+                    s.Modules[m.SlotName] = m;
+                loadouts[id] = s;
+                return false;
+            }
+            else
+            {
+                if ( modules != null && (modules.Length != s.Modules.Count || !s.CompareModules(modules) ))
+                {
+                    System.Diagnostics.Debug.WriteLine("Update Loadout {0} {1} {2}", id, name, suitid);
+                    s = new SuitLoadout(time, id, name, suitid, false);
+                    foreach (var m in modules.EmptyIfNull())
+                        s.Modules[m.SlotName] = m;
+                    loadouts[id] = s;
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public void DeleteLoadout(DateTime time, ulong id)

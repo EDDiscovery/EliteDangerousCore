@@ -268,11 +268,45 @@ namespace EliteDangerousCore
             public Actor(string name) { Name = name; }
         }
 
+        public class WeaponStats
+        {
+            public double DPS;
+            public double RatePerSec;
+            public int ClipSize;
+            public int Range;
+            public WeaponStats(double dps, double rate, int clip, int range) { DPS = dps; RatePerSec = rate; ClipSize = clip; Range = range; }
+
+        }
         public class Weapon : IModuleInfo
         {
             public string Name;
-            public double DPS;
-            public Weapon(string name, double dps) { Name = name; DPS = dps; }
+            public bool Primary;
+            public enum WeaponClass { Launcher, Carbine, LongRangeRifle, Rifle, ShotGun, Pistol }
+            public enum WeaponDamageType { Thermal, Plasma, Kinetic, Explosive }
+            public enum WeaponFireMode { Automatic, SemiAutomatic, Burst }
+            public WeaponClass Class;
+            public WeaponDamageType DamageType;
+            public WeaponFireMode FireMode;
+            public WeaponStats[] Stats;     // 5 classes,0 to 4
+
+            public WeaponStats GetStats(int cls) // 1 to 5
+            {
+                if (cls >= 1 && cls <= 5)
+                    return Stats[cls - 1];
+                else
+                    return null;
+            }
+
+
+            public Weapon(string name, bool primary,  WeaponDamageType ty, WeaponClass ds, WeaponFireMode fr, WeaponStats[] values)
+            {
+                Name = name;
+                Primary = primary;
+                DamageType = ty;
+                Class = ds;
+                FireMode = fr;
+                Stats = values;
+            }
         }
 
         public class Suit : IModuleInfo
@@ -392,21 +426,38 @@ namespace EliteDangerousCore
 
         public static Dictionary<string, Weapon> weapons = new Dictionary<string, Weapon>   // DO NOT USE DIRECTLY - public is for checking only
         {
-             { "wpn_m_assaultrifle_kinetic_fauto", new Weapon("Karma AR-50",0.0) },
-             { "wpn_m_assaultrifle_plasma_fauto", new Weapon("Manticore Oppressor",0.0) },
-             { "wpn_m_assaultrifle_laser_fauto", new Weapon("TK Aphelion",0.0) },
+             { "wpn_m_assaultrifle_kinetic_fauto", new Weapon("Karma AR-50", true, Weapon.WeaponDamageType.Kinetic, Weapon.WeaponClass.LongRangeRifle, Weapon.WeaponFireMode.SemiAutomatic, 
+                             new WeaponStats[] {  new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0),  new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0) }) },
 
-             { "wpn_m_launcher_rocket_sauto", new Weapon("Karma L-6",0.0) },
+             { "wpn_m_assaultrifle_plasma_fauto", new Weapon("Manticore Oppressor", true, Weapon.WeaponDamageType.Plasma, Weapon.WeaponClass.Rifle, Weapon.WeaponFireMode.Automatic,
+                                new WeaponStats[] { new WeaponStats(0.8,6.7,50,35), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0) }) },
 
-             { "wpn_m_shotgun_plasma_doublebarrel", new Weapon("Manticore Intimidator",0.0) },
-             { "wpn_m_sniper_plasma_charged", new Weapon("Manticore Executioner",0.0) },
+             { "wpn_m_assaultrifle_laser_fauto", new Weapon("TK Aphelion", true, Weapon.WeaponDamageType.Thermal, Weapon.WeaponClass.Rifle, Weapon.WeaponFireMode.Automatic,
+                                new WeaponStats[] { new WeaponStats(1.6,5.7,25,70), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0) }) },
 
-             { "wpn_m_submachinegun_laser_fauto", new Weapon("TK Eclipse",90.0) },
-             { "wpn_m_submachinegun_kinetic_fauto", new Weapon("Karma C-44",0.0) },
+             { "wpn_m_launcher_rocket_sauto", new Weapon("Karma L-6", true, Weapon.WeaponDamageType.Explosive, Weapon.WeaponClass.Launcher, Weapon.WeaponFireMode.Automatic,
+                                new WeaponStats[] { new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(69.2,1,2,300), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0) }) },
 
-             { "wpn_s_pistol_laser_sauto", new Weapon("TK Zenith",0.0) },
-             { "wpn_s_pistol_kinetic_sauto", new Weapon("Karma P-15",0.0) },
-             { "wpn_s_pistol_plasma_charged", new Weapon("Manticore Tormentor",0.0) },
+             { "wpn_m_shotgun_plasma_doublebarrel", new Weapon("Manticore Intimidator", true,  Weapon.WeaponDamageType.Plasma, Weapon.WeaponClass.ShotGun, Weapon.WeaponFireMode.SemiAutomatic,
+                                new WeaponStats[] { new WeaponStats(1.8,1.3,2,7), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0) }) },
+
+                { "wpn_m_sniper_plasma_charged", new Weapon("Manticore Executioner", true, Weapon.WeaponDamageType.Plasma, Weapon.WeaponClass.LongRangeRifle, Weapon.WeaponFireMode.SemiAutomatic, 
+                                new WeaponStats[] { new WeaponStats(15,0.8,3,100), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0) }) },
+
+             { "wpn_m_submachinegun_laser_fauto", new Weapon("TK Eclipse", true, Weapon.WeaponDamageType.Thermal, Weapon.WeaponClass.Carbine, Weapon.WeaponFireMode.Automatic,
+                    new WeaponStats[] { new WeaponStats(0.9,10,40,25), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0) }) },
+
+             { "wpn_m_submachinegun_kinetic_fauto", new Weapon("Karma C-44", true, Weapon.WeaponDamageType.Kinetic, Weapon.WeaponClass.Launcher, Weapon.WeaponFireMode.SemiAutomatic,
+                                    new WeaponStats[] { new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0) }) },
+
+             { "wpn_s_pistol_laser_sauto", new Weapon("TK Zenith", false, Weapon.WeaponDamageType.Thermal, Weapon.WeaponClass.Pistol, Weapon.WeaponFireMode.Burst, 
+                                                new WeaponStats[] { new WeaponStats(1.7,5.7,18,35), new WeaponStats(2.2,5.7,18,35), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0) }) },
+
+             { "wpn_s_pistol_kinetic_sauto", new Weapon("Karma P-15", false, Weapon.WeaponDamageType.Kinetic, Weapon.WeaponClass.Pistol, Weapon.WeaponFireMode.SemiAutomatic, 
+                                         new WeaponStats[] { new WeaponStats(1.4,10,24,25), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0) }) },
+
+            { "wpn_s_pistol_plasma_charged", new Weapon("Manticore Tormentor", false, Weapon.WeaponDamageType.Plasma, Weapon.WeaponClass.Pistol, Weapon.WeaponFireMode.SemiAutomatic, 
+                            new WeaponStats[] { new WeaponStats(7.5,1.7,6,15), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0) }) },
 
         };
 

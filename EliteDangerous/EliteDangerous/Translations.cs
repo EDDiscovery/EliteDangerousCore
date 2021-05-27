@@ -75,6 +75,8 @@ namespace EliteDangerousCore
 
         JournalEntry_Taxi, // Taxi
 
+        JournalEntry_Class,
+        JournalEntry_Mods,
         JournalEntry_OnFootAt, 
         JournalEntry_LegBounty, // {0} total {1:N0}
         JournalEntry_Target, // Target:

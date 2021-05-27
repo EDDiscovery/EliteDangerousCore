@@ -514,17 +514,17 @@ namespace EliteDangerousCore
             {
                 if (Flags(flags1, StatusFlagsShip.Supercruise))
                 {
-                    return new UIMode( UIMode.ModeType.MainShipSupercruise, UIMode.MajorModeType.Ship);
+                    return new UIMode( UIMode.ModeType.MainShipSupercruise, UIMode.MajorModeType.MainShip);
                 }
                 if (Flags(flags1, StatusFlagsShip.Docked))
                 {
-                    return new UIMode( Flags(flags1, StatusFlagsAll.HasLatLong) ? UIEvents.UIMode.ModeType.MainShipDockedPlanet : UIEvents.UIMode.ModeType.MainShipDockedStarPort, UIMode.MajorModeType.Ship);
+                    return new UIMode( Flags(flags1, StatusFlagsAll.HasLatLong) ? UIEvents.UIMode.ModeType.MainShipDockedPlanet : UIEvents.UIMode.ModeType.MainShipDockedStarPort, UIMode.MajorModeType.MainShip);
                 }
                 if (Flags(flags1, StatusFlagsShip.Landed))
                 {
-                    return new UIMode( UIMode.ModeType.MainShipLanded, UIMode.MajorModeType.Ship);
+                    return new UIMode( UIMode.ModeType.MainShipLanded, UIMode.MajorModeType.MainShip);
                 }
-                return new UIMode( UIMode.ModeType.MainShipNormalSpace, UIMode.MajorModeType.Ship);
+                return new UIMode( UIMode.ModeType.MainShipNormalSpace, UIMode.MajorModeType.MainShip);
             }
 
             return new UIMode( UIMode.ModeType.None, UIMode.MajorModeType.None);

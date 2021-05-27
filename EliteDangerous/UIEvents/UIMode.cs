@@ -36,7 +36,8 @@ namespace EliteDangerousCore.UIEvents
             MajorMode = mode;
         }
 
-        public enum ModeType {
+        public enum ModeType        // NOTE webserver reported this in 'Mode' JSON record, and the website checks the names. Be careful changing
+        {      
             None,
             MainShipNormalSpace,
             MainShipDockedStarPort,
@@ -63,10 +64,10 @@ namespace EliteDangerousCore.UIEvents
             OnFootPlanet
         };
 
-        public enum MajorModeType
+        public enum MajorModeType       // NOTE webserver reported this in 'ShipType' JSON record, and the website checks the names. Be careful changing
         {
             None,
-            Ship,
+            MainShip,
             Taxi,
             Multicrew,
             SRV,

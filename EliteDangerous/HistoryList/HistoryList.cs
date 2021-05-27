@@ -95,8 +95,9 @@ namespace EliteDangerousCore
             
             he.UpdateMissionList(MissionListAccumulator.Process(je, he.System, he.WhereAmI));
 
-            he.UpdateWeapons(WeaponList.Process(je, he.WhereAmI, he.System));          // update the entries in suit entry list
+            // IN THIS order, so suits can be added, then weapons, then loadouts
             he.UpdateSuits(SuitList.Process(je, he.WhereAmI, he.System));
+            he.UpdateWeapons(WeaponList.Process(je, he.WhereAmI, he.System));          
             he.UpdateLoadouts(SuitLoadoutList.Process(je, WeaponList, he.WhereAmI, he.System));
 
             historylist.Add(he);        // then add to history
@@ -200,8 +201,9 @@ namespace EliteDangerousCore
 
                 he.UpdateMissionList(hist.MissionListAccumulator.Process(je, he.System, he.WhereAmI));
 
-                he.UpdateWeapons(hist.WeaponList.Process(je, he.WhereAmI, he.System));          // update the entries in suit entry list
+                // IN THIS order, so suits can be added, then weapons, then loadouts
                 he.UpdateSuits(hist.SuitList.Process(je, he.WhereAmI, he.System));
+                he.UpdateWeapons(hist.WeaponList.Process(je, he.WhereAmI, he.System));          // update the entries in suit entry list
                 he.UpdateLoadouts(hist.SuitLoadoutList.Process(je, hist.WeaponList, he.WhereAmI, he.System));
 
                 AddToVisitsScan(hist, i, null);          // add to scan but don't complain if can't add

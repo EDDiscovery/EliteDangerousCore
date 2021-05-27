@@ -17,6 +17,7 @@
 using BaseUtils;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EliteDangerousCore
 {
@@ -30,10 +31,11 @@ namespace EliteDangerousCore
         public string FriendlyName { get; private set; }
         public long Price { get; private set; }             // may be 0, not known
         public bool Sold { get; private set; }
+        public string[] SuitMods { get; private set; }     // may be null or empty
 
-        public Suit(DateTime time, ulong id, string fdname, string locname, long price, bool sold)
+        public Suit(DateTime time, ulong id, string fdname, string locname, long price,string[] suitmods , bool sold )
         {
-            EventTime = time; ID = id; FDName = fdname; Name_Localised = locname; Price = price; Sold = sold;
+            EventTime = time; ID = id; FDName = fdname; Name_Localised = locname; Price = price; Sold = sold; SuitMods = suitmods;
             if ( fdname.HasChars() )
                 FriendlyName = ItemData.GetSuit(fdname, Name_Localised)?.Name ?? Name_Localised;
         }
@@ -52,9 +54,32 @@ namespace EliteDangerousCore
         {
         }
 
-        public void Buy(DateTime time, ulong id, string fdname, string namelocalised, long price)
+        public void Buy(DateTime time, ulong id, string fdname, string namelocalised, long price, string[] mods)
         {
-            suits[id] = new Suit(time, id, fdname, namelocalised, price, false);
+            suits[id] = new Suit(time, id, fdname, namelocalised, price, mods, false);
+        }
+
+        public bool VerifyPresence(DateTime time, ulong id, string fdname, string namelocalised, long price, string[] mods)
+        {
+            var s = suits.GetLast(id);
+
+            if (s == null)
+            {
+                System.Diagnostics.Debug.WriteLine("Missing Suit {0} {1} {2}", id, fdname, namelocalised);
+                suits[id] = new Suit(time, id, fdname, namelocalised, price, mods, false);
+                return false;
+            }
+            else
+            {
+                if ((s.SuitMods == null && mods != null) || (s.SuitMods != null && mods != null && !s.SuitMods.SequenceEqual(mods)))
+                {
+                    System.Diagnostics.Debug.WriteLine("Update suit info {0} {1} {2}", id, fdname, namelocalised);
+                    suits[id] = new Suit(time, id, fdname, namelocalised, s.Price, mods, false);
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public void Sell(DateTime time, ulong id)
@@ -64,7 +89,7 @@ namespace EliteDangerousCore
                 var last = suits.GetLast(id);
                 if (last.Sold == false)       // if not sold
                 {
-                    suits[id] = new Suit(time, id, last.FDName, last.Name_Localised, last.Price, true);               // new entry with this time but sold
+                    suits[id] = new Suit(time, id, last.FDName, last.Name_Localised, last.Price, last.SuitMods, true);               // new entry with this time but sold
                 }
                 else
                     System.Diagnostics.Debug.WriteLine("Suits sold a suit already sold " + id);
@@ -75,7 +100,7 @@ namespace EliteDangerousCore
 
         public void SwitchTo(DateTime time, ulong id)
         {
-            suits[CURSUITID] = new Suit(time, id, null, null, 0, false);
+            suits[CURSUITID] = new Suit(time, id, null, null, 0, null, false);
         }
 
         public uint Process(JournalEntry je, string whereami, ISystem system)

@@ -30,7 +30,7 @@ namespace EliteDangerousCore.JournalEvents
             Build = evt["build"].Str();
             Language = evt["language"].Str();
             Part = evt["part"].Int();
-            Odyssey = evt["odyssey"].Bool();
+            Odyssey = evt["Odyssey"].Bool();
         }
 
         public string GameVersion { get; set; }
@@ -102,6 +102,10 @@ namespace EliteDangerousCore.JournalEvents
             Horizons = evt["Horizons"].Bool();
             Odyssey = evt["Odyssey"].Bool();
 
+            Language = evt["language"].Str();
+            GameVersion = evt["gameversion"].Str();
+            Build = evt["build"].Str();
+
             FID = JournalFieldNaming.SubsituteCommanderFID(evt["FID"].Str());     // 3.3 on
         }
 
@@ -123,6 +127,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public override bool IsHorizons { get { return Horizons; } }     // override base to get value of private value
         public override bool IsOdyssey { get { return Odyssey; } }
+
+        public string Language { get; set; }         // odyssey release 2 27/5/21
+        public string GameVersion { get; set; }      // odyssey release 2 27/5/21
+        public string Build { get; set; }            // odyssey release 2 27/5/21
 
         public string FID { get; set; }
 

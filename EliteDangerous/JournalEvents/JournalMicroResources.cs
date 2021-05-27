@@ -31,9 +31,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public string FriendlyName { get; set; }                // computed
 
-        public ulong OwnerID { get; set; }                      // Backpackmaterials, ShipLockerMaterials, CollectItems, DropItems
-        public ulong MissionID { get; set; }                    // Backpackmaterials, ShipLockerMaterials, DropItems, may be -1, invalid
-        public int Count { get; set; }                          // Backpackmaterials, ShipLockerMaterials, CollectItems, DropItems, TransferMicroResources, TradeMicroResource
+        public ulong OwnerID { get; set; }                      // ShipLockerMaterials, CollectItems, DropItems
+        public ulong MissionID { get; set; }                    // ShipLockerMaterials, DropItems, may be -1, invalid
+        public int Count { get; set; }                          // ShipLockerMaterials, CollectItems, DropItems, TransferMicroResources, TradeMicroResource
 
         public string Category { get; set; }                    // BuyMicroResources, SellMicroResources, TradeMicroresources, TransferMicroresources
         public string Type { get; set; }                        // UseConsumable, CollectItems, DropItems   (Type is Category, normalise moves it across, use Category)
@@ -372,13 +372,18 @@ namespace EliteDangerousCore.JournalEvents
 
             public bool ReadAdditionalFiles(string directory, bool historyrefreshparse)
             {
-                JObject jnew = ReadAdditionalFile(System.IO.Path.Combine(directory, "backpack.json"), waitforfile: !historyrefreshparse, checktimestamptype: true);
-                if (jnew != null)        // new json, rescan
+                if (Items == null || Components == null || Consumables == null || Data == null)     // if any null, try the file, otherwise its in the event
                 {
-                    Rescan(jnew);
-                    UpdateJson(jnew);
+                    JObject jnew = ReadAdditionalFile(System.IO.Path.Combine(directory, "backpack.json"), waitforfile: !historyrefreshparse, checktimestamptype: true);
+                    if (jnew != null)        // new json, rescan
+                    {
+                        Rescan(jnew);
+                        UpdateJson(jnew);
+                    }
+                    return jnew != null;
                 }
-                return jnew != null;
+                else
+                    return true;
             }
 
             public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc)
