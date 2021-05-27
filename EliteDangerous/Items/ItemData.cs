@@ -273,8 +273,9 @@ namespace EliteDangerousCore
             public double DPS;
             public double RatePerSec;
             public int ClipSize;
+            public int HopperSize;
             public int Range;
-            public WeaponStats(double dps, double rate, int clip, int range) { DPS = dps; RatePerSec = rate; ClipSize = clip; Range = range; }
+            public WeaponStats(double dps, double rate, int clip, int hoppersize, int range) { DPS = dps; RatePerSec = rate; ClipSize = clip; HopperSize = hoppersize;  Range = range; }
 
         }
         public class Weapon : IModuleInfo
@@ -426,38 +427,40 @@ namespace EliteDangerousCore
 
         public static Dictionary<string, Weapon> weapons = new Dictionary<string, Weapon>   // DO NOT USE DIRECTLY - public is for checking only
         {
-             { "wpn_m_assaultrifle_kinetic_fauto", new Weapon("Karma AR-50", true, Weapon.WeaponDamageType.Kinetic, Weapon.WeaponClass.LongRangeRifle, Weapon.WeaponFireMode.SemiAutomatic, 
-                             new WeaponStats[] {  new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0),  new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0) }) },
-
-             { "wpn_m_assaultrifle_plasma_fauto", new Weapon("Manticore Oppressor", true, Weapon.WeaponDamageType.Plasma, Weapon.WeaponClass.Rifle, Weapon.WeaponFireMode.Automatic,
-                                new WeaponStats[] { new WeaponStats(0.8,6.7,50,35), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0) }) },
+             { "wpn_m_assaultrifle_kinetic_fauto", new Weapon("Karma AR-50", true, Weapon.WeaponDamageType.Kinetic, Weapon.WeaponClass.LongRangeRifle, Weapon.WeaponFireMode.Automatic, 
+                             new WeaponStats[] {  new WeaponStats(0.9,10,40,240,50), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0),  new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
 
              { "wpn_m_assaultrifle_laser_fauto", new Weapon("TK Aphelion", true, Weapon.WeaponDamageType.Thermal, Weapon.WeaponClass.Rifle, Weapon.WeaponFireMode.Automatic,
-                                new WeaponStats[] { new WeaponStats(1.6,5.7,25,70), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0) }) },
+                                new WeaponStats[] { new WeaponStats(1.6,5.7,25,150,70), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
 
-             { "wpn_m_launcher_rocket_sauto", new Weapon("Karma L-6", true, Weapon.WeaponDamageType.Explosive, Weapon.WeaponClass.Launcher, Weapon.WeaponFireMode.Automatic,
-                                new WeaponStats[] { new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(69.2,1,2,300), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0) }) },
+            { "wpn_m_assaultrifle_plasma_fauto", new Weapon("Manticore Oppressor", true, Weapon.WeaponDamageType.Plasma, Weapon.WeaponClass.Rifle, Weapon.WeaponFireMode.Automatic,
+                                new WeaponStats[] { new WeaponStats(0.8,6.7,50,300,35), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
 
-             { "wpn_m_shotgun_plasma_doublebarrel", new Weapon("Manticore Intimidator", true,  Weapon.WeaponDamageType.Plasma, Weapon.WeaponClass.ShotGun, Weapon.WeaponFireMode.SemiAutomatic,
-                                new WeaponStats[] { new WeaponStats(1.8,1.3,2,7), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0) }) },
+            { "wpn_m_launcher_rocket_sauto", new Weapon("Karma L-6", true, Weapon.WeaponDamageType.Explosive, Weapon.WeaponClass.Launcher, Weapon.WeaponFireMode.Automatic,
+                                new WeaponStats[] { new WeaponStats(40,1,2,8,300), new WeaponStats(0,0,0,0,0), new WeaponStats(69.2,1,2,8,300), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
 
-                { "wpn_m_sniper_plasma_charged", new Weapon("Manticore Executioner", true, Weapon.WeaponDamageType.Plasma, Weapon.WeaponClass.LongRangeRifle, Weapon.WeaponFireMode.SemiAutomatic, 
-                                new WeaponStats[] { new WeaponStats(15,0.8,3,100), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0) }) },
+            { "wpn_m_shotgun_plasma_doublebarrel", new Weapon("Manticore Intimidator", true,  Weapon.WeaponDamageType.Plasma, Weapon.WeaponClass.ShotGun, Weapon.WeaponFireMode.SemiAutomatic,
+                                new WeaponStats[] { new WeaponStats(1.8,1.25,2,24,7), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
 
+            { "wpn_m_sniper_plasma_charged", new Weapon("Manticore Executioner", true, Weapon.WeaponDamageType.Plasma, Weapon.WeaponClass.LongRangeRifle, Weapon.WeaponFireMode.SemiAutomatic,
+                                new WeaponStats[] { new WeaponStats(15,0.8,3,30,100), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
+
+             { "wpn_m_submachinegun_kinetic_fauto", new Weapon("Karma C-44", true, Weapon.WeaponDamageType.Kinetic, Weapon.WeaponClass.Carbine, Weapon.WeaponFireMode.Automatic,
+                                    new WeaponStats[] { new WeaponStats(0.65,13.3,60,360,20), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
+
+             // TBD range
              { "wpn_m_submachinegun_laser_fauto", new Weapon("TK Eclipse", true, Weapon.WeaponDamageType.Thermal, Weapon.WeaponClass.Carbine, Weapon.WeaponFireMode.Automatic,
-                    new WeaponStats[] { new WeaponStats(0.9,10,40,25), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0) }) },
+                    new WeaponStats[] { new WeaponStats(0.9,10,40,280,25), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
 
-             { "wpn_m_submachinegun_kinetic_fauto", new Weapon("Karma C-44", true, Weapon.WeaponDamageType.Kinetic, Weapon.WeaponClass.Launcher, Weapon.WeaponFireMode.SemiAutomatic,
-                                    new WeaponStats[] { new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0) }) },
+             { "wpn_s_pistol_kinetic_sauto", new Weapon("Karma P-15", false, Weapon.WeaponDamageType.Kinetic, Weapon.WeaponClass.Pistol, Weapon.WeaponFireMode.SemiAutomatic,
+                                         new WeaponStats[] { new WeaponStats(1.4,10,24,240,25), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
 
              { "wpn_s_pistol_laser_sauto", new Weapon("TK Zenith", false, Weapon.WeaponDamageType.Thermal, Weapon.WeaponClass.Pistol, Weapon.WeaponFireMode.Burst, 
-                                                new WeaponStats[] { new WeaponStats(1.7,5.7,18,35), new WeaponStats(2.2,5.7,18,35), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0) }) },
+                                                new WeaponStats[] { new WeaponStats(1.7,2.7,18,180,35), new WeaponStats(2.2,5.7,18,180,35), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
 
-             { "wpn_s_pistol_kinetic_sauto", new Weapon("Karma P-15", false, Weapon.WeaponDamageType.Kinetic, Weapon.WeaponClass.Pistol, Weapon.WeaponFireMode.SemiAutomatic, 
-                                         new WeaponStats[] { new WeaponStats(1.4,10,24,25), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0) }) },
-
+             // TBD range
             { "wpn_s_pistol_plasma_charged", new Weapon("Manticore Tormentor", false, Weapon.WeaponDamageType.Plasma, Weapon.WeaponClass.Pistol, Weapon.WeaponFireMode.SemiAutomatic, 
-                            new WeaponStats[] { new WeaponStats(7.5,1.7,6,15), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0), new WeaponStats(0,0,0,0) }) },
+                            new WeaponStats[] { new WeaponStats(7.5,1.7,6,72,15), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
 
         };
 
