@@ -182,7 +182,7 @@ namespace EliteDangerousCore
                     mc.Price = (costprev + costofnew) / mc.Counts[0];       // price is now a combination of the current cost and the new cost. in case we buy in tranches
 
                 items[fdname] = mc;                                         // and set fdname to mc - this allows for any repeat adds due to frontier data repeating stuff in things like cargo
-               // System.Diagnostics.Debug.WriteLine("{0} Changed {1} {2} {3}", utc, items.Generation, mc.Details.FDName, mc.Count);
+               // System.Diagnostics.Debug.WriteLine("{0} Changed {1} {2} {3} {4}", utc, items.Generation, mc.Details.FDName, mc.Counts[0], mc.Counts[1]);
             }
             else
             {
@@ -217,14 +217,18 @@ namespace EliteDangerousCore
             }
         }
 
+        // ensure a category has the same values as in values, for cnum entry.
+        // All others in the same cat not mentioned in values go to zero
         // make sure values has name lower case.
+
         public void Update(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, List<Tuple<string,int>> values, int cnum = 0)
         {
             var curlist = items.GetLastValues((x) => x.Details.Category == cat && x.Counts[cnum]>0);     // find all of this cat with a count >0
 
             var varray = new int[MaterialCommodityMicroResource.NoCounts];      // all set to zero
-            var vsets = new bool[MaterialCommodityMicroResource.NoCounts];      // all set to false, change
-            vsets[cnum] = true;                                                 // set the cnum to set.
+            var vsets = new bool[MaterialCommodityMicroResource.NoCounts];      // all set to false, change, with 0 in the varray, no therefore no change
+
+            vsets[cnum] = true;                                                 // but set the cnum to set
 
             foreach (var v in values)           
             {
@@ -232,7 +236,7 @@ namespace EliteDangerousCore
                 Change(utc, cat, v.Item1, varray, vsets, 0);      // set entry 
             }
 
-            foreach( var c in curlist)
+            foreach( var c in curlist)                                          //go thru the non zero list of cat
             {
                 if ( values.Find(x=>x.Item1.Equals(c.Details.FDName,StringComparison.InvariantCultureIgnoreCase)) == null)       // if not in updated list
                 {

@@ -253,6 +253,11 @@ namespace EliteDangerousCore
             System = sys;
         }
 
+        public void ReplaceJournalEntry(JournalEntry p)
+        {
+            journalEntry = p;
+        }
+
         #endregion
 
         #region Interaction

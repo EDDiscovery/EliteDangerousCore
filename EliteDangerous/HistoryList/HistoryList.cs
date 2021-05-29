@@ -338,7 +338,7 @@ namespace EliteDangerousCore
                         EliteDangerousCore.JournalEvents.JournalFuelScoop jfsprev = prev as EliteDangerousCore.JournalEvents.JournalFuelScoop;
                         jfsprev.Scooped += jfs.Scooped;
                         jfsprev.Total = jfs.Total;
-                        //System.Diagnostics.Debug.WriteLine("Merge FS " + jfsprev.EventTimeUTC);
+                        System.Diagnostics.Debug.WriteLine("Merge FS " + jfsprev.EventTimeUTC);
                         return true;
                     }
                     else if (je.EventTypeID == JournalTypeEnum.Friends) // merge friends
@@ -406,7 +406,10 @@ namespace EliteDangerousCore
         {
             // we generally try and remove cargo as spam, but we need to keep its updated MC
 
-            if (he.EntryType == JournalTypeEnum.Cargo && hprev != null)       
+            if (hprev == null)
+                return false;
+
+            if (he.EntryType == JournalTypeEnum.Cargo)
             {
                 var cargo = he.journalEntry as JournalCargo;
 
@@ -424,23 +427,43 @@ namespace EliteDangerousCore
                     //  System.Diagnostics.Debug.WriteLine(he.EventTimeUTC + " Keep cargo entry FromFile: " + cargo.EDDFromFile);
                 }
             }
-            else if ( he.EntryType == JournalTypeEnum.BackpackChange)
-            {
-                // backpack change get spammed next to these, if so, use these, and remove backpack change
+            else if ((he.EntryType == JournalTypeEnum.ShipLockerMaterials && hprev.EntryType == JournalTypeEnum.BuyMicroResources) ||
+                        (he.EntryType == JournalTypeEnum.BackpackChange && (hprev.EntryType == JournalTypeEnum.UseConsumable || hprev.EntryType == JournalTypeEnum.DropItems || hprev.EntryType == JournalTypeEnum.CollectItems))
+                        )
 
-                if ( hprev != null && ( hprev.EntryType == JournalTypeEnum.UseConsumable || hprev.EntryType == JournalTypeEnum.DropItems || hprev.EntryType == JournalTypeEnum.CollectItems))
+            {
+                System.Diagnostics.Debug.WriteLine("{0} discard after {1}", he.EntryType, hprev.EntryType);
+                hprev.UpdateMaterialsCommodities(he.MaterialCommodity);        // assign its updated commodity list to previous entry
+                return true;
+            }
+            else if (he.EntryType == JournalTypeEnum.BackpackChange )
+            {
+                var bp = he.journalEntry as JournalBackpackChange;
+                if ( bp.ThrowGrenade)
                 {
-                    System.Diagnostics.Debug.WriteLine("Backpackchange, previous is consume, update it");
-                    hprev.UpdateMaterialsCommodities(he.MaterialCommodity);        // assign its updated commodity list to previous entry
-                    return true;
+                    System.Diagnostics.Debug.WriteLine("Throw grenade, use Alchemy");
+                    he.ReplaceJournalEntry(new JournalUseConsumable(bp.EventTimeUTC, bp.Removed[0].Name, bp.Removed[0].Name_Localised, bp.Removed[0].Category, bp.TLUId, bp.CommanderId, bp.Id));
                 }
+            }
+            else if (he.EntryType == JournalTypeEnum.ShipLockerMaterials && hprev.EntryType != JournalTypeEnum.Materials)       // materials is produced just before it on startup, keep it, else throw it away
+            {
+                return true;        // dont update hprev commodities, next entry will have the update
+            }
+            else if (he.EntryType == JournalTypeEnum.TransferMicroResources)
+            {
+                return true;
+            }
+            else if (he.EntryType == JournalTypeEnum.Backpack) 
+            {
+                return true;
+            }
+            else if ( he.EntryType == JournalTypeEnum.Loadout && hprev.EntryType == JournalTypeEnum.Embark)
+            {
+                return true;
             }
 
             return false;
         }
-
-
-
 
         #endregion
 

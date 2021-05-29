@@ -75,9 +75,14 @@ namespace EliteDangerousCore
             CommanderId = cmdr;
         }
 
-        public void SetCommander(int cmdr)         // used during log reading..
+        public void SetCommander(int cmdr)         // used during creation of special jrec
         {
             CommanderId = cmdr;
+        }
+
+        public void SetJID(long id)         // used if substituting one record for another
+        {
+            Id = id;
         }
 
         #endregion
