@@ -497,8 +497,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Resource.Name);
-            info = BaseUtils.FieldBuilder.Build("", Resource.FriendlyName, "< (;)", mcd.TranslatedCategory, "< ; items".T(EDTx.JournalEntry_MatC), Resource.Count, ";Stolen".T(EDTx.JournalEntry_Stolen), Stolen);
+            MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Resource.Name);     // may be null
+            info = BaseUtils.FieldBuilder.Build("", Resource.FriendlyName, "< (;)", mcd?.TranslatedCategory, "< ; items".T(EDTx.JournalEntry_MatC), Resource.Count, ";Stolen".T(EDTx.JournalEntry_Stolen), Stolen);
             detailed = "";
         }
     }
@@ -517,8 +517,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Resource.Name);
-            info = BaseUtils.FieldBuilder.Build("", Resource.FriendlyName, "< (;)", mcd.TranslatedCategory, "< ; items".T(EDTx.JournalEntry_MatC), Resource.Count);
+            MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Resource.Name);     // may be null
+            info = BaseUtils.FieldBuilder.Build("", Resource.FriendlyName, "< (;)", mcd?.TranslatedCategory, "< ; items".T(EDTx.JournalEntry_MatC), Resource.Count);
             detailed = "";
         }
 

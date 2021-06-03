@@ -663,6 +663,8 @@ namespace EliteDangerousCore
         JournalPromotion_Combat, // Combat:
         JournalPromotion_Trade, // Trade:
         JournalPromotion_Exploration, // Exploration:
+        JournalPromotion_ExoBiologist,
+        JournalPromotion_Soldier,
         JournalPromotion_Empire, // Empire:
         JournalPromotion_Federation, // Federation:
         JournalPromotion_CQC, // CQC:

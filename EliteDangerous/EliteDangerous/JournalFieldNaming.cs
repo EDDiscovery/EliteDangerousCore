@@ -196,6 +196,12 @@ namespace EliteDangerousCore
             return invalid ? alt.SplitCapsWordFull() : loc;
         }
 
+        static public string CheckLocalisationDollar(string loc, string alt)      // any $/;
+        {
+            bool invalid = loc == null || loc.Length < 2 || loc.Contains("$") || loc.Contains(";");
+            return invalid ? alt : loc;
+        }
+
         static public string CheckLocalisationTranslation(string loc, string alt)      // instances of ! # $int in localisation strings, screen out
         {
             if (BaseUtils.Translator.Instance.Translating)          // if we are translating, use the alt name as its the most valid..
