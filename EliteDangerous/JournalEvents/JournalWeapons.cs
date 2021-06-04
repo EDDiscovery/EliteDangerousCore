@@ -14,9 +14,6 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 using BaseUtils.JSON;
-using System;
-using System.Linq;
-using System.Text;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -27,10 +24,15 @@ namespace EliteDangerousCore.JournalEvents
         public JournalBuyWeapon(JObject evt) : base(evt, JournalTypeEnum.BuyWeapon)
         {
             SuitModuleID = ulong.MaxValue;
+            Class = 1; // presume
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
-            FriendlyName = ItemData.GetWeapon(Name, Name_Localised)?.Name ?? Name_Localised;
-            Name = Name.ToLower(); // normalise
+
+            if (Name.HasChars())
+            {
+                FriendlyName = ItemData.GetWeapon(Name, Name_Localised)?.Name ?? Name_Localised;
+                Name = Name.ToLower(); // normalise
+            }
         }
 
         public ulong SuitModuleID { get; set; }
@@ -38,10 +40,13 @@ namespace EliteDangerousCore.JournalEvents
         public string Name_Localised { get; set; }
         public string FriendlyName { get; set; }
         public long Price { get; set; }
+        public int Class { get; set; }
+        public string[] WeaponMods { get; set; }    // may be null/empty
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< buy price ; cr;N0".T(EDTx.JournalEntry_buyprice), Price);
+            string wmod = WeaponMods != null ? string.Join(", ", WeaponMods) : null;
+            info = BaseUtils.FieldBuilder.Build("", FriendlyName, "Class: ".T(EDTx.JournalEntry_Class), Class, "Mods: ".T(EDTx.JournalEntry_Mods), wmod, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Price);
             detailed = "";
         }
 
@@ -49,7 +54,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (SuitModuleID != ulong.MaxValue)
             {
-                shp.Buy(EventTimeUTC, SuitModuleID, Name, Name_Localised, Price);
+                shp.Buy(EventTimeUTC, SuitModuleID, Name, Name_Localised, Price, Class, WeaponMods);    
             }
         }
     }
@@ -63,8 +68,11 @@ namespace EliteDangerousCore.JournalEvents
             SuitModuleID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
-            FriendlyName = ItemData.GetWeapon(Name, Name_Localised)?.Name ?? Name_Localised;
-            Name = Name.ToLower(); // normalise
+            if (Name.HasChars())
+            {
+                FriendlyName = ItemData.GetWeapon(Name, Name_Localised)?.Name ?? Name_Localised;
+                Name = Name.ToLower(); // normalise
+            }
         }
 
         public string Name { get; set; }
@@ -98,19 +106,25 @@ namespace EliteDangerousCore.JournalEvents
             SuitModuleID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
-            FriendlyName = ItemData.GetWeapon(Name, Name_Localised)?.Name ?? Name_Localised;
+            if (Name.HasChars())
+            {
+                FriendlyName = ItemData.GetWeapon(Name, Name_Localised)?.Name ?? Name_Localised;
+            }
         }
 
         public ulong SuitModuleID { get; set; }
         public string Name { get; set; }
         public string Name_Localised { get; set; }
         public string FriendlyName { get; set; }
-        public int Class { get; set; }
         public long Cost { get; set; }
+        public int Class { get; set; }
+        public string[] WeaponMods { get; set; }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = "TDB awaiting record";
+            string wmod = WeaponMods != null ? string.Join(", ", WeaponMods) : null;
+            long? p = Cost > 0 ? Cost : default(long?);
+            info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< => " + "Class: ".T(EDTx.JournalEntry_Class), Class, "Mods: ".T(EDTx.JournalEntry_Mods), wmod, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), p);
             detailed = "";
         }
 
@@ -118,7 +132,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (SuitModuleID != ulong.MaxValue)
             {
-
+                shp.Upgrade(EventTimeUTC, SuitModuleID, Class, WeaponMods);
             }
         }
     }

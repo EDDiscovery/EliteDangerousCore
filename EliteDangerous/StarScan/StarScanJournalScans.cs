@@ -137,7 +137,7 @@ namespace EliteDangerousCore
                 }
             }
 
-            ProcessedSaved(sn);  // any saved JEs due to no scan, add
+            ProcessedSaved();  // any saved JEs due to no scan, add
 
             return true;
         }

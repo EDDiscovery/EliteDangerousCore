@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2018 EDDiscovery development team
+ * Copyright © 2016-2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -14,7 +14,6 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 using BaseUtils.JSON;
-using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -108,7 +107,7 @@ namespace EliteDangerousCore.JournalEvents
                     if (k.Ship.HasChars() && ItemData.IsShip(k.Ship))
                         info = info.AppendPrePad(string.Format("{0} in ship type {1} rank {2}".T(EDTx.JournalEntry_Died), k.Name_Localised, k.Ship ?? "?", k.Rank ?? "?"), ", ");
                     else
-                        info = BaseUtils.FieldBuilder.Build("",k.Name_Localised,"Rank:".T(EDTx.JournalEntry_Rank),k.Rank);
+                        info = BaseUtils.FieldBuilder.Build("",k.Name_Localised,"Rank: ".T(EDTx.JournalEntry_Rank),k.Rank);
                 }
 
                 info = "Killed by ".T(EDTx.JournalEntry_Killedby) + info;
@@ -162,7 +161,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Option:".T(EDTx.JournalEntry_Option), Option, "Cost:; cr;N0".T(EDTx.JournalEntry_Cost), Cost, ";Bankrupt".T(EDTx.JournalEntry_Bankrupt), Bankrupt);
+            info = BaseUtils.FieldBuilder.Build("Option: ".T(EDTx.JournalEntry_Option), Option, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Cost, ";Bankrupt".T(EDTx.JournalEntry_Bankrupt), Bankrupt);
             detailed = "";
         }
     }

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2018 EDDiscovery development team
+ * Copyright © 2016-2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -16,8 +16,6 @@
 using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -86,11 +84,11 @@ namespace EliteDangerousCore.JournalEvents
                 DateTime exp = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(Expiry);
 
                 return BaseUtils.FieldBuilder.Build(
-                     "Title:".T(EDTx.CommunityGoal_Title), Title, "System:".T(EDTx.CommunityGoal_System), SystemName,                  
-                     nl,"At:".T(EDTx.CommunityGoal_At), MarketName, "Expires:".T(EDTx.CommunityGoal_Expires), exp,
-                     nl,"Not Complete;Complete".T(EDTx.CommunityGoal_NotComplete), IsComplete,  "Current Total:".T(EDTx.CommunityGoal_CurrentTotal), CurrentTotal, "Contribution:".T(EDTx.CommunityGoal_Contribution), PlayerContribution, "Num Contributors:".T(EDTx.CommunityGoal_NumContributors), NumContributors,
-                     nl,"Player % Band:".T(EDTx.CommunityGoal_Player), PlayerPercentileBand, "Top Rank:".T(EDTx.CommunityGoal_TopRank), TopRankSize, "Not In Top Rank;In Top Rank".T(EDTx.CommunityGoal_NotInTopRank), PlayerInTopRank,
-                     nl,"Tier Reached:".T(EDTx.CommunityGoal_TierReached), TierReached,  "Bonus:".T(EDTx.CommunityGoal_Bonus), Bonus, "Top Tier Name".T(EDTx.CommunityGoal_TopTierName), TopTierName , "TT. Bonus".T(EDTx.CommunityGoal_TT), TopTierBonus
+                     "Title: ".T(EDTx.CommunityGoal_Title), Title, "System: ".T(EDTx.CommunityGoal_System), SystemName,                  
+                     nl,"At: ".T(EDTx.CommunityGoal_At), MarketName, "Expires: ".T(EDTx.CommunityGoal_Expires), exp,
+                     nl,"Not Complete;Complete".T(EDTx.CommunityGoal_NotComplete), IsComplete,  "Current Total: ".T(EDTx.CommunityGoal_CurrentTotal), CurrentTotal, "Contribution: ".T(EDTx.CommunityGoal_Contribution), PlayerContribution, "Num Contributors: ".T(EDTx.CommunityGoal_NumContributors), NumContributors,
+                     nl,"Player % Band: ".T(EDTx.CommunityGoal_Player), PlayerPercentileBand, "Top Rank: ".T(EDTx.CommunityGoal_TopRank), TopRankSize, "Not In Top Rank;In Top Rank".T(EDTx.CommunityGoal_NotInTopRank), PlayerInTopRank,
+                     nl,"Tier Reached: ".T(EDTx.CommunityGoal_TierReached), TierReached,  "Bonus: ".T(EDTx.CommunityGoal_Bonus), Bonus, "Top Tier Name".T(EDTx.CommunityGoal_TopTierName), TopTierName , "TT. Bonus".T(EDTx.CommunityGoal_TT), TopTierBonus
                       );
             }
         }
@@ -196,7 +194,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", Name, "< at ; Star System".T(EDTx.JournalEntry_CGS), System, "Reward:; cr;N0".T(EDTx.JournalEntry_Reward), Reward);
+            info = BaseUtils.FieldBuilder.Build("", Name, "< at ; Star System".T(EDTx.JournalEntry_CGS), System, "Reward: ; cr;N0".T(EDTx.JournalEntry_Reward), Reward);
             detailed = "";
         }
     }

@@ -30,7 +30,7 @@ namespace EliteDangerousCore.JournalEvents
             Build = evt["build"].Str();
             Language = evt["language"].Str();
             Part = evt["part"].Int();
-            Odyssey = evt["odyssey"].Bool();
+            Odyssey = evt["Odyssey"].Bool();
         }
 
         public string GameVersion { get; set; }
@@ -58,7 +58,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
-            info = BaseUtils.FieldBuilder.Build("Version:".T(EDTx.JournalEntry_Version), GameVersion , "Build:".T(EDTx.JournalEntry_Build), Build , "Part:".T(EDTx.JournalEntry_Part), Part);
+            info = BaseUtils.FieldBuilder.Build("Version: ".T(EDTx.JournalEntry_Version), GameVersion , "Build: ".T(EDTx.JournalEntry_Build), Build , "Part: ".T(EDTx.JournalEntry_Part), Part);
             detailed = "";
         }
     }
@@ -102,6 +102,10 @@ namespace EliteDangerousCore.JournalEvents
             Horizons = evt["Horizons"].Bool();
             Odyssey = evt["Odyssey"].Bool();
 
+            Language = evt["language"].Str();
+            GameVersion = evt["gameversion"].Str();
+            Build = evt["build"].Str();
+
             FID = JournalFieldNaming.SubsituteCommanderFID(evt["FID"].Str());     // 3.3 on
         }
 
@@ -124,6 +128,10 @@ namespace EliteDangerousCore.JournalEvents
         public override bool IsHorizons { get { return Horizons; } }     // override base to get value of private value
         public override bool IsOdyssey { get { return Odyssey; } }
 
+        public string Language { get; set; }         // odyssey release 2 27/5/21
+        public string GameVersion { get; set; }      // odyssey release 2 27/5/21
+        public string Build { get; set; }            // odyssey release 2 27/5/21
+
         public string FID { get; set; }
 
         public bool InShip { get { return ItemData.IsShip(ShipFD); } }
@@ -135,8 +143,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Cmdr ", LoadGameCommander, "Ship:".T(EDTx.JournalEntry_Ship), Ship, "Name:".T(EDTx.JournalEntry_Name), ShipName, "Ident:".T(EDTx.JournalEntry_Ident), ShipIdent, "Credits:;;N0".T(EDTx.JournalEntry_Credits), Credits);
-            detailed = BaseUtils.FieldBuilder.Build("Mode:".T(EDTx.JournalEntry_Mode), GameMode, "Group:".T(EDTx.JournalEntry_Group), Group, "Not Landed;Landed".T(EDTx.JournalEntry_NotLanded), StartLanded, "Fuel Level:;;0.0".T(EDTx.JournalEntry_FuelLevel), FuelLevel, "Capacity:;;0.0".T(EDTx.JournalEntry_Capacity), FuelCapacity);
+            info = BaseUtils.FieldBuilder.Build("Cmdr ", LoadGameCommander, "Ship: ".T(EDTx.JournalEntry_Ship), Ship, "Name: ".T(EDTx.JournalEntry_Name), ShipName, "Ident: ".T(EDTx.JournalEntry_Ident), ShipIdent, "Credits: ;;N0".T(EDTx.JournalEntry_Credits), Credits);
+            detailed = BaseUtils.FieldBuilder.Build("Mode: ".T(EDTx.JournalEntry_Mode), GameMode, "Group: ".T(EDTx.JournalEntry_Group), Group, "Not Landed;Landed".T(EDTx.JournalEntry_NotLanded), StartLanded, "Fuel Level: ;;0.0".T(EDTx.JournalEntry_FuelLevel), FuelLevel, "Capacity: ;;0.0".T(EDTx.JournalEntry_Capacity), FuelCapacity);
         }
 
         public void Ledger(Ledger mcl)

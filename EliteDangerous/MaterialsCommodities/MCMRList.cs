@@ -28,6 +28,7 @@ namespace EliteDangerousCore
 
         public int Count { get { return Counts[0]; } }       // backwards compatible with code when there was only 1 count
         public int[] Counts { get; set; }
+        public bool NonZero { get { return Counts[0] != 0 || Counts[1] != 0; } }
 
         public double Price { get; set; }
         public MaterialCommodityMicroResourceType Details { get; set; }
@@ -180,8 +181,8 @@ namespace EliteDangerousCore
                 if (mc.Counts[0] > 0 && counts[0] > 0)                      // if bought (defensive with mc.counts)
                     mc.Price = (costprev + costofnew) / mc.Counts[0];       // price is now a combination of the current cost and the new cost. in case we buy in tranches
 
-                items.Add(fdname, mc);  // and add a new fresh mc to the dictionary
-               // System.Diagnostics.Debug.WriteLine("{0} Changed {1} {2} {3}", utc, items.Generation, mc.Details.FDName, mc.Count);
+                items[fdname] = mc;                                         // and set fdname to mc - this allows for any repeat adds due to frontier data repeating stuff in things like cargo
+               // System.Diagnostics.Debug.WriteLine("{0} Changed {1} {2} {3} {4}", utc, items.Generation, mc.Details.FDName, mc.Counts[0], mc.Counts[1]);
             }
             else
             {
@@ -197,7 +198,7 @@ namespace EliteDangerousCore
             {
                 mc = new MaterialCommodityMicroResource(mc);      // new clone of
                 mc.Counts[0] = Math.Max(mc.Counts[0] - num, 0);
-                items.Add(mc.Details.FDName.ToLowerInvariant(), mc);
+                items[mc.Details.FDName.ToLowerInvariant()] = mc;
                 System.Diagnostics.Debug.WriteLine("{0} Craft {1} {2}", utc, mc.Details.FDName, num);
             }
         }
@@ -211,19 +212,23 @@ namespace EliteDangerousCore
                 {
                     var mc = new MaterialCommodityMicroResource(e);     // clone it
                     mc.Counts[cnum] = 0;
-                    items.Add(e.Details.FDName.ToLowerInvariant(), mc);        // and add to end of list
+                    items[e.Details.FDName.ToLowerInvariant()] = mc;        // and add to end of list
                 }
             }
         }
 
+        // ensure a category has the same values as in values, for cnum entry.
+        // All others in the same cat not mentioned in values go to zero
         // make sure values has name lower case.
+
         public void Update(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, List<Tuple<string,int>> values, int cnum = 0)
         {
             var curlist = items.GetLastValues((x) => x.Details.Category == cat && x.Counts[cnum]>0);     // find all of this cat with a count >0
 
             var varray = new int[MaterialCommodityMicroResource.NoCounts];      // all set to zero
-            var vsets = new bool[MaterialCommodityMicroResource.NoCounts];      // all set to false, change
-            vsets[cnum] = true;                                                 // set the cnum to set.
+            var vsets = new bool[MaterialCommodityMicroResource.NoCounts];      // all set to false, change, with 0 in the varray, no therefore no change
+
+            vsets[cnum] = true;                                                 // but set the cnum to set
 
             foreach (var v in values)           
             {
@@ -231,13 +236,13 @@ namespace EliteDangerousCore
                 Change(utc, cat, v.Item1, varray, vsets, 0);      // set entry 
             }
 
-            foreach( var c in curlist)
+            foreach( var c in curlist)                                          //go thru the non zero list of cat
             {
                 if ( values.Find(x=>x.Item1.Equals(c.Details.FDName,StringComparison.InvariantCultureIgnoreCase)) == null)       // if not in updated list
                 {
                     var mc = new MaterialCommodityMicroResource(c);     // clone it
                     mc.Counts[cnum] = 0;            // zero cnum
-                    items.Add(c.Details.FDName.ToLowerInvariant(), mc);
+                    items[c.Details.FDName.ToLowerInvariant()] = mc;
                     System.Diagnostics.Debug.WriteLine("{0} Found {1} not in update list, zeroing", utc, mc.Details.FDName);
                 }
             }

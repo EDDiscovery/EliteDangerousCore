@@ -101,18 +101,18 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)      
         {
-            info = BaseUtils.FieldBuilder.Build("Type:".T(EDTx.JournalEntry_Type), StationType, "< in system ".T(EDTx.JournalEntry_insystem), StarSystem, ";(Wanted)".T(EDTx.JournalEntry_Wanted), Wanted, 
+            info = BaseUtils.FieldBuilder.Build("Type: ".T(EDTx.JournalEntry_Type), StationType, "< in system ".T(EDTx.JournalEntry_insystem), StarSystem, ";(Wanted)".T(EDTx.JournalEntry_Wanted), Wanted, 
                 ";Active Fine".T(EDTx.JournalEntry_ActiveFine),ActiveFine,
-                "Faction:".T(EDTx.JournalEntry_Faction), Faction,  "< in state ".T(EDTx.JournalEntry_instate), FactionState.SplitCapsWord());
+                "Faction: ".T(EDTx.JournalEntry_Faction), Faction,  "< in state ".T(EDTx.JournalEntry_instate), FactionState.SplitCapsWord());
 
-            detailed = BaseUtils.FieldBuilder.Build("Allegiance:".T(EDTx.JournalEntry_Allegiance), Allegiance, "Economy:".T(EDTx.JournalEntry_Economy), Economy_Localised, "Government:".T(EDTx.JournalEntry_Government), Government_Localised);
+            detailed = BaseUtils.FieldBuilder.Build("Allegiance: ".T(EDTx.JournalEntry_Allegiance), Allegiance, "Economy: ".T(EDTx.JournalEntry_Economy), Economy_Localised, "Government: ".T(EDTx.JournalEntry_Government), Government_Localised);
 
             if (StationServices != null)
             {
                 string l = "";
                 foreach (string s in StationServices)
                     l = l.AppendPrePad(s.SplitCapsWord(), ", ");
-                detailed += System.Environment.NewLine + "Station services:".T(EDTx.JournalEntry_Stationservices) + l;
+                detailed += System.Environment.NewLine + "Station services: ".T(EDTx.JournalEntry_Stationservices) + l;
             }
 
             if ( EconomyList != null )
@@ -120,7 +120,7 @@ namespace EliteDangerousCore.JournalEvents
                 string l = "";
                 foreach (Economies e in EconomyList)
                     l = l.AppendPrePad(e.Name_Localised.Alt(e.Name) + " " + (e.Proportion * 100).ToString("0.#") + "%", ", ");
-                detailed += System.Environment.NewLine + "Economies:".T(EDTx.JournalEntry_Economies) + l;
+                detailed += System.Environment.NewLine + "Economies: ".T(EDTx.JournalEntry_Economies) + l;
             }
         }
     }
@@ -187,7 +187,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", StationName, "< on pad ".T(EDTx.JournalEntry_onpad), LandingPad, "Type:".T(EDTx.JournalEntry_Type), StationType);
+            info = BaseUtils.FieldBuilder.Build("", StationName, "< on pad ".T(EDTx.JournalEntry_onpad), LandingPad, "Type: ".T(EDTx.JournalEntry_Type), StationType);
             detailed = "";
         }
     }
@@ -256,7 +256,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", StationName, "Type:".T(EDTx.JournalEntry_Type), StationType);
+            info = BaseUtils.FieldBuilder.Build("", StationName, "Type: ".T(EDTx.JournalEntry_Type), StationType);
             detailed = "";
         }
     }

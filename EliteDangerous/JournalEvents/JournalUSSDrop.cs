@@ -34,7 +34,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
-            info = BaseUtils.FieldBuilder.Build("Type:".T(EDTx.JournalEntry_Type), USSTypeLocalised, "Threat:".T(EDTx.JournalEntry_Threat), USSThreat);
+            info = BaseUtils.FieldBuilder.Build("Type: ".T(EDTx.JournalEntry_Type), USSTypeLocalised, "Threat: ".T(EDTx.JournalEntry_Threat), USSThreat);
             detailed = "";
         }
     }

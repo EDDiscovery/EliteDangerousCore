@@ -39,7 +39,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
-            info = BaseUtils.FieldBuilder.Build("To:".T(EDTx.JournalSendText_To), To_Localised, "Msg:".T(EDTx.JournalSendText_Msg), Message);
+            info = BaseUtils.FieldBuilder.Build("To: ".T(EDTx.JournalSendText_To), To_Localised, "Msg: ".T(EDTx.JournalSendText_Msg), Message);
             detailed = "";
         }
     }
@@ -56,7 +56,7 @@ namespace EliteDangerousCore.JournalEvents
             MessageLocalised = JournalFieldNaming.CheckLocalisation(evt["Message_Localised"].Str(), Message);
             Channel = evt["Channel"].Str();
 
-            string[] specials = new string[] { "$COMMS_entered:", "$CHAT_intro;" };
+            string[] specials = new string[] { "$COMMS_entered: ", "$CHAT_intro;" };
 
             if ( specials.StartsWith(Message, System.StringComparison.InvariantCultureIgnoreCase)>=0)
             {
@@ -90,14 +90,14 @@ namespace EliteDangerousCore.JournalEvents
         public override string ToString()
         {
             if ( FromLocalised.HasChars() )
-                return BaseUtils.FieldBuilder.Build("From:".T(EDTx.JournalReceiveText_From), FromLocalised, "< on ".T(EDTx.JournalReceiveText_on), Channel, "<: ", MessageLocalised);
+                return BaseUtils.FieldBuilder.Build("From: ".T(EDTx.JournalReceiveText_From), FromLocalised, "< on ".T(EDTx.JournalReceiveText_on), Channel, "<: ", MessageLocalised);
             else
                 return BaseUtils.FieldBuilder.Build("", Channel, "<: ", MessageLocalised);
         }
 
         public string ToStringNC()
         {
-            return BaseUtils.FieldBuilder.Build("From:".T(EDTx.JournalReceiveText_From), FromLocalised, "<: ", MessageLocalised);
+            return BaseUtils.FieldBuilder.Build("From: ".T(EDTx.JournalReceiveText_From), FromLocalised, "<: ", MessageLocalised);
         }
 
         public void Add(JournalReceiveText next)

@@ -47,9 +47,9 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
             if ( Submitted )
-                info = BaseUtils.FieldBuilder.Build(";Submitted".T(EDTx.JournalEntry_Submitted), Submitted, "< to ".T(EDTx.JournalEntry_to), Interdictor_Localised, "< (NPC);(Player)".T(EDTx.JournalEntry_NPC), IsPlayer, "Rank:", CombatRank.ToString().SplitCapsWord(), "Faction:".T(EDTx.JournalEntry_Faction), Faction, "Power:".T(EDTx.JournalEntry_Power), Power);
+                info = BaseUtils.FieldBuilder.Build(";Submitted".T(EDTx.JournalEntry_Submitted), Submitted, "< to ".T(EDTx.JournalEntry_to), Interdictor_Localised, "< (NPC);(Player)".T(EDTx.JournalEntry_NPC), IsPlayer, "Rank: ", CombatRank.ToString().SplitCapsWord(), "Faction: ".T(EDTx.JournalEntry_Faction), Faction, "Power: ".T(EDTx.JournalEntry_Power), Power);
             else
-                info = BaseUtils.FieldBuilder.Build("<By ".T(EDTx.JournalEntry_to), Interdictor_Localised, "< (NPC);(Player)".T(EDTx.JournalEntry_NPC), IsPlayer, "Rank:", CombatRank.ToString().SplitCapsWord(), "Faction:".T(EDTx.JournalEntry_Faction), Faction, "Power:".T(EDTx.JournalEntry_Power), Power);
+                info = BaseUtils.FieldBuilder.Build("By: ".T(EDTx.JournalEntry_By), Interdictor_Localised, "< (NPC);(Player)".T(EDTx.JournalEntry_NPC), IsPlayer, "Rank: ", CombatRank.ToString().SplitCapsWord(), "Faction: ".T(EDTx.JournalEntry_Faction), Faction, "Power: ".T(EDTx.JournalEntry_Power), Power);
 
             detailed = "";
         }
@@ -85,7 +85,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
 
-            info = BaseUtils.FieldBuilder.Build("Failed to interdict;Interdicted".T(EDTx.JournalEntry_Failedtointerdict), Success, "< ", Interdicted_Localised, "< (NPC);(Player)".T(EDTx.JournalEntry_NPC), IsPlayer, "Rank:", CombatRank.ToString().SplitCapsWord(), "Faction:".T(EDTx.JournalEntry_Faction), Faction, "Power:".T(EDTx.JournalEntry_Power), Power);
+            info = BaseUtils.FieldBuilder.Build("Failed to interdict;Interdicted".T(EDTx.JournalEntry_Failedtointerdict), Success, "< ", Interdicted_Localised, "< (NPC);(Player)".T(EDTx.JournalEntry_NPC), IsPlayer, "Rank: ", CombatRank.ToString().SplitCapsWord(), "Faction: ".T(EDTx.JournalEntry_Faction), Faction, "Power: ".T(EDTx.JournalEntry_Power), Power);
             detailed = "";
         }
     }
@@ -107,7 +107,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("By:".T(EDTx.JournalEntry_By), Interdictor_Localised, "< (NPC);(Player)".T(EDTx.JournalEntry_NPC), IsPlayer);
+            info = BaseUtils.FieldBuilder.Build("By: ".T(EDTx.JournalEntry_By), Interdictor_Localised, "< (NPC);(Player)".T(EDTx.JournalEntry_NPC), IsPlayer);
             detailed = "";
         }
     }

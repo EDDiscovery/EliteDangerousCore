@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 EDDiscovery development team
+ * Copyright © 2021 - 2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -16,6 +16,7 @@
 
 using BaseUtils;
 using System;
+using System.Linq;
 
 namespace EliteDangerousCore
 {
@@ -29,10 +30,12 @@ namespace EliteDangerousCore
         public string FriendlyName { get; private set; }
         public long Price { get; private set; }
         public bool Sold { get; private set; }
+        public int Class { get; private set; }
+        public string[] WeaponMods { get; private set; }
 
-        public SuitWeapon(DateTime time, ulong id, string fdname, string namelocalised, long price, bool sold)
+        public SuitWeapon(DateTime time, ulong id, string fdname, string namelocalised, long price, int cls, string[] weaponmods, bool sold)
         {
-            EventTime = time; ID = id;FDName = fdname; Name_Localised = namelocalised; Price = price; Sold = sold;
+            EventTime = time; ID = id;FDName = fdname; Name_Localised = namelocalised; Price = price; Sold = sold; Class = cls; WeaponMods = weaponmods;
             FriendlyName = ItemData.GetWeapon(fdname, Name_Localised)?.Name ?? Name_Localised;
         }
     }
@@ -45,9 +48,33 @@ namespace EliteDangerousCore
         {
         }
 
-        public void Buy(DateTime time, ulong id, string fdname, string namelocalised, long price)
+        public void Buy(DateTime time, ulong id, string fdname, string namelocalised, long price, int cls, string[] weaponmods)
         {
-            Weapons.Add(id, new SuitWeapon(time, id, fdname, namelocalised, price,false));
+            Weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, price, cls, weaponmods, false);
+        }
+
+        public bool VerifyPresence(DateTime time, ulong id, string fdname, string namelocalised, long price, int cls, string[] weaponmods)
+        {
+            var w = Weapons.GetLast(id);
+
+            if (w == null)
+            {
+                System.Diagnostics.Debug.WriteLine("Missing weapon {0} {1} {2}", id, fdname, namelocalised);
+                Weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, price, cls, weaponmods, false);
+                return false;
+            }
+            else 
+            {
+                // if differs in cls, or weapons mods is null but new one isnt, or both are set but different
+                if ( w.Class != cls || (w.WeaponMods == null && weaponmods != null ) || (w.WeaponMods != null && weaponmods != null && !w.WeaponMods.SequenceEqual(weaponmods)))
+                {
+                    System.Diagnostics.Debug.WriteLine("Update weapon info {0} {1} {2}", id, fdname, namelocalised);
+                    Weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, w.Price, cls, weaponmods, false);
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public void Sell(DateTime time, ulong id)
@@ -57,13 +84,29 @@ namespace EliteDangerousCore
                 var last = Weapons.GetLast(id);
                 if (last.Sold == false)       // if not sold
                 {
-                    Weapons.Add(id, new SuitWeapon(time, id, last.FDName, last.Name_Localised, last.Price, true));               // new entry with this time but sold
+                    Weapons[id] = new SuitWeapon(time, id, last.FDName, last.Name_Localised, last.Price, last.Class, last.WeaponMods, true);               // new entry with this time but sold
                 }
                 else
                     System.Diagnostics.Debug.WriteLine("Weapons sold a weapon already sold " + id);
             }
             else
                 System.Diagnostics.Debug.WriteLine("Weapons sold a weapon not seen " + id);
+        }
+
+        public void Upgrade(DateTime time, ulong id, int cls, string[] weaponmods)
+        {
+            if (Weapons.ContainsKey(id))
+            {
+                var last = Weapons.GetLast(id);
+                if (last.Sold == false)       // if not sold
+                {                   // new entry with the new class
+                    Weapons[id] = new SuitWeapon(time, id, last.FDName, last.Name_Localised, last.Price, cls, weaponmods, false);
+                }
+                else
+                    System.Diagnostics.Debug.WriteLine("Weapons upgrade but already sold " + id);
+            }
+            else
+                System.Diagnostics.Debug.WriteLine("Weapons upgrade a weapon not seen " + id);
         }
 
         public uint Process(JournalEntry je, string whereami, ISystem system)

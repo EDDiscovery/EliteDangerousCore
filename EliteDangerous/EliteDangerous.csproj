@@ -257,6 +257,8 @@
     <Compile Include="SystemDB\SystemsDBGetLists.cs" />
     <Compile Include="SystemDB\SystemsDBGetStars.cs" />
     <Compile Include="DB\UserDatabase.cs" />
+    <Compile Include="UIEvents\UISrvHighBeam.cs" />
+    <Compile Include="UIEvents\UIFsdJump.cs" />
     <Compile Include="UIEvents\UIGlideMode.cs" />
     <Compile Include="UIEvents\UIBreathableAtmosphere.cs" />
     <Compile Include="UIEvents\UIHealth.cs" />
@@ -291,7 +293,7 @@
     <Compile Include="UIEvents\UIGUIFocus.cs" />
     <Compile Include="UIEvents\UIHardpointsDeployed.cs" />
     <Compile Include="UIEvents\UIHasLatLong.cs" />
-    <Compile Include="UIEvents\UIShipType.cs" />
+    <Compile Include="UIEvents\UIMode.cs" />
     <Compile Include="UIEvents\UIInWing.cs" />
     <Compile Include="UIEvents\UIIsInDanger.cs" />
     <Compile Include="UIEvents\UILanded.cs" />

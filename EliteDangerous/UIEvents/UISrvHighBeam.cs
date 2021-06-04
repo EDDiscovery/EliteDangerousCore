@@ -17,25 +17,17 @@ using System;
 
 namespace EliteDangerousCore.UIEvents
 {
-    public class UIShipType : UIEvent
+    public class UISrvHighBeam : UIEvent
     {
-        public UIShipType(DateTime time, bool refresh) : base(UITypeEnum.ShipType, time, refresh)
+        public UISrvHighBeam(DateTime time, bool refresh) : base(UITypeEnum.SrvHighBeam, time, refresh)
         {
         }
 
-        public UIShipType(Shiptype type, DateTime time, bool refresh) : this(time, refresh)
+        public UISrvHighBeam(bool state, DateTime time, bool refresh) : this(time, refresh)
         {
-            ShipType = type;
+            HighBeam = state;
         }
 
-        public enum Shiptype { None, MainShip, Fighter, SRV, InTaxi, Multicrew,
-                                    OnFootStationHangar, OnFootStationSocialSpace,
-                                    OnFootPlantaryPortHangar, OnFootPlantaryPortSocialSpace,
-                                    OnFootInstallation,
-                                    OnFootPlanet };
-
-        public Shiptype ShipType { get; private set; }
-
-        static public bool OnFoot(Shiptype t ) { return t >= Shiptype.OnFootStationHangar; }
+        public bool HighBeam { get; private set; }
     }
 }

@@ -21,54 +21,35 @@ using System.Text;
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.BookDropship)]
-    public class JournalBookDropship : JournalEntry, ILedgerJournalEntry
+    public class JournalBookDropship : JournalEntry
     {
         public JournalBookDropship(JObject evt) : base(evt, JournalTypeEnum.BookDropship)
         {
             DestinationSystem = evt["DestinationSystem"].StrNull();
             DestinationLocation = evt["DestinationLocation"].StrNull();
-            Cost = evt["Cost"].Long();
         }
 
         public string DestinationSystem { get; set; }
         public string DestinationLocation { get; set; }
-        public long Cost { get; set; }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            long? cost = Cost > 0 ? Cost : default(long?);
-            info = BaseUtils.FieldBuilder.Build("", DestinationSystem, "<:", DestinationLocation, "Cost:; cr;N0".T(EDTx.JournalEntry_Cost), cost);
+            info = BaseUtils.FieldBuilder.Build("", DestinationSystem, "<: ", DestinationLocation );
             detailed = "";
-        }
-
-        public void Ledger(Ledger mcl)
-        {
-            if (Cost>0)
-                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "->" + DestinationSystem + ":" + DestinationLocation, -Cost);
         }
     }
 
     [JournalEntryType(JournalTypeEnum.CancelDropship)]
-    public class JournalCancelDropship : JournalEntry, ILedgerJournalEntry
+    public class JournalCancelDropship : JournalEntry
     {
         public JournalCancelDropship(JObject evt) : base(evt, JournalTypeEnum.CancelDropship)
         {
-            Refund = evt["Refund"].Long();
         }
-
-        public long Refund { get; set; }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            long? refund = Refund > 0 ? Refund : default(long?);
-            info = BaseUtils.FieldBuilder.Build("", refund);
+            info = "";
             detailed = "";
-        }
-
-        public void Ledger(Ledger mcl)
-        {
-            if (Refund > 0)
-                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "", Refund);
         }
     }
 
@@ -81,7 +62,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = "";//     info = BaseUtils.FieldBuilder.Build("", FriendlyType, "", Count, "< sell price ; cr;N0".T(EDTx.JournalEntry_sellprice), SellPrice, "Total Cost:; cr;N0".T(EDTx.JournalEntry_TotalCost), TotalSale, "Profit:; cr;N0".T(EDTx.JournalEntry_Profit), profit);
+            info = "";//     info = BaseUtils.FieldBuilder.Build("", FriendlyType, "", Count, "< sell price ; cr;N0".T(EDTx.JournalEntry_sellprice), SellPrice, "Total Cost: ; cr;N0".T(EDTx.JournalEntry_TotalCost), TotalSale, "Profit: ; cr;N0".T(EDTx.JournalEntry_Profit), profit);
             detailed = "";
         }
     }
@@ -103,7 +84,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             long? cost = Cost > 0 ? Cost : default(long?);
-            info = BaseUtils.FieldBuilder.Build("", DestinationSystem, "<:", DestinationLocation, "Cost:; cr;N0".T(EDTx.JournalEntry_Cost), cost);
+            info = BaseUtils.FieldBuilder.Build("", DestinationSystem, "<:", DestinationLocation, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), cost);
             detailed = "";
         }
 

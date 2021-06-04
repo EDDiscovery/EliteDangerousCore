@@ -26,6 +26,8 @@ namespace EliteDangerousCore.JournalEvents
             Combat = (CombatRank)evt["Combat"].Int();
             Trade = (TradeRank)evt["Trade"].Int();
             Explore = (ExplorationRank)evt["Explore"].Int();
+            SoldierRank = (SoldierRank)evt["Soldier"].Int();
+            ExoBiologistRank = (ExoBiologistRank)evt["Exobiologist"].Int();
             Empire = (EmpireRank)evt["Empire"].Int();
             Federation = (FederationRank)evt["Federation"].Int();
             CQC = (CQCRank)evt["CQC"].Int();
@@ -37,12 +39,16 @@ namespace EliteDangerousCore.JournalEvents
         public EmpireRank Empire { get; set; }
         public FederationRank Federation { get; set; }
         public CQCRank CQC { get; set; }
+        public SoldierRank SoldierRank { get; set; }
+        public ExoBiologistRank ExoBiologistRank { get; set; }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("", Combat.ToString().SplitCapsWord(),
                                       "", Trade.ToString().SplitCapsWord(),
                                       "", Explore.ToString().SplitCapsWord(),
+                                      "", SoldierRank.ToString().SplitCapsWord(),
+                                      "", ExoBiologistRank.ToString().SplitCapsWord(),
                                       "", Federation.ToString().SplitCapsWord(),
                                       "", Empire.ToString().SplitCapsWord(),
                                       "", CQC.ToString().SplitCapsWord());
@@ -68,6 +74,14 @@ namespace EliteDangerousCore.JournalEvents
             if (e.HasValue)
                 Explore = (ExplorationRank)e;
 
+            int? b = evt["Exobiologist"].IntNull();
+            if (b.HasValue)
+                ExoBiologist = (ExoBiologistRank)b;
+
+            int? s = evt["Soldier"].IntNull();
+            if (s.HasValue)
+                Soldier = (SoldierRank)s;
+
             int? q = evt["CQC"].IntNull();
             if (q.HasValue)
                 CQC = (CQCRank)q;
@@ -87,15 +101,19 @@ namespace EliteDangerousCore.JournalEvents
         public CQCRank? CQC { get; set; }
         public FederationRank? Federation { get; set; }
         public EmpireRank? Empire { get; set; }
+        public SoldierRank? Soldier { get; set; }
+        public ExoBiologistRank? ExoBiologist { get; set; }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Combat:".T(EDTx.JournalPromotion_Combat), Combat.HasValue ? Combat.ToString() : null,
-                                      "Trade:".T(EDTx.JournalPromotion_Trade), Trade.HasValue ? Trade.ToString() : null,
-                                      "Exploration:".T(EDTx.JournalPromotion_Exploration), Explore.HasValue ? Explore.ToString() : null,
-                                      "Empire:".T(EDTx.JournalPromotion_Empire), Empire.HasValue ? Empire.ToString() : null,
-                                      "Federation:".T(EDTx.JournalPromotion_Federation), Federation.HasValue ? Federation.ToString() : null,
-                                      "CQC:".T(EDTx.JournalPromotion_CQC), CQC.HasValue ? CQC.ToString() : null);
+            info = BaseUtils.FieldBuilder.Build("Combat: ".T(EDTx.JournalPromotion_Combat), Combat.HasValue ? Combat.ToString().SplitCapsWord() : null,
+                                      "Trade: ".T(EDTx.JournalPromotion_Trade), Trade.HasValue ? Trade.ToString().SplitCapsWord() : null,
+                                      "Exploration: ".T(EDTx.JournalPromotion_Exploration), Explore.HasValue ? Explore.ToString().SplitCapsWord() : null,
+                                      "Soldier: ".T(EDTx.JournalPromotion_Soldier), Soldier.HasValue ? Soldier.ToString().SplitCapsWord() : null,
+                                      "ExoBiologist: ".T(EDTx.JournalPromotion_ExoBiologist), ExoBiologist.HasValue ? ExoBiologist.ToString().SplitCapsWord() : null,
+                                      "Empire: ".T(EDTx.JournalPromotion_Empire), Empire.HasValue ? Empire.ToString().SplitCapsWord() : null,
+                                      "Federation: ".T(EDTx.JournalPromotion_Federation), Federation.HasValue ? Federation.ToString().SplitCapsWord() : null,
+                                      "CQC: ".T(EDTx.JournalPromotion_CQC), CQC.HasValue ? CQC.ToString().SplitCapsWord() : null);
             detailed = "";
         }
     }

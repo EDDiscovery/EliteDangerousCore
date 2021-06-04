@@ -268,11 +268,46 @@ namespace EliteDangerousCore
             public Actor(string name) { Name = name; }
         }
 
+        public class WeaponStats
+        {
+            public double DPS;
+            public double RatePerSec;
+            public int ClipSize;
+            public int HopperSize;
+            public int Range;
+            public WeaponStats(double dps, double rate, int clip, int hoppersize, int range) { DPS = dps; RatePerSec = rate; ClipSize = clip; HopperSize = hoppersize;  Range = range; }
+
+        }
         public class Weapon : IModuleInfo
         {
             public string Name;
-            public double DPS;
-            public Weapon(string name, double dps) { Name = name; DPS = dps; }
+            public bool Primary;
+            public enum WeaponClass { Launcher, Carbine, LongRangeRifle, Rifle, ShotGun, Pistol }
+            public enum WeaponDamageType { Thermal, Plasma, Kinetic, Explosive }
+            public enum WeaponFireMode { Automatic, SemiAutomatic, Burst }
+            public WeaponClass Class;
+            public WeaponDamageType DamageType;
+            public WeaponFireMode FireMode;
+            public WeaponStats[] Stats;     // 5 classes,0 to 4
+
+            public WeaponStats GetStats(int cls) // 1 to 5
+            {
+                if (cls >= 1 && cls <= 5)
+                    return Stats[cls - 1];
+                else
+                    return null;
+            }
+
+
+            public Weapon(string name, bool primary,  WeaponDamageType ty, WeaponClass ds, WeaponFireMode fr, WeaponStats[] values)
+            {
+                Name = name;
+                Primary = primary;
+                DamageType = ty;
+                Class = ds;
+                FireMode = fr;
+                Stats = values;
+            }
         }
 
         public class Suit : IModuleInfo
@@ -392,20 +427,61 @@ namespace EliteDangerousCore
 
         public static Dictionary<string, Weapon> weapons = new Dictionary<string, Weapon>   // DO NOT USE DIRECTLY - public is for checking only
         {
-             { "wpn_m_submachinegun_laser_fauto", new Weapon("TK Eclipse",90.0) },
-             { "wpn_m_launcher_rocket_sauto", new Weapon("Karma L-6",0.0) },
-             { "wpn_m_submachinegun_kinetic_fauto", new Weapon("Karma C-44",0.0) },
-             { "wpn_m_assaultrifle_kinetic_fauto", new Weapon("Karma AR-50",0.0) },
-             { "wpn_s_pistol_kinetic_sauto", new Weapon("Karma P-15",0.0) },
-             { "wpn_m_assaultrifle_laser_fauto", new Weapon("TK Aphelion",0.0) },
-             { "wpn_s_pistol_laser_sauto", new Weapon("TK Zenith",0.0) },
+             { "wpn_m_assaultrifle_kinetic_fauto", new Weapon("Karma AR-50", true, Weapon.WeaponDamageType.Kinetic, Weapon.WeaponClass.LongRangeRifle, Weapon.WeaponFireMode.Automatic, 
+                             new WeaponStats[] {  new WeaponStats(0.9,10,40,240,50), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0),  new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
+
+             { "wpn_m_assaultrifle_laser_fauto", new Weapon("TK Aphelion", true, Weapon.WeaponDamageType.Thermal, Weapon.WeaponClass.Rifle, Weapon.WeaponFireMode.Automatic,
+                                new WeaponStats[] { new WeaponStats(1.6,5.7,25,150,70), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
+
+            { "wpn_m_assaultrifle_plasma_fauto", new Weapon("Manticore Oppressor", true, Weapon.WeaponDamageType.Plasma, Weapon.WeaponClass.Rifle, Weapon.WeaponFireMode.Automatic,
+                                new WeaponStats[] { new WeaponStats(0.8,6.7,50,300,35), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
+
+            { "wpn_m_launcher_rocket_sauto", new Weapon("Karma L-6", true, Weapon.WeaponDamageType.Explosive, Weapon.WeaponClass.Launcher, Weapon.WeaponFireMode.Automatic,
+                                new WeaponStats[] { new WeaponStats(40,1,2,8,300), new WeaponStats(0,0,0,0,0), new WeaponStats(69.2,1,2,8,300), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
+
+            { "wpn_m_shotgun_plasma_doublebarrel", new Weapon("Manticore Intimidator", true,  Weapon.WeaponDamageType.Plasma, Weapon.WeaponClass.ShotGun, Weapon.WeaponFireMode.SemiAutomatic,
+                                new WeaponStats[] { new WeaponStats(1.8,1.25,2,24,7), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
+
+            { "wpn_m_sniper_plasma_charged", new Weapon("Manticore Executioner", true, Weapon.WeaponDamageType.Plasma, Weapon.WeaponClass.LongRangeRifle, Weapon.WeaponFireMode.SemiAutomatic,
+                                new WeaponStats[] { new WeaponStats(15,0.8,3,30,100), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
+
+             { "wpn_m_submachinegun_kinetic_fauto", new Weapon("Karma C-44", true, Weapon.WeaponDamageType.Kinetic, Weapon.WeaponClass.Carbine, Weapon.WeaponFireMode.Automatic,
+                                    new WeaponStats[] { new WeaponStats(0.65,13.3,60,360,20), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
+
+             // TBD range
+             { "wpn_m_submachinegun_laser_fauto", new Weapon("TK Eclipse", true, Weapon.WeaponDamageType.Thermal, Weapon.WeaponClass.Carbine, Weapon.WeaponFireMode.Automatic,
+                    new WeaponStats[] { new WeaponStats(0.9,10,40,280,25), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
+
+             { "wpn_s_pistol_kinetic_sauto", new Weapon("Karma P-15", false, Weapon.WeaponDamageType.Kinetic, Weapon.WeaponClass.Pistol, Weapon.WeaponFireMode.SemiAutomatic,
+                                         new WeaponStats[] { new WeaponStats(1.4,10,24,240,25), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
+
+             { "wpn_s_pistol_laser_sauto", new Weapon("TK Zenith", false, Weapon.WeaponDamageType.Thermal, Weapon.WeaponClass.Pistol, Weapon.WeaponFireMode.Burst, 
+                                                new WeaponStats[] { new WeaponStats(1.7,2.7,18,180,35), new WeaponStats(2.2,5.7,18,180,35), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
+
+             // TBD range
+            { "wpn_s_pistol_plasma_charged", new Weapon("Manticore Tormentor", false, Weapon.WeaponDamageType.Plasma, Weapon.WeaponClass.Pistol, Weapon.WeaponFireMode.SemiAutomatic, 
+                            new WeaponStats[] { new WeaponStats(7.5,1.7,6,72,15), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
+
         };
 
         public static Dictionary<string, Suit> suit = new Dictionary<string, Suit>   // DO NOT USE DIRECTLY - public is for checking only
         {
+            { "flightsuit", new Suit("Flight Suit") },
             { "utilitysuit_class1", new Suit("Maverick Suit") },
+            { "utilitysuit_class2", new Suit("Maverick Suit Class 2") },
+            { "utilitysuit_class3", new Suit("Maverick Suit Class 3") },
+            { "utilitysuit_class4", new Suit("Maverick Suit Class 4") },
+            { "utilitysuit_class5", new Suit("Maverick Suit Class 5") },
             { "explorationsuit_class1", new Suit("Artemis Suit") },
+            { "explorationsuit_class2", new Suit("Artemis Suit Class 2") },
+            { "explorationsuit_class3", new Suit("Artemis Suit Class 3") },
+            { "explorationsuit_class4", new Suit("Artemis Suit Class 4") },
+            { "explorationsuit_class5", new Suit("Artemis Suit Class 5") },
             { "tacticalsuit_class1", new Suit("Dominator Suit") },
+            { "tacticalsuit_class2", new Suit("Dominator Suit Class 2") },
+            { "tacticalsuit_class3", new Suit("Dominator Suit Class 3") },
+            { "tacticalsuit_class4", new Suit("Dominator Suit Class 4") },
+            { "tacticalsuit_class5", new Suit("Dominator Suit Class 5") },
         };
 
         #endregion
@@ -1069,7 +1145,12 @@ namespace EliteDangerousCore
              { "nameplate_wings03_black", new ShipModule(-1,0, "Nameplate Wings 3 Black", VanityType ) },
              { "nameplate_explorer02_grey", new ShipModule(-1,0, "Nameplate Explorer 2 Grey", VanityType ) },
 
-            { "paintjob_krait_mkii_vibrant_red", new ShipModule(-1,0, "Paintjob Krait Mkii Vibrant Red", VanityType ) },
+             { "paintjob_krait_mkii_vibrant_red", new ShipModule(-1,0, "Paintjob Krait Mkii Vibrant Red", VanityType ) },
+
+             { "nameplate_trader02_grey", new ShipModule(-1,0, "Nameplate Trader 2 Grey", VanityType ) },
+             { "bobble_snowman", new ShipModule(-1,0, "Bobble Snowman", VanityType ) },
+             { "bobble_snowflake", new ShipModule(-1,0, "Bobble Snowflake", VanityType ) },
+             { "decal_triple_elite", new ShipModule(-1,0, "Decal Triple Elite", VanityType ) },
         };
 
         #endregion

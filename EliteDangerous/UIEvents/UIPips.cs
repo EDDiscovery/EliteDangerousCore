@@ -32,16 +32,29 @@ namespace EliteDangerousCore.UIEvents
 
         public class Pips
         {
-            public Pips()
+            public Pips(int[] p)    // p can be null, p must be 3 long
             {
-                Systems = Engines = Weapons = double.MinValue;
+                if ( p!= null && p.Length == 3 )
+                {
+                    Systems = p[0] / 2.0;
+                    Engines = p[1] / 2.0;
+                    Weapons = p[2] / 2.0;
+                }
+                else
+                    Systems = Engines = Weapons = double.MinValue;
             }
+
+            public bool Equal(Pips other)
+            {
+                return Systems == other.Systems && Engines == other.Engines && Weapons == other.Weapons;
+            }
+
+            public bool Valid { get { return Systems > double.MinValue; } }
 
             public double Systems;
             public double Engines;
             public double Weapons;
 
-            public bool Valid { get { return Systems > double.MinValue; } }
         }
     }
 }

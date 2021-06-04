@@ -10,7 +10,6 @@ SECTION JournalTypeEnum
 .BuyDrones: "Buy Drones" @
 .BuyExplorationData: "Buy Exploration Data" @
 .BuyTradeData: "Buy Trade Data" @
-.CapShipBond: "Cap Ship Bond" @
 .Cargo: "Cargo" @
 .CargoDepot: "Cargo Depot" @
 .ChangeCrewRole: "Change Crew Role" @
@@ -45,7 +44,6 @@ SECTION JournalTypeEnum
 .EngineerLegacyConvert: "Engineer Legacy Convert" @
 .EngineerProgress: "Engineer Progress" @
 .EscapeInterdiction: "Escape Interdiction" @
-.FactionKillBond: "Faction Kill Bond" @
 .FSDJump: "FSD Jump" @
 .FuelScoop: "Fuel Scoop" @
 .Fileheader: "Fileheader" @
@@ -258,6 +256,9 @@ SECTION JournalTypeEnum
 .TransferMicroResources: "Transfer Micro Resources" @
 .SuitLoadout: "Suit Loadout" @
 .DropshipDeploy: "Dropship Deploy" @
+.FactionKillBond: "Faction Kill Bond" @
+.CapShipBond: "Capital Ship Bond" @
+.BackpackChange: "Backpack Change" @
 .ICONIDsStart: "Don't bother with this one, its an internal ID" @
 
 SECTION JournalCargo
@@ -484,11 +485,11 @@ SECTION JournalReservoirReplenished
 
 SECTION StarPlanetRing
 
-.Mass: "  Mass: {0:N4}{1}\n" @
-.InnerRadius: "  Inner Radius: {0:0.00}ls\n" @
-.OuterRadius: "  Outer Radius: {0:0.00}ls\n" @
-.IK: "  Inner Radius: {0}km\n" @
-.OK: "  Outer Radius: {0}km\n" @
+.Mass: "Mass: {0:N4}{1}\n" @
+.InnerRadius: "Inner Radius: {0:0.00}ls\n" @
+.OuterRadius: "Outer Radius: {0:0.00}ls\n" @
+.IK: "Inner Radius: {0}km\n" @
+.OK: "Outer Radius: {0}km\n" @
 .Moons: " Moons" @
 .Icy: "Icy" @
 .Rocky: "Rocky" @
@@ -721,12 +722,12 @@ SECTION ExplorationClass
 
 SECTION PassengerMissionsClass
 
-.Accepted: "Accepted: ;;N0" @
+.Accepted: "Accepted Mission Passengers: ;;N0" @
 .BulkMissionPassengers: "Bulk Mission Passengers: ;;N0" @
 .VIPMissionPassengers: "VIP Mission Passengers: ;;N0" @
 .PassengersDelivered: "Passengers Delivered: ;;N0" @
 .PassengersEjected: "Passengers Ejected: ;;N0" @
-.PassengersDisgrunted: "Passengers Disgrunted: ;;N0" @
+.PassengersDisgrunted: "Passengers Disgruntled: ;;N0" @
 
 SECTION SearchAndRescueClass
 
@@ -800,10 +801,6 @@ SECTION JournalUnderAttack
 
 .ACOUNT: "times" @
 
-SECTION JournalUnknown
-
-.UnhandledJournalevent: "Unhandled Journal event, Report to EDDiscovery team. " @
-
 SECTION JournalNavRoute
 .Jumps: "{0} jumps: " @
 
@@ -812,7 +809,6 @@ SECTION JournalApproachBody
 .In: "In " @
 
 SECTION JournalEntry
-
 .Hyperspace: "Hyperspace" @
 .Supercruise: "Supercruise" @
 .LegBounty: "{0} total {1:N0}" @
@@ -826,6 +822,7 @@ SECTION JournalEntry
 .Against: "Against " @
 .Cost: "Cost: ; cr;N0" @
 .Bounty: "Bounty: ; cr;N0" @
+.BountyOnly: "Bounty" @
 .Offender: "Offender " @
 .Reward: "Reward: ; cr;N0" @
 .to: "< to " @
@@ -916,6 +913,10 @@ SECTION JournalEntry
 .NumberofStatuses: "Number of Statuses: " @
 .Online: "Online: " @
 .Offline: "Offline: " @
+.Unfriended: "Unfriended: " @
+.Declined: "Declined: " @
+.RequestedFriend: "Requested friend: " @
+.AddedFriend: "Added Friend: " @
 .Submitted: ";Submitted" @
 .NPC: "< (NPC);(Player)" @
 .Power: "Power: " @

@@ -17,24 +17,17 @@ using System;
 
 namespace EliteDangerousCore.UIEvents
 {
-    public class UIFuel : UIEvent
+    public class UIFsdJump : UIEvent
     {
-        public UIFuel(DateTime time, bool refresh) : base(UITypeEnum.Fuel, time, refresh)
+        public UIFsdJump(DateTime time, bool refresh) : base(UITypeEnum.FsdJump, time, refresh)
         {
         }
 
-        public UIFuel(double value, double res, UIMode.ModeType shiptype, DateTime time, bool refresh) : this( time, refresh)
+        public UIFsdJump(bool state, DateTime time, bool refresh) : this(time, refresh)
         {
-            Fuel = value;
-            FuelRes = res;
-            Mode = shiptype;
+            Jumping = state;
         }
 
-        public double Fuel { get; private set; }     // level,
-        public double FuelRes { get; private set; }     // level 3.3.2
-
-        public bool Valid { get { return Fuel >= 0; } }
-
-        public UIMode.ModeType Mode { get; private set; }   // Ship type flags.. per flags
+        public bool Jumping { get; private set; }
     }
 }

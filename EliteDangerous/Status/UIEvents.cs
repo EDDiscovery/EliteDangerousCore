@@ -64,7 +64,7 @@ namespace EliteDangerousCore
 
         // EDD Ones
 
-        ShipType,              
+        Mode,              
         OverallStatus,        
         
         // Redirected journal entries
@@ -80,11 +80,13 @@ namespace EliteDangerousCore
         Oxygen,
         Health,
         Temperature,
-        Weapon,
         Gravity,
         SelectedWeapon,
         BreathableAtmosphere,
         GlideMode,
+
+        SrvHighBeam,
+        FsdJump,
 
         BodyName,
 

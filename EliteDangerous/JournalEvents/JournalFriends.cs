@@ -25,62 +25,80 @@ namespace EliteDangerousCore.JournalEvents
         public JournalFriends(JObject evt) : base(evt, JournalTypeEnum.Friends)
         {
             Status = evt["Status"].Str();
+            StatusEnum = evt["Status"].EnumStr(FriendStatus.Offline);
             Name = evt["Name"].Str();
-            OfflineCount = Status.Equals("offline", System.StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;
-            OnlineCount = Status.Equals("online", System.StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;
+            OfflineCount = StatusEnum == FriendStatus.Offline ? 1 : 0;
+            OnlineCount = StatusEnum == FriendStatus.Online ? 1 : 0;
         }
 
         public void AddFriend(JournalFriends next)
         {
             if (StatusList == null)     // if first time we added, move to status list format
             {
-                StatusList = new List<string>() { Status };
+                StatusList = new List<FriendStatus>() { StatusEnum };
                 NameList = new List<string>() { Name };
                 Status = Name = string.Empty;
             }
 
-            string stat = next.Status;
-
-            StatusList.Add(stat);
+            StatusList.Add(next.StatusEnum);
             NameList.Add(next.Name);
 
-            OfflineCount += stat.Equals("offline", System.StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;
-            OnlineCount += stat.Equals("online", System.StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;
+            OfflineCount = next.StatusEnum == FriendStatus.Offline ? 1 : 0;
+            OnlineCount = next.StatusEnum == FriendStatus.Online ? 1 : 0;
         }
 
-        public string Status { get; set; }      // used for single entries.. empty if list.  Used for VP backwards compat
+        public enum FriendStatus { Requested, Declined, Added, Lost, Offline, Online}
+        public FriendStatus StatusEnum { get; set; }      // used for single entries.. empty if list.  Used for VP backwards compat
+
+        public string Status { get; set; }              // backwards compat
         public string Name { get; set; }
-
-        public List<string> StatusList { get; set; }        // EDD addition.. used when agregating, null if single entry
-        public List<string> NameList { get; set; }
-
-        public int OnlineCount { get; set; }        // always counts
+        public int OnlineCount { get; set; }            // always counts
         public int OfflineCount { get; set; }
+
+        public List<FriendStatus> StatusList { get; set; }        // EDD addition.. used when agregating, null if single entry
+        public List<string> NameList { get; set; }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
-            
             detailed = "";
 
             if (StatusList != null)
             {
                 info = "";
                 if (OfflineCount + OnlineCount < NameList.Count)
-                    info = BaseUtils.FieldBuilder.Build("Number of Statuses:".T(EDTx.JournalEntry_NumberofStatuses), NameList.Count);
+                    info = BaseUtils.FieldBuilder.Build("Number of Statuses: ".T(EDTx.JournalEntry_NumberofStatuses), NameList.Count);
 
                 if (OnlineCount > 0)
-                    info = info.AppendPrePad("Online:".T(EDTx.JournalEntry_Online) + OnlineCount.ToString(), ", ");
+                    info = info.AppendPrePad("Online: ".T(EDTx.JournalEntry_Online) + OnlineCount.ToString(), ", ");
 
                 if (OfflineCount > 0)
-                    info = info.AppendPrePad("Offline:".T(EDTx.JournalEntry_Offline) + OfflineCount.ToString(), ", ");
+                    info = info.AppendPrePad("Offline: ".T(EDTx.JournalEntry_Offline) + OfflineCount.ToString(), ", ");
 
                 for ( int i = 0; i < StatusList.Count; i++ )
-                    detailed = detailed.AppendPrePad(BaseUtils.FieldBuilder.Build("", NameList[i], "", StatusList[i]) , System.Environment.NewLine);
+                    detailed = detailed.AppendPrePad(ST(NameList[i], StatusList[i]) , System.Environment.NewLine);
             }
             else
             {
-                info = BaseUtils.FieldBuilder.Build("", Name, "", Status);
+                info = ST(Name, StatusEnum);
             }
+        }
+
+        static private string ST(string friendname, FriendStatus stat)
+        {
+            if (stat == FriendStatus.Online)
+                return "Online: ".T(EDTx.JournalEntry_Online) + friendname;
+            else if (stat == FriendStatus.Offline)
+                return "Online: ".T(EDTx.JournalEntry_Offline) + friendname;
+            else if (stat == FriendStatus.Lost)
+                return "Unfriended: ".T(EDTx.JournalEntry_Unfriended) + friendname;
+            else if (stat == FriendStatus.Declined)
+                return "Declined: ".T(EDTx.JournalEntry_Declined) + friendname;
+            else if (stat == FriendStatus.Requested)
+                return "Requested Friend: ".T(EDTx.JournalEntry_RequestedFriend) + friendname;
+            else if (stat == FriendStatus.Added)
+                return "Added Friend: ".T(EDTx.JournalEntry_AddedFriend) + friendname;
+            else
+                return "??";
         }
     }
 }

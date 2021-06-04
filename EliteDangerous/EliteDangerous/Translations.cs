@@ -75,6 +75,8 @@ namespace EliteDangerousCore
 
         JournalEntry_Taxi, // Taxi
 
+        JournalEntry_Class,
+        JournalEntry_Mods,
         JournalEntry_OnFootAt, 
         JournalEntry_LegBounty, // {0} total {1:N0}
         JournalEntry_Target, // Target:
@@ -87,6 +89,7 @@ namespace EliteDangerousCore
         JournalEntry_Against, // Against
         JournalEntry_Cost, // Cost:; cr;N0
         JournalEntry_Bounty, // Bounty:; cr;N0
+        JournalEntry_BountyOnly, // Bounty
         JournalEntry_Offender, // Offender
         JournalEntry_Reward, // Reward:; cr;N0
         JournalEntry_to, // < to
@@ -178,6 +181,10 @@ namespace EliteDangerousCore
         JournalEntry_NumberofStatuses, // Number of Statuses:
         JournalEntry_Online, // Online:
         JournalEntry_Offline, // Offline:
+        JournalEntry_Unfriended,
+        JournalEntry_Declined,
+        JournalEntry_RequestedFriend,
+        JournalEntry_AddedFriend,
         JournalEntry_Submitted, // ;Submitted
         JournalEntry_NPC, // < (NPC);(Player)
         JournalEntry_Power, // Power:
@@ -249,8 +256,6 @@ namespace EliteDangerousCore
         JournalEntry_RemainingJumps,  // Remaining Jumps
         JournalEntry_Nearest, // Nearest:
         JournalEntry_Near, // Near:
-        JournalEntry_CapShipBond, // Capital Ship Bond
-        JournalEntry_FactionKillBond, // Faction Kill Bond
         JournalEntry_Locker,
         JournalEntry_Backpack,
 
@@ -658,6 +663,8 @@ namespace EliteDangerousCore
         JournalPromotion_Combat, // Combat:
         JournalPromotion_Trade, // Trade:
         JournalPromotion_Exploration, // Exploration:
+        JournalPromotion_ExoBiologist,
+        JournalPromotion_Soldier,
         JournalPromotion_Empire, // Empire:
         JournalPromotion_Federation, // Federation:
         JournalPromotion_CQC, // CQC:
@@ -669,7 +676,6 @@ namespace EliteDangerousCore
         JournalFuelScoop_Total, // Total:;t;0.0
         JournalReservoirReplenished_Main, // Main:;t;0.0
         JournalReservoirReplenished_Reservoir, // Reservoir:;t;0.0
-        JournalUnknown_UnhandledJournalevent, // Unhandled Journal event, Report to EDDiscovery team.
 
         EDStar_O, // O (Blue-White) Star,
         EDStar_B, // B (Blue-White) Star,
@@ -750,6 +756,9 @@ namespace EliteDangerousCore
         Screenshot_Identical, // Cannot set input..
         Screenshot_FolderNotExist, // Folder specified does not exist
 
+        JournalTypeEnum_CapShipBond, // Capital Ship Bond
+        JournalTypeEnum_FactionKillBond, // Faction Kill Bond
+
     }
 
     public static class EDTranslatorExtensions
@@ -758,7 +767,7 @@ namespace EliteDangerousCore
         {
             return BaseUtils.Translator.Instance.Translate(s, value.ToString().Replace("_", "."));
         }
-        static public string T(bool translate, string s, EDTx value)              // use the enum.
+        static public string TCond(bool translate, string s, EDTx value)              // use the enum.
         {
             return translate ? BaseUtils.Translator.Instance.Translate(s, value.ToString().Replace("_", ".")) : s;
         }

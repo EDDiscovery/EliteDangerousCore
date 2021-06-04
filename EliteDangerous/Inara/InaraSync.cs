@@ -554,19 +554,19 @@ namespace EliteDangerousCore.Inara
                         {
                             for( int i = 0; i < je.StatusList.Count; i++ )
                             {
-                                string s = je.StatusList[i].ToLower();
-                                if (s == "online" || s == "added")
+                                var s = je.StatusList[i];
+                                if (s == JournalFriends.FriendStatus.Online || s == JournalFriends.FriendStatus.Added)
                                     eventstosend.Add(InaraClass.addCommanderFriend(je.NameList[i], he.EventTimeUTC));
-                                else if (s == "lost")
+                                else if (s == JournalFriends.FriendStatus.Lost)
                                     eventstosend.Add(InaraClass.delCommanderFriend(je.NameList[i], he.EventTimeUTC));
                             }
                         }
                         else
                         {
-                            string s = je.Status.ToLower();
-                            if (s == "online" || s == "added")
+                            var s = je.StatusEnum;
+                            if (s == JournalFriends.FriendStatus.Online || s == JournalFriends.FriendStatus.Added)
                                 eventstosend.Add(InaraClass.addCommanderFriend(je.Name, he.EventTimeUTC));
-                            else if (s == "lost")
+                            else if ( s == JournalFriends.FriendStatus.Lost)
                                 eventstosend.Add(InaraClass.delCommanderFriend(je.Name, he.EventTimeUTC));
                         }
 

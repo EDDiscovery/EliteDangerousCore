@@ -39,7 +39,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
             
-            info = BaseUtils.FieldBuilder.Build("", Engineer, "Blueprint:".T(EDTx.JournalEntry_Blueprint), Blueprint, "Level:".T(EDTx.JournalEntry_Level), Level, "Override:".T(EDTx.JournalEntry_Override), Override);
+            info = BaseUtils.FieldBuilder.Build("", Engineer, "Blueprint: ".T(EDTx.JournalEntry_Blueprint), Blueprint, "Level: ".T(EDTx.JournalEntry_Level), Level, "Override: ".T(EDTx.JournalEntry_Override), Override);
             detailed = "";
         }
     }
@@ -113,8 +113,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", Engineer, "Type:".T(EDTx.JournalEntry_Type), Type, "Commodity:".T(EDTx.JournalEntry_Commodity), Commodity_Localised,
-                    "Material:".T(EDTx.JournalEntry_Material), Material_Localised, "Quantity:".T(EDTx.JournalEntry_Quantity), Quantity, "TotalQuantity:".T(EDTx.JournalEntry_TotalQuantity), TotalQuantity);
+            info = BaseUtils.FieldBuilder.Build("", Engineer, "Type: ".T(EDTx.JournalEntry_Type), Type, "Commodity: ".T(EDTx.JournalEntry_Commodity), Commodity_Localised,
+                    "Material: ".T(EDTx.JournalEntry_Material), Material_Localised, "Quantity: ".T(EDTx.JournalEntry_Quantity), Quantity, "TotalQuantity: ".T(EDTx.JournalEntry_TotalQuantity), TotalQuantity);
             detailed = "";
         }
     }
@@ -193,7 +193,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("In Slot:".T(EDTx.JournalEntry_InSlot), Slot, "", Module, "By:".T(EDTx.JournalEntry_By), Engineering.Engineer, "Blueprint:".T(EDTx.JournalEntry_Blueprint), Engineering.FriendlyBlueprintName, "Level:".T(EDTx.JournalEntry_Level), Engineering.Level);
+            info = BaseUtils.FieldBuilder.Build("In Slot: ".T(EDTx.JournalEntry_InSlot), Slot, "", Module, "By: ".T(EDTx.JournalEntry_By), Engineering.Engineer, "Blueprint: ".T(EDTx.JournalEntry_Blueprint), Engineering.FriendlyBlueprintName, "Level: ".T(EDTx.JournalEntry_Level), Engineering.Level);
 
             detailed = "";
             if (Ingredients != null)
@@ -260,7 +260,7 @@ namespace EliteDangerousCore.JournalEvents
             string enginfo = "";
             foreach (var p in Engineers)
             {
-                enginfo = enginfo.AppendPrePad(BaseUtils.FieldBuilder.Build("", p.Engineer, "", p.Progress, "Rank:".T(EDTx.JournalEngineerProgress_Rank), p.Rank, ";%",p.RankProgress), System.Environment.NewLine);
+                enginfo = enginfo.AppendPrePad(BaseUtils.FieldBuilder.Build("", p.Engineer, "", p.Progress, "Rank: ".T(EDTx.JournalEngineerProgress_Rank), p.Rank, ";%",p.RankProgress), System.Environment.NewLine);
             }
 
             detailed = "";

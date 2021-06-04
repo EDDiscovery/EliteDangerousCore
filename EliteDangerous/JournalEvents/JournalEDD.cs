@@ -105,7 +105,7 @@ namespace EliteDangerousCore.JournalEvents
                                                 "< in ".T(EDTx.JournalCommodityPricesBase_CPBin), StarSystem);
 
             int col = 0;
-            detailed = "Items to buy:".T(EDTx.JournalCommodityPricesBase_Itemstobuy) + System.Environment.NewLine;
+            detailed = "Items to buy: ".T(EDTx.JournalCommodityPricesBase_Itemstobuy) + System.Environment.NewLine;
             foreach (CCommodities c in Commodities)
             {
                 if (c.buyPrice > 0)
@@ -133,7 +133,7 @@ namespace EliteDangerousCore.JournalEvents
                 detailed += System.Environment.NewLine;
 
             col = 0;
-            detailed += "Sell only Items:".T(EDTx.JournalCommodityPricesBase_SO) + System.Environment.NewLine;
+            detailed += "Sell only Items: ".T(EDTx.JournalCommodityPricesBase_SO) + System.Environment.NewLine;
             foreach (CCommodities c in Commodities)
             {
                 if (c.buyPrice <= 0)
@@ -196,7 +196,7 @@ namespace EliteDangerousCore.JournalEvents
                     if (comma)
                         info += ", ";
                     comma = true;
-                    info += BaseUtils.FieldBuilder.Build("Name:".T(EDTx.JournalEntry_Name), MaterialCommodityMicroResourceType.GetNameByFDName(m.Name), "", m.Count);
+                    info += BaseUtils.FieldBuilder.Build("Name: ".T(EDTx.JournalEntry_Name), MaterialCommodityMicroResourceType.GetNameByFDName(m.Name), "", m.Count);
                 }
             }
 
@@ -207,7 +207,7 @@ namespace EliteDangerousCore.JournalEvents
                     if (comma)
                         info += ", ";
                     comma = true;
-                    info += BaseUtils.FieldBuilder.Build("Name:".T(EDTx.JournalEntry_Name), MaterialCommodityMicroResourceType.GetNameByFDName(m.Name), "", m.Count);
+                    info += BaseUtils.FieldBuilder.Build("Name: ".T(EDTx.JournalEntry_Name), MaterialCommodityMicroResourceType.GetNameByFDName(m.Name), "", m.Count);
                 }
             }
             detailed = "";

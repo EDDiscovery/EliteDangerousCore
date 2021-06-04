@@ -127,4 +127,30 @@ namespace EliteDangerousCore
         Agent = 3,
         Rookie = 4,
     }
+
+    public enum ExoBiologistRank
+    {
+        Directionless = 0,
+        MostlyDirectionless,
+        Compiler,
+        Collector,
+        Cataloguer,
+        Taxonomist,
+        Ecologist,
+        Geneticist,
+        Elite,
+    }
+
+    public enum SoldierRank
+    {
+        Defenceless = 0,
+        MostlyDefenceless,
+        Rookie,
+        Soldier,
+        Gunslinger,
+        Warrior,
+        Gladiator,
+        Deadeye,
+        Elite,
+    }
 }

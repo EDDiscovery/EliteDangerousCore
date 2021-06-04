@@ -60,7 +60,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
-            info = BaseUtils.FieldBuilder.Build("Wealth:;cr;N0".T(EDTx.JournalEntry_Wealth), BankAccount.CurrentWealth, "Notoriety Index:;;N0".T(EDTx.JournalEntry_NotorietyIndex), Crime.Notoriety);
+            info = BaseUtils.FieldBuilder.Build("Wealth: ;cr;N0".T(EDTx.JournalEntry_Wealth), BankAccount.CurrentWealth, "Notoriety Index: ;;N0".T(EDTx.JournalEntry_NotorietyIndex), Crime.Notoriety);
 
             detailed =  "Bank Account".T(EDTx.JournalStatistics_BankAccount) + Environment.NewLine + BankAccount?.Format() + Environment.NewLine + 
                         "Combat".T(EDTx.JournalStatistics_Combat) + Environment.NewLine + Combat?.Format() + Environment.NewLine +
@@ -93,14 +93,14 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline, 
-                    "Wealth:;cr;N0".T(EDTx.BankAccountClass_Wealth),  CurrentWealth, 
-                    "Spent on Ships:;cr;N0".T(EDTx.BankAccountClass_SpentonShips), SpentOnShips,
-                    "Spent on Outfitting:;cr;N0".T(EDTx.BankAccountClass_SpentonOutfitting), SpentOnOutfitting, 
-                    "Spent on Repairs:;cr;N0".T(EDTx.BankAccountClass_SpentonRepairs), SpentOnRepairs, 
-                    "Spent on Fuel:;cr;N0".T(EDTx.BankAccountClass_SpentonFuel), SpentOnFuel,
-                    "Spent on Ammo:;cr;N0".T(EDTx.BankAccountClass_SpendonAmmo), SpentOnAmmoConsumables, 
-                    "Insurance Claims:;;N0".T(EDTx.BankAccountClass_InsuranceClaims), InsuranceClaims,
-                    "Spent on Insurance:;cr;N0".T(EDTx.BankAccountClass_SpentonInsurance), SpentOnInsurance,
+                    "Wealth: ;cr;N0".T(EDTx.BankAccountClass_Wealth),  CurrentWealth, 
+                    "Spent on Ships: ;cr;N0".T(EDTx.BankAccountClass_SpentonShips), SpentOnShips,
+                    "Spent on Outfitting: ;cr;N0".T(EDTx.BankAccountClass_SpentonOutfitting), SpentOnOutfitting, 
+                    "Spent on Repairs: ;cr;N0".T(EDTx.BankAccountClass_SpentonRepairs), SpentOnRepairs, 
+                    "Spent on Fuel: ;cr;N0".T(EDTx.BankAccountClass_SpentonFuel), SpentOnFuel,
+                    "Spent on Ammo: ;cr;N0".T(EDTx.BankAccountClass_SpendonAmmo), SpentOnAmmoConsumables, 
+                    "Insurance Claims: ;;N0".T(EDTx.BankAccountClass_InsuranceClaims), InsuranceClaims,
+                    "Spent on Insurance: ;cr;N0".T(EDTx.BankAccountClass_SpentonInsurance), SpentOnInsurance,
                     "Owned ships".T(EDTx.BankAccountClass_OwnedShipCount), OwnedShipCount);
             }
         }
@@ -119,14 +119,14 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Bounties :;;N0".T(EDTx.CombatClass_Bounties), BountiesClaimed, 
-                    "Bounty Profits:;cr;N0".T(EDTx.CombatClass_BountyProfits), BountyHuntingProfit,
-                    "Combat Bonds:;;N0".T(EDTx.CombatClass_CombatBonds), CombatBonds, 
-                    "Combat Bond Profits:;cr;N0".T(EDTx.CombatClass_CombatBondProfits), CombatBondProfits,
-                    "Assassinations:;;N0".T(EDTx.CombatClass_Assassinations), Assassinations, 
-                    "Assassination Profits:;cr;N0".T(EDTx.CombatClass_AssassinationProfits), AssassinationProfits,
-                    "Highest Reward:;cr;N0".T(EDTx.CombatClass_HighestReward), HighestSingleReward, 
-                    "Skimmers Killed:;;N0".T(EDTx.CombatClass_SkimmersKilled), SkimmersKilled);
+                    "Bounties : ;;N0".T(EDTx.CombatClass_Bounties), BountiesClaimed, 
+                    "Bounty Profits: ;cr;N0".T(EDTx.CombatClass_BountyProfits), BountyHuntingProfit,
+                    "Combat Bonds: ;;N0".T(EDTx.CombatClass_CombatBonds), CombatBonds, 
+                    "Combat Bond Profits: ;cr;N0".T(EDTx.CombatClass_CombatBondProfits), CombatBondProfits,
+                    "Assassinations: ;;N0".T(EDTx.CombatClass_Assassinations), Assassinations, 
+                    "Assassination Profits: ;cr;N0".T(EDTx.CombatClass_AssassinationProfits), AssassinationProfits,
+                    "Highest Reward: ;cr;N0".T(EDTx.CombatClass_HighestReward), HighestSingleReward, 
+                    "Skimmers Killed: ;;N0".T(EDTx.CombatClass_SkimmersKilled), SkimmersKilled);
             }
         }
 
@@ -142,12 +142,12 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Notoriety Index:;;N0".T(EDTx.CrimeClass_NotorietyIndex), Notoriety, 
-                    "Fines:;;N0".T(EDTx.CrimeClass_Fines), Fines,
-                    "Total Fines:;cr;N0".T(EDTx.CrimeClass_TotalFines), TotalFines, 
-                    "Bounties:;;N0".T(EDTx.CrimeClass_Bounties), BountiesReceived,
-                    "Total Bounties:;cr;N0".T(EDTx.CrimeClass_TotalBounties), TotalBounties, 
-                    "Highest Bounty:;cr;N0".T(EDTx.CrimeClass_HighestBounty), HighestBounty);
+                    "Notoriety Index: ;;N0".T(EDTx.CrimeClass_NotorietyIndex), Notoriety, 
+                    "Fines: ;;N0".T(EDTx.CrimeClass_Fines), Fines,
+                    "Total Fines: ;cr;N0".T(EDTx.CrimeClass_TotalFines), TotalFines, 
+                    "Bounties: ;;N0".T(EDTx.CrimeClass_Bounties), BountiesReceived,
+                    "Total Bounties: ;cr;N0".T(EDTx.CrimeClass_TotalBounties), TotalBounties, 
+                    "Highest Bounty: ;cr;N0".T(EDTx.CrimeClass_HighestBounty), HighestBounty);
             }
         }
 
@@ -162,11 +162,11 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Black Markets:;;N0".T(EDTx.SmugglingClass_BlackMarkets), BlackMarketsTradedWith, 
-                    "Black Market Profits:;cr;N0".T(EDTx.SmugglingClass_BlackMarketProfits), BlackMarketsProfits,
-                    "Resources Smuggled:;;N0".T(EDTx.SmugglingClass_ResourcesSmuggled), ResourcesSmuggled, 
-                    "Average Profit:;cr;N0".T(EDTx.SmugglingClass_AverageProfit), AverageProfit,
-                    "Highest Single Transaction:;cr;N0".T(EDTx.SmugglingClass_HighestSingleTransaction), HighestSingleTransaction);
+                    "Black Markets: ;;N0".T(EDTx.SmugglingClass_BlackMarkets), BlackMarketsTradedWith, 
+                    "Black Market Profits: ;cr;N0".T(EDTx.SmugglingClass_BlackMarketProfits), BlackMarketsProfits,
+                    "Resources Smuggled: ;;N0".T(EDTx.SmugglingClass_ResourcesSmuggled), ResourcesSmuggled, 
+                    "Average Profit: ;cr;N0".T(EDTx.SmugglingClass_AverageProfit), AverageProfit,
+                    "Highest Single Transaction: ;cr;N0".T(EDTx.SmugglingClass_HighestSingleTransaction), HighestSingleTransaction);
             }
         }
 
@@ -181,11 +181,11 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                        "Markets Traded:;;N0".T(EDTx.TradingClass_MarketsTraded), MarketsTradedWith, 
-                        "Profits:;cr;N0".T(EDTx.TradingClass_Profits), MarketProfits, 
-                        "No. of Resources:;;N0".T(EDTx.TradingClass_No), ResourcesTraded,
-                        "Average Profit:;cr;N0".T(EDTx.TradingClass_AverageProfit), AverageProfit, 
-                        "Highest Single Transaction:;cr;N0".T(EDTx.TradingClass_HighestSingleTransaction), HighestSingleTransaction);
+                        "Markets Traded: ;;N0".T(EDTx.TradingClass_MarketsTraded), MarketsTradedWith, 
+                        "Profits: ;cr;N0".T(EDTx.TradingClass_Profits), MarketProfits, 
+                        "No. of Resources: ;;N0".T(EDTx.TradingClass_No), ResourcesTraded,
+                        "Average Profit: ;cr;N0".T(EDTx.TradingClass_AverageProfit), AverageProfit, 
+                        "Highest Single Transaction: ;cr;N0".T(EDTx.TradingClass_HighestSingleTransaction), HighestSingleTransaction);
             }
         }
 
@@ -197,9 +197,9 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                        "Profits:;cr;N0".T(EDTx.MiningClass_Profits), MiningProfits, 
-                        "Quantity:;;N0".T(EDTx.MiningClass_Quantity), QuantityMined, 
-                        "Materials Types Collected:;;N0".T(EDTx.MiningClass_MaterialsTypesCollected), MaterialsCollected);
+                        "Profits: ;cr;N0".T(EDTx.MiningClass_Profits), MiningProfits, 
+                        "Quantity: ;;N0".T(EDTx.MiningClass_Quantity), QuantityMined, 
+                        "Materials Types Collected: ;;N0".T(EDTx.MiningClass_MaterialsTypesCollected), MaterialsCollected);
 
 
             }
@@ -221,16 +221,16 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                        "Systems Visited:;;N0".T(EDTx.ExplorationClass_SystemsVisited), SystemsVisited, 
-                        "Profits:;cr;N0".T(EDTx.ExplorationClass_Profits), ExplorationProfits,
-                        "Level 2 Scans:;;N0".T(EDTx.ExplorationClass_Level2Scans), PlanetsScannedToLevel2,
-                        "Level 3 Scans:;;N0".T(EDTx.ExplorationClass_Level3Scans), PlanetsScannedToLevel3,
-                        "Efficient Scans:;;N0".T(EDTx.ExplorationClass_EfficientScans), EfficientScans,
-                        "Highest Payout:;cr;N0".T(EDTx.ExplorationClass_HighestPayout), HighestPayout,
-                        "Total Distance:;;N0".T(EDTx.ExplorationClass_TotalDistance), TotalHyperspaceDistance,
-                        "No of Jumps:;;N0".T(EDTx.ExplorationClass_NoofJumps), TotalHyperspaceJumps,
-                        "Greatest Distance:;;N0".T(EDTx.ExplorationClass_GreatestDistance), GreatestDistanceFromStart, 
-                        "Time Played:".T(EDTx.ExplorationClass_TimePlayed), TimePlayed.SecondsToWeeksDaysHoursMinutesSeconds());
+                        "Systems Visited: ;;N0".T(EDTx.ExplorationClass_SystemsVisited), SystemsVisited, 
+                        "Profits: ;cr;N0".T(EDTx.ExplorationClass_Profits), ExplorationProfits,
+                        "Level 2 Scans: ;;N0".T(EDTx.ExplorationClass_Level2Scans), PlanetsScannedToLevel2,
+                        "Level 3 Scans: ;;N0".T(EDTx.ExplorationClass_Level3Scans), PlanetsScannedToLevel3,
+                        "Efficient Scans: ;;N0".T(EDTx.ExplorationClass_EfficientScans), EfficientScans,
+                        "Highest Payout: ;cr;N0".T(EDTx.ExplorationClass_HighestPayout), HighestPayout,
+                        "Total Distance: ;;N0".T(EDTx.ExplorationClass_TotalDistance), TotalHyperspaceDistance,
+                        "No of Jumps: ;;N0".T(EDTx.ExplorationClass_NoofJumps), TotalHyperspaceJumps,
+                        "Greatest Distance: ;;N0".T(EDTx.ExplorationClass_GreatestDistance), GreatestDistanceFromStart, 
+                        "Time Played: ".T(EDTx.ExplorationClass_TimePlayed), TimePlayed.SecondsToWeeksDaysHoursMinutesSeconds());
             }
         }
 
@@ -245,12 +245,12 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Accepted Mission Passengers:;;N0".T(EDTx.PassengerMissionsClass_Accepted), Bulk,
-                    "Bulk Mission Passengers:;;N0".T(EDTx.PassengerMissionsClass_BulkMissionPassengers), Bulk,
-                    "VIP Mission Passengers:;;N0".T(EDTx.PassengerMissionsClass_VIPMissionPassengers), VIP, 
-                    "Passengers Delivered:;;N0".T(EDTx.PassengerMissionsClass_PassengersDelivered), Delivered,
-                    "Passengers Ejected:;;N0".T(EDTx.PassengerMissionsClass_PassengersEjected), Ejected,
-                    "Passengers Disgruntled:;;N0".T(EDTx.PassengerMissionsClass_PassengersDisgrunted), Ejected);
+                    "Accepted Mission Passengers: ;;N0".T(EDTx.PassengerMissionsClass_Accepted), Bulk,
+                    "Bulk Mission Passengers: ;;N0".T(EDTx.PassengerMissionsClass_BulkMissionPassengers), Bulk,
+                    "VIP Mission Passengers: ;;N0".T(EDTx.PassengerMissionsClass_VIPMissionPassengers), VIP, 
+                    "Passengers Delivered: ;;N0".T(EDTx.PassengerMissionsClass_PassengersDelivered), Delivered,
+                    "Passengers Ejected: ;;N0".T(EDTx.PassengerMissionsClass_PassengersEjected), Ejected,
+                    "Passengers Disgruntled: ;;N0".T(EDTx.PassengerMissionsClass_PassengersDisgrunted), Ejected);
             }
         }
 
@@ -262,9 +262,9 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Total Items Rescued:;;N0".T(EDTx.SearchAndRescueClass_TotalItemsRescued), Traded, 
-                    "Profit:;cr;N0".T(EDTx.SearchAndRescueClass_Profit), Profit, 
-                    "Total Rescue Transactions:;;N0".T(EDTx.SearchAndRescueClass_TotalRescueTransactions), Count);
+                    "Total Items Rescued: ;;N0".T(EDTx.SearchAndRescueClass_TotalItemsRescued), Traded, 
+                    "Profit: ;cr;N0".T(EDTx.SearchAndRescueClass_Profit), Profit, 
+                    "Total Rescue Transactions: ;;N0".T(EDTx.SearchAndRescueClass_TotalRescueTransactions), Count);
             }
         }
 
@@ -280,13 +280,13 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Engineers Used:;;N0".T(EDTx.CraftingClass_EngineersUsed), CountOfUsedEngineers, 
-                    "Blueprints:;;N0".T(EDTx.CraftingClass_Blueprints), RecipesGenerated,
-                    "At Level 1:;;N0".T(EDTx.CraftingClass_AtLevel1), RecipesGeneratedRank1, 
-                    "At Level 2:;;N0".T(EDTx.CraftingClass_AtLevel2), RecipesGeneratedRank2, 
-                    "At Level 3:;;N0".T(EDTx.CraftingClass_AtLevel3), RecipesGeneratedRank3,
-                    "At Level 4:;;N0".T(EDTx.CraftingClass_AtLevel4), RecipesGeneratedRank4, 
-                    "At Level 5:;;N0".T(EDTx.CraftingClass_AtLevel5), RecipesGeneratedRank5);
+                    "Engineers Used: ;;N0".T(EDTx.CraftingClass_EngineersUsed), CountOfUsedEngineers, 
+                    "Blueprints: ;;N0".T(EDTx.CraftingClass_Blueprints), RecipesGenerated,
+                    "At Level 1: ;;N0".T(EDTx.CraftingClass_AtLevel1), RecipesGeneratedRank1, 
+                    "At Level 2: ;;N0".T(EDTx.CraftingClass_AtLevel2), RecipesGeneratedRank2, 
+                    "At Level 3: ;;N0".T(EDTx.CraftingClass_AtLevel3), RecipesGeneratedRank3,
+                    "At Level 4: ;;N0".T(EDTx.CraftingClass_AtLevel4), RecipesGeneratedRank4, 
+                    "At Level 5: ;;N0".T(EDTx.CraftingClass_AtLevel5), RecipesGeneratedRank5);
             }
         }
 
@@ -299,8 +299,8 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Total Wages:;cr;N0".T(EDTx.CrewClass_TotalWages), TotalWages, "Hired:;;N0".T(EDTx.CrewClass_Hired), Hired, 
-                    "Fired:;;N0".T(EDTx.CrewClass_Fired), Fired, "Killed in Action:;;N0".T(EDTx.CrewClass_KilledinAction), Died);
+                    "Total Wages: ;cr;N0".T(EDTx.CrewClass_TotalWages), TotalWages, "Hired: ;;N0".T(EDTx.CrewClass_Hired), Hired, 
+                    "Fired: ;;N0".T(EDTx.CrewClass_Fired), Fired, "Killed in Action: ;;N0".T(EDTx.CrewClass_KilledinAction), Died);
             }
         }
 
@@ -315,11 +315,11 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Total Time:".T(EDTx.MulticrewClass_TotalTime), TimeTotal.SecondsToWeeksDaysHoursMinutesSeconds(),
-                    "Gunner Time:;;N0".T(EDTx.MulticrewClass_GunnerTime), GunnerTimeTotal.SecondsToWeeksDaysHoursMinutesSeconds(),
-                    "Fighter Time:;;N0".T(EDTx.MulticrewClass_FighterTime), FighterTimeTotal.SecondsToWeeksDaysHoursMinutesSeconds(),
-                    "Credits:;cr;N0".T(EDTx.MulticrewClass_Credits), CreditsTotal,
-                    "Fines:;cr;N0".T(EDTx.MulticrewClass_Fines), FinesTotal);
+                    "Total Time: ".T(EDTx.MulticrewClass_TotalTime), TimeTotal.SecondsToWeeksDaysHoursMinutesSeconds(),
+                    "Gunner Time: ;;N0".T(EDTx.MulticrewClass_GunnerTime), GunnerTimeTotal.SecondsToWeeksDaysHoursMinutesSeconds(),
+                    "Fighter Time: ;;N0".T(EDTx.MulticrewClass_FighterTime), FighterTimeTotal.SecondsToWeeksDaysHoursMinutesSeconds(),
+                    "Credits: ;cr;N0".T(EDTx.MulticrewClass_Credits), CreditsTotal,
+                    "Fines: ;cr;N0".T(EDTx.MulticrewClass_Fines), FinesTotal);
             }
         }
 
@@ -337,8 +337,8 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Commodity Trades:;;N0".T(EDTx.MaterialTraderStatsClass_CommodityTrades), TradesCompleted,
-                    "Material Traded:;;N0".T(EDTx.MaterialTraderStatsClass_MaterialTraded), MaterialsTraded
+                    "Commodity Trades: ;;N0".T(EDTx.MaterialTraderStatsClass_CommodityTrades), TradesCompleted,
+                    "Material Traded: ;;N0".T(EDTx.MaterialTraderStatsClass_MaterialTraded), MaterialsTraded
                     );
             }
         }
@@ -354,11 +354,11 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Credits:;cr;N0".T(EDTx.MulticrewClass_Credits), CreditsEarned,
-                    "Time Played:;;N0".T(EDTx.CQCClass_TimePlayed), TimePlayed.SecondsToWeeksDaysHoursMinutesSeconds(),
-                    "KD Ratio:;;N".T(EDTx.CQCClass_KDRatio), KD,
-                    "Kills:;;N0".T(EDTx.CQCClass_Kills), Kills,
-                    "Win/Loss:;;N".T(EDTx.CQCClass_Win), WL);
+                    "Credits: ;cr;N0".T(EDTx.MulticrewClass_Credits), CreditsEarned,
+                    "Time Played: ;;N0".T(EDTx.CQCClass_TimePlayed), TimePlayed.SecondsToWeeksDaysHoursMinutesSeconds(),
+                    "KD Ratio: ;;N0".T(EDTx.CQCClass_KDRatio), KD,
+                    "Kills: ;;N0".T(EDTx.CQCClass_Kills), Kills,
+                    "Win/Loss: ;;N0".T(EDTx.CQCClass_Win), WL);
             }
         }
     }

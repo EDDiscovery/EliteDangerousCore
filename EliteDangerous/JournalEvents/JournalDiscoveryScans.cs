@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2018 EDDiscovery development team
+ * Copyright © 2016-2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -16,7 +16,6 @@
 using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -34,7 +33,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("New bodies discovered:".T(EDTx.JournalEntry_Dscan), Bodies);
+            info = BaseUtils.FieldBuilder.Build("New bodies discovered: ".T(EDTx.JournalEntry_Dscan), Bodies);
             detailed = "";
         }
     }
@@ -55,8 +54,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Progress:;%;N1".T(EDTx.JournalFSSDiscoveryScan_Progress), Progress, 
-                "Bodies:".T(EDTx.JournalFSSDiscoveryScan_Bodies), BodyCount, "Others:".T(EDTx.JournalFSSDiscoveryScan_Others), NonBodyCount);
+            info = BaseUtils.FieldBuilder.Build("Progress: ;%;N1".T(EDTx.JournalFSSDiscoveryScan_Progress), Progress, 
+                "Bodies: ".T(EDTx.JournalFSSDiscoveryScan_Bodies), BodyCount, "Others: ".T(EDTx.JournalFSSDiscoveryScan_Others), NonBodyCount);
             detailed = "";
         }
     }
@@ -172,11 +171,11 @@ namespace EliteDangerousCore.JournalEvents
                             ";Installation: ".T(EDTx.FSSSignal_InstallationBool), ClassOfSignal == Classification.Installation,
                             "<", signname,
                             "", USSTypeLocalised,
-                            "Threat Level:".T(EDTx.FSSSignal_ThreatLevel), ThreatLevel,
-                            "Faction:".T(EDTx.FSSSignal_Faction), SpawningFaction_Localised,
-                            "State:".T(EDTx.FSSSignal_State), spstate,
-                            "Time:".T(EDTx.Time), outoftime,
-                            "Last Seen:".T(EDTx.FSSSignal_LastSeen), seen
+                            "Threat Level: ".T(EDTx.FSSSignal_ThreatLevel), ThreatLevel,
+                            "Faction: ".T(EDTx.FSSSignal_Faction), SpawningFaction_Localised,
+                            "State: ".T(EDTx.FSSSignal_State), spstate,
+                            "Time: ".T(EDTx.JournalEntry_Time), outoftime,
+                            "Last Seen: ".T(EDTx.FSSSignal_LastSeen), seen
                             );
             }
         }
@@ -238,7 +237,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Bodies:".T(EDTx.JournalEntry_Bodies), NumBodies);
+            info = BaseUtils.FieldBuilder.Build("Bodies: ".T(EDTx.JournalEntry_Bodies), NumBodies);
             detailed = "";
         }
     }
@@ -270,8 +269,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Probes:".T(EDTx.JournalSAAScanComplete_Probes), ProbesUsed,
-                                                "Efficiency Target:".T(EDTx.JournalSAAScanComplete_EfficiencyTarget), EfficiencyTarget);
+            info = BaseUtils.FieldBuilder.Build("Probes: ".T(EDTx.JournalSAAScanComplete_Probes), ProbesUsed,
+                                                "Efficiency Target: ".T(EDTx.JournalSAAScanComplete_EfficiencyTarget), EfficiencyTarget);
             detailed = "";
         }
     }
@@ -322,7 +321,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var x in list)
                 {
-                    info = info.AppendPrePad(inds + (logtype ? x.Type : x.Type_Localised.Alt(x.Type)) + ":" + x.Count.ToString("N0"), separ);
+                    info = info.AppendPrePad(inds + (logtype ? x.Type : x.Type_Localised.Alt(x.Type)) + ": " + x.Count.ToString("N0"), separ);
                 }
             }
             return info;

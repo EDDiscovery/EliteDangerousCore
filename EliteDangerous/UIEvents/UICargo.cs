@@ -23,13 +23,13 @@ namespace EliteDangerousCore.UIEvents
         {
         }
 
-        public UICargo(int value, UIShipType.Shiptype shiptype, DateTime time, bool refresh) : this(time, refresh)
+        public UICargo(int value, UIMode.ModeType shiptype, DateTime time, bool refresh) : this(time, refresh)
         {
             Count = value;
-            ShipType = shiptype;
+            Mode = shiptype;
         }
 
         public int Count { get; private set; }     // number of items
-        public UIShipType.Shiptype ShipType { get; private set; }   // Ship type flags.. per flags
+        public UIMode.ModeType Mode { get; private set; }   // Ship type flags.. per flags
     }
 }

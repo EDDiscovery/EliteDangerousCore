@@ -93,7 +93,7 @@ namespace EliteDangerousCore
             else
             {
                 if (saveprocessinglater)
-                    sn.SaveForProcessing(jsaa,sys);
+                    SaveForProcessing(jsaa,sys);
                 //System.Diagnostics.Debug.WriteLine("No body to attach data found for " + jsaa.BodyName + " @ " + sys.Name + " body " + jsaa.BodyDesignation);
             }
 

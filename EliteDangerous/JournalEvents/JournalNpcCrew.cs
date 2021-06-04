@@ -60,7 +60,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("<", Name, "Rank:".T(EDTx.JournalEntry_Rank), RankCombat.ToString().SplitCapsWord());
+            info = BaseUtils.FieldBuilder.Build("<", Name, "Rank: ".T(EDTx.JournalEntry_Rank), RankCombat.ToString().SplitCapsWord());
             detailed = "";
         }
 

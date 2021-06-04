@@ -38,11 +38,13 @@ namespace EliteDangerousCore
         private ConcurrentQueue<string> m_netLogFileQueue;
         private bool StoreToDBDuringUpdateRead = false;
         private string journalfilematch;
+        private DateTime mindateutc;
 
-        public JournalMonitorWatcher(string folder, string journalmatchpattern)
+        public JournalMonitorWatcher(string folder, string journalmatchpattern, DateTime mindateutcp)
         {
             WatcherFolder = folder;
             journalfilematch = journalmatchpattern;
+            mindateutc = mindateutcp;
         }
 
         #region Scan start stop and monitor
@@ -143,6 +145,7 @@ namespace EliteDangerousCore
                     string[] filenames = Directory.EnumerateFiles(WatcherFolder, journalfilematch, SearchOption.AllDirectories)
                                                     .Select(s => new { name = Path.GetFileName(s), fullname = s })
                                                     .Where(s => !tlunames.Contains(s.fullname))           // find any new ones..
+                                                    .Where(g => new FileInfo(g.fullname).LastWriteTime >= mindateutc)
                                                     .OrderBy(s => s.name)
                                                     .Select(s => s.fullname)
                                                     .ToArray();
@@ -231,12 +234,13 @@ namespace EliteDangerousCore
         // look thru all files in the location, in date ascending order, work out if we need to scan them, assemble a list of JournalReaders representing one
         // file to parse.  We can order the reload of the last N files
 
-        public List<EDJournalReader> ScanJournalFiles(int reloadlastn)
+        public List<EDJournalReader> ScanJournalFiles(DateTime minjournaldateutc, int reloadlastn)
         {
             //            System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLap("PJF", true), "Scanned " + WatcherFolder);
 
             // order by file write time so we end up on the last one written
-            FileInfo[] allFiles = Directory.EnumerateFiles(WatcherFolder, journalfilematch, SearchOption.AllDirectories).Select(f => new FileInfo(f)).OrderBy(p => p.LastWriteTime).ToArray();
+            FileInfo[] allFiles = Directory.EnumerateFiles(WatcherFolder, journalfilematch, SearchOption.AllDirectories).
+                                        Select(f => new FileInfo(f)).Where(g=>g.LastWriteTime >= minjournaldateutc).OrderBy(p => p.LastWriteTime).ToArray();
 
             List<EDJournalReader> readersToUpdate = new List<EDJournalReader>();
 

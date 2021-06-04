@@ -81,7 +81,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed) 
         {
-            info = BaseUtils.FieldBuilder.Build("Type:".T(EDTx.JournalEntry_Type), BrokerType);
+            info = BaseUtils.FieldBuilder.Build("Type: ".T(EDTx.JournalEntry_Type), BrokerType);
 
             if (ItemsUnlocked != null)
             {
@@ -93,11 +93,11 @@ namespace EliteDangerousCore.JournalEvents
 
             if (CommodityList != null)
                 foreach (Commodities c in CommodityList)
-                    detailed = detailed.AppendPrePad(c.FriendlyName + ":" + c.Count.ToString(), ", "); 
+                    detailed = detailed.AppendPrePad(c.FriendlyName + ": " + c.Count.ToString(), ", "); 
 
             if (MaterialList != null)
                 foreach (Materials m in MaterialList)
-                    detailed = detailed.AppendPrePad(m.FriendlyName + ":" + m.Count.ToString(), ", ");
+                    detailed = detailed.AppendPrePad(m.FriendlyName + ": " + m.Count.ToString(), ", ");
         }
     }
 }

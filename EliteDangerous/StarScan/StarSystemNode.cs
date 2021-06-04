@@ -39,8 +39,6 @@ namespace EliteDangerousCore
 
             public List<JournalFSSSignalDiscovered.FSSSignal> FSSSignalList = new List<JournalFSSSignalDiscovered.FSSSignal>();     // set by FSSSignalsDiscovered
 
-            public List<Tuple<JournalEntry, ISystem>> ToProcess;     // entries seen but yet to be processed due to no scan node (used by reports which do not create scan nodes)
-
             public SystemNode(ISystem sys)
             {
                 System = sys;
@@ -110,14 +108,6 @@ namespace EliteDangerousCore
                 }
                 return null;
             }
-
-            public void SaveForProcessing(JournalEntry je, ISystem sys)
-            {
-                if (ToProcess == null)
-                    ToProcess = new List<Tuple<JournalEntry, ISystem>>();
-                ToProcess.Add(new Tuple<JournalEntry, ISystem>(je, sys));
-            }
-
         };
 
     }
