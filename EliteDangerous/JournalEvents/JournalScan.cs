@@ -970,6 +970,27 @@ namespace EliteDangerousCore.JournalEvents
             return scanText.ToNullSafeString();
         }
 
+        // adds to mats hash if one found.  returns number of jumponiums in body
+        public int Jumponium(HashSet<string> mats)
+        {
+            int count = 0;
+
+            foreach (var m in Materials.EmptyIfNull())
+            {
+                string n = m.Key.ToLower();
+                if (MaterialCommodityMicroResourceType.IsJumponiumType(n))
+                {
+                    count++;
+                    if (!mats.Contains(n))      // and we have not counted it
+                    {
+                        mats.Add(n);
+                    }
+                }
+            }
+
+            return count;
+        }
+
         private string DisplayAtmosphere(int indent = 0)     // has trailing LF
         {
             StringBuilder scanText = new StringBuilder();
