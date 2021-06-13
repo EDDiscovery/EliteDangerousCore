@@ -30,6 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ScreenShotConfigureForm));
             this.panelConfigure = new System.Windows.Forms.Panel();
+            this.labelQuality = new System.Windows.Forms.Label();
+            this.numericUpDownQuality = new ExtendedControls.ExtNumericUpDown();
             this.extCheckBoxHiRes = new ExtendedControls.ExtCheckBox();
             this.extCheckBoxKeepMasterConvertedImage = new ExtendedControls.ExtCheckBox();
             this.extComboBoxConvert2 = new ExtendedControls.ExtComboBox();
@@ -92,6 +94,8 @@
             // panelConfigure
             // 
             this.panelConfigure.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelConfigure.Controls.Add(this.labelQuality);
+            this.panelConfigure.Controls.Add(this.numericUpDownQuality);
             this.panelConfigure.Controls.Add(this.extCheckBoxEnabled);
             this.panelConfigure.Controls.Add(this.extCheckBoxHiRes);
             this.panelConfigure.Controls.Add(this.extCheckBoxKeepMasterConvertedImage);
@@ -130,6 +134,33 @@
             this.panelConfigure.Name = "panelConfigure";
             this.panelConfigure.Size = new System.Drawing.Size(648, 666);
             this.panelConfigure.TabIndex = 0;
+            // 
+            // labelQuality
+            // 
+            this.labelQuality.AutoSize = true;
+            this.labelQuality.Location = new System.Drawing.Point(464, 174);
+            this.labelQuality.Name = "labelQuality";
+            this.labelQuality.Size = new System.Drawing.Size(69, 13);
+            this.labelQuality.TabIndex = 37;
+            this.labelQuality.Text = "JPEG Quality";
+            this.labelQuality.Visible = false;
+            // 
+            // numericUpDownQuality
+            // 
+            this.numericUpDownQuality.AutoSizeTextBox = true;
+            this.numericUpDownQuality.BorderColor = System.Drawing.Color.Transparent;
+            this.numericUpDownQuality.BorderColorScaling = 0.5F;
+            this.numericUpDownQuality.Location = new System.Drawing.Point(539, 171);
+            this.numericUpDownQuality.Maximum = 100;
+            this.numericUpDownQuality.Minimum = 0;
+            this.numericUpDownQuality.Name = "numericUpDownQuality";
+            this.numericUpDownQuality.Size = new System.Drawing.Size(75, 23);
+            this.numericUpDownQuality.TabIndex = 36;
+            this.numericUpDownQuality.Text = "0";
+            this.numericUpDownQuality.TextBoxBackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownQuality.TextBoxForeColor = System.Drawing.SystemColors.WindowText;
+            this.numericUpDownQuality.Value = 0;
+            this.numericUpDownQuality.Visible = false;
             // 
             // extCheckBoxHiRes
             // 
@@ -1009,5 +1040,7 @@
         private ExtendedControls.ExtComboBox extComboBoxClipboard;
         private ExtendedControls.ExtCheckBox extCheckBoxEnabled;
         private System.Windows.Forms.Label labelEnabled;
+        private System.Windows.Forms.Label labelQuality;
+        private ExtendedControls.ExtNumericUpDown numericUpDownQuality;
     }
 }

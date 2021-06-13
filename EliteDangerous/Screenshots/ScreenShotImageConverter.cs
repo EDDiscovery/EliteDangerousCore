@@ -99,6 +99,8 @@ namespace EliteDangerousCore.ScreenShots
 
         public bool HighRes { get; set; } = false;
 
+        public int Quality { get; set; } = 85;
+
         // convert bmp from inputfilename with filetime
         // into outputfolder with properties body,system,cmdrname
         // return final inputfilename, output filename, size. or null if failed.
@@ -240,13 +242,20 @@ namespace EliteDangerousCore.ScreenShots
             return new Tuple<string, string, Size>(inputfilename, outputfilename, finalsize);
         }
 
+        private System.Drawing.Imaging.ImageCodecInfo GetCodec(System.Drawing.Imaging.ImageFormat format)
+        {
+            return System.Drawing.Imaging.ImageCodecInfo.GetImageEncoders().FirstOrDefault(e => e.FormatID == format.Guid);
+        }
+
         private void WriteBMP(Bitmap bmp, string filename, DateTime datetimeutc)
         {
             using (var memstream = new MemoryStream())
             {
                 if (OutputFileExtension == OutputTypes.jpg)
                 {
-                    bmp.Save(memstream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    var encodeparams = new System.Drawing.Imaging.EncoderParameters();
+                    encodeparams.Param[0] = new System.Drawing.Imaging.EncoderParameter(System.Drawing.Imaging.Encoder.Quality, Quality);
+                    bmp.Save(memstream, GetCodec(System.Drawing.Imaging.ImageFormat.Jpeg), encodeparams);
                 }
                 else if (OutputFileExtension == OutputTypes.tiff)
                 {

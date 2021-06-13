@@ -96,6 +96,7 @@ namespace EliteDangerousCore.ScreenShots
                 converter.OutputFileExtension = (ScreenShotImageConverter.OutputTypes)EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("ImageHandlerFormatNr", 0);
 
                 converter.KeepMasterConvertedImage = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingBool("ImageHandlerKeepFullSized", false);
+                converter.Quality = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("ImageHandlerQuality", 85);
             }
             catch (Exception ex)
             {
@@ -116,6 +117,7 @@ namespace EliteDangerousCore.ScreenShots
             DB.UserDatabase.Instance.PutSettingInt("ImageHandlerClipboardOption", (int)converter.ClipboardOption);
             DB.UserDatabase.Instance.PutSettingBool("checkBoxHires", converter.HighRes );
             DB.UserDatabase.Instance.PutSettingBool("ImageHandlerKeepFullSized", converter.KeepMasterConvertedImage);
+            DB.UserDatabase.Instance.PutSettingInt("ImageHandlerQuality", converter.Quality);
 
             DB.UserDatabase.Instance.PutSettingInt("ImageHandlerCropResizeImage1", (int)converter.CropResizeImage1);      // fires the checked handler which sets the readonly mode of the controls
             DB.UserDatabase.Instance.PutSettingInt("ImageHandlerCropTop", converter.CropResizeArea1.Top);
@@ -162,6 +164,7 @@ namespace EliteDangerousCore.ScreenShots
                 converter.CropResizeArea2 = frm.CropResizeArea2;
                 converter.HighRes = frm.HighRes;
                 converter.ClipboardOption = frm.ClipboardOption;
+                converter.Quality = frm.Quality;
 
                 if (watcher != null)
                     watcher.Start(InputFolder,InputFileExtension.ToString(),OutputFolder);
