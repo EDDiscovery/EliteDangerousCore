@@ -14,12 +14,14 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 using BaseUtils.JSON;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.Embark)]
-    public class JournalEmbark : JournalEntry
+    public class JournalEmbark : JournalEntry, IMicroResourceJournalEntry
     {
         public JournalEmbark(JObject evt) : base(evt, JournalTypeEnum.Embark)
         {
@@ -69,6 +71,17 @@ namespace EliteDangerousCore.JournalEvents
             //TBD StationName,StatioNType
             detailed = BaseUtils.FieldBuilder.Build("< to ".T(EDTx.JournalEntry_to), StarSystem, "", Body);
         }
+
+        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry lastprocessedunused)
+        {
+            List<Tuple<string, int>> counts = new List<Tuple<string, int>>();
+            System.Diagnostics.Debug.WriteLine("EMBARK, clear out back pack items");
+            mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Item, counts, MicroResource.BackPack);
+            mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Component, counts, MicroResource.BackPack);
+            mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Consumable, counts, MicroResource.BackPack);
+            mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Data, counts, MicroResource.BackPack);
+        }
+
     }
 
     [JournalEntryType(JournalTypeEnum.Disembark)]

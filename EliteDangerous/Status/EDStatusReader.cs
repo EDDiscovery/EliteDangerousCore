@@ -397,7 +397,7 @@ namespace EliteDangerousCore
                     }
 
                     //for debugging, keep
-#if true
+#if false
                     foreach (var uient in events)
                         {
                             System.Diagnostics.Trace.WriteLine(string.Format("New UI entry from journal {0} {1} refresh {2}", uient.EventTimeUTC, uient.EventTypeStr, changedmajormode));

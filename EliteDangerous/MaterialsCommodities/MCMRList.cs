@@ -131,7 +131,7 @@ namespace EliteDangerousCore
                 Change(utc, cat.Value, fdname, num, price, cnum, setit);
             }
             else
-                System.Diagnostics.Debug.WriteLine("Unknown Cat " + catname);
+                System.Diagnostics.Debug.WriteLine("MCMRLIST Unknown Cat " + catname);
         }
 
         // change entry 0
@@ -149,7 +149,7 @@ namespace EliteDangerousCore
         // to change a value, set count/set = 0 for that entry
         // to leave a value, set count=0,set=0 for that entry
         // set means set to value, else add to value
-        public void Change(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, string fdname, int[] counts, bool[] set, long price)
+        public bool Change(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, string fdname, int[] counts, bool[] set, long price)
         {
             fdname = fdname.ToLowerInvariant();
 
@@ -182,12 +182,15 @@ namespace EliteDangerousCore
                     mc.Price = (costprev + costofnew) / mc.Counts[0];       // price is now a combination of the current cost and the new cost. in case we buy in tranches
 
                 items[fdname] = mc;                                         // and set fdname to mc - this allows for any repeat adds due to frontier data repeating stuff in things like cargo
-               // System.Diagnostics.Debug.WriteLine("{0} Changed {1} {2} {3} {4}", utc, items.Generation, mc.Details.FDName, mc.Counts[0], mc.Counts[1]);
+
+                //System.Diagnostics.Debug.WriteLine("MCMRLIST {0} Changed {1} {2} {3} {4}", utc.ToString(), items.Generation, mc.Details.FDName, mc.Counts[0], mc.Counts[1]);
             }
             else
             {
-               // System.Diagnostics.Debug.WriteLine("{0} Not changed {1} {2}", utc, mc.Details.FDName, mc.Count);
+                // System.Diagnostics.Debug.WriteLine("{0} Not changed {1} {2}", utc.ToString(), mc.Details.FDName, mc.Count);
             }
+
+            return changed;
         }
 
         //always changes entry 0
@@ -199,7 +202,7 @@ namespace EliteDangerousCore
                 mc = new MaterialCommodityMicroResource(mc);      // new clone of
                 mc.Counts[0] = Math.Max(mc.Counts[0] - num, 0);
                 items[mc.Details.FDName.ToLowerInvariant()] = mc;
-                System.Diagnostics.Debug.WriteLine("{0} Craft {1} {2}", utc, mc.Details.FDName, num);
+                //System.Diagnostics.Debug.WriteLine("MCMRLIST {0} Craft {1} {2}", utc.ToString(), mc.Details.FDName, num);
             }
         }
 
@@ -221,7 +224,7 @@ namespace EliteDangerousCore
         // All others in the same cat not mentioned in values go to zero
         // make sure values has name lower case.
 
-        public void Update(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, List<Tuple<string,int>> values, int cnum = 0)
+        public int Update(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, List<Tuple<string,int>> values, int cnum = 0)
         {
             var curlist = items.GetLastValues((x) => x.Details.Category == cat && x.Counts[cnum]>0);     // find all of this cat with a count >0
 
@@ -230,10 +233,16 @@ namespace EliteDangerousCore
 
             vsets[cnum] = true;                                                 // but set the cnum to set
 
+            int changed = 0;
+
             foreach (var v in values)           
             {
                 varray[cnum] = v.Item2;                         // set cnum value
-                Change(utc, cat, v.Item1, varray, vsets, 0);      // set entry 
+                if (Change(utc, cat, v.Item1, varray, vsets, 0))      // set entry 
+                {
+                    //System.Diagnostics.Debug.WriteLine("MCMRLIST {0} updated {1} {2} to {3} (entry {4})", utc.ToString(), cat, v.Item1, v.Item2 , cnum);
+                    changed++;                                 // indicated changed
+                }
             }
 
             foreach( var c in curlist)                                          //go thru the non zero list of cat
@@ -243,12 +252,16 @@ namespace EliteDangerousCore
                     var mc = new MaterialCommodityMicroResource(c);     // clone it
                     mc.Counts[cnum] = 0;            // zero cnum
                     items[c.Details.FDName.ToLowerInvariant()] = mc;
-                    System.Diagnostics.Debug.WriteLine("{0} Found {1} not in update list, zeroing", utc, mc.Details.FDName);
+                    //System.Diagnostics.Debug.WriteLine("MCMRLIST {0} Found {1} not in update list, zeroing", utc.ToString(), mc.Details.FDName);
+                    changed++;
                 }
             }
+
+            //System.Diagnostics.Debug.WriteLine("MCMRLIST {0} update changed {1}", utc.ToString(), changed);
+            return changed;
         }
 
-        public uint Process(JournalEntry je)
+        public uint Process(JournalEntry je, JournalEntry lastprocessed)
         {
             if (je is ICommodityJournalEntry || je is IMaterialJournalEntry || je is IMicroResourceJournalEntry)
             {
@@ -271,7 +284,7 @@ namespace EliteDangerousCore
                 if (je is IMicroResourceJournalEntry)
                 {
                     IMicroResourceJournalEntry e = je as IMicroResourceJournalEntry;
-                    e.UpdateMicroResource(this);
+                    e.UpdateMicroResource(this,lastprocessed);
                 }
 
                 if (items.UpdatesAtThisGeneration == 0)         // if nothing changed, abandon it.
