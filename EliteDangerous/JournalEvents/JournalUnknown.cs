@@ -19,31 +19,73 @@ using System;
 
 namespace EliteDangerousCore.JournalEvents
 {
-    [JournalEntryType(JournalTypeEnum.Unknown)] 
-    public class JournalUnknown : JournalEntry
+    public class JournalUnimplemented: JournalEntry
     {
         public JObject json;
         public string eventname;
+        public bool withdrawn;
 
-        public JournalUnknown(JObject evt) : base(evt, JournalTypeEnum.Unknown)
+        public JournalUnimplemented(JObject evt, JournalTypeEnum e, bool withdrawn) : base(evt, e)
         {
             json = evt;
             eventname = evt["event"].Str("No event tag");
+            this.withdrawn = withdrawn;
         }
 
         public override string SummaryName(ISystem sys)
         {
-            return json["event"].Str("Unknown").Alt("Missing event name").SplitCapsWordFull();
+            return json["event"].Str("Unknown").SplitCapsWordFull();
         }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             JObject jt = json.Clone().Object();
             jt.Remove("timestamp");
             jt.Remove("event");
-            info = jt.ToStringLiteral();
+            info = (withdrawn ? "Obsolete Event:" : "Unknown Event:") + jt.ToStringLiteral();
             detailed = "";
         }
     }
+
+    [JournalEntryType(JournalTypeEnum.Unknown)]
+    public class JournalUnknown : JournalUnimplemented
+    {
+        public JournalUnknown(JObject evt) : base(evt, JournalTypeEnum.Unknown,false)
+        {
+        }
+    }
+
+    [JournalEntryType(JournalTypeEnum.TransferMicroResources)]
+    public class JournalTransferMicroResources : JournalUnimplemented
+    {
+        public JournalTransferMicroResources(JObject evt) : base(evt, JournalTypeEnum.TransferMicroResources,true)
+        {
+        }
+    }
+
+    [JournalEntryType(JournalTypeEnum.ShipLockerMaterials)]
+    public class JournalShipLockerMaterials : JournalUnimplemented
+    {
+        public JournalShipLockerMaterials(JObject evt) : base(evt, JournalTypeEnum.ShipLockerMaterials,true)
+        {
+        }
+    }
+
+    [JournalEntryType(JournalTypeEnum.BackPack)]
+    public class JournalBackPack : JournalUnimplemented
+    {
+        public JournalBackPack(JObject evt) : base(evt, JournalTypeEnum.BackPack, true)
+        {
+        }
+    }
+
+    [JournalEntryType(JournalTypeEnum.BackPackMaterials)]
+    public class JournalBackPackMaterials : JournalUnimplemented
+    {
+        public JournalBackPackMaterials(JObject evt) : base(evt, JournalTypeEnum.BackPack, true)
+        {
+        }
+    }
+
 
 }

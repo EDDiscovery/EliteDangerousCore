@@ -234,7 +234,7 @@ namespace EliteDangerousCore
         ShipyardSwap = 870,
         ShipyardTransfer = 880,
         ShipTargeted = 881,
-        ShipLockerMaterials = 4022,
+        ShipLocker = 4031,
         Shutdown = 882,
         SRVDestroyed = 883,
         StartJump = 885,
@@ -254,7 +254,6 @@ namespace EliteDangerousCore
         TechnologyBroker = 918,
         Touchdown = 920,
         TradeMicroResources = 4024,
-        TransferMicroResources = 4028,
         UnderAttack = 925,
         Undocked = 930,
         UpgradeSuit = 4025,
@@ -267,6 +266,13 @@ namespace EliteDangerousCore
         WingJoin = 970,
         WingLeave = 980,
         WonATrophyForSquadron = 985,
+
+        // removed events
+        TransferMicroResources = 9000,
+        BackPack = 9001,
+        ShipLockerMaterials = 9002,
+        BackPackMaterials = 9003,
+
 
         // EDD Entries
 

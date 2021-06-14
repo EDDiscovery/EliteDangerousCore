@@ -61,7 +61,7 @@ namespace EliteDangerousCore
                         }
                         else
                         {
-                            System.Diagnostics.Debug.WriteLine("FSS Signals can't find now" + fs.SystemAddress);
+                            //System.Diagnostics.Debug.WriteLine("FSS Signals can't find now" + fs.SystemAddress);
                         }
                         return false;
                     }

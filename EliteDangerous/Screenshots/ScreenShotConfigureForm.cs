@@ -39,6 +39,7 @@ namespace EliteDangerousCore.ScreenShots
         public Rectangle CropResizeArea2 { get { return new Rectangle(extNumericUpDownLeft2.Value, extNumericUpDownTop2.Value, extNumericUpDownWidth2.Value, extNumericUpDownHeight2.Value); } }
         public bool HighRes {  get { return extCheckBoxHiRes.Checked; } }
         public ScreenShotImageConverter.ClipboardOptions ClipboardOption { get { return (ScreenShotImageConverter.ClipboardOptions)extComboBoxClipboard.SelectedIndex; } }
+        public int Quality { get { return numericUpDownQuality.Value; } }
 
         string initialssfolder;
 
@@ -96,6 +97,9 @@ namespace EliteDangerousCore.ScreenShots
             extNumericUpDownLeft2.Value = cf.CropResizeArea2.Left;
             extNumericUpDownWidth2.Value = cf.CropResizeArea2.Width;
             extNumericUpDownHeight2.Value = cf.CropResizeArea2.Height;
+
+            numericUpDownQuality.Value = cf.Quality;
+            numericUpDownQuality.Visible = labelQuality.Visible = comboBoxOutputAs.SelectedIndex == (int)ScreenShotImageConverter.OutputTypes.jpg;
 
             SetNumEnabled();
 
@@ -237,6 +241,7 @@ namespace EliteDangerousCore.ScreenShots
 
         private void comboBoxOutputAs_SelectedIndexChanged(object sender, EventArgs e)
         {
+            numericUpDownQuality.Visible = labelQuality.Visible = comboBoxOutputAs.SelectedIndex == (int)ScreenShotImageConverter.OutputTypes.jpg;
             UpdateExample();
         }
 

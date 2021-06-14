@@ -32,7 +32,7 @@ namespace EliteDangerousCore
 
     public interface IMicroResourceJournalEntry
     {
-        void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc);
+        void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry lastprocessed);
     }
 
     public interface ILedgerJournalEntry

@@ -85,6 +85,14 @@ namespace EliteDangerousCore
                     || FDName.Contains("vanadium") || FDName.Contains("yttrium"));
             }
         }
+        
+        // expects lower case
+        static public bool IsJumponiumType(string fdname)
+        {
+            return (fdname.Contains("arsenic") || fdname.Contains("cadmium") || fdname.Contains("carbon")
+                || fdname.Contains("germanium") || fdname.Contains("niobium") || fdname.Contains("polonium")
+                || fdname.Contains("vanadium") || fdname.Contains("yttrium"));
+        }
 
         static public CatType? CategoryFrom(string s)
         {

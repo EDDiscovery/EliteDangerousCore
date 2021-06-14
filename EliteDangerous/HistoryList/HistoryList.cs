@@ -36,6 +36,9 @@ namespace EliteDangerousCore
         private List<HistoryEntry> historylist = new List<HistoryEntry>();  // oldest first here
         private Stats statisticsaccumulator = new Stats();
 
+        // last one processed into this class, after merge, before MC removal, null at creation, updated by loadhistory and addjournalentry
+        private HistoryEntry lastprocessedbeforeremoval = null;                         
+
         public HistoryList() { }
 
         public HistoryList(List<HistoryEntry> hl) { historylist = hl; }         // SPECIAL USE ONLY - DOES NOT COMPUTE ALL THE OTHER STUFF
@@ -71,13 +74,24 @@ namespace EliteDangerousCore
 
         public HistoryEntry AddJournalEntryToHistory(JournalEntry je, Action<string> logerror)   
         {
-            HistoryEntry hprev = GetLast;
+            HistoryEntry hlaststored = GetLast;
 
-            HistoryEntry he = HistoryEntry.FromJournalEntry(je, hprev);     // we may check edsm for this entry
+            HistoryEntry he = HistoryEntry.FromJournalEntry(je, hlaststored);     // we may check edsm for this entry
 
-            he.UpdateMaterialsCommodities(MaterialCommoditiesMicroResources.Process(je));
+            he.UpdateMaterialsCommodities(MaterialCommoditiesMicroResources.Process(je,lastprocessedbeforeremoval?.journalEntry));
 
-            if (CheckForRemoval(he, hprev))                                     // check here to see if we want to remove the entry.. can move this lower later, but at first point where we have the data
+            // IN THIS order, so suits can be added, then weapons, then loadouts
+            he.UpdateSuits(SuitList.Process(je, he.WhereAmI, he.System));
+            he.UpdateWeapons(WeaponList.Process(je, he.WhereAmI, he.System));
+            he.UpdateLoadouts(SuitLoadoutList.Process(je, WeaponList, he.WhereAmI, he.System));
+
+            // check here to see if we want to remove the entry.. can move this lower later, but at first point where we have the data
+
+            bool remove = CheckForRemovalAfterMCSuits(he, hlaststored, lastprocessedbeforeremoval);
+
+            lastprocessedbeforeremoval = he;                                              // update this, we may remove now..
+
+            if (remove)                                     
                 return null;
 
             he.UpdateStats(je, statisticsaccumulator, he.StationFaction);
@@ -95,15 +109,10 @@ namespace EliteDangerousCore
             
             he.UpdateMissionList(MissionListAccumulator.Process(je, he.System, he.WhereAmI));
 
-            // IN THIS order, so suits can be added, then weapons, then loadouts
-            he.UpdateSuits(SuitList.Process(je, he.WhereAmI, he.System));
-            he.UpdateWeapons(WeaponList.Process(je, he.WhereAmI, he.System));          
-            he.UpdateLoadouts(SuitLoadoutList.Process(je, WeaponList, he.WhereAmI, he.System));
-
             historylist.Add(he);        // then add to history
 
             AddToVisitsScan(this, this.historylist.Count-1, logerror);  // add to scan database and complain if can't add. Do this after history add, so it has a list.
-            
+
             return he;
         }
 
@@ -144,11 +153,11 @@ namespace EliteDangerousCore
 
             reportProgress( "Creating History");
 
-            HistoryEntry hprev = null;
-            
+            HistoryEntry hlaststored = null;
+
             foreach (JournalEntry je in jlist)
             {
-                if (MergeOrDiscardEntries(hprev?.journalEntry, je))        // if we merge, don't store into HE
+                if (MergeOrDiscardEntries(hlaststored?.journalEntry, je))        // if we merge, don't store into HE
                 {
                     continue;
                 }
@@ -166,16 +175,26 @@ namespace EliteDangerousCore
                     continue;
                 }
 
-                HistoryEntry he = HistoryEntry.FromJournalEntry(je, hprev);     // create entry
+                HistoryEntry he = HistoryEntry.FromJournalEntry(je, hlaststored);     // create entry
 
-                he.UpdateMaterialsCommodities(hist.MaterialCommoditiesMicroResources.Process(je));
+                he.UpdateMaterialsCommodities(hist.MaterialCommoditiesMicroResources.Process(je,hist.lastprocessedbeforeremoval?.journalEntry));
 
-                if (CheckForRemoval(he, hprev))                                 // check here to see if we want to remove the entry.. can move this lower later, but at first point where we have the data
+                // IN THIS order, so suits can be added, then weapons, then loadouts
+                he.UpdateSuits(hist.SuitList.Process(je, he.WhereAmI, he.System));
+                he.UpdateWeapons(hist.WeaponList.Process(je, he.WhereAmI, he.System));          // update the entries in suit entry list
+                he.UpdateLoadouts(hist.SuitLoadoutList.Process(je, hist.WeaponList, he.WhereAmI, he.System));
+
+                // check here to see if we want to remove the entry.. can move this lower later, but at first point where we have the data
+                bool remove = CheckForRemovalAfterMCSuits(he, hlaststored, hist.lastprocessedbeforeremoval);
+
+                hist.lastprocessedbeforeremoval = he;       // and we store the last processed
+
+                if ( remove)
                     continue;
 
                 hist.historylist.Add(he);                                       // now add it to the history
 
-                hprev = he;
+                hlaststored = he;
             }
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " History List Created");
@@ -201,13 +220,11 @@ namespace EliteDangerousCore
 
                 he.UpdateMissionList(hist.MissionListAccumulator.Process(je, he.System, he.WhereAmI));
 
-                // IN THIS order, so suits can be added, then weapons, then loadouts
-                he.UpdateSuits(hist.SuitList.Process(je, he.WhereAmI, he.System));
-                he.UpdateWeapons(hist.WeaponList.Process(je, he.WhereAmI, he.System));          // update the entries in suit entry list
-                he.UpdateLoadouts(hist.SuitLoadoutList.Process(je, hist.WeaponList, he.WhereAmI, he.System));
-
                 AddToVisitsScan(hist, i, null);          // add to scan but don't complain if can't add
             }
+
+            foreach (var s in hist.StarScan.ToProcess)
+                System.Diagnostics.Debug.WriteLine("StarScan could not find " + s.Item2.SystemAddress + " at " + s.Item1.EventTimeUTC);
 
         //for (int i = hist.Count - 10; i < hist.Count; i++)  System.Diagnostics.Debug.WriteLine("Hist {0} {1} {2}", hist[i].EventTimeUTC, hist[i].Indexno , hist[i].EventSummary);
 
@@ -308,7 +325,7 @@ namespace EliteDangerousCore
             }
         }
 
-        public static int MergeTypeDelay(JournalEntry je)   // 0 = no delay, delay for attempts to merge items..
+        public static int MergeTypeDelay(JournalEntry je)   // 0 = no delay, delay for attempts to merge items..  used by new entry mech only, not by historylist
         {
             if (je.EventTypeID == JournalTypeEnum.Friends)
                 return 2000;
@@ -338,7 +355,7 @@ namespace EliteDangerousCore
                         EliteDangerousCore.JournalEvents.JournalFuelScoop jfsprev = prev as EliteDangerousCore.JournalEvents.JournalFuelScoop;
                         jfsprev.Scooped += jfs.Scooped;
                         jfsprev.Total = jfs.Total;
-                        System.Diagnostics.Debug.WriteLine("Merge FS " + jfsprev.EventTimeUTC);
+                        //System.Diagnostics.Debug.WriteLine("Merge FS " + jfsprev.EventTimeUTC);
                         return true;
                     }
                     else if (je.EventTypeID == JournalTypeEnum.Friends) // merge friends
@@ -400,14 +417,16 @@ namespace EliteDangerousCore
             return false;
         }
 
-        // this allows for discarding after materialcommodities processing
+        // this allows for discarding after materialcommodities and suit processing
 
-        public static bool CheckForRemoval(HistoryEntry he, HistoryEntry hprev)
+        public static bool CheckForRemovalAfterMCSuits(HistoryEntry he, HistoryEntry hlaststored, HistoryEntry hlastprocessed)
         {
             // we generally try and remove cargo as spam, but we need to keep its updated MC
 
-            if (hprev == null)
+            if (hlaststored == null || hlastprocessed == null)
                 return false;
+
+            bool removeodysseyevents = true;       // set to try normally, false for debug
 
             if (he.EntryType == JournalTypeEnum.Cargo)
             {
@@ -415,51 +434,78 @@ namespace EliteDangerousCore
 
                 if (cargo.EDDFromFile == true ||       // if from file, its a newer entry, after nov 20, so we remove it
                                                        // else if older than when this flag was introduced, we remove if its not following the two types below
-                     (cargo.EventTimeUTC < new DateTime(2020, 11, 20) && hprev.EntryType != JournalTypeEnum.Statistics && hprev.EntryType != JournalTypeEnum.Friends)
+                     (cargo.EventTimeUTC < new DateTime(2020, 11, 20) && hlaststored.EntryType != JournalTypeEnum.Statistics && hlaststored.EntryType != JournalTypeEnum.Friends)
                     )
                 {
-                    //  System.Diagnostics.Debug.WriteLine(he.EventTimeUTC + " Remove cargo and assign to previous entry FromFile: " + cargo.EDDFromFile);
-                    hprev.UpdateMaterialsCommodities(he.MaterialCommodity);        // assign its updated commodity list to previous entry
+                    //  System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " Remove cargo and assign to previous entry FromFile: " + cargo.EDDFromFile);
+                    hlaststored.UpdateMaterialsCommodities(he.MaterialCommodity);        // assign its updated commodity list to previous entry
                     return true;
                 }
                 else
                 {
-                    //  System.Diagnostics.Debug.WriteLine(he.EventTimeUTC + " Keep cargo entry FromFile: " + cargo.EDDFromFile);
+                    //  System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " Keep cargo entry FromFile: " + cargo.EDDFromFile);
                 }
             }
-            else if ((he.EntryType == JournalTypeEnum.ShipLockerMaterials && hprev.EntryType == JournalTypeEnum.BuyMicroResources) ||
-                        (he.EntryType == JournalTypeEnum.BackpackChange && (hprev.EntryType == JournalTypeEnum.UseConsumable || hprev.EntryType == JournalTypeEnum.DropItems || hprev.EntryType == JournalTypeEnum.CollectItems))
-                        )
-
+            else if (he.EntryType == JournalTypeEnum.ShipLocker)      // we updated the MCML list, just remove. Next entry will deal with it
             {
-                System.Diagnostics.Debug.WriteLine("{0} discard after {1}", he.EntryType, hprev.EntryType);
-                hprev.UpdateMaterialsCommodities(he.MaterialCommodity);        // assign its updated commodity list to previous entry
-                return true;
+                System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " Shiplocker removed");
+                return removeodysseyevents;
             }
-            else if (he.EntryType == JournalTypeEnum.BackpackChange )
+            else if (he.EntryType == JournalTypeEnum.SuitLoadout)
+            {
+                // sequence disembark/embark, suitloadout, push back and remove.  we use laststored since we keep embark/disembark
+                if (hlaststored.EntryType == JournalTypeEnum.Disembark || hlaststored.EntryType == JournalTypeEnum.Embark)       
+                {
+                    System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " Suitloadout following disembark, copy back");
+                    hlaststored.UpdateSuits(he.Suits);
+                    hlaststored.UpdateWeapons(he.Weapons);
+                    hlaststored.UpdateLoadouts(he.Loadouts);
+                    return removeodysseyevents;
+                }
+                else
+                {
+                    // keep for now
+                    System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " Suitloadout keep");
+                }
+            }
+            else if (he.EntryType == JournalTypeEnum.Backpack)
+            {
+                // sequence disembark, suitloadout, backpack, push back. 
+                // Note suitloadout should have been removed by above so it should now be disembark, backpack.  
+                // use last stored as disembark should be there as the last stored entry
+                if (hlaststored.EntryType == JournalTypeEnum.Disembark )       
+                {
+                    System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " backpack following disembark or suitloadout, copy back mats");
+                    hlaststored.UpdateMaterialsCommodities(he.MaterialCommodity);
+                }
+
+                System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " backpack removed");
+                return removeodysseyevents;
+            }
+            else if (he.EntryType == JournalTypeEnum.BackpackChange)
             {
                 var bp = he.journalEntry as JournalBackpackChange;
-                if ( bp.ThrowGrenade)
+
+                // if its a grenade, use alchemy to turn it back into a use consumable
+                if (bp.ThrowGrenade)       
                 {
-                    System.Diagnostics.Debug.WriteLine("Throw grenade, use Alchemy");
+                    System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " Throw grenade, use Alchemy");
                     he.ReplaceJournalEntry(new JournalUseConsumable(bp.EventTimeUTC, bp.Removed[0].Name, bp.Removed[0].Name_Localised, bp.Removed[0].Category, bp.TLUId, bp.CommanderId, bp.Id));
                 }
-            }
-            else if (he.EntryType == JournalTypeEnum.ShipLockerMaterials && hprev.EntryType != JournalTypeEnum.Materials)       // materials is produced just before it on startup, keep it, else throw it away
-            {
-                return true;        // dont update hprev commodities, next entry will have the update
-            }
-            else if (he.EntryType == JournalTypeEnum.TransferMicroResources)
-            {
-                return true;
-            }
-            else if (he.EntryType == JournalTypeEnum.Backpack) 
-            {
-                return true;
-            }
-            else if ( he.EntryType == JournalTypeEnum.Loadout && hprev.EntryType == JournalTypeEnum.Embark)
-            {
-                return true;
+
+                // sequence droptitems (etc), backpack change, but we need to make sure we are attached to the last processed, not the last stored, since we remove
+                // BPC and if you have sequences like USEC(frag) SL BPL (get from ship) and with the SL being removed it would be confused
+
+                else if (hlastprocessed.EntryType == JournalTypeEnum.DropItems || hlastprocessed.EntryType == JournalTypeEnum.CollectItems || hlastprocessed.EntryType == JournalTypeEnum.UseConsumable)
+                {
+                    System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " BackPackChange following " + hlaststored.EntryType + " update prev " + he.MaterialCommodity + ", remove");
+                    hlaststored.UpdateMaterialsCommodities(he.MaterialCommodity);         // backpack change has the change, 
+                    return removeodysseyevents;
+                }
+                else
+                {           // KEEP - transfer from ship does shiplocker/backpackchange
+                    System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " Backpackchange keep");
+                }
             }
 
             return false;
