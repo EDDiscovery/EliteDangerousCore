@@ -759,6 +759,11 @@ namespace EliteDangerousCore
         JournalTypeEnum_CapShipBond, // Capital Ship Bond
         JournalTypeEnum_FactionKillBond, // Faction Kill Bond
 
+        UserControlScan_Expired,
+        ScanDisplayUserControl_NSD, // No scan data available
+        ScanDisplayUserControl_BC, // Barycentre of {0}
+        ScanDisplayUserControl_Signals, // Signals
+
     }
 
     public static class EDTranslatorExtensions
