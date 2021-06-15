@@ -891,3 +891,10 @@ SECTION Screenshot
 .FolderNotExist: "Folder specified does not exist" => "La carpeta especificada no existe"
 .Folder: "Select screenshot folder" => "Seleccionar carpeta de captura de pantalla"
 .Identical: "Cannot set input and output to identical types and the same folder" => "No se puede establecer la entrada y la salida en tipos idénticos y la misma carpeta"
+
+SECTION ScanDisplayUserControl
+
+.NSD: "No scan data available" => "No hay datos de escaneo disponibles"
+.BC: "Barycentre of {0}" => "Baricentro de {0}"
+.Signals: "Signals" => "Señales"
+
