@@ -196,7 +196,7 @@ namespace EliteDangerousCore
 
         public static EDStar StarStr2Enum(string star)
         {
-            if (star == null)
+            if (star.IsEmpty())
                 return EDStar.Unknown;
 
             if (StarStr2EnumLookup == null)
@@ -218,9 +218,9 @@ namespace EliteDangerousCore
 
         private static Dictionary<string, EDPlanet> PlanetStr2EnumLookup;
 
-        public static EDPlanet PlanetStr2Enum(string star)
+        public static EDPlanet PlanetStr2Enum(string planet)
         {
-            if (star == null)
+            if (planet.IsEmpty())
                 return EDPlanet.Unknown_Body_Type;
 
             if (PlanetStr2EnumLookup == null)
@@ -232,7 +232,7 @@ namespace EliteDangerousCore
                 }
             }
 
-            var searchstr = star.Replace("_", "").Replace(" ", "").Replace("-", "").ToLowerInvariant();
+            var searchstr = planet.Replace("_", "").Replace(" ", "").Replace("-", "").ToLowerInvariant();
 
             if (PlanetStr2EnumLookup.ContainsKey(searchstr))
                 return PlanetStr2EnumLookup[searchstr];
@@ -246,7 +246,7 @@ namespace EliteDangerousCore
         {
             atmprop = EDAtmosphereProperty.None;
 
-            if (v == null)
+            if (v.IsEmpty())
                 return EDAtmosphereType.Unknown;
 
             if (AtmosphereStr2EnumLookup == null)
@@ -294,7 +294,8 @@ namespace EliteDangerousCore
         public static EDVolcanism VolcanismStr2Enum(string v, out EDVolcanismProperty vprop )
         {
             vprop = EDVolcanismProperty.None;
-            if (v == null)
+
+            if (v.IsEmpty())
                 return EDVolcanism.Unknown;
 
             string searchstr = v.ToLowerInvariant().Replace("_", "").Replace(" ", "").Replace("-", "").Replace("volcanism", "");
@@ -329,7 +330,7 @@ namespace EliteDangerousCore
 
         public static EDReserve ReserveStr2Enum(string star)
         {
-            if (star == null)
+            if (star.IsEmpty())
                 return EDReserve.None;
 
             if (ReserveStr2EnumLookup == null)
