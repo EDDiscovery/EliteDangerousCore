@@ -148,7 +148,7 @@ namespace EliteDangerousCore.JournalEvents
         public Dictionary<string, double> PlanetComposition { get; private set; }
         public bool HasPlanetaryComposition { get { return PlanetComposition != null && PlanetComposition.Any(); } }
 
-        public string Volcanism { get; private set; }                       // direct from journal
+        public string Volcanism { get; private set; }                       // direct from journal - can be null or a blank string
         public EDVolcanism VolcanismID { get; }                     // Volcanism -> ID (Water_Magma, Nitrogen_Magma etc)
         public bool HasMeaningfulVolcanism { get { return VolcanismID != EDVolcanism.None && VolcanismID != EDVolcanism.Unknown; } }
         public EDVolcanismProperty VolcanismProperty { get; private set; }               // Volcanism -> Property (None, Major, Minor)
@@ -646,8 +646,8 @@ namespace EliteDangerousCore.JournalEvents
                 }
             }
 
-            if (Volcanism != null)
-                scanText.AppendFormat("Volcanism: {0}\n".T(EDTx.JournalScan_Volcanism), Volcanism == String.Empty ? "No Volcanism".T(EDTx.JournalScan_NoVolcanism) : System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.
+            if (Volcanism.HasChars())
+                scanText.AppendFormat("Volcanism: {0}\n".T(EDTx.JournalScan_Volcanism), Volcanism.IsEmpty() ? "No Volcanism".T(EDTx.JournalScan_NoVolcanism) : System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.
                                                                                             ToTitleCase(Volcanism.ToLowerInvariant()));
 
 
