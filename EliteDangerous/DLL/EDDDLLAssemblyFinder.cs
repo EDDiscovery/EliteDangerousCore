@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -23,7 +24,7 @@ namespace EliteDangerousCore.DLL
 {
     public static class EDDDLLAssemblyFinder
     {
-        public static string AssemblyFindPath { get; set; } = "";
+        public static List<string> AssemblyFindPaths { get; set; } = new List<string>();
 
         public static Assembly AssemblyResolve(object sender, ResolveEventArgs args)
         {
@@ -37,27 +38,31 @@ namespace EliteDangerousCore.DLL
 
             string filename = args.Name.Split(',')[0] + ".dll".ToLower();
 
-            FileInfo[] find = Directory.EnumerateFiles(AssemblyFindPath, filename, SearchOption.AllDirectories).Select(f => new FileInfo(f)).OrderBy(p => p.LastWriteTime).ToArray();
-
-            foreach( var f in find )
+            foreach (var path in AssemblyFindPaths)
             {
-                try
-                {
-                    AssemblyName currentAssemblyName = AssemblyName.GetAssemblyName(f.FullName);
+                FileInfo[] find = Directory.EnumerateFiles(path, filename, SearchOption.AllDirectories).Select(f => new FileInfo(f)).OrderBy(p => p.LastWriteTime).ToArray();
 
-                    if (args.Name == currentAssemblyName.FullName)      // check full name in case we have multiple ones with different versions
+                foreach (var f in find)
+                {
+                    try
                     {
-                        System.Diagnostics.Debug.WriteLine("Resolved " + filename + " from " + find[0].FullName);
-                        return System.Reflection.Assembly.LoadFrom(find[0].FullName);
+                        AssemblyName currentAssemblyName = AssemblyName.GetAssemblyName(f.FullName);
+
+                        if (args.Name == currentAssemblyName.FullName)      // check full name in case we have multiple ones with different versions
+                        {
+                            System.Diagnostics.Debug.WriteLine("Resolved " + filename + " from " + find[0].FullName);
+                            return System.Reflection.Assembly.LoadFrom(find[0].FullName);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Exception during load " + ex);
                     }
                 }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine("Exception during load " + ex);
-                }
+
+                System.Diagnostics.Debug.WriteLine("UnResolved " + filename + " from " + find[0].FullName);
             }
 
-            System.Diagnostics.Debug.WriteLine("UnResolved " + filename + " from " + find[0].FullName);
             return null;
 
         }
