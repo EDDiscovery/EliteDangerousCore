@@ -99,19 +99,18 @@ namespace EliteDangerousCore
 
                 Point maxitemspos = new Point(0, 0);
 
-                if (systemnode.StarNodes.Values.Count == 0 && systemnode.FSSSignalList.Count > 0)  // if no stars, but signals..
-                {
-                    Point maxpos = CreateImageAndLabel(starcontrols, notscannedbitmap, leftmiddle, StarSize, out Rectangle starpos, new string[] { "Main Star" }, "", false);
-                    DrawSignals(starcontrols, new Point(starpos.Right + moonspacerx, leftmiddle.Y), systemnode.FSSSignalList, StarSize.Height * 6 / 4, 16);       // draw them, nothing else to follow
-                }
-
-                bool drawnsignals = false;
+                bool drawnsignals = false;      // set if we drawn signals against any of the stars
 
                 foreach (StarScan.ScanNode starnode in systemnode.StarNodes.Values)        // always has scan nodes
                 {
                     if (filter != null && starnode.IsBodyInFilter(filter, true) == false)       // if filter active, but no body or children in filter
                     {
                        // System.Diagnostics.Debug.WriteLine("SDUC Rejected " + starnode.fullname);
+                        continue;
+                    }
+
+                    if (!starnode.DoesNodeHaveNonEDSMScansBelow() && !ShowEDSMBodies)      // if we don't have any non edsm bodies at or under the node, and we are not showing edsm bodies, ignore
+                    {
                         continue;
                     }
 
@@ -298,6 +297,12 @@ namespace EliteDangerousCore
 
                     DisplayAreaUsed = new Point(Math.Max(DisplayAreaUsed.X, maxitemspos.X), Math.Max(DisplayAreaUsed.Y, maxitemspos.Y));
 
+                }
+
+                if (!drawnsignals && systemnode.FSSSignalList.Count > 0)  // if no stars were drawn, but signals..
+                {
+                    Point maxpos = CreateImageAndLabel(starcontrols, notscannedbitmap, leftmiddle, StarSize, out Rectangle starpos, new string[] { "" }, "", false);
+                    DrawSignals(starcontrols, new Point(starpos.Right + moonspacerx, leftmiddle.Y), systemnode.FSSSignalList, StarSize.Height * 6 / 4, 16);       // draw them, nothing else to follow
                 }
 
                 imagebox.AddRange(starcontrols);
