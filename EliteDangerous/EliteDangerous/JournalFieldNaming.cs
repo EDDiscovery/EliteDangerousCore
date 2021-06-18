@@ -156,8 +156,11 @@ namespace EliteDangerousCore
                 s = s.Replace("hpt_", "Hpt_");
             if (s.Contains("_armour_"))
                 s = s.Replace("_armour_", "_Armour_");      // normalise to Armour upper cas.. its a bit over the place with case..
-            if (s.EndsWith("_name;"))
+            if (s.EndsWith("_name;", StringComparison.InvariantCultureIgnoreCase))
+            {
+                //System.Diagnostics.Debug.WriteLine("Correct " + s);
                 s = s.Substring(0, s.Length - 6);
+            }
             if (s.StartsWith("$"))                          // seen instances of $python_armour..
                 s = s.Substring(1);
 
