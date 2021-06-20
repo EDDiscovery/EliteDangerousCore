@@ -89,21 +89,26 @@ namespace EliteDangerousCore
                 }
             }
 
-            if (relatednode != null )
+            if (relatednode != null)
             {
-              //  System.Diagnostics.Debug.WriteLine("Setting SAA Signals Found for " + jsaa.BodyName + " @ " + sys.Name + " body "  + jsaa.BodyDesignation);
+                //  System.Diagnostics.Debug.WriteLine("Setting SAA Signals Found for " + jsaa.BodyName + " @ " + sys.Name + " body "  + jsaa.BodyDesignation);
                 if (relatednode.Signals == null)
                     relatednode.Signals = new List<JournalSAASignalsFound.SAASignal>();
 
-                relatednode.Signals.AddRange(jsaa.Signals); // add signals to list of signals of this entity
-
-                return true; // all ok
+                foreach (var x in jsaa.Signals)
+                {
+                    if (relatednode.Signals.Find(y => y.Type == x.Type && y.Count == x.Count) == null)
+                    {
+                        relatednode.Signals.Add(x);
+                    }
+                }
             }
+
             else
             {
                 if (saveprocessinglater)
-                    SaveForProcessing(jsaa,sys);
-              //  System.Diagnostics.Debug.WriteLine("No body to attach data found for " + jsaa.BodyName + " @ " + sys.Name + " body " + jsaa.BodyDesignation);
+                    SaveForProcessing(jsaa, sys);
+                //  System.Diagnostics.Debug.WriteLine("No body to attach data found for " + jsaa.BodyName + " @ " + sys.Name + " body " + jsaa.BodyDesignation);
             }
 
             return false;
