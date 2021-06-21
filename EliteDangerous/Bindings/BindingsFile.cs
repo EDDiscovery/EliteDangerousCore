@@ -239,63 +239,69 @@ namespace EliteDangerousCore
 
             try
             {
-                string sel = System.IO.File.ReadAllText(optsel);
-                System.Diagnostics.Trace.WriteLine("Bindings file " + sel);
+                string[] bindlist = System.IO.File.ReadAllLines(optsel);
+                System.Diagnostics.Trace.WriteLine("Bindings file " + string.Join(";", bindlist));
 
-                FileInfo[] allFiles = Directory.EnumerateFiles(path, sel + "*.binds", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToArray();
-
-                if (allFiles.Length >= 1)
+                foreach (string selline in bindlist)
                 {
-                    XElement bindings = XElement.Load(allFiles[0].FullName);
+                    // pick the latest file if found
+                    FileInfo[] allFiles = Directory.EnumerateFiles(path, selline + "*.binds", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToArray();
 
-                    foreach (XElement x in bindings.Elements())
+                    if (allFiles.Length >= 1)
                     {
-                        //System.Diagnostics.Debug.WriteLine("Reader " + x.NodeType + " " + x.Name);
+                        XElement bindings = XElement.Load(allFiles[0].FullName);
 
-                        if (x.HasElements)
+                        foreach (XElement x in bindings.Elements())
                         {
-                            foreach (XElement y in x.Descendants())
+                            //System.Diagnostics.Debug.WriteLine("Reader " + x.NodeType + " " + x.Name);
+
+                            if (x.HasElements)
                             {
-                                if (y.Name == "Binding")
+                                foreach (XElement y in x.Descendants())
                                 {
-                                    AxisNames.Add(x.Name.LocalName);
-                                    AssignToDevice(x, y);
-                                }
-                                else if (y.Name == "Primary" || y.Name == "Secondary")
-                                {
-                                    //System.Diagnostics.Debug.WriteLine("Binding Point " + x.NodeType + " " + x.Name + " Element " + y.Name);
-                                    KeyNames.Add(x.Name.LocalName);
-                                    AssignToDevice(x, y);
-                                }
-                                else
-                                {
-                                    foreach (XAttribute z in y.Attributes())
+                                    if (y.Name == "Binding")
                                     {
-                                        values[x.Name + "." + y.Name + ChkValue(z.Name.ToString())] = z.Value;
+                                        AxisNames.Add(x.Name.LocalName);
+                                        AssignToDevice(x, y);
+                                    }
+                                    else if (y.Name == "Primary" || y.Name == "Secondary")
+                                    {
+                                        //System.Diagnostics.Debug.WriteLine("Binding Point " + x.NodeType + " " + x.Name + " Element " + y.Name);
+                                        KeyNames.Add(x.Name.LocalName);
+                                        AssignToDevice(x, y);
+                                    }
+                                    else
+                                    {
+                                        foreach (XAttribute z in y.Attributes())
+                                        {
+                                            values[x.Name + "." + y.Name + ChkValue(z.Name.ToString())] = z.Value;
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        if (x.HasAttributes)
-                        {
-                            foreach (XAttribute y in x.Attributes())
+                            if (x.HasAttributes)
                             {
-                                values[x.Name + ChkValue(y.Name.ToString())] = y.Value;
+                                foreach (XAttribute y in x.Attributes())
+                                {
+                                    values[x.Name + ChkValue(y.Name.ToString())] = y.Value;
+                                }
                             }
                         }
-                    }
 
-                    FileLoaded = allFiles[0].FullName;
-                    return true;
+                        FileLoaded = allFiles[0].FullName;
+                        return true;
+                    }
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine("Bindings exception " + ex);
             }
 
             return false;
         }
+
 
         public Device GetDevice(string name)
         {
