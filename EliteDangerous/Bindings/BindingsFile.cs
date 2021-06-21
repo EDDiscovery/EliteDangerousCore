@@ -294,8 +294,9 @@ namespace EliteDangerousCore
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine("Bindings exception " + ex);
             }
 
             return false;
