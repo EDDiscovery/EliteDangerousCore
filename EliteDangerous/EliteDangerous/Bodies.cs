@@ -129,13 +129,9 @@ namespace EliteDangerousCore
         Hot = 8,
     }
 
-    public enum EDAtmosphereType
+    public enum EDAtmosphereType   // from the journal
     {
-        Unknown = 0,
-        No_atmosphere,
-        Suitable_for_water_based_life,
-        Ammonia_and_oxygen,
-
+        Earth_Like = 900,
         Ammonia = 1000,
         Water = 2000,
         Carbon_dioxide = 3000,
@@ -148,6 +144,9 @@ namespace EliteDangerousCore
         Silicate_vapour = 10000,
         Metallic_vapour = 11000,
         Oxygen = 12000,
+
+        Unknown = 0,
+        No_atmosphere = 1,                        
     }
 
 
@@ -240,7 +239,7 @@ namespace EliteDangerousCore
             return EDPlanet.Unknown_Body_Type;
         }
 
-        private static Dictionary<string, EDAtmosphereType> AtmosphereStr2EnumLookup;
+        private static Dictionary<EDAtmosphereType,string> atmoscomparestrings;
 
         public static EDAtmosphereType AtmosphereStr2Enum(string v, out EDAtmosphereProperty atmprop)
         {
@@ -249,42 +248,42 @@ namespace EliteDangerousCore
             if (v.IsEmpty())
                 return EDAtmosphereType.Unknown;
 
-            if (AtmosphereStr2EnumLookup == null)
+            if (v.Equals("None", StringComparison.InvariantCultureIgnoreCase))
+                return EDAtmosphereType.No_atmosphere;
+
+            if (atmoscomparestrings == null)
             {
-                AtmosphereStr2EnumLookup = new Dictionary<string, EDAtmosphereType>(StringComparer.InvariantCultureIgnoreCase);
+                atmoscomparestrings = new Dictionary<EDAtmosphereType, string>();
                 foreach (EDAtmosphereType atm in Enum.GetValues(typeof(EDAtmosphereType)))
                 {
-                    AtmosphereStr2EnumLookup[atm.ToString().Replace("_", "")] = atm;
+                    atmoscomparestrings[atm] = atm.ToString().ToLower().Replace("_", " ");
                 }
             }
 
-            var searchstr = v.ToLowerInvariant().Replace("_", "").Replace(" ", "").Replace("-", "").Replace("atmosphere", "");
+            var searchstr = v.ToLowerInvariant();
 
             if (searchstr.Contains("rich"))
             {
                 atmprop |= EDAtmosphereProperty.Rich;
-                searchstr = searchstr.Replace("rich", "");
             }
             if (searchstr.Contains("thick"))
             {
                 atmprop |= EDAtmosphereProperty.Thick;
-                searchstr = searchstr.Replace("thick", "");
             }
             if (searchstr.Contains("thin"))
             {
                 atmprop |= EDAtmosphereProperty.Thin;
-                searchstr = searchstr.Replace("thin", "");
             }
             if (searchstr.Contains("hot"))
             {
                 atmprop |= EDAtmosphereProperty.Hot;
-                searchstr = searchstr.Replace("hot", "");
             }
 
-            if (AtmosphereStr2EnumLookup.ContainsKey(searchstr))
-                return AtmosphereStr2EnumLookup[searchstr];
-
-           // System.Diagnostics.Trace.WriteLine("atm: " + v);
+            foreach( var kvp in atmoscomparestrings)
+            {
+                if (searchstr.Contains(kvp.Value))     // both are lower case, does it contain it?
+                    return kvp.Key;
+            }
 
             return EDAtmosphereType.Unknown;
         }

@@ -138,12 +138,25 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Empty, Terraformable, Terraformed, Terraforming")]
         public string TerraformState { get; private set; }                  // direct, can be empty or a string
         public bool Terraformable { get { return TerraformState != null && new[] { "terraformable", "terraforming", "terraformed" }.Contains(TerraformState, StringComparer.InvariantCultureIgnoreCase); } }
+
         public string Atmosphere { get; private set; }                      // direct from journal, if not there or blank, tries AtmosphereType (Earthlikes)
         public EDAtmosphereType AtmosphereID { get; }               // Atmosphere -> ID (Ammonia, Carbon etc)
         public EDAtmosphereProperty AtmosphereProperty { get; private set; }             // Atomsphere -> Property (None, Rich, Thick , Thin, Hot)
         public bool HasAtmosphericComposition { get { return AtmosphereComposition != null && AtmosphereComposition.Any(); } }
         [PropertyNameAttribute("Not Searchable")]
         public Dictionary<string, double> AtmosphereComposition { get; private set; }
+        public List<KeyValuePair<string, double>> SortedAtmosphereComposition()     // highest first
+        {
+            if (AtmosphereComposition != null)
+            {
+                var sorted = AtmosphereComposition.ToList();
+                sorted.Sort((p1, p2) => p2.Value.CompareTo(p1.Value));
+                return sorted;
+            }
+            else
+                return null;
+        }
+
         [PropertyNameAttribute("Not Searchable")]
         public Dictionary<string, double> PlanetComposition { get; private set; }
         public bool HasPlanetaryComposition { get { return PlanetComposition != null && PlanetComposition.Any(); } }
@@ -375,14 +388,7 @@ namespace EliteDangerousCore.JournalEvents
                 if (TerraformState != null && TerraformState.Equals("Not Terraformable", StringComparison.InvariantCultureIgnoreCase)) // EDSM returns this, normalise to journal
                     TerraformState = String.Empty;
 
-                Atmosphere = evt["Atmosphere"].StrNull();
-                if (Atmosphere == null || Atmosphere.Length == 0)             // Earthlikes appear to have empty atmospheres but AtmosphereType
-                    Atmosphere = evt["AtmosphereType"].StrNull();
-                if (Atmosphere != null)
-                    Atmosphere = Atmosphere.SplitCapsWordFull();
 
-                AtmosphereID = Bodies.AtmosphereStr2Enum(Atmosphere, out EDAtmosphereProperty ap);
-                AtmosphereProperty = ap;
 
                 JToken atmos = evt["AtmosphereComposition"];
                 if (!atmos.IsNull())
@@ -399,6 +405,51 @@ namespace EliteDangerousCore.JournalEvents
                             AtmosphereComposition[jo["Name"].Str("Default")] = jo["Percent"].Double();
                         }
                     }
+                }
+
+                Atmosphere = evt["Atmosphere"].StrNull();               // can be null, or empty
+
+                if ( Atmosphere == "thick  atmosphere" )            // obv a frontier but, atmosphere type has the missing text
+                {
+                    Atmosphere = "Thick " + evt["AtmosphereType"].Str().SplitCapsWord() + " atmosphere";
+                }
+                else if ( Atmosphere == "thin  atmosphere")             
+                {
+                    Atmosphere = "Thin " + evt["AtmosphereType"].Str().SplitCapsWord() + " atmosphere";
+                }
+                else if ( Atmosphere.IsEmpty())                         // try type.
+                    Atmosphere = evt["AtmosphereType"].StrNull();       // it may still be null here or empty string
+
+                if (Atmosphere.IsEmpty())       // null or empty - nothing in either, see if there is composition
+                {
+                    if ((AtmosphereComposition?.Count ?? 0) > 0)    // if we have some composition, synthesise name
+                    {
+                        foreach( var e  in Enum.GetNames(typeof(EDAtmosphereType)))
+                        {
+                            if ( AtmosphereComposition.ContainsKey(e.ToString()))       // pick first match in ID
+                            {
+                                Atmosphere = e.ToString();
+                                break;
+                            }
+                        }
+                    }
+
+                    if ( Atmosphere.IsEmpty())          // still nothing, set to None
+                        Atmosphere = "None";
+                }
+                else
+                {
+                    Atmosphere = Atmosphere.Replace("sulfur", "sulphur");      // fix frontier spelling mistakes
+                }
+
+                Atmosphere = Atmosphere.SplitCapsWord();        // split out conjoined words 
+
+                AtmosphereID = Bodies.AtmosphereStr2Enum(Atmosphere, out EDAtmosphereProperty ap);  // convert to internal ID
+                AtmosphereProperty = ap;
+
+                if (AtmosphereID == EDAtmosphereType.Unknown)
+                {
+                    System.Diagnostics.Debug.WriteLine("*** Atmos not recognised {0} '{1}' '{2}'", Atmosphere, evt["Atmosphere"].Str(), evt["AtmosphereType"].Str());
                 }
 
                 JObject composition = evt["Composition"].Object();
@@ -1507,9 +1558,9 @@ namespace EliteDangerousCore.JournalEvents
                         iconName = "AMWv2";
                     else if (AtmosphereProperty == EDAtmosphereProperty.Thick || AtmosphereProperty == EDAtmosphereProperty.Hot)
                         iconName = "AMWv3";
-                    else if (AtmosphereProperty == EDAtmosphereProperty.Rich || AtmosphereID == EDAtmosphereType.Ammonia_and_oxygen)
+                    else if (AtmosphereProperty == EDAtmosphereProperty.Rich )
                         iconName = "AMWv4"; // kindly provided by CMDR CompleteNOOB
-                    else if (nLandable == true || AtmosphereID == EDAtmosphereType.No_atmosphere && st < 140)
+                    else if (nLandable == true || (AtmosphereID == EDAtmosphereType.No_atmosphere && st < 140))
                         iconName = "AMWv5"; // kindly provided by CMDR CompleteNOOB
                     else if (st < 190)
                         iconName = "AMWv6";
@@ -1557,7 +1608,7 @@ namespace EliteDangerousCore.JournalEvents
                     iconName = "HMCv3"; // fallback
 
                     // landable, atmosphere-less high metal content bodies
-                    if (nLandable == true || AtmosphereProperty == EDAtmosphereProperty.None || AtmosphereID == EDAtmosphereType.No_atmosphere)
+                    if (nLandable == true || AtmosphereID == EDAtmosphereType.No_atmosphere)
                     {
                         if (st < 300)
                         {
