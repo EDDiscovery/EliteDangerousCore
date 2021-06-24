@@ -144,7 +144,7 @@ namespace EliteDangerousCore
 
             foreach (JournalTypeEnum jte in Enum.GetValues(typeof(JournalTypeEnum)))
             {
-                if ((int)jte < (int)JournalTypeEnum.ICONIDsStart)
+                if ((int)jte < (int)JournalTypeEnum.ObsoleteOrIcons)
                 {
                     if (methods == null)
                     {

@@ -47,6 +47,11 @@ namespace EliteDangerousCore
         // combat, spanel,stats, history filter
         public List<HistoryEntry> LatestFirst() { return historylist.OrderByDescending(s => s.EntryNumber).ToList(); }
 
+        public Dictionary<string, Stats.FactionInfo> GetStatsAtGeneration(uint g)
+        {
+            return statisticsaccumulator.GetAtGeneration(g);
+        }
+
         #endregion
 
         #region Output filters

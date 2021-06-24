@@ -28,8 +28,8 @@ namespace EliteDangerousCore
     {
         #region Public Variables
 
-        public int EntryNumber { get; private set; }   // for display purposes.  from 1 to number of records
-        public int Index { get { return EntryNumber - 1; } }  // zero based index number
+        public int EntryNumber { get { return Index + 1; } }   // for display purposes.  from 1 to number of records
+        public int Index { get; set; }// zero based index number
 
         public JournalEntry journalEntry { get; private set; }       // MUST be present
 
@@ -141,7 +141,6 @@ namespace EliteDangerousCore
         public static HistoryEntry FromJournalEntry(JournalEntry je, HistoryEntry prev)
         {
             ISystem isys = prev == null ? new SystemClass("Unknown") : prev.System;
-            int entryno = prev == null ? 1 : prev.EntryNumber + 1;
 
             if (je.EventTypeID == JournalTypeEnum.Location || je.EventTypeID == JournalTypeEnum.FSDJump || je.EventTypeID == JournalTypeEnum.CarrierJump)
             {
@@ -190,7 +189,6 @@ namespace EliteDangerousCore
 
             HistoryEntry he = new HistoryEntry
             {
-                EntryNumber = entryno,
                 journalEntry = je,
                 System = isys,
                 EntryStatus = HistoryEntryStatus.Update(prev?.EntryStatus, je, isys.Name)
@@ -253,9 +251,10 @@ namespace EliteDangerousCore
             System = sys;
         }
 
-        public void ReplaceJournalEntry(JournalEntry p)
+        public void ReplaceJournalEntry(JournalEntry p, DateTime utc)
         {
             journalEntry = p;
+            journalEntry.EventTimeUTC = utc;
         }
 
         #endregion

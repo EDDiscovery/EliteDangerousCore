@@ -261,7 +261,7 @@ namespace EliteDangerousCore
             return changed;
         }
 
-        public uint Process(JournalEntry je, JournalEntry lastprocessed)
+        public uint Process(JournalEntry je, JournalEntry lastentry )
         {
             if (je is ICommodityJournalEntry || je is IMaterialJournalEntry || je is IMicroResourceJournalEntry)
             {
@@ -284,7 +284,7 @@ namespace EliteDangerousCore
                 if (je is IMicroResourceJournalEntry)
                 {
                     IMicroResourceJournalEntry e = je as IMicroResourceJournalEntry;
-                    e.UpdateMicroResource(this,lastprocessed);
+                    e.UpdateMicroResource(this, lastentry);
                 }
 
                 if (items.UpdatesAtThisGeneration == 0)         // if nothing changed, abandon it.

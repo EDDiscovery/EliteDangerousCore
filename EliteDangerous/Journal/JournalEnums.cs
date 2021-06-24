@@ -267,19 +267,21 @@ namespace EliteDangerousCore
         WingLeave = 980,
         WonATrophyForSquadron = 985,
 
-        // removed events
-        TransferMicroResources = 9000,
-        BackPack = 9001,
-        ShipLockerMaterials = 9002,
-        BackPackMaterials = 9003,
-
-
         // EDD Entries
 
         EDDItemSet = 2000,
         EDDCommodityPrices = 2010,
 
-        ICONIDsStart = 10000,
+        // below are not events currently supported or icon rename events
+
+        ObsoleteOrIcons = 10000,
+
+        // removed events
+        TransferMicroResources = 11000,
+        BackPack = 11001,
+        ShipLockerMaterials = 11002,
+        BackPackMaterials = 11003,
+
         // Specials Event IDs for ICON selection - alternate Icons for these events
         RestockVehicle_SRV = 10750,
         RestockVehicle_Fighter = 10751,

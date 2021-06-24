@@ -202,6 +202,8 @@ namespace EliteDangerousCore.JournalEvents
             MarketID = evt["MarketID"].LongNull();
         }
 
+        // TBD Odyssey Update 4 adds {"LandingPads":{ "Small":17, "Medium":18, "Large":9 }
+
         public string StationName { get; set; }
         public string StationType { get; set; }
         public long? MarketID { get; set; }

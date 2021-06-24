@@ -72,10 +72,10 @@ namespace EliteDangerousCore.JournalEvents
             detailed = BaseUtils.FieldBuilder.Build("< to ".T(EDTx.JournalEntry_to), StarSystem, "", Body);
         }
 
-        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry lastprocessedunused)
+        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry unused)
         {
             List<Tuple<string, int>> counts = new List<Tuple<string, int>>();
-            System.Diagnostics.Debug.WriteLine("EMBARK, clear out back pack items");
+        //    System.Diagnostics.Debug.WriteLine("EMBARK, clear out back pack items");
             mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Item, counts, MicroResource.BackPack);
             mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Component, counts, MicroResource.BackPack);
             mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Consumable, counts, MicroResource.BackPack);

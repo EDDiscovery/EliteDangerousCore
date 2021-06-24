@@ -39,20 +39,22 @@ namespace EliteDangerousCore.JournalEvents
         [JsonNameAttribute("Type", "Category")]                 // for some crazy reason, they use type someplaces, category others. Use json name to allow both
         public string Category { get; set; }                    // BuyMicroResources, SellMicroResource, TradeMicroResources, TransferMicroResources. These call it type: BackPackChange, UseConsumable, CollectItems, DropItems   
 
-        public void Normalise()
+        public void Normalise(string cat)
         {
             if (Name.HasChars())
             {
                 Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, Name);
                 Name = JournalFieldNaming.FDNameTranslation(Name);      // this lower cases the name
                 FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(Name);      // normalises to lower case  
+                if (cat != null)
+                    Category = cat;
             }
         }
 
-        static public void Normalise(MicroResource[] a)
+        static public void Normalise(MicroResource[] a, string cat)
         {
             foreach (MicroResource m in a.EmptyIfNull())
-                m.Normalise();
+                m.Normalise(cat);
         }
 
         static public string List(MicroResource[] mat)
@@ -80,13 +82,13 @@ namespace EliteDangerousCore.JournalEvents
             // these collect Name, Name_Localised, MissionID, OwnerID, Count
 
             Items = evt["Items"]?.ToObjectQ<MicroResource[]>()?.OrderBy(x => x.Name)?.ToArray();
-            MicroResource.Normalise(Items);
+            MicroResource.Normalise(Items, "Items");
             Components = evt["Components"]?.ToObjectQ<MicroResource[]>()?.OrderBy(x => x.Name)?.ToArray();
-            MicroResource.Normalise(Components);
+            MicroResource.Normalise(Components,"Components");
             Consumables = evt["Consumables"]?.ToObjectQ<MicroResource[]>()?.OrderBy(x => x.Name)?.ToArray();
-            MicroResource.Normalise(Consumables);
+            MicroResource.Normalise(Consumables,"Consumables");
             Data = evt["Data"]?.ToObjectQ<MicroResource[]>()?.OrderBy(x => x.Name)?.ToArray();
-            MicroResource.Normalise(Data);
+            MicroResource.Normalise(Data,"Data");
         }
 
         public MicroResource[] Items { get; set; }
@@ -158,33 +160,29 @@ namespace EliteDangerousCore.JournalEvents
                 return true;
         }
 
-        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry lastprocessedunused)        // update all ship locker materials to these values
+        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry unused)        // update all ship locker materials to these values
         {
             if (Items != null)
             {
                 List<Tuple<string, int>> counts = Items.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
-                System.Diagnostics.Debug.WriteLine("ship locker items");
                 mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Item, counts, MicroResource.ShipLocker);
             }
 
             if (Components != null)
             {
                 List<Tuple<string, int>> counts = Components.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
-                System.Diagnostics.Debug.WriteLine("ship locker comp");
                 mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Component, counts, MicroResource.ShipLocker);
             }
 
             if (Consumables != null)
             {
                 List<Tuple<string, int>> counts = Consumables.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
-                System.Diagnostics.Debug.WriteLine("ship locker consum");
                 mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Consumable, counts, MicroResource.ShipLocker);
             }
 
             if (Data != null)
             {
                 List<Tuple<string, int>> counts = Data.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
-                System.Diagnostics.Debug.WriteLine("ship locker data");
                 mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Data, counts, MicroResource.ShipLocker);
             }
         }
@@ -199,7 +197,7 @@ namespace EliteDangerousCore.JournalEvents
             // collect Name, Name_Localised, Category, Count
             evt.ToObjectProtected(Resource.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                                         Resource);        // read fields named in this structure matching JSON names
-            Resource.Normalise();
+            Resource.Normalise(null);
             Price = evt["Price"].Int();
             MarketID = evt["MarketID"].Long();
         }
@@ -220,13 +218,14 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Resource.FriendlyName + " " + Resource.Count, -Price);
         }
 
-        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry lastprocessed)        // Odyssey from 11/6/21 this comes before shiplocker, so must update
+        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry previous)        
         {
-            if ((lastprocessed?.EventTypeID ?? JournalTypeEnum.Unknown) != JournalTypeEnum.ShipLocker)      // if we have a shiplocker before, its been taken off, so don't change.
+            if (previous?.EventTypeID != JournalTypeEnum.ShipLocker)      // if we have a shiplocker before, its been taken off, so don't change.
             {
                 MaterialCommodityMicroResourceType.EnsurePresent(Resource.Category, Resource.Name, Resource.Name_Localised);
                 mc.Change(EventTimeUTC, Resource.Category, Resource.Name, Resource.Count, Price, MicroResource.ShipLocker);
             }
+
         }
     }
 
@@ -237,7 +236,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             // collect Name, Name_Localised, Category, Count
             Items = evt["MicroResources"]?.ToObjectQ<MicroResource[]>()?.OrderBy(x => x.Name)?.ToArray();
-            MicroResource.Normalise(Items);
+            MicroResource.Normalise(Items,null);
             Price = evt["Price"].Long();
             MarketID = evt["MarketID"].Long();
         }
@@ -266,9 +265,9 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry lastprocessed)        // Odyssey from 11/6/21 this comes after shiplocker, so don't change
+        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry previous)        // Odyssey from 11/6/21 this comes after shiplocker, so don't change
         {
-            if ((lastprocessed?.EventTypeID ?? JournalTypeEnum.Unknown) != JournalTypeEnum.ShipLocker)      // if we have a shiplocker before, its been taken off, so don't change.
+            if (previous?.EventTypeID != JournalTypeEnum.ShipLocker)
             {
                 foreach (var m in Items.EmptyIfNull())
                 {
@@ -286,7 +285,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             // Collect Name, Name_Localised, Category, Count
             Offered = evt["Offered"]?.ToObjectQ<MicroResource[]>()?.OrderBy(x => x.Name)?.ToArray();
-            MicroResource.Normalise(Offered);
+            MicroResource.Normalise(Offered,null);
             Received = evt["Received"].Str();
             Received_Localised = evt["Received_Localised"].Str();
             Category = evt["Category"].Str();
@@ -312,9 +311,9 @@ namespace EliteDangerousCore.JournalEvents
             detailed = MicroResource.List(Offered);
         }
 
-        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry lastprocessed)        // odyssey june 21 writes shiplocker/trade
+        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry previous)       
         {
-            if ((lastprocessed?.EventTypeID ?? JournalTypeEnum.Unknown) != JournalTypeEnum.ShipLocker)      // if we have a shiplocker before, its been taken off, so don't change.
+            if (previous?.EventTypeID != JournalTypeEnum.ShipLocker)    // if shiplocker is before, its already updated
             {
                 System.Diagnostics.Debug.WriteLine("Trade - remove offered");
                 foreach (var m in Offered.EmptyIfNull())
@@ -360,33 +359,29 @@ namespace EliteDangerousCore.JournalEvents
                 return true;
         }
 
-        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry lastprocessedunused)
+        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry unused)
         {
             if (Items != null)
             {
                 List<Tuple<string, int>> counts = Items.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();      // Name is already lower cased
-                System.Diagnostics.Debug.WriteLine("back pack items");
                 mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Item, counts, MicroResource.BackPack);
             }
 
             if (Components != null)
             {
                 List<Tuple<string, int>> counts = Components.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
-                System.Diagnostics.Debug.WriteLine("back pack comp");
                 mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Component, counts, MicroResource.BackPack);
             }
 
             if (Consumables != null)
             {
                 List<Tuple<string, int>> counts = Consumables.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
-                System.Diagnostics.Debug.WriteLine("back pack cons");
                 mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Consumable, counts, MicroResource.BackPack);
             }
 
             if (Data != null)
             {
                 List<Tuple<string, int>> counts = Data.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
-                System.Diagnostics.Debug.WriteLine("back pack data");
                 mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Data, counts, MicroResource.BackPack);
             }
         }
@@ -399,9 +394,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             // collect Name, Name_localised, OwnerId, Count, Type
             Added = evt["Added"]?.ToObject<MicroResource[]>(false, true)?.OrderBy(x => x.Name)?.ToArray();
-            MicroResource.Normalise(Added);
+            MicroResource.Normalise(Added,null);
             Removed = evt["Removed"]?.ToObject<MicroResource[]>(false, true)?.OrderBy(x => x.Name)?.ToArray();
-            MicroResource.Normalise(Removed);
+            MicroResource.Normalise(Removed,null);
         }
 
         public MicroResource[] Added { get; set; }
@@ -432,7 +427,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry lastprocessedunused)
+        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry unused)
         {
             if (Added != null)
             {
@@ -455,14 +450,22 @@ namespace EliteDangerousCore.JournalEvents
     // we rely for these below on BackpackChange to record deltas. See CheckForRemoval in historylist.
 
     [JournalEntryType(JournalTypeEnum.CollectItems)]
-    public class JournalCollectItems : JournalEntry
+    public class JournalCollectItems : JournalEntry, IMicroResourceJournalEntry
     {
         public JournalCollectItems(JObject evt) : base(evt, JournalTypeEnum.CollectItems)
         {
             //Collect Name, Name_Localised,  Type, OwnerId, Count. Enable custom attributes to allow type to alias to category
             evt.ToObjectProtected(Resource.GetType(), true, true, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, Resource);        // read fields named in this structure matching JSON names
-            Resource.Normalise();
+            Resource.Normalise(null);
             Stolen = evt["Stolen"].Bool();
+        }
+
+        public JournalCollectItems(DateTime utc, MicroResource res, bool stolen, long tluid, int cmdr, long id) : base(utc, JournalTypeEnum.CollectItems, false)
+        {
+            SetTLUCommander(tluid, cmdr);
+            SetJID(id);
+            Resource = res;
+            Stolen = stolen;
         }
 
         public MicroResource Resource { get; set; } = new MicroResource();
@@ -475,16 +478,27 @@ namespace EliteDangerousCore.JournalEvents
             info = BaseUtils.FieldBuilder.Build("", Resource.FriendlyName, "< (;)", mcd?.TranslatedCategory, "< ; items".T(EDTx.JournalEntry_MatC), Resource.Count, ";Stolen".T(EDTx.JournalEntry_Stolen), Stolen);
             detailed = "";
         }
+
+        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry unused)    // no action, BPC does the work, but mark as MR
+        {
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.DropItems)]
-    public class JournalDropItems : JournalEntry
+    public class JournalDropItems : JournalEntry, IMicroResourceJournalEntry
     {
         public JournalDropItems(JObject evt) : base(evt, JournalTypeEnum.DropItems)
         {
             // Collect name, NameLocalised, Type,OwnerId, Count. Enable custom attributes to allow type to alias to category
             evt.ToObjectProtected(Resource.GetType(), true, true, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, Resource);        // read fields named in this structure matching JSON names
-            Resource.Normalise();
+            Resource.Normalise(null);
+        }
+
+        public JournalDropItems(DateTime utc, MicroResource res, long tluid, int cmdr, long id) : base(utc, JournalTypeEnum.DropItems, false)
+        {
+            SetTLUCommander(tluid, cmdr);
+            SetJID(id);
+            Resource = res;
         }
 
         public MicroResource Resource { get; set; } = new MicroResource();
@@ -496,25 +510,27 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
+        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry unused)    // no action, BPC does the work, but mark as MR
+        {
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.UseConsumable)]
-    public class JournalUseConsumable : JournalEntry
+    public class JournalUseConsumable : JournalEntry, IMicroResourceJournalEntry
     {
         public JournalUseConsumable(JObject evt) : base(evt, JournalTypeEnum.UseConsumable)
         {
             // Collect name, NameLocalised, Type.  Enable custom attributes to allow type to alias to category
             evt.ToObjectProtected(Resource.GetType(), true, true, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, Resource);        // read fields named in this structure matching JSON names
-            Resource.Normalise();
+            Resource.Normalise(null);
         }
 
         // use to make a use consumable JE 
-        public JournalUseConsumable(DateTime utc, string name, string nameloc, string type, long tluid, int cmdr, long id) : base(utc, JournalTypeEnum.UseConsumable, false)
+        public JournalUseConsumable(DateTime utc, MicroResource res, long tluid, int cmdr, long id) : base(utc, JournalTypeEnum.UseConsumable, false)
         {
             SetTLUCommander(tluid, cmdr);
             SetJID(id);
-            Resource = new MicroResource() { Name = name, Name_Localised = nameloc, Category = type };
-            Resource.Normalise();
+            Resource = res;
         }
 
         public MicroResource Resource { get; set; } = new MicroResource();
@@ -523,6 +539,10 @@ namespace EliteDangerousCore.JournalEvents
         {
             info = Resource.FriendlyName;
             detailed = "";
+        }
+
+        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry unused)    // no action, BPC does the work, but mark as MR
+        {
         }
     }
 

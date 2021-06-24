@@ -247,6 +247,28 @@ namespace EliteDangerousCore.Inara
             return Event("setCommanderInventoryMaterials", dt, items);
         }
 
+        // can handle any category: A type of the item as defined by Frontier: 'Encoded', 'Raw', 'Manufactured', 'Item', 'Items', 'Component', 'Components', 'Data', 'Consumable', 'Consumables'. 
+        // On top of that you can use a type 'Material' instead of Encoded, Raw and Manufactured and 'Commodity' for the commodities in the ships's cargo hold. 
+
+        static public JToken setCommanderInventory(List<MaterialCommodityMicroResource> mats, DateTime dt, int cn = 0, string loc = null)
+        {
+            JArray items = new JArray();
+            if (mats != null)
+            {
+                foreach (var x in mats)
+                {
+                    JObject data = new JObject();
+                    data["itemName"] = x.Details.FDName;
+                    data["itemCount"] = x.Counts[cn];
+                    data["itemType"] = x.Details.Category.ToString();
+                    if ( loc != null )
+                        data["itemLocation"] = loc;
+                    items.Add(data);
+                }
+            }
+            return Event("setCommanderInventory", dt, items);
+        }
+
         static public JToken setCommanderInventoryMaterialsItem(string fdname, int count, DateTime dt)
         {
             JObject eventData = new JObject();
