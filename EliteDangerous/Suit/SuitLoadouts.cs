@@ -135,7 +135,7 @@ namespace EliteDangerousCore
             {
                 if ( modules != null && (modules.Length != s.Modules.Count || !s.CompareModules(modules) ))
                 {
-                    System.Diagnostics.Debug.WriteLine("Update Loadout {0} {1} {2}", id, name, suitid);
+                    //System.Diagnostics.Debug.WriteLine("Update Loadout {0} {1} {2}", id, name, suitid);
                     s = new SuitLoadout(time, id, name, suitid, false);
                     foreach (var m in modules.EmptyIfNull())
                         s.Modules[m.SlotName] = m;
@@ -178,7 +178,7 @@ namespace EliteDangerousCore
                 var ld = new SuitLoadout(last);
                 ld.Modules[slotname] = weap;
                 loadouts[id] = ld;
-                System.Diagnostics.Debug.WriteLine("Suits Equip {0}-{1}-{2} with {3}", last.ID, last.Name, slotname, weap.ModuleName_Localised);
+                //System.Diagnostics.Debug.WriteLine("Suits Equip {0}-{1}-{2} with {3}", last.ID, last.Name, slotname, weap.ModuleName_Localised);
             }
             else
                 System.Diagnostics.Debug.WriteLine("Suits equip an unknown loadout " + id);
@@ -195,7 +195,7 @@ namespace EliteDangerousCore
                     var ld = new SuitLoadout(last);
                     ld.Modules.Remove(slotname);
                     loadouts[id] = ld;
-                    System.Diagnostics.Debug.WriteLine("Suits Remove {0}-{1}-{2} with {3}", last.ID, last.Name, slotname, weap.Name_Localised);
+                    //System.Diagnostics.Debug.WriteLine("Suits Remove {0}-{1}-{2} with {3}", last.ID, last.Name, slotname, weap.Name_Localised);
                 }
                 else
                     System.Diagnostics.Debug.WriteLine("Suits Remove Failed {0}-{1}-{2} with {3}", last.ID, last.Name, slotname, weap.Name_Localised);

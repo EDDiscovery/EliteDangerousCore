@@ -73,7 +73,7 @@ namespace EliteDangerousCore
             {
                 if ((s.SuitMods == null && mods != null) || (s.SuitMods != null && mods != null && !s.SuitMods.SequenceEqual(mods)))
                 {
-                    System.Diagnostics.Debug.WriteLine("Update suit info {0} {1} {2}", id, fdname, namelocalised);
+                    //System.Diagnostics.Debug.WriteLine("Update suit info {0} {1} {2}", id, fdname, namelocalised);
                     suits[id] = new Suit(time, id, fdname, namelocalised, s.Price, mods, false);
                     return false;
                 }

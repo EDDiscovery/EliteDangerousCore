@@ -90,6 +90,12 @@ namespace EliteDangerousCore
         }
 
 
+        public List<MaterialCommodityMicroResource> GetMicroResourcesSorted(uint gen)
+        {
+            var list = items.GetValues(gen, x => x.Details.IsMicroResources);
+            return list.OrderBy(x => x.Details.Type).ThenBy(x => x.Details.Name).ToList();
+        }
+
         public List<MaterialCommodityMicroResource> GetSorted(uint gen, bool commodityormaterial)       // true = commodity
         {
             var list = items.GetValues(gen);

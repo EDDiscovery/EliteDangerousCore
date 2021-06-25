@@ -345,7 +345,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 shp.VerifyPresence(EventTimeUTC, LoadoutID, LoadoutName, SuitID, null);
 
-                System.Diagnostics.Debug.WriteLine("{0} Equip suit {1} Loadout {2} slot {3} with {4} {5} {6}", EventTimeUTC.ToString(), SuitID, LoadoutID, SlotName, ModuleName, Class, string.Join(",", WeaponMods??new string[] { }) );
+                //System.Diagnostics.Debug.WriteLine("{0} Equip suit {1} Loadout {2} slot {3} with {4} {5} {6}", EventTimeUTC.ToString(), SuitID, LoadoutID, SlotName, ModuleName, Class, string.Join(",", WeaponMods??new string[] { }) );
                 shp.Equip(LoadoutID, SlotName, new SuitLoadout.LoadoutModule(SlotName, SuitModuleID, ModuleName, ModuleName_Localised, Class, WeaponMods));
             }
         }

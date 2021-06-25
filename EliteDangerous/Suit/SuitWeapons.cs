@@ -68,7 +68,7 @@ namespace EliteDangerousCore
                 // if differs in cls, or weapons mods is null but new one isnt, or both are set but different
                 if ( w.Class != cls || (w.WeaponMods == null && weaponmods != null ) || (w.WeaponMods != null && weaponmods != null && !w.WeaponMods.SequenceEqual(weaponmods)))
                 {
-                    System.Diagnostics.Debug.WriteLine("Update weapon info {0} {1} {2}", id, fdname, namelocalised);
+                    //System.Diagnostics.Debug.WriteLine("Update weapon info {0} {1} {2}", id, fdname, namelocalised);
                     Weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, w.Price, cls, weaponmods, false);
                     return false;
                 }

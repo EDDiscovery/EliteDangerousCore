@@ -205,46 +205,15 @@ namespace EliteDangerousCore.Inara
             return Event("setCommanderReputationMajorFaction", dt, eventData);
         }
 
-        static public JToken setCommanderInventoryCargo(IEnumerable<Tuple<string,int>> list, DateTime dt)
-        {
-            JArray items = new JArray();
-            if (list != null)
-            {
-                foreach (var x in list)
-                {
-                    JObject data = new JObject();
-                    data["itemName"] = x.Item1;
-                    data["itemCount"] = x.Item2;
-                    items.Add(data);
-                }
-            }
-            return Event("setCommanderInventoryCargo", dt, items);
-        }
-
-        static public JToken setCommanderInventoryCargoItem(string fdname, int count, bool? isstolen, DateTime dt)
+          static public JToken setCommanderInventoryItem(MaterialCommodityMicroResource x, DateTime dt, int cn = 0 , string loc = null)
         {
             JObject eventData = new JObject();
-            eventData["itemName"] = fdname;
-            eventData["itemCount"] = count;
-            if (isstolen.HasValue)
-                eventData["isStolen"] = isstolen.Value;
-            return Event("setCommanderInventoryCargoItem", dt, eventData);
-        }
-
-        static public JToken setCommanderInventoryMaterials(IEnumerable<Tuple<string, int>> list, DateTime dt)
-        {
-            JArray items = new JArray();
-            if (list != null)
-            {
-                foreach (var x in list)
-                {
-                    JObject data = new JObject();
-                    data["itemName"] = x.Item1;
-                    data["itemCount"] = x.Item2;
-                    items.Add(data);
-                }
-            }
-            return Event("setCommanderInventoryMaterials", dt, items);
+            eventData["itemName"] = x.Details.FDName;
+            eventData["itemCount"] = x.Counts[cn];
+            eventData["itemType"] = x.Details.Category.ToString();
+            if (loc != null)
+                eventData["itemLocation"] = loc;
+            return Event("setCommanderInventoryItem", dt, eventData);
         }
 
         // can handle any category: A type of the item as defined by Frontier: 'Encoded', 'Raw', 'Manufactured', 'Item', 'Items', 'Component', 'Components', 'Data', 'Consumable', 'Consumables'. 
@@ -261,7 +230,7 @@ namespace EliteDangerousCore.Inara
                     data["itemName"] = x.Details.FDName;
                     data["itemCount"] = x.Counts[cn];
                     data["itemType"] = x.Details.Category.ToString();
-                    if ( loc != null )
+                    if (loc != null)
                         data["itemLocation"] = loc;
                     items.Add(data);
                 }
@@ -269,30 +238,6 @@ namespace EliteDangerousCore.Inara
             return Event("setCommanderInventory", dt, items);
         }
 
-        static public JToken setCommanderInventoryMaterialsItem(string fdname, int count, DateTime dt)
-        {
-            JObject eventData = new JObject();
-            eventData["itemName"] = fdname;
-            eventData["itemCount"] = count;
-            return Event("setCommanderInventoryMaterialsItem", dt, eventData);
-        }
-
-        static public JToken setCommanderInventoryItem(MaterialCommodityMicroResource item, DateTime dt)
-        {
-            if (item != null)
-            {
-                if (item.Details.IsCommodity)
-                    return setCommanderInventoryCargoItem(item.Details.FDName, item.Count, null, dt);
-                else
-                    return setCommanderInventoryMaterialsItem(item.Details.FDName, item.Count, dt);
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("INARA Can't find item");
-                return null;
-            }
-               
-        }
 
         static public JToken setCommanderStorageModules(IEnumerable<ModulesInStore.StoredModule> list, DateTime dt)
         {

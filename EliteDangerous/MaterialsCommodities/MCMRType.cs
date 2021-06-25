@@ -277,7 +277,7 @@ namespace EliteDangerousCore
         }
 
 
-        public static MaterialCommodityMicroResourceType EnsurePresent(CatType cat, string fdname, string locname = "")  // By FDNAME
+        public static MaterialCommodityMicroResourceType EnsurePresent(CatType cat, string fdname, string locname = "Unavailable")  // By FDNAME
         {
             if (!cachelist.ContainsKey(fdname.ToLowerInvariant()))
             {
@@ -291,7 +291,7 @@ namespace EliteDangerousCore
                         shortnameguess += c;
                 }
 
-                System.Diagnostics.Debug.WriteLine("** Made MCD: {0},{1},{2},{3}", "?", fdname, cat.ToString(), locname);
+                System.Diagnostics.Debug.WriteLine("** Made MCMRType: {0},{1},{2},{3}", "?", fdname, cat.ToString(), locname);
                 System.Diagnostics.Debug.WriteLine("** AddMicroResource(CatType.{0},\"{1}\",\"{2}\",\"{3}\");" ,cat.ToString(), locname, fdname , shortnameguess);
             }
 
@@ -1002,6 +1002,7 @@ namespace EliteDangerousCore
             AddMicroResource(CatType.Component, "Viscoelastic Polymer", "viscoelasticpolymer", "MRCVP");
             AddMicroResource(CatType.Component, "Ion Battery", "ionbattery", "MRCIB");
             AddMicroResource(CatType.Component, "Scrambler", "scrambler", "MRCS");
+            AddMicroResource(CatType.Component, "Oxygenic Bacteria", "oxygenicbacteria", "MROXYBAC");
 
             AddMicroResource(CatType.Data, "Chemical Inventory", "chemicalinventory", "MRDCI");
             AddMicroResource(CatType.Data, "Duty Rota", "dutyrota", "MRDDR");
@@ -1063,9 +1064,11 @@ namespace EliteDangerousCore
             AddMicroResource(CatType.Data, "Faction Donator List", "factiondonatorlist", "MRDFDL");
             AddMicroResource(CatType.Data, "NOC Data", "nocdata", "MRDNOCD");
             AddMicroResource(CatType.Data, "Manufacturing Instructions", "manufacturinginstructions", "MRDMI");
+            AddMicroResource(CatType.Data, "Propaganda", "propaganda", "MRPROPG");
+            AddMicroResource(CatType.Data, "Security Expenses", "securityexpenses", "MRSECEXP");
             #endregion
 
-            
+
             AddCommodity("Drones", ItemType.Drones, "Drones");
 
             foreach (var x in cachelist.Values)

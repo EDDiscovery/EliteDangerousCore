@@ -46,7 +46,7 @@ namespace EliteDangerousCore
 
         #region Entry processing
 
-        // Called on a New Entry, by EDDiscoveryController:NewEntry, to add an journal entry in.  May return null if don't want it in history
+        // Called on a New Entry, by EDDiscoveryController:NewEntry, to add an journal entry in.  May return null or empty list, or multiple entries.
 
         public List<HistoryEntry> AddJournalEntryToHistory(JournalEntry je, Action<string> logerror)   
         {
@@ -173,7 +173,7 @@ namespace EliteDangerousCore
 
                 foreach (var heh in reorderlist.EmptyIfNull())
                 {
-                    System.Diagnostics.Debug.WriteLine("   ++ {0} {1}", heh.EventTimeUTC.ToString(), heh.EntryType);
+                   // System.Diagnostics.Debug.WriteLine("   ++ {0} {1}", heh.EventTimeUTC.ToString(), heh.EntryType);
                     heh.Index = hist.historylist.Count; // store its index for quick ordering, after all removal etc
                     hist.historylist.Add(heh);        // then add to history
                     hist.AddToVisitsScan(null);  // add to scan database but don't complain
@@ -378,7 +378,7 @@ namespace EliteDangerousCore
             return false;
         }
 
-/*
+/* as of June 25 2011:
 Disembark ship to planet: shiplocker  disembark suit loadout  backpack  shiplocker
 Disembark ship to station:  disembark  suit loadout  backpack  ship locker
 Board ship:  shiplocker embark loadout shiplocker
@@ -397,15 +397,14 @@ Odyssey 3: Sell MR: ShipLocker SellMicroResources
             if (he.EventTimeUTC >= new DateTime(2021, 6, 17))        // this stuff only works on journals after odyssey 3 update
             {
                 JournalTypeEnum queuetype = reorderqueue.Count > 0 ? reorderqueue[0].EntryType : JournalTypeEnum.Unknown;
-                //                bool embarkdisembark = queuetype == JournalTypeEnum.Disembark || queuetype == JournalTypeEnum.Embark;
 
-                System.Diagnostics.Debug.WriteLine("-> {0} {1} Reorder queue {2} {3}", he.EventTimeUTC.ToString(), he.EntryType, queuetype, reorderqueue.Count);
+                //System.Diagnostics.Debug.WriteLine("-> {0} {1} Reorder queue {2} {3}", he.EventTimeUTC.ToString(), he.EntryType, queuetype, reorderqueue.Count);
 
                 if (he.EntryType == JournalTypeEnum.Embark || he.EntryType == JournalTypeEnum.Disembark)
                 {
                     if (queuetype == JournalTypeEnum.ShipLocker)        // disembark to planet : SL-DIS-SuitLoadout-Backpack-Shiplocker
                     {
-                        System.Diagnostics.Debug.WriteLine("-> Embark/disembark after shiplocker, discard shiplocker");
+                        //System.Diagnostics.Debug.WriteLine("-> Embark/disembark after shiplocker, discard shiplocker");
                         reorderqueue.Clear();
                     }
 
@@ -436,7 +435,7 @@ Odyssey 3: Sell MR: ShipLocker SellMicroResources
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine("Isolated back pack, remove");
+                        //System.Diagnostics.Debug.WriteLine("Isolated back pack, remove");
                         return null;
                     }
                 }
@@ -449,7 +448,7 @@ Odyssey 3: Sell MR: ShipLocker SellMicroResources
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine("Isolated loadout, let through");
+                        //System.Diagnostics.Debug.WriteLine("Isolated loadout, let through");
                     }
                 }
                 else if (he.EntryType == JournalTypeEnum.ShipLocker)
@@ -462,7 +461,7 @@ Odyssey 3: Sell MR: ShipLocker SellMicroResources
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine("Isolated ship locker, remove");
+                        //System.Diagnostics.Debug.WriteLine("Isolated ship locker, remove");
                         return null;
                     }
                 }
@@ -479,18 +478,18 @@ Odyssey 3: Sell MR: ShipLocker SellMicroResources
                     // if its a grenade, use alchemy to turn it back into a use consumable
                     if (bp.ThrowGrenade)
                     {
-                        System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " Throw grenade, use Alchemy");
+                        //System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " Throw grenade, use Alchemy");
                         he.ReplaceJournalEntry(new JournalUseConsumable(bp.EventTimeUTC, bp.Removed[0], bp.TLUId, bp.CommanderId, bp.Id), he.EventTimeUTC);
                     }
                     else if (queuetype == JournalTypeEnum.CollectItems || queuetype == JournalTypeEnum.DropItems || queuetype == JournalTypeEnum.UseConsumable)
                     {
-                        System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " " + queuetype + " use Alchemy ");
+                        //System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " " + queuetype + " use Alchemy ");
                         he.ReplaceJournalEntry(reorderqueue[0].journalEntry, he.EventTimeUTC);
                         reorderqueue.Clear();
                     }
                     else
                     {           // KEEP - transfer from ship does shiplocker/backpackchange
-                        System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " Backpackchange keep");
+                        //System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " Backpackchange keep");
                     }
                 }
             }
