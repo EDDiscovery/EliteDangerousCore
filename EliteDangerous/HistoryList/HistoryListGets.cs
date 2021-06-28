@@ -353,7 +353,7 @@ namespace EliteDangerousCore
             return (cmdr?.journalEntry as JournalCommander)?.FID;
         }
 
-  
+ 
         // map3d
         public static HistoryEntry FindLastKnownPosition(List<HistoryEntry> syslist)        // can return FSD, Carrier or Location
         {
@@ -381,6 +381,21 @@ namespace EliteDangerousCore
 
             return list.GroupBy(x => x.Name).Select(group => group.First());
         }
+
+        public HistoryEntry FindBeforeLastDockLoadGameShutdown( int depthback, params JournalTypeEnum[] e)
+        {
+            for( int i = historylist.Count-1; i>=0 && depthback-->0; i--)
+            {
+                if (Array.IndexOf(e,historylist[i].EntryType) >= 0)     // if found..
+                    return historylist[i];
+
+                if (historylist[i].EntryType == JournalTypeEnum.Docked || historylist[i].EntryType == JournalTypeEnum.LoadGame || historylist[i].EntryType == JournalTypeEnum.Shutdown)
+                    break;
+            }
+
+            return null;
+        }
+
 
         #endregion
 

@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Diagnostics;
+using System.Linq;
 
 namespace EliteDangerousCore
 {
@@ -52,7 +53,7 @@ namespace EliteDangerousCore
         {
             HistoryEntry he = HistoryEntry.FromJournalEntry(je, hlastprocessed);     // we may check edsm for this entry
 
-            he.UpdateMaterialsCommodities(MaterialCommoditiesMicroResources.Process(je, hlastprocessed?.journalEntry));
+            he.UpdateMaterialsCommodities(MaterialCommoditiesMicroResources.Process(je, hlastprocessed?.journalEntry, he.Status.TravelState == HistoryEntryStatus.TravelStateType.SRV));
 
             // IN THIS order, so suits can be added, then weapons, then loadouts
             he.UpdateSuits(SuitList.Process(je, he.WhereAmI, he.System));
@@ -145,7 +146,7 @@ namespace EliteDangerousCore
 
                 HistoryEntry he = HistoryEntry.FromJournalEntry(je, hist.hlastprocessed);     // create entry
 
-                he.UpdateMaterialsCommodities(hist.MaterialCommoditiesMicroResources.Process(je, hist.hlastprocessed?.journalEntry));
+                he.UpdateMaterialsCommodities(hist.MaterialCommoditiesMicroResources.Process(je, hist.hlastprocessed?.journalEntry, he.Status.TravelState == HistoryEntryStatus.TravelStateType.SRV));
 
                 // IN THIS order, so suits can be added, then weapons, then loadouts
                 he.UpdateSuits(hist.SuitList.Process(je, he.WhereAmI, he.System));
@@ -394,6 +395,47 @@ Odyssey 3: Sell MR: ShipLocker SellMicroResources
 
         public List<HistoryEntry> ReorderRemove(HistoryEntry he)
         {
+            if (EliteConfigInstance.InstanceOptions.DisableMerge)
+                return new List<HistoryEntry> { he };
+
+            if ( historylist.Count > 0 )
+            {
+                // we generally try and remove these as spam if they did not do anything
+                if (he.EntryType == JournalTypeEnum.Cargo || he.EntryType == JournalTypeEnum.Materials)       
+                {
+                    var lasthe = historylist.Last();
+                    if ( lasthe.MaterialCommodity != he.MaterialCommodity)  // they changed the mc list, keep
+                    {
+                        System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " " + he.EntryType.ToString() + " Update,keep");
+                    }
+                    else
+                    {
+                        //System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " " + he.EntryType.ToString() + " No update, remove");
+                        return null;
+                    }
+                }
+                // these we try and stop repeats
+                else if (he.EntryType == JournalTypeEnum.Outfitting || he.EntryType == JournalTypeEnum.Shipyard )
+                {
+                    HistoryEntry lasthe = FindBeforeLastDockLoadGameShutdown(1000,he.EntryType);     // don't look back forever
+                    if (lasthe != null)
+                    {
+                        System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " " + he.EntryType.ToString() + " Duplicate with " + lasthe.EventTimeUTC.ToString() + " remove");
+                        return null;
+                    }
+                }
+                // these we try and stop repeats
+                else if (he.EntryType == JournalTypeEnum.EDDCommodityPrices || he.EntryType == JournalTypeEnum.Market)
+                {
+                    HistoryEntry lasthe = FindBeforeLastDockLoadGameShutdown(1000,JournalTypeEnum.Market, JournalTypeEnum.EDDCommodityPrices);     // don't look back forever
+                    if (lasthe != null)
+                    {
+                        System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " " + he.EntryType.ToString() + " Duplicate with " + lasthe.EntryType.ToString() + " " + lasthe.EventTimeUTC.ToString() + " remove");
+                        return null;
+                    }
+                }
+            }
+
             if (he.EventTimeUTC >= new DateTime(2021, 6, 17))        // this stuff only works on journals after odyssey 3 update
             {
                 JournalTypeEnum queuetype = reorderqueue.Count > 0 ? reorderqueue[0].EntryType : JournalTypeEnum.Unknown;

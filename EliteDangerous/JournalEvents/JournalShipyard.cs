@@ -27,6 +27,17 @@ namespace EliteDangerousCore.JournalEvents
             Rescan(evt);
         }
 
+        public JournalShipyard(DateTime utc, string sn, string sys, long mid, Tuple<long, string, long>[] list, int cmdrid, bool allowcobramkiv, bool horizons = true) :
+              base(utc, JournalTypeEnum.Shipyard, false)
+        {
+            MarketID = mid;
+            Horizons = horizons;
+            AllowCobraMkIV = allowcobramkiv;
+            var nlist = list.Select(x => new ShipYard.ShipyardItem { id = x.Item1, ShipType = x.Item2, ShipPrice = x.Item3 }).ToArray();
+            Yard = new ShipYard(sn, sys, utc, nlist);
+            SetCommander(cmdrid);
+        }
+
         public void Rescan(JObject evt)
         {
             Yard = new ShipYard(evt["StationName"].Str(), evt["StarSystem"].Str(), EventTimeUTC, evt["PriceList"]?.ToObjectQ<ShipYard.ShipyardItem[]>());
@@ -46,6 +57,26 @@ namespace EliteDangerousCore.JournalEvents
             return jnew != null;
         }
 
+        public JObject ToJSON()
+        {
+            JArray itemlist = new JArray(Yard.Ships.Select(x => new JObject() { { "id", x.id }, { "ShipType", x.ShipType }, { "ShipType_Localised", x.ShipType_Localised },{ "ShipPrice", x.ShipPrice } }));
+
+            JObject j = new JObject()
+            {
+                ["timestamp"] = EventTimeUTC.ToStringZulu(),
+                ["event"] = EventTypeStr,
+                ["StationName"] = Yard.StationName,
+                ["StarSystem"] = Yard.StarSystem,
+                ["MarketID"] = MarketID,
+                ["Horizons"] = Horizons,
+                ["AllowCobraMkIV"] = AllowCobraMkIV,
+                ["PriceList"] = itemlist,
+            };
+
+            return j;
+        }
+
+
         public ShipYard Yard { get; set; }
         public long? MarketID { get; set; }
         public bool? Horizons { get; set; }
@@ -61,14 +92,14 @@ namespace EliteDangerousCore.JournalEvents
                 if (Yard.Ships.Length < 5)
                 {
                     foreach (ShipYard.ShipyardItem m in Yard.Ships)
-                        info = info.AppendPrePad(m.ShipType_Localised.Alt(m.ShipType), ", ");
+                        info = info.AppendPrePad(m.ShipType_Localised.Alt(m.FriendlyShipType), ", ");
                 }
                 else
                     info = Yard.Ships.Length.ToString() + " " + "Ships".T(EDTx.JournalEntry_Ships);
 
                 foreach (ShipYard.ShipyardItem m in Yard.Ships)
                 {
-                    detailed = detailed.AppendPrePad(BaseUtils.FieldBuilder.Build("",m.ShipType_Localised.Alt(m.ShipType), "; cr;N0", m.ShipPrice), System.Environment.NewLine);
+                    detailed = detailed.AppendPrePad(BaseUtils.FieldBuilder.Build("",m.ShipType_Localised.Alt(m.FriendlyShipType), "; cr;N0", m.ShipPrice), System.Environment.NewLine);
                 }
             }
         }

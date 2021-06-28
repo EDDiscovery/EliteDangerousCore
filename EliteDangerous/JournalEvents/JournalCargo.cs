@@ -136,7 +136,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc)
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
             if (Vessel.Equals("Ship"))      // only want ship cargo to change lists..
             {
@@ -175,9 +175,9 @@ namespace EliteDangerousCore.JournalEvents
         public string PowerplayOrigin { get; set; }
         public ulong? MissionID { get; set; }             // if applicable
 
-        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc)
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
-            mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Type, -Count, 0);   // no faction here, we are dumping
+            mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Type, -Count, 0);   // same in the srv or ship, we lose count
         }
 
         public void LedgerNC(Ledger mcl)
@@ -240,7 +240,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public long? MarketID { get; set; }
 
-        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc)
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
             if (CargoType.Length > 0 && Count > 0)
                 mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, CargoType, (UpdateEnum == UpdateTypeEnum.Collect) ? Count : -Count, 0);
@@ -294,9 +294,9 @@ namespace EliteDangerousCore.JournalEvents
         public bool Stolen { get; set; }
         public ulong? MissionID { get; set; }             // if applicable
 
-        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc) 
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool innormalspace) 
         {
-            mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Type, 1, 0);
+            mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Type, 1, 0);     // collecting cargo in srv same as collecting cargo in ship. srv autotransfers it to ship
         }
 
         public void LedgerNC(Ledger mcl)
@@ -349,9 +349,9 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc) 
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool insrv) 
         {
-            if (Transfers != null)
+            if (Transfers != null && !insrv)        // being in the srv is the same as the ships hold, so ignore transfers
             {
                 foreach (var t in Transfers)
                 {

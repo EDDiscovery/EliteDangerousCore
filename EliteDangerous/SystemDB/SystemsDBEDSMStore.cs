@@ -140,7 +140,7 @@ namespace EliteDangerousCore.DB
                     {
                         updates += StoreNewEntries(cache, tablepostfix, sw);
 
-                        reportProgress?.Invoke("EDSM Star database updated " + recordstostore);
+                        reportProgress?.Invoke("EDSM Star database updated " + recordstostore + " total so far " + updates);
                     }
 
                     if (jr_eof)

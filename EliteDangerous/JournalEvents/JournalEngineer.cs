@@ -91,7 +91,7 @@ namespace EliteDangerousCore.JournalEvents
                 mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Raw, Material, -Quantity, 0);
         }
 
-        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc)
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
             if (Type.Equals("Commodity"))
                 mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Commodity, -Quantity, 0);

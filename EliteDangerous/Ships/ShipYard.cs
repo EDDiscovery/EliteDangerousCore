@@ -27,21 +27,22 @@ namespace EliteDangerousCore
         public class ShipyardItem : IEquatable<ShipyardItem>
         {
             public long id;
-            public string FDShipType;
-            public string ShipType;
+            public string ShipType;             //FDName, direct from entries
             public string ShipType_Localised;
             public long ShipPrice;
 
+            public string FriendlyShipType;   // created
+
             public void Normalise()
             {
-                FDShipType = JournalFieldNaming.NormaliseFDShipName(ShipType);
-                ShipType = JournalFieldNaming.GetBetterShipName(FDShipType);
-                ShipType_Localised = JournalFieldNaming.CheckLocalisation(ShipType_Localised??"",ShipType);
+                ShipType = JournalFieldNaming.NormaliseFDShipName(ShipType);
+                FriendlyShipType = JournalFieldNaming.GetBetterShipName(ShipType);
+                ShipType_Localised = JournalFieldNaming.CheckLocalisation(ShipType_Localised,FriendlyShipType);
             }
 
             public bool Equals(ShipyardItem other)
             {
-                return id == other.id && string.Compare(FDShipType, other.FDShipType) == 0 &&
+                return id == other.id && string.Compare(ShipType, other.ShipType) == 0 &&
                             string.Compare(ShipType_Localised, other.ShipType_Localised) == 0 && ShipPrice == other.ShipPrice;
             }
         }
@@ -89,6 +90,7 @@ namespace EliteDangerousCore
     public class ShipYardList
     {
         public List<ShipYard> ShipYards { get; private set; }
+        public bool? AllowCobraMkIV { get; private set; } = null;         // set when we get a shipyard
 
         public ShipYardList()
         {
@@ -150,6 +152,7 @@ namespace EliteDangerousCore
                 JournalEvents.JournalShipyard js = je as JournalEvents.JournalShipyard;
                 if (js.Yard.Ships != null)     // just in case we get a bad shipyard with no ship data or EDD did not see a matching shipyard.json vs the journal entry
                 {
+                    AllowCobraMkIV = js.AllowCobraMkIV;     // set the flag
                     //System.Diagnostics.Debug.WriteLine("Add yard data for " + js.Yard.StarSystem + ":" + js.Yard.StationName);
                     ShipYards.Add(js.Yard);
                 }

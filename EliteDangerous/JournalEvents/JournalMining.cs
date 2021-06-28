@@ -35,7 +35,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public int Total { get; set; }      // found from MCL
 
-        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc)
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
             mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Type, 1, 0);
             Total = mc.GetLast(Type)?.Count ?? 0;

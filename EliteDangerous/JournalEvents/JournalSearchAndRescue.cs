@@ -39,7 +39,7 @@ namespace EliteDangerousCore.JournalEvents
         public long Reward { get; set; }
         public long? MarketID { get; set; }
 
-        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc)
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
             mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, FDName, -Count, 0);
         }

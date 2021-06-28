@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2018 EDDiscovery development team
+ * Copyright © 2016-2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -58,7 +58,7 @@ namespace EliteDangerousCore
             }
             public string IngredientsStringvsCurrent(List<MaterialCommodityMicroResource> cur)
             {
-                var ing = (from x in Ingredients select Amount[Array.IndexOf(Ingredients, x)].ToString() + x.Shortname + "(" + (cur.Find((z)=>z.Details.FDName==x.FDName)?.Count ?? 0).ToStringInvariant() + ")").ToArray();
+                var ing = (from x in Ingredients select Amount[Array.IndexOf(Ingredients, x)].ToString() + x.Shortname + "(" + (cur.Find((z) => z.Details.FDName == x.FDName)?.Count ?? 0).ToStringInvariant() + ")").ToArray();
                 return string.Join(", ", ing);
             }
 
@@ -66,7 +66,7 @@ namespace EliteDangerousCore
             {
                 get
                 {
-                    var ing = (from x in Ingredients select Amount[Array.IndexOf(Ingredients, x)].ToString() + " "+ x.Name).ToArray();
+                    var ing = (from x in Ingredients select Amount[Array.IndexOf(Ingredients, x)].ToString() + " " + x.Name).ToArray();
                     return string.Join(", ", ing);
                 }
             }
@@ -105,8 +105,8 @@ namespace EliteDangerousCore
 
         public class TechBrokerUnlockRecipe : Recipe
         {
-            public TechBrokerUnlockRecipe(string n, string typename, string indg)     
-                : base(n + " (" + typename+")", indg)
+            public TechBrokerUnlockRecipe(string n, string typename, string indg)
+                : base(n + " (" + typename + ")", indg)
             { }
         }
 
@@ -119,15 +119,15 @@ namespace EliteDangerousCore
 
         public static string UsedInRecipesByFDName(string fdname, string join = ", ")
         {
-            string s =Recipes.UsedInEngineeringByFDName(fdname, join);
-            s = s.AppendPrePad(Recipes.UsedInSythesisByFDName(fdname, join),join);
+            string s = Recipes.UsedInEngineeringByFDName(fdname, join);
+            s = s.AppendPrePad(Recipes.UsedInSythesisByFDName(fdname, join), join);
             s = s.AppendPrePad(Recipes.UsedInTechBrokerUnlocksByFDName(fdname, join), join);
             s = s.AppendPrePad(Recipes.UsedInSpecialEffectsyFDName(fdname, join), join);
             return s;
         }
 
 
-        public static string UsedInSythesisByFDName(string fdname, string join=", ")
+        public static string UsedInSythesisByFDName(string fdname, string join = ", ")
         {
             MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);
             if (mc != null && SynthesisRecipesByMaterial.ContainsKey(mc))
@@ -140,7 +140,7 @@ namespace EliteDangerousCore
         {
             MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);
             if (mc != null && EngineeringRecipesByMaterial.ContainsKey(mc))
-                return String.Join(join, EngineeringRecipesByMaterial[mc].Select(x => x.modulesstring + " "+ x.Name + "-" + x.level + ": " + x.IngredientsStringLong + " @ " + x.engineersstring));
+                return String.Join(join, EngineeringRecipesByMaterial[mc].Select(x => x.modulesstring + " " + x.Name + "-" + x.level + ": " + x.IngredientsStringLong + " @ " + x.engineersstring));
             else
                 return "";
         }
@@ -1149,6 +1149,8 @@ namespace EliteDangerousCore
             new TechBrokerUnlockRecipe("Plasma Shock Cannon Turret Large","Human","26V,28W,22Re,24Tc,10IOD"),
             new TechBrokerUnlockRecipe("Plasma Shock Cannon Turret Medium","Human","24V,22W,20Re,28Tc,8PTB"),
             new TechBrokerUnlockRecipe("Plasma Shock Cannon Turret Small","Human","8V,12W,10Re,10Tc,4IOD"),
+            new TechBrokerUnlockRecipe("Engineered FSD V 1 ( Class : 5 )","Human","18DWEx,26Te,26EA,28CP"),
+            new TechBrokerUnlockRecipe("Engineered Seeker Missile Rack V 1 ( Fixed ) ( Class : 2 )","Human","10OSM,16PRA,24CCe,26HC,28P"),
         };
 
         public static Dictionary<MaterialCommodityMicroResourceType, List<TechBrokerUnlockRecipe>> TechBrokerUnlockRecipesByMaterial =

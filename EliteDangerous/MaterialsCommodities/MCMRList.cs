@@ -89,7 +89,6 @@ namespace EliteDangerousCore
             return list.OrderBy(x => x.Details.Type).ThenBy(x => x.Details.Name).ToList();
         }
 
-
         public List<MaterialCommodityMicroResource> GetMicroResourcesSorted(uint gen)
         {
             var list = items.GetValues(gen, x => x.Details.IsMicroResources);
@@ -178,8 +177,13 @@ namespace EliteDangerousCore
             for (int i = 0; i < counts.Length; i++)
             {
                 int newcount = set[i] ? counts[i] : Math.Max(mc.Counts[i] + counts[i], 0);       // don't let it go below zero if changing
-                changed |= newcount != mc.Counts[i];                        // have we changed? we are trying to minimise deltas to the gen dictionary, so don't add if nothing changed
-                mc.Counts[i] = newcount;
+                if (newcount != mc.Counts[i])
+                {
+                    changed = true;
+                  //  System.Diagnostics.Debug.WriteLine("MCMRLIST {0} Gen {1} Changed {2}:{3} Entry {4} {5} -> {6} {7}", utc.ToString(), items.Generation, mc.Details.Category, mc.Details.FDName, i, mc.Counts[i], newcount, mc.Counts[i]<newcount ? "+++" : "---");
+                 //   System.Diagnostics.Debug.WriteLine(Environment.StackTrace);
+                    mc.Counts[i] = newcount;
+                }
             }
 
             if (changed)                                                    // only store back a new entry if material change to counts
@@ -188,8 +192,6 @@ namespace EliteDangerousCore
                     mc.Price = (costprev + costofnew) / mc.Counts[0];       // price is now a combination of the current cost and the new cost. in case we buy in tranches
 
                 items[fdname] = mc;                                         // and set fdname to mc - this allows for any repeat adds due to frontier data repeating stuff in things like cargo
-
-                //System.Diagnostics.Debug.WriteLine("MCMRLIST {0} Changed {1} {2} {3} {4}", utc.ToString(), items.Generation, mc.Details.FDName, mc.Counts[0], mc.Counts[1]);
             }
             else
             {
@@ -241,6 +243,7 @@ namespace EliteDangerousCore
 
             int changed = 0;
 
+            //System.Diagnostics.Debug.WriteLine("Perform update for " + cat.ToString());
             foreach (var v in values)           
             {
                 varray[cnum] = v.Item2;                         // set cnum value
@@ -253,21 +256,22 @@ namespace EliteDangerousCore
 
             foreach( var c in curlist)                                          //go thru the non zero list of cat
             {
-                if ( values.Find(x=>x.Item1.Equals(c.Details.FDName,StringComparison.InvariantCultureIgnoreCase)) == null)       // if not in updated list
+                if ( values.Find(x=>x.Item1.Equals(c.Details.FDName,StringComparison.InvariantCultureIgnoreCase)) == null )       // if not in updated list
                 {
                     var mc = new MaterialCommodityMicroResource(c);     // clone it
                     mc.Counts[cnum] = 0;            // zero cnum
                     items[c.Details.FDName.ToLowerInvariant()] = mc;
-                    //System.Diagnostics.Debug.WriteLine("MCMRLIST {0} Found {1} not in update list, zeroing", utc.ToString(), mc.Details.FDName);
+                    //System.Diagnostics.Debug.WriteLine("MCMRLIST {0} Found {1}:{2} not in update list, zeroing", utc.ToString(), mc.Details.Category, mc.Details.FDName);
                     changed++;
                 }
             }
 
-            //System.Diagnostics.Debug.WriteLine("MCMRLIST {0} update changed {1}", utc.ToString(), changed);
+            if (changed > 0) System.Diagnostics.Debug.WriteLine("MCMRLIST {0} {1} fixed {2}", utc.ToString() , cat, changed);
+
             return changed;
         }
 
-        public uint Process(JournalEntry je, JournalEntry lastentry )
+        public uint Process(JournalEntry je, JournalEntry lastentry, bool insrv )
         {
             if (je is ICommodityJournalEntry || je is IMaterialJournalEntry || je is IMicroResourceJournalEntry)
             {
@@ -278,7 +282,7 @@ namespace EliteDangerousCore
                 if (je is ICommodityJournalEntry)
                 {
                     ICommodityJournalEntry e = je as ICommodityJournalEntry;
-                    e.UpdateCommodities(this);
+                    e.UpdateCommodities(this,insrv);
                 }
 
                 if (je is IMaterialJournalEntry)

@@ -90,7 +90,7 @@ namespace EliteDangerousCore.JournalEvents
             mlist.Died(this.EventTimeUTC);
         }
 
-        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc)
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
             mc.Clear(0, MaterialCommodityMicroResourceType.CatType.Commodity);      // clear all count zero of commodities
             // clear all backpack items on death..

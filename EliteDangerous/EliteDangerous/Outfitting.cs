@@ -29,7 +29,7 @@ namespace EliteDangerousCore
         [System.Diagnostics.DebuggerDisplay("{Name} {BuyPrice}")]
         public class OutfittingItem: IEquatable<OutfittingItem>
         {
-            public long id;
+            public long id;             // json fields
             public string Name;
             public long BuyPrice;
 
@@ -49,13 +49,12 @@ namespace EliteDangerousCore
                 return (id == other.id && string.Compare(Name, other.Name) == 0 && string.Compare(FDName, other.FDName) == 0 &&
                          BuyPrice == other.BuyPrice);
             }
-
         }
 
         public OutfittingItem[] Items { get; private set; }
         public string StationName { get; private set; }
         public string StarSystem { get; private set; }
-        public DateTime Datetime { get; private set; }
+        public DateTime Datetimeutc { get; private set; }
 
         public Outfitting()
         {
@@ -65,7 +64,7 @@ namespace EliteDangerousCore
         {
             StationName = st;
             StarSystem = sy;
-            Datetime = dt;
+            Datetimeutc = dt;
             Items = it;
             if (Items != null)
                 foreach (Outfitting.OutfittingItem i in Items)
@@ -82,13 +81,14 @@ namespace EliteDangerousCore
 
         public string Ident()
         {
-            return StarSystem + ":" + StationName + " on " + EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(Datetime).ToString();
+            return StarSystem + ":" + StationName + " on " + EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(Datetimeutc).ToString();
         }
 
         public List<string> ItemList() { return (from x1 in Items select x1.Name).ToList(); }
 
         public OutfittingItem Find(string item) { return Array.Find(Items, x => x.Name.Equals(item)); }
         public List<OutfittingItem> FindType(string itemtype) { return (from x in Items where x.ModType.Equals(itemtype) select x).ToList(); }
+
     }
 
     [System.Diagnostics.DebuggerDisplay("Yards {OutfittingYards.Count}")]
@@ -121,7 +121,7 @@ namespace EliteDangerousCore
                 if (!nolocrepeats || yards.Find(x => x.Location.Equals(yard.Location)) == null) // allow yard repeats or not in list
                 {
                     // if no last or different name or time is older..
-                    if (last == null || !yard.Location.Equals(last.Location) || (last.Datetime - yard.Datetime).TotalSeconds >= timeout)
+                    if (last == null || !yard.Location.Equals(last.Location) || (last.Datetimeutc - yard.Datetimeutc).TotalSeconds >= timeout)
                     {
                         yards.Add(yard);
                         last = yard;

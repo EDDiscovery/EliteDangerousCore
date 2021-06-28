@@ -249,7 +249,7 @@ namespace EliteDangerousCore.JournalEvents
 
         private static DateTime ED32Date = new DateTime(2018, 8, 28, 10, 0, 0);
 
-        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc)
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
             if (Commodity != null && Count != null && EventTimeUTC < ED32Date)           // after this we will rely on Cargo to update us, only safe way to know if something has been stowed
             {
@@ -360,7 +360,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public FactionEffectsEntry[] FactionEffects;
 
-        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc)
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
             // removed update on Commodity/Count (which is unreliable about if you should remove them from cargo)
             // rely on Cargo to update stats, its emitted directly after MissionCompleted.

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 EDDiscovery development team
+ * Copyright © 2016-2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -160,7 +160,7 @@ namespace EliteDangerousCore
             return ifd.HasChars() && !IsSRVOrFighter(ifd) && !IsSuit(ifd) && !IsTaxi(ifd);
         }
 
-        static public bool IsShipSRVOrFighter(string ifd)       
+        static public bool IsShipSRVOrFighter(string ifd)
         {
             return ifd.HasChars() && !IsSuit(ifd) && !IsTaxi(ifd);
         }
@@ -275,7 +275,7 @@ namespace EliteDangerousCore
             public int ClipSize;
             public int HopperSize;
             public int Range;
-            public WeaponStats(double dps, double rate, int clip, int hoppersize, int range) { DPS = dps; RatePerSec = rate; ClipSize = clip; HopperSize = hoppersize;  Range = range; }
+            public WeaponStats(double dps, double rate, int clip, int hoppersize, int range) { DPS = dps; RatePerSec = rate; ClipSize = clip; HopperSize = hoppersize; Range = range; }
 
         }
         public class Weapon : IModuleInfo
@@ -299,7 +299,7 @@ namespace EliteDangerousCore
             }
 
 
-            public Weapon(string name, bool primary,  WeaponDamageType ty, WeaponClass ds, WeaponFireMode fr, WeaponStats[] values)
+            public Weapon(string name, bool primary, WeaponDamageType ty, WeaponClass ds, WeaponFireMode fr, WeaponStats[] values)
             {
                 Name = name;
                 Primary = primary;
@@ -313,7 +313,7 @@ namespace EliteDangerousCore
         public class Suit : IModuleInfo
         {
             public string Name;
-            public Suit(string name) { Name = name;  }
+            public Suit(string name) { Name = name; }
         }
 
         #endregion
@@ -427,7 +427,7 @@ namespace EliteDangerousCore
 
         public static Dictionary<string, Weapon> weapons = new Dictionary<string, Weapon>   // DO NOT USE DIRECTLY - public is for checking only
         {
-             { "wpn_m_assaultrifle_kinetic_fauto", new Weapon("Karma AR-50", true, Weapon.WeaponDamageType.Kinetic, Weapon.WeaponClass.LongRangeRifle, Weapon.WeaponFireMode.Automatic, 
+             { "wpn_m_assaultrifle_kinetic_fauto", new Weapon("Karma AR-50", true, Weapon.WeaponDamageType.Kinetic, Weapon.WeaponClass.LongRangeRifle, Weapon.WeaponFireMode.Automatic,
                              new WeaponStats[] {  new WeaponStats(0.9,10,40,240,50), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0),  new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
 
              { "wpn_m_assaultrifle_laser_fauto", new Weapon("TK Aphelion", true, Weapon.WeaponDamageType.Thermal, Weapon.WeaponClass.Rifle, Weapon.WeaponFireMode.Automatic,
@@ -455,11 +455,11 @@ namespace EliteDangerousCore
              { "wpn_s_pistol_kinetic_sauto", new Weapon("Karma P-15", false, Weapon.WeaponDamageType.Kinetic, Weapon.WeaponClass.Pistol, Weapon.WeaponFireMode.SemiAutomatic,
                                          new WeaponStats[] { new WeaponStats(1.4,10,24,240,25), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
 
-             { "wpn_s_pistol_laser_sauto", new Weapon("TK Zenith", false, Weapon.WeaponDamageType.Thermal, Weapon.WeaponClass.Pistol, Weapon.WeaponFireMode.Burst, 
+             { "wpn_s_pistol_laser_sauto", new Weapon("TK Zenith", false, Weapon.WeaponDamageType.Thermal, Weapon.WeaponClass.Pistol, Weapon.WeaponFireMode.Burst,
                                                 new WeaponStats[] { new WeaponStats(1.7,2.7,18,180,35), new WeaponStats(2.2,5.7,18,180,35), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
 
              // TBD range
-            { "wpn_s_pistol_plasma_charged", new Weapon("Manticore Tormentor", false, Weapon.WeaponDamageType.Plasma, Weapon.WeaponClass.Pistol, Weapon.WeaponFireMode.SemiAutomatic, 
+            { "wpn_s_pistol_plasma_charged", new Weapon("Manticore Tormentor", false, Weapon.WeaponDamageType.Plasma, Weapon.WeaponClass.Pistol, Weapon.WeaponFireMode.SemiAutomatic,
                             new WeaponStats[] { new WeaponStats(7.5,1.7,6,72,15), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0), new WeaponStats(0,0,0,0,0) }) },
 
         };
@@ -492,6 +492,8 @@ namespace EliteDangerousCore
         {
             // Excel frontier data for 3.3 not in corolis yet..
             // mass guessed..
+
+            { "null", new ShipModule(-1,0, "Error in frontier journal - Null module", UnknownType ) },
 
              { "hpt_cannon_turret_huge", new ShipModule(-1, 1, .9, "Cannon Turret Huge", "Cannon")},
              { "hpt_plasmaburstcannon_fixed_medium", new ShipModule(-1, 1, 1.4, "Plasma Burst Cannon Fixed Medium", "Plasma Accelerator")},
@@ -547,9 +549,9 @@ namespace EliteDangerousCore
             { "hpt_pulselaser_gimbal_indie_fighter", new ShipModule(-1,0, 1,"Pulse Laser Gimbal Indie Fighter", "Pulse Laser" ) },
             { "hpt_pulselaser_gimbal_empire_fighter", new ShipModule(-1,0, 1, "Pulse Laser Gimbal Empire Fighter", "Pulse Laser" ) },
 
-            { "int_powerdistributor_fighter_class1", new ShipModule(-1,0, "Int Powerdistributor Fighter Class 1", UnknownType ) },
-            { "int_sensors_fighter_class1", new ShipModule(-1,0, "Int Sensors Fighter Class 1", UnknownType ) },
-            { "int_powerplant_fighter_class1", new ShipModule(-1,0, "Int Powerplant Fighter Class 1", UnknownType ) },
+            { "int_powerdistributor_fighter_class1", new ShipModule(-1,0, "Int Powerdistributor Fighter Class 1", "Power Distributor" ) },
+            { "int_sensors_fighter_class1", new ShipModule(-1,0, "Int Sensors Fighter Class 1", "Sensors" ) },
+            { "int_powerplant_fighter_class1", new ShipModule(-1,0, "Int Powerplant Fighter Class 1", "Powerplant" ) },
 
             { "hpt_pulselaser_fixed_fed_fighter", new ShipModule(-1,0, 1, "Pulse Laser Fixed Federation Fighter", "Pulse Laser" ) },
             { "hpt_pulselaser_fixed_indie_fighter", new ShipModule(-1,0, 1,"Pulse Laser Fixed Indie Fighter", "Pulse Laser" ) },
@@ -1327,7 +1329,7 @@ namespace EliteDangerousCore
             { "hpt_mining_subsurfdispmisle_fixed_medium", new ShipModule(128915457, 4, 1.01F, "Ammo:96/1, Damage:5, Range:3000m, Speed:550m/s, Reload:2s, ThermL:2.9","Mining Sub Surface Displacement Missile Fixed Medium", "Mining")},
             { "hpt_mining_subsurfdispmisle_turret_medium", new ShipModule(128049381, 4, 0.93F, "Ammo:96/1, Damage:5, Range:3000m, Speed:550m/s, Reload:2s, ThermL:2.9","Mining Subsurface Displacement Missile Turret Medium", "Mining")},
             { "hpt_mining_subsurfdispmisle_fixed_small", new ShipModule(128915455, 2, 0.42F, "Ammo:32/1, Damage:5, Range:3000m, Speed:550m/s, Reload:2s, ThermL:2.2","Mining Sub Surface Displacement Missile Fixed Small", "Mining")},
-            { "hpt_mining_subsurfdispmisle_turret_small", new ShipModule(128049381, 2, 0.42F, "Ammo:32/1, Damage:5, Range:3000m, Speed:550m/s, Reload:2s, ThermL:2.2","Mining Subsurface Displacement Missile Turret Small", "Mining")},
+            { "hpt_mining_subsurfdispmisle_turret_small", new ShipModule(128049381, 2, 0.53F, "Ammo:32/1, Damage:5, Range:3000m, Speed:550m/s, Reload:2s, ThermL:2.2","Mining Subsurface Displacement Missile Turret Small", "Mining")},
             { "hpt_advancedtorppylon_fixed_small", new ShipModule(128049509, 2, 0.4F, "Ammo:1/1, Damage:120, Speed:250m/s, Reload:5s, ThermL:45","Advanced Torp Pylon Fixed Small", "Missile Rack")},
             { "hpt_advancedtorppylon_fixed_medium", new ShipModule(128049510, 4, 0.4F, "Ammo:2/1, Damage:120, Speed:250m/s, Reload:5s, ThermL:50","Advanced Torp Pylon Fixed Medium", "Missile Rack")},
             { "hpt_advancedtorppylon_fixed_large", new ShipModule(128049511, 8, 0.6F, "Ammo:4/4, Damage:120, Speed:250m/s, Reload:5s, ThermL:55","Advanced Torp Pylon Fixed Large", "Missile Rack")},
@@ -1616,7 +1618,7 @@ namespace EliteDangerousCore
             { "int_buggybay_size4_class2", new ShipModule(128672291, 10, 1.2F, null,"Planetary Vehicle Hangar Class 4 Rating G", "Planetary Vehicle Hangar")},
             { "int_buggybay_size6_class1", new ShipModule(128672292, 34, 0.6F, null,"Planetary Vehicle Hangar Class 6 Rating H", "Planetary Vehicle Hangar")},
             { "int_buggybay_size6_class2", new ShipModule(128672293, 17, 1.8F, null,"Planetary Vehicle Hangar Class 6 Rating G", "Planetary Vehicle Hangar")},
-            { "int_shieldgenerator_size1_class5_strong", new ShipModule(128671323, 2.5F, 2.52F, "OptMass:25t, MaxMass:63t, MinMass:13t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 1 Rating A Strong", "Shield Generator")},
+            { "int_shieldgenerator_size1_class5_strong", new ShipModule(128671323, 2.6F, 2.52F, "OptMass:25t, MaxMass:63t, MinMass:13t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 1 Rating A Strong", "Shield Generator")},
             { "int_shieldgenerator_size2_class5_strong", new ShipModule(128671324, 5, 3.15F, "OptMass:55t, MaxMass:138t, MinMass:23t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 2 Rating A Strong", "Shield Generator")},
             { "int_shieldgenerator_size3_class5_strong", new ShipModule(128671325, 10, 3.78F, "OptMass:165t, MaxMass:413t, MinMass:83t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 3 Rating A Strong", "Shield Generator")},
             { "int_shieldgenerator_size4_class5_strong", new ShipModule(128671326, 20, 4.62F, "OptMass:285t, MaxMass:713t, MinMass:143t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 4 Rating A Strong", "Shield Generator")},

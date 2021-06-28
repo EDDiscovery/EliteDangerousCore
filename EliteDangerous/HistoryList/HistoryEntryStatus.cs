@@ -112,12 +112,12 @@ namespace EliteDangerousCore
 
                         bool locinstation = jloc.StationType.HasChars() || prev.StationType.HasChars();     // second is required due to alpha 4 stationtype being missing
 
-                        TravelStateType t = jloc.Docked ? TravelStateType.Docked :
-                                                ((jloc.InSRV == null && jloc.Latitude.HasValue) || jloc.InSRV == true) ? (jloc.Multicrew == true ? TravelStateType.MulticrewSRV : TravelStateType.SRV) :      // lat is pre 4.0 check
+                        TravelStateType t = jloc.Docked ? (jloc.Multicrew == true ? TravelStateType.MulticrewDocked : TravelStateType.Docked) :
+                                                (jloc.InSRV == true) ? (jloc.Multicrew == true ? TravelStateType.MulticrewSRV : TravelStateType.SRV) :      // lat is pre 4.0 check
                                                     jloc.Taxi == true ? TravelStateType.TaxiNormalSpace :          // can't be in dropship, must be in normal space.
-                                                        jloc.Multicrew == true ? TravelStateType.MulticrewNormalSpace :
-                                                            jloc.OnFoot == true ? (locinstation ? TravelStateType.OnFootStarPort : TravelStateType.OnFootPlanet) :
-                                                                // removed prev.TravelState == TravelStateType.OnFootPlanet && locinstation ? TravelStateType.OnFootStation :
+                                                        jloc.OnFoot == true ? (locinstation ? TravelStateType.OnFootStarPort : TravelStateType.OnFootPlanet) :
+                                                            jloc.Latitude.HasValue ? (jloc.Multicrew == true ? TravelStateType.MulticrewLanded : TravelStateType.Landed) :
+                                                                jloc.Multicrew == true ? TravelStateType.MulticrewNormalSpace :
                                                                     TravelStateType.NormalSpace;
 
                         hes = new HistoryEntryStatus(prev)     // Bodyapproach copy over we should be in the same state as last..
@@ -128,8 +128,8 @@ namespace EliteDangerousCore
                             BodyType = jloc.BodyType,
                             BodyName = jloc.Body,
                             Wanted = jloc.Wanted,
-                            StationName = jloc.StationName.Alt(null),       // if empty string, set to null
-                            StationType = jloc.StationType.Alt(null),
+                            StationName = jloc.StationName.Alt(jloc.Docked || locinstation ? jloc.Body : null),
+                            StationType = jloc.StationType.Alt(prev.StationType).Alt(jloc.Docked || locinstation ? jloc.BodyType : null),
                             StationFaction = jloc.StationFaction,          // may be null
                         };
                         break;
@@ -231,7 +231,7 @@ namespace EliteDangerousCore
                 case JournalTypeEnum.Docked:        // Docked not seen when in Taxi.
                     {
                         JournalDocked jdocked = (JournalDocked)je;
-                        //System.Diagnostics.Debug.WriteLine("{0} Station {1} {2}", jdocked.EventTimeUTC, jdocked.StationName, jdocked.Faction);
+                        //System.Diagnostics.Debug.WriteLine("{0} Docked {1} {2} {3}", jdocked.EventTimeUTC, jdocked.StationName, jdocked.StationType, jdocked.Faction);
                         hes = new HistoryEntryStatus(prev)
                         {
                             TravelState = jdocked.Taxi == true ? TravelStateType.TaxiDocked :
@@ -240,7 +240,7 @@ namespace EliteDangerousCore
                             MarketId = jdocked.MarketID,
                             Wanted = jdocked.Wanted,
                             StationName = jdocked.StationName.Alt("Unknown"),
-                            StationType = jdocked.StationType,
+                            StationType = jdocked.StationType.Alt("Station"),
                             StationFaction = jdocked.Faction,
                         };
                         break;
@@ -454,14 +454,16 @@ namespace EliteDangerousCore
                     break;
 
                 case JournalTypeEnum.ShipyardSwap:
-                    JournalShipyardSwap jsswap = (JournalShipyardSwap)je;
-                    hes = new HistoryEntryStatus(prev)
                     {
-                        ShipID = jsswap.ShipId,
-                        ShipType = jsswap.ShipType,
-                        ShipTypeFD = jsswap.ShipFD,
-                    };
-                    break;
+                        JournalShipyardSwap jsswap = (JournalShipyardSwap)je;
+                        hes = new HistoryEntryStatus(prev)
+                        {
+                            ShipID = jsswap.ShipId,
+                            ShipType = jsswap.ShipType,
+                            ShipTypeFD = jsswap.ShipFD,
+                        };
+                        break;
+                    }
 
                 case JournalTypeEnum.BookDropship:
                     hes = new HistoryEntryStatus(prev)
@@ -477,7 +479,6 @@ namespace EliteDangerousCore
                         BookedDropship = false,
                     };
                     break;
-
             }
 
             return hes;

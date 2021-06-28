@@ -27,7 +27,7 @@ namespace EliteDangerousCore
 
     public interface ICommodityJournalEntry
     {
-        void UpdateCommodities(MaterialCommoditiesMicroResourceList mc);
+        void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool insrv);
     }
 
     public interface IMicroResourceJournalEntry

@@ -224,7 +224,7 @@ namespace EliteDangerousCore
 
         public Dictionary<ulong, SuitLoadout> GetLoadoutsForSuit(uint gen, ulong suitid)
         {
-            System.Diagnostics.Debug.WriteLine("Lookup at gen {0} suitid {1}", gen, suitid);
+            //System.Diagnostics.Debug.WriteLine("Lookup at gen {0} suitid {1}", gen, suitid);
             var ret = loadouts.Get(gen, x => x.SuitID == suitid && x.Deleted == false);
             //if ( ret != null )
             //{

@@ -52,7 +52,6 @@ namespace EliteDangerousCore
         public bool IsFSDCarrierJump { get { return EntryType == JournalTypeEnum.FSDJump || EntryType == JournalTypeEnum.CarrierJump; } }
         public bool IsLocOrJump { get { return EntryType == JournalTypeEnum.FSDJump || EntryType == JournalTypeEnum.Location || EntryType == JournalTypeEnum.CarrierJump; } }
         public bool IsFuelScoop { get { return EntryType == JournalTypeEnum.FuelScoop; } }
-        public bool IsShipChange { get { return (EntryType == JournalTypeEnum.LoadGame || EntryType == JournalTypeEnum.Docked) && ShipInformation != null; } }
 
         public double TravelledDistance { get { return TravelStatus.TravelledDistance; } }
         public TimeSpan TravelledSeconds { get { return TravelStatus.TravelledSeconds; } }
@@ -64,9 +63,13 @@ namespace EliteDangerousCore
 
         public HistoryEntryStatus Status { get { return EntryStatus; } }
 
+        // is landed in own ship
         public bool IsLanded { get { return EntryStatus.TravelState == HistoryEntryStatus.TravelStateType.Landed || EntryStatus.TravelState == HistoryEntryStatus.TravelStateType.SRV; } }
+        // is docked in own ship
         public bool IsDocked { get { return EntryStatus.TravelState == HistoryEntryStatus.TravelStateType.Docked; } }
+        // is in hyperspace in own ship
         public bool IsInHyperSpace { get { return EntryStatus.TravelState == HistoryEntryStatus.TravelStateType.Supercruise; } }
+
         public HistoryEntryStatus.TravelStateType TravelState { get { return EntryStatus.TravelState; } }
 
         public string WhereAmI { get { return EntryStatus.StationName ?? EntryStatus.BodyName ?? "Unknown"; } }

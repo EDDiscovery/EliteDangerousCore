@@ -670,7 +670,7 @@ namespace EliteDangerousCore.EDDN
                 ["systemName"] = journal.Yard.StarSystem,
                 ["stationName"] = journal.Yard.StationName,
                 ["marketId"] = journal.MarketID,
-                ["ships"] = new JArray(journal.Yard.Ships.Select(m => m.FDShipType))
+                ["ships"] = new JArray(journal.Yard.Ships.Select(m => m.ShipType))
             };
 
             message["odyssey"] = journal.IsOdyssey;     // new may 21

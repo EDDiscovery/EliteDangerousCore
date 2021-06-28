@@ -65,7 +65,7 @@ namespace EliteDangerousCore.JournalEvents
         public string FDNameOfItem { get { return Type; } }        // implement IStatsJournalEntryMatCommod
         public int CountOfItem { get { return Count; } }
 
-        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc)
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
             mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, "drones", Count, 0);
         }
@@ -106,7 +106,7 @@ namespace EliteDangerousCore.JournalEvents
         // Istats
         public List<IStatsItemsInfo> ItemsList { get { return new List<IStatsItemsInfo>() { new IStatsItemsInfo() { FDName = Type, Count = -Count } }; } }
 
-        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc)
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
             mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, "drones", -Count, 0);
         }
@@ -142,7 +142,7 @@ namespace EliteDangerousCore.JournalEvents
         public DroneType Type { get; set; }
         public string FriendlyType { get; set; }
 
-        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc) 
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv) 
         {
             mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, "drones", -1, 0);
         }

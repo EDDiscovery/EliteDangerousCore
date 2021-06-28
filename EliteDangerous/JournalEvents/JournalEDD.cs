@@ -175,7 +175,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc)
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         { 
             if (Commodities != null)
             {
