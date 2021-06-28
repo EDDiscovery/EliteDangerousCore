@@ -138,6 +138,7 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Empty, Terraformable, Terraformed, Terraforming")]
         public string TerraformState { get; private set; }                  // direct, can be empty or a string
         public bool Terraformable { get { return TerraformState != null && new[] { "terraformable", "terraforming", "terraformed" }.Contains(TerraformState, StringComparer.InvariantCultureIgnoreCase); } }
+        public bool CanBeTerraformable { get { return TerraformState != null && new[] { "terraformable", "terraforming" }.Contains(TerraformState, StringComparer.InvariantCultureIgnoreCase); } }
 
         public string Atmosphere { get; private set; }                      // direct from journal, if not there or blank, tries AtmosphereType (Earthlikes)
         public EDAtmosphereType AtmosphereID { get; }               // Atmosphere -> ID (Ammonia, Carbon etc)
@@ -411,11 +412,11 @@ namespace EliteDangerousCore.JournalEvents
 
                 if ( Atmosphere == "thick  atmosphere" )            // obv a frontier but, atmosphere type has the missing text
                 {
-                    Atmosphere = "Thick " + evt["AtmosphereType"].Str().SplitCapsWord() + " atmosphere";
+                    Atmosphere = "thick " + evt["AtmosphereType"].Str().SplitCapsWord() + " atmosphere";
                 }
                 else if ( Atmosphere == "thin  atmosphere")             
                 {
-                    Atmosphere = "Thin " + evt["AtmosphereType"].Str().SplitCapsWord() + " atmosphere";
+                    Atmosphere = "thin " + evt["AtmosphereType"].Str().SplitCapsWord() + " atmosphere";
                 }
                 else if ( Atmosphere.IsEmpty())                         // try type.
                     Atmosphere = evt["AtmosphereType"].StrNull();       // it may still be null here or empty string
@@ -424,25 +425,25 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     if ((AtmosphereComposition?.Count ?? 0) > 0)    // if we have some composition, synthesise name
                     {
-                        foreach( var e  in Enum.GetNames(typeof(EDAtmosphereType)))
+                        foreach( var e in Enum.GetNames(typeof(EDAtmosphereType)))
                         {
                             if ( AtmosphereComposition.ContainsKey(e.ToString()))       // pick first match in ID
                             {
-                                Atmosphere = e.ToString();
+                                Atmosphere = e.ToString().SplitCapsWord().ToLower();
+                             //   System.Diagnostics.Debug.WriteLine("Computed Atmosphere '" + Atmosphere + "'");
                                 break;
                             }
                         }
                     }
 
                     if ( Atmosphere.IsEmpty())          // still nothing, set to None
-                        Atmosphere = "None";
+                        Atmosphere = "none";
                 }
                 else
                 {
-                    Atmosphere = Atmosphere.Replace("sulfur", "sulphur");      // fix frontier spelling mistakes
+                    Atmosphere = Atmosphere.Replace("sulfur", "sulphur").SplitCapsWord().ToLower();      // fix frontier spelling mistakes
+                 //   System.Diagnostics.Debug.WriteLine("Atmosphere '" + Atmosphere + "'");
                 }
-
-                Atmosphere = Atmosphere.SplitCapsWord();        // split out conjoined words 
 
                 AtmosphereID = Bodies.AtmosphereStr2Enum(Atmosphere, out EDAtmosphereProperty ap);  // convert to internal ID
                 AtmosphereProperty = ap;
