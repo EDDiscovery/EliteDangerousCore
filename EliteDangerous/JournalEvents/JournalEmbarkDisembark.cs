@@ -57,6 +57,8 @@ namespace EliteDangerousCore.JournalEvents
         public string StationType { get; set; }
         public long? MarketID { get; set; }
 
+        protected override JournalTypeEnum IconEventType { get { return SRV ? JournalTypeEnum.EmbarkSRV : JournalTypeEnum.Embark; } }
+
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             if (Taxi)
@@ -120,6 +122,8 @@ namespace EliteDangerousCore.JournalEvents
         public string StationName { get; set; }
         public string StationType { get; set; }
         public long? MarketID { get; set; }
+
+        protected override JournalTypeEnum IconEventType { get { return SRV ? JournalTypeEnum.DisembarkSRV : JournalTypeEnum.Disembark; } }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {

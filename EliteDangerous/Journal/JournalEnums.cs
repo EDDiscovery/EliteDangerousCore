@@ -289,6 +289,8 @@ namespace EliteDangerousCore
         ShieldState_ShieldsDown = 10831,
         VehicleSwitch_Mothership = 10950,
         VehicleSwitch_Fighter = 10951,
+        DisembarkSRV = 10960,
+        EmbarkSRV = 10961,
     }
 }
 
