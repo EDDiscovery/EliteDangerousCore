@@ -84,6 +84,8 @@ namespace EliteDangerousCore.JournalEvents
         public string Name_Localised { get; set; }
         public string FriendlyName { get; set; }
         public long Price { get; set; }
+        //TBD
+        public string[] SuitMods { get; set; }      // may be null
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
@@ -387,6 +389,10 @@ namespace EliteDangerousCore.JournalEvents
         public string ModuleName_Localised { get; set; }
         public ulong SuitModuleID { get; set; }         // aka weapon ID
 
+        //TBD
+        public int Class { get; set; }        // may not be there
+        public string[] WeaponMods { get; set; }    // may be null or empty
+
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "<: ", LoadoutName, "<: ", SlotFriendlyName, "< --> ", ModuleNameFriendly);
@@ -474,7 +480,7 @@ namespace EliteDangerousCore.JournalEvents
         public string[] SuitMods { get; set; }          // may be null or empty
         public ulong LoadoutID { get; set; }
         public string LoadoutName { get; set; }
-
+        //tbd check new fields
         public SuitLoadout.LoadoutModule[] Modules;
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)

@@ -90,6 +90,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public bool IsTrainingEvent { get; private set; }
 
+        // TBD Odyssey Update 4 adds {"LandingPads":{ "Small":17, "Medium":18, "Large":9 }
+
         public class Economies
         {
             public string Name;

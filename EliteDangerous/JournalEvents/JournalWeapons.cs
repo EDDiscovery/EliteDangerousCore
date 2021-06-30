@@ -80,6 +80,10 @@ namespace EliteDangerousCore.JournalEvents
         public string FriendlyName { get; set; }
         public long Price { get; set; }
         public ulong SuitModuleID { get; set; }
+        //TBD Class, WeaponMods
+        public int Class { get; set; }
+        public string[] WeaponMods { get; set; }    // may be null/empty
+
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {

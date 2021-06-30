@@ -60,6 +60,8 @@ namespace EliteDangerousCore.JournalEvents
         {
         }
 
+        // TBD more fields
+
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = "";//     info = BaseUtils.FieldBuilder.Build("", FriendlyType, "", Count, "< sell price ; cr;N0".T(EDTx.JournalEntry_sellprice), SellPrice, "Total Cost: ; cr;N0".T(EDTx.JournalEntry_TotalCost), TotalSale, "Profit: ; cr;N0".T(EDTx.JournalEntry_Profit), profit);
