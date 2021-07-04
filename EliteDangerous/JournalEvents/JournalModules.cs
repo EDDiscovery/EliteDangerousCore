@@ -558,15 +558,14 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public bool ReadAdditionalFiles(string directory, bool historyrefreshparse)
+        public void ReadAdditionalFiles(string directory)
         {
-            JObject jnew = ReadAdditionalFile(System.IO.Path.Combine(directory, "ModulesInfo.json"), waitforfile: !historyrefreshparse, checktimestamptype: true);
+            JObject jnew = ReadAdditionalFile(System.IO.Path.Combine(directory, "ModulesInfo.json"), EventTypeStr);
             if (jnew != null)        // new json, rescan
             {
                 Rescan(jnew);
                 UpdateJson(jnew);
             }
-            return jnew != null;
         }
 
         public List<ShipModule> ShipModules;

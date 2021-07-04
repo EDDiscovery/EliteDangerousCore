@@ -46,15 +46,14 @@ namespace EliteDangerousCore.JournalEvents
             AllowCobraMkIV = evt["AllowCobraMkIV"].BoolNull();
         }
 
-        public bool ReadAdditionalFiles(string directory, bool historyrefreshparse)
+        public void ReadAdditionalFiles(string directory)
         {
-            JObject jnew = ReadAdditionalFile(System.IO.Path.Combine(directory, "Shipyard.json"), waitforfile: !historyrefreshparse, checktimestamptype: true);
+            JObject jnew = ReadAdditionalFile(System.IO.Path.Combine(directory, "Shipyard.json"), EventTypeStr);
             if (jnew != null)        // new json, rescan
             {
                 Rescan(jnew);
                 UpdateJson(jnew);
             }
-            return jnew != null;
         }
 
         public JObject ToJSON()

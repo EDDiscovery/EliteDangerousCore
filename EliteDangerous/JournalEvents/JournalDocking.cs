@@ -65,6 +65,8 @@ namespace EliteDangerousCore.JournalEvents
 
             Taxi = evt["Taxi"].BoolNull();
             Multicrew = evt["Multicrew"].BoolNull();
+
+            LandingPads = evt["LandingPads"]?.ToObjectQ<LandingPadList>();      // only from odyssey release 5
         }
 
         public string StationName { get; set; }
@@ -87,10 +89,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public bool? Taxi { get; set; }             //4.0 alpha 4
         public bool? Multicrew { get; set; }
+        public LandingPadList LandingPads { get; set; } // 4.0 update 5
 
         public bool IsTrainingEvent { get; private set; }
-
-        // TBD Odyssey Update 4 adds {"LandingPads":{ "Small":17, "Medium":18, "Large":9 }
 
         public class Economies
         {
@@ -98,6 +99,13 @@ namespace EliteDangerousCore.JournalEvents
             public string Name_Localised;
             public double Proportion;
         }
+
+        public class LandingPadList
+        {
+            public int Small;
+            public int Medium;
+            public int Large;
+        };
 
         public override string SummaryName(ISystem sys) { return string.Format("At {0}".T(EDTx.JournalDocked_At), StationName); }
 
@@ -202,13 +210,13 @@ namespace EliteDangerousCore.JournalEvents
             StationName = evt["StationName"].Str();
             StationType = evt["StationType"].Str().SplitCapsWord();
             MarketID = evt["MarketID"].LongNull();
+            LandingPads = evt["LandingPads"]?.ToObjectQ<JournalDocked.LandingPadList>();      // only from odyssey release 5
         }
-
-        // TBD Odyssey Update 4 adds {"LandingPads":{ "Small":17, "Medium":18, "Large":9 }
 
         public string StationName { get; set; }
         public string StationType { get; set; }
         public long? MarketID { get; set; }
+        public JournalDocked.LandingPadList LandingPads { get; set; } // 4.0 update 5
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {

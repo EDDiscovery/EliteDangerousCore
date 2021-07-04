@@ -242,7 +242,6 @@ namespace EliteDangerousCore.JournalEvents
 
     }
 
-    // TBD Write, Test
     [JournalEntryType(JournalTypeEnum.DeleteSuitLoadout)]
     public class JournalDeleteSuitLoadout : JournalEntry, ISuitLoadoutInformation
     {
@@ -281,7 +280,6 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
-    // TBD Write, Test
     [JournalEntryType(JournalTypeEnum.LoadoutEquipModule)]
     public class JournalLoadoutEquipModule : JournalEntry, ISuitLoadoutInformation, ISuitInformation, IWeaponInformation
     {

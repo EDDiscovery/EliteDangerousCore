@@ -170,11 +170,12 @@ namespace EliteDangerousCore
 
                 hist.hlastprocessed = he;
 
+               // System.Diagnostics.Debug.WriteLine("++ {0} {1}", he.EventTimeUTC.ToString(), he.EntryType);
                 var reorderlist = hist.ReorderRemove(he);
 
                 foreach (var heh in reorderlist.EmptyIfNull())
                 {
-                   // System.Diagnostics.Debug.WriteLine("   ++ {0} {1}", heh.EventTimeUTC.ToString(), heh.EntryType);
+                    // System.Diagnostics.Debug.WriteLine("   ++ {0} {1}", heh.EventTimeUTC.ToString(), heh.EntryType);
                     heh.Index = hist.historylist.Count; // store its index for quick ordering, after all removal etc
                     hist.historylist.Add(heh);        // then add to history
                     hist.AddToVisitsScan(null);  // add to scan database but don't complain
@@ -379,18 +380,10 @@ namespace EliteDangerousCore
             return false;
         }
 
-/* as of June 25 2011:
-Disembark ship to planet: shiplocker  disembark suit loadout  backpack  shiplocker
-Disembark ship to station:  disembark  suit loadout  backpack  ship locker
-Board ship:  shiplocker embark loadout shiplocker
-Exit suit loadout menu, after loadout change, plus other places: SuitLoadout Backpack Ship locker
-Throwing a grenade causes:  BackpackChange/Removed event.
-Using a consumable: UseConsumable BackpackChange/Removed. 
-Collect item: CollectItem BackpackChanged/Added.
-Drop item: DropItem BackpackChanged/Removed.
-Odyssey 3: Buy MR: BuyMicroResource ShipLocker
-Odyssey 3: Trade MR: Shiplocker TradeMicroResource
-Odyssey 3: Sell MR: ShipLocker SellMicroResources
+ /* 
+  * need to check
+        Odyssey 5: Trade MR: TradeMicroResource Shiplocker 
+        Odyssey 5: Sell MR: SellMicroResource Shiplocker 
 */
 
         public List<HistoryEntry> ReorderRemove(HistoryEntry he)
@@ -436,38 +429,25 @@ Odyssey 3: Sell MR: ShipLocker SellMicroResources
                 }
             }
 
-            if (he.EventTimeUTC >= new DateTime(2021, 6, 17))        // this stuff only works on journals after odyssey 3 update
+            // this stuff only works on journals after Odyssey 5 (1/7/21)
+            if (he.EventTimeUTC >= new DateTime(2021, 7, 1))        
             {
                 JournalTypeEnum queuetype = reorderqueue.Count > 0 ? reorderqueue[0].EntryType : JournalTypeEnum.Unknown;
 
-                //System.Diagnostics.Debug.WriteLine("-> {0} {1} Reorder queue {2} {3}", he.EventTimeUTC.ToString(), he.EntryType, queuetype, reorderqueue.Count);
+                //if ( queuetype != JournalTypeEnum.Unknown) System.Diagnostics.Debug.WriteLine("{0}     Queue {1} Event {2} Count {3}", he.EventTimeUTC.ToString(), queuetype, he.EntryType, reorderqueue.Count);
+
+                // Disembark ship to planet: disembark shiplocker suitloadout backpack  shiplocker
+                // Board ship:  embark loadout shiplocker
+                // Disembark ship to station: disembark suit loadout backpack  ship locker
 
                 if (he.EntryType == JournalTypeEnum.Embark || he.EntryType == JournalTypeEnum.Disembark)
                 {
-                    if (queuetype == JournalTypeEnum.ShipLocker)        // disembark to planet : SL-DIS-SuitLoadout-Backpack-Shiplocker
-                    {
-                        //System.Diagnostics.Debug.WriteLine("-> Embark/disembark after shiplocker, discard shiplocker");
-                        reorderqueue.Clear();
-                    }
-
+                    //System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} Start of queue {he.EntryType}");
                     var prevreorder = reorderqueue;
                     reorderqueue = new List<HistoryEntry> { he };       // reset the queue, and run with it
                     return prevreorder;                                 // if anything queued up, play it out..
                 }
-                else if (he.EntryType == JournalTypeEnum.SuitLoadout)      // either part of a Embark/Disembark - Suit loadout - Backpack - Ship locker sequence, or SL-BP-Ship locker
-                {
-                    if (queuetype == JournalTypeEnum.Disembark || queuetype == JournalTypeEnum.Embark)
-                    {
-                        reorderqueue.Add(he);
-                        return null;
-                    }
-                    else
-                    {
-                        var prevreorder = reorderqueue;
-                        reorderqueue = new List<HistoryEntry> { he };       // reset the queue, and run with it
-                        return prevreorder;                                 // if anything queued up, play it out..
-                    }
-                }
+
                 else if (he.EntryType == JournalTypeEnum.Backpack)
                 {
                     if (queuetype == JournalTypeEnum.Disembark || queuetype == JournalTypeEnum.SuitLoadout)  // if part of this queue
@@ -477,11 +457,10 @@ Odyssey 3: Sell MR: ShipLocker SellMicroResources
                     }
                     else
                     {
-                        //System.Diagnostics.Debug.WriteLine("Isolated back pack, remove");
-                        return null;
+                        System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} Isolated {he.EntryType}");
                     }
                 }
-                else if ( he.EntryType == JournalTypeEnum.Loadout)
+                else if (he.EntryType == JournalTypeEnum.Loadout)
                 {
                     if (queuetype == JournalTypeEnum.Embark)  // if part of this queue
                     {
@@ -490,48 +469,119 @@ Odyssey 3: Sell MR: ShipLocker SellMicroResources
                     }
                     else
                     {
-                        //System.Diagnostics.Debug.WriteLine("Isolated loadout, let through");
+                        System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} Isolated {he.EntryType}");
+                    }
+                }
+
+                // Part of disembark, or start of SuitLoadout Backpack Ship locker
+                else if (he.EntryType == JournalTypeEnum.SuitLoadout)      
+                {
+                    if (queuetype == JournalTypeEnum.Disembark )
+                    {
+                        reorderqueue.Add(he);
+                        return null;
+                    }
+                    else
+                    {
+                        //System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} Start of queue {he.EntryType}");
+                        var prevreorder = reorderqueue;
+                        reorderqueue = new List<HistoryEntry> { he };       // reset the queue, and run with it
+                        return prevreorder;                                 // if anything queued up, play it out..
                     }
                 }
                 else if (he.EntryType == JournalTypeEnum.ShipLocker)
                 {
-                    if (queuetype == JournalTypeEnum.Disembark || queuetype == JournalTypeEnum.Embark || queuetype == JournalTypeEnum.SuitLoadout )  // if part of this queue
+                    if ( queuetype == JournalTypeEnum.Disembark )
                     {
+                        // Disembark has a possible shiplocker  before suitloadout.  If a suitloadout is there, its the end of the disembark sequence
+
+                        if ( reorderqueue.FindIndex(x=>x.EntryType == JournalTypeEnum.SuitLoadout) >= 0 )       // if we had a suit loadout, its the end
+                        {
+                            //System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} **** End of queue {queuetype}");
+                            he.ReplaceJournalEntry(reorderqueue[0].journalEntry, he.EventTimeUTC);      // move first entry to here
+                            reorderqueue.Clear();
+                            return new List<HistoryEntry> { he };
+                        }
+                        else
+                        {
+                           // System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()}     ignore ship locker {queuetype}");
+                            reorderqueue.Add(he);           // in the first part, queue
+                            return null;
+                        }
+                    }
+
+                    // marks the end of these sequences
+                    else if ( queuetype == JournalTypeEnum.Embark || queuetype == JournalTypeEnum.SuitLoadout || 
+                                queuetype == JournalTypeEnum.Resupply || queuetype == JournalTypeEnum.BackpackChange ||
+                                queuetype == JournalTypeEnum.BuyMicroResources || queuetype == JournalTypeEnum.SellMicroResources || queuetype == JournalTypeEnum.TradeMicroResources
+                                )  // if part of this queue
+                    {
+                        //System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} **** End of queue {queuetype}");
                         he.ReplaceJournalEntry(reorderqueue[0].journalEntry, he.EventTimeUTC);      // move first entry to here
                         reorderqueue.Clear();
                         return new List<HistoryEntry> { he };
                     }
                     else
                     {
-                        //System.Diagnostics.Debug.WriteLine("Isolated ship locker, remove");
+                        System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} Isolated {he.EntryType}");
                         return null;
                     }
                 }
-                else if (he.EntryType == JournalTypeEnum.CollectItems || he.EntryType == JournalTypeEnum.DropItems || he.EntryType == JournalTypeEnum.UseConsumable)
+
+                // Using a consumable: UseConsumable BackpackChange/ Removed.
+                // Collect item: CollectItem BackpackChanged/ Added.
+                // Drop item: DropItem BackpackChanged/ Removed.
+                // Resuppy: Resupply ShipLocker
+                // Buy MR: BuyMicroResource ShipLocker
+                // TradeMicroResource  Shiplocker 
+                // SellMicroResources ShipLocker
+
+                else if (he.EntryType == JournalTypeEnum.CollectItems || he.EntryType == JournalTypeEnum.DropItems || he.EntryType == JournalTypeEnum.UseConsumable ||
+                            he.EntryType == JournalTypeEnum.Resupply ||
+                            he.EntryType == JournalTypeEnum.BuyMicroResources || he.EntryType == JournalTypeEnum.SellMicroResources || he.EntryType == JournalTypeEnum.TradeMicroResources)
                 {
+                    //System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} Start of queue {he.EntryType}");
                     var prevreorder = reorderqueue;
                     reorderqueue = new List<HistoryEntry> { he };       // reset the queue, and run with it
                     return prevreorder;                                 // if anything queued up, play it out..
                 }
+
                 else if (he.EntryType == JournalTypeEnum.BackpackChange)
                 {
-                    var bp = he.journalEntry as JournalBackpackChange;
+                    // May be following a UseConsumable, a Collect or Drop
 
-                    // if its a grenade, use alchemy to turn it back into a use consumable
-                    if (bp.ThrowGrenade)
+                    var je = he.journalEntry as JournalBackpackChange;
+
+                    if (queuetype == JournalTypeEnum.CollectItems || queuetype == JournalTypeEnum.DropItems || queuetype == JournalTypeEnum.UseConsumable)
                     {
-                        //System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " Throw grenade, use Alchemy");
-                        he.ReplaceJournalEntry(new JournalUseConsumable(bp.EventTimeUTC, bp.Removed[0], bp.TLUId, bp.CommanderId, bp.Id), he.EventTimeUTC);
-                    }
-                    else if (queuetype == JournalTypeEnum.CollectItems || queuetype == JournalTypeEnum.DropItems || queuetype == JournalTypeEnum.UseConsumable)
-                    {
-                        //System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " " + queuetype + " use Alchemy ");
+                        //System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} **** End of queue {queuetype}");
                         he.ReplaceJournalEntry(reorderqueue[0].journalEntry, he.EventTimeUTC);
                         reorderqueue.Clear();
                     }
+
+                    // If we are in a backpackchange queue, sum it up. We are in a Backpackchange/Shiplocker transfer to ship sequence
+
+                    else if ( queuetype == JournalTypeEnum.BackpackChange)
+                    {
+                        //System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} Sum up {he.EntryType}");
+                        (reorderqueue[0].journalEntry as JournalBackpackChange).Add(je);      // sum up the BPCs
+                        reorderqueue.Add(he);
+                        return null;
+                    }
+
+                    // if it looks like a throw grenade, we can't distinguish this from a backpack.. shiplocker sequence. Its isolated. 
+                    // so must let thru. Thanks frontier for not using useconsumable for throwing grenades.  Otherwise its the start of a BPC queue
+
+                    else if ( je.ThrowGrenade )
+                    {
+                        System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} throw grenade");
+                    }
                     else
-                    {           // KEEP - transfer from ship does shiplocker/backpackchange
-                        //System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " Backpackchange keep");
+                    {           // otherwise, queue it
+                        //System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} Start of queue {he.EntryType}");
+                        var prevreorder = reorderqueue;
+                        reorderqueue = new List<HistoryEntry> { he };       // reset the queue, and run with it
+                        return prevreorder;                                 // if anything queued up, play it out..
                     }
                 }
             }
