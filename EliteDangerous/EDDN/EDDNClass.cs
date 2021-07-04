@@ -14,11 +14,10 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
-using EliteDangerousCore.JournalEvents;
 using BaseUtils.JSON;
+using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -228,9 +227,6 @@ namespace EliteDangerousCore.EDDN
 
         private static readonly JObject AllowedFieldsDocked = new JObject(AllowedFieldsCommon)
         {
-            ["Body"] = true,
-            ["BodyID"] = true,
-            ["BodyType"] = true,
             ["MarketID"] = true,
             ["StationName"] = true,
             ["StationType"] = true,
@@ -245,6 +241,12 @@ namespace EliteDangerousCore.EDDN
             ["StationEconomy"] = true,
             ["StationServices"] = "[]",
             ["StationState"] = true,
+            ["LandingPads"] = new JObject
+            {
+                ["Small"] = true,
+                ["Medium"] = true,
+                ["Large"] = true,
+            },
             ["StationEconomies"] = new JArray
             {
                 new JObject
@@ -253,6 +255,7 @@ namespace EliteDangerousCore.EDDN
                     ["Proportion"] = true
                 }
             },
+            ["Taxi"] = true,
         };
 
         private static readonly JObject AllowedFieldsScan = new JObject(AllowedFieldsCommon)
@@ -354,75 +357,6 @@ namespace EliteDangerousCore.EDDN
             }
         };
 
-        private static JObject FilterJournalEvent(JObject message, JObject allowedFields, string path = "")
-        {
-            JObject ret = new JObject();
-
-            foreach (var kvp in message)
-            {
-                string mpath = $"{path}.{kvp.Key}";
-
-                if (allowedFields.Contains(kvp.Key))
-                {
-                    JToken allowedField = allowedFields[kvp.Key];
-
-                    if (kvp.Value.HasValue )
-                    {
-                        if (allowedField.BoolNull() == true)      // if straight value and allowed)
-                            ret[kvp.Key] = kvp.Value;
-                        else
-                            System.Diagnostics.Debug.WriteLine("Reject Field " + mpath);
-                    }                                                               // if Jarray, allowed is Jarray, and one JOBJECT underneath
-                    else if (kvp.Value.IsArray && allowedField.IsArray && allowedField.Count == 1 && allowedField[0] is JObject)
-                    {
-                        JObject allowed = (JObject)allowedField[0];
-                        JArray vals = new JArray();
-
-                        foreach (JObject val in kvp.Value)      // go thru array
-                        {
-                            vals.Add(FilterJournalEvent(val, allowed, $"{mpath}[]"));
-                        }
-
-                        ret[kvp.Key] = vals;
-                    }
-                    else if (kvp.Value.IsArray && allowedField.StrNull() == "[]")     //  if Jarray, and allowed fields is a special [] string marker
-                    {
-                        JArray vals = new JArray();
-
-                        foreach (JToken val in kvp.Value)       // just add all values
-                        {
-                            if (val.HasValue)
-                            {
-                                vals.Add(val);
-                            }
-                            else
-                            {
-                                Trace.WriteLine($"Array value {mpath}[] is not a value: {val?.ToString()}");
-                            }
-                        }
-
-                        ret[kvp.Key] = vals;
-                    }       
-                    else if (kvp.Value.IsObject && allowedField.IsObject)       // if object, and allowed is object
-                    {
-                        JObject allowed = (JObject)allowedField;
-                        JObject val = (JObject)kvp.Value;
-
-                        ret[kvp.Key] = FilterJournalEvent(val, allowed, mpath);     // recurse add
-                    }
-                    else
-                    {
-                        Trace.WriteLine($"Object value {mpath} is not of expected type: {kvp.Value?.ToString()}");
-                    }
-                }
-                else
-                {
-                    Trace.WriteLine($"Object value {mpath} not in allowed list: {kvp.Value?.ToString()}");
-                }
-            }
-
-            return ret;
-        }
 
         private JObject RemoveCommonKeys(JObject obj)
         {
@@ -506,7 +440,7 @@ namespace EliteDangerousCore.EDDN
             message.Remove("StarPosFromEDSM");
             message.Remove("ActiveFine");
 
-            message = FilterJournalEvent(message, AllowedFieldsFSDJump);
+            message = message.Filter(AllowedFieldsFSDJump);
 
             message["odyssey"] = journal.IsOdyssey;     // new may 21
             message["horizons"] = journal.IsHorizons;
@@ -544,7 +478,7 @@ namespace EliteDangerousCore.EDDN
             message.Remove("MyReputation");
             message.Remove("ActiveFine");
 
-            message = FilterJournalEvent(message, AllowedFieldsLocation);
+            message =message.Filter(AllowedFieldsLocation);
 
             message["odyssey"] = journal.IsOdyssey;     // new may 21
             message["horizons"] = journal.IsHorizons;
@@ -582,7 +516,7 @@ namespace EliteDangerousCore.EDDN
             message.Remove("MyReputation");
             message.Remove("ActiveFine");
 
-            message = FilterJournalEvent(message, AllowedFieldsLocation);
+            message = message.Filter( AllowedFieldsLocation);
 
             message["odyssey"] = journal.IsOdyssey;     // new may 21
             message["horizons"] = journal.IsHorizons;
@@ -619,7 +553,7 @@ namespace EliteDangerousCore.EDDN
 
             message["StarPos"] = new JArray(new float[] { (float)system.X, (float)system.Y, (float)system.Z });
 
-            message = FilterJournalEvent(message, AllowedFieldsDocked);
+            message = message.Filter( AllowedFieldsDocked);
 
             message["odyssey"] = journal.IsOdyssey;     // new may 21
             message["horizons"] = journal.IsHorizons;
@@ -642,6 +576,7 @@ namespace EliteDangerousCore.EDDN
             {
                 ["timestamp"] = journal.EventTimeUTC.ToString("yyyy-MM-ddTHH:mm:ss'Z'"),
                 ["systemName"] = journal.ItemList.StarSystem,
+                ["stationName"] = journal.ItemList.StationName,
                 ["stationName"] = journal.ItemList.StationName,
                 ["marketId"] = journal.MarketID,
                 ["modules"] = new JArray(journal.ItemList.Items.Select(m => JournalFieldNaming.NormaliseFDItemName(m.FDName)))
@@ -718,7 +653,7 @@ namespace EliteDangerousCore.EDDN
 
             message = RemoveCommonKeys(message);
 
-            message = FilterJournalEvent(message, AllowedFieldsScan);
+            message = message.Filter( AllowedFieldsScan);
 
             if (!bodydesig.StartsWith(system.Name, StringComparison.InvariantCultureIgnoreCase))  // For now test if its a different name ( a few exception for like sol system with named planets)  To catch a rare out of sync bug in historylist.
             {
@@ -773,7 +708,7 @@ namespace EliteDangerousCore.EDDN
 
             message = RemoveCommonKeys(message);
 
-            message = FilterJournalEvent(message, AllowedFieldsSAASignalsFound);
+            message = message.Filter( AllowedFieldsSAASignalsFound);
 
             message["odyssey"] = journal.IsOdyssey;     // new may 21
             message["horizons"] = journal.IsHorizons;

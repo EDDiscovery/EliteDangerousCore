@@ -21,23 +21,27 @@ using System.Text;
 
 namespace EliteDangerousCore.JournalEvents
 {
+    #region Class helpers
+
+    // this class holds a microresource, read from the json
+
     public class MicroResource
     {
         public const int ShipLocker = 0;                        // index into MCMRList for types
         public const int BackPack = 1;
 
-        public string Name { get; set; }                        // normalised to lower case, All
-        public string Name_Localised { get; set; }              // All
+        public string Name { get; set; }                        // JSON, normalised to lower case, All
+        public string Name_Localised { get; set; }              // JSON, All
 
         public string FriendlyName { get; set; }                // computed
 
-        public ulong OwnerID { get; set; }                      // ShipLockerMaterials          |, CollectItems, DropItems
-        public ulong MissionID { get; set; }                    // ShipLockerMaterials          |, DropItems, may be -1, invalid
+        public ulong OwnerID { get; set; }                      // JSON, ShipLockerMaterials          |, CollectItems, DropItems
+        public ulong MissionID { get; set; }                    // JSON, ShipLockerMaterials          |, DropItems, may be -1, invalid
 
-        public int Count { get; set; }                          // ShipLockerMaterials, BuyMicroResource, SellMicroResource, TradeMicroResources
+        public int Count { get; set; }                          // JSON, ShipLockerMaterials, BuyMicroResource, SellMicroResource, TradeMicroResources
 
         [JsonNameAttribute("Type", "Category")]                 // for some crazy reason, they use type someplaces, category others. Use json name to allow both
-        public string Category { get; set; }                    // BuyMicroResources, SellMicroResource, TradeMicroResources, TransferMicroResources. These call it type: BackPackChange, UseConsumable, CollectItems, DropItems   
+        public string Category { get; set; }                    // JSON, BuyMicroResources, SellMicroResource, TradeMicroResources, TransferMicroResources. These call it type: BackPackChange, UseConsumable, CollectItems, DropItems   
 
         public void Normalise(string cat)
         {
@@ -70,6 +74,8 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
+    // baseclass for backpack, shiplocker, resupply.
+
     public class JournalMicroResourceState : JournalEntry
     {
         public JournalMicroResourceState(JObject evt, JournalTypeEnum en) : base(evt, en)
@@ -89,6 +95,54 @@ namespace EliteDangerousCore.JournalEvents
             MicroResource.Normalise(Consumables,"Consumables");
             Data = evt["Data"]?.ToObjectQ<MicroResource[]>()?.OrderBy(x => x.Name)?.ToArray();
             MicroResource.Normalise(Data,"Data");
+        }
+
+        // helper function for IAdditionalFiles
+        // we look for the file with the eventype fileeventtype present
+        // we store back with recordeventtype
+        // when resupply is written, its resupply in the journal, backpack in the json of the file. we need to make sure its resupply in the json after reading
+
+        public void UpdateFromAdditionalFile(string file, string fileeventtype, string recordeventtype)
+        {
+            if (Items == null || Components == null || Consumables == null || Data == null)     // if any null, try the file, otherwise its in the event
+            {
+                System.Diagnostics.Debug.WriteLine("{0} MCMR from file ", EventTimeUTC.ToString());
+                JObject jnew = ReadAdditionalFile(file, fileeventtype);
+                if (jnew != null)        // new json, rescan
+                {
+                    jnew["event"] = recordeventtype;            // fix it to the name we want in the json
+                    Rescan(jnew);
+                    UpdateJson(jnew);
+                }
+            }
+        }
+
+        // helper function for IMicroResourceJournalEntry
+        public void UpdateMCMR(MaterialCommoditiesMicroResourceList mc, int countindex)
+        {
+            if (Items != null)
+            {
+                List<Tuple<string, int>> counts = Items.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
+                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Item, counts, countindex);
+            }
+
+            if (Components != null)
+            {
+                List<Tuple<string, int>> counts = Components.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
+                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Component, counts, countindex);
+            }
+
+            if (Consumables != null)
+            {
+                List<Tuple<string, int>> counts = Consumables.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
+                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Consumable, counts, countindex);
+            }
+
+            if (Data != null)
+            {
+                List<Tuple<string, int>> counts = Data.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
+                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Data, counts, countindex);
+            }
         }
 
         public MicroResource[] Items { get; set; }
@@ -130,9 +184,11 @@ namespace EliteDangerousCore.JournalEvents
                 info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("Data".T(EDTx.JournalMicroResources_Data) + ": ; ", Data.Length), "; ");
                 detailed += "Data".T(EDTx.JournalMicroResources_Data) + ": " + MicroResource.List(Data);
             }
-
         }
     }
+
+    #endregion
+    #region ShipLocker
 
     // written to tell the whole state of the ship locker
 
@@ -143,48 +199,14 @@ namespace EliteDangerousCore.JournalEvents
         {
         }
 
-        public bool ReadAdditionalFiles(string directory, bool historyrefreshparse)
+        public void ReadAdditionalFiles(string directory)
         {
-            if (Items == null || Components == null || Consumables == null || Data == null)     // if any null, try the file, otherwise its in the event
-            {
-                System.Diagnostics.Debug.WriteLine("Shiplocker {0} reload from file ", EventTimeUTC.ToString());
-                JObject jnew = ReadAdditionalFile(System.IO.Path.Combine(directory, "shiplocker.json"), waitforfile: !historyrefreshparse, checktimestamptype: true);
-                if (jnew != null)        // new json, rescan
-                {
-                    Rescan(jnew);
-                    UpdateJson(jnew);
-                }
-                return jnew != null;
-            }
-            else
-                return true;
+            UpdateFromAdditionalFile(System.IO.Path.Combine(directory, "Shiplocker.json"), EventTypeStr, EventTypeStr);
         }
 
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry unused)        // update all ship locker materials to these values
         {
-            if (Items != null)
-            {
-                List<Tuple<string, int>> counts = Items.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
-                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Item, counts, MicroResource.ShipLocker);
-            }
-
-            if (Components != null)
-            {
-                List<Tuple<string, int>> counts = Components.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
-                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Component, counts, MicroResource.ShipLocker);
-            }
-
-            if (Consumables != null)
-            {
-                List<Tuple<string, int>> counts = Consumables.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
-                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Consumable, counts, MicroResource.ShipLocker);
-            }
-
-            if (Data != null)
-            {
-                List<Tuple<string, int>> counts = Data.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
-                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Data, counts, MicroResource.ShipLocker);
-            }
+            UpdateMCMR(mc, MicroResource.ShipLocker);
         }
     }
 
@@ -332,6 +354,7 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
+    #endregion  
     #region Backpack changes
 
     [JournalEntryType(JournalTypeEnum.Backpack)]
@@ -342,50 +365,37 @@ namespace EliteDangerousCore.JournalEvents
             Rescan(evt);
         }
 
-        public bool ReadAdditionalFiles(string directory, bool historyrefreshparse)
+        public void ReadAdditionalFiles(string directory)
         {
-            if (Items == null || Components == null || Consumables == null || Data == null)     // if any null, try the file, otherwise its in the event
-            {
-                System.Diagnostics.Debug.WriteLine("Shiplocker {0} reload from file ", EventTimeUTC.ToString());
-                JObject jnew = ReadAdditionalFile(System.IO.Path.Combine(directory, "backpack.json"), waitforfile: !historyrefreshparse, checktimestamptype: true);
-                if (jnew != null)        // new json, rescan
-                {
-                    Rescan(jnew);
-                    UpdateJson(jnew);
-                }
-                return jnew != null;
-            }
-            else
-                return true;
+            UpdateFromAdditionalFile(System.IO.Path.Combine(directory, "Backpack.json"), EventTypeStr,EventTypeStr);
+        }
+
+        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry unused)        // update all ship locker materials to these values
+        {
+            UpdateMCMR(mc, MicroResource.BackPack);
+        }
+    }
+
+    [JournalEntryType(JournalTypeEnum.Resupply)]
+    public class JournalResupply : JournalMicroResourceState, IMicroResourceJournalEntry, IAdditionalFiles
+    {
+        public JournalResupply(JObject evt) : base(evt, JournalTypeEnum.Resupply)
+        {
+            Rescan(evt);
+        }
+
+        public void ReadAdditionalFiles(string directory)
+        {
+            UpdateFromAdditionalFile(System.IO.Path.Combine(directory, "Backpack.json"), "Backpack", EventTypeStr);
+
         }
 
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry unused)
         {
-            if (Items != null)
-            {
-                List<Tuple<string, int>> counts = Items.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();      // Name is already lower cased
-                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Item, counts, MicroResource.BackPack);
-            }
-
-            if (Components != null)
-            {
-                List<Tuple<string, int>> counts = Components.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
-                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Component, counts, MicroResource.BackPack);
-            }
-
-            if (Consumables != null)
-            {
-                List<Tuple<string, int>> counts = Consumables.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
-                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Consumable, counts, MicroResource.BackPack);
-            }
-
-            if (Data != null)
-            {
-                List<Tuple<string, int>> counts = Data.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
-                mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Data, counts, MicroResource.BackPack);
-            }
+            UpdateMCMR(mc, MicroResource.BackPack);
         }
     }
+
 
     [JournalEntryType(JournalTypeEnum.BackpackChange)]
     public class JournalBackpackChange : JournalEntry, IMicroResourceJournalEntry
@@ -397,6 +407,19 @@ namespace EliteDangerousCore.JournalEvents
             MicroResource.Normalise(Added,null);
             Removed = evt["Removed"]?.ToObject<MicroResource[]>(false, true)?.OrderBy(x => x.Name)?.ToArray();
             MicroResource.Normalise(Removed,null);
+        }
+
+        public void Add(JournalBackpackChange other)
+        {
+            if (Added == null)              // nothing here, this is the other
+                Added = other.Added;
+            else if (other.Added != null)   // if other has data, concat
+                Added = Added.Concat(other.Added).ToArray();
+
+            if (Removed == null)
+                Removed = other.Removed;
+            else if (other.Removed != null)
+                Removed = Removed.Concat(other.Removed).ToArray();
         }
 
         public MicroResource[] Added { get; set; }
@@ -447,7 +470,7 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
-    // we rely for these below on BackpackChange to record deltas. See CheckForRemoval in historylist.
+    // we rely for these below on BackpackChange to record deltas. See ReorderRemove in historylist.
 
     [JournalEntryType(JournalTypeEnum.CollectItems)]
     public class JournalCollectItems : JournalEntry, IMicroResourceJournalEntry

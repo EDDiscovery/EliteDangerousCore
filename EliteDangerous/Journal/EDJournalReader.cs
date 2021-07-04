@@ -165,12 +165,11 @@ namespace EliteDangerousCore
                 return null;
             }
 
-            // if additional files, and we are NOT a console commander, see if we can pick up extra info
+            // if in dynamic read during play, and its an additional file JE, and we are NOT a console commander, see if we can pick up extra info
 
-            if (je is IAdditionalFiles && !(EDCommander.GetCommander(cmdrid)?.ConsoleCommander ?? false))
+            if (!inhistoryrefreshparse && (je is IAdditionalFiles) && !(EDCommander.GetCommander(cmdrid)?.ConsoleCommander ?? false) )
             {
-                if ((je as IAdditionalFiles).ReadAdditionalFiles(TravelLogUnit.Path, inhistoryrefreshparse) == false)     // if failed
-                    return null;
+                (je as IAdditionalFiles).ReadAdditionalFiles(TravelLogUnit.Path);       // try and read file dynamically written.
             }
 
             if (je is JournalEvents.JournalShipyard)                // when going into shipyard
@@ -178,7 +177,7 @@ namespace EliteDangerousCore
                 toosoon = lastshipyard != null && lastshipyard.Yard.Equals((je as JournalEvents.JournalShipyard).Yard);
                 lastshipyard = je as JournalEvents.JournalShipyard;
             }
-            else if (je is JournalEvents.JournalStoredShips)        // when going into shipyard
+            else if (je is JournalEvents.JournalStoredShips)        // when going into stored ships
             {
                 toosoon = laststoredships != null && CollectionStaticHelpers.Equals(laststoredships.ShipsHere, (je as JournalEvents.JournalStoredShips).ShipsHere) &&
                     CollectionStaticHelpers.Equals(laststoredships.ShipsRemote, (je as JournalEvents.JournalStoredShips).ShipsRemote);
@@ -259,8 +258,10 @@ namespace EliteDangerousCore
         // function needs to report two things, list of JREs (may be empty) and UIs, and if it read something, bool.. hence form changed
         // bool reporting we have performed any sort of action is important.. it causes the TLU pos to be updated above even if we have junked all the events or delayed them
         // function does not throw.
+        // historyrefreshparsing = reading from DB, else reading dynamically during play
+        // True if anything was processed, even if we rejected it
 
-        public bool ReadJournal(List<JournalEntry> jent, List<UIEvent> uievents, bool historyrefreshparsing )      // True if anything was processed, even if we rejected it
+        public bool ReadJournal(List<JournalEntry> jent, List<UIEvent> uievents, bool historyrefreshparsing ) 
         {
             bool readanything = false;
 

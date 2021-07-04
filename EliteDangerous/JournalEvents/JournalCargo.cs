@@ -61,25 +61,20 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
         
-        public bool ReadAdditionalFiles(string directory, bool historyrefreshparse)
+        public void ReadAdditionalFiles(string directory)
         {
             if (Inventory == null)  // so, if cargo contained info, we use that.. else we try for cargo.json.
             {
                 //System.Diagnostics.Debug.WriteLine("Cargo with no data, checking file.." + historyrefreshparse);
 
-                JObject jnew = ReadAdditionalFile(System.IO.Path.Combine(directory, "Cargo.json"), waitforfile: !historyrefreshparse, checktimestamptype: true);  // check timestamp..
+                JObject jnew = ReadAdditionalFile(System.IO.Path.Combine(directory, "Cargo.json"), EventTypeStr);  
+
                 if (jnew != null)        // new json, rescan. returns null if cargo in the folder is not related to this entry by time.
                 {
                     jnew["EDDFromFile"] = true;  // mark its from file
                     Rescan(jnew);
                     UpdateJson(jnew);
                 }
-                return jnew != null;
-            }
-            else
-            {
-                //System.Diagnostics.Debug.WriteLine("Cargo with with data, no need to check file.." + historyrefreshparse);
-                return true;
             }
         }
 

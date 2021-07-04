@@ -266,7 +266,7 @@ namespace EliteDangerousCore
                 }
             }
 
-            if (changed > 0) System.Diagnostics.Debug.WriteLine("MCMRLIST {0} {1} fixed {2}", utc.ToString() , cat, changed);
+            //if (changed > 0) System.Diagnostics.Debug.WriteLine("MCMRLIST {0} {1} fixed {2}", utc.ToString() , cat, changed);
 
             return changed;
         }

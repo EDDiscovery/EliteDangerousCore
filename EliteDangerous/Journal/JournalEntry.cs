@@ -450,7 +450,7 @@ namespace EliteDangerousCore
             return res;
         }
 
-        protected JObject ReadAdditionalFile( string extrafile, bool waitforfile, bool checktimestamptype )       // read file, return new JSON
+        protected JObject ReadAdditionalFile( string extrafile, string eventnametocheck )       // read file, return new JSON
         {
             for (int retries = 0; retries < 25*4 ; retries++)
             {
@@ -464,7 +464,7 @@ namespace EliteDangerousCore
                 {
                     string newtype = joaf["event"].Str();
                     DateTime fileUTC = joaf["timestamp"].DateTimeUTC();
-                    if (newtype != EventTypeStr || fileUTC == DateTime.MinValue)
+                    if (newtype != eventnametocheck || fileUTC == DateTime.MinValue)
                     {
                         System.Diagnostics.Debug.WriteLine($"Rejected {extrafile} due to type/bad date, deleting");
                         BaseUtils.FileHelpers.DeleteFileNoError(extrafile);     // may be corrupt..
@@ -477,7 +477,7 @@ namespace EliteDangerousCore
                           //  System.Diagnostics.Debug.WriteLine($"File is younger than Event, can't be associated {extrafile}");
                             return null;
                         }
-                        else if (checktimestamptype == false || fileUTC == EventTimeUTC)
+                        else if (fileUTC == EventTimeUTC)
                         {
                             System.Diagnostics.Debug.WriteLine($"Read {extrafile} at {fileUTC} after {retries}");
                             return joaf;                        // good current file..
@@ -492,9 +492,6 @@ namespace EliteDangerousCore
                 {
                     System.Diagnostics.Debug.WriteLine($"Cannot read {extrafile}, waiting.. {retries}");
                 }
-
-                if (!waitforfile)               // if don't wait, continue with no return
-                    return null;
 
                 System.Threading.Thread.Sleep(25);
             }

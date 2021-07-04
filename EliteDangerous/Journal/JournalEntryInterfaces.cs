@@ -72,7 +72,7 @@ namespace EliteDangerousCore
 
     public interface IAdditionalFiles
     {
-        bool ReadAdditionalFiles(string directory, bool inhistoryparse);     // true if your happy
+        void ReadAdditionalFiles(string directory);     // true if your happy
     }
 
     public interface IScanDataChanges       // no functions, just marks entries which change scan data. IBodyNameAndID also changes starscan

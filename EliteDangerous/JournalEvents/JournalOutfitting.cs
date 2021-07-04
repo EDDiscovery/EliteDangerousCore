@@ -46,15 +46,14 @@ namespace EliteDangerousCore.JournalEvents
             Horizons = evt["Horizons"].BoolNull();
         }
 
-        public bool ReadAdditionalFiles(string directory, bool historyrefreshparse)
+        public void ReadAdditionalFiles(string directory)
         {
-            JObject jnew = ReadAdditionalFile(System.IO.Path.Combine(directory, "Outfitting.json"), waitforfile: !historyrefreshparse, checktimestamptype: true);
+            JObject jnew = ReadAdditionalFile(System.IO.Path.Combine(directory, "Outfitting.json"), EventTypeStr);
             if (jnew != null)        // new json, rescan
             {
                 Rescan(jnew);
                 UpdateJson(jnew);
             }
-            return jnew != null;
         }
 
         public JObject ToJSON()
