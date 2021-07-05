@@ -30,10 +30,13 @@ namespace EliteDangerousCore.Forms
         {
             InitializeComponent();
 
-            foreach (Control c in additionalcontrols)
-                c.Dock = DockStyle.Top;
+            if (additionalcontrols != null)
+            {
+                foreach (Control c in additionalcontrols)
+                    c.Dock = DockStyle.Top;
 
-            panelGroups.Controls.InsertRangeBefore(groupBoxCustomInara,additionalcontrols );
+                panelGroups.Controls.InsertRangeBefore(groupBoxCustomInara, additionalcontrols);
+            }
 
             var theme = ExtendedControls.ThemeableFormsInstance.Instance;
             bool winborder = theme.ApplyDialog(this);
@@ -47,7 +50,10 @@ namespace EliteDangerousCore.Forms
         {
             textBoxBorderCmdr.Enabled = enablecmdredit;
             checkBoxCustomEDSMFrom.Visible = !disablefromedsm;
-            extGroupBoxCommanderInfo.Visible = !disable3dmapsettings;
+            if ( disable3dmapsettings)
+            {
+                panelGroups.Controls.Remove(extGroupBoxCommanderInfo);
+            }
             checkBoxCustomEDDNTo.Checked = true;        // default EDDN on
             extCheckBoxConsoleCommander.Visible = !disableconsolesupport;
         }

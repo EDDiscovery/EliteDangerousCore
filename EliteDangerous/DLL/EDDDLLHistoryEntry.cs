@@ -25,7 +25,7 @@ namespace EliteDangerousCore.DLL
         //
         //var ml = 
 
-        static public EDDDLLInterfaces.EDDDLLIF.JournalEntry CreateFromHistoryEntry(EliteDangerousCore.HistoryList hl, EliteDangerousCore.HistoryEntry he, 
+        static public EDDDLLInterfaces.EDDDLLIF.JournalEntry CreateFromHistoryEntry(EliteDangerousCore.HistoryList hl, EliteDangerousCore.HistoryEntry he,
                                                                                      bool storedflag = false)
         {
             return CreateFromHistoryEntry(he, hl.MaterialCommoditiesMicroResources.GetMaterialsSorted(he.MaterialCommodity),
@@ -33,6 +33,17 @@ namespace EliteDangerousCore.DLL
                                               hl.MaterialCommoditiesMicroResources.GetMicroResourcesSorted(he.MaterialCommodity),
                                               hl.MissionListAccumulator.GetAllCurrentMissions(he.MissionList, he.EventTimeUTC),
                                               storedflag);
+        }
+
+        static public EDDDLLInterfaces.EDDDLLIF.JournalEntry CreateFromHistoryEntry( EliteDangerousCore.HistoryEntry he, List<MaterialCommodityMicroResource> list,
+                                                                                     List<MissionState> missionlist,
+                                                                                     bool storedflag = false)
+        {
+            var mats = list.Where(x => x.Details.IsMaterial).OrderBy(x => x.Details.Type).ToList();
+            var commods = list.Where(x => x.Details.IsCommodity).OrderBy(x => x.Details.Type).ToList();
+            var mr = list.Where(x => x.Details.IsMicroResources).OrderBy(x => x.Details.Type).ToList();
+
+            return CreateFromHistoryEntry(he, mats, commods, mr, missionlist, storedflag);
         }
 
         static public EDDDLLInterfaces.EDDDLLIF.JournalEntry CreateFromHistoryEntry(EliteDangerousCore.HistoryEntry he,

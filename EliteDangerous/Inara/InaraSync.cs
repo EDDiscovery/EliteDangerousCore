@@ -66,9 +66,17 @@ namespace EliteDangerousCore.Inara
         public static bool NewEvent(Action<string> logger, HistoryList hl, HistoryEntry he)
         {
             var mcmr = hl.MaterialCommoditiesMicroResources.GetDict(he.MaterialCommodity);
-            List<JToken> events = NewEntryList(he,mcmr);
+            List<JToken> events = NewEntryList(he, mcmr);
             if (events.Count > 0)
-                Submit(events,logger, he.Commander, false);
+                Submit(events, logger, he.Commander, false);
+            return true;
+        }
+
+        public static bool NewEvent(Action<string> logger, HistoryEntry he, Dictionary<string,MaterialCommodityMicroResource> mcmr)
+        {
+            List<JToken> events = NewEntryList(he, mcmr);
+            if (events.Count > 0)
+                Submit(events, logger, he.Commander, false);
             return true;
         }
 
