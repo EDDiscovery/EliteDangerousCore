@@ -298,6 +298,8 @@ namespace EliteDangerousCore
         JournalStatistics_Multicrew, // Multicrew
         JournalStatistics_MaterialsandCommodityTrading, // Materials and Commodity Trading
         JournalStatistics_CQC, // CQC
+        JournalStatistics_FLEETCARRIER, // Fleetcarrier
+        JournalStatistics_Exobiology, // Exobiology
         BankAccountClass_Wealth, // Wealth:;cr;N0
         BankAccountClass_SpentonShips, // Spent on Ships:;cr;N0
         BankAccountClass_SpentonOutfitting, // Spent on Outfitting:;cr;N0
@@ -306,7 +308,14 @@ namespace EliteDangerousCore
         BankAccountClass_SpendonAmmo, // Spend on Ammo:;cr;N0
         BankAccountClass_InsuranceClaims, // Insurance Claims:;;N0
         BankAccountClass_SpentonInsurance, // Spent on Insurance:;cr;N0
-        BankAccountClass_OwnedShipCount, // Owned ships
+        BankAccountClass_OwnedShipCount, // Owned ships: ;;No
+        BankAccountClass_SpentOnSuits, // Spent on Suits: ;cr;N0
+        BankAccountClass_SpentOnWeapons, // Spent on Weapons: ;cr;N0
+        BankAccountClass_SpentOnSuitConsumables, // Spent on Suit Consumables: ;cr;N0
+        BankAccountClass_SuitsOwned, // Suits Owned: ;;N0
+        BankAccountClass_WeaponsOwned, // Weapons Owned: ;;N0
+        BankAccountClass_SpentOnPremiumStock, // Spent on Premium Stock: ;cr;N0
+        BankAccountClass_PremiumStockBought, // Premium Stock bought : ;;N0
         CombatClass_Bounties, // Bounties :;;N0
         CombatClass_BountyProfits, // Bounty Profits:;cr;N0
         CombatClass_CombatBonds, // Combat Bonds:;;N0
@@ -315,12 +324,44 @@ namespace EliteDangerousCore
         CombatClass_AssassinationProfits, // Assassination Profits:;cr;N0
         CombatClass_HighestReward, // Highest Reward:;cr;N0
         CombatClass_SkimmersKilled, // Skimmers Killed:;;N0
+        CombatClass_DropshipsTaken, // Dropships Taken: ;;N0
+        CombatClass_DropshipsBooked, //Dropships Booked: ;;N0
+        CombatClass_DropshipsCancelled, //Dropships Cancelled: ;;N0
+        CombatClass_ConflictZoneHigh, // High Intensity Conflict Zones fought: ;;N0
+        CombatClass_ConflictZoneMedium, // Medium Intensity Conflict Zones fought: ;;N0
+        CombatClass_ConflictZoneLow, // Low Intensity Conflict Zones fought: ;;N0
+        CombatClass_ConflictZoneTotal, // Total Conflict Zones fought: ;;N0
+        CombatClass_ConflictZoneHighWins, // High Intensity Conflict Zones won: ;;N0
+        CombatClass_ConflictZoneMediumWins, // Medium Intensity ConflictZones won: ;;N0
+        CombatClass_ConflictZoneLowWins, // Low Intensity Conflict Zones won: ;;N0
+        CombatClass_ConflictZoneTotalWins, // Total Conflict Zones won: ;;N0
+        CombatClass_SettlementDefended, // Settlements Defended: ;;N0
+        CombatClass_SettlementConquered, // Settlements Conquered: ;;N0
+        CombatClass_OnFootSkimmersKilled, // Skimmers Killed on Foot: ;;N0
+        CombatClass_OnFootScavsKilled, // Scavengers Killed on Foot: ;;N0
         CrimeClass_NotorietyIndex, // Notoriety Index:;;N0
         CrimeClass_Fines, // Fines:;;N0
         CrimeClass_TotalFines, // Total Fines:;cr;N0
         CrimeClass_Bounties, // Bounties:;;N0
         CrimeClass_TotalBounties, // Total Bounties:;cr;N0
         CrimeClass_HighestBounty, // Highest Bounty:;cr;N0
+        CrimeClass_MalwareUploaded, // Malware Uploaded: ;;N0
+        CrimeClass_SettlementsStateShutdown, // Settlements shut down: ;;N0
+        CrimeClass_ProductionSabotage, // Production Sabotaged: ;;N0
+        CrimeClass_ProductionTheft, // Production Thefts: ;;N0
+        CrimeClass_TotalMurders, // Total Murders: ;;N0
+        CrimeClass_CitizensMurdered, // Citizens Murdered: ;;N0
+        CrimeClass_OmnipolMurdered, // Omnipol Murdered: ;;N0  
+        CrimeClass_GuardsMurdered, //Guards Murdered: ;;N0
+        CrimeClass_DataStolen, // Data Stolen: ;;N0
+        CrimeClass_GoodsStolen, // Goods Stolen: ;;N0
+        CrimeClass_SampleStolen, // Production Samples Stolen: ;;N0
+        CrimeClass_TotalStolen, // Total Inventory Items Stolen: ;;N0
+        CrimeClass_TurretsDestroyed, // Turrets Destroyed: ;;N0
+        CrimeClass_TurretsOverloaded, // Turrets Overloaded: ;;N0
+        CrimeClass_TurretsTotal, // Total Turrets shut down: ;;N0
+        CrimeClass_ValueStolenStateChange, // Stolen Items Value: ;cr;N0
+        CrimeClass_ProfilesCloned, // ProfilesCloned: ;;N0
         SmugglingClass_BlackMarkets, // Black Markets:;;N0
         SmugglingClass_BlackMarketProfits, // Black Market Profits:;cr;N0
         SmugglingClass_ResourcesSmuggled, // Resources Smuggled:;;N0
@@ -331,6 +372,9 @@ namespace EliteDangerousCore
         TradingClass_No, // No. of Resources:;;N0
         TradingClass_AverageProfit, // Average Profit:;cr;N0
         TradingClass_HighestSingleTransaction, // Highest Single Transaction:;cr;N0
+        TradingClass_DataSold, // Data Sold: ;;N0
+        TradingClass_GoodsSold, // Goods Sold: ;;N0
+        TradingClass_AssetsSold, // Assets Sold: ;;N0
         MiningClass_Profits, // Profits:;cr;N0
         MiningClass_Quantity, // Quantity:;;N0
         MiningClass_MaterialsTypesCollected, // Materials Types Collected:;;N0
@@ -343,7 +387,13 @@ namespace EliteDangerousCore
         ExplorationClass_NoofJumps, // No of Jumps:;;N0
         ExplorationClass_GreatestDistance, // Greatest Distance:;;N0
         ExplorationClass_TimePlayed, // Time Played:
-        ExplorationClass_EfficientScans,
+        ExplorationClass_EfficientScans, // Efficient Scans: ;;N0
+        ExplorationClass_ShuttleJourneys, // Shuttle Journeys: ;;N0
+        ExplorationClass_ShuttleDistanceTravelled, // Shuttle Distance Travelled: ;ly,N0
+        ExplorationClass_SpentOnShuttles, // Credits Spent on Shuttles: ;cr;N0
+        ExplorationClass_FirstFootfalls, // First Footfalls: ;;N0
+        ExplorationClass_PlanetFootfalls, // Planets walked on: ;;N0
+        ExplorationClass_SettlementsVisited, // Settlements docked at: ;;N0
         PassengerMissionsClass_Accepted, // Accepted:;;N0
         PassengerMissionsClass_BulkMissionPassengers, // Bulk Mission Passengers:;;N0
         PassengerMissionsClass_VIPMissionPassengers, // VIP Mission Passengers:;;N0
@@ -353,6 +403,14 @@ namespace EliteDangerousCore
         SearchAndRescueClass_TotalItemsRescued, // Total Items Rescued:;;N0
         SearchAndRescueClass_Profit, // Profit:;cr;N0
         SearchAndRescueClass_TotalRescueTransactions, // Total Rescue Transactions:;;N0
+        SearchAndRescueClass_SalvageLegalPOI, // Legal Salvage Value - Surface: ;cr,N0
+        SearchAndRescueClass_SalvageLegalSettlements, // Legal Salvage Value - Settlements: ;cr;N0
+        SearchAndRescueClass_SalvageIllegalPOI, // Illegal Salvage Value - Surface: ;cr;N0
+        SearchAndRescueClass_SalvageIllegalSettlements, // Illegal Salvage Value - Settlements: ;cr;N0
+        SearchAndRescueClass_MaglocksOpened, // Maglocks cut: ;;N0
+        SearchAndRescueClass_PanelsOpened, // Panels cut: ;;N0
+        SearchAndRescueClass_SettlementsStateFireOut, // Settlement Fires extinguished: ;;N0
+        SearchAndRescueClass_SettlementsStateReboot, // Settlements rebooted: ;;N0
         CraftingClass_EngineersUsed, // Engineers Used:;;N0
         CraftingClass_Blueprints, // Blueprints:;;N0
         CraftingClass_AtLevel1, // At Level 1:;;N0
@@ -360,6 +418,14 @@ namespace EliteDangerousCore
         CraftingClass_AtLevel3, // At Level 3:;;N0
         CraftingClass_AtLevel4, // At Level 4:;;N0
         CraftingClass_AtLevel5, // At Level 5:;;N0
+        CraftingClass_SuitModsApplied, // Suit Modifications Applied: ;;N0
+        CraftingClass_WeaponModsApplied, // Weapon Modifications Applied: ;;N0
+        CraftingClass_SuitsUpgraded, // Suit Upgrades Applied: ;;N0
+        CraftingClass_WeaponsUpgraded, // Weapon Upgrades Applied: ;;N0
+        CraftingClass_SuitsUpgradedFull, // Suits fully Upgraded: ;;N0
+        CraftingClass_WeaponsUpgradedFull, // Weapons fully Upgraded: ;;N0
+        CraftingClass_SuitModsAppliedFull, // Suits fully Modified: ;;N0
+        CraftingClass_WeaponModsAppliedFull, // Weapons fully Modified: ;;N0
         CrewClass_TotalWages, // Total Wages:;cr;N0
         CrewClass_Hired, // Hired:;;N0
         CrewClass_Fired, // Fired:;;N0
@@ -369,14 +435,49 @@ namespace EliteDangerousCore
         MulticrewClass_FighterTime, // Fighter Time:;;N0
         MulticrewClass_Credits, // Credits:;cr;N0
         MulticrewClass_Fines, // Fines:;cr;N0
-        MaterialTraderStatsClass_CommodityTrades, // Commodity Trades:;;N0
+        MaterialTraderStatsClass_CommodityTrades, // Material Trades Completed:;;N0
         MaterialTraderStatsClass_MaterialTraded, // Material Traded:;;N0
+        MaterialTraderStatsClass_G1MaterialsTraded, // Grade 1 Materials Traded: ;;N0
+        MaterialTraderStatsClass_G2MaterialsTraded, // Grade 2 Materials Traded: ;;N0
+        MaterialTraderStatsClass_G3MaterialsTraded, // Grade 3 Materials Traded: ;;N0
+        MaterialTraderStatsClass_G4MaterialsTraded, // Grade 4 Materials Traded: ;;N0
+        MaterialTraderStatsClass_G5MaterialsTraded, // Grade 5 Materials Traded: ;;N0
+        CQCClass_CreditsEarned, // Profits from CQC: ;cr;N0
         CQCClass_TimePlayed, // Time Played:;;N0
-        CQCClass_KDRatio, // KD Ratio:;;N
+        CQCClass_KDRatio, // K/D Ratio:;;N2
         CQCClass_Kills, // Kills:;;N0
-        CQCClass_Win, // Win/Loss:;;N
+        CQCClass_Win, // Win/Loss:;;N2
+        FLEETCARRIERClass_EXPORTTOTAL, // Total Commodities Exported: ;;N0
+        FLEETCARRIERClass_IMPORTTOTAL, // Total Commodities Imported: ;;N0
+        FLEETCARRIERClass_TRADEPROFITTOTAL, // Credits earned from Commodities: ;cr;N0
+        FLEETCARRIERClass_TRADESPENDTOTAL, // Credits spent on Commodities: ;cr;N0
+        FLEETCARRIERClass_STOLENPROFITTOTAL, // Credits earned from Stolen Goods: ;cr;N0
+        FLEETCARRIERClass_STOLENSPENDTOTAL, // Credits spent on Stolen Goods: ;cr;N0
+        FLEETCARRIERClass_DISTANCETRAVELLED, // Total Travel Distance: ;ly;N0
+        FLEETCARRIERClass_TOTALJUMPS, // Number of Carrier Jumps: ;;N0
+        FLEETCARRIERClass_SHIPYARDSOLD, // Total Ships Sold: ;;N0
+        FLEETCARRIERClass_SHIPYARDPROFIT, // Credits earned from Shipyard: ;cr;N0
+        FLEETCARRIERClass_OUTFITTINGSOLD, // Total Modules Sold: ;;N0
+        FLEETCARRIERClass_OUTFITTINGPROFIT, // Credits earned from Outfitting: ;cr;N0
+        FLEETCARRIERClass_REARMTOTAL, // Total Ships Restocked: ;;N0
+        FLEETCARRIERClass_REFUELTOTAL, // Total Ships Refuelled: ;;N0
+        FLEETCARRIERClass_REFUELPROFIT, // Credits earned from Refuelling: ;cr;N0
+        FLEETCARRIERClass_REPAIRSTOTAL, // Total Ships Repaired: ;;N0
+        FLEETCARRIERClass_VOUCHERSREDEEMED, // Redemption Office Exchanges: ;;N0
+        FLEETCARRIERClass_VOUCHERSPROFIT, // Redemption Office Payouts: ;cr;N0
+        ExobiologyClass_OrganicGenusEncountered, // Unique Genus Encountered: ;;N0
+        ExobiologyClass_OrganicSpeciesEncountered, // Unique Species Encountered: ;;N0
+        ExobiologyClass_OrganicVariantEncountered, // Unique Variants Encountered: ;;N0
+        ExobiologyClass_OrganicDataProfits, // Profit from Organic Data: ;cr;N0
+        ExobiologyClass_OrganicData, // Organic Data Registered: ;;N0
+        ExobiologyClass_FirstLoggedProfits, // Profit from First Logged: ;cr;N0
+        ExobiologyClass_FirstLogged, // First Logged: ;;N0
+        ExobiologyClass_OrganicSystems, // Systems with Organic Life: ;;N0
+        ExobiologyClass_OrganicPlanets, // Planets with Organic Life: ;;N0
+        ExobiologyClass_OrganicGenus, // Unique Genus Data Logged: ;;N0
+        ExobiologyClass_OrganicSpecies, // Unique Species Data Logged: ;;N0
 
-        JournalNavRoute_Jumps, // "{0} jumps: "
+    JournalNavRoute_Jumps, // "{0} jumps: "
 
         JournalScan_Autoscanof, // Autoscan of {0}
         JournalScan_Detailedscanof, // Detailed scan of {0}
