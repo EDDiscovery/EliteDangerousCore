@@ -77,6 +77,11 @@ namespace EliteDangerousCore
             return items.GetValues(gen);
         }
 
+        public Dictionary<string, MaterialCommodityMicroResource> GetDict(uint gen)
+        {
+            return items.Get(gen);
+        }
+
         public List<MaterialCommodityMicroResource> GetMaterialsSorted(uint gen)
         {
             var list = items.GetValues(gen, x => x.Details.IsMaterial);

@@ -65,7 +65,8 @@ namespace EliteDangerousCore.Inara
 
         public static bool NewEvent(Action<string> logger, HistoryList hl, HistoryEntry he)
         {
-            List<JToken> events = NewEntryList(hl, he);
+            var mcmr = hl.MaterialCommoditiesMicroResources.GetDict(he.MaterialCommodity);
+            List<JToken> events = NewEntryList(he,mcmr);
             if (events.Count > 0)
                 Submit(events,logger, he.Commander, false);
             return true;
@@ -139,7 +140,7 @@ namespace EliteDangerousCore.Inara
         }
 
 
-        public static List<JToken> NewEntryList(HistoryList hl, HistoryEntry he)         // may create NULL entries if some material items not found
+        public static List<JToken> NewEntryList(HistoryEntry he, Dictionary<string, MaterialCommodityMicroResource> mcmr)         // may create NULL entries if some material items not found
         {
             List<JToken> eventstosend = new List<JToken>();
 
@@ -396,23 +397,27 @@ namespace EliteDangerousCore.Inara
                         var je = he.journalEntry as JournalCargoDepot;
                         if (je.CargoType.HasChars() && je.Count > 0)
                         {
-                            MaterialCommodityMicroResource item = hl.MaterialCommoditiesMicroResources.Get(he.MaterialCommodity, je.CargoType);
-                            eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
+                            if (mcmr.TryGetValue(je.CargoType, out MaterialCommodityMicroResource item))
+                                eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
                         }
                         break;
                     }
                 case JournalTypeEnum.CollectCargo: //VERIFIED 16/5/18
                     {
                         var je = he.journalEntry as JournalCollectCargo;
-                        MaterialCommodityMicroResource item = hl.MaterialCommoditiesMicroResources.Get(he.MaterialCommodity, je.Type);
-                        eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
+                        if (mcmr.TryGetValue(je.Type, out MaterialCommodityMicroResource item))
+                        {
+                            eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
+                        }
                         break;
                     }
                 case JournalTypeEnum.EjectCargo: //VERIFIED 16/5/18
                     { 
                         var je = he.journalEntry as JournalEjectCargo;
-                        MaterialCommodityMicroResource item = hl.MaterialCommoditiesMicroResources.Get(he.MaterialCommodity, je.Type);
-                        eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
+                        if (mcmr.TryGetValue(je.Type, out MaterialCommodityMicroResource item))
+                        {
+                            eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
+                        }
                         break;
                     }
                 case JournalTypeEnum.EngineerContribution: //VERIFIED 16/5/18
@@ -420,63 +425,65 @@ namespace EliteDangerousCore.Inara
                         var je = he.journalEntry as JournalEngineerContribution;
                         if (je.Commodity.HasChars())
                         {
-                            MaterialCommodityMicroResource item = hl.MaterialCommoditiesMicroResources.Get(he.MaterialCommodity, je.Commodity);
-                            eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
+                            if (mcmr.TryGetValue(je.Commodity, out MaterialCommodityMicroResource item))
+                                eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
                         }
                         if (je.Material.HasChars())
                         {
-                            MaterialCommodityMicroResource item = hl.MaterialCommoditiesMicroResources.Get(he.MaterialCommodity, je.Material);
-                            eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
+                            if (mcmr.TryGetValue(je.Material, out MaterialCommodityMicroResource item))
+                                eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
                         }
                         break;
                     }
                 case JournalTypeEnum.MarketBuy: //VERIFIED 16/5/18
                     {
                         var je = he.journalEntry as JournalMarketBuy;
-                        MaterialCommodityMicroResource item = hl.MaterialCommoditiesMicroResources.Get(he.MaterialCommodity, je.Type);
-                        eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
+                        if (mcmr.TryGetValue(je.Type, out MaterialCommodityMicroResource item))
+                            eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
                         break;
                     }
                 case JournalTypeEnum.MarketSell: //VERIFIED 16/5/18
                     {
                         var je = he.journalEntry as JournalMarketSell;
-                        MaterialCommodityMicroResource item = hl.MaterialCommoditiesMicroResources.Get(he.MaterialCommodity, je.Type);
-                        eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
+                        if (mcmr.TryGetValue(je.Type, out MaterialCommodityMicroResource item))
+                            eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
                         break;
                     }
                 case JournalTypeEnum.Cargo: //VERIFIED 16/5/18
                     {
-                        List<MaterialCommodityMicroResource> commod = hl.MaterialCommoditiesMicroResources.GetCommoditiesSorted(he.MaterialCommodity);
-                        eventstosend.Add(InaraClass.setCommanderInventory(commod, he.EventTimeUTC));
+                        var commod = mcmr.Values.Where(x => x.Details.IsCommodity).ToList();
+                        if (commod.Count > 0)
+                            eventstosend.Add(InaraClass.setCommanderInventory(commod, he.EventTimeUTC));
                         break;
                     }
 
                 case JournalTypeEnum.Materials: //VERIFIED 16/5/18
                     {
-                        List<MaterialCommodityMicroResource> mat = hl.MaterialCommoditiesMicroResources.GetMaterialsSorted(he.MaterialCommodity);
-                        eventstosend.Add(InaraClass.setCommanderInventory(mat, he.EventTimeUTC));
+                        var mat= mcmr.Values.Where(x => x.Details.IsMaterial).ToList();
+                        if (mat.Count > 0)
+                            eventstosend.Add(InaraClass.setCommanderInventory(mat, he.EventTimeUTC));
                         break;
                     }
 
                 case JournalTypeEnum.MaterialCollected:
                     {
                         var je = he.journalEntry as JournalMaterialCollected;
-                        MaterialCommodityMicroResource item = hl.MaterialCommoditiesMicroResources.Get(he.MaterialCommodity, je.Name);
-                        eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
+                        if (mcmr.TryGetValue(je.Name, out MaterialCommodityMicroResource item))
+                            eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
                         break;
                     }
                 case JournalTypeEnum.MaterialDiscarded:
                     {
                         var je = he.journalEntry as JournalMaterialDiscarded;
-                        MaterialCommodityMicroResource item = hl.MaterialCommoditiesMicroResources.Get(he.MaterialCommodity, je.Name);
-                        eventstosend.Add(InaraClass.setCommanderInventoryItem(item,he.EventTimeUTC));
+                        if (mcmr.TryGetValue(je.Name, out MaterialCommodityMicroResource item))
+                            eventstosend.Add(InaraClass.setCommanderInventoryItem(item,he.EventTimeUTC));
                         break;
                     }
                 case JournalTypeEnum.MiningRefined:
                     {
                         var je = he.journalEntry as JournalMiningRefined;
-                        MaterialCommodityMicroResource item = hl.MaterialCommoditiesMicroResources.Get(he.MaterialCommodity, je.Type);
-                        eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
+                        if (mcmr.TryGetValue(je.Type, out MaterialCommodityMicroResource item))
+                            eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
                         break;
                     }
 
@@ -485,13 +492,13 @@ namespace EliteDangerousCore.Inara
                         var je = he.journalEntry as JournalMaterialTrade;
                         if (je.Paid != null)
                         {
-                            MaterialCommodityMicroResource item = hl.MaterialCommoditiesMicroResources.Get(he.MaterialCommodity, je.Paid.Material);
-                            eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
+                            if (mcmr.TryGetValue(je.Paid.Material, out MaterialCommodityMicroResource item))
+                                eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
                         }
                         if (je.Received != null)
                         {
-                            MaterialCommodityMicroResource item = hl.MaterialCommoditiesMicroResources.Get(he.MaterialCommodity, je.Received.Material);
-                            eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
+                            if (mcmr.TryGetValue(je.Received.Material, out MaterialCommodityMicroResource item))
+                                eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
                         }
 
                         break;
@@ -505,8 +512,8 @@ namespace EliteDangerousCore.Inara
                         {
                             foreach (KeyValuePair<string, int> k in je.Ingredients)
                             {
-                                MaterialCommodityMicroResource item = hl.MaterialCommoditiesMicroResources.Get(he.MaterialCommodity, k.Key);
-                                eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
+                                if (mcmr.TryGetValue(k.Key, out MaterialCommodityMicroResource item))
+                                    eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
                             }
                         }
                         break;
@@ -519,8 +526,8 @@ namespace EliteDangerousCore.Inara
                         {
                             foreach (KeyValuePair<string, int> k in je.Materials)
                             {
-                                MaterialCommodityMicroResource item = hl.MaterialCommoditiesMicroResources.Get(he.MaterialCommodity, k.Key);
-                                eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
+                                if (mcmr.TryGetValue(k.Key, out MaterialCommodityMicroResource item))
+                                    eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC));
                             }
                         }
                         break;
@@ -574,15 +581,15 @@ namespace EliteDangerousCore.Inara
                 case JournalTypeEnum.Embark:
                 case JournalTypeEnum.Disembark:
                     {
-                        List<MaterialCommodityMicroResource> mat = hl.MaterialCommoditiesMicroResources.GetMicroResourcesSorted(he.MaterialCommodity);
-                        eventstosend.Add(InaraClass.setCommanderInventory(mat, he.EventTimeUTC, 0, "ShipLocker"));
+                        var mr = mcmr.Values.Where(x => x.Details.IsMicroResources).ToList();
+                        if (mr.Count > 0)
+                            eventstosend.Add(InaraClass.setCommanderInventory(mr, he.EventTimeUTC, 0, "ShipLocker"));
                         break;
                     }
 
                 case JournalTypeEnum.BuyMicroResources:
                     {
-                        MaterialCommodityMicroResource item = hl.MaterialCommoditiesMicroResources.Get(he.MaterialCommodity, ((JournalBuyMicroResources)he.journalEntry).Resource.Name);
-                        if (item != null)
+                        if (mcmr.TryGetValue(((JournalBuyMicroResources)he.journalEntry).Resource.Name, out MaterialCommodityMicroResource item))
                             eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC,0,"ShipLocker"));
                         break;
                     }
@@ -591,17 +598,17 @@ namespace EliteDangerousCore.Inara
                     {
                         foreach( var mritem in ((JournalSellMicroResources)he.journalEntry).Items.EmptyIfNull())
                         {
-                            MaterialCommodityMicroResource item = hl.MaterialCommoditiesMicroResources.Get(he.MaterialCommodity, mritem.Name);
-                            if ( item!=null)
+                            if (mcmr.TryGetValue(mritem.Name, out MaterialCommodityMicroResource item))
                                 eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC,0,"ShipLocker"));
                         }
                         break;
                     }
 
                 case JournalTypeEnum.TradeMicroResources:
-                    {       
-                        List<MaterialCommodityMicroResource> mat = hl.MaterialCommoditiesMicroResources.GetMicroResourcesSorted(he.MaterialCommodity);
-                        eventstosend.Add(InaraClass.setCommanderInventory(mat, he.EventTimeUTC, 0, "ShipLocker"));      // just send all here
+                    {
+                        var mr = mcmr.Values.Where(x => x.Details.IsMicroResources).ToList();
+                        if (mr.Count > 0)
+                            eventstosend.Add(InaraClass.setCommanderInventory(mr, he.EventTimeUTC, 0, "ShipLocker"));      // just send all here
                         break;
                     }
 
