@@ -21,7 +21,26 @@ namespace EliteDangerousCore.DLL
 {
     static public class EDDDLLCallerHE
     {
-        static public EDDDLLInterfaces.EDDDLLIF.JournalEntry CreateFromHistoryEntry(EliteDangerousCore.HistoryList hl, EliteDangerousCore.HistoryEntry he, bool storedflag = false)
+        //
+        //
+        //var ml = 
+
+        static public EDDDLLInterfaces.EDDDLLIF.JournalEntry CreateFromHistoryEntry(EliteDangerousCore.HistoryList hl, EliteDangerousCore.HistoryEntry he, 
+                                                                                     bool storedflag = false)
+        {
+            return CreateFromHistoryEntry(he, hl.MaterialCommoditiesMicroResources.GetMaterialsSorted(he.MaterialCommodity),
+                                              hl.MaterialCommoditiesMicroResources.GetCommoditiesSorted(he.MaterialCommodity),
+                                              hl.MaterialCommoditiesMicroResources.GetMicroResourcesSorted(he.MaterialCommodity),
+                                              hl.MissionListAccumulator.GetAllCurrentMissions(he.MissionList, he.EventTimeUTC),
+                                              storedflag);
+        }
+
+        static public EDDDLLInterfaces.EDDDLLIF.JournalEntry CreateFromHistoryEntry(EliteDangerousCore.HistoryEntry he,
+                                                                                         List<MaterialCommodityMicroResource> mats,
+                                                                                         List<MaterialCommodityMicroResource> commds,
+                                                                                         List<MaterialCommodityMicroResource> mr,
+                                                                                         List<MissionState> missionlist,
+                                                                                         bool storedflag = false)
         {
             if (he == null)
             {
@@ -31,7 +50,7 @@ namespace EliteDangerousCore.DLL
             {
                 EDDDLLInterfaces.EDDDLLIF.JournalEntry je = new EDDDLLInterfaces.EDDDLLIF.JournalEntry()
                 {
-                    ver = 2,
+                    ver = 3,
                     indexno = he.EntryNumber,
                     utctime = he.EventTimeUTC.ToStringZulu(),
                     name = he.EventSummary,
@@ -57,18 +76,16 @@ namespace EliteDangerousCore.DLL
                     hullvalue = he.ShipInformation?.HullValue ?? 0,
                     rebuy = he.ShipInformation?.Rebuy ?? 0,
                     modulesvalue = he.ShipInformation?.ModulesValue ?? 0,
-                    stored = storedflag
+                    stored = storedflag,
+                    travelstate = he.Status.TravelState.ToString(),
                 };
 
                 he.journalEntry.FillInformation(he.System, out je.info, out je.detailedinfo);
 
-
-
-                je.materials = (from x in hl.MaterialCommoditiesMicroResources.GetMaterialsSorted(he.MaterialCommodity) select x.Details.Name + ":" + x.Count.ToStringInvariant() + ":" + x.Details.FDName).ToArray();
-                je.commodities = (from x in hl.MaterialCommoditiesMicroResources.GetCommoditiesSorted(he.MaterialCommodity) select x.Details.Name + ":" + x.Count.ToStringInvariant() + ":" + x.Details.FDName).ToArray();
-
-                var ml = hl.MissionListAccumulator.GetAllCurrentMissions(he.MissionList, he.EventTimeUTC);
-                je.currentmissions = ml.Select(x=>x.DLLInfo()).ToArray();
+                je.materials = (from x in mats select x.Details.Name + ":" + x.Count.ToStringInvariant() + ":" + x.Details.FDName).ToArray();
+                je.commodities = (from x in commds select x.Details.Name + ":" + x.Count.ToStringInvariant() + ":" + x.Details.FDName).ToArray();
+                je.currentmissions = missionlist.Select(x=>x.DLLInfo()).ToArray();
+                je.microresources = (from x in mr select x.Details.Name + ":" + x.Counts[0].ToStringInvariant()+ ":" + x.Counts[1].ToStringInvariant() + ":" + x.Details.FDName).ToArray();
                 return je;
             }
         }

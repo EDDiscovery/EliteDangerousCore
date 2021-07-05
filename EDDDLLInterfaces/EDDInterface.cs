@@ -24,6 +24,10 @@ namespace EDDDLLInterfaces
         [StructLayout(LayoutKind.Explicit)]
         public struct JournalEntry
         {
+            // int/long = 4 offset, aligned 4
+            // bool = 1 offset, next aligned to 4
+            // BSTR/Safearray = 8 offset, aligned 8
+
             [FieldOffset(0)] public int ver;
             [FieldOffset(4)] public int indexno;
             [FieldOffset(8)] [MarshalAs(UnmanagedType.BStr)] public string utctime;
@@ -66,11 +70,16 @@ namespace EDDDLLInterfaces
             [FieldOffset(200)] [MarshalAs(UnmanagedType.BStr)] public string shipident;
             [FieldOffset(208)] [MarshalAs(UnmanagedType.BStr)] public string shipname;
             [FieldOffset(216)] public long hullvalue;
-            [FieldOffset(224)] public long rebuy;
-            [FieldOffset(232)] public long modulesvalue;
-            [FieldOffset(240)] public bool stored;          // true if its a stored replay journal, false if live
+            [FieldOffset(220)] public long rebuy;
+            [FieldOffset(224)] public long modulesvalue;
+            [FieldOffset(228)] public bool stored;          // true if its a stored replay journal, false if live
 
             // Version 2 Ends here
+
+            [FieldOffset(232)] [MarshalAs(UnmanagedType.BStr)] public string travelstate;
+            [FieldOffset(240)] [MarshalAs(UnmanagedType.SafeArray)] public string[] microresources;
+
+            // Version 3 Ends here
         };
 
         public delegate bool EDDRequestHistory(long index, bool isjid, out JournalEntry f); //index =1..total records, or jid
