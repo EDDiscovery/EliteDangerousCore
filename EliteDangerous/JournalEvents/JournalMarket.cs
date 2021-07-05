@@ -53,15 +53,14 @@ namespace EliteDangerousCore.JournalEvents
             return string.Compare(Station, other.Station) == 0 && string.Compare(StarSystem, other.StarSystem) == 0 && CollectionStaticHelpers.Equals(Commodities, other.Commodities);
         }
 
-        public bool ReadAdditionalFiles(string directory, bool historyrefreshparse)
+        public void ReadAdditionalFiles(string directory)
         {
-            JObject jnew = ReadAdditionalFile(System.IO.Path.Combine(directory, "Market.json"), waitforfile: !historyrefreshparse, checktimestamptype: true);
+            JObject jnew = ReadAdditionalFile(System.IO.Path.Combine(directory, "Market.json"), EventTypeStr);
             if (jnew != null)        // new json, rescan
             {
                 Rescan(jnew);
                 UpdateJson(jnew);
             }
-            return jnew != null;
         }
 
     }

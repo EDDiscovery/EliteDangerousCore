@@ -207,6 +207,7 @@ namespace EliteDangerousCore
         RestockVehicle = 750,
         Resurrect = 760,
         ReservoirReplenished = 763,
+        Resupply = 4022,
         SAAScanComplete = 765,
         SAASignalsFound = 766,
         Scan = 770,
