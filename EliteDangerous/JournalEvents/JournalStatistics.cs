@@ -374,7 +374,7 @@ public string Format(string frontline = "    ")
                     "Total Items Rescued: ;;N0".T(EDTx.SearchAndRescueClass_TotalItemsRescued), Traded,
                     "Profit: ;cr;N0".T(EDTx.SearchAndRescueClass_Profit), Profit,
                     "Total Rescue Transactions: ;;N0".T(EDTx.SearchAndRescueClass_TotalRescueTransactions), Count,
-                    "Legal Salvage Value - Surface: ;cr,N0".T(EDTx.SearchAndRescueClass_SalvageLegalPOI), SalvageLegalPOI,
+                    "Legal Salvage Value - Surface: ;cr;N0".T(EDTx.SearchAndRescueClass_SalvageLegalPOI), SalvageLegalPOI,
                     "Legal Salvage Value - Settlements: ;cr;N0".T(EDTx.SearchAndRescueClass_SalvageLegalSettlements), SalvageLegalSettlements,
                     "Illegal Salvage Value - Surface: ;cr;N0".T(EDTx.SearchAndRescueClass_SalvageIllegalPOI), SalvageIllegalPOI,
                     "Illegal Salvage Value - Settlements: ;cr;N0".T(EDTx.SearchAndRescueClass_SalvageIllegalSettlements), SalvageIllegalSettlements,
