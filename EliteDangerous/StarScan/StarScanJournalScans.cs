@@ -66,7 +66,7 @@ namespace EliteDangerousCore
 
         // take the journal scan and add it to the node tree
 
-        private bool ProcessJournalScan(JournalScan sc, ISystem sys, bool reprocessPrimary = false)  // background or foreground.. FALSE if you can't process it
+        private bool ProcessJournalScan(JournalScan sc, ISystem sys, bool reprocessPrimary = false, ScanNode oldnode = null)  // background or foreground.. FALSE if you can't process it
         {
             SystemNode sn = GetOrCreateSystemNode(sys);
 
@@ -98,7 +98,7 @@ namespace EliteDangerousCore
             string customname = GetCustomNameJournalScan(sc, sys);
 
             // Process elements, 
-            ScanNode node = ProcessElementsJournalScan(sc, sys, sn, customname, elements, starscannodetype, isbeltcluster, isring);
+            ScanNode node = ProcessElementsJournalScan(sc, sys, sn, customname, elements, starscannodetype, isbeltcluster, isring, oldnode);
 
             if (node.BodyID != null)
             {
@@ -122,16 +122,17 @@ namespace EliteDangerousCore
                     if (reprocessPrimary && sn.StarNodes.Any(n => n.Key.Length > 1 && n.Value.NodeType == ScanNodeType.star))       
                     {
                         // get bodies with scans
-                        List<JournalScan> bodies = sn.Bodies.Where(b => b.ScanData != null).Select(b => b.ScanData).ToList();
+                        List<ScanNode> bodies = sn.Bodies.Where(b => b.ScanData != null).ToList();
 
                         // reset the nodes to zero
                         sn.StarNodes = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());
                         sn.NodesByID = new SortedList<int, ScanNode>();
 
-                        foreach (JournalScan js in bodies)              // replay into process the body scans.. using the newly updated body designation (primary star cache) to correct any errors
+                        foreach (var body in bodies)              // replay into process the body scans.. using the newly updated body designation (primary star cache) to correct any errors
                         {
+                            var js = body.ScanData;
                             js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sn.System.Name);
-                            ProcessJournalScan(js, sn.System);
+                            ProcessJournalScan(js, sn.System, oldnode: body);
                         }
                     }
                 }
@@ -218,7 +219,7 @@ namespace EliteDangerousCore
         // see above for elements
 
         private ScanNode ProcessElementsJournalScan(JournalScan sc, ISystem sys, SystemNode systemnode, string customname, List<string> elements, 
-                                                    ScanNodeType starscannodetype, bool isbeltcluster, bool isring)
+                                                    ScanNodeType starscannodetype, bool isbeltcluster, bool isring, ScanNode oldnode = null)
         {
 
             List<JournalScan.BodyParent> ancestors = sc.Parents?.AsEnumerable()?.ToList();      // this includes Rings, Barycentres(Nulls) that frontier put into the list..
@@ -289,6 +290,13 @@ namespace EliteDangerousCore
                     
                 if (lvl == elements.Count - 1)                                  // if we are at the end node..
                 {
+                    if (oldnode != null && oldnode.FullName == subnode.FullName && !object.ReferenceEquals(subnode, oldnode))
+                    {
+                        subnode.IsMapped = oldnode.IsMapped;
+                        subnode.WasMappedEfficiently = oldnode.WasMappedEfficiently;
+                        subnode.Signals = oldnode.Signals;
+                    }
+
                     subnode.ScanData = sc;                                      // only overwrites if scan is better
                     subnode.ScanData.SetMapped(subnode.IsMapped, subnode.WasMappedEfficiently);      // pass this data to node, as we may have previously had a SAA Scan
                     subnode.CustomName = customname;                            // and its custom name
