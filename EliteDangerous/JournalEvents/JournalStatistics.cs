@@ -38,8 +38,22 @@ namespace EliteDangerousCore.JournalEvents
             Multicrew = evt["Multicrew"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("Multicrew")?.ToObjectQ<MulticrewClass>() ?? new MulticrewClass();
             MaterialTraderStats = evt["Material_Trader_Stats"]?.RenameObjectFieldsUnderscores()?.ToObjectQ<MaterialTraderStatsClass>() ?? new MaterialTraderStatsClass();
             CQC = evt["CQC"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("CQC")?.ToObjectQ<CQCClass>() ?? new CQCClass();
-            FLEETCARRIER = evt["FLEETCARRIER"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("FLEETCARRIER")?.ToObject<FLEETCARRIERClass>() ?? new FLEETCARRIERClass();
             Exobiology = evt["Exobiology"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("Exobiology")?.ToObject<ExobiologyClass>() ?? new ExobiologyClass();
+
+            FLEETCARRIER = evt["FLEETCARRIER"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("FLEETCARRIER")?.ToObject<FLEETCARRIERClass>(true,true) ?? new FLEETCARRIERClass();
+            JToken dt = evt["FLEETCARRIER"].I("FLEETCARRIER_DISTANCE_TRAVELLED");   // this is a classic frontier eff up
+            if ( dt !=null)
+            {
+                if (dt.IsString)        // used to be 292929 LY
+                {
+                    string s = dt.Str("0 LY");
+                    int i = s.IndexOf(" ");
+                    if (i >= 0)
+                        FLEETCARRIER.DISTANCETRAVELLED = s.Substring(0, i).InvariantParseDouble(0);
+                }
+                else
+                    FLEETCARRIER.DISTANCETRAVELLED = dt.Double(0);
+            }
         }
 
         public BankAccountClass BankAccount { get; set; }
@@ -510,7 +524,8 @@ public string Format(string frontline = "    ")
             public long TRADESPENDTOTAL { get; set; }
             public long STOLENPROFITTOTAL { get; set; }
             public int STOLENSPENDTOTAL { get; set; }
-            public long DISTANCETRAVELLED { get; set; }
+            [JsonIgnore]        // ignore it for auto convert due to frontier changing from string to double
+            public double DISTANCETRAVELLED { get; set; }
             public int TOTALJUMPS { get; set; }
             public int SHIPYARDSOLD { get; set; }
             public long SHIPYARDPROFIT { get; set; }
