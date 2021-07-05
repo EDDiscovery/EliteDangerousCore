@@ -87,6 +87,10 @@ namespace EliteDangerousCore
                     relatednode.ScanData.SetMapped(relatednode.IsMapped, relatednode.WasMappedEfficiently);
                     //System.Diagnostics.Debug.WriteLine(".. passing down to scan " + relatedScan.ScanData.ScanType);
                 }
+                else if (saveprocessinglater)
+                {
+                    SaveForProcessing(jsaa, sys);
+                }
 
                 return true; // We already have the scan
             }
