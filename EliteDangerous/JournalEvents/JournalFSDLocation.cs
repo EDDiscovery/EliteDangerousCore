@@ -118,9 +118,9 @@ namespace EliteDangerousCore.JournalEvents
             JArray coords = evt["StarPos"].Array();
             if (coords!=null)
             {
-                pos.X = coords[0].Float();
-                pos.Y = coords[1].Float();
-                pos.Z = coords[2].Float();
+                pos.X = coords[0].FloatNull() ?? float.NaN;
+                pos.Y = coords[1].FloatNull() ?? float.NaN;
+                pos.Z = coords[2].FloatNull() ?? float.NaN;
             }
             else
             {
