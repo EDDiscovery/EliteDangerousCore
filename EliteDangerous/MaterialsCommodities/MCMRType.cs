@@ -26,8 +26,11 @@ namespace EliteDangerousCore
     {
         public enum CatType
         {
-            Commodity, Raw, Encoded, Manufactured,        // all
-            Item, Component, Data, Consumable,          // odyssey 4.0
+            Commodity, Raw, Encoded, Manufactured,          // all
+            Item,                                           // odyssey 4.0.  Called goods in game
+            Component,                                      // odyssey 4.0.  Called assets in game
+            Data,                                           // odyssey 4.0.  
+            Consumable,                                     // odyssey 4.0. 
         };
         public CatType Category { get; private set; }                // either Commodity, Encoded, Manufactured, Raw
 

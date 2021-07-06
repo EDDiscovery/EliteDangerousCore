@@ -118,8 +118,11 @@ namespace EliteDangerousCore
             int total = 0;
             foreach (MaterialCommodityMicroResource c in list)
             {
-                if ( Array.IndexOf<MaterialCommodityMicroResourceType.CatType>(cats, c.Details.Category) != -1 )
+                if (Array.IndexOf<MaterialCommodityMicroResourceType.CatType>(cats, c.Details.Category) != -1)
+                {
                     total += c.Count;
+                  //  System.Diagnostics.Debug.WriteLine($"{c.Details.Category} {c.Details.FDName} {c.Count} {total}");
+                }
             }
 
             return total;
