@@ -113,27 +113,16 @@ namespace EliteDangerousCore
             return ret;
         }
 
-        static public int Count(List<MaterialCommodityMicroResource> list, params MaterialCommodityMicroResourceType.CatType [] cats)    // for all types of cat, if item matches or does not, count
+        static public int[] Count(List<MaterialCommodityMicroResource> list, int cn = 0)        // Counts of different types, array, use CatType to index it
         {
-            int total = 0;
+            System.Diagnostics.Debug.Assert(Enum.GetNames(typeof(MaterialCommodityMicroResourceType.CatType)).Length == 8);  // done purposely this way so only debug builds pay the price for getnames
+            int[] ret = new int[8];
             foreach (MaterialCommodityMicroResource c in list)
-            {
-                if (Array.IndexOf<MaterialCommodityMicroResourceType.CatType>(cats, c.Details.Category) != -1)
-                {
-                    total += c.Count;
-                  //  System.Diagnostics.Debug.WriteLine($"{c.Details.Category} {c.Details.FDName} {c.Count} {total}");
-                }
-            }
-
-            return total;
+                ret[(int)c.Details.Category] += c.Counts[cn];
+            return ret;
         }
 
-        static public int DataCount(List<MaterialCommodityMicroResource> list) { return Count(list, MaterialCommodityMicroResourceType.CatType.Encoded); }
-        static public int MaterialsCount(List<MaterialCommodityMicroResource> list) { return Count(list, MaterialCommodityMicroResourceType.CatType.Raw, MaterialCommodityMicroResourceType.CatType.Manufactured); }
-        static public int CargoCount(List<MaterialCommodityMicroResource> list) { return Count(list, MaterialCommodityMicroResourceType.CatType.Commodity); }
-        static public int MicroResourcesCount(List<MaterialCommodityMicroResource> list) { return Count(list, MaterialCommodityMicroResourceType.CatType.Component, MaterialCommodityMicroResourceType.CatType.Consumable, MaterialCommodityMicroResourceType.CatType.Item, MaterialCommodityMicroResourceType.CatType.Data); }
-
-        public int CargoCount(uint gen) { return Count(Get(gen), MaterialCommodityMicroResourceType.CatType.Commodity); }
+        public int CargoCount(uint gen) { return Count(Get(gen))[(int)MaterialCommodityMicroResourceType.CatType.Commodity]; }
 
         // change entry 0
         public void Change(DateTime utc, string catname, string fdname, int num, long price, int cnum = 0, bool setit = false)        
