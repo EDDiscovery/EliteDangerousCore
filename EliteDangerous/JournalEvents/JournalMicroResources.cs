@@ -329,7 +329,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build(" ", Received_FriendlyName, "; items".T(EDTx.JournalEntry_items), Count);
+            info = BaseUtils.FieldBuilder.Build("", Received_FriendlyName, "; items".T(EDTx.JournalEntry_items), Count);
             detailed = MicroResource.List(Offered);
         }
 
@@ -337,14 +337,12 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (previous?.EventTypeID != JournalTypeEnum.ShipLocker)    // if shiplocker is before, its already updated
             {
-                System.Diagnostics.Debug.WriteLine("Trade - remove offered");
                 foreach (var m in Offered.EmptyIfNull())
                 {
                     MaterialCommodityMicroResourceType.EnsurePresent(m.Category, m.Name, m.Name_Localised);
                     mc.Change(EventTimeUTC, m.Category, m.Name, -m.Count, 0, MicroResource.ShipLocker);
                 }
 
-                System.Diagnostics.Debug.WriteLine("Trade - add received");
                 if (Received.HasChars())
                 {
                     MaterialCommodityMicroResourceType.EnsurePresent(Category, Received, Received_Localised);

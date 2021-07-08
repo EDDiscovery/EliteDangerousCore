@@ -51,24 +51,22 @@ namespace EliteDangerousCore
             }
         }
 
-        public OutfittingItem[] Items { get; private set; }
+        public OutfittingItem[] Items { get; private set; }     // can be null if its retrospecively read
         public string StationName { get; private set; }
         public string StarSystem { get; private set; }
         public DateTime Datetimeutc { get; private set; }
 
-        public Outfitting()
-        {
-        }
-
-        public Outfitting(string st, string sy, DateTime dt, OutfittingItem[] it)
+        public Outfitting(string st, string sy, DateTime dt, OutfittingItem[] it = null)        // items can be null if no data captured at the point
         {
             StationName = st;
             StarSystem = sy;
             Datetimeutc = dt;
             Items = it;
-            if (Items != null)
+            if (it != null)
+            {
                 foreach (Outfitting.OutfittingItem i in Items)
                     i.Normalise();
+            }
         }
 
         public bool Equals(Outfitting other)
@@ -154,9 +152,9 @@ namespace EliteDangerousCore
             if (je.EventTypeID == JournalTypeEnum.Outfitting)
             {
                 JournalEvents.JournalOutfitting js = je as JournalEvents.JournalOutfitting;
-                if (js.ItemList.Items != null)     // just in case we get a bad Outfitting with no data or its one which was not caught by the EDD at the time
+                if (js.YardInfo.Items != null)     // just in case we get a bad Outfitting with no data or its one which was not caught by the EDD at the time
                 {
-                    OutfittingYards.Add(js.ItemList);
+                    OutfittingYards.Add(js.YardInfo);
                 }
             }
         }

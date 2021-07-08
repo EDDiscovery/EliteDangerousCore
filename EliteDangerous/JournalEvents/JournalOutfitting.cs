@@ -35,13 +35,13 @@ namespace EliteDangerousCore.JournalEvents
             MarketID = mid;
             Horizons = horizons;
             var nlist = list.Select(x => new Outfitting.OutfittingItem { id = x.Item1, Name = x.Item2, BuyPrice = x.Item3 }).ToArray();
-            ItemList = new Outfitting(sn, sys, utc, nlist);
+            YardInfo = new Outfitting(sn, sys, utc, nlist);
             SetCommander(cmdrid);
         }
 
         public void Rescan(JObject evt)
         {
-            ItemList = new Outfitting(evt["StationName"].Str(), evt["StarSystem"].Str(), EventTimeUTC, evt["Items"]?.ToObjectQ<Outfitting.OutfittingItem[]>());
+            YardInfo = new Outfitting(evt["StationName"].Str(), evt["StarSystem"].Str(), EventTimeUTC, evt["Items"]?.ToObjectQ<Outfitting.OutfittingItem[]>());
             MarketID = evt["MarketID"].LongNull();
             Horizons = evt["Horizons"].BoolNull();
         }
@@ -58,14 +58,14 @@ namespace EliteDangerousCore.JournalEvents
 
         public JObject ToJSON()
         {
-            JArray itemlist = new JArray(ItemList.Items.Select(x => new JObject() { { "id", x.id }, { "Name", x.FDName }, { "BuyPrice", x.BuyPrice } }));
+            JArray itemlist = new JArray(YardInfo.Items.Select(x => new JObject() { { "id", x.id }, { "Name", x.FDName }, { "BuyPrice", x.BuyPrice } }));
 
             JObject j = new JObject()
             {
                 ["timestamp"] = EventTimeUTC.ToStringZulu(),
                 ["event"] = EventTypeStr,
-                ["StationName"] = ItemList.StationName,
-                ["StarSystem"] = ItemList.StarSystem,
+                ["StationName"] = YardInfo.StationName,
+                ["StarSystem"] = YardInfo.StarSystem,
                 ["MarketID"] = MarketID,
                 ["Horizons"] = Horizons,
                 ["Items"] = itemlist,
@@ -75,7 +75,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
 
-        public Outfitting ItemList;
+        public Outfitting YardInfo;
 
         public long? MarketID { get; set; }
         public bool? Horizons { get; set; }
@@ -85,11 +85,11 @@ namespace EliteDangerousCore.JournalEvents
             info = "";
             detailed = "";
 
-            if (ItemList.Items != null)
+            if (YardInfo.Items != null)
             {
-                info = ItemList.Items.Length.ToString() + " items available".T(EDTx.JournalEntry_itemsavailable);
+                info = YardInfo.Items.Length.ToString() + " items available".T(EDTx.JournalEntry_itemsavailable);
                 int itemno = 0;
-                foreach (Outfitting.OutfittingItem m in ItemList.Items)
+                foreach (Outfitting.OutfittingItem m in YardInfo.Items)
                 {
                     detailed = detailed.AppendPrePad(m.Name + ":" + m.BuyPrice.ToString("N0"), (itemno % 3 < 2) ? ", " : System.Environment.NewLine);
                     itemno++;

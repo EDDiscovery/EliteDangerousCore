@@ -190,7 +190,7 @@ namespace EliteDangerousCore
             }
             else if (je is JournalEvents.JournalOutfitting)         // when doing into outfitting
             {
-                toosoon = lastoutfitting != null && lastoutfitting.ItemList.Equals((je as JournalEvents.JournalOutfitting).ItemList);
+                toosoon = lastoutfitting != null && lastoutfitting.YardInfo.Equals((je as JournalEvents.JournalOutfitting).YardInfo);
                 lastoutfitting = je as JournalEvents.JournalOutfitting;
             }
             else if (je is JournalEvents.JournalMarket)

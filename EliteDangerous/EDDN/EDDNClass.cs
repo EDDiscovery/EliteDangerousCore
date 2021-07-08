@@ -564,7 +564,7 @@ namespace EliteDangerousCore.EDDN
 
         public JObject CreateEDDNOutfittingMessage(JournalOutfitting journal)
         {
-            if (journal.ItemList.Items == null)
+            if (journal.YardInfo.Items == null)
                 return null;
 
             JObject msg = new JObject();
@@ -575,11 +575,11 @@ namespace EliteDangerousCore.EDDN
             JObject message = new JObject
             {
                 ["timestamp"] = journal.EventTimeUTC.ToString("yyyy-MM-ddTHH:mm:ss'Z'"),
-                ["systemName"] = journal.ItemList.StarSystem,
-                ["stationName"] = journal.ItemList.StationName,
-                ["stationName"] = journal.ItemList.StationName,
+                ["systemName"] = journal.YardInfo.StarSystem,
+                ["stationName"] = journal.YardInfo.StationName,
+                ["stationName"] = journal.YardInfo.StationName,
                 ["marketId"] = journal.MarketID,
-                ["modules"] = new JArray(journal.ItemList.Items.Select(m => JournalFieldNaming.NormaliseFDItemName(m.FDName)))
+                ["modules"] = new JArray(journal.YardInfo.Items.Select(m => JournalFieldNaming.NormaliseFDItemName(m.FDName)))
             };
 
             message["odyssey"] = journal.IsOdyssey;     // new may 21

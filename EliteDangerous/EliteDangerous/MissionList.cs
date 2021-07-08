@@ -226,7 +226,9 @@ namespace EliteDangerousCore
                 history[key] = new MissionState(m, c);
             }
             else
-                System.Diagnostics.Debug.WriteLine("Missions: Unknown " + key);
+            {
+                //System.Diagnostics.Debug.WriteLine("Missions Completed: Unknown " + key);
+            }
         }
 
         public void CargoDepot(JournalCargoDepot cd)
@@ -242,10 +244,14 @@ namespace EliteDangerousCore
                     history[key] = new MissionState(m, cd);
                 }
                 else
-                    System.Diagnostics.Debug.WriteLine("Missions: Unknown " + key);
+                {
+                    //System.Diagnostics.Debug.WriteLine("Missions Cargo: Unknown " + key);
+                }
             }
             else
-                System.Diagnostics.Debug.WriteLine("Missions: Not found " + cd.MissionId);
+            {
+                //System.Diagnostics.Debug.WriteLine("Missions: Not found " + cd.MissionId);
+            }
         }
 
         public void Abandoned(JournalMissionAbandoned a)
@@ -258,7 +264,9 @@ namespace EliteDangerousCore
                 history[key] = new MissionState(m, MissionState.StateTypes.Abandoned, a.EventTimeUTC);
             }
             else
-                System.Diagnostics.Debug.WriteLine("Missions: Unknown " + key);
+            {
+                //System.Diagnostics.Debug.WriteLine("Missions Abandonded: Unknown " + key);
+            }
         }
 
         public void Failed(JournalMissionFailed f)
@@ -271,7 +279,9 @@ namespace EliteDangerousCore
                 history[key] = new MissionState(m, MissionState.StateTypes.Failed, f.EventTimeUTC);
             }
             else
-                System.Diagnostics.Debug.WriteLine("Missions: Unknown " + key);
+            {
+                //System.Diagnostics.Debug.WriteLine("Missions Failed: Unknown " + key);
+            }
         }
 
         public void Redirected(JournalMissionRedirected r)
@@ -281,10 +291,12 @@ namespace EliteDangerousCore
             if (m != null)
             {
                 history.NextGeneration();
-                history[key] = new MissionState(m,r);
+                history[key] = new MissionState(m, r);
             }
             else
-                System.Diagnostics.Debug.WriteLine("Missions: Unknown " + key);
+            {
+                //System.Diagnostics.Debug.WriteLine("Missions Redirected: Unknown " + key);
+            }
         }
 
         public void Died(DateTime diedtimeutc)
@@ -369,13 +381,13 @@ namespace EliteDangerousCore
 
                     if (ms.State == MissionState.StateTypes.Died)  // if marked died... 
                     {
-                        System.Diagnostics.Debug.WriteLine("Missions in active list but marked died" + kn);
+                        //System.Diagnostics.Debug.WriteLine("Missions in active list but marked died:" + kn);
                         toresurrect.Add(kn);
                     }
                 }
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine("Active mission '" + kn + "' But no Mission accepted");
+                    //System.Diagnostics.Debug.WriteLine("Active mission '" + kn + "' But no Mission accepted");
                 }
             }
 
@@ -395,7 +407,7 @@ namespace EliteDangerousCore
             {
                 if (!active.Contains(kvp.Key) && !failed.Contains(kvp.Key) && !completed.Contains(kvp.Key) && kvp.Value.State == MissionState.StateTypes.InProgress)
                 {
-                    System.Diagnostics.Debug.WriteLine(m.EventTimeUTC.ToStringZulu() + " Mission " + kvp.Value.Mission.EventTimeUTC.ToStringZulu() + " " + kvp.Key + " disappeared ****");
+                   // System.Diagnostics.Debug.WriteLine(m.EventTimeUTC.ToStringZulu() + " Mission " + kvp.Value.Mission.EventTimeUTC.ToStringZulu() + " " + kvp.Key + " disappeared ****");
                     disappeared.Add(kvp.Key);
                 }
             }

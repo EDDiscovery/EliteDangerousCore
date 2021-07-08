@@ -170,6 +170,7 @@ namespace EliteDangerousCore
             return ifd.Equals("testbuggy", StringComparison.InvariantCultureIgnoreCase);
         }
 
+
         static public bool IsFighter(string ifd)
         {
             ifd = ifd.ToLowerInvariant();
@@ -1153,6 +1154,15 @@ namespace EliteDangerousCore
              { "bobble_snowman", new ShipModule(-1,0, "Bobble Snowman", VanityType ) },
              { "bobble_snowflake", new ShipModule(-1,0, "Bobble Snowflake", VanityType ) },
              { "decal_triple_elite", new ShipModule(-1,0, "Decal Triple Elite", VanityType ) },
+
+             { "paintjob_sidewinder_vibrant_red", new ShipModule(-1,0, "Paintjob Sidewinder Vibrant Red", VanityType ) },
+             { "paintjob_asp_lrpo_azure", new ShipModule(-1,0, "Paintjob Asp Lrpo Azure", VanityType ) },
+             { "paintjob_type9_lrpo_azure", new ShipModule(-1,0, "Paintjob Type 9 Lrpo Azure", VanityType ) },
+             { "paintjob_python_lrpo_azure", new ShipModule(-1,0, "Paintjob Python Lrpo Azure", VanityType ) },
+             { "bobble_trophy_exploration", new ShipModule(-1,0, "Bobble Trophy Exploration", VanityType ) },
+             { "paintjob_asp_metallic2_gold", new ShipModule(-1,0, "Paintjob Asp Metallic 2 Gold", VanityType ) },
+             { "paintjob_asp_operator_red", new ShipModule(-1,0, "Paintjob Asp Operator Red", VanityType ) },
+
         };
 
         #endregion

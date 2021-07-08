@@ -48,6 +48,11 @@ namespace EliteDangerousCore
                 Class = cls; WeaponMods = weaponmods;
                 FriendlyName = ItemData.GetWeapon(ModuleName)?.Name ?? ModuleName_Localised;
             }
+
+            public string WeaponModList()
+            {
+                return (WeaponMods != null) ? string.Join(", ", WeaponMods) : "";
+            }
         }
 
         public Dictionary<string, LoadoutModule> Modules { get; private set; }      // may be empty if not known, never null
@@ -78,11 +83,13 @@ namespace EliteDangerousCore
         {
             if ( Modules.TryGetValue(slotname, out LoadoutModule m))
             {
-                return m.FriendlyName + ":" + m.Class.ToStringInvariant();
+                string wml = m.WeaponModList();
+                return m.FriendlyName + ":" + m.Class.ToStringInvariant() + (wml.HasChars() ? " " + wml : "");
             }
 
             return "";
         }
+
 
         public SuitLoadout(DateTime time, ulong id, string name, ulong suitID, bool deleted)
         {

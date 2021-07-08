@@ -23,23 +23,8 @@ namespace EliteDangerousCore
 {
     public partial class StarScan
     {
-        // we store by the tuple<name:sysaddr> if it has an address, else we store by name only. We use the tuple just to distinguish it more
-        //      names are searched first during store to see if we have an older entry there without a system address 
-        //      then we search for name:sysaddr if we have a sys addr 
-        //      then we search for name in ByNameSysAddr as the last resort, in case the Find Isystem is synthesised without a system address being available
-        // we do not store all names in ByName, because we want to store ones with system address in it. We want maximum distiguishing of systems
-        // star names are case sensitive.
-
-        public Dictionary<Tuple<string, long?>, SystemNode> ScanDataByNameSysaddr { get; private set; } = new Dictionary<Tuple<string, long?>, SystemNode>();
-        public Dictionary<string, SystemNode> scanDataByName { get; private set; } = new Dictionary<string, SystemNode>();
-
-        public List<SystemNode> ScansSortedByName()
-        {
-            List<SystemNode> scans = scanDataByName.Values.ToList();
-            scans.AddRange(ScanDataByNameSysaddr.Values.ToList());
-            scans.Sort(delegate (SystemNode l, SystemNode r) { return l.System.Name.CompareTo(r.System.Name); });
-            return scans;
-        }
+        public Dictionary<long, SystemNode> ScanDataBySysaddr { get; private set; } = new Dictionary<long, SystemNode>();       // primary store - may not be there
+        public Dictionary<string, SystemNode> ScanDataByName { get; private set; } = new Dictionary<string, SystemNode>();      // by name, always there
 
         private const string MainStar = "Main Star";
 
@@ -58,22 +43,19 @@ namespace EliteDangerousCore
             List<Tuple<JournalEntry, ISystem>> todelete = new List<Tuple<JournalEntry, ISystem>>();
             foreach (var e in ToProcess)
             {
-                JournalSAAScanComplete jsaasc = e.Item1 as JournalSAAScanComplete;
-                if (jsaasc != null)
-                {
-                    if (ProcessSAAScan(jsaasc, e.Item2, false))
+                if (e.Item1.EventTypeID == JournalTypeEnum.SAAScanComplete)
+                { 
+                    if (ProcessSAAScan((JournalSAAScanComplete)e.Item1, e.Item2, false))
                         todelete.Add(e);
                 }
-                JournalSAASignalsFound jsaasf = e.Item1 as JournalSAASignalsFound;
-                if (jsaasf != null)
+                else if (e.Item1.EventTypeID == JournalTypeEnum.SAASignalsFound)
                 {
-                    if (ProcessSAASignalsFound(jsaasf, e.Item2, false))
+                    if (ProcessSAASignalsFound((JournalSAASignalsFound)e.Item1, e.Item2, false))
                         todelete.Add(e);
                 }
-                JournalFSSSignalDiscovered jssdis = e.Item1 as JournalFSSSignalDiscovered;
-                if ( jssdis != null )
+                else if (e.Item1.EventTypeID == JournalTypeEnum.FSSSignalDiscovered)
                 {
-                    if (AddFSSSignalsDiscoveredToSystem(jssdis, null, false))
+                    if (AddFSSSignalsDiscoveredToSystem((JournalFSSSignalDiscovered)e.Item1, false))
                         todelete.Add(e);
                 }
             }

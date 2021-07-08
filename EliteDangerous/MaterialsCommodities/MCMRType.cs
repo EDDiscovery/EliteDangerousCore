@@ -254,7 +254,8 @@ namespace EliteDangerousCore
         public MaterialCommodityMicroResourceType(CatType cs, string n, string fd, ItemType t, MaterialGroupType mtg, string shortn, Color cl, bool rare)
         {
             Category = cs;
-            TranslatedCategory = Category.ToString().Tx(typeof(MaterialCommodityMicroResourceType));        // valid to pass this thru the Tx( system
+            TranslatedCategory = (Category ==CatType.Item) ? "Goods" : (Category==CatType.Component) ? "Assets" : Category.ToString();      // name is as the game does
+            TranslatedCategory = TranslatedCategory.Tx(typeof(MaterialCommodityMicroResourceType));        // valid to pass this thru the Tx( system
             Name = n;
             FDName = fd;
             Type = t;

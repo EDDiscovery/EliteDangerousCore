@@ -126,12 +126,17 @@ namespace EliteDangerousCore
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Journals read from DB");
 
-            reportProgress( "Creating History");
-
             hist.hlastprocessed = null;
+
+            int eno = 0;
 
             foreach (JournalEntry je in jlist)
             {
+                if (eno++ % 10000 == 0)
+                {
+                    reportProgress($"Creating History {eno-1}/{jlist.Count}");
+                }
+
                 if (MergeOrDiscardEntries(hist.hlastprocessed?.journalEntry, je))        // if we merge, don't store into HE
                 {
                     continue;
@@ -184,8 +189,7 @@ namespace EliteDangerousCore
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " History List Created");
 
-            foreach (var s in hist.StarScan.ToProcess)
-                System.Diagnostics.Debug.WriteLine("StarScan could not find " + s.Item2.SystemAddress + " at " + s.Item1.EventTimeUTC);
+            foreach (var s in hist.StarScan.ToProcess)  System.Diagnostics.Debug.WriteLine($"StarScan could not find {s.Item2.Name} {s.Item2.SystemAddress} at {s.Item1.EventTimeUTC}");
 
         //for (int i = hist.Count - 10; i < hist.Count; i++)  System.Diagnostics.Debug.WriteLine("Hist {0} {1} {2}", hist[i].EventTimeUTC, hist[i].Indexno , hist[i].EventSummary);
 
@@ -268,11 +272,11 @@ namespace EliteDangerousCore
             }
             else if (he.EntryType == JournalTypeEnum.SAAScanComplete)
             {
-                StarScan.AddSAAScanToBestSystem((JournalSAAScanComplete)he.journalEntry, pos , historylist);
+                StarScan.AddSAAScanToBestSystem((JournalSAAScanComplete)he.journalEntry, he.System, pos , historylist);
             }
             else if (he.EntryType == JournalTypeEnum.SAASignalsFound)
             {
-                StarScan.AddSAASignalsFoundToBestSystem((JournalSAASignalsFound)he.journalEntry, pos , historylist);
+                StarScan.AddSAASignalsFoundToBestSystem((JournalSAASignalsFound)he.journalEntry, he.System, pos , historylist);
             }
             else if (he.EntryType == JournalTypeEnum.FSSDiscoveryScan)
             {
@@ -280,7 +284,7 @@ namespace EliteDangerousCore
             }
             else if (he.EntryType == JournalTypeEnum.FSSSignalDiscovered)
             {
-                StarScan.AddFSSSignalsDiscoveredToSystem((JournalFSSSignalDiscovered)he.journalEntry, he.System);
+                StarScan.AddFSSSignalsDiscoveredToSystem((JournalFSSSignalDiscovered)he.journalEntry);
             }
             else if (he.journalEntry is IBodyNameAndID)
             {
@@ -399,7 +403,7 @@ namespace EliteDangerousCore
                     var lasthe = historylist.Last();
                     if ( lasthe.MaterialCommodity != he.MaterialCommodity)  // they changed the mc list, keep
                     {
-                        System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " " + he.EntryType.ToString() + " Update,keep");
+                        //System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " " + he.EntryType.ToString() + " Update,keep");
                     }
                     else
                     {
@@ -413,7 +417,7 @@ namespace EliteDangerousCore
                     HistoryEntry lasthe = FindBeforeLastDockLoadGameShutdown(1000,he.EntryType);     // don't look back forever
                     if (lasthe != null)
                     {
-                        System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " " + he.EntryType.ToString() + " Duplicate with " + lasthe.EventTimeUTC.ToString() + " remove");
+                        //System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " " + he.EntryType.ToString() + " Duplicate with " + lasthe.EventTimeUTC.ToString() + " remove");
                         return null;
                     }
                 }
@@ -423,7 +427,7 @@ namespace EliteDangerousCore
                     HistoryEntry lasthe = FindBeforeLastDockLoadGameShutdown(1000,JournalTypeEnum.Market, JournalTypeEnum.EDDCommodityPrices);     // don't look back forever
                     if (lasthe != null)
                     {
-                        System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " " + he.EntryType.ToString() + " Duplicate with " + lasthe.EntryType.ToString() + " " + lasthe.EventTimeUTC.ToString() + " remove");
+                        //System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " " + he.EntryType.ToString() + " Duplicate with " + lasthe.EntryType.ToString() + " " + lasthe.EventTimeUTC.ToString() + " remove");
                         return null;
                     }
                 }
@@ -457,7 +461,7 @@ namespace EliteDangerousCore
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} Isolated {he.EntryType}");
+                       // System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} Isolated {he.EntryType}");
                     }
                 }
                 else if (he.EntryType == JournalTypeEnum.Loadout)
@@ -469,7 +473,7 @@ namespace EliteDangerousCore
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} Isolated {he.EntryType}");
+                       // System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} Isolated {he.EntryType}");
                     }
                 }
 
@@ -523,7 +527,7 @@ namespace EliteDangerousCore
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} Isolated {he.EntryType}");
+                       // System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} Isolated {he.EntryType}");
                         return null;
                     }
                 }
@@ -574,7 +578,7 @@ namespace EliteDangerousCore
 
                     else if ( je.ThrowGrenade )
                     {
-                        System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} throw grenade");
+                       // System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} throw grenade");
                     }
                     else
                     {           // otherwise, queue it

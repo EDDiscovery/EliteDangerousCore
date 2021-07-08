@@ -23,19 +23,25 @@ namespace EliteDangerousCore
     public partial class StarScan
     {
         // used by historylist directly for a single update during play, in foreground..  Also used by above.. so can be either in fore/back
-        public bool AddSAAScanToBestSystem(JournalSAAScanComplete jsaa, int startindex, List<HistoryEntry> hl)
+        public bool AddSAAScanToBestSystem(JournalSAAScanComplete jsaa, ISystem sys, int startindex, List<HistoryEntry> hl)
         {
-            if (jsaa.BodyName == null)
-                return false;
+            // jsaa may have a system address.  If it matches current system, we can go for an immediate add
+            if (jsaa.SystemAddress == sys.SystemAddress)
+            {
+                return ProcessSAAScan(jsaa, sys);
+            }
+            else
+            {
+                if (jsaa.BodyName == null)
+                    return false;
 
-            var best = FindBestSystem(startindex, hl, jsaa.BodyName, jsaa.BodyID, false);
+                var best = FindBestSystem(startindex, hl, jsaa.BodyName, jsaa.BodyID, false);
 
-            if (best == null)
-                return false;
-
-            jsaa.BodyDesignation = best.Item1;
-
-            return ProcessSAAScan(jsaa, best.Item2);         
+                if (best == null)
+                    return false;
+                else
+                    return ProcessSAAScan(jsaa, best.Item2);
+            }
         }
 
         private bool ProcessSAAScan(JournalSAAScanComplete jsaa, ISystem sys, bool saveprocessinglater = true)  // background or foreground.. FALSE if you can't process it
@@ -46,24 +52,8 @@ namespace EliteDangerousCore
             if (sn.NodesByID.ContainsKey((int)jsaa.BodyID))
             {
                 relatednode = sn.NodesByID[(int)jsaa.BodyID];
-                if (relatednode.ScanData != null && relatednode.ScanData.BodyDesignation != null)
-                {
-                    jsaa.BodyDesignation = relatednode.ScanData.BodyDesignation;
-                }
             }
-            else if (jsaa.BodyDesignation != null && jsaa.BodyDesignation != jsaa.BodyName)
-            {
-                foreach (var body in sn.Bodies)
-                {
-                    if (body.FullName == jsaa.BodyDesignation)
-                    {
-                        relatednode = body;
-                        break;
-                    }
-                }
-            }
-
-            if (relatednode == null)
+            else 
             {
                 foreach (var body in sn.Bodies)
                 {

@@ -260,8 +260,6 @@ namespace EliteDangerousCore.JournalEvents
         public int EfficiencyTarget { get; set; }
         public long? SystemAddress { get; set; }    // 3.5
 
-        public string BodyDesignation { get; set; }     // set by scan system to best body designation for this entry
-
         public override string SummaryName(ISystem sys)
         {
             return base.SummaryName(sys) + " " + "of ".T(EDTx.JournalEntry_ofa) + BodyName.ReplaceIfStartsWith(sys.Name);
@@ -297,8 +295,6 @@ namespace EliteDangerousCore.JournalEvents
         public string BodyName { get; set; }
         public int BodyID { get; set; }
         public List<SAASignal> Signals { get; set; }
-
-        public string BodyDesignation { get; set; }     // set by scan system to best body designation for this entry
 
         public class SAASignal 
         {

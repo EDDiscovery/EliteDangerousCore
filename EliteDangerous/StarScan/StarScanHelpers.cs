@@ -28,50 +28,35 @@ namespace EliteDangerousCore
 
     public partial class StarScan
     {
-        // make or get a system node for a system. See starsystemnode for the rules on using these two structures for lookups
+        // check system address, then check name
 
         private SystemNode GetOrCreateSystemNode(ISystem sys)
         {
-            if (scanDataByName.TryGetValue(sys.Name, out SystemNode sn))            // try name, it may have been stored with an old entry without sys address 
-                return sn;                                                          // so we check to see if we already have that first
-
-            // then try sysaddr
-            if (sys.SystemAddress.HasValue && ScanDataByNameSysaddr.TryGetValue(sys.NameSystemAddress, out sn))
+            if (sys.SystemAddress.HasValue && ScanDataBySysaddr.TryGetValue(sys.SystemAddress.Value, out SystemNode sn))
                 return sn;
+
+            if (ScanDataByName.TryGetValue(sys.Name, out sn))            // try name, it may have been stored with an old entry without sys address 
+                return sn;                                                          // so we check to see if we already have that first
 
             // not found, make a new node
             sn = new SystemNode(sys);
 
             // if it has a system address, we store it to the list that way. Else we add to name list
             if (sys.SystemAddress.HasValue)
-                ScanDataByNameSysaddr[sys.NameSystemAddress] = sn;
-            else
-                scanDataByName[sys.Name] = sn;
+                ScanDataBySysaddr[sys.SystemAddress.Value] = sn;
+
+            ScanDataByName[sys.Name] = sn;
 
             return sn;
         }
 
         private SystemNode FindSystemNode(ISystem sys)
         {
-            if (scanDataByName.TryGetValue(sys.Name, out SystemNode sn))            // try name first, in case the entry is old enough not to have a system address
+            if (sys.SystemAddress.HasValue && ScanDataBySysaddr.TryGetValue(sys.SystemAddress.Value, out SystemNode sn))
                 return sn;
 
-            if (sys.SystemAddress.HasValue)                                         // if the find has a system address, then we should now only check the system address table
-            {
-                if (ScanDataByNameSysaddr.TryGetValue(sys.NameSystemAddress, out sn)) // try system address
-                    return sn;
-            }
-            else
-            {                                                                       // find does not have system address, and was not found in DataByName
-                                                                                    // it could be an old journal system with no sysaddr, in which case its probably has no data
-                                                                                    //      as it should have been picked up by the DataByName if it did. But we can't distinguish so can't screen that out
-                                                                                    // Or its synthesised with just the name available
-                                                                                    // Either way, last check for sysaddr by name
-                                                                                    // this is unlikely to be used now, probably just by Action system
-                sn = ScanDataByNameSysaddr.Values.ToList().Find(x => x.System.Name.Equals(sys.Name));     // try and find it in the system by address by name
-                if (sn != null)
-                    return sn;
-            }
+            if (ScanDataByName.TryGetValue(sys.Name, out sn))            // try name, it may have been stored with an old entry without sys address 
+                return sn;                                                          // so we check to see if we already have that first
 
             return null;
         }
