@@ -26,6 +26,7 @@ using System.Linq;
 
 namespace EliteDangerousCore
 {
+    [System.Diagnostics.DebuggerDisplay("HL {historylist.Count}")]
     public partial class HistoryList //: IEnumerable<HistoryEntry>
     {
         public MissionListAccumulator MissionListAccumulator { get; private set; } = new MissionListAccumulator(); // and mission list..

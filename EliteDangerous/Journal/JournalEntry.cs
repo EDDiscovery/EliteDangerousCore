@@ -390,8 +390,10 @@ namespace EliteDangerousCore
 
         private static Dictionary<JournalTypeEnum, string> GetJournalTranslatedNames()
         {
+            // only translate ones below Obsoleteoricons
             var v = Enum.GetValues(typeof(JournalTypeEnum)).OfType<JournalTypeEnum>();
-            return v.ToDictionary(e => e, e => e.ToString().SplitCapsWord().Tx(typeof(JournalTypeEnum), e.ToString()));
+            var tx = v.ToDictionary(e => e, e => e < JournalTypeEnum.ObsoleteOrIcons ? e.ToString().SplitCapsWord().Tx(typeof(JournalTypeEnum), e.ToString()) : e.ToString().SplitCapsWord() );
+            return tx;
         }
 
         #endregion

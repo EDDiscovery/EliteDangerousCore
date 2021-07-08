@@ -178,12 +178,6 @@ SECTION JournalTypeEnum
 .EDDCommodityPrices: "EDD Commodity Prices" @
 .EngineerContribution_Unknown: "Engineer Contribution_Unknown" @
 .EngineerContribution_MatCommod: "Engineer Contribution_Mat Commod" @
-.RestockVehicle_SRV: "Restock Vehicle_SRV" @
-.RestockVehicle_Fighter: "Restock Vehicle_Fighter" @
-.ShieldState_ShieldsUp: "Shield State_Shields Up" @
-.ShieldState_ShieldsDown: "Shield State_Shields Down" @
-.VehicleSwitch_Mothership: "Vehicle Switch_Mothership" @
-.VehicleSwitch_Fighter: "Vehicle Switch_Fighter" @
 .AppliedToSquadron: "Applied To Squadron" @
 .AsteroidCracked: "Asteroid Cracked" @
 .CodexEntry: "Codex Entry" @
@@ -225,7 +219,6 @@ SECTION JournalTypeEnum
 .CarrierJumpCancelled: "Carrier Jump Cancelled" @
 .CargoTransfer: "Cargo Transfer" @
 .NavRoute: "Nav Route" @
-.BackPack: "Back Pack" @
 .BookDropship: "Book Dropship" @
 .BookTaxi: "Book Taxi" @
 .BuyMicroResources: "Buy Micro Resources" @
@@ -247,19 +240,20 @@ SECTION JournalTypeEnum
 .SellOrganicData: "Sell Organic Data" @
 .SellSuit: "Sell Suit" @
 .SellWeapon: "Sell Weapon" @
-.ShipLockerMaterials: "Ship Locker Materials" @
 .SwitchSuitLoadout: "Switch Suit Loadout" @
 .TradeMicroResources: "Trade Micro Resources" @
 .UpgradeSuit: "Upgrade Suit" @
 .UpgradeWeapon: "Upgrade Weapon" @
 .UseConsumable: "Use Consumable" @
-.TransferMicroResources: "Transfer Micro Resources" @
 .SuitLoadout: "Suit Loadout" @
 .DropshipDeploy: "Dropship Deploy" @
 .FactionKillBond: "Faction Kill Bond" @
 .CapShipBond: "Capital Ship Bond" @
 .BackpackChange: "Backpack Change" @
-.ICONIDsStart: "Don't bother with this one, its an internal ID" @
+.Backpack: "Backpack" @
+.Resupply: "Resupply" @
+.ShipLocker: "Ship Locker" @
+
 
 SECTION JournalCargo
 
@@ -457,6 +451,8 @@ SECTION JournalPromotion
 .Empire: "Empire: " @
 .Federation: "Federation: " @
 .CQC: "CQC: " @
+.Soldier: "Soldier: " @
+.ExoBiologist: "ExoBiologist: " @
 
 SECTION JournalReceiveText
 
@@ -1099,7 +1095,8 @@ SECTION JournalEntry
 .Taxi: "Taxi" @
 .Backpack: "Backpack" @
 .Locker: "Locker" @
-
+.Mods: "Mods: " @
+.Class: "Class: " @
 
 SECTION JournalCarrierJump
 .JumpedWith: "Jumped with carrier {0} to {1}" @

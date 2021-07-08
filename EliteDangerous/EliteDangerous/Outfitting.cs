@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 
 namespace EliteDangerousCore
 {
-    [System.Diagnostics.DebuggerDisplay("{Ident(true)} {Items.Length}")]
+    [System.Diagnostics.DebuggerDisplay("{Ident()} {Items.Length}")]
     public class Outfitting : IEquatable<Outfitting>
     {
         [System.Diagnostics.DebuggerDisplay("{Name} {BuyPrice}")]
