@@ -145,7 +145,7 @@
     <Compile Include="Journal\JournalEntry.cs" />
     <Compile Include="Journal\JournalEntryAttributes.cs" />
     <Compile Include="Journal\JournalEntryInterfaces.cs" />
-    <Compile Include="EliteDangerous\JournalFieldNaming.cs" />
+    <Compile Include="Journal\JournalFieldNaming.cs" />
     <Compile Include="EliteDangerous\Ledger.cs" />
     <Compile Include="DB\TravelLogUnitLogReader.cs" />
     <Compile Include="MaterialsCommodities\MCMRType.cs" />

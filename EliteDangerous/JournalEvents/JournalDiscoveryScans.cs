@@ -272,9 +272,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
+            string name = BodyName.Contains(sys.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : sys.Name + ":" + BodyName;
             info = BaseUtils.FieldBuilder.Build("Probes: ".T(EDTx.JournalSAAScanComplete_Probes), ProbesUsed,
                                                 "Efficiency Target: ".T(EDTx.JournalSAAScanComplete_EfficiencyTarget), EfficiencyTarget,
-                                                "@ ", BodyName);
+                                                "@ ", name);
             detailed = "";
         }
     }
@@ -333,7 +334,8 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = SignalList(Signals);
-            info = info.AppendPrePad("@ " + BodyName, ", ");
+            string name = BodyName.Contains(sys.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : sys.Name + ":" + BodyName;
+            info = info.AppendPrePad("@ " + name, ", ");
             detailed = "";
         }
 
