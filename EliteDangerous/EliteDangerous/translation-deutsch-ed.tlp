@@ -57,8 +57,8 @@ SECTION MaterialCommodityMicroResourceType
 
 .Consumable: "Consumable" @
 .Unknown: "Unknown" @
-.Item: "Item" @
-.Component: "Component" @
+.Goods: "Goods" @
+.Assets: "Assets" @
 .Data: "Data" @
 .Raw: "Raw" => "Rohmaterialien"
 .VeryCommon: "Very Common" => "Sehr häufig"
@@ -772,6 +772,89 @@ SECTION MaterialCommodityMicroResourceType
 .factiondonatorlist: "Faction Donator List" @
 .nocdata: "NOC Data" @
 .manufacturinginstructions: "Manufacturing Instructions" @
+.m_tissuesample_fluid: "Mollusc Fluid" @
+.m_tissuesample_nerves: "Mollusc Brain Tissue" @
+.s9_tissuesample_shell: "Pod Tissue" @
+.agriculturalprocesssample: "Agricultural Process Sample" @
+.geneticsample: "Biological Sample" @
+.californium: "Californium" @
+.castfossil: "Cast Fossil" @
+.chemicalprocesssample: "Chemical Process Sample" @
+.chemicalsample: "Chemical Sample" @
+.deepmantlesample: "Deep Mantle Sample" @
+.geneticrepairmeds: "Genetic Repair Meds" @
+.gmeds: "G-Meds" @
+.inorganiccontaminant: "Inorganic Contaminant" @
+.insightdatabank: "Insight Data Bank" @
+.microbialinhibitor: "Microbial Inhibitor" @
+.mutageniccatalyst: "Mutagenic Catalyst" @
+.nutritionalconcentrate: "Nutritional Concentrate" @
+.personalcomputer: "Personal Computer" @
+.personaldocuments: "Personal Documents" @
+.petrifiedfossil: "Petrified Fossil" @
+.pyrolyticcatalyst: "Pyrolytic Catalyst" @
+.refinementprocesssample: "Refinement Process Sample" @
+.surveillanceequipment: "Surveillance Equipment" @
+.syntheticgenome: "Synthetic Genome" @
+.oxygenicbacteria: "Oxygenic Bacteria" @
+.epinephrine: "Epinephrine" @
+.phneutraliser: "pH Neutraliser" @
+.transmitter: "Transmitter" @
+.propaganda: "Propaganda" @
+.securityexpenses: "Security Expenses" @
+.weapontestdata: "Weapon Test Data" @
+.audiologs: "Audio Logs" @
+.axcombatlogs: "AX Combat Logs" @
+.ballisticsdata: "Ballistics Data" @
+.biologicalweapondata: "Biological Weapon Data" @
+.biometricdata: "Biometric Data" @
+.chemicalweapondata: "Chemical Weapon Data" @
+.classicentertainment: "Classic Entertainment" @
+.cocktailrecipes: "Cocktail Recipes" @
+.conflicthistory: "Conflict History" @
+.criminalrecords: "Criminal Records" @
+.cropyieldanalysis: "Crop Yield Analysis" @
+.culinaryrecipes: "Culinary Recipes" @
+.digitaldesigns: "Digital Designs" @
+.employeeexpenses: "Employee Expenses" @
+.employmenthistory: "Employment History" @
+.enhancedinterrogationrecordings: "Enhanced Interrogation Recordings" @
+.espionagematerial: "Espionage Material" @
+.extractionyielddata: "Extraction Yield Data" @
+.fleetregistry: "Fleet Registry" @
+.genesequencingdata: "Gene Sequencing Data" @
+.geneticresearch: "Genetic Research" @
+.geologicaldata: "Geological Data" @
+.hydroponicdata: "Hydroponic Data" @
+.incidentlogs: "Incident Logs" @
+.influenceprojections: "Influence Projections" @
+.interrogationrecordings: "Interrogation Recordings" @
+.interviewrecordings: "Interview Recordings" @
+.jobapplications: "Job Applications" @
+.kompromat: "Kompromat" @
+.medicalrecords: "Medical Records" @
+.medicaltrialrecords: "Clinical Trial Records" @
+.mininganalytics: "Mining Analytics" @
+.networksecurityprotocols: "Network Security Protocols" @
+.opinionpolls: "Opinion Polls" @
+.patienthistory: "Patient History" @
+.photoalbums: "Photo Albums" @
+.plantgrowthcharts: "Plant Growth Charts" @
+.politicalaffiliations: "Political Affiliations" @
+.prisonerlogs: "Prisoner Logs" @
+.recyclinglogs: "Recycling Logs" @
+.riskassessments: "Risk Assessments" @
+.seedgeneaology: "Seed Geneaology" @
+.settlementassaultplans: "Settlement Assault Plans" @
+.slushfundlogs: "Slush Fund Logs" @
+.smearcampaignplans: "Smear Campaign Plans" @
+.spectralanalysisdata: "Spectral Analysis Data" @
+.spyware: "Spyware" @
+.stellaractivitylogs: "Stellar Activity Logs" @
+.tacticalplans: "Tactical Plans" @
+.vipsecuritydetail: "VIP Security Detail" @
+.virus: "Virus" @
+.xenodefenceprotocols: "Xeno-Defence Protocols" @
 
 SECTION EngineeringData
 
