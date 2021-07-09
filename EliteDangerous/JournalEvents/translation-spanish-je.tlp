@@ -760,7 +760,7 @@ SECTION ExplorationClass
 .TimePlayed: "Time Played: " => "Tiempo jugado: "
 .EfficientScans: "Efficient Scans: ;;N0" => "Escaneos eficientes: ;;N0"
 .ShuttleJourneys: "Shuttle Journeys: ;;N0" @
-.ShuttleDistanceTravelled: "Shuttle Distance Travelled: ;ly,N0" @
+.ShuttleDistanceTravelled: "Shuttle Distance Travelled: ;ly;N0" @
 .SpentOnShuttles: "Credits Spent on Shuttles: ;cr;N0" @
 .FirstFootfalls: "First Footfalls: ;;N0" @
 .PlanetFootfalls: "Planets walked on: ;;N0" @
@@ -826,6 +826,8 @@ SECTION MaterialTraderStatsClass
 
 .CommodityTrades: "Material" => "Operaciones con Mercancías: ;;N0"
 .MaterialTraded: "Material Traded: ;;N0" => "Material negociado: ;;N0"
+.EncodedMaterialsTraded: "Encoded Materials Traded: ;;N0" @
+.RawMaterialsTraded: "Raw Materials Traded: ;;N0" @
 .G1MaterialsTraded: "Grade 1 Materials Traded: ;;N0" @
 .G2MaterialsTraded: "Grade 2 Materials Traded: ;;N0" @
 .G3MaterialsTraded: "Grade 3 Materials Traded: ;;N0" @
