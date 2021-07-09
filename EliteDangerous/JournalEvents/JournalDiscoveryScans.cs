@@ -33,7 +33,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("New bodies discovered: ".T(EDTx.JournalEntry_Dscan), Bodies);
+            info = BaseUtils.FieldBuilder.Build("New bodies discovered: ".T(EDTx.JournalEntry_Dscan), Bodies,
+                                                "@ ", sys.Name);
             detailed = "";
         }
     }
@@ -55,7 +56,9 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Progress: ;%;N1".T(EDTx.JournalFSSDiscoveryScan_Progress), Progress, 
-                "Bodies: ".T(EDTx.JournalFSSDiscoveryScan_Bodies), BodyCount, "Others: ".T(EDTx.JournalFSSDiscoveryScan_Others), NonBodyCount);
+                "Bodies: ".T(EDTx.JournalFSSDiscoveryScan_Bodies), BodyCount, 
+                "Others: ".T(EDTx.JournalFSSDiscoveryScan_Others), NonBodyCount,
+                "@ ", sys.Name);
             detailed = "";
         }
     }
@@ -212,6 +215,8 @@ namespace EliteDangerousCore.JournalEvents
                     }
                 }
 
+                info = info.AppendPrePad("@ " + sys.Name, ", ");
+
                 foreach (var s in Signals)
                     detailed = detailed.AppendPrePad(s.ToString(false), System.Environment.NewLine);
             }
@@ -268,7 +273,8 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Probes: ".T(EDTx.JournalSAAScanComplete_Probes), ProbesUsed,
-                                                "Efficiency Target: ".T(EDTx.JournalSAAScanComplete_EfficiencyTarget), EfficiencyTarget);
+                                                "Efficiency Target: ".T(EDTx.JournalSAAScanComplete_EfficiencyTarget), EfficiencyTarget,
+                                                "@ ", BodyName);
             detailed = "";
         }
     }
@@ -320,12 +326,14 @@ namespace EliteDangerousCore.JournalEvents
                     info = info.AppendPrePad(inds + (logtype ? x.Type : x.Type_Localised.Alt(x.Type)) + ": " + x.Count.ToString("N0"), separ);
                 }
             }
+
             return info;
         }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
         {
             info = SignalList(Signals);
+            info = info.AppendPrePad("@ " + BodyName, ", ");
             detailed = "";
         }
 
