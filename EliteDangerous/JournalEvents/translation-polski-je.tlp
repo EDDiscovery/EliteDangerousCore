@@ -661,7 +661,7 @@ SECTION BankAccountClass
 .SpendonAmmo: "Spent on Ammo: ;cr;N0" => "Wydano na Amunicję: ;cr;N0"
 .InsuranceClaims: "Insurance Claims: ;;N0" => "Roszczenia Ubezpieczeniowe: ;;N0"
 .SpentonInsurance: "Spent on Insurance: ;cr;N0" => "Wydano na Ubezpieczenia: ;cr;N0"
-.OwnedShipCount: "Owned ships" @
+.OwnedShipCount: "Owned ships: ;;N0" @
 .SpentOnSuits: "Spent on Suits: ;cr;N0" @
 .SpentOnWeapons: "Spent on Weapons: ;cr;N0" @
 .SpentOnSuitConsumables: "Spent on Suit Consumables: ;cr;N0" @
@@ -754,13 +754,13 @@ SECTION ExplorationClass
 .Level2Scans: "Level 2 Scans: ;;N0" => "Skany Poziomu 2: ;;N0"
 .Level3Scans: "Level 3 Scans: ;;N0" => "Skany Poziomu 3: ;;N0"
 .HighestPayout: "Highest Payout: ;cr;N0" => "Najwyższa Wypłata: ;cr;N0"
-.TotalDistance: "Total Distance: ;;N0" => "Łączny Dystans: ;;N0"
+.TotalDistance: "Total Distance: ;ly;N0" => "Łączny Dystans: ;ly;N0"
 .NoofJumps: "No of Jumps: ;;N0" => "Ilość Skoków: ;;N0"
-.GreatestDistance: "Greatest Distance: ;;N0" => "Największy Dystans: ;;N0"
+.GreatestDistance: "Greatest Distance: ;ly;N0" => "Największy Dystans: ;ly;N0"
 .TimePlayed: "Time Played: " => "Czas Gry: "
 .EfficientScans: "Efficient Scans: ;;N0" @
 .ShuttleJourneys: "Shuttle Journeys: ;;N0" @
-.ShuttleDistanceTravelled: "Shuttle Distance Travelled: ;ly,N0" @
+.ShuttleDistanceTravelled: "Shuttle Distance Travelled: ;ly;N0" @
 .SpentOnShuttles: "Credits Spent on Shuttles: ;cr;N0" @
 .FirstFootfalls: "First Footfalls: ;;N0" @
 .PlanetFootfalls: "Planets walked on: ;;N0" @
@@ -826,6 +826,8 @@ SECTION MaterialTraderStatsClass
 
 .CommodityTrades: "Material" => "Transakcje Handlu Towarami: ;;N0"
 .MaterialTraded: "Material Traded: ;;N0" => "Ilość Przehandlowanych Materiałów: ;;N0"
+.EncodedMaterialsTraded: "Encoded Materials Traded: ;;N0" @
+.RawMaterialsTraded: "Raw Materials Traded: ;;N0" @
 .G1MaterialsTraded: "Grade 1 Materials Traded: ;;N0" @
 .G2MaterialsTraded: "Grade 2 Materials Traded: ;;N0" @
 .G3MaterialsTraded: "Grade 3 Materials Traded: ;;N0" @
@@ -836,9 +838,9 @@ SECTION CQCClass
 
 .CreditsEarned: "Profits from CQC: ;cr;N0" @
 .TimePlayed: "Time Played: ;;N0" => "Czas Gry: ;;N0"
-.KDRatio: "K/D Ratio: ;;N2" => "Stosunek Zabójstw/Śmierci: ;;N0"
+.KDRatio: "K/D Ratio: ;;N2" => "Stosunek Zabójstw/Śmierci: ;;N2"
 .Kills: "Kills: ;;N0" => "Zabójstwa: ;;N0"
-.Win: "Win/Loss: ;;N2" => "Wygrane/Przegrane: ;;N0"
+.Win: "Win/Loss: ;;N2" => "Wygrane/Przegrane: ;;N2"
 
 SECTION FLEETCARRIERClass
 

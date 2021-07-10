@@ -55,11 +55,11 @@ SECTION EDPlanet
 
 SECTION MaterialCommodityMicroResourceType
 
-.Consumable: "Consumable" @
-.Unknown: "Unknown" @
-.Goods: "Goods" @
-.Assets: "Assets" @
-.Data: "Data" @
+.Consumable: "Consumable" => "Verbrauchsgegenstände"
+.Unknown: "Unknown" => "Unbekannt"
+.Goods: "Goods" => "Waren"
+.Assets: "Assets" => "Material"
+.Data: "Data" => "Daten"
 .Raw: "Raw" => "Rohmaterialien"
 .VeryCommon: "Very Common" => "Sehr häufig"
 .Common: "Common" => "Häufig"
@@ -655,206 +655,206 @@ SECTION MaterialCommodityMicroResourceType
 .tritium: "Tritium" => "Tritium"
 .s6_tissuesample_mesoglea: "Pod Mesoglea" => "Hülsen-Mesoglea"
 .s6_tissuesample_cells: "Pod Outer Tissue" => "Hülsen-Aussengewebe"
-.bypass: "E-Breach" @
-.energycell: "Energy Cell" @
-.healthpack: "Medkit" @
-.amm_grenade_frag: "Frag Grenade" @
-.amm_grenade_emp: "Shield Disruptor" @
-.amm_grenade_shield: "Shield Projector" @
-.largecapacitypowerregulator: "Power Regulator" @
-.compactlibrary: "Compact Library" @
-.infinity: "Infinity" @
-.insightentertainmentsuite: "Insight Entertainment Suite" @
-.lazarus: "Lazarus" @
-.universaltranslator: "Universal Translator" @
-.biochemicalagent: "Biochemical Agent" @
-.degradedpowerregulator: "Degraded Power Regulator" @
-.hush: "Hush" @
-.push: "Push" @
-.syntheticpathogen: "Synthetic Pathogen" @
-.buildingschematic: "Building Schematic" @
-.insight: "Insight" @
-.compressionliquefiedgas: "Compression-Liquefied Gas" @
-.healthmonitor: "Health Monitor" @
-.inertiacanister: "Inertia Canister" @
-.ionisedgas: "Ionised Gas" @
-.shipschematic: "Ship Schematic" @
-.suitschematic: "Suit Schematic" @
-.vehicleschematic: "Vehicle Schematic" @
-.weaponschematic: "Weapon Schematic" @
-.trueformfossil: "True Form Fossil" @
-.carbonfibreplating: "Carbon Fibre Plating" @
-.encryptedmemorychip: "Encrypted Memory Chip" @
-.epoxyadhesive: "Epoxy Adhesive" @
-.graphene: "Graphene" @
-.memorychip: "Memory Chip" @
-.microelectrode: "Microelectrode" @
-.microhydraulics: "Micro Hydraulics" @
-.microthrusters: "Micro Thrusters" @
-.opticalfibre: "Optical Fibre" @
-.opticallens: "Optical Lens" @
-.rdx: "Rdx" @
-.titaniumplating: "Titanium Plating" @
-.tungstencarbide: "Tungsten Carbide" @
-.weaponcomponent: "Weapon Component" @
-.aerogel: "Aerogel" @
-.chemicalsuperbase: "Chemical Superbase" @
-.circuitboard: "Circuit Board" @
-.circuitswitch: "Circuit Switch" @
-.electricalwiring: "Electrical Wiring" @
-.electromagnet: "Electromagnet" @
-.metalcoil: "Metal Coil" @
-.motor: "Motor" @
-.chemicalcatalyst: "Chemical Catalyst" @
-.microtransformer: "Micro Transformer" @
-.electricalfuse: "Electrical Fuse" @
-.microsupercapacitor: "Micro Supercapacitor" @
-.viscoelasticpolymer: "Viscoelastic Polymer" @
-.ionbattery: "Ion Battery" @
-.scrambler: "Scrambler" @
-.chemicalinventory: "Chemical Inventory" @
-.dutyrota: "Duty Rota" @
-.evacuationprotocols: "Evacuation Protocols" @
-.explorationjournals: "Exploration Journals" @
-.factionnews: "Faction News" @
-.financialprojections: "Financial Projections" @
-.salesrecords: "Sales Records" @
-.unionmembership: "Union Membership" @
-.maintenancelogs: "Maintenance Logs" @
-.patrolroutes: "Patrol Routes" @
-.settlementdefenceplans: "Settlement Defence Plans" @
-.surveilleancelogs: "Surveillance Logs" @
-.operationalmanual: "Operational Manual" @
-.blacklistdata: "Blacklist Data" @
-.airqualityreports: "Air Quality Reports" @
-.employeedirectory: "Employee Directory" @
-.factionassociates: "Faction Associates" @
-.meetingminutes: "Meeting Minutes" @
-.multimediaentertainment: "Multimedia Entertainment" @
-.networkaccesshistory: "Network Access History" @
-.purchaserecords: "Purchase Records" @
-.radioactivitydata: "Radioactivity Data" @
-.residentialdirectory: "Residential Directory" @
-.shareholderinformation: "Shareholder Information" @
-.travelpermits: "Travel Permits" @
-.accidentlogs: "Accident Logs" @
-.campaignplans: "Campaign Plans" @
-.combattrainingmaterial: "Combat Training Material" @
-.internalcorrespondence: "Internal Correspondence" @
-.payrollinformation: "Payroll Information" @
-.personallogs: "Personal Logs" @
-.weaponinventory: "Weapon Inventory" @
-.atmosphericdata: "Atmospheric Data" @
-.topographicalsurveys: "Topographical Surveys" @
-.literaryfiction: "Literary Fiction" @
-.reactoroutputreview: "Reactor Output Review" @
-.nextofkinrecords: "Next of Kin Records" @
-.purchaserequests: "Purchase Requests" @
-.taxrecords: "Tax Records" @
-.visitorregister: "Visitor Register" @
-.pharmaceuticalpatents: "Pharmaceutical Patents" @
-.vaccineresearch: "Vaccine Research" @
-.virologydata: "Virology Data" @
-.vaccinationrecords: "Vaccination Records" @
-.censusdata: "Census Data" @
-.geographicaldata: "Geographical Data" @
-.mineralsurvey: "Mineral Survey" @
-.chemicalformulae: "Chemical Formulae" @
-.chemicalexperimentdata: "Chemical Experiment Data" @
-.chemicalpatents: "Chemical Patents" @
-.productionreports: "Production Reports" @
-.productionschedule: "Production Schedule" @
-.bloodtestresults: "Blood Test Results" @
-.combatantperformance: "Combatant Performance" @
-.troopdeploymentrecords: "Troop Deployment Records" @
-.catmedia: "Cat Media" @
-.employeegeneticdata: "Employee Genetic Data" @
-.factiondonatorlist: "Faction Donator List" @
-.nocdata: "NOC Data" @
-.manufacturinginstructions: "Manufacturing Instructions" @
-.m_tissuesample_fluid: "Mollusc Fluid" @
-.m_tissuesample_nerves: "Mollusc Brain Tissue" @
-.s9_tissuesample_shell: "Pod Tissue" @
-.agriculturalprocesssample: "Agricultural Process Sample" @
-.geneticsample: "Biological Sample" @
-.californium: "Californium" @
-.castfossil: "Cast Fossil" @
-.chemicalprocesssample: "Chemical Process Sample" @
-.chemicalsample: "Chemical Sample" @
-.deepmantlesample: "Deep Mantle Sample" @
-.geneticrepairmeds: "Genetic Repair Meds" @
-.gmeds: "G-Meds" @
-.inorganiccontaminant: "Inorganic Contaminant" @
-.insightdatabank: "Insight Data Bank" @
-.microbialinhibitor: "Microbial Inhibitor" @
-.mutageniccatalyst: "Mutagenic Catalyst" @
-.nutritionalconcentrate: "Nutritional Concentrate" @
-.personalcomputer: "Personal Computer" @
-.personaldocuments: "Personal Documents" @
-.petrifiedfossil: "Petrified Fossil" @
-.pyrolyticcatalyst: "Pyrolytic Catalyst" @
-.refinementprocesssample: "Refinement Process Sample" @
-.surveillanceequipment: "Surveillance Equipment" @
-.syntheticgenome: "Synthetic Genome" @
-.oxygenicbacteria: "Oxygenic Bacteria" @
-.epinephrine: "Epinephrine" @
-.phneutraliser: "pH Neutraliser" @
-.transmitter: "Transmitter" @
-.propaganda: "Propaganda" @
-.securityexpenses: "Security Expenses" @
-.weapontestdata: "Weapon Test Data" @
-.audiologs: "Audio Logs" @
-.axcombatlogs: "AX Combat Logs" @
-.ballisticsdata: "Ballistics Data" @
-.biologicalweapondata: "Biological Weapon Data" @
-.biometricdata: "Biometric Data" @
-.chemicalweapondata: "Chemical Weapon Data" @
-.classicentertainment: "Classic Entertainment" @
-.cocktailrecipes: "Cocktail Recipes" @
-.conflicthistory: "Conflict History" @
-.criminalrecords: "Criminal Records" @
-.cropyieldanalysis: "Crop Yield Analysis" @
-.culinaryrecipes: "Culinary Recipes" @
-.digitaldesigns: "Digital Designs" @
-.employeeexpenses: "Employee Expenses" @
-.employmenthistory: "Employment History" @
-.enhancedinterrogationrecordings: "Enhanced Interrogation Recordings" @
-.espionagematerial: "Espionage Material" @
-.extractionyielddata: "Extraction Yield Data" @
-.fleetregistry: "Fleet Registry" @
-.genesequencingdata: "Gene Sequencing Data" @
-.geneticresearch: "Genetic Research" @
-.geologicaldata: "Geological Data" @
-.hydroponicdata: "Hydroponic Data" @
-.incidentlogs: "Incident Logs" @
-.influenceprojections: "Influence Projections" @
-.interrogationrecordings: "Interrogation Recordings" @
-.interviewrecordings: "Interview Recordings" @
-.jobapplications: "Job Applications" @
-.kompromat: "Kompromat" @
-.medicalrecords: "Medical Records" @
-.medicaltrialrecords: "Clinical Trial Records" @
-.mininganalytics: "Mining Analytics" @
-.networksecurityprotocols: "Network Security Protocols" @
-.opinionpolls: "Opinion Polls" @
-.patienthistory: "Patient History" @
-.photoalbums: "Photo Albums" @
-.plantgrowthcharts: "Plant Growth Charts" @
-.politicalaffiliations: "Political Affiliations" @
-.prisonerlogs: "Prisoner Logs" @
-.recyclinglogs: "Recycling Logs" @
-.riskassessments: "Risk Assessments" @
-.seedgeneaology: "Seed Geneaology" @
-.settlementassaultplans: "Settlement Assault Plans" @
-.slushfundlogs: "Slush Fund Logs" @
-.smearcampaignplans: "Smear Campaign Plans" @
-.spectralanalysisdata: "Spectral Analysis Data" @
-.spyware: "Spyware" @
-.stellaractivitylogs: "Stellar Activity Logs" @
-.tacticalplans: "Tactical Plans" @
-.vipsecuritydetail: "VIP Security Detail" @
-.virus: "Virus" @
-.xenodefenceprotocols: "Xeno-Defence Protocols" @
+.bypass: "E-Breach" => "E-Breach"
+.energycell: "Energy Cell" => "Energiezelle"
+.healthpack: "Medkit" => "Medikit"
+.amm_grenade_frag: "Frag Grenade" => "Splittergranate"
+.amm_grenade_emp: "Shield Disruptor" => "Schildunterbrecher"
+.amm_grenade_shield: "Shield Projector" => "Schildgenerator"
+.largecapacitypowerregulator: "Power Regulator" => "Energieregulator"
+.compactlibrary: "Compact Library" => "Kompakt-Bibliothek"
+.infinity: "Infinity" => "Unendlichkeit"
+.insightentertainmentsuite: "Insight Entertainment Suite" => "Insight-Entertainment-Bibliothek"
+.lazarus: "Lazarus" => "Lazarus"
+.universaltranslator: "Universal Translator" => "Universal-Übersetzer""
+.biochemicalagent: "Biochemical Agent" => "Biochemischer Wirkstoff"
+.degradedpowerregulator: "Degraded Power Regulator" => "Ausrangierter Energieregulator"
+.hush: "Hush" => "Schnurr"
+.push: "Push" => "Schub"
+.syntheticpathogen: "Synthetic Pathogen" => "Synthetischer Erreger"
+.buildingschematic: "Building Schematic" => "Gebäudeplan"
+.insight: "Insight" => "Insight"
+.compressionliquefiedgas: "Compression-Liquefied Gas" => "Komprimiertes Flüssiggas"
+.healthmonitor: "Health Monitor" => "Gesundheitsmonitor"
+.inertiacanister: "Inertia Canister" => "Tragheits-Container"
+.ionisedgas: "Ionised Gas" => "Ionisiertes Gas"
+.shipschematic: "Ship Schematic" => "Schiffsplan"
+.suitschematic: "Suit Schematic" => "Anzugplan"
+.vehicleschematic: "Vehicle Schematic" => "Fahrzeugplan"
+.weaponschematic: "Weapon Schematic" => "Waffenplan"
+.trueformfossil: "True Form Fossil" => "Makelloses Fossil"
+.carbonfibreplating: "Carbon Fibre Plating" => "Carbonfaserplatten"
+.encryptedmemorychip: "Encrypted Memory Chip" => "Verschlüsselter Speicherchip"
+.epoxyadhesive: "Epoxy Adhesive" => "Epoxy-Klebstoff"
+.graphene: "Graphene" => "Graphen"
+.memorychip: "Memory Chip" => "Speicherchip"
+.microelectrode: "Microelectrode" => "Mikroelektrode"
+.microhydraulics: "Micro Hydraulics" => "Mikrohydraulikgeräte"
+.microthrusters: "Micro Thrusters" => "Mikro-Schubdüsen"
+.opticalfibre: "Optical Fibre" => "Glasfaser"
+.opticallens: "Optical Lens" => "Optische Linse"
+.rdx: "Rdx" => "Hexogen"
+.titaniumplating: "Titanium Plating" => "Titanplatten"
+.tungstencarbide: "Tungsten Carbide" => "Wolframcarbid"
+.weaponcomponent: "Weapon Component" => "Waffenkomponente"
+.aerogel: "Aerogel" => "Aerogel"
+.chemicalsuperbase: "Chemical Superbase" => "Chemische Superbase"
+.circuitboard: "Circuit Board" => "Schaltplatte"
+.circuitswitch: "Circuit Switch" => "Elektroschalter"
+.electricalwiring: "Electrical Wiring" => "Elektroverkabelung"
+.electromagnet: "Electromagnet" => "Elektromagnet"
+.metalcoil: "Metal Coil" => "Metallspule"
+.motor: "Motor" => "Motor"
+.chemicalcatalyst: "Chemical Catalyst" => "Chemischer Katalysator"
+.microtransformer: "Micro Transformer" => "Mikro-Transformator"
+.electricalfuse: "Electrical Fuse" => "Elektrosicherung"
+.microsupercapacitor: "Micro Supercapacitor" => "Mikro-Superkondensatoren"
+.viscoelasticpolymer: "Viscoelastic Polymer" => "Viskoelastisches Polymer"
+.ionbattery: "Ion Battery" => "Ionen-Batterie"
+.scrambler: "Scrambler" => "Störsender"
+.chemicalinventory: "Chemical Inventory" => "Chemische Bestandsliste"
+.dutyrota: "Duty Rota" => "Dienstpläne"
+.evacuationprotocols: "Evacuation Protocols" => "Evakuierungsprotokolle"
+.explorationjournals: "Exploration Journals" => "Erkundungstagebücher"
+.factionnews: "Faction News" => "Fraktionsnachrichten"
+.financialprojections: "Financial Projections" => "Finanzprognosen"
+.salesrecords: "Sales Records" => "Verkaufszahlen"
+.unionmembership: "Union Membership" => "Gewerkschaftsmitgliedschaft"
+.maintenancelogs: "Maintenance Logs" => "Wartungs-Logs"
+.patrolroutes: "Patrol Routes" => "Patrouillenrouten"
+.settlementdefenceplans: "Settlement Defence Plans" => "Siedlungsverteidigungspläne"
+.surveilleancelogs: "Surveillance Logs" => "Überwachungs-Logs"
+.operationalmanual: "Operational Manual" => "Bedienungsanleitung"
+.blacklistdata: "Blacklist Data" => "Daten der schwarzen Liste"
+.airqualityreports: "Air Quality Reports" => "Berichte zur Luftqualität"
+.employeedirectory: "Employee Directory" => "Mitarbeiterverzeichnis"
+.factionassociates: "Faction Associates" => "Fraktionspartner"
+.meetingminutes: "Meeting Minutes" => "Besprechungsprotokolle"
+.multimediaentertainment: "Multimedia Entertainment" => "Multimedia-Unterhaltung"
+.networkaccesshistory: "Network Access History" => "Netzwerkzugriffshistorie"
+.purchaserecords: "Purchase Records" => "Kaufaufzeichnungen"
+.radioactivitydata: "Radioactivity Data" => "Daten zur Radioaktivität"
+.residentialdirectory: "Residential Directory" => "Einwohnerverzeichnis"
+.shareholderinformation: "Shareholder Information" => "Aktionärsinformationen"
+.travelpermits: "Travel Permits" => "Reiseerlaubnisse"
+.accidentlogs: "Accident Logs" => "Unfall-Logs"
+.campaignplans: "Campaign Plans" => "Kampagnenpläne"
+.combattrainingmaterial: "Combat Training Material" => "Kampftraining-Materialien"
+.internalcorrespondence: "Internal Correspondence" => "Interne Korrespondenz"
+.payrollinformation: "Payroll Information" => "Gehaltsinformationen"
+.personallogs: "Personal Logs" => "Persönliche Logs"
+.weaponinventory: "Weapon Inventory" => "Waffeninventarliste"
+.atmosphericdata: "Atmospheric Data" => "Atmosphärische Daten"
+.topographicalsurveys: "Topographical Surveys" => "Topographische Erhebung"
+.literaryfiction: "Literary Fiction" => "Belletristik"
+.reactoroutputreview: "Reactor Output Review" => "Evaluierung der Reaktorleistung"
+.nextofkinrecords: "Next of Kin Records" => "Angehörigen-Aufzeichnungen"
+.purchaserequests: "Purchase Requests" => "Kaufanfragen"
+.taxrecords: "Tax Records" => "Steuerunterlagen"
+.visitorregister: "Visitor Register" => "Besucherliste"
+.pharmaceuticalpatents: "Pharmaceutical Patents" => "Pharmazeutische Patente"
+.vaccineresearch: "Vaccine Research" => "Impfstoffforschung"
+.virologydata: "Virology Data" => "Virologische Daten"
+.vaccinationrecords: "Vaccination Records" => "Aufzeichnungen zu Impfungen"
+.censusdata: "Census Data" => "Zensusdaten"
+.geographicaldata: "Geographical Data" => "Geographische Daten"
+.mineralsurvey: "Mineral Survey" => "Mineralienübersicht"
+.chemicalformulae: "Chemical Formulae" => "Chemische Formeln"
+.chemicalexperimentdata: "Chemical Experiment Data" => "Chemieexperiment-Daten"
+.chemicalpatents: "Chemical Patents" => "Chemische Patente"
+.productionreports: "Production Reports" => "Produktionsberichte"
+.productionschedule: "Production Schedule" => "Produktionszeitplan"
+.bloodtestresults: "Blood Test Results" => "Bluttest-Ergebnisse"
+.combatantperformance: "Combatant Performance" => "Kampfleistung"
+.troopdeploymentrecords: "Troop Deployment Records" => "Truppeneinsatzprotokolle"
+.catmedia: "Cat Media" => "Katzen-Medien"
+.employeegeneticdata: "Employee Genetic Data" => "Gen-Daten von Mitarbeitern"
+.factiondonatorlist: "Faction Donator List" => "Spenderliste einer Fraktion"
+.nocdata: "NOC Data" => "Geheimoperation-Daten"
+.manufacturinginstructions: "Manufacturing Instructions" => "Herstellungsanweisungen"
+.m_tissuesample_fluid: "Mollusc Fluid" => "Molluskenflüssigkeit"
+.m_tissuesample_nerves: "Mollusc Brain Tissue" => "Mollusken-Hirnmasse"
+.s9_tissuesample_shell: "Pod Tissue" => "Hülsengewebe"
+.agriculturalprocesssample: "Agricultural Process Sample" => "Agrikulturverfahren-Probe"
+.geneticsample: "Biological Sample" => "Biologische Probe"
+.californium: "Californium" => "Californium"
+.castfossil: "Cast Fossil" => "Fossilfund"
+.chemicalprocesssample: "Chemical Process Sample" => "Chemieverfahren-Probe"
+.chemicalsample: "Chemical Sample" => "Chemieprobe"
+.deepmantlesample: "Deep Mantle Sample" => "Innerer-Mantel-Probe"
+.geneticrepairmeds: "Genetic Repair Meds" => "Gen-Reparatursets"
+.gmeds: "G-Meds" => "G-Medizin"
+.inorganiccontaminant: "Inorganic Contaminant" => "Anorganischer Schadstoff"
+.insightdatabank: "Insight Data Bank" => "Insight-Datenbank"
+.microbialinhibitor: "Microbial Inhibitor" => "Mikrobieller Hemmstoff"
+.mutageniccatalyst: "Mutagenic Catalyst" => "Mutagen-Katalysator"
+.nutritionalconcentrate: "Nutritional Concentrate" => "Nahrungskonzentrat"
+.personalcomputer: "Personal Computer" => "Personal Computer"
+.personaldocuments: "Personal Documents" => "Persönliche Dokumente"
+.petrifiedfossil: "Petrified Fossil" => "Versteinertes Fossil"
+.pyrolyticcatalyst: "Pyrolytic Catalyst" => "Pyrolytischer Katalysator"
+.refinementprocesssample: "Refinement Process Sample" => "Raffinerieverfahren-Probe"
+.surveillanceequipment: "Surveillance Equipment" => "Überwachungsausrüstung"
+.syntheticgenome: "Synthetic Genome" => "Synthetisches Genom"
+.oxygenicbacteria: "Oxygenic Bacteria" => "Sauerstoffbakterien"
+.epinephrine: "Epinephrine" => "Epinephrin"
+.phneutraliser: "pH Neutraliser" => "pH-Neutralisator"
+.transmitter: "Transmitter" => "Sender"
+.propaganda: "Propaganda" => "Propaganda"
+.securityexpenses: "Security Expenses" => "Aufwendungen für Sicherheit"
+.weapontestdata: "Weapon Test Data" => "Waffentestdaten"
+.audiologs: "Audio Logs" => "Audio-Logs"
+.axcombatlogs: "AX Combat Logs" => "AX-Kampf-Logs"
+.ballisticsdata: "Ballistics Data" => "Ballistische Daten"
+.biologicalweapondata: "Biological Weapon Data" => "Biowaffen-Daten"
+.biometricdata: "Biometric Data" => "Biometrische Daten"
+.chemicalweapondata: "Chemical Weapon Data" => "Chemiewaffen-Daten"
+.classicentertainment: "Classic Entertainment" => "Klassische Unterhaltung"
+.cocktailrecipes: "Cocktail Recipes" => "Cocktail-Rezepte"
+.conflicthistory: "Conflict History" => "Konflikthistorie"
+.criminalrecords: "Criminal Records" => "Strafakten"
+.cropyieldanalysis: "Crop Yield Analysis" => "Ernteertrag-Analyse"
+.culinaryrecipes: "Culinary Recipes" => "Kulinarische Rezepte"
+.digitaldesigns: "Digital Designs" => "Digitale Konzepte"
+.employeeexpenses: "Employee Expenses" => "Aufwendungen für Mitarbeiter"
+.employmenthistory: "Employment History" => "Beschäftigungshistorie"
+.enhancedinterrogationrecordings: "Enhanced Interrogation Recordings" => "Optimierte Vernehmungsaufzeichnungen"
+.espionagematerial: "Espionage Material" => "Spionagematerial"
+.extractionyielddata: "Extraction Yield Data" => "Daten für Förderungsausbeute"
+.fleetregistry: "Fleet Registry" => "Flottenliste"
+.genesequencingdata: "Gene Sequencing Data" => "Gen-Sequenzierungsdaten"
+.geneticresearch: "Genetic Research" => "Genforschung"
+.geologicaldata: "Geological Data" => "Geologische Daten"
+.hydroponicdata: "Hydroponic Data" => "Hydrokultur-Daten"
+.incidentlogs: "Incident Logs" => "Zwischenfall-Logs"
+.influenceprojections: "Influence Projections" => "Einfluss-Projektionen"
+.interrogationrecordings: "Interrogation Recordings" => "Vernehmungsaufzeichnungen"
+.interviewrecordings: "Interview Recordings" => "Aufzeichnungen von Vorstellungsgesprächen"
+.jobapplications: "Job Applications" => "Bewerbungen"
+.kompromat: "Kompromat" => "Kompromittierendes Material"
+.medicalrecords: "Medical Records" => "Medizinische Daten"
+.medicaltrialrecords: "Clinical Trial Records" => "Klinische Prüfberichte"
+.mininganalytics: "Mining Analytics" => "Abbau-Analytik"
+.networksecurityprotocols: "Network Security Protocols" => "Netzwerksicherheitsprotokolle"
+.opinionpolls: "Opinion Polls" => "Umfrageergebnisse"
+.patienthistory: "Patient History" => "Patientenhistorie"
+.photoalbums: "Photo Albums" => "Fotoalben"
+.plantgrowthcharts: "Plant Growth Charts" => "Diagramme zum Pflanzenwachstum"
+.politicalaffiliations: "Political Affiliations" => "Politische Beziehungen"
+.prisonerlogs: "Prisoner Logs" => "Gefangenen-Logs"
+.recyclinglogs: "Recycling Logs" => "Recycling-Logs"
+.riskassessments: "Risk Assessments" => "Gefährdungsbeurteilungen"
+.seedgeneaology: "Seed Geneaology" => "Saatgut-Geneaologie"
+.settlementassaultplans: "Settlement Assault Plans" => "Siedlungsangriffspläne"
+.slushfundlogs: "Slush Fund Logs" => "Schmiergeld-Logs"
+.smearcampaignplans: "Smear Campaign Plans" => "Pläne für Verleumdungskampagne"
+.spectralanalysisdata: "Spectral Analysis Data" => "Spektralanalyse-Daten"
+.spyware: "Spyware" => "Spyware"
+.stellaractivitylogs: "Stellar Activity Logs" => "Sternenaktivitäts-Logs"
+.tacticalplans: "Tactical Plans" => "Taktikpläne"
+.vipsecuritydetail: "VIP Security Detail" => "VIP-Sicherheitsdienst"
+.virus: "Virus" => "Virus"
+.xenodefenceprotocols: "Xeno-Defence Protocols" => "Xeno-Abwehr-Protokolle"
 
 SECTION EngineeringData
 

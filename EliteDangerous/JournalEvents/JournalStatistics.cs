@@ -476,9 +476,9 @@ public string Format(string frontline = "    ")
         {
             public int TradesCompleted { get; set; }
             public int MaterialsTraded { get; set; }
-            public int EncodedMaterialsTraded { get; set; }     // not currently outputted, TBD
-            public int RawMaterialsTraded { get; set; }         // not currently outputted, TBD
-            public int Grade1MaterialsTraded { get; set; }      // 1-5 not currently outputted, TBD
+            public int EncodedMaterialsTraded { get; set; }     
+            public int RawMaterialsTraded { get; set; }         
+            public int Grade1MaterialsTraded { get; set; }      
             public int Grade2MaterialsTraded { get; set; }
             public int Grade3MaterialsTraded { get; set; }
             public int Grade4MaterialsTraded { get; set; }
@@ -488,6 +488,8 @@ public string Format(string frontline = "    ")
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
                     "Material Trades Completed: ;;N0".T(EDTx.MaterialTraderStatsClass_CommodityTrades), TradesCompleted,
                     "Material Traded: ;;N0".T(EDTx.MaterialTraderStatsClass_MaterialTraded), MaterialsTraded,
+                    "Encoded Materials traded: ;;N0".T(EDTx.MaterialTraderStatsClass_EncodedMaterialsTraded), EncodedMaterialsTraded,
+                    "Raw Materials traded: ;;N0".T(EDTx.MaterialTraderStatsClass_RawMaterialsTraded), RawMaterialsTraded,
                     "Grade 1 Materials Traded: ;;N0".T(EDTx.MaterialTraderStatsClass_G1MaterialsTraded), Grade1MaterialsTraded,
                     "Grade 2 Materials Traded: ;;N0".T(EDTx.MaterialTraderStatsClass_G2MaterialsTraded), Grade2MaterialsTraded,
                     "Grade 3 Materials Traded: ;;N0".T(EDTx.MaterialTraderStatsClass_G3MaterialsTraded), Grade3MaterialsTraded,

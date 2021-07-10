@@ -437,6 +437,8 @@ namespace EliteDangerousCore
         MulticrewClass_Fines, // Fines:;cr;N0
         MaterialTraderStatsClass_CommodityTrades, // Material Trades Completed:;;N0
         MaterialTraderStatsClass_MaterialTraded, // Material Traded:;;N0
+        MaterialTraderStatsClass_EncodedMaterialsTraded, // Encoded Materials Traded: ;;N0
+        MaterialTraderStatsClass_RawMaterialsTraded, // Raw Materials Traded: ;;N0
         MaterialTraderStatsClass_G1MaterialsTraded, // Grade 1 Materials Traded: ;;N0
         MaterialTraderStatsClass_G2MaterialsTraded, // Grade 2 Materials Traded: ;;N0
         MaterialTraderStatsClass_G3MaterialsTraded, // Grade 3 Materials Traded: ;;N0
