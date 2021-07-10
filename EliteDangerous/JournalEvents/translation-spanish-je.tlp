@@ -661,7 +661,7 @@ SECTION BankAccountClass
 .SpendonAmmo: "Spent on Ammo: ;cr;N0" => "Gastado en munición: ;cr;N0"
 .InsuranceClaims: "Insurance Claims: ;;N0" => "Reclamaciones de seguros: ;;N0"
 .SpentonInsurance: "Spent on Insurance: ;cr;N0" => "Gastado en seguros: ;cr;N0"
-.OwnedShipCount: "Owned ships" => "Naves propios"
+.OwnedShipCount: "Owned ships: ;;N0" => "Naves propios: ;;N0"
 .SpentOnSuits: "Spent on Suits: ;cr;N0" @
 .SpentOnWeapons: "Spent on Weapons: ;cr;N0" @
 .SpentOnSuitConsumables: "Spent on Suit Consumables: ;cr;N0" @
@@ -754,7 +754,7 @@ SECTION ExplorationClass
 .Level2Scans: "Level 2 Scans: ;;N0" => "Escaneos de nivel 2: ;;N0"
 .Level3Scans: "Level 3 Scans: ;;N0" => "Escaneos de nivel 3: ;;N0"
 .HighestPayout: "Highest Payout: ;cr;N0" => "Mayor pago: ;cr;N0"
-.TotalDistance: "Total Distance: ;;N0" => "Distancia total: ;;N0"
+.TotalDistance: "Total Distance: ;ly;N0" => "Distancia total: ;ly;N0"
 .NoofJumps: "No of Jumps: ;;N0" => "No de saltos: ;;N0"
 .GreatestDistance: "Greatest Distance: ;;N0" => "Distancia máxima: ;;N0"
 .TimePlayed: "Time Played: " => "Tiempo jugado: "
@@ -838,9 +838,9 @@ SECTION CQCClass
 
 .CreditsEarned: "Profits from CQC: ;cr;N0" @
 .TimePlayed: "Time Played: ;;N0" => "Tiempo jugado: ;;N0"
-.KDRatio: "K/D Ratio: ;;N2" => "Relación KD: ;;N0"
+.KDRatio: "K/D Ratio: ;;N2" => "Relación KD: ;;N2"
 .Kills: "Kills: ;;N0" => "Asesinatos: ;;N0"
-.Win: "Win/Loss: ;;N2" => "Ganar/Perder: ;;N0"
+.Win: "Win/Loss: ;;N2" => "Ganar/Perder: ;;N2"
 
 SECTION FLEETCARRIERClass
 

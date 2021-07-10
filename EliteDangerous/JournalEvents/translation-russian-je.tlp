@@ -661,7 +661,7 @@ SECTION BankAccountClass
 .SpendonAmmo: "Spent on Ammo: ;cr;N0" => "Потрачено на боеприпасы: ; кр.;N0"
 .InsuranceClaims: "Insurance Claims: ;;N0" => "Страховых выплат: ;;N0"
 .SpentonInsurance: "Spent on Insurance: ;cr;N0" => "Потрачено на страховку: ; кр.;N0"
-.OwnedShipCount: "Owned ships" @
+.OwnedShipCount: "Owned ships: ;;N0" @
 .SpentOnSuits: "Spent on Suits: ;cr;N0" @
 .SpentOnWeapons: "Spent on Weapons: ;cr;N0" @
 .SpentOnSuitConsumables: "Spent on Suit Consumables: ;cr;N0" @
@@ -754,9 +754,9 @@ SECTION ExplorationClass
 .Level2Scans: "Level 2 Scans: ;;N0" => "Сканирования 2 уровня: ;;N0"
 .Level3Scans: "Level 3 Scans: ;;N0" => "Сканирования 3 уровня: ;;N0"
 .HighestPayout: "Highest Payout: ;cr;N0" => "Самая высокая выплата: ; кр.;N0"
-.TotalDistance: "Total Distance: ;;N0" => "Пройдено в гиперпространстве: ;;N0"
+.TotalDistance: "Total Distance: ;ly;N0" => "Пройдено в гиперпространстве: ;;N0"
 .NoofJumps: "No of Jumps: ;;N0" => "Всего прыжков в гиперпространстве: ;;N0"
-.GreatestDistance: "Greatest Distance: ;;N0" => "Макс. расстояние с начала: ;;N0"
+.GreatestDistance: "Greatest Distance: ;ly;N0" => "Макс. расстояние с начала: ;ly;N0"
 .TimePlayed: "Time Played: " => "Время игры: "
 .EfficientScans: "Efficient Scans: ;;N0" @
 .ShuttleJourneys: "Shuttle Journeys: ;;N0" @
@@ -838,9 +838,9 @@ SECTION CQCClass
 
 .CreditsEarned: "Profits from CQC: ;cr;N0" @
 .TimePlayed: "Time Played: ;;N0" => "Время игры: ;;N0"
-.KDRatio: "K/D Ratio: ;;N2" => "Соотношение убийств и смертей: ;;N0"
+.KDRatio: "K/D Ratio: ;;N2" => "Соотношение убийств и смертей: ;;N2"
 .Kills: "Kills: ;;N0" => "Убийства: ;;N0"
-.Win: "Win/Loss: ;;N2" => "Соотношение побед и поражений: ;;N0"
+.Win: "Win/Loss: ;;N2" => "Соотношение побед и поражений: ;;N2"
 
 SECTION FLEETCARRIERClass
 

@@ -261,7 +261,7 @@ SECTION JournalCargo
 
 SECTION JournalCodexEntry
 
-.At: "At " => "Am "
+.At: "At " => "Bei "
 .in: "in " => "in "
 .NewEntry: ";New Entry" => ";neuer Eintrag"
 .Traits: ";Traits" => ";Merkmale"
@@ -661,11 +661,11 @@ SECTION BankAccountClass
 .SpendonAmmo: "Spent on Ammo: ;cr;N0" => "In Munition investiert: ;Cr;N0"
 .InsuranceClaims: "Insurance Claims: ;;N0" => "Versicherungserstattungen: ;;N0"
 .SpentonInsurance: "Spent on Insurance: ;cr;N0" => "Erstattungen gesamt: ;Cr;N0"
-.OwnedShipCount: "Owned ships" => "Schiffe in Besitz"
-.SpentOnSuits: "Spent on Suits: ;cr;N0" => "In Anzüge investierte credits: ;Cr;N0"
+.OwnedShipCount: "Owned ships: ;;N0" => "Schiffe in Besitz: ;;N0"
+.SpentOnSuits: "Spent on Suits: ;cr;N0" => "In Anzüge investierte Credits: ;Cr;N0"
 .SpentOnWeapons: "Spent on Weapons: ;cr;N0" => "In persönliche Waffen investierte Credits: ;Cr;N0"
 .SpentOnSuitConsumables: "Spent on Suit Consumables: ;cr;N0" => "In Verbrauchsgegenstände investierte Credits: ;Cr;N0"
-.SuitsOwned: "Suits Owned: ;;N0" => "Anzahl der Anzüge in besitz: ;;N0"
+.SuitsOwned: "Suits Owned: ;;N0" => "Anzahl der Anzüge in Besitz: ;;N0"
 .WeaponsOwned: "WeaponsOwned: ;;N0" => "Anzahl persönlicher Waffen in Besitz: ;;N0"
 .SpentOnPremiumStock: "Spent on Premium Stock: ;cr;N0" => "In Premiumanzüge/Waffen investierte Credits: ;Cr;N0"
 .PremiumStockBought: "Premium Stock bought: ;;N0" => "Anzahl gekaufter Premiumanzüge/Waffen: ;;N0"
@@ -715,7 +715,7 @@ SECTION CrimeClass
 .DataStolen: "Data Stolen: ;;N0" => "Gestohlene Daten: ;;N0"
 .GoodsStolen: "Goods Stolen: ;;N0" => "Gestohlene Waren: ;;N0"
 .SampleStolen: "Production Samples Stolen: ;;N0" => "Gestohlene Produktionsproben: ;;N0"
-.TotalStolen: "Total Inventory Items Stolen: ;;N0" => "Gestohlenes im nventar (gesamt): ;;N0"
+.TotalStolen: "Total Inventory Items Stolen: ;;N0" => "Gestohlenes im Inventar (gesamt): ;;N0"
 .TurretsDestroyed: "Turrets Destroyed: ;;N0" => "Zerstörte Geschütze: ;;N0"
 .TurretsOverloaded: "Turrets Overloaded: ;;N0" => "Überladene Geschütze: ;;N0"
 .TurretsTotal: "Total Turrets shut down: ;;N0" => "Ausgeschaltete Geschütze (gesamt): ;;N0"
@@ -754,15 +754,15 @@ SECTION ExplorationClass
 .Level2Scans: "Level 2 Scans: ;;N0" => "Level 2 Scans: ;;N0"
 .Level3Scans: "Level 3 Scans: ;;N0" => "Level 3 Scans: ;;N0"
 .HighestPayout: "Highest Payout: ;cr;N0" => "Höchste Auszahlung: ;Cr;N0"
-.TotalDistance: "Total Distance: ;;N0" => "Gesamtentfernung: ;;N0"
+.TotalDistance: "Total Distance: ;ly;N0" => "Gesamtentfernung: ;Lj;N0"
 .NoofJumps: "No of Jumps: ;;N0" => "Anzahl der Sprünge: ;;N0"
-.GreatestDistance: "Greatest Distance: ;;N0" => "Größte Entfernung: ;;N0"
+.GreatestDistance: "Greatest Distance: ;ly;N0" => "Größte Entfernung: ;Lj;N0"
 .TimePlayed: "Time Played: " => "Spielzeit: "
 .EfficientScans: "Efficient Scans: ;;N0" => "Effiziente Scans: ;;N0"
 .ShuttleJourneys: "Shuttle Journeys: ;;N0" => "Shuttle-Reisen: ;;N0"
 .ShuttleDistanceTravelled: "Shuttle Distance Travelled: ;ly,N0" => "Per Shuttle zurückgelegte Distanz: ;Lj;N0"
 .SpentOnShuttles: "Credits Spent on Shuttles: ;cr;N0" => "In Shuttles investierte Credits: ;Cr;N0"
-.FirstFootfalls: "First Footfalls: ;;N0" => Erstbetretungen: ;;N0
+.FirstFootfalls: "First Footfalls: ;;N0" => "Erstbetretungen: ;;N0"
 .PlanetFootfalls: "Planets walked on: ;;N0" => "Zu Fuß betretene Planeten: ;;N0"
 .SettlementsVisited: "Settlements docked at: ;;N0" => "An Siedlungen angedockt: ;;N0"
 
@@ -838,9 +838,9 @@ SECTION CQCClass
 
 .CreditsEarned: "Profits from CQC: ;cr;N0" => "Einnahmen aus CQC: ;Cr;N0"
 .TimePlayed: "Time Played: ;;N0" => "Spielzeit: ;;N0"
-.KDRatio: "K/D Ratio: ;;N2" => "Abschuss/Tod-Quote: ;;N0"
+.KDRatio: "K/D Ratio: ;;N2" => "Abschuss/Tod-Quote: ;;N2"
 .Kills: "Kills: ;;N0" => "Abschüsse: ;;N0"
-.Win: "Win/Loss: ;;N2" => "Sieg/Niederlage-Quote: ;;N0"
+.Win: "Win/Loss: ;;N2" => "Sieg/Niederlage-Quote: ;;N2"
 
 SECTION FLEETCARRIERClass
 
