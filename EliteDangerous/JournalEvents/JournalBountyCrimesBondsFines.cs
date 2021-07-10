@@ -84,7 +84,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void LedgerNC(Ledger mcl)
         {
-            mcl.AddEventNoCash(Id, EventTimeUTC, EventTypeID, string.Format("{0} total {1:N0}".T(EDTx.JournalEntry_LegBounty), VictimFactionLocalised, TotalReward));
+            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, string.Format("{0} total {1:N0}".T(EDTx.JournalEntry_LegBounty), VictimFactionLocalised, TotalReward));
         }
 
         public void UpdateStats(Stats stats, string unusedstationfaction)
@@ -174,7 +174,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void LedgerNC(Ledger mcl)
         {
-            mcl.AddEventNoCash(Id, EventTimeUTC, EventTypeID, AwardingFaction_Localised.Alt(AwardingFaction) + " " + Reward);
+            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, AwardingFaction_Localised.Alt(AwardingFaction) + " " + Reward);
         }
 
         public void UpdateStats(Stats stats, string stationfaction)
@@ -237,7 +237,7 @@ namespace EliteDangerousCore.JournalEvents
             if (Bounty.HasValue)
                 v += string.Format(" Bounty {0:N0}".T(EDTx.JournalCommitCrime_Bounty), Bounty.Value);
 
-            mcl.AddEventNoCash(Id, EventTimeUTC, EventTypeID, string.Format("{0} on {1}".T(EDTx.JournalEntry_0), CrimeType, v));
+            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, string.Format("{0} on {1}".T(EDTx.JournalEntry_0), CrimeType, v));
         }
 
         public void UpdateStats(Stats stats, string stationfaction)
@@ -298,7 +298,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void LedgerNC(Ledger mcl)
         {
-            mcl.AddEventNoCash(Id, EventTimeUTC, EventTypeID, AwardingFaction_Localised.Alt(AwardingFaction) + " " + Reward.ToString("N0"));
+            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, AwardingFaction_Localised.Alt(AwardingFaction) + " " + Reward.ToString("N0"));
         }
 
         public void UpdateStats(Stats stats, string stationfaction)

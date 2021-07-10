@@ -26,12 +26,13 @@ namespace EliteDangerousCore
         public class Transaction
         {
             public long jid;
-            public DateTime utctime;                               // when it was done.
-            public JournalTypeEnum jtype;                          // what caused it..
-            public string notes;                                   // notes about the entry
-            public long cashadjust;                                // any profit, 0 if none (negative for cost, positive for profit)
-            public double profitperunit;                             // profit per unit
-            public long cash;                                      // cash total at this point
+            public DateTime utctime;                                // when it was done.
+            public JournalTypeEnum jtype;                           // what caused it..
+            public string notes;                                    // notes about the entry
+            public long cashadjust;                                 // cash adjustment for this transaction 0 if none (negative for cost, positive for profit)
+            public long profit;                                     // profit on this transaction
+            public double profitperunit;                            // profit per unit
+            public long cash;                                       // cash total at this point
 
             public bool IsJournalEventInEventFilter(string[] events)        // events are the uncompressed journal names ModuleBuy etc.
             {
@@ -39,29 +40,26 @@ namespace EliteDangerousCore
             }
         }
 
-        private List<Transaction> transactions;
+        public List<Transaction> Transactions { get; private set; } = new List<Transaction>();
         public long CashTotal = 0;
 
         public Ledger()
         {
-            transactions = new List<Transaction>();
         }
 
-        public List<Transaction> Transactions { get { return transactions; } }
-
-        public void AddEvent(long jidn, DateTime t, JournalTypeEnum j, string n, long? ca, double ppu = 0)
+        public void AddEvent(long jidn, DateTime t, JournalTypeEnum j, string n, long? ca)      // event with cash adjust but no profit
         {
-            AddEventCash(jidn, t, j, n, ca.HasValue ? ca.Value : 0, ppu);
+            AddEvent(jidn, t, j, n, ca ?? 0, 0 , 0);
         }
 
-        public void AddEventNoCash(long jidn, DateTime t, JournalTypeEnum j, string n)
+        public void AddEvent(long jidn, DateTime t, JournalTypeEnum j, string n)        // event with no adjust
         {
-            AddEventCash(jidn, t, j, n, 0, 0);
+            AddEvent(jidn, t, j, n, 0, 0, 0);
         }
 
-        public void AddEventCash(long jidn, DateTime t, JournalTypeEnum j, string n, long ca, double ppu = 0)
+        public void AddEvent(long jidn, DateTime t, JournalTypeEnum j, string text, long adjust, long profitp, double ppu) // full monty
         {
-            long newcashtotal = CashTotal + ca;
+            long newcashtotal = CashTotal + adjust;
             //System.Diagnostics.Debug.WriteLine("{0} {1} {2} {3} = {4}", j.ToString(), n, CashTotal, ca , newcashtotal);
             CashTotal = newcashtotal;
 
@@ -70,15 +68,15 @@ namespace EliteDangerousCore
                 jid = jidn,
                 utctime = t,
                 jtype = j,
-                notes = n,
-                cashadjust = ca,
+                notes = text,
+                cashadjust = adjust,
+                profit = profitp,
                 cash = CashTotal,
                 profitperunit = ppu
             };
 
-            transactions.Add(tr);
+            Transactions.Add(tr);
         }
-
 
         public void Process(JournalEntry je)
         {

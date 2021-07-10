@@ -177,7 +177,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void LedgerNC(Ledger mcl)
         {
-            mcl.AddEventNoCash(Id, EventTimeUTC, EventTypeID, FriendlyType + " " + Count);
+            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, FriendlyType + " " + Count);
         }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)
@@ -296,7 +296,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void LedgerNC(Ledger mcl)
         {
-            mcl.AddEventNoCash(Id, EventTimeUTC, EventTypeID, FriendlyType);
+            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, FriendlyType);
         }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)

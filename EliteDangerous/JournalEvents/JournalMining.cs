@@ -43,7 +43,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void LedgerNC(Ledger mcl)
         {
-            mcl.AddEventNoCash(Id, EventTimeUTC, EventTypeID, Type_Localised);
+            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Type_Localised);
         }
 
         public override void FillInformation(ISystem sys, out string info, out string detailed)

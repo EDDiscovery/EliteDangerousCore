@@ -388,7 +388,7 @@ namespace EliteDangerousCore.JournalEvents
             long rv = Reward.HasValue ? Reward.Value : 0;
             long dv = Donation.HasValue ? Donation.Value : 0;
 
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name, (rv - dv), 0);
+            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name, (rv - dv));
         }
 
         public void UpdateMissions(MissionListAccumulator mlist, EliteDangerousCore.ISystem sys, string body)
