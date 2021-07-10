@@ -817,8 +817,8 @@ SECTION CrewClass
 SECTION MulticrewClass
 
 .TotalTime: "Total Time: " => "Общее время: "
-.GunnerTime: "Gunner Time: ;;N0" => "В роли наводчика: ;;N0"
-.FighterTime: "Fighter Time: ;;N0" => "В роли летчика-истребителя: ;;N0"
+.GunnerTime: "Gunner Time: " => "В роли наводчика: "
+.FighterTime: "Fighter Time: " => "В роли летчика-истребителя: "
 .Credits: "Credits: ;cr;N0" => "Кредитов заработано: ; кр.;N0"
 .Fines: "Fines: ;cr;N0" => "Штрафов получено: ; кр.;N0"
 
@@ -837,7 +837,7 @@ SECTION MaterialTraderStatsClass
 SECTION CQCClass
 
 .CreditsEarned: "Profits from CQC: ;cr;N0" @
-.TimePlayed: "Time Played: ;;N0" => "Время игры: ;;N0"
+.TimePlayed: "Time Played: " => "Время игры: "
 .KDRatio: "K/D Ratio: ;;N2" => "Соотношение убийств и смертей: ;;N2"
 .Kills: "Kills: ;;N0" => "Убийства: ;;N0"
 .Win: "Win/Loss: ;;N2" => "Соотношение побед и поражений: ;;N2"
@@ -915,7 +915,7 @@ SECTION JournalApproachBody
 .In: "In " => "Система: "
 
 SECTION JournalEntry
-
+.TME: "{0} days {1} hours {2} minutes" => "{0} дн. {1} ч. {2} мин."
 .Hyperspace: "Hyperspace" @
 .Supercruise: "Supercruise" @
 .LegBounty: "{0} total {1:N0}" => "{0} всего {1:N0}"

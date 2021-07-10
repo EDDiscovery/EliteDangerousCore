@@ -817,8 +817,8 @@ SECTION CrewClass
 SECTION MulticrewClass
 
 .TotalTime: "Total Time: " => "Łączny Czas: "
-.GunnerTime: "Gunner Time: ;;N0" => "Czas jako Kanonier: ;;N0"
-.FighterTime: "Fighter Time: ;;N0" => "Czas w Myśliwcu: ;;N0"
+.GunnerTime: "Gunner Time: " => "Czas jako Kanonier: "
+.FighterTime: "Fighter Time: " => "Czas w Myśliwcu: "
 .Credits: "Credits: ;cr;N0" => "Kredyty: ;cr;N0"
 .Fines: "Fines: ;cr;N0" => "Kary: ;cr;N0"
 
@@ -837,7 +837,7 @@ SECTION MaterialTraderStatsClass
 SECTION CQCClass
 
 .CreditsEarned: "Profits from CQC: ;cr;N0" @
-.TimePlayed: "Time Played: ;;N0" => "Czas Gry: ;;N0"
+.TimePlayed: "Time Played: " => "Czas Gry: "
 .KDRatio: "K/D Ratio: ;;N2" => "Stosunek Zabójstw/Śmierci: ;;N2"
 .Kills: "Kills: ;;N0" => "Zabójstwa: ;;N0"
 .Win: "Win/Loss: ;;N2" => "Wygrane/Przegrane: ;;N2"
@@ -915,7 +915,7 @@ SECTION JournalApproachBody
 .In: "In " @
 
 SECTION JournalEntry
-
+.TME: "{0} days {1} hours {2} minutes" => "{0} dni, {1} godzin, {2} minut"
 .Hyperspace: "Hyperspace" @
 .Supercruise: "Supercruise" @
 .LegBounty: "{0} total {1:N0}" => "{0} razem {1:N0}"

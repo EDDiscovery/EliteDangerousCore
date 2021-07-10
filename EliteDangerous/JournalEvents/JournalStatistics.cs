@@ -339,7 +339,7 @@ public string Format(string frontline = "    ")
                         "Total Distance: ;;N0".T(EDTx.ExplorationClass_TotalDistance), TotalHyperspaceDistance,
                         "No of Jumps: ;;N0".T(EDTx.ExplorationClass_NoofJumps), TotalHyperspaceJumps,
                         "Greatest Distance: ;;N0".T(EDTx.ExplorationClass_GreatestDistance), GreatestDistanceFromStart,
-                        "Time Played: ".T(EDTx.ExplorationClass_TimePlayed), TimePlayed.SecondsToWeeksDaysHoursMinutesSeconds(),
+                        "Time Played: ".T(EDTx.ExplorationClass_TimePlayed), TimePlayed.SecondsToDHMString(),
                         "Shuttle Journeys: ;;N0".T(EDTx.ExplorationClass_ShuttleJourneys), ShuttleJourneys,
                         "Shuttle Distance Travelled: ;ly,N0".T(EDTx.ExplorationClass_ShuttleDistanceTravelled), ShuttleDistanceTravelled,
                         "Credits Spent on Shuttles: ;cr;N0".T(EDTx.ExplorationClass_SpentOnShuttles), SpentOnShuttles,
@@ -464,9 +464,9 @@ public string Format(string frontline = "    ")
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Total Time: ".T(EDTx.MulticrewClass_TotalTime), TimeTotal.SecondsToWeeksDaysHoursMinutesSeconds(),
-                    "Gunner Time: ;;N0".T(EDTx.MulticrewClass_GunnerTime), GunnerTimeTotal.SecondsToWeeksDaysHoursMinutesSeconds(),
-                    "Fighter Time: ;;N0".T(EDTx.MulticrewClass_FighterTime), FighterTimeTotal.SecondsToWeeksDaysHoursMinutesSeconds(),
+                    "Total Time: ".T(EDTx.MulticrewClass_TotalTime), TimeTotal.SecondsToDHMString(),
+                    "Gunner Time: ".T(EDTx.MulticrewClass_GunnerTime), GunnerTimeTotal.SecondsToDHMString(),
+                    "Fighter Time: ".T(EDTx.MulticrewClass_FighterTime), FighterTimeTotal.SecondsToDHMString(),
                     "Credits: ;cr;N0".T(EDTx.MulticrewClass_Credits), CreditsTotal,
                     "Fines: ;cr;N0".T(EDTx.MulticrewClass_Fines), FinesTotal);
             }
@@ -511,7 +511,7 @@ public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
                     "Profits from CQC: ;cr;N0".T(EDTx.CQCClass_CreditsEarned), CreditsEarned,
-                    "Time Played: ;;N0".T(EDTx.CQCClass_TimePlayed), TimePlayed.SecondsToWeeksDaysHoursMinutesSeconds(),
+                    "Time Played: ".T(EDTx.CQCClass_TimePlayed), TimePlayed.SecondsToDHMString(),
                     "K/D Ratio: ;;N2".T(EDTx.CQCClass_KDRatio), KD,
                     "Kills: ;;N0".T(EDTx.CQCClass_Kills), Kills,
                     "Win/Loss: ;;N2".T(EDTx.CQCClass_Win), WL);

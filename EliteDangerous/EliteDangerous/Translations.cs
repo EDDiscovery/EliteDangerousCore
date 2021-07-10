@@ -74,7 +74,7 @@ namespace EliteDangerousCore
         EngineeringData_Worse, // < (Worse); (Better)
 
         JournalEntry_Taxi, // Taxi
-
+        JournalEntry_TME,
         JournalEntry_Class,
         JournalEntry_Mods,
         JournalEntry_OnFootAt, 
@@ -431,8 +431,8 @@ namespace EliteDangerousCore
         CrewClass_Fired, // Fired:;;N0
         CrewClass_KilledinAction, // Killed in Action:;;N0
         MulticrewClass_TotalTime, // Total Time:
-        MulticrewClass_GunnerTime, // Gunner Time:;;N0
-        MulticrewClass_FighterTime, // Fighter Time:;;N0
+        MulticrewClass_GunnerTime, // Gunner Time:
+        MulticrewClass_FighterTime, // Fighter Time:
         MulticrewClass_Credits, // Credits:;cr;N0
         MulticrewClass_Fines, // Fines:;cr;N0
         MaterialTraderStatsClass_CommodityTrades, // Material Trades Completed:;;N0
