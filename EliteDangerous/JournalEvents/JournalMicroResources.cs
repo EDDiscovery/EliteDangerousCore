@@ -117,30 +117,40 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
+        public List<Tuple<string,int>> Merge(MicroResource[] array)         // array can have repeats if owned by others or mission id different, we don't care, merge
+        {
+            Dictionary<string, int> entries = new Dictionary<string, int>();
+            foreach( var e in array)
+            {
+                entries[e.Name] = (entries.ContainsKey(e.Name) ? entries[e.Name] : 0) + e.Count;        // sum them
+            }
+            return entries.Select(x => new Tuple<string, int>(x.Key, x.Value)).ToList();
+        }
+
         // helper function for IMicroResourceJournalEntry
         public void UpdateMCMR(MaterialCommoditiesMicroResourceList mc, int countindex)
         {
             if (Items != null)
             {
-                List<Tuple<string, int>> counts = Items.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
+                var counts = Merge(Items);
                 mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Item, counts, countindex);
             }
 
             if (Components != null)
             {
-                List<Tuple<string, int>> counts = Components.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
+                var counts = Merge(Components);
                 mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Component, counts, countindex);
             }
 
             if (Consumables != null)
             {
-                List<Tuple<string, int>> counts = Consumables.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
+                var counts = Merge(Consumables);
                 mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Consumable, counts, countindex);
             }
 
             if (Data != null)
             {
-                List<Tuple<string, int>> counts = Data.Select(x => new Tuple<string, int>(x.Name, x.Count)).ToList();
+                var counts = Merge(Data);
                 mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Data, counts, countindex);
             }
         }

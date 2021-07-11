@@ -76,7 +76,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry unused)
         {
-            List<Tuple<string, int>> counts = new List<Tuple<string, int>>();
+            List<Tuple<string, int>> counts = new List<Tuple<string, int>>();       // empty list, meaning nothing in backpack
         //    System.Diagnostics.Debug.WriteLine("EMBARK, clear out back pack items");
             mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Item, counts, MicroResource.BackPack);
             mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Component, counts, MicroResource.BackPack);
