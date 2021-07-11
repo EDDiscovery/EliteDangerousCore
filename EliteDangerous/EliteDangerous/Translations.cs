@@ -52,7 +52,8 @@ namespace EliteDangerousCore
         Bodies_BH, //"Black Hole" @
         Bodies_EX, //"Exotic" @
         Bodies_SMBH, //"Super Massive Black Hole" @
-        Bodies_BSG, //"Blue White Super Giant" @
+        Bodies_ABSG, //"A Blue White Super Giant" @
+        Bodies_BBSG, //"B Blue White Super Giant" @
         Bodies_WSG, //"F White Super Giant" @
         Bodies_MSR, //"M Red Super Giant" @
         Bodies_MOG, //"M Red Giant" @

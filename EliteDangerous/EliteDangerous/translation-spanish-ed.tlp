@@ -20,7 +20,8 @@ SECTION Bodies
 .BH: "Black Hole" => "Agujero negro"
 .EX: "Exotic" => "Exótico"
 .SMBH: "Super Massive Black Hole" => "Agujero negro supermasivo"
-.BSG: "Blue White Super Giant" => "Supergigante azul blanco"
+.ABSG: "Blue White Super Giant" => "A Supergigante azul blanco"
+.BBSG: "B Blue White Super Giant" @
 .WSG: "F White Super Giant" => "F Super Gigante Blanco"
 .MSR: "M Red Super Giant" => "M Red Super Giant"
 .MOG: "M Red Giant" => "M Red Giant"

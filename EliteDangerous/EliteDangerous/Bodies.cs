@@ -448,7 +448,9 @@ namespace EliteDangerousCore
                 case EDStar.SuperMassiveBlackHole:
                     return "Super Massive Black Hole".T(EDTx.Bodies_SMBH);
                 case EDStar.A_BlueWhiteSuperGiant:
-                    return "Blue White Super Giant".T(EDTx.Bodies_BSG);
+                    return "A Blue White Super Giant".T(EDTx.Bodies_ABSG);
+                case EDStar.B_BlueWhiteSuperGiant:
+                    return "B Blue White Super Giant".T(EDTx.Bodies_BBSG);
                 case EDStar.F_WhiteSuperGiant:
                     return "F White Super Giant".T(EDTx.Bodies_WSG);
                 case EDStar.M_RedSuperGiant:
