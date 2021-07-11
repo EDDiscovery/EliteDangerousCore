@@ -20,7 +20,8 @@ SECTION Bodies
 .BH: "Black Hole" @
 .EX: "Exotic" @
 .SMBH: "Super Massive Black Hole" @
-.BSG: "Blue White Super Giant" @
+.ABSG: "A Blue White Super Giant" @
+.BBSG: "B Blue White Super Giant" @
 .WSG: "F White Super Giant" @
 .MSR: "M Red Super Giant" @
 .MOG: "M Red Giant" @
