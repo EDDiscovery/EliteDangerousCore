@@ -97,32 +97,56 @@ namespace EliteDangerousCore
             {
                 level = lvl;
                 modulesstring = mod;
-                modules = mod.Split(',');
+                modules = modulesstring.Split(',');
                 engineersstring = engnrs;
-                engineers = engnrs.Split(',');
+                engineers = engineersstring.Split(',');
             }
-        }
 
-        public class TechBrokerUnlockRecipe : Recipe
-        {
-            public TechBrokerUnlockRecipe(string n, string typename, string indg)
-                : base(n + " (" + typename + ")", indg)
-            { }
-        }
+            public EngineeringRecipe(string n, string type, string mod, string indg)        // for tech broker
+                : base(n, indg)
+            {
+                level = "NA";
+                modulesstring = mod;
+                modules = modulesstring.Split(',');
+                engineersstring = type;
+                engineers = engineersstring.Split(',');
+            }
 
-        public class SpecialEffectRecipe : Recipe
-        {
-            public SpecialEffectRecipe(string n, string modules, string indg)
-                : base(n + " (" + modules + ")", indg)
-            { }
+            public EngineeringRecipe(string n, string mod, string indg)        // for special effects
+                : base(n, indg)
+            {
+                level = "NA";
+                modulesstring = mod;
+                modules = modulesstring.Split(',');
+                engineersstring = "Special Effect";
+                engineers = engineersstring.Split(',');
+            }
+
+            public EngineeringRecipe(string type, string manu, int lvl, string indg)        // for suit/weapon upgrades
+                : base(manu, indg)
+            {
+                level = lvl.ToString();
+                modulesstring = type;
+                modules = modulesstring.Split(',');
+                engineersstring = type;
+                engineers = engineersstring.Split(',');
+            }
+
+            public EngineeringRecipe(string type, string manu, string n, int cost, string indg, string eng)        // for suit/weapon upgrades
+                : base((manu != "All" ? manu +":" : "") + n, indg)
+            {
+                level = "NA";
+                modulesstring = type;
+                modules = modulesstring.Split(',');
+                engineersstring = eng;
+                engineers = engineersstring.Split(',');
+            }
         }
 
         public static string UsedInRecipesByFDName(string fdname, string join = ", ")
         {
             string s = Recipes.UsedInEngineeringByFDName(fdname, join);
             s = s.AppendPrePad(Recipes.UsedInSythesisByFDName(fdname, join), join);
-            s = s.AppendPrePad(Recipes.UsedInTechBrokerUnlocksByFDName(fdname, join), join);
-            s = s.AppendPrePad(Recipes.UsedInSpecialEffectsyFDName(fdname, join), join);
             return s;
         }
 
@@ -141,24 +165,6 @@ namespace EliteDangerousCore
             MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);
             if (mc != null && EngineeringRecipesByMaterial.ContainsKey(mc))
                 return String.Join(join, EngineeringRecipesByMaterial[mc].Select(x => x.modulesstring + " " + x.Name + "-" + x.level + ": " + x.IngredientsStringLong + " @ " + x.engineersstring));
-            else
-                return "";
-        }
-
-        public static string UsedInSpecialEffectsyFDName(string fdname, string join = ", ")
-        {
-            MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);
-            if (mc != null && SpecialEffectsRecipesByMaterial.ContainsKey(mc))
-                return String.Join(join, SpecialEffectsRecipesByMaterial[mc].Select(x => x.Name + ": " + x.IngredientsStringLong));
-            else
-                return "";
-        }
-
-        public static string UsedInTechBrokerUnlocksByFDName(string fdname, string join = ", ")
-        {
-            MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);
-            if (mc != null && TechBrokerUnlockRecipesByMaterial.ContainsKey(mc))
-                return String.Join(join, TechBrokerUnlockRecipesByMaterial[mc].Select(x => x.Name + ": " + x.IngredientsStringLong));
             else
                 return "";
         }
@@ -1099,7 +1105,209 @@ namespace EliteDangerousCore
         new EngineeringRecipe("Expanded Probe Scanning Radius", "1ME,1Nb,1PLA", "Surface Scanner", "4", "Etienne Dorn,Bill Turner,Juri Ishmaak,Lei Cheung,Lori Jameson,Hera Tani" ),
         new EngineeringRecipe("Expanded Probe Scanning Radius", "1MC,1Sn,1PRA", "Surface Scanner", "5", "Etienne Dorn,Bill Turner,Juri Ishmaak,Lei Cheung,Lori Jameson,Hera Tani" ),
 
-#endregion
+            #endregion
+
+            #region Tech broker
+
+            new EngineeringRecipe("Corrosion Resistant Cargo Rack Size 4 Class 1","Human","Cargo Rack","16MA,26Fe,18CM,22RB,12NFI"),
+            new EngineeringRecipe("Enzyme Missile Rack Fixed Medium","Human","Missile","16UKEC,18UKOC,16Mo,15W,6RB"),
+            new EngineeringRecipe("Flechette Launcher Fixed Medium","Human","Flechette","30Fe,24Mo,22Re,26Ge,8CMMC"),
+            new EngineeringRecipe("Flechette Launcher Turret Medium","Human","Flechette","28Fe,28Mo,20Re,24Ge,10AM"),
+            new EngineeringRecipe("Frame Shift Drive (Engineered V1)","Human","FSD","26Te,26EA,28CP,18DWEx"),
+            new EngineeringRecipe("Guardian FSD Booster  Size 1","Guardian","FSD","1GMBS,21GPCe,21GTC,24FoC,8HNSM"),
+            new EngineeringRecipe("Guardian Gauss Cannon Fixed Small","Guardian Weapons","Gauss Cannon","1GWBS,12GPC,12GSWC,15GSWP"),
+            new EngineeringRecipe("Guardian Gauss Cannon Fixed Medium","Guardian Weapons","Gauss Cannon","1GWBS,18GPCe,20GTC,15Mn,6MEC"),
+            new EngineeringRecipe("Guardian Hull Reinforcement Size 1 Class 1","Guardian","Hull Reinforcement","1GMBS,21GSWC,16PBOD,16PGOD,12RMP"),
+            new EngineeringRecipe("Guardian Hybrid Fighter V 1","Guardian","Fighter","1GMVB,25GPCe,26PEOD,18PBOD,25GTC"),
+            new EngineeringRecipe("Guardian Hybrid Fighter V 2","Guardian","Fighter","1GMVB,25GPCe,26PEOD,18GSWC,25GTC"),
+            new EngineeringRecipe("Guardian Hybrid Fighter V 3","Guardian","Fighter","1GMVB,25GPCe,26PEOD,18GSWP,25GTC"),
+            new EngineeringRecipe("Guardian Module Reinforcement Size 1 Class 1","Guardian","Module","1GMBS,18GSWC,15PEOD,20GPC,9RMP"),
+            new EngineeringRecipe("Guardian Plasma Launcher Fixed Large","Guardian Weapons","Plasma Accelerator","1GWBS,28GPC,20GSWP,28Cr,10MWCH"),
+            new EngineeringRecipe("Guardian Plasma Launcher Fixed Medium","Guardian Weapons","Plasma Accelerator","1GWBS,18GPC,16GSWP,14Cr,8MWCH"),
+            new EngineeringRecipe("Guardian Plasma Launcher Fixed Small","Guardian Weapons","Plasma Accelerator","1GWBS,12GPCe,12GSWP,15GTC"),
+            new EngineeringRecipe("Guardian Plasma Launcher Turret Large","Guardian Weapons","Plasma Accelerator","2GWBS,20GPC,24GSWP,26Cr,10AM"),
+            new EngineeringRecipe("Guardian Plasma Launcher Turret Medium","Guardian Weapons","Plasma Accelerator","2GWBS,21GPC,20GSWP,16Cr,8AM"),
+            new EngineeringRecipe("Guardian Plasma Launcher Turret Small","Guardian Weapons","Plasma Accelerator","1GWBS,12GPCe,12GTC,15GSWP"),
+            new EngineeringRecipe("Guardian Power Distributor  Size 1","Guardian","Power Distributor","1GMBS,20PAOD,24GPCe,18PA,6HSI"),
+            new EngineeringRecipe("Guardian Power Plant Size 2","Guardian","Power Plant","1GMBS,18GPC,21PEOD,15HRC,10EGA"),
+            new EngineeringRecipe("Guardian Shard Cannon Fixed Large","Guardian Weapons","Shard Cannon","1GWBS,20GSWC,28GTC,20C,18MCC"),
+            new EngineeringRecipe("Guardian Shard Cannon Fixed Medium","Guardian Weapons","Shard Cannon","1GWBS,20GSWC,18GTC,14C,12PTB"),
+            new EngineeringRecipe("Guardian Shard Cannon Fixed Small","Guardian Weapons","Shard Cannon","1GWBS,12GPC,12GTC,15GSWP"),
+            new EngineeringRecipe("Guardian Shard Cannon Turret Large","Guardian Weapons","Shard Cannon","2GWBS,20GSWC,26GTC,28C,12MCC"),
+            new EngineeringRecipe("Guardian Shard Cannon Turret Medium","Guardian Weapons","Shard Cannon","2GWBS,16GSWC,20GTC,15C,12MCC"),
+            new EngineeringRecipe("Guardian Shard Cannon Turret Small","Guardian Weapons","Shard Cannon","1GWBS,12GPC,15GTC,12GSWP"),
+            new EngineeringRecipe("Guardian Shield Reinforcement Size 1 Class 1","Guardian","Shield Generator","1GMBS,17GPCe,20GTC,24PDOD,8DIS"),
+            new EngineeringRecipe("Meta Alloy Hull Reinforcement Size 1 Class 1","Human","Hull Reinforcement","16MA,15FoC,22ASPA,20CCom,12RMP"),
+            new EngineeringRecipe("Plasma Shock Cannon Fixed Large","Human","Shock Cannon","28V,26W,24Re,26Tc,8PC"),
+            new EngineeringRecipe("Plasma Shock Cannon Fixed Medium","Human","Shock Cannon","24V,26W,20Re,28Tc,6IOD"),
+            new EngineeringRecipe("Plasma Shock Cannon Fixed Small","Human","Shock Cannon","8V,10W,8Re,12Tc,4PC"),
+            new EngineeringRecipe("Plasma Shock Cannon Gimbal Large","Human","Shock Cannon","28V,24W,24Re,22Tc,12PTB"),
+            new EngineeringRecipe("Plasma Shock Cannon Gimbal Medium","Human","Shock Cannon","24V,22W,20Re,28Tc,10PC"),
+            new EngineeringRecipe("Plasma Shock Cannon Gimbal Small","Human","Shock Cannon","10V,11W,8Re,10Tc,4PTB"),
+            new EngineeringRecipe("Plasma Shock Cannon Turret Large","Human","Shock Cannon","26V,28W,22Re,24Tc,10IOD"),
+            new EngineeringRecipe("Plasma Shock Cannon Turret Medium","Human","Shock Cannon","24V,22W,20Re,28Tc,8PTB"),
+            new EngineeringRecipe("Plasma Shock Cannon Turret Small","Human","Shock Cannon","8V,12W,10Re,10Tc,4IOD"),
+            new EngineeringRecipe("Engineered FSD V 1 ( Class : 5 )","Human","FSD","18DWEx,26Te,26EA,28CP"),
+            new EngineeringRecipe("Engineered Seeker Missile Rack V 1 ( Fixed ) ( Class : 2 )","Human","Missile","10OSM,16PRA,24CCe,26HC,28P"),
+
+            #endregion
+
+            #region Special Effects
+
+            new EngineeringRecipe("Angled Plating", "Armour", "5CC,3HDC,3Zr"),
+            new EngineeringRecipe("Angled Plating", "Hull Reinforcement", "5TeA,3Zr,5C,3HDC"),
+            new EngineeringRecipe("Auto Loader", "Cannon,Multicannon", "4ME,3MC,3HDC"),
+            new EngineeringRecipe("Blast Block", "Shield Booster", "5ISSA,3HRC,3HDP,2Se"),
+            new EngineeringRecipe("Boss Cells", "Shield Cell", "5CSU,3Cr,1PCa"),
+            new EngineeringRecipe("Cluster Capacitors", "Power Distributor", "5P,3HRC,1Cd"),
+            new EngineeringRecipe("Concordant Sequence", "Pulse Laser,Burst Laser,Beam Laser", "5FoC,3EFW,1Zr"),
+            new EngineeringRecipe("Corrosive Shell", "Multicannon,Frag Cannon", "5CSU,4PAll,3As"),
+            new EngineeringRecipe("Dazzle Shell", "Plasma Accelerator,Frag Cannon", "5MS,4Mn,5HC,5MS"),
+            new EngineeringRecipe("Deep Charge", "FSD", "5ADWE,3GA,1EHT"),
+            new EngineeringRecipe("Deep Plating", "Armour", "5CC,3ME,2Mo"),
+            new EngineeringRecipe("Deep Plating", "Hull Reinforcement", "5CC,3Mo,2Ru"),
+            new EngineeringRecipe("Dispersal Field", "Plasma Accelerator,Cannon", "5CCo,5HC,5IED,5WSE"),
+            new EngineeringRecipe("Double Braced", "Weapon", "5MS,5CC,3V"),
+            new EngineeringRecipe("Double Braced", "FSD", "5ADWE,3GA,1CCom"),
+            new EngineeringRecipe("Double Braced", "Power Plant", "5GR,3V,1FPC"),
+            new EngineeringRecipe("Double Braced", "Shield Cell", "5CSU,3Cr,1Y"),
+            new EngineeringRecipe("Double Braced", "Engine", "5Fe,3HC,1FPC"),
+            new EngineeringRecipe("Double Braced", "Shield Generator", "5WSE,3FFC,1CCom"),
+            new EngineeringRecipe("Double Braced", "Power Distributor", "5P,3HRC,1FPC"),
+            new EngineeringRecipe("Double Braced", "Shield Booster", "5DSCR,3GA,3SHE"),
+            new EngineeringRecipe("Drag Drives", "Engine", "5Fe,3HC,1SFP"),
+            new EngineeringRecipe("Drag Munitions", "Frag Cannon,Seeker Missile", "5C,5GR,2Mo"),
+            new EngineeringRecipe("Drive Distributors", "Engine", "5Fe,3HC,1SFP"),
+            new EngineeringRecipe("Emissive Munitions", "Pulse Laser,Multicannon,Seeker Missile,Dumb Missile,Mine", "4ME,3UED,3HE,3Mn"),
+            new EngineeringRecipe("Fast Charge", "Shield Generator", "5WSE,3FFC,1CoS"),
+            new EngineeringRecipe("Feedback Cascade", "Rail Gun", "5OSK,5SHE,5FiC"),
+            new EngineeringRecipe("Flow Control", "Power Distributor", "5P,3HRC,1CPo"),
+            new EngineeringRecipe("Flow Control", "Weapon", "5MS,3HC,1EFW"),
+            new EngineeringRecipe("Flow Control", "Shield Booster", "5ISSA,3SFP,3FoC,3Nb"),
+            new EngineeringRecipe("Flow Control", "Shield Cell", "5CSU,3Cr,1CPo"),
+            new EngineeringRecipe("Force Block", "Shield Booster", "5USA,3SS,2ASPA"),
+            new EngineeringRecipe("Force Block", "Shield Generator", "5WSE,3FFC,1DED"),
+            new EngineeringRecipe("Force Shell", "Cannon", "5MS,5Zn,3PA,3HCW"),
+            new EngineeringRecipe("FSD Interrupt", "Dumb Missile", "3SWS,5AFT,5ME,3CCom"),
+            new EngineeringRecipe("Hi-Cap", "Shield Generator", "5WSE,3FFC,1CPo"),
+            new EngineeringRecipe("High Yield Shell", "Cannon", "5MS,3PLA,3CM,5Ni"),
+            new EngineeringRecipe("Incendiary Rounds", "Multicannon,Frag Cannon", "5HCW,5P,5S,3PA"),
+            new EngineeringRecipe("Inertial Impact", "Burst Laser", "5FFC,5DSCR,5ADWE"),
+            new EngineeringRecipe("Ion Disruption", "Mine", "5S,5P,3CHD,3EA"),
+            new EngineeringRecipe("Layered Plating", "Armour", "5HCW,3HDC,1Nb"),
+            new EngineeringRecipe("Layered Plating", "Hull Reinforcement", "5HCW,3SS,3W"),
+            new EngineeringRecipe("Lo-draw", "Shield Generator", "5WSE,3FFC,1CPo"),
+            new EngineeringRecipe("Mass Lock Munition", "Torpedo", "5ME,3HDC,3ASPA"),
+            new EngineeringRecipe("Mass Manager", "FSD", "5ADWE,3GA,1EHT"),
+            new EngineeringRecipe("Monstered", "Power Plant", "5GR,3V,1PCa"),
+            new EngineeringRecipe("Multi-servos", "Pulse Laser,Burst Laser,Cannon,Multicannon,Plasma Accelerator,Rail Gun,Frag Cannon,Missile", "5MS,4FoC,2CPo,2CCom"),
+            new EngineeringRecipe("Multi-weave", "Shield Generator", "5WSE,3FFC,1ASPA"),
+            new EngineeringRecipe("Overload Munitions", "Seeker Missile,Dumb Missile,Mine", "5FiC,4TEC,2ASPA,3Ge"),
+            new EngineeringRecipe("Oversized", "Weapon", "5MS,3MC,1Ru"),
+            new EngineeringRecipe("Penetrator Munitions", "Dumb Missile", "5GA,3EA,3Zr"),
+            new EngineeringRecipe("Penetrator Payload", "Torpedo", "3MC,3W,5ABSD,3Se"),
+            new EngineeringRecipe("Phasing Sequence", "Pulse Laser,Burst Laser,Plasma Accelerator", "5FoC,3ASPA,3Nb,3CCom"),
+            new EngineeringRecipe("Plasma Slug", "Plasma Accelerator", "3HE,2EFW,2RFC,4Hg"),
+            new EngineeringRecipe("Plasma Slug", "Rail Gun", "3HE,2EFW,2RFC,4Hg"),
+            new EngineeringRecipe("Radiant Canister", "Mine", "1Po,3PA,4HDP"),
+            new EngineeringRecipe("Recycling Cell", "Shield Cell", "5CSU,3Cr,1CCom"),
+            new EngineeringRecipe("Reflective Plating", "Armour", "5CC,3HDP,2ThA"),
+            new EngineeringRecipe("Reflective Plating", "Hull Reinforcement", "5HCW,3HDP,1PLA,4Zn"),
+            new EngineeringRecipe("Regeneration Sequence", "Beam Laser", "3RFC,4SS,1PSFD"),
+            new EngineeringRecipe("Reverberating Cascade", "Torpedo,Mine", "2CCom,3CSD,4FiC,4Cr"),
+            new EngineeringRecipe("Scramble Spectrum", "Pulse Laser,Burst Laser", "5CS,3USS,5ESED"),
+            new EngineeringRecipe("Screening Shell", "Frag Cannon", "5MS,5DSCR,5MCF,3Nb"),
+            new EngineeringRecipe("Shift-lock Canister", "Mine", "5TeA,3SWS,5SAll"),
+            new EngineeringRecipe("Smart Rounds", "Cannon,Multicannon", "5MS,3SFP,3DED,3CSD"),
+            new EngineeringRecipe("Stripped Down", "Engine", "5Fe,3HC,1PLA"),
+            new EngineeringRecipe("Stripped Down", "Power Distributor", "5P,3HRC,1PLA"),
+            new EngineeringRecipe("Stripped Down", "Weapon", "5SAll,5C,1Sn"),
+            new EngineeringRecipe("Stripped Down", "Shield Cell", "5CSU,3Cr,1PLA"),
+            new EngineeringRecipe("Stripped Down", "FSD", "5ADWE,3GA,1PLA"),
+            new EngineeringRecipe("Stripped Down", "Power Plant", "5GR,3V,1PLA"),
+            new EngineeringRecipe("Stripped Down", "Shield Generator", "5WSE,3FFC,1PLA"),
+            new EngineeringRecipe("Super Capacitors", "Shield Booster", "3USS,5CC,2Cd"),
+            new EngineeringRecipe("Super Conduits", "Power Distributor", "5P,3HRC,1SFP"),
+            new EngineeringRecipe("Super Penetrator", "Rail Gun", "3PLA,3RFC,3Zr,5USS"),
+            new EngineeringRecipe("Target Lock Breaker", "Plasma Accelerator", "5Se,3SFP,1AEC"),
+            new EngineeringRecipe("Thermal Cascade", "Cannon,Seeker Missile,Dumb Missile", "5HCW,4HC,3HDC,5P"),
+            new EngineeringRecipe("Thermal Conduit", "Beam Laser,Plasma Accelerator", "5HDP,5S,5TeA"),
+            new EngineeringRecipe("Thermal Shock", "Pulse Laser,Burst Laser,Beam Laser,Multicannon", "5FFC,3HRC,3CCo,3W"),
+            new EngineeringRecipe("Thermal Spread", "Power Plant", "5GR,3V,1HV"),
+            new EngineeringRecipe("Thermal Spread", "FSD", "5ADWE,3GA,1HV,3GR"),
+            new EngineeringRecipe("Thermal Spread", "Engine", "5Fe,3HC,1HV"),
+            new EngineeringRecipe("Thermal Vent", "Beam Laser", "5FFC,3CPo,3PAll"),
+            new EngineeringRecipe("Thermo Block", "Shield Generator", "5WSE,3FFC,1HV"),
+            new EngineeringRecipe("Thermo Block", "Shield Booster", "5ABSD,3CCe,3HV"),
+
+            #endregion
+
+            #region suit/weapon levels
+
+            new EngineeringRecipe("Suit","Remlok",2,"1MRISuitSch,1MRIHM,1MRIPR,1MRDMI,5MRCCFP,5MRCG"),
+            new EngineeringRecipe("Suit","Remlok",3,"5MRISuitSch,5MRIHM,5MRIPR,5MRDMI,15MRCCFP,15MRCG"),
+            new EngineeringRecipe("Suit","Remlok",4,"10MRISuitSch,10MRIHM,10MRIPR,10MRDMI,25MRCCFP,25MRCG"),
+            new EngineeringRecipe("Suit","Remlok",5,"15MRISuitSch,15MRIHM,15MRIPR,15MRDMI,35MRCCFP,35MRCG"),
+            new EngineeringRecipe("Suit","Supratech",2,"1MRISuitSch,1MRIHM,1MRIPR,1MRDMI,5MRCA,5MRCG"),
+            new EngineeringRecipe("Suit","Supratech",3,"5MRISuitSch,5MRIHM,5MRIPR,5MRDMI,15MRCA,15MRCG"),
+            new EngineeringRecipe("Suit","Supratech",4,"10MRISuitSch,10MRIHM,10MRIPR,10MRDMI,25MRCA,25MRCG"),
+            new EngineeringRecipe("Suit","Supratech",5,"15MRISuitSch,15MRIHM,15MRIPR,15MRDMI,35MRCA,35MRCG"),
+            new EngineeringRecipe("Suit","Manticore",2,"1MRISuitSch,1MRIHM,1MRIPR,1MRDMI,5MRCTP,5MRCG"),
+            new EngineeringRecipe("Suit","Manticore",3,"5MRISuitSch,5MRIHM,5MRIPR,5MRDMI,15MRCTP,15MRCG"),
+            new EngineeringRecipe("Suit","Manticore",4,"10MRISuitSch,10MRIHM,10MRIPR,10MRDMI,25MRCTP,25MRCG"),
+            new EngineeringRecipe("Suit","Manticore",5,"15MRISuitSch,15MRIHM,15MRIPR,15MRDMI,35MRCTP,35MRCG"),
+            new EngineeringRecipe("Weapon","Kinematic Armaments",2,"1MRIWS,1MRICLG"),
+            new EngineeringRecipe("Weapon","Kinematic Armaments",3,"5MRIWS,5MRICLG"),
+            new EngineeringRecipe("Weapon","Kinematic Armaments",4,"10MRIWS,10MRICLG"),
+            new EngineeringRecipe("Weapon","Kinematic Armaments",5,"15MRIWS,15MRICLG"),
+            new EngineeringRecipe("Weapon","Manticore",2,"1MRIWS,1MRIIG"),
+            new EngineeringRecipe("Weapon","Manticore",3,"5MRIWS,5MRIIG"),
+            new EngineeringRecipe("Weapon","Manticore",4,"10MRIWS,10MRIIG"),
+            new EngineeringRecipe("Weapon","Manticore",5,"15MRIWS,15MRIIG"),
+            new EngineeringRecipe("Weapon","Takada",2,"1MRIWS,1MRIIG"),
+            new EngineeringRecipe("Weapon","Takada",3,"5MRIWS,5MRIIG"),
+            new EngineeringRecipe("Weapon","Takada",4,"10MRIWS,10MRIIG"),
+            new EngineeringRecipe("Weapon","Takada",5,"15MRIWS,15MRIIG"),
+
+            #endregion
+
+            #region Engineer mods
+
+            new EngineeringRecipe("Suit","All","Reduced Tool Battery Consumption",500000,"5MRCEF,10MRCMICTRANS,15MRCEW,10MRDROR","Eng?"),
+            new EngineeringRecipe("Suit","All","Improved Battery Capacity",750000,"5MRCIB,10MRCMS,10MRCEW,10MRDROR,15MRDML","Eng?"),
+            new EngineeringRecipe("Suit","All","Faster Shield Regen",750000,"5MRCIB,15MRCMICTRANS,15MRCEW,10MRDROR","Eng?"),
+            new EngineeringRecipe("Suit","All","Damage Resistance",750000,"5MRCTP,5MRCCFP,15MRCEA,10MRDWI,10MRDBALD","Eng?"),
+            new EngineeringRecipe("Suit","All","Increased Air Reserves",750000,"10MRCOXYBAC,15MRCPHN,5MRDPP,15MRDAQR","Eng?"),
+            new EngineeringRecipe("Suit","All","Night Vision",1000000,"10MRISE,10MRCCIRSWITCH,5MRDSL,5MRDRD,5MRDNOCD","Eng?"),
+            new EngineeringRecipe("Suit","All","Enhanced Tracking",750000,"5MRCTX,5MRCCB,10MRDTS,10MRDSAL,10MRDSAD","Eng?"),
+            new EngineeringRecipe("Suit","All","Extra Backpack Capacity",750000,"10MRCEA,5MRCMC,10MRDWI,10MRDCI,10MRDDD","Eng?"),
+            new EngineeringRecipe("Suit","All","Extra Ammo Capacity",750000,"5MRCWC,15MRDRL,10MRWTD,10MRDPRODREP","Eng?"),
+            new EngineeringRecipe("Suit","All","Improved Jump Assist",750000,"10MRIGM,5MRCMT,10MRCMOTOR,10MRDTS","Eng?"),
+            new EngineeringRecipe("Suit","All","Increased Sprint Duration",750000,"10MRCOXYBAC,15MRCCC,5MRDTDR,5MRDGSD,5MRDMR","Eng?"),
+            new EngineeringRecipe("Suit","All","Combat Movement Speed",750000,"10MRCEPINE,15MRCPHN,10MRDEP,5MRDGR","Eng?"),
+            new EngineeringRecipe("Suit","All","Quieter Footsteps",1000000,"5MRCMH,15MRCVP,5MRDSAP,10MRDTACP,10MRDPATR","Eng?"),
+            new EngineeringRecipe("Suit","All","Added Melee Damage",500000,"10MRCEPINE,15MRCMT,10MRDCTM,10MRDCOMBPERF","Eng?"),
+            new EngineeringRecipe("Weapon","All","Noise Suppressor",1000000,"15MRCVP,5MRCWC,10MRDAD,10MRDMA","Eng?"),
+            new EngineeringRecipe("Weapon","All","Audio Masking",1000000,"10MRCS,15MRCTX,5MRCCB,5MRDAL,10MRDPATR","Eng?"),
+            new EngineeringRecipe("Weapon","All","Stability",500000,"10MRCVP,10MRCMH,10MRDMA,15MRDRA","Eng?"),
+            new EngineeringRecipe("Weapon","All","Faster Handling",500000,"5MRCVP,10MRDOM,10MRDCOMBPERF,10MRDCTM","Eng?"),
+            new EngineeringRecipe("Weapon","All","Reload Speed",500000,"10MRCMH,10MRCE,10MRDOM,10MRDPRODREP,10MRDCTM","Eng?"),
+            new EngineeringRecipe("Weapon","All","Magazine Size",750000,"5MRCWC,5MRCTC,10MRCMETALCOIL,10MRWTD,5MRSECEXP","Eng?"),
+            new EngineeringRecipe("Weapon","All","Scope",500000,"10MRCOL,5MRCOF,10MRDSAD,5MRDBIOD","Eng?"),
+            new EngineeringRecipe("Weapon","All","Stowed reloading",1000000,"5MRCCB,15MRCEMC,10MRDDD,10MRDOM,10MRDPS","Eng?"),
+            new EngineeringRecipe("Weapon","Kinematic Armaments","Higher Accuracy",500000,"10MRCVP,10MRCR,10MRDEYD,5MRDBIOD,10MRDCOMBPERF","Eng?"),
+            new EngineeringRecipe("Weapon","Kinematic Armaments","Greater Range",500000,"10MRCMETALCOIL,10MRCR,5MRCWC,10MRDBALD,10MRDTS","Eng?"),
+            new EngineeringRecipe("Weapon","Kinematic Armaments","Headshot damage",500000,"10MRCCC,15MRCR,5MRCWC,10MRWTD,5MRDMR","Eng?"),
+            new EngineeringRecipe("Weapon","Manticore","Higher Accuracy",500000,"10MRCCC,10MRCE,10MRCMETALCOIL,5MRDCHEMPAT,10MRDCOMBPERF","Eng?"),
+            new EngineeringRecipe("Weapon","Manticore","Greater Range",500000,"5MRCMOTOR,10MRCE,5MRCEF,10MRDCF,15MRDMS","Eng?"),
+            new EngineeringRecipe("Weapon","Manticore","Headshot damage",500000,"10MRCIB,10MRCE,15MRCMS,10MRDCED,5MRDBTR","Eng?"),
+            new EngineeringRecipe("Weapon","Takada","Higher Accuracy",500000,"10MRCMETALCOIL,5MRCOL,15MRCEW,5MRDRD,10MRDCOMBPERF","Eng?"),
+            new EngineeringRecipe("Weapon","Takada","Greater Range",500000,"15MRCMICTRANS,5MRCOL,5MRCCB,10MRDSAL,15MRDRA","Eng?"),
+            new EngineeringRecipe("Weapon","Takada","Headshot damage",750000,"10MRCIB,5MRCOL,10MRCS,10MRDSAD,5MRDBIOD","Eng?"),
+            #endregion
+
+
+
         };
 
         public static Dictionary<MaterialCommodityMicroResourceType, List<EngineeringRecipe>> EngineeringRecipesByMaterial =
@@ -1107,152 +1315,5 @@ namespace EliteDangerousCore
                               .GroupBy(a => a.mat)
                               .ToDictionary(g => g.Key, g => g.Select(a => a.recipe).ToList());
 
-        #region Use the netlogentry frontierdata to update this
-
-        public static List<TechBrokerUnlockRecipe> TechBrokerUnlocks = new List<TechBrokerUnlockRecipe>()
-        {
-            new TechBrokerUnlockRecipe("Corrosion Resistant Cargo Rack Size 4 Class 1","Human","16MA,26Fe,18CM,22RB,12NFI"),
-            new TechBrokerUnlockRecipe("Enzyme Missile Rack Fixed Medium","Human","16UKEC,18UKOC,16Mo,15W,6RB"),
-            new TechBrokerUnlockRecipe("Flechette Launcher Fixed Medium","Human","30Fe,24Mo,22Re,26Ge,8CMMC"),
-            new TechBrokerUnlockRecipe("Flechette Launcher Turret Medium","Human","28Fe,28Mo,20Re,24Ge,10AM"),
-            new TechBrokerUnlockRecipe("Frame Shift Drive (Engineered V1)","Human","26Te,26EA,28CP,18DWEx"),
-            new TechBrokerUnlockRecipe("Guardian FSD Booster  Size 1","Guardian","1GMBS,21GPCe,21GTC,24FoC,8HNSM"),
-            new TechBrokerUnlockRecipe("Guardian Gauss Cannon Fixed Small","Guardian","1GWBS,12GPC,12GSWC,15GSWP"),
-            new TechBrokerUnlockRecipe("Guardian Gauss Cannon Fixed Medium","Guardian","1GWBS,18GPCe,20GTC,15Mn,6MEC"),
-            new TechBrokerUnlockRecipe("Guardian Hull Reinforcement Size 1 Class 1","Guardian","1GMBS,21GSWC,16PBOD,16PGOD,12RMP"),
-            new TechBrokerUnlockRecipe("Guardian Hybrid Fighter V 1","Guardian","1GMVB,25GPCe,26PEOD,18PBOD,25GTC"),
-            new TechBrokerUnlockRecipe("Guardian Hybrid Fighter V 2","Guardian","1GMVB,25GPCe,26PEOD,18GSWC,25GTC"),
-            new TechBrokerUnlockRecipe("Guardian Hybrid Fighter V 3","Guardian","1GMVB,25GPCe,26PEOD,18GSWP,25GTC"),
-            new TechBrokerUnlockRecipe("Guardian Module Reinforcement Size 1 Class 1","Guardian","1GMBS,18GSWC,15PEOD,20GPC,9RMP"),
-            new TechBrokerUnlockRecipe("Guardian Plasma Launcher Fixed Large","Guardian","1GWBS,28GPC,20GSWP,28Cr,10MWCH"),
-            new TechBrokerUnlockRecipe("Guardian Plasma Launcher Fixed Medium","Guardian","1GWBS,18GPC,16GSWP,14Cr,8MWCH"),
-            new TechBrokerUnlockRecipe("Guardian Plasma Launcher Fixed Small","Guardian","1GWBS,12GPCe,12GSWP,15GTC"),
-            new TechBrokerUnlockRecipe("Guardian Plasma Launcher Turret Large","Guardian","2GWBS,20GPC,24GSWP,26Cr,10AM"),
-            new TechBrokerUnlockRecipe("Guardian Plasma Launcher Turret Medium","Guardian","2GWBS,21GPC,20GSWP,16Cr,8AM"),
-            new TechBrokerUnlockRecipe("Guardian Plasma Launcher Turret Small","Guardian","1GWBS,12GPCe,12GTC,15GSWP"),
-            new TechBrokerUnlockRecipe("Guardian Power Distributor  Size 1","Guardian","1GMBS,20PAOD,24GPCe,18PA,6HSI"),
-            new TechBrokerUnlockRecipe("Guardian Power Plant Size 2","Guardian","1GMBS,18GPC,21PEOD,15HRC,10EGA"),
-            new TechBrokerUnlockRecipe("Guardian Shard Cannon Fixed Large","Guardian","1GWBS,20GSWC,28GTC,20C,18MCC"),
-            new TechBrokerUnlockRecipe("Guardian Shard Cannon Fixed Medium","Guardian","1GWBS,20GSWC,18GTC,14C,12PTB"),
-            new TechBrokerUnlockRecipe("Guardian Shard Cannon Fixed Small","Guardian","1GWBS,12GPC,12GTC,15GSWP"),
-            new TechBrokerUnlockRecipe("Guardian Shard Cannon Turret Large","Guardian","2GWBS,20GSWC,26GTC,28C,12MCC"),
-            new TechBrokerUnlockRecipe("Guardian Shard Cannon Turret Medium","Guardian","2GWBS,16GSWC,20GTC,15C,12MCC"),
-            new TechBrokerUnlockRecipe("Guardian Shard Cannon Turret Small","Guardian","1GWBS,12GPC,15GTC,12GSWP"),
-            new TechBrokerUnlockRecipe("Guardian Shield Reinforcement Size 1 Class 1","Guardian","1GMBS,17GPCe,20GTC,24PDOD,8DIS"),
-            new TechBrokerUnlockRecipe("Meta Alloy Hull Reinforcement Size 1 Class 1","Human","16MA,15FoC,22ASPA,20CCom,12RMP"),
-            new TechBrokerUnlockRecipe("Plasma Shock Cannon Fixed Large","Human","28V,26W,24Re,26Tc,8PC"),
-            new TechBrokerUnlockRecipe("Plasma Shock Cannon Fixed Medium","Human","24V,26W,20Re,28Tc,6IOD"),
-            new TechBrokerUnlockRecipe("Plasma Shock Cannon Fixed Small","Human","8V,10W,8Re,12Tc,4PC"),
-            new TechBrokerUnlockRecipe("Plasma Shock Cannon Gimbal Large","Human","28V,24W,24Re,22Tc,12PTB"),
-            new TechBrokerUnlockRecipe("Plasma Shock Cannon Gimbal Medium","Human","24V,22W,20Re,28Tc,10PC"),
-            new TechBrokerUnlockRecipe("Plasma Shock Cannon Gimbal Small","Human","10V,11W,8Re,10Tc,4PTB"),
-            new TechBrokerUnlockRecipe("Plasma Shock Cannon Turret Large","Human","26V,28W,22Re,24Tc,10IOD"),
-            new TechBrokerUnlockRecipe("Plasma Shock Cannon Turret Medium","Human","24V,22W,20Re,28Tc,8PTB"),
-            new TechBrokerUnlockRecipe("Plasma Shock Cannon Turret Small","Human","8V,12W,10Re,10Tc,4IOD"),
-            new TechBrokerUnlockRecipe("Engineered FSD V 1 ( Class : 5 )","Human","18DWEx,26Te,26EA,28CP"),
-            new TechBrokerUnlockRecipe("Engineered Seeker Missile Rack V 1 ( Fixed ) ( Class : 2 )","Human","10OSM,16PRA,24CCe,26HC,28P"),
-        };
-
-        public static Dictionary<MaterialCommodityMicroResourceType, List<TechBrokerUnlockRecipe>> TechBrokerUnlockRecipesByMaterial =
-            TechBrokerUnlocks.SelectMany(r => r.Ingredients.Select(i => new { mat = i, recipe = r }))
-                              .GroupBy(a => a.mat)
-                              .ToDictionary(g => g.Key, g => g.Select(a => a.recipe).ToList());
-
-
-        public static List<SpecialEffectRecipe> SpecialEffects = new List<SpecialEffectRecipe>()
-        {
-            new SpecialEffectRecipe("Angled Plating", "Armour", "5CC,3HDC,3Zr"),
-            new SpecialEffectRecipe("Angled Plating", "Hull Reinforcement", "5TeA,3Zr,5C,3HDC"),
-            new SpecialEffectRecipe("Auto Loader", "Cannon,Multicannon", "4ME,3MC,3HDC"),
-            new SpecialEffectRecipe("Blast Block", "Shield Booster", "5ISSA,3HRC,3HDP,2Se"),
-            new SpecialEffectRecipe("Boss Cells", "Shield Cell", "5CSU,3Cr,1PCa"),
-            new SpecialEffectRecipe("Cluster Capacitors", "Power Distributor", "5P,3HRC,1Cd"),
-            new SpecialEffectRecipe("Concordant Sequence", "Pulse Laser,Burst Laser,Beam Laser", "5FoC,3EFW,1Zr"),
-            new SpecialEffectRecipe("Corrosive Shell", "Multicannon,Frag Cannon", "5CSU,4PAll,3As"),
-            new SpecialEffectRecipe("Dazzle Shell", "Plasma Accelerator,Frag Cannon", "5MS,4Mn,5HC,5MS"),
-            new SpecialEffectRecipe("Deep Charge", "FSD", "5ADWE,3GA,1EHT"),
-            new SpecialEffectRecipe("Deep Plating", "Armour", "5CC,3ME,2Mo"),
-            new SpecialEffectRecipe("Deep Plating", "Hull Reinforcement", "5CC,3Mo,2Ru"),
-            new SpecialEffectRecipe("Dispersal Field", "Plasma Accelerator,Cannon", "5CCo,5HC,5IED,5WSE"),
-            new SpecialEffectRecipe("Double Braced", "Weapon", "5MS,5CC,3V"),
-            new SpecialEffectRecipe("Double Braced", "FSD", "5ADWE,3GA,1CCom"),
-            new SpecialEffectRecipe("Double Braced", "Power Plant", "5GR,3V,1FPC"),
-            new SpecialEffectRecipe("Double Braced", "Shield Cell", "5CSU,3Cr,1Y"),
-            new SpecialEffectRecipe("Double Braced", "Engine", "5Fe,3HC,1FPC"),
-            new SpecialEffectRecipe("Double Braced", "Shield Generator", "5WSE,3FFC,1CCom"),
-            new SpecialEffectRecipe("Double Braced", "Power Distributor", "5P,3HRC,1FPC"),
-            new SpecialEffectRecipe("Double Braced", "Shield Booster", "5DSCR,3GA,3SHE"),
-            new SpecialEffectRecipe("Drag Drives", "Engine", "5Fe,3HC,1SFP"),
-            new SpecialEffectRecipe("Drag Munitions", "Frag Cannon,Seeker Missile", "5C,5GR,2Mo"),
-            new SpecialEffectRecipe("Drive Distributors", "Engine", "5Fe,3HC,1SFP"),
-            new SpecialEffectRecipe("Emissive Munitions", "Pulse Laser,Multicannon,Seeker Missile,Dumb Missile,Mine", "4ME,3UED,3HE,3Mn"),
-            new SpecialEffectRecipe("Fast Charge", "Shield Generator", "5WSE,3FFC,1CoS"),
-            new SpecialEffectRecipe("Feedback Cascade", "Rail Gun", "5OSK,5SHE,5FiC"),
-            new SpecialEffectRecipe("Flow Control", "Power Distributor", "5P,3HRC,1CPo"),
-            new SpecialEffectRecipe("Flow Control", "Weapon", "5MS,3HC,1EFW"),
-            new SpecialEffectRecipe("Flow Control", "Shield Booster", "5ISSA,3SFP,3FoC,3Nb"),
-            new SpecialEffectRecipe("Flow Control", "Shield Cell", "5CSU,3Cr,1CPo"),
-            new SpecialEffectRecipe("Force Block", "Shield Booster", "5USA,3SS,2ASPA"),
-            new SpecialEffectRecipe("Force Block", "Shield Generator", "5WSE,3FFC,1DED"),
-            new SpecialEffectRecipe("Force Shell", "Cannon", "5MS,5Zn,3PA,3HCW"),
-            new SpecialEffectRecipe("FSD Interrupt", "Dumb Missile", "3SWS,5AFT,5ME,3CCom"),
-            new SpecialEffectRecipe("Hi-Cap", "Shield Generator", "5WSE,3FFC,1CPo"),
-            new SpecialEffectRecipe("High Yield Shell", "Cannon", "5MS,3PLA,3CM,5Ni"),
-            new SpecialEffectRecipe("Incendiary Rounds", "Multicannon,Frag Cannon", "5HCW,5P,5S,3PA"),
-            new SpecialEffectRecipe("Inertial Impact", "Burst Laser", "5FFC,5DSCR,5ADWE"),
-            new SpecialEffectRecipe("Ion Disruption", "Mine", "5S,5P,3CHD,3EA"),
-            new SpecialEffectRecipe("Layered Plating", "Armour", "5HCW,3HDC,1Nb"),
-            new SpecialEffectRecipe("Layered Plating", "Hull Reinforcement", "5HCW,3SS,3W"),
-            new SpecialEffectRecipe("Lo-draw", "Shield Generator", "5WSE,3FFC,1CPo"),
-            new SpecialEffectRecipe("Mass Lock Munition", "Torpedo", "5ME,3HDC,3ASPA"),
-            new SpecialEffectRecipe("Mass Manager", "FSD", "5ADWE,3GA,1EHT"),
-            new SpecialEffectRecipe("Monstered", "Power Plant", "5GR,3V,1PCa"),
-            new SpecialEffectRecipe("Multi-servos", "Pulse Laser,Burst Laser,Cannon,Multicannon,Plasma Accelerator,Rail Gun,Frag Cannon,Missile", "5MS,4FoC,2CPo,2CCom"),
-            new SpecialEffectRecipe("Multi-weave", "Shield Generator", "5WSE,3FFC,1ASPA"),
-            new SpecialEffectRecipe("Overload Munitions", "Seeker Missile,Dumb Missile,Mine", "5FiC,4TEC,2ASPA,3Ge"),
-            new SpecialEffectRecipe("Oversized", "Weapon", "5MS,3MC,1Ru"),
-            new SpecialEffectRecipe("Penetrator Munitions", "Dumb Missile", "5GA,3EA,3Zr"),
-            new SpecialEffectRecipe("Penetrator Payload", "Torpedo", "3MC,3W,5ABSD,3Se"),
-            new SpecialEffectRecipe("Phasing Sequence", "Pulse Laser,Burst Laser,Plasma Accelerator", "5FoC,3ASPA,3Nb,3CCom"),
-            new SpecialEffectRecipe("Plasma Slug", "Plasma Accelerator", "3HE,2EFW,2RFC,4Hg"),
-            new SpecialEffectRecipe("Plasma Slug", "Rail Gun", "3HE,2EFW,2RFC,4Hg"),
-            new SpecialEffectRecipe("Radiant Canister", "Mine", "1Po,3PA,4HDP"),
-            new SpecialEffectRecipe("Recycling Cell", "Shield Cell", "5CSU,3Cr,1CCom"),
-            new SpecialEffectRecipe("Reflective Plating", "Armour", "5CC,3HDP,2ThA"),
-            new SpecialEffectRecipe("Reflective Plating", "Hull Reinforcement", "5HCW,3HDP,1PLA,4Zn"),
-            new SpecialEffectRecipe("Regeneration Sequence", "Beam Laser", "3RFC,4SS,1PSFD"),
-            new SpecialEffectRecipe("Reverberating Cascade", "Torpedo,Mine", "2CCom,3CSD,4FiC,4Cr"),
-            new SpecialEffectRecipe("Scramble Spectrum", "Pulse Laser,Burst Laser", "5CS,3USS,5ESED"),
-            new SpecialEffectRecipe("Screening Shell", "Frag Cannon", "5MS,5DSCR,5MCF,3Nb"),
-            new SpecialEffectRecipe("Shift-lock Canister", "Mine", "5TeA,3SWS,5SAll"),
-            new SpecialEffectRecipe("Smart Rounds", "Cannon,Multicannon", "5MS,3SFP,3DED,3CSD"),
-            new SpecialEffectRecipe("Stripped Down", "Engine", "5Fe,3HC,1PLA"),
-            new SpecialEffectRecipe("Stripped Down", "Power Distributor", "5P,3HRC,1PLA"),
-            new SpecialEffectRecipe("Stripped Down", "Weapon", "5SAll,5C,1Sn"),
-            new SpecialEffectRecipe("Stripped Down", "Shield Cell", "5CSU,3Cr,1PLA"),
-            new SpecialEffectRecipe("Stripped Down", "FSD", "5ADWE,3GA,1PLA"),
-            new SpecialEffectRecipe("Stripped Down", "Power Plant", "5GR,3V,1PLA"),
-            new SpecialEffectRecipe("Stripped Down", "Shield Generator", "5WSE,3FFC,1PLA"),
-            new SpecialEffectRecipe("Super Capacitors", "Shield Booster", "3USS,5CC,2Cd"),
-            new SpecialEffectRecipe("Super Conduits", "Power Distributor", "5P,3HRC,1SFP"),
-            new SpecialEffectRecipe("Super Penetrator", "Rail Gun", "3PLA,3RFC,3Zr,5USS"),
-            new SpecialEffectRecipe("Target Lock Breaker", "Plasma Accelerator", "5Se,3SFP,1AEC"),
-            new SpecialEffectRecipe("Thermal Cascade", "Cannon,Seeker Missile,Dumb Missile", "5HCW,4HC,3HDC,5P"),
-            new SpecialEffectRecipe("Thermal Conduit", "Beam Laser,Plasma Accelerator", "5HDP,5S,5TeA"),
-            new SpecialEffectRecipe("Thermal Shock", "Pulse Laser,Burst Laser,Beam Laser,Multicannon", "5FFC,3HRC,3CCo,3W"),
-            new SpecialEffectRecipe("Thermal Spread", "Power Plant", "5GR,3V,1HV"),
-            new SpecialEffectRecipe("Thermal Spread", "FSD", "5ADWE,3GA,1HV,3GR"),
-            new SpecialEffectRecipe("Thermal Spread", "Engine", "5Fe,3HC,1HV"),
-            new SpecialEffectRecipe("Thermal Vent", "Beam Laser", "5FFC,3CPo,3PAll"),
-            new SpecialEffectRecipe("Thermo Block", "Shield Generator", "5WSE,3FFC,1HV"),
-            new SpecialEffectRecipe("Thermo Block", "Shield Booster", "5ABSD,3CCe,3HV"),
-        };
-
-        public static Dictionary<MaterialCommodityMicroResourceType, List<SpecialEffectRecipe>> SpecialEffectsRecipesByMaterial =
-            SpecialEffects.SelectMany(r => r.Ingredients.Select(i => new { mat = i, recipe = r }))
-                              .GroupBy(a => a.mat)
-                              .ToDictionary(g => g.Key, g => g.Select(a => a.recipe).ToList());
-
-        #endregion
     }
 }
