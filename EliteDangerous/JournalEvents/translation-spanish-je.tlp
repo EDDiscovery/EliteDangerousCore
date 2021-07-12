@@ -756,7 +756,7 @@ SECTION ExplorationClass
 .HighestPayout: "Highest Payout: ;cr;N0" => "Mayor pago: ;cr;N0"
 .TotalDistance: "Total Distance: ;ly;N0" => "Distancia total: ;ly;N0"
 .NoofJumps: "No of Jumps: ;;N0" => "No de saltos: ;;N0"
-.GreatestDistance: "Greatest Distance: ;;N0" => "Distancia máxima: ;;N0"
+.GreatestDistance: "Greatest Distance: ;ly;N0" => "Distancia máxima: ;;N0"
 .TimePlayed: "Time Played: " => "Tiempo jugado: "
 .EfficientScans: "Efficient Scans: ;;N0" => "Escaneos eficientes: ;;N0"
 .ShuttleJourneys: "Shuttle Journeys: ;;N0" @
@@ -780,7 +780,7 @@ SECTION SearchAndRescueClass
 .TotalItemsRescued: "Total Items Rescued: ;;N0" => "Total de artículos rescatados: ;;N0"
 .Profit: "Profit: ;cr;N0" => "Beneficio: ;cr;N0"
 .TotalRescueTransactions: "Total Rescue Transactions: ;;N0" => "Total de transacciones de rescate: ;;N0"
-.SalvageLegalPOI: "Legal Salvage Value - Surface: ;cr,N0" @
+.SalvageLegalPOI: "Legal Salvage Value - Surface: ;cr;N0" @
 .SalvageLegalSettlements: "Legal Salvage Value - Settlements: ;cr;N0" @
 .SalvageIllegalPOI: "Illegal Salvage Value - Surface: ;cr;N0" @
 .SalvageIllegalSettlements: "Illegal Salvage Value - Settlements: ;cr;N0" @
@@ -824,7 +824,7 @@ SECTION MulticrewClass
 
 SECTION MaterialTraderStatsClass
 
-.CommodityTrades: "Material" => "Operaciones con Mercancías: ;;N0"
+.CommodityTrades: "Material Trades Completed: ;;N0" => "Operaciones con Mercancías: ;;N0"
 .MaterialTraded: "Material Traded: ;;N0" => "Material negociado: ;;N0"
 .EncodedMaterialsTraded: "Encoded Materials Traded: ;;N0" @
 .RawMaterialsTraded: "Raw Materials Traded: ;;N0" @
@@ -915,6 +915,7 @@ SECTION JournalApproachBody
 .In: "In " => "En "
 
 SECTION JournalEntry
+
 .TME: "{0} days {1} hours {2} minutes" => "{0} días {1} horas {2} minutos"
 .Hyperspace: "Hyperspace" => "Hiperespacio"
 .Supercruise: "Supercruise" => "Supercrucero"
@@ -1146,3 +1147,20 @@ SECTION JournalMicroResources
 .Components: "Components" @
 .Consumables: "Consumables" @
 .Data: "Data" @
+
+SECTION JournalScanInfo
+
+.isa: " is a " @
+.Atmosphere: " Atmosphere: " @
+.terraformable: "terraformable " @
+.LowRadius: " Is tiny." => " Radio bajo"
+.LargeRadius: " Is large." @
+.Signals: " Has signals." => " Tiene señales"
+.Mapped: " (Mapped & Discovered)" => " (Mapeado y descubierto)"
+.MandD: " (Mapped & Discovered)" => " (Mapeado y descubierto)"
+.MP: " (Mapped)" => " (Mapeado)"
+.DIS: " (Discovered)" => " (Descubierto)"
+.islandable: " Is landable." => " es aterrizable"
+.Hasring: " Has ring." => " Tiene anillo."
+.Has: " Has " => " Tiene "
+.eccentricity: " Has an high eccentricity of " @

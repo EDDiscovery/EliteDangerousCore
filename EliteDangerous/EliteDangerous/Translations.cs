@@ -868,6 +868,22 @@ namespace EliteDangerousCore
         ScanDisplayUserControl_BC, // Barycentre of {0}
         ScanDisplayUserControl_Signals, // Signals
 
+        JournalScanInfo_isa, // is a(n)
+        JournalScanInfo_Atmosphere, // Atmosphere
+        JournalScanInfo_terraformable, // terraformable
+        JournalScanInfo_LowRadius, //  Low Radius.
+        JournalScanInfo_LargeRadius, //  Large Radius.
+        JournalScanInfo_Signals, //  Has signals.
+        JournalScanInfo_Mapped, //  (Mapped & Discovered)
+        JournalScanInfo_MandD, //  (Mapped & Discovered)
+        JournalScanInfo_MP, //  (Mapped)
+        JournalScanInfo_DIS, //  (Discovered)
+        JournalScanInfo_islandable, // is landable
+        JournalScanInfo_Hasring, //  Has ring.
+        JournalScanInfo_Has, //  Has
+        JournalScanInfo_eccentricity, // high eccentricity
+        JournalScanInfo_unknownAtmosphere, //unknown atmosphere
+
     }
 
     public static class EDTranslatorExtensions

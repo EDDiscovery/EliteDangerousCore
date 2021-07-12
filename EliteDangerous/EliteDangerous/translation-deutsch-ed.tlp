@@ -667,7 +667,7 @@ SECTION MaterialCommodityMicroResourceType
 .infinity: "Infinity" => "Unendlichkeit"
 .insightentertainmentsuite: "Insight Entertainment Suite" => "Insight-Entertainment-Bibliothek"
 .lazarus: "Lazarus" => "Lazarus"
-.universaltranslator: "Universal Translator" => "Universal-Übersetzer""
+.universaltranslator: "Universal Translator" => "Universal-Übersetzer"
 .biochemicalagent: "Biochemical Agent" => "Biochemischer Wirkstoff"
 .degradedpowerregulator: "Degraded Power Regulator" => "Ausrangierter Energieregulator"
 .hush: "Hush" => "Schnurr"

@@ -780,7 +780,7 @@ SECTION SearchAndRescueClass
 .TotalItemsRescued: "Total Items Rescued: ;;N0" => "Nb d'objets secourus: ;;N0"
 .Profit: "Profit: ;cr;N0" => "Gain: ;cr;N0"
 .TotalRescueTransactions: "Total Rescue Transactions: ;;N0" => "Nb de transaction de rescousse: ;;N0"
-.SalvageLegalPOI: "Legal Salvage Value - Surface: ;cr,N0" @
+.SalvageLegalPOI: "Legal Salvage Value - Surface: ;cr;N0" @
 .SalvageLegalSettlements: "Legal Salvage Value - Settlements: ;cr;N0" @
 .SalvageIllegalPOI: "Illegal Salvage Value - Surface: ;cr;N0" @
 .SalvageIllegalSettlements: "Illegal Salvage Value - Settlements: ;cr;N0" @
@@ -824,7 +824,7 @@ SECTION MulticrewClass
 
 SECTION MaterialTraderStatsClass
 
-.CommodityTrades: "Material" => "Commerce de marchandises: ;;N0"
+.CommodityTrades: "Material Trades Completed: ;;N0" => "Commerce de marchandises: ;;N0"
 .MaterialTraded: "Material Traded: ;;N0" => "Commerce de matériaux: ;;N0"
 .EncodedMaterialsTraded: "Encoded Materials Traded: ;;N0" @
 .RawMaterialsTraded: "Raw Materials Traded: ;;N0" @
@@ -915,6 +915,7 @@ SECTION JournalApproachBody
 .In: "In " => "Dans "
 
 SECTION JournalEntry
+
 .TME: "{0} days {1} hours {2} minutes" => "{0} jours {1} heures {2} minutes"
 .Hyperspace: "Hyperspace" @
 .Supercruise: "Supercruise" @
@@ -1146,3 +1147,20 @@ SECTION JournalMicroResources
 .Components: "Components" @
 .Consumables: "Consumables" @
 .Data: "Data" @
+
+SECTION JournalScanInfo
+
+.isa: " is a " @
+.Atmosphere: " Atmosphere: " @
+.terraformable: "terraformable " @
+.LowRadius: " Is tiny." @
+.LargeRadius: " Is large." @
+.Signals: " Has signals." => " a des signaux."
+.Mapped: " (Mapped & Discovered)" => " (cartographiée & découverte)"
+.MandD: " (Mapped & Discovered)" => " (cartographiée & découverte)"
+.MP: " (Mapped)" => " (cartographiée)"
+.DIS: " (Discovered)" => " (découverte)"
+.islandable: " Is landable." @
+.Hasring: " Has ring." => " a des anneaux."
+.Has: " Has " => " a "
+.eccentricity: " Has an high eccentricity of " @

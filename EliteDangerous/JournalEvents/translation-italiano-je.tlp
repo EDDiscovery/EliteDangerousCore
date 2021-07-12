@@ -780,7 +780,7 @@ SECTION SearchAndRescueClass
 .TotalItemsRescued: "Total Items Rescued: ;;N0" @
 .Profit: "Profit: ;cr;N0" @
 .TotalRescueTransactions: "Total Rescue Transactions: ;;N0" @
-.SalvageLegalPOI: "Legal Salvage Value - Surface: ;cr,N0" @
+.SalvageLegalPOI: "Legal Salvage Value - Surface: ;cr;N0" @
 .SalvageLegalSettlements: "Legal Salvage Value - Settlements: ;cr;N0" @
 .SalvageIllegalPOI: "Illegal Salvage Value - Surface: ;cr;N0" @
 .SalvageIllegalSettlements: "Illegal Salvage Value - Settlements: ;cr;N0" @
@@ -824,7 +824,7 @@ SECTION MulticrewClass
 
 SECTION MaterialTraderStatsClass
 
-.CommodityTrades: "Material" @
+.CommodityTrades: "Material Trades Completed: ;;N0" @
 .MaterialTraded: "Material Traded: ;;N0" @
 .EncodedMaterialsTraded: "Encoded Materials Traded: ;;N0" @
 .RawMaterialsTraded: "Raw Materials Traded: ;;N0" @
@@ -915,6 +915,7 @@ SECTION JournalApproachBody
 .In: "In " @
 
 SECTION JournalEntry
+
 .TME: "{0} days {1} hours {2} minutes" @
 .Hyperspace: "Hyperspace" @
 .Supercruise: "Supercruise" @
@@ -1146,3 +1147,20 @@ SECTION JournalMicroResources
 .Components: "Components" @
 .Consumables: "Consumables" @
 .Data: "Data" @
+
+SECTION JournalScanInfo
+
+.isa: " is a " @
+.Atmosphere: " Atmosphere: " @
+.terraformable: "terraformable " @
+.LowRadius: " Is tiny." @
+.LargeRadius: " Is large." @
+.Signals: " Has signals." @
+.Mapped: " (Mapped & Discovered)" @
+.MandD: " (Mapped & Discovered)" @
+.MP: " (Mapped)" @
+.DIS: " (Discovered)" @
+.islandable: " Is landable." @
+.Hasring: " Has ring." @
+.Has: " Has " @
+.eccentricity: " Has an high eccentricity of " @

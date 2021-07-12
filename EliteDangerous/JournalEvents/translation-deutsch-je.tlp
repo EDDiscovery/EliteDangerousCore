@@ -760,7 +760,7 @@ SECTION ExplorationClass
 .TimePlayed: "Time Played: " => "Spielzeit: "
 .EfficientScans: "Efficient Scans: ;;N0" => "Effiziente Scans: ;;N0"
 .ShuttleJourneys: "Shuttle Journeys: ;;N0" => "Shuttle-Reisen: ;;N0"
-.ShuttleDistanceTravelled: "Shuttle Distance Travelled: ;ly,N0" => "Per Shuttle zurückgelegte Distanz: ;Lj;N0"
+.ShuttleDistanceTravelled: "Shuttle Distance Travelled: ;ly;N0" => "Per Shuttle zurückgelegte Distanz: ;Lj;N0"
 .SpentOnShuttles: "Credits Spent on Shuttles: ;cr;N0" => "In Shuttles investierte Credits: ;Cr;N0"
 .FirstFootfalls: "First Footfalls: ;;N0" => "Erstbetretungen: ;;N0"
 .PlanetFootfalls: "Planets walked on: ;;N0" => "Zu Fuß betretene Planeten: ;;N0"
@@ -780,7 +780,7 @@ SECTION SearchAndRescueClass
 .TotalItemsRescued: "Total Items Rescued: ;;N0" => "Insgesamt gerettete Gegenstände: ;;N0"
 .Profit: "Profit: ;cr;N0" => "Gewinn: ;Cr;N0"
 .TotalRescueTransactions: "Total Rescue Transactions: ;;N0" => "Gesamte Rettungstransaktionen: ;;N0"
-.SalvageLegalPOI: "Legal Salvage Value - Surface: ;cr,N0" => "Wert legaler Bergungen (Oberfläche): ;Cr;N0"
+.SalvageLegalPOI: "Legal Salvage Value - Surface: ;cr;N0" => "Wert legaler Bergungen (Oberfläche): ;Cr;N0"
 .SalvageLegalSettlements: "Legal Salvage Value - Settlements: ;cr;N0" => "Wert legaler Bergungen (Siedlung): ;Cr;N0"
 .SalvageIllegalPOI: "Illegal Salvage Value - Surface: ;cr;N0" => "Wert illegaler Bergungen (Oberfläche): ;Cr;N0"
 .SalvageIllegalSettlements: "Illegal Salvage Value - Settlements: ;cr;N0" => "Wert illegaler Bergungen (Siedlung): ;Cr;N0"
@@ -824,7 +824,7 @@ SECTION MulticrewClass
 
 SECTION MaterialTraderStatsClass
 
-.CommodityTrades: "Material" => "Abgeschlossener Materialhandel: ;;N0"
+.CommodityTrades: "Material Trades Completed: ;;N0" => "Abgeschlossener Materialhandel: ;;N0"
 .MaterialTraded: "Material Traded: ;;N0" => "Gehandelte Materialien: ;;N0"
 .EncodedMaterialsTraded: "Encoded Materials Traded: ;;N0" => "Gehandelte verschlüsselte Materialien: ;;N0"
 .RawMaterialsTraded: "Raw Materials Traded: ;;N0" => "Gehandelte Rohmaterialien: ;;N0"
@@ -915,6 +915,7 @@ SECTION JournalApproachBody
 .In: "In " => "In "
 
 SECTION JournalEntry
+
 .TME: "{0} days {1} hours {2} minutes" => "{0} Tage {1} Stunden {2} Minuten"
 .Hyperspace: "Hyperspace" => "Hyperraum"
 .Supercruise: "Supercruise" => "Supercruise"
@@ -1098,7 +1099,7 @@ SECTION JournalEntry
 .Fuel: "Fuel: ; tons;0.0" => "Treibstoff: ; Tonnen;0.0"
 .Taxi: "Taxi" => "Taxi"
 .Backpack: "Backpack" => "Rucksack"
-.Locker: "Locker" ="Spind"
+.Locker: "Locker" => "Spind"
 .Mods: "Mods: " => "Mods"
 .Class: "Class: " => "Klasse"
 
@@ -1146,3 +1147,20 @@ SECTION JournalMicroResources
 .Components: "Components" => "Komponenten"
 .Consumables: "Consumables" => "Verbrauchsgegenstände"
 .Data: "Data" => "Daten"
+
+SECTION JournalScanInfo
+
+.isa: " is a " => " ist ein/e "
+.Atmosphere: " Atmosphere: " @
+.terraformable: "terraformable " @
+.LowRadius: " Is tiny." => " niedriger Radius"
+.LargeRadius: " Is large." => " Ist groß."
+.Signals: " Has signals." => " hat Signale."
+.Mapped: " (Mapped & Discovered)" => " (Kartographiert & erkundet)"
+.MandD: " (Mapped & Discovered)" => " (Kartographiert & erkundet)"
+.MP: " (Mapped)" => " (Kartographiert)"
+.DIS: " (Discovered)" => " (Erkundet)"
+.islandable: " Is landable." => " Ist landbar."
+.Hasring: " Has ring." => " hat Ringe."
+.Has: " Has " => " hat "
+.eccentricity: " Has an high eccentricity of " => " Hat eine hohe Exzentrizität von "

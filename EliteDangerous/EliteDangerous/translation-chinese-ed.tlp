@@ -20,7 +20,7 @@ SECTION Bodies
 .BH: "Black Hole" => "黑洞"
 .EX: "Exotic" => "未知的"
 .SMBH: "Super Massive Black Hole" => "超大型黑洞"
-.ABSG: "Blue White Super Giant" => "A型蓝白色超巨星"
+.ABSG: "A Blue White Super Giant" => "A型蓝白色超巨星"
 .BBSG: "B Blue White Super Giant" @
 .WSG: "F White Super Giant" => "F型白色超巨星"
 .MSR: "M Red Super Giant" => "M型红色超巨星"

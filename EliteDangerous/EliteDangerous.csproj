@@ -108,6 +108,7 @@
     <Compile Include="IGAU\IGAUClass.cs" />
     <Compile Include="JournalEvents\JournalEmbarkDisembark.cs" />
     <Compile Include="JournalEvents\JournalCarrier.cs" />
+    <Compile Include="JournalEvents\JournalScanInfo.cs" />
     <Compile Include="JournalEvents\JournalWeapons.cs" />
     <Compile Include="JournalEvents\JournalTaxiDropShip.cs" />
     <Compile Include="JournalEvents\JournalSuits.cs" />
