@@ -844,6 +844,34 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
+        static public System.Drawing.Image GetPlanetImageNotScanned()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Unknown");
+        }
+
+        static public System.Drawing.Image GetMoonImageNotScanned()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Unknown");
+        }
+
+        public string ShortInformation()
+        {
+            if (IsStar)
+            {
+                return BaseUtils.FieldBuilder.Build("Mass: ;SM;0.00".T(EDTx.JournalScan_MSM), nStellarMass,
+                                                "Age: ;my;0.0".T(EDTx.JournalScan_Age), nAge,
+                                                "Radius: ".T(EDTx.JournalScan_RS), RadiusText(),
+                                                "Dist: ".T(EDTx.JournalScan_DIST), DistanceFromArrivalText);
+            }
+            else
+            {
+                return BaseUtils.FieldBuilder.Build("Mass: ".T(EDTx.JournalScan_MASS), MassEMText(),
+                                                 "Radius: ".T(EDTx.JournalScan_RS), RadiusText(),
+                                                 "Dist: ".T(EDTx.JournalScan_DIST), DistanceFromArrivalText);
+            }
+        }
+
+
         public string SurveyorInfoLine(ISystem sys, bool hassignals,  bool volcanism, bool showvalues, bool shortinfo, bool showGravity, 
                                     int lowRadiusLimit, int largeRadiusLimit, double eccentricityLimit)
         {
@@ -915,16 +943,6 @@ namespace EliteDangerousCore.JournalEvents
                 information.Append(' ').Append(js.DistanceFromArrivalText);
 
             return information.ToString();
-        }
-
-        static public System.Drawing.Image GetPlanetImageNotScanned()
-        {
-            return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Unknown");
-        }
-
-        static public System.Drawing.Image GetMoonImageNotScanned()
-        {
-            return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Unknown");
         }
 
 

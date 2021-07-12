@@ -600,29 +600,7 @@ namespace EliteDangerousCore.JournalEvents
             detailed = DisplayString(0, includefront: false);
         }
 
-        public string ShortInformation(bool name = false)
-        {
-            if (IsStar)
-            {
-                return BaseUtils.FieldBuilder.Build("", StarTypeText, "Mass: ;SM;0.00".T(EDTx.JournalScan_MSM), nStellarMass,
-                                                "Age: ;my;0.0".T(EDTx.JournalScan_Age), nAge,
-                                                "Radius: ".T(EDTx.JournalScan_RS), RadiusText(),
-                                                "Dist: ".T(EDTx.JournalScan_DIST), DistanceFromArrivalText,
-                                                "Name: ".T(EDTx.JournalScan_BNME), name ? BodyName : null);
-            }
-            else
-            {
-                return BaseUtils.FieldBuilder.Build("", PlanetTypeText, "Mass: ".T(EDTx.JournalScan_MASS), MassEMText(),
-                                                "<;, Landable".T(EDTx.JournalScan_Landable), IsLandable,
-                                                "<;, Terraformable".T(EDTx.JournalScan_Terraformable), TerraformState == "Terraformable", "", Atmosphere,
-                                                 "Gravity: ;G;0.00".T(EDTx.JournalScan_Gravity), nSurfaceGravityG,
-                                                 "Radius: ".T(EDTx.JournalScan_RS), RadiusText(),
-                                                 "Dist: ".T(EDTx.JournalScan_DIST), DistanceFromArrivalText,
-                                                 "Name: ".T(EDTx.JournalScan_SNME), name ? BodyName : null);
-            }
-        }
-
-        // has no trailing LF
+          // has no trailing LF
         public string DisplayString(int indent = 0, List<MaterialCommodityMicroResource> historicmatlist = null,
                                                         List<MaterialCommodityMicroResource> currentmatlist = null,
                                                         bool includefront = true)//, bool mapped = false, bool efficiencyBonus = false)
