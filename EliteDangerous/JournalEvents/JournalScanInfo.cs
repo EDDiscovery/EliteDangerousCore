@@ -896,7 +896,7 @@ namespace EliteDangerousCore.JournalEvents
             information.Append((js.IsLandable) ? @" Is landable.".T(EDTx.JournalScanInfo_islandable) : null);
             information.Append((js.IsLandable && showGravity && js.nSurfaceGravityG.HasValue) ? @" (" + Math.Round(js.nSurfaceGravityG.Value, 2, MidpointRounding.AwayFromZero) + "g)" : null);
             information.Append((js.HasAtmosphericComposition && js.IsLandable) ? @" Atmosphere: ".T(EDTx.JournalScanInfo_Atmosphere) + (js.Atmosphere ?? "unknown atmosphere".T(EDTx.JournalScanInfo_unknownAtmosphere)) + "." : null);
-            information.Append((js.HasMeaningfulVolcanism && js.IsLandable | volcanism) ? @" Has ".T(EDTx.JournalScanInfo_Has) + js.Volcanism + "." : null);
+            information.Append((js.HasMeaningfulVolcanism && volcanism) ? @" Has ".T(EDTx.JournalScanInfo_Has) + js.Volcanism + "." : null);
             information.Append((hassignals) ? " Has signals.".T(EDTx.JournalScanInfo_Signals) : null);
             information.Append((js.HasRings) ? @" Is ringed.".T(EDTx.JournalScanInfo_Hasring) : null);
             information.Append((js.nEccentricity >= eccentricityLimit) ? @" Has an high eccentricity of ".T(EDTx.JournalScanInfo_eccentricity) + js.nEccentricity + "." : null);
