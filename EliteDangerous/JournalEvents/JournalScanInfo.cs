@@ -872,7 +872,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
 
-        public string SurveyorInfoLine(ISystem sys, bool hassignals,  bool volcanism, bool showvalues, bool shortinfo, bool showGravity, 
+        public string SurveyorInfoLine(ISystem sys, bool hassignals,  bool showvolcanism, bool showvalues, bool shortinfo, bool showGravity, bool showAtmos, bool showRings, 
                                     int lowRadiusLimit, int largeRadiusLimit, double eccentricityLimit)
         {
             JournalScan js = this;
@@ -895,10 +895,10 @@ namespace EliteDangerousCore.JournalEvents
             information.Append((js.nRadius > largeRadiusLimit && js.IsPlanet && js.IsLandable) ? @" Is large.".T(EDTx.JournalScanInfo_LargeRadius) : null);
             information.Append((js.IsLandable) ? @" Is landable.".T(EDTx.JournalScanInfo_islandable) : null);
             information.Append((js.IsLandable && showGravity && js.nSurfaceGravityG.HasValue) ? @" (" + Math.Round(js.nSurfaceGravityG.Value, 2, MidpointRounding.AwayFromZero) + "g)" : null);
-            information.Append((js.HasAtmosphericComposition && js.IsLandable) ? @" Atmosphere: ".T(EDTx.JournalScanInfo_Atmosphere) + (js.Atmosphere ?? "unknown atmosphere".T(EDTx.JournalScanInfo_unknownAtmosphere)) + "." : null);
-            information.Append((js.HasMeaningfulVolcanism && volcanism) ? @" Has ".T(EDTx.JournalScanInfo_Has) + js.Volcanism + "." : null);
+            information.Append((js.HasAtmosphericComposition && showAtmos) ? @" Atmosphere: ".T(EDTx.JournalScanInfo_Atmosphere) + (js.Atmosphere ?? "unknown atmosphere".T(EDTx.JournalScanInfo_unknownAtmosphere)) + "." : null);
+            information.Append((js.HasMeaningfulVolcanism && showvolcanism) ? @" Has ".T(EDTx.JournalScanInfo_Has) + js.Volcanism + "." : null);
             information.Append((hassignals) ? " Has signals.".T(EDTx.JournalScanInfo_Signals) : null);
-            information.Append((js.HasRings) ? @" Is ringed.".T(EDTx.JournalScanInfo_Hasring) : null);
+            information.Append((js.HasRings && showRings) ? @" Is ringed.".T(EDTx.JournalScanInfo_Hasring) : null);
             information.Append((js.nEccentricity >= eccentricityLimit) ? @" Has an high eccentricity of ".T(EDTx.JournalScanInfo_eccentricity) + js.nEccentricity + "." : null);
 
             var ev = js.GetEstimatedValues();
