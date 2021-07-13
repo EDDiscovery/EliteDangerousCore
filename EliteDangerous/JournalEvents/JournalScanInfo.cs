@@ -946,6 +946,42 @@ namespace EliteDangerousCore.JournalEvents
         }
 
 
+        public void AccumulateJumponium(ref string jumponium, string sysname)
+        {
+            if (IsLandable == true && HasMaterials) // Landable bodies with valuable materials, collect into jumponimum
+            {
+                int basic = 0;
+                int standard = 0;
+                int premium = 0;
+
+                foreach (KeyValuePair<string, double> mat in Materials)
+                {
+                    string usedin = Recipes.UsedInSythesisByFDName(mat.Key);
+                    if (usedin.Contains("FSD-Basic"))
+                        basic++;
+                    if (usedin.Contains("FSD-Standard"))
+                        standard++;
+                    if (usedin.Contains("FSD-Premium"))
+                        premium++;
+                }
+
+                if (basic > 0 || standard > 0 || premium > 0)
+                {
+                    int mats = basic + standard + premium;
+
+                    StringBuilder jumpLevel = new StringBuilder();
+
+                    if (basic != 0)
+                        jumpLevel.AppendPrePad(basic + "/" + Recipes.FindSynthesis("FSD", "Basic").Count + " Basic".T(EDTx.JournalScanInfo_BFSD), ", ");
+                    if (standard != 0)
+                        jumpLevel.AppendPrePad(standard + "/" + Recipes.FindSynthesis("FSD", "Standard").Count + " Standard".T(EDTx.JournalScanInfo_SFSD), ", ");
+                    if (premium != 0)
+                        jumpLevel.AppendPrePad(premium + "/" + Recipes.FindSynthesis("FSD", "Premium").Count + " Premium".T(EDTx.JournalScanInfo_PFSD), ", ");
+
+                    jumponium = jumponium.AppendPrePad(string.Format("{0} has {1} level elements.".T(EDTx.JournalScanInfo_LE), sysname, jumpLevel), Environment.NewLine);
+                }
+            }
+        }
     }
 
 }

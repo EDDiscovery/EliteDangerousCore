@@ -1164,3 +1164,7 @@ SECTION JournalScanInfo
 .Hasring: " Has ring." @
 .Has: " Has " @
 .eccentricity: " Has an high eccentricity of " @
+.BFSD: " Basic" => " 种基础"
+.SFSD: " Standard" => " 种标准"
+.PFSD: " Premium" => " 种高级"
+.LE: "{0} has {1} level elements." => "{0} 上有 {1}的元素。"

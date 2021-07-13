@@ -1161,3 +1161,7 @@ SECTION JournalScanInfo
 .Has: " Has " @
 .eccentricity: " Has an high eccentricity of " @
 .unknownAtmosphere "unknown atmosphere"
+.BFSD: " Basic" @
+.SFSD: " Standard" @
+.PFSD: " Premium" @
+.LE: "{0} has {1} level elements." @

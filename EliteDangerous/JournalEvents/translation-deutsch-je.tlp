@@ -1164,3 +1164,7 @@ SECTION JournalScanInfo
 .Hasring: " Has ring." => " hat Ringe."
 .Has: " Has " => " hat "
 .eccentricity: " Has an high eccentricity of " => " Hat eine hohe Exzentrizität von "
+.BFSD: " Basic" => "Einfach"
+.SFSD: " Standard" => "Standard"
+.PFSD: " Premium" => "Premium"
+.LE: "{0} has {1} level elements." => "{0} hat Stufe {1} Elemente."

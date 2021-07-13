@@ -883,6 +883,10 @@ namespace EliteDangerousCore
         JournalScanInfo_Has, //  Has
         JournalScanInfo_eccentricity, // high eccentricity
         JournalScanInfo_unknownAtmosphere, //unknown atmosphere
+        JournalScanInfo_BFSD, //  Basic
+        JournalScanInfo_SFSD, //  Standard
+        JournalScanInfo_PFSD, //  Premium
+        JournalScanInfo_LE, // {0} has {1} level elements.
 
     }
 
