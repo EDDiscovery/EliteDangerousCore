@@ -341,7 +341,7 @@ public string Format(string frontline = "    ")
                         "Greatest Distance: ;;N0".T(EDTx.ExplorationClass_GreatestDistance), GreatestDistanceFromStart,
                         "Time Played: ".T(EDTx.ExplorationClass_TimePlayed), TimePlayed.SecondsToDHMString(),
                         "Shuttle Journeys: ;;N0".T(EDTx.ExplorationClass_ShuttleJourneys), ShuttleJourneys,
-                        "Shuttle Distance Travelled: ;ly,N0".T(EDTx.ExplorationClass_ShuttleDistanceTravelled), ShuttleDistanceTravelled,
+                        "Shuttle Distance Travelled: ;ly;N0".T(EDTx.ExplorationClass_ShuttleDistanceTravelled), ShuttleDistanceTravelled,
                         "Credits Spent on Shuttles: ;cr;N0".T(EDTx.ExplorationClass_SpentOnShuttles), SpentOnShuttles,
                         "First Footfalls: ;;N0".T(EDTx.ExplorationClass_FirstFootfalls), FirstFootfalls,
                         "Planets walked on: ;;N0".T(EDTx.ExplorationClass_PlanetFootfalls), PlanetFootfalls,
