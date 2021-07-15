@@ -57,7 +57,7 @@ namespace EliteDangerousCore
         public virtual bool IsHorizons { get { return TravelLogUnit.Get(TLUId)?.Horizons ?? false; } }     
         public virtual bool IsOdyssey { get { return TravelLogUnit.Get(TLUId)?.Odyssey ?? false; } }       
 
-        public abstract void FillInformation(ISystem sys, out string info, out string detailed);     // all entries must implement
+        public abstract void FillInformation(ISystem sys, string whereami, out string info, out string detailed);     // all entries must implement
 
         // the long name of it, such as Approach Body. May be overridden, is translated
         public virtual string SummaryName(ISystem sys) { return TranslatedEventNames.ContainsKey(EventTypeID) ? TranslatedEventNames[EventTypeID] : EventTypeID.ToString(); }  // entry may be overridden for specialist output

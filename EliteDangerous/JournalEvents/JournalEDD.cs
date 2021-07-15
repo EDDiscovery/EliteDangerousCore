@@ -92,12 +92,12 @@ namespace EliteDangerousCore.JournalEvents
         public bool HasCommodity(string fdname) { return Commodities.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase)) >= 0; }
         public bool HasCommodityToBuy(string fdname) { return Commodities.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase) && x.stock > 0) >= 0; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            FillInformation(sys, out info, out detailed, Commodities.Count > 60 ? 2 : 1);
+            FillInformation(sys, whereami, out info, out detailed, Commodities.Count > 60 ? 2 : 1);
         }
 
-        public void FillInformation(ISystem sys, out string info, out string detailed, int maxcol)
+        public void FillInformation(ISystem sys, string whereami, out string info, out string detailed, int maxcol)
         {
 
             info = BaseUtils.FieldBuilder.Build("Prices on ; items".T(EDTx.JournalCommodityPricesBase_PON), Commodities.Count, 
@@ -184,7 +184,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
 
             info = "";

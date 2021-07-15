@@ -49,7 +49,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? OnStation { get; set; }
         public bool? OnPlanet { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
             // TBD enhance
             info = JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude) + BaseUtils.FieldBuilder.Build(", NPC Controlled;".T(EDTx.JournalEntry_NPCControlled), PlayerControlled, ", " + "Nearest: ".T(EDTx.JournalEntry_Nearest), NearestDestination_Localised);
@@ -88,7 +88,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? OnStation { get; set; }
         public bool? OnPlanet { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             //TBD enhance
             info = JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude) + BaseUtils.FieldBuilder.Build(", NPC Controlled;".T(EDTx.JournalEntry_NPCControlled), PlayerControlled, ", " + "Nearest: ".T(EDTx.JournalEntry_Nearest), NearestDestination_Localised);

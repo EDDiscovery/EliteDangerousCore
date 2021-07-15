@@ -73,7 +73,7 @@ namespace EliteDangerousCore.JournalEvents
         public FLEETCARRIERClass FLEETCARRIER { get; set; }
         public ExobiologyClass Exobiology { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("Wealth: ;cr;N0".T(EDTx.JournalEntry_Wealth), BankAccount.CurrentWealth, "Notoriety Index: ;;N0".T(EDTx.JournalEntry_NotorietyIndex), Crime.Notoriety);
 

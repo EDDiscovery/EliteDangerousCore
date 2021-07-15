@@ -41,7 +41,7 @@ namespace EliteDangerousCore.JournalEvents
         public long Price { get; set; }
         public string[] SuitMods { get; set; }          // may be null or empty
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             string smod = SuitMods != null ? string.Join(", ", SuitMods) : null;
             info = BaseUtils.FieldBuilder.Build("", FriendlyName, "Mods: ".T(EDTx.JournalEntry_Mods), smod, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Price);
@@ -87,7 +87,7 @@ namespace EliteDangerousCore.JournalEvents
         //TBD
         public string[] SuitMods { get; set; }      // may be null
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< sell price ; cr;N0".T(EDTx.JournalEntry_sellprice), Price);
             detailed = "";
@@ -151,7 +151,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public SuitLoadout.LoadoutModule[] Modules { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "< ++> ", LoadoutName);
             detailed = "";
@@ -210,7 +210,7 @@ namespace EliteDangerousCore.JournalEvents
         public ulong LoadoutID { get; set; }
         public SuitLoadout.LoadoutModule[] Modules { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", SuitID % 10000, "", LoadoutID % 10000, "", SuitFriendlyName, "< ==> ", LoadoutName);
             detailed = "";
@@ -265,7 +265,7 @@ namespace EliteDangerousCore.JournalEvents
         public string LoadoutName { get; set; }
         public ulong LoadoutID { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "< --> ", LoadoutName);
             detailed = "";
@@ -316,7 +316,7 @@ namespace EliteDangerousCore.JournalEvents
         public string[] WeaponMods { get; set; }    // may be null or empty
         public ulong SuitModuleID { get; set; }         // aka weapon ID
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             string wmod = WeaponMods != null ? string.Join(", ", WeaponMods) : null;
             info = BaseUtils.FieldBuilder.Build("", SuitID % 10000, "", LoadoutID%10000, "", SuitFriendlyName, "<: ", LoadoutName, "<: ", SlotFriendlyName, "< ++> ", ModuleNameFriendly, "Class: ".T(EDTx.JournalEntry_Class), Class, "Mods: ".T(EDTx.JournalEntry_Mods), wmod);
@@ -391,7 +391,7 @@ namespace EliteDangerousCore.JournalEvents
         public int Class { get; set; }        // may not be there
         public string[] WeaponMods { get; set; }    // may be null or empty
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "<: ", LoadoutName, "<: ", SlotFriendlyName, "< --> ", ModuleNameFriendly);
             detailed = "";
@@ -437,7 +437,7 @@ namespace EliteDangerousCore.JournalEvents
         public ulong LoadoutID { get; set; }
         public string LoadoutName { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "<: ==> ", LoadoutName);
             detailed = "";
@@ -481,7 +481,7 @@ namespace EliteDangerousCore.JournalEvents
         //tbd check new fields
         public SuitLoadout.LoadoutModule[] Modules;
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "< ==> ", LoadoutName);
             detailed = "";
@@ -530,7 +530,7 @@ namespace EliteDangerousCore.JournalEvents
         public int Class { get; set; }
         public string[] SuitMods { get; set; }          // may be null or empty
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             long? p = Cost > 0 ? Cost : default(long?);
             string smod = SuitMods != null ? string.Join(", ", SuitMods) : null;

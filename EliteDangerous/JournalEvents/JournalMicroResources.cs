@@ -160,7 +160,7 @@ namespace EliteDangerousCore.JournalEvents
         public MicroResource[] Consumables { get; set; }
         public MicroResource[] Data { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = "";
             detailed = "";
@@ -239,7 +239,7 @@ namespace EliteDangerousCore.JournalEvents
         public int Price { get; set; }
         public long MarketID { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Resource.FriendlyName, "", Resource.Count, "< buy price ; cr;N0".T(EDTx.JournalEntry_buyprice), Price);
             detailed = "";
@@ -277,7 +277,7 @@ namespace EliteDangerousCore.JournalEvents
         public long Price { get; set; }
         public long MarketID { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = "";
             detailed = "";
@@ -337,7 +337,7 @@ namespace EliteDangerousCore.JournalEvents
         public int Count { get; set; }
         public long MarketID { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Received_FriendlyName, "; items".T(EDTx.JournalEntry_items), Count);
             detailed = MicroResource.List(Offered);
@@ -435,7 +435,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public bool ThrowGrenade { get { return Removed != null && Added == null && Removed.Length == 1 && Removed[0].Name.Equals("amm_grenade_frag"); } }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = "";
             detailed = "";
@@ -503,7 +503,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public bool Stolen { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Resource.Name);     // may be null
             info = BaseUtils.FieldBuilder.Build("", Resource.FriendlyName, "< (;)", mcd?.TranslatedCategory, "< ; items".T(EDTx.JournalEntry_MatC), Resource.Count, ";Stolen".T(EDTx.JournalEntry_Stolen), Stolen);
@@ -534,7 +534,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public MicroResource Resource { get; set; } = new MicroResource();
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Resource.Name);     // may be null
             info = BaseUtils.FieldBuilder.Build("", Resource.FriendlyName, "< (;)", mcd?.TranslatedCategory, "< ; items".T(EDTx.JournalEntry_MatC), Resource.Count);
@@ -566,7 +566,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public MicroResource Resource { get; set; } = new MicroResource();
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = Resource.FriendlyName;
             detailed = "";

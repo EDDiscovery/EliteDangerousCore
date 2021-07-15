@@ -33,7 +33,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "", -Cost);
         }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("; cr;N0", Cost);
             detailed = "";

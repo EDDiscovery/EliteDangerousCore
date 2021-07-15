@@ -38,7 +38,7 @@ namespace EliteDangerousCore.JournalEvents
         public int Federation { get; set; }
         public int CQC { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("Combat: ;%".T(EDTx.JournalProgress_Combat), Combat,
                                       "Trade: ;%".T(EDTx.JournalProgress_Trade), Trade,

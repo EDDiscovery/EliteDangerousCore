@@ -37,7 +37,7 @@ namespace EliteDangerousCore.JournalEvents
             return json["event"].Str("Unknown").SplitCapsWordFull();
         }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             JObject jt = json.Clone().Object();
             jt.Remove("timestamp");

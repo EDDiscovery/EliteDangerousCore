@@ -25,7 +25,7 @@ namespace EliteDangerousCore.JournalEvents
         {
         }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {         
             info = "";
             detailed = "";

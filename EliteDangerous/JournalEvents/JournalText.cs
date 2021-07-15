@@ -37,7 +37,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Message { get; set; }
         public bool Command { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("To: ".T(EDTx.JournalSendText_To), To_Localised, "Msg: ".T(EDTx.JournalSendText_Msg), Message);
             detailed = "";
@@ -73,7 +73,7 @@ namespace EliteDangerousCore.JournalEvents
         public List<JournalReceiveText> MergedEntries { get; set; }    // if verbose.. doing it this way does not break action packs as the variables are maintained
                                                                        // This is second, third merge etc.  First one is in above variables
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             detailed = "";
             if (MergedEntries == null)

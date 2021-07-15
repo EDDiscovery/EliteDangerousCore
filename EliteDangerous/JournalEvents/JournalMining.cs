@@ -46,7 +46,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Type_Localised);
         }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Type);
             if (mcd != null)
@@ -67,7 +67,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Body { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = Body;
             detailed = "";
@@ -122,7 +122,7 @@ namespace EliteDangerousCore.JournalEvents
         public double Remaining { get; set; }
         public Material[] Materials { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", FriendlyMotherlodeMaterial, "", Content_Localised, "Remaining: ;%;N1".T(EDTx.JournalProspectedAsteroid_Remaining), Remaining);
             

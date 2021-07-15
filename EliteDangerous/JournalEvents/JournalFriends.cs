@@ -58,7 +58,7 @@ namespace EliteDangerousCore.JournalEvents
         public List<FriendStatus> StatusList { get; set; }        // EDD addition.. used when agregating, null if single entry
         public List<string> NameList { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
             detailed = "";
 

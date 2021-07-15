@@ -92,7 +92,7 @@ namespace EliteDangerousCore.DLL
                 travelstate = he.Status.TravelState.ToString(),
             };
 
-            he.journalEntry.FillInformation(he.System, out je.info, out je.detailedinfo);
+            he.journalEntry.FillInformation(he.System, he.WhereAmI, out je.info, out je.detailedinfo);
 
             je.materials = (from x in mats select x.Details.Name + ":" + x.Count.ToStringInvariant() + ":" + x.Details.FDName).ToArray();
             je.commodities = (from x in commds select x.Details.Name + ":" + x.Count.ToStringInvariant() + ":" + x.Details.FDName).ToArray();

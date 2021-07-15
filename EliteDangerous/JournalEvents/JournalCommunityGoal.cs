@@ -115,7 +115,7 @@ namespace EliteDangerousCore.JournalEvents
         public List<CommunityGoal> CommunityGoals;
         public string CommunityGoalList;
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
             info = CommunityGoalList;
             detailed = "";
@@ -144,7 +144,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Name { get; set; }
         public string System { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Name, "< at ; Star System".T(EDTx.JournalEntry_CGS), System);
             detailed = "";
@@ -164,7 +164,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Name { get; set; }
         public string System { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
 
             info = BaseUtils.FieldBuilder.Build("", Name, "< at ; Star System".T(EDTx.JournalEntry_CGS), System);
@@ -192,7 +192,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name + " " + System, Reward);
         }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Name, "< at ; Star System".T(EDTx.JournalEntry_CGS), System, "Reward: ; cr;N0".T(EDTx.JournalEntry_Reward), Reward);
             detailed = "";

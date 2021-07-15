@@ -65,7 +65,7 @@ namespace EliteDangerousCore.JournalEvents
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("At ".T(EDTx.JournalCodexEntry_At), System,
                                                 "in ".T(EDTx.JournalCodexEntry_in), Region_Localised,

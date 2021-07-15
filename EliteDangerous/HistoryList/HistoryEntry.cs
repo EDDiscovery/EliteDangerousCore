@@ -303,7 +303,7 @@ namespace EliteDangerousCore
 
         public void FillInformation(out string EventDescription, out string EventDetailedInfo)
         {
-            journalEntry.FillInformation(System, out EventDescription, out EventDetailedInfo);
+            journalEntry.FillInformation(System, WhereAmI, out EventDescription, out EventDetailedInfo);
         }
 
 

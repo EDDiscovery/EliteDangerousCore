@@ -576,7 +576,7 @@ namespace EliteDangerousCore.JournalEvents
             };
         }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             if (IsStar)
             {
@@ -1152,13 +1152,13 @@ namespace EliteDangerousCore.JournalEvents
         public ScanEstimatedValues GetEstimatedValues()
         {
             if (EstimatedValues == null)
-                EstimatedValues = new ScanEstimatedValues(EventTimeUTC, IsStar, StarTypeID, IsPlanet, PlanetTypeID, Terraformable, nStellarMass, nMassEM);
+                EstimatedValues = new ScanEstimatedValues(EventTimeUTC, IsStar, StarTypeID, IsPlanet, PlanetTypeID, Terraformable, nStellarMass, nMassEM, IsOdyssey);
             return EstimatedValues;
         }
 
         public ScanEstimatedValues RecalcEstimatedValues()
         {
-            return new ScanEstimatedValues(EventTimeUTC, IsStar, StarTypeID, IsPlanet, PlanetTypeID, Terraformable, nStellarMass, nMassEM);
+            return new ScanEstimatedValues(EventTimeUTC, IsStar, StarTypeID, IsPlanet, PlanetTypeID, Terraformable, nStellarMass, nMassEM, IsOdyssey);
         }
 
     }

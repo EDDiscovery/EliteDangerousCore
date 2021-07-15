@@ -359,7 +359,7 @@ namespace EliteDangerousCore.JournalEvents
 
         }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
             if (Docked)
             {
@@ -488,7 +488,7 @@ namespace EliteDangerousCore.JournalEvents
             return string.Format("Jumped with carrier {0} to {1}".T(EDTx.JournalCarrierJump_JumpedWith), StationName, Body);
         }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Type ".T(EDTx.JournalLocOrJump_Type), StationType, "< in system ".T(EDTx.JournalLocOrJump_insystem), StarSystem);
 
@@ -581,7 +581,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys) { return string.Format("Jump to {0}".T(EDTx.JournalFSDJump_Jumpto), StarSystem); }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             StringBuilder sb = new StringBuilder();
             if (JumpDist > 0)
@@ -722,7 +722,7 @@ namespace EliteDangerousCore.JournalEvents
         public int? RemainingJumpsInRoute { get; set; }
         public string FriendlyStarClass { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", StarSystem,"",StarClass,"Remaining Jumps".T(EDTx.JournalEntry_RemainingJumps), RemainingJumpsInRoute);
             detailed = "";
@@ -753,7 +753,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys) { return "Charging FSD".T(EDTx.JournalStartJump_ChargingFSD); }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             if (IsHyperspace)
                 info = "Hyperspace".T(EDTx.JournalEntry_Hyperspace) + BaseUtils.FieldBuilder.Build("< to ".T(EDTx.JournalEntry_to), StarSystem, "", FriendlyStarClass);

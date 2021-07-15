@@ -53,7 +53,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("Version: ".T(EDTx.JournalEntry_Version), GameVersion , "Build: ".T(EDTx.JournalEntry_Build), Build , "Part: ".T(EDTx.JournalEntry_Part), Part);
             detailed = "";
@@ -138,7 +138,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool InFighter { get { return ItemData.IsFighter(ShipFD); } }
         public bool InShipSRVOrFighter { get { return ItemData.IsShipSRVOrFighter(ShipFD); } }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Cmdr ", LoadGameCommander, "Ship: ".T(EDTx.JournalEntry_Ship), Ship, "Name: ".T(EDTx.JournalEntry_Name), ShipName, "Ident: ".T(EDTx.JournalEntry_Ident), ShipIdent, "Credits: ;;N0".T(EDTx.JournalEntry_Credits), Credits);
             detailed = BaseUtils.FieldBuilder.Build("Mode: ".T(EDTx.JournalEntry_Mode), GameMode, "Group: ".T(EDTx.JournalEntry_Group), Group, "Not Landed;Landed".T(EDTx.JournalEntry_NotLanded), StartLanded, "Fuel Level: ;;0.0".T(EDTx.JournalEntry_FuelLevel), FuelLevel, "Capacity: ;;0.0".T(EDTx.JournalEntry_Capacity), FuelCapacity);
@@ -169,7 +169,7 @@ namespace EliteDangerousCore.JournalEvents
         {
         }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = "";
             detailed = "";
@@ -187,7 +187,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public int Part { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = Part.ToString();
             detailed = "";

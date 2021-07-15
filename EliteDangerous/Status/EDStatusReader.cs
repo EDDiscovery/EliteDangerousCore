@@ -167,12 +167,14 @@ namespace EliteDangerousCore
 
                     if (text.HasChars() && (prev_text == null || !text.Equals(prev_text)))        // if text not null, and prev text is null OR not equal
                     {
-                        jo = JObject.ParseThrowCommaEOL(text);  // and of course the json could be crap
+                        jo = JObject.Parse(text,JToken.ParseOptions.AllowTrailingCommas | JToken.ParseOptions.CheckEOL | JToken.ParseOptions.ThrowOnError | JToken.ParseOptions.IgnoreBadObjectValue);  // and of course the json could be crap
                         prev_text = text;       // set after successful parse
                     }
                 }
-                catch
-                { }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine("Status reader exception " + ex);
+                }
                 finally
                 {
                     if (stream != null)

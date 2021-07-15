@@ -102,7 +102,7 @@ namespace EliteDangerousCore.JournalEvents
         public Cargo[] Inventory { get; set; }      // may be NULL
         public bool EDDFromFile { get; set; }       // set if from file, but only from nov 2020
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
             info = "No Cargo".T(EDTx.JournalEntry_NoCargo);
             detailed = "";
@@ -180,7 +180,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, FriendlyType + " " + Count);
         }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Type_Localised, "Count: ".T(EDTx.JournalEntry_Count), Count,
                             "<; (Mission Cargo)".T(EDTx.JournalEntry_MissionCargo), MissionID != null,
@@ -246,7 +246,7 @@ namespace EliteDangerousCore.JournalEvents
             mlist.CargoDepot(this);
         }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             if (UpdateEnum == UpdateTypeEnum.Collect)
             {
@@ -299,7 +299,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, FriendlyType);
         }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Type_Localised, ";Stolen".T(EDTx.JournalEntry_Stolen), Stolen, "<; (Mission Cargo)".T(EDTx.JournalEntry_MissionCargo), MissionID != null);
             detailed = "";
@@ -330,7 +330,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = "";
             detailed = "";

@@ -20,7 +20,7 @@ namespace EliteDangerousCore
 {
     public class ScanEstimatedValues
     {
-        public ScanEstimatedValues(DateTime utc, bool isstar , EDStar st, bool isplanet, EDPlanet pl, bool terraformable, double? massstar, double? massem)
+        public ScanEstimatedValues(DateTime utc, bool isstar , EDStar st, bool isplanet, EDPlanet pl, bool terraformable, double? massstar, double? massem, bool odyssey)
         {
             // see https://forums.frontier.co.uk/showthread.php/232000-Exploration-value-formulae/ for detail
 
@@ -124,6 +124,9 @@ namespace EliteDangerousCore
                     double mass = massem.HasValue ? massem.Value : 1.0;
                     double effmapped = 1.25;
                     double firstdiscovery = 2.6;
+                    double mapmultforfirstdiscoveredmapped = 3.699622554;
+                    double mapmultforfirstmappedonly = 8.0956;
+                    double mapmultforalreadymappeddiscovered = 3.3333333;
 
                     double basevalue = PlanetValue33(kValue, mass);
 
@@ -131,16 +134,21 @@ namespace EliteDangerousCore
 
                     EstimatedValueFirstDiscovered = (int)(basevalue * firstdiscovery);
 
-                    EstimatedValueFirstDiscoveredFirstMapped = (int)(basevalue * firstdiscovery * 3.699622554);
-                    EstimatedValueFirstDiscoveredFirstMappedEfficiently = (int)(basevalue * firstdiscovery * 3.699622554 * effmapped);
+                    EstimatedValueFirstDiscoveredFirstMapped = (int)(Ody(basevalue * mapmultforfirstdiscoveredmapped,odyssey) * firstdiscovery); 
+                    EstimatedValueFirstDiscoveredFirstMappedEfficiently = (int)(Ody(basevalue * mapmultforfirstdiscoveredmapped,odyssey) * firstdiscovery * effmapped);  
 
-                    EstimatedValueFirstMapped = (int)(basevalue * 8.0956);
-                    EstimatedValueFirstMappedEfficiently = (int)(basevalue * 8.0956 * effmapped);
+                    EstimatedValueFirstMapped = (int)(Ody(basevalue * mapmultforfirstmappedonly,odyssey));                          
+                    EstimatedValueFirstMappedEfficiently = (int)(Ody(basevalue * mapmultforfirstmappedonly, odyssey) * effmapped);
 
-                    EstimatedValueMapped = (int)(basevalue * 3.3333333333);
-                    EstimatedValueMappedEfficiently = (int)(basevalue * 3.3333333333 * effmapped);
+                    EstimatedValueMapped = (int)Ody(basevalue * mapmultforalreadymappeddiscovered, odyssey);     // already mapped/discovered
+                    EstimatedValueMappedEfficiently = (int)(Ody(basevalue * mapmultforalreadymappeddiscovered, odyssey) * effmapped);
                 }
             }
+        }
+
+        private double Ody(double v, bool odyssey)
+        {
+            return v + (odyssey ? Math.Max(v * 0.3, 555) : 0);
         }
 
         private double StarValue32And33(double k, double m)

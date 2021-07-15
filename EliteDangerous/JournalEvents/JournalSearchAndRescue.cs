@@ -44,7 +44,7 @@ namespace EliteDangerousCore.JournalEvents
             mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, FDName, -Count, 0);
         }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("",Name_Localised , "Num: ".T(EDTx.JournalEntry_Num), Count, "Reward: ".T(EDTx.JournalSearchAndRescue_Reward), Reward);
             detailed = "";

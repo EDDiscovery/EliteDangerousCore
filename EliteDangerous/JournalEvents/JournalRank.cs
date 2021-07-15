@@ -42,7 +42,7 @@ namespace EliteDangerousCore.JournalEvents
         public SoldierRank SoldierRank { get; set; }
         public ExoBiologistRank ExoBiologistRank { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("", Combat.ToString().SplitCapsWord(),
                                       "", Trade.ToString().SplitCapsWord(),
@@ -104,7 +104,7 @@ namespace EliteDangerousCore.JournalEvents
         public SoldierRank? Soldier { get; set; }
         public ExoBiologistRank? ExoBiologist { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Combat: ".T(EDTx.JournalPromotion_Combat), Combat.HasValue ? Combat.ToString().SplitCapsWord() : null,
                                       "Trade: ".T(EDTx.JournalPromotion_Trade), Trade.HasValue ? Trade.ToString().SplitCapsWord() : null,

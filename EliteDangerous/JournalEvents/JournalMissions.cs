@@ -38,7 +38,7 @@ namespace EliteDangerousCore.JournalEvents
         public MissionItem[] FailedMissions { get; set; }
         public MissionItem[] CompletedMissions { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed) 
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("Active: ".T(EDTx.JournalEntry_Active), ActiveMissions?.Length, "Failed: ".T(EDTx.JournalEntry_Failed), FailedMissions?.Length, "Completed: ".T(EDTx.JournalEntry_Completed), CompletedMissions?.Length);
             detailed = "";
@@ -187,7 +187,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public bool? Wing { get; private set; }     // 3.02
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = MissionBasicInfo(true);
             detailed = MissionDetailedInfo(true);
@@ -396,7 +396,7 @@ namespace EliteDangerousCore.JournalEvents
             mlist.Completed(this);
         }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
 
             info = BaseUtils.FieldBuilder.Build("", Name,
@@ -613,7 +613,7 @@ namespace EliteDangerousCore.JournalEvents
         public ulong MissionId { get; set; }
         public long? Fine { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
 
             info = BaseUtils.FieldBuilder.Build("", Name, "Fine: ".T(EDTx.JournalEntry_Fine), Fine);
@@ -651,7 +651,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Name { get; set; }
         public string FDName { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = info = BaseUtils.FieldBuilder.Build("Mission name: ".T(EDTx.JournalEntry_Missionname), Name,
                                       "From: ".T(EDTx.JournalMissionRedirected_From), OldDestinationSystem,
@@ -687,7 +687,7 @@ namespace EliteDangerousCore.JournalEvents
         public ulong MissionId { get; set; }
         public long? Fine { get; set; }
 
-        public override void FillInformation(ISystem sys, out string info, out string detailed)
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Name, "Fine: ".T(EDTx.JournalEntry_Fine), Fine);
             detailed = "";
