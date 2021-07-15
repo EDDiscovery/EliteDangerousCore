@@ -190,11 +190,9 @@ namespace EliteDangerousCore
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " History List Created");
 
-            foreach (var s in hist.StarScan.ToProcess)  System.Diagnostics.Debug.WriteLine($"StarScan could not find {s?.Item2.Name} {s?.Item2.SystemAddress} at {s.Item1.EventTimeUTC}");
+            foreach (var s in hist.StarScan.ToProcess) System.Diagnostics.Debug.WriteLine($"StarScan could not find {s.Item2?.Name ?? "FSSSignalDiscovered"} {s.Item2?.SystemAddress} at {s.Item1.EventTimeUTC}");
 
-        //for (int i = hist.Count - 10; i < hist.Count; i++)  System.Diagnostics.Debug.WriteLine("Hist {0} {1} {2}", hist[i].EventTimeUTC, hist[i].Indexno , hist[i].EventSummary);
-
-        // now database has been updated due to initial fill, now fill in stuff which needs the user database
+            //for (int i = hist.Count - 10; i < hist.Count; i++)  System.Diagnostics.Debug.WriteLine("Hist {0} {1} {2}", hist[i].EventTimeUTC, hist[i].Indexno , hist[i].EventSummary);
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Anaylsis End");
 
