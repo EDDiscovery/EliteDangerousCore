@@ -101,7 +101,10 @@ namespace EliteDangerousCore.DLL
                                 }
                                 else
                                 {
-                                    newdlls = newdlls.AppendPrePad(f.FullName, ",");
+                                    if (!newdlls.Contains(f.FullName))      // Eahlstan special - don't add twice to the newdlls in case we are scanning the same folder twice
+                                    {
+                                        newdlls = newdlls.AppendPrePad(f.FullName, ",");
+                                    }
                                 }
                             }
                         }
