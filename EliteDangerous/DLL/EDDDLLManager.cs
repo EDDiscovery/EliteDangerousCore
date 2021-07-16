@@ -93,7 +93,7 @@ namespace EliteDangerousCore.DLL
                                 }
                             }
                             else
-                            {
+                            {       // not there
                                 if (disallowautomatically[i])
                                 {
                                     alloweddisallowed = alloweddisallowed.AppendPrePad("-" + f.FullName,",");
@@ -225,6 +225,7 @@ namespace EliteDangerousCore.DLL
                 }
             }
 
+            f.Add(new ExtendedControls.ConfigurableForm.Entry("CALL", typeof(ExtendedControls.ExtButton), "Remove All".Tx(), new Point(margin, vpos), new Size(100, 20),null));
             f.AddOK(new Point(width - margin - 100, vpos), "OK".Tx());
             f.AddCancel(new Point(width - margin - 200, vpos), "Cancel".Tx());
 
@@ -234,19 +235,28 @@ namespace EliteDangerousCore.DLL
                 {
                     f.ReturnResult(DialogResult.OK);
                 }
+                else if (controlname == "CALL")
+                {
+                    f.ReturnResult(DialogResult.Abort);
+                }
                 else if (controlname == "Cancel" || controlname == "Close")
                 {
                     f.ReturnResult(DialogResult.Cancel);
                 }
             };
 
-            if (f.ShowDialogCentred(form, icon, "DLL - applies at next restart", closeicon: true) == DialogResult.OK)
+            var res = f.ShowDialogCentred(form, icon, "DLL - applies at next restart", closeicon: true);
+            if (res == DialogResult.OK)
             {
                 alloweddisallowed = "";
                 foreach (var e in f.Entries.Where(x => x.controltype == typeof(ExtendedControls.ExtCheckBox)))
                     alloweddisallowed = alloweddisallowed.AppendPrePad((f.Get(e.controlname) == "1" ? "+" : "-") + e.controlname, ",");
 
                 return alloweddisallowed;
+            }
+            else if ( res == DialogResult.Abort)
+            {
+                return "";
             }
             else
                 return null;
