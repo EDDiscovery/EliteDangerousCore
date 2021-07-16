@@ -93,15 +93,20 @@ namespace EliteDangerousCore.DLL
                                 }
                             }
                             else
-                            {       // not there
+                            {
+                                bool innewdlls = newdlls.Contains(f.FullName);
+
                                 if (disallowautomatically[i])
                                 {
-                                    alloweddisallowed = alloweddisallowed.AppendPrePad("-" + f.FullName,",");
-                                    disabled = disabled.AppendPrePad(f.FullName, ",");
+                                    if (!innewdlls)     // Ealhstan special - if we are scanning the same folder multiple times, it may have already been added to newdlls
+                                    {
+                                        alloweddisallowed = alloweddisallowed.AppendPrePad("-" + f.FullName, ",");
+                                        disabled = disabled.AppendPrePad(f.FullName, ",");
+                                    }
                                 }
                                 else
                                 {
-                                    if (!newdlls.Contains(f.FullName))      // Eahlstan special - don't add twice to the newdlls in case we are scanning the same folder twice
+                                    if (!innewdlls)      // Eahlstan special - don't add twice to the newdlls in case we are scanning the same folder twice
                                     {
                                         newdlls = newdlls.AppendPrePad(f.FullName, ",");
                                     }
