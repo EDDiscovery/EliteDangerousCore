@@ -452,15 +452,23 @@ namespace EliteDangerousCore
                 case EDStar.B_BlueWhiteSuperGiant:
                     return "B Blue White Super Giant".T(EDTx.Bodies_BBSG);
                 case EDStar.F_WhiteSuperGiant:
-                    return "F White Super Giant".T(EDTx.Bodies_WSG);
+                    return "F White Super Giant".T(EDTx.Bodies_FWSG);
+                case EDStar.G_WhiteSuperGiant:
+                    return "G White Super Giant".T(EDTx.Bodies_GWSG);
                 case EDStar.M_RedSuperGiant:
                     return "M Red Super Giant".T(EDTx.Bodies_MSR);
                 case EDStar.M_RedGiant:
                     return "M Red Giant".T(EDTx.Bodies_MOG);
                 case EDStar.K_OrangeGiant:
                     return "K Orange Giant".T(EDTx.Bodies_KOG);
+                case EDStar.Nebula:
+                    return "Nebula".T(EDTx.Bodies_Nebula);
+                case EDStar.StellarRemnantNebula:
+                    return "Stellar Remnant Nebula".T(EDTx.Bodies_StellarRemnantNebula);
                 case EDStar.RoguePlanet:
                     return "Rogue Planet".T(EDTx.Bodies_RP);
+                case EDStar.Unknown:
+                    return "Unknown Star class".T(EDTx.Bodies_SUnknown);
 
                 default:
                     return string.Format("Class {0} star".T(EDTx.Bodies_UNK), id.ToString());

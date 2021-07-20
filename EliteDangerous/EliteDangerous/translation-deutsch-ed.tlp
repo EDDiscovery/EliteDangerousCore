@@ -22,7 +22,8 @@ SECTION Bodies
 .SMBH: "Super Massive Black Hole" => "Supermassives schwarzes Loch"
 .ABSG: "A Blue White Super Giant" => "A Blauweisser Überriese"
 .BBSG: "B Blue White Super Giant" => "B Blauweisser Überriese"
-.WSG: "F White Super Giant" => "F Weisser Überriese"
+.FWSG: "F White Super Giant" => "F Weisser Überriese"
+.GWSG: "G White Super Giant" => "G Weisser Überriese"
 .MSR: "M Red Super Giant" => "M Roter Überriese"
 .MOG: "M Red Giant" => "M Roter Riese"
 .KOG: "K Orange Giant" => "K Orangener Riese"
@@ -30,6 +31,9 @@ SECTION Bodies
 .UNK: "Class {0} star" => "Klasse {0}-Stern"
 .Herbig: "Herbig Ae/Be" => "Herbig Ae/Be"
 .TTauri: "T Tauri" => "T-Tauri"
+.Nebula: "Nebula" => "Nebel"
+.StellarRemnantNebula: "Supernova remnant Nebula" => "Stellarer Überrestnebel"
+.SUnknown: "Unknown Star class" => "Unbekannte Sternenklasse"
 
 SECTION EDPlanet
 
