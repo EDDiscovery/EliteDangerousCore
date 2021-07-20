@@ -54,7 +54,8 @@ namespace EliteDangerousCore
         Bodies_SMBH, //"Super Massive Black Hole" @
         Bodies_ABSG, //"A Blue White Super Giant" @
         Bodies_BBSG, //"B Blue White Super Giant" @
-        Bodies_WSG, //"F White Super Giant" @
+        Bodies_FWSG, //"F White Super Giant" @
+        Bodies_GWSG, //"G White Super Giant" @
         Bodies_MSR, //"M Red Super Giant" @
         Bodies_MOG, //"M Red Giant" @
         Bodies_KOG, //"K Orange Giant" @
@@ -62,6 +63,9 @@ namespace EliteDangerousCore
         Bodies_UNK, // "Class {0} star" @
         Bodies_Herbig, //"Herbig Ae/Be"
         Bodies_TTauri, //"T Tauri"
+        Bodies_Nebula, //"Nebula" @
+        Bodies_StellarRemnantNebula, //"Stellar Remnant Nebula" @
+        Bodies_Unknown, //"Unknown Star class" @
 
         MissionState_ToGo, // To Go:
         MissionState_Progress, // Progress:;%;N1

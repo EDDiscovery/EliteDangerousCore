@@ -22,7 +22,8 @@ SECTION Bodies
 .SMBH: "Super Massive Black Hole" => "Сверхмассивная черная дыра"
 .ABSG: "A Blue White Super Giant" => "Бело-голубой сверхгигант"
 .BBSG: "B Blue White Super Giant" @
-.WSG: "F White Super Giant" => "Белый сверхгигант класса F"
+.FWSG: "F White Super Giant" => "Белый сверхгигант класса F"
+.GWSG: "F White Super Giant" => "Белый сверхгигант класса G"
 .MSR: "M Red Super Giant" => "Красный сверхгигант класса М"
 .MOG: "M Red Giant" => "Оранжевый гигант класса M"
 .KOG: "K Orange Giant" => "Оранжевый гигант класса K"

@@ -21,8 +21,9 @@ SECTION Bodies
 .EX: "Exotic" @
 .SMBH: "Super Massive Black Hole" => "Supermasywna Czarna Dziura"
 .ABSG: "A Blue White Super Giant" => "Niebieskobiały Nadolbrzym A"
-.BBSG: "B Blue White Super Giant" @
-.WSG: "F White Super Giant" => "Biały Nadolbrzym F"
+.BBSG: "B Blue White Super Giant" => "Niebieskobiały Nadolbrzym B"
+.FWSG: "F White Super Giant" => "Biały Nadolbrzym F"
+.GWSG: "G White Super Giant" => "Biały Nadolbrzym G"
 .MSR: "M Red Super Giant" => "Czerwony Nadolbrzym M"
 .MOG: "M Red Giant" => "Czerwony Olbrzym M"
 .KOG: "K Orange Giant" => "Pomarańczowy Olbrzym K"

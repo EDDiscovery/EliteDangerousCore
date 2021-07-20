@@ -21,8 +21,9 @@ SECTION Bodies
 .EX: "Exotic" => "Étoile exotique"
 .SMBH: "Super Massive Black Hole" => "Trou noir supermassif"
 .ABSG: "A Blue White Super Giant" => "Supergéante bleu-blanc A"
-.BBSG: "B Blue White Super Giant" @
-.WSG: "F White Super Giant" => "Supergéante blanche F"
+.BBSG: "B Blue White Super Giant" => "Supergéante bleu-blanc B"
+.FWSG: "F White Super Giant" => "Supergéante blanche F"
+.GWSG: "F White Super Giant" => "Supergéante blanche G"
 .MSR: "M Red Super Giant" => "Supergéante rouge M"
 .MOG: "M Red Giant" => "Naine rouge M"
 .KOG: "K Orange Giant" => "Géante jaune-orange K"

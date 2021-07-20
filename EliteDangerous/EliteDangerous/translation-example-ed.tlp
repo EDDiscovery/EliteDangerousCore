@@ -22,7 +22,8 @@ SECTION Bodies
 .SMBH: "Super Massive Black Hole" @
 .ABSG: "A Blue White Super Giant" @
 .BBSG: "B Blue White Super Giant" @
-.WSG: "F White Super Giant" @
+.FWSG: "F White Super Giant" @
+.GWSG: "G White Super Giant" @
 .MSR: "M Red Super Giant" @
 .MOG: "M Red Giant" @
 .KOG: "K Orange Giant" @
@@ -30,6 +31,9 @@ SECTION Bodies
 .UNK: "Class {0} star" @
 .Herbig: "Herbig Ae/Be" @
 .TTauri: "T Tauri" @
+.Nebula: "Nebula" @
+.StellarRemnantNebula: "Stellar Remnant nebula" @
+.Unknown: "Unknown Star class" @
 
 SECTION EDPlanet
 
