@@ -33,7 +33,7 @@ SECTION Bodies
 .TTauri: "T Tauri" @
 .Nebula: "Nebula" @
 .StellarRemnantNebula: "Stellar Remnant nebula" @
-.Unknown: "Unknown Star class" @
+.SUnknown: "Unknown Star class" @
 
 SECTION EDPlanet
 

@@ -65,7 +65,7 @@ namespace EliteDangerousCore
         Bodies_TTauri, //"T Tauri"
         Bodies_Nebula, //"Nebula" @
         Bodies_StellarRemnantNebula, //"Stellar Remnant Nebula" @
-        Bodies_Unknown, //"Unknown Star class" @
+        Bodies_SUnknown, //"Unknown Star class" @
 
         MissionState_ToGo, // To Go:
         MissionState_Progress, // Progress:;%;N1

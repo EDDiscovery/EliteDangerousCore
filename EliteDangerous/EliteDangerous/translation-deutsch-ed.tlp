@@ -33,7 +33,7 @@ SECTION Bodies
 .TTauri: "T Tauri" => "T-Tauri"
 .Nebula: "Nebula" => "Nebel"
 .StellarRemnantNebula: "Supernova remnant Nebula" => "Stellarer Überrestnebel"
-.Unknown: "Unknown Star class" => "Unbekannte Sternenklasse"
+.SUnknown: "Unknown Star class" => "Unbekannte Sternenklasse"
 
 SECTION EDPlanet
 
