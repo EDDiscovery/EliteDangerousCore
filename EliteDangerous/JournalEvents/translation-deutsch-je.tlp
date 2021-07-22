@@ -1151,8 +1151,8 @@ SECTION JournalMicroResources
 SECTION JournalScanInfo
 
 .isa: " is a " => " ist ein/e "
-.Atmosphere: " Atmosphere: " @
-.terraformable: "terraformable " @
+.Atmosphere: " Atmosphere: " => " Atmosphäre: "
+.terraformable: "terraformable " => "Terraformierbare/r "
 .LowRadius: " Is tiny." => " niedriger Radius"
 .LargeRadius: " Is large." => " Ist groß."
 .Signals: " Has signals." => " hat Signale."
