@@ -37,7 +37,8 @@ namespace EliteDangerousCore
 
             public int? FSSTotalBodies;         // if we have FSSDiscoveryScan, this will be set
 
-            public List<JournalFSSSignalDiscovered.FSSSignal> FSSSignalList = new List<JournalFSSSignalDiscovered.FSSSignal>();     // set by FSSSignalsDiscovered
+            public List<JournalFSSSignalDiscovered.FSSSignal> FSSSignalList = new List<JournalFSSSignalDiscovered.FSSSignal>();    
+            public List<JournalCodexEntry> CodexEntryList = new List<JournalCodexEntry>();
 
             public SystemNode(ISystem sys)
             {

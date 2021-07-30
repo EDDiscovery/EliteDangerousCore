@@ -20,8 +20,6 @@ namespace EliteDangerousCore
 {
     public partial class StarScan
     {
-        // if processing later, sys will be null
-
         public bool AddFSSSignalsDiscoveredToSystem(JournalFSSSignalDiscovered jsd, bool saveprocessinglater = true)
         {
             foreach (var fs in jsd.Signals)

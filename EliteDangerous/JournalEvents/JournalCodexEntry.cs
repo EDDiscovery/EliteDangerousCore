@@ -19,7 +19,7 @@ using System;
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.CodexEntry)]
-    public class JournalCodexEntry : JournalEntry
+    public class JournalCodexEntry : JournalEntry, IStarScan
     {
         public JournalCodexEntry(JObject evt) : base(evt, JournalTypeEnum.CodexEntry)
         {
@@ -64,6 +64,11 @@ namespace EliteDangerousCore.JournalEvents
         public string NearestDestination_Localised { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
+
+        public void AddStarScan(StarScan s, ISystem system)
+        {
+            s.AddCodexEntryToSystem(this);
+        }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {

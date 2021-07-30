@@ -241,7 +241,7 @@ namespace EliteDangerousCore
 
             int pos = historylist.Count - 1;                // current entry index
 
-            if (he.EntryType == JournalTypeEnum.Scan)
+            if (he.EntryType == JournalTypeEnum.Scan)       // may need to do a history match
             {
                 JournalScan js = he.journalEntry as JournalScan;
 
@@ -269,21 +269,13 @@ namespace EliteDangerousCore
                     }
                 }
             }
-            else if (he.EntryType == JournalTypeEnum.SAAScanComplete)
+            else if (he.EntryType == JournalTypeEnum.SAAScanComplete)       // early entries did not have systemaddress, so need to match
             {
                 StarScan.AddSAAScanToBestSystem((JournalSAAScanComplete)he.journalEntry, he.System, pos , historylist);
             }
-            else if (he.EntryType == JournalTypeEnum.SAASignalsFound)
+            else if (he.journalEntry is IStarScan)
             {
-                StarScan.AddSAASignalsFoundToBestSystem((JournalSAASignalsFound)he.journalEntry, he.System, pos , historylist);
-            }
-            else if (he.EntryType == JournalTypeEnum.FSSDiscoveryScan)
-            {
-                StarScan.SetFSSDiscoveryScan((JournalFSSDiscoveryScan)he.journalEntry, he.System);
-            }
-            else if (he.EntryType == JournalTypeEnum.FSSSignalDiscovered)
-            {
-                StarScan.AddFSSSignalsDiscoveredToSystem((JournalFSSSignalDiscovered)he.journalEntry);
+                (he.journalEntry as IStarScan).AddStarScan(StarScan,he.System);
             }
             else if (he.journalEntry is IBodyNameAndID)
             {

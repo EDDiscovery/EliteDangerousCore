@@ -44,6 +44,7 @@ namespace EliteDangerousCore
             private JournalScan scandata;            // can be null if no scan, its a place holder, else its a journal scan
             private JournalScan.StarPlanetRing beltdata;    // can be null if not belt. if its a type==belt, it is populated with belt data
             private List<JournalSAASignalsFound.SAASignal> signals; // can be null if no signals for this node, else its a list of signals.
+            private List<JournalScanOrganic> organics;  // can be null if nothing for this node, else a list of organics
 
             public JournalScan ScanData
             {
@@ -95,6 +96,21 @@ namespace EliteDangerousCore
                         return;
 
                     signals = value;
+                }
+            }
+
+            public List<JournalScanOrganic> Organics
+            {
+                get
+                {
+                    return organics;
+                }
+                set
+                {
+                    if (value == null)
+                        return;
+
+                    organics = value;
                 }
             }
 

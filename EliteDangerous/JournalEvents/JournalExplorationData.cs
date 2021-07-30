@@ -182,28 +182,6 @@ namespace EliteDangerousCore.JournalEvents
 
     }
 
-    [JournalEntryType(JournalTypeEnum.ScanOrganic)]
-    public class JournalScanOrganic : JournalEntry
-    {
-        public JournalScanOrganic(JObject evt) : base(evt, JournalTypeEnum.ScanOrganic)
-        {
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
-        }
-
-        public long SystemAddress { get; set; }
-        public int Body;
-        public string Genus;
-        public string Genus_Localised;
-        public string Species;
-        public string Species_Localised;
-        public string ScanType;     //Analyse, Log, Sample
-
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
-        {
-            info = BaseUtils.FieldBuilder.Build("", ScanType, "<: ", Genus_Localised, "", Species_Localised, "@ ",whereami);
-            detailed = "";
-        }
-    }
 
 
 }

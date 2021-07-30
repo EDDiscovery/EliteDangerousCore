@@ -50,6 +50,11 @@ namespace EliteDangerousCore
         void ShipInformation(ShipInformationList shp, string whereami, ISystem system);
     }
 
+    public interface IStarScan
+    {
+        void AddStarScan( StarScan s, ISystem system);
+    }
+
     public interface IBodyNameAndID
     {
         string Body { get; }
@@ -73,11 +78,6 @@ namespace EliteDangerousCore
     public interface IAdditionalFiles
     {
         void ReadAdditionalFiles(string directory);     // true if your happy
-    }
-
-    public interface IScanDataChanges       // no functions, just marks entries which change scan data. IBodyNameAndID also changes starscan
-    {
-
     }
 
     public interface IJournalJumpColor

@@ -120,6 +120,7 @@ namespace EliteDangerousCore
         Friends = 305,
         FSSDiscoveryScan = 306,
         FSSSignalDiscovered = 307,
+        FSSBodySignals = 308,
         HeatDamage = 310,
         HeatWarning = 320,
         HullDamage = 330,

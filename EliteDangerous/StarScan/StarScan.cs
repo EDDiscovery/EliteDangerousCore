@@ -50,12 +50,29 @@ namespace EliteDangerousCore
                 }
                 else if (e.Item1.EventTypeID == JournalTypeEnum.SAASignalsFound)
                 {
-                    if (ProcessSAASignalsFound((JournalSAASignalsFound)e.Item1, e.Item2, false))
+                    var jsaa = (JournalSAASignalsFound)e.Item1;
+                    if (ProcessSignalsFound(jsaa.BodyID,jsaa.BodyName,jsaa.Signals, e.Item2))
                         todelete.Add(e);
                 }
                 else if (e.Item1.EventTypeID == JournalTypeEnum.FSSSignalDiscovered)
                 {
                     if (AddFSSSignalsDiscoveredToSystem((JournalFSSSignalDiscovered)e.Item1, false))
+                        todelete.Add(e);
+                }
+                else if (e.Item1.EventTypeID == JournalTypeEnum.FSSBodySignals)
+                {
+                    var jsaa = (JournalFSSBodySignals)e.Item1;
+                    if (ProcessSignalsFound(jsaa.BodyID, jsaa.BodyName, jsaa.Signals, e.Item2))
+                        todelete.Add(e);
+                }
+                else if (e.Item1.EventTypeID == JournalTypeEnum.CodexEntry)
+                {
+                    if (AddCodexEntryToSystem((JournalCodexEntry)e.Item1, false))
+                        todelete.Add(e);
+                }
+                else if (e.Item1.EventTypeID == JournalTypeEnum.ScanOrganic)
+                {
+                    if (ProcessScanOrganicFound((JournalScanOrganic)e.Item1, e.Item2))
                         todelete.Add(e);
                 }
             }

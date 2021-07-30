@@ -26,7 +26,7 @@ namespace EliteDangerousCore.JournalEvents
 {
     [System.Diagnostics.DebuggerDisplay("Event {EventTypeStr} {EventTimeUTC} {BodyName} {BodyDesignation} s{IsStar} p{IsPlanet}")]
     [JournalEntryType(JournalTypeEnum.Scan)]
-    public partial class JournalScan : JournalEntry, IScanDataChanges
+    public partial class JournalScan : JournalEntry
     {
         public bool IsStar { get { return StarType != null; } }
         public bool IsBeltCluster { get { return StarType == null && PlanetClass == null; } }

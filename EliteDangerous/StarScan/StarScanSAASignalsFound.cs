@@ -23,37 +23,34 @@ namespace EliteDangerousCore
     public partial class StarScan
     {
         // used by historylist directly for a single update during play, in foreground..  Also used by above.. so can be either in fore/back
-        public bool AddSAASignalsFoundToBestSystem(JournalSAASignalsFound jsaa, ISystem sys, int startindex, List<HistoryEntry> hl)
+        public bool AddSAASignalsFoundToBestSystem(JournalSAASignalsFound jsaa, ISystem sys)
         {
             // jsaa should always have a system address.  If it matches current system, we can go for an immediate add
             if (sys.SystemAddress.HasValue && jsaa.SystemAddress == sys.SystemAddress.Value)
             {
-                return ProcessSAASignalsFound(jsaa, sys);
+                bool ret = ProcessSignalsFound(jsaa.BodyID, jsaa.BodyName, jsaa.Signals, sys);
+                if (!ret)
+                    SaveForProcessing(jsaa, sys);
+                return ret;
             }
             else
             {
-                if (jsaa.Signals == null || jsaa.BodyName == null)       // be paranoid, don't add if null signals
-                    return false;
-
-                var best = FindBestSystem(startindex, hl, jsaa.BodyName, jsaa.BodyID, false);
-
-                if (best == null)
-                    return false;
-                else
-                    return ProcessSAASignalsFound(jsaa, best.Item2);
+                SaveForProcessing(jsaa, sys);
+                return false;
             }
         }
 
-        private bool ProcessSAASignalsFound(JournalSAASignalsFound jsaa, ISystem sys, bool saveprocessinglater = true)  // background or foreground.. FALSE if you can't process it
+
+        private bool ProcessSignalsFound(int bodyid, string bodyname, List<JournalSAASignalsFound.SAASignal> signals, ISystem sys)  // background or foreground.. FALSE if you can't process it
         {
             SystemNode sn = GetOrCreateSystemNode(sys);
             ScanNode relatednode = null;
 
-            if (sn.NodesByID.ContainsKey((int)jsaa.BodyID)) // find by ID
+            if (sn.NodesByID.ContainsKey((int)bodyid)) // find by ID
             {
-                relatednode = sn.NodesByID[(int)jsaa.BodyID];
+                relatednode = sn.NodesByID[(int)bodyid];
             }
- 
+
             if (relatednode != null && relatednode.NodeType == ScanNodeType.ring && relatednode.ScanData != null && relatednode.ScanData.Parents != null && sn.NodesByID.ContainsKey(relatednode.ScanData.Parents[0].BodyID))
             {
                 relatednode = sn.NodesByID[relatednode.ScanData.Parents[0].BodyID];
@@ -61,12 +58,12 @@ namespace EliteDangerousCore
 
             if (relatednode == null || relatednode.NodeType == ScanNodeType.ring)
             {
-                bool ringname = jsaa.BodyName.EndsWith("A Ring") || jsaa.BodyName.EndsWith("B Ring") || jsaa.BodyName.EndsWith("C Ring") || jsaa.BodyName.EndsWith("D Ring");
-                string ringcutname = ringname ? jsaa.BodyName.Left(jsaa.BodyName.Length - 6).TrimEnd() : null;
+                bool ringname = bodyname.EndsWith("A Ring") || bodyname.EndsWith("B Ring") || bodyname.EndsWith("C Ring") || bodyname.EndsWith("D Ring");
+                string ringcutname = ringname ? bodyname.Left(bodyname.Length - 6).TrimEnd() : null;
 
                 foreach (var body in sn.Bodies)
                 {
-                    if ((body.FullName == jsaa.BodyName || body.CustomName == jsaa.BodyName) &&
+                    if ((body.FullName == bodyname || body.CustomName == bodyname) &&
                         (body.FullName != sys.Name || body.Level != 0))
                     {
                         relatednode = body;
@@ -82,11 +79,11 @@ namespace EliteDangerousCore
 
             if (relatednode != null)
             {
-                //  System.Diagnostics.Debug.WriteLine("Setting SAA Signals Found for " + jsaa.BodyName + " @ " + sys.Name + " body "  + jsaa.BodyDesignation);
+                //  System.Diagnostics.Debug.WriteLine("Setting SAA Signals Found for " + bodyname + " @ " + sys.Name + " body "  + jsaa.BodyDesignation);
                 if (relatednode.Signals == null)
                     relatednode.Signals = new List<JournalSAASignalsFound.SAASignal>();
 
-                foreach (var x in jsaa.Signals)
+                foreach (var x in signals)
                 {
                     if (relatednode.Signals.Find(y => y.Type == x.Type && y.Count == x.Count) == null)
                     {
@@ -98,12 +95,9 @@ namespace EliteDangerousCore
             }
             else
             {
-                if (saveprocessinglater)
-                    SaveForProcessing(jsaa, sys);
-                //  System.Diagnostics.Debug.WriteLine("No body to attach data found for " + jsaa.BodyName + " @ " + sys.Name + " body " + jsaa.BodyDesignation);
-
                 return false;
             }
         }
+
     }
 }

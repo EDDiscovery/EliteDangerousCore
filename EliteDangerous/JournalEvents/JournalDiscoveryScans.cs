@@ -40,7 +40,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.FSSDiscoveryScan)]
-    public class JournalFSSDiscoveryScan : JournalEntry, IScanDataChanges
+    public class JournalFSSDiscoveryScan : JournalEntry, IStarScan
     {
         public JournalFSSDiscoveryScan(JObject evt) : base(evt, JournalTypeEnum.FSSDiscoveryScan)
         {
@@ -53,6 +53,11 @@ namespace EliteDangerousCore.JournalEvents
         public int BodyCount { get; set; }
         public int NonBodyCount { get; set; }
 
+        public void AddStarScan(StarScan s, ISystem system)
+        {
+            s.SetFSSDiscoveryScan(this, system);
+        }
+
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Progress: ;%;N1".T(EDTx.JournalFSSDiscoveryScan_Progress), Progress, 
@@ -64,7 +69,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.FSSSignalDiscovered)]
-    public class JournalFSSSignalDiscovered : JournalEntry
+    public class JournalFSSSignalDiscovered : JournalEntry, IStarScan
     {
         public class FSSSignal
         {
@@ -196,6 +201,11 @@ namespace EliteDangerousCore.JournalEvents
 
         public List<FSSSignal> Signals;
 
+        public void AddStarScan(StarScan s, ISystem system)
+        {
+            s.AddFSSSignalsDiscoveredToSystem(this);
+        }
+
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             detailed = "";
@@ -225,6 +235,7 @@ namespace EliteDangerousCore.JournalEvents
                 info = Signals[0].ToString(false);
             }
         }
+
     }
 
    
@@ -248,15 +259,15 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.SAAScanComplete)]
-    public class JournalSAAScanComplete : JournalEntry, IScanDataChanges
+    public class JournalSAAScanComplete : JournalEntry
     {
-        public JournalSAAScanComplete(JObject evt) : base(evt, JournalTypeEnum.SAAScanComplete)
+        public JournalSAAScanComplete(JObject evt) : base(evt, JournalTypeEnum.SAAScanComplete) // event came in about 12/12/18
         {
             BodyName = evt["BodyName"].Str();
             BodyID = evt["BodyID"].Int();
             ProbesUsed = evt["ProbesUsed"].Int();
             EfficiencyTarget = evt["EfficiencyTarget"].Int();
-            SystemAddress = evt["SystemAddress"].LongNull();
+            SystemAddress = evt["SystemAddress"].LongNull();        // Early ones did not have it (before 11/12/19)
         }
 
         public int BodyID { get; set; }
@@ -281,7 +292,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.SAASignalsFound)]
-    public class JournalSAASignalsFound : JournalEntry, IScanDataChanges
+    public class JournalSAASignalsFound : JournalEntry, IStarScan
     {
         public JournalSAASignalsFound(JObject evt) : base(evt, JournalTypeEnum.SAASignalsFound)
         {
@@ -350,6 +361,11 @@ namespace EliteDangerousCore.JournalEvents
             int contains = Contains(fdname);
             return showit && contains > 0 ? contains.ToStringInvariant() : "";
         }
+
+        public void AddStarScan(StarScan s, ISystem system)
+        {
+            s.AddSAASignalsFoundToBestSystem(this, system);
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.FSSAllBodiesFound)]
@@ -373,5 +389,87 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
+    [JournalEntryType(JournalTypeEnum.FSSBodySignals)]
+    public class JournalFSSBodySignals : JournalEntry, IStarScan
+    {
+        public JournalFSSBodySignals(JObject evt) : base(evt, JournalTypeEnum.FSSBodySignals)
+        {
+            SystemAddress = evt["SystemAddress"].Long();
+            BodyName = evt["BodyName"].Str();
+            BodyID = evt["BodyID"].Int();
+            Signals = evt["Signals"].ToObjectQ<List<JournalSAASignalsFound.SAASignal>>();
+            if (Signals != null)
+            {
+                foreach (var s in Signals)      // some don't have localisation
+                {
+                    s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, s.Type.SplitCapsWordFull());
+                }
+            }
+        }
+
+        public long SystemAddress { get; set; }
+        public string BodyName { get; set; }
+        public int BodyID { get; set; }
+        public List<JournalSAASignalsFound.SAASignal> Signals { get; set; }
+
+        public void AddStarScan(StarScan s, ISystem system)
+        {
+            s.AddFSSBodySignalsToSystem(this,system);
+        }
+
+        public override string SummaryName(ISystem sys)
+        {
+            return base.SummaryName(sys) + " " + "of ".T(EDTx.JournalEntry_ofa) + BodyName.ReplaceIfStartsWith(sys.Name);
+        }
+
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        {
+            info = JournalSAASignalsFound.SignalList(Signals);
+            string name = BodyName.Contains(sys.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : sys.Name + ":" + BodyName;
+            info = info.AppendPrePad("@ " + name, ", ");
+            detailed = "";
+        }
+
+        public int Contains(string fdname)      // give count if contains fdname, else zero
+        {
+            int index = Signals?.FindIndex((x) => x.Type.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase)) ?? -1;
+            return (index >= 0) ? Signals[index].Count : 0;
+        }
+
+        public string ContainsStr(string fdname, bool showit = true)      // give count if contains fdname, else empty string
+        {
+            int contains = Contains(fdname);
+            return showit && contains > 0 ? contains.ToStringInvariant() : "";
+        }
+    }
+
+    [JournalEntryType(JournalTypeEnum.ScanOrganic)]
+    public class JournalScanOrganic : JournalEntry, IStarScan
+    {
+        public JournalScanOrganic(JObject evt) : base(evt, JournalTypeEnum.ScanOrganic)
+        {
+            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+        }
+
+        public long SystemAddress { get; set; }
+        public int Body;
+        public string Genus;
+        public string Genus_Localised;
+        public string Species;
+        public string Species_Localised;
+        public string ScanType;     //Analyse, Log, Sample
+
+        public void AddStarScan(StarScan s, ISystem system)
+        {
+            s.AddScanOrganicToSystem(this,system);
+        }
+
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        {
+            info = BaseUtils.FieldBuilder.Build("", ScanType, "<: ", Genus_Localised, "", Species_Localised, "@ ", whereami);
+            detailed = "";
+        }
+
+    }
 
 }

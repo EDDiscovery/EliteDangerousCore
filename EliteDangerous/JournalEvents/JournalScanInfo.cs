@@ -24,7 +24,7 @@ using static BaseUtils.TypeHelpers;
 
 namespace EliteDangerousCore.JournalEvents
 {
-    public partial class JournalScan : JournalEntry, IScanDataChanges
+    public partial class JournalScan : JournalEntry
     {
         public string GetStarPlanetTypeImageName()
         {
