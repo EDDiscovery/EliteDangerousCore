@@ -259,7 +259,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.SAAScanComplete)]
-    public class JournalSAAScanComplete : JournalEntry
+    public class JournalSAAScanComplete : JournalEntry, IStarScan
     {
         public JournalSAAScanComplete(JObject evt) : base(evt, JournalTypeEnum.SAAScanComplete) // event came in about 12/12/18
         {
@@ -275,6 +275,10 @@ namespace EliteDangerousCore.JournalEvents
         public int ProbesUsed { get; set; }
         public int EfficiencyTarget { get; set; }
         public long? SystemAddress { get; set; }    // 3.5
+
+        public void AddStarScan(StarScan s, ISystem system)     // no action in this class, historylist.cs does the adding itself instead of using this. 
+        {                                                       // Class interface is marked so you know its part of the gang
+        }
 
         public override string SummaryName(ISystem sys)
         {

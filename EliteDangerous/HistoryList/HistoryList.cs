@@ -44,8 +44,6 @@ namespace EliteDangerousCore
 
         public HistoryList() { }
 
-        public HistoryList(List<HistoryEntry> hl) { historylist = hl; }         // SPECIAL USE ONLY - DOES NOT COMPUTE ALL THE OTHER STUFF
-
         #region Entry processing
 
         // Called on a New Entry, by EDDiscoveryController:NewEntry, to add an journal entry in.  May return null or empty list, or multiple entries.
@@ -241,7 +239,7 @@ namespace EliteDangerousCore
 
             int pos = historylist.Count - 1;                // current entry index
 
-            if (he.EntryType == JournalTypeEnum.Scan)       // may need to do a history match
+            if (he.EntryType == JournalTypeEnum.Scan)       // may need to do a history match, so intercept
             {
                 JournalScan js = he.journalEntry as JournalScan;
 
@@ -273,7 +271,7 @@ namespace EliteDangerousCore
             {
                 StarScan.AddSAAScanToBestSystem((JournalSAAScanComplete)he.journalEntry, he.System, pos , historylist);
             }
-            else if (he.journalEntry is IStarScan)
+            else if (he.journalEntry is IStarScan)      // otherwise execute add
             {
                 (he.journalEntry as IStarScan).AddStarScan(StarScan,he.System);
             }

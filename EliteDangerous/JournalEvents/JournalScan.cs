@@ -26,7 +26,7 @@ namespace EliteDangerousCore.JournalEvents
 {
     [System.Diagnostics.DebuggerDisplay("Event {EventTypeStr} {EventTimeUTC} {BodyName} {BodyDesignation} s{IsStar} p{IsPlanet}")]
     [JournalEntryType(JournalTypeEnum.Scan)]
-    public partial class JournalScan : JournalEntry
+    public partial class JournalScan : JournalEntry, IStarScan
     {
         public bool IsStar { get { return StarType != null; } }
         public bool IsBeltCluster { get { return StarType == null && PlanetClass == null; } }
@@ -1161,6 +1161,9 @@ namespace EliteDangerousCore.JournalEvents
             return new ScanEstimatedValues(EventTimeUTC, IsStar, StarTypeID, IsPlanet, PlanetTypeID, Terraformable, nStellarMass, nMassEM, IsOdyssey);
         }
 
+        public void AddStarScan(StarScan s, ISystem system)     // no action in this class, historylist.cs does the adding itself instead of using this. 
+        {                                                       // Class interface is marked so you know its part of the gang
+        }
     }
 
     #endregion
