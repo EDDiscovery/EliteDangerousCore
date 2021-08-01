@@ -872,7 +872,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
 
-        public string SurveyorInfoLine(ISystem sys, bool hassignals,  bool showvolcanism, bool showvalues, bool shortinfo, bool showGravity, bool showAtmos, bool showRings, 
+        public string SurveyorInfoLine(ISystem sys, bool hassignals, bool hasgeosignals, bool hasbiosignals,  bool showvolcanism, bool showvalues, bool shortinfo, bool showGravity, bool showAtmos, bool showRings, 
                                     int lowRadiusLimit, int largeRadiusLimit, double eccentricityLimit)
         {
             JournalScan js = this;
@@ -898,6 +898,8 @@ namespace EliteDangerousCore.JournalEvents
             information.Append((js.HasAtmosphericComposition && showAtmos) ? @" Atmosphere: ".T(EDTx.JournalScanInfo_Atmosphere) + (js.Atmosphere ?? "unknown atmosphere".T(EDTx.JournalScanInfo_unknownAtmosphere)) + "." : null);
             information.Append((js.HasMeaningfulVolcanism && showvolcanism) ? @" Has ".T(EDTx.JournalScanInfo_Has) + js.Volcanism + "." : null);
             information.Append((hassignals) ? " Has signals.".T(EDTx.JournalScanInfo_Signals) : null);
+            information.Append((hasgeosignals) ? " Has geological signals." : null);
+            information.Append((hasbiosignals) ? " Has biological signals." : null);
             information.Append((js.HasRings && showRings) ? @" Is ringed.".T(EDTx.JournalScanInfo_Hasring) : null);
             information.Append((js.nEccentricity >= eccentricityLimit) ? @" Has an high eccentricity of ".T(EDTx.JournalScanInfo_eccentricity) + js.nEccentricity + "." : null);
 
