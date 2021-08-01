@@ -1151,7 +1151,13 @@ SECTION JournalScanInfo
 .terraformable: "terraformable " @
 .LowRadius: " Is tiny." @
 .LargeRadius: " Is large." @
-.Signals: " Has signals." @
+.Signals: " Has mining signals." @
+.BioSignals: " Has biological signals." @
+.GeoSignals: " Has geological signals." @
+.ThargoidSignals: " Has thargoid signals." @
+.GuardianSignals: " Has guardian signals." @
+.HumanSignals: " Has human signals." @
+.OtherSignals: " Has 'other' signals." @
 .Mapped: " (Mapped & Discovered)" @
 .MandD: " (Mapped & Discovered)" @
 .MP: " (Mapped)" @

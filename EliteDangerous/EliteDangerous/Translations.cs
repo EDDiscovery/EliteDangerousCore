@@ -877,7 +877,13 @@ namespace EliteDangerousCore
         JournalScanInfo_terraformable, // terraformable
         JournalScanInfo_LowRadius, //  Low Radius.
         JournalScanInfo_LargeRadius, //  Large Radius.
-        JournalScanInfo_Signals, //  Has signals.
+        JournalScanInfo_Signals, //  Has mining signals.
+        JournalScanInfo_BioSignals, //  Has biological signals.
+        JournalScanInfo_GeoSignals, //  Has geological signals.
+        JournalScanInfo_ThargoidSignals, //  Has thargoid signals.
+        JournalScanInfo_GuardianSignals, //  Has guardian signals.
+        JournalScanInfo_HumanSignals, //  Has human signals.
+        JournalScanInfo_OtherSignals, //  Has 'other' signals.
         JournalScanInfo_Mapped, //  (Mapped & Discovered)
         JournalScanInfo_MandD, //  (Mapped & Discovered)
         JournalScanInfo_MP, //  (Mapped)
