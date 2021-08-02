@@ -60,6 +60,8 @@ namespace EliteDangerousCore
                     tip = sc.DisplayString(0, historicmats, curmats);
                     if (sn.Signals != null)
                         tip += "\n" + "Signals".T(EDTx.ScanDisplayUserControl_Signals) + ":\n" + JournalSAASignalsFound.SignalList(sn.Signals, 4, "\n");
+                    if ( sn.Organics != null )
+                        tip += "\n" + "Organics".T(EDTx.ScanDisplayUserControl_Organics) + ":\n" + JournalScanOrganic.OrganicList(sn.Organics);
 
                     Bitmap nodeimage = (Bitmap)BaseUtils.Icons.IconSet.GetIcon(sc.GetStarPlanetTypeImageName());
 

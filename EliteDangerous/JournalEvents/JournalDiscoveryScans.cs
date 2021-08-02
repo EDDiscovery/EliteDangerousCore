@@ -16,6 +16,7 @@
 using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -480,6 +481,13 @@ namespace EliteDangerousCore.JournalEvents
         {
             info = BaseUtils.FieldBuilder.Build("", ScanType, "<: ", Genus_Localised, "", Species_Localised, "@ ", whereami);
             detailed = "";
+        }
+
+
+        static public string OrganicList(List<JournalScanOrganic> list)
+        {
+            string s = string.Join(Environment.NewLine, list.Select(x => BaseUtils.FieldBuilder.Build("", x.ScanType, "<: ", x.Genus_Localised, "", x.Species_Localised)));
+            return s;
         }
 
     }

@@ -871,6 +871,7 @@ namespace EliteDangerousCore
         ScanDisplayUserControl_NSD, // No scan data available
         ScanDisplayUserControl_BC, // Barycentre of {0}
         ScanDisplayUserControl_Signals, // Signals
+        ScanDisplayUserControl_Organics, // Organics
 
         JournalScanInfo_isa, // is a(n)
         JournalScanInfo_Atmosphere, // Atmosphere
