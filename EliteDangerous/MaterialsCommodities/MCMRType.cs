@@ -32,7 +32,7 @@ namespace EliteDangerousCore
             Data,                                           // odyssey 4.0.  
             Consumable,                                     // odyssey 4.0. 
         };
-        public CatType Category { get; private set; }                // either Commodity, Encoded, Manufactured, Raw
+        public CatType Category { get; private set; }               // see above
 
         public string TranslatedCategory { get; private set; }      // translation of above..
 
@@ -50,7 +50,7 @@ namespace EliteDangerousCore
         public ItemType Type { get; private set; }                  // and its type, for materials its commonality, for commodities its group ("Metals" etc), for microresources Unknown
         public string TranslatedType { get; private set; }          // translation of above..        
 
-        public enum MaterialGroupType
+        public enum MaterialGroupType                               // Material trader group type
         {
             NA,
             RawCategory1, RawCategory2, RawCategory3, RawCategory4, RawCategory5, RawCategory6, RawCategory7,
@@ -564,11 +564,11 @@ namespace EliteDangerousCore
 
             // Obelisk
 
-            AddEnc("Pattern Beta Obelisk Data", ItemType.Common, MaterialGroupType.NA, "PBOD", "ancientculturaldata");
-            AddEnc("Pattern Gamma Obelisk Data", ItemType.Common, MaterialGroupType.NA, "PGOD", "ancienthistoricaldata");
-            AddEnc("Pattern Alpha Obelisk Data", ItemType.Standard, MaterialGroupType.NA, "PAOD", "ancientbiologicaldata");
+            AddEnc("Pattern Alpha Obelisk Data", ItemType.Rare, MaterialGroupType.NA, "PAOD", "ancientbiologicaldata");
+            AddEnc("Pattern Beta Obelisk Data", ItemType.Rare, MaterialGroupType.NA, "PBOD", "ancientculturaldata");
+            AddEnc("Pattern Gamma Obelisk Data", ItemType.Rare, MaterialGroupType.NA, "PGOD", "ancienthistoricaldata");
             AddEnc("Pattern Delta Obelisk Data", ItemType.Rare, MaterialGroupType.NA, "PDOD", "ancientlanguagedata");
-            AddEnc("Pattern Epsilon Obelisk Data", ItemType.VeryRare, MaterialGroupType.NA, "PEOD", "ancienttechnologicaldata");
+            AddEnc("Pattern Epsilon Obelisk Data", ItemType.Rare, MaterialGroupType.NA, "PEOD", "ancienttechnologicaldata");
 
             // new to 3.1 frontier data
 
@@ -583,11 +583,11 @@ namespace EliteDangerousCore
             // new to 3.2 frontier data
             AddEnc("Guardian Vessel Blueprint Fragment", ItemType.VeryRare, MaterialGroupType.NA, "GMVB", "guardian_vesselblueprint");
             AddManu("Bio-Mechanical Conduits", ItemType.Standard, MaterialGroupType.NA, "BMC", "TG_BioMechanicalConduits");
-            AddManu("Propulsion Elements", ItemType.Standard, MaterialGroupType.NA, "PE", "TG_PropulsionElement");
-            AddManu("Weapon Parts", ItemType.Standard, MaterialGroupType.NA, "WP", "TG_WeaponParts");
+            AddManu("Propulsion Elements", ItemType.VeryRare, MaterialGroupType.NA, "PE", "TG_PropulsionElement");
+            AddManu("Weapon Parts", ItemType.Rare, MaterialGroupType.NA, "WP", "TG_WeaponParts");
             AddManu("Wreckage Components", ItemType.Standard, MaterialGroupType.NA, "WRC", "TG_WreckageComponents");
             AddEnc("Ship Flight Data", ItemType.Standard, MaterialGroupType.NA, "SFD", "TG_ShipFlightData");
-            AddEnc("Ship Systems Data", ItemType.Standard, MaterialGroupType.NA, "SSD", "TG_ShipSystemsData");
+            AddEnc("Ship Systems Data", ItemType.Rare, MaterialGroupType.NA, "SSD", "TG_ShipSystemsData");
 
             ItemType sv = ItemType.Salvage;
             AddCommodity("Thargoid Sensor", sv, "UnknownArtifact");
