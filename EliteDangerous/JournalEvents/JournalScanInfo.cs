@@ -872,8 +872,10 @@ namespace EliteDangerousCore.JournalEvents
         }
 
 
-        public string SurveyorInfoLine(ISystem sys, bool hassignals, bool hasgeosignals, bool hasbiosignals, bool hasthargoidsignals, bool hasguardiansignals, bool hashumansignals, bool hasothersignals, bool showvolcanism, bool showvalues, bool shortinfo, bool showGravity, bool showAtmos, bool showRings, 
-                                    int lowRadiusLimit, int largeRadiusLimit, double eccentricityLimit)
+        public string SurveyorInfoLine(ISystem sys, 
+                            bool hasminingsignals, bool hasgeosignals, bool hasbiosignals, bool hasthargoidsignals, bool hasguardiansignals, bool hashumansignals, bool hasothersignals, 
+                            bool showvolcanism, bool showvalues, bool shortinfo, bool showGravity, bool showAtmos, bool showRings, 
+                            int lowRadiusLimit, int largeRadiusLimit, double eccentricityLimit)
         {
             JournalScan js = this;
 
@@ -897,7 +899,7 @@ namespace EliteDangerousCore.JournalEvents
             information.Append((js.IsLandable && showGravity && js.nSurfaceGravityG.HasValue) ? @" (" + Math.Round(js.nSurfaceGravityG.Value, 2, MidpointRounding.AwayFromZero) + "g)" : null);
             information.Append((js.HasAtmosphericComposition && showAtmos) ? @" Atmosphere: ".T(EDTx.JournalScanInfo_Atmosphere) + (js.Atmosphere ?? "unknown atmosphere".T(EDTx.JournalScanInfo_unknownAtmosphere)) + "." : null);
             information.Append((js.HasMeaningfulVolcanism && showvolcanism) ? @" Has ".T(EDTx.JournalScanInfo_Has) + js.Volcanism + "." : null);
-            information.Append((hassignals) ? " Has mining signals.".T(EDTx.JournalScanInfo_Signals) : null);
+            information.Append((hasminingsignals) ? " Has mining signals.".T(EDTx.JournalScanInfo_Signals) : null);
             information.Append((hasgeosignals) ? " Has geological signals.".T(EDTx.JournalScanInfo_GeoSignals) : null);
             information.Append((hasbiosignals) ? " Has biological signals.".T(EDTx.JournalScanInfo_BioSignals) : null);
             information.Append((hasthargoidsignals) ? " Has thargoid signals.".T(EDTx.JournalScanInfo_ThargoidSignals) : null);

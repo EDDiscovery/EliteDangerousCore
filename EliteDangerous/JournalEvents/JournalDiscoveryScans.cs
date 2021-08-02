@@ -323,8 +323,16 @@ namespace EliteDangerousCore.JournalEvents
             public string Type { get; set; }        // material fdname, or $SAA_SignalType..
             public string Type_Localised { get; set; }
             public int Count { get; set; }
+
+            public bool IsGeo { get { return Type.Contains("$SAA_SignalType_Geological;"); } }
+            public bool IsBio { get { return Type.Contains("$SAA_SignalType_Biological;"); } }
+            public bool IsThargoid { get { return Type.Contains("$SAA_SignalType_Thargoid;"); } }
+            public bool IsGuardian { get { return Type.Contains("$SAA_SignalType_Guardian;"); } }
+            public bool IsHuman { get { return Type.Contains("$SAA_SignalType_Human;"); } }
+            public bool IsOther { get { return Type.Contains("$SAA_SignalType_Other;"); } }
+            public bool IsUncatagorised { get { return !Type.Contains("$SAA_SignalType"); } }       // probably a material, but you can never tell with FD
         }
-      
+
         public override string SummaryName(ISystem sys)
         {
             return base.SummaryName(sys) + " " + "of ".T(EDTx.JournalEntry_ofa) + BodyName.ReplaceIfStartsWith(sys.Name);
