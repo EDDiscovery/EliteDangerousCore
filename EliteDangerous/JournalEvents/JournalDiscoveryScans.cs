@@ -330,7 +330,7 @@ namespace EliteDangerousCore.JournalEvents
             public bool IsGuardian { get { return Type.Contains("$SAA_SignalType_Guardian;"); } }
             public bool IsHuman { get { return Type.Contains("$SAA_SignalType_Human;"); } }
             public bool IsOther { get { return Type.Contains("$SAA_SignalType_Other;"); } }
-            public bool IsUncatagorised { get { return !Type.Contains("$SAA_SignalType"); } }       // probably a material, but you can never tell with FD
+            public bool IsUncategorised { get { return !Type.Contains("$SAA_SignalType"); } }       // probably a material, but you can never tell with FD
         }
 
         public override string SummaryName(ISystem sys)
