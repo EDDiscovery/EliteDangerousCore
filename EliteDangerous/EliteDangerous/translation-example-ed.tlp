@@ -986,4 +986,6 @@ SECTION ScanDisplayUserControl
 .NSD: "No scan data available" @
 .BC: "Barycentre of {0}" @
 .Signals: "Signals" @
+.Codex: "Codex" @
+.Organics: "Organics" @
 

@@ -253,6 +253,7 @@ SECTION JournalTypeEnum
 .Backpack: "Backpack" => "Rucksack"
 .Resupply: "Resupply" => "Aufstocken"
 .ShipLocker: "Ship Locker" => "Schiffsspind"
+.FSSBodySignals: "FSS Body Signals" @
 
 SECTION JournalCargo
 
@@ -1174,3 +1175,4 @@ SECTION JournalScanInfo
 .SFSD: " Standard" => "Standard"
 .PFSD: " Premium" => "Premium"
 .LE: "{0} has {1} level elements." => "{0} hat Stufe {1} Elemente."
+.scanorganics: " Has been scanned for organics." @

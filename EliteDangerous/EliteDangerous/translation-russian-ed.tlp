@@ -23,7 +23,7 @@ SECTION Bodies
 .ABSG: "A Blue White Super Giant" => "Бело-голубой сверхгигант"
 .BBSG: "B Blue White Super Giant" @
 .FWSG: "F White Super Giant" => "Белый сверхгигант класса F"
-.GWSG: "F White Super Giant" => "Белый сверхгигант класса G"
+.GWSG: "G White Super Giant" => "Белый сверхгигант класса G"
 .MSR: "M Red Super Giant" => "Красный сверхгигант класса М"
 .MOG: "M Red Giant" => "Оранжевый гигант класса M"
 .KOG: "K Orange Giant" => "Оранжевый гигант класса K"
@@ -31,6 +31,9 @@ SECTION Bodies
 .UNK: "Class {0} star" @
 .Herbig: "Herbig Ae/Be" @
 .TTauri: "T Tauri" @
+.Nebula: "Nebula" @
+.StellarRemnantNebula: "Stellar Remnant nebula" @
+.SUnknown: "Unknown Star class" @
 
 SECTION EDPlanet
 
@@ -982,3 +985,5 @@ SECTION ScanDisplayUserControl
 .NSD: "No scan data available" => "Нет доступных данных сканирования"
 .BC: "Barycentre of {0}" => "Барицентр {0}"
 .Signals: "Signals" @
+.Codex: "Codex" @
+.Organics: "Organics" @

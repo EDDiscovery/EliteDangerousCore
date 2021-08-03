@@ -253,6 +253,7 @@ SECTION JournalTypeEnum
 .Backpack: "Backpack" @
 .Resupply: "Resupply" @
 .ShipLocker: "Ship Locker" @
+.FSSBodySignals: "FSS Body Signals" @
 
 SECTION JournalCargo
 
@@ -1155,7 +1156,13 @@ SECTION JournalScanInfo
 .terraformable: "terraformable " @
 .LowRadius: " Is tiny." @
 .LargeRadius: " Is large." @
-.Signals: " Has signals." => " a des signaux."
+.Signals: " Has mining signals." => " a des signaux."
+.BioSignals: " Has biological signals." @
+.GeoSignals: " Has geological signals." @
+.ThargoidSignals: " Has thargoid signals." @
+.GuardianSignals: " Has guardian signals." @
+.HumanSignals: " Has human signals." @
+.OtherSignals: " Has 'other' signals." @
 .Mapped: " (Mapped & Discovered)" => " (cartographiée & découverte)"
 .MandD: " (Mapped & Discovered)" => " (cartographiée & découverte)"
 .MP: " (Mapped)" => " (cartographiée)"
@@ -1168,3 +1175,4 @@ SECTION JournalScanInfo
 .SFSD: " Standard" @
 .PFSD: " Premium" @
 .LE: "{0} has {1} level elements." @
+.scanorganics: " Has been scanned for organics." @

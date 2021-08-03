@@ -817,11 +817,11 @@ namespace EliteDangerousCore
         JournalTypeEnum_FactionKillBond, // Faction Kill Bond
 
         UserControlScan_Expired,
-        UserControlScan_Codex,
         ScanDisplayUserControl_NSD, // No scan data available
         ScanDisplayUserControl_BC, // Barycentre of {0}
         ScanDisplayUserControl_Signals, // Signals
         ScanDisplayUserControl_Organics, // Organics
+        ScanDisplayUserControl_Codex,
 
         JournalScanInfo_isa, // is a(n)
         JournalScanInfo_Atmosphere, // Atmosphere

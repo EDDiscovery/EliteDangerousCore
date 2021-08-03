@@ -23,7 +23,7 @@ SECTION Bodies
 .ABSG: "A Blue White Super Giant" => "Supergéante bleu-blanc A"
 .BBSG: "B Blue White Super Giant" => "Supergéante bleu-blanc B"
 .FWSG: "F White Super Giant" => "Supergéante blanche F"
-.GWSG: "F White Super Giant" => "Supergéante blanche G"
+.GWSG: "G White Super Giant" => "Supergéante blanche G"
 .MSR: "M Red Super Giant" => "Supergéante rouge M"
 .MOG: "M Red Giant" => "Naine rouge M"
 .KOG: "K Orange Giant" => "Géante jaune-orange K"
@@ -31,6 +31,9 @@ SECTION Bodies
 .UNK: "Class {0} star" => "Étoile {0}"
 .Herbig: "Herbig Ae/Be" => "Objet Herbig-Haro"
 .TTauri: "T Tauri" => "Étoile T Tauri"
+.Nebula: "Nebula" @
+.StellarRemnantNebula: "Stellar Remnant nebula" @
+.SUnknown: "Unknown Star class" @
 
 SECTION EDPlanet
 
@@ -982,3 +985,5 @@ SECTION ScanDisplayUserControl
 .NSD: "No scan data available" => "Pas de données de scan disponibles"
 .BC: "Barycentre of {0}" => "Barycentre de {0}"
 .Signals: "Signals" => "Signaux"
+.Codex: "Codex" @
+.Organics: "Organics" @

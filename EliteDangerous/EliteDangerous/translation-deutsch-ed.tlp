@@ -32,7 +32,7 @@ SECTION Bodies
 .Herbig: "Herbig Ae/Be" => "Herbig Ae/Be"
 .TTauri: "T Tauri" => "T-Tauri"
 .Nebula: "Nebula" => "Nebel"
-.StellarRemnantNebula: "Supernova remnant Nebula" => "Stellarer Überrestnebel"
+.StellarRemnantNebula: "Stellar Remnant nebula" => "Stellarer Überrestnebel"
 .SUnknown: "Unknown Star class" => "Unbekannte Sternenklasse"
 
 SECTION EDPlanet
@@ -985,3 +985,5 @@ SECTION ScanDisplayUserControl
 .NSD: "No scan data available" => "Keine Scandaten verfügbar"
 .BC: "Barycentre of {0}" => "Baryzentrum von {0}"
 .Signals: "Signals" => "Signale"
+.Codex: "Codex" @
+.Organics: "Organics" @

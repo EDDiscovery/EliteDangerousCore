@@ -23,7 +23,7 @@ SECTION Bodies
 .ABSG: "A Blue White Super Giant" => "A型蓝白色超巨星"
 .BBSG: "B Blue White Super Giant" => "B型蓝白色超巨星"
 .FWSG: "F White Super Giant" => "F型白色超巨星"
-.GWSG: "F White Super Giant" => "G型白色超巨星"
+.GWSG: "G White Super Giant" => "G型白色超巨星"
 .MSR: "M Red Super Giant" => "M型红色超巨星"
 .MOG: "M Red Giant" => "M型红巨星"
 .KOG: "K Orange Giant" => "K型橙巨星"
@@ -31,6 +31,9 @@ SECTION Bodies
 .UNK: "Class {0} star" @
 .Herbig: "Herbig Ae/Be" @
 .TTauri: "T Tauri" @
+.Nebula: "Nebula" @
+.StellarRemnantNebula: "Stellar Remnant nebula" @
+.SUnknown: "Unknown Star class" @
 
 SECTION EDPlanet
 
@@ -982,3 +985,5 @@ SECTION ScanDisplayUserControl
 .NSD: "No scan data available" @
 .BC: "Barycentre of {0}" @
 .Signals: "Signals" @
+.Codex: "Codex" @
+.Organics: "Organics" @

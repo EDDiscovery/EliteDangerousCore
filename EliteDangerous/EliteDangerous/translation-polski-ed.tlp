@@ -31,6 +31,9 @@ SECTION Bodies
 .UNK: "Class {0} star" @
 .Herbig: "Herbig Ae/Be" @
 .TTauri: "T Tauri" @
+.Nebula: "Nebula" @
+.StellarRemnantNebula: "Stellar Remnant nebula" @
+.SUnknown: "Unknown Star class" @
 
 SECTION EDPlanet
 
@@ -982,3 +985,5 @@ SECTION ScanDisplayUserControl
 .NSD: "No scan data available" => "Brak dostępnych danych skanu"
 .BC: "Barycentre of {0}" => "Barycentrum {0}"
 .Signals: "Signals" @
+.Codex: "Codex" @
+.Organics: "Organics" @
