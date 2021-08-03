@@ -490,8 +490,7 @@ namespace EliteDangerousCore
                 tip = tip.AppendPrePad("Codex:".T(EDTx.UserControlScan_Codex), Environment.NewLine + Environment.NewLine);
                 foreach ( var c in codex)
                 {
-                    c.FillInformation(null, null, out string i, out string detailed);
-                    tip = tip.AppendPrePad(i, Environment.NewLine);
+                    tip = tip.AppendPrePad(c.Info(), Environment.NewLine);
                 }
             }
 

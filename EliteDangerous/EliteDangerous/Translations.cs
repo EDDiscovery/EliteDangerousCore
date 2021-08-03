@@ -848,6 +848,7 @@ namespace EliteDangerousCore
         JournalScanInfo_SFSD, //  Standard
         JournalScanInfo_PFSD, //  Premium
         JournalScanInfo_LE, // {0} has {1} level elements.
+        JournalScanInfo_scanorganics, // Has been scanned for organics
 
     }
 

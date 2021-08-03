@@ -84,7 +84,7 @@ namespace EliteDangerousCore
                 }
             }
 
-            public List<JournalSAASignalsFound.SAASignal> Signals
+            public List<JournalSAASignalsFound.SAASignal> Signals       // can be null
             {
                 get
                 {
@@ -99,7 +99,7 @@ namespace EliteDangerousCore
                 }
             }
 
-            public List<JournalScanOrganic> Organics
+            public List<JournalScanOrganic> Organics        // can be null
             {
                 get
                 {

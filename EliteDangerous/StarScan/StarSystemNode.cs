@@ -29,20 +29,26 @@ namespace EliteDangerousCore
         {
             public ISystem System;
 
-            public SortedList<string, ScanNode> StarNodes = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());   // node list
-            public SortedList<int, ScanNode> NodesByID = new SortedList<int, ScanNode>();               // by ID list
+            public SortedList<string, ScanNode> StarNodes { get; private set; }  = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());   // node list
+            public SortedList<int, ScanNode> NodesByID { get; private set; } = new SortedList<int, ScanNode>();               // by ID list
 
-            public bool EDSMCacheCheck = false; // check flags
-            public bool EDSMWebChecked = false;
+            public bool EDSMCacheCheck { get; set; } = false; // check flags
+            public bool EDSMWebChecked { get; set; } = false;
 
-            public int? FSSTotalBodies;         // if we have FSSDiscoveryScan, this will be set
+            public int? FSSTotalBodies { get; set; }         // if we have FSSDiscoveryScan, this will be set
 
-            public List<JournalFSSSignalDiscovered.FSSSignal> FSSSignalList = new List<JournalFSSSignalDiscovered.FSSSignal>();    
-            public List<JournalCodexEntry> CodexEntryList = new List<JournalCodexEntry>();
+            public List<JournalFSSSignalDiscovered.FSSSignal> FSSSignalList { get; private set; } = new List<JournalFSSSignalDiscovered.FSSSignal>();    
+            public List<JournalCodexEntry> CodexEntryList { get; private set; } = new List<JournalCodexEntry>();
 
             public SystemNode(ISystem sys)
             {
                 System = sys;
+            }
+
+            public void ClearChildren()
+            {
+                StarNodes = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());
+                NodesByID = new SortedList<int, ScanNode>();
             }
 
             public IEnumerable<ScanNode> Bodies

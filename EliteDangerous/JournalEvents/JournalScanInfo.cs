@@ -873,7 +873,8 @@ namespace EliteDangerousCore.JournalEvents
 
 
         public string SurveyorInfoLine(ISystem sys, 
-                            bool hasminingsignals, bool hasgeosignals, bool hasbiosignals, bool hasthargoidsignals, bool hasguardiansignals, bool hashumansignals, bool hasothersignals, 
+                            bool hasminingsignals, bool hasgeosignals, bool hasbiosignals, bool hasthargoidsignals, bool hasguardiansignals, bool hashumansignals, bool hasothersignals,
+                            bool hasscanorganics,
                             bool showvolcanism, bool showvalues, bool shortinfo, bool showGravity, bool showAtmos, bool showRings, 
                             int lowRadiusLimit, int largeRadiusLimit, double eccentricityLimit)
         {
@@ -908,6 +909,7 @@ namespace EliteDangerousCore.JournalEvents
             information.Append((hasothersignals) ? " Has 'other' signals.".T(EDTx.JournalScanInfo_OtherSignals) : null);
             information.Append((js.HasRings && showRings) ? @" Is ringed.".T(EDTx.JournalScanInfo_Hasring) : null);
             information.Append((js.nEccentricity >= eccentricityLimit) ? @" Has an high eccentricity of ".T(EDTx.JournalScanInfo_eccentricity) + js.nEccentricity + "." : null);
+            information.Append(hasscanorganics ? " Has been scanned for organics.".T(EDTx.JournalScanInfo_scanorganics) : null);
 
             var ev = js.GetEstimatedValues();
 

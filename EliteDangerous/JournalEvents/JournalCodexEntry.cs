@@ -70,7 +70,7 @@ namespace EliteDangerousCore.JournalEvents
             s.AddCodexEntryToSystem(this);
         }
 
-        public override void FillInformation(ISystem sysunused, string whereamiunused, out string info, out string detailed)    // if you use sys or whereami check systemdisplaynodes
+        public override void FillInformation(ISystem sysunused, string whereamiunused, out string info, out string detailed)   
         {
             info = BaseUtils.FieldBuilder.Build("At ".T(EDTx.JournalCodexEntry_At), System,
                                                 "in ".T(EDTx.JournalCodexEntry_in), Region_Localised,
@@ -85,6 +85,18 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Traits != null)
                 detailed = String.Join(",", Traits);
+        }
+
+        public string Info()
+        {
+            return BaseUtils.FieldBuilder.Build("", Region_Localised,
+                                                "", Name_Localised,
+                                                "", Category_Localised,
+                                                "", SubCategory_Localised,
+                                                ";New Entry".T(EDTx.JournalCodexEntry_NewEntry), IsNewEntry,
+                                                ";Traits".T(EDTx.JournalCodexEntry_Traits), NewTraitsDiscovered,
+                                                "Nearest: ".T(EDTx.JournalEntry_Nearest), NearestDestination_Localised
+                                                );
         }
     }
 }

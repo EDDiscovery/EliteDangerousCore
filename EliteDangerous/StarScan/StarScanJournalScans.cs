@@ -125,8 +125,7 @@ namespace EliteDangerousCore
                         List<ScanNode> bodies = sn.Bodies.Where(b => b.ScanData != null).ToList();
 
                         // reset the nodes to zero
-                        sn.StarNodes = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());
-                        sn.NodesByID = new SortedList<int, ScanNode>();
+                        sn.ClearChildren();
 
                         foreach (var body in bodies)              // replay into process the body scans.. using the newly updated body designation (primary star cache) to correct any errors
                         {
