@@ -470,7 +470,8 @@ namespace EliteDangerousCore.JournalEvents
         public string Genus_Localised;
         public string Species;
         public string Species_Localised;
-        public string ScanType;     //Analyse, Log, Sample
+        public enum ScanTypeEnum { Log, Sample, Analyse };
+        public ScanTypeEnum ScanType;     //Analyse, Log, Sample
 
         public void AddStarScan(StarScan s, ISystem system)
         {
@@ -479,15 +480,45 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", ScanType, "<: ", Genus_Localised, "", Species_Localised, "@ ", whereami);
+            info = BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised, "@ ", whereami);
             detailed = "";
         }
 
+        // sorted by genus/species, then sorted by the highest scan type
 
-        static public string OrganicList(List<JournalScanOrganic> list)
+        static public List<JournalScanOrganic> SortList(List<JournalScanOrganic> list)
         {
-            string s = string.Join(Environment.NewLine, list.Select(x => BaseUtils.FieldBuilder.Build("", x.ScanType, "<: ", x.Genus_Localised, "", x.Species_Localised)));
-            return s;
+            List<JournalScanOrganic> listsorted = new List<JournalScanOrganic>(list);
+            listsorted.Sort(delegate (JournalScanOrganic l, JournalScanOrganic r)
+            {
+                int cmp = l.Genus.CompareTo(r.Genus);
+                if (cmp == 0)
+                    cmp = l.Species.CompareTo(r.Species);
+                if (cmp == 0)
+                    cmp = r.ScanType.CompareTo(l.ScanType);     // backwards, so analyse is at top
+                return cmp;
+            });
+            return listsorted;
+        }
+
+        static public string OrganicList(List<JournalScanOrganic> list, int indent = 0, string separ = null)        // default is environment.newline
+        {
+            var listsorted = SortList(list);
+            string inds = new string(' ', indent);
+            string res = "";
+            string gs = "";
+
+            foreach (var s in listsorted)
+            {
+                string key = s.Genus + ":" + s.Species;     // don't repeat genus/species
+                if (gs != key)
+                {
+                    res = res.AppendPrePad(inds + BaseUtils.FieldBuilder.Build("", s.ScanType, "<: ", s.Genus_Localised, "", s.Species_Localised), separ ?? Environment.NewLine);
+                    gs = key;
+                }
+            }
+
+            return res;
         }
 
     }

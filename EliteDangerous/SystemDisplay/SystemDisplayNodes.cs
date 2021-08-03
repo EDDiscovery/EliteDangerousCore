@@ -61,7 +61,7 @@ namespace EliteDangerousCore
                     if (sn.Signals != null)
                         tip += "\n" + "Signals".T(EDTx.ScanDisplayUserControl_Signals) + ":\n" + JournalSAASignalsFound.SignalList(sn.Signals, 4, "\n");
                     if ( sn.Organics != null )
-                        tip += "\n" + "Organics".T(EDTx.ScanDisplayUserControl_Organics) + ":\n" + JournalScanOrganic.OrganicList(sn.Organics);
+                        tip += "\n" + "Organics".T(EDTx.ScanDisplayUserControl_Organics) + ":\n" + JournalScanOrganic.OrganicList(sn.Organics,4);
 
                     Bitmap nodeimage = (Bitmap)BaseUtils.Icons.IconSet.GetIcon(sc.GetStarPlanetTypeImageName());
 
@@ -139,7 +139,8 @@ namespace EliteDangerousCore
                     bool isdiscovered = sc.IsPreviouslyDiscovered && sc.IsPlanet;
                     int iconoverlays = ShowOverlays ? ((sc.Terraformable ? 1 : 0) + (sc.HasMeaningfulVolcanism ? 1 : 0) + 
                                         (valuable ? 1 : 0) + (sc.Mapped ? 1 : 0) + (isdiscovered ? 1 : 0) + (sc.IsPreviouslyMapped ? 1 : 0) +
-                                        (sn.Signals != null ? 1 : 0)) : 0;
+                                        (sn.Signals != null ? 1 : 0) + (sn.Organics != null ? 1 : 0)
+                                        ) : 0;
 
                     //   if (sc.BodyName.Contains("4 b"))  iconoverlays = 0;
 
@@ -229,6 +230,13 @@ namespace EliteDangerousCore
                             if (sn.Signals != null)
                             {
                                 g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Signals"), new Rectangle(0, pos, ovsize, ovsize));
+                                pos += ovsize + 1;
+                            }
+
+                            if ( sn.Organics != null )
+                            {
+                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Journal.ScanOrganic"), new Rectangle(0, pos, ovsize, ovsize));
+                                pos += ovsize + 1;
                             }
                         }
 
@@ -389,10 +397,12 @@ namespace EliteDangerousCore
         }
 
         // Create a signals list
-        Point DrawSignals(List<ExtPictureBox.ImageElement> pc, Point leftmiddle , List<JournalFSSSignalDiscovered.FSSSignal> signals, int height, int shiftrightifreq)
+        Point DrawSignals(List<ExtPictureBox.ImageElement> pc, Point leftmiddle , 
+                                List<JournalFSSSignalDiscovered.FSSSignal> signals, List<JournalCodexEntry> codex,
+                                int height, int shiftrightifreq)
         {
-            const int max = 5;
-            int iconsize = height / max;
+            const int maxicons = 5;
+            int iconsize = height / maxicons;
             Bitmap bmp = new Bitmap(iconsize, height);
 
             int[] count = new int[]     // in priority order
@@ -404,23 +414,30 @@ namespace EliteDangerousCore
                 signals.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.ResourceExtraction).Count(),
                 signals.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.ConflictZone).Count(),
                 signals.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.USS).Count(),
-                0
+                0, // 7, slot for others
+                0, // 8, slot for codex
             };
 
-            count[7] = signals.Count - (from x in count select x).Sum();
+            count[7] = signals.Count - (from x in count select x).Sum();        // set seven to signals left
 
             int icons;
-            int knockout = 6;
+            int knockout = 6;       // starting from this signal, work backwards knocking out if required
             while(true)
             {
                 icons = (from x in count where x > 0 select 1).Sum();           // how many are set?
-                if (icons > max)        // too many
+                if (icons > maxicons)        // too many
                 {
                     count[7] = 1;               // okay set the generic signal one
                     count[knockout--] = 0;      // and knock this out
                 }
                 else
                     break;
+            }
+
+            if ( icons < maxicons && codex.Count>0 )        // if we have space for codex, and we have codex, add in
+            {
+                icons++;
+                count[8] = 1;
             }
 
             Image[] images = new Image[]
@@ -433,6 +450,7 @@ namespace EliteDangerousCore
                 BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.CZ"),
                 BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.USS"),
                 BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Signals"),
+                BaseUtils.Icons.IconSet.GetIcon("Journal.CodexEntry"),
             };
 
             int vpos = height / 2 - iconsize * icons / 2;
@@ -450,9 +468,10 @@ namespace EliteDangerousCore
                 }
             }
 
+            string tip = "";
+
             var notexpired = signals.Where(x => !x.TimeRemaining.HasValue || x.ExpiryUTC >= DateTime.UtcNow).ToList();
             notexpired.Sort(delegate (JournalFSSSignalDiscovered.FSSSignal l, JournalFSSSignalDiscovered.FSSSignal r) { return l.ClassOfSignal.CompareTo(r.ClassOfSignal); });
-            string tip = "";
             foreach (var sig in notexpired )
                 tip = tip.AppendPrePad(sig.ToString(true), Environment.NewLine);
 
@@ -466,9 +485,18 @@ namespace EliteDangerousCore
                     tip = tip.AppendPrePad(sig.ToString(true), Environment.NewLine);
             }
 
+            if ( codex.Count>0)
+            {
+                tip = tip.AppendPrePad("Codex:".T(EDTx.UserControlScan_Codex), Environment.NewLine + Environment.NewLine);
+                foreach ( var c in codex)
+                {
+                    c.FillInformation(null, null, out string i, out string detailed);
+                    tip = tip.AppendPrePad(i, Environment.NewLine);
+                }
+            }
+
             if (icons > 4)
                 leftmiddle.X += shiftrightifreq;
-           
 
             return CreateImageAndLabel(pc, bmp, leftmiddle, bmp.Size, out Rectangle xic, new string[] { "" }, tip, false);
         }

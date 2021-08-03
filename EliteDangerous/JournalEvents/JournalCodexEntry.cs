@@ -70,7 +70,7 @@ namespace EliteDangerousCore.JournalEvents
             s.AddCodexEntryToSystem(this);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(ISystem sysunused, string whereamiunused, out string info, out string detailed)    // if you use sys or whereami check systemdisplaynodes
         {
             info = BaseUtils.FieldBuilder.Build("At ".T(EDTx.JournalCodexEntry_At), System,
                                                 "in ".T(EDTx.JournalCodexEntry_in), Region_Localised,
