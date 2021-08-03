@@ -253,7 +253,7 @@ SECTION JournalTypeEnum
 .Backpack: "Backpack" => "Rucksack"
 .Resupply: "Resupply" => "Aufstocken"
 .ShipLocker: "Ship Locker" => "Schiffsspind"
-.FSSBodySignals: "FSS Body Signals" @
+.FSSBodySignals: "FSS Body Signals" => "VSS Körpersignale"
 
 SECTION JournalCargo
 
@@ -1151,7 +1151,7 @@ SECTION JournalMicroResources
 
 SECTION JournalScanInfo
 
-.isa: " is a " => " ist ein/e "
+.isa: " is a " => " ist ein(e) "
 .Atmosphere: " Atmosphere: " => " Atmosphäre: "
 .terraformable: "terraformable " => "terraformierbare/r "
 .LowRadius: " Is tiny." => " niedriger Radius"
@@ -1175,4 +1175,4 @@ SECTION JournalScanInfo
 .SFSD: " Standard" => "Standard"
 .PFSD: " Premium" => "Premium"
 .LE: "{0} has {1} level elements." => "{0} hat Stufe {1} Elemente."
-.scanorganics: " Has been scanned for organics." @
+.scanorganics: " Has been scanned for organics." => " Wurde nach Organsimen gescannt."
