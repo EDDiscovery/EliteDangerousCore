@@ -56,10 +56,12 @@ namespace EliteDangerousCore.IGAU
 
         public JObject CreateIGAUMessageScanOrganicMessage(string timestamp, string species, string speciesloc, string System, string SystemAddress)
         {
+            var strippedspecies = species?.ToLowerInvariant()?.Replace("$", "")?.Replace("_name;", "");
+
             JObject detail = new JObject();
             detail["timestamp"] = timestamp;
             detail["EntryID"] = "-";
-            detail["Name"] = species;
+            detail["Name"] = strippedspecies;
             detail["Name_Localised"] = speciesloc;
             detail["System"] = System;
             detail["SystemAddress"] = SystemAddress.ToString();
