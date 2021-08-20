@@ -15,6 +15,7 @@
  */
 using BaseUtils.JSON;
 using System;
+using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -43,7 +44,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            string smod = SuitMods != null ? string.Join(", ", SuitMods) : null;
+            string smod = SuitMods != null ? string.Join(", ", SuitMods.Select(x=>Recipes.GetBetterNameForEngineeringRecipe(x))) : null;
             info = BaseUtils.FieldBuilder.Build("", FriendlyName, "Mods: ".T(EDTx.JournalEntry_Mods), smod, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Price);
             detailed = "";
         }
@@ -533,7 +534,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             long? p = Cost > 0 ? Cost : default(long?);
-            string smod = SuitMods != null ? string.Join(", ", SuitMods) : null;
+            string smod = SuitMods != null ? string.Join(", ", SuitMods.Select(x => Recipes.GetBetterNameForEngineeringRecipe(x))) : null;
             info = BaseUtils.FieldBuilder.Build("", Name_Localised, "< => ", Class, "Mods: ".T(EDTx.JournalEntry_Mods), smod, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), p);
             detailed = "";
         }

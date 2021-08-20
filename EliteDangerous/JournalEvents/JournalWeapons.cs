@@ -14,6 +14,7 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 using BaseUtils.JSON;
+using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -45,7 +46,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            string wmod = WeaponMods != null ? string.Join(", ", WeaponMods) : null;
+            string wmod = WeaponMods != null ? string.Join(", ", WeaponMods.Select(x => Recipes.GetBetterNameForEngineeringRecipe(x))) : null;
             info = BaseUtils.FieldBuilder.Build("", FriendlyName, "Class: ".T(EDTx.JournalEntry_Class), Class, "Mods: ".T(EDTx.JournalEntry_Mods), wmod, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Price);
             detailed = "";
         }
@@ -126,7 +127,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            string wmod = WeaponMods != null ? string.Join(", ", WeaponMods) : null;
+            string wmod = WeaponMods != null ? string.Join(", ", WeaponMods.Select(x => Recipes.GetBetterNameForEngineeringRecipe(x))) : null;
             long? p = Cost > 0 ? Cost : default(long?);
             info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< => " + "Class: ".T(EDTx.JournalEntry_Class), Class, "Mods: ".T(EDTx.JournalEntry_Mods), wmod, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), p);
             detailed = "";

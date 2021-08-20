@@ -91,6 +91,7 @@ namespace EliteDangerousCore
             public string[] modules;
             public string engineersstring;
             public string[] engineers;
+            public string fdname;       // only certain types have a fdname
 
             public EngineeringRecipe(string n, string indg, string mod, string lvl, string engnrs)
                 : base(n, indg)
@@ -132,11 +133,12 @@ namespace EliteDangerousCore
                 engineers = engineersstring.Split(',');
             }
 
-            public EngineeringRecipe(string type, string manu, string n, int cost, string indg, string eng)        // for suit/weapon engineer mods
+            public EngineeringRecipe(string type, string fdname, string manu, string n, int cost, string indg, string eng)        // for suit/weapon engineer mods
                 : base(n + (manu != "All" ? (": " + manu) : ""), indg)
             {
                 level = "NA";
                 modulesstring = type;
+                this.fdname = fdname;
                 modules = modulesstring.Split(',');
                 engineersstring = eng;
                 engineers = engineersstring.Split(',');
@@ -167,6 +169,13 @@ namespace EliteDangerousCore
                 return String.Join(join, EngineeringRecipesByMaterial[mc].Select(x => x.modulesstring + " " + x.Name + "-" + x.level + ": " + x.IngredientsStringLong + " @ " + x.engineersstring));
             else
                 return "";
+        }
+
+        public static string GetBetterNameForEngineeringRecipe(string fdname)
+        {
+            var lfdname = fdname.ToLower();
+            var f = EngineeringRecipes.Find(x => x.fdname == lfdname);
+            return f == null ? fdname : f.Name;
         }
 
         public static SynthesisRecipe FindSynthesis(string recipename, string level)
@@ -1271,43 +1280,44 @@ namespace EliteDangerousCore
 
             #endregion
 
-            #region Engineer mods
+            #region Engineer mods - again from frontier data, excepting engineer list manually added.
 
-            new EngineeringRecipe("Suit","All","Reduced Tool Battery Consumption",500000,"5MRCEF,10MRCMICTRANS,15MRCEW,10MRDROR","Domino Green,Wellington Beck"),
-            new EngineeringRecipe("Suit","All","Improved Battery Capacity",750000,"5MRCIB,10MRCMS,10MRCEW,10MRDROR,15MRDML","Wellington Beck,Oden Geiger"),
-            new EngineeringRecipe("Suit","All","Faster Shield Regen",750000,"5MRCIB,15MRCMICTRANS,15MRCEW,10MRDROR","Kit Fowler,Uma Laszlo"),
-            new EngineeringRecipe("Suit","All","Damage Resistance",750000,"5MRCTP,5MRCCFP,15MRCEA,10MRDWI,10MRDBALD","Jude Navarro,Uma Laszlo"),
-            new EngineeringRecipe("Suit","All","Increased Air Reserves",750000,"10MRCOXYBAC,15MRCPHN,5MRDPP,15MRDAQR","Terra Velasquez,Hero Ferrari"),
-            new EngineeringRecipe("Suit","All","Night Vision",1000000,"10MRISE,10MRCCIRSWITCH,5MRDSL,5MRDRD,5MRDNOCD","Oden Geiger"),
-            new EngineeringRecipe("Suit","All","Enhanced Tracking",750000,"5MRCTX,5MRCCB,10MRDTS,10MRDSAL,10MRDSAD","Domino Green,Oden Geiger"),
-            new EngineeringRecipe("Suit","All","Extra Backpack Capacity",750000,"10MRCEA,5MRCMC,10MRDWI,10MRDCI,10MRDDD","Domino Green,Wellington Beck"),
-            new EngineeringRecipe("Suit","All","Extra Ammo Capacity",750000,"5MRCWC,15MRDRL,10MRWTD,10MRDPRODREP","Kit Fowler,Jude Navarro"),
-            new EngineeringRecipe("Suit","All","Improved Jump Assist",750000,"10MRIGM,5MRCMT,10MRCMOTOR,10MRDTS","Yarden Bond,Hero Ferrari"),
-            new EngineeringRecipe("Suit","All","Increased Sprint Duration",750000,"10MRCOXYBAC,15MRCCC,5MRDTDR,5MRDGSD,5MRDMR","Terra Velasquez,Hero Ferrari"),
-            new EngineeringRecipe("Suit","All","Combat Movement Speed",750000,"10MRCEPINE,15MRCPHN,10MRDEP,5MRDGR","Yarden Bond,Terra Velasquez"),
-            new EngineeringRecipe("Suit","All","Quieter Footsteps",1000000,"5MRCMH,15MRCVP,5MRDSAP,10MRDTACP,10MRDPATR","Yarden Bond"),
-            new EngineeringRecipe("Suit","All","Added Melee Damage",500000,"10MRCEPINE,15MRCMT,10MRDCTM,10MRDCOMBPERF","Kit Fowler,Jude Navarro"),
+            new EngineeringRecipe("Suit","suit_reducedtoolbatteryconsumption","All","Reduced Tool Battery Consumption",500000,"5MRCEF,10MRCMICTRANS,15MRCEW,10MRDROR","Domino Green,Wellington Beck"),
+            new EngineeringRecipe("Suit","suit_increasedbatterycapacity","All","Improved Battery Capacity",750000,"5MRCIB,10MRCMS,10MRCEW,10MRDROR,15MRDML","Wellington Beck,Oden Geiger"),
+            new EngineeringRecipe("Suit","suit_increasedshieldregen","All","Faster Shield Regen",750000,"5MRCIB,15MRCMICTRANS,15MRCEW,10MRDROR","Kit Fowler,Uma Laszlo"),
+            new EngineeringRecipe("Suit","suit_improvedarmourrating","All","Damage Resistance",750000,"5MRCTP,5MRCCFP,15MRCEA,10MRDWI,10MRDBALD","Jude Navarro,Uma Laszlo"),
+            new EngineeringRecipe("Suit","suit_increasedo2capacity","All","Increased Air Reserves",750000,"10MRCOXYBAC,15MRCPHN,5MRDPP,15MRDAQR","Terra Velasquez,Hero Ferrari"),
+            new EngineeringRecipe("Suit","suit_nightvision","All","Night Vision",1000000,"10MRISE,10MRCCIRSWITCH,5MRDSL,5MRDRD,5MRDNOCD","Oden Geiger"),
+            new EngineeringRecipe("Suit","suit_improvedradar","All","Enhanced Tracking",750000,"5MRCTX,5MRCCB,10MRDTS,10MRDSAL,10MRDSAD","Domino Green,Oden Geiger"),
+            new EngineeringRecipe("Suit","suit_backpackcapacity","All","Extra Backpack Capacity",750000,"10MRCEA,5MRCMC,10MRDWI,10MRDCI,10MRDDD","Domino Green,Wellington Beck"),
+            new EngineeringRecipe("Suit","suit_increasedammoreserves","All","Extra Ammo Capacity",750000,"5MRCWC,15MRDRL,10MRWTD,10MRDPRODREP","Kit Fowler,Jude Navarro"),
+            new EngineeringRecipe("Suit","suit_improvedjumpassist","All","Improved Jump Assist",750000,"10MRIGM,5MRCMT,10MRCMOTOR,10MRDTS","Yarden Bond,Hero Ferrari"),
+            new EngineeringRecipe("Suit","suit_increasedsprintduration","All","Increased Sprint Duration",750000,"10MRCOXYBAC,15MRCCC,5MRDTDR,5MRDGSD,5MRDMR","Terra Velasquez,Hero Ferrari"),
+            new EngineeringRecipe("Suit","suit_adsmovementspeed","All","Combat Movement Speed",750000,"10MRCEPINE,15MRCPHN,10MRDEP,5MRDGR","Yarden Bond,Terra Velasquez"),
+            new EngineeringRecipe("Suit","suit_quieterfootsteps","All","Quieter Footsteps",1000000,"5MRCMH,15MRCVP,5MRDSAP,10MRDTACP,10MRDPATR","Yarden Bond"),
+            new EngineeringRecipe("Suit","suit_increasedmeleedamage","All","Added Melee Damage",500000,"10MRCEPINE,15MRCMT,10MRDCTM,10MRDCOMBPERF","Kit Fowler,Jude Navarro"),
 
-            new EngineeringRecipe("Weapon","All","Noise Suppressor",1000000,"15MRCVP,5MRCWC,10MRDAD,10MRDMA","Terra Velasquez,Hero Ferrari"),
-            new EngineeringRecipe("Weapon","All","Audio Masking",1000000,"10MRCS,15MRCTX,5MRCCB,5MRDAL,10MRDPATR","Yarden Bond"),
-            new EngineeringRecipe("Weapon","All","Stability",500000,"10MRCVP,10MRCMH,10MRDMA,15MRDRA","Domino Green,Oden Geiger"),
-            new EngineeringRecipe("Weapon","All","Faster Handling",500000,"5MRCVP,10MRDOM,10MRDCOMBPERF,10MRDCTM","Yarden Bond,Hero Ferrari"),
-            new EngineeringRecipe("Weapon","All","Reload Speed",500000,"10MRCMH,10MRCE,10MRDOM,10MRDPRODREP,10MRDCTM","Jude Navarro,Uma Laszlo"),
-            new EngineeringRecipe("Weapon","All","Magazine Size",750000,"5MRCWC,5MRCTC,10MRCMETALCOIL,10MRWTD,5MRSECEXP","Kit Fowler,Jude Navarro"),
-            new EngineeringRecipe("Weapon","All","Scope",500000,"10MRCOL,5MRCOF,10MRDSAD,5MRDBIOD","Wellington Beck,Oden Geiger"),
-            new EngineeringRecipe("Weapon","All","Stowed reloading",1000000,"5MRCCB,15MRCEMC,10MRDDD,10MRDOM,10MRDPS","Kit Fowler,Uma Laszlo"),
+            new EngineeringRecipe("Weapon","weapon_suppression_pressurised","All","Noise Suppressor",1000000,"15MRCVP,5MRCWC,10MRDAD,10MRDMA","Terra Velasquez,Hero Ferrari"),
+            new EngineeringRecipe("Weapon","weapon_suppression_unpressurised","All","Audio Masking",1000000,"10MRCS,15MRCTX,5MRCCB,5MRDAL,10MRDPATR","Yarden Bond"),
+            new EngineeringRecipe("Weapon","weapon_stability","All","Stability",500000,"10MRCVP,10MRCMH,10MRDMA,15MRDRA","Domino Green,Oden Geiger"),
+            new EngineeringRecipe("Weapon","weapon_handling","All","Faster Handling",500000,"5MRCVP,10MRDOM,10MRDCOMBPERF,10MRDCTM","Yarden Bond,Hero Ferrari"),
+            new EngineeringRecipe("Weapon","weapon_reloadspeed","All","Reload Speed",500000,"10MRCMH,10MRCE,10MRDOM,10MRDPRODREP,10MRDCTM","Jude Navarro,Uma Laszlo"),
+            new EngineeringRecipe("Weapon","weapon_clipsize","All","Magazine Size",750000,"5MRCWC,5MRCTC,10MRCMETALCOIL,10MRWTD,5MRSECEXP","Kit Fowler,Jude Navarro"),
+            new EngineeringRecipe("Weapon","weapon_scope","All","Scope",500000,"10MRCOL,5MRCOF,10MRDSAD,5MRDBIOD","Wellington Beck,Oden Geiger"),
+            new EngineeringRecipe("Weapon","weapon_backpackreloading","All","Stowed reloading",1000000,"5MRCCB,15MRCEMC,10MRDDD,10MRDOM,10MRDPS","Kit Fowler,Uma Laszlo"),
 
-            new EngineeringRecipe("Weapon","Kinematic Armaments","Higher Accuracy",500000,"10MRCVP,10MRCR,10MRDEYD,5MRDBIOD,10MRDCOMBPERF","Yarden Bond,Terra Velasquez"),
-            new EngineeringRecipe("Weapon","Kinematic Armaments","Greater Range",500000,"10MRCMETALCOIL,10MRCR,5MRCWC,10MRDBALD,10MRDTS","Domino Green,Wellington Beck"),
-            new EngineeringRecipe("Weapon","Kinematic Armaments","Headshot damage",500000,"10MRCCC,15MRCR,5MRCWC,10MRWTD,5MRDMR","Uma Laszlo"),
+            new EngineeringRecipe("Weapon","weapon_accuracy","Kinematic Armaments","Higher Accuracy",500000,"10MRCVP,10MRCR,10MRDEYD,5MRDBIOD,10MRDCOMBPERF","Yarden Bond,Terra Velasquez"),
+            new EngineeringRecipe("Weapon","weapon_range","Kinematic Armaments","Greater Range",500000,"10MRCMETALCOIL,10MRCR,5MRCWC,10MRDBALD,10MRDTS","Domino Green,Wellington Beck"),
+            new EngineeringRecipe("Weapon","weapon_headshotdamage","Kinematic Armaments","Headshot damage",500000,"10MRCCC,15MRCR,5MRCWC,10MRWTD,5MRDMR","Uma Laszlo"),
 
-            new EngineeringRecipe("Weapon","Manticore","Higher Accuracy",500000,"10MRCCC,10MRCE,10MRCMETALCOIL,5MRDCHEMPAT,10MRDCOMBPERF","Yarden Bond,Terra Velasquez"),
-            new EngineeringRecipe("Weapon","Manticore","Greater Range",500000,"5MRCMOTOR,10MRCE,5MRCEF,10MRDCF,15MRDMS","Domino Green,Wellington Beck"),
-            new EngineeringRecipe("Weapon","Manticore","Headshot damage",500000,"10MRCIB,10MRCE,15MRCMS,10MRDCED,5MRDBTR","Uma Laszlo"),
+            new EngineeringRecipe("Weapon","weapon_accuracy","Manticore","Higher Accuracy",500000,"10MRCCC,10MRCE,10MRCMETALCOIL,5MRDCHEMPAT,10MRDCOMBPERF","Yarden Bond,Terra Velasquez"),
+            new EngineeringRecipe("Weapon","weapon_range","Manticore","Greater Range",500000,"5MRCMOTOR,10MRCE,5MRCEF,10MRDCF,15MRDMS","Domino Green,Wellington Beck"),
+            new EngineeringRecipe("Weapon","weapon_headshotdamage","Manticore","Headshot damage",500000,"10MRCIB,10MRCE,15MRCMS,10MRDCED,5MRDBTR","Uma Laszlo"),
 
-            new EngineeringRecipe("Weapon","Takada","Higher Accuracy",500000,"10MRCMETALCOIL,5MRCOL,15MRCEW,5MRDRD,10MRDCOMBPERF","Yarden Bond,Terra Velasquez"),
-            new EngineeringRecipe("Weapon","Takada","Greater Range",500000,"15MRCMICTRANS,5MRCOL,5MRCCB,10MRDSAL,15MRDRA","Domino Green,Wellington Beck"),
-            new EngineeringRecipe("Weapon","Takada","Headshot damage",750000,"10MRCIB,5MRCOL,10MRCS,10MRDSAD,5MRDBIOD","Uma Laszlo"),
+            new EngineeringRecipe("Weapon","weapon_accuracy","Takada","Higher Accuracy",500000,"10MRCMETALCOIL,5MRCOL,15MRCEW,5MRDRD,10MRDCOMBPERF","Yarden Bond,Terra Velasquez"),
+            new EngineeringRecipe("Weapon","weapon_range","Takada","Greater Range",500000,"15MRCMICTRANS,5MRCOL,5MRCCB,10MRDSAL,15MRDRA","Domino Green,Wellington Beck"),
+            new EngineeringRecipe("Weapon","weapon_headshotdamage","Takada","Headshot damage",750000,"10MRCIB,5MRCOL,10MRCS,10MRDSAD,5MRDBIOD","Uma Laszlo"),
+
             #endregion
 
 
