@@ -522,102 +522,104 @@ namespace EliteDangerousCore
 
         };
 
+        // rob checked 20/8/21 for all suits to class 3 in game, class 4/5 according to wiki
+
         public static Dictionary<string, Suit> suit = new Dictionary<string, Suit>   // DO NOT USE DIRECTLY - public is for checking only
         {
                  { "flightsuit", new Suit( "Flight Suit", 0, 0, 1, "Energylink", "Profile Analyser", "",
-                new SuitStats( 1.7, 0.6, 1.2, 1, // health kinetic, thermal, plasma, explosive
+                new SuitStats( 1.7, 0.6, 1.2, 1, // health kinetic, thermal, plasma, explosive                  
                 0.4, 1.5, 1, 0.5, // shield kinetic, thermal, plasma, explosive
-                0.55, 7.5, // regen, shield health
-                7, 60, 5,10,10 )) }, // battery, oxygen, items, components, data
+                0.55, 7.5, // regen, shield health  
+                7, 60, 5,10,10 )) }, // battery, oxygen, items, components, data     
 
                  { "tacticalsuit_class1", new Suit( "Dominator Suit", 1, 2, 1, "Energylink", "Profile Analyser", "",
-                new SuitStats( 1.5, 0.4, 1, 1, // health kinetic, thermal, plasma, explosive
+                new SuitStats( 1.5, 0.4, 1, 1, // health kinetic, thermal, plasma, explosive : correct
                 0.4, 1.5, 1, 0.5, // shield kinetic, thermal, plasma, explosive
-                1.1, 15, // regen, shield health
-                10, 60, 5,10,10 )) }, // battery, oxygen, items, components, data
+                1.1, 15, // regen, shield health : correct
+                10, 60, 5,10,10 )) }, // battery, oxygen, items, components, data : correct
 
                  { "tacticalsuit_class2", new Suit( "Dominator Suit", 2, 2, 1, "Energylink", "Profile Analyser", "",
-                new SuitStats( 1.26, 0.34, 0.84, 0.84, // health kinetic, thermal, plasma, explosive
+                new SuitStats( 1.26, 0.34, 0.84, 0.84, // health kinetic, thermal, plasma, explosive : correct
                 0.4, 1.5, 1, 0.5, // shield kinetic, thermal, plasma, explosive
-                1.34, 18.3, // regen, shield health
-                10, 60, 5,10,10 )) }, // battery, oxygen, items, components, data
+                1.34, 18.3, // regen, shield health correct
+                10, 60, 5,10,10 )) }, // battery, oxygen, items, components, data correct
 
                  { "tacticalsuit_class3", new Suit( "Dominator Suit", 3, 2, 1, "Energylink", "Profile Analyser", "",
-                new SuitStats( 1.07, 0.28, 0.71, 0.71, // health kinetic, thermal, plasma, explosive
+                new SuitStats( 1.07, 0.28, 0.71, 0.71, // health kinetic, thermal, plasma, explosive : correct
                 0.4, 1.5, 1, 0.5, // shield kinetic, thermal, plasma, explosive
-                1.65, 22.5, // regen, shield health
-                10, 60, 5,10,10 )) }, // battery, oxygen, items, components, data
+                1.65, 22.5, // regen, shield health correct
+                10, 60, 5,10,10 )) }, // battery, oxygen, items, components, data correct
 
                  { "tacticalsuit_class4", new Suit( "Dominator Suit", 4, 2, 1, "Energylink", "Profile Analyser", "",
                 new SuitStats( 0.89, 0.24, 0.59, 0.59, // health kinetic, thermal, plasma, explosive
                 0.4, 1.5, 1, 0.5, // shield kinetic, thermal, plasma, explosive
-                2.02, 27.6, // regen, shield health
+                2.02, 27.6, // regen, shield health matches https://elite-dangerous.fandom.com/wiki/Artemis_Suit
                 10, 60, 5,10,10 )) }, // battery, oxygen, items, components, data
 
                  { "tacticalsuit_class5", new Suit( "Dominator Suit", 5, 2, 1, "Energylink", "Profile Analyser", "",
                 new SuitStats( 0.75, 0.2, 0.5, 0.5, // health kinetic, thermal, plasma, explosive
                 0.4, 1.5, 1, 0.5, // shield kinetic, thermal, plasma, explosive
-                2.48, 33.8, // regen, shield health
+                2.48, 33.8, // regen, shield health matches https://elite-dangerous.fandom.com/wiki/Artemis_Suit
                 10, 60, 5,10,10 )) }, // battery, oxygen, items, components, data
 
                  { "explorationsuit_class1", new Suit( "Artemis Suit", 1, 1, 1, "Energylink", "Profile Analyser", "Genetic Sampler",
-                new SuitStats( 1.7, 0.6, 1.2, 1, // health kinetic, thermal, plasma, explosive
+                new SuitStats( 1.7, 0.6, 1.2, 1, // health kinetic, thermal, plasma, explosive : Correct
                 0.4, 1.5, 1, 0.5, // shield kinetic, thermal, plasma, explosive
-                0.99, 12, // regen, shield health
-                17, 60, 10,20,10 )) }, // battery, oxygen, items, components, data
+                0.88, 12, // regen, shield health : wrong in frontier data, game says 0.88,12
+                17, 60, 10,20,10 )) }, // battery, oxygen, items, components, data : correct
 
                  { "explorationsuit_class2", new Suit( "Artemis Suit", 2, 1, 1, "Energylink", "Profile Analyser", "Genetic Sampler",
-                new SuitStats( 1.43, 0.5, 1.01, 0.84, // health kinetic, thermal, plasma, explosive
+                new SuitStats( 1.43, 0.5, 1.01, 0.84, // health kinetic, thermal, plasma, explosive : correct
                 0.4, 1.5, 1, 0.5, // shield kinetic, thermal, plasma, explosive
-                1.21, 14.7, // regen, shield health
-                17, 60, 10,20,10 )) }, // battery, oxygen, items, components, data
+                1.07, 14.7, // regen, shield health : wrong in frontier data, game says 1.07,14.7
+                17, 60, 10,20,10 )) }, // battery, oxygen, items, components, data : correct
 
                  { "explorationsuit_class3", new Suit( "Artemis Suit", 3, 1, 1, "Energylink", "Profile Analyser", "Genetic Sampler",
-                new SuitStats( 1.21, 0.43, 0.85, 0.71, // health kinetic, thermal, plasma, explosive
+                new SuitStats( 1.21, 0.43, 0.85, 0.71, // health kinetic, thermal, plasma, explosive Correct
                 0.4, 1.5, 1, 0.5, // shield kinetic, thermal, plasma, explosive
-                1.49, 18, // regen, shield health
-                17, 60, 10,20,10 )) }, // battery, oxygen, items, components, data
+                1.32, 18, // regen, shield health wrong in frontier data. fixed to game data
+                17, 60, 10,20,10 )) }, // battery, oxygen, items, components, data Correct
 
                  { "explorationsuit_class4", new Suit( "Artemis Suit", 4, 1, 1, "Energylink", "Profile Analyser", "Genetic Sampler",
                 new SuitStats( 1, 0.35, 0.71, 0.59, // health kinetic, thermal, plasma, explosive
                 0.4, 1.5, 1, 0.5, // shield kinetic, thermal, plasma, explosive
-                1.82, 22.1, // regen, shield health
+                1.62, 22.1, // regen, shield health - wrong in frontier data, corrected according to https://elite-dangerous.fandom.com/wiki/Artemis_Suit
                 17, 60, 10,20,10 )) }, // battery, oxygen, items, components, data
 
                  { "explorationsuit_class5", new Suit( "Artemis Suit", 5, 1, 1, "Energylink", "Profile Analyser", "Genetic Sampler",
                 new SuitStats( 0.85, 0.3, 0.6, 0.5, // health kinetic, thermal, plasma, explosive
                 0.4, 1.5, 1, 0.5, // shield kinetic, thermal, plasma, explosive
-                2.23, 27, // regen, shield health
+                2.23, 27, // regen, shield health - no data can be found!  MISSING VALUE
                 17, 60, 10,20,10 )) }, // battery, oxygen, items, components, data
 
                  { "utilitysuit_class1", new Suit( "Maverick Suit", 1, 1, 1, "Energylink", "Profile Analyser", "Arc Cutter",
-                new SuitStats( 1.6, 0.5, 1.1, 1, // health kinetic, thermal, plasma, explosive
+                new SuitStats( 1.6, 0.5, 1.1, 1, // health kinetic, thermal, plasma, explosive : correct
                 0.4, 1.5, 1, 0.5, // shield kinetic, thermal, plasma, explosive
-                0.88, 13.5, // regen, shield health
-                13.5, 60, 15,30,10 )) }, // battery, oxygen, items, components, data
+                0.99, 13.5, // regen, shield health wrong in frontier data, game says 0.99,13.5
+                13.5, 60, 15,30,10 )) }, // battery, oxygen, items, components, data correct
 
                  { "utilitysuit_class2", new Suit( "Maverick Suit", 2, 1, 1, "Energylink", "Profile Analyser", "Arc Cutter",
-                new SuitStats( 1.34, 0.42, 0.92, 0.84, // health kinetic, thermal, plasma, explosive
+                new SuitStats( 1.34, 0.42, 0.92, 0.84, // health kinetic, thermal, plasma, explosive : Correct   
                 0.4, 1.5, 1, 0.5, // shield kinetic, thermal, plasma, explosive
-                1.07, 16.5, // regen, shield health
-                13.5, 60, 15,30,10 )) }, // battery, oxygen, items, components, data
+                1.21, 16.5, // regen, shield health wrong in frontier data, game says 1.21,16.5 
+                13.5, 60, 15,30,10 )) }, // battery, oxygen, items, components, data correct 
 
                  { "utilitysuit_class3", new Suit( "Maverick Suit", 3, 1, 1, "Energylink", "Profile Analyser", "Arc Cutter",
-                new SuitStats( 1.14, 0.36, 0.78, 0.71, // health kinetic, thermal, plasma, explosive
+                new SuitStats( 1.14, 0.36, 0.78, 0.71, // health kinetic, thermal, plasma, explosive        // 20/8/21
                 0.4, 1.5, 1, 0.5, // shield kinetic, thermal, plasma, explosive
-                1.32, 20.3, // regen, shield health
-                13.5, 60, 15,30,10 )) }, // battery, oxygen, items, components, data
+                1.49, 20.3, // regen, shield health     // Wrong, game says 1.49, 20.3
+                13.5, 60, 15,30,10 )) }, // battery, oxygen, items, components, data    // 20/8/21
 
                  { "utilitysuit_class4", new Suit( "Maverick Suit", 4, 1, 1, "Energylink", "Profile Analyser", "Arc Cutter",
                 new SuitStats( 0.94, 0.3, 0.65, 0.59, // health kinetic, thermal, plasma, explosive
                 0.4, 1.5, 1, 0.5, // shield kinetic, thermal, plasma, explosive
-                1.62, 24.9, // regen, shield health
+                1.82, 24.9, // regen, shield health - wrong in frontier data, corrected according to https://elite-dangerous.fandom.com/wiki/Artemis_Suit
                 13.5, 60, 15,30,10 )) }, // battery, oxygen, items, components, data
 
                  { "utilitysuit_class5", new Suit( "Maverick Suit", 5, 1, 1, "Energylink", "Profile Analyser", "Arc Cutter",
                 new SuitStats( 0.8, 0.25, 0.55, 0.5, // health kinetic, thermal, plasma, explosive
                 0.4, 1.5, 1, 0.5, // shield kinetic, thermal, plasma, explosive
-                1.98, 30.5, // regen, shield health
+                2.23, 30.5, // regen, shield health wrong in frontier data, corrected according to https://elite-dangerous.fandom.com/wiki/Artemis_Suit
                 13.5, 60, 15,30,10 )) }, // battery, oxygen, items, components, data
          };
 
