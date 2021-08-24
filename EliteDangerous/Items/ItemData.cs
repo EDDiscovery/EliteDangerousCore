@@ -527,7 +527,7 @@ namespace EliteDangerousCore
         public static Dictionary<string, Suit> suit = new Dictionary<string, Suit>   // DO NOT USE DIRECTLY - public is for checking only
         {
                  { "flightsuit", new Suit( "Flight Suit", 0, 0, 1, "Energylink", "Profile Analyser", "",
-                new SuitStats( 1.7, 0.6, 1.2, 1, // health kinetic, thermal, plasma, explosive                  
+                new SuitStats( 1.7, 0.6, 1.2, 1, // health kinetic, thermal, plasma, explosive                  Greater is WORSE, so 1.7 is 70% worse
                 0.4, 1.5, 1, 0.5, // shield kinetic, thermal, plasma, explosive
                 0.55, 7.5, // regen, shield health  
                 7, 60, 5,10,10 )) }, // battery, oxygen, items, components, data     
@@ -589,7 +589,7 @@ namespace EliteDangerousCore
                  { "explorationsuit_class5", new Suit( "Artemis Suit", 5, 1, 1, "Energylink", "Profile Analyser", "Genetic Sampler",
                 new SuitStats( 0.85, 0.3, 0.6, 0.5, // health kinetic, thermal, plasma, explosive
                 0.4, 1.5, 1, 0.5, // shield kinetic, thermal, plasma, explosive
-                2.23, 27, // regen, shield health - no data can be found!  MISSING VALUE
+                1.98, 27, // regen, shield health - Artie supplied this one via discord
                 17, 60, 10,20,10 )) }, // battery, oxygen, items, components, data
 
                  { "utilitysuit_class1", new Suit( "Maverick Suit", 1, 1, 1, "Energylink", "Profile Analyser", "Arc Cutter",
