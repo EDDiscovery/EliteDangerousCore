@@ -162,6 +162,7 @@ namespace EliteDangerousCore
         MissionRedirected = 505,
         ModuleInfo = 508,
         ModuleBuy = 510,
+        ModuleBuyAndStore = 511,
         ModuleRetrieve = 515,
         ModuleSell = 520,
         ModuleSellRemote = 990,

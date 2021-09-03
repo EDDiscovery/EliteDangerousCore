@@ -329,7 +329,7 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void ModuleBuy(JournalModuleBuy e)
+        public void ModuleBuy(JournalModuleBuy e, ISystem sys)
         {
             string sid = Key(e.ShipFD, e.ShipId);
 
@@ -337,7 +337,7 @@ namespace EliteDangerousCore
             sm = sm.SetShipDetails(e.Ship, e.ShipFD);   // shallow copy if changed
 
             if (e.StoredItem.Length > 0)                             // if we stored something
-                StoredModules = StoredModules.StoreModule(e.StoredItem, e.StoredItemLocalised);
+                StoredModules = StoredModules.StoreModule(e.StoredItemFD, e.StoredItem, e.StoredItemLocalised, sys);
 
             // if we sold it, who cares?
             Ships[sid] = sm.AddModule(e.Slot, e.SlotFD, e.BuyItem, e.BuyItemFD, e.BuyItemLocalised);      // replace the slot with this
@@ -348,6 +348,12 @@ namespace EliteDangerousCore
             if (e.StoredItem.Length > 0)
                 itemlocalisation[e.StoredItem] = e.StoredItemLocalised;
 
+            VerifyList();
+        }
+
+        public void ModuleBuyAndStore(JournalModuleBuyAndStore e, ISystem sys)
+        {
+            StoredModules = StoredModules.StoreModule(e.BuyItemFD, e.BuyItem, e.BuyItemLocalised, sys);
             VerifyList();
         }
 
@@ -377,7 +383,7 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void ModuleStore(JournalModuleStore e)
+        public void ModuleStore(JournalModuleStore e, ISystem sys)
         {
             string sid = Key(e.ShipFD, e.ShipId);
 
@@ -390,11 +396,11 @@ namespace EliteDangerousCore
             else
                 Ships[sid] = sm.RemoveModule(e.Slot, e.StoredItem);
 
-            StoredModules = StoredModules.StoreModule(e.StoredItem, e.StoredItemLocalised);
+            StoredModules = StoredModules.StoreModule(e,sys);
             VerifyList();
         }
 
-        public void ModuleRetrieve(JournalModuleRetrieve e)
+        public void ModuleRetrieve(JournalModuleRetrieve e, ISystem sys)
         {
             string sid = Key(e.ShipFD, e.ShipId);
 
@@ -402,7 +408,7 @@ namespace EliteDangerousCore
 
             sm = sm.SetShipDetails(e.Ship, e.ShipFD);   // shallow copy if changed
             if (e.SwapOutItem.Length > 0)
-                StoredModules = StoredModules.StoreModule(e.SwapOutItem, e.SwapOutItemLocalised);
+                StoredModules = StoredModules.StoreModule(e.SwapOutItemFD, e.SwapOutItem, e.SwapOutItemLocalised, sys);
 
             Ships[sid] = sm.AddModule(e.Slot, e.SlotFD, e.RetrievedItem, e.RetrievedItemFD, e.RetrievedItemLocalised);
 
@@ -415,14 +421,14 @@ namespace EliteDangerousCore
             StoredModules = StoredModules.RemoveModule(e.SellItem);
         }
 
-        public void MassModuleStore(JournalMassModuleStore e)
+        public void MassModuleStore(JournalMassModuleStore e, ISystem sys)
         {
             string sid = Key(e.ShipFD, e.ShipId);
 
             ShipInformation sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
             sm = sm.SetShipDetails(e.Ship, e.ShipFD);   // will clone if data changed..
             Ships[sid] = sm.RemoveModules(e.ModuleItems);
-            StoredModules = StoredModules.StoreModule(e.ModuleItems, itemlocalisation);
+            StoredModules = StoredModules.StoreModule(e.ModuleItems, itemlocalisation, sys);
             VerifyList();
         }
 

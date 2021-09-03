@@ -50,7 +50,7 @@ namespace EliteDangerousCore
             {
                 get
                 {
-                    ItemData.ShipModule smd = ItemData.Instance.GetShipModuleProperties(Name);
+                    ItemData.ShipModule smd = ItemData.Instance.GetShipModuleProperties(NameFD);
                     return smd?.Mass ?? 0;
                 }
             }
@@ -62,13 +62,23 @@ namespace EliteDangerousCore
                 Name_Localised = Name_Localised.Alt(Name);
                 TransferTimeSpan = new System.TimeSpan((int)(TransferTime / 60 / 60), (int)((TransferTime / 60) % 60), (int)(TransferTime % 60));
                 TransferTimeString = TransferTime > 0 ? TransferTimeSpan.ToString() : "";
+                //System.Diagnostics.Debug.WriteLine($"SD Normalise '{NameFD}' '{Name}' '{Name_Localised}'");
             }
 
-            public StoredModule(string item, string item_localised)
+            public StoredModule(string fdname, string name, string item_localised, string system, string eng, int? level , double? quality, bool? hot)
             {
-                Name = item;
+                NameFD = fdname;
+                Name = name;
                 Name_Localised = item_localised.Alt(Name);
-                //System.Diagnostics.Debug.WriteLine("Store module '" + item + "' '" + item_localised + "'");
+                //System.Diagnostics.Debug.WriteLine($"SD Make '{NameFD}' '{Name}' '{Name_Localised}'");
+                StarSystem = system;
+                EngineerModifications = eng;
+                if (level.HasValue)
+                    Level = level.Value;
+                if (quality.HasValue)
+                    Quality = quality.Value;
+                if (hot.HasValue)
+                    Hot = hot.Value;
             }
 
             public StoredModule()
@@ -97,24 +107,35 @@ namespace EliteDangerousCore
             StoredModules = new List<StoredModule>(list);
         }
 
-        public ModulesInStore StoreModule(string item, string itemlocalised)
+        // ModuleBuy, ModuleBuyAndStore , ModuleRetrieve
+        public ModulesInStore StoreModule(string fdname, string name, string namelocalised, ISystem sys)
         {
             ModulesInStore mis = this.ShallowClone();
-            mis.StoredModules.Add(new StoredModule(item, itemlocalised));
+            mis.StoredModules.Add(new StoredModule(fdname, name, namelocalised ,sys.Name, "", null, null, null));
             return mis;
         }
 
-        public ModulesInStore StoreModule(JournalMassModuleStore.ModuleItem[] items, Dictionary<string, string> itemlocalisation)
+        // ModuleStore (has more info)
+        public ModulesInStore StoreModule(JournalModuleStore e, ISystem sys)
+        {
+            ModulesInStore mis = this.ShallowClone();
+            mis.StoredModules.Add(new StoredModule(e.StoredItemFD,e.StoredItem, e.StoredItemLocalised,sys.Name, e.EngineerModifications,e.Level,e.Quality,e.Hot));
+            return mis;
+        }
+
+        // MassModuleStore
+        public ModulesInStore StoreModule(JournalMassModuleStore.ModuleItem[] items, Dictionary<string, string> itemlocalisation, ISystem sys)
         {
             ModulesInStore mis = this.ShallowClone();
             foreach (var it in items)
             {
-                string local = itemlocalisation.ContainsKey(it.Name) ? itemlocalisation[it.Name] : "";
-                mis.StoredModules.Add(new StoredModule(it.Name, local));
+                string local = itemlocalisation.ContainsKey(it.Name) ? itemlocalisation[it.Name] : it.Name;
+                mis.StoredModules.Add(new StoredModule(it.NameFD, it.Name, local, sys.Name, it.EngineerModifications, it.Level, it.Quality, it.Hot ));
             }
             return mis;
         }
 
+        // ModuleRetrieve, ModuleSellRemote
         public ModulesInStore RemoveModule(string item)
         {
             int index = StoredModules.FindIndex(x => x.Name.Equals(item, StringComparison.InvariantCultureIgnoreCase));  // if we have an item of this name
@@ -129,6 +150,7 @@ namespace EliteDangerousCore
                 return this;
         }
 
+        // StoredModules
         public ModulesInStore UpdateStoredModules(StoredModule[] newlist)
         {
             ModulesInStore mis = new ModulesInStore(newlist.ToList());      // copy constructor ..

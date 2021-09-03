@@ -189,7 +189,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
         {
-            shp.ModuleBuy(this);
+            shp.ModuleBuy(this, system);
         }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
@@ -201,6 +201,54 @@ namespace EliteDangerousCore.JournalEvents
             if (StoredItem.Length > 0)
                 info += ", " + BaseUtils.FieldBuilder.Build("Stored: ".T(EDTx.JournalEntry_Stored), StoredItemLocalised);
 
+            detailed = "";
+        }
+    }
+
+
+    [JournalEntryType(JournalTypeEnum.ModuleBuyAndStore)]
+    public class JournalModuleBuyAndStore : JournalEntry, ILedgerJournalEntry, IShipInformation
+    {
+        public JournalModuleBuyAndStore(JObject evt) : base(evt, JournalTypeEnum.ModuleBuyAndStore)
+        {
+            BuyItemFD = JournalFieldNaming.NormaliseFDItemName(evt["BuyItem"].Str());
+            BuyItem = JournalFieldNaming.GetBetterItemName(BuyItemFD);
+            BuyItemLocalised = JournalFieldNaming.CheckLocalisation(evt["BuyItem_Localised"].Str(), BuyItem);
+
+            MarketID = evt["MarketID"].Long();
+            BuyPrice = evt["BuyPrice"].Long();
+
+            ShipFD = JournalFieldNaming.NormaliseFDShipName(evt["Ship"].Str());
+            Ship = JournalFieldNaming.GetBetterShipName(ShipFD);
+            ShipId = evt["ShipID"].ULong();
+        }
+
+        public string BuyItem { get; set; }
+        public string BuyItemFD { get; set; }
+        public string BuyItemLocalised { get; set; }
+
+        public string Ship { get; set; }
+        public string ShipFD { get; set; }
+        public ulong ShipId { get; set; }
+
+        public long MarketID { get; set; }
+        public long BuyPrice { get; set; }
+
+        public void Ledger(Ledger mcl)
+        {
+            string s = (BuyItemLocalised.Length > 0) ? BuyItemLocalised : BuyItem;
+
+            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, s + " on " + Ship, -BuyPrice);
+        }
+
+        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        {
+            shp.ModuleBuyAndStore(this,system);
+        }
+
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        {
+            info = BaseUtils.FieldBuilder.Build("", BuyItemLocalised, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), BuyPrice);
             detailed = "";
         }
     }
@@ -308,6 +356,7 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
+
     [JournalEntryType(JournalTypeEnum.ModuleRetrieve)]
     public class JournalModuleRetrieve : JournalEntry, ILedgerJournalEntry, IShipInformation
     {
@@ -366,7 +415,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
         {
-            shp.ModuleRetrieve(this);
+            shp.ModuleRetrieve(this,system);
         }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
@@ -442,7 +491,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
         {
-            shp.ModuleStore(this);
+            shp.ModuleStore(this,system);
         }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
@@ -666,7 +715,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
         {
-            shp.MassModuleStore(this);
+            shp.MassModuleStore(this,system);
         }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
