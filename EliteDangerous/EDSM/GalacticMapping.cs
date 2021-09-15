@@ -19,6 +19,7 @@ using BaseUtils.JSON;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace EliteDangerousCore.EDSM
 {
@@ -26,6 +27,8 @@ namespace EliteDangerousCore.EDSM
     {
         public List<GalacticMapObject> galacticMapObjects = null;
         public List<GalMapType> galacticMapTypes = null;
+        public GalacticMapObject[] RenderableMapObjects { get { return galacticMapObjects.Where(x => x.galMapType.Image != null).ToArray(); } }
+        public GalMapType[] RenderableMapTypes { get { return galacticMapTypes.Where(x => x.Image != null).ToArray(); } }
 
         public bool Loaded { get { return galacticMapObjects != null; } }
 
@@ -52,15 +55,28 @@ namespace EliteDangerousCore.EDSM
             return false;
         }
 
-        public bool Parse(string file)
+        public bool ParseFile(string file)
+        {
+            try
+            {
+                string json = File.ReadAllText(file);
+                return ParseJson(json);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine("GalacticMapping.parsedata exception:" + ex.Message);
+            }
+
+            return false;
+        }
+
+        public bool ParseJson(string json)
         {
             var gmobjects = new List<GalacticMapObject>();
 
             try
             {
-                string json = BaseUtils.FileHelpers.TryReadAllTextFromFile(file);
-
-                if (json != null)
+                if (json.HasChars())
                 {
                     JArray galobjects = JArray.ParseThrowCommaEOL(json);
 
