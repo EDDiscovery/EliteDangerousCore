@@ -37,24 +37,6 @@ namespace EliteDangerousCore.EDSM
             galacticMapTypes = GalMapType.GetTypes();          // we always have the types.
         }
 
-        public bool DownloadFromEDSM(string file)
-        {
-            try
-            {
-                EDSMClass edsm = new EDSMClass();
-                string url = EDSMClass.ServerAddress + "en/galactic-mapping/json-edd";
-                bool newfile;
-
-                return BaseUtils.DownloadFile.HTTPDownloadFile(url, file, false, out newfile);
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Trace.WriteLine("DownloadFromEDSM exception:" + ex.Message);
-            }
-
-            return false;
-        }
-
         public bool ParseFile(string file)
         {
             try
