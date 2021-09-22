@@ -317,7 +317,7 @@ SECTION JournalDocked
 
 SECTION JournalCommodityPricesBase
 
-.PON: "Prices on ; items" => "Preise von ; Gegenstände"
+.PON: "Prices on ; items" => "Preise von ; Gegenständen"
 .CPBat: "< at " => "< bei "
 .CPBin: "< in " => "< in "
 .Itemstobuy: "Items to buy: " => "Waren zu kaufen: "
@@ -989,6 +989,7 @@ SECTION JournalEntry
 .Cockpit: "Cockpit: " => "Cockpit: "
 .Corrosion: "Corrosion: " => "Korrosion: "
 .TotalCost: "Total Cost: ; cr;N0" => "Gesamtkosten: ; Cr;N0"
+.TotalSale: "Total Sale: ; cr;N0" => "Gesamtumsatz: ; Cr;N0"
 .each: "each: ; cr;N0" => "jede: ; Cr;N0"
 .Drones: "Drones" => "Drohnen"
 .Price: "Price: ; cr;N0" => "Preis: ; Cr;N0"
