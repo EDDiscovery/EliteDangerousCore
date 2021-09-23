@@ -115,6 +115,9 @@ namespace EliteDangerousCore.JournalEvents
         public double? nOrbitalPeriod { get; private set; }                 // direct
         public double? nOrbitalPeriodDays { get { if (nOrbitalPeriod.HasValue) return nOrbitalPeriod.Value / oneDay_s; else return null; } }
         [PropertyNameAttribute("Radians")]
+        public double? nAscendingNode { get; private set; }                  // odyssey update 7 22/9/21
+        public double? nMeanAnomaly { get; private set; }                    // odyssey update 7 22/9/21
+
         public double? nAxialTilt { get; private set; }                     // direct, radians
         public double? nAxialTiltDeg { get { if (nAxialTilt.HasValue) return nAxialTilt.Value * 180.0 / Math.PI; else return null; } }
         public bool? nTidalLock { get; private set; }                       // direct
@@ -376,6 +379,8 @@ namespace EliteDangerousCore.JournalEvents
                 nOrbitalPeriod = evt["OrbitalPeriod"].DoubleNull();
                 nAxialTilt = evt["AxialTilt"].DoubleNull();
                 nTidalLock = evt["TidalLock"].Bool();
+                nMeanAnomaly = evt["MeanAnomaly"].DoubleNull();
+                nAscendingNode = evt["AscendingNode"].DoubleNull();
             }
 
             if (IsPlanet)
