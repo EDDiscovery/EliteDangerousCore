@@ -474,6 +474,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public long? MarketID { get; set; }
         public int MapColor { get; set; }
+        public System.Drawing.Color MapColorARGB { get { return System.Drawing.Color.FromArgb(MapColor); } }
 
         public string StationFaction { get; set; }
         public string StationFactionState { get; set; }
@@ -571,6 +572,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool BoostUsed { get; set; }
         public int BoostValue { get; set; }
         public int MapColor { get; set; }
+        public System.Drawing.Color MapColorARGB { get { return System.Drawing.Color.FromArgb(MapColor); } }
         public bool EDSMFirstDiscover { get; set; }
         public string Body { get; set; }
         public int? BodyID { get; set; }

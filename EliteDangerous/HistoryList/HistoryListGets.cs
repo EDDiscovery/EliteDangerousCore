@@ -179,30 +179,6 @@ namespace EliteDangerousCore
                     select s).ToList();
         }
 
-        // 3dmap entries use this to get journal list
-        public List<HistoryEntry> FilterByTravel() { return FilterHLByTravel(historylist); }
-
-        static public List<HistoryEntry> FilterHLByTravel(List<HistoryEntry> hlist)        // filter, in its own order. return FSD and location events after death
-        {
-            List<HistoryEntry> ents = new List<HistoryEntry>();
-            bool resurrect = true;
-            foreach (HistoryEntry he in hlist)
-            {
-                if (he.EntryType == JournalTypeEnum.Resurrect || he.EntryType == JournalTypeEnum.Died)
-                {
-                    resurrect = true;
-                    ents.Add(he);
-                }
-                else if ((resurrect && he.EntryType == JournalTypeEnum.Location) || he.EntryType == JournalTypeEnum.FSDJump || he.EntryType == JournalTypeEnum.CarrierJump)
-                {
-                    resurrect = false;
-                    ents.Add(he);
-                }
-            }
-
-            return ents;
-        }
-
         // trilat/trippanel
         public List<HistoryEntry> FilterByFSDOnly() { return (from s in historylist where s.EntryType == JournalTypeEnum.FSDJump select s).ToList(); }
 
@@ -368,6 +344,33 @@ namespace EliteDangerousCore
                                             Math.Abs(s.System.Y - y) < limit &&
                                             Math.Abs(s.System.Z - z) < limit);
         }
+
+        // map3d
+        public List<HistoryEntry> FilterByTravelTime(DateTime? starttimeutc, DateTime? endtimeutc)        // filter, in its own order. return FSD,carrier and location events after death
+        {
+            List<HistoryEntry> ents = new List<HistoryEntry>();
+            bool resurrect = true;
+            foreach (HistoryEntry he in historylist)        // in add order, oldest first
+            {
+                if ((starttimeutc == null || he.EventTimeUTC >= starttimeutc) && (endtimeutc == null || he.EventTimeUTC <= endtimeutc))
+                {
+                    if (he.EntryType == JournalTypeEnum.Resurrect || he.EntryType == JournalTypeEnum.Died)
+                    {
+                        resurrect = true;
+                        ents.Add(he);
+                    }
+                    else if ((resurrect && he.EntryType == JournalTypeEnum.Location) || he.EntryType == JournalTypeEnum.FSDJump || he.EntryType == JournalTypeEnum.CarrierJump)
+                    {
+                        resurrect = false;
+                        ents.Add(he);
+                    }
+                }
+            }
+
+            return ents;
+        }
+
+
 
         // findsystemusercontrol
         public static IEnumerable<ISystem> FindSystemsWithinLy(List<HistoryEntry> he, ISystem centre, double minrad, double maxrad, bool spherical)
