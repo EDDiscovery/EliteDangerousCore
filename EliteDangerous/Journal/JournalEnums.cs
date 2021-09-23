@@ -213,6 +213,7 @@ namespace EliteDangerousCore
         SAAScanComplete = 765,
         SAASignalsFound = 766,
         Scan = 770,
+        ScanBaryCentre = 771,
         ScanOrganic = 4017,
         Scanned = 772,
         ScientificResearch = 775,
