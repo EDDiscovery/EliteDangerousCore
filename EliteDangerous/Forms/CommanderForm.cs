@@ -5,12 +5,12 @@
  * file except in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
+ *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
@@ -134,6 +134,23 @@ namespace EliteDangerousCore.Forms
 
             return update;
         }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+            {
+                extPanelScroll.Dock = System.Windows.Forms.DockStyle.None;
+                panelOK.Dock = System.Windows.Forms.DockStyle.None;
+                int bh = 50;
+                int vsplit = ClientRectangle.Height-bh;
+                int width = ClientRectangle.Width;
+                extPanelScroll.Bounds = new System.Drawing.Rectangle(0,0,width,vsplit);
+                panelOK.Bounds = new System.Drawing.Rectangle(0,vsplit,width,bh);
+
+            }
+        }
+
 
         #region UI
 
