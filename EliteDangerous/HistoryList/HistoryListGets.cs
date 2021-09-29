@@ -349,20 +349,23 @@ namespace EliteDangerousCore
         public List<HistoryEntry> FilterByTravelTime(DateTime? starttimeutc, DateTime? endtimeutc)        // filter, in its own order. return FSD,carrier and location events after death
         {
             List<HistoryEntry> ents = new List<HistoryEntry>();
-            bool resurrect = true;
+            string lastsystem = null;
             foreach (HistoryEntry he in historylist)        // in add order, oldest first
             {
                 if ((starttimeutc == null || he.EventTimeUTC >= starttimeutc) && (endtimeutc == null || he.EventTimeUTC <= endtimeutc))
                 {
-                    if (he.EntryType == JournalTypeEnum.Resurrect || he.EntryType == JournalTypeEnum.Died)
+                    if (he.EntryType == JournalTypeEnum.Location || he.EntryType == JournalTypeEnum.CarrierJump || he.EntryType == JournalTypeEnum.FSDJump)
                     {
-                        resurrect = true;
-                        ents.Add(he);
-                    }
-                    else if ((resurrect && he.EntryType == JournalTypeEnum.Location) || he.EntryType == JournalTypeEnum.FSDJump || he.EntryType == JournalTypeEnum.CarrierJump)
-                    {
-                        resurrect = false;
-                        ents.Add(he);
+                        if (lastsystem != he.System.Name)
+                        {
+                            ents.Add(he);
+                            lastsystem = he.System.Name;
+                          //  System.Diagnostics.Debug.WriteLine($"TH {he.EventTimeUTC} {he.System.Name}");
+                        }
+                        else
+                        {
+                          //  System.Diagnostics.Debug.WriteLine($"Reject {he.EventTimeUTC} {he.System.Name}");
+                        }
                     }
                 }
             }
