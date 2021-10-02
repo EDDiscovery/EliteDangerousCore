@@ -210,7 +210,7 @@ namespace EliteDangerousCore.DB
                 {
                     try
                     {
-                        var cn = db.Connection;
+                        var cn = db;
 
                         selectSectorCmd = cn.CreateSelect("Sectors" + tablepostfix, "id", "name = @sname AND gridid = @gid", null,
                                                                 new string[] { "sname", "gid" }, new DbType[] { DbType.String, DbType.Int32 });
@@ -350,7 +350,7 @@ namespace EliteDangerousCore.DB
             {
                 try
                 {
-                    var cn = db.Connection;
+                    var cn = db;
 
                     selectSectorCmd = cn.CreateSelect("Sectors" + tablepostfix, "id", "name = @sname AND gridid = @gid", null,
                                                             new string[] { "sname", "gid" }, new DbType[] { DbType.String, DbType.Int32 });
@@ -483,7 +483,7 @@ namespace EliteDangerousCore.DB
                 DbCommand replaceNameCmd = null;
                 try
                 {
-                    var cn = db.Connection;
+                    var cn = db;
                     txn = cn.BeginTransaction();
 
                     replaceSectorCmd = cn.CreateReplace("Sectors" + tablepostfix, new string[] { "name", "gridid", "id" }, new DbType[] { DbType.String, DbType.Int32, DbType.Int64 }, txn);

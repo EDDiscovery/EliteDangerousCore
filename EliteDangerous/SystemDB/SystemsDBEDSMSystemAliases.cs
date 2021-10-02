@@ -40,7 +40,7 @@ namespace EliteDangerousCore.DB
         {
             return SystemsDatabase.Instance.ExecuteWithDatabase(func: db =>
             {
-                var cn = db.Connection;
+                var cn = db;
                 System.Diagnostics.Debug.WriteLine("Update aliases");
 
                 long updates = 0;
@@ -135,7 +135,7 @@ namespace EliteDangerousCore.DB
         {
             return SystemsDatabase.Instance.ExecuteWithDatabase(db =>
             {
-                return FindAlias(edsmid, name, db.Connection);
+                return FindAlias(edsmid, name, db);
             });
         }
 
@@ -159,7 +159,7 @@ namespace EliteDangerousCore.DB
         {
             return SystemsDatabase.Instance.ExecuteWithDatabase(db =>
             {
-                return FindAliasWildcard(name, db.Connection);
+                return FindAliasWildcard(name, db);
             });
         }
 

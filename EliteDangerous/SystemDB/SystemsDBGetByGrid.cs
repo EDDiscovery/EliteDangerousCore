@@ -32,7 +32,7 @@ namespace EliteDangerousCore.DB
 
             SystemsDatabase.Instance.ExecuteWithDatabase(db =>
             {
-                GetSystemVector<V>(gridid, ref cpvertices1, ref cpcolours1, percentage, tovect, db.Connection);
+                GetSystemVector<V>(gridid, ref cpvertices1, ref cpcolours1, percentage, tovect, db);
             },warnthreshold:5000);
 
             vertices1 = cpvertices1;

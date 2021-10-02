@@ -19,7 +19,7 @@ using System;
 
 namespace EliteDangerousCore.DB
 {
-    internal class SQLiteConnectionSystem : SQLExtConnectionRegister<SQLiteConnectionSystem>
+    public class SQLiteConnectionSystem : SQLExtConnectionRegister<SQLiteConnectionSystem>
     {
         public SQLiteConnectionSystem() : this(false)
         {

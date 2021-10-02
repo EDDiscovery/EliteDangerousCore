@@ -29,7 +29,7 @@ namespace EliteDangerousCore.DB
 
             return SystemsDatabase.Instance.ExecuteWithDatabase(db =>
             {
-                var cn = db.Connection;
+                var cn = db;
                 using (DbCommand cmd = cn.CreateCommand("select Count(1) from Systems"))
                 {
                     return (long)cmd.ExecuteScalar();
@@ -52,7 +52,7 @@ namespace EliteDangerousCore.DB
 
                 //BaseUtils.AppTicks.TickCountLap("Star");
 
-                var cn = db.Connection;
+                var cn = db;
 
                 using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed, where, orderby, limit: limit, joinlist: MakeSystemQueryNamedJoinList))
                 {
@@ -85,7 +85,7 @@ namespace EliteDangerousCore.DB
             return SystemsDatabase.Instance.ExecuteWithDatabase(db =>
             {
 
-                var cn = db.Connection;
+                var cn = db;
 
                 using (DbCommand cmd = cn.CreateSelect("Systems s",
                                                        outparas: "s.x,s.y,s.z",

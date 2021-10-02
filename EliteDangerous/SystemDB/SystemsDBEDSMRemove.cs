@@ -25,7 +25,7 @@ namespace EliteDangerousCore.DB
         {
             SystemsDatabase.Instance.ExecuteWithDatabase( action: db =>
             {
-                var cn = db.Connection;
+                var cn = db;
                 int gridspergo = 4;
 
                 report?.Invoke("Delete System Information from sector:");
@@ -60,7 +60,7 @@ namespace EliteDangerousCore.DB
         {
             SystemsDatabase.Instance.ExecuteWithDatabase(action: db =>
             {
-                db.Connection.Vacuum();
+                db.Vacuum();
             });
         }
     }
