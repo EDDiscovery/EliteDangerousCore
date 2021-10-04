@@ -11,26 +11,7 @@ using EliteDangerousCore.DB;
 
 namespace EliteDangerousCore.DB
 {
-    public class UserDatabaseConnection : IDisposable
-    {
-        internal SQLiteConnectionUser Connection { get; private set; }
-
-        public UserDatabaseConnection()
-        {
-            Connection = new SQLiteConnectionUser();
-        }
-
-        public void Dispose()
-        {
-            if (Connection != null)
-            {
-                Connection.Dispose();
-                Connection = null;
-            }
-        }
-    }
-
-    public class UserDatabase : SQLProcessingThread<UserDatabaseConnection>
+    public class UserDatabase : SQLProcessingThread<SQLiteConnectionUser>
     {
         private UserDatabase()
         {
@@ -40,84 +21,84 @@ namespace EliteDangerousCore.DB
 
         public void Initialize()
         {
-            ExecuteWithDatabase(cn => { cn.Connection.UpgradeUserDB(); });
+            ExecuteWithDatabase(cn => { cn.UpgradeUserDB(); });
         }
 
-        protected override UserDatabaseConnection CreateConnection()
+        protected override SQLiteConnectionUser CreateConnection()
         {
-            return new UserDatabaseConnection();
+            return new SQLiteConnectionUser();
         }
 
         // Register
 
         public bool KeyExists(string key)
         {
-            return ExecuteWithDatabase(db => db.Connection.RegisterClass.keyExists(key));
+            return ExecuteWithDatabase(db => db.RegisterClass.keyExists(key));
         }
 
         public bool DeleteKey(string key)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.DeleteKey(key));
+            return ExecuteWithDatabase(db =>  db.RegisterClass.DeleteKey(key));
         }
 
         public T GetSetting<T>(string key, T defaultvalue)
         {
-            return ExecuteWithDatabase(db => db.Connection.RegisterClass.GetSetting(key, defaultvalue));
+            return ExecuteWithDatabase(db => db.RegisterClass.GetSetting(key, defaultvalue));
         }
 
         public bool PutSetting<T>(string key, T defaultvalue)
         {
-            return ExecuteWithDatabase(db => db.Connection.RegisterClass.PutSetting(key, defaultvalue));
+            return ExecuteWithDatabase(db => db.RegisterClass.PutSetting(key, defaultvalue));
         }
 
         public int GetSettingInt(string key, int defaultvalue)
         {
-            return ExecuteWithDatabase(db => db.Connection.RegisterClass.GetSetting(key, defaultvalue));
+            return ExecuteWithDatabase(db => db.RegisterClass.GetSetting(key, defaultvalue));
         }
 
         public bool PutSettingInt(string key, int intvalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.PutSetting(key, intvalue));
+            return ExecuteWithDatabase(db =>  db.RegisterClass.PutSetting(key, intvalue));
         }
 
         public double GetSettingDouble(string key, double defaultvalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.GetSetting(key, defaultvalue));
+            return ExecuteWithDatabase(db =>  db.RegisterClass.GetSetting(key, defaultvalue));
         }
 
         public bool PutSettingDouble(string key, double doublevalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.PutSetting(key, doublevalue));
+            return ExecuteWithDatabase(db =>  db.RegisterClass.PutSetting(key, doublevalue));
         }
 
         public bool GetSettingBool(string key, bool defaultvalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.GetSetting(key, defaultvalue));
+            return ExecuteWithDatabase(db =>  db.RegisterClass.GetSetting(key, defaultvalue));
         }
 
         public bool PutSettingBool(string key, bool boolvalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.PutSetting(key, boolvalue));
+            return ExecuteWithDatabase(db =>  db.RegisterClass.PutSetting(key, boolvalue));
         }
 
         public string GetSettingString(string key, string defaultvalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.GetSetting(key, defaultvalue));
+            return ExecuteWithDatabase(db =>  db.RegisterClass.GetSetting(key, defaultvalue));
         }
 
         public bool PutSettingString(string key, string strvalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.PutSetting(key, strvalue));
+            return ExecuteWithDatabase(db =>  db.RegisterClass.PutSetting(key, strvalue));
         }
 
         public DateTime GetSettingDate(string key, DateTime defaultvalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.GetSetting(key, defaultvalue));
+            return ExecuteWithDatabase(db =>  db.RegisterClass.GetSetting(key, defaultvalue));
         }
 
         public bool PutSettingDate(string key, DateTime value)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.PutSetting(key, value));
+            return ExecuteWithDatabase(db =>  db.RegisterClass.PutSetting(key, value));
         }
 
         public void RebuildIndexes(Action<string> logger)
@@ -127,9 +108,9 @@ namespace EliteDangerousCore.DB
                 ExecuteWithDatabase(db =>
                 {
                     logger?.Invoke("Removing indexes");
-                    db.Connection.DropUserDBTableIndexes();
+                    db.DropUserDBTableIndexes();
                     logger?.Invoke("Rebuilding indexes, please wait");
-                    db.Connection.CreateUserDBTableIndexes();
+                    db.CreateUserDBTableIndexes();
                     logger?.Invoke("Indexes rebuilt");
                 });
             });

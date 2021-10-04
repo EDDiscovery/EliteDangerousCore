@@ -30,7 +30,7 @@ namespace EliteDangerousCore.DB
             V[] cpvertices1 = vertices1;
             uint[] cpcolours1 = colours1;
 
-            SystemsDatabase.Instance.ExecuteWithDatabase(db =>
+            SystemsDatabase.Instance.DBRead(db =>
             {
                 GetSystemVector<V>(gridid, ref cpvertices1, ref cpcolours1, percentage, tovect, db);
             },warnthreshold:5000);

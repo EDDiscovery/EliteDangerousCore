@@ -74,7 +74,7 @@ namespace EliteDangerousCore.DB
 
         public bool Add()
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Add(cn.Connection); });
+            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Add(cn); });
         }
 
         internal bool Add(SQLiteConnectionUser cn, DbTransaction tn = null)
@@ -105,7 +105,7 @@ namespace EliteDangerousCore.DB
 
         public bool Update()
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Update(cn.Connection); });
+            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Update(cn); });
         }
 
         internal bool Update(SQLiteConnectionUser cn, DbTransaction tn = null)
@@ -134,7 +134,7 @@ namespace EliteDangerousCore.DB
 
                 UserDatabase.Instance.ExecuteWithDatabase(cn =>
                 {
-                    using (DbCommand cmd = cn.Connection.CreateCommand("select * from TravelLogUnit"))
+                    using (DbCommand cmd = cn.CreateCommand("select * from TravelLogUnit"))
                     {
                         using (DbDataReader rdr = cmd.ExecuteReader())
                         {

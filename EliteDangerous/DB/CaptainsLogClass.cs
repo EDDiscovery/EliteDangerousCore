@@ -65,7 +65,7 @@ namespace EliteDangerousCore.DB
 
         internal bool Add()
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Add(cn.Connection); });
+            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Add(cn); });
         }
 
         private bool Add(SQLiteConnectionUser cn)
@@ -92,7 +92,7 @@ namespace EliteDangerousCore.DB
 
         internal bool Update()
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Update(cn.Connection); });
+            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Update(cn); });
         }
 
         private bool Update(SQLiteConnectionUser cn)
@@ -115,7 +115,7 @@ namespace EliteDangerousCore.DB
 
         public bool Delete()
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Delete(cn.Connection, ID); });
+            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Delete(cn, ID); });
         }
 
         static private bool Delete(SQLiteConnectionUser cn, long id)
@@ -164,7 +164,7 @@ namespace EliteDangerousCore.DB
             {
                 return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn =>
                 {
-                    using (DbCommand cmd = cn.Connection.CreateCommand("select * from CaptainsLog"))
+                    using (DbCommand cmd = cn.CreateCommand("select * from CaptainsLog"))
                     {
                         List<CaptainsLogClass> logs = new List<CaptainsLogClass>();
 

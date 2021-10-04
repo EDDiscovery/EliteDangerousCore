@@ -23,7 +23,7 @@ namespace EliteDangerousCore.DB
     {
         public static void RemoveGridSystems(int[] gridids, Action<string> report = null)
         {
-            SystemsDatabase.Instance.ExecuteWithDatabase( action: db =>
+            SystemsDatabase.Instance.DBWrite( db =>
             {
                 var cn = db;
                 int gridspergo = 4;
@@ -58,7 +58,7 @@ namespace EliteDangerousCore.DB
 
         public static void Vacuum()
         {
-            SystemsDatabase.Instance.ExecuteWithDatabase(action: db =>
+            SystemsDatabase.Instance.DBWrite(db =>
             {
                 db.Vacuum();
             });

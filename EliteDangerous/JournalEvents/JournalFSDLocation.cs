@@ -661,12 +661,12 @@ namespace EliteDangerousCore.JournalEvents
         {
             UserDatabase.Instance.ExecuteWithDatabase(cn =>
             {
-                JObject jo = GetJson(Id, cn.Connection);
+                JObject jo = GetJson(Id, cn);
 
                 if (jo != null)
                 {
                     jo["EDDMapColor"] = mapcolour;
-                    UpdateJsonEntry(jo, cn.Connection);
+                    UpdateJsonEntry(jo, cn);
                     MapColor = mapcolour;
                 }
             });
@@ -676,7 +676,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             UserDatabase.Instance.ExecuteWithDatabase(cn =>
             {
-                UpdateFirstDiscover(value, cn.Connection);
+                UpdateFirstDiscover(value, cn);
             });
         }
 

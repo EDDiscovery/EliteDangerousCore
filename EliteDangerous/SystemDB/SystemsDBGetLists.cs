@@ -27,7 +27,7 @@ namespace EliteDangerousCore.DB
             if (SystemsDatabase.Instance.RebuildRunning)
                 return 0;
 
-            return SystemsDatabase.Instance.ExecuteWithDatabase(db =>
+            return SystemsDatabase.Instance.DBRead(db =>
             {
                 var cn = db;
                 using (DbCommand cmd = cn.CreateCommand("select Count(1) from Systems"))
@@ -47,7 +47,7 @@ namespace EliteDangerousCore.DB
             if (SystemsDatabase.Instance.RebuildRunning)
                 return ret;
 
-            return SystemsDatabase.Instance.ExecuteWithDatabase(db =>
+            return SystemsDatabase.Instance.DBRead(db =>
             {
 
                 //BaseUtils.AppTicks.TickCountLap("Star");
@@ -82,7 +82,7 @@ namespace EliteDangerousCore.DB
             if (SystemsDatabase.Instance.RebuildRunning)
                 return ret;
 
-            return SystemsDatabase.Instance.ExecuteWithDatabase(db =>
+            return SystemsDatabase.Instance.DBRead(db =>
             {
 
                 var cn = db;

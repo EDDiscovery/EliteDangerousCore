@@ -620,12 +620,12 @@ namespace EliteDangerousCore
             {
                 UserDatabase.Instance.ExecuteWithDatabase(cn =>
                 {
-                    using (DbTransaction txn = cn.Connection.BeginTransaction())        // take a transaction over this
+                    using (DbTransaction txn = cn.BeginTransaction())        // take a transaction over this
                     {
                         foreach (Tuple<HistoryEntry, ISystem> hesys in updatesystems)
                         {
                             logger?.Invoke($"Update position of {hesys.Item1.System.Name} at {hesys.Item1.EntryNumber} in journal");
-                            hesys.Item1.journalEntry.UpdateStarPosition(hesys.Item2, cn.Connection, txn);
+                            hesys.Item1.journalEntry.UpdateStarPosition(hesys.Item2, cn, txn);
                             hesys.Item1.UpdateSystem(hesys.Item2);
                         }
 

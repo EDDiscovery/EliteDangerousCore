@@ -38,7 +38,7 @@ namespace EliteDangerousCore.DB
 
         public static long ParseAlias(TextReader textreader)
         {
-            return SystemsDatabase.Instance.ExecuteWithDatabase(func: db =>
+            return SystemsDatabase.Instance.DBWrite(db =>
             {
                 var cn = db;
                 System.Diagnostics.Debug.WriteLine("Update aliases");
@@ -133,7 +133,7 @@ namespace EliteDangerousCore.DB
 
         public static long FindAlias(long edsmid, string name)
         {
-            return SystemsDatabase.Instance.ExecuteWithDatabase(db =>
+            return SystemsDatabase.Instance.DBRead(db =>
             {
                 return FindAlias(edsmid, name, db);
             });
@@ -157,7 +157,7 @@ namespace EliteDangerousCore.DB
 
         public static List<ISystem> FindAliasWildcard(string name)
         {
-            return SystemsDatabase.Instance.ExecuteWithDatabase(db =>
+            return SystemsDatabase.Instance.DBRead(db =>
             {
                 return FindAliasWildcard(name, db);
             });

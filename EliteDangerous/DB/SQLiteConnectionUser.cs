@@ -22,7 +22,7 @@ using SQLLiteExtensions;
 
 namespace EliteDangerousCore.DB
 {
-    internal class SQLiteConnectionUser : SQLExtConnectionRegister<SQLiteConnectionUser>
+    public class SQLiteConnectionUser : SQLExtConnectionRegister
     {
         public SQLiteConnectionUser() : base(EliteDangerousCore.EliteConfigInstance.InstanceOptions.UserDatabasePath, utctimeindicator:true)
         {

@@ -134,7 +134,7 @@ namespace EliteDangerousCore.DB
 
                     int recordstostore = ProcessBlock(cache, enumerator, grididallowed, tablesareempty, tablepostfix, ref maxdate, ref nextsectorid, out bool jr_eof);
 
-                    System.Diagnostics.Debug.WriteLine("Process " + BaseUtils.AppTicks.TickCountLap("L1") + "   " + updates);
+                    System.Diagnostics.Debug.WriteLine($"{Environment.TickCount} Process {BaseUtils.AppTicks.TickCountLap("L1")}  {updates}");
 
                     if (recordstostore > 0)
                     {
@@ -206,7 +206,7 @@ namespace EliteDangerousCore.DB
                 DbCommand selectSectorCmd = null;
                 DbCommand selectPrev = null;
 
-                SystemsDatabase.Instance.ExecuteWithDatabase(db =>
+                SystemsDatabase.Instance.DBWrite(db =>
                 {
                     try
                     {
@@ -300,7 +300,7 @@ namespace EliteDangerousCore.DB
             DbCommand selectSectorCmd = null;
             DateTime cpmaxdate = maxdate;
             int cpnextsectorid = nextsectorid;
-            const int BlockSize = 10000;
+            const int BlockSize = 1000000;      // for 66mil stars, 20000 = 38.66m, 100000=34.67m, 1e6 = 28.02m
             int Limit = int.MaxValue;
             var entries = new List<TableWriteData>();
             jr_eof = false;
@@ -346,7 +346,7 @@ namespace EliteDangerousCore.DB
                 }
             }
 
-            SystemsDatabase.Instance.ExecuteWithDatabase( action: db =>
+            SystemsDatabase.Instance.DBWrite( db =>
             {
                 try
                 {
@@ -473,7 +473,7 @@ namespace EliteDangerousCore.DB
         {
             ////////////////////////////////////////////////////////////// push all new data to the db without any selects
 
-            return SystemsDatabase.Instance.ExecuteWithDatabase(func: db =>
+            return SystemsDatabase.Instance.DBWrite(db =>
             {
                 long updates = 0;
 

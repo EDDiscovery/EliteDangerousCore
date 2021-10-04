@@ -45,7 +45,7 @@ namespace EliteDangerousCore.DB
             }
             else
             {
-                found = SystemsDatabase.Instance.ExecuteWithDatabase(conn => FindSystem(find, conn));
+                found = SystemsDatabase.Instance.DBRead(conn => FindSystem(find, conn));
 
                 // we need to do this after the normal connection above, as if we find something, we need to go into read write mode (took a moment to realise this)
 
@@ -218,7 +218,7 @@ namespace EliteDangerousCore.DB
             }
             else
             {
-                return SystemsDatabase.Instance.ExecuteWithDatabase(conn => FindSystemWildcard(name, conn, limit));
+                return SystemsDatabase.Instance.DBRead(conn => FindSystemWildcard(name, conn, limit));
             }
         }
 
@@ -244,7 +244,7 @@ namespace EliteDangerousCore.DB
 
             List<string> tolookup = new List<string>();
 
-            SystemsDatabase.Instance.ExecuteWithDatabase(conn =>
+            SystemsDatabase.Instance.DBRead(conn =>
             {
                 foreach (var s in sysnames)
                 {
@@ -312,7 +312,7 @@ namespace EliteDangerousCore.DB
             }
             else
             {
-                SystemsDatabase.Instance.ExecuteWithDatabase(conn => GetSystemListBySqDistancesFrom(distlist, x, y, z, maxitems, mindist, maxdist, spherical, conn));
+                SystemsDatabase.Instance.DBRead(conn => GetSystemListBySqDistancesFrom(distlist, x, y, z, maxitems, mindist, maxdist, spherical, conn));
             }
         }
 
@@ -342,7 +342,7 @@ namespace EliteDangerousCore.DB
             }
             else
             {
-                return SystemsDatabase.Instance.ExecuteWithDatabase(conn => FindNearestSystemTo(x, y, z, maxdistance, conn), warnthreshold: warnthreshold);
+                return SystemsDatabase.Instance.DBRead(conn => FindNearestSystemTo(x, y, z, maxdistance, conn), warnthreshold: warnthreshold);
             }
         }
 
@@ -388,7 +388,7 @@ namespace EliteDangerousCore.DB
             }
             else
             {
-                return SystemsDatabase.Instance.ExecuteWithDatabase(conn => GetSystemNearestTo(currentpos, wantedpos, maxfromcurpos, maxfromwanted, routemethod, limitto, conn));
+                return SystemsDatabase.Instance.DBRead(conn => GetSystemNearestTo(currentpos, wantedpos, maxfromcurpos, maxfromwanted, routemethod, limitto, conn));
             }
         }
 

@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace EliteDangerousCore.DB
 {
-    public class SystemsDatabase : SQLProcessingThread<SQLiteConnectionSystem>
+    public class SystemsDatabase : SQLAdvProcessingThread<SQLiteConnectionSystem>
     {
         private SystemsDatabase()
         {
@@ -18,7 +18,7 @@ namespace EliteDangerousCore.DB
 
         public void Initialize()
         {
-            ExecuteWithDatabase(cn => 
+            DBWrite(cn => 
             {
                 cn.UpgradeSystemsDB();
                 RebuildRunning = false;
@@ -33,12 +33,12 @@ namespace EliteDangerousCore.DB
 
         protected override SQLiteConnectionSystem CreateConnection()
         {
-            return new SQLiteConnectionSystem(ReadOnly);
+            return new SQLiteConnectionSystem();
         }
 
         public long UpgradeSystemTableFromFile(string filename, bool[] gridids, Func<bool> cancelRequested, Action<string> reportProgress)
         {
-            ExecuteWithDatabase( action: conn =>
+            DBWrite( action: conn =>
             {
                 conn.DropStarTables(TempTablePostfix);     // just in case, kill the old tables
                 conn.CreateStarTables(TempTablePostfix);     // and make new temp tables
@@ -49,7 +49,7 @@ namespace EliteDangerousCore.DB
 
             if (updates > 0)
             {
-                ExecuteWithDatabase(action: conn =>
+                DBWrite(action: conn =>
                 {
                     RebuildRunning = true;
 
@@ -73,7 +73,7 @@ namespace EliteDangerousCore.DB
             }
             else
             {
-                ExecuteWithDatabase(action: conn =>
+                DBWrite(action: conn =>
                 {
                     conn.DropStarTables(TempTablePostfix);     // clean out half prepared tables
                 });
@@ -93,7 +93,11 @@ namespace EliteDangerousCore.DB
         {
             long count = 0;
             if (!RebuildRunning)
-                WithReadWrite(() => { RebuildRunning = true; count = SystemsDB.StoreSystems(systems); RebuildRunning = false; });
+            {
+                RebuildRunning = true;
+                count = SystemsDB.StoreSystems(systems);
+                RebuildRunning = false;
+            }
 
             return count;
         }
@@ -104,7 +108,7 @@ namespace EliteDangerousCore.DB
 
             // first work out if we can upgrade, if so, create temp tables
 
-            ExecuteWithDatabase(action: conn =>
+            DBWrite(action: conn =>
             {
                 var list = conn.Tables();    // this gets table list
 
@@ -126,7 +130,7 @@ namespace EliteDangerousCore.DB
 
                     long updates = SystemsDB.UpgradeDB102to200(cancelRequested, reportProgress, TempTablePostfix, tablesareempty: true, maxgridid: maxgridid);
 
-                    ExecuteWithDatabase(action: conn =>
+                    DBWrite(action: conn =>
                     {
                         if (updates >= 0) // a cancel will result in -1
                         {
@@ -177,7 +181,7 @@ namespace EliteDangerousCore.DB
                 }
                 else
                 {       // newer data is needed, so just remove
-                    ExecuteWithDatabase( action: conn =>
+                    DBWrite( action: conn =>
                     {
                         reportProgress?.Invoke("Removing old system tables");
 
@@ -199,14 +203,14 @@ namespace EliteDangerousCore.DB
                 {
                     RebuildRunning = true;
 
-                    WithReadWrite(() => ExecuteWithDatabase(action: conn =>
+                    DBWrite((conn) =>
                     {
                         logger?.Invoke("Removing indexes");
                         conn.DropSystemDBTableIndexes();
                         logger?.Invoke("Rebuilding indexes, please wait");
                         conn.CreateSystemDBTableIndexes();
                         logger?.Invoke("Indexes rebuilt");
-                    }));
+                    });
 
                     RebuildRunning = false;
                 });
@@ -215,22 +219,22 @@ namespace EliteDangerousCore.DB
 
         public string GetEDSMGridIDs()
         {
-            return ExecuteWithDatabase( db => db.RegisterClass.GetSetting("EDSMGridIDs", "Not Set"));
+            return DBRead( db => db.RegisterClass.GetSetting("EDSMGridIDs", "Not Set"));
         }
 
         public bool SetEDSMGridIDs(string value)
         {
-            return WithReadWrite(() => ExecuteWithDatabase( db => db.RegisterClass.PutSetting("EDSMGridIDs", value)));
+            return DBWrite((db) => db.RegisterClass.PutSetting("EDSMGridIDs", value));
         }
 
         public DateTime GetEDSMGalMapLast()
         {
-            return ExecuteWithDatabase( db => db.RegisterClass.GetSetting("EDSMGalMapLast", DateTime.MinValue));
+            return DBRead( db => db.RegisterClass.GetSetting("EDSMGalMapLast", DateTime.MinValue));
         }
 
         public bool SetEDSMGalMapLast(DateTime value)
         {
-            return WithReadWrite(() => ExecuteWithDatabase( db => db.RegisterClass.PutSetting("EDSMGalMapLast", value)));
+            return DBWrite( (db) => db.RegisterClass.PutSetting("EDSMGalMapLast", value));
         }
 
         #region Time markers
@@ -239,12 +243,12 @@ namespace EliteDangerousCore.DB
 
         public void ForceEDSMFullUpdate()
         {
-            WithReadWrite(() => ExecuteWithDatabase( db => db.RegisterClass.PutSetting("EDSMLastSystems", "2010-01-01 00:00:00")));
+            DBWrite( (db) => db.RegisterClass.PutSetting("EDSMLastSystems", "2010-01-01 00:00:00"));
         }
 
         public DateTime GetLastEDSMRecordTimeUTC()
         {
-            return ExecuteWithDatabase( db =>
+            return DBRead( db =>
             {
                 string rwsystime = db.RegisterClass.GetSetting("EDSMLastSystems", "2000-01-01 00:00:00"); // Latest time from RW file.
                 DateTime edsmdate;
@@ -258,36 +262,36 @@ namespace EliteDangerousCore.DB
 
         public void SetLastEDSMRecordTimeUTC(DateTime time)
         {
-            WithReadWrite(() => ExecuteWithDatabase( db =>
+            DBWrite( db =>
             {
                 db.RegisterClass.PutSetting("EDSMLastSystems", time.ToString(CultureInfo.InvariantCulture));
                 System.Diagnostics.Debug.WriteLine("Last EDSM record " + time.ToString());
-            }));
+            });
         }
 
         public DateTime GetLastAliasDownloadTime()
         {
-            return ExecuteWithDatabase(db => db.RegisterClass.GetSetting("EDSMAliasLastDownloadTime", DateTime.MinValue));
+            return DBRead(db => db.RegisterClass.GetSetting("EDSMAliasLastDownloadTime", DateTime.MinValue));
         }
 
         public void SetLastEDSMAliasDownloadTime()
         {
-            WithReadWrite(() => ExecuteWithDatabase(db => db.RegisterClass.PutSetting("EDSMAliasLastDownloadTime", DateTime.UtcNow)));
+            DBWrite(db => db.RegisterClass.PutSetting("EDSMAliasLastDownloadTime", DateTime.UtcNow));
         }
 
         public void ForceEDSMAliasFullUpdate()
         {
-            WithReadWrite(() => ExecuteWithDatabase(db => db.RegisterClass.PutSetting("EDSMAliasLastDownloadTime", DateTime.MinValue)));
+            DBWrite(db => db.RegisterClass.PutSetting("EDSMAliasLastDownloadTime", DateTime.MinValue));
         }
 
         public int GetEDSMSectorIDNext()
         {
-            return ExecuteWithDatabase( db => db.RegisterClass.GetSetting("EDSMSectorIDNext", 1));
+            return DBRead( db => db.RegisterClass.GetSetting("EDSMSectorIDNext", 1));
         }
 
         public void SetEDSMSectorIDNext(int val)
         {
-            WithReadWrite(() => ExecuteWithDatabase( db => db.RegisterClass.PutSetting("EDSMSectorIDNext", val)));
+            DBWrite(db => db.RegisterClass.PutSetting("EDSMSectorIDNext", val));
         }
 
         #endregion

@@ -412,7 +412,7 @@ namespace EliteDangerousCore.EDSM
                     if (enddatestr == null || !DateTime.TryParseExact(enddatestr, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out logendtime))
                         logendtime = DateTime.MinValue;
 
-                    var tofetch = SystemsDatabase.Instance.ExecuteWithDatabase(db =>
+                    var tofetch = SystemsDatabase.Instance.DBRead(db =>
                     {
                         var xtofetch = new List<Tuple<JObject, ISystem>>();
 

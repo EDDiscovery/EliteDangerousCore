@@ -190,20 +190,20 @@ namespace EliteDangerousCore
                         System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
                         sw.Start();
 
-                        using (DbTransaction txn = cn.Connection.BeginTransaction())
+                        using (DbTransaction txn = cn.BeginTransaction())
                         {
                             if (entries.Count > 0)
                             {
-                                entries = entries.Where(jre => JournalEntry.FindEntry(jre, cn, jre.GetJson(cn.Connection,txn)).Count == 0).ToList();
+                                entries = entries.Where(jre => JournalEntry.FindEntry(jre, cn, jre.GetJson(cn,txn)).Count == 0).ToList();
 
                                 foreach (JournalEntry jre in entries)
                                 {
-                                    var json = jre.GetJson(cn.Connection, txn);
-                                    jre.Add(json,cn.Connection,txn);
+                                    var json = jre.GetJson(cn, txn);
+                                    jre.Add(json,cn,txn);
                                 }
                             }
 
-                            lastnfi.TravelLogUnit.Update(cn.Connection, txn);       // update TLU pos
+                            lastnfi.TravelLogUnit.Update(cn, txn);       // update TLU pos
 
                             txn.Commit();
                         }
@@ -274,11 +274,11 @@ namespace EliteDangerousCore
             {
                 UserDatabase.Instance.ExecuteWithDatabase(cn => 
                     {
-                        using (DbTransaction txn = cn.Connection.BeginTransaction())
+                        using (DbTransaction txn = cn.BeginTransaction())
                         {
                             foreach (var tlu in tlutoadd)
                             {
-                                tlu.Add(cn.Connection, txn);
+                                tlu.Add(cn, txn);
                             }
 
                             txn.Commit();
@@ -321,22 +321,22 @@ namespace EliteDangerousCore
                     UserDatabase.Instance.ExecuteWithDatabase(cn =>
                     {
                         // only lookup TLUs if there is actually anything to compare against
-                        ILookup<DateTime, JournalEntry> existing = entries.Count > 0 ? JournalEntry.GetAllByTLU(reader.ID, cn.Connection).ToLookup(e => e.EventTimeUTC) : null;
+                        ILookup<DateTime, JournalEntry> existing = entries.Count > 0 ? JournalEntry.GetAllByTLU(reader.ID, cn).ToLookup(e => e.EventTimeUTC) : null;
 
                         //System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLap("PJF"), i + " into db");
 
-                        using (DbTransaction tn = cn.Connection.BeginTransaction())
+                        using (DbTransaction tn = cn.BeginTransaction())
                         {
                             foreach (JournalEntry jre in entries)
                             {
                                 //System.Diagnostics.Trace.WriteLine(string.Format("--- Check {0} {1} Existing {2} : {3}", jre.EventTimeUTC, jre.EventTypeStr, existing[jre.EventTimeUTC].Count(), jre.GetJson().ToString()));
 
-                                if (!existing[jre.EventTimeUTC].Any(e => JournalEntry.AreSameEntry(jre, e, cn.Connection, ent1jo: jre.GetJson(cn.Connection,tn))))
+                                if (!existing[jre.EventTimeUTC].Any(e => JournalEntry.AreSameEntry(jre, e, cn, ent1jo: jre.GetJson(cn,tn))))
                                 {
                                     //foreach (var x in existing[jre.EventTimeUTC]) { System.Diagnostics.Trace.WriteLine(string.Format(" passed vs {0} Deepequals {1}", x.GetJson().ToString(), x.GetJson().DeepEquals(jre.GetJson()))); }
 
-                                    BaseUtils.JSON.JObject jo = jre.GetJson(cn.Connection, tn);
-                                    jre.Add(jo, cn.Connection, tn);
+                                    BaseUtils.JSON.JObject jo = jre.GetJson(cn, tn);
+                                    jre.Add(jo, cn, tn);
 
                                     //System.Diagnostics.Trace.WriteLine(string.Format("Write Journal to db {0} {1}", jre.EventTimeUTC, jre.EventTypeStr));
                                 }
@@ -347,7 +347,7 @@ namespace EliteDangerousCore
                             }
 
                             if (readanything)
-                                reader.TravelLogUnit.Update(cn.Connection, tn);
+                                reader.TravelLogUnit.Update(cn, tn);
 
                             tn.Commit();
                         }

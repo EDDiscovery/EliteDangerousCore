@@ -19,13 +19,9 @@ using System;
 
 namespace EliteDangerousCore.DB
 {
-    public class SQLiteConnectionSystem : SQLExtConnectionRegister<SQLiteConnectionSystem>
+    public class SQLiteConnectionSystem : SQLExtConnectionRegister
     {
-        public SQLiteConnectionSystem() : this(false)
-        {
-        }
-
-        public SQLiteConnectionSystem(bool ro) : base(EliteDangerousCore.EliteConfigInstance.InstanceOptions.SystemDatabasePath, utctimeindicator: true, mode: ro ? AccessMode.Reader : AccessMode.ReaderWriter)
+        public SQLiteConnectionSystem() : base(EliteDangerousCore.EliteConfigInstance.InstanceOptions.SystemDatabasePath, utctimeindicator: true)
         {
         }
 

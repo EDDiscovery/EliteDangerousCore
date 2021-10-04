@@ -76,7 +76,7 @@ namespace EliteDangerousCore.JournalEvents
                 jo["EDDOutputFile"] = output_filename;
                 jo["EDDOutputWidth"] = width;
                 jo["EDDOutputHeight"] = height;
-                EliteDangerousCore.DB.UserDatabase.Instance.ExecuteWithDatabase(cn=> UpdateJsonEntry(jo,cn.Connection) );
+                EliteDangerousCore.DB.UserDatabase.Instance.ExecuteWithDatabase(cn=> UpdateJsonEntry(jo,cn) );
             }
         }
     }

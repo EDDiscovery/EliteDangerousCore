@@ -58,7 +58,7 @@ namespace EliteDangerousCore
 
         public bool Add(JObject jo)
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Add(jo, cn.Connection); });
+            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Add(jo, cn); });
         }
 
         internal bool Add(JObject jo, SQLiteConnectionUser cn, DbTransaction tn = null)
@@ -87,7 +87,7 @@ namespace EliteDangerousCore
 
         public bool Update()
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Update(cn.Connection); });
+            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Update(cn); });
         }
 
         private bool Update(SQLiteConnectionUser cn, DbTransaction tn = null)
@@ -124,7 +124,7 @@ namespace EliteDangerousCore
 
         static public void Delete(long idvalue)
         {
-            UserDatabase.Instance.ExecuteWithDatabase(cn => { Delete(idvalue,cn.Connection); });
+            UserDatabase.Instance.ExecuteWithDatabase(cn => { Delete(idvalue,cn); });
         }
 
         static private void Delete(long idvalue, SQLiteConnectionUser cn)
@@ -186,7 +186,7 @@ namespace EliteDangerousCore
         {
             UserDatabase.Instance.ExecuteWithDatabase(cn =>
             {
-                using (DbCommand cmd = cn.Connection.CreateCommand("Update JournalEntries set CommanderID = @cmdrid where ID=@journalid"))
+                using (DbCommand cmd = cn.CreateCommand("Update JournalEntries set CommanderID = @cmdrid where ID=@journalid"))
                 {
                     cmd.AddParameterWithValue("@journalid", Id);
                     cmd.AddParameterWithValue("@cmdrid", cmdrid);
@@ -201,7 +201,7 @@ namespace EliteDangerousCore
         {
             UserDatabase.Instance.ExecuteWithDatabase(cn =>
             {
-                using (DbCommand cmd = cn.Connection.CreateCommand("Update JournalEntries set CommanderID = @cmdridto where CommanderID=@cmdridfrom"))
+                using (DbCommand cmd = cn.CreateCommand("Update JournalEntries set CommanderID = @cmdridto where CommanderID=@cmdridfrom"))
                 {
                     if (from == -1)
                         cmd.CommandText = "Update JournalEntries set CommanderID = @cmdridto";
@@ -230,7 +230,7 @@ namespace EliteDangerousCore
         public JObject GetJson()
         {
             if (JsonCached == null)
-                return UserDatabase.Instance.ExecuteWithDatabase<JObject>(cn => { return GetJson(cn.Connection); });
+                return UserDatabase.Instance.ExecuteWithDatabase<JObject>(cn => { return GetJson(cn); });
             else
                 return JsonCached;
         }
@@ -270,7 +270,7 @@ namespace EliteDangerousCore
 
         static public JournalEntry Get(long journalid)
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<JournalEntry>(cn => { return Get(journalid, cn.Connection); });
+            return UserDatabase.Instance.ExecuteWithDatabase<JournalEntry>(cn => { return Get(journalid, cn); });
         }
 
         static internal JournalEntry Get(long journalid, SQLiteConnectionUser cn, DbTransaction tn = null)
@@ -293,7 +293,7 @@ namespace EliteDangerousCore
 
         static public List<JournalEntry> Get(string eventtype)            // any commander, find me an event of this type..
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<List<JournalEntry>>(cn => { return Get(eventtype, cn.Connection); });
+            return UserDatabase.Instance.ExecuteWithDatabase<List<JournalEntry>>(cn => { return Get(eventtype, cn); });
         }
 
         static internal List<JournalEntry> Get(string eventtype, SQLiteConnectionUser cn, DbTransaction tn = null)
@@ -343,7 +343,7 @@ namespace EliteDangerousCore
 
             try
             {
-                cmd = UserDatabase.Instance.ExecuteWithDatabase(cn => cn.Connection.CreateCommand("select Id,TravelLogId,CommanderId,EventData,Synced from JournalEntries"));
+                cmd = UserDatabase.Instance.ExecuteWithDatabase(cn => cn.CreateCommand("select Id,TravelLogId,CommanderId,EventData,Synced from JournalEntries"));
                 reader = UserDatabase.Instance.ExecuteWithDatabase(cn =>
                 {
                     string cnd = "";
@@ -497,7 +497,7 @@ namespace EliteDangerousCore
 
             try
             {
-                cmd = UserDatabase.Instance.ExecuteWithDatabase(cn => cn.Connection.CreateCommand("SELECT * FROM JournalEntries WHERE EventTypeID = @eventtype and  CommanderID=@commander and  EventTime >=@start and EventTime<=@Stop ORDER BY EventTime ASC"));
+                cmd = UserDatabase.Instance.ExecuteWithDatabase(cn => cn.CreateCommand("SELECT * FROM JournalEntries WHERE EventTypeID = @eventtype and  CommanderID=@commander and  EventTime >=@start and EventTime<=@Stop ORDER BY EventTime ASC"));
                 reader = UserDatabase.Instance.ExecuteWithDatabase(cn =>
                 {
                     cmd.AddParameterWithValue("@eventtype", (int)eventtype);
@@ -567,7 +567,7 @@ namespace EliteDangerousCore
         {
             return UserDatabase.Instance.ExecuteWithDatabase<JournalEntry>(cn =>
             {
-                using (DbCommand cmd = cn.Connection.CreateCommand("SELECT * FROM JournalEntries WHERE CommanderId = @cmdrid AND EventTime < @time ORDER BY EventTime DESC"))
+                using (DbCommand cmd = cn.CreateCommand("SELECT * FROM JournalEntries WHERE CommanderId = @cmdrid AND EventTime < @time ORDER BY EventTime DESC"))
                 {
                     cmd.AddParameterWithValue("@cmdrid", cmdrid);
                     cmd.AddParameterWithValue("@time", beforeutc);
@@ -591,7 +591,7 @@ namespace EliteDangerousCore
         {
             return UserDatabase.Instance.ExecuteWithDatabase<JournalEntry>(cn =>
             {
-                using (DbCommand cmd = cn.Connection.CreateCommand("SELECT * FROM JournalEntries WHERE EventTime < @time ORDER BY EventTime DESC"))
+                using (DbCommand cmd = cn.CreateCommand("SELECT * FROM JournalEntries WHERE EventTime < @time ORDER BY EventTime DESC"))
                 {
                     cmd.AddParameterWithValue("@time", beforeutc);
                     using (DbDataReader reader = cmd.ExecuteReader())
@@ -622,18 +622,18 @@ namespace EliteDangerousCore
             return (T)GetLast(beforeutc, e => e is T && (filter == null || filter((T)e)));
         }
 
-        public static List<JournalEntry> FindEntry(JournalEntry ent, UserDatabaseConnection cn , JObject entjo = null)      // entjo is not changed.
+        public static List<JournalEntry> FindEntry(JournalEntry ent, SQLiteConnectionUser cn , JObject entjo = null)      // entjo is not changed.
         {
             if (entjo == null)
             {
-                entjo = GetJson(ent.Id,cn.Connection);
+                entjo = GetJson(ent.Id,cn);
             }
 
             entjo = RemoveEDDGeneratedKeys(entjo);
 
             List<JournalEntry> entries = new List<JournalEntry>();
 
-            using (DbCommand cmd = cn.Connection.CreateCommand("SELECT * FROM JournalEntries WHERE CommanderId = @cmdrid AND EventTime = @time AND TravelLogId = @tluid AND EventTypeId = @evttype ORDER BY Id ASC"))
+            using (DbCommand cmd = cn.CreateCommand("SELECT * FROM JournalEntries WHERE CommanderId = @cmdrid AND EventTime = @time AND TravelLogId = @tluid AND EventTypeId = @evttype ORDER BY Id ASC"))
             {
                 cmd.AddParameterWithValue("@cmdrid", ent.CommanderId);
                 cmd.AddParameterWithValue("@time", ent.EventTimeUTC);
@@ -644,7 +644,7 @@ namespace EliteDangerousCore
                     while (reader.Read())
                     {
                         JournalEntry jent = CreateJournalEntry(reader);
-                        if (AreSameEntry(ent, jent, cn.Connection, entjo))
+                        if (AreSameEntry(ent, jent, cn, entjo))
                         {
                             entries.Add(jent);
                         }
@@ -674,7 +674,7 @@ namespace EliteDangerousCore
 
                         if (previssame)
                         {
-                            Delete(prev.Id, cn.Connection);
+                            Delete(prev.Id, cn);
                             count++;
                             System.Diagnostics.Debug.WriteLine("Dup {0} {1} {2} {3}", prev.Id, current.Id, prev.StarSystem, current.StarSystem);
                         }
