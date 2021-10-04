@@ -242,7 +242,7 @@ namespace EliteDangerousCore.EDSM
                 tlu.CommanderId = EDCommander.CurrentCmdrID;
                 tlu.Add();  // Add to Database
 
-                UserDatabase.Instance.ExecuteWithDatabase(cn =>
+                UserDatabase.Instance.DBWrite(cn =>
                 {
                     foreach (JournalFSDJump jfsd in toadd)
                     {

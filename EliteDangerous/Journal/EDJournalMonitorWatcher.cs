@@ -185,7 +185,7 @@ namespace EliteDangerousCore
             {
                 if (entries.Count > 0 || readanything )
                 {
-                    UserDatabase.Instance.ExecuteWithDatabase(cn =>
+                    UserDatabase.Instance.DBWrite(cn =>
                     {
                         System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
                         sw.Start();
@@ -272,7 +272,7 @@ namespace EliteDangerousCore
 
             if ( tlutoadd.Count > 0 )                      // now, on spinning rust, this takes ages for 600+ log files first time, so transaction it
             {
-                UserDatabase.Instance.ExecuteWithDatabase(cn => 
+                UserDatabase.Instance.DBWrite(cn => 
                     {
                         using (DbTransaction txn = cn.BeginTransaction())
                         {
@@ -318,7 +318,7 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    UserDatabase.Instance.ExecuteWithDatabase(cn =>
+                    UserDatabase.Instance.DBWrite(cn =>
                     {
                         // only lookup TLUs if there is actually anything to compare against
                         ILookup<DateTime, JournalEntry> existing = entries.Count > 0 ? JournalEntry.GetAllByTLU(reader.ID, cn).ToLookup(e => e.EventTimeUTC) : null;

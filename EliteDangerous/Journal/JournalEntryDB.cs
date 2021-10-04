@@ -58,7 +58,7 @@ namespace EliteDangerousCore
 
         public bool Add(JObject jo)
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Add(jo, cn); });
+            return UserDatabase.Instance.DBWrite<bool>(cn => { return Add(jo, cn); });
         }
 
         internal bool Add(JObject jo, SQLiteConnectionUser cn, DbTransaction tn = null)
@@ -87,7 +87,7 @@ namespace EliteDangerousCore
 
         public bool Update()
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Update(cn); });
+            return UserDatabase.Instance.DBWrite<bool>(cn => { return Update(cn); });
         }
 
         private bool Update(SQLiteConnectionUser cn, DbTransaction tn = null)
@@ -124,7 +124,7 @@ namespace EliteDangerousCore
 
         static public void Delete(long idvalue)
         {
-            UserDatabase.Instance.ExecuteWithDatabase(cn => { Delete(idvalue,cn); });
+            UserDatabase.Instance.DBWrite(cn => { Delete(idvalue,cn); });
         }
 
         static private void Delete(long idvalue, SQLiteConnectionUser cn)
@@ -184,7 +184,7 @@ namespace EliteDangerousCore
 
         public void UpdateCommanderID(int cmdrid)
         {
-            UserDatabase.Instance.ExecuteWithDatabase(cn =>
+            UserDatabase.Instance.DBWrite(cn =>
             {
                 using (DbCommand cmd = cn.CreateCommand("Update JournalEntries set CommanderID = @cmdrid where ID=@journalid"))
                 {
@@ -199,7 +199,7 @@ namespace EliteDangerousCore
 
         static public bool ResetCommanderID(int from, int to)
         {
-            UserDatabase.Instance.ExecuteWithDatabase(cn =>
+            UserDatabase.Instance.DBWrite(cn =>
             {
                 using (DbCommand cmd = cn.CreateCommand("Update JournalEntries set CommanderID = @cmdridto where CommanderID=@cmdridfrom"))
                 {
@@ -230,7 +230,7 @@ namespace EliteDangerousCore
         public JObject GetJson()
         {
             if (JsonCached == null)
-                return UserDatabase.Instance.ExecuteWithDatabase<JObject>(cn => { return GetJson(cn); });
+                return UserDatabase.Instance.DBRead<JObject>(cn => { return GetJson(cn); });
             else
                 return JsonCached;
         }
@@ -270,7 +270,7 @@ namespace EliteDangerousCore
 
         static public JournalEntry Get(long journalid)
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<JournalEntry>(cn => { return Get(journalid, cn); });
+            return UserDatabase.Instance.DBRead<JournalEntry>(cn => { return Get(journalid, cn); });
         }
 
         static internal JournalEntry Get(long journalid, SQLiteConnectionUser cn, DbTransaction tn = null)
@@ -293,7 +293,7 @@ namespace EliteDangerousCore
 
         static public List<JournalEntry> Get(string eventtype)            // any commander, find me an event of this type..
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<List<JournalEntry>>(cn => { return Get(eventtype, cn); });
+            return UserDatabase.Instance.DBRead<List<JournalEntry>>(cn => { return Get(eventtype, cn); });
         }
 
         static internal List<JournalEntry> Get(string eventtype, SQLiteConnectionUser cn, DbTransaction tn = null)
@@ -337,152 +337,136 @@ namespace EliteDangerousCore
                             JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null, Func<JournalEntry,Object,bool> callback = null, Object callbackobj = null,
                             int chunksize = 1000)
         {
-            DbCommand cmd = null;
-            DbDataReader reader = null;
-            List<JournalEntry> entries = new List<JournalEntry>();
+            // in the connection thread, construct the command and execute a read..
 
-            try
+            DbDataReader reader = UserDatabase.Instance.DBRead(cn =>        
             {
-                cmd = UserDatabase.Instance.ExecuteWithDatabase(cn => cn.CreateCommand("select Id,TravelLogId,CommanderId,EventData,Synced from JournalEntries"));
-                reader = UserDatabase.Instance.ExecuteWithDatabase(cn =>
+                DbCommand cmd = cn.CreateCommand("select Id,TravelLogId,CommanderId,EventData,Synced from JournalEntries");
+                string cnd = "";
+                if (commander != -999)
                 {
-                    string cnd = "";
-                    if (commander != -999)
-                    {
-                        cnd = cnd.AppendPrePad("CommanderID = @commander", " and ");
-                        cmd.AddParameterWithValue("@commander", commander);
-                    }
-                    if (startdateutc != null)
-                    {
-                        cnd = cnd.AppendPrePad("EventTime >= @after", " and ");
-                        cmd.AddParameterWithValue("@after", startdateutc.Value);
-                    }
-                    if (enddateutc != null)
-                    {
-                        cnd = cnd.AppendPrePad("EventTime <= @before", " and ");
-                        cmd.AddParameterWithValue("@before", enddateutc.Value);
-                    }
-                    if (ids != null)
-                    {
-                        int[] array = Array.ConvertAll(ids, x => (int)x);
-                        if (allidsafterutc != null)
-                        {
-                            cmd.AddParameterWithValue("@idafter", allidsafterutc.Value);
-                            cnd = cnd.AppendPrePad("(EventTypeId in (" + string.Join(",", array) + ") Or EventTime>=@idafter)", " and ");
-                        }
-                        else
-                        {
-                            cnd = cnd.AppendPrePad("EventTypeId in (" + string.Join(",", array) + ")", " and ");
-                        }
-                    }
-
-                    if (cnd.HasChars())
-                        cmd.CommandText += " where " + cnd;
-
-                    cmd.CommandText += " Order By EventTime,Id ASC";
-
-                    return cmd.ExecuteReader();
-                });
-
-                List<JournalEntry> retlist = null;
-
-#if TIMESCAN
-                Dictionary<string, List<long>> times = new Dictionary<string, List<long>>();
-                Stopwatch sw = new Stopwatch();
-                sw.Start();
-#endif
-                do
+                    cnd = cnd.AppendPrePad("CommanderID = @commander", " and ");
+                    cmd.AddParameterWithValue("@commander", commander);
+                }
+                if (startdateutc != null)
                 {
-                    // experiments state that reading the DL is not the time sink, its creating the journal entries
-
-                    retlist = UserDatabase.Instance.ExecuteWithDatabase(cn =>       // split into smaller chunks to allow other things access..
+                    cnd = cnd.AppendPrePad("EventTime >= @after", " and ");
+                    cmd.AddParameterWithValue("@after", startdateutc.Value);
+                }
+                if (enddateutc != null)
+                {
+                    cnd = cnd.AppendPrePad("EventTime <= @before", " and ");
+                    cmd.AddParameterWithValue("@before", enddateutc.Value);
+                }
+                if (ids != null)
+                {
+                    int[] array = Array.ConvertAll(ids, x => (int)x);
+                    if (allidsafterutc != null)
                     {
-                        List<JournalEntry> list = new List<JournalEntry>();
-
-                        while (list.Count < chunksize && reader.Read())
-                        {
-#if TIMESCAN
-                            long t = sw.ElapsedTicks;
-#endif
-
-                            JournalEntry je = JournalEntry.CreateJournalEntryFixedPos(reader);
-                            list.Add(je);
-
-#if TIMESCAN
-                            long tw = sw.ElapsedTicks - t;
-                            if (!times.TryGetValue(sys.EventTypeStr, out var x))
-                                times[sys.EventTypeStr] = new List<long>();
-                            times[sys.EventTypeStr].Add(tw);
-#endif
-
-                        }
-
-                        return list;
-                    });
-
-                    if (callback != null)               // collated, now process them, if callback, feed them thru callback procedure
-                    {
-                        foreach (var e in retlist)
-                        {
-                            if (!callback.Invoke(e, callbackobj))     // if indicate stop
-                            {
-                                retlist = null;
-                                break;
-                            }
-                        }
+                        cmd.AddParameterWithValue("@idafter", allidsafterutc.Value);
+                        cnd = cnd.AppendPrePad("(EventTypeId in (" + string.Join(",", array) + ") Or EventTime>=@idafter)", " and ");
                     }
                     else
                     {
-                        entries.AddRange(retlist);
+                        cnd = cnd.AppendPrePad("EventTypeId in (" + string.Join(",", array) + ")", " and ");
                     }
                 }
-                while (retlist != null && retlist.Count != 0);
+
+                if (cnd.HasChars())
+                    cmd.CommandText += " where " + cnd;
+
+                cmd.CommandText += " Order By EventTime,Id ASC";
+
+                return cmd.ExecuteReader();
+            });
+
+            List<JournalEntry> entries = new List<JournalEntry>();
+            List<JournalEntry> retlist = null;
 
 #if TIMESCAN
-                List<Results> res = new List<Results>();
-
-                foreach( var kvp in times)
-                {
-                    Results r = new Results();
-                    r.name = kvp.Key;
-                    r.avg = kvp.Value.Average();
-                    r.min = kvp.Value.Min();
-                    r.max = kvp.Value.Max();
-                    r.total = kvp.Value.Sum();
-                    r.avgtime = ((double)r.avg / Stopwatch.Frequency * 1000);
-                    r.sumtime = ((double)r.total / Stopwatch.Frequency * 1000);
-                    r.count = kvp.Value.Count;
-                    res.Add(r);
-                }
-
-                //res.Sort(delegate (Results l, Results r) { return l.sumtime.CompareTo(r.sumtime); });
-                res.Sort(delegate (Results l, Results r) { return l.avgtime.CompareTo(r.avgtime); });
-
-                string rs = "";
-                foreach (var r in res)
-                {
-                    rs = rs + Environment.NewLine + string.Format("Time {0} min {1} max {2} avg {3} ms count {4} totaltime {5} ms", r.name, r.min, r.max, r.avgtime.ToString("#.#########"), r.count, r.sumtime.ToString("#.#######"));
-                }
-
-                System.Diagnostics.Trace.WriteLine(rs);
-                //File.WriteAllText(@"c:\code\times.txt", rs);
+            Dictionary<string, List<long>> times = new Dictionary<string, List<long>>();
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
 #endif
-            }
-            catch (Exception ex)
+            do
             {
-                System.Diagnostics.Debug.WriteLine("Getall Exception " + ex);
-            }
-            finally
-            {
-                if (reader != null || cmd != null)
+                // experiments state that reading the DL is not the time sink, its creating the journal entries
+
+                // split into smaller chunks to allow other things access..  in the connection  thread, read a chunk
+
+                retlist = UserDatabase.Instance.DBRead(cn =>       
                 {
-                    UserDatabase.Instance.ExecuteWithDatabase(cn =>
+                    List<JournalEntry> list = new List<JournalEntry>();
+
+                    while (list.Count < chunksize && reader.Read())
                     {
-                        reader?.Close();
-                        cmd?.Dispose();
-                    });
+#if TIMESCAN
+                        long t = sw.ElapsedTicks;
+#endif
+
+                        JournalEntry je = JournalEntry.CreateJournalEntryFixedPos(reader);
+                        list.Add(je);
+
+#if TIMESCAN
+                        long tw = sw.ElapsedTicks - t;
+                        if (!times.TryGetValue(sys.EventTypeStr, out var x))
+                            times[sys.EventTypeStr] = new List<long>();
+                        times[sys.EventTypeStr].Add(tw);
+#endif
+                    }
+
+                    return list;
+                });
+
+                // back in the caller thread,dispatch or add
+
+                if (callback != null)               // collated, now process them, if callback, feed them thru callback procedure
+                {
+                    foreach (var e in retlist)
+                    {
+                        if (!callback.Invoke(e, callbackobj))     // if indicate stop
+                        {
+                            retlist = null;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    entries.AddRange(retlist);
                 }
             }
+            while (retlist != null && retlist.Count != 0);
+
+#if TIMESCAN
+            List<Results> res = new List<Results>();
+
+            foreach( var kvp in times)
+            {
+                Results r = new Results();
+                r.name = kvp.Key;
+                r.avg = kvp.Value.Average();
+                r.min = kvp.Value.Min();
+                r.max = kvp.Value.Max();
+                r.total = kvp.Value.Sum();
+                r.avgtime = ((double)r.avg / Stopwatch.Frequency * 1000);
+                r.sumtime = ((double)r.total / Stopwatch.Frequency * 1000);
+                r.count = kvp.Value.Count;
+                res.Add(r);
+            }
+
+            //res.Sort(delegate (Results l, Results r) { return l.sumtime.CompareTo(r.sumtime); });
+            res.Sort(delegate (Results l, Results r) { return l.avgtime.CompareTo(r.avgtime); });
+
+            string rs = "";
+            foreach (var r in res)
+            {
+                rs = rs + Environment.NewLine + string.Format("Time {0} min {1} max {2} avg {3} ms count {4} totaltime {5} ms", r.name, r.min, r.max, r.avgtime.ToString("#.#########"), r.count, r.sumtime.ToString("#.#######"));
+            }
+
+            System.Diagnostics.Trace.WriteLine(rs);
+            //File.WriteAllText(@"c:\code\times.txt", rs);
+#endif
 
             return entries;
         }
@@ -491,56 +475,41 @@ namespace EliteDangerousCore
         public static List<JournalEntry> GetByEventType(JournalTypeEnum eventtype, int commanderid, DateTime startutc, DateTime stoputc)
         {
             Dictionary<long, TravelLogUnit> tlus = TravelLogUnit.GetAll().ToDictionary(t => t.ID);
-            DbCommand cmd = null;
-            DbDataReader reader = null;
             List<JournalEntry> entries = new List<JournalEntry>();
 
-            try
+            // in the connection thread, execute the 
+            DbDataReader reader = UserDatabase.Instance.DBRead(cn =>
             {
-                cmd = UserDatabase.Instance.ExecuteWithDatabase(cn => cn.CreateCommand("SELECT * FROM JournalEntries WHERE EventTypeID = @eventtype and  CommanderID=@commander and  EventTime >=@start and EventTime<=@Stop ORDER BY EventTime ASC"));
-                reader = UserDatabase.Instance.ExecuteWithDatabase(cn =>
+                var cmd = cn.CreateCommand("SELECT * FROM JournalEntries WHERE EventTypeID = @eventtype and  CommanderID=@commander and  EventTime >=@start and EventTime<=@Stop ORDER BY EventTime ASC");
+                cmd.AddParameterWithValue("@eventtype", (int)eventtype);
+                cmd.AddParameterWithValue("@commander", (int)commanderid);
+                cmd.AddParameterWithValue("@start", startutc);
+                cmd.AddParameterWithValue("@stop", stoputc);
+                return cmd.ExecuteReader();
+            });
+
+            List<JournalEntry> retlist = null;
+
+            do
+            {
+                retlist = UserDatabase.Instance.DBRead(cn =>
                 {
-                    cmd.AddParameterWithValue("@eventtype", (int)eventtype);
-                    cmd.AddParameterWithValue("@commander", (int)commanderid);
-                    cmd.AddParameterWithValue("@start", startutc);
-                    cmd.AddParameterWithValue("@stop", stoputc);
-                    return cmd.ExecuteReader();
+                    List<JournalEntry> vsc = new List<JournalEntry>();
+
+                    while (vsc.Count < 1000 && reader.Read())
+                    {
+                        JournalEntry je = CreateJournalEntry(reader);
+                        vsc.Add(je);
+                    }
+
+                    return vsc;
                 });
 
-                List<JournalEntry> retlist = null;
-
-                do
-                {
-                    retlist = UserDatabase.Instance.ExecuteWithDatabase(cn =>
-                    {
-                        List<JournalEntry> vsc = new List<JournalEntry>();
-
-                        while (vsc.Count < 1000 && reader.Read())
-                        {
-                            JournalEntry je = CreateJournalEntry(reader);
-                            vsc.Add(je);
-                        }
-
-                        return vsc;
-                    });
-
-                    entries.AddRange(retlist);
-                }
-                while (retlist != null && retlist.Count != 0);
-
-                return entries;
+                entries.AddRange(retlist);
             }
-            finally
-            {
-                if (reader != null || cmd != null)
-                {
-                    UserDatabase.Instance.ExecuteWithDatabase(cn =>
-                    {
-                        reader?.Close();
-                        cmd?.Dispose();
-                    });
-                }
-            }
+            while (retlist != null && retlist.Count != 0);
+
+            return entries;
         }
                
         internal static List<JournalEntry> GetAllByTLU(long tluid, SQLiteConnectionUser cn)
@@ -565,7 +534,7 @@ namespace EliteDangerousCore
 
         public static JournalEntry GetLast(int cmdrid, DateTime beforeutc, Func<JournalEntry, bool> filter)
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<JournalEntry>(cn =>
+            return UserDatabase.Instance.DBRead<JournalEntry>(cn =>
             {
                 using (DbCommand cmd = cn.CreateCommand("SELECT * FROM JournalEntries WHERE CommanderId = @cmdrid AND EventTime < @time ORDER BY EventTime DESC"))
                 {
@@ -589,7 +558,7 @@ namespace EliteDangerousCore
 
         public static JournalEntry GetLast(DateTime beforeutc, Func<JournalEntry, bool> filter)
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<JournalEntry>(cn =>
+            return UserDatabase.Instance.DBRead<JournalEntry>(cn =>
             {
                 using (DbCommand cmd = cn.CreateCommand("SELECT * FROM JournalEntries WHERE EventTime < @time ORDER BY EventTime DESC"))
                 {
@@ -661,7 +630,7 @@ namespace EliteDangerousCore
             List<JournalFSDJump> vsSystemsEnts = GetAll(currentcmdrid, ids: new[] { JournalTypeEnum.FSDJump }).OfType<JournalFSDJump>().OrderBy(j => j.EventTimeUTC).ToList();
 
             int count = 0;
-            UserDatabase.Instance.ExecuteWithDatabase(cn =>
+            UserDatabase.Instance.DBWrite(cn =>
             {
                 for (int ji = 1; ji < vsSystemsEnts.Count; ji++)
                 {

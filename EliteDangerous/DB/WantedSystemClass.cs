@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 EDDiscovery development team
+ * Copyright 2016-2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -41,7 +41,7 @@ namespace EliteDangerousCore.DB
 
         public bool Add()
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Add(cn); });
+            return UserDatabase.Instance.DBWrite<bool>(cn => { return Add(cn); });
         }
 
         private bool Add(SQLiteConnectionUser cn)
@@ -61,7 +61,7 @@ namespace EliteDangerousCore.DB
 
         public bool Delete()
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Delete(cn); });
+            return UserDatabase.Instance.DBWrite<bool>(cn => { return Delete(cn); });
         }
 
         private bool Delete(SQLiteConnectionUser cn)
@@ -80,7 +80,7 @@ namespace EliteDangerousCore.DB
         {
             try
             {
-                return UserDatabase.Instance.ExecuteWithDatabase<List<WantedSystemClass>>(cn =>
+                return UserDatabase.Instance.DBRead<List<WantedSystemClass>>(cn =>
                 {
                     using (DbCommand cmd = cn.CreateCommand("select * from wanted_systems"))
                     {

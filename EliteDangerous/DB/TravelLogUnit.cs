@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 EDDiscovery development team
+ * Copyright 2016-2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -74,7 +74,7 @@ namespace EliteDangerousCore.DB
 
         public bool Add()
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Add(cn); });
+            return UserDatabase.Instance.DBWrite<bool>(cn => { return Add(cn); });
         }
 
         internal bool Add(SQLiteConnectionUser cn, DbTransaction tn = null)
@@ -105,7 +105,7 @@ namespace EliteDangerousCore.DB
 
         public bool Update()
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Update(cn); });
+            return UserDatabase.Instance.DBWrite<bool>(cn => { return Update(cn); });
         }
 
         internal bool Update(SQLiteConnectionUser cn, DbTransaction tn = null)
@@ -132,7 +132,7 @@ namespace EliteDangerousCore.DB
             {
                 cache = new Dictionary<long, TravelLogUnit>();
 
-                UserDatabase.Instance.ExecuteWithDatabase(cn =>
+                UserDatabase.Instance.DBRead(cn =>
                 {
                     using (DbCommand cmd = cn.CreateCommand("select * from TravelLogUnit"))
                     {

@@ -279,7 +279,7 @@ namespace EliteDangerousCore.EDSM
             }
             else
             {
-                firstdiscovers = UserDatabase.Instance.ExecuteWithDatabase<string>(cn =>
+                firstdiscovers = UserDatabase.Instance.DBWrite<string>(cn =>
                 {
                     string firsts = "";
                     using (var txn = cn.BeginTransaction())

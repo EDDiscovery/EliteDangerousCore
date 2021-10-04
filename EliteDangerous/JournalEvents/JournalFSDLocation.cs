@@ -659,7 +659,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void SetMapColour(int mapcolour)
         {
-            UserDatabase.Instance.ExecuteWithDatabase(cn =>
+            UserDatabase.Instance.DBWrite(cn =>
             {
                 JObject jo = GetJson(Id, cn);
 
@@ -674,7 +674,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateFirstDiscover(bool value)
         {
-            UserDatabase.Instance.ExecuteWithDatabase(cn =>
+            UserDatabase.Instance.DBWrite(cn =>
             {
                 UpdateFirstDiscover(value, cn);
             });

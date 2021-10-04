@@ -78,7 +78,7 @@ namespace EliteDangerousCore
 
             if (tlutoadd.Count > 0)                      // now, on spinning rust, this takes ages for 600+ log files first time, so transaction it
             {
-                UserDatabase.Instance.ExecuteWithDatabase(cn =>
+                UserDatabase.Instance.DBWrite(cn =>
                 {
                     using (DbTransaction txn = cn.BeginTransaction())
                     {
@@ -94,7 +94,7 @@ namespace EliteDangerousCore
 
             for (int i = 0; i < readersToUpdate.Count; i++)
             {
-                UserDatabase.Instance.ExecuteWithDatabase(cn =>
+                UserDatabase.Instance.DBWrite(cn =>
                 {
                     int ji = 0;
 

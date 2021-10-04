@@ -618,7 +618,7 @@ namespace EliteDangerousCore
 
             if (updatesystems.Count > 0)
             {
-                UserDatabase.Instance.ExecuteWithDatabase(cn =>
+                UserDatabase.Instance.DBWrite(cn =>
                 {
                     using (DbTransaction txn = cn.BeginTransaction())        // take a transaction over this
                     {

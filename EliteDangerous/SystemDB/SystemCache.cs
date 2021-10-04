@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2021 EDDiscovery development team
+ * Copyright 2015 - 2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -323,12 +323,12 @@ namespace EliteDangerousCore.DB
             DB.SystemsDB.GetSystemListBySqDistancesFrom(distlist, x, y, z, maxitems, mindist, maxdist, spherical, cn, (s) => AddToCache(s));
         }
 
-        public static ISystem GetSystemByPosition(double x, double y, double z, int warnthreshold = 500)
+        public static ISystem GetSystemByPosition(double x, double y, double z, uint warnthreshold = 500)
         {
             return FindNearestSystemTo(x, y, z, 0.125, warnthreshold);
         }
 
-        public static ISystem FindNearestSystemTo(double x, double y, double z, double maxdistance, int warnthreshold = 500)
+        public static ISystem FindNearestSystemTo(double x, double y, double z, double maxdistance, uint warnthreshold = 500)
         {
             if (SystemsDatabase.Instance.RebuildRunning) // Return from cache if rebuild is running
             {
