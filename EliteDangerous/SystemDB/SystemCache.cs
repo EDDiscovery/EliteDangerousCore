@@ -312,7 +312,7 @@ namespace EliteDangerousCore.DB
             }
             else
             {
-                SystemsDatabase.Instance.DBRead(conn => GetSystemListBySqDistancesFrom(distlist, x, y, z, maxitems, mindist, maxdist, spherical, conn));
+                SystemsDatabase.Instance.DBRead(conn => GetSystemListBySqDistancesFrom(distlist, x, y, z, maxitems, mindist, maxdist, spherical, conn),5000);
             }
         }
 
@@ -388,7 +388,7 @@ namespace EliteDangerousCore.DB
             }
             else
             {
-                return SystemsDatabase.Instance.DBRead(conn => GetSystemNearestTo(currentpos, wantedpos, maxfromcurpos, maxfromwanted, routemethod, limitto, conn));
+                return SystemsDatabase.Instance.DBRead(conn => GetSystemNearestTo(currentpos, wantedpos, maxfromcurpos, maxfromwanted, routemethod, limitto, conn), 5000);
             }
         }
 

@@ -113,7 +113,7 @@ namespace EliteDangerousCore.DB
 
         internal static List<ISystem> FindStarWildcard(string name, int limit = int.MaxValue)
         {
-            return SystemsDatabase.Instance.DBRead(cn => FindStarWildcard(name, cn, limit));
+            return SystemsDatabase.Instance.DBRead(cn => FindStarWildcard(name, cn, limit), 2000);
         }
 
         internal static List<ISystem> FindStarWildcard(string name, SQLiteConnectionSystem cn, int limit = int.MaxValue)
