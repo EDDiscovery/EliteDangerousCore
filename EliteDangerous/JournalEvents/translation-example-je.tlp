@@ -436,6 +436,8 @@ SECTION JournalProgress
 .Trade: "Trade: ;%" @
 .Exploration: "Exploration: ;%" @
 .Federation: "Federation: ;%" @
+.Soldier: "Soldier: ;%" @
+.Exobiologist: "Exobiologist: ;%" @
 .Empire: "Empire: ;%" @
 .CQC: "CQC: ;%" @
 

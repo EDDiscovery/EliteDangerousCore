@@ -772,6 +772,8 @@ namespace EliteDangerousCore
         JournalProgress_Combat, // Combat:;%
         JournalProgress_Trade, // Trade:;%
         JournalProgress_Exploration, // Exploration:;%
+        JournalProgress_Soldier, // "Soldier: ;%" @
+        JournalProgress_Exobiologist, // "Exobiologist: ;%" @
         JournalProgress_Federation, // Federation:;%
         JournalProgress_Empire, // Empire:;%
         JournalProgress_CQC, // CQC:;%
