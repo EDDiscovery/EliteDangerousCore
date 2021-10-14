@@ -42,7 +42,8 @@ namespace EliteDangerousCore
 
         // oldest first
         public List<HistoryEntry> EntryOrder() { return historylist; }
-        public HistoryEntry this[int i] { get {return historylist[i]; } }       
+        public HistoryEntry this[int i] { get {return historylist[i]; } }
+        public HistoryEntry LastOrDefault { get { return historylist.LastOrDefault(); } }
 
         // combat, spanel,stats, history filter
         public List<HistoryEntry> LatestFirst() { return historylist.OrderByDescending(s => s.EntryNumber).ToList(); }
