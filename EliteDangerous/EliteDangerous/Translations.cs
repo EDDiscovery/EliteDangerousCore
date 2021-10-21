@@ -151,7 +151,8 @@ namespace EliteDangerousCore
         JournalEntry_onpad, // < on pad
         JournalEntry_Cockpit, // Cockpit:
         JournalEntry_Corrosion, // Corrosion:
-        JournalEntry_TotalCost, // Total Cost:; cr;N0
+        JournalEntry_TotalCost, // Total Cost: ; cr;N0
+        JournalEntry_TotalSale, // Total Sale: ; cr;N0
         JournalEntry_each, // each:; cr;N0
         JournalEntry_Drones, // Drones
         JournalEntry_Price, // Price:; cr;N0

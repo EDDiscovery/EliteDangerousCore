@@ -986,6 +986,7 @@ SECTION JournalEntry
 .Cockpit: "Cockpit: " @
 .Corrosion: "Corrosion: " @
 .TotalCost: "Total Cost: ; cr;N0" @
+.TotalSale: "Total Sale: ; cr;N0" @
 .each: "each: ; cr;N0" @
 .Drones: "Drones" @
 .Price: "Price: ; cr;N0" @

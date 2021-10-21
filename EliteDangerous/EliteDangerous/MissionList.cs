@@ -45,7 +45,7 @@ namespace EliteDangerousCore
 
         public string DestinationSystemStation()        // allowing for redirection
         {
-            return (Redirected != null) ? ("->" + Redirected.NewDestinationSystem.AppendPrePad(Redirected.NewDestinationStation, ":")) : Mission.DestinationSystem.AppendPrePad(Mission.DestinationStation, ":");
+            return (Redirected != null) ? ("->" + Redirected.NewDestinationSystem.AppendPrePad(Redirected.NewDestinationStation, ": ")) : Mission.DestinationSystem.AppendPrePad(Mission.DestinationStation, ": ");
         }
 
         public string MissionInfoColumn()            // Missions panel uses this for info column
