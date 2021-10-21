@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2021 EDDiscovery development team
+ * Copyright 2015 - 2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -45,7 +45,7 @@ namespace EliteDangerousCore.DB
             }
             else
             {
-                found = SystemsDatabase.Instance.ExecuteWithDatabase(conn => FindSystem(find, conn));
+                found = SystemsDatabase.Instance.DBRead(conn => FindSystem(find, conn));
 
                 // we need to do this after the normal connection above, as if we find something, we need to go into read write mode (took a moment to realise this)
 
@@ -81,7 +81,7 @@ namespace EliteDangerousCore.DB
         // core find, with database
         // find in cache, find in db, add to cache
 
-        public static ISystem FindSystem(ISystem find, SystemsDatabaseConnection cn)
+        public static ISystem FindSystem(ISystem find, SQLiteConnectionSystem cn)
         {
             ISystem orgsys = find;
 
@@ -100,23 +100,23 @@ namespace EliteDangerousCore.DB
 
                 if (find.EDSMID > 0)        // if we have an ID, look it up
                 {
-                    found = DB.SystemsDB.FindStar(find.EDSMID,cn.Connection);
+                    found = DB.SystemsDB.FindStar(find.EDSMID,cn);
 
                     if (found != null && findnameok )      // if we find it, use the find name in the return as the EDSM name may be out of date..
                         found.Name = find.Name;
                 }
 
                 if (found == null && findnameok)            // if not found but has a good name
-                    found = DB.SystemsDB.FindStar(find.Name,cn.Connection);   // find by name, no wildcards
+                    found = DB.SystemsDB.FindStar(find.Name,cn);   // find by name, no wildcards
 
                 if (found == null && find.HasCoordinate)        // finally, not found, but we have a co-ord, find it from the db  by distance
-                    found = DB.SystemsDB.GetSystemByPosition(find.X, find.Y, find.Z, cn.Connection);
+                    found = DB.SystemsDB.GetSystemByPosition(find.X, find.Y, find.Z, cn);
 
                 if (found == null)
                 {
-                    long newid = DB.SystemsDB.FindAlias(find.EDSMID, find.Name , cn.Connection);   // is there a named alias in there due to a system being renamed..
+                    long newid = DB.SystemsDB.FindAlias(find.EDSMID, find.Name , cn);   // is there a named alias in there due to a system being renamed..
                     if (newid >= 0)
-                        found = DB.SystemsDB.FindStar(newid,cn.Connection);  // find it using the new id
+                        found = DB.SystemsDB.FindStar(newid,cn);  // find it using the new id
                 }
 
                 if (found != null)                              // if we have a good db, go for it
@@ -218,13 +218,13 @@ namespace EliteDangerousCore.DB
             }
             else
             {
-                return SystemsDatabase.Instance.ExecuteWithDatabase(conn => FindSystemWildcard(name, conn, limit));
+                return SystemsDatabase.Instance.DBRead(conn => FindSystemWildcard(name, conn, limit));
             }
         }
 
-        static private List<ISystem> FindSystemWildcard(string name, SystemsDatabaseConnection cn, int limit = int.MaxValue)
+        static private List<ISystem> FindSystemWildcard(string name, SQLiteConnectionSystem cn, int limit = int.MaxValue)
         {
-            var list = DB.SystemsDB.FindStarWildcard(name, cn.Connection, limit);
+            var list = DB.SystemsDB.FindStarWildcard(name, cn, limit);
             if (list != null)
             {
                 foreach (var x in list)
@@ -244,7 +244,7 @@ namespace EliteDangerousCore.DB
 
             List<string> tolookup = new List<string>();
 
-            SystemsDatabase.Instance.ExecuteWithDatabase(conn =>
+            SystemsDatabase.Instance.DBRead(conn =>
             {
                 foreach (var s in sysnames)
                 {
@@ -312,23 +312,23 @@ namespace EliteDangerousCore.DB
             }
             else
             {
-                SystemsDatabase.Instance.ExecuteWithDatabase(conn => GetSystemListBySqDistancesFrom(distlist, x, y, z, maxitems, mindist, maxdist, spherical, conn));
+                SystemsDatabase.Instance.DBRead(conn => GetSystemListBySqDistancesFrom(distlist, x, y, z, maxitems, mindist, maxdist, spherical, conn),5000);
             }
         }
 
         private static void GetSystemListBySqDistancesFrom(BaseUtils.SortedListDoubleDuplicate<ISystem> distlist, double x, double y, double z,
                                                     int maxitems,
-                                                    double mindist, double maxdist, bool spherical, SystemsDatabaseConnection cn)
+                                                    double mindist, double maxdist, bool spherical, SQLiteConnectionSystem cn)
         {
-            DB.SystemsDB.GetSystemListBySqDistancesFrom(distlist, x, y, z, maxitems, mindist, maxdist, spherical, cn.Connection, (s) => AddToCache(s));
+            DB.SystemsDB.GetSystemListBySqDistancesFrom(distlist, x, y, z, maxitems, mindist, maxdist, spherical, cn, (s) => AddToCache(s));
         }
 
-        public static ISystem GetSystemByPosition(double x, double y, double z, int warnthreshold = 500)
+        public static ISystem GetSystemByPosition(double x, double y, double z, uint warnthreshold = 500)
         {
             return FindNearestSystemTo(x, y, z, 0.125, warnthreshold);
         }
 
-        public static ISystem FindNearestSystemTo(double x, double y, double z, double maxdistance, int warnthreshold = 500)
+        public static ISystem FindNearestSystemTo(double x, double y, double z, double maxdistance, uint warnthreshold = 500)
         {
             if (SystemsDatabase.Instance.RebuildRunning) // Return from cache if rebuild is running
             {
@@ -342,15 +342,15 @@ namespace EliteDangerousCore.DB
             }
             else
             {
-                return SystemsDatabase.Instance.ExecuteWithDatabase(conn => FindNearestSystemTo(x, y, z, maxdistance, conn), warnthreshold: warnthreshold);
+                return SystemsDatabase.Instance.DBRead(conn => FindNearestSystemTo(x, y, z, maxdistance, conn), warnthreshold: warnthreshold);
             }
         }
 
-        private static ISystem FindNearestSystemTo(double x, double y, double z, double maxdistance, SystemsDatabaseConnection cn)
+        private static ISystem FindNearestSystemTo(double x, double y, double z, double maxdistance, SQLiteConnectionSystem cn)
         {
             //System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch(); sw.Start();  System.Diagnostics.Debug.WriteLine("Look up " + x + "," + y + "," + z + " : " + maxdistance);
 
-            ISystem s = DB.SystemsDB.GetSystemByPosition(x, y, z, cn.Connection, maxdistance);
+            ISystem s = DB.SystemsDB.GetSystemByPosition(x, y, z, cn, maxdistance);
             if (s != null)
                 AddToCache(s);
 
@@ -388,7 +388,7 @@ namespace EliteDangerousCore.DB
             }
             else
             {
-                return SystemsDatabase.Instance.ExecuteWithDatabase(conn => GetSystemNearestTo(currentpos, wantedpos, maxfromcurpos, maxfromwanted, routemethod, limitto, conn));
+                return SystemsDatabase.Instance.DBRead(conn => GetSystemNearestTo(currentpos, wantedpos, maxfromcurpos, maxfromwanted, routemethod, limitto, conn), 5000);
             }
         }
 
@@ -397,10 +397,10 @@ namespace EliteDangerousCore.DB
                                                  double maxfromcurpos,
                                                  double maxfromwanted,
                                                  SystemsDB.SystemsNearestMetric routemethod,
-                                                 int limitto, 
-                                                 SystemsDatabaseConnection cn)
+                                                 int limitto,
+                                                 SQLiteConnectionSystem cn)
         {
-            ISystem sys = DB.SystemsDB.GetSystemNearestTo(currentpos, wantedpos, maxfromcurpos, maxfromwanted, routemethod, cn.Connection, (s) => AddToCache(s), limitto);
+            ISystem sys = DB.SystemsDB.GetSystemNearestTo(currentpos, wantedpos, maxfromcurpos, maxfromwanted, routemethod, cn, (s) => AddToCache(s), limitto);
 
             return sys;
         }

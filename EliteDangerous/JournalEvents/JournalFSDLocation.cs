@@ -474,6 +474,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public long? MarketID { get; set; }
         public int MapColor { get; set; }
+        public System.Drawing.Color MapColorARGB { get { return System.Drawing.Color.FromArgb(MapColor); } }
 
         public string StationFaction { get; set; }
         public string StationFactionState { get; set; }
@@ -571,6 +572,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool BoostUsed { get; set; }
         public int BoostValue { get; set; }
         public int MapColor { get; set; }
+        public System.Drawing.Color MapColorARGB { get { return System.Drawing.Color.FromArgb(MapColor); } }
         public bool EDSMFirstDiscover { get; set; }
         public string Body { get; set; }
         public int? BodyID { get; set; }
@@ -657,14 +659,14 @@ namespace EliteDangerousCore.JournalEvents
 
         public void SetMapColour(int mapcolour)
         {
-            UserDatabase.Instance.ExecuteWithDatabase(cn =>
+            UserDatabase.Instance.DBWrite(cn =>
             {
-                JObject jo = GetJson(Id, cn.Connection);
+                JObject jo = GetJson(Id, cn);
 
                 if (jo != null)
                 {
                     jo["EDDMapColor"] = mapcolour;
-                    UpdateJsonEntry(jo, cn.Connection);
+                    UpdateJsonEntry(jo, cn);
                     MapColor = mapcolour;
                 }
             });
@@ -672,9 +674,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateFirstDiscover(bool value)
         {
-            UserDatabase.Instance.ExecuteWithDatabase(cn =>
+            UserDatabase.Instance.DBWrite(cn =>
             {
-                UpdateFirstDiscover(value, cn.Connection);
+                UpdateFirstDiscover(value, cn);
             });
         }
 

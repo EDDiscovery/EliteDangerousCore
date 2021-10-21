@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2019 EDDiscovery development team
+ * Copyright 2015-2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -26,7 +26,7 @@ namespace EliteDangerousCore.DB
 
         internal static ISystem FindStar(string name)
         {
-            return SystemsDatabase.Instance.ExecuteWithDatabase(cn => FindStar(name, cn.Connection));
+            return SystemsDatabase.Instance.DBRead(cn => FindStar(name, cn));
         }
 
         internal static ISystem FindStar(string name, SQLiteConnectionSystem cn)
@@ -84,7 +84,7 @@ namespace EliteDangerousCore.DB
 
         internal static ISystem FindStar(long edsmid)
         {
-            return SystemsDatabase.Instance.ExecuteWithDatabase(cn => FindStar(edsmid, cn.Connection));
+            return SystemsDatabase.Instance.DBRead(cn => FindStar(edsmid, cn));
         }
 
         internal static ISystem FindStar(long edsmid, SQLiteConnectionSystem cn)
@@ -113,7 +113,7 @@ namespace EliteDangerousCore.DB
 
         internal static List<ISystem> FindStarWildcard(string name, int limit = int.MaxValue)
         {
-            return SystemsDatabase.Instance.ExecuteWithDatabase(cn => FindStarWildcard(name, cn.Connection, limit));
+            return SystemsDatabase.Instance.DBRead(cn => FindStarWildcard(name, cn, limit), 2000);
         }
 
         internal static List<ISystem> FindStarWildcard(string name, SQLiteConnectionSystem cn, int limit = int.MaxValue)

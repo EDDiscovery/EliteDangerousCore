@@ -279,10 +279,10 @@ namespace EliteDangerousCore.EDSM
             }
             else
             {
-                firstdiscovers = UserDatabase.Instance.ExecuteWithDatabase<string>(cn =>
+                firstdiscovers = UserDatabase.Instance.DBWrite<string>(cn =>
                 {
                     string firsts = "";
-                    using (var txn = cn.Connection.BeginTransaction())
+                    using (var txn = cn.BeginTransaction())
                     {
                         for (int i = 0; i < hl.Count && i < results.Count; i++)
                         {
@@ -300,13 +300,13 @@ namespace EliteDangerousCore.EDSM
                                     if (systemCreated)
                                     {
                                         System.Diagnostics.Debug.WriteLine("** EDSM indicates first entry for " + he.System.Name);
-                                        (he.journalEntry as JournalFSDJump).UpdateFirstDiscover(true, cn.Connection, txn);
+                                        (he.journalEntry as JournalFSDJump).UpdateFirstDiscover(true, cn, txn);
                                         firsts = firsts.AppendPrePad(he.System.Name, ";");
                                     }
                                 }
 
 //                                System.Diagnostics.Debug.WriteLine("Setting sync on " + (he.Indexno-1));
-                                he.journalEntry.SetEdsmSync(cn.Connection, txn);
+                                he.journalEntry.SetEdsmSync(cn, txn);
 
                                 if (msgnr == 500)
                                 {

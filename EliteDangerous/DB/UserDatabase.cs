@@ -1,36 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
-using System.Data.Common;
-using System.Text;
-using System.Linq;
-using System.Data;
+﻿/*
+ * Copyright 2016-2021 EDDiscovery development team
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ * 
+ * EDDiscovery is not affiliated with Frontier Developments plc.
+ */
+
 using SQLLiteExtensions;
-using System.Threading;
-using EliteDangerousCore.DB;
+using System;
 
 namespace EliteDangerousCore.DB
 {
-    public class UserDatabaseConnection : IDisposable
-    {
-        internal SQLiteConnectionUser Connection { get; private set; }
-
-        public UserDatabaseConnection()
-        {
-            Connection = new SQLiteConnectionUser();
-        }
-
-        public void Dispose()
-        {
-            if (Connection != null)
-            {
-                Connection.Dispose();
-                Connection = null;
-            }
-        }
-    }
-
-    public class UserDatabase : SQLProcessingThread<UserDatabaseConnection>
+    public class UserDatabase : SQLAdvProcessingThread<SQLiteConnectionUser>
     {
         private UserDatabase()
         {
@@ -40,96 +29,96 @@ namespace EliteDangerousCore.DB
 
         public void Initialize()
         {
-            ExecuteWithDatabase(cn => { cn.Connection.UpgradeUserDB(); });
+            DBWrite(cn => { cn.UpgradeUserDB(); });
         }
 
-        protected override UserDatabaseConnection CreateConnection()
+        protected override SQLiteConnectionUser CreateConnection()
         {
-            return new UserDatabaseConnection();
+            return new SQLiteConnectionUser();
         }
 
         // Register
 
         public bool KeyExists(string key)
         {
-            return ExecuteWithDatabase(db => db.Connection.RegisterClass.keyExists(key));
+            return DBRead(db => db.RegisterClass.keyExists(key));
         }
 
         public bool DeleteKey(string key)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.DeleteKey(key));
+            return DBWrite(db =>  db.RegisterClass.DeleteKey(key));
         }
 
         public T GetSetting<T>(string key, T defaultvalue)
         {
-            return ExecuteWithDatabase(db => db.Connection.RegisterClass.GetSetting(key, defaultvalue));
+            return DBRead(db => db.RegisterClass.GetSetting(key, defaultvalue));
         }
 
         public bool PutSetting<T>(string key, T defaultvalue)
         {
-            return ExecuteWithDatabase(db => db.Connection.RegisterClass.PutSetting(key, defaultvalue));
+            return DBWrite(db => db.RegisterClass.PutSetting(key, defaultvalue));
         }
 
         public int GetSettingInt(string key, int defaultvalue)
         {
-            return ExecuteWithDatabase(db => db.Connection.RegisterClass.GetSetting(key, defaultvalue));
+            return DBRead(db => db.RegisterClass.GetSetting(key, defaultvalue));
         }
 
         public bool PutSettingInt(string key, int intvalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.PutSetting(key, intvalue));
+            return DBWrite(db =>  db.RegisterClass.PutSetting(key, intvalue));
         }
 
         public double GetSettingDouble(string key, double defaultvalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.GetSetting(key, defaultvalue));
+            return DBRead(db =>  db.RegisterClass.GetSetting(key, defaultvalue));
         }
 
         public bool PutSettingDouble(string key, double doublevalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.PutSetting(key, doublevalue));
+            return DBWrite(db =>  db.RegisterClass.PutSetting(key, doublevalue));
         }
 
         public bool GetSettingBool(string key, bool defaultvalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.GetSetting(key, defaultvalue));
+            return DBRead(db =>  db.RegisterClass.GetSetting(key, defaultvalue));
         }
 
         public bool PutSettingBool(string key, bool boolvalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.PutSetting(key, boolvalue));
+            return DBWrite(db =>  db.RegisterClass.PutSetting(key, boolvalue));
         }
 
         public string GetSettingString(string key, string defaultvalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.GetSetting(key, defaultvalue));
+            return DBRead(db =>  db.RegisterClass.GetSetting(key, defaultvalue));
         }
 
         public bool PutSettingString(string key, string strvalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.PutSetting(key, strvalue));
+            return DBWrite(db =>  db.RegisterClass.PutSetting(key, strvalue));
         }
 
         public DateTime GetSettingDate(string key, DateTime defaultvalue)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.GetSetting(key, defaultvalue));
+            return DBRead(db =>  db.RegisterClass.GetSetting(key, defaultvalue));
         }
 
         public bool PutSettingDate(string key, DateTime value)
         {
-            return ExecuteWithDatabase(db =>  db.Connection.RegisterClass.PutSetting(key, value));
+            return DBWrite(db =>  db.RegisterClass.PutSetting(key, value));
         }
 
         public void RebuildIndexes(Action<string> logger)
         {
             System.Threading.Tasks.Task.Factory.StartNew(() =>
             {
-                ExecuteWithDatabase(db =>
+                DBWrite(db =>
                 {
                     logger?.Invoke("Removing indexes");
-                    db.Connection.DropUserDBTableIndexes();
+                    db.DropUserDBTableIndexes();
                     logger?.Invoke("Rebuilding indexes, please wait");
-                    db.Connection.CreateUserDBTableIndexes();
+                    db.CreateUserDBTableIndexes();
                     logger?.Invoke("Indexes rebuilt");
                 });
             });

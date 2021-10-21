@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2019 EDDiscovery development team
+ * Copyright 2019-2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -65,7 +65,7 @@ namespace EliteDangerousCore.DB
 
         internal bool Add()
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Add(cn.Connection); });
+            return UserDatabase.Instance.DBWrite<bool>(cn => { return Add(cn); });
         }
 
         private bool Add(SQLiteConnectionUser cn)
@@ -92,7 +92,7 @@ namespace EliteDangerousCore.DB
 
         internal bool Update()
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Update(cn.Connection); });
+            return UserDatabase.Instance.DBWrite<bool>(cn => { return Update(cn); });
         }
 
         private bool Update(SQLiteConnectionUser cn)
@@ -115,7 +115,7 @@ namespace EliteDangerousCore.DB
 
         public bool Delete()
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Delete(cn.Connection, ID); });
+            return UserDatabase.Instance.DBWrite<bool>(cn => { return Delete(cn, ID); });
         }
 
         static private bool Delete(SQLiteConnectionUser cn, long id)
@@ -162,9 +162,9 @@ namespace EliteDangerousCore.DB
 
             try
             {
-                return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn =>
+                return UserDatabase.Instance.DBRead<bool>(cn =>
                 {
-                    using (DbCommand cmd = cn.Connection.CreateCommand("select * from CaptainsLog"))
+                    using (DbCommand cmd = cn.CreateCommand("select * from CaptainsLog"))
                     {
                         List<CaptainsLogClass> logs = new List<CaptainsLogClass>();
 

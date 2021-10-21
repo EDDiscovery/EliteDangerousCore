@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2019 EDDiscovery development team
+ * Copyright 2015-2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -23,9 +23,9 @@ namespace EliteDangerousCore.DB
     {
         public static void RemoveGridSystems(int[] gridids, Action<string> report = null)
         {
-            SystemsDatabase.Instance.ExecuteWithDatabase( action: db =>
+            SystemsDatabase.Instance.DBWrite( db =>
             {
-                var cn = db.Connection;
+                var cn = db;
                 int gridspergo = 4;
 
                 report?.Invoke("Delete System Information from sector:");
@@ -58,9 +58,9 @@ namespace EliteDangerousCore.DB
 
         public static void Vacuum()
         {
-            SystemsDatabase.Instance.ExecuteWithDatabase(action: db =>
+            SystemsDatabase.Instance.DBWrite(db =>
             {
-                db.Connection.Vacuum();
+                db.Vacuum();
             });
         }
     }

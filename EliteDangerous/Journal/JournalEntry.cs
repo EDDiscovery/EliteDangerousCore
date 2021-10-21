@@ -91,22 +91,22 @@ namespace EliteDangerousCore
 
         public void SetStartFlag()
         {
-            UserDatabase.Instance.ExecuteWithDatabase(cn => UpdateSyncFlagBit(SyncFlags.StartMarker, true, SyncFlags.StopMarker, false, cn.Connection));
+            UserDatabase.Instance.DBWrite(cn => UpdateSyncFlagBit(SyncFlags.StartMarker, true, SyncFlags.StopMarker, false, cn));
         }
 
         public void SetEndFlag()
         {
-            UserDatabase.Instance.ExecuteWithDatabase(cn => UpdateSyncFlagBit(SyncFlags.StartMarker, false, SyncFlags.StopMarker, true, cn.Connection));
+            UserDatabase.Instance.DBWrite(cn => UpdateSyncFlagBit(SyncFlags.StartMarker, false, SyncFlags.StopMarker, true, cn));
         }
 
         public void ClearStartEndFlag()
         {
-            UserDatabase.Instance.ExecuteWithDatabase(cn => UpdateSyncFlagBit(SyncFlags.StartMarker, false, SyncFlags.StopMarker, false, cn.Connection));
+            UserDatabase.Instance.DBWrite(cn => UpdateSyncFlagBit(SyncFlags.StartMarker, false, SyncFlags.StopMarker, false, cn));
         }
 
         public void SetEdsmSync()
         {
-            UserDatabase.Instance.ExecuteWithDatabase(cn => UpdateSyncFlagBit(SyncFlags.EDSM, true, SyncFlags.NoBit, false, cn.Connection));
+            UserDatabase.Instance.DBWrite(cn => UpdateSyncFlagBit(SyncFlags.EDSM, true, SyncFlags.NoBit, false, cn));
         }
 
         internal void SetEdsmSync(SQLiteConnectionUser cn , DbTransaction txn = null)
@@ -116,17 +116,17 @@ namespace EliteDangerousCore
 
         public void SetEddnSync()
         {
-            UserDatabase.Instance.ExecuteWithDatabase( cn => UpdateSyncFlagBit(SyncFlags.EDDN, true, SyncFlags.NoBit, false, cn.Connection));
+            UserDatabase.Instance.DBWrite( cn => UpdateSyncFlagBit(SyncFlags.EDDN, true, SyncFlags.NoBit, false, cn));
         }
 
         public static void SetEdsmSyncList(List<JournalEntry> jlist)
         {
-            UserDatabase.Instance.ExecuteWithDatabase(cn =>
+            UserDatabase.Instance.DBWrite(cn =>
             {
-                using (var txn = cn.Connection.BeginTransaction())
+                using (var txn = cn.BeginTransaction())
                 {
                     foreach (var he in jlist)
-                        he.SetEdsmSync(cn.Connection, txn);
+                        he.SetEdsmSync(cn, txn);
                     txn.Commit();
                 }
             });

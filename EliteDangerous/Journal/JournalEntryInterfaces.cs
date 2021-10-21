@@ -83,6 +83,7 @@ namespace EliteDangerousCore
     public interface IJournalJumpColor
     {
         int MapColor { get; set; }
+        System.Drawing.Color MapColorARGB { get; }
     }
 
     public interface IStatsJournalEntry

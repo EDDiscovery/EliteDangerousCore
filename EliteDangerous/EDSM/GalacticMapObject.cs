@@ -19,10 +19,11 @@ using System;
 using System.Collections.Generic;
 using BaseUtils.JSON;
 using System.Diagnostics;
+using System.Xml.Linq;
+using BaseUtils;
 
 namespace EliteDangerousCore.EDSM
 {
-    [DebuggerDisplay("GMO {name} {type}")]
     public class GalacticMapObject
     {
         public int id;
@@ -33,13 +34,33 @@ namespace EliteDangerousCore.EDSM
         public string colour;
         public List<Vector3> points;
         public string description;
-        public string descriptionhtml;
 
         public GalMapType galMapType;
 
         public GalacticMapObject()
         {
             points = new List<Vector3>();
+        }
+
+        public void PrintElement(XElement x, int level)
+        {
+            string pad = "                    ".Substring(0, level);
+            System.Diagnostics.Debug.WriteLine(pad + $"{x.NodeType} {x.Name} : {x.Value}");
+            //                if (x.NodeType == System.Xml.XmlNodeType.Element)
+            if (x.HasAttributes)
+            {
+                foreach (var y in x.Attributes())
+                {
+                    System.Diagnostics.Debug.WriteLine(pad + $" {x.Name} attr {y.NodeType} {y.Name} : {y.Value}");
+                }
+            }
+            if (x.HasElements)
+            {
+                foreach (XElement y in x.Descendants())
+                {
+                    PrintElement(y, level + 1);
+                }
+            }
         }
 
         public GalacticMapObject(JObject jo)
@@ -50,9 +71,17 @@ namespace EliteDangerousCore.EDSM
             galMapSearch = jo["galMapSearch"].Str("");
             galMapUrl = jo["galMapUrl"].Str("");
             colour = jo["color"].Str("Orange");
-            description = jo["descriptionMardown"].Str("No description");
-            descriptionhtml = jo["descriptionHtml"].Str("");
-            
+            description = jo["descriptionMardown"].Str("No description");       // default back up description in case html fails
+
+            var descriptionhtml = jo["descriptionHtml"].StrNull();
+
+            if (descriptionhtml != null)
+            {
+                string res = ("<Body>" + descriptionhtml + "</Body>").XMLtoText();
+                if (res != null)
+                    description = res;
+            }
+
             points = new List<Vector3>();
 
             try

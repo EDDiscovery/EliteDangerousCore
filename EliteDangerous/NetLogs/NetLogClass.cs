@@ -78,13 +78,13 @@ namespace EliteDangerousCore
 
             if (tlutoadd.Count > 0)                      // now, on spinning rust, this takes ages for 600+ log files first time, so transaction it
             {
-                UserDatabase.Instance.ExecuteWithDatabase(cn =>
+                UserDatabase.Instance.DBWrite(cn =>
                 {
-                    using (DbTransaction txn = cn.Connection.BeginTransaction())
+                    using (DbTransaction txn = cn.BeginTransaction())
                     {
                         foreach (var tlu in tlutoadd)
                         {
-                            tlu.Add(cn.Connection, txn);
+                            tlu.Add(cn, txn);
                         }
 
                         txn.Commit();
@@ -94,17 +94,17 @@ namespace EliteDangerousCore
 
             for (int i = 0; i < readersToUpdate.Count; i++)
             {
-                UserDatabase.Instance.ExecuteWithDatabase(cn =>
+                UserDatabase.Instance.DBWrite(cn =>
                 {
                     int ji = 0;
 
                     NetLogFileReader reader = readersToUpdate[i];
                     updateProgress(i * 100 / readersToUpdate.Count, reader.TravelLogUnit.FullName);
 
-                    var systems = JournalEntry.GetAllByTLU(reader.ID, cn.Connection).OfType<JournalLocOrJump>().ToList();
+                    var systems = JournalEntry.GetAllByTLU(reader.ID, cn).OfType<JournalLocOrJump>().ToList();
                     var last = systems.LastOrDefault();     // find last system recorded for this TLU, may be null if no systems..
 
-                    using (DbTransaction tn = cn.Connection.BeginTransaction())
+                    using (DbTransaction tn = cn.BeginTransaction())
                     {
                         var ienum = reader.ReadSystems(last, cancelRequested, currentcmdrid);
                         System.Diagnostics.Debug.WriteLine("Scanning TLU " + reader.ID + " " + reader.FullName);
@@ -131,12 +131,12 @@ namespace EliteDangerousCore
 
                             if (!(previssame || nextissame))
                             {
-                                je.Add(jo, cn.Connection, tn);
+                                je.Add(jo, cn, tn);
                                 System.Diagnostics.Debug.WriteLine("Add {0} {1}", je.EventTimeUTC, jo.ToString());
                             }
                         }
 
-                        reader.TravelLogUnit.Update(cn.Connection, tn);
+                        reader.TravelLogUnit.Update(cn, tn);
 
                         tn.Commit();
                     }

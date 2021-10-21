@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2019 EDDiscovery development team
+ * Copyright 2015-2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -19,13 +19,9 @@ using System;
 
 namespace EliteDangerousCore.DB
 {
-    internal class SQLiteConnectionSystem : SQLExtConnectionRegister<SQLiteConnectionSystem>
+    public class SQLiteConnectionSystem : SQLExtConnectionRegister
     {
-        public SQLiteConnectionSystem() : this(false)
-        {
-        }
-
-        public SQLiteConnectionSystem(bool ro) : base(EliteDangerousCore.EliteConfigInstance.InstanceOptions.SystemDatabasePath, utctimeindicator: true, mode: ro ? AccessMode.Reader : AccessMode.ReaderWriter)
+        public SQLiteConnectionSystem() : base(EliteDangerousCore.EliteConfigInstance.InstanceOptions.SystemDatabasePath, utctimeindicator: true)
         {
         }
 

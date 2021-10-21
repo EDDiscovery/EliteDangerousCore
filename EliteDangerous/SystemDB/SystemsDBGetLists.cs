@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2019 EDDiscovery development team
+ * Copyright 2015-2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -27,9 +27,9 @@ namespace EliteDangerousCore.DB
             if (SystemsDatabase.Instance.RebuildRunning)
                 return 0;
 
-            return SystemsDatabase.Instance.ExecuteWithDatabase(db =>
+            return SystemsDatabase.Instance.DBRead(db =>
             {
-                var cn = db.Connection;
+                var cn = db;
                 using (DbCommand cmd = cn.CreateCommand("select Count(1) from Systems"))
                 {
                     return (long)cmd.ExecuteScalar();
@@ -47,12 +47,12 @@ namespace EliteDangerousCore.DB
             if (SystemsDatabase.Instance.RebuildRunning)
                 return ret;
 
-            return SystemsDatabase.Instance.ExecuteWithDatabase(db =>
+            return SystemsDatabase.Instance.DBRead(db =>
             {
 
                 //BaseUtils.AppTicks.TickCountLap("Star");
 
-                var cn = db.Connection;
+                var cn = db;
 
                 using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed, where, orderby, limit: limit, joinlist: MakeSystemQueryNamedJoinList))
                 {
@@ -82,10 +82,10 @@ namespace EliteDangerousCore.DB
             if (SystemsDatabase.Instance.RebuildRunning)
                 return ret;
 
-            return SystemsDatabase.Instance.ExecuteWithDatabase(db =>
+            return SystemsDatabase.Instance.DBRead(db =>
             {
 
-                var cn = db.Connection;
+                var cn = db;
 
                 using (DbCommand cmd = cn.CreateSelect("Systems s",
                                                        outparas: "s.x,s.y,s.z",
@@ -104,6 +104,85 @@ namespace EliteDangerousCore.DB
                 return ret;
             });
         }
+
+        // function provides a V[] vector of positions and a text list of names in a given area, lower left bottom defined by x/y/z
+        // it returns a too long vector, for speed reasons
+        // may return zero entries with empty arrays if nothing is present
+        // may return zero/null if system DB is being built
+        public static int GetSystemList<V>(float x, float y, float z, float blocksize, ref string[] names, ref V[] vectors, Func<int, int, int, V> tovect, int chunksize = 10000)
+        {
+            string[] namesout = null;
+            V[] vectsout = null;
+            int fill = 0;
+
+            if (!SystemsDatabase.Instance.RebuildRunning) // use the cache is db is updating
+            {
+                SystemsDatabase.Instance.DBRead(db =>
+                {
+                    fill = GetSystemList<V>(x, y, z, blocksize, ref namesout, ref vectsout, tovect, db, chunksize);
+                }, warnthreshold: 5000);
+            }
+
+            names = namesout;
+            vectors = vectsout;
+            return fill;
+        }
+
+
+        public static int GetSystemList<V>(float x, float y, float z, float blocksize, ref string[] names, ref V[] vectors, Func<int, int, int, V> tovect, SQLiteConnectionSystem cn, int chunksize )
+        {
+            names = new string[chunksize];
+            vectors = new V[chunksize];
+            int fillpos = 0;
+
+            using (DbCommand cmd = cn.CreateSelect("Systems s",
+                                                    outparas: "s.x, s.y, s.z, c.name, s.nameid, n.Name",
+                                                    where: "s.x>=@p1 AND s.x<@p2 AND s.y>=@p3 AND s.y<@p4 AND s.z>=@p5 AND s.z<@p6",
+                                                    paras: new Object[] {   SystemClass.DoubleToInt(x), SystemClass.DoubleToInt(x+blocksize),
+                                                                            SystemClass.DoubleToInt(y), SystemClass.DoubleToInt(y+blocksize),
+                                                                            SystemClass.DoubleToInt(z),SystemClass.DoubleToInt(z+blocksize) },
+                                                    joinlist: MakeSystemQueryNamedJoinList
+                                                    ))
+            {
+                //System.Diagnostics.Debug.WriteLine( cn.ExplainQueryPlanString(cmd));
+
+                using (DbDataReader reader = cmd.ExecuteReader())
+                {
+                    //System.Diagnostics.Debug.WriteLine("sysLapStart : " + BaseUtils.AppTicks.TickCountLap());
+
+                    Object[] data = new Object[4];
+
+                    while (reader.Read())
+                    {
+                        if (fillpos == names.Length)    // if reached limit, increase
+                        {
+                            chunksize *= 2;             // increase chunksize each time
+                            Array.Resize(ref names, names.Length + chunksize);
+                            Array.Resize(ref vectors, vectors.Length + chunksize);
+                        }
+
+                        int sx = reader.GetInt32(0);
+                        int sy = reader.GetInt32(1);
+                        int sz = reader.GetInt32(2);
+
+                        vectors[fillpos] = tovect(sx, sy, sz);
+
+                        EliteNameClassifier ec = new EliteNameClassifier((ulong)reader.GetInt64(4));
+                        ec.SectorName = reader.GetString(3);
+
+                        if (ec.IsNamed)
+                            ec.StarName = reader.GetString(5);
+
+                        names[fillpos] = ec.ToString();
+                        fillpos++;
+
+                    }
+                }
+            }
+
+            return fillpos;
+        }
+
     }
 }
 

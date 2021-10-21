@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2020 EDDiscovery development team
+ * Copyright 2016-2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -232,7 +232,7 @@ namespace EliteDangerousCore.DB
 
         internal bool Add()
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Add(cn.Connection); });
+            return UserDatabase.Instance.DBWrite<bool>(cn => { return Add(cn); });
         }
 
         private bool Add(SQLiteConnectionUser cn)
@@ -265,7 +265,7 @@ namespace EliteDangerousCore.DB
 
         internal bool Update()
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Update(cn.Connection); });
+            return UserDatabase.Instance.DBWrite<bool>(cn => { return Update(cn); });
         }
 
         private bool Update(SQLiteConnectionUser cn)
@@ -294,7 +294,7 @@ namespace EliteDangerousCore.DB
 
         internal bool Delete()
         {
-            return UserDatabase.Instance.ExecuteWithDatabase<bool>(cn => { return Delete(cn.Connection); });
+            return UserDatabase.Instance.DBWrite<bool>(cn => { return Delete(cn); });
         }
 
         private bool Delete(SQLiteConnectionUser cn)
@@ -383,9 +383,9 @@ namespace EliteDangerousCore.DB
             {
                 List<BookmarkClass> bookmarks = new List<BookmarkClass>();
 
-                UserDatabase.Instance.ExecuteWithDatabase(cn =>
+                UserDatabase.Instance.DBRead(cn =>
                 {
-                    using (DbCommand cmd = cn.Connection.CreateCommand("select * from Bookmarks"))
+                    using (DbCommand cmd = cn.CreateCommand("select * from Bookmarks"))
                     {
                         using (DbDataReader rdr = cmd.ExecuteReader())
                         {

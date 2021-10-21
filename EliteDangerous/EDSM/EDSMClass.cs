@@ -412,7 +412,7 @@ namespace EliteDangerousCore.EDSM
                     if (enddatestr == null || !DateTime.TryParseExact(enddatestr, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out logendtime))
                         logendtime = DateTime.MinValue;
 
-                    var tofetch = SystemsDatabase.Instance.ExecuteWithDatabase(db =>
+                    var tofetch = SystemsDatabase.Instance.DBRead(db =>
                     {
                         var xtofetch = new List<Tuple<JObject, ISystem>>();
 
@@ -1136,5 +1136,26 @@ namespace EliteDangerousCore.EDSM
         }
 
         #endregion
+
+        public static bool DownloadGMOFileFromEDSM(string file)
+        {
+            try
+            {
+                EDSMClass edsm = new EDSMClass();
+                string url = EDSMClass.ServerAddress + "en/galactic-mapping/json-edd";
+                bool newfile;
+
+                return BaseUtils.DownloadFile.HTTPDownloadFile(url, file, false, out newfile);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine("DownloadFromEDSM exception:" + ex.Message);
+            }
+
+            return false;
+        }
+
+
+
     }
 }

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2019 EDDiscovery development team
+ * Copyright 2015-2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -38,9 +38,9 @@ namespace EliteDangerousCore.DB
 
         public static long ParseAlias(TextReader textreader)
         {
-            return SystemsDatabase.Instance.ExecuteWithDatabase(func: db =>
+            return SystemsDatabase.Instance.DBWrite(db =>
             {
-                var cn = db.Connection;
+                var cn = db;
                 System.Diagnostics.Debug.WriteLine("Update aliases");
 
                 long updates = 0;
@@ -133,9 +133,9 @@ namespace EliteDangerousCore.DB
 
         public static long FindAlias(long edsmid, string name)
         {
-            return SystemsDatabase.Instance.ExecuteWithDatabase(db =>
+            return SystemsDatabase.Instance.DBRead(db =>
             {
-                return FindAlias(edsmid, name, db.Connection);
+                return FindAlias(edsmid, name, db);
             });
         }
 
@@ -157,9 +157,9 @@ namespace EliteDangerousCore.DB
 
         public static List<ISystem> FindAliasWildcard(string name)
         {
-            return SystemsDatabase.Instance.ExecuteWithDatabase(db =>
+            return SystemsDatabase.Instance.DBRead(db =>
             {
-                return FindAliasWildcard(name, db.Connection);
+                return FindAliasWildcard(name, db);
             });
         }
 

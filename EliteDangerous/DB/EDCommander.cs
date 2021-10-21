@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2021 EDDiscovery development team
+ * Copyright 2015-2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -129,9 +129,9 @@ namespace EliteDangerousCore
                                         string homesystem = null, float mapzoom = 1.0f, bool mapcentreonselection = true, int mapcolour = -1,
                                         bool toigau = false, string options = "{}")
         {
-            EDCommander cmdr = UserDatabase.Instance.ExecuteWithDatabase<EDCommander>(cn =>
+            EDCommander cmdr = UserDatabase.Instance.DBWrite<EDCommander>(cn =>
             {
-                using (DbCommand cmd = cn.Connection.CreateCommand("INSERT INTO Commanders (Name,EdsmName,EdsmApiKey,JournalDir,Deleted, SyncToEdsm, SyncFromEdsm, SyncToEddn, NetLogDir, SyncToEGO, EGOName, EGOAPIKey, SyncToInara, InaraName, InaraAPIKey, HomeSystem, MapColour, MapCentreOnSelection, MapZoom, SyncToIGAU,Options) " +
+                using (DbCommand cmd = cn.CreateCommand("INSERT INTO Commanders (Name,EdsmName,EdsmApiKey,JournalDir,Deleted, SyncToEdsm, SyncFromEdsm, SyncToEddn, NetLogDir, SyncToEGO, EGOName, EGOAPIKey, SyncToInara, InaraName, InaraAPIKey, HomeSystem, MapColour, MapCentreOnSelection, MapZoom, SyncToIGAU,Options) " +
                                                           "VALUES (@Name,@EdsmName,@EdsmApiKey,@JournalDir,@Deleted, @SyncToEdsm, @SyncFromEdsm, @SyncToEddn, @NetLogDir, @SyncToEGO, @EGOName, @EGOApiKey, @SyncToInara, @InaraName, @InaraAPIKey, @HomeSystem, @MapColour, @MapCentreOnSelection, @MapZoom, @SyncToIGAU,@Options)"))
                 {
 
@@ -159,7 +159,7 @@ namespace EliteDangerousCore
                     cmd.ExecuteNonQuery();
                 }
 
-                using (DbCommand cmd = cn.Connection.CreateCommand("SELECT * FROM Commanders WHERE rowid = last_insert_rowid()"))
+                using (DbCommand cmd = cn.CreateCommand("SELECT * FROM Commanders WHERE rowid = last_insert_rowid()"))
                 {
                     using (DbDataReader reader = cmd.ExecuteReader())
                     {
@@ -179,9 +179,9 @@ namespace EliteDangerousCore
 
         public static void Update(EDCommander cmdr)
         {
-            UserDatabase.Instance.ExecuteWithDatabase(cn =>
+            UserDatabase.Instance.DBWrite(cn =>
             {
-                using (DbCommand cmd = cn.Connection.CreateCommand(
+                using (DbCommand cmd = cn.CreateCommand(
                     "UPDATE Commanders SET Name=@Name, EdsmName=@EdsmName, EdsmApiKey=@EdsmApiKey, NetLogDir=@NetLogDir, JournalDir=@JournalDir, " +
                     "SyncToEdsm=@SyncToEdsm, SyncFromEdsm=@SyncFromEdsm, SyncToEddn=@SyncToEddn, SyncToEGO=@SyncToEGO, EGOName=@EGOName, " +
                     "EGOAPIKey=@EGOApiKey, SyncToInara=@SyncToInara, InaraName=@InaraName, InaraAPIKey=@InaraAPIKey, HomeSystem=@HomeSystem, " +
@@ -220,9 +220,9 @@ namespace EliteDangerousCore
         {
             Commanders.Remove(cmdr.Id);
 
-            UserDatabase.Instance.ExecuteWithDatabase(cn =>
+            UserDatabase.Instance.DBWrite(cn =>
             {
-                using (DbCommand cmd = cn.Connection.CreateCommand("UPDATE Commanders SET Deleted = 1 WHERE Id = @Id"))
+                using (DbCommand cmd = cn.CreateCommand("UPDATE Commanders SET Deleted = 1 WHERE Id = @Id"))
                 {
                     cmd.AddParameterWithValue("@Id", cmdr.Id);
                     cmd.ExecuteNonQuery();
@@ -366,9 +366,9 @@ namespace EliteDangerousCore
             {
                 intcmdrdict = new Dictionary<int, EDCommander>();
 
-                UserDatabase.Instance.ExecuteWithDatabase(cn =>
+                UserDatabase.Instance.DBRead(cn =>
                 {
-                    using (DbCommand cmd = cn.Connection.CreateCommand("SELECT * FROM Commanders Where Deleted=0"))
+                    using (DbCommand cmd = cn.CreateCommand("SELECT * FROM Commanders Where Deleted=0"))
                     {
                         using (DbDataReader reader = cmd.ExecuteReader())
                         {
