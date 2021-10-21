@@ -146,6 +146,10 @@ namespace EliteDangerousCore.JournalEvents
             public long AssassinationProfits { get; set; }
             public long HighestSingleReward { get; set; }
             public int SkimmersKilled { get; set; }
+            public int OnFootCombatBonds { get; set; }
+            public long OnFootCombatBondsProfits { get; set; }
+            public int OnFootVehiclesDestroyed { get; set; }
+            public int OnFootShipsDestroyed { get; set; }
             public int DropshipsTaken { get; set; }
             public int DropShipsBooked { get; set; }
             public int DropshipsCancelled { get; set; }
@@ -165,7 +169,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Bounties : ;;N0".T(EDTx.CombatClass_Bounties), BountiesClaimed,
+                    "Bounties: ;;N0".T(EDTx.CombatClass_Bounties), BountiesClaimed,
                     "Bounty Profits: ;cr;N0".T(EDTx.CombatClass_BountyProfits), BountyHuntingProfit,
                     "Combat Bonds: ;;N0".T(EDTx.CombatClass_CombatBonds), CombatBonds,
                     "Combat Bond Profits: ;cr;N0".T(EDTx.CombatClass_CombatBondProfits), CombatBondProfits,
@@ -173,6 +177,10 @@ namespace EliteDangerousCore.JournalEvents
                     "Assassination Profits: ;cr;N0".T(EDTx.CombatClass_AssassinationProfits), AssassinationProfits,
                     "Highest Reward: ;cr;N0".T(EDTx.CombatClass_HighestReward), HighestSingleReward,
                     "Skimmers Killed: ;;N0".T(EDTx.CombatClass_SkimmersKilled), SkimmersKilled,
+                    "Surface Combat Bonds: ;;N0".T(EDTx.CombatClass_OnFootCombatBonds), OnFootCombatBonds,
+                    "Surface Combat Bonds Profits: ;cr;N0".T(EDTx.CombatClass_OnFootCombatBondsProfits), OnFootCombatBondsProfits,
+                    "Vehicles Destroyed on Foot: ;;N0".T(EDTx.CombatClass_OnFootVehiclesDestroyed), OnFootVehiclesDestroyed,
+                    "Ships Destroyed on Foot: ;;N0".T(EDTx.CombatClass_OnFootShipsDestroyed), OnFootShipsDestroyed,
                     "Dropships Taken: ;;N0".T(EDTx.CombatClass_DropshipsTaken), DropshipsTaken,
                     "Dropships Booked: ;;N0".T(EDTx.CombatClass_DropshipsBooked), DropShipsBooked,
                     "Dropships Cancelled: ;;N0".T(EDTx.CombatClass_DropshipsCancelled), DropshipsCancelled,
@@ -318,6 +326,7 @@ namespace EliteDangerousCore.JournalEvents
             public int TotalHyperspaceJumps { get; set; }
             public double GreatestDistanceFromStart { get; set; }
             public int TimePlayed { get; set; }
+            public long OnFootDistanceTravelled { get; set; }
             public int ShuttleJourneys { get; set; }
             public long ShuttleDistanceTravelled { get; set; }
             public long SpentOnShuttles { get; set; }
@@ -340,6 +349,7 @@ public string Format(string frontline = "    ")
                         "No of Jumps: ;;N0".T(EDTx.ExplorationClass_NoofJumps), TotalHyperspaceJumps,
                         "Greatest Distance: ;ly;N0".T(EDTx.ExplorationClass_GreatestDistance), GreatestDistanceFromStart,
                         "Time Played: ".T(EDTx.ExplorationClass_TimePlayed), TimePlayed.SecondsToDHMString(),
+                        "Distance Travelled on Foot: ;m;N0".T(EDTx.ExplorationClass_OnFootDistanceTravelled), OnFootDistanceTravelled,
                         "Shuttle Journeys: ;;N0".T(EDTx.ExplorationClass_ShuttleJourneys), ShuttleJourneys,
                         "Shuttle Distance Travelled: ;ly;N0".T(EDTx.ExplorationClass_ShuttleDistanceTravelled), ShuttleDistanceTravelled,
                         "Credits Spent on Shuttles: ;cr;N0".T(EDTx.ExplorationClass_SpentOnShuttles), SpentOnShuttles,
@@ -351,21 +361,24 @@ public string Format(string frontline = "    ")
 
         public class PassengerMissionsClass
         {
+            public int Accepted { get; set; }
+            public int Disgruntled { get; set; }
             public int Bulk { get; set; }
             public int VIP { get; set; }
-            public int Accepted { get; set; }
+            
             public int Delivered { get; set; }
-            public int Disgruntled { get; set; }
             public int Ejected { get; set; }
+             
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Accepted Mission Passengers: ;;N0".T(EDTx.PassengerMissionsClass_Accepted), Bulk,
-                    "Bulk Mission Passengers: ;;N0".T(EDTx.PassengerMissionsClass_BulkMissionPassengers), Bulk,
-                    "VIP Mission Passengers: ;;N0".T(EDTx.PassengerMissionsClass_VIPMissionPassengers), VIP, 
-                    "Passengers Delivered: ;;N0".T(EDTx.PassengerMissionsClass_PassengersDelivered), Delivered,
-                    "Passengers Ejected: ;;N0".T(EDTx.PassengerMissionsClass_PassengersEjected), Ejected,
-                    "Passengers Disgruntled: ;;N0".T(EDTx.PassengerMissionsClass_PassengersDisgrunted), Ejected);
+                    "Accepted Passenger Missions: ;;N0".T(EDTx.PassengerMissionsClass_Accepted), Accepted,
+                    "Passengers Disgruntled: ;;N0".T(EDTx.PassengerMissionsClass_PassengersDisgrunted), Disgruntled,
+                    "Total Bulk Passengers Delivered: ;;N0".T(EDTx.PassengerMissionsClass_BulkMissionPassengers), Bulk,
+                    "Total VIPs Delivered: ;;N0".T(EDTx.PassengerMissionsClass_VIPMissionPassengers), VIP,
+                    "Total Delivered: ;;N0".T(EDTx.PassengerMissionsClass_PassengersDelivered), Delivered,
+                    "Total Ejected: ;;N0".T(EDTx.PassengerMissionsClass_PassengersEjected), Ejected);
+                    
             }
         }
 
@@ -483,6 +496,8 @@ public string Format(string frontline = "    ")
             public int Grade3MaterialsTraded { get; set; }
             public int Grade4MaterialsTraded { get; set; }
             public int Grade5MaterialsTraded { get; set; }
+            public int AssetsTradedIn { get; set; }
+            public int AssetsTradedOut { get; set; }
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
@@ -494,7 +509,9 @@ public string Format(string frontline = "    ")
                     "Grade 2 Materials Traded: ;;N0".T(EDTx.MaterialTraderStatsClass_G2MaterialsTraded), Grade2MaterialsTraded,
                     "Grade 3 Materials Traded: ;;N0".T(EDTx.MaterialTraderStatsClass_G3MaterialsTraded), Grade3MaterialsTraded,
                     "Grade 4 Materials Traded: ;;N0".T(EDTx.MaterialTraderStatsClass_G4MaterialsTraded), Grade4MaterialsTraded,
-                    "Grade 5 Materials Traded: ;;N0".T(EDTx.MaterialTraderStatsClass_G5MaterialsTraded), Grade5MaterialsTraded);                    
+                    "Grade 5 Materials Traded: ;;N0".T(EDTx.MaterialTraderStatsClass_G5MaterialsTraded), Grade5MaterialsTraded,
+                    "Assets Gained in Trade: ;;N0".T(EDTx.MaterialTraderStatsClass_AssetsTradedIn), AssetsTradedIn,
+                    "Assets Spent in Trade: ;;N0".T(EDTx.MaterialTraderStatsClass_AssetsTradedOut), AssetsTradedOut);                     
             }
         }
 

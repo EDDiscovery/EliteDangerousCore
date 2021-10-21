@@ -436,6 +436,8 @@ SECTION JournalProgress
 .Combat: "Combat: ;%" => "Kampf: ;%"
 .Trade: "Trade: ;%" => "Handel: ;%"
 .Exploration: "Exploration: ;%" => "Erkundung: ;%"
+.Soldier: "Soldier: ;%" => "Soldat: ;%"
+.Exobiologist: "Exobiologist: ;%" => "Exobiologe: ;%"
 .Federation: "Federation: ;%" => "Föderation: ;%"
 .Empire: "Empire: ;%" => "Imperium: ;%"
 .CQC: "CQC: ;%" => "CQC: ;%"
@@ -681,6 +683,10 @@ SECTION CombatClass
 .AssassinationProfits: "Assassination Profits: ;cr;N0" => "Einnahmen aus Mordaufträge: ;Cr;N0"
 .HighestReward: "Highest Reward: ;cr;N0" => "Höchste Belohnung: ;Cr;N0"
 .SkimmersKilled: "Skimmers Killed: ;;N0" => "OF-Drohnen ausgeschaltet: ;;N0"
+.OnFootCombatBonds: "Surface Combat Bonds: ;;N0" => "OF-Kampfbelohnungen: ;;N0"
+.OnFootCombatBondsProfits: "Surface Combat Bonds Profits: ;cr;N0" => "Einnahmen aus OF-Kampfbelohnungen: ;Cr;N0"
+.OnFootVehiclesDestroyed: "Vehicles Destroyed on Foot: ;;N0" => "Fahrzeuge zerstört (zu Fuß): ;;N0"
+.OnFootShipsDestroyed: "Ships Destroyed on Foot: ;;N0" => "Schiffe zerstört (zu Fuß): ;;N0"
 .DropshipsTaken: "Dropships Taken: ;;N0" => "Abwurfschiff-Reisen: ;;N0"
 .DropshipsBooked: "Dropships Booked: ;;N0" => "Gebuchte Abwurfschiffe: ;;N0"
 .DropshipsCancelled: "Dropships Cancelled: ;;N0" => "Stornierte Abwurfschiffe: ;;N0"
@@ -759,6 +765,7 @@ SECTION ExplorationClass
 .NoofJumps: "No of Jumps: ;;N0" => "Anzahl der Sprünge: ;;N0"
 .GreatestDistance: "Greatest Distance: ;ly;N0" => "Größte Entfernung: ;Lj;N0"
 .TimePlayed: "Time Played: " => "Spielzeit: "
+.OnFootDistanceTravelled: "Distance Travelled on Foot: ;m;N0"  => "Gesamtentfernung (zu Fuß): ;m;N0"
 .EfficientScans: "Efficient Scans: ;;N0" => "Effiziente Scans: ;;N0"
 .ShuttleJourneys: "Shuttle Journeys: ;;N0" => "Shuttle-Reisen: ;;N0"
 .ShuttleDistanceTravelled: "Shuttle Distance Travelled: ;ly;N0" => "Per Shuttle zurückgelegte Distanz: ;Lj;N0"
@@ -834,6 +841,8 @@ SECTION MaterialTraderStatsClass
 .G3MaterialsTraded: "Grade 3 Materials Traded: ;;N0" => "Gehandelte Grad-3-Materialien: ;;N0"
 .G4MaterialsTraded: "Grade 4 Materials Traded: ;;N0" => "Gehandelte Grad-4-Materialien: ;;N0"
 .G5MaterialsTraded: "Grade 5 Materials Traded: ;;N0" => "Gehandelte Grad-5-Materialien: ;;N0"
+.AssetsTradedIn: "Assets Gained in Trade: ;;N0" => "Erhaltene Materialien (Handel): ;;N0"
+.AssetsTradedOut: "Assets Spent in Trade: ;;N0" => "Ausgegebene Materialien (Handel): ;;N0"
 
 SECTION CQCClass
 

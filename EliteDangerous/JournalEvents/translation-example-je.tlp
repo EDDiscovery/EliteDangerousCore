@@ -436,6 +436,8 @@ SECTION JournalProgress
 .Trade: "Trade: ;%" @
 .Exploration: "Exploration: ;%" @
 .Federation: "Federation: ;%" @
+.Soldier: "Soldier: ;%" @
+.Exobiologist: "Exobiologist: ;%" @
 .Empire: "Empire: ;%" @
 .CQC: "CQC: ;%" @
 
@@ -680,6 +682,10 @@ SECTION CombatClass
 .AssassinationProfits: "Assassination Profits: ;cr;N0" @
 .HighestReward: "Highest Reward: ;cr;N0" @
 .SkimmersKilled: "Skimmers Killed: ;;N0" @
+.OnFootCombatBonds: "Surface Combat Bonds: ;;N0" @
+.OnFootCombatBondsProfits: "Surface Combat Bonds Profits: ;cr;N0" @
+.OnFootVehiclesDestroyed: "Vehicles Destroyed on Foot: ;;N0" @
+.OnFootShipsDestroyed: "Ships Destroyed on Foot: ;;N0" @
 .DropshipsTaken: "Dropships Taken: ;;N0" @
 .DropshipsBooked: "Dropships Booked: ;;N0" @
 .DropshipsCancelled: "Dropships Cancelled: ;;N0" @
@@ -758,6 +764,7 @@ SECTION ExplorationClass
 .NoofJumps: "No of Jumps: ;;N0" @
 .GreatestDistance: "Greatest Distance: ;ly;N0" @
 .TimePlayed: "Time Played: " @
+.OnFootDistanceTravelled: "Distance Travelled on Foot: ;m;N0" @
 .EfficientScans: "Efficient Scans: ;;N0" @
 .ShuttleJourneys: "Shuttle Journeys: ;;N0" @
 .ShuttleDistanceTravelled: "Shuttle Distance Travelled: ;ly;N0" @
@@ -768,12 +775,12 @@ SECTION ExplorationClass
 
 SECTION PassengerMissionsClass
 
-.Accepted: "Accepted Mission Passengers: ;;N0" @
-.BulkMissionPassengers: "Bulk Mission Passengers: ;;N0" @
-.VIPMissionPassengers: "VIP Mission Passengers: ;;N0" @
-.PassengersDelivered: "Passengers Delivered: ;;N0" @
-.PassengersEjected: "Passengers Ejected: ;;N0" @
+.Accepted: "Accepted Passenger Missions: ;;N0" @
 .PassengersDisgrunted: "Passengers Disgruntled: ;;N0" @
+.BulkMissionPassengers: "Total Bulk Passengers Delivered: ;;N0" @
+.VIPMissionPassengers: "Total VIPs Delivered: ;;N0" @
+.PassengersDelivered: "Total Delivered: ;;N0" @
+.PassengersEjected: "Total Ejected: ;;N0" @
 
 SECTION SearchAndRescueClass
 
@@ -833,6 +840,8 @@ SECTION MaterialTraderStatsClass
 .G3MaterialsTraded: "Grade 3 Materials Traded: ;;N0" @
 .G4MaterialsTraded: "Grade 4 Materials Traded: ;;N0" @
 .G5MaterialsTraded: "Grade 5 Materials Traded: ;;N0" @
+.AssetsTradedIn: "Assets Gained in Trade: ;;N0" @
+.AssetsTradedOut: "Assets Spent in Trade: ;;N0" @
 
 SECTION CQCClass
 
