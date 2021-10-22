@@ -328,18 +328,18 @@ namespace EliteDangerousCore
             public int count;
         };
 #endif
-    
+
         // Primary method to fill historylist
         // Get All journals matching parameters. 
-        // if callback set, then each JE is passed back thru callback and not accumulated. Callback is in a thread. Callback can stop the accumulation if it returns false
+        // if callback set, then each JE is passed back thru callback and not accumulated. Callback is in this thread. Callback can stop the accumulation if it returns false
 
         static public List<JournalEntry> GetAll(int commander = -999, DateTime? startdateutc = null, DateTime? enddateutc = null,
-                            JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null, Func<JournalEntry,Object,bool> callback = null, Object callbackobj = null,
+                            JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null, Func<JournalEntry, Object, bool> callback = null, Object callbackobj = null,
                             int chunksize = 1000)
         {
             // in the connection thread, construct the command and execute a read..
 
-            DbDataReader reader = UserDatabase.Instance.DBRead(cn =>        
+            var retlist = UserDatabase.Instance.DBRead<List<JournalEntry>>(cn =>
             {
                 DbCommand cmd = cn.CreateCommand("select Id,TravelLogId,CommanderId,EventData,Synced from JournalEntries");
                 string cnd = "";
@@ -377,100 +377,37 @@ namespace EliteDangerousCore
 
                 cmd.CommandText += " Order By EventTime,Id ASC";
 
-                return cmd.ExecuteReader();
-            });
+                List<JournalEntry> list = new List<JournalEntry>();
 
-            List<JournalEntry> entries = new List<JournalEntry>();
-            List<JournalEntry> retlist = null;
-
-#if TIMESCAN
-            Dictionary<string, List<long>> times = new Dictionary<string, List<long>>();
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-#endif
-            do
-            {
-                // experiments state that reading the DL is not the time sink, its creating the journal entries
-
-                // split into smaller chunks to allow other things access..  in the connection  thread, read a chunk
-
-                retlist = UserDatabase.Instance.DBRead(cn =>       
+                using (var reader = cmd.ExecuteReader())
                 {
-                    List<JournalEntry> list = new List<JournalEntry>();
-
-                    while (list.Count < chunksize && reader.Read())
+                    while (reader.Read())
                     {
-#if TIMESCAN
-                        long t = sw.ElapsedTicks;
-#endif
-
                         JournalEntry je = JournalEntry.CreateJournalEntryFixedPos(reader);
                         list.Add(je);
-
-#if TIMESCAN
-                        long tw = sw.ElapsedTicks - t;
-                        if (!times.TryGetValue(sys.EventTypeStr, out var x))
-                            times[sys.EventTypeStr] = new List<long>();
-                        times[sys.EventTypeStr].Add(tw);
-#endif
                     }
+                }
 
-                    return list;
-                });
+                return list;
+            });
 
-                // back in the caller thread,dispatch or add
-
-                if (callback != null)               // collated, now process them, if callback, feed them thru callback procedure
+            if (callback != null)               // collated, now process them, if callback, feed them thru callback procedure
+            {
+                foreach (var e in retlist)
                 {
-                    foreach (var e in retlist)
+                    if (!callback.Invoke(e, callbackobj))     // if indicate stop
                     {
-                        if (!callback.Invoke(e, callbackobj))     // if indicate stop
-                        {
-                            retlist = null;
-                            break;
-                        }
+                        break;
                     }
                 }
-                else
-                {
-                    entries.AddRange(retlist);
-                }
+                retlist = null;
+                return null;
             }
-            while (retlist != null && retlist.Count != 0);
-
-#if TIMESCAN
-            List<Results> res = new List<Results>();
-
-            foreach( var kvp in times)
+            else
             {
-                Results r = new Results();
-                r.name = kvp.Key;
-                r.avg = kvp.Value.Average();
-                r.min = kvp.Value.Min();
-                r.max = kvp.Value.Max();
-                r.total = kvp.Value.Sum();
-                r.avgtime = ((double)r.avg / Stopwatch.Frequency * 1000);
-                r.sumtime = ((double)r.total / Stopwatch.Frequency * 1000);
-                r.count = kvp.Value.Count;
-                res.Add(r);
+                return retlist;
             }
-
-            //res.Sort(delegate (Results l, Results r) { return l.sumtime.CompareTo(r.sumtime); });
-            res.Sort(delegate (Results l, Results r) { return l.avgtime.CompareTo(r.avgtime); });
-
-            string rs = "";
-            foreach (var r in res)
-            {
-                rs = rs + Environment.NewLine + string.Format("Time {0} min {1} max {2} avg {3} ms count {4} totaltime {5} ms", r.name, r.min, r.max, r.avgtime.ToString("#.#########"), r.count, r.sumtime.ToString("#.#######"));
-            }
-
-            System.Diagnostics.Trace.WriteLine(rs);
-            //File.WriteAllText(@"c:\code\times.txt", rs);
-#endif
-
-            return entries;
         }
-
 
         public static List<JournalEntry> GetByEventType(JournalTypeEnum eventtype, int commanderid, DateTime startutc, DateTime stoputc)
         {
@@ -478,21 +415,15 @@ namespace EliteDangerousCore
             List<JournalEntry> entries = new List<JournalEntry>();
 
             // in the connection thread, execute the 
-            DbDataReader reader = UserDatabase.Instance.DBRead(cn =>
+            return UserDatabase.Instance.DBRead(cn =>
             {
                 var cmd = cn.CreateCommand("SELECT * FROM JournalEntries WHERE EventTypeID = @eventtype and  CommanderID=@commander and  EventTime >=@start and EventTime<=@Stop ORDER BY EventTime ASC");
                 cmd.AddParameterWithValue("@eventtype", (int)eventtype);
                 cmd.AddParameterWithValue("@commander", (int)commanderid);
                 cmd.AddParameterWithValue("@start", startutc);
                 cmd.AddParameterWithValue("@stop", stoputc);
-                return cmd.ExecuteReader();
-            });
 
-            List<JournalEntry> retlist = null;
-
-            do
-            {
-                retlist = UserDatabase.Instance.DBRead(cn =>
+                using (var reader = cmd.ExecuteReader())
                 {
                     List<JournalEntry> vsc = new List<JournalEntry>();
 
@@ -503,13 +434,8 @@ namespace EliteDangerousCore
                     }
 
                     return vsc;
-                });
-
-                entries.AddRange(retlist);
-            }
-            while (retlist != null && retlist.Count != 0);
-
-            return entries;
+                }
+            });
         }
                
         internal static List<JournalEntry> GetAllByTLU(long tluid, SQLiteConnectionUser cn)
