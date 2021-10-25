@@ -70,7 +70,7 @@ namespace EliteDangerousCore
         static public JournalTypeEnum[] JumpScanEssentialEvents = new JournalTypeEnum[]     // 
             {
                 JournalTypeEnum.FSDJump,JournalTypeEnum.CarrierJump, JournalTypeEnum.Location,
-                JournalTypeEnum.Scan,
+                JournalTypeEnum.Scan, JournalTypeEnum.SAASignalsFound,
             };
         static public JournalTypeEnum[] JumpEssentialEvents = new JournalTypeEnum[]     // 
             {
