@@ -46,9 +46,6 @@
             this.checkBoxCustomInara = new ExtendedControls.ExtCheckBox();
             this.textBoxBorderInaraName = new ExtendedControls.ExtTextBox();
             this.textBoxBorderInaraAPIKey = new ExtendedControls.ExtTextBox();
-            this.textBoxDefaultZoom = new ExtendedControls.NumberBoxDouble();
-            this.radioButtonHistorySelection = new ExtendedControls.ExtRadioButton();
-            this.radioButtonCentreHome = new ExtendedControls.ExtRadioButton();
             this.panel_defaultmapcolor = new ExtendedControls.PanelNoTheme();
             this.checkBoxIGAUSync = new ExtendedControls.ExtCheckBox();
             this.groupBoxCustomEDDN = new ExtendedControls.ExtGroupBox();
@@ -74,14 +71,12 @@
             this.labelMapCol = new System.Windows.Forms.Label();
             this.extTextBoxAutoCompleteHomeSystem = new ExtendedControls.ExtTextBoxAutoComplete();
             this.HomeSys = new System.Windows.Forms.Label();
-            this.labelZoom = new System.Windows.Forms.Label();
-            this.labelOpenOn = new System.Windows.Forms.Label();
             this.groupBoxCustomIGAU = new ExtendedControls.ExtGroupBox();
             this.extPanelScroll = new ExtendedControls.ExtPanelScroll();
-            this.extScrollBar = new ExtendedControls.ExtScrollBar();
+            this.panelGroups = new System.Windows.Forms.Panel();
             this.extGroupBoxEDAstro = new ExtendedControls.ExtGroupBox();
             this.extCheckBoxEDAstro = new ExtendedControls.ExtCheckBox();
-            this.panelGroups = new System.Windows.Forms.Panel();
+            this.extScrollBar = new ExtendedControls.ExtScrollBar();
             this.panelTop.SuspendLayout();
             this.groupBoxCustomEDDN.SuspendLayout();
             this.groupBoxCustomEDSM.SuspendLayout();
@@ -95,8 +90,8 @@
             this.tableLayoutPanelCommanderInfo.SuspendLayout();
             this.groupBoxCustomIGAU.SuspendLayout();
             this.extPanelScroll.SuspendLayout();
-            this.extGroupBoxEDAstro.SuspendLayout();
             this.panelGroups.SuspendLayout();
+            this.extGroupBoxEDAstro.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelTop
@@ -431,79 +426,13 @@
         ".cz");
             this.textBoxBorderInaraAPIKey.WordWrap = true;
             // 
-            // textBoxDefaultZoom
-            // 
-            this.textBoxDefaultZoom.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.textBoxDefaultZoom.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.textBoxDefaultZoom.BackErrorColor = System.Drawing.Color.Red;
-            this.textBoxDefaultZoom.BorderColor = System.Drawing.Color.Transparent;
-            this.textBoxDefaultZoom.BorderColorScaling = 0.5F;
-            this.textBoxDefaultZoom.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBoxDefaultZoom.ClearOnFirstChar = false;
-            this.textBoxDefaultZoom.ControlBackground = System.Drawing.SystemColors.Control;
-            this.textBoxDefaultZoom.DelayBeforeNotification = 0;
-            this.textBoxDefaultZoom.EndButtonEnable = true;
-            this.textBoxDefaultZoom.EndButtonImage = ((System.Drawing.Image)(resources.GetObject("textBoxDefaultZoom.EndButtonImage")));
-            this.textBoxDefaultZoom.EndButtonVisible = false;
-            this.textBoxDefaultZoom.Format = "0.#######";
-            this.textBoxDefaultZoom.InErrorCondition = true;
-            this.textBoxDefaultZoom.Location = new System.Drawing.Point(231, 65);
-            this.textBoxDefaultZoom.Maximum = 300D;
-            this.textBoxDefaultZoom.Minimum = 0.01D;
-            this.textBoxDefaultZoom.Multiline = false;
-            this.textBoxDefaultZoom.Name = "textBoxDefaultZoom";
-            this.textBoxDefaultZoom.ReadOnly = false;
-            this.textBoxDefaultZoom.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.textBoxDefaultZoom.SelectionLength = 0;
-            this.textBoxDefaultZoom.SelectionStart = 0;
-            this.textBoxDefaultZoom.Size = new System.Drawing.Size(51, 14);
-            this.textBoxDefaultZoom.TabIndex = 3;
-            this.textBoxDefaultZoom.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.toolTip.SetToolTip(this.textBoxDefaultZoom, "Set the zoom level of the map. 1 is normal");
-            this.textBoxDefaultZoom.Value = 0D;
-            this.textBoxDefaultZoom.WordWrap = true;
-            // 
-            // radioButtonHistorySelection
-            // 
-            this.radioButtonHistorySelection.AutoSize = true;
-            this.radioButtonHistorySelection.Location = new System.Drawing.Point(459, 34);
-            this.radioButtonHistorySelection.MouseOverColor = System.Drawing.Color.CornflowerBlue;
-            this.radioButtonHistorySelection.Name = "radioButtonHistorySelection";
-            this.radioButtonHistorySelection.RadioButtonColor = System.Drawing.Color.Gray;
-            this.radioButtonHistorySelection.RadioButtonInnerColor = System.Drawing.Color.White;
-            this.radioButtonHistorySelection.SelectedColor = System.Drawing.Color.DarkBlue;
-            this.radioButtonHistorySelection.SelectedColorRing = System.Drawing.Color.Black;
-            this.radioButtonHistorySelection.Size = new System.Drawing.Size(126, 17);
-            this.radioButtonHistorySelection.TabIndex = 2;
-            this.radioButtonHistorySelection.TabStop = true;
-            this.radioButtonHistorySelection.Text = "History Grid Selection";
-            this.toolTip.SetToolTip(this.radioButtonHistorySelection, "Select history entry as opening location");
-            this.radioButtonHistorySelection.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonCentreHome
-            // 
-            this.radioButtonCentreHome.AutoSize = true;
-            this.radioButtonCentreHome.Location = new System.Drawing.Point(231, 34);
-            this.radioButtonCentreHome.MouseOverColor = System.Drawing.Color.CornflowerBlue;
-            this.radioButtonCentreHome.Name = "radioButtonCentreHome";
-            this.radioButtonCentreHome.RadioButtonColor = System.Drawing.Color.Gray;
-            this.radioButtonCentreHome.RadioButtonInnerColor = System.Drawing.Color.White;
-            this.radioButtonCentreHome.SelectedColor = System.Drawing.Color.DarkBlue;
-            this.radioButtonCentreHome.SelectedColorRing = System.Drawing.Color.Black;
-            this.radioButtonCentreHome.Size = new System.Drawing.Size(90, 17);
-            this.radioButtonCentreHome.TabIndex = 1;
-            this.radioButtonCentreHome.TabStop = true;
-            this.radioButtonCentreHome.Text = "Home System";
-            this.toolTip.SetToolTip(this.radioButtonCentreHome, "Select home system as opening location");
-            this.radioButtonCentreHome.UseVisualStyleBackColor = true;
-            // 
             // panel_defaultmapcolor
             // 
             this.panel_defaultmapcolor.AccessibleDescription = "";
             this.panel_defaultmapcolor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel_defaultmapcolor.Location = new System.Drawing.Point(231, 85);
+            this.panel_defaultmapcolor.Location = new System.Drawing.Point(231, 23);
             this.panel_defaultmapcolor.Name = "panel_defaultmapcolor";
-            this.panel_defaultmapcolor.Size = new System.Drawing.Size(28, 15);
+            this.panel_defaultmapcolor.Size = new System.Drawing.Size(51, 15);
             this.panel_defaultmapcolor.TabIndex = 4;
             this.panel_defaultmapcolor.Tag = "";
             this.toolTip.SetToolTip(this.panel_defaultmapcolor, "New travel entries get this colour on the map");
@@ -789,7 +718,7 @@
             this.extGroupBoxCommanderInfo.Dock = System.Windows.Forms.DockStyle.Top;
             this.extGroupBoxCommanderInfo.Location = new System.Drawing.Point(0, 408);
             this.extGroupBoxCommanderInfo.Name = "extGroupBoxCommanderInfo";
-            this.extGroupBoxCommanderInfo.Size = new System.Drawing.Size(691, 122);
+            this.extGroupBoxCommanderInfo.Size = new System.Drawing.Size(691, 60);
             this.extGroupBoxCommanderInfo.TabIndex = 37;
             this.extGroupBoxCommanderInfo.TabStop = false;
             this.extGroupBoxCommanderInfo.Text = "Other";
@@ -802,30 +731,25 @@
             this.tableLayoutPanelCommanderInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanelCommanderInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanelCommanderInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanelCommanderInfo.Controls.Add(this.radioButtonHistorySelection, 2, 1);
-            this.tableLayoutPanelCommanderInfo.Controls.Add(this.textBoxDefaultZoom, 1, 2);
-            this.tableLayoutPanelCommanderInfo.Controls.Add(this.labelMapCol, 0, 3);
-            this.tableLayoutPanelCommanderInfo.Controls.Add(this.radioButtonCentreHome, 1, 1);
             this.tableLayoutPanelCommanderInfo.Controls.Add(this.extTextBoxAutoCompleteHomeSystem, 1, 0);
             this.tableLayoutPanelCommanderInfo.Controls.Add(this.HomeSys, 0, 0);
-            this.tableLayoutPanelCommanderInfo.Controls.Add(this.labelZoom, 0, 2);
-            this.tableLayoutPanelCommanderInfo.Controls.Add(this.labelOpenOn, 0, 1);
-            this.tableLayoutPanelCommanderInfo.Controls.Add(this.panel_defaultmapcolor, 1, 3);
+            this.tableLayoutPanelCommanderInfo.Controls.Add(this.labelMapCol, 0, 1);
+            this.tableLayoutPanelCommanderInfo.Controls.Add(this.panel_defaultmapcolor, 1, 1);
             this.tableLayoutPanelCommanderInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanelCommanderInfo.Location = new System.Drawing.Point(3, 16);
             this.tableLayoutPanelCommanderInfo.Name = "tableLayoutPanelCommanderInfo";
-            this.tableLayoutPanelCommanderInfo.RowCount = 4;
+            this.tableLayoutPanelCommanderInfo.RowCount = 2;
             this.tableLayoutPanelCommanderInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanelCommanderInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanelCommanderInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanelCommanderInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanelCommanderInfo.Size = new System.Drawing.Size(685, 103);
+            this.tableLayoutPanelCommanderInfo.Size = new System.Drawing.Size(685, 41);
             this.tableLayoutPanelCommanderInfo.TabIndex = 14;
             // 
             // labelMapCol
             // 
             this.labelMapCol.AutoSize = true;
-            this.labelMapCol.Location = new System.Drawing.Point(3, 82);
+            this.labelMapCol.Location = new System.Drawing.Point(3, 20);
             this.labelMapCol.Name = "labelMapCol";
             this.labelMapCol.Size = new System.Drawing.Size(92, 13);
             this.labelMapCol.TabIndex = 13;
@@ -859,7 +783,7 @@
             this.extTextBoxAutoCompleteHomeSystem.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.extTextBoxAutoCompleteHomeSystem.SelectionLength = 0;
             this.extTextBoxAutoCompleteHomeSystem.SelectionStart = 0;
-            this.extTextBoxAutoCompleteHomeSystem.Size = new System.Drawing.Size(152, 23);
+            this.extTextBoxAutoCompleteHomeSystem.Size = new System.Drawing.Size(152, 14);
             this.extTextBoxAutoCompleteHomeSystem.TabIndex = 0;
             this.extTextBoxAutoCompleteHomeSystem.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.extTextBoxAutoCompleteHomeSystem.TextChangedEvent = "";
@@ -873,24 +797,6 @@
             this.HomeSys.Size = new System.Drawing.Size(75, 13);
             this.HomeSys.TabIndex = 2;
             this.HomeSys.Text = "Home System:";
-            // 
-            // labelZoom
-            // 
-            this.labelZoom.AutoSize = true;
-            this.labelZoom.Location = new System.Drawing.Point(3, 62);
-            this.labelZoom.Name = "labelZoom";
-            this.labelZoom.Size = new System.Drawing.Size(71, 13);
-            this.labelZoom.TabIndex = 10;
-            this.labelZoom.Text = "Default Zoom";
-            // 
-            // labelOpenOn
-            // 
-            this.labelOpenOn.AutoSize = true;
-            this.labelOpenOn.Location = new System.Drawing.Point(3, 31);
-            this.labelOpenOn.Name = "labelOpenOn";
-            this.labelOpenOn.Size = new System.Drawing.Size(90, 13);
-            this.labelOpenOn.TabIndex = 7;
-            this.labelOpenOn.Text = "Open Centred On";
             // 
             // groupBoxCustomIGAU
             // 
@@ -920,34 +826,20 @@
             this.extPanelScroll.TabIndex = 40;
             this.extPanelScroll.VerticalScrollBarDockRight = true;
             // 
-            // extScrollBar
+            // panelGroups
             // 
-            this.extScrollBar.ArrowBorderColor = System.Drawing.Color.LightBlue;
-            this.extScrollBar.ArrowButtonColor = System.Drawing.Color.LightGray;
-            this.extScrollBar.ArrowColorScaling = 0.5F;
-            this.extScrollBar.ArrowDownDrawAngle = 270F;
-            this.extScrollBar.ArrowUpDrawAngle = 90F;
-            this.extScrollBar.BorderColor = System.Drawing.Color.White;
-            this.extScrollBar.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.extScrollBar.HideScrollBar = false;
-            this.extScrollBar.LargeChange = 10;
-            this.extScrollBar.Location = new System.Drawing.Point(697, 0);
-            this.extScrollBar.Maximum = -95;
-            this.extScrollBar.Minimum = 0;
-            this.extScrollBar.MouseOverButtonColor = System.Drawing.Color.Green;
-            this.extScrollBar.MousePressedButtonColor = System.Drawing.Color.Red;
-            this.extScrollBar.Name = "extScrollBar";
-            this.extScrollBar.Size = new System.Drawing.Size(16, 620);
-            this.extScrollBar.SliderColor = System.Drawing.Color.DarkGray;
-            this.extScrollBar.SmallChange = 1;
-            this.extScrollBar.TabIndex = 0;
-            this.extScrollBar.Text = "extScrollBar1";
-            this.extScrollBar.ThumbBorderColor = System.Drawing.Color.Yellow;
-            this.extScrollBar.ThumbButtonColor = System.Drawing.Color.DarkBlue;
-            this.extScrollBar.ThumbColorScaling = 0.5F;
-            this.extScrollBar.ThumbDrawAngle = 0F;
-            this.extScrollBar.Value = -95;
-            this.extScrollBar.ValueLimited = -95;
+            this.panelGroups.AutoSize = true;
+            this.panelGroups.Controls.Add(this.extGroupBoxCommanderInfo);
+            this.panelGroups.Controls.Add(this.groupBoxCustomIGAU);
+            this.panelGroups.Controls.Add(this.extGroupBoxEDAstro);
+            this.panelGroups.Controls.Add(this.groupBoxCustomInara);
+            this.panelGroups.Controls.Add(this.groupBoxCustomEDSM);
+            this.panelGroups.Controls.Add(this.groupBoxCustomEDDN);
+            this.panelGroups.Controls.Add(this.groupBoxCustomJournal);
+            this.panelGroups.Location = new System.Drawing.Point(0, 0);
+            this.panelGroups.Name = "panelGroups";
+            this.panelGroups.Size = new System.Drawing.Size(691, 486);
+            this.panelGroups.TabIndex = 1;
             // 
             // extGroupBoxEDAstro
             // 
@@ -985,20 +877,34 @@
             this.extCheckBoxEDAstro.TickBoxReductionRatio = 0.75F;
             this.extCheckBoxEDAstro.UseVisualStyleBackColor = true;
             // 
-            // panelGroups
+            // extScrollBar
             // 
-            this.panelGroups.AutoSize = true;
-            this.panelGroups.Controls.Add(this.extGroupBoxCommanderInfo);
-            this.panelGroups.Controls.Add(this.groupBoxCustomIGAU);
-            this.panelGroups.Controls.Add(this.extGroupBoxEDAstro);
-            this.panelGroups.Controls.Add(this.groupBoxCustomInara);
-            this.panelGroups.Controls.Add(this.groupBoxCustomEDSM);
-            this.panelGroups.Controls.Add(this.groupBoxCustomEDDN);
-            this.panelGroups.Controls.Add(this.groupBoxCustomJournal);
-            this.panelGroups.Location = new System.Drawing.Point(0, 0);
-            this.panelGroups.Name = "panelGroups";
-            this.panelGroups.Size = new System.Drawing.Size(691, 530);
-            this.panelGroups.TabIndex = 1;
+            this.extScrollBar.ArrowBorderColor = System.Drawing.Color.LightBlue;
+            this.extScrollBar.ArrowButtonColor = System.Drawing.Color.LightGray;
+            this.extScrollBar.ArrowColorScaling = 0.5F;
+            this.extScrollBar.ArrowDownDrawAngle = 270F;
+            this.extScrollBar.ArrowUpDrawAngle = 90F;
+            this.extScrollBar.BorderColor = System.Drawing.Color.White;
+            this.extScrollBar.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.extScrollBar.HideScrollBar = false;
+            this.extScrollBar.LargeChange = 10;
+            this.extScrollBar.Location = new System.Drawing.Point(697, 0);
+            this.extScrollBar.Maximum = -125;
+            this.extScrollBar.Minimum = 0;
+            this.extScrollBar.MouseOverButtonColor = System.Drawing.Color.Green;
+            this.extScrollBar.MousePressedButtonColor = System.Drawing.Color.Red;
+            this.extScrollBar.Name = "extScrollBar";
+            this.extScrollBar.Size = new System.Drawing.Size(16, 620);
+            this.extScrollBar.SliderColor = System.Drawing.Color.DarkGray;
+            this.extScrollBar.SmallChange = 1;
+            this.extScrollBar.TabIndex = 0;
+            this.extScrollBar.Text = "extScrollBar1";
+            this.extScrollBar.ThumbBorderColor = System.Drawing.Color.Yellow;
+            this.extScrollBar.ThumbButtonColor = System.Drawing.Color.DarkBlue;
+            this.extScrollBar.ThumbColorScaling = 0.5F;
+            this.extScrollBar.ThumbDrawAngle = 0F;
+            this.extScrollBar.Value = -125;
+            this.extScrollBar.ValueLimited = -125;
             // 
             // CommanderForm
             // 
@@ -1036,10 +942,10 @@
             this.groupBoxCustomIGAU.PerformLayout();
             this.extPanelScroll.ResumeLayout(false);
             this.extPanelScroll.PerformLayout();
-            this.extGroupBoxEDAstro.ResumeLayout(false);
-            this.extGroupBoxEDAstro.PerformLayout();
             this.panelGroups.ResumeLayout(false);
             this.panelGroups.PerformLayout();
+            this.extGroupBoxEDAstro.ResumeLayout(false);
+            this.extGroupBoxEDAstro.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1083,11 +989,6 @@
         private ExtendedControls.ExtGroupBox extGroupBoxCommanderInfo;
         private ExtendedControls.ExtTextBoxAutoComplete extTextBoxAutoCompleteHomeSystem;
         private System.Windows.Forms.Label HomeSys;
-        private ExtendedControls.NumberBoxDouble textBoxDefaultZoom;
-        private System.Windows.Forms.Label labelZoom;
-        private ExtendedControls.ExtRadioButton radioButtonHistorySelection;
-        private ExtendedControls.ExtRadioButton radioButtonCentreHome;
-        private System.Windows.Forms.Label labelOpenOn;
         private System.Windows.Forms.Label labelMapCol;
         private ExtendedControls.PanelNoTheme panel_defaultmapcolor;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelCommanderInfo;

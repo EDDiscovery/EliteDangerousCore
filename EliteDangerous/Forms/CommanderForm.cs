@@ -94,12 +94,6 @@ namespace EliteDangerousCore.Forms
             extTextBoxAutoCompleteHomeSystem.Text = cmdr.HomeSystem;
             extTextBoxAutoCompleteHomeSystem.SetAutoCompletor(EliteDangerousCore.DB.SystemCache.ReturnSystemAutoCompleteList, true);
 
-            textBoxDefaultZoom.ValueNoChange = cmdr.MapZoom;
-
-            bool selectionCentre = cmdr.MapCentreOnSelection;
-            radioButtonHistorySelection.Checked = selectionCentre;
-            radioButtonCentreHome.Checked = !selectionCentre;
-
             panel_defaultmapcolor.BackColor = System.Drawing.Color.FromArgb(cmdr.MapColour);
             panel_defaultmapcolor.Click += Panel_defaultmapcolor_Click;
         }
@@ -128,8 +122,6 @@ namespace EliteDangerousCore.Forms
             cmdr.SyncToInara = checkBoxCustomInara.Checked;
             cmdr.SyncToEDAstro = extCheckBoxEDAstro.Checked;
             cmdr.HomeSystem = extTextBoxAutoCompleteHomeSystem.Text;
-            cmdr.MapZoom = float.TryParse(textBoxDefaultZoom.Text, out float res) ? res : 1.0f;
-            cmdr.MapCentreOnSelection = radioButtonHistorySelection.Checked;
             cmdr.MapColour = panel_defaultmapcolor.BackColor.ToArgb();
 
             return update;

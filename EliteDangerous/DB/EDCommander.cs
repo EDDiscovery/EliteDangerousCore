@@ -84,9 +84,7 @@ namespace EliteDangerousCore
 
         public ISystem HomeSystemIOrSol { get { return HomeSystemI ?? new SystemClass("Sol", 0, 0, 0); } }
 
-        public float MapZoom { set; get; } = 1.0f;
         public int MapColour { set; get; } = System.Drawing.Color.Red.ToArgb();
-        public bool MapCentreOnSelection { set; get; } = true;
 
         public string Info
         {
@@ -118,7 +116,7 @@ namespace EliteDangerousCore
                                 other.SyncToEdsm, other.SyncFromEdsm,
                                 other.SyncToEddn,
                                 other.SyncToInara, other.InaraName, other.InaraAPIKey,
-                                other.HomeSystem, other.MapZoom, other.MapCentreOnSelection, other.MapColour,
+                                other.HomeSystem, other.MapColour,
                                 other.SyncToIGAU, other.Options.ToString());
         }
 
@@ -126,7 +124,7 @@ namespace EliteDangerousCore
                                         bool toedsm = false, bool fromedsm = false,
                                         bool toeddn = true,
                                         bool toinara = false, string inaraname = null, string inaraapikey = null,
-                                        string homesystem = null, float mapzoom = 1.0f, bool mapcentreonselection = true, int mapcolour = -1,
+                                        string homesystem = null, int mapcolour = -1,
                                         bool toigau = false, string options = "{}")
         {
             EDCommander cmdr = UserDatabase.Instance.DBWrite<EDCommander>(cn =>
@@ -152,8 +150,8 @@ namespace EliteDangerousCore
                     cmd.AddParameterWithValue("@InaraApiKey", inaraapikey ?? "");
                     cmd.AddParameterWithValue("@HomeSystem", homesystem ?? "");
                     cmd.AddParameterWithValue("@MapColour", mapcolour == -1 ? System.Drawing.Color.Red.ToArgb() : mapcolour);
-                    cmd.AddParameterWithValue("@MapCentreOnSelection", mapcentreonselection);
-                    cmd.AddParameterWithValue("@MapZoom", mapzoom);
+                    cmd.AddParameterWithValue("@MapCentreOnSelection", false); // unused since 15.0
+                    cmd.AddParameterWithValue("@MapZoom", 0); // unused since 15.0
                     cmd.AddParameterWithValue("@SyncToIGAU", toigau);
                     cmd.AddParameterWithValue("@Options", options);
                     cmd.ExecuteNonQuery();
@@ -205,8 +203,8 @@ namespace EliteDangerousCore
                     cmd.AddParameterWithValue("@InaraAPIKey", cmdr.InaraAPIKey != null ? cmdr.InaraAPIKey : "");
                     cmd.AddParameterWithValue("@HomeSystem", cmdr.homesystem != null ? cmdr.homesystem : "");
                     cmd.AddParameterWithValue("@MapColour", cmdr.MapColour);
-                    cmd.AddParameterWithValue("@MapCentreOnSelection", cmdr.MapCentreOnSelection);
-                    cmd.AddParameterWithValue("@MapZoom", cmdr.MapZoom);
+                    cmd.AddParameterWithValue("@MapCentreOnSelection", false); // unused
+                    cmd.AddParameterWithValue("@MapZoom", 0); // unused
                     cmd.AddParameterWithValue("@SyncToIGAU", cmdr.SyncToIGAU);
                     cmd.AddParameterWithValue("@Options", cmdr.Options.ToString());
                     cmd.ExecuteNonQuery();
@@ -341,9 +339,7 @@ namespace EliteDangerousCore
 
             HomeSystem = Convert.ToString(reader["HomeSystem"]) ?? "";        // may be null
 
-            MapZoom = reader["MapZoom"] is System.DBNull ? 1.0f : (float)Convert.ToDouble(reader["MapZoom"]);
             MapColour = reader["MapColour"] is System.DBNull ? System.Drawing.Color.Red.ToArgb() : Convert.ToInt32(reader["MapColour"]);
-            MapCentreOnSelection = reader["MapCentreOnSelection"] is System.DBNull ? true : Convert.ToBoolean(reader["MapCentreOnSelection"]);
 
             SyncToIGAU = Convert.ToBoolean(reader["SyncToIGAU"]);
 
