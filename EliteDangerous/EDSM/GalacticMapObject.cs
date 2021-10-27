@@ -26,20 +26,108 @@ namespace EliteDangerousCore.EDSM
 {
     public class GalacticMapObject
     {
-        public int id;
-        public string type;
-        public string name;
-        public string galMapSearch;
-        public string galMapUrl;
-        public string colour;
-        public List<Vector3> points;
-        public string description;
-
-        public GalMapType galMapType;
+        public int ID { get; private set; }
+        public string Type { get; private set; }
+        public string Name { get; private set; }
+        public string GalMapSearch { get; private set; }
+        public string GalMapUrl { get; private set; }
+        public List<Vector3> Points { get; private set; }
+        public string Description { get; private set; }
+        public GalMapType GalMapType { get; private set; }
 
         public GalacticMapObject()
         {
-            points = new List<Vector3>();
+            Points = new List<Vector3>();
+        }
+
+        public GalacticMapObject(string type, string name, string desc, Vector3 pos)
+        {
+            this.Type = type;
+            this.Name = name;
+            this.Description = desc;
+            this.GalMapSearch = GalMapUrl = "";
+            Points = new List<Vector3>() { pos };
+            SetGalMapTypeFromTypeName();
+        }
+
+        // from EDSM JO
+        public GalacticMapObject(JObject jo)
+        {
+            ID = jo["id"].Int();
+            Type = jo["type"].Str("Not Set");
+            Name = jo["name"].Str("No name set");
+            GalMapSearch = jo["galMapSearch"].Str("");
+            GalMapUrl = jo["galMapUrl"].Str("");
+            Description = jo["descriptionMardown"].Str("No description");       // default back up description in case html fails
+
+            var descriptionhtml = jo["descriptionHtml"].StrNull();
+
+            if (descriptionhtml != null)
+            {
+                string res = ("<Body>" + descriptionhtml + "</Body>").XMLtoText();
+                if (res != null)
+                    Description = res;
+            }
+
+            SetGalMapTypeFromTypeName();
+
+            Points = new List<Vector3>();
+
+            try
+            {
+                JArray coords = (JArray)jo["coordinates"];
+
+                if (coords.Count > 0)
+                {
+                    if (coords[0].IsArray)
+                    {
+                        foreach (JArray ja in coords)
+                        {
+                            float x, y, z;
+                            x = ja[0].Float();
+                            y = ja[1].Float();
+                            z = ja[2].Float();
+                            Points.Add(new Vector3(x, y, z));
+                        }
+                    }
+                    else
+                    {
+                        JArray plist = coords;
+
+                        float x, y, z;
+                        x = plist[0].Float();
+                        y = plist[1].Float();
+                        z = plist[2].Float();
+                        Points.Add(new Vector3(x, y, z));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine("GalacticMapObject parse coordinate error: type" + Type + " " + ex.Message);
+                Points = null;
+            }
+        }
+
+        private void SetGalMapTypeFromTypeName()
+        {
+            GalMapType ty = GalMapType.GalTypes.Find(x => x.TypeName.Equals(Type));
+
+            if (ty == null)
+            {
+                ty = GalMapType.GalTypes.Find(x => x.VisibleType == GalMapType.VisibleObjectsType.EDSMUnknown);      // select edsm unknown
+                System.Diagnostics.Debug.WriteLine($"GMO unknown type {Type}");
+            }
+
+            GalMapType = ty;
+        }
+
+        public GalacticMapSystem GetSystem(ISystem sys = null)
+        {
+            if (sys != null)
+                return new EDSM.GalacticMapSystem(sys, this);
+            else
+                return new EDSM.GalacticMapSystem(this);
         }
 
         public void PrintElement(XElement x, int level)
@@ -63,70 +151,6 @@ namespace EliteDangerousCore.EDSM
             }
         }
 
-        public GalacticMapObject(JObject jo)
-        {
-            id = jo["id"].Int();
-            type = jo["type"].Str("Not Set");
-            name = jo["name"].Str("No name set");
-            galMapSearch = jo["galMapSearch"].Str("");
-            galMapUrl = jo["galMapUrl"].Str("");
-            colour = jo["color"].Str("Orange");
-            description = jo["descriptionMardown"].Str("No description");       // default back up description in case html fails
-
-            var descriptionhtml = jo["descriptionHtml"].StrNull();
-
-            if (descriptionhtml != null)
-            {
-                string res = ("<Body>" + descriptionhtml + "</Body>").XMLtoText();
-                if (res != null)
-                    description = res;
-            }
-
-            points = new List<Vector3>();
-
-            try
-            {
-                JArray coords = (JArray)jo["coordinates"];
-
-                if (coords.Count > 0)
-                {
-                    if (coords[0].IsArray)
-                    {
-                        foreach (JArray ja in coords)
-                        {
-                            float x, y, z;
-                            x = ja[0].Float();
-                            y = ja[1].Float();
-                            z = ja[2].Float();
-                            points.Add(new Vector3(x, y, z));
-                        }
-                    }
-                    else
-                    {
-                        JArray plist = coords;
-
-                        float x, y, z;
-                        x = plist[0].Float();
-                        y = plist[1].Float();
-                        z = plist[2].Float();
-                        points.Add(new Vector3(x, y, z));
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Trace.WriteLine("GalacticMapObject parse coordinate error: type" + type + " " + ex.Message);
-                points = null;
-            }
-        }
-
-        public GalacticMapSystem GetSystem(ISystem sys = null)
-        {
-            if (sys != null)
-                return new EDSM.GalacticMapSystem(sys, this);
-            else
-                return new EDSM.GalacticMapSystem(this);
-        }
     }
 }
 

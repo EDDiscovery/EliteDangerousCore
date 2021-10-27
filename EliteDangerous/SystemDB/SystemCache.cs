@@ -418,18 +418,14 @@ namespace EliteDangerousCore.DB
             }
         }
 
-        public static List<string> ReturnSystemAdditionalListForAutoComplete(string input, Object ctrl)
+        public static void ReturnSystemAdditionalListForAutoComplete(string input, Object ctrl, SortedSet<string> set )
         {
-            List<string> ret = new List<string>();
-            ret.AddRange(ReturnAdditionalAutoCompleteList(input, ctrl));
-            ret.AddRange(ReturnSystemAutoCompleteList(input, ctrl));
-            return ret;
+            ReturnAdditionalAutoCompleteList(input, ctrl, set);
+            ReturnSystemAutoCompleteList(input, ctrl, set);
         }
 
-        public static List<string> ReturnAdditionalAutoCompleteList(string input, Object ctrl)
+        public static void ReturnAdditionalAutoCompleteList(string input, Object ctrl, SortedSet<string> set)
         {
-            List<string> ret = new List<string>();
-
             if (input != null && input.Length > 0)
             {
                 lock (AutoCompleteAdditionalList)
@@ -437,19 +433,16 @@ namespace EliteDangerousCore.DB
                     foreach (string other in AutoCompleteAdditionalList)
                     {
                         if (other.StartsWith(input, StringComparison.InvariantCultureIgnoreCase))
-                            ret.Add(other);
+                            set.Add(other);
                     }
                 }
             }
-            return ret;
         }
 
         public static int MaximumStars { get; set; } = 1000;
 
-        public static List<string> ReturnSystemAutoCompleteList(string input, Object ctrl)
+        public static void ReturnSystemAutoCompleteList(string input, Object ctrl, SortedSet<string> set)
         {
-            List<string> ret = new List<string>();
-
             if (input.HasChars())
             {
                 if (SystemsDatabase.Instance.RebuildRunning)
@@ -464,7 +457,7 @@ namespace EliteDangerousCore.DB
                             {
                                 foreach (var s in kvp.Value)
                                 {
-                                    ret.Add(s.Name);
+                                    set.Add(s.Name);
                                 }
                             }
                         }
@@ -476,19 +469,17 @@ namespace EliteDangerousCore.DB
                     foreach (var i in systems)
                     {
                         AddToCache(i);
-                        ret.Add(i.Name);
+                        set.Add(i.Name);
                     }
 
                     List<ISystem> aliases = DB.SystemsDB.FindAliasWildcard(input);
                     foreach (var i in aliases)
                     {
                         AddToCache(i);
-                        ret.Add(i.Name);
+                        set.Add(i.Name);
                     }
                 }
             }
-
-            return ret;
         }
 
         #endregion

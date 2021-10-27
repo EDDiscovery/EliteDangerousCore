@@ -15,101 +15,102 @@
  */
 
 using System.Collections.Generic;
-using System.Drawing;
+using System.Linq;
 
 namespace EliteDangerousCore.EDSM
 {
-    public enum GalMapTypeEnum
-    {
-        historicalLocation,
-        nebula,
-        planetaryNebula,
-        stellarRemnant,
-        blackHole,
-        starCluster,
-        pulsar,
-        minorPOI,
-        beacon,
-        surfacePOI,
-        cometaryBody,
-        jumponiumRichSystem,
-        planetFeatures,
-        deepSpaceOutpost,
-        mysteryPOI,
-        restrictedSectors,
-        independentOutpost,
-        Regional,
-        GeyserPOI,
-        OrganicPOI,
-        EDSMUnknown,
-
-
-    }
-
     public class GalMapType
     {
-        public enum GalMapGroup
+        public enum VisibleObjectsType            // IDs of visible objects
+        {
+            historicalLocation,
+            nebula,
+            planetaryNebula,
+            stellarRemnant,
+            blackHole,
+            starCluster,
+            pulsar,
+            minorPOI,
+            beacon,
+            surfacePOI,
+            cometaryBody,
+            jumponiumRichSystem,
+            planetFeatures,
+            deepSpaceOutpost,
+            mysteryPOI,
+            restrictedSectors,
+            independentOutpost,
+            Regional,
+            GeyserPOI,
+            OrganicPOI,
+            EDSMUnknown,
+
+            MarxNebula, // non EDSM
+        }
+        public enum GroupType
         {
             Markers = 1,
             Routes,
             Regions,
             Quadrants,
         }
+        static public List<GalMapType> GalTypes { get; private set; }  = CreateTypes();     // all the types.
+        static public GalMapType[] VisibleTypes { get { return GalTypes.Where(x => x.VisibleType != null).ToArray(); } }
 
-        public string Typeid;
+        public string TypeName;         // mostly, EDSM type name
         public string Description;
-        public Image Image;
-        public GalMapGroup Group;
-        public bool Animate;
+        public GroupType Group;
+        public VisibleObjectsType? VisibleType;
         public int Index;
 
-        public GalMapType(string id, string desc, GalMapGroup g, Image b, bool animate, int i)
+        private GalMapType(string id, string desc, GroupType g, VisibleObjectsType? te, int i)
         {
-            Typeid = id;
+            TypeName = id;
             Description = desc;
             Group = g;
-            Image = b;
-            Animate = animate;
+            VisibleType = te;
             Index = i;
         }
 
-        public static IReadOnlyDictionary<GalMapTypeEnum, Image> GalMapTypeIcons { get; } = new BaseUtils.Icons.IconGroup<GalMapTypeEnum>("GalMap");
-
-        static public List<GalMapType> GetTypes()
+        private static List<GalMapType> CreateTypes()
         {
             List<GalMapType> type = new List<GalMapType>();
 
             int index = 0;
 
-            type.Add(new GalMapType("historicalLocation", "η Historical Location", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.historicalLocation], false, index++));
-            type.Add(new GalMapType("nebula", "α Nebula", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.nebula], true, index++));
-            type.Add(new GalMapType("planetaryNebula", "β Planetary Nebula", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.planetaryNebula], true, index++));
-            type.Add(new GalMapType("stellarRemnant", "γ Stellar Features", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.stellarRemnant], true, index++));
-            type.Add(new GalMapType("blackHole", "δ Black Hole", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.blackHole], true, index++));
-            type.Add(new GalMapType("starCluster", "σ Star Cluster", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.starCluster], true, index++));
-            type.Add(new GalMapType("pulsar", "ζ Pulsar", GalMapGroup.Markers , GalMapTypeIcons[GalMapTypeEnum.pulsar], true, index++));
-            type.Add(new GalMapType("minorPOI", "★ Minor POI or Star", GalMapGroup.Markers , GalMapTypeIcons[GalMapTypeEnum.minorPOI], false, index++));
-            type.Add(new GalMapType("beacon", "⛛ Beacon", GalMapGroup.Markers , GalMapTypeIcons[GalMapTypeEnum.beacon], false, index++));
-            type.Add(new GalMapType("surfacePOI", "∅ Surface POI", GalMapGroup.Markers , GalMapTypeIcons[GalMapTypeEnum.surfacePOI], false, index++));
-            type.Add(new GalMapType("cometaryBody", "☄ Cometary Body", GalMapGroup.Markers , GalMapTypeIcons[GalMapTypeEnum.cometaryBody], true, index++));
-            type.Add(new GalMapType("jumponiumRichSystem", "☢ Jumponium-Rich System", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.jumponiumRichSystem], false, index++));
-            type.Add(new GalMapType("planetFeatures", "∅ Planetary Features", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.planetFeatures], false, index++));
-            type.Add(new GalMapType("deepSpaceOutpost", "Deep space outpost", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.deepSpaceOutpost], false, index++));
-            type.Add(new GalMapType("mysteryPOI", "Mystery POI", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.mysteryPOI], false, index++));
-            type.Add(new GalMapType("restrictedSectors", "Restricted Sectors", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.restrictedSectors], false, index++));
-            type.Add(new GalMapType("independentOutpost", "Independent Outpost", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.independentOutpost], false, index++));
-            type.Add(new GalMapType("regional", "Regional Marker", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.Regional], false, index++));
-            type.Add(new GalMapType("geyserPOI", "Geyser", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.GeyserPOI], false, index++));
-            type.Add(new GalMapType("organicPOI", "Organic Material", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.OrganicPOI], false, index++));
-            type.Add(new GalMapType("EDSMUnknown", "EDSM other POI type", GalMapGroup.Markers, GalMapTypeIcons[GalMapTypeEnum.EDSMUnknown], false, index++));
+            type.Add(new GalMapType("historicalLocation", "η Historical Location", GroupType.Markers, VisibleObjectsType.historicalLocation,index++));
+            type.Add(new GalMapType("nebula", "α Nebula", GroupType.Markers, VisibleObjectsType.nebula, index++));
+            type.Add(new GalMapType("planetaryNebula", "β Planetary Nebula", GroupType.Markers, VisibleObjectsType.planetaryNebula, index++));
+            type.Add(new GalMapType("stellarRemnant", "γ Stellar Features", GroupType.Markers, VisibleObjectsType.stellarRemnant, index++));
+            type.Add(new GalMapType("blackHole", "δ Black Hole", GroupType.Markers, VisibleObjectsType.blackHole, index++));
+            type.Add(new GalMapType("starCluster", "σ Star Cluster", GroupType.Markers, VisibleObjectsType.starCluster, index++));
+            type.Add(new GalMapType("pulsar", "ζ Pulsar", GroupType.Markers , VisibleObjectsType.pulsar, index++));
+            type.Add(new GalMapType("minorPOI", "★ Minor POI or Star", GroupType.Markers , VisibleObjectsType.minorPOI,index++));
+            type.Add(new GalMapType("beacon", "⛛ Beacon", GroupType.Markers , VisibleObjectsType.beacon,index++));
+            type.Add(new GalMapType("surfacePOI", "∅ Surface POI", GroupType.Markers , VisibleObjectsType.surfacePOI,index++));
+            type.Add(new GalMapType("cometaryBody", "☄ Cometary Body", GroupType.Markers , VisibleObjectsType.cometaryBody, index++));
+            type.Add(new GalMapType("jumponiumRichSystem", "☢ Jumponium-Rich System", GroupType.Markers, VisibleObjectsType.jumponiumRichSystem,index++));
+            type.Add(new GalMapType("planetFeatures", "∅ Planetary Features", GroupType.Markers, VisibleObjectsType.planetFeatures,index++));
+            type.Add(new GalMapType("deepSpaceOutpost", "Deep space outpost", GroupType.Markers, VisibleObjectsType.deepSpaceOutpost,index++));
+            type.Add(new GalMapType("mysteryPOI", "Mystery POI", GroupType.Markers, VisibleObjectsType.mysteryPOI,index++));
+            type.Add(new GalMapType("restrictedSectors", "Restricted Sectors", GroupType.Markers, VisibleObjectsType.restrictedSectors,index++));
+            type.Add(new GalMapType("independentOutpost", "Independent Outpost", GroupType.Markers, VisibleObjectsType.independentOutpost,index++));
+            type.Add(new GalMapType("regional", "Regional Marker", GroupType.Markers, VisibleObjectsType.Regional,index++));
+            type.Add(new GalMapType("geyserPOI", "Geyser", GroupType.Markers, VisibleObjectsType.GeyserPOI,index++));
+            type.Add(new GalMapType("organicPOI", "Organic Material", GroupType.Markers, VisibleObjectsType.OrganicPOI,index++));
+            type.Add(new GalMapType("EDSMUnknown", "EDSM other POI type", GroupType.Markers, VisibleObjectsType.EDSMUnknown,index++));
+
+            // not EDSM
+
+            type.Add(new GalMapType("MarxNebula", "Marx Nebula List", GroupType.Markers, VisibleObjectsType.MarxNebula, index++));
 
             // not visual
-            type.Add(new GalMapType("travelRoute", "Travel Route", GalMapGroup.Routes , null, false, index++));
-            type.Add(new GalMapType("historicalRoute", "Historical Route", GalMapGroup.Routes , null, false, index++));
-            type.Add(new GalMapType("minorRoute", "Minor Route", GalMapGroup.Routes, null, false, index++));
-            type.Add(new GalMapType("neutronRoute", "Neutron highway", GalMapGroup.Routes, null, false, index++));
-            type.Add(new GalMapType("region", "Region", GalMapGroup.Regions, null, false, index++));
-            type.Add(new GalMapType("regionQuadrants", "Galactic Quadrants", GalMapGroup.Quadrants , null, false, index++));
+            type.Add(new GalMapType("travelRoute", "Travel Route", GroupType.Routes , null,index++));
+            type.Add(new GalMapType("historicalRoute", "Historical Route", GroupType.Routes , null,index++));
+            type.Add(new GalMapType("minorRoute", "Minor Route", GroupType.Routes, null,index++));
+            type.Add(new GalMapType("neutronRoute", "Neutron highway", GroupType.Routes, null,index++));
+            type.Add(new GalMapType("region", "Region", GroupType.Regions, null,index++));
+            type.Add(new GalMapType("regionQuadrants", "Galactic Quadrants", GroupType.Quadrants , null,index++));
 
 
             return type;

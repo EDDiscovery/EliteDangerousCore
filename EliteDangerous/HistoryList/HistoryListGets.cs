@@ -477,9 +477,9 @@ namespace EliteDangerousCore
                 {
                     EDSM.GalacticMapObject gmo = glist.Find(name, true);
 
-                    if (gmo != null && gmo.points.Count > 0)                // valid item, and has position
+                    if (gmo != null && gmo.Points.Count > 0)                // valid item, and has position
                     {
-                        ds1 = SystemCache.FindSystem(gmo.galMapSearch);     // only thru the db/cache, as we checked above for edsm direct, may be null
+                        ds1 = SystemCache.FindSystem(gmo.GalMapSearch);     // only thru the db/cache, as we checked above for edsm direct, may be null
 
                         return gmo.GetSystem(ds1);                          // and return a ISystem.  If ds1=null, we use the points pos, if ds1 is found, we use the cache position 
                     }

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2020 EDDiscovery development team
+ * Copyright © 2016-2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -20,29 +20,44 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using BaseUtils;
 
 namespace EliteDangerousCore.EDSM
 {
     public class GalacticMapping
     {
-        public List<GalacticMapObject> galacticMapObjects = null;
-        public List<GalMapType> galacticMapTypes = null;
-        public GalacticMapObject[] RenderableMapObjects { get { return galacticMapObjects.Where(x => x.galMapType.Image != null).ToArray(); } }
-        public GalMapType[] RenderableMapTypes { get { return galacticMapTypes.Where(x => x.Image != null).ToArray(); } }
+        public List<GalacticMapObject> GalacticMapObjects = null;
+        public GalacticMapObject[] VisibleMapObjects { get { return GalacticMapObjects.Where(x => x.GalMapType.VisibleType != null).ToArray(); } }
 
-        public bool Loaded { get { return galacticMapObjects != null; } }
+        public bool Loaded { get { return GalacticMapObjects.Count > 0; } }
 
         public GalacticMapping()
         {
-            galacticMapTypes = GalMapType.GetTypes();          // we always have the types.
+            GalacticMapObjects = new List<GalacticMapObject>();
         }
 
-        public bool ParseFile(string file)
+        public bool LoadMarxObjects()
+        {
+            using (StringReader t = new StringReader(EliteDangerous.Properties.Resources.Marx_Nebula_List_26_10_21))
+            {
+                CSVFile csv = new CSVFile();
+
+                return csv.Read(t, true, (r, rw) => {
+                    var gmo = new GalacticMapObject("MarxNebula", rw[0] + " Nebula", "Marx sourced nebula",
+                                            new EMK.LightGeometry.Vector3((float)(rw[2].InvariantParseDoubleNull() ?? 0), 
+                                                        (float)(rw[3].InvariantParseDoubleNull() ?? 0), 
+                                                        (float)(rw[4].InvariantParseDoubleNull() ?? 0)));
+                    GalacticMapObjects.Add(gmo);
+                });
+            }
+        }
+
+        public bool ParseEDSMFile(string file)
         {
             try
             {
                 string json = File.ReadAllText(file);
-                return ParseJson(json);
+                return ParseEDSMJson(json);
             }
             catch (Exception ex)
             {
@@ -52,10 +67,8 @@ namespace EliteDangerousCore.EDSM
             return false;
         }
 
-        public bool ParseJson(string json)
+        public bool ParseEDSMJson(string json)
         {
-            var gmobjects = new List<GalacticMapObject>();
-
             try
             {
                 if (json.HasChars())
@@ -65,26 +78,14 @@ namespace EliteDangerousCore.EDSM
                     foreach (JObject jo in galobjects)
                     {
                         GalacticMapObject galobject = new GalacticMapObject(jo);
+                        GalacticMapObjects.Add(galobject);
 
-                        GalMapType ty = galacticMapTypes.Find(x => x.Typeid.Equals(galobject.type));
-
-                        if (ty == null)
-                        {
-                            ty = galacticMapTypes[galacticMapTypes.Count - 1];      // last one is default..
-                            System.Diagnostics.Trace.WriteLine("Unknown Gal Map object " + galobject.type + " " + galobject.name);
-                        }
-
-                        galobject.galMapType = ty;
-                        gmobjects.Add(galobject);
-
-                        if (galobject.points.Count == 1 && galobject.galMapSearch != null && galobject.galMapUrl != null)
+                        if (galobject.Points.Count == 1 && galobject.GalMapSearch != null && galobject.GalMapUrl != null)
                         {
                             var gms = new GalacticMapSystem(galobject);
                             SystemCache.FindCachedJournalSystem(gms);
                         }
                     }
-
-                    galacticMapObjects = gmobjects;
 
                     return true;
                 }
@@ -99,11 +100,11 @@ namespace EliteDangerousCore.EDSM
 
         public GalacticMapObject Find(string name, bool contains = false)
         {
-            if (galacticMapObjects != null && name.HasChars())
+            if (GalacticMapObjects != null && name.HasChars())
             {
-                foreach (GalacticMapObject gmo in galacticMapObjects)
+                foreach (GalacticMapObject gmo in GalacticMapObjects)
                 {
-                    if (gmo.name.Equals(name, StringComparison.InvariantCultureIgnoreCase) || (contains && gmo.name.IndexOf(name, StringComparison.InvariantCultureIgnoreCase) >= 0))
+                    if (gmo.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase) || (contains && gmo.Name.IndexOf(name, StringComparison.InvariantCultureIgnoreCase) >= 0))
                     {
                         return gmo;
                     }
@@ -117,14 +118,14 @@ namespace EliteDangerousCore.EDSM
         {
             GalacticMapObject nearest = null;
 
-            if (galacticMapObjects != null)
+            if (GalacticMapObjects != null)
             {
                 double mindist = double.MaxValue;
-                foreach (GalacticMapObject gmo in galacticMapObjects)
+                foreach (GalacticMapObject gmo in GalacticMapObjects)
                 {
-                    if ( gmo.points.Count == 1 )        // only for single point  bits
+                    if ( gmo.Points.Count == 1 )        // only for single point  bits
                     {
-                        double distsq = (gmo.points[0].X - x) * (gmo.points[0].X - x) + (gmo.points[0].Y - y) * (gmo.points[0].Y - y) + (gmo.points[0].Z - z) * (gmo.points[0].Z - z);
+                        double distsq = (gmo.Points[0].X - x) * (gmo.Points[0].X - x) + (gmo.Points[0].Y - y) * (gmo.Points[0].Y - y) + (gmo.Points[0].Z - z) * (gmo.Points[0].Z - z);
                         if ( distsq < mindist)
                         {
                             mindist = distsq;
@@ -141,11 +142,11 @@ namespace EliteDangerousCore.EDSM
         {
             List<string> ret = new List<string>();
 
-            if (galacticMapObjects != null)
+            if (GalacticMapObjects != null)
             {
-                foreach (GalacticMapObject gmo in galacticMapObjects)
+                foreach (GalacticMapObject gmo in GalacticMapObjects)
                 {
-                    ret.Add(gmo.name);
+                    ret.Add(gmo.Name);
                 }
             }
 

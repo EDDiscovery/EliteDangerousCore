@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2020 EDDiscovery development team
+ * Copyright © 2016-2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -31,15 +31,15 @@ namespace EliteDangerousCore.EDSM
 
         public GalacticMapSystem(GalacticMapObject gmo) : base()
         {
-            this.Name = gmo.galMapSearch;
-            this.X = gmo.points[0].X;
-            this.Y = gmo.points[0].Y;
-            this.Z = gmo.points[0].Z;
+            this.Name = gmo.GalMapSearch;
+            this.X = gmo.Points[0].X;
+            this.Y = gmo.Points[0].Y;
+            this.Z = gmo.Points[0].Z;
             this.GalMapObject = gmo;
 
-            if (gmo.galMapUrl != null)
+            if (gmo.GalMapUrl != null)
             {
-                var rematch = EDSMIdRegex.Match(gmo.galMapUrl);
+                var rematch = EDSMIdRegex.Match(gmo.GalMapUrl);
 
                 long edsmid;
                 if (rematch != null && long.TryParse(rematch.Groups[1].Value, out edsmid))
