@@ -109,7 +109,8 @@ namespace EliteDangerousCore.DB
         // it returns a too long vector, for speed reasons
         // may return zero entries with empty arrays if nothing is present
         // may return zero/null if system DB is being built
-        public static int GetSystemList<V>(float x, float y, float z, float blocksize, ref string[] names, ref V[] vectors, Func<int, int, int, V> tovect, int chunksize = 10000)
+        public static int GetSystemList<V>(float x, float y, float z, float blocksize, ref string[] names, ref V[] vectors, Func<int, int, int, V> tovect,
+                                            Func<V, string, string> additionaltext, int chunksize = 10000)
         {
             string[] namesout = null;
             V[] vectsout = null;
@@ -119,7 +120,7 @@ namespace EliteDangerousCore.DB
             {
                 SystemsDatabase.Instance.DBRead(db =>
                 {
-                    fill = GetSystemList<V>(x, y, z, blocksize, ref namesout, ref vectsout, tovect, db, chunksize);
+                    fill = GetSystemList<V>(db,x, y, z, blocksize, ref namesout, ref vectsout, tovect, additionaltext, chunksize);
                 }, warnthreshold: 5000);
             }
 
@@ -129,7 +130,8 @@ namespace EliteDangerousCore.DB
         }
 
 
-        public static int GetSystemList<V>(float x, float y, float z, float blocksize, ref string[] names, ref V[] vectors, Func<int, int, int, V> tovect, SQLiteConnectionSystem cn, int chunksize )
+        public static int GetSystemList<V>(SQLiteConnectionSystem cn, float x, float y, float z, float blocksize, ref string[] names, ref V[] vectors, Func<int, int, int, V> tovect,
+                                                Func<V, string, string> additionaltext, int chunksize )
         {
             names = new string[chunksize];
             vectors = new V[chunksize];
@@ -172,8 +174,11 @@ namespace EliteDangerousCore.DB
 
                         if (ec.IsNamed)
                             ec.StarName = reader.GetString(5);
-
-                        names[fillpos] = ec.ToString();
+                        string name = ec.ToString();
+                        if (additionaltext != null)
+                            names[fillpos] = additionaltext(vectors[fillpos], name);
+                        else
+                            names[fillpos] = name;
                         fillpos++;
 
                     }
