@@ -347,15 +347,16 @@ namespace EliteDangerousCore
         }
 
         // map3d
-        public List<HistoryEntry> FilterByTravelTime(DateTime? starttimeutc, DateTime? endtimeutc)        // filter, in its own order. return FSD,carrier and location events after death
+        public List<HistoryEntry> FilterByTravelTime(DateTime? starttimeutc, DateTime? endtimeutc, bool musthavecoord)        // filter, in its own order. return FSD,carrier and location events after death
         {
             List<HistoryEntry> ents = new List<HistoryEntry>();
             string lastsystem = null;
             foreach (HistoryEntry he in historylist)        // in add order, oldest first
             {
-                if ((starttimeutc == null || he.EventTimeUTC >= starttimeutc) && (endtimeutc == null || he.EventTimeUTC <= endtimeutc))
-                {
-                    if (he.EntryType == JournalTypeEnum.Location || he.EntryType == JournalTypeEnum.CarrierJump || he.EntryType == JournalTypeEnum.FSDJump)
+                if ((he.EntryType == JournalTypeEnum.Location || he.EntryType == JournalTypeEnum.CarrierJump || he.EntryType == JournalTypeEnum.FSDJump) &&
+                    (he.System.HasCoordinate || !musthavecoord))
+                { 
+                    if ((starttimeutc == null || he.EventTimeUTC >= starttimeutc) && (endtimeutc == null || he.EventTimeUTC <= endtimeutc))
                     {
                         if (lastsystem != he.System.Name)
                         {
