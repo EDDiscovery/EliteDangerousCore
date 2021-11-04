@@ -335,7 +335,7 @@ namespace EliteDangerousCore
 
         static public List<JournalEntry> GetAll(int commander = -999, DateTime? startdateutc = null, DateTime? enddateutc = null,
                             JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null, Func<JournalEntry, Object, bool> callback = null, Object callbackobj = null,
-                            int chunksize = 1000)
+                            int chunksize = 1000, Func<bool> cancelRequested = null)
         {
             // in the connection thread, construct the command and execute a read..
 
@@ -381,7 +381,7 @@ namespace EliteDangerousCore
 
                 using (var reader = cmd.ExecuteReader())
                 {
-                    while (reader.Read())
+                    while (reader.Read() && !(cancelRequested?.Invoke()??false))
                     {
                         JournalEntry je = JournalEntry.CreateJournalEntryFixedPos(reader);
                         list.Add(je);

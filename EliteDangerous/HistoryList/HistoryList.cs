@@ -92,7 +92,7 @@ namespace EliteDangerousCore
 
         // History load system, read DB for entries and make a history up
 
-        public static HistoryList LoadHistory(  Action<string> reportProgress, 
+        public static HistoryList LoadHistory(  Action<string> reportProgress, Func<bool> cancelRequested,
                                                 int CurrentCommander, 
                                                 int fullhistoryloaddaylimit, string essentialitems
                                              )
@@ -115,12 +115,13 @@ namespace EliteDangerousCore
 
                 jlist = JournalEntry.GetAll(CurrentCommander,
                     ids: list,
-                    allidsafterutc: DateTime.UtcNow.Subtract(new TimeSpan(fullhistoryloaddaylimit, 0, 0, 0))
+                    allidsafterutc: DateTime.UtcNow.Subtract(new TimeSpan(fullhistoryloaddaylimit, 0, 0, 0)),
+                    cancelRequested:cancelRequested
                     );
             }
             else
             {
-                jlist = JournalEntry.GetAll(CurrentCommander);
+                jlist = JournalEntry.GetAll(CurrentCommander, cancelRequested:cancelRequested);
             }
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Journals read from DB");
@@ -131,6 +132,9 @@ namespace EliteDangerousCore
 
             foreach (JournalEntry je in jlist)
             {
+                if (cancelRequested?.Invoke() ?? false)     // if cancelling, stop processing
+                    break;
+
                 if (eno++ % 10000 == 0)
                 {
                     reportProgress($"Creating History {eno-1}/{jlist.Count}");
