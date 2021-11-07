@@ -14,8 +14,6 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
-//#define TIMESCAN
-
 using BaseUtils.JSON;
 using EliteDangerousCore.DB;
 using EliteDangerousCore.JournalEvents;
@@ -42,17 +40,6 @@ namespace EliteDangerousCore
             jr.TLUId = (int)(long)dr["TravelLogId"];
             jr.CommanderId = (int)(long)dr["CommanderId"];
             jr.Synced = (int)(long)dr["Synced"];
-            return jr;
-        }
-
-        static protected JournalEntry CreateJournalEntryFixedPos(DbDataReader dr)       // table is Id,TravelLogId,CommanderId,EventData,Sycned
-        {
-            string json = (string)dr[3];
-            JournalEntry jr = JournalEntry.CreateJournalEntry(json);
-            jr.Id = (int)(long)dr[0];
-            jr.TLUId = (int)(long)dr[1];
-            jr.CommanderId = (int)(long)dr[2];
-            jr.Synced = (int)(long)dr[4];
             return jr;
         }
 
@@ -319,27 +306,19 @@ namespace EliteDangerousCore
             }
         }
 
-        // ordered in time, id order, ascending, oldest first
-#if TIMESCAN
-        class Results
-        {
-            public string name;
-            public double avg, min, max, total, avgtime, sumtime;
-            public int count;
-        };
-#endif
-
         // Primary method to fill historylist
         // Get All journals matching parameters. 
         // if callback set, then each JE is passed back thru callback and not accumulated. Callback is in this thread. Callback can stop the accumulation if it returns false
 
-        static public List<JournalEntry> GetAll(int commander = -999, DateTime? startdateutc = null, DateTime? enddateutc = null,
+        static public JournalEntry[] GetAll(int commander = -999, DateTime? startdateutc = null, DateTime? enddateutc = null,
                             JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null, Func<JournalEntry, Object, bool> callback = null, Object callbackobj = null,
-                            int chunksize = 1000, Func<bool> cancelRequested = null)
+                            int chunksize = 1000, Action<string> reportProgress = null, Func<bool> cancelRequested = null)
         {
             // in the connection thread, construct the command and execute a read..
 
-            var retlist = UserDatabase.Instance.DBRead<List<JournalEntry>>(cn =>
+            Stopwatch sw = new Stopwatch(); sw.Start();
+
+            var retlist = UserDatabase.Instance.DBRead<List<Tuple<long, long, int, string, int>>>(cn =>
             {
                 DbCommand cmd = cn.CreateCommand("select Id,TravelLogId,CommanderId,EventData,Synced from JournalEntries");
                 string cnd = "";
@@ -377,35 +356,55 @@ namespace EliteDangerousCore
 
                 cmd.CommandText += " Order By EventTime,Id ASC";
 
-                List<JournalEntry> list = new List<JournalEntry>();
+                List<Tuple<long, long, int, string, int>> jdata = new List<Tuple<long, long, int, string, int>>();
 
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read() && !(cancelRequested?.Invoke()??false))
                     {
-                        JournalEntry je = JournalEntry.CreateJournalEntryFixedPos(reader);
-                        list.Add(je);
+                        jdata.Add(new Tuple<long, long, int, string, int>((long)reader[0], (long)reader[1], (int)(long)reader[2], (string)reader[3], (int)(long)reader[4]));
                     }
                 }
 
-                return list;
+                return jdata;
             });
+
+            System.Diagnostics.Debug.WriteLine($"P1 {sw.ElapsedMilliseconds} {retlist.Count}");
+
+            JournalEntry[] jlist = new JournalEntry[retlist.Count];
+
+            int eno = 0;
+            foreach(var e in retlist )
+            {
+                if ( eno % 10000 == 0 )
+                {
+                    if (cancelRequested?.Invoke() ?? false)     // if cancelling, stop processing
+                        break;
+                    reportProgress?.Invoke($"Creating Journal Entries {eno}/{retlist.Count}");
+                }
+
+                jlist[eno++] = CreateJournalEntry(e.Item1, e.Item2, e.Item3, e.Item4, e.Item5);
+            }
+
+            retlist = null;
+
+            System.Diagnostics.Debug.WriteLine($"P2 {sw.ElapsedMilliseconds} {jlist.Length} {cancelRequested?.Invoke()}");
 
             if (callback != null)               // collated, now process them, if callback, feed them thru callback procedure
             {
-                foreach (var e in retlist)
+                foreach (var e in jlist)
                 {
                     if (!callback.Invoke(e, callbackobj))     // if indicate stop
                     {
                         break;
                     }
                 }
-                retlist = null;
+                jlist = null;
                 return null;
             }
             else
             {
-                return retlist;
+                return jlist;
             }
         }
 
@@ -458,30 +457,6 @@ namespace EliteDangerousCore
             return vsc;
         }
 
-        public static JournalEntry GetLast(int cmdrid, DateTime beforeutc, Func<JournalEntry, bool> filter)
-        {
-            return UserDatabase.Instance.DBRead<JournalEntry>(cn =>
-            {
-                using (DbCommand cmd = cn.CreateCommand("SELECT * FROM JournalEntries WHERE CommanderId = @cmdrid AND EventTime < @time ORDER BY EventTime DESC"))
-                {
-                    cmd.AddParameterWithValue("@cmdrid", cmdrid);
-                    cmd.AddParameterWithValue("@time", beforeutc);
-                    using (DbDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            JournalEntry ent = CreateJournalEntry(reader);
-                            if (filter(ent))
-                            {
-                                return ent;
-                            }
-                        }
-                    }
-                }
-                return null;
-            });
-        }
-
         public static JournalEntry GetLast(DateTime beforeutc, Func<JournalEntry, bool> filter)
         {
             return UserDatabase.Instance.DBRead<JournalEntry>(cn =>
@@ -503,12 +478,6 @@ namespace EliteDangerousCore
                 }
                 return null;
             });
-        }
-
-        public static T GetLast<T>(int cmdrid, DateTime beforeutc, Func<T, bool> filter = null)
-            where T : JournalEntry
-        {
-            return (T)GetLast(cmdrid, beforeutc, e => e is T && (filter == null || filter((T)e)));
         }
 
         public static T GetLast<T>(DateTime beforeutc, Func<T, bool> filter = null)

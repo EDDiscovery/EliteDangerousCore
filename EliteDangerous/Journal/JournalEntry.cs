@@ -216,6 +216,16 @@ namespace EliteDangerousCore
             return CreateJournalEntry(jo.ToString());
         }
 
+        static protected JournalEntry CreateJournalEntry(long id, long tluid, int cmdrid, string json, int flags)      
+        {
+            JournalEntry jr = JournalEntry.CreateJournalEntry(json);
+            jr.Id = id;
+            jr.TLUId = tluid;
+            jr.CommanderId = cmdrid;
+            jr.Synced = flags;
+            return jr;
+        }
+
         // Decode text, to journal entry, or Unknown/Null if bad
         static public JournalEntry CreateJournalEntry(string text, bool savejson = false, bool returnnullifbadjson = false)       
         {

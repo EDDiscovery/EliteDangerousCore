@@ -103,7 +103,7 @@ namespace EliteDangerousCore
 
             reportProgress("Reading Database");
 
-            List<JournalEntry> jlist;       // returned in date ascending, oldest first order.
+            JournalEntry[] journalentries;       // returned in date ascending, oldest first order.
 
             if (fullhistoryloaddaylimit > 0)
             {
@@ -113,15 +113,15 @@ namespace EliteDangerousCore
                            (essentialitems == nameof(JournalEssentialEvents.FullStatsEssentialEvents)) ? JournalEssentialEvents.FullStatsEssentialEvents :
                             JournalEssentialEvents.EssentialEvents;
 
-                jlist = JournalEntry.GetAll(CurrentCommander,
+                journalentries = JournalEntry.GetAll(CurrentCommander,
                     ids: list,
                     allidsafterutc: DateTime.UtcNow.Subtract(new TimeSpan(fullhistoryloaddaylimit, 0, 0, 0)),
-                    cancelRequested:cancelRequested
+                    reportProgress: reportProgress, cancelRequested:cancelRequested
                     );
             }
             else
             {
-                jlist = JournalEntry.GetAll(CurrentCommander, cancelRequested:cancelRequested);
+                journalentries = JournalEntry.GetAll(CurrentCommander, reportProgress: reportProgress, cancelRequested:cancelRequested);
             }
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Journals read from DB");
@@ -130,14 +130,14 @@ namespace EliteDangerousCore
 
             int eno = 0;
 
-            foreach (JournalEntry je in jlist)
+            foreach (JournalEntry je in journalentries)
             {
-                if (cancelRequested?.Invoke() ?? false)     // if cancelling, stop processing
-                    break;
-
                 if (eno++ % 10000 == 0)
                 {
-                    reportProgress($"Creating History {eno-1}/{jlist.Count}");
+                    if (cancelRequested?.Invoke() ?? false)     // if cancelling, stop processing
+                        break;
+
+                    reportProgress($"Creating History {eno-1}/{journalentries.Length}");
                 }
 
                 if (MergeOrDiscardEntries(hist.hlastprocessed?.journalEntry, je))        // if we merge, don't store into HE
