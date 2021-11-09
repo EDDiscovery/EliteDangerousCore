@@ -278,63 +278,42 @@ namespace EliteDangerousCore
             return null;
         }
 
-        static public List<JournalEntry> Get(string eventtype)            // any commander, find me an event of this type..
+        // Return data from table
+        // ID, travellogid, commanderid, event json, sync flag
+        // null if cancelled
+
+        public class TableData
         {
-            return UserDatabase.Instance.DBRead<List<JournalEntry>>(cn => { return Get(eventtype, cn); });
+            public long ID;
+            public long TLUID;
+            public int Cmdr;
+            public string Json;
+            public int Syncflag;
         }
 
-        static internal List<JournalEntry> Get(string eventtype, SQLiteConnectionUser cn, DbTransaction tn = null)
-        {
-            Dictionary<long, TravelLogUnit> tlus = TravelLogUnit.GetAll().ToDictionary(t => t.ID);
-
-            using (DbCommand cmd = cn.CreateCommand("select * from JournalEntries where EventType=@ev", tn))
-            {
-                cmd.AddParameterWithValue("@ev", eventtype);
-
-                using (DbDataReader reader = cmd.ExecuteReader())
-                {
-                    List<JournalEntry> entries = new List<JournalEntry>();
-
-                    while (reader.Read())
-                    {
-                        JournalEntry je = CreateJournalEntry(reader);
-                        entries.Add(je);
-                    }
-
-                    return entries;
-                }
-            }
-        }
-
-        // Primary method to fill historylist
-        // Get All journals matching parameters. 
-        // if callback set, then each JE is passed back thru callback and not accumulated. Callback is in this thread. Callback can stop the accumulation if it returns false
-
-        static public JournalEntry[] GetAll(int commander = -999, DateTime? startdateutc = null, DateTime? enddateutc = null,
-                            JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null, Func<JournalEntry, Object, bool> callback = null, Object callbackobj = null,
-                            int chunksize = 1000, Action<string> reportProgress = null, Func<bool> cancelRequested = null)
+        static public List<TableData> GetTableData(int commander = -999, DateTime? startdateutc = null, DateTime? enddateutc = null,
+                             JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null,
+                             Func<bool> cancelRequested = null)
         {
             // in the connection thread, construct the command and execute a read..
 
-            Stopwatch sw = new Stopwatch(); sw.Start();
-
-            var retlist = UserDatabase.Instance.DBRead<List<Tuple<long, long, int, string, int>>>(cn =>
+            return UserDatabase.Instance.DBRead<List<TableData>>(cn =>
             {
                 DbCommand cmd = cn.CreateCommand("select Id,TravelLogId,CommanderId,EventData,Synced from JournalEntries");
-                string cnd = "";
+                string condition = "";
                 if (commander != -999)
                 {
-                    cnd = cnd.AppendPrePad("CommanderID = @commander", " and ");
+                    condition = condition.AppendPrePad("CommanderID = @commander", " and ");
                     cmd.AddParameterWithValue("@commander", commander);
                 }
                 if (startdateutc != null)
                 {
-                    cnd = cnd.AppendPrePad("EventTime >= @after", " and ");
+                    condition = condition.AppendPrePad("EventTime >= @after", " and ");
                     cmd.AddParameterWithValue("@after", startdateutc.Value);
                 }
                 if (enddateutc != null)
                 {
-                    cnd = cnd.AppendPrePad("EventTime <= @before", " and ");
+                    condition = condition.AppendPrePad("EventTime <= @before", " and ");
                     cmd.AddParameterWithValue("@before", enddateutc.Value);
                 }
                 if (ids != null)
@@ -343,71 +322,63 @@ namespace EliteDangerousCore
                     if (allidsafterutc != null)
                     {
                         cmd.AddParameterWithValue("@idafter", allidsafterutc.Value);
-                        cnd = cnd.AppendPrePad("(EventTypeId in (" + string.Join(",", array) + ") Or EventTime>=@idafter)", " and ");
+                        condition = condition.AppendPrePad("(EventTypeId in (" + string.Join(",", array) + ") Or EventTime>=@idafter)", " and ");
                     }
                     else
                     {
-                        cnd = cnd.AppendPrePad("EventTypeId in (" + string.Join(",", array) + ")", " and ");
+                        condition = condition.AppendPrePad("EventTypeId in (" + string.Join(",", array) + ")", " and ");
                     }
                 }
 
-                if (cnd.HasChars())
-                    cmd.CommandText += " where " + cnd;
+                if (condition.HasChars())
+                    cmd.CommandText += " where " + condition;
 
                 cmd.CommandText += " Order By EventTime,Id ASC";
 
-                List<Tuple<long, long, int, string, int>> jdata = new List<Tuple<long, long, int, string, int>>();
+                List<TableData> jdata = new List<TableData>();
 
+                int eno = 0;
                 using (var reader = cmd.ExecuteReader())
                 {
-                    while (reader.Read() && !(cancelRequested?.Invoke()??false))
-                    {
-                        jdata.Add(new Tuple<long, long, int, string, int>((long)reader[0], (long)reader[1], (int)(long)reader[2], (string)reader[3], (int)(long)reader[4]));
+                while (reader.Read())
+                {
+                    if (eno++ % 10000 == 0 && (cancelRequested?.Invoke() ?? false))       // check every X entries
+                        return null;
+
+                    jdata.Add(new TableData() { ID = (long)reader[0], TLUID = (long)reader[1], Cmdr = (int)(long)reader[2], Json = (string)reader[3], Syncflag = (int)(long)reader[4] });
                     }
                 }
 
                 return jdata;
             });
-
-            System.Diagnostics.Debug.WriteLine($"P1 {sw.ElapsedMilliseconds} {retlist.Count}");
-
-            JournalEntry[] jlist = new JournalEntry[retlist.Count];
-
-            int eno = 0;
-            foreach(var e in retlist )
-            {
-                if ( eno % 10000 == 0 )
-                {
-                    if (cancelRequested?.Invoke() ?? false)     // if cancelling, stop processing
-                        break;
-                    reportProgress?.Invoke($"Creating Journal Entries {eno}/{retlist.Count}");
-                }
-
-                jlist[eno++] = CreateJournalEntry(e.Item1, e.Item2, e.Item3, e.Item4, e.Item5);
-            }
-
-            retlist = null;
-
-            System.Diagnostics.Debug.WriteLine($"P2 {sw.ElapsedMilliseconds} {jlist.Length} {cancelRequested?.Invoke()}");
-
-            if (callback != null)               // collated, now process them, if callback, feed them thru callback procedure
-            {
-                foreach (var e in jlist)
-                {
-                    if (!callback.Invoke(e, callbackobj))     // if indicate stop
-                    {
-                        break;
-                    }
-                }
-                jlist = null;
-                return null;
-            }
-            else
-            {
-                return jlist;
-            }
         }
 
+        // Get All journals matching parameters. 
+        // if cancelled, return empty array
+
+        static public JournalEntry[] GetAll(int commander = -999, DateTime? startdateutc = null, DateTime? enddateutc = null,
+                            JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null, 
+                            Func<bool> cancelRequested = null)
+        {
+            var retlist = GetTableData(commander, startdateutc, enddateutc, ids, allidsafterutc, cancelRequested);
+
+            if (retlist != null)   // if not cancelled
+            {
+                var jlist = CreateJournalEntries(retlist, cancelRequested);
+
+                System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
+                GC.Collect();       // to try and lose the tabledata
+
+                if (jlist != null)  // if not cancelled, return it
+                {
+                    return jlist;
+                }
+            }
+
+            return new JournalEntry[] { };  // default is empty array
+        }
+
+ 
         public static List<JournalEntry> GetByEventType(JournalTypeEnum eventtype, int commanderid, DateTime startutc, DateTime stoputc)
         {
             Dictionary<long, TravelLogUnit> tlus = TravelLogUnit.GetAll().ToDictionary(t => t.ID);

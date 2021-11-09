@@ -26,6 +26,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 
 namespace EliteDangerousCore
 {
@@ -264,6 +265,61 @@ namespace EliteDangerousCore
                 ret.JsonCached = jo;
 
             return ret;
+        }
+
+        // from table data ID, travellogid, commanderid, event json, sync flag
+        // create journal entries.  Multithreaded if many entries
+        // null if cancelled
+        static public JournalEntry[] CreateJournalEntries(List<TableData> tabledata, Func<bool> cancelRequested = null)
+        {
+            JournalEntry[] jlist = new JournalEntry[tabledata.Count];
+
+            if (tabledata.Count > 10000)        // a good amount, worth MTing
+            {
+                int threads = 4;        // on Rob's system 4 seems optimal
+                CountdownEvent cd = new CountdownEvent(threads);
+                for (int i = 0; i < threads; i++)
+                {
+                    int s = i * tabledata.Count / threads;
+                    int e = (i + 1) * tabledata.Count / threads;
+                    Thread t1 = new Thread(new ParameterizedThreadStart(CreateJEinThread));
+                    t1.Priority = ThreadPriority.Highest;
+                    t1.Name = $"GetAll {i}";
+                    System.Diagnostics.Debug.WriteLine($"Journal Creation Spawn {s}..{e}");
+                    t1.Start(new Tuple<List<TableData>, JournalEntry[], int, int, CountdownEvent, Func<bool>>(tabledata, jlist, s, e, cd, cancelRequested));
+                }
+
+                cd.Wait();
+            }
+            else
+            {
+                for (int j = 0; j < tabledata.Count; j++)
+                {
+                    var e = tabledata[j];
+                    jlist[j] = CreateJournalEntry(e.ID, e.TLUID, e.Cmdr, e.Json, e.Syncflag);
+                }
+            }
+
+            if (cancelRequested?.Invoke() ?? false)
+            {
+                return null;
+            }
+            return jlist;
+        }
+
+        private static void CreateJEinThread(Object o)
+        {
+            var cmd = (Tuple<List<TableData>, JournalEntry[], int, int, CountdownEvent, Func<bool>>)o;
+
+            for (int j = cmd.Item3; j < cmd.Item4; j++)
+            {
+                if (j % 10000 == 0 && (cmd.Item6?.Invoke() ?? false))       // check every X entries
+                    break;
+                var e = cmd.Item1[j];
+                cmd.Item2[j] = CreateJournalEntry(e.ID, e.TLUID, e.Cmdr, e.Json, e.Syncflag);
+            }
+
+            cmd.Item5.Signal();
         }
 
         #endregion

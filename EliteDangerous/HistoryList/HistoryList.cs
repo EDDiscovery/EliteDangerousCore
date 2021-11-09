@@ -103,7 +103,7 @@ namespace EliteDangerousCore
 
             reportProgress("Reading Database");
 
-            JournalEntry[] journalentries;       // returned in date ascending, oldest first order.
+            List<JournalEntry.TableData> tabledata;
 
             if (fullhistoryloaddaylimit > 0)
             {
@@ -113,16 +113,35 @@ namespace EliteDangerousCore
                            (essentialitems == nameof(JournalEssentialEvents.FullStatsEssentialEvents)) ? JournalEssentialEvents.FullStatsEssentialEvents :
                             JournalEssentialEvents.EssentialEvents;
 
-                journalentries = JournalEntry.GetAll(CurrentCommander,
+                tabledata = JournalEntry.GetTableData(CurrentCommander,
                     ids: list,
                     allidsafterutc: DateTime.UtcNow.Subtract(new TimeSpan(fullhistoryloaddaylimit, 0, 0, 0)),
-                    reportProgress: reportProgress, cancelRequested:cancelRequested
+                    cancelRequested:cancelRequested
                     );
             }
             else
             {
-                journalentries = JournalEntry.GetAll(CurrentCommander, reportProgress: reportProgress, cancelRequested:cancelRequested);
+                tabledata = JournalEntry.GetTableData(CurrentCommander, cancelRequested:cancelRequested);
             }
+ 
+            JournalEntry[] journalentries = new JournalEntry[0];       // default empty array so rest of code works
+
+            if (tabledata != null)          // if not cancelled table read
+            {
+                Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Journal Creation");
+
+                reportProgress($"Creating {tabledata.Count} Journal Entries");
+                var jes = JournalEntry.CreateJournalEntries(tabledata, cancelRequested);
+                if (jes != null)        // if not cancelled, use it
+                    journalentries = jes;
+            }
+
+            tabledata = null;
+
+            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Table Clean");
+
+            System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
+            GC.Collect();       // to try and lose the tabledata
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Journals read from DB");
 

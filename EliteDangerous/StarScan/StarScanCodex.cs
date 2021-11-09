@@ -38,7 +38,7 @@ namespace EliteDangerousCore
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine($"Reject codex entry {jsd.EventTimeUTC} {jsd.SystemAddress}");
+               // System.Diagnostics.Debug.WriteLine($"Reject codex entry {jsd.EventTimeUTC} {jsd.SystemAddress}");
             }
 
             return false;
