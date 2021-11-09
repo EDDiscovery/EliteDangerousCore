@@ -62,7 +62,7 @@ namespace EliteDangerousCore.DLL
         {
             EDDDLLInterfaces.EDDDLLIF.JournalEntry je = new EDDDLLInterfaces.EDDDLLIF.JournalEntry()
             {
-                ver = 3,
+                ver = 4,
                 indexno = he.EntryNumber,
                 utctime = he.EventTimeUTC.ToStringZulu(),
                 name = he.EventSummary,
@@ -90,6 +90,9 @@ namespace EliteDangerousCore.DLL
                 modulesvalue = he.ShipInformation?.ModulesValue ?? 0,
                 stored = storedflag,
                 travelstate = he.Status.TravelState.ToString(),
+                horizons = he.journalEntry.IsHorizons,
+                odyssey = he.journalEntry.IsOdyssey,
+                beta = he.journalEntry.IsBeta,
             };
 
             he.journalEntry.FillInformation(he.System, he.WhereAmI, out je.info, out je.detailedinfo);

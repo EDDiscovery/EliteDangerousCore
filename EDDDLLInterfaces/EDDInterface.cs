@@ -80,6 +80,12 @@ namespace EDDDLLInterfaces
             [FieldOffset(240)] [MarshalAs(UnmanagedType.SafeArray)] public string[] microresources;
 
             // Version 3 Ends here
+
+            [FieldOffset(248)] public bool horizons;
+            [FieldOffset(249)] public bool odyssey;
+            [FieldOffset(250)] public bool beta;
+
+            // Version 4 Ends here
         };
 
         public delegate bool EDDRequestHistory(long index, bool isjid, out JournalEntry f); //index =1..total records, or jid
