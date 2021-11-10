@@ -871,8 +871,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-
-        public string SurveyorInfoLine(ISystem sys, 
+        public string SurveyorInfoLine(ISystem sys,
                             bool hasminingsignals, bool hasgeosignals, bool hasbiosignals, bool hasthargoidsignals, bool hasguardiansignals, bool hashumansignals, bool hasothersignals,
                             bool hasscanorganics,
                             bool showvolcanism, bool showvalues, bool shortinfo, bool showGravity, bool showAtmos, bool showRings, 

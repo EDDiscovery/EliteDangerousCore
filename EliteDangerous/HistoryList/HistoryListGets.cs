@@ -32,12 +32,12 @@ namespace EliteDangerousCore
         public OutfittingList Outfitting = new OutfittingList();        // outfitting on stations
         public StarScan StarScan { get; private set; } = new StarScan();      // the results of scanning
         public int CommanderId { get; private set; }
-        public Dictionary<string, HistoryEntry> Visited { get; private set; } = new Dictionary<string, HistoryEntry>();  // not in any particular order.
+        public Dictionary<string, HistoryEntry> Visited { get; private set; } = new Dictionary<string, HistoryEntry>(StringComparer.InvariantCultureIgnoreCase);  // not in any particular order.
         public string LastSystem { get; private set; }                          // last system seen in
 
         public int Count { get { return historylist.Count; } }
 
-        public int Visits(string name) { return Visited.TryGetValue(name, out var res) ? res.Visits : 0; }
+        public int Visits(string name) { return Visited.TryGetValue(name, out var res) ? res.Visits : 0; }     // name is case insensitive
         public int VisitedSystemsCount { get { return Visited.Count; } }
 
         // oldest first

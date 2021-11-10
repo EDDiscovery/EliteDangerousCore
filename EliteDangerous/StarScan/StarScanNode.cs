@@ -182,6 +182,30 @@ namespace EliteDangerousCore
                 }
             }
 
+            // Using info here, and the indicated journal scan node, return suryeyor info on this node
+            public string SurveyorInfoLine(ISystem sys, bool showsignals, bool showorganics, bool showvolcanism, bool showvalues, bool shortinfo, bool showGravity, bool showAtmos, bool showRings,
+                            int lowRadiusLimit, int largeRadiusLimit, double eccentricityLimit)
+            {
+                if (scandata != null)
+                {
+                    bool hasthargoidsignals = Signals?.Find(x => x.IsThargoid) != null && showsignals;
+                    bool hasguardiansignals = Signals?.Find(x => x.IsGuardian) != null && showsignals;
+                    bool hashumansignals = Signals?.Find(x => x.IsHuman) != null && showsignals;
+                    bool hasothersignals = Signals?.Find(x => x.IsOther) != null && showsignals;
+                    bool hasminingsignals = Signals?.Find(x => x.IsUncategorised) != null && showsignals;
+                    bool hasgeosignals = Signals?.Find(x => x.IsGeo) != null && showsignals;
+                    bool hasbiosignals = Signals?.Find(x => x.IsBio) != null && showsignals;
+                    bool hasscanorganics = Organics != null && showorganics;
+
+                    return scandata.SurveyorInfoLine(sys, hasminingsignals, hasgeosignals, hasbiosignals,
+                                hasthargoidsignals, hasguardiansignals, hashumansignals, hasothersignals, hasscanorganics,
+                                showvolcanism, showvalues, shortinfo, showGravity, showAtmos, showRings,
+                                lowRadiusLimit,largeRadiusLimit, eccentricityLimit);
+                }
+                else
+                    return string.Empty;
+            }
+
 
             // given a list of scannodes, construst a tree of barynodes with their scans underneath.
             // reconstructs the node tree and inserts barynodes into it from the parent info
