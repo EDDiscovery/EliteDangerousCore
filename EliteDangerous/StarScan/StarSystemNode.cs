@@ -101,6 +101,10 @@ namespace EliteDangerousCore
             {
                 return Bodies.Where(b => (b.NodeType == ScanNodeType.star || b.NodeType == ScanNodeType.body) && b.ScanData != null).Count();
             }
+            public int StarPlanetsScannednonEDSM()      // not include anything but these.  This corresponds to FSSDiscoveryScan
+            {
+                return Bodies.Where(b => (b.NodeType == ScanNodeType.star || b.NodeType == ScanNodeType.body) && b.ScanData != null && !b.ScanData.IsEDSMBody).Count();
+            }
             public int StarsScanned()      // only stars
             {
                 return Bodies.Where(b => b.NodeType == ScanNodeType.star && b.ScanData != null).Count();
