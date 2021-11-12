@@ -66,6 +66,10 @@ namespace EliteDangerousCore.JournalEvents
                             StarClass = starclass
                         });
                     }
+
+                    SystemClass s = new SystemClass(routeents.Last().StarSystem, starpos.X, starpos.Y, starpos.Z);
+                    s.Source = SystemSource.FromJournal;
+                    DB.SystemCache.AddSystemToCache(s);     // inform cache of this known system
                 }
 
                 Route = routeents.ToArray();

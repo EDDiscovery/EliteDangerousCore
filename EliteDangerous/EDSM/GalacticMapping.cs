@@ -90,7 +90,7 @@ namespace EliteDangerousCore.EDSM
                         if (galobject.Points.Count == 1 && galobject.GalMapSearch != null && galobject.GalMapUrl != null)
                         {
                             var gms = new GalacticMapSystem(galobject);
-                            SystemCache.FindCachedJournalSystem(gms);
+                            SystemCache.AddSystemToCache(gms);
                         }
                     }
 

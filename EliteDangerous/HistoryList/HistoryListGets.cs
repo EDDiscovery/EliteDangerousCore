@@ -211,7 +211,7 @@ namespace EliteDangerousCore
         public double DistanceCurrentTo(string system)          // from current, if we have one, to system, if its found.
         {
             ISystem cursys = CurrentSystem();
-            ISystem other = FindSystem(system, null, false);    // does not use EDSM for this, just DB and history
+            ISystem other = SystemCache.FindSystem(system);    // does not use EDSM for this, just DB and history
             return cursys != null ? cursys.Distance(other) : -1;  // current can be null, shipsystem can be null, cursys can not have co-ord, -1 if failed.
         }
 
@@ -375,8 +375,6 @@ namespace EliteDangerousCore
             return ents;
         }
 
-
-
         // findsystemusercontrol
         public static IEnumerable<ISystem> FindSystemsWithinLy(List<HistoryEntry> he, ISystem centre, double minrad, double maxrad, bool spherical)
         {
@@ -454,42 +452,14 @@ namespace EliteDangerousCore
             }
         }
 
-        public HistoryEntry FindByName(string name, bool fsdjump = false)
+        // findsystemusercontrol
+        // find the last jump entry to system name
+        public HistoryEntry FindLastFSDCarrierJumpBySystemName(string name)
         {
-            if (fsdjump)
-                return historylist.FindLast(x => x.System.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-            else
-                return historylist.FindLast(x => x.IsFSDCarrierJump && x.System.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            return historylist.FindLast(x => x.IsFSDCarrierJump && x.System.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        // Checks Cache, Database, History, Galactic map if required, and EDSM directly if required
-
-        public ISystem FindSystem(string name, EDSM.GalacticMapping glist , bool checkedsm)        // in system or name
-        {
-            ISystem ds1 = SystemCache.FindSystem(name, checkedsm);     // go thru the cache and edsm if required
-
-            if (ds1 == null)
-            {
-                HistoryEntry vs = FindByName(name);         // else try and find in our list
-
-                if (vs != null)
-                    ds1 = vs.System;
-                else if (glist != null)                     // if we have a galmap
-                {
-                    EDSM.GalacticMapObject gmo = glist.Find(name, true);
-
-                    if (gmo != null && gmo.Points.Count > 0)                // valid item, and has position
-                    {
-                        ds1 = SystemCache.FindSystem(gmo.GalMapSearch);     // only thru the db/cache, as we checked above for edsm direct, may be null
-
-                        return gmo.GetSystem(ds1);                          // and return a ISystem.  If ds1=null, we use the points pos, if ds1 is found, we use the cache position 
-                    }
-                }
-            }
-
-            return ds1;
-        }
-
+ 
         // 3dmap only
         public static HistoryEntry FindNextSystem(List<HistoryEntry> syslist, string sysname, int dir)
         {

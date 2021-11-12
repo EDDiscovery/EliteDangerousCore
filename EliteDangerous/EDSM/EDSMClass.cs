@@ -423,7 +423,7 @@ namespace EliteDangerousCore.EDSM
                             long id = jo["systemId"].Long();
                             DateTime etutc = DateTime.ParseExact(ts, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal); // UTC time
 
-                            ISystem sc = DB.SystemCache.FindSystem(new SystemClass(name, id), db);      // find in our DB only.
+                            ISystem sc = DB.SystemCache.FindSystemInCacheDB(new SystemClass(name, id), db);      // find in our DB only.
 
                             xtofetch.Add(new Tuple<JObject, ISystem>(jo, sc));
                         }
