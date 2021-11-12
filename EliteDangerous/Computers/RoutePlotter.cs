@@ -15,6 +15,7 @@
  */
 
 using EliteDangerousCore.DB;
+using EliteDangerousCore.EDSM;
 using EMK.LightGeometry;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,7 @@ namespace EliteDangerousCore
         public string ToSystem;
         public SystemsDB.SystemsNearestMetric RouteMethod;
         public bool UseFsdBoost;
+        public bool EDSM;
 
         public class ReturnInfo
         {
@@ -79,6 +81,11 @@ namespace EliteDangerousCore
                 Point3D expectedNextPosition = GetNextPosition(curpos, travelvectorperly, MaxRange);    // where we would like to be..
                 ISystem bestsystem = GetBestJumpSystem(curpos, travelvectorperly, maxfromwanted, MaxRange);    // see if we can find a system near  our target
 
+                if ( bestsystem == null && EDSM)
+                {
+                    bestsystem = GetBestEDSMSystem(curpos, travelvectorperly, maxfromwanted, MaxRange);
+                }
+
                 // if we haven't found a system in range, let's try boosting
                 int boostStrength = 0;
                 while (UseFsdBoost && bestsystem == null && boostStrength < 4)
@@ -86,7 +93,8 @@ namespace EliteDangerousCore
                     boostStrength = 1 << boostStrength;
                     float maxRangeWithBoost = MaxRange * (1.0f + BoostPercentage(boostStrength));
                     ISystem bestSystemWithBoost = GetBestJumpSystem(curpos, travelvectorperly, maxfromwanted, maxRangeWithBoost);
-
+                    if ( bestSystemWithBoost == null && EDSM)
+                        bestSystemWithBoost = GetBestEDSMSystem(curpos, travelvectorperly, maxfromwanted, maxRangeWithBoost);
                     if (bestSystemWithBoost != null)
                         bestsystem = bestSystemWithBoost;
                 }
@@ -139,6 +147,26 @@ namespace EliteDangerousCore
             return new Point3D(currentPosition.X + maxRange * travelVectorPerLy.X,
                 currentPosition.Y + maxRange * travelVectorPerLy.Y,
                 currentPosition.Z + maxRange * travelVectorPerLy.Z); // where we would like to be..
+        }
+
+        private static ISystem GetBestEDSMSystem( Point3D currentPosition, Point3D travelVectorPerLy, float maxDistanceFromWanted, float maxRange)
+        {
+            EDSMClass edsm = new EDSMClass();
+            Point3D next = GetNextPosition(currentPosition, travelVectorPerLy, maxRange);
+
+            Point3D centrepos = GetNextPosition(currentPosition, travelVectorPerLy, maxRange - maxDistanceFromWanted / 2);        // centre of edsm sphere is made here, at maxdistance-maxwanted/2
+            var list = edsm.GetSphereSystems(centrepos.X, centrepos.Y, centrepos.Z, maxDistanceFromWanted, 0).
+                                // ensure its not too far.. don't trust edsm
+                                Where(x => (x.Item1.X - currentPosition.X) * (x.Item1.X - currentPosition.X) + (x.Item1.Y - currentPosition.Y) * (x.Item1.Y - currentPosition.Y) + (x.Item1.Z - currentPosition.Z) * (x.Item1.Z - currentPosition.Z) < maxRange * maxRange).
+                                // order by distance from next ascending
+                                OrderBy(x => (x.Item1.X - next.X) * (x.Item1.X - next.X) + (x.Item1.Y - next.Y) * (x.Item1.Y - next.Y) + (x.Item1.Z - next.Z) * (x.Item1.Z - next.Z)).
+                                ToList();
+            //foreach (var x in list)
+            //    System.Diagnostics.Debug.WriteLine($"Sys {x.Item1.Name} {x.Item1.X},{x.Item1.Y},{x.Item1.Z} dist {Math.Sqrt((x.Item1.X - next.X) * (x.Item1.X - next.X) + (x.Item1.Y - next.Y) * (x.Item1.Y - next.Y) + (x.Item1.Z - next.Z) * (x.Item1.Z - next.Z))}" +
+            //            $"distcur {Math.Sqrt((x.Item1.X - currentPosition.X) * (x.Item1.X - currentPosition.X) + (x.Item1.Y - currentPosition.Y) * (x.Item1.Y - currentPosition.Y) + (x.Item1.Z - currentPosition.Z) * (x.Item1.Z - currentPosition.Z))}"
+            //        );
+
+            return list.Count > 0 ? list[0].Item1 : null;
         }
 
         private static float BoostPercentage(int boostStrength)
