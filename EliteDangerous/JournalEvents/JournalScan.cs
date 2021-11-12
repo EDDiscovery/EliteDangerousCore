@@ -518,9 +518,9 @@ namespace EliteDangerousCore.JournalEvents
             if (nRadius != null)
             {
                 if (nRadius >= oneSolRadius_m / 5)
-                    return nRadiusSols.Value.ToString("0.#" + "SR");
+                    return nRadiusSols.Value.ToString("0.#" + " SR");
                 else
-                    return (nRadius.Value / 1000).ToString("0.#") + "km";
+                    return (nRadius.Value / 1000).ToString("0.#") + " km";
             }
             else
                 return null;
@@ -531,9 +531,9 @@ namespace EliteDangerousCore.JournalEvents
             if (nMassEM.HasValue)
             {
                 if (nMassEM.Value < 0.01)
-                    return nMassMM.Value.ToString("0.####") + "MM";
+                    return nMassMM.Value.ToString("0.####") + " MM";
                 else
-                    return nMassEM.Value.ToString("0.##") + "EM";
+                    return nMassEM.Value.ToString("0.##") + " EM";
             }
             else
                 return null;

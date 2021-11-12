@@ -893,8 +893,8 @@ namespace EliteDangerousCore.JournalEvents
             information.Append((js.IsStar) ? Bodies.StarName(js.StarTypeID) + "." : null);
             information.Append((js.CanBeTerraformable) ? @"terraformable ".T(EDTx.JournalScanInfo_terraformable) : null);
             information.Append((js.IsPlanet) ? Bodies.PlanetTypeName(js.PlanetTypeID) + "." : null);
-            information.Append((js.nRadius < lowRadiusLimit && js.IsPlanet) ? @" Is tiny.".T(EDTx.JournalScanInfo_LowRadius) : null);
-            information.Append((js.nRadius > largeRadiusLimit && js.IsPlanet && js.IsLandable) ? @" Is large.".T(EDTx.JournalScanInfo_LargeRadius) : null);
+            information.Append((js.nRadius < lowRadiusLimit && js.IsPlanet) ? @" Is tiny ".T(EDTx.JournalScanInfo_LowRadius) + "(" + RadiusText() + ")." : null);
+            information.Append((js.nRadius > largeRadiusLimit && js.IsPlanet && js.IsLandable) ? @" Is large ".T(EDTx.JournalScanInfo_LargeRadius) + "(" + RadiusText() + ")." : null);
             information.Append((js.IsLandable) ? @" Is landable.".T(EDTx.JournalScanInfo_islandable) : null);
             information.Append((js.IsLandable && showGravity && js.nSurfaceGravityG.HasValue) ? @" (" + Math.Round(js.nSurfaceGravityG.Value, 2, MidpointRounding.AwayFromZero) + "g)" : null);
             information.Append((js.HasAtmosphericComposition && showAtmos) ? @" Atmosphere: ".T(EDTx.JournalScanInfo_Atmosphere) + (js.Atmosphere ?? "unknown atmosphere".T(EDTx.JournalScanInfo_unknownAtmosphere)) + "." : null);
