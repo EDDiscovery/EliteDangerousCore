@@ -88,9 +88,10 @@ namespace EliteDangerousCore
                 return value;
             }
 
-            public string StarTypesFound(bool bracketit = true) // first is primary star
+            // first is primary star. longform means full text, else abbreviation
+            public string StarTypesFound(bool bracketit = true, bool longform = false) 
             {
-                var sortedset = (from x in Bodies where x.ScanData != null && x.NodeType == ScanNodeType.star orderby x.ScanData.DistanceFromArrivalLS select x.ScanData.StarTypeText).ToList();
+                var sortedset = (from x in Bodies where x.ScanData != null && x.NodeType == ScanNodeType.star orderby x.ScanData.DistanceFromArrivalLS select longform ? x.ScanData.StarTypeText : x.ScanData.StarClassificationAbv).ToList();
                 string s = string.Join("; ", sortedset);
                 if (bracketit && s.HasChars())
                     s = "(" + s + ")";
