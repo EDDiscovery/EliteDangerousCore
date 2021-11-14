@@ -26,7 +26,7 @@ using System.Linq;
 
 namespace EliteDangerousCore.DB
 {
-    [DebuggerDisplay("{DebugDisplay,nq}")]
+    [DebuggerDisplay("{Name} {Id} {Systems.Count}")]
     public class SavedRouteClass : IEquatable<SavedRouteClass>
     {
         public SavedRouteClass()
@@ -330,8 +330,8 @@ namespace EliteDangerousCore.DB
                     {
                         d = distleft / d;
                         //System.Diagnostics.Debug.WriteLine(percentage + " " + d + " last:" + last.X + " " + last.Y + " " + last.Z + " s:" + s.X + " " + s.Y + " " + s.Z);
-                        name = "WP" + knownsystems[i - 1].Item2.ToString() + "-" + "WP" + knownsystems[i].Item2.ToString() + "-" + d.ToString("#.00");
                         syspos = new Point3D(knownsystems[i - 1].Item1.X + (knownsystems[i].Item1.X - knownsystems[i - 1].Item1.X) * d, knownsystems[i - 1].Item1.Y + (knownsystems[i].Item1.Y - knownsystems[i - 1].Item1.Y) * d, knownsystems[i - 1].Item1.Z + (knownsystems[i].Item1.Z - knownsystems[i - 1].Item1.Z) * d);
+                        name = "WP" + knownsystems[i - 1].Item2.ToString() + "-" + "WP" + knownsystems[i].Item2.ToString() + "-" + d.ToString("#.00") + $" @ {syspos.X:0.0},{syspos.Y:0.0},{syspos.Z:0.0}";
                         break;
                     }
 
@@ -349,6 +349,7 @@ namespace EliteDangerousCore.DB
 
         // given the system list, which is the next waypoint to go to.  return the system (or null if not available or past end) and the waypoint.. (0 based) and the distance on the path left..
 
+        [DebuggerDisplay("{system.Name} w {waypoint} d {deviation} cwpd {cumulativewpdist} distto {disttowaypoint}")]
         public class ClosestInfo
         {
             public ISystem system;
