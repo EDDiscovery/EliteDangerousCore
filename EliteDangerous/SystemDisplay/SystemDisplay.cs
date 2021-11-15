@@ -87,7 +87,7 @@ namespace EliteDangerousCore
                 if ( opttext != null )
                 {
                     ExtPictureBox.ImageElement lab = new ExtPictureBox.ImageElement();
-                    lab.TextAutosize(new Point(leftmargin,0), new Size(500, 30), opttext, LargerFont, LabelColor, BackColor);
+                    lab.TextAutoSize(new Point(leftmargin,0), new Size(500, 30), opttext, LargerFont, LabelColor, BackColor);
                     imagebox.Add(lab);
                     leftmiddle.Y += lab.Image.Height + 8;
                 }

@@ -352,12 +352,13 @@ namespace EliteDangerousCore.DB
         [DebuggerDisplay("{system.Name} w {waypoint} d {deviation} cwpd {cumulativewpdist} distto {disttowaypoint}")]
         public class ClosestInfo
         {
-            public ISystem system;
+            public ISystem lastsystem;              // from
+            public ISystem nextsystem;              // to
             public int waypoint;                    // index of Systems
             public double deviation;                // -1 if not on path
-            public double cumulativewpdist;         // distance after the WP, 0 means no more WPs after this
+            public double cumulativewpdist;         // distance to end, 0 means no more WPs after this
             public double disttowaypoint;           // distance to WP
-            public ClosestInfo( ISystem s, int w, double dv, double wdl, double dtwp) { system = s; waypoint = w; deviation = dv; cumulativewpdist = wdl; disttowaypoint = dtwp; }
+            public ClosestInfo( ISystem s, ISystem p, int w, double dv, double wdl, double dtwp) { lastsystem = s; nextsystem = p; waypoint = w; deviation = dv; cumulativewpdist = wdl; disttowaypoint = dtwp; }
         }
 
         static Point3D P3D(ISystem s)
@@ -375,7 +376,7 @@ namespace EliteDangerousCore.DB
                 return null;
 
             double mininterceptdist = Double.MaxValue;
-            int interceptendpoint = -1;
+            int wpto = -1;     // which waypoint are we between, N.. N+1
 
             double closesttodist = Double.MaxValue;
             int closestto = -1;
@@ -395,37 +396,40 @@ namespace EliteDangerousCore.DB
                     // allow a little margin in the intercept point for randomness, must be min dist, and not stupidly far.
                     if (interceptpercent >= -0.01 && interceptpercent < 1.01 && dist <= mininterceptdist && dist < distbetween)
                     {
-                        interceptendpoint = i;
+                        wpto = i;
                         mininterceptdist = dist;
                     }
                 }
 
                 double disttofirstpoint = currentsystemp3d.Distance(P3D(knownsystems[i].Item1));
 
-                if (disttofirstpoint < closesttodist)
+                if (disttofirstpoint < closesttodist)       // find the closest waypoint
                 {
                     closesttodist = disttofirstpoint;
                     closestto = i;
                 }
             }
 
-            int topos = interceptendpoint;     // default value
-
-            if (topos == -1)        // if not on path
+            if (wpto == -1)        // if not on path
             {
-                topos = closestto;
+                wpto = closestto;
                 mininterceptdist = -1;
                 //System.Diagnostics.Debug.WriteLine("Not on path, closest to" + knownsystems[closestto].ToString());
             }
             else
-            { 
+            {
                 //System.Diagnostics.Debug.WriteLine("Lies on line to WP" + interceptendpoint + " " + knownsystems[interceptendpoint].ToString());
             }
 
-            double distto = currentsystemp3d.Distance(P3D(knownsystems[topos].Item1));
-            double cumldist = CumulativeDistance(knownsystems[topos].Item1, knownsystems);
+            double distto = currentsystemp3d.Distance(P3D(knownsystems[wpto].Item1));
+            double cumldist = CumulativeDistance(knownsystems[wpto].Item1, knownsystems);
 
-            return new ClosestInfo(knownsystems[topos].Item1, (int)knownsystems[topos].Item2, mininterceptdist, cumldist, distto);
+            return new ClosestInfo( wpto>0 ? knownsystems[wpto - 1].Item1 : null, 
+                                    knownsystems[wpto].Item1, 
+                                    (int)knownsystems[wpto].Item2, 
+                                    mininterceptdist,       // deviation from path
+                                    cumldist, 
+                                    distto);
         }
 
         // Given a set of expedition files, update the DB.  Add any new ones, and make sure the EDSM marker is on.
@@ -528,7 +532,7 @@ namespace EliteDangerousCore.DB
 
                     if (closest != null)
                     {
-                        System.Diagnostics.Debug.WriteLine("Next {0} {1} {2} {3}, index {4} dev {5} dist to wp {6} cumul left {7}", closest.system?.X, closest.system?.Y, closest.system?.Z, closest.system?.Name, closest.waypoint, closest.deviation, closest.disttowaypoint, closest.cumulativewpdist);
+                        System.Diagnostics.Debug.WriteLine("Next {0} {1} {2} {3}, index {4} dev {5} dist to wp {6} cumul left {7}", closest.lastsystem?.X, closest.lastsystem?.Y, closest.lastsystem?.Z, closest.lastsystem?.Name, closest.waypoint, closest.deviation, closest.disttowaypoint, closest.cumulativewpdist);
                     }
                 }
             }

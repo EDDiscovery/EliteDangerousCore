@@ -535,7 +535,7 @@ namespace EliteDangerousCore
 
                     using (var frmt = new StringFormat() { Alignment = StringAlignment.Center })
                     {
-                        labie.TextCentreAutosize(labposcenthorz, new Size(0, 1000), label.Substring(labcut), f, LabelColor, BackColor, frmt: frmt);
+                        labie.TextCentreAutoSize(labposcenthorz, new Size(0, 1000), label.Substring(labcut), f, LabelColor, BackColor, frmt: frmt);
                     }
 
                     labelie.Add(labie);
