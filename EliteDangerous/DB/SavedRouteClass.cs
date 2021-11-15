@@ -354,11 +354,14 @@ namespace EliteDangerousCore.DB
         {
             public ISystem lastsystem;              // from
             public ISystem nextsystem;              // to
+            public ISystem firstsystem;        
+            public ISystem finalsystem;        
             public int waypoint;                    // index of Systems
             public double deviation;                // -1 if not on path
             public double cumulativewpdist;         // distance to end, 0 means no more WPs after this
             public double disttowaypoint;           // distance to WP
-            public ClosestInfo( ISystem s, ISystem p, int w, double dv, double wdl, double dtwp) { lastsystem = s; nextsystem = p; waypoint = w; deviation = dv; cumulativewpdist = wdl; disttowaypoint = dtwp; }
+            public ClosestInfo( ISystem s, ISystem p, ISystem first, ISystem final, int w, double dv, double wdl, double dtwp) 
+            { lastsystem = s; nextsystem = p; firstsystem = first; finalsystem = final; waypoint = w; deviation = dv; cumulativewpdist = wdl; disttowaypoint = dtwp; }
         }
 
         static Point3D P3D(ISystem s)
@@ -424,8 +427,10 @@ namespace EliteDangerousCore.DB
             double distto = currentsystemp3d.Distance(P3D(knownsystems[wpto].Item1));
             double cumldist = CumulativeDistance(knownsystems[wpto].Item1, knownsystems);
 
-            return new ClosestInfo( wpto>0 ? knownsystems[wpto - 1].Item1 : null, 
-                                    knownsystems[wpto].Item1, 
+            return new ClosestInfo( wpto>0 ? knownsystems[wpto - 1].Item1 : null,
+                                    knownsystems[wpto].Item1,
+                                    knownsystems[0].Item1,
+                                    knownsystems.Last().Item1,
                                     (int)knownsystems[wpto].Item2, 
                                     mininterceptdist,       // deviation from path
                                     cumldist, 

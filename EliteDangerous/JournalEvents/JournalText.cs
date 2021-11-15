@@ -56,7 +56,7 @@ namespace EliteDangerousCore.JournalEvents
             MessageLocalised = JournalFieldNaming.CheckLocalisation(evt["Message_Localised"].Str(), Message);
             Channel = evt["Channel"].Str();
 
-            string[] specials = new string[] { "$COMMS_entered:", "$CHAT_intro;" };
+            string[] specials = new string[] { "$COMMS_entered:", "$CHAT_intro;", "$HumanoidEmote" };
 
             if ( specials.StartsWith(Message, System.StringComparison.InvariantCultureIgnoreCase)>=0)
             {
