@@ -25,19 +25,19 @@ namespace EliteDangerousCore
     public partial class StarScan
     {
         [DebuggerDisplay("SN {System.Name} {System.SystemAddress}")]
-        public class SystemNode
+        public partial class SystemNode
         {
             public ISystem System;
 
-            public SortedList<string, ScanNode> StarNodes { get; private set; }  = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());   // node list
+            public SortedList<string, ScanNode> StarNodes { get; private set; } = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());   // node list
             public SortedList<int, ScanNode> NodesByID { get; private set; } = new SortedList<int, ScanNode>();               // by ID list
-
+            public SortedList<int, JournalScanBaryCentre> BaryCentres { get; private set; } = new SortedList<int, JournalScanBaryCentre>();
             public bool EDSMCacheCheck { get; set; } = false; // check flags
             public bool EDSMWebChecked { get; set; } = false;
 
             public int? FSSTotalBodies { get; set; }         // if we have FSSDiscoveryScan, this will be set
 
-            public List<JournalFSSSignalDiscovered.FSSSignal> FSSSignalList { get; private set; } = new List<JournalFSSSignalDiscovered.FSSSignal>();    
+            public List<JournalFSSSignalDiscovered.FSSSignal> FSSSignalList { get; private set; } = new List<JournalFSSSignalDiscovered.FSSSignal>();
             public List<JournalCodexEntry> CodexEntryList { get; private set; } = new List<JournalCodexEntry>();
 
             public SystemNode(ISystem sys)
@@ -89,7 +89,7 @@ namespace EliteDangerousCore
             }
 
             // first is primary star. longform means full text, else abbreviation
-            public string StarTypesFound(bool bracketit = true, bool longform = false) 
+            public string StarTypesFound(bool bracketit = true, bool longform = false)
             {
                 var sortedset = (from x in Bodies where x.ScanData != null && x.NodeType == ScanNodeType.star orderby x.ScanData.DistanceFromArrivalLS select longform ? x.ScanData.StarTypeText : x.ScanData.StarClassificationAbv).ToList();
                 string s = string.Join("; ", sortedset);
@@ -120,7 +120,8 @@ namespace EliteDangerousCore
                 }
                 return null;
             }
-        };
 
+  
+        }
     }
 }

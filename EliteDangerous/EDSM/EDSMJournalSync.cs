@@ -480,7 +480,7 @@ namespace EliteDangerousCore.EDSM
         "AfmuRepairs",
         "CockpitBreached",
         "ReservoirReplenished",
-        "CargoTransfer", //TODO: Synched in Cargo?!
+        "CargoTransfer", 
 
         "ApproachBody",
         "LeaveBody",
