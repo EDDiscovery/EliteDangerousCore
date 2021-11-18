@@ -39,14 +39,38 @@ namespace EliteDangerousCore
             {
                 JObject obj = new JObject();
                 obj["Name"] = top.OwnName;
-                obj["Type"] = top.NodeType.ToString();
-                obj["Epoch"] = top.ScanData.EventTimeUTC;
-                obj["SemiMajorAxis"] = top.ScanData.nSemiMajorAxis;
-                obj["Inclination"] = top.ScanData.nOrbitalInclination;
-                obj["AscendingNode"] = top.ScanData.nAscendingNode;
-                obj["Periapis"] = top.ScanData.nPeriapsis;
-                obj["MeanAnomaly"] = top.scandata.nMeanAnomaly;
-                obj["Mass"] = top.scandata.nMassKG;
+                obj["NodeType"] = top.NodeType.ToString();
+                if (top.BodyID.HasValue)
+                {
+                    obj["ID"] = top.BodyID.Value.ToString();
+                }
+                if (top.ScanData != null)
+                {
+                    if (top.ScanData.IsStar)
+                    {
+                        obj["StarClass"] = top.ScanData.StarClassificationAbv;
+                    }
+                    else if (top.ScanData.IsPlanet)
+                    {
+                        obj["PlanetClass"] = top.ScanData.PlanetTypeID.ToString();
+                    }
+
+                    if ( top.ScanData.nRadius.HasValue)
+                        obj["Radius"] = top.ScanData.nRadius / 1000.0;  // in km
+
+                    obj["Epoch"] = top.ScanData.EventTimeUTC;
+                    
+                    if ( top.scandata.nSemiMajorAxis.HasValue)
+                        obj["SemiMajorAxis"] = top.ScanData.nSemiMajorAxis / 1000.0;        // in km
+
+                    obj["Inclination"] = top.ScanData.nOrbitalInclination;  // degrees
+                    obj["AscendingNode"] = top.ScanData.nAscendingNode; // degrees
+                    obj["Periapis"] = top.ScanData.nPeriapsis;// degrees
+                    obj["MeanAnomaly"] = top.scandata.nMeanAnomaly;// degrees
+                    obj["OrbitalPeriod"] = top.scandata.nOrbitalPeriod;// in seconds
+                    obj["AxialTilt"] = top.scandata.nAxialTiltDeg;  // degrees
+                    obj["Mass"] = top.scandata.nMassKG; // kg
+                }
 
                 if (top.Children != null && top.Children.Count>0)
                 {

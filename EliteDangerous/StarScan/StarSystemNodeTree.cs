@@ -27,7 +27,7 @@ namespace EliteDangerousCore
         public partial class SystemNode
         {
             // generate a node tree with barycentres properly positioned for display
-            public ScanNode PopulateTree()
+            public ScanNode OrderedSystemTree()
             {
                 ScanNode rootnode = null;
 

@@ -107,16 +107,17 @@ namespace EliteDangerousCore.JournalEvents
         public string SemiMajorAxisLSKM { get { return nSemiMajorAxis.HasValue ? (nSemiMajorAxis >= oneLS_m / 10 ? ((nSemiMajorAxis.Value / oneLS_m).ToString("N1") + "ls") : ((nSemiMajorAxis.Value / 1000).ToString("N0") + "km")) : ""; } }
 
         public double? nEccentricity { get; private set; }                  // direct
-        [PropertyNameAttribute("Radians")]
-        public double? nOrbitalInclination { get; private set; }            // direct
-        [PropertyNameAttribute("Radians")]
-        public double? nPeriapsis { get; private set; }                     // direct
+        [PropertyNameAttribute("Degrees")]
+        public double? nOrbitalInclination { get; private set; }            // direct, degrees
+        [PropertyNameAttribute("Degrees")]
+        public double? nPeriapsis { get; private set; }                     // direct, degrees
         [PropertyNameAttribute("Seconds")]
-        public double? nOrbitalPeriod { get; private set; }                 // direct
+        public double? nOrbitalPeriod { get; private set; }                 // direct, seconds
         public double? nOrbitalPeriodDays { get { if (nOrbitalPeriod.HasValue) return nOrbitalPeriod.Value / oneDay_s; else return null; } }
-        [PropertyNameAttribute("Radians")]
-        public double? nAscendingNode { get; private set; }                  // odyssey update 7 22/9/21
-        public double? nMeanAnomaly { get; private set; }                    // odyssey update 7 22/9/21
+        [PropertyNameAttribute("Degrees")]
+        public double? nAscendingNode { get; private set; }                  // odyssey update 7 22/9/21, degrees
+        [PropertyNameAttribute("Degrees")]
+        public double? nMeanAnomaly { get; private set; }                    // odyssey update 7 22/9/21, degrees
 
         public double? nMassKG { get { return IsPlanet ? nMassEM * oneEarth_KG : nStellarMass * oneSOL_KG; } }
 
