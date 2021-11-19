@@ -241,13 +241,13 @@ namespace EliteDangerousCore.JournalEvents
         public const double oneSolRadius_m = 695700000; // 695,700km
 
         // planetary bodies
+        public const double oneSOLRadius_m = 695700*1000;
         public const double oneEarthRadius_m = 6371000;
         public const double oneAtmosphere_Pa = 101325;
         public const double oneGee_m_s2 = 9.80665;
         public const double oneSOL_KG = 1.989e30;         
         public const double oneEarth_KG = 5.972e24;       
         public const double oneMoon_KG = 7.34767309e22;   
-        public const double oneSun_KG = 1.989e30;           // in kg
         public const double EarthMoonMassRatio = oneEarth_KG / oneMoon_KG;
 
         // astrometric
@@ -724,11 +724,14 @@ namespace EliteDangerousCore.JournalEvents
             if (nOrbitalInclination.HasValue)
                 scanText.AppendFormat("Orbital Inclination: {0:0.000}°\n".T(EDTx.JournalScan_OrbitalInclination), nOrbitalInclination.Value);
 
+            if (nAscendingNode.HasValue)
+                scanText.AppendFormat("Ascending Node: {0:0.000}°\n".T(EDTx.JournalScan_AscendingNode), nAscendingNode.Value);
+
             if (nPeriapsis.HasValue)
                 scanText.AppendFormat("Arg Of Periapsis: {0:0.000}°\n".T(EDTx.JournalScan_ArgOfPeriapsis), nPeriapsis.Value);
 
-            if (nAbsoluteMagnitude.HasValue)
-                scanText.AppendFormat("Absolute Magnitude: {0:0.00}\n".T(EDTx.JournalScan_AbsoluteMagnitude), nAbsoluteMagnitude.Value);
+            if ( nMeanAnomaly.HasValue)
+                scanText.AppendFormat("Mean Anomaly: {0:0.000}°\n".T(EDTx.JournalScan_MeanAnomaly), nMeanAnomaly.Value);
 
             if (nAxialTiltDeg.HasValue)
                 scanText.AppendFormat("Axial tilt: {0:0.00}°\n".T(EDTx.JournalScan_Axialtilt), nAxialTiltDeg.Value);
@@ -736,6 +739,10 @@ namespace EliteDangerousCore.JournalEvents
             if (nRotationPeriodDays.HasValue)
                 scanText.AppendFormat("Rotation Period: {0} days\n".T(EDTx.JournalScan_RotationPeriod), nRotationPeriodDays.Value.ToString("N1"));
 
+
+            if (nAbsoluteMagnitude.HasValue)
+                scanText.AppendFormat("Absolute Magnitude: {0:0.00}\n".T(EDTx.JournalScan_AbsoluteMagnitude), nAbsoluteMagnitude.Value);
+            
             if (nTidalLock.HasValue && nTidalLock.Value)
                 scanText.Append("Tidally locked\n".T(EDTx.JournalScan_Tidallylocked));
 

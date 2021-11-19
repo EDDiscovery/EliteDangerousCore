@@ -531,6 +531,8 @@ namespace EliteDangerousCore
         JournalScan_OrbitalEccentricity, // Orbital Eccentricity: {0:0.000}
         JournalScan_OrbitalInclination, // Orbital Inclination: {0:0.000}´┐¢
         JournalScan_ArgOfPeriapsis, // Arg Of Periapsis: {0:0.000}´┐¢
+        JournalScan_AscendingNode, 
+        JournalScan_MeanAnomaly, 
         JournalScan_AbsoluteMagnitude, // Absolute Magnitude: {0:0.00}
         JournalScan_Axialtilt, // Axial tilt: {0:0.00}´┐¢
         JournalScan_RotationPeriod, // Rotation Period: {0} days
