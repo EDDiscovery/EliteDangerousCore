@@ -332,6 +332,10 @@ namespace EliteDangerousCore.Inara
                             eventstosend.Add(InaraClass.setCommanderRankPilot("trade", (int)promotion.Trade, 0, promotion.EventTimeUTC));     // by definition, since your promoted, progress = 0
                         if (promotion.Explore != null)
                             eventstosend.Add(InaraClass.setCommanderRankPilot("explore", (int)promotion.Explore, 0, promotion.EventTimeUTC));     // by definition, since your promoted, progress = 0
+                        if (promotion.ExoBiologist != null)
+                            eventstosend.Add(InaraClass.setCommanderRankPilot("exobiologist", (int)promotion.ExoBiologist, 0, promotion.EventTimeUTC));     // by definition, since your promoted, progress = 0
+                        if (promotion.Soldier != null)
+                            eventstosend.Add(InaraClass.setCommanderRankPilot("soldier", (int)promotion.Soldier, 0, promotion.EventTimeUTC));     // by definition, since your promoted, progress = 0
                         if (promotion.Empire != null)
                             eventstosend.Add(InaraClass.setCommanderRankPilot("empire", (int)promotion.Empire, 0, promotion.EventTimeUTC));     // by definition, since your promoted, progress = 0
                         if (promotion.Federation != null)
