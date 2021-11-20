@@ -131,8 +131,12 @@
     <Compile Include="Screenshots\ScreenShotDirectoryWatcher.cs" />
     <Compile Include="Screenshots\ScreenShotImageConverter.cs" />
     <Compile Include="StarScan\StarScanFSSBodySignals.cs" />
+    <Compile Include="StarScan\StarScanBaryCentre.cs" />
+    <Compile Include="StarScan\StarScanNodeInfo.cs" />
+    <Compile Include="StarScan\StarScanNodeBaryCentre.cs" />
     <Compile Include="StarScan\StarScanScanOrganic.cs" />
     <Compile Include="StarScan\StarScanCodex.cs" />
+    <Compile Include="StarScan\StarSystemNodeTree.cs" />
     <Compile Include="StarScan\StarSystemNode.cs" />
     <Compile Include="StarScan\StarScanNode.cs" />
     <Compile Include="StarScan\StarScanHelpers.cs" />

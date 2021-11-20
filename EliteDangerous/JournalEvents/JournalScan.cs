@@ -107,16 +107,19 @@ namespace EliteDangerousCore.JournalEvents
         public string SemiMajorAxisLSKM { get { return nSemiMajorAxis.HasValue ? (nSemiMajorAxis >= oneLS_m / 10 ? ((nSemiMajorAxis.Value / oneLS_m).ToString("N1") + "ls") : ((nSemiMajorAxis.Value / 1000).ToString("N0") + "km")) : ""; } }
 
         public double? nEccentricity { get; private set; }                  // direct
-        [PropertyNameAttribute("Radians")]
-        public double? nOrbitalInclination { get; private set; }            // direct
-        [PropertyNameAttribute("Radians")]
-        public double? nPeriapsis { get; private set; }                     // direct
+        [PropertyNameAttribute("Degrees")]
+        public double? nOrbitalInclination { get; private set; }            // direct, degrees
+        [PropertyNameAttribute("Degrees")]
+        public double? nPeriapsis { get; private set; }                     // direct, degrees
         [PropertyNameAttribute("Seconds")]
-        public double? nOrbitalPeriod { get; private set; }                 // direct
+        public double? nOrbitalPeriod { get; private set; }                 // direct, seconds
         public double? nOrbitalPeriodDays { get { if (nOrbitalPeriod.HasValue) return nOrbitalPeriod.Value / oneDay_s; else return null; } }
-        [PropertyNameAttribute("Radians")]
-        public double? nAscendingNode { get; private set; }                  // odyssey update 7 22/9/21
-        public double? nMeanAnomaly { get; private set; }                    // odyssey update 7 22/9/21
+        [PropertyNameAttribute("Degrees")]
+        public double? nAscendingNode { get; private set; }                  // odyssey update 7 22/9/21, degrees
+        [PropertyNameAttribute("Degrees")]
+        public double? nMeanAnomaly { get; private set; }                    // odyssey update 7 22/9/21, degrees
+
+        public double? nMassKG { get { return IsPlanet ? nMassEM * oneEarth_KG : nStellarMass * oneSOL_KG; } }
 
         public double? nAxialTilt { get; private set; }                     // direct, radians
         public double? nAxialTiltDeg { get { if (nAxialTilt.HasValue) return nAxialTilt.Value * 180.0 / Math.PI; else return null; } }
@@ -238,12 +241,14 @@ namespace EliteDangerousCore.JournalEvents
         public const double oneSolRadius_m = 695700000; // 695,700km
 
         // planetary bodies
+        public const double oneSOLRadius_m = 695700*1000;
         public const double oneEarthRadius_m = 6371000;
         public const double oneAtmosphere_Pa = 101325;
         public const double oneGee_m_s2 = 9.80665;
-        public const double oneEarth_MT = 5.972e15;        // mega tons, 1 meta ton = 1e6 tons = 1e9 kg (google 5.972e21 tons)
-        public const double oneMoon_MT = 7.34767309e13;     // mega tons, 1 meta ton = 1e6 tons = 1e9 kg
-        public const double EarthMoonMassRatio = oneEarth_MT / oneMoon_MT;
+        public const double oneSOL_KG = 1.989e30;         
+        public const double oneEarth_KG = 5.972e24;       
+        public const double oneMoon_KG = 7.34767309e22;   
+        public const double EarthMoonMassRatio = oneEarth_KG / oneMoon_KG;
 
         // astrometric
         public const double oneLS_m = 299792458;
@@ -281,7 +286,8 @@ namespace EliteDangerousCore.JournalEvents
             // has trailing LF
             public string RingInformationMoons(bool parentIsStar = false, string frontpad = "  ")
             {
-                return RingInformation(1 / oneMoon_MT, " Moons".T(EDTx.StarPlanetRing_Moons), parentIsStar, frontpad);
+                // mega ton is 1E6 tons = 1E9
+                return RingInformation(1 / oneMoon_KG / 1E9, " Moons".T(EDTx.StarPlanetRing_Moons), parentIsStar, frontpad);
             }
 
             public static string DisplayStringFromRingClass(string ringClass)   // no trailing LF
@@ -315,6 +321,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             public string Type;
             public int BodyID;
+            public bool BaryCentre { get { return Type.Equals("Null", StringComparison.InvariantCultureIgnoreCase); } }
         }
 
         public JournalScan(JObject evt) : base(evt, JournalTypeEnum.Scan)
@@ -373,14 +380,15 @@ namespace EliteDangerousCore.JournalEvents
 
             if (nSemiMajorAxis.HasValue)
             {
-                nEccentricity = evt["Eccentricity"].DoubleNull();
+                nEccentricity = evt["Eccentricity"].DoubleNull();       // keplarian values..
                 nOrbitalInclination = evt["OrbitalInclination"].DoubleNull();
                 nPeriapsis = evt["Periapsis"].DoubleNull();
-                nOrbitalPeriod = evt["OrbitalPeriod"].DoubleNull();
+                nMeanAnomaly = evt["MeanAnomaly"].DoubleNull();         // Odyssey rel 7 onwards
+                nAscendingNode = evt["AscendingNode"].DoubleNull();     // Odyssey rel 7 onwards
+
+                nOrbitalPeriod = evt["OrbitalPeriod"].DoubleNull();     // will allow central mass to be estimated if required
                 nAxialTilt = evt["AxialTilt"].DoubleNull();
                 nTidalLock = evt["TidalLock"].Bool();
-                nMeanAnomaly = evt["MeanAnomaly"].DoubleNull();
-                nAscendingNode = evt["AscendingNode"].DoubleNull();
             }
 
             if (IsPlanet)
@@ -509,6 +517,19 @@ namespace EliteDangerousCore.JournalEvents
                 EDSMDiscoveryCommander = discovery["commander"].StrNull();
                 EDSMDiscoveryUTC = discovery["date"].DateTimeUTC();
             }
+        }
+
+        // special, for star scan, create a scan record with the contents of the journal scan bary centre info
+        public JournalScan(JournalScanBaryCentre js) : base(DateTime.Now, JournalTypeEnum.ScanBaryCentre, false)
+        {
+            BodyID = js.BodyID;
+            nSemiMajorAxis = js.SemiMajorAxis;
+            nEccentricity = js.Eccentricity;
+            nOrbitalInclination = js.OrbitalInclination;
+            nPeriapsis = js.Periapsis;
+            nOrbitalPeriod = js.OrbitalPeriod;
+            nAscendingNode = js.AscendingNode;
+            nMeanAnomaly = js.MeanAnomaly;
         }
 
         #region Information Returns
@@ -703,11 +724,14 @@ namespace EliteDangerousCore.JournalEvents
             if (nOrbitalInclination.HasValue)
                 scanText.AppendFormat("Orbital Inclination: {0:0.000}°\n".T(EDTx.JournalScan_OrbitalInclination), nOrbitalInclination.Value);
 
+            if (nAscendingNode.HasValue)
+                scanText.AppendFormat("Ascending Node: {0:0.000}°\n".T(EDTx.JournalScan_AscendingNode), nAscendingNode.Value);
+
             if (nPeriapsis.HasValue)
                 scanText.AppendFormat("Arg Of Periapsis: {0:0.000}°\n".T(EDTx.JournalScan_ArgOfPeriapsis), nPeriapsis.Value);
 
-            if (nAbsoluteMagnitude.HasValue)
-                scanText.AppendFormat("Absolute Magnitude: {0:0.00}\n".T(EDTx.JournalScan_AbsoluteMagnitude), nAbsoluteMagnitude.Value);
+            if ( nMeanAnomaly.HasValue)
+                scanText.AppendFormat("Mean Anomaly: {0:0.000}°\n".T(EDTx.JournalScan_MeanAnomaly), nMeanAnomaly.Value);
 
             if (nAxialTiltDeg.HasValue)
                 scanText.AppendFormat("Axial tilt: {0:0.00}°\n".T(EDTx.JournalScan_Axialtilt), nAxialTiltDeg.Value);
@@ -715,6 +739,10 @@ namespace EliteDangerousCore.JournalEvents
             if (nRotationPeriodDays.HasValue)
                 scanText.AppendFormat("Rotation Period: {0} days\n".T(EDTx.JournalScan_RotationPeriod), nRotationPeriodDays.Value.ToString("N1"));
 
+
+            if (nAbsoluteMagnitude.HasValue)
+                scanText.AppendFormat("Absolute Magnitude: {0:0.00}\n".T(EDTx.JournalScan_AbsoluteMagnitude), nAbsoluteMagnitude.Value);
+            
             if (nTidalLock.HasValue && nTidalLock.Value)
                 scanText.Append("Tidally locked\n".T(EDTx.JournalScan_Tidallylocked));
 
@@ -726,9 +754,10 @@ namespace EliteDangerousCore.JournalEvents
                     scanText.AppendFormat(Rings.Count() == 1 ? "Belt".T(EDTx.JournalScan_Belt) : "Belts".T(EDTx.JournalScan_Belts), ""); // OLD translator files had "Belt{0}" so supply an empty string just in case
                     for (int i = 0; i < Rings.Length; i++)
                     {
-                        if (Rings[i].MassMT > (oneMoon_MT / 10000))
+                        if (Rings[i].MassMT > (oneMoon_KG / 1e9/ 10000))
                         {
-                            scanText.Append("\n" + RingInformation(i, 1.0 / oneMoon_MT, " Moons".T(EDTx.JournalScan_Moons)));
+                            // its in mega tons, so convert KG into mega (1E6) tons
+                            scanText.Append("\n" + RingInformation(i, 1.0 / (oneMoon_KG/1E9), " Moons".T(EDTx.JournalScan_Moons)));
                         }
                         else
                         {

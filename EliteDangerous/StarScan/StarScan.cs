@@ -75,6 +75,11 @@ namespace EliteDangerousCore
                     if (ProcessScanOrganicFound((JournalScanOrganic)e.Item1, e.Item2))
                         todelete.Add(e);
                 }
+                else if (e.Item1.EventTypeID == JournalTypeEnum.ScanBaryCentre)
+                {
+                    if (AddBaryCentre((JournalScanBaryCentre)e.Item1, e.Item2,false))
+                        todelete.Add(e);
+                }
             }
 
             foreach (var je in todelete)

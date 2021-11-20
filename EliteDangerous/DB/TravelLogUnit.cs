@@ -63,7 +63,7 @@ namespace EliteDangerousCore.DB
             obj =dr["CommanderId"];
 
             if (obj == DBNull.Value)
-                CommanderId = null;  // TODO  use better default value?
+                CommanderId = null;  
             else
                 CommanderId = (int)(long)dr["CommanderId"];
         }
