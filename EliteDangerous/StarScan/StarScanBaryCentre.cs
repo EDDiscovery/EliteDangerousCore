@@ -28,7 +28,7 @@ namespace EliteDangerousCore
             if (ScanDataBySysaddr.TryGetValue(jsa.SystemAddress, out SystemNode sn))       // if we have it
             {
                 System.Diagnostics.Debug.WriteLine($"Add barycentre {jsa.StarSystem} {jsa.BodyID}");
-                sn.BaryCentres.Add(jsa.BodyID, jsa);        // add it
+                sn.BaryCentres[jsa.BodyID] = jsa;        // add it
                 return true;
             }
             else 
