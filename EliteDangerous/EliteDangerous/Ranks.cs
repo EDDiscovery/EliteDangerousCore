@@ -33,7 +33,12 @@ namespace EliteDangerousCore
         Master,
         Dangerous,
         Deadly,
-        Elite
+        Elite,
+        EliteI,
+        EliteII,
+        EliteIII,
+        EliteIV,
+        EliteV
     }
 
     public enum TradeRank
@@ -47,7 +52,12 @@ namespace EliteDangerousCore
         Broker,
         Entrepreneur,
         Tycoon,
-        Elite
+        Elite,
+        EliteI,
+        EliteII,
+        EliteIII,
+        EliteIV,
+        EliteV
     }
 
     public enum ExplorationRank
@@ -61,7 +71,12 @@ namespace EliteDangerousCore
         Pathfinder,
         Ranger,
         Pioneer,
-        Elite
+        Elite,
+        EliteI,
+        EliteII,
+        EliteIII,
+        EliteIV,
+        EliteV
     }
 
     public enum FederationRank
@@ -115,7 +130,12 @@ namespace EliteDangerousCore
         Champion,
         Hero,
         Legend,
-        Elite
+        Elite,
+        EliteI,
+        EliteII,
+        EliteIII,
+        EliteIV,
+        EliteV
     }
 
     public enum SquadronRank       // these, as of 1/11/2018, are provisional
@@ -139,6 +159,11 @@ namespace EliteDangerousCore
         Ecologist,
         Geneticist,
         Elite,
+        EliteI,
+        EliteII,
+        EliteIII,
+        EliteIV,
+        EliteV
     }
 
     public enum SoldierRank
@@ -152,5 +177,10 @@ namespace EliteDangerousCore
         Gladiator,
         Deadeye,
         Elite,
+        EliteI,
+        EliteII,
+        EliteIII,
+        EliteIV,
+        EliteV
     }
 }
