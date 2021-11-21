@@ -49,8 +49,8 @@ namespace EliteDangerousCore.JournalEvents
                                       "", Explore.ToString().SplitCapsWord(),
                                       "", SoldierRank.ToString().SplitCapsWord(),
                                       "", ExoBiologistRank.ToString().SplitCapsWord(),
-                                      "", Federation.ToString().SplitCapsWord(),
                                       "", Empire.ToString().SplitCapsWord(),
+                                      "", Federation.ToString().SplitCapsWord(),                                      
                                       "", CQC.ToString().SplitCapsWord());
             detailed = "";
         }
