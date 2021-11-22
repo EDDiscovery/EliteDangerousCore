@@ -44,14 +44,14 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
-            info = BaseUtils.FieldBuilder.Build("", Combat.ToString().SplitCapsWord(),
-                                      "", Trade.ToString().SplitCapsWord(),
-                                      "", Explore.ToString().SplitCapsWord(),
-                                      "", SoldierRank.ToString().SplitCapsWord(),
-                                      "", ExoBiologistRank.ToString().SplitCapsWord(),
-                                      "", Empire.ToString().SplitCapsWord(),
-                                      "", Federation.ToString().SplitCapsWord(),                                      
-                                      "", CQC.ToString().SplitCapsWord());
+            info = BaseUtils.FieldBuilder.Build("", Combat.ToString().Replace("_", " "),
+                                      "", Trade.ToString().Replace("_", " "),
+                                      "", Explore.ToString().Replace("_", " "),
+                                      "", SoldierRank.ToString().Replace("_", " "),
+                                      "", ExoBiologistRank.ToString().Replace("_", " "),
+                                      "", Empire.ToString().Replace("_", " "),
+                                      "", Federation.ToString().Replace("_", " "),                                      
+                                      "", CQC.ToString().Replace("_", " "));
             detailed = "";
         }
     }
@@ -106,14 +106,14 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Combat: ".T(EDTx.JournalPromotion_Combat), Combat.HasValue ? Combat.ToString().SplitCapsWord() : null,
-                                      "Trade: ".T(EDTx.JournalPromotion_Trade), Trade.HasValue ? Trade.ToString().SplitCapsWord() : null,
-                                      "Exploration: ".T(EDTx.JournalPromotion_Exploration), Explore.HasValue ? Explore.ToString().SplitCapsWord() : null,
-                                      "Soldier: ".T(EDTx.JournalPromotion_Soldier), Soldier.HasValue ? Soldier.ToString().SplitCapsWord() : null,
-                                      "ExoBiologist: ".T(EDTx.JournalPromotion_ExoBiologist), ExoBiologist.HasValue ? ExoBiologist.ToString().SplitCapsWord() : null,
-                                      "Empire: ".T(EDTx.JournalPromotion_Empire), Empire.HasValue ? Empire.ToString().SplitCapsWord() : null,
-                                      "Federation: ".T(EDTx.JournalPromotion_Federation), Federation.HasValue ? Federation.ToString().SplitCapsWord() : null,
-                                      "CQC: ".T(EDTx.JournalPromotion_CQC), CQC.HasValue ? CQC.ToString().SplitCapsWord() : null);
+            info = BaseUtils.FieldBuilder.Build("Combat: ".T(EDTx.JournalPromotion_Combat), Combat.HasValue ? Combat.ToString().Replace("_", " ") : null,
+                                      "Trade: ".T(EDTx.JournalPromotion_Trade), Trade.HasValue ? Trade.ToString().Replace("_", " ") : null,
+                                      "Exploration: ".T(EDTx.JournalPromotion_Exploration), Explore.HasValue ? Explore.ToString().Replace("_", " ") : null,
+                                      "Soldier: ".T(EDTx.JournalPromotion_Soldier), Soldier.HasValue ? Soldier.ToString().Replace("_", " ") : null,
+                                      "ExoBiologist: ".T(EDTx.JournalPromotion_ExoBiologist), ExoBiologist.HasValue ? ExoBiologist.ToString().Replace("_", " ") : null,
+                                      "Empire: ".T(EDTx.JournalPromotion_Empire), Empire.HasValue ? Empire.ToString().Replace("_", " ") : null,
+                                      "Federation: ".T(EDTx.JournalPromotion_Federation), Federation.HasValue ? Federation.ToString().Replace("_", " ") : null,
+                                      "CQC: ".T(EDTx.JournalPromotion_CQC), CQC.HasValue ? CQC.ToString().Replace("_", " ") : null);
             detailed = "";
         }
     }

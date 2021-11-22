@@ -26,7 +26,7 @@ namespace EliteDangerousCore
     {
         Unknown = -1,
         Harmless = 0,
-        MostlyHarmless,
+        Mostly_Harmless,
         Novice,
         Competent,
         Expert,
@@ -34,18 +34,18 @@ namespace EliteDangerousCore
         Dangerous,
         Deadly,
         Elite,
-        EliteI,
-        EliteII,
-        EliteIII,
-        EliteIV,
-        EliteV
+        Elite_I,
+        Elite_II,
+        Elite_III,
+        Elite_IV,
+        Elite_V
     }
 
     public enum TradeRank
     {
         Unknown = -1,
         Penniless = 0,
-        MostlyPenniless,
+        Mostly_Penniless,
         Peddler,
         Dealer,
         Merchant,
@@ -53,18 +53,18 @@ namespace EliteDangerousCore
         Entrepreneur,
         Tycoon,
         Elite,
-        EliteI,
-        EliteII,
-        EliteIII,
-        EliteIV,
-        EliteV
+        Elite_I,
+        Elite_II,
+        Elite_III,
+        Elite_IV,
+        Elite_V
     }
 
     public enum ExplorationRank
     {
         Unknown = -1,
         Aimless = 0,
-        MostlyAimless,
+        Mostly_Aimless,
         Scout,
         Surveyor,
         Explorer,
@@ -72,11 +72,11 @@ namespace EliteDangerousCore
         Ranger,
         Pioneer,
         Elite,
-        EliteI,
-        EliteII,
-        EliteIII,
-        EliteIV,
-        EliteV
+        Elite_I,
+        Elite_II,
+        Elite_III,
+        Elite_IV,
+        Elite_V
     }
 
     public enum FederationRank
@@ -86,16 +86,16 @@ namespace EliteDangerousCore
         Recruit,
         Cadet,
         Midshipman,
-        PettyOfficer,
-        ChiefPettyOfficer,
-        WarrantOfficer,
+        Petty_Officer,
+        Chief_Petty_Officer,
+        Warrant_Officer,
         Ensign,
         Lieutenant,
-        LtCommander,
-        PostCommander,
-        PostCaptain,
-        RearAdmiral,
-        ViceAdmiral,
+        Lt_Commander,
+        Post_Commander,
+        Post_Captain,
+        Rear_Admiral,
+        Vice_Admiral,
         Admiral
     }
 
@@ -123,26 +123,26 @@ namespace EliteDangerousCore
     {
         Unknown = -1,
         Helpless = 0,
-        MostlyHelpless,
+        Mostly_Helpless,
         Amateur,
-        SemiProfessional,
+        Semi_Professional,
         Professional,
         Champion,
         Hero,
         Legend,
         Elite,
-        EliteI,
-        EliteII,
-        EliteIII,
-        EliteIV,
-        EliteV
+        Elite_I,
+        Elite_II,
+        Elite_III,
+        Elite_IV,
+        Elite_V
     }
 
     public enum SquadronRank       // these, as of 1/11/2018, are provisional
     {
         Unknown = -1,
         Leader = 0,
-        SeniorOfficer = 1,
+        Senior_Officer = 1,
         Officer = 2,
         Agent = 3,
         Rookie = 4,
@@ -151,7 +151,7 @@ namespace EliteDangerousCore
     public enum ExoBiologistRank
     {
         Directionless = 0,
-        MostlyDirectionless,
+        Mostly_Directionless,
         Compiler,
         Collector,
         Cataloguer,
@@ -159,17 +159,17 @@ namespace EliteDangerousCore
         Ecologist,
         Geneticist,
         Elite,
-        EliteI,
-        EliteII,
-        EliteIII,
-        EliteIV,
-        EliteV
+        Elite_I,
+        Elite_II,
+        Elite_III,
+        Elite_IV,
+        Elite_V
     }
 
     public enum SoldierRank
     {
         Defenceless = 0,
-        MostlyDefenceless,
+        Mostly_Defenceless,
         Rookie,
         Soldier,
         Gunslinger,
@@ -177,10 +177,10 @@ namespace EliteDangerousCore
         Gladiator,
         Deadeye,
         Elite,
-        EliteI,
-        EliteII,
-        EliteIII,
-        EliteIV,
-        EliteV
+        Elite_I,
+        Elite_II,
+        Elite_III,
+        Elite_IV,
+        Elite_V
     }
 }
