@@ -574,7 +574,7 @@ namespace EliteDangerousCore.EDDN
 
             JObject message = new JObject
             {
-                ["timestamp"] = journal.EventTimeUTC.ToString("yyyy-MM-ddTHH:mm:ss'Z'"),
+                ["timestamp"] = journal.EventTimeUTC.ToString("yyyy-MM-ddTHH:mm:ss'Z'", CultureInfo.InvariantCulture),
                 ["systemName"] = journal.YardInfo.StarSystem,
                 ["stationName"] = journal.YardInfo.StationName,
                 ["stationName"] = journal.YardInfo.StationName,
@@ -601,7 +601,7 @@ namespace EliteDangerousCore.EDDN
 
             JObject message = new JObject
             {
-                ["timestamp"] = journal.EventTimeUTC.ToString("yyyy-MM-ddTHH:mm:ss'Z'"),
+                ["timestamp"] = journal.EventTimeUTC.ToString("yyyy-MM-ddTHH:mm:ss'Z'", CultureInfo.InvariantCulture),
                 ["systemName"] = journal.Yard.StarSystem,
                 ["stationName"] = journal.Yard.StationName,
                 ["marketId"] = journal.MarketID,
