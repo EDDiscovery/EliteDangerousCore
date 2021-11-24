@@ -26,6 +26,8 @@ namespace EliteDangerousCore.JournalEvents
             Combat = evt["Combat"].Int();
             Trade = evt["Trade"].Int();
             Explore = evt["Explore"].Int();
+            Soldier = evt["Soldier"].Int();
+            Exobiologist = evt["Exobiologist"].Int();
             Empire = evt["Empire"].Int();
             Federation = evt["Federation"].Int();
             CQC = evt["CQC"].Int();
@@ -34,15 +36,18 @@ namespace EliteDangerousCore.JournalEvents
         public int Combat { get; set; }         // keep ints for backwards compat
         public int Trade { get; set; }
         public int Explore { get; set; }
+        public int Soldier { get; set; }
+        public int Exobiologist { get; set; }
         public int Empire { get; set; }
         public int Federation { get; set; }
         public int CQC { get; set; }
-
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("Combat: ;%".T(EDTx.JournalProgress_Combat), Combat,
                                       "Trade: ;%".T(EDTx.JournalProgress_Trade), Trade,
                                       "Exploration: ;%".T(EDTx.JournalProgress_Exploration), Explore,
+                                      "Soldier: ;%", Soldier,
+                                      "Exobiologist: ;%", Exobiologist,
                                       "Federation: ;%".T(EDTx.JournalProgress_Federation), Federation,
                                       "Empire: ;%".T(EDTx.JournalProgress_Empire), Empire,
                                       "CQC: ;%".T(EDTx.JournalProgress_CQC), CQC);

@@ -313,6 +313,8 @@ namespace EliteDangerousCore.Inara
                             eventstosend.Add(InaraClass.setCommanderRankPilot("combat", (int)ranksave.Combat, progress?.Combat ?? -1, ranksave.EventTimeUTC));
                             eventstosend.Add(InaraClass.setCommanderRankPilot("trade", (int)ranksave.Trade, progress?.Trade ?? -1, ranksave.EventTimeUTC));
                             eventstosend.Add(InaraClass.setCommanderRankPilot("explore", (int)ranksave.Explore, progress?.Explore ?? -1, ranksave.EventTimeUTC));
+                            eventstosend.Add(InaraClass.setCommanderRankPilot("soldier", (int)ranksave.SoldierRank, progress?.Soldier ?? -1, ranksave.EventTimeUTC));
+                            eventstosend.Add(InaraClass.setCommanderRankPilot("exobiologist", (int)ranksave.ExoBiologistRank, progress?.Exobiologist ?? -1, ranksave.EventTimeUTC));
                             eventstosend.Add(InaraClass.setCommanderRankPilot("empire", (int)ranksave.Empire, progress?.Empire ?? -1, ranksave.EventTimeUTC));
                             eventstosend.Add(InaraClass.setCommanderRankPilot("federation", (int)ranksave.Federation, progress?.Federation ?? -1, ranksave.EventTimeUTC));
                             eventstosend.Add(InaraClass.setCommanderRankPilot("cqc", (int)ranksave.CQC, progress?.CQC ?? -1, ranksave.EventTimeUTC));
