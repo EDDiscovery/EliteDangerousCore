@@ -695,7 +695,7 @@ namespace EliteDangerousCore.JournalEvents
         public JObject CreateFSDJournalEntryJson()          // minimal version, not the whole schebang
         {
             JObject jo = new JObject();
-            jo["timestamp"] = EventTimeUTC.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'");
+            jo["timestamp"] = EventTimeUTC.ToStringZuluInvariant();
             jo["event"] = "FSDJump";
             jo["StarSystem"] = StarSystem;
             jo["StarPos"] = new JArray(StarPos.X, StarPos.Y, StarPos.Z);

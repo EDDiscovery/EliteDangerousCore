@@ -574,7 +574,7 @@ namespace EliteDangerousCore.EDDN
 
             JObject message = new JObject
             {
-                ["timestamp"] = journal.EventTimeUTC.ToString("yyyy-MM-ddTHH:mm:ss'Z'"),
+                ["timestamp"] = journal.EventTimeUTC.ToStringZuluInvariant(),
                 ["systemName"] = journal.YardInfo.StarSystem,
                 ["stationName"] = journal.YardInfo.StationName,
                 ["stationName"] = journal.YardInfo.StationName,
@@ -601,7 +601,7 @@ namespace EliteDangerousCore.EDDN
 
             JObject message = new JObject
             {
-                ["timestamp"] = journal.EventTimeUTC.ToString("yyyy-MM-ddTHH:mm:ss'Z'"),
+                ["timestamp"] = journal.EventTimeUTC.ToStringZuluInvariant(),
                 ["systemName"] = journal.Yard.StarSystem,
                 ["stationName"] = journal.Yard.StationName,
                 ["marketId"] = journal.MarketID,
@@ -733,7 +733,7 @@ namespace EliteDangerousCore.EDDN
             message["systemName"] = systemName;
             message["stationName"] = stationName;
             message["marketId"] = marketID;
-            message["timestamp"] = time.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", CultureInfo.InvariantCulture);
+            message["timestamp"] = time.ToStringZuluInvariant();
 
             JArray JAcommodities = new JArray();
 

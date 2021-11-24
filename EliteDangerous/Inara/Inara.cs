@@ -446,7 +446,7 @@ namespace EliteDangerousCore.Inara
             JObject eventData = new JObject();
             eventData["missionName"] = mission.FDName;
             eventData["missionGameID"] = mission.MissionId;
-            eventData["missionExpiry"] = mission.Expiry.ToStringZulu();
+            eventData["missionExpiry"] = mission.Expiry.ToStringZuluInvariant();
 
             if (mission.Influence.HasChars())
                 eventData["influenceGain"] = mission.Influence;
@@ -638,7 +638,7 @@ namespace EliteDangerousCore.Inara
             eventData["communitygoalName"] = goals.Title;
             eventData["starsystemName"] = goals.SystemName;
             eventData["stationName"] = goals.MarketName;
-            eventData["goalExpiry"] = goals.Expiry.ToStringZulu();
+            eventData["goalExpiry"] = goals.Expiry.ToStringZuluInvariant();
             if (goals.TierReachedInt.HasValue)
                 eventData["tierReached"] = goals.TierReachedInt.Value;
             if (goals.TopTierInt.HasValue)
@@ -701,7 +701,7 @@ namespace EliteDangerousCore.Inara
         {
             JObject jo = new JObject();
             jo["eventName"] = eventname;
-            jo["eventTimestamp"] = DateTime.UtcNow.ToStringZulu();
+            jo["eventTimestamp"] = DateTime.UtcNow.ToStringZuluInvariant();
             jo["eventData"] = eventData;
             return jo;
         }

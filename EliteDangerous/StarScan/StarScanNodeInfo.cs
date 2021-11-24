@@ -27,7 +27,8 @@ namespace EliteDangerousCore
 
             public static void DumpTree(ScanNode top, string key, int level)        // debug dump out
             {
-                System.Diagnostics.Debug.WriteLine("                                                        ".Substring(0, level * 3) + key + ":" + top.BodyID + " " + top.FullName + " " + top.NodeType + " SD:" + (top.scandata != null));
+                string pad = new string(' ', 64);
+                System.Diagnostics.Debug.WriteLine(pad.Substring(0, level * 3) + key + ":" + top.BodyID + " " + top.FullName + " " + top.NodeType + " SD:" + (top.scandata != null));
                 if (top.Children != null)
                 {
                     foreach (var c in top.Children)
@@ -35,7 +36,21 @@ namespace EliteDangerousCore
                 }
             }
 
-            public static JObject DumpOrbitElements(ScanNode top)        // use with SystemNodeTree for orbital elements
+            public static bool AllWithScanData(ScanNode top)
+            {
+                if (top.scandata == null)
+                    return false;
+                if (top.Children != null)
+                {
+                    foreach (var c in top.Children)
+                        if (!AllWithScanData(c.Value))
+                            return false;
+                }
+                return true;
+            }
+
+            // Dumps out orbital parameters. Distance is km, as per Kepler Orbital Parameters/Horizons
+            public static JObject DumpOrbitElements(ScanNode top)        
             {
                 JObject obj = new JObject();
                 obj["Name"] = top.OwnName;

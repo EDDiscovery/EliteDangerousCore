@@ -104,7 +104,7 @@ namespace EliteDangerousCore
         private bool ParseVisitedSystem(DateTime time, TimeSpan tzoffset, string line, out JObject jo, out JournalLocOrJump je)
         {
             jo = new JObject();
-            jo["timestamp"] = time.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'");
+            jo["timestamp"] = time.ToStringZuluInvariant();
             jo["event"] = "FSDJump";
             je = null;
 

@@ -85,7 +85,7 @@ namespace EliteDangerousCore.IGAU
                             JournalCodexEntry c = he.journalEntry as JournalCodexEntry;
                             if (c.VoucherAmount != null && c.VoucherAmount > 0)
                             {
-                                var msg = igau.CreateIGAUMessageCodexMessage(he.EventTimeUTC.ToStringZulu(),
+                                var msg = igau.CreateIGAUMessageCodexMessage(he.EventTimeUTC.ToStringZuluInvariant(),
                                                                   c.EntryID.ToString(), c.Name, c.Name_Localised, c.System, c.SystemAddress?.ToString() ?? "0");
 
                                 System.Diagnostics.Debug.WriteLine("IGAU Post " + msg.ToString(true));
@@ -100,7 +100,7 @@ namespace EliteDangerousCore.IGAU
                         {
                             JournalScanOrganic c = he.journalEntry as JournalScanOrganic;
 
-                            var msg = igau.CreateIGAUMessageScanOrganicMessage(he.EventTimeUTC.ToStringZulu(), c.Species, c.Species_Localised, he.System.Name, he.System.SystemAddress?.ToString() ?? "0");
+                            var msg = igau.CreateIGAUMessageScanOrganicMessage(he.EventTimeUTC.ToStringZuluInvariant(), c.Species, c.Species_Localised, he.System.Name, he.System.SystemAddress?.ToString() ?? "0");
 
                             System.Diagnostics.Debug.WriteLine("IGAU Post " + msg.ToString(true));
 

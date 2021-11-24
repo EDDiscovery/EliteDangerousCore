@@ -64,7 +64,7 @@ namespace EliteDangerousCore.DLL
             {
                 ver = 4,
                 indexno = he.EntryNumber,
-                utctime = he.EventTimeUTC.ToStringZulu(),
+                utctime = he.EventTimeUTC.ToStringZuluInvariant(),
                 name = he.EventSummary,
                 systemname = he.System.Name,
                 x = he.System.X,

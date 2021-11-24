@@ -721,7 +721,7 @@ namespace EliteDangerousCore
         {
             JObject jo = new JObject();
 
-            jo["timestamp"] = DateTime.UtcNow.ToStringZulu();
+            jo["timestamp"] = DateTime.UtcNow.ToStringZuluInvariant();
             jo["event"] = "Loadout";
             jo["Ship"] = ShipFD;
             jo["ShipID"] = ID;

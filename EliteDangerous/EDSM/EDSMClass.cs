@@ -222,8 +222,8 @@ namespace EliteDangerousCore.EDSM
             }
 
             string query = "api-v1/systems" +
-                "?startdatetime=" + HttpUtility.UrlEncode(startdate.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)) +
-                "&enddatetime=" + HttpUtility.UrlEncode(enddate.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)) +
+                "?startdatetime=" + HttpUtility.UrlEncode(startdate.ToUniversalTime().ToStringYearFirstInvariant()) +
+                "&enddatetime=" + HttpUtility.UrlEncode(enddate.ToUniversalTime().ToStringYearFirstInvariant()) +
                 "&coords=1&submitted=1&known=1&showId=1";
             return RequestGet(query, handleException: true, timeout: timeout);
         }
@@ -259,7 +259,7 @@ namespace EliteDangerousCore.EDSM
             if (!ValidCredentials)
                 return null;
 
-            string query = "get-comments?startdatetime=" + HttpUtility.UrlEncode(starttime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)) + "&apiKey=" + apiKey + "&commanderName=" + HttpUtility.UrlEncode(commanderName) + "&showId=1";
+            string query = "get-comments?startdatetime=" + HttpUtility.UrlEncode(starttime.ToStringYearFirstInvariant()) + "&apiKey=" + apiKey + "&commanderName=" + HttpUtility.UrlEncode(commanderName) + "&showId=1";
             var response = RequestGet("api-logs-v1/" + query, handleException: true);
 
             if (response.Error)
@@ -375,10 +375,10 @@ namespace EliteDangerousCore.EDSM
             string query = "get-logs?showId=1&apiKey=" + apiKey + "&commanderName=" + HttpUtility.UrlEncode(commanderName);
 
             if (starttimeutc != null)
-                query += "&startDateTime=" + HttpUtility.UrlEncode(starttimeutc.Value.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture));
+                query += "&startDateTime=" + HttpUtility.UrlEncode(starttimeutc.Value.ToStringYearFirstInvariant());
 
             if (endtimeutc != null)
-                query += "&endDateTime=" + HttpUtility.UrlEncode(endtimeutc.Value.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture));
+                query += "&endDateTime=" + HttpUtility.UrlEncode(endtimeutc.Value.ToStringYearFirstInvariant());
 
             response = RequestGet("api-logs-v1/" + query, handleException: true);
 
@@ -913,7 +913,7 @@ namespace EliteDangerousCore.EDSM
         {
             JObject jout = new JObject
             {
-                ["timestamp"] = DateTime.UtcNow.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", CultureInfo.InvariantCulture),
+                ["timestamp"] = DateTime.UtcNow.ToStringZuluInvariant(),
                 ["event"] = "Scan",
                 ["EDDFromEDSMBodie"] = true,
                 ["BodyName"] = jo["name"],

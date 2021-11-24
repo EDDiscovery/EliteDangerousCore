@@ -237,7 +237,7 @@ namespace EliteDangerousCore.EDSM
             {
                 System.Diagnostics.Debug.WriteLine($"Adding EDSM logs count {toadd.Count}");
 
-                TravelLogUnit tlu = new TravelLogUnit("EDSM\\EDSM-" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture));    // need a tlu for it
+                TravelLogUnit tlu = new TravelLogUnit("EDSM\\EDSM-" + DateTime.Now.ToStringYearFirstInvariant());    // need a tlu for it
                 tlu.Type = TravelLogUnit.EDSMType;  // EDSM
                 tlu.CommanderId = EDCommander.CurrentCmdrID;
                 tlu.Add();  // Add to Database

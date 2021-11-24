@@ -62,7 +62,7 @@ namespace EliteDangerousCore.JournalEvents
 
             JObject j = new JObject()
             {
-                ["timestamp"] = EventTimeUTC.ToStringZulu(),
+                ["timestamp"] = EventTimeUTC.ToStringZuluInvariant(),
                 ["event"] = EventTypeStr,
                 ["StationName"] = Yard.StationName,
                 ["StarSystem"] = Yard.StarSystem,

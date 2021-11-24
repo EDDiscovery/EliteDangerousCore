@@ -131,9 +131,13 @@ namespace EliteDangerousCore
                     ScanNode newnode = new ScanNode(name, pnode.BaryCentre ? ScanNodeType.barycentre : ScanNodeType.body, cid);
 
                     // if we have data on a barycentre, add a new JournalScan for it
-                    if ( BaryCentres.ContainsKey(cid))
+                    if (BaryCentres.ContainsKey(cid))
                     {
                         newnode.ScanData = new JournalScan(BaryCentres[cid]);
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"{node.OwnName} No scan data");
                     }
 
                     node.Children.Add(name, newnode);
