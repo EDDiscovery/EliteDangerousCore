@@ -381,7 +381,6 @@ namespace EliteDangerousCore
  
         public static List<JournalEntry> GetByEventType(JournalTypeEnum eventtype, int commanderid, DateTime startutc, DateTime stoputc)
         {
-            Dictionary<long, TravelLogUnit> tlus = TravelLogUnit.GetAll().ToDictionary(t => t.ID);
             List<JournalEntry> entries = new List<JournalEntry>();
 
             // in the connection thread, execute the 
@@ -397,7 +396,7 @@ namespace EliteDangerousCore
                 {
                     List<JournalEntry> vsc = new List<JournalEntry>();
 
-                    while (vsc.Count < 1000 && reader.Read())
+                    while (reader.Read())
                     {
                         JournalEntry je = CreateJournalEntry(reader);
                         vsc.Add(je);
@@ -428,6 +427,12 @@ namespace EliteDangerousCore
             return vsc;
         }
 
+        public static T GetLast<T>(DateTime beforeutc, Func<T, bool> filter = null)
+            where T : JournalEntry
+        {
+            return (T)GetLast(beforeutc, e => e is T && (filter == null || filter((T)e)));
+        }
+
         public static JournalEntry GetLast(DateTime beforeutc, Func<JournalEntry, bool> filter)
         {
             return UserDatabase.Instance.DBRead<JournalEntry>(cn =>
@@ -449,12 +454,6 @@ namespace EliteDangerousCore
                 }
                 return null;
             });
-        }
-
-        public static T GetLast<T>(DateTime beforeutc, Func<T, bool> filter = null)
-            where T : JournalEntry
-        {
-            return (T)GetLast(beforeutc, e => e is T && (filter == null || filter((T)e)));
         }
 
         public static List<JournalEntry> FindEntry(JournalEntry ent, SQLiteConnectionUser cn , JObject entjo = null)      // entjo is not changed.
