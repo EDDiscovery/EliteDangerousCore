@@ -387,8 +387,8 @@ namespace EliteDangerousCore.DB
             {
                 SystemsDatabase.Instance.DBRead(cn =>
                 {
-                    var enumablelist = DB.SystemsDB.GetSystemNearestTo(currentpos, wantedpos, maxfromcurpos, maxfromwanted, routemethod, cn, (s) => AddToCache(s), limitto);
-                    candidates.AddRange(enumablelist);
+                    var list = DB.SystemsDB.GetSystemNearestTo(currentpos, wantedpos, maxfromcurpos, maxfromwanted, routemethod, cn, (s) => AddToCache(s), limitto);
+                    candidates.AddRange(list);
                 });
             }
 

@@ -125,7 +125,7 @@ namespace EliteDangerousCore.DB
             IterativeWaypointDevHalf,
         }
 
-        internal static IEnumerable<ISystem> GetSystemNearestTo(
+        internal static List<ISystem> GetSystemNearestTo(
                                                   Point3D currentpos,
                                                   Point3D wantedpos,
                                                   double maxfromcurpos,
@@ -165,10 +165,17 @@ namespace EliteDangerousCore.DB
 
                 //System.Diagnostics.Debug.WriteLine(cn.ExplainQueryPlanString(cmd));
 
+                List<ISystem> list = new List<ISystem>();
                 using (DbDataReader reader = cmd.ExecuteReader())
                 {
-                    return MakeSystemEnumerable(reader, callback: LookedUp);
+                    while (reader.Read())
+                    {
+                        var sys = MakeSystem(reader);
+                        list.Add(sys);
+                    }
                 }
+
+                return list;
             }
         }
 

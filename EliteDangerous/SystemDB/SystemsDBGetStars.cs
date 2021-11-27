@@ -253,16 +253,6 @@ namespace EliteDangerousCore.DB
             return new SystemClass(ec.ToString(), reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt64(3), reader.GetInt32(5));
         }
 
-        static IEnumerable<SystemClass> MakeSystemEnumerable(DbDataReader reader, Action<ISystem> callback = null)
-        {
-            while (reader.Read())
-            {
-                var sys = MakeSystem(reader);
-                callback?.Invoke(sys);
-                yield return sys;
-            }
-        }
-
         #endregion
 
     }
