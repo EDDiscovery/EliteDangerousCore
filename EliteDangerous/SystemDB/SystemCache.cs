@@ -14,6 +14,7 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
+using BaseUtils;
 using EMK.LightGeometry;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,27 @@ namespace EliteDangerousCore.DB
         #region Public Interface for Find System
 
         // in historylist, addtocache for all fsd jumps and navroutes.
+        public static System.Threading.Tasks.Task<ISystem> FindSystemAsync(string name, EDSM.GalacticMapping glist, bool checkedsm = false)
+        {
+            return System.Threading.Tasks.Task.Run(() =>
+            {
+                //if (checkedsm)
+                //{
+                //    System.Diagnostics.Debug.WriteLine($"{Environment.TickCount % 10000} PAUSE");
+                //    System.Threading.Thread.Sleep(5000);
+                //    System.Diagnostics.Debug.WriteLine($"{Environment.TickCount % 10000} RESUME");
+                //}
+                return FindSystem(name, glist, checkedsm);
+            });
+        }
+
+        public static System.Threading.Tasks.Task<ISystem> FindSystemAsync(ISystem find, bool checkedsm = false)
+        {
+            return System.Threading.Tasks.Task.Run(() =>
+            {
+                return FindSystem(find, checkedsm);
+            });
+        }
 
         public static ISystem FindSystem(string name, EDSM.GalacticMapping glist, bool checkedsm)
         {
@@ -58,6 +80,8 @@ namespace EliteDangerousCore.DB
             return FindSystem(new SystemClass(name), checkedsm);
         }
 
+        // look up thru cache and db, and optionally edsm
+        // thread safe
         public static ISystem FindSystem(ISystem find, bool checkedsm = false)
         {
             ISystem found;
@@ -184,6 +208,7 @@ namespace EliteDangerousCore.DB
             }
         }
 
+        // find in cache, thread safe
         public static ISystem FindCachedSystem(ISystem find)
         {
             List<ISystem> foundlist = new List<ISystem>();
@@ -230,161 +255,144 @@ namespace EliteDangerousCore.DB
             }
         }
 
-        public static List<ISystem> FindSystemWildcard(string name, int limit = int.MaxValue)
+        // return, maybe an empty, list of systems, non duplicated
+        public static HashSet<ISystem> FindSystemWildcard(string name, int limit = int.MaxValue)
         {
-            if (SystemsDatabase.Instance.RebuildRunning) // use the cache is db is updating
+            HashSet<ISystem> systems = new HashSet<ISystem>(new ISystemNameCompareCaseInsensitiveInvariantCulture());      // important, compare on name case insensite
+
+            lock (cachelockobject)  // systems can exist in the cache as well as the db
             {
-                lock(cachelockobject)
+                name = name.ToLowerInvariant();
+
+                systems.AddRange(systemsByName.Where(kvp => kvp.Key.ToLowerInvariant().StartsWith(name))
+                                    .SelectMany(s => s.Value)
+                                    .Take(limit)
+                                    .ToList());
+            }
+
+            if (!SystemsDatabase.Instance.RebuildRunning) // Return from cache if rebuild is running
+            {
+                SystemsDatabase.Instance.DBRead(cn =>
                 {
-                    name = name.ToLowerInvariant();
+                    var list = DB.SystemsDB.FindStarWildcard(name, cn, limit);
+                    if (list != null)
+                        systems.AddRange(list);
+                });
+            }
 
-                    return systemsByName.Where(kvp => kvp.Key.ToLowerInvariant().StartsWith(name))
-                                        .SelectMany(s => s.Value)
-                                        .Take(limit)
-                                        .ToList();
-                }
-            }
-            else
-            {
-                return SystemsDatabase.Instance.DBRead(conn => FindSystemWildcard(name, conn, limit));
-            }
+            return systems;
         }
 
-        static private List<ISystem> FindSystemWildcard(string name, SQLiteConnectionSystem cn, int limit = int.MaxValue)
-        {
-            var list = DB.SystemsDB.FindStarWildcard(name, cn, limit);
-            if (list != null)
-            {
-                foreach (var x in list)
-                    AddToCache(x);
-            }
+        // system list with distances
 
-            return list;
-        }
- 
         public static void GetSystemListBySqDistancesFrom(BaseUtils.SortedListDoubleDuplicate<ISystem> distlist, double x, double y, double z,
                                                     int maxitems,
                                                     double mindist, double maxdist, bool spherical)
         {
-            if (SystemsDatabase.Instance.RebuildRunning) // Return from cache if rebuild is running
+            lock(cachelockobject)
             {
-                lock(cachelockobject)
+                var sysdist = systemsByName.Values
+                                            .SelectMany(s => s)
+                                            .Select(s => new { distsq = s.DistanceSq(x, y, z), sys = s })
+                                            .OrderBy(s => s.distsq)
+                                            .ToList();
+                var minsq = mindist * mindist;
+                var maxsq = maxdist * maxdist;
+
+                foreach (var sd in sysdist)
                 {
-                    var sysdist = systemsByName.Values
-                                               .SelectMany(s => s)
-                                               .Select(s => new { distsq = s.DistanceSq(x, y, z), sys = s })
-                                               .OrderBy(s => s.distsq)
-                                               .ToList();
-                    var minsq = mindist * mindist;
-                    var maxsq = maxdist * maxdist;
-
-                    foreach (var sd in sysdist)
+                    if (sd.distsq <= minsq && sd.distsq >= maxsq)
                     {
-                        if (sd.distsq <= minsq && sd.distsq >= maxsq)
-                        {
-                            distlist.Add(sd.distsq, sd.sys);
-                        }
+                        distlist.Add(sd.distsq, sd.sys);
+                    }
 
-                        if (distlist.Count >= maxitems)
-                        {
-                            break;
-                        }
+                    if (distlist.Count >= maxitems)
+                    {
+                        break;
                     }
                 }
             }
-            else
+
+            if (!SystemsDatabase.Instance.RebuildRunning) // Return from cache if rebuild is running
             {
-                SystemsDatabase.Instance.DBRead(conn => GetSystemListBySqDistancesFrom(distlist, x, y, z, maxitems, mindist, maxdist, spherical, conn),5000);
+                SystemsDatabase.Instance.DBRead(cn =>
+                {
+                    DB.SystemsDB.GetSystemListBySqDistancesFrom(distlist, x, y, z, maxitems, mindist, maxdist, spherical, cn, (s) => AddToCache(s));
+                });
             }
         }
 
-        private static void GetSystemListBySqDistancesFrom(BaseUtils.SortedListDoubleDuplicate<ISystem> distlist, double x, double y, double z,
-                                                    int maxitems,
-                                                    double mindist, double maxdist, bool spherical, SQLiteConnectionSystem cn)
-        {
-            DB.SystemsDB.GetSystemListBySqDistancesFrom(distlist, x, y, z, maxitems, mindist, maxdist, spherical, cn, (s) => AddToCache(s));
-        }
-
+        // find by position
         public static ISystem GetSystemByPosition(double x, double y, double z, uint warnthreshold = 500)
         {
             return FindNearestSystemTo(x, y, z, 0.125, warnthreshold);
         }
 
+        // find nearest system
         public static ISystem FindNearestSystemTo(double x, double y, double z, double maxdistance, uint warnthreshold = 500)
         {
-            if (SystemsDatabase.Instance.RebuildRunning) // Return from cache if rebuild is running
+            ISystem sys = null;
+            lock (cachelockobject)
             {
-                lock(cachelockobject)
+                sys = systemsByName.Values
+                                    .SelectMany(s => s)
+                                    .OrderBy(s => s.Distance(x, y, z))
+                                    .FirstOrDefault(e => e.Distance(x, y, z) < maxdistance);
+            }
+
+            if (!SystemsDatabase.Instance.RebuildRunning)
+            {
+                ISystem dbsys = null;
+                SystemsDatabase.Instance.DBRead(cn =>
                 {
-                    return systemsByName.Values
-                                        .SelectMany(s => s)
-                                        .OrderBy(s => s.Distance(x, y, z))
-                                        .FirstOrDefault(e => e.Distance(x, y, z) < maxdistance);
+                    dbsys = DB.SystemsDB.GetSystemByPosition(x, y, z, cn, maxdistance);
+                });
+
+                if (dbsys != null && sys != null && dbsys.Distance(x, y, z) < sys.Distance(x, y, z))
+                {
+                    sys = dbsys;
                 }
             }
-            else
-            {
-                return SystemsDatabase.Instance.DBRead(conn => FindNearestSystemTo(x, y, z, maxdistance, conn), warnthreshold: warnthreshold);
-            }
+
+            return sys;
         }
 
-        private static ISystem FindNearestSystemTo(double x, double y, double z, double maxdistance, SQLiteConnectionSystem cn)
-        {
-            //System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch(); sw.Start();  System.Diagnostics.Debug.WriteLine("Look up " + x + "," + y + "," + z + " : " + maxdistance);
-
-            ISystem s = DB.SystemsDB.GetSystemByPosition(x, y, z, cn, maxdistance);
-            if (s != null)
-                AddToCache(s);
-
-            //System.Diagnostics.Debug.WriteLine(".. lookup done " + sw.ElapsedMilliseconds);
-            return s;
-        }
-
-         public static ISystem GetSystemNearestTo(Point3D currentpos,
+        // return system nearest to, given range
+        public static ISystem GetSystemNearestTo(Point3D currentpos,
                                                  Point3D wantedpos,
                                                  double maxfromcurpos,
                                                  double maxfromwanted,
                                                  SystemsDB.SystemsNearestMetric routemethod,
                                                  int limitto)
         {
-            if (SystemsDatabase.Instance.RebuildRunning)    // return from cache is rebuild is running
+            List<ISystem> candidates;
+
+            lock (cachelockobject)
             {
-                lock(cachelockobject)
+                candidates = systemsByName.Values
+                                 .SelectMany(s => s)
+                                 .Select(s => new
+                                 {
+                                     dc = s.Distance(currentpos.X, currentpos.Y, currentpos.Z),
+                                     dw = s.Distance(wantedpos.X, wantedpos.Y, wantedpos.Z),
+                                     sys = s
+                                 })
+                                 .Where(s => s.dw < maxfromwanted && s.dc < maxfromcurpos)
+                                 .OrderBy(s => s.dw)
+                                 .Select(s => s.sys)
+                                 .ToList();
+            }
+
+            if (!SystemsDatabase.Instance.RebuildRunning)    // return from cache is rebuild is running
+            {
+                SystemsDatabase.Instance.DBRead(cn =>
                 {
-                    var candidates =
-                        systemsByName.Values
-                                     .SelectMany(s => s)
-                                     .Select(s => new
-                                     {
-                                         dc = s.Distance(currentpos.X, currentpos.Y, currentpos.Z),
-                                         dw = s.Distance(wantedpos.X, wantedpos.Y, wantedpos.Z),
-                                         sys = s
-                                     })
-                                     .Where(s => s.dw < maxfromwanted && s.dc < maxfromcurpos)
-                                     .OrderBy(s => s.dw)
-                                     .Select(s => s.sys)
-                                     .ToList();
-
-                    return DB.SystemsDB.GetSystemNearestTo(candidates, currentpos, wantedpos, maxfromcurpos, maxfromwanted, routemethod);
-                }
+                    var enumablelist = DB.SystemsDB.GetSystemNearestTo(currentpos, wantedpos, maxfromcurpos, maxfromwanted, routemethod, cn, (s) => AddToCache(s), limitto);
+                    candidates.AddRange(enumablelist);
+                });
             }
-            else
-            {
-                return SystemsDatabase.Instance.DBRead(conn => GetSystemNearestTo(currentpos, wantedpos, maxfromcurpos, maxfromwanted, routemethod, limitto, conn), 5000);
-            }
-        }
 
-        private static ISystem GetSystemNearestTo(Point3D currentpos,
-                                                 Point3D wantedpos,
-                                                 double maxfromcurpos,
-                                                 double maxfromwanted,
-                                                 SystemsDB.SystemsNearestMetric routemethod,
-                                                 int limitto,
-                                                 SQLiteConnectionSystem cn)
-        {
-            ISystem sys = DB.SystemsDB.GetSystemNearestTo(currentpos, wantedpos, maxfromcurpos, maxfromwanted, routemethod, cn, (s) => AddToCache(s), limitto);
-
-            return sys;
+            return DB.SystemsDB.GetSystemNearestTo(candidates, currentpos, wantedpos, maxfromcurpos, maxfromwanted, routemethod);
         }
 
         #endregion

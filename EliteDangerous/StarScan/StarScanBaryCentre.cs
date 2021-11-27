@@ -27,7 +27,7 @@ namespace EliteDangerousCore
         {
             if (ScanDataBySysaddr.TryGetValue(jsa.SystemAddress, out SystemNode sn))       // if we have it
             {
-                System.Diagnostics.Debug.WriteLine($"Add barycentre {jsa.StarSystem} {jsa.BodyID}");
+              //  System.Diagnostics.Debug.WriteLine($"Add barycentre {jsa.StarSystem} {jsa.BodyID}");
                 sn.BaryCentres[jsa.BodyID] = jsa;        // add it
                 return true;
             }
@@ -35,7 +35,7 @@ namespace EliteDangerousCore
             {
                 if (saveit)
                 {
-                    System.Diagnostics.Debug.WriteLine($"SAVE barycentre {jsa.StarSystem} {jsa.BodyID}");
+              //      System.Diagnostics.Debug.WriteLine($"SAVE barycentre {jsa.StarSystem} {jsa.BodyID}");
                     SaveForProcessing(jsa, null);
                 }
                 return false;

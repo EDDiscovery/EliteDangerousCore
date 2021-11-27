@@ -14,6 +14,7 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 using System;
+using System.Collections.Generic;
 
 namespace EliteDangerousCore
 {
@@ -159,5 +160,19 @@ namespace EliteDangerousCore
 
         string ToString();
         string ToStringVerbose();
+    }
+
+    // useful to pass for isystem comparision of name only
+    public class ISystemNameCompareCaseInsensitiveInvariantCulture : IEqualityComparer<ISystem>
+    {
+        public bool Equals(ISystem x, ISystem y)
+        {
+            return x.Name.Equals(y.Name, StringComparison.InvariantCulture);
+        }
+
+        public int GetHashCode(ISystem obj)
+        {
+            return obj.Name.GetHashCode();
+        }
     }
 }
