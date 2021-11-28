@@ -32,8 +32,6 @@ namespace EliteDangerousCore
             public SortedList<string, ScanNode> StarNodes { get; private set; } = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());   // node list
             public SortedList<int, ScanNode> NodesByID { get; private set; } = new SortedList<int, ScanNode>();               // by ID list
             public SortedList<int, JournalScanBaryCentre> BaryCentres { get; private set; } = new SortedList<int, JournalScanBaryCentre>();
-            public bool EDSMCacheCheck { get; set; } = false; // check flags
-            public bool EDSMWebChecked { get; set; } = false;
 
             public int? FSSTotalBodies { get; set; }         // if we have FSSDiscoveryScan, this will be set
 

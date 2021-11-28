@@ -64,7 +64,7 @@ namespace EliteDangerousCore.DB
                     });
                 }
 
-                if (dbver < 102)        // is it older than 102, its unusable
+                if (dbver < 200)                           // is it older than 200, now unusable.  Removed 102-200 reformat code as its been long enough
                 {
                     ExecuteNonQueries(new string[]         // older than 102, not supporting, remove
                     {

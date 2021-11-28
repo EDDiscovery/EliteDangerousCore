@@ -36,13 +36,7 @@ namespace EliteDangerousCore.DB
         {
             return System.Threading.Tasks.Task.Run(() =>
             {
-                //if (checkedsm)
-                //{
-                //    System.Diagnostics.Debug.WriteLine($"{Environment.TickCount % 10000} PAUSE");
-                //    System.Threading.Thread.Sleep(5000);
-                //    System.Diagnostics.Debug.WriteLine($"{Environment.TickCount % 10000} RESUME");
-                //}
-                return FindSystem(name, glist, checkedsm);
+                 return FindSystem(name, glist, checkedsm);
             });
         }
 
@@ -94,30 +88,18 @@ namespace EliteDangerousCore.DB
             {
                 found = SystemsDatabase.Instance.DBRead(conn => FindSystemInCacheDB(find, conn));
 
-                // we need to do this after the normal connection above, as if we find something, we need to go into read write mode (took a moment to realise this)
-
                 // if not found, checking edsm, and its a good name
 
                 if (found == null && checkedsm && find.Name.HasChars() && find.Name != "UnKnown")
                 {
-                    lock (edsmnotfoundlist)                                // lock it against threads
+                    EDSM.EDSMClass edsm = new EDSM.EDSMClass();
+                    found = edsm.GetSystem(find.Name)?.FirstOrDefault();     // this may return null, an empty list, so first or default, or it may return null
+
+                    // if found one, and EDSM ID/coords (paranoia), add back to our db so next time we have it
+
+                    if (found != null && found.EDSMID > 0 && found.HasCoordinate)       // if its a good system
                     {
-                        if (!edsmnotfoundlist.Contains(find.Name))        // if not in not found list - the ones we have already checked
-                        {
-                            EDSM.EDSMClass edsm = new EDSM.EDSMClass();
-                            found = edsm.GetSystem(find.Name)?.FirstOrDefault();     // this may return an empty list, so first or default, or it may return null
-
-                            // if found one, and EDSM ID/coords (paranoia), add back to our db so next time we have it
-
-                            if (found != null && found.EDSMID > 0 && found.HasCoordinate)       // if its a good system
-                            {
-                                SystemsDatabase.Instance.StoreSystems(new List<ISystem> { found });     // won't do anything if rebuilding
-                            }
-                            else
-                            {
-                                edsmnotfoundlist.Add(find.Name);            // else exclude from futher checks. Checked 22/2/21
-                            }
-                        }
+                        SystemsDatabase.Instance.StoreSystems(new List<ISystem> { found });     // won't do anything if rebuilding
                     }
                 }
             }
@@ -127,7 +109,6 @@ namespace EliteDangerousCore.DB
 
         // core find, with database
         // find in cache, find in db, add to cache
-
         public static ISystem FindSystemInCacheDB(ISystem find, SQLiteConnectionSystem cn)
         {
             ISystem orgsys = find;
@@ -546,8 +527,6 @@ namespace EliteDangerousCore.DB
 
         private static Dictionary<long, ISystem> systemsByEdsmId = new Dictionary<long, ISystem>();
         private static Dictionary<string, List<ISystem>> systemsByName = new Dictionary<string, List<ISystem>>(StringComparer.InvariantCultureIgnoreCase);
-
-        private static HashSet<string> edsmnotfoundlist = new HashSet<string>();
 
         private static List<string> AutoCompleteAdditionalList = new List<string>();
 

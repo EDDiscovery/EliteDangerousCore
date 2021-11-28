@@ -86,12 +86,6 @@ namespace EliteDangerousCore
                 ToProcess.Remove(je);
         }
 
-        public bool HasWebLookupOccurred(ISystem sys)       // have we had a web checkup on this system?  false if sys does not exist
-        {
-            SystemNode sn = FindSystemNode(sys);
-            return (sn != null && sn.EDSMWebChecked);
-        }
-
         // ONLY use this if you must because the async await won't work in the call stack.  edsmweblookup here with true is strongly discouraged
 
         public SystemNode FindSystemSynchronous(ISystem sys, bool edsmweblookup)    // Find the system. Optionally do a EDSM web lookup
@@ -103,7 +97,8 @@ namespace EliteDangerousCore
 
             // System.Diagnostics.Debug.WriteLine("Scan Lookup " + sys.Name + " found " + (sn != null) + " web? " + edsmweblookup + " edsm lookup " + (sn?.EDSMAdded ?? false));
 
-            if ((sys.EDSMID > 0 || (sys.SystemAddress != null && sys.SystemAddress > 0) || (sys.Name.HasChars())) && (sn == null || sn.EDSMCacheCheck == false || (edsmweblookup && !sn.EDSMWebChecked)))
+            // if we have an ID, a sys address, or a name AND no node and no lookup occurred
+            if ((sys.EDSMID > 0 || (sys.SystemAddress != null && sys.SystemAddress > 0) || (sys.Name.HasChars())) && (sn == null && !EliteDangerousCore.EDSM.EDSMClass.HasBodyLookupOccurred(sys.Name)))
             {
                 var jl = EliteDangerousCore.EDSM.EDSMClass.GetBodiesList(sys, edsmweblookup); // lookup, with optional web
 
@@ -120,14 +115,6 @@ namespace EliteDangerousCore
 
                 if (sn == null) // refind to make sure SN is set
                     sn = FindSystemNode(sys);
-
-                if (sn != null) // if we found it, set to indicate we did a cache check
-                {
-                    sn.EDSMCacheCheck = true;
-
-                    if (edsmweblookup)      // and if we did a web check, set it too..
-                        sn.EDSMWebChecked = true;
-                }
             }
 
             return sn;
@@ -147,7 +134,7 @@ namespace EliteDangerousCore
 
             //System.Diagnostics.Debug.WriteLine("Scan Lookup " + trace + " " + sys.Name + " found " + (sn != null) + " web? " + edsmweblookup + " edsm lookup " + (sn?.EDSMWebChecked ?? false));
 
-            if ((sys.EDSMID > 0 || (sys.SystemAddress != null && sys.SystemAddress > 0) || (sys.Name.HasChars())) && (sn == null || sn.EDSMCacheCheck == false || (edsmweblookup && !sn.EDSMWebChecked)))
+            if ((sys.EDSMID > 0 || (sys.SystemAddress != null && sys.SystemAddress > 0) || (sys.Name.HasChars())) && (sn == null && !EliteDangerousCore.EDSM.EDSMClass.HasBodyLookupOccurred(sys.Name)))
             {
                 var jl = await EliteDangerousCore.EDSM.EDSMClass.GetBodiesListAsync(sys, edsmweblookup); // lookup, with optional web
 
@@ -178,14 +165,6 @@ namespace EliteDangerousCore
                 //System.Diagnostics.Debug.WriteLine("Lookup System node again");
                 if (sn == null) // refind to make sure SN is set
                     sn = FindSystemNode(sys);
-
-                if (sn != null) // if we found it, set to indicate we did a cache check
-                {
-                    sn.EDSMCacheCheck = true;
-
-                    if (edsmweblookup)      // and if we did a web check, set it too..
-                        sn.EDSMWebChecked = true;
-                }
             }
 
             return sn;

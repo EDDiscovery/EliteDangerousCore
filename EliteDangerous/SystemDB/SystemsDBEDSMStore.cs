@@ -171,122 +171,7 @@ namespace EliteDangerousCore.DB
 
         #endregion
 
-        #region UPGRADE FROM 102
-
-        // take old system table and turn to new.  tablesarempty=false is normal, only set to true if using this code for checking replace algorithm
-
-        public static long UpgradeDB102to200(Func<bool> cancelRequested, Action<string> reportProgress, string tablepostfix, bool tablesareempty = false, int maxgridid = int.MaxValue)
-        {
-            var cache = new SectorCache();
-
-            int nextsectorid = GetNextSectorID();
-            long updates = 0;
-
-            long Limit = long.MaxValue;
-
-            DateTime maxdate = DateTime.MinValue;       // we don't pass this back due to using the same date
-            reportProgress?.Invoke("Begin System DB upgrade");
-            List<int> gridids = DB.GridId.AllId();
-            BaseUtils.AppTicks.TickCountLap("UTotal");
-
-            //int debug_z = 0;
-
-            foreach (int gridid in gridids)  // using grid id to keep chunks a good size.. can't read and write so can't just read the whole.
-            {
-                if (cancelRequested())
-                {
-                    updates = -1;
-                    break;
-                }
-
-                if (gridid == maxgridid)        // for debugging
-                    break;
-
-                int recordstostore = 0;
-                DbCommand selectSectorCmd = null;
-                DbCommand selectPrev = null;
-
-                SystemsDatabase.Instance.DBWrite(db =>
-                {
-                    try
-                    {
-                        var cn = db;
-
-                        selectSectorCmd = cn.CreateSelect("Sectors" + tablepostfix, "id", "name = @sname AND gridid = @gid", null,
-                                                                new string[] { "sname", "gid" }, new DbType[] { DbType.String, DbType.Int32 });
-                        selectPrev = cn.CreateSelect("EdsmSystems s", "s.EdsmId,s.x,s.y,s.z,n.Name,s.UpdateTimeStamp", "s.GridId = @gid", null,
-                                                                new string[] { "gid" }, new DbType[] { DbType.Int32 },
-                                                                joinlist: new string[] { "LEFT OUTER JOIN SystemNames n ON n.EdsmId=s.EdsmId" });
-
-                        selectPrev.Parameters[0].Value = gridid;
-
-                        using (DbDataReader reader = selectPrev.ExecuteReader())       // find name:gid
-                        {
-                            BaseUtils.AppTicks.TickCountLap("U1");
-
-                            while (reader.Read())
-                            {
-                                try
-                                {
-                                    EDSMFileEntry d = new EDSMFileEntry();
-                                    d.id = (long)reader[0];
-                                    d.x = (int)(long)reader[1];
-                                    d.y = (int)(long)reader[2];
-                                    d.z = (int)(long)reader[3];
-                                    d.name = (string)reader[4];
-                                    d.date = new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc) + TimeSpan.FromSeconds((long)reader["UpdateTimestamp"]);
-                                    int grididentry = GridId.Id128(d.x, d.z);  // because i don't trust the previous gridid - it should be the same as the outer loop, but lets recalc
-
-                                    //if (!tablesareempty)  d.z = debug_z++;  // for debug checking
-
-                                    CreateNewUpdate(cache, selectSectorCmd, d, grididentry, tablesareempty, ref maxdate, ref nextsectorid);      // not using gridid on purpose to double check it.
-                                    recordstostore++;
-                                }
-                                catch (Exception ex)
-                                {
-                                    System.Diagnostics.Debug.WriteLine("Reading prev table" + ex);
-                                }
-                            }
-                        }
-                    }
-                    finally
-                    {
-                        selectSectorCmd?.Dispose();
-                    }
-                },5000);
-
-                //System.Diagnostics.Debug.WriteLine("Reader took " + BaseUtils.AppTicks.TickCountLap("U1") + " in " + gridid + "  " + recordpos + " total " + recordstostore);
-
-                if (recordstostore >= 0)
-                {
-                    updates += StoreNewEntries(cache, tablepostfix, null);
-                    reportProgress?.Invoke("System DB upgrade processed " + updates);
-
-                    Limit -= recordstostore;
-
-                    if (Limit <= 0)
-                        break;
-
-                    System.Threading.Thread.Sleep(20);      // just sleepy for a bit to let others use the db
-                }
-
-                var tres1 = BaseUtils.AppTicks.TickCountLapDelta("U1");
-                var tres2 = BaseUtils.AppTicks.TickCountFromLastLap("UTotal");
-                System.Diagnostics.Debug.WriteLine("Sector " + gridid + " took " + tres1.Item1 + " store " + recordstostore + " total " + updates + " " + ((float)tres1.Item2 / (float)recordstostore) + " cumulative " + tres2);
-            }
-
-            reportProgress?.Invoke("System DB complete, processed " + updates);
-
-            PutNextSectorID(nextsectorid);    // and store back
-
-            return updates;
-        }
-
-        #endregion
-
-
         #region Table Update Helpers
-
         private static int ProcessBlock(SectorCache cache,
                                          IEnumerator<JToken> enumerator,
                                          bool[] grididallowed,       // null = all, else grid bool value
@@ -302,7 +187,7 @@ namespace EliteDangerousCore.DB
             int cpnextsectorid = nextsectorid;
             const int BlockSize = 1000000;      // for 66mil stars, 20000 = 38.66m, 100000=34.67m, 1e6 = 28.02m
             int Limit = int.MaxValue;
-            var entries = new List<TableWriteData>();
+            var unknownsectorentries = new List<TableWriteData>();
             jr_eof = false;
 
             while (true)
@@ -326,9 +211,13 @@ namespace EliteDangerousCore.DB
                         {
                             TableWriteData data = new TableWriteData() { edsm = d, classifier = new EliteNameClassifier(d.name), gridid = gridid };
 
-                            if (!TryCreateNewUpdate(cache, data, tablesareempty, ref cpmaxdate, ref cpnextsectorid, out Sector sector))
+                            // try and add data to sector
+                            // if sector is not in cache, do not make it, return false, instead add to entries
+                            // if sector is in cache, add it to the sector update list, return false,
+                            // so this accumulates entries which need new sectors.
+                            if (!TryCreateNewUpdate(cache, data, tablesareempty, ref cpmaxdate, ref cpnextsectorid, out Sector sector , false))
                             {
-                                entries.Add(data);
+                                unknownsectorentries.Add(data); // unknown sector, process below
                             }
 
                             recordstostore++;
@@ -346,7 +235,9 @@ namespace EliteDangerousCore.DB
                 }
             }
 
-            SystemsDatabase.Instance.DBWrite( db =>
+            // for unknownsectorentries, create sectors in cache for them
+
+            SystemsDatabase.Instance.DBRead( db =>
             {
                 try
                 {
@@ -355,9 +246,9 @@ namespace EliteDangerousCore.DB
                     selectSectorCmd = cn.CreateSelect("Sectors" + tablepostfix, "id", "name = @sname AND gridid = @gid", null,
                                                             new string[] { "sname", "gid" }, new DbType[] { DbType.String, DbType.Int32 });
 
-                    foreach (var entry in entries)
+                    foreach (var entry in unknownsectorentries)
                     {
-                        CreateNewUpdate(cache, selectSectorCmd, entry, tablesareempty, ref cpmaxdate, ref cpnextsectorid);
+                        CreateSectorInCacheIfRequired(cache, selectSectorCmd, entry, tablesareempty, ref cpmaxdate, ref cpnextsectorid);
                     }
                 }
                 finally
@@ -377,13 +268,12 @@ namespace EliteDangerousCore.DB
 
 
         // create a new entry for insert in the sector tables 
-        private static void CreateNewUpdate(SectorCache cache, DbCommand selectSectorCmd, EDSMFileEntry d, int gid, bool tablesareempty, ref DateTime maxdate, ref int nextsectorid)
-        {
-            TableWriteData data = new TableWriteData() { edsm = d, classifier = new EliteNameClassifier(d.name), gridid = gid };
-            CreateNewUpdate(cache, selectSectorCmd, data, tablesareempty, ref maxdate, ref nextsectorid);
-        }
-
-        private static bool TryCreateNewUpdate(SectorCache cache, TableWriteData data, bool tablesareempty, ref DateTime maxdate, ref int nextsectorid, out Sector t, bool makenew = false)
+        // tablesareempty means the tables are fresh and this is the first read
+        // makenewiftablesarepresent allows new sectors to be made
+        // false means tables are not empty , not making new, and sector not found in cache.. 
+        // true means sector is found, and entry is added to sector update list
+        private static bool TryCreateNewUpdate(SectorCache cache, TableWriteData data, bool tablesareempty, ref DateTime maxdate, ref int nextsectorid, 
+                                                out Sector t, bool makenewiftablesarepresent = false)
         {
             if (data.edsm.date > maxdate)                                   // for all, record last recorded date processed
                 maxdate = data.edsm.date;
@@ -394,7 +284,7 @@ namespace EliteDangerousCore.DB
 
             if (!cache.SectorNameCache.ContainsKey(data.classifier.SectorName))   // if unknown to cache
             {
-                if (!tablesareempty && !makenew)
+                if (!tablesareempty && !makenewiftablesarepresent)        // if the tables are NOT empty and we can't make new..
                 {
                     return false;
                 }
@@ -412,7 +302,7 @@ namespace EliteDangerousCore.DB
 
                 if (t == null)      // still not got it, its a new one.
                 {
-                    if (!tablesareempty && !makenew)
+                    if (!tablesareempty && !makenewiftablesarepresent)
                     {
                         return false;
                     }
@@ -440,8 +330,11 @@ namespace EliteDangerousCore.DB
             return true;
         }
 
-        private static void CreateNewUpdate(SectorCache cache, DbCommand selectSectorCmd, TableWriteData data, bool tablesareempty, ref DateTime maxdate, ref int nextsectorid)
+        // add the data to the sector cache, making it if required.
+        // If it was made (id==-1) then find sector, and if not there, assign an ID
+        private static void CreateSectorInCacheIfRequired(SectorCache cache, DbCommand selectSectorCmd, TableWriteData data, bool tablesareempty, ref DateTime maxdate, ref int nextsectorid)
         {
+            // force the entry into the sector cache.
             TryCreateNewUpdate(cache, data, tablesareempty, ref maxdate, ref nextsectorid, out Sector t, true);
 
             if (t.Id == -1)   // if unknown sector ID..
@@ -563,10 +456,6 @@ namespace EliteDangerousCore.DB
                 }
             },warnthreshold:5000);
         }
-
-        #endregion
-
-        #region Upgrade from 102
 
         #endregion
 

@@ -107,107 +107,11 @@ namespace EliteDangerousCore.DB
             long count = 0;
             if (!RebuildRunning)
             {
-                RebuildRunning = true;
                 count = SystemsDB.StoreSystems(systems);
-                RebuildRunning = false;
             }
 
             return count;
         }
-
-        public void UpgradeSystemTableFrom102TypeDB(Func<bool> cancelRequested, Action<string> reportProgress, bool fullsyncrequested)
-        {
-            bool executeupgrade = false;
-
-            // first work out if we can upgrade, if so, create temp tables
-
-            DBWrite(action: conn =>
-            {
-                var list = conn.Tables();    // this gets table list
-
-                if (list.Contains("EdsmSystems"))
-                {
-                    conn.DropStarTables(TempTablePostfix);     // just in case, kill the old tables
-                    conn.CreateStarTables(TempTablePostfix);     // and make new temp tables
-                    executeupgrade = true;
-                }
-            });
-
-            //drop connection, execute upgrade in another connection, this solves an issue with SQL 17 error
-
-            if (executeupgrade)
-            {
-                if (!fullsyncrequested)     // if we did not request a full upgrade, we can use the current data and transmute
-                {
-                    int maxgridid = int.MaxValue;// 109;    // for debugging
-
-                    long updates = SystemsDB.UpgradeDB102to200(cancelRequested, reportProgress, TempTablePostfix, tablesareempty: true, maxgridid: maxgridid);
-
-                    DBWrite(action: conn =>
-                    {
-                        if (updates >= 0) // a cancel will result in -1
-                        {
-                            RebuildRunning = true;
-
-                            // keep code for checking
-
-                            //if (false)   // demonstrate replacement to show rows are overwitten and not duplicated in the edsmid column and that speed is okay
-                            //{
-                            //    long countrows = conn.CountOf("Systems" + tablepostfix, "edsmid");
-                            //    long countnames = conn.CountOf("Names" + tablepostfix, "id");
-                            //    long countsectors = conn.CountOf("Sectors" + tablepostfix, "id");
-
-                            //    // replace takes : Sector 108 took 44525 U1 + 116 store 5627 total 532162 0.02061489 cumulative 11727
-
-                            //    SystemsDB.UpgradeDB102to200(cancelRequested, reportProgress, tablepostfix, tablesareempty: false, maxgridid: maxgridid);
-                            //    System.Diagnostics.Debug.Assert(countrows == conn.CountOf("Systems" + tablepostfix, "edsmid"));
-                            //    System.Diagnostics.Debug.Assert(countnames * 2 == conn.CountOf("Names" + tablepostfix, "id"));      // names are duplicated.. so should be twice as much
-                            //    System.Diagnostics.Debug.Assert(countsectors == conn.CountOf("Sectors" + tablepostfix, "id"));
-                            //    System.Diagnostics.Debug.Assert(1 == conn.CountOf("Systems" + tablepostfix, "edsmid", "edsmid=6719254"));
-                            //}
-
-                            conn.DropStarTables();     // drop the main ones - this also kills the indexes
-
-                            conn.RenameStarTables(TempTablePostfix, "");     // rename the temp to main ones
-
-                            reportProgress?.Invoke("Removing old system tables");
-
-                            conn.ExecuteNonQueries(new string[]
-                            {
-                                "DROP TABLE IF EXISTS EdsmSystems",
-                                "DROP TABLE IF EXISTS SystemNames",
-                            });
-
-                            reportProgress?.Invoke("Shrinking database");
-                            conn.Vacuum();
-
-                            reportProgress?.Invoke("Creating indexes");         // NOTE the date should be the same so we don't rewrite
-                            conn.CreateSystemDBTableIndexes();
-
-                            RebuildRunning = false;
-                        }
-                        else
-                        {
-                            conn.DropStarTables(TempTablePostfix);     // just in case, kill the old tables
-                        }
-                    });
-                }
-                else
-                {       // newer data is needed, so just remove
-                    DBWrite( action: conn =>
-                    {
-                        reportProgress?.Invoke("Removing old system tables");
-
-                        conn.ExecuteNonQueries(new string[]
-                        {
-                            "DROP TABLE IF EXISTS EdsmSystems",
-                            "DROP TABLE IF EXISTS SystemNames",
-                        });
-                    });
-                }
-            }
-        }
-
         public void RebuildIndexes(Action<string> logger )
         {
             if (!RebuildRunning)

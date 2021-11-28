@@ -39,8 +39,6 @@ namespace EliteDangerousCore.EDSM
         private string apiKey;
 
         private readonly string fromSoftwareVersion;
-        static private Dictionary<long, List<JournalScan>> DictEDSMBodies = new Dictionary<long, List<JournalScan>>();
-        static private Dictionary<long, List<JournalScan>> DictEDSMBodiesByID64 = new Dictionary<long, List<JournalScan>>();
 
         public EDSMClass()
         {
@@ -532,11 +530,26 @@ namespace EliteDangerousCore.EDSM
             return list;
         }
 
+        // cache of lookups, either null not found or list
+        static private Dictionary<string, List<ISystem>> EDSMGetSystemCache = new Dictionary<string, List<ISystem>>();
 
-        // Visual inspection Nov 20 - using Int() 
-        // may return empty list, or null - protect yourself
-        public List<ISystem> GetSystem(string systemName, bool uselike = false)     
+        static public bool HasSystemLookedOccurred(string name)
         {
+            return EDSMGetSystemCache.ContainsKey(name);
+        }
+
+        // lookup, through the cache, a system
+        // may return empty list, or null - protect yourself
+        public List<ISystem> GetSystem(string systemName)     
+        {
+            lock (EDSMGetSystemCache)       // only lock over test, its unlikely that two queries with the same name will come at the same time
+            {
+                if (EDSMGetSystemCache.TryGetValue(systemName, out List<ISystem> res))  // if cache has the name
+                {
+                    return res;     // will return null or list
+                }
+            }
+
             string query = String.Format("api-v1/systems?systemName={0}&showCoordinates=1&showId=1&showInformation=1&showPermit=1", Uri.EscapeDataString(systemName));
 
             var response = RequestGet(query, handleException: true);
@@ -549,50 +562,59 @@ namespace EliteDangerousCore.EDSM
 
             JArray msg = JArray.Parse(json);
 
-            List<ISystem> systems = new List<ISystem>();
-
             if (msg != null)
             {
+                List<ISystem> systems = new List<ISystem>();
+
                 foreach (JObject sysname in msg)
                 {
                     ISystem sys = new SystemClass(sysname["name"].Str("Unknown"), sysname["id"].Long(0));
-                    JObject co = (JObject)sysname["coords"];
 
-                    if (co != null)
+                    if (sys.Name.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        sys.X = co["x"].Double();
-                        sys.Y = co["y"].Double();
-                        sys.Z = co["z"].Double();
-                    }
+                        JObject co = (JObject)sysname["coords"];
 
-                    sys.NeedsPermit = sysname["requirePermit"].Bool(false) ? 1 : 0;
+                        if (co != null)
+                        {
+                            sys.X = co["x"].Double();
+                            sys.Y = co["y"].Double();
+                            sys.Z = co["z"].Double();
+                        }
 
-                    JObject info = sysname["information"] as JObject;
+                        sys.NeedsPermit = sysname["requirePermit"].Bool(false) ? 1 : 0;
 
-                    if (info != null)
-                    {
-                        sys.Population = info["population"].Long(0);
-                        sys.Faction = info["faction"].StrNull();
-                        EDAllegiance allegiance = EDAllegiance.None;
-                        EDGovernment government = EDGovernment.None;
-                        EDState state = EDState.None;
-                        EDEconomy economy = EDEconomy.None;
-                        EDSecurity security = EDSecurity.Unknown;
-                        sys.Allegiance = Enum.TryParse(info["allegiance"].Str(), out allegiance) ? allegiance : EDAllegiance.None;
-                        sys.Government = Enum.TryParse(info["government"].Str(), out government) ? government : EDGovernment.None;
-                        sys.State = Enum.TryParse(info["factionState"].Str(), out state) ? state : EDState.None;
-                        sys.PrimaryEconomy = Enum.TryParse(info["economy"].Str(), out economy) ? economy : EDEconomy.None;
-                        sys.Security = Enum.TryParse(info["security"].Str(), out security) ? security : EDSecurity.Unknown;
-                    }
+                        JObject info = sysname["information"] as JObject;
 
-                    if (uselike ? sys.Name.StartsWith(systemName, StringComparison.InvariantCultureIgnoreCase) : sys.Name.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
-                    {
+                        if (info != null)
+                        {
+                            sys.Population = info["population"].Long(0);
+                            sys.Faction = info["faction"].StrNull();
+                            EDAllegiance allegiance = EDAllegiance.None;
+                            EDGovernment government = EDGovernment.None;
+                            EDState state = EDState.None;
+                            EDEconomy economy = EDEconomy.None;
+                            EDSecurity security = EDSecurity.Unknown;
+                            sys.Allegiance = Enum.TryParse(info["allegiance"].Str(), out allegiance) ? allegiance : EDAllegiance.None;
+                            sys.Government = Enum.TryParse(info["government"].Str(), out government) ? government : EDGovernment.None;
+                            sys.State = Enum.TryParse(info["factionState"].Str(), out state) ? state : EDState.None;
+                            sys.PrimaryEconomy = Enum.TryParse(info["economy"].Str(), out economy) ? economy : EDEconomy.None;
+                            sys.Security = Enum.TryParse(info["security"].Str(), out security) ? security : EDSecurity.Unknown;
+                        }
                         systems.Add(sys);
                     }
                 }
+
+                if (systems.Count == 0) // no systems, set to null so stored as such
+                    systems = null;
+
+                lock (EDSMGetSystemCache)
+                {
+                    EDSMGetSystemCache[systemName] = systems;
+                }
+                return systems;
             }
 
-            return systems;
+            return null;
         }
 
         // Verified Nov 20
@@ -795,46 +817,50 @@ namespace EliteDangerousCore.EDSM
             return msg;
         }
 
-        public async static System.Threading.Tasks.Task<Tuple<List<JournalScan>, bool>> GetBodiesListAsync(ISystem sys, bool edsmweblookup = true, Action<List<JournalScan>, ISystem> onnewbodies = null) // get this edsmid,  optionally lookup web protected against bad json
+        public async static System.Threading.Tasks.Task<Tuple<List<JournalScan>, bool>> GetBodiesListAsync(ISystem sys, bool edsmweblookup = true) // get this edsmid,  optionally lookup web protected against bad json
         {
             return await System.Threading.Tasks.Task.Run(() =>
             {
-                return GetBodiesList(sys, edsmweblookup, onnewbodies);
+                return GetBodiesList(sys, edsmweblookup);
             });
         }
 
-        static Object bodylock = new object();
+        // EDSMBodiesCache gets either the body list, or null marking no EDSM server data
+        static private Dictionary<string, List<JournalScan>> EDSMBodiesCache = new Dictionary<string, List<JournalScan>>();
+
+        public static bool HasBodyLookupOccurred(string name)
+        {
+            return EDSMBodiesCache.ContainsKey(name);
+        }
 
         // returns null if EDSM says not there, else if returns list of bodies and a flag indicating if from cache. 
         // all this is done in a lock inside a task - the only way to sequence the code and prevent multiple lookups in an await structure
         // so we must pass back all the info we can to tell the caller what happened.
-        // optional call back is allowed in lock - may not be used.
-        // Verified Nov 20
+        // Verified Nov 21
 
-        public static Tuple<List<JournalScan>, bool> GetBodiesList(ISystem sys, bool edsmweblookup = true, Action<List<JournalScan>, ISystem> onnewbodies = null) 
+        public static Tuple<List<JournalScan>, bool> GetBodiesList(ISystem sys, bool edsmweblookup = true) 
         {
             try
             {
-                lock (bodylock) // only one request at a time going, this is to prevent multiple requests for the same body
+                lock (EDSMBodiesCache) // only one request at a time going, this is to prevent multiple requests for the same body
                 {
                     // System.Threading.Thread.Sleep(2000); //debug - delay to show its happening 
-                   // System.Diagnostics.Debug.WriteLine("EDSM Cache check " + sys.EDSMID + " " + sys.SystemAddress + " " + sys.Name);
+                    // System.Diagnostics.Debug.WriteLine("EDSM Cache check " + sys.EDSMID + " " + sys.SystemAddress + " " + sys.Name);
 
-                    if (DictEDSMBodies != null && sys.EDSMID > 0 && DictEDSMBodies.ContainsKey(sys.EDSMID))  // Cache EDSM bidies during run of EDD.
+                    if ( EDSMBodiesCache.TryGetValue(sys.Name,out List<JournalScan> we))
                     {
-                        System.Diagnostics.Debug.WriteLine("Found sys.EDSMID " + sys.EDSMID);
-                        return new Tuple<List<JournalScan>, bool>(DictEDSMBodies[sys.EDSMID], true);
-                    }
-                    else if (DictEDSMBodiesByID64 != null && sys.SystemAddress != null && sys.SystemAddress > 0 && DictEDSMBodiesByID64.ContainsKey(sys.SystemAddress.Value))
-                    {
-                        System.Diagnostics.Debug.WriteLine("Found sys.EDSMID64 " + sys.SystemAddress.Value );
-                        return new Tuple<List<JournalScan>, bool>(DictEDSMBodiesByID64[sys.SystemAddress.Value], true);
+                        System.Diagnostics.Debug.WriteLine($"EDSM Bodies Cache hit on {sys.Name} {we!=null}");
+                        if (we == null) // lookedup but not found
+                            return null;
+                        else
+                            return new Tuple<List<JournalScan>, bool>(we, true);        // mark from cache
                     }
 
                     if (!edsmweblookup)      // must be set for a web lookup
                         return null;
 
-                    System.Diagnostics.Debug.WriteLine("EDSM Web lookup");
+                    System.Diagnostics.Debug.WriteLine($"EDSM Web lookup on {sys.Name}");
+
                     List<JournalScan> bodies = new List<JournalScan>();
 
                     EDSMClass edsm = new EDSMClass();
@@ -856,7 +882,7 @@ namespace EliteDangerousCore.EDSM
                             {
                                 JObject jbody = EDSMClass.ConvertFromEDSMBodies(edsmbody);
 
-                                JournalScan js = new JournalScan(jbody);//TBD, sys.EDSMID);
+                                JournalScan js = new JournalScan(jbody);
 
                                 bodies.Add(js);
                             }
@@ -869,31 +895,16 @@ namespace EliteDangerousCore.EDSM
                             }
                         }
 
-                        if (sys.EDSMID > 0)
-                        {
-                            DictEDSMBodies[sys.EDSMID] = bodies;
-                        }
-
-                        if (sys.SystemAddress != null && sys.SystemAddress > 0)
-                        {
-                            DictEDSMBodiesByID64[sys.SystemAddress.Value] = bodies;
-                        }
+                        EDSMBodiesCache[sys.Name] = bodies;
 
                         System.Diagnostics.Debug.WriteLine("EDSM Web Lookup complete " + sys.Name + " " + bodies.Count);
-
-                        onnewbodies?.Invoke(bodies,sys);        // inside the lock, with new bodies, allow it to do processsing.
-
-                        return new Tuple<List<JournalScan>, bool>(bodies, false);
+                        return new Tuple<List<JournalScan>, bool>(bodies, false);       // not from cache
                     }
-
-                    if (sys.EDSMID > 0)
+                    else
                     {
-                        DictEDSMBodies[sys.EDSMID] = null;
-                    }
-
-                    if (sys.SystemAddress != null && sys.SystemAddress > 0)
-                    {
-                        DictEDSMBodiesByID64[sys.SystemAddress.Value] = null;
+                        System.Diagnostics.Debug.WriteLine("EDSM Web Lookup complete no info");
+                        EDSMBodiesCache[sys.Name] = null;
+                        return null;
                     }
                 }
             }
@@ -901,8 +912,6 @@ namespace EliteDangerousCore.EDSM
             {
                 Trace.WriteLine($"Exception: {ex.Message}");
                 Trace.WriteLine($"ETrace: {ex.StackTrace}");
-                return null;
-
             }
 
             return null;
