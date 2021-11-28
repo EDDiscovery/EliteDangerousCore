@@ -134,7 +134,11 @@ namespace EliteDangerousCore
 
             //System.Diagnostics.Debug.WriteLine("Scan Lookup " + trace + " " + sys.Name + " found " + (sn != null) + " web? " + edsmweblookup + " edsm lookup " + (sn?.EDSMWebChecked ?? false));
 
-            if ((sys.EDSMID > 0 || (sys.SystemAddress != null && sys.SystemAddress > 0) || (sys.Name.HasChars())) && (sn == null && !EliteDangerousCore.EDSM.EDSMClass.HasBodyLookupOccurred(sys.Name)))
+            // if we have data for a lookup
+            // and node is null, or edsmweblookup is set and we have not done a body lookup 
+
+            if ((sys.EDSMID > 0 || (sys.SystemAddress != null && sys.SystemAddress > 0) || (sys.Name.HasChars())) && 
+                            (sn == null || (edsmweblookup && !EliteDangerousCore.EDSM.EDSMClass.HasBodyLookupOccurred(sys.Name))))
             {
                 var jl = await EliteDangerousCore.EDSM.EDSMClass.GetBodiesListAsync(sys, edsmweblookup); // lookup, with optional web
 
@@ -151,14 +155,11 @@ namespace EliteDangerousCore
 
                 if (jl != null && jl.Item1 != null)
                 {
-                    // removed - can't guarantee if (jl.Item2 == false)      // only want them if not previously cached
+                    //System.Diagnostics.Debug.WriteLine("Process bodies from EDSM " + trace + " " + sys.Name + " " + sys.EDSMID + " result " + (jl.Item1?.Count ?? -1));
+                    foreach (JournalScan js in jl.Item1)
                     {
-                        //System.Diagnostics.Debug.WriteLine("Process bodies from EDSM " + trace + " " + sys.Name + " " + sys.EDSMID + " result " + (jl.Item1?.Count ?? -1));
-                        foreach (JournalScan js in jl.Item1)
-                        {
-                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
-                            ProcessJournalScan(js, sys, true);
-                        }
+                        js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
+                        ProcessJournalScan(js, sys, true);
                     }
                 }
 
