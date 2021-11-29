@@ -107,7 +107,7 @@ namespace EliteDangerousCore.Inara
                                                                 last.IsDocked ? last.WhereAmI : null, last.IsDocked ? last.MarketID : null));
                 }
 
-                eventstosend.Add(InaraClass.setCommanderCredits(last.Credits, last.EventTimeUTC));
+                eventstosend.Add(InaraClass.setCommanderCredits(last.Credits, null,null, last.EventTimeUTC));
 
                 eventstosend.Add(InaraClass.setCommanderTravelLocation(last.System.Name, last.IsDocked ? last.WhereAmI : null, last.MarketID.HasValue ? last.MarketID : null, last.EventTimeUTC));
 
@@ -163,7 +163,7 @@ namespace EliteDangerousCore.Inara
                         if (je.SellOldShipFD != null && je.SellOldShipId.HasValue)
                             eventstosend.Add(InaraClass.delCommanderShip(je.SellOldShipFD, je.SellOldShipId.Value, he.EventTimeUTC));
 
-                        eventstosend.Add(InaraClass.setCommanderCredits(he.Credits, he.EventTimeUTC));
+                        eventstosend.Add(InaraClass.setCommanderCredits(he.Credits, null, null, he.EventTimeUTC));
                         CmdrCredits = he.Credits;
 
                         break;
@@ -180,7 +180,7 @@ namespace EliteDangerousCore.Inara
                     {
                         var je = he.journalEntry as JournalShipyardSell;
                         eventstosend.Add(InaraClass.delCommanderShip(je.ShipTypeFD, je.SellShipId, he.EventTimeUTC));
-                        eventstosend.Add(InaraClass.setCommanderCredits(he.Credits, he.EventTimeUTC));
+                        eventstosend.Add(InaraClass.setCommanderCredits(he.Credits, null,null, he.EventTimeUTC));
                         CmdrCredits = he.Credits;
                         break;
                     }
@@ -547,9 +547,10 @@ namespace EliteDangerousCore.Inara
                         break;
                     }
 
-                case JournalTypeEnum.Statistics://VERIFIED 16/5/18
+                case JournalTypeEnum.Statistics:
                     {
                         JournalStatistics stats = he.journalEntry as JournalStatistics;
+                        eventstosend.Add(InaraClass.setCommanderCredits(he.Credits, stats.BankAccount.CurrentWealth, null, he.EventTimeUTC));
                         eventstosend.Add(InaraClass.setCommanderGameStatistics(stats.GetJsonCloned(), stats.EventTimeUTC));
                         break;
                     }
@@ -631,7 +632,7 @@ namespace EliteDangerousCore.Inara
 
             if ( Math.Abs(CmdrCredits-he.Credits) > 500000 )
             {
-                eventstosend.Add(InaraClass.setCommanderCredits(he.Credits, he.EventTimeUTC));
+                eventstosend.Add(InaraClass.setCommanderCredits(he.Credits, null,null, he.EventTimeUTC));
                 CmdrCredits = he.Credits;
             }
 
