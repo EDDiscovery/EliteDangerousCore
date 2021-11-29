@@ -146,6 +146,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void Ledger(Ledger mcl)
         {
+            mcl.Loan = Loan;
             if (mcl.CashTotal != Credits)
             {
                 mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "Cash total differs, adjustment".T(EDTx.JournalEntry_Cashtotaldiffers), Credits - mcl.CashTotal);

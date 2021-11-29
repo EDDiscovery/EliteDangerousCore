@@ -41,7 +41,9 @@ namespace EliteDangerousCore
         }
 
         public List<Transaction> Transactions { get; private set; } = new List<Transaction>();
-        public long CashTotal = 0;
+        public long CashTotal { get; set; } = 0;
+        public long Assets { get; set; } = 0;
+        public long Loan { get; set; } = 0;
 
         public Ledger()
         {

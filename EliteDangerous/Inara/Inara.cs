@@ -154,14 +154,12 @@ namespace EliteDangerousCore.Inara
             return Event("addCommanderPermit", dt, eventData);
         }
 
-        static public JToken setCommanderCredits(long credits, long? assets, long? loan, DateTime dt )
+        static public JToken setCommanderCredits(long credits, long assets, long loan, DateTime dt )
         {
             JObject eventData = new JObject();
             eventData["commanderCredits"] = credits;
-            if (assets.HasValue)
-                eventData["commanderAssets"] = assets.Value;
-            if (loan.HasValue)
-                eventData["commanderLoan"] = loan.Value;
+            eventData["commanderAssets"] = assets;
+            eventData["commanderLoan"] = loan;
             return Event("setCommanderCredits", dt, eventData);
         }
 
