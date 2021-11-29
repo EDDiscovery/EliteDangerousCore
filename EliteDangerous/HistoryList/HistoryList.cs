@@ -66,6 +66,8 @@ namespace EliteDangerousCore
 
             CashLedger.Process(je);
             he.Credits = CashLedger.CashTotal;
+            he.Loan = CashLedger.Loan;
+            he.Assets = CashLedger.Assets;
 
             Shipyards.Process(je);
             Outfitting.Process(je);
@@ -185,6 +187,8 @@ namespace EliteDangerousCore
 
                 hist.CashLedger.Process(je);            // update the ledger     
                 he.Credits = hist.CashLedger.CashTotal;
+                he.Loan = hist.CashLedger.Loan;
+                he.Assets = hist.CashLedger.Assets;
 
                 hist.Shipyards.Process(je);
                 hist.Outfitting.Process(je);

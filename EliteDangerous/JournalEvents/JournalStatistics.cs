@@ -20,7 +20,7 @@ using System.Linq;
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.Statistics)]
-    public class JournalStatistics : JournalEntry
+    public class JournalStatistics : JournalEntry, ILedgerJournalEntry
     {
         public JournalStatistics(JObject evt ) : base(evt, JournalTypeEnum.Statistics)
         {
@@ -93,6 +93,11 @@ namespace EliteDangerousCore.JournalEvents
                         "CQC".T(EDTx.JournalStatistics_CQC) + Environment.NewLine + CQC?.Format() + Environment.NewLine +
                         "FLEETCARRIER".T(EDTx.JournalStatistics_FLEETCARRIER) + Environment.NewLine + FLEETCARRIER?.Format() + Environment.NewLine +
                         "Exobiology".T(EDTx.JournalStatistics_Exobiology) + Environment.NewLine + Exobiology.Format();
+        }
+
+        public void Ledger(Ledger mcl)
+        {
+            mcl.Assets = BankAccount?.CurrentWealth ?? 0;
         }
 
         public class BankAccountClass

@@ -111,7 +111,8 @@ namespace EliteDangerousCore
             } }
 
         public long Credits { get; set; }       // set up by Historylist during ledger accumulation
-
+        public long Loan { get; set; }       // set up by Historylist during ledger accumulation
+        public long Assets { get; set; }       // set up by Historylist during ledger accumulation
 
         // Calculated values, not from JE
 
