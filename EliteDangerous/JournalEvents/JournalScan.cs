@@ -146,9 +146,9 @@ namespace EliteDangerousCore.JournalEvents
         public bool Terraformable { get { return TerraformState != null && new[] { "terraformable", "terraforming", "terraformed" }.Contains(TerraformState, StringComparer.InvariantCultureIgnoreCase); } }
         public bool CanBeTerraformable { get { return TerraformState != null && new[] { "terraformable", "terraforming" }.Contains(TerraformState, StringComparer.InvariantCultureIgnoreCase); } }
 
-        public string Atmosphere { get; private set; }                      // direct from journal, if not there or blank, tries AtmosphereType (Earthlikes)
-        public EDAtmosphereType AtmosphereID { get; }               // Atmosphere -> ID (Ammonia, Carbon etc)
-        public EDAtmosphereProperty AtmosphereProperty { get; private set; }             // Atomsphere -> Property (None, Rich, Thick , Thin, Hot)
+        public string Atmosphere { get; private set; }                      // processed data, always there, may be "none"
+        public EDAtmosphereType AtmosphereID { get; }                       // Atmosphere -> ID (Ammonia, Carbon etc)
+        public EDAtmosphereProperty AtmosphereProperty { get; private set; }  // Atomsphere -> Property (None, Rich, Thick , Thin, Hot)
         public bool HasAtmosphericComposition { get { return AtmosphereComposition != null && AtmosphereComposition.Any(); } }
         [PropertyNameAttribute("Not Searchable")]
         public Dictionary<string, double> AtmosphereComposition { get; private set; }
@@ -423,7 +423,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 Atmosphere = evt["Atmosphere"].StrNull();               // can be null, or empty
 
-                if ( Atmosphere == "thick  atmosphere" )            // obv a frontier but, atmosphere type has the missing text
+                if ( Atmosphere == "thick  atmosphere" )            // obv a frontier bug, atmosphere type has the missing text
                 {
                     Atmosphere = "thick " + evt["AtmosphereType"].Str().SplitCapsWord() + " atmosphere";
                 }
@@ -458,7 +458,11 @@ namespace EliteDangerousCore.JournalEvents
                  //   System.Diagnostics.Debug.WriteLine("Atmosphere '" + Atmosphere + "'");
                 }
 
-                AtmosphereID = Bodies.AtmosphereStr2Enum(Atmosphere, out EDAtmosphereProperty ap);  // convert to internal ID
+                //System.IO.File.AppendAllText(@"c:\code\atmos.txt", $"Atmosphere {evt["Atmosphere"]} type {evt["AtmosphereType"]} => {Atmosphere}\r\n");
+
+                System.Diagnostics.Debug.Assert(Atmosphere.HasChars());
+
+                AtmosphereID = Bodies.AtmosphereStr2Enum(Atmosphere.ToLower(), out EDAtmosphereProperty ap);  // convert to internal ID
                 AtmosphereProperty = ap;
 
                 if (AtmosphereID == EDAtmosphereType.Unknown)
@@ -651,7 +655,7 @@ namespace EliteDangerousCore.JournalEvents
 
                     if (!GasWorld)      // all gas worlds have atmospheres, so don't add it on
                     {
-                        scanText.AppendFormat(Atmosphere.HasChars() ? (", " + Atmosphere) : ", No Atmosphere".T(EDTx.JournalScan_NoAtmosphere));
+                        scanText.AppendFormat(", " + (Atmosphere == "none" ? "No Atmosphere".Tx(EDTx.JournalScan_NoAtmosphere) : Atmosphere));
                     }
 
                     if (IsLandable)

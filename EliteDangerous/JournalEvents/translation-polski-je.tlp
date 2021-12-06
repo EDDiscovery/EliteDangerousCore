@@ -514,7 +514,7 @@ SECTION JournalScan
 .Terraformable: "<;, Terraformable" => "<;, Możliwe Terraformowanie"
 .Gravity: "Gravity: ;G;0.00" => "Grawitacja: ;G;0.00"
 .RK: "Radius: ;km;0" => "Promień: ;km;0"
-.NoAtmosphere: ", No Atmosphere" => ", Brak Atmosfery"
+.NoAtmosphere: "No Atmosphere" => "Brak Atmosfery"
 .LandC: ", Landable" => ", Możliwe Lądowanie"
 .AMY: "Age: {0} my\n" => "Wiek: {0} mln.lat\n"
 .SolarMasses: "Solar Masses: {0:0.00}\n" => "Mas Słońca: {0:0.00}\n"

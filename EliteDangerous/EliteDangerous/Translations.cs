@@ -510,7 +510,7 @@ namespace EliteDangerousCore
         JournalScan_Terraformable, // <;, Terraformable
         JournalScan_Gravity, // Gravity:;G;0.0
         JournalScan_RK, // Radius:;km;0
-        JournalScan_NoAtmosphere, // , No Atmosphere
+        JournalScan_NoAtmosphere, // No Atmosphere
         JournalScan_LandC, // , Landable
         JournalScan_AMY, // Age: {0} my
         JournalScan_SolarMasses, // Solar Masses: {0:0.00}
