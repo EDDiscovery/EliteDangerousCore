@@ -475,6 +475,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void AddStarScan(StarScan s, ISystem system)
         {
+            //System.Diagnostics.Debug.WriteLine($"Add ScanOrganic {ScanType} {Genus_Localised} {Species_Localised}");
             s.AddScanOrganicToSystem(this,system);
         }
 
@@ -484,21 +485,46 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        // sorted by genus/species, then sorted by the highest scan type
+        // this sorts the list by date/time, then runs the algorithm that returns only the latest sample state for each key
+        // Note that if you don't complete a log-sample-sample-analyse, and do another log, then that previous one gets wiped
 
-        static public List<JournalScanOrganic> SortList(List<JournalScanOrganic> list)
+        static public List<Tuple<string,JournalScanOrganic>> SortList(List<JournalScanOrganic> list)
         {
-            List<JournalScanOrganic> listsorted = new List<JournalScanOrganic>(list);
-            listsorted.Sort(delegate (JournalScanOrganic l, JournalScanOrganic r)
+            list.Sort(delegate (JournalScanOrganic l, JournalScanOrganic r)     // get it in time order
             {
-                int cmp = l.Genus.CompareTo(r.Genus);
-                if (cmp == 0)
-                    cmp = l.Species.CompareTo(r.Species);
-                if (cmp == 0)
-                    cmp = r.ScanType.CompareTo(l.ScanType);     // backwards, so analyse is at top
-                return cmp;
+                return (l.EventTimeUTC.CompareTo(r.EventTimeUTC));
             });
-            return listsorted;
+
+            Dictionary<string, Tuple<string, JournalScanOrganic>> stage = new Dictionary<string, Tuple<string, JournalScanOrganic>>();
+
+            string currentkey = null;
+            foreach( var so in list)
+            {
+                var key = so.Genus + ":" + so.Species;
+                if (currentkey == null || currentkey == key)
+                {
+                }
+                else if (currentkey != key)     // changed type, remove any which are not at analyse
+                {
+                    List<string> toremove = new List<string>();
+                    foreach( var kvp in stage)
+                    {
+                        if (kvp.Value.Item2.ScanType != ScanTypeEnum.Analyse)
+                            toremove.Add(kvp.Key);
+                    }
+
+                    foreach (var k in toremove)
+                        stage.Remove(k);
+                }
+
+                currentkey = key;
+                string c = ((int)so.ScanType + 1).ToString();
+                if (stage.ContainsKey(key) && stage[key].Item2.ScanType == ScanTypeEnum.Sample && so.ScanType == ScanTypeEnum.Sample)
+                    c = "2+";
+                stage[key] = new Tuple<string,JournalScanOrganic>(c,so);        // should go log, sample, sample,analyse
+            }
+
+            return stage.Values.ToList();
         }
 
         static public string OrganicList(List<JournalScanOrganic> list, int indent = 0, string separ = null)        // default is environment.newline
@@ -506,16 +532,12 @@ namespace EliteDangerousCore.JournalEvents
             var listsorted = SortList(list);
             string inds = new string(' ', indent);
             string res = "";
-            string gs = "";
 
-            foreach (var s in listsorted)
+            foreach (var t in listsorted)
             {
-                string key = s.Genus + ":" + s.Species;     // don't repeat genus/species
-                if (gs != key)
-                {
-                    res = res.AppendPrePad(inds + BaseUtils.FieldBuilder.Build("", s.ScanType, "<: ", s.Genus_Localised, "", s.Species_Localised), separ ?? Environment.NewLine);
-                    gs = key;
-                }
+                var s = t.Item2;
+                //System.Diagnostics.Debug.WriteLine($"{s.ScanType} {s.Genus_Localised} {s.Species_Localised}");
+                res = res.AppendPrePad(inds + BaseUtils.FieldBuilder.Build(";/3", t.Item1, "", s.ScanType, "<: ", s.Genus_Localised, "", s.Species_Localised), separ ?? Environment.NewLine);
             }
 
             return res;

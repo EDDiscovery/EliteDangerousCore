@@ -56,11 +56,7 @@ namespace EliteDangerousCore
                 if (relatednode.Organics == null)
                     relatednode.Organics = new List<JournalScanOrganic>();
 
-                if (relatednode.Organics.Find(y => y.Genus == jsaa.Genus && y.Species == jsaa.Species && y.ScanType == jsaa.ScanType) == null)
-                {
-                    relatednode.Organics.Add(jsaa);
-                }
-
+                relatednode.Organics.Add(jsaa);     // we add, even if its a repeat, since we get multiple sample events
                 return true;
             }
             else
