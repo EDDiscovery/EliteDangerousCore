@@ -1122,7 +1122,7 @@ namespace EliteDangerousCore
             new EngineeringRecipe("Enzyme Missile Rack Fixed Medium","Human","Missile","16UKEC,18UKOC,16Mo,15W,6RB"),
             new EngineeringRecipe("Flechette Launcher Fixed Medium","Human","Flechette","30Fe,24Mo,22Re,26Ge,8CMMC"),
             new EngineeringRecipe("Flechette Launcher Turret Medium","Human","Flechette","28Fe,28Mo,20Re,24Ge,10AM"),
-            new EngineeringRecipe("Frame Shift Drive (Engineered V1)","Human","FSD","26Te,26EA,28CP,18DWEx"),
+            new EngineeringRecipe("Frame Shift Drive (Engineered V1, Class 5)","Human","FSD","26Te,26EA,28CP,18DWEx"),
             new EngineeringRecipe("Guardian FSD Booster  Size 1","Guardian","FSD","1GMBS,21GPCe,21GTC,24FoC,8HNSM"),
             new EngineeringRecipe("Guardian Gauss Cannon Fixed Small","Guardian Weapons","Gauss Cannon","1GWBS,12GPC,12GSWC,15GSWP"),
             new EngineeringRecipe("Guardian Gauss Cannon Fixed Medium","Guardian Weapons","Gauss Cannon","1GWBS,18GPCe,20GTC,15Mn,6MEC"),
@@ -1156,8 +1156,8 @@ namespace EliteDangerousCore
             new EngineeringRecipe("Plasma Shock Cannon Turret Large","Human","Shock Cannon","26V,28W,22Re,24Tc,10IOD"),
             new EngineeringRecipe("Plasma Shock Cannon Turret Medium","Human","Shock Cannon","24V,22W,20Re,28Tc,8PTB"),
             new EngineeringRecipe("Plasma Shock Cannon Turret Small","Human","Shock Cannon","8V,12W,10Re,10Tc,4IOD"),
-            new EngineeringRecipe("Engineered FSD V 1 ( Class : 5 )","Human","FSD","18DWEx,26Te,26EA,28CP"),
             new EngineeringRecipe("Engineered Seeker Missile Rack V 1 ( Fixed ) ( Class : 2 )","Human","Missile","10OSM,16PRA,24CCe,26HC,28P"),
+            new EngineeringRecipe("Detailed Surface Scanner (Engineered V1)","Human","Surface Scanner", "22Ge,24Nb,28MC,26MS"),
 
             #endregion
 
