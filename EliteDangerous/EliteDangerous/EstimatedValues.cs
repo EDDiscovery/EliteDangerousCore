@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Linq;
 
 namespace EliteDangerousCore
 {
@@ -541,5 +542,142 @@ namespace EliteDangerousCore
         public int EstimatedValueFirstMappedEfficiently { get; private set; }             // with just mapped
         public int EstimatedValueMapped { get; private set; }             // with just mapped
         public int EstimatedValueMappedEfficiently { get; private set; }             // with just mapped
+    }
+
+    public class OrganicEstimatedValues
+    {
+        public class Values
+        {
+            public string Name;
+            public int Value;
+            public string Codexname;
+            public Values(string n, int v, string c) { Name = n;Value = v;Codexname = c; }
+        }
+
+        public static Values GetValue(string codexname)     // null if not found
+        {
+            return Array.Find(valuelist,x => codexname.StartsWith(x.Codexname));
+        }
+
+        private static Values[] valuelist = new Values[] {
+            new Values("Aleoida Arcus",379300,"$Codex_Ent_Aleoids_01"),
+            new Values("Aleoida Coronamus ",339100,"$Codex_Ent_Aleoids_02"),
+            new Values("Aleoida Spica",208900,"$Codex_Ent_Aleoids_03"),
+            new Values("Aleoida Laminiae",208900,"$Codex_Ent_Aleoids_04"),
+            new Values("Aleoida Gravis",596500,"$Codex_Ent_Aleoids_05"),
+            new Values("Bacterium Aurasus",78500,"$Codex_Ent_Bacterial_01"),
+            new Values("Bacterium Nebulus",296300,"$Codex_Ent_Bacterial_02"),
+            new Values("Bacterium Scopulum",280600,"$Codex_Ent_Bacterial_03"),
+            new Values("Bacterium Acies",50000,"$Codex_Ent_Bacterial_04"),
+            new Values("Bacterium Vesicula",56100,"$Codex_Ent_Bacterial_05"),
+            new Values("Bacterium Alcyoneum",119500,"$Codex_Ent_Bacterial_06"),
+            new Values("Bacterium Tela",135600,"$Codex_Ent_Bacterial_07"),
+            new Values("Bacterium Informem",426200,"$Codex_Ent_Bacterial_08"),
+            new Values("Bacterium Volu",400500,"$Codex_Ent_Bacterial_09"),
+            new Values("Bacterium Bullaris",89900,"$Codex_Ent_Bacterial_10"),
+            new Values("Bacterium Omentum",267400,"$Codex_Ent_Bacterial_11"),
+            new Values("Bacterium Cerbrus",121300,"$Codex_Ent_Bacterial_12"),
+            new Values("Bacterium Verrata",233300,"$Codex_Ent_Bacterial_13"),
+            new Values("Cactoida Cortexum",222500,"$Codex_Ent_Cactoid_01"),
+            new Values("Cactoida Lapis",164000,"$Codex_Ent_Cactoid_02"),
+            new Values("Cactoida Vermis",711500,"$Codex_Ent_Cactoid_03"),
+            new Values("Cactoida Pullulanta",222500,"$Codex_Ent_Cactoid_04"),
+            new Values("Cactoida Peperatis",164000,"$Codex_Ent_Cactoid_05"),
+            new Values("Clypeus Lacrimam",426200,"$Codex_Ent_Clypeus_01"),
+            new Values("Clypeus Margaritus",557800,"$Codex_Ent_Clypeus_02"),
+            new Values("Clypeus Speculumi",711500,"$Codex_Ent_Clypeus_03"),
+            new Values("Concha Renibus",264300,"$Codex_Ent_Conchas_01"),
+            new Values("Concha Aureolas",400500,"$Codex_Ent_Conchas_02"),
+            new Values("Concha Labiata",157100,"$Codex_Ent_Conchas_03"),
+            new Values("Concha Biconcavis",806300,"$Codex_Ent_Conchas_04"),
+            new Values("Bark Mound",108900,"$Codex_Ent_Cone"),
+            new Values("Electricae Pluma",339100,"$Codex_Ent_Electricae_01"),
+            new Values("Electricae Radialem",339100,"$Codex_Ent_Electricae_02"),
+            new Values("Fonticulua Segmentatus",806300,"$Codex_Ent_Fonticulus_01"),
+            new Values("Fonticulua Campestris",63600,"$Codex_Ent_Fonticulus_02"),
+            new Values("Fonticulua Upupam",315300,"$Codex_Ent_Fonticulus_03"),
+            new Values("Fonticulua Lapida",195600,"$Codex_Ent_Fonticulus_04"),
+            new Values("Fonticulua Fluctus",900000,"$Codex_Ent_Fonticulus_05"),
+            new Values("Fonticulua Digitos",127700,"$Codex_Ent_Fonticulus_06"),
+            new Values("Fumerola Carbosis",339100,"$Codex_Ent_Fumerolas_01"),
+            new Values("Fumerola Extremus",711500,"$Codex_Ent_Fumerolas_02"),
+            new Values("Fumerola Nitris",389400,"$Codex_Ent_Fumerolas_03"),
+            new Values("Fumerola Aquatis",339100,"$Codex_Ent_Fumerolas_04"),
+            new Values("Fungoida Setisis",120200,"$Codex_Ent_Fungoids_01"),
+            new Values("Fungoida Stabitis",174000,"$Codex_Ent_Fungoids_02"),
+            new Values("Fungoida Bullarum",224100,"$Codex_Ent_Fungoids_03"),
+            new Values("Fungoida Gelata",206300,"$Codex_Ent_Fungoids_04"),
+            new Values("Crystalline Shards",117900,"$Codex_Ent_Ground_Struct_Ice"),
+            new Values("Osseus Fractus",239400,"$Codex_Ent_Osseus_01"),
+            new Values("Osseus Discus",596500,"$Codex_Ent_Osseus_02"),
+            new Values("Osseus Spiralis",159900,"$Codex_Ent_Osseus_03"),
+            new Values("Osseus Pumice",197800,"$Codex_Ent_Osseus_04"),
+            new Values("Osseus Cornibus",109500,"$Codex_Ent_Osseus_05"),
+            new Values("Osseus Pellebantus",477700,"$Codex_Ent_Osseus_06"),
+            new Values("Recepta Umbrux",596500,"$Codex_Ent_Recepta_01"),
+            new Values("Recepta Deltahedronix",711500,"$Codex_Ent_Recepta_02"),
+            new Values("Recepta Conditivus",645700,"$Codex_Ent_Recepta_03"),
+            new Values("Roseum Brain Tree",115900,"$Codex_Ent_Seed"),
+            new Values("Gypseeum Brain Tree",115900,"$Codex_Ent_SeedABCD_01"),
+            new Values("Ostrinum Brain Tree",115900,"$Codex_Ent_SeedABCD_02"),
+            new Values("Viride Brain Tree",115900,"$Codex_Ent_SeedABCD_03"),
+            new Values("Aureum Brain Tree",115900,"$Codex_Ent_SeedEFGH_01"),
+            new Values("Puniceum Brain Tree",115900,"$Codex_Ent_SeedEFGH_02"),
+            new Values("Lindigoticum Brain Tree",115900,"$Codex_Ent_SeedEFGH_03"),
+            new Values("Lividum Brain Tree",115900,"$Codex_Ent_SeedEFGH"),
+            new Values("Frutexa Flabellum",127900,"$Codex_Ent_Shrubs_01"),
+            new Values("Frutexa Acus",400500,"$Codex_Ent_Shrubs_02"),
+            new Values("Frutexa Metallicum",118100,"$Codex_Ent_Shrubs_03"),
+            new Values("Frutexa Flammasis",500100,"$Codex_Ent_Shrubs_04"),
+            new Values("Frutexa Fera",118100,"$Codex_Ent_Shrubs_05"),
+            new Values("Frutexa Sponsae",326500,"$Codex_Ent_Shrubs_06"),
+            new Values("Frutexa Collum",118500,"$Codex_Ent_Shrubs_07"),
+            new Values("Luteolum Anemone",110500,"$Codex_Ent_Sphere"),
+            new Values("Croceum Anemone",110500,"$Codex_Ent_SphereABCD_01"),
+            new Values("Puniceum Anemone",110500,"$Codex_Ent_SphereABCD_02"),
+            new Values("Roseum Anemone",110500,"$Codex_Ent_SphereABCD_03"),
+            new Values("Rubeum Bioluminescent Anemone",110500,"$Codex_Ent_SphereEFGH_01"),
+            new Values("Prasinum Bioluminescent Anemone",110500,"$Codex_Ent_SphereEFGH_02"),
+            new Values("Roseum Bioluminescent Anemone",110500,"$Codex_Ent_SphereEFGH_03"),
+            new Values("Blatteum Bioluminescent Anemone",110500,"$Codex_Ent_SphereEFGH"),
+            new Values("Stratum Excutitus",162200,"$Codex_Ent_Stratum_01"),
+            new Values("Stratum Paleas",102500,"$Codex_Ent_Stratum_02"),
+            new Values("Stratum Laminamus",179500,"$Codex_Ent_Stratum_03"),
+            new Values("Stratum Araneamus",162200,"$Codex_Ent_Stratum_04"),
+            new Values("Stratum Limaxus",102500,"$Codex_Ent_Stratum_05"),
+            new Values("Stratum Cucumisis",711500,"$Codex_Ent_Stratum_06"),
+            new Values("Stratum Tectonicas",806300,"$Codex_Ent_Stratum_07"),
+            new Values("Stratum Frigus",171900,"$Codex_Ent_Stratum_08"),
+            new Values("Roseum Sinuous Tubers",111300,"$Codex_Ent_Tube"),
+            new Values("Prasinum Sinuous Tubers",111300,"$Codex_Ent_TubeABCD_01"),
+            new Values("Albidum Sinuous Tubers",111300,"$Codex_Ent_TubeABCD_02"),
+            new Values("Caeruleum Sinuous Tubers",111300,"$Codex_Ent_TubeABCD_03"),
+            new Values("Lindigoticum Sinuous Tubers",111300,"$Codex_Ent_TubeEFGH_01"),
+            new Values("Violaceum Sinuous Tubers",111300,"$Codex_Ent_TubeEFGH_02"),
+            new Values("Viride Sinuous Tubers",111300,"$Codex_Ent_TubeEFGH_03"),
+            new Values("Blatteum Sinuous Tubers",111300,"$Codex_Ent_TubeEFGH"),
+            new Values("Tubus Conifer",315300,"$Codex_Ent_Tubus_01"),
+            new Values("Tubus Sororibus",557800,"$Codex_Ent_Tubus_02"),
+            new Values("Tubus Cavas",171900,"$Codex_Ent_Tubus_03"),
+            new Values("Tubus Rosarium",400500,"$Codex_Ent_Tubus_04"),
+            new Values("Tubus Compagibus",102700,"$Codex_Ent_Tubus_05"),
+            new Values("Tussock Pennata",320700,"$Codex_Ent_Tussocks_01"),
+            new Values("Tussock Ventusa",201300,"$Codex_Ent_Tussocks_02"),
+            new Values("Tussock Ignis",130100,"$Codex_Ent_Tussocks_03"),
+            new Values("Tussock Cultro",125600,"$Codex_Ent_Tussocks_04"),
+            new Values("Tussock Catena",125600,"$Codex_Ent_Tussocks_05"),
+            new Values("Tussock Pennatis",59600,"$Codex_Ent_Tussocks_06"),
+            new Values("Tussock Serrati",258700,"$Codex_Ent_Tussocks_07"),
+            new Values("Tussock Albata",202500,"$Codex_Ent_Tussocks_08"),
+            new Values("Tussock Propagito",71300,"$Codex_Ent_Tussocks_09"),
+            new Values("Tussock Divisa",125600,"$Codex_Ent_Tussocks_10"),
+            new Values("Tussock Caputus",213100,"$Codex_Ent_Tussocks_11"),
+            new Values("Tussock Triticum",400500,"$Codex_Ent_Tussocks_12"),
+            new Values("Tussock Stigmasis",806300,"$Codex_Ent_Tussocks_13"),
+            new Values("Tussock Virgam",645700,"$Codex_Ent_Tussocks_14"),
+            new Values("Tussock Capillum",370000,"$Codex_Ent_Tussocks_15"),
+            new Values("Amphora Plant",117900,"$Codex_Ent_Vents"),
+        };
+
     }
 }

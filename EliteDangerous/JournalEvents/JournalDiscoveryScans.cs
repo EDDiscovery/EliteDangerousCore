@@ -462,6 +462,10 @@ namespace EliteDangerousCore.JournalEvents
         public JournalScanOrganic(JObject evt) : base(evt, JournalTypeEnum.ScanOrganic)
         {
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+
+            var value = OrganicEstimatedValues.GetValue(Species);
+            if (value != null)
+                EstimatedValue = value.Value;
         }
 
         public long SystemAddress { get; set; }
@@ -473,6 +477,8 @@ namespace EliteDangerousCore.JournalEvents
         public enum ScanTypeEnum { Log, Sample, Analyse };
         public ScanTypeEnum ScanType;     //Analyse, Log, Sample
 
+        public int? EstimatedValue;          // Value, if known
+
         public void AddStarScan(StarScan s, ISystem system)
         {
             //System.Diagnostics.Debug.WriteLine($"Add ScanOrganic {ScanType} {Genus_Localised} {Species_Localised}");
@@ -481,7 +487,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised, "@ ", whereami);
+            int? ev = ScanType == ScanTypeEnum.Analyse ? EstimatedValue : null;
+            info = BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised, "; cr;N0", ev, "< @ ", whereami);
             detailed = "";
         }
 
