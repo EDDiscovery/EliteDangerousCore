@@ -31,13 +31,14 @@ namespace EliteDangerousCore
             return used;
         }
 
-        //return maximum can make, how many made, needed string, needed string long format
-
-        static public Tuple<int, int, string, string> HowManyLeft(List<MaterialCommodityMicroResource> list, Dictionary<string, int> totals, Recipes.Recipe r, int tomake = 0)
+        //return maximum can make, how many made, needed string, needed string long format, and the % to having one recipe
+        static public Tuple<int, int, string, string,double> HowManyLeft(List<MaterialCommodityMicroResource> list, Dictionary<string, int> totals, Recipes.Recipe r, int tomake = 0)
         {
             int max = int.MaxValue;
             System.Text.StringBuilder needed = new System.Text.StringBuilder(256);
             System.Text.StringBuilder neededlong = new System.Text.StringBuilder(256);
+
+            int itemsavailable = 0;
 
             for (int i = 0; i < r.Ingredients.Length; i++)
             {
@@ -50,6 +51,8 @@ namespace EliteDangerousCore
                 max = Math.Min(max, sets);
 
                 int need = r.Amount[i] * tomake;
+
+                itemsavailable += Math.Min(r.Amount[i], got);          // up to amount, how many of these have we got..
 
                 if (got < need)
                 {
@@ -83,6 +86,8 @@ namespace EliteDangerousCore
                 }
             }
 
+          //  System.Diagnostics.Debug.WriteLine($"Recipe {r.Name} total ing {r.Ingredients.Length} No.Ing {r.Amounts} Got {itemsavailable}");
+
             int made = 0;
 
             if (max > 0 && tomake > 0)             // if we have a set, and use it up
@@ -110,7 +115,7 @@ namespace EliteDangerousCore
                 neededlong.Append("Used: " + Environment.NewLine + usedstrlong.ToString());
             }
 
-            return new Tuple<int, int, string, string>(max, made, needed.ToNullSafeString(), neededlong.ToNullSafeString());
+            return new Tuple<int, int, string, string,double>(max, made, needed.ToNullSafeString(), neededlong.ToNullSafeString(),itemsavailable*100.0/r.Amounts);
         }
 
         // return shopping list/count given receipe list, list of current materials.

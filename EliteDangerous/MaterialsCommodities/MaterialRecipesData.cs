@@ -30,6 +30,8 @@ namespace EliteDangerousCore
 
             public int Count { get { return Ingredients.Length; } }
 
+            public int Amounts { get { return Amount.Sum(); } }     // number of items
+
             public Recipe(string n, string ingredientsstring)
             {
                 Name = n;
