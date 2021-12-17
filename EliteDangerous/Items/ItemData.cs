@@ -280,7 +280,38 @@ namespace EliteDangerousCore
             public double DPS { get { return Damage * RatePerSec; } }
             public WeaponStats(double damage, double rate, int clip, int hoppersize, int range,double hsm) 
             { Damage = damage; RatePerSec = rate; ClipSize = clip; HopperSize = hoppersize; Range = range; HeadShotMultiplier = hsm; }
+            public WeaponStats(WeaponStats other)
+            {  Damage = other.Damage; RatePerSec = other.RatePerSec; ClipSize = other.ClipSize; HopperSize = other.HopperSize; Range = other.Range; HeadShotMultiplier = other.HeadShotMultiplier; }
 
+            // https://elite-dangerous.fandom.com/wiki/Category:Engineer_Upgrades_for_Pilot_Equipment
+            // damage - no engineering
+            // rate - no engineering
+            // clip Weapon_ClipSize https://elite-dangerous.fandom.com/wiki/Magazine_Size 1.5x
+            // hoppersize - applied at suit level
+            // range Weapon_Range  https://elite-dangerous.fandom.com/wiki/Greater_Range 1.5x
+            // headshot  Weapon_HeadshotDamage https://elite-dangerous.fandom.com/wiki/Headshot_Damage 1.5x
+            // Applied at suit level Suit_IncreasedAmmoReserves https://elite-dangerous.fandom.com/wiki/Extra_Ammo_Capacity 1.5x
+
+            public WeaponStats ApplyEngineering(string[] mods)
+            {
+                if (mods.Length > 0)
+                {
+                    WeaponStats newws = new WeaponStats(this);
+                    foreach (var m in mods)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Weapon mod {m}");
+                        if (m.Equals("Weapon_ClipSize", StringComparison.InvariantCultureIgnoreCase))
+                            newws.ClipSize = newws.ClipSize * 3 / 2;
+                        else if (m.Equals("Weapon_Range", StringComparison.InvariantCultureIgnoreCase))
+                            newws.Range = newws.Range * 3 / 2;
+                        else if (m.Equals("Weapon_HeadshotDamage", StringComparison.InvariantCultureIgnoreCase))
+                            newws.HeadShotMultiplier = newws.HeadShotMultiplier * 1.5;
+                    }
+                    return newws;
+                }
+                else
+                    return this;
+            }
         }
         public class Weapon : IModuleInfo
         {
@@ -484,9 +515,6 @@ namespace EliteDangerousCore
              { "skimmerdrone", new Actor("Skimmer Drone") },
              { "ps_turretbasemedium02_6m", new Actor("Turret medium 2-6-M") },
         };
-
-        // Greater range = x1.5
-        // headshot damage x1.5
 
         public static Dictionary<string, Weapon> weapons = new Dictionary<string, Weapon>   // DO NOT USE DIRECTLY - public is for checking only
         {
