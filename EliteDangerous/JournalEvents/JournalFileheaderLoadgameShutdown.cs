@@ -70,18 +70,22 @@ namespace EliteDangerousCore.JournalEvents
             LoadGameCommander = JournalFieldNaming.SubsituteCommanderName( evt["Commander"].Str() );
             
             ShipFD = evt["Ship"].Str();
-            if (ShipFD.Length == 0)      // Vega logs show no ship on certain logs.. handle it to prevent warnings.
-                ShipFD = "Unknown";
+            Ship_Localised = evt["Ship_Localised"].StrNull();       // may not be present
 
-            if ( ItemData.IsShip(ShipFD))
+            if (ShipFD.Length == 0)      // Vega logs show no ship on certain logs.. handle it to prevent warnings.
+                Ship_Localised = ShipFD = "Unknown";
+
+            if ( ItemData.IsShip(ShipFD) || ItemData.IsSRVOrFighter(ShipFD))
             { 
                 ShipFD = JournalFieldNaming.NormaliseFDShipName(ShipFD);
                 Ship = JournalFieldNaming.GetBetterShipName(ShipFD);
             }
-            else
+            else 
             {
                 Ship = ShipFD.SplitCapsWordFull();
             }
+
+            Ship_Localised = Ship_Localised.Alt(Ship);
 
             ShipId = evt["ShipID"].ULong();
             StartLanded = evt["StartLanded"].Bool();
@@ -107,7 +111,8 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string LoadGameCommander { get; set; }
-        public string Ship { get; set; }        // type, fer-de-lance
+        public string Ship { get; set; }        // friendly name, fer-de-lance, from our db.  Older Load games did not have Localised
+        public string Ship_Localised { get; set; }   // localised
         public string ShipFD { get; set; }        // type, fd name
         public ulong ShipId { get; set; }
         public bool StartLanded { get; set; }

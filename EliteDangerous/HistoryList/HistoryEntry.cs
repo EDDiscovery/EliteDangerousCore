@@ -74,9 +74,6 @@ namespace EliteDangerousCore
 
         public string WhereAmI { get { return EntryStatus.StationName ?? EntryStatus.BodyName ?? "Unknown"; } }
         public string BodyType { get { return EntryStatus.BodyType ?? "Unknown"; } }
-        public string ShipType { get { return EntryStatus.ShipType ?? "Unknown"; } }         // NOT FD - translated name
-        public string ShipTypeFD { get { return EntryStatus.ShipTypeFD ?? "unknown"; } }
-        public ulong ShipId { get { return EntryStatus.ShipID; } }
         public bool MultiPlayer { get { return EntryStatus.OnCrewWithCaptain != null; } }
         public string GameMode { get { return EntryStatus.GameMode ?? ""; } }
         public string Group { get { return EntryStatus.Group ?? ""; } }

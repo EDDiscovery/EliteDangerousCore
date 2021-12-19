@@ -22,10 +22,14 @@ namespace EliteDangerousCore.JournalEvents
     public class JournalDockSRV : JournalEntry, IShipInformation
     {
         public int? ID { get; set; }
+        public string SRVType;          // new odyssey 9, dec 21, may be null
+        public string SRVType_Localised; // new odyssey 9, dec 21, may be null
 
         public JournalDockSRV(JObject evt ) : base(evt, JournalTypeEnum.DockSRV)
         {
             ID = evt["ID"].IntNull();
+            SRVType = evt["SRVType"].StrNull();
+            SRVType_Localised = evt["SRVType_Localised"].StrNull();
         }
 
         public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
@@ -35,7 +39,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)  
         {
-            info = "";
+            info = BaseUtils.FieldBuilder.Build("", SRVType_Localised);
             detailed = "";
         }
     }
@@ -48,10 +52,15 @@ namespace EliteDangerousCore.JournalEvents
             Loadout = evt["Loadout"].Str();
             PlayerControlled = evt["PlayerControlled"].Bool(true);
             ID = evt["ID"].IntNull();
+            SRVType = evt["SRVType"].StrNull();
+            SRVType_Localised = evt["SRVType_Localised"].StrNull();
         }
         public string Loadout { get; set; }
         public bool PlayerControlled { get; set; }
         public int? ID { get; set; }
+
+        public string SRVType;          // new odyssey 9, dec 21, may be null
+        public string SRVType_Localised; // new odyssey 9, dec 21, may be null
 
         public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
         {
@@ -60,7 +69,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Loadout: ".T(EDTx.JournalEntry_Loadout), Loadout) + BaseUtils.FieldBuilder.Build(", NPC Controlled;".T(EDTx.JournalEntry_NPCControlled), PlayerControlled);
+            info = BaseUtils.FieldBuilder.Build("", SRVType_Localised, "Loadout: ".T(EDTx.JournalEntry_Loadout), Loadout) + BaseUtils.FieldBuilder.Build(", NPC Controlled;".T(EDTx.JournalEntry_NPCControlled), PlayerControlled);
             detailed = "";
         }
     }

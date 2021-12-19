@@ -60,8 +60,10 @@ namespace EliteDangerousCore
         public TravelStateType TravelState { get; private set; } = TravelStateType.Unknown;  // travel state
         public bool OnFoot { get { return TravelState >= TravelStateType.OnFootStarPort; } }
         public ulong ShipID { get; private set; } = ulong.MaxValue;
-        public string ShipType { get; private set; } = "Unknown";         // and the ship
-        public string ShipTypeFD { get; private set; } = "unknown";
+        public string ShipType { get; private set; } = "Unknown";         // and the ship nice name
+        public string ShipTypeFD { get; private set; } = "unknown";      // FD name
+        public bool IsSRV { get { return ItemData.IsSRV(ShipTypeFD); } }
+        public bool IsFighter { get { return ItemData.IsFighter(ShipTypeFD); } }
         public string OnCrewWithCaptain { get; private set; } = null;     // if not null, your in another multiplayer ship
         public string GameMode { get; private set; } = "Unknown";         // game mode, from LoadGame event
         public string Group { get; private set; } = "";                   // group..

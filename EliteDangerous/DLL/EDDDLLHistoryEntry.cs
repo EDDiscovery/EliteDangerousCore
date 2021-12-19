@@ -75,7 +75,7 @@ namespace EliteDangerousCore.DLL
                 islanded = he.IsLanded,
                 isdocked = he.IsDocked,
                 whereami = he.WhereAmI,
-                shiptype = he.ShipType,
+                shiptype = he.Status.ShipType,
                 gamemode = he.GameMode,
                 group = he.Group,
                 credits = he.Credits,
