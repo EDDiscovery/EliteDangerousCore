@@ -167,7 +167,7 @@ namespace EliteDangerousCore
 
         static public bool IsSRV(string ifd)
         {
-            return ifd.Equals("testbuggy", StringComparison.InvariantCultureIgnoreCase);
+            return ifd.Equals("testbuggy", StringComparison.InvariantCultureIgnoreCase) || ifd.Contains("_SRV", StringComparison.InvariantCultureIgnoreCase);
         }
 
 
@@ -462,12 +462,25 @@ namespace EliteDangerousCore
             { ShipPropID.Class, new ShipInfoInt(1)},
         };
 
+        static Dictionary<ShipPropID, IModuleInfo> combatsrv = new Dictionary<ShipPropID, IModuleInfo>
+        {
+            { ShipPropID.FDID, new ShipInfoString("Combat_Multicrew_SRV_01")},
+            { ShipPropID.HullMass, new ShipInfoDouble(0F)},
+            { ShipPropID.Name, new ShipInfoString("Scorpion Combat SRV")},
+            { ShipPropID.Manu, new ShipInfoString("Vodel")},
+            { ShipPropID.Speed, new ShipInfoInt(32)},
+            { ShipPropID.Boost, new ShipInfoInt(32)},
+            { ShipPropID.HullCost, new ShipInfoInt(0)},
+            { ShipPropID.Class, new ShipInfoInt(1)},
+        };
+
         static Dictionary<string, Dictionary<ShipPropID, IModuleInfo>> noncoriolisships = new Dictionary<string, Dictionary<ShipPropID, IModuleInfo>>
         {
             { "empire_fighter",  imperial_fighter},
             { "federation_fighter",  federation_fighter},
             { "independent_fighter",  taipan_fighter},       //EDDI evidence
             { "testbuggy",  srv},
+            { "combat_multicrew_srv_01",  combatsrv},
             { "gdn_hybrid_fighter_v1",  GDN_Hybrid_v1_fighter},
             { "gdn_hybrid_fighter_v2",  GDN_Hybrid_v2_fighter},
             { "gdn_hybrid_fighter_v3",  GDN_Hybrid_v3_fighter},
