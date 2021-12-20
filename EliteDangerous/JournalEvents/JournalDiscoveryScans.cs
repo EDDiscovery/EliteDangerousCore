@@ -319,6 +319,14 @@ namespace EliteDangerousCore.JournalEvents
         public int BodyID { get; set; }
         public List<SAASignal> Signals { get; set; }
 
+        public bool ContainsGeoSignals { get { return Signals?.Count(x => x.IsGeo) > 0 ? true : false; } }
+        public bool ContainsBioSignals { get { return Signals?.Count(x => x.IsBio) > 0 ? true : false; } }
+        public bool ContainsThargoidSignals { get { return Signals?.Count(x => x.IsThargoid) > 0 ? true : false; } }
+        public bool ContainsGuardianSignals { get { return Signals?.Count(x => x.IsGuardian) > 0 ? true : false; } }
+        public bool ContainsHumanSignals { get { return Signals?.Count(x => x.IsHuman) > 0 ? true : false; } }
+        public bool ContainsOtherSignals { get { return Signals?.Count(x => x.IsOther) > 0 ? true : false; } }
+        public bool ContainsUncategorisedSignals { get { return Signals?.Count(x => x.IsUncategorised) > 0 ? true : false; } }
+
         public class SAASignal 
         {
             public string Type { get; set; }        // material fdname, or $SAA_SignalType..
@@ -425,6 +433,14 @@ namespace EliteDangerousCore.JournalEvents
         public int BodyID { get; set; }
         public List<JournalSAASignalsFound.SAASignal> Signals { get; set; }
 
+        public bool ContainsGeoSignals { get { return Signals?.Count(x => x.IsGeo) > 0 ? true : false; } }
+        public bool ContainsBioSignals { get { return Signals?.Count(x => x.IsBio) > 0 ? true : false; } }
+        public bool ContainsThargoidSignals { get { return Signals?.Count(x => x.IsThargoid) > 0 ? true : false; } }
+        public bool ContainsGuardianSignals { get { return Signals?.Count(x => x.IsGuardian) > 0 ? true : false; } }
+        public bool ContainsHumanSignals { get { return Signals?.Count(x => x.IsHuman) > 0 ? true : false; } }
+        public bool ContainsOtherSignals { get { return Signals?.Count(x => x.IsOther) > 0 ? true : false; } }
+        public bool ContainsUncategorisedSignals { get { return Signals?.Count(x => x.IsUncategorised) > 0 ? true : false; } }
+
         public void AddStarScan(StarScan s, ISystem system)
         {
             s.AddFSSBodySignalsToSystem(this,system);
@@ -443,17 +459,6 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public int Contains(string fdname)      // give count if contains fdname, else zero
-        {
-            int index = Signals?.FindIndex((x) => x.Type.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase)) ?? -1;
-            return (index >= 0) ? Signals[index].Count : 0;
-        }
-
-        public string ContainsStr(string fdname, bool showit = true)      // give count if contains fdname, else empty string
-        {
-            int contains = Contains(fdname);
-            return showit && contains > 0 ? contains.ToStringInvariant() : "";
-        }
     }
 
     [JournalEntryType(JournalTypeEnum.ScanOrganic)]
