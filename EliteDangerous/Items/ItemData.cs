@@ -299,7 +299,7 @@ namespace EliteDangerousCore
                     WeaponStats newws = new WeaponStats(this);
                     foreach (var m in mods)
                     {
-                        System.Diagnostics.Debug.WriteLine($"Weapon mod {m}");
+                        //System.Diagnostics.Debug.WriteLine($"Weapon mod {m}");
                         if (m.Equals("Weapon_ClipSize", StringComparison.InvariantCultureIgnoreCase))
                             newws.ClipSize = newws.ClipSize * 3 / 2;
                         else if (m.Equals("Weapon_Range", StringComparison.InvariantCultureIgnoreCase))
@@ -869,6 +869,18 @@ namespace EliteDangerousCore
             { "int_stellarbodydiscoveryscanner_advanced", new ShipModule(128663561, 2, 0, null,"Stellar Body Discovery Scanner Advanced", "Stellar Body Discovery Scanner")},
             { "int_stellarbodydiscoveryscanner_intermediate", new ShipModule(128663560, 2, 0, "Range:1000ls","Stellar Body Discovery Scanner Intermediate", "Stellar Body Discovery Scanner")},
             { "int_stellarbodydiscoveryscanner_standard", new ShipModule(128662535, 2, 0, "Range:500ls","Stellar Body Discovery Scanner Standard", "Stellar Body Discovery Scanner")},
+
+            // not in coriolis as of odyssey 9, dec 21 - power/mass/Range incorrect as of now.  Data checked out at Jameson on 19/12/21
+            { "int_multidronecontrol_mining_size3_class1", new ShipModule(129001921, 12, 0.5F, "Range:3.3km","Multi Purpose Mining Drone Controller Class 3 Rating E", "Limpet Controller")},
+            { "int_multidronecontrol_mining_size3_class3", new ShipModule(129001922, 10, 0.35F, "Range:5km","Multi Purpose Mining Drone Controller Class 3 Rating C", "Limpet Controller")},
+            { "int_multidronecontrol_operations_size3_class3", new ShipModule(129001923, 10, 0.35F, "Range:5km","Multi Purpose Operations Drone Controller Class 3 Rating C", "Limpet Controller")},
+            { "int_multidronecontrol_operations_size3_class4", new ShipModule(129001924, 15, 0.3F, "Range:3.1km","Multi Purpose Operations Drone Controller Class 3 Rating B", "Limpet Controller")},
+            { "int_multidronecontrol_rescue_size3_class2", new ShipModule(129001925, 8, 0.4F, "Range:2.1km","Multi Purpose Operations Drone Controller Class 3 Rating D", "Limpet Controller")},
+            { "int_multidronecontrol_rescue_size3_class3", new ShipModule(129001926, 10, 0.35F, "Range:2.6km","Multi Purpose Operations Drone Controller Class 3 Rating C", "Limpet Controller")},
+            { "int_multidronecontrol_xeno_size3_class3", new ShipModule(129001927, 10, 0.35F, "Range:5km","Multi Purpose Xeno Drone Controller Class 3 Rating C", "Limpet Controller")},
+            { "int_multidronecontrol_xeno_size3_class4", new ShipModule(129001928, 15, 0.3F, "Range:5km","Multi Purpose Xeno Drone Controller Class 3 Rating B", "Limpet Controller")},
+            { "int_multidronecontrol_universal_size7_class3", new ShipModule(129001929, 126, 0.8F, "Range:6.5km","Multi Purpose Universal Drone Controller Class 7 Rating C", "Limpet Controller")},
+            { "int_multidronecontrol_universal_size7_class5", new ShipModule(129001930, 140, 1.1F, "Range:9.1km","Multi Purpose Universal Drone Controller Class 7 Rating A", "Limpet Controller")},
 
             // Vanities found in logs (not exhaustive)
 
