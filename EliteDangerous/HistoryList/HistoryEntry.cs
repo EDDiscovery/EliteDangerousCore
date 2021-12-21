@@ -73,20 +73,17 @@ namespace EliteDangerousCore
         public HistoryEntryStatus.TravelStateType TravelState { get { return EntryStatus.TravelState; } }
 
         public string WhereAmI { get { return EntryStatus.StationName ?? EntryStatus.BodyName ?? "Unknown"; } }
-        public string BodyType { get { return EntryStatus.BodyType ?? "Unknown"; } }
         public bool MultiPlayer { get { return EntryStatus.OnCrewWithCaptain != null; } }
         public string GameMode { get { return EntryStatus.GameMode ?? ""; } }
         public string Group { get { return EntryStatus.Group ?? ""; } }
         public string GameModeGroup { get { return GameMode + (String.IsNullOrEmpty(Group) ? "" : (":" + Group)); } }
         public bool Wanted { get { return EntryStatus.Wanted; } }
         public long? MarketID { get { return EntryStatus.MarketId; } }
-        public int? BodyID { get { return EntryStatus.BodyID; } }           // NOTE -1 is used for no body, as well as null
-        public bool HasBodyID { get { return EntryStatus.HasBodyID; } }
         public string StationFaction { get { return EntryStatus.StationFaction; } }
         public int Visits { get; set; }                                     // set by Historylist, visits up to this point in time
 
         public long? FullBodyID { get {                                     // only if at a body
-                if (System.SystemAddress.HasValue && HasBodyID)
+                if (System.SystemAddress.HasValue && Status.HasBodyID)
                     return System.SystemAddress.Value | ((long)EntryStatus.BodyID.Value << 55);
                 else
                     return null;

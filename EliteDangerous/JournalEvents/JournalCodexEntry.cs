@@ -14,6 +14,7 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 using BaseUtils.JSON;
+using EliteDangerousCore.DB;
 using System;
 
 namespace EliteDangerousCore.JournalEvents
@@ -43,6 +44,10 @@ namespace EliteDangerousCore.JournalEvents
             VoucherAmount = evt["VoucherAmount"].LongNull();
             Latitude = evt["Latitude"].Double();        // odyssey
             Longitude = evt["Longitude"].Double();
+
+            // EDD Additions
+            EDDBodyName = evt["EDDBodyName"].StrNull();
+            EDDBodyId = evt["EDDBodyID"].Int(-1);
         }
 
         public long EntryID { get; set; }
@@ -65,6 +70,9 @@ namespace EliteDangerousCore.JournalEvents
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
+        public string EDDBodyName { get; set; }        // EDD addition, filled in in ED. Null for not known
+        public int EDDBodyId { get; set; } = -1;       // EDD addition, filled in in ED.  -1 for not known
+
         public void AddStarScan(StarScan s, ISystem system)
         {
             s.AddCodexEntryToSystem(this);
@@ -72,8 +80,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sysunused, string whereamiunused, out string info, out string detailed)   
         {
-            info = BaseUtils.FieldBuilder.Build("At ".T(EDTx.JournalCodexEntry_At), System,
-                                                "in ".T(EDTx.JournalCodexEntry_in), Region_Localised,
+            info = BaseUtils.FieldBuilder.Build("At ".T(EDTx.JournalCodexEntry_At), System, ";", EDDBodyName, "ID", EDDBodyId, "in ".T(EDTx.JournalCodexEntry_in), Region_Localised,
                                                 "", Name_Localised,
                                                 "", Category_Localised,
                                                 "", SubCategory_Localised,
@@ -97,6 +104,22 @@ namespace EliteDangerousCore.JournalEvents
                                                 ";Traits".T(EDTx.JournalCodexEntry_Traits), NewTraitsDiscovered,
                                                 "Nearest: ".T(EDTx.JournalEntry_Nearest), NearestDestination_Localised
                                                 );
+        }
+
+        public void UpdateDB()
+        {
+            UserDatabase.Instance.DBWrite(cn =>
+            {
+                JObject jo = GetJson(cn);
+
+                if (jo != null)
+                {
+                    jo["EDDBodyName"] = EDDBodyName;        // these are not in JSON from frontier, so add them in (or just overwrite them)
+                    jo["EDDBodyID"] = EDDBodyId;
+                    UpdateJsonEntry(jo, cn);
+                }
+            });
+
         }
     }
 }

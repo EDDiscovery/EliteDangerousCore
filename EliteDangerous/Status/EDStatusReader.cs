@@ -22,13 +22,13 @@ using System.IO;
 
 namespace EliteDangerousCore
 {
-    [System.Diagnostics.DebuggerDisplay("{WatcherFolder}")]
+    [System.Diagnostics.DebuggerDisplay("{StatusFolder}")]
     public class StatusReader
     {
         public string StatusFolder { get; set; }
 
         private string statusfile;
-    
+
         public StatusReader(string datapath)
         {
             StatusFolder = datapath;
@@ -37,29 +37,31 @@ namespace EliteDangerousCore
 
         const int NotPresent = -1;
 
-        long prev_flags = 0;
-        long prev_flags2 = 0;
-        int prev_guifocus = NotPresent;                 
-        int prev_firegroup = NotPresent;
-        double prev_curfuel = NotPresent;
-        double prev_curres = NotPresent;
-        string prev_legalstatus = null;
-        int prev_cargo = NotPresent;
-        UIEvents.UIPips.Pips prev_pips = new UIEvents.UIPips.Pips(null);
-        UIEvents.UIPosition.Position prev_pos = new UIEvents.UIPosition.Position();     // default is MinValue
-        double prev_heading = UIEvents.UIPosition.InvalidValue;    // this forces a pos report
-        double prev_jpradius = UIEvents.UIPosition.InvalidValue;    // this forces a pos report
+        public long Flags { get; private set; } = 0;
+        public long Flags2 { get; private set; } = 0;
+        public UIMode ShipType() { return ShipType(Flags, Flags2); }
+        public static bool CheckFlags(long flags, Object bit)  { return (flags & (1L << (int)bit)) != 0; }
+        public int GUIFocus { get; private set; } = NotPresent;
+        public int FireGroup { get; private set; } = NotPresent;
+        public double FuelLevel { get; private set; } = NotPresent;
+        public double ReserveLevel { get; private set; } = NotPresent;
+        public string LegalStatus { get; private set; } = null;
+        public int CargoCount { get; private set; } = NotPresent;
+        public UIEvents.UIPips.Pips PIPStatus { get; private set; } = new UIEvents.UIPips.Pips(null);
+        public UIEvents.UIPosition.Position Position { get; private set; } = new UIEvents.UIPosition.Position();     // default is MinValue
+        public double Heading { get; private set; } = UIEvents.UIPosition.InvalidValue;    // this forces a pos report
+        public double BodyRadius { get; private set; } = UIEvents.UIPosition.InvalidValue;    // this forces a pos report
 
-        string prev_bodyname = null;
+        public string BodyName { get; private set; } = null;
 
-        double prev_oxygen = NotPresent;        // odyssey
-        double prev_temperature = NotPresent;
-        double prev_gravity = NotPresent;
-        double prev_health = NotPresent;
-        string prev_selectedweapon = null;
-        string prev_selectedweaponloc = null;
+        public double Oxygen { get; private set; } = NotPresent;        // odyssey
+        public double Temperature { get; private set; } = NotPresent;
+        public double Gravity { get; private set; } = NotPresent;
+        public double Health { get; private set; } = NotPresent;
+        public string SelectedWeapon { get; private set; } = null;
+        public string SelectedWeaponLocalised { get; private set; } = null;
 
-        private enum StatusFlagsShip                        // PURPOSELY PRIVATE - don't want users to get into low level detail of BITS
+        public enum StatusFlagsShip                             // Flags
         {
             Docked = 0, // (on a landing pad)
             Landed = 1, // (on planet surface)
@@ -80,7 +82,7 @@ namespace EliteDangerousCore
             FsdJump = 30,
         }
 
-        private enum StatusFlagsSRV
+        public enum StatusFlagsSRV                              // Flags
         {
             SrvHandbrake = 12,
             SrvTurret = 13,
@@ -89,7 +91,7 @@ namespace EliteDangerousCore
             SrvHighBeam = 31,
         }
 
-        private enum StatusFlagsAll
+        public enum StatusFlagsAll                             // Flags
         {
             ShieldsUp = 3,
             Lights = 8,
@@ -101,7 +103,7 @@ namespace EliteDangerousCore
 
         // these two below determine the shiptype (operating mode)
 
-        private enum StatusFlagsShipType
+        public enum StatusFlagsShipType                        // Flags
         {
             InMainShip = 24,        
             InFighter = 25,
@@ -114,7 +116,7 @@ namespace EliteDangerousCore
             AltitudeFromAverageRadius = 29, // 3.4, via position
         }
 
-        private enum StatusFlags2ShipType                   // used to compute ship type
+        public enum StatusFlags2ShipType                   // used to compute ship type
         {
             OnFoot = 0,
             InTaxi = 1,
@@ -126,14 +128,14 @@ namespace EliteDangerousCore
             OnFootExterior = 15,
         }
 
-        private enum StatusFlags2               // these are bool flags, reported sep.
+        public enum StatusFlags2               // these are bool flags, reported sep.
         {
             AimDownSight = 5,
             GlideMode = 12,
             BreathableAtmosphere = 16,
         }
 
-        private enum StatusFlags2OtherFlags     // these are states reported as part of other messages
+        public enum StatusFlags2OtherFlags     // these are states reported as part of other messages
         {
             LowOxygen = 6,
             LowHealth = 7,
@@ -187,7 +189,7 @@ namespace EliteDangerousCore
                             
                     List<UIEvent> events = new List<UIEvent>();
 
-                    UIMode shiptype = ShipType(prev_flags, prev_flags2);
+                    UIMode shiptype = ShipType(Flags, Flags2);
 
                     long curflags = jo["Flags"].Long(0);
                     long curflags2 = jo["Flags2"].Long(0);      // 0 is backwards compat with horizons
@@ -196,7 +198,7 @@ namespace EliteDangerousCore
                     bool changedmajormode = false;
                     long flagsdelta2 = 0;                       // what changed between prev and current
 
-                    if (curflags != prev_flags || curflags2 != prev_flags2)
+                    if (curflags != Flags || curflags2 != Flags2)
                     {
                         UIMode nextshiptype = ShipType(curflags, curflags2);
 
@@ -208,43 +210,43 @@ namespace EliteDangerousCore
                             events.Add(new UIEvents.UIMode(nextshiptype.Mode, nextshiptype.MajorMode, EventTimeUTC, changedmajormode));        // Generate an event for it
                         }
 
-                        events.AddRange(ReportFlagState(typeof(StatusFlags2), curflags2, prev_flags2, EventTimeUTC, changedmajormode));
-                        events.AddRange(ReportFlagState(typeof(StatusFlagsShip), curflags, prev_flags, EventTimeUTC, changedmajormode));
-                        events.AddRange(ReportFlagState(typeof(StatusFlagsSRV), curflags, prev_flags, EventTimeUTC, changedmajormode));
-                        events.AddRange(ReportFlagState(typeof(StatusFlagsAll), curflags, prev_flags, EventTimeUTC, changedmajormode));
+                        events.AddRange(ReportFlagState(typeof(StatusFlags2), curflags2, Flags2, EventTimeUTC, changedmajormode));
+                        events.AddRange(ReportFlagState(typeof(StatusFlagsShip), curflags, Flags, EventTimeUTC, changedmajormode));
+                        events.AddRange(ReportFlagState(typeof(StatusFlagsSRV), curflags, Flags, EventTimeUTC, changedmajormode));
+                        events.AddRange(ReportFlagState(typeof(StatusFlagsAll), curflags, Flags, EventTimeUTC, changedmajormode));
                         fireoverall = true;
 
-                        flagsdelta2 = curflags2 ^ prev_flags2;        // record the delta here for later processing, some of those flags go into the main reports
+                        flagsdelta2 = curflags2 ^ Flags2;        // record the delta here for later processing, some of those flags go into the main reports
 
-                        prev_flags = curflags;
-                        prev_flags2 = curflags2;
+                        Flags = curflags;
+                        Flags2 = curflags2;
                         shiptype = nextshiptype;
                     }
 
                     int curguifocus = jo["GuiFocus"].Int(NotPresent);
-                    if (curguifocus != prev_guifocus || changedmajormode)
+                    if (curguifocus != GUIFocus || changedmajormode)
                     {
                         events.Add(new UIEvents.UIGUIFocus(curguifocus, EventTimeUTC, changedmajormode));
-                        prev_guifocus = curguifocus;
+                        GUIFocus = curguifocus;
                         fireoverall = true;
                     }
 
                     int[] pips = jo["Pips"]?.ToObjectQ<int[]>();            // may appear/disappear
                     UIEvents.UIPips.Pips curpips = new UIEvents.UIPips.Pips(pips);      // can accept null as input
 
-                    if ( !curpips.Equal(prev_pips) || changedmajormode)                  // if change in pips, or changed mode
+                    if ( !curpips.Equal(PIPStatus) || changedmajormode)                  // if change in pips, or changed mode
                     {
                         events.Add(new UIEvents.UIPips(curpips, EventTimeUTC, changedmajormode));
-                        prev_pips = curpips;
+                        PIPStatus = curpips;
                         fireoverall = true;
                     }
 
                     int curfiregroup = jo["FireGroup"].Int(NotPresent);      // may appear/disappear.
 
-                    if (curfiregroup != prev_firegroup || changedmajormode)
+                    if (curfiregroup != FireGroup || changedmajormode)
                     {
                         events.Add(new UIEvents.UIFireGroup(curfiregroup + 1, EventTimeUTC, changedmajormode));
-                        prev_firegroup = curfiregroup;
+                        FireGroup = curfiregroup;
                         fireoverall = true;
                     }
 
@@ -252,19 +254,19 @@ namespace EliteDangerousCore
                     double curfuel = jfuel != null ? jfuel["FuelMain"].Double(-1) : -1;
                     double curres = jfuel != null ? jfuel["FuelReservoir"].Double(-1) : -1;
 
-                    if (Math.Abs(curfuel - prev_curfuel) >= 0.1 || Math.Abs(curres - prev_curres) >= 0.01 || changedmajormode)  // don't fire if small changes
+                    if (Math.Abs(curfuel - FuelLevel) >= 0.1 || Math.Abs(curres - ReserveLevel) >= 0.01 || changedmajormode)  // don't fire if small changes
                     {
                         events.Add(new UIEvents.UIFuel(curfuel, curres, shiptype.Mode, EventTimeUTC, changedmajormode));
-                        prev_curfuel = curfuel;
-                        prev_curres = curres;
+                        FuelLevel = curfuel;
+                        ReserveLevel = curres;
                         fireoverall = true;
                     }
 
                     int curcargo = jo["Cargo"].Int(NotPresent);      // may appear/disappear and only introduced for 3.3
-                    if (curcargo != prev_cargo || changedmajormode)
+                    if (curcargo != CargoCount || changedmajormode)
                     {
                         events.Add(new UIEvents.UICargo(curcargo, shiptype.Mode, EventTimeUTC, changedmajormode));
-                        prev_cargo = curcargo;
+                        CargoCount = curcargo;
                         fireoverall = true;
                     }
 
@@ -274,95 +276,95 @@ namespace EliteDangerousCore
                     double jheading = jo["Heading"].Double(UIEvents.UIPosition.InvalidValue);
                     double jpradius = jo["PlanetRadius"].Double(UIEvents.UIPosition.InvalidValue);       // 3.4
 
-                    if (jlat != prev_pos.Latitude || jlon != prev_pos.Longitude || jalt != prev_pos.Altitude || jheading != prev_heading || jpradius != prev_jpradius || changedmajormode)
+                    if (jlat != Position.Latitude || jlon != Position.Longitude || jalt != Position.Altitude || jheading != Heading || jpradius != BodyRadius || changedmajormode)
                     {
                         UIEvents.UIPosition.Position newpos = new UIEvents.UIPosition.Position()
                         {
                             Latitude = jlat, Longitude = jlon,
-                            Altitude = jalt, AltitudeFromAverageRadius = Flags(curflags, StatusFlagsReportedInOtherEvents.AltitudeFromAverageRadius)
+                            Altitude = jalt, AltitudeFromAverageRadius = CheckFlags(curflags, StatusFlagsReportedInOtherEvents.AltitudeFromAverageRadius)
                         };
 
                         events.Add(new UIEvents.UIPosition(newpos, jheading, jpradius, EventTimeUTC, changedmajormode));
-                        prev_pos = newpos;
-                        prev_heading = jheading;
-                        prev_jpradius = jpradius;
+                        Position = newpos;
+                        Heading = jheading;
+                        BodyRadius = jpradius;
                         fireoverall = true;
                     }
 
                     string cur_legalstatus = jo["LegalState"].StrNull();
 
-                    if (cur_legalstatus != prev_legalstatus || changedmajormode)
+                    if (cur_legalstatus != LegalStatus || changedmajormode)
                     {
                         events.Add(new UIEvents.UILegalStatus(cur_legalstatus, EventTimeUTC, changedmajormode));
-                        prev_legalstatus = cur_legalstatus;
+                        LegalStatus = cur_legalstatus;
                         fireoverall = true;
                     }
 
                     string cur_bodyname = jo["BodyName"].StrNull();
 
-                    if (cur_bodyname != prev_bodyname || changedmajormode)
+                    if (cur_bodyname != BodyName || changedmajormode)
                     {
                         events.Add(new UIEvents.UIBodyName(cur_bodyname, EventTimeUTC, changedmajormode));
-                        prev_bodyname = cur_bodyname;
+                        BodyName = cur_bodyname;
                         fireoverall = true;
                     }
 
                     string cur_weapon = jo["SelectedWeapon"].StrNull();                 // null if not there
                     string cur_weaponloc = jo["SelectedWeapon_Localised"].Str();        // empty if not there
 
-                    if (cur_weapon != prev_selectedweapon || changedmajormode)
+                    if (cur_weapon != SelectedWeapon || changedmajormode)
                     {
                         events.Add(new UIEvents.UISelectedWeapon(cur_weapon, cur_weaponloc, EventTimeUTC, changedmajormode));
-                        prev_selectedweapon = cur_weapon;
-                        prev_selectedweaponloc = cur_weaponloc;
+                        SelectedWeapon = cur_weapon;
+                        SelectedWeaponLocalised = cur_weaponloc;
                         fireoverall = true;
                     }
 
                     double oxygen = jo["Oxygen"].Double(NotPresent);                //-1 is not present
                     oxygen = oxygen < 0 ? oxygen : oxygen * 100;                    // correct to 0-100%
-                    bool lowoxygen = Flags(curflags2, StatusFlags2OtherFlags.LowOxygen);
+                    bool lowoxygen = CheckFlags(curflags2, StatusFlags2OtherFlags.LowOxygen);
 
-                    if (oxygen != prev_oxygen || Flags(flagsdelta2,StatusFlags2OtherFlags.LowOxygen) || changedmajormode)
+                    if (oxygen != Oxygen || CheckFlags(flagsdelta2,StatusFlags2OtherFlags.LowOxygen) || changedmajormode)
                     {
                         events.Add(new UIEvents.UIOxygen(oxygen, lowoxygen , EventTimeUTC, changedmajormode));
-                        prev_oxygen = oxygen;
+                        Oxygen = oxygen;
                         fireoverall = true;
                     }
 
                     double health = jo["Health"].Double(NotPresent);                //-1 is not present
                     health = health < 0 ? health : health * 100;                    // correct to 0-100%
-                    bool lowhealth = Flags(curflags2, StatusFlags2OtherFlags.LowHealth);
+                    bool lowhealth = CheckFlags(curflags2, StatusFlags2OtherFlags.LowHealth);
 
-                    if (health != prev_health || Flags(flagsdelta2,StatusFlags2OtherFlags.LowHealth) || changedmajormode)
+                    if (health != Health || CheckFlags(flagsdelta2,StatusFlags2OtherFlags.LowHealth) || changedmajormode)
                     {
                         events.Add(new UIEvents.UIHealth(health, lowhealth, EventTimeUTC, changedmajormode));
-                        prev_health = health;
+                        Health = health;
                         fireoverall = true;
                     }
 
                     double gravity = jo["Gravity"].Double(NotPresent);                //-1 is not present
 
-                    if (gravity != prev_gravity || changedmajormode)
+                    if (gravity != Gravity || changedmajormode)
                     {
                         events.Add(new UIEvents.UIGravity(gravity, EventTimeUTC, changedmajormode));
-                        prev_gravity = gravity;
+                        Gravity = gravity;
                         fireoverall = true;
                     }
 
                     double temperature = jo["Temperature"].Double(NotPresent);       //-1 is not present
 
                     UIEvents.UITemperature.TempState tempstate =
-                        Flags(curflags2,StatusFlags2OtherFlags.VeryCold) ? UIEvents.UITemperature.TempState.VeryCold :       // order important, you can get Cold | VeryCold
-                        Flags(curflags2,StatusFlags2OtherFlags.VeryHot) ? UIEvents.UITemperature.TempState.VeryHot :
-                        Flags(curflags2,StatusFlags2OtherFlags.Cold) ? UIEvents.UITemperature.TempState.Cold :
-                        Flags(curflags2,StatusFlags2OtherFlags.Hot) ? UIEvents.UITemperature.TempState.Hot :
+                        CheckFlags(curflags2,StatusFlags2OtherFlags.VeryCold) ? UIEvents.UITemperature.TempState.VeryCold :       // order important, you can get Cold | VeryCold
+                        CheckFlags(curflags2,StatusFlags2OtherFlags.VeryHot) ? UIEvents.UITemperature.TempState.VeryHot :
+                        CheckFlags(curflags2,StatusFlags2OtherFlags.Cold) ? UIEvents.UITemperature.TempState.Cold :
+                        CheckFlags(curflags2,StatusFlags2OtherFlags.Hot) ? UIEvents.UITemperature.TempState.Hot :
                                                             UIEvents.UITemperature.TempState.Normal;
 
-                    if (temperature != prev_temperature || (flagsdelta2 & (long)StatusFlags2OtherFlags.TempBits) != 0 || changedmajormode)
+                    if (temperature != Temperature || (flagsdelta2 & (long)StatusFlags2OtherFlags.TempBits) != 0 || changedmajormode)
                     {
 
                         events.Add(new UIEvents.UITemperature(temperature,tempstate, EventTimeUTC, changedmajormode));
-                        prev_temperature = temperature;
+                        Temperature = temperature;
                         fireoverall = true;
                     }
 
@@ -373,26 +375,26 @@ namespace EliteDangerousCore
                         flagsset.AddRange(ReportFlagState(typeof(StatusFlagsAll), curflags));
                         flagsset.AddRange(ReportFlagState(typeof(StatusFlags2), curflags2));
 
-                        bool glidemode = Flags(curflags2,StatusFlags2.GlideMode);
-                        bool breathableatmos = Flags(curflags2,StatusFlags2.BreathableAtmosphere);
+                        bool glidemode = CheckFlags(curflags2,StatusFlags2.GlideMode);
+                        bool breathableatmos = CheckFlags(curflags2,StatusFlags2.BreathableAtmosphere);
 
                         UIEvents.UIOverallStatus.FSDStateType fsdstate = UIEvents.UIOverallStatus.FSDStateType.Normal;
-                        if (Flags(curflags, StatusFlagsShip.FsdMassLocked))
+                        if (CheckFlags(curflags, StatusFlagsShip.FsdMassLocked))
                             fsdstate = UIEvents.UIOverallStatus.FSDStateType.MassLock;
-                        if (Flags(curflags, StatusFlagsShip.FsdJump))
+                        if (CheckFlags(curflags, StatusFlagsShip.FsdJump))
                             fsdstate = UIEvents.UIOverallStatus.FSDStateType.Jumping;
-                        else if (Flags(curflags,StatusFlagsShip.FsdCharging))
+                        else if (CheckFlags(curflags,StatusFlagsShip.FsdCharging))
                             fsdstate = UIEvents.UIOverallStatus.FSDStateType.Charging;
-                        else if (Flags(curflags2,StatusFlags2.GlideMode))
+                        else if (CheckFlags(curflags2,StatusFlags2.GlideMode))
                             fsdstate = UIEvents.UIOverallStatus.FSDStateType.Gliding;
-                        else if (Flags(curflags,StatusFlagsShip.FsdCooldown))
+                        else if (CheckFlags(curflags,StatusFlagsShip.FsdCooldown))
                             fsdstate = UIEvents.UIOverallStatus.FSDStateType.Cooldown;
 
-                        events.Add(new UIEvents.UIOverallStatus(shiptype.MajorMode, shiptype.Mode, flagsset, prev_guifocus, prev_pips, prev_firegroup, 
-                                                                prev_curfuel,prev_curres, prev_cargo, prev_pos, prev_heading, prev_jpradius, prev_legalstatus, 
-                                                                prev_bodyname,
-                                                                prev_health,lowhealth,gravity,prev_temperature,tempstate,prev_oxygen,lowoxygen,
-                                                                prev_selectedweapon, prev_selectedweaponloc,
+                        events.Add(new UIEvents.UIOverallStatus(shiptype.MajorMode, shiptype.Mode, flagsset, GUIFocus, PIPStatus, FireGroup, 
+                                                                FuelLevel,ReserveLevel, CargoCount, Position, Heading, BodyRadius, LegalStatus, 
+                                                                BodyName,
+                                                                Health,lowhealth,gravity,Temperature,tempstate,Oxygen,lowoxygen,
+                                                                SelectedWeapon, SelectedWeaponLocalised,
                                                                 fsdstate, breathableatmos,
                                                                 EventTimeUTC, 
                                                                 changedmajormode));        // overall list of flags set
@@ -417,7 +419,7 @@ namespace EliteDangerousCore
             return new List<UIEvent>();
         }
 
-        List<UITypeEnum> ReportFlagState(Type enumtype, long curflags)
+        private List<UITypeEnum> ReportFlagState(Type enumtype, long curflags)
         {
             List<UITypeEnum> flags = new List<UITypeEnum>();
             foreach (string n in Enum.GetNames(enumtype))
@@ -432,7 +434,7 @@ namespace EliteDangerousCore
             return flags;
         }
 
-        List<UIEvent> ReportFlagState(Type enumtype, long curflags, long prev_flags, DateTime EventTimeUTC, bool changedmajormode)
+        private List<UIEvent> ReportFlagState(Type enumtype, long curflags, long prev_flags, DateTime EventTimeUTC, bool changedmajormode)
         {
             List<UIEvent> events = new List<UIEvent>();
             long delta = curflags ^ prev_flags;
@@ -457,72 +459,66 @@ namespace EliteDangerousCore
             return events;
         }
 
-        static bool Flags(long flags, Object bit)
+        private static UIMode ShipType(long flags1, long flags2)
         {
-            return (flags & (1L << (int)bit)) != 0;
-        }
-
-
-        static private UIMode ShipType(long flags1, long flags2)
-        {
-            if (Flags(flags2, StatusFlags2ShipType.InMulticrew))
+            if (CheckFlags(flags2, StatusFlags2ShipType.InMulticrew))
             {
-                if (Flags(flags1, StatusFlagsShipType.InSRV))
+                if (CheckFlags(flags1, StatusFlagsShipType.InSRV))
                     return new UIMode( UIMode.ModeType.MulticrewSRV, UIMode.MajorModeType.Multicrew);
-                if (Flags(flags1, StatusFlagsShip.Supercruise))
+                if (CheckFlags(flags1, StatusFlagsShip.Supercruise))
                     return new UIMode( UIMode.ModeType.MulticrewSupercruise, UIMode.MajorModeType.Multicrew);
-                if (Flags(flags1, StatusFlagsShip.Docked))
-                    return new UIMode( Flags(flags1, StatusFlagsAll.HasLatLong) ? UIEvents.UIMode.ModeType.MulticrewDockedPlanet : UIEvents.UIMode.ModeType.MulticrewDockedStarPort, UIMode.MajorModeType.Multicrew);
-                if (Flags(flags1, StatusFlagsShip.Landed))
+                if (CheckFlags(flags1, StatusFlagsShip.Docked))
+                    return new UIMode( CheckFlags(flags1, StatusFlagsAll.HasLatLong) ? UIEvents.UIMode.ModeType.MulticrewDockedPlanet : UIEvents.UIMode.ModeType.MulticrewDockedStarPort, UIMode.MajorModeType.Multicrew);
+                if (CheckFlags(flags1, StatusFlagsShip.Landed))
                     return new UIMode( UIMode.ModeType.MulticrewLanded, UIMode.MajorModeType.Multicrew);
                 return new UIMode( UIMode.ModeType.MulticrewNormalSpace, UIMode.MajorModeType.Multicrew);
             }
-            else if (Flags(flags2, StatusFlags2ShipType.InTaxi))
+            else if (CheckFlags(flags2, StatusFlags2ShipType.InTaxi))
             {
-                if (Flags(flags1, StatusFlagsShip.Supercruise))
+                if (CheckFlags(flags1, StatusFlagsShip.Supercruise))
                     return new UIMode( UIMode.ModeType.TaxiSupercruise, UIMode.MajorModeType.Taxi);
-                if (Flags(flags1, StatusFlagsShip.Docked))
-                    return new UIMode( Flags(flags1, StatusFlagsAll.HasLatLong) ? UIEvents.UIMode.ModeType.TaxiDockedPlanet : UIEvents.UIMode.ModeType.TaxiDocked, UIMode.MajorModeType.Taxi);
+                if (CheckFlags(flags1, StatusFlagsShip.Docked))
+                    return new UIMode( CheckFlags(flags1, StatusFlagsAll.HasLatLong) ? UIEvents.UIMode.ModeType.TaxiDockedPlanet : UIEvents.UIMode.ModeType.TaxiDocked, UIMode.MajorModeType.Taxi);
                 return new UIMode( UIMode.ModeType.TaxiNormalSpace, UIMode.MajorModeType.Taxi);
             }
-            else if (Flags(flags1, StatusFlagsShipType.InFighter))
+            else if (CheckFlags(flags1, StatusFlagsShipType.InFighter))
             {
                 return new UIMode( UIMode.ModeType.Fighter, UIMode.MajorModeType.Fighter);
             }
-            else if (Flags(flags1, StatusFlagsShipType.InSRV))
+            else if (CheckFlags(flags1, StatusFlagsShipType.InSRV))
             {
                 return new UIMode( UIMode.ModeType.SRV, UIMode.MajorModeType.SRV);
             }
-            else if (Flags(flags2, StatusFlags2ShipType.OnFoot))
+            else if (CheckFlags(flags2, StatusFlags2ShipType.OnFoot))
             {
-                if (Flags(flags2, StatusFlags2ShipType.OnFootInStation))        // station means starport
+                if (CheckFlags(flags2, StatusFlags2ShipType.OnFootInStation))        // station means starport
                 {
-                    return new UIMode(Flags(flags2, StatusFlags2ShipType.OnFootInHangar) ? UIEvents.UIMode.ModeType.OnFootStarPortHangar : UIEvents.UIMode.ModeType.OnFootStarPortSocialSpace, UIMode.MajorModeType.OnFoot);
+                    return new UIMode(CheckFlags(flags2, StatusFlags2ShipType.OnFootInHangar) ? UIEvents.UIMode.ModeType.OnFootStarPortHangar : UIEvents.UIMode.ModeType.OnFootStarPortSocialSpace, UIMode.MajorModeType.OnFoot);
                 }
-                else if (Flags(flags2, StatusFlags2ShipType.OnFootInHangar))        // if set, but no station, its a planetary port
+                else if (CheckFlags(flags2, StatusFlags2ShipType.OnFootInHangar))        // if set, but no station, its a planetary port
                 {
                     return new UIMode( UIMode.ModeType.OnFootPlantaryPortHangar, UIMode.MajorModeType.OnFoot);
                 }
-                else if (Flags(flags2, StatusFlags2ShipType.OnFootInSocialSpace))
+                else if (CheckFlags(flags2, StatusFlags2ShipType.OnFootInSocialSpace))
                 {
                     return new UIMode( UIMode.ModeType.OnFootPlantaryPortSocialSpace, UIMode.MajorModeType.OnFoot);
                 }
-                else if (Flags(flags2, StatusFlags2ShipType.OnFootOnPlanet))
+                else if (CheckFlags(flags2, StatusFlags2ShipType.OnFootOnPlanet))
                 {
-                    return new UIMode( Flags(flags2, StatusFlags2.BreathableAtmosphere) ? UIEvents.UIMode.ModeType.OnFootInstallationInside : UIEvents.UIMode.ModeType.OnFootPlanet, UIMode.MajorModeType.OnFoot);
+                    return new UIMode( CheckFlags(flags2, StatusFlags2.BreathableAtmosphere) ? UIEvents.UIMode.ModeType.OnFootInstallationInside : UIEvents.UIMode.ModeType.OnFootPlanet, UIMode.MajorModeType.OnFoot);
                 }
             }
-            else if(Flags(flags1, StatusFlagsShipType.InMainShip))
+            else if(CheckFlags(flags1, StatusFlagsShipType.InMainShip))
             {
-                if (Flags(flags1, StatusFlagsShip.Supercruise))
+                if (CheckFlags(flags1, StatusFlagsShip.Supercruise))
                 {
                     return new UIMode( UIMode.ModeType.MainShipSupercruise, UIMode.MajorModeType.MainShip);
                 }
-                if (Flags(flags1, StatusFlagsShip.Docked))
+                if (CheckFlags(flags1, StatusFlagsShip.Docked))
                 {
-                    return new UIMode( Flags(flags1, StatusFlagsAll.HasLatLong) ? UIEvents.UIMode.ModeType.MainShipDockedPlanet : UIEvents.UIMode.ModeType.MainShipDockedStarPort, UIMode.MajorModeType.MainShip);
+                    return new UIMode( CheckFlags(flags1, StatusFlagsAll.HasLatLong) ? UIEvents.UIMode.ModeType.MainShipDockedPlanet : UIEvents.UIMode.ModeType.MainShipDockedStarPort, UIMode.MajorModeType.MainShip);
                 }
-                if (Flags(flags1, StatusFlagsShip.Landed))
+                if (CheckFlags(flags1, StatusFlagsShip.Landed))
                 {
                     return new UIMode( UIMode.ModeType.MainShipLanded, UIMode.MajorModeType.MainShip);
                 }

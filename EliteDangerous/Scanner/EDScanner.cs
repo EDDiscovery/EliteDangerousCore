@@ -28,16 +28,8 @@ namespace EliteDangerousCore
 
     public class EDJournalUIScanner
     {
-        public Action<JournalEntry> OnNewJournalEntry;
-        public Action<UIEvent> OnNewUIEvent;
-
-        private Thread ScanThread;
-        private ManualResetEvent StopRequested;
-        private Action<Action> InvokeAsyncOnUiThread;
-        private List<JournalMonitorWatcher> watchers = new List<JournalMonitorWatcher>();
-        private List<StatusReader> statuswatchers = new List<StatusReader>();
-
-        const int ScanTick = 100;       // tick time to check journals and status
+        public Action<JournalEntry,StatusReader> OnNewJournalEntry;
+        public Action<UIEvent,StatusReader> OnNewUIEvent;
 
         public EDJournalUIScanner(Action<Action> invokeAsyncOnUiThread)
         {
@@ -91,73 +83,65 @@ namespace EliteDangerousCore
             {
                 var jlu = ScanTickWorker(() => stopRequested.WaitOne(0));
 
-                if (jlu != null && (jlu.Item1.Count != 0 || jlu.Item2.Count != 0) && !stopRequested.WaitOne(0))
+                if (jlu != null && jlu.Count>0 && !stopRequested.WaitOne(0))
                 {
                     InvokeAsyncOnUiThread(() => IssueEvents(jlu));
                 }
             }
         }
 
-        private Tuple<List<JournalEntry>, List<UIEvent>> ScanTickWorker(Func<bool> stopRequested)     // read the entries from all watchers..
+        private class Event
         {
-            var entries = new List<JournalEntry>();
-            var uientries = new List<UIEvent>();
-
-            foreach (JournalMonitorWatcher mw in watchers)
-            {
-                var evret = mw.ScanForNewEntries();
-                entries.AddRange(evret.Item1);
-                uientries.AddRange(evret.Item2);
-
-                if (stopRequested())
-                {
-                    return null;
-                }
-            }
-
-            foreach (var sw in statuswatchers)
-            {
-                var evret = sw.Scan();
-                uientries.AddRange(evret);
-
-                if (stopRequested())
-                {
-                    return null;
-                }
-            }
-
-            return new Tuple<List<JournalEntry>, List<UIEvent>>(entries, uientries);
+            public JournalEntry je;        // holds either an je or an ui, plus its associated sr
+            public UIEvent ui;
+            public StatusReader sr;
         }
 
-        private void IssueEvents(Tuple<List<JournalEntry>, List<UIEvent>> entries)       // in UI thread..
+        private List<Event> ScanTickWorker(Func<bool> stopRequested)     // read the entries from all watchers..
         {
-            ManualResetEvent stopRequested = StopRequested;
+            var events = new List<Event>();
 
-            if (entries != null && stopRequested != null)
+            for (int i = 0; i < watchers.Count; i++)
             {
-                foreach (var ent in entries.Item1)                    // pass them to the handler
-                {
-                    lock (stopRequested) // Make sure StopMonitor returns after this method returns
-                    {
-                        if (stopRequested.WaitOne(0))
-                            return;
+                var mw = watchers[i];                           // watchers/statuswatchers come in pairs
+                var sw = statuswatchers[i];
 
-                       // System.Diagnostics.Debug.WriteLine("Issue " + ent.EventTypeStr);
-                        OnNewJournalEntry?.Invoke(ent);
-                    }
+                var evret = mw.ScanForNewEntries();             // return tuple of list of journal events, and list of ui events
+                foreach (var ev in evret.Item1)         
+                {
+                    events.Add(new Event() { je = ev, sr = sw }); // feed an event in
+                }
+                foreach (var ev in evret.Item2)
+                {
+                    events.Add(new Event() { ui = ev, sr = sw });
                 }
 
-                foreach (var uient in entries.Item2)                    // pass them to the handler
+                var uiret = sw.Scan();      // return list of ui events
+                foreach (var ev in uiret)
                 {
-                    lock (stopRequested) // Make sure StopMonitor returns after this method returns
-                    {
-                        if (stopRequested.WaitOne(0))
-                            return;
-
-                      //  System.Diagnostics.Debug.WriteLine("Issue  UI" + uient.EventTypeStr);
-                        OnNewUIEvent?.Invoke(uient);
-                    }
+                    events.Add(new Event() { ui = ev, sr = sw });
                 }
+
+                if (stopRequested())
+                {
+                    return null;
+                }
+            }
+
+            return events;
+        }
+
+        // in UI thread.. fire the events off
+        private void IssueEvents(List<Event> entries)       
+        {
+            foreach( var e in entries)
+            {
+                if (e.je != null)
+                    OnNewJournalEntry?.Invoke(e.je, e.sr);
+                if (e.ui != null)
+                    OnNewUIEvent?.Invoke(e.ui, e.sr);
+                if (StopRequested.WaitOne(0))
+                    return;
             }
         }
 
@@ -264,6 +248,19 @@ namespace EliteDangerousCore
                 watchers[i].ProcessDetectedNewFiles(list, updateProgress, firebacknostore, firebacklastn);
             }
         }
+
+        #endregion
+
+        #region vars
+
+        private Thread ScanThread;
+        private ManualResetEvent StopRequested;
+        private Action<Action> InvokeAsyncOnUiThread;
+        private List<JournalMonitorWatcher> watchers = new List<JournalMonitorWatcher>();
+        private List<StatusReader> statuswatchers = new List<StatusReader>();
+
+        const int ScanTick = 100;       // tick time to check journals and status
+
 
         #endregion
     }
