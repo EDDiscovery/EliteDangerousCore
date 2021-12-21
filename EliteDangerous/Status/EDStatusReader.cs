@@ -41,7 +41,7 @@ namespace EliteDangerousCore
         public long Flags2 { get; private set; } = 0;
         public UIMode ShipType() { return ShipType(Flags, Flags2); }
         public static bool CheckFlags(long flags, Object bit)  { return (flags & (1L << (int)bit)) != 0; }
-        public int GUIFocus { get; private set; } = NotPresent;
+        public int GUIFocus { get; private set; } = NotPresent;     // shows -1 when no status has been read, then always reads a valid value. On foot, there is no GUI field, so set to NoFocus
         public int FireGroup { get; private set; } = NotPresent;
         public double FuelLevel { get; private set; } = NotPresent;
         public double ReserveLevel { get; private set; } = NotPresent;
@@ -223,7 +223,7 @@ namespace EliteDangerousCore
                         shiptype = nextshiptype;
                     }
 
-                    int curguifocus = jo["GuiFocus"].Int(NotPresent);
+                    int curguifocus = jo["GuiFocus"].Int((int)UIGUIFocus.Focus.NoFocus);            // in landed mode, its disappears, so its the same as NoFocus.
                     if (curguifocus != GUIFocus || changedmajormode)
                     {
                         events.Add(new UIEvents.UIGUIFocus(curguifocus, EventTimeUTC, changedmajormode));

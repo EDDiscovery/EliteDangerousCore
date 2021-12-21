@@ -90,7 +90,7 @@ namespace EliteDangerousCore
         {
             get
             {
-                return BaseUtils.FieldBuilder.Build(";Console", ConsoleCommander, ";To EDDN", SyncToEddn, ";To EDSM", SyncToEdsm, ";From EDSM", SyncFromEdsm, ";To Inara", SyncToInara, ";To IGAU", SyncToIGAU );
+                return BaseUtils.FieldBuilder.Build(";Console", ConsoleCommander, ";EDDN", SyncToEddn, ";EDSM", SyncToEdsm, ";From EDSM", SyncFromEdsm, ";Inara", SyncToInara, ";IGAU", SyncToIGAU, ";EDAstro", SyncToEDAstro );
             }
         }
 
