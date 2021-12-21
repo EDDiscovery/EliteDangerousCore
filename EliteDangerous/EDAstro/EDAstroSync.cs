@@ -98,7 +98,8 @@ namespace EliteDangerousCore.EDAstro
                         {
                             if (acceptevents.Count == 0 || acceptevents.Contains(he.journalEntry.EventTypeStr))       // no need to lock, this thread only one which changes it
                             {
-                                JObject json = he.journalEntry.GetJson();
+                                JObject json = he.journalEntry.GetJsonCloned();
+                                json.RemoveWildcard("EDD*");        // remove any EDD specials
                                 odyssey |= he.journalEntry.IsOdyssey;
                                 jo.Add(json);
                             }

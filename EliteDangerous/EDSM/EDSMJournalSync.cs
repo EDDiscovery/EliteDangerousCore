@@ -250,7 +250,7 @@ namespace EliteDangerousCore.EDSM
                     continue;
                 }
 
-                RemoveCommonKeys(json);
+                json.RemoveWildcard("EDD*");        // remove any EDD specials
                 if (je.EventTypeID == JournalTypeEnum.FSDJump && json["FuelUsed"].IsNull())
                     json["_convertedNetlog"] = true;
                 if (json["StarPosFromEDSM"].Bool(false)) // Remove star pos from EDSM
@@ -327,19 +327,6 @@ namespace EliteDangerousCore.EDSM
 
                 return true;
             }
-        }
-
-        private static JObject RemoveCommonKeys(JObject obj)
-        {
-            foreach (var key in obj.PropertyNames())
-            {
-                if (key.StartsWith("EDD"))
-                {
-                    obj.Remove(key);
-                }
-            }
-
-            return obj;
         }
 
         // the discard list removes the ones to send
