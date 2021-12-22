@@ -170,7 +170,7 @@ namespace EliteDangerousCore
         JournalEntry_Scanned, // Scanned:
         JournalEntry_Discovered, // Discovered:
         JournalEntry_Loadout, // Loadout:
-        JournalEntry_NPCControlled, // , NPC Controlled;
+        JournalEntry_NPCControlled, // NPC Controlled;
         JournalEntry_Version, // Version:
         JournalEntry_Build, // Build:
         JournalEntry_Part, // Part:

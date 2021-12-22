@@ -21,7 +21,7 @@ using System.Linq;
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.Embark)]
-    public class JournalEmbark : JournalEntry, IMicroResourceJournalEntry
+    public class JournalEmbark : JournalEntry
     {
         public JournalEmbark(JObject evt) : base(evt, JournalTypeEnum.Embark)
         {
@@ -70,20 +70,11 @@ namespace EliteDangerousCore.JournalEvents
             else
                 info = "Ship".T(EDTx.JournalCargo_CargoShip);
 
-            //TBD StationName,StatioNType
-            detailed = BaseUtils.FieldBuilder.Build("< to ".T(EDTx.JournalEntry_to), StarSystem, "", Body);
-        }
+            string body = Body == StationName ? null : Body.ReplaceIfStartsWith(StarSystem);
 
-        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry unused)
-        {
-            List<Tuple<string, int>> counts = new List<Tuple<string, int>>();       // empty list, meaning nothing in backpack
-        //    System.Diagnostics.Debug.WriteLine("EMBARK, clear out back pack items");
-            mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Item, counts, MicroResource.BackPack);
-            mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Component, counts, MicroResource.BackPack);
-            mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Consumable, counts, MicroResource.BackPack);
-            mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Data, counts, MicroResource.BackPack);
+            info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", StationName, "", body, "", StarSystem), ". ");
+            detailed = "";
         }
-
     }
 
     [JournalEntryType(JournalTypeEnum.Disembark)]
@@ -136,8 +127,9 @@ namespace EliteDangerousCore.JournalEvents
             else
                 info = "Ship".T(EDTx.JournalCargo_CargoShip);
 
-            //TBD StationName,StatioNType
-            detailed = BaseUtils.FieldBuilder.Build("< to ".T(EDTx.JournalEntry_to), StarSystem, "", Body);
+            string body = Body == StationName ? null : Body.ReplaceIfStartsWith(StarSystem);
+            info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", StationName, "", body, "", StarSystem), ". ");
+            detailed = "";
         }
     }
 }

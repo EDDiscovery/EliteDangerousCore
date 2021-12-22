@@ -31,7 +31,7 @@ namespace EliteDangerousCore.JournalEvents
             StarSystem = evt["StarSystem"].StrNull();
             SystemAddress = evt["SystemAddress"].LongNull();
             Body = evt["Body"].StrNull();
-            BodyID = evt["BodyID"].LongNull();
+            BodyID = evt["BodyID"].IntNull();
             OnPlanet = evt["OnPlanet"].BoolNull();
             OnStation = evt["OnStation"].BoolNull();
         }
@@ -45,14 +45,15 @@ namespace EliteDangerousCore.JournalEvents
         public string StarSystem { get; set; }      //4.0 alpha 4 on
         public long? SystemAddress { get; set; }
         public string Body { get; set; }
-        public long? BodyID { get; set; }
+        public int? BodyID { get; set; }
         public bool? OnStation { get; set; }
         public bool? OnPlanet { get; set; }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
-            // TBD enhance
-            info = JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude) + BaseUtils.FieldBuilder.Build(", NPC Controlled;".T(EDTx.JournalEntry_NPCControlled), PlayerControlled, ", " + "Nearest: ".T(EDTx.JournalEntry_Nearest), NearestDestination_Localised);
+            info = JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude);
+            info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", Body, "NPC Controlled;".T(EDTx.JournalEntry_NPCControlled), PlayerControlled, 
+                                        "Nearest: ".T(EDTx.JournalEntry_Nearest), NearestDestination_Localised), ". ");
             detailed = "";
         }
     }
@@ -70,7 +71,7 @@ namespace EliteDangerousCore.JournalEvents
             StarSystem = evt["StarSystem"].StrNull();
             SystemAddress = evt["SystemAddress"].LongNull();
             Body = evt["Body"].StrNull();
-            BodyID = evt["BodyID"].LongNull();
+            BodyID = evt["BodyID"].IntNull();
             OnPlanet = evt["OnPlanet"].BoolNull();
             OnStation = evt["OnStation"].BoolNull();
         }
@@ -84,14 +85,15 @@ namespace EliteDangerousCore.JournalEvents
         public string StarSystem { get; set; }      //4.0 alpha 4 on
         public long? SystemAddress { get; set; }
         public string Body { get; set; }
-        public long? BodyID { get; set; }
+        public int? BodyID { get; set; }
         public bool? OnStation { get; set; }
         public bool? OnPlanet { get; set; }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            //TBD enhance
-            info = JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude) + BaseUtils.FieldBuilder.Build(", NPC Controlled;".T(EDTx.JournalEntry_NPCControlled), PlayerControlled, ", " + "Nearest: ".T(EDTx.JournalEntry_Nearest), NearestDestination_Localised);
+            info = JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude);
+            info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", Body, "NPC Controlled;".T(EDTx.JournalEntry_NPCControlled), PlayerControlled, 
+                                                                "Nearest: ".T(EDTx.JournalEntry_Nearest), NearestDestination_Localised), ". ");
             detailed = "";
         }
     }

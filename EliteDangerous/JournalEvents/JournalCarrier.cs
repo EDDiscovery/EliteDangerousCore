@@ -192,7 +192,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierDecommission)]
-    public class JournalCarrierDecommission : JournalEntry      // TBD Ledger
+    public class JournalCarrierDecommission : JournalEntry, ILedgerJournalEntry    
     {
         public long CarrierID { get; set; }
         public long ScrapRefund { get; set; }
@@ -214,6 +214,13 @@ namespace EliteDangerousCore.JournalEvents
                                                 );
             detailed = "";
         }
+
+        public void Ledger(Ledger mcl)
+        {
+            if (ScrapRefund > 0)
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "", ScrapRefund);
+        }
+
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierCancelDecommission)]

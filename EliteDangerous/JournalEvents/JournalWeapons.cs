@@ -60,7 +60,6 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
-    // TBD Write, Test
     [JournalEntryType(JournalTypeEnum.SellWeapon)]
     public class JournalSellWeapon : JournalEntry, IWeaponInformation
     {
@@ -81,7 +80,6 @@ namespace EliteDangerousCore.JournalEvents
         public string FriendlyName { get; set; }
         public long Price { get; set; }
         public ulong SuitModuleID { get; set; }
-        //TBD Class, WeaponMods
         public int Class { get; set; }
         public string[] WeaponMods { get; set; }    // may be null/empty
 
@@ -102,7 +100,7 @@ namespace EliteDangerousCore.JournalEvents
 
     }
 
-    // TBD Write, Test
+    // TBD Test
     [JournalEntryType(JournalTypeEnum.UpgradeWeapon)]
     public class JournalUpgradeWeapon : JournalEntry, IWeaponInformation
     {

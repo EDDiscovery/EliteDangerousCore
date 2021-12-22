@@ -1017,7 +1017,7 @@ SECTION JournalEntry
 .Scanned: "Scanned: " @
 .Discovered: "Discovered: " @
 .Loadout: "Loadout: " @
-.NPCControlled: ", NPC Controlled;" @
+.NPCControlled: "NPC Controlled;" @
 .Version: "Version: " @
 .Build: "Build: " @
 .Part: "Part: " @

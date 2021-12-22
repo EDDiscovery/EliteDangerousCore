@@ -209,7 +209,7 @@ namespace EliteDangerousCore.EDSM
                             double hdiff = vi.v.EventTimeUTC.Subtract(jfsd.EventTimeUTC).TotalHours;
                             if (hdiff >= -2 && hdiff <= 2 && hdiff == Math.Floor(hdiff))
                             {
-                                index = vi.i;       // same system, nearly same time.. TBD check
+                                index = vi.i;       // same system, nearly same time..
                                 break;
                             }
                         }

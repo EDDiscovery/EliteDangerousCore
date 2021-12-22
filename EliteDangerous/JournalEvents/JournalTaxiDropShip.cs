@@ -58,13 +58,24 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalDropshipDeploy(JObject evt) : base(evt, JournalTypeEnum.DropshipDeploy)
         {
+            StarSystem = evt["StarSystem"].Str();
+            SystemAddress = evt["SystemAddress"].LongNull();
+            Body = evt["StarSystem"].Str();
+            BodyID = evt["BodyID"].IntNull();
+            OnStation = evt["OnStation"].Bool();
+            OnPlanet = evt["OnPlanet"].Bool();
         }
 
-        // TBD more fields
+        public string StarSystem { get; set; }
+        public long? SystemAddress { get; set; }
+        public string Body { get; set; }
+        public int? BodyID { get; set; }
+        public bool OnStation { get; set; }
+        public bool OnPlanet { get; set; }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = "";//     info = BaseUtils.FieldBuilder.Build("", FriendlyType, "", Count, "< sell price ; cr;N0".T(EDTx.JournalEntry_sellprice), SellPrice, "Total Cost: ; cr;N0".T(EDTx.JournalEntry_TotalCost), TotalSale, "Profit: ; cr;N0".T(EDTx.JournalEntry_Profit), profit);
+            info = BaseUtils.FieldBuilder.Build("", Body);
             detailed = "";
         }
     }

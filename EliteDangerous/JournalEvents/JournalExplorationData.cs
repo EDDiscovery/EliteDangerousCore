@@ -134,7 +134,6 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
-    // TBD Write, Test
     [JournalEntryType(JournalTypeEnum.SellOrganicData)]
     public class JournalSellOrganicData : JournalEntry, ILedgerJournalEntry
     {
@@ -146,7 +145,7 @@ namespace EliteDangerousCore.JournalEvents
             if ( Bios!=null)
             {
                 foreach (var b in Bios)
-                    TotalValue = b.Value + b.Bonus;
+                    TotalValue += b.Value + b.Bonus;
             }
         }
 

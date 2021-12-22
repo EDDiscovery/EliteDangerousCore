@@ -274,7 +274,6 @@ namespace EliteDangerousCore
                                                         prev.TravelState == TravelStateType.OnFootPlanet ? TravelStateType.Landed:
                                                             TravelStateType.Docked,
                             BookedDropship = false,
-                            // update others tbd
                         };
                         break;
                     }
@@ -316,14 +315,16 @@ namespace EliteDangerousCore
                         TravelState = TravelStateType.Landed
                     };
                     break;
+                
                 case JournalTypeEnum.Touchdown:
-                    // tbd do something with Body etc
                     var td = (JournalTouchdown)je;
                     if (td.PlayerControlled == true)        // can get this when not player controlled
                     {
                         hes = new HistoryEntryStatus(prev)
                         {
                             TravelState = prev.TravelState == TravelStateType.MulticrewNormalSpace ? TravelStateType.MulticrewLanded : TravelStateType.Landed,
+                            BodyName = td.Body ?? prev.BodyName,
+                            BodyID = td.BodyID.HasValue ? td.BodyID.Value :prev.BodyID,
                         };
                     }
                     else
@@ -331,11 +332,10 @@ namespace EliteDangerousCore
                     break;
 
                 case JournalTypeEnum.Liftoff:
-                    // tbd do something with Body etc
                     var loff = (JournalLiftoff)je;
                     if (loff.PlayerControlled == true)         // can get this when not player controlled
                     {
-                        hes = new HistoryEntryStatus(prev)
+                        hes = new HistoryEntryStatus(prev)      // not going to use Body, since we must already have it.
                         {
                             TravelState = prev.TravelState == TravelStateType.MulticrewLanded ? TravelStateType.MulticrewNormalSpace : TravelStateType.NormalSpace,
                         };

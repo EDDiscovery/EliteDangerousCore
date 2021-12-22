@@ -73,7 +73,7 @@ namespace EliteDangerousCore
             foreach( var m in other)
             {
                 var o = Array.Find(other, x => m.SlotName.Equals(x.SlotName));
-                if (o == null || o.Class != m.Class || o.ModuleName != m.ModuleName)        // TBD Maybe more
+                if (o == null || o.Class != m.Class || o.ModuleName != m.ModuleName)      
                     return false;
             }
             return true;
@@ -174,7 +174,7 @@ namespace EliteDangerousCore
         {
             var loadoutstoremove = loadouts.GetLast(x => x.SuitID == suitid);       // all with this suit id
             foreach (var l in loadoutstoremove)
-                DeleteLoadout(time, l.Value.ID);      // TBD to test
+                DeleteLoadout(time, l.Value.ID);      
         }
 
         public void Equip(ulong id, string slotname, SuitLoadout.LoadoutModule weap)
