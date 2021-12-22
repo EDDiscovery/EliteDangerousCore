@@ -46,7 +46,7 @@ namespace EliteDangerousCore.ScreenShots
         public ScreenShotConfigureForm()
         {
             InitializeComponent();
-            var theme = ExtendedControls.ThemeableFormsInstance.Instance;
+            var theme = ExtendedControls.Theme.Current;
             bool winborder = theme.ApplyStd(this);
             panelTop.Visible = panelTop.Enabled = !winborder;
         }

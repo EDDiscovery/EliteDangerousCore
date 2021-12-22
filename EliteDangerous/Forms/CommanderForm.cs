@@ -38,7 +38,7 @@ namespace EliteDangerousCore.Forms
                 panelGroups.Controls.InsertRangeBefore(groupBoxCustomInara, additionalcontrols);
             }
 
-            var theme = ExtendedControls.ThemeableFormsInstance.Instance;
+            var theme = ExtendedControls.Theme.Current;
             bool winborder = theme.ApplyDialog(this);
             panelTop.Visible = panelTop.Enabled = !winborder;
 
