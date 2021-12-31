@@ -284,7 +284,7 @@ namespace EliteDangerousCore
                     EntryType = NameType.Named;
                 }
 
-                System.Diagnostics.Debug.Assert(ToString() == starname.Trim(),"ENC Non compare " + ToString() + " '" + starname + "'");        // double check conversion
+                System.Diagnostics.Debug.Assert(ToString().Trim() == starname.Trim(), $"ENC Non compare '{ToString()}' to '{starname}'");        // double check conversion
             }
         }
     }
