@@ -126,6 +126,10 @@ namespace EliteDangerousCore
                 if (jlg.IsHorizons == true)
                     TravelLogUnit.Type |= TravelLogUnit.HorizonsMarker;
 
+                JournalEntry.DefaultHorizonsFlag = jlg.IsHorizons;      // for made up entries without a TLU (EDSM downloads) assign the default flag
+                JournalEntry.DefaultOdysseyFlag = jlg.IsOdyssey;
+                JournalEntry.DefaultBetaFlag = jlg.IsBeta;
+
                 EDCommander commander = EDCommander.GetCommander(newname);
 
                 if (commander == null )

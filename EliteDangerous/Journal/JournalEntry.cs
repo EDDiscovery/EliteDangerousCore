@@ -54,9 +54,13 @@ namespace EliteDangerousCore
         public bool StartMarker { get { return (Synced & (int)SyncFlags.StartMarker) != 0; } }
         public bool StopMarker { get { return (Synced & (int)SyncFlags.StopMarker) != 0; } }
 
-        public virtual bool IsBeta { get { return TravelLogUnit.Get(TLUId)?.Beta ?? false; } }        // TLUs are cached via the dictionary, no point also holding a local copy
-        public virtual bool IsHorizons { get { return TravelLogUnit.Get(TLUId)?.Horizons ?? false; } }     
-        public virtual bool IsOdyssey { get { return TravelLogUnit.Get(TLUId)?.Odyssey ?? false; } }       
+        public virtual bool IsBeta { get { return TravelLogUnit.Get(TLUId)?.Beta ?? DefaultBetaFlag; } }        // TLUs are cached via the dictionary, no point also holding a local copy
+        public virtual bool IsHorizons { get { return TravelLogUnit.Get(TLUId)?.Horizons ?? DefaultHorizonsFlag; } }     
+        public virtual bool IsOdyssey { get { return TravelLogUnit.Get(TLUId)?.Odyssey ?? DefaultOdysseyFlag; } }
+
+        public static bool DefaultBetaFlag { get; set; } = false;
+        public static bool DefaultHorizonsFlag { get; set; } = false;       // for entries without a TLU (EDSM downloaded made up ones for instance) provide default value
+        public static bool DefaultOdysseyFlag { get; set; } = false;
 
         public abstract void FillInformation(ISystem sys, string whereami, out string info, out string detailed);     // all entries must implement
 
