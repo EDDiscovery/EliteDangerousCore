@@ -512,10 +512,10 @@ namespace EliteDangerousCore
                 bool wasnotpreviousmapped = wasmapped.HasValue && wasmapped == false;
 
                 if ( wasnotpreviousdiscovered && wasmapped == true && mapped == false)       // this is the situation pointed out in PR#31, discovered is there and false, but mapped is true and we didn't map it ourself
-                    return EstimatedValueFirstDiscovered;
+                    return EstimatedValueBase;
 
                 if (wasnotpreviousdiscovered && wasmapped == true && mapped == true)       // this is the situation pointed out in PR#31, discovered is there and false, but mapped is true and we mapped it ourself
-                    return efficientlymapped ? EstimatedValueFirstMappedEfficiently : EstimatedValueFirstMapped;
+                    return efficientlymapped ? EstimatedValueMappedEfficiently : EstimatedValueMapped;
 
                 // if def not discovered (flag is there) and not mapped (flag is there), and we mapped it
                 if (wasnotpreviousdiscovered && wasnotpreviousmapped && mapped)
