@@ -135,6 +135,22 @@ namespace EliteDangerousCore.Forms
             return update;
         }
 
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+            {
+                extPanelScroll.Dock = System.Windows.Forms.DockStyle.None;
+                panelOK.Dock = System.Windows.Forms.DockStyle.None;
+                int bh = 50;
+                int vsplit = ClientRectangle.Height - bh;
+                int width = ClientRectangle.Width;
+                extPanelScroll.Bounds = new System.Drawing.Rectangle(0, 0, width, vsplit);
+                panelOK.Bounds = new System.Drawing.Rectangle(0, vsplit, width, bh);
+
+            }
+        }
+
         #region UI
 
         private void Panel_defaultmapcolor_Click(object sender, EventArgs e)
