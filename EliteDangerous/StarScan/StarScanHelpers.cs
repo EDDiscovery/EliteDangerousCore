@@ -63,6 +63,7 @@ namespace EliteDangerousCore
 
         // bodyid can be null, bodyname must be set.
         // scan the history and try and find the best star system this bodyname is associated with
+        // find best system for scan.  Note startindex might be -1, if only 1 entry is in the list
 
         private static Tuple<string, ISystem> FindBestSystem(int startindex, List<HistoryEntry> hl, string bodyname, int? bodyid, bool isstar )
         {
@@ -89,6 +90,8 @@ namespace EliteDangerousCore
                     }
                 }
             }
+
+            startindex = Math.Max(0, startindex);       // if only 1 in list, startindex will be -1, so just pick first one
 
             return new Tuple<string, ISystem>(BodyDesignations.GetBodyDesignation(bodyname, bodyid, false, hl[startindex].System.Name), hl[startindex].System);
         }

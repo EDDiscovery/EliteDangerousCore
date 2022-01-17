@@ -564,7 +564,7 @@ namespace EliteDangerousCore.EDDN
 
         public JObject CreateEDDNOutfittingMessage(JournalOutfitting journal)
         {
-            if (journal.YardInfo.Items == null)
+            if (journal.YardInfo.Items == null || journal.YardInfo.Items.Length == 0)   // not allowed to send empty lists jan 21
                 return null;
 
             JObject msg = new JObject();
@@ -591,7 +591,7 @@ namespace EliteDangerousCore.EDDN
 
         public JObject CreateEDDNShipyardMessage(JournalShipyard journal)
         {
-            if (journal.Yard.Ships == null)
+            if (journal.Yard.Ships == null || journal.Yard.Ships.Length == 0) // not allowed to send empty lists jan 21
                 return null;
 
             JObject msg = new JObject();
@@ -720,7 +720,7 @@ namespace EliteDangerousCore.EDDN
 
         public JObject CreateEDDNCommodityMessage(List<CCommodities> commodities, bool odyssey, bool horizons, string systemName, string stationName, long? marketID, DateTime time)
         {
-            if (commodities == null || commodities.Count == 0)
+            if (commodities == null) // now allowed to send empty lists for FC purposes (jan 21)
                 return null;
                 
             JObject msg = new JObject();

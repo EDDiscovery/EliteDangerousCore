@@ -23,6 +23,7 @@ namespace EliteDangerousCore
 {
     public partial class StarScan
     {
+        // find best system for scan.  Note startindex might be -1, if only 1 entry is in the list
         public bool AddScanToBestSystem(JournalScan je, int startindex, List<HistoryEntry> hl, out HistoryEntry he, out JournalLocOrJump jl)
         {
             he = null;
@@ -60,7 +61,10 @@ namespace EliteDangerousCore
                 }
             }
 
+            startindex = Math.Max(0, startindex);       // if only 1 in list, startindex will be -1, so just pick first one
+
             je.BodyDesignation = BodyDesignations.GetBodyDesignation(je, hl[startindex].System.Name);
+
             return ProcessJournalScan(je, hl[startindex].System, true);         // no relationship, add..
         }
 
