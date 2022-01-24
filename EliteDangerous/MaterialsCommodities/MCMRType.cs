@@ -266,6 +266,7 @@ namespace EliteDangerousCore
             Shortname = shortn;
             Colour = cl;
             Rarity = rare;
+            //System.Diagnostics.Debug.WriteLine($"Added {FDName} {Name} {Shortname}");
         }
 
         private void SetCache()
@@ -643,7 +644,8 @@ namespace EliteDangerousCore
             AddCommodityList("Building Fabricators;Crop Harvesters;Emergency Power Cells;Exhaust Manifold;Geological Equipment", m);
             AddCommoditySN("HN Shock Mount", m, "HNSM", "");
             AddCommodityList("Mineral Extractors;Modular Terminals;Power Generators", m);
-            AddCommodityList("Thermal Cooling Units;Water Purifiers", m);
+            AddCommoditySN("Thermal Cooling Units", m, "TCU","");
+            AddCommoditySN("Water Purifiers", m, "WPURE", "");
             AddCommoditySN("Heatsink Interlink", m, "HSI", "");
             AddCommoditySN("Energy Grid Assembly", m, "EGA", "powergridassembly");
             AddCommoditySN("Radiation Baffle", m, "RB", "");

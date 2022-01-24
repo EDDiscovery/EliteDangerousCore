@@ -1120,47 +1120,63 @@ namespace EliteDangerousCore
 
             #region Tech broker
 
+            // inara, 10, 
+
+            // bobblehead - Don't have thargoid heart in list. 
             new EngineeringRecipe("Corrosion Resistant Cargo Rack Size 4 Class 1","Human","Cargo Rack","16MA,26Fe,18CM,22RB,12NFI"),
+            new EngineeringRecipe("Detailed Surface Scanner (Engineered V1)","Human","Surface Scanner", "22Ge,24Nb,28MC,26MS"),
             new EngineeringRecipe("Enzyme Missile Rack Fixed Medium","Human","Missile","16UKEC,18UKOC,16Mo,15W,6RB"),
+            new EngineeringRecipe("Engineered FSD V1 (Class 5)","Human","FSD","18DWEx,26Te,26EA,28CP"),
+            new EngineeringRecipe("Meta Alloy Hull Reinforcement Size 1 Class 1","Human","Hull Reinforcement","16MA,15FoC,22ASPA,20CCom,12RMP"),
+            new EngineeringRecipe("Mining Laser (Fixed Small)","Human","Mining Laser","16OSM,20As,24Re,28P"),
             new EngineeringRecipe("Flechette Launcher Fixed Medium","Human","Flechette","30Fe,24Mo,22Re,26Ge,8CMMC"),
             new EngineeringRecipe("Flechette Launcher Turret Medium","Human","Flechette","28Fe,28Mo,20Re,24Ge,10AM"),
-            new EngineeringRecipe("Frame Shift Drive (Engineered V1)","Human","FSD","26Te,26EA,28CP,18DWEx"),
+            new EngineeringRecipe("Engineered Seeker Missile Rack V1 (Fixed, Class 2)","Human","Missile","10OSM,16PRA,24CCe,26HC,28P"),
+
+            // Inara, 9, right column, correct
+            new EngineeringRecipe("Plasma Shock Cannon Fixed Large","Human","Shock Cannon","28V,26W,24Re,26Tc,8PC"),
+            new EngineeringRecipe("Plasma Shock Cannon Fixed Medium","Human","Shock Cannon","24V,26W,20Re,28Tc,6IOD"),
+            new EngineeringRecipe("Plasma Shock Cannon Fixed Small","Human","Shock Cannon","8V,10W,8Re,12Tc,4PC"),
+            new EngineeringRecipe("Plasma Shock Cannon Turret Large","Human","Shock Cannon","26V,28W,22Re,24Tc,10IOD"),
+            new EngineeringRecipe("Plasma Shock Cannon Turret Medium","Human","Shock Cannon","24V,22W,20Re,28Tc,8PTB"),
+            new EngineeringRecipe("Plasma Shock Cannon Turret Small","Human","Shock Cannon","8V,12W,10Re,10Tc,4IOD"),
+            new EngineeringRecipe("Plasma Shock Cannon Gimbal Large","Human","Shock Cannon","28V,24W,24Re,22Tc,12PTB"),
+            new EngineeringRecipe("Plasma Shock Cannon Gimbal Medium","Human","Shock Cannon","24V,22W,20Re,28Tc,10PC"),
+            new EngineeringRecipe("Plasma Shock Cannon Gimbal Small","Human","Shock Cannon","10V,11W,8Re,10Tc,4PTB"),
+
+            // Inara 9
+
             new EngineeringRecipe("Guardian FSD Booster  Size 1","Guardian","FSD","1GMBS,21GPCe,21GTC,24FoC,8HNSM"),
-            new EngineeringRecipe("Guardian Gauss Cannon Fixed Small","Guardian Weapons","Gauss Cannon","1GWBS,12GPC,12GSWC,15GSWP"),
-            new EngineeringRecipe("Guardian Gauss Cannon Fixed Medium","Guardian Weapons","Gauss Cannon","1GWBS,18GPCe,20GTC,15Mn,6MEC"),
             new EngineeringRecipe("Guardian Hull Reinforcement Size 1 Class 1","Guardian","Hull Reinforcement","1GMBS,21GSWC,16PBOD,16PGOD,12RMP"),
             new EngineeringRecipe("Guardian Hybrid Fighter V 1","Guardian","Fighter","1GMVB,25GPCe,26PEOD,18PBOD,25GTC"),
             new EngineeringRecipe("Guardian Hybrid Fighter V 2","Guardian","Fighter","1GMVB,25GPCe,26PEOD,18GSWC,25GTC"),
             new EngineeringRecipe("Guardian Hybrid Fighter V 3","Guardian","Fighter","1GMVB,25GPCe,26PEOD,18GSWP,25GTC"),
             new EngineeringRecipe("Guardian Module Reinforcement Size 1 Class 1","Guardian","Module","1GMBS,18GSWC,15PEOD,20GPC,9RMP"),
+            new EngineeringRecipe("Guardian Power Distributor  Size 1","Guardian","Power Distributor","1GMBS,20PAOD,24GPCe,18PA,6HSI"),
+            new EngineeringRecipe("Guardian Power Plant Size 2","Guardian","Power Plant","1GMBS,18GPC,21PEOD,15HRC,10EGA"),
+            new EngineeringRecipe("Guardian Shield Reinforcement Size 1 Class 1","Guardian","Shield Generator","1GMBS,17GPCe,20GTC,24PDOD,8DIS"),
+
+            // Inara 9 left
+            new EngineeringRecipe("Guardian Gauss Cannon Fixed Medium","Guardian Weapons","Gauss Cannon","1GWBS,18GPCe,20GTC,15Mn,6MEC"),
+            new EngineeringRecipe("Guardian Gauss Cannon Fixed Medium Modified","Guardian Weapons","Gauss Cannon","6TCU,18GPCe,20GTC,15Nb,1GWBS"),
+            new EngineeringRecipe("Guardian Gauss Cannon Fixed Small","Guardian Weapons","Gauss Cannon","1GWBS,12GPC,12GSWC,15GSWP"),
+            new EngineeringRecipe("Guardian Gauss Cannon Fixed Small Modified","Guardian Weapons","Gauss Cannon","12GPC,12GSWC,15GSWP,9Nb,1GWBS"),
             new EngineeringRecipe("Guardian Plasma Launcher Fixed Large","Guardian Weapons","Plasma Accelerator","1GWBS,28GPC,20GSWP,28Cr,10MWCH"),
             new EngineeringRecipe("Guardian Plasma Launcher Fixed Medium","Guardian Weapons","Plasma Accelerator","1GWBS,18GPC,16GSWP,14Cr,8MWCH"),
             new EngineeringRecipe("Guardian Plasma Launcher Fixed Small","Guardian Weapons","Plasma Accelerator","1GWBS,12GPCe,12GSWP,15GTC"),
             new EngineeringRecipe("Guardian Plasma Launcher Turret Large","Guardian Weapons","Plasma Accelerator","2GWBS,20GPC,24GSWP,26Cr,10AM"),
             new EngineeringRecipe("Guardian Plasma Launcher Turret Medium","Guardian Weapons","Plasma Accelerator","2GWBS,21GPC,20GSWP,16Cr,8AM"),
+
+            // Inara 9 right
             new EngineeringRecipe("Guardian Plasma Launcher Turret Small","Guardian Weapons","Plasma Accelerator","1GWBS,12GPCe,12GTC,15GSWP"),
-            new EngineeringRecipe("Guardian Power Distributor  Size 1","Guardian","Power Distributor","1GMBS,20PAOD,24GPCe,18PA,6HSI"),
-            new EngineeringRecipe("Guardian Power Plant Size 2","Guardian","Power Plant","1GMBS,18GPC,21PEOD,15HRC,10EGA"),
             new EngineeringRecipe("Guardian Shard Cannon Fixed Large","Guardian Weapons","Shard Cannon","1GWBS,20GSWC,28GTC,20C,18MCC"),
+            new EngineeringRecipe("Guardian Shard Cannon Fixed Medium Modified","Guardian Weapons","Shard Cannon","12PC,20GSWC,18GTC,14Ge,1GWBS"),
             new EngineeringRecipe("Guardian Shard Cannon Fixed Medium","Guardian Weapons","Shard Cannon","1GWBS,20GSWC,18GTC,14C,12PTB"),
+            new EngineeringRecipe("Guardian Shard Cannon Fixed Small Modified","Guardian Weapons","Shard Cannon","12GPC,12GSWC,15GSWP,6Ge,1GWBS"),
             new EngineeringRecipe("Guardian Shard Cannon Fixed Small","Guardian Weapons","Shard Cannon","1GWBS,12GPC,12GTC,15GSWP"),
             new EngineeringRecipe("Guardian Shard Cannon Turret Large","Guardian Weapons","Shard Cannon","2GWBS,20GSWC,26GTC,28C,12MCC"),
             new EngineeringRecipe("Guardian Shard Cannon Turret Medium","Guardian Weapons","Shard Cannon","2GWBS,16GSWC,20GTC,15C,12MCC"),
             new EngineeringRecipe("Guardian Shard Cannon Turret Small","Guardian Weapons","Shard Cannon","1GWBS,12GPC,15GTC,12GSWP"),
-            new EngineeringRecipe("Guardian Shield Reinforcement Size 1 Class 1","Guardian","Shield Generator","1GMBS,17GPCe,20GTC,24PDOD,8DIS"),
-            new EngineeringRecipe("Meta Alloy Hull Reinforcement Size 1 Class 1","Human","Hull Reinforcement","16MA,15FoC,22ASPA,20CCom,12RMP"),
-            new EngineeringRecipe("Plasma Shock Cannon Fixed Large","Human","Shock Cannon","28V,26W,24Re,26Tc,8PC"),
-            new EngineeringRecipe("Plasma Shock Cannon Fixed Medium","Human","Shock Cannon","24V,26W,20Re,28Tc,6IOD"),
-            new EngineeringRecipe("Plasma Shock Cannon Fixed Small","Human","Shock Cannon","8V,10W,8Re,12Tc,4PC"),
-            new EngineeringRecipe("Plasma Shock Cannon Gimbal Large","Human","Shock Cannon","28V,24W,24Re,22Tc,12PTB"),
-            new EngineeringRecipe("Plasma Shock Cannon Gimbal Medium","Human","Shock Cannon","24V,22W,20Re,28Tc,10PC"),
-            new EngineeringRecipe("Plasma Shock Cannon Gimbal Small","Human","Shock Cannon","10V,11W,8Re,10Tc,4PTB"),
-            new EngineeringRecipe("Plasma Shock Cannon Turret Large","Human","Shock Cannon","26V,28W,22Re,24Tc,10IOD"),
-            new EngineeringRecipe("Plasma Shock Cannon Turret Medium","Human","Shock Cannon","24V,22W,20Re,28Tc,8PTB"),
-            new EngineeringRecipe("Plasma Shock Cannon Turret Small","Human","Shock Cannon","8V,12W,10Re,10Tc,4IOD"),
-            new EngineeringRecipe("Engineered FSD V 1 ( Class : 5 )","Human","FSD","18DWEx,26Te,26EA,28CP"),
-            new EngineeringRecipe("Engineered Seeker Missile Rack V 1 ( Fixed ) ( Class : 2 )","Human","Missile","10OSM,16PRA,24CCe,26HC,28P"),
-
             #endregion
 
             #region Special Effects
