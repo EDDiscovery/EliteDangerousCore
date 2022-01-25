@@ -722,39 +722,51 @@ namespace EliteDangerousCore
             // Excel frontier data for 3.3 not in corolis yet..
             // mass guessed..
 
+  
             { "null", new ShipModule(-1,0, "Error in frontier journal - Null module", UnknownType ) },
 
-             { "hpt_cannon_turret_huge", new ShipModule(-1, 1, .9, "Cannon Turret Huge", "Cannon")},
-             { "hpt_plasmaburstcannon_fixed_medium", new ShipModule(-1, 1, 1.4, "Plasma Burst Cannon Fixed Medium", "Plasma Accelerator")},
-             { "hpt_pulselaserstealth_fixed_small", new ShipModule(-1, 1, .2, "Pulse Laser Stealth Fixed Small", "Pulse Laser")},
-             { "hpt_pulselaser_fixed_smallfree", new ShipModule(-1, 1, .4, "Pulse Laser Fixed Small Free", "Pulse Laser")},
-             { "int_codexscanner", new ShipModule(-1, 0, "Codex Scanner", "Codex")},
+            { "hpt_cannon_turret_huge", new ShipModule(-1, 1, .9, "Cannon Turret Huge", "Cannon")},
+            { "hpt_plasmaburstcannon_fixed_medium", new ShipModule(-1, 1, 1.4, "Plasma Burst Cannon Fixed Medium", "Plasma Accelerator")},
+            { "hpt_pulselaserstealth_fixed_small", new ShipModule(-1, 1, .2, "Pulse Laser Stealth Fixed Small", "Pulse Laser")},
+            { "hpt_pulselaser_fixed_smallfree", new ShipModule(-1, 1, .4, "Pulse Laser Fixed Small Free", "Pulse Laser")},
+            { "int_codexscanner", new ShipModule(-1, 0, "Codex Scanner", "Codex")},
 
-             // 3.6 missing modules from corolis
+            // 3.6 missing modules from corolis
 
-             { "hpt_dumbfiremissilerack_fixed_medium_advanced", new ShipModule(-1, 1, 1.2, "Dumbfire Missile Rack Fixed Medium Advanced", "Weapon")},
-             { "hpt_dumbfiremissilerack_fixed_small_advanced", new ShipModule(-1, 1, .4, "Dumbfire Missile Rack Fixed Small Advanced", "Weapon")},
-             { "hpt_guardiangauss_fixed_gdn_fighter", new ShipModule(-1, 1, 1, "Guardian Gauss Fixed GDN Fighter", "Weapon")},
-             { "hpt_guardianplasma_fixed_gdn_fighter", new ShipModule(-1, 1, 1, "Guardian Plasma Fixed GDN Fighter", "Weapon")},
-             { "hpt_guardianshard_fixed_gdn_fighter", new ShipModule(-1, 1, 1, "Guardian Shard Fixed GDN Fighter", "Weapon")},
-             { "hpt_multicannon_fixed_medium_advanced", new ShipModule(-1, 1, .5, "Multi Cannon Fixed Medium Advanced", "Weapon")},
-             { "hpt_multicannon_fixed_small_advanced", new ShipModule(-1, 1, .3, "Multi Cannon Fixed Small Advanced", "Weapon")},
-             { "int_corrosionproofcargorack_size2_class1", new ShipModule(-1, 0, "Corrosion Resistant Cargo Rack", "Internal Module")},            
+            { "hpt_dumbfiremissilerack_fixed_medium_advanced", new ShipModule(-1, 1, 1.2, "Dumbfire Missile Rack Fixed Medium Advanced", "Weapon")},
+            { "hpt_dumbfiremissilerack_fixed_small_advanced", new ShipModule(-1, 1, .4, "Dumbfire Missile Rack Fixed Small Advanced", "Weapon")},
+            { "hpt_guardiangauss_fixed_gdn_fighter", new ShipModule(-1, 1, 1, "Guardian Gauss Fixed GDN Fighter", "Weapon")},
+            { "hpt_guardianplasma_fixed_gdn_fighter", new ShipModule(-1, 1, 1, "Guardian Plasma Fixed GDN Fighter", "Weapon")},
+            { "hpt_guardianshard_fixed_gdn_fighter", new ShipModule(-1, 1, 1, "Guardian Shard Fixed GDN Fighter", "Weapon")},
+            { "hpt_multicannon_fixed_medium_advanced", new ShipModule(-1, 1, .5, "Multi Cannon Fixed Medium Advanced", "Weapon")},
+            { "hpt_multicannon_fixed_small_advanced", new ShipModule(-1, 1, .3, "Multi Cannon Fixed Small Advanced", "Weapon")},
+            { "int_corrosionproofcargorack_size2_class1", new ShipModule(-1, 0, "Corrosion Resistant Cargo Rack", "Internal Module")},
 
-            // SRV
-
-            { "scarab_armour_grade1", new ShipModule(-1,0,"SRV Armour","Armour")},
+            // SRV Both
             { "int_shieldgenerator_size0_class3" , new ShipModule(-1,0, "SRV Shields" , "Shield Generator" ) },
             { "int_sensors_surface_size1_class1" , new ShipModule(-1,0, "SRV Sensors" , "Sensors" ) },
-            { "vehicle_turretgun" , new ShipModule(-1,0, "SRV Turret" , "Pulse Laser" ) },
-            { "int_sinewavescanner_size1_class1" , new ShipModule(-1,0, "SRV Scanner" , "Sensors" ) },
-            { "int_powerdistributor_size0_class1" , new ShipModule(-1,0, "SRV Power Distributor" , "Power Distributor" ) },
+            { "buggycargobaydoor", new ShipModule( -1, 0 , "SRV Cargo Bay Door","Module") },
             { "hpt_datalinkscanner" , new ShipModule(-1,0, "SRV Data Link Scanner" , "Sensors" ) },
             { "int_lifesupport_size0_class1" , new ShipModule(-1,0, "SRV Life Support" , "Life Support" ) },
-            { "int_powerplant_size0_class1" , new ShipModule(-1,0, "SRV Powerplant" , "Powerplant" ) },
-            { "int_fueltank_size0_class3" , new ShipModule(-1,0, "SRV Fuel Tank" , "Fuel Tank" ) },
-            { "testbuggy_cockpit", new ShipModule( -1, 0 , "SRV Cockpit","Module") },
-            { "buggycargobaydoor", new ShipModule( -1, 0 , "SRV Cargo Bay Door","Module") },
+
+            // Scarab SRV
+
+            { "scarab_armour_grade1", new ShipModule(-1,0,"SRV Scarab Armour","Armour")},
+            { "vehicle_turretgun" , new ShipModule(-1,0, "SRV Scarab Turret" , "Pulse Laser" ) },
+            { "int_sinewavescanner_size1_class1" , new ShipModule(-1,0, "SRV Scarab Scanner" , "Sensors" ) },
+            { "int_powerdistributor_size0_class1" , new ShipModule(-1,0, "SRV Scarab Power Distributor" , "Power Distributor" ) },
+            { "int_powerplant_size0_class1" , new ShipModule(-1,0, "SRV Scarab Powerplant" , "Powerplant" ) },
+            { "int_fueltank_size0_class3" , new ShipModule(-1,0, "SRV Scarab Fuel Tank" , "Fuel Tank" ) },
+            { "testbuggy_cockpit", new ShipModule( -1, 0 , "SRV Scarab Cockpit","Module") },
+
+            // Scorpion SRV
+
+            { "int_powerdistributor_size0_class1_cms", new ShipModule(-1,0, "SRV Scorpion Power Distributor Size 0 Class 1 Cms", "Power Distributor" ) },
+            { "vehicle_scorpion_missilerack_lockon", new ShipModule(-1,0, "SRV Scorpion Missile Rack", "Missile Rack" ) },
+            { "vehicle_plasmaminigun_turretgun", new ShipModule(-1, 0, "SRV Scorpion Plasma Turret Gun", "Pulse Laser") },
+            { "combat_multicrew_srv_01_cockpit", new ShipModule(-1, 0, "SRV Scorpion Cockpit", "Module") },
+            { "int_powerplant_size0_class1_cms", new ShipModule(-1, 0, "SRV Scorpion Powerplant Size 0 Class 1 Cms", "Powerplant") },
+            { "int_fueltank_size0_class2", new ShipModule(-1, 0, "SRV Scopion Fuel tank Size 0 Class 2", "Fuel Tank") },
 
             // Repair items
             { "wear" , new ShipModule(-1,0, "Wear" ,  WearAndTearType ) },
