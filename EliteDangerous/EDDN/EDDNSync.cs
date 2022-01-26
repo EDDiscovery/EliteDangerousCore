@@ -33,16 +33,6 @@ namespace EliteDangerousCore.EDDN
 
         static public Action<int> SentEvents;       // called in thread when sync thread has finished and is terminating
 
-        public static bool SendEDDNEvent(Action<string> logger, HistoryEntry helist)
-        {
-            return SendEDDNEvents(logger, new[] { helist });
-        }
-
-        public static bool SendEDDNEvents(Action<string> logger, params HistoryEntry[] helist)
-        {
-            return SendEDDNEvents(logger, (IEnumerable<HistoryEntry>)helist);
-        }
-
         public static bool SendEDDNEvents(Action<string> log, IEnumerable<HistoryEntry> helist)
         {
             logger = log;
@@ -92,7 +82,7 @@ namespace EliteDangerousCore.EDDN
 
                         TimeSpan age = he.AgeOfEntry();
 
-                        if (age.Days >= 1 && he.EntryType != EliteDangerousCore.JournalTypeEnum.Scan)
+                        if (age.Days >= 1 )
                         {
                             System.Diagnostics.Debug.WriteLine("EDDN: Ignoring entry due to age");
                         }
@@ -146,22 +136,24 @@ namespace EliteDangerousCore.EDDN
             running = 0;
         }
 
-        static public bool? SendToEDDN(HistoryEntry he, bool debugonly = false)
+        // Send to test vectors it to the beta server
+        static public bool? SendToEDDN(HistoryEntry he, bool sendtotest = false)
         {
             EDDNClass eddn = new EDDNClass();
 
             if (he.Commander != null)
             {
-                eddn.commanderName = he.Commander.EdsmName;
-                if (string.IsNullOrEmpty(eddn.commanderName))
-                    eddn.commanderName = he.Commander.Name;
+                eddn.CommanderName = he.Commander.EdsmName;
+
+                if (string.IsNullOrEmpty(eddn.CommanderName))
+                    eddn.CommanderName = he.Commander.Name;
 
                 if (he.Commander.Name.StartsWith("[BETA]", StringComparison.InvariantCultureIgnoreCase))
-                    eddn.isBeta = true;
+                    eddn.IsBeta = true;
             }
 
-            if (he.journalEntry.IsBeta)
-                eddn.isBeta = true;
+            if (he.journalEntry.IsBeta || sendtotest )      
+                eddn.IsBeta = true;
 
             JournalEntry je = he.journalEntry;
 
@@ -214,12 +206,33 @@ namespace EliteDangerousCore.EDDN
                 JournalEDDCommodityPrices jm = je as JournalEDDCommodityPrices;
                 msg = eddn.CreateEDDNCommodityMessage(jm.Commodities, jm.IsOdyssey, jm.IsHorizons, jm.StarSystem, jm.Station, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned
             }
+            else if (je.EventTypeID == JournalTypeEnum.FSSDiscoveryScan)
+            {
+                msg = eddn.CreateEDDNFSSDiscoveryScan(je as JournalFSSDiscoveryScan, he.System);
+            }
+            else if (je.EventTypeID == JournalTypeEnum.CodexEntry)
+            {
+                msg = eddn.CreateEDDNCodexEntry(je as JournalCodexEntry, he.System);
+            }
+            else if (je.EventTypeID == JournalTypeEnum.NavBeaconScan)
+            {
+                msg = eddn.CreateEDDNNavBeaconScan(je as JournalNavBeaconScan, he.System);
+            }
+            else if (je.EventTypeID == JournalTypeEnum.NavRoute)
+            {
+                msg = eddn.CreateEDDNNavRoute(je as JournalNavRoute, he.System);
+            }
+            else if (je.EventTypeID == JournalTypeEnum.ScanBaryCentre)
+            {
+                msg = eddn.CreateEDDNScanBaryCentre(je as JournalScanBaryCentre, he.System);
+            }
 
             if (msg != null)
             {
-                System.Diagnostics.Debug.WriteLine("Send to EDDN " + msg.ToString(true));
+                if (sendtotest) // make sure it looks fresh if send to test
+                    msg["message"]["timestamp"] = DateTime.UtcNow.ToStringZuluInvariant();
 
-                if (!debugonly && eddn.PostMessage(msg) )
+                if (eddn.PostMessage(msg) )
                 {
                     he.journalEntry.SetEddnSync();
                     return true;

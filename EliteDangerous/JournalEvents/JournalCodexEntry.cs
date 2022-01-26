@@ -38,6 +38,8 @@ namespace EliteDangerousCore.JournalEvents
             IsNewEntry = evt["IsNewEntry"].BoolNull();
             NewTraitsDiscovered = evt["NewTraitsDiscovered"].BoolNull();
             NearestDestination = evt["NearestDestination"].StrNull();
+            if (!NearestDestination.HasChars())     // sometimes can be empty string
+                NearestDestination = null;
             NearestDestination_Localised = JournalFieldNaming.CheckLocalisation(evt["NearestDestination_Localised"].StrNull(), NearestDestination);
             if ( evt["Traits"] != null )
                 Traits = evt["Traits"].ToObjectQ<string[]>();
