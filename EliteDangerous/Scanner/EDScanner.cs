@@ -237,7 +237,8 @@ namespace EliteDangerousCore
 
         public void ParseJournalFilesOnWatchers(Action<int, string> updateProgress,
                                                 DateTime minjournaldateutc, int reloadlastn,
-                                                Action<JournalEntry, int, int, int, int> firebacknostore = null, int firebacklastn = 0)
+                                                Action<JournalEntry, int, int, int, int> firebacknostore = null, int firebacklastn = 0,
+                                                EventWaitHandle closerequested = null)
         {
             System.Diagnostics.Debug.Assert(ScanThread == null);        // double check we are not scanning.
 
@@ -245,7 +246,7 @@ namespace EliteDangerousCore
             {
                 // may create new commanders at the end, but won't need any new watchers, because they will obv be in the same folder
                 var list = watchers[i].ScanJournalFiles(minjournaldateutc,reloadlastn);
-                watchers[i].ProcessDetectedNewFiles(list, updateProgress, firebacknostore, firebacklastn);
+                watchers[i].ProcessDetectedNewFiles(list, updateProgress, firebacknostore, firebacklastn, closerequested);
             }
         }
 

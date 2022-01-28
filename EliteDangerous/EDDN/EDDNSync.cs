@@ -226,6 +226,14 @@ namespace EliteDangerousCore.EDDN
             {
                 msg = eddn.CreateEDDNScanBaryCentre(je as JournalScanBaryCentre, he.System);
             }
+            else if (je.EventTypeID == JournalTypeEnum.ApproachSettlement)
+            {
+               // msg = eddn.CreateEDDNApproachSettlement(je as JournalApproachSettlement, he.System);      // hold off until on main server
+            }
+            else if (je.EventTypeID == JournalTypeEnum.FSSAllBodiesFound)
+            {
+                // msg = eddn.CreateEDDNFSSAllBodiesFound(je as JournalFSSAllBodiesFound, he.System);
+            }
 
             if (msg != null)
             {

@@ -44,6 +44,8 @@ namespace EliteDangerousCore.EDDN
         private readonly string NavBeaconSchema = "https://eddn.edcd.io/schemas/navbeaconscan/1";
         private readonly string NavRouteSchema = "https://eddn.edcd.io/schemas/navroute/1";
         private readonly string ScanBarycentreSchema = "https://eddn.edcd.io/schemas/scanbarycentre/1";
+        private readonly string ApproachSettlementSchema = "https://eddn.edcd.io/schemas/approachsettlement/1";
+        private readonly string FSSAllBodiesFoundSchema = "https://eddn.edcd.io/schemas/fssallbodiesfound/1";
         public EDDNClass()
         {
             var assemblyFullName = Assembly.GetEntryAssembly().FullName;
@@ -79,7 +81,8 @@ namespace EliteDangerousCore.EDDN
                  EntryType == JournalTypeEnum.CodexEntry ||
                  EntryType == JournalTypeEnum.NavBeaconScan ||
                  EntryType == JournalTypeEnum.NavRoute ||
-                 EntryType == JournalTypeEnum.ScanBaryCentre
+                 EntryType == JournalTypeEnum.FSSAllBodiesFound ||
+                 EntryType == JournalTypeEnum.ApproachSettlement 
                  );
         }
 
@@ -809,6 +812,45 @@ namespace EliteDangerousCore.EDDN
             message["StarPos"] = new JArray(new float[] { (float)system.X, (float)system.Y, (float)system.Z });
             message["odyssey"] = sbc.IsOdyssey;
             message["horizons"] = sbc.IsHorizons;
+
+            msg["message"] = message;
+            return msg;
+        }
+
+        public JObject CreateEDDNFSSAllBodiesFound(JournalFSSAllBodiesFound fabf, ISystem system)
+        {
+            JObject msg = new JObject();
+            msg["header"] = Header();
+            msg["$schemaRef"] = FSSAllBodiesFoundSchema;
+
+            JObject message = fabf.GetJsonCloned();
+
+            if (message == null)
+                return null;
+
+            message["odyssey"] = fabf.IsOdyssey;
+            message["horizons"] = fabf.IsHorizons;
+            message["StarPos"] = new JArray(new float[] { (float)system.X, (float)system.Y, (float)system.Z });
+
+            msg["message"] = message;
+            return msg;
+        }
+
+        public JObject CreateEDDNApproachSettlement(JournalApproachSettlement ap, ISystem system)
+        {
+            JObject msg = new JObject();
+            msg["header"] = Header();
+            msg["$schemaRef"] = ApproachSettlementSchema;
+
+            JObject message = ap.GetJsonCloned();
+
+            if (message == null)
+                return null;
+
+            message["odyssey"] = ap.IsOdyssey;
+            message["horizons"] = ap.IsHorizons;
+            message["StarSystem"] = system.Name;
+            message["StarPos"] = new JArray(new float[] { (float)system.X, (float)system.Y, (float)system.Z });
 
             msg["message"] = message;
             return msg;
