@@ -34,7 +34,7 @@ namespace EliteDangerousCore.DB
             DBWrite(cn => { registrycreated = cn.CreateRegistry(); });
 
             if (registrycreated)
-                ClearDownConnections();         // to stop the schema problem
+                ClearDownRestart();         // to stop the schema problem
             
             int dbno = 0;
             DBWrite(cn => 
@@ -44,7 +44,7 @@ namespace EliteDangerousCore.DB
             
             if (dbno > 0)
             {
-                ClearDownConnections();         // to stop the schema problem
+                ClearDownRestart();         // to stop the schema problem
                 DBWrite(cn =>
                 {
                     SQLExtRegister reg = new SQLExtRegister(cn);
@@ -146,6 +146,12 @@ namespace EliteDangerousCore.DB
             });
         }
 
-
+        public void ClearJournals()
+        {
+            DBWrite(db =>
+            {
+                db.ClearJournal();
+            });
+        }
     }
 }

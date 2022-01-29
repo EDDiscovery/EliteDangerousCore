@@ -36,7 +36,7 @@ namespace EliteDangerousCore.DB
             DBWrite(cn => { registrycreated = cn.CreateRegistry(); });
 
             if (registrycreated)
-                ClearDownConnections();         // to stop the schema problem
+                ClearDownRestart();         // to stop the schema problem
 
             int dbno = 0;
 
@@ -48,7 +48,7 @@ namespace EliteDangerousCore.DB
 
             if ( dbno > 0 )
             {
-                ClearDownConnections();         // to stop the schema problem
+                ClearDownRestart();         // to stop the schema problem
                 DBWrite(cn =>
                 {
                     SQLExtRegister reg = new SQLExtRegister(cn);
@@ -104,7 +104,7 @@ namespace EliteDangerousCore.DB
                     RebuildRunning = false;
                 });
 
-                ClearDownConnections();             // tables have changed, clear all connections down
+                ClearDownRestart();             // tables have changed, clear all connections down
 
                 SetLastEDSMRecordTimeUTC(maxdate);          // record last data stored in database
 

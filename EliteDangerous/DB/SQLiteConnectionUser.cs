@@ -414,5 +414,16 @@ namespace EliteDangerousCore.DB
 
             ExecuteNonQueries(queries);
         }
+
+        public void ClearJournal()
+        {
+            string[] queries = new[]
+            {
+                "DELETE from JournalEntries",
+                "DELETE FROM TravelLogUnit",
+            };
+
+            ExecuteNonQueries(queries);
+        }
     }
 }
