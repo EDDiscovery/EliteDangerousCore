@@ -14,7 +14,7 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
-using BaseUtils.JSON;
+using QuickJSON;
 using System.IO;
 using System.Data.Common;
 using System.Collections.Generic;
@@ -56,7 +56,7 @@ namespace EliteDangerousCore.DB
                         deletesystemcmd = cn.CreateDelete("Systems", "edsmid=@edsmid", paras: new string[] { "edsmid:int64" }, tx: txn);
                         insertCmd = cn.CreateReplace("Aliases", paras: new string[] { "edsmid:int64", "edsmid_mergedto:int64", "name:string" }, tx: txn);
 
-                        var parser = new BaseUtils.StringParserQuickTextReader(textreader, 32768);
+                        var parser = new QuickJSON.Utils.StringParserQuickTextReader(textreader, 32768);
                         var enumerator = JToken.ParseToken(parser, JToken.ParseOptions.None).GetEnumerator();
 
                         try
@@ -72,7 +72,7 @@ namespace EliteDangerousCore.DB
 
                                 if (t.IsObject)
                                 {
-                                    enumerator.Load();          // load all objects associated with the entry
+                                    JToken.LoadTokens(enumerator);
                                     JObject jo = t as JObject;
 
                                     long edsmid = jo["id"].Long();

@@ -14,7 +14,7 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
-using BaseUtils.JSON;
+using QuickJSON;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -121,7 +121,7 @@ namespace EliteDangerousCore.DB
                 {
                 }
 #endif
-                var parser = new BaseUtils.StringParserQuickTextReader(textreader, 32768);
+                var parser = new QuickJSON.Utils.StringParserQuickTextReader(textreader, 32768);
                 var enumerator = JToken.ParseToken(parser, JToken.ParseOptions.None).GetEnumerator();       // Parser may throw note
 
                 while (true)

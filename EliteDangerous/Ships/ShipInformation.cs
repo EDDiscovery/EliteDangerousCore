@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EliteDangerousCore.JournalEvents;
-using BaseUtils.JSON;
+using QuickJSON;
 
 namespace EliteDangerousCore
 {

@@ -15,7 +15,7 @@
  */
 
 using EliteDangerousCore;
-using BaseUtils.JSON;
+using QuickJSON;
 using System.Linq;
 using System;
 

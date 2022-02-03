@@ -341,7 +341,7 @@ namespace EliteDangerousCore
                                 {
                                     //foreach (var x in existing[jre.EventTimeUTC]) { System.Diagnostics.Trace.WriteLine(string.Format(" passed vs {0} Deepequals {1}", x.GetJson().ToString(), x.GetJson().DeepEquals(jre.GetJson()))); }
 
-                                    BaseUtils.JSON.JObject jo = jre.GetJson(cn, tn);
+                                    QuickJSON.JObject jo = jre.GetJson(cn, tn);
                                     jre.Add(jo, cn, tn);
 
                                     //System.Diagnostics.Trace.WriteLine(string.Format("Write Journal to db {0} {1}", jre.EventTimeUTC, jre.EventTypeStr));

@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Data.Common;
-using BaseUtils.JSON;
+using QuickJSON;
 
 namespace EliteDangerousCore
 {

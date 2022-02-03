@@ -162,7 +162,7 @@ namespace EliteDangerousCore.EDDN
                 je = JournalEntry.Get(he.Journalid);
             }
 
-            BaseUtils.JSON.JObject msg = null;
+            QuickJSON.JObject msg = null;
 
             if (je.EventTypeID == JournalTypeEnum.FSDJump)
             {
