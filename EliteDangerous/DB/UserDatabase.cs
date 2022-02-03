@@ -27,9 +27,31 @@ namespace EliteDangerousCore.DB
 
         public static UserDatabase Instance { get; } = new UserDatabase();
 
+        // will throw on error, cope with it.
         public void Initialize()
         {
-            DBWrite(cn => { cn.UpgradeUserDB(); });
+            bool registrycreated = false;
+            DBWrite(cn => { registrycreated = cn.CreateRegistry(); });
+
+            if (registrycreated)
+                ClearDownRestart();         // to stop the schema problem
+            
+            int dbno = 0;
+            DBWrite(cn => 
+            { 
+                dbno = cn.UpgradeUserDB(); 
+            });
+            
+            if (dbno > 0)
+            {
+                ClearDownRestart();         // to stop the schema problem
+                DBWrite(cn =>
+                {
+                    SQLExtRegister reg = new SQLExtRegister(cn);
+                    reg.PutSetting("DBVer", dbno);
+                });
+            }
+
         }
 
         protected override SQLiteConnectionUser CreateConnection()
@@ -124,6 +146,12 @@ namespace EliteDangerousCore.DB
             });
         }
 
-
+        public void ClearJournals()
+        {
+            DBWrite(db =>
+            {
+                db.ClearJournal();
+            });
+        }
     }
 }

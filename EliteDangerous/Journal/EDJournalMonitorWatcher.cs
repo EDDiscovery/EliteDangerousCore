@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace EliteDangerousCore
 {
@@ -292,11 +293,16 @@ namespace EliteDangerousCore
         // given a list of files to reparse, read them and store to db or fire them back (and set firebacklastn to make it work)
 
         public void ProcessDetectedNewFiles(List<EDJournalReader> readersToUpdate,  Action<int, string> updateProgress, 
-                                            Action<JournalEntry, int,int,int,int> fireback = null, int firebacklastn = 0)
+                                            Action<JournalEntry, int,int,int,int> fireback = null, int firebacklastn = 0,
+                                            EventWaitHandle closerequested = null
+                                            )
         {
             for (int i = 0; i < readersToUpdate.Count; i++)
             {
+                if (closerequested?.WaitOne(0) ?? false)
+                    break;
                 EDJournalReader reader = readersToUpdate[i];
+                //System.Diagnostics.Debug.WriteLine($"Processing {reader.FullName}");
 
                 List<JournalEntry> entries = new List<JournalEntry>();
                 List<UIEvent> uievents = new List<UIEvent>();

@@ -29,13 +29,32 @@ namespace EliteDangerousCore.DB
 
         public static SystemsDatabase Instance { get; } = new SystemsDatabase();        //STATIC constructor, make once at start of program
 
+        // will throw on error, cope with it.
         public void Initialize()
         {
-            DBWrite(cn => 
+            bool registrycreated = false;
+            DBWrite(cn => { registrycreated = cn.CreateRegistry(); });
+
+            if (registrycreated)
+                ClearDownRestart();         // to stop the schema problem
+
+            int dbno = 0;
+
+            DBWrite(cn =>
             {
-                cn.UpgradeSystemsDB();
+                dbno = cn.UpgradeSystemsDB();
                 RebuildRunning = false;
             });
+
+            if ( dbno > 0 )
+            {
+                ClearDownRestart();         // to stop the schema problem
+                DBWrite(cn =>
+                {
+                    SQLExtRegister reg = new SQLExtRegister(cn);
+                    reg.PutSetting("DBVer", dbno);
+                });
+            }
         }
 
         const string TempTablePostfix = "temp"; // postfix for temp tables
@@ -66,19 +85,26 @@ namespace EliteDangerousCore.DB
                 {
                     RebuildRunning = true;
 
+                    System.Diagnostics.Debug.WriteLine($"{Environment.TickCount} Removing old data");
                     reportProgress?.Invoke("Remove old data");
                     conn.DropStarTables();     // drop the main ones - this also kills the indexes
 
+                    System.Diagnostics.Debug.WriteLine($"{Environment.TickCount} Renaming tables");
+
                     conn.RenameStarTables(TempTablePostfix, "");     // rename the temp to main ones
 
+                    System.Diagnostics.Debug.WriteLine($"{Environment.TickCount} Shrinking DB");
                     reportProgress?.Invoke("Shrinking database");
                     conn.Vacuum();
 
+                    System.Diagnostics.Debug.WriteLine($"{Environment.TickCount} Creating indexes");
                     reportProgress?.Invoke("Creating indexes");
                     conn.CreateSystemDBTableIndexes();
 
                     RebuildRunning = false;
                 });
+
+                ClearDownRestart();             // tables have changed, clear all connections down
 
                 SetLastEDSMRecordTimeUTC(maxdate);          // record last data stored in database
 

@@ -29,17 +29,17 @@ namespace EliteDangerousCore.DB
 
         const string tablepostfix = "temp"; // postfix for temp tables
 
-        public bool UpgradeSystemsDB()
+        // will throw on error
+        // returns 0 DB was good, else version number
+        public int UpgradeSystemsDB()
         {
-            try
+            // BE VERY careful with connections when creating/deleting tables - you end up with SQL Schema errors or it not seeing the table
+
+            SQLExtRegister reg = new SQLExtRegister(this);
+            int dbver = reg.GetSetting("DBVer", (int)0);      // use reg, don't use the built in func as they create new connections and confuse the schema
+
+            if (dbver < 210)
             {
-                ExecuteNonQuery("CREATE TABLE IF NOT EXISTS Register (ID TEXT PRIMARY KEY NOT NULL, ValueInt INTEGER, ValueDouble DOUBLE, ValueString TEXT, ValueBlob BLOB)");
-
-                // BE VERY careful with connections when creating/deleting tables - you end up with SQL Schema errors or it not seeing the table
-
-                SQLExtRegister reg = new SQLExtRegister(this);
-                int dbver = reg.GetSetting("DBVer", (int)0);      // use reg, don't use the built in func as they create new connections and confuse the schema
-
                 ExecuteNonQueries(new string[]                  // always set up
                     {
                     "DROP TABLE IF EXISTS Distances",
@@ -54,9 +54,9 @@ namespace EliteDangerousCore.DB
 
                 var tablesql = this.SQLMasterQuery("table");
                 int index = tablesql.FindIndex(x => x.TableName == "Systems");
-                bool oldsystems = index >=0 && tablesql[index].SQL.Contains("commandercreate");
+                bool oldsystems = index >= 0 && tablesql[index].SQL.Contains("commandercreate");
 
-                if ( dbver < 200 || oldsystems)
+                if (dbver < 200 || oldsystems)
                 {
                     ExecuteNonQueries(new string[]             // always kill these old tables 
                     {
@@ -79,24 +79,13 @@ namespace EliteDangerousCore.DB
                 CreateSystemDBTableIndexes();           // ensure they are there 
                 DropStarTables(tablepostfix);         // clean out any temp tables half prepared 
 
-                //    conn.Vacuum();  // debug
-
-                if (dbver < 200)
-                {
-                    reg.PutSetting("DBVer", (int)200);
-                }
-
-                return true;
+                return 210;
             }
-            catch (Exception ex)
-            {
-                System.Windows.Forms.MessageBox.Show("UpgradeSystemsDB error: " + ex.Message + Environment.NewLine + ex.StackTrace);
-                return false;
-            }
+            else
+                return 0;
         }
 
         #endregion
-
 
         #region Helpers
 
