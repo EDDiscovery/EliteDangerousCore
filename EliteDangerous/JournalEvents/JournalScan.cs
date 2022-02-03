@@ -210,8 +210,8 @@ namespace EliteDangerousCore.JournalEvents
             Mapped = m; EfficientMapped = e;
         }
 
-        public int EstimatedValue { get { return GetEstimatedValues().EstimatedValue(WasDiscovered, WasMapped, Mapped, EfficientMapped); } }     // Direct access to its current EstimatedValue, provides backwards compatibility for code and action packs.
-        public int MaximumEstimatedValue { get { return GetEstimatedValues().EstimatedValue(WasDiscovered, WasMapped, true, true); } }     // Direct access to its current EstimatedValue, provides backwards compatibility for code and action packs.
+        public int EstimatedValue { get { return GetEstimatedValues().EstimatedValue(WasDiscovered, WasMapped, Mapped, EfficientMapped, IsEDSMBody); } }     // Direct access to its current EstimatedValue, provides backwards compatibility for code and action packs.
+        public int MaximumEstimatedValue { get { return GetEstimatedValues().EstimatedValue(WasDiscovered, WasMapped, true, true,false); } }     // Direct access to its current EstimatedValue, provides backwards compatibility for code and action packs.
 
         public int HasSameParents(JournalScan other)     // return -1 if not, or index of last match , 0,1,2
         {
@@ -801,7 +801,7 @@ namespace EliteDangerousCore.JournalEvents
 
             ScanEstimatedValues ev = GetEstimatedValues();
 
-            scanText.AppendFormat("Current value: {0:N0}".T(EDTx.JournalScan_CV) + "\n", ev.EstimatedValue(WasDiscovered, WasMapped, Mapped, EfficientMapped));
+            scanText.AppendFormat("Current value: {0:N0}".T(EDTx.JournalScan_CV) + "\n", ev.EstimatedValue(WasDiscovered, WasMapped, Mapped, EfficientMapped, IsEDSMBody));
 
             if (ev.EstimatedValueFirstDiscoveredFirstMapped > 0 && (!WasDiscovered.HasValue || !WasDiscovered.Value))  // if we don't know, or its not discovered
             {
