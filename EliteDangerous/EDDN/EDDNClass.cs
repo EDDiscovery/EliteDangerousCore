@@ -769,9 +769,9 @@ namespace EliteDangerousCore.EDDN
             message["System"] = system.Name;
 
             JObject orgmsg = cx.GetJson();
-            if (orgmsg["EDDBodyID"] != null)
+            if (orgmsg["EDDBodyID"].Int(-1) != -1)
                 message["BodyID"] = orgmsg["EDDBodyID"];
-            if (orgmsg["EDDBodyName"] != null)
+            if (orgmsg["EDDBodyName"].StrNull() != null)
                 message["BodyName"] = orgmsg["EDDBodyName"];
             msg["message"] = message;
             return msg;
