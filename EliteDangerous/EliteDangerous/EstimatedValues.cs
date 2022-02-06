@@ -514,10 +514,11 @@ namespace EliteDangerousCore
                 bool wasnotpreviousdiscovered = wasdiscovered.HasValue && wasdiscovered == false;
                 bool wasnotpreviousmapped = wasmapped.HasValue && wasmapped == false;
 
-                if ( wasnotpreviousdiscovered && wasmapped == true && mapped == false)       // this is the situation pointed out in PR#31, discovered is there and false, but mapped is true and we didn't map it ourself
+                // the next two cope with the situation in PR#31, where we have a body with previousdiscovered = false but previouslymapped = true.
+                if ( wasnotpreviousdiscovered && wasmapped == true && mapped == false)       // we did not map it
                     return EstimatedValueBase;
 
-                if (wasnotpreviousdiscovered && wasmapped == true && mapped == true)       // this is the situation pointed out in PR#31, discovered is there and false, but mapped is true and we mapped it ourself
+                if (wasnotpreviousdiscovered && wasmapped == true && mapped == true)       // we did map it
                     return efficientlymapped ? EstimatedValueMappedEfficiently : EstimatedValueMapped;
 
                 // if def not discovered (flag is there) and not mapped (flag is there), and we mapped it
