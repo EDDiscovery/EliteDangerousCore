@@ -22,10 +22,6 @@ namespace EliteDangerousCore.DLL
 {
     static public class EDDDLLCallerHE
     {
-        //
-        //
-        //var ml = 
-
         static public EDDDLLInterfaces.EDDDLLIF.JournalEntry CreateFromHistoryEntry(EliteDangerousCore.HistoryList hl, EliteDangerousCore.HistoryEntry he,
                                                                                      bool storedflag = false)
         {
@@ -38,6 +34,22 @@ namespace EliteDangerousCore.DLL
                                               hl.MissionListAccumulator.GetAllCurrentMissions(he.MissionList, he.EventTimeUTC),
                                               hl.Count,
                                               storedflag);
+        }
+
+        // EDDLite uses this
+        static public EDDDLLInterfaces.EDDDLLIF.JournalEntry CreateFromHistoryEntry(EliteDangerousCore.HistoryEntry he, List<MaterialCommodityMicroResource> list,
+                                                                                      List<MissionState> missionlist,
+                                                                                      bool storedflag = false)
+        {
+            if (he == null)
+                return new EDDDLLInterfaces.EDDDLLIF.JournalEntry() { ver = 3, indexno = -1 };
+            else
+            {
+                var mats = list.Where(x => x.Details.IsMaterial).OrderBy(x => x.Details.Type).ToList();
+                var commods = list.Where(x => x.Details.IsCommodity).OrderBy(x => x.Details.Type).ToList();
+                var mr = list.Where(x => x.Details.IsMicroResources).OrderBy(x => x.Details.Type).ToList();
+                return CreateFromHistoryEntry(he, mats, commods, mr, missionlist, 0, storedflag);
+            }
         }
 
         static private EDDDLLInterfaces.EDDDLLIF.JournalEntry CreateFromHistoryEntry(EliteDangerousCore.HistoryEntry he,
