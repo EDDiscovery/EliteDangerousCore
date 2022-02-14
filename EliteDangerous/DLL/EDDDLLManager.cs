@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2020 EDDiscovery development team
+ * Copyright © 2015 - 2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -17,14 +17,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
 
 namespace EliteDangerousCore.DLL
 {
-    public class EDDDLLManager
+    public partial class EDDDLLManager
     {
         public int Count { get { return DLLs.Count; } }
         public List<EDDDLLCaller> DLLs { get; private set; } = new List<EDDDLLCaller>();
@@ -35,15 +33,17 @@ namespace EliteDangerousCore.DLL
         // all Csharp assembly DLLs are loaded - only ones implementing *EDDClass class causes it to be added to the DLL list
         // only normal DLLs implementing EDDInitialise are kept loaded
 
-        public Tuple<string, string, string,string> Load(string[] dlldirectories, bool[] disallowautomatically, string ourversion, string[] inoptions, 
-                                EDDDLLInterfaces.EDDDLLIF.EDDCallBacks callbacks, ref string alloweddisallowed)
+        public Tuple<string, string, string, string> Load(string[] dlldirectories, bool[] disallowautomatically, string ourversion, string[] inoptions,
+                                EDDDLLInterfaces.EDDDLLIF.EDDCallBacks callbacks, ref string alloweddisallowed,
+                                Func<string, string> getconfig, Action<string, string> setconfig
+                                )
         {
             string loaded = "";
             string failed = "";
             string disabled = "";
             string newdlls = "";
 
-            for (int i = 0 ; i < dlldirectories.Length; i++)
+            for (int i = 0; i < dlldirectories.Length; i++)
             {
                 var dlldirectory = dlldirectories[i];
 
@@ -72,7 +72,7 @@ namespace EliteDangerousCore.DLL
                             bool isdisallowed = allowedfiles.Contains("-" + f.FullName, StringComparer.InvariantCultureIgnoreCase) ||      // full name is now used
                                                 allowedfiles.Contains("-" + filename, StringComparer.InvariantCultureIgnoreCase);              // filename previously used
 
-                            if ( isdisallowed )     // disallowed
+                            if (isdisallowed)     // disallowed
                             {
                                 disabled = disabled.AppendPrePad(f.FullName, ",");
                             }
@@ -82,6 +82,13 @@ namespace EliteDangerousCore.DLL
                                 {
                                     if (caller.Init(ourversion, inoptions, dlldirectory, callbacks))       // must init
                                     {
+                                        if (caller.HasConfig())
+                                        {
+                                            string cfg = getconfig(caller.Name);
+                                            string res = caller.Config(cfg, false);  // pass in config, save config, don't edit
+                                            setconfig(caller.Name, res);
+                                        }
+
                                         DLLs.Add(caller);
                                         loaded = loaded.AppendPrePad(filename, ",");        // just use short name for reporting
                                     }
@@ -117,7 +124,7 @@ namespace EliteDangerousCore.DLL
                 }
             }
 
-            return new Tuple<string, string, string,string>(loaded, failed, newdlls,disabled);
+            return new Tuple<string, string, string, string>(loaded, failed, newdlls, disabled);
         }
 
         public void UnLoad()
@@ -209,67 +216,6 @@ namespace EliteDangerousCore.DLL
             else
                 return new Tuple<bool, string, string>(false, caller.Name, r.Mid(1));
         }
-
-
-        // present and allow alloweddisallowed string to be edited. null if cancel
-
-        public static string DLLPermissionManager(Form form, Icon icon, string alloweddisallowed)
-        {
-            string[] allowedfiles = alloweddisallowed.Split(',');
-
-            ExtendedControls.ConfigurableForm f = new ExtendedControls.ConfigurableForm();
-
-            int width = 400;
-            int margin = 20;
-            int vpos = 30;
-
-            foreach (string setting in allowedfiles)
-            {
-                if (setting.Length >= 2)    // double check
-                {
-                    string name = setting.Substring(1);
-                    f.Add(new ExtendedControls.ConfigurableForm.Entry(name, typeof(ExtendedControls.ExtCheckBox), name, new Point(margin, vpos), new Size(width - margin - 20, 20), null) { checkboxchecked = setting[0] == '+' });
-                    vpos += 30;
-                }
-            }
-
-            f.Add(new ExtendedControls.ConfigurableForm.Entry("CALL", typeof(ExtendedControls.ExtButton), "Remove All".Tx(), new Point(margin, vpos), new Size(100, 20),null));
-            f.AddOK(new Point(width - margin - 100, vpos), "OK".Tx());
-            f.AddCancel(new Point(width - margin - 200, vpos), "Cancel".Tx());
-
-            f.Trigger += (dialogname, controlname, xtag) =>
-            {
-                if (controlname == "OK")
-                {
-                    f.ReturnResult(DialogResult.OK);
-                }
-                else if (controlname == "CALL")
-                {
-                    f.ReturnResult(DialogResult.Abort);
-                }
-                else if (controlname == "Cancel" || controlname == "Close")
-                {
-                    f.ReturnResult(DialogResult.Cancel);
-                }
-            };
-
-            var res = f.ShowDialogCentred(form, icon, "DLL - applies at next restart", closeicon: true);
-            if (res == DialogResult.OK)
-            {
-                alloweddisallowed = "";
-                foreach (var e in f.Entries.Where(x => x.controltype == typeof(ExtendedControls.ExtCheckBox)))
-                    alloweddisallowed = alloweddisallowed.AppendPrePad((f.Get(e.controlname) == "1" ? "+" : "-") + e.controlname, ",");
-
-                return alloweddisallowed;
-            }
-            else if ( res == DialogResult.Abort)
-            {
-                return "";
-            }
-            else
-                return null;
-        }
-
 
     }
 }

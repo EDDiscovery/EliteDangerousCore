@@ -79,6 +79,7 @@
     <Compile Include="DLL\EDDDLLAssemblyFinder.cs" />
     <Compile Include="DLL\EDDDLLCaller.cs" />
     <Compile Include="DLL\EDDDLLHistoryEntry.cs" />
+    <Compile Include="DLL\EDDDLLManagerDialogs.cs" />
     <Compile Include="DLL\EDDDLLManager.cs" />
     <Compile Include="EDAstro\EDAstroSync.cs" />
     <Compile Include="EDAstro\EDAstroClass.cs" />

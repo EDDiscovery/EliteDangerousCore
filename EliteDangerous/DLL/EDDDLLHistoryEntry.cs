@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2020 EDDiscovery development team
+ * Copyright © 2015 - 2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -30,28 +30,14 @@ namespace EliteDangerousCore.DLL
                                                                                      bool storedflag = false)
         {
             if (he == null)
-                return new EDDDLLInterfaces.EDDDLLIF.JournalEntry() { ver = 3, indexno = -1 };
+                return new EDDDLLInterfaces.EDDDLLIF.JournalEntry() { ver = 5, indexno = -1 };
             else
                 return CreateFromHistoryEntry(he, hl.MaterialCommoditiesMicroResources.GetMaterialsSorted(he.MaterialCommodity),
                                               hl.MaterialCommoditiesMicroResources.GetCommoditiesSorted(he.MaterialCommodity),
                                               hl.MaterialCommoditiesMicroResources.GetMicroResourcesSorted(he.MaterialCommodity),
                                               hl.MissionListAccumulator.GetAllCurrentMissions(he.MissionList, he.EventTimeUTC),
+                                              hl.Count,
                                               storedflag);
-        }
-
-        static public EDDDLLInterfaces.EDDDLLIF.JournalEntry CreateFromHistoryEntry( EliteDangerousCore.HistoryEntry he, List<MaterialCommodityMicroResource> list,
-                                                                                     List<MissionState> missionlist,
-                                                                                     bool storedflag = false)
-        {
-            if (he == null)
-                return new EDDDLLInterfaces.EDDDLLIF.JournalEntry() { ver = 3, indexno = -1 };
-            else
-            {
-                var mats = list.Where(x => x.Details.IsMaterial).OrderBy(x => x.Details.Type).ToList();
-                var commods = list.Where(x => x.Details.IsCommodity).OrderBy(x => x.Details.Type).ToList();
-                var mr = list.Where(x => x.Details.IsMicroResources).OrderBy(x => x.Details.Type).ToList();
-                return CreateFromHistoryEntry(he, mats, commods, mr, missionlist, storedflag);
-            }
         }
 
         static private EDDDLLInterfaces.EDDDLLIF.JournalEntry CreateFromHistoryEntry(EliteDangerousCore.HistoryEntry he,
@@ -59,6 +45,7 @@ namespace EliteDangerousCore.DLL
                                                                                          List<MaterialCommodityMicroResource> commds,
                                                                                          List<MaterialCommodityMicroResource> mr,
                                                                                          List<MissionState> missionlist,
+                                                                                         int totalrecords,
                                                                                          bool storedflag = false)
         {
             JObject json = he.journalEntry.GetJsonCloned();
@@ -66,7 +53,8 @@ namespace EliteDangerousCore.DLL
 
             EDDDLLInterfaces.EDDDLLIF.JournalEntry je = new EDDDLLInterfaces.EDDDLLIF.JournalEntry()
             {
-                ver = 4,
+                ver = 5,
+                //v1
                 indexno = he.EntryNumber,
                 utctime = he.EventTimeUTC.ToStringZuluInvariant(),
                 name = he.EventSummary,
@@ -79,11 +67,15 @@ namespace EliteDangerousCore.DLL
                 islanded = he.IsLanded,
                 isdocked = he.IsDocked,
                 whereami = he.WhereAmI,
-                shiptype = he.Status.ShipType,
+                shiptype = he.Status.ShipType,      // 
                 gamemode = he.GameMode,
                 group = he.Group,
                 credits = he.Credits,
                 eventid = he.journalEntry.EventTypeStr,
+                jid = he.journalEntry.Id,
+                totalrecords = totalrecords,
+
+                // v2
                 json = json.ToString(),
                 cmdrname = he.Commander.Name,
                 cmdrfid = he.Commander.FID,
@@ -93,17 +85,41 @@ namespace EliteDangerousCore.DLL
                 rebuy = he.ShipInformation?.Rebuy ?? 0,
                 modulesvalue = he.ShipInformation?.ModulesValue ?? 0,
                 stored = storedflag,
+
+                //v3
                 travelstate = he.Status.TravelState.ToString(),
+
+                //v4
                 horizons = he.journalEntry.IsHorizons,
                 odyssey = he.journalEntry.IsOdyssey,
                 beta = he.journalEntry.IsBeta,
+
+                //v5
+                wanted = he.Status.Wanted,
+                bodyapproached = he.Status.BodyApproached,
+                bookeddropship = he.Status.BookedDropship,
+                issrv = he.Status.IsSRV,
+                isfighter = he.Status.IsFighter,
+                onfoot = he.Status.OnFoot,
+                bookedtaxi = he.Status.BookedTaxi,
+
+                bodyname = he.Status.BodyName ?? "Unknown",
+                bodytype = he.Status.BodyType ?? "Unknown",
+                stationname = he.Status.StationName ?? "Unknown",
+                stationtype = he.Status.StationType ?? "Unknown",
+                stationfaction = he.Status.StationFaction ?? "Unknown",
+                shiptypefd = he.Status.ShipTypeFD ?? "Unknown",
+                oncrewwithcaptain = he.Status.OnCrewWithCaptain ?? "",
+                shipid = he.Status.ShipID,
             };
 
+            // v1
             he.journalEntry.FillInformation(he.System, he.WhereAmI, out je.info, out je.detailedinfo);
-
             je.materials = (from x in mats select x.Details.Name + ":" + x.Count.ToStringInvariant() + ":" + x.Details.FDName).ToArray();
             je.commodities = (from x in commds select x.Details.Name + ":" + x.Count.ToStringInvariant() + ":" + x.Details.FDName).ToArray();
             je.currentmissions = missionlist.Select(x=>x.DLLInfo()).ToArray();
+
+            // v2
             je.microresources = (from x in mr select x.Details.Name + ":" + x.Counts[0].ToStringInvariant()+ ":" + x.Counts[1].ToStringInvariant() + ":" + x.Details.FDName).ToArray();
             return je;
         }

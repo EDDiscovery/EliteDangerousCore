@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2020 EDDiscovery development team
+ * Copyright © 2015 - 2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -24,14 +24,13 @@ namespace EliteDangerousCore.DLL
         public string Version { get; private set; }
         public string[] DLLOptions { get; private set; }
         public string Name { get; private set; }
-        public bool HasConfig { get { return pConfigParameters != null; } }
 
         // for a standard DLL
         private IntPtr pDll = IntPtr.Zero;
         private IntPtr pNewJournalEntry = IntPtr.Zero;
         private IntPtr pActionJournalEntry = IntPtr.Zero;
         private IntPtr pActionCommand = IntPtr.Zero;
-        private IntPtr pConfigParameters = IntPtr.Zero;
+        private IntPtr pConfig = IntPtr.Zero;
         private IntPtr pNewUIEvent = IntPtr.Zero;
 
         // for a csharp assembly
@@ -74,7 +73,7 @@ namespace EliteDangerousCore.DLL
                             pNewJournalEntry = BaseUtils.Win32.UnsafeNativeMethods.GetProcAddress(pDll, "EDDNewJournalEntry");
                             pActionJournalEntry = BaseUtils.Win32.UnsafeNativeMethods.GetProcAddress(pDll, "EDDActionJournalEntry");
                             pActionCommand = BaseUtils.Win32.UnsafeNativeMethods.GetProcAddress(pDll, "EDDActionCommand");
-                            pConfigParameters = BaseUtils.Win32.UnsafeNativeMethods.GetProcAddress(pDll, "EDDConfigParameters");
+                            pConfig = BaseUtils.Win32.UnsafeNativeMethods.GetProcAddress(pDll, "EDDConfig");
                             pNewUIEvent = BaseUtils.Win32.UnsafeNativeMethods.GetProcAddress(pDll, "EDDNewUIEvent");
                             return true;
                         }
@@ -198,7 +197,7 @@ namespace EliteDangerousCore.DLL
 
         public bool NewJournalEntry(EDDDLLInterfaces.EDDDLLIF.JournalEntry nje, bool stored)
         {
-            if (stored && DLLOptions.ContainsIn(EDDDLLInterfaces.EDDDLLIF.FLAG_PLAYLASTFILELOAD)<0)
+            if (stored && DLLOptions.ContainsIn(EDDDLLInterfaces.EDDDLLIF.FLAG_PLAYLASTFILELOAD) < 0)
                 return false;
 
             if (AssemblyMainType != null)
@@ -269,48 +268,6 @@ namespace EliteDangerousCore.DLL
 
         // Config..
 
-        public string[] GetConfig()
-        {
-            if (AssemblyMainType != null)
-            {
-                if (AssemblyMainType.GetType().GetMethod("EDDConfigParameters") != null)
-                {
-                    return AssemblyMainType.EDDConfigParameters(new string[] { });
-                }
-            }
-            else if (pDll != IntPtr.Zero && pConfigParameters != IntPtr.Zero)
-            {
-                EDDDLLInterfaces.EDDDLLIF.EDDConfigParameters edf = (EDDDLLInterfaces.EDDDLLIF.EDDConfigParameters)Marshal.GetDelegateForFunctionPointer(
-                                                                                    pConfigParameters,
-                                                                                    typeof(EDDDLLInterfaces.EDDDLLIF.EDDConfigParameters));
-                return edf(new string[] { });
-            }
-
-            return null;
-        }
-
-        public bool SetConfig(string[] paras)
-        {
-            if (AssemblyMainType != null)
-            {
-                if (AssemblyMainType.GetType().GetMethod("EDDConfigParameters") != null)
-                {
-                    var ret = AssemblyMainType.EDDConfigParameters(paras);
-                    return ret.Length > 0;
-                }
-            }
-            else if (pDll != IntPtr.Zero && pConfigParameters != IntPtr.Zero)
-            {
-                EDDDLLInterfaces.EDDDLLIF.EDDConfigParameters edf = (EDDDLLInterfaces.EDDDLLIF.EDDConfigParameters)Marshal.GetDelegateForFunctionPointer(
-                                                                                    pConfigParameters,
-                                                                                    typeof(EDDDLLInterfaces.EDDDLLIF.EDDConfigParameters));
-                var r = edf(paras);
-                return r.Length > 0;
-            }
-
-            return false;
-        }
-
         public bool NewUIEvent(string json)
         {
             if (AssemblyMainType != null)
@@ -331,6 +288,36 @@ namespace EliteDangerousCore.DLL
             }
 
             return false;
+        }
+
+        public bool HasConfig()
+        {
+            if (AssemblyMainType != null)
+            {
+                return AssemblyMainType.GetType().GetMethod("EDDConfig") != null;
+            }
+            else
+                return pDll != IntPtr.Zero && pConfig != IntPtr.Zero;
+        }
+
+        public string Config(string istr, bool editit)
+        {
+            if (AssemblyMainType != null)
+            {
+                if (AssemblyMainType.GetType().GetMethod("EDDConfig") != null)
+                {
+                    return AssemblyMainType.EDDConfig(istr, editit);
+                }
+            }
+            else if (pDll != IntPtr.Zero && pConfig != IntPtr.Zero)
+            {
+                EDDDLLInterfaces.EDDDLLIF.EDDConfig cfg = (EDDDLLInterfaces.EDDDLLIF.EDDConfig)Marshal.GetDelegateForFunctionPointer(
+                                                                                    pConfig,
+                                                                                    typeof(EDDDLLInterfaces.EDDDLLIF.EDDConfig));
+                return cfg(istr, editit);
+            }
+
+            return null;
         }
 
 
