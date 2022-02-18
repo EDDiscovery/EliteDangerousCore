@@ -254,6 +254,8 @@ SECTION JournalTypeEnum
 .Resupply: "Resupply" @
 .ShipLocker: "Ship Locker" @
 .FSSBodySignals: "FSS Body Signals" @
+.ModuleBuyAndStore: "Module Buy And Store" @
+.ScanBaryCentre: "Scan Barycentre" @
 
 SECTION JournalCargo
 
@@ -437,6 +439,8 @@ SECTION JournalProgress
 .Trade: "Trade: ;%" => "торговый ранг: ;%"
 .Exploration: "Exploration: ;%" => "исследовательский ранг: ;%"
 .Federation: "Federation: ;%" => "Федерация: ;%"
+.Soldier: "Soldier: ;%" @
+.Exobiologist: "Exobiologist: ;%" @
 .Empire: "Empire: ;%" => "Империя: ;%"
 .CQC: "CQC: ;%" => "CQC: ;%"
 
@@ -573,6 +577,8 @@ SECTION JournalScan
 .EVAM: "Already Mapped" @
 .InferredCircumstellarzones: "Inferred Circumstellar zones:\n" => "Предполагаемая околозвездная зона:\n"
 .MASS: "Mass: " => "Масса: "
+.AscendingNode: "Ascending Node: {0:0.000}°\n" @
+.MeanAnomaly: "Mean Anomaly: {0:0.000}°\n" @
 
 SECTION JournalSAAScanComplete
 
@@ -681,6 +687,10 @@ SECTION CombatClass
 .AssassinationProfits: "Assassination Profits: ;cr;N0" => "Прибыль от наемных убийств: ; кр.;N0"
 .HighestReward: "Highest Reward: ;cr;N0" => "Максимальный размер награды: ; кр.;N0"
 .SkimmersKilled: "Skimmers Killed: ;;N0" => "Сбито оборонных беспилотников: ;;N0"
+.OnFootCombatBonds: "Surface Combat Bonds: ;;N0" @
+.OnFootCombatBondsProfits: "Surface Combat Bonds Profits: ;cr;N0" @
+.OnFootVehiclesDestroyed: "Vehicles Destroyed on Foot: ;;N0" @
+.OnFootShipsDestroyed: "Ships Destroyed on Foot: ;;N0" @
 .DropshipsTaken: "Dropships Taken: ;;N0" @
 .DropshipsBooked: "Dropships Booked: ;;N0" @
 .DropshipsCancelled: "Dropships Cancelled: ;;N0" @
@@ -759,6 +769,7 @@ SECTION ExplorationClass
 .NoofJumps: "No of Jumps: ;;N0" => "Всего прыжков в гиперпространстве: ;;N0"
 .GreatestDistance: "Greatest Distance: ;ly;N0" => "Макс. расстояние с начала: ;ly;N0"
 .TimePlayed: "Time Played: " => "Время игры: "
+.OnFootDistanceTravelled: "Distance Travelled on Foot: ;m;N0" @
 .EfficientScans: "Efficient Scans: ;;N0" @
 .ShuttleJourneys: "Shuttle Journeys: ;;N0" @
 .ShuttleDistanceTravelled: "Shuttle Distance Travelled: ;ly;N0" @
@@ -769,12 +780,12 @@ SECTION ExplorationClass
 
 SECTION PassengerMissionsClass
 
-.Accepted: "Accepted Mission Passengers: ;;N0" @
-.BulkMissionPassengers: "Bulk Mission Passengers: ;;N0" => "Доставлено обычных пассажиров: ;;N0"
-.VIPMissionPassengers: "VIP Mission Passengers: ;;N0" => "Доставлено VIP-персон: ;;N0"
-.PassengersDelivered: "Passengers Delivered: ;;N0" => "Всего доставлено: ;;N0"
-.PassengersEjected: "Passengers Ejected: ;;N0" => "Всего потеряно: ;;N0"
+.Accepted: "Accepted Passenger Missions: ;;N0" @
 .PassengersDisgrunted: "Passengers Disgruntled: ;;N0" @
+.BulkMissionPassengers: "Total Bulk Passengers Delivered: ;;N0" => "Доставлено обычных пассажиров: ;;N0"
+.VIPMissionPassengers: "Total VIPs Delivered: ;;N0" => "Доставлено VIP-персон: ;;N0"
+.PassengersDelivered: "Total Delivered: ;;N0" => "Всего доставлено: ;;N0"
+.PassengersEjected: "Total Ejected: ;;N0" => "Всего потеряно: ;;N0"
 
 SECTION SearchAndRescueClass
 
@@ -834,6 +845,8 @@ SECTION MaterialTraderStatsClass
 .G3MaterialsTraded: "Grade 3 Materials Traded: ;;N0" @
 .G4MaterialsTraded: "Grade 4 Materials Traded: ;;N0" @
 .G5MaterialsTraded: "Grade 5 Materials Traded: ;;N0" @
+.AssetsTradedIn: "Assets Gained in Trade: ;;N0" @
+.AssetsTradedOut: "Assets Spent in Trade: ;;N0" @
 
 SECTION CQCClass
 
@@ -989,6 +1002,7 @@ SECTION JournalEntry
 .Cockpit: "Cockpit: " => "Фонарь кабины: "
 .Corrosion: "Corrosion: " => "Коррозия: "
 .TotalCost: "Total Cost: ; cr;N0" => "общая сумма: ; кр;N0"
+.TotalSale: "Total Sale: ; cr;N0" @
 .each: "each: ; cr;N0" => "цена за шт.: ; кр.;N0"
 .Drones: "Drones" => "Дроны"
 .Price: "Price: ; cr;N0" => "цена: ; кр.;N0"
@@ -1006,7 +1020,7 @@ SECTION JournalEntry
 .Scanned: "Scanned: " => "Системы: "
 .Discovered: "Discovered: " => "Обнаружено: "
 .Loadout: "Loadout: " => "Снаряжение: "
-.NPCControlled: ", NPC Controlled;" => ", под управлением NPC;"
+.NPCControlled: "NPC Controlled;" => ", под управлением NPC;"
 .Version: "Version: " => "Версия: "
 .Build: "Build: " => "билд: "
 .Part: "Part: " => "часть: "

@@ -254,6 +254,8 @@ SECTION JournalTypeEnum
 .Resupply: "Resupply" => "Aufstocken"
 .ShipLocker: "Ship Locker" => "Schiffsspind"
 .FSSBodySignals: "FSS Body Signals" => "VSS Körpersignale"
+.ModuleBuyAndStore: "Module Buy And Store" @
+.ScanBaryCentre: "Scan Barycentre" @
 
 SECTION JournalCargo
 
@@ -436,9 +438,9 @@ SECTION JournalProgress
 .Combat: "Combat: ;%" => "Kampf: ;%"
 .Trade: "Trade: ;%" => "Handel: ;%"
 .Exploration: "Exploration: ;%" => "Erkundung: ;%"
+.Federation: "Federation: ;%" => "Föderation: ;%"
 .Soldier: "Soldier: ;%" => "Soldat: ;%"
 .Exobiologist: "Exobiologist: ;%" => "Exobiologe: ;%"
-.Federation: "Federation: ;%" => "Föderation: ;%"
 .Empire: "Empire: ;%" => "Imperium: ;%"
 .CQC: "CQC: ;%" => "CQC: ;%"
 
@@ -575,6 +577,8 @@ SECTION JournalScan
 .EVAM: "Already Mapped" => "Bereits kartographiert"
 .InferredCircumstellarzones: "Inferred Circumstellar zones:\n" => "Vermutete zirkumstellare Zonen:\n"
 .MASS: "Mass: " => "Masse: "
+.AscendingNode: "Ascending Node: {0:0.000}°\n" @
+.MeanAnomaly: "Mean Anomaly: {0:0.000}°\n" @
 
 SECTION JournalSAAScanComplete
 
@@ -765,7 +769,7 @@ SECTION ExplorationClass
 .NoofJumps: "No of Jumps: ;;N0" => "Anzahl der Sprünge: ;;N0"
 .GreatestDistance: "Greatest Distance: ;ly;N0" => "Größte Entfernung: ;Lj;N0"
 .TimePlayed: "Time Played: " => "Spielzeit: "
-.OnFootDistanceTravelled: "Distance Travelled on Foot: ;m;N0"  => "Gesamtentfernung (zu Fuß): ;m;N0"
+.OnFootDistanceTravelled: "Distance Travelled on Foot: ;m;N0" => "Gesamtentfernung (zu Fuß): ;m;N0"
 .EfficientScans: "Efficient Scans: ;;N0" => "Effiziente Scans: ;;N0"
 .ShuttleJourneys: "Shuttle Journeys: ;;N0" => "Shuttle-Reisen: ;;N0"
 .ShuttleDistanceTravelled: "Shuttle Distance Travelled: ;ly;N0" => "Per Shuttle zurückgelegte Distanz: ;Lj;N0"
@@ -776,12 +780,12 @@ SECTION ExplorationClass
 
 SECTION PassengerMissionsClass
 
-.Accepted: "Accepted Mission Passengers: ;;N0" => "Angenommen: ;;N0"
-.BulkMissionPassengers: "Bulk Mission Passengers: ;;N0" => "Passagiere in Massentransportmissionen: ;;N0"
-.VIPMissionPassengers: "VIP Mission Passengers: ;;N0" => "Passagiere in VIP Missionen: ;;N0"
-.PassengersDelivered: "Passengers Delivered: ;;N0" => "Passagiere abgeliefert: ;;N0"
-.PassengersEjected: "Passengers Ejected: ;;N0" => "Passagiere ausgeworfen: ;;N0"
+.Accepted: "Accepted Passenger Missions: ;;N0" => "Angenommen: ;;N0"
 .PassengersDisgrunted: "Passengers Disgruntled: ;;N0" => "Passagiere verärgert: ;;N0"
+.BulkMissionPassengers: "Total Bulk Passengers Delivered: ;;N0" => "Passagiere in Massentransportmissionen: ;;N0"
+.VIPMissionPassengers: "Total VIPs Delivered: ;;N0" => "Passagiere in VIP Missionen: ;;N0"
+.PassengersDelivered: "Total Delivered: ;;N0" => "Passagiere abgeliefert: ;;N0"
+.PassengersEjected: "Total Ejected: ;;N0" => "Passagiere ausgeworfen: ;;N0"
 
 SECTION SearchAndRescueClass
 
@@ -1016,7 +1020,7 @@ SECTION JournalEntry
 .Scanned: "Scanned: " => "Gescannt: "
 .Discovered: "Discovered: " => "Entdeckt: "
 .Loadout: "Loadout: " => "Ausrüstung/Bewaffnung: "
-.NPCControlled: ", NPC Controlled;" => ", NPC-kontrolliert;"
+.NPCControlled: "NPC Controlled;" => ", NPC-kontrolliert;"
 .Version: "Version: " => "Version: "
 .Build: "Build: " => "Bauart: "
 .Part: "Part: " => "Teil: "

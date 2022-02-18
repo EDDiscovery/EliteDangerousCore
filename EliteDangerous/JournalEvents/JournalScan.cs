@@ -655,7 +655,7 @@ namespace EliteDangerousCore.JournalEvents
 
                     if (!GasWorld)      // all gas worlds have atmospheres, so don't add it on
                     {
-                        scanText.AppendFormat(", " + (Atmosphere == "none" ? "No Atmosphere".Tx(EDTx.JournalScan_NoAtmosphere) : Atmosphere));
+                        scanText.AppendFormat(", " + (Atmosphere == "none" ? "No Atmosphere".T(EDTx.JournalScan_NoAtmosphere) : Atmosphere));
                     }
 
                     if (IsLandable)
