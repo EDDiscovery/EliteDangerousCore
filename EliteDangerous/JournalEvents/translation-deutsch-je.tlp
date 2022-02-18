@@ -254,8 +254,8 @@ SECTION JournalTypeEnum
 .Resupply: "Resupply" => "Aufstocken"
 .ShipLocker: "Ship Locker" => "Schiffsspind"
 .FSSBodySignals: "FSS Body Signals" => "VSS Körpersignale"
-.ModuleBuyAndStore: "Module Buy And Store" @
-.ScanBaryCentre: "Scan Barycentre" @
+.ModuleBuyAndStore: "Module Buy And Store" => "Modul kaufen und lagern"
+.ScanBaryCentre: "Scan Barycentre" => "Baryzentrumsscan"
 
 SECTION JournalCargo
 
@@ -577,8 +577,8 @@ SECTION JournalScan
 .EVAM: "Already Mapped" => "Bereits kartographiert"
 .InferredCircumstellarzones: "Inferred Circumstellar zones:\n" => "Vermutete zirkumstellare Zonen:\n"
 .MASS: "Mass: " => "Masse: "
-.AscendingNode: "Ascending Node: {0:0.000}°\n" @
-.MeanAnomaly: "Mean Anomaly: {0:0.000}°\n" @
+.AscendingNode: "Ascending Node: {0:0.000}°\n" => "Aufsteigender Knoten: {0:0.000}°\n"
+.MeanAnomaly: "Mean Anomaly: {0:0.000}°\n" => "Mittlere Anomalie: {0:0.000}°\n"
 
 SECTION JournalSAAScanComplete
 
