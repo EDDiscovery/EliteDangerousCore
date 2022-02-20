@@ -966,7 +966,7 @@ SECTION JournalEntry
 .Progress: "Progress: ;%;N1" => "Fortschritt: ;%;N1"
 .Delivered: "Delivered: " => "Geliefert: "
 .Update: "Update, Collected: " => "Aktualisierung, Gesammelt: "
-.ToGo: "To Go: " => "Gehe nach: "
+.ToGo: "To Go: " => "Noch übrig: "
 .ProgressLeft: "Progress Left: ;%;N1" => "Restlicher Fortschritt: ;%;N1"
 .Stolen: ";Stolen" => ";Gestohlen"
 .StartingPackage: "Starting Package: " => "Starterpaket: "
