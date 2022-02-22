@@ -32,6 +32,7 @@
             this.panelConfigure = new System.Windows.Forms.Panel();
             this.labelQuality = new System.Windows.Forms.Label();
             this.numericUpDownQuality = new ExtendedControls.ExtNumericUpDown();
+            this.extCheckBoxEnabled = new ExtendedControls.ExtCheckBox();
             this.extCheckBoxHiRes = new ExtendedControls.ExtCheckBox();
             this.extCheckBoxKeepMasterConvertedImage = new ExtendedControls.ExtCheckBox();
             this.extComboBoxConvert2 = new ExtendedControls.ExtComboBox();
@@ -73,6 +74,7 @@
             this.buttonEDChangeOutputFolder = new ExtendedControls.ExtButton();
             this.labelClipboard = new System.Windows.Forms.Label();
             this.labelOriginal = new System.Windows.Forms.Label();
+            this.labelEnabled = new System.Windows.Forms.Label();
             this.labelScanFor = new System.Windows.Forms.Label();
             this.labelSaveAs = new System.Windows.Forms.Label();
             this.extComboBoxClipboard = new ExtendedControls.ExtComboBox();
@@ -83,8 +85,6 @@
             this.panel_close = new ExtendedControls.ExtButtonDrawn();
             this.panel_minimize = new ExtendedControls.ExtButtonDrawn();
             this.label_index = new System.Windows.Forms.Label();
-            this.labelEnabled = new System.Windows.Forms.Label();
-            this.extCheckBoxEnabled = new ExtendedControls.ExtCheckBox();
             this.panelConfigure.SuspendLayout();
             this.extGroupBox1.SuspendLayout();
             this.groupBoxCropSettings.SuspendLayout();
@@ -138,7 +138,7 @@
             // labelQuality
             // 
             this.labelQuality.AutoSize = true;
-            this.labelQuality.Location = new System.Drawing.Point(464, 174);
+            this.labelQuality.Location = new System.Drawing.Point(431, 174);
             this.labelQuality.Name = "labelQuality";
             this.labelQuality.Size = new System.Drawing.Size(69, 13);
             this.labelQuality.TabIndex = 37;
@@ -150,7 +150,7 @@
             this.numericUpDownQuality.AutoSizeTextBox = true;
             this.numericUpDownQuality.BorderColor = System.Drawing.Color.Transparent;
             this.numericUpDownQuality.BorderColorScaling = 0.5F;
-            this.numericUpDownQuality.Location = new System.Drawing.Point(539, 171);
+            this.numericUpDownQuality.Location = new System.Drawing.Point(539, 173);
             this.numericUpDownQuality.Maximum = 100;
             this.numericUpDownQuality.Minimum = 0;
             this.numericUpDownQuality.Name = "numericUpDownQuality";
@@ -161,6 +161,26 @@
             this.numericUpDownQuality.TextBoxForeColor = System.Drawing.SystemColors.WindowText;
             this.numericUpDownQuality.Value = 0;
             this.numericUpDownQuality.Visible = false;
+            // 
+            // extCheckBoxEnabled
+            // 
+            this.extCheckBoxEnabled.AutoSize = true;
+            this.extCheckBoxEnabled.CheckBoxColor = System.Drawing.Color.Gray;
+            this.extCheckBoxEnabled.CheckBoxDisabledScaling = 0.5F;
+            this.extCheckBoxEnabled.CheckBoxInnerColor = System.Drawing.Color.White;
+            this.extCheckBoxEnabled.CheckColor = System.Drawing.Color.DarkBlue;
+            this.extCheckBoxEnabled.ImageButtonDisabledScaling = 0.5F;
+            this.extCheckBoxEnabled.ImageIndeterminate = null;
+            this.extCheckBoxEnabled.ImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.extCheckBoxEnabled.ImageUnchecked = null;
+            this.extCheckBoxEnabled.Location = new System.Drawing.Point(216, 16);
+            this.extCheckBoxEnabled.MouseOverColor = System.Drawing.Color.CornflowerBlue;
+            this.extCheckBoxEnabled.Name = "extCheckBoxEnabled";
+            this.extCheckBoxEnabled.Size = new System.Drawing.Size(121, 17);
+            this.extCheckBoxEnabled.TabIndex = 35;
+            this.extCheckBoxEnabled.Text = "Conversion Enabled";
+            this.extCheckBoxEnabled.TickBoxReductionRatio = 0.75F;
+            this.extCheckBoxEnabled.UseVisualStyleBackColor = true;
             // 
             // extCheckBoxHiRes
             // 
@@ -256,7 +276,7 @@
             this.buttonExtCancel.Name = "buttonExtCancel";
             this.buttonExtCancel.Size = new System.Drawing.Size(100, 23);
             this.buttonExtCancel.TabIndex = 32;
-            this.buttonExtCancel.Text = "Cancel";
+            this.buttonExtCancel.Text = "%Cancel%";
             this.buttonExtCancel.UseVisualStyleBackColor = true;
             this.buttonExtCancel.Click += new System.EventHandler(this.buttonExtCancel_Click);
             // 
@@ -389,7 +409,7 @@
             this.buttonExtOK.Name = "buttonExtOK";
             this.buttonExtOK.Size = new System.Drawing.Size(100, 23);
             this.buttonExtOK.TabIndex = 31;
-            this.buttonExtOK.Text = "OK";
+            this.buttonExtOK.Text = "%OK%";
             this.buttonExtOK.UseVisualStyleBackColor = true;
             this.buttonExtOK.Click += new System.EventHandler(this.buttonExtOK_Click);
             // 
@@ -757,6 +777,15 @@
             this.labelOriginal.TabIndex = 24;
             this.labelOriginal.Text = "Original Image";
             // 
+            // labelEnabled
+            // 
+            this.labelEnabled.AutoSize = true;
+            this.labelEnabled.Location = new System.Drawing.Point(11, 16);
+            this.labelEnabled.Name = "labelEnabled";
+            this.labelEnabled.Size = new System.Drawing.Size(40, 13);
+            this.labelEnabled.TabIndex = 24;
+            this.labelEnabled.Text = "Enable";
+            // 
             // labelScanFor
             // 
             this.labelScanFor.AutoSize = true;
@@ -931,35 +960,6 @@
             this.label_index.Text = "<code>";
             this.label_index.MouseDown += new System.Windows.Forms.MouseEventHandler(this.captionControl_MouseDown);
             this.label_index.MouseUp += new System.Windows.Forms.MouseEventHandler(this.captionControl_MouseUp);
-            // 
-            // labelEnabled
-            // 
-            this.labelEnabled.AutoSize = true;
-            this.labelEnabled.Location = new System.Drawing.Point(11, 16);
-            this.labelEnabled.Name = "labelEnabled";
-            this.labelEnabled.Size = new System.Drawing.Size(40, 13);
-            this.labelEnabled.TabIndex = 24;
-            this.labelEnabled.Text = "Enable";
-            // 
-            // extCheckBoxEnabled
-            // 
-            this.extCheckBoxEnabled.AutoSize = true;
-            this.extCheckBoxEnabled.CheckBoxColor = System.Drawing.Color.Gray;
-            this.extCheckBoxEnabled.CheckBoxDisabledScaling = 0.5F;
-            this.extCheckBoxEnabled.CheckBoxInnerColor = System.Drawing.Color.White;
-            this.extCheckBoxEnabled.CheckColor = System.Drawing.Color.DarkBlue;
-            this.extCheckBoxEnabled.ImageButtonDisabledScaling = 0.5F;
-            this.extCheckBoxEnabled.ImageIndeterminate = null;
-            this.extCheckBoxEnabled.ImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.extCheckBoxEnabled.ImageUnchecked = null;
-            this.extCheckBoxEnabled.Location = new System.Drawing.Point(216, 16);
-            this.extCheckBoxEnabled.MouseOverColor = System.Drawing.Color.CornflowerBlue;
-            this.extCheckBoxEnabled.Name = "extCheckBoxEnabled";
-            this.extCheckBoxEnabled.Size = new System.Drawing.Size(121, 17);
-            this.extCheckBoxEnabled.TabIndex = 35;
-            this.extCheckBoxEnabled.Text = "Conversion Enabled";
-            this.extCheckBoxEnabled.TickBoxReductionRatio = 0.75F;
-            this.extCheckBoxEnabled.UseVisualStyleBackColor = true;
             // 
             // ScreenShotConfigureForm
             // 

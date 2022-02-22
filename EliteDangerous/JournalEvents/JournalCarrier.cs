@@ -43,15 +43,15 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("At ".T(EDTx.JournalCarrier_At), Location,
-                                              "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Price,
-                                              "Call Sign: ".T(EDTx.JournalCarrier_Callsign), Callsign);
+            info = BaseUtils.FieldBuilder.Build("At ".T(EDCTx.JournalCarrier_At), Location,
+                                              "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Price,
+                                              "Call Sign: ".T(EDCTx.JournalCarrier_Callsign), Callsign);
             detailed = "";
         }
 
         public void Ledger(Ledger mcl)
         {
-            string x = "Call Sign: ".T(EDTx.JournalCarrier_Callsign) + Callsign;
+            string x = "Call Sign: ".T(EDCTx.JournalCarrier_Callsign) + Callsign;
             mcl.AddEvent(Id, EventTimeUTC, JournalTypeEnum.CarrierBuy, x, -Price);
         }
     }
@@ -143,24 +143,24 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Name: ".T(EDTx.JournalCarrier_Name), Name,
-                                                "Call Sign: ".T(EDTx.JournalCarrier_Callsign), Callsign,
-                                                "Fuel Level: ;;N0".T(EDTx.JournalCarrier_FuelLevel), FuelLevel,
-                                                "Jump Range: ;ly;0.0".T(EDTx.JournalCarrier_JumpRange), JumpRangeCurr,
-                                                "Carrier Balance: ; cr;N0".T(EDTx.JournalCarrier_Balance), Finance_CarrierBalance,
-                                                "Reserve Balance: ; cr;N0".T(EDTx.JournalCarrier_ReserveBalance), Finance_ReserveBalance,
-                                                "Available Balance: ; cr;N0".T(EDTx.JournalCarrier_AvailableBalance), Finance_AvailableBalance,
-                                                "Reserve Percent: ;;N1".T(EDTx.JournalCarrier_ReservePercent), Finance_ReservePercent,
-                                                "Tax Rate: ;;N1".T(EDTx.JournalCarrier_TaxRate), Finance_TaxRate
+            info = BaseUtils.FieldBuilder.Build("Name: ".T(EDCTx.JournalCarrier_Name), Name,
+                                                "Call Sign: ".T(EDCTx.JournalCarrier_Callsign), Callsign,
+                                                "Fuel Level: ;;N0".T(EDCTx.JournalCarrier_FuelLevel), FuelLevel,
+                                                "Jump Range: ;ly;0.0".T(EDCTx.JournalCarrier_JumpRange), JumpRangeCurr,
+                                                "Carrier Balance: ; cr;N0".T(EDCTx.JournalCarrier_Balance), Finance_CarrierBalance,
+                                                "Reserve Balance: ; cr;N0".T(EDCTx.JournalCarrier_ReserveBalance), Finance_ReserveBalance,
+                                                "Available Balance: ; cr;N0".T(EDCTx.JournalCarrier_AvailableBalance), Finance_AvailableBalance,
+                                                "Reserve Percent: ;;N1".T(EDCTx.JournalCarrier_ReservePercent), Finance_ReservePercent,
+                                                "Tax Rate: ;;N1".T(EDCTx.JournalCarrier_TaxRate), Finance_TaxRate
                                                 );
 
-            detailed = BaseUtils.FieldBuilder.Build("Total Capacity: ".T(EDTx.JournalCarrier_TotalCapacity), SpaceUsage_TotalCapacity,
-                                                    "Crew: ".T(EDTx.JournalCarrier_Crew), SpaceUsage_Crew,
-                                                    "Cargo: ".T(EDTx.JournalCarrier_Cargo), SpaceUsage_Cargo,
-                                                    "Cargo Space Reserved: ".T(EDTx.JournalCarrier_CargoReserved), SpaceUsage_CargoSpaceReserved,
-                                                    "Ship Packs: ".T(EDTx.JournalCarrier_ShipPacks), SpaceUsage_ShipPacks,
-                                                    "Module Packs: ".T(EDTx.JournalCarrier_ModulePacks), SpaceUsage_ModulePacks,
-                                                    "Free Space: ".T(EDTx.JournalCarrier_FreeSpace), SpaceUsage_FreeSpace);
+            detailed = BaseUtils.FieldBuilder.Build("Total Capacity: ".T(EDCTx.JournalCarrier_TotalCapacity), SpaceUsage_TotalCapacity,
+                                                    "Crew: ".T(EDCTx.JournalCarrier_Crew), SpaceUsage_Crew,
+                                                    "Cargo: ".T(EDCTx.JournalCarrier_Cargo), SpaceUsage_Cargo,
+                                                    "Cargo Space Reserved: ".T(EDCTx.JournalCarrier_CargoReserved), SpaceUsage_CargoSpaceReserved,
+                                                    "Ship Packs: ".T(EDCTx.JournalCarrier_ShipPacks), SpaceUsage_ShipPacks,
+                                                    "Module Packs: ".T(EDCTx.JournalCarrier_ModulePacks), SpaceUsage_ModulePacks,
+                                                    "Free Space: ".T(EDCTx.JournalCarrier_FreeSpace), SpaceUsage_FreeSpace);
         }
     }
 
@@ -184,8 +184,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("To ".T(EDTx.JournalCarrier_ToSystem), SystemName,
-                                                "Body ".T(EDTx.JournalCarrier_Body), Body
+            info = BaseUtils.FieldBuilder.Build("To ".T(EDCTx.JournalCarrier_ToSystem), SystemName,
+                                                "Body ".T(EDCTx.JournalCarrier_Body), Body
                                                 );
             detailed = "";
         }
@@ -209,8 +209,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Refund: ; cr;N0".T(EDTx.JournalCarrier_Refund), ScrapRefund,
-                                                "at UTC ".T(EDTx.JournalCarrier_RefundTime), ScrapDateTime
+            info = BaseUtils.FieldBuilder.Build("Refund: ; cr;N0".T(EDCTx.JournalCarrier_Refund), ScrapRefund,
+                                                "at UTC ".T(EDCTx.JournalCarrier_RefundTime), ScrapDateTime
                                                 );
             detailed = "";
         }
@@ -261,9 +261,9 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             if (Deposit > 0)
-                info = BaseUtils.FieldBuilder.Build("Deposit: ; cr;N0".T(EDTx.JournalCarrier_Deposit), Deposit, "Carrier Balance: ; cr;N0".T(EDTx.JournalCarrier_Balance), CarrierBalance);
+                info = BaseUtils.FieldBuilder.Build("Deposit: ; cr;N0".T(EDCTx.JournalCarrier_Deposit), Deposit, "Carrier Balance: ; cr;N0".T(EDCTx.JournalCarrier_Balance), CarrierBalance);
             else
-                info = BaseUtils.FieldBuilder.Build("Withdraw: ; cr;N0".T(EDTx.JournalCarrier_Withdraw), Withdraw, "Carrier Balance: ; cr;N0".T(EDTx.JournalCarrier_Balance), CarrierBalance);
+                info = BaseUtils.FieldBuilder.Build("Withdraw: ; cr;N0".T(EDCTx.JournalCarrier_Withdraw), Withdraw, "Carrier Balance: ; cr;N0".T(EDCTx.JournalCarrier_Balance), CarrierBalance);
             detailed = "";
         }
 
@@ -295,8 +295,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Amount: ;;N0".T(EDTx.JournalCarrier_Amount), Amount,
-                                                "Fuel Level: ;;N0".T(EDTx.JournalCarrier_FuelLevel), Total);
+            info = BaseUtils.FieldBuilder.Build("Amount: ;;N0".T(EDCTx.JournalCarrier_Amount), Amount,
+                                                "Fuel Level: ;;N0".T(EDCTx.JournalCarrier_FuelLevel), Total);
             detailed = "";
         }
 
@@ -329,9 +329,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Role: ".T(EDTx.JournalEntry_Role), CrewRole.SplitCapsWordFull(),
-                                                "Operation: ".T(EDTx.JournalCarrier_Operation), Operation,
-                                                "Crew Member: ".T(EDTx.JournalEntry_CrewMember), CrewName
+            info = BaseUtils.FieldBuilder.Build("Role: ".T(EDCTx.JournalEntry_Role), CrewRole.SplitCapsWordFull(),
+                                                "Operation: ".T(EDCTx.JournalCarrier_Operation), Operation,
+                                                "Crew Member: ".T(EDCTx.JournalEntry_CrewMember), CrewName
                                                 );
             detailed = "";
         }
@@ -359,11 +359,11 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Carrier Balance: ; cr;N0".T(EDTx.JournalCarrier_Balance), Finance_CarrierBalance,
-                                                "Reserve Balance: ; cr;N0".T(EDTx.JournalCarrier_ReserveBalance), Finance_ReserveBalance,
-                                                "Available Balance: ; cr;N0".T(EDTx.JournalCarrier_AvailableBalance), Finance_AvailableBalance,
-                                                "Reserve Percent: ;;N1".T(EDTx.JournalCarrier_ReservePercent), Finance_ReservePercent,
-                                                "Tax Rate: ;;N1".T(EDTx.JournalCarrier_TaxRate), Finance_TaxRate
+            info = BaseUtils.FieldBuilder.Build("Carrier Balance: ; cr;N0".T(EDCTx.JournalCarrier_Balance), Finance_CarrierBalance,
+                                                "Reserve Balance: ; cr;N0".T(EDCTx.JournalCarrier_ReserveBalance), Finance_ReserveBalance,
+                                                "Available Balance: ; cr;N0".T(EDCTx.JournalCarrier_AvailableBalance), Finance_AvailableBalance,
+                                                "Reserve Percent: ;;N1".T(EDCTx.JournalCarrier_ReservePercent), Finance_ReservePercent,
+                                                "Tax Rate: ;;N1".T(EDCTx.JournalCarrier_TaxRate), Finance_TaxRate
                                                 );
             detailed = "";
         }
@@ -394,9 +394,9 @@ namespace EliteDangerousCore.JournalEvents
             info = BaseUtils.FieldBuilder.Build(
                                                 "", Operation.SplitCapsWordFull(),
                                                 "", PackTheme,
-                                                "Tier: ".T(EDTx.JournalCarrier_Tier), PackTier,
-                                                "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Cost,
-                                                "Refund: ; cr;N0".T(EDTx.JournalCarrier_Refund), Refund
+                                                "Tier: ".T(EDCTx.JournalCarrier_Tier), PackTier,
+                                                "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost,
+                                                "Refund: ; cr;N0".T(EDCTx.JournalCarrier_Refund), Refund
                                                 );
 
             detailed = "";
@@ -432,9 +432,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             info = BaseUtils.FieldBuilder.Build("", Operation.SplitCapsWordFull(),
                                                 "", PackTheme,
-                                                "Tier: ".T(EDTx.JournalCarrier_Tier), PackTier,
-                                                "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Cost,
-                                                "Refund: ; cr;N0".T(EDTx.JournalCarrier_Refund), Refund
+                                                "Tier: ".T(EDCTx.JournalCarrier_Tier), PackTier,
+                                                "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost,
+                                                "Refund: ; cr;N0".T(EDCTx.JournalCarrier_Refund), Refund
                                                 );
 
             detailed = "";
@@ -474,19 +474,19 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (PurchaseOrder != null)
             {
-                info = BaseUtils.FieldBuilder.Build("Purchase: ".T(EDTx.JournalCarrier_Purchase), Commodity_Localised,
+                info = BaseUtils.FieldBuilder.Build("Purchase: ".T(EDCTx.JournalCarrier_Purchase), Commodity_Localised,
                                                     "", PurchaseOrder,
-                                                    "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Price);
+                                                    "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Price);
             }
             else if ( SaleOrder != null)
             {
-                info = BaseUtils.FieldBuilder.Build("Sell: ".T(EDTx.JournalCarrier_Sell), Commodity_Localised,
+                info = BaseUtils.FieldBuilder.Build("Sell: ".T(EDCTx.JournalCarrier_Sell), Commodity_Localised,
                                                     "", SaleOrder,
-                                                    "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Price);
+                                                    "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Price);
             }
             else if ( CancelTrade != null && CancelTrade.Value == true )
             {
-                info = BaseUtils.FieldBuilder.Build("Cancel Sell of: ".T(EDTx.JournalCarrier_CancelSell), Commodity_Localised);
+                info = BaseUtils.FieldBuilder.Build("Cancel Sell of: ".T(EDCTx.JournalCarrier_CancelSell), Commodity_Localised);
             }
             else
             {
@@ -513,8 +513,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Access: ".T(EDTx.JournalCarrier_Access), DockingAccess, 
-                                                ";Allow Notorious".T(EDTx.JournalCarrier_AllowNotorious), AllowNotorious);
+            info = BaseUtils.FieldBuilder.Build("Access: ".T(EDCTx.JournalCarrier_Access), DockingAccess, 
+                                                ";Allow Notorious".T(EDCTx.JournalCarrier_AllowNotorious), AllowNotorious);
             detailed = "";
         }
     }
@@ -535,7 +535,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Name: ".T(EDTx.JournalCarrier_Name), Name, "Call Sign: ".T(EDTx.JournalCarrier_Callsign), Callsign);
+            info = BaseUtils.FieldBuilder.Build("Name: ".T(EDCTx.JournalCarrier_Name), Name, "Call Sign: ".T(EDCTx.JournalCarrier_Callsign), Callsign);
             detailed = "";
         }
     }

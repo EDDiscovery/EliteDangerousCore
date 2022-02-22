@@ -30,7 +30,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
-            info = BaseUtils.FieldBuilder.Build("Boost: ;;0.0".T(EDTx.JournalEntry_Boost), BoostValue);
+            info = BaseUtils.FieldBuilder.Build("Boost: ;;0.0".T(EDCTx.JournalEntry_Boost), BoostValue);
             detailed = "";
         }
     }

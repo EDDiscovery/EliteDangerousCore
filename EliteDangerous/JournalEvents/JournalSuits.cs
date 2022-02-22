@@ -45,7 +45,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             string smod = SuitMods != null ? string.Join(", ", SuitMods.Select(x=>Recipes.GetBetterNameForEngineeringRecipe(x))) : null;
-            info = BaseUtils.FieldBuilder.Build("", FriendlyName, "Mods: ".T(EDTx.JournalEntry_Mods), smod, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Price);
+            info = BaseUtils.FieldBuilder.Build("", FriendlyName, "Mods: ".T(EDCTx.JournalEntry_Mods), smod, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Price);
             detailed = "";
         }
 
@@ -89,7 +89,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< sell price ; cr;N0".T(EDTx.JournalEntry_sellprice), Price);
+            info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< sell price ; cr;N0".T(EDCTx.JournalEntry_sellprice), Price);
             detailed = "";
         }
 
@@ -319,7 +319,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             string wmod = WeaponMods != null ? string.Join(", ", WeaponMods) : null;
-            info = BaseUtils.FieldBuilder.Build("", SuitID % 10000, "", LoadoutID%10000, "", SuitFriendlyName, "<: ", LoadoutName, "<: ", SlotFriendlyName, "< ++> ", ModuleNameFriendly, "Class: ".T(EDTx.JournalEntry_Class), Class, "Mods: ".T(EDTx.JournalEntry_Mods), wmod);
+            info = BaseUtils.FieldBuilder.Build("", SuitID % 10000, "", LoadoutID%10000, "", SuitFriendlyName, "<: ", LoadoutName, "<: ", SlotFriendlyName, "< ++> ", ModuleNameFriendly, "Class: ".T(EDCTx.JournalEntry_Class), Class, "Mods: ".T(EDCTx.JournalEntry_Mods), wmod);
             detailed = "";
         }
 
@@ -533,7 +533,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             long? p = Cost > 0 ? Cost : default(long?);
             string smod = SuitMods != null ? string.Join(", ", SuitMods.Select(x => Recipes.GetBetterNameForEngineeringRecipe(x))) : null;
-            info = BaseUtils.FieldBuilder.Build("", Name_Localised, "< => ", Class, "Mods: ".T(EDTx.JournalEntry_Mods), smod, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), p);
+            info = BaseUtils.FieldBuilder.Build("", Name_Localised, "< => ", Class, "Mods: ".T(EDCTx.JournalEntry_Mods), smod, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), p);
             detailed = "";
         }
 

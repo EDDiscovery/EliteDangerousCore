@@ -38,7 +38,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
-            info = BaseUtils.FieldBuilder.Build("System: ".T(EDTx.JournalEntry_System), System, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Cost);
+            info = BaseUtils.FieldBuilder.Build("System: ".T(EDCTx.JournalEntry_System), System, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost);
             detailed = "";
         }
     }
@@ -74,18 +74,18 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Amount: ; cr;N0".T(EDTx.JournalEntry_Amount), BaseValue, "Bonus: ; cr;N0".T(EDTx.JournalEntry_Bonus), Bonus,
-                                "Total: ; cr;N0".T(EDTx.JournalSellExplorationData_Total), TotalEarnings);
+            info = BaseUtils.FieldBuilder.Build("Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), BaseValue, "Bonus: ; cr;N0".T(EDCTx.JournalEntry_Bonus), Bonus,
+                                "Total: ; cr;N0".T(EDCTx.JournalSellExplorationData_Total), TotalEarnings);
             detailed = "";
             if (Systems != null && Systems.Length != 0)
             {
-                detailed += "Scanned: ".T(EDTx.JournalEntry_Scanned);
+                detailed += "Scanned: ".T(EDCTx.JournalEntry_Scanned);
                 foreach (string s in Systems)
                     detailed += s + " ";
             }
             if (Discovered != null && Discovered.Length != 0)
             {
-                detailed += System.Environment.NewLine + "Discovered: ".T(EDTx.JournalEntry_Discovered);
+                detailed += System.Environment.NewLine + "Discovered: ".T(EDCTx.JournalEntry_Discovered);
                 foreach (string s in Discovered)
                     detailed += s + " ";
             }
@@ -123,8 +123,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Amount: ; cr;N0".T(EDTx.JournalEntry_Amount), BaseValue, "Bonus: ; cr;N0".T(EDTx.JournalEntry_Bonus), Bonus,
-                                "Total: ; cr;N0".T(EDTx.JournalMultiSellExplorationData_Total), TotalEarnings);
+            info = BaseUtils.FieldBuilder.Build("Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), BaseValue, "Bonus: ; cr;N0".T(EDCTx.JournalEntry_Bonus), Bonus,
+                                "Total: ; cr;N0".T(EDCTx.JournalMultiSellExplorationData_Total), TotalEarnings);
             detailed = "";
             if (Systems != null)
             {
@@ -165,7 +165,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Count: ".T(EDTx.JournalEntry_Count), Bios?.Length ?? 0, "Amount: ; cr;N0".T(EDTx.JournalEntry_Amount), TotalValue);
+            info = BaseUtils.FieldBuilder.Build("Count: ".T(EDCTx.JournalEntry_Count), Bios?.Length ?? 0, "Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), TotalValue);
             detailed = "";
             if (Bios != null)
             {

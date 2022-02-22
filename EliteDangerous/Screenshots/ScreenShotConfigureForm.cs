@@ -108,7 +108,7 @@ namespace EliteDangerousCore.ScreenShots
 
             UpdateExample();
 
-            BaseUtils.Translator.Instance.Translate(this);
+            BaseUtils.Translator.Instance.TranslateVerify(this, typeof(EDCTx));
 
             label_index.Text = this.Text;
         }
@@ -149,7 +149,7 @@ namespace EliteDangerousCore.ScreenShots
         {
             using (var dlg = new FolderBrowserDialog())
             {
-                dlg.Description = "Select screenshot folder".T(EDTx.Screenshot_Folder);
+                dlg.Description = "Select screenshot folder".T(EDCTx.Screenshot_Folder);
                 dlg.SelectedPath = textBoxScreenshotsDir.Text;
 
                 if (dlg.ShowDialog(this) == DialogResult.OK)
@@ -163,7 +163,7 @@ namespace EliteDangerousCore.ScreenShots
         {
             FolderBrowserDialog dlg = new FolderBrowserDialog();
 
-            dlg.Description = "Select screenshot folder".T(EDTx.Screenshot_Folder);
+            dlg.Description = "Select screenshot folder".T(EDCTx.Screenshot_Folder);
             dlg.SelectedPath = textBoxOutputDir.Text;
 
             if (dlg.ShowDialog(this) == DialogResult.OK)
@@ -176,7 +176,7 @@ namespace EliteDangerousCore.ScreenShots
         {
             if (!Directory.Exists(textBoxScreenshotsDir.Text))
             {
-                ExtendedControls.MessageBoxTheme.Show(this, "Folder specified does not exist".T(EDTx.Screenshot_FolderNotExist));
+                ExtendedControls.MessageBoxTheme.Show(this, "Folder specified does not exist".T(EDCTx.Screenshot_FolderNotExist));
                 textBoxScreenshotsDir.Text = initialssfolder;
             }
             else
@@ -206,7 +206,7 @@ namespace EliteDangerousCore.ScreenShots
                         Close();
                     }
                     else
-                        ExtendedControls.MessageBoxTheme.Show(this, "Cannot set input and output to identical types and the same folder".T(EDTx.Screenshot_Identical));
+                        ExtendedControls.MessageBoxTheme.Show(this, "Cannot set input and output to identical types and the same folder".T(EDCTx.Screenshot_Identical));
                 }
                 catch (Exception ex)
                 {
@@ -215,7 +215,7 @@ namespace EliteDangerousCore.ScreenShots
                 }
             }
             else
-                ExtendedControls.MessageBoxTheme.Show(this, "Folder specified does not exist".T(EDTx.Screenshot_FolderNotExist));
+                ExtendedControls.MessageBoxTheme.Show(this, "Folder specified does not exist".T(EDCTx.Screenshot_FolderNotExist));
         }
 
         private void buttonExtCancel_Click(object sender, EventArgs e)
@@ -260,7 +260,7 @@ namespace EliteDangerousCore.ScreenShots
         {
             FolderBrowserDialog dlg = new FolderBrowserDialog();
 
-            dlg.Description = "Select screenshot folder".T(EDTx.Screenshot_Folder);
+            dlg.Description = "Select screenshot folder".T(EDCTx.Screenshot_Folder);
             dlg.SelectedPath = OriginalImageDirectory;
 
             if (dlg.ShowDialog(this) == DialogResult.OK)

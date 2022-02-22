@@ -62,13 +62,13 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             if (Taxi)
-                info = "Taxi".T(EDTx.JournalEntry_Taxi);
+                info = "Taxi".T(EDCTx.JournalEntry_Taxi);
             else if (SRV)
-                info = "SRV".T(EDTx.JournalCargo_CargoSRV);
+                info = "SRV".T(EDCTx.JournalCargo_CargoSRV);
             else if (Multicrew)
-                info = "Multicrew".T(EDTx.JournalStatistics_Multicrew);
+                info = "Multicrew".T(EDCTx.JournalStatistics_Multicrew);
             else
-                info = "Ship".T(EDTx.JournalCargo_CargoShip);
+                info = "Ship".T(EDCTx.JournalCargo_CargoShip);
 
             string body = Body == StationName ? null : Body.ReplaceIfStartsWith(StarSystem);
 
@@ -119,13 +119,13 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             if (Taxi)
-                info = "Taxi".T(EDTx.JournalEntry_Taxi);
+                info = "Taxi".T(EDCTx.JournalEntry_Taxi);
             else if (SRV)
-                info = "SRV".T(EDTx.JournalCargo_CargoSRV);
+                info = "SRV".T(EDCTx.JournalCargo_CargoSRV);
             else if (Multicrew)
-                info = "Multicrew".T(EDTx.JournalStatistics_Multicrew);
+                info = "Multicrew".T(EDCTx.JournalStatistics_Multicrew);
             else
-                info = "Ship".T(EDTx.JournalCargo_CargoShip);
+                info = "Ship".T(EDCTx.JournalCargo_CargoShip);
 
             string body = Body == StationName ? null : Body.ReplaceIfStartsWith(StarSystem);
             info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", StationName, "", body, "", StarSystem), ". ");

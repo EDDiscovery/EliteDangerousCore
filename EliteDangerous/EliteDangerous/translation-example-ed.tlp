@@ -880,15 +880,9 @@ SECTION MissionState
 SECTION CommanderForm
 
 CommanderForm: "CommanderForm" @
-.buttonCancel: "Cancel" @
-.buttonOK: "OK" @
 .extGroupBoxCommanderInfo: "Other" @
-.radioButtonHistorySelection: "History Grid Selection" @
 .labelMapCol: "Default Map Color" @
-.radioButtonCentreHome: "Home System" @
 .HomeSys: "Home System: " @
-.labelZoom: "Default Zoom" @
-.labelOpenOn: "Open Centred On" @
 .groupBoxCustomIGAU: "Intergalactic Astronomical Union [IGAU]" @
 .checkBoxIGAUSync: "Send Codex Entry Discovery Data to IGAU" @
 .groupBoxCustomInara: "Inara Information (optional)" @
@@ -906,10 +900,6 @@ CommanderForm: "CommanderForm" @
 .labelCN: "Commander Name: " @
 .buttonExtBrowse: "Browse" @
 .labelJL: "Journal Location: " @
-.label_index: "Commander Configure" @
-.radioButtonHistorySelection.ToolTip: "Select history entry as opening location" @
-.textBoxDefaultZoom.ToolTip: "Set the zoom level of the map. 1 is normal" @
-.radioButtonCentreHome.ToolTip: "Select home system as opening location" @
 .panel_defaultmapcolor.ToolTip: "New travel entries get this colour on the map" @
 .checkBoxIGAUSync.ToolTip: "https://github.com/Elite-IGAU/publications/blob/master/IGAU_Codex.csv" @
 .textBoxBorderInaraName.ToolTip: "Give the user name for this commander on Inara" @
@@ -942,8 +932,6 @@ SECTION ScreenShotImageConverter
 SECTION ScreenShotConfigureForm
 
 ScreenShotConfigureForm: "Screen Shot Configure" @
-.buttonExtCancel: "Cancel" @
-.buttonExtOK: "OK" @
 .groupBoxCropSettings: "Crop Settings" @
 .extGroupBox1: "Crop/Resize Settings" @
 .labelHeight: "Height" @
@@ -954,7 +942,6 @@ ScreenShotConfigureForm: "Screen Shot Configure" @
 .labelWidth2: "Width" @
 .labelLeft2: "Left" @
 .labelTop2: "Top" @
-.checkBoxCropImage: "Crop Image" @
 .labelFolder: "ED/Steam Screenshot folder" @
 .buttonChangeScreenshotsFolder: "Browse" @
 .labelSubfolder: "In Sub folder" @
@@ -963,7 +950,6 @@ ScreenShotConfigureForm: "Screen Shot Configure" @
 .buttonEDChangeOutputFolder: "Browse" @
 .labelScanFor: "Scan for" @
 .labelSaveAs: "Save as" @
-.extCheckBoxRemoveOriginal: "Remove Original Elite Image" @
 .extCheckBoxKeepMasterConvertedImage: "Keep master converted image" @
 .labelImage2: "Image 2" @
 .labelImage1: "Image 1" @
@@ -974,6 +960,7 @@ ScreenShotConfigureForm: "Screen Shot Configure" @
 .labelClipboard: "Clipboard" @
 .labelOriginal: "Original Image" @
 .labelEnabled: "Enable" @
+.labelQuality: "JPEG Quality" @
 
 SECTION Screenshot
 

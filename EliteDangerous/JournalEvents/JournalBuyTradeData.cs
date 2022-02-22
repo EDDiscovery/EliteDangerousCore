@@ -37,7 +37,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)  
         {
-            info = BaseUtils.FieldBuilder.Build("System: ".T(EDTx.JournalEntry_System), System, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Cost);
+            info = BaseUtils.FieldBuilder.Build("System: ".T(EDCTx.JournalEntry_System), System, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost);
             detailed = "";
         }
     }

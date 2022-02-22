@@ -36,8 +36,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
-            info = BaseUtils.FieldBuilder.Build("Hull: ".T(EDTx.JournalRepairDrone_Hull), HullRepaired.ToString("0.0"), "Cockpit: ".T(EDTx.JournalEntry_Cockpit), CockpitRepaired.ToString("0.0"), 
-                                "Corrosion: ".T(EDTx.JournalEntry_Corrosion), CorrosionRepaired.ToString("0.0"));
+            info = BaseUtils.FieldBuilder.Build("Hull: ".T(EDCTx.JournalRepairDrone_Hull), HullRepaired.ToString("0.0"), "Cockpit: ".T(EDCTx.JournalEntry_Cockpit), CockpitRepaired.ToString("0.0"), 
+                                "Corrosion: ".T(EDCTx.JournalEntry_Corrosion), CorrosionRepaired.ToString("0.0"));
             detailed = "";
         }
     }
@@ -82,7 +82,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Type: ".T(EDTx.JournalEntry_Type), Type, "Count: ".T(EDTx.JournalEntry_Count), Count, "Total Cost: ; cr;N0".T(EDTx.JournalEntry_TotalCost), TotalCost, "each: ; cr;N0".T(EDTx.JournalEntry_each), BuyPrice);
+            info = BaseUtils.FieldBuilder.Build("Type: ".T(EDCTx.JournalEntry_Type), Type, "Count: ".T(EDCTx.JournalEntry_Count), Count, "Total Cost: ; cr;N0".T(EDCTx.JournalEntry_TotalCost), TotalCost, "each: ; cr;N0".T(EDCTx.JournalEntry_each), BuyPrice);
             detailed = "";
         }
     }
@@ -118,12 +118,12 @@ namespace EliteDangerousCore.JournalEvents
 
         public void Ledger(Ledger mcl)
         {
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Count.ToString() + " " + "Drones".T(EDTx.JournalEntry_Drones), TotalSale);
+            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Count.ToString() + " " + "Drones".T(EDCTx.JournalEntry_Drones), TotalSale);
         }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", Type, "Count: ".T(EDTx.JournalEntry_Count), Count, "Price: ; cr;N0".T(EDTx.JournalEntry_Price), SellPrice, "Amount: ; cr;N0".T(EDTx.JournalEntry_Amount), TotalSale);
+            info = BaseUtils.FieldBuilder.Build("", Type, "Count: ".T(EDCTx.JournalEntry_Count), Count, "Price: ; cr;N0".T(EDCTx.JournalEntry_Price), SellPrice, "Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), TotalSale);
             detailed = "";
         }
     }
@@ -149,7 +149,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Type: ".T(EDTx.JournalEntry_Type), FriendlyType);
+            info = BaseUtils.FieldBuilder.Build("Type: ".T(EDCTx.JournalEntry_Type), FriendlyType);
             detailed = "";
         }
     }

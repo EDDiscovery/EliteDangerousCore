@@ -42,7 +42,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
-            info = BaseUtils.FieldBuilder.Build("", Power, "Rank: ".T(EDTx.JournalEntry_Rank), Rank, "Merits: ".T(EDTx.JournalEntry_Merits), Merits, "Votes: ".T(EDTx.JournalEntry_Votes), Votes, "Pledged: ".T(EDTx.JournalEntry_Pledged), TimePledgedString);
+            info = BaseUtils.FieldBuilder.Build("", Power, "Rank: ".T(EDCTx.JournalEntry_Rank), Rank, "Merits: ".T(EDCTx.JournalEntry_Merits), Merits, "Votes: ".T(EDCTx.JournalEntry_Votes), Votes, "Pledged: ".T(EDCTx.JournalEntry_Pledged), TimePledgedString);
             detailed = "";
         }
     }
@@ -65,7 +65,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", Power, "Type: ".T(EDTx.JournalEntry_Type), Type_Localised, "Count: ".T(EDTx.JournalEntry_Count), Count);
+            info = BaseUtils.FieldBuilder.Build("", Power, "Type: ".T(EDCTx.JournalEntry_Type), Type_Localised, "Count: ".T(EDCTx.JournalEntry_Count), Count);
             detailed = "";
         }
 
@@ -89,7 +89,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("From Power: ".T(EDTx.JournalEntry_FromPower), FromPower, "To Power: ".T(EDTx.JournalEntry_ToPower), ToPower);
+            info = BaseUtils.FieldBuilder.Build("From Power: ".T(EDCTx.JournalEntry_FromPower), FromPower, "To Power: ".T(EDCTx.JournalEntry_ToPower), ToPower);
             detailed = "";
         }
     }
@@ -112,7 +112,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", Power, "Type: ".T(EDTx.JournalEntry_Type), Type_Localised, "Count: ".T(EDTx.JournalEntry_Count), Count);
+            info = BaseUtils.FieldBuilder.Build("", Power, "Type: ".T(EDCTx.JournalEntry_Type), Type_Localised, "Count: ".T(EDCTx.JournalEntry_Count), Count);
             detailed = "";
         }
 
@@ -141,7 +141,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", Power, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Cost);
+            info = BaseUtils.FieldBuilder.Build("", Power, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost);
             detailed = "";
         }
     }
@@ -199,7 +199,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", Power, "Amount: ; cr;N0".T(EDTx.JournalEntry_Amount), Amount);
+            info = BaseUtils.FieldBuilder.Build("", Power, "Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), Amount);
             detailed = "";
         }
     }
@@ -220,7 +220,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", Power, "System: ".T(EDTx.JournalEntry_System), System, "Votes: ".T(EDTx.JournalEntry_Votes), Votes);
+            info = BaseUtils.FieldBuilder.Build("", Power, "System: ".T(EDCTx.JournalEntry_System), System, "Votes: ".T(EDCTx.JournalEntry_Votes), Votes);
             detailed = "";
         }
     }
@@ -243,7 +243,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Systems != null)
             {
-                info += ", Systems: ".T(EDTx.JournalEntry_Systems);
+                info += ", Systems: ".T(EDCTx.JournalEntry_Systems);
 
                 bool comma = false;
                 foreach (string s in Systems)

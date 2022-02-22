@@ -59,9 +59,9 @@ namespace EliteDangerousCore
                 {
                     tip = sc.DisplayString(0, historicmats, curmats);
                     if (sn.Signals != null)
-                        tip += "\n" + "Signals".T(EDTx.ScanDisplayUserControl_Signals) + ":\n" + JournalSAASignalsFound.SignalList(sn.Signals, 4, "\n");
+                        tip += "\n" + "Signals".T(EDCTx.ScanDisplayUserControl_Signals) + ":\n" + JournalSAASignalsFound.SignalList(sn.Signals, 4, "\n");
                     if ( sn.Organics != null )
-                        tip += "\n" + "Organics".T(EDTx.ScanDisplayUserControl_Organics) + ":\n" + JournalScanOrganic.OrganicList(sn.Organics,4);
+                        tip += "\n" + "Organics".T(EDCTx.ScanDisplayUserControl_Organics) + ":\n" + JournalScanOrganic.OrganicList(sn.Organics,4);
 
                     Bitmap nodeimage = (Bitmap)BaseUtils.Icons.IconSet.GetIcon(sc.GetStarPlanetTypeImageName());
 
@@ -294,7 +294,7 @@ namespace EliteDangerousCore
                 if (sn.BeltData != null)
                     tip = sn.BeltData.RingInformationMoons(true,"");
                 else
-                    tip = sn.OwnName + Environment.NewLine + Environment.NewLine + "No scan data available".T(EDTx.ScanDisplayUserControl_NSD);
+                    tip = sn.OwnName + Environment.NewLine + Environment.NewLine + "No scan data available".T(EDCTx.ScanDisplayUserControl_NSD);
 
                 if (sn.Children != null && sn.Children.Count != 0)
                 {
@@ -315,9 +315,9 @@ namespace EliteDangerousCore
             else
             {
                 if (sn.NodeType == StarScan.ScanNodeType.barycentre)
-                    tip = string.Format("Barycentre of {0}".T(EDTx.ScanDisplayUserControl_BC), sn.OwnName);
+                    tip = string.Format("Barycentre of {0}".T(EDCTx.ScanDisplayUserControl_BC), sn.OwnName);
                 else
-                    tip = sn.OwnName + Environment.NewLine + Environment.NewLine + "No scan data available".T(EDTx.ScanDisplayUserControl_NSD);
+                    tip = sn.OwnName + Environment.NewLine + Environment.NewLine + "No scan data available".T(EDCTx.ScanDisplayUserControl_NSD);
 
                 string nodelabel = sn.CustomName ?? sn.OwnName;
                 nodelabel = nodelabel.AppendPrePad(appendlabeltext,Environment.NewLine);
@@ -480,14 +480,14 @@ namespace EliteDangerousCore
             if (expired.Count > 0)
             {
                 expired.Sort(delegate (JournalFSSSignalDiscovered.FSSSignal l, JournalFSSSignalDiscovered.FSSSignal r) { return r.ExpiryUTC.CompareTo(l.ExpiryUTC); });
-                tip = tip.AppendPrePad("Expired:".T(EDTx.UserControlScan_Expired), Environment.NewLine + Environment.NewLine);
+                tip = tip.AppendPrePad("Expired:".T(EDCTx.UserControlScan_Expired), Environment.NewLine + Environment.NewLine);
                 foreach (var sig in expired)
                     tip = tip.AppendPrePad(sig.ToString(true), Environment.NewLine);
             }
 
             if ( codex.Count>0)
             {
-                tip = tip.AppendPrePad("Codex".T(EDTx.ScanDisplayUserControl_Codex) + ":", Environment.NewLine + Environment.NewLine);
+                tip = tip.AppendPrePad("Codex".T(EDCTx.ScanDisplayUserControl_Codex) + ":", Environment.NewLine + Environment.NewLine);
                 foreach ( var c in codex)
                 {
                     tip = tip.AppendPrePad(c.Info(), Environment.NewLine);

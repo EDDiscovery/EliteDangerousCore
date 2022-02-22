@@ -110,7 +110,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", Name, "Old: ".T(EDTx.JournalEntry_Old), OldRank.ToString().SplitCapsWord(), "New: ".T(EDTx.JournalEntry_New), NewRank.ToString().SplitCapsWord());
+            info = BaseUtils.FieldBuilder.Build("", Name, "Old: ".T(EDCTx.JournalEntry_Old), OldRank.ToString().SplitCapsWord(), "New: ".T(EDCTx.JournalEntry_New), NewRank.ToString().SplitCapsWord());
             detailed = "";
         }
 
@@ -155,7 +155,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", Name, "Rank: ".T(EDTx.JournalEntry_Rank), CurrentRank.ToString().SplitCapsWord());
+            info = BaseUtils.FieldBuilder.Build("", Name, "Rank: ".T(EDCTx.JournalEntry_Rank), CurrentRank.ToString().SplitCapsWord());
             detailed = "";
         }
     }

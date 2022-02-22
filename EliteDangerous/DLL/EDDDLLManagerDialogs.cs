@@ -46,9 +46,9 @@ namespace EliteDangerousCore.DLL
             }
 
             vpos += 20;
-            f.Add(new ExtendedControls.ConfigurableForm.Entry("CALL", typeof(ExtendedControls.ExtButton), "Remove All".Tx(), new Point(margin, vpos), new Size(100, 20), null));
-            f.AddOK(new Point(width - margin - 100, vpos), "OK".Tx());
-            f.AddCancel(new Point(width - margin - 200, vpos), "Cancel".Tx());
+            f.Add(new ExtendedControls.ConfigurableForm.Entry("CALL", typeof(ExtendedControls.ExtButton), "Remove All".TxID(EDCTx.RemoveAll), new Point(margin, vpos), new Size(100, 20), null));
+            f.AddOK(new Point(width - margin - 100, vpos), "OK".TxID(EDCTx.OK));
+            f.AddCancel(new Point(width - margin - 200, vpos), "Cancel".TxID(EDCTx.Cancel));
 
             f.Trigger += (dialogname, controlname, xtag) =>
             {
@@ -111,7 +111,7 @@ namespace EliteDangerousCore.DLL
             }
 
             vpos += 20;
-            f.AddCancel(new Point(width - margin - 100, vpos), "Cancel".Tx());
+            f.AddCancel(new Point(width - margin - 100, vpos), "Cancel".TxID(EDCTx.Cancel));
 
             f.Trigger += (dialogname, controlname, xtag) =>
             {

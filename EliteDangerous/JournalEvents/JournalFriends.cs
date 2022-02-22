@@ -66,13 +66,13 @@ namespace EliteDangerousCore.JournalEvents
             {
                 info = "";
                 if (OfflineCount + OnlineCount < NameList.Count)
-                    info = BaseUtils.FieldBuilder.Build("Number of Statuses: ".T(EDTx.JournalEntry_NumberofStatuses), NameList.Count);
+                    info = BaseUtils.FieldBuilder.Build("Number of Statuses: ".T(EDCTx.JournalEntry_NumberofStatuses), NameList.Count);
 
                 if (OnlineCount > 0)
-                    info = info.AppendPrePad("Online: ".T(EDTx.JournalEntry_Online) + OnlineCount.ToString(), ", ");
+                    info = info.AppendPrePad("Online: ".T(EDCTx.JournalEntry_Online) + OnlineCount.ToString(), ", ");
 
                 if (OfflineCount > 0)
-                    info = info.AppendPrePad("Offline: ".T(EDTx.JournalEntry_Offline) + OfflineCount.ToString(), ", ");
+                    info = info.AppendPrePad("Offline: ".T(EDCTx.JournalEntry_Offline) + OfflineCount.ToString(), ", ");
 
                 for ( int i = 0; i < StatusList.Count; i++ )
                     detailed = detailed.AppendPrePad(ST(NameList[i], StatusList[i]) , System.Environment.NewLine);
@@ -86,17 +86,17 @@ namespace EliteDangerousCore.JournalEvents
         static private string ST(string friendname, FriendStatus stat)
         {
             if (stat == FriendStatus.Online)
-                return "Online: ".T(EDTx.JournalEntry_Online) + friendname;
+                return "Online: ".T(EDCTx.JournalEntry_Online) + friendname;
             else if (stat == FriendStatus.Offline)
-                return "Online: ".T(EDTx.JournalEntry_Offline) + friendname;
+                return "Online: ".T(EDCTx.JournalEntry_Offline) + friendname;
             else if (stat == FriendStatus.Lost)
-                return "Unfriended: ".T(EDTx.JournalEntry_Unfriended) + friendname;
+                return "Unfriended: ".T(EDCTx.JournalEntry_Unfriended) + friendname;
             else if (stat == FriendStatus.Declined)
-                return "Declined: ".T(EDTx.JournalEntry_Declined) + friendname;
+                return "Declined: ".T(EDCTx.JournalEntry_Declined) + friendname;
             else if (stat == FriendStatus.Requested)
-                return "Requested Friend: ".T(EDTx.JournalEntry_RequestedFriend) + friendname;
+                return "Requested Friend: ".T(EDCTx.JournalEntry_RequestedFriend) + friendname;
             else if (stat == FriendStatus.Added)
-                return "Added Friend: ".T(EDTx.JournalEntry_AddedFriend) + friendname;
+                return "Added Friend: ".T(EDCTx.JournalEntry_AddedFriend) + friendname;
             else
                 return "??";
         }

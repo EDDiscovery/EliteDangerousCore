@@ -68,9 +68,9 @@
             this.statusStripCustom = new ExtendedControls.ExtStatusStrip();
             this.extGroupBoxCommanderInfo = new ExtendedControls.ExtGroupBox();
             this.tableLayoutPanelCommanderInfo = new System.Windows.Forms.TableLayoutPanel();
-            this.labelMapCol = new System.Windows.Forms.Label();
             this.extTextBoxAutoCompleteHomeSystem = new ExtendedControls.ExtTextBoxAutoComplete();
             this.HomeSys = new System.Windows.Forms.Label();
+            this.labelMapCol = new System.Windows.Forms.Label();
             this.groupBoxCustomIGAU = new ExtendedControls.ExtGroupBox();
             this.extPanelScroll = new ExtendedControls.ExtPanelScroll();
             this.panelGroups = new System.Windows.Forms.Panel();
@@ -156,9 +156,9 @@
             this.label_index.AutoSize = true;
             this.label_index.Location = new System.Drawing.Point(3, 8);
             this.label_index.Name = "label_index";
-            this.label_index.Size = new System.Drawing.Size(111, 13);
+            this.label_index.Size = new System.Drawing.Size(43, 13);
             this.label_index.TabIndex = 23;
-            this.label_index.Text = "Commander Configure";
+            this.label_index.Text = "<code>";
             this.label_index.MouseDown += new System.Windows.Forms.MouseEventHandler(this.label_index_MouseDown);
             // 
             // toolTip
@@ -618,7 +618,7 @@
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(100, 23);
             this.buttonCancel.TabIndex = 1;
-            this.buttonCancel.Text = "Cancel";
+            this.buttonCancel.Text = "%Cancel%";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
@@ -629,7 +629,7 @@
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(100, 23);
             this.buttonOK.TabIndex = 0;
-            this.buttonOK.Text = "OK";
+            this.buttonOK.Text = "%OK%";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
@@ -746,15 +746,6 @@
             this.tableLayoutPanelCommanderInfo.Size = new System.Drawing.Size(685, 41);
             this.tableLayoutPanelCommanderInfo.TabIndex = 14;
             // 
-            // labelMapCol
-            // 
-            this.labelMapCol.AutoSize = true;
-            this.labelMapCol.Location = new System.Drawing.Point(3, 20);
-            this.labelMapCol.Name = "labelMapCol";
-            this.labelMapCol.Size = new System.Drawing.Size(92, 13);
-            this.labelMapCol.TabIndex = 13;
-            this.labelMapCol.Text = "Default Map Color";
-            // 
             // extTextBoxAutoCompleteHomeSystem
             // 
             this.extTextBoxAutoCompleteHomeSystem.AutoCompleteCommentMarker = null;
@@ -797,6 +788,15 @@
             this.HomeSys.Size = new System.Drawing.Size(75, 13);
             this.HomeSys.TabIndex = 2;
             this.HomeSys.Text = "Home System:";
+            // 
+            // labelMapCol
+            // 
+            this.labelMapCol.AutoSize = true;
+            this.labelMapCol.Location = new System.Drawing.Point(3, 20);
+            this.labelMapCol.Name = "labelMapCol";
+            this.labelMapCol.Size = new System.Drawing.Size(92, 13);
+            this.labelMapCol.TabIndex = 13;
+            this.labelMapCol.Text = "Default Map Color";
             // 
             // groupBoxCustomIGAU
             // 

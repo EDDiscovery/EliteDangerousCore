@@ -30,6 +30,9 @@ namespace EliteDangerousCore.Forms
         {
             InitializeComponent();
 
+            BaseUtils.Translator.Instance.TranslateVerify(this, typeof(EDCTx));          // before translate
+            BaseUtils.Translator.Instance.TranslateVerify(toolTip, typeof(EDCTx), this);
+
             if (additionalcontrols != null)
             {
                 foreach (Control c in additionalcontrols)
@@ -42,8 +45,7 @@ namespace EliteDangerousCore.Forms
             bool winborder = theme.ApplyDialog(this);
             panelTop.Visible = panelTop.Enabled = !winborder;
 
-            BaseUtils.Translator.Instance.Translate(this);
-            BaseUtils.Translator.Instance.Translate(toolTip,this);
+            label_index.Text = this.Text;
         }
 
         private void InitInt(bool enablecmdredit, bool disablefromedsm, bool disable3dmapsettings, bool disableconsolesupport)
@@ -161,7 +163,7 @@ namespace EliteDangerousCore.Forms
         private void buttonExtBrowse_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
-            fbd.Description = "Select folder where Journal*.log files are stored by Frontier in".T(EDTx.CommanderForm_LF);
+            fbd.Description = "Select folder where Journal*.log files are stored by Frontier in".T(EDCTx.CommanderForm_LF);
 
             if (fbd.ShowDialog(this) == DialogResult.OK)
                 textBoxBorderJournal.Text = fbd.SelectedPath;
@@ -172,7 +174,7 @@ namespace EliteDangerousCore.Forms
         {
             if (textBoxBorderJournal.Text.HasChars() && !Directory.Exists(textBoxBorderJournal.Text))
             {
-                ExtendedControls.MessageBoxTheme.Show(this, "Folder does not exist".T(EDTx.CommanderForm_ND), "Warning".Tx(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ExtendedControls.MessageBoxTheme.Show(this, "Folder does not exist".T(EDCTx.CommanderForm_ND), "Warning".TxID(EDCTx.Warning), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else
             {

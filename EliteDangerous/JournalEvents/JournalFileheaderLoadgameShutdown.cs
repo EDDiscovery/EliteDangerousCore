@@ -55,7 +55,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
-            info = BaseUtils.FieldBuilder.Build("Version: ".T(EDTx.JournalEntry_Version), GameVersion , "Build: ".T(EDTx.JournalEntry_Build), Build , "Part: ".T(EDTx.JournalEntry_Part), Part);
+            info = BaseUtils.FieldBuilder.Build("Version: ".T(EDCTx.JournalEntry_Version), GameVersion , "Build: ".T(EDCTx.JournalEntry_Build), Build , "Part: ".T(EDCTx.JournalEntry_Part), Part);
             detailed = "";
         }
     }
@@ -145,8 +145,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Cmdr ", LoadGameCommander, "Ship: ".T(EDTx.JournalEntry_Ship), Ship, "Name: ".T(EDTx.JournalEntry_Name), ShipName, "Ident: ".T(EDTx.JournalEntry_Ident), ShipIdent, "Credits: ;;N0".T(EDTx.JournalEntry_Credits), Credits);
-            detailed = BaseUtils.FieldBuilder.Build("Mode: ".T(EDTx.JournalEntry_Mode), GameMode, "Group: ".T(EDTx.JournalEntry_Group), Group, "Not Landed;Landed".T(EDTx.JournalEntry_NotLanded), StartLanded, "Fuel Level: ;;0.0".T(EDTx.JournalEntry_FuelLevel), FuelLevel, "Capacity: ;;0.0".T(EDTx.JournalEntry_Capacity), FuelCapacity);
+            info = BaseUtils.FieldBuilder.Build("Cmdr ", LoadGameCommander, "Ship: ".T(EDCTx.JournalEntry_Ship), Ship, "Name: ".T(EDCTx.JournalEntry_Name), ShipName, "Ident: ".T(EDCTx.JournalEntry_Ident), ShipIdent, "Credits: ;;N0".T(EDCTx.JournalEntry_Credits), Credits);
+            detailed = BaseUtils.FieldBuilder.Build("Mode: ".T(EDCTx.JournalEntry_Mode), GameMode, "Group: ".T(EDCTx.JournalEntry_Group), Group, "Not Landed;Landed".T(EDCTx.JournalEntry_NotLanded), StartLanded, "Fuel Level: ;;0.0".T(EDCTx.JournalEntry_FuelLevel), FuelLevel, "Capacity: ;;0.0".T(EDCTx.JournalEntry_Capacity), FuelCapacity);
         }
 
         public void Ledger(Ledger mcl)
@@ -154,7 +154,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.Loan = Loan;
             if (mcl.CashTotal != Credits)
             {
-                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "Cash total differs, adjustment".T(EDTx.JournalEntry_Cashtotaldiffers), Credits - mcl.CashTotal);
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "Cash total differs, adjustment".T(EDCTx.JournalEntry_Cashtotaldiffers), Credits - mcl.CashTotal);
             }
         }
 

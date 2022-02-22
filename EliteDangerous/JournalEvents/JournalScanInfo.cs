@@ -858,16 +858,16 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (IsStar)
             {
-                return BaseUtils.FieldBuilder.Build("Mass: ;SM;0.00".T(EDTx.JournalScan_MSM), nStellarMass,
-                                                "Age: ;my;0.0".T(EDTx.JournalScan_Age), nAge,
-                                                "Radius: ".T(EDTx.JournalScan_RS), RadiusText(),
-                                                "Dist: ".T(EDTx.JournalScan_DIST), DistanceFromArrivalText);
+                return BaseUtils.FieldBuilder.Build("Mass: ;SM;0.00".T(EDCTx.JournalScan_MSM), nStellarMass,
+                                                "Age: ;my;0.0".T(EDCTx.JournalScan_Age), nAge,
+                                                "Radius: ".T(EDCTx.JournalScan_RS), RadiusText(),
+                                                "Dist: ".T(EDCTx.JournalScan_DIST), DistanceFromArrivalText);
             }
             else
             {
-                return BaseUtils.FieldBuilder.Build("Mass: ".T(EDTx.JournalScan_MASS), MassEMText(),
-                                                 "Radius: ".T(EDTx.JournalScan_RS), RadiusText(),
-                                                 "Dist: ".T(EDTx.JournalScan_DIST), DistanceFromArrivalText);
+                return BaseUtils.FieldBuilder.Build("Mass: ".T(EDCTx.JournalScan_MASS), MassEMText(),
+                                                 "Radius: ".T(EDCTx.JournalScan_RS), RadiusText(),
+                                                 "Dist: ".T(EDCTx.JournalScan_DIST), DistanceFromArrivalText);
             }
         }
 
@@ -887,34 +887,34 @@ namespace EliteDangerousCore.JournalEvents
             string bodyname = js.BodyDesignationOrName.ReplaceIfStartsWith(sys.Name);
 
             // Name
-            information.Append((bodyname) + @" is a ".T(EDTx.JournalScanInfo_isa));
+            information.Append((bodyname) + @" is a ".T(EDCTx.JournalScanInfo_isa));
 
             // Additional information
             information.Append((js.IsStar) ? Bodies.StarName(js.StarTypeID) + "." : null);
-            information.Append((js.CanBeTerraformable) ? @"terraformable ".T(EDTx.JournalScanInfo_terraformable) : null);
+            information.Append((js.CanBeTerraformable) ? @"terraformable ".T(EDCTx.JournalScanInfo_terraformable) : null);
             information.Append((js.IsPlanet) ? Bodies.PlanetTypeName(js.PlanetTypeID) + "." : null);
-            information.Append((js.nRadius < lowRadiusLimit && js.IsPlanet) ? @" Is tiny ".T(EDTx.JournalScanInfo_LowRadius) + "(" + RadiusText() + ")." : null);
-            information.Append((js.nRadius > largeRadiusLimit && js.IsPlanet && js.IsLandable) ? @" Is large ".T(EDTx.JournalScanInfo_LargeRadius) + "(" + RadiusText() + ")." : null);
-            information.Append((js.IsLandable) ? @" Is landable.".T(EDTx.JournalScanInfo_islandable) : null);
+            information.Append((js.nRadius < lowRadiusLimit && js.IsPlanet) ? @" Is tiny ".T(EDCTx.JournalScanInfo_LowRadius) + "(" + RadiusText() + ")." : null);
+            information.Append((js.nRadius > largeRadiusLimit && js.IsPlanet && js.IsLandable) ? @" Is large ".T(EDCTx.JournalScanInfo_LargeRadius) + "(" + RadiusText() + ")." : null);
+            information.Append((js.IsLandable) ? @" Is landable.".T(EDCTx.JournalScanInfo_islandable) : null);
             information.Append((js.IsLandable && showGravity && js.nSurfaceGravityG.HasValue) ? @" (" + Math.Round(js.nSurfaceGravityG.Value, 2, MidpointRounding.AwayFromZero) + "g)" : null);
-            information.Append((js.HasAtmosphericComposition && showAtmos) ? @" Atmosphere: ".T(EDTx.JournalScanInfo_Atmosphere) + (js.Atmosphere ?? "unknown atmosphere".T(EDTx.JournalScanInfo_unknownAtmosphere)) + "." : null);
-            information.Append((js.HasMeaningfulVolcanism && showvolcanism) ? @" Has ".T(EDTx.JournalScanInfo_Has) + js.Volcanism + "." : null);
-            information.Append((hasminingsignals) ? " Has mining signals.".T(EDTx.JournalScanInfo_Signals) : null);
-            information.Append((hasgeosignals) ? " Has geological signals.".T(EDTx.JournalScanInfo_GeoSignals) : null);
-            information.Append((hasbiosignals) ? " Has biological signals.".T(EDTx.JournalScanInfo_BioSignals) : null);
-            information.Append((hasthargoidsignals) ? " Has thargoid signals.".T(EDTx.JournalScanInfo_ThargoidSignals) : null);
-            information.Append((hasguardiansignals) ? " Has guardian signals.".T(EDTx.JournalScanInfo_GuardianSignals) : null);
-            information.Append((hashumansignals) ? " Has human signals.".T(EDTx.JournalScanInfo_HumanSignals) : null);
-            information.Append((hasothersignals) ? " Has 'other' signals.".T(EDTx.JournalScanInfo_OtherSignals) : null);
-            information.Append((js.HasRings && showRings) ? @" Is ringed.".T(EDTx.JournalScanInfo_Hasring) : null);
-            information.Append((js.nEccentricity >= eccentricityLimit) ? @" Has an high eccentricity of ".T(EDTx.JournalScanInfo_eccentricity) + js.nEccentricity + "." : null);
-            information.Append(hasscanorganics ? " Has been scanned for organics.".T(EDTx.JournalScanInfo_scanorganics) : null);
+            information.Append((js.HasAtmosphericComposition && showAtmos) ? @" Atmosphere: ".T(EDCTx.JournalScanInfo_Atmosphere) + (js.Atmosphere ?? "unknown atmosphere".T(EDCTx.JournalScanInfo_unknownAtmosphere)) + "." : null);
+            information.Append((js.HasMeaningfulVolcanism && showvolcanism) ? @" Has ".T(EDCTx.JournalScanInfo_Has) + js.Volcanism + "." : null);
+            information.Append((hasminingsignals) ? " Has mining signals.".T(EDCTx.JournalScanInfo_Signals) : null);
+            information.Append((hasgeosignals) ? " Has geological signals.".T(EDCTx.JournalScanInfo_GeoSignals) : null);
+            information.Append((hasbiosignals) ? " Has biological signals.".T(EDCTx.JournalScanInfo_BioSignals) : null);
+            information.Append((hasthargoidsignals) ? " Has thargoid signals.".T(EDCTx.JournalScanInfo_ThargoidSignals) : null);
+            information.Append((hasguardiansignals) ? " Has guardian signals.".T(EDCTx.JournalScanInfo_GuardianSignals) : null);
+            information.Append((hashumansignals) ? " Has human signals.".T(EDCTx.JournalScanInfo_HumanSignals) : null);
+            information.Append((hasothersignals) ? " Has 'other' signals.".T(EDCTx.JournalScanInfo_OtherSignals) : null);
+            information.Append((js.HasRings && showRings) ? @" Is ringed.".T(EDCTx.JournalScanInfo_Hasring) : null);
+            information.Append((js.nEccentricity >= eccentricityLimit) ? @" Has an high eccentricity of ".T(EDCTx.JournalScanInfo_eccentricity) + js.nEccentricity + "." : null);
+            information.Append(hasscanorganics ? " Has been scanned for organics.".T(EDCTx.JournalScanInfo_scanorganics) : null);
 
             var ev = js.GetEstimatedValues();
 
             if (js.WasMapped == true && js.WasDiscovered == true)
             {
-                information.Append(" (Mapped & Discovered)".T(EDTx.JournalScanInfo_MandD));
+                information.Append(" (Mapped & Discovered)".T(EDCTx.JournalScanInfo_MandD));
                 if (showvalues)
                 {
                     information.Append(' ').Append(ev.EstimatedValueMappedEfficiently.ToString("N0")).Append(" cr");
@@ -922,7 +922,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             else if (js.WasMapped == true && js.WasDiscovered == false)
             {
-                information.Append(" (Mapped)".T(EDTx.JournalScanInfo_MP));
+                information.Append(" (Mapped)".T(EDCTx.JournalScanInfo_MP));
                 if (showvalues)
                 {
                     information.Append(' ').Append(ev.EstimatedValueFirstMappedEfficiently.ToString("N0")).Append(" cr");
@@ -930,7 +930,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             else if (js.WasDiscovered == true && js.WasMapped == false)
             {
-                information.Append(" (Discovered)".T(EDTx.JournalScanInfo_DIS));
+                information.Append(" (Discovered)".T(EDCTx.JournalScanInfo_DIS));
                 if (showvalues)
                 {
                     information.Append(' ').Append(ev.EstimatedValueFirstMappedEfficiently.ToString("N0")).Append(" cr");
@@ -981,13 +981,13 @@ namespace EliteDangerousCore.JournalEvents
                     StringBuilder jumpLevel = new StringBuilder();
 
                     if (basic != 0)
-                        jumpLevel.AppendPrePad(basic + "/" + Recipes.FindSynthesis("FSD", "Basic").Count + " Basic".T(EDTx.JournalScanInfo_BFSD), ", ");
+                        jumpLevel.AppendPrePad(basic + "/" + Recipes.FindSynthesis("FSD", "Basic").Count + " Basic".T(EDCTx.JournalScanInfo_BFSD), ", ");
                     if (standard != 0)
-                        jumpLevel.AppendPrePad(standard + "/" + Recipes.FindSynthesis("FSD", "Standard").Count + " Standard".T(EDTx.JournalScanInfo_SFSD), ", ");
+                        jumpLevel.AppendPrePad(standard + "/" + Recipes.FindSynthesis("FSD", "Standard").Count + " Standard".T(EDCTx.JournalScanInfo_SFSD), ", ");
                     if (premium != 0)
-                        jumpLevel.AppendPrePad(premium + "/" + Recipes.FindSynthesis("FSD", "Premium").Count + " Premium".T(EDTx.JournalScanInfo_PFSD), ", ");
+                        jumpLevel.AppendPrePad(premium + "/" + Recipes.FindSynthesis("FSD", "Premium").Count + " Premium".T(EDCTx.JournalScanInfo_PFSD), ", ");
 
-                    jumponium = jumponium.AppendPrePad(string.Format("{0} has {1} level elements.".T(EDTx.JournalScanInfo_LE), sysname, jumpLevel), Environment.NewLine);
+                    jumponium = jumponium.AppendPrePad(string.Format("{0} has {1} level elements.".T(EDCTx.JournalScanInfo_LE), sysname, jumpLevel), Environment.NewLine);
                 }
             }
         }
