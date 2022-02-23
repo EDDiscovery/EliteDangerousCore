@@ -879,15 +879,9 @@ SECTION MissionState
 SECTION CommanderForm
 
 CommanderForm: "CommanderForm" => "指挥官配置"
-.buttonCancel: "Cancel" => "取消"
-.buttonOK: "OK" => "确认"
 .extGroupBoxCommanderInfo: "Other" @
-.radioButtonHistorySelection: "History Grid Selection" @
 .labelMapCol: "Default Map Color" @
-.radioButtonCentreHome: "Home System" @
 .HomeSys: "Home System: " @
-.labelZoom: "Default Zoom" @
-.labelOpenOn: "Open Centred On" @
 .groupBoxCustomIGAU: "Intergalactic Astronomical Union [IGAU]" @
 .checkBoxIGAUSync: "Send Codex Entry Discovery Data to IGAU" @
 .groupBoxCustomInara: "Inara Information (optional)" => "Inara 设置（可选）"
@@ -905,10 +899,6 @@ CommanderForm: "CommanderForm" => "指挥官配置"
 .labelCN: "Commander Name: " => "指挥官名称："
 .buttonExtBrowse: "Browse" => "浏览"
 .labelJL: "Journal Location: " => "游戏日志文件路径："
-.label_index: "Commander Configure" => "指挥官配置"
-.radioButtonHistorySelection.ToolTip: "Select history entry as opening location" @
-.textBoxDefaultZoom.ToolTip: "Set the zoom level of the map. 1 is normal" @
-.radioButtonCentreHome.ToolTip: "Select home system as opening location" @
 .panel_defaultmapcolor.ToolTip: "New travel entries get this colour on the map" @
 .checkBoxIGAUSync.ToolTip: "https://github.com/Elite-IGAU/publications/blob/master/IGAU_Codex.csv" @
 .textBoxBorderInaraName.ToolTip: "Give the user name for this commander on Inara" => "输入此指挥官在 Inara 上对应的用户名"
@@ -941,8 +931,6 @@ SECTION ScreenShotImageConverter
 SECTION ScreenShotConfigureForm
 
 ScreenShotConfigureForm: "Screen Shot Configure" => "截图配置"
-.buttonExtCancel: "Cancel" => "取消"
-.buttonExtOK: "OK" => "确认"
 .groupBoxCropSettings: "Crop Settings" => "裁剪设置"
 .extGroupBox1: "Crop/Resize Settings" @
 .labelHeight: "Height" => "高度"
@@ -953,7 +941,6 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "截图配置"
 .labelWidth2: "Width" @
 .labelLeft2: "Left" @
 .labelTop2: "Top" @
-.checkBoxCropImage: "Crop Image" => "裁剪图片"
 .labelFolder: "ED/Steam Screenshot folder" => "ED/Steam截图文件夹"
 .buttonChangeScreenshotsFolder: "Browse" => "浏览"
 .labelSubfolder: "In Sub folder" => "创建子文件夹"
@@ -962,7 +949,6 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "截图配置"
 .buttonEDChangeOutputFolder: "Browse" => "浏览"
 .labelScanFor: "Scan for" => "原始格式"
 .labelSaveAs: "Save as" => "转换为"
-.extCheckBoxRemoveOriginal: "Remove Original Elite Image" @
 .extCheckBoxKeepMasterConvertedImage: "Keep master converted image" @
 .labelImage2: "Image 2" @
 .labelImage1: "Image 1" @
@@ -973,6 +959,7 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "截图配置"
 .labelClipboard: "Clipboard" @
 .labelOriginal: "Original Image" @
 .labelEnabled: "Enable" @
+.labelQuality: "JPEG Quality" @
 
 SECTION Screenshot
 

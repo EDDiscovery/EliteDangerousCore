@@ -296,7 +296,6 @@ SECTION FSSSignal
 
 .State: "State: " => "Estado: "
 .Faction: "Faction: " => "Facción: "
-.USSType: "USS Type: " => "Tipo de USS: "
 .ThreatLevel: "Threat Level: " => "Nivel de amenaza: "
 .StationBool: ";Station: " => ";Estación: "
 .CarrierBool: ";Carrier: " => ";Transportador: "
@@ -327,16 +326,8 @@ SECTION JournalCommodityPricesBase
 .CPBBuy: "{0}: {1}  " => "{0}: {1}  "
 .SO: "Sell only Items: " => "Vender solo artículos: "
 
-SECTION JournalEngineerCraftBase
-
-.InSlot: "In Slot: " => "En el espacio: "
-.By: "By: " => "Por: "
-.Blueprint: "Blueprint: " => "Plano: "
-.Level: "Level: " => "Nivel: "
-
 SECTION JournalEngineerProgress
 
-.Progress: "Progress: " => "Progreso: "
 .Progresson: "Progress on ; Engineers" => "Progreso en ; Ingenieros"
 .Rank: "Rank: " => "Rango: "
 
@@ -382,8 +373,6 @@ SECTION JournalLocOrJump
 .Type: "Type " => "Tipo "
 .insystem: "< in system " => "< en el sistema "
 .Security: "Security: " => "Seguridad: "
-.Inspacenear: "In space near " => "En el espacio cerca "
-.oftype: "< of type " => "< de tipo "
 .Happiness: "Happiness: " => "Felicidad: "
 .Reputation: "Reputation: ;%;N1" => "Reputación: ;%;N1"
 .SquadronSystem: ";Squadron System" => ";Sistema de escuadrón"
@@ -462,8 +451,6 @@ SECTION JournalPromotion
 SECTION JournalReceiveText
 
 .From: "From: " => "Desde: "
-.Msg: "Msg: " => "Msj: "
-.Channel: "Channel: " => "Canal: "
 .Text: " Texts" => " Textos"
 .FC: "from " => "desde "
 .on: "< on " => "< en "
@@ -513,18 +500,13 @@ SECTION JournalScan
 .MSM: "Mass: ;SM;0.00" => "Masa: ;SM;0.00"
 .Age: "Age: ;my;0.0" => "Edad: ;mi;0.0"
 .RS: "Radius: " => "Radio: "
-.MEM: "Mass: ;EM;0.00" => "Masa: ;EM;0.00"
 .Landable: "<;, Landable" => "<;, Aterrizable"
 .Terraformable: "<;, Terraformable" => "<;, Terraformable"
 .Gravity: "Gravity: ;G;0.00" => "Gravedad: ;G;0.00"
-.RK: "Radius: ;km;0" => "Radio: ;km;0"
 .NoAtmosphere: "No Atmosphere" => "Sin atmósfera"
 .LandC: ", Landable" => ", Aterrizable"
 .AMY: "Age: {0} my\n" => "Edad: {0} mi\n"
 .SolarMasses: "Solar Masses: {0:0.00}\n" => "Masas solares: {0:0.00}\n"
-.EarthMasses: "Earth Masses: {0:0.0000}\n" => "Masas de la Tierra: {0:0.0000}\n"
-.SolarRadius: "Solar Radius: {0:0.00} Sols\n" => "Radio solar: {0:0.00} Soles\n"
-.BodyRadius: "Body Radius: {0:0.00}km\n" => "Radio del cuerpo: {0:0.00} km\n"
 .SurfaceTemp: "Surface Temp: {0}K\n" => "Temperatura de la superficie: {0} K\n"
 .GV: "Gravity: {0:0.00}g\n" => "Gravedad: {0:0.00} g\n"
 .SPA: "Surface Pressure: {0} Atmospheres\n" => "Presión de la superficie: {0} Atmósferas\n"
@@ -551,7 +533,6 @@ SECTION JournalScan
 .EV: "Base Estimated value: {0:N0}" => "Valor base estimado: {0:N0}"
 .EVM: "Mapped value: {0:N0}/{1:N0}e" => "Valor asignado: {0:N0}/{1:N0}e"
 .DB: "Discovered by {0} on {1}" => "Descubierto por {0} el {1}"
-.HabitableZoneApprox: "Habitable Zone Approx. {0} ({1}-{2} AU)\n" => "Zona habitable aprox. {0} ({1}-{2} AU)\n"
 .Othersstarsnotconsidered: " - Others stars not considered\n" => " - Otras estrellas no consideradas\n"
 .Materials: "Materials:\n" => "Materiales:\n"
 .AtmosphericComposition: "Atmospheric Composition:\n" => "Composición atmosférica:\n"
@@ -565,9 +546,7 @@ SECTION JournalScan
 .DISTA: "Dist: ;ls;0.0" => "Dist: ;ls;0.0"
 .DIST: "Dist: " => "Dist: "
 .BNME: "Name: " => "Nombre: "
-.MMoM: "Mass: ;MM;0.00" => "Masa: ;MM;0.00"
 .SNME: "Name: " => "Nombre: "
-.MoonMasses: "Moon Masses: {0:0.00}\n" => "Misas lunares: {0:0.00}\n"
 .MPI: "Mapped" => "Asignado"
 .MPIE: "Efficiently" => "Eficientemente"
 .EVFD: "First Discovered+Mapped value: {0:N0}/{1:N0}e" => "Primer descubrimiento + valor asignado: {0:N0}/{1:N0}e"
@@ -629,11 +608,6 @@ SECTION JournalShipyardSwap
 SECTION JournalShipyardTransfer
 
 .Of: "Of " => "De "
-
-SECTION JournalSquadronBase
-
-.Old: "Old: " => "Viejo: "
-.New: "New: " => "Nuevo: "
 
 SECTION JournalStartJump
 
@@ -725,7 +699,6 @@ SECTION CrimeClass
 .GuardsMurdered: "Guards Murdered: ;;N0" @
 .DataStolen: "Data Stolen: ;;N0" @
 .GoodsStolen: "Goods Stolen: ;;N0" @
-.SampleStolen: "Production Samples Stolen: ;;N0" @
 .TotalStolen: "Total Inventory Items Stolen: ;;N0" @
 .TurretsDestroyed: "Turrets Destroyed: ;;N0" @
 .TurretsOverloaded: "Turrets Overloaded: ;;N0" @
@@ -894,10 +867,6 @@ SECTION ExobiologyClass
 SECTION JournalStoredModules
 
 .at: "< at " => "< en "
-
-SECTION JournalSquadronBase
-
-.Rank: "Rank: " => "Rango: "
 
 SECTION JournalSupercruiseExit
 
@@ -1113,8 +1082,6 @@ SECTION JournalEntry
 .NotorietyIndex: "Notoriety Index: ;;N0" => "Índice de notoriedad: ;;N0"
 .Fuel: "Fuel: ; tons;0.0" => "Combustible: ; toneladas;0.0"
 .Taxi: "Taxi" @
-.Backpack: "Backpack" @
-.Locker: "Locker" @
 .Mods: "Mods: " @
 .Class: "Class: " @
 
@@ -1177,7 +1144,6 @@ SECTION JournalScanInfo
 .GuardianSignals: " Has guardian signals." @
 .HumanSignals: " Has human signals." @
 .OtherSignals: " Has 'other' signals." @
-.Mapped: " (Mapped & Discovered)" => " (Mapeado y descubierto)"
 .MandD: " (Mapped & Discovered)" => " (Mapeado y descubierto)"
 .MP: " (Mapped)" => " (Mapeado)"
 .DIS: " (Discovered)" => " (Descubierto)"
@@ -1185,6 +1151,7 @@ SECTION JournalScanInfo
 .Hasring: " Has ring." => " Tiene anillo."
 .Has: " Has " => " Tiene "
 .eccentricity: " Has an high eccentricity of " @
+.unknownAtmosphere: "unknown atmosphere" @
 .BFSD: " Basic" => " Básico"
 .SFSD: " Standard" => " Estándar"
 .PFSD: " Premium" => " Premium"

@@ -879,15 +879,9 @@ SECTION MissionState
 SECTION CommanderForm
 
 CommanderForm: "CommanderForm" => "Ustawienia Dowódcy"
-.buttonCancel: "Cancel" => "Anuluj"
-.buttonOK: "OK" @
 .extGroupBoxCommanderInfo: "Other" @
-.radioButtonHistorySelection: "History Grid Selection" @
 .labelMapCol: "Default Map Color" @
-.radioButtonCentreHome: "Home System" @
 .HomeSys: "Home System: " @
-.labelZoom: "Default Zoom" @
-.labelOpenOn: "Open Centred On" @
 .groupBoxCustomIGAU: "Intergalactic Astronomical Union [IGAU]" @
 .checkBoxIGAUSync: "Send Codex Entry Discovery Data to IGAU" @
 .groupBoxCustomInara: "Inara Information (optional)" => "Informacje Inara (opcjonalne)"
@@ -905,10 +899,6 @@ CommanderForm: "CommanderForm" => "Ustawienia Dowódcy"
 .labelCN: "Commander Name: " => "Nazwa Dowódcy"
 .buttonExtBrowse: "Browse" => "Przeglądaj"
 .labelJL: "Journal Location: " => "Lokalizacja Dzienników: "
-.label_index: "Commander Configure" => "Konfiguracja Dowódcy"
-.radioButtonHistorySelection.ToolTip: "Select history entry as opening location" @
-.textBoxDefaultZoom.ToolTip: "Set the zoom level of the map. 1 is normal" @
-.radioButtonCentreHome.ToolTip: "Select home system as opening location" @
 .panel_defaultmapcolor.ToolTip: "New travel entries get this colour on the map" @
 .checkBoxIGAUSync.ToolTip: "https://github.com/Elite-IGAU/publications/blob/master/IGAU_Codex.csv" @
 .textBoxBorderInaraName.ToolTip: "Give the user name for this commander on Inara" => "Wprowadź nazwę użytkownika z Inara dla tego Dowódcy"
@@ -941,8 +931,6 @@ SECTION ScreenShotImageConverter
 SECTION ScreenShotConfigureForm
 
 ScreenShotConfigureForm: "Screen Shot Configure" => "Konfiguracja Zrzutów Ekranu"
-.buttonExtCancel: "Cancel" => "Anuluj"
-.buttonExtOK: "OK" @
 .groupBoxCropSettings: "Crop Settings" => "Ustawienia Przycinania"
 .extGroupBox1: "Crop/Resize Settings" @
 .labelHeight: "Height" => "Wysokość"
@@ -953,7 +941,6 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Konfiguracja Zrzutów Ekran
 .labelWidth2: "Width" @
 .labelLeft2: "Left" @
 .labelTop2: "Top" @
-.checkBoxCropImage: "Crop Image" => "Przytnij Obraz"
 .labelFolder: "ED/Steam Screenshot folder" => "Folder Zrzutów Ekranu ED/Steam"
 .buttonChangeScreenshotsFolder: "Browse" => "Przeglądaj"
 .labelSubfolder: "In Sub folder" => "W podfolderze"
@@ -962,7 +949,6 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Konfiguracja Zrzutów Ekran
 .buttonEDChangeOutputFolder: "Browse" => "Przeglądaj"
 .labelScanFor: "Scan for" => "Szukaj plików w formacie"
 .labelSaveAs: "Save as" => "Zapisz jako"
-.extCheckBoxRemoveOriginal: "Remove Original Elite Image" @
 .extCheckBoxKeepMasterConvertedImage: "Keep master converted image" @
 .labelImage2: "Image 2" @
 .labelImage1: "Image 1" @
@@ -973,6 +959,7 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Konfiguracja Zrzutów Ekran
 .labelClipboard: "Clipboard" @
 .labelOriginal: "Original Image" @
 .labelEnabled: "Enable" @
+.labelQuality: "JPEG Quality" @
 
 SECTION Screenshot
 

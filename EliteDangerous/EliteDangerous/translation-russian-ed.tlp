@@ -879,15 +879,9 @@ SECTION MissionState
 SECTION CommanderForm
 
 CommanderForm: "CommanderForm" => "Командир"
-.buttonCancel: "Cancel" => "Отмена"
-.buttonOK: "OK" @
 .extGroupBoxCommanderInfo: "Other" @
-.radioButtonHistorySelection: "History Grid Selection" @
 .labelMapCol: "Default Map Color" @
-.radioButtonCentreHome: "Home System" @
 .HomeSys: "Home System: " @
-.labelZoom: "Default Zoom" @
-.labelOpenOn: "Open Centred On" @
 .groupBoxCustomIGAU: "Intergalactic Astronomical Union [IGAU]" @
 .checkBoxIGAUSync: "Send Codex Entry Discovery Data to IGAU" @
 .groupBoxCustomInara: "Inara Information (optional)" => "Inara (необязательно)"
@@ -905,10 +899,6 @@ CommanderForm: "CommanderForm" => "Командир"
 .labelCN: "Commander Name: " => "Имя командира"
 .buttonExtBrowse: "Browse" => "Обзор"
 .labelJL: "Journal Location: " => "Путь к файлам журнала"
-.label_index: "Commander Configure" => "Настройки командира"
-.radioButtonHistorySelection.ToolTip: "Select history entry as opening location" @
-.textBoxDefaultZoom.ToolTip: "Set the zoom level of the map. 1 is normal" @
-.radioButtonCentreHome.ToolTip: "Select home system as opening location" @
 .panel_defaultmapcolor.ToolTip: "New travel entries get this colour on the map" @
 .checkBoxIGAUSync.ToolTip: "https://github.com/Elite-IGAU/publications/blob/master/IGAU_Codex.csv" @
 .textBoxBorderInaraName.ToolTip: "Give the user name for this commander on Inara" => "Укажите имя пользователя Inara для этого командира"
@@ -941,8 +931,6 @@ SECTION ScreenShotImageConverter
 SECTION ScreenShotConfigureForm
 
 ScreenShotConfigureForm: "Screen Shot Configure" => "Настройки скриншотов"
-.buttonExtCancel: "Cancel" => "Отмена"
-.buttonExtOK: "OK" @
 .groupBoxCropSettings: "Crop Settings" => "Настройки кадрирования"
 .extGroupBox1: "Crop/Resize Settings" @
 .labelHeight: "Height" => "Высота"
@@ -953,7 +941,6 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Настройки скри
 .labelWidth2: "Width" @
 .labelLeft2: "Left" @
 .labelTop2: "Top" @
-.checkBoxCropImage: "Crop Image" => "Кадрировать изображение"
 .labelFolder: "ED/Steam Screenshot folder" => "Папка сриншотов ED/Steam"
 .buttonChangeScreenshotsFolder: "Browse" => "Обзор"
 .labelSubfolder: "In Sub folder" => "В подпапке"
@@ -962,7 +949,6 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Настройки скри
 .buttonEDChangeOutputFolder: "Browse" => "Обзор"
 .labelScanFor: "Scan for" => "Искать"
 .labelSaveAs: "Save as" => "Сохранить как"
-.extCheckBoxRemoveOriginal: "Remove Original Elite Image" @
 .extCheckBoxKeepMasterConvertedImage: "Keep master converted image" @
 .labelImage2: "Image 2" @
 .labelImage1: "Image 1" @
@@ -973,6 +959,7 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Настройки скри
 .labelClipboard: "Clipboard" @
 .labelOriginal: "Original Image" @
 .labelEnabled: "Enable" @
+.labelQuality: "JPEG Quality" @
 
 SECTION Screenshot
 

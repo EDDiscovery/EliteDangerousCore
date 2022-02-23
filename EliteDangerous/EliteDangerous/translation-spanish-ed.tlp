@@ -879,15 +879,9 @@ SECTION MissionState
 SECTION CommanderForm
 
 CommanderForm: "CommanderForm" => "CommanderForm"
-.buttonCancel: "Cancel" => "Cancelar"
-.buttonOK: "OK" => "OK"
 .extGroupBoxCommanderInfo: "Other" => "Otro"
-.radioButtonHistorySelection: "History Grid Selection" => "Selección de cuadrícula de historial"
 .labelMapCol: "Default Map Color" => "Color de mapa predeterminado"
-.radioButtonCentreHome: "Home System" => "Sistema de inicio"
 .HomeSys: "Home System: " => "Sistema de inicio: "
-.labelZoom: "Default Zoom" => "Zoom predeterminado"
-.labelOpenOn: "Open Centred On" => "Abierto centrado en"
 .groupBoxCustomIGAU: "Intergalactic Astronomical Union [IGAU]" => "Unión Astronómica Intergaláctica [IGAU]"
 .checkBoxIGAUSync: "Send Codex Entry Discovery Data to IGAU" => "Enviar datos de descubrimiento de entrada del Codex a IGAU"
 .groupBoxCustomInara: "Inara Information (optional)" => "Información de Inara (opcional)"
@@ -905,10 +899,6 @@ CommanderForm: "CommanderForm" => "CommanderForm"
 .labelCN: "Commander Name: " => "Nombre del comandante: "
 .buttonExtBrowse: "Browse" => "Navegar"
 .labelJL: "Journal Location: " => "Ubicación del diario: "
-.label_index: "Commander Configure" => "Configuración del comandante"
-.radioButtonHistorySelection.ToolTip: "Select history entry as opening location" => "Seleccionar entrada del historial como ubicación de apertura"
-.textBoxDefaultZoom.ToolTip: "Set the zoom level of the map. 1 is normal" => "Establece el nivel de zoom del mapa. 1 es normal"
-.radioButtonCentreHome.ToolTip: "Select home system as opening location" => "Seleccionar sistema de inicio como ubicación de apertura"
 .panel_defaultmapcolor.ToolTip: "New travel entries get this colour on the map" => "Las nuevas entradas de viajes obtienen este color en el mapa"
 .checkBoxIGAUSync.ToolTip: "https://github.com/Elite-IGAU/publications/blob/master/IGAU_Codex.csv" => "https://github.com/Elite-IGAU/publications/blob/master/IGAU_Codex.csv"
 .textBoxBorderInaraName.ToolTip: "Give the user name for this commander on Inara" => "Dar el nombre de usuario de este comandante en Inara"
@@ -941,8 +931,6 @@ SECTION ScreenShotImageConverter
 SECTION ScreenShotConfigureForm
 
 ScreenShotConfigureForm: "Screen Shot Configure" => "Configurar captura de pantalla"
-.buttonExtCancel: "Cancel" => "Cancelar"
-.buttonExtOK: "OK" => "OK"
 .groupBoxCropSettings: "Crop Settings" => "Configuración de recorte"
 .extGroupBox1: "Crop/Resize Settings" => "Ajustes de recorte/cambio de tamaño"
 .labelHeight: "Height" => "Altura"
@@ -953,7 +941,6 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Configurar captura de panta
 .labelWidth2: "Width" => "Ancho"
 .labelLeft2: "Left" => "Izquierda"
 .labelTop2: "Top" => "Cima"
-.checkBoxCropImage: "Crop Image" => "Delimitar imagen"
 .labelFolder: "ED/Steam Screenshot folder" => "Carpeta de captura de pantalla de ED/Steam"
 .buttonChangeScreenshotsFolder: "Browse" => "Navegar"
 .labelSubfolder: "In Sub folder" => "En subcarpeta"
@@ -962,7 +949,6 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Configurar captura de panta
 .buttonEDChangeOutputFolder: "Browse" => "Navegar"
 .labelScanFor: "Scan for" => "Buscar"
 .labelSaveAs: "Save as" => "Guardar como"
-.extCheckBoxRemoveOriginal: "Remove Original Elite Image" => "Eliminar imagen Elite original"
 .extCheckBoxKeepMasterConvertedImage: "Keep master converted image" => "Conservar la imagen maestra convertida"
 .labelImage2: "Image 2" => "Imagen 2"
 .labelImage1: "Image 1" => "Imagen 1"
@@ -973,6 +959,7 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Configurar captura de panta
 .labelClipboard: "Clipboard" => "Portapapeles"
 .labelOriginal: "Original Image" => "Imagen original"
 .labelEnabled: "Enable" => "Habilitar"
+.labelQuality: "JPEG Quality" @
 
 SECTION Screenshot
 

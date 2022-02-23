@@ -879,15 +879,9 @@ SECTION MissionState
 SECTION CommanderForm
 
 CommanderForm: "CommanderForm" @
-.buttonCancel: "Cancel" => "Annuler"
-.buttonOK: "OK" @
 .extGroupBoxCommanderInfo: "Other" => "Autre"
-.radioButtonHistorySelection: "History Grid Selection" => "Selection de la grille d'historique"
 .labelMapCol: "Default Map Color" => "Couleur par défaut de la carte"
-.radioButtonCentreHome: "Home System" => "Système de base"
 .HomeSys: "Home System: " => "Système de base"
-.labelZoom: "Default Zoom" => "Zoom par défaut"
-.labelOpenOn: "Open Centred On" => "Ouvrir centré sur"
 .groupBoxCustomIGAU: "Intergalactic Astronomical Union [IGAU]" @
 .checkBoxIGAUSync: "Send Codex Entry Discovery Data to IGAU" => "Envoyer les données découvertes du Codex à l'IGAU"
 .groupBoxCustomInara: "Inara Information (optional)" => "Information Inara (Optionnel)"
@@ -905,10 +899,6 @@ CommanderForm: "CommanderForm" @
 .labelCN: "Commander Name: " => "Nom du commandant"
 .buttonExtBrowse: "Browse" => "Parcourir"
 .labelJL: "Journal Location: " => "Emplacement du journal"
-.label_index: "Commander Configure" => "Configuration du commandant"
-.radioButtonHistorySelection.ToolTip: "Select history entry as opening location" => "Selectionne l'entrée d'historique lors de l'ouverture"
-.textBoxDefaultZoom.ToolTip: "Set the zoom level of the map. 1 is normal" => "Définir le niveau de zoom de la carte. 1 = normal."
-.radioButtonCentreHome.ToolTip: "Select home system as opening location" => "Selectionne le système de base lors de l'ouverture"
 .panel_defaultmapcolor.ToolTip: "New travel entries get this colour on the map" => "Les nouvelles entrées ont cette couleur sur la carte"
 .checkBoxIGAUSync.ToolTip: "https://github.com/Elite-IGAU/publications/blob/master/IGAU_Codex.csv" @
 .textBoxBorderInaraName.ToolTip: "Give the user name for this commander on Inara" => "Entrer le nom d'utilisateur Inara pour ce commandant"
@@ -941,8 +931,6 @@ SECTION ScreenShotImageConverter
 SECTION ScreenShotConfigureForm
 
 ScreenShotConfigureForm: "Screen Shot Configure" => "Configuration des captures d'écran"
-.buttonExtCancel: "Cancel" => "Annuler"
-.buttonExtOK: "OK" @
 .groupBoxCropSettings: "Crop Settings" => "Paramètres de rognage"
 .extGroupBox1: "Crop/Resize Settings" => "Paramètres de rognage/redimensionnement"
 .labelHeight: "Height" => "Hauteur"
@@ -953,7 +941,6 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Configuration des captures 
 .labelWidth2: "Width" => "Largeur"
 .labelLeft2: "Left" => "Gauche"
 .labelTop2: "Top" => "Haut"
-.checkBoxCropImage: "Crop Image" => "Rogner l'image"
 .labelFolder: "ED/Steam Screenshot folder" => "Dossier des captures d'écran ED/Steam"
 .buttonChangeScreenshotsFolder: "Browse" => "Parcourir"
 .labelSubfolder: "In Sub folder" => "Dans le sous dossier"
@@ -962,7 +949,6 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Configuration des captures 
 .buttonEDChangeOutputFolder: "Browse" => "Parcourir"
 .labelScanFor: "Scan for" @
 .labelSaveAs: "Save as" => "Sauvegarder sous"
-.extCheckBoxRemoveOriginal: "Remove Original Elite Image" => "Supprimer la capture originale"
 .extCheckBoxKeepMasterConvertedImage: "Keep master converted image" => "Conserver la capture originale"
 .labelImage2: "Image 2" @
 .labelImage1: "Image 1" @
@@ -973,6 +959,7 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Configuration des captures 
 .labelClipboard: "Clipboard" @
 .labelOriginal: "Original Image" @
 .labelEnabled: "Enable" @
+.labelQuality: "JPEG Quality" @
 
 SECTION Screenshot
 
