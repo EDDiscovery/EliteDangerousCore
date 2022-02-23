@@ -363,9 +363,9 @@ namespace EliteDangerousCore.EDSM
         }
 
         private static HashSet<string> discardEvents = new HashSet<string>
-        {   // From https://github.com/EDSM-NET/Journal-Events/blob/master/Discard.php on 2/2/2021
+        {   // From https://github.com/EDSM-NET/Journal-Events/blob/master/Discard.php on 2/23/2022
 
-        //"StartUp", // Give first system response to EDMC
+        //'StartUp', // Give first system response to EDMC
         "ShutDown",
         "EDDItemSet",
         "EDDCommodityPrices",
@@ -393,7 +393,6 @@ namespace EliteDangerousCore.EDSM
 
         "SharedBookmarkToSquadron",
 
-
         // Fleet Carrier
         "CarrierStats",
         "CarrierTradeOrder",
@@ -410,6 +409,18 @@ namespace EliteDangerousCore.EDSM
         "CarrierBuy",
         "CarrierNameChange",
         "CarrierDecommission",
+
+        // Odyssey
+        "BookDropship",
+        "CancelDropship",
+        "DropshipDeploy",
+
+        // Odyssey - Backed by BackpackChange
+        "CollectItems",
+        "DropItems",
+
+        "Disembark", //TODO: Use for Foot discovery
+        "Embark",
 
         // Load events
         "Fileheader",
@@ -467,7 +478,7 @@ namespace EliteDangerousCore.EDSM
         "AfmuRepairs",
         "CockpitBreached",
         "ReservoirReplenished",
-        "CargoTransfer", 
+        "CargoTransfer", //TODO: Synched in Cargo?!
 
         "ApproachBody",
         "LeaveBody",
@@ -486,6 +497,12 @@ namespace EliteDangerousCore.EDSM
         "MassModuleStore",
         "ModuleStore",
         "ModuleSwap",
+        
+        // Suit
+        "SuitLoadout",
+        "SwitchSuitLoadout",
+        "CreateSuitLoadout",
+        "LoadoutEquipModule",
 
         // Powerplay
         "PowerplayVote",
@@ -531,6 +548,10 @@ namespace EliteDangerousCore.EDSM
         "FSSSignalDiscovered",
         "AsteroidCracked",
         "ProspectedAsteroid",
+        "ScanBaryCentre",
+        "FSSBodySignals",
+        "SAASignalsFound",
+        "ScanOrganic",
         };
 
         private static HashSet<string> alwaysDiscard = new HashSet<string>
