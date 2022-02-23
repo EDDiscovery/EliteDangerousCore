@@ -30,8 +30,11 @@ namespace EliteDangerousCore.Forms
         {
             InitializeComponent();
 
-            BaseUtils.Translator.Instance.TranslateVerify(this, typeof(EDCTx));          // before translate
-            BaseUtils.Translator.Instance.TranslateVerify(toolTip, typeof(EDCTx), this);
+            var enumlist = new Enum[] { EDCTx.CommanderForm, EDCTx.CommanderForm_extGroupBoxCommanderInfo, EDCTx.CommanderForm_HomeSys, EDCTx.CommanderForm_labelMapCol, EDCTx.CommanderForm_groupBoxCustomIGAU, EDCTx.CommanderForm_checkBoxIGAUSync, EDCTx.CommanderForm_extGroupBoxEDAstro, EDCTx.CommanderForm_extCheckBoxEDAstro, EDCTx.CommanderForm_groupBoxCustomInara, EDCTx.CommanderForm_labelINARAN, EDCTx.CommanderForm_labelInaraAPI, EDCTx.CommanderForm_checkBoxCustomInara, EDCTx.CommanderForm_groupBoxCustomEDSM, EDCTx.CommanderForm_checkBoxCustomEDSMFrom, EDCTx.CommanderForm_labelEDSMAPI, EDCTx.CommanderForm_labelEDSMN, EDCTx.CommanderForm_checkBoxCustomEDSMTo, EDCTx.CommanderForm_groupBoxCustomEDDN, EDCTx.CommanderForm_checkBoxCustomEDDNTo, EDCTx.CommanderForm_groupBoxCustomJournal, EDCTx.CommanderForm_labelCN, EDCTx.CommanderForm_labelJL, EDCTx.CommanderForm_buttonExtBrowse, EDCTx.CommanderForm_extCheckBoxConsoleCommander };
+            var enumlisttt = new Enum[] { EDCTx.CommanderForm_panel_defaultmapcolor_ToolTip, EDCTx.CommanderForm_checkBoxIGAUSync_ToolTip, EDCTx.CommanderForm_checkBoxCustomInara_ToolTip, EDCTx.CommanderForm_textBoxBorderInaraAPIKey_ToolTip, EDCTx.CommanderForm_textBoxBorderInaraName_ToolTip, EDCTx.CommanderForm_checkBoxCustomEDSMFrom_ToolTip, EDCTx.CommanderForm_checkBoxCustomEDSMTo_ToolTip, EDCTx.CommanderForm_textBoxBorderEDSMAPI_ToolTip, EDCTx.CommanderForm_textBoxBorderEDSMName_ToolTip, EDCTx.CommanderForm_checkBoxCustomEDDNTo_ToolTip, EDCTx.CommanderForm_textBoxBorderCmdr_ToolTip, EDCTx.CommanderForm_buttonExtBrowse_ToolTip, EDCTx.CommanderForm_textBoxBorderJournal_ToolTip };
+
+            BaseUtils.Translator.Instance.TranslateControls(this, enumlist);          // before additional controls
+            BaseUtils.Translator.Instance.TranslateTooltip(toolTip, enumlisttt, this);
 
             if (additionalcontrols != null)
             {

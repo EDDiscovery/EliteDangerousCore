@@ -108,7 +108,9 @@ namespace EliteDangerousCore.ScreenShots
 
             UpdateExample();
 
-            BaseUtils.Translator.Instance.TranslateVerify(this, typeof(EDCTx));
+            var enumlist = new Enum[] { EDCTx.ScreenShotConfigureForm, EDCTx.ScreenShotConfigureForm_labelQuality, EDCTx.ScreenShotConfigureForm_extCheckBoxEnabled, EDCTx.ScreenShotConfigureForm_extCheckBoxHiRes, EDCTx.ScreenShotConfigureForm_extCheckBoxKeepMasterConvertedImage, EDCTx.ScreenShotConfigureForm_extGroupBox1, EDCTx.ScreenShotConfigureForm_labelHeight2, EDCTx.ScreenShotConfigureForm_labelWidth2, EDCTx.ScreenShotConfigureForm_labelLeft2, EDCTx.ScreenShotConfigureForm_labelTop2, EDCTx.ScreenShotConfigureForm_groupBoxCropSettings, EDCTx.ScreenShotConfigureForm_labelHeight, EDCTx.ScreenShotConfigureForm_labelWidth, EDCTx.ScreenShotConfigureForm_labelLeft, EDCTx.ScreenShotConfigureForm_labelTop, EDCTx.ScreenShotConfigureForm_labelFolder, EDCTx.ScreenShotConfigureForm_buttonChangeScreenshotsFolder, EDCTx.ScreenShotConfigureForm_labelSubfolder, EDCTx.ScreenShotConfigureForm_labelImage2, EDCTx.ScreenShotConfigureForm_labelImage1, EDCTx.ScreenShotConfigureForm_labelCropResizeOptions, EDCTx.ScreenShotConfigureForm_labelFileNameFormat, EDCTx.ScreenShotConfigureForm_labelStoreFolder, EDCTx.ScreenShotConfigureForm_extButtonBrowseMoveOrg, EDCTx.ScreenShotConfigureForm_buttonEDChangeOutputFolder, EDCTx.ScreenShotConfigureForm_labelClipboard, EDCTx.ScreenShotConfigureForm_labelOriginal, EDCTx.ScreenShotConfigureForm_labelEnabled, EDCTx.ScreenShotConfigureForm_labelScanFor, EDCTx.ScreenShotConfigureForm_labelSaveAs };
+
+            BaseUtils.Translator.Instance.TranslateControls(this, enumlist);
 
             label_index.Text = this.Text;
         }
