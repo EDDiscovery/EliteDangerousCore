@@ -350,6 +350,16 @@ namespace EliteDangerousCore
                         jdprev.Add(jd.Target);
                         return true;
                     }
+                    else if (je.EventTypeID == JournalTypeEnum.FSSAllBodiesFound)
+                    {
+                        var jdprev = prev as EliteDangerousCore.JournalEvents.JournalFSSAllBodiesFound;
+                        var jd = je as EliteDangerousCore.JournalEvents.JournalFSSAllBodiesFound;
+                        if ( jdprev.SystemAddress == jd.SystemAddress)          // same system, repeat, remove.  seen instances of this
+                        {
+                            System.Diagnostics.Debug.WriteLine("Duplicate FSSAllBodiesFound **********");
+                            return true;
+                        }
+                    }
                     else if (je.EventTypeID == JournalTypeEnum.ReceiveText)
                     {
                         var jdprev = prev as EliteDangerousCore.JournalEvents.JournalReceiveText;
