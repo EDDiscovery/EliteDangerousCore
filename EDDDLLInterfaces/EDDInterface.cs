@@ -30,7 +30,7 @@ namespace EDDDLLInterfaces
             // BSTR/Safearray = 8 offset, aligned 8
 
             [FieldOffset(0)] public int ver;
-            [FieldOffset(4)] public int indexno;        // if -1, null record, rest is invalid
+            [FieldOffset(4)] public int indexno;        // if -1, null record, rest is invalid.  For NewJournalEntry, its HL position (0..). Not valid for NewUnfilteredJournalEntry
 
             [FieldOffset(8)] [MarshalAs(UnmanagedType.BStr)] public string utctime;
             [FieldOffset(16)] [MarshalAs(UnmanagedType.BStr)] public string name;
@@ -62,7 +62,7 @@ namespace EDDDLLInterfaces
             [FieldOffset(152)] [MarshalAs(UnmanagedType.SafeArray)] public string[] currentmissions;
 
             [FieldOffset(160)] public long jid;
-            [FieldOffset(168)] public int totalrecords;
+            [FieldOffset(168)] public int totalrecords;     // Number of HLs for NewJournalEntry, for Unfiltered its no of HLs before add.
 
             // Version 1 Ends here
 
@@ -167,7 +167,7 @@ namespace EDDDLLInterfaces
 
         // Optional
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void EDDNewJournalEntry(JournalEntry nje);
+        public delegate void EDDNewJournalEntry(JournalEntry nje);      // this is the JEs EDDiscovery main system sees, post filtering reordering
 
         // Optional DLLCall in Action causes this
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -195,7 +195,11 @@ namespace EDDDLLInterfaces
         // if editit = true, user wants you to offer the option to change the config
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         [return: MarshalAs(UnmanagedType.BStr)]                         
-        public delegate String EDDConfig([MarshalAs(UnmanagedType.BStr)] string input, bool editit);    
+        public delegate String EDDConfig([MarshalAs(UnmanagedType.BStr)] string input, bool editit);
+
+        // Optional
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void EDDNewUnfilteredJournalEntry(JournalEntry nje);      // unfiltered stream of JEs before any ordering. Note list number is not applicable
 
         // version 5 ends here
     }

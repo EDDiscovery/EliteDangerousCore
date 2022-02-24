@@ -156,6 +156,15 @@ namespace EliteDangerousCore.DLL
             }
         }
 
+        public void NewUnfilteredJournalEntry(EDDDLLInterfaces.EDDDLLIF.JournalEntry nje)
+        {
+            foreach (EDDDLLCaller caller in DLLs)
+            {
+                caller.NewUnfilteredJournalEntry(nje);
+            }
+        }
+
+
         public void NewUIEvent(string json)
         {
             foreach (EDDDLLCaller caller in DLLs)

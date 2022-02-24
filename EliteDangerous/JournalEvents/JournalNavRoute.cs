@@ -117,6 +117,22 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
+        public bool Equals( JournalNavRoute other)
+        {
+            if ( Route != null && other.Route != null && other.Route.Length == Route.Length)
+            {
+                for (int i = 0; i < Route.Length; i++)
+                {
+                    if (Route[i].StarSystem != other.Route[i].StarSystem || Route[i].SystemAddress != other.Route[i].SystemAddress)
+                        return false;
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
         public class NavRouteEntry
         {
             public string StarSystem { get; set; }

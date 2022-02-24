@@ -108,6 +108,7 @@
       <DependentUpon>CommanderForm.cs</DependentUpon>
     </Compile>
     <Compile Include="HistoryList\HistoryList.cs" />
+    <Compile Include="HistoryList\HistoryListFill.cs" />
     <Compile Include="IGAU\IGAUSync.cs" />
     <Compile Include="IGAU\IGAUClass.cs" />
     <Compile Include="JournalEvents\JournalEmbarkDisembark.cs" />

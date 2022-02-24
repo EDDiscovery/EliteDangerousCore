@@ -16,11 +16,9 @@
 
 //#define LISTSCANS
 
-using EliteDangerousCore.DB;
 using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
 
@@ -46,9 +44,9 @@ namespace EliteDangerousCore
 
         #region Entry processing
 
-        // Called on a New Entry, by EDDiscoveryController:NewEntry, to add an journal entry in.  May return null or empty list, or multiple entries.
+        // Called on a New Entry, by EDDiscoveryController:NewEntry, to make an HE, updating the databases
 
-        public List<HistoryEntry> AddJournalEntryToHistory(JournalEntry je, Action<string> logerror)   
+        public HistoryEntry MakeHistoryEntry(JournalEntry je)
         {
             HistoryEntry he = HistoryEntry.FromJournalEntry(je, hlastprocessed);     // we may check edsm for this entry
 
@@ -58,8 +56,6 @@ namespace EliteDangerousCore
             he.UpdateSuits(SuitList.Process(je, he.WhereAmI, he.System));
             he.UpdateWeapons(WeaponList.Process(je, he.WhereAmI, he.System));
             he.UpdateLoadouts(SuitLoadoutList.Process(je, WeaponList, he.WhereAmI, he.System));
-
-            // check here to see if we want to remove the entry.. can move this lower later, but at first point where we have the data
 
             he.UpdateStats(je, statisticsaccumulator, he.StationFaction);
             he.UpdateSystemNote();
@@ -75,11 +71,18 @@ namespace EliteDangerousCore
             Tuple<ShipInformation, ModulesInStore> ret = ShipInformationList.Process(je, he.WhereAmI, he.System);
             he.UpdateShipInformation(ret.Item1);
             he.UpdateShipStoredModules(ret.Item2);
-            
+
             he.UpdateMissionList(MissionListAccumulator.Process(je, he.System, he.WhereAmI));
 
             hlastprocessed = he;
 
+            return he;
+        }
+
+        // Called with the HE above to perform reorder removal and add to HL, returns list of HLs added
+
+        public List<HistoryEntry> AddHistoryEntryToListWithReorder(HistoryEntry he, Action<string> logerror)   
+        {
             var reorderlist = ReorderRemove(he);
 
             foreach(var heh in reorderlist.EmptyIfNull())
@@ -128,6 +131,8 @@ namespace EliteDangerousCore
  
             JournalEntry[] journalentries = new JournalEntry[0];       // default empty array so rest of code works
 
+            // Create the journal entries from the table data, MTing if needed
+
             if (tabledata != null)          // if not cancelled table read
             {
                 Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Journal Creation");
@@ -161,7 +166,7 @@ namespace EliteDangerousCore
                     reportProgress($"Creating History {eno-1}/{journalentries.Length}");
                 }
 
-                if (MergeOrDiscardEntries(hist.hlastprocessed?.journalEntry, je))        // if we merge, don't store into HE
+                if (MergeJournalEntries(hist.hlastprocessed?.journalEntry, je))        // if we merge, don't store into HE
                 {
                     continue;
                 }
@@ -173,33 +178,7 @@ namespace EliteDangerousCore
                     continue;
                 }
 
-                HistoryEntry he = HistoryEntry.FromJournalEntry(je, hist.hlastprocessed);     // create entry
-
-                he.UpdateMaterialsCommodities(hist.MaterialCommoditiesMicroResources.Process(je, hist.hlastprocessed?.journalEntry, he.Status.TravelState == HistoryEntryStatus.TravelStateType.SRV));
-
-                // IN THIS order, so suits can be added, then weapons, then loadouts
-                he.UpdateSuits(hist.SuitList.Process(je, he.WhereAmI, he.System));
-                he.UpdateWeapons(hist.WeaponList.Process(je, he.WhereAmI, he.System));          // update the entries in suit entry list
-                he.UpdateLoadouts(hist.SuitLoadoutList.Process(je, hist.WeaponList, he.WhereAmI, he.System));
-
-                he.UpdateStats(je, hist.statisticsaccumulator, he.StationFaction);
-                he.UpdateSystemNote();
-
-                hist.CashLedger.Process(je);            // update the ledger     
-                he.Credits = hist.CashLedger.CashTotal;
-                he.Loan = hist.CashLedger.Loan;
-                he.Assets = hist.CashLedger.Assets;
-
-                hist.Shipyards.Process(je);
-                hist.Outfitting.Process(je);
-
-                Tuple<ShipInformation, ModulesInStore> ret = hist.ShipInformationList.Process(je, he.WhereAmI, he.System);  // the ships
-                he.UpdateShipInformation(ret.Item1);
-                he.UpdateShipStoredModules(ret.Item2);
-
-                he.UpdateMissionList(hist.MissionListAccumulator.Process(je, he.System, he.WhereAmI));
-
-                hist.hlastprocessed = he;
+                HistoryEntry he = hist.MakeHistoryEntry(je);
 
                // System.Diagnostics.Debug.WriteLine("++ {0} {1}", he.EventTimeUTC.ToString(), he.EntryType);
                 var reorderlist = hist.ReorderRemove(he);
@@ -244,7 +223,7 @@ namespace EliteDangerousCore
             return hist;
         }
 
-        public void AddToVisitsScan(Action<string> logerror)
+        private void AddToVisitsScan(Action<string> logerror)
         {
             HistoryEntry he = GetLast;
 
@@ -308,7 +287,8 @@ namespace EliteDangerousCore
             }
         }
 
-        public static int MergeTypeDelay(JournalEntry je)   // 0 = no delay, delay for attempts to merge items..  used by new entry mech only, not by historylist
+        // 0 = no delay, delay for attempts to merge items..  used by new entry mech only, not by historylist
+        public static int MergeTypeDelayForJournalEntries(JournalEntry je)   
         {
             if (je.EventTypeID == JournalTypeEnum.Friends)
                 return 2000;
@@ -322,9 +302,9 @@ namespace EliteDangerousCore
                 return 0;
         }
 
-        // this allows entries to be merged or discarded before any processing
+        // this allows journal entries to be merged into one before being made into a history entry
         // true if to discard
-        public static bool MergeOrDiscardEntries(JournalEntry prev, JournalEntry je)
+        public static bool MergeJournalEntries(JournalEntry prev, JournalEntry je)
         {
             if (prev != null && !EliteConfigInstance.InstanceOptions.DisableMerge)
             {
@@ -406,7 +386,7 @@ namespace EliteDangerousCore
         Odyssey 5: Sell MR: SellMicroResource Shiplocker 
 */
 
-        public List<HistoryEntry> ReorderRemove(HistoryEntry he)
+        private List<HistoryEntry> ReorderRemove(HistoryEntry he)
         {
             if (EliteConfigInstance.InstanceOptions.DisableMerge)
                 return new List<HistoryEntry> { he };
@@ -427,8 +407,9 @@ namespace EliteDangerousCore
                         return null;
                     }
                 }
-                // these we try and stop repeats
-                else if (he.EntryType == JournalTypeEnum.Outfitting || he.EntryType == JournalTypeEnum.Shipyard )
+                // these we try and stop repeats by not allowing more than one after docking
+                else if (he.EntryType == JournalTypeEnum.Outfitting || he.EntryType == JournalTypeEnum.Shipyard || 
+                                he.EntryType == JournalTypeEnum.StoredShips || he.EntryType == JournalTypeEnum.StoredModules)
                 {
                     HistoryEntry lasthe = FindBeforeLastDockLoadGameShutdown(1000,he.EntryType);     // don't look back forever
                     if (lasthe != null)
@@ -437,14 +418,28 @@ namespace EliteDangerousCore
                         return null;
                     }
                 }
-                // these we try and stop repeats
+                // these we try and stop repeats by not allowing more than one after docking
                 else if (he.EntryType == JournalTypeEnum.EDDCommodityPrices || he.EntryType == JournalTypeEnum.Market)
                 {
-                    HistoryEntry lasthe = FindBeforeLastDockLoadGameShutdown(1000,JournalTypeEnum.Market, JournalTypeEnum.EDDCommodityPrices);     // don't look back forever
+                    HistoryEntry lasthe = FindBeforeLastDockLoadGameShutdown(1000, JournalTypeEnum.Market, JournalTypeEnum.EDDCommodityPrices);     // don't look back forever
                     if (lasthe != null)
                     {
                         //System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " " + he.EntryType.ToString() + " Duplicate with " + lasthe.EntryType.ToString() + " " + lasthe.EventTimeUTC.ToString() + " remove");
                         return null;
+                    }
+                }
+                else if ( he.EntryType == JournalTypeEnum.NavRoute)
+                {
+                    HistoryEntry lasthe = FindBeforeLastDockLoadGameShutdown(1000, he.EntryType);     // don't look back forever, back to last dock
+                    if ( lasthe != null )
+                    {
+                        JournalNavRoute cur= he.journalEntry as JournalNavRoute;
+                        JournalNavRoute last = lasthe.journalEntry as JournalNavRoute;
+                        if (cur.Route != null && last.Route != null && cur.Equals(last))    // see if routes are the same, if so, no point putting it in again
+                        {
+                            System.Diagnostics.Debug.WriteLine("Remove repeat nav route");
+                            return null;
+                        }
                     }
                 }
             }
@@ -610,59 +605,6 @@ namespace EliteDangerousCore
         }
 
         #endregion
-
-        #region EDSM
-
-        public void FillInPositionsFSDJumps(Action<string> logger)       // call if you want to ensure we have the best posibile position data on FSD Jumps.  Only occurs on pre 2.1 netlogs
-        {
-            List<Tuple<HistoryEntry, ISystem>> updatesystems = new List<Tuple<HistoryEntry, ISystem>>();
-
-            if (!SystemsDatabase.Instance.RebuildRunning)       // only run this when the system db is stable.. this prevents the UI from slowing to a standstill
-            {
-                foreach (HistoryEntry he in historylist)
-                {
-                    // try and load ones without position.. if its got pos we are happy.  If its 0,0,0 and its not sol, it may just be a stay entry
-
-                    if (he.IsFSDCarrierJump)
-                    {
-                        //logger?.Invoke($"Checking system {he.System.Name}");
-
-                        if (!he.System.HasCoordinate || (Math.Abs(he.System.X) < 1 && Math.Abs(he.System.Y) < 1 && Math.Abs(he.System.Z) < 0 && he.System.Name != "Sol"))
-                        {
-                            ISystem found = SystemCache.FindSystem(he.System, true);        // find, thru edsm if required
-                                    
-                            if (found != null)
-                            {
-                                logger?.Invoke($"System {he.System.Name} found system in EDSM");
-                                updatesystems.Add(new Tuple<HistoryEntry, ISystem>(he, found));
-                            }
-                            else
-                                logger?.Invoke($"System {he.System.Name} failed to find system in EDSM");
-                        }
-                    }
-                }
-            }
-
-            if (updatesystems.Count > 0)
-            {
-                UserDatabase.Instance.DBWrite(cn =>
-                {
-                    using (DbTransaction txn = cn.BeginTransaction())        // take a transaction over this
-                    {
-                        foreach (Tuple<HistoryEntry, ISystem> hesys in updatesystems)
-                        {
-                            logger?.Invoke($"Update position of {hesys.Item1.System.Name} at {hesys.Item1.EntryNumber} in journal");
-                            hesys.Item1.journalEntry.UpdateStarPosition(hesys.Item2, cn, txn);
-                            hesys.Item1.UpdateSystem(hesys.Item2);
-                        }
-
-                        txn.Commit();
-                    }
-                });
-            }
-        }
-
-#endregion
 
     }
 }
