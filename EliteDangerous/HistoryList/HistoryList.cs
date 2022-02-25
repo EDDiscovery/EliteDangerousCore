@@ -354,9 +354,9 @@ namespace EliteDangerousCore
                     {
                         var jdprev = prev as EliteDangerousCore.JournalEvents.JournalFSSAllBodiesFound;
                         var jd = je as EliteDangerousCore.JournalEvents.JournalFSSAllBodiesFound;
-                        if ( jdprev.SystemAddress == jd.SystemAddress)          // same system, repeat, remove.  seen instances of this
+                        if ( jdprev.SystemAddress == jd.SystemAddress && jdprev.Count == jd.Count)          // same system, repeat, remove.  seen instances of this
                         {
-                            System.Diagnostics.Debug.WriteLine("Duplicate FSSAllBodiesFound **********");
+                          //  System.Diagnostics.Debug.WriteLine("Duplicate FSSAllBodiesFound **********");
                             return true;
                         }
                     }
