@@ -167,13 +167,13 @@ namespace EliteDangerousCore
            
             if (je.EventTypeID == JournalTypeEnum.Undocked || je.EventTypeID == JournalTypeEnum.LoadGame || je.EventTypeID == JournalTypeEnum.Died)            
             {
-                 cqc = (je.EventTypeID == JournalTypeEnum.LoadGame) && ((JournalEvents.JournalLoadGame)je).GameMode == null;
+                 cqc = (je.EventTypeID == JournalTypeEnum.LoadGame) && string.IsNullOrEmpty((je as JournalEvents.JournalLoadGame)?.GameMode);
             }
             else if (je.EventTypeID == JournalTypeEnum.Music)
             {
                 var music = je as JournalEvents.JournalMusic;
                 
-                if (music.MusicTrackID == JournalEvents.EDMusicTrackEnum.CQC || music.MusicTrackID == JournalEvents.EDMusicTrackEnum.CQCMenu)
+                if (music?.MusicTrackID == JournalEvents.EDMusicTrackEnum.CQC || music?.MusicTrackID == JournalEvents.EDMusicTrackEnum.CQCMenu)
                 {
                     cqc = true;
                 }
