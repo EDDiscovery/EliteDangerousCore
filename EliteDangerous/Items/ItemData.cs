@@ -90,7 +90,7 @@ namespace EliteDangerousCore
 
                     var newmodule = new ShipModule(-1, 0, candidatename, IsVanity(lowername) ? VanityType : UnknownType);
 
-                    System.Diagnostics.Debug.WriteLine("Unknown Module { \"" + lowername + "\", new ShipModule(-1,0, \"" + m.ModName + "\", " + (IsVanity(lowername) ? "VanityType" : "UnknownType") + " ) },");
+                    System.Diagnostics.Debug.WriteLine("Unknown Module { \"" + lowername + "\", new ShipModule(-1,0, \"" + newmodule.ModName + "\", " + (IsVanity(lowername) ? "VanityType" : "UnknownType") + " ) },");
 
                     lock (synthesisedmodules) // Prevent modification from multiple threads
                     {
