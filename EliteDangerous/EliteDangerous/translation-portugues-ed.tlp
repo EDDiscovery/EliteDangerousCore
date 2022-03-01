@@ -879,15 +879,9 @@ SECTION MissionState
 SECTION CommanderForm
 
 CommanderForm: "CommanderForm" => "Ficha"
-.buttonCancel: "Cancel" => "Cancela"
-.buttonOK: "OK" @
 .extGroupBoxCommanderInfo: "Other" => "Outros"
-.radioButtonHistorySelection: "History Grid Selection" => "Seleção da Grade do Histórico"
 .labelMapCol: "Default Map Color" => "Cor do mapa predefinido"
-.radioButtonCentreHome: "Home System" => "Sistema estelar de moradia"
 .HomeSys: "Home System: " => "Sistema estelar de moradia"
-.labelZoom: "Default Zoom" => "Zoom predefinido"
-.labelOpenOn: "Open Centred On" => "Abre centrado su"
 .groupBoxCustomIGAU: "Intergalactic Astronomical Union [IGAU]" => "Intergalactic Astronomical Union [IGAU]"
 .checkBoxIGAUSync: "Send Codex Entry Discovery Data to IGAU" => "Envia dados do Codex a IGAU"
 .groupBoxCustomInara: "Inara Information (optional)" => "Informações de Inara (opcional)"
@@ -905,10 +899,6 @@ CommanderForm: "CommanderForm" => "Ficha"
 .labelCN: "Commander Name: " => "Nome do Comandante"
 .buttonExtBrowse: "Browse" => "Navegar"
 .labelJL: "Journal Location: " => "Localização do Jornal"
-.label_index: "Commander Configure" => "Configurar o comandante"
-.radioButtonHistorySelection.ToolTip: "Select history entry as opening location" => "Centra no registro do histórico selecionado"
-.textBoxDefaultZoom.ToolTip: "Set the zoom level of the map. 1 is normal" => "Seleziona o nível de zoom do mapa. 1 é o normal."
-.radioButtonCentreHome.ToolTip: "Select home system as opening location" => "Centra no sistema estelar de moradia"
 .panel_defaultmapcolor.ToolTip: "New travel entries get this colour on the map" => "Novos registros de viajem recebem essa cor no mapa"
 .checkBoxIGAUSync.ToolTip: "https://github.com/Elite-IGAU/publications/blob/master/IGAU_Codex.csv" @
 .textBoxBorderInaraName.ToolTip: "Give the user name for this commander on Inara" => "Definir o nome de usuário para este comandante sobre Inara"
@@ -941,8 +931,6 @@ SECTION ScreenShotImageConverter
 SECTION ScreenShotConfigureForm
 
 ScreenShotConfigureForm: "Screen Shot Configure" => "Impostar SCreen Shot"
-.buttonExtCancel: "Cancel" => "Cancelar"
-.buttonExtOK: "OK" @
 .groupBoxCropSettings: "Crop Settings" => "Ajustes de recorte"
 .extGroupBox1: "Crop/Resize Settings" @
 .labelHeight: "Height" => "Altura"
@@ -953,7 +941,6 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Impostar SCreen Shot"
 .labelWidth2: "Width" => "Largura"
 .labelLeft2: "Left" => "Esquerda"
 .labelTop2: "Top" => "Alto"
-.checkBoxCropImage: "Crop Image" => "Recortar imagem"
 .labelFolder: "ED/Steam Screenshot folder" => "Pasta screenshot ED/Steam"
 .buttonChangeScreenshotsFolder: "Browse" => "Navegar"
 .labelSubfolder: "In Sub folder" => "Em sub pastas"
@@ -962,7 +949,6 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Impostar SCreen Shot"
 .buttonEDChangeOutputFolder: "Browse" => "Navegar"
 .labelScanFor: "Scan for" => "Escanear para"
 .labelSaveAs: "Save as" => "Salvar como"
-.extCheckBoxRemoveOriginal: "Remove Original Elite Image" => "Remove imagem original"
 .extCheckBoxKeepMasterConvertedImage: "Keep master converted image" => "Mantém imagem convertida"
 .labelImage2: "Image 2" => "Imagem 2"
 .labelImage1: "Image 1" => "Imagem 1"
@@ -973,6 +959,7 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Impostar SCreen Shot"
 .labelClipboard: "Clipboard" @
 .labelOriginal: "Original Image" @
 .labelEnabled: "Enable" @
+.labelQuality: "JPEG Quality" @
 
 SECTION Screenshot
 

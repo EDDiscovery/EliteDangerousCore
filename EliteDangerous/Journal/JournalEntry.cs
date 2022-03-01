@@ -462,7 +462,7 @@ namespace EliteDangerousCore
         {
             // only translate ones below Obsoleteoricons
             var v = Enum.GetValues(typeof(JournalTypeEnum)).OfType<JournalTypeEnum>();
-            var tx = v.ToDictionary(e => e, e => e < JournalTypeEnum.ObsoleteOrIcons ? e.ToString().SplitCapsWord().Tx(typeof(JournalTypeEnum), e.ToString()) : e.ToString().SplitCapsWord() );
+            var tx = v.ToDictionary(e => e, e => e < JournalTypeEnum.ObsoleteOrIcons ? e.ToString().SplitCapsWord().TxID(typeof(JournalTypeEnum), e.ToString()) : e.ToString().SplitCapsWord() );
             return tx;
         }
 

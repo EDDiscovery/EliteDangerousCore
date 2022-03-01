@@ -22,7 +22,7 @@ using System.Linq;
 
 namespace EliteDangerousCore
 {
-    public partial class HistoryList //: IEnumerable<HistoryEntry>
+    public partial class HistoryList 
     {
         #region List access
 

@@ -69,35 +69,40 @@ namespace EliteDangerousCore
 
             ShipModule m = null;
 
-            if (modules.ContainsKey(lowername))
+            if (!modules.TryGetValue(lowername, out m) && !noncorolismodules.TryGetValue(lowername, out m))
             {
-                //System.Diagnostics.Debug.WriteLine("Module item " + fdid + " >> " + (modules[lowername] as ShipModule).modname + " " + (modules[lowername] as ShipModule).moduleid);
-                m = modules[lowername];
-            }
-            else if (noncorolismodules.ContainsKey(lowername))
-            {
-                m = noncorolismodules[lowername];
-            }
-            else if (synthesisedmodules.ContainsKey(lowername))
-            {
-                m = synthesisedmodules[lowername];
-            }
-            else
-            {                                                           // synthesise one
-                string candidatename = fdid;
-                candidatename = candidatename.Replace("weaponcustomisation", "WeaponCustomisation").Replace("testbuggy", "SRV").
-                                        Replace("enginecustomisation", "EngineCustomisation");
+                bool hasmodule;
 
-                candidatename = candidatename.SplitCapsWordFull();
+                // TODO: Implement thread-safe TValue IDictionary<TKey, TValue>.GetOrAdd<TState>(TKey key, TState state, Func<TKey, TState, TValue> valueCreator) extension method
 
-                m = new ShipModule(-1, 0, candidatename, IsVanity(lowername) ? VanityType : UnknownType);
+                lock (synthesisedmodules)  // Ensure synthesisedmodules is in a valid state
+                {
+                    hasmodule = synthesisedmodules.TryGetValue(lowername, out m);
+                }
 
-                System.Diagnostics.Debug.WriteLine("Unknown Module { \"" + lowername + "\", new ShipModule(-1,0, \"" + m.ModName + "\", " + (IsVanity(lowername) ? "VanityType" : "UnknownType") + " ) },");
+                if (!hasmodule)
+                {               // synthesise one
+                    string candidatename = fdid;
+                    candidatename = candidatename.Replace("weaponcustomisation", "WeaponCustomisation").Replace("testbuggy", "SRV").
+                                            Replace("enginecustomisation", "EngineCustomisation");
 
-                synthesisedmodules.Add(lowername, m);                   // lets cache them for completeness..
+                    candidatename = candidatename.SplitCapsWordFull();
 
-                //            string line = "{ \"" + lowername + "\", new ShipModule( -1, 0 , \"" + m.modname + "\",\"" + m.modtype + "\") },";     // DEBUG
-                //            if (!synthresponses.Contains(line))  synthresponses.Add(line);
+                    var newmodule = new ShipModule(-1, 0, candidatename, IsVanity(lowername) ? VanityType : UnknownType);
+
+                    System.Diagnostics.Debug.WriteLine("Unknown Module { \"" + lowername + "\", new ShipModule(-1,0, \"" + newmodule.ModName + "\", " + (IsVanity(lowername) ? "VanityType" : "UnknownType") + " ) },");
+
+                    lock (synthesisedmodules) // Prevent modification from multiple threads
+                    {
+                        if (!synthesisedmodules.TryGetValue(lowername, out m))
+                        {
+                            synthesisedmodules[lowername] = m = newmodule;                   // lets cache them for completeness..
+
+                            //            string line = "{ \"" + lowername + "\", new ShipModule( -1, 0 , \"" + m.modname + "\",\"" + m.modtype + "\") },";     // DEBUG
+                            //            if (!synthresponses.Contains(line))  synthresponses.Add(line);
+                        }
+                    }
+                }
             }
 
             // System.Diagnostics.Debug.WriteLine("Module item " + fdid + " >> " + m.ModName + " " + m.ModType + " " + m.ModuleID);

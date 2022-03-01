@@ -37,7 +37,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
-            info = BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Cost, "Fuel: ; tons;0.0".T(EDTx.JournalEntry_Fuel), Amount);
+            info = BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost, "Fuel: ; tons;0.0".T(EDCTx.JournalEntry_Fuel), Amount);
             detailed = "";
         }
 
@@ -66,7 +66,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Cost, "Fuel: ; tons;0.0".T(EDTx.JournalEntry_Fuel), Amount);
+            info = BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost, "Fuel: ; tons;0.0".T(EDCTx.JournalEntry_Fuel), Amount);
             detailed = "";
         }
 
@@ -90,7 +90,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build(";t;0.0", Scooped, "Total: ;t;0.0".T(EDTx.JournalFuelScoop_Total), Total);
+            info = BaseUtils.FieldBuilder.Build(";t;0.0", Scooped, "Total: ;t;0.0".T(EDCTx.JournalFuelScoop_Total), Total);
             detailed = "";
         }
 
@@ -114,7 +114,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Main: ;t;0.0".T(EDTx.JournalReservoirReplenished_Main), FuelMain, "Reservoir: ;t;0.0".T(EDTx.JournalReservoirReplenished_Reservoir), FuelReservoir);
+            info = BaseUtils.FieldBuilder.Build("Main: ;t;0.0".T(EDCTx.JournalReservoirReplenished_Main), FuelMain, "Reservoir: ;t;0.0".T(EDCTx.JournalReservoirReplenished_Reservoir), FuelReservoir);
             detailed = "";
         }
 

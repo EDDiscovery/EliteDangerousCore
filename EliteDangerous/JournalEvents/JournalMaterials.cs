@@ -70,22 +70,22 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
             if (Raw != null && Raw.Length>0)
             {
-                info += BaseUtils.FieldBuilder.Build("Raw: ".T(EDTx.JournalMaterials_Raw) + "; ", Raw.Length);
-                detailed += "Raw: ".T(EDTx.JournalMaterials_Raw) + List(Raw);
+                info += BaseUtils.FieldBuilder.Build("Raw: ".T(EDCTx.JournalMaterials_Raw) + "; ", Raw.Length);
+                detailed += "Raw: ".T(EDCTx.JournalMaterials_Raw) + List(Raw);
             }
             if (Manufactured != null && Manufactured.Length>0)
             {
-                info += BaseUtils.FieldBuilder.Build("Manufactured: ".T(EDTx.JournalMaterials_Manufactured) + "; ", Manufactured.Length);// NOT DONE
+                info += BaseUtils.FieldBuilder.Build("Manufactured: ".T(EDCTx.JournalMaterials_Manufactured) + "; ", Manufactured.Length);// NOT DONE
                 if (detailed.Length > 0)
                     detailed += Environment.NewLine;
-                detailed += "Manufactured: ".T(EDTx.JournalMaterials_Manufactured) + List(Manufactured);
+                detailed += "Manufactured: ".T(EDCTx.JournalMaterials_Manufactured) + List(Manufactured);
             }
             if (Encoded != null && Encoded.Length > 0)
             {
-                info += BaseUtils.FieldBuilder.Build("Encoded: ".T(EDTx.JournalMaterials_Encoded) + "; ", Encoded.Length);// NOT DONE
+                info += BaseUtils.FieldBuilder.Build("Encoded: ".T(EDCTx.JournalMaterials_Encoded) + "; ", Encoded.Length);// NOT DONE
                 if (detailed.Length > 0)
                     detailed += Environment.NewLine;
-                detailed += "Encoded: ".T(EDTx.JournalMaterials_Encoded) + List(Encoded);
+                detailed += "Encoded: ".T(EDCTx.JournalMaterials_Encoded) + List(Encoded);
             }
         }
 
@@ -96,7 +96,7 @@ namespace EliteDangerousCore.JournalEvents
             foreach (Material m in mat)
             {
                 sb.Append(Environment.NewLine);
-                sb.Append(BaseUtils.FieldBuilder.Build(" ", m.FriendlyName, "; items".T(EDTx.JournalEntry_items), m.Count));
+                sb.Append(BaseUtils.FieldBuilder.Build(" ", m.FriendlyName, "; items".T(EDCTx.JournalEntry_items), m.Count));
             }
             return sb.ToString();
         }
@@ -150,9 +150,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Name);
             if (mcd != null)
-                info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".T(EDTx.JournalEntry_MatC), Count, "Total: ".T(EDTx.JournalEntry_Total), Total);
+                info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".T(EDCTx.JournalEntry_MatC), Count, "Total: ".T(EDCTx.JournalEntry_Total), Total);
             else
-                info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< ; items".T(EDTx.JournalEntry_MatC), Count);
+                info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< ; items".T(EDCTx.JournalEntry_MatC), Count);
 
             detailed = "";
         }
@@ -186,9 +186,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Name);
             if (mcd != null)
-                info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".T(EDTx.JournalEntry_MatC), Count, "Total: ".T(EDTx.JournalEntry_Total), Total);
+                info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".T(EDCTx.JournalEntry_MatC), Count, "Total: ".T(EDCTx.JournalEntry_Total), Total);
             else
-                info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< ; items".T(EDTx.JournalEntry_MatC), Count);
+                info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< ; items".T(EDCTx.JournalEntry_MatC), Count);
     
             detailed = "";
         }
@@ -218,7 +218,7 @@ namespace EliteDangerousCore.JournalEvents
                 info += BaseUtils.FieldBuilder.Build(" (", mcd.TranslatedCategory, ";)", mcd.TranslatedType);
 
             if (DiscoveryNumber > 0)
-                info += string.Format(", Discovery {0}".T(EDTx.JournalMaterialDiscovered_DN), DiscoveryNumber);
+                info += string.Format(", Discovery {0}".T(EDCTx.JournalMaterialDiscovered_DN), DiscoveryNumber);
             detailed = "";
         }
     }
@@ -295,8 +295,8 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Paid != null && Received != null)
             {
-                info = BaseUtils.FieldBuilder.Build("Sold: ".T(EDTx.JournalEntry_Sold), Paid.Quantity, "< ", Paid.Material_Localised,
-                                                    "Received: ".T(EDTx.JournalEntry_Received), Received.Quantity, "< ", Received.Material_Localised);
+                info = BaseUtils.FieldBuilder.Build("Sold: ".T(EDCTx.JournalEntry_Sold), Paid.Quantity, "< ", Paid.Material_Localised,
+                                                    "Received: ".T(EDCTx.JournalEntry_Received), Received.Quantity, "< ", Received.Material_Localised);
             }
         }
     }

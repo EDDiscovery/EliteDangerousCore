@@ -237,7 +237,7 @@ namespace EliteDangerousCore.ScreenShots
 
             System.Diagnostics.Debug.WriteLine("Convert " + inputfilename + " at " + systemname + " to " + outputfilename);
 
-            logit(string.Format("Converted {0} to {1}".T(EDTx.ScreenShotImageConverter_CNV), Path.GetFileName(inputfilename) , outputfilename));
+            logit(string.Format("Converted {0} to {1}".T(EDCTx.ScreenShotImageConverter_CNV), Path.GetFileName(inputfilename) , outputfilename));
 
             return new Tuple<string, string, Size>(inputfilename, outputfilename, finalsize);
         }

@@ -87,7 +87,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (YardInfo.Items != null)
             {
-                info = YardInfo.Items.Length.ToString() + " items available".T(EDTx.JournalEntry_itemsavailable);
+                info = YardInfo.Items.Length.ToString() + " items available".T(EDCTx.JournalEntry_itemsavailable);
                 int itemno = 0;
                 foreach (Outfitting.OutfittingItem m in YardInfo.Items)
                 {

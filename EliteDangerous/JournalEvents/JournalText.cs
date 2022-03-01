@@ -39,7 +39,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
-            info = BaseUtils.FieldBuilder.Build("To: ".T(EDTx.JournalSendText_To), To_Localised, "Msg: ".T(EDTx.JournalSendText_Msg), Message);
+            info = BaseUtils.FieldBuilder.Build("To: ".T(EDCTx.JournalSendText_To), To_Localised, "Msg: ".T(EDCTx.JournalSendText_Msg), Message);
             detailed = "";
         }
     }
@@ -80,7 +80,7 @@ namespace EliteDangerousCore.JournalEvents
                 info = ToString();
             else
             {
-                info = (MergedEntries.Count() + 1).ToString() + " Texts".T(EDTx.JournalReceiveText_Text) + " " + "from ".T(EDTx.JournalReceiveText_FC) + Channel;
+                info = (MergedEntries.Count() + 1).ToString() + " Texts".T(EDCTx.JournalReceiveText_Text) + " " + "from ".T(EDCTx.JournalReceiveText_FC) + Channel;
                 for (int i = MergedEntries.Count - 1; i >= 0; i--)
                     detailed = detailed.AppendPrePad(MergedEntries[i].ToStringNC(), System.Environment.NewLine);
                 detailed = detailed.AppendPrePad(ToStringNC(), System.Environment.NewLine);   // ours is the last one
@@ -90,14 +90,14 @@ namespace EliteDangerousCore.JournalEvents
         public override string ToString()
         {
             if ( FromLocalised.HasChars() )
-                return BaseUtils.FieldBuilder.Build("From: ".T(EDTx.JournalReceiveText_From), FromLocalised, "< on ".T(EDTx.JournalReceiveText_on), Channel, "<: ", MessageLocalised);
+                return BaseUtils.FieldBuilder.Build("From: ".T(EDCTx.JournalReceiveText_From), FromLocalised, "< on ".T(EDCTx.JournalReceiveText_on), Channel, "<: ", MessageLocalised);
             else
                 return BaseUtils.FieldBuilder.Build("", Channel, "<: ", MessageLocalised);
         }
 
         public string ToStringNC()
         {
-            return BaseUtils.FieldBuilder.Build("From: ".T(EDTx.JournalReceiveText_From), FromLocalised, "<: ", MessageLocalised);
+            return BaseUtils.FieldBuilder.Build("From: ".T(EDCTx.JournalReceiveText_From), FromLocalised, "<: ", MessageLocalised);
         }
 
         public void Add(JournalReceiveText next)

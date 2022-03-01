@@ -45,7 +45,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
-            info = "In ".T(EDTx.JournalApproachBody_In) + StarSystem;
+            info = "In ".T(EDCTx.JournalApproachBody_In) + StarSystem;
             detailed = "";
         }
     }
@@ -77,7 +77,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = "In ".T(EDTx.JournalLeaveBody_In) + StarSystem;
+            info = "In ".T(EDCTx.JournalLeaveBody_In) + StarSystem;
             detailed = "";
         }
     }

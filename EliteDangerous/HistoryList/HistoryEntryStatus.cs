@@ -54,14 +54,15 @@ namespace EliteDangerousCore
         public int? BodyID { get; private set; }
         public bool HasBodyID { get { return BodyID.HasValue && BodyID.Value >= 0; } }
         public string BodyType { get; private set; }
-        public string StationName { get; private set; }
-        public string StationType { get; private set; }
-        public long? MarketId { get; private set; }
+        public string StationName { get; private set; }     // will be null when undocked
+        public string StationType { get; private set; }     // will be null when undocked
+        public string StationFaction { get; private set; }  // will be null when undocked
+        public long? MarketId { get; private set; } 
         public TravelStateType TravelState { get; private set; } = TravelStateType.Unknown;  // travel state
         public bool OnFoot { get { return TravelState >= TravelStateType.OnFootStarPort; } }
         public ulong ShipID { get; private set; } = ulong.MaxValue;
         public string ShipType { get; private set; } = "Unknown";         // and the ship nice name
-        public string ShipTypeFD { get; private set; } = "unknown";      // FD name
+        public string ShipTypeFD { get; private set; } = "Unknown";      // FD name
         public bool IsSRV { get { return ItemData.IsSRV(ShipTypeFD); } }
         public bool IsFighter { get { return ItemData.IsFighter(ShipTypeFD); } }
         public string OnCrewWithCaptain { get; private set; } = null;     // if not null, your in another multiplayer ship
@@ -69,8 +70,8 @@ namespace EliteDangerousCore
         public string Group { get; private set; } = "";                   // group..
         public bool Wanted { get; private set; } = false;
         public bool BodyApproached { get; private set; } = false;         // set at approach body, cleared at leave body or fsd jump
-        public string StationFaction { get; private set; } = "";          // when docked
         public bool BookedDropship { get; private set; } = false;         // cleared on embark - need this to tell difference between booking a taxi or a dropship when entering the taxi
+        public bool BookedTaxi { get; private set; } = false;             // cleared on embark - need this to tell difference between booking a taxi or a dropship when entering the taxi
 
         private HistoryEntryStatus()
         {
@@ -95,6 +96,7 @@ namespace EliteDangerousCore
             BodyApproached = prevstatus.BodyApproached;
             StationFaction = prevstatus.StationFaction;
             BookedDropship = prevstatus.BookedDropship;
+            BookedTaxi = prevstatus.BookedTaxi;
         }
 
         public static HistoryEntryStatus Update(HistoryEntryStatus prev, JournalEntry je, string curStarSystem)
@@ -164,6 +166,7 @@ namespace EliteDangerousCore
                             BodyName = !prev.BodyApproached ? curStarSystem : prev.BodyName,
                             BodyType = !prev.BodyApproached ? "Star" : prev.BodyType,
                             BodyID = !prev.BodyApproached ? -1 : prev.BodyID,
+                            BookedTaxi = false,
                             BookedDropship = false,
                             StationName = null,
                             StationType = null,
@@ -225,6 +228,7 @@ namespace EliteDangerousCore
                         ShipType = jlg.InShip ? jlg.Ship : prev.ShipType,
                         ShipID = jlg.InShip ? jlg.ShipId : prev.ShipID,
                         ShipTypeFD = jlg.InShip ? jlg.ShipFD : prev.ShipTypeFD,
+                        BookedTaxi = false,
                         BookedDropship = false, //  to ensure
                     };
                     break;
@@ -273,6 +277,7 @@ namespace EliteDangerousCore
                                                     em.Multicrew ? (prev.TravelState == TravelStateType.OnFootPlanet ? TravelStateType.MulticrewLanded : TravelStateType.MulticrewDocked ):
                                                         prev.TravelState == TravelStateType.OnFootPlanet ? TravelStateType.Landed:
                                                             TravelStateType.Docked,
+                            BookedTaxi = false,
                             BookedDropship = false,
                         };
                         break;
@@ -429,6 +434,7 @@ namespace EliteDangerousCore
                         TravelState = TravelStateType.Unknown,
                         OnCrewWithCaptain = null,
                         BodyApproached = false,     // we have to clear this, we can't tell if we are going back to another place..
+                        BookedTaxi = false,
                         BookedDropship = false,
                     };
                     break;
@@ -471,14 +477,26 @@ namespace EliteDangerousCore
                     hes = new HistoryEntryStatus(prev)
                     {
                         BookedDropship = true,
+                        BookedTaxi = false,
                     };
                     break;
 
+                case JournalTypeEnum.CancelTaxi:
                 case JournalTypeEnum.CancelDropship:
+                    {
+                        hes = new HistoryEntryStatus(prev)
+                        {
+                            BookedDropship = false,
+                            BookedTaxi = false,
+                        };
+                        break;
+                    }
+
                 case JournalTypeEnum.BookTaxi:
                     hes = new HistoryEntryStatus(prev)
                     {
                         BookedDropship = false,
+                        BookedTaxi = true,
                     };
                     break;
             }

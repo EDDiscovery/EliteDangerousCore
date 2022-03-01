@@ -34,7 +34,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("New bodies discovered: ".T(EDTx.JournalEntry_Dscan), Bodies,
+            info = BaseUtils.FieldBuilder.Build("New bodies discovered: ".T(EDCTx.JournalEntry_Dscan), Bodies,
                                                 "@ ", sys.Name);
             detailed = "";
         }
@@ -61,9 +61,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Progress: ;%;N1".T(EDTx.JournalFSSDiscoveryScan_Progress), Progress, 
-                "Bodies: ".T(EDTx.JournalFSSDiscoveryScan_Bodies), BodyCount, 
-                "Others: ".T(EDTx.JournalFSSDiscoveryScan_Others), NonBodyCount,
+            info = BaseUtils.FieldBuilder.Build("Progress: ;%;N1".T(EDCTx.JournalFSSDiscoveryScan_Progress), Progress, 
+                "Bodies: ".T(EDCTx.JournalFSSDiscoveryScan_Bodies), BodyCount, 
+                "Others: ".T(EDCTx.JournalFSSDiscoveryScan_Others), NonBodyCount,
                 "@ ", sys.Name);
             detailed = "";
         }
@@ -175,16 +175,16 @@ namespace EliteDangerousCore.JournalEvents
                 string spstate = SpawningState_Localised != null ? SpawningState_Localised.Truncate(0, 32, "..") : null;
 
                 return BaseUtils.FieldBuilder.Build(
-                            ";Station: ".T(EDTx.FSSSignal_StationBool), ClassOfSignal == Classification.Station,
-                            ";Carrier: ".T(EDTx.FSSSignal_CarrierBool), ClassOfSignal == Classification.Carrier,
-                            ";Installation: ".T(EDTx.FSSSignal_InstallationBool), ClassOfSignal == Classification.Installation,
+                            ";Station: ".T(EDCTx.FSSSignal_StationBool), ClassOfSignal == Classification.Station,
+                            ";Carrier: ".T(EDCTx.FSSSignal_CarrierBool), ClassOfSignal == Classification.Carrier,
+                            ";Installation: ".T(EDCTx.FSSSignal_InstallationBool), ClassOfSignal == Classification.Installation,
                             "<", signname,
                             "", USSTypeLocalised,
-                            "Threat Level: ".T(EDTx.FSSSignal_ThreatLevel), ThreatLevel,
-                            "Faction: ".T(EDTx.FSSSignal_Faction), SpawningFaction_Localised,
-                            "State: ".T(EDTx.FSSSignal_State), spstate,
-                            "Time: ".T(EDTx.JournalEntry_Time), outoftime,
-                            "Last Seen: ".T(EDTx.FSSSignal_LastSeen), seen
+                            "Threat Level: ".T(EDCTx.FSSSignal_ThreatLevel), ThreatLevel,
+                            "Faction: ".T(EDCTx.FSSSignal_Faction), SpawningFaction_Localised,
+                            "State: ".T(EDCTx.FSSSignal_State), spstate,
+                            "Time: ".T(EDCTx.JournalEntry_Time), outoftime,
+                            "Last Seen: ".T(EDCTx.FSSSignal_LastSeen), seen
                             );
             }
         }
@@ -213,7 +213,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Signals.Count > 1)
             {
-                info = BaseUtils.FieldBuilder.Build("Detected ; signals".T(EDTx.JournalFSSSignalDiscovered_Detected), Signals.Count);
+                info = BaseUtils.FieldBuilder.Build("Detected ; signals".T(EDCTx.JournalFSSSignalDiscovered_Detected), Signals.Count);
 
                 if (Signals.Count < 20)
                 {
@@ -254,7 +254,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Bodies: ".T(EDTx.JournalEntry_Bodies), NumBodies);
+            info = BaseUtils.FieldBuilder.Build("Bodies: ".T(EDCTx.JournalEntry_Bodies), NumBodies);
             detailed = "";
         }
     }
@@ -283,14 +283,14 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys)
         {
-            return base.SummaryName(sys) + " " + "of ".T(EDTx.JournalEntry_ofa) + BodyName.ReplaceIfStartsWith(sys.Name);
+            return base.SummaryName(sys) + " " + "of ".T(EDCTx.JournalEntry_ofa) + BodyName.ReplaceIfStartsWith(sys.Name);
         }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             string name = BodyName.Contains(sys.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : sys.Name + ":" + BodyName;
-            info = BaseUtils.FieldBuilder.Build("Probes: ".T(EDTx.JournalSAAScanComplete_Probes), ProbesUsed,
-                                                "Efficiency Target: ".T(EDTx.JournalSAAScanComplete_EfficiencyTarget), EfficiencyTarget,
+            info = BaseUtils.FieldBuilder.Build("Probes: ".T(EDCTx.JournalSAAScanComplete_Probes), ProbesUsed,
+                                                "Efficiency Target: ".T(EDCTx.JournalSAAScanComplete_EfficiencyTarget), EfficiencyTarget,
                                                 "@ ", name);
             detailed = "";
         }
@@ -344,7 +344,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys)
         {
-            return base.SummaryName(sys) + " " + "of ".T(EDTx.JournalEntry_ofa) + BodyName.ReplaceIfStartsWith(sys.Name);
+            return base.SummaryName(sys) + " " + "of ".T(EDCTx.JournalEntry_ofa) + BodyName.ReplaceIfStartsWith(sys.Name);
         }
 
         static public string SignalList(List<SAASignal> list, int indent = 0, string separ = ", " , bool logtype = false)
@@ -448,7 +448,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys)
         {
-            return base.SummaryName(sys) + " " + "of ".T(EDTx.JournalEntry_ofa) + BodyName.ReplaceIfStartsWith(sys.Name);
+            return base.SummaryName(sys) + " " + "of ".T(EDCTx.JournalEntry_ofa) + BodyName.ReplaceIfStartsWith(sys.Name);
         }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)

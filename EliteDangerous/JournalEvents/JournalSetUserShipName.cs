@@ -43,7 +43,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
-            info = BaseUtils.FieldBuilder.Build("",ShipName,"", ShipIdent, "On: ".T(EDTx.JournalSetUserShipName_On) , Ship);
+            info = BaseUtils.FieldBuilder.Build("",ShipName,"", ShipIdent, "On: ".T(EDCTx.JournalSetUserShipName_On) , Ship);
             detailed = "";
         }
     }

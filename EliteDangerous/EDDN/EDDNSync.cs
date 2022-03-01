@@ -228,13 +228,11 @@ namespace EliteDangerousCore.EDDN
             }
             else if (je.EventTypeID == JournalTypeEnum.ApproachSettlement)
             {
-                if ( sendtotest )   // test only for now
-                    msg = eddn.CreateEDDNApproachSettlement(je as JournalApproachSettlement, he.System);      // hold off until on main server
+                msg = eddn.CreateEDDNApproachSettlement(je as JournalApproachSettlement, he.System);      // hold off until on main server
             }
             else if (je.EventTypeID == JournalTypeEnum.FSSAllBodiesFound)
             {
-                if ( sendtotest )   // test only for now
-                     msg = eddn.CreateEDDNFSSAllBodiesFound(je as JournalFSSAllBodiesFound, he.System);
+                msg = eddn.CreateEDDNFSSAllBodiesFound(je as JournalFSSAllBodiesFound, he.System);
             }
 
             if (msg != null)

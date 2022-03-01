@@ -52,8 +52,8 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
             info = JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude);
-            info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", Body, "NPC Controlled;".T(EDTx.JournalEntry_NPCControlled), PlayerControlled, 
-                                        "Nearest: ".T(EDTx.JournalEntry_Nearest), NearestDestination_Localised), ". ");
+            info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", Body, "NPC Controlled;".T(EDCTx.JournalEntry_NPCControlled), PlayerControlled, 
+                                        "Nearest: ".T(EDCTx.JournalEntry_Nearest), NearestDestination_Localised), ". ");
             detailed = "";
         }
     }
@@ -92,8 +92,8 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude);
-            info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", Body, "NPC Controlled;".T(EDTx.JournalEntry_NPCControlled), PlayerControlled, 
-                                                                "Nearest: ".T(EDTx.JournalEntry_Nearest), NearestDestination_Localised), ". ");
+            info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", Body, "NPC Controlled;".T(EDCTx.JournalEntry_NPCControlled), PlayerControlled, 
+                                                                "Nearest: ".T(EDCTx.JournalEntry_Nearest), NearestDestination_Localised), ". ");
             detailed = "";
         }
     }

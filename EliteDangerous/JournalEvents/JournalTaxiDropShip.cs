@@ -97,7 +97,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             long? cost = Cost > 0 ? Cost : default(long?);
-            info = BaseUtils.FieldBuilder.Build("", DestinationSystem, "<:", DestinationLocation, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), cost);
+            info = BaseUtils.FieldBuilder.Build("", DestinationSystem, "<:", DestinationLocation, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), cost);
             detailed = "";
         }
 

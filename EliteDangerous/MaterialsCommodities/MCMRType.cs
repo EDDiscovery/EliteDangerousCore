@@ -255,14 +255,13 @@ namespace EliteDangerousCore
         {
             Category = cs;
             TranslatedCategory = (Category ==CatType.Item) ? "Goods" : (Category==CatType.Component) ? "Assets" : Category.ToString();      // name is as the game does
-            TranslatedCategory = TranslatedCategory.Tx(typeof(MaterialCommodityMicroResourceType));        // valid to pass this thru the Tx( system
+            TranslatedCategory = TranslatedCategory.TxID(typeof(MaterialCommodityMicroResourceType), TranslatedCategory);        // valid to pass this thru the Tx( system
             Name = n;
             FDName = fd;
             Type = t;
-            string tn = Type.ToString().SplitCapsWord();
-            TranslatedType = tn.Tx(typeof(MaterialCommodityMicroResourceType));                // valid to pass this thru the Tx( system
+            TranslatedType = Type.ToString().SplitCapsWord().TxID(typeof(MaterialCommodityMicroResourceType), Type.ToString());                // valid to pass this thru the Tx( system
             MaterialGroup = mtg;
-            TranslatedMaterialGroup = MaterialGroup.ToString().SplitCapsWordFull().Tx(typeof(MaterialCommodityMicroResourceType));                // valid to pass this thru the Tx( system
+            TranslatedMaterialGroup = MaterialGroup.ToString().SplitCapsWordFull().TxID(typeof(MaterialCommodityMicroResourceType), MaterialGroup.ToString());                // valid to pass this thru the Tx( system
             Shortname = shortn;
             Colour = cl;
             Rarity = rare;
@@ -1165,7 +1164,7 @@ namespace EliteDangerousCore
 
             foreach (var x in cachelist.Values)
             {
-                x.Name = BaseUtils.Translator.Instance.Translate(x.Name, "MaterialCommodityMicroResourceType." + x.FDName);
+                x.Name = x.Name.TxID(typeof(MaterialCommodityMicroResourceType),x.FDName);
             }
 
             // foreach (MaterialCommodityData d in cachelist.Values) System.Diagnostics.Debug.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6}", d.Category, d.Type.ToString().SplitCapsWord(), d.MaterialGroup.ToString(), d.FDName, d.Name, d.Shortname, d.Rarity ));

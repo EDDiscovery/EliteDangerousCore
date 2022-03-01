@@ -50,7 +50,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Type);
             if (mcd != null)
-                info = BaseUtils.FieldBuilder.Build("", Type_Localised, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "Total: ".T(EDTx.JournalEntry_Total), Total);
+                info = BaseUtils.FieldBuilder.Build("", Type_Localised, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "Total: ".T(EDCTx.JournalEntry_Total), Total);
             else
                 info = Type_Localised;
             detailed = "";
@@ -124,7 +124,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", FriendlyMotherlodeMaterial, "", Content_Localised, "Remaining: ;%;N1".T(EDTx.JournalProspectedAsteroid_Remaining), Remaining);
+            info = BaseUtils.FieldBuilder.Build("", FriendlyMotherlodeMaterial, "", Content_Localised, "Remaining: ;%;N1".T(EDCTx.JournalProspectedAsteroid_Remaining), Remaining);
             
             if ( Materials != null )
             {

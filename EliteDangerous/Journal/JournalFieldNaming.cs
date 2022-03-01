@@ -226,7 +226,7 @@ namespace EliteDangerousCore
         public static string SecondsToDHMString(this int seconds)
         {
             TimeSpan time = TimeSpan.FromSeconds(seconds);
-            return string.Format("{0} days {1} hours {2} minutes".T(EDTx.JournalEntry_TME), time.Days, time.Hours, time.Minutes);
+            return string.Format("{0} days {1} hours {2} minutes".T(EDCTx.JournalEntry_TME), time.Days, time.Hours, time.Minutes);
         }
     }
 }

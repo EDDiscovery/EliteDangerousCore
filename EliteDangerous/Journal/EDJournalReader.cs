@@ -23,16 +23,7 @@ namespace EliteDangerousCore
 {
     public class EDJournalReader : TravelLogUnitLogReader
     {
-        JournalEvents.JournalShipyard lastshipyard = null;
-        JournalEvents.JournalStoredShips laststoredships = null;
-        JournalEvents.JournalStoredModules laststoredmodules = null;
-        JournalEvents.JournalOutfitting lastoutfitting = null;
-        JournalEvents.JournalMarket lastmarket = null;
-        JournalEvents.JournalNavRoute lastnavroute = null;
-        JournalEvents.JournalCargo lastcargo = null;
-
         bool cqc = false;
-        const int timelimit = 5 * 60;   //seconds.. 5 mins between logs. Note if we undock, we reset the counters.
 
         static JournalEvents.JournalContinued lastcontinued = null;
 
@@ -73,8 +64,6 @@ namespace EliteDangerousCore
                 System.Diagnostics.Trace.WriteLine($"{TravelLogUnit.FullName} Bad journal line: {line}");
                 return null;
             }
-
-            bool toosoon = false;
 
             if (je.EventTypeID == JournalTypeEnum.Fileheader)
             {
@@ -175,78 +164,19 @@ namespace EliteDangerousCore
             {
                 (je as IAdditionalFiles).ReadAdditionalFiles(TravelLogUnit.Path);       // try and read file dynamically written.
             }
-
-            if (je is JournalEvents.JournalShipyard)                // when going into shipyard
+           
+            if (je.EventTypeID == JournalTypeEnum.Undocked || je.EventTypeID == JournalTypeEnum.LoadGame || je.EventTypeID == JournalTypeEnum.Died)            
             {
-                toosoon = lastshipyard != null && lastshipyard.Yard.Equals((je as JournalEvents.JournalShipyard).Yard);
-                lastshipyard = je as JournalEvents.JournalShipyard;
+                 cqc = (je.EventTypeID == JournalTypeEnum.LoadGame) && string.IsNullOrEmpty((je as JournalEvents.JournalLoadGame)?.GameMode);
             }
-            else if (je is JournalEvents.JournalStoredShips)        // when going into stored ships
-            {
-                toosoon = laststoredships != null && CollectionStaticHelpers.Equals(laststoredships.ShipsHere, (je as JournalEvents.JournalStoredShips).ShipsHere) &&
-                    CollectionStaticHelpers.Equals(laststoredships.ShipsRemote, (je as JournalEvents.JournalStoredShips).ShipsRemote);
-                laststoredships = je as JournalEvents.JournalStoredShips;
-            }
-            else if (je is JournalEvents.JournalStoredModules)      // when going into outfitting
-            {
-                toosoon = laststoredmodules != null && CollectionStaticHelpers.Equals(laststoredmodules.ModuleItems, (je as JournalEvents.JournalStoredModules).ModuleItems);
-                laststoredmodules = je as JournalEvents.JournalStoredModules;
-            }
-            else if (je is JournalEvents.JournalOutfitting)         // when doing into outfitting
-            {
-                toosoon = lastoutfitting != null && lastoutfitting.YardInfo.Equals((je as JournalEvents.JournalOutfitting).YardInfo);
-                lastoutfitting = je as JournalEvents.JournalOutfitting;
-            }
-            else if (je is JournalEvents.JournalMarket)
-            {
-                toosoon = lastmarket != null && lastmarket.Equals(je as JournalEvents.JournalMarket);
-                lastmarket = je as JournalEvents.JournalMarket;
-            }
-            else if ( je is JournalEvents.JournalCargo )
-            {
-                var cargo = je as JournalEvents.JournalCargo;
-                if ( lastcargo != null )
-                {
-                    toosoon = lastcargo.SameAs(cargo);     // if exactly the same, swallow.
-                    //System.Diagnostics.Debug.WriteLine("Cargo vs last " + toosoon);
-                }
-                lastcargo = cargo;
-            }
-            else if (je is JournalEvents.JournalUndocked || je is JournalEvents.JournalLoadGame)             // undocked, Load Game, repeats are cleared
-            {
-                lastshipyard = null;
-                laststoredmodules = null;
-                lastoutfitting = null;
-                laststoredmodules = null;
-                laststoredships = null;
-                lastcargo = null;
-                cqc = (je is JournalEvents.JournalLoadGame) && ((JournalEvents.JournalLoadGame)je).GameMode == null;
-            }
-            else if (je is JournalEvents.JournalMusic)
+            else if (je.EventTypeID == JournalTypeEnum.Music)
             {
                 var music = je as JournalEvents.JournalMusic;
                 
-                if (music.MusicTrackID == JournalEvents.EDMusicTrackEnum.CQC || music.MusicTrackID == JournalEvents.EDMusicTrackEnum.CQCMenu)
+                if (music?.MusicTrackID == JournalEvents.EDMusicTrackEnum.CQC || music?.MusicTrackID == JournalEvents.EDMusicTrackEnum.CQCMenu)
                 {
                     cqc = true;
                 }
-            }
-            else if (je is JournalEvents.JournalNavRoute)
-            {
-                var route = je as JournalEvents.JournalNavRoute;
-
-                if (lastnavroute != null && (route.EventTimeUTC == lastnavroute.EventTimeUTC || route.EventTimeUTC == lastnavroute.EventTimeUTC.AddSeconds(1)))
-                {
-                    toosoon = true;
-                }
-
-                lastnavroute = route;
-            }
-
-            if (toosoon)                                                // if seeing repeats, remove
-            {
-               // System.Diagnostics.Debug.WriteLine("**** Remove as dup " + je.EventTypeStr);
-                return null;
             }
 
             if (cqc)  // Ignore events if in CQC

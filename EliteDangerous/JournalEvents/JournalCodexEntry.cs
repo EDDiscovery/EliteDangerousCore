@@ -82,13 +82,13 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sysunused, string whereamiunused, out string info, out string detailed)   
         {
-            info = BaseUtils.FieldBuilder.Build("At ".T(EDTx.JournalCodexEntry_At), System, ";", EDDBodyName, "ID", EDDBodyId, "in ".T(EDTx.JournalCodexEntry_in), Region_Localised,
+            info = BaseUtils.FieldBuilder.Build("At ".T(EDCTx.JournalCodexEntry_At), System, ";", EDDBodyName, "ID", EDDBodyId, "in ".T(EDCTx.JournalCodexEntry_in), Region_Localised,
                                                 "", Name_Localised,
                                                 "", Category_Localised,
                                                 "", SubCategory_Localised,
-                                                ";New Entry".T(EDTx.JournalCodexEntry_NewEntry), IsNewEntry,
-                                                ";Traits".T(EDTx.JournalCodexEntry_Traits), NewTraitsDiscovered,
-                                                "Nearest: ".T(EDTx.JournalEntry_Nearest), NearestDestination_Localised
+                                                ";New Entry".T(EDCTx.JournalCodexEntry_NewEntry), IsNewEntry,
+                                                ";Traits".T(EDCTx.JournalCodexEntry_Traits), NewTraitsDiscovered,
+                                                "Nearest: ".T(EDCTx.JournalEntry_Nearest), NearestDestination_Localised
                                                 );
             detailed = "";
 
@@ -102,9 +102,9 @@ namespace EliteDangerousCore.JournalEvents
                                                 "", Name_Localised,
                                                 "", Category_Localised,
                                                 "", SubCategory_Localised,
-                                                ";New Entry".T(EDTx.JournalCodexEntry_NewEntry), IsNewEntry,
-                                                ";Traits".T(EDTx.JournalCodexEntry_Traits), NewTraitsDiscovered,
-                                                "Nearest: ".T(EDTx.JournalEntry_Nearest), NearestDestination_Localised
+                                                ";New Entry".T(EDCTx.JournalCodexEntry_NewEntry), IsNewEntry,
+                                                ";Traits".T(EDCTx.JournalCodexEntry_Traits), NewTraitsDiscovered,
+                                                "Nearest: ".T(EDCTx.JournalEntry_Nearest), NearestDestination_Localised
                                                 );
         }
 

@@ -340,43 +340,43 @@ namespace EliteDangerousCore
             switch (id)       // see journal, section 11.2
             {
                 case EDStar.O:
-                    return string.Format("Luminous Hot Main Sequence {0} star".T(EDTx.Bodies_HMS), id.ToString());
+                    return string.Format("Luminous Hot Main Sequence {0} star".T(EDCTx.Bodies_HMS), id.ToString());
 
                 case EDStar.B:
                     // also have an B1V
-                    return string.Format("Luminous Blue Main Sequence {0} star".T(EDTx.Bodies_BMS), id.ToString());
+                    return string.Format("Luminous Blue Main Sequence {0} star".T(EDCTx.Bodies_BMS), id.ToString());
 
                 case EDStar.A:
                     // also have an A3V..
-                    return string.Format("Bluish-White Main Sequence {0} star".T(EDTx.Bodies_BWMS), id.ToString());
+                    return string.Format("Bluish-White Main Sequence {0} star".T(EDCTx.Bodies_BWMS), id.ToString());
 
                 case EDStar.F:
-                    return string.Format("White Main Sequence {0} star".T(EDTx.Bodies_WMS), id.ToString());
+                    return string.Format("White Main Sequence {0} star".T(EDCTx.Bodies_WMS), id.ToString());
 
                 case EDStar.G:
                     // also have a G8V
-                    return string.Format("Yellow Main Sequence {0} star".T(EDTx.Bodies_YMS), id.ToString());
+                    return string.Format("Yellow Main Sequence {0} star".T(EDCTx.Bodies_YMS), id.ToString());
 
                 case EDStar.K:
                     // also have a K0V
-                    return string.Format("Orange Main Sequence {0} star".T(EDTx.Bodies_OMS), id.ToString());
+                    return string.Format("Orange Main Sequence {0} star".T(EDCTx.Bodies_OMS), id.ToString());
                 case EDStar.M:
                     // also have a M1VA
-                    return string.Format("Red Main Sequence {0} star".T(EDTx.Bodies_RMS), id.ToString());
+                    return string.Format("Red Main Sequence {0} star".T(EDCTx.Bodies_RMS), id.ToString());
 
                 // dwarfs
                 case EDStar.L:
-                    return string.Format("Dark Red Non Main Sequence {0} star".T(EDTx.Bodies_DRNS), id.ToString());
+                    return string.Format("Dark Red Non Main Sequence {0} star".T(EDCTx.Bodies_DRNS), id.ToString());
                 case EDStar.T:
-                    return string.Format("Methane Dwarf star".T(EDTx.Bodies_MD));
+                    return string.Format("Methane Dwarf star".T(EDCTx.Bodies_MD));
                 case EDStar.Y:
-                    return string.Format("Brown Dwarf star".T(EDTx.Bodies_BD));
+                    return string.Format("Brown Dwarf star".T(EDCTx.Bodies_BD));
 
                 // proto stars
                 case EDStar.AeBe:    // Herbig
-                    return "Herbig Ae/Be".T(EDTx.Bodies_Herbig);
+                    return "Herbig Ae/Be".T(EDCTx.Bodies_Herbig);
                 case EDStar.TTS:     // seen in logs
-                    return "T Tauri".T(EDTx.Bodies_TTauri);
+                    return "T Tauri".T(EDCTx.Bodies_TTauri);
 
                 // wolf rayet
                 case EDStar.W:
@@ -384,7 +384,7 @@ namespace EliteDangerousCore
                 case EDStar.WNC:
                 case EDStar.WC:
                 case EDStar.WO:
-                    return string.Format("Wolf-Rayet {0} star".T(EDTx.Bodies_WR), id.ToString());
+                    return string.Format("Wolf-Rayet {0} star".T(EDCTx.Bodies_WR), id.ToString());
 
                 // Carbon
                 case EDStar.CS:
@@ -392,13 +392,13 @@ namespace EliteDangerousCore
                 case EDStar.CN:
                 case EDStar.CJ:
                 case EDStar.CHd:
-                    return string.Format("Carbon {0} star".T(EDTx.Bodies_C), id.ToString());
+                    return string.Format("Carbon {0} star".T(EDCTx.Bodies_C), id.ToString());
 
                 case EDStar.MS: //seen in log https://en.wikipedia.org/wiki/S-type_star
-                    return string.Format("Intermediate low Zirconium Monoxide Type star".T(EDTx.Bodies_IZ));
+                    return string.Format("Intermediate low Zirconium Monoxide Type star".T(EDCTx.Bodies_IZ));
 
                 case EDStar.S:   // seen in log, data from http://elite-dangerous.wikia.com/wiki/Stars
-                    return string.Format("Cool Giant Zirconium Monoxide rich Type star".T(EDTx.Bodies_CGZ));
+                    return string.Format("Cool Giant Zirconium Monoxide rich Type star".T(EDCTx.Bodies_CGZ));
 
                 // white dwarf
                 case EDStar.D:
@@ -416,74 +416,74 @@ namespace EliteDangerousCore
                 case EDStar.DC:
                 case EDStar.DCV:
                 case EDStar.DX:
-                    return string.Format("White Dwarf {0} star".T(EDTx.Bodies_WD), id.ToString());
+                    return string.Format("White Dwarf {0} star".T(EDCTx.Bodies_WD), id.ToString());
 
                 case EDStar.N:
-                    return "Neutron Star".T(EDTx.Bodies_NS);
+                    return "Neutron Star".T(EDCTx.Bodies_NS);
 
                 case EDStar.H:
 
-                    return "Black Hole".T(EDTx.Bodies_BH);
+                    return "Black Hole".T(EDCTx.Bodies_BH);
 
                 case EDStar.X:
                     // currently speculative, not confirmed with actual data... in journal
-                    return "Exotic".T(EDTx.Bodies_EX);
+                    return "Exotic".T(EDCTx.Bodies_EX);
 
                 // Journal.. really?  need evidence these actually are formatted like this.
 
                 case EDStar.SuperMassiveBlackHole:
-                    return "Super Massive Black Hole".T(EDTx.Bodies_SMBH);
+                    return "Super Massive Black Hole".T(EDCTx.Bodies_SMBH);
                 case EDStar.A_BlueWhiteSuperGiant:
-                    return "A Blue White Super Giant".T(EDTx.Bodies_ABSG);
+                    return "A Blue White Super Giant".T(EDCTx.Bodies_ABSG);
                 case EDStar.B_BlueWhiteSuperGiant:
-                    return "B Blue White Super Giant".T(EDTx.Bodies_BBSG);
+                    return "B Blue White Super Giant".T(EDCTx.Bodies_BBSG);
                 case EDStar.F_WhiteSuperGiant:
-                    return "F White Super Giant".T(EDTx.Bodies_FWSG);
+                    return "F White Super Giant".T(EDCTx.Bodies_FWSG);
                 case EDStar.G_WhiteSuperGiant:
-                    return "G White Super Giant".T(EDTx.Bodies_GWSG);
+                    return "G White Super Giant".T(EDCTx.Bodies_GWSG);
                 case EDStar.M_RedSuperGiant:
-                    return "M Red Super Giant".T(EDTx.Bodies_MSR);
+                    return "M Red Super Giant".T(EDCTx.Bodies_MSR);
                 case EDStar.M_RedGiant:
-                    return "M Red Giant".T(EDTx.Bodies_MOG);
+                    return "M Red Giant".T(EDCTx.Bodies_MOG);
                 case EDStar.K_OrangeGiant:
-                    return "K Orange Giant".T(EDTx.Bodies_KOG);
+                    return "K Orange Giant".T(EDCTx.Bodies_KOG);
                 case EDStar.Nebula:
-                    return "Nebula".T(EDTx.Bodies_Nebula);
+                    return "Nebula".T(EDCTx.Bodies_Nebula);
                 case EDStar.StellarRemnantNebula:
-                    return "Stellar Remnant Nebula".T(EDTx.Bodies_StellarRemnantNebula);
+                    return "Stellar Remnant Nebula".T(EDCTx.Bodies_StellarRemnantNebula);
                 case EDStar.RoguePlanet:
-                    return "Rogue Planet".T(EDTx.Bodies_RP);
+                    return "Rogue Planet".T(EDCTx.Bodies_RP);
                 case EDStar.Unknown:
-                    return "Unknown Star class".T(EDTx.Bodies_SUnknown);
+                    return "Unknown Star class".T(EDCTx.Bodies_SUnknown);
 
                 default:
-                    return string.Format("Class {0} star".T(EDTx.Bodies_UNK), id.ToString());
+                    return string.Format("Class {0} star".T(EDCTx.Bodies_UNK), id.ToString());
             }
         }
 
         // These should be translated to match the in-game planet types
         private static readonly Dictionary<EDPlanet, string> PlanetEnumToNameLookup = new Dictionary<EDPlanet, string>
         {
-            [EDPlanet.Metal_rich_body] = "Metal-rich body".T(EDTx.EDPlanet_Metalrichbody),
-            [EDPlanet.High_metal_content_body] = "High metal content world".T(EDTx.EDPlanet_Highmetalcontentbody),
-            [EDPlanet.Rocky_body] = "Rocky body".T(EDTx.EDPlanet_Rockybody),
-            [EDPlanet.Icy_body] = "Icy body".T(EDTx.EDPlanet_Icybody),
-            [EDPlanet.Rocky_ice_body] = "Rocky ice world".T(EDTx.EDPlanet_Rockyicebody),
-            [EDPlanet.Earthlike_body] = "Earth-like world".T(EDTx.EDPlanet_Earthlikebody),
-            [EDPlanet.Water_world] = "Water world".T(EDTx.EDPlanet_Waterworld),
-            [EDPlanet.Ammonia_world] = "Ammonia world".T(EDTx.EDPlanet_Ammoniaworld),
-            [EDPlanet.Water_giant] = "Water giant".T(EDTx.EDPlanet_Watergiant),
-            [EDPlanet.Water_giant_with_life] = "Water giant with life".T(EDTx.EDPlanet_Watergiantwithlife),
-            [EDPlanet.Gas_giant_with_water_based_life] = "Gas giant with water-based life".T(EDTx.EDPlanet_Gasgiantwithwaterbasedlife),
-            [EDPlanet.Gas_giant_with_ammonia_based_life] = "Gas giant with ammonia-based life".T(EDTx.EDPlanet_Gasgiantwithammoniabasedlife),
-            [EDPlanet.Sudarsky_class_I_gas_giant] = "Class I gas giant".T(EDTx.EDPlanet_SudarskyclassIgasgiant),
-            [EDPlanet.Sudarsky_class_II_gas_giant] = "Class II gas giant".T(EDTx.EDPlanet_SudarskyclassIIgasgiant),
-            [EDPlanet.Sudarsky_class_III_gas_giant] = "Class III gas giant".T(EDTx.EDPlanet_SudarskyclassIIIgasgiant),
-            [EDPlanet.Sudarsky_class_IV_gas_giant] = "Class IV gas giant".T(EDTx.EDPlanet_SudarskyclassIVgasgiant),
-            [EDPlanet.Sudarsky_class_V_gas_giant] = "Class V gas giant".T(EDTx.EDPlanet_SudarskyclassVgasgiant),
-            [EDPlanet.Helium_rich_gas_giant] = "Helium-rich gas giant".T(EDTx.EDPlanet_Heliumrichgasgiant),
-            [EDPlanet.Helium_gas_giant] = "Helium gas giant".T(EDTx.EDPlanet_Heliumgasgiant),
-            [EDPlanet.Unknown_Body_Type] = "Unknown planet type".T(EDTx.EDPlanet_Unknown),
+            [EDPlanet.Metal_rich_body] = "Metal-rich body".T(EDCTx.EDPlanet_Metalrichbody),
+            [EDPlanet.High_metal_content_body] = "High metal content world".T(EDCTx.EDPlanet_Highmetalcontentbody),
+            [EDPlanet.Rocky_body] = "Rocky body".T(EDCTx.EDPlanet_Rockybody),
+            [EDPlanet.Icy_body] = "Icy body".T(EDCTx.EDPlanet_Icybody),
+            [EDPlanet.Rocky_ice_body] = "Rocky ice world".T(EDCTx.EDPlanet_Rockyicebody),
+            [EDPlanet.Earthlike_body] = "Earth-like world".T(EDCTx.EDPlanet_Earthlikebody),
+            [EDPlanet.Water_world] = "Water world".T(EDCTx.EDPlanet_Waterworld),
+            [EDPlanet.Ammonia_world] = "Ammonia world".T(EDCTx.EDPlanet_Ammoniaworld),
+            [EDPlanet.Water_giant] = "Water giant".T(EDCTx.EDPlanet_Watergiant),
+            [EDPlanet.Water_giant_with_life] = "Water giant with life".T(EDCTx.EDPlanet_Watergiantwithlife),
+            [EDPlanet.Gas_giant_with_water_based_life] = "Gas giant with water-based life".T(EDCTx.EDPlanet_Gasgiantwithwaterbasedlife),
+            [EDPlanet.Gas_giant_with_ammonia_based_life] = "Gas giant with ammonia-based life".T(EDCTx.EDPlanet_Gasgiantwithammoniabasedlife),
+            [EDPlanet.Sudarsky_class_I_gas_giant] = "Class I gas giant".T(EDCTx.EDPlanet_SudarskyclassIgasgiant),
+            [EDPlanet.Sudarsky_class_II_gas_giant] = "Class II gas giant".T(EDCTx.EDPlanet_SudarskyclassIIgasgiant),
+            [EDPlanet.Sudarsky_class_III_gas_giant] = "Class III gas giant".T(EDCTx.EDPlanet_SudarskyclassIIIgasgiant),
+            [EDPlanet.Sudarsky_class_IV_gas_giant] = "Class IV gas giant".T(EDCTx.EDPlanet_SudarskyclassIVgasgiant),
+            [EDPlanet.Sudarsky_class_V_gas_giant] = "Class V gas giant".T(EDCTx.EDPlanet_SudarskyclassVgasgiant),
+            [EDPlanet.Helium_rich_gas_giant] = "Helium-rich gas giant".T(EDCTx.EDPlanet_Heliumrichgasgiant),
+            [EDPlanet.Helium_gas_giant] = "Helium gas giant".T(EDCTx.EDPlanet_Heliumgasgiant),
+            [EDPlanet.Unknown_Body_Type] = "Unknown planet type".T(EDCTx.EDPlanet_Unknown),
         };
 
         public static string PlanetTypeName(EDPlanet type)

@@ -4,29 +4,13 @@ using System.Globalization;
 
 namespace EliteDangerousCore
 {
-    public enum EDTx
+    internal enum EDCTx
     {
         Warning, // Warning
-        Today, // Today
-        t24h, // 24h
-        t7days, // 7 days
-        All, // All
         OK, // OK
         Cancel, // Cancel
-        Delete, // Delete
-        Campaign, // Campaign
-        NoScan, // No Scan
-        Systemnotknown, // System not known
-        Travel, // Travel
-        GameTime, // Game Time
-        Time, // Time
-        NoData, // No Data
-        None, // None
-        on, // on
-        Off, // Off
         Unknown, // Unknown
-        Information, // Information
-        NoPos, // No Pos
+        RemoveAll, // Remove All
 
         ScreenShotImageConverter_CNV, 
         ScreenshotDirectoryWatcher_Scan,
@@ -213,7 +197,6 @@ namespace EliteDangerousCore
         JournalEntry_Donation, // Donation:
         JournalEntry_Permits, // Permits:
         JournalEntry_Rewards, // Rewards:
-        JournalEntry_FactionEffects, // Faction Effects:
         JournalEntry_Fine, // Fine:
         JournalEntry_Missionname, // Mission name:
         JournalEntry_Hot, // ;(Hot)
@@ -262,15 +245,11 @@ namespace EliteDangerousCore
         JournalEntry_RemainingJumps,  // Remaining Jumps
         JournalEntry_Nearest, // Nearest:
         JournalEntry_Near, // Near:
-        JournalEntry_Locker,
-        JournalEntry_Backpack,
 
 
         JournalLocOrJump_Type, // "Type " @
         JournalLocOrJump_insystem, // "< in system " @
         JournalLocOrJump_Security, // "Security, //" @
-        JournalLocOrJump_Inspacenear, // "In space near " @
-        JournalLocOrJump_oftype, // "< of type " @
         JournalLocOrJump_Happiness, // "Happiness, //" @
         JournalLocOrJump_Reputation, // "Reputation, //;%;N1" @
         JournalLocOrJump_SquadronSystem, // ";Squadron System" @
@@ -365,7 +344,6 @@ namespace EliteDangerousCore
         CrimeClass_GuardsMurdered, //Guards Murdered: ;;N0
         CrimeClass_DataStolen, // Data Stolen: ;;N0
         CrimeClass_GoodsStolen, // Goods Stolen: ;;N0
-        CrimeClass_SampleStolen, // Production Samples Stolen: ;;N0
         CrimeClass_TotalStolen, // Total Inventory Items Stolen: ;;N0
         CrimeClass_TurretsDestroyed, // Turrets Destroyed: ;;N0
         CrimeClass_TurretsOverloaded, // Turrets Overloaded: ;;N0
@@ -505,20 +483,14 @@ namespace EliteDangerousCore
         JournalScan_MSM, // Mass:;SM;0.00
         JournalScan_Age, // Age:;my;0.0
         JournalScan_RS, // Radius:
-        JournalScan_MEM, // Mass:;EM;0.00
         JournalScan_Landable, // <;, Landable
         JournalScan_Terraformable, // <;, Terraformable
         JournalScan_Gravity, // Gravity:;G;0.0
-        JournalScan_RK, // Radius:;km;0
         JournalScan_NoAtmosphere, // No Atmosphere
         JournalScan_LandC, // , Landable
         JournalScan_AMY, // Age: {0} my
         JournalScan_SolarMasses, // Solar Masses: {0:0.00}
-        JournalScan_EarthMasses, // Earth Masses: {0:0.0000}
-        JournalScan_SolarRadius, // Solar Radius: {0:0.00} Sols
-        JournalScan_BodyRadius, // Body Radius: {0:0.00}km
         JournalScan_SurfaceTemp, // Surface Temp: {0}K
-        JournalScan_Luminosity, // Luminosity: {0}
         JournalScan_GV, // Gravity: {0:0.0}g
         JournalScan_SPA, // Surface Pressure: {0} Atmospheres
         JournalScan_SPP, // Surface Pressure: {0} Pa
@@ -547,7 +519,6 @@ namespace EliteDangerousCore
         JournalScan_EV, //  Estimated value: {0:N0}
         JournalScan_FDV, //  First Discovered Value {0:N0}
         JournalScan_DB, //   Discovered by {0} on {1}
-        JournalScan_HabitableZoneApprox, // Habitable Zone Approx. {0} ({1}-{2} AU)
         JournalScan_Othersstarsnotconsidered, //  (Others stars not considered)
         JournalScan_Materials, // Materials:
         JournalScan_AtmosphericComposition, // Atmospheric Composition:
@@ -561,9 +532,7 @@ namespace EliteDangerousCore
         JournalScan_DISTA, // Dist:;ls;0.0
         JournalScan_DIST, // Dist:
         JournalScan_BNME, // Name:
-        JournalScan_MMoM, // Mass:;MM;0.00
         JournalScan_SNME, // Name:
-        JournalScan_MoonMasses, // Moon Masses: {0:0.00}
         JournalScan_MPI, // Mapped
         JournalScan_MPIE, // Efficiently
         JournalScan_EVFD, //  First Discovered+Mapped value: {0:N0}
@@ -594,7 +563,6 @@ namespace EliteDangerousCore
 
         FSSSignal_State, // State:
         FSSSignal_Faction, // Faction:
-        FSSSignal_USSType, // USS Type:
         FSSSignal_ThreatLevel, //  Threat Level:
         FSSSignal_StationBool, // ;Station:
         FSSSignal_CarrierBool, // ;Carrier:
@@ -734,8 +702,6 @@ namespace EliteDangerousCore
         JournalSupercruiseExit_At, // At
 
         JournalReceiveText_From, // From:
-        JournalReceiveText_Msg, // Msg:
-        JournalReceiveText_Channel, // Channel:
         JournalReceiveText_Text, //  Texts
         JournalReceiveText_FC, // from
         JournalReceiveText_on, // < on
@@ -751,8 +717,6 @@ namespace EliteDangerousCore
         JournalSearchAndRescue_Reward, // Reward:
         JournalSellExplorationData_Total, // Total:; cr;N0
         JournalSetUserShipName_On, // On:
-        JournalSquadronBase_Old, // Old:
-        JournalSquadronBase_New, // New:
         JournalMultiSellExplorationData_Total, // Total:; cr;N0
 
         JournalMissionAccepted_from, // < from
@@ -818,9 +782,76 @@ namespace EliteDangerousCore
         EDPlanet_Heliumgasgiant, // Helium gas giant
         EDPlanet_Unknown, // Unknown planet type
 
+        CommanderForm, // Control 'CommanderForm'
+        CommanderForm_extGroupBoxCommanderInfo, // Control 'Other'
+        CommanderForm_HomeSys, // Control 'Home System:'
+        CommanderForm_labelMapCol, // Control 'Default Map Color'
+        CommanderForm_groupBoxCustomIGAU, // Control 'Intergalactic Astronomical Union [IGAU]'
+        CommanderForm_checkBoxIGAUSync, // Control 'Send Codex Entry Discovery Data to IGAU'
+        CommanderForm_extGroupBoxEDAstro, // Control 'EDAstro'
+        CommanderForm_extCheckBoxEDAstro, // Control 'Send Events to EDAstro'
+        CommanderForm_groupBoxCustomInara, // Control 'Inara Information (optional)'
+        CommanderForm_labelINARAN, // Control 'Inara Name:'
+        CommanderForm_labelInaraAPI, // Control 'Inara API Key:'
+        CommanderForm_checkBoxCustomInara, // Control 'Sync to Inara'
+        CommanderForm_groupBoxCustomEDSM, // Control 'EDSM Information (optional)'
+        CommanderForm_checkBoxCustomEDSMFrom, // Control 'Sync From EDSM'
+        CommanderForm_labelEDSMAPI, // Control 'EDSM API Key:'
+        CommanderForm_labelEDSMN, // Control 'EDSM Name:'
+        CommanderForm_checkBoxCustomEDSMTo, // Control 'Sync to EDSM'
+        CommanderForm_groupBoxCustomEDDN, // Control 'EDDN'
+        CommanderForm_checkBoxCustomEDDNTo, // Control 'Send Event Information to EDDN'
+        CommanderForm_groupBoxCustomJournal, // Control 'Journal Related Information'
+        CommanderForm_labelCN, // Control 'Commander Name:'
+        CommanderForm_labelJL, // Control 'Journal Location:'
+        CommanderForm_buttonExtBrowse, // Control 'Browse'
+        CommanderForm_extCheckBoxConsoleCommander, // Control 'Console Commander'
+        CommanderForm_panel_defaultmapcolor_ToolTip, // ToolTip 'New travel entries get this colour on the map'
+        CommanderForm_checkBoxIGAUSync_ToolTip, // ToolTip 'https://github.com/Elite-IGAU/publications/blob/master/IGAU_Codex.csv'
+        CommanderForm_checkBoxCustomInara_ToolTip, // ToolTip 'Sync with Inara'
+        CommanderForm_textBoxBorderInaraAPIKey_ToolTip, // ToolTip 'Enter the API key from the Inara Website\\nGet an Inara API key from https://inara.cz'
+        CommanderForm_textBoxBorderInaraName_ToolTip, // ToolTip 'Give the user name for this commander on Inara'
+        CommanderForm_checkBoxCustomEDSMFrom_ToolTip, // ToolTip 'Receive any FSD jumps from EDSM that are on their database but not in EDDiscovery'
+        CommanderForm_checkBoxCustomEDSMTo_ToolTip, // ToolTip 'Send your travel and ship data to EDSM'
+        CommanderForm_textBoxBorderEDSMAPI_ToolTip, // ToolTip 'Enter the API key from the EDSM Website\\nGet an EDSM API key from https://www.edsm.net in "My account" menu'
+        CommanderForm_textBoxBorderEDSMName_ToolTip, // ToolTip 'Give the name this commander is known as in EDSM'
+        CommanderForm_checkBoxCustomEDDNTo_ToolTip, // ToolTip 'Click to send journal information to EDDN. EDDN feeds tools such as EDDB, EDSM, Inara with data from commanders. All data is made anonymised'
+        CommanderForm_textBoxBorderCmdr_ToolTip, // ToolTip 'Enter commander name as used in Elite Dangerous'
+        CommanderForm_buttonExtBrowse_ToolTip, // ToolTip 'Browse to the the journal folder'
+        CommanderForm_textBoxBorderJournal_ToolTip, // ToolTip 'Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\\nLeave override journal location blank to use the standard Frontier location for journals'
         CommanderForm_LF, // Select folder where Journal*.log files are stored by Frontier in
         CommanderForm_ND, // Folder does not exist
 
+        ScreenShotConfigureForm, // Control 'Screen Shot Configure'
+        ScreenShotConfigureForm_labelQuality, // Control 'JPEG Quality'
+        ScreenShotConfigureForm_extCheckBoxEnabled, // Control 'Conversion Enabled'
+        ScreenShotConfigureForm_extCheckBoxHiRes, // Control 'Mark HiRes Files'
+        ScreenShotConfigureForm_extCheckBoxKeepMasterConvertedImage, // Control 'Keep master converted image'
+        ScreenShotConfigureForm_extGroupBox1, // Control 'Crop/Resize Settings'
+        ScreenShotConfigureForm_labelHeight2, // Control 'Height'
+        ScreenShotConfigureForm_labelWidth2, // Control 'Width'
+        ScreenShotConfigureForm_labelLeft2, // Control 'Left'
+        ScreenShotConfigureForm_labelTop2, // Control 'Top'
+        ScreenShotConfigureForm_groupBoxCropSettings, // Control 'Crop/Resize Settings'
+        ScreenShotConfigureForm_labelHeight, // Control 'Height'
+        ScreenShotConfigureForm_labelWidth, // Control 'Width'
+        ScreenShotConfigureForm_labelLeft, // Control 'Left'
+        ScreenShotConfigureForm_labelTop, // Control 'Top'
+        ScreenShotConfigureForm_labelFolder, // Control 'ED/Steam Screenshot folder'
+        ScreenShotConfigureForm_buttonChangeScreenshotsFolder, // Control 'Browse'
+        ScreenShotConfigureForm_labelSubfolder, // Control 'In Sub folder'
+        ScreenShotConfigureForm_labelImage2, // Control 'Image 2'
+        ScreenShotConfigureForm_labelImage1, // Control 'Image 1'
+        ScreenShotConfigureForm_labelCropResizeOptions, // Control 'Crop/Resize Options'
+        ScreenShotConfigureForm_labelFileNameFormat, // Control 'In Filename format'
+        ScreenShotConfigureForm_labelStoreFolder, // Control 'Store Converted pictures'
+        ScreenShotConfigureForm_extButtonBrowseMoveOrg, // Control 'Browse'
+        ScreenShotConfigureForm_buttonEDChangeOutputFolder, // Control 'Browse'
+        ScreenShotConfigureForm_labelClipboard, // Control 'Clipboard'
+        ScreenShotConfigureForm_labelOriginal, // Control 'Original Image'
+        ScreenShotConfigureForm_labelEnabled, // Control 'Enable'
+        ScreenShotConfigureForm_labelScanFor, // Control 'Scan for'
+        ScreenShotConfigureForm_labelSaveAs, // Control 'Save as'
         Screenshot_Folder, // Select screenshot folder
         Screenshot_Identical, // Cannot set input..
         Screenshot_FolderNotExist, // Folder specified does not exist
@@ -847,7 +878,6 @@ namespace EliteDangerousCore
         JournalScanInfo_GuardianSignals, //  Has guardian signals.
         JournalScanInfo_HumanSignals, //  Has human signals.
         JournalScanInfo_OtherSignals, //  Has 'other' signals.
-        JournalScanInfo_Mapped, //  (Mapped & Discovered)
         JournalScanInfo_MandD, //  (Mapped & Discovered)
         JournalScanInfo_MP, //  (Mapped)
         JournalScanInfo_DIS, //  (Discovered)
@@ -864,15 +894,15 @@ namespace EliteDangerousCore
 
     }
 
-    public static class EDTranslatorExtensions
+    internal static class EDTranslatorExtensions
     {
-        static public string T(this string s, EDTx value)              // use the enum.
+        static public string T(this string s, EDCTx value)       // use the enum.  This was invented before the shift to all Enums of feb 22
         {
-            return BaseUtils.Translator.Instance.Translate(s, value.ToString().Replace("_", "."));
+            return s.TxID(value);
         }
-        static public string TCond(bool translate, string s, EDTx value)              // use the enum.
+        static public string TCond(bool translate, string s, EDCTx value)         
         {
-            return translate ? BaseUtils.Translator.Instance.Translate(s, value.ToString().Replace("_", ".")) : s;
+            return translate ? s.TxID(value) : s;
         }
     }
 }

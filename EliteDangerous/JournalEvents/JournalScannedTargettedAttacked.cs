@@ -101,7 +101,7 @@ namespace EliteDangerousCore.JournalEvents
                 info = ToString();
             else
             {
-                info = (MergedEntries.Count() + 1).ToString() + " Target Events".T(EDTx.JournalShipTargeted_MC);
+                info = (MergedEntries.Count() + 1).ToString() + " Target Events".T(EDCTx.JournalShipTargeted_MC);
                 for (int i = MergedEntries.Count - 1; i >= 0; i--)
                     detailed = detailed.AppendPrePad(MergedEntries[i].ToString(), System.Environment.NewLine);
                 detailed = detailed.AppendPrePad(ToString(), System.Environment.NewLine);   // ours is the last one
@@ -123,31 +123,31 @@ namespace EliteDangerousCore.JournalEvents
                 }
                 else if (ScanStage.Value == 1)
                 {
-                    info = BaseUtils.FieldBuilder.Build("", PilotName_Localised, "Rank: ".T(EDTx.JournalEntry_Rank), PilotRank, "< in ".T(EDTx.JournalShipTargeted_in), Ship_Localised);
+                    info = BaseUtils.FieldBuilder.Build("", PilotName_Localised, "Rank: ".T(EDCTx.JournalEntry_Rank), PilotRank, "< in ".T(EDCTx.JournalShipTargeted_in), Ship_Localised);
                 }
                 else if (ScanStage.Value == 2)
                 {
                     info = BaseUtils.FieldBuilder.Build(
-                        "", PilotName_Localised, "Rank: ".T(EDTx.JournalEntry_Rank), PilotRank, "< in ".T(EDTx.JournalShipTargeted_in), Ship_Localised,
-                        "Shield ;;N1".T(EDTx.JournalEntry_Shield), ShieldHealth, "Hull ;;N1".T(EDTx.JournalShipTargeted_Hull), HullHealth);
+                        "", PilotName_Localised, "Rank: ".T(EDCTx.JournalEntry_Rank), PilotRank, "< in ".T(EDCTx.JournalShipTargeted_in), Ship_Localised,
+                        "Shield ;;N1".T(EDCTx.JournalEntry_Shield), ShieldHealth, "Hull ;;N1".T(EDCTx.JournalShipTargeted_Hull), HullHealth);
                         
 
                 }
                 else if (ScanStage.Value == 3)
                 {
                     info = BaseUtils.FieldBuilder.Build(
-                                    "", PilotName_Localised, "<(;)", LegalStatus, "Rank: ".T(EDTx.JournalEntry_Rank), PilotRank, "< in ".T(EDTx.JournalShipTargeted_in), Ship_Localised,
-                                    "Shield ;;N1".T(EDTx.JournalEntry_Shield), ShieldHealth, "Hull ;;N1".T(EDTx.JournalShipTargeted_Hull), HullHealth,
-                                    "Bounty: ; cr;N0".T(EDTx.JournalEntry_Bounty), Bounty,
-                                    "", SubSystem, "< at ;;N1".T(EDTx.JournalShipTargeted_at), SubSystemHealth,
-                                    "Power: ".T(EDTx.JournalEntry_Power), Power
+                                    "", PilotName_Localised, "<(;)", LegalStatus, "Rank: ".T(EDCTx.JournalEntry_Rank), PilotRank, "< in ".T(EDCTx.JournalShipTargeted_in), Ship_Localised,
+                                    "Shield ;;N1".T(EDCTx.JournalEntry_Shield), ShieldHealth, "Hull ;;N1".T(EDCTx.JournalShipTargeted_Hull), HullHealth,
+                                    "Bounty: ; cr;N0".T(EDCTx.JournalEntry_Bounty), Bounty,
+                                    "", SubSystem, "< at ;;N1".T(EDCTx.JournalShipTargeted_at), SubSystemHealth,
+                                    "Power: ".T(EDCTx.JournalEntry_Power), Power
                                     );
                 }
                 else
                     info = "Unknown Scan Stage type - report to EDD team";
             }
             else
-                info = "Lost Target".T(EDTx.JournalEntry_LostTarget);
+                info = "Lost Target".T(EDCTx.JournalEntry_LostTarget);
 
             return info;
         }
@@ -172,7 +172,7 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
             if (MergedEntries != null)
             {
-                info = (MergedEntries.Count+1).ToString("N0") + " " + "times".T(EDTx.JournalUnderAttack_ACOUNT);
+                info = (MergedEntries.Count+1).ToString("N0") + " " + "times".T(EDCTx.JournalUnderAttack_ACOUNT);
                 for (int i = MergedEntries.Count - 1; i >= 0; i--)
                     detailed = detailed.AppendPrePad(MergedEntries[i], System.Environment.NewLine);
                 detailed = detailed.AppendPrePad(Target, System.Environment.NewLine);   // ours is the last one
@@ -206,7 +206,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Shields Down;Shields Up".T(EDTx.JournalEntry_ShieldsDown), ShieldsUp);
+            info = BaseUtils.FieldBuilder.Build("Shields Down;Shields Up".T(EDCTx.JournalEntry_ShieldsDown), ShieldsUp);
             detailed = "";
         }
     }

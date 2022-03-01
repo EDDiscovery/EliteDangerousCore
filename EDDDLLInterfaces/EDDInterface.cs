@@ -19,17 +19,19 @@ using System.Runtime.InteropServices;
 
 namespace EDDDLLInterfaces
 {
-    public static class EDDDLLIF       // Standard DLL Interface for a C++ type program
+    public static class EDDDLLIF      
     {
         [StructLayout(LayoutKind.Explicit)]
         public struct JournalEntry
         {
+            // offsets apply to WIN32 DLL
             // int/long = 4 offset, aligned 4
-            // bool = 1 offset, next aligned to 4
+            // bool = 1 offset, next aligned to 1, first aligned 4
             // BSTR/Safearray = 8 offset, aligned 8
 
             [FieldOffset(0)] public int ver;
-            [FieldOffset(4)] public int indexno;
+            [FieldOffset(4)] public int indexno;        // if -1, null record, rest is invalid.  For NewJournalEntry, its HL position (0..). Not valid for NewUnfilteredJournalEntry
+
             [FieldOffset(8)] [MarshalAs(UnmanagedType.BStr)] public string utctime;
             [FieldOffset(16)] [MarshalAs(UnmanagedType.BStr)] public string name;
             [FieldOffset(24)] [MarshalAs(UnmanagedType.BStr)] public string info;
@@ -50,9 +52,9 @@ namespace EDDDLLInterfaces
             [FieldOffset(101)] public bool isdocked;
 
             [FieldOffset(104)] [MarshalAs(UnmanagedType.BStr)] public string whereami;
-            [FieldOffset(112)] [MarshalAs(UnmanagedType.BStr)] public string shiptype;
-            [FieldOffset(120)] [MarshalAs(UnmanagedType.BStr)] public string gamemode;
-            [FieldOffset(128)] [MarshalAs(UnmanagedType.BStr)] public string group;
+            [FieldOffset(112)] [MarshalAs(UnmanagedType.BStr)] public string shiptype;  // nice name, Unknown not set
+            [FieldOffset(120)] [MarshalAs(UnmanagedType.BStr)] public string gamemode; // Unknown not set
+            [FieldOffset(128)] [MarshalAs(UnmanagedType.BStr)] public string group; // empty if not group
             [FieldOffset(136)] public long credits;
 
             [FieldOffset(144)] [MarshalAs(UnmanagedType.BStr)] public string eventid;
@@ -60,7 +62,7 @@ namespace EDDDLLInterfaces
             [FieldOffset(152)] [MarshalAs(UnmanagedType.SafeArray)] public string[] currentmissions;
 
             [FieldOffset(160)] public long jid;
-            [FieldOffset(168)] public int totalrecords;
+            [FieldOffset(168)] public int totalrecords;     // Number of HLs for NewJournalEntry, for Unfiltered its no of HLs before add.
 
             // Version 1 Ends here
 
@@ -69,7 +71,7 @@ namespace EDDDLLInterfaces
             [FieldOffset(192)] [MarshalAs(UnmanagedType.BStr)] public string cmdrfid;
             [FieldOffset(200)] [MarshalAs(UnmanagedType.BStr)] public string shipident;
             [FieldOffset(208)] [MarshalAs(UnmanagedType.BStr)] public string shipname;
-            [FieldOffset(216)] public long hullvalue;
+            [FieldOffset(216)] public long hullvalue;       // offsets here are not right for the thunk to a WIN32 DLL. should have been 8.  C# will see a long, c++ will see a uint
             [FieldOffset(220)] public long rebuy;
             [FieldOffset(224)] public long modulesvalue;
             [FieldOffset(228)] public bool stored;          // true if its a stored replay journal, false if live
@@ -86,6 +88,28 @@ namespace EDDDLLInterfaces
             [FieldOffset(250)] public bool beta;
 
             // Version 4 Ends here
+
+            [FieldOffset(251)] public bool wanted;
+            [FieldOffset(252)] public bool bodyapproached;
+            [FieldOffset(253)] public bool bookeddropship;
+            [FieldOffset(254)] public bool issrv;
+            [FieldOffset(255)] public bool isfighter;
+            [FieldOffset(256)] public bool onfoot;
+            [FieldOffset(257)] public bool bookedtaxi;
+
+            // if not known "Unknown" is used
+
+            [FieldOffset(264)] [MarshalAs(UnmanagedType.BStr)] public string bodyname;      
+            [FieldOffset(272)] [MarshalAs(UnmanagedType.BStr)] public string bodytype;   
+            [FieldOffset(280)] [MarshalAs(UnmanagedType.BStr)] public string stationname;    
+            [FieldOffset(288)] [MarshalAs(UnmanagedType.BStr)] public string stationtype;
+            [FieldOffset(296)] [MarshalAs(UnmanagedType.BStr)] public string stationfaction;
+            [FieldOffset(304)] [MarshalAs(UnmanagedType.BStr)] public string shiptypefd;   
+            [FieldOffset(312)] [MarshalAs(UnmanagedType.BStr)] public string oncrewwithcaptain;    // empty not in multiplayer
+            [FieldOffset(320)] public ulong shipid;        // ulong.maxvalue = unknown
+            [FieldOffset(328)] public int bodyid;        //  -1 not on body
+
+            // Version 5 Ends here
         };
 
         public delegate bool EDDRequestHistory(long index, bool isjid, out JournalEntry f); //index =1..total records, or jid
@@ -143,10 +167,10 @@ namespace EDDDLLInterfaces
 
         // Optional
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void EDDNewJournalEntry(JournalEntry nje);
+        public delegate void EDDNewJournalEntry(JournalEntry nje);      // this is the JEs EDDiscovery main system sees, post filtering reordering
 
         // Optional DLLCall in Action causes this
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]            
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         [return: MarshalAs(UnmanagedType.BStr)]                         // paras can be an empty array, but is always present
         public delegate String EDDActionCommand([MarshalAs(UnmanagedType.BStr)]string cmdname, [MarshalAs(UnmanagedType.SafeArray)]string[] paras);
 
@@ -158,18 +182,26 @@ namespace EDDDLLInterfaces
 
         // Optional
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void EDDNewUIEvent([MarshalAs(UnmanagedType.BStr)]string jsonui);
+        public delegate void EDDNewUIEvent([MarshalAs(UnmanagedType.BStr)] string jsonui);
 
-        // Optional 
-        // back: list of (config name, config value, config type (string,int)) of all configs
-        // in : either an empty array or list of (name, values) to set
-        // if fails, return empty array back
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        [return: MarshalAs(UnmanagedType.SafeArray)]
-        public delegate string[] EDDConfigParameters([MarshalAs(UnmanagedType.SafeArray)] string[] values);
+        // config parameters has been removed - never used
 
         // Version 2 Ends here
 
+        // Version 5 
+
+        // Optional, Configure event, called just after EDDInitialise(), to pass in any config string that the system has saved for you
+        // string passed back is saved by system
+        // if editit = true, user wants you to offer the option to change the config
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.BStr)]                         
+        public delegate String EDDConfig([MarshalAs(UnmanagedType.BStr)] string input, bool editit);
+
+        // Optional
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void EDDNewUnfilteredJournalEntry(JournalEntry nje);      // unfiltered stream of JEs before any ordering. Note list number is not applicable
+
+        // version 5 ends here
     }
 
 }

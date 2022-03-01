@@ -44,14 +44,14 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
-            info = BaseUtils.FieldBuilder.Build("Combat: ;%".T(EDTx.JournalProgress_Combat), Combat,
-                                      "Trade: ;%".T(EDTx.JournalProgress_Trade), Trade,
-                                      "Exploration: ;%".T(EDTx.JournalProgress_Exploration), Explore,
-                                      "Soldier: ;%".T(EDTx.JournalProgress_Soldier), Soldier,
-                                      "Exobiologist: ;%".T(EDTx.JournalProgress_Exobiologist), Exobiologist,
-                                      "Federation: ;%".T(EDTx.JournalProgress_Federation), Federation,
-                                      "Empire: ;%".T(EDTx.JournalProgress_Empire), Empire,
-                                      "CQC: ;%".T(EDTx.JournalProgress_CQC), CQC);
+            info = BaseUtils.FieldBuilder.Build("Combat: ;%".T(EDCTx.JournalProgress_Combat), Combat,
+                                      "Trade: ;%".T(EDCTx.JournalProgress_Trade), Trade,
+                                      "Exploration: ;%".T(EDCTx.JournalProgress_Exploration), Explore,
+                                      "Soldier: ;%".T(EDCTx.JournalProgress_Soldier), Soldier,
+                                      "Exobiologist: ;%".T(EDCTx.JournalProgress_Exobiologist), Exobiologist,
+                                      "Federation: ;%".T(EDCTx.JournalProgress_Federation), Federation,
+                                      "Empire: ;%".T(EDCTx.JournalProgress_Empire), Empire,
+                                      "CQC: ;%".T(EDCTx.JournalProgress_CQC), CQC);
             detailed = "";
         }
     }

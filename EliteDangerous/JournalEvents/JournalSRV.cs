@@ -69,7 +69,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", SRVType_Localised, "Loadout: ".T(EDTx.JournalEntry_Loadout), Loadout) + BaseUtils.FieldBuilder.Build(", NPC Controlled;".T(EDTx.JournalEntry_NPCControlled), PlayerControlled);
+            info = BaseUtils.FieldBuilder.Build("", SRVType_Localised, "Loadout: ".T(EDCTx.JournalEntry_Loadout), Loadout) + BaseUtils.FieldBuilder.Build(", NPC Controlled;".T(EDCTx.JournalEntry_NPCControlled), PlayerControlled);
             detailed = "";
         }
     }

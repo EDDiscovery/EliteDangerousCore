@@ -85,7 +85,7 @@ namespace EliteDangerousCore
 
                 if (jlu != null && jlu.Count>0 && !stopRequested.WaitOne(0))
                 {
-                    InvokeAsyncOnUiThread(() => IssueEvents(jlu));
+                    InvokeAsyncOnUiThread(() => IssueEventsInUIThread(jlu));
                 }
             }
         }
@@ -132,9 +132,11 @@ namespace EliteDangerousCore
         }
 
         // in UI thread.. fire the events off
-        private void IssueEvents(List<Event> entries)       
+        private void IssueEventsInUIThread(List<Event> entries)       
         {
-            foreach( var e in entries)
+            System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);
+
+            foreach ( var e in entries)
             {
                 if (e.je != null)
                     OnNewJournalEntry?.Invoke(e.je, e.sr);

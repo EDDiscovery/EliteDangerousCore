@@ -920,12 +920,16 @@ namespace EliteDangerousCore.EDSM
         // Verified Nov 20,  by scan panel
         private static JObject ConvertFromEDSMBodies(JObject jo)        // protect yourself against bad JSON
         {
+            //System.Diagnostics.Debug.WriteLine($"EDSM Body {jo.ToString(true)}");
             JObject jout = new JObject
             {
                 ["timestamp"] = DateTime.UtcNow.ToStringZuluInvariant(),
                 ["event"] = "Scan",
                 ["EDDFromEDSMBodie"] = true,
                 ["BodyName"] = jo["name"],
+                ["SystemAddress"] = jo["id64"].Long(0),
+                ["WasDiscovered"] = true,
+                ["WasMapped"] = false,
             };
 
             if (!jo["discovery"].IsNull())       // much more defense around this.. EDSM gives discovery=null back

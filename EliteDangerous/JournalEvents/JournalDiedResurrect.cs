@@ -105,12 +105,12 @@ namespace EliteDangerousCore.JournalEvents
                 foreach (Killer k in Killers)
                 {
                     if (k.Ship.HasChars() && ItemData.IsShip(k.Ship))
-                        info = info.AppendPrePad(string.Format("{0} in ship type {1} rank {2}".T(EDTx.JournalEntry_Died), k.Name_Localised, k.Ship ?? "?", k.Rank ?? "?"), ", ");
+                        info = info.AppendPrePad(string.Format("{0} in ship type {1} rank {2}".T(EDCTx.JournalEntry_Died), k.Name_Localised, k.Ship ?? "?", k.Rank ?? "?"), ", ");
                     else
-                        info = BaseUtils.FieldBuilder.Build("",k.Name_Localised,"Rank: ".T(EDTx.JournalEntry_Rank),k.Rank);
+                        info = BaseUtils.FieldBuilder.Build("",k.Name_Localised,"Rank: ".T(EDCTx.JournalEntry_Rank),k.Rank);
                 }
 
-                info = "Killed by ".T(EDTx.JournalEntry_Killedby) + info;
+                info = "Killed by ".T(EDCTx.JournalEntry_Killedby) + info;
             }
 
             detailed = "";
@@ -128,7 +128,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = "Boom!".T(EDTx.JournalEntry_Boom);
+            info = "Boom!".T(EDCTx.JournalEntry_Boom);
             detailed = "";
         }
     }
@@ -161,7 +161,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Option: ".T(EDTx.JournalEntry_Option), Option, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Cost, ";Bankrupt".T(EDTx.JournalEntry_Bankrupt), Bankrupt);
+            info = BaseUtils.FieldBuilder.Build("Option: ".T(EDCTx.JournalEntry_Option), Option, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost, ";Bankrupt".T(EDCTx.JournalEntry_Bankrupt), Bankrupt);
             detailed = "";
         }
     }

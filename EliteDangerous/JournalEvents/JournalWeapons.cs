@@ -47,7 +47,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             string wmod = WeaponMods != null ? string.Join(", ", WeaponMods.Select(x => Recipes.GetBetterNameForEngineeringRecipe(x))) : null;
-            info = BaseUtils.FieldBuilder.Build("", FriendlyName, "Class: ".T(EDTx.JournalEntry_Class), Class, "Mods: ".T(EDTx.JournalEntry_Mods), wmod, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), Price);
+            info = BaseUtils.FieldBuilder.Build("", FriendlyName, "Class: ".T(EDCTx.JournalEntry_Class), Class, "Mods: ".T(EDCTx.JournalEntry_Mods), wmod, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Price);
             detailed = "";
         }
 
@@ -86,7 +86,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< sell price ; cr;N0".T(EDTx.JournalEntry_sellprice), Price);
+            info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< sell price ; cr;N0".T(EDCTx.JournalEntry_sellprice), Price);
             detailed = "";
         }
 
@@ -127,7 +127,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             string wmod = WeaponMods != null ? string.Join(", ", WeaponMods.Select(x => Recipes.GetBetterNameForEngineeringRecipe(x))) : null;
             long? p = Cost > 0 ? Cost : default(long?);
-            info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< => " + "Class: ".T(EDTx.JournalEntry_Class), Class, "Mods: ".T(EDTx.JournalEntry_Mods), wmod, "Cost: ; cr;N0".T(EDTx.JournalEntry_Cost), p);
+            info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< => " + "Class: ".T(EDCTx.JournalEntry_Class), Class, "Mods: ".T(EDCTx.JournalEntry_Mods), wmod, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), p);
             detailed = "";
         }
 
