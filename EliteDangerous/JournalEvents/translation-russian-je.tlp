@@ -254,6 +254,8 @@ SECTION JournalTypeEnum
 .Resupply: "Resupply" @
 .ShipLocker: "Ship Locker" @
 .FSSBodySignals: "FSS Body Signals" @
+.ModuleBuyAndStore: "Module Buy And Store" @
+.ScanBaryCentre: "Scan Barycentre" @
 
 SECTION JournalCargo
 
@@ -294,7 +296,6 @@ SECTION FSSSignal
 
 .State: "State: " => "Состояние: "
 .Faction: "Faction: " => "фракция: "
-.USSType: "USS Type: " => "тип сигнала: "
 .ThreatLevel: "Threat Level: " => " уровень угрозы: "
 .StationBool: ";Station: " => "; станция"
 .CarrierBool: ";Carrier: " @
@@ -325,16 +326,8 @@ SECTION JournalCommodityPricesBase
 .CPBBuy: "{0}: {1}  " @
 .SO: "Sell only Items: " => "Товары, которые можно продать: "
 
-SECTION JournalEngineerCraftBase
-
-.InSlot: "In Slot: " => "Слот: "
-.By: "By: " => "инженер: "
-.Blueprint: "Blueprint: " => "чертеж: "
-.Level: "Level: " => "уровень: "
-
 SECTION JournalEngineerProgress
 
-.Progress: "Progress: " => "Прогресс: "
 .Progresson: "Progress on ; Engineers" => "Всего известно: ;"
 .Rank: "Rank: " => "Ранг: "
 
@@ -380,8 +373,6 @@ SECTION JournalLocOrJump
 .Type: "Type " => "Тип: "
 .insystem: "< in system " => "<, система: "
 .Security: "Security: " => "безопасность: "
-.Inspacenear: "In space near " => "В космосе рядом с "
-.oftype: "< of type " => "<, тип: "
 .Happiness: "Happiness: " => "удовлетворенность: "
 .Reputation: "Reputation: ;%;N1" => "репутация: ;%;N1"
 .SquadronSystem: ";Squadron System" => ";система эскадрильи"
@@ -437,6 +428,8 @@ SECTION JournalProgress
 .Trade: "Trade: ;%" => "торговый ранг: ;%"
 .Exploration: "Exploration: ;%" => "исследовательский ранг: ;%"
 .Federation: "Federation: ;%" => "Федерация: ;%"
+.Soldier: "Soldier: ;%" @
+.Exobiologist: "Exobiologist: ;%" @
 .Empire: "Empire: ;%" => "Империя: ;%"
 .CQC: "CQC: ;%" => "CQC: ;%"
 
@@ -458,8 +451,6 @@ SECTION JournalPromotion
 SECTION JournalReceiveText
 
 .From: "From: " => "Имя: "
-.Msg: "Msg: " => "Текст: "
-.Channel: "Channel: " => "Канал: "
 .Text: " Texts" => " сообщен."
 .FC: "from " => "на канале "
 .on: "< on " => "<, канал: "
@@ -509,18 +500,13 @@ SECTION JournalScan
 .MSM: "Mass: ;SM;0.00" => "солнечных масс: ; ;0.00"
 .Age: "Age: ;my;0.0" => "возраст: ; млн лет;0.0"
 .RS: "Radius: " => "Радиус: "
-.MEM: "Mass: ;EM;0.00" => "земных масс: ; ;0.00"
 .Landable: "<;, Landable" => "<;, пригодна для посадки"
 .Terraformable: "<;, Terraformable" => "<;, пригодна для терраформирования"
 .Gravity: "Gravity: ;G;0.00" => "гравитация: ; g;0.00"
-.RK: "Radius: ;km;0" => "радиус: ; км;0"
-.NoAtmosphere: ", No Atmosphere" => ", без атмосферы"
+.NoAtmosphere: "No Atmosphere" => ", без атмосферы"
 .LandC: ", Landable" => ", пригодна для посадки"
 .AMY: "Age: {0} my\n" => "Возраст: {0} млн лет\n"
 .SolarMasses: "Solar Masses: {0:0.00}\n" => "Солнечных масс: {0:0.00}\n"
-.EarthMasses: "Earth Masses: {0:0.0000}\n" => "Земных масс: {0:0.0000}\n"
-.SolarRadius: "Solar Radius: {0:0.00} Sols\n" => "Солнечных радиусов: {0:0.00}\n"
-.BodyRadius: "Body Radius: {0:0.00}km\n" => "Радиус: {0:0.00} км\n"
 .SurfaceTemp: "Surface Temp: {0}K\n" => "Температура поверхности: {0} K\n"
 .GV: "Gravity: {0:0.00}g\n" => "Гравитация: {0:0.00} g\n"
 .SPA: "Surface Pressure: {0} Atmospheres\n" => "Атмосферное давление: {0} ат\n"
@@ -547,7 +533,6 @@ SECTION JournalScan
 .EV: "Base Estimated value: {0:N0}" => "\n\nПримерная стоимость данных сканирования: {0:N0} кр.,"
 .EVM: "Mapped value: {0:N0}/{1:N0}e" @
 .DB: "Discovered by {0} on {1}" => "\n\nПервооткрыватель: {0}, дата: {1}"
-.HabitableZoneApprox: "Habitable Zone Approx. {0} ({1}-{2} AU)\n" => "Обитаемая зона прибл. {0} ({1}-{2} а. е.)\n"
 .Othersstarsnotconsidered: " - Others stars not considered\n" => " (без учета других звезд)\n\n"
 .Materials: "Materials:\n" => "Материалы:\n"
 .AtmosphericComposition: "Atmospheric Composition:\n" => "Состав атмосферы:\n"
@@ -561,9 +546,7 @@ SECTION JournalScan
 .DISTA: "Dist: ;ls;0.0" => "Расстояние от точки прибытия: ; св. с.;0.0"
 .DIST: "Dist: " @
 .BNME: "Name: " => "название звезды: "
-.MMoM: "Mass: ;MM;0.00" => "Масса: ; лунных масс;0.00"
 .SNME: "Name: " => "название тела: "
-.MoonMasses: "Moon Masses: {0:0.00}\n" => "Лунных масс: {0:0.00}\n"
 .MPI: "Mapped" => "картографировано"
 .MPIE: "Efficiently" => "оптимально"
 .EVFD: "First Discovered+Mapped value: {0:N0}/{1:N0}e" => "Стоимость данных + бонус первооткрывателя: {0:N0}/{1:N0}e кр."
@@ -573,6 +556,8 @@ SECTION JournalScan
 .EVAM: "Already Mapped" @
 .InferredCircumstellarzones: "Inferred Circumstellar zones:\n" => "Предполагаемая околозвездная зона:\n"
 .MASS: "Mass: " => "Масса: "
+.AscendingNode: "Ascending Node: {0:0.000}°\n" @
+.MeanAnomaly: "Mean Anomaly: {0:0.000}°\n" @
 
 SECTION JournalSAAScanComplete
 
@@ -623,11 +608,6 @@ SECTION JournalShipyardSwap
 SECTION JournalShipyardTransfer
 
 .Of: "Of " => "Корабль: "
-
-SECTION JournalSquadronBase
-
-.Old: "Old: " => "Старый: "
-.New: "New: " => "новый: "
 
 SECTION JournalStartJump
 
@@ -681,6 +661,10 @@ SECTION CombatClass
 .AssassinationProfits: "Assassination Profits: ;cr;N0" => "Прибыль от наемных убийств: ; кр.;N0"
 .HighestReward: "Highest Reward: ;cr;N0" => "Максимальный размер награды: ; кр.;N0"
 .SkimmersKilled: "Skimmers Killed: ;;N0" => "Сбито оборонных беспилотников: ;;N0"
+.OnFootCombatBonds: "Surface Combat Bonds: ;;N0" @
+.OnFootCombatBondsProfits: "Surface Combat Bonds Profits: ;cr;N0" @
+.OnFootVehiclesDestroyed: "Vehicles Destroyed on Foot: ;;N0" @
+.OnFootShipsDestroyed: "Ships Destroyed on Foot: ;;N0" @
 .DropshipsTaken: "Dropships Taken: ;;N0" @
 .DropshipsBooked: "Dropships Booked: ;;N0" @
 .DropshipsCancelled: "Dropships Cancelled: ;;N0" @
@@ -715,7 +699,6 @@ SECTION CrimeClass
 .GuardsMurdered: "Guards Murdered: ;;N0" @
 .DataStolen: "Data Stolen: ;;N0" @
 .GoodsStolen: "Goods Stolen: ;;N0" @
-.SampleStolen: "Production Samples Stolen: ;;N0" @
 .TotalStolen: "Total Inventory Items Stolen: ;;N0" @
 .TurretsDestroyed: "Turrets Destroyed: ;;N0" @
 .TurretsOverloaded: "Turrets Overloaded: ;;N0" @
@@ -759,6 +742,7 @@ SECTION ExplorationClass
 .NoofJumps: "No of Jumps: ;;N0" => "Всего прыжков в гиперпространстве: ;;N0"
 .GreatestDistance: "Greatest Distance: ;ly;N0" => "Макс. расстояние с начала: ;ly;N0"
 .TimePlayed: "Time Played: " => "Время игры: "
+.OnFootDistanceTravelled: "Distance Travelled on Foot: ;m;N0" @
 .EfficientScans: "Efficient Scans: ;;N0" @
 .ShuttleJourneys: "Shuttle Journeys: ;;N0" @
 .ShuttleDistanceTravelled: "Shuttle Distance Travelled: ;ly;N0" @
@@ -769,12 +753,12 @@ SECTION ExplorationClass
 
 SECTION PassengerMissionsClass
 
-.Accepted: "Accepted Mission Passengers: ;;N0" @
-.BulkMissionPassengers: "Bulk Mission Passengers: ;;N0" => "Доставлено обычных пассажиров: ;;N0"
-.VIPMissionPassengers: "VIP Mission Passengers: ;;N0" => "Доставлено VIP-персон: ;;N0"
-.PassengersDelivered: "Passengers Delivered: ;;N0" => "Всего доставлено: ;;N0"
-.PassengersEjected: "Passengers Ejected: ;;N0" => "Всего потеряно: ;;N0"
+.Accepted: "Accepted Passenger Missions: ;;N0" @
 .PassengersDisgrunted: "Passengers Disgruntled: ;;N0" @
+.BulkMissionPassengers: "Total Bulk Passengers Delivered: ;;N0" => "Доставлено обычных пассажиров: ;;N0"
+.VIPMissionPassengers: "Total VIPs Delivered: ;;N0" => "Доставлено VIP-персон: ;;N0"
+.PassengersDelivered: "Total Delivered: ;;N0" => "Всего доставлено: ;;N0"
+.PassengersEjected: "Total Ejected: ;;N0" => "Всего потеряно: ;;N0"
 
 SECTION SearchAndRescueClass
 
@@ -834,6 +818,8 @@ SECTION MaterialTraderStatsClass
 .G3MaterialsTraded: "Grade 3 Materials Traded: ;;N0" @
 .G4MaterialsTraded: "Grade 4 Materials Traded: ;;N0" @
 .G5MaterialsTraded: "Grade 5 Materials Traded: ;;N0" @
+.AssetsTradedIn: "Assets Gained in Trade: ;;N0" @
+.AssetsTradedOut: "Assets Spent in Trade: ;;N0" @
 
 SECTION CQCClass
 
@@ -881,10 +867,6 @@ SECTION ExobiologyClass
 SECTION JournalStoredModules
 
 .at: "< at " => "< в системе "
-
-SECTION JournalSquadronBase
-
-.Rank: "Rank: " => "Ранг: "
 
 SECTION JournalSupercruiseExit
 
@@ -989,6 +971,7 @@ SECTION JournalEntry
 .Cockpit: "Cockpit: " => "Фонарь кабины: "
 .Corrosion: "Corrosion: " => "Коррозия: "
 .TotalCost: "Total Cost: ; cr;N0" => "общая сумма: ; кр;N0"
+.TotalSale: "Total Sale: ; cr;N0" @
 .each: "each: ; cr;N0" => "цена за шт.: ; кр.;N0"
 .Drones: "Drones" => "Дроны"
 .Price: "Price: ; cr;N0" => "цена: ; кр.;N0"
@@ -1006,7 +989,7 @@ SECTION JournalEntry
 .Scanned: "Scanned: " => "Системы: "
 .Discovered: "Discovered: " => "Обнаружено: "
 .Loadout: "Loadout: " => "Снаряжение: "
-.NPCControlled: ", NPC Controlled;" => ", под управлением NPC;"
+.NPCControlled: "NPC Controlled;" => ", под управлением NPC;"
 .Version: "Version: " => "Версия: "
 .Build: "Build: " => "билд: "
 .Part: "Part: " => "часть: "
@@ -1099,8 +1082,6 @@ SECTION JournalEntry
 .NotorietyIndex: "Notoriety Index: ;;N0" => "плохая репутация: ;;N0"
 .Fuel: "Fuel: ; tons;0.0" => "получено ;0.0 т топлива"
 .Taxi: "Taxi" @
-.Backpack: "Backpack" @
-.Locker: "Locker" @
 .Mods: "Mods: " @
 .Class: "Class: " @
 
@@ -1163,7 +1144,6 @@ SECTION JournalScanInfo
 .GuardianSignals: " Has guardian signals." @
 .HumanSignals: " Has human signals." @
 .OtherSignals: " Has 'other' signals." @
-.Mapped: " (Mapped & Discovered)" @
 .MandD: " (Mapped & Discovered)" @
 .MP: " (Mapped)" @
 .DIS: " (Discovered)" @
@@ -1171,6 +1151,7 @@ SECTION JournalScanInfo
 .Hasring: " Has ring." => ", есть кольцо"
 .Has: " Has " => ", "
 .eccentricity: " Has an high eccentricity of " @
+.unknownAtmosphere: "unknown atmosphere" @
 .BFSD: " Basic" => " базового"
 .SFSD: " Standard" => " стандартного"
 .PFSD: " Premium" => " премиум"
