@@ -505,24 +505,31 @@ namespace EliteDangerousCore
                 }
                 else if (CheckFlags(flags2, StatusFlags2ShipType.OnFootOnPlanet))
                 {
-                    return new UIMode( CheckFlags(flags2, StatusFlags2.BreathableAtmosphere) ? UIEvents.UIMode.ModeType.OnFootInstallationInside : UIEvents.UIMode.ModeType.OnFootPlanet, UIMode.MajorModeType.OnFoot);
+                    return new UIMode(CheckFlags(flags2, StatusFlags2.BreathableAtmosphere) ? UIEvents.UIMode.ModeType.OnFootInstallationInside : UIEvents.UIMode.ModeType.OnFootPlanet, UIMode.MajorModeType.OnFoot);
+                }
+                else
+                {
+                    return new UIMode(UIEvents.UIMode.ModeType.OnFootPlanet, UIMode.MajorModeType.OnFoot);      // backup in case..
                 }
             }
             else if(CheckFlags(flags1, StatusFlagsShipType.InMainShip))
             {
                 if (CheckFlags(flags1, StatusFlagsShip.Supercruise))
                 {
-                    return new UIMode( UIMode.ModeType.MainShipSupercruise, UIMode.MajorModeType.MainShip);
+                    return new UIMode(UIMode.ModeType.MainShipSupercruise, UIMode.MajorModeType.MainShip);
                 }
-                if (CheckFlags(flags1, StatusFlagsShip.Docked))
+                else if (CheckFlags(flags1, StatusFlagsShip.Docked))
                 {
-                    return new UIMode( CheckFlags(flags1, StatusFlagsAll.HasLatLong) ? UIEvents.UIMode.ModeType.MainShipDockedPlanet : UIEvents.UIMode.ModeType.MainShipDockedStarPort, UIMode.MajorModeType.MainShip);
+                    return new UIMode(CheckFlags(flags1, StatusFlagsAll.HasLatLong) ? UIEvents.UIMode.ModeType.MainShipDockedPlanet : UIEvents.UIMode.ModeType.MainShipDockedStarPort, UIMode.MajorModeType.MainShip);
                 }
-                if (CheckFlags(flags1, StatusFlagsShip.Landed))
+                else if (CheckFlags(flags1, StatusFlagsShip.Landed))
                 {
-                    return new UIMode( UIMode.ModeType.MainShipLanded, UIMode.MajorModeType.MainShip);
+                    return new UIMode(UIMode.ModeType.MainShipLanded, UIMode.MajorModeType.MainShip);
                 }
-                return new UIMode( UIMode.ModeType.MainShipNormalSpace, UIMode.MajorModeType.MainShip);
+                else
+                {
+                    return new UIMode(UIMode.ModeType.MainShipNormalSpace, UIMode.MajorModeType.MainShip);
+                }
             }
 
             return new UIMode( UIMode.ModeType.None, UIMode.MajorModeType.None);
