@@ -48,7 +48,7 @@ namespace EliteDangerousCore
         public string LegalStatus { get; private set; } = null;
         public int CargoCount { get; private set; } = NotPresent;
         public UIEvents.UIPips.Pips PIPStatus { get; private set; } = new UIEvents.UIPips.Pips(null);
-        public UIEvents.UIPosition.Position Position { get; private set; } = new UIEvents.UIPosition.Position();     // default is MinValue
+        public UIEvents.UIPosition.Position Position { get; private set; } = new UIEvents.UIPosition.Position();     
         public double Heading { get; private set; } = UIEvents.UIPosition.InvalidValue;    // this forces a pos report
         public double BodyRadius { get; private set; } = UIEvents.UIPosition.InvalidValue;    // this forces a pos report
 
@@ -60,6 +60,24 @@ namespace EliteDangerousCore
         public double Health { get; private set; } = NotPresent;
         public string SelectedWeapon { get; private set; } = null;
         public string SelectedWeaponLocalised { get; private set; } = null;
+
+        private string prev_text = null;
+
+        public void Reset()
+        {
+            Flags = Flags2 = 0;
+            GUIFocus = FireGroup = NotPresent;
+            FuelLevel = ReserveLevel = NotPresent;
+            LegalStatus = null;
+            CargoCount = NotPresent;
+            PIPStatus = new UIEvents.UIPips.Pips(null);
+            Position = new UIEvents.UIPosition.Position();
+            Heading = BodyRadius = UIEvents.UIPosition.InvalidValue;
+            BodyName = null;
+            Oxygen = Temperature = Gravity = Health = NotPresent;
+            SelectedWeapon = SelectedWeaponLocalised = null;
+            prev_text = null;
+        }
 
         public enum StatusFlagsShip                             // Flags
         {
@@ -146,14 +164,12 @@ namespace EliteDangerousCore
             TempBits = (1<<Cold) | (1<<Hot) | ( 1<< VeryCold) | (1<<VeryHot),
         }
 
-        string prev_text = null;
-
         public List<UIEvent> Scan()
         {
-          //  System.Diagnostics.Debug.WriteLine(Environment.TickCount % 100000 + "Check " + statusfile);
-
             if (File.Exists(statusfile))
             {
+                //System.Diagnostics.Debug.WriteLine(Environment.TickCount % 100000 + "Check Status " + statusfile);
+
                 JObject jo = null;
 
                 Stream stream = null;

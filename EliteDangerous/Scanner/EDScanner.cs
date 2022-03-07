@@ -73,6 +73,15 @@ namespace EliteDangerousCore
             }
         }
 
+        // call to force reset of ui status
+        public void ResetUIStatus()
+        {
+            foreach (var e in statuswatchers)
+            {
+                e.Reset();
+            }
+        }
+
         // Journal scanner main tick - every tick, do scan tick worker, pass anything found to foreground for dispatch
 
         private void ScanThreadProc()
@@ -136,7 +145,7 @@ namespace EliteDangerousCore
         {
             System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);
 
-            foreach ( var e in entries)
+            foreach (var e in entries)
             {
                 if (e.je != null)
                     OnNewJournalEntry?.Invoke(e.je, e.sr);
