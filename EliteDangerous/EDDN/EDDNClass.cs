@@ -337,7 +337,7 @@ namespace EliteDangerousCore.EDDN
         };
 
 
-        private JObject RemoveCommonKeys(JObject obj)
+        private void RemoveCommonKeys(JObject obj)
         {
             foreach (var key in obj.PropertyNames())
             {
@@ -346,11 +346,9 @@ namespace EliteDangerousCore.EDDN
                     obj.Remove(key);
                 }
             }
-
-            return obj;
         }
 
-        private JObject RemoveFactionReputation(JObject obj)
+        private void RemoveFactionReputation(JObject obj)
         {
             JArray factions = obj["Factions"] as JArray;
 
@@ -365,11 +363,9 @@ namespace EliteDangerousCore.EDDN
                     RemoveCommonKeys(faction);
                 }
             }
-
-            return obj;
         }
 
-        private JObject RemoveStationEconomyKeys(JObject jo)
+        private void RemoveStationEconomyKeys(JObject jo)
         {
             JArray economies = jo["StationEconomies"] as JArray;
 
@@ -382,8 +378,6 @@ namespace EliteDangerousCore.EDDN
 
                 jo["StationEconomies"] = economies;
             }
-
-            return jo;
         }
 
         public JObject CreateEDDNMessage(JournalFSDJump journal)
@@ -409,8 +403,8 @@ namespace EliteDangerousCore.EDDN
             if (message["StarPosFromEDSM"] != null)  // Reject systems recently updated with EDSM coords
                 return null;
 
-            message = RemoveCommonKeys(message);
-            message = RemoveFactionReputation(message);
+            RemoveCommonKeys(message);
+            RemoveFactionReputation(message);
             message.Remove("BoostUsed");
             message.Remove("MyReputation"); 
             message.Remove("JumpDist");
@@ -448,9 +442,9 @@ namespace EliteDangerousCore.EDDN
             if (message["StarPosFromEDSM"] != null)  // Reject systems recently updated with EDSM coords
                 return null;
 
-            message = RemoveCommonKeys(message);
-            message = RemoveFactionReputation(message);
-            message = RemoveStationEconomyKeys(message);
+            RemoveCommonKeys(message);
+            RemoveFactionReputation(message);
+            RemoveStationEconomyKeys(message);
             message.Remove("StarPosFromEDSM");
             message.Remove("Latitude");
             message.Remove("Longitude");
@@ -486,9 +480,9 @@ namespace EliteDangerousCore.EDDN
             if (message["StarPosFromEDSM"] != null)  // Reject systems recently updated with EDSM coords
                 return null;
 
-            message = RemoveCommonKeys(message);
-            message = RemoveFactionReputation(message);
-            message = RemoveStationEconomyKeys(message);
+            RemoveCommonKeys(message);
+            RemoveFactionReputation(message);
+            RemoveStationEconomyKeys(message);
             message.Remove("StarPosFromEDSM");
             message.Remove("Latitude");
             message.Remove("Longitude");
@@ -524,8 +518,8 @@ namespace EliteDangerousCore.EDDN
                 return null;
             }
 
-            message = RemoveCommonKeys(message);
-            message = RemoveStationEconomyKeys(message);
+            RemoveCommonKeys(message);
+            RemoveStationEconomyKeys(message);
             message.Remove("CockpitBreach");
             message.Remove("Wanted");
             message.Remove("ActiveFine");
@@ -630,7 +624,7 @@ namespace EliteDangerousCore.EDDN
 
             string bodydesig = journal.BodyDesignation ?? journal.BodyName;
 
-            message = RemoveCommonKeys(message);
+            RemoveCommonKeys(message);
 
             message = message.Filter( AllowedFieldsScan);
 
@@ -690,7 +684,7 @@ namespace EliteDangerousCore.EDDN
                 }
             }
 
-            message = RemoveCommonKeys(message);
+            RemoveCommonKeys(message);
 
             message = message.Filter( AllowedFieldsSAASignalsFound);
 
@@ -788,6 +782,8 @@ namespace EliteDangerousCore.EDDN
             if (message == null)                   // must have something
                 return null;
 
+            RemoveCommonKeys(message);          // remove _localised
+
             var ja = message["Route"].Array();      // must have a valid route inside it
             if (ja == null || ja.Count == 0)
                 return null;
@@ -809,6 +805,8 @@ namespace EliteDangerousCore.EDDN
             if (message == null)                        // must have something, all the rest of the fields are valid to send
                 return null;
 
+            RemoveCommonKeys(message);          // remove _localised
+            
             message["StarPos"] = new JArray(new float[] { (float)system.X, (float)system.Y, (float)system.Z });
             message["odyssey"] = sbc.IsOdyssey;
             message["horizons"] = sbc.IsHorizons;
@@ -827,6 +825,8 @@ namespace EliteDangerousCore.EDDN
 
             if (message == null)
                 return null;
+
+            RemoveCommonKeys(message);          // remove _localised
 
             message["odyssey"] = fabf.IsOdyssey;
             message["horizons"] = fabf.IsHorizons;
@@ -849,6 +849,8 @@ namespace EliteDangerousCore.EDDN
 
             if (message == null)
                 return null;
+
+            RemoveCommonKeys(message);          // remove _localised
 
             message["odyssey"] = ap.IsOdyssey;
             message["horizons"] = ap.IsHorizons;
