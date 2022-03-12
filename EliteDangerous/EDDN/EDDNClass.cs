@@ -838,6 +838,9 @@ namespace EliteDangerousCore.EDDN
 
         public JObject CreateEDDNApproachSettlement(JournalApproachSettlement ap, ISystem system)
         {
+            if (ap.Latitude == null || ap.Longitude == null)        // sometimes these are missing, so ignore these. 
+                return null;
+
             JObject msg = new JObject();
             msg["header"] = Header();
             msg["$schemaRef"] = ApproachSettlementSchema;
