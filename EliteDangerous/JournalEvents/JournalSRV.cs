@@ -80,9 +80,14 @@ namespace EliteDangerousCore.JournalEvents
     {
         public int? ID { get; set; }
 
+        public string SRVType;          // new odyssey 9, dec 21, may be null
+        public string SRVType_Localised; // new odyssey 9, dec 21, may be null
+
         public JournalSRVDestroyed(JObject evt) : base(evt, JournalTypeEnum.SRVDestroyed)
         {
             ID = evt["ID"].IntNull();
+            SRVType = evt["SRVType"].StrNull();
+            SRVType_Localised = evt["SRVType_Localised"].StrNull();
         }
 
         public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
@@ -92,7 +97,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = "";
+            info = BaseUtils.FieldBuilder.Build("", SRVType_Localised);
             detailed = "";
         }
 
