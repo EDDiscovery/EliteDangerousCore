@@ -554,16 +554,14 @@ namespace EliteDangerousCore.EDSM
         "ScanOrganic",
         };
 
+        // 15/3/22 removed all of these - kept list for the future and as it acts as a lock
+        // this enables Friends and CommunityGoals to be sent to EDSM.  The other ones ReceiveText, SendText, FuelScoop are in the normal discard list
+        // Underattack, FSDTarget are UI events which EDSM does not see.
+
         private static HashSet<string> alwaysDiscard = new HashSet<string>
-        { // Discard spammy events
-            "CommunityGoal",
-            "ReceiveText",
-            "SendText",
-            "FuelScoop",
-            "Friends",
-            "UnderAttack",
-            "FSDTarget"     // disabled 28/2/2019 due to it creating a system entry and preventing systemcreated from working
+        { 
         };
+
         private static HashSet<JournalTypeEnum> holdEvents = new HashSet<JournalTypeEnum>
         {
             JournalTypeEnum.Cargo,
