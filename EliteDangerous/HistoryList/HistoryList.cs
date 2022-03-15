@@ -303,7 +303,7 @@ namespace EliteDangerousCore
         }
 
         // this allows journal entries to be merged into one before being made into a history entry
-        // true if to discard
+        // true if to discard.  
         public static bool MergeJournalEntries(JournalEntry prev, JournalEntry je)
         {
             if (prev != null && !EliteConfigInstance.InstanceOptions.DisableMerge)
@@ -341,13 +341,6 @@ namespace EliteDangerousCore
                         var jdprev = prev as EliteDangerousCore.JournalEvents.JournalShipTargeted;
                         var jd = je as EliteDangerousCore.JournalEvents.JournalShipTargeted;
                         jdprev.Add(jd);
-                        return true;
-                    }
-                    else if (je.EventTypeID == JournalTypeEnum.UnderAttack)
-                    {
-                        var jdprev = prev as EliteDangerousCore.JournalEvents.JournalUnderAttack;
-                        var jd = je as EliteDangerousCore.JournalEvents.JournalUnderAttack;
-                        jdprev.Add(jd.Target);
                         return true;
                     }
                     else if (je.EventTypeID == JournalTypeEnum.FSSAllBodiesFound)
