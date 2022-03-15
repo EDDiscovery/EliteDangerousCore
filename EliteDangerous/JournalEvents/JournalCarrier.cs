@@ -82,7 +82,12 @@ namespace EliteDangerousCore.JournalEvents
         public long Finance_ReserveBalance { get; set; }
         public long Finance_AvailableBalance { get; set; }
         public double Finance_ReservePercent { get; set; }
-        public double Finance_TaxRate { get; set; }
+        public double Finance_TaxRatePioneersupplies { get; set; }
+        public double Finance_TaxRateShipyard { get; set; }
+        public double Finance_TaxRateRearm { get; set; }
+        public double Finance_TaxRateOutfitting { get; set; }
+        public double Finance_TaxRateRefuel { get; set; }
+        public double Finance_TaxRateRepair { get; set; }
 
         public CrewClass[] Crew { get; set; }
         public PackClass[] ShipPacks { get; set; }
@@ -119,7 +124,12 @@ namespace EliteDangerousCore.JournalEvents
                 Finance_ReserveBalance = finance["ReserveBalance"].Long();
                 Finance_AvailableBalance = finance["AvailableBalance"].Long();
                 Finance_ReservePercent = finance["ReservePercent"].Double();
-                Finance_TaxRate = finance["TaxRate"].Double();
+                Finance_TaxRatePioneersupplies = finance["TaxRate_pioneersupplies"].Double();
+                Finance_TaxRateShipyard = finance["TaxRate_shipyard"].Double();
+                Finance_TaxRateRearm = finance["TaxRate_rearm"].Double();
+                Finance_TaxRateOutfitting = finance["TaxRate_outfitting"].Double();
+                Finance_TaxRateRefuel = finance["TaxRate_refuel"].Double();
+                Finance_TaxRateRepair = finance["TaxRate_repair"].Double();
             }
 
             Crew = evt["Crew"]?.ToObjectQ<CrewClass[]>();
@@ -151,7 +161,12 @@ namespace EliteDangerousCore.JournalEvents
                                                 "Reserve Balance: ; cr;N0".T(EDCTx.JournalCarrier_ReserveBalance), Finance_ReserveBalance,
                                                 "Available Balance: ; cr;N0".T(EDCTx.JournalCarrier_AvailableBalance), Finance_AvailableBalance,
                                                 "Reserve Percent: ;;N1".T(EDCTx.JournalCarrier_ReservePercent), Finance_ReservePercent,
-                                                "Tax Rate: ;;N1".T(EDCTx.JournalCarrier_TaxRate), Finance_TaxRate
+                                                "Tax Rate Pioneersupplies: ;;N1".T(EDCTx.JournalCarrier_TaxRatePioneersupplies), Finance_TaxRatePioneersupplies,
+                                                "Tax Rate Shipyard: ;;N1".T(EDCTx.JournalCarrier_TaxRateShipyard), Finance_TaxRateShipyard,
+                                                "Tax Rate Rearm: ;;N1".T(EDCTx.JournalCarrier_TaxRateRearm), Finance_TaxRateRearm,
+                                                "Tax Rate Outfitting: ;;N1".T(EDCTx.JournalCarrier_TaxRateOutfitting), Finance_TaxRateOutfitting,
+                                                "Tax Rate Refuel: ;;N1".T(EDCTx.JournalCarrier_TaxRateRefuel), Finance_TaxRateRefuel,
+                                                "Tax Rate Repair: ;;N1".T(EDCTx.JournalCarrier_TaxRateRepair), Finance_TaxRateRepair
                                                 );
 
             detailed = BaseUtils.FieldBuilder.Build("Total Capacity: ".T(EDCTx.JournalCarrier_TotalCapacity), SpaceUsage_TotalCapacity,
@@ -345,12 +360,22 @@ namespace EliteDangerousCore.JournalEvents
         public long Finance_ReserveBalance { get; set; }
         public long Finance_AvailableBalance { get; set; }
         public double Finance_ReservePercent { get; set; }
-        public double Finance_TaxRate { get; set; }
+        public double Finance_TaxRatePioneersupplies { get; set; }
+        public double Finance_TaxRateShipyard { get; set; }
+        public double Finance_TaxRateRearm { get; set; }
+        public double Finance_TaxRateOutfitting { get; set; }
+        public double Finance_TaxRateRefuel { get; set; }
+        public double Finance_TaxRateRepair { get; set; }
 
         public JournalCarrierFinance(JObject evt) : base(evt, JournalTypeEnum.CarrierFinance)
         {
             CarrierID = evt["CarrierID"].Long();
-            Finance_TaxRate = evt["TaxRate"].Double();
+            Finance_TaxRatePioneersupplies = evt["TaxRate_pioneersupplies"].Double();
+            Finance_TaxRateShipyard = evt["TaxRate_shipyard"].Double();
+            Finance_TaxRateRearm = evt["TaxRate_rearm"].Double();
+            Finance_TaxRateOutfitting = evt["TaxRate_outfitting"].Double();
+            Finance_TaxRateRefuel = evt["TaxRate_refuel"].Double();
+            Finance_TaxRateRepair = evt["TaxRate_repair"].Double();
             Finance_CarrierBalance = evt["CarrierBalance"].Long();
             Finance_ReserveBalance = evt["ReserveBalance"].Long();
             Finance_AvailableBalance = evt["AvailableBalance"].Long();
@@ -363,7 +388,12 @@ namespace EliteDangerousCore.JournalEvents
                                                 "Reserve Balance: ; cr;N0".T(EDCTx.JournalCarrier_ReserveBalance), Finance_ReserveBalance,
                                                 "Available Balance: ; cr;N0".T(EDCTx.JournalCarrier_AvailableBalance), Finance_AvailableBalance,
                                                 "Reserve Percent: ;;N1".T(EDCTx.JournalCarrier_ReservePercent), Finance_ReservePercent,
-                                                "Tax Rate: ;;N1".T(EDCTx.JournalCarrier_TaxRate), Finance_TaxRate
+                                                "Tax Rate Pioneersupplies: ;;N1".T(EDCTx.JournalCarrier_TaxRatePioneersupplies), Finance_TaxRatePioneersupplies,
+                                                "Tax Rate Shipyard: ;;N1".T(EDCTx.JournalCarrier_TaxRateShipyard), Finance_TaxRateShipyard,
+                                                "Tax Rate Rearm: ;;N1".T(EDCTx.JournalCarrier_TaxRateRearm), Finance_TaxRateRearm,
+                                                "Tax Rate Outfitting: ;;N1".T(EDCTx.JournalCarrier_TaxRateOutfitting), Finance_TaxRateOutfitting,
+                                                "Tax Rate Refuel: ;;N1".T(EDCTx.JournalCarrier_TaxRateRefuel), Finance_TaxRateRefuel,
+                                                "Tax Rate Repair: ;;N1".T(EDCTx.JournalCarrier_TaxRateRepair), Finance_TaxRateRepair
                                                 );
             detailed = "";
         }
