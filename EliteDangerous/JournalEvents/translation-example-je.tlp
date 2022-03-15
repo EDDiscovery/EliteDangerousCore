@@ -1094,7 +1094,12 @@ SECTION JournalCarrier
 .ReserveBalance: "Reserve Balance: ; cr;N0" @
 .AvailableBalance: "Available Balance: ; cr;N0" @
 .ReservePercent: "Reserve Percent: ;;N1" @
-.TaxRate: "Tax Rate: ;;N1" @
+.TaxRatePioneersupplies: "Tax Rate Pioneersupplies: ;;N1" @
+.TaxRateShipyard: "Tax Rate Shipyard: ;;N1" @
+.TaxRateRearm: "Tax Rate Rearm: ;;N1" @
+.TaxRateOutfitting: "Tax Rate Outfitting: ;;N1" @
+.TaxRateRefuel: "Tax Rate Refuel: ;;N1" @
+.TaxRateRepair: "Tax Rate Repair: ;;N1" @
 .TotalCapacity: "Total Capacity: " @
 .Crew: "Crew: " @
 .Cargo: "Cargo: " @
