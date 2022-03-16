@@ -946,6 +946,7 @@ SECTION JournalEntry
 .offaction: "< of faction " => "< von Fraktion "
 .Rank: "Rank: " => "Rang: "
 .Crew: "Crew: " => "Crew: "
+.Telepresence: "; Telepresence: " => "; Telepräsenz: "
 .Role: "Role: " => "Rolle: "
 .CrewMember: "Crew Member: " => "Crewmitglied: "
 .DuetoCrime: "; Due to Crime" => "; Aufgrund von Verbrechen"

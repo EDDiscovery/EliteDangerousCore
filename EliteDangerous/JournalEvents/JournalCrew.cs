@@ -95,14 +95,16 @@ namespace EliteDangerousCore.JournalEvents
         {
             Crew = evt["Crew"].Str();
             ID = evt["ID"].IntNull();
+            Telepresence = evt["Telepresence"].Bool();
 
         }
         public string Crew { get; set; }
         public int? ID { get; set; }
+        public bool Telepresence { get; set; }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = Crew;
+            info = BaseUtils.FieldBuilder.Build("Crew: ".T(EDCTx.JournalEntry_Crew), Crew, "; Telepresence: ".T(EDCTx.JournalEntry_Telepresence), Telepresence);
             detailed = "";
         }
     }
@@ -113,13 +115,15 @@ namespace EliteDangerousCore.JournalEvents
         public JournalCrewMemberJoins(JObject evt) : base(evt, JournalTypeEnum.CrewMemberJoins)
         {
             Crew = evt["Crew"].Str();
+            Telepresence = evt["Telepresence"].Bool();
 
         }
         public string Crew { get; set; }
+        public bool Telepresence { get; set; }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = Crew;
+            info = BaseUtils.FieldBuilder.Build("Crew: ".T(EDCTx.JournalEntry_Crew), Crew, "; Telepresence: ".T(EDCTx.JournalEntry_Telepresence), Telepresence);
             detailed = "";
         }
     }
@@ -130,13 +134,15 @@ namespace EliteDangerousCore.JournalEvents
         public JournalCrewMemberQuits(JObject evt) : base(evt, JournalTypeEnum.CrewMemberQuits)
         {
             Crew = evt["Crew"].Str();
+            Telepresence = evt["Telepresence"].Bool();
 
         }
         public string Crew { get; set; }
+        public bool Telepresence { get; set; }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = Crew;
+            info = BaseUtils.FieldBuilder.Build("Crew: ".T(EDCTx.JournalEntry_Crew), Crew, "; Telepresence: ".T(EDCTx.JournalEntry_Telepresence), Telepresence);
             detailed = "";
         }
     }
@@ -148,14 +154,16 @@ namespace EliteDangerousCore.JournalEvents
         {
             Crew = evt["Crew"].Str();
             Role = evt["Role"].Str().SplitCapsWord();
+            Telepresence = evt["Telepresence"].Bool();
         }
 
         public string Crew { get; set; }
         public string Role { get; set; }
+        public bool Telepresence { get; set; }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Crew: ".T(EDCTx.JournalEntry_Crew), Crew, "Role: ".T(EDCTx.JournalEntry_Role), Role);
+            info = BaseUtils.FieldBuilder.Build("Crew: ".T(EDCTx.JournalEntry_Crew), Crew, "Role: ".T(EDCTx.JournalEntry_Role), Role, "; Telepresence: ".T(EDCTx.JournalEntry_Telepresence), Telepresence);
             detailed = "";
         }
     }
@@ -167,14 +175,16 @@ namespace EliteDangerousCore.JournalEvents
         {
             Crew = evt["Crew"].Str();
             OnCrime = evt["OnCrime"].Bool();
+            Telepresence = evt["Telepresence"].Bool();
         }
 
         public string Crew { get; set; }
         public bool OnCrime { get; set; }
+        public bool Telepresence { get; set; }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Crew Member: ".T(EDCTx.JournalEntry_CrewMember), Crew, "; Due to Crime".T(EDCTx.JournalEntry_DuetoCrime), OnCrime);
+            info = BaseUtils.FieldBuilder.Build("Crew Member: ".T(EDCTx.JournalEntry_CrewMember), Crew, "; Due to Crime".T(EDCTx.JournalEntry_DuetoCrime), OnCrime, "; Telepresence: ".T(EDCTx.JournalEntry_Telepresence), Telepresence);
             detailed = "";
         }
     }
@@ -185,14 +195,16 @@ namespace EliteDangerousCore.JournalEvents
         public JournalJoinACrew(JObject evt) : base(evt, JournalTypeEnum.JoinACrew)
         {
             Captain = evt["Captain"].Str();
+            Telepresence = evt["Telepresence"].Bool();
 
         }
         public string Captain { get; set; }
+        public bool Telepresence { get; set; }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
 
-            info = BaseUtils.FieldBuilder.Build("Captain: ".T(EDCTx.JournalEntry_Captain), Captain);
+            info = BaseUtils.FieldBuilder.Build("Captain: ".T(EDCTx.JournalEntry_Captain), Captain, "; Telepresence: ".T(EDCTx.JournalEntry_Telepresence), Telepresence);
             detailed = "";
         }
     }
@@ -204,13 +216,15 @@ namespace EliteDangerousCore.JournalEvents
         public JournalChangeCrewRole(JObject evt) : base(evt, JournalTypeEnum.ChangeCrewRole)
         {
             Role = evt["Role"].Str().SplitCapsWordFull();
+            Telepresence = evt["Telepresence"].Bool();
         }
 
         public string Role { get; set; }
+        public bool Telepresence { get; set; }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = Role;
+            info = BaseUtils.FieldBuilder.Build("Role: ".T(EDCTx.JournalEntry_Role), Role, "; Telepresence: ".T(EDCTx.JournalEntry_Telepresence), Telepresence);
             detailed = "";
         }
     }
@@ -222,13 +236,15 @@ namespace EliteDangerousCore.JournalEvents
         public JournalEndCrewSession(JObject evt) : base(evt, JournalTypeEnum.EndCrewSession)
         {
             OnCrime = evt["OnCrime"].Bool();
+            Telepresence = evt["Telepresence"].Bool();
 
         }
         public bool OnCrime { get; set; }
+        public bool Telepresence { get; set; }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("; Due to Crime".T(EDCTx.JournalEntry_DuetoCrime), OnCrime);
+            info = BaseUtils.FieldBuilder.Build("; Due to Crime".T(EDCTx.JournalEntry_DuetoCrime), OnCrime, "; Telepresence: ".T(EDCTx.JournalEntry_Telepresence), Telepresence);
             detailed = "";
         }
     }
@@ -240,13 +256,15 @@ namespace EliteDangerousCore.JournalEvents
         public JournalQuitACrew(JObject evt) : base(evt, JournalTypeEnum.QuitACrew)
         {
             Captain = evt["Captain"].Str();
+            Telepresence = evt["Telepresence"].Bool();
         }
 
         public string Captain { get; set; }
+        public bool Telepresence { get; set; }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Captain: ".T(EDCTx.JournalEntry_Captain), Captain);
+            info = BaseUtils.FieldBuilder.Build("Captain: ".T(EDCTx.JournalEntry_Captain), Captain, "; Telepresence: ".T(EDCTx.JournalEntry_Telepresence), Telepresence);
             detailed = "";
         }
 
