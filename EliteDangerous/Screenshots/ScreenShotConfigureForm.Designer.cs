@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ScreenShotConfigureForm));
-            this.panelConfigure = new System.Windows.Forms.Panel();
+            this.panelConfigure = new ExtendedControls.ExtPanelScroll();
             this.labelQuality = new System.Windows.Forms.Label();
             this.numericUpDownQuality = new ExtendedControls.ExtNumericUpDown();
             this.extCheckBoxEnabled = new ExtendedControls.ExtCheckBox();
@@ -85,6 +85,8 @@
             this.panel_close = new ExtendedControls.ExtButtonDrawn();
             this.panel_minimize = new ExtendedControls.ExtButtonDrawn();
             this.label_index = new System.Windows.Forms.Label();
+            this.extScrollBar = new ExtendedControls.ExtScrollBar();
+            this.statusStripCustom = new ExtendedControls.ExtStatusStrip();
             this.panelConfigure.SuspendLayout();
             this.extGroupBox1.SuspendLayout();
             this.groupBoxCropSettings.SuspendLayout();
@@ -94,6 +96,7 @@
             // panelConfigure
             // 
             this.panelConfigure.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelConfigure.Controls.Add(this.extScrollBar);
             this.panelConfigure.Controls.Add(this.labelQuality);
             this.panelConfigure.Controls.Add(this.numericUpDownQuality);
             this.panelConfigure.Controls.Add(this.extCheckBoxEnabled);
@@ -130,10 +133,12 @@
             this.panelConfigure.Controls.Add(this.comboBoxScanFor);
             this.panelConfigure.Controls.Add(this.comboBoxOutputAs);
             this.panelConfigure.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelConfigure.FlowControlsLeftToRight = false;
             this.panelConfigure.Location = new System.Drawing.Point(0, 26);
             this.panelConfigure.Name = "panelConfigure";
-            this.panelConfigure.Size = new System.Drawing.Size(648, 666);
+            this.panelConfigure.Size = new System.Drawing.Size(658, 663);
             this.panelConfigure.TabIndex = 0;
+            this.panelConfigure.VerticalScrollBarDockRight = true;
             // 
             // labelQuality
             // 
@@ -271,8 +276,7 @@
             // 
             // buttonExtCancel
             // 
-            this.buttonExtCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonExtCancel.Location = new System.Drawing.Point(416, 626);
+            this.buttonExtCancel.Location = new System.Drawing.Point(413, 623);
             this.buttonExtCancel.Name = "buttonExtCancel";
             this.buttonExtCancel.Size = new System.Drawing.Size(100, 23);
             this.buttonExtCancel.TabIndex = 32;
@@ -404,8 +408,7 @@
             // 
             // buttonExtOK
             // 
-            this.buttonExtOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonExtOK.Location = new System.Drawing.Point(533, 626);
+            this.buttonExtOK.Location = new System.Drawing.Point(530, 623);
             this.buttonExtOK.Name = "buttonExtOK";
             this.buttonExtOK.Size = new System.Drawing.Size(100, 23);
             this.buttonExtOK.TabIndex = 31;
@@ -901,7 +904,7 @@
             this.panelTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelTop.Location = new System.Drawing.Point(0, 0);
             this.panelTop.Name = "panelTop";
-            this.panelTop.Size = new System.Drawing.Size(648, 26);
+            this.panelTop.Size = new System.Drawing.Size(658, 26);
             this.panelTop.TabIndex = 32;
             this.panelTop.MouseDown += new System.Windows.Forms.MouseEventHandler(this.captionControl_MouseDown);
             this.panelTop.MouseUp += new System.Windows.Forms.MouseEventHandler(this.captionControl_MouseUp);
@@ -913,7 +916,7 @@
             this.panel_close.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.panel_close.Image = null;
             this.panel_close.ImageSelected = ExtendedControls.ExtButtonDrawn.ImageType.Close;
-            this.panel_close.Location = new System.Drawing.Point(625, 0);
+            this.panel_close.Location = new System.Drawing.Point(635, 0);
             this.panel_close.MouseOverColor = System.Drawing.Color.White;
             this.panel_close.MouseSelectedColor = System.Drawing.Color.Green;
             this.panel_close.MouseSelectedColorEnable = true;
@@ -935,7 +938,7 @@
             this.panel_minimize.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.panel_minimize.Image = null;
             this.panel_minimize.ImageSelected = ExtendedControls.ExtButtonDrawn.ImageType.Minimize;
-            this.panel_minimize.Location = new System.Drawing.Point(595, 0);
+            this.panel_minimize.Location = new System.Drawing.Point(605, 0);
             this.panel_minimize.MouseOverColor = System.Drawing.Color.White;
             this.panel_minimize.MouseSelectedColor = System.Drawing.Color.Green;
             this.panel_minimize.MouseSelectedColorEnable = true;
@@ -961,12 +964,49 @@
             this.label_index.MouseDown += new System.Windows.Forms.MouseEventHandler(this.captionControl_MouseDown);
             this.label_index.MouseUp += new System.Windows.Forms.MouseEventHandler(this.captionControl_MouseUp);
             // 
+            // extScrollBar
+            // 
+            this.extScrollBar.ArrowBorderColor = System.Drawing.Color.LightBlue;
+            this.extScrollBar.ArrowButtonColor = System.Drawing.Color.LightGray;
+            this.extScrollBar.ArrowColorScaling = 0.5F;
+            this.extScrollBar.ArrowDownDrawAngle = 270F;
+            this.extScrollBar.ArrowUpDrawAngle = 90F;
+            this.extScrollBar.BorderColor = System.Drawing.Color.White;
+            this.extScrollBar.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.extScrollBar.HideScrollBar = false;
+            this.extScrollBar.LargeChange = 10;
+            this.extScrollBar.Location = new System.Drawing.Point(640, 0);
+            this.extScrollBar.Maximum = -6;
+            this.extScrollBar.Minimum = 0;
+            this.extScrollBar.MouseOverButtonColor = System.Drawing.Color.Green;
+            this.extScrollBar.MousePressedButtonColor = System.Drawing.Color.Red;
+            this.extScrollBar.Name = "extScrollBar";
+            this.extScrollBar.Size = new System.Drawing.Size(16, 661);
+            this.extScrollBar.SliderColor = System.Drawing.Color.DarkGray;
+            this.extScrollBar.SmallChange = 1;
+            this.extScrollBar.TabIndex = 38;
+            this.extScrollBar.Text = "extScrollBar1";
+            this.extScrollBar.ThumbBorderColor = System.Drawing.Color.Yellow;
+            this.extScrollBar.ThumbButtonColor = System.Drawing.Color.DarkBlue;
+            this.extScrollBar.ThumbColorScaling = 0.5F;
+            this.extScrollBar.ThumbDrawAngle = 0F;
+            this.extScrollBar.Value = -6;
+            this.extScrollBar.ValueLimited = -6;
+            // 
+            // statusStripCustom
+            // 
+            this.statusStripCustom.Location = new System.Drawing.Point(0, 689);
+            this.statusStripCustom.Name = "statusStripCustom";
+            this.statusStripCustom.Size = new System.Drawing.Size(658, 22);
+            this.statusStripCustom.TabIndex = 39;
+            // 
             // ScreenShotConfigureForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(648, 692);
+            this.ClientSize = new System.Drawing.Size(658, 711);
             this.Controls.Add(this.panelConfigure);
+            this.Controls.Add(this.statusStripCustom);
             this.Controls.Add(this.panelTop);
             this.Name = "ScreenShotConfigureForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -981,12 +1021,13 @@
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Panel panelConfigure;
+        private ExtendedControls.ExtPanelScroll panelConfigure;
         private System.Windows.Forms.Panel panelTop;
         private ExtendedControls.ExtButtonDrawn panel_close;
         private ExtendedControls.ExtButtonDrawn panel_minimize;
@@ -1042,5 +1083,7 @@
         private System.Windows.Forms.Label labelEnabled;
         private System.Windows.Forms.Label labelQuality;
         private ExtendedControls.ExtNumericUpDown numericUpDownQuality;
+        private ExtendedControls.ExtScrollBar extScrollBar;
+        private ExtendedControls.ExtStatusStrip statusStripCustom;
     }
 }
