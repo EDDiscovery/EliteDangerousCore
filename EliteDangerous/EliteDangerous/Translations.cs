@@ -111,9 +111,10 @@ namespace EliteDangerousCore
         JournalEntry_offaction, // < of faction
         JournalEntry_Rank, // Rank:
         JournalEntry_Crew, // Crew:
+        JournalEntry_Telepresence, // ;Telespresence
         JournalEntry_Role, // Role:
         JournalEntry_CrewMember, // Crew Member:
-        JournalEntry_DuetoCrime, // ; Due to Crime
+        JournalEntry_DuetoCrime, // ;Due to Crime
         JournalEntry_Captain, // Captain:
         JournalEntry_fromfaction, // < from faction
         JournalEntry_Died, // {0} in ship type {1} rank {2}
@@ -603,12 +604,12 @@ namespace EliteDangerousCore
         JournalCarrier_ReserveBalance, 
         JournalCarrier_AvailableBalance,
         JournalCarrier_ReservePercent,
-        JournalCarrier_TaxRatePioneersupplies,
-        JournalCarrier_TaxRateShipyard,
-        JournalCarrier_TaxRateRearm,
-        JournalCarrier_TaxRateOutfitting,
-        JournalCarrier_TaxRateRefuel,
-        JournalCarrier_TaxRateRepair,
+        JournalCarrier_TaxRatePioneersupplies, // Tax Rate Pioneersupplies: ;;N1
+        JournalCarrier_TaxRateShipyard, // Tax Rate Shipyard: ;;N1
+        JournalCarrier_TaxRateRearm, // Tax Rate Rearm: ;;N1
+        JournalCarrier_TaxRateOutfitting, // Tax Rate Outfitting: ;;N1
+        JournalCarrier_TaxRateRefuel, // Tax Rate Refuel: ;;N1
+        JournalCarrier_TaxRateRepair, // Tax Rate Repair: ;;N1
         JournalCarrier_Amount, 
         JournalCarrier_Operation, 
         JournalCarrier_Tier,

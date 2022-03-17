@@ -303,6 +303,7 @@ SECTION FSSSignal
 .LastSeen: "Last Seen: " @
 
 SECTION JournalFSSDiscoveryScan
+
 .Progress: "Progress: ;%;N1" @
 .Bodies: "Bodies: " @
 .Others: "Others: " @
@@ -889,6 +890,7 @@ SECTION JournalUnderAttack
 .ACOUNT: "times" @
 
 SECTION JournalNavRoute
+
 .Jumps: "{0} jumps: " @
 
 SECTION JournalApproachBody
@@ -896,6 +898,7 @@ SECTION JournalApproachBody
 .In: "In " @
 
 SECTION JournalEntry
+
 .TME: "{0} days {1} hours {2} minutes" @
 .Hyperspace: "Hyperspace" @
 .Supercruise: "Supercruise" @
@@ -943,9 +946,10 @@ SECTION JournalEntry
 .offaction: "< of faction " @
 .Rank: "Rank: " @
 .Crew: "Crew: " @
+.Telepresence: ";Telepresence" @
 .Role: "Role: " @
 .CrewMember: "Crew Member: " @
-.DuetoCrime: "; Due to Crime" @
+.DuetoCrime: ";Due to Crime" @
 .Captain: "Captain: " @
 .fromfaction: "< from faction " @
 .Died: "{0} in ship type {1} rank {2}" @
