@@ -104,7 +104,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Crew: ".T(EDCTx.JournalEntry_Crew), Crew, "; Telepresence: ".T(EDCTx.JournalEntry_Telepresence), Telepresence);
+            info = BaseUtils.FieldBuilder.Build("Crew: ".T(EDCTx.JournalEntry_Crew), Crew, ";Telepresence".T(EDCTx.JournalEntry_Telepresence), Telepresence);
             detailed = "";
         }
     }
@@ -123,7 +123,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Crew: ".T(EDCTx.JournalEntry_Crew), Crew, "; Telepresence: ".T(EDCTx.JournalEntry_Telepresence), Telepresence);
+            info = BaseUtils.FieldBuilder.Build("Crew: ".T(EDCTx.JournalEntry_Crew), Crew, ";Telepresence".T(EDCTx.JournalEntry_Telepresence), Telepresence);
             detailed = "";
         }
     }
@@ -142,7 +142,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Crew: ".T(EDCTx.JournalEntry_Crew), Crew, "; Telepresence: ".T(EDCTx.JournalEntry_Telepresence), Telepresence);
+            info = BaseUtils.FieldBuilder.Build("Crew: ".T(EDCTx.JournalEntry_Crew), Crew, ";Telepresence".T(EDCTx.JournalEntry_Telepresence), Telepresence);
             detailed = "";
         }
     }
@@ -163,7 +163,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Crew: ".T(EDCTx.JournalEntry_Crew), Crew, "Role: ".T(EDCTx.JournalEntry_Role), Role, "; Telepresence: ".T(EDCTx.JournalEntry_Telepresence), Telepresence);
+            info = BaseUtils.FieldBuilder.Build("Crew: ".T(EDCTx.JournalEntry_Crew), Crew, "Role: ".T(EDCTx.JournalEntry_Role), Role, ";Telepresence".T(EDCTx.JournalEntry_Telepresence), Telepresence);
             detailed = "";
         }
     }
@@ -184,7 +184,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Crew Member: ".T(EDCTx.JournalEntry_CrewMember), Crew, "; Due to Crime".T(EDCTx.JournalEntry_DuetoCrime), OnCrime, "; Telepresence: ".T(EDCTx.JournalEntry_Telepresence), Telepresence);
+            info = BaseUtils.FieldBuilder.Build("Crew Member: ".T(EDCTx.JournalEntry_CrewMember), Crew, ";Due to Crime".T(EDCTx.JournalEntry_DuetoCrime), OnCrime, ";Telepresence".T(EDCTx.JournalEntry_Telepresence), Telepresence);
             detailed = "";
         }
     }
@@ -204,7 +204,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
 
-            info = BaseUtils.FieldBuilder.Build("Captain: ".T(EDCTx.JournalEntry_Captain), Captain, "; Telepresence: ".T(EDCTx.JournalEntry_Telepresence), Telepresence);
+            info = BaseUtils.FieldBuilder.Build("Captain: ".T(EDCTx.JournalEntry_Captain), Captain, ";Telepresence".T(EDCTx.JournalEntry_Telepresence), Telepresence);
             detailed = "";
         }
     }
@@ -224,7 +224,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Role: ".T(EDCTx.JournalEntry_Role), Role, "; Telepresence: ".T(EDCTx.JournalEntry_Telepresence), Telepresence);
+            info = BaseUtils.FieldBuilder.Build("Role: ".T(EDCTx.JournalEntry_Role), Role, ";Telepresence".T(EDCTx.JournalEntry_Telepresence), Telepresence);
             detailed = "";
         }
     }
@@ -244,7 +244,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("; Due to Crime".T(EDCTx.JournalEntry_DuetoCrime), OnCrime, "; Telepresence: ".T(EDCTx.JournalEntry_Telepresence), Telepresence);
+            info = BaseUtils.FieldBuilder.Build("; Due to Crime".T(EDCTx.JournalEntry_DuetoCrime), OnCrime, ";Telepresence".T(EDCTx.JournalEntry_Telepresence), Telepresence);
             detailed = "";
         }
     }
@@ -264,7 +264,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Captain: ".T(EDCTx.JournalEntry_Captain), Captain, "; Telepresence: ".T(EDCTx.JournalEntry_Telepresence), Telepresence);
+            info = BaseUtils.FieldBuilder.Build("Captain: ".T(EDCTx.JournalEntry_Captain), Captain, ";Telepresence".T(EDCTx.JournalEntry_Telepresence), Telepresence);
             detailed = "";
         }
 

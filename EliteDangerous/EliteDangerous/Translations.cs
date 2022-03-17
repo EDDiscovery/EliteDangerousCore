@@ -111,10 +111,10 @@ namespace EliteDangerousCore
         JournalEntry_offaction, // < of faction
         JournalEntry_Rank, // Rank:
         JournalEntry_Crew, // Crew:
-        JournalEntry_Telepresence, // ; Telespresence: 
+        JournalEntry_Telepresence, // ;Telespresence
         JournalEntry_Role, // Role:
         JournalEntry_CrewMember, // Crew Member:
-        JournalEntry_DuetoCrime, // ; Due to Crime
+        JournalEntry_DuetoCrime, // ;Due to Crime
         JournalEntry_Captain, // Captain:
         JournalEntry_fromfaction, // < from faction
         JournalEntry_Died, // {0} in ship type {1} rank {2}

@@ -946,10 +946,10 @@ SECTION JournalEntry
 .offaction: "< of faction " @
 .Rank: "Rank: " @
 .Crew: "Crew: " @
-.Telepresence: "; Telepresence: " @
+.Telepresence: ";Telepresence" @
 .Role: "Role: " @
 .CrewMember: "Crew Member: " @
-.DuetoCrime: "; Due to Crime" @
+.DuetoCrime: ";Due to Crime" @
 .Captain: "Captain: " @
 .fromfaction: "< from faction " @
 .Died: "{0} in ship type {1} rank {2}" @
