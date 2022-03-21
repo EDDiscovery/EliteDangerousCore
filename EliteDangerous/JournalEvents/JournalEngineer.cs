@@ -274,6 +274,26 @@ namespace EliteDangerousCore.JournalEvents
                 detailed = enginfo;
             }
         }
+
+        public string[] ApplyProgress(string[] engineers)
+        {
+            string[] ret = new string[engineers.Length];
+            for(int i =0; i < engineers.Length; i++)
+            {
+                ret[i] = engineers[i];
+
+                int found = Array.FindIndex(Engineers, x => x.Engineer.Equals(engineers[i],StringComparison.InvariantCultureIgnoreCase));
+                if (found >= 0)
+                {
+                    if (Engineers[found].Progress.Equals("Unlocked", StringComparison.InvariantCultureIgnoreCase))
+                        ret[i] += "++";
+                    if (Engineers[found].Progress.Equals("Invited", StringComparison.InvariantCultureIgnoreCase))
+                        ret[i] += "~";
+                }
+            }
+
+            return ret;
+        }
     }
 
 }

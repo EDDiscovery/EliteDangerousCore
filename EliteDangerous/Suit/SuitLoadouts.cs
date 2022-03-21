@@ -49,9 +49,9 @@ namespace EliteDangerousCore
                 FriendlyName = ItemData.GetWeapon(ModuleName)?.Name ?? ModuleName_Localised;
             }
 
-            public string WeaponModList()
+            public string WeaponModList() // nice names
             {
-                return (WeaponMods != null) ? string.Join(", ", WeaponMods) : "";
+                return (WeaponMods != null) ? string.Join(", ", WeaponMods.Select(x=>Recipes.GetBetterNameForEngineeringRecipe(x))) : "";
             }
         }
 
@@ -84,7 +84,7 @@ namespace EliteDangerousCore
             if ( Modules.TryGetValue(slotname, out LoadoutModule m))
             {
                 string wml = m.WeaponModList();
-                return m.FriendlyName + ":" + m.Class.ToStringInvariant() + (wml.HasChars() ? " " + wml : "");
+                return m.FriendlyName + ":" + m.Class.ToStringInvariant() + (wml.HasChars() ? ":" + wml : "");
             }
 
             return "";

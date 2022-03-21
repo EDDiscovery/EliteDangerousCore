@@ -36,7 +36,10 @@ namespace EliteDangerousCore.UIEvents
             MajorMode = mode;
         }
 
-        public enum ModeType        // NOTE webserver reported this in 'Mode' JSON record, and the website checks the names. Be careful changing
+        // NOTE webserver reported this in 'Mode' JSON record, and the website checks the names. Be careful changing
+        // And Free voice control uses Mode and MajorMode to determine voice set
+
+        public enum ModeType        
         {      
             None,
             MainShipNormalSpace,

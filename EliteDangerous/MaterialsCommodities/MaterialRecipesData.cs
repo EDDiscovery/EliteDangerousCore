@@ -91,7 +91,6 @@ namespace EliteDangerousCore
             public string level;
             public string modulesstring;
             public string[] modules;
-            public string engineersstring;
             public string[] engineers;
             public string fdname;       // only certain types have a fdname
 
@@ -101,8 +100,7 @@ namespace EliteDangerousCore
                 level = lvl;
                 modulesstring = mod;
                 modules = modulesstring.Split(',');
-                engineersstring = engnrs;
-                engineers = engineersstring.Split(',');
+                engineers = engnrs.Split(',');
             }
 
             public EngineeringRecipe(string n, string type, string mod, string indg)        // for tech broker
@@ -111,8 +109,7 @@ namespace EliteDangerousCore
                 level = "NA";
                 modulesstring = mod;
                 modules = modulesstring.Split(',');
-                engineersstring = type;
-                engineers = engineersstring.Split(',');
+                engineers = type.Split(',');
             }
 
             public EngineeringRecipe(string n, string mod, string indg)        // for special effects
@@ -121,8 +118,7 @@ namespace EliteDangerousCore
                 level = "NA";
                 modulesstring = mod;
                 modules = modulesstring.Split(',');
-                engineersstring = "Special Effect";
-                engineers = engineersstring.Split(',');
+                engineers = new string[] { "Special Effect" };
             }
 
             public EngineeringRecipe(string type, string manu, int lvl, string indg)        // for suit/weapon upgrades
@@ -131,8 +127,7 @@ namespace EliteDangerousCore
                 level = lvl.ToString();
                 modulesstring = type;
                 modules = modulesstring.Split(',');
-                engineersstring = type;
-                engineers = engineersstring.Split(',');
+                engineers = type.Split(',');
             }
 
             public EngineeringRecipe(string type, string fdname, string manu, string n, int cost, string indg, string eng)        // for suit/weapon engineer mods
@@ -142,8 +137,7 @@ namespace EliteDangerousCore
                 modulesstring = type;
                 this.fdname = fdname;
                 modules = modulesstring.Split(',');
-                engineersstring = eng;
-                engineers = engineersstring.Split(',');
+                engineers = eng.Split(',');
             }
         }
 
@@ -168,7 +162,7 @@ namespace EliteDangerousCore
         {
             MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);
             if (mc != null && EngineeringRecipesByMaterial.ContainsKey(mc))
-                return String.Join(join, EngineeringRecipesByMaterial[mc].Select(x => x.modulesstring + " " + x.Name + "-" + x.level + ": " + x.IngredientsStringLong + " @ " + x.engineersstring));
+                return String.Join(join, EngineeringRecipesByMaterial[mc].Select(x => x.modulesstring + " " + x.Name + "-" + x.level + ": " + x.IngredientsStringLong + " @ " + string.Join(",",x.engineers)));
             else
                 return "";
         }
