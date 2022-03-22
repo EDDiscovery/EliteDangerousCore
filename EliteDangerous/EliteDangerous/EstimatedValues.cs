@@ -643,7 +643,7 @@ namespace EliteDangerousCore
             new Values("Croceum Anemone",110500,"$Codex_Ent_SphereABCD_01"),
             new Values("Puniceum Anemone",110500,"$Codex_Ent_SphereABCD_02"),
             new Values("Roseum Anemone",110500,"$Codex_Ent_SphereABCD_03"),
-            new Values("Rubeum Bioluminescent Anemone",110500,"$Codex_Ent_SphereEFGH_01"),
+            new Values("Rubeum Bioluminescent Anemone",129900,"$Codex_Ent_SphereEFGH_01"),
             new Values("Prasinum Bioluminescent Anemone",110500,"$Codex_Ent_SphereEFGH_02"),
             new Values("Roseum Bioluminescent Anemone",110500,"$Codex_Ent_SphereEFGH_03"),
             new Values("Blatteum Bioluminescent Anemone",110500,"$Codex_Ent_SphereEFGH"),
