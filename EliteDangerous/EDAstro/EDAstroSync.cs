@@ -56,10 +56,10 @@ namespace EliteDangerousCore.EDAstro
                 {
                     Exit = false;
                     exitevent.Reset();
-                    ThreadEDSMSync = new System.Threading.Thread(new System.Threading.ThreadStart(SyncThread));
-                    ThreadEDSMSync.Name = "EDSM Journal Sync";
-                    ThreadEDSMSync.IsBackground = true;
-                    ThreadEDSMSync.Start();
+                    ThreadSync = new System.Threading.Thread(new System.Threading.ThreadStart(SyncThread));
+                    ThreadSync.Name = "EDSM Journal Sync";
+                    ThreadSync.IsBackground = true;
+                    ThreadSync.Start();
                 }
             }
         }
@@ -133,7 +133,7 @@ namespace EliteDangerousCore.EDAstro
             }
         }
 
-        private static Thread ThreadEDSMSync;
+        private static Thread ThreadSync;
         private static int running = 0;
         private static bool Exit = false;
         private static ConcurrentQueue<HistoryEntry> historylist = new ConcurrentQueue<HistoryEntry>();

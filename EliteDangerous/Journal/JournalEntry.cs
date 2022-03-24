@@ -109,29 +109,29 @@ namespace EliteDangerousCore
             UserDatabase.Instance.DBWrite(cn => UpdateSyncFlagBit(SyncFlags.StartMarker, false, SyncFlags.StopMarker, false, cn));
         }
 
-        public void SetEdsmSync()
+        public void SetEdsmSync(bool value = true)
         {
-            UserDatabase.Instance.DBWrite(cn => UpdateSyncFlagBit(SyncFlags.EDSM, true, SyncFlags.NoBit, false, cn));
+            UserDatabase.Instance.DBWrite(cn => UpdateSyncFlagBit(SyncFlags.EDSM, value, SyncFlags.NoBit, false, cn));
         }
 
-        internal void SetEdsmSync(SQLiteConnectionUser cn , DbTransaction txn = null)
+        internal void SetEdsmSync(SQLiteConnectionUser cn , DbTransaction txn = null, bool value = true)
         {
-            UpdateSyncFlagBit(SyncFlags.EDSM, true, SyncFlags.NoBit, false, cn, txn);
+            UpdateSyncFlagBit(SyncFlags.EDSM, value, SyncFlags.NoBit, false, cn, txn);
         }
 
-        public void SetEddnSync()
+        public void SetEddnSync(bool value = true)
         {
-            UserDatabase.Instance.DBWrite( cn => UpdateSyncFlagBit(SyncFlags.EDDN, true, SyncFlags.NoBit, false, cn));
+            UserDatabase.Instance.DBWrite( cn => UpdateSyncFlagBit(SyncFlags.EDDN, value , SyncFlags.NoBit, false, cn));
         }
 
-        public static void SetEdsmSyncList(List<JournalEntry> jlist)
+        public static void SetEdsmSyncList(List<JournalEntry> jlist, bool value = true)
         {
             UserDatabase.Instance.DBWrite(cn =>
             {
                 using (var txn = cn.BeginTransaction())
                 {
                     foreach (var he in jlist)
-                        he.SetEdsmSync(cn, txn);
+                        he.SetEdsmSync(cn, txn, value);
                     txn.Commit();
                 }
             });
