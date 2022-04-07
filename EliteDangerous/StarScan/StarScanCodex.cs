@@ -30,6 +30,10 @@ namespace EliteDangerousCore
                 {
                     if (!sn.CodexEntryList.Contains(jsd))
                         sn.CodexEntryList.Add(jsd);
+                    else
+                    {
+                     //   System.Diagnostics.Debug.WriteLine($"Duplicate codex {jsd.Name}");
+                    }
                 }
                 else if (saveprocessinglater)
                 {

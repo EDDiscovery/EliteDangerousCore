@@ -20,7 +20,7 @@ using System;
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.CodexEntry)]
-    public class JournalCodexEntry : JournalEntry, IStarScan
+    public class JournalCodexEntry : JournalEntry, IStarScan, IEquatable<JournalCodexEntry>
     {
         public JournalCodexEntry(JObject evt) : base(evt, JournalTypeEnum.CodexEntry)
         {
@@ -74,6 +74,15 @@ namespace EliteDangerousCore.JournalEvents
 
         public string EDDBodyName { get; set; }        // EDD addition, filled in in ED. Null for not known
         public int EDDBodyId { get; set; } = -1;       // EDD addition, filled in in ED.  -1 for not known
+
+        public bool Equals(JournalCodexEntry other)
+        {
+            return Name.Equals(other.Name, StringComparison.CurrentCultureIgnoreCase) &&
+                   SubCategory.Equals(other.SubCategory, StringComparison.CurrentCultureIgnoreCase) &&
+                   Category.Equals(other.Category, StringComparison.CurrentCultureIgnoreCase) &&
+                   Region.Equals(other.Region, StringComparison.CurrentCultureIgnoreCase) &&
+                   SystemAddress == other.SystemAddress;
+        }
 
         public void AddStarScan(StarScan s, ISystem system)
         {
