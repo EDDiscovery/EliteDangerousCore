@@ -891,7 +891,7 @@ namespace EliteDangerousCore
         JournalScanInfo_Hasring, //  Has ring.
         JournalScanInfo_Has, //  Has
         JournalScanInfo_eccentricity, // high eccentricity
-        JournalScanInfo_unknownAtmosphere, //unknown atmosphere
+        JournalScanInfo_unknownAtmosphere, //unknown
         JournalScanInfo_BFSD, //  Basic
         JournalScanInfo_SFSD, //  Standard
         JournalScanInfo_PFSD, //  Premium
