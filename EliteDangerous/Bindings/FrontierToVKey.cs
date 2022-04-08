@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 - 2017 EDDiscovery development team
+ * Copyright 2016 - 2022 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -16,34 +16,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace EliteDangerousCore
 {
     static public class FrontierKeyConversion
     {
-        static private Dictionary<string,uint> nametoscan = null;
-        static private bool mapped = false;
-
-        // lovely frontier uses strange naming.. its dependent on input language, except for some locals (ESP) it isn't.
-        // do this is the best i can do.. tested UK,USA,FR,DE,IT,ESP,POL.
-        // will probably need more bodging.
-
+        // Translate strange frontier name to vkeys name used by baseutils
+        // tested on multiple languages.
+        // function returns ! as first character if error occurred
         static public string FrontierToKeys(string frontiername)
         {
-            if (nametoscan == null)
-            {
-                Dictionary<char, uint> chartoscancode = KeyObjectExtensions.CharToScanCode();
-                //ScancodeToFrontierName(chartoscancode);
-                nametoscan = FrontierNameToScancode(chartoscancode);
-                mapped = IsFullyMapped(chartoscancode);
-                //System.Diagnostics.Debug.WriteLine("Mapped " + mapped);
-            }
-
             string output;
+            string layoutname = InputLanguage.CurrentInputLanguage.LayoutName;
 
             if (frontiername.StartsWith("Key_"))
             {
@@ -51,69 +36,180 @@ namespace EliteDangerousCore
 
                 int num;
 
+                // these two languages appear by frontier to use standard names, instead of localised names!
+                bool usestdnames = layoutname.Contains("Spanish") || layoutname.Contains("Polish");
+
+                // first simple keys
                 if (output.Length == 1 && ((output[0] >= '0' && output[0] <= '9') || (output[0] >= 'A' && output[0] <= 'Z')))
                 {
-                    // no action
+                    // no action - output same as input
                 }
-                else if (output.StartsWith("Numpad_") && char.IsDigit(output[7]))
-                    output = "NumPad" + output[7];
-                else if (output.StartsWith("F") && int.TryParse(output.Substring(1), out num))
-                    output = "F" + num;
-                else
+                else if (output.StartsWith("Numpad_") && output.Length == 8 && char.IsDigit(output[7]))   // numpad 0-9
                 {
-                    int i = Array.FindIndex(frontiertovkeyname, x => x.Item2.Equals(output));
-
-                    if (i >= 0)
-                        return frontiertovkeyname[i].Item1;
-
-                    uint sc = 0;
-
-//                    System.Diagnostics.Debug.WriteLine("Layout " + InputLanguage.CurrentInputLanguage.LayoutName);
-
-                    if (InputLanguage.CurrentInputLanguage.LayoutName != "Spanish" && mapped && nametoscan.ContainsKey(output))       // spanish uses default names
-                        sc = nametoscan[output];
-                    else
-                    {
-                        i = Array.FindIndex(defaultscancodes, x => x.Item1.Equals(output));
-
-                        if (i >= 0)
-                            sc = defaultscancodes[i].Item2;
-                    }
-
-                    if (sc != 0)      // if we have a code, convert it to a Vkey.
-                    {
-                        // System.Diagnostics.Debug.WriteLine("Name {0} ->SC {1:x}", output, sc);
-
-                        uint v = BaseUtils.Win32.UnsafeNativeMethods.MapVirtualKey(sc, 3);
-
-                        if (v != 0)
-                        {
-                            // System.Diagnostics.Debug.WriteLine("        .. {0} -> VK {1:x} {2}", sc, v, ((Keys)v).VKeyToString());
-                            output = ((Keys)v).VKeyToString();
-                        }
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine("Scan code converstion failed {0} {1:x}", frontiername , sc);
-                            output = "Unknown_SCMap_" + frontiername + "_" + InputLanguage.CurrentInputLanguage.LayoutName;
-                        }
-                    }
-                    else
-                    {
-                        System.Diagnostics.Debug.WriteLine("Frontier Mapping failed {0}", frontiername);
-                        output = "Unknown_Key_" + frontiername + "_" + InputLanguage.CurrentInputLanguage.LayoutName;
-                    }
+                    output = "NumPad" + output[7];
                 }
+                else if (output.StartsWith("F") && int.TryParse(output.Substring(1), out num))      // F keys
+                {
+                    output = "F" + num;
+                }
+                else if (output.Length == 1) // single chars
+                {
+                    IntPtr layout = BaseUtils.Win32.UnsafeNativeMethods.GetKeyboardLayout(0);
+                    short vkey = BaseUtils.Win32.UnsafeNativeMethods.VkKeyScanExW(output[0], layout);        // look up char->vkey
+
+                    if (layoutname == "Ukrainian (Enhanced)")
+                    {
+                        if (output == "ё")      // frontier is writing this for oem3, which is Ukranian non enhanced, which is not what it is at http://kbdlayout.info/kbdur1 or in real life, fix
+                            vkey = (short)Keys.Oem3;
+                        else if (output == "ґ") // VKeyScanW does not seem to work with this value
+                            vkey = (short)Keys.Oem102;
+                    }
+                    else if (layoutname == "Lithuanian")
+                    {
+                        // Frontier are writing out these for the Lithuanian keyboard, even though http://kbdlayout.info/kbdlt1/scancodes and the real keys do not match these
+                        // so mangle
+
+                        if (output == "į")
+                            vkey = (short)Keys.Oem4;
+                        else if (output == "“")
+                            vkey = (short)Keys.Oem6;
+                        else if (output == "ų")
+                            vkey = (short)Keys.Oem1;
+                        else if (output == "ė")
+                            vkey = (short)Keys.Oem7;
+                        else if (output == "č")
+                            vkey = (short)Keys.Oemcomma;
+                        else if (output == "š")
+                            vkey = (short)Keys.OemPeriod;
+                        else if (output == "ę")
+                            vkey = (short)Keys.Oem2;
+                    }
+                    else if (layoutname == "Slovenian")
+                    {
+                        if (output == "¸")
+                            vkey = (short)Keys.Oem3;
+                    }
+                    else if (layoutname == "Romanian (Standard)")
+                    {
+                        if (output == "ş")
+                            vkey = (short)Keys.Oem1;
+                        if (output == "ţ")
+                            vkey = (short)Keys.Oem7;
+                    }
+
+                    if (vkey != -1)
+                    {
+                        Keys k = (Keys)(vkey & 0xff);
+                        // System.Diagnostics.Debug.WriteLine($"Translated thru VkKeyScanEx '{output}' -> {(int)output[0]:x} -> vkey {vkey:x} -> {k} -> {KeyObjectExtensions.VKeyToString(k)}");
+                        output = KeyObjectExtensions.VKeyToString(k);
+                    }
+                    else
+                        output = null;
+                }
+                else if ((num = Array.FindIndex(frontiertovkeyname, x => x.Item2.Equals(output))) >= 0)    // a standard frontier name for a key
+                {
+                    //System.Diagnostics.Debug.WriteLine($"Translated thru frontiertovkeyname {output} -> {frontiertovkeyname[num].Item1}");
+                    output = frontiertovkeyname[num].Item1;
+                }
+                else if (usestdnames && (num = Array.FindIndex(defaultnamestoscancodes, x => x.Item1.Equals(output))) >= 0)    // if in standard name mode, try that.
+                {
+                    uint scancode = defaultnamestoscancodes[num].Item2;
+                    //System.Diagnostics.Debug.WriteLine($"Translated thru defaultnames {output} -> scancode {scancode:x}");
+
+                    uint v = BaseUtils.Win32.UnsafeNativeMethods.MapVirtualKey(scancode, 3);
+
+                    if (v != 0)
+                    {
+                        // System.Diagnostics.Debug.WriteLine("        .. {0} -> VK {1:x} {2}", sc, v, ((Keys)v).VKeyToString());
+                        output = ((Keys)v).VKeyToString();
+                    }
+                    else
+                        output = null;
+                }
+                else if ((num = Array.FindIndex(frontiernameforcharacters, x => x.Item1.Equals(output, StringComparison.InvariantCultureIgnoreCase))) >= 0) // try a logical name for a character
+                {
+                    char ch = frontiernameforcharacters[num].Item2;
+                    IntPtr layout = BaseUtils.Win32.UnsafeNativeMethods.GetKeyboardLayout(0);
+                    short vkey = BaseUtils.Win32.UnsafeNativeMethods.VkKeyScanExW(ch, layout);
+
+                    if (layoutname == "Czech")     // above seems to fail with Czech, manually fix
+                    {
+                        if (output == "BackSlash")
+                            vkey = (short)Keys.Oem102;
+                        else if (output == "Acute")
+                            vkey = (short)Keys.Oem2;
+                        else if (output == "Equals")
+                            vkey = (short)Keys.Oemplus;
+                        else if (output == "Umlaut")
+                            vkey = (short)Keys.Oem5;
+                    }
+                    else if (layoutname == "Turkish Q")
+                    {
+                        if (output == "LessThan")
+                            vkey = (short)Keys.Oem102;
+                    }
+                    else if (layoutname == "Slovak")
+                    {
+                        if (output == "Ampersand")
+                            vkey = (short)Keys.Oem102;
+                        else if (output == "Acute")
+                            vkey = (short)Keys.Oem8;
+                    }
+                    else if (layoutname == "Lithuanian")
+                    {
+                        if (output == "BackSlash")
+                            vkey = (short)Keys.Oem102;
+                    }
+                    else if (layoutname == "Slovenian")
+                    {
+                        if (output == "LessThan")
+                            vkey = (short)Keys.Oem102;
+                    }
+                    else if (layoutname == "Romanian (Standard)")
+                    {
+                        if (output == "RightBracket")       // keys produced in romanian standard match the website, the oem codes do, yet frontier produces this strange set
+                            vkey = (short)Keys.Oem3;
+                        else if (output == "Plus")
+                            vkey = (short)Keys.OemMinus;
+                        else if (output == "Apostrophe")
+                            vkey = (short)Keys.Oemplus;
+                        else if (output == "LessThan")
+                            vkey = (short)Keys.Oem102;
+                        else if (output == "Minus")
+                            vkey = (short)Keys.Oem2;
+                    }
+
+                    if (vkey != -1)
+                    {
+                        Keys k = (Keys)(vkey & 0xff);
+                        if (k == Keys.Decimal)              // italian returned this, instead of oem period. UK returns period
+                            k = Keys.OemPeriod;
+                        //System.Diagnostics.Debug.WriteLine($"Translated thru frontiernameforchars VkKeyScanEx {output} -> '{ch}' -> vkey {vkey:x} {k} -> {KeyObjectExtensions.VKeyToString(k)}");
+                        output = KeyObjectExtensions.VKeyToString(k);
+                    }
+                    else
+                        output = null;
+                }
+                else
+                    output = null;
             }
             else
-                output = "Unknown_Format_" + frontiername;
+                output = null;
+
+
+            if (output == null)
+            {
+                System.Diagnostics.Trace.WriteLine($"Failed to convert {frontiername} binding key in lang {layoutname}");
+                output = "!Unknown Frontier Key " + frontiername + " in key layout " + layoutname;
+            }
 
             return output;
 
         }
 
-        static Tuple<string, string>[] frontiertovkeyname = new Tuple<string, string>[]
+        static Tuple<string, string>[] frontiertovkeyname = new Tuple<string, string>[]     // Frontier names for keys
         {
-            new Tuple<string,string>(Keys.Up.VKeyToString()          ,"UpArrow"),          // FD naming
+            new Tuple<string,string>(Keys.Up.VKeyToString()          ,"UpArrow"),
             new Tuple<string,string>(Keys.Down.VKeyToString()        ,"DownArrow"),
             new Tuple<string,string>(Keys.Left.VKeyToString()        ,"LeftArrow"),
             new Tuple<string,string>(Keys.Right.VKeyToString()       ,"RightArrow"),
@@ -134,7 +230,6 @@ namespace EliteDangerousCore
             new Tuple<string,string>("NumEnter", "Numpad_Enter"),
             new Tuple<string,string>(Keys.Space.VKeyToString(), "Space"),
             new Tuple<string,string>(Keys.Tab.VKeyToString(), "Tab"),
-
             new Tuple<string,string>(Keys.LShiftKey.VKeyToString(),"LeftShift"),
             new Tuple<string,string>(Keys.LControlKey.VKeyToString(),"LeftControl"),
             new Tuple<string,string>(Keys.LMenu.VKeyToString(),"LeftAlt"),
@@ -144,354 +239,561 @@ namespace EliteDangerousCore
             new Tuple<string,string>(Keys.Back.VKeyToString(),"Backspace"),
          };
 
-        static Tuple<string, uint>[] defaultscancodes = new Tuple<string, uint>[]       // used on some layouts (ESP) instead of local names.. no idea how its chosen
+        static Tuple<string, uint> Create(string name, uint sc)
         {
-            new Tuple<string, uint>("Grave",0x29),
+            return new Tuple<string, uint>(name, sc);
+        }
 
-            new Tuple<string, uint>("Minus",0x0c),
-            new Tuple<string, uint>("Equals",0x0d),
+        static Tuple<string, uint>[] defaultnamestoscancodes = new Tuple<string, uint>[]       // used on some layouts instead of local names.. no idea how its chosen
+        {
+            Create("Grave",0x29),   // uk oem8 
 
-            new Tuple<string, uint>("LeftBracket",0x1a),
-            new Tuple<string, uint>("RightBracket",0x1b),
+            Create("Minus",0x0c),   // uk oemminus
+            Create("Equals",0x0d),  // uk oemplus
 
-            new Tuple<string, uint>("SemiColon",0x27),
-            new Tuple<string, uint>("Apostrophe",0x28),
-            new Tuple<string, uint>("Hash",0x2b),
+            Create("LeftBracket",0x1a), // uk oem4
+            Create("RightBracket",0x1b),    // uk oem6
 
-            new Tuple<string, uint>("Comma",0x33),
-            new Tuple<string, uint>("Period",0x34),
-            new Tuple<string, uint>("Slash",0x35),
+            Create("SemiColon",0x27),   // uk oem1
+            Create("Apostrophe",0x28),  // uk oem3
+            Create("Hash",0x2b),        // uk oem7
 
-            new Tuple<string, uint>("BackSlash",0x56),
-
+            Create("BackSlash",0x56),   // uk oem5
+            Create("Comma",0x33),       // uk oemcomma
+            Create("Period",0x34),      // uk oemperiod
+            Create("Slash",0x35),       // uk oem2
         };
 
-
-        static public Dictionary<uint, string> ScancodeToFrontierName(Dictionary<char, uint> chartosc)  // list of scan codes vs frontier names
+        static Tuple<string, char> Create(string name, char ch)
         {
-            Dictionary<uint, string> scn = new Dictionary<uint, string>();
-
-            foreach (KeyValuePair<char, uint> kv in chartosc)
-            {
-                if ((kv.Value & 0xff) == kv.Value)
-                {
-                    string str = "";
-                    str += kv.Key;
-
-                    int i = Array.FindIndex(chartofrontiername, x => x.Item1.Equals(str));
-
-                    if (i >= 0)
-                        str = chartofrontiername[i].Item2;
-
-                    System.Diagnostics.Debug.WriteLine("Scan code {0:x} = '{1}'", kv.Value, str);
-                }
-            }
-
-            return scn;
+            return new Tuple<string, char>(name, ch);
         }
 
-        static public bool IsFullyMapped(Dictionary<char, uint> chartosc)   // tell me if you have these keys in the name table
+        static Tuple<string, char>[] frontiernameforcharacters = new Tuple<string, char>[]      // logical name frontier uses for characters.. list may not be complete
         {
-            bool fullymapped = chartosc.ContainsValue(0x29) && chartosc.ContainsValue(0xc) && chartosc.ContainsValue(0xd)
-                            && chartosc.ContainsValue(0x1a) && chartosc.ContainsValue(0x1b) && chartosc.ContainsValue(0x27)
-                            && chartosc.ContainsValue(0x28) && chartosc.ContainsValue(0x2b) && chartosc.ContainsValue(0x33)
-                            && chartosc.ContainsValue(0x34) && chartosc.ContainsValue(0x35);
-
-            // USA does not support 0x56, so we don't call that a fully mapped key fullymapped = fullymapped && chartosc.ContainsValue(0x56);
-
-            return fullymapped;
-        }
-
-        static public Dictionary<string, uint> FrontierNameToScancode(Dictionary<char, uint> chartosc)  // given a name, give me the scan code..
-        {
-            Dictionary<string, uint> scn = new Dictionary<string, uint>();
-
-            foreach (KeyValuePair<char, uint> kv in chartosc)
-            {
-                if ((kv.Value & 0xff) == kv.Value)      // if not shifted..
-                {
-                    string str = "";
-                    str += kv.Key;
-
-                    int i = Array.FindIndex(chartofrontiername, x => x.Item1.Equals(str));
-
-                    if (i >= 0)
-                    {
-                        str = chartofrontiername[i].Item2;
-                    }
-
-                   // System.Diagnostics.Debug.WriteLine("'{0}' Scan code {1:x}", str, kv.Value);
-                    scn[str] = kv.Value;
-                }
-            }
-
-
-            return scn;
-        }
-
-        static Tuple<string, string>[] chartofrontiername = new Tuple<string, string>[]
-        {
-        new Tuple<string,string>("`","Grave"),
-        new Tuple<string,string>("-","Minus"),
-        new Tuple<string,string>("=","Equals"),
-        new Tuple<string,string>("[","LeftBracket"),
-        new Tuple<string,string>("]","RightBracket"),
-        new Tuple<string,string>(";","SemiColon"),
-        new Tuple<string,string>("'","Apostrophe"),
-        new Tuple<string,string>("#","Hash"),
-        new Tuple<string,string>(",","Comma"),
-        new Tuple<string,string>(".","Period"),
-        new Tuple<string,string>("/","Slash"),
-        new Tuple<string,string>("\\","BackSlash"),
-
-        // DE 28-12-2017 
-        new Tuple<string,string>("^","Circumflex"),
-        //ß
-        new Tuple<string,string>("∩","Acute"),
-        //ü
-        new Tuple<string,string>("+","Plus"),
-        //ö,ä
-        new Tuple<string,string>("#","Hash"),
-        //Comma,Period,Minus
-        new Tuple<string,string>("<","LessThan"),
-            
-        // FR 29 12 2017
-        new Tuple<string,string>("²","SuperscriptTwo"),
-        new Tuple<string,string>(")","RightParenthesis"),
-        //= Equals
-        //^ Cirumflex
-        new Tuple<string,string>("$","Dollar"),
-        //m auto
-        //ù auto
-        new Tuple<string,string>("*","Asterisk"),
-        //Semicolon
-        new Tuple<string,string>(":","Colon"),
-        new Tuple<string,string>("!","ExclamationPoint"),
-
-            // IT 29 12 2017
-            //Backslash
-            //Apostrophe
-            //ì auto
-            //è
-            //+
-            //ò
-            //à
-            //ù auto
-            //Comma
-            //Period 
-            //Minus
-            //LessThan
+            Create("SuperscriptTwo",'²'),
+            Create("RightParenthesis",')'),
+            Create("Circumflex",'^'),
+            Create("Dollar",'$'),
+            Create("Asterisk",'*'),
+            Create("Comma",','),
+            Create("SemiColon",';'),
+            Create("Colon",':'),
+            Create("ExclamationPoint",'!'),
+            Create("LessThan",'<'),
+            Create("Minus",'-'),
+            Create("Period",'.'),
+            Create("Hash",'#'),
+            Create("Acute",'´'),
+            Create("Plus",'+'),
+            Create("Grave",'`'),
+            Create("Equals",'='),
+            Create("LeftBracket",'['),
+            Create("RightBracket",']'),
+            Create("Apostrophe",'\''),
+            Create("BackSlash",'\\'),
+            Create("Slash",'/'),
+            Create("Tilde",'~'),
+            Create("DoubleQuote",'"'),
+            Create("LessThan",'<'),
+            Create("Umlaut",'¨'),
+            Create("Half",'½'),
+            Create("Underline",'_'),
+            Create("Ampersand",'&'),
         };
 
-#if DEBUG
+#if false
+        // april 6/7/8 '22 coded
 
-        static public void Check()
+        public static void Check()
         {
-            InputLanguage l = InputLanguage.CurrentInputLanguage;
-            if (l.Culture.Name.Contains("es-"))
-                CheckESP();
-            if (l.Culture.Name.Contains("en-GB"))
-                CheckUKUS(false);
-            if (l.Culture.Name.Contains("en-US"))
-                CheckUKUS(true);
-            if (l.Culture.Name.Contains("fr-"))
-                CheckFR();
-            if (l.Culture.Name.Contains("it-"))
-                CheckIT();
-            if (l.Culture.Name.Contains("de-"))
-                CheckDE();
-            if (l.Culture.Name.Contains("pl-"))
-                CheckPOL();
-        }
+            InputLanguage defl = InputLanguage.CurrentInputLanguage;
+            List<string> done = new List<string>();
 
-        static public void CheckUKUS(bool usa)
-        {
-            Check(Keys.Up, "Key_UpArrow");
-            Check(Keys.Down, "Key_DownArrow");
-            Check(Keys.Left, "Key_LeftArrow");
-            Check(Keys.Right, "Key_RightArrow");
-            Check(Keys.Back, "Key_Backspace");
-            Check(Keys.Insert, "Key_Insert");
-            Check(Keys.Home, "Key_Home");
-            Check(Keys.PageUp, "Key_PageUp");
-            Check(Keys.PageDown, "Key_PageDown");
-            Check(Keys.Delete, "Key_Delete");
-            Check(Keys.End, "Key_End");
-            Check(Keys.Space, "Key_Space");
-            Check(Keys.F1, "Key_F1");
-            Check(Keys.F12, "Key_F12");
-
-            Check(Keys.Tab, "Key_Tab");
-            Check(Keys.Capital, "Key_CapsLock");
-            Check(Keys.LShiftKey, "Key_LeftShift");
-            Check(Keys.RShiftKey, "Key_RightShift");
-            Check(Keys.LControlKey, "Key_LeftControl");
-            Check(Keys.RControlKey, "Key_RightControl");
-            Check(Keys.LMenu, "Key_LeftAlt");
-            Check(Keys.RMenu, "Key_RightAlt");
-
-            Check(Keys.NumPad0, "Key_Numpad_0");
-            Check(Keys.NumPad9, "Key_Numpad_9");
-            Check(KeyObjectExtensions.NumEnter, "Key_Numpad_Enter");
-            Check(Keys.Multiply, "Key_Numpad_Multiply");
-            Check(Keys.Add, "Key_Numpad_Add");
-            Check(Keys.Subtract, "Key_Numpad_Subtract");
-            Check(Keys.Decimal, "Key_Numpad_Decimal");
-            Check(Keys.NumLock, "Key_NumLock");
-            
-            if ( usa )
+            foreach (InputLanguage lang in InputLanguage.InstalledInputLanguages)
             {
-                Check(Keys.Oemtilde, "Key_Grave");
+                if (done.Contains(lang.LayoutName))
+                    continue;
 
-                Check(Keys.OemMinus, "Key_Minus");
-                Check(Keys.Oemplus, "Key_Equals");
+                InputLanguage.CurrentInputLanguage = lang;
+                System.Diagnostics.Debug.WriteLine($"Checking {lang.LayoutName}");
 
-                Check(Keys.OemOpenBrackets, "Key_LeftBracket");
-                Check(Keys.Oem6, "Key_RightBracket");
+                done.Add(lang.LayoutName);
 
-                Check(Keys.Oem1, "Key_SemiColon");
-                Check(Keys.Oem7, "Key_Apostrophe");
-                Check(Keys.Oem5, "Key_BackSlash");
+#if true
+                Check(Keys.Up, "Key_UpArrow");
+                Check(Keys.Down, "Key_DownArrow");
+                Check(Keys.Left, "Key_LeftArrow");
+                Check(Keys.Right, "Key_RightArrow");
+                Check(Keys.Back, "Key_Backspace");
+                Check(Keys.Insert, "Key_Insert");
+                Check(Keys.Home, "Key_Home");
+                Check(Keys.PageUp, "Key_PageUp");
+                Check(Keys.PageDown, "Key_PageDown");
+                Check(Keys.Delete, "Key_Delete");
+                Check(Keys.End, "Key_End");
+                Check(Keys.Space, "Key_Space");
+                Check(Keys.F1, "Key_F1");
+                Check(Keys.F12, "Key_F12");
 
-                Check(Keys.Oemcomma, "Key_Comma");
-                Check(Keys.OemPeriod, "Key_Period");
-                Check(Keys.OemQuestion, "Key_Slash");
+                Check(Keys.Tab, "Key_Tab");
+                Check(Keys.Capital, "Key_CapsLock");
+                Check(Keys.LShiftKey, "Key_LeftShift");
+                Check(Keys.RShiftKey, "Key_RightShift");
+                Check(Keys.LControlKey, "Key_LeftControl");
+                Check(Keys.RControlKey, "Key_RightControl");
+                Check(Keys.LMenu, "Key_LeftAlt");
+                Check(Keys.RMenu, "Key_RightAlt");
 
-               // No SC 56 on USA Check(Keys.OemBackslash, "Key_BackSlash");
+                Check(Keys.NumPad0, "Key_Numpad_0");
+                Check(Keys.NumPad9, "Key_Numpad_9");
+                Check(KeyObjectExtensions.NumEnter, "Key_Numpad_Enter");
+                Check(Keys.Multiply, "Key_Numpad_Multiply");
+                Check(Keys.Add, "Key_Numpad_Add");
+                Check(Keys.Subtract, "Key_Numpad_Subtract");
+                Check(Keys.Decimal, "Key_Numpad_Decimal");
+                Check(Keys.NumLock, "Key_NumLock");
+#endif
+
+                // 6/4/22 confirmed
+                // Keys always listed in row order, top row first, middle row, bottom row
+                // each keyboard layout is helpfully having different oem assigned to different keys! (crap)
+                // Elite was used to see what frontier names were mapped to these oem keys, and http://kbdlayout.info/ was used to find the oem key assigned
+
+#if true
+                if (lang.LayoutName == "Portuguese")
+                {
+                    Check(Keys.Oem5, "Key_BackSlash");
+                    Check(Keys.Oem4, "Key_Apostrophe");
+                    Check(Keys.Oem6, "Key_«");
+
+                    Check(Keys.Oemplus, "Key_Plus");
+                    Check(Keys.Oem1, "Key_Acute");
+
+                    Check(Keys.Oem3, "Key_ç");
+                    Check(Keys.Oem7, "Key_º");
+                    Check(Keys.Oem2, "Key_Tilde");
+
+                    Check(Keys.Oem102, "Key_LessThan");
+                    Check(Keys.Oemcomma, "Key_Comma");
+                    Check(Keys.OemPeriod, "Key_Period");
+                    Check(Keys.OemMinus, "Key_Minus");
+                }
+                if (lang.LayoutName.Contains("Portuguese (Brazil ABNT"))
+                {
+                    Check(Keys.Oem3, "Key_Apostrophe");
+                    Check(Keys.OemMinus, "Key_Minus");
+                    Check(Keys.Oemplus, "Key_Equals");
+
+                    Check(Keys.Oem4, "Key_Acute");
+                    Check(Keys.Oem6, "Key_LeftBracket");
+
+                    Check(Keys.Oem1, "Key_ç");
+                    Check(Keys.Oem7, "Key_Tilde");
+                    Check(Keys.Oem5, "Key_RightBracket");
+
+                    Check(Keys.Oem102, "Key_BackSlash");
+                    Check(Keys.Oemcomma, "Key_Comma");
+                    Check(Keys.OemPeriod, "Key_Period");
+                    Check(Keys.Oem2, "Key_SemiColon");
+
+                }
+                if (lang.LayoutName == "Turkish Q")
+                {
+
+                    Check(Keys.Oem3, "Key_DoubleQuote");
+                    Check(Keys.Oem8, "Key_Asterisk");
+                    Check(Keys.OemMinus, "Key_Minus");
+
+                    Check(Keys.Oem4, "Key_ğ");
+                    Check(Keys.Oem6, "Key_ü");
+
+                    Check(Keys.Oem1, "Key_ş");
+                    Check(Keys.I, "Key_I");
+                    Check(Keys.Oemcomma, "Key_Comma");
+
+                    Check(Keys.Oem102, "Key_LessThan");
+                    Check(Keys.Oem2, "Key_ö");
+                    Check(Keys.Oem5, "Key_ç");
+                    Check(Keys.OemPeriod, "Key_Period");
+
+                }
+
+                if (lang.LayoutName == "Swedish")
+                {
+                    Check(Keys.Oem5, "Key_§");
+                    Check(Keys.Oemplus, "Key_Plus");
+                    Check(Keys.Oem4, "Key_Acute");
+
+                    Check(Keys.Oem6, "Key_å");
+                    Check(Keys.Oem1, "Key_Umlaut");
+
+                    Check(Keys.Oem3, "Key_ö");
+                    Check(Keys.Oem7, "Key_ä");
+                    Check(Keys.Oem2, "Key_Apostrophe");
+
+                    Check(Keys.Oem102, "Key_LessThan");
+                    Check(Keys.Oemcomma, "Key_Comma");
+                    Check(Keys.OemPeriod, "Key_Period");
+                    Check(Keys.OemMinus, "Key_Minus");
+
+                }
+                if (lang.LayoutName == "Danish")
+                {
+                    Check(Keys.Oem5, "Key_Half");
+                    Check(Keys.Oemplus, "Key_Plus");
+                    Check(Keys.Oem4, "Key_Acute");
+
+                    Check(Keys.Oem6, "Key_å");
+                    Check(Keys.Oem1, "Key_Umlaut");
+
+                    Check(Keys.Oem3, "Key_æ");
+                    Check(Keys.Oem7, "Key_ø");
+                    Check(Keys.Oem2, "Key_Apostrophe");
+
+                    Check(Keys.Oem102, "Key_BackSlash");
+                    Check(Keys.Oemcomma, "Key_Comma");
+                    Check(Keys.OemPeriod, "Key_Period");
+                    Check(Keys.OemMinus, "Key_Minus");
+
+                }
+
+                if (lang.LayoutName == "US" || lang.LayoutName == "United States-International")
+                {
+
+                    Check(Keys.Oem3, "Key_Grave");
+                    Check(Keys.OemMinus, "Key_Minus");
+                    Check(Keys.Oemplus, "Key_Equals");
+
+                    Check(Keys.Oem4, "Key_LeftBracket");
+                    Check(Keys.Oem6, "Key_RightBracket");
+
+                    Check(Keys.Oem1, "Key_SemiColon");
+                    Check(Keys.Oem7, "Key_Apostrophe");
+
+                    // oem 102 is showing KeyBackslash, same as Oem 5. Table maps it to scan code 56
+                    Check(Keys.Oem5, "Key_BackSlash");
+                    Check(Keys.Oemcomma, "Key_Comma");  // ok
+                    Check(Keys.OemPeriod, "Key_Period");    //ok
+                    Check(Keys.Oem2, "Key_Slash");  //ok
+                }
+                else if (lang.LayoutName == "United Kingdom")
+                {
+                    Check(Keys.Oem8, "Key_Grave");
+                    Check(Keys.OemMinus, "Key_Minus");
+                    Check(Keys.Oemplus, "Key_Equals");
+
+                    Check(Keys.Oem4, "Key_LeftBracket");
+                    Check(Keys.Oem6, "Key_RightBracket");
+
+                    Check(Keys.Oem1, "Key_SemiColon");
+                    Check(Keys.Oem3, "Key_Apostrophe");
+                    Check(Keys.Oem7, "Key_Hash");
+
+                    Check(Keys.Oem5, "Key_BackSlash");
+                    Check(Keys.Oemcomma, "Key_Comma");
+                    Check(Keys.OemPeriod, "Key_Period");
+                    Check(Keys.Oem2, "Key_Slash");
+                }
+                if (lang.LayoutName == "German")
+                {
+                    Check(Keys.Oem5, "Key_Circumflex");
+                    Check(Keys.Oem4, "Key_ß");
+                    Check(Keys.Oem6, "Key_Acute");
+
+                    Check(Keys.Oem1, "Key_ü");
+                    Check(Keys.Oemplus, "Key_Plus");
+
+                    Check(Keys.Oem3, "Key_ö");
+                    Check(Keys.Oem7, "Key_ä");
+                    Check(Keys.Oem2, "Key_Hash");
+
+                    Check(Keys.Oem102, "Key_LessThan");
+                    Check(Keys.Oemcomma, "Key_Comma");
+                    Check(Keys.OemPeriod, "Key_Period");
+                    Check(Keys.OemMinus, "Key_Minus");
+
+                }
+                if (lang.LayoutName == "Spanish")
+                {
+                    Check(Keys.Oem5, "Key_Grave");
+                    Check(Keys.Oem4, "Key_Minus");
+                    Check(Keys.Oem6, "Key_Equals");
+
+                    Check(Keys.Oem1, "Key_LeftBracket");
+                    Check(Keys.Oemplus, "Key_RightBracket");
+
+                    Check(Keys.Oem3, "Key_SemiColon");
+                    Check(Keys.Oem7, "Key_Apostrophe");
+                    Check(Keys.Oem2, "Key_Hash");
+
+                    Check(Keys.Oem102, "Key_BackSlash");
+                    Check(Keys.Oemcomma, "Key_Comma");
+                    Check(Keys.OemPeriod, "Key_Period");
+                    Check(Keys.OemMinus, "Key_Slash");
+                }
+                if (lang.LayoutName == "French")
+                {
+                    Check(Keys.Oem7, "Key_SuperscriptTwo");
+                    Check(Keys.Oem4, "Key_RightParenthesis");
+                    Check(Keys.Oemplus, "Key_Equals");
+
+                    Check(Keys.Oem6, "Key_Circumflex");
+                    Check(Keys.Oem1, "Key_Dollar");
+
+                    Check(Keys.M, "Key_M");
+                    Check(Keys.Oem3, "Key_ù");
+                    Check(Keys.Oem5, "Key_Asterisk");
+
+                    Check(Keys.Oem102, "Key_LessThan");
+                    Check(Keys.Oemcomma, "Key_Comma");
+                    Check(Keys.OemPeriod, "Key_SemiColon");
+                    Check(Keys.Oem2, "Key_Colon");
+                    Check(Keys.Oem8, "Key_ExclamationPoint");
+                }
+                if (lang.LayoutName.Contains("Polish"))
+                {
+                    Check(Keys.Oem3, "Key_Grave");
+
+                    Check(Keys.Oemplus, "Key_Minus");
+                    Check(Keys.Oem2, "Key_Equals");
+
+                    Check(Keys.Oem4, "Key_LeftBracket");
+                    Check(Keys.Oem6, "Key_RightBracket");
+
+                    Check(Keys.Oem1, "Key_SemiColon");
+                    Check(Keys.Oem7, "Key_Apostrophe");
+                    Check(Keys.Oem5, "Key_Hash");
+
+                    Check(Keys.Oem102, "Key_BackSlash");
+                    Check(Keys.Oemcomma, "Key_Comma");
+                    Check(Keys.OemPeriod, "Key_Period");
+                    Check(Keys.OemMinus, "Key_Slash");
+                }
+                if (lang.LayoutName.Contains("Italian"))
+                {
+                    Check(Keys.Oem5, "Key_BackSlash");
+                    Check(Keys.Oem4, "Key_Apostrophe");
+                    Check(Keys.Oem6, "Key_ì");
+
+                    Check(Keys.Oem1, "Key_è");
+                    Check(Keys.Oemplus, "Key_Plus");
+
+                    Check(Keys.Oem3, "Key_ò");
+                    Check(Keys.Oem7, "Key_à");
+                    Check(Keys.Oem2, "Key_ù");
+
+                    Check(Keys.Oem102, "Key_LessThan");
+                    Check(Keys.Oemcomma, "Key_Comma");
+                    Check(Keys.OemPeriod, "Key_Period");
+                    Check(Keys.OemMinus, "Key_Minus");
+                }
+
+                if (lang.LayoutName.Contains("Norwegian"))
+                {
+                    Check(Keys.Oem5, "Key_|");
+                    Check(Keys.Oemplus, "Key_Plus");
+                    Check(Keys.Oem4, "Key_BackSlash");
+
+                    Check(Keys.Oem6, "Key_å");
+                    Check(Keys.Oem1, "Key_Umlaut");
+
+                    Check(Keys.Oem3, "Key_ø");
+                    Check(Keys.Oem7, "Key_æ");
+                    Check(Keys.Oem2, "Key_Apostrophe");
+
+                    Check(Keys.Oem102, "Key_LessThan");
+                    Check(Keys.Oemcomma, "Key_Comma");
+                    Check(Keys.OemPeriod, "Key_Period");
+                    Check(Keys.OemMinus, "Key_Minus");
+                }
+                if (lang.LayoutName.Contains("Finnish"))
+                {
+                    Check(Keys.Oem5, "Key_§");
+                    Check(Keys.Oemplus, "Key_Plus");
+                    Check(Keys.Oem4, "Key_Acute");
+
+                    Check(Keys.Oem6, "Key_å");
+                    Check(Keys.Oem1, "Key_Umlaut");
+
+                    Check(Keys.Oem3, "Key_ö");
+                    Check(Keys.Oem7, "Key_ä");
+                    Check(Keys.Oem2, "Key_Apostrophe");
+
+                    Check(Keys.Oem102, "Key_LessThan");
+                    Check(Keys.Oemcomma, "Key_Comma");
+                    Check(Keys.OemPeriod, "Key_Period");
+                    Check(Keys.OemMinus, "Key_Minus");
+                }
+                if (lang.LayoutName.Contains("Ukrainian (Enhanced)"))
+                {
+                    Check(Keys.Oem3, "Key_ё");
+                    Check(Keys.OemMinus, "Key_Minus");
+                    Check(Keys.Oemplus, "Key_Equals");
+
+                    Check(Keys.Oem4, "Key_х");
+                    Check(Keys.Oem6, "Key_ї");
+
+                    Check(Keys.Oem1, "Key_ж");
+                    Check(Keys.Oem7, "Key_є");
+                    Check(Keys.Oem5, "Key_BackSlash");
+
+                    Check(Keys.Oem102, "Key_ґ");
+                    Check(Keys.Oemcomma, "Key_б");
+                    Check(Keys.OemPeriod, "Key_ю");
+                    Check(Keys.Oem2, "Key_Period");
+                }
+
+                if (lang.LayoutName.Contains("Czech")) //rechecked 7th
+                {
+                    Check(Keys.Oem3, "Key_SemiColon");
+                    Check(Keys.Oemplus, "Key_Equals");
+                    Check(Keys.Oem2, "Key_Acute");
+
+                    Check(Keys.Oem4, "Key_ú");
+                    Check(Keys.Oem6, "Key_RightParenthesis");
+
+                    Check(Keys.Oem1, "Key_ů");
+                    Check(Keys.Oem7, "Key_§");
+                    Check(Keys.Oem5, "Key_Umlaut");
+
+                    Check(Keys.Oem102, "Key_BackSlash");
+                    Check(Keys.Oemcomma, "Key_Comma");
+                    Check(Keys.OemPeriod, "Key_Period");
+                    Check(Keys.OemMinus, "Key_Minus");
+                }
+
+                if (lang.LayoutName.Contains("Greek")) // 7/4/22
+                {
+                    Check(Keys.Oem3, "Key_Grave");
+                    Check(Keys.OemMinus, "Key_Minus");
+                    Check(Keys.Oemplus, "Key_Equals");
+
+                    Check(Keys.Oem4, "Key_LeftBracket");
+                    Check(Keys.Oem6, "Key_RightBracket");
+
+                    Check(Keys.Oem1, "Key_΄");
+                    Check(Keys.Oem7, "Key_Apostrophe");
+                    Check(Keys.Oem5, "Key_BackSlash");
+
+                    Check(Keys.Oem102, "Key_LessThan");
+                    Check(Keys.Oemcomma, "Key_Comma");
+                    Check(Keys.OemPeriod, "Key_Period");
+                    Check(Keys.Oem2, "Key_Slash");
+                }
+
+
+                if (lang.LayoutName.Contains("Lithuanian"))     // 7/4/22
+                {
+                    Check(Keys.Oem3, "Key_Grave");
+                    Check(Keys.OemMinus, "Key_Underline");
+                    Check(Keys.Oemplus, "Key_Plus");
+
+                    Check(Keys.Oem4, "Key_į");
+                    Check(Keys.Oem6, "Key_“");
+
+                    Check(Keys.Oem1, "Key_ų");
+                    Check(Keys.Oem7, "Key_ė");
+                    Check(Keys.Oem5, "Key_|");
+
+                    Check(Keys.Oem102, "Key_BackSlash");
+                    Check(Keys.Oemcomma, "Key_č");
+                    Check(Keys.OemPeriod, "Key_š");
+                    Check(Keys.Oem2, "Key_ę");
+                }
+
+                if (lang.LayoutName.Contains("Slovak")) // 7/4/22
+                {
+                    Check(Keys.Oem3, "Key_SemiColon");
+                    Check(Keys.Oem2, "Key_Equals");
+                    Check(Keys.Oem8, "Key_Acute");
+
+                    Check(Keys.Oem4, "Key_ú");
+                    Check(Keys.Oem6, "Key_ä");
+
+                    Check(Keys.Oem1, "Key_ô");
+                    Check(Keys.Oem7, "Key_§");
+                    Check(Keys.Oem5, "Key_ň");
+
+                    Check(Keys.Oem102, "Key_Ampersand");
+                    Check(Keys.Oemcomma, "Key_Comma");
+                    Check(Keys.OemPeriod, "Key_Period");
+                    Check(Keys.OemMinus, "Key_Minus");
+                }
+
+                if (lang.LayoutName.Contains("Slovenian"))  // 7/4/22
+                {
+                    Check(Keys.Oem3, "Key_¸");
+                    Check(Keys.Oem2, "Key_Apostrophe");
+                    Check(Keys.Oemplus, "Key_Plus");
+
+                    Check(Keys.Oem4, "Key_š");
+                    Check(Keys.Oem6, "Key_đ");
+
+                    Check(Keys.Oem1, "Key_č");
+                    Check(Keys.Oem7, "Key_ć");
+                    Check(Keys.Oem5, "Key_ž");
+
+                    Check(Keys.Oem102, "Key_LessThan");
+                    Check(Keys.Oemcomma, "Key_Comma");
+                    Check(Keys.OemPeriod, "Key_Period");
+                    Check(Keys.OemMinus, "Key_Minus");
+                }
+
+                if (lang.LayoutName.Contains("Romanian (Standard)"))    // 7/4/22
+                {
+                    Check(Keys.Oem3, "Key_RightBracket");
+                    Check(Keys.OemMinus, "Key_Plus");
+                    Check(Keys.Oemplus, "Key_Apostrophe");
+
+                    Check(Keys.Oem4, "Key_ă");
+                    Check(Keys.Oem6, "Key_î");
+
+                    Check(Keys.Oem1, "Key_ş");
+                    Check(Keys.Oem7, "Key_ţ");
+                    Check(Keys.Oem5, "Key_â");
+
+                    Check(Keys.Oem102, "Key_LessThan");
+                    Check(Keys.Oemcomma, "Key_Comma");
+                    Check(Keys.OemPeriod, "Key_Period");
+                    Check(Keys.Oem2, "Key_Minus");
+                }
+#endif
+                System.Diagnostics.Debug.WriteLine($"Finished {lang.LayoutName}" + Environment.NewLine);
+
             }
-            else
-            {
-                Check(Keys.Oem8, "Key_Grave");
 
-                Check(Keys.OemMinus, "Key_Minus");
-                Check(Keys.Oemplus, "Key_Equals");
-
-                Check(Keys.Oem4, "Key_LeftBracket");
-                Check(Keys.Oem6, "Key_RightBracket");
-
-                Check(Keys.Oem1, "Key_SemiColon");
-                Check(Keys.Oem3, "Key_Apostrophe");
-                Check(Keys.Oem7, "Key_Hash");
-
-                Check(Keys.Oemcomma, "Key_Comma");
-                Check(Keys.OemPeriod, "Key_Period");
-                Check(Keys.Oem2, "Key_Slash");
-
-                Check(Keys.Oem5, "Key_BackSlash");
-            }
+            InputLanguage.CurrentInputLanguage = defl;
         }
 
-        static public void CheckESP()
-        {
-            Check(Keys.Oem5, "Key_Grave");
-
-            Check(Keys.OemOpenBrackets, "Key_Minus");
-            Check(Keys.Oem6, "Key_Equals");
-
-            Check(Keys.Oem1, "Key_LeftBracket");
-            Check(Keys.Oemplus, "Key_RightBracket");
-
-            Check(Keys.Oemtilde, "Key_SemiColon");
-            Check(Keys.Oem7, "Key_Apostrophe");
-            Check(Keys.OemQuestion, "Key_Hash");
-
-            Check(Keys.Oemcomma, "Key_Comma");
-            Check(Keys.OemPeriod, "Key_Period");
-            Check(Keys.OemMinus, "Key_Slash");
-
-            Check(Keys.OemBackslash, "Key_BackSlash");
-
-        }
-
-        static public void CheckPOL()
-        {
-            Check(Keys.Oemtilde, "Key_Grave");
-
-            Check(Keys.Oemplus, "Key_Minus");
-            Check(Keys.OemQuestion, "Key_Equals");
-
-            Check(Keys.OemOpenBrackets, "Key_LeftBracket");
-            Check(Keys.Oem6, "Key_RightBracket");
-
-            Check(Keys.Oem1, "Key_SemiColon");
-            Check(Keys.Oem7, "Key_Apostrophe");
-            Check(Keys.Oem5, "Key_Hash");  
-
-            Check(Keys.Oemcomma, "Key_Comma");
-            Check(Keys.OemPeriod, "Key_Period");
-            Check(Keys.OemMinus, "Key_Slash");
-
-            Check(Keys.OemBackslash, "Key_BackSlash");
-
-        }
-
-        static public void CheckDE()
-        {
-            Check(Keys.Oem5, "Key_Circumflex");
-            Check(Keys.OemOpenBrackets, "Key_ß");
-            Check(Keys.Oem6, "Key_Acute");
-            Check(Keys.Oem1, "Key_ü");
-            Check(Keys.Oemplus, "Key_Plus");
-            Check(Keys.Oemtilde, "Key_ö");
-            Check(Keys.Oem7, "Key_ä");
-            Check(Keys.OemQuestion, "Key_Hash");
-            Check(Keys.Oemcomma, "Key_Comma");
-            Check(Keys.OemPeriod, "Key_Period");
-            Check(Keys.OemMinus, "Key_Minus");
-            Check(Keys.OemBackslash, "Key_LessThan");
-
-        }
-
-        static public void CheckFR()
-        {
-            Check(Keys.Oem7, "Key_SuperscriptTwo");
-            Check(Keys.OemOpenBrackets, "Key_RightParenthesis");
-            Check(Keys.Oemplus, "Key_Equals");
-            Check(Keys.Oem6, "Key_Circumflex");
-            Check(Keys.Oem1, "Key_Dollar");
-            Check(Keys.M, "Key_M");
-            Check(Keys.Oemtilde, "Key_ù");
-            Check(Keys.Oem5, "Key_Asterisk");
-            Check(Keys.OemPeriod, "Key_SemiColon");
-            Check(Keys.OemQuestion, "Key_Colon");
-            Check(Keys.Oem8, "Key_ExclamationPoint");
-            Check(Keys.OemBackslash, "Key_LessThan");
-
-        }
-
-        static public void CheckIT()
-        {
-            Check(Keys.Oem5, "Key_BackSlash");
-
-            Check(Keys.OemOpenBrackets, "Key_Apostrophe");
-            Check(Keys.Oem6, "Key_ì");
-
-            Check(Keys.Oem1, "Key_è");
-            Check(Keys.Oemplus, "Key_Plus");
-
-            Check(Keys.Oemtilde, "Key_ò");
-            Check(Keys.Oem7, "Key_à");
-            Check(Keys.OemQuestion, "Key_ù");
-
-            Check(Keys.Oemcomma, "Key_Comma");
-            Check(Keys.OemMinus, "Key_Minus");
-
-            Check(Keys.OemBackslash, "Key_LessThan");
-
-        }
 
         static private void Check(Keys k, string key)
         {
             string output = FrontierToKeys(key);
             Keys kc = output.ToVkey();
+
             string check = "";
             if (kc != k)
                 check = "********** ERROR";
 
-            System.Diagnostics.Debug.WriteLine("     Key {0} => {1} {2} {3}" + Environment.NewLine, key, output, kc, check);
-        }
-#endif
+            System.Diagnostics.Debug.WriteLine($"  Check Key {key} => Frontier: {output} Keyc: {kc} KcNorm: {KeyObjectExtensions.VKeyToString(kc)} {check}");
+            if (kc != k)
+            {
 
+            }
+        }
+
+        static private void DumpVK()
+        {
+            for (int i = 0x20; i < 0x500; i++)        // char->vkey
+            {
+                IntPtr layout = BaseUtils.Win32.UnsafeNativeMethods.GetKeyboardLayout(0);
+                short vkey = BaseUtils.Win32.UnsafeNativeMethods.VkKeyScanExW((char)i, layout);        // look up char->vkey
+                System.Diagnostics.Debug.WriteLine($"{i:x} {(char)i} = {vkey:x}");
+            }
+        }
+
+#endif
     }
 
 }

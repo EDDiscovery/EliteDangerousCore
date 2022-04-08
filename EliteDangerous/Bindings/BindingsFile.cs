@@ -29,6 +29,7 @@ namespace EliteDangerousCore
     {
         public bool Loaded { get { return devices.Count > 0; } }
         public string FileLoaded { get; private set; }
+        public string ErrorList { get; private set; } = "";
 
         public HashSet<string> AxisNames { get; private set; } = new HashSet<string>();        // from Bindings in frontier file - all names even if not assigned
         public HashSet<string> KeyNames { get; private set; } = new HashSet<string>();         // from Primary or Secondary in frontier file - all names even if not assigned
@@ -66,6 +67,31 @@ namespace EliteDangerousCore
                         s.Append(",");
 
                     s.AppendFormat(keys[i].Device.Name + ":" + keys[i].Key);
+                }
+
+                if (keys.Count > 1)
+                    s.Append(")");
+
+                s.Append("=" + assignedfunc);
+
+                return s.ToNullSafeString();
+            }
+
+            public string ToString(string devicename)
+            {
+                StringBuilder s = new StringBuilder(64);
+                if (keys.Count > 1)
+                    s.Append("(");
+
+                for (int i = 0; i < keys.Count; i++)
+                {
+                    if (i >= 1)
+                        s.Append(",");
+
+                    if (keys[i].Device.Name!=devicename)
+                        s.Append(keys[i].Device.Name + ":" );
+
+                    s.Append(keys[i].Key);
                 }
 
                 if (keys.Count > 1)
@@ -177,6 +203,15 @@ namespace EliteDangerousCore
             if (xdevice != null && xkey != null && xkey.Value.Length > 0)
             {
                 string key = xkey.Value;
+                if ( xdevice.Value == KeyboardDeviceName)
+                {
+                    key = FrontierKeyConversion.FrontierToKeys(key);
+                    if (key.StartsWith("!"))
+                    {
+                        ErrorList = ErrorList.AppendPrePad(key.Substring(1), Environment.NewLine);
+                        return;
+                    }
+                }
 
                 int povindex = key.IndexOf("POV");    // pov evil.. frontier code these as primary (l/r/u/d) and modifier (l/r/u/d) in no particular order
                 string povroot = (povindex > 0) ? key.Truncate(0, povindex + 4) : null;
@@ -198,11 +233,23 @@ namespace EliteDangerousCore
                                 key = povroot + ((key.Contains("Up") || vm.Contains("Up")) ? "UpRight" : "DownRight");
                         }
                         else
-                            dvp.Add(new DeviceKeyPair() { Device = FindOrMakeDevice(km), Key = FrontierToKeys(km, vm) });
+                        {
+                            if ( km == KeyboardDeviceName)
+                            {
+                                vm = FrontierKeyConversion.FrontierToKeys(vm);
+                                if (vm.StartsWith("!"))
+                                {
+                                    ErrorList = ErrorList.AppendPrePad(vm.Substring(1), Environment.NewLine);
+                                    return;
+                                }
+                            }
+
+                            dvp.Add(new DeviceKeyPair() { Device = FindOrMakeDevice(km), Key = vm });
+                        }
                     }
                 }
 
-                dvp.Insert(0, new DeviceKeyPair() { Device = FindOrMakeDevice(xdevice.Value), Key = FrontierToKeys(xdevice.Value, key) });
+                dvp.Insert(0, new DeviceKeyPair() { Device = FindOrMakeDevice(xdevice.Value), Key = key });
 
                 Assignment a = new Assignment() { assignedfunc = d.Name.ToString(), keys = dvp };
 
@@ -228,27 +275,49 @@ namespace EliteDangerousCore
             return (s == "Value") ? "" : ("." + s);
         }
 
-        public bool LoadBindingsFile()
+        // We can indicate if we prefer odyssey
+        public bool LoadBindingsFile(string path, bool odyssey)
         {
             devices = new Dictionary<string, Device>();     // clear
             values = new Dictionary<string, string>();
+            FileLoaded = null;
+            ErrorList = "";
 
-            string path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Frontier Developments\Elite Dangerous\Options\Bindings");
+            FileInfo[] allStarts = Directory.EnumerateFiles(path, odyssey ? "StartPreset.*.start" : "StartPreset.start", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToArray();
 
-            string optsel = System.IO.Path.Combine(path, "StartPreset.start");
+            if ( allStarts.Length == 0 )
+                allStarts = Directory.EnumerateFiles(path, "StartPreset.start", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToArray();
 
             try
             {
-                string[] bindlist = System.IO.File.ReadAllLines(optsel);
-                System.Diagnostics.Trace.WriteLine("Bindings file " + string.Join(";",bindlist));
+                string sfile = allStarts[0].FullName;
+                
+                // new startpreset.X.start files from odyssey 11 onwards.. isolate the number, 0 if not found
+                int i1 = sfile.IndexOf(".");
+                int i2 = sfile.IndexOf(".", i1 + 1);
+                int index = 0;
+                if (i1 >= 0 && i2 >= 0)
+                    index = sfile.Substring(i1 + 1, i2 - i1 - 1).InvariantParseInt(0);
+
+                string[] bindlist = System.IO.File.ReadAllLines(sfile);
+                System.Diagnostics.Trace.WriteLine($"Bindings preset file {sfile} contents {string.Join(";", bindlist)} index {index}");
 
                 foreach (string selline in bindlist)
                 {
-                    // pick the latest file if found
-                    FileInfo[] allFiles = Directory.EnumerateFiles(path, selline + "*.binds", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToArray();
+                    FileInfo[] allFiles = null;
+
+                    // prefer files called with same index                     
+                    if ( index > 0 )
+                        allFiles = Directory.EnumerateFiles(path, selline + "." + index.ToStringInvariant() + ".0.binds", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToArray();
+
+                    // else any files with this prefix
+                    if ( allFiles == null || allFiles.Length == 0)
+                        allFiles = Directory.EnumerateFiles(path, selline + "*.binds", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToArray();
 
                     if (allFiles.Length >= 1)
                     {
+                        System.Diagnostics.Debug.WriteLine($"Bindings Read {allFiles[0].FullName}");
+
                         XElement bindings = XElement.Load(allFiles[0].FullName);
 
                         foreach (XElement x in bindings.Elements())
@@ -296,7 +365,8 @@ namespace EliteDangerousCore
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("Bindings exception " + ex);
+                ErrorList = "Bindings exception " + ex;
+                System.Diagnostics.Trace.WriteLine("Bindings exception " + ex);
             }
 
             return false;
@@ -401,7 +471,7 @@ namespace EliteDangerousCore
         }
 
 
-        private string Mappings(string devicename)
+        private string Mappings(string devicename, string prefix)
         {
             StringBuilder s = new StringBuilder(128);
             if (devices.ContainsKey(devicename))
@@ -410,7 +480,7 @@ namespace EliteDangerousCore
                 {
                     foreach (Assignment a in devices[devicename].Assignments[keyname])
                     {
-                        s.Append("Key " + keyname + "=>" + a.ToString());
+                        s.Append(prefix + a.ToString(devicename));
                         s.AppendLine();
                     }
                 }
@@ -423,7 +493,7 @@ namespace EliteDangerousCore
             string ret = "";
             foreach (string s in devices.Keys)
             {
-                ret += s + Environment.NewLine + Mappings(s) + Environment.NewLine;
+                ret += s + Environment.NewLine + Mappings(s,"  ") + Environment.NewLine;
             }
             return ret;
 
@@ -439,20 +509,7 @@ namespace EliteDangerousCore
             return String.Join(Environment.NewLine, (from x in KeyNames select prefix + x + postfix));
         }
 
-
-        static private string FrontierToKeys(string device, string frontiername)
-        {
-            if (device == KeyboardDeviceName)
-            {
-                string ret = EliteDangerousCore.FrontierKeyConversion.FrontierToKeys(frontiername);
-                //System.Diagnostics.Debug.WriteLine("Frontier Name Convert {0} to {1}", frontiername, ret);
-                return ret;
-            }
-            else
-                return frontiername;
-        }
-
-        // From frontier DeviceMapping.xml table 11/Jan/2018
+           // From frontier DeviceMapping.xml table 11/Jan/2018
         Dictionary<Tuple<int, int>, string> devicemapping = new Dictionary<Tuple<int, int>, string>()
         {
              {  new Tuple<int,int>(0x28E, 0x45E), "GamePad" },
