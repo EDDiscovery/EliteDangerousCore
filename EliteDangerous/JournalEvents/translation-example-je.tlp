@@ -1155,7 +1155,7 @@ SECTION JournalScanInfo
 .Hasring: " Has ring." @
 .Has: " Has " @
 .eccentricity: " Has an high eccentricity of " @
-.unknownAtmosphere: "unknown atmosphere" @
+.unknownAtmosphere: "unknown" @
 .BFSD: " Basic" @
 .SFSD: " Standard" @
 .PFSD: " Premium" @

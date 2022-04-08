@@ -1157,7 +1157,7 @@ SECTION JournalScanInfo
 .Hasring: " Has ring." => " hat Ringe."
 .Has: " Has " => " hat "
 .eccentricity: " Has an high eccentricity of " => " Hat eine hohe Exzentrizität von "
-.unknownAtmosphere: "unknown atmosphere" @
+.unknownAtmosphere: "unknown" => "unbekannt"
 .BFSD: " Basic" => "Einfach"
 .SFSD: " Standard" => "Standard"
 .PFSD: " Premium" => "Premium"
