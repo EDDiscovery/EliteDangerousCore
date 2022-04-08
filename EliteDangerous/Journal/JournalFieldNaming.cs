@@ -193,19 +193,41 @@ namespace EliteDangerousCore
             }
         }
 
-        static public string CheckLocalisation(string loc, string alt)      // instances of ! # $int in localisation strings, screen out
+        static public string CheckLocalisation(string loc, string alt)      
         {
-            bool invalid = loc == null || loc.Length < 2 || loc.StartsWith("$int", StringComparison.InvariantCultureIgnoreCase) || loc.StartsWith("$hpt", StringComparison.InvariantCultureIgnoreCase);
-            return invalid ? alt.SplitCapsWordFull() : loc;
-        }
+            if ( alt != null  )  // no point if alt is null
+            { 
+                bool invalid = loc == null || loc.Length < 2 || loc.StartsWith("$int", StringComparison.InvariantCultureIgnoreCase) || loc.StartsWith("$hpt", StringComparison.InvariantCultureIgnoreCase) ||
+                                  (loc.StartsWith("$") && loc.EndsWith(";"));
 
-        static public string CheckLocalisationDollar(string loc, string alt)      // any $/;
-        {
-            bool invalid = loc == null || loc.Length < 2 || loc.Contains("$") || loc.Contains(";");
-            return invalid ? alt : loc;
-        }
+                if (invalid)
+                {
+                    if (alt.Length > 0)
+                    {
+                        if (alt.StartsWith("$") && alt.EndsWith(";")) // identifier
+                        {
+                            alt = alt.Substring(1, alt.Length - 2).SplitCapsWordFull();
+                           // System.IO.File.AppendAllText(@"c:\code\loc.txt", $"Substitute identifier loc '{loc}' for '{alt}'\r\n");
+                        }
+                        else if (alt.StartsWith("HPT_", StringComparison.InvariantCultureIgnoreCase) || alt.StartsWith("INT_", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            alt = alt.Substring(4).SplitCapsWordFull();
+                          //  System.IO.File.AppendAllText(@"c:\code\loc.txt", $"Substitute int/hpt loc '{loc}' for '{alt}'\r\n");
+                        }
+                        else
+                        {
+                           // System.IO.File.AppendAllText(@"c:\code\loc.txt", $"Substitute loc '{loc}' for '{alt}'\r\n");
+                        }
+                    }
 
-        static public string CheckLocalisationTranslation(string loc, string alt)      // instances of ! # $int in localisation strings, screen out
+                    return alt;
+                }
+            }
+            
+            return loc;
+        }
+        
+        static public string CheckLocalisationTranslation(string loc, string alt)      
         {
             if (BaseUtils.Translator.Instance.Translating)          // if we are translating, use the alt name as its the most valid..
                 return alt;

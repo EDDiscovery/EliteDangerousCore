@@ -53,7 +53,7 @@ namespace EliteDangerousCore.JournalEvents
             From = evt["From"].Str();
             FromLocalised = evt["From_Localised"].Str().Alt(From);
             Message = evt["Message"].Str();
-            MessageLocalised = JournalFieldNaming.CheckLocalisation(evt["Message_Localised"].Str(), Message);
+            MessageLocalised = evt["Message_Localised"].Str().Alt(Message);
             Channel = evt["Channel"].Str();
 
             string[] specials = new string[] { "$COMMS_entered:", "$CHAT_intro;", "$HumanoidEmote" };

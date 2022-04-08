@@ -278,9 +278,10 @@ namespace EliteDangerousCore
         {
             JournalEntry[] jlist = new JournalEntry[tabledata.Count];
 
-            if (tabledata.Count > 10000)        // a good amount, worth MTing
+            if (tabledata.Count > 10000 )        // a good amount, worth MTing
             {
-                int threads = 4;        // on Rob's system 4 seems optimal
+                int threads = System.Environment.ProcessorCount/2;        // on Rob's system 4 from 8 seems optimal, any more gives little more return
+
                 CountdownEvent cd = new CountdownEvent(threads);
                 for (int i = 0; i < threads; i++)
                 {
