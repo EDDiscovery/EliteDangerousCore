@@ -207,8 +207,11 @@ namespace EliteDangerousCore
 
         }
 
-        static Tuple<string, string>[] frontiertovkeyname = new Tuple<string, string>[]     // Frontier names for keys
+        // in frontier devices help.txt file inside controlschemes
+
+        static Tuple<string, string>[] frontiertovkeyname = new Tuple<string, string>[]     
         {
+            new Tuple<string,string>(Keys.Escape.VKeyToString()      ,"Escape"),
             new Tuple<string,string>(Keys.Up.VKeyToString()          ,"UpArrow"),
             new Tuple<string,string>(Keys.Down.VKeyToString()        ,"DownArrow"),
             new Tuple<string,string>(Keys.Left.VKeyToString()        ,"LeftArrow"),
@@ -237,6 +240,10 @@ namespace EliteDangerousCore
             new Tuple<string,string>(Keys.RControlKey.VKeyToString(),"RightControl"),
             new Tuple<string,string>(Keys.RMenu.VKeyToString(),"RightAlt"),
             new Tuple<string,string>(Keys.Back.VKeyToString(),"Backspace"),
+            new Tuple<string,string>(Keys.Scroll.VKeyToString(),"ScrollLock"),
+            new Tuple<string,string>(Keys.Pause.VKeyToString(),"Pause"),
+            new Tuple<string,string>(Keys.LWin.VKeyToString(),"LeftWin"),
+            new Tuple<string,string>(Keys.RWin.VKeyToString(),"RightWin"),
          };
 
         static Tuple<string, uint> Create(string name, uint sc)
@@ -269,7 +276,9 @@ namespace EliteDangerousCore
             return new Tuple<string, char>(name, ch);
         }
 
-        static Tuple<string, char>[] frontiernameforcharacters = new Tuple<string, char>[]      // logical name frontier uses for characters.. list may not be complete
+        // logical name frontier uses for characters.. all found by trial and error
+
+        static Tuple<string, char>[] frontiernameforcharacters = new Tuple<string, char>[]      
         {
             Create("SuperscriptTwo",'²'),
             Create("RightParenthesis",')'),
