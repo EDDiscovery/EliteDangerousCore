@@ -604,8 +604,11 @@ namespace EliteDangerousCore.Inara
 
                 case JournalTypeEnum.BuyMicroResources:
                     {
-                        if (mcmr.TryGetValue(((JournalBuyMicroResources)he.journalEntry).Resource.Name, out MaterialCommodityMicroResource item))
-                            eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC,0,"ShipLocker"));
+                        foreach (var mritem in ((JournalBuyMicroResources)he.journalEntry).Items.EmptyIfNull())
+                        {
+                            if (mcmr.TryGetValue(mritem.Name, out MaterialCommodityMicroResource item))
+                                eventstosend.Add(InaraClass.setCommanderInventoryItem(item, he.EventTimeUTC, 0, "ShipLocker"));
+                        }
                         break;
                     }
 

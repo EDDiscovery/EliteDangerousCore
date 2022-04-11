@@ -225,40 +225,49 @@ namespace EliteDangerousCore.JournalEvents
     public class JournalBuyMicroResources : JournalEntry, IMicroResourceJournalEntry, ILedgerJournalEntry
     {
         public JournalBuyMicroResources(JObject evt) : base(evt, JournalTypeEnum.BuyMicroResources)
+
         {
             // collect Name, Name_Localised, Category, Count
-            evt.ToObjectProtected(Resource.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
-                                        Resource);        // read fields named in this structure matching JSON names
-            Resource.Normalise(null);
-            Price = evt["Price"].Int();
+            Items = evt["MicroResources"]?.ToObjectQ<MicroResource[]>()?.OrderBy(x => x.Name)?.ToArray();
+            MicroResource.Normalise(Items, null);
+            Price = evt["Price"].Long();
             MarketID = evt["MarketID"].Long();
         }
 
-        public MicroResource Resource { get; set; } = new MicroResource();
-
-        public int Price { get; set; }
+        public MicroResource[] Items { get; set; } = null;
+        public long Price { get; set; }
         public long MarketID { get; set; }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            int? itemcount = Resource.Count > 1 ? Resource.Count : default(int?);
-            info = BaseUtils.FieldBuilder.Build("", Resource.FriendlyName, "", itemcount, "< buy price ; cr;N0".T(EDCTx.JournalEntry_buyprice), Price);
+            info = "";
             detailed = "";
+
+            if (Items != null && Items.Length > 0)
+            {
+                info += BaseUtils.FieldBuilder.Build("Items".T(EDCTx.JournalMicroResources_Items) + ":; ", Items.Length, "< buy price ; cr;N0".T(EDCTx.JournalEntry_buyprice), Price);
+                detailed += "Items".T(EDCTx.JournalMicroResources_Items) + ":" + MicroResource.List(Items);
+            }
         }
 
         public void Ledger(Ledger mcl)
         {
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Resource.FriendlyName + " " + Resource.Count, -Price);
+            if (Items != null)
+            {
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Items.Length + " " + Price + "cr", -Price);
+            }
         }
 
-        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry previous)        
+    public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry previous)
         {
-            if (previous?.EventTypeID != JournalTypeEnum.ShipLocker)      // if we have a shiplocker before, its been taken off, so don't change.
+            if (previous?.EventTypeID != JournalTypeEnum.ShipLocker)
             {
-                MaterialCommodityMicroResourceType.EnsurePresent(Resource.Category, Resource.Name, Resource.Name_Localised);
-                mc.Change(EventTimeUTC, Resource.Category, Resource.Name, Resource.Count, Price, MicroResource.ShipLocker);
+                foreach (var m in Items.EmptyIfNull())
+                {
+                    MaterialCommodityMicroResourceType.EnsurePresent(m.Category, m.Name, m.Name_Localised);
+                    mc.Change(EventTimeUTC, m.Category, m.Name, m.Count, 0, MicroResource.ShipLocker);
+                }
             }
-
         }
     }
 
