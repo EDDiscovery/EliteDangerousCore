@@ -91,9 +91,10 @@ namespace EliteDangerousCore
             }
         }
 
-        // expects lower case
+        // any case accepted
         static public bool IsJumponiumType(string fdname)
         {
+            fdname = fdname.ToLowerInvariant();
             return (fdname.Contains("arsenic") || fdname.Contains("cadmium") || fdname.Contains("carbon")
                 || fdname.Contains("germanium") || fdname.Contains("niobium") || fdname.Contains("polonium")
                 || fdname.Contains("vanadium") || fdname.Contains("yttrium"));

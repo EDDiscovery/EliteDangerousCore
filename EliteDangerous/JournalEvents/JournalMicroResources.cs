@@ -53,6 +53,12 @@ namespace EliteDangerousCore.JournalEvents
                 if (cat != null)
                     Category = cat;
             }
+            else
+            {
+                Name = Name_Localised = FriendlyName = "Missing Microresource Name - report";
+                Category = "ERROR";
+                System.Diagnostics.Trace.WriteLine("Microresource journal without Name detected");
+            }
         }
 
         static public void Normalise(MicroResource[] a, string cat)
@@ -64,10 +70,12 @@ namespace EliteDangerousCore.JournalEvents
         static public string List(MicroResource[] mat)
         {
             StringBuilder sb = new StringBuilder(64);
+            int count = 0;
 
-            foreach (MicroResource m in mat)
+            foreach (MicroResource m in mat.EmptyIfNull())
             {
-                sb.Append(Environment.NewLine);
+                if (count++ > 0 )
+                    sb.Append(Environment.NewLine);
                 sb.Append(BaseUtils.FieldBuilder.Build(" ", m.FriendlyName, "; items".T(EDCTx.JournalEntry_items), m.Count));
             }
             return sb.ToString();
@@ -170,13 +178,13 @@ namespace EliteDangerousCore.JournalEvents
                 if (Items.Length > 10)
                     info = BaseUtils.FieldBuilder.Build("Items".T(EDCTx.JournalMicroResources_Items) + ": ", Items.Length);
 
-                detailed = "Items".T(EDCTx.JournalMicroResources_Items) + ": " + MicroResource.List(Items) + Environment.NewLine;
+                detailed = "Items".T(EDCTx.JournalMicroResources_Items) + ": " + Environment.NewLine + MicroResource.List(Items) + Environment.NewLine;
             }
 
             if (Components != null && Components.Length > 0)
             {
                 info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("Components".T(EDCTx.JournalMicroResources_Components) + ": ", Components.Length), "; ");
-                detailed += "Components".T(EDCTx.JournalMicroResources_Components) + ": " + MicroResource.List(Components) + Environment.NewLine;
+                detailed += "Components".T(EDCTx.JournalMicroResources_Components) + ": " + Environment.NewLine + MicroResource.List(Components) + Environment.NewLine;
             }
 
             if (Consumables != null && Consumables.Length > 0)
@@ -186,13 +194,13 @@ namespace EliteDangerousCore.JournalEvents
                 else
                     info = info.AppendPrePad(string.Join(", ", Consumables.Select(x => x.FriendlyName).ToArray()), "; ");
 
-                detailed += "Consumables".T(EDCTx.JournalMicroResources_Consumables) + ": " + MicroResource.List(Consumables) + Environment.NewLine;
+                detailed += "Consumables".T(EDCTx.JournalMicroResources_Consumables) + ": " + Environment.NewLine + MicroResource.List(Consumables) + Environment.NewLine;
             }
 
             if (Data != null && Data.Length > 0)
             {
                 info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("Data".T(EDCTx.JournalMicroResources_Data) + ": ", Data.Length), "; ");
-                detailed += "Data".T(EDCTx.JournalMicroResources_Data) + ": " + MicroResource.List(Data);
+                detailed += "Data".T(EDCTx.JournalMicroResources_Data) + ": " + Environment.NewLine + MicroResource.List(Data);
             }
         }
     }
@@ -226,37 +234,67 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalBuyMicroResources(JObject evt) : base(evt, JournalTypeEnum.BuyMicroResources)
         {
+            if ( evt.Contains("MicroResources") )       // new style, present in some records
+            {
+                Items = evt["MicroResources"]?.ToObjectQ<MicroResource[]>()?.OrderBy(x => x.Name)?.ToArray();       // items may be null
+            }
+            else
+            {                                       // single entry style
+                Items = new MicroResource[1] { new MicroResource() };
+                evt.ToObjectProtected(Items[0].GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                                            Items[0]);        // read fields named in this structure matching JSON names
+            }
+
             // collect Name, Name_Localised, Category, Count
-            evt.ToObjectProtected(Resource.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
-                                        Resource);        // read fields named in this structure matching JSON names
-            Resource.Normalise(null);
+            MicroResource.Normalise(Items, null);
             Price = evt["Price"].Int();
             MarketID = evt["MarketID"].Long();
+            if (Items != null)
+                TotalCount = Items.Select(x => x.Count).Sum();          // do it this way, so its consistent across both forms
         }
 
-        public MicroResource Resource { get; set; } = new MicroResource();
-
+        public MicroResource[] Items { get; set; } = null;      // may be null
         public int Price { get; set; }
+        public int TotalCount { get; set; }
         public long MarketID { get; set; }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            int? itemcount = Resource.Count > 1 ? Resource.Count : default(int?);
-            info = BaseUtils.FieldBuilder.Build("", Resource.FriendlyName, "", itemcount, "< buy price ; cr;N0".T(EDCTx.JournalEntry_buyprice), Price);
+            info = "";
             detailed = "";
+
+            if (Items != null && Items.Length > 0)
+            {
+                if (Items.Length == 1)
+                {
+                    info = BaseUtils.FieldBuilder.Build("", Items[0].FriendlyName, "", Items[0].Count, "< buy price ; cr;N0".T(EDCTx.JournalEntry_buyprice), Price);
+                }
+                else
+                {
+                    info += BaseUtils.FieldBuilder.Build("Items".T(EDCTx.JournalMicroResources_Items) + ":; ", TotalCount, "< buy price ; cr;N0".T(EDCTx.JournalEntry_buyprice), Price);
+                    detailed += MicroResource.List(Items);
+                }
+            }
         }
 
         public void Ledger(Ledger mcl)
         {
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Resource.FriendlyName + " " + Resource.Count, -Price);
+            if ( Items != null )
+            {
+                FillInformation(null, null, out string info, out string detailed);
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, info + (detailed.HasChars() ? Environment.NewLine + detailed : ""), -Price);
+            }
         }
 
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry previous)        
         {
-            if (previous?.EventTypeID != JournalTypeEnum.ShipLocker)      // if we have a shiplocker before, its been taken off, so don't change.
+            if (previous?.EventTypeID != JournalTypeEnum.ShipLocker && Items!=null)      // if we have a shiplocker before, its been taken off, so don't change.
             {
-                MaterialCommodityMicroResourceType.EnsurePresent(Resource.Category, Resource.Name, Resource.Name_Localised);
-                mc.Change(EventTimeUTC, Resource.Category, Resource.Name, Resource.Count, Price, MicroResource.ShipLocker);
+                foreach (var m in Items.EmptyIfNull())
+                {
+                    MaterialCommodityMicroResourceType.EnsurePresent(m.Category, m.Name, m.Name_Localised);
+                    mc.Change(EventTimeUTC, m.Category, m.Name, m.Count, 0, MicroResource.ShipLocker);
+                }
             }
 
         }
@@ -272,11 +310,14 @@ namespace EliteDangerousCore.JournalEvents
             MicroResource.Normalise(Items,null);
             Price = evt["Price"].Long();
             MarketID = evt["MarketID"].Long();
+            if (Items != null)
+                TotalCount = Items.Select(x => x.Count).Sum();          // do it this way, so its consistent across both forms
         }
 
         public MicroResource[] Items { get; set; } = null;
         public long Price { get; set; }
         public long MarketID { get; set; }
+        public int TotalCount { get; set; }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
@@ -285,8 +326,15 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Items != null && Items.Length > 0)
             {
-                info += BaseUtils.FieldBuilder.Build("Items".T(EDCTx.JournalMicroResources_Items) + ":; ", Items.Length, "< sell price ; cr;N0".T(EDCTx.JournalEntry_sellprice), Price);
-                detailed += "Items".T(EDCTx.JournalMicroResources_Items) + ":" + MicroResource.List(Items);
+                if (Items.Length == 1)
+                {
+                    info = BaseUtils.FieldBuilder.Build("", Items[0].FriendlyName, "", Items[0].Count, "< sell price ; cr;N0".T(EDCTx.JournalEntry_sellprice), Price);
+                }
+                else
+                {
+                    info += BaseUtils.FieldBuilder.Build("Items".T(EDCTx.JournalMicroResources_Items) + ":; ", TotalCount, "< sell price ; cr;N0".T(EDCTx.JournalEntry_sellprice), Price);
+                    detailed += MicroResource.List(Items);
+                }
             }
         }
 
@@ -294,7 +342,8 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (Items != null)
             {
-                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Items.Length + " " + Price + "cr", Price);
+                FillInformation(null, null, out string info, out string detailed);
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, info + (detailed.HasChars() ? Environment.NewLine + detailed : ""), -Price);
             }
         }
 

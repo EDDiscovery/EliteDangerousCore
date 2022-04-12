@@ -1045,7 +1045,7 @@ namespace EliteDangerousCore.JournalEvents
 
             foreach (var m in Materials.EmptyIfNull())
             {
-                string n = m.Key.ToLower();
+                string n = m.Key.ToLowerInvariant();
                 if (MaterialCommodityMicroResourceType.IsJumponiumType(n))
                 {
                     count++;
