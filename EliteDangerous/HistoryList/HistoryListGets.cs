@@ -138,7 +138,7 @@ namespace EliteDangerousCore
             {
                 if (where(list[indexno]))
                 {
-                    System.Diagnostics.Debug.WriteLine(list[indexno].EntryType + " " + list[indexno].StationFaction);
+                    //System.Diagnostics.Debug.WriteLine(list[indexno].EntryType + " " + list[indexno].StationFaction);
                     helist.Add(list[indexno]);
                 }
                 indexno--;
