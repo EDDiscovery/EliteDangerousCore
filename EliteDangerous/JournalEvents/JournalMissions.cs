@@ -247,7 +247,7 @@ namespace EliteDangerousCore.JournalEvents
             "Chain_HelpFinishTheOrder",
         };
 
-        private static DateTime ED32Date = new DateTime(2018, 8, 28, 10, 0, 0);
+        private static DateTime ED32Date = new DateTime(2018, 8, 28, 10, 0, 0, DateTimeKind.Utc);
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {

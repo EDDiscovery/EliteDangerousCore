@@ -604,6 +604,7 @@ namespace EliteDangerousCore
         JournalCarrier_ReserveBalance, 
         JournalCarrier_AvailableBalance,
         JournalCarrier_ReservePercent,
+        JournalCarrier_TaxRate, // Tax Rate: ;;N1
         JournalCarrier_TaxRatePioneersupplies, // Tax Rate Pioneersupplies: ;;N1
         JournalCarrier_TaxRateShipyard, // Tax Rate Shipyard: ;;N1
         JournalCarrier_TaxRateRearm, // Tax Rate Rearm: ;;N1

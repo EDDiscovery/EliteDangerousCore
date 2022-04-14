@@ -1100,6 +1100,7 @@ SECTION JournalCarrier
 .ReserveBalance: "Reserve Balance: ; cr;N0" => "Reservekontostand: ; Cr;N0"
 .AvailableBalance: "Available Balance: ; cr;N0" => "Verfügbarer Kontostand: ; Cr;N0"
 .ReservePercent: "Reserve Percent: ;;N1" => "Reserve Prozent: ;;N1"
+.TaxRate: "Tax Rate: ;;N1" => "Steuersatz: ;;N1"
 .TaxRatePioneersupplies: "Tax Rate Pioneersupplies: ;;N1" => "Steuersatz Pioniervorräte: ;;N1"
 .TaxRateShipyard: "Tax Rate Shipyard: ;;N1" => "Steuersatz Werft: ;;N1"
 .TaxRateRearm: "Tax Rate Rearm: ;;N1" => "Steuersatz Nachladen: ;;N1"
