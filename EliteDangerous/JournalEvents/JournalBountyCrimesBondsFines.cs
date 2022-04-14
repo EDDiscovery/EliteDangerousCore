@@ -177,7 +177,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, AwardingFaction_Localised.Alt(AwardingFaction) + " " + Reward);
         }
 
-        public void UpdateStats(Stats stats, string stationfaction)
+        public void UpdateStats(Stats stats, string unusedstationfaction)
         {
             stats.CapShipAward(AwardingFaction_Localised, VictimFaction_Localised, Reward);
         }
@@ -240,7 +240,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, string.Format("{0} on {1}".T(EDCTx.JournalEntry_0), CrimeType, v));
         }
 
-        public void UpdateStats(Stats stats, string stationfaction)
+        public void UpdateStats(Stats stats, string unusedstationfaction)
         {
             stats.CommitCrime(Faction);
         }
@@ -301,7 +301,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, AwardingFaction_Localised.Alt(AwardingFaction) + " " + Reward.ToString("N0"));
         }
 
-        public void UpdateStats(Stats stats, string stationfaction)
+        public void UpdateStats(Stats stats, string unusedstationfaction)
         {
             stats.KillBond(AwardingFaction_Localised, VictimFaction_Localised, Reward);
         }

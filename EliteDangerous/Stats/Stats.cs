@@ -41,6 +41,7 @@ namespace EliteDangerousCore
                 KillBondAwardAsAwaringFaction = other.KillBondAwardAsAwaringFaction;
                 KillBondAwardAsAwaringFactionValue = other.KillBondAwardAsAwaringFactionValue;
                 KillBondAwardAsVictimFaction = other.KillBondAwardAsVictimFaction;
+                CartographicDataSold = other.CartographicDataSold;
             }
 
             public string Faction { get; set; }
@@ -61,6 +62,7 @@ namespace EliteDangerousCore
             public int KillBondAwardAsAwaringFaction { get; set; }
             public long KillBondAwardAsAwaringFactionValue { get; set; }
             public int KillBondAwardAsVictimFaction { get; set; }
+            public long CartographicDataSold { get; set; }
         }
 
         private GenerationalDictionary<string, FactionInfo> history;
@@ -209,6 +211,15 @@ namespace EliteDangerousCore
                     anewfi.KillBondAwardAsAwaringFactionValue += reward;
                     vnewfi.KillBondAwardAsVictimFaction++;
                 }
+            }
+        }
+
+        public void CartographicSold(string faction, long value)
+        {
+            var vnewfi = Clone(faction);
+            if (vnewfi != null)
+            {
+                vnewfi.CartographicDataSold += value;
             }
         }
 

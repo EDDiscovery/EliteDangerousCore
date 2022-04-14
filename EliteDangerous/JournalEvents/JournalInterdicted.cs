@@ -39,7 +39,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Faction { get; set; }
         public string Power { get; set; }
 
-        public void UpdateStats(Stats stats, string stationfaction)
+        public void UpdateStats(Stats stats, string unusedstationfaction)
         {
             stats.Interdicted(Faction);
         }
@@ -77,7 +77,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Faction { get; set; }
         public string Power { get; set; }
 
-        public void UpdateStats(Stats stats, string stationfaction)
+        public void UpdateStats(Stats stats, string unusedstationfaction)
         {
             stats.Interdiction(Faction);
         }

@@ -322,7 +322,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateStats(Stats stats, string stationfaction)
         {
-            stats.UpdateCommodity("tritium", -Amount, 0, stationfaction);
+            if (stationfaction.HasChars())
+                stats.UpdateCommodity("tritium", -Amount, 0, stationfaction);
         }
     }
 

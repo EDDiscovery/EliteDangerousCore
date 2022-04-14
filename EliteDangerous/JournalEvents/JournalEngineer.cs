@@ -97,7 +97,7 @@ namespace EliteDangerousCore.JournalEvents
                 mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Commodity, -Quantity, 0);
         }
 
-        public void UpdateStats(Stats stats, string stationfaction)
+        public void UpdateStats(Stats stats, string unusedstationfaction)
         {
             if (Type.Equals("Materials"))
                 stats.UpdateEngineerMaterial(Engineer, Material, Quantity);

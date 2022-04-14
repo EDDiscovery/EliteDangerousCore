@@ -72,7 +72,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateStats(Stats stats, string stationfaction)
         {
-            stats.UpdateCommodity("drones", Count, 0, stationfaction);
+            if (stationfaction.HasChars())
+                stats.UpdateCommodity("drones", Count, 0, stationfaction);
         }
 
         public void Ledger(Ledger mcl)
@@ -113,7 +114,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateStats(Stats stats, string stationfaction)
         {
-            stats.UpdateCommodity("drones", -Count, 0, stationfaction);
+            if (stationfaction.HasChars())
+                stats.UpdateCommodity("drones", -Count, 0, stationfaction);
         }
 
         public void Ledger(Ledger mcl)

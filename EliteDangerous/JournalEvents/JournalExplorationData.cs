@@ -44,7 +44,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.SellExplorationData)]
-    public class JournalSellExplorationData : JournalEntry, ILedgerJournalEntry
+    public class JournalSellExplorationData : JournalEntry, ILedgerJournalEntry, IStatsJournalEntry
     {
         private static DateTime TotalEarningsCorrectDate = new DateTime(2018, 5, 1, 0, 0, 0, DateTimeKind.Utc);
 
@@ -72,6 +72,12 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, count + " systems", TotalEarnings);
         }
 
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            if (stationfaction.HasChars())
+                stats.CartographicSold(stationfaction, TotalEarnings);
+        }
+
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), BaseValue, "Bonus: ; cr;N0".T(EDCTx.JournalEntry_Bonus), Bonus,
@@ -90,11 +96,12 @@ namespace EliteDangerousCore.JournalEvents
                     detailed += s + " ";
             }
         }
+
     }
 
 
     [JournalEntryType(JournalTypeEnum.MultiSellExplorationData)]
-    public class JournalMultiSellExplorationData : JournalEntry, ILedgerJournalEntry
+    public class JournalMultiSellExplorationData : JournalEntry, ILedgerJournalEntry, IStatsJournalEntry
     {
         public JournalMultiSellExplorationData(JObject evt) : base(evt, JournalTypeEnum.MultiSellExplorationData)   // 3.3
         {
@@ -119,6 +126,12 @@ namespace EliteDangerousCore.JournalEvents
         {
             int count = (Systems?.Length ?? 0);
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, count + " systems", TotalEarnings);
+        }
+
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            if (stationfaction.HasChars())
+                stats.CartographicSold(stationfaction, TotalEarnings);
         }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
