@@ -57,6 +57,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierStats)]
+    
     public class JournalCarrierStats : JournalEntry
     {
         public long CarrierID { get; set; }
@@ -82,18 +83,21 @@ namespace EliteDangerousCore.JournalEvents
         public long Finance_ReserveBalance { get; set; }
         public long Finance_AvailableBalance { get; set; }
         public double Finance_ReservePercent { get; set; }
-        public double Finance_TaxRatePioneersupplies { get; set; }
-        public double Finance_TaxRateShipyard { get; set; }
-        public double Finance_TaxRateRearm { get; set; }
-        public double Finance_TaxRateOutfitting { get; set; }
-        public double Finance_TaxRateRefuel { get; set; }
-        public double Finance_TaxRateRepair { get; set; }
+        public double? Finance_TaxRatePioneersupplies { get; set; }
+        public double? Finance_TaxRateShipyard { get; set; }
+        public double? Finance_TaxRateRearm { get; set; }
+        public double? Finance_TaxRateOutfitting { get; set; }
+        public double? Finance_TaxRateRefuel { get; set; }
+        public double? Finance_TaxRateRepair { get; set; }
+        public double? Finance_TaxRate { get; set; }
 
         public CrewClass[] Crew { get; set; }
         public PackClass[] ShipPacks { get; set; }
         public PackClass[] ModulePacks { get; set; }
 
         public JournalCarrierStats(JObject evt) : base(evt, JournalTypeEnum.CarrierStats)
+
+        
         {
             CarrierID = evt["CarrierID"].Long();
             Callsign = evt["Callsign"].Str();
@@ -124,12 +128,13 @@ namespace EliteDangerousCore.JournalEvents
                 Finance_ReserveBalance = finance["ReserveBalance"].Long();
                 Finance_AvailableBalance = finance["AvailableBalance"].Long();
                 Finance_ReservePercent = finance["ReservePercent"].Double();
-                Finance_TaxRatePioneersupplies = finance["TaxRate_pioneersupplies"].Double();
-                Finance_TaxRateShipyard = finance["TaxRate_shipyard"].Double();
-                Finance_TaxRateRearm = finance["TaxRate_rearm"].Double();
-                Finance_TaxRateOutfitting = finance["TaxRate_outfitting"].Double();
-                Finance_TaxRateRefuel = finance["TaxRate_refuel"].Double();
-                Finance_TaxRateRepair = finance["TaxRate_repair"].Double();
+                Finance_TaxRate = finance["TaxRate"].DoubleNull();
+                Finance_TaxRatePioneersupplies = finance["TaxRate_pioneersupplies"].DoubleNull();
+                Finance_TaxRateShipyard = finance["TaxRate_shipyard"].DoubleNull();
+                Finance_TaxRateRearm = finance["TaxRate_rearm"].DoubleNull();
+                Finance_TaxRateOutfitting = finance["TaxRate_outfitting"].DoubleNull();
+                Finance_TaxRateRefuel = finance["TaxRate_refuel"].DoubleNull();
+                Finance_TaxRateRepair = finance["TaxRate_repair"].DoubleNull();
             }
 
             Crew = evt["Crew"]?.ToObjectQ<CrewClass[]>();
@@ -153,29 +158,32 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Name: ".T(EDCTx.JournalCarrier_Name), Name,
-                                                "Call Sign: ".T(EDCTx.JournalCarrier_Callsign), Callsign,
-                                                "Fuel Level: ;;N0".T(EDCTx.JournalCarrier_FuelLevel), FuelLevel,
-                                                "Jump Range: ;ly;0.0".T(EDCTx.JournalCarrier_JumpRange), JumpRangeCurr,
-                                                "Carrier Balance: ; cr;N0".T(EDCTx.JournalCarrier_Balance), Finance_CarrierBalance,
-                                                "Reserve Balance: ; cr;N0".T(EDCTx.JournalCarrier_ReserveBalance), Finance_ReserveBalance,
-                                                "Available Balance: ; cr;N0".T(EDCTx.JournalCarrier_AvailableBalance), Finance_AvailableBalance,
-                                                "Reserve Percent: ;;N1".T(EDCTx.JournalCarrier_ReservePercent), Finance_ReservePercent,
-                                                "Tax Rate Pioneersupplies: ;;N1".T(EDCTx.JournalCarrier_TaxRatePioneersupplies), Finance_TaxRatePioneersupplies,
-                                                "Tax Rate Shipyard: ;;N1".T(EDCTx.JournalCarrier_TaxRateShipyard), Finance_TaxRateShipyard,
-                                                "Tax Rate Rearm: ;;N1".T(EDCTx.JournalCarrier_TaxRateRearm), Finance_TaxRateRearm,
-                                                "Tax Rate Outfitting: ;;N1".T(EDCTx.JournalCarrier_TaxRateOutfitting), Finance_TaxRateOutfitting,
-                                                "Tax Rate Refuel: ;;N1".T(EDCTx.JournalCarrier_TaxRateRefuel), Finance_TaxRateRefuel,
-                                                "Tax Rate Repair: ;;N1".T(EDCTx.JournalCarrier_TaxRateRepair), Finance_TaxRateRepair
-                                                );
+            {
+                info = BaseUtils.FieldBuilder.Build("Name: ".T(EDCTx.JournalCarrier_Name), Name,
+                                                    "Call Sign: ".T(EDCTx.JournalCarrier_Callsign), Callsign,
+                                                    "Fuel Level: ;;N0".T(EDCTx.JournalCarrier_FuelLevel), FuelLevel,
+                                                    "Jump Range: ;ly;0.0".T(EDCTx.JournalCarrier_JumpRange), JumpRangeCurr,
+                                                    "Carrier Balance: ; cr;N0".T(EDCTx.JournalCarrier_Balance), Finance_CarrierBalance,
+                                                    "Reserve Balance: ; cr;N0".T(EDCTx.JournalCarrier_ReserveBalance), Finance_ReserveBalance,
+                                                    "Available Balance: ; cr;N0".T(EDCTx.JournalCarrier_AvailableBalance), Finance_AvailableBalance,
+                                                    "Reserve Percent: ;;N1".T(EDCTx.JournalCarrier_ReservePercent), Finance_ReservePercent,
+                                                    "Tax Rate: ;;N1".T(EDCTx.JournalCarrier_TaxRate), Finance_TaxRate,
+                                                    "Tax Rate Pioneersupplies: ;;N1".T(EDCTx.JournalCarrier_TaxRatePioneersupplies), Finance_TaxRatePioneersupplies,
+                                                    "Tax Rate Shipyard: ;;N1".T(EDCTx.JournalCarrier_TaxRateShipyard), Finance_TaxRateShipyard,
+                                                    "Tax Rate Rearm: ;;N1".T(EDCTx.JournalCarrier_TaxRateRearm), Finance_TaxRateRearm,
+                                                    "Tax Rate Outfitting: ;;N1".T(EDCTx.JournalCarrier_TaxRateOutfitting), Finance_TaxRateOutfitting,
+                                                    "Tax Rate Refuel: ;;N1".T(EDCTx.JournalCarrier_TaxRateRefuel), Finance_TaxRateRefuel,
+                                                    "Tax Rate Repair: ;;N1".T(EDCTx.JournalCarrier_TaxRateRepair), Finance_TaxRateRepair
+                                                    );
 
-            detailed = BaseUtils.FieldBuilder.Build("Total Capacity: ".T(EDCTx.JournalCarrier_TotalCapacity), SpaceUsage_TotalCapacity,
-                                                    "Crew: ".T(EDCTx.JournalCarrier_Crew), SpaceUsage_Crew,
-                                                    "Cargo: ".T(EDCTx.JournalCarrier_Cargo), SpaceUsage_Cargo,
-                                                    "Cargo Space Reserved: ".T(EDCTx.JournalCarrier_CargoReserved), SpaceUsage_CargoSpaceReserved,
-                                                    "Ship Packs: ".T(EDCTx.JournalCarrier_ShipPacks), SpaceUsage_ShipPacks,
-                                                    "Module Packs: ".T(EDCTx.JournalCarrier_ModulePacks), SpaceUsage_ModulePacks,
-                                                    "Free Space: ".T(EDCTx.JournalCarrier_FreeSpace), SpaceUsage_FreeSpace);
+                detailed = BaseUtils.FieldBuilder.Build("Total Capacity: ".T(EDCTx.JournalCarrier_TotalCapacity), SpaceUsage_TotalCapacity,
+                                                        "Crew: ".T(EDCTx.JournalCarrier_Crew), SpaceUsage_Crew,
+                                                        "Cargo: ".T(EDCTx.JournalCarrier_Cargo), SpaceUsage_Cargo,
+                                                        "Cargo Space Reserved: ".T(EDCTx.JournalCarrier_CargoReserved), SpaceUsage_CargoSpaceReserved,
+                                                        "Ship Packs: ".T(EDCTx.JournalCarrier_ShipPacks), SpaceUsage_ShipPacks,
+                                                        "Module Packs: ".T(EDCTx.JournalCarrier_ModulePacks), SpaceUsage_ModulePacks,
+                                                        "Free Space: ".T(EDCTx.JournalCarrier_FreeSpace), SpaceUsage_FreeSpace);
+            }
         }
     }
 
