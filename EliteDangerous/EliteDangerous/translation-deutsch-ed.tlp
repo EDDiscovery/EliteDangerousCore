@@ -959,7 +959,7 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Screenshotkonfiguration"
 .labelClipboard: "Clipboard" => "Zwischenablage"
 .labelOriginal: "Original Image" => "Originalbild"
 .labelEnabled: "Enable" => "Aktivieren"
-.labelQuality: "JPEG Quality" @
+.labelQuality: "JPEG Quality" => "JPEG Qualität"
 
 SECTION Screenshot
 
