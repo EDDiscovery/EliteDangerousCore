@@ -18,6 +18,7 @@ using EliteDangerousCore.JournalEvents;
 
 namespace EliteDangerousCore
 {
+    [System.Diagnostics.DebuggerDisplay("HES {TravelState} {BodyName} {StationName} ")]
     public class HistoryEntryStatus
     {
         public enum TravelStateType {
@@ -48,6 +49,7 @@ namespace EliteDangerousCore
             OnFootStarPort,      
             OnFootPlanetaryPort, 
             OnFootPlanet,
+            OnFootFleetCarrier,
         };       
 
         public string BodyName { get; private set; }
@@ -115,8 +117,11 @@ namespace EliteDangerousCore
                         JournalLocation jloc = je as JournalLocation;
 
                         bool locinstation = jloc.StationType.HasChars() || prev.StationType.HasChars();     // second is required due to alpha 4 stationtype being missing
+                        bool fc1 = prev.StationType.HasChars() && prev.StationType.Equals("Fleet Carrier", System.StringComparison.CurrentCultureIgnoreCase);
 
-                        TravelStateType t = jloc.Docked ? (jloc.Multicrew == true ? TravelStateType.MulticrewDocked : TravelStateType.Docked) :
+                        TravelStateType t = fc1 ? TravelStateType.OnFootFleetCarrier : 
+                           
+                            jloc.Docked ? (jloc.Multicrew == true ? TravelStateType.MulticrewDocked : TravelStateType.Docked) :
                                                 (jloc.InSRV == true) ? (jloc.Multicrew == true ? TravelStateType.MulticrewSRV : TravelStateType.SRV) :      // lat is pre 4.0 check
                                                     jloc.Taxi == true ? TravelStateType.TaxiNormalSpace :          // can't be in dropship, must be in normal space.
                                                         jloc.OnFoot == true ? (locinstation ? TravelStateType.OnFootStarPort : TravelStateType.OnFootPlanet) :
@@ -132,8 +137,8 @@ namespace EliteDangerousCore
                             BodyType = jloc.BodyType,
                             BodyName = jloc.Body,
                             Wanted = jloc.Wanted,
-                            StationName = jloc.StationName.Alt(jloc.Docked || locinstation ? jloc.Body : null),
-                            StationType = jloc.StationType.Alt(prev.StationType).Alt(jloc.Docked || locinstation ? jloc.BodyType : null),
+                            StationName = fc1 ? prev.StationName: (jloc.StationName.Alt(jloc.Docked || locinstation ? jloc.Body : null)),
+                            StationType = fc1 ? prev.StationType : ( jloc.StationType.Alt(prev.StationType).Alt(jloc.Docked || locinstation ? jloc.BodyType : null)),
                             StationFaction = jloc.StationFaction,          // may be null
                         };
                         break;
@@ -287,10 +292,12 @@ namespace EliteDangerousCore
                     var disem = (JournalDisembark)je;
 
                     bool instation = disem.StationType.HasChars() || prev.StationType.HasChars();
+                    bool fc = prev.StationType.HasChars() && prev.StationType.Equals("Fleet Carrier", System.StringComparison.CurrentCultureIgnoreCase);
 
                     hes = new HistoryEntryStatus(prev)
                     {
-                        TravelState = disem.SRV ? TravelStateType.OnFootPlanet :
+                        TravelState = fc ? TravelStateType.OnFootFleetCarrier : 
+                                    disem.SRV ? TravelStateType.OnFootPlanet :
                                         disem.OnStation == true ?  TravelStateType.OnFootStarPort :
                                             disem.OnPlanet == true && instation ? TravelStateType.OnFootPlanetaryPort :
                                             TravelStateType.OnFootPlanet,

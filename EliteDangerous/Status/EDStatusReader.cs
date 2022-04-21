@@ -224,6 +224,7 @@ namespace EliteDangerousCore
                         {
                             changedmajormode = nextshiptype.MajorMode != shiptype.MajorMode;   // did we change major mode
                             events.Add(new UIEvents.UIMode(nextshiptype.Mode, nextshiptype.MajorMode, EventTimeUTC, changedmajormode));        // Generate an event for it
+                            System.Diagnostics.Debug.WriteLine($"UI Mode change to {nextshiptype.Mode} {nextshiptype.MajorMode}");
                         }
 
                         events.AddRange(ReportFlagState(typeof(StatusFlags2), curflags2, Flags2, EventTimeUTC, changedmajormode));
