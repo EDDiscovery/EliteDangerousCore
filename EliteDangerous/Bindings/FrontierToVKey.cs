@@ -212,38 +212,88 @@ namespace EliteDangerousCore
         static Tuple<string, string>[] frontiertovkeyname = new Tuple<string, string>[]     
         {
             new Tuple<string,string>(Keys.Escape.VKeyToString()      ,"Escape"),
+            // 1-0 handled, minus, equals, 
+            new Tuple<string,string>(Keys.Back.VKeyToString(),"Backspace"),
+            new Tuple<string,string>(Keys.Tab.VKeyToString(), "Tab"),
+            // q-p handled, leftbracket, rightbracket handled
+            new Tuple<string,string>(Keys.Return.VKeyToString()      ,"Enter"),
+            new Tuple<string,string>(Keys.LControlKey.VKeyToString(),"LeftControl"),
+            // a-l, semicolon, apost, grave handled
+            new Tuple<string,string>(Keys.LShiftKey.VKeyToString(),"LeftShift"),
+            // backslash handled
+            // z-m, comma, period, slash handled
+            new Tuple<string,string>(Keys.RShiftKey.VKeyToString(),"RightShift"),
+            new Tuple<string,string>(Keys.Multiply.VKeyToString()    ,"Numpad_Multiply"),
+            new Tuple<string,string>(Keys.LMenu.VKeyToString(),"LeftAlt"),
+            new Tuple<string,string>(Keys.Space.VKeyToString(), "Space"),
+            new Tuple<string,string>(Keys.Capital.VKeyToString()     ,"CapsLock"),
+            // F1-F10 handled
+            new Tuple<string,string>(Keys.NumLock.VKeyToString()     ,"NumLock"),
+            new Tuple<string,string>(Keys.Scroll.VKeyToString(),"ScrollLock"),
+            // numpad 7-9 handled
+            new Tuple<string,string>(Keys.Subtract.VKeyToString()    ,"Numpad_Subtract"),
+            // numpad 4-6
+            new Tuple<string,string>(Keys.Add.VKeyToString()         ,"Numpad_Add"),
+            // numpad 1-0
+            new Tuple<string,string>(Keys.Decimal.VKeyToString()     ,"Numpad_Decimal"),
+            new Tuple<string,string>(Keys.Oem102.VKeyToString(),"OEM_102"),
+            // F11-F15
+            new Tuple<string,string>(Keys.KanaMode.VKeyToString(),"Kana"),
+            // ? ABNT_C1
+            new Tuple<string,string>(Keys.IMEConvert.VKeyToString(),"Convert"),
+            new Tuple<string,string>(Keys.IMENonconvert.VKeyToString(),"NoConvert"),
+            // ? Yen
+            // ? ABNT_C2
+            // ? Numpad_Equals
+            new Tuple<string,string>(Keys.MediaPreviousTrack.VKeyToString()      ,"PrevTrack"),
+            // ? AT
+            // Colon, Underline handled
+            new Tuple<string,string>(Keys.KanjiMode.VKeyToString(),"Kanji"),
+            // ? Stop
+            // ? AX
+            new Tuple<string,string>(Keys.NoName.VKeyToString()      ,"Unlabeled"),
+            new Tuple<string,string>(Keys.MediaNextTrack.VKeyToString()      ,"NextTrack"),
+            new Tuple<string,string>("NumEnter", "Numpad_Enter"),
+            new Tuple<string,string>(Keys.RControlKey.VKeyToString(),"RightControl"),
+            new Tuple<string,string>(Keys.VolumeMute.VKeyToString(),"Mute"),
+            // ? Calculator
+            new Tuple<string,string>(Keys.MediaPlayPause.VKeyToString(),"PlayPause"),
+            new Tuple<string,string>(Keys.MediaStop.VKeyToString(),"MediaStop"),
+            new Tuple<string,string>(Keys.VolumeDown.VKeyToString(),"VolumeDown"),
+            new Tuple<string,string>(Keys.VolumeUp.VKeyToString(),"VolumeUp"),
+            new Tuple<string,string>(Keys.BrowserHome.VKeyToString(),"WebHome"),
+            // ? Numpad_Comma
+            new Tuple<string,string>(Keys.Divide.VKeyToString()      ,"Numpad_Divide"),
+            // ? SysRQ
+            new Tuple<string,string>(Keys.RMenu.VKeyToString(),"RightAlt"),
+            new Tuple<string,string>(Keys.Pause.VKeyToString(),"Pause"),
+            new Tuple<string,string>(Keys.Home.VKeyToString()     ,"Home"),
             new Tuple<string,string>(Keys.Up.VKeyToString()          ,"UpArrow"),
-            new Tuple<string,string>(Keys.Down.VKeyToString()        ,"DownArrow"),
+            new Tuple<string,string>(Keys.PageUp.VKeyToString()     ,"PageUp"),
             new Tuple<string,string>(Keys.Left.VKeyToString()        ,"LeftArrow"),
             new Tuple<string,string>(Keys.Right.VKeyToString()       ,"RightArrow"),
-            new Tuple<string,string>(Keys.Return.VKeyToString()      ,"Enter"),
-            new Tuple<string,string>(Keys.Capital.VKeyToString()     ,"CapsLock"),
-            new Tuple<string,string>(Keys.NumLock.VKeyToString()     ,"NumLock"),
-            new Tuple<string,string>(Keys.Subtract.VKeyToString()    ,"Numpad_Subtract"),
-            new Tuple<string,string>(Keys.Divide.VKeyToString()      ,"Numpad_Divide"),
-            new Tuple<string,string>(Keys.Multiply.VKeyToString()    ,"Numpad_Multiply"),
-            new Tuple<string,string>(Keys.Add.VKeyToString()         ,"Numpad_Add"),
-            new Tuple<string,string>(Keys.Decimal.VKeyToString()     ,"Numpad_Decimal"),
-            new Tuple<string,string>(Keys.Insert.VKeyToString()     ,"Insert"),
-            new Tuple<string,string>(Keys.Home.VKeyToString()     ,"Home"),
-            new Tuple<string,string>(Keys.PageUp.VKeyToString()     ,"PageUp"),
-            new Tuple<string,string>(Keys.Delete.VKeyToString()     ,"Delete"),
             new Tuple<string,string>(Keys.End.VKeyToString()     ,"End"),
+            new Tuple<string,string>(Keys.Down.VKeyToString()        ,"DownArrow"),
             new Tuple<string,string>(Keys.PageDown.VKeyToString()     ,"PageDown"),
-            new Tuple<string,string>("NumEnter", "Numpad_Enter"),
-            new Tuple<string,string>(Keys.Space.VKeyToString(), "Space"),
-            new Tuple<string,string>(Keys.Tab.VKeyToString(), "Tab"),
-            new Tuple<string,string>(Keys.LShiftKey.VKeyToString(),"LeftShift"),
-            new Tuple<string,string>(Keys.LControlKey.VKeyToString(),"LeftControl"),
-            new Tuple<string,string>(Keys.LMenu.VKeyToString(),"LeftAlt"),
-            new Tuple<string,string>(Keys.RShiftKey.VKeyToString(),"RightShift"),
-            new Tuple<string,string>(Keys.RControlKey.VKeyToString(),"RightControl"),
-            new Tuple<string,string>(Keys.RMenu.VKeyToString(),"RightAlt"),
-            new Tuple<string,string>(Keys.Back.VKeyToString(),"Backspace"),
-            new Tuple<string,string>(Keys.Scroll.VKeyToString(),"ScrollLock"),
-            new Tuple<string,string>(Keys.Pause.VKeyToString(),"Pause"),
+            new Tuple<string,string>(Keys.Insert.VKeyToString()     ,"Insert"),
+            new Tuple<string,string>(Keys.Delete.VKeyToString()     ,"Delete"),
             new Tuple<string,string>(Keys.LWin.VKeyToString(),"LeftWin"),
             new Tuple<string,string>(Keys.RWin.VKeyToString(),"RightWin"),
+            new Tuple<string,string>(Keys.Apps.VKeyToString(),"Apps"),
+            // ?Power
+            new Tuple<string,string>(Keys.Sleep.VKeyToString(),"Sleep"),
+            // ?Wake
+            new Tuple<string,string>(Keys.BrowserSearch.VKeyToString(),"WebSearch"),
+            new Tuple<string,string>(Keys.BrowserFavorites.VKeyToString(),"WebFavourites"),
+            new Tuple<string,string>(Keys.BrowserRefresh.VKeyToString(),"WebRefresh"),
+            new Tuple<string,string>(Keys.BrowserStop.VKeyToString(),"WebStop"),
+            new Tuple<string,string>(Keys.BrowserForward.VKeyToString(),"WebForward"),
+            new Tuple<string,string>(Keys.BrowserBack.VKeyToString(),"WebBack"),
+            // ?MyComputer
+            new Tuple<string,string>(Keys.LaunchMail.VKeyToString(),"Mail"),
+            new Tuple<string,string>(Keys.SelectMedia.VKeyToString(),"MediaSelect"),
+            // ?green modifier
+            // ?orange modifer
          };
 
         static Tuple<string, uint> Create(string name, uint sc)
