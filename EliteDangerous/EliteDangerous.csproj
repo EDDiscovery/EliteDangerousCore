@@ -111,6 +111,12 @@
     <Compile Include="HistoryList\HistoryListFill.cs" />
     <Compile Include="IGAU\IGAUSync.cs" />
     <Compile Include="IGAU\IGAUClass.cs" />
+    <Compile Include="Items\ItemEngineers.cs" />
+    <Compile Include="Items\ItemData.cs" />
+    <Compile Include="Items\ItemShips.cs" />
+    <Compile Include="Items\ItemActors.cs" />
+    <Compile Include="Items\ItemSuits.cs" />
+    <Compile Include="Items\ItemWeapons.cs" />
     <Compile Include="JournalEvents\JournalEmbarkDisembark.cs" />
     <Compile Include="JournalEvents\JournalCarrier.cs" />
     <Compile Include="JournalEvents\JournalScanBarycentre.cs" />
@@ -171,7 +177,7 @@
     <Compile Include="Ships\ShipModulesInStore.cs" />
     <Compile Include="Ships\ShipInformationList.cs" />
     <Compile Include="Ships\ShipModule.cs" />
-    <Compile Include="Items\ItemData.cs" />
+    <Compile Include="Items\ItemModules.cs" />
     <Compile Include="NetLogs\NetLogClass.cs" />
     <Compile Include="NetLogs\NetLogReader.cs" />
     <Compile Include="EliteDangerous\Ranks.cs" />

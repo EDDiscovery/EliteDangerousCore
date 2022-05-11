@@ -24,25 +24,30 @@ namespace EliteDangerousCore
 {
     public partial class ItemData
     {
-        static ItemData instance = null;
-        private ItemData()
+        static public Actor GetActor(string fdname, string locname = null)         // actors are things like skimmer drones
         {
-        }
-
-        public static ItemData Instance
-        {
-            get
+            fdname = fdname.ToLowerInvariant();
+            if (actors2.TryGetValue(fdname, out Actor var))
+                return var;
+            else
             {
-                if (instance == null)
-                {
-                    instance = new ItemData();
-                }
-                return instance;
+                System.Diagnostics.Debug.WriteLine("Unknown Actor: {{ \"{0}\", new Weapon(\"{1}\") }},", fdname, locname ?? fdname.SplitCapsWordFull());
+                return null;
             }
         }
-        public interface IModuleInfo
+
+        public class Actor : IModuleInfo
         {
+            public string Name;
+            public Actor(string name) { Name = name; }
+        }
+
+        public static Dictionary<string, Actor> actors2 = new Dictionary<string, Actor>   // DO NOT USE DIRECTLY - public is for checking only
+        {
+             { "skimmerdrone", new Actor("Skimmer Drone") },
+             { "ps_turretbasemedium02_6m", new Actor("Turret medium 2-6-M") },
         };
+
 
     }
 }
