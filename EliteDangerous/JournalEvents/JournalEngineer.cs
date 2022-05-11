@@ -275,6 +275,23 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
+        public enum InviteState { UnknownEngineer, None, Invited , Unlocked};
+        public InviteState Progress(string engineer)        // use in case text changed in frontier data
+        {
+            int found = Array.FindIndex(Engineers, x => x.Engineer.Equals(engineer, StringComparison.InvariantCultureIgnoreCase));
+            if (found >= 0)
+            {
+                if (Engineers[found].Progress.Equals("Unlocked", StringComparison.InvariantCultureIgnoreCase))
+                    return InviteState.Unlocked;
+                if (Engineers[found].Progress.Equals("Invited", StringComparison.InvariantCultureIgnoreCase))
+                    return InviteState.Invited;
+
+                return InviteState.None;
+            }
+            else
+                return InviteState.UnknownEngineer;
+        }
+
         public string[] ApplyProgress(string[] engineers)
         {
             string[] ret = new string[engineers.Length];
@@ -282,7 +299,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 ret[i] = engineers[i];
 
-                int found = Array.FindIndex(Engineers, x => x.Engineer.Equals(engineers[i],StringComparison.InvariantCultureIgnoreCase));
+                int found = Array.FindIndex(Engineers, x => x.Engineer.Equals(engineers[i], StringComparison.InvariantCultureIgnoreCase));
                 if (found >= 0)
                 {
                     if (Engineers[found].Progress.Equals("Unlocked", StringComparison.InvariantCultureIgnoreCase))

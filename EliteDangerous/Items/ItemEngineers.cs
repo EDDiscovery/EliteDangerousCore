@@ -340,7 +340,7 @@ namespace EliteDangerousCore
       true, false) },
 
 {
-    "Tod Mcquinn", new EngineeringInfo("Tod Mcquinn", "Wolf 397", "Trophy Camp",
+    "Tod 'The Blaster' McQuinn", new EngineeringInfo("Tod 'The Blaster' McQuinn", "Wolf 397", "Trophy Camp",
       40, 79.21875, -10.40625, "Trus Madi",
       "Common knowledge.",
       "Earn more than 15 bounty vouchers.",
