@@ -31,9 +31,18 @@ namespace EliteDangerousCore
                 return var;
             else
             {
-                System.Diagnostics.Debug.WriteLine("Unknown Engineer: {{ \"{0}\", new EngineerInfo(\"{1}\") }},", fdname, locname ?? fdname.SplitCapsWordFull());
+               // System.Diagnostics.Debug.WriteLine("Unknown Engineer: {{ \"{0}\", new EngineerInfo(\"{1}\") }},", fdname, locname ?? fdname.SplitCapsWordFull());
                 return null;
             }
+        }
+
+        static public string[] ShipEngineers()
+        {
+            return engineers.Values.Where(x => x.OdysseyEnginner == false).Select(x => x.Name).ToArray();
+        }
+        static public string[] OnFootEngineers()
+        {
+            return engineers.Values.Where(x => x.OdysseyEnginner == true).Select(x => x.Name).ToArray();
         }
 
         public class EngineeringInfo : IModuleInfo

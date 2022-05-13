@@ -86,6 +86,8 @@ namespace EliteDangerousCore
             }
         }
 
+
+        [System.Diagnostics.DebuggerDisplay("Rec {fdname} {level} {modulesstring} {string.Join(\",\",engineers)}")]
         public class EngineeringRecipe : Recipe
         {
             public string level;

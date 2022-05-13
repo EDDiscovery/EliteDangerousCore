@@ -31,8 +31,10 @@ namespace EliteDangerousCore
             return used;
         }
 
-        //return maximum can make, how many made, needed string, needed string long format, and the % to having one recipe
-        static public Tuple<int, int, string, string,double> HowManyLeft(List<MaterialCommodityMicroResource> list, Dictionary<string, int> totals, Recipes.Recipe r, int tomake = 0)
+        // return maximum can make, how many made, needed string, needed string long format, and the % to having one recipe
+        // select if totals is reduced by the making
+        static public Tuple<int, int, string, string,double> HowManyLeft(List<MaterialCommodityMicroResource> list, 
+                            Dictionary<string, int> totals, Recipes.Recipe r, int tomake = 0, bool reducetotals = true)
         {
             int max = int.MaxValue;
             System.Text.StringBuilder needed = new System.Text.StringBuilder(256);
@@ -102,7 +104,9 @@ namespace EliteDangerousCore
                     int mi = list.FindIndex(x => x.Details.Shortname.Equals(ingredient));
                     System.Diagnostics.Debug.Assert(mi != -1);
                     int used = r.Amount[i] * made;
-                    totals[ list[mi].Details.FDName] -= used;
+
+                    if ( reducetotals)  // may not want to chain recipes
+                        totals[ list[mi].Details.FDName] -= used;
 
                     string dispshort = (list[mi].Details.IsEncodedOrManufactured) ? " " + list[mi].Details.Name : list[mi].Details.Shortname;
                     string displong = " " + list[mi].Details.Name;
