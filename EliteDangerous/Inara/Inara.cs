@@ -658,7 +658,7 @@ namespace EliteDangerousCore.Inara
 
         static public JToken setCommandersCommunityGoalProgress(JournalCommunityGoal.CommunityGoal goals, DateTime dt)
         {
-            if (goals.Bonus.HasValue)
+            if (goals.CGID != null && goals.PlayerContribution > 0)
             {
                 JObject eventData = new JObject();
 
