@@ -24,8 +24,10 @@ namespace EliteDangerousCore
 {
     public class EngineeringList
     {
-        // return generation/value pairs in add order of particular engineer
-        public Dictionary<uint,HistoryEntry> Get(uint gen, string engineer) { return crafting.GetHistoryOfKey(gen, engineer); }
+        public const string TechBrokerID = "Tech Broker";
+
+        // Get vertical slice of engineer or tech broker. In add order. Note it can hold any of the journal types involved in engineering
+        public List<HistoryEntry> Get(uint gen, string engineer) { return crafting.GetHistoryOfKey(gen, engineer)?.Values.ToList(); }
 
         public EngineeringList()
         {
@@ -38,6 +40,11 @@ namespace EliteDangerousCore
                 var jecb = he.journalEntry as JournalEngineerCraftBase;
                 crafting.NextGeneration();
                 crafting.Add(jecb.Engineering.Engineer, he);
+            }
+            else if (he.EntryType == JournalTypeEnum.TechnologyBroker)
+            {
+                crafting.NextGeneration();
+                crafting.Add(TechBrokerID, he);        // add under tech broker
             }
 
             return crafting.Generation;        // return the generation we are on.

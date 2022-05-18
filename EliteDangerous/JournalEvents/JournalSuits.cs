@@ -539,7 +539,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void SuitInformation(SuitList shp, string whereami, ISystem system)
         {
-            // tbd need one in the wild
+            // the problem is, upgrading the suit, the suit class is encoded in the fdname..
             if (SuitID != ulong.MaxValue)
             {
             }
