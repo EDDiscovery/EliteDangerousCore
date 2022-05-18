@@ -836,6 +836,16 @@ namespace EliteDangerousCore
              { "paintjob_asp_metallic2_gold", new ShipModule(-1,0, "Paintjob Asp Metallic 2 Gold", VanityType ) },
              { "paintjob_asp_operator_red", new ShipModule(-1,0, "Paintjob Asp Operator Red", VanityType ) },
 
+             { "paintjob_anaconda_squadron_black", new ShipModule(-1,0, "Paintjob Anaconda Squadron Black", VanityType ) },
+             { "paintjob_anaconda_gold_wireframe_01", new ShipModule(-1,0, "Paint Job Anaconda Gold Wireframe 1", VanityType ) },
+             { "bobble_oldskool_python", new ShipModule(-1,0, "Bobble Oldskool Python", VanityType ) },
+             { "bobble_nav_beacon", new ShipModule(-1,0, "Bobble Nav Beacon", VanityType ) },
+             { "bobble_ship_cobramkiii_ffe", new ShipModule(-1,0, "Bobble Ship Cobra Mk III FFE", VanityType ) },
+             { "bobble_oldskool_anaconda", new ShipModule(-1,0, "Bobble Oldskool Anaconda", VanityType ) },
+             { "bobble_oldskool_aspmkii", new ShipModule(-1,0, "Bobble Oldskool Asp Mk II", VanityType ) },
+             { "bobble_oldskool_cobramkiii", new ShipModule(-1,0, "Bobble Oldskool Cobram Mk III", VanityType ) },
+             { "string_lights_thargoidprobe", new ShipModule(-1,0, "String Lights Thargoid probe", VanityType ) },
+             { "voicepack_alix", new ShipModule(-1,0, "Voicepack Alix", VanityType ) },
         };
 
         #endregion

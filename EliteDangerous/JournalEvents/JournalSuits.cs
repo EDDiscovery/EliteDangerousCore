@@ -539,9 +539,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public void SuitInformation(SuitList shp, string whereami, ISystem system)
         {
-            // the problem is, upgrading the suit, the suit class is encoded in the fdname..
             if (SuitID != ulong.MaxValue)
             {
+                shp.Upgrade(EventTimeUTC, SuitID, Name, Class, Cost);
             }
         }
 

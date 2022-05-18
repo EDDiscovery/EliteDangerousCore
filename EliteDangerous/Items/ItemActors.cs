@@ -31,7 +31,7 @@ namespace EliteDangerousCore
                 return var;
             else
             {
-                System.Diagnostics.Debug.WriteLine("Unknown Actor: {{ \"{0}\", new Weapon(\"{1}\") }},", fdname, locname ?? fdname.SplitCapsWordFull());
+                System.Diagnostics.Debug.WriteLine("Unknown Actor: {{ \"{0}\", new Actor(\"{1}\") }},", fdname, locname ?? fdname.SplitCapsWordFull());
                 return null;
             }
         }
@@ -46,6 +46,7 @@ namespace EliteDangerousCore
         {
              { "skimmerdrone", new Actor("Skimmer Drone") },
              { "ps_turretbasemedium02_6m", new Actor("Turret medium 2-6-M") },
+             { "ps_turretbasesmall_3m", new Actor("Turret Small 3 M") },
         };
 
 
