@@ -118,6 +118,7 @@ namespace EliteDangerousCore
         public uint Weapons { get; private set; }           // generation index
         public uint Suits { get; private set; }             // generation index
         public uint Loadouts { get; private set; }          // generation index
+        public uint Engineering { get; private set; }       // generation index
 
         public SystemNoteClass SNC;     // system note class found attached to this entry. May be null
 
@@ -247,6 +248,11 @@ namespace EliteDangerousCore
         public void UpdateSystem(ISystem sys)
         {
             System = sys;
+        }
+
+        public void UpdateEngineering(uint gen)
+        {
+            Engineering = gen;
         }
 
         public void ReplaceJournalEntry(JournalEntry p, DateTime utc)

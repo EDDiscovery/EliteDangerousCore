@@ -1064,6 +1064,12 @@ namespace EliteDangerousCore
         new EngineeringRecipe("Thermal Resistant Shields", "1ISSA,1FoC,1Hg", "Shield Generator", "4", "Lei Cheung,Mel Brandon" ),
         new EngineeringRecipe("Thermal Resistant Shields", "1USS,1RFC,1Ru", "Shield Generator", "5", "Lei Cheung,Mel Brandon" ),
 
+        new EngineeringRecipe("Expanded Probe Scanning Radius", "1MS", "Surface Scanner", "1", "Etienne Dorn,Bill Turner,Juri Ishmaak,Lei Cheung,Lori Jameson,Tiana Fortune,Felicity Farseer,Hera Tani" ),
+        new EngineeringRecipe("Expanded Probe Scanning Radius", "1MS,1Ge", "Surface Scanner", "2", "Etienne Dorn,Bill Turner,Juri Ishmaak,Lei Cheung,Lori Jameson,Tiana Fortune,Felicity Farseer,Hera Tani" ),
+        new EngineeringRecipe("Expanded Probe Scanning Radius", "1MS,1Ge,1PA", "Surface Scanner", "3", "Etienne Dorn,Bill Turner,Juri Ishmaak,Lei Cheung,Lori Jameson,Tiana Fortune,Felicity Farseer,Hera Tani" ),
+        new EngineeringRecipe("Expanded Probe Scanning Radius", "1ME,1Nb,1PLA", "Surface Scanner", "4", "Etienne Dorn,Bill Turner,Juri Ishmaak,Lei Cheung,Lori Jameson,Hera Tani" ),
+        new EngineeringRecipe("Expanded Probe Scanning Radius", "1MC,1Sn,1PRA", "Surface Scanner", "5", "Etienne Dorn,Bill Turner,Juri Ishmaak,Lei Cheung,Lori Jameson,Hera Tani" ),
+
         new EngineeringRecipe("Light Weight Mount", "1P", "Torpedo", "1", "Juri Ishmaak,Liz Ryder,Petra Olmanova" ),
         new EngineeringRecipe("Light Weight Mount", "1SAll,1Mn", "Torpedo", "2", "Juri Ishmaak,Liz Ryder,Petra Olmanova" ),
         new EngineeringRecipe("Light Weight Mount", "1SAll,1Mn,1CCe", "Torpedo", "3", "Juri Ishmaak,Liz Ryder,Petra Olmanova" ),
@@ -1105,12 +1111,6 @@ namespace EliteDangerousCore
         new EngineeringRecipe("Wide Angle Scanner", "1MS,1Ge,1CSD", "Wake Scanner", "3", "Bill Turner,Juri Ishmaak,Lori Jameson,Tiana Fortune" ),
         new EngineeringRecipe("Wide Angle Scanner", "1ME,1Nb,1DSD", "Wake Scanner", "4", "Tiana Fortune,Etienne Dorn" ),
         new EngineeringRecipe("Wide Angle Scanner", "1MC,1Sn,1CFSD", "Wake Scanner", "5", "Tiana Fortune" ),
-
-        new EngineeringRecipe("Expanded Probe Scanning Radius", "1MS", "Surface Scanner", "1", "Etienne Dorn,Bill Turner,Juri Ishmaak,Lei Cheung,Lori Jameson,Tiana Fortune,Felicity Farseer,Hera Tani" ),
-        new EngineeringRecipe("Expanded Probe Scanning Radius", "1MS,1Ge", "Surface Scanner", "2", "Etienne Dorn,Bill Turner,Juri Ishmaak,Lei Cheung,Lori Jameson,Tiana Fortune,Felicity Farseer,Hera Tani" ),
-        new EngineeringRecipe("Expanded Probe Scanning Radius", "1MS,1Ge,1PA", "Surface Scanner", "3", "Etienne Dorn,Bill Turner,Juri Ishmaak,Lei Cheung,Lori Jameson,Tiana Fortune,Felicity Farseer,Hera Tani" ),
-        new EngineeringRecipe("Expanded Probe Scanning Radius", "1ME,1Nb,1PLA", "Surface Scanner", "4", "Etienne Dorn,Bill Turner,Juri Ishmaak,Lei Cheung,Lori Jameson,Hera Tani" ),
-        new EngineeringRecipe("Expanded Probe Scanning Radius", "1MC,1Sn,1PRA", "Surface Scanner", "5", "Etienne Dorn,Bill Turner,Juri Ishmaak,Lei Cheung,Lori Jameson,Hera Tani" ),
 
             #endregion
 

@@ -32,13 +32,15 @@ namespace EliteDangerousCore
         public SuitWeaponList WeaponList { get; private set; } = new SuitWeaponList();
         public SuitList SuitList { get; private set; } = new SuitList();
         public SuitLoadoutList SuitLoadoutList { get; private set; } = new SuitLoadoutList();
+        public EngineeringList Engineering { get; private set; } = new EngineeringList();
 
         private List<HistoryEntry> historylist = new List<HistoryEntry>();  // oldest first here
         private Stats statisticsaccumulator = new Stats();
 
         private HistoryEntry hlastprocessed = null;
 
-        List<HistoryEntry> reorderqueue = new List<HistoryEntry>();
+        private List<HistoryEntry> reorderqueue = new List<HistoryEntry>();
+
 
         public HistoryList() { }
 
@@ -73,6 +75,8 @@ namespace EliteDangerousCore
             he.UpdateShipStoredModules(ret.Item2);
 
             he.UpdateMissionList(MissionListAccumulator.Process(je, he.System, he.WhereAmI));
+
+            he.UpdateEngineering(Engineering.Process(he));
 
             hlastprocessed = he;
 
