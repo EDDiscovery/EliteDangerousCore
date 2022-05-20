@@ -24,7 +24,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public class CommunityGoal
         {
-            public int? CGID { get; set; }
+            public int CGID { get; set; }
             public string Title { get; set; }
             public string SystemName { get; set; }
             public string MarketName { get; set; }

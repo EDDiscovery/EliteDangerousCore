@@ -658,16 +658,18 @@ namespace EliteDangerousCore.Inara
 
         static public JToken setCommandersCommunityGoalProgress(JournalCommunityGoal.CommunityGoal goals, DateTime dt)
         {
-            if (goals.CGID != null && goals.PlayerContribution > 0)
+            if (goals.PlayerContribution > 0)       // no point if none
             {
                 JObject eventData = new JObject();
 
                 eventData["communitygoalGameID"] = goals.CGID;
                 eventData["contribution"] = goals.PlayerContribution;
                 eventData["percentileBand"] = goals.PlayerPercentileBand;
-                eventData["percentileBandReward"] = goals.Bonus.Value;
 
-                if (goals.PlayerInTopRank == true)
+                if ( goals.Bonus.HasValue ) // may not be there
+                    eventData["percentileBandReward"] = goals.Bonus.Value;
+
+                if (goals.PlayerInTopRank.HasValue && goals.PlayerInTopRank == true)
                     eventData["isTopRank"] = true;
 
                 return Event("setCommanderCommunityGoalProgress", dt, eventData);
