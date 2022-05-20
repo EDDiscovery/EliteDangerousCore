@@ -178,7 +178,7 @@ namespace EliteDangerousCore
         public class EngineeringData
         {
             public string Engineer { get; set; }
-            public string BlueprintName { get; set; }
+            public string BlueprintName { get; set; }       // not case corrected - as inara gets it, best to leave its case.
             public string FriendlyBlueprintName { get; set; }
             public ulong EngineerID { get; set; }
             public ulong BlueprintID { get; set; }

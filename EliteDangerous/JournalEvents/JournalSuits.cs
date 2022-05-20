@@ -539,9 +539,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public void SuitInformation(SuitList shp, string whereami, ISystem system)
         {
-            // tbd need one in the wild
             if (SuitID != ulong.MaxValue)
             {
+                shp.Upgrade(EventTimeUTC, SuitID, Name, Class, Cost);
             }
         }
 

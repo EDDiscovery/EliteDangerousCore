@@ -21,7 +21,7 @@ using System.Linq;
 
 namespace EliteDangerousCore
 {
-    [System.Diagnostics.DebuggerDisplay("{ID}:{FDName}:{Name}")]
+    [System.Diagnostics.DebuggerDisplay("{ID}:{FDName}:{FriendlyName}")]
     public class Suit
     {
         public DateTime EventTime { get; private set; }
@@ -44,7 +44,7 @@ namespace EliteDangerousCore
     public class SuitList
     {
         public Dictionary<ulong, Suit> Suits(uint gen) { return suits.Get(gen, x => x.Sold == false && x.FDName.HasChars()); }    // all valid unsold suits with valid names. fdname=null special entry
-        public Suit Suit(ulong suit, uint gen) { return suits.Get(suit,gen); }    // get suit at gen
+        public Suit Suit(ulong suit, uint gen) { return suits.Get(suit, gen); }    // get suit at gen
 
         public ulong CurrentID(uint gen) { return suits.Get(CURSUITID, gen)?.ID ?? 0; }
 
@@ -56,7 +56,7 @@ namespace EliteDangerousCore
 
         public void Buy(DateTime time, ulong id, string fdname, string namelocalised, long price, string[] mods)
         {
-            suits[id] = new Suit(time, id, fdname, namelocalised, price, mods, false);
+            suits[id] = new Suit(time, id, fdname, namelocalised, price, mods, sold: false);
         }
 
         public bool VerifyPresence(DateTime time, ulong id, string fdname, string namelocalised, long price, string[] mods)
@@ -66,15 +66,15 @@ namespace EliteDangerousCore
             if (s == null)
             {
                 System.Diagnostics.Debug.WriteLine("Missing Suit {0} {1} {2}", id, fdname, namelocalised);
-                suits[id] = new Suit(time, id, fdname, namelocalised, price, mods, false);
+                suits[id] = new Suit(time, id, fdname, namelocalised, price, mods, sold: false);
                 return false;
             }
             else
             {
-                if ((s.SuitMods == null && mods != null) || (s.SuitMods != null && mods != null && !s.SuitMods.SequenceEqual(mods)))
+                if ((s.SuitMods == null && mods != null) || (s.SuitMods != null && mods != null && !s.SuitMods.SequenceEqual(mods)) || ( s.Name_Localised != namelocalised))
                 {
                     //System.Diagnostics.Debug.WriteLine("Update suit info {0} {1} {2}", id, fdname, namelocalised);
-                    suits[id] = new Suit(time, id, fdname, namelocalised, s.Price, mods, false);
+                    suits[id] = new Suit(time, id, fdname, namelocalised, s.Price, mods, sold: false);
                     return false;
                 }
             }
@@ -89,7 +89,7 @@ namespace EliteDangerousCore
                 var last = suits.GetLast(id);
                 if (last.Sold == false)       // if not sold
                 {
-                    suits[id] = new Suit(time, id, last.FDName, last.Name_Localised, last.Price, last.SuitMods, true);               // new entry with this time but sold
+                    suits[id] = new Suit(time, id, last.FDName, last.Name_Localised, last.Price, last.SuitMods, sold:true);               // new entry with this time but sold
                 }
                 else
                     System.Diagnostics.Debug.WriteLine("Suits sold a suit already sold " + id);
@@ -101,6 +101,29 @@ namespace EliteDangerousCore
         public void SwitchTo(DateTime time, ulong id)
         {
             suits[CURSUITID] = new Suit(time, id, null, null, 0, null, false);
+        }
+
+        public void Upgrade(DateTime time, ulong id, string fdname, int newclass, long cost)
+        {
+            //System.Diagnostics.Debug.WriteLine($"Upgrade {id} to {newclass} for {cost}");
+
+            if (suits.ContainsKey(id))
+            {
+                var last = suits.GetLast(id);
+                if (last.Sold == false)       // if not sold
+                {
+                    var newsuit = ItemData.GetNextSuit(fdname, newclass);     // get suit info and use it. Use our name instead of name_localised in upgrade since its wrong in many journals
+                    if ( newsuit != null)
+                        suits[id] = new Suit(time, id, newsuit.Item1, newsuit.Item2.Name, last.Price + cost, last.SuitMods, sold:false); 
+                    else
+                        System.Diagnostics.Debug.WriteLine("Suits upgrade suit failed to find better suit " + id + " " + fdname);
+                }
+                else
+                    System.Diagnostics.Debug.WriteLine("Suits upgrade a suit already sold " + id);
+            }
+            else
+                System.Diagnostics.Debug.WriteLine("Suits upgrade a suit not seen " + id);
+
         }
 
         public uint Process(JournalEntry je, string whereami, ISystem system)

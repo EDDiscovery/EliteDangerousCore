@@ -41,6 +41,20 @@ namespace EliteDangerousCore
                 return null;
             }
         }
+        static public Tuple<string,Suit> GetNextSuit(string fdname, int newclass, string locname = null)         // given a suit, return next suit
+        {
+            fdname = fdname.ToLowerInvariant();
+            if (fdname.Length > 0 )
+            {
+                fdname = fdname.Substring(0, fdname.Length - 1) + newclass.ToStringInvariant();
+
+                if (suit.TryGetValue(fdname, out Suit var))
+                    return new Tuple<string,Suit>(fdname,var);
+            }
+
+            System.Diagnostics.Trace.WriteLine($"Can't upgrade Suit {fdname}");
+            return null;
+        }
 
         public class SuitStats
         {
