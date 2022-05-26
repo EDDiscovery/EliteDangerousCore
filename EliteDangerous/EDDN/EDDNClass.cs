@@ -239,11 +239,16 @@ namespace EliteDangerousCore.EDDN
 
         private static readonly JObject AllowedFieldsScan = new JObject(AllowedFieldsCommon)
         {
+            // synced in journal scan order 22/5/22
             // Common
+            ["ScanType"] = true,
             ["BodyName"] = true,
             ["BodyID"] = true,
-            ["ScanType"] = true,
+            // not starsystem
+            // not systemaddress
             ["DistanceFromArrivalLS"] = true,
+            ["WasDiscovered"] = true,
+            ["WasMapped"] = true,
             ["Parents"] = new JArray
             {
                 new JObject
@@ -254,38 +259,10 @@ namespace EliteDangerousCore.EDDN
                     ["Ring"] = true
                 }
             },
-            ["WasDiscovered"] = true,
-            ["WasMapped"] = true,
-            // Star / Planet
+ 
             ["RotationPeriod"] = true,
-            ["OrbitalPeriod"] = true,
-            ["SemiMajorAxis"] = true,
-            ["Eccentricity"] = true,
-            ["OrbitalInclination"] = true,
-            ["Periapsis"] = true,
-            ["AxialTilt"] = true,
-            ["Radius"] = true,
-            ["TidalLock"] = true,
-            // Star
-            ["StarType"] = true,
-            ["Age_MY"] = true,
-            ["StellarMass"] = true,
-            ["AbsoluteMagnitude"] = true,
-            ["Luminosity"] = true,
-            ["Subclass"] = true,
-            // Planet
-            ["PlanetClass"] = true,
-            ["TerraformState"] = true,
-            ["Atmosphere"] = true,
-            ["AtmosphereType"] = true,
-            ["Volcanism"] = true,
-            ["MassEM"] = true,
-            ["SurfaceGravity"] = true,
             ["SurfaceTemperature"] = true,
-            ["SurfacePressure"] = true,
-            ["Landable"] = true,
-            // Rings
-            ["ReserveLevel"] = true,
+            ["Radius"] = true,
             ["Rings"] = new JArray
             {
                 new JObject
@@ -297,21 +274,29 @@ namespace EliteDangerousCore.EDDN
                     ["OuterRad"] = true
                 }
             },
-            // Materials
-            ["Materials"] = new JArray
-            {
-                new JObject
-                {
-                    ["Name"] = true,
-                    ["Percent"] = true
-                }
-            },
-            ["Composition"] = new JObject
-            {
-                ["Rock"] = true,
-                ["Metal"] = true,
-                ["Ice"] = true
-            },
+
+            ["StarType"] = true,
+
+            ["StellarMass"] = true,         // star only
+            ["AbsoluteMagnitude"] = true,
+            ["Luminosity"] = true,
+            ["Subclass"] = true,
+            ["Age_MY"] = true,
+
+            ["PlanetClass"] = true,
+
+            ["SemiMajorAxis"] = true,
+
+            ["Eccentricity"] = true,            // has semi major axis
+            ["OrbitalInclination"] = true,
+            ["Periapsis"] = true,
+            ["MeanAnomaly"] = true,
+            ["AscendingNode"] = true,
+            ["OrbitalPeriod"] = true,
+            ["AxialTilt"] = true,
+            ["TidalLock"] = true,
+
+            ["TerraformState"] = true,          // planet
             ["AtmosphereComposition"] = new JArray
             {
                 new JObject
@@ -320,6 +305,28 @@ namespace EliteDangerousCore.EDDN
                     ["Percent"] = true
                 }
             }
+            ["Atmosphere"] = true,
+            ["AtmosphereType"] = true,
+            ["Composition"] = new JObject
+            {
+                ["Rock"] = true,
+                ["Metal"] = true,
+                ["Ice"] = true
+            },
+            ["Volcanism"] = true,
+            ["SurfaceGravity"] = true,
+            ["SurfacePressure"] = true,
+            ["Landable"] = true,
+            ["MassEM"] = true,
+            ["Materials"] = new JArray
+            {
+                new JObject
+                {
+                    ["Name"] = true,
+                    ["Percent"] = true
+                }
+            },
+            ["ReserveLevel"] = true,
         };
 
         private static readonly JObject AllowedFieldsSAASignalsFound = new JObject(AllowedFieldsCommon)
