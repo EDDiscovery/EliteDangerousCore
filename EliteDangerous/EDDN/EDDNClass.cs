@@ -304,7 +304,7 @@ namespace EliteDangerousCore.EDDN
                     ["Name"] = true,
                     ["Percent"] = true
                 }
-            }
+            },
             ["Atmosphere"] = true,
             ["AtmosphereType"] = true,
             ["Composition"] = new JObject
@@ -326,7 +326,7 @@ namespace EliteDangerousCore.EDDN
                     ["Percent"] = true
                 }
             },
-            ["ReserveLevel"] = true,
+            ["ReserveLevel"] = true
         };
 
         private static readonly JObject AllowedFieldsSAASignalsFound = new JObject(AllowedFieldsCommon)
