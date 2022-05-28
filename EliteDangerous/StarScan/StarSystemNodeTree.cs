@@ -15,10 +15,8 @@
  */
 
 using EliteDangerousCore.JournalEvents;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace EliteDangerousCore
 {
@@ -26,7 +24,7 @@ namespace EliteDangerousCore
     {
         public partial class SystemNode
         {
-            // generate a node tree with barycentres properly positioned for display
+            // generate a node tree with barycentres properly positioned for display. Does not fill in Scannode.Parent
             public ScanNode OrderedSystemTree()
             {
                 ScanNode rootnode = null;

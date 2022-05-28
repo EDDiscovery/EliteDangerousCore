@@ -34,6 +34,7 @@ namespace EliteDangerousCore
             public string OwnName;                  // own name excluding star system
             public string CustomName;               // if we can extract from the journals a custom name of it, this holds it. Mostly null
             public SortedList<string, ScanNode> Children;         // kids
+            public ScanNode Parent;                 // Parent node 
             public int Level;                       // level within SystemNode
             public int? BodyID;
             public bool IsMapped;                   // recorded here since the scan data can be replaced by a better version later.

@@ -28,7 +28,7 @@ namespace EliteDangerousCore
             public static void DumpTree(ScanNode top, string key, int level)        // debug dump out
             {
                 string pad = new string(' ', 64);
-                System.Diagnostics.Debug.WriteLine(pad.Substring(0, level * 3) + key + ":" + top.BodyID + " " + top.FullName + " " + top.NodeType + " SD:" + (top.scandata != null));
+                System.Diagnostics.Debug.WriteLine(pad.Substring(0, level * 3) + key + ":" + top.BodyID + " `" + top.FullName + "` " + top.NodeType + " Parent `" + top?.Parent?.FullName + "` SD:" + (top.scandata != null));
                 if (top.Children != null)
                 {
                     foreach (var c in top.Children)

@@ -52,7 +52,8 @@ namespace EliteDangerousCore
 
                                     if (bodynode == null && sd.Parents[i - 1].Type == "Null")   // if can't find, and its another barycentre, add a new dummy barycentre node
                                     {
-                                        bodynode = new ScanNode() { BodyID = bodyid, NodeType = ScanNodeType.barycentre, FullName = "Created Barynode " + bodyid, OwnName = bodyid.ToString("00000") };
+                                        bodynode = new ScanNode() { BodyID = bodyid, NodeType = ScanNodeType.barycentre, FullName = "Created Barynode " + bodyid,
+                                            OwnName = bodyid.ToString("00000") };
                                     }
                                 }
                                 else
@@ -78,6 +79,7 @@ namespace EliteDangerousCore
 
                                     if (!cur.Children.ContainsKey(bodynode.OwnName))
                                     {
+                                        bodynode.Parent = cur;
                                         cur.Children[bodynode.OwnName] = bodynode;
                                     }
                                 }

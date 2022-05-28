@@ -272,7 +272,7 @@ namespace EliteDangerousCore
 
                     string ownname = elements[lvl];
 
-                    subnode = new ScanNode            
+                    subnode = new ScanNode
                     {
                         OwnName = ownname,
                         FullName = previousnode == null ? (sys.Name + (ownname.Contains("Main") ? "" : (" " + ownname))) : previousnode.FullName + " " + ownname,
@@ -280,6 +280,7 @@ namespace EliteDangerousCore
                         Children = null,
                         NodeType = sublvtype,
                         Level = lvl,
+                        Parent = previousnode,
                     };
 
                     currentnodelist.Add(ownname, subnode);
@@ -351,7 +352,8 @@ namespace EliteDangerousCore
                             BeltData = ring,
                             Children = null,
                             NodeType = ScanNodeType.belt,
-                            Level = 1
+                            Level = 1,
+                            Parent = node,
                         };
 
                         node.Children.Add(beltname, belt);

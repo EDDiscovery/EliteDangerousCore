@@ -198,6 +198,7 @@ namespace EliteDangerousCore
                         Children = null,
                         NodeType = sublvtype,
                         Level = lvl,
+                        Parent = previousnode,
                     };
 
                     currentnodelist.Add(ownname, subnode);
