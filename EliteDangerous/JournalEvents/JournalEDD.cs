@@ -108,11 +108,11 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "Items to buy: ".T(EDCTx.JournalCommodityPricesBase_Itemstobuy) + System.Environment.NewLine;
             foreach (CCommodities c in Commodities)
             {
-                if (c.buyPrice > 0)
+                if (c.CanBeBought)
                 {
                     string name = MaterialCommodityMicroResourceType.GetNameByFDName(c.fdname);
 
-                    if (c.sellPrice > 0)
+                    if (c.CanBeSold)
                     {
                         detailed += string.Format("{0}: {1} sell {2} Diff {3} {4}%  ".T(EDCTx.JournalCommodityPricesBase_CPBBuySell),
                             name, c.buyPrice, c.sellPrice, c.buyPrice - c.sellPrice, 
@@ -136,7 +136,7 @@ namespace EliteDangerousCore.JournalEvents
             detailed += "Sell only Items: ".T(EDCTx.JournalCommodityPricesBase_SO) + System.Environment.NewLine;
             foreach (CCommodities c in Commodities)
             {
-                if (c.buyPrice <= 0)
+                if (!c.CanBeBought)
                 {
                     string name = MaterialCommodityMicroResourceType.GetNameByFDName(c.fdname);
 

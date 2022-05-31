@@ -32,7 +32,9 @@ namespace EliteDangerousCore
         public string loccategory { get; private set; }     // in this context, it means, its type (Metals).. as per MaterialCommoditiesDB
         public string legality { get; private set; }        // CAPI only
 
+        public bool CanBeBought { get { return buyPrice > 0 && stock > 0; } }
         public int buyPrice { get; private set; }
+        public bool CanBeSold { get { return sellPrice > 0 && demand > 0; } }
         public int sellPrice { get; private set; }
         public int meanPrice { get; private set; }
         public int demandBracket { get; private set; }
@@ -218,13 +220,13 @@ namespace EliteDangerousCore
                 CCommodities r = right.Find(x => x.fdname == l.fdname);
                 if (r != null)
                 {
-                    if (l.buyPrice > 0)     // if we can buy it..
+                    if (l.CanBeBought)     // if we can buy it..
                     {
                         m.ComparisionLR = (r.sellPrice - l.buyPrice).ToString();
                         m.ComparisionBuy = true;
                     }
 
-                    if (r.buyPrice > 0)
+                    if (r.CanBeBought)     // if we can buy it..
                     {
                         m.ComparisionRL = (l.sellPrice - r.buyPrice).ToString();
                         m.ComparisionBuy = true;
@@ -232,7 +234,7 @@ namespace EliteDangerousCore
                 }
                 else
                 {                                   // not found in right..
-                    if (l.buyPrice > 0)            // if we can buy it here, note you can't price it in right
+                    if (l.CanBeBought)             // if we can buy it here, note you can't price it in right
                         m.ComparisionLR = "No Price";
                 }
 
@@ -248,7 +250,7 @@ namespace EliteDangerousCore
                     m = new CCommodities(r);
                     m.ComparisionRightOnly = true;
 
-                    if (r.buyPrice > 0)                             // if we can buy it there, but its not in the left list
+                    if (r.CanBeBought)                             // if we can buy it there, but its not in the left list
                     {
                         m.ComparisionBuy = true;
                         m.ComparisionRL = "No price";
