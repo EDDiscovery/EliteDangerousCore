@@ -189,7 +189,7 @@ namespace EliteDangerousCore
 
                                 if (lastbelt.BeltData != null)
                                 {
-                                    appendlabel = appendlabel.AppendPrePad($"{lastbelt.BeltData.OuterRad / JournalScan.oneLS_m:N1}ls", Environment.NewLine);
+                                    appendlabel = appendlabel.AppendPrePad($"{lastbelt.BeltData.OuterRad / BodyPhysicalConstants.oneLS_m:N1}ls", Environment.NewLine);
                                 }
 
                                 appendlabel = appendlabel.AppendPrePad("" + lastbelt.ScanData?.BodyID, Environment.NewLine);
@@ -213,7 +213,7 @@ namespace EliteDangerousCore
 
                                 if (ShowHabZone && planetnode.ScanData != null && !planetnode.ScanData.IsOrbitingBaryCentre && planetnode.ScanData.nSemiMajorAxis.HasValue)
                                 {
-                                    double dist = planetnode.ScanData.nSemiMajorAxis.Value / JournalScan.oneLS_m;  // m , converted to LS
+                                    double dist = planetnode.ScanData.nSemiMajorAxis.Value / BodyPhysicalConstants.oneLS_m;  // m , converted to LS
                                     habzone =  dist >= habzonestartls && dist <= habzoneendls;
                                 }
 
@@ -258,7 +258,7 @@ namespace EliteDangerousCore
 
                             if (lastbelt.BeltData != null)
                             {
-                                appendlabel = appendlabel.AppendPrePad($"{lastbelt.BeltData.OuterRad / JournalScan.oneLS_m:N1}ls", Environment.NewLine);
+                                appendlabel = appendlabel.AppendPrePad($"{lastbelt.BeltData.OuterRad / BodyPhysicalConstants.oneLS_m:N1}ls", Environment.NewLine);
                             }
 
                             appendlabel = appendlabel.AppendPrePad("" + lastbelt.ScanData?.BodyID, Environment.NewLine);

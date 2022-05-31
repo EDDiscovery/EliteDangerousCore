@@ -47,21 +47,26 @@ namespace EliteDangerousCore.JournalEvents
         public long? SystemAddress { get; private set; }                    // direct (3.5)
         public double DistanceFromArrivalLS { get; private set; }           // direct
         [PropertyNameAttribute("In meters")]
-        public double DistanceFromArrivalm { get { return DistanceFromArrivalLS * oneLS_m; } }
-        public string DistanceFromArrivalText { get { return string.Format("{0:0.00}AU ({1:0.0}ls)", DistanceFromArrivalLS / JournalScan.oneAU_LS, DistanceFromArrivalLS); } }
+        public double DistanceFromArrivalm { get { return DistanceFromArrivalLS * BodyPhysicalConstants.oneLS_m; } }
+        public string DistanceFromArrivalText { get { return string.Format("{0:0.00}AU ({1:0.0}ls)", DistanceFromArrivalLS / BodyPhysicalConstants.oneAU_LS, DistanceFromArrivalLS); } }
         [PropertyNameAttribute("Seconds")]
         public double? nRotationPeriod { get; private set; }                // direct
-        public double? nRotationPeriodDays { get { if (nRotationPeriod.HasValue) return nRotationPeriod.Value / oneDay_s; else return null; } }
+        public double? nRotationPeriodDays { get { if (nRotationPeriod.HasValue) return nRotationPeriod.Value / BodyPhysicalConstants.oneDay_s; else return null; } }
         [PropertyNameAttribute("K")]
         public double? nSurfaceTemperature { get; private set; }            // direct
         [PropertyNameAttribute("Meters")]
         public double? nRadius { get; private set; }                        // direct
-        public double? nRadiusSols { get { if (nRadius.HasValue) return nRadius.Value / oneSolRadius_m; else return null; } }
-        public double? nRadiusEarths { get { if (nRadius.HasValue) return nRadius.Value / oneEarthRadius_m; else return null; } }
+        public double? nRadiusSols { get { if (nRadius.HasValue) return nRadius.Value / BodyPhysicalConstants.oneSolRadius_m; else return null; } }
+        public double? nRadiusEarths { get { if (nRadius.HasValue) return nRadius.Value / BodyPhysicalConstants.oneEarthRadius_m; else return null; } }
 
         public bool HasRings { get { return Rings != null && Rings.Length > 0; } }
         [PropertyNameAttribute("Rings[1 to N] _Name, _RingClass, _MassMT, _InnerRad (m), _OuterRad. Also RingCount")]
         public StarPlanetRing[] Rings { get; private set; }
+
+        [PropertyNameAttribute("Distance of inner ring from planet, Meters, null if no rings")]
+        public double? RingsInnerm { get { if (Rings != null) return Rings.Select(x => x.InnerRad).Min(); else return null; } }
+        [PropertyNameAttribute("Distance of final outer ring from planet, Meters, null if no rings")]
+        public double? RingsOuterm { get { if (Rings != null) return Rings.Select(x => x.OuterRad).Max(); else return null; } }
 
         [PropertyNameAttribute("Parents[1 to N] _Type (Null=Barycentre, Star, Planet), _BodyID. Also ParentsCount. First is nearest body")]
         public List<BodyParent> Parents { get; private set; }
@@ -99,12 +104,12 @@ namespace EliteDangerousCore.JournalEvents
 
         // All orbiting bodies (Stars/Planets), not main star
 
-        public double DistanceAccountingForBarycentre { get { return nSemiMajorAxis.HasValue && !IsOrbitingBaryCentre ? nSemiMajorAxis.Value : DistanceFromArrivalLS * oneLS_m; } } // in metres
+        public double DistanceAccountingForBarycentre { get { return nSemiMajorAxis.HasValue && !IsOrbitingBaryCentre ? nSemiMajorAxis.Value : DistanceFromArrivalLS * BodyPhysicalConstants.oneLS_m; } } // in metres
 
         [PropertyNameAttribute("Meters")]
         public double? nSemiMajorAxis { get; private set; }                 // direct, m
-        public double? nSemiMajorAxisAU { get { if (nSemiMajorAxis.HasValue) return nSemiMajorAxis.Value / oneAU_m; else return null; } }
-        public string SemiMajorAxisLSKM { get { return nSemiMajorAxis.HasValue ? (nSemiMajorAxis >= oneLS_m / 10 ? ((nSemiMajorAxis.Value / oneLS_m).ToString("N1") + "ls") : ((nSemiMajorAxis.Value / 1000).ToString("N0") + "km")) : ""; } }
+        public double? nSemiMajorAxisAU { get { if (nSemiMajorAxis.HasValue) return nSemiMajorAxis.Value / BodyPhysicalConstants.oneAU_m; else return null; } }
+        public string SemiMajorAxisLSKM { get { return nSemiMajorAxis.HasValue ? (nSemiMajorAxis >= BodyPhysicalConstants.oneLS_m / 10 ? ((nSemiMajorAxis.Value / BodyPhysicalConstants.oneLS_m).ToString("N1") + "ls") : ((nSemiMajorAxis.Value / 1000).ToString("N0") + "km")) : ""; } }
 
         public double? nEccentricity { get; private set; }                  // direct
         [PropertyNameAttribute("Degrees")]
@@ -113,13 +118,13 @@ namespace EliteDangerousCore.JournalEvents
         public double? nPeriapsis { get; private set; }                     // direct, degrees
         [PropertyNameAttribute("Seconds")]
         public double? nOrbitalPeriod { get; private set; }                 // direct, seconds
-        public double? nOrbitalPeriodDays { get { if (nOrbitalPeriod.HasValue) return nOrbitalPeriod.Value / oneDay_s; else return null; } }
+        public double? nOrbitalPeriodDays { get { if (nOrbitalPeriod.HasValue) return nOrbitalPeriod.Value / BodyPhysicalConstants.oneDay_s; else return null; } }
         [PropertyNameAttribute("Degrees")]
         public double? nAscendingNode { get; private set; }                  // odyssey update 7 22/9/21, degrees
         [PropertyNameAttribute("Degrees")]
         public double? nMeanAnomaly { get; private set; }                    // odyssey update 7 22/9/21, degrees
 
-        public double? nMassKG { get { return IsPlanet ? nMassEM * oneEarth_KG : nStellarMass * oneSOL_KG; } }
+        public double? nMassKG { get { return IsPlanet ? nMassEM * BodyPhysicalConstants.oneEarth_KG : nStellarMass * BodyPhysicalConstants.oneSOL_KG; } }
 
         public double? nAxialTilt { get; private set; }                     // direct, radians
         public double? nAxialTiltDeg { get { if (nAxialTilt.HasValue) return nAxialTilt.Value * 180.0 / Math.PI; else return null; } }
@@ -174,16 +179,16 @@ namespace EliteDangerousCore.JournalEvents
         public EDVolcanismProperty VolcanismProperty { get; private set; }               // Volcanism -> Property (None, Major, Minor)
         [PropertyNameAttribute("m/s")]
         public double? nSurfaceGravity { get; private set; }                // direct
-        public double? nSurfaceGravityG { get { if (nSurfaceGravity.HasValue) return nSurfaceGravity.Value / oneGee_m_s2; else return null; } }
+        public double? nSurfaceGravityG { get { if (nSurfaceGravity.HasValue) return nSurfaceGravity.Value / BodyPhysicalConstants.oneGee_m_s2; else return null; } }
         [PropertyNameAttribute("Pascals")]
         public double? nSurfacePressure { get; private set; }               // direct
-        public double? nSurfacePressureEarth { get { if (nSurfacePressure.HasValue) return nSurfacePressure.Value / oneAtmosphere_Pa; else return null; } }
+        public double? nSurfacePressureEarth { get { if (nSurfacePressure.HasValue) return nSurfacePressure.Value / BodyPhysicalConstants.oneAtmosphere_Pa; else return null; } }
         public bool? nLandable { get; private set; }                        // direct
         public bool IsLandable { get { return nLandable.HasValue && nLandable.Value; } }
         [PropertyNameAttribute("Earths")]
         public double? nMassEM { get; private set; }                        // direct, not in description of event, mass in EMs
         [PropertyNameAttribute("Moons")]
-        public double? nMassMM { get { if (nMassEM.HasValue) return nMassEM * EarthMoonMassRatio; else return null; } }
+        public double? nMassMM { get { if (nMassEM.HasValue) return nMassEM * BodyPhysicalConstants.EarthMoonMassRatio; else return null; } }
 
         public bool HasMaterials { get { return Materials != null && Materials.Any(); } }
         [PropertyNameAttribute("Not Searchable")]
@@ -235,27 +240,6 @@ namespace EliteDangerousCore.JournalEvents
 
         public string ParentList() { return Parents != null ? string.Join(",", Parents.Select(x => x.Type + ":" + x.BodyID)) : ""; }     // not get on purpose
 
-        // Constants:
-
-        // stellar references
-        public const double oneSolRadius_m = 695700000; // 695,700km
-
-        // planetary bodies
-        public const double oneSOLRadius_m = 695700*1000;
-        public const double oneEarthRadius_m = 6371000;
-        public const double oneAtmosphere_Pa = 101325;
-        public const double oneGee_m_s2 = 9.80665;
-        public const double oneSOL_KG = 1.989e30;         
-        public const double oneEarth_KG = 5.972e24;       
-        public const double oneMoon_KG = 7.34767309e22;   
-        public const double EarthMoonMassRatio = oneEarth_KG / oneMoon_KG;
-
-        // astrometric
-        public const double oneLS_m = 299792458;
-        public const double oneAU_m = 149597870700;
-        public const double oneAU_LS = oneAU_m / oneLS_m;
-        public const double oneDay_s = 86400;
-
         public class StarPlanetRing
         {
             public string Name;     // may be null
@@ -272,8 +256,8 @@ namespace EliteDangerousCore.JournalEvents
                 scanText.AppendFormat(frontpad + "Mass: {0:N4}{1}\n".T(EDCTx.StarPlanetRing_Mass), MassMT * scale, scaletype);
                 if (parentIsStar && InnerRad > 3000000)
                 {
-                    scanText.AppendFormat(frontpad + "Inner Radius: {0:0.00}ls\n".T(EDCTx.StarPlanetRing_InnerRadius), (InnerRad / oneLS_m));
-                    scanText.AppendFormat(frontpad + "Outer Radius: {0:0.00}ls\n".T(EDCTx.StarPlanetRing_OuterRadius), (OuterRad / oneLS_m));
+                    scanText.AppendFormat(frontpad + "Inner Radius: {0:0.00}ls\n".T(EDCTx.StarPlanetRing_InnerRadius), (InnerRad / BodyPhysicalConstants.oneLS_m));
+                    scanText.AppendFormat(frontpad + "Outer Radius: {0:0.00}ls\n".T(EDCTx.StarPlanetRing_OuterRadius), (OuterRad / BodyPhysicalConstants.oneLS_m));
                 }
                 else
                 {
@@ -287,7 +271,7 @@ namespace EliteDangerousCore.JournalEvents
             public string RingInformationMoons(bool parentIsStar = false, string frontpad = "  ")
             {
                 // mega ton is 1E6 tons = 1E9
-                return RingInformation(1 / oneMoon_KG / 1E9, " Moons".T(EDCTx.StarPlanetRing_Moons), parentIsStar, frontpad);
+                return RingInformation(1 / BodyPhysicalConstants.oneMoon_KG / 1E9, " Moons".T(EDCTx.StarPlanetRing_Moons), parentIsStar, frontpad);
             }
 
             public static string DisplayStringFromRingClass(string ringClass)   // no trailing LF
@@ -542,7 +526,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (nRadius != null)
             {
-                if (nRadius >= oneSolRadius_m / 5)
+                if (nRadius >= BodyPhysicalConstants.oneSolRadius_m / 5)
                     return nRadiusSols.Value.ToString("0.#" + " SR");
                 else
                     return (nRadius.Value / 1000).ToString("0.#") + " km";
@@ -716,7 +700,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (nSemiMajorAxis.HasValue)
             {
-                if (IsStar || nSemiMajorAxis.Value > oneAU_m / 10)
+                if (IsStar || nSemiMajorAxis.Value > BodyPhysicalConstants.oneAU_m / 10)
                     scanText.AppendFormat("Semi Major Axis: {0:0.00}AU\n".T(EDCTx.JournalScan_SMA), nSemiMajorAxisAU.Value);
                 else
                     scanText.AppendFormat("Semi Major Axis: {0}km\n".T(EDCTx.JournalScan_SMK), (nSemiMajorAxis.Value / 1000).ToString("N1"));
@@ -758,10 +742,10 @@ namespace EliteDangerousCore.JournalEvents
                     scanText.AppendFormat(Rings.Count() == 1 ? "Belt".T(EDCTx.JournalScan_Belt) : "Belts".T(EDCTx.JournalScan_Belts), ""); // OLD translator files had "Belt{0}" so supply an empty string just in case
                     for (int i = 0; i < Rings.Length; i++)
                     {
-                        if (Rings[i].MassMT > (oneMoon_KG / 1e9/ 10000))
+                        if (Rings[i].MassMT > (BodyPhysicalConstants.oneMoon_KG / 1e9/ 10000))
                         {
                             // its in mega tons, so convert KG into mega (1E6) tons
-                            scanText.Append("\n" + RingInformation(i, 1.0 / (oneMoon_KG/1E9), " Moons".T(EDCTx.JournalScan_Moons)));
+                            scanText.Append("\n" + RingInformation(i, 1.0 / (BodyPhysicalConstants.oneMoon_KG /1E9), " Moons".T(EDCTx.JournalScan_Moons)));
                         }
                         else
                         {
@@ -868,7 +852,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 hz.HabitableZoneInner = DistanceForBlackBodyTemperature(315); // this is the goldilocks zone, where is possible to expect to find planets with liquid water.
                 hz.HabitableZoneOuter = DistanceForBlackBodyTemperature(223);
-                hz.MetalRichZoneInner = DistanceForNoMaxTemperatureBody(oneSolRadius_m); // we don't know the maximum temperature that the galaxy simulation take as possible...
+                hz.MetalRichZoneInner = DistanceForNoMaxTemperatureBody(BodyPhysicalConstants.oneSolRadius_m); // we don't know the maximum temperature that the galaxy simulation take as possible...
                 hz.MetalRichZoneOuter = DistanceForBlackBodyTemperature(1100);
                 hz.WaterWrldZoneInner = DistanceForBlackBodyTemperature(307);
                 hz.WaterWrldZoneOuter = DistanceForBlackBodyTemperature(156);
@@ -908,47 +892,47 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     habZone.AppendFormat(" - Habitable Zone, {0} ({1}-{2} AU),\n".T(EDCTx.JournalScan_HabitableZone),
                                      $"{hz.HabitableZoneInner:N0}-{hz.HabitableZoneOuter:N0}ls",
-                                     (hz.HabitableZoneInner / oneAU_LS).ToString("N2"),
-                                     (hz.HabitableZoneOuter / oneAU_LS).ToString("N2"));
+                                     (hz.HabitableZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
+                                     (hz.HabitableZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
                 }
 
                 if (p == CZPrint.CZAll || p == CZPrint.CZMR)
                 {
                     habZone.AppendFormat(" - Metal Rich planets, {0} ({1}-{2} AU),\n".T(EDCTx.JournalScan_MetalRichplanets),
                                      $"{hz.MetalRichZoneInner:N0}-{hz.MetalRichZoneOuter:N0}ls",
-                                     (hz.MetalRichZoneInner / oneAU_LS).ToString("N2"),
-                                     (hz.MetalRichZoneInner / oneAU_LS).ToString("N2"));
+                                     (hz.MetalRichZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
+                                     (hz.MetalRichZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
                 }
 
                 if (p == CZPrint.CZAll || p == CZPrint.CZWW)
                 {
                     habZone.AppendFormat(" - Water Worlds, {0} ({1}-{2} AU),\n".T(EDCTx.JournalScan_WaterWorlds),
                                      $"{hz.WaterWrldZoneInner:N0}-{hz.WaterWrldZoneOuter:N0}ls",
-                                     (hz.WaterWrldZoneInner / oneAU_LS).ToString("N2"),
-                                     (hz.WaterWrldZoneOuter / oneAU_LS).ToString("N2"));
+                                     (hz.WaterWrldZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
+                                     (hz.WaterWrldZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
                 }
 
                 if (p == CZPrint.CZAll || p == CZPrint.CZEL)
                 {
                     habZone.AppendFormat(" - Earth Like Worlds, {0} ({1}-{2} AU),\n".T(EDCTx.JournalScan_EarthLikeWorlds),
                                      $"{hz.EarthLikeZoneInner:N0}-{hz.EarthLikeZoneOuter:N0}ls",
-                                     (hz.EarthLikeZoneInner / oneAU_LS).ToString("N2"),
-                                     (hz.EarthLikeZoneOuter / oneAU_LS).ToString("N2"));
+                                     (hz.EarthLikeZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
+                                     (hz.EarthLikeZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
                 }
 
                 if (p == CZPrint.CZAll || p == CZPrint.CZAW)
                 {
                     habZone.AppendFormat(" - Ammonia Worlds, {0} ({1}-{2} AU),\n".T(EDCTx.JournalScan_AmmoniaWorlds),
                                      $"{hz.AmmonWrldZoneInner:N0}-{hz.AmmonWrldZoneOuter:N0}ls",
-                                     (hz.AmmonWrldZoneInner / oneAU_LS).ToString("N2"),
-                                     (hz.AmmonWrldZoneOuter / oneAU_LS).ToString("N2"));
+                                     (hz.AmmonWrldZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
+                                     (hz.AmmonWrldZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
                 }
 
                 if (p == CZPrint.CZAll || p == CZPrint.CZIP)
                 {
                     habZone.AppendFormat(" - Icy Planets, {0} (from {1} AU)\n".T(EDCTx.JournalScan_IcyPlanets),
                                      $"{hz.IcyPlanetZoneInner:N0}ls to ~",
-                                     (hz.IcyPlanetZoneInner / oneAU_LS).ToString("N2"));
+                                     (hz.IcyPlanetZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
                 }
 
                 if (titles)
@@ -981,12 +965,12 @@ namespace EliteDangerousCore.JournalEvents
             double top = Math.Pow(nRadius.Value, 2.0) * Math.Pow(nSurfaceTemperature.Value, 4.0);
             double bottom = 4.0 * Math.Pow(targetTemp, 4.0);
             double radius_metres = Math.Pow(top / bottom, 0.5);
-            return radius_metres / oneLS_m;
+            return radius_metres / BodyPhysicalConstants.oneLS_m;
         }
 
         private double DistanceForNoMaxTemperatureBody(double radius)
         {
-            return radius / oneLS_m;
+            return radius / BodyPhysicalConstants.oneLS_m;
         }
 
 

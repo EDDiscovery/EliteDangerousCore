@@ -940,11 +940,11 @@ namespace EliteDangerousCore.EDSM
             if (jo["orbitalInclination"] != null) jout["OrbitalInclination"] = jo["orbitalInclination"];
             if (jo["orbitalEccentricity"] != null) jout["Eccentricity"] = jo["orbitalEccentricity"];
             if (jo["argOfPeriapsis"] != null) jout["Periapsis"] = jo["argOfPeriapsis"];
-            if (jo["semiMajorAxis"].Double() != 0) jout["SemiMajorAxis"] = jo["semiMajorAxis"].Double() * JournalScan.oneAU_m; // AU -> metres
-            if (jo["orbitalPeriod"].Double() != 0) jout["OrbitalPeriod"] = jo["orbitalPeriod"].Double() * JournalScan.oneDay_s; // days -> seconds
+            if (jo["semiMajorAxis"].Double() != 0) jout["SemiMajorAxis"] = jo["semiMajorAxis"].Double() * BodyPhysicalConstants.oneAU_m; // AU -> metres
+            if (jo["orbitalPeriod"].Double() != 0) jout["OrbitalPeriod"] = jo["orbitalPeriod"].Double() * BodyPhysicalConstants.oneDay_s; // days -> seconds
             if (jo["rotationalPeriodTidallyLocked"] != null) jout["TidalLock"] = jo["rotationalPeriodTidallyLocked"];
             if (jo["axialTilt"] != null) jout["AxialTilt"] = jo["axialTilt"].Double() * Math.PI / 180.0; // degrees -> radians
-            if (jo["rotationalPeriod"].Double() != 0) jout["RotationalPeriod"] = jo["rotationalPeriod"].Double() * JournalScan.oneDay_s; // days -> seconds
+            if (jo["rotationalPeriod"].Double() != 0) jout["RotationalPeriod"] = jo["rotationalPeriod"].Double() * BodyPhysicalConstants.oneDay_s; // days -> seconds
             if (jo["surfaceTemperature"] != null) jout["SurfaceTemperature"] = jo["surfaceTemperature"];
             if (jo["distanceToArrival"] != null) jout["DistanceFromArrivalLS"] = jo["distanceToArrival"];
             if (jo["parents"] != null) jout["Parents"] = jo["parents"];
@@ -957,14 +957,14 @@ namespace EliteDangerousCore.EDSM
                     jout["StarType"] = EDSMStar2JournalName(jo["subType"].StrNull());           // pass thru null to code, it will cope with it
                     jout["Age_MY"] = jo["age"];
                     jout["StellarMass"] = jo["solarMasses"];
-                    jout["Radius"] = jo["solarRadius"].Double() * JournalScan.oneSolRadius_m; // solar-rad -> metres
+                    jout["Radius"] = jo["solarRadius"].Double() * BodyPhysicalConstants.oneSolRadius_m; // solar-rad -> metres
                 }
                 else if (jo["type"].Str().Equals("Planet"))
                 {
                     jout["Landable"] = jo["isLandable"];
                     jout["MassEM"] = jo["earthMasses"];
 
-                    jout["SurfaceGravity"] = jo["gravity"].Double() * JournalScan.oneGee_m_s2;      // if not there, we get 0
+                    jout["SurfaceGravity"] = jo["gravity"].Double() * BodyPhysicalConstants.oneGee_m_s2;      // if not there, we get 0
 
                     jout["Volcanism"] = jo["volcanismType"];
                     string atmos = jo["atmosphereType"].StrNull();
@@ -974,7 +974,7 @@ namespace EliteDangerousCore.EDSM
                     jout["Radius"] = jo["radius"].Double() * 1000.0; // km -> metres
                     jout["PlanetClass"] = EDSMPlanet2JournalName(jo["subType"].Str());
                     if (jo["terraformingState"] != null) jout["TerraformState"] = jo["terraformingState"];
-                    if (jo["surfacePressure"] != null) jout["SurfacePressure"] = jo["surfacePressure"].Double() * JournalScan.oneAtmosphere_Pa; // atmospheres -> pascals
+                    if (jo["surfacePressure"] != null) jout["SurfacePressure"] = jo["surfacePressure"].Double() * BodyPhysicalConstants.oneAtmosphere_Pa; // atmospheres -> pascals
                     if (jout["TerraformState"].Str() == "Candidate for terraforming")
                         jout["TerraformState"] = "Terraformable";
                 }

@@ -41,14 +41,14 @@ namespace EliteDangerousCore.JournalEvents
         public int BodyID { get; private set; }                            
 
         public double SemiMajorAxis { get; private set; }
-        public double SemiMajorAxisAU { get { return SemiMajorAxis / JournalScan.oneAU_m; } }
-        public string SemiMajorAxisLSKM { get { return (SemiMajorAxis >= JournalScan.oneLS_m / 10 ? ((SemiMajorAxis / JournalScan.oneLS_m).ToString("N1") + "ls") : ((SemiMajorAxis / 1000).ToString("N0") + "km")); } }
+        public double SemiMajorAxisAU { get { return SemiMajorAxis / BodyPhysicalConstants.oneAU_m; } }
+        public string SemiMajorAxisLSKM { get { return (SemiMajorAxis >= BodyPhysicalConstants.oneLS_m / 10 ? ((SemiMajorAxis / BodyPhysicalConstants.oneLS_m).ToString("N1") + "ls") : ((SemiMajorAxis / 1000).ToString("N0") + "km")); } }
 
         public double Eccentricity { get; private set; }                  
         public double OrbitalInclination { get; private set; }            
         public double Periapsis { get; private set; }
         public double OrbitalPeriod { get; private set; }
-        public double OrbitalPeriodDays { get { return OrbitalPeriod / JournalScan.oneDay_s; } }
+        public double OrbitalPeriodDays { get { return OrbitalPeriod / BodyPhysicalConstants.oneDay_s; } }
 
         public double AscendingNode { get; private set; }
         public double MeanAnomaly { get; private set; }

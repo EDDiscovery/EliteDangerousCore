@@ -72,5 +72,21 @@ namespace EliteDangerousCore
             }
         }
 
+        private int lastfilled = 0;
+        public void FillInScanNode()        // call repeatedly to fill up historyentry.ScanNode to the top of history
+        {
+            while( lastfilled < historylist.Count)
+            {
+                var he = historylist[lastfilled];
+                if ( he.EntryType == JournalTypeEnum.Scan && he.ScanNode == null)
+                {
+                    var sysnode = StarScan.FindSystemSynchronous(he.System, false);                 // prob not null, but check
+                    var jscan = sysnode?.Find(he.journalEntry as JournalEvents.JournalScan);        // prob not null, but check
+                    he.ScanNode = jscan;
+                }
+                lastfilled++;
+            }
+        }
+
     }
 }

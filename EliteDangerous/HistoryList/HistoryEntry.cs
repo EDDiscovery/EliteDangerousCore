@@ -122,6 +122,8 @@ namespace EliteDangerousCore
 
         public SystemNoteClass SNC;     // system note class found attached to this entry. May be null
 
+        public StarScan.ScanNode ScanNode {get; set; } // only for journal scan, and only after you called FillScanNode in history list.
+
         #endregion
 
         #region Private Variables

@@ -119,7 +119,16 @@ namespace EliteDangerousCore
                 return null;
             }
 
-  
+            public ScanNode Find(JournalScan s)
+            {
+                foreach (var b in Bodies)
+                {
+                    if (object.ReferenceEquals(b.ScanData,s))
+                        return b;
+                }
+
+                return null;
+            }
         }
     }
 }

@@ -100,7 +100,7 @@ namespace EliteDangerousCore
 
                         if ((sn.ScanData.IsLandable || ShowAllG) && sn.ScanData.nSurfaceGravity != null)
                         {
-                            nodelabels[1] = nodelabels[1].AppendPrePad($"{(sn.ScanData.nSurfaceGravity / JournalScan.oneGee_m_s2):N2}g", Environment.NewLine);
+                            nodelabels[1] = nodelabels[1].AppendPrePad($"{(sn.ScanData.nSurfaceGravity / BodyPhysicalConstants.oneGee_m_s2):N2}g", Environment.NewLine);
                         }
                     }
 
@@ -118,7 +118,7 @@ namespace EliteDangerousCore
                             else
                             {
                                 //System.Diagnostics.Debug.WriteLine(sn.ScanData.BodyName + " SMA " + sn.ScanData.nSemiMajorAxis + " " + sn.ScanData.DistanceFromArrivalm);
-                                string s = sn.ScanData.nSemiMajorAxis.HasValue && Math.Abs(sn.ScanData.nSemiMajorAxis.Value- sn.ScanData.DistanceFromArrivalm) > JournalScan.oneAU_m ? (" / " + sn.ScanData.SemiMajorAxisLSKM) : "";
+                                string s = sn.ScanData.nSemiMajorAxis.HasValue && Math.Abs(sn.ScanData.nSemiMajorAxis.Value- sn.ScanData.DistanceFromArrivalm) > BodyPhysicalConstants.oneAU_m ? (" / " + sn.ScanData.SemiMajorAxisLSKM) : "";
                                 nodelabels[1] = nodelabels[1].AppendPrePad($"{sn.ScanData.DistanceFromArrivalLS:N1}ls" + s, Environment.NewLine);
                             }
                         }
@@ -126,7 +126,7 @@ namespace EliteDangerousCore
                         {
                             if (!sn.ScanData.IsOrbitingBaryCentre && sn.ScanData.nSemiMajorAxis.HasValue)          // if not in orbit of barycentre
                             {
-                                nodelabels[1] = nodelabels[1].AppendPrePad($"{(sn.ScanData.nSemiMajorAxis / JournalScan.oneLS_m):N1}ls", Environment.NewLine);
+                                nodelabels[1] = nodelabels[1].AppendPrePad($"{(sn.ScanData.nSemiMajorAxis / BodyPhysicalConstants.oneLS_m):N1}ls", Environment.NewLine);
                             }
                         }
                     }
