@@ -32,9 +32,15 @@ namespace EliteDangerousCore
         public string loccategory { get; private set; }     // in this context, it means, its type (Metals).. as per MaterialCommoditiesDB
         public string legality { get; private set; }        // CAPI only
 
+        [JsonIgnore]
         public bool CanBeBought { get { return buyPrice > 0 && stock > 0; } }
-        public int buyPrice { get; private set; }
+        [JsonIgnore]
         public bool CanBeSold { get { return sellPrice > 0 && demand > 0; } }
+        [JsonIgnore]
+        public bool HasDemand { get { return demand > 1; } }        // 1 because lots of them are marked as 1, as in, they want it, but not much
+
+        public int buyPrice { get; private set; }
+
         public int sellPrice { get; private set; }
         public int meanPrice { get; private set; }
         public int demandBracket { get; private set; }
