@@ -617,7 +617,7 @@ namespace EliteDangerousCore.JournalEvents
           // has no trailing LF
         public string DisplayString(int indent = 0, List<MaterialCommodityMicroResource> historicmatlist = null,
                                                         List<MaterialCommodityMicroResource> currentmatlist = null,
-                                                        bool includefront = true)//, bool mapped = false, bool efficiencyBonus = false)
+                                                        bool includefront = true)
         {
             string inds = new string(' ', indent);
 
@@ -627,7 +627,8 @@ namespace EliteDangerousCore.JournalEvents
 
             if (includefront)
             {
-                scanText.AppendFormat("{0} {1}\n\n", BodyName, IsEDSMBody ? " (EDSM)" : "");
+                scanText.AppendFormat("{0} {1}" + Environment.NewLine, BodyName, IsEDSMBody ? " (EDSM)" : "");
+                scanText.Append(Environment.NewLine);
 
                 if (IsStar)
                 {
