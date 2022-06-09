@@ -49,8 +49,9 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("In meters")]
         public double DistanceFromArrivalm { get { return DistanceFromArrivalLS * BodyPhysicalConstants.oneLS_m; } }
         public string DistanceFromArrivalText { get { return string.Format("{0:0.00}AU ({1:0.0}ls)", DistanceFromArrivalLS / BodyPhysicalConstants.oneAU_LS, DistanceFromArrivalLS); } }
-        [PropertyNameAttribute("Seconds")]
-        public double? nRotationPeriod { get; private set; }                // direct
+        [PropertyNameAttribute("Seconds, may be negative indicating reverse rotation")]
+        public double? nRotationPeriod { get; private set; }                // direct, can be negative indi
+        [PropertyNameAttribute("Days, may be negative indicating reverse rotation")]
         public double? nRotationPeriodDays { get { if (nRotationPeriod.HasValue) return nRotationPeriod.Value / BodyPhysicalConstants.oneDay_s; else return null; } }
         [PropertyNameAttribute("K")]
         public double? nSurfaceTemperature { get; private set; }            // direct
@@ -124,7 +125,7 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Degrees")]
         public double? nMeanAnomaly { get; private set; }                    // odyssey update 7 22/9/21, degrees
 
-        public double? nMassKG { get { return IsPlanet ? nMassEM * BodyPhysicalConstants.oneEarth_KG : nStellarMass * BodyPhysicalConstants.oneSOL_KG; } }
+        public double? nMassKG { get { return IsPlanet ? nMassEM * BodyPhysicalConstants.oneEarth_KG : nStellarMass * BodyPhysicalConstants.oneSol_KG; } }
 
         public double? nAxialTilt { get; private set; }                     // direct, radians
         public double? nAxialTiltDeg { get { if (nAxialTilt.HasValue) return nAxialTilt.Value * 180.0 / Math.PI; else return null; } }
@@ -256,13 +257,13 @@ namespace EliteDangerousCore.JournalEvents
                 scanText.AppendFormat(frontpad + "Mass: {0:N4}{1}\n".T(EDCTx.StarPlanetRing_Mass), MassMT * scale, scaletype);
                 if (parentIsStar && InnerRad > 3000000)
                 {
-                    scanText.AppendFormat(frontpad + "Inner Radius: {0:0.00}ls\n".T(EDCTx.StarPlanetRing_InnerRadius), (InnerRad / BodyPhysicalConstants.oneLS_m));
-                    scanText.AppendFormat(frontpad + "Outer Radius: {0:0.00}ls\n".T(EDCTx.StarPlanetRing_OuterRadius), (OuterRad / BodyPhysicalConstants.oneLS_m));
+                    scanText.AppendFormat(frontpad + "Inner Radius: {0:0.00}ls".T(EDCTx.StarPlanetRing_InnerRadius) + Environment.NewLine, (InnerRad / BodyPhysicalConstants.oneLS_m));
+                    scanText.AppendFormat(frontpad + "Outer Radius: {0:0.00}ls".T(EDCTx.StarPlanetRing_OuterRadius) + Environment.NewLine, (OuterRad / BodyPhysicalConstants.oneLS_m));
                 }
                 else
                 {
-                    scanText.AppendFormat(frontpad + "Inner Radius: {0}km\n".T(EDCTx.StarPlanetRing_IK), (InnerRad / 1000).ToString("N0"));
-                    scanText.AppendFormat(frontpad + "Outer Radius: {0}km\n".T(EDCTx.StarPlanetRing_OK), (OuterRad / 1000).ToString("N0"));
+                    scanText.AppendFormat(frontpad + "Inner Radius: {0}km".T(EDCTx.StarPlanetRing_IK) + Environment.NewLine, (InnerRad / 1000).ToString("N0"));
+                    scanText.AppendFormat(frontpad + "Outer Radius: {0}km".T(EDCTx.StarPlanetRing_OK) + " \u0394 {1}" + Environment.NewLine, (OuterRad / 1000).ToString("N0"), ((OuterRad-InnerRad)/1000).ToString("N0"));
                 }
                 return scanText.ToNullSafeString();
             }
@@ -697,7 +698,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
             if (nOrbitalPeriodDays.HasValue && nOrbitalPeriodDays > 0)
-                scanText.AppendFormat("Orbital Period: {0} days\n".T(EDCTx.JournalScan_OrbitalPeriod), nOrbitalPeriodDays.Value.ToString("N1"));
+                scanText.AppendFormat("Orbital Period: {0} days\n".T(EDCTx.JournalScan_OrbitalPeriod), nOrbitalPeriodDays.Value.ToString("0.0####"));
 
             if (nSemiMajorAxis.HasValue)
             {
@@ -726,7 +727,7 @@ namespace EliteDangerousCore.JournalEvents
                 scanText.AppendFormat("Axial tilt: {0:0.00}°\n".T(EDCTx.JournalScan_Axialtilt), nAxialTiltDeg.Value);
 
             if (nRotationPeriodDays.HasValue)
-                scanText.AppendFormat("Rotation Period: {0} days\n".T(EDCTx.JournalScan_RotationPeriod), nRotationPeriodDays.Value.ToString("N1"));
+                scanText.AppendFormat("Rotation Period: {0} days\n".T(EDCTx.JournalScan_RotationPeriod), nRotationPeriodDays.Value.ToString("0.0####"));
 
 
             if (nAbsoluteMagnitude.HasValue)
@@ -1023,8 +1024,9 @@ namespace EliteDangerousCore.JournalEvents
             return scanText.ToNullSafeString();
         }
 
-        // adds to mats hash if one found.  returns number of jumponiums in body
-        public int Jumponium(HashSet<string> mats)
+        // adds to mats hash (if required) if one found.
+        // returns number of jumponiums in body
+        public int Jumponium(HashSet<string> mats = null)
         {
             int count = 0;
 
@@ -1034,7 +1036,7 @@ namespace EliteDangerousCore.JournalEvents
                 if (MaterialCommodityMicroResourceType.IsJumponiumType(n))
                 {
                     count++;
-                    if (!mats.Contains(n))      // and we have not counted it
+                    if (mats != null && !mats.Contains(n))      // and we have not counted it
                     {
                         mats.Add(n);
                     }

@@ -264,7 +264,7 @@ namespace EliteDangerousCore
             new Tuple<string,string>(Keys.BrowserHome.VKeyToString(),"WebHome"),
             // ? Numpad_Comma
             new Tuple<string,string>(Keys.Divide.VKeyToString()      ,"Numpad_Divide"),
-            // ? SysRQ
+            new Tuple<string,string>(Keys.PrintScreen.VKeyToString()      ,"SYSRQ"),
             new Tuple<string,string>(Keys.RMenu.VKeyToString(),"RightAlt"),
             new Tuple<string,string>(Keys.Pause.VKeyToString(),"Pause"),
             new Tuple<string,string>(Keys.Home.VKeyToString()     ,"Home"),
@@ -409,9 +409,12 @@ namespace EliteDangerousCore
                 Check(KeyObjectExtensions.NumEnter, "Key_Numpad_Enter");
                 Check(Keys.Multiply, "Key_Numpad_Multiply");
                 Check(Keys.Add, "Key_Numpad_Add");
-                Check(Keys.Subtract, "Key_Numpad_Subtract");
+                Check(Keys.Subtract, "Key_Numpad_Subtract");its the
                 Check(Keys.Decimal, "Key_Numpad_Decimal");
                 Check(Keys.NumLock, "Key_NumLock");
+
+                Check(Keys.PrintScreen, "Key_SYSRQ");
+
 #endif
 
                 // 6/4/22 confirmed

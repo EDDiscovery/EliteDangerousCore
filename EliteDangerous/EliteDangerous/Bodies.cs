@@ -530,11 +530,10 @@ namespace EliteDangerousCore
         public const double oneSolRadius_m = 695700000; // 695,700km
 
         // planetary bodies
-        public const double oneSOLRadius_m = 695700 * 1000;
         public const double oneEarthRadius_m = 6371000;
         public const double oneAtmosphere_Pa = 101325;
         public const double oneGee_m_s2 = 9.80665;
-        public const double oneSOL_KG = 1.989e30;
+        public const double oneSol_KG = 1.989e30;
         public const double oneEarth_KG = 5.972e24;
         public const double oneMoon_KG = 7.34767309e22;
         public const double EarthMoonMassRatio = oneEarth_KG / oneMoon_KG;

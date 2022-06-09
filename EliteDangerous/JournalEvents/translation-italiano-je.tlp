@@ -474,10 +474,10 @@ SECTION JournalReservoirReplenished
 SECTION StarPlanetRing
 
 .Mass: "Mass: {0:N4}{1}\n" @
-.InnerRadius: "Inner Radius: {0:0.00}ls\n" @
-.OuterRadius: "Outer Radius: {0:0.00}ls\n" @
-.IK: "Inner Radius: {0}km\n" @
-.OK: "Outer Radius: {0}km\n" @
+.InnerRadius: "Inner Radius: {0:0.00}ls" @
+.OuterRadius: "Outer Radius: {0:0.00}ls" @
+.IK: "Inner Radius: {0}km" @
+.OK: "Outer Radius: {0}km" @
 .Moons: " Moons" @
 .Icy: "Icy" @
 .Rocky: "Rocky" @
