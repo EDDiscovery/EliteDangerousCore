@@ -48,7 +48,7 @@ namespace EliteDangerousCore
             {
                 new Query("Planet inside outer ring","IsPlanet IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis <= Parent.RingsOuterm And Parent.IsPlanet IsTrue",true ),
                 new Query("Planet inside inner ring","IsPlanet IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis <= Parent.RingsInnerm And Parent.IsPlanet IsTrue",true ),
-                new Query("Planet inside the rings","IsPlanet IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis >= Parent.RingsInnerm And nSemiMajorAxis <= Parent.RingsOuterm And Parent.IsPlanet IsTrue And IsPlanet IsTrue",true ),
+                new Query("Planet inside the rings","IsPlanet IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis >= Parent.RingsInnerm And nSemiMajorAxis <= Parent.RingsOuterm And Parent.IsPlanet IsTrue",true ),
 
                 new Query("Heavier than Sol","nStellarMass > 1", true ),
                 new Query("Bigger than Sol","nRadius > 695700000", true ),
@@ -202,6 +202,7 @@ namespace EliteDangerousCore
 
 
         // find using cond, async. return string of result info.  Fill in results dictionary (already made)
+        // default vars can be null
         static public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist, 
                                    Dictionary<string,Results> results, string filterdescription,
                                    BaseUtils.ConditionLists cond, BaseUtils.Variables defaultvars, bool wantdebug)
@@ -209,7 +210,7 @@ namespace EliteDangerousCore
 
             return System.Threading.Tasks.Task.Run(() =>
             {
-                if (cond == null)
+                if (cond == null || cond.Count == 0)
                     return "Search Not Found";
 
                 StringBuilder resultinfo = new StringBuilder(10000);
@@ -227,9 +228,6 @@ namespace EliteDangerousCore
                 bool wantsiblingcount = varsevent.Contains("Sibling.Count");
                 bool wantchildcount = varsevent.Contains("Child.Count");
                 bool wantlevel = varsevent.Contains("Level");
-                bool wantconstants = varsevent.StartsWith("one") >= 0;
-                if (!wantconstants)
-                    defaultvars = null;
 
                 foreach (var he in helist)
                 {
@@ -323,7 +321,7 @@ namespace EliteDangerousCore
 
                     //if (js.BodyName.Equals("Borann A 2 a"))  debugit = true;
 
-                    bool? res = BaseUtils.ConditionLists.CheckConditionsEval(cond.List, scandatavars, out string evalerrlist, out BaseUtils.ConditionLists.ErrorClass errclassunused, debugit: debugit);
+                    bool? res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, out string evalerrlist, out BaseUtils.ConditionLists.ErrorClass errclassunused, iter1 || iter2 , debugit: debugit);
 
                     if (wantdebug && evalerrlist.HasChars())
                     {
