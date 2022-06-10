@@ -297,7 +297,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.SAASignalsFound)]
-    public class JournalSAASignalsFound : JournalEntry, IStarScan
+    public class JournalSAASignalsFound : JournalEntry, IStarScan, IBodyNameIDOnly
     {
         public JournalSAASignalsFound(JObject evt) : base(evt, JournalTypeEnum.SAASignalsFound)
         {
@@ -316,7 +316,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public long SystemAddress { get; set; }
         public string BodyName { get; set; }
-        public int BodyID { get; set; }
+        public int? BodyID { get; set; }        // acutally always set, set to ? to correspond to previous journal event types where BodyID may be missing
         public List<SAASignal> Signals { get; set; }
 
         public bool ContainsGeoSignals { get { return Signals?.Count(x => x.IsGeo) > 0 ? true : false; } }
@@ -411,7 +411,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.FSSBodySignals)]
-    public class JournalFSSBodySignals : JournalEntry, IStarScan
+    public class JournalFSSBodySignals : JournalEntry, IStarScan, IBodyNameIDOnly
     {
         public JournalFSSBodySignals(JObject evt) : base(evt, JournalTypeEnum.FSSBodySignals)
         {
@@ -430,7 +430,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public long SystemAddress { get; set; }
         public string BodyName { get; set; }
-        public int BodyID { get; set; }
+        public int? BodyID { get; set; }        // acutally always set, set to ? to correspond to previous journal event types where BodyID may be missing
         public List<JournalSAASignalsFound.SAASignal> Signals { get; set; }
 
         public bool ContainsGeoSignals { get { return Signals?.Count(x => x.IsGeo) > 0 ? true : false; } }

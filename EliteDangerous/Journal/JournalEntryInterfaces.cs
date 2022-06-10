@@ -55,7 +55,13 @@ namespace EliteDangerousCore
         void AddStarScan( StarScan s, ISystem system);
     }
 
-    public interface IBodyNameAndID
+    public interface IBodyNameIDOnly
+    {
+        string BodyName { get; }
+        int? BodyID { get; }
+    }
+
+    public interface IBodyNameAndID 
     {
         string Body { get; }
         string BodyType { get; }

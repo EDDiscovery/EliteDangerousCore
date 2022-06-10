@@ -186,6 +186,7 @@ namespace EliteDangerousCore
         // search scans
         public List<HistoryEntry> FilterByScan() { return (from s in historylist where s.journalEntry.EventTypeID == JournalTypeEnum.Scan select s).ToList(); }
         public List<HistoryEntry> FilterByScanFSSBodySAASignals() { return (from s in historylist where (s.journalEntry.EventTypeID == JournalTypeEnum.Scan || s.journalEntry.EventTypeID == JournalTypeEnum.FSSBodySignals || s.journalEntry.EventTypeID == JournalTypeEnum.SAASignalsFound) select s).ToList(); }
+        public List<HistoryEntry> FilterByScanFSSBodySAASignals(ISystem sys) { return (from s in historylist where (sys.Name == s.System.Name && (s.journalEntry.EventTypeID == JournalTypeEnum.Scan || s.journalEntry.EventTypeID == JournalTypeEnum.FSSBodySignals || s.journalEntry.EventTypeID == JournalTypeEnum.SAASignalsFound)) select s).ToList(); }
 
         // used by travel, spanel, journal to filter out by journal type
         public static List<HistoryEntry> FilterByJournalEvent(List<HistoryEntry> he, string eventstring, out int count)

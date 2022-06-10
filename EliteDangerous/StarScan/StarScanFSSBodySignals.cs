@@ -26,7 +26,7 @@ namespace EliteDangerousCore
             // jsd should always have a system address.  If it matches current system, we can go for an immediate add
             if (sys.SystemAddress.HasValue && jsaa.SystemAddress == sys.SystemAddress.Value)
             {
-                bool ret = ProcessSignalsFound(jsaa.BodyID,jsaa.BodyName,jsaa.Signals, sys);
+                bool ret = ProcessSignalsFound(jsaa.BodyID.Value,jsaa.BodyName,jsaa.Signals, sys);
                 if (!ret)
                     SaveForProcessing(jsaa, sys);
                 return ret;

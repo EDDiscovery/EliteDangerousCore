@@ -26,7 +26,7 @@ namespace EliteDangerousCore.JournalEvents
 {
     [System.Diagnostics.DebuggerDisplay("Event {EventTypeStr} {EventTimeUTC} {BodyName} {BodyDesignation} s{IsStar} p{IsPlanet}")]
     [JournalEntryType(JournalTypeEnum.Scan)]
-    public partial class JournalScan : JournalEntry, IStarScan
+    public partial class JournalScan : JournalEntry, IStarScan, IBodyNameIDOnly
     {
         public bool IsStar { get { return StarType != null; } }
         public bool IsBeltCluster { get { return StarType == null && PlanetClass == null; } }
@@ -152,6 +152,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool Terraformable { get { return TerraformState != null && new[] { "terraformable", "terraforming", "terraformed" }.Contains(TerraformState, StringComparer.InvariantCultureIgnoreCase); } }
         public bool CanBeTerraformable { get { return TerraformState != null && new[] { "terraformable", "terraforming" }.Contains(TerraformState, StringComparer.InvariantCultureIgnoreCase); } }
 
+        public bool HasAtmosphere { get { return Atmosphere != "none"; } }  // none is used if no atmosphere
         public string Atmosphere { get; private set; }                      // processed data, always there, may be "none"
         public EDAtmosphereType AtmosphereID { get; }                       // Atmosphere -> ID (Ammonia, Carbon etc)
         public EDAtmosphereProperty AtmosphereProperty { get; private set; }  // Atomsphere -> Property (None, Rich, Thick , Thin, Hot)

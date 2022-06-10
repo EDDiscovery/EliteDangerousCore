@@ -53,7 +53,7 @@ namespace EliteDangerousCore
 
                 new Query("Landable","IsLandable IsTrue", true ),
                 new Query("Landable and Terraformable","IsPlanet IsTrue And IsLandable IsTrue And Terraformable IsTrue",true ),
-                new Query("Landable with Atmosphere","IsPlanet IsTrue And IsLandable IsTrue And Atmosphere IsNotEmpty",true ),
+                new Query("Landable with Atmosphere","IsPlanet IsTrue And IsLandable IsTrue And HasAtmosphere IsTrue",true ),
                 new Query("Landable with High G","IsPlanet IsTrue And IsLandable IsTrue And nSurfaceGravityG >= 3",true ),
                 new Query("Landable large planet","IsPlanet IsTrue And IsLandable IsTrue And nRadius > 8000000",true ),
                 new Query("Landable with Rings","IsPlanet IsTrue And IsLandable IsTrue And HasRings IsTrue",true ),
@@ -177,36 +177,48 @@ namespace EliteDangerousCore
                 Searches.RemoveAt(entry);
         }
 
-        // find a named search, async
-        public System.Threading.Tasks.Task<List<HistoryEntry>> Find(List<HistoryEntry> helist, string searchname, BaseUtils.Variables defaultvars)
+        //find a named search, async
+        public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist, Dictionary<string, Results> results, string searchname, BaseUtils.Variables defaultvars)
         {
             var search = Searches.Find(x => x.Name.Equals(searchname));
             if (search != null)
             {
                 var cond = new BaseUtils.ConditionLists(search.Condition);
-                return Find(helist, cond, defaultvars);
+                return Find(helist, results, searchname, cond, defaultvars);
             }
             else
-                return null;
+            {
+                return new System.Threading.Tasks.Task<string>(null, "Search not found");
+            }
         }
 
-        // find using cond, async
-        static public System.Threading.Tasks.Task<List<HistoryEntry>> Find(List<HistoryEntry> helist, BaseUtils.ConditionLists cond, BaseUtils.Variables defaultvars)
+        public class Results
         {
+            public HistoryEntry HistoryEntry { get; set; }
+            public List<string> FiltersPassed { get; set; }
+        }
+
+
+        // find using cond, async. return string of result info.  Fill in results dictionary (already made)
+        static public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist, 
+                                   Dictionary<string,Results> results, string filterdescription,
+                                   BaseUtils.ConditionLists cond, BaseUtils.Variables defaultvars)
+        {
+
             return System.Threading.Tasks.Task.Run(() =>
             {
+                string resultinfo = "";
+
                 var allvars = BaseUtils.Condition.EvalVariablesUsed(cond.List);
 
-                HashSet<string> varsevent = allvars.Where(x=> !x.StartsWith("Parent.") && !x.StartsWith("Sibling")).Select(x => x.Substring(0, x.IndexOfOrLength("["))).ToHashSet();
-                HashSet<string> varsparent = allvars.Where(x => x.StartsWith("Parent.")).Select(x => x.Substring(7, x.IndexOfOrLength("[")-7)).ToHashSet();
+                HashSet<string> varsevent = allvars.Where(x => !x.StartsWith("Parent.") && !x.StartsWith("Sibling")).Select(x => x.Substring(0, x.IndexOfOrLength("["))).ToHashSet();
+                HashSet<string> varsparent = allvars.Where(x => x.StartsWith("Parent.")).Select(x => x.Substring(7, x.IndexOfOrLength("[") - 7)).ToHashSet();
                 HashSet<string> varssiblings = allvars.Where(x => x.StartsWith("Sibling[")).Select(x => x.Substring(x.IndexOfOrLength("]", offset: 2))).Select(x => x.Substring(0, x.IndexOfOrLength("["))).ToHashSet();
                 HashSet<string> varschildren = allvars.Where(x => x.StartsWith("Child[")).Select(x => x.Substring(x.IndexOfOrLength("]", offset: 2))).Select(x => x.Substring(0, x.IndexOfOrLength("["))).ToHashSet();
 
-                List<HistoryEntry> retlist = new List<HistoryEntry>();
+
                 foreach (var he in helist)
                 {
-                    if (he.EntryType != JournalTypeEnum.Scan) continue;// debug
-
                     BaseUtils.Variables scandatavars = new BaseUtils.Variables(defaultvars);
                     scandatavars.AddPropertiesFieldsOfClass(he.journalEntry, "",
                             new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
@@ -231,7 +243,7 @@ namespace EliteDangerousCore
                             if (varsparent.Count > 0 && parentjs != null) // if want parent scan data
                             {
                                 scandatavars.AddPropertiesFieldsOfClass(parentjs, "Parent.",
-                                        new Type[] { typeof(System.Drawing.Icon ), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap ), typeof(QuickJSON.JObject) }, 5,
+                                        new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
                                         varsparent);
                                 scandatavars["Parent.Level"] = he.ScanNode.Parent.Level.ToStringInvariant();
                             }
@@ -267,7 +279,7 @@ namespace EliteDangerousCore
                                                 new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
                                                 varschildren);
 
-                                        if ( scandatavars.Count > cc )
+                                        if (scandatavars.Count > cc)
                                         {
 
                                         }
@@ -282,27 +294,40 @@ namespace EliteDangerousCore
                         scandatavars["Iter1"] = "1";
                     if (varsevent.Contains("Iter2"))      // set up default iter2
                         scandatavars["Iter2"] = "1";
-                    //TBD
-                    if (js.BodyName.Contains("Beta Catonis 10 a"))
-                    {
 
-                    }
                     bool debugit = false;
 
-                    if (js.BodyName.Equals("Borann A 2 a"))
-                        debugit = true;
+                    //if (js.BodyName.Equals("Borann A 2 a"))  debugit = true;
 
-                    bool? res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, out string errlist, out BaseUtils.ConditionLists.ErrorClass errclassunused, debugit:debugit);
+                    bool? res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, out string evalerrlist, out BaseUtils.ConditionLists.ErrorClass errclassunused, debugit: debugit);
 
-                  //  if (errlist.HasChars()) System.Diagnostics.Debug.WriteLine($"Eval {errlist}");
+                    if (evalerrlist.HasChars())
+                    {
+                        resultinfo += $"{he.EventTimeUTC} Journal type {he.EntryType} : {evalerrlist}";
+                        // System.Diagnostics.Debug.WriteLine($"For entry type {he.EventTimeUTC} {he.EntryType} error: {resultinfo}");
+                    }
 
                     if (res.HasValue && res.Value == true)
                     {
-                        retlist.Add(he);
+                        // if we have a je with a body name, use that to set the ret, else just use a incrementing decimal count name
+                        string key = he.journalEntry is IBodyNameIDOnly ? (he.journalEntry as IBodyNameIDOnly).BodyName : results.Count.ToStringInvariant();
+
+                        resultinfo += $"{he.EventTimeUTC} Journal type {he.EntryType} : Matched {key} {Environment.NewLine}";
+
+                        if (results.TryGetValue(key, out Results value))       // if key already exists, set HE to us, and update filters passed
+                        {
+                            value.HistoryEntry = he;
+                            if ( !value.FiltersPassed.Contains(filterdescription))      // we may scan and find the same body twice with the same filter, do not dup add
+                                value.FiltersPassed.Add(filterdescription);
+                        }
+                        else
+                        {                                                       // else make a new key
+                            results[key] = new Results() { HistoryEntry = he, FiltersPassed = new List<string>() { filterdescription }};
+                        }
                     }
                 }
 
-                return retlist;
+                return resultinfo;
             });
         }
 
