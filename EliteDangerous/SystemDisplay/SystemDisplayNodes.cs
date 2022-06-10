@@ -145,7 +145,7 @@ namespace EliteDangerousCore
                     //   if (sc.BodyName.Contains("4 b"))  iconoverlays = 0;
 
                     bool materialsicon = sc.HasMaterials && !ShowMaterials;
-                    bool imageoverlays = sc.IsLandable || (sc.HasRings && drawtype != DrawLevel.TopLevelStar) || materialsicon;
+                    bool imageoverlays = sc.IsLandable || (sc.HasRingsOrBelts && drawtype != DrawLevel.TopLevelStar) || materialsicon;
 
                     int bitmapheight = size.Height * nodeheightratio / noderatiodivider;
                     int overlaywidth = bitmapheight / 6;
@@ -180,7 +180,7 @@ namespace EliteDangerousCore
                                                                                            imagetop + size.Height / 2 - offset * scale / 2, offset * scale, offset * scale));
                         }
 
-                        if (sc.HasRings && drawtype != DrawLevel.TopLevelStar)
+                        if (sc.HasRingsOrBelts && drawtype != DrawLevel.TopLevelStar)
                         {
                             g.DrawImage(sc.Rings.Count() > 1 ? BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RingGap") : BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RingOnly"),
                                             new Rectangle(imageleft - size.Width / 2, imagetop, size.Width * 2, size.Height));

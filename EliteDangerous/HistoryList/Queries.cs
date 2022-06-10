@@ -49,7 +49,8 @@ namespace EliteDangerousCore
                 new Query("Planet inside inner ring","IsPlanet IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis <= Parent.RingsInnerm And Parent.IsPlanet IsTrue",true ),
                 new Query("Planet inside the rings","IsPlanet IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis >= Parent.RingsInnerm And nSemiMajorAxis <= Parent.RingsOuterm And Parent.IsPlanet IsTrue And IsPlanet IsTrue",true ),
 
-                new Query("Bigger than Sol","IsStar IsTrue And nStellarMass > 1", true ),
+                new Query("Heavier than Sol","IsStar IsTrue And nStellarMass > 1", true ),
+                new Query("Bigger than Sol","IsStar IsTrue And nRadius > oneSolRadius_m", true ),
 
                 new Query("Landable","IsLandable IsTrue", true ),
                 new Query("Landable and Terraformable","IsPlanet IsTrue And IsLandable IsTrue And Terraformable IsTrue",true ),
@@ -59,7 +60,8 @@ namespace EliteDangerousCore
                 new Query("Landable with Rings","IsPlanet IsTrue And IsLandable IsTrue And HasRings IsTrue",true ),
                 new Query("Has Volcanism","HasMeaningfulVolcanism IsTrue", true ),
                 new Query("Landable with Volcanism","HasMeaningfulVolcanism IsTrue And IsLandable IsTrue", true ),
-                new Query("Has Rings","HasRings == 1", true ),
+                new Query("Has Rings","HasRings IsTrue", true ),
+                new Query("Has Belts","HasBelts IsTrue", true ),
                 new Query("Bigger than Earth","IsPlanet IsTrue And nMassEM > 1", true ),
                 new Query("Hotter than Hades","IsPlanet IsTrue And nSurfaceTemperature >= 350", true ),
 

@@ -60,7 +60,10 @@ namespace EliteDangerousCore.JournalEvents
         public double? nRadiusSols { get { if (nRadius.HasValue) return nRadius.Value / BodyPhysicalConstants.oneSolRadius_m; else return null; } }
         public double? nRadiusEarths { get { if (nRadius.HasValue) return nRadius.Value / BodyPhysicalConstants.oneEarthRadius_m; else return null; } }
 
-        public bool HasRings { get { return Rings != null && Rings.Length > 0; } }
+        public bool HasRingsOrBelts { get { return Rings != null && Rings.Length > 0; } }
+        public bool HasBelts { get { return HasRingsOrBelts && Rings[0].Name.Contains("Belt"); } }
+        public bool HasRings { get { return HasRingsOrBelts && !Rings[0].Name.Contains("Belt"); } }
+
         [PropertyNameAttribute("Rings[1 to N] _Name, _RingClass, _MassMT, _InnerRad (m), _OuterRad. Also RingCount")]
         public StarPlanetRing[] Rings { get; private set; }
 
@@ -737,7 +740,7 @@ namespace EliteDangerousCore.JournalEvents
             if (nTidalLock.HasValue && nTidalLock.Value)
                 scanText.Append("Tidally locked\n".T(EDCTx.JournalScan_Tidallylocked));
 
-            if (HasRings)
+            if (HasRingsOrBelts)
             {
                 scanText.Append("\n");
                 if (IsStar)

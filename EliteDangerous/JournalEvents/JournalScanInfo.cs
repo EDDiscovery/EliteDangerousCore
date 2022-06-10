@@ -906,7 +906,7 @@ namespace EliteDangerousCore.JournalEvents
             information.Append((hasguardiansignals) ? " Has guardian signals.".T(EDCTx.JournalScanInfo_GuardianSignals) : null);
             information.Append((hashumansignals) ? " Has human signals.".T(EDCTx.JournalScanInfo_HumanSignals) : null);
             information.Append((hasothersignals) ? " Has 'other' signals.".T(EDCTx.JournalScanInfo_OtherSignals) : null);
-            information.Append((js.HasRings && showRings) ? @" Is ringed.".T(EDCTx.JournalScanInfo_Hasring) : null);
+            information.Append((js.HasRingsOrBelts && showRings) ? @" Is ringed.".T(EDCTx.JournalScanInfo_Hasring) : null);
             information.Append((js.nEccentricity >= eccentricityLimit) ? @" Has an high eccentricity of ".T(EDCTx.JournalScanInfo_eccentricity) + js.nEccentricity + "." : null);
             information.Append(hasscanorganics ? " Has been scanned for organics.".T(EDCTx.JournalScanInfo_scanorganics) : null);
 

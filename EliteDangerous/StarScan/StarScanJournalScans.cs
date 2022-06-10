@@ -322,7 +322,7 @@ namespace EliteDangerousCore
 
         private void ProcessBelts(JournalScan sc, ScanNode node)
         {
-            if (sc.HasRings)
+            if (sc.HasRingsOrBelts)
             {
                 foreach (JournalScan.StarPlanetRing ring in sc.Rings)
                 {
