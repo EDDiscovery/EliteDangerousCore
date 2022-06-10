@@ -181,15 +181,13 @@ namespace EliteDangerousCore
         public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist, Dictionary<string, Results> results, string searchname, BaseUtils.Variables defaultvars)
         {
             var search = Searches.Find(x => x.Name.Equals(searchname));
-            if (search != null)
-            {
-                var cond = new BaseUtils.ConditionLists(search.Condition);
-                return Find(helist, results, searchname, cond, defaultvars);
-            }
-            else
-            {
-                return new System.Threading.Tasks.Task<string>(null, "Search not found");
-            }
+
+            var cond = search != null ? new BaseUtils.ConditionLists(search.Condition) : null;
+
+            if (cond == null)
+                System.Diagnostics.Trace.WriteLine($"Search missing {searchname}");
+
+            return Find(helist, results, searchname, cond, defaultvars);
         }
 
         public class Results
@@ -207,6 +205,9 @@ namespace EliteDangerousCore
 
             return System.Threading.Tasks.Task.Run(() =>
             {
+                if (cond == null)
+                    return "Search Not Found";
+
                 string resultinfo = "";
 
                 var allvars = BaseUtils.Condition.EvalVariablesUsed(cond.List);
