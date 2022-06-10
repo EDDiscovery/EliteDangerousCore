@@ -193,7 +193,7 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Earths")]
         public double? nMassEM { get; private set; }                        // direct, not in description of event, mass in EMs
         [PropertyNameAttribute("Moons")]
-        public double? nMassMM { get { if (nMassEM.HasValue) return nMassEM * BodyPhysicalConstants.EarthMoonMassRatio; else return null; } }
+        public double? nMassMM { get { if (nMassEM.HasValue) return nMassEM * BodyPhysicalConstants.oneEarthMoonMassRatio; else return null; } }
 
         public bool HasMaterials { get { return Materials != null && Materials.Any(); } }
         [PropertyNameAttribute("Not Searchable")]

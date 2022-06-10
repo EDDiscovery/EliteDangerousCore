@@ -536,7 +536,7 @@ namespace EliteDangerousCore
         public const double oneSol_KG = 1.989e30;
         public const double oneEarth_KG = 5.972e24;
         public const double oneMoon_KG = 7.34767309e22;
-        public const double EarthMoonMassRatio = oneEarth_KG / oneMoon_KG;
+        public const double oneEarthMoonMassRatio = oneEarth_KG / oneMoon_KG;
 
         // astrometric
         public const double oneLS_m = 299792458;

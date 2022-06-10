@@ -18,6 +18,7 @@ using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace EliteDangerousCore
 {
@@ -49,8 +50,8 @@ namespace EliteDangerousCore
                 new Query("Planet inside inner ring","IsPlanet IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis <= Parent.RingsInnerm And Parent.IsPlanet IsTrue",true ),
                 new Query("Planet inside the rings","IsPlanet IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis >= Parent.RingsInnerm And nSemiMajorAxis <= Parent.RingsOuterm And Parent.IsPlanet IsTrue And IsPlanet IsTrue",true ),
 
-                new Query("Heavier than Sol","IsStar IsTrue And nStellarMass > 1", true ),
-                new Query("Bigger than Sol","IsStar IsTrue And nRadius > oneSolRadius_m", true ),
+                new Query("Heavier than Sol","nStellarMass > 1", true ),
+                new Query("Bigger than Sol","nRadius > 695700000", true ),
 
                 new Query("Landable","IsLandable IsTrue", true ),
                 new Query("Landable and Terraformable","IsPlanet IsTrue And IsLandable IsTrue And Terraformable IsTrue",true ),
@@ -60,6 +61,7 @@ namespace EliteDangerousCore
                 new Query("Landable with Rings","IsPlanet IsTrue And IsLandable IsTrue And HasRings IsTrue",true ),
                 new Query("Has Volcanism","HasMeaningfulVolcanism IsTrue", true ),
                 new Query("Landable with Volcanism","HasMeaningfulVolcanism IsTrue And IsLandable IsTrue", true ),
+                new Query("Earth Like planet","Earthlike IsTrue", true ),
                 new Query("Has Rings","HasRings IsTrue", true ),
                 new Query("Has Belts","HasBelts IsTrue", true ),
                 new Query("Bigger than Earth","IsPlanet IsTrue And nMassEM > 1", true ),
@@ -180,7 +182,7 @@ namespace EliteDangerousCore
         }
 
         //find a named search, async
-        public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist, Dictionary<string, Results> results, string searchname, BaseUtils.Variables defaultvars)
+        public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist, Dictionary<string, Results> results, string searchname, BaseUtils.Variables defaultvars, bool wantdebug)
         {
             var search = Searches.Find(x => x.Name.Equals(searchname));
 
@@ -189,7 +191,7 @@ namespace EliteDangerousCore
             if (cond == null)
                 System.Diagnostics.Trace.WriteLine($"Search missing {searchname}");
 
-            return Find(helist, results, searchname, cond, defaultvars);
+            return Find(helist, results, searchname, cond, defaultvars, wantdebug);
         }
 
         public class Results
@@ -202,7 +204,7 @@ namespace EliteDangerousCore
         // find using cond, async. return string of result info.  Fill in results dictionary (already made)
         static public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist, 
                                    Dictionary<string,Results> results, string filterdescription,
-                                   BaseUtils.ConditionLists cond, BaseUtils.Variables defaultvars)
+                                   BaseUtils.ConditionLists cond, BaseUtils.Variables defaultvars, bool wantdebug)
         {
 
             return System.Threading.Tasks.Task.Run(() =>
@@ -210,7 +212,7 @@ namespace EliteDangerousCore
                 if (cond == null)
                     return "Search Not Found";
 
-                string resultinfo = "";
+                StringBuilder resultinfo = new StringBuilder(10000);
 
                 var allvars = BaseUtils.Condition.EvalVariablesUsed(cond.List);
 
@@ -219,40 +221,59 @@ namespace EliteDangerousCore
                 HashSet<string> varssiblings = allvars.Where(x => x.StartsWith("Sibling[")).Select(x => x.Substring(x.IndexOfOrLength("]", offset: 2))).Select(x => x.Substring(0, x.IndexOfOrLength("["))).ToHashSet();
                 HashSet<string> varschildren = allvars.Where(x => x.StartsWith("Child[")).Select(x => x.Substring(x.IndexOfOrLength("]", offset: 2))).Select(x => x.Substring(0, x.IndexOfOrLength("["))).ToHashSet();
 
+                bool iter1 = varsevent.Contains("Iter1");
+                bool iter2 = varsevent.Contains("Iter2");
+                bool jumponium = varsevent.Contains("JumponiumCount");
+                bool wantsiblingcount = varsevent.Contains("Sibling.Count");
+                bool wantchildcount = varsevent.Contains("Child.Count");
+                bool wantlevel = varsevent.Contains("Level");
+                bool wantconstants = varsevent.StartsWith("one") >= 0;
+                if (!wantconstants)
+                    defaultvars = null;
 
                 foreach (var he in helist)
                 {
-                    BaseUtils.Variables scandatavars = new BaseUtils.Variables(defaultvars);
+                    BaseUtils.Variables scandatavars = defaultvars != null ? new BaseUtils.Variables(defaultvars) : new BaseUtils.Variables();
+
                     scandatavars.AddPropertiesFieldsOfClass(he.journalEntry, "",
                             new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
                             varsevent);
 
-                    JournalScan js = he.journalEntry as JournalScan;
+                    if ( jumponium )
+                    { 
+                        JournalScan js = he.journalEntry as JournalScan;
 
-                    if (js != null)   // if its a journal scan
-                    {
-                        if (varsevent.Contains("JumponiumCount"))
+                        if (js != null)   // if its a journal scan
+                        {
                             scandatavars["JumponiumCount"] = js.Jumponium().ToStringInvariant();
+                        }
                     }
 
                     if (he.ScanNode != null)      // if it has a scan node
                     {
-                        scandatavars["Level"] = he.ScanNode.Level.ToStringInvariant();
+                        if ( wantlevel )
+                            scandatavars["Level"] = he.ScanNode.Level.ToStringInvariant();
 
                         if (he.ScanNode.Parent != null) // if we have a parent..
                         {
-                            var parentjs = he.ScanNode.Parent.ScanData;               // parent journal entry, may be null
-
-                            if (varsparent.Count > 0 && parentjs != null) // if want parent scan data
+                            if (varsparent.Count > 0)
                             {
-                                scandatavars.AddPropertiesFieldsOfClass(parentjs, "Parent.",
-                                        new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                                        varsparent);
-                                scandatavars["Parent.Level"] = he.ScanNode.Parent.Level.ToStringInvariant();
+                                var parentjs = he.ScanNode.Parent.ScanData;               // parent journal entry, may be null
+
+                                if (parentjs != null) // if want parent scan data
+                                {
+                                    scandatavars.AddPropertiesFieldsOfClass(parentjs, "Parent.",
+                                            new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
+                                            varsparent);
+                                    scandatavars["Parent.Level"] = he.ScanNode.Parent.Level.ToStringInvariant();
+                                }
                             }
 
-                            scandatavars["Sibling.Count"] = ((he.ScanNode.Parent.Children.Count - 1)).ToStringInvariant();      // count of children or parent less ours
-                            scandatavars["Child.Count"] = ((he.ScanNode.Children?.Count ?? 0)).ToStringInvariant();      // count of children
+                            if ( wantsiblingcount )
+                                scandatavars["Sibling.Count"] = ((he.ScanNode.Parent.Children.Count - 1)).ToStringInvariant();      // count of children or parent less ours
+                            
+                            if ( wantchildcount)
+                                scandatavars["Child.Count"] = ((he.ScanNode.Children?.Count ?? 0)).ToStringInvariant();      // count of children
 
                             if (varssiblings.Count > 0)        // if want sibling[
                             {
@@ -293,44 +314,44 @@ namespace EliteDangerousCore
                         }
                     }
 
-                    if (varsevent.Contains("Iter1"))      // set up default iter1
+                    if (iter1)      // set up default iter1
                         scandatavars["Iter1"] = "1";
-                    if (varsevent.Contains("Iter2"))      // set up default iter2
+                    if (iter2)      // set up default iter2
                         scandatavars["Iter2"] = "1";
 
                     bool debugit = false;
 
                     //if (js.BodyName.Equals("Borann A 2 a"))  debugit = true;
 
-                    bool? res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, out string evalerrlist, out BaseUtils.ConditionLists.ErrorClass errclassunused, debugit: debugit);
+                    bool? res = BaseUtils.ConditionLists.CheckConditionsEval(cond.List, scandatavars, out string evalerrlist, out BaseUtils.ConditionLists.ErrorClass errclassunused, debugit: debugit);
 
-                    if (evalerrlist.HasChars())
+                    if (wantdebug && evalerrlist.HasChars())
                     {
-                        resultinfo += $"{he.EventTimeUTC} Journal type {he.EntryType} : {evalerrlist}";
+                        resultinfo.AppendLine($"{he.EventTimeUTC} Journal type {he.EntryType} : {evalerrlist}");
                         // System.Diagnostics.Debug.WriteLine($"For entry type {he.EventTimeUTC} {he.EntryType} error: {resultinfo}");
                     }
 
                     if (res.HasValue && res.Value == true)
                     {
-                        // if we have a je with a body name, use that to set the ret, else just use a incrementing decimal count name
+                        //if we have a je with a body name, use that to set the ret, else just use a incrementing decimal count name
                         string key = he.journalEntry is IBodyNameIDOnly ? (he.journalEntry as IBodyNameIDOnly).BodyName : results.Count.ToStringInvariant();
 
-                        resultinfo += $"{he.EventTimeUTC} Journal type {he.EntryType} : Matched {key} {Environment.NewLine}";
+                        // resultinfo += $"{he.EventTimeUTC} Journal type {he.EntryType} : Matched {key} {Environment.NewLine}";
 
                         if (results.TryGetValue(key, out Results value))       // if key already exists, set HE to us, and update filters passed
                         {
                             value.HistoryEntry = he;
-                            if ( !value.FiltersPassed.Contains(filterdescription))      // we may scan and find the same body twice with the same filter, do not dup add
+                            if (!value.FiltersPassed.Contains(filterdescription))      // we may scan and find the same body twice with the same filter, do not dup add
                                 value.FiltersPassed.Add(filterdescription);
                         }
                         else
                         {                                                       // else make a new key
-                            results[key] = new Results() { HistoryEntry = he, FiltersPassed = new List<string>() { filterdescription }};
+                            results[key] = new Results() { HistoryEntry = he, FiltersPassed = new List<string>() { filterdescription } };
                         }
                     }
                 }
 
-                return resultinfo;
+                return resultinfo.ToString();
             });
         }
 
