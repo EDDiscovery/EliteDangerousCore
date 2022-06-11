@@ -76,7 +76,7 @@ namespace EliteDangerousCore
                                 "( \"Abs(Parent.Rings[Iter1]_InnerRad-nSemiMajorAxis)\" < nRadius*10 Or  \"Abs(Parent.Rings[Iter1]_OuterRad-nSemiMajorAxis)\" < nRadius*10 )"
                     ,true ),
 
-                new Query("Moons with a large number of companions","Sibling.Count >= 6 And Level == 2 And IsBeltCluster IsFalse",true ),
+                new Query("Planets with a large number of Moons","IsPlanet IsTrue And Child.Count >= 8",true ),
                 new Query("Moon of a Moon","Level == 3",true ),
                 new Query("Moons orbiting Terraformables","Level >= 2 And Parent.Terraformable IsTrue",true ),
                 new Query("Moons orbiting Earthlike","Level >= 2 And Parent.Earthlike IsTrue",true ),
