@@ -57,7 +57,7 @@ namespace EliteDangerousCore
                 new Query("Landable and Terraformable","IsPlanet IsTrue And IsLandable IsTrue And Terraformable IsTrue",true ),
                 new Query("Landable with Atmosphere","IsPlanet IsTrue And IsLandable IsTrue And HasAtmosphere IsTrue",true ),
                 new Query("Landable with High G","IsPlanet IsTrue And IsLandable IsTrue And nSurfaceGravityG >= 3",true ),
-                new Query("Landable large planet","IsPlanet IsTrue And IsLandable IsTrue And nRadius > 8000000",true ),
+                new Query("Landable large planet","IsPlanet IsTrue And IsLandable IsTrue And nRadius >= 12000000",true ),
                 new Query("Landable with Rings","IsPlanet IsTrue And IsLandable IsTrue And HasRings IsTrue",true ),
                 new Query("Has Volcanism","HasMeaningfulVolcanism IsTrue", true ),
                 new Query("Landable with Volcanism","HasMeaningfulVolcanism IsTrue And IsLandable IsTrue", true ),
@@ -73,13 +73,13 @@ namespace EliteDangerousCore
 
                 new Query("Close to ring",
                                 "( IsPlanet IsTrue And Parent.IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse ) And " +
-                                "( \"Abs(Parent.Rings[Iter1]_InnerRad-nSemiMajorAxis)\" < nRadius*100 Or  \"Abs(Parent.Rings[Iter1]_OuterRad-nSemiMajorAxis)\" < nRadius*100 )"
+                                "( \"Abs(Parent.Rings[Iter1]_InnerRad-nSemiMajorAxis)\" < nRadius*10 Or  \"Abs(Parent.Rings[Iter1]_OuterRad-nSemiMajorAxis)\" < nRadius*10 )"
                     ,true ),
 
-                new Query("Moons with a large number of companions","Sibling.Count >= 8 And Level == 2",true ),
+                new Query("Moons with a large number of companions","Sibling.Count >= 6 And Level == 2 And IsBeltCluster IsFalse",true ),
                 new Query("Moon of a Moon","Level == 3",true ),
-                new Query("Moons orbiting Terraformables","Level == 2 And Parent.Terraformable IsTrue",true ),
-                new Query("Moons orbiting Earthlike","Level == 2 And Parent.Earthlike IsTrue",true ),
+                new Query("Moons orbiting Terraformables","Level >= 2 And Parent.Terraformable IsTrue",true ),
+                new Query("Moons orbiting Earthlike","Level >= 2 And Parent.Earthlike IsTrue",true ),
 
                 new Query("Close Binary","IsPlanet IsTrue And IsOrbitingBaryCentre IsTrue And Sibling.Count == 1 And nRadius/nSemiMajorAxis > 0.4 And " +
                     "Sibling[1].nRadius/Sibling[1].nSemiMajorAxis > 0.4",true ),
@@ -92,7 +92,7 @@ namespace EliteDangerousCore
                 new Query("Fast Rotation of a non tidally locked body","Level >= 1 And nTidalLock IsFalse And Abs(nRotationPeriod) < 3600",true ),
                 new Query("Fast Orbital period","Level >= 1 And nOrbitalPeriod < 28800",true ),
                 new Query("High Eccentric Orbit","Level >= 1 And nEccentricity > 0.9",true ),
-                new Query("Low Eccentricity Orbit","Level >= 1 And nEccentricity <= 0.1", true ),
+                new Query("Low Eccentricity Orbit","Level >= 1 And nEccentricity <= 0.01", true ),
                 new Query("Tidal Lock","IsPlanet IsTrue And nTidalLock == 1",true ),
 
                 new Query("High number of Jumponium Materials","IsLandable IsTrue And JumponiumCount >= 5",true ),
@@ -205,7 +205,7 @@ namespace EliteDangerousCore
         // default vars can be null
         static public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist, 
                                    Dictionary<string,Results> results, string filterdescription,
-                                   BaseUtils.ConditionLists cond, BaseUtils.Variables defaultvars, bool wantdebug)
+                                   BaseUtils.ConditionLists cond, BaseUtils.Variables defaultvars, bool wantreport)
         {
 
             return System.Threading.Tasks.Task.Run(() =>
@@ -217,21 +217,23 @@ namespace EliteDangerousCore
 
                 var allvars = BaseUtils.Condition.EvalVariablesUsed(cond.List);
 
+                bool iter1 = allvars.Contains("Iter1");
+                bool iter2 = allvars.Contains("Iter2");
+                bool jumponium = allvars.Contains("JumponiumCount");
+                bool wantsiblingcount = allvars.Contains("Sibling.Count");
+                bool wantchildcount = allvars.Contains("Child.Count");
+                bool wantlevel = allvars.Contains("Level");
+
                 HashSet<string> varsevent = allvars.Where(x => !x.StartsWith("Parent.") && !x.StartsWith("Sibling")).Select(x => x.Substring(0, x.IndexOfOrLength("["))).ToHashSet();
                 HashSet<string> varsparent = allvars.Where(x => x.StartsWith("Parent.")).Select(x => x.Substring(7, x.IndexOfOrLength("[") - 7)).ToHashSet();
                 HashSet<string> varssiblings = allvars.Where(x => x.StartsWith("Sibling[")).Select(x => x.Substring(x.IndexOfOrLength("]", offset: 2))).Select(x => x.Substring(0, x.IndexOfOrLength("["))).ToHashSet();
                 HashSet<string> varschildren = allvars.Where(x => x.StartsWith("Child[")).Select(x => x.Substring(x.IndexOfOrLength("]", offset: 2))).Select(x => x.Substring(0, x.IndexOfOrLength("["))).ToHashSet();
 
-                bool iter1 = varsevent.Contains("Iter1");
-                bool iter2 = varsevent.Contains("Iter2");
-                bool jumponium = varsevent.Contains("JumponiumCount");
-                bool wantsiblingcount = varsevent.Contains("Sibling.Count");
-                bool wantchildcount = varsevent.Contains("Child.Count");
-                bool wantlevel = varsevent.Contains("Level");
-
                 foreach (var he in helist)
                 {
                     BaseUtils.Variables scandatavars = defaultvars != null ? new BaseUtils.Variables(defaultvars) : new BaseUtils.Variables();
+
+                    //if (he.EntryType != JournalTypeEnum.Scan) continue;
 
                     scandatavars.AddPropertiesFieldsOfClass(he.journalEntry, "",
                             new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
@@ -323,7 +325,7 @@ namespace EliteDangerousCore
 
                     bool? res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, out string evalerrlist, out BaseUtils.ConditionLists.ErrorClass errclassunused, iter1 || iter2 , debugit: debugit);
 
-                    if (wantdebug && evalerrlist.HasChars())
+                    if (wantreport && evalerrlist.HasChars())
                     {
                         resultinfo.AppendLine($"{he.EventTimeUTC} Journal type {he.EntryType} : {evalerrlist}");
                         // System.Diagnostics.Debug.WriteLine($"For entry type {he.EventTimeUTC} {he.EntryType} error: {resultinfo}");
@@ -334,7 +336,8 @@ namespace EliteDangerousCore
                         //if we have a je with a body name, use that to set the ret, else just use a incrementing decimal count name
                         string key = he.journalEntry is IBodyNameIDOnly ? (he.journalEntry as IBodyNameIDOnly).BodyName : results.Count.ToStringInvariant();
 
-                        // resultinfo += $"{he.EventTimeUTC} Journal type {he.EntryType} : Matched {key} {Environment.NewLine}";
+                        if ( wantreport)
+                            resultinfo.AppendLine($"{he.EventTimeUTC} Journal type {he.EntryType} : Matched {key}");
 
                         if (results.TryGetValue(key, out Results value))       // if key already exists, set HE to us, and update filters passed
                         {
