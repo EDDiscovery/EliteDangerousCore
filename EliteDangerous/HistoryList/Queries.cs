@@ -339,15 +339,18 @@ namespace EliteDangerousCore
                         if ( wantreport)
                             resultinfo.AppendLine($"{he.EventTimeUTC} Journal type {he.EntryType} : Matched {key}");
 
-                        if (results.TryGetValue(key, out Results value))       // if key already exists, set HE to us, and update filters passed
+                        lock (results)     // may be spawing a lot of parallel awaits, make sure the shared resource is locked
                         {
-                            value.HistoryEntry = he;
-                            if (!value.FiltersPassed.Contains(filterdescription))      // we may scan and find the same body twice with the same filter, do not dup add
-                                value.FiltersPassed.Add(filterdescription);
-                        }
-                        else
-                        {                                                       // else make a new key
-                            results[key] = new Results() { HistoryEntry = he, FiltersPassed = new List<string>() { filterdescription } };
+                            if (results.TryGetValue(key, out Results value))       // if key already exists, set HE to us, and update filters passed
+                            {
+                                value.HistoryEntry = he;
+                                if (!value.FiltersPassed.Contains(filterdescription))      // we may scan and find the same body twice with the same filter, do not dup add
+                                    value.FiltersPassed.Add(filterdescription);
+                            }
+                            else
+                            {                                                       // else make a new key
+                                results[key] = new Results() { HistoryEntry = he, FiltersPassed = new List<string>() { filterdescription } };
+                            }
                         }
                     }
                 }
