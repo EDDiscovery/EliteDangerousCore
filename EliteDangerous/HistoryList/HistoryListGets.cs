@@ -63,6 +63,15 @@ namespace EliteDangerousCore
             return Enumerable.Reverse(list).ToList();
         }
 
+        static public List<HistoryEntry> LatestFirst(List<HistoryEntry> list, JournalTypeEnum[] entries) // list should be in entry order (oldest first)
+        {
+            return list.Where(x => entries.Contains(x.EntryType)).Reverse().ToList();
+        }
+        static public List<HistoryEntry> OnlyEntries(List<HistoryEntry> list, JournalTypeEnum[] entries) // list should be in entry order (oldest first)
+        {
+            return list.Where(x => entries.Contains(x.EntryType)).ToList();
+        }
+
         // history filter
         static public List<HistoryEntry> LatestFirstLimitNumber(List<HistoryEntry> list, int max) // list should be in entry order (oldest first)
         {
@@ -70,14 +79,27 @@ namespace EliteDangerousCore
         }
 
         // history filter
-        static public List<HistoryEntry> LatestFirstLimitByDate(List<HistoryEntry> list, TimeSpan days)     // list should be in entry order (oldest first)
+        static public List<HistoryEntry> LimitByDate(List<HistoryEntry> list, TimeSpan days, JournalTypeEnum[] entries = null, bool reverse = true)     // list should be in entry order (oldest first)
         {
             var oldestData = DateTime.UtcNow.Subtract(days);
-            return Enumerable.Reverse(list.Where(x => x.EventTimeUTC >= oldestData)).ToList();
+            if (entries != null)
+            {
+                if (reverse)
+                    return list.Where(x => entries.Contains(x.EntryType) && x.EventTimeUTC >= oldestData).Reverse().ToList();
+                else
+                    return list.Where(x => entries.Contains(x.EntryType) && x.EventTimeUTC >= oldestData).ToList();
+            }
+            else
+            {
+                if (reverse)
+                    return list.Where(x => x.EventTimeUTC >= oldestData).Reverse().ToList();
+                else
+                    return list.Where(x => x.EventTimeUTC >= oldestData).ToList();
+            }
         }
 
         // history filter List should be in entry order.
-        static public List<HistoryEntry> LatestFirstStartStopFlags(List<HistoryEntry> list)
+        static public List<HistoryEntry> StartStopFlags(List<HistoryEntry> list, JournalTypeEnum[] entriestoaccept = null, bool reverse = true)
         {
             List<HistoryEntry> entries = new List<HistoryEntry>();
             bool started = false;
@@ -86,27 +108,67 @@ namespace EliteDangerousCore
                 if (he.StartMarker)
                 {
                     started = true;
-                    entries.Add(he);
+                    if (entriestoaccept == null || entriestoaccept.Contains(he.EntryType))
+                        entries.Add(he);
                 }
                 else if (started)
                 {
-                    entries.Add(he);
+                    if (entriestoaccept == null || entriestoaccept.Contains(he.EntryType))
+                        entries.Add(he);
+
                     if (he.StopMarker && !he.StartMarker)
                         started = false;
                 }
             }
-            return Enumerable.Reverse(entries).ToList();
+
+            if ( reverse)
+                return Enumerable.Reverse(entries).ToList();
+            else
+                return entries;
         }
 
-        // history filter, combat panel.  List should be in entry order.
-        static public List<HistoryEntry> LatestFirstToLastDock(List<HistoryEntry> list)
+        // history filter, combat panel. List should be in entry order.
+        static public List<HistoryEntry> ToLastDock(List<HistoryEntry> list, JournalTypeEnum[] entriestoaccept = null, bool reverse = true)
         {
             int lastdock = list.FindLastIndex(x => !x.MultiPlayer && x.EntryType == JournalTypeEnum.Docked);
             if (lastdock >= 0)
             {
                 List<HistoryEntry> tolastdock = new List<HistoryEntry>();
-                for (int i = list.Count - 1; i >= lastdock; i--)     // go backwards so in lastest first order
-                    tolastdock.Add(list[i]);
+
+                if (reverse)
+                {
+                    if (entriestoaccept == null)
+                    {
+                        for (int i = list.Count - 1; i >= lastdock; i--)     // go backwards so in lastest first order
+                            tolastdock.Add(list[i]);
+                    }
+                    else
+                    {
+                        for (int i = list.Count - 1; i >= lastdock; i--)     // go backwards so in lastest first order
+                        {
+                            if (entriestoaccept.Contains(list[i].EntryType))
+                                tolastdock.Add(list[i]);
+                        }
+                    }
+                }
+                else
+                {
+                    if (entriestoaccept == null)
+                    {
+                        for (int i = lastdock; i < list.Count; i++)     // go backwards so in lastest first order
+                            tolastdock.Add(list[i]);
+                    }
+                    else
+                    {
+                        for (int i = lastdock; i < list.Count; i++)     // go backwards so in lastest first order
+                        {
+                            if (entriestoaccept.Contains(list[i].EntryType))
+                                tolastdock.Add(list[i]);
+                        }
+                    }
+
+                }
+
                 return tolastdock;
             }
             else
@@ -184,7 +246,6 @@ namespace EliteDangerousCore
         public List<HistoryEntry> FilterByFSDOnly() { return (from s in historylist where s.EntryType == JournalTypeEnum.FSDJump select s).ToList(); }
 
         // search scans
-        public List<HistoryEntry> FilterByScan() { return (from s in historylist where s.journalEntry.EventTypeID == JournalTypeEnum.Scan select s).ToList(); }
         public List<HistoryEntry> FilterByScanFSSBodySAASignals() { return (from s in historylist where (s.journalEntry.EventTypeID == JournalTypeEnum.Scan || s.journalEntry.EventTypeID == JournalTypeEnum.FSSBodySignals || s.journalEntry.EventTypeID == JournalTypeEnum.SAASignalsFound) select s).ToList(); }
         public List<HistoryEntry> FilterByScanFSSBodySAASignals(ISystem sys) { return (from s in historylist where (sys.Name == s.System.Name && (s.journalEntry.EventTypeID == JournalTypeEnum.Scan || s.journalEntry.EventTypeID == JournalTypeEnum.FSSBodySignals || s.journalEntry.EventTypeID == JournalTypeEnum.SAASignalsFound)) select s).ToList(); }
 

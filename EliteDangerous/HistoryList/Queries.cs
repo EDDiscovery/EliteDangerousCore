@@ -153,7 +153,7 @@ namespace EliteDangerousCore
                 Searches.Add(new Query(userqueries[i], userqueries[i + 1],false,true));
         }
 
-        public void Save()
+        private void Save()
         {
             string userqueries = "";
             for (int i = 0; i < Searches.Count; i++)
@@ -172,13 +172,18 @@ namespace EliteDangerousCore
                 Searches[entry] = new Query(name, expr, false, true);
             else
                 Searches.Add(new Query(name, expr, false, true));
+
+            Save();
         }
 
         public void Delete(string name)
         {
             var entry = Searches.FindIndex(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             if (entry != -1)
+            {
                 Searches.RemoveAt(entry);
+                Save();
+            }
         }
 
         //find a named search, async
@@ -217,9 +222,9 @@ namespace EliteDangerousCore
 
                 var allvars = BaseUtils.Condition.EvalVariablesUsed(cond.List);
 
-                bool iter1 = allvars.Contains("Iter1");
-                bool iter2 = allvars.Contains("Iter2");
-                bool jumponium = allvars.Contains("JumponiumCount");
+                bool wantiter1 = allvars.Contains("Iter1");
+                bool wantiter2 = allvars.Contains("Iter2");
+                bool wantjumponium = allvars.Contains("JumponiumCount");
                 bool wantsiblingcount = allvars.Contains("Sibling.Count");
                 bool wantchildcount = allvars.Contains("Child.Count");
                 bool wantlevel = allvars.Contains("Level");
@@ -239,7 +244,7 @@ namespace EliteDangerousCore
                             new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
                             varsevent);
 
-                    if ( jumponium )
+                    if ( wantjumponium )
                     { 
                         JournalScan js = he.journalEntry as JournalScan;
 
@@ -314,16 +319,16 @@ namespace EliteDangerousCore
                         }
                     }
 
-                    if (iter1)      // set up default iter1
+                    if (wantiter1)      // set up default iter1
                         scandatavars["Iter1"] = "1";
-                    if (iter2)      // set up default iter2
+                    if (wantiter2)      // set up default iter2
                         scandatavars["Iter2"] = "1";
 
                     bool debugit = false;
 
                     //if (js.BodyName.Equals("Borann A 2 a"))  debugit = true;
 
-                    bool? res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, out string evalerrlist, out BaseUtils.ConditionLists.ErrorClass errclassunused, iter1 || iter2 , debugit: debugit);
+                    bool? res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, out string evalerrlist, out BaseUtils.ConditionLists.ErrorClass errclassunused, wantiter1 || wantiter2 , debugit: debugit);
 
                     if (wantreport && evalerrlist.HasChars())
                     {
