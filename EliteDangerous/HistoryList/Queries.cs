@@ -46,9 +46,11 @@ namespace EliteDangerousCore
 
         public List<Query> Searches = new List<Query>()
             {
-                new Query("Planet inside outer ring","IsPlanet IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis <= Parent.RingsOuterm And Parent.IsPlanet IsTrue",true ),
-                new Query("Planet inside inner ring","IsPlanet IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis <= Parent.RingsInnerm And Parent.IsPlanet IsTrue",true ),
-                new Query("Planet inside the rings","IsPlanet IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis >= Parent.RingsInnerm And nSemiMajorAxis <= Parent.RingsOuterm And Parent.IsPlanet IsTrue",true ),
+                new Query("Planet inside inner ring","IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis <= Parent.RingsInnerm And Parent.IsPlanet IsTrue",true ),
+                new Query("Planet inside rings","IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis <= Parent.RingsOuterm And Parent.IsPlanet IsTrue",true ),
+                new Query("Planet between inner and outer ring","IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis >= Parent.RingsInnerm And nSemiMajorAxis <= Parent.RingsOuterm And Parent.IsPlanet IsTrue",true ),
+                new Query("Planet between rings 1 and 2","IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis >= Parent.Rings[1]_OuterRad And nSemiMajorAxis <= Parent.Rings[2]_InnerRad",true ),
+                new Query("Planet between rings 2 and 3","IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis >= Parent.Rings[2]_OuterRad And nSemiMajorAxis <= Parent.Rings[3]_InnerRad",true ),
 
                 new Query("Heavier than Sol","nStellarMass > 1", true ),
                 new Query("Bigger than Sol","nRadius > 695700000", true ),
