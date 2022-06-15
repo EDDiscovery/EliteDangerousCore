@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 - 2021 EDDiscovery development team
+ * Copyright © 2016 - 2022 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -245,74 +245,6 @@ namespace EliteDangerousCore.JournalEvents
 
         public string ParentList() { return Parents != null ? string.Join(",", Parents.Select(x => x.Type + ":" + x.BodyID)) : ""; }     // not get on purpose
 
-        public class StarPlanetRing
-        {
-            public string Name;     // may be null
-            public string RingClass;    // may be null
-            public double MassMT;
-            public double InnerRad;
-            public double OuterRad;
-
-            // has trailing LF
-            public string RingInformation(string frontpad = "  ")
-            {
-                StringBuilder scanText = new StringBuilder();
-
-                scanText.AppendFormat(frontpad + "{0} ({1})\n", Name.Alt("Unknown".T(EDCTx.Unknown)), DisplayStringFromRingClass(RingClass));
-
-                if ( MassMT > (BodyPhysicalConstants.oneMoon_KG / 1e9 / 1000))
-                    scanText.AppendFormat(frontpad + "Mass: {0:N4}{1}\n".T(EDCTx.StarPlanetRing_Mass), MassMT / (BodyPhysicalConstants.oneMoon_KG / 1E9), " Moons".T(EDCTx.JournalScan_Moons));
-                else
-                    scanText.AppendFormat(frontpad + "Mass: {0:N0}{1}\n".T(EDCTx.StarPlanetRing_Mass), MassMT, " MT");
-
-                if (InnerRad > BodyPhysicalConstants.oneAU_m/10)       // more than 0.1AU, its in ls
-                {
-                    scanText.AppendFormat(frontpad + "Inner Radius: {0:0.00}ls".T(EDCTx.StarPlanetRing_InnerRadius) + Environment.NewLine, (InnerRad / BodyPhysicalConstants.oneLS_m));
-                    scanText.AppendFormat(frontpad + "Outer Radius: {0:0.00}ls".T(EDCTx.StarPlanetRing_OuterRadius) + Environment.NewLine, (OuterRad / BodyPhysicalConstants.oneLS_m));
-                }
-                else
-                {
-                    scanText.AppendFormat(frontpad + "Inner Radius: {0}km".T(EDCTx.StarPlanetRing_IK) + Environment.NewLine, (InnerRad / 1000).ToString("N0"));
-                    scanText.AppendFormat(frontpad + "Outer Radius: {0}km".T(EDCTx.StarPlanetRing_OK) + " \u0394 {1}" + Environment.NewLine, (OuterRad / 1000).ToString("N0"), ((OuterRad-InnerRad)/1000).ToString("N0"));
-                }
-
-                return scanText.ToNullSafeString();
-            }
-            
-            public static string DisplayStringFromRingClass(string ringClass)   // no trailing LF
-            {
-                switch (ringClass)
-                {
-                    case null:
-                        return "Unknown".T(EDCTx.Unknown);
-                    case "eRingClass_Icy":
-                        return "Icy".T(EDCTx.StarPlanetRing_Icy);
-                    case "eRingClass_Rocky":
-                        return "Rocky".T(EDCTx.StarPlanetRing_Rocky);
-                    case "eRingClass_MetalRich":
-                        return "Metal Rich".T(EDCTx.StarPlanetRing_MetalRich);
-                    case "eRingClass_Metalic":
-                        return "Metallic".T(EDCTx.StarPlanetRing_Metallic);
-                    case "eRingClass_RockyIce":
-                        return "Rocky Ice".T(EDCTx.StarPlanetRing_RockyIce);
-                    default:
-                        return ringClass.Replace("eRingClass_", "");
-                }
-            }
-
-            public string RingClassNormalised()
-            {
-                return RingClass.Replace("eRingClass_", "").SplitCapsWordFull();
-            }
-        }
-
-        public class BodyParent
-        {
-            public string Type;
-            public int BodyID;
-            public bool BaryCentre { get { return Type.Equals("Null", StringComparison.InvariantCultureIgnoreCase); } }
-        }
-
         public JournalScan(JObject evt) : base(evt, JournalTypeEnum.Scan)
         {
             ScanType = evt["ScanType"].Str();                               // ALL
@@ -525,34 +457,7 @@ namespace EliteDangerousCore.JournalEvents
             nMeanAnomaly = js.MeanAnomaly;
         }
 
-        #region Information Returns
-
-        public string RadiusText()  // null if not set, or the best representation
-        {
-            if (nRadius != null)
-            {
-                if (nRadius >= BodyPhysicalConstants.oneSolRadius_m / 5)
-                    return nRadiusSols.Value.ToString("0.#" + " SR");
-                else
-                    return (nRadius.Value / 1000).ToString("0.#") + " km";
-            }
-            else
-                return null;
-        }
-
-        public string MassEMText()
-        {
-            if (nMassEM.HasValue)
-            {
-                if (nMassEM.Value < 0.01)
-                    return nMassMM.Value.ToString("0.####") + " MM";
-                else
-                    return nMassEM.Value.ToString("0.##") + " EM";
-            }
-            else
-                return null;
-        }
-
+        #region Overrides, interfaces, etc
 
         public override string SummaryName(ISystem sys)
         {
@@ -585,16 +490,6 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        static public List<Tuple<string, string, Image>> FilterItems()
-        {
-            return new List<Tuple<string, string, Image>>()
-            {
-                new Tuple<string, string,Image>( "Scan Auto", "Scan Auto".T(EDCTx.JournalScan_ScanAuto), JournalEntry.JournalTypeIcons[JournalTypeEnum.Scan] ),
-                new Tuple<string,string,Image>( "Scan Basic", "Scan Basic".T(EDCTx.JournalScan_ScanBasic), JournalEntry.JournalTypeIcons[JournalTypeEnum.Scan] ),
-                new Tuple<string,string,Image>( "Scan Nav", "Scan Nav".T(EDCTx.JournalScan_ScanNav), JournalEntry.JournalTypeIcons[JournalTypeEnum.Scan] ),
-            };
-        }
-
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             if (IsStar)
@@ -619,400 +514,24 @@ namespace EliteDangerousCore.JournalEvents
             detailed = DisplayString(0, includefront: false);
         }
 
-          // has no trailing LF
-        public string DisplayString(int indent = 0, List<MaterialCommodityMicroResource> historicmatlist = null,
-                                                        List<MaterialCommodityMicroResource> currentmatlist = null,
-                                                        bool includefront = true)
+        // this structure is reflected by JournalFilterSelector to allow a journal class to add extra filter items to the journal filter lists. Its in use!
+        static public List<Tuple<string, string, Image>> FilterItems()
         {
-            string inds = new string(' ', indent);
-
-            StringBuilder scanText = new StringBuilder();
-
-            scanText.Append(inds);
-
-            if (includefront)
+            return new List<Tuple<string, string, Image>>()
             {
-                scanText.AppendFormat("{0} {1}" + Environment.NewLine, BodyName, IsEDSMBody ? " (EDSM)" : "");
-                scanText.Append(Environment.NewLine);
-
-                if (IsStar)
-                {
-                    scanText.AppendFormat(StarTypeText + " (" + StarClassification + ")\n");
-                }
-                else if (IsPlanet)
-                {
-                    scanText.AppendFormat("{0}", PlanetTypeText);
-
-                    if (!GasWorld)      // all gas worlds have atmospheres, so don't add it on
-                    {
-                        scanText.AppendFormat(", " + (Atmosphere == "none" ? "No Atmosphere".T(EDCTx.JournalScan_NoAtmosphere) : Atmosphere));
-                    }
-
-                    if (IsLandable)
-                        scanText.AppendFormat(", Landable".T(EDCTx.JournalScan_LandC));
-                    scanText.AppendFormat("\n");
-                }
-
-                if (Terraformable)
-                    scanText.Append("Candidate for terraforming\n".T(EDCTx.JournalScan_Candidateforterraforming));
-
-                if (nAge.HasValue)
-                    scanText.AppendFormat("Age: {0} my\n".T(EDCTx.JournalScan_AMY), nAge.Value.ToString("N0"));
-
-                if (nStellarMass.HasValue)
-                    scanText.AppendFormat("Solar Masses: {0:0.00}\n".T(EDCTx.JournalScan_SolarMasses), nStellarMass.Value);
-
-                if (nMassEM.HasValue)
-                    scanText.AppendFormat("Mass: ".T(EDCTx.JournalScan_MASS) + " " + MassEMText() + "\n");
-
-                if (nRadius.HasValue)
-                    scanText.AppendFormat("Radius: ".T(EDCTx.JournalScan_RS) + " " + RadiusText() + "\n");
-
-                if (DistanceFromArrivalLS > 0)
-                    scanText.AppendFormat("Distance from Arrival Point {0:N1}ls\n".T(EDCTx.JournalScan_DistancefromArrivalPoint), DistanceFromArrivalLS);
-
-                if (HasAtmosphericComposition)
-                    scanText.Append(DisplayAtmosphere(4));
-
-                if (HasPlanetaryComposition)
-                    scanText.Append(DisplayComposition(4));
-            }
-
-            if (nSurfaceTemperature.HasValue)
-                scanText.AppendFormat("Surface Temp: {0}K\n".T(EDCTx.JournalScan_SurfaceTemp), nSurfaceTemperature.Value.ToString("N0"));
-
-            if (nSurfaceGravity.HasValue)
-                scanText.AppendFormat("Gravity: {0:0.00}g\n".T(EDCTx.JournalScan_GV), nSurfaceGravityG.Value);
-
-            if (nSurfacePressure.HasValue && nSurfacePressure.Value > 0.00 && !GasWorld)        // don't print for gas worlds
-            {
-                if (nSurfacePressure.Value > 1000)
-                {
-                    scanText.AppendFormat("Surface Pressure: {0} Atmospheres\n".T(EDCTx.JournalScan_SPA), nSurfacePressureEarth.Value.ToString("N2"));
-                }
-                else
-                {
-                    scanText.AppendFormat("Surface Pressure: {0} Pa\n".T(EDCTx.JournalScan_SPP), (nSurfacePressure.Value).ToString("N2"));
-                }
-            }
-
-            if (Volcanism.HasChars())
-                scanText.AppendFormat("Volcanism: {0}\n".T(EDCTx.JournalScan_Volcanism), Volcanism.IsEmpty() ? "No Volcanism".T(EDCTx.JournalScan_NoVolcanism) : System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.
-                                                                                            ToTitleCase(Volcanism.ToLowerInvariant()));
-
-
-            if (nOrbitalPeriodDays.HasValue && nOrbitalPeriodDays > 0)
-                scanText.AppendFormat("Orbital Period: {0} days\n".T(EDCTx.JournalScan_OrbitalPeriod), nOrbitalPeriodDays.Value.ToString("0.0####"));
-
-            if (nSemiMajorAxis.HasValue)
-            {
-                if (IsStar || nSemiMajorAxis.Value > BodyPhysicalConstants.oneAU_m / 10)
-                    scanText.AppendFormat("Semi Major Axis: {0:0.00}AU\n".T(EDCTx.JournalScan_SMA), nSemiMajorAxisAU.Value);
-                else
-                    scanText.AppendFormat("Semi Major Axis: {0}km\n".T(EDCTx.JournalScan_SMK), (nSemiMajorAxis.Value / 1000).ToString("N1"));
-            }
-
-            if (nEccentricity.HasValue)
-                scanText.AppendFormat("Orbital Eccentricity: {0:0.000}\n".T(EDCTx.JournalScan_OrbitalEccentricity), nEccentricity.Value);
-
-            if (nOrbitalInclination.HasValue)
-                scanText.AppendFormat("Orbital Inclination: {0:0.000}°\n".T(EDCTx.JournalScan_OrbitalInclination), nOrbitalInclination.Value);
-
-            if (nAscendingNode.HasValue)
-                scanText.AppendFormat("Ascending Node: {0:0.000}°\n".T(EDCTx.JournalScan_AscendingNode), nAscendingNode.Value);
-
-            if (nPeriapsis.HasValue)
-                scanText.AppendFormat("Arg Of Periapsis: {0:0.000}°\n".T(EDCTx.JournalScan_ArgOfPeriapsis), nPeriapsis.Value);
-
-            if ( nMeanAnomaly.HasValue)
-                scanText.AppendFormat("Mean Anomaly: {0:0.000}°\n".T(EDCTx.JournalScan_MeanAnomaly), nMeanAnomaly.Value);
-
-            if (nAxialTiltDeg.HasValue)
-                scanText.AppendFormat("Axial tilt: {0:0.00}°\n".T(EDCTx.JournalScan_Axialtilt), nAxialTiltDeg.Value);
-
-            if (nRotationPeriodDays.HasValue)
-                scanText.AppendFormat("Rotation Period: {0} days\n".T(EDCTx.JournalScan_RotationPeriod), nRotationPeriodDays.Value.ToString("0.0####"));
-
-
-            if (nAbsoluteMagnitude.HasValue)
-                scanText.AppendFormat("Absolute Magnitude: {0:0.00}\n".T(EDCTx.JournalScan_AbsoluteMagnitude), nAbsoluteMagnitude.Value);
-            
-            if (nTidalLock.HasValue && nTidalLock.Value)
-                scanText.Append("Tidally locked\n".T(EDCTx.JournalScan_Tidallylocked));
-
-            if (HasRingsOrBelts)
-            {
-                scanText.Append("\n");
-
-                if ( HasRings )
-                    scanText.AppendFormat(Rings.Count() == 1 ? "Ring".T(EDCTx.JournalScan_Ring) : "Rings".T(EDCTx.JournalScan_Rings), ""); // OLD translator files had "Rings{0}" so supply an empty string just in case
-                else
-                    scanText.AppendFormat(Rings.Count() == 1 ? "Belt".T(EDCTx.JournalScan_Belt) : "Belts".T(EDCTx.JournalScan_Belts), ""); // OLD translator files had "Belt{0}" so supply an empty string just in case
-
-                for (int i = 0; i < Rings.Length; i++)
-                    scanText.Append("\n" + Rings[i].RingInformation());
-
-                scanText.Append("\n");
-            }
-
-            if (HasMaterials)
-            {
-                scanText.Append(DisplayMaterials(4, historicmatlist, currentmatlist));
-            }
-
-            if (IsStar)
-            {
-                string czs = CircumstellarZonesString(true, CZPrint.CZAll);
-                if (czs != null)
-                    scanText.Append(czs);
-            }
-
-            if (Mapped)
-            {
-                scanText.Append("Mapped".T(EDCTx.JournalScan_MPI));
-                if (EfficientMapped)
-                    scanText.Append(" " + "Efficiently".T(EDCTx.JournalScan_MPIE));
-                scanText.Append("\n");
-            }
-
-            ScanEstimatedValues ev = GetEstimatedValues();
-
-            scanText.AppendFormat("Current value: {0:N0}".T(EDCTx.JournalScan_CV) + "\n", ev.EstimatedValue(WasDiscovered, WasMapped, Mapped, EfficientMapped, IsEDSMBody));
-
-            if (ev.EstimatedValueFirstDiscoveredFirstMapped > 0 && (!WasDiscovered.HasValue || !WasDiscovered.Value))  // if we don't know, or its not discovered
-            {
-                string msg = "First Discovered+Mapped value: {0:N0}/{1:N0}e".T(EDCTx.JournalScan_EVFD) + "\n";
-                scanText.AppendFormat(msg, ev.EstimatedValueFirstDiscoveredFirstMapped, ev.EstimatedValueFirstDiscoveredFirstMappedEfficiently);
-            }
-
-            if (ev.EstimatedValueFirstMapped > 0 && (!WasMapped.HasValue || !WasMapped.Value))    // if was not mapped
-            {
-                scanText.AppendFormat("First Mapped value: {0:N0}/{1:N0}e".T(EDCTx.JournalScan_EVFM) + "\n", ev.EstimatedValueFirstMapped, ev.EstimatedValueFirstMappedEfficiently);
-            }
-
-            if (ev.EstimatedValueFirstDiscovered > 0 && (!WasDiscovered.HasValue || !WasDiscovered.Value))  // if we don't know, or its not discovered
-            {
-                scanText.AppendFormat("First Discovered value: {0:N0}".T(EDCTx.JournalScan_FDV) + "\n", ev.EstimatedValueFirstDiscovered);
-            }
-
-            if (ev.EstimatedValueFirstDiscovered > 0) // if we have extra details, on planets, show the base value
-            {
-                scanText.AppendFormat("Mapped value: {0:N0}/{1:N0}e".T(EDCTx.JournalScan_EVM) + "\n", ev.EstimatedValueMapped, ev.EstimatedValueMappedEfficiently);
-                scanText.AppendFormat("Base Estimated value: {0:N0}".T(EDCTx.JournalScan_EV) + "\n", ev.EstimatedValueBase);
-            }
-
-            if (WasDiscovered.HasValue && WasDiscovered.Value)
-                scanText.AppendFormat("Already Discovered".T(EDCTx.JournalScan_EVAD) + "\n");
-            if (WasMapped.HasValue && WasMapped.Value)
-                scanText.AppendFormat("Already Mapped".T(EDCTx.JournalScan_EVAM) + "\n");
-
-            if (EDSMDiscoveryCommander != null)
-                scanText.AppendFormat("Discovered by {0} on {1}".T(EDCTx.JournalScan_DB) + "\n", EDSMDiscoveryCommander, EDSMDiscoveryUTC.ToStringZulu());
-
-            scanText.AppendFormat("Scan Type: {0}".T(EDCTx.JournalScan_SCNT) + "\n", ScanType);
-
-            //scanText.AppendFormat("BID+Parents: {0} - {1}\n", BodyID ?? -1, ParentList());
-
-            if (scanText.Length > 0 && scanText[scanText.Length - 1] == '\n')
-                scanText.Remove(scanText.Length - 1, 1);
-
-            return scanText.ToNullSafeString().Replace("\n", "\n" + inds);
+                new Tuple<string, string,Image>( "Scan Auto", "Scan Auto".T(EDCTx.JournalScan_ScanAuto), JournalEntry.JournalTypeIcons[JournalTypeEnum.Scan] ),
+                new Tuple<string,string,Image>( "Scan Basic", "Scan Basic".T(EDCTx.JournalScan_ScanBasic), JournalEntry.JournalTypeIcons[JournalTypeEnum.Scan] ),
+                new Tuple<string,string,Image>( "Scan Nav", "Scan Nav".T(EDCTx.JournalScan_ScanNav), JournalEntry.JournalTypeIcons[JournalTypeEnum.Scan] ),
+            };
         }
 
-        public class HabZones
-        {
-            public double HabitableZoneInner { get; set; }             // in AU
-            public double HabitableZoneOuter { get; set; }             // in AU
-            public double MetalRichZoneInner { get; set; }             // in AU etc
-            public double MetalRichZoneOuter { get; set; }
-            public double WaterWrldZoneInner { get; set; }
-            public double WaterWrldZoneOuter { get; set; }
-            public double EarthLikeZoneInner { get; set; }
-            public double EarthLikeZoneOuter { get; set; }
-            public double AmmonWrldZoneInner { get; set; }
-            public double AmmonWrldZoneOuter { get; set; }
-            public double IcyPlanetZoneInner { get; set; }
+        public void AddStarScan(StarScan s, ISystem system)     // no action in this class, historylist.cs does the adding itself instead of using this. 
+        {                                                       // Class interface is marked so you know its part of the gang
         }
 
-        public HabZones GetHabZones()
-        {
-            if (IsStar && nRadius.HasValue && nSurfaceTemperature.HasValue)
-            {
-                HabZones hz = new HabZones();
+        #endregion
 
-                // values initially calculated by Jackie Silver (https://forums.frontier.co.uk/member.php/37962-Jackie-Silver)
-
-                hz.HabitableZoneInner = DistanceForBlackBodyTemperature(315); // this is the goldilocks zone, where is possible to expect to find planets with liquid water.
-                hz.HabitableZoneOuter = DistanceForBlackBodyTemperature(223);
-                hz.MetalRichZoneInner = DistanceForNoMaxTemperatureBody(BodyPhysicalConstants.oneSolRadius_m); // we don't know the maximum temperature that the galaxy simulation take as possible...
-                hz.MetalRichZoneOuter = DistanceForBlackBodyTemperature(1100);
-                hz.WaterWrldZoneInner = DistanceForBlackBodyTemperature(307);
-                hz.WaterWrldZoneOuter = DistanceForBlackBodyTemperature(156);
-                hz.EarthLikeZoneInner = DistanceForBlackBodyTemperature(281); // I enlarged a bit the range to fit my and other CMDRs discoveries.
-                hz.EarthLikeZoneOuter = DistanceForBlackBodyTemperature(227);
-                hz.AmmonWrldZoneInner = DistanceForBlackBodyTemperature(193);
-                hz.AmmonWrldZoneOuter = DistanceForBlackBodyTemperature(117);
-                hz.IcyPlanetZoneInner = DistanceForBlackBodyTemperature(150);
-                return hz;
-            }
-            else
-                return null;
-        }
-
-        // goldilocks zone. No trailing LF
-        public string GetHabZoneStringLs()
-        {
-            HabZones hz = GetHabZones();
-            return hz != null ? $"{hz.HabitableZoneInner:N0}-{hz.HabitableZoneOuter:N0}ls" : "";
-        }
-
-        public enum CZPrint { CZAll, CZHab, CZMR, CZWW, CZEL, CZAW, CZIP };
-
-        // trailing LF if titles are on, else not.
-        public string CircumstellarZonesString(bool titles, CZPrint p)
-        {
-            HabZones hz = GetHabZones();
-
-            if (hz != null)
-            {
-                StringBuilder habZone = new StringBuilder();
-
-                if (titles)
-                    habZone.Append("Inferred Circumstellar zones:\n".T(EDCTx.JournalScan_InferredCircumstellarzones));
-
-                if (p == CZPrint.CZAll || p == CZPrint.CZHab)
-                {
-                    habZone.AppendFormat(" - Habitable Zone, {0} ({1}-{2} AU),\n".T(EDCTx.JournalScan_HabitableZone),
-                                     $"{hz.HabitableZoneInner:N0}-{hz.HabitableZoneOuter:N0}ls",
-                                     (hz.HabitableZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
-                                     (hz.HabitableZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
-                }
-
-                if (p == CZPrint.CZAll || p == CZPrint.CZMR)
-                {
-                    habZone.AppendFormat(" - Metal Rich planets, {0} ({1}-{2} AU),\n".T(EDCTx.JournalScan_MetalRichplanets),
-                                     $"{hz.MetalRichZoneInner:N0}-{hz.MetalRichZoneOuter:N0}ls",
-                                     (hz.MetalRichZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
-                                     (hz.MetalRichZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
-                }
-
-                if (p == CZPrint.CZAll || p == CZPrint.CZWW)
-                {
-                    habZone.AppendFormat(" - Water Worlds, {0} ({1}-{2} AU),\n".T(EDCTx.JournalScan_WaterWorlds),
-                                     $"{hz.WaterWrldZoneInner:N0}-{hz.WaterWrldZoneOuter:N0}ls",
-                                     (hz.WaterWrldZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
-                                     (hz.WaterWrldZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
-                }
-
-                if (p == CZPrint.CZAll || p == CZPrint.CZEL)
-                {
-                    habZone.AppendFormat(" - Earth Like Worlds, {0} ({1}-{2} AU),\n".T(EDCTx.JournalScan_EarthLikeWorlds),
-                                     $"{hz.EarthLikeZoneInner:N0}-{hz.EarthLikeZoneOuter:N0}ls",
-                                     (hz.EarthLikeZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
-                                     (hz.EarthLikeZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
-                }
-
-                if (p == CZPrint.CZAll || p == CZPrint.CZAW)
-                {
-                    habZone.AppendFormat(" - Ammonia Worlds, {0} ({1}-{2} AU),\n".T(EDCTx.JournalScan_AmmoniaWorlds),
-                                     $"{hz.AmmonWrldZoneInner:N0}-{hz.AmmonWrldZoneOuter:N0}ls",
-                                     (hz.AmmonWrldZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
-                                     (hz.AmmonWrldZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
-                }
-
-                if (p == CZPrint.CZAll || p == CZPrint.CZIP)
-                {
-                    habZone.AppendFormat(" - Icy Planets, {0} (from {1} AU)\n".T(EDCTx.JournalScan_IcyPlanets),
-                                     $"{hz.IcyPlanetZoneInner:N0}ls to ~",
-                                     (hz.IcyPlanetZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
-                }
-
-                if (titles)
-                {
-                    if (nSemiMajorAxis.HasValue && nSemiMajorAxis.Value > 0)
-                        habZone.Append(" - Others stars not considered\n".T(EDCTx.JournalScan_Othersstarsnotconsidered));
-
-                    return habZone.ToNullSafeString();
-                }
-                else
-                {
-                    if (habZone.Length > 2)
-                        habZone.Remove(habZone.Length - 2, 2);      // remove ,\n
-
-                    string s = habZone.ToNullSafeString();
-                    if (s.StartsWith(" - "))        // mangle the translated string - can't do it above for backwards compat reasons
-                        s = s.Substring(3);
-
-                    return s;
-                }
-
-            }
-            else
-                return null;
-        }
-
-        // Habitable zone calculations, formula cribbed from JackieSilver's HabZone Calculator with permission
-        private double DistanceForBlackBodyTemperature(double targetTemp)
-        {
-            double top = Math.Pow(nRadius.Value, 2.0) * Math.Pow(nSurfaceTemperature.Value, 4.0);
-            double bottom = 4.0 * Math.Pow(targetTemp, 4.0);
-            double radius_metres = Math.Pow(top / bottom, 0.5);
-            return radius_metres / BodyPhysicalConstants.oneLS_m;
-        }
-
-        private double DistanceForNoMaxTemperatureBody(double radius)
-        {
-            return radius / BodyPhysicalConstants.oneLS_m;
-        }
-
-
-        // show material counts at the historic point and current.  Has trailing LF if text present.
-        public string DisplayMaterials(int indent = 0, List<MaterialCommodityMicroResource> historicmatlist = null, List<MaterialCommodityMicroResource> currentmatlist = null)
-        {
-            StringBuilder scanText = new StringBuilder();
-
-            if (HasMaterials)
-            {
-                string indents = new string(' ', indent);
-
-                scanText.Append("Materials:\n".T(EDCTx.JournalScan_Materials));
-                foreach (KeyValuePair<string, double> mat in Materials)
-                {
-                    scanText.Append(indents + DisplayMaterial(mat.Key, mat.Value, historicmatlist, currentmatlist));
-                }
-            }
-
-            return scanText.ToNullSafeString();
-        }
-
-        public string DisplayMaterial(string fdname, double percent, List<MaterialCommodityMicroResource> historicmatlist = null,
-                                                                      List<MaterialCommodityMicroResource> currentmatlist = null)  // has trailing LF
-        {
-            StringBuilder scanText = new StringBuilder();
-
-            MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);
-
-            if (mc != null && (historicmatlist != null || currentmatlist != null))
-            {
-                MaterialCommodityMicroResource historic = historicmatlist?.Find(x => x.Details == mc);
-                MaterialCommodityMicroResource current = ReferenceEquals(historicmatlist, currentmatlist) ? null : currentmatlist?.Find(x => x.Details == mc);
-                int? limit = mc.MaterialLimit();
-
-                string matinfo = historic?.Count.ToString() ?? "0";
-                if (limit != null)
-                    matinfo += "/" + limit.Value.ToString();
-
-                if (current != null && (historic == null || historic.Count != current.Count))
-                    matinfo += " Cur " + current.Count.ToString();
-
-                scanText.AppendFormat("{0} ({1}) {2} {3}% {4}\n", mc.Name, mc.Shortname, mc.TranslatedType, percent.ToString("N1"), matinfo);
-            }
-            else
-                scanText.AppendFormat("{0} {1}%\n", System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(fdname.ToLowerInvariant()),
-                                                            percent.ToString("N1"));
-
-            return scanText.ToNullSafeString();
-        }
+        #region Other Queries
 
         // adds to mats hash (if required) if one found.
         // returns number of jumponiums in body
@@ -1035,36 +554,7 @@ namespace EliteDangerousCore.JournalEvents
 
             return count;
         }
-
-        private string DisplayAtmosphere(int indent = 0)     // has trailing LF
-        {
-            StringBuilder scanText = new StringBuilder();
-            string indents = new string(' ', indent);
-
-            scanText.Append("Atmospheric Composition:\n".T(EDCTx.JournalScan_AtmosphericComposition));
-            foreach (KeyValuePair<string, double> comp in AtmosphereComposition)
-            {
-                scanText.AppendFormat(indents + "{0} - {1}%\n", comp.Key, comp.Value.ToString("N2"));
-            }
-
-            return scanText.ToNullSafeString();
-        }
-
-        private string DisplayComposition(int indent = 0)   // has trailing LF
-        {
-            StringBuilder scanText = new StringBuilder();
-            string indents = new string(' ', indent);
-
-            scanText.Append("Planetary Composition:\n".T(EDCTx.JournalScan_PlanetaryComposition));
-            foreach (KeyValuePair<string, double> comp in PlanetComposition)
-            {
-                if (comp.Value > 0)
-                    scanText.AppendFormat(indents + "{0} - {1}%\n", comp.Key, (comp.Value * 100).ToString("N2"));
-            }
-
-            return scanText.ToNullSafeString();
-        }
-
+   
         public StarPlanetRing FindRing(string name)
         {
             if (Rings != null)
@@ -1150,11 +640,6 @@ namespace EliteDangerousCore.JournalEvents
             return desigrest;
         }
 
-
-        #endregion
-
-        #region Estimated Value
-
         private ScanEstimatedValues EstimatedValues = null;
 
         public ScanEstimatedValues GetEstimatedValues()
@@ -1169,24 +654,45 @@ namespace EliteDangerousCore.JournalEvents
             return new ScanEstimatedValues(EventTimeUTC, IsStar, StarTypeID, IsPlanet, PlanetTypeID, Terraformable, nStellarMass, nMassEM, IsOdyssey);
         }
 
-        public void AddStarScan(StarScan s, ISystem system)     // no action in this class, historylist.cs does the adding itself instead of using this. 
-        {                                                       // Class interface is marked so you know its part of the gang
-        }
-    }
-
-    #endregion
-
-    public class ScansAreForSameBody : EqualityComparer<JournalScan>
-    {
-        public override bool Equals(JournalScan x, JournalScan y)
+        public void AccumulateJumponium(ref string jumponium, string sysname)
         {
-            return x.BodyName == y.BodyName;
+            if (IsLandable == true && HasMaterials) // Landable bodies with valuable materials, collect into jumponimum
+            {
+                int basic = 0;
+                int standard = 0;
+                int premium = 0;
+
+                foreach (KeyValuePair<string, double> mat in Materials)
+                {
+                    string usedin = Recipes.UsedInSythesisByFDName(mat.Key);
+                    if (usedin.Contains("FSD-Basic"))
+                        basic++;
+                    if (usedin.Contains("FSD-Standard"))
+                        standard++;
+                    if (usedin.Contains("FSD-Premium"))
+                        premium++;
+                }
+
+                if (basic > 0 || standard > 0 || premium > 0)
+                {
+                    int mats = basic + standard + premium;
+
+                    StringBuilder jumpLevel = new StringBuilder();
+
+                    if (basic != 0)
+                        jumpLevel.AppendPrePad(basic + "/" + Recipes.FindSynthesis("FSD", "Basic").Count + " Basic".T(EDCTx.JournalScanInfo_BFSD), ", ");
+                    if (standard != 0)
+                        jumpLevel.AppendPrePad(standard + "/" + Recipes.FindSynthesis("FSD", "Standard").Count + " Standard".T(EDCTx.JournalScanInfo_SFSD), ", ");
+                    if (premium != 0)
+                        jumpLevel.AppendPrePad(premium + "/" + Recipes.FindSynthesis("FSD", "Premium").Count + " Premium".T(EDCTx.JournalScanInfo_PFSD), ", ");
+
+                    jumponium = jumponium.AppendPrePad(string.Format("{0} has {1} level elements.".T(EDCTx.JournalScanInfo_LE), sysname, jumpLevel), Environment.NewLine);
+                }
+            }
         }
 
-        public override int GetHashCode(JournalScan obj)
-        {
-            return obj.BodyName.GetHashCode();
-        }
+
+        #endregion
     }
 
 }
