@@ -48,7 +48,7 @@ namespace EliteDangerousCore.JournalEvents
         public double DistanceFromArrivalLS { get; private set; }           // direct
         [PropertyNameAttribute("In meters")]
         public double DistanceFromArrivalm { get { return DistanceFromArrivalLS * BodyPhysicalConstants.oneLS_m; } }
-        public string DistanceFromArrivalText { get { return string.Format("{0:0.00}AU ({1:0.0}ls)", DistanceFromArrivalLS / BodyPhysicalConstants.oneAU_LS, DistanceFromArrivalLS); } }
+        public string DistanceFromArrivalText { get { return string.Format("{0:N2}AU ({1:N1}ls)", DistanceFromArrivalLS / BodyPhysicalConstants.oneAU_LS, DistanceFromArrivalLS); } }
         [PropertyNameAttribute("Seconds, may be negative indicating reverse rotation")]
         public double? nRotationPeriod { get; private set; }                // direct, can be negative indi
         [PropertyNameAttribute("Days, may be negative indicating reverse rotation")]
