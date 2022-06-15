@@ -254,12 +254,18 @@ namespace EliteDangerousCore.JournalEvents
             public double OuterRad;
 
             // has trailing LF
-            public string RingInformation(double scale = 1, string scaletype = " MT", bool parentIsStar = false, string frontpad = "  ")
+            public string RingInformation(string frontpad = "  ")
             {
                 StringBuilder scanText = new StringBuilder();
+
                 scanText.AppendFormat(frontpad + "{0} ({1})\n", Name.Alt("Unknown".T(EDCTx.Unknown)), DisplayStringFromRingClass(RingClass));
-                scanText.AppendFormat(frontpad + "Mass: {0:N4}{1}\n".T(EDCTx.StarPlanetRing_Mass), MassMT * scale, scaletype);
-                if (parentIsStar && InnerRad > 3000000)
+
+                if ( MassMT > (BodyPhysicalConstants.oneMoon_KG / 1e9 / 1000))
+                    scanText.AppendFormat(frontpad + "Mass: {0:N4}{1}\n".T(EDCTx.StarPlanetRing_Mass), MassMT / (BodyPhysicalConstants.oneMoon_KG / 1E9), " Moons".T(EDCTx.JournalScan_Moons));
+                else
+                    scanText.AppendFormat(frontpad + "Mass: {0:N0}{1}\n".T(EDCTx.StarPlanetRing_Mass), MassMT, " MT");
+
+                if (InnerRad > BodyPhysicalConstants.oneAU_m/10)       // more than 0.1AU, its in ls
                 {
                     scanText.AppendFormat(frontpad + "Inner Radius: {0:0.00}ls".T(EDCTx.StarPlanetRing_InnerRadius) + Environment.NewLine, (InnerRad / BodyPhysicalConstants.oneLS_m));
                     scanText.AppendFormat(frontpad + "Outer Radius: {0:0.00}ls".T(EDCTx.StarPlanetRing_OuterRadius) + Environment.NewLine, (OuterRad / BodyPhysicalConstants.oneLS_m));
@@ -269,16 +275,10 @@ namespace EliteDangerousCore.JournalEvents
                     scanText.AppendFormat(frontpad + "Inner Radius: {0}km".T(EDCTx.StarPlanetRing_IK) + Environment.NewLine, (InnerRad / 1000).ToString("N0"));
                     scanText.AppendFormat(frontpad + "Outer Radius: {0}km".T(EDCTx.StarPlanetRing_OK) + " \u0394 {1}" + Environment.NewLine, (OuterRad / 1000).ToString("N0"), ((OuterRad-InnerRad)/1000).ToString("N0"));
                 }
+
                 return scanText.ToNullSafeString();
             }
-
-            // has trailing LF
-            public string RingInformationMoons(bool parentIsStar = false, string frontpad = "  ")
-            {
-                // mega ton is 1E6 tons = 1E9
-                return RingInformation(1 / BodyPhysicalConstants.oneMoon_KG / 1E9, " Moons".T(EDCTx.StarPlanetRing_Moons), parentIsStar, frontpad);
-            }
-
+            
             public static string DisplayStringFromRingClass(string ringClass)   // no trailing LF
             {
                 switch (ringClass)
@@ -743,29 +743,15 @@ namespace EliteDangerousCore.JournalEvents
             if (HasRingsOrBelts)
             {
                 scanText.Append("\n");
-                if (IsStar)
-                {
-                    scanText.AppendFormat(Rings.Count() == 1 ? "Belt".T(EDCTx.JournalScan_Belt) : "Belts".T(EDCTx.JournalScan_Belts), ""); // OLD translator files had "Belt{0}" so supply an empty string just in case
-                    for (int i = 0; i < Rings.Length; i++)
-                    {
-                        if (Rings[i].MassMT > (BodyPhysicalConstants.oneMoon_KG / 1e9/ 10000))
-                        {
-                            // its in mega tons, so convert KG into mega (1E6) tons
-                            scanText.Append("\n" + RingInformation(i, 1.0 / (BodyPhysicalConstants.oneMoon_KG /1E9), " Moons".T(EDCTx.JournalScan_Moons)));
-                        }
-                        else
-                        {
-                            scanText.Append("\n" + RingInformation(i));
-                        }
-                    }
-                }
-                else
-                {
-                    scanText.AppendFormat(Rings.Count() == 1 ? "Ring".T(EDCTx.JournalScan_Ring) : "Rings".T(EDCTx.JournalScan_Rings), ""); // OLD translator files had "Rings{0}" so supply an empty string just in case
 
-                    for (int i = 0; i < Rings.Length; i++)
-                        scanText.Append("\n" + RingInformation(i));
-                }
+                if ( HasRings )
+                    scanText.AppendFormat(Rings.Count() == 1 ? "Ring".T(EDCTx.JournalScan_Ring) : "Rings".T(EDCTx.JournalScan_Rings), ""); // OLD translator files had "Rings{0}" so supply an empty string just in case
+                else
+                    scanText.AppendFormat(Rings.Count() == 1 ? "Belt".T(EDCTx.JournalScan_Belt) : "Belts".T(EDCTx.JournalScan_Belts), ""); // OLD translator files had "Belt{0}" so supply an empty string just in case
+
+                for (int i = 0; i < Rings.Length; i++)
+                    scanText.Append("\n" + Rings[i].RingInformation());
+
                 scanText.Append("\n");
             }
 
@@ -1077,13 +1063,6 @@ namespace EliteDangerousCore.JournalEvents
             }
 
             return scanText.ToNullSafeString();
-        }
-
-        // Has Trailing LF
-        private string RingInformation(int ringno, double scale = 1, string scaletype = " MT")
-        {
-            StarPlanetRing ring = Rings[ringno];
-            return ring.RingInformation(scale, scaletype, IsStar);
         }
 
         public StarPlanetRing FindRing(string name)

@@ -292,7 +292,7 @@ namespace EliteDangerousCore
             else if (sn.NodeType == StarScan.ScanNodeType.belt)
             {
                 if (sn.BeltData != null)
-                    tip = sn.BeltData.RingInformationMoons(true,"");
+                    tip = sn.BeltData.RingInformation("");
                 else
                     tip = sn.OwnName + Environment.NewLine + Environment.NewLine + "No scan data available".T(EDCTx.ScanDisplayUserControl_NSD);
 
