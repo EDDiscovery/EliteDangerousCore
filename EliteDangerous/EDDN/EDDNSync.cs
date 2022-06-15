@@ -25,8 +25,8 @@ namespace EliteDangerousCore.EDDN
     public static class EDDNSync
     {
         private static Thread ThreadEDDNSync;
-        private static int running = 0;
-        private static bool Exit = false;
+        private static ManualResetEvent Exit = new ManualResetEvent(false);
+
         private static ConcurrentQueue<HistoryEntry> hlscanunsyncedlist = new ConcurrentQueue<HistoryEntry>();
         private static AutoResetEvent hlscanevent = new AutoResetEvent(false);
         private static Action<string> logger;
@@ -42,12 +42,9 @@ namespace EliteDangerousCore.EDDN
                 hlscanunsyncedlist.Enqueue(he);
             }
 
-            hlscanevent.Set();
-
             // Start the sync thread if it's not already running
-            if (Interlocked.CompareExchange(ref running, 1, 0) == 0)
+            if (ThreadEDDNSync == null )
             {
-                Exit = false;
                 ThreadEDDNSync = new System.Threading.Thread(new System.Threading.ThreadStart(SyncThread));
                 ThreadEDDNSync.Name = "EDDN Sync";
                 ThreadEDDNSync.IsBackground = true;
@@ -59,23 +56,26 @@ namespace EliteDangerousCore.EDDN
 
         public static void StopSync()
         {
-            Exit = true;
-            hlscanevent.Set();
+            if ( ThreadEDDNSync != null )       // may never have started
+            {
+                Exit.Set();                     // but if so, set to trigger thread to stop, and join
+                ThreadEDDNSync.Join();
+            }
         }
 
         private static void SyncThread()
         {
-            running = 1;
-            //mainForm.LogLine("Starting EDDN sync thread");
+            System.Diagnostics.Debug.WriteLine("EDDN thread active");
 
-            while (hlscanunsyncedlist.Count != 0)
+            while( Exit.WaitOne(1000) == false )        // while not told to exit.. if its set, its an exit. Else we wake up every N ms to process
             {
-                HistoryEntry he = null;
-
                 int eventcount = 0;
 
-                while (hlscanunsyncedlist.TryDequeue(out he))
+                while (hlscanunsyncedlist.TryDequeue(out HistoryEntry he))   // if we have an HE, process it
                 {
+                    if (Exit.WaitOne(0) == true)     // if signalled, immediate stop
+                        return;
+
                     try
                     {
                         hlscanevent.Reset();
@@ -88,6 +88,7 @@ namespace EliteDangerousCore.EDDN
                         }
                         else
                         {
+                            System.Diagnostics.Debug.WriteLine($"EDDN Send of {he.EventTimeUTC} {he.EventSummary}");
                             bool? res = EDDNSync.SendToEDDN(he);
 
                             if (res != null)    // if attempted to send
@@ -100,10 +101,6 @@ namespace EliteDangerousCore.EDDN
                                 else
                                     logger?.Invoke($"Failed sending {he.EntryType.ToString()} event to EDDN ({he.EventSummary})");
                             }
-                            else
-                            {
-                                continue; // skip the 1 second delay if nothing was sent
-                            }
                         }
                     }
                     catch (Exception ex)
@@ -112,28 +109,12 @@ namespace EliteDangerousCore.EDDN
                         System.Diagnostics.Trace.WriteLine("Exception ex:" + ex.StackTrace);
                         logger?.Invoke("EDDN sync Exception " + ex.Message + Environment.NewLine + ex.StackTrace);
                     }
+                }   // end while
 
-                    if (Exit)
-                    {
-                        running = 0;
-                        return;
-                    }
+                if ( eventcount > 0) 
+                    SentEvents?.Invoke(eventcount);     // tell the system we sent this number of events
 
-                    Thread.Sleep(1000);   // Throttling to 1 per second to not kill EDDN network
-                }
-
-                SentEvents?.Invoke(eventcount);     // tell the system..
-
-                if (hlscanunsyncedlist.IsEmpty)     // if nothing there..
-                    hlscanevent.WaitOne(60000);     // Wait up to 60 seconds for another EDDN event to come in
-
-                if (Exit)
-                {
-                    break;
-                }
-            }
-
-            running = 0;
+            }   // around to wait for another timeperiod before testing again
         }
 
         // Send to test vectors it to the beta server

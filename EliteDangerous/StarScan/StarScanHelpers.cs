@@ -14,14 +14,9 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
-using EliteDangerousCore;
 using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EliteDangerousCore
 {
