@@ -61,12 +61,15 @@ namespace EliteDangerousCore
         [JsonIgnore]
         public int CargoCarried { get; set; }                  // NOT in Frontier data, cargo currently carried for this item
 
-        public CCommodities(JObject jo, bool market )
+        public enum ReaderType { Market, CAPI, FCMaterials }
+        public CCommodities(JObject jo, ReaderType ty )
         {
-            if ( market )
+            if (ty == ReaderType.Market)
                 FromJsonMarket(jo);
-            else
+            else if (ty == ReaderType.CAPI)
                 FromJsonCAPI(jo);
+            else
+                FromJsonFCMaterials(jo);
         }
 
         public CCommodities(CCommodities other)             // main fields copied, not the extra data ones
@@ -186,6 +189,37 @@ namespace EliteDangerousCore
                     StatusFlags.Add("Rare");
 
                 this.statusFlags = StatusFlags;
+                //System.Diagnostics.Debug.WriteLine("Market field fd:'{0}' loc:'{1}' of type '{2}' '{3}'", fdname, locName, category, loccategory);
+
+                ComparisionLR = ComparisionRL = "";
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public bool FromJsonFCMaterials(JObject jo)
+        {
+            try
+            {
+                fdname = JournalFieldNaming.FixCommodityName(jo["Name"].Str());
+                locName = jo["Name_Localised"].Str();
+                if (locName.IsEmpty())
+                    locName = fdname.SplitCapsWordFull();
+
+                loccategory = "";
+                category = "Microresources";        // fixed
+
+                legality = "";  // not in market data
+                
+                meanPrice = sellPrice = buyPrice = jo["Price"].Int();
+                demandBracket = 0;
+                stockBracket = 0;
+
+                stock = jo["Stock"].Int();
+                demand = jo["Demand"].Int();
+                this.statusFlags = new List<string>(); // not present
                 //System.Diagnostics.Debug.WriteLine("Market field fd:'{0}' loc:'{1}' of type '{2}' '{3}'", fdname, locName, category, loccategory);
 
                 ComparisionLR = ComparisionRL = "";

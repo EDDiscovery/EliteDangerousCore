@@ -552,7 +552,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Access: ".T(EDCTx.JournalCarrier_Access), DockingAccess, 
+            info = BaseUtils.FieldBuilder.Build("Access: ".T(EDCTx.JournalCarrier_Access), DockingAccess,
                                                 ";Allow Notorious".T(EDCTx.JournalCarrier_AllowNotorious), AllowNotorious);
             detailed = "";
         }
@@ -594,6 +594,90 @@ namespace EliteDangerousCore.JournalEvents
             info = "";
             detailed = "";
         }
+    }
+
+    [JournalEntryType(JournalTypeEnum.FCMaterials)]
+    public class JournalFCMaterials : JournalEntry, IAdditionalFiles
+    {
+        public JournalFCMaterials(JObject evt) : base(evt, JournalTypeEnum.FCMaterials)
+        {
+            Rescan(evt);
+        }
+
+        public void Rescan(JObject evt)
+        {
+            MarketID = evt["MarketID"].Long();
+            CarrierID = evt["CarrierID"].Str();
+            CarrierName = evt["CarrierName"].Str();
+            Items = new List<CCommodities>(); // always made..
+
+            JArray jitems = (JArray)evt["Items"];
+            if (jitems != null)
+            {
+                foreach (JObject commodity in jitems)
+                {
+                    CCommodities com = new CCommodities(commodity, CCommodities.ReaderType.FCMaterials);
+                    Items.Add(com);
+                }
+
+                Items.Sort((l, r) => l.locName.CompareTo(r.locName));
+            }
+        }
+
+        public void ReadAdditionalFiles(string directory)
+        {
+            JObject jnew = ReadAdditionalFile(System.IO.Path.Combine(directory, "FCMaterials.json"), EventTypeStr);
+            if (jnew != null)        // new json, rescan
+            {
+                Rescan(jnew);
+                UpdateJson(jnew);
+            }
+        }
+
+        public long MarketID { get; set; }
+        public string CarrierID { get; set; }       // NOTE different to other carrier events
+        public string CarrierName { get; set; }
+        public List<CCommodities> Items { get; set; }       // may be null
+
+
+        public override string SummaryName(ISystem sys) { return "Bartender Materials"; }
+
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        {
+            if (Items == null)
+            {
+                info = BaseUtils.FieldBuilder.Build("", CarrierName);
+                detailed = "";
+            }
+            else
+            {
+                info = BaseUtils.FieldBuilder.Build("", CarrierName, "Prices on ; items".T(EDCTx.JournalCommodityPricesBase_PON), Items.Count);
+
+                detailed = "Items to buy: ".T(EDCTx.JournalCommodityPricesBase_Itemstobuy) + System.Environment.NewLine;
+                foreach (CCommodities c in Items)
+                {
+                    if (c.CanBeBought)
+                    {
+                        string name = MaterialCommodityMicroResourceType.GetNameByFDName(c.fdname);
+                        detailed += string.Format("{0}: {1}  ".T(EDCTx.JournalCommodityPricesBase_CPBBuy), name, c.buyPrice) + Environment.NewLine;
+                    }
+                }
+
+                detailed += "Sell only Items: ".T(EDCTx.JournalCommodityPricesBase_SO) + System.Environment.NewLine;
+                foreach (CCommodities c in Items)
+                {
+                    if (!c.CanBeBought)
+                    {
+                        string name = MaterialCommodityMicroResourceType.GetNameByFDName(c.fdname);
+                        detailed += string.Format("{0}: {1}  ".T(EDCTx.JournalCommodityPricesBase_CPBBuy), name, c.sellPrice) + Environment.NewLine;
+                    }
+                }
+            }
+        }
+
+        public bool HasItem(string fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase)) >= 0; }
+        public bool HasItemToBuy(string fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase) && x.CanBeBought) >= 0; }
+        public bool HasItemToSell(string fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase) && x.CanBeSold) >= 0; }
     }
 }
 

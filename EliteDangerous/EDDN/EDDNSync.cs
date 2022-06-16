@@ -67,7 +67,7 @@ namespace EliteDangerousCore.EDDN
         {
             System.Diagnostics.Debug.WriteLine("EDDN thread active");
 
-            while( Exit.WaitOne(1000) == false )        // while not told to exit.. if its set, its an exit. Else we wake up every N ms to process
+            while( Exit.WaitOne(5000) == false )        // while not told to exit.. if its set, its an exit. Else we wake up every N ms to process
             {
                 int eventcount = 0;
 
@@ -97,6 +97,7 @@ namespace EliteDangerousCore.EDDN
                                 {
                                     logger?.Invoke($"Sent {he.EntryType.ToString()} event to EDDN ({he.EventSummary})");
                                     eventcount++;
+                                    Thread.Sleep(500);     // just a little pause between sending to space them out
                                 }
                                 else
                                     logger?.Invoke($"Failed sending {he.EntryType.ToString()} event to EDDN ({he.EventSummary})");

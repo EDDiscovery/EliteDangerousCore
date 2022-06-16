@@ -55,8 +55,9 @@ namespace EliteDangerousCore
         public bool StopMarker { get { return (Synced & (int)SyncFlags.StopMarker) != 0; } }
 
         public virtual bool IsBeta { get { return TravelLogUnit.Get(TLUId)?.Beta ?? DefaultBetaFlag; } }        // TLUs are cached via the dictionary, no point also holding a local copy
-        public virtual bool IsHorizons { get { return TravelLogUnit.Get(TLUId)?.Horizons ?? DefaultHorizonsFlag; } }     
+        public virtual bool IsHorizons { get { return TravelLogUnit.Get(TLUId)?.Horizons ?? DefaultHorizonsFlag; } }
         public virtual bool IsOdyssey { get { return TravelLogUnit.Get(TLUId)?.Odyssey ?? DefaultOdysseyFlag; } }
+        public virtual string FullPath { get { return TravelLogUnit.Get(TLUId)?.FullName; } }
 
         public static bool DefaultBetaFlag { get; set; } = false;
         public static bool DefaultHorizonsFlag { get; set; } = false;       // for entries without a TLU (EDSM downloaded made up ones for instance) provide default value

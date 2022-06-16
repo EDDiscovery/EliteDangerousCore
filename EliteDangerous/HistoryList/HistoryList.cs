@@ -184,7 +184,13 @@ namespace EliteDangerousCore
 
                 HistoryEntry he = hist.MakeHistoryEntry(je);
 
-               // System.Diagnostics.Debug.WriteLine("++ {0} {1}", he.EventTimeUTC.ToString(), he.EntryType);
+                //if (he.EntryType == JournalTypeEnum.FCMaterials)      // Solely for debugging if you've missed the event.
+                //{
+                //    var jfcm = je as JournalFCMaterials;
+                //    jfcm.ReadAdditionalFiles(System.IO.Path.GetDirectoryName(jfcm.FullPath));
+                //}
+
+                // System.Diagnostics.Debug.WriteLine("++ {0} {1}", he.EventTimeUTC.ToString(), he.EntryType);
                 var reorderlist = hist.ReorderRemove(he);
 
                 foreach (var heh in reorderlist.EmptyIfNull())
@@ -337,8 +343,11 @@ namespace EliteDangerousCore
                     {
                         var jdprev = prev as EliteDangerousCore.JournalEvents.JournalFSSSignalDiscovered;
                         var jd = je as EliteDangerousCore.JournalEvents.JournalFSSSignalDiscovered;
-                        jdprev.Add(jd);
-                        return true;
+                        if (jdprev.Signals[0].SystemAddress == jd.Signals[0].SystemAddress)     // only if same system address
+                        {
+                            jdprev.Add(jd);
+                            return true;
+                        }
                     }
                     else if (je.EventTypeID == JournalTypeEnum.ShipTargeted)
                     {

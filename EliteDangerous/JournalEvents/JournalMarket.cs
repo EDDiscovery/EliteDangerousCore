@@ -40,7 +40,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (JObject commodity in jcommodities)
                 {
-                    CCommodities com = new CCommodities(commodity, true);
+                    CCommodities com = new CCommodities(commodity, CCommodities.ReaderType.Market);
                     Commodities.Add(com);
                 }
 

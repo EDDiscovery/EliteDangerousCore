@@ -109,6 +109,7 @@ namespace EliteDangerousCore
         Embark = 4013,
         EscapeInterdiction = 260,
         FactionKillBond = 270,
+        FCMaterials = 271,
         FetchRemoteModule = 1000,
         FSDJump = 280,
         FSDTarget = 281,

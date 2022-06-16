@@ -38,7 +38,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (JObject commodity in jcommodities)
                 {
-                    CCommodities com = new CCommodities(commodity, false);
+                    CCommodities com = new CCommodities(commodity, CCommodities.ReaderType.CAPI);
                     Commodities.Add(com);
                 }
 
@@ -90,7 +90,7 @@ namespace EliteDangerousCore.JournalEvents
         public List<CCommodities> Commodities { get; protected set; }   // never null
 
         public bool HasCommodity(string fdname) { return Commodities.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase)) >= 0; }
-        public bool HasCommodityToBuy(string fdname) { return Commodities.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase) && x.stock > 0) >= 0; }
+        public bool HasCommodityToBuy(string fdname) { return Commodities.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase) && x.CanBeBought) >= 0; }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
