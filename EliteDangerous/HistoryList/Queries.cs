@@ -233,23 +233,24 @@ namespace EliteDangerousCore
                 bool wantchildcount = allvars.Contains("Child.Count");
                 bool wantlevel = allvars.Contains("Level");
 
-                HashSet<string> varsevent = allvars.Where(x => !x.StartsWith("Parent.") && !x.StartsWith("Sibling")).Select(x => x.Substring(0, x.IndexOfOrLength("["))).ToHashSet();
-                HashSet<string> varsparent = allvars.Where(x => x.StartsWith("Parent.")).Select(x => x.Substring(7, x.IndexOfOrLength("[") - 7)).ToHashSet();
-                HashSet<string> varssiblings = allvars.Where(x => x.StartsWith("Sibling[")).Select(x => x.Substring(x.IndexOfOrLength("]", offset: 2))).Select(x => x.Substring(0, x.IndexOfOrLength("["))).ToHashSet();
-                HashSet<string> varschildren = allvars.Where(x => x.StartsWith("Child[")).Select(x => x.Substring(x.IndexOfOrLength("]", offset: 2))).Select(x => x.Substring(0, x.IndexOfOrLength("["))).ToHashSet();
+                string[] stoptext = new string[] { "[", "_" };
+                HashSet<string> varsparent = allvars.Where(x => x.StartsWith("Parent.")).Select(x => x.Substring(7, x.IndexOfOrLength(stoptext) - 7)).ToHashSet();
+                HashSet<string> varssiblings = allvars.Where(x => x.StartsWith("Sibling[")).Select(x => x.Substring(x.IndexOfOrLength("]", offset: 2))).Select(x => x.Substring(0, x.IndexOfOrLength(stoptext))).ToHashSet();
+                HashSet<string> varschildren = allvars.Where(x => x.StartsWith("Child[")).Select(x => x.Substring(x.IndexOfOrLength("]", offset: 2))).Select(x => x.Substring(0, x.IndexOfOrLength(stoptext))).ToHashSet();
+                HashSet<string> varsevent = allvars.Where(x => !x.StartsWith("Parent.") && !x.StartsWith("Sibling") && !x.StartsWith("Child[")).Select(x => x.Substring(0, x.IndexOfOrLength(stoptext))).ToHashSet();
 
                 foreach (var he in helist)
                 {
                     BaseUtils.Variables scandatavars = defaultvars != null ? new BaseUtils.Variables(defaultvars) : new BaseUtils.Variables();
 
-                    //if (he.EntryType != JournalTypeEnum.Scan) continue;
+                  //  if (he.EntryType != JournalTypeEnum.Scan) continue;
 
                     scandatavars.AddPropertiesFieldsOfClass(he.journalEntry, "",
                             new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
                             varsevent);
 
                     if ( wantjumponium )
-                    { 
+                    {
                         JournalScan js = he.journalEntry as JournalScan;
 
                         if (js != null)   // if its a journal scan
@@ -330,7 +331,15 @@ namespace EliteDangerousCore
 
                     bool debugit = false;
 
-                    //if (js.BodyName.Equals("Borann A 2 a"))  debugit = true;
+                    //if (he.ScanNode?.ScanData?.Barycentre != null)
+                    //{
+                    //}
+                    //if (scandatavars.Contains("IsOrbitingBaryCentre") && scandatavars["IsOrbitingBaryCentre"] == "1")
+                    //{
+                    //}
+                    //JournalScan js2 = he.journalEntry as JournalScan;
+                    //if (js2.BodyName.Equals("Oufaish IG-Y e26 3"))  
+                    //    debugit = true;
 
                     bool? res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, out string evalerrlist, out BaseUtils.ConditionLists.ErrorClass errclassunused, wantiter1 || wantiter2 , debugit: debugit);
 

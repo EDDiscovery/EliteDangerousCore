@@ -74,9 +74,11 @@ namespace EliteDangerousCore.JournalEvents
 
         [PropertyNameAttribute("Parents[1 to N] _Type (Null=Barycentre, Star, Planet), _BodyID. Also ParentsCount. First is nearest body")]
         public List<BodyParent> Parents { get; private set; }
+        public JournalScanBaryCentre Barycentre { get; set; }        // set by star scan system if the parent is a barycentre
         public bool IsOrbitingBaryCentre { get { return Parents?.FirstOrDefault()?.Type == "Null"; } }
         public bool IsOrbitingPlanet { get { return Parents?.FirstOrDefault()?.Type == "Planet"; } }
         public bool IsOrbitingStar { get { return Parents?.FirstOrDefault()?.Type == "Star"; } }
+
 
         public bool? WasDiscovered { get; private set; }                    // direct, 3.4, indicates whether the body has already been discovered
         public bool IsNotPreviouslyDiscovered { get { return WasDiscovered.HasValue && WasDiscovered == false; } } // true if its there, and its not mapped

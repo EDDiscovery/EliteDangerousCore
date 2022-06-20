@@ -216,6 +216,10 @@ namespace EliteDangerousCore.EDDN
             {
                 msg = eddn.CreateEDDNFSSAllBodiesFound(je as JournalFSSAllBodiesFound, he.System);
             }
+            else if (je.EventTypeID == JournalTypeEnum.FSSSignalDiscovered)
+            {
+                msg = eddn.CreateEDDNFSSSignalDiscovered( je as JournalFSSSignalDiscovered, he.System);
+            }
 
             if (msg != null)
             {

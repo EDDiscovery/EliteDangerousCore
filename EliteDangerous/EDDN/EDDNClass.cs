@@ -46,6 +46,8 @@ namespace EliteDangerousCore.EDDN
         private readonly string ScanBarycentreSchema = "https://eddn.edcd.io/schemas/scanbarycentre/1";
         private readonly string ApproachSettlementSchema = "https://eddn.edcd.io/schemas/approachsettlement/1";
         private readonly string FSSAllBodiesFoundSchema = "https://eddn.edcd.io/schemas/fssallbodiesfound/1";
+        private readonly string FSSSignalDiscoveredSchema = "https://eddn.edcd.io/schemas/fsssignaldiscovered/1";
+
         public EDDNClass()
         {
             var assemblyFullName = Assembly.GetEntryAssembly().FullName;
@@ -82,7 +84,8 @@ namespace EliteDangerousCore.EDDN
                  EntryType == JournalTypeEnum.NavBeaconScan ||
                  EntryType == JournalTypeEnum.NavRoute ||
                  EntryType == JournalTypeEnum.FSSAllBodiesFound ||
-                 EntryType == JournalTypeEnum.ApproachSettlement 
+                 EntryType == JournalTypeEnum.ApproachSettlement ||
+                 EntryType == JournalTypeEnum.FSSSignalDiscovered
                  );
         }
 
@@ -922,6 +925,61 @@ namespace EliteDangerousCore.EDDN
             msg["message"] = message;
             return msg;
         }
+
+
+        public JObject CreateEDDNFSSSignalDiscovered(JournalFSSSignalDiscovered sd, ISystem system)
+        {
+            if (sd.Signals == null)
+                return null;
+
+            JObject msg = new JObject();
+            msg["header"] = Header();
+            msg["$schemaRef"] = FSSSignalDiscoveredSchema;
+
+            JObject message = new JObject();
+
+            message["event"] = "FSSSignalDiscovered";
+            message["horizons"] = sd.IsHorizons;
+            message["odyssey"] = sd.IsOdyssey;
+            message["timestamp"] = sd.Signals[0].RecordedUTC.ToStringZuluInvariant();
+            message["SystemAddress"] = system.SystemAddress ?? 0;
+            message["StarSystem"] = system.Name;
+            message["StarPos"] = new JArray(new float[] { (float)system.X, (float)system.Y, (float)system.Z });
+
+            JArray ja = new JArray();
+            foreach( var sig in sd.Signals)
+            {
+                if (sig.USSType == null || !sig.USSType.Contains("$USS_Type_MissionTarget"))        // not mission targets
+                {
+                    JObject sj = new JObject();
+
+                    sj["timestamp"] = sig.RecordedUTC.ToStringZuluInvariant();
+                    sj["SignalName"] = sig.SignalName;
+                    if (sig.IsStation.HasValue)
+                        sj["IsStation"] = sig.IsStation.Value;
+                    if (sig.USSType.HasChars())
+                        sj["USSType"] = sig.USSType;
+                    if (sig.SpawningState.HasChars())
+                        sj["SpawningState"] = sig.SpawningState;
+                    if (sig.SpawningFaction.HasChars())
+                        sj["SpawningFaction"] = sig.SpawningFaction;
+                    if (sig.ThreatLevel != null)
+                        sj["ThreatLevel"] = sig.ThreatLevel.Value;
+
+                    ja.Add(sj);
+                }
+            }
+
+            if (ja.Count == 0)  // nothing, all knocked out
+                return null;
+
+            message["signals"] = ja;
+
+            msg["message"] = message;
+            
+            return msg;
+        }
+
 
 
         public bool PostMessage(JObject msg)

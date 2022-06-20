@@ -291,7 +291,7 @@ namespace EliteDangerousCore
                     subnode.BodyID = ancestorbodies[lvl].BodyID;
                     systemnode.NodesByID[(int)subnode.BodyID] = subnode;
                 }
-                    
+
                 if (lvl == elements.Count - 1)                                  // if we are at the end node..
                 {
                     if (oldnode != null && oldnode.FullName == subnode.FullName && !object.ReferenceEquals(subnode, oldnode))
@@ -308,6 +308,15 @@ namespace EliteDangerousCore
                     if (sc.BodyID != null)                                      // if scan has a body ID, pass it to the node
                     {
                         subnode.BodyID = sc.BodyID;
+                    }
+
+                    if (sc.IsOrbitingBaryCentre)
+                    {
+                        if ( systemnode.BaryCentres.TryGetValue(sc.Parents[0].BodyID, out JournalScanBaryCentre jsa))
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Barycentre in {sys.Name} BC {jsa.BodyID} attach to {sc.BodyName}");
+                            subnode.ScanData.Barycentre = jsa;     // assign to barycentre
+                        }
                     }
                 }
 

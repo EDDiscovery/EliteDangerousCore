@@ -17,6 +17,7 @@
 using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EliteDangerousCore
 {
@@ -29,6 +30,17 @@ namespace EliteDangerousCore
             {
               //  System.Diagnostics.Debug.WriteLine($"Add barycentre {jsa.StarSystem} {jsa.BodyID}");
                 sn.BaryCentres[jsa.BodyID] = jsa;        // add it
+
+                // find any stored scans associated with this scanbarycentre and assign
+
+                var scannodelist = sn.Bodies.Where(x => ((x.ScanData?.Parents?.Count ?? 0) > 0) && x.ScanData.Parents[0].BodyID == jsa.BodyID);     // find all
+
+                foreach( var scannode in scannodelist)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Barycentre in {sys.Name} BC {jsa.BodyID} attach to {scannode.ScanData.BodyName}");
+                    scannode.ScanData.Barycentre = jsa;     // assign to barycentre
+                }
+
                 return true;
             }
             else 
@@ -36,7 +48,7 @@ namespace EliteDangerousCore
                 if (saveit)
                 {
               //      System.Diagnostics.Debug.WriteLine($"SAVE barycentre {jsa.StarSystem} {jsa.BodyID}");
-                    SaveForProcessing(jsa, null);
+                    SaveForProcessing(jsa, sys);
                 }
                 return false;
             }

@@ -83,6 +83,8 @@ namespace EliteDangerousCore.JournalEvents
             public double? TimeRemaining { get; set; }          // null if not expiring
             public long? SystemAddress { get; set; }
 
+            public bool? IsStation { get; set; }
+
             public int? ThreatLevel { get; set; }
             public string USSType { get; set; }
             public string USSTypeLocalised { get; set; }
@@ -118,9 +120,9 @@ namespace EliteDangerousCore.JournalEvents
 
                 SystemAddress = evt["SystemAddress"].LongNull();
 
-                bool? isstation = evt["IsStation"].BoolNull();
+                IsStation = evt["IsStation"].BoolNull();
 
-                if (isstation == true)          // station flag
+                if (IsStation == true)          // station flag
                 {
                     int dash = SignalName.LastIndexOf('-');
                     if (SignalName.Length >= 5 && dash == SignalName.Length - 4 && char.IsLetterOrDigit(SignalName[dash + 1]) && char.IsLetterOrDigit(SignalName[dash - 1]))
