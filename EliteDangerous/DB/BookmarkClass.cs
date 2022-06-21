@@ -177,7 +177,8 @@ namespace EliteDangerousCore.DB
                 return false;
         }
     }
-        
+
+    [System.Diagnostics.DebuggerDisplay("{Name} {x} {y} {z} {Note}")]
     public class BookmarkClass
     {
         public long id;
