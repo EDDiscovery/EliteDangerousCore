@@ -34,6 +34,8 @@ namespace EliteDangerousCore
             }
         }
 
+        public static HashSet<JournalTypeEnum> SearchableJournalTypes { get; } = new HashSet<JournalTypeEnum> { JournalTypeEnum.Scan, JournalTypeEnum.FSSBodySignals, JournalTypeEnum.SAASignalsFound };
+
         public class Query
         {
             public string Name { get; set; }

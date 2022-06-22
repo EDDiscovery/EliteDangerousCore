@@ -57,19 +57,30 @@ namespace EliteDangerousCore
 
         #region Output filters
 
-        // history filter
-        static public List<HistoryEntry> LatestFirst(List<HistoryEntry> list) // list should be in entry order (oldest first)
+        // history filter. list should be in entry order (oldest first)
+        static public List<HistoryEntry> LatestFirst(List<HistoryEntry> list) 
         {
             return Enumerable.Reverse(list).ToList();
         }
-
-        static public List<HistoryEntry> LatestFirst(List<HistoryEntry> list, JournalTypeEnum[] entries) // list should be in entry order (oldest first)
+        // history filter. list should be in entry order (oldest first)
+        static public List<HistoryEntry> LatestFirst(List<HistoryEntry> list, HashSet<JournalTypeEnum> entries) 
         {
             return list.Where(x => entries.Contains(x.EntryType)).Reverse().ToList();
         }
-        static public List<HistoryEntry> OnlyEntries(List<HistoryEntry> list, JournalTypeEnum[] entries) // list should be in entry order (oldest first)
+        // history filter, surveyor, search scans. list should be in entry order (oldest first)
+        static public List<HistoryEntry> FilterByEventEntryOrder(List<HistoryEntry> list, HashSet<JournalTypeEnum> entries, ISystem sys = null, HashSet<JournalTypeEnum> afterlastevent = null) 
         {
-            return list.Where(x => entries.Contains(x.EntryType)).ToList();
+            if ( afterlastevent != null)        // find last index of journal event and subset the list.
+            {
+                int index = list.FindLastIndex(x => afterlastevent.Contains(x.EntryType));
+                if (index >= 0)
+                    list = list.GetRange(index, list.Count - index);
+            }
+
+            if (sys == null)
+                return list.Where(x => entries.Contains(x.EntryType)).ToList();
+            else
+                return list.Where(x => x.System.Name == sys.Name && entries.Contains(x.EntryType)).ToList();
         }
 
         // history filter
@@ -79,7 +90,7 @@ namespace EliteDangerousCore
         }
 
         // history filter
-        static public List<HistoryEntry> LimitByDate(List<HistoryEntry> list, TimeSpan days, JournalTypeEnum[] entries = null, bool reverse = true)     // list should be in entry order (oldest first)
+        static public List<HistoryEntry> LimitByDate(List<HistoryEntry> list, TimeSpan days, HashSet<JournalTypeEnum> entries = null, bool reverse = true)     // list should be in entry order (oldest first)
         {
             var oldestData = DateTime.UtcNow.Subtract(days);
             if (entries != null)
@@ -99,7 +110,7 @@ namespace EliteDangerousCore
         }
 
         // history filter List should be in entry order.
-        static public List<HistoryEntry> StartStopFlags(List<HistoryEntry> list, JournalTypeEnum[] entriestoaccept = null, bool reverse = true)
+        static public List<HistoryEntry> StartStopFlags(List<HistoryEntry> list, HashSet<JournalTypeEnum> entriestoaccept = null, bool reverse = true)
         {
             List<HistoryEntry> entries = new List<HistoryEntry>();
             bool started = false;
@@ -128,7 +139,7 @@ namespace EliteDangerousCore
         }
 
         // history filter, combat panel. List should be in entry order.
-        static public List<HistoryEntry> ToLastDock(List<HistoryEntry> list, JournalTypeEnum[] entriestoaccept = null, bool reverse = true)
+        static public List<HistoryEntry> ToLastDock(List<HistoryEntry> list, HashSet<JournalTypeEnum> entriestoaccept = null, bool reverse = true)
         {
             int lastdock = list.FindLastIndex(x => !x.MultiPlayer && x.EntryType == JournalTypeEnum.Docked);
             if (lastdock >= 0)
@@ -192,7 +203,8 @@ namespace EliteDangerousCore
         }
 
         // factions, List should be in entry order.
-        static public List<HistoryEntry> FilterBefore(List<HistoryEntry> list, HistoryEntry pos, Predicate<HistoryEntry> where)         // from and including pos, go back in time, and return all which match where
+        // from and including pos, go back in time, and return all which match where
+        static public List<HistoryEntry> FilterBefore(List<HistoryEntry> list, HistoryEntry pos, Predicate<HistoryEntry> where)         
         {
             int indexno = pos.EntryNumber-1;        // position in HElist..
             List<HistoryEntry> helist = new List<HistoryEntry>();
@@ -245,11 +257,7 @@ namespace EliteDangerousCore
         // trilat/trippanel
         public List<HistoryEntry> FilterByFSDOnly() { return (from s in historylist where s.EntryType == JournalTypeEnum.FSDJump select s).ToList(); }
 
-        // search scans
-        public List<HistoryEntry> FilterByScanFSSBodySAASignals() { return (from s in historylist where (s.journalEntry.EventTypeID == JournalTypeEnum.Scan || s.journalEntry.EventTypeID == JournalTypeEnum.FSSBodySignals || s.journalEntry.EventTypeID == JournalTypeEnum.SAASignalsFound) select s).ToList(); }
-        public List<HistoryEntry> FilterByScanFSSBodySAASignals(ISystem sys) { return (from s in historylist where (sys.Name == s.System.Name && (s.journalEntry.EventTypeID == JournalTypeEnum.Scan || s.journalEntry.EventTypeID == JournalTypeEnum.FSSBodySignals || s.journalEntry.EventTypeID == JournalTypeEnum.SAASignalsFound)) select s).ToList(); }
-
-        // used by travel, spanel, journal to filter out by journal type
+           // used by travel, spanel, journal to filter out by journal type
         public static List<HistoryEntry> FilterByJournalEvent(List<HistoryEntry> he, string eventstring, out int count)
         {
             count = 0;
