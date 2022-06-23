@@ -67,7 +67,7 @@ namespace EliteDangerousCore
                 new Query("Landable with Volcanism","HasMeaningfulVolcanism IsTrue And IsLandable IsTrue", true ),
                 new Query("Earth Like planet","Earthlike IsTrue", true ),
                 new Query("Bigger than Earth","IsPlanet IsTrue And nMassEM > 1", true ),
-                new Query("Hotter than Hades","IsPlanet IsTrue And nSurfaceTemperature >= 350", true ),
+                new Query("Hotter than Hades","IsPlanet IsTrue And nSurfaceTemperature >= 2273", true ),
 
                 new Query("Has Rings","HasRings IsTrue", true ),
                 new Query("Star has Rings","HasRings IsTrue And IsStar IsTrue", true ),
