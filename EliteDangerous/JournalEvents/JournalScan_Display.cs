@@ -225,6 +225,18 @@ namespace EliteDangerousCore.JournalEvents
                 scanText.AppendLine(detailed);
             }
 
+
+#if DEBUG
+            if ( Parents != null)
+            {
+                scanText.AppendLine();
+                scanText.AppendLine($"Body ID {BodyID}");
+                foreach (var x in Parents)
+                    scanText.AppendLine($"Parent {x.BodyID} {x.Type}");
+            }
+
+#endif
+
             //scanText.AppendFormat("BID+Parents: {0} - {1}\n", BodyID ?? -1, ParentList());
 
             if (scanText.Length > 0 && scanText[scanText.Length - 1] == '\n')

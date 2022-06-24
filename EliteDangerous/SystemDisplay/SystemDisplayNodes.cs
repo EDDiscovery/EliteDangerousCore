@@ -131,6 +131,11 @@ namespace EliteDangerousCore
                         }
                     }
 
+#if DEBUG
+                    nodelabels[1] = nodelabels[1] + $" ID:{sc.BodyID}";
+#endif
+
+
                     nodelabels[1] = nodelabels[1].AppendPrePad(appendlabeltext, Environment.NewLine);
 
 //  nodelabels[1] = nodelabels[1].AppendPrePad("" + sn.ScanData?.BodyID, Environment.NewLine);

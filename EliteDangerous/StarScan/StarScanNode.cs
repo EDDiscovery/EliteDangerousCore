@@ -24,7 +24,15 @@ namespace EliteDangerousCore
 {
     public partial class StarScan
     {
-        public enum ScanNodeType { star, barycentre, body, belt, beltcluster, ring };
+        public enum ScanNodeType 
+        {  
+            star,            // used for top level stars - stars around stars are called a body.
+            barycentre,      // only used for top level barycentres (AB)
+            body,            // all levels >0 except for below are called a body
+            belt,            // used on level 1 under the star : HIP 23759 A Belt Cluster 4 -> elements Main Star,A Belt,Cluster 4
+            beltcluster,     // each cluster under it gets this name at level 2
+            ring             // rings at the last level : Selkana 9 A Ring : MainStar,9,A Ring
+        };
 
         [DebuggerDisplay("SN {FullName} {NodeType} lv {Level} bid {BodyID}")]
         public partial class ScanNode
@@ -48,7 +56,7 @@ namespace EliteDangerousCore
             private List<JournalScanOrganic> organics;  // can be null if nothing for this node, else a list of organics
 
             public ScanNode() { }
-            public ScanNode(string name, ScanNodeType node, int? bodyid) { OwnName = name; NodeType = node; BodyID = bodyid; Children = new SortedList<string, ScanNode>(); }
+            public ScanNode(string name, ScanNodeType node, int? bodyid) { FullName = OwnName = name; NodeType = node; BodyID = bodyid; Children = new SortedList<string, ScanNode>(); }
             public ScanNode(ScanNode other) // copy constructor, but not children
             {
                 NodeType = other.NodeType; FullName = other.FullName; OwnName = other.OwnName; CustomName = other.CustomName;

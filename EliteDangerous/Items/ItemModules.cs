@@ -846,6 +846,11 @@ namespace EliteDangerousCore
              { "bobble_oldskool_cobramkiii", new ShipModule(-1,0, "Bobble Oldskool Cobram Mk III", VanityType ) },
              { "string_lights_thargoidprobe", new ShipModule(-1,0, "String Lights Thargoid probe", VanityType ) },
              { "voicepack_alix", new ShipModule(-1,0, "Voicepack Alix", VanityType ) },
+
+            { "paintjob_type9_military_iridescentblack_02", new ShipModule(-1,0, "Paintjob Type 9 Military Iridescent black 2", VanityType ) },
+            { "type9_military_shipkit1_spoiler2", new ShipModule(-1,0, "Type 9 Military Shipkit 1 Spoiler 2", VanityType ) },
+            { "type9_military_shipkit1_bumper3", new ShipModule(-1,0, "Type 9 Military Shipkit 1 Bumper 3", VanityType ) },
+
         };
 
         #endregion

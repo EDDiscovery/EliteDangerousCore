@@ -37,7 +37,7 @@ namespace EliteDangerousCore
 
                 foreach( var scannode in scannodelist)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Barycentre in {sys.Name} BC {jsa.BodyID} attach to {scannode.ScanData.BodyName}");
+                    //System.Diagnostics.Debug.WriteLine($"Barycentre in {sys.Name} BC {jsa.BodyID} attach to {scannode.ScanData.BodyName}");
                     scannode.ScanData.Barycentre = jsa;     // assign to barycentre
                 }
 

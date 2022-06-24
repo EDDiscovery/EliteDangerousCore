@@ -25,10 +25,10 @@ namespace EliteDangerousCore
         {
             // Scan Node debugs and information
 
-            public static void DumpTree(ScanNode top, string key, int level)        // debug dump out
+            public static void DumpTree(ScanNode top, string introtext, int level)        // debug dump out
             {
                 string pad = new string(' ', 64);
-                System.Diagnostics.Debug.WriteLine(pad.Substring(0, level * 3) + key + ":" + top.BodyID + " `" + top.FullName + "` " + top.NodeType + " Parent `" + top?.Parent?.FullName + "` SD:" + (top.scandata != null));
+                System.Diagnostics.Debug.WriteLine(pad.Substring(0, level * 3) + introtext + ": ID " + top.BodyID + " " + top.FullName + " : " + top.NodeType + (top.scandata != null ? " : sd": ""));
                 if (top.Children != null)
                 {
                     foreach (var c in top.Children)
@@ -60,16 +60,31 @@ namespace EliteDangerousCore
                 {
                     obj["ID"] = top.BodyID.Value;
                 }
+
+                obj["ScanDataPresent"] = top.ScanData != null;         // one key to indicate data is available
+
                 if (top.ScanData != null)
                 {
                     obj["Epoch"] = top.ScanData.EventTimeUTC;
+                    obj["DistanceFromArrival"] = top.ScanData.DistanceFromArrivalm / 1000.0;        // in km
 
-                    if (top.ScanData.IsStar)
+                    if (top.NodeType == ScanNodeType.belt)
+                        obj["BodyType"] = "Belt";
+                    else if (top.NodeType == ScanNodeType.beltcluster)
+                        obj["BodyType"] = "BeltCluster";
+                    else if (top.NodeType == ScanNodeType.ring)
+                        obj["BodyType"] = "Ring";
+                    else if (top.ScanData.IsStar)
                     {
+                        obj["BodyType"] = "Star";
+                        obj["StarType"] = top.ScanData.StarTypeID.ToString();
                         obj["StarClass"] = top.ScanData.StarClassificationAbv;
+                        obj["StarAbsMag"] = top.ScanData.nAbsoluteMagnitude;
+                        obj["StarAge"] = top.ScanData.nAge;
                     }
                     else if (top.ScanData.IsPlanet)
                     {
+                        obj["BodyType"] = "Planet";
                         obj["PlanetClass"] = top.ScanData.PlanetTypeID.ToString();
                     }
 
@@ -95,6 +110,15 @@ namespace EliteDangerousCore
 
                     if ( top.scandata.nMassKG.HasValue)
                         obj["Mass"] = top.scandata.nMassKG; // kg
+
+                    if (top.ScanData.nSurfaceTemperature.HasValue)
+                        obj["SurfaceTemp"] = top.ScanData.nSurfaceTemperature;
+
+                    if (top.ScanData.nSurfaceTemperature.HasValue)
+                        obj["SurfaceTemp"] = top.ScanData.nSurfaceTemperature;
+
+                    if (top.ScanData.HasRings)
+                        obj["RingCount"] = top.ScanData.Rings.Length;
 
                 }
 

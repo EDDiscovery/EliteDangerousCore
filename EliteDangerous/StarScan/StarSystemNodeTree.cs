@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2021 EDDiscovery development team
+ * Copyright © 2015 - 2022 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -25,36 +25,35 @@ namespace EliteDangerousCore
         public partial class SystemNode
         {
             // generate a node tree with barycentres properly positioned for display. Does not fill in Scannode.Parent
+            // nodes types marked as barycentre, body, belt, ring or beltcluster
             public ScanNode OrderedSystemTree()
             {
-                ScanNode rootnode = null;
+                JournalScan.BodyParent topbp = null;
 
-                foreach (var kvp in StarNodes)  // first process star nodes to find root node
+                foreach (var kvp in StarNodes)  // go thru all star nodes and try to find a parent list
                 {
-                    ScanNode snode = kvp.Value;
+                    var plist = FindFirstParentList(kvp.Value);
 
-                    // need some scan data with a valid body id, then we can discover the root node
-                    if (snode.ScanData != null && snode.BodyID.HasValue)
+                    if (plist != null)        // if we have a parent list, we can find the root node
                     {
-                        Debug.WriteLine($"Star {snode.BodyID} '{snode.OwnName}' {snode.ScanData?.ParentList()}");
-
-                        if (snode.ScanData.Parents != null) // if it has a parent list, it will tell us the root node as the last entry to it.
-                        {
-                            var pnode = snode.ScanData.Parents[snode.ScanData.Parents.Count - 1];
-                            int pid = pnode.BodyID;
-
-                            // make an entry for the top level object, which will be a barycentre (but check in case)
-                            rootnode = new ScanNode("Node" + pid.ToStringInvariant(), pnode.BaryCentre ? ScanNodeType.barycentre : ScanNodeType.body, pid);  
-                        }
-                        else  // no parent list, this is a top level star, confirmed that entries without parent list are top level stars with BID = 0
-                        {
-                            rootnode = new ScanNode(snode);     // top level node created from snode with data
-                        }
+                        topbp = plist[plist.Count - 1];
+                        break;
                     }
                 }
 
-                if ( rootnode != null )     // we have a root node, a star or a barycentre
+                if (topbp != null)      // if we don't have a single parents list, can't do any associations, so stop. if so,
                 {
+                    ScanNode rootnode = null;
+
+                    if (NodesByID.TryGetValue(topbp.BodyID, out ScanNode foundnode))        // find ID In nodes
+                    {
+                        rootnode = new ScanNode(foundnode);     // top level node created from snode with data
+                    }
+                    else
+                    {       // else create a new one. We set it to barycentre or body dependent on the parent node info
+                        rootnode = new ScanNode("Node" + topbp.BodyID.ToStringInvariant(), topbp.BaryCentre ? ScanNodeType.barycentre : ScanNodeType.body, topbp.BodyID);
+                    }
+
                     foreach (var kvp in StarNodes)  // go thru star list again
                     {
                         ScanNode snode = kvp.Value;
@@ -62,20 +61,27 @@ namespace EliteDangerousCore
                         // if we have parents list, we find the parent, and assign as child
                         // if we did not have a parents list, then the rootnode is the top level star, and it already has the scan data assigned above
 
-                        if (snode.ScanData?.Parents != null) 
+                        if (snode.ScanData?.Parents != null)
                         {
                             var parentnode = FindParentAddToTree(rootnode, snode.ScanData.Parents, snode.ScanData.Parents.Count - 1);
                             string name = "Node" + snode.BodyID.ToStringInvariant();
                             var node = new ScanNode(snode);
                             parentnode.Children.Add(name, node);
                         }
+                        else
+                        {
+                            //Debug.WriteLine($"Node {snode.FullName} No scan data or parents");
+                        }
 
                         if (snode.Children != null)
                             AddChildren(rootnode, snode.Children);
                     }
-                }
 
-                return rootnode;
+                    return rootnode;
+                }
+                else
+                    return null;
+
             }
 
             private void AddChildren(ScanNode rootnode, SortedList<string, ScanNode> children)
@@ -85,7 +91,7 @@ namespace EliteDangerousCore
                     if (kvp.Value.ScanData?.Parents != null)    // need heirarchy
                     {
                         // find the parent of this body, using the parent list to find it. It will make parents to fit
-                        ScanNode parent = FindParentAddToTree(rootnode, kvp.Value.ScanData.Parents, kvp.Value.ScanData.Parents.Count - 1);
+                        ScanNode parent = FindParentAddToTree(rootnode,kvp.Value.ScanData.Parents, kvp.Value.ScanData.Parents.Count - 1);
 
                         string name = "Node" + kvp.Value.BodyID.ToStringInvariant();
 
@@ -101,9 +107,17 @@ namespace EliteDangerousCore
                             parent.Children.Add(name, newnode);
                         }
 
-                        if (kvp.Value.Children != null)     // then go thru children
-                            AddChildren(rootnode, kvp.Value.Children);
+                        if (kvp.Value.NodeType == ScanNodeType.beltcluster)       // if we are pushing a belt cluster, mark the above as a belt, as it was auto created and called a body by default
+                            parent.NodeType = ScanNodeType.belt;
+
                     }
+                    else
+                    {
+                        //Debug.WriteLine($"Node {kvp.Value.FullName} No scan data or parents in add children");
+                    }
+
+                    if (kvp.Value.Children != null)     // then go thru children
+                        AddChildren(rootnode, kvp.Value.Children);
                 }
             }
 
@@ -135,7 +149,7 @@ namespace EliteDangerousCore
                     }
                     else
                     {
-                        Debug.WriteLine($"{node.OwnName} No scan data");
+                        //Debug.WriteLine($"{node.OwnName} No scan data");
                     }
 
                     node.Children.Add(name, newnode);
@@ -145,7 +159,21 @@ namespace EliteDangerousCore
                     return node;
             }
 
+            // find the first parent list
+            private List<JournalScan.BodyParent> FindFirstParentList(ScanNode node)
+            {
+                if (node.ScanData?.Parents != null)
+                    return node.ScanData.Parents;
 
+                foreach (var kvp in node.Children)
+                {
+                    var ret = FindFirstParentList(kvp.Value);
+                    if (ret != null)
+                        return ret;
+                }
+
+                return null;
+            }
 
         }
     }

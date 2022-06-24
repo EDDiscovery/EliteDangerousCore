@@ -92,7 +92,7 @@ namespace EliteDangerousCore
             // Bail out if more than 5 elements extracted
             else if (elements.Count > 5)
             {
-                System.Diagnostics.Trace.WriteLine($"Failed to add body {sc.BodyName} to system {sys.Name} - too deep");
+                System.Diagnostics.Trace.WriteLine($"Failed to add body {sc.BodyName} to system {sys.Name} - Versip");
                 return false;
             }
 
@@ -177,6 +177,7 @@ namespace EliteDangerousCore
                     {
                         elements = new List<string> { MainStar, elements[0] + " " + elements[1], elements[2] + " " + elements[3] };     // reform into Main Star | A belt | Cluster N
                         isbeltcluster = true;
+                        //System.Diagnostics.Debug.WriteLine($"Belt cluster depth 1 {sc.BodyName} : {string.Join(",", elements)}");
                     }
                     else if (elements.Count == 5 && elements[0].Length >= 1 &&                                      // AA A belt cluster N
                             elements[1].Length == 1 && char.IsLetter(elements[1][0]) &&
@@ -185,6 +186,7 @@ namespace EliteDangerousCore
                     {
                         elements = new List<string> { elements[0], elements[1] + " " + elements[2], elements[3] + " " + elements[4] };      // reform into <star> | A belt | Cluster N
                         isbeltcluster = true;
+                        //System.Diagnostics.Debug.WriteLine($"Belt cluster depth 2 {sc.BodyName} : {string.Join(",", elements)}");
                     }
                     else if (elements.Count >= 3 &&
                              elements[elements.Count - 1].Equals("ring", StringComparison.InvariantCultureIgnoreCase) &&        // A 2 A ring
@@ -193,6 +195,7 @@ namespace EliteDangerousCore
                     {                                                                                               // reform into A | 2 | A ring three level or A A ring
                         elements = elements.Take(elements.Count - 2).Concat(new string[] { elements[elements.Count - 2] + " " + elements[elements.Count - 1] }).ToList();
                         isring = true;
+                        //System.Diagnostics.Debug.WriteLine($"Ring depth N-1 {sc.BodyName} : {string.Join(",", elements)}");
                     }
 
                     if (char.IsDigit(elements[0][0]))                                   // if digits, planet number, no star designator
@@ -242,20 +245,20 @@ namespace EliteDangerousCore
             SortedList<string, ScanNode> currentnodelist = systemnode.StarNodes;            // current operating node list, always made
             ScanNode previousnode = null;                                                   // trails subnode by 1 to point to previous node
 
-            for (int lvl = 0; lvl < elements.Count; lvl++)
+            for (int lvl = 0; lvl < elements.Count; lvl++)                                  // run thru the found elements..
             {
                 ScanNodeType sublvtype = starscannodetype;                                  // top level, element[0] type is starscannode (star/barycentre)    
 
-                if (lvl > 0)                                                                // levels pass 0, we need to determine what it is    
+                if (lvl > 0)                                                                // levels > 0, we need to determine what it is    
                 {
-                    if (isbeltcluster)                                                      // a belt cluster is in three levels (star, belt, cluster number)
+                    if (isbeltcluster)                                                      // a belt cluster is in three levels (star, belt, cluster)
                     {
-                        if (lvl == 1)                                                       // next level, its a belt
+                        if (lvl == 1)                                                       // level 1, call it belt - belt clusters come out with elements Main Star,A Belt,Cluster 4
                             sublvtype = ScanNodeType.belt;              
                         else
-                            sublvtype = ScanNodeType.beltcluster;                           // third level, cluster
+                            sublvtype = ScanNodeType.beltcluster;                           // level 2, its called a cluster
                     }
-                    else if (isring && lvl == elements.Count - 1)                           // and level, and a ring, mark as a ring
+                    else if (isring && lvl == elements.Count - 1)                           // if its a ring, and we are at the end of the list, mark as a ring
                     {
                         sublvtype = ScanNodeType.ring;
                     }
@@ -294,12 +297,18 @@ namespace EliteDangerousCore
 
                 if (lvl == elements.Count - 1)                                  // if we are at the end node..
                 {
-                    if (oldnode != null && oldnode.FullName == subnode.FullName && !object.ReferenceEquals(subnode, oldnode))
+                    if (oldnode != null && oldnode.FullName == subnode.FullName && !object.ReferenceEquals(subnode, oldnode))       // if we are replacing the node, make sure we dup across some info
                     {
                         subnode.IsMapped = oldnode.IsMapped;
                         subnode.WasMappedEfficiently = oldnode.WasMappedEfficiently;
                         subnode.Signals = oldnode.Signals;
                     }
+
+                    // if its a belt cluster we are adding, then the previous node is a belt but it does not have a scan data, therefore it was artifically created and has no body id
+                    // if we have a parent list, we can push the body id of it up. makes the IDs look better
+
+                    if (subnode.NodeType == ScanNodeType.beltcluster && sc.Parents != null)     
+                        previousnode.BodyID = sc.Parents[0].BodyID;                        
 
                     subnode.ScanData = sc;                                      // only overwrites if scan is better
                     subnode.ScanData.SetMapped(subnode.IsMapped, subnode.WasMappedEfficiently);      // pass this data to node, as we may have previously had a SAA Scan
@@ -310,11 +319,11 @@ namespace EliteDangerousCore
                         subnode.BodyID = sc.BodyID;
                     }
 
-                    if (sc.IsOrbitingBaryCentre)
+                    if (sc.IsOrbitingBaryCentre)    // if we are orbiting a barycentre, see if the dump of barycentres for this system has the entry, if so, fill in the scan barycentre value so you can ref it via that
                     {
                         if ( systemnode.BaryCentres.TryGetValue(sc.Parents[0].BodyID, out JournalScanBaryCentre jsa))
                         {
-                            System.Diagnostics.Debug.WriteLine($"Barycentre in {sys.Name} BC {jsa.BodyID} attach to {sc.BodyName}");
+                            //System.Diagnostics.Debug.WriteLine($"Barycentre in {sys.Name} BC {jsa.BodyID} attach to {sc.BodyName}");
                             subnode.ScanData.Barycentre = jsa;     // assign to barycentre
                         }
                     }
