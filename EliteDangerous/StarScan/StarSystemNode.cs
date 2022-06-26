@@ -29,7 +29,7 @@ namespace EliteDangerousCore
         {
             public ISystem System;
 
-            public SortedList<string, ScanNode> StarNodes { get; private set; } = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());   // node list
+            public SortedList<string, ScanNode> StarNodes { get; private set; } = new SortedList<string, ScanNode>(new CollectionStaticHelpers.BasicLengthBasedNumberComparitor<string>());   // node list
             public SortedList<int, ScanNode> NodesByID { get; private set; } = new SortedList<int, ScanNode>();               // by ID list
             public SortedList<int, JournalScanBaryCentre> BaryCentres { get; private set; } = new SortedList<int, JournalScanBaryCentre>();
 
@@ -45,7 +45,7 @@ namespace EliteDangerousCore
 
             public void ClearChildren()
             {
-                StarNodes = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());
+                StarNodes = new SortedList<string, ScanNode>(new CollectionStaticHelpers.BasicLengthBasedNumberComparitor<string>());
                 NodesByID = new SortedList<int, ScanNode>();
             }
 

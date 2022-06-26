@@ -28,7 +28,7 @@ namespace EliteDangerousCore
             static public ScanNode PopulateBarycentres(List<ScanNode> nodes)
             {
                 ScanNode top = new ScanNode();
-                top.Children = new SortedList<string, ScanNode>();
+                top.Children = new SortedList<string, ScanNode>();      // not sorting using comparitor - not sure why June 22.
 
                 foreach (var sn in nodes)
                 {

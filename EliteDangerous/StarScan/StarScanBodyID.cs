@@ -186,7 +186,7 @@ namespace EliteDangerousCore
                 if (currentnodelist == null || !currentnodelist.TryGetValue(elements[lvl], out ScanNode subnode))
                 {
                     if (currentnodelist == null)    // no node list, happens when we are at least 1 level down as systemnode always has a node list, make one 
-                        currentnodelist = previousnode.Children = new SortedList<string, ScanNode>(new DuplicateKeyComparer<string>());
+                        currentnodelist = previousnode.Children = new SortedList<string, ScanNode>(new CollectionStaticHelpers.BasicLengthBasedNumberComparitor<string>());
 
                     string ownname = elements[lvl];
                     

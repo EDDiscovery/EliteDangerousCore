@@ -119,22 +119,6 @@ namespace EliteDangerousCore
             return null;
         }
 
-        private class DuplicateKeyComparer<TKey> : IComparer<string> where TKey : IComparable      // special compare for sortedlist
-        {
-            public int Compare(string x, string y)
-            {
-                if (x.Length > 0 && Char.IsDigit(x[0]))      // numbers..
-                {
-                    if (x.Length < y.Length)
-                        return -1;
-                    else if (x.Length > y.Length)
-                        return 1;
-
-                }
-
-                return StringComparer.InvariantCultureIgnoreCase.Compare(x, y);
-            }
-        }
 
     }
 }

@@ -56,13 +56,14 @@ namespace EliteDangerousCore
             private List<JournalScanOrganic> organics;  // can be null if nothing for this node, else a list of organics
 
             public ScanNode() { }
-            public ScanNode(string name, ScanNodeType node, int? bodyid) { FullName = OwnName = name; NodeType = node; BodyID = bodyid; Children = new SortedList<string, ScanNode>(); }
+            public ScanNode(string name, ScanNodeType node, int? bodyid) { FullName = OwnName = name; NodeType = node; BodyID = bodyid; 
+                        Children = new SortedList<string, ScanNode>(new CollectionStaticHelpers.BasicLengthBasedNumberComparitor<string>()); }
             public ScanNode(ScanNode other) // copy constructor, but not children
             {
                 NodeType = other.NodeType; FullName = other.FullName; OwnName = other.OwnName; CustomName = other.CustomName;
                 Level = other.Level; BodyID = other.BodyID; IsMapped = other.IsMapped; WasMappedEfficiently = other.WasMappedEfficiently;
                 scandata = other.scandata; beltdata = other.beltdata; signals = other.signals; organics = other.organics;
-                Children = new SortedList<string, ScanNode>();
+                Children = new SortedList<string, ScanNode>(new CollectionStaticHelpers.BasicLengthBasedNumberComparitor<string>());
             }
 
             public JournalScan ScanData
