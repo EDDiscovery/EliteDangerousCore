@@ -343,7 +343,7 @@ namespace EliteDangerousCore.JournalEvents
             if (Items != null)
             {
                 FillInformation(null, null, out string info, out string detailed);
-                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, info + (detailed.HasChars() ? Environment.NewLine + detailed : ""), -Price);
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, info + (detailed.HasChars() ? Environment.NewLine + detailed : ""), Price);
             }
         }
 
