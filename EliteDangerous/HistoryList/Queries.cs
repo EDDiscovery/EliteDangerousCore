@@ -162,7 +162,7 @@ namespace EliteDangerousCore
             string[] userqueries = DB.UserDatabase.Instance.GetSettingString(DbUserQueries, "").Split(new char[] { splitmarker }); // allowed use
 
             for (int i = 0; i + 1 < userqueries.Length; i += 2)
-                Searches.Add(new Query(userqueries[i], userqueries[i + 1],QueryType.User));
+                Searches.Insert(0,new Query(userqueries[i], userqueries[i + 1],QueryType.User));
         }
 
         public void Set(string name, string expr, QueryType t)
@@ -171,7 +171,7 @@ namespace EliteDangerousCore
             if (entry != -1)
                 Searches[entry] = new Query(name, expr, t);
             else
-                Searches.Add(new Query(name, expr, t));
+                Searches.Insert(0,new Query(name, expr, t));
         }
 
         public void Delete(string name)
