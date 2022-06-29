@@ -15,6 +15,7 @@
  */
 
 using EliteDangerousCore.JournalEvents;
+using QuickJSON;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,114 +37,119 @@ namespace EliteDangerousCore
 
         public static HashSet<JournalTypeEnum> SearchableJournalTypes { get; } = new HashSet<JournalTypeEnum> { JournalTypeEnum.Scan, JournalTypeEnum.FSSBodySignals, JournalTypeEnum.SAASignalsFound };
 
+        public enum QueryType { BuiltIn, User, Example };
+
         public class Query
         {
             public string Name { get; set; }
             public string Condition { get; set; }
-            public bool Standard { get; set; }
-            public bool User { get; set; }
 
-            public Query(string n, string c, bool std = false, bool user = false) { Name = n;Condition = c;Standard = std; User = user; }
+            public QueryType QueryType { get; set; }
+
+            public Query(string n, string c, QueryType qt) { Name = n;Condition = c; QueryType = qt; }
+
+            public bool User { get { return QueryType == QueryType.User; } }
+            public bool UserOrBuiltIn { get { return QueryType == QueryType.BuiltIn || QueryType == QueryType.User; } }
         }
 
         public List<Query> Searches = new List<Query>()
             {
-                new Query("Planet inside inner ring","IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis <= Parent.RingsInnerm And Parent.IsPlanet IsTrue",true ),
-                new Query("Planet inside rings","IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis <= Parent.RingsOuterm And Parent.IsPlanet IsTrue",true ),
-                new Query("Planet between inner and outer ring","IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis >= Parent.RingsInnerm And nSemiMajorAxis <= Parent.RingsOuterm And Parent.IsPlanet IsTrue",true ),
-                new Query("Planet between rings 1 and 2","IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis >= Parent.Rings[1]_OuterRad And nSemiMajorAxis <= Parent.Rings[2]_InnerRad",true ),
-                new Query("Planet between rings 2 and 3","IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis >= Parent.Rings[2]_OuterRad And nSemiMajorAxis <= Parent.Rings[3]_InnerRad",true ),
+                new Query("Planet inside inner ring","IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis <= Parent.RingsInnerm And Parent.IsPlanet IsTrue", QueryType.BuiltIn ),
+                new Query("Planet inside rings","IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis <= Parent.RingsOuterm And Parent.IsPlanet IsTrue", QueryType.BuiltIn ),
+                new Query("Planet between inner and outer ring","IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis >= Parent.RingsInnerm And nSemiMajorAxis <= Parent.RingsOuterm And Parent.IsPlanet IsTrue", QueryType.BuiltIn ),
+                new Query("Planet between rings 1 and 2","IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis >= Parent.Rings[1]_OuterRad And nSemiMajorAxis <= Parent.Rings[2]_InnerRad", QueryType.BuiltIn ),
+                new Query("Planet between rings 2 and 3","IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis >= Parent.Rings[2]_OuterRad And nSemiMajorAxis <= Parent.Rings[3]_InnerRad", QueryType.BuiltIn ),
 
-                new Query("Heavier than Sol","nStellarMass > 1", true ),
-                new Query("Bigger than Sol","nRadius > 695700000", true ),
+                new Query("Heavier than Sol","nStellarMass > 1", QueryType.BuiltIn ),
+                new Query("Bigger than Sol","nRadius > 695700000", QueryType.BuiltIn ),
 
-                new Query("Landable","IsLandable IsTrue", true ),
-                new Query("Landable and Terraformable","IsPlanet IsTrue And IsLandable IsTrue And Terraformable IsTrue",true ),
-                new Query("Landable with Atmosphere","IsPlanet IsTrue And IsLandable IsTrue And HasAtmosphere IsTrue",true ),
-                new Query("Landable with High G","IsPlanet IsTrue And IsLandable IsTrue And nSurfaceGravityG >= 3",true ),
-                new Query("Landable large planet","IsPlanet IsTrue And IsLandable IsTrue And nRadius >= 12000000",true ),
-                new Query("Landable with Rings","IsPlanet IsTrue And IsLandable IsTrue And HasRings IsTrue",true ),
-                new Query("Has Volcanism","HasMeaningfulVolcanism IsTrue", true ),
-                new Query("Landable with Volcanism","HasMeaningfulVolcanism IsTrue And IsLandable IsTrue", true ),
-                new Query("Earth Like planet","Earthlike IsTrue", true ),
-                new Query("Bigger than Earth","IsPlanet IsTrue And nMassEM > 1", true ),
-                new Query("Hotter than Hades","IsPlanet IsTrue And nSurfaceTemperature >= 2273", true ),
+                new Query("Landable","IsLandable IsTrue", QueryType.BuiltIn ),
+                new Query("Landable and Terraformable","IsPlanet IsTrue And IsLandable IsTrue And Terraformable IsTrue", QueryType.BuiltIn ),
+                new Query("Landable with Atmosphere","IsPlanet IsTrue And IsLandable IsTrue And HasAtmosphere IsTrue", QueryType.BuiltIn ),
+                new Query("Landable with High G","IsPlanet IsTrue And IsLandable IsTrue And nSurfaceGravityG >= 3", QueryType.BuiltIn ),
+                new Query("Landable large planet","IsPlanet IsTrue And IsLandable IsTrue And nRadius >= 12000000", QueryType.BuiltIn ),
+                new Query("Landable with Rings","IsPlanet IsTrue And IsLandable IsTrue And HasRings IsTrue", QueryType.BuiltIn ),
+                new Query("Has Volcanism","HasMeaningfulVolcanism IsTrue", QueryType.BuiltIn ),
+                new Query("Landable with Volcanism","HasMeaningfulVolcanism IsTrue And IsLandable IsTrue", QueryType.BuiltIn ),
+                new Query("Earth Like planet","Earthlike IsTrue", QueryType.BuiltIn ),
+                new Query("Bigger than Earth","IsPlanet IsTrue And nMassEM > 1", QueryType.BuiltIn ),
+                new Query("Hotter than Hades","IsPlanet IsTrue And nSurfaceTemperature >= 2273", QueryType.BuiltIn ),
 
-                new Query("Has Rings","HasRings IsTrue", true ),
-                new Query("Star has Rings","HasRings IsTrue And IsStar IsTrue", true ),
-                new Query("Has Belts","HasBelts IsTrue", true ),
+                new Query("Has Rings","HasRings IsTrue", QueryType.BuiltIn ),
+                new Query("Star has Rings","HasRings IsTrue And IsStar IsTrue", QueryType.BuiltIn ),
+                new Query("Has Belts","HasBelts IsTrue", QueryType.BuiltIn ),
 
-                new Query("Planet has wide rings vs radius","(IsPlanet IsTrue And HasRings IsTrue ) And ( Rings[Iter1]_OuterRad-Rings[Iter1]_InnerRad >= nRadius*5)",true ),
+                new Query("Planet has wide rings vs radius","(IsPlanet IsTrue And HasRings IsTrue ) And ( Rings[Iter1]_OuterRad-Rings[Iter1]_InnerRad >= nRadius*5)", QueryType.BuiltIn ),
 
-                new Query("Close orbit to parent","IsPlanet IsTrue And Parent.IsPlanet IsTrue And IsOrbitingBaryCentre IsFalse And Parent.nRadius*3 > nSemiMajorAxis",true ),
+                new Query("Close orbit to parent","IsPlanet IsTrue And Parent.IsPlanet IsTrue And IsOrbitingBaryCentre IsFalse And Parent.nRadius*3 > nSemiMajorAxis", QueryType.BuiltIn ),
 
                 new Query("Close to ring",
                                 "( IsPlanet IsTrue And Parent.IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse ) And " +
                                 "( \"Abs(Parent.Rings[Iter1]_InnerRad-nSemiMajorAxis)\" < nRadius*10 Or  \"Abs(Parent.Rings[Iter1]_OuterRad-nSemiMajorAxis)\" < nRadius*10 )"
-                    ,true ),
+                    , QueryType.BuiltIn ),
 
-                new Query("Planet with a large number of Moons","IsPlanet IsTrue And Child.Count >= 8",true ),
-                new Query("Moon of a Moon","Level == 3",true ),
-                new Query("Moons orbiting Terraformables","Level >= 2 And Parent.Terraformable IsTrue",true ),
-                new Query("Moons orbiting Earthlike","Level >= 2 And Parent.Earthlike IsTrue",true ),
+                new Query("Planet with a large number of Moons","IsPlanet IsTrue And Child.Count >= 8", QueryType.BuiltIn ),
+                new Query("Moon of a Moon","Level == 3", QueryType.BuiltIn ),
+                new Query("Moons orbiting Terraformables","Level >= 2 And Parent.Terraformable IsTrue", QueryType.BuiltIn ),
+                new Query("Moons orbiting Earthlike","Level >= 2 And Parent.Earthlike IsTrue", QueryType.BuiltIn ),
 
                 new Query("Close Binary","IsPlanet IsTrue And IsOrbitingBaryCentre IsTrue And Sibling.Count == 1 And nRadius/nSemiMajorAxis > 0.4 And " +
-                    "Sibling[1].nRadius/Sibling[1].nSemiMajorAxis > 0.4",true ),
+                    "Sibling[1].nRadius/Sibling[1].nSemiMajorAxis > 0.4", QueryType.BuiltIn ),
 
-                new Query("Gas giant has a terraformable Moon","( SudarskyGasGiant IsTrue Or GasGiant IsTrue Or HeliumGasGiant IsTrue ) And ( Child[Iter1].Terraformable IsTrue )",true ),
-                new Query("Gas giant has a large moon","( SudarskyGasGiant IsTrue Or GasGiant IsTrue Or HeliumGasGiant IsTrue ) And ( Child[Iter1].nRadius >= 5000000 )",true ),
-                new Query("Gas giant has a tiny moon","( SudarskyGasGiant IsTrue Or GasGiant IsTrue Or HeliumGasGiant IsTrue ) And ( Child[Iter1].nRadius <= 500000 )",true ),
+                new Query("Gas giant has a terraformable Moon","( SudarskyGasGiant IsTrue Or GasGiant IsTrue Or HeliumGasGiant IsTrue ) And ( Child[Iter1].Terraformable IsTrue )", QueryType.BuiltIn ),
+                new Query("Gas giant has a large moon","( SudarskyGasGiant IsTrue Or GasGiant IsTrue Or HeliumGasGiant IsTrue ) And ( Child[Iter1].nRadius >= 5000000 )", QueryType.BuiltIn ),
+                new Query("Gas giant has a tiny moon","( SudarskyGasGiant IsTrue Or GasGiant IsTrue Or HeliumGasGiant IsTrue ) And ( Child[Iter1].nRadius <= 500000 )", QueryType.BuiltIn ),
 
-                new Query("Tiny Moon","Level >= 2 And nRadius < 300000",true ),
-                new Query("Fast Rotation of a non tidally locked body","Level >= 1 And nTidalLock IsFalse And Abs(nRotationPeriod) < 3600",true ),
-                new Query("Fast Orbital period","Level >= 1 And nOrbitalPeriod < 28800",true ),
-                new Query("High Eccentric Orbit","Level >= 1 And nEccentricity > 0.9",true ),
-                new Query("Low Eccentricity Orbit","Level >= 1 And nEccentricity <= 0.01", true ),
-                new Query("Tidal Lock","IsPlanet IsTrue And nTidalLock == 1",true ),
+                new Query("Tiny Moon","Level >= 2 And nRadius < 300000", QueryType.BuiltIn ),
+                new Query("Fast Rotation of a non tidally locked body","Level >= 1 And nTidalLock IsFalse And Abs(nRotationPeriod) < 3600", QueryType.BuiltIn ),
+                new Query("Fast Orbital period","Level >= 1 And nOrbitalPeriod < 28800", QueryType.BuiltIn ),
+                new Query("High Eccentric Orbit","Level >= 1 And nEccentricity > 0.9", QueryType.BuiltIn ),
+                new Query("Low Eccentricity Orbit","Level >= 1 And nEccentricity <= 0.01", QueryType.BuiltIn ),
+                new Query("Tidal Lock","IsPlanet IsTrue And nTidalLock == 1", QueryType.BuiltIn ),
 
-                new Query("High number of Jumponium Materials","IsLandable IsTrue And JumponiumCount >= 5",true ),
+                new Query("High number of Jumponium Materials","IsLandable IsTrue And JumponiumCount >= 5", QueryType.BuiltIn ),
 
-                new Query("Contains Geo Signals",            "ContainsGeoSignals IsTrue",true ),
-                new Query("Contains Bio Signals",            "ContainsBioSignals IsTrue",true ),
-                new Query("Contains Thargoid Signals",       "ContainsThargoidSignals IsTrue",true ),
-                new Query("Contains Guardian Signals",       "ContainsGuardianSignals IsTrue",true ),
-                new Query("Contains Human Signals",          "ContainsHumanSignals IsTrue",true ),
-                new Query("Contains Other Signals",          "ContainsOtherSignals IsTrue",true ),
-                new Query("Contains Uncategorised Signals",  "ContainsUncategorisedSignals IsTrue",true ),
+                new Query("Contains Geo Signals",            "ContainsGeoSignals IsTrue", QueryType.BuiltIn ),
+                new Query("Contains Bio Signals",            "ContainsBioSignals IsTrue", QueryType.BuiltIn ),
+                new Query("Contains Thargoid Signals",       "ContainsThargoidSignals IsTrue", QueryType.BuiltIn ),
+                new Query("Contains Guardian Signals",       "ContainsGuardianSignals IsTrue", QueryType.BuiltIn ),
+                new Query("Contains Human Signals",          "ContainsHumanSignals IsTrue", QueryType.BuiltIn ),
+                new Query("Contains Other Signals",          "ContainsOtherSignals IsTrue", QueryType.BuiltIn ),
+                new Query("Contains Uncategorised Signals",  "ContainsUncategorisedSignals IsTrue", QueryType.BuiltIn ),
 
-                new Query("Body Name","BodyName contains <name>",false ),
-                new Query("Scan Type","ScanType contains Detailed",false ),
-                new Query("Distance (ls)","DistanceFromArrivalLS >= 20",false ),
-                new Query("Rotation Period (s)","nRotationPeriod >= 30",false ),
-                new Query("Rotation Period (days)","nRotationPeriodDays >= 1",false ),
-                new Query("Radius (m)","nRadius >= 100000",false ),
-                new Query("Radius (sols)","nRadiusSols >= 1",false ),
-                new Query("Radius (Earth)","nRadiusEarths >= 1",false ),
-                new Query("Semi Major Axis (m)","nSemiMajorAxis >= 20000000",false ),
-                new Query("Semi Major Axis (AU)","nSemiMajorAxisAU >= 1",false ),
-                new Query("Orbital Inclination (Deg)","nOrbitalInclination > 1",false ),
-                new Query("Periapsis (Deg)","nPeriapsis > 1",false ),
-                new Query("Orbital period (s)","nOrbitalPeriod > 200",false ),
-                new Query("Orbital period (days)","nOrbitalPeriodDays > 200",false ),
-                new Query("Axial Tilt (Deg)","nAxialTiltDeg > 1",false ),
+                new Query("Body Name","BodyName contains <name>", QueryType.Example ),
+                new Query("Scan Type","ScanType contains Detailed", QueryType.Example ),
+                new Query("Distance (ls)","DistanceFromArrivalLS >= 20", QueryType.Example ),
+                new Query("Rotation Period (s)","nRotationPeriod >= 30", QueryType.Example ),
+                new Query("Rotation Period (days)","nRotationPeriodDays >= 1", QueryType.Example ),
+                new Query("Radius (m)","nRadius >= 100000", QueryType.Example ),
+                new Query("Radius (sols)","nRadiusSols >= 1", QueryType.Example ),
+                new Query("Radius (Earth)","nRadiusEarths >= 1", QueryType.Example ),
+                new Query("Semi Major Axis (m)","nSemiMajorAxis >= 20000000", QueryType.Example ),
+                new Query("Semi Major Axis (AU)","nSemiMajorAxisAU >= 1", QueryType.Example ),
+                new Query("Orbital Inclination (Deg)","nOrbitalInclination > 1", QueryType.Example ),
+                new Query("Periapsis (Deg)","nPeriapsis > 1", QueryType.Example ),
+                new Query("Orbital period (s)","nOrbitalPeriod > 200", QueryType.Example ),
+                new Query("Orbital period (days)","nOrbitalPeriodDays > 200", QueryType.Example ),
+                new Query("Axial Tilt (Deg)","nAxialTiltDeg > 1", QueryType.Example ),
 
-                new Query("Star Type","StarType $== A",false ),
-                new Query("Star Magnitude","nAbsoluteMagnitude >= 1",false ),
-                new Query("Star Age (MY)","nAge >= 2000",false ),
-                new Query("Star Luminosity","Luminosity $== V",false ),
+                new Query("Star Type","StarType $== A", QueryType.Example ),
+                new Query("Star Magnitude","nAbsoluteMagnitude >= 1", QueryType.Example ),
+                new Query("Star Age (MY)","nAge >= 2000", QueryType.Example ),
+                new Query("Star Luminosity","Luminosity $== V", QueryType.Example ),
 
-                new Query("Planet Materials","MaterialList contains \"iron\"",false ),
-                new Query("Planet Class","PlanetClass $== \"High metal content body\"",false ),
-                new Query("Terraformable","Terraformable Isfalse",false ),
-                new Query("Atmosphere","Atmosphere $== \"thin sulfur dioxide atmosphere\"",false ),
-                new Query("Atmosphere ID","AtmosphereID $== \"Carbon_dioxide\"",false ),
-                new Query("Atmosphere Property","AtmosphereProperty $== \"Rich\"",false ),
-                new Query("Volcanism","Volcanism $== \"minor metallic magma volcanism\"",false ),
-                new Query("Volcanism ID","VolcanismID $== \"Ammonia_Magma\"",false ),
-                new Query("Surface Gravity m/s","nSurfaceGravity >= 9.6",false ),
-                new Query("Surface Gravity G","nSurfaceGravityG >= 1.0",false ),
-                new Query("Surface Pressure (Pa)","nSurfacePressure >= 101325",false ),
-                new Query("Surface Pressure (Earth Atmos)","nSurfacePressureEarth >= 1",false ),
+                new Query("Planet Materials","MaterialList contains \"iron\"", QueryType.Example ),
+                new Query("Planet Class","PlanetClass $== \"High metal content body\"", QueryType.Example ),
+                new Query("Terraformable","Terraformable Isfalse", QueryType.Example ),
+                new Query("Atmosphere","Atmosphere $== \"thin sulfur dioxide atmosphere\"", QueryType.Example ),
+                new Query("Atmosphere ID","AtmosphereID $== \"Carbon_dioxide\"", QueryType.Example ),
+                new Query("Atmosphere Property","AtmosphereProperty $== \"Rich\"", QueryType.Example ),
+                new Query("Volcanism","Volcanism $== \"minor metallic magma volcanism\"", QueryType.Example ),
+                new Query("Volcanism ID","VolcanismID $== \"Ammonia_Magma\"", QueryType.Example ),
+                new Query("Surface Gravity m/s","nSurfaceGravity >= 9.6", QueryType.Example ),
+                new Query("Surface Gravity G","nSurfaceGravityG >= 1.0", QueryType.Example ),
+                new Query("Surface Pressure (Pa)","nSurfacePressure >= 101325", QueryType.Example ),
+                new Query("Surface Pressure (Earth Atmos)","nSurfacePressureEarth >= 1", QueryType.Example ),
             };
 
         static private HistoryListQueries instance = null;
@@ -156,30 +162,16 @@ namespace EliteDangerousCore
             string[] userqueries = DB.UserDatabase.Instance.GetSettingString(DbUserQueries, "").Split(new char[] { splitmarker }); // allowed use
 
             for (int i = 0; i + 1 < userqueries.Length; i += 2)
-                Searches.Add(new Query(userqueries[i], userqueries[i + 1],false,true));
+                Searches.Add(new Query(userqueries[i], userqueries[i + 1],QueryType.User));
         }
 
-        private void Save()
-        {
-            string userqueries = "";
-            for (int i = 0; i < Searches.Count; i++)
-            {
-                if ( Searches[i].User)
-                    userqueries += Searches[i].Name + splitmarker + Searches[i].Condition + splitmarker;
-            }
-
-            DB.UserDatabase.Instance.PutSettingString(DbUserQueries, userqueries); // allowed use
-        }
-
-        public void Update(string name, string expr)
+        public void Set(string name, string expr, QueryType t)
         {
             var entry = Searches.FindIndex(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             if (entry != -1)
-                Searches[entry] = new Query(name, expr, false, true);
+                Searches[entry] = new Query(name, expr, t);
             else
-                Searches.Add(new Query(name, expr, false, true));
-
-            Save();
+                Searches.Add(new Query(name, expr, t));
         }
 
         public void Delete(string name)
@@ -188,9 +180,57 @@ namespace EliteDangerousCore
             if (entry != -1)
             {
                 Searches.RemoveAt(entry);
-                Save();
             }
         }
+
+        public void SaveUserQueries()
+        {
+            string userqueries = "";
+            foreach (var q in Searches.Where(x => x.User))
+            {
+                userqueries += q.Name + splitmarker + q.Condition + splitmarker;
+            }
+
+            DB.UserDatabase.Instance.PutSettingString(DbUserQueries, userqueries); // allowed use
+        }
+
+        public JArray QueriesInJSON(QueryType t)
+        {
+            JArray ja = new JArray();
+            foreach (var q in Searches.Where(x => x.QueryType == t))
+            {
+                JObject query = new JObject();
+                query["Name"] = q.Name;
+                query["Condition"] = q.Condition;
+                query["Type"] = q.QueryType.ToString();
+                ja.Add(query);
+            }
+
+            return ja;
+        }
+        public bool ReadJSONQueries(JArray ja)
+        {
+            foreach( var t in ja)
+            {
+                JObject to = t.Object();
+                if (to != null)
+                {
+                    string name = to["Name"].StrNull();
+                    string condition = to["Condition"].StrNull();
+                    if (name != null && condition != null && Enum.TryParse<QueryType>(to["Type"].Str(), true, out QueryType qt))
+                    {
+                        Set(name, condition, qt);
+                    }
+                    else
+                        return false;
+                }
+                else
+                    return false;
+            }
+
+            return true;
+        }
+
 
         //find a named search, async
         public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist, Dictionary<string, Results> results, string searchname, BaseUtils.Variables defaultvars, bool wantdebug)
@@ -234,6 +274,9 @@ namespace EliteDangerousCore
                 bool wantsiblingcount = allvars.Contains("Sibling.Count");
                 bool wantchildcount = allvars.Contains("Child.Count");
                 bool wantlevel = allvars.Contains("Level");
+
+                // extract variables needed to be filled in by the AddPropertiesFieldsOfClass function. We extract only the ones we need for speed reason.
+                // Variables using the Name[] format, or Class_subclass naming system need to have the [ and _ text stripped off for the property expander to iterate thru them
 
                 string[] stoptext = new string[] { "[", "_" };
                 HashSet<string> varsparent = allvars.Where(x => x.StartsWith("Parent.")).Select(x => x.Substring(7, x.IndexOfOrLength(stoptext) - 7)).ToHashSet();
