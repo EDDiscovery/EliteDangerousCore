@@ -376,15 +376,9 @@ namespace EliteDangerousCore
 
                     bool debugit = false;
 
-                    //if (he.ScanNode?.ScanData?.Barycentre != null)
-                    //{
-                    //}
-                    //if (scandatavars.Contains("IsOrbitingBaryCentre") && scandatavars["IsOrbitingBaryCentre"] == "1")
-                    //{
-                    //}
-                    //JournalScan js2 = he.journalEntry as JournalScan;
-                    //if (js2.BodyName.Equals("Oufaish IG-Y e26 3"))  
-                    //    debugit = true;
+                    //JournalScan js1 = he.journalEntry as JournalScan;
+                    //if (js1!=null && js1.BodyName.Equals("Phua Phylio QZ-E d12-6 3 c"))  
+                      //  debugit = true;
 
                     bool? res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, out string evalerrlist, out BaseUtils.ConditionLists.ErrorClass errclassunused, wantiter1 || wantiter2 , debugit: debugit);
 
