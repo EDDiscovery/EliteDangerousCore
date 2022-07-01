@@ -28,8 +28,10 @@ namespace EliteDangerousCore
 
             static public ScanNode PopulateBarycentres(List<ScanNode> nodes)
             {
-                ScanNode top = new ScanNode();
-                top.Children = new SortedList<string, ScanNode>();      
+                ScanNode barycentrelist = new ScanNode();
+                barycentrelist.Children = new SortedList<string, ScanNode>();      
+
+                // first, in barycentrelist, we go thru all nodes, look at the parent array, and extract a list of all barycentres
 
                 foreach (var sn in nodes)
                 {
@@ -51,7 +53,7 @@ namespace EliteDangerousCore
                                 if (i > 0)              // so its not the last barycentre (remembering its in reverse order- last entry is the deepest (say Star) node
                                 {
                                     int bodyid = sd.Parents[i - 1].BodyID;                  // pick up the body ID of the previous entry
-                                    bodynode = nodes.Find((x) => x.BodyID == bodyid);       // see if its in the node list
+                                    bodynode = nodes.Find((x) => x.BodyID == bodyid);       // see if its in the node list, may fail of course if not scanned etc
 
                                     if (bodynode == null && sd.Parents[i - 1].Type == "Null")   // if can't find, and its another barycentre, add a new dummy barycentre node
                                     {
@@ -61,27 +63,29 @@ namespace EliteDangerousCore
                                 }
                                 else
                                 {
-                                    // not happy with this.
+                                    // we do not alter sn at all, so we can directly use it
                                     bodynode = sn;      // its directly above the body, so the node is the scan node (Node-barycentre)
                                 }
 
-                                if (bodynode != null)       // we have the bodynode under the barycentre
+                                // we have the bodynode under the barycentre
+
+                                if (bodynode != null)       
                                 {
-                                    string barykey = sp.BodyID.ToStringInvariant("00000"); // sp is a barycentre, so get its body id
+                                    string barykey = sp.BodyID.ToStringInvariant("00000"); // sp is a barycentre, so make its body id
                                     ScanNode topbarycentrenode = null;
 
                                     // so we add the barycentre to the top node, so all barycentres are at the top-child level
 
-                                    if (top.Children.ContainsKey(barykey))      // if top has this barycentre..
+                                    if (barycentrelist.Children.ContainsKey(barykey))      // if list has this barycentre already, add another child to it
                                     {
-                                        topbarycentrenode = top.Children[barykey];        // already made..
+                                        topbarycentrenode = barycentrelist.Children[barykey];        // already made..
                                     }
                                     else
                                     {
-                                        // make a new top-child barycentre
+                                        // make a new barycentre for the list
                                         topbarycentrenode = new ScanNode() { BodyID = sp.BodyID, NodeType = ScanNodeType.barycentre, FullName = "Created Barynode " + sp.BodyID };    // make it
                                         topbarycentrenode.Children = new SortedList<string, ScanNode>();
-                                        top.Children[barykey] = topbarycentrenode;
+                                        barycentrelist.Children[barykey] = topbarycentrenode;
                                     }
 
                                     //System.Diagnostics.Debug.WriteLine("Scan add " + entry + " to " + barykey);
@@ -97,44 +101,57 @@ namespace EliteDangerousCore
                     }
                 }
 
+                //DumpTree(barycentrelist, "BA", 0);
+
+                // we now have a list of all the barycentres in the game, but flat, at the top level. we want it heirachically arranged, so we go thru it and move it around
+                // then remove them from the top level
+
                 List<string> keystodelete = new List<string>();
 
-                foreach (var n in top.Children)
+                foreach (var n in barycentrelist.Children)
                 {
                     //System.Diagnostics.Debug.WriteLine("Top Node  " + n.Value.BodyID);
-                    keystodelete.AddRange(ExpandRecurivelyBarynodeTree(top, n.Value));      // move bary-node on the top to their positions in the tree
+                    var delkeys = ExpandRecurivelyBarynodeTree(barycentrelist, n.Value);       // recurse thru the nodes of n.Value, adding barycentres to the top
+                    keystodelete.AddRange(delkeys);      // move bary-node on the top to their positions in the tree
                 }
 
                 foreach (var k in keystodelete)     // remove any moved keys
-                    top.Children.Remove(k);
+                    barycentrelist.Children.Remove(k);
 
-                return top;
+                //DumpTree(barycentrelist, "BC", 0);
+                return barycentrelist;
             }
 
-            static private List<string> ExpandRecurivelyBarynodeTree(ScanNode top, ScanNode pos)     // go down tree, moving nodes from the top to their positions
+            // go down tree, moving any barycentres found in the recurse from the barycentrelist to their proper positions
+            static private List<string> ExpandRecurivelyBarynodeTree(ScanNode barycentrelist, ScanNode pos)     
             {
                 List<string> keystodelete = new List<string>();
 
-                foreach (var k in pos.Children)     // all children of top
+                foreach (var sn in pos.Children)     // all children of the scan node
                 {
-                    string keyid = k.Value.BodyID.ToStringInvariant("00000");   // key from bodyid
+                    string keyid = sn.Value.BodyID.ToStringInvariant("00000");   // key from bodyid
 
-                    if (k.Value.NodeType == ScanNodeType.barycentre && top.Children.ContainsKey(keyid)) // its a barycentre, and top has that barycentre, move it to here
+                    // its a barycentre (which was created by us, above, as the star scan does not have barycentres in it)
+                    // and the top has the barycentre
+
+                    if (sn.Value.NodeType == ScanNodeType.barycentre && barycentrelist.Children.ContainsKey(keyid)) 
                     {
                         //System.Diagnostics.Debug.WriteLine(".. barycenter  " + keyid);
-                        ScanNode tocopy = top.Children[keyid];
+                        ScanNode tocopy = barycentrelist.Children[keyid];
 
-                        if (k.Value.Children == null)
-                            k.Value.Children = new SortedList<string, ScanNode>();
+                        System.Diagnostics.Debug.Assert(sn.Value.FullName.Contains("Created Barynode"));    // double check we are only altering stuff we made
+
+                        if (sn.Value.Children == null)                      // we are altering sn, which is a barycentre, and made by us.
+                            sn.Value.Children = new SortedList<string, ScanNode>();
 
                         foreach (var cc in tocopy.Children)
                         {
                             string cckey = cc.Key;
-                            if (!k.Value.Children.ContainsKey(cckey))                               // may have been moved already, because we don't remove top keys until finished
+                            if (!sn.Value.Children.ContainsKey(cckey))                               // may have been moved already, because we don't remove top keys until finished
                             {
                                 // System.Diagnostics.Debug.WriteLine(".. " + cckey + " " + cc.Value.fullname + " onto " + keyid);
-                                k.Value.Children.Add(cckey, cc.Value);
-                                ExpandRecurivelyBarynodeTree(top, k.Value);
+                                sn.Value.Children.Add(cckey, cc.Value);
+                                ExpandRecurivelyBarynodeTree(barycentrelist, sn.Value);     // we go down, but we don't record the list back, since we are only interested in ones moved from the barycentrelist
                             }
                             else
                             {
@@ -142,7 +159,7 @@ namespace EliteDangerousCore
                             }
                         }
 
-                        keystodelete.Add(keyid);
+                        keystodelete.Add(keyid);        // remove keyid from barycentrelist
                     }
                 }
 

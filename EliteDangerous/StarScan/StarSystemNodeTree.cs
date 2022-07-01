@@ -43,7 +43,7 @@ namespace EliteDangerousCore
 
                 if (topbp != null)      // if we don't have a single parents list, can't do any associations, so stop. if so,
                 {
-                    ScanNode rootnode = null;
+                    ScanNode rootnode;
 
                     if (NodesByID.TryGetValue(topbp.BodyID, out ScanNode foundnode))        // find ID In nodes
                     {

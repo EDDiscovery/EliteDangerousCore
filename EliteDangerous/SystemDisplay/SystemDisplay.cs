@@ -396,8 +396,12 @@ namespace EliteDangerousCore
                     }
                 }
 
+                //foreach (var n in moonnodes) StarScan.ScanNode.DumpTree(n, "MB", 0);
+
                 //// now, taking the moon modes, create a barycentre tree with those inserted in 
                 var barynodes = StarScan.ScanNode.PopulateBarycentres(moonnodes);  // children always made, barynode tree
+
+                //foreach (var n in moonnodes) StarScan.ScanNode.DumpTree(n, "MA", 0);
 
                 foreach (var k in barynodes.Children)   // for all barynodes.. display
                 {

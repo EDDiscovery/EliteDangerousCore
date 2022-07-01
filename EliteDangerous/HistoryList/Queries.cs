@@ -63,7 +63,7 @@ namespace EliteDangerousCore
                 new Query("Heavier than Sol","nStellarMass > 1", QueryType.BuiltIn ),
                 new Query("Bigger than Sol","nRadius > 695700000", QueryType.BuiltIn ),
 
-                new Query("Landable","IsLandable IsTrue", QueryType.BuiltIn ),
+                new Query("Landable","IsPlanet IsTrue And IsLandable IsTrue", QueryType.BuiltIn ),
                 new Query("Landable and Terraformable","IsPlanet IsTrue And IsLandable IsTrue And Terraformable IsTrue", QueryType.BuiltIn ),
                 new Query("Landable with Atmosphere","IsPlanet IsTrue And IsLandable IsTrue And HasAtmosphere IsTrue", QueryType.BuiltIn ),
                 new Query("Landable with High G","IsPlanet IsTrue And IsLandable IsTrue And nSurfaceGravityG >= 3", QueryType.BuiltIn ),
@@ -71,7 +71,7 @@ namespace EliteDangerousCore
                 new Query("Landable with Rings","IsPlanet IsTrue And IsLandable IsTrue And HasRings IsTrue", QueryType.BuiltIn ),
                 new Query("Has Volcanism","HasMeaningfulVolcanism IsTrue", QueryType.BuiltIn ),
                 new Query("Landable with Volcanism","HasMeaningfulVolcanism IsTrue And IsLandable IsTrue", QueryType.BuiltIn ),
-                new Query("Earth Like planet","Earthlike IsTrue", QueryType.BuiltIn ),
+                new Query("Earth like planet","Earthlike IsTrue", QueryType.BuiltIn ),
                 new Query("Bigger than Earth","IsPlanet IsTrue And nMassEM > 1", QueryType.BuiltIn ),
                 new Query("Hotter than Hades","IsPlanet IsTrue And nSurfaceTemperature >= 2273", QueryType.BuiltIn ),
 
