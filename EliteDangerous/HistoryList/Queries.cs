@@ -37,6 +37,8 @@ namespace EliteDangerousCore
 
         public static HashSet<JournalTypeEnum> SearchableJournalTypes { get; } = new HashSet<JournalTypeEnum> { JournalTypeEnum.Scan, JournalTypeEnum.FSSBodySignals, JournalTypeEnum.SAASignalsFound };
 
+        public const string DefaultSearches = "Planet between inner and outer ringↈLandable and TerraformableↈLandable with High GↈLandable with RingsↈHotter than HadesↈPlanet has wide rings vs radiusↈClose orbit to parentↈClose to ringↈPlanet with a large number of MoonsↈMoons orbiting TerraformablesↈClose BinaryↈGas giant has a terraformable MoonↈTiny MoonↈFast Rotation of a non tidally locked bodyↈHigh Eccentric OrbitↈHigh number of Jumponium Materialsↈ";
+
         public enum QueryType { BuiltIn, User, Example };
 
         public class Query
