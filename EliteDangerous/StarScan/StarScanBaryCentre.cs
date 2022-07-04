@@ -33,12 +33,17 @@ namespace EliteDangerousCore
 
                 // find any stored scans associated with this scanbarycentre and assign
 
-                var scannodelist = sn.Bodies.Where(x => ((x.ScanData?.Parents?.Count ?? 0) > 0) && x.ScanData.Parents[0].BodyID == jsa.BodyID);     // find all
+                var scannodelist = sn.Bodies.Where(x => x.ScanData?.Parents != null && x.ScanData.Parents.FindIndex(y=>y.BodyID==jsa.BodyID)>=0);   // all entries where JSA BodyID occurs
 
-                foreach( var scannode in scannodelist)
+                foreach (var scannode in scannodelist)
                 {
-                    //System.Diagnostics.Debug.WriteLine($"Barycentre in {sys.Name} BC {jsa.BodyID} attach to {scannode.ScanData.BodyName}");
-                    scannode.ScanData.Barycentre = jsa;     // assign to barycentre
+                    for ( int i = 0; i < scannode.ScanData.Parents.Count; i++)   // look thru the list, and assign at the correct level
+                    {
+                        if (scannode.ScanData.Parents[i].BodyID == jsa.BodyID)
+                        {
+                            scannode.ScanData.Parents[i].Barycentre = jsa;
+                        }
+                    }
                 }
 
                 return true;

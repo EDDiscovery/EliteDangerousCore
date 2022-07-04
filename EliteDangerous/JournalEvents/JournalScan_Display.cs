@@ -216,11 +216,12 @@ namespace EliteDangerousCore.JournalEvents
 
             scanText.AppendFormat("Scan Type: {0}".T(EDCTx.JournalScan_SCNT) + "\n", ScanType);
 
-            if ( Barycentre != null )
+            JournalScanBaryCentre barycentrejs = Parents?[0].Barycentre;
+            if ( barycentrejs != null )     
             {
                 scanText.AppendLine();
-                scanText.AppendLine("Barycentre: " + Barycentre.BodyID.ToString());
-                Barycentre.FillInformation(null, null, out string info, out string detailed);
+                scanText.AppendLine("Barycentre: " + barycentrejs.BodyID.ToString());
+                barycentrejs.FillInformation(null, null, out string info, out string detailed);
                 scanText.AppendLine(info);
                 scanText.AppendLine(detailed);
             }

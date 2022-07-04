@@ -82,11 +82,13 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
+        [System.Diagnostics.DebuggerDisplay("BodyParent {Type} {BodyID}")]
         public class BodyParent
         {
-            public string Type;
-            public int BodyID;
-            public bool BaryCentre { get { return Type.Equals("Null", StringComparison.InvariantCultureIgnoreCase); } }
+            public string Type { get; set; }
+            public int BodyID { get; set; }
+            public bool IsBaryCentre { get { return Type.Equals("Null", StringComparison.InvariantCultureIgnoreCase); } }
+            public JournalScanBaryCentre Barycentre { get; set; }        // set by star scan system if its a barycentre
         }
 
 

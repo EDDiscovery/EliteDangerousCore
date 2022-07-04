@@ -18,6 +18,7 @@ using QuickJSON;
 
 namespace EliteDangerousCore.JournalEvents
 {
+    [System.Diagnostics.DebuggerDisplay("Barycentre {EventTimeUTC} {StarSystem} {BodyID} {SemiMajorAxis}")]
     [JournalEntryType(JournalTypeEnum.ScanBaryCentre)]
     public class JournalScanBaryCentre : JournalEntry, IStarScan
     {

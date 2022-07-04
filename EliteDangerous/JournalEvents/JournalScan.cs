@@ -74,7 +74,6 @@ namespace EliteDangerousCore.JournalEvents
 
         [PropertyNameAttribute("Parents[1 to N] _Type (Null=Barycentre, Star, Planet), _BodyID. Also ParentsCount. First is nearest body")]
         public List<BodyParent> Parents { get; private set; }
-        public JournalScanBaryCentre Barycentre { get; set; }        // set by star scan system if the parent is a barycentre
         public bool IsOrbitingBaryCentre { get { return Parents?.FirstOrDefault()?.Type == "Null"; } }
         public bool IsOrbitingPlanet { get { return Parents?.FirstOrDefault()?.Type == "Planet"; } }
         public bool IsOrbitingStar { get { return Parents?.FirstOrDefault()?.Type == "Star"; } }
@@ -446,7 +445,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        // special, for star scan, create a scan record with the contents of the journal scan bary centre info
+        // special, for star scan node tree only, create a scan record with the contents of the journal scan bary centre info
         public JournalScan(JournalScanBaryCentre js) : base(DateTime.Now, JournalTypeEnum.ScanBaryCentre, false)
         {
             BodyID = js.BodyID;

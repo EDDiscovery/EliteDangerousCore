@@ -56,11 +56,11 @@ namespace EliteDangerousCore
 
         public List<Query> Searches = new List<Query>()
             {
-                new Query("Planet inside inner ring","IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis <= Parent.RingsInnerm And Parent.IsPlanet IsTrue", QueryType.BuiltIn ),
-                new Query("Planet inside rings","IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis <= Parent.RingsOuterm And Parent.IsPlanet IsTrue", QueryType.BuiltIn ),
-                new Query("Planet between inner and outer ring","IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis >= Parent.RingsInnerm And nSemiMajorAxis <= Parent.RingsOuterm And Parent.IsPlanet IsTrue", QueryType.BuiltIn ),
-                new Query("Planet between rings 1 and 2","IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis >= Parent.Rings[1]_OuterRad And nSemiMajorAxis <= Parent.Rings[2]_InnerRad", QueryType.BuiltIn ),
-                new Query("Planet between rings 2 and 3","IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse And nSemiMajorAxis >= Parent.Rings[2]_OuterRad And nSemiMajorAxis <= Parent.Rings[3]_InnerRad", QueryType.BuiltIn ),
+                new Query("Planet inside inner ring","(IsOrbitingBaryCentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And nSemiMajorAxis <= Parent.RingsInnerm And Parent.Level >= 1) Or (IsOrbitingBaryCentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[1]_Barycentre_SemiMajorAxis <= Parent.RingsInnerm And Parent.Level >= 1)", QueryType.BuiltIn ),
+                new Query("Planet inside rings","(IsOrbitingBaryCentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And nSemiMajorAxis <= Parent.RingsOuterm And Parent.Level >= 1) Or (IsOrbitingBaryCentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[1]_Barycentre_SemiMajorAxis <= Parent.RingsOuterm And Parent.Level >= 1)", QueryType.BuiltIn ),
+                new Query("Planet between inner and outer ring","(IsOrbitingBaryCentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And nSemiMajorAxis >= Parent.RingsInnerm And nSemiMajorAxis <= Parent.RingsOuterm And Parent.Level >= 1) Or (IsOrbitingBaryCentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[1]_Barycentre_SemiMajorAxis >= Parent.RingsInnerm And Parents[1]_Barycentre_SemiMajorAxis <= Parent.RingsOuterm And Parent.Level >= 1)", QueryType.BuiltIn ),
+                new Query("Planet between rings 1 and 2","(IsOrbitingBaryCentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And nSemiMajorAxis >= Parent.Rings[1]_OuterRad And nSemiMajorAxis <= Parent.Rings[2]_InnerRad And Parent.Level >= 1) Or (IsOrbitingBaryCentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[1]_Barycentre_SemiMajorAxis >= Parent.Rings[1]_OuterRad And Parents[1]_Barycentre_SemiMajorAxis <= Parent.Rings[2]_InnerRad And Parent.Level >= 1)", QueryType.BuiltIn ),
+                new Query("Planet between rings 2 and 3","(IsOrbitingBaryCentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And nSemiMajorAxis >= Parent.Rings[2]_OuterRad And nSemiMajorAxis <= Parent.Rings[3]_InnerRad And Parent.Level >= 1) Or (IsOrbitingBaryCentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[1]_Barycentre_SemiMajorAxis >= Parent.Rings[2]_OuterRad And Parents[1]_Barycentre_SemiMajorAxis <= Parent.Rings[3]_InnerRad And Parent.Level >= 1)", QueryType.BuiltIn ),
 
                 new Query("Heavier than Sol","nStellarMass > 1", QueryType.BuiltIn ),
                 new Query("Bigger than Sol","nRadius > 695700000", QueryType.BuiltIn ),
@@ -89,6 +89,7 @@ namespace EliteDangerousCore
                                 "( IsPlanet IsTrue And Parent.IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse ) And " +
                                 "( \"Abs(Parent.Rings[Iter1]_InnerRad-nSemiMajorAxis)\" < nRadius*10 Or  \"Abs(Parent.Rings[Iter1]_OuterRad-nSemiMajorAxis)\" < nRadius*10 )"
                     , QueryType.BuiltIn ),
+                new Query("Binary close to rings","(IsOrbitingBaryCentre IsTrue And Parent.HasRings IsTrue And IsPlanet IsTrue) And (\"Abs(Parent.Rings[Iter1]_InnerRad-Parents[1]_Barycentre_SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\" Or \"Abs(Parent.Rings[Iter1]_OuterRad-Parents[1]_Barycentre_SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\")", QueryType.BuiltIn ),
 
                 new Query("Planet with a large number of Moons","IsPlanet IsTrue And Child.Count >= 8", QueryType.BuiltIn ),
                 new Query("Moon of a Moon","Level == 3", QueryType.BuiltIn ),
@@ -281,16 +282,38 @@ namespace EliteDangerousCore
                 // Variables using the Name[] format, or Class_subclass naming system need to have the [ and _ text stripped off for the property expander to iterate thru them
 
                 string[] stoptext = new string[] { "[", "_" };
-                HashSet<string> varsparent = allvars.Where(x => x.StartsWith("Parent.")).Select(x => x.Substring(7, x.IndexOfOrLength(stoptext) - 7)).ToHashSet();
-                HashSet<string> varssiblings = allvars.Where(x => x.StartsWith("Sibling[")).Select(x => x.Substring(x.IndexOfOrLength("]", offset: 2))).Select(x => x.Substring(0, x.IndexOfOrLength(stoptext))).ToHashSet();
-                HashSet<string> varschildren = allvars.Where(x => x.StartsWith("Child[")).Select(x => x.Substring(x.IndexOfOrLength("]", offset: 2))).Select(x => x.Substring(0, x.IndexOfOrLength(stoptext))).ToHashSet();
-                HashSet<string> varsevent = allvars.Where(x => !x.StartsWith("Parent.") && !x.StartsWith("Sibling") && !x.StartsWith("Child[")).Select(x => x.Substring(0, x.IndexOfOrLength(stoptext))).ToHashSet();
+
+                HashSet<string> varsparent = new HashSet<string>();
+                HashSet<string> varsparentparent = new HashSet<string>();
+                HashSet<string> varssiblings = new HashSet<string>();
+                HashSet<string> varschildren = new HashSet<string>();
+                HashSet<string> varsevent = new HashSet<string>();
+
+                foreach( var v in allvars)
+                {
+                    if (v.StartsWith("Parent.Parent."))
+                        varsparentparent.Add(v.Substring(14, v.IndexOfOrLength(stoptext) - 14));
+                    else if (v.StartsWith("Parent."))
+                        varsparent.Add(v.Substring(7, v.IndexOfOrLength(stoptext) - 7));
+                    else if (v.StartsWith("Sibling["))
+                    {
+                        var v1 = v.Substring(v.IndexOfOrLength("]", offset: 2));        // remove up to the []
+                        varssiblings.Add(v1.Substring(0, v1.IndexOfOrLength(stoptext)));    // then add, remove after stop text
+                    }
+                    else if (v.StartsWith("Child["))
+                    {
+                        var v1 = v.Substring(v.IndexOfOrLength("]", offset: 2));
+                        varschildren.Add(v1.Substring(0, v1.IndexOfOrLength(stoptext)));
+                    }
+                    else
+                        varsevent.Add(v.Substring(0, v.IndexOfOrLength(stoptext)));
+                }
 
                 foreach (var he in helist)
                 {
                     BaseUtils.Variables scandatavars = defaultvars != null ? new BaseUtils.Variables(defaultvars) : new BaseUtils.Variables();
 
-                  //  if (he.EntryType != JournalTypeEnum.Scan) continue;
+                   // if (he.EntryType != JournalTypeEnum.Scan) continue;
 
                     scandatavars.AddPropertiesFieldsOfClass(he.journalEntry, "",
                             new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
@@ -323,6 +346,19 @@ namespace EliteDangerousCore
                                             new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
                                             varsparent);
                                     scandatavars["Parent.Level"] = he.ScanNode.Parent.Level.ToStringInvariant();
+                                }
+                            }
+
+                            if (varsparentparent.Count > 0 && he.ScanNode.Parent.Parent != null)        // if want parent.parent and we have one
+                            {
+                                var parentparentjs = he.ScanNode.Parent.Parent.ScanData;               // parent journal entry, may be null
+
+                                if (parentparentjs != null) // if want parent scan data
+                                {
+                                    scandatavars.AddPropertiesFieldsOfClass(parentparentjs, "Parent.Parent.",
+                                            new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
+                                            varsparentparent);
+                                    scandatavars["Parent.Parent.Level"] = he.ScanNode.Parent.Level.ToStringInvariant();
                                 }
                             }
 
@@ -380,17 +416,21 @@ namespace EliteDangerousCore
 
                     //JournalScan js1 = he.journalEntry as JournalScan;
                     //if (js1!=null && js1.BodyName.Equals("Phua Phylio QZ-E d12-6 3 c"))  
-                      //  debugit = true;
+                    //  debugit = true;
 
-                    bool? res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, out string evalerrlist, out BaseUtils.ConditionLists.ErrorClass errclassunused, wantiter1 || wantiter2 , debugit: debugit);
+                    List<BaseUtils.ConditionEntry> testspassed = wantreport ? new List<BaseUtils.ConditionEntry>() : null;
 
-                    if (wantreport && evalerrlist.HasChars())
+                    var res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, out string evalerrlist, out BaseUtils.ConditionLists.ErrorClass errclassunused, wantiter1 || wantiter2, debugit: debugit);
+
+                    if (wantreport )
                     {
-                        resultinfo.AppendLine($"{he.EventTimeUTC} Journal type {he.EntryType} : {evalerrlist}");
+                        resultinfo.AppendLine($"{he.EventTimeUTC} Journal type {he.EntryType} : {res.Item1} : {evalerrlist} : Last {res.Item2.Last().ItemName} {res.Item2.Last().MatchCondition} {res.Item2.Last().MatchString}");
+                        //foreach ( var x in res.Item2)    resultinfo.AppendLine($"  {x.ItemName} {x.MatchCondition} {x.MatchString}");
+
                         // System.Diagnostics.Debug.WriteLine($"For entry type {he.EventTimeUTC} {he.EntryType} error: {resultinfo}");
                     }
 
-                    if (res.HasValue && res.Value == true)
+                    if (res.Item1.Value == true)    // if passed
                     {
                         //if we have a je with a body name, use that to set the ret, else just use a incrementing decimal count name
                         string key = he.journalEntry is IBodyNameIDOnly ? (he.journalEntry as IBodyNameIDOnly).BodyName : results.Count.ToStringInvariant();

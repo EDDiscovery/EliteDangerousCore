@@ -319,12 +319,14 @@ namespace EliteDangerousCore
                         subnode.BodyID = sc.BodyID;
                     }
 
-                    if (sc.IsOrbitingBaryCentre)    // if we are orbiting a barycentre, see if the dump of barycentres for this system has the entry, if so, fill in the scan barycentre value so you can ref it via that
+                    if (sc.Parents != null)
                     {
-                        if ( systemnode.BaryCentres.TryGetValue(sc.Parents[0].BodyID, out JournalScanBaryCentre jsa))
+                        for (int i = 0; i < sc.Parents.Count - 1; i++)   // look thru the list, and assign at the correct level
                         {
-                            //System.Diagnostics.Debug.WriteLine($"Barycentre in {sys.Name} BC {jsa.BodyID} attach to {sc.BodyName}");
-                            subnode.ScanData.Barycentre = jsa;     // assign to barycentre
+                            if (systemnode.BaryCentres.TryGetValue(sc.Parents[i].BodyID, out JournalScanBaryCentre jsa))
+                            {
+                                sc.Parents[i].Barycentre = jsa;
+                            }
                         }
                     }
                 }
