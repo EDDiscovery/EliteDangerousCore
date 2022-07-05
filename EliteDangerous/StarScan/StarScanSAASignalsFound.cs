@@ -17,6 +17,7 @@
 using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EliteDangerousCore
 {
@@ -89,6 +90,12 @@ namespace EliteDangerousCore
                     {
                         relatednode.Signals.Add(x);
                     }
+                }
+
+                if (relatednode.ScanData != null)
+                {
+                    relatednode.ScanData.Signals = relatednode.Signals;       // make sure Scan node has same list as subnode
+                   // System.Diagnostics.Debug.WriteLine($"Assign SAA signal list {string.Join(",", relatednode.Signals.Select(x => x.Type).ToList())} to {relatednode.FullName}");
                 }
 
                 return true;

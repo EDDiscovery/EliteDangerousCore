@@ -80,9 +80,25 @@ namespace EliteDangerousCore
                 var he = historylist[lastfilled];
                 if ( he.EntryType == JournalTypeEnum.Scan && he.ScanNode == null)
                 {
+                    // if we have two scans of the same body, the starscan always replaces the journal scan with the latest.
+                    // maybe we should use bodyid
+
                     var sysnode = StarScan.FindSystemSynchronous(he.System, false);                 // prob not null, but check
-                    var jscan = sysnode?.Find(he.journalEntry as JournalEvents.JournalScan);        // prob not null, but check
-                    he.ScanNode = jscan;
+
+                    if ( sysnode != null)
+                    {
+                        var js = he.journalEntry as JournalEvents.JournalScan;
+                        if (js.BodyID.HasValue && sysnode.NodesByID.TryGetValue(js.BodyID.Value, out StarScan.ScanNode sn))     // find by bodyid
+                            he.ScanNode = sn;
+                        else
+                        {
+                            var jscan = sysnode?.Find(he.journalEntry as JournalEvents.JournalScan);        // else find by journal entry
+                            he.ScanNode = jscan;
+                        }
+
+                        if ( he.ScanNode == null )
+                            System.Diagnostics.Debug.WriteLine($"Fill Scan Node failed for {he.System}");
+                    }
                 }
                 lastfilled++;
             }

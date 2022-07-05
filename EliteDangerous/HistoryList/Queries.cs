@@ -35,7 +35,7 @@ namespace EliteDangerousCore
             }
         }
 
-        public static HashSet<JournalTypeEnum> SearchableJournalTypes { get; } = new HashSet<JournalTypeEnum> { JournalTypeEnum.Scan, JournalTypeEnum.FSSBodySignals, JournalTypeEnum.SAASignalsFound };
+        public static HashSet<JournalTypeEnum> SearchableJournalTypes { get; } = new HashSet<JournalTypeEnum> { JournalTypeEnum.Scan };
 
         public const string DefaultSearches = "Planet between inner and outer ringↈLandable and TerraformableↈLandable with High GↈLandable with RingsↈHotter than HadesↈPlanet has wide rings vs radiusↈClose orbit to parentↈClose to ringↈPlanet with a large number of MoonsↈMoons orbiting TerraformablesↈClose BinaryↈGas giant has a terraformable MoonↈTiny MoonↈFast Rotation of a non tidally locked bodyↈHigh Eccentric OrbitↈHigh number of Jumponium Materialsↈ";
 
@@ -313,11 +313,20 @@ namespace EliteDangerousCore
                 {
                     BaseUtils.Variables scandatavars = defaultvars != null ? new BaseUtils.Variables(defaultvars) : new BaseUtils.Variables();
 
-                   // if (he.EntryType != JournalTypeEnum.Scan) continue;
+                    bool debugit = false;
+
+                    //JournalScan js1 = he.journalEntry as JournalScan;
+                    //if (js1 != null)
+                    //{
+                    //    if (js1.BodyName == "Skaude AA-A h294 AB 2 a")
+                    //    {
+                    //        debugit = true;
+                    //    }
+                    //}
 
                     scandatavars.AddPropertiesFieldsOfClass(he.journalEntry, "",
                             new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                            varsevent);
+                            varsevent, ensuredoublerep: true);
 
                     if ( wantjumponium )
                     {
@@ -344,7 +353,7 @@ namespace EliteDangerousCore
                                 {
                                     scandatavars.AddPropertiesFieldsOfClass(parentjs, "Parent.",
                                             new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                                            varsparent);
+                                            varsparent, ensuredoublerep: true);
                                     scandatavars["Parent.Level"] = he.ScanNode.Parent.Level.ToStringInvariant();
                                 }
                             }
@@ -357,16 +366,13 @@ namespace EliteDangerousCore
                                 {
                                     scandatavars.AddPropertiesFieldsOfClass(parentparentjs, "Parent.Parent.",
                                             new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                                            varsparentparent);
+                                            varsparentparent, ensuredoublerep: true);
                                     scandatavars["Parent.Parent.Level"] = he.ScanNode.Parent.Level.ToStringInvariant();
                                 }
                             }
 
-                            if ( wantsiblingcount )
+                            if (wantsiblingcount)
                                 scandatavars["Sibling.Count"] = ((he.ScanNode.Parent.Children.Count - 1)).ToStringInvariant();      // count of children or parent less ours
-                            
-                            if ( wantchildcount)
-                                scandatavars["Child.Count"] = ((he.ScanNode.Children?.Count ?? 0)).ToStringInvariant();      // count of children
 
                             if (varssiblings.Count > 0)        // if want sibling[
                             {
@@ -377,31 +383,34 @@ namespace EliteDangerousCore
                                     {
                                         scandatavars.AddPropertiesFieldsOfClass(sn.Value.ScanData, $"Sibling[{cno}].",
                                                 new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                                                varssiblings);
+                                                varssiblings, ensuredoublerep: true);
                                         cno++;
                                     }
                                 }
                             }
+                        }
 
-                            if (varschildren.Count > 0)        // if want children[
+                        if ( wantchildcount)
+                            scandatavars["Child.Count"] = ((he.ScanNode.Children?.Count ?? 0)).ToStringInvariant();      // count of children
+
+                        if (varschildren.Count > 0)        // if want children[
+                        {
+                            int cno = 1;
+                            foreach (var sn in he.ScanNode.Children.EmptyIfNull())
                             {
-                                int cno = 1;
-                                foreach (var sn in he.ScanNode.Children.EmptyIfNull())
+                                if (sn.Value.ScanData != null)        // if not ours and has a scan
                                 {
-                                    if (sn.Value.ScanData != null)        // if not ours and has a scan
+                                    int cc = scandatavars.Count;
+
+                                    scandatavars.AddPropertiesFieldsOfClass(sn.Value.ScanData, $"Child[{cno}].",
+                                            new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
+                                            varschildren, ensuredoublerep: true);
+
+                                    if (scandatavars.Count > cc)
                                     {
-                                        int cc = scandatavars.Count;
 
-                                        scandatavars.AddPropertiesFieldsOfClass(sn.Value.ScanData, $"Child[{cno}].",
-                                                new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                                                varschildren);
-
-                                        if (scandatavars.Count > cc)
-                                        {
-
-                                        }
-                                        cno++;
                                     }
+                                    cno++;
                                 }
                             }
                         }
@@ -412,19 +421,14 @@ namespace EliteDangerousCore
                     if (wantiter2)      // set up default iter2
                         scandatavars["Iter2"] = "1";
 
-                    bool debugit = false;
-
-                    //JournalScan js1 = he.journalEntry as JournalScan;
-                    //if (js1!=null && js1.BodyName.Equals("Phua Phylio QZ-E d12-6 3 c"))  
-                    //  debugit = true;
-
                     List<BaseUtils.ConditionEntry> testspassed = wantreport ? new List<BaseUtils.ConditionEntry>() : null;
 
                     var res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, out string evalerrlist, out BaseUtils.ConditionLists.ErrorClass errclassunused, wantiter1 || wantiter2, debugit: debugit);
 
                     if (wantreport )
                     {
-                        resultinfo.AppendLine($"{he.EventTimeUTC} Journal type {he.EntryType} : {res.Item1} : {evalerrlist} : Last {res.Item2.Last().ItemName} {res.Item2.Last().MatchCondition} {res.Item2.Last().MatchString}");
+                        JournalScan jsi = he.journalEntry as JournalScan;
+                        resultinfo.AppendLine($"{he.EventTimeUTC} Journal type {he.EntryType} {jsi?.BodyName} : {res.Item1} : {evalerrlist} : Last {res.Item2.Last().ItemName} {res.Item2.Last().MatchCondition} {res.Item2.Last().MatchString}");
                         //foreach ( var x in res.Item2)    resultinfo.AppendLine($"  {x.ItemName} {x.MatchCondition} {x.MatchString}");
 
                         // System.Diagnostics.Debug.WriteLine($"For entry type {he.EventTimeUTC} {he.EntryType} error: {resultinfo}");

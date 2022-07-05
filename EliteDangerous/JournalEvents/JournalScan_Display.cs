@@ -214,6 +214,12 @@ namespace EliteDangerousCore.JournalEvents
             if (EDSMDiscoveryCommander != null)
                 scanText.AppendFormat("Discovered by {0} on {1}".T(EDCTx.JournalScan_DB) + "\n", EDSMDiscoveryCommander, EDSMDiscoveryUTC.ToStringZulu());
 
+            if (Signals != null)
+                scanText.AppendFormat("Signals".T(EDCTx.ScanDisplayUserControl_Signals) + ":\n" + JournalSAASignalsFound.SignalList(Signals, 4, "\n") + "\n");
+
+            if (Organics != null)
+                scanText.AppendFormat("Organics".T(EDCTx.ScanDisplayUserControl_Organics) + ":\n" + JournalScanOrganic.OrganicList(Organics, 4, "\n") + "\n");
+
             scanText.AppendFormat("Scan Type: {0}".T(EDCTx.JournalScan_SCNT) + "\n", ScanType);
 
             JournalScanBaryCentre barycentrejs = Parents?[0].Barycentre;

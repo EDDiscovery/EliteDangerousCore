@@ -302,6 +302,7 @@ namespace EliteDangerousCore
                         subnode.IsMapped = oldnode.IsMapped;
                         subnode.WasMappedEfficiently = oldnode.WasMappedEfficiently;
                         subnode.Signals = oldnode.Signals;
+                        subnode.Organics = oldnode.Organics;
                     }
 
                     // if its a belt cluster we are adding, then the previous node is a belt but it does not have a scan data, therefore it was artifically created and has no body id
@@ -328,6 +329,17 @@ namespace EliteDangerousCore
                                 sc.Parents[i].Barycentre = jsa;
                             }
                         }
+                    }
+
+                    if (subnode.Signals != null)
+                    {
+                       // System.Diagnostics.Debug.WriteLine($"Assign JS signal list {string.Join(",", subnode.Signals.Select(x => x.Type).ToList())} to {subnode.FullName}");
+                        sc.Signals = subnode.Signals;       // make sure Scan node has same list as subnode
+                    }
+                    if (subnode.Organics != null)
+                    {
+                       // System.Diagnostics.Debug.WriteLine($"Assign JS organic list {string.Join(",", subnode.Organics.Select(x => x.Species).ToList())} to {subnode.FullName}");
+                        sc.Organics = subnode.Organics;       // make sure Scan node has same list as subnode
                     }
                 }
 

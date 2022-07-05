@@ -16,6 +16,7 @@
 
 using EliteDangerousCore.JournalEvents;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EliteDangerousCore
 {
@@ -57,6 +58,13 @@ namespace EliteDangerousCore
                     relatednode.Organics = new List<JournalScanOrganic>();
 
                 relatednode.Organics.Add(jsaa);     // we add, even if its a repeat, since we get multiple sample events
+
+                if (relatednode.ScanData != null )
+                {
+                    relatednode.ScanData.Organics = relatednode.Organics;       // make sure Scan node has same list as subnode
+                   // System.Diagnostics.Debug.WriteLine($"Assign Scan organic signal list {string.Join(",", relatednode.Organics.Select(x => x.Species).ToList())} to {relatednode.FullName}");
+                }
+
                 return true;
             }
             else
