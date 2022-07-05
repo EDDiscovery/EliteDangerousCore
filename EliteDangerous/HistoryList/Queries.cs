@@ -35,7 +35,7 @@ namespace EliteDangerousCore
             }
         }
 
-        public static HashSet<JournalTypeEnum> SearchableJournalTypes { get; } = new HashSet<JournalTypeEnum> { JournalTypeEnum.Scan };
+        public static HashSet<JournalTypeEnum> AllSearchableJournalTypes { get; } = new HashSet<JournalTypeEnum> { JournalTypeEnum.Scan, JournalTypeEnum.FSSBodySignals, JournalTypeEnum.SAASignalsFound, JournalTypeEnum.FSSSignalDiscovered };
 
         public const string DefaultSearches = "Planet between inner and outer ringↈLandable and TerraformableↈLandable with High GↈLandable with RingsↈHotter than HadesↈPlanet has wide rings vs radiusↈClose orbit to parentↈClose to ringↈPlanet with a large number of MoonsↈMoons orbiting TerraformablesↈClose BinaryↈGas giant has a terraformable MoonↈTiny MoonↈFast Rotation of a non tidally locked bodyↈHigh Eccentric OrbitↈHigh number of Jumponium Materialsↈ";
 
@@ -233,6 +233,84 @@ namespace EliteDangerousCore
 
             return true;
         }
+
+        // Get the list of properties
+        static public List<BaseUtils.TypeHelpers.PropertyNameInfo> PropertyList()
+        {
+            List<BaseUtils.TypeHelpers.PropertyNameInfo> scannames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalScan), 
+                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, comment:"Scan");
+            List<BaseUtils.TypeHelpers.PropertyNameInfo> fssnames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalFSSSignalDiscovered), 
+                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, comment: "FSSSignalDiscovered");
+            List<BaseUtils.TypeHelpers.PropertyNameInfo> saanames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalSAASignalsFound), 
+                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly , comment:"SAASignalsFound");
+            List<BaseUtils.TypeHelpers.PropertyNameInfo> fssbodynames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalFSSBodySignals), 
+                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, comment:"FSSBodySignals");
+
+            List<BaseUtils.TypeHelpers.PropertyNameInfo> classnames = new List<BaseUtils.TypeHelpers.PropertyNameInfo>();
+            classnames.AddRange(scannames);
+            classnames.AddRange(fssnames);
+            classnames.AddRange(saanames);
+            classnames.AddRange(fssbodynames);
+
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventTimeUTC", "Date Time in UTC", BaseUtils.ConditionEntry.MatchType.DateAfter,"All"));     // add on a few from the base class..
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventTimeLocal", "Date Time in Local time", BaseUtils.ConditionEntry.MatchType.DateAfter,"All"));     
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("SyncedEDSM", "Synced to EDSM, 1 = yes, 0 = not", BaseUtils.ConditionEntry.MatchType.IsTrue,"All"));    
+
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Level", "Level of body in system, 0 =star, 1 = Planet, 2 = moon, 3 = submoon", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Sibling.Count", "Number of siblings", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Child.Count", "Number of child moons", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("JumponiumCount", "Number of jumponium materials available", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));     // add on ones we synthesise
+
+            var defaultvars = new BaseUtils.Variables();
+            defaultvars.AddPropertiesFieldsOfClass(new BodyPhysicalConstants(), "", null, 10);
+            foreach (var v in defaultvars.NameEnumuerable)
+                classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo(v, "Constant", BaseUtils.ConditionEntry.MatchType.NumericEquals,"Constant"));
+
+            classnames.Sort(delegate (BaseUtils.TypeHelpers.PropertyNameInfo left, BaseUtils.TypeHelpers.PropertyNameInfo right) { return left.Name.CompareTo(right.Name); });
+
+            return classnames;
+        }
+
+        // Calculate from variables what is being searched for..
+        static public HashSet<JournalTypeEnum> NeededSearchableTypes( HashSet<string> allvars)
+        {
+            var propertynames = PropertyList();
+
+            var res = new HashSet<JournalTypeEnum>();
+
+            string[] stoptext = new string[] { "[", "_" };
+
+            foreach ( var v in allvars)
+            {
+                string v1 = v.Substring(0, v.IndexOfOrLength(stoptext));        // cut off the [ and _ stuff to get to the root
+
+                for ( int i= 0; i < propertynames.Count; i++)        // do all propertynames
+                {
+                    if (propertynames[i].Name.StartsWith(v1))        // and it starts with
+                    {
+                        var comment = propertynames[i].Comment;
+                        bool all = comment == "All";
+                        if (comment == "Scan" || all)
+                            res.Add(JournalTypeEnum.Scan);
+                        if (comment == "FSSSignalDiscovered" || all)
+                            res.Add(JournalTypeEnum.FSSSignalDiscovered);
+                        if (comment == "SAASignalsFound" || all)
+                            res.Add(JournalTypeEnum.SAASignalsFound);
+                        if (comment == "FSSBodySignals" || all)
+                            res.Add(JournalTypeEnum.FSSBodySignals);
+                    }
+                }
+
+                if (v.StartsWith("Parent.") || v.StartsWith("Parent.Parent.") || v.StartsWith("Sibling") || v.StartsWith("Child"))      // specials, for scan
+                    res.Add(JournalTypeEnum.Scan);
+            }
+
+            foreach (var v in res)
+                System.Diagnostics.Debug.WriteLine($"Search types {v.ToString()}");
+
+            return res;
+        }
+
 
 
         //find a named search, async
@@ -436,7 +514,7 @@ namespace EliteDangerousCore
 
                     if (res.Item1.Value == true)    // if passed
                     {
-                        //if we have a je with a body name, use that to set the ret, else just use a incrementing decimal count name
+                          //if we have a je with a body name, use that to set the ret, else just use a incrementing decimal count name
                         string key = he.journalEntry is IBodyNameIDOnly ? (he.journalEntry as IBodyNameIDOnly).BodyName : results.Count.ToStringInvariant();
 
                         if ( wantreport)
@@ -444,9 +522,19 @@ namespace EliteDangerousCore
 
                         lock (results)     // may be spawing a lot of parallel awaits, make sure the shared resource is locked
                         {
-                            if (results.TryGetValue(key, out Results value))       // if key already exists, set HE to us, and update filters passed
+                            if (results.TryGetValue(key, out Results value))       // if key already exists, maybe set HE to us, and update filters passed
                             {
-                                value.HistoryEntry = he;
+                                bool isstoredscan = value.HistoryEntry.EntryType == JournalTypeEnum.Scan;
+
+                                if (isstoredscan && he.EntryType == JournalTypeEnum.Scan)      // new scan, replace
+                                    value.HistoryEntry = he;
+                                else if (!isstoredscan)                                       // if not stored a scan, store whatever we have newer
+                                    value.HistoryEntry = he;
+                                else
+                                {
+                                    //System.Diagnostics.Debug.WriteLine($"Query {he.EventTimeUTC} stored {value.HistoryEntry.EntryType} not replacing with {he.EntryType}");
+                                }
+
                                 if (!value.FiltersPassed.Contains(filterdescription))      // we may scan and find the same body twice with the same filter, do not dup add
                                     value.FiltersPassed.Add(filterdescription);
                             }

@@ -202,7 +202,16 @@ namespace EliteDangerousCore.JournalEvents
             Signals.Add(next.Signals[0]);
         }
 
-        public List<FSSSignal> Signals;
+        public List<FSSSignal> Signals { get; set; }            // name used in action packs not changeable
+
+        public int CountStationSignals { get { return Signals?.Where(x => x.ClassOfSignal == FSSSignal.Classification.Carrier).Count() ?? 0; } }
+        public int CountInstallationSignals { get { return Signals?.Where(x => x.ClassOfSignal == FSSSignal.Classification.Installation).Count() ?? 0; } }
+        public int CountNotableStellarPhenomenaSignals { get { return Signals?.Where(x => x.ClassOfSignal == FSSSignal.Classification.NotableStellarPhenomena).Count() ?? 0; } }
+        public int CountConflictZoneSignals { get { return Signals?.Where(x => x.ClassOfSignal == FSSSignal.Classification.ConflictZone).Count() ?? 0; } }
+        public int CountResourceExtractionZoneSignals { get { return Signals?.Where(x => x.ClassOfSignal == FSSSignal.Classification.ResourceExtraction).Count() ?? 0; } }
+        public int CountCarrierSignals { get { return Signals?.Where(x => x.ClassOfSignal == FSSSignal.Classification.Carrier).Count() ?? 0; } }
+        public int CountUSSSignals { get { return Signals?.Where(x => x.ClassOfSignal == FSSSignal.Classification.USS).Count() ?? 0; } }
+        public int CountOtherSignals { get { return Signals?.Where(x => x.ClassOfSignal == FSSSignal.Classification.Other).Count() ?? 0; } }
 
         public void AddStarScan(StarScan s, ISystem system)
         {
@@ -321,6 +330,22 @@ namespace EliteDangerousCore.JournalEvents
         public int? BodyID { get; set; }        // acutally always set, set to ? to correspond to previous journal event types where BodyID may be missing
         public List<SAASignal> Signals { get; set; }
 
+        public bool ContainsGeoSignals { get { return Signals?.Count(x => x.IsGeo) > 0 ? true : false; } }
+        public bool ContainsBioSignals { get { return Signals?.Count(x => x.IsBio) > 0 ? true : false; } }
+        public bool ContainsThargoidSignals { get { return Signals?.Count(x => x.IsThargoid) > 0 ? true : false; } }
+        public bool ContainsGuardianSignals { get { return Signals?.Count(x => x.IsGuardian) > 0 ? true : false; } }
+        public bool ContainsHumanSignals { get { return Signals?.Count(x => x.IsHuman) > 0 ? true : false; } }
+        public bool ContainsOtherSignals { get { return Signals?.Count(x => x.IsOther) > 0 ? true : false; } }
+        public bool ContainsUncategorisedSignals { get { return Signals?.Count(x => x.IsUncategorised) > 0 ? true : false; } }
+        public int CountGeoSignals { get { return Signals?.Where(x => x.IsGeo).Sum(y => y.Count) ?? 0; } }
+        public int CountBioSignals { get { return Signals?.Where(x => x.IsBio).Sum(y => y.Count) ?? 0; } }
+        public int CountThargoidSignals { get { return Signals?.Where(x => x.IsThargoid).Sum(y => y.Count) ?? 0; } }
+        public int CountGuardianSignals { get { return Signals?.Where(x => x.IsGuardian).Sum(y => y.Count) ?? 0; } }
+        public int CountHumanSignals { get { return Signals?.Where(x => x.IsHuman).Sum(y => y.Count) ?? 0; } }
+        public int CountOtherSignals { get { return Signals?.Where(x => x.IsOther).Sum(y => y.Count) ?? 0; } }
+        public int CountUncategorisedSignals { get { return Signals?.Where(x => x.IsUncategorised).Sum(y => y.Count) ?? 0; } }
+
+
         public class SAASignal 
         {
             public string Type { get; set; }        // material fdname, or $SAA_SignalType..
@@ -426,6 +451,22 @@ namespace EliteDangerousCore.JournalEvents
         public string BodyName { get; set; }
         public int? BodyID { get; set; }        // acutally always set, set to ? to correspond to previous journal event types where BodyID may be missing
         public List<JournalSAASignalsFound.SAASignal> Signals { get; set; }
+
+        public bool ContainsGeoSignals { get { return Signals?.Count(x => x.IsGeo) > 0 ? true : false; } }
+        public bool ContainsBioSignals { get { return Signals?.Count(x => x.IsBio) > 0 ? true : false; } }
+        public bool ContainsThargoidSignals { get { return Signals?.Count(x => x.IsThargoid) > 0 ? true : false; } }
+        public bool ContainsGuardianSignals { get { return Signals?.Count(x => x.IsGuardian) > 0 ? true : false; } }
+        public bool ContainsHumanSignals { get { return Signals?.Count(x => x.IsHuman) > 0 ? true : false; } }
+        public bool ContainsOtherSignals { get { return Signals?.Count(x => x.IsOther) > 0 ? true : false; } }
+        public bool ContainsUncategorisedSignals { get { return Signals?.Count(x => x.IsUncategorised) > 0 ? true : false; } }
+        public int CountGeoSignals { get { return Signals?.Where(x => x.IsGeo).Sum(y => y.Count) ?? 0; } }
+        public int CountBioSignals { get { return Signals?.Where(x => x.IsBio).Sum(y => y.Count) ?? 0; } }
+        public int CountThargoidSignals { get { return Signals?.Where(x => x.IsThargoid).Sum(y => y.Count) ?? 0; } }
+        public int CountGuardianSignals { get { return Signals?.Where(x => x.IsGuardian).Sum(y => y.Count) ?? 0; } }
+        public int CountHumanSignals { get { return Signals?.Where(x => x.IsHuman).Sum(y => y.Count) ?? 0; } }
+        public int CountOtherSignals { get { return Signals?.Where(x => x.IsOther).Sum(y => y.Count) ?? 0; } }
+        public int CountUncategorisedSignals { get { return Signals?.Where(x => x.IsUncategorised).Sum(y => y.Count) ?? 0; } }
+
 
         public void AddStarScan(StarScan s, ISystem system)
         {
