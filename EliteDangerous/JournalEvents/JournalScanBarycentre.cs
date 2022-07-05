@@ -43,6 +43,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public double SemiMajorAxis { get; private set; }
         public double SemiMajorAxisAU { get { return SemiMajorAxis / BodyPhysicalConstants.oneAU_m; } }
+        public double SemiMajorAxisLS { get { return SemiMajorAxis / BodyPhysicalConstants.oneLS_m; } }
         public string SemiMajorAxisLSKM { get { return (SemiMajorAxis >= BodyPhysicalConstants.oneLS_m / 10 ? ((SemiMajorAxis / BodyPhysicalConstants.oneLS_m).ToString("N1") + "ls") : ((SemiMajorAxis / 1000).ToString("N0") + "km")); } }
 
         public double Eccentricity { get; private set; }                  
