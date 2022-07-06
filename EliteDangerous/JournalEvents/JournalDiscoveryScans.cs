@@ -220,13 +220,18 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
+            FillInformation(sys, whereami, 20, out info, out detailed);
+        }
+
+        public void FillInformation(ISystem sys, string whereami, int maxsignals, out string info, out string detailed)
+        {
             detailed = "";
 
             if (Signals.Count > 1)
             {
                 info = BaseUtils.FieldBuilder.Build("Detected ; signals".T(EDCTx.JournalFSSSignalDiscovered_Detected), Signals.Count);
 
-                if (Signals.Count < 20)
+                if (Signals.Count < maxsignals)
                 {
                     foreach (var s in Signals)
                     {

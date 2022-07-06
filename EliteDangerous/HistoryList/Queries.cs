@@ -237,20 +237,28 @@ namespace EliteDangerousCore
         // Get the list of properties
         static public List<BaseUtils.TypeHelpers.PropertyNameInfo> PropertyList()
         {
-            List<BaseUtils.TypeHelpers.PropertyNameInfo> scannames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalScan), 
+            List<BaseUtils.TypeHelpers.PropertyNameInfo> classnames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalScan), 
                     bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, comment:"Scan");
-            List<BaseUtils.TypeHelpers.PropertyNameInfo> fssnames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalFSSSignalDiscovered), 
+
+            List<BaseUtils.TypeHelpers.PropertyNameInfo> othernames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalFSSSignalDiscovered), 
                     bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, comment: "FSSSignalDiscovered");
             List<BaseUtils.TypeHelpers.PropertyNameInfo> saanames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalSAASignalsFound), 
                     bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly , comment:"SAASignalsFound");
+            othernames.AddRange(saanames);
             List<BaseUtils.TypeHelpers.PropertyNameInfo> fssbodynames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalFSSBodySignals), 
                     bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, comment:"FSSBodySignals");
+            othernames.AddRange(fssbodynames);        // merge blind
 
-            List<BaseUtils.TypeHelpers.PropertyNameInfo> classnames = new List<BaseUtils.TypeHelpers.PropertyNameInfo>();
-            classnames.AddRange(scannames);
-            classnames.AddRange(fssnames);
-            classnames.AddRange(saanames);
-            classnames.AddRange(fssbodynames);
+            foreach( var v in othernames)
+            {
+                var merged = classnames.Find(x => x.Name == v.Name);        // if we have the same, just merge the comments, so we don't get lots of repeats.
+                if (merged != null)
+                {
+                    merged.Comment += ", " + v.Comment;
+                }
+                else
+                    classnames.Add(v);
+            }
 
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventTimeUTC", "Date Time in UTC", BaseUtils.ConditionEntry.MatchType.DateAfter,"All"));     // add on a few from the base class..
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventTimeLocal", "Date Time in Local time", BaseUtils.ConditionEntry.MatchType.DateAfter,"All"));     
