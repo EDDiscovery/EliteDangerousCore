@@ -238,15 +238,19 @@ namespace EliteDangerousCore
         static public List<BaseUtils.TypeHelpers.PropertyNameInfo> PropertyList()
         {
             List<BaseUtils.TypeHelpers.PropertyNameInfo> classnames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalScan), 
-                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, comment:"Scan");
+                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, 
+                    comment:"Scan");
 
             List<BaseUtils.TypeHelpers.PropertyNameInfo> othernames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalFSSSignalDiscovered), 
-                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, comment: "FSSSignalDiscovered");
+                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, 
+                    comment: "FSSSignalDiscovered");
             List<BaseUtils.TypeHelpers.PropertyNameInfo> saanames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalSAASignalsFound), 
-                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly , comment:"SAASignalsFound");
+                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly , 
+                    comment:"SAASignalsFound");
             othernames.AddRange(saanames);
             List<BaseUtils.TypeHelpers.PropertyNameInfo> fssbodynames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalFSSBodySignals), 
-                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, comment:"FSSBodySignals");
+                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, 
+                    comment:"FSSBodySignals");
             othernames.AddRange(fssbodynames);        // merge blind
 
             foreach( var v in othernames)
@@ -297,14 +301,14 @@ namespace EliteDangerousCore
                     if (propertynames[i].Name.StartsWith(v1))        // and it starts with
                     {
                         var comment = propertynames[i].Comment;
-                        bool all = comment == "All";
-                        if (comment == "Scan" || all)
+                        bool all = comment.Contains("All");
+                        if (comment.Contains("Scan") || all)
                             res.Add(JournalTypeEnum.Scan);
-                        if (comment == "FSSSignalDiscovered" || all)
+                        if (comment.Contains("FSSSignalDiscovered") || all)
                             res.Add(JournalTypeEnum.FSSSignalDiscovered);
-                        if (comment == "SAASignalsFound" || all)
+                        if (comment.Contains("SAASignalsFound") || all)
                             res.Add(JournalTypeEnum.SAASignalsFound);
-                        if (comment == "FSSBodySignals" || all)
+                        if (comment.Contains("FSSBodySignals") || all)
                             res.Add(JournalTypeEnum.FSSBodySignals);
                     }
                 }
