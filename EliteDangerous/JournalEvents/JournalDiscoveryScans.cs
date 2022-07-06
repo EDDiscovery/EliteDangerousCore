@@ -248,6 +248,21 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
+        static public List<FSSSignal> SignalList( List<JournalFSSSignalDiscovered> jsd)      // from a set of jsd's, extract all signals which are not the same
+        {
+            List<FSSSignal> list = new List<FSSSignal>();
+            foreach( var j in jsd)
+            {
+                foreach( var s in j.Signals)
+                {
+                    int present = list.FindIndex(x => x.IsSame(s));
+                    if (present == -1)
+                        list.Add(s);
+                }
+            }
+
+            return list;
+        }
     }
 
    

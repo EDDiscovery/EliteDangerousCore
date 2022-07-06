@@ -49,6 +49,7 @@ namespace EliteDangerousCore
 
                 // scan
                 JournalTypeEnum.Scan, JournalTypeEnum.SellExplorationData, JournalTypeEnum.SAASignalsFound, JournalTypeEnum.SAAScanComplete, JournalTypeEnum.FSSBodySignals, JournalTypeEnum.ScanOrganic,
+                JournalTypeEnum.FSSSignalDiscovered,
 
                 // misc
                 JournalTypeEnum.ClearSavedGame,
@@ -70,7 +71,7 @@ namespace EliteDangerousCore
         static public JournalTypeEnum[] JumpScanEssentialEvents = new JournalTypeEnum[]     // 
             {
                 JournalTypeEnum.FSDJump,JournalTypeEnum.CarrierJump, JournalTypeEnum.Location,JournalTypeEnum.SAAScanComplete,
-                JournalTypeEnum.Scan, JournalTypeEnum.SAASignalsFound, JournalTypeEnum.FSSBodySignals, JournalTypeEnum.ScanOrganic,
+                JournalTypeEnum.Scan, JournalTypeEnum.SAASignalsFound, JournalTypeEnum.FSSBodySignals, JournalTypeEnum.ScanOrganic, JournalTypeEnum.FSSSignalDiscovered
             };
         static public JournalTypeEnum[] JumpEssentialEvents = new JournalTypeEnum[]     // 
             {

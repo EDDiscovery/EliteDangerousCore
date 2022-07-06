@@ -32,10 +32,8 @@ namespace EliteDangerousCore
             public SortedList<string, ScanNode> StarNodes { get; private set; } = new SortedList<string, ScanNode>(new CollectionStaticHelpers.BasicLengthBasedNumberComparitor<string>());   // node list
             public SortedList<int, ScanNode> NodesByID { get; private set; } = new SortedList<int, ScanNode>();               // by ID list
             public SortedList<int, JournalScanBaryCentre> BaryCentres { get; private set; } = new SortedList<int, JournalScanBaryCentre>();
-
             public int? FSSTotalBodies { get; set; }         // if we have FSSDiscoveryScan, this will be set
-
-            public List<JournalFSSSignalDiscovered.FSSSignal> FSSSignalList { get; private set; } = new List<JournalFSSSignalDiscovered.FSSSignal>();
+            public List<JournalFSSSignalDiscovered> FSSSignalList { get; private set; } = new List<JournalFSSSignalDiscovered>();       // we keep the FSS signal discovered not the signal list as the signals get merged, and we don't get a chance to see the merged signals
             public List<JournalCodexEntry> CodexEntryList { get; private set; } = new List<JournalCodexEntry>();
 
             public SystemNode(ISystem sys)

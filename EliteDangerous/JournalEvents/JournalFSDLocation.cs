@@ -271,7 +271,7 @@ namespace EliteDangerousCore.JournalEvents
 
     //When written: at startup, or when being resurrected at a station
     [JournalEntryType(JournalTypeEnum.Location)]
-    public class JournalLocation : JournalLocOrJump, ISystemStationEntry, IBodyNameAndID
+    public class JournalLocation : JournalLocOrJump, ISystemStationEntry, IBodyNameAndID, IStarScan
     {
         public JournalLocation(JObject evt) : base(evt, JournalTypeEnum.Location)      // all have evidence 16/3/2017
         {
@@ -414,11 +414,17 @@ namespace EliteDangerousCore.JournalEvents
                 detailed = "";
             }
         }
+
+        public void AddStarScan(StarScan s, ISystem system)
+        {
+            if (SystemAddress.HasValue)
+                s.AddLocation(StarSystem, SystemAddress.Value);
+        }
     }
 
     //When written: when jumping with a fleet carrier
     [JournalEntryType(JournalTypeEnum.CarrierJump)]
-    public class JournalCarrierJump : JournalLocOrJump, ISystemStationEntry, IBodyNameAndID, IJournalJumpColor
+    public class JournalCarrierJump : JournalLocOrJump, ISystemStationEntry, IBodyNameAndID, IJournalJumpColor, IStarScan
     {
         public JournalCarrierJump(JObject evt) : base(evt, JournalTypeEnum.CarrierJump)
         {
@@ -488,6 +494,12 @@ namespace EliteDangerousCore.JournalEvents
         {
             return string.Format("Jumped with carrier {0} to {1}".T(EDCTx.JournalCarrierJump_JumpedWith), StationName, Body);
         }
+        public void AddStarScan(StarScan s, ISystem system)
+        {
+            if (SystemAddress.HasValue)
+                s.AddLocation(StarSystem, SystemAddress.Value);
+        }
+
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
@@ -534,7 +546,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.FSDJump)]
-    public class JournalFSDJump : JournalLocOrJump, IShipInformation, ISystemStationEntry, IJournalJumpColor
+    public class JournalFSDJump : JournalLocOrJump, IShipInformation, ISystemStationEntry, IJournalJumpColor, IStarScan
     {
         public JournalFSDJump(JObject evt) : base(evt, JournalTypeEnum.FSDJump)
         {
@@ -582,6 +594,11 @@ namespace EliteDangerousCore.JournalEvents
         public bool? Multicrew { get; set; }
 
         public override string SummaryName(ISystem sys) { return string.Format("Jump to {0}".T(EDCTx.JournalFSDJump_Jumpto), StarSystem); }
+        public void AddStarScan(StarScan s, ISystem system)
+        {
+            if (SystemAddress.HasValue)
+                s.AddLocation(StarSystem, SystemAddress.Value);
+        }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {

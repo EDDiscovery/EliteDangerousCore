@@ -399,27 +399,29 @@ namespace EliteDangerousCore
 
         // Create a signals list
         Point DrawSignals(List<ExtPictureBox.ImageElement> pc, Point leftmiddle , 
-                                List<JournalFSSSignalDiscovered.FSSSignal> signals, List<JournalCodexEntry> codex,
+                                List<JournalFSSSignalDiscovered> listfsd, List<JournalCodexEntry> codex,
                                 int height, int shiftrightifreq)
         {
             const int maxicons = 5;
             int iconsize = height / maxicons;
             Bitmap bmp = new Bitmap(iconsize, height);
 
+            var signallist = JournalFSSSignalDiscovered.SignalList(listfsd);
+
             int[] count = new int[]     // in priority order
             {
-                signals.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.Station).Count(),
-                signals.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.Carrier).Count(),
-                signals.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.Installation).Count(),
-                signals.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.NotableStellarPhenomena).Count(),
-                signals.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.ResourceExtraction).Count(),
-                signals.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.ConflictZone).Count(),
-                signals.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.USS).Count(),
+                signallist.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.Station).Count(),
+                signallist.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.Carrier).Count(),
+                signallist.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.Installation).Count(),
+                signallist.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.NotableStellarPhenomena).Count(),
+                signallist.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.ResourceExtraction).Count(),
+                signallist.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.ConflictZone).Count(),
+                signallist.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.USS).Count(),
                 0, // 7, slot for others
                 0, // 8, slot for codex
             };
 
-            count[7] = signals.Count - (from x in count select x).Sum();        // set seven to signals left
+            count[7] = signallist.Count - (from x in count select x).Sum();        // set seven to signals left
 
             int icons;
             int knockout = 6;       // starting from this signal, work backwards knocking out if required
@@ -471,12 +473,12 @@ namespace EliteDangerousCore
 
             string tip = "";
 
-            var notexpired = signals.Where(x => !x.TimeRemaining.HasValue || x.ExpiryUTC >= DateTime.UtcNow).ToList();
+            var notexpired = signallist.Where(x => !x.TimeRemaining.HasValue || x.ExpiryUTC >= DateTime.UtcNow).ToList();
             notexpired.Sort(delegate (JournalFSSSignalDiscovered.FSSSignal l, JournalFSSSignalDiscovered.FSSSignal r) { return l.ClassOfSignal.CompareTo(r.ClassOfSignal); });
             foreach (var sig in notexpired )
                 tip = tip.AppendPrePad(sig.ToString(true), Environment.NewLine);
 
-            var expired = signals.Where(x => x.TimeRemaining.HasValue && x.ExpiryUTC < DateTime.UtcNow).ToList();
+            var expired = signallist.Where(x => x.TimeRemaining.HasValue && x.ExpiryUTC < DateTime.UtcNow).ToList();
 
             if (expired.Count > 0)
             {

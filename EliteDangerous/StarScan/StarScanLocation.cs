@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2021 EDDiscovery development team
+ * Copyright © 2015 - 2022 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -20,22 +20,10 @@ namespace EliteDangerousCore
 {
     public partial class StarScan
     {
-        public bool AddFSSSignalsDiscoveredToSystem(JournalFSSSignalDiscovered jsd, bool saveprocessinglater = true)
+        public void AddLocation(string name, long sysaddr)      // called when we have a new system address
         {
-            if (jsd.Signals[0].SystemAddress.HasValue)
-            {
-                if (ScanDataBySysaddr.TryGetValue(jsd.Signals[0].SystemAddress.Value, out SystemNode sn))       // if we have it
-                {
-                    sn.FSSSignalList.Add(jsd);
-                }
-                else if (saveprocessinglater)
-                {
-                    SaveForProcessing(jsd, null);
-                    return false;
-                }
-            }
-
-            return true;
+            SystemClass sys = new SystemClass(sysaddr, name);
+            GetOrCreateSystemNode(sys);
         }
     }
 }

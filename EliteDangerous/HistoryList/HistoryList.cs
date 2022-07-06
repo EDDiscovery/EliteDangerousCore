@@ -378,18 +378,7 @@ namespace EliteDangerousCore
                             return true;
                         }
                     }
-                    else if (je.EventTypeID == JournalTypeEnum.FSSAllBodiesFound)
-                    {
-                        var jdprev = prev as EliteDangerousCore.JournalEvents.JournalFSSAllBodiesFound;
-                        var jd = je as EliteDangerousCore.JournalEvents.JournalFSSAllBodiesFound;
-
-                        // throw away if same..
-                        if (jdprev.SystemName == jd.SystemName && jdprev.Count == jd.Count) // if same, we just waste the repeater, ED sometimes spews out multiples
-                        {
-                            return true;
-                        }
-                    }
-
+   
                 }
             }
 

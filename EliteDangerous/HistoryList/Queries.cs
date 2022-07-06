@@ -314,7 +314,8 @@ namespace EliteDangerousCore
 
 
         //find a named search, async
-        public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist, Dictionary<string, Results> results, string searchname, BaseUtils.Variables defaultvars, bool wantdebug)
+        public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist, Dictionary<string, Results> results, string searchname, BaseUtils.Variables defaultvars, 
+                            StarScan starscan, bool wantdebug)
         {
             var search = Searches.Find(x => x.Name.Equals(searchname));
 
@@ -323,13 +324,13 @@ namespace EliteDangerousCore
             if (cond == null)
                 System.Diagnostics.Trace.WriteLine($"Search missing {searchname}");
 
-            return Find(helist, results, searchname, cond, defaultvars, wantdebug);
+            return Find(helist, results, searchname, cond, defaultvars, starscan, wantdebug);
         }
 
         public class Results
         {
-            public HistoryEntry HistoryEntry { get; set; }
             public List<string> FiltersPassed { get; set; }
+            public List<HistoryEntry> EntryList { get; set; }
         }
 
 
@@ -337,7 +338,7 @@ namespace EliteDangerousCore
         // default vars can be null
         static public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist, 
                                    Dictionary<string,Results> results, string filterdescription,
-                                   BaseUtils.ConditionLists cond, BaseUtils.Variables defaultvars, bool wantreport)
+                                   BaseUtils.ConditionLists cond, BaseUtils.Variables defaultvars, StarScan starscan, bool wantreport)
         {
 
             return System.Threading.Tasks.Task.Run(() =>
@@ -514,33 +515,45 @@ namespace EliteDangerousCore
 
                     if (res.Item1.Value == true)    // if passed
                     {
-                          //if we have a je with a body name, use that to set the ret, else just use a incrementing decimal count name
-                        string key = he.journalEntry is IBodyNameIDOnly ? (he.journalEntry as IBodyNameIDOnly).BodyName : results.Count.ToStringInvariant();
+                        //if we have a je with a body name, use that to set the ret, else just use a incrementing decimal count name
 
-                        if ( wantreport)
-                            resultinfo.AppendLine($"{he.EventTimeUTC} Journal type {he.EntryType} : Matched {key}");
-
-                        lock (results)     // may be spawing a lot of parallel awaits, make sure the shared resource is locked
+                        string key = null;
+                        if (he.EntryType == JournalTypeEnum.FSSSignalDiscovered)
                         {
-                            if (results.TryGetValue(key, out Results value))       // if key already exists, maybe set HE to us, and update filters passed
+                            long? sysaddr = ((JournalFSSSignalDiscovered)he.journalEntry).Signals[0].SystemAddress;
+                            if (sysaddr.HasValue && starscan.ScanDataBySysaddr.TryGetValue(sysaddr.Value, out StarScan.SystemNode sn))
                             {
-                                bool isstoredscan = value.HistoryEntry.EntryType == JournalTypeEnum.Scan;
-
-                                if (isstoredscan && he.EntryType == JournalTypeEnum.Scan)      // new scan, replace
-                                    value.HistoryEntry = he;
-                                else if (!isstoredscan)                                       // if not stored a scan, store whatever we have newer
-                                    value.HistoryEntry = he;
-                                else
-                                {
-                                    //System.Diagnostics.Debug.WriteLine($"Query {he.EventTimeUTC} stored {value.HistoryEntry.EntryType} not replacing with {he.EntryType}");
-                                }
-
-                                if (!value.FiltersPassed.Contains(filterdescription))      // we may scan and find the same body twice with the same filter, do not dup add
-                                    value.FiltersPassed.Add(filterdescription);
+                                key = sn.System.Name;
                             }
                             else
-                            {                                                       // else make a new key
-                                results[key] = new Results() { HistoryEntry = he, FiltersPassed = new List<string>() { filterdescription } };
+                            {
+                                System.Diagnostics.Debug.WriteLine($"Query FSD No system found for {he.EventTimeUTC} {sysaddr}");
+                            }
+                        }
+                        else if (he.journalEntry is IBodyNameIDOnly)
+                        {
+                            key = (he.journalEntry as IBodyNameIDOnly).BodyName;
+                        }
+                        else
+                            System.Diagnostics.Debug.Assert(false);
+
+                        if (key != null)
+                        {
+                            if (wantreport)
+                                resultinfo.AppendLine($"{he.EventTimeUTC} Journal type {he.EntryType} : Matched {key}");
+
+                            lock (results)     // may be spawing a lot of parallel awaits, make sure the shared resource is locked
+                            {
+                                if (results.TryGetValue(key, out Results value))       // if key already exists, maybe set HE to us, and update filters passed
+                                {
+                                    value.EntryList.Add(he);
+                                    if (!value.FiltersPassed.Contains(filterdescription))      // we may scan and find the same body twice with the same filter, do not dup add
+                                        value.FiltersPassed.Add(filterdescription);
+                                }
+                                else
+                                {                                                       // else make a new key
+                                    results[key] = new Results() { EntryList = new List<HistoryEntry>() { he }, FiltersPassed = new List<string>() { filterdescription } };
+                                }
                             }
                         }
                     }
