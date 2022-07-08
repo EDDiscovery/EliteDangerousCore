@@ -27,7 +27,7 @@ namespace EliteDangerousCore
         [DebuggerDisplay("SN {System.Name} {System.SystemAddress}")]
         public partial class SystemNode
         {
-            public ISystem System;
+            public ISystem System { get; set; }
 
             public SortedList<string, ScanNode> StarNodes { get; private set; } = new SortedList<string, ScanNode>(new CollectionStaticHelpers.BasicLengthBasedNumberComparitor<string>());   // node list
             public SortedList<int, ScanNode> NodesByID { get; private set; } = new SortedList<int, ScanNode>();               // by ID list

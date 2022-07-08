@@ -199,8 +199,9 @@ namespace EliteDangerousCore
                     heh.Index = hist.historylist.Count; // store its index for quick ordering, after all removal etc
                     hist.historylist.Add(heh);        // then add to history
                     hist.AddToVisitsScan(null);  // add to scan database but don't complain
+                    //System.Diagnostics.Debug.WriteLine($"Add {heh.EventTimeUTC} {heh.EntryType} {hist.StarScan.ScanDataByName.Count} {hist.Visited.Count}");
                 }
-            }
+           }
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " History List Created");
 
@@ -211,6 +212,8 @@ namespace EliteDangerousCore
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Anaylsis End");
 
             hist.CommanderId = CurrentCommander;
+
+            //foreach( var kvp in hist.StarScan.ScanDataByName) if (kvp.Value.System.SystemAddress == null) System.Diagnostics.Debug.WriteLine($"{kvp.Value.System.Name} no SA");
 
 #if LISTSCANS
             {

@@ -20,7 +20,7 @@ namespace EliteDangerousCore
 {
     public partial class StarScan
     {
-        public void AddLocation(string name, long sysaddr)      // called when we have a new system address
+        public void AddLocation(string name, long? sysaddr)      // called when we have a new system address
         {
             SystemClass sys = new SystemClass(sysaddr, name);
             GetOrCreateSystemNode(sys);

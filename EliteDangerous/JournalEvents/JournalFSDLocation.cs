@@ -417,8 +417,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void AddStarScan(StarScan s, ISystem system)
         {
-            if (SystemAddress.HasValue)
-                s.AddLocation(StarSystem, SystemAddress.Value);
+                s.AddLocation(StarSystem, SystemAddress);
         }
     }
 
@@ -496,8 +495,7 @@ namespace EliteDangerousCore.JournalEvents
         }
         public void AddStarScan(StarScan s, ISystem system)
         {
-            if (SystemAddress.HasValue)
-                s.AddLocation(StarSystem, SystemAddress.Value);
+            s.AddLocation(StarSystem, SystemAddress);
         }
 
 
@@ -596,8 +594,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string SummaryName(ISystem sys) { return string.Format("Jump to {0}".T(EDCTx.JournalFSDJump_Jumpto), StarSystem); }
         public void AddStarScan(StarScan s, ISystem system)
         {
-            if (SystemAddress.HasValue)
-                s.AddLocation(StarSystem, SystemAddress.Value);
+            s.AddLocation(StarSystem, SystemAddress);
         }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
@@ -751,7 +748,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.StartJump)]
-    public class JournalStartJump : JournalEntry
+    public class JournalStartJump : JournalEntry, IStarScan
     {
         public JournalStartJump(JObject evt) : base(evt, JournalTypeEnum.StartJump)
         {
@@ -781,6 +778,10 @@ namespace EliteDangerousCore.JournalEvents
 
             detailed = "";
         }
+        public void AddStarScan(StarScan s, ISystem system)
+        {
+            if ( IsHyperspace )
+                s.AddLocation(StarSystem, SystemAddress);
+        }
     }
-
 }

@@ -34,6 +34,7 @@ namespace EliteDangerousCore
             {
                 if ( sys.SystemAddress.HasValue)
                 {
+                    sn.System = sys;            // refresh our node knowledge of the system
                     ScanDataBySysaddr[sys.SystemAddress.Value] = sn;    // previously without a known system address, now we have it, assign
                  //   System.Diagnostics.Debug.WriteLine($"StarScan {sys.Name} now has address {sys.SystemAddress}" );
                 }
@@ -41,13 +42,14 @@ namespace EliteDangerousCore
                 return sn;                                              
             }
 
-
             // not found, make a new node
             sn = new SystemNode(sys);
 
             // if it has a system address, we store it to the list that way. Else we add to name list
             if (sys.SystemAddress.HasValue)
+            {
                 ScanDataBySysaddr[sys.SystemAddress.Value] = sn;
+            }
             else
             {
                 //System.Diagnostics.Debug.WriteLine($"StarScan {sys.Name} no address");
