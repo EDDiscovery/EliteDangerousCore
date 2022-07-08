@@ -444,16 +444,17 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (IsStar)
             {
+
                 return BaseUtils.FieldBuilder.Build("Mass: ;SM;0.00".T(EDCTx.JournalScan_MSM), nStellarMass,
                                                 "Age: ;my;0.0".T(EDCTx.JournalScan_Age), nAge,
                                                 "Radius: ".T(EDCTx.JournalScan_RS), RadiusText(),
-                                                "Dist: ".T(EDCTx.JournalScan_DIST), DistanceFromArrivalText);
+                                                "Dist: ".T(EDCTx.JournalScan_DIST), DistanceFromArrivalLS > 0 ? DistanceFromArrivalText : null);
             }
             else
             {
                 return BaseUtils.FieldBuilder.Build("Mass: ".T(EDCTx.JournalScan_MASS), MassEMText(),
                                                  "Radius: ".T(EDCTx.JournalScan_RS), RadiusText(),
-                                                 "Dist: ".T(EDCTx.JournalScan_DIST), DistanceFromArrivalText);
+                                                 "Dist: ".T(EDCTx.JournalScan_DIST), DistanceFromArrivalLS > 0 ? DistanceFromArrivalText : null);
             }
         }
 

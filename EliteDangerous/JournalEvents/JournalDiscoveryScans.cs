@@ -40,6 +40,7 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
+    [System.Diagnostics.DebuggerDisplay("{Progress} {BodyCount} {NonBodyCount}")]
     [JournalEntryType(JournalTypeEnum.FSSDiscoveryScan)]
     public class JournalFSSDiscoveryScan : JournalEntry, IStarScan
     {
@@ -69,9 +70,11 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
+    [System.Diagnostics.DebuggerDisplay("{SignalNames()}")]
     [JournalEntryType(JournalTypeEnum.FSSSignalDiscovered)]
     public class JournalFSSSignalDiscovered : JournalEntry, IStarScan
     {
+        [System.Diagnostics.DebuggerDisplay("{ClassOfSignal} {SignalName}")]
         public class FSSSignal
         {
             public string SignalName { get; set; }
@@ -202,9 +205,11 @@ namespace EliteDangerousCore.JournalEvents
             Signals.Add(next.Signals[0]);
         }
 
+        private string SignalNames() { return string.Join(",", Signals?.Select(x => x.SignalName)); }       // for debugger
+
         public List<FSSSignal> Signals { get; set; }            // name used in action packs not changeable
 
-        public int CountStationSignals { get { return Signals?.Where(x => x.ClassOfSignal == FSSSignal.Classification.Carrier).Count() ?? 0; } }
+        public int CountStationSignals { get { return Signals?.Where(x => x.ClassOfSignal == FSSSignal.Classification.Station).Count() ?? 0; } }
         public int CountInstallationSignals { get { return Signals?.Where(x => x.ClassOfSignal == FSSSignal.Classification.Installation).Count() ?? 0; } }
         public int CountNotableStellarPhenomenaSignals { get { return Signals?.Where(x => x.ClassOfSignal == FSSSignal.Classification.NotableStellarPhenomena).Count() ?? 0; } }
         public int CountConflictZoneSignals { get { return Signals?.Where(x => x.ClassOfSignal == FSSSignal.Classification.ConflictZone).Count() ?? 0; } }
@@ -270,7 +275,8 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
-   
+
+    [System.Diagnostics.DebuggerDisplay("{NumBodies}")]
     [JournalEntryType(JournalTypeEnum.NavBeaconScan)]
     public class JournalNavBeaconScan : JournalEntry
     {
@@ -290,6 +296,7 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
+    [System.Diagnostics.DebuggerDisplay("{BodyName} {BodyID} {ProbesUsed} {EfficiencyTarget}")]
     [JournalEntryType(JournalTypeEnum.SAAScanComplete)]
     public class JournalSAAScanComplete : JournalEntry, IStarScan
     {
@@ -327,6 +334,7 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
+    [System.Diagnostics.DebuggerDisplay("{BodyName} {BodyID} {SignalNames()}")]
     [JournalEntryType(JournalTypeEnum.SAASignalsFound)]
     public class JournalSAASignalsFound : JournalEntry, IStarScan, IBodyNameIDOnly
     {
@@ -357,6 +365,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool ContainsHumanSignals { get { return Signals?.Count(x => x.IsHuman) > 0 ? true : false; } }
         public bool ContainsOtherSignals { get { return Signals?.Count(x => x.IsOther) > 0 ? true : false; } }
         public bool ContainsUncategorisedSignals { get { return Signals?.Count(x => x.IsUncategorised) > 0 ? true : false; } }
+
         public int CountGeoSignals { get { return Signals?.Where(x => x.IsGeo).Sum(y => y.Count) ?? 0; } }
         public int CountBioSignals { get { return Signals?.Where(x => x.IsBio).Sum(y => y.Count) ?? 0; } }
         public int CountThargoidSignals { get { return Signals?.Where(x => x.IsThargoid).Sum(y => y.Count) ?? 0; } }
@@ -366,6 +375,7 @@ namespace EliteDangerousCore.JournalEvents
         public int CountUncategorisedSignals { get { return Signals?.Where(x => x.IsUncategorised).Sum(y => y.Count) ?? 0; } }
 
 
+        [System.Diagnostics.DebuggerDisplay("{Type} {Count}")]
         public class SAASignal 
         {
             public string Type { get; set; }        // material fdname, or $SAA_SignalType..
@@ -385,6 +395,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             return base.SummaryName(sys) + " " + "of ".T(EDCTx.JournalEntry_ofa) + BodyName.ReplaceIfStartsWith(sys.Name);
         }
+
+
+        private string SignalNames() { return string.Join(",", Signals?.Select(x => x.Type)); }       // for debugger
 
         static public string SignalList(List<SAASignal> list, int indent = 0, string separ = ", " , bool logtype = false)
         {
@@ -428,6 +441,7 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
+    [System.Diagnostics.DebuggerDisplay("{SystenName} {Count}")]
     [JournalEntryType(JournalTypeEnum.FSSAllBodiesFound)]
     public class JournalFSSAllBodiesFound : JournalEntry
     {
@@ -449,6 +463,7 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
+    [System.Diagnostics.DebuggerDisplay("{BodyName} {BodyID} {SignalNames()}")]
     [JournalEntryType(JournalTypeEnum.FSSBodySignals)]
     public class JournalFSSBodySignals : JournalEntry, IStarScan, IBodyNameIDOnly
     {
@@ -479,6 +494,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool ContainsHumanSignals { get { return Signals?.Count(x => x.IsHuman) > 0 ? true : false; } }
         public bool ContainsOtherSignals { get { return Signals?.Count(x => x.IsOther) > 0 ? true : false; } }
         public bool ContainsUncategorisedSignals { get { return Signals?.Count(x => x.IsUncategorised) > 0 ? true : false; } }
+
         public int CountGeoSignals { get { return Signals?.Where(x => x.IsGeo).Sum(y => y.Count) ?? 0; } }
         public int CountBioSignals { get { return Signals?.Where(x => x.IsBio).Sum(y => y.Count) ?? 0; } }
         public int CountThargoidSignals { get { return Signals?.Where(x => x.IsThargoid).Sum(y => y.Count) ?? 0; } }
@@ -492,6 +508,8 @@ namespace EliteDangerousCore.JournalEvents
         {
             s.AddFSSBodySignalsToSystem(this,system);
         }
+
+        private string SignalNames() { return string.Join(",", Signals?.Select(x => x.Type)); }       // for debugger
 
         public override string SummaryName(ISystem sys)
         {
@@ -508,6 +526,7 @@ namespace EliteDangerousCore.JournalEvents
 
     }
 
+    [System.Diagnostics.DebuggerDisplay("{Body} {Genus} {Species}")]
     [JournalEntryType(JournalTypeEnum.ScanOrganic)]
     public class JournalScanOrganic : JournalEntry, IStarScan
     {

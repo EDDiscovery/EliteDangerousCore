@@ -406,14 +406,7 @@ namespace EliteDangerousCore
 
                     bool debugit = false;
 
-                    //JournalScan js1 = he.journalEntry as JournalScan;
-                    //if (js1 != null)
-                    //{
-                    //    if (js1.BodyName == "Skaude AA-A h294 AB 2 a")
-                    //    {
-                    //        debugit = true;
-                    //    }
-                    //}
+                    //if ( he.System.Name == "Lu Dongia") debugit = true;
 
                     scandatavars.AddPropertiesFieldsOfClass(he.journalEntry, "",
                             new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
