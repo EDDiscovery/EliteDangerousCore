@@ -879,12 +879,12 @@ namespace EliteDangerousCore
         JournalScanInfo_LowRadius, //  Low Radius.
         JournalScanInfo_LargeRadius, //  Large Radius.
         JournalScanInfo_Signals, //  Has mining signals.
-        JournalScanInfo_BioSignals, //  Has biological signals.
-        JournalScanInfo_GeoSignals, //  Has geological signals.
-        JournalScanInfo_ThargoidSignals, //  Has thargoid signals.
-        JournalScanInfo_GuardianSignals, //  Has guardian signals.
-        JournalScanInfo_HumanSignals, //  Has human signals.
-        JournalScanInfo_OtherSignals, //  Has 'other' signals.
+        JournalScanInfo_BioSignals, //  Biological signals:
+        JournalScanInfo_GeoSignals, //  Geological signals:
+        JournalScanInfo_ThargoidSignals, //  Thargoid signals:
+        JournalScanInfo_GuardianSignals, //  Guardian signals:
+        JournalScanInfo_HumanSignals, //  Human signals:
+        JournalScanInfo_OtherSignals, //  'Other' signals:
         JournalScanInfo_MandD, //  (Mapped & Discovered)
         JournalScanInfo_MP, //  (Mapped)
         JournalScanInfo_DIS, //  (Discovered)
