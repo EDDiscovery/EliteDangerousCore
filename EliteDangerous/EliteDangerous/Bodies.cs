@@ -340,37 +340,37 @@ namespace EliteDangerousCore
             switch (id)       // see journal, section 11.2
             {
                 case EDStar.O:
-                    return string.Format("Luminous Hot Main Sequence {0} star".T(EDCTx.Bodies_HMS), id.ToString());
+                    return string.Format("Luminous Hot {0} star".T(EDCTx.Bodies_HMS), id.ToString());
 
                 case EDStar.B:
                     // also have an B1V
-                    return string.Format("Luminous Blue Main Sequence {0} star".T(EDCTx.Bodies_BMS), id.ToString());
+                    return string.Format("Luminous Blue {0} star".T(EDCTx.Bodies_BMS), id.ToString());
 
                 case EDStar.A:
                     // also have an A3V..
-                    return string.Format("Bluish-White Main Sequence {0} star".T(EDCTx.Bodies_BWMS), id.ToString());
+                    return string.Format("Bluish-White {0} star".T(EDCTx.Bodies_BWMS), id.ToString());
 
                 case EDStar.F:
-                    return string.Format("White Main Sequence {0} star".T(EDCTx.Bodies_WMS), id.ToString());
+                    return string.Format("White {0} star".T(EDCTx.Bodies_WMS), id.ToString());
 
                 case EDStar.G:
                     // also have a G8V
-                    return string.Format("Yellow Main Sequence {0} star".T(EDCTx.Bodies_YMS), id.ToString());
+                    return string.Format("Yellow {0} star".T(EDCTx.Bodies_YMS), id.ToString());
 
                 case EDStar.K:
                     // also have a K0V
-                    return string.Format("Orange Main Sequence {0} star".T(EDCTx.Bodies_OMS), id.ToString());
+                    return string.Format("Orange {0} star".T(EDCTx.Bodies_OMS), id.ToString());
                 case EDStar.M:
                     // also have a M1VA
-                    return string.Format("Red Main Sequence {0} star".T(EDCTx.Bodies_RMS), id.ToString());
+                    return string.Format("Red {0} star".T(EDCTx.Bodies_RMS), id.ToString());
 
                 // dwarfs
                 case EDStar.L:
-                    return string.Format("Dark Red Non Main Sequence {0} star".T(EDCTx.Bodies_DRNS), id.ToString());
+                    return string.Format("Dark Red Non {0} star".T(EDCTx.Bodies_DRNS), id.ToString());
                 case EDStar.T:
-                    return string.Format("Methane Dwarf star".T(EDCTx.Bodies_MD));
+                    return string.Format("Methane Dwarf Y star".T(EDCTx.Bodies_MD));
                 case EDStar.Y:
-                    return string.Format("Brown Dwarf star".T(EDCTx.Bodies_BD));
+                    return string.Format("Brown Dwarf T star".T(EDCTx.Bodies_BD));
 
                 // proto stars
                 case EDStar.AeBe:    // Herbig
@@ -395,10 +395,10 @@ namespace EliteDangerousCore
                     return string.Format("Carbon {0} star".T(EDCTx.Bodies_C), id.ToString());
 
                 case EDStar.MS: //seen in log https://en.wikipedia.org/wiki/S-type_star
-                    return string.Format("Intermediate low Zirconium Monoxide Type star".T(EDCTx.Bodies_IZ));
+                    return string.Format("Intermediate low Zirconium Monoxide MS star".T(EDCTx.Bodies_IZ));
 
                 case EDStar.S:   // seen in log, data from http://elite-dangerous.wikia.com/wiki/Stars
-                    return string.Format("Cool Giant Zirconium Monoxide rich Type star".T(EDCTx.Bodies_CGZ));
+                    return string.Format("Cool Giant Zirconium Monoxide rich S star".T(EDCTx.Bodies_CGZ));
 
                 // white dwarf
                 case EDStar.D:
