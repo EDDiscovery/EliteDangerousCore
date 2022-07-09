@@ -366,7 +366,7 @@ namespace EliteDangerousCore
 
                 // dwarfs
                 case EDStar.L:
-                    return string.Format("Dark Red Non {0} class star".T(EDCTx.Bodies_DRNS), id.ToString());
+                    return string.Format("Dark Red {0} class star".T(EDCTx.Bodies_DRNS), id.ToString());
                 case EDStar.T:
                     return string.Format("Methane Dwarf T class star".T(EDCTx.Bodies_MD));
                 case EDStar.Y:
