@@ -278,6 +278,7 @@ namespace EliteDangerousCore
 
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventTimeUTC", "Date Time in UTC", BaseUtils.ConditionEntry.MatchType.DateAfter, "All"));     // add on a few from the base class..
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventTimeLocal", "Date Time in Local time", BaseUtils.ConditionEntry.MatchType.DateAfter, "All"));
+         //   classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventType", "Event type", BaseUtils.ConditionEntry.MatchType.Equals, "All"));
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("SyncedEDSM", "Synced to EDSM, 1 = yes, 0 = not", BaseUtils.ConditionEntry.MatchType.IsTrue, "All"));
 
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Level", "Level of body in system, 0 =star, 1 = Planet, 2 = moon, 3 = submoon", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
@@ -403,21 +404,32 @@ namespace EliteDangerousCore
                 foreach (var v in allvars)
                 {
                     if (v.StartsWith("Parent.Parent."))
+                    {
                         varsparentparent.Add(v.Substring(14, v.IndexOfOrLength(stoptext) - 14));
+                        varsparentparent.Add(v.Substring(14));
+                    }
                     else if (v.StartsWith("Parent."))
+                    {
                         varsparent.Add(v.Substring(7, v.IndexOfOrLength(stoptext) - 7));
+                        varsparent.Add(v.Substring(7));
+                    }
                     else if (v.StartsWith("Sibling["))
                     {
                         var v1 = v.Substring(v.IndexOfOrLength("]", offset: 2));        // remove up to the []
                         varssiblings.Add(v1.Substring(0, v1.IndexOfOrLength(stoptext)));    // then add, remove after stop text
+                        varssiblings.Add(v1);
                     }
                     else if (v.StartsWith("Child["))
                     {
                         var v1 = v.Substring(v.IndexOfOrLength("]", offset: 2));
                         varschildren.Add(v1.Substring(0, v1.IndexOfOrLength(stoptext)));
+                        varschildren.Add(v1);
                     }
                     else
+                    {
                         varsevent.Add(v.Substring(0, v.IndexOfOrLength(stoptext)));
+                        varsevent.Add(v);
+                    }
                 }
 
                 foreach (var he in helist)
