@@ -832,6 +832,10 @@ namespace EliteDangerousCore.EDSM
         {
             return EDSMBodiesCache.ContainsKey(name);
         }
+        public static bool HasNoDataBeenStoredOnBody(string name)      // true if lookup occurred, but no data. false otherwise
+        {
+            return EDSMBodiesCache.TryGetValue(name, out List<JournalScan> d) && d == null;
+        }
 
         // returns null if EDSM says not there, else if returns list of bodies and a flag indicating if from cache. 
         // all this is done in a lock inside a task - the only way to sequence the code and prevent multiple lookups in an await structure

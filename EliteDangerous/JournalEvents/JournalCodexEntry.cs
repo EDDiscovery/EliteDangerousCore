@@ -44,8 +44,8 @@ namespace EliteDangerousCore.JournalEvents
             if ( evt["Traits"] != null )
                 Traits = evt["Traits"].ToObjectQ<string[]>();
             VoucherAmount = evt["VoucherAmount"].LongNull();
-            Latitude = evt["Latitude"].Double();        // odyssey
-            Longitude = evt["Longitude"].Double();
+            Latitude = evt["Latitude"].DoubleNull();        // odyssey
+            Longitude = evt["Longitude"].DoubleNull();
 
             // EDD Additions
             EDDBodyName = evt["EDDBodyName"].StrNull();
@@ -69,8 +69,8 @@ namespace EliteDangerousCore.JournalEvents
         public string [] Traits { get; set; }
         public string NearestDestination { get; set; }
         public string NearestDestination_Localised { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
 
         public string EDDBodyName { get; set; }        // EDD addition, filled in in ED. Null for not known
         public int EDDBodyId { get; set; } = -1;       // EDD addition, filled in in ED.  -1 for not known
@@ -99,6 +99,8 @@ namespace EliteDangerousCore.JournalEvents
                                                 ";Traits".T(EDCTx.JournalCodexEntry_Traits), NewTraitsDiscovered,
                                                 "Nearest: ".T(EDCTx.JournalEntry_Nearest), NearestDestination_Localised
                                                 );
+            if ( Latitude.HasValue )
+                info += ", " + JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude);
             detailed = "";
 
             if (Traits != null)

@@ -543,15 +543,14 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public long SystemAddress { get; set; }
-        public int Body;
-        public string Genus;
-        public string Genus_Localised;
-        public string Species;
-        public string Species_Localised;
+        public int Body { get; set; }
+        public string Genus { get; set; }
+        public string Genus_Localised { get; set; }
+        public string Species { get; set; }
+        public string Species_Localised { get; set; }
         public enum ScanTypeEnum { Log, Sample, Analyse };
-        public ScanTypeEnum ScanType;     //Analyse, Log, Sample
-
-        public int? EstimatedValue;          // Value, if known
+        public ScanTypeEnum ScanType { get; set; }     //Analyse, Log, Sample
+        public int? EstimatedValue { get; set; }       // Value, if known
 
         public void AddStarScan(StarScan s, ISystem system)
         {

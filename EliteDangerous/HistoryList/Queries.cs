@@ -35,7 +35,8 @@ namespace EliteDangerousCore
             }
         }
 
-        public static HashSet<JournalTypeEnum> AllSearchableJournalTypes { get; } = new HashSet<JournalTypeEnum> { JournalTypeEnum.Scan, JournalTypeEnum.FSSBodySignals, JournalTypeEnum.SAASignalsFound, JournalTypeEnum.FSSSignalDiscovered };
+        public static HashSet<JournalTypeEnum> AllSearchableJournalTypes { get; } = new HashSet<JournalTypeEnum> 
+            { JournalTypeEnum.Scan, JournalTypeEnum.FSSBodySignals, JournalTypeEnum.SAASignalsFound, JournalTypeEnum.FSSSignalDiscovered , JournalTypeEnum.CodexEntry ,JournalTypeEnum.ScanOrganic };
 
         public const string DefaultSearches = "Planet between inner and outer ringↈLandable and TerraformableↈLandable with High GↈLandable with RingsↈHotter than HadesↈPlanet has wide rings vs radiusↈClose orbit to parentↈClose to ringↈPlanet with a large number of MoonsↈMoons orbiting TerraformablesↈClose BinaryↈGas giant has a terraformable MoonↈTiny MoonↈFast Rotation of a non tidally locked bodyↈHigh Eccentric OrbitↈHigh number of Jumponium Materialsↈ";
 
@@ -48,7 +49,7 @@ namespace EliteDangerousCore
 
             public QueryType QueryType { get; set; }
 
-            public Query(string n, string c, QueryType qt) { Name = n;Condition = c; QueryType = qt; }
+            public Query(string n, string c, QueryType qt) { Name = n; Condition = c; QueryType = qt; }
 
             public bool User { get { return QueryType == QueryType.User; } }
             public bool UserOrBuiltIn { get { return QueryType == QueryType.BuiltIn || QueryType == QueryType.User; } }
@@ -119,6 +120,9 @@ namespace EliteDangerousCore
                 new Query("Contains Human Signals",          "ContainsHumanSignals IsTrue", QueryType.BuiltIn ),
                 new Query("Contains Other Signals",          "ContainsOtherSignals IsTrue", QueryType.BuiltIn ),
                 new Query("Contains Uncategorised Signals",  "ContainsUncategorisedSignals IsTrue", QueryType.BuiltIn ),
+                new Query("Contains an Installation",  "CountInstallationSignals >= 1", QueryType.BuiltIn ),
+                new Query("Contains a Carrier",  "CountCarrierSignals >= 1", QueryType.BuiltIn ),
+                new Query("Contains a NSP",  "CountNotableStellarPhenomenaSignals >= 1", QueryType.BuiltIn ),
 
                 new Query("Body Name","BodyName contains <name>", QueryType.Example ),
                 new Query("Scan Type","ScanType contains Detailed", QueryType.Example ),
@@ -165,7 +169,7 @@ namespace EliteDangerousCore
             string[] userqueries = DB.UserDatabase.Instance.GetSettingString(DbUserQueries, "").Split(new char[] { splitmarker }); // allowed use
 
             for (int i = 0; i + 1 < userqueries.Length; i += 2)
-                Searches.Insert(0,new Query(userqueries[i], userqueries[i + 1],QueryType.User));
+                Searches.Insert(0, new Query(userqueries[i], userqueries[i + 1], QueryType.User));
         }
 
         public void Set(string name, string expr, QueryType t)
@@ -174,7 +178,7 @@ namespace EliteDangerousCore
             if (entry != -1)
                 Searches[entry] = new Query(name, expr, t);
             else
-                Searches.Insert(0,new Query(name, expr, t));
+                Searches.Insert(0, new Query(name, expr, t));
         }
 
         public void Delete(string name)
@@ -213,7 +217,7 @@ namespace EliteDangerousCore
         }
         public bool ReadJSONQueries(JArray ja)
         {
-            foreach( var t in ja)
+            foreach (var t in ja)
             {
                 JObject to = t.Object();
                 if (to != null)
@@ -237,23 +241,31 @@ namespace EliteDangerousCore
         // Get the list of properties
         static public List<BaseUtils.TypeHelpers.PropertyNameInfo> PropertyList()
         {
-            List<BaseUtils.TypeHelpers.PropertyNameInfo> classnames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalScan), 
-                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, 
-                    comment:"Scan");
+            List<BaseUtils.TypeHelpers.PropertyNameInfo> classnames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalScan),
+                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    comment: "Scan");
 
-            List<BaseUtils.TypeHelpers.PropertyNameInfo> othernames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalFSSSignalDiscovered), 
-                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, 
+            List<BaseUtils.TypeHelpers.PropertyNameInfo> othernames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalFSSSignalDiscovered),
+                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     comment: "FSSSignalDiscovered");
-            List<BaseUtils.TypeHelpers.PropertyNameInfo> saanames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalSAASignalsFound), 
-                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly , 
-                    comment:"SAASignalsFound");
+            List<BaseUtils.TypeHelpers.PropertyNameInfo> saanames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalSAASignalsFound),
+                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    comment: "SAASignalsFound");
             othernames.AddRange(saanames);
-            List<BaseUtils.TypeHelpers.PropertyNameInfo> fssbodynames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalFSSBodySignals), 
-                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, 
-                    comment:"FSSBodySignals");
+            List<BaseUtils.TypeHelpers.PropertyNameInfo> fssbodynames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalFSSBodySignals),
+                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    comment: "FSSBodySignals");
             othernames.AddRange(fssbodynames);        // merge blind
+            List<BaseUtils.TypeHelpers.PropertyNameInfo> codexnames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalCodexEntry),
+                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    comment: "CodexEntry");
+            othernames.AddRange(codexnames);        // merge blind
+            List<BaseUtils.TypeHelpers.PropertyNameInfo> scanorganicnames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalScanOrganic),
+                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    comment: "ScanOrganic");
+            othernames.AddRange(scanorganicnames);        // merge blind
 
-            foreach( var v in othernames)
+            foreach (var v in othernames)
             {
                 var merged = classnames.Find(x => x.Name == v.Name);        // if we have the same, just merge the comments, so we don't get lots of repeats.
                 if (merged != null)
@@ -264,9 +276,9 @@ namespace EliteDangerousCore
                     classnames.Add(v);
             }
 
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventTimeUTC", "Date Time in UTC", BaseUtils.ConditionEntry.MatchType.DateAfter,"All"));     // add on a few from the base class..
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventTimeLocal", "Date Time in Local time", BaseUtils.ConditionEntry.MatchType.DateAfter,"All"));     
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("SyncedEDSM", "Synced to EDSM, 1 = yes, 0 = not", BaseUtils.ConditionEntry.MatchType.IsTrue,"All"));    
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventTimeUTC", "Date Time in UTC", BaseUtils.ConditionEntry.MatchType.DateAfter, "All"));     // add on a few from the base class..
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventTimeLocal", "Date Time in Local time", BaseUtils.ConditionEntry.MatchType.DateAfter, "All"));
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("SyncedEDSM", "Synced to EDSM, 1 = yes, 0 = not", BaseUtils.ConditionEntry.MatchType.IsTrue, "All"));
 
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Level", "Level of body in system, 0 =star, 1 = Planet, 2 = moon, 3 = submoon", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Sibling.Count", "Number of siblings", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
@@ -276,7 +288,7 @@ namespace EliteDangerousCore
             var defaultvars = new BaseUtils.Variables();
             defaultvars.AddPropertiesFieldsOfClass(new BodyPhysicalConstants(), "", null, 10);
             foreach (var v in defaultvars.NameEnumuerable)
-                classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo(v, "Constant", BaseUtils.ConditionEntry.MatchType.NumericEquals,"Constant"));
+                classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo(v, "Constant", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Constant"));
 
             classnames.Sort(delegate (BaseUtils.TypeHelpers.PropertyNameInfo left, BaseUtils.TypeHelpers.PropertyNameInfo right) { return left.Name.CompareTo(right.Name); });
 
@@ -284,7 +296,7 @@ namespace EliteDangerousCore
         }
 
         // Calculate from variables what is being searched for..
-        static public HashSet<JournalTypeEnum> NeededSearchableTypes( HashSet<string> allvars)
+        static public HashSet<JournalTypeEnum> NeededSearchableTypes(HashSet<string> allvars)
         {
             var propertynames = PropertyList();
 
@@ -292,24 +304,28 @@ namespace EliteDangerousCore
 
             string[] stoptext = new string[] { "[", "_" };
 
-            foreach ( var v in allvars)
+            foreach (var v in allvars)
             {
                 string v1 = v.Substring(0, v.IndexOfOrLength(stoptext));        // cut off the [ and _ stuff to get to the root
 
-                for ( int i= 0; i < propertynames.Count; i++)        // do all propertynames
+                for (int i = 0; i < propertynames.Count; i++)        // do all propertynames
                 {
                     if (propertynames[i].Name.StartsWith(v1))        // and it starts with
                     {
                         var comment = propertynames[i].Comment;
                         bool all = comment.Contains("All");
-                        if (comment.Contains("Scan") || all)
+                        if (InComment(comment,"Scan",all))
                             res.Add(JournalTypeEnum.Scan);
-                        if (comment.Contains("FSSSignalDiscovered") || all)
+                        if (InComment(comment, "FSSSignalDiscovered",all))
                             res.Add(JournalTypeEnum.FSSSignalDiscovered);
-                        if (comment.Contains("SAASignalsFound") || all)
+                        if (InComment(comment,"SAASignalsFound",all))
                             res.Add(JournalTypeEnum.SAASignalsFound);
-                        if (comment.Contains("FSSBodySignals") || all)
+                        if (InComment(comment,"FSSBodySignals",all))
                             res.Add(JournalTypeEnum.FSSBodySignals);
+                        if (InComment(comment,"CodexEntry",all))
+                            res.Add(JournalTypeEnum.CodexEntry);
+                        if (InComment(comment,"ScanOrganic",all))
+                            res.Add(JournalTypeEnum.ScanOrganic);
                     }
                 }
 
@@ -323,10 +339,14 @@ namespace EliteDangerousCore
             return res;
         }
 
+        static private bool InComment(string comment, string tag, bool all)
+        {
+            return comment.Contains(tag + ",") || comment.EndsWith(tag) || all;
+        }
 
 
         //find a named search, async
-        public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist, Dictionary<string, Results> results, string searchname, BaseUtils.Variables defaultvars, 
+        public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist, Dictionary<string, Results> results, string searchname, BaseUtils.Variables defaultvars,
                             StarScan starscan, bool wantdebug)
         {
             var search = Searches.Find(x => x.Name.Equals(searchname));
@@ -348,8 +368,8 @@ namespace EliteDangerousCore
 
         // find using cond, async. return string of result info.  Fill in results dictionary (already made)
         // default vars can be null
-        static public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist, 
-                                   Dictionary<string,Results> results, string filterdescription,
+        static public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist,
+                                   Dictionary<string, Results> results, string filterdescription,
                                    BaseUtils.ConditionLists cond, BaseUtils.Variables defaultvars, StarScan starscan, bool wantreport)
         {
 
@@ -380,7 +400,7 @@ namespace EliteDangerousCore
                 HashSet<string> varschildren = new HashSet<string>();
                 HashSet<string> varsevent = new HashSet<string>();
 
-                foreach( var v in allvars)
+                foreach (var v in allvars)
                 {
                     if (v.StartsWith("Parent.Parent."))
                         varsparentparent.Add(v.Substring(14, v.IndexOfOrLength(stoptext) - 14));
@@ -412,7 +432,7 @@ namespace EliteDangerousCore
                             new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
                             varsevent, ensuredoublerep: true);
 
-                    if ( wantjumponium )
+                    if (wantjumponium)
                     {
                         JournalScan js = he.journalEntry as JournalScan;
 
@@ -424,7 +444,7 @@ namespace EliteDangerousCore
 
                     if (he.ScanNode != null)      // if it has a scan node
                     {
-                        if ( wantlevel )
+                        if (wantlevel)
                             scandatavars["Level"] = he.ScanNode.Level.ToStringInvariant();
 
                         if (he.ScanNode.Parent != null) // if we have a parent..
@@ -474,7 +494,7 @@ namespace EliteDangerousCore
                             }
                         }
 
-                        if ( wantchildcount)
+                        if (wantchildcount)
                             scandatavars["Child.Count"] = ((he.ScanNode.Children?.Count ?? 0)).ToStringInvariant();      // count of children
 
                         if (varschildren.Count > 0)        // if want children[
@@ -509,7 +529,7 @@ namespace EliteDangerousCore
 
                     var res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, out string evalerrlist, out BaseUtils.ConditionLists.ErrorClass errclassunused, wantiter1 || wantiter2, debugit: debugit);
 
-                    if (wantreport )
+                    if (wantreport)
                     {
                         JournalScan jsi = he.journalEntry as JournalScan;
                         resultinfo.AppendLine($"{he.EventTimeUTC} Journal type {he.EntryType} {jsi?.BodyName} : {res.Item1} : {evalerrlist} : Last {res.Item2.Last().ItemName} {res.Item2.Last().MatchCondition} {res.Item2.Last().MatchString}");
@@ -538,6 +558,21 @@ namespace EliteDangerousCore
                         else if (he.journalEntry is IBodyNameIDOnly)
                         {
                             key = (he.journalEntry as IBodyNameIDOnly).BodyName;
+                        }
+                        else if (he.EntryType == JournalTypeEnum.CodexEntry)
+                        {
+                            var ce = he.journalEntry as JournalCodexEntry;
+                            key = ce.EDDBodyName ?? ce.System;
+                        }
+                        else if (he.EntryType == JournalTypeEnum.ScanOrganic)
+                        {
+                            var so = he.journalEntry as JournalScanOrganic;
+                            key = he.System.Name;       // default
+                            if (starscan.ScanDataBySysaddr.TryGetValue(so.SystemAddress, out StarScan.SystemNode sn))
+                            {
+                                if (sn.NodesByID.TryGetValue(so.Body, out StarScan.ScanNode ssn))
+                                    key = ssn.FullName;
+                            }
                         }
                         else
                             System.Diagnostics.Debug.Assert(false);
@@ -569,7 +604,87 @@ namespace EliteDangerousCore
         }
 
 
-    };
+        public static void GenerateReportFields(string bodykey, List<HistoryEntry> hes, out string name, out string info, out string infotooltip, out string pinfo)
+        {
+            name = "";
+            info = "";
+            pinfo = "";
+            infotooltip = "";
 
+            HistoryEntry he = hes.Last();
+
+            if (he.EntryType == JournalTypeEnum.Scan)
+            {
+                JournalScan js = he.journalEntry as JournalScan;
+                name = js.BodyName;
+                info = js.DisplayString();
+                if (he.ScanNode?.Parent != null)
+                {
+                    var parentjs = he.ScanNode?.Parent?.ScanData;               // parent journal entry, may be null
+                    pinfo = parentjs != null ? parentjs.DisplayString() : he.ScanNode.Parent.CustomNameOrOwnname + " " + he.ScanNode.Parent.NodeType;
+                }
+            }
+            else if (he.EntryType == JournalTypeEnum.FSSBodySignals)
+            {
+                JournalFSSBodySignals jb = he.journalEntry as JournalFSSBodySignals;
+                name = jb.BodyName;
+                jb.FillInformation(he.System, "", out info, out string d);
+            }
+            else if (he.EntryType == JournalTypeEnum.SAASignalsFound)
+            {
+                JournalSAASignalsFound jbs = he.journalEntry as JournalSAASignalsFound;
+                name = jbs.BodyName;
+                jbs.FillInformation(he.System, "", out info, out string d);
+            }
+            else if (he.EntryType == JournalTypeEnum.FSSSignalDiscovered)
+            {
+                JournalFSSSignalDiscovered jfsd = he.journalEntry as JournalFSSSignalDiscovered;
+
+                name = he.System.Name;
+                foreach (var h in hes)
+                {
+                    string time = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(h.EventTimeUTC).ToString();
+                    ((JournalFSSSignalDiscovered)h.journalEntry).FillInformation(he.System, "", 20, out string info2, out string detailed);
+                    if (hes.Count > 1)
+                        info = info.AppendPrePad(time + ": " + info2, Environment.NewLine);
+                    else
+                        info = info.AppendPrePad(info2, Environment.NewLine);
+
+                    infotooltip += time + Environment.NewLine + detailed.LineIndentation("    ") + Environment.NewLine;
+                }
+            }
+            else if (he.EntryType == JournalTypeEnum.CodexEntry)
+            {
+                name = bodykey;
+                foreach (var h in hes)
+                {
+                    JournalCodexEntry ce = h.journalEntry as JournalCodexEntry;
+                    string time = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(h.EventTimeUTC).ToString();
+                    ce.FillInformation(he.System, "", out string info2, out string d);
+                    if (hes.Count > 1)
+                        info = info.AppendPrePad(time + ": " + info2, Environment.NewLine);
+                    else
+                        info = info.AppendPrePad(info2, Environment.NewLine);
+                }
+            }
+            else if (he.EntryType == JournalTypeEnum.ScanOrganic)
+            {
+                name = bodykey;
+                foreach (var h in hes)
+                {
+                    var so = h.journalEntry as JournalScanOrganic;
+                    string time = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(h.EventTimeUTC).ToString();
+
+                    so.FillInformation(h.System, "", out string info2, out string d);
+                    if (hes.Count > 1)
+                        info = info.AppendPrePad(time + ": " + info2, Environment.NewLine);
+                    else
+                        info = info.AppendPrePad(info2, Environment.NewLine);
+                }
+            }
+            else
+                System.Diagnostics.Debug.Assert(false, "Missing journal type decode");
+        }
+    }
 
 }
