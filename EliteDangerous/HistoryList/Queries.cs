@@ -57,11 +57,11 @@ namespace EliteDangerousCore
 
         public List<Query> Searches = new List<Query>()
             {
-                new Query("Planet inside inner ring","(IsOrbitingBaryCentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And nSemiMajorAxis <= Parent.RingsInnerm And Parent.Level >= 1) Or (IsOrbitingBaryCentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[1]_Barycentre_SemiMajorAxis <= Parent.RingsInnerm And Parent.Level >= 1)", QueryType.BuiltIn ),
-                new Query("Planet inside rings","(IsOrbitingBaryCentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And nSemiMajorAxis <= Parent.RingsOuterm And Parent.Level >= 1) Or (IsOrbitingBaryCentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[1]_Barycentre_SemiMajorAxis <= Parent.RingsOuterm And Parent.Level >= 1)", QueryType.BuiltIn ),
-                new Query("Planet between inner and outer ring","(IsOrbitingBaryCentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And nSemiMajorAxis >= Parent.RingsInnerm And nSemiMajorAxis <= Parent.RingsOuterm And Parent.Level >= 1) Or (IsOrbitingBaryCentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[1]_Barycentre_SemiMajorAxis >= Parent.RingsInnerm And Parents[1]_Barycentre_SemiMajorAxis <= Parent.RingsOuterm And Parent.Level >= 1)", QueryType.BuiltIn ),
-                new Query("Planet between rings 1 and 2","(IsOrbitingBaryCentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And nSemiMajorAxis >= Parent.Rings[1]_OuterRad And nSemiMajorAxis <= Parent.Rings[2]_InnerRad And Parent.Level >= 1) Or (IsOrbitingBaryCentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[1]_Barycentre_SemiMajorAxis >= Parent.Rings[1]_OuterRad And Parents[1]_Barycentre_SemiMajorAxis <= Parent.Rings[2]_InnerRad And Parent.Level >= 1)", QueryType.BuiltIn ),
-                new Query("Planet between rings 2 and 3","(IsOrbitingBaryCentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And nSemiMajorAxis >= Parent.Rings[2]_OuterRad And nSemiMajorAxis <= Parent.Rings[3]_InnerRad And Parent.Level >= 1) Or (IsOrbitingBaryCentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[1]_Barycentre_SemiMajorAxis >= Parent.Rings[2]_OuterRad And Parents[1]_Barycentre_SemiMajorAxis <= Parent.Rings[3]_InnerRad And Parent.Level >= 1)", QueryType.BuiltIn ),
+                new Query("Planet inside inner ring","(IsOrbitingBaryCentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And nSemiMajorAxis <= Parent.RingsInnerm And Parent.Level >= 1) Or (IsOrbitingBaryCentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[1].Barycentre.SemiMajorAxis <= Parent.RingsInnerm And Parent.Level >= 1)", QueryType.BuiltIn ),
+                new Query("Planet inside rings","(IsOrbitingBaryCentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And nSemiMajorAxis <= Parent.RingsOuterm And Parent.Level >= 1) Or (IsOrbitingBaryCentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[1].Barycentre.SemiMajorAxis <= Parent.RingsOuterm And Parent.Level >= 1)", QueryType.BuiltIn ),
+                new Query("Planet between inner and outer ring","(IsOrbitingBaryCentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And nSemiMajorAxis >= Parent.RingsInnerm And nSemiMajorAxis <= Parent.RingsOuterm And Parent.Level >= 1) Or (IsOrbitingBaryCentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[1].Barycentre.SemiMajorAxis >= Parent.RingsInnerm And Parents[1].Barycentre.SemiMajorAxis <= Parent.RingsOuterm And Parent.Level >= 1)", QueryType.BuiltIn ),
+                new Query("Planet between rings 1 and 2","(IsOrbitingBaryCentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And nSemiMajorAxis >= Parent.Rings[1].OuterRad And nSemiMajorAxis <= Parent.Rings[2].InnerRad And Parent.Level >= 1) Or (IsOrbitingBaryCentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[1].Barycentre.SemiMajorAxis >= Parent.Rings[1].OuterRad And Parents[1].Barycentre.SemiMajorAxis <= Parent.Rings[2].InnerRad And Parent.Level >= 1)", QueryType.BuiltIn ),
+                new Query("Planet between rings 2 and 3","(IsOrbitingBaryCentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And nSemiMajorAxis >= Parent.Rings[2].OuterRad And nSemiMajorAxis <= Parent.Rings[3].InnerRad And Parent.Level >= 1) Or (IsOrbitingBaryCentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[1].Barycentre.SemiMajorAxis >= Parent.Rings[2].OuterRad And Parents[1].Barycentre.SemiMajorAxis <= Parent.Rings[3].InnerRad And Parent.Level >= 1)", QueryType.BuiltIn ),
 
                 new Query("Heavier than Sol","nStellarMass > 1", QueryType.BuiltIn ),
                 new Query("Bigger than Sol","nRadius > 695700000", QueryType.BuiltIn ),
@@ -82,15 +82,16 @@ namespace EliteDangerousCore
                 new Query("Star has Rings","HasRings IsTrue And IsStar IsTrue", QueryType.BuiltIn ),
                 new Query("Has Belts","HasBelts IsTrue", QueryType.BuiltIn ),
 
-                new Query("Planet has wide rings vs radius","(IsPlanet IsTrue And HasRings IsTrue ) And ( Rings[Iter1]_OuterRad-Rings[Iter1]_InnerRad >= nRadius*5)", QueryType.BuiltIn ),
+                new Query("Planet has wide rings vs radius","(IsPlanet IsTrue And HasRings IsTrue ) And ( Rings[Iter1].OuterRad-Rings[Iter1].InnerRad >= nRadius*5)", QueryType.BuiltIn ),
 
                 new Query("Close orbit to parent","IsPlanet IsTrue And Parent.IsPlanet IsTrue And IsOrbitingBaryCentre IsFalse And Parent.nRadius*3 > nSemiMajorAxis", QueryType.BuiltIn ),
 
                 new Query("Close to ring",
                                 "( IsPlanet IsTrue And Parent.IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse ) And " +
-                                "( \"Abs(Parent.Rings[Iter1]_InnerRad-nSemiMajorAxis)\" < nRadius*10 Or  \"Abs(Parent.Rings[Iter1]_OuterRad-nSemiMajorAxis)\" < nRadius*10 )"
+                                "( \"Abs(Parent.Rings[Iter1].InnerRad-nSemiMajorAxis)\" < nRadius*10 Or  \"Abs(Parent.Rings[Iter1].OuterRad-nSemiMajorAxis)\" < nRadius*10 )"
                     , QueryType.BuiltIn ),
-                new Query("Binary close to rings","(IsOrbitingBaryCentre IsTrue And Parent.HasRings IsTrue And IsPlanet IsTrue) And (\"Abs(Parent.Rings[Iter1]_InnerRad-Parents[1]_Barycentre_SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\" Or \"Abs(Parent.Rings[Iter1]_OuterRad-Parents[1]_Barycentre_SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\")", QueryType.BuiltIn ),
+                new Query("Binary close to rings","(IsOrbitingBaryCentre IsTrue And Parent.HasRings IsTrue And IsPlanet IsTrue) And " + 
+                            "(\"Abs(Parent.Rings[Iter1].InnerRad-Parents[1].Barycentre.SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\" Or \"Abs(Parent.Rings[Iter1].OuterRad-Parents[1].Barycentre.SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\")", QueryType.BuiltIn ),
 
                 new Query("Planet with a large number of Moons","IsPlanet IsTrue And Child.Count >= 8", QueryType.BuiltIn ),
                 new Query("Moon of a Moon","Level == 3", QueryType.BuiltIn ),
@@ -243,25 +244,31 @@ namespace EliteDangerousCore
         {
             List<BaseUtils.TypeHelpers.PropertyNameInfo> classnames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalScan),
                     bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    classsepar: ".",
                     comment: "Scan");
 
             List<BaseUtils.TypeHelpers.PropertyNameInfo> othernames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalFSSSignalDiscovered),
                     bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    classsepar: ".",
                     comment: "FSSSignalDiscovered");
             List<BaseUtils.TypeHelpers.PropertyNameInfo> saanames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalSAASignalsFound),
                     bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    classsepar: ".",
                     comment: "SAASignalsFound");
             othernames.AddRange(saanames);
             List<BaseUtils.TypeHelpers.PropertyNameInfo> fssbodynames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalFSSBodySignals),
                     bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    classsepar: ".",
                     comment: "FSSBodySignals");
-            othernames.AddRange(fssbodynames);        // merge blind
-            List<BaseUtils.TypeHelpers.PropertyNameInfo> codexnames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalCodexEntry),
+            othernames.AddRange(fssbodynames);        // merge blind 
+            List<BaseUtils.TypeHelpers.PropertyNameInfo> codexnames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalCodexEntry), 
                     bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    classsepar: ".",
                     comment: "CodexEntry");
             othernames.AddRange(codexnames);        // merge blind
-            List<BaseUtils.TypeHelpers.PropertyNameInfo> scanorganicnames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalScanOrganic),
+            List<BaseUtils.TypeHelpers.PropertyNameInfo> scanorganicnames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalScanOrganic), 
                     bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    classsepar: ".",
                     comment: "ScanOrganic");
             othernames.AddRange(scanorganicnames);        // merge blind
 
@@ -303,11 +310,11 @@ namespace EliteDangerousCore
 
             var res = new HashSet<JournalTypeEnum>();
 
-            string[] stoptext = new string[] { "[", "_" };
+            string[] stoptext = new string[] { "[", "." };
 
             foreach (var v in allvars)
             {
-                string v1 = v.Substring(0, v.IndexOfOrLength(stoptext));        // cut off the [ and _ stuff to get to the root
+                string v1 = v.Substring(0, v.IndexOfOrLength(stoptext));        // cut off the [ and class stuff to get to the root
 
                 for (int i = 0; i < propertynames.Count; i++)        // do all propertynames
                 {
@@ -393,7 +400,7 @@ namespace EliteDangerousCore
                 // extract variables needed to be filled in by the AddPropertiesFieldsOfClass function. We extract only the ones we need for speed reason.
                 // Variables using the Name[] format, or Class_subclass naming system need to have the [ and _ text stripped off for the property expander to iterate thru them
 
-                string[] stoptext = new string[] { "[", "_" };
+                string[] stoptext = new string[] { "[", "." };
 
                 HashSet<string> varsparent = new HashSet<string>();
                 HashSet<string> varsparentparent = new HashSet<string>();
@@ -405,33 +412,35 @@ namespace EliteDangerousCore
                 {
                     if (v.StartsWith("Parent.Parent."))
                     {
-                        varsparentparent.Add(v.Substring(14, v.IndexOfOrLength(stoptext) - 14));
-                        varsparentparent.Add(v.Substring(14));
+                        varsparentparent.Add(v.Substring(14, v.IndexOfOrLength(stoptext,startindex:14) - 14));
                     }
                     else if (v.StartsWith("Parent."))
                     {
-                        varsparent.Add(v.Substring(7, v.IndexOfOrLength(stoptext) - 7));
-                        varsparent.Add(v.Substring(7));
+                        varsparent.Add(v.Substring(7, v.IndexOfOrLength(stoptext, startindex:7) - 7));
                     }
                     else if (v.StartsWith("Sibling["))
                     {
                         var v1 = v.Substring(v.IndexOfOrLength("]", offset: 2));        // remove up to the []
                         varssiblings.Add(v1.Substring(0, v1.IndexOfOrLength(stoptext)));    // then add, remove after stop text
-                        varssiblings.Add(v1);
                     }
                     else if (v.StartsWith("Child["))
                     {
                         var v1 = v.Substring(v.IndexOfOrLength("]", offset: 2));
                         varschildren.Add(v1.Substring(0, v1.IndexOfOrLength(stoptext)));
-                        varschildren.Add(v1);
                     }
                     else
                     {
                         varsevent.Add(v.Substring(0, v.IndexOfOrLength(stoptext)));
-                        varsevent.Add(v);
                     }
                 }
 
+                foreach (var v in varsevent) System.Diagnostics.Debug.WriteLine($"Search Event Var {v}");
+                foreach (var v in varsparent) System.Diagnostics.Debug.WriteLine($"Search Parent Var {v}");
+                foreach (var v in varsparentparent) System.Diagnostics.Debug.WriteLine($"Search Parent Parent Var {v}");
+                foreach (var v in varssiblings) System.Diagnostics.Debug.WriteLine($"Search Sibling Var {v}");
+                foreach (var v in varschildren) System.Diagnostics.Debug.WriteLine($"Search Child Var {v}");
+
+                //foreach (var he in helist.GetRange(helist.Count-100,100))
                 foreach (var he in helist)
                 {
                     BaseUtils.Variables scandatavars = defaultvars != null ? new BaseUtils.Variables(defaultvars) : new BaseUtils.Variables();
@@ -440,9 +449,10 @@ namespace EliteDangerousCore
 
                     //if ( he.System.Name == "Lu Dongia") debugit = true;
 
+
                     scandatavars.AddPropertiesFieldsOfClass(he.journalEntry, "",
                             new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                            varsevent, ensuredoublerep: true);
+                            varsevent, ensuredoublerep: true, classsepar:".");
 
                     if (wantjumponium)
                     {
@@ -469,7 +479,7 @@ namespace EliteDangerousCore
                                 {
                                     scandatavars.AddPropertiesFieldsOfClass(parentjs, "Parent.",
                                             new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                                            varsparent, ensuredoublerep: true);
+                                            varsparent, ensuredoublerep: true, classsepar: ".");
                                     scandatavars["Parent.Level"] = he.ScanNode.Parent.Level.ToStringInvariant();
                                 }
                             }
@@ -482,7 +492,7 @@ namespace EliteDangerousCore
                                 {
                                     scandatavars.AddPropertiesFieldsOfClass(parentparentjs, "Parent.Parent.",
                                             new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                                            varsparentparent, ensuredoublerep: true);
+                                            varsparentparent, ensuredoublerep: true, classsepar: ".");
                                     scandatavars["Parent.Parent.Level"] = he.ScanNode.Parent.Level.ToStringInvariant();
                                 }
                             }
@@ -499,7 +509,7 @@ namespace EliteDangerousCore
                                     {
                                         scandatavars.AddPropertiesFieldsOfClass(sn.Value.ScanData, $"Sibling[{cno}].",
                                                 new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                                                varssiblings, ensuredoublerep: true);
+                                                varssiblings, ensuredoublerep: true, classsepar: ".");
                                         cno++;
                                     }
                                 }
@@ -520,7 +530,7 @@ namespace EliteDangerousCore
 
                                     scandatavars.AddPropertiesFieldsOfClass(sn.Value.ScanData, $"Child[{cno}].",
                                             new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                                            varschildren, ensuredoublerep: true);
+                                            varschildren, ensuredoublerep: true, classsepar: ".");
 
                                     if (scandatavars.Count > cc)
                                     {
@@ -539,7 +549,13 @@ namespace EliteDangerousCore
 
                     List<BaseUtils.ConditionEntry> testspassed = wantreport ? new List<BaseUtils.ConditionEntry>() : null;
 
+                    //JournalScan jsc = he.journalEntry as JournalScan; if (jsc?.BodyName == "Blue Euq WA-E d12-32 7 a") debugit = true;
+
+                    //foreach (var v in scandatavars.NameEnumuerable) System.Diagnostics.Debug.WriteLine($"Search scandata var {v} = {scandatavars[v]}");
+
                     var res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, out string evalerrlist, out BaseUtils.ConditionLists.ErrorClass errclassunused, wantiter1 || wantiter2, debugit: debugit);
+
+                    //if (res.Item1 == false && res.Item2.Last().ItemName.Contains("Parent.Rings[Iter1].OuterRad")) debugit = true;
 
                     if (wantreport)
                     {
