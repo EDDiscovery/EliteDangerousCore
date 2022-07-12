@@ -106,7 +106,7 @@ namespace EliteDangerousCore
                                 "( IsPlanet IsTrue And Parent.IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBaryCentre IsFalse ) And " +
                                 "( \"Abs(Parent.Rings[Iter1].InnerRad-nSemiMajorAxis)\" < nRadius*10 Or  \"Abs(Parent.Rings[Iter1].OuterRad-nSemiMajorAxis)\" < nRadius*10 )"
                     , QueryType.BuiltIn ),
-                new Query("Binary close to rings","(IsOrbitingBaryCentre IsTrue And Parents[2].IsBarycentre IsFalse And Parent.HasRings IsTrue And IsPlanet IsTrue) And " + 
+                new Query("Binary close to rings","(IsOrbitingBaryCentre IsTrue And Parents[2].IsBaryCentre IsFalse And Parent.HasRings IsTrue And IsPlanet IsTrue) And " + 
                             "(\"Abs(Parent.Rings[Iter1].InnerRad-Parents[1].Barycentre.SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\" Or \"Abs(Parent.Rings[Iter1].OuterRad-Parents[1].Barycentre.SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\")", QueryType.BuiltIn ),
 
                 new Query("Planet with a large number of Moons","IsPlanet IsTrue And Child.Count >= 8", QueryType.BuiltIn ),
