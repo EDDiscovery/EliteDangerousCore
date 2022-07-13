@@ -44,6 +44,7 @@ SECTION JournalTypeEnum
 .EngineerLegacyConvert: "Engineer Legacy Convert" => "Преобразование устаревшей модификации"
 .EngineerProgress: "Engineer Progress" => "Инженеры"
 .EscapeInterdiction: "Escape Interdiction" => "Уход от перехвата"
+.FCMaterials: "Bartender Materials" @
 .FSDJump: "FSD Jump" => "Прыжок"
 .FuelScoop: "Fuel Scoop" => "Сбор топлива"
 .Fileheader: "Fileheader" => "Заголовок файла"
@@ -478,7 +479,6 @@ SECTION StarPlanetRing
 .OuterRadius: "Outer Radius: {0:0.00}ls" => " Внешний радиус: {0:0.00} св. с."
 .IK: "Inner Radius: {0}km" => " Внутренний радиус: {0} км"
 .OK: "Outer Radius: {0}km" => " Внешний радиус: {0} км"
-.Moons: " Moons" => " лунных масс"
 .Icy: "Icy" => "лед."
 .Rocky: "Rocky" => "каменн."
 .MetalRich: "Metal Rich" => "насыщ. металлами"
@@ -946,9 +946,10 @@ SECTION JournalEntry
 .offaction: "< of faction " => "<, фракция: "
 .Rank: "Rank: " => "ранг: "
 .Crew: "Crew: " => "Член экипажа: "
+.Telepresence: ";Telepresence" @
 .Role: "Role: " => "роль: "
 .CrewMember: "Crew Member: " => "Член экипажа: "
-.DuetoCrime: "; Due to Crime" => "; из-за преступления"
+.DuetoCrime: ";Due to Crime" => "; из-за преступления"
 .Captain: "Captain: " => "Капитан: "
 .fromfaction: "< from faction " => "< от фракции "
 .Died: "{0} in ship type {1} rank {2}" => "{0}, тип корабля: {1}, ранг: {2}"
@@ -1100,6 +1101,12 @@ SECTION JournalCarrier
 .AvailableBalance: "Available Balance: ; cr;N0" @
 .ReservePercent: "Reserve Percent: ;;N1" @
 .TaxRate: "Tax Rate: ;;N1" @
+.TaxRatePioneersupplies: "Tax Rate Pioneersupplies: ;;N1" @
+.TaxRateShipyard: "Tax Rate Shipyard: ;;N1" @
+.TaxRateRearm: "Tax Rate Rearm: ;;N1" @
+.TaxRateOutfitting: "Tax Rate Outfitting: ;;N1" @
+.TaxRateRefuel: "Tax Rate Refuel: ;;N1" @
+.TaxRateRepair: "Tax Rate Repair: ;;N1" @
 .TotalCapacity: "Total Capacity: " @
 .Crew: "Crew: " @
 .Cargo: "Cargo: " @
@@ -1138,12 +1145,12 @@ SECTION JournalScanInfo
 .LowRadius: " Is tiny." @
 .LargeRadius: " Is large." @
 .Signals: " Has mining signals." @
-.BioSignals: " Has biological signals." @
-.GeoSignals: " Has geological signals." @
-.ThargoidSignals: " Has thargoid signals." @
-.GuardianSignals: " Has guardian signals." @
-.HumanSignals: " Has human signals." @
-.OtherSignals: " Has 'other' signals." @
+.BioSignals: " Biological signals: " @
+.GeoSignals: " Geological signals: " @
+.ThargoidSignals: " Thargoid signals: " @
+.GuardianSignals: " Guardian signals: " @
+.HumanSignals: " Human signals: " @
+.OtherSignals: " 'Other' signals: " @
 .MandD: " (Mapped & Discovered)" @
 .MP: " (Mapped)" @
 .DIS: " (Discovered)" @
@@ -1151,7 +1158,7 @@ SECTION JournalScanInfo
 .Hasring: " Has ring." => ", есть кольцо"
 .Has: " Has " => ", "
 .eccentricity: " Has an high eccentricity of " @
-.unknownAtmosphere: "unknown atmosphere" @
+.unknownAtmosphere: "unknown" @
 .BFSD: " Basic" => " базового"
 .SFSD: " Standard" => " стандартного"
 .PFSD: " Premium" => " премиум"

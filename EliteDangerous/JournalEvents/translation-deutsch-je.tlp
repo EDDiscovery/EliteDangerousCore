@@ -44,6 +44,7 @@ SECTION JournalTypeEnum
 .EngineerLegacyConvert: "Engineer Legacy Convert" => "Umwandlung Ingenieur-Historie"
 .EngineerProgress: "Engineer Progress" => "Rangaufstieg Ingenieur"
 .EscapeInterdiction: "Escape Interdiction" => "Unterbrechung entgangen"
+.FCMaterials: "Bartender Materials" @
 .FSDJump: "FSD Jump" => "FSA Sprung"
 .FuelScoop: "Fuel Scoop" => "Treibstoffsammler"
 .Fileheader: "Fileheader" => "Dateikopf"
@@ -478,7 +479,6 @@ SECTION StarPlanetRing
 .OuterRadius: "Outer Radius: {0:0.00}ls" => " Äusserer Radius: {0:0.00}Ls"
 .IK: "Inner Radius: {0}km" => " Innerer Radius: {0}Km"
 .OK: "Outer Radius: {0}km" => " Äusserer Radius: {0}Km"
-.Moons: " Moons" => " Monde"
 .Icy: "Icy" => "Vereist"
 .Rocky: "Rocky" => "Felsig"
 .MetalRich: "Metal Rich" => "Reich an Erzen"
