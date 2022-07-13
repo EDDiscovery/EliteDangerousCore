@@ -423,12 +423,22 @@ namespace EliteDangerousCore
                 HashSet<string> varssiblings = new HashSet<string>();
                 HashSet<string> varschildren = new HashSet<string>();
                 HashSet<string> varsevent = new HashSet<string>();
+                HashSet<string> varsstar = new HashSet<string>();
+                HashSet<string> varsstarstar = new HashSet<string>();
 
                 foreach (var v in allvars)
                 {
-                    if (v.StartsWith("Parent.Parent."))
+                    if (v.StartsWith("Star.Star."))
                     {
-                        varsparentparent.Add(v.Substring(14, v.IndexOfOrLength(stoptext,startindex:14) - 14));
+                        varsstarstar.Add(v.Substring(10, v.IndexOfOrLength(stoptext, startindex: 10) - 10));
+                    }
+                    else if (v.StartsWith("Star."))
+                    {
+                        varsstar.Add(v.Substring(5, v.IndexOfOrLength(stoptext, startindex: 5) - 5));
+                    }
+                    else if (v.StartsWith("Parent.Parent."))
+                    {
+                        varsparentparent.Add(v.Substring(14, v.IndexOfOrLength(stoptext, startindex: 14) - 14));
                     }
                     else if (v.StartsWith("Parent."))
                     {
@@ -451,10 +461,15 @@ namespace EliteDangerousCore
                 }
 
                 foreach (var v in varsevent) System.Diagnostics.Debug.WriteLine($"Search Event Var {v}");
+                foreach (var v in varsstar) System.Diagnostics.Debug.WriteLine($"Search Star Var {v}");
+                foreach (var v in varsstarstar) System.Diagnostics.Debug.WriteLine($"Search Star Star Var {v}");
                 foreach (var v in varsparent) System.Diagnostics.Debug.WriteLine($"Search Parent Var {v}");
                 foreach (var v in varsparentparent) System.Diagnostics.Debug.WriteLine($"Search Parent Parent Var {v}");
                 foreach (var v in varssiblings) System.Diagnostics.Debug.WriteLine($"Search Sibling Var {v}");
                 foreach (var v in varschildren) System.Diagnostics.Debug.WriteLine($"Search Child Var {v}");
+
+                Type[] ignoretypes = new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) };
+
 
                 //foreach (var he in helist.GetRange(helist.Count-100,100))
                 foreach (var he in helist)
@@ -465,10 +480,7 @@ namespace EliteDangerousCore
 
                     //if ( he.System.Name == "Lu Dongia") debugit = true;
 
-
-                    scandatavars.AddPropertiesFieldsOfClass(he.journalEntry, "",
-                            new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                            varsevent, ensuredoublerep: true, classsepar:".");
+                    scandatavars.AddPropertiesFieldsOfClass(he.journalEntry, "",ignoretypes, 5, varsevent, ensuredoublerep: true, classsepar:".");
 
                     if (wantjumponium)
                     {
@@ -493,9 +505,7 @@ namespace EliteDangerousCore
 
                                 if (parentjs != null) // if want parent scan data
                                 {
-                                    scandatavars.AddPropertiesFieldsOfClass(parentjs, "Parent.",
-                                            new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                                            varsparent, ensuredoublerep: true, classsepar: ".");
+                                    scandatavars.AddPropertiesFieldsOfClass(parentjs, "Parent.", ignoretypes, 5,varsparent, ensuredoublerep: true, classsepar: ".");
                                     scandatavars["Parent.Level"] = he.ScanNode.Parent.Level.ToStringInvariant();
                                 }
                             }
@@ -506,12 +516,40 @@ namespace EliteDangerousCore
 
                                 if (parentparentjs != null) // if want parent scan data
                                 {
-                                    scandatavars.AddPropertiesFieldsOfClass(parentparentjs, "Parent.Parent.",
-                                            new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                                            varsparentparent, ensuredoublerep: true, classsepar: ".");
+                                    scandatavars.AddPropertiesFieldsOfClass(parentparentjs, "Parent.Parent.", ignoretypes, 5, varsparentparent, ensuredoublerep: true, classsepar: ".");
                                     scandatavars["Parent.Parent.Level"] = he.ScanNode.Parent.Level.ToStringInvariant();
                                 }
                             }
+
+                            if (varsstar.Count > 0)
+                            {
+                                var scandata = FindStarOf(he.ScanNode, 0);
+
+                                if (scandata != null)
+                                {
+                                    //System.Diagnostics.Debug.WriteLine($"{scandata.BodyName} is the Star parent");
+
+                                    scandatavars.AddPropertiesFieldsOfClass(scandata, "Star.",
+                                            new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
+                                            varsstar, ensuredoublerep: true, classsepar: ".");
+                                }
+                            }
+
+
+                            if (varsstarstar.Count > 0)
+                            {
+                                var scandata = FindStarOf(he.ScanNode, 1);
+
+                                if (scandata != null)
+                                {
+                                    //System.Diagnostics.Debug.WriteLine($"{scandata.BodyName} is the Star Star parent");
+
+                                    scandatavars.AddPropertiesFieldsOfClass(scandata, "Star.Star.",
+                                            new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
+                                            varsstarstar, ensuredoublerep: true, classsepar: ".");
+                                }
+                            }
+
 
                             if (wantsiblingcount)
                                 scandatavars["Sibling.Count"] = ((he.ScanNode.Parent.Children.Count - 1)).ToStringInvariant();      // count of children or parent less ours
@@ -548,10 +586,6 @@ namespace EliteDangerousCore
                                             new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
                                             varschildren, ensuredoublerep: true, classsepar: ".");
 
-                                    if (scandatavars.Count > cc)
-                                    {
-
-                                    }
                                     cno++;
                                 }
                             }
@@ -645,6 +679,29 @@ namespace EliteDangerousCore
 
                 return resultinfo.ToString();
             });
+        }
+
+        private static JournalScan FindStarOf(StarScan.ScanNode node, int stardepth)
+        {
+            var plist = node.ScanData?.Parents;
+            if (plist != null)
+            {
+                for (int i = 0; i < plist.Count; i++)
+                {
+                    if (plist[i].IsStar && stardepth-- == 0)    // use bodyid to find it in parents list to get a definitive parent id, accounting for star depth
+                    {
+                        var pnode = node.Parent;    // now lets see if we can find it
+                        while (pnode != null && pnode.BodyID != plist[i].BodyID)        // look up the star node list and see if we have a body id to match
+                        {
+                            pnode = pnode.Parent;
+                        }
+
+                        return pnode?.ScanData;
+                    }
+                }
+            }
+
+            return null;
         }
 
 

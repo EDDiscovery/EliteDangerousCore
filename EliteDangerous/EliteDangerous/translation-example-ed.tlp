@@ -1,22 +1,24 @@
 
 SECTION Bodies
 
-.HMS: "Luminous Hot Main Sequence {0} star" @
-.BMS: "Luminous Blue Main Sequence {0} star" @
-.BWMS: "Bluish-White Main Sequence {0} star" @
-.WMS: "White Main Sequence {0} star" @
-.YMS: "Yellow Main Sequence {0} star" @
-.OMS: "Orange Main Sequence {0} star" @
-.RMS: "Red Main Sequence {0} star" @
-.DRNS: "Dark Red Non Main Sequence {0} star" @
-.MD: "Methane Dwarf star" @
-.BD: "Brown Dwarf star" @
-.WR: "Wolf-Rayet {0} star" @
-.C: "Carbon {0} star" @
-.IZ: "Intermediate low Zirconium Monoxide Type star" @
-.CGZ: "Cool Giant Zirconium Monoxide rich Type star" @
-.WD: "White Dwarf {0} star" @
-.NS: "Neutron Star" @
+.HMS: "Luminous Hot {0} class star" @
+.BMS: "Luminous Blue {0} class star" @
+.BWMS: "Bluish-White {0} class star" @
+.WMS: "White {0} class star" @
+.YMS: "Yellow {0} class star" @
+.OMS: "Orange {0} class star" @
+.RMS: "Red {0} class star" @
+.DRNS: "Dark Red {0} class star" @
+.MD: "Methane Dwarf T class star" @
+.BD: "Brown Dwarf Y class star" @
+.Herbig: "Herbig Ae/Be class star" @
+.TTauri: "T Tauri star" @
+.WR: "Wolf-Rayet {0} class star" @
+.C: "Carbon {0} class star" @
+.IZ: "Intermediate low Zirconium Monoxide MS class star" @
+.CGZ: "Cool Giant Zirconium Monoxide rich S class star" @
+.WD: "White Dwarf {0} class star" @
+.NS: "Neutron star" @
 .BH: "Black Hole" @
 .EX: "Exotic" @
 .SMBH: "Super Massive Black Hole" @
@@ -24,16 +26,14 @@ SECTION Bodies
 .BBSG: "B Blue White Super Giant" @
 .FWSG: "F White Super Giant" @
 .GWSG: "G White Super Giant" @
-.MSR: "M Red Super Giant" @
+.MSR: "M Red Stuper Giant" @
 .MOG: "M Red Giant" @
 .KOG: "K Orange Giant" @
 .RP: "Rogue Planet" @
-.UNK: "Class {0} star" @
-.Herbig: "Herbig Ae/Be" @
-.TTauri: "T Tauri" @
 .Nebula: "Nebula" @
-.StellarRemnantNebula: "Stellar Remnant nebula" @
-.SUnknown: "Unknown Star class" @
+.StellarRemnantNebula: "Stellar Remnant Nebula" @
+.SUnknown: "Unknown star class" @
+.UNK: "Class {0} class star" @
 
 SECTION EDPlanet
 
