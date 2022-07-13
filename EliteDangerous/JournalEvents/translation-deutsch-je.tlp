@@ -44,7 +44,7 @@ SECTION JournalTypeEnum
 .EngineerLegacyConvert: "Engineer Legacy Convert" => "Umwandlung Ingenieur-Historie"
 .EngineerProgress: "Engineer Progress" => "Rangaufstieg Ingenieur"
 .EscapeInterdiction: "Escape Interdiction" => "Unterbrechung entgangen"
-.FCMaterials: "Bartender Materials" @
+.FCMaterials: "Bartender Materials"  => "Barkeepermaterialien"
 .FSDJump: "FSD Jump" => "FSA Sprung"
 .FuelScoop: "Fuel Scoop" => "Treibstoffsammler"
 .Fileheader: "Fileheader" => "Dateikopf"
