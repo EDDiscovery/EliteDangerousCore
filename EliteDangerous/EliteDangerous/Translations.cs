@@ -550,7 +550,6 @@ namespace EliteDangerousCore
         StarPlanetRing_OuterRadius, //   Outer Radius: {0:0.00}ls
         StarPlanetRing_IK, //   Inner Radius: {0}km
         StarPlanetRing_OK, //   Outer Radius: {0}km
-        StarPlanetRing_Moons, //  Moons
         StarPlanetRing_Icy, // Icy
         StarPlanetRing_Rocky, // Rocky
         StarPlanetRing_MetalRich, // Metal Rich
