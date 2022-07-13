@@ -653,7 +653,7 @@ SECTION BankAccountClass
 
 SECTION CombatClass
 
-.Bounties: "Bounties : ;;N0" @
+.Bounties: "Bounties: ;;N0" @
 .BountyProfits: "Bounty Profits: ;cr;N0" @
 .CombatBonds: "Combat Bonds: ;;N0" @
 .CombatBondProfits: "Combat Bond Profits: ;cr;N0" @
@@ -811,8 +811,8 @@ SECTION MaterialTraderStatsClass
 
 .CommodityTrades: "Material Trades Completed: ;;N0" @
 .MaterialTraded: "Material Traded: ;;N0" @
-.EncodedMaterialsTraded: "Encoded Materials Traded: ;;N0" @
-.RawMaterialsTraded: "Raw Materials Traded: ;;N0" @
+.EncodedMaterialsTraded: "Encoded Materials traded: ;;N0" @
+.RawMaterialsTraded: "Raw Materials traded: ;;N0" @
 .G1MaterialsTraded: "Grade 1 Materials Traded: ;;N0" @
 .G2MaterialsTraded: "Grade 2 Materials Traded: ;;N0" @
 .G3MaterialsTraded: "Grade 3 Materials Traded: ;;N0" @
@@ -935,7 +935,7 @@ SECTION JournalEntry
 .Progress: "Progress: ;%;N1" @
 .Delivered: "Delivered: " @
 .Update: "Update, Collected: " @
-.ToGo: "To Go: " @
+.ToGo: "To Go:" @
 .ProgressLeft: "Progress Left: ;%;N1" @
 .Stolen: ";Stolen" @
 .StartingPackage: "Starting Package: " @
@@ -1008,7 +1008,7 @@ SECTION JournalEntry
 .Offline: "Offline: " @
 .Unfriended: "Unfriended: " @
 .Declined: "Declined: " @
-.RequestedFriend: "Requested friend: " @
+.RequestedFriend: "Requested Friend: " @
 .AddedFriend: "Added Friend: " @
 .Submitted: ";Submitted" @
 .NPC: "< (NPC);(Player)" @
@@ -1140,7 +1140,7 @@ SECTION JournalScanInfo
 .isa: " is a " @
 .Atmosphere: " Atmosphere: " @
 .terraformable: "terraformable " @
-.LowRadius: " Is tiny." @
+.LowRadius: " Is tiny " @
 .LargeRadius: " Is large." @
 .Signals: " Has mining signals." @
 .BioSignals: " Biological signals: " @
@@ -1153,7 +1153,7 @@ SECTION JournalScanInfo
 .MP: " (Mapped)" @
 .DIS: " (Discovered)" @
 .islandable: " Is landable." @
-.Hasring: " Has ring." @
+.Hasring: " Is ringed." @
 .Has: " Has " @
 .eccentricity: " Has an high eccentricity of " @
 .unknownAtmosphere: "unknown" @

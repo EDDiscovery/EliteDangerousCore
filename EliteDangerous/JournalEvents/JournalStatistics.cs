@@ -91,7 +91,7 @@ namespace EliteDangerousCore.JournalEvents
                         "Multicrew".T(EDCTx.JournalStatistics_Multicrew) + Environment.NewLine + Multicrew?.Format() + Environment.NewLine +
                         "Materials and Commodity Trading".T(EDCTx.JournalStatistics_MaterialsandCommodityTrading) + Environment.NewLine + MaterialTraderStats?.Format() + Environment.NewLine +
                         "CQC".T(EDCTx.JournalStatistics_CQC) + Environment.NewLine + CQC?.Format() + Environment.NewLine +
-                        "FLEETCARRIER".T(EDCTx.JournalStatistics_FLEETCARRIER) + Environment.NewLine + FLEETCARRIER?.Format() + Environment.NewLine +
+                        "Fleetcarrier".T(EDCTx.JournalStatistics_FLEETCARRIER) + Environment.NewLine + FLEETCARRIER?.Format() + Environment.NewLine +
                         "Exobiology".T(EDCTx.JournalStatistics_Exobiology) + Environment.NewLine + Exobiology.Format();
         }
 
@@ -249,7 +249,6 @@ namespace EliteDangerousCore.JournalEvents
                     "Guards Murdered: ;;N0".T(EDCTx.CrimeClass_GuardsMurdered), GuardsMurdered,
                     "Data Stolen: ;;N0".T(EDCTx.CrimeClass_DataStolen), DataStolen,
                     "Goods Stolen: ;;N0".T(EDCTx.CrimeClass_GoodsStolen), GoodsStolen,
-                    "Production Samples Stolen: ;;N0".T(EDCTx.CrimeClass_ProductionTheft), ProductionTheft,
                     "Total Inventory Items Stolen: ;;N0".T(EDCTx.CrimeClass_TotalStolen), TotalStolen,
                     "Turrets Destroyed: ;;N0".T(EDCTx.CrimeClass_TurretsDestroyed), TurretsDestroyed,
                     "Turrets Overloaded: ;;N0".T(EDCTx.CrimeClass_TurretsOverloaded), TurretsOverloaded,

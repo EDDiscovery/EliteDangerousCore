@@ -39,7 +39,7 @@ namespace EliteDangerousCore.JournalEvents
                 if (MassMT > (BodyPhysicalConstants.oneMoon_KG / 1e9 / 1000))
                     scanText.AppendFormat(frontpad + "Mass: {0:N4}{1}\n".T(EDCTx.StarPlanetRing_Mass), MassMT / (BodyPhysicalConstants.oneMoon_KG / 1E9), " Moons".T(EDCTx.JournalScan_Moons));
                 else
-                    scanText.AppendFormat(frontpad + "Mass: {0:N0}{1}\n".T(EDCTx.StarPlanetRing_Mass), MassMT, " MT");
+                    scanText.AppendFormat(frontpad + "Mass: {0:N4}{1}\n".T(EDCTx.StarPlanetRing_Mass), MassMT, " MT");
 
                 if (InnerRad > BodyPhysicalConstants.oneAU_m / 10)       // more than 0.1AU, its in ls
                 {

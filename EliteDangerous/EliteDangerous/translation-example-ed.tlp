@@ -18,7 +18,7 @@ SECTION Bodies
 .IZ: "Intermediate low Zirconium Monoxide MS class star" @
 .CGZ: "Cool Giant Zirconium Monoxide rich S class star" @
 .WD: "White Dwarf {0} class star" @
-.NS: "Neutron star" @
+.NS: "Neutron Star" @
 .BH: "Black Hole" @
 .EX: "Exotic" @
 .SMBH: "Super Massive Black Hole" @
@@ -26,7 +26,7 @@ SECTION Bodies
 .BBSG: "B Blue White Super Giant" @
 .FWSG: "F White Super Giant" @
 .GWSG: "G White Super Giant" @
-.MSR: "M Red Stuper Giant" @
+.MSR: "M Red Super Giant" @
 .MOG: "M Red Giant" @
 .KOG: "K Orange Giant" @
 .RP: "Rogue Planet" @
@@ -90,7 +90,7 @@ SECTION MaterialCommodityMicroResourceType
 .Textiles: "Textiles" @
 .Waste: "Waste" @
 .Weapons: "Weapons" @
-.PowerPlay: "PowerPlay" @
+.PowerPlay: "Power Play" @
 .Drones: "Drones" @
 .carbon: "Carbon" @
 .iron: "Iron" @
@@ -189,9 +189,9 @@ SECTION MaterialCommodityMicroResourceType
 .guardian_powerconduit: "Guardian Power Conduit" @
 .guardian_techcomponent: "Guardian Technology Component" @
 .guardian_sentinel_weaponparts: "Guardian Sentinel Weapon Parts" @
-.guardian_sentinel_wreckagecomponents: "Guardian Sentinel Wreckage Components" @
-.guardian_weaponblueprint: "Guardian Weapon Blueprint Segment" @
-.guardian_moduleblueprint: "Guardian Module Blueprint Segment" @
+.guardian_sentinel_wreckagecomponents: "Guardian Wreckage Components" @
+.guardian_weaponblueprint: "Guardian Weapon Blueprint Fragment" @
+.guardian_moduleblueprint: "Guardian Module Blueprint Fragment" @
 .tg_biomechanicalconduits: "Bio-Mechanical Conduits" @
 .tg_propulsionelement: "Propulsion Elements" @
 .tg_weaponparts: "Weapon Parts" @
@@ -365,12 +365,12 @@ SECTION MaterialCommodityMicroResourceType
 .encryptedcorrespondence: "Encrypted Correspondence" @
 .fossilremnants: "Fossil Remnants" @
 .geologicalsamples: "Geological Samples" @
-.hostage: "Hostage" @
+.hostage: "Hostages" @
 .militaryintelligence: "Military Intelligence" @
 .mysteriousidol: "Mysterious Idol" @
 .occupiedcryopod: "Occupied Escape Pod" @
 .personaleffects: "Personal Effects" @
-.politicalprisoner: "Political Prisoner" @
+.politicalprisoner: "Political Prisoners" @
 .preciousgems: "Precious Gems" @
 .prohibitedresearchmaterials: "Prohibited Research Materials" @
 .sap8corecontainer: "Sap 8 Core Container" @
@@ -392,12 +392,12 @@ SECTION MaterialCommodityMicroResourceType
 .usscargorebeltransmissions: "Rebel Transmissions" @
 .usscargotechnicalblueprints: "Technical Blueprints" @
 .usscargotradedata: "Trade Data" @
-.ancientrelic: "Ancient Relic" @
-.ancientorb: "Ancient Orb" @
-.ancientcasket: "Ancient Casket" @
-.ancienttablet: "Ancient Tablet" @
-.ancienturn: "Ancient Urn" @
-.ancienttotem: "Ancient Totem" @
+.ancientrelic: "Guardian Relic" @
+.ancientorb: "Guardian Orb" @
+.ancientcasket: "Guardian Casket" @
+.ancienttablet: "Guardian Tablet" @
+.ancienturn: "Guardian Urn" @
+.ancienttotem: "Guardian Totem" @
 .basicnarcotics: "Narcotics" @
 .imperialslaves: "Imperial Slaves" @
 .slaves: "Slaves" @
@@ -609,7 +609,7 @@ SECTION MaterialCommodityMicroResourceType
 .markedslaves: "Marked Slaves" @
 .torvaldeeds: "Torval Deeds" @
 .drones: "Drones" @
-.guardian_vesselblueprint: "Guardian Vessel Blueprint Segment" @
+.guardian_vesselblueprint: "Guardian Vessel Blueprint Fragment" @
 .duradrives: "Duradrives" @
 .nanomedicines: "Nanomedicines" @
 .rhodplumsite: "Rhodplumsite" @
@@ -619,7 +619,7 @@ SECTION MaterialCommodityMicroResourceType
 .benitoite: "Benitoite" @
 .grandidierite: "Grandidierite" @
 .alexandrite: "Alexandrite" @
-.opal: "Opal" @
+.opal: "Void Opal" @
 .thargoidtissuesampletype4: "Thargoid Hydra Tissue Sample" @
 .ancientkey: "Ancient Key" @
 .rockforthfertiliser: "Rockforth Fertiliser" @
@@ -698,7 +698,7 @@ SECTION MaterialCommodityMicroResourceType
 .microthrusters: "Micro Thrusters" @
 .opticalfibre: "Optical Fibre" @
 .opticallens: "Optical Lens" @
-.rdx: "Rdx" @
+.rdx: "RDX" @
 .titaniumplating: "Titanium Plating" @
 .tungstencarbide: "Tungsten Carbide" @
 .weaponcomponent: "Weapon Component" @
@@ -864,17 +864,17 @@ SECTION MaterialCommodityMicroResourceType
 
 SECTION EngineeringData
 
-.Engineer: "Engineer: " @
-.Blueprint: "Blueprint: " @
-.Level: "Level: " @
-.Quality: "Quality: " @
-.ExperimentalEffect: "Experimental Effect: " @
-.Original: "Original:;;N2" @
+.Engineer: "Engineer:" @
+.Blueprint: "Blueprint:" @
+.Level: "Level:" @
+.Quality: "Quality:" @
+.ExperimentalEffect: "Experimental Effect:" @
+.Original: "Original: ;;N2" @
 .Worse: "< (Worse); (Better)" @
 
 SECTION MissionState
 
-.ToGo: "To Go: " @
+.ToGo: "To Go:" @
 .Progress: "Progress:;%;N1" @
 
 SECTION CommanderForm

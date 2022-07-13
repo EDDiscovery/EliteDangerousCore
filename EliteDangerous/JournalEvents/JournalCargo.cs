@@ -250,15 +250,15 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (UpdateEnum == UpdateTypeEnum.Collect)
             {
-                info = BaseUtils.FieldBuilder.Build("Collected: ".T(EDCTx.JournalEntry_Collected), Count, "< of ".T(EDCTx.JournalEntry_of), FriendlyCargoType, "Total: ".T(EDCTx.JournalEntry_Total), ItemsDelivered, "To Go: ".T(EDCTx.JournalEntry_ToGo), ItemsToGo, "Progress: ;%;N1".T(EDCTx.JournalEntry_Progress), ProgressPercent);
+                info = BaseUtils.FieldBuilder.Build("Collected: ".T(EDCTx.JournalEntry_Collected), Count, "< of ".T(EDCTx.JournalEntry_of), FriendlyCargoType, "Total: ".T(EDCTx.JournalEntry_Total), ItemsDelivered, "To Go:".T(EDCTx.JournalEntry_ToGo), ItemsToGo, "Progress: ;%;N1".T(EDCTx.JournalEntry_Progress), ProgressPercent);
             }
             else if (UpdateEnum == UpdateTypeEnum.Deliver)
             {
-                info = BaseUtils.FieldBuilder.Build("Delivered: ".T(EDCTx.JournalEntry_Delivered), Count, "< of ".T(EDCTx.JournalEntry_of), FriendlyCargoType, "Total: ".T(EDCTx.JournalEntry_Total), ItemsDelivered, "To Go: ".T(EDCTx.JournalEntry_ToGo), ItemsToGo, "Progress: ;%;N1".T(EDCTx.JournalEntry_Progress), ProgressPercent);
+                info = BaseUtils.FieldBuilder.Build("Delivered: ".T(EDCTx.JournalEntry_Delivered), Count, "< of ".T(EDCTx.JournalEntry_of), FriendlyCargoType, "Total: ".T(EDCTx.JournalEntry_Total), ItemsDelivered, "To Go:".T(EDCTx.JournalEntry_ToGo), ItemsToGo, "Progress: ;%;N1".T(EDCTx.JournalEntry_Progress), ProgressPercent);
             }
             else if (UpdateEnum == UpdateTypeEnum.WingUpdate)
             {
-                info = BaseUtils.FieldBuilder.Build("Update, Collected: ".T(EDCTx.JournalEntry_Update), ItemsCollected, "Delivered: ".T(EDCTx.JournalEntry_Delivered), ItemsDelivered, "To Go: ".T(EDCTx.JournalEntry_ToGo), ItemsToGo, "Progress Left: ;%;N1".T(EDCTx.JournalEntry_ProgressLeft), ProgressPercent);
+                info = BaseUtils.FieldBuilder.Build("Update, Collected: ".T(EDCTx.JournalEntry_Update), ItemsCollected, "Delivered: ".T(EDCTx.JournalEntry_Delivered), ItemsDelivered, "To Go:".T(EDCTx.JournalEntry_ToGo), ItemsToGo, "Progress Left: ;%;N1".T(EDCTx.JournalEntry_ProgressLeft), ProgressPercent);
             }
             else
             {

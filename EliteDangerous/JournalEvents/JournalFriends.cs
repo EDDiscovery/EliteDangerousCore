@@ -88,7 +88,7 @@ namespace EliteDangerousCore.JournalEvents
             if (stat == FriendStatus.Online)
                 return "Online: ".T(EDCTx.JournalEntry_Online) + friendname;
             else if (stat == FriendStatus.Offline)
-                return "Online: ".T(EDCTx.JournalEntry_Offline) + friendname;
+                return "Offline: ".T(EDCTx.JournalEntry_Offline) + friendname;
             else if (stat == FriendStatus.Lost)
                 return "Unfriended: ".T(EDCTx.JournalEntry_Unfriended) + friendname;
             else if (stat == FriendStatus.Declined)
