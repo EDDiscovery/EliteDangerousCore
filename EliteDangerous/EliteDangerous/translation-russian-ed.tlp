@@ -1,21 +1,23 @@
 ﻿
 SECTION Bodies
 
-.HMS: "Luminous Hot Main Sequence {0} star" => "Яркая горячая звезда главной последовательности {0}"
-.BMS: "Luminous Blue Main Sequence {0} star" => "Яркая голубая звезда главной последовательности {0}"
-.BWMS: "Bluish-White Main Sequence {0} star" => "Бело-голубая звезда главной последовательности {0}"
-.WMS: "White Main Sequence {0} star" => "Белая звезда главной последовательности {0}"
-.YMS: "Yellow Main Sequence {0} star" => "Желтая звезда главной последовательности {0}"
-.OMS: "Orange Main Sequence {0} star" => "Оранжевая звезда главной последовательности {0}"
-.RMS: "Red Main Sequence {0} star" => "Красная звезда главной последовательности {0}"
-.DRNS: "Dark Red Non Main Sequence {0} star" => "Темно-красная звезда вне главной последовательности {0}"
-.MD: "Methane Dwarf star" => "Метановый карлик"
-.BD: "Brown Dwarf star" => "Коричневый карлик"
-.WR: "Wolf-Rayet {0} star" => "Звезда Вольфа-Райе {0}"
-.C: "Carbon {0} star" => "Углеродная звезда {0}"
-.IZ: "Intermediate low Zirconium Monoxide Type star" => "Звезда средней массы с низким содержанием оксида циркония"
-.CGZ: "Cool Giant Zirconium Monoxide rich Type star" => "Холодный гигант, звезда, богатая оксидом циркония"
-.WD: "White Dwarf {0} star" => "Белый карлик {0}"
+.HMS: "Luminous Hot {0} class star" => "Яркая горячая звезда главной последовательности {0}"
+.BMS: "Luminous Blue {0} class star" => "Яркая голубая звезда главной последовательности {0}"
+.BWMS: "Bluish-White {0} class star" => "Бело-голубая звезда главной последовательности {0}"
+.WMS: "White {0} class star" => "Белая звезда главной последовательности {0}"
+.YMS: "Yellow {0} class star" => "Желтая звезда главной последовательности {0}"
+.OMS: "Orange {0} class star" => "Оранжевая звезда главной последовательности {0}"
+.RMS: "Red {0} class star" => "Красная звезда главной последовательности {0}"
+.DRNS: "Dark Red {0} class star" => "Темно-красная звезда вне главной последовательности {0}"
+.MD: "Methane Dwarf T class star" => "Метановый карлик"
+.BD: "Brown Dwarf Y class star" => "Коричневый карлик"
+.Herbig: "Herbig Ae/Be class star" @
+.TTauri: "T Tauri star" @
+.WR: "Wolf-Rayet {0} class star" => "Звезда Вольфа-Райе {0}"
+.C: "Carbon {0} class star" => "Углеродная звезда {0}"
+.IZ: "Intermediate low Zirconium Monoxide MS class star" => "Звезда средней массы с низким содержанием оксида циркония"
+.CGZ: "Cool Giant Zirconium Monoxide rich S class star" => "Холодный гигант, звезда, богатая оксидом циркония"
+.WD: "White Dwarf {0} class star" => "Белый карлик {0}"
 .NS: "Neutron Star" => "Нейтронная звезда"
 .BH: "Black Hole" => "Черная дыра"
 .EX: "Exotic" => "Экзотический"
@@ -28,12 +30,10 @@ SECTION Bodies
 .MOG: "M Red Giant" => "Оранжевый гигант класса M"
 .KOG: "K Orange Giant" => "Оранжевый гигант класса K"
 .RP: "Rogue Planet" => "Планета-сирота"
-.UNK: "Class {0} star" @
-.Herbig: "Herbig Ae/Be" @
-.TTauri: "T Tauri" @
 .Nebula: "Nebula" @
-.StellarRemnantNebula: "Stellar Remnant nebula" @
-.SUnknown: "Unknown Star class" @
+.StellarRemnantNebula: "Stellar Remnant Nebula" @
+.SUnknown: "Unknown star class" @
+.UNK: "Class {0} class star" @
 
 SECTION EDPlanet
 
@@ -90,7 +90,7 @@ SECTION MaterialCommodityMicroResourceType
 .Textiles: "Textiles" => "Текстиль"
 .Waste: "Waste" => "Отходы"
 .Weapons: "Weapons" => "Оружие"
-.PowerPlay: "PowerPlay" => "Политический ресурс"
+.PowerPlay: "Power Play" => "Политический ресурс"
 .Drones: "Drones" => "Дроны"
 .carbon: "Carbon" => "Углерод"
 .iron: "Iron" => "Железо"
@@ -189,9 +189,9 @@ SECTION MaterialCommodityMicroResourceType
 .guardian_powerconduit: "Guardian Power Conduit" => "Энергопроводники защитника"
 .guardian_techcomponent: "Guardian Technology Component" => "Компоненты технологий защитника"
 .guardian_sentinel_weaponparts: "Guardian Sentinel Weapon Parts" => "Детали вооружения защитника Sentinel"
-.guardian_sentinel_wreckagecomponents: "Guardian Sentinel Wreckage Components" => "Обломки кораблекрушений защитника Sentinel"
-.guardian_weaponblueprint: "Guardian Weapon Blueprint Segment" => "Фрагмент чертежа оружия защитника"
-.guardian_moduleblueprint: "Guardian Module Blueprint Segment" => "Фрагмент чертежа модуля защитника"
+.guardian_sentinel_wreckagecomponents: "Guardian Wreckage Components" => "Обломки кораблекрушений защитника Sentinel"
+.guardian_weaponblueprint: "Guardian Weapon Blueprint Fragment" => "Фрагмент чертежа оружия защитника"
+.guardian_moduleblueprint: "Guardian Module Blueprint Fragment" => "Фрагмент чертежа модуля защитника"
 .tg_biomechanicalconduits: "Bio-Mechanical Conduits" => "Биомеханические энергопроводники"
 .tg_propulsionelement: "Propulsion Elements" => "Реактивные элементы"
 .tg_weaponparts: "Weapon Parts" => "Детали вооружения"
@@ -365,12 +365,12 @@ SECTION MaterialCommodityMicroResourceType
 .encryptedcorrespondence: "Encrypted Correspondence" => "Шифрованная переписка"
 .fossilremnants: "Fossil Remnants" => "Ископаемые останки"
 .geologicalsamples: "Geological Samples" => "Образцы породы"
-.hostage: "Hostage" => "Заложник"
+.hostage: "Hostages" => "Заложник"
 .militaryintelligence: "Military Intelligence" => "Разведданные"
 .mysteriousidol: "Mysterious Idol" => "Таинственный идол"
 .occupiedcryopod: "Occupied Escape Pod" => "Спасательная капсула с пассажиром"
 .personaleffects: "Personal Effects" => "Личные вещи"
-.politicalprisoner: "Political Prisoner" => "Политический заключенный"
+.politicalprisoner: "Political Prisoners" => "Политический заключенный"
 .preciousgems: "Precious Gems" => "Драгоценные камни"
 .prohibitedresearchmaterials: "Prohibited Research Materials" => "Запретные материалы исследований"
 .sap8corecontainer: "Sap 8 Core Container" => "Контейнер «SAP 8 Core»"
@@ -392,12 +392,12 @@ SECTION MaterialCommodityMicroResourceType
 .usscargorebeltransmissions: "Rebel Transmissions" => "Переговоры повстанцев"
 .usscargotechnicalblueprints: "Technical Blueprints" => "Промышленные чертежи"
 .usscargotradedata: "Trade Data" => "Торговая информация"
-.ancientrelic: "Ancient Relic" => "Древняя реликвия"
-.ancientorb: "Ancient Orb" => "Древний шар"
-.ancientcasket: "Ancient Casket" => "Древний контейнер"
-.ancienttablet: "Ancient Tablet" => "Древняя пластина"
-.ancienturn: "Ancient Urn" => "Древняя урна"
-.ancienttotem: "Ancient Totem" => "Древний тотем"
+.ancientrelic: "Guardian Relic" => "Древняя реликвия"
+.ancientorb: "Guardian Orb" => "Древний шар"
+.ancientcasket: "Guardian Casket" => "Древний контейнер"
+.ancienttablet: "Guardian Tablet" => "Древняя пластина"
+.ancienturn: "Guardian Urn" => "Древняя урна"
+.ancienttotem: "Guardian Totem" => "Древний тотем"
 .basicnarcotics: "Narcotics" => "Наркотики"
 .imperialslaves: "Imperial Slaves" => "Имперские рабы"
 .slaves: "Slaves" => "Рабы"
@@ -609,7 +609,7 @@ SECTION MaterialCommodityMicroResourceType
 .markedslaves: "Marked Slaves" => "Помеченные рабы"
 .torvaldeeds: "Torval Deeds" => "Договора Торвал"
 .drones: "Drones" => "Дроны"
-.guardian_vesselblueprint: "Guardian Vessel Blueprint Segment" => "Фрагмент чертежа судна защитника"
+.guardian_vesselblueprint: "Guardian Vessel Blueprint Fragment" => "Фрагмент чертежа судна защитника"
 .duradrives: "Duradrives" => "Дюрадрайвы"
 .nanomedicines: "Nanomedicines" => "Нанолекарства"
 .rhodplumsite: "Rhodplumsite" => "Родплумсит"
@@ -619,7 +619,7 @@ SECTION MaterialCommodityMicroResourceType
 .benitoite: "Benitoite" => "Бенитоит"
 .grandidierite: "Grandidierite" => "Грандидьерит"
 .alexandrite: "Alexandrite" => "Александрит"
-.opal: "Opal" => "Опалы бездны"
+.opal: "Void Opal" => "Опалы бездны"
 .thargoidtissuesampletype4: "Thargoid Hydra Tissue Sample" => "Образец ткани таргоидского корабля «Гидра»"
 .ancientkey: "Ancient Key" => "Древний ключ"
 .rockforthfertiliser: "Rockforth Fertiliser" @
@@ -698,7 +698,7 @@ SECTION MaterialCommodityMicroResourceType
 .microthrusters: "Micro Thrusters" @
 .opticalfibre: "Optical Fibre" @
 .opticallens: "Optical Lens" @
-.rdx: "Rdx" @
+.rdx: "RDX" @
 .titaniumplating: "Titanium Plating" @
 .tungstencarbide: "Tungsten Carbide" @
 .weaponcomponent: "Weapon Component" @
@@ -863,17 +863,17 @@ SECTION MaterialCommodityMicroResourceType
 
 SECTION EngineeringData
 
-.Engineer: "Engineer: " => "Инженер: "
-.Blueprint: "Blueprint: " => "Чертеж: "
-.Level: "Level: " => "Уровень: "
-.Quality: "Quality: " => "Качество: "
-.ExperimentalEffect: "Experimental Effect: " => "Экспериментальный эффект: "
-.Original: "Original:;;N2" => "исходн.: ;;N2"
+.Engineer: "Engineer:" => "Инженер: "
+.Blueprint: "Blueprint:" => "Чертеж: "
+.Level: "Level:" => "Уровень: "
+.Quality: "Quality:" => "Качество: "
+.ExperimentalEffect: "Experimental Effect:" => "Экспериментальный эффект: "
+.Original: "Original: ;;N2" => "исходн.: ;;N2"
 .Worse: "< (Worse); (Better)" => "< (хуже); (лучше)"
 
 SECTION MissionState
 
-.ToGo: "To Go: " => "осталось: "
+.ToGo: "To Go:" => "осталось: "
 .Progress: "Progress:;%;N1" => "прогресс: ;%;N1"
 
 SECTION CommanderForm

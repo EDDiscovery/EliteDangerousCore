@@ -1,21 +1,23 @@
 ﻿
 SECTION Bodies
 
-.HMS: "Luminous Hot Main Sequence {0} star" => "Stella {0} luminosa calda di sequenza-principale"
-.BMS: "Luminous Blue Main Sequence {0} star" => "Stella {0} luminosa blu di sequenza-principale"
-.BWMS: "Bluish-White Main Sequence {0} star" => "Stella {0} bianco-azzurra di sequenza-principale"
-.WMS: "White Main Sequence {0} star" => "Stella {0} bianca di sequenza-principale"
-.YMS: "Yellow Main Sequence {0} star" => "Stella {0} gialla di sequenza-principale"
-.OMS: "Orange Main Sequence {0} star" => "Stella {0} arancione di sequenza-principale"
-.RMS: "Red Main Sequence {0} star" => "Stella {0} rossa di sequenza-principale"
-.DRNS: "Dark Red Non Main Sequence {0} star" => "Stella {0} rosso scura"
-.MD: "Methane Dwarf star" => "Stella nana di metano"
-.BD: "Brown Dwarf star" => "Stella nana bruna"
-.WR: "Wolf-Rayet {0} star" => "Stella {0} di Wolf-Rayet"
-.C: "Carbon {0} star" => "Stella {0} al carbonio"
-.IZ: "Intermediate low Zirconium Monoxide Type star" => "Stella intermedia a basso tenore di Monossido di Zirconio"
-.CGZ: "Cool Giant Zirconium Monoxide rich Type star" => "Stella gigante fredda a alto tenore di Monossido di Zirconio"
-.WD: "White Dwarf {0} star" => "Stella {0} nana bianca"
+.HMS: "Luminous Hot {0} class star" => "Stella {0} luminosa calda di sequenza-principale"
+.BMS: "Luminous Blue {0} class star" => "Stella {0} luminosa blu di sequenza-principale"
+.BWMS: "Bluish-White {0} class star" => "Stella {0} bianco-azzurra di sequenza-principale"
+.WMS: "White {0} class star" => "Stella {0} bianca di sequenza-principale"
+.YMS: "Yellow {0} class star" => "Stella {0} gialla di sequenza-principale"
+.OMS: "Orange {0} class star" => "Stella {0} arancione di sequenza-principale"
+.RMS: "Red {0} class star" => "Stella {0} rossa di sequenza-principale"
+.DRNS: "Dark Red {0} class star" => "Stella {0} rosso scura"
+.MD: "Methane Dwarf T class star" => "Stella nana di metano"
+.BD: "Brown Dwarf Y class star" => "Stella nana bruna"
+.Herbig: "Herbig Ae/Be class star" => "Herbig Ae/Be"
+.TTauri: "T Tauri star" => "T Tauri"
+.WR: "Wolf-Rayet {0} class star" => "Stella {0} di Wolf-Rayet"
+.C: "Carbon {0} class star" => "Stella {0} al carbonio"
+.IZ: "Intermediate low Zirconium Monoxide MS class star" => "Stella intermedia a basso tenore di Monossido di Zirconio"
+.CGZ: "Cool Giant Zirconium Monoxide rich S class star" => "Stella gigante fredda a alto tenore di Monossido di Zirconio"
+.WD: "White Dwarf {0} class star" => "Stella {0} nana bianca"
 .NS: "Neutron Star" => "Stella di neutroni"
 .BH: "Black Hole" => "Buco nero"
 .EX: "Exotic" => "Corpo stellare esotico"
@@ -28,12 +30,10 @@ SECTION Bodies
 .MOG: "M Red Giant" => "Gigante rossa M"
 .KOG: "K Orange Giant" => "Gigante arancione K"
 .RP: "Rogue Planet" => "Pianeta interstellare"
-.UNK: "Class {0} star" => "Stella di classe {0}"
-.Herbig: "Herbig Ae/Be" => "Herbig Ae/Be"
-.TTauri: "T Tauri" => "T Tauri"
 .Nebula: "Nebula" @
-.StellarRemnantNebula: "Stellar Remnant nebula" @
-.SUnknown: "Unknown Star class" @
+.StellarRemnantNebula: "Stellar Remnant Nebula" @
+.SUnknown: "Unknown star class" @
+.UNK: "Class {0} class star" => "Stella di classe {0}"
 
 SECTION EDPlanet
 
@@ -90,7 +90,7 @@ SECTION MaterialCommodityMicroResourceType
 .Textiles: "Textiles" => "Tessuti"
 .Waste: "Waste" => "Rifiuti"
 .Weapons: "Weapons" => "Armi"
-.PowerPlay: "PowerPlay" @
+.PowerPlay: "Power Play" @
 .Drones: "Drones" => "Droni"
 .carbon: "Carbon" => "Carbono"
 .iron: "Iron" => "Ferro"
@@ -189,9 +189,9 @@ SECTION MaterialCommodityMicroResourceType
 .guardian_powerconduit: "Guardian Power Conduit" => "Conduttori di potenza Guardian"
 .guardian_techcomponent: "Guardian Technology Component" => "Componenti di tecnologia Guardian"
 .guardian_sentinel_weaponparts: "Guardian Sentinel Weapon Parts" => "Parti di armi di Sentinella Guardian"
-.guardian_sentinel_wreckagecomponents: "Guardian Sentinel Wreckage Components" => "Componenti di relitto Sentinela Guardian"
-.guardian_weaponblueprint: "Guardian Weapon Blueprint Segment" => "Segmento di diagramma d'arma Guardian"
-.guardian_moduleblueprint: "Guardian Module Blueprint Segment" => "Segmento di diagramma di modulo Guardian"
+.guardian_sentinel_wreckagecomponents: "Guardian Wreckage Components" => "Componenti di relitto Sentinela Guardian"
+.guardian_weaponblueprint: "Guardian Weapon Blueprint Fragment" => "Segmento di diagramma d'arma Guardian"
+.guardian_moduleblueprint: "Guardian Module Blueprint Fragment" => "Segmento di diagramma di modulo Guardian"
 .tg_biomechanicalconduits: "Bio-Mechanical Conduits" => "Conduttori Biomeccanici"
 .tg_propulsionelement: "Propulsion Elements" => "Elementi di Propulsione"
 .tg_weaponparts: "Weapon Parts" => "Parti d'Arma"
@@ -365,12 +365,12 @@ SECTION MaterialCommodityMicroResourceType
 .encryptedcorrespondence: "Encrypted Correspondence" => "Corrispondenze criptografate"
 .fossilremnants: "Fossil Remnants" => "Rimanescenti fossili"
 .geologicalsamples: "Geological Samples" => "Campioni geologici"
-.hostage: "Hostage" => "Ostaggio"
+.hostage: "Hostages" => "Ostaggio"
 .militaryintelligence: "Military Intelligence" => "Inteliggenza militare"
 .mysteriousidol: "Mysterious Idol" => "Idolo misterioso"
 .occupiedcryopod: "Occupied Escape Pod" => "Capsula di salvataggio occupata"
 .personaleffects: "Personal Effects" => "Oggetti personali"
-.politicalprisoner: "Political Prisoner" => "Prigioniero politico"
+.politicalprisoner: "Political Prisoners" => "Prigioniero politico"
 .preciousgems: "Precious Gems" => "Pietre preziose"
 .prohibitedresearchmaterials: "Prohibited Research Materials" => "Materiali di ricercha proibiti"
 .sap8corecontainer: "Sap 8 Core Container" => "Recipienti di nucleo SAP 8"
@@ -392,12 +392,12 @@ SECTION MaterialCommodityMicroResourceType
 .usscargorebeltransmissions: "Rebel Transmissions" => "Transmissioni ribelle"
 .usscargotechnicalblueprints: "Technical Blueprints" => "Diagrammi tecnici"
 .usscargotradedata: "Trade Data" => "Dati commerciali"
-.ancientrelic: "Ancient Relic" => "Reliquia Antica"
-.ancientorb: "Ancient Orb" => "Sfera Antica"
-.ancientcasket: "Ancient Casket" => "Cassa Antica"
-.ancienttablet: "Ancient Tablet" => "Barra Antica"
-.ancienturn: "Ancient Urn" => "Urna Antica"
-.ancienttotem: "Ancient Totem" => "Totem Antico"
+.ancientrelic: "Guardian Relic" => "Reliquia Antica"
+.ancientorb: "Guardian Orb" => "Sfera Antica"
+.ancientcasket: "Guardian Casket" => "Cassa Antica"
+.ancienttablet: "Guardian Tablet" => "Barra Antica"
+.ancienturn: "Guardian Urn" => "Urna Antica"
+.ancienttotem: "Guardian Totem" => "Totem Antico"
 .basicnarcotics: "Narcotics" => "Narcotici"
 .imperialslaves: "Imperial Slaves" => "Schiavi imperiali"
 .slaves: "Slaves" => "Schiavi"
@@ -609,7 +609,7 @@ SECTION MaterialCommodityMicroResourceType
 .markedslaves: "Marked Slaves" => "Schiavi marchiati"
 .torvaldeeds: "Torval Deeds" => "Titoli della Torval"
 .drones: "Drones" => "Droni"
-.guardian_vesselblueprint: "Guardian Vessel Blueprint Segment" => "Segmento di progetto della nave dei Guardiani"
+.guardian_vesselblueprint: "Guardian Vessel Blueprint Fragment" => "Segmento di progetto della nave dei Guardiani"
 .duradrives: "Duradrives" @
 .nanomedicines: "Nanomedicines" => "Nanomedicine"
 .rhodplumsite: "Rhodplumsite" @
@@ -619,7 +619,7 @@ SECTION MaterialCommodityMicroResourceType
 .benitoite: "Benitoite" @
 .grandidierite: "Grandidierite" @
 .alexandrite: "Alexandrite" @
-.opal: "Opal" => "Opale"
+.opal: "Void Opal" => "Opale"
 .thargoidtissuesampletype4: "Thargoid Hydra Tissue Sample" => "Campione di tessuto di idra thargoide"
 .ancientkey: "Ancient Key" => "Chiave antica"
 .rockforthfertiliser: "Rockforth Fertiliser" => "Fertilizzante Rockforth"
@@ -698,7 +698,7 @@ SECTION MaterialCommodityMicroResourceType
 .microthrusters: "Micro Thrusters" @
 .opticalfibre: "Optical Fibre" @
 .opticallens: "Optical Lens" @
-.rdx: "Rdx" @
+.rdx: "RDX" @
 .titaniumplating: "Titanium Plating" @
 .tungstencarbide: "Tungsten Carbide" @
 .weaponcomponent: "Weapon Component" @
@@ -863,17 +863,17 @@ SECTION MaterialCommodityMicroResourceType
 
 SECTION EngineeringData
 
-.Engineer: "Engineer: " => "Ingegnere"
-.Blueprint: "Blueprint: " => "Progetto"
-.Level: "Level: " => "Livello"
-.Quality: "Quality: " => "Qualità"
-.ExperimentalEffect: "Experimental Effect: " => "Effetto sperimental"
-.Original: "Original:;;N2" => "Originale: ;;N2"
+.Engineer: "Engineer:" => "Ingegnere"
+.Blueprint: "Blueprint:" => "Progetto"
+.Level: "Level:" => "Livello"
+.Quality: "Quality:" => "Qualità"
+.ExperimentalEffect: "Experimental Effect:" => "Effetto sperimental"
+.Original: "Original: ;;N2" => "Originale: ;;N2"
 .Worse: "< (Worse); (Better)" => "< (Peggiore); (Migliore)"
 
 SECTION MissionState
 
-.ToGo: "To Go: " => "Andare: "
+.ToGo: "To Go:" => "Andare: "
 .Progress: "Progress:;%;N1" => "Progresso: ;%;N1"
 
 SECTION CommanderForm

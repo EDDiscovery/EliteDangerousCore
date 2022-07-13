@@ -653,7 +653,7 @@ SECTION BankAccountClass
 
 SECTION CombatClass
 
-.Bounties: "Bounties : ;;N0" => "Recompensas : ;;N0"
+.Bounties: "Bounties: ;;N0" => "Recompensas : ;;N0"
 .BountyProfits: "Bounty Profits: ;cr;N0" => "Beneficios de recompensas: ;cr;N0"
 .CombatBonds: "Combat Bonds: ;;N0" => "Combat Bonds: ;;N0"
 .CombatBondProfits: "Combat Bond Profits: ;cr;N0" => "Beneficios de los bonos de combate: ;cr;N0"
@@ -811,8 +811,8 @@ SECTION MaterialTraderStatsClass
 
 .CommodityTrades: "Material Trades Completed: ;;N0" => "Operaciones con Mercancías: ;;N0"
 .MaterialTraded: "Material Traded: ;;N0" => "Material negociado: ;;N0"
-.EncodedMaterialsTraded: "Encoded Materials Traded: ;;N0" @
-.RawMaterialsTraded: "Raw Materials Traded: ;;N0" @
+.EncodedMaterialsTraded: "Encoded Materials traded: ;;N0" @
+.RawMaterialsTraded: "Raw Materials traded: ;;N0" @
 .G1MaterialsTraded: "Grade 1 Materials Traded: ;;N0" @
 .G2MaterialsTraded: "Grade 2 Materials Traded: ;;N0" @
 .G3MaterialsTraded: "Grade 3 Materials Traded: ;;N0" @
@@ -935,7 +935,7 @@ SECTION JournalEntry
 .Progress: "Progress: ;%;N1" => "Progreso: ;%;N1"
 .Delivered: "Delivered: " => "Entregado: "
 .Update: "Update, Collected: " => "Actualización, recopilada: "
-.ToGo: "To Go: " => "Para llevar: "
+.ToGo: "To Go:" => "Para llevar: "
 .ProgressLeft: "Progress Left: ;%;N1" => "Progreso restante: ;%;N1"
 .Stolen: ";Stolen" => ";Robado"
 .StartingPackage: "Starting Package: " => "Paquete inicial: "
@@ -1008,7 +1008,7 @@ SECTION JournalEntry
 .Offline: "Offline: " => "Sin conexión: "
 .Unfriended: "Unfriended: " @
 .Declined: "Declined: " @
-.RequestedFriend: "Requested friend: " @
+.RequestedFriend: "Requested Friend: " @
 .AddedFriend: "Added Friend: " @
 .Submitted: ";Submitted" => ";Enviado"
 .NPC: "< (NPC);(Player)" => "< (NPC);(Player)"
@@ -1142,7 +1142,7 @@ SECTION JournalScanInfo
 .isa: " is a " @
 .Atmosphere: " Atmosphere: " @
 .terraformable: "terraformable " @
-.LowRadius: " Is tiny." => " Radio bajo"
+.LowRadius: " Is tiny " => " Radio bajo"
 .LargeRadius: " Is large." @
 .Signals: " Has mining signals." => " Tiene señales"
 .BioSignals: " Biological signals: " @
@@ -1155,7 +1155,7 @@ SECTION JournalScanInfo
 .MP: " (Mapped)" => " (Mapeado)"
 .DIS: " (Discovered)" => " (Descubierto)"
 .islandable: " Is landable." => " es aterrizable"
-.Hasring: " Has ring." => " Tiene anillo."
+.Hasring: " Is ringed." => " Tiene anillo."
 .Has: " Has " => " Tiene "
 .eccentricity: " Has an high eccentricity of " @
 .unknownAtmosphere: "unknown" @
