@@ -460,13 +460,13 @@ namespace EliteDangerousCore
                     }
                 }
 
-                foreach (var v in varsevent) System.Diagnostics.Debug.WriteLine($"Search Event Var {v}");
-                foreach (var v in varsstar) System.Diagnostics.Debug.WriteLine($"Search Star Var {v}");
-                foreach (var v in varsstarstar) System.Diagnostics.Debug.WriteLine($"Search Star Star Var {v}");
-                foreach (var v in varsparent) System.Diagnostics.Debug.WriteLine($"Search Parent Var {v}");
-                foreach (var v in varsparentparent) System.Diagnostics.Debug.WriteLine($"Search Parent Parent Var {v}");
-                foreach (var v in varssiblings) System.Diagnostics.Debug.WriteLine($"Search Sibling Var {v}");
-                foreach (var v in varschildren) System.Diagnostics.Debug.WriteLine($"Search Child Var {v}");
+                //foreach (var v in varsevent) System.Diagnostics.Debug.WriteLine($"Search Event Var {v}");
+                //foreach (var v in varsstar) System.Diagnostics.Debug.WriteLine($"Search Star Var {v}");
+                //foreach (var v in varsstarstar) System.Diagnostics.Debug.WriteLine($"Search Star Star Var {v}");
+                //foreach (var v in varsparent) System.Diagnostics.Debug.WriteLine($"Search Parent Var {v}");
+                //foreach (var v in varsparentparent) System.Diagnostics.Debug.WriteLine($"Search Parent Parent Var {v}");
+                //foreach (var v in varssiblings) System.Diagnostics.Debug.WriteLine($"Search Sibling Var {v}");
+                //foreach (var v in varschildren) System.Diagnostics.Debug.WriteLine($"Search Child Var {v}");
 
                 Type[] ignoretypes = new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) };
 
