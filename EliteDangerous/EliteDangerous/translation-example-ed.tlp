@@ -882,37 +882,37 @@ SECTION CommanderForm
 CommanderForm: "CommanderForm" @
 .extGroupBoxCommanderInfo: "Other" @
 .labelMapCol: "Default Map Color" @
-.HomeSys: "Home System: " @
+.HomeSys: "Home System:" @
 .groupBoxCustomIGAU: "Intergalactic Astronomical Union [IGAU]" @
 .checkBoxIGAUSync: "Send Codex Entry Discovery Data to IGAU" @
 .groupBoxCustomInara: "Inara Information (optional)" @
-.labelINARAN: "Inara Name: " @
-.labelInaraAPI: "Inara API Key: " @
+.labelINARAN: "Inara Name:" @
+.labelInaraAPI: "Inara API Key:" @
 .checkBoxCustomInara: "Sync to Inara" @
 .groupBoxCustomEDDN: "EDDN" @
 .checkBoxCustomEDDNTo: "Send Event Information to EDDN" @
 .groupBoxCustomEDSM: "EDSM Information (optional)" @
 .checkBoxCustomEDSMFrom: "Sync From EDSM" @
-.labelEDSMAPI: "EDSM API Key: " @
-.labelEDSMN: "EDSM Name: " @
+.labelEDSMAPI: "EDSM API Key:" @
+.labelEDSMN: "EDSM Name:" @
 .checkBoxCustomEDSMTo: "Sync to EDSM" @
 .groupBoxCustomJournal: "Journal Related Information" @
-.labelCN: "Commander Name: " @
+.labelCN: "Commander Name:" @
 .buttonExtBrowse: "Browse" @
-.labelJL: "Journal Location: " @
+.labelJL: "Journal Location:" @
 .panel_defaultmapcolor.ToolTip: "New travel entries get this colour on the map" @
 .checkBoxIGAUSync.ToolTip: "https://github.com/Elite-IGAU/publications/blob/master/IGAU_Codex.csv" @
 .textBoxBorderInaraName.ToolTip: "Give the user name for this commander on Inara" @
 .checkBoxCustomInara.ToolTip: "Sync with Inara" @
-.textBoxBorderInaraAPIKey.ToolTip: "Enter the API key from the Inara Website\nGet an Inara API key from https://inara.cz" @
+.textBoxBorderInaraAPIKey.ToolTip: "Enter the API key from the Inara Website\r\nGet an Inara API key from https://inara.cz" @
 .checkBoxCustomEDDNTo.ToolTip: "Click to send journal information to EDDN. EDDN feeds tools such as EDDB, EDSM, Inara with data from commanders. All data is made anonymised" @
 .checkBoxCustomEDSMFrom.ToolTip: "Receive any FSD jumps from EDSM that are on their database but not in EDDiscovery" @
 .checkBoxCustomEDSMTo.ToolTip: "Send your travel and ship data to EDSM" @
-.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \"My account\" menu" @
+.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\r\nGet an EDSM API key from https://www.edsm.net in \"My account\" menu" @
 .textBoxBorderEDSMName.ToolTip: "Give the name this commander is known as in EDSM" @
 .buttonExtBrowse.ToolTip: "Browse to the the journal folder" @
 .textBoxBorderCmdr.ToolTip: "Enter commander name as used in Elite Dangerous" @
-.textBoxBorderJournal.ToolTip: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\nLeave override journal location blank to use the standard Frontier location for journals" @
+.textBoxBorderJournal.ToolTip: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\r\nLeave override journal location blank to use the standard Frontier location for journals" @
 .LF: "Select folder where Journal*.log files are stored by Frontier in" @
 .ND: "Folder does not exist" @
 .extCheckBoxConsoleCommander: "Console Commander" @
@@ -932,7 +932,7 @@ SECTION ScreenShotImageConverter
 SECTION ScreenShotConfigureForm
 
 ScreenShotConfigureForm: "Screen Shot Configure" @
-.groupBoxCropSettings: "Crop Settings" @
+.groupBoxCropSettings: "Crop/Resize Settings" @
 .extGroupBox1: "Crop/Resize Settings" @
 .labelHeight: "Height" @
 .labelWidth: "Width" @

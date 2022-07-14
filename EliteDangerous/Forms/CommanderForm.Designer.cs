@@ -292,7 +292,7 @@
             this.textBoxBorderEDSMAPI.Size = new System.Drawing.Size(197, 23);
             this.textBoxBorderEDSMAPI.TabIndex = 1;
             this.textBoxBorderEDSMAPI.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.toolTip.SetToolTip(this.textBoxBorderEDSMAPI, "Enter the API key from the EDSM Website\\nGet an EDSM API key from https://www.eds" +
+            this.toolTip.SetToolTip(this.textBoxBorderEDSMAPI, "Enter the API key from the EDSM Website\r\nGet an EDSM API key from https://www.eds" +
         "m.net in \"My account\" menu");
             this.textBoxBorderEDSMAPI.WordWrap = true;
             // 
@@ -422,7 +422,7 @@
             this.textBoxBorderInaraAPIKey.Size = new System.Drawing.Size(197, 23);
             this.textBoxBorderInaraAPIKey.TabIndex = 1;
             this.textBoxBorderInaraAPIKey.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.toolTip.SetToolTip(this.textBoxBorderInaraAPIKey, "Enter the API key from the Inara Website\\nGet an Inara API key from https://inara" +
+            this.toolTip.SetToolTip(this.textBoxBorderInaraAPIKey, "Enter the API key from the Inara Website\r\nGet an Inara API key from https://inara" +
         ".cz");
             this.textBoxBorderInaraAPIKey.WordWrap = true;
             // 
