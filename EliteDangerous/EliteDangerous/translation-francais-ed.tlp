@@ -33,7 +33,7 @@ SECTION Bodies
 .Nebula: "Nebula" @
 .StellarRemnantNebula: "Stellar Remnant Nebula" @
 .SUnknown: "Unknown star class" @
-.UNK: "Class {0} class star" => "Étoile {0}"
+.UNK: "Class {0} star" => "Étoile {0}"
 
 SECTION EDPlanet
 
@@ -881,37 +881,37 @@ SECTION CommanderForm
 CommanderForm: "CommanderForm" @
 .extGroupBoxCommanderInfo: "Other" => "Autre"
 .labelMapCol: "Default Map Color" => "Couleur par défaut de la carte"
-.HomeSys: "Home System: " => "Système de base"
+.HomeSys: "Home System:" => "Système de base"
 .groupBoxCustomIGAU: "Intergalactic Astronomical Union [IGAU]" @
 .checkBoxIGAUSync: "Send Codex Entry Discovery Data to IGAU" => "Envoyer les données découvertes du Codex à l'IGAU"
 .groupBoxCustomInara: "Inara Information (optional)" => "Information Inara (Optionnel)"
-.labelINARAN: "Inara Name: " => "Nom sur Inara : "
-.labelInaraAPI: "Inara API Key: " => "Clé API Inara"
+.labelINARAN: "Inara Name:" => "Nom sur Inara : "
+.labelInaraAPI: "Inara API Key:" => "Clé API Inara"
 .checkBoxCustomInara: "Sync to Inara" => "Synchroniser avec Inara"
 .groupBoxCustomEDDN: "EDDN" @
 .checkBoxCustomEDDNTo: "Send Event Information to EDDN" => "Envoyer les événements à EDDN"
 .groupBoxCustomEDSM: "EDSM Information (optional)" => "Information EDSM (optionnnel)"
 .checkBoxCustomEDSMFrom: "Sync From EDSM" => "Synchroniser avec EDSM"
-.labelEDSMAPI: "EDSM API Key: " => "Clé API EDSM"
-.labelEDSMN: "EDSM Name: " => "Nom sur EDSM"
+.labelEDSMAPI: "EDSM API Key:" => "Clé API EDSM"
+.labelEDSMN: "EDSM Name:" => "Nom sur EDSM"
 .checkBoxCustomEDSMTo: "Sync to EDSM" => "Synchroniser avec EDSM"
 .groupBoxCustomJournal: "Journal Related Information" => "Information du journal"
-.labelCN: "Commander Name: " => "Nom du commandant"
+.labelCN: "Commander Name:" => "Nom du commandant"
 .buttonExtBrowse: "Browse" => "Parcourir"
-.labelJL: "Journal Location: " => "Emplacement du journal"
+.labelJL: "Journal Location:" => "Emplacement du journal"
 .panel_defaultmapcolor.ToolTip: "New travel entries get this colour on the map" => "Les nouvelles entrées ont cette couleur sur la carte"
 .checkBoxIGAUSync.ToolTip: "https://github.com/Elite-IGAU/publications/blob/master/IGAU_Codex.csv" @
 .textBoxBorderInaraName.ToolTip: "Give the user name for this commander on Inara" => "Entrer le nom d'utilisateur Inara pour ce commandant"
 .checkBoxCustomInara.ToolTip: "Sync with Inara" => "Synchroniser avec Inara"
-.textBoxBorderInaraAPIKey.ToolTip: "Enter the API key from the Inara Website\nGet an Inara API key from https://inara.cz" => "Entrer la clé d'API obbtenue sur le site d'Inara\r\nhttps://inara.cz"
+.textBoxBorderInaraAPIKey.ToolTip: "Enter the API key from the Inara Website\r\nGet an Inara API key from https://inara.cz" => "Entrer la clé d'API obbtenue sur le site d'Inara\r\nhttps://inara.cz"
 .checkBoxCustomEDDNTo.ToolTip: "Click to send journal information to EDDN. EDDN feeds tools such as EDDB, EDSM, Inara with data from commanders. All data is made anonymised" => "Cocher pour envoyer les informations du journal à EDDN.\r\nEDDN sert à alimenter les outils tels que EDDB, EDSM, Inara avec les données des commandants. Toutes les données sont anonymisées."
 .checkBoxCustomEDSMFrom.ToolTip: "Receive any FSD jumps from EDSM that are on their database but not in EDDiscovery" => "Recevoir les données de sauts FSD d'EDSM qui sont sur leur base de données mais pas dans EDDiscovery"
 .checkBoxCustomEDSMTo.ToolTip: "Send your travel and ship data to EDSM" => "Envoyer vos voyages et données de vaisseau à EDSM"
-.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\nGet an EDSM API key from https://www.edsm.net in \"My account\" menu" @
+.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\r\nGet an EDSM API key from https://www.edsm.net in \"My account\" menu" @
 .textBoxBorderEDSMName.ToolTip: "Give the name this commander is known as in EDSM" => "Indiquer le nom de ce commandant tel qu'il est connu sur EDSM"
 .buttonExtBrowse.ToolTip: "Browse to the the journal folder" => "Selectionner le fichier de journal sur l'ordinateur"
 .textBoxBorderCmdr.ToolTip: "Enter commander name as used in Elite Dangerous" => "Entrer le nom de commandant utilisé dans Elite Dangerous"
-.textBoxBorderJournal.ToolTip: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\nLeave override journal location blank to use the standard Frontier location for journals" => "En principe il faut laisser ce champs vide, sauf si vous jouez depuis un autre ordinateur que celui ci. Si vous laissez vite, le répertoire standard d'Elite Dangerous sera utilisé."
+.textBoxBorderJournal.ToolTip: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\r\nLeave override journal location blank to use the standard Frontier location for journals" => "En principe il faut laisser ce champs vide, sauf si vous jouez depuis un autre ordinateur que celui ci. Si vous laissez vite, le répertoire standard d'Elite Dangerous sera utilisé."
 .LF: "Select folder where Journal*.log files are stored by Frontier in" => "Choisir le répertoire ou les fichiers journal*.log sont stockés"
 .ND: "Folder does not exist" @
 .extCheckBoxConsoleCommander: "Console Commander" @
@@ -931,7 +931,7 @@ SECTION ScreenShotImageConverter
 SECTION ScreenShotConfigureForm
 
 ScreenShotConfigureForm: "Screen Shot Configure" => "Configuration des captures d'écran"
-.groupBoxCropSettings: "Crop Settings" => "Paramètres de rognage"
+.groupBoxCropSettings: "Crop/Resize Settings" => "Paramètres de rognage"
 .extGroupBox1: "Crop/Resize Settings" => "Paramètres de rognage/redimensionnement"
 .labelHeight: "Height" => "Hauteur"
 .labelWidth: "Width" => "Largeur"
