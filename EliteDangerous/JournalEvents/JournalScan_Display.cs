@@ -367,13 +367,23 @@ namespace EliteDangerousCore.JournalEvents
 
             var information = new StringBuilder();
 
-            if (js.Mapped)
-                information.Append("\u2713"); // let the cmdr see that this body is already mapped - this is a check
-
             string bodyname = js.BodyDesignationOrName.ReplaceIfStartsWith(sys.Name);
 
             // Name
-            information.Append((bodyname) + @" is a ".T(EDCTx.JournalScanInfo_isa));
+            information.Append(bodyname);
+
+            // symbols
+            if (js.Mapped)
+                information.Append(" \u2B24\u2713"); // let the cmdr see that this body is already mapped - this is a check
+
+            if (js.CountOrganicsScans >= 1)
+            {
+                information.Append(" \u232C"); // let the cmdr see that this body is already mapped - this is a check
+                if (js.CountOrganicsScansAnalysed == js.CountBioSignals)
+                    information.Append("\u2713"); // let the cmdr see that this body is already mapped - this is a check
+            }
+
+            information.Append(" is a ".T(EDCTx.JournalScanInfo_isa));
 
             // Additional information
             information.Append((js.IsStar) ? Bodies.StarName(js.StarTypeID) + "." : null);

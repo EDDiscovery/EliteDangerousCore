@@ -301,7 +301,7 @@ namespace EliteDangerousCore
 
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventTimeUTC", "Date Time in UTC", BaseUtils.ConditionEntry.MatchType.DateAfter, "All"));     // add on a few from the base class..
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventTimeLocal", "Date Time in Local time", BaseUtils.ConditionEntry.MatchType.DateAfter, "All"));
-         //   classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventType", "Event type", BaseUtils.ConditionEntry.MatchType.Equals, "All"));
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventType", "Event type (Scan etc)", BaseUtils.ConditionEntry.MatchType.Equals, "All"));
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("SyncedEDSM", "Synced to EDSM, 1 = yes, 0 = not", BaseUtils.ConditionEntry.MatchType.IsTrue, "All"));
 
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Level", "Level of body in system, 0 =star, 1 = Planet, 2 = moon, 3 = submoon", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
@@ -479,6 +479,8 @@ namespace EliteDangerousCore
                     bool debugit = false;
 
                     //if ( he.System.Name == "Lu Dongia") debugit = true;
+
+                    scandatavars["EventType"] = he.EntryType.ToString();
 
                     scandatavars.AddPropertiesFieldsOfClass(he.journalEntry, "",ignoretypes, 5, varsevent, ensuredoublerep: true, classsepar:".");
 

@@ -232,8 +232,10 @@ namespace EliteDangerousCore.JournalEvents
 
 
         public List<JournalScanOrganic> Organics { get; set; }  // can be null if nothing for this node, else a list of organics. Set up by StarScan
-        public bool ContainsOrganics { get { return (Organics?.Count ?? 0) > 0 ; } }
-        public int CountOrganics { get { return Organics?.Count ?? 0; } }
+        public bool ContainsOrganicsScans { get { return (Organics?.Count ?? 0) > 0 ; } }
+        public int CountOrganicsScans { get { return Organics?.Count ?? 0; } }
+        public int CountOrganicsScansAnalysed { get { return Organics?.Where(x => x.ScanType == JournalScanOrganic.ScanTypeEnum.Analyse).Count() ?? 0; } }
+        public bool OrganicsFullyAnalysed { get { return CountOrganicsScansAnalysed == CountBioSignals; } }
 
         public bool Mapped { get; private set; }                        // WE Mapped it - affects prices
         public bool EfficientMapped { get; private set; }               // WE efficiently mapped it - affects prices
