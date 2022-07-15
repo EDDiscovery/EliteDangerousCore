@@ -454,7 +454,7 @@ namespace EliteDangerousCore
                 case EDStar.RoguePlanet:
                     return "Rogue Planet".T(EDCTx.Bodies_RP);
                 case EDStar.Unknown:
-                    return "Unknown Star class".T(EDCTx.Bodies_SUnknown);
+                    return "Unknown star class".T(EDCTx.Bodies_SUnknown);
 
                 default:
                     return string.Format("Class {0} star".T(EDCTx.Bodies_UNK), id.ToString());

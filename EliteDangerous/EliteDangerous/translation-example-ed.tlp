@@ -33,7 +33,7 @@ SECTION Bodies
 .Nebula: "Nebula" @
 .StellarRemnantNebula: "Stellar Remnant Nebula" @
 .SUnknown: "Unknown star class" @
-.UNK: "Class {0} class star" @
+.UNK: "Class {0} star" @
 
 SECTION EDPlanet
 
