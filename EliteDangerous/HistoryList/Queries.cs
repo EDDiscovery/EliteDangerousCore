@@ -141,6 +141,8 @@ namespace EliteDangerousCore
                 new Query("Contains a Carrier",  "CountCarrierSignals >= 1", QueryType.BuiltIn ),
                 new Query("Contains a NSP",  "CountNotableStellarPhenomenaSignals >= 1", QueryType.BuiltIn ),
 
+                new Query("Scanned all organics on a planet","CountOrganicsScansAnalysed >= 1 And CountOrganicsScansAnalysed == CountBioSignals", QueryType.BuiltIn ),
+
                 new Query("Body Name","BodyName contains <name>", QueryType.Example ),
                 new Query("Scan Type","ScanType contains Detailed", QueryType.Example ),
                 new Query("Distance (ls)","DistanceFromArrivalLS >= 20", QueryType.Example ),

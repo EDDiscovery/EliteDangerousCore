@@ -373,14 +373,15 @@ namespace EliteDangerousCore.JournalEvents
             information.Append(bodyname);
 
             // symbols
-            if (js.Mapped)
-                information.Append(" \u2B24\u2713"); // let the cmdr see that this body is already mapped - this is a check
+            if (js.Mapped)  // let the cmdr see that this body is already mapped
+                information.Append(" \u24C2");
 
-            if (js.CountOrganicsScans >= 1)
+            if (js.CountOrganicsScansAnalysed > 0) // if scanned
             {
-                information.Append(" \u232C"); // let the cmdr see that this body is already mapped - this is a check
-                if (js.CountOrganicsScansAnalysed == js.CountBioSignals)
-                    information.Append("\u2713"); // let the cmdr see that this body is already mapped - this is a check
+                if (js.CountOrganicsScansAnalysed == js.CountBioSignals)   // and show organic scan situation - fully with a tick
+                    information.Append(" \u232C\u2713");
+                else
+                    information.Append(" \u232C");  // partial
             }
 
             information.Append(" is a ".T(EDCTx.JournalScanInfo_isa));
