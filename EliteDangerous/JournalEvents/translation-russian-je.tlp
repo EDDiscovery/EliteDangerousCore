@@ -517,7 +517,7 @@ SECTION JournalScan
 .OrbitalPeriod: "Orbital Period: {0} days\n" => "Сидерический период обращения: {0} дн\n"
 .SMA: "Semi Major Axis: {0:0.00}AU\n" => "Большая полуось: {0:0.00} а. е.\n"
 .SMK: "Semi Major Axis: {0}km\n" => "Большая полуось: {0} км\n"
-.OrbitalEccentricity: "Orbital Eccentricity: {0:0.000}\n" => "Эксцентриситет орбиты: {0:0.000}\n"
+.OrbitalEccentricity: "Orbital Eccentricity: " => "Эксцентриситет орбиты: "
 .OrbitalInclination: "Orbital Inclination: {0:0.000}°\n" => "Наклонение орбиты: {0:0.000}°\n"
 .ArgOfPeriapsis: "Arg Of Periapsis: {0:0.000}°\n" => "Аргумент перицентра : {0:0.000}\n"
 .AbsoluteMagnitude: "Absolute Magnitude: {0:0.00}\n" => "Абсолютная звездная величина: {0:0.00}°\n"

@@ -517,7 +517,7 @@ SECTION JournalScan
 .OrbitalPeriod: "Orbital Period: {0} days\n" => "Période de révolution: {0} jours\n"
 .SMA: "Semi Major Axis: {0:0.00}AU\n" => "Demi-grand axe : {0:0.00}UA\n"
 .SMK: "Semi Major Axis: {0}km\n" => "Demi-grand axe : {0}km\n"
-.OrbitalEccentricity: "Orbital Eccentricity: {0:0.000}\n" => "Excentricité orbitale: {0:0.000}\n"
+.OrbitalEccentricity: "Orbital Eccentricity: " => "Excentricité orbitale: "
 .OrbitalInclination: "Orbital Inclination: {0:0.000}°\n" => "Inclinaison orbitale: {0:0.000}°\n"
 .ArgOfPeriapsis: "Arg Of Periapsis: {0:0.000}°\n" => "Argument du périastre: {0:0.000}°\n"
 .AbsoluteMagnitude: "Absolute Magnitude: {0:0.00}\n" => "Magnitude absolue: {0:0.00}\n"
