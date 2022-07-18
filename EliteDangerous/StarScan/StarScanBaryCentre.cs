@@ -24,12 +24,12 @@ namespace EliteDangerousCore
     public partial class StarScan
     {
         // used by historylist directly for a single update during play, in foreground..  Also used by above.. so can be either in fore/back
-        public bool AddBaryCentre(JournalScanBaryCentre jsa, ISystem sys, bool saveit = true)
+        public bool AddBarycentre(JournalScanBaryCentre jsa, ISystem sys, bool saveit = true)
         {
             if (ScanDataBySysaddr.TryGetValue(jsa.SystemAddress, out SystemNode sn))       // if we have it
             {
               //  System.Diagnostics.Debug.WriteLine($"Add barycentre {jsa.StarSystem} {jsa.BodyID}");
-                sn.BaryCentres[jsa.BodyID] = jsa;        // add it
+                sn.Barycentres[jsa.BodyID] = jsa;        // add it
 
                 // find any stored scans associated with this scanbarycentre and assign
 

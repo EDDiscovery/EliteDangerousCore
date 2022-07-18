@@ -57,7 +57,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void AddStarScan(StarScan s, ISystem system)
         {
-            s.AddBaryCentre(this,system);
+            s.AddBarycentre(this,system);
         }
 
         public override void FillInformation(ISystem sysunused, string whereamiunused, out string info, out string detailed)

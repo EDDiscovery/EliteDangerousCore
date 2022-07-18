@@ -177,7 +177,7 @@ namespace EliteDangerousCore
 
                             // if belt is before this, display belts here
 
-                            while (displaybelts && lastbelt != null && planetnode.ScanData != null && (lastbelt.BeltData == null || planetnode.ScanData.IsOrbitingBaryCentre || lastbelt.BeltData.OuterRad < planetnode.ScanData.nSemiMajorAxis))
+                            while (displaybelts && lastbelt != null && planetnode.ScanData != null && (lastbelt.BeltData == null || planetnode.ScanData.IsOrbitingBarycentre || lastbelt.BeltData.OuterRad < planetnode.ScanData.nSemiMajorAxis))
                             {
                                 // if too far across, go back to star
                                 if (leftmiddle.X + planetsize.Width > widthavailable) // if too far across..
@@ -211,7 +211,7 @@ namespace EliteDangerousCore
 
                                 bool habzone = false;
 
-                                if (ShowHabZone && planetnode.ScanData != null && !planetnode.ScanData.IsOrbitingBaryCentre && planetnode.ScanData.nSemiMajorAxis.HasValue)
+                                if (ShowHabZone && planetnode.ScanData != null && !planetnode.ScanData.IsOrbitingBarycentre && planetnode.ScanData.nSemiMajorAxis.HasValue)
                                 {
                                     double dist = planetnode.ScanData.nSemiMajorAxis.Value / BodyPhysicalConstants.oneLS_m;  // m , converted to LS
                                     habzone =  dist >= habzonestartls && dist <= habzoneendls;

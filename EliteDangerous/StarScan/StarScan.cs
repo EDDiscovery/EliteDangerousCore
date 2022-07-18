@@ -77,7 +77,7 @@ namespace EliteDangerousCore
                 }
                 else if (e.Item1.EventTypeID == JournalTypeEnum.ScanBaryCentre)
                 {
-                    if (AddBaryCentre((JournalScanBaryCentre)e.Item1, e.Item2,false))
+                    if (AddBarycentre((JournalScanBaryCentre)e.Item1, e.Item2,false))
                         todelete.Add(e);
                 }
             }

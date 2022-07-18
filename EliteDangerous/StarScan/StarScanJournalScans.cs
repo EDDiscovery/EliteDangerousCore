@@ -324,7 +324,7 @@ namespace EliteDangerousCore
                     {
                         for (int i = 0; i < sc.Parents.Count - 1; i++)   // look thru the list, and assign at the correct level
                         {
-                            if (systemnode.BaryCentres.TryGetValue(sc.Parents[i].BodyID, out JournalScanBaryCentre jsa))
+                            if (systemnode.Barycentres.TryGetValue(sc.Parents[i].BodyID, out JournalScanBaryCentre jsa))
                             {
                                 sc.Parents[i].Barycentre = jsa;
                             }

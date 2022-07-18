@@ -104,7 +104,7 @@ namespace EliteDangerousCore
                     {
                         if (drawtype != DrawLevel.MoonLevel)       // other than moons
                         {
-                            if (sn.ScanData.IsOrbitingBaryCentre)          // if in orbit of barycentre
+                            if (sn.ScanData.IsOrbitingBarycentre)          // if in orbit of barycentre
                             {
                                 string s = $"{(sn.ScanData.DistanceFromArrivalLS):N1}ls";
                                 if (sn.ScanData.nSemiMajorAxis.HasValue)
@@ -120,7 +120,7 @@ namespace EliteDangerousCore
                         }
                         else
                         {
-                            if (!sn.ScanData.IsOrbitingBaryCentre && sn.ScanData.nSemiMajorAxis.HasValue)          // if not in orbit of barycentre
+                            if (!sn.ScanData.IsOrbitingBarycentre && sn.ScanData.nSemiMajorAxis.HasValue)          // if not in orbit of barycentre
                             {
                                 nodelabels[1] = nodelabels[1].AppendPrePad($"{(sn.ScanData.nSemiMajorAxis / BodyPhysicalConstants.oneLS_m):N1}ls", Environment.NewLine);
                             }

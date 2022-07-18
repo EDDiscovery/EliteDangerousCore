@@ -87,7 +87,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             public string Type { get; set; }
             public int BodyID { get; set; }
-            public bool IsBaryCentre { get { return Type.Equals("Null", StringComparison.InvariantCultureIgnoreCase); } }
+            public bool IsBarycentre { get { return Type.Equals("Null", StringComparison.InvariantCultureIgnoreCase); } }
             public bool IsStar { get { return Type.Equals("Star", StringComparison.InvariantCultureIgnoreCase); } }
             public bool IsPlanet { get { return Type.Equals("Planet", StringComparison.InvariantCultureIgnoreCase); } }
             public JournalScanBaryCentre Barycentre { get; set; }        // set by star scan system if its a barycentre
