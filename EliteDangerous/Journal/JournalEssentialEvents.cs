@@ -48,8 +48,9 @@ namespace EliteDangerousCore
                 JournalTypeEnum.ShipyardSwap , JournalTypeEnum.ShipyardTransfer, JournalTypeEnum.StoredModules, JournalTypeEnum.StoredShips,
 
                 // scan
-                JournalTypeEnum.Scan, JournalTypeEnum.SellExplorationData, JournalTypeEnum.SAASignalsFound, JournalTypeEnum.SAAScanComplete, JournalTypeEnum.FSSBodySignals, JournalTypeEnum.ScanOrganic,
-                JournalTypeEnum.FSSSignalDiscovered,
+                JournalTypeEnum.Scan, JournalTypeEnum.SAASignalsFound, JournalTypeEnum.FSSBodySignals, JournalTypeEnum.ScanOrganic,  JournalTypeEnum.FSSSignalDiscovered, JournalTypeEnum.ScanBaryCentre, 
+                JournalTypeEnum.CodexEntry,
+                JournalTypeEnum.SellExplorationData,JournalTypeEnum.SAAScanComplete, 
 
                 // misc
                 JournalTypeEnum.ClearSavedGame,
@@ -68,18 +69,19 @@ namespace EliteDangerousCore
             }
         }
 
-        static public JournalTypeEnum[] JumpScanEssentialEvents = new JournalTypeEnum[]     // 
+        static public JournalTypeEnum[] JumpScanEssentialEvents = new JournalTypeEnum[]    
             {
                 JournalTypeEnum.FSDJump,JournalTypeEnum.CarrierJump, JournalTypeEnum.Location,JournalTypeEnum.SAAScanComplete,
+
                 JournalTypeEnum.Scan, JournalTypeEnum.SAASignalsFound, JournalTypeEnum.FSSBodySignals, JournalTypeEnum.ScanOrganic, JournalTypeEnum.FSSSignalDiscovered, JournalTypeEnum.ScanBaryCentre,
                 JournalTypeEnum.CodexEntry
             };
-        static public JournalTypeEnum[] JumpEssentialEvents = new JournalTypeEnum[]     // 
+        static public JournalTypeEnum[] JumpEssentialEvents = new JournalTypeEnum[]    
             {
                 JournalTypeEnum.FSDJump,JournalTypeEnum.CarrierJump,JournalTypeEnum.Location,
             };
 
-        static public JournalTypeEnum[] NoEssentialEvents = new JournalTypeEnum[]     // 
+        static public JournalTypeEnum[] NoEssentialEvents = new JournalTypeEnum[]    
             {
             };
     }

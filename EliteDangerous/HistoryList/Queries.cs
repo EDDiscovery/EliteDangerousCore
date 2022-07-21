@@ -355,7 +355,7 @@ namespace EliteDangerousCore
                     }
                 }
 
-                if (v.StartsWith("Parent.") || v.StartsWith("Parent.Parent.") || v.StartsWith("Sibling") || v.StartsWith("Child"))      // specials, for scan
+                if (v.StartsWith("Parent.") || v.StartsWith("Sibling") || v.StartsWith("Child") || v.StartsWith("Star.") )      // specials, for scan
                     res.Add(JournalTypeEnum.Scan);
             }
 
@@ -608,6 +608,12 @@ namespace EliteDangerousCore
                     //foreach (var v in scandatavars.NameEnumuerable) System.Diagnostics.Debug.WriteLine($"Search scandata var {v} = {scandatavars[v]}");
 
                     var res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, wantiter1 || wantiter2, debugit: debugit);
+                    
+                    //var resold = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, out string errlist, out BaseUtils.ConditionLists.ErrorClass errcls, wantiter1 || wantiter2, debugit: debugit);
+
+                    //if ( res.Item1 != resold.Item1)
+                    //{
+                    //}
 
                     //if (res.Item1 == false && res.Item2.Last().ItemName.Contains("Parent.Rings[Iter1].OuterRad")) debugit = true;
 
