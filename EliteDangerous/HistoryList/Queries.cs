@@ -607,14 +607,14 @@ namespace EliteDangerousCore
 
                     //foreach (var v in scandatavars.NameEnumuerable) System.Diagnostics.Debug.WriteLine($"Search scandata var {v} = {scandatavars[v]}");
 
-                    var res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, out string evalerrlist, out BaseUtils.ConditionLists.ErrorClass errclassunused, wantiter1 || wantiter2, debugit: debugit);
+                    var res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, wantiter1 || wantiter2, debugit: debugit);
 
                     //if (res.Item1 == false && res.Item2.Last().ItemName.Contains("Parent.Rings[Iter1].OuterRad")) debugit = true;
 
                     if (wantreport)
                     {
                         JournalScan jsi = he.journalEntry as JournalScan;
-                        resultinfo.AppendLine($"{he.EventTimeUTC} Journal type {he.EntryType} {jsi?.BodyName} : {res.Item1} : {evalerrlist} : Last {res.Item2.Last().ItemName} {res.Item2.Last().MatchCondition} {res.Item2.Last().MatchString}");
+                        resultinfo.AppendLine($"{he.EventTimeUTC} Journal type {he.EntryType} {jsi?.BodyName} : {res.Item1} : Last {res.Item2.Last().ItemName} {res.Item2.Last().MatchCondition} {res.Item2.Last().MatchString} : {res.Item3.Last()??""}");
                         //foreach ( var x in res.Item2)    resultinfo.AppendLine($"  {x.ItemName} {x.MatchCondition} {x.MatchString}");
 
                         // System.Diagnostics.Debug.WriteLine($"For entry type {he.EventTimeUTC} {he.EntryType} error: {resultinfo}");
