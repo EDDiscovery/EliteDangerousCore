@@ -715,12 +715,13 @@ namespace EliteDangerousCore
         }
 
 
-        public static void GenerateReportFields(string bodykey, List<HistoryEntry> hes, out string name, out string info, out string infotooltip, out string pinfo)
+        public static void GenerateReportFields(string bodykey, List<HistoryEntry> hes, out string name, out string info, out string infotooltip, 
+                                                bool pinfowanted, out string pinfo, 
+                                                bool ppinfowanted, out string ppinfo, 
+                                                bool sinfowanted, out string sinfo, 
+                                                bool ssinfowanted, out string ssinfo)
         {
-            name = "";
-            info = "";
-            pinfo = "";
-            infotooltip = "";
+            name = info = pinfo = infotooltip = ppinfo = sinfo = ssinfo = "";
 
             HistoryEntry he = hes.Last();
 
@@ -729,10 +730,37 @@ namespace EliteDangerousCore
                 JournalScan js = he.journalEntry as JournalScan;
                 name = js.BodyName;
                 info = js.DisplayString();
-                if (he.ScanNode?.Parent != null)
+                if (pinfowanted && he.ScanNode?.Parent != null)
                 {
                     var parentjs = he.ScanNode?.Parent?.ScanData;               // parent journal entry, may be null
                     pinfo = parentjs != null ? parentjs.DisplayString() : he.ScanNode.Parent.CustomNameOrOwnname + " " + he.ScanNode.Parent.NodeType;
+                }
+
+                if (ppinfowanted && he.ScanNode?.Parent?.Parent != null)        // if want parent.parent and we have one
+                {
+                    var parentparentjs = he.ScanNode.Parent.Parent.ScanData;               // parent journal entry, may be null
+
+                    ppinfo = parentparentjs != null ? parentparentjs.DisplayString() : he.ScanNode.Parent.Parent.CustomNameOrOwnname + " " + he.ScanNode.Parent.Parent.NodeType;
+                }
+
+                if ( sinfowanted)
+                {
+                    var scandata = FindStarOf(he.ScanNode, 0);
+
+                    if (scandata != null)
+                    {
+                        sinfo = scandata.DisplayString();
+                    }
+                }
+
+                if ( ssinfowanted)
+                {
+                    var scandata = FindStarOf(he.ScanNode, 1);
+
+                    if (scandata != null)
+                    {
+                        ssinfo = scandata.DisplayString();
+                    }
                 }
             }
             else if (he.EntryType == JournalTypeEnum.FSSBodySignals)
