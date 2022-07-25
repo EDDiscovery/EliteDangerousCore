@@ -721,31 +721,33 @@ namespace EliteDangerousCore
                                                 bool sinfowanted, out string sinfo, 
                                                 bool ssinfowanted, out string ssinfo)
         {
-            name = info = pinfo = infotooltip = ppinfo = sinfo = ssinfo = "";
+            name = bodykey;
+            
+            info = pinfo = infotooltip = ppinfo = sinfo = ssinfo = "";
 
-            HistoryEntry he = hes.Last();
+            HistoryEntry hescan = hes.Find(x => x.EntryType == JournalTypeEnum.Scan); // if we have a scan in the results list, do that first
 
-            if (he.EntryType == JournalTypeEnum.Scan)
+            if ( hescan != null)
             {
-                JournalScan js = he.journalEntry as JournalScan;
-                name = js.BodyName;
+                JournalScan js = hescan.journalEntry as JournalScan;
                 info = js.DisplayString();
-                if (pinfowanted && he.ScanNode?.Parent != null)
+
+                if (pinfowanted && hescan.ScanNode?.Parent != null)
                 {
-                    var parentjs = he.ScanNode?.Parent?.ScanData;               // parent journal entry, may be null
-                    pinfo = parentjs != null ? parentjs.DisplayString() : he.ScanNode.Parent.CustomNameOrOwnname + " " + he.ScanNode.Parent.NodeType;
+                    var parentjs = hescan.ScanNode?.Parent?.ScanData;               // parent journal entry, may be null
+                    pinfo = parentjs != null ? parentjs.DisplayString() : hescan.ScanNode.Parent.CustomNameOrOwnname + " " + hescan.ScanNode.Parent.NodeType;
                 }
 
-                if (ppinfowanted && he.ScanNode?.Parent?.Parent != null)        // if want parent.parent and we have one
+                if (ppinfowanted && hescan.ScanNode?.Parent?.Parent != null)        // if want parent.parent and we have one
                 {
-                    var parentparentjs = he.ScanNode.Parent.Parent.ScanData;               // parent journal entry, may be null
+                    var parentparentjs = hescan.ScanNode.Parent.Parent.ScanData;               // parent journal entry, may be null
 
-                    ppinfo = parentparentjs != null ? parentparentjs.DisplayString() : he.ScanNode.Parent.Parent.CustomNameOrOwnname + " " + he.ScanNode.Parent.Parent.NodeType;
+                    ppinfo = parentparentjs != null ? parentparentjs.DisplayString() : hescan.ScanNode.Parent.Parent.CustomNameOrOwnname + " " + hescan.ScanNode.Parent.Parent.NodeType;
                 }
 
-                if ( sinfowanted)
+                if (sinfowanted)
                 {
-                    var scandata = FindStarOf(he.ScanNode, 0);
+                    var scandata = FindStarOf(hescan.ScanNode, 0);
 
                     if (scandata != null)
                     {
@@ -753,9 +755,9 @@ namespace EliteDangerousCore
                     }
                 }
 
-                if ( ssinfowanted)
+                if (ssinfowanted)
                 {
-                    var scandata = FindStarOf(he.ScanNode, 1);
+                    var scandata = FindStarOf(hescan.ScanNode, 1);
 
                     if (scandata != null)
                     {
@@ -763,66 +765,25 @@ namespace EliteDangerousCore
                     }
                 }
             }
-            else if (he.EntryType == JournalTypeEnum.FSSBodySignals)
-            {
-                JournalFSSBodySignals jb = he.journalEntry as JournalFSSBodySignals;
-                name = jb.BodyName;
-                jb.FillInformation(he.System, "", out info, out string d);
-            }
-            else if (he.EntryType == JournalTypeEnum.SAASignalsFound)
-            {
-                JournalSAASignalsFound jbs = he.journalEntry as JournalSAASignalsFound;
-                name = jbs.BodyName;
-                jbs.FillInformation(he.System, "", out info, out string d);
-            }
-            else if (he.EntryType == JournalTypeEnum.FSSSignalDiscovered)
-            {
-                JournalFSSSignalDiscovered jfsd = he.journalEntry as JournalFSSSignalDiscovered;
 
-                name = he.System.Name;
-                foreach (var h in hes)
+            foreach (var he in hes)
+            {
+                if (he.EntryType != JournalTypeEnum.Scan)      // for all the rest of the results, ignoring scan
                 {
-                    string time = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(h.EventTimeUTC).ToString();
-                    ((JournalFSSSignalDiscovered)h.journalEntry).FillInformation(he.System, "", 20, out string info2, out string detailed);
-                    if (hes.Count > 1)
+                    string time = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(he.EventTimeUTC).ToString();
+                    he.journalEntry.FillInformation(he.System, "", out string info2, out string detailed);
+                    if (info.HasChars())
                         info = info.AppendPrePad(time + ": " + info2, Environment.NewLine);
                     else
                         info = info.AppendPrePad(info2, Environment.NewLine);
 
-                    infotooltip += time + Environment.NewLine + detailed.LineIndentation("    ") + Environment.NewLine;
+                    if (detailed.HasChars())
+                    {
+                        infotooltip += time + Environment.NewLine + detailed.LineIndentation("    ") + Environment.NewLine;
+                    }
                 }
             }
-            else if (he.EntryType == JournalTypeEnum.CodexEntry)
-            {
-                name = bodykey;
-                foreach (var h in hes)
-                {
-                    JournalCodexEntry ce = h.journalEntry as JournalCodexEntry;
-                    string time = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(h.EventTimeUTC).ToString();
-                    ce.FillInformation(he.System, "", out string info2, out string d);
-                    if (hes.Count > 1)
-                        info = info.AppendPrePad(time + ": " + info2, Environment.NewLine);
-                    else
-                        info = info.AppendPrePad(info2, Environment.NewLine);
-                }
-            }
-            else if (he.EntryType == JournalTypeEnum.ScanOrganic)
-            {
-                name = bodykey;
-                foreach (var h in hes)
-                {
-                    var so = h.journalEntry as JournalScanOrganic;
-                    string time = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(h.EventTimeUTC).ToString();
 
-                    so.FillInformation(h.System, "", out string info2, out string d);
-                    if (hes.Count > 1)
-                        info = info.AppendPrePad(time + ": " + info2, Environment.NewLine);
-                    else
-                        info = info.AppendPrePad(info2, Environment.NewLine);
-                }
-            }
-            else
-                System.Diagnostics.Debug.Assert(false, "Missing journal type decode");
         }
     }
 
