@@ -126,7 +126,7 @@ namespace EliteDangerousCore
                 new Query("Fast Orbital period","Level >= 1 And nOrbitalPeriod < 28800", QueryType.BuiltIn ),
                 new Query("High Eccentric Orbit","Level >= 1 And nEccentricity > 0.9", QueryType.BuiltIn ),
                 new Query("Low Eccentricity Orbit","Level >= 1 And nEccentricity <= 0.01", QueryType.BuiltIn ),
-                new Query("Tidal Lock","IsPlanet IsTrue And nTidalLock == 1", QueryType.BuiltIn ),
+                new Query("Tidal Lock","IsPlanet IsTrue And nTidalLock IsTrue", QueryType.BuiltIn ),
 
                 new Query("High number of Jumponium Materials","IsLandable IsTrue And JumponiumCount >= 5", QueryType.BuiltIn ),
 
@@ -693,7 +693,7 @@ namespace EliteDangerousCore
 
         private static JournalScan FindStarOf(StarScan.ScanNode node, int stardepth)
         {
-            var plist = node.ScanData?.Parents;
+            var plist = node?.ScanData?.Parents;
             if (plist != null)
             {
                 for (int i = 0; i < plist.Count; i++)
