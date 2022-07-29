@@ -15,6 +15,7 @@
  */
 
 using QuickJSON;
+using static BaseUtils.TypeHelpers;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -37,22 +38,36 @@ namespace EliteDangerousCore.JournalEvents
 
         }
 
-        public string StarSystem { get; private set; }                    
-        public long SystemAddress { get; private set; }                   
-        public int BodyID { get; private set; }                            
+        [PropertyNameAttribute("Barycentre system")]
+        public string StarSystem { get; private set; }
+        [PropertyNameAttribute("Frontier system address")]
+        public long SystemAddress { get; private set; }
+        [PropertyNameAttribute("Frontier body ID")]
+        public int BodyID { get; private set; }
 
+        [PropertyNameAttribute("SMA in m")]
         public double SemiMajorAxis { get; private set; }
+        [PropertyNameAttribute("SMA in AU")]
         public double SemiMajorAxisAU { get { return SemiMajorAxis / BodyPhysicalConstants.oneAU_m; } }
+        [PropertyNameAttribute("SMA in LS")]
         public double SemiMajorAxisLS { get { return SemiMajorAxis / BodyPhysicalConstants.oneLS_m; } }
+        [PropertyNameAttribute("SMA in LS if > 0.1 LS, or km")]
         public string SemiMajorAxisLSKM { get { return (SemiMajorAxis >= BodyPhysicalConstants.oneLS_m / 10 ? ((SemiMajorAxis / BodyPhysicalConstants.oneLS_m).ToString("N1") + "ls") : ((SemiMajorAxis / 1000).ToString("N0") + "km")); } }
 
-        public double Eccentricity { get; private set; }                  
-        public double OrbitalInclination { get; private set; }            
+        [PropertyNameAttribute("Eccentricity of orbit")]
+        public double Eccentricity { get; private set; }
+        [PropertyNameAttribute("Degrees")]
+        public double OrbitalInclination { get; private set; }
+        [PropertyNameAttribute("Degrees")]
         public double Periapsis { get; private set; }
+        [PropertyNameAttribute("Seconds")]
         public double OrbitalPeriod { get; private set; }
+        [PropertyNameAttribute("Days")]
         public double OrbitalPeriodDays { get { return OrbitalPeriod / BodyPhysicalConstants.oneDay_s; } }
 
+        [PropertyNameAttribute("Degrees")]
         public double AscendingNode { get; private set; }
+        [PropertyNameAttribute("Degrees")]
         public double MeanAnomaly { get; private set; }
 
         public void AddStarScan(StarScan s, ISystem system)

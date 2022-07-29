@@ -16,6 +16,7 @@
 using QuickJSON;
 using EliteDangerousCore.DB;
 using System;
+using static BaseUtils.TypeHelpers;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -52,27 +53,48 @@ namespace EliteDangerousCore.JournalEvents
             EDDBodyId = evt["EDDBodyID"].Int(-1);
         }
 
+        [PropertyNameAttribute("Frontier entry ID")]
         public long EntryID { get; set; }
+        [PropertyNameAttribute("Frontier Name")]
         public string Name { get; set; }
+        [PropertyNameAttribute("Localised name")]
         public string Name_Localised { get; set; }
+        [PropertyNameAttribute("FDName Category")]
         public string Category { get; set; }
+        [PropertyNameAttribute("Localised category")]
         public string Category_Localised { get; set; }
+        [PropertyNameAttribute("FDName Sub Category")]
         public string SubCategory { get; set; }
+        [PropertyNameAttribute("Sub Category localised")]
         public string SubCategory_Localised { get; set; }
+        [PropertyNameAttribute("FDName Region of galaxy")]
         public string Region { get; set; }
+        [PropertyNameAttribute("Localised name of region")]
         public string Region_Localised { get; set; }
+        [PropertyNameAttribute("System name")]
         public string System { get; set; }
+        [PropertyNameAttribute("FD System address")]
         public long? SystemAddress { get; set; }
+        [PropertyNameAttribute("Is it a new entry")]
         public bool? IsNewEntry { get; set; }
+        [PropertyNameAttribute("Is traits discovered")]
         public bool? NewTraitsDiscovered { get; set; }
+        [PropertyNameAttribute("Worth, cr")]
         public long? VoucherAmount { get; set; }
+        [PropertyNameAttribute("Traits array")]
         public string [] Traits { get; set; }
+        [PropertyNameAttribute("Nearest destination on planet if given")]
         public string NearestDestination { get; set; }
+        [PropertyNameAttribute("Nearest destination localised")]
         public string NearestDestination_Localised { get; set; }
+        [PropertyNameAttribute("Lattitude if on planet if given")]
         public double? Latitude { get; set; }
+        [PropertyNameAttribute("Longitude if on planet if given")]
         public double? Longitude { get; set; }
 
+        [PropertyNameAttribute("EDD assigned body name")]
         public string EDDBodyName { get; set; }        // EDD addition, filled in in ED. Null for not known
+        [PropertyNameAttribute("EDD assigned body ID")]
         public int EDDBodyId { get; set; } = -1;       // EDD addition, filled in in ED.  -1 for not known
 
         public bool Equals(JournalCodexEntry other)

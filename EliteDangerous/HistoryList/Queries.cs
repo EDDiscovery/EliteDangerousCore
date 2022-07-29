@@ -279,12 +279,12 @@ namespace EliteDangerousCore
                     classsepar: ".",
                     comment: "FSSBodySignals");
             othernames.AddRange(fssbodynames);        // merge blind 
-            List<BaseUtils.TypeHelpers.PropertyNameInfo> codexnames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalCodexEntry), 
+            List<BaseUtils.TypeHelpers.PropertyNameInfo> codexnames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalCodexEntry),
                     bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     classsepar: ".",
                     comment: "CodexEntry");
             othernames.AddRange(codexnames);        // merge blind
-            List<BaseUtils.TypeHelpers.PropertyNameInfo> scanorganicnames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalScanOrganic), 
+            List<BaseUtils.TypeHelpers.PropertyNameInfo> scanorganicnames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalScanOrganic),
                     bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     classsepar: ".",
                     comment: "ScanOrganic");
@@ -301,20 +301,20 @@ namespace EliteDangerousCore
                     classnames.Add(v);
             }
 
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventTimeUTC", "Date Time in UTC", BaseUtils.ConditionEntry.MatchType.DateAfter, "All"));     // add on a few from the base class..
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventTimeLocal", "Date Time in Local time", BaseUtils.ConditionEntry.MatchType.DateAfter, "All"));
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventType", "Event type (Scan etc)", BaseUtils.ConditionEntry.MatchType.Equals, "All"));
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("SyncedEDSM", "Synced to EDSM, 1 = yes, 0 = not", BaseUtils.ConditionEntry.MatchType.IsTrue, "All"));
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventTimeUTC", "Date time value, US format: UTC", BaseUtils.ConditionEntry.MatchType.DateAfter, "All"));     // add on a few from the base class..
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventTimeLocal", "Date time value, US format: Local", BaseUtils.ConditionEntry.MatchType.DateAfter, "All"));
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventType", "String value: Event type (Scan etc)", BaseUtils.ConditionEntry.MatchType.Equals, "All"));
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("SyncedEDSM", "Boolean value: 1 = true, 0 = false: Synced to EDSM", BaseUtils.ConditionEntry.MatchType.IsTrue, "All"));
 
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Level", "Level of body in system, 0 =star, 1 = Planet, 2 = moon, 3 = submoon", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Sibling.Count", "Number of siblings", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Child.Count", "Number of child moons", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("JumponiumCount", "Number of jumponium materials available", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));     // add on ones we synthesise
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Level", "Integer value: Level of body in system, 0 star, 1 planet, 2 moon, 3 submoon", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Sibling.Count", "Integer value: Number of siblings", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Child.Count", "Integer value: Number of child moons", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("JumponiumCount", "Integer value: Number of jumponium materials available", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));     // add on ones we synthesise
 
             var defaultvars = new BaseUtils.Variables();
             defaultvars.AddPropertiesFieldsOfClass(new BodyPhysicalConstants(), "", null, 10);
             foreach (var v in defaultvars.NameEnumuerable)
-                classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo(v, "Constant", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Constant"));
+                classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo(v, "Floating point value: Constant", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Constant"));
 
             classnames.Sort(delegate (BaseUtils.TypeHelpers.PropertyNameInfo left, BaseUtils.TypeHelpers.PropertyNameInfo right) { return left.Name.CompareTo(right.Name); });
 

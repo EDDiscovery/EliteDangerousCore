@@ -28,26 +28,35 @@ namespace EliteDangerousCore.JournalEvents
     [JournalEntryType(JournalTypeEnum.Scan)]
     public partial class JournalScan : JournalEntry, IStarScan, IBodyNameIDOnly
     {
+        [PropertyNameAttribute("Is it a star")]
         public bool IsStar { get { return StarType != null; } }
+        [PropertyNameAttribute("Is it a belt or cluster")]
         public bool IsBeltCluster { get { return StarType == null && PlanetClass == null; } }
+        [PropertyNameAttribute("Is it a planet")]
         public bool IsPlanet { get { return PlanetClass != null; } }
 
-        public string BodyDesignation { get; set; }     // nerfed name
+        [PropertyNameAttribute("EDD name for well known bodies")]
+        public string BodyDesignation { get; set; }
 
+        [PropertyNameAttribute("EDD name or journal name")]
         public string BodyDesignationOrName { get { return BodyDesignation ?? BodyName; } }
 
         // ALL
         [PropertyNameAttribute("Scan type, Basic, Detailed, NavBeacon, NavBeaconDetail, AutoScan, may be empty for very old scans")]
         public string ScanType { get; private set; }                        // 3.0 scan type  Basic, Detailed, NavBeacon, NavBeaconDetail, (3.3) AutoScan, or empty for older ones
+        [PropertyNameAttribute("Frontier body name")]
         public string BodyName { get; private set; }                        // direct (meaning no translation)
         [PropertyNameAttribute("Internal Frontier ID, is empty for older scans")]
         public int? BodyID { get; private set; }                            // direct
+        [PropertyNameAttribute("Name of star")]
         public string StarSystem { get; private set; }                      // direct (3.5)
         [PropertyNameAttribute("Internal Frontier ID, is empty for older scans")]
         public long? SystemAddress { get; private set; }                    // direct (3.5)
+        [PropertyNameAttribute("In light seconds")]
         public double DistanceFromArrivalLS { get; private set; }           // direct
         [PropertyNameAttribute("In meters")]
         public double DistanceFromArrivalm { get { return DistanceFromArrivalLS * BodyPhysicalConstants.oneLS_m; } }
+        [PropertyNameAttribute("Astronomic Unit (AU) and Ls")]
         public string DistanceFromArrivalText { get { return string.Format("{0:N2}AU ({1:N1}ls)", DistanceFromArrivalLS / BodyPhysicalConstants.oneAU_LS, DistanceFromArrivalLS); } }
         [PropertyNameAttribute("Seconds, may be negative indicating reverse rotation")]
         public double? nRotationPeriod { get; private set; }                // direct, can be negative indi
@@ -57,14 +66,19 @@ namespace EliteDangerousCore.JournalEvents
         public double? nSurfaceTemperature { get; private set; }            // direct
         [PropertyNameAttribute("Meters")]
         public double? nRadius { get; private set; }                        // direct
+        [PropertyNameAttribute("Radius in units of Sol")]
         public double? nRadiusSols { get { if (nRadius.HasValue) return nRadius.Value / BodyPhysicalConstants.oneSolRadius_m; else return null; } }
+        [PropertyNameAttribute("Radius in units of Earth")]
         public double? nRadiusEarths { get { if (nRadius.HasValue) return nRadius.Value / BodyPhysicalConstants.oneEarthRadius_m; else return null; } }
 
+        [PropertyNameAttribute("Does the body have rings or belts")]
         public bool HasRingsOrBelts { get { return Rings != null && Rings.Length > 0; } }
+        [PropertyNameAttribute("Does the body have belts")]
         public bool HasBelts { get { return HasRingsOrBelts && Rings[0].Name.Contains("Belt"); } }
+        [PropertyNameAttribute("Does the body have rings")]
         public bool HasRings { get { return HasRingsOrBelts && !Rings[0].Name.Contains("Belt"); } }
 
-        [PropertyNameAttribute("Rings[1 to N] _Name, _RingClass, _MassMT, _InnerRad (m), _OuterRad. Also RingCount")]
+        [PropertyNameAttribute("Ring information")]
         public StarPlanetRing[] Rings { get; private set; }
 
         [PropertyNameAttribute("Distance of inner ring from planet, Meters, null if no rings")]
@@ -72,19 +86,27 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Distance of final outer ring from planet, Meters, null if no rings")]
         public double? RingsOuterm { get { if (Rings != null) return Rings.Select(x => x.OuterRad).Max(); else return null; } }
 
-        [PropertyNameAttribute("Parents[1 to N] _Type (Null=Barycentre, Star, Planet), _BodyID. Also ParentsCount. First is nearest body")]
+        [PropertyNameAttribute("Parent body information. First is nearest body")]
         public List<BodyParent> Parents { get; private set; }
+        [PropertyNameAttribute("Orbiting a barycentre")]
         public bool IsOrbitingBarycentre { get { return Parents?.FirstOrDefault()?.Type == "Null"; } }
+        [PropertyNameAttribute("Orbiting a planet")]
         public bool IsOrbitingPlanet { get { return Parents?.FirstOrDefault()?.Type == "Planet"; } }
+        [PropertyNameAttribute("Orbiting a star")]
         public bool IsOrbitingStar { get { return Parents?.FirstOrDefault()?.Type == "Star"; } }
 
-
+        [PropertyNameAttribute("Has the body been previously discovered - older scans do not have this field")]
         public bool? WasDiscovered { get; private set; }                    // direct, 3.4, indicates whether the body has already been discovered
+        [PropertyNameAttribute("Has the body not been previously discovered")]
         public bool IsNotPreviouslyDiscovered { get { return WasDiscovered.HasValue && WasDiscovered == false; } } // true if its there, and its not mapped
+        [PropertyNameAttribute("Has the body been previously discovered")]
         public bool IsPreviouslyDiscovered { get { return WasDiscovered.HasValue && WasDiscovered == true; } } // true if its there, and its discovered
 
+        [PropertyNameAttribute("Has the body been previously mapped - older scans do not have this field")]
         public bool? WasMapped { get; private set; }                        // direct, 3.4, indicates whether the body has already been mapped
+        [PropertyNameAttribute("Has the body not been previously mapped")]
         public bool IsNotPreviouslyMapped { get { return WasMapped.HasValue && WasMapped == false; } }    // true if its there, and its not mapped
+        [PropertyNameAttribute("Has the body been previously mapped")]
         public bool IsPreviouslyMapped { get { return WasMapped.HasValue && WasMapped == true; } }    // true if its there, and its mapped
 
         // STAR
@@ -96,9 +118,11 @@ namespace EliteDangerousCore.JournalEvents
         public string StarTypeText { get { return IsStar ? Bodies.StarName(StarTypeID) : ""; } }   // Long form star name, from StarTypeID, localised
         [PropertyNameAttribute("Ratio of Sol")]
         public double? nStellarMass { get; private set; }                   // direct
+        [PropertyNameAttribute("Absolute magnitude, in Sol fractions")]
         public double? nAbsoluteMagnitude { get; private set; }             // direct
-        [PropertyNameAttribute("Yerkes Spectral Classification")]
+        [PropertyNameAttribute("Yerkes Spectral Classification, may not be present")]
         public string Luminosity { get; private set; }                      // character string (I,II,.. V)
+        [PropertyNameAttribute("Star subclass number, may not be present")]
         public int? StarSubclass { get; private set; }                      // star Subclass, direct, 3.4
         [PropertyNameAttribute("StarType (long) Subclass Luminosity (K3Vab)")]
         public string StarClassification { get { return (StarType ?? "") + (StarSubclass?.ToStringInvariant() ?? "") + (Luminosity ?? ""); } }
@@ -109,14 +133,19 @@ namespace EliteDangerousCore.JournalEvents
 
         // All orbiting bodies (Stars/Planets), not main star
 
+        [PropertyNameAttribute("Estimated distance allowing for a barycentre, m")]
         public double DistanceAccountingForBarycentre { get { return nSemiMajorAxis.HasValue && !IsOrbitingBarycentre ? nSemiMajorAxis.Value : DistanceFromArrivalLS * BodyPhysicalConstants.oneLS_m; } } // in metres
 
         [PropertyNameAttribute("Meters")]
         public double? nSemiMajorAxis { get; private set; }                 // direct, m
+        [PropertyNameAttribute("AU")]
         public double? nSemiMajorAxisAU { get { if (nSemiMajorAxis.HasValue) return nSemiMajorAxis.Value / BodyPhysicalConstants.oneAU_m; else return null; } }
+        [PropertyNameAttribute("Light seconds")]
         public double? nSemiMajorAxisLS { get { if (nSemiMajorAxis.HasValue) return nSemiMajorAxis.Value / BodyPhysicalConstants.oneLS_m; else return null; } }
+        [PropertyNameAttribute("LS is greater than .1 ls, else KM")]
         public string SemiMajorAxisLSKM { get { return nSemiMajorAxis.HasValue ? (nSemiMajorAxis >= BodyPhysicalConstants.oneLS_m / 10 ? ((nSemiMajorAxis.Value / BodyPhysicalConstants.oneLS_m).ToString("N1") + "ls") : ((nSemiMajorAxis.Value / 1000).ToString("N0") + "km")) : ""; } }
 
+        [PropertyNameAttribute("Eccentricity of orbit")]
         public double? nEccentricity { get; private set; }                  // direct
         [PropertyNameAttribute("Degrees")]
         public double? nOrbitalInclination { get; private set; }            // direct, degrees
@@ -124,45 +153,66 @@ namespace EliteDangerousCore.JournalEvents
         public double? nPeriapsis { get; private set; }                     // direct, degrees
         [PropertyNameAttribute("Seconds")]
         public double? nOrbitalPeriod { get; private set; }                 // direct, seconds
+        [PropertyNameAttribute("Days")]
         public double? nOrbitalPeriodDays { get { if (nOrbitalPeriod.HasValue) return nOrbitalPeriod.Value / BodyPhysicalConstants.oneDay_s; else return null; } }
         [PropertyNameAttribute("Degrees")]
         public double? nAscendingNode { get; private set; }                  // odyssey update 7 22/9/21, degrees
         [PropertyNameAttribute("Degrees")]
         public double? nMeanAnomaly { get; private set; }                    // odyssey update 7 22/9/21, degrees
 
+        [PropertyNameAttribute("Mass of star or planet in KG")]
         public double? nMassKG { get { return IsPlanet ? nMassEM * BodyPhysicalConstants.oneEarth_KG : nStellarMass * BodyPhysicalConstants.oneSol_KG; } }
 
+        [PropertyNameAttribute("Tilt, radians")]
         public double? nAxialTilt { get; private set; }                     // direct, radians
+        [PropertyNameAttribute("Tilt, degrees")]
         public double? nAxialTiltDeg { get { if (nAxialTilt.HasValue) return nAxialTilt.Value * 180.0 / Math.PI; else return null; } }
+        [PropertyNameAttribute("Is in tidal lock")]
         public bool? nTidalLock { get; private set; }                       // direct
 
         // Planets
         [PropertyNameAttribute("Long text name from journal")]
         public string PlanetClass { get; private set; }                     // planet class, direct. If belt cluster, null. Try to avoid. Not localised
+        [PropertyNameAttribute("EDD Enum")]
         public EDPlanet PlanetTypeID { get; }                       // planet class -> ID
         [PropertyNameAttribute("Localised Name")]
         public string PlanetTypeText { get { return IsPlanet ? Bodies.PlanetTypeName(PlanetTypeID) : ""; } }   // Use in preference to planet class for display
 
+        [PropertyNameAttribute("Is it an ammonia world")]
         public bool AmmoniaWorld { get { return Bodies.AmmoniaWorld(PlanetTypeID); } }
+        [PropertyNameAttribute("Is it an earth like world")]
         public bool Earthlike { get { return Bodies.Earthlike(PlanetTypeID); } }
+        [PropertyNameAttribute("Is it a water world")]
         public bool WaterWorld { get { return Bodies.WaterWorld(PlanetTypeID); } }
+        [PropertyNameAttribute("Is it a sudarsky gas giant world")]
         public bool SudarskyGasGiant { get { return Bodies.SudarskyGasGiant(PlanetTypeID); } }
+        [PropertyNameAttribute("Is it a gas giant world")]
         public bool GasGiant { get { return Bodies.GasGiant(PlanetTypeID); } }
+        [PropertyNameAttribute("Is it a water giant world")]
         public bool WaterGiant { get { return Bodies.WaterGiant(PlanetTypeID); } }
+        [PropertyNameAttribute("Is it an helium gas world")]
         public bool HeliumGasGiant { get { return Bodies.HeliumGasGiant(PlanetTypeID); } }
+        [PropertyNameAttribute("Is it an gas world")]
         public bool GasWorld { get { return Bodies.GasWorld(PlanetTypeID); } }          // any type of gas world
 
         [PropertyNameAttribute("Empty, Terraformable, Terraformed, Terraforming")]
         public string TerraformState { get; private set; }                  // direct, can be empty or a string
+        [PropertyNameAttribute("Is it terraformable or been terraformed")]
         public bool Terraformable { get { return TerraformState != null && new[] { "terraformable", "terraforming", "terraformed" }.Contains(TerraformState, StringComparer.InvariantCultureIgnoreCase); } }
+        [PropertyNameAttribute("Can it be teraformed")]
         public bool CanBeTerraformable { get { return TerraformState != null && new[] { "terraformable", "terraforming" }.Contains(TerraformState, StringComparer.InvariantCultureIgnoreCase); } }
 
+        [PropertyNameAttribute("Does it have atmosphere")]
         public bool HasAtmosphere { get { return Atmosphere != "none"; } }  // none is used if no atmosphere
+        [PropertyNameAttribute("Atmosphere string, can be none")]
         public string Atmosphere { get; private set; }                      // processed data, always there, may be "none"
+        [PropertyNameAttribute("EDD ID")]
         public EDAtmosphereType AtmosphereID { get; }                       // Atmosphere -> ID (Ammonia, Carbon etc)
+        [PropertyNameAttribute("EDD atmospheric property")]
         public EDAtmosphereProperty AtmosphereProperty { get; private set; }  // Atomsphere -> Property (None, Rich, Thick , Thin, Hot)
+        [PropertyNameAttribute("Does body have atmosphere composition list")]
         public bool HasAtmosphericComposition { get { return AtmosphereComposition != null && AtmosphereComposition.Any(); } }
-        [PropertyNameAttribute("Not Searchable")]
+        [PropertyNameAttribute("Dictionary of atmosphere composition, in %")]
         public Dictionary<string, double> AtmosphereComposition { get; private set; }
         public List<KeyValuePair<string, double>> SortedAtmosphereComposition()     // highest first
         {
@@ -176,34 +226,45 @@ namespace EliteDangerousCore.JournalEvents
                 return null;
         }
 
-        [PropertyNameAttribute("Not Searchable")]
+        [PropertyNameAttribute("Dictionary of planet composition, in fractional percent")]
         public Dictionary<string, double> PlanetComposition { get; private set; }
+        [PropertyNameAttribute("Does it have planetary composition stats")]
         public bool HasPlanetaryComposition { get { return PlanetComposition != null && PlanetComposition.Any(); } }
 
+        [PropertyNameAttribute("Journal volcanism string")]
         public string Volcanism { get; private set; }                       // direct from journal - can be null or a blank string
+        [PropertyNameAttribute("EDD Volcanism ID")]
         public EDVolcanism VolcanismID { get; }                     // Volcanism -> ID (Water_Magma, Nitrogen_Magma etc)
+        [PropertyNameAttribute("Has volcanism, excluding unknowns")]
         public bool HasMeaningfulVolcanism { get { return VolcanismID != EDVolcanism.None && VolcanismID != EDVolcanism.Unknown; } }
+        [PropertyNameAttribute("EDD Volcanism type")]
         public EDVolcanismProperty VolcanismProperty { get; private set; }               // Volcanism -> Property (None, Major, Minor)
         [PropertyNameAttribute("m/s")]
         public double? nSurfaceGravity { get; private set; }                // direct
+        [PropertyNameAttribute("Fractions of earth gravity")]
         public double? nSurfaceGravityG { get { if (nSurfaceGravity.HasValue) return nSurfaceGravity.Value / BodyPhysicalConstants.oneGee_m_s2; else return null; } }
         [PropertyNameAttribute("Pascals")]
         public double? nSurfacePressure { get; private set; }               // direct
+        [PropertyNameAttribute("Fractions of earth atmosphere")]
         public double? nSurfacePressureEarth { get { if (nSurfacePressure.HasValue) return nSurfacePressure.Value / BodyPhysicalConstants.oneAtmosphere_Pa; else return null; } }
+        [PropertyNameAttribute("Is it landable (may be null if not valid for body)")]
         public bool? nLandable { get; private set; }                        // direct
+        [PropertyNameAttribute("Is it def landable")]
         public bool IsLandable { get { return nLandable.HasValue && nLandable.Value; } }
         [PropertyNameAttribute("Earths")]
         public double? nMassEM { get; private set; }                        // direct, not in description of event, mass in EMs
         [PropertyNameAttribute("Moons")]
         public double? nMassMM { get { if (nMassEM.HasValue) return nMassEM * BodyPhysicalConstants.oneEarthMoonMassRatio; else return null; } }
 
+        [PropertyNameAttribute("Does it have materials list")]
         public bool HasMaterials { get { return Materials != null && Materials.Any(); } }
-        [PropertyNameAttribute("Not Searchable")]
+        [PropertyNameAttribute("Materials dictionary, in %")]
         public Dictionary<string, double> Materials { get; private set; }       // fdname and name is the same for materials on planets.  name is lower case
         public bool HasMaterial(string name) { return Materials != null && Materials.ContainsKey(name.ToLowerInvariant()); }
         [PropertyNameAttribute("List of materials, comma separated")]
         public string MaterialList { get { if (Materials != null) { var na = (from x in Materials select x.Key).ToArray(); return String.Join(",", na); } else return null; } }
 
+        [PropertyNameAttribute("What is the reserve level of the ring")]
         public EDReserve ReserveLevel { get; private set; }
 
         // EDD additions
@@ -214,30 +275,52 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("EDSM first reported time UTC")]
         public DateTime EDSMDiscoveryUTC { get; private set; }
 
+        [PropertyNameAttribute("Signal information")]
         public List<JournalSAASignalsFound.SAASignal> Signals { get; set; }          // can be null if no signals for this node, else its a list of signals.  set up by StarScan
+        [PropertyNameAttribute("Does it contain geo signals")]
         public bool ContainsGeoSignals { get { return Signals?.Count(x => x.IsGeo) > 0 ? true : false; } }
+        [PropertyNameAttribute("Does it contain bio signals")]
         public bool ContainsBioSignals { get { return Signals?.Count(x => x.IsBio) > 0 ? true : false; } }
+        [PropertyNameAttribute("Does it contain thargoid signals")]
         public bool ContainsThargoidSignals { get { return Signals?.Count(x => x.IsThargoid) > 0 ? true : false; } }
+        [PropertyNameAttribute("Does it contain guardian signals")]
         public bool ContainsGuardianSignals { get { return Signals?.Count(x => x.IsGuardian) > 0 ? true : false; } }
+        [PropertyNameAttribute("Does it contain human signals")]
         public bool ContainsHumanSignals { get { return Signals?.Count(x => x.IsHuman) > 0 ? true : false; } }
+        [PropertyNameAttribute("Does it contain other signals")]
         public bool ContainsOtherSignals { get { return Signals?.Count(x => x.IsOther) > 0 ? true : false; } }
+        [PropertyNameAttribute("Does it contain uncategorised signals")]
         public bool ContainsUncategorisedSignals { get { return Signals?.Count(x => x.IsUncategorised) > 0 ? true : false; } }
+        [PropertyNameAttribute("Count of geo signals")]
         public int CountGeoSignals { get { return Signals?.Where(x => x.IsGeo).Sum(y => y.Count) ?? 0; } }
+        [PropertyNameAttribute("Count of bio signals")]
         public int CountBioSignals { get { return Signals?.Where(x => x.IsBio).Sum(y => y.Count) ?? 0; } }
+        [PropertyNameAttribute("Count of thargoid signals")]
         public int CountThargoidSignals { get { return Signals?.Where(x => x.IsThargoid).Sum(y => y.Count) ?? 0; } }
+        [PropertyNameAttribute("Count of guardian signals")]
         public int CountGuardianSignals { get { return Signals?.Where(x => x.IsGuardian).Sum(y => y.Count) ?? 0; } }
+        [PropertyNameAttribute("Count of human signals")]
         public int CountHumanSignals { get { return Signals?.Where(x => x.IsHuman).Sum(y => y.Count) ?? 0; } }
+        [PropertyNameAttribute("Count of other signals")]
         public int CountOtherSignals { get { return Signals?.Where(x => x.IsOther).Sum(y => y.Count) ?? 0; } }
+        [PropertyNameAttribute("Count of uncategorised signals")]
         public int CountUncategorisedSignals { get { return Signals?.Where(x => x.IsUncategorised).Sum(y => y.Count) ?? 0; } }
 
 
+        [PropertyNameAttribute("Organics information")]
         public List<JournalScanOrganic> Organics { get; set; }  // can be null if nothing for this node, else a list of organics. Set up by StarScan
+        [PropertyNameAttribute("Any organic scans")]
         public bool ContainsOrganicsScans { get { return (Organics?.Count ?? 0) > 0 ; } }
+        [PropertyNameAttribute("Count of all scans")]
         public int CountOrganicsScans { get { return Organics?.Count ?? 0; } }
+        [PropertyNameAttribute("Count of fully analysed scans")]
         public int CountOrganicsScansAnalysed { get { return Organics?.Where(x => x.ScanType == JournalScanOrganic.ScanTypeEnum.Analyse).Count() ?? 0; } }
+        [PropertyNameAttribute("Are all organics on this body analysed")]
         public bool OrganicsFullyAnalysed { get { return CountOrganicsScansAnalysed == CountBioSignals; } }
 
+        [PropertyNameAttribute("Have we mapped it")]
         public bool Mapped { get; private set; }                        // WE Mapped it - affects prices
+        [PropertyNameAttribute("Have we efficiently mapped it")]
         public bool EfficientMapped { get; private set; }               // WE efficiently mapped it - affects prices
 
         public void SetMapped(bool m, bool e)
@@ -245,7 +328,9 @@ namespace EliteDangerousCore.JournalEvents
             Mapped = m; EfficientMapped = e;
         }
 
+        [PropertyNameAttribute("cr")]
         public int EstimatedValue { get { return GetEstimatedValues().EstimatedValue(WasDiscovered, WasMapped, Mapped, EfficientMapped, IsEDSMBody); } }     // Direct access to its current EstimatedValue, provides backwards compatibility for code and action packs.
+        [PropertyNameAttribute("cr")]
         public int MaximumEstimatedValue { get { return GetEstimatedValues().EstimatedValue(WasDiscovered, WasMapped, true, true,false); } }     // Direct access to its current EstimatedValue, provides backwards compatibility for code and action packs.
 
         public int HasSameParents(JournalScan other)     // return -1 if not, or index of last match , 0,1,2
@@ -303,6 +388,8 @@ namespace EliteDangerousCore.JournalEvents
             nRadius = evt["Radius"].DoubleNull();                           // Stars/Planets, not belt clusters    
 
             Rings = evt["Rings"]?.ToObjectQ<StarPlanetRing[]>();            // Stars/Planets, may be Null, not belt clusters
+            foreach (var r in Rings.EmptyIfNull())
+                r.Normalise();
 
             StarType = evt["StarType"].StrNull();                           // stars have this field
 

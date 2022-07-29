@@ -16,6 +16,7 @@
 
 using System;
 using System.Text;
+using static BaseUtils.TypeHelpers;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -23,11 +24,31 @@ namespace EliteDangerousCore.JournalEvents
     {
         public class StarPlanetRing
         {
-            public string Name;     // may be null
-            public string RingClass;    // may be null
-            public double MassMT;
-            public double InnerRad;
-            public double OuterRad;
+            [PropertyNameAttribute("Name")]
+            public string Name { get; set; }        // may be null
+            [PropertyNameAttribute("Ring class")]
+            public string RingClass { get; set; }    // may be null
+            public enum RingClassEnum { Unknown , Rocky, Metalic, Icy, MetalRich }
+
+            [PropertyNameAttribute("Ring class as enumeration")]
+            public RingClassEnum RingClassID { get; set; }
+
+            [PropertyNameAttribute("Mass in mega tons (1e6)t")]
+            public double MassMT { get; set; }
+            [PropertyNameAttribute("Inner radius m")]
+            public double InnerRad { get; set; }
+            [PropertyNameAttribute("Outer radius m")]
+            public double OuterRad { get; set; }
+
+            public void Normalise()
+            {
+                if (Enum.TryParse<RingClassEnum>(RingClass.ReplaceIfStartsWith("eRingClass_"), true, out RingClassEnum rc))
+                    RingClassID = rc;
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"!!! Unknown Ring Class {RingClass}");
+                }
+            }
 
             // has trailing LF
             public string RingInformation(string frontpad = "  ")
@@ -85,11 +106,17 @@ namespace EliteDangerousCore.JournalEvents
         [System.Diagnostics.DebuggerDisplay("BodyParent {Type} {BodyID}")]
         public class BodyParent
         {
+            [PropertyNameAttribute("Type of node, Null = barycentre, Planet, Star")]
             public string Type { get; set; }
+            [PropertyNameAttribute("Frontier body ID")]
             public int BodyID { get; set; }
+            [PropertyNameAttribute("Is node a barycentre")]
             public bool IsBarycentre { get { return Type.Equals("Null", StringComparison.InvariantCultureIgnoreCase); } }
+            [PropertyNameAttribute("Is node a star")]
             public bool IsStar { get { return Type.Equals("Star", StringComparison.InvariantCultureIgnoreCase); } }
+            [PropertyNameAttribute("Is node a planet")]
             public bool IsPlanet { get { return Type.Equals("Planet", StringComparison.InvariantCultureIgnoreCase); } }
+            [PropertyNameAttribute("Properties of the barycentre")]
             public JournalScanBaryCentre Barycentre { get; set; }        // set by star scan system if its a barycentre
         }
 

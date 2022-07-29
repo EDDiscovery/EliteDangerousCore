@@ -14,6 +14,8 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
+using static BaseUtils.TypeHelpers;
+
 namespace EliteDangerousCore.JournalEvents
 {
     public partial class JournalScan : JournalEntry
@@ -22,6 +24,8 @@ namespace EliteDangerousCore.JournalEvents
         {
             return IsStar ? StarTypeImageName : PlanetClassImageName;
         }
+
+        [PropertyNameAttribute(null)] // cancel
 
         public string StarTypeImageName                      // property so its gets outputted via JSON
         {
@@ -183,6 +187,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
+        [PropertyNameAttribute(null)]       // cancel
         public string PlanetClassImageName       // property so its gets outputted via JSON
         {
             get
