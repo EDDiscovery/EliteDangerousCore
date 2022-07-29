@@ -110,9 +110,9 @@ namespace EliteDangerousCore
                             "(\"Abs(Parent.Rings[Iter1].InnerRad-Parents[1].Barycentre.SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\" Or \"Abs(Parent.Rings[Iter1].OuterRad-Parents[1].Barycentre.SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\")", QueryType.BuiltIn ),
 
                 new Query("Planet with a large number of Moons","IsPlanet IsTrue And Child.Count >= 8", QueryType.BuiltIn ),
-                new Query("Moon of a Moon","Level == 3", QueryType.BuiltIn ),
-                new Query("Moons orbiting Terraformables","Level >= 2 And Parent.Terraformable IsTrue", QueryType.BuiltIn ),
-                new Query("Moons orbiting Earthlike","Level >= 2 And Parent.Earthlike IsTrue", QueryType.BuiltIn ),
+                new Query("Moon of a Moon","Parent.IsPlanet IsTrue And Parent.Parent.IsPlanet IsTrue", QueryType.BuiltIn ),
+                new Query("Moons orbiting Terraformables","Parent.Terraformable IsTrue", QueryType.BuiltIn ),
+                new Query("Moons orbiting Earthlike","Parent.Earthlike IsTrue", QueryType.BuiltIn ),
 
                 new Query("Close Binary","IsPlanet IsTrue And IsOrbitingBarycentre IsTrue And Sibling.Count == 1 And nRadius/nSemiMajorAxis > 0.4 And " +
                     "Sibling[1].nRadius/Sibling[1].nSemiMajorAxis > 0.4", QueryType.BuiltIn ),
@@ -121,11 +121,11 @@ namespace EliteDangerousCore
                 new Query("Gas giant has a large moon","( SudarskyGasGiant IsTrue Or GasGiant IsTrue Or HeliumGasGiant IsTrue ) And ( Child[Iter1].nRadius >= 5000000 )", QueryType.BuiltIn ),
                 new Query("Gas giant has a tiny moon","( SudarskyGasGiant IsTrue Or GasGiant IsTrue Or HeliumGasGiant IsTrue ) And ( Child[Iter1].nRadius <= 500000 )", QueryType.BuiltIn ),
 
-                new Query("Tiny Moon","Level >= 2 And nRadius < 300000", QueryType.BuiltIn ),
-                new Query("Fast Rotation of a non tidally locked body","Level >= 1 And nTidalLock IsFalse And Abs(nRotationPeriod) < 3600", QueryType.BuiltIn ),
-                new Query("Fast Orbital period","Level >= 1 And nOrbitalPeriod < 28800", QueryType.BuiltIn ),
-                new Query("High Eccentric Orbit","Level >= 1 And nEccentricity > 0.9", QueryType.BuiltIn ),
-                new Query("Low Eccentricity Orbit","Level >= 1 And nEccentricity <= 0.01", QueryType.BuiltIn ),
+                new Query("Tiny Moon","Parent.IsPlanet IsTrue And nRadius < 300000", QueryType.BuiltIn ),
+                new Query("Fast Rotation of a non tidally locked body","IsPlanet IsTrue And nTidalLock IsFalse And Abs(nRotationPeriod) < 3600", QueryType.BuiltIn ),
+                new Query("Planet with fast orbital period","IsPlanet IsTrue And nOrbitalPeriod < 28800", QueryType.BuiltIn ),
+                new Query("Planet with high Eccentric Orbit","IsPlanet IsTrue And nEccentricity > 0.9", QueryType.BuiltIn ),
+                new Query("Planet with low Eccentricity Orbit","IsPlanet IsTrue  And nEccentricity <= 0.01", QueryType.BuiltIn ),
                 new Query("Tidal Lock","IsPlanet IsTrue And nTidalLock IsTrue", QueryType.BuiltIn ),
 
                 new Query("High number of Jumponium Materials","IsLandable IsTrue And JumponiumCount >= 5", QueryType.BuiltIn ),
@@ -306,7 +306,7 @@ namespace EliteDangerousCore
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventType", "String value: Event type (Scan etc)", BaseUtils.ConditionEntry.MatchType.Equals, "All"));
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("SyncedEDSM", "Boolean value: 1 = true, 0 = false: Synced to EDSM", BaseUtils.ConditionEntry.MatchType.IsTrue, "All"));
 
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Level", "Integer value: Level of body in system, 0 star, 1 planet, 2 moon, 3 submoon", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Level", "Integer value: Level of body in system", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Sibling.Count", "Integer value: Number of siblings", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Child.Count", "Integer value: Number of child moons", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("JumponiumCount", "Integer value: Number of jumponium materials available", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));     // add on ones we synthesise
