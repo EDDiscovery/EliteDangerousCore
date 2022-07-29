@@ -91,7 +91,7 @@ namespace EliteDangerousCore
                 new Query("Has Volcanism","HasMeaningfulVolcanism IsTrue", QueryType.BuiltIn ),
                 new Query("Landable with Volcanism","HasMeaningfulVolcanism IsTrue And IsLandable IsTrue", QueryType.BuiltIn ),
                 new Query("Earth like planet","Earthlike IsTrue", QueryType.BuiltIn ),
-                new Query("Bigger than Earth","IsPlanet IsTrue And nMassEM > 1", QueryType.BuiltIn ),
+                new Query("More mass than Earth","IsPlanet IsTrue And nMassEM > 1", QueryType.BuiltIn ),
                 new Query("Hotter than Hades","IsPlanet IsTrue And nSurfaceTemperature >= 2273", QueryType.BuiltIn ),
 
                 new Query("Has Rings","HasRings IsTrue", QueryType.BuiltIn ),
@@ -142,6 +142,10 @@ namespace EliteDangerousCore
                 new Query("Contains a NSP",  "CountNotableStellarPhenomenaSignals >= 1", QueryType.BuiltIn ),
 
                 new Query("Scanned all organics on a planet","CountOrganicsScansAnalysed >= 1 And CountOrganicsScansAnalysed == CountBioSignals", QueryType.BuiltIn ),
+
+                new Query("Star has Rings","HasRings IsTrue And IsStar IsTrue", QueryType.BuiltIn ),
+                new Query("Star has same magnitude as Sol","nAbsoluteMagnitudeSol >= -0.5 And nAbsoluteMagnitudeSol <= 0.5", QueryType.BuiltIn ),
+                new Query("Star is brighter magnitude than Sirius","nAbsoluteMagnitudeSol >= 11", QueryType.BuiltIn ),
 
                 new Query("Body Name","BodyName contains <name>", QueryType.Example ),
                 new Query("Scan Type","ScanType contains Detailed", QueryType.Example ),

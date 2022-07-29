@@ -120,8 +120,8 @@ namespace EliteDangerousCore.JournalEvents
         public double? nStellarMass { get; private set; }                   // direct
         [PropertyNameAttribute("Absolute magnitude")]
         public double? nAbsoluteMagnitude { get; private set; }             // direct
-        [PropertyNameAttribute("Absolute magnitude referenced to Sol (0=Sol)")]     // From https://en.wikipedia.org/wiki/Absolute_magnitude
-        public double? nAbsoluteMagnitudeSol { get { return nAbsoluteMagnitude != null ? nAbsoluteMagnitude + 26.832 : null; } }    
+        [PropertyNameAttribute("Absolute magnitude referenced to Sol (0=Sol)")]     // From https://en.wikipedia.org/wiki/Absolute_magnitude and from the journal Sol entry
+        public double? nAbsoluteMagnitudeSol { get { return nAbsoluteMagnitude != null ? nAbsoluteMagnitude - 4.829987 : null; } }    
         [PropertyNameAttribute("Yerkes Spectral Classification, may not be present")]
         public string Luminosity { get; private set; }                      // character string (I,II,.. V)
         [PropertyNameAttribute("Star subclass number, may not be present")]
