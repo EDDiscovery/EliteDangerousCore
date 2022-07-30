@@ -118,7 +118,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StarTypeText { get { return IsStar ? Bodies.StarName(StarTypeID) : ""; } }   // Long form star name, from StarTypeID, localised
         [PropertyNameAttribute("Ratio of Sol")]
         public double? nStellarMass { get; private set; }                   // direct
-        [PropertyNameAttribute("Absolute magnitude")]
+        [PropertyNameAttribute("Absolute magnitude (less is more, Sol = 4.83)")]
         public double? nAbsoluteMagnitude { get; private set; }             // direct
         [PropertyNameAttribute("Absolute magnitude referenced to Sol (0=Sol)")]     // From https://en.wikipedia.org/wiki/Absolute_magnitude and from the journal Sol entry
         public double? nAbsoluteMagnitudeSol { get { return nAbsoluteMagnitude != null ? nAbsoluteMagnitude - 4.829987 : null; } }    

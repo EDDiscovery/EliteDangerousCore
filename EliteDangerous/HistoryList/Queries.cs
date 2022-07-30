@@ -78,10 +78,6 @@ namespace EliteDangerousCore
                             " Or (IsOrbitingBarycentre IsTrue And Parents[3].IsBarycentre IsFalse And Parents[2].IsBarycentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[2].Barycentre.SemiMajorAxis >= Parent.Rings[2].OuterRad And Parents[2].Barycentre.SemiMajorAxis <= Parent.Rings[3].InnerRad And Parent.Level >= 1)" + // trinary and ((O-O)-(O-O)) quarteries
                             " Or (IsOrbitingBarycentre IsTrue And Parents[3].IsBarycentre IsTrue And Parents[2].IsBarycentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[3].Barycentre.SemiMajorAxis >= Parent.Rings[2].OuterRad And Parents[3].Barycentre.SemiMajorAxis <= Parent.Rings[3].InnerRad And Parent.Level >= 1)", QueryType.BuiltIn ), // (((O-O)-O)-O) quartery
                 
-
-                new Query("Heavier than Sol","nStellarMass > 1", QueryType.BuiltIn ),
-                new Query("Bigger than Sol","nRadius > 695700000", QueryType.BuiltIn ),
-
                 new Query("Landable","IsPlanet IsTrue And IsLandable IsTrue", QueryType.BuiltIn ),
                 new Query("Landable and Terraformable","IsPlanet IsTrue And IsLandable IsTrue And Terraformable IsTrue", QueryType.BuiltIn ),
                 new Query("Landable with Atmosphere","IsPlanet IsTrue And IsLandable IsTrue And HasAtmosphere IsTrue", QueryType.BuiltIn ),
@@ -95,8 +91,6 @@ namespace EliteDangerousCore
                 new Query("Hotter than Hades","IsPlanet IsTrue And nSurfaceTemperature >= 2273", QueryType.BuiltIn ),
 
                 new Query("Has Rings","HasRings IsTrue", QueryType.BuiltIn ),
-                new Query("Star has Rings","HasRings IsTrue And IsStar IsTrue", QueryType.BuiltIn ),
-                new Query("Has Belts","HasBelts IsTrue", QueryType.BuiltIn ),
 
                 new Query("Planet has wide rings vs radius","(IsPlanet IsTrue And HasRings IsTrue ) And ( Rings[Iter1].OuterRad-Rings[Iter1].InnerRad >= nRadius*5)", QueryType.BuiltIn ),
 
@@ -106,6 +100,7 @@ namespace EliteDangerousCore
                                 "( IsPlanet IsTrue And Parent.IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBarycentre IsFalse ) And " +
                                 "( \"Abs(Parent.Rings[Iter1].InnerRad-nSemiMajorAxis)\" < nRadius*10 Or  \"Abs(Parent.Rings[Iter1].OuterRad-nSemiMajorAxis)\" < nRadius*10 )"
                     , QueryType.BuiltIn ),
+
                 new Query("Binary close to rings","(IsOrbitingBarycentre IsTrue And Parents[2].IsBarycentre IsFalse And Parent.HasRings IsTrue And IsPlanet IsTrue) And " + 
                             "(\"Abs(Parent.Rings[Iter1].InnerRad-Parents[1].Barycentre.SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\" Or \"Abs(Parent.Rings[Iter1].OuterRad-Parents[1].Barycentre.SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\")", QueryType.BuiltIn ),
 
@@ -144,8 +139,12 @@ namespace EliteDangerousCore
                 new Query("Scanned all organics on a planet","CountOrganicsScansAnalysed >= 1 And CountOrganicsScansAnalysed == CountBioSignals", QueryType.BuiltIn ),
 
                 new Query("Star has Rings","HasRings IsTrue And IsStar IsTrue", QueryType.BuiltIn ),
+                new Query("Star is brighter magnitude than Sirius","nAbsoluteMagnitude <= 1.5", QueryType.BuiltIn ),
+                new Query("Star is super bright","nAbsoluteMagnitude <= -2", QueryType.BuiltIn ),
+                new Query("Star has belts","HasBelts IsTrue", QueryType.BuiltIn ),
                 new Query("Star has same magnitude as Sol","nAbsoluteMagnitudeSol >= -0.5 And nAbsoluteMagnitudeSol <= 0.5", QueryType.BuiltIn ),
-                new Query("Star is brighter magnitude than Sirius","nAbsoluteMagnitudeSol >= 11", QueryType.BuiltIn ),
+                new Query("Star is heavier than Sol","nStellarMass > 1", QueryType.BuiltIn ),
+                new Query("Star is wider than Sol","nRadius > 695700000", QueryType.BuiltIn ),
 
                 new Query("Body Name","BodyName contains <name>", QueryType.Example ),
                 new Query("Scan Type","ScanType contains Detailed", QueryType.Example ),
