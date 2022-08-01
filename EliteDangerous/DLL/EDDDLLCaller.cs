@@ -33,6 +33,7 @@ namespace EliteDangerousCore.DLL
         private IntPtr pActionCommand = IntPtr.Zero;
         private IntPtr pConfig = IntPtr.Zero;
         private IntPtr pNewUIEvent = IntPtr.Zero;
+        private IntPtr pShown = IntPtr.Zero;
 
         // for a csharp assembly
         private dynamic AssemblyMainType;
@@ -77,6 +78,7 @@ namespace EliteDangerousCore.DLL
                             pActionCommand = BaseUtils.Win32.UnsafeNativeMethods.GetProcAddress(pDll, "EDDActionCommand");
                             pConfig = BaseUtils.Win32.UnsafeNativeMethods.GetProcAddress(pDll, "EDDConfig");
                             pNewUIEvent = BaseUtils.Win32.UnsafeNativeMethods.GetProcAddress(pDll, "EDDNewUIEvent");
+                            pShown = BaseUtils.Win32.UnsafeNativeMethods.GetProcAddress(pDll, "EDDMainFormShown");
                             return true;
                         }
                         else
@@ -164,6 +166,28 @@ namespace EliteDangerousCore.DLL
                 pDll = IntPtr.Zero;
                 Version = null;
                 DLLOptions = null;
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool Shown()
+        {
+            if (AssemblyMainType != null)
+            {
+                if (AssemblyMainType.GetType().GetMethod("EDDMainFormShown") != null)
+                {
+                    AssemblyMainType.EDDMainFormShown();
+                    return true;
+                }
+            }
+            else if (pDll != IntPtr.Zero && pShown != null)
+            {
+                EDDDLLInterfaces.EDDDLLIF.EDDMainFormShown edf = (EDDDLLInterfaces.EDDDLLIF.EDDMainFormShown)Marshal.GetDelegateForFunctionPointer(
+                                                                                    pShown,
+                                                                                    typeof(EDDDLLInterfaces.EDDDLLIF.EDDMainFormShown));
+                edf();
                 return true;
             }
 

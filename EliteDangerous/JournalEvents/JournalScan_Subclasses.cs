@@ -25,13 +25,13 @@ namespace EliteDangerousCore.JournalEvents
         public class StarPlanetRing
         {
             [PropertyNameAttribute("Name")]
-            public string Name { get; set; }        // may be null
+            public string Name { get; set; }        
             [PropertyNameAttribute("Ring class")]
-            public string RingClass { get; set; }    // may be null
+            public string RingClass { get; set; }               // FDName 
             public enum RingClassEnum { Unknown , Rocky, Metalic, Icy, MetalRich }
 
             [PropertyNameAttribute("Ring class as enumeration")]
-            public RingClassEnum RingClassID { get; set; }
+            public RingClassEnum RingClassID { get; set; }      // Default will be unknown
 
             [PropertyNameAttribute("Mass in mega tons (1e6)t")]
             public double MassMT { get; set; }
@@ -42,7 +42,7 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise()
             {
-                if (Enum.TryParse<RingClassEnum>(RingClass.ReplaceIfStartsWith("eRingClass_"), true, out RingClassEnum rc))
+                if (Enum.TryParse<RingClassEnum>(RingClass.ReplaceIfStartsWith("eRingClass_"), true, out RingClassEnum rc))     // may not have eringclass on it if from EDSM
                     RingClassID = rc;
                 else
                 {
@@ -55,7 +55,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 StringBuilder scanText = new StringBuilder();
 
-                scanText.AppendFormat(frontpad + "{0} ({1})\n", Name.Alt("Unknown".T(EDCTx.Unknown)), DisplayStringFromRingClass(RingClass));
+                scanText.AppendFormat(frontpad + "{0} ({1})\n", Name.Alt("Unknown".T(EDCTx.Unknown)), TranslatedRingClass());
 
                 if (MassMT > (BodyPhysicalConstants.oneMoon_KG / 1e9 / 1000))
                     scanText.AppendFormat(frontpad + "Mass: {0:N4}{1}\n".T(EDCTx.StarPlanetRing_Mass), MassMT / (BodyPhysicalConstants.oneMoon_KG / 1E9), " Moons".T(EDCTx.JournalScan_Moons));
@@ -76,30 +76,21 @@ namespace EliteDangerousCore.JournalEvents
                 return scanText.ToNullSafeString();
             }
 
-            public static string DisplayStringFromRingClass(string ringClass)   // no trailing LF
+            public string TranslatedRingClass() 
             {
-                switch (ringClass)
+                switch (RingClassID)
                 {
-                    case null:
-                        return "Unknown".T(EDCTx.Unknown);
-                    case "eRingClass_Icy":
-                        return "Icy".T(EDCTx.StarPlanetRing_Icy);
-                    case "eRingClass_Rocky":
-                        return "Rocky".T(EDCTx.StarPlanetRing_Rocky);
-                    case "eRingClass_MetalRich":
-                        return "Metal Rich".T(EDCTx.StarPlanetRing_MetalRich);
-                    case "eRingClass_Metalic":
-                        return "Metallic".T(EDCTx.StarPlanetRing_Metallic);
-                    case "eRingClass_RockyIce":
-                        return "Rocky Ice".T(EDCTx.StarPlanetRing_RockyIce);
                     default:
-                        return ringClass.Replace("eRingClass_", "");
+                        return "Unknown".T(EDCTx.Unknown);
+                    case RingClassEnum.Icy:
+                        return "Icy".T(EDCTx.StarPlanetRing_Icy);
+                    case RingClassEnum.Rocky:
+                        return "Rocky".T(EDCTx.StarPlanetRing_Rocky);
+                    case RingClassEnum.MetalRich:
+                        return "Metal Rich".T(EDCTx.StarPlanetRing_MetalRich);
+                    case RingClassEnum.Metalic:
+                        return "Metallic".T(EDCTx.StarPlanetRing_Metallic);
                 }
-            }
-
-            public string RingClassNormalised()
-            {
-                return RingClass.Replace("eRingClass_", "").SplitCapsWordFull();
             }
         }
 
@@ -116,6 +107,8 @@ namespace EliteDangerousCore.JournalEvents
             public bool IsStar { get { return Type.Equals("Star", StringComparison.InvariantCultureIgnoreCase); } }
             [PropertyNameAttribute("Is node a planet")]
             public bool IsPlanet { get { return Type.Equals("Planet", StringComparison.InvariantCultureIgnoreCase); } }
+            [PropertyNameAttribute("Is node a ring")]
+            public bool IsRing { get { return Type.Equals("Ring", StringComparison.InvariantCultureIgnoreCase); } }
             [PropertyNameAttribute("Properties of the barycentre")]
             public JournalScanBaryCentre Barycentre { get; set; }        // set by star scan system if its a barycentre
         }

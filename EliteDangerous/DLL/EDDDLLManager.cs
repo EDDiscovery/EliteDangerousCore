@@ -147,6 +147,13 @@ namespace EliteDangerousCore.DLL
                 caller.Refresh(cmdr, je);
             }
         }
+        public void Shown()
+        {
+            foreach (EDDDLLCaller caller in DLLs)
+            {
+                caller.Shown();
+            }
+        }
 
         public void NewJournalEntry(EDDDLLInterfaces.EDDDLLIF.JournalEntry nje, bool stored)
         {

@@ -21,6 +21,7 @@ namespace EDDDLLInterfaces
 {
     public static class EDDDLLIF      
     {
+
         [StructLayout(LayoutKind.Explicit)]
         public struct JournalEntry
         {
@@ -112,6 +113,8 @@ namespace EDDDLLInterfaces
             // Version 5 Ends here
         };
 
+        public const int CallBackVersion = 6;
+
         public delegate bool EDDRequestHistory(long index, bool isjid, out JournalEntry f); //index =1..total records, or jid
         public delegate bool EDDRunAction([MarshalAs(UnmanagedType.BStr)]string eventname,
                                              [MarshalAs(UnmanagedType.BStr)]string parameters);  // parameters in format v="k",X="k"
@@ -137,13 +140,15 @@ namespace EDDDLLInterfaces
 
         // C++ DLLs implement these functions with the types indicated in the MarshalAs
 
-        public const string FLAG_HOSTNAME = "HOSTNAME=";                    // flags in
-        public const string FLAG_JOURNALVERSION = "JOURNALVERSION=";
-        public const string FLAG_CALLBACKVERSION = "CALLBACKVERSION=";
+        public const string FLAG_HOSTNAME = "HOSTNAME=";                    // flags in vstr
+        public const string FLAG_JOURNALVERSION = "JOURNALVERSION=";        // see EDDDLLHistoryEntry
+        public const string FLAG_CALLBACKVERSION = "CALLBACKVERSION=";      // see EDDCallBacks
+        public const string FLAG_CALLVERSION = "CALLVERSION=";              // this file, CallBackVersion
 
         public const string FLAG_PLAYLASTFILELOAD = "PLAYLASTFILELOAD";     // flags back
 
-        // Manadatory
+        // Called by Discoveryform Load - system is not fully up at this point. History is not available etc. No callbacks work
+        // Mandatory
         // vstr = Host Vnum [;InOptions]..
         //      HOSTNAME=x
         //      JOURNALVERSION=x
@@ -153,7 +158,7 @@ namespace EDDDLLInterfaces
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         [return: MarshalAs(UnmanagedType.BStr)]     
-        public delegate String EDDInitialise([MarshalAs(UnmanagedType.BStr)]string vstr,        
+        public delegate String EDDInitialise([MarshalAs(UnmanagedType.BStr)]string vstr,               
                                              [MarshalAs(UnmanagedType.BStr)]string dllfolder,
                                              EDDCallBacks callbacks);
 
@@ -161,13 +166,13 @@ namespace EDDDLLInterfaces
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void EDDTerminate();
 
-        // Optional
+        // Optional, called when history has been accumulated.  From now on callbacks can be used
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void EDDRefresh([MarshalAs(UnmanagedType.BStr)]string cmdname, JournalEntry lastje);
 
-        // Optional
+        // Optional, this is the JEs EDDiscovery main system sees, post filtering reordering
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void EDDNewJournalEntry(JournalEntry nje);      // this is the JEs EDDiscovery main system sees, post filtering reordering
+        public delegate void EDDNewJournalEntry(JournalEntry nje);      
 
         // Optional DLLCall in Action causes this
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -202,6 +207,14 @@ namespace EDDDLLInterfaces
         public delegate void EDDNewUnfilteredJournalEntry(JournalEntry nje);      // unfiltered stream of JEs before any ordering. Note list number is not applicable
 
         // version 5 ends here
+
+        // version 6
+
+        // Optional
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void EDDMainFormShown();                                    // after main form is shown
+
+        // version 6 ends
     }
 
 }

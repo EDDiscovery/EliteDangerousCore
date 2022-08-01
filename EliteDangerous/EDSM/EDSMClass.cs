@@ -998,8 +998,8 @@ namespace EliteDangerousCore.EDSM
                         ["InnerRad"] = ring["innerRadius"].Double() * 1000,
                         ["OuterRad"] = ring["outerRadius"].Double() * 1000,
                         ["MassMT"] = ring["mass"],
-                        ["RingClass"] = ring["type"],
-                        ["Name"] = ring["name"]
+                        ["RingClass"] = ring["type"].Str().Replace(" ", ""),// turn to string, and EDSM reports "Metal Rich" etc so get rid of space
+                        ["Name"] = ring["name"]          
                     });
                 }
 
