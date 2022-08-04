@@ -38,18 +38,17 @@ namespace EliteDangerousCore
         public static HashSet<JournalTypeEnum> AllSearchableJournalTypes { get; } = new HashSet<JournalTypeEnum> 
             { JournalTypeEnum.Scan, JournalTypeEnum.FSSBodySignals, JournalTypeEnum.SAASignalsFound, JournalTypeEnum.FSSSignalDiscovered , JournalTypeEnum.CodexEntry ,JournalTypeEnum.ScanOrganic };
 
-        public const string DefaultSearches = "Planet between inner and outer ringↈLandable and TerraformableↈLandable with High GↈLandable with RingsↈHotter than HadesↈPlanet has wide rings vs radiusↈClose orbit to parentↈClose to ringↈPlanet with a large number of MoonsↈMoons orbiting TerraformablesↈClose BinaryↈGas giant has a terraformable MoonↈTiny MoonↈFast Rotation of a non tidally locked bodyↈHigh Eccentric OrbitↈHigh number of Jumponium Materialsↈ";
-
         public enum QueryType { BuiltIn, User, Example };
 
         public class Query
         {
-            public string Name { get; set; }
-            public string Condition { get; set; }
+            public string Name { get; }
+            public string Condition { get;  }
 
-            public QueryType QueryType { get; set; }
+            public QueryType QueryType { get;  }
+            public bool DefaultSearch { get; set; }
 
-            public Query(string n, string c, QueryType qt) { Name = n; Condition = c; QueryType = qt; }
+            public Query(string n, string c, QueryType qt, bool def = false) { Name = n; Condition = c; QueryType = qt; DefaultSearch = def; }
 
             public bool User { get { return QueryType == QueryType.User; } }
             public bool UserOrBuiltIn { get { return QueryType == QueryType.BuiltIn || QueryType == QueryType.User; } }
@@ -61,69 +60,74 @@ namespace EliteDangerousCore
                             " Or (IsOrbitingBarycentre IsTrue And Parents[2].IsBarycentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[1].Barycentre.SemiMajorAxis <= Parent.RingsInnerm And Parent.Level >= 1)" + // binary body
                             " Or (IsOrbitingBarycentre IsTrue And Parents[3].IsBarycentre IsFalse And Parents[2].IsBarycentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[2].Barycentre.SemiMajorAxis <= Parent.RingsInnerm And Parent.Level >= 1)" + // trinary and ((O-O)-(O-O)) quarteries
                             " Or (IsOrbitingBarycentre IsTrue And Parents[3].IsBarycentre IsTrue And Parents[2].IsBarycentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[3].Barycentre.SemiMajorAxis <= Parent.RingsInnerm And Parent.Level >= 1)", QueryType.BuiltIn ), // (((O-O)-O)-O) quartery
+               
                 new Query("Planet inside rings","(IsOrbitingBarycentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And nSemiMajorAxis <= Parent.RingsOuterm And Parent.Level >= 1)" +
                             " Or (IsOrbitingBarycentre IsTrue And Parents[2].IsBarycentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[1].Barycentre.SemiMajorAxis <= Parent.RingsOuterm And Parent.Level >= 1)" + // binary body
                             " Or (IsOrbitingBarycentre IsTrue And Parents[3].IsBarycentre IsFalse And Parents[2].IsBarycentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[2].Barycentre.SemiMajorAxis <= Parent.RingsOuterm And Parent.Level >= 1)" + // trinary and ((O-O)-(O-O)) quarteries
                             " Or (IsOrbitingBarycentre IsTrue And Parents[3].IsBarycentre IsTrue And Parents[2].IsBarycentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[3].Barycentre.SemiMajorAxis <= Parent.RingsOuterm And Parent.Level >= 1)", QueryType.BuiltIn ), // (((O-O)-O)-O) quartery
+               
                 new Query("Planet between inner and outer ring","(IsOrbitingBarycentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And nSemiMajorAxis >= Parent.RingsInnerm And nSemiMajorAxis <= Parent.RingsOuterm And Parent.Level >= 1)" +
                             " Or (IsOrbitingBarycentre IsTrue And Parents[2].IsBarycentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[1].Barycentre.SemiMajorAxis >= Parent.RingsInnerm And Parents[1].Barycentre.SemiMajorAxis <= Parent.RingsOuterm And Parent.Level >= 1)" + // binary body
                             " Or (IsOrbitingBarycentre IsTrue And Parents[3].IsBarycentre IsFalse And Parents[2].IsBarycentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[2].Barycentre.SemiMajorAxis >= Parent.RingsInnerm And Parents[2].Barycentre.SemiMajorAxis <= Parent.RingsOuterm And Parent.Level >= 1)" + // trinary and ((O-O)-(O-O)) quarteries
-                            " Or (IsOrbitingBarycentre IsTrue And Parents[3].IsBarycentre IsTrue And Parents[2].IsBarycentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[3].Barycentre.SemiMajorAxis >= Parent.RingsInnerm And Parents[3].Barycentre.SemiMajorAxis <= Parent.RingsOuterm And Parent.Level >= 1)", QueryType.BuiltIn ), // (((O-O)-O)-O) quartery
+                            " Or (IsOrbitingBarycentre IsTrue And Parents[3].IsBarycentre IsTrue And Parents[2].IsBarycentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[3].Barycentre.SemiMajorAxis >= Parent.RingsInnerm And Parents[3].Barycentre.SemiMajorAxis <= Parent.RingsOuterm And Parent.Level >= 1)", QueryType.BuiltIn, true ), // (((O-O)-O)-O) quartery
+                
                 new Query("Planet between rings 1 and 2","(IsOrbitingBarycentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And nSemiMajorAxis >= Parent.Rings[1].OuterRad And nSemiMajorAxis <= Parent.Rings[2].InnerRad And Parent.Level >= 1)" +
                             " Or (IsOrbitingBarycentre IsTrue And Parents[2].IsBarycentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[1].Barycentre.SemiMajorAxis >= Parent.Rings[1].OuterRad And Parents[1].Barycentre.SemiMajorAxis <= Parent.Rings[2].InnerRad And Parent.Level >= 1)" + // binary body
                             " Or (IsOrbitingBarycentre IsTrue And Parents[3].IsBarycentre IsFalse And Parents[2].IsBarycentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[2].Barycentre.SemiMajorAxis >= Parent.Rings[1].OuterRad And Parents[2].Barycentre.SemiMajorAxis <= Parent.Rings[2].InnerRad And Parent.Level >= 1)" + // trinary and ((O-O)-(O-O)) quarteries
                             " Or (IsOrbitingBarycentre IsTrue And Parents[3].IsBarycentre IsTrue And Parents[2].IsBarycentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[3].Barycentre.SemiMajorAxis >= Parent.Rings[1].OuterRad And Parents[3].Barycentre.SemiMajorAxis <= Parent.Rings[2].InnerRad And Parent.Level >= 1)", QueryType.BuiltIn ), // (((O-O)-O)-O) quartery
+                
                 new Query("Planet between rings 2 and 3","(IsOrbitingBarycentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And nSemiMajorAxis >= Parent.Rings[2].OuterRad And nSemiMajorAxis <= Parent.Rings[3].InnerRad And Parent.Level >= 1)" +
                             " Or (IsOrbitingBarycentre IsTrue And Parents[2].IsBarycentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[1].Barycentre.SemiMajorAxis >= Parent.Rings[2].OuterRad And Parents[1].Barycentre.SemiMajorAxis <= Parent.Rings[3].InnerRad And Parent.Level >= 1)" + // binary body
                             " Or (IsOrbitingBarycentre IsTrue And Parents[3].IsBarycentre IsFalse And Parents[2].IsBarycentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[2].Barycentre.SemiMajorAxis >= Parent.Rings[2].OuterRad And Parents[2].Barycentre.SemiMajorAxis <= Parent.Rings[3].InnerRad And Parent.Level >= 1)" + // trinary and ((O-O)-(O-O)) quarteries
                             " Or (IsOrbitingBarycentre IsTrue And Parents[3].IsBarycentre IsTrue And Parents[2].IsBarycentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[3].Barycentre.SemiMajorAxis >= Parent.Rings[2].OuterRad And Parents[3].Barycentre.SemiMajorAxis <= Parent.Rings[3].InnerRad And Parent.Level >= 1)", QueryType.BuiltIn ), // (((O-O)-O)-O) quartery
                 
                 new Query("Landable","IsPlanet IsTrue And IsLandable IsTrue", QueryType.BuiltIn ),
-                new Query("Landable and Terraformable","IsPlanet IsTrue And IsLandable IsTrue And Terraformable IsTrue", QueryType.BuiltIn ),
+                new Query("Landable and Terraformable","IsPlanet IsTrue And IsLandable IsTrue And Terraformable IsTrue", QueryType.BuiltIn , true ),
                 new Query("Landable with Atmosphere","IsPlanet IsTrue And IsLandable IsTrue And HasAtmosphere IsTrue", QueryType.BuiltIn ),
-                new Query("Landable with High G","IsPlanet IsTrue And IsLandable IsTrue And nSurfaceGravityG >= 3", QueryType.BuiltIn ),
+                new Query("Landable with High G","IsPlanet IsTrue And IsLandable IsTrue And nSurfaceGravityG >= 3", QueryType.BuiltIn, true ),
                 new Query("Landable large planet","IsPlanet IsTrue And IsLandable IsTrue And nRadius >= 12000000", QueryType.BuiltIn ),
-                new Query("Landable with Rings","IsPlanet IsTrue And IsLandable IsTrue And HasRings IsTrue", QueryType.BuiltIn ),
+                new Query("Landable with Rings","IsPlanet IsTrue And IsLandable IsTrue And HasRings IsTrue", QueryType.BuiltIn , true),
                 new Query("Has Volcanism","HasMeaningfulVolcanism IsTrue", QueryType.BuiltIn ),
                 new Query("Landable with Volcanism","HasMeaningfulVolcanism IsTrue And IsLandable IsTrue", QueryType.BuiltIn ),
                 new Query("Earth like planet","Earthlike IsTrue", QueryType.BuiltIn ),
                 new Query("More mass than Earth","IsPlanet IsTrue And nMassEM > 1", QueryType.BuiltIn ),
-                new Query("Hotter than Hades","IsPlanet IsTrue And nSurfaceTemperature >= 2273", QueryType.BuiltIn ),
+                new Query("Hotter than Hades","IsPlanet IsTrue And nSurfaceTemperature >= 2273", QueryType.BuiltIn , true),
 
                 new Query("Has Rings","HasRings IsTrue", QueryType.BuiltIn ),
 
-                new Query("Planet has wide rings vs radius","(IsPlanet IsTrue And HasRings IsTrue ) And ( Rings[Iter1].OuterRad-Rings[Iter1].InnerRad >= nRadius*5)", QueryType.BuiltIn ),
+                new Query("Planet has wide rings vs radius","(IsPlanet IsTrue And HasRings IsTrue ) And ( Rings[Iter1].OuterRad-Rings[Iter1].InnerRad >= nRadius*5)", QueryType.BuiltIn , true),
 
-                new Query("Close orbit to parent","IsPlanet IsTrue And Parent.IsPlanet IsTrue And IsOrbitingBarycentre IsFalse And Parent.nRadius*3 > nSemiMajorAxis", QueryType.BuiltIn ),
+                new Query("Close orbit to parent","IsPlanet IsTrue And Parent.IsPlanet IsTrue And IsOrbitingBarycentre IsFalse And Parent.nRadius*3 > nSemiMajorAxis", QueryType.BuiltIn, true ),
 
                 new Query("Close to ring",
                                 "( IsPlanet IsTrue And Parent.IsPlanet IsTrue And Parent.HasRings IsTrue And IsOrbitingBarycentre IsFalse ) And " +
-                                "( \"Abs(Parent.Rings[Iter1].InnerRad-nSemiMajorAxis)\" < nRadius*10 Or  \"Abs(Parent.Rings[Iter1].OuterRad-nSemiMajorAxis)\" < nRadius*10 )"
-                    , QueryType.BuiltIn ),
+                                "( \"Abs(Parent.Rings[Iter1].InnerRad-nSemiMajorAxis)\" < nRadius*10 Or  \"Abs(Parent.Rings[Iter1].OuterRad-nSemiMajorAxis)\" < nRadius*10 )",
+                    QueryType.BuiltIn, true ),
 
                 new Query("Binary close to rings","(IsOrbitingBarycentre IsTrue And Parents[2].IsBarycentre IsFalse And Parent.HasRings IsTrue And IsPlanet IsTrue) And " + 
-                            "(\"Abs(Parent.Rings[Iter1].InnerRad-Parents[1].Barycentre.SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\" Or \"Abs(Parent.Rings[Iter1].OuterRad-Parents[1].Barycentre.SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\")", QueryType.BuiltIn ),
+                            "(\"Abs(Parent.Rings[Iter1].InnerRad-Parents[1].Barycentre.SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\" Or \"Abs(Parent.Rings[Iter1].OuterRad-Parents[1].Barycentre.SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\")", 
+                    QueryType.BuiltIn, true ),
 
-                new Query("Planet with a large number of Moons","IsPlanet IsTrue And Child.Count >= 8", QueryType.BuiltIn ),
+                new Query("Planet with a large number of Moons","IsPlanet IsTrue And Child.Count >= 8", QueryType.BuiltIn, true ),
                 new Query("Moon of a Moon","Parent.IsPlanet IsTrue And Parent.Parent.IsPlanet IsTrue", QueryType.BuiltIn ),
-                new Query("Moons orbiting Terraformables","Parent.Terraformable IsTrue", QueryType.BuiltIn ),
+                new Query("Moons orbiting Terraformables","Parent.Terraformable IsTrue", QueryType.BuiltIn, true ),
                 new Query("Moons orbiting Earthlike","Parent.Earthlike IsTrue", QueryType.BuiltIn ),
 
                 new Query("Close Binary","IsPlanet IsTrue And IsOrbitingBarycentre IsTrue And Sibling.Count == 1 And nRadius/nSemiMajorAxis > 0.4 And " +
-                    "Sibling[1].nRadius/Sibling[1].nSemiMajorAxis > 0.4", QueryType.BuiltIn ),
+                    "Sibling[1].nRadius/Sibling[1].nSemiMajorAxis > 0.4", QueryType.BuiltIn, true ),
 
-                new Query("Gas giant has a terraformable Moon","( SudarskyGasGiant IsTrue Or GasGiant IsTrue Or HeliumGasGiant IsTrue ) And ( Child[Iter1].Terraformable IsTrue )", QueryType.BuiltIn ),
+                new Query("Gas giant has a terraformable Moon","( SudarskyGasGiant IsTrue Or GasGiant IsTrue Or HeliumGasGiant IsTrue ) And ( Child[Iter1].Terraformable IsTrue )", QueryType.BuiltIn, true ),
                 new Query("Gas giant has a large moon","( SudarskyGasGiant IsTrue Or GasGiant IsTrue Or HeliumGasGiant IsTrue ) And ( Child[Iter1].nRadius >= 5000000 )", QueryType.BuiltIn ),
                 new Query("Gas giant has a tiny moon","( SudarskyGasGiant IsTrue Or GasGiant IsTrue Or HeliumGasGiant IsTrue ) And ( Child[Iter1].nRadius <= 500000 )", QueryType.BuiltIn ),
 
-                new Query("Tiny Moon","Parent.IsPlanet IsTrue And nRadius < 300000", QueryType.BuiltIn ),
-                new Query("Fast Rotation of a non tidally locked body","IsPlanet IsTrue And nTidalLock IsFalse And Abs(nRotationPeriod) < 3600", QueryType.BuiltIn ),
+                new Query("Tiny Moon","Parent.IsPlanet IsTrue And nRadius < 300000", QueryType.BuiltIn, true ),
+                new Query("Fast Rotation of a non tidally locked body","IsPlanet IsTrue And nTidalLock IsFalse And Abs(nRotationPeriod) < 3600", QueryType.BuiltIn , true ),
                 new Query("Planet with fast orbital period","IsPlanet IsTrue And nOrbitalPeriod < 28800", QueryType.BuiltIn ),
-                new Query("Planet with high Eccentric Orbit","IsPlanet IsTrue And nEccentricity > 0.9", QueryType.BuiltIn ),
+                new Query("Planet with high Eccentric Orbit","IsPlanet IsTrue And nEccentricity > 0.9", QueryType.BuiltIn, true ),
                 new Query("Planet with low Eccentricity Orbit","IsPlanet IsTrue  And nEccentricity <= 0.01", QueryType.BuiltIn ),
                 new Query("Tidal Lock","IsPlanet IsTrue And nTidalLock IsTrue", QueryType.BuiltIn ),
 
-                new Query("High number of Jumponium Materials","IsLandable IsTrue And JumponiumCount >= 5", QueryType.BuiltIn ),
+                new Query("High number of Jumponium Materials","IsLandable IsTrue And JumponiumCount >= 5", QueryType.BuiltIn, true ),
 
                 new Query("Contains Geo Signals",            "ContainsGeoSignals IsTrue", QueryType.BuiltIn ),
                 new Query("Contains Bio Signals",            "ContainsBioSignals IsTrue", QueryType.BuiltIn ),
@@ -192,6 +196,12 @@ namespace EliteDangerousCore
 
             for (int i = 0; i + 1 < userqueries.Length; i += 2)
                 Searches.Insert(0, new Query(userqueries[i], userqueries[i + 1], QueryType.User));
+        }
+
+        public string DefaultSearches(char splitmarkerin)
+        {
+            string[] names = Searches.Where(x => x.DefaultSearch).Select(x => x.Name).ToArray();
+            return names.Join(splitmarkerin);
         }
 
         public void Set(string name, string expr, QueryType t)
