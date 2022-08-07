@@ -43,14 +43,21 @@ namespace EliteDangerousCore
         public class Query
         {
             public string Name { get; }
-            public string Condition { get;  }
+            public string Condition { get; }
+            public string SortCondition { get; }
+            public bool SortAscending { get; }
 
+            [JsonIgnore]
             public QueryType QueryType { get;  }
+            [JsonIgnore]
             public bool DefaultSearch { get; set; }
 
-            public Query(string n, string c, QueryType qt, bool def = false) { Name = n; Condition = c; QueryType = qt; DefaultSearch = def; }
+            public Query(string n, string c, QueryType qt, bool def = false, string sortcond= null, bool sortascending = false) 
+            { Name = n; Condition = c; QueryType = qt; DefaultSearch = def; SortCondition = sortcond; SortAscending = SortAscending; }
 
+            [JsonIgnore]
             public bool User { get { return QueryType == QueryType.User; } }
+            [JsonIgnore]
             public bool UserOrBuiltIn { get { return QueryType == QueryType.BuiltIn || QueryType == QueryType.User; } }
         }
 
@@ -84,8 +91,8 @@ namespace EliteDangerousCore
                 new Query("Landable","IsPlanet IsTrue And IsLandable IsTrue", QueryType.BuiltIn ),
                 new Query("Landable and Terraformable","IsPlanet IsTrue And IsLandable IsTrue And Terraformable IsTrue", QueryType.BuiltIn , true ),
                 new Query("Landable with Atmosphere","IsPlanet IsTrue And IsLandable IsTrue And HasAtmosphere IsTrue", QueryType.BuiltIn ),
-                new Query("Landable with High G","IsPlanet IsTrue And IsLandable IsTrue And nSurfaceGravityG >= 3", QueryType.BuiltIn, true ),
-                new Query("Landable large planet","IsPlanet IsTrue And IsLandable IsTrue And nRadius >= 12000000", QueryType.BuiltIn ),
+                new Query("Landable with High G","IsPlanet IsTrue And IsLandable IsTrue And nSurfaceGravityG >= 3", QueryType.BuiltIn, true, "Compare(left.nSurfaceGravityG,right.nSurfaceGravityG)", false ),
+                new Query("Landable large planet","IsPlanet IsTrue And IsLandable IsTrue And nRadius >= 12000000", QueryType.BuiltIn, false, "Compare(left.nRadius,right.nRadius)", false ),
                 new Query("Landable with Rings","IsPlanet IsTrue And IsLandable IsTrue And HasRings IsTrue", QueryType.BuiltIn , true),
                 new Query("Has Volcanism","HasMeaningfulVolcanism IsTrue", QueryType.BuiltIn ),
                 new Query("Landable with Volcanism","HasMeaningfulVolcanism IsTrue And IsLandable IsTrue", QueryType.BuiltIn ),
@@ -188,14 +195,17 @@ namespace EliteDangerousCore
         static private HistoryListQueries instance = null;
         private string DbUserQueries { get { return "UCSearchScansUserQuery"; } }  // not keyed to profile or to panel, global
 
-        private char splitmarker = (char)0x2b1c; // horrible but i can't be bothered to do a better implementation at this point
-
         private HistoryListQueries()
         {
-            string[] userqueries = DB.UserDatabase.Instance.GetSettingString(DbUserQueries, "").Split(new char[] { splitmarker }); // allowed use
-
-            for (int i = 0; i + 1 < userqueries.Length; i += 2)
-                Searches.Insert(0, new Query(userqueries[i], userqueries[i + 1], QueryType.User));
+            JArray json = JArray.Parse(DB.UserDatabase.Instance.GetSettingString(DbUserQueries, ""));
+            if ( json != null )
+            {
+                foreach( var t in json )
+                {
+                    Searches.Insert(0, new Query(t["Name"].Str("Unknown"), t["Condition"].Str("Unknown"), QueryType.User, 
+                        sortcond:t["SortCondition"].Str(), sortascending:t["SortAscending"].Bool()));
+                }
+            }
         }
 
         public string DefaultSearches(char splitmarkerin)
@@ -204,13 +214,13 @@ namespace EliteDangerousCore
             return names.Join(splitmarkerin);
         }
 
-        public void Set(string name, string expr, QueryType t)
+        public void Set(string name, string expr, QueryType t, string sortcond = "", bool sortascending= false)
         {
             var entry = Searches.FindIndex(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             if (entry != -1)
-                Searches[entry] = new Query(name, expr, t);
+                Searches[entry] = new Query(name, expr, t, false, sortcond, sortascending);
             else
-                Searches.Insert(0, new Query(name, expr, t));
+                Searches.Insert(0, new Query(name, expr, t, false, sortcond, sortascending));
         }
 
         public void Delete(string name)
@@ -224,30 +234,18 @@ namespace EliteDangerousCore
 
         public void SaveUserQueries()
         {
-            string userqueries = "";
-            foreach (var q in Searches.Where(x => x.User))
-            {
-                userqueries += q.Name + splitmarker + q.Condition + splitmarker;
-            }
-
-            DB.UserDatabase.Instance.PutSettingString(DbUserQueries, userqueries); // allowed use
+            var list = Searches.Where(x => x.QueryType == QueryType.User).ToArray();
+            JToken json = JToken.FromObject(list);
+            DB.UserDatabase.Instance.PutSettingString(DbUserQueries, json.ToString()); // allowed use
+            //System.IO.File.WriteAllText(@"c:\code\json.txt", json.ToString(true));
         }
 
         public JArray QueriesInJSON(QueryType t)
         {
-            JArray ja = new JArray();
-            foreach (var q in Searches.Where(x => x.QueryType == t))
-            {
-                JObject query = new JObject();
-                query["Name"] = q.Name;
-                query["Condition"] = q.Condition;
-                query["Type"] = q.QueryType.ToString();
-                ja.Add(query);
-            }
-
-            return ja;
+            var list = Searches.Where(x => x.QueryType == t).ToArray();
+            return JToken.FromObject(list).Array();
         }
-        public bool ReadJSONQueries(JArray ja)
+        public bool ReadJSONQueries(JArray ja, QueryType ty)
         {
             foreach (var t in ja)
             {
@@ -256,9 +254,11 @@ namespace EliteDangerousCore
                 {
                     string name = to["Name"].StrNull();
                     string condition = to["Condition"].StrNull();
-                    if (name != null && condition != null && Enum.TryParse<QueryType>(to["Type"].Str(), true, out QueryType qt))
+                    if (name != null && condition != null)
                     {
-                        Set(name, condition, qt);
+                        string sortcondition = to["SortCondition"].Str();
+                        bool sortascending = to["SortAscending"].Bool();
+                        Set(name, condition, ty,sortcondition,sortascending);
                     }
                     else
                         return false;
