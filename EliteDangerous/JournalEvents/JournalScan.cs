@@ -66,6 +66,8 @@ namespace EliteDangerousCore.JournalEvents
         public double? nSurfaceTemperature { get; private set; }            // direct
         [PropertyNameAttribute("Meters")]
         public double? nRadius { get; private set; }                        // direct
+        [PropertyNameAttribute("km")]
+        public double? nRadiusKM { get { if (nRadius.HasValue) return nRadius.Value / 1000.0; else return null; } }
         [PropertyNameAttribute("Radius in units of Sol")]
         public double? nRadiusSols { get { if (nRadius.HasValue) return nRadius.Value / BodyPhysicalConstants.oneSolRadius_m; else return null; } }
         [PropertyNameAttribute("Radius in units of Earth")]
@@ -85,6 +87,10 @@ namespace EliteDangerousCore.JournalEvents
         public double? RingsInnerm { get { if (Rings != null) return Rings.Select(x => x.InnerRad).Min(); else return null; } }
         [PropertyNameAttribute("Distance of final outer ring from planet, Meters, null if no rings")]
         public double? RingsOuterm { get { if (Rings != null) return Rings.Select(x => x.OuterRad).Max(); else return null; } }
+        [PropertyNameAttribute("Max ring width, Meters, 0 if no rings")]
+        public double? RingsMaxWidth { get { if (Rings != null) return Rings.Select(x => x.Width).Max(); else return 0; } }
+        [PropertyNameAttribute("Min ring width, Meters, 0 if no rings")]
+        public double? RingsMinWidth { get { if (Rings != null) return Rings.Select(x => x.Width).Min(); else return 0; } }
 
         [PropertyNameAttribute("Parent body information. First is nearest body")]
         public List<BodyParent> Parents { get; private set; }

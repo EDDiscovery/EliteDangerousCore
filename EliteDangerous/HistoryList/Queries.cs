@@ -53,7 +53,7 @@ namespace EliteDangerousCore
             public bool DefaultSearch { get; set; }
 
             public Query(string n, string c, QueryType qt, bool def = false, string sortcond= null, bool sortascending = false) 
-            { Name = n; Condition = c; QueryType = qt; DefaultSearch = def; SortCondition = sortcond; SortAscending = SortAscending; }
+            { Name = n; Condition = c; QueryType = qt; DefaultSearch = def; SortCondition = sortcond; SortAscending = sortascending; }
 
             [JsonIgnore]
             public bool User { get { return QueryType == QueryType.User; } }
@@ -91,18 +91,18 @@ namespace EliteDangerousCore
                 new Query("Landable","IsPlanet IsTrue And IsLandable IsTrue", QueryType.BuiltIn ),
                 new Query("Landable and Terraformable","IsPlanet IsTrue And IsLandable IsTrue And Terraformable IsTrue", QueryType.BuiltIn , true ),
                 new Query("Landable with Atmosphere","IsPlanet IsTrue And IsLandable IsTrue And HasAtmosphere IsTrue", QueryType.BuiltIn ),
-                new Query("Landable with High G","IsPlanet IsTrue And IsLandable IsTrue And nSurfaceGravityG >= 3", QueryType.BuiltIn, true, "Compare(left.nSurfaceGravityG,right.nSurfaceGravityG)", false ),
-                new Query("Landable large planet","IsPlanet IsTrue And IsLandable IsTrue And nRadius >= 12000000", QueryType.BuiltIn, false, "Compare(left.nRadius,right.nRadius)", false ),
+                new Query("Landable with High G","IsPlanet IsTrue And IsLandable IsTrue And nSurfaceGravityG >= 3", QueryType.BuiltIn, true, "Compare(left.nSurfaceGravityG,right.nSurfaceGravityG)", false),
+                new Query("Landable large planet","IsPlanet IsTrue And IsLandable IsTrue And nRadiusKM >= 8000", QueryType.BuiltIn, false, "Compare(left.nRadius,right.nRadius)", false ),
                 new Query("Landable with Rings","IsPlanet IsTrue And IsLandable IsTrue And HasRings IsTrue", QueryType.BuiltIn , true),
                 new Query("Has Volcanism","HasMeaningfulVolcanism IsTrue", QueryType.BuiltIn ),
                 new Query("Landable with Volcanism","HasMeaningfulVolcanism IsTrue And IsLandable IsTrue", QueryType.BuiltIn ),
                 new Query("Earth like planet","Earthlike IsTrue", QueryType.BuiltIn ),
-                new Query("More mass than Earth","IsPlanet IsTrue And nMassEM > 1", QueryType.BuiltIn ),
-                new Query("Hotter than Hades","IsPlanet IsTrue And nSurfaceTemperature >= 2273", QueryType.BuiltIn , true),
+                new Query("More mass than Earth","IsPlanet IsTrue And nMassEM > 1", QueryType.BuiltIn, false, "Compare(left.nMassKG,right.nMassKG)", false),
+                new Query("Hotter than Hades","IsPlanet IsTrue And nSurfaceTemperature >= 2273", QueryType.BuiltIn , true, "Compare(left.nSurfaceTemperature,right.nSurfaceTemperature)", false),
 
                 new Query("Has Rings","HasRings IsTrue", QueryType.BuiltIn ),
 
-                new Query("Planet has wide rings vs radius","(IsPlanet IsTrue And HasRings IsTrue ) And ( Rings[Iter1].OuterRad-Rings[Iter1].InnerRad >= nRadius*5)", QueryType.BuiltIn , true),
+                new Query("Planet has wide rings vs radius","(IsPlanet IsTrue And HasRings IsTrue ) And ( Rings[Iter1].OuterRad-Rings[Iter1].InnerRad >= nRadius*5)", QueryType.BuiltIn , true, "Compare(left.RingsMaxWidth,right.RingsMaxWidth)", false),
 
                 new Query("Close orbit to parent","IsPlanet IsTrue And Parent.IsPlanet IsTrue And IsOrbitingBarycentre IsFalse And Parent.nRadius*3 > nSemiMajorAxis", QueryType.BuiltIn, true ),
 
@@ -115,7 +115,7 @@ namespace EliteDangerousCore
                             "(\"Abs(Parent.Rings[Iter1].InnerRad-Parents[1].Barycentre.SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\" Or \"Abs(Parent.Rings[Iter1].OuterRad-Parents[1].Barycentre.SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\")", 
                     QueryType.BuiltIn, true ),
 
-                new Query("Planet with a large number of Moons","IsPlanet IsTrue And Child.Count >= 8", QueryType.BuiltIn, true ),
+                new Query("Planet with a large number of Moons","IsPlanet IsTrue And Child.Count >= 8", QueryType.BuiltIn, true, "Compare(left.Child.Count,right.Child.Count)" ),
                 new Query("Moon of a Moon","Parent.IsPlanet IsTrue And Parent.Parent.IsPlanet IsTrue", QueryType.BuiltIn ),
                 new Query("Moons orbiting Terraformables","Parent.Terraformable IsTrue", QueryType.BuiltIn, true ),
                 new Query("Moons orbiting Earthlike","Parent.Earthlike IsTrue", QueryType.BuiltIn ),
@@ -129,9 +129,9 @@ namespace EliteDangerousCore
 
                 new Query("Tiny Moon","Parent.IsPlanet IsTrue And nRadius < 300000", QueryType.BuiltIn, true ),
                 new Query("Fast Rotation of a non tidally locked body","IsPlanet IsTrue And nTidalLock IsFalse And Abs(nRotationPeriod) < 3600", QueryType.BuiltIn , true ),
-                new Query("Planet with fast orbital period","IsPlanet IsTrue And nOrbitalPeriod < 28800", QueryType.BuiltIn ),
-                new Query("Planet with high Eccentric Orbit","IsPlanet IsTrue And nEccentricity > 0.9", QueryType.BuiltIn, true ),
-                new Query("Planet with low Eccentricity Orbit","IsPlanet IsTrue  And nEccentricity <= 0.01", QueryType.BuiltIn ),
+                new Query("Planet with fast orbital period","IsPlanet IsTrue And nOrbitalPeriod < 28800", QueryType.BuiltIn, false, "Compare(left.nOrbitalPeriod,right.nOrbitalPeriod)", true),
+                new Query("Planet with high Eccentric Orbit","IsPlanet IsTrue And nEccentricity > 0.9", QueryType.BuiltIn, true, "Compare(left.nEccentricity,right.nEccentricity)", false ),
+                new Query("Planet with low Eccentricity Orbit","IsPlanet IsTrue  And nEccentricity <= 0.01", QueryType.BuiltIn , false, "Compare(left.nEccentricity,right.nEccentricity)", true ),
                 new Query("Tidal Lock","IsPlanet IsTrue And nTidalLock IsTrue", QueryType.BuiltIn ),
 
                 new Query("High number of Jumponium Materials","IsLandable IsTrue And JumponiumCount >= 5", QueryType.BuiltIn, true ),
@@ -150,12 +150,12 @@ namespace EliteDangerousCore
                 new Query("Scanned all organics on a planet","CountOrganicsScansAnalysed >= 1 And CountOrganicsScansAnalysed == CountBioSignals", QueryType.BuiltIn ),
 
                 new Query("Star has Rings","HasRings IsTrue And IsStar IsTrue", QueryType.BuiltIn ),
-                new Query("Star is brighter magnitude than Sirius","nAbsoluteMagnitude <= 1.5", QueryType.BuiltIn ),
-                new Query("Star is super bright","nAbsoluteMagnitude <= -2", QueryType.BuiltIn ),
+                new Query("Star is brighter in magnitude than Sirius","nAbsoluteMagnitude <= 1.5", QueryType.BuiltIn, false, "Compare(left.nAbsoluteMagnitude,right.nAbsoluteMagnitude)", true  ),
+                new Query("Star is super bright","nAbsoluteMagnitude <= -2", QueryType.BuiltIn , false, "Compare(left.nAbsoluteMagnitude,right.nAbsoluteMagnitude)", true  ),
+                new Query("Star has same magnitude as Sol","nAbsoluteMagnitudeSol >= -0.5 And nAbsoluteMagnitudeSol <= 0.5", QueryType.BuiltIn, false, "Compare(left.nAbsoluteMagnitude,right.nAbsoluteMagnitude)", true),
                 new Query("Star has belts","HasBelts IsTrue", QueryType.BuiltIn ),
-                new Query("Star has same magnitude as Sol","nAbsoluteMagnitudeSol >= -0.5 And nAbsoluteMagnitudeSol <= 0.5", QueryType.BuiltIn ),
-                new Query("Star is heavier than Sol","nStellarMass > 1", QueryType.BuiltIn ),
-                new Query("Star is wider than Sol","nRadius > 695700000", QueryType.BuiltIn ),
+                new Query("Star is heavier than Sol","nStellarMass > 1", QueryType.BuiltIn, false, "Compare(left.nStellarMass,right.nStellarMass)", false ), 
+                new Query("Star is wider than Sol","nRadius > 695700000", QueryType.BuiltIn, false, "Compare(left.nRadius,right.nRadius)" ,false ),
 
                 new Query("Body Name","BodyName contains <name>", QueryType.Example ),
                 new Query("Scan Type","ScanType contains Detailed", QueryType.Example ),

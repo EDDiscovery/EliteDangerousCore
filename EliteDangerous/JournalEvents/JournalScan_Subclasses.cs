@@ -39,6 +39,8 @@ namespace EliteDangerousCore.JournalEvents
             public double InnerRad { get; set; }
             [PropertyNameAttribute("Outer radius m")]
             public double OuterRad { get; set; }
+            [PropertyNameAttribute("Width m")]
+            public double Width { get { return OuterRad - InnerRad; } }
 
             public void Normalise()
             {
