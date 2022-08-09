@@ -18,7 +18,7 @@ using System.Collections.Generic;
 
 namespace EliteDangerousCore
 {
-    public enum EDGovernment
+    public enum EDGovernment        // synced with FDev IDs Aug 22
     {
         Unknown = 0,
         Anarchy = 1,
@@ -30,44 +30,62 @@ namespace EliteDangerousCore
         Dictatorship,
         Feudal,
         Imperial,
+        None,
         Patronage,
-        Colony,
+        Prison,
         Prison_Colony,
         Theocracy,
-        None,
-
+        Engineer,
+        Carrier,
     }
 
-    public enum EDAllegiance
+    public enum EDAllegiance        // synced with FDEV and logs aug 22
     {
         Unknown = 0,
         Alliance = 1,
-        Anarchy = 2,
         Empire = 3,
         Federation = 4,
         Independent = 5,
+        Anarchy = 2,
         None = 6,
+        PilotsFederation = 7,
+        Pirate = 8,
+        Guardian = 9,
     }
 
-    public enum EDState
+    public enum EDState // synced with FDev Ids aug 22
     {
         Unknown = 0,
         None = 1,
         Boom,
         Bust,
-        Civil_Unrest,
-        Civil_War,
+        CivilUnrest,
+        CivilWar,
+        Election,
         Expansion,
+        Famine,
+        Investment,
         Lockdown,
         Outbreak,
-        War,
-        Famine,
-        Election,
         Retreat,
-        Investment,
+        War,
+        CivilLiberty,
+        PirateAttack,
+        Blight,
+        Drought,
+        InfrastructureFailure, 
+        NaturalDisaster, 
+        PublicHoliday, 
+        Terrorism,
+        ColdWar, 
+        Colonisation, 
+        HistoricEvent, 
+        Revolution,
+        TechnologicalLeap, 
+        TradeWar, 
     }
 
-    public enum EDSecurity
+    public enum EDSecurity  // in FDevID august 22
     {
         Unknown = 0,
         Low,
@@ -77,36 +95,26 @@ namespace EliteDangerousCore
         Lawless,
     }
 
-    public enum EDStationType
-    {
-        Unknown = 0,
-        Civilian_Outpost = 1,
-        Commercial_Outpost = 2,
-        Coriolis_Starport = 3,
-        Industrial_Outpost = 4,
-        Military_Outpost = 5,
-        Mining_Outpost = 6,
-        Ocellus_Starport = 7,
-        Orbis_Starport = 8,
-        Scientific_Outpost = 9,
-        Unsanctioned_Outpost = 10,
-        Unknown_Outpost = 11,
-        Unknown_Starport = 12,
-    }
-
-    public enum EDEconomy
+    public enum EDEconomy   // in FDevID order august 22
     {
         Unknown = 0,
         Agriculture = 1,
+        Colony = 11,
         Extraction = 2,
         High_Tech = 3,
         Industrial = 4,
         Military = 5,
+        None = 10,
         Refinery = 6,
         Service = 7,
         Terraforming = 8,
         Tourism = 9,
-        None = 10,
+        Prison = 12,
+        Damaged = 13,
+        Rescue = 14,
+        Repair = 15,
+        Carrier = 16,
+        Engineer = 17,
     }
 
     public enum SystemSource                // Who made the information?

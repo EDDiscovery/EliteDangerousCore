@@ -164,7 +164,6 @@
     <Compile Include="StarScan\StarScanSAAScan.cs" />
     <Compile Include="Stats\Stats.cs" />
     <Compile Include="Status\EDStatusReader.cs" />
-    <Compile Include="EliteDangerous\EDTypesFromString.cs" />
     <Compile Include="Bindings\FrontierToVKey.cs" />
     <Compile Include="EliteDangerous\ISystem.cs" />
     <Compile Include="Journal\JournalEntry.cs" />

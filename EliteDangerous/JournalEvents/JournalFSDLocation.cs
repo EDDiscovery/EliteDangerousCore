@@ -189,7 +189,7 @@ namespace EliteDangerousCore.JournalEvents
             get
             {
                 EDGovernment government;
-                if (Government != null && Government.StartsWith("$government_") && Enum.TryParse(Government.Substring(12), true, out government))
+                if (Government != null && Government.StartsWith("$government_") && Enum.TryParse(Government.Substring(12).Replace(";",""), true, out government))
                 {
                     return government;
                 }
@@ -203,11 +203,13 @@ namespace EliteDangerousCore.JournalEvents
             get
             {
                 EDEconomy economy;
-                if (Economy != null && Economy.StartsWith("$economy_") && Enum.TryParse(Economy.Substring(9), true, out economy))
+                if (Economy != null && Economy.StartsWith("$economy_") && Enum.TryParse(Economy.Substring(9).Replace(";",""), true, out economy))
                 {
                     return economy;
                 }
                 if (Economy == "$economy_Agri;") return EDEconomy.Agriculture;
+                if (Economy == "$economy_HighTech;") return EDEconomy.High_Tech;
+
                 return EDEconomy.Unknown;
             }
         }
@@ -237,8 +239,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     return state;
                 }
-                if (FactionState == "CivilUnrest") return EDState.Civil_Unrest;
-                if (FactionState == "CivilWar") return EDState.Civil_War;
+
                 return EDState.Unknown;
             }
         }
@@ -252,6 +253,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     return allegiance;
                 }
+
                 return EDAllegiance.Unknown;
             }
         }

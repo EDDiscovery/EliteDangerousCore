@@ -377,7 +377,7 @@ namespace EliteDangerousCore.JournalEvents
                     s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, s.Type.Replace("$SAA_","").SplitCapsWordFull());
                 }
             }
-            Genuses = evt["Genus"].ToObjectQ<List<SAAGenus>>();
+            Genuses = evt["Genuses"].ToObjectQ<List<SAAGenus>>();
             if (Genuses != null)
             {
                 foreach (var g in Genuses)      // some don't have localisation
