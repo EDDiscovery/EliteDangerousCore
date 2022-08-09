@@ -94,9 +94,9 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             detailed = info = "";
-            if ( Route != null )
+            if (Route != null)
             {
-                for( int i = 1; i < Route.Length;i++)
+                for (int i = 1; i < Route.Length; i++)
                 {
                     var r = Route[i];
                     string n = r.StarSystem ?? r.SystemAddress.ToStringInvariant();     // star system has been seen to be empty
@@ -113,13 +113,13 @@ namespace EliteDangerousCore.JournalEvents
 
                     detailed = detailed.AppendPrePad(n + " @ " + r.StarPos.X.ToString("N1") + "," + r.StarPos.Y.ToString("N1") + "," + r.StarPos.Z.ToString("N1") + " " + r.StarClass, System.Environment.NewLine);
                 }
-                info = string.Format("{0} jumps: ".T(EDCTx.JournalNavRoute_Jumps), Route.Length-1) + info;
+                info = string.Format("{0} jumps: ".T(EDCTx.JournalNavRoute_Jumps), Route.Length - 1) + info;
             }
         }
 
-        public bool Equals( JournalNavRoute other)
+        public bool Equals(JournalNavRoute other)
         {
-            if ( Route != null && other.Route != null && other.Route.Length == Route.Length)
+            if (Route != null && other.Route != null && other.Route.Length == Route.Length)
             {
                 for (int i = 0; i < Route.Length; i++)
                 {
@@ -139,6 +139,19 @@ namespace EliteDangerousCore.JournalEvents
             public long SystemAddress { get; set; }
             public EMK.LightGeometry.Vector3 StarPos { get; set; }
             public string StarClass { get; set; }
+        }
+    }
+
+    [JournalEntryType(JournalTypeEnum.NavRouteClear)]
+    public class JournalNavRouteClear : JournalEntry
+    {
+        public JournalNavRouteClear(JObject evt) : base(evt, JournalTypeEnum.NavRouteClear)
+        {
+        }
+
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        {
+            info = detailed = "";
         }
     }
 }

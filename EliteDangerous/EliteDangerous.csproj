@@ -285,6 +285,7 @@
     <Compile Include="SystemDisplay\SystemDisplayNodes.cs" />
     <Compile Include="SystemDisplay\SystemDisplay.cs" />
     <Compile Include="SystemDisplay\SystemDisplayBarycentres.cs" />
+    <Compile Include="UIEvents\UINavRouteClear.cs" />
     <Compile Include="UIEvents\UISrvHighBeam.cs" />
     <Compile Include="UIEvents\UIFsdJump.cs" />
     <Compile Include="UIEvents\UIGlideMode.cs" />

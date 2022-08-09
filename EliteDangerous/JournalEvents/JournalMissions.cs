@@ -124,6 +124,7 @@ namespace EliteDangerousCore.JournalEvents
             DestinationSystem = evt["DestinationSystem"].Str().Replace("$MISSIONUTIL_MULTIPLE_INNER_SEPARATOR;", ",")
                                                               .Replace("$MISSIONUTIL_MULTIPLE_FINAL_SEPARATOR;", ",");       // multi missions get this strange list;
             DestinationStation = evt["DestinationStation"].Str();
+            DestinationSettlement = evt["DestinationSettlement"].Str();
 
             Influence = evt["Influence"].Str();
             Reputation = evt["Reputation"].Str();
@@ -157,6 +158,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string DestinationSystem { get; private set; }
         public string DestinationStation { get; private set; }
+        public string DestinationSettlement { get; private set; }   // Odyssey 4.0r13 August 22
 
         public string TargetType { get; private set; }
         public string TargetTypeFriendly { get; private set; }
@@ -200,7 +202,8 @@ namespace EliteDangerousCore.JournalEvents
             return BaseUtils.FieldBuilder.Build("", LocalisedName,
                                       EDTranslatorExtensions.TCond(translate, "< from ", EDCTx.JournalMissionAccepted_from), Faction,
                                       EDTranslatorExtensions.TCond(translate, "System: ",EDCTx.JournalEntry_System ), DestinationSystem,
-                                      EDTranslatorExtensions.TCond(translate, "Station: ",EDCTx.JournalEntry_Station ), DestinationStation,
+                                      EDTranslatorExtensions.TCond(translate, "Station: ", EDCTx.JournalEntry_Station), DestinationStation,
+                                      EDTranslatorExtensions.TCond(translate, "Settlement: ", EDCTx.JournalEntry_Settlement), DestinationSettlement,
                                       EDTranslatorExtensions.TCond(translate, "Expiry: ",EDCTx.JournalMissionAccepted_Expiry ), exp,
                                       EDTranslatorExtensions.TCond(translate, "Influence: ",EDCTx.JournalMissionAccepted_Influence ), Influence,
                                       EDTranslatorExtensions.TCond(translate, "Reputation: ",EDCTx.JournalMissionAccepted_Reputation ), Reputation,
@@ -307,6 +310,8 @@ namespace EliteDangerousCore.JournalEvents
                                                               .Replace("$MISSIONUTIL_MULTIPLE_FINAL_SEPARATOR;", ",");       // multi missions get this strange list;
             DestinationStation = evt["DestinationStation"].Str();
 
+            DestinationSettlement = evt["DestinationSettlement"].Str();     // TBC.
+
             PermitsAwarded = evt["PermitsAwarded"]?.ToObjectQ<string[]>();
 
             // 7/3/2018 journal 16 3.02
@@ -347,8 +352,9 @@ namespace EliteDangerousCore.JournalEvents
         public string TargetTypeFriendly { get; set; }
         public string TargetFaction { get; set; }
 
-        public string DestinationSystem { get; set; }
-        public string DestinationStation { get; set; }
+        public string DestinationSystem { get; set; }       // not in doc but logs as per aug 22
+        public string DestinationStation { get; set; }      // not in doc but logs as per aug 22
+        public string DestinationSettlement { get; private set; }   // asking in aug 22 if its there..
 
         public long? Reward { get; set; }
         public long? Donation { get; set; }
@@ -404,7 +410,9 @@ namespace EliteDangerousCore.JournalEvents
                                         "Reward: ; cr;N0".T(EDCTx.JournalEntry_Reward), Reward,
                                         "Donation: ".T(EDCTx.JournalEntry_Donation), Donation,
                                         "System: ".T(EDCTx.JournalEntry_System), DestinationSystem,
-                                        "Station: ".T(EDCTx.JournalEntry_Station), DestinationStation);
+                                        "Station: ".T(EDCTx.JournalEntry_Station), DestinationStation,
+                                        "Settlement: ".T(EDCTx.JournalEntry_Settlement), DestinationSettlement
+                                        );
 
             detailed = BaseUtils.FieldBuilder.Build("Commodity: ".T(EDCTx.JournalEntry_Commodity), CommodityLocalised,
                                             "Count: ".T(EDCTx.JournalMissionAccepted_Count), Count,

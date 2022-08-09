@@ -344,6 +344,13 @@ namespace EliteDangerousCore.EDDN
                     ["Type"] = true
                 }
             }
+            ["Genus"] = new JArray
+            {
+                new JObject
+                {
+                    ["Genus"] = true,
+                }
+            }
         };
 
 

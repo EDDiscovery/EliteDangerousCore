@@ -370,11 +370,19 @@ namespace EliteDangerousCore.JournalEvents
             BodyName = evt["BodyName"].Str();
             BodyID = evt["BodyID"].Int();
             Signals = evt["Signals"].ToObjectQ<List<SAASignal>>();
-            if ( Signals != null )
+            if (Signals != null)
             {
                 foreach (var s in Signals)      // some don't have localisation
                 {
-                    s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, s.Type.SplitCapsWordFull());
+                    s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, s.Type.Replace("$SAA_","").SplitCapsWordFull());
+                }
+            }
+            Genuses = evt["Genus"].ToObjectQ<List<SAAGenus>>();
+            if (Genuses != null)
+            {
+                foreach (var g in Genuses)      // some don't have localisation
+                {
+                    g.Genus_Localised = JournalFieldNaming.CheckLocalisation(g.Genus_Localised, g.Genus.Replace("_Name;","").Replace("$Codex_","").SplitCapsWordFull());
                 }
             }
         }
@@ -387,7 +395,8 @@ namespace EliteDangerousCore.JournalEvents
         public int? BodyID { get; set; }        // acutally always set, set to ? to correspond to previous journal event types where BodyID may be missing
         [PropertyNameAttribute("List of signals")]
         public List<SAASignal> Signals { get; set; }
-
+        [PropertyNameAttribute("List of Genus (4.0v13+)")]
+        public List<SAAGenus> Genuses { get; set; }
         [PropertyNameAttribute("Does it have geo signals")]
         public bool ContainsGeoSignals { get { return Signals?.Count(x => x.IsGeo) > 0 ? true : false; } }
         [PropertyNameAttribute("Does it have bio signals")]
@@ -444,6 +453,15 @@ namespace EliteDangerousCore.JournalEvents
             public bool IsUncategorised { get { return !Type.Contains("$SAA_SignalType"); } }       // probably a material, but you can never tell with FD
         }
 
+        [System.Diagnostics.DebuggerDisplay("{Genus} {Genus_Localised}")]
+        public class SAAGenus
+        {
+            [PropertyNameAttribute("Genus type string, FDName")]
+            public string Genus { get; set; }        // $Codex_Ent_Bacterial_Genus_Name;
+            [PropertyNameAttribute("Genus type string, localised")]
+            public string Genus_Localised { get; set; }
+        }
+
         public override string SummaryName(ISystem sys)
         {
             return base.SummaryName(sys) + " " + "of ".T(EDCTx.JournalEntry_ofa) + BodyName.ReplaceIfStartsWith(sys.Name);
@@ -452,7 +470,7 @@ namespace EliteDangerousCore.JournalEvents
 
         private string SignalNames() { return string.Join(",", Signals?.Select(x => x.Type)); }       // for debugger
 
-        static public string SignalList(List<SAASignal> list, int indent = 0, string separ = ", " , bool logtype = false)
+        static public string SignalList(List<SAASignal> list, int indent = 0, string separ = ", ", bool logtype = false)
         {
             string inds = new string(' ', indent);
 
@@ -467,12 +485,29 @@ namespace EliteDangerousCore.JournalEvents
 
             return info;
         }
+        static public string GenusList(List<SAAGenus> list, int indent = 0, string separ = ", ", bool logtype = false)
+        {
+            string inds = new string(' ', indent);
+
+            string info = "";
+            if (list != null)
+            {
+                foreach (var x in list)
+                {
+                    info = info.AppendPrePad(inds + (logtype ? x.Genus : x.Genus_Localised.Alt(x.Genus)), separ);
+                }
+            }
+
+            return info;
+        }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = SignalList(Signals);
             string name = BodyName.Contains(sys.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : sys.Name + ":" + BodyName;
             info = info.AppendPrePad("@ " + name, ", ");
+            if (Genuses != null)
+                info = info.AppendPrePad(GenusList(Genuses), "; ");
             detailed = "";
         }
 

@@ -43,9 +43,10 @@ namespace EliteDangerousCore
         public string OriginatingSystem { get { return sys.Name; } }
         public string OriginatingStation { get { return body; } }
 
-        public string DestinationSystemStation()        // allowing for redirection
+        public string DestinationSystemStationSettlement()        // allowing for redirection
         {
-            return (Redirected != null) ? ("->" + Redirected.NewDestinationSystem.AppendPrePad(Redirected.NewDestinationStation, ": ")) : Mission.DestinationSystem.AppendPrePad(Mission.DestinationStation, ": ");
+            return (Redirected != null) ? ("->" + Redirected.NewDestinationSystem.AppendPrePad(Redirected.NewDestinationStation, ": ")) : 
+                        Mission.DestinationSystem.AppendPrePad(Mission.DestinationStation.Alt(Mission.DestinationSettlement), ": ");
         }
 
         public string MissionInfoColumn()            // Missions panel uses this for info column

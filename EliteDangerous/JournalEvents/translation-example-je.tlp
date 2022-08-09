@@ -257,6 +257,7 @@ SECTION JournalTypeEnum
 .FSSBodySignals: "FSS Body Signals" @
 .ModuleBuyAndStore: "Module Buy And Store" @
 .ScanBaryCentre: "Scan Barycentre" @
+.NavRouteClear: "Nav Route Clear" @
 
 SECTION JournalCargo
 
@@ -1028,6 +1029,7 @@ SECTION JournalEntry
 .Failed: "Failed: " @
 .Completed: "Completed: " @
 .Station: "Station: " @
+.Settlement: "Settlement: " @
 .TargetFaction: "Target Faction: " @
 .Donation: "Donation: " @
 .Permits: "Permits: " @

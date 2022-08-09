@@ -194,6 +194,7 @@ namespace EliteDangerousCore
         JournalEntry_Failed, // Failed:
         JournalEntry_Completed, // Completed:
         JournalEntry_Station, // Station:
+        JournalEntry_Settlement, // Settlement:
         JournalEntry_TargetFaction, // Target Faction:
         JournalEntry_Donation, // Donation:
         JournalEntry_Permits, // Permits:

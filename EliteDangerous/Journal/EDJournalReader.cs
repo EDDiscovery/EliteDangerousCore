@@ -287,6 +287,12 @@ namespace EliteDangerousCore
                 uievents.Add(new UIEvents.UIFSDTarget(jt, jt.EventTimeUTC, false));
                 return;
             }
+            else if ( newentry.EventTypeID == JournalTypeEnum.NavRouteClear)
+            {
+                var jnc = newentry as JournalEvents.JournalNavRouteClear;
+                uievents.Add(new UIEvents.UINavRouteClear(jnc, jnc.EventTimeUTC, false));
+                return;
+            }
 
             jent.Add(newentry);
         }

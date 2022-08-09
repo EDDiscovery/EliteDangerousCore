@@ -465,6 +465,8 @@ namespace EliteDangerousCore.Inara
                 eventData["starsystemNameTarget"] = mission.DestinationSystem;
             if (mission.DestinationStation.HasChars())
                 eventData["stationNameTarget"] = mission.DestinationStation;
+            if (mission.DestinationSettlement.HasChars())
+                eventData["stationNameTarget"] = mission.DestinationSettlement;
 
             if (mission.TargetFaction.HasChars())
                 eventData["minorfactionNameTarget"] = mission.TargetFaction;
