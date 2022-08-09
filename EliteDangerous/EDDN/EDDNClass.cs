@@ -343,7 +343,7 @@ namespace EliteDangerousCore.EDDN
                     ["Count"] = true,
                     ["Type"] = true
                 }
-            }
+            },
             ["Genus"] = new JArray
             {
                 new JObject
