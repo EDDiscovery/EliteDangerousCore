@@ -441,8 +441,8 @@ namespace EliteDangerousCore.JournalEvents
             public bool IsGeo { get { return Type.Contains("$SAA_SignalType_Geological;"); } }
             [PropertyNameAttribute("Is bio signal")]
             public bool IsBio { get { return Type.Contains("$SAA_SignalType_Biological;"); } }
-            [PropertyNameAttribute("Is thargoid signal")]
-            public bool IsThargoid { get { return Type.Contains("$SAA_SignalType_Thargoid;"); } }
+            [PropertyNameAttribute("Is thargoid signal")]           // note Anonmaly is associated with thargoid interactions
+            public bool IsThargoid { get { return Type.Contains("$SAA_SignalType_Thargoid;") || Type.Contains("$SAA_SignalType_PlanetAnomaly;"); } }
             [PropertyNameAttribute("Is guardian signal")]
             public bool IsGuardian { get { return Type.Contains("$SAA_SignalType_Guardian;"); } }
             [PropertyNameAttribute("Is human signal")]

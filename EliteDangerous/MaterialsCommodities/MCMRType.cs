@@ -1163,6 +1163,11 @@ namespace EliteDangerousCore
 
             AddCommodity("Drones", ItemType.Drones, "Drones");
 
+            int cmmds = cachelist.Where(x => x.Value.IsCommodity).Count();
+            int mats = cachelist.Where(x => x.Value.IsMaterial).Count();
+            int micro = cachelist.Where(x => x.Value.IsMicroResources).Count();
+            System.Diagnostics.Debug.WriteLine($"Commds {cmmds} Mats {mats} MRs {micro}");
+
             foreach (var x in cachelist.Values)
             {
                 x.Name = x.Name.TxID(typeof(MaterialCommodityMicroResourceType),x.FDName);
