@@ -34,7 +34,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Build { get; set; }
         public string Language { get; set; }
         public int Part { get; set; }
-        public bool Odyssey { get; set; }
+        public bool Odyssey { get; set; }       // NOTE 4.0 'Horizons' has this true, its indicating the client build, not if the user has odyssey. Source Fdev
 
         public override bool IsBeta
         {

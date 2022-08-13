@@ -318,6 +318,9 @@ namespace EliteDangerousCore
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventTimeLocal", "Date time value, US format: Local", BaseUtils.ConditionEntry.MatchType.DateAfter, "All"));
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("EventType", "String value: Event type (Scan etc)", BaseUtils.ConditionEntry.MatchType.Equals, "All"));
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("SyncedEDSM", "Boolean value: 1 = true, 0 = false: Synced to EDSM", BaseUtils.ConditionEntry.MatchType.IsTrue, "All"));
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("SyncedEDDN", "Boolean value: 1 = true, 0 = false: Synced to EDDN", BaseUtils.ConditionEntry.MatchType.IsTrue, "All"));
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("IsOdyssey", "Boolean value: 1 = true, 0 = false: Odyssey journal entry", BaseUtils.ConditionEntry.MatchType.IsTrue, "All"));
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("IsHorizons", "Boolean value: 1 = true, 0 = false: Horizons journal entry", BaseUtils.ConditionEntry.MatchType.IsTrue, "All"));
 
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Level", "Integer value: Level of body in system", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Sibling.Count", "Integer value: Number of siblings", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
