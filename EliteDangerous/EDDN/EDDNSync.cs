@@ -218,7 +218,9 @@ namespace EliteDangerousCore.EDDN
             }
             else if (je.EventTypeID == JournalTypeEnum.FSSSignalDiscovered)
             {
-                msg = eddn.CreateEDDNFSSSignalDiscovered( je as JournalFSSSignalDiscovered, he.System);
+                // if EDDNSystem is set, we use that, else use system
+                var fss = je as JournalFSSSignalDiscovered;
+                msg = eddn.CreateEDDNFSSSignalDiscovered(fss, fss.EDDNSystem != null ? fss.EDDNSystem : he.System);
             }
 
             if (msg != null)
