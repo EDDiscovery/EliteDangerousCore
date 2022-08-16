@@ -155,15 +155,6 @@ namespace EliteDangerousCore
                     {
                         EDSMID = 0,         // not an EDSM entry
                         SystemAddress = jl.SystemAddress,
-                        Population = jl.Population ?? 0,
-                        Faction = jl.Faction,
-                        Government = jl.EDGovernment,
-                        Allegiance = jl.EDAllegiance,
-                        State = jl.EDState,
-                        Security = jl.EDSecurity,
-                        PrimaryEconomy = jl.EDEconomy,
-                        Power = jl.PowerList,
-                        PowerState = jl.PowerplayState,
                         Source = jl.StarPosFromEDSM ? SystemSource.FromEDSM : SystemSource.FromJournal,
                     };
 
@@ -177,12 +168,7 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    // NOTE Rob: 09-JAN-2018 I've removed the Jumpstart looking up a system by name since they were using up lots of lookup time during history reading.  
-                    // This is used for pre 2.2 systems without co-ords, which now should be limited.
-                    // JumpStart still gets the system when the FSD loc is processed, see above.
-                    // Jumpstart was also screwing about with the EDSM ID fill in which was broken.  This is now working again.
-
-                    newsys = new SystemClass(jl.StarSystem);         // this will be a synthesised one
+                      newsys = new SystemClass(jl.StarSystem);         // this will be a synthesised one
                 }
 
                 isys = newsys;

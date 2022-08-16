@@ -581,25 +581,6 @@ namespace EliteDangerousCore.EDSM
                             sys.Z = co["z"].Double();
                         }
 
-                        sys.NeedsPermit = sysname["requirePermit"].Bool(false) ? 1 : 0;
-
-                        JObject info = sysname["information"] as JObject;
-
-                        if (info != null)
-                        {
-                            sys.Population = info["population"].Long(0);
-                            sys.Faction = info["faction"].StrNull();
-                            EDAllegiance allegiance = EDAllegiance.None;
-                            EDGovernment government = EDGovernment.None;
-                            EDState state = EDState.None;
-                            EDEconomy economy = EDEconomy.None;
-                            EDSecurity security = EDSecurity.Unknown;
-                            sys.Allegiance = Enum.TryParse(info["allegiance"].Str(), out allegiance) ? allegiance : EDAllegiance.None;
-                            sys.Government = Enum.TryParse(info["government"].Str(), out government) ? government : EDGovernment.None;
-                            sys.State = Enum.TryParse(info["factionState"].Str(), out state) ? state : EDState.None;
-                            sys.PrimaryEconomy = Enum.TryParse(info["economy"].Str(), out economy) ? economy : EDEconomy.None;
-                            sys.Security = Enum.TryParse(info["security"].Str(), out security) ? security : EDSecurity.Unknown;
-                        }
                         systems.Add(sys);
                     }
                 }

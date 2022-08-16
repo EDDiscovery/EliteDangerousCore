@@ -17,106 +17,7 @@ using System;
 using System.Collections.Generic;
 
 namespace EliteDangerousCore
-{
-    public enum EDGovernment        // synced with FDev IDs Aug 22
-    {
-        Unknown = 0,
-        Anarchy = 1,
-        Communism = 2,
-        Confederacy = 3,
-        Corporate = 4,
-        Cooperative = 5,
-        Democracy = 6,
-        Dictatorship,
-        Feudal,
-        Imperial,
-        None,
-        Patronage,
-        Prison,
-        Prison_Colony,
-        Theocracy,
-        Engineer,
-        Carrier,
-    }
-
-    public enum EDAllegiance        // synced with FDEV and logs aug 22
-    {
-        Unknown = 0,
-        Alliance = 1,
-        Empire = 3,
-        Federation = 4,
-        Independent = 5,
-        Anarchy = 2,
-        None = 6,
-        PilotsFederation = 7,
-        Pirate = 8,
-        Guardian = 9,
-    }
-
-    public enum EDState // synced with FDev Ids aug 22
-    {
-        Unknown = 0,
-        None = 1,
-        Boom,
-        Bust,
-        CivilUnrest,
-        CivilWar,
-        Election,
-        Expansion,
-        Famine,
-        Investment,
-        Lockdown,
-        Outbreak,
-        Retreat,
-        War,
-        CivilLiberty,
-        PirateAttack,
-        Blight,
-        Drought,
-        InfrastructureFailure, 
-        NaturalDisaster, 
-        PublicHoliday, 
-        Terrorism,
-        ColdWar, 
-        Colonisation, 
-        HistoricEvent, 
-        Revolution,
-        TechnologicalLeap, 
-        TradeWar, 
-    }
-
-    public enum EDSecurity  // in FDevID august 22
-    {
-        Unknown = 0,
-        Low,
-        Medium,
-        High,
-        Anarchy,
-        Lawless,
-    }
-
-    public enum EDEconomy   // in FDevID order august 22
-    {
-        Unknown = 0,
-        Agriculture = 1,
-        Colony = 11,
-        Extraction = 2,
-        High_Tech = 3,
-        Industrial = 4,
-        Military = 5,
-        None = 10,
-        Refinery = 6,
-        Service = 7,
-        Terraforming = 8,
-        Tourism = 9,
-        Prison = 12,
-        Damaged = 13,
-        Rescue = 14,
-        Repair = 15,
-        Carrier = 16,
-        Engineer = 17,
-    }
-
+{ 
     public enum SystemSource                // Who made the information?
     {
         Synthesised,
@@ -146,22 +47,7 @@ namespace EliteDangerousCore
         bool Cuboid(ISystemBase other, double min, double max);
     }
 
-    public interface ISystemSystemInfo
-    {
-        string Faction { get; set; }
-        long Population { get; set; }
-        EDGovernment Government { get; set; }
-        EDAllegiance Allegiance { get; set; }
-        EDState State { get; set; }
-        EDSecurity Security { get; set; }
-        EDEconomy PrimaryEconomy { get; set; }
-        string Power { get; set; }
-        string PowerState { get; set; }
-        int NeedsPermit { get; set; }
-        bool HasSystemStateInfo { get; }
-    }
-
-    public interface ISystem : ISystemBase, ISystemSystemInfo
+    public interface ISystem : ISystemBase
     {
         long EDSMID { get; set; }
         SystemSource Source { get; set; }        // Who made this entry, where did the info come from?

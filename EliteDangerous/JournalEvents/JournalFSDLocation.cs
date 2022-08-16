@@ -135,7 +135,7 @@ namespace EliteDangerousCore.JournalEvents
             if (jk != null && jk.IsObject)                  // new 3.03
             {
                 Faction = jk["Name"].Str();                // system faction pick up
-                FactionState = jk["FactionState"].Str();
+                FactionState = jk["FactionState"].Str("None");      // 16 august 22, analysed journals, appears not written if faction state is none, so use as default
             }
             else
             {
@@ -184,90 +184,6 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public EDGovernment EDGovernment
-        {
-            get
-            {
-                EDGovernment government;
-                if (Government != null && Government.StartsWith("$government_") && Enum.TryParse(Government.Substring(12).Replace(";",""), true, out government))
-                {
-                    return government;
-                }
-                if (Government == "$government_PrisonColony;") return EDGovernment.Prison_Colony;
-                return EDGovernment.Unknown;
-            }
-        }
-
-        public EDEconomy EDEconomy
-        {
-            get
-            {
-                EDEconomy economy;
-                if (Economy != null && Economy.StartsWith("$economy_") && Enum.TryParse(Economy.Substring(9).Replace(";",""), true, out economy))
-                {
-                    return economy;
-                }
-                if (Economy == "$economy_Agri;") return EDEconomy.Agriculture;
-                if (Economy == "$economy_HighTech;") return EDEconomy.High_Tech;
-
-                return EDEconomy.Unknown;
-            }
-        }
-
-        public EDSecurity EDSecurity
-        {
-            get
-            {
-                switch (Security)
-                {
-                    case "$GAlAXY_MAP_INFO_state_anarchy;": return EDSecurity.Anarchy;
-                    case "$GALAXY_MAP_INFO_state_lawless;": return EDSecurity.Lawless;
-                    case "$SYSTEM_SECURITY_low;": return EDSecurity.Low;
-                    case "$SYSTEM_SECURITY_medium;": return EDSecurity.Medium;
-                    case "$SYSTEM_SECURITY_high;": return EDSecurity.High;
-                    default: return EDSecurity.Unknown;
-                }
-            }
-        }
-
-        public EDState EDState
-        {
-            get
-            {
-                EDState state;
-                if (FactionState != null && Enum.TryParse(FactionState, true, out state))
-                {
-                    return state;
-                }
-
-                return EDState.Unknown;
-            }
-        }
-
-        public EDAllegiance EDAllegiance
-        {
-            get
-            {
-                EDAllegiance allegiance;
-                if (Allegiance != null && Enum.TryParse(Allegiance, true, out allegiance))
-                {
-                    return allegiance;
-                }
-
-                return EDAllegiance.Unknown;
-            }
-        }
-
-        public string PowerList
-        {
-            get
-            {
-                if (PowerplayPowers != null && PowerplayPowers.Length > 0)
-                    return string.Join(",", PowerplayPowers);
-                else
-                    return "";
-            }
-        }
     }
 
 
