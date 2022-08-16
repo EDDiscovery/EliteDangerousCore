@@ -227,6 +227,8 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("List of FSS signals")]
         public List<FSSSignal> Signals { get; set; }            // name used in action packs not changeable
 
+        public ISystem EDDNSystem { get; set; }                 // set if FSS has been detected in the wrong system                  
+
         [PropertyNameAttribute("Count of station signals")]
         public int CountStationSignals { get { return Signals?.Where(x => x.ClassOfSignal == FSSSignal.Classification.Station).Count() ?? 0; } }
         [PropertyNameAttribute("Count of installation signals")]
