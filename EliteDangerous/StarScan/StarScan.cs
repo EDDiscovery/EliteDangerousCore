@@ -51,7 +51,7 @@ namespace EliteDangerousCore
                 else if (e.Item1.EventTypeID == JournalTypeEnum.SAASignalsFound)
                 {
                     var jsaa = (JournalSAASignalsFound)e.Item1;
-                    if (ProcessSignalsFound(jsaa.BodyID.Value,jsaa.BodyName,jsaa.Signals, e.Item2))
+                    if (ProcessSignalsFound(jsaa.BodyID.Value,jsaa.BodyName,jsaa.Signals, jsaa.Genuses, e.Item2))
                         todelete.Add(e);
                 }
                 else if (e.Item1.EventTypeID == JournalTypeEnum.FSSSignalDiscovered)
@@ -62,7 +62,7 @@ namespace EliteDangerousCore
                 else if (e.Item1.EventTypeID == JournalTypeEnum.FSSBodySignals)
                 {
                     var jsaa = (JournalFSSBodySignals)e.Item1;
-                    if (ProcessSignalsFound(jsaa.BodyID.Value, jsaa.BodyName, jsaa.Signals, e.Item2))
+                    if (ProcessSignalsFound(jsaa.BodyID.Value, jsaa.BodyName, jsaa.Signals, null, e.Item2))
                         todelete.Add(e);
                 }
                 else if (e.Item1.EventTypeID == JournalTypeEnum.CodexEntry)

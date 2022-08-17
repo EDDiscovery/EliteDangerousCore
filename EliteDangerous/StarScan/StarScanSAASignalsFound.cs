@@ -29,7 +29,7 @@ namespace EliteDangerousCore
             // jsaa should always have a system address.  If it matches current system, we can go for an immediate add
             if (sys.SystemAddress.HasValue && jsaa.SystemAddress == sys.SystemAddress.Value)
             {
-                bool ret = ProcessSignalsFound(jsaa.BodyID.Value, jsaa.BodyName, jsaa.Signals, sys);
+                bool ret = ProcessSignalsFound(jsaa.BodyID.Value, jsaa.BodyName, jsaa.Signals, jsaa.Genuses, sys);
                 if (!ret)
                     SaveForProcessing(jsaa, sys);
                 return ret;
@@ -41,8 +41,13 @@ namespace EliteDangerousCore
             }
         }
 
+        // add signals from various sources (SAASignals, FSSBodySignals) to node
+        // genuses only present in odyssey 4.0 v13+ SAASignals, so it may be null
 
-        private bool ProcessSignalsFound(int bodyid, string bodyname, List<JournalSAASignalsFound.SAASignal> signals, ISystem sys)  // background or foreground.. FALSE if you can't process it
+        private bool ProcessSignalsFound(int bodyid, string bodyname,
+                                            List<JournalSAASignalsFound.SAASignal> signals,
+                                            List<JournalSAASignalsFound.SAAGenus> genuses,
+                                            ISystem sys)  // background or foreground.. FALSE if you can't process it
         {
             SystemNode sn = GetOrCreateSystemNode(sys);
             ScanNode relatednode = null;
@@ -92,9 +97,24 @@ namespace EliteDangerousCore
                     }
                 }
 
+                if (genuses != null)        // if we have any - ones before Odyssey v4.0 r 13 did not
+                {
+                    if (relatednode.Genuses == null)
+                        relatednode.Genuses = new List<JournalSAASignalsFound.SAAGenus>();
+
+                    foreach (var x in genuses)
+                    {
+                        if (relatednode.Genuses.Find(y => y.Genus == x.Genus) == null)
+                        {
+                            relatednode.Genuses.Add(x);
+                        }
+                    }
+                }
+
                 if (relatednode.ScanData != null)
                 {
                     relatednode.ScanData.Signals = relatednode.Signals;       // make sure Scan node has same list as subnode
+                    relatednode.ScanData.Genuses = relatednode.Genuses;
                    // System.Diagnostics.Debug.WriteLine($"Assign SAA signal list {string.Join(",", relatednode.Signals.Select(x => x.Type).ToList())} to {relatednode.FullName}");
                 }
 

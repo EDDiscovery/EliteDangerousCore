@@ -302,6 +302,7 @@ namespace EliteDangerousCore
                         subnode.IsMapped = oldnode.IsMapped;
                         subnode.WasMappedEfficiently = oldnode.WasMappedEfficiently;
                         subnode.Signals = oldnode.Signals;
+                        subnode.Genuses = oldnode.Genuses;
                         subnode.Organics = oldnode.Organics;
                     }
 
@@ -333,8 +334,12 @@ namespace EliteDangerousCore
 
                     if (subnode.Signals != null)
                     {
-                       // System.Diagnostics.Debug.WriteLine($"Assign JS signal list {string.Join(",", subnode.Signals.Select(x => x.Type).ToList())} to {subnode.FullName}");
+                        // System.Diagnostics.Debug.WriteLine($"Assign JS signal list {string.Join(",", subnode.Signals.Select(x => x.Type).ToList())} to {subnode.FullName}");
                         sc.Signals = subnode.Signals;       // make sure Scan node has same list as subnode
+                    }
+                    if (subnode.Genuses != null)
+                    {
+                        sc.Genuses = subnode.Genuses;       // make sure Scan node has same list as subnode
                     }
                     if (subnode.Organics != null)
                     {

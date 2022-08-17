@@ -314,12 +314,18 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Count of uncategorised signals")]
         public int CountUncategorisedSignals { get { return Signals?.Where(x => x.IsUncategorised).Sum(y => y.Count) ?? 0; } }
 
+        [PropertyNameAttribute("Genuses information")]
+        public List<JournalSAASignalsFound.SAAGenus> Genuses { get; set; }          // can be null if no genusus for this node, else its a list of genusus.  set up by StarScan
+        [PropertyNameAttribute("Any Genuses")]
+        public bool ContainsGenusus { get { return (Genuses?.Count ?? 0) > 0; } }
+        [PropertyNameAttribute("Count of all genuses")]
+        public int CountGenusus { get { return Genuses?.Count ?? 0; } }
 
         [PropertyNameAttribute("Organics information")]
         public List<JournalScanOrganic> Organics { get; set; }  // can be null if nothing for this node, else a list of organics. Set up by StarScan
         [PropertyNameAttribute("Any organic scans")]
-        public bool ContainsOrganicsScans { get { return (Organics?.Count ?? 0) > 0 ; } }
-        [PropertyNameAttribute("Count of all scans")]
+        public bool ContainsOrganicsScans { get { return (Organics?.Count ?? 0) > 0; } }
+        [PropertyNameAttribute("Count of all organic scans")]
         public int CountOrganicsScans { get { return Organics?.Count ?? 0; } }
         [PropertyNameAttribute("Count of fully analysed scans")]
         public int CountOrganicsScansAnalysed { get { return Organics?.Where(x => x.ScanType == JournalScanOrganic.ScanTypeEnum.Analyse).Count() ?? 0; } }

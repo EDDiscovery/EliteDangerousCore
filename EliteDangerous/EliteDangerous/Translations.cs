@@ -870,6 +870,7 @@ namespace EliteDangerousCore
         ScanDisplayUserControl_NSD, // No scan data available
         ScanDisplayUserControl_BC, // Barycentre of {0}
         ScanDisplayUserControl_Signals, // Signals
+        ScanDisplayUserControl_Genuses, // Signals
         ScanDisplayUserControl_Organics, // Organics
         ScanDisplayUserControl_Codex,
 
