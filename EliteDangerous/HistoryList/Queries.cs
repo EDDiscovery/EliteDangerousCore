@@ -117,7 +117,7 @@ namespace EliteDangerousCore
 
                 new Query("Planet with a large number of Moons","IsPlanet IsTrue And Child.Count >= 8", QueryType.BuiltIn, true, "Compare(left.Child.Count,right.Child.Count)" ),
                 new Query("Moon of a Moon","Parent.IsPlanet IsTrue And Parent.Parent.IsPlanet IsTrue", QueryType.BuiltIn ),
-                new Query("Moons orbiting Terraformables","Parent.Terraformable IsTrue", QueryType.BuiltIn, true ),
+                new Query("Moons orbiting Terraformables","Parent.Terraformable IsTrue And IsPlanet IsTrue", QueryType.BuiltIn, true ),
                 new Query("Moons orbiting Earthlike","Parent.Earthlike IsTrue", QueryType.BuiltIn ),
 
                 new Query("Close Binary","IsPlanet IsTrue And IsOrbitingBarycentre IsTrue And Sibling.Count == 1 And nRadius/nSemiMajorAxis > 0.4 And " +
