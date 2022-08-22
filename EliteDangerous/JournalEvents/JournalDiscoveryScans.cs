@@ -641,6 +641,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
 
+            Species = Species.Alt("Unknown");       // seen entries with no genus/species, set to unknown.
+            Genus = Genus.Alt("Unknown");
+
             if (ScanType == ScanTypeEnum.Analyse)
             {
                 var value = OrganicEstimatedValues.GetValue(Species);
