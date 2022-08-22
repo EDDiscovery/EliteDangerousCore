@@ -105,17 +105,17 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (Raw != null)
             {
-                List<Tuple<string, int>> counts = Raw.Select(x => new Tuple<string, int>(x.Name.ToLower(), x.Count)).ToList();
+                List<Tuple<string, int>> counts = Raw.Select(x => new Tuple<string, int>(x.Name.ToLowerInvariant(), x.Count)).ToList();
                 mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Raw, counts);
             }
             if ( Manufactured != null )
             {
-                List<Tuple<string, int>> counts = Manufactured.Select(x => new Tuple<string, int>(x.Name.ToLower(), x.Count)).ToList();
+                List<Tuple<string, int>> counts = Manufactured.Select(x => new Tuple<string, int>(x.Name.ToLowerInvariant(), x.Count)).ToList();
                 mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Manufactured, counts);
             }
             if ( Encoded != null )
             {
-                List<Tuple<string, int>> counts = Encoded.Select(x => new Tuple<string, int>(x.Name.ToLower(), x.Count)).ToList();
+                List<Tuple<string, int>> counts = Encoded.Select(x => new Tuple<string, int>(x.Name.ToLowerInvariant(), x.Count)).ToList();
                 mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Encoded, counts);
             }
         }

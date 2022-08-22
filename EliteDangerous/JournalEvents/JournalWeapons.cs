@@ -32,7 +32,7 @@ namespace EliteDangerousCore.JournalEvents
             if (Name.HasChars())
             {
                 FriendlyName = ItemData.GetWeapon(Name, Name_Localised)?.Name ?? Name_Localised;
-                Name = Name.ToLower(); // normalise
+                Name = Name.ToLowerInvariant(); // normalise
             }
         }
 
@@ -71,7 +71,7 @@ namespace EliteDangerousCore.JournalEvents
             if (Name.HasChars())
             {
                 FriendlyName = ItemData.GetWeapon(Name, Name_Localised)?.Name ?? Name_Localised;
-                Name = Name.ToLower(); // normalise
+                Name = Name.ToLowerInvariant(); // normalise
             }
         }
 

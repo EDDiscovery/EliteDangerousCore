@@ -174,7 +174,7 @@ namespace EliteDangerousCore
 
         public static string GetBetterNameForEngineeringRecipe(string fdname)
         {
-            var lfdname = fdname.ToLower();
+            var lfdname = fdname.ToLowerInvariant();
             var f = EngineeringRecipes.Find(x => x.fdname == lfdname);
             return f == null ? fdname : f.Name;
         }
