@@ -219,7 +219,7 @@ namespace EliteDangerousCore
             }
             foreach (EDAtmosphereType atm in Enum.GetValues(typeof(EDAtmosphereType)))
             {
-                Atmoscomparestrings[atm] = atm.ToString().ToLower().Replace("_", " ");
+                Atmoscomparestrings[atm] = atm.ToString().ToLowerInvariant().Replace("_", " ");
             }
             foreach (EDVolcanism atm in Enum.GetValues(typeof(EDVolcanism)))
             {

@@ -36,7 +36,7 @@ namespace EliteDangerousCore.DLL
             if (assembly != null)
                 return assembly;
 
-            string filename = args.Name.Split(',')[0] + ".dll".ToLower();
+            string filename = args.Name.Split(',')[0] + ".dll".ToLowerInvariant();
 
             foreach (var path in AssemblyFindPaths)
             {

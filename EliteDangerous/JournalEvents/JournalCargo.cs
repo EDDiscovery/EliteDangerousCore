@@ -137,7 +137,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if (Inventory != null)
                 {
-                    List<Tuple<string, int>> counts = Inventory.Select(x => new Tuple<string, int>(x.Name.ToLower(), x.Count)).ToList();
+                    List<Tuple<string, int>> counts = Inventory.Select(x => new Tuple<string, int>(x.Name.ToLowerInvariant(), x.Count)).ToList();
                     mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, counts);
                 }
             }

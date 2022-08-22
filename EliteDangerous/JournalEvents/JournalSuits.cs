@@ -31,7 +31,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
                 Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, FriendlyName);
-                Name = Name.ToLower(); // normalise
+                Name = Name.ToLowerInvariant(); // normalise
             }
         }
 
@@ -70,7 +70,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
                 Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, FriendlyName);
-                Name = Name.ToLower(); // normalise
+                Name = Name.ToLowerInvariant(); // normalise
             }
         }
 
@@ -136,7 +136,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
                 SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
-                SuitName = SuitName.ToLower(); // normalise
+                SuitName = SuitName.ToLowerInvariant(); // normalise
                 SuitLoadout.NormaliseModules(Modules);
             }
         }
@@ -196,7 +196,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
                 SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
-                SuitName = SuitName.ToLower(); // normalise
+                SuitName = SuitName.ToLowerInvariant(); // normalise
                 SuitLoadout.NormaliseModules(Modules);
             }
         }
@@ -254,7 +254,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
                 SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
-                SuitName = SuitName.ToLower(); // normalise
+                SuitName = SuitName.ToLowerInvariant(); // normalise
             }
         }
 
@@ -293,11 +293,11 @@ namespace EliteDangerousCore.JournalEvents
             {
                 SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
                 SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
-                SuitName = SuitName.ToLower(); // normalise
+                SuitName = SuitName.ToLowerInvariant(); // normalise
                 ModuleNameFriendly = ItemData.GetWeapon(ModuleName, ModuleName_Localised)?.Name ?? ModuleName_Localised;
                 SlotFriendlyName = SlotName.SplitCapsWordFull();
-                SlotName = SlotName.ToLower();
-                ModuleName = ModuleName.ToLower();
+                SlotName = SlotName.ToLowerInvariant();
+                ModuleName = ModuleName.ToLowerInvariant();
             }
         }
 
@@ -365,12 +365,12 @@ namespace EliteDangerousCore.JournalEvents
             if (SuitName.HasChars() && ModuleName.HasChars())
             {
                 SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
-                SuitName = SuitName.ToLower(); // normalise
+                SuitName = SuitName.ToLowerInvariant(); // normalise
                 SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
                 ModuleNameFriendly = ItemData.GetWeapon(ModuleName, ModuleName_Localised)?.Name ?? ModuleName_Localised;
                 SlotFriendlyName = SlotName.SplitCapsWordFull();
-                SlotName = SlotName.ToLower();
-                ModuleName = ModuleName.ToLower();
+                SlotName = SlotName.ToLowerInvariant();
+                ModuleName = ModuleName.ToLowerInvariant();
             }
         }
 
@@ -425,7 +425,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
                 SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
-                SuitName = SuitName.ToLower(); // normalise
+                SuitName = SuitName.ToLowerInvariant(); // normalise
             }
         }
 
@@ -465,7 +465,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
                 SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
-                SuitName = SuitName.ToLower(); // normalise
+                SuitName = SuitName.ToLowerInvariant(); // normalise
                 SuitLoadout.NormaliseModules(Modules);
             }
         }
@@ -517,7 +517,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
                 Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, FriendlyName);
-                Name = Name.ToLower(); // normalise
+                Name = Name.ToLowerInvariant(); // normalise
             }
         }
 

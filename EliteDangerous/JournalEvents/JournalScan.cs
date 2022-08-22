@@ -489,7 +489,7 @@ namespace EliteDangerousCore.JournalEvents
                         {
                             if ( AtmosphereComposition.ContainsKey(e.ToString()))       // pick first match in ID
                             {
-                                Atmosphere = e.ToString().SplitCapsWord().ToLower();
+                                Atmosphere = e.ToString().SplitCapsWord().ToLowerInvariant();
                              //   System.Diagnostics.Debug.WriteLine("Computed Atmosphere '" + Atmosphere + "'");
                                 break;
                             }
@@ -501,7 +501,7 @@ namespace EliteDangerousCore.JournalEvents
                 }
                 else
                 {
-                    Atmosphere = Atmosphere.Replace("sulfur", "sulphur").SplitCapsWord().ToLower();      // fix frontier spelling mistakes
+                    Atmosphere = Atmosphere.Replace("sulfur", "sulphur").SplitCapsWord().ToLowerInvariant();      // fix frontier spelling mistakes
                  //   System.Diagnostics.Debug.WriteLine("Atmosphere '" + Atmosphere + "'");
                 }
 
@@ -509,7 +509,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 System.Diagnostics.Debug.Assert(Atmosphere.HasChars());
 
-                AtmosphereID = Bodies.AtmosphereStr2Enum(Atmosphere.ToLower(), out EDAtmosphereProperty ap);  // convert to internal ID
+                AtmosphereID = Bodies.AtmosphereStr2Enum(Atmosphere.ToLowerInvariant(), out EDAtmosphereProperty ap);  // convert to internal ID
                 AtmosphereProperty = ap;
 
                 if (AtmosphereID == EDAtmosphereType.Unknown)

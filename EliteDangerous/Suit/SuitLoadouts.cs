@@ -61,8 +61,8 @@ namespace EliteDangerousCore
         {
             foreach (var m in list.EmptyIfNull())
             {
-                m.ModuleName = m.ModuleName.ToLower();
-                m.SlotName = m.SlotName.ToLower();
+                m.ModuleName = m.ModuleName.ToLowerInvariant();
+                m.SlotName = m.SlotName.ToLowerInvariant();
                 m.FriendlyName = ItemData.GetWeapon(m.ModuleName)?.Name ?? m.ModuleName_Localised;
             }
         }
