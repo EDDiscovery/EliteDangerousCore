@@ -159,12 +159,16 @@ namespace EliteDangerousCore.JournalEvents
         public double? nOrbitalInclination { get; private set; }            // direct, degrees
         [PropertyNameAttribute("Degrees")]
         public double? nPeriapsis { get; private set; }                     // direct, degrees
+        [PropertyNameAttribute("Kepler Periapsis Degrees")]
+        public double? nPeriapsisKepler { get { if (nPeriapsis.HasValue) return (360.0 - nPeriapsis.Value) % 360.0; else return null; } set { nPeriapsis = (360.0 - value) % 360; } }
         [PropertyNameAttribute("Seconds")]
         public double? nOrbitalPeriod { get; private set; }                 // direct, seconds
         [PropertyNameAttribute("Days")]
         public double? nOrbitalPeriodDays { get { if (nOrbitalPeriod.HasValue) return nOrbitalPeriod.Value / BodyPhysicalConstants.oneDay_s; else return null; } }
         [PropertyNameAttribute("Degrees")]
         public double? nAscendingNode { get; private set; }                  // odyssey update 7 22/9/21, degrees
+        [PropertyNameAttribute("Kepler AN Degrees")]
+        public double? nAscendingNodeKepler { get { if (nAscendingNode.HasValue) return (360.0 - nAscendingNode.Value) % 360.0; else return null; } set { nAscendingNode = (360.0 - value) % 360; } }
         [PropertyNameAttribute("Degrees")]
         public double? nMeanAnomaly { get; private set; }                    // odyssey update 7 22/9/21, degrees
 

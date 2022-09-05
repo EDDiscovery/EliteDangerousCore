@@ -1,16 +1,16 @@
 ﻿/*
- * Copyright © 2015 - 2021 EDDiscovery development team
+ * Copyright ┬® 2015 - 2021 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
+ *
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
@@ -28,7 +28,7 @@ namespace EliteDangerousCore
             public static void DumpTree(ScanNode top, string introtext, int level)        // debug dump out
             {
                 string pad = new string(' ', 64);
-                System.Diagnostics.Debug.WriteLine(pad.Substring(0, level * 3) + introtext + ": ID " + top.BodyID + " " + top.FullName + " : " + top.NodeType + (top.scandata != null ? " : sd": ""));
+                System.Diagnostics.Debug.WriteLine(pad.Substring(0, level * 3) + introtext + ": ID " + top.BodyID + " " + top.FullName + " : " + top.NodeType + (top.scandata != null ? " : sd" : ""));
                 if (top.Children != null)
                 {
                     foreach (var c in top.Children)
@@ -50,7 +50,7 @@ namespace EliteDangerousCore
             }
 
             // Dumps out orbital parameters. Distance is km, as per Kepler Orbital Parameters/Horizons
-            public static JObject DumpOrbitElements(ScanNode top)        
+            public static JObject DumpOrbitElements(ScanNode top)
             {
                 JObject obj = new JObject();
                 obj["Name"] = top.OwnName;
@@ -78,6 +78,7 @@ namespace EliteDangerousCore
                     {
                         obj["BodyType"] = "Star";
                         obj["StarType"] = top.ScanData.StarTypeID.ToString();
+                        obj["StarImage"] = top.ScanData.StarTypeImageName;
                         obj["StarClass"] = top.ScanData.StarClassificationAbv;
                         obj["StarAbsMag"] = top.ScanData.nAbsoluteMagnitude;
                         obj["StarAge"] = top.ScanData.nAge;
@@ -86,9 +87,10 @@ namespace EliteDangerousCore
                     {
                         obj["BodyType"] = "Planet";
                         obj["PlanetClass"] = top.ScanData.PlanetTypeID.ToString();
+                        obj["PlanetImage"] = top.ScanData.PlanetClassImageName;
                     }
 
-                    if ( top.ScanData.nRadius.HasValue)
+                    if (top.ScanData.nRadius.HasValue)
                         obj["Radius"] = top.ScanData.nRadius / 1000.0;  // in km
 
                     if (top.scandata.nSemiMajorAxis.HasValue)       // if we have semi major axis, we have orbital elements
@@ -96,19 +98,19 @@ namespace EliteDangerousCore
                         obj["SemiMajorAxis"] = top.ScanData.nSemiMajorAxis / 1000.0;        // in km
                         obj["Eccentricity"] = top.ScanData.nEccentricity;  // degrees
                         obj["Inclination"] = top.ScanData.nOrbitalInclination;  // degrees
-                        obj["AscendingNode"] = top.ScanData.nAscendingNode; // degrees
-                        obj["Periapis"] = top.ScanData.nPeriapsis;// degrees
+                        obj["AscendingNode"] = top.ScanData.nAscendingNodeKepler; // degrees
+                        obj["Periapis"] = top.ScanData.nPeriapsisKepler;// degrees
                         obj["MeanAnomaly"] = top.scandata.nMeanAnomaly;// degrees
                         obj["OrbitalPeriod"] = top.scandata.nOrbitalPeriod;// in seconds
                     }
 
-                    if ( top.scandata.nAxialTilt.HasValue )
+                    if (top.scandata.nAxialTilt.HasValue)
                         obj["AxialTilt"] = top.scandata.nAxialTiltDeg;  // degrees
 
                     if (top.scandata.nRotationPeriod.HasValue)      // seconds
                         obj["RotationPeriod"] = top.scandata.nRotationPeriod;
 
-                    if ( top.scandata.nMassKG.HasValue)
+                    if (top.scandata.nMassKG.HasValue)
                         obj["Mass"] = top.scandata.nMassKG; // kg
 
                     if (top.ScanData.nSurfaceTemperature.HasValue)
@@ -118,11 +120,25 @@ namespace EliteDangerousCore
                         obj["SurfaceTemp"] = top.ScanData.nSurfaceTemperature;
 
                     if (top.ScanData.HasRings)
-                        obj["RingCount"] = top.ScanData.Rings.Length;
+                    {
+                        JArray ringarray = new JArray();
+                        foreach (var r in top.ScanData.Rings)
+                        {
+                            JObject jo = new JObject()
+                            {
+                                ["Type"] = r.RingClassID.ToString(),
+                                ["InnerRad"] = r.InnerRad / 1000.0,  // in km
+                                ["OuterRad"] = r.OuterRad / 1000.0,    // in km
+                                ["MassMT"] = r.MassMT
+                            };
+                            ringarray.Add(jo);
+                        }
+                        obj["Rings"] = ringarray;
+                    }
 
                 }
 
-                if (top.Children != null && top.Children.Count>0)
+                if (top.Children != null && top.Children.Count > 0)
                 {
                     JArray ja = new JArray();
                     foreach (var kvp in top.Children)
