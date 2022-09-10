@@ -149,24 +149,33 @@ namespace EliteDangerousCore
                 currentPosition.Z + maxRange * travelVectorPerLy.Z); // where we would like to be..
         }
 
+        // return an EDSM ISystem or null based on parameters
         private static ISystem GetBestEDSMSystem( Point3D currentPosition, Point3D travelVectorPerLy, float maxDistanceFromWanted, float maxRange)
         {
             EDSMClass edsm = new EDSMClass();
             Point3D next = GetNextPosition(currentPosition, travelVectorPerLy, maxRange);
 
             Point3D centrepos = GetNextPosition(currentPosition, travelVectorPerLy, maxRange - maxDistanceFromWanted / 2);        // centre of edsm sphere is made here, at maxdistance-maxwanted/2
-            var list = edsm.GetSphereSystems(centrepos.X, centrepos.Y, centrepos.Z, maxDistanceFromWanted, 0).
+            var edsmresponse = edsm.GetSphereSystems(centrepos.X, centrepos.Y, centrepos.Z, maxDistanceFromWanted, 0);
+
+            if (edsmresponse != null) // it did reply. May not due to limiter or general internet stuffy
+            {
+                var list = edsmresponse.
                                 // ensure its not too far.. don't trust edsm
                                 Where(x => (x.Item1.X - currentPosition.X) * (x.Item1.X - currentPosition.X) + (x.Item1.Y - currentPosition.Y) * (x.Item1.Y - currentPosition.Y) + (x.Item1.Z - currentPosition.Z) * (x.Item1.Z - currentPosition.Z) < maxRange * maxRange).
                                 // order by distance from next ascending
                                 OrderBy(x => (x.Item1.X - next.X) * (x.Item1.X - next.X) + (x.Item1.Y - next.Y) * (x.Item1.Y - next.Y) + (x.Item1.Z - next.Z) * (x.Item1.Z - next.Z)).
                                 ToList();
-            //foreach (var x in list)
-            //    System.Diagnostics.Debug.WriteLine($"Sys {x.Item1.Name} {x.Item1.X},{x.Item1.Y},{x.Item1.Z} dist {Math.Sqrt((x.Item1.X - next.X) * (x.Item1.X - next.X) + (x.Item1.Y - next.Y) * (x.Item1.Y - next.Y) + (x.Item1.Z - next.Z) * (x.Item1.Z - next.Z))}" +
-            //            $"distcur {Math.Sqrt((x.Item1.X - currentPosition.X) * (x.Item1.X - currentPosition.X) + (x.Item1.Y - currentPosition.Y) * (x.Item1.Y - currentPosition.Y) + (x.Item1.Z - currentPosition.Z) * (x.Item1.Z - currentPosition.Z))}"
-            //        );
+                //foreach (var x in list)
+                //    System.Diagnostics.Debug.WriteLine($"Sys {x.Item1.Name} {x.Item1.X},{x.Item1.Y},{x.Item1.Z} dist {Math.Sqrt((x.Item1.X - next.X) * (x.Item1.X - next.X) + (x.Item1.Y - next.Y) * (x.Item1.Y - next.Y) + (x.Item1.Z - next.Z) * (x.Item1.Z - next.Z))}" +
+                //            $"distcur {Math.Sqrt((x.Item1.X - currentPosition.X) * (x.Item1.X - currentPosition.X) + (x.Item1.Y - currentPosition.Y) * (x.Item1.Y - currentPosition.Y) + (x.Item1.Z - currentPosition.Z) * (x.Item1.Z - currentPosition.Z))}"
+                //        );
 
-            return list.Count > 0 ? list[0].Item1 : null;
+                return list.Count > 0 ? list[0].Item1 : null;
+            }
+            else
+                return null;
+
         }
 
         private static float BoostPercentage(int boostStrength)
