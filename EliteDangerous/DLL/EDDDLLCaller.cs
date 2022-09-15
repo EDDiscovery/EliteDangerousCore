@@ -182,7 +182,7 @@ namespace EliteDangerousCore.DLL
                     return true;
                 }
             }
-            else if (pDll != IntPtr.Zero && pShown != null)
+            else if (pDll != IntPtr.Zero && pShown != IntPtr.Zero )
             {
                 EDDDLLInterfaces.EDDDLLIF.EDDMainFormShown edf = (EDDDLLInterfaces.EDDDLLIF.EDDMainFormShown)Marshal.GetDelegateForFunctionPointer(
                                                                                     pShown,
