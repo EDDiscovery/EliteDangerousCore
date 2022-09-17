@@ -231,7 +231,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public class ProgressInformation
         {
-            public string Engineer { get; set; }
+            public string Engineer { get; set; } = "Unknown";           // some journals seen on 17/9/22 have no Engineer or EngineerID
             public long EngineerID { get; set; }
             public int? Rank { get; set; }       // only when unlocked
             public string Progress { get; set; }
