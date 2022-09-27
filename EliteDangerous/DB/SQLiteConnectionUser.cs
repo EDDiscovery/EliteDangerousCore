@@ -34,7 +34,9 @@ namespace EliteDangerousCore.DB
         {
             int dbver = RegisterClass.GetSetting("DBVer", (int)1);        // use the constring one, as don't want to go back into ConnectionString code. Int is to force type
 
-            if (dbver < 127)
+            const int lastver = 128;
+
+            if (dbver < lastver)
             {
                 DropOldUserTables();
 
@@ -110,11 +112,14 @@ namespace EliteDangerousCore.DB
                 if (dbver < 126)
                     UpgradeUserDB126();
 
-                UpgradeUserDB127();
+                if (dbver < 127)
+                    UpgradeUserDB127();
+
+                UpgradeUserDB128();
 
                 CreateUserDBTableIndexes();
 
-                return 127;
+                return lastver;
             }
             else
                 return 0;
@@ -362,6 +367,12 @@ namespace EliteDangerousCore.DB
         {
             string query = "ALTER TABLE Commanders ADD COLUMN Options TEXT NOT NULL DEFAULT \"{}\"";
             ExecuteNonQuery(query);
+        }
+        private void UpgradeUserDB128()
+        {
+            string query1 = "ALTER TABLE TravelLogUnit ADD COLUMN GameVersion TEXT DEFAULT \"\"";
+            string query2 = "ALTER TABLE TravelLogUnit ADD COLUMN Build TEXT DEFAULT \"\"";
+            ExecuteNonQueries(query1,query2);
         }
 
         private void DropOldUserTables()
