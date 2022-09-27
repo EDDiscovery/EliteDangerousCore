@@ -74,6 +74,9 @@ namespace EliteDangerousCore
                     TravelLogUnit.Type |= TravelLogUnit.BetaMarker;
                 }
 
+                TravelLogUnit.Build = header.Build?.Trim() ?? "";                 // Probably never null, but we will protect
+                TravelLogUnit.GameVersion = header.GameVersion?.Trim() ?? "";     // trimming because there are spaces in their naming system
+
                 if (header.Part > 1)
                 {
                     // if we have a last continued, and its header parts match, and it has a commander, and its not too different in time..
@@ -96,7 +99,7 @@ namespace EliteDangerousCore
                     }
                 }
             }
-            else if ( je.EventTypeID == JournalTypeEnum.Continued )
+            else if (je.EventTypeID == JournalTypeEnum.Continued)
             {
                 lastcontinued = je as JournalEvents.JournalContinued;       // save.. we are getting a new file soon
             }
@@ -105,15 +108,21 @@ namespace EliteDangerousCore
                 var jlg = je as JournalEvents.JournalLoadGame;
                 string newname = jlg.LoadGameCommander;
 
-                if ((TravelLogUnit.Type & TravelLogUnit.BetaMarker) == TravelLogUnit.BetaMarker)
+                if (TravelLogUnit.IsBetaFlag)
                 {
                     newname = "[BETA] " + newname;
                 }
 
-                if (jlg.IsOdyssey == true)                                                    // new! mark TLU with odyssey and horizons markers
+                if (jlg.IsOdyssey == true)                                      // new! mark TLU with odyssey and horizons markers
                     TravelLogUnit.Type |= TravelLogUnit.OdysseyMarker;
                 if (jlg.IsHorizons == true)
                     TravelLogUnit.Type |= TravelLogUnit.HorizonsMarker;
+
+                if (jlg.Build.HasChars() && jlg.GameVersion.HasChars())        // journals before odyssey did not have these, so strings will be empty
+                { 
+                    TravelLogUnit.Build = jlg.Build.Trim();                  
+                    TravelLogUnit.GameVersion = jlg.GameVersion.Trim();        // trimming because there are spaces in their naming system
+                }
 
                 JournalEntry.DefaultHorizonsFlag = jlg.IsHorizons;      // for made up entries without a TLU (EDSM downloads) assign the default flag
                 JournalEntry.DefaultOdysseyFlag = jlg.IsOdyssey;

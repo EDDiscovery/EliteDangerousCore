@@ -54,10 +54,22 @@ namespace EliteDangerousCore
         public bool StartMarker { get { return (Synced & (int)SyncFlags.StartMarker) != 0; } }
         public bool StopMarker { get { return (Synced & (int)SyncFlags.StopMarker) != 0; } }
 
-        public virtual bool IsBeta { get { return TravelLogUnit.Get(TLUId)?.Beta ?? DefaultBetaFlag; } }        // TLUs are cached via the dictionary, no point also holding a local copy
-        public virtual bool IsHorizons { get { return TravelLogUnit.Get(TLUId)?.Horizons ?? DefaultHorizonsFlag; } }
-        public virtual bool IsOdyssey { get { return TravelLogUnit.Get(TLUId)?.Odyssey ?? DefaultOdysseyFlag; } }
-        public virtual string FullPath { get { return TravelLogUnit.Get(TLUId)?.FullName; } }
+        public virtual bool IsBeta { get { return TravelLogUnit.Get(TLUId)?.IsBeta ?? DefaultBetaFlag; } }        // TLUs are cached via the dictionary, no point also holding a local copy
+        public virtual bool IsHorizons { get { return TravelLogUnit.Get(TLUId)?.IsHorizons ?? DefaultHorizonsFlag; } }  // horizons flag from loadgame
+        public virtual bool IsOdyssey { get { return TravelLogUnit.Get(TLUId)?.IsOdyssey ?? DefaultOdysseyFlag; } } // odyseey flag from loadgame
+      
+        public bool IsOdysseyEstimatedValues { get      // work out which estimated values algorithm to use
+            {
+                var tlu = TravelLogUnit.Get(TLUId);
+                if (tlu != null)
+                    return IsOdyssey || GameVersion.StartsWith("4.");       // if odyssey flag is set, OR we have a horizons 4.0 situation
+                else
+                    return DefaultOdysseyFlag;
+            } }
+
+        public virtual string GameVersion { get { return TravelLogUnit.Get(TLUId)?.GameVersion ?? ""; } }
+        public virtual string Build { get { return TravelLogUnit.Get(TLUId)?.Build ?? ""; } }
+        public virtual string FullPath { get { return TravelLogUnit.Get(TLUId)?.FullName ?? ""; } }
 
         public static bool DefaultBetaFlag { get; set; } = false;
         public static bool DefaultHorizonsFlag { get; set; } = false;       // for entries without a TLU (EDSM downloaded made up ones for instance) provide default value

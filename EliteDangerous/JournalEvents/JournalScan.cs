@@ -765,13 +765,13 @@ namespace EliteDangerousCore.JournalEvents
         public ScanEstimatedValues GetEstimatedValues()
         {
             if (EstimatedValues == null)
-                EstimatedValues = new ScanEstimatedValues(EventTimeUTC, IsStar, StarTypeID, IsPlanet, PlanetTypeID, Terraformable, nStellarMass, nMassEM, IsOdyssey);
+                EstimatedValues = new ScanEstimatedValues(EventTimeUTC, IsStar, StarTypeID, IsPlanet, PlanetTypeID, Terraformable, nStellarMass, nMassEM, IsOdysseyEstimatedValues);
             return EstimatedValues;
         }
 
         public ScanEstimatedValues RecalcEstimatedValues()
         {
-            return new ScanEstimatedValues(EventTimeUTC, IsStar, StarTypeID, IsPlanet, PlanetTypeID, Terraformable, nStellarMass, nMassEM, IsOdyssey);
+            return new ScanEstimatedValues(EventTimeUTC, IsStar, StarTypeID, IsPlanet, PlanetTypeID, Terraformable, nStellarMass, nMassEM, IsOdysseyEstimatedValues);
         }
 
         public void AccumulateJumponium(ref string jumponium, string sysname)
