@@ -183,6 +183,36 @@ namespace EliteDangerousCore.JournalEvents
                                                         "Ship Packs: ".T(EDCTx.JournalCarrier_ShipPacks), SpaceUsage_ShipPacks,
                                                         "Module Packs: ".T(EDCTx.JournalCarrier_ModulePacks), SpaceUsage_ModulePacks,
                                                         "Free Space: ".T(EDCTx.JournalCarrier_FreeSpace), SpaceUsage_FreeSpace);
+
+                detailed += Environment.NewLine;
+                if ( Crew != null && Crew.Length>0)
+                {
+
+                    foreach (var v in Crew)
+                    {
+                        if ( v.Activated )
+                            detailed += BaseUtils.FieldBuilder.Build("Activated:" , v.CrewRole, "", v.CrewName, "< (Disabled);", v.Enabled ) + Environment.NewLine;
+                        else
+                            detailed += BaseUtils.FieldBuilder.Build("Not Activated:", v.CrewRole) + Environment.NewLine;
+                    }
+                }
+
+                if (ShipPacks != null && ShipPacks.Length > 0)
+                {
+                    foreach (var v in ShipPacks)
+                    {
+                        detailed += BaseUtils.FieldBuilder.Build("Pack: ", v.PackTheme, "", v.PackTier) + Environment.NewLine;
+                    }
+                }
+
+                if (ModulePacks != null && ModulePacks.Length>0)
+                {
+                    foreach (var v in ModulePacks)
+                    {
+                        detailed += BaseUtils.FieldBuilder.Build("Module: ", v.PackTheme, "", v.PackTier) + Environment.NewLine;
+                    }
+
+                }
             }
         }
     }
