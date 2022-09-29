@@ -545,17 +545,19 @@ namespace EliteDangerousCore.JournalEvents
             {
                 info = BaseUtils.FieldBuilder.Build("Purchase: ".T(EDCTx.JournalCarrier_Purchase), Commodity_Localised,
                                                     "", PurchaseOrder,
-                                                    "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Price);
+                                                    "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Price,
+                                                    "<; (Blackmarket)", BlackMarket);
             }
             else if ( SaleOrder != null)
             {
                 info = BaseUtils.FieldBuilder.Build("Sell: ".T(EDCTx.JournalCarrier_Sell), Commodity_Localised,
                                                     "", SaleOrder,
-                                                    "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Price);
+                                                    "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Price,
+                                                    "<; (Blackmarket)", BlackMarket); 
             }
             else if ( CancelTrade != null && CancelTrade.Value == true )
             {
-                info = BaseUtils.FieldBuilder.Build("Cancel Sell of: ".T(EDCTx.JournalCarrier_CancelSell), Commodity_Localised);
+                info = BaseUtils.FieldBuilder.Build("Cancel Sell of: ".T(EDCTx.JournalCarrier_CancelSell), Commodity_Localised, "<; (Blackmarket)", BlackMarket);
             }
             else
             {
