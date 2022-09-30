@@ -49,6 +49,18 @@ namespace EliteDangerousCore
 
         public DateTime EventTimeLocal { get { return EventTimeUTC.ToLocalTime(); } }
 
+        public DateTime EventTimeGame { get { return EventTimeUTC.AddYears(1286); }  }
+
+        public DateTime GetSelectedEventTime(int? displayTimeIndex)
+        {
+            switch (displayTimeIndex)
+            {
+                case 0: return EventTimeLocal;
+                case 2: return EventTimeGame;
+                default: return EventTimeUTC;
+            }
+        }
+
         public bool SyncedEDSM { get { return (Synced & (int)SyncFlags.EDSM) != 0; } }
         public bool SyncedEDDN { get { return (Synced & (int)SyncFlags.EDDN) != 0; } }
         public bool StartMarker { get { return (Synced & (int)SyncFlags.StartMarker) != 0; } }
