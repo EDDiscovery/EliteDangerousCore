@@ -189,7 +189,7 @@ namespace EliteDangerousCore.JournalEvents
 
     //When written: at startup, or when being resurrected at a station
     [JournalEntryType(JournalTypeEnum.Location)]
-    public class JournalLocation : JournalLocOrJump, ISystemStationEntry, IBodyNameAndID, IStarScan
+    public class JournalLocation : JournalLocOrJump, ISystemStationEntry, IBodyNameAndID, IStarScan, ICarrierStats
     {
         public JournalLocation(JObject evt) : base(evt, JournalTypeEnum.Location)      // all have evidence 16/3/2017
         {
@@ -335,13 +335,18 @@ namespace EliteDangerousCore.JournalEvents
 
         public void AddStarScan(StarScan s, ISystem system)
         {
-                s.AddLocation(StarSystem, SystemAddress);
+            s.AddLocation(StarSystem, SystemAddress);
+        }
+
+        public void UpdateCarrierStats(CarrierStats s)
+        {
+            s.Update(this);
         }
     }
 
     //When written: when jumping with a fleet carrier
     [JournalEntryType(JournalTypeEnum.CarrierJump)]
-    public class JournalCarrierJump : JournalLocOrJump, ISystemStationEntry, IBodyNameAndID, IJournalJumpColor, IStarScan
+    public class JournalCarrierJump : JournalLocOrJump, ISystemStationEntry, IBodyNameAndID, IJournalJumpColor, IStarScan, ICarrierStats
     {
         public JournalCarrierJump(JObject evt) : base(evt, JournalTypeEnum.CarrierJump)
         {
@@ -458,6 +463,11 @@ namespace EliteDangerousCore.JournalEvents
                     }
                 }
             }
+        }
+
+        public void UpdateCarrierStats(CarrierStats s)
+        {
+            s.Update(this);
         }
     }
 

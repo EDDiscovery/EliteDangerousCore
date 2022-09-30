@@ -132,4 +132,9 @@ namespace EliteDangerousCore
     {
         void WeaponInformation(SuitWeaponList shp, string whereami, ISystem system);
     }
+
+    public interface ICarrierStats
+    {
+        void UpdateCarrierStats(CarrierStats s);
+    }
 }

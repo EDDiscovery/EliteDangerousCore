@@ -33,6 +33,7 @@ namespace EliteDangerousCore
         public SuitList SuitList { get; private set; } = new SuitList();
         public SuitLoadoutList SuitLoadoutList { get; private set; } = new SuitLoadoutList();
         public EngineeringList Engineering { get; private set; } = new EngineeringList();
+        public CarrierStats Carrier { get; private set; } = new CarrierStats();
 
         private List<HistoryEntry> historylist = new List<HistoryEntry>();  // oldest first here
         private Stats statisticsaccumulator = new Stats();
@@ -69,6 +70,8 @@ namespace EliteDangerousCore
 
             Shipyards.Process(je);
             Outfitting.Process(je);
+
+            Carrier.Process(je);
 
             Tuple<ShipInformation, ModulesInStore> ret = ShipInformationList.Process(je, he.WhereAmI, he.System);
             he.UpdateShipInformation(ret.Item1);
