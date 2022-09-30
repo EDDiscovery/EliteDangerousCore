@@ -29,6 +29,7 @@ namespace EliteDangerousCore
         // from CarrierBuy
         public string StarSystem;                           // where is it?
         public string Body;                                 // may be null if not known
+        public int BodyID = -1;                             // may be unknown, especially when first bought                        
         public long SystemAddress;                          // its ID
         public long Cost;                                   // cost to buy
         public string Variant;                              // and its variant type
@@ -108,6 +109,7 @@ namespace EliteDangerousCore
             StarSystem = j.StarSystem;                  // set new location
             SystemAddress = j.SystemAddress ?? 0;
             Body = NextBody;
+            BodyID = NextBodyID;
 
             NextStarSystem = NextBody = null;
             NextBodyID = -1;
@@ -121,6 +123,7 @@ namespace EliteDangerousCore
                 StarSystem = NextStarSystem;
                 SystemAddress = NextSystemAddress;
                 Body = NextBody;
+                BodyID = NextBodyID;
             }
 
             NextStarSystem = NextBody = null;
@@ -250,8 +253,16 @@ namespace EliteDangerousCore
 
                 if (!buy && !restock)                   // if not buy/restock, remove
                 {
+                    if (j.Refund.HasValue)     // should do of course
+                        State.Finance.CarrierBalance += j.Refund.Value;
+
                     if (sp != null)
                         State.ShipPacks.Remove(sp);
+                }
+                else
+                {
+                    if (j.Cost.HasValue)
+                        State.Finance.CarrierBalance -= j.Cost.Value;
                 }
             }
             else
@@ -278,8 +289,15 @@ namespace EliteDangerousCore
 
                 if (!buy && !restock)                   // if not buy/restock, remove
                 {
+                    if ( j.Refund.HasValue)     // should do of course
+                        State.Finance.CarrierBalance += j.Refund.Value;
                     if (mp != null)
                         State.ModulePacks.Remove(mp);
+                }
+                else
+                {
+                    if (j.Cost.HasValue)
+                        State.Finance.CarrierBalance -= j.Cost.Value;
                 }
             }
             else
@@ -292,15 +310,13 @@ namespace EliteDangerousCore
             {
                 JournalCarrierTradeOrder.TradeOrder to = TradeOrders.Find(x => x.Equals(j.Order));      // have we got one?
 
-                if (j.CancelTrade == true)
+                if (to != null)
+                    TradeOrders.Remove(to);
+
+                if (j.CancelTrade != true)
                 {
-                    if (to != null)
-                        TradeOrders.Remove(to);
-                    else
-                        System.Diagnostics.Debug.WriteLine($"Trade order cancel but not in list {j.Order.Commodity}!");
-                }
-                else
                     TradeOrders.Add(new JournalCarrierTradeOrder.TradeOrder(j.Order));            // even if its the same, we add a copy again, as we can have repeats
+                }
             }
             else
                 System.Diagnostics.Debug.WriteLine($"Trade order but no carrier!");

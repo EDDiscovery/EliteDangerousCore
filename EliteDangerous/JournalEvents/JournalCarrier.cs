@@ -66,6 +66,7 @@ namespace EliteDangerousCore.JournalEvents
         public double JumpRangeMax { get; set; }
         public bool PendingDecommission { get; set; }
 
+        [System.Diagnostics.DebuggerDisplay("Space Usage {TotalCapacity} {Crew} {Cargo} {CargoSpaceReserved} {ShipPacks} {ModulePacks} {FreeSpace}")]
         public class SpaceUsageClass
         {
             public SpaceUsageClass(){}
@@ -91,6 +92,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public SpaceUsageClass SpaceUsage { get; set; } = new SpaceUsageClass();
 
+        [System.Diagnostics.DebuggerDisplay("Finance {CarrierBalance} r{ReserveBalance} a{AvailableBalance}")]
         public class FinanceClass
         {
             public FinanceClass() { }
@@ -121,6 +123,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public FinanceClass Finance { get; set; } = new FinanceClass();
 
+        [System.Diagnostics.DebuggerDisplay("Crew {CrewRole} {CrewName} a{Activated} e{Enabled}")]
         public class CrewClass
         {
             public string CrewRole { get; set; }
@@ -128,6 +131,7 @@ namespace EliteDangerousCore.JournalEvents
             public bool Enabled { get; set; }
             public string CrewName { get; set; }
         }
+        [System.Diagnostics.DebuggerDisplay("Pack {PackTheme} {PackTier}")]
         public class PackClass
         {
             public string PackTheme { get; set; }
@@ -340,7 +344,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierDecommission)]
-    public class JournalCarrierDecommission : JournalEntry, ILedgerJournalEntry, ICarrierStats
+    public class JournalCarrierDecommission : JournalEntry, ICarrierStats
     {
         public long CarrierID { get; set; }
         public long ScrapRefund { get; set; }
@@ -361,12 +365,6 @@ namespace EliteDangerousCore.JournalEvents
                                                 "at UTC ".T(EDCTx.JournalCarrier_RefundTime), ScrapDateTimeUTC
                                                 );
             detailed = "";
-        }
-
-        public void Ledger(Ledger mcl)
-        {
-            if (ScrapRefund > 0)
-                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "", ScrapRefund);
         }
 
         public void UpdateCarrierStats(CarrierStats s)
@@ -555,7 +553,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierShipPack)]
-    public class JournalCarrierShipPack : JournalEntry, ILedgerJournalEntry, ICarrierStats
+    public class JournalCarrierShipPack : JournalEntry, ICarrierStats
     {
         public long CarrierID { get; set; }
         public string Operation { get; set; }       // BuyPack, SellPack
@@ -587,11 +585,6 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void Ledger(Ledger mcl)
-        {
-            mcl.AddEvent(Id, EventTimeUTC, JournalTypeEnum.CarrierShipPack, Operation.SplitCapsWordFull(), Refund - Cost);
-        }
-
         public void UpdateCarrierStats(CarrierStats s)
         {
             s.Update(this);
@@ -599,7 +592,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierModulePack)]
-    public class JournalCarrierModulePack : JournalEntry, ILedgerJournalEntry, ICarrierStats
+    public class JournalCarrierModulePack : JournalEntry, ICarrierStats
     {
         public long CarrierID { get; set; }
         public string Operation { get; set; }
@@ -630,11 +623,6 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void Ledger(Ledger mcl)
-        {
-            mcl.AddEvent(Id, EventTimeUTC, JournalTypeEnum.CarrierShipPack, Operation.SplitCapsWordFull(), Refund - Cost);
-        }
-
         public void UpdateCarrierStats(CarrierStats s)
         {
             s.Update(this);
@@ -648,6 +636,7 @@ namespace EliteDangerousCore.JournalEvents
         public long CarrierID { get; set; }
         public bool? CancelTrade { get; set; }
 
+        [System.Diagnostics.DebuggerDisplay("TO {Commodity} cost{Price} p{PurchaseOrder} s{SaleOrder} bm{BlackMarket}")]
         public class TradeOrder
         {
             public bool BlackMarket { get; set; }
@@ -669,7 +658,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             public bool Equals(TradeOrder other)    // based on Blackmarket and names
             {
-                return BlackMarket == other.BlackMarket && Commodity == other.Commodity && Commodity_Localised == other.Commodity_Localised ;
+                return BlackMarket == other.BlackMarket && Commodity == other.Commodity;
             }
         }
 
