@@ -338,9 +338,9 @@ namespace EliteDangerousCore.JournalEvents
             s.AddLocation(StarSystem, SystemAddress);
         }
 
-        public void UpdateCarrierStats(CarrierStats s)
+        public void UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrier)
         {
-            s.Update(this);
+            s.Update(this,onfootfleetcarrier);
         }
     }
 
@@ -465,7 +465,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void UpdateCarrierStats(CarrierStats s)
+        public void UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
         {
             s.Update(this);
         }

@@ -71,7 +71,7 @@ namespace EliteDangerousCore
             Shipyards.Process(je);
             Outfitting.Process(je);
 
-            Carrier.Process(je);
+            Carrier.Process(je,he.Status.OnFootFleetCarrier);
 
             Tuple<ShipInformation, ModulesInStore> ret = ShipInformationList.Process(je, he.WhereAmI, he.System);
             he.UpdateShipInformation(ret.Item1);

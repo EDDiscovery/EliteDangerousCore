@@ -49,11 +49,11 @@ namespace EliteDangerousCore
         // From CarrierTradeOrder
         public List<JournalCarrierTradeOrder.TradeOrder> TradeOrders { get; private set; } = new List<JournalCarrierTradeOrder.TradeOrder>();
 
-        public void Process(JournalEntry je)
+        public void Process(JournalEntry je, bool onfootfleetcarrier)
         {
             if (je is ICarrierStats)
             {
-                ((ICarrierStats)je).UpdateCarrierStats(this);
+                ((ICarrierStats)je).UpdateCarrierStats(this,onfootfleetcarrier);
             }
         }
 
@@ -116,19 +116,21 @@ namespace EliteDangerousCore
             NextSystemAddress = 0;
         }
 
-        public void Update(JournalLocOrJump j)            // odyssey up to patch 13 is writing FSD Jumps not carrier jumps
+        public void Update(JournalLocation j, bool onfootfleetcarrier)            // odyssey up to patch 13 is writing Location on jump if in ship or on foot
         {
-            if (NextStarSystem != null)               // if we have a pending jump, we have to assume that the carrier has moved.. 
+            // if we have a location, and station type is fleet carrier, it jumped
+            
+            if (NextStarSystem != null && (onfootfleetcarrier || j.StationType.Contains("carrier",StringComparison.InvariantCultureIgnoreCase))) 
             {
                 StarSystem = NextStarSystem;
                 SystemAddress = NextSystemAddress;
                 Body = NextBody;
                 BodyID = NextBodyID;
-            }
 
-            NextStarSystem = NextBody = null;
-            NextBodyID = -1;
-            NextSystemAddress = 0;
+                NextStarSystem = NextBody = null;
+                NextBodyID = -1;
+                NextSystemAddress = 0;
+            }
         }
 
         public void Update(JournalCarrierDecommission j)
@@ -142,7 +144,7 @@ namespace EliteDangerousCore
             else
                 System.Diagnostics.Debug.WriteLine($"Carrier Decommission but no carrier!");
         }
-        public void Update(JournalCarrierCancelDecommission j)
+        public void Update(JournalCarrierCancelDecommission junused)
         {
             if (State.HaveCarrier)                     // must have a carrier
             {

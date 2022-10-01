@@ -178,7 +178,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, JournalTypeEnum.CarrierBuy, x, -Price);
         }
 
-        public void UpdateCarrierStats(CarrierStats s)
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
         {
             s.Update(this);
         }
@@ -305,7 +305,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void UpdateCarrierStats(CarrierStats s)
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
         {
             s.Update(this);
         }
@@ -337,7 +337,7 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void UpdateCarrierStats(CarrierStats s)
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
         {
             s.Update(this);
         }
@@ -367,7 +367,7 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void UpdateCarrierStats(CarrierStats s)
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
         {
             s.Update(this);
         }
@@ -389,7 +389,7 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void UpdateCarrierStats(CarrierStats s)
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
         {
             s.Update(this);
         }
@@ -427,7 +427,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, JournalTypeEnum.CarrierBankTransfer, "" , Withdraw - Deposit);
         }
 
-        public void UpdateCarrierStats(CarrierStats s)
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
         {
             s.Update(this);
         }
@@ -471,7 +471,7 @@ namespace EliteDangerousCore.JournalEvents
                 stats.UpdateCommodity("tritium", -Amount, 0, stationfaction);
         }
 
-        public void UpdateCarrierStats(CarrierStats s)
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
         {
             s.Update(this);
         }
@@ -502,7 +502,7 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void UpdateCarrierStats(CarrierStats s)
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
         {
             s.Update(this);
         }
@@ -546,7 +546,7 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void UpdateCarrierStats(CarrierStats s)
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
         {
             s.Update(this);
         }
@@ -585,7 +585,7 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void UpdateCarrierStats(CarrierStats s)
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
         {
             s.Update(this);
         }
@@ -623,7 +623,7 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void UpdateCarrierStats(CarrierStats s)
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
         {
             s.Update(this);
         }
@@ -702,7 +702,7 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void UpdateCarrierStats(CarrierStats s)
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
         {
             s.Update(this);
         }
@@ -729,7 +729,7 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void UpdateCarrierStats(CarrierStats s)
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
         {
             s.Update(this);
         }
@@ -755,7 +755,7 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void UpdateCarrierStats(CarrierStats s)
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
         {
             s.Update(this);
         }
@@ -777,7 +777,7 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void UpdateCarrierStats(CarrierStats s)
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
         {
             s.Update(this);
         }

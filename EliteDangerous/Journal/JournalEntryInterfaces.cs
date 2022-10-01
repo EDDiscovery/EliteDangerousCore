@@ -135,6 +135,6 @@ namespace EliteDangerousCore
 
     public interface ICarrierStats
     {
-        void UpdateCarrierStats(CarrierStats s);
+        void UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrier);
     }
 }
