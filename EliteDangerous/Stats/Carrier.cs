@@ -40,6 +40,10 @@ namespace EliteDangerousCore
         public long NextSystemAddress;
         public string NextBody;
         public int NextBodyID;
+        public DateTime? EstimatedJumpTimeUTC;               // we set this up from carrier jump request
+
+        const int CarrierNormalJumpTimeMins = 15;            // normal jump time..
+        const int CarrierJumpTimeMarginSeconds = 60;         // Lets leave a margin so we let the normal events pass thru first
 
         // from CarrierDecommision
 
@@ -54,6 +58,21 @@ namespace EliteDangerousCore
             if (je is ICarrierStats)
             {
                 ((ICarrierStats)je).UpdateCarrierStats(this,onfootfleetcarrier);
+            }
+
+            CheckCarrierJump(je.EventTimeUTC);
+        }
+
+        public void CheckCarrierJump(DateTime curtime)
+        {
+            if (EstimatedJumpTimeUTC.HasValue && EstimatedJumpTimeUTC.Value.AddSeconds(CarrierJumpTimeMarginSeconds) < curtime)
+            {
+                System.Diagnostics.Debug.WriteLine($"{Environment.NewLine} Carrier presumed jumped at {EstimatedJumpTimeUTC} curtime {curtime}");
+                StarSystem = NextStarSystem;
+                SystemAddress = NextSystemAddress;
+                Body = NextBody;
+                BodyID = NextBodyID;
+                ClearNextJump();
             }
         }
 
@@ -92,6 +111,7 @@ namespace EliteDangerousCore
                 NextSystemAddress = j.SystemAddress;
                 NextBody = j.Body;
                 NextBodyID = j.BodyID;
+                EstimatedJumpTimeUTC = j.EventTimeUTC.AddMinutes(CarrierNormalJumpTimeMins);
             }
             else
                 System.Diagnostics.Debug.WriteLine($"Carrier Jump Request but no carrier!");
@@ -99,9 +119,15 @@ namespace EliteDangerousCore
 
         public void Update(JournalCarrierJumpCancelled junused)
         {
+            ClearNextJump();
+        }
+
+        private void ClearNextJump()
+        {
             NextStarSystem = NextBody = null;       // clear next info
             NextBodyID = -1;
             NextSystemAddress = 0;
+            EstimatedJumpTimeUTC = null;
         }
 
         public void Update(JournalCarrierJump j)
@@ -111,9 +137,7 @@ namespace EliteDangerousCore
             Body = NextBody;
             BodyID = NextBodyID;
 
-            NextStarSystem = NextBody = null;
-            NextBodyID = -1;
-            NextSystemAddress = 0;
+            ClearNextJump();
         }
 
         public void Update(JournalLocation j, bool onfootfleetcarrier)            // odyssey up to patch 13 is writing Location on jump if in ship or on foot
@@ -127,9 +151,7 @@ namespace EliteDangerousCore
                 Body = NextBody;
                 BodyID = NextBodyID;
 
-                NextStarSystem = NextBody = null;
-                NextBodyID = -1;
-                NextSystemAddress = 0;
+                ClearNextJump();
             }
         }
 
