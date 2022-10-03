@@ -221,7 +221,8 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Signals != null)
                 scanText.AppendFormat("Signals".T(EDCTx.ScanDisplayUserControl_Signals) + ":\n" + JournalSAASignalsFound.SignalList(Signals, 4, "\n") + "\n");
-
+            if (Genuses != null)
+                scanText.AppendFormat("Genuses".T(EDCTx.ScanDisplayUserControl_Genuses) + ":\n" + JournalSAASignalsFound.GenusList(Genuses, 4, "\n") + "\n");
             if (Organics != null)
                 scanText.AppendFormat("Organics".T(EDCTx.ScanDisplayUserControl_Organics) + ":\n" + JournalScanOrganic.OrganicList(Organics, 4, "\n") + "\n");
 
@@ -436,6 +437,13 @@ namespace EliteDangerousCore.JournalEvents
                 if (showvalues)
                 {
                     information.Append(' ').Append(ev.EstimatedValueFirstMappedEfficiently.ToString("N0")).Append(" cr");
+                }
+            }
+            else if (js.WasDiscovered == false && js.IsStar)
+            {
+                if (showvalues)
+                {
+                    information.Append(' ').Append(ev.EstimatedValueFirstDiscovered.ToString("N0")).Append(" cr");
                 }
             }
             else
