@@ -81,7 +81,12 @@ namespace EliteDangerousCore
                         break;
                 }
 
-                EstimatedValueBase = (int)StarValue32And33(kValue, massstar.HasValue ? massstar.Value : 1.0);
+                double firstdiscovery = 2.6;
+
+                double basevalue = StarValue32And33(kValue, massstar.HasValue ? massstar.Value : 1.0);
+
+                EstimatedValueBase = (int)basevalue;
+                EstimatedValueFirstDiscovered = (int)(basevalue * firstdiscovery);
             }
             else
             {
