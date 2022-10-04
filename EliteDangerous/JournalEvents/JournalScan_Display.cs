@@ -443,7 +443,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if (showvalues)
                 {
-                    information.Append(' ').Append(ev.EstimatedValueFirstDiscovered.ToString("N0")).Append(" cr");
+                    information.Append(' ').Append((ev.EstimatedValueFirstDiscovered > 0 ? ev.EstimatedValueFirstDiscovered : ev.EstimatedValueBase).ToString("N0")).Append(" cr");
                 }
             }
             else
