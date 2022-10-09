@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2018 EDDiscovery development team
+ * Copyright © 2022-2022 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -39,9 +39,9 @@ namespace EliteDangerousCore.JournalEvents
             SpaceUsage = new SpaceUsageClass(other.SpaceUsage);
             Finance = new FinanceClass(other.Finance);
 
-            if (other.Crew != null)
+            if (other.Services != null)
             {
-                Crew = new List<CrewClass>(other.Crew);         // Crew are values, can be copied
+                Services = new List<ServicesClass>(other.Services);         // Crew are values, can be copied
             }
             if (other.ShipPacks != null)
             {
@@ -57,8 +57,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public long CarrierID { get; set; }     // carrier buy also sets this
         public string Callsign { get; set; }    // carrier buy also sets this
-        public string Name { get; set; }        
+        public string Name { get; set; }
         public string DockingAccess { get; set; }
+        public string DockingAccessSplittable { get { return DockingAccess == "squadronfriends" ? "Squadron Friends" : DockingAccess; } }
 
         public bool AllowNotorious { get; set; }
         public int FuelLevel { get; set; }
@@ -113,18 +114,18 @@ namespace EliteDangerousCore.JournalEvents
             public long ReserveBalance { get; set; }
             public long AvailableBalance { get; set; }
             public double ReservePercent { get; set; }
-            public double? TaxRatePioneersupplies { get; set; }     // may be null note
-            public double? TaxRateShipyard { get; set; }
-            public double? TaxRateRearm { get; set; }
-            public double? TaxRateOutfitting { get; set; }
-            public double? TaxRateRefuel { get; set; }
-            public double? TaxRateRepair { get; set; }
+            public double TaxRatePioneersupplies { get; set; }   // tax rates missing are -1
+            public double TaxRateShipyard { get; set; }
+            public double TaxRateRearm { get; set; }
+            public double TaxRateOutfitting { get; set; }
+            public double TaxRateRefuel { get; set; }
+            public double TaxRateRepair { get; set; }
         }
 
         public FinanceClass Finance { get; set; } = new FinanceClass();
 
-        [System.Diagnostics.DebuggerDisplay("Crew {CrewRole} {CrewName} a{Activated} e{Enabled}")]
-        public class CrewClass
+        [System.Diagnostics.DebuggerDisplay("Services {CrewRole} {CrewName} a{Activated} e{Enabled}")]
+        public class ServicesClass
         {
             public string CrewRole { get; set; }
             public bool Activated { get; set; }
@@ -137,7 +138,7 @@ namespace EliteDangerousCore.JournalEvents
             public string PackTheme { get; set; }
             public int PackTier { get; set; }
         }
-        public List<CrewClass> Crew { get; set; }       // may be null
+        public List<ServicesClass> Services { get; set; }       // may be null - called 'Crew' in journal buts its all about services
         public List<PackClass> ShipPacks { get; set; }  // may be null
         public List<PackClass> ModulePacks { get; set; }    // may be null
     }
@@ -224,17 +225,17 @@ namespace EliteDangerousCore.JournalEvents
                 State.Finance.ReserveBalance = finance["ReserveBalance"].Long();
                 State.Finance.AvailableBalance = finance["AvailableBalance"].Long();
                 State.Finance.ReservePercent = finance["ReservePercent"].Double();
-                State.Finance.TaxRatePioneersupplies = finance["TaxRate_pioneersupplies"].DoubleNull();
-                State.Finance.TaxRateShipyard = finance["TaxRate_shipyard"].DoubleNull();
-                State.Finance.TaxRateRearm = finance["TaxRate_rearm"].DoubleNull();
-                State.Finance.TaxRateOutfitting = finance["TaxRate_outfitting"].DoubleNull();
-                State.Finance.TaxRateRefuel = finance["TaxRate_refuel"].DoubleNull();
-                State.Finance.TaxRateRepair = finance["TaxRate_repair"].DoubleNull();
+                State.Finance.TaxRatePioneersupplies = finance["TaxRate_pioneersupplies"].Double(-1);
+                State.Finance.TaxRateShipyard = finance["TaxRate_shipyard"].Double(-1);
+                State.Finance.TaxRateRearm = finance["TaxRate_rearm"].Double(-1);
+                State.Finance.TaxRateOutfitting = finance["TaxRate_outfitting"].Double(-1);
+                State.Finance.TaxRateRefuel = finance["TaxRate_refuel"].Double(-1);
+                State.Finance.TaxRateRepair = finance["TaxRate_repair"].Double(-1);
             }
 
-            var ca = evt["Crew"]?.ToObjectQ<CarrierState.CrewClass[]>();
+            var ca = evt["Crew"]?.ToObjectQ<CarrierState.ServicesClass[]>();
             if (ca != null)
-               State.Crew = ca.ToList();
+               State.Services = ca.ToList();
 
             var sp = evt["ShipPacks"]?.ToObjectQ<CarrierState.PackClass[]>();
             if (sp != null)
@@ -274,10 +275,10 @@ namespace EliteDangerousCore.JournalEvents
                                                         "Free Space: ".T(EDCTx.JournalCarrier_FreeSpace), State.SpaceUsage.FreeSpace);
 
                 detailed += Environment.NewLine;
-                if (State.Crew != null && State.Crew.Count>0)
+                if (State.Services != null && State.Services.Count>0)
                 {
 
-                    foreach (var v in State.Crew)
+                    foreach (var v in State.Services)
                     {
                         if ( v.Activated )
                             detailed += BaseUtils.FieldBuilder.Build("Activated:" , v.CrewRole, "", v.CrewName, "< (Disabled);", v.Enabled ) + Environment.NewLine;

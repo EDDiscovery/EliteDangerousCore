@@ -206,6 +206,8 @@ namespace EliteDangerousCore
                 }
            }
 
+            hist.Carrier.CheckCarrierJump(DateTime.UtcNow);         // lets see if a jump has completed.
+
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " History List Created");
 
             foreach (var s in hist.StarScan.ToProcess) System.Diagnostics.Debug.WriteLine($"StarScan could not assign {s.Item1.GetType().Name} {s.Item2?.Name ?? "???"} {s.Item2?.SystemAddress} at {s.Item1.EventTimeUTC}");
