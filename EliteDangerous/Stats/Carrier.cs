@@ -24,13 +24,16 @@ namespace EliteDangerousCore
     public class CarrierStats
     {
         // from journalcarrier, a copy of the carrier stats journal record. 
+        // use State.HaveCarrier to determine carrier state
         public CarrierState State { get; private set; } = new CarrierState();
 
         // from CarrierBuy, CarrierJump
-        public ISystem StarSystem { get; private set; }                           // where is it?. May have position
-        public string Body { get; private set; }                                 // may be null if not known
-        public int BodyID { get; private set; } = -1;                             // may be unknown, especially when first bought                        
+        public ISystem StarSystem { get; private set; } = new SystemClass("Unknown");  // where is it?. always set
+        public string Body { get; private set; } = "";                           // normally set by carrierjump/carrierbuy
+        public int BodyID { get; private set; } = 0;                             
         public long SystemAddress { get; private set; }                          // its ID
+
+        public string CurrentPositionText { get { return StarSystem.Name + (Body.Equals(StarSystem.Name, StringComparison.InvariantCultureIgnoreCase) ? "" : (": " + Body)); } }
 
         // CarrierBuy
 
@@ -41,12 +44,15 @@ namespace EliteDangerousCore
 
         public string NextStarSystem { get; private set; }                       // null if not jumping
         public long NextSystemAddress { get; private set; }
-        public string NextBody { get; private set; }
-        public int NextBodyID { get; private set; }
+        public string NextBody { get; private set; }            // null if not jumping. If jumping, its empty or the body name
+        public int NextBodyID { get; private set; }             // 0 or the body id
         public DateTime? EstimatedJumpTimeUTC { get; private set; }               // we set this up from carrier jump request
 
         public bool IsJumping { get { return EstimatedJumpTimeUTC.HasValue; } }
         public TimeSpan TimeTillJump { get { return IsJumping ? (EstimatedJumpTimeUTC.Value - DateTime.UtcNow) : new TimeSpan(0); } }
+
+        public string NextDestinationText { get { return IsJumping ? (NextStarSystem + (NextBody.Equals(NextStarSystem,StringComparison.InvariantCultureIgnoreCase) ? "" : (": " + NextBody))) : ""; } }
+
 
         const int CarrierNormalJumpTimeSeconds = 15*60;            // normal jump time..
         const int CarrierJumpTimeMarginSeconds = 60;         // Lets leave a margin so we let the normal events pass thru first
@@ -61,10 +67,22 @@ namespace EliteDangerousCore
 
         public class Jumps
         {
-            public ISystem StarSystem { get; set; }
-            public string Body { get; set; }        // may be null, may be empty.
-            public int BodyID { get; set; }
-            public DateTime JumpTime { get; set; }
+            public Jumps(ISystem sys, string body, int bodyid, DateTime jumptime)
+            {
+                System.Diagnostics.Debug.Assert(body != null && sys != null && sys.Name != null);
+                StarSystem = sys; Body = body;BodyID = bodyid;JumpTime = jumptime;
+            }
+
+            public ISystem StarSystem { get; private set; }
+            public string Body { get; private set; }        // may be null, may be empty.
+            public int BodyID { get; private set; }
+            public DateTime JumpTime { get; private set; }
+            public string PositionText { get { return StarSystem.Name + (Body.Equals(StarSystem.Name, StringComparison.InvariantCultureIgnoreCase) ? "" : (": " + Body)); } }
+
+            public void SetSystem(ISystem sys)
+            {
+                StarSystem = sys;
+            }
         }
 
         public List<Jumps> JumpHistory { get; private set; } = new List<Jumps>();
@@ -75,10 +93,10 @@ namespace EliteDangerousCore
             if (i >= 0)
             {
                 var it = JumpHistory[i];
-                return it.StarSystem.Name + (it.Body.HasChars() ? ": " + it.Body : "");
+                return it.PositionText;
             }
             else
-                return "";
+                return null;
         }
 
         // From CarrierTradeOrder
@@ -103,7 +121,7 @@ namespace EliteDangerousCore
                 SystemAddress = NextSystemAddress;
                 Body = NextBody;
                 BodyID = NextBodyID;
-                JumpHistory.Add(new Jumps() { StarSystem = StarSystem, Body = Body, BodyID = BodyID, JumpTime = EstimatedJumpTimeUTC.Value });
+                JumpHistory.Add(new Jumps(StarSystem, Body, BodyID, EstimatedJumpTimeUTC.Value));
                 ClearNextJump();
                 return true;
             }
@@ -123,6 +141,8 @@ namespace EliteDangerousCore
             State.CarrierID = j.CarrierID;
             State.Callsign = j.Callsign;
             StarSystem = new SystemClass(j.Location);   // no position
+            Body = j.Location;                     // body is same as system
+            BodyID = 0;
             SystemAddress = j.SystemAddress;
             Cost = j.Price;
             Variant = j.Variant;
@@ -130,7 +150,7 @@ namespace EliteDangerousCore
             ClearDecommisioning();      // clear decommisioning
             TradeOrders = new List<JournalCarrierTradeOrder.TradeOrder>();  // reset order list
             JumpHistory = new List<Jumps>();
-            JumpHistory.Add(new Jumps() { StarSystem = StarSystem, Body = Body, BodyID = BodyID, JumpTime = j.EventTimeUTC});
+            JumpHistory.Add(new Jumps(StarSystem, Body, BodyID, j.EventTimeUTC));
         }
 
         public void Update(JournalCarrierNameChange j)
@@ -150,14 +170,20 @@ namespace EliteDangerousCore
             if (State.HaveCarrier)                     // must have a carrier
             {
                 State.CarrierID = j.CarrierID;
-                NextStarSystem = j.SystemName;
-                NextSystemAddress = j.SystemAddress;
-                NextBody = j.Body;
-                NextBodyID = j.BodyID;
-                EstimatedJumpTimeUTC = j.EventTimeUTC.AddSeconds(CarrierNormalJumpTimeSeconds);
+                SetCarrierJump(j.SystemName, j.SystemAddress, j.Body, j.BodyID, j.EventTimeUTC);
             }
             else
                 System.Diagnostics.Debug.WriteLine($"Carrier Jump Request but no carrier!");
+        }
+
+        public void SetCarrierJump(string system, long sysaddr, string body, int bodyid, DateTime now)
+        {
+            System.Diagnostics.Debug.Assert(body != null && system != null);
+            NextStarSystem = system;
+            NextSystemAddress = sysaddr;
+            NextBody = body;
+            NextBodyID = bodyid;
+            EstimatedJumpTimeUTC = now.AddSeconds(CarrierNormalJumpTimeSeconds);
         }
 
         public void Update(JournalCarrierJumpCancelled junused)
@@ -169,9 +195,9 @@ namespace EliteDangerousCore
         {
             StarSystem = new SystemClass(j.StarSystem, j.StarPos.X, j.StarPos.Y, j.StarPos.Z);                  // set new location with position
             SystemAddress = j.SystemAddress ?? 0;
-            Body = NextBody;
+            Body = NextBody ?? j.StarSystem;        // you should always have a nextbody, but if debugging.. 
             BodyID = NextBodyID;
-            JumpHistory.Add(new Jumps() { StarSystem = StarSystem, Body = Body, BodyID = BodyID, JumpTime = j.EventTimeUTC });
+            JumpHistory.Add(new Jumps(StarSystem, Body, BodyID, j.EventTimeUTC));
             ClearNextJump();
         }
 
@@ -185,7 +211,7 @@ namespace EliteDangerousCore
                 SystemAddress = NextSystemAddress;
                 Body = NextBody;
                 BodyID = NextBodyID;
-                JumpHistory.Add(new Jumps() { StarSystem = StarSystem, Body = Body, BodyID = BodyID, JumpTime = j.EventTimeUTC });
+                JumpHistory.Add(new Jumps(StarSystem, Body, BodyID, j.EventTimeUTC));
                 ClearNextJump();
             }
         }

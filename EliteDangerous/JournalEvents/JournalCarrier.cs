@@ -114,12 +114,12 @@ namespace EliteDangerousCore.JournalEvents
             public long ReserveBalance { get; set; }
             public long AvailableBalance { get; set; }
             public double ReservePercent { get; set; }
-            public double TaxRatePioneersupplies { get; set; }   // tax rates missing are -1
-            public double TaxRateShipyard { get; set; }
-            public double TaxRateRearm { get; set; }
-            public double TaxRateOutfitting { get; set; }
-            public double TaxRateRefuel { get; set; }
-            public double TaxRateRepair { get; set; }
+            public double? TaxRatePioneersupplies { get; set; }     // tax rates may be missing
+            public double? TaxRateShipyard { get; set; }
+            public double? TaxRateRearm { get; set; }
+            public double? TaxRateOutfitting { get; set; }
+            public double? TaxRateRefuel { get; set; }
+            public double? TaxRateRepair { get; set; }
         }
 
         public FinanceClass Finance { get; set; } = new FinanceClass();
@@ -225,12 +225,12 @@ namespace EliteDangerousCore.JournalEvents
                 State.Finance.ReserveBalance = finance["ReserveBalance"].Long();
                 State.Finance.AvailableBalance = finance["AvailableBalance"].Long();
                 State.Finance.ReservePercent = finance["ReservePercent"].Double();
-                State.Finance.TaxRatePioneersupplies = finance["TaxRate_pioneersupplies"].Double(-1);
-                State.Finance.TaxRateShipyard = finance["TaxRate_shipyard"].Double(-1);
-                State.Finance.TaxRateRearm = finance["TaxRate_rearm"].Double(-1);
-                State.Finance.TaxRateOutfitting = finance["TaxRate_outfitting"].Double(-1);
-                State.Finance.TaxRateRefuel = finance["TaxRate_refuel"].Double(-1);
-                State.Finance.TaxRateRepair = finance["TaxRate_repair"].Double(-1);
+                State.Finance.TaxRatePioneersupplies = finance["TaxRate_pioneersupplies"].DoubleNull();
+                State.Finance.TaxRateShipyard = finance["TaxRate_shipyard"].DoubleNull();
+                State.Finance.TaxRateRearm = finance["TaxRate_rearm"].DoubleNull();
+                State.Finance.TaxRateOutfitting = finance["TaxRate_outfitting"].DoubleNull();
+                State.Finance.TaxRateRefuel = finance["TaxRate_refuel"].DoubleNull();
+                State.Finance.TaxRateRepair = finance["TaxRate_repair"].DoubleNull();
             }
 
             var ca = evt["Crew"]?.ToObjectQ<CarrierState.ServicesClass[]>();
@@ -317,9 +317,9 @@ namespace EliteDangerousCore.JournalEvents
     {
         public long CarrierID { get; set; }
         public string SystemName { get; set; }
-        public string Body { get; set; }
         public long SystemAddress { get; set; }
-        public int BodyID { get; set; }
+        public string Body { get; set; }        // if to system, journal seems to write Body==System Name. Body will always be non null
+        public int BodyID { get; set; }         // will be 0 or the body id
 
         public JournalCarrierJumpRequest(JObject evt) : base(evt, JournalTypeEnum.CarrierJumpRequest)
         {
