@@ -18,6 +18,7 @@ using BaseUtils;
 using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EliteDangerousCore
 {
@@ -99,6 +100,23 @@ namespace EliteDangerousCore
                 return null;
         }
 
+
+        public class LedgerEntry
+        {
+            public LedgerEntry(JournalEntry r, ISystem starsystem, string body, long balance, string notes)
+            {
+                JournalEntry = r; StarSystem = starsystem; Body = body; Balance = balance; Notes = notes;
+            }
+
+            public ISystem StarSystem { get; set; }
+            public string Body { get; set; }
+            public JournalEntry JournalEntry { get; set; }
+            public long Balance { get; set; }
+            public string Notes { get; set; }
+        }
+
+        public List<LedgerEntry> Ledger { get; private set; } = new List<LedgerEntry>();       // in add order, ascending time
+
         // From CarrierTradeOrder
         public List<JournalCarrierTradeOrder.TradeOrder> TradeOrders { get; private set; } = new List<JournalCarrierTradeOrder.TradeOrder>();
 
@@ -133,6 +151,10 @@ namespace EliteDangerousCore
         public void Update(JournalCarrierStats j)
         {
             State = new CarrierState(j.State);      // State array is a direct copy of carrier..
+            if (State.Finance.CarrierBalance != Ledger.Last().Balance)
+            {
+                Ledger.Add(new LedgerEntry(j, StarSystem, Body, State.Finance.CarrierBalance,""));
+            }
         }
 
         public void Update(JournalCarrierBuy j)
@@ -151,6 +173,9 @@ namespace EliteDangerousCore
             TradeOrders = new List<JournalCarrierTradeOrder.TradeOrder>();  // reset order list
             JumpHistory = new List<Jumps>();
             JumpHistory.Add(new Jumps(StarSystem, Body, BodyID, j.EventTimeUTC));
+            Ledger.Add(new LedgerEntry(j, StarSystem, Body, 0, ""));
+
+            // DecommisionTimeUTC = new DateTime(2022, 12, 12, 0, 0, 0); 
         }
 
         public void Update(JournalCarrierNameChange j)
@@ -252,6 +277,7 @@ namespace EliteDangerousCore
             if (State.HaveCarrier)                     // must have a carrier
             {
                 State.Finance.CarrierBalance = j.CarrierBalance;
+                Ledger.Add(new LedgerEntry(j, StarSystem, Body, State.Finance.CarrierBalance,"Player: " + j.PlayerBalance.ToString("N0") ));
             }
             else
                 System.Diagnostics.Debug.WriteLine($"Carrier Bank transfer but no carrier!");
@@ -261,6 +287,10 @@ namespace EliteDangerousCore
             if (State.HaveCarrier)                     // must have a carrier
             {
                 State.Finance = new CarrierState.FinanceClass(j.Finance);
+                if (State.Finance.CarrierBalance != Ledger.Last().Balance)
+                {
+                    Ledger.Add(new LedgerEntry(j, StarSystem, Body, State.Finance.CarrierBalance, "Available: " + j.Finance.AvailableBalance.ToString("N0")));
+                }
             }
             else
                 System.Diagnostics.Debug.WriteLine($"Carrier finance but no carrier!");
@@ -289,23 +319,32 @@ namespace EliteDangerousCore
                     State.Services.Add(cc);
                 }
 
-                if (j.Operation.Equals("activate", StringComparison.InvariantCultureIgnoreCase))
+                var optype = j.GetOperation();
+
+                if (optype == JournalCarrierCrewServices.OperationType.Activate)
                 {
                     cc.Enabled = cc.Activated = true;
+
+                    var sdata = j.GetDataOnService;
+                    if (sdata != null)      // may fail due to not having the right name in the table in the future
+                    {
+                        State.Finance.CarrierBalance -= sdata.InstallCost;
+                        Ledger.Add(new LedgerEntry(j, StarSystem, Body, State.Finance.CarrierBalance, "+ " + j.CrewRole.SplitCapsWordFull()));
+                    }
                 }
-                else if (j.Operation.Equals("deactivate", StringComparison.InvariantCultureIgnoreCase))
+                else if (optype == JournalCarrierCrewServices.OperationType.Deactivate)
                 {
                     cc.Enabled = cc.Activated = false;
                 }
-                else if (j.Operation.Equals("pause", StringComparison.InvariantCultureIgnoreCase))
+                else if (optype == JournalCarrierCrewServices.OperationType.Pause)
                 {
                     cc.Enabled = false;
                 }
-                else if (j.Operation.Equals("resume", StringComparison.InvariantCultureIgnoreCase))
+                else if (optype == JournalCarrierCrewServices.OperationType.Resume)
                 {
                     cc.Enabled = true;
                 }
-                else if (j.Operation.Equals("replace", StringComparison.InvariantCultureIgnoreCase))
+                else if (optype == JournalCarrierCrewServices.OperationType.Replace)
                 {
                     cc.CrewName = j.CrewName;   // set crewname
                 }
@@ -336,17 +375,28 @@ namespace EliteDangerousCore
 
                 if (!buy && !restock)                   // if not buy/restock, remove
                 {
+                    if (sp != null)
+                        State.ShipPacks.Remove(sp);
+
                     if (j.Refund.HasValue)     // should do of course
                         State.Finance.CarrierBalance += j.Refund.Value;
 
-                    if (sp != null)
-                        State.ShipPacks.Remove(sp);
+                    if (State.Finance.CarrierBalance != Ledger.Last().Balance)
+                    {
+                        Ledger.Add(new LedgerEntry(j, StarSystem, Body, State.Finance.CarrierBalance, "- " + j.PackTheme + ":" + j.PackTier.ToString("N0")));
+                    }
                 }
                 else
                 {
                     if (j.Cost.HasValue)
                         State.Finance.CarrierBalance -= j.Cost.Value;
+
+                    if (State.Finance.CarrierBalance != Ledger.Last().Balance)
+                    {
+                        Ledger.Add(new LedgerEntry(j, StarSystem, Body, State.Finance.CarrierBalance, (restock ? "Restock: " : "+ ") + j.PackTheme + ":" + j.PackTier.ToString("N0")));
+                    }
                 }
+
             }
             else
                 System.Diagnostics.Debug.WriteLine($"Ship pack but no carrier!");
@@ -372,16 +422,28 @@ namespace EliteDangerousCore
 
                 if (!buy && !restock)                   // if not buy/restock, remove
                 {
-                    if ( j.Refund.HasValue)     // should do of course
-                        State.Finance.CarrierBalance += j.Refund.Value;
                     if (mp != null)
                         State.ModulePacks.Remove(mp);
+
+                    if (j.Refund.HasValue)     // should do of course
+                        State.Finance.CarrierBalance += j.Refund.Value;
+
+                    if (State.Finance.CarrierBalance != Ledger.Last().Balance)
+                    {
+                        Ledger.Add(new LedgerEntry(j, StarSystem, Body, State.Finance.CarrierBalance, "- " + j.PackTheme + ":" + j.PackTier.ToString("N0")));
+                    }
                 }
                 else
                 {
                     if (j.Cost.HasValue)
                         State.Finance.CarrierBalance -= j.Cost.Value;
+
+                    if (State.Finance.CarrierBalance != Ledger.Last().Balance)
+                    {
+                        Ledger.Add(new LedgerEntry(j, StarSystem, Body, State.Finance.CarrierBalance, (restock ? "Restock: " : "+ ") + j.PackTheme + ":" + j.PackTier.ToString("N0")));
+                    }
                 }
+
             }
             else
                 System.Diagnostics.Debug.WriteLine($"Ship pack but no carrier!");
