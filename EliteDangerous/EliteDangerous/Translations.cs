@@ -900,6 +900,10 @@ namespace EliteDangerousCore
         JournalScanInfo_LE, // {0} has {1} level elements.
         JournalScanInfo_scanorganics, // Has been scanned for organics
 
+        Services_BridgeCrew, Services_CommodityTrading, Services_TritiumDepot,        // not listed in crew services, but core items
+        Services_Refuel, Services_Repair, Services_Rearm, Services_VoucherRedemption, Services_Shipyard, Services_Outfitting, Services_BlackMarket,
+        Services_Exploration, Services_Bartender, Services_VistaGenomics, Services_PioneerSupplies,
+
     }
 
     internal static class EDTranslatorExtensions

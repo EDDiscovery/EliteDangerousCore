@@ -131,14 +131,42 @@ namespace EliteDangerousCore.JournalEvents
             public bool Activated { get; set; }
             public bool Enabled { get; set; }
             public string CrewName { get; set; }
+            public JournalCarrierCrewServices.ServiceType ServiceType() { return JournalCarrierCrewServices.GetServiceType(CrewRole); }
         }
+
+        public List<ServicesClass> Services { get; set; }       // may be null - called 'Crew' in journal buts its all about services
+        public ServicesClass GetService(JournalCarrierCrewServices.ServiceType t) // may be null.  Core services are not listed
+        {
+            return Services?.Find(x => x.ServiceType() == t);
+        }
+
+        public long GetServicesCost()
+        {
+            long res = 0;
+            foreach( var s in Services.EmptyIfNull())
+            {
+                JournalCarrierCrewServices.ServicesData si = JournalCarrierCrewServices.GetDataOnServiceType(s.ServiceType());
+                if (si != null)
+                {
+                    long delta = s.Activated ? (s.Enabled ? si.UpkeepCost : si.SuspendedUpkeepCost) : 0;
+                    System.Diagnostics.Debug.WriteLine($"Service cost {si.Service} {si.UpkeepCost} {si.SuspendedUpkeepCost} = {delta}");
+                    res += delta;
+                }
+            }
+
+            return res;
+        }
+
+        public long GetCoreCost() { return 5000000; }
+
         [System.Diagnostics.DebuggerDisplay("Pack {PackTheme} {PackTier}")]
         public class PackClass
         {
             public string PackTheme { get; set; }
             public int PackTier { get; set; }
         }
-        public List<ServicesClass> Services { get; set; }       // may be null - called 'Crew' in journal buts its all about services
+
+
         public List<PackClass> ShipPacks { get; set; }  // may be null
         public List<PackClass> ModulePacks { get; set; }    // may be null
     }
@@ -233,8 +261,14 @@ namespace EliteDangerousCore.JournalEvents
 
             var ca = evt["Crew"]?.ToObjectQ<CarrierState.ServicesClass[]>();
             if (ca != null)
-               State.Services = ca.ToList();
+                State.Services = ca.ToList();
 
+//debug TBD 
+            //var si = State.GetService(JournalCarrierCrewServices.ServiceType.BlackMarket);
+            //if (si != null) si.Activated = false;
+            //si = State.GetService(JournalCarrierCrewServices.ServiceType.Exploration);
+            //if (si != null) si.Enabled = false;
+// end debug
             var sp = evt["ShipPacks"]?.ToObjectQ<CarrierState.PackClass[]>();
             if (sp != null)
                 State.ShipPacks = sp.ToList();
@@ -478,42 +512,47 @@ namespace EliteDangerousCore.JournalEvents
     public class JournalCarrierCrewServices : JournalEntry, ICarrierStats
     {
         public long CarrierID { get; set; }
-        public string Operation { get; set; }      
+        public string Operation { get; set; }
         public string CrewRole { get; set; }
         public string CrewName { get; set; }
+
+        // as per frontier CrewRole Entry
+        public enum ServiceType
+        {
+            BridgeCrew, CommodityTrading, TritiumDepot,        // not listed in crew services, but core items
+            Refuel, Repair, Rearm, VoucherRedemption, Shipyard, Outfitting, BlackMarket, Exploration, Bartender, VistaGenomics, PioneerSupplies,
+            Unknown
+        };
+
+        public ServiceType GetServiceType() { return Enum.TryParse(CrewRole, true, out ServiceType typefound) ? typefound : ServiceType.Unknown; }
+        static public ServiceType GetServiceType(string name) { return Enum.TryParse(name, true, out ServiceType typefound) ? typefound : ServiceType.Unknown; }
 
         public enum OperationType { Activate, Deactivate, Pause, Resume, Replace, Unknown }
         public OperationType GetOperation() { return Enum.TryParse(Operation, true, out OperationType typefound) ? typefound : OperationType.Unknown; }
 
+        static public string GetTranslatedServiceName(ServiceType t) { return translatedname[(int)t]; }
+
+        static public bool IsOptionalService(ServiceType t) { return t >= ServiceType.Refuel && t != ServiceType.Unknown; }
+        static public bool IsValidService(ServiceType t) { return t != ServiceType.Unknown; }
+
+        static public int GetServiceCount() { var entries = Enum.GetValues(typeof(EliteDangerousCore.JournalEvents.JournalCarrierCrewServices.ServiceType)); return entries.Length - 1; }      // ignore Unknown
+
+        // as per frontier Operation Entry
+
         public class ServicesData       // https://elite-dangerous.fandom.com/wiki/Drake-Class_Carrier
         {
-            public ServicesData(string name, long cost, long upkeep, long suspendedcost, int cargosize) 
-            { Name = name;InstallCost = cost; UpkeepCost = upkeep; SuspendedUpkeepCost = suspendedcost; CargoSize = cargosize; }
-            public string Name { get; set; }
+            public ServicesData(ServiceType t, long cost, long upkeep, long suspendedcost, int cargosize) 
+            { Service = t; InstallCost = cost; UpkeepCost = upkeep; SuspendedUpkeepCost = suspendedcost; CargoSize = cargosize; }
+            public ServiceType Service { get; set; }
             public long InstallCost { get; set; }
             public long UpkeepCost { get; set; }
             public long SuspendedUpkeepCost { get; set; }
             public long CargoSize { get; set; }
         }
 
-        public static ServicesData[] ServiceInformation = new ServicesData[]
-        {
-            new ServicesData("Refuel",40000000,1500000,750000,500),
-            new ServicesData("Repair",50000000,1500000,750000,180),
-            new ServicesData("Rearm",95000000,1500000,750000,250),
-            new ServicesData("VoucherRedemption",150000000,18500000,850000,100),
-            new ServicesData("Shipyard",250000000,6500000,1800000,3000),
-            new ServicesData("Outfitting",250000000,5000000,1500000,1750),
-            new ServicesData("BlackMarket",165000000,2000000,1250000,250),
-            new ServicesData("Exploration",150000000,1850000,700000,120),
-            new ServicesData("Bartender",200000000,1750000,1250000,150),
-            new ServicesData("VistaGenomics",150000000,1500000,700000,120),
-            new ServicesData("PioneerSupplies",250000000,5000000,1500000,200),
-        };
-
         // may return null if names don't match in future.
-        public ServicesData GetDataOnServiceName(string name) { return Array.Find(ServiceInformation, x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)); }
-        public ServicesData GetDataOnService { get { return Array.Find(ServiceInformation, x => x.Name.Equals(CrewRole, StringComparison.InvariantCultureIgnoreCase)); } }
+        public static ServicesData GetDataOnServiceType(ServiceType t) { return Array.Find(ServiceInformation, x => x.Service == t); }
+        public ServicesData GetDataOnService { get { var t = GetServiceType();  return Array.Find(ServiceInformation, x => x.Service == t); } }
 
         public JournalCarrierCrewServices(JObject evt) : base(evt, JournalTypeEnum.CarrierCrewServices)
         {
@@ -536,6 +575,42 @@ namespace EliteDangerousCore.JournalEvents
         {
             s.Update(this);
         }
+
+        private static ServicesData[] ServiceInformation = new ServicesData[]        // verified with game oct 22
+        {
+            new ServicesData(ServiceType.Refuel,40000000,1500000,750000,500),
+            new ServicesData(ServiceType.Repair,50000000,1500000,750000,180),
+            new ServicesData(ServiceType.Rearm,95000000,1500000,750000,250),
+            new ServicesData(ServiceType.VoucherRedemption,150000000,1850000,850000,100),
+            new ServicesData(ServiceType.Shipyard,250000000,6500000,1800000,3000),
+            new ServicesData(ServiceType.Outfitting,250000000,5000000,1500000,1750),
+            new ServicesData(ServiceType.BlackMarket,165000000,2000000,1250000,250),
+            new ServicesData(ServiceType.Exploration,150000000,1850000,700000,120),
+            new ServicesData(ServiceType.Bartender,200000000,1750000,1250000,150),
+            new ServicesData(ServiceType.VistaGenomics,150000000,1500000,700000,120),
+            new ServicesData(ServiceType.PioneerSupplies,250000000,5000000,1500000,200),
+        };
+
+
+        private static string[] translatedname = new string[] {
+            "Bridge Crew".TxID(EDCTx.Services_BridgeCrew),
+            "Commodity Trading".TxID(EDCTx.Services_CommodityTrading),
+            "Tritium Depot".TxID(EDCTx.Services_TritiumDepot),
+            "Refuel Station".TxID(EDCTx.Services_Refuel),
+            "Repair Crews".TxID(EDCTx.Services_Repair),
+            "Armoury".TxID(EDCTx.Services_Rearm),
+            "Redemption Office".TxID(EDCTx.Services_VoucherRedemption),
+            "Shipyard".TxID(EDCTx.Services_Shipyard),
+            "Outfitting".TxID(EDCTx.Services_Outfitting),
+            "Secure Warehouse".TxID(EDCTx.Services_BlackMarket),
+            "Universal Cartographics".TxID(EDCTx.Services_Exploration),
+            "Concourse Bar".TxID(EDCTx.Services_Bartender),
+            "Vista Genomics".TxID(EDCTx.Services_VistaGenomics),
+            "Pioneer Supplies".TxID(EDCTx.Services_PioneerSupplies),
+            "Unknown",
+        };
+
+
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierFinance)]
