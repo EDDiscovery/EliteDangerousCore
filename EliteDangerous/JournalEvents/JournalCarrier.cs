@@ -168,7 +168,10 @@ namespace EliteDangerousCore.JournalEvents
 
 
         public List<PackClass> ShipPacks { get; set; }  // may be null
+        public int ShipPacksCount() { return ShipPacks?.Count() ?? 0; }
         public List<PackClass> ModulePacks { get; set; }    // may be null
+        public int ModulePacksCount() { return ModulePacks?.Count() ?? 0; }
+
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierBuy)]
@@ -263,12 +266,6 @@ namespace EliteDangerousCore.JournalEvents
             if (ca != null)
                 State.Services = ca.ToList();
 
-//debug TBD 
-            //var si = State.GetService(JournalCarrierCrewServices.ServiceType.BlackMarket);
-            //if (si != null) si.Activated = false;
-            //si = State.GetService(JournalCarrierCrewServices.ServiceType.Exploration);
-            //if (si != null) si.Enabled = false;
-// end debug
             var sp = evt["ShipPacks"]?.ToObjectQ<CarrierState.PackClass[]>();
             if (sp != null)
                 State.ShipPacks = sp.ToList();
@@ -751,6 +748,8 @@ namespace EliteDangerousCore.JournalEvents
             public int? PurchaseOrder { get; set; }     // non null if purchase order
             public int? SaleOrder { get; set; }         // non null if sale order
 
+            public DateTime Placed { get; set; }        // additional field
+
             public TradeOrder() { }
             public TradeOrder(TradeOrder other)
             {
@@ -760,6 +759,7 @@ namespace EliteDangerousCore.JournalEvents
                 Price = other.Price;
                 PurchaseOrder = other.PurchaseOrder;
                 SaleOrder = other.SaleOrder;
+                Placed = other.Placed;
             }
             public bool Equals(TradeOrder other)    // based on Blackmarket and names
             {
@@ -770,13 +770,15 @@ namespace EliteDangerousCore.JournalEvents
         public JournalCarrierTradeOrder(JObject evt) : base(evt, JournalTypeEnum.CarrierTradeOrder)
         {
             CarrierID = evt["CarrierID"].Long();
+            CancelTrade = evt["CancelTrade"].BoolNull();
+
             Order.BlackMarket = evt["BlackMarket"].Bool();
             Order.Commodity = evt["Commodity"].Str();
             Order.Commodity_Localised =JournalFieldNaming.CheckLocalisation(evt["Commodity_Localised"].Str(), Order.Commodity);
             Order.PurchaseOrder = evt["PurchaseOrder"].IntNull();
             Order.SaleOrder = evt["SaleOrder"].IntNull();
-            CancelTrade = evt["CancelTrade"].BoolNull();
             Order.Price = evt["Price"].Int();
+            Order.Placed = this.EventTimeUTC;
         }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)

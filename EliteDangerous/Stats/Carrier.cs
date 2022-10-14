@@ -26,6 +26,8 @@ namespace EliteDangerousCore
     {
         // from journalcarrier, a copy of the carrier stats journal record. 
         // use State.HaveCarrier to determine carrier state
+
+        #region Vars
         public CarrierState State { get; private set; } = new CarrierState();
 
         // from CarrierBuy, CarrierJump
@@ -40,6 +42,14 @@ namespace EliteDangerousCore
 
         public long Cost { get; private set; }                                   // cost to buy
         public string Variant { get; private set; }                              // and its variant type
+
+        // CarrierCrewServices  (note CarrierStats does not carry name but crew services do, so cache)
+        public Dictionary<JournalCarrierCrewServices.ServiceType, string> CrewNames { get; set; } = new Dictionary<JournalCarrierCrewServices.ServiceType, string>();
+
+        // CarrierModulePack/ShipPack (not CarrierStats does not carry cost but these do, so cache). key is PackTheme:PackTier
+        public Dictionary<string, long> PackCost { get; set; } = new Dictionary<string, long>();
+        static public string PackCostKey(string name, int tier) { return name + ":" + tier.ToStringInvariant(); }
+        static public string PackCostKey(CarrierState.PackClass pc) { return pc.PackTheme + ":" + pc.PackTier.ToStringInvariant(); }
 
         // from CarrierJumpRequest
 
@@ -120,6 +130,10 @@ namespace EliteDangerousCore
         // From CarrierTradeOrder
         public List<JournalCarrierTradeOrder.TradeOrder> TradeOrders { get; private set; } = new List<JournalCarrierTradeOrder.TradeOrder>();
 
+        #endregion
+
+        #region Process
+
         public void Process(JournalEntry je, bool onfootfleetcarrier)
         {
             if (je is ICarrierStats)
@@ -147,10 +161,21 @@ namespace EliteDangerousCore
                 return false;
         }
 
+        #endregion
+
+        #region Journal Events
 
         public void Update(JournalCarrierStats j)
         {
             State = new CarrierState(j.State);      // State array is a direct copy of carrier..
+
+            ////debug TBD 
+            //var si = State.GetService(JournalCarrierCrewServices.ServiceType.BlackMarket);
+            //if (si != null) si.Activated = false;
+            //si = State.GetService(JournalCarrierCrewServices.ServiceType.Exploration);
+            //if (si != null) si.Enabled = false;
+            //// end debug
+
             if (State.Finance.CarrierBalance != Ledger.Last().Balance)
             {
                 Ledger.Add(new LedgerEntry(j, StarSystem, Body, State.Finance.CarrierBalance,""));
@@ -331,6 +356,8 @@ namespace EliteDangerousCore
                         State.Finance.CarrierBalance -= sdata.InstallCost;
                         Ledger.Add(new LedgerEntry(j, StarSystem, Body, State.Finance.CarrierBalance, "+ " + j.CrewRole.SplitCapsWordFull()));
                     }
+
+                    CrewNames[j.GetServiceType()] = j.CrewName;
                 }
                 else if (optype == JournalCarrierCrewServices.OperationType.Deactivate)
                 {
@@ -347,6 +374,7 @@ namespace EliteDangerousCore
                 else if (optype == JournalCarrierCrewServices.OperationType.Replace)
                 {
                     cc.CrewName = j.CrewName;   // set crewname
+                    CrewNames[j.GetServiceType()] = j.CrewName;
                 }
                 else
                     System.Diagnostics.Debug.WriteLine($"Crew services unknown action {j.Operation}");
@@ -389,7 +417,11 @@ namespace EliteDangerousCore
                 else
                 {
                     if (j.Cost.HasValue)
+                    {
                         State.Finance.CarrierBalance -= j.Cost.Value;
+                        if (buy)
+                            PackCost[PackCostKey(sp)] = j.Cost.Value;
+                    }
 
                     if (State.Finance.CarrierBalance != Ledger.Last().Balance)
                     {
@@ -436,7 +468,11 @@ namespace EliteDangerousCore
                 else
                 {
                     if (j.Cost.HasValue)
+                    {
                         State.Finance.CarrierBalance -= j.Cost.Value;
+                        if (buy)
+                            PackCost[PackCostKey(mp)] = j.Cost.Value;
+                    }
 
                     if (State.Finance.CarrierBalance != Ledger.Last().Balance)
                     {
@@ -456,16 +492,18 @@ namespace EliteDangerousCore
                 JournalCarrierTradeOrder.TradeOrder to = TradeOrders.Find(x => x.Equals(j.Order));      // have we got one?
 
                 if (to != null)
-                    TradeOrders.Remove(to);
+                    TradeOrders.Remove(to);     // kill it first
 
-                if (j.CancelTrade != true)
+                if (j.CancelTrade != true)      // then possibly add it back in
                 {
-                    TradeOrders.Add(new JournalCarrierTradeOrder.TradeOrder(j.Order));            // even if its the same, we add a copy again, as we can have repeats
+                    TradeOrders.Add(new JournalCarrierTradeOrder.TradeOrder(j.Order));   
                 }
             }
             else
                 System.Diagnostics.Debug.WriteLine($"Trade order but no carrier!");
         }
+
+        #endregion
 
         #region Helpers
         private void ClearDecommisioning()
