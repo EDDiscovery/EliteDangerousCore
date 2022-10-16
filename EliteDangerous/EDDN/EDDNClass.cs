@@ -569,7 +569,10 @@ namespace EliteDangerousCore.EDDN
                 ["stationName"] = journal.YardInfo.StationName,
                 ["stationName"] = journal.YardInfo.StationName,
                 ["marketId"] = journal.MarketID,
-                ["modules"] = new JArray(journal.YardInfo.Items.Select(m => JournalFieldNaming.NormaliseFDItemName(m.FDName)))
+                ["modules"] = new JArray(journal.YardInfo.Items
+                                .Where(m => m.FDName.StartsWith("Hpt_", StringComparison.InvariantCultureIgnoreCase) || m.FDName.StartsWith("Int_", StringComparison.InvariantCultureIgnoreCase)
+                                        || m.FDName.Contains("_armour_", StringComparison.InvariantCultureIgnoreCase))
+                                .Select(m => JournalFieldNaming.NormaliseFDItemName(m.FDName)))
             };
 
             message["odyssey"] = journal.IsOdyssey;     // new may 21
