@@ -68,10 +68,30 @@ namespace EliteDangerousCore
             else
                 return null;
         }
-        public IModuleInfo GetShipProperty(string fdshipname, ShipPropID property)        // get property of a ship, case insensitive.  property is case sensitive.  May be null
+        
+        // get property of a ship, case insensitive.  may be null
+        public IModuleInfo GetShipProperty(string fdshipname, ShipPropID property)        
         {
             Dictionary<ShipPropID, IModuleInfo> info = GetShipProperties(fdshipname);
             return info != null ? (info.ContainsKey(property) ? info[property] : null) : null;
+        }
+
+        // get property of a ship, case insensitive.
+        // format/fp is used for ints/doubles and must be provided. Not used for string.
+        // May be null
+        public string GetShipPropertyAsString(string fdshipname, ShipPropID property, string format, IFormatProvider fp)        
+        {
+            Dictionary<ShipPropID, IModuleInfo> info = GetShipProperties(fdshipname);
+            if ( info != null && info.TryGetValue(property, out IModuleInfo i))
+            {
+                if (i is ShipInfoString)
+                    return ((ShipInfoString)i).Value;
+                else if (i is ShipInfoDouble)
+                    return ((ShipInfoDouble)i).Value.ToString(format, fp);
+                else if (i is ShipInfoInt)
+                    return ((ShipInfoInt)i).Value.ToString(format, fp);
+            }
+            return null;
         }
 
         public class ShipInfoString : IModuleInfo
@@ -101,7 +121,7 @@ namespace EliteDangerousCore
             { ShipPropID.Speed, new ShipInfoInt(220)},
             { ShipPropID.Boost, new ShipInfoInt(320)},
             { ShipPropID.HullCost, new ShipInfoInt(40000)},
-            { ShipPropID.Class, new ShipInfoInt(1)},
+            { ShipPropID.Class, new ShipInfoInt(1)},            // Class is the landing pad size
         };
         static Dictionary<ShipPropID, IModuleInfo> alliance_challenger = new Dictionary<ShipPropID, IModuleInfo>
         {
