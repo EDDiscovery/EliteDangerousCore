@@ -216,7 +216,7 @@ namespace EliteDangerousCore
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Anaylsis End");
 
-            hist.CommanderId = CurrentCommander;
+            hist.CommanderId = CurrentCommander;        // last thing, and this indicates history is loaded.
 
             //foreach( var kvp in hist.StarScan.ScanDataByName) if (kvp.Value.System.SystemAddress == null) System.Diagnostics.Debug.WriteLine($"{kvp.Value.System.Name} no SA");
 

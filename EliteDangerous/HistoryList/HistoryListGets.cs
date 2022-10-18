@@ -31,7 +31,9 @@ namespace EliteDangerousCore
         public ShipYardList Shipyards = new ShipYardList(); // yards in space (not meters)
         public OutfittingList Outfitting = new OutfittingList();        // outfitting on stations
         public StarScan StarScan { get; private set; } = new StarScan();      // the results of scanning
-        public int CommanderId { get; private set; }
+        public int CommanderId { get; private set; } = -999;                 // set by history load at end, indicating commander loaded
+        public bool HistoryLoaded { get { return CommanderId > -999; } }      // history is loaded
+        public bool IsRealCommanderId { get { return CommanderId >= 0; } }      // history is loaded with a non hidden commander log etc
         public Dictionary<string, HistoryEntry> Visited { get; private set; } = new Dictionary<string, HistoryEntry>(StringComparer.InvariantCultureIgnoreCase);  // not in any particular order.
         public string LastSystem { get; private set; }                          // last system seen in
 
