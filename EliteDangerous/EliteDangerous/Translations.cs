@@ -826,6 +826,7 @@ namespace EliteDangerousCore
         CommanderForm_textBoxBorderCmdr_ToolTip, // ToolTip 'Enter commander name as used in Elite Dangerous'
         CommanderForm_buttonExtBrowse_ToolTip, // ToolTip 'Browse to the the journal folder'
         CommanderForm_textBoxBorderJournal_ToolTip, // ToolTip 'Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\\nLeave override journal location blank to use the standard Frontier location for journals'
+        CommanderForm_extCheckBoxIncludeSubfolders,
         CommanderForm_LF, // Select folder where Journal*.log files are stored by Frontier in
         CommanderForm_ND, // Folder does not exist
 

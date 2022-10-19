@@ -17,7 +17,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
+using BaseUtils;
 
 namespace EliteDangerousCore
 {
@@ -166,78 +168,85 @@ namespace EliteDangerousCore
         {
             System.Diagnostics.Debug.Assert(ScanThread == null);        // double check we are not scanning.
 
-            List<int> watchersinuse = new List<int>();          // may contain -1s for rejected paths
+            List<Tuple<string, bool>> folderlist = new List<Tuple<string, bool>>();
 
             foreach (string std in stdfolders)          // setup the std folders
             {
-                watchersinuse.Add(CheckAddPath(std, journalmatchpattern, mindateutc));
+                folderlist.Add(new Tuple<string, bool>(std, false));        // std folders are not sub folder scanned
             }
 
-            foreach (var cmdr in EDCommander.GetListCommanders())       // setup any commander folders
+            foreach (var cmdr in EDCommander.GetListCommanders())       // setup any commander folders first, so the watches are established with subfolder search
             {
-                if (!cmdr.ConsoleCommander && cmdr.JournalDir.HasChars())    // not console commanders, and we have a path
+                if (!cmdr.ConsoleCommander && cmdr.JournalDir.HasChars())
                 {
-                    watchersinuse.Add(CheckAddPath(cmdr.JournalDir,journalmatchpattern, mindateutc));   // try adding
+                    var path = Path.GetFullPath(cmdr.JournalDir);
+
+                    if (Directory.Exists(path))
+                    {
+                        var tp = folderlist.Find(x => x.Item1.Equals(cmdr.JournalDir, StringComparison.InvariantCultureIgnoreCase));
+
+                        // if we have a previous one without subfolders, but we want subfolders, remove
+                        if (tp != null && cmdr.IncludeSubFolders == true && tp.Item2 == false)      
+                        {
+                            folderlist.Remove(tp);
+                            tp = null;
+                        }
+
+                        // and add if we don't have this folder
+                        if (tp == null)
+                            folderlist.Add(new Tuple<string, bool>(path, cmdr.IncludeSubFolders));
+                    }
                 }
             }
+
+            foreach (var x in folderlist)
+                System.Diagnostics.Debug.WriteLine($"Monitor Folder {x.Item1} incl {x.Item2}");
 
             List<int> del = new List<int>();
             for (int i = 0; i < watchers.Count; i++)           // for all current watchers, are we still in use?
             {
-                if (!watchersinuse.Contains(i))
-                    del.Add(i);
+                var exists = folderlist.Find(x => x.Item1.Equals(watchers[i].WatcherFolder, StringComparison.CurrentCultureIgnoreCase));
+
+                if (exists == null || watchers[i].IncludeSubfolders != exists.Item2 )       // if not in list, or in list but sub folders are different..
+                    del.Add(i);    
             }
 
-            for (int j = 0; j < del.Count; j++)
+            for (int j = 0; j < del.Count; j++)     // remove any unused watchers
             {
                 int wi = del[j];
-                System.Diagnostics.Trace.WriteLine(string.Format("Delete watch on {0}", watchers[wi].WatcherFolder));
                 JournalMonitorWatcher mw = watchers[wi];
+                System.Diagnostics.Debug.WriteLine($"Monitor Remove {mw.WatcherFolder} incl {mw.IncludeSubfolders}");
                 mw.StopMonitor();          // just in case
                 watchers.Remove(mw);
                 StatusReader sw = statuswatchers[wi];
                 statuswatchers.Remove(sw);
             }
-        }
 
-        // check path exists, and if not already in watchers folder, add it
-        // return -1 if not good, else return index of watcher (and therefore status watcher as we add in parallel)
-        private int CheckAddPath(string p, string journalmatchpattern, DateTime mindateutc)         
-        {
-            try
+            foreach (var tw in folderlist)      // make sure all folders are watched
             {
-                string path = Path.GetFullPath(p);      // make path normalised. this can throw, so we need to protect and reject the path
-
-                if (Directory.Exists(path))     // sanity check in case folder disappeared
+                var exists = watchers.Find(x => x.WatcherFolder.Equals(tw.Item1, StringComparison.InvariantCultureIgnoreCase));
+                if (exists == null)     // if not watching in list, add
                 {
-                    int present = watchers.FindIndex(x => x.WatcherFolder.Equals(path, StringComparison.InvariantCultureIgnoreCase));
-
-                    if (present < 0)  // and we are not watching it, add it
+                    try
                     {
-                        System.Diagnostics.Trace.WriteLine(string.Format("New watch on {0}", path));
-                        JournalMonitorWatcher mw = new JournalMonitorWatcher(path,journalmatchpattern, mindateutc);
+                        JournalMonitorWatcher mw = new JournalMonitorWatcher(tw.Item1, journalmatchpattern, mindateutc, tw.Item2);
                         watchers.Add(mw);
 
-                        StatusReader sw = new StatusReader(path);
+                        StatusReader sw = new StatusReader(tw.Item1);
                         statuswatchers.Add(sw);
-
-                        present = watchers.Count - 1;
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        System.Diagnostics.Trace.WriteLine(string.Format("Existing watch on {0}", path));
+                        System.Diagnostics.Debug.WriteLine($"Watcher path exception {exists.WatcherFolder} {ex}");
                     }
-
-                    return present;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"Monitor existing watch {exists.WatcherFolder} incl {exists.IncludeSubfolders}");
                 }
             }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine("Watcher path exception" + ex);
-            }
-
-            return -1;
         }
+
 
         #endregion
 

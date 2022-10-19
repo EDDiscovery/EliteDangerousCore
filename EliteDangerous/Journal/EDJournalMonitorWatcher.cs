@@ -31,6 +31,7 @@ namespace EliteDangerousCore
     public class JournalMonitorWatcher
     {
         public string WatcherFolder { get; set; }
+        public bool IncludeSubfolders;
 
         private Dictionary<string, EDJournalReader> netlogreaders = new Dictionary<string, EDJournalReader>();
         private EDJournalReader lastnfi = null;          // last one read..
@@ -41,11 +42,13 @@ namespace EliteDangerousCore
         private string journalfilematch;
         private DateTime mindateutc;
 
-        public JournalMonitorWatcher(string folder, string journalmatchpattern, DateTime mindateutcp)
+        public JournalMonitorWatcher(string folder, string journalmatchpattern, DateTime mindateutcp, bool pincludesubfolders)
         {
             WatcherFolder = folder;
             journalfilematch = journalmatchpattern;
             mindateutc = mindateutcp;
+            IncludeSubfolders = pincludesubfolders;
+            System.Diagnostics.Debug.WriteLine($"Monitor new watch {WatcherFolder} incl {IncludeSubfolders} match {journalfilematch} date {mindateutc} ");
         }
 
         #region Scan start stop and monitor
@@ -56,18 +59,19 @@ namespace EliteDangerousCore
             {
                 try
                 {
+
                     StoreToDBDuringUpdateRead = storetodb;
                     m_netLogFileQueue = new ConcurrentQueue<string>();
                     m_Watcher = new System.IO.FileSystemWatcher();
                     m_Watcher.Path = WatcherFolder + Path.DirectorySeparatorChar;
                     m_Watcher.Filter = journalfilematch;
-                    m_Watcher.IncludeSubdirectories = false;
+                    m_Watcher.IncludeSubdirectories = IncludeSubfolders;
                     m_Watcher.NotifyFilter = NotifyFilters.FileName;
                     m_Watcher.Changed += new FileSystemEventHandler(OnNewFile);
                     m_Watcher.Created += new FileSystemEventHandler(OnNewFile);
                     m_Watcher.EnableRaisingEvents = true;
 
-                    System.Diagnostics.Trace.WriteLine("Start Monitor on " + WatcherFolder);
+                    System.Diagnostics.Trace.WriteLine($"Start Monitor on {WatcherFolder} incl {IncludeSubfolders}");
                 }
                 catch (Exception ex)
                 {
@@ -86,7 +90,7 @@ namespace EliteDangerousCore
                 m_Watcher.Dispose();
                 m_Watcher = null;
 
-                System.Diagnostics.Trace.WriteLine("Stop Monitor on " + WatcherFolder);
+                System.Diagnostics.Trace.WriteLine($"Stop Monitor on {WatcherFolder} incl {IncludeSubfolders}");
             }
         }
 
@@ -143,7 +147,7 @@ namespace EliteDangerousCore
                 try
                 {
                     HashSet<string> tlunames = new HashSet<string>(TravelLogUnit.GetAllNames());
-                    string[] filenames = Directory.EnumerateFiles(WatcherFolder, journalfilematch, SearchOption.AllDirectories)
+                    string[] filenames = Directory.EnumerateFiles(WatcherFolder, journalfilematch, IncludeSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
                                                     .Select(s => new { name = Path.GetFileName(s), fullname = s })
                                                     .Where(s => !tlunames.Contains(s.fullname))           // find any new ones..
                                                     .Where(g => new FileInfo(g.fullname).LastWriteTime >= mindateutc)
@@ -240,7 +244,7 @@ namespace EliteDangerousCore
             //            System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLap("PJF", true), "Scanned " + WatcherFolder);
 
             // order by file write time so we end up on the last one written
-            FileInfo[] allFiles = Directory.EnumerateFiles(WatcherFolder, journalfilematch, SearchOption.AllDirectories).
+            FileInfo[] allFiles = Directory.EnumerateFiles(WatcherFolder, journalfilematch, IncludeSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).
                                         Select(f => new FileInfo(f)).Where(g=>g.LastWriteTime >= minjournaldateutc).OrderBy(p => p.LastWriteTime).ToArray();
 
             List<EDJournalReader> readersToUpdate = new List<EDJournalReader>();
