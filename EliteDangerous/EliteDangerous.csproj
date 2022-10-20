@@ -135,6 +135,7 @@
     <Compile Include="Journal\JournalEssentialEvents.cs" />
     <Compile Include="Journal\JournalEntryDB.cs" />
     <Compile Include="Journal\JournalEnums.cs" />
+    <Compile Include="Computers\JournalStatsComputer.cs" />
     <Compile Include="Scanner\EDScanner.cs" />
     <Compile Include="Screenshots\ScreenShotConfigureForm.cs">
       <SubType>Form</SubType>
