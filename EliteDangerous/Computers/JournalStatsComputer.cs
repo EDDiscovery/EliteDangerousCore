@@ -290,14 +290,11 @@ namespace EliteDangerousCore
     public class JournalStatisticsComputer
     {
         public bool Running { get; set; }
-        public void Start(int pcmdrid, DateTime? pstart, DateTime? pend, Action<JournalStats> pcallback)
+        public void Start(int pcmdrid, DateTime? pstartutc, DateTime? pendutc, Action<JournalStats> pcallback)
         {
-            System.Diagnostics.Debug.Assert(pstart == null || pstart.Value.IsStartOfDay());
-            System.Diagnostics.Debug.Assert(pend == null || pend.Value.IsEndOfDay());
-
             cmdrid = pcmdrid;
-            start = pstart;
-            end = pend;
+            start = pstartutc;
+            end = pendutc;
             callback = pcallback;
 
             Running = true;
