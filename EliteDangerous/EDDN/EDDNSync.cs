@@ -222,10 +222,10 @@ namespace EliteDangerousCore.EDDN
                 var fss = je as JournalFSSSignalDiscovered;
                 msg = eddn.CreateEDDNFSSSignalDiscovered(fss, fss.EDDNSystem != null ? fss.EDDNSystem : he.System);
             }
-            //else if (je.EventTypeID == JournalTypeEnum.FCMaterials)       // not yet
-            //{
-            //    msg = eddn.CreateEDDNFCMaterials(je as JournalFCMaterials,he.System);
-            //}
+            else if (je.EventTypeID == JournalTypeEnum.FCMaterials)       // not yet
+            {
+                msg = eddn.CreateEDDNFCMaterials(je as JournalFCMaterials, he.System);
+            }
 
             if (msg != null)
             {

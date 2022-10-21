@@ -1007,9 +1007,9 @@ namespace EliteDangerousCore.EDDN
             message["event"] = "FCMaterials";
             message["horizons"] = sd.IsHorizons;
             message["odyssey"] = sd.IsOdyssey;
-            message["MarketId"] = sd.MarketID;
+            message["MarketID"] = sd.MarketID;
             message["CarrierName"] = sd.CarrierName;
-            message["CarrierId"] = sd.CarrierID;
+            message["CarrierID"] = sd.CarrierID;
 
             JArray ja = new JArray();
             foreach (var commodity in sd.Items)
