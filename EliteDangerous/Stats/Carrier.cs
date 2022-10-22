@@ -176,7 +176,7 @@ namespace EliteDangerousCore
             //if (si != null) si.Enabled = false;
             //// end debug
 
-            if (State.Finance.CarrierBalance != Ledger.Last().Balance)
+            if (Ledger.Count == 0 || State.Finance.CarrierBalance != Ledger.Last().Balance)
             {
                 Ledger.Add(new LedgerEntry(j, StarSystem, Body, State.Finance.CarrierBalance,""));
             }
@@ -312,7 +312,7 @@ namespace EliteDangerousCore
             if (State.HaveCarrier)                     // must have a carrier
             {
                 State.Finance = new CarrierState.FinanceClass(j.Finance);
-                if (State.Finance.CarrierBalance != Ledger.Last().Balance)
+                if (Ledger.Count == 0 || State.Finance.CarrierBalance != Ledger.Last().Balance)
                 {
                     Ledger.Add(new LedgerEntry(j, StarSystem, Body, State.Finance.CarrierBalance, "Available: " + j.Finance.AvailableBalance.ToString("N0")));
                 }
@@ -409,7 +409,7 @@ namespace EliteDangerousCore
                     if (j.Refund.HasValue)     // should do of course
                         State.Finance.CarrierBalance += j.Refund.Value;
 
-                    if (State.Finance.CarrierBalance != Ledger.Last().Balance)
+                    if (Ledger.Count == 0 || State.Finance.CarrierBalance != Ledger.Last().Balance)
                     {
                         Ledger.Add(new LedgerEntry(j, StarSystem, Body, State.Finance.CarrierBalance, "- " + j.PackTheme + ":" + j.PackTier.ToString("N0")));
                     }
@@ -423,7 +423,7 @@ namespace EliteDangerousCore
                             PackCost[PackCostKey(sp)] = j.Cost.Value;
                     }
 
-                    if (State.Finance.CarrierBalance != Ledger.Last().Balance)
+                    if (Ledger.Count == 0 || State.Finance.CarrierBalance != Ledger.Last().Balance)
                     {
                         Ledger.Add(new LedgerEntry(j, StarSystem, Body, State.Finance.CarrierBalance, (restock ? "Restock: " : "+ ") + j.PackTheme + ":" + j.PackTier.ToString("N0")));
                     }
@@ -460,7 +460,7 @@ namespace EliteDangerousCore
                     if (j.Refund.HasValue)     // should do of course
                         State.Finance.CarrierBalance += j.Refund.Value;
 
-                    if (State.Finance.CarrierBalance != Ledger.Last().Balance)
+                    if (Ledger.Count == 0 || State.Finance.CarrierBalance != Ledger.Last().Balance)
                     {
                         Ledger.Add(new LedgerEntry(j, StarSystem, Body, State.Finance.CarrierBalance, "- " + j.PackTheme + ":" + j.PackTier.ToString("N0")));
                     }
@@ -474,7 +474,7 @@ namespace EliteDangerousCore
                             PackCost[PackCostKey(mp)] = j.Cost.Value;
                     }
 
-                    if (State.Finance.CarrierBalance != Ledger.Last().Balance)
+                    if (Ledger.Count == 0 || State.Finance.CarrierBalance != Ledger.Last().Balance)
                     {
                         Ledger.Add(new LedgerEntry(j, StarSystem, Body, State.Finance.CarrierBalance, (restock ? "Restock: " : "+ ") + j.PackTheme + ":" + j.PackTier.ToString("N0")));
                     }
