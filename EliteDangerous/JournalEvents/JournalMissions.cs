@@ -137,6 +137,7 @@ namespace EliteDangerousCore.JournalEvents
 
             Count = evt["Count"].IntNull();
             Expiry = evt["Expiry"].DateTimeUTC();
+            System.Diagnostics.Debug.Assert(Expiry.Kind == DateTimeKind.Utc);
 
             PassengerCount = evt["PassengerCount"].IntNull();
             PassengerVIPs = evt["PassengerVIPs"].BoolNull();
@@ -197,7 +198,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string MissionBasicInfo(bool translate)          // MissionList::FullInfo uses this. Journal Entry info brief uses this
         {
-            DateTime exp = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(Expiry);
+            DateTime? exp = Expiry > DateTime.MinValue ? EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(Expiry) : default(DateTime?);
 
             return BaseUtils.FieldBuilder.Build("", LocalisedName,
                                       EDTranslatorExtensions.TCond(translate, "< from ", EDCTx.JournalMissionAccepted_from), Faction,
