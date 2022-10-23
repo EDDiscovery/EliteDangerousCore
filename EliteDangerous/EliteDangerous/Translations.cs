@@ -247,6 +247,7 @@ namespace EliteDangerousCore
         JournalEntry_RemainingJumps,  // Remaining Jumps
         JournalEntry_Nearest, // Nearest:
         JournalEntry_Near, // Near:
+        JournalEntry_BartenderMaterials, 
 
 
         JournalLocOrJump_Type, // "Type " @

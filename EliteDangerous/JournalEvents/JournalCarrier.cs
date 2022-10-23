@@ -934,7 +934,7 @@ namespace EliteDangerousCore.JournalEvents
         public List<CCommodities> Items { get; set; }       // may be null
 
 
-        public override string SummaryName(ISystem sys) { return "Bartender Materials"; }
+        public override string SummaryName(ISystem sys) { return "Bartender Materials".TxID(EDCTx.JournalEntry_BartenderMaterials); }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
