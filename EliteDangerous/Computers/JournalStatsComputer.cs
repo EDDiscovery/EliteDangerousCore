@@ -78,12 +78,12 @@ namespace EliteDangerousCore
             public int died;
         }
 
-        public List<JumpInfo> FSDJumps;
-        public List<ScanInfo> Scans;
-        public List<JournalScanOrganic> OrganicScans;
-        public List<ScanCompleteInfo> ScanComplete;
-        public List<JetConeBoostInfo> JetConeBoost;
-        public Dictionary<string, ShipInfo> Ships;
+        public List<JumpInfo> FSDJumps = new List<JumpInfo>();
+        public List<ScanInfo> Scans = new List<ScanInfo>();
+        public List<JournalScanOrganic> OrganicScans = new List<JournalScanOrganic>();
+        public List<ScanCompleteInfo> ScanComplete = new List<ScanCompleteInfo>();
+        public List<JetConeBoostInfo> JetConeBoost = new List<JetConeBoostInfo>();
+        public Dictionary<string, ShipInfo> Ships = new Dictionary<string, ShipInfo>();
         public JournalLocOrJump MostNorth;
         public JournalLocOrJump MostSouth;
         public JournalLocOrJump MostEast;
@@ -99,15 +99,15 @@ namespace EliteDangerousCore
 
         public int fsdcarrierjumps;
 
+        public List<JournalPVPKill> PVPKills = new List<JournalPVPKill>();
+        public List<JournalBounty> Bounties = new List<JournalBounty>();
+        public List<JournalCommitCrime> Crimes = new List<JournalCommitCrime>();
+        public List<JournalFactionKillBond> FactionKillBonds = new List<JournalFactionKillBond>();
+        public List<JournalInterdiction> Interdiction = new List<JournalInterdiction>();
+        public List<JournalInterdicted> Interdicted = new List<JournalInterdicted>();
+
         public JournalStats()
         {
-            FSDJumps = new List<JumpInfo>();
-            Scans = new List<ScanInfo>();
-            OrganicScans = new List<JournalScanOrganic>();
-            ScanComplete = new List<ScanCompleteInfo>();
-            JetConeBoost = new List<JetConeBoostInfo>();
-            Ships = new Dictionary<string, ShipInfo>();
-            lastdockedutc = DateTime.UtcNow;
         }
 
         public void Process(JournalEntry ev)
@@ -144,7 +144,7 @@ namespace EliteDangerousCore
                         if (fsd != null)
                         {
                             this.fsdcarrierjumps++;
-                            this.FSDJumps.Add(new JournalStats.JumpInfo() { utc = fsd.EventTimeUTC, jumpdist = fsd.JumpDist, boostvalue = fsd.BoostValue, shipid = this.currentshipid, bodyname = fsd.StarSystem });
+                            this.FSDJumps.Add(new JournalStats.JumpInfo() { utc = fsd.EventTimeUTC, jumpdist = fsd.JumpDist, boostvalue = fsd.BoostUsed, shipid = this.currentshipid, bodyname = fsd.StarSystem });
                         }
                         else if (ev.EventTypeID == JournalTypeEnum.CarrierJump)
                         {
@@ -282,9 +282,46 @@ namespace EliteDangerousCore
                         break;
                     }
 
-            }
-        }
+                case JournalTypeEnum.PVPKill:
+                    {
+                        var j = ev as JournalEvents.JournalPVPKill;
+                        this.PVPKills.Add(j);
+                        break;
+                    }
+                case JournalTypeEnum.Bounty:
+                    {
+                        var j = ev as JournalEvents.JournalBounty;
+                        this.Bounties.Add(j);
+                        break;
+                    }
 
+                case JournalTypeEnum.CommitCrime:
+                    {
+                        var j = ev as JournalEvents.JournalCommitCrime;
+                        this.Crimes.Add(j);
+                        break;
+                    }
+                case JournalTypeEnum.FactionKillBond:
+                    {
+                        var j = ev as JournalEvents.JournalFactionKillBond;
+                        this.FactionKillBonds.Add(j);
+                        break;
+                    }
+                case JournalTypeEnum.Interdicted:
+                    {
+                        var j = ev as JournalEvents.JournalInterdicted;
+                        this.Interdicted.Add(j);
+                        break;
+                    }
+                case JournalTypeEnum.Interdiction:
+                    {
+                        var j = ev as JournalEvents.JournalInterdiction;
+                        this.Interdiction.Add(j);
+                        break;
+                    }
+            }
+
+        }
     }
 
     public class JournalStatisticsComputer
@@ -324,8 +361,9 @@ namespace EliteDangerousCore
                     JournalTypeEnum.FSDJump, JournalTypeEnum.CarrierJump, JournalTypeEnum.Location, JournalTypeEnum.Docked, JournalTypeEnum.JetConeBoost,
                     JournalTypeEnum.Scan, JournalTypeEnum.SAAScanComplete, JournalTypeEnum.Docked,
                     JournalTypeEnum.ShipyardNew, JournalTypeEnum.ShipyardSwap, JournalTypeEnum.LoadGame,
-                    JournalTypeEnum.Statistics, JournalTypeEnum.SetUserShipName, JournalTypeEnum.Loadout, JournalTypeEnum.Died, JournalTypeEnum.ScanOrganic
-
+                    JournalTypeEnum.Statistics, JournalTypeEnum.SetUserShipName, JournalTypeEnum.Loadout, JournalTypeEnum.Died, JournalTypeEnum.ScanOrganic,
+                    JournalTypeEnum.PVPKill, JournalTypeEnum.Bounty, JournalTypeEnum.CommitCrime, JournalTypeEnum.FactionKillBond,
+                    JournalTypeEnum.Interdiction, JournalTypeEnum.Interdicted,
             };
 
             var jlist = JournalEntry.GetAll(cmdrid, ids: events, startdateutc: start, enddateutc: end);
