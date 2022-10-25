@@ -113,7 +113,9 @@ namespace EliteDangerousCore
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL", true).Item1 + " History Load");
 
-            reportProgress("Reading Database");
+            string cmdname = EDCommander.GetCommander(CurrentCommander).Name;
+
+            reportProgress($"Reading {cmdname} database records");
 
             List<JournalEntry.TableData> tabledata;
 
@@ -144,7 +146,8 @@ namespace EliteDangerousCore
             {
                 Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Journal Creation");
 
-                reportProgress($"Creating {tabledata.Count} Journal Entries");
+                reportProgress($"Creating {cmdname} {tabledata.Count} journal entries");
+
                 var jes = JournalEntry.CreateJournalEntries(tabledata, cancelRequested);
                 if (jes != null)        // if not cancelled, use it
                     journalentries = jes;
@@ -170,7 +173,7 @@ namespace EliteDangerousCore
                     if (cancelRequested?.Invoke() ?? false)     // if cancelling, stop processing
                         break;
 
-                    reportProgress($"Creating History {eno-1}/{journalentries.Length}");
+                    reportProgress($"Creating {cmdname} history {eno-1}/{journalentries.Length}");
                 }
 
                 if (MergeJournalEntries(hist.hlastprocessed?.journalEntry, je))        // if we merge, don't store into HE

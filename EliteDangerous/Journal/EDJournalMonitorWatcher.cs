@@ -251,6 +251,8 @@ namespace EliteDangerousCore
 
             List<TravelLogUnit> tlutoadd = new List<TravelLogUnit>();
 
+            //System.Diagnostics.Debug.WriteLine($"ScanJournalFiles {WatcherFolder} {allFiles.Length}");  var time = Environment.TickCount;
+
             for (int i = 0; i < allFiles.Length; i++)
             {
                 FileInfo fi = allFiles[i];
@@ -274,6 +276,8 @@ namespace EliteDangerousCore
                     readersToUpdate.Add(reader);
                 }
             }
+
+            //System.Diagnostics.Debug.WriteLine($"ScanJournalFiles {Environment.TickCount-time} now TLU update {tlutoadd.Count}");
 
             if ( tlutoadd.Count > 0 )                      // now, on spinning rust, this takes ages for 600+ log files first time, so transaction it
             {
@@ -306,6 +310,7 @@ namespace EliteDangerousCore
                 if (closerequested?.WaitOne(0) ?? false)
                     break;
                 EDJournalReader reader = readersToUpdate[i];
+            
                 //System.Diagnostics.Debug.WriteLine($"Processing {reader.FullName}");
 
                 List<JournalEntry> entries = new List<JournalEntry>();

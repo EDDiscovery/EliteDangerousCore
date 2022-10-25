@@ -342,6 +342,47 @@ namespace EliteDangerousCore
 
         #endregion
 
+        #region MT process table data to a callback
+
+        // from table data ID, travellogid, commanderid, event json, sync flag
+        // create journal entries and dispatch to a thread. Entries will bombard the thread in any order, in multiple threads
+        // unused idea but worth keeping
+        static public void MTJournalEntries(List<TableData> tabledata, Action<JournalEntry> dispatchinthread, Func<bool> cancelRequested = null)
+        {
+            int threads = System.Environment.ProcessorCount / 2;        // on Rob's system 4 from 8 seems optimal, any more gives little more return
+
+            CountdownEvent cd = new CountdownEvent(threads);
+            for (int i = 0; i < threads; i++)
+            {
+                int s = i * tabledata.Count / threads;
+                int e = (i + 1) * tabledata.Count / threads;
+                Thread t1 = new Thread(new ParameterizedThreadStart(MTJEinThread));
+                t1.Priority = ThreadPriority.Highest;
+                t1.Name = $"MTGetAll {i}";
+                System.Diagnostics.Debug.WriteLine($"MTJournal Creation Spawn {s}..{e}");
+                t1.Start(new Tuple<List<TableData>, Action<JournalEntry>, int, int, CountdownEvent, Func<bool>>(tabledata, dispatchinthread, s, e, cd, cancelRequested));
+            }
+
+            cd.Wait();
+        }
+
+        private static void MTJEinThread(Object o)
+        {
+            var cmd = (Tuple<List<TableData>, Action<JournalEntry>, int, int, CountdownEvent, Func<bool>>)o;
+
+            for (int j = cmd.Item3; j < cmd.Item4; j++)
+            {
+                if (j % 10000 == 0 && (cmd.Item6?.Invoke() ?? false))       // check every X entries
+                    break;
+                var e = cmd.Item1[j];
+                cmd.Item2.Invoke(CreateJournalEntry(e.ID, e.TLUID, e.Cmdr, e.Json, e.Syncflag)); // and dispatch to caller
+            }
+
+            cmd.Item5.Signal();
+        }
+
+        #endregion
+
         #region Types of events
 
         static public Type TypeOfJournalEntry(string text)

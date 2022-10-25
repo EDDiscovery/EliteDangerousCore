@@ -373,6 +373,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public string ParentList() { return Parents != null ? string.Join(",", Parents.Select(x => x.Type + ":" + x.BodyID)) : ""; }     // not get on purpose
 
+        [PropertyNameAttribute("N/A")]
+        public string ShipIDForStatsOnly { get; set; }         // used in stats computation only.  Not in main code.
+
         public JournalScan(JObject evt) : base(evt, JournalTypeEnum.Scan)
         {
             ScanType = evt["ScanType"].Str();                               // ALL

@@ -32,44 +32,23 @@ namespace EliteDangerousCore
             public string shipid;
         };
 
-        public class ScanInfo
-        {
-            public DateTime utc;
-            public ScanEstimatedValues ev;
-            public EDStar? starid;
-            public EDPlanet planetid;
-            public string bodyname;
-            public bool? wasdiscovered;
-            public bool? wasmapped;
-            public bool mapped;
-            public bool efficientlymapped;
-            public string shipid;
-        };
-
-        public class ScanCompleteInfo
-        {
-            public DateTime utc;
-            public string bodyname;
-            public bool efficientlymapped;
-        }
-
         public class JetConeBoostInfo
         {
             public DateTime utc;
         }
 
-        public class ScansAreForSameBody : EqualityComparer<ScanInfo>
-        {
-            public override bool Equals(ScanInfo x, ScanInfo y)
-            {
-                return x.bodyname == y.bodyname;
-            }
+        //public class ScansAreForSameBody : EqualityComparer<ScanInfo>
+        //{
+        //    public override bool Equals(ScanInfo x, ScanInfo y)
+        //    {
+        //        return x.bodyname == y.bodyname;
+        //    }
 
-            public override int GetHashCode(ScanInfo obj)
-            {
-                return obj.bodyname.GetHashCode();
-            }
-        }
+        //    public override int GetHashCode(ScanInfo obj)
+        //    {
+        //        return obj.bodyname.GetHashCode();
+        //    }
+        //}
 
         public class ShipInfo
         {
@@ -78,12 +57,6 @@ namespace EliteDangerousCore
             public int died;
         }
 
-        public List<JumpInfo> FSDJumps = new List<JumpInfo>();
-        public List<ScanInfo> Scans = new List<ScanInfo>();
-        public List<JournalScanOrganic> OrganicScans = new List<JournalScanOrganic>();
-        public List<ScanCompleteInfo> ScanComplete = new List<ScanCompleteInfo>();
-        public List<JetConeBoostInfo> JetConeBoost = new List<JetConeBoostInfo>();
-        public Dictionary<string, ShipInfo> Ships = new Dictionary<string, ShipInfo>();
         public JournalLocOrJump MostNorth;
         public JournalLocOrJump MostSouth;
         public JournalLocOrJump MostEast;
@@ -99,6 +72,12 @@ namespace EliteDangerousCore
 
         public int fsdcarrierjumps;
 
+        public List<JumpInfo> FSDJumps = new List<JumpInfo>();
+        public Dictionary<string, JournalScan> Scans = new Dictionary<string, JournalScan>();
+        public List<JournalScanOrganic> OrganicScans = new List<JournalScanOrganic>();
+        public Dictionary<string, JournalSAAScanComplete> SAAScanComplete = new Dictionary<string, JournalSAAScanComplete>();
+        public List<JetConeBoostInfo> JetConeBoost = new List<JetConeBoostInfo>();
+        public Dictionary<string, ShipInfo> Ships = new Dictionary<string, ShipInfo>();
         public List<JournalPVPKill> PVPKills = new List<JournalPVPKill>();
         public List<JournalBounty> Bounties = new List<JournalBounty>();
         public List<JournalCommitCrime> Crimes = new List<JournalCommitCrime>();
@@ -157,22 +136,8 @@ namespace EliteDangerousCore
                 case JournalTypeEnum.Scan:
                     {
                         JournalScan sc = ev as JournalScan;
-                        JournalStats.ScanCompleteInfo sci = this.ScanComplete.Find(x => x.bodyname == sc.BodyName);      // see if we have a Scancomplete already
-                        bool mapped = sci != null;
-                        bool effcientlymapped = sci?.efficientlymapped ?? false;
-                        this.Scans.Add(new JournalStats.ScanInfo()
-                        {
-                            utc = sc.EventTimeUTC,
-                            ev = sc.GetEstimatedValues(),
-                            bodyname = sc.BodyName,
-                            starid = sc.IsStar ? sc.StarTypeID : default(EDStar?),
-                            planetid = sc.PlanetTypeID,
-                            wasdiscovered = sc.WasDiscovered,
-                            wasmapped = sc.WasMapped,
-                            mapped = mapped,
-                            efficientlymapped = effcientlymapped,
-                            shipid = this.currentshipid
-                        });
+                        sc.ShipIDForStatsOnly = currentshipid;
+                        this.Scans[sc.BodyName.ToLowerInvariant()] = sc;
                         break;
                     }
 
@@ -187,14 +152,7 @@ namespace EliteDangerousCore
                 case JournalTypeEnum.SAAScanComplete:
                     {
                         JournalSAAScanComplete sc = ev as JournalSAAScanComplete;
-                        bool em = sc.ProbesUsed <= sc.EfficiencyTarget;
-                        this.ScanComplete.Add(new JournalStats.ScanCompleteInfo() { utc = sc.EventTimeUTC, bodyname = sc.BodyName, efficientlymapped = em });
-                        JournalStats.ScanInfo sci = this.Scans.Find(x => x.bodyname == sc.BodyName);
-                        if (sci != null)
-                        {
-                            sci.mapped = true;
-                            sci.efficientlymapped = em;
-                        }
+                        this.SAAScanComplete[sc.BodyName.ToLowerInvariant()] = sc;
                         break;
                     }
 
@@ -366,7 +324,14 @@ namespace EliteDangerousCore
                     JournalTypeEnum.Interdiction, JournalTypeEnum.Interdicted,
             };
 
+            long time = Environment.TickCount;
+            System.Diagnostics.Debug.WriteLine($"Stats table read {Environment.TickCount - time}");
+
             var jlist = JournalEntry.GetAll(cmdrid, ids: events, startdateutc: start, enddateutc: end);
+
+            System.Diagnostics.Debug.WriteLine($"Stats db read {Environment.TickCount - time}");
+
+            time = Environment.TickCount;
 
             JournalStats stats = new JournalStats();
 
@@ -379,6 +344,16 @@ namespace EliteDangerousCore
                     return;
                 }
             }
+
+            foreach ( var saa in stats.SAAScanComplete )     // go thru all SAA scan completes, and make sure the scans have the flags set probably
+            {
+                if ( stats.Scans.TryGetValue(saa.Value.BodyName.ToLowerInvariant(), out JournalScan scan))
+                {
+                    scan.SetMapped(true, saa.Value.ProbesUsed <= saa.Value.EfficiencyTarget);
+                }
+            }
+
+            System.Diagnostics.Debug.WriteLine($"Stats analysis in {Environment.TickCount - time}");
 
             callback?.Invoke(stats);
             Running = false;
