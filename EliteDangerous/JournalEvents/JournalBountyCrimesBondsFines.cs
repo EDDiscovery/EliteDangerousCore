@@ -40,7 +40,7 @@ namespace EliteDangerousCore.JournalEvents
 
             TargetLocalised = Target = evt["Target"].StrNull();       // only set for skimmer target missions
 
-            if (Target != null)
+            if (Target != null)         
             {
                 TargetLocalised = JournalFieldNaming.CheckLocalisation(evt["Target_Localised"].Str(), Target);  // 3.7 added a localised target field, so try it
 
@@ -51,13 +51,12 @@ namespace EliteDangerousCore.JournalEvents
                 }
             }
 
-
             if ( Rewards == null )                  // for skimmers, its Faction/Reward.  Bug in manual reported to FD 23/5/2018
             {
                 string faction = evt["Faction"].StrNull();
                 long? reward = evt["Reward"].IntNull();
 
-                if (faction != null && reward != null)
+                if (faction != null && reward != null)      // create an array from it
                 {
                     string factionloc = JournalFieldNaming.CheckLocalisation(evt["Faction_Localised"].Str(), faction);      // not mentioned in frontiers documents, but seen with $alliance, $fed etc
                     Rewards = new BountyReward[1];
@@ -81,6 +80,8 @@ namespace EliteDangerousCore.JournalEvents
         public string TargetLocalised { get; set; }
         public bool SharedWithOthers { get; set; }
         public BountyReward[] Rewards { get; set; }
+
+        public bool IsThargoid { get { return VictimFaction.Contains("Thargoid", System.StringComparison.InvariantCultureIgnoreCase); } }       // seen both "Thargoid" and later "$faction_Thargoid;"
 
         public void LedgerNC(Ledger mcl)
         {
