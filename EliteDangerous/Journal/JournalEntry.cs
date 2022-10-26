@@ -291,9 +291,9 @@ namespace EliteDangerousCore
         {
             JournalEntry[] jlist = new JournalEntry[tabledata.Count];
 
-            if (tabledata.Count > 10000 )        // a good amount, worth MTing
+            if (tabledata.Count > 10000 && System.Environment.ProcessorCount>1)  // a good amount, worth MTing - just in case someone is using this on a potato
             {
-                int threads = System.Environment.ProcessorCount/2;        // on Rob's system 4 from 8 seems optimal, any more gives little more return
+                int threads = Math.Max(System.Environment.ProcessorCount/2,2);   // leave a few processors for other things
 
                 CountdownEvent cd = new CountdownEvent(threads);
                 for (int i = 0; i < threads; i++)
@@ -303,7 +303,7 @@ namespace EliteDangerousCore
                     Thread t1 = new Thread(new ParameterizedThreadStart(CreateJEinThread));
                     t1.Priority = ThreadPriority.Highest;
                     t1.Name = $"GetAll {i}";
-                    System.Diagnostics.Debug.WriteLine($"Journal Creation Spawn {s}..{e}");
+                    System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.TickCount} Journal Creation Spawn {s}..{e}");
                     t1.Start(new Tuple<List<TableData>, JournalEntry[], int, int, CountdownEvent, Func<bool>>(tabledata, jlist, s, e, cd, cancelRequested));
                 }
 

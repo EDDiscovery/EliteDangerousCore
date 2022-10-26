@@ -48,7 +48,7 @@ namespace EliteDangerousCore
             journalfilematch = journalmatchpattern;
             mindateutc = mindateutcp;
             IncludeSubfolders = pincludesubfolders;
-            System.Diagnostics.Debug.WriteLine($"Monitor new watch {WatcherFolder} incl {IncludeSubfolders} match {journalfilematch} date {mindateutc} ");
+            //System.Diagnostics.Debug.WriteLine($"Monitor new watch {WatcherFolder} incl {IncludeSubfolders} match {journalfilematch} date {mindateutc} ");
         }
 
         #region Scan start stop and monitor
@@ -71,7 +71,7 @@ namespace EliteDangerousCore
                     m_Watcher.Created += new FileSystemEventHandler(OnNewFile);
                     m_Watcher.EnableRaisingEvents = true;
 
-                    System.Diagnostics.Trace.WriteLine($"Start Monitor on {WatcherFolder} incl {IncludeSubfolders}");
+                    System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCount} Start Monitor on {WatcherFolder} incl {IncludeSubfolders}");
                 }
                 catch (Exception ex)
                 {
@@ -90,7 +90,7 @@ namespace EliteDangerousCore
                 m_Watcher.Dispose();
                 m_Watcher = null;
 
-                System.Diagnostics.Trace.WriteLine($"Stop Monitor on {WatcherFolder} incl {IncludeSubfolders}");
+                System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCount} Stop Monitor on {WatcherFolder} incl {IncludeSubfolders}");
             }
         }
 

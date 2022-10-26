@@ -199,8 +199,7 @@ namespace EliteDangerousCore
                 }
             }
 
-            foreach (var x in folderlist)
-                System.Diagnostics.Debug.WriteLine($"Monitor Folder {x.Item1} incl {x.Item2}");
+            //foreach (var x in folderlist)  System.Diagnostics.Debug.WriteLine($"Monitor Folder {x.Item1} incl {x.Item2}");
 
             List<int> del = new List<int>();
             for (int i = 0; i < watchers.Count; i++)           // for all current watchers, are we still in use?
@@ -215,7 +214,7 @@ namespace EliteDangerousCore
             {
                 int wi = del[j];
                 JournalMonitorWatcher mw = watchers[wi];
-                System.Diagnostics.Debug.WriteLine($"Monitor Remove {mw.WatcherFolder} incl {mw.IncludeSubfolders}");
+                //System.Diagnostics.Debug.WriteLine($"Monitor Remove {mw.WatcherFolder} incl {mw.IncludeSubfolders}");
                 mw.StopMonitor();          // just in case
                 watchers.Remove(mw);
                 StatusReader sw = statuswatchers[wi];
@@ -242,7 +241,7 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine($"Monitor existing watch {exists.WatcherFolder} incl {exists.IncludeSubfolders}");
+                    //System.Diagnostics.Debug.WriteLine($"Monitor existing watch {exists.WatcherFolder} incl {exists.IncludeSubfolders}");
                 }
             }
         }

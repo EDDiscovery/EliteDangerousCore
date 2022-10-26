@@ -36,20 +36,6 @@ namespace EliteDangerousCore
         {
             public DateTime utc;
         }
-
-        //public class ScansAreForSameBody : EqualityComparer<ScanInfo>
-        //{
-        //    public override bool Equals(ScanInfo x, ScanInfo y)
-        //    {
-        //        return x.bodyname == y.bodyname;
-        //    }
-
-        //    public override int GetHashCode(ScanInfo obj)
-        //    {
-        //        return obj.bodyname.GetHashCode();
-        //    }
-        //}
-
         public class ShipInfo
         {
             public string name;
@@ -324,14 +310,11 @@ namespace EliteDangerousCore
                     JournalTypeEnum.Interdiction, JournalTypeEnum.Interdicted,
             };
 
-            long time = Environment.TickCount;
-            System.Diagnostics.Debug.WriteLine($"Stats table read {Environment.TickCount - time}");
+            System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.TickCountLap("JSC", true)} Stats table read start");
 
-            var jlist = JournalEntry.GetAll(cmdrid, ids: events, startdateutc: start, enddateutc: end);
+            var jlist = JournalEntry.GetAll(cmdrid, ids: events, startdateutc: start, enddateutc: end, cancelRequested:()=> { return Exit; });
 
-            System.Diagnostics.Debug.WriteLine($"Stats db read {Environment.TickCount - time}");
-
-            time = Environment.TickCount;
+            System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.TickCountLap("JSC")} Stats table read end");
 
             JournalStats stats = new JournalStats();
 
@@ -353,7 +336,7 @@ namespace EliteDangerousCore
                 }
             }
 
-            System.Diagnostics.Debug.WriteLine($"Stats analysis in {Environment.TickCount - time}");
+            System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.TickCountLap("JSC")} Stats analysis finished");
 
             callback?.Invoke(stats);
             Running = false;

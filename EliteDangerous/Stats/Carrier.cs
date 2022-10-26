@@ -148,7 +148,7 @@ namespace EliteDangerousCore
         {
             if (EstimatedJumpTimeUTC.HasValue && EstimatedJumpTimeUTC.Value.AddSeconds(CarrierJumpTimeMarginSeconds) < curtime)
             {
-                System.Diagnostics.Debug.WriteLine($"{Environment.NewLine} Carrier presumed jumped at {EstimatedJumpTimeUTC} curtime {curtime} to {NextStarSystem}");
+                //System.Diagnostics.Debug.WriteLine($"Carrier presumed jumped at {EstimatedJumpTimeUTC} curtime {curtime} to {NextStarSystem}");
                 StarSystem = new SystemClass(NextStarSystem);       // don't have position..
                 SystemAddress = NextSystemAddress;
                 Body = NextBody;
