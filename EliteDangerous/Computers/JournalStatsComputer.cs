@@ -298,18 +298,23 @@ namespace EliteDangerousCore
             StatsThread = null;
         }
 
+        private static JournalTypeEnum[] events = new JournalTypeEnum[]     // 
+        {
+                JournalTypeEnum.FSDJump, JournalTypeEnum.CarrierJump, JournalTypeEnum.Location, JournalTypeEnum.Docked, JournalTypeEnum.JetConeBoost,
+                JournalTypeEnum.Scan, JournalTypeEnum.SAAScanComplete, JournalTypeEnum.Docked,
+                JournalTypeEnum.ShipyardNew, JournalTypeEnum.ShipyardSwap, JournalTypeEnum.LoadGame,
+                JournalTypeEnum.Statistics, JournalTypeEnum.SetUserShipName, JournalTypeEnum.Loadout, JournalTypeEnum.Died, JournalTypeEnum.ScanOrganic,
+                JournalTypeEnum.PVPKill, JournalTypeEnum.Bounty, JournalTypeEnum.CommitCrime, JournalTypeEnum.FactionKillBond,
+                JournalTypeEnum.Interdiction, JournalTypeEnum.Interdicted,
+        };
+
+        static public bool IsJournalEntryForStats(JournalEntry e)
+        {
+            return Array.FindIndex(events, x => e.EventTypeID == x) >= 0;
+        }
+
         private void StatisticsThread()
         {
-            JournalTypeEnum[] events = new JournalTypeEnum[]     // 
-            {
-                    JournalTypeEnum.FSDJump, JournalTypeEnum.CarrierJump, JournalTypeEnum.Location, JournalTypeEnum.Docked, JournalTypeEnum.JetConeBoost,
-                    JournalTypeEnum.Scan, JournalTypeEnum.SAAScanComplete, JournalTypeEnum.Docked,
-                    JournalTypeEnum.ShipyardNew, JournalTypeEnum.ShipyardSwap, JournalTypeEnum.LoadGame,
-                    JournalTypeEnum.Statistics, JournalTypeEnum.SetUserShipName, JournalTypeEnum.Loadout, JournalTypeEnum.Died, JournalTypeEnum.ScanOrganic,
-                    JournalTypeEnum.PVPKill, JournalTypeEnum.Bounty, JournalTypeEnum.CommitCrime, JournalTypeEnum.FactionKillBond,
-                    JournalTypeEnum.Interdiction, JournalTypeEnum.Interdicted,
-            };
-
             System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.TickCountLap("JSC", true)} Stats table read start");
 
             var jlist = JournalEntry.GetAll(cmdrid, ids: events, startdateutc: start, enddateutc: end, cancelRequested:()=> { return Exit; });
