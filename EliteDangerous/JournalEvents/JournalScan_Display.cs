@@ -436,7 +436,14 @@ namespace EliteDangerousCore.JournalEvents
                 information.Append(" (Discovered)".T(EDCTx.JournalScanInfo_DIS));
                 if (showvalues)
                 {
-                    information.Append(' ').Append(ev.EstimatedValueFirstMappedEfficiently.ToString("N0")).Append(" cr");
+                    information.Append(' ').Append((ev.EstimatedValueFirstMappedEfficiently > 0 ? ev.EstimatedValueFirstMappedEfficiently : ev.EstimatedValueBase).ToString("N0")).Append(" cr");
+                }
+            }
+            else if (js.WasDiscovered == false && js.IsStar)
+            {
+                if (showvalues)
+                {
+                    information.Append(' ').Append((ev.EstimatedValueFirstDiscovered > 0 ? ev.EstimatedValueFirstDiscovered : ev.EstimatedValueBase).ToString("N0")).Append(" cr");
                 }
             }
             else
