@@ -70,6 +70,7 @@ namespace EliteDangerousCore
         public List<JournalFactionKillBond> FactionKillBonds = new List<JournalFactionKillBond>();
         public List<JournalInterdiction> Interdiction = new List<JournalInterdiction>();
         public List<JournalInterdicted> Interdicted = new List<JournalInterdicted>();
+        public Dictionary<DateTime, long> Credits = new Dictionary<DateTime, long>();
 
         public JournalStats()
         {
@@ -178,6 +179,7 @@ namespace EliteDangerousCore
                         cls.name = j.ShipName;
                         System.Diagnostics.Debug.Assert(this.currentshipid != null);
                         this.Ships[this.currentshipid] = cls;
+                        this.Credits[j.EventTimeUTC.Date] = j.Credits;                  // one per date, no need for more for a big view.
                         break;
                     }
                 case JournalTypeEnum.Loadout:

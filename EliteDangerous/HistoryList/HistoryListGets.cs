@@ -356,7 +356,7 @@ namespace EliteDangerousCore
         {
             if (frominclusive is null)
                 return GetLastHistoryEntry(where);
-            else 
+            else
             {
                 for (int index = frominclusive.EntryNumber - 1; index >= 0 && index < historylist.Count; index--)
                 {
@@ -366,6 +366,18 @@ namespace EliteDangerousCore
 
                 return null;
             }
+        }
+
+        // find the condition, from this HE inclusive, backwards, until stop date is passed.
+        public HistoryEntry GetLastHistoryEntry(Predicate<HistoryEntry> where, HistoryEntry frominclusive, DateTime stopbeforeinc)
+        {
+            for (int index = frominclusive.EntryNumber - 1; index >= 0 && index < historylist.Count && historylist[index].EventTimeUTC >= stopbeforeinc; index--)
+            {
+                if (where(historylist[index]))
+                    return historylist[index];
+            }
+
+            return null;
         }
 
         // sysinfo, discoveryform
@@ -381,22 +393,30 @@ namespace EliteDangerousCore
         }
 
         //stats
-        public bool IsTravellingUTC(out DateTime startTimeutc)
+        // return trip start/stop he's within the date range.
+        // may return start but no end, or end without a start, or both null
+        public void FindStartStopMarkersWithinDateTimeRange(DateTime starttimeutc, DateTime endtimeutc, out HistoryEntry tripstarthe, out HistoryEntry tripendhe)
         {
-            bool inTrip = false;
-            startTimeutc = DateTime.UtcNow;
-            HistoryEntry lastStartMark = GetLastHistoryEntry(x => x.StartMarker);
-            if (lastStartMark != null)
+            tripstarthe = tripendhe = null;
+
+            HistoryEntry firstdatebeforeend = GetLastHistoryEntry(x => x.EventTimeUTC <= endtimeutc);        // where is the entry at the end time..
+
+            if (firstdatebeforeend != null)     // found an entry within the range.
             {
-                HistoryEntry lastStopMark = GetLastHistoryEntry(x => x.StopMarker);
-                inTrip = lastStopMark == null || lastStopMark.EventTimeUTC < lastStartMark.EventTimeUTC;
-                if (inTrip)
-                    startTimeutc = lastStartMark.EventTimeUTC;
+                tripendhe = GetLastHistoryEntry(x => x.StopMarker, firstdatebeforeend, starttimeutc);       // from endtime, find the first stop marker
+
+                if (tripendhe != null)            // found one
+                {
+                    tripstarthe = GetLastHistoryEntry(x => x.StartMarker, tripendhe, starttimeutc);        // find the start marker if in the range.  May be null
+                }
+                else
+                {           // no end marker, is there a start?
+                    tripstarthe = GetLastHistoryEntry(x => x.StartMarker, firstdatebeforeend, starttimeutc);        // find the start marker if in the range.  May be null
+                }
             }
-            return inTrip;
         }
 
-       // historylist
+        // historylist
         public string GetCommanderFID()     // may be null
         {
             var cmdr = historylist.FindLast(x => x.EntryType == JournalTypeEnum.Commander);
