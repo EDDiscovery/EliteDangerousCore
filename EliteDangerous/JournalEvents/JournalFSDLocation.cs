@@ -189,7 +189,7 @@ namespace EliteDangerousCore.JournalEvents
 
     //When written: at startup, or when being resurrected at a station
     [JournalEntryType(JournalTypeEnum.Location)]
-    public class JournalLocation : JournalLocOrJump, ISystemStationEntry, IBodyNameAndID, IStarScan
+    public class JournalLocation : JournalLocOrJump, ISystemStationEntry, IBodyNameAndID, IStarScan, ICarrierStats
     {
         public JournalLocation(JObject evt) : base(evt, JournalTypeEnum.Location)      // all have evidence 16/3/2017
         {
@@ -335,13 +335,18 @@ namespace EliteDangerousCore.JournalEvents
 
         public void AddStarScan(StarScan s, ISystem system)
         {
-                s.AddLocation(StarSystem, SystemAddress);
+            s.AddLocation(StarSystem, SystemAddress);
+        }
+
+        public void UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrier)
+        {
+            s.Update(this,onfootfleetcarrier);
         }
     }
 
     //When written: when jumping with a fleet carrier
     [JournalEntryType(JournalTypeEnum.CarrierJump)]
-    public class JournalCarrierJump : JournalLocOrJump, ISystemStationEntry, IBodyNameAndID, IJournalJumpColor, IStarScan
+    public class JournalCarrierJump : JournalLocOrJump, ISystemStationEntry, IBodyNameAndID, IJournalJumpColor, IStarScan, ICarrierStats
     {
         public JournalCarrierJump(JObject evt) : base(evt, JournalTypeEnum.CarrierJump)
         {
@@ -459,6 +464,11 @@ namespace EliteDangerousCore.JournalEvents
                 }
             }
         }
+
+        public void UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
+        {
+            s.Update(this);
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.FSDJump)]
@@ -471,8 +481,7 @@ namespace EliteDangerousCore.JournalEvents
             JumpDist = evt["JumpDist"].Double();
             FuelUsed = evt["FuelUsed"].Double();
             FuelLevel = evt["FuelLevel"].Double();
-            BoostUsed = evt["BoostUsed"].Bool();
-            BoostValue = evt["BoostUsed"].Int();
+            BoostUsed = evt["BoostUsed"].Int();         
             Body = evt["Body"].StrNull();
             BodyID = evt["BodyID"].IntNull();
             BodyType = JournalFieldNaming.NormaliseBodyType(evt["BodyType"].Str());
@@ -497,8 +506,7 @@ namespace EliteDangerousCore.JournalEvents
         public double JumpDist { get; set; }
         public double FuelUsed { get; set; }
         public double FuelLevel { get; set; }
-        public bool BoostUsed { get; set; }
-        public int BoostValue { get; set; }
+        public int BoostUsed { get; set; }          // 1 = basic, 2 = standard, 3 = premium, 4 = ?
         public int MapColor { get; set; }
         public System.Drawing.Color MapColorARGB { get { return System.Drawing.Color.FromArgb(MapColor); } }
         public bool EDSMFirstDiscover { get; set; }

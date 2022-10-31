@@ -41,8 +41,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="QuickJSON, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RJKJSoft.QuickJSON.0.9.0\lib\net48\QuickJSON.dll</HintPath>
+    <Reference Include="QuickJSON, Version=0.9.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\RJKJSoft.QuickJSON.0.9.5\lib\net48\QuickJSON.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -135,6 +135,7 @@
     <Compile Include="Journal\JournalEssentialEvents.cs" />
     <Compile Include="Journal\JournalEntryDB.cs" />
     <Compile Include="Journal\JournalEnums.cs" />
+    <Compile Include="Computers\JournalStatsComputer.cs" />
     <Compile Include="Scanner\EDScanner.cs" />
     <Compile Include="Screenshots\ScreenShotConfigureForm.cs">
       <SubType>Form</SubType>
@@ -162,6 +163,7 @@
     <Compile Include="StarScan\StarScanFSSSignalsDiscovered.cs" />
     <Compile Include="StarScan\StarScanSAASignalsFound.cs" />
     <Compile Include="StarScan\StarScanSAAScan.cs" />
+    <Compile Include="Stats\Carrier.cs" />
     <Compile Include="Stats\Stats.cs" />
     <Compile Include="Status\EDStatusReader.cs" />
     <Compile Include="Bindings\FrontierToVKey.cs" />

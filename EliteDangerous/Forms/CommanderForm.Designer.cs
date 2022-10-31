@@ -77,6 +77,7 @@
             this.extGroupBoxEDAstro = new ExtendedControls.ExtGroupBox();
             this.extCheckBoxEDAstro = new ExtendedControls.ExtCheckBox();
             this.extScrollBar = new ExtendedControls.ExtScrollBar();
+            this.extCheckBoxIncludeSubfolders = new ExtendedControls.ExtCheckBox();
             this.panelTop.SuspendLayout();
             this.groupBoxCustomEDDN.SuspendLayout();
             this.groupBoxCustomEDSM.SuspendLayout();
@@ -466,7 +467,7 @@
             this.groupBoxCustomEDDN.BorderColorScaling = 0.5F;
             this.groupBoxCustomEDDN.Controls.Add(this.checkBoxCustomEDDNTo);
             this.groupBoxCustomEDDN.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBoxCustomEDDN.Location = new System.Drawing.Point(0, 97);
+            this.groupBoxCustomEDDN.Location = new System.Drawing.Point(0, 107);
             this.groupBoxCustomEDDN.Name = "groupBoxCustomEDDN";
             this.groupBoxCustomEDDN.Size = new System.Drawing.Size(691, 55);
             this.groupBoxCustomEDDN.TabIndex = 5;
@@ -483,7 +484,7 @@
             this.groupBoxCustomEDSM.BorderColorScaling = 0.5F;
             this.groupBoxCustomEDSM.Controls.Add(this.tableLayoutPanel2);
             this.groupBoxCustomEDSM.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBoxCustomEDSM.Location = new System.Drawing.Point(0, 152);
+            this.groupBoxCustomEDSM.Location = new System.Drawing.Point(0, 162);
             this.groupBoxCustomEDSM.Margin = new System.Windows.Forms.Padding(10);
             this.groupBoxCustomEDSM.Name = "groupBoxCustomEDSM";
             this.groupBoxCustomEDSM.Size = new System.Drawing.Size(691, 77);
@@ -543,7 +544,7 @@
             this.groupBoxCustomJournal.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBoxCustomJournal.Location = new System.Drawing.Point(0, 0);
             this.groupBoxCustomJournal.Name = "groupBoxCustomJournal";
-            this.groupBoxCustomJournal.Size = new System.Drawing.Size(691, 97);
+            this.groupBoxCustomJournal.Size = new System.Drawing.Size(691, 107);
             this.groupBoxCustomJournal.TabIndex = 3;
             this.groupBoxCustomJournal.TabStop = false;
             this.groupBoxCustomJournal.Text = "Journal Related Information";
@@ -563,14 +564,15 @@
             this.tableLayoutPanel1.Controls.Add(this.buttonExtBrowse, 2, 1);
             this.tableLayoutPanel1.Controls.Add(this.textBoxBorderJournal, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.extCheckBoxConsoleCommander, 2, 0);
+            this.tableLayoutPanel1.Controls.Add(this.extCheckBoxIncludeSubfolders, 1, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 16);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(685, 78);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(685, 88);
             this.tableLayoutPanel1.TabIndex = 5;
             // 
             // labelCN
@@ -641,7 +643,7 @@
             this.groupBoxCustomInara.BorderColorScaling = 0.5F;
             this.groupBoxCustomInara.Controls.Add(this.tableLayoutPanelInara);
             this.groupBoxCustomInara.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBoxCustomInara.Location = new System.Drawing.Point(0, 229);
+            this.groupBoxCustomInara.Location = new System.Drawing.Point(0, 239);
             this.groupBoxCustomInara.Margin = new System.Windows.Forms.Padding(10);
             this.groupBoxCustomInara.Name = "groupBoxCustomInara";
             this.groupBoxCustomInara.Size = new System.Drawing.Size(691, 76);
@@ -716,7 +718,7 @@
             this.extGroupBoxCommanderInfo.BorderColorScaling = 0.5F;
             this.extGroupBoxCommanderInfo.Controls.Add(this.tableLayoutPanelCommanderInfo);
             this.extGroupBoxCommanderInfo.Dock = System.Windows.Forms.DockStyle.Top;
-            this.extGroupBoxCommanderInfo.Location = new System.Drawing.Point(0, 408);
+            this.extGroupBoxCommanderInfo.Location = new System.Drawing.Point(0, 418);
             this.extGroupBoxCommanderInfo.Name = "extGroupBoxCommanderInfo";
             this.extGroupBoxCommanderInfo.Size = new System.Drawing.Size(691, 60);
             this.extGroupBoxCommanderInfo.TabIndex = 37;
@@ -805,7 +807,7 @@
             this.groupBoxCustomIGAU.BorderColorScaling = 0.5F;
             this.groupBoxCustomIGAU.Controls.Add(this.checkBoxIGAUSync);
             this.groupBoxCustomIGAU.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBoxCustomIGAU.Location = new System.Drawing.Point(0, 358);
+            this.groupBoxCustomIGAU.Location = new System.Drawing.Point(0, 368);
             this.groupBoxCustomIGAU.Name = "groupBoxCustomIGAU";
             this.groupBoxCustomIGAU.Size = new System.Drawing.Size(691, 50);
             this.groupBoxCustomIGAU.TabIndex = 39;
@@ -848,7 +850,7 @@
             this.extGroupBoxEDAstro.BorderColorScaling = 0.5F;
             this.extGroupBoxEDAstro.Controls.Add(this.extCheckBoxEDAstro);
             this.extGroupBoxEDAstro.Dock = System.Windows.Forms.DockStyle.Top;
-            this.extGroupBoxEDAstro.Location = new System.Drawing.Point(0, 305);
+            this.extGroupBoxEDAstro.Location = new System.Drawing.Point(0, 315);
             this.extGroupBoxEDAstro.Name = "extGroupBoxEDAstro";
             this.extGroupBoxEDAstro.Size = new System.Drawing.Size(691, 53);
             this.extGroupBoxEDAstro.TabIndex = 39;
@@ -905,6 +907,26 @@
             this.extScrollBar.ThumbDrawAngle = 0F;
             this.extScrollBar.Value = -125;
             this.extScrollBar.ValueLimited = -125;
+            // 
+            // extCheckBoxIncludeSubfolders
+            // 
+            this.extCheckBoxIncludeSubfolders.AutoSize = true;
+            this.extCheckBoxIncludeSubfolders.CheckBoxColor = System.Drawing.Color.Gray;
+            this.extCheckBoxIncludeSubfolders.CheckBoxDisabledScaling = 0.5F;
+            this.extCheckBoxIncludeSubfolders.CheckBoxInnerColor = System.Drawing.Color.White;
+            this.extCheckBoxIncludeSubfolders.CheckColor = System.Drawing.Color.DarkBlue;
+            this.extCheckBoxIncludeSubfolders.ImageButtonDisabledScaling = 0.5F;
+            this.extCheckBoxIncludeSubfolders.ImageIndeterminate = null;
+            this.extCheckBoxIncludeSubfolders.ImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.extCheckBoxIncludeSubfolders.ImageUnchecked = null;
+            this.extCheckBoxIncludeSubfolders.Location = new System.Drawing.Point(231, 61);
+            this.extCheckBoxIncludeSubfolders.MouseOverColor = System.Drawing.Color.CornflowerBlue;
+            this.extCheckBoxIncludeSubfolders.Name = "extCheckBoxIncludeSubfolders";
+            this.extCheckBoxIncludeSubfolders.Size = new System.Drawing.Size(114, 17);
+            this.extCheckBoxIncludeSubfolders.TabIndex = 5;
+            this.extCheckBoxIncludeSubfolders.Text = "Include Subfolders";
+            this.extCheckBoxIncludeSubfolders.TickBoxReductionRatio = 0.75F;
+            this.extCheckBoxIncludeSubfolders.UseVisualStyleBackColor = true;
             // 
             // CommanderForm
             // 
@@ -1000,5 +1022,6 @@
         private ExtendedControls.ExtGroupBox extGroupBoxEDAstro;
         private ExtendedControls.ExtCheckBox extCheckBoxEDAstro;
         private System.Windows.Forms.Panel panelGroups;
+        private ExtendedControls.ExtCheckBox extCheckBoxIncludeSubfolders;
     }
 }

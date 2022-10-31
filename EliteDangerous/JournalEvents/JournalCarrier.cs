@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2018 EDDiscovery development team
+ * Copyright © 2022-2022 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -16,15 +16,170 @@
 using QuickJSON;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
 {
+    // holds carrier state
+    public class CarrierState
+    {
+        public CarrierState() { }
+        public CarrierState(CarrierState other)     // copy constructor
+        {
+            CarrierID = other.CarrierID;
+            Callsign = other.Callsign;
+            Name = other.Name;
+            DockingAccess = other.DockingAccess;
+            AllowNotorious = other.AllowNotorious;
+            FuelLevel = other.FuelLevel;
+            JumpRangeCurr = other.JumpRangeCurr;
+            JumpRangeMax = other.JumpRangeMax;
+            PendingDecommission = other.PendingDecommission;
+
+            SpaceUsage = new SpaceUsageClass(other.SpaceUsage);
+            Finance = new FinanceClass(other.Finance);
+
+            if (other.Services != null)
+            {
+                Services = new List<ServicesClass>(other.Services);         // Crew are values, can be copied
+            }
+            if (other.ShipPacks != null)
+            {
+                ShipPacks = new List<PackClass>(other.ShipPacks);
+            }
+            if (other.ModulePacks != null)
+            {
+                ModulePacks = new List<PackClass>(other.ModulePacks);
+            }
+        }
+
+        public bool HaveCarrier { get { return CarrierID != 0 && Callsign != null; } }      // set if we have ever bought a carrier, even if decommissioned
+
+        public long CarrierID { get; set; }     // carrier buy also sets this
+        public string Callsign { get; set; }    // carrier buy also sets this
+        public string Name { get; set; }
+        public string DockingAccess { get; set; }
+        public string DockingAccessSplittable { get { return DockingAccess == "squadronfriends" ? "Squadron Friends" : DockingAccess; } }
+
+        public bool AllowNotorious { get; set; }
+        public int FuelLevel { get; set; }
+        public double JumpRangeCurr { get; set; }
+        public double JumpRangeMax { get; set; }
+        public bool PendingDecommission { get; set; }
+
+        [System.Diagnostics.DebuggerDisplay("Space Usage {TotalCapacity} {Crew} {Cargo} {CargoSpaceReserved} {ShipPacks} {ModulePacks} {FreeSpace}")]
+        public class SpaceUsageClass
+        {
+            public SpaceUsageClass(){}
+            public SpaceUsageClass(SpaceUsageClass other)
+            {
+                TotalCapacity = other.TotalCapacity;
+                Crew = other.Crew;
+                Cargo = other.Cargo;
+                CargoSpaceReserved = other.CargoSpaceReserved;
+                ShipPacks = other.ShipPacks;
+                ModulePacks = other.ModulePacks;
+                FreeSpace = other.FreeSpace;
+            }
+
+            public int TotalCapacity { get; set; }
+            public int Crew { get; set; }
+            public int Cargo { get; set; }
+            public int CargoSpaceReserved { get; set; }
+            public int ShipPacks { get; set; }
+            public int ModulePacks { get; set; }
+            public int FreeSpace { get; set; }
+        };
+
+        public SpaceUsageClass SpaceUsage { get; set; } = new SpaceUsageClass();
+
+        [System.Diagnostics.DebuggerDisplay("Finance {CarrierBalance} r{ReserveBalance} a{AvailableBalance}")]
+        public class FinanceClass
+        {
+            public FinanceClass() { }
+            public FinanceClass(FinanceClass other)
+            {
+                CarrierBalance = other.CarrierBalance;
+                ReserveBalance = other.ReserveBalance;
+                AvailableBalance = other.AvailableBalance;
+                ReservePercent = other.ReservePercent;
+                TaxRatePioneersupplies = other.TaxRatePioneersupplies;
+                TaxRateShipyard = other.TaxRateShipyard;
+                TaxRateRearm = other.TaxRateRearm;
+                TaxRateOutfitting = other.TaxRateOutfitting;
+                TaxRateRefuel = other.TaxRateRefuel;
+                TaxRateRepair = other.TaxRateRepair;
+            }
+            public long CarrierBalance { get; set; }
+            public long ReserveBalance { get; set; }
+            public long AvailableBalance { get; set; }
+            public double ReservePercent { get; set; }
+            public double? TaxRatePioneersupplies { get; set; }     // tax rates may be missing
+            public double? TaxRateShipyard { get; set; }
+            public double? TaxRateRearm { get; set; }
+            public double? TaxRateOutfitting { get; set; }
+            public double? TaxRateRefuel { get; set; }
+            public double? TaxRateRepair { get; set; }
+        }
+
+        public FinanceClass Finance { get; set; } = new FinanceClass();
+
+        [System.Diagnostics.DebuggerDisplay("Services {CrewRole} {CrewName} a{Activated} e{Enabled}")]
+        public class ServicesClass
+        {
+            public string CrewRole { get; set; }
+            public bool Activated { get; set; }
+            public bool Enabled { get; set; }
+            public string CrewName { get; set; }
+            public JournalCarrierCrewServices.ServiceType ServiceType() { return JournalCarrierCrewServices.GetServiceType(CrewRole); }
+        }
+
+        public List<ServicesClass> Services { get; set; }       // may be null - called 'Crew' in journal buts its all about services
+        public ServicesClass GetService(JournalCarrierCrewServices.ServiceType t) // may be null.  Core services are not listed
+        {
+            return Services?.Find(x => x.ServiceType() == t);
+        }
+
+        public long GetServicesCost()
+        {
+            long res = 0;
+            foreach( var s in Services.EmptyIfNull())
+            {
+                JournalCarrierCrewServices.ServicesData si = JournalCarrierCrewServices.GetDataOnServiceType(s.ServiceType());
+                if (si != null)
+                {
+                    long delta = s.Activated ? (s.Enabled ? si.UpkeepCost : si.SuspendedUpkeepCost) : 0;
+                    System.Diagnostics.Debug.WriteLine($"Service cost {si.Service} {si.UpkeepCost} {si.SuspendedUpkeepCost} = {delta}");
+                    res += delta;
+                }
+            }
+
+            return res;
+        }
+
+        public long GetCoreCost() { return 5000000; }
+
+        [System.Diagnostics.DebuggerDisplay("Pack {PackTheme} {PackTier}")]
+        public class PackClass
+        {
+            public string PackTheme { get; set; }
+            public int PackTier { get; set; }
+        }
+
+
+        public List<PackClass> ShipPacks { get; set; }  // may be null
+        public int ShipPacksCount() { return ShipPacks?.Count() ?? 0; }
+        public List<PackClass> ModulePacks { get; set; }    // may be null
+        public int ModulePacksCount() { return ModulePacks?.Count() ?? 0; }
+
+    }
+
     [JournalEntryType(JournalTypeEnum.CarrierBuy)]
-    public class JournalCarrierBuy : JournalEntry, ILedgerJournalEntry
+    public class JournalCarrierBuy : JournalEntry, ILedgerJournalEntry, ICarrierStats
     {
         public long CarrierID { get; set; }
-        public long BoughtAtMarket { get; set; }
-        public string Location { get; set; }
+        public long BoughtAtMarket { get; set; }        // market id 
+        public string Location { get; set; }        // starsystem
         public long SystemAddress { get; set; }
         public long Price { get; set; }
         public string Variant { get; set; }
@@ -54,154 +209,151 @@ namespace EliteDangerousCore.JournalEvents
             string x = "Call Sign: ".T(EDCTx.JournalCarrier_Callsign) + Callsign;
             mcl.AddEvent(Id, EventTimeUTC, JournalTypeEnum.CarrierBuy, x, -Price);
         }
+
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
+        {
+            s.Update(this);
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierStats)]
     
-    public class JournalCarrierStats : JournalEntry
+    public class JournalCarrierStats : JournalEntry, ICarrierStats
     {
-        public long CarrierID { get; set; }
-        public string Callsign { get; set; }
-        public string Name { get; set; }
-        public string DockingAccess { get; set; }
-
-        public bool AllowNotorious { get; set; }
-        public int FuelLevel { get; set; }
-        public double JumpRangeCurr { get; set; }
-        public double JumpRangeMax { get; set; }
-        public bool PendingDecommission { get; set; }
-
-        public int SpaceUsage_TotalCapacity { get; set; }
-        public int SpaceUsage_Crew { get; set; }
-        public int SpaceUsage_Cargo { get; set; }
-        public int SpaceUsage_CargoSpaceReserved { get; set; }
-        public int SpaceUsage_ShipPacks { get; set; }
-        public int SpaceUsage_ModulePacks { get; set; }
-        public int SpaceUsage_FreeSpace { get; set; }
-
-        public long Finance_CarrierBalance { get; set; }
-        public long Finance_ReserveBalance { get; set; }
-        public long Finance_AvailableBalance { get; set; }
-        public double Finance_ReservePercent { get; set; }
-        public double? Finance_TaxRatePioneersupplies { get; set; }
-        public double? Finance_TaxRateShipyard { get; set; }
-        public double? Finance_TaxRateRearm { get; set; }
-        public double? Finance_TaxRateOutfitting { get; set; }
-        public double? Finance_TaxRateRefuel { get; set; }
-        public double? Finance_TaxRateRepair { get; set; }
-        public double? Finance_TaxRate { get; set; }
-
-        public CrewClass[] Crew { get; set; }
-        public PackClass[] ShipPacks { get; set; }
-        public PackClass[] ModulePacks { get; set; }
+        public CarrierState State { get; private set; }
 
         public JournalCarrierStats(JObject evt) : base(evt, JournalTypeEnum.CarrierStats)
-
-        
         {
-            CarrierID = evt["CarrierID"].Long();
-            Callsign = evt["Callsign"].Str();
-            Name = evt["Name"].Str();
-            DockingAccess = evt["DockingAccess"].Str();
-            AllowNotorious = evt["AllowNotorious"].Bool();
-            FuelLevel = evt["FuelLevel"].Int();
-            JumpRangeCurr = evt["JumpRangeCurr"].Double();
-            JumpRangeMax = evt["JumpRangeMax"].Double();
-            PendingDecommission = evt["PendingDecommission"].Bool();
+            State = new CarrierState();
+            State.CarrierID = evt["CarrierID"].Long();
+            State.Callsign = evt["Callsign"].Str();
+            State.Name = evt["Name"].Str();
+            State.DockingAccess = evt["DockingAccess"].Str();
+            State.AllowNotorious = evt["AllowNotorious"].Bool();
+            State.FuelLevel = evt["FuelLevel"].Int();
+            State.JumpRangeCurr = evt["JumpRangeCurr"].Double();
+            State.JumpRangeMax = evt["JumpRangeMax"].Double();
+            State.PendingDecommission = evt["PendingDecommission"].Bool();
 
             var spaceusage = evt["SpaceUsage"];
             if (spaceusage != null)
             {
-                SpaceUsage_TotalCapacity = spaceusage["TotalCapacity"].Int();
-                SpaceUsage_Crew = spaceusage["Crew"].Int();
-                SpaceUsage_Cargo = spaceusage["Cargo"].Int();
-                SpaceUsage_CargoSpaceReserved = spaceusage["CargoSpaceReserved"].Int();
-                SpaceUsage_ShipPacks = spaceusage["ShipPacks"].Int();
-                SpaceUsage_ModulePacks = spaceusage["ModulePacks"].Int();
-                SpaceUsage_FreeSpace = spaceusage["FreeSpace"].Int();
+                State.SpaceUsage.TotalCapacity = spaceusage["TotalCapacity"].Int();
+                State.SpaceUsage.Crew = spaceusage["Crew"].Int();
+                State.SpaceUsage.Cargo = spaceusage["Cargo"].Int();
+                State.SpaceUsage.CargoSpaceReserved = spaceusage["CargoSpaceReserved"].Int();
+                State.SpaceUsage.ShipPacks = spaceusage["ShipPacks"].Int();
+                State.SpaceUsage.ModulePacks = spaceusage["ModulePacks"].Int();
+                State.SpaceUsage.FreeSpace = spaceusage["FreeSpace"].Int();
             }
 
             var finance = evt["Finance"];
             if (finance != null)
             {
-                Finance_CarrierBalance = finance["CarrierBalance"].Long();
-                Finance_ReserveBalance = finance["ReserveBalance"].Long();
-                Finance_AvailableBalance = finance["AvailableBalance"].Long();
-                Finance_ReservePercent = finance["ReservePercent"].Double();
-                Finance_TaxRate = finance["TaxRate"].DoubleNull();
-                Finance_TaxRatePioneersupplies = finance["TaxRate_pioneersupplies"].DoubleNull();
-                Finance_TaxRateShipyard = finance["TaxRate_shipyard"].DoubleNull();
-                Finance_TaxRateRearm = finance["TaxRate_rearm"].DoubleNull();
-                Finance_TaxRateOutfitting = finance["TaxRate_outfitting"].DoubleNull();
-                Finance_TaxRateRefuel = finance["TaxRate_refuel"].DoubleNull();
-                Finance_TaxRateRepair = finance["TaxRate_repair"].DoubleNull();
+                State.Finance.CarrierBalance = finance["CarrierBalance"].Long();
+                State.Finance.ReserveBalance = finance["ReserveBalance"].Long();
+                State.Finance.AvailableBalance = finance["AvailableBalance"].Long();
+                State.Finance.ReservePercent = finance["ReservePercent"].Double();
+                State.Finance.TaxRatePioneersupplies = finance["TaxRate_pioneersupplies"].DoubleNull();
+                State.Finance.TaxRateShipyard = finance["TaxRate_shipyard"].DoubleNull();
+                State.Finance.TaxRateRearm = finance["TaxRate_rearm"].DoubleNull();
+                State.Finance.TaxRateOutfitting = finance["TaxRate_outfitting"].DoubleNull();
+                State.Finance.TaxRateRefuel = finance["TaxRate_refuel"].DoubleNull();
+                State.Finance.TaxRateRepair = finance["TaxRate_repair"].DoubleNull();
             }
 
-            Crew = evt["Crew"]?.ToObjectQ<CrewClass[]>();
-            ShipPacks = evt["ShipPacks"]?.ToObjectQ<PackClass[]>();
-            ModulePacks = evt["ModulePacks"]?.ToObjectQ<PackClass[]>();
+            var ca = evt["Crew"]?.ToObjectQ<CarrierState.ServicesClass[]>();
+            if (ca != null)
+                State.Services = ca.ToList();
+
+            var sp = evt["ShipPacks"]?.ToObjectQ<CarrierState.PackClass[]>();
+            if (sp != null)
+                State.ShipPacks = sp.ToList();
+
+            var mp = evt["ModulePacks"]?.ToObjectQ<CarrierState.PackClass[]>();
+            if (mp != null)
+                State.ModulePacks = mp.ToList();
         }
 
-        public class CrewClass
-        {
-            public string CrewRole { get; set; }
-            public bool Activated { get; set; }
-            public bool Enabled { get; set; }
-            public string CrewName { get; set; }
-        }
-
-        public class PackClass
-        {
-            public string PackTheme { get; set; }
-            public int PackTier { get; set; }
-        }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            {
-                info = BaseUtils.FieldBuilder.Build("Name: ".T(EDCTx.JournalCarrier_Name), Name,
-                                                    "Call Sign: ".T(EDCTx.JournalCarrier_Callsign), Callsign,
-                                                    "Fuel Level: ;;N0".T(EDCTx.JournalCarrier_FuelLevel), FuelLevel,
-                                                    "Jump Range: ;ly;0.0".T(EDCTx.JournalCarrier_JumpRange), JumpRangeCurr,
-                                                    "Carrier Balance: ; cr;N0".T(EDCTx.JournalCarrier_Balance), Finance_CarrierBalance,
-                                                    "Reserve Balance: ; cr;N0".T(EDCTx.JournalCarrier_ReserveBalance), Finance_ReserveBalance,
-                                                    "Available Balance: ; cr;N0".T(EDCTx.JournalCarrier_AvailableBalance), Finance_AvailableBalance,
-                                                    "Reserve Percent: ;;N1".T(EDCTx.JournalCarrier_ReservePercent), Finance_ReservePercent,
-                                                    "Tax Rate: ;;N1".T(EDCTx.JournalCarrier_TaxRate), Finance_TaxRate,
-                                                    "Tax Rate Pioneersupplies: ;;N1".T(EDCTx.JournalCarrier_TaxRatePioneersupplies), Finance_TaxRatePioneersupplies,
-                                                    "Tax Rate Shipyard: ;;N1".T(EDCTx.JournalCarrier_TaxRateShipyard), Finance_TaxRateShipyard,
-                                                    "Tax Rate Rearm: ;;N1".T(EDCTx.JournalCarrier_TaxRateRearm), Finance_TaxRateRearm,
-                                                    "Tax Rate Outfitting: ;;N1".T(EDCTx.JournalCarrier_TaxRateOutfitting), Finance_TaxRateOutfitting,
-                                                    "Tax Rate Refuel: ;;N1".T(EDCTx.JournalCarrier_TaxRateRefuel), Finance_TaxRateRefuel,
-                                                    "Tax Rate Repair: ;;N1".T(EDCTx.JournalCarrier_TaxRateRepair), Finance_TaxRateRepair
-                                                    );
+            info = BaseUtils.FieldBuilder.Build("Name: ".T(EDCTx.JournalCarrier_Name), State.Name,
+                                                "Call Sign: ".T(EDCTx.JournalCarrier_Callsign), State.Callsign,
+                                                "Fuel Level: ;;N0".T(EDCTx.JournalCarrier_FuelLevel), State.FuelLevel,
+                                                "Jump Range: ;ly;0.0".T(EDCTx.JournalCarrier_JumpRange), State.JumpRangeCurr,
+                                                "Carrier Balance: ; cr;N0".T(EDCTx.JournalCarrier_Balance), State.Finance.CarrierBalance,
+                                                "Reserve Balance: ; cr;N0".T(EDCTx.JournalCarrier_ReserveBalance), State.Finance.ReserveBalance,
+                                                "Available Balance: ; cr;N0".T(EDCTx.JournalCarrier_AvailableBalance), State.Finance.AvailableBalance,
+                                                "Reserve Percent: ;;N1".T(EDCTx.JournalCarrier_ReservePercent), State.Finance.ReservePercent,
+                                                "Tax Rate Pioneersupplies: ;;N1".T(EDCTx.JournalCarrier_TaxRatePioneersupplies), State.Finance.TaxRatePioneersupplies,
+                                                "Tax Rate Shipyard: ;;N1".T(EDCTx.JournalCarrier_TaxRateShipyard), State.Finance.TaxRateShipyard,
+                                                "Tax Rate Rearm: ;;N1".T(EDCTx.JournalCarrier_TaxRateRearm), State.Finance.TaxRateRearm,
+                                                "Tax Rate Outfitting: ;;N1".T(EDCTx.JournalCarrier_TaxRateOutfitting), State.Finance.TaxRateOutfitting,
+                                                "Tax Rate Refuel: ;;N1".T(EDCTx.JournalCarrier_TaxRateRefuel), State.Finance.TaxRateRefuel,
+                                                "Tax Rate Repair: ;;N1".T(EDCTx.JournalCarrier_TaxRateRepair), State.Finance.TaxRateRepair
+                                                );
 
-                detailed = BaseUtils.FieldBuilder.Build("Total Capacity: ".T(EDCTx.JournalCarrier_TotalCapacity), SpaceUsage_TotalCapacity,
-                                                        "Crew: ".T(EDCTx.JournalCarrier_Crew), SpaceUsage_Crew,
-                                                        "Cargo: ".T(EDCTx.JournalCarrier_Cargo), SpaceUsage_Cargo,
-                                                        "Cargo Space Reserved: ".T(EDCTx.JournalCarrier_CargoReserved), SpaceUsage_CargoSpaceReserved,
-                                                        "Ship Packs: ".T(EDCTx.JournalCarrier_ShipPacks), SpaceUsage_ShipPacks,
-                                                        "Module Packs: ".T(EDCTx.JournalCarrier_ModulePacks), SpaceUsage_ModulePacks,
-                                                        "Free Space: ".T(EDCTx.JournalCarrier_FreeSpace), SpaceUsage_FreeSpace);
+            detailed = BaseUtils.FieldBuilder.Build("Total Capacity: ".T(EDCTx.JournalCarrier_TotalCapacity), State.SpaceUsage.TotalCapacity,
+                                                    "Crew: ".T(EDCTx.JournalCarrier_Crew), State.SpaceUsage.Crew,
+                                                    "Cargo: ".T(EDCTx.JournalCarrier_Cargo), State.SpaceUsage.Cargo,
+                                                    "Cargo Space Reserved: ".T(EDCTx.JournalCarrier_CargoReserved), State.SpaceUsage.CargoSpaceReserved,
+                                                    "Ship Packs: ".T(EDCTx.JournalCarrier_ShipPacks), State.SpaceUsage.ShipPacks,
+                                                    "Module Packs: ".T(EDCTx.JournalCarrier_ModulePacks), State.SpaceUsage.ModulePacks,
+                                                    "Free Space: ".T(EDCTx.JournalCarrier_FreeSpace), State.SpaceUsage.FreeSpace);
+
+            detailed += Environment.NewLine;
+            if (State.Services != null && State.Services.Count>0)
+            {
+
+                foreach (var v in State.Services)
+                {
+                    if ( v.Activated )
+                        detailed += BaseUtils.FieldBuilder.Build("Activated:" , v.CrewRole, "", v.CrewName, "< (Disabled);", v.Enabled ) + Environment.NewLine;
+                    else
+                        detailed += BaseUtils.FieldBuilder.Build("Not Activated:", v.CrewRole) + Environment.NewLine;
+                }
             }
+
+            if (State.ShipPacks != null && State.ShipPacks.Count > 0)
+            {
+                foreach (var v in State.ShipPacks)
+                {
+                    detailed += BaseUtils.FieldBuilder.Build("Pack: ", v.PackTheme, "", v.PackTier) + Environment.NewLine;
+                }
+            }
+
+            if (State.ModulePacks != null && State.ModulePacks.Count>0)
+            {
+                foreach (var v in State.ModulePacks)
+                {
+                    detailed += BaseUtils.FieldBuilder.Build("Module: ", v.PackTheme, "", v.PackTier) + Environment.NewLine;
+                }
+
+            }
+        }
+
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
+        {
+            s.Update(this);
         }
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierJumpRequest)]
-    public class JournalCarrierJumpRequest : JournalEntry
+    public class JournalCarrierJumpRequest : JournalEntry, ICarrierStats
     {
         public long CarrierID { get; set; }
         public string SystemName { get; set; }
-        public string Body { get; set; }
         public long SystemAddress { get; set; }
-        public int BodyID { get; set; }
+        public string Body { get; set; }        // if to system, journal seems to write Body==System Name. Body will always be non null
+        public int BodyID { get; set; }         // will be 0 or the body id
 
         public JournalCarrierJumpRequest(JObject evt) : base(evt, JournalTypeEnum.CarrierJumpRequest)
         {
             CarrierID = evt["CarrierID"].Long();
             SystemName = evt["SystemName"].Str();
             Body = evt["Body"].Str();
-            SystemAddress = evt["SystemID"].Long();
+            SystemAddress = evt["SystemAddress"].Long();
             BodyID = evt["BodyID"].Int();
         }
 
@@ -212,42 +364,45 @@ namespace EliteDangerousCore.JournalEvents
                                                 );
             detailed = "";
         }
+
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
+        {
+            s.Update(this);
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierDecommission)]
-    public class JournalCarrierDecommission : JournalEntry, ILedgerJournalEntry    
+    public class JournalCarrierDecommission : JournalEntry, ICarrierStats
     {
         public long CarrierID { get; set; }
         public long ScrapRefund { get; set; }
         public long ScrapTime { get; set; }
-        public DateTime ScrapDateTime { get; set; }
+        public DateTime ScrapDateTimeUTC { get; set; }
 
         public JournalCarrierDecommission(JObject evt) : base(evt, JournalTypeEnum.CarrierDecommission)
         {
             CarrierID = evt["CarrierID"].Long();
             ScrapRefund = evt["ScrapRefund"].Long();
             ScrapTime = evt["ScrapTime"].Long();
-            ScrapDateTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(ScrapTime);
+            ScrapDateTimeUTC = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(ScrapTime);
         }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Refund: ; cr;N0".T(EDCTx.JournalCarrier_Refund), ScrapRefund,
-                                                "at UTC ".T(EDCTx.JournalCarrier_RefundTime), ScrapDateTime
+                                                "at UTC ".T(EDCTx.JournalCarrier_RefundTime), ScrapDateTimeUTC
                                                 );
             detailed = "";
         }
 
-        public void Ledger(Ledger mcl)
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
         {
-            if (ScrapRefund > 0)
-                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "", ScrapRefund);
+            s.Update(this);
         }
-
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierCancelDecommission)]
-    public class JournalCarrierCancelDecommission : JournalEntry
+    public class JournalCarrierCancelDecommission : JournalEntry, ICarrierStats
     {
         public long CarrierID { get; set; }
 
@@ -261,10 +416,15 @@ namespace EliteDangerousCore.JournalEvents
             info = "";
             detailed = "";
         }
+
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
+        {
+            s.Update(this);
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierBankTransfer)]
-    public class JournalCarrierBankTransfer : JournalEntry, ILedgerJournalEntry
+    public class JournalCarrierBankTransfer : JournalEntry, ILedgerJournalEntry, ICarrierStats
     {
         public long CarrierID { get; set; }
         public long Deposit { get; set; }
@@ -294,13 +454,18 @@ namespace EliteDangerousCore.JournalEvents
         {
             mcl.AddEvent(Id, EventTimeUTC, JournalTypeEnum.CarrierBankTransfer, "" , Withdraw - Deposit);
         }
+
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
+        {
+            s.Update(this);
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierDepositFuel)]
-    public class JournalCarrierDepositFuel : JournalEntry, ICommodityJournalEntry, IStatsJournalEntryMatCommod
+    public class JournalCarrierDepositFuel : JournalEntry, ICommodityJournalEntry, IStatsJournalEntryMatCommod, ICarrierStats
     {
         public long CarrierID { get; set; }
-        public int Amount { get; set; }      // being paranoid about this .. don't trust they will be ints forever.
+        public int Amount { get; set; }     
         public int Total { get; set; }
 
         // Istats
@@ -333,15 +498,58 @@ namespace EliteDangerousCore.JournalEvents
             if (stationfaction.HasChars())
                 stats.UpdateCommodity("tritium", -Amount, 0, stationfaction);
         }
+
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
+        {
+            s.Update(this);
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierCrewServices)]
-    public class JournalCarrierCrewServices : JournalEntry
+    public class JournalCarrierCrewServices : JournalEntry, ICarrierStats
     {
         public long CarrierID { get; set; }
         public string Operation { get; set; }
         public string CrewRole { get; set; }
         public string CrewName { get; set; }
+
+        // as per frontier CrewRole Entry
+        public enum ServiceType
+        {
+            BridgeCrew, CommodityTrading, TritiumDepot,        // not listed in crew services, but core items
+            Refuel, Repair, Rearm, VoucherRedemption, Shipyard, Outfitting, BlackMarket, Exploration, Bartender, VistaGenomics, PioneerSupplies,
+            Unknown
+        };
+
+        public ServiceType GetServiceType() { return Enum.TryParse(CrewRole, true, out ServiceType typefound) ? typefound : ServiceType.Unknown; }
+        static public ServiceType GetServiceType(string name) { return Enum.TryParse(name, true, out ServiceType typefound) ? typefound : ServiceType.Unknown; }
+
+        public enum OperationType { Activate, Deactivate, Pause, Resume, Replace, Unknown }
+        public OperationType GetOperation() { return Enum.TryParse(Operation, true, out OperationType typefound) ? typefound : OperationType.Unknown; }
+
+        static public string GetTranslatedServiceName(ServiceType t) { return translatedname[(int)t]; }
+
+        static public bool IsOptionalService(ServiceType t) { return t >= ServiceType.Refuel && t != ServiceType.Unknown; }
+        static public bool IsValidService(ServiceType t) { return t != ServiceType.Unknown; }
+
+        static public int GetServiceCount() { var entries = Enum.GetValues(typeof(EliteDangerousCore.JournalEvents.JournalCarrierCrewServices.ServiceType)); return entries.Length - 1; }      // ignore Unknown
+
+        // as per frontier Operation Entry
+
+        public class ServicesData       // https://elite-dangerous.fandom.com/wiki/Drake-Class_Carrier
+        {
+            public ServicesData(ServiceType t, long cost, long upkeep, long suspendedcost, int cargosize) 
+            { Service = t; InstallCost = cost; UpkeepCost = upkeep; SuspendedUpkeepCost = suspendedcost; CargoSize = cargosize; }
+            public ServiceType Service { get; set; }
+            public long InstallCost { get; set; }
+            public long UpkeepCost { get; set; }
+            public long SuspendedUpkeepCost { get; set; }
+            public long CargoSize { get; set; }
+        }
+
+        // may return null if names don't match in future.
+        public static ServicesData GetDataOnServiceType(ServiceType t) { return Array.Find(ServiceInformation, x => x.Service == t); }
+        public ServicesData GetDataOnService { get { var t = GetServiceType();  return Array.Find(ServiceInformation, x => x.Service == t); } }
 
         public JournalCarrierCrewServices(JObject evt) : base(evt, JournalTypeEnum.CarrierCrewServices)
         {
@@ -359,57 +567,95 @@ namespace EliteDangerousCore.JournalEvents
                                                 );
             detailed = "";
         }
+
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
+        {
+            s.Update(this);
+        }
+
+        private static ServicesData[] ServiceInformation = new ServicesData[]        // verified with game oct 22
+        {
+            new ServicesData(ServiceType.Refuel,40000000,1500000,750000,500),
+            new ServicesData(ServiceType.Repair,50000000,1500000,750000,180),
+            new ServicesData(ServiceType.Rearm,95000000,1500000,750000,250),
+            new ServicesData(ServiceType.VoucherRedemption,150000000,1850000,850000,100),
+            new ServicesData(ServiceType.Shipyard,250000000,6500000,1800000,3000),
+            new ServicesData(ServiceType.Outfitting,250000000,5000000,1500000,1750),
+            new ServicesData(ServiceType.BlackMarket,165000000,2000000,1250000,250),
+            new ServicesData(ServiceType.Exploration,150000000,1850000,700000,120),
+            new ServicesData(ServiceType.Bartender,200000000,1750000,1250000,150),
+            new ServicesData(ServiceType.VistaGenomics,150000000,1500000,700000,120),
+            new ServicesData(ServiceType.PioneerSupplies,250000000,5000000,1500000,200),
+        };
+
+
+        private static string[] translatedname = new string[] {
+            "Bridge Crew".TxID(EDCTx.Services_BridgeCrew),
+            "Commodity Trading".TxID(EDCTx.Services_CommodityTrading),
+            "Tritium Depot".TxID(EDCTx.Services_TritiumDepot),
+            "Refuel Station".TxID(EDCTx.Services_Refuel),
+            "Repair Crews".TxID(EDCTx.Services_Repair),
+            "Armoury".TxID(EDCTx.Services_Rearm),
+            "Redemption Office".TxID(EDCTx.Services_VoucherRedemption),
+            "Shipyard".TxID(EDCTx.Services_Shipyard),
+            "Outfitting".TxID(EDCTx.Services_Outfitting),
+            "Secure Warehouse".TxID(EDCTx.Services_BlackMarket),
+            "Universal Cartographics".TxID(EDCTx.Services_Exploration),
+            "Concourse Bar".TxID(EDCTx.Services_Bartender),
+            "Vista Genomics".TxID(EDCTx.Services_VistaGenomics),
+            "Pioneer Supplies".TxID(EDCTx.Services_PioneerSupplies),
+            "Unknown",
+        };
+
+
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierFinance)]
-    public class JournalCarrierFinance : JournalEntry
+    public class JournalCarrierFinance : JournalEntry, ICarrierStats
     {
         public long CarrierID { get; set; }
-        public long Finance_CarrierBalance { get; set; }        // names aligned to Stats
-        public long Finance_ReserveBalance { get; set; }
-        public long Finance_AvailableBalance { get; set; }
-        public double Finance_ReservePercent { get; set; }
-        public double Finance_TaxRatePioneersupplies { get; set; }
-        public double Finance_TaxRateShipyard { get; set; }
-        public double Finance_TaxRateRearm { get; set; }
-        public double Finance_TaxRateOutfitting { get; set; }
-        public double Finance_TaxRateRefuel { get; set; }
-        public double Finance_TaxRateRepair { get; set; }
+
+        public CarrierState.FinanceClass Finance { get; set; } = new CarrierState.FinanceClass();
 
         public JournalCarrierFinance(JObject evt) : base(evt, JournalTypeEnum.CarrierFinance)
         {
             CarrierID = evt["CarrierID"].Long();
-            Finance_TaxRatePioneersupplies = evt["TaxRate_pioneersupplies"].Double();
-            Finance_TaxRateShipyard = evt["TaxRate_shipyard"].Double();
-            Finance_TaxRateRearm = evt["TaxRate_rearm"].Double();
-            Finance_TaxRateOutfitting = evt["TaxRate_outfitting"].Double();
-            Finance_TaxRateRefuel = evt["TaxRate_refuel"].Double();
-            Finance_TaxRateRepair = evt["TaxRate_repair"].Double();
-            Finance_CarrierBalance = evt["CarrierBalance"].Long();
-            Finance_ReserveBalance = evt["ReserveBalance"].Long();
-            Finance_AvailableBalance = evt["AvailableBalance"].Long();
-            Finance_ReservePercent = evt["ReservePercent"].Double();
+            Finance.TaxRatePioneersupplies = evt["TaxRate_pioneersupplies"].Double();
+            Finance.TaxRateShipyard = evt["TaxRate_shipyard"].Double();
+            Finance.TaxRateRearm = evt["TaxRate_rearm"].Double();
+            Finance.TaxRateOutfitting = evt["TaxRate_outfitting"].Double();
+            Finance.TaxRateRefuel = evt["TaxRate_refuel"].Double();
+            Finance.TaxRateRepair = evt["TaxRate_repair"].Double();
+            Finance.CarrierBalance = evt["CarrierBalance"].Long();
+            Finance.ReserveBalance = evt["ReserveBalance"].Long();
+            Finance.AvailableBalance = evt["AvailableBalance"].Long();
+            Finance.ReservePercent = evt["ReservePercent"].Double();
         }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Carrier Balance: ; cr;N0".T(EDCTx.JournalCarrier_Balance), Finance_CarrierBalance,
-                                                "Reserve Balance: ; cr;N0".T(EDCTx.JournalCarrier_ReserveBalance), Finance_ReserveBalance,
-                                                "Available Balance: ; cr;N0".T(EDCTx.JournalCarrier_AvailableBalance), Finance_AvailableBalance,
-                                                "Reserve Percent: ;;N1".T(EDCTx.JournalCarrier_ReservePercent), Finance_ReservePercent,
-                                                "Tax Rate Pioneersupplies: ;;N1".T(EDCTx.JournalCarrier_TaxRatePioneersupplies), Finance_TaxRatePioneersupplies,
-                                                "Tax Rate Shipyard: ;;N1".T(EDCTx.JournalCarrier_TaxRateShipyard), Finance_TaxRateShipyard,
-                                                "Tax Rate Rearm: ;;N1".T(EDCTx.JournalCarrier_TaxRateRearm), Finance_TaxRateRearm,
-                                                "Tax Rate Outfitting: ;;N1".T(EDCTx.JournalCarrier_TaxRateOutfitting), Finance_TaxRateOutfitting,
-                                                "Tax Rate Refuel: ;;N1".T(EDCTx.JournalCarrier_TaxRateRefuel), Finance_TaxRateRefuel,
-                                                "Tax Rate Repair: ;;N1".T(EDCTx.JournalCarrier_TaxRateRepair), Finance_TaxRateRepair
+            info = BaseUtils.FieldBuilder.Build("Carrier Balance: ; cr;N0".T(EDCTx.JournalCarrier_Balance), Finance.CarrierBalance,
+                                                "Reserve Balance: ; cr;N0".T(EDCTx.JournalCarrier_ReserveBalance), Finance.ReserveBalance,
+                                                "Available Balance: ; cr;N0".T(EDCTx.JournalCarrier_AvailableBalance), Finance.AvailableBalance,
+                                                "Reserve Percent: ;;N1".T(EDCTx.JournalCarrier_ReservePercent), Finance.ReservePercent,
+                                                "Tax Rate Pioneersupplies: ;;N1".T(EDCTx.JournalCarrier_TaxRatePioneersupplies), Finance.TaxRatePioneersupplies,
+                                                "Tax Rate Shipyard: ;;N1".T(EDCTx.JournalCarrier_TaxRateShipyard), Finance.TaxRateShipyard,
+                                                "Tax Rate Rearm: ;;N1".T(EDCTx.JournalCarrier_TaxRateRearm), Finance.TaxRateRearm,
+                                                "Tax Rate Outfitting: ;;N1".T(EDCTx.JournalCarrier_TaxRateOutfitting), Finance.TaxRateOutfitting,
+                                                "Tax Rate Refuel: ;;N1".T(EDCTx.JournalCarrier_TaxRateRefuel), Finance.TaxRateRefuel,
+                                                "Tax Rate Repair: ;;N1".T(EDCTx.JournalCarrier_TaxRateRepair), Finance.TaxRateRepair
                                                 );
             detailed = "";
+        }
+
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
+        {
+            s.Update(this);
         }
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierShipPack)]
-    public class JournalCarrierShipPack : JournalEntry, ILedgerJournalEntry
+    public class JournalCarrierShipPack : JournalEntry, ICarrierStats
     {
         public long CarrierID { get; set; }
         public string Operation { get; set; }       // BuyPack, SellPack
@@ -441,14 +687,14 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void Ledger(Ledger mcl)
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
         {
-            mcl.AddEvent(Id, EventTimeUTC, JournalTypeEnum.CarrierShipPack, Operation.SplitCapsWordFull(), Refund - Cost);
+            s.Update(this);
         }
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierModulePack)]
-    public class JournalCarrierModulePack : JournalEntry, ILedgerJournalEntry
+    public class JournalCarrierModulePack : JournalEntry, ICarrierStats
     {
         public long CarrierID { get; set; }
         public string Operation { get; set; }
@@ -479,53 +725,81 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void Ledger(Ledger mcl)
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
         {
-            mcl.AddEvent(Id, EventTimeUTC, JournalTypeEnum.CarrierShipPack, Operation.SplitCapsWordFull(), Refund - Cost);
+            s.Update(this);
         }
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierTradeOrder)]
-    public class JournalCarrierTradeOrder : JournalEntry
+    public class JournalCarrierTradeOrder : JournalEntry, ICarrierStats
     {
+        public TradeOrder Order { get; set; } = new TradeOrder();
         public long CarrierID { get; set; }
-        public bool BlackMarket { get; set; }
-        public string Commodity { get; set; }
-        public string Commodity_Localised { get; set; }
-        public int? PurchaseOrder { get; set; }
-        public int? SaleOrder { get; set; }
         public bool? CancelTrade { get; set; }
-        public int Price { get; set; }
+
+        [System.Diagnostics.DebuggerDisplay("TO {Commodity} cost{Price} p{PurchaseOrder} s{SaleOrder} bm{BlackMarket}")]
+        public class TradeOrder
+        {
+            public bool BlackMarket { get; set; }
+            public string Commodity { get; set; }
+            public string Commodity_Localised { get; set; }
+            public int Price { get; set; }
+            public int? PurchaseOrder { get; set; }     // non null if purchase order
+            public int? SaleOrder { get; set; }         // non null if sale order
+
+            public DateTime Placed { get; set; }        // additional field
+
+            public TradeOrder() { }
+            public TradeOrder(TradeOrder other)
+            {
+                BlackMarket = other.BlackMarket;
+                Commodity = other.Commodity;
+                Commodity_Localised = other.Commodity_Localised;
+                Price = other.Price;
+                PurchaseOrder = other.PurchaseOrder;
+                SaleOrder = other.SaleOrder;
+                Placed = other.Placed;
+            }
+            public bool Equals(TradeOrder other)    // based on Blackmarket and names
+            {
+                return BlackMarket == other.BlackMarket && Commodity == other.Commodity;
+            }
+        }
 
         public JournalCarrierTradeOrder(JObject evt) : base(evt, JournalTypeEnum.CarrierTradeOrder)
         {
             CarrierID = evt["CarrierID"].Long();
-            BlackMarket = evt["BlackMarket"].Bool();
-            Commodity = evt["Commodity"].Str();
-            Commodity_Localised =JournalFieldNaming.CheckLocalisation(evt["Commodity_Localised"].Str(),Commodity);
-            PurchaseOrder = evt["PurchaseOrder"].IntNull();
-            SaleOrder = evt["SaleOrder"].IntNull();
             CancelTrade = evt["CancelTrade"].BoolNull();
-            Price = evt["Price"].Int();
+
+            Order.BlackMarket = evt["BlackMarket"].Bool();
+            Order.Commodity = evt["Commodity"].Str();
+            Order.Commodity_Localised =JournalFieldNaming.CheckLocalisation(evt["Commodity_Localised"].Str(), Order.Commodity);
+            Order.PurchaseOrder = evt["PurchaseOrder"].IntNull();
+            Order.SaleOrder = evt["SaleOrder"].IntNull();
+            Order.Price = evt["Price"].Int();
+            Order.Placed = this.EventTimeUTC;
         }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            if (PurchaseOrder != null)
+            if (Order.PurchaseOrder != null)
             {
-                info = BaseUtils.FieldBuilder.Build("Purchase: ".T(EDCTx.JournalCarrier_Purchase), Commodity_Localised,
-                                                    "", PurchaseOrder,
-                                                    "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Price);
+                info = BaseUtils.FieldBuilder.Build("Purchase: ".T(EDCTx.JournalCarrier_Purchase), Order.Commodity_Localised,
+                                                    "", Order.PurchaseOrder,
+                                                    "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Order.Price,
+                                                    "<; (Blackmarket)", Order.BlackMarket);
             }
-            else if ( SaleOrder != null)
+            else if (Order.SaleOrder != null)
             {
-                info = BaseUtils.FieldBuilder.Build("Sell: ".T(EDCTx.JournalCarrier_Sell), Commodity_Localised,
-                                                    "", SaleOrder,
-                                                    "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Price);
+                info = BaseUtils.FieldBuilder.Build("Sell: ".T(EDCTx.JournalCarrier_Sell), Order.Commodity_Localised,
+                                                    "", Order.SaleOrder,
+                                                    "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Order.Price,
+                                                    "<; (Blackmarket)", Order.BlackMarket); 
             }
             else if ( CancelTrade != null && CancelTrade.Value == true )
             {
-                info = BaseUtils.FieldBuilder.Build("Cancel Sell of: ".T(EDCTx.JournalCarrier_CancelSell), Commodity_Localised);
+                info = BaseUtils.FieldBuilder.Build("Cancel Sell of: ".T(EDCTx.JournalCarrier_CancelSell), Order.Commodity_Localised, "<; (Blackmarket)", Order.BlackMarket);
             }
             else
             {
@@ -534,10 +808,15 @@ namespace EliteDangerousCore.JournalEvents
 
             detailed = "";
         }
+
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
+        {
+            s.Update(this);
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierDockingPermission)]
-    public class JournalCarrierDockingPermission : JournalEntry
+    public class JournalCarrierDockingPermission : JournalEntry, ICarrierStats
     {
         public long CarrierID { get; set; }
         public string DockingAccess { get; set; }
@@ -556,10 +835,15 @@ namespace EliteDangerousCore.JournalEvents
                                                 ";Allow Notorious".T(EDCTx.JournalCarrier_AllowNotorious), AllowNotorious);
             detailed = "";
         }
+
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
+        {
+            s.Update(this);
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierNameChange)]
-    public class JournalCarrierNameChange : JournalEntry
+    public class JournalCarrierNameChange : JournalEntry, ICarrierStats
     {
         public long CarrierID { get; set; }
         public string Callsign { get; set; }
@@ -577,10 +861,15 @@ namespace EliteDangerousCore.JournalEvents
             info = BaseUtils.FieldBuilder.Build("Name: ".T(EDCTx.JournalCarrier_Name), Name, "Call Sign: ".T(EDCTx.JournalCarrier_Callsign), Callsign);
             detailed = "";
         }
+
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
+        {
+            s.Update(this);
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierJumpCancelled)]
-    public class JournalCarrierJumpCancelled : JournalEntry
+    public class JournalCarrierJumpCancelled : JournalEntry, ICarrierStats
     {
         public long CarrierID { get; set; }
 
@@ -593,6 +882,11 @@ namespace EliteDangerousCore.JournalEvents
         {
             info = "";
             detailed = "";
+        }
+
+        public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
+        {
+            s.Update(this);
         }
     }
 
@@ -640,7 +934,7 @@ namespace EliteDangerousCore.JournalEvents
         public List<CCommodities> Items { get; set; }       // may be null
 
 
-        public override string SummaryName(ISystem sys) { return "Bartender Materials"; }
+        public override string SummaryName(ISystem sys) { return "Bartender Materials".TxID(EDCTx.JournalEntry_BartenderMaterials); }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {

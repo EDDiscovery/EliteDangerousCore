@@ -30,7 +30,10 @@ namespace EliteDangerousCore.Forms
         {
             InitializeComponent();
 
-            var enumlist = new Enum[] { EDCTx.CommanderForm, EDCTx.CommanderForm_extGroupBoxCommanderInfo, EDCTx.CommanderForm_HomeSys, EDCTx.CommanderForm_labelMapCol, EDCTx.CommanderForm_groupBoxCustomIGAU, EDCTx.CommanderForm_checkBoxIGAUSync, EDCTx.CommanderForm_extGroupBoxEDAstro, EDCTx.CommanderForm_extCheckBoxEDAstro, EDCTx.CommanderForm_groupBoxCustomInara, EDCTx.CommanderForm_labelINARAN, EDCTx.CommanderForm_labelInaraAPI, EDCTx.CommanderForm_checkBoxCustomInara, EDCTx.CommanderForm_groupBoxCustomEDSM, EDCTx.CommanderForm_checkBoxCustomEDSMFrom, EDCTx.CommanderForm_labelEDSMAPI, EDCTx.CommanderForm_labelEDSMN, EDCTx.CommanderForm_checkBoxCustomEDSMTo, EDCTx.CommanderForm_groupBoxCustomEDDN, EDCTx.CommanderForm_checkBoxCustomEDDNTo, EDCTx.CommanderForm_groupBoxCustomJournal, EDCTx.CommanderForm_labelCN, EDCTx.CommanderForm_labelJL, EDCTx.CommanderForm_buttonExtBrowse, EDCTx.CommanderForm_extCheckBoxConsoleCommander };
+            var enumlist = new Enum[] { EDCTx.CommanderForm, EDCTx.CommanderForm_extGroupBoxCommanderInfo, EDCTx.CommanderForm_HomeSys, EDCTx.CommanderForm_labelMapCol, EDCTx.CommanderForm_groupBoxCustomIGAU, EDCTx.CommanderForm_checkBoxIGAUSync, EDCTx.CommanderForm_extGroupBoxEDAstro, EDCTx.CommanderForm_extCheckBoxEDAstro, EDCTx.CommanderForm_groupBoxCustomInara, EDCTx.CommanderForm_labelINARAN, EDCTx.CommanderForm_labelInaraAPI, EDCTx.CommanderForm_checkBoxCustomInara, EDCTx.CommanderForm_groupBoxCustomEDSM, EDCTx.CommanderForm_checkBoxCustomEDSMFrom, EDCTx.CommanderForm_labelEDSMAPI, EDCTx.CommanderForm_labelEDSMN, EDCTx.CommanderForm_checkBoxCustomEDSMTo, 
+                                        EDCTx.CommanderForm_groupBoxCustomEDDN, EDCTx.CommanderForm_checkBoxCustomEDDNTo, EDCTx.CommanderForm_groupBoxCustomJournal, 
+                                        EDCTx.CommanderForm_labelCN, EDCTx.CommanderForm_labelJL, EDCTx.CommanderForm_buttonExtBrowse, EDCTx.CommanderForm_extCheckBoxConsoleCommander,
+                                        EDCTx.CommanderForm_extCheckBoxIncludeSubfolders};
             var enumlisttt = new Enum[] { EDCTx.CommanderForm_panel_defaultmapcolor_ToolTip, EDCTx.CommanderForm_checkBoxIGAUSync_ToolTip, EDCTx.CommanderForm_checkBoxCustomInara_ToolTip, EDCTx.CommanderForm_textBoxBorderInaraAPIKey_ToolTip, EDCTx.CommanderForm_textBoxBorderInaraName_ToolTip, EDCTx.CommanderForm_checkBoxCustomEDSMFrom_ToolTip, EDCTx.CommanderForm_checkBoxCustomEDSMTo_ToolTip, EDCTx.CommanderForm_textBoxBorderEDSMAPI_ToolTip, EDCTx.CommanderForm_textBoxBorderEDSMName_ToolTip, EDCTx.CommanderForm_checkBoxCustomEDDNTo_ToolTip, EDCTx.CommanderForm_textBoxBorderCmdr_ToolTip, EDCTx.CommanderForm_buttonExtBrowse_ToolTip, EDCTx.CommanderForm_textBoxBorderJournal_ToolTip };
 
             BaseUtils.Translator.Instance.TranslateControls(this, enumlist);          // before additional controls
@@ -95,6 +98,7 @@ namespace EliteDangerousCore.Forms
             textBoxBorderInaraName.Text = cmdr.InaraName;
             checkBoxCustomInara.Checked = cmdr.SyncToInara;
             extCheckBoxEDAstro.Checked = cmdr.SyncToEDAstro;
+            extCheckBoxIncludeSubfolders.Checked = cmdr.IncludeSubFolders;
 
             extTextBoxAutoCompleteHomeSystem.Text = cmdr.HomeSystem;
             extTextBoxAutoCompleteHomeSystem.SetAutoCompletor(EliteDangerousCore.DB.SystemCache.ReturnSystemAutoCompleteList, true);
@@ -109,7 +113,8 @@ namespace EliteDangerousCore.Forms
                           cmdr.EdsmName != textBoxBorderEDSMName.Text ||
                           cmdr.EDSMAPIKey != textBoxBorderEDSMAPI.Text ||
                           cmdr.SyncFromEdsm != checkBoxCustomEDSMFrom.Checked ||
-                          cmdr.SyncToEdsm != checkBoxCustomEDSMTo.Checked;
+                          cmdr.SyncToEdsm != checkBoxCustomEDSMTo.Checked ||
+                          cmdr.IncludeSubFolders != extCheckBoxIncludeSubfolders.Checked;
 
             cmdr.Name = CommanderName;
             if (extCheckBoxConsoleCommander.Checked)
@@ -128,6 +133,7 @@ namespace EliteDangerousCore.Forms
             cmdr.SyncToEDAstro = extCheckBoxEDAstro.Checked;
             cmdr.HomeSystem = extTextBoxAutoCompleteHomeSystem.Text;
             cmdr.MapColour = panel_defaultmapcolor.BackColor.ToArgb();
+            cmdr.IncludeSubFolders = extCheckBoxIncludeSubfolders.Checked;
 
             return update;
         }
@@ -218,12 +224,6 @@ namespace EliteDangerousCore.Forms
         {
             Close();
         }
-
-        //protected override void OnResize(EventArgs e)
-        //{
-        //    base.OnResize(e);
-        //    Refresh();
-        //}
 
         #endregion
     }

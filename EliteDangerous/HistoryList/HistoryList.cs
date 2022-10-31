@@ -33,6 +33,7 @@ namespace EliteDangerousCore
         public SuitList SuitList { get; private set; } = new SuitList();
         public SuitLoadoutList SuitLoadoutList { get; private set; } = new SuitLoadoutList();
         public EngineeringList Engineering { get; private set; } = new EngineeringList();
+        public CarrierStats Carrier { get; private set; } = new CarrierStats();
 
         private List<HistoryEntry> historylist = new List<HistoryEntry>();  // oldest first here
         private Stats statisticsaccumulator = new Stats();
@@ -69,6 +70,8 @@ namespace EliteDangerousCore
 
             Shipyards.Process(je);
             Outfitting.Process(je);
+
+            Carrier.Process(je,he.Status.OnFootFleetCarrier);
 
             Tuple<ShipInformation, ModulesInStore> ret = ShipInformationList.Process(je, he.WhereAmI, he.System);
             he.UpdateShipInformation(ret.Item1);
@@ -110,7 +113,9 @@ namespace EliteDangerousCore
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL", true).Item1 + " History Load");
 
-            reportProgress("Reading Database");
+            string cmdname = EDCommander.GetCommander(CurrentCommander).Name;
+
+            reportProgress($"Reading Cmdr. {cmdname} database records");
 
             List<JournalEntry.TableData> tabledata;
 
@@ -141,7 +146,8 @@ namespace EliteDangerousCore
             {
                 Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Journal Creation");
 
-                reportProgress($"Creating {tabledata.Count} Journal Entries");
+                reportProgress($"Creating Cmdr. {cmdname} {tabledata.Count.ToString("N0")} journal entries");
+
                 var jes = JournalEntry.CreateJournalEntries(tabledata, cancelRequested);
                 if (jes != null)        // if not cancelled, use it
                     journalentries = jes;
@@ -167,7 +173,7 @@ namespace EliteDangerousCore
                     if (cancelRequested?.Invoke() ?? false)     // if cancelling, stop processing
                         break;
 
-                    reportProgress($"Creating History {eno-1}/{journalentries.Length}");
+                    reportProgress($"Creating Cmdr. {cmdname} history {(eno-1).ToString("N0")}/{journalentries.Length.ToString("N0")}");
                 }
 
                 if (MergeJournalEntries(hist.hlastprocessed?.journalEntry, je))        // if we merge, don't store into HE
@@ -203,6 +209,8 @@ namespace EliteDangerousCore
                 }
            }
 
+            hist.Carrier.CheckCarrierJump(DateTime.UtcNow);         // lets see if a jump has completed.
+
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " History List Created");
 
             foreach (var s in hist.StarScan.ToProcess) System.Diagnostics.Debug.WriteLine($"StarScan could not assign {s.Item1.GetType().Name} {s.Item2?.Name ?? "???"} {s.Item2?.SystemAddress} at {s.Item1.EventTimeUTC}");
@@ -211,7 +219,7 @@ namespace EliteDangerousCore
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Anaylsis End");
 
-            hist.CommanderId = CurrentCommander;
+            hist.CommanderId = CurrentCommander;        // last thing, and this indicates history is loaded.
 
             //foreach( var kvp in hist.StarScan.ScanDataByName) if (kvp.Value.System.SystemAddress == null) System.Diagnostics.Debug.WriteLine($"{kvp.Value.System.Name} no SA");
 

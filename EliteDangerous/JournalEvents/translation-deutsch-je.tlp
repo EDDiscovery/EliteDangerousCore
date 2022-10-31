@@ -1029,7 +1029,7 @@ SECTION JournalEntry
 .Failed: "Failed: " => "Gescheitert: "
 .Completed: "Completed: " => "Abgeschlossen: "
 .Station: "Station: " => "Station: "
-.Settlement: "Settlement: " => "Siedlung"
+.Settlement: "Settlement: " => "Siedlung: "
 .TargetFaction: "Target Faction: " => "Zielfraktion: "
 .Donation: "Donation: " => "Spende: "
 .Permits: "Permits: " => "Autorisierungen: "

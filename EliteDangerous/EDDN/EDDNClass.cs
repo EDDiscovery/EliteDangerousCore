@@ -47,6 +47,7 @@ namespace EliteDangerousCore.EDDN
         private readonly string ApproachSettlementSchema = "https://eddn.edcd.io/schemas/approachsettlement/1";
         private readonly string FSSAllBodiesFoundSchema = "https://eddn.edcd.io/schemas/fssallbodiesfound/1";
         private readonly string FSSSignalDiscoveredSchema = "https://eddn.edcd.io/schemas/fsssignaldiscovered/1";
+        private readonly string FCMaterialsSchema = "https://eddn.edcd.io/schemas/fcmaterials_journal/1";
 
         public EDDNClass()
         {
@@ -85,7 +86,8 @@ namespace EliteDangerousCore.EDDN
                  EntryType == JournalTypeEnum.NavRoute ||
                  EntryType == JournalTypeEnum.FSSAllBodiesFound ||
                  EntryType == JournalTypeEnum.ApproachSettlement ||
-                 EntryType == JournalTypeEnum.FSSSignalDiscovered
+                 EntryType == JournalTypeEnum.FSSSignalDiscovered ||
+                 EntryType == JournalTypeEnum.FCMaterials
                  );
         }
 
@@ -569,7 +571,10 @@ namespace EliteDangerousCore.EDDN
                 ["stationName"] = journal.YardInfo.StationName,
                 ["stationName"] = journal.YardInfo.StationName,
                 ["marketId"] = journal.MarketID,
-                ["modules"] = new JArray(journal.YardInfo.Items.Select(m => JournalFieldNaming.NormaliseFDItemName(m.FDName)))
+                ["modules"] = new JArray(journal.YardInfo.Items
+                                .Where(m => m.FDName.StartsWith("Hpt_", StringComparison.InvariantCultureIgnoreCase) || m.FDName.StartsWith("Int_", StringComparison.InvariantCultureIgnoreCase)
+                                        || m.FDName.Contains("_armour_", StringComparison.InvariantCultureIgnoreCase))
+                                .Select(m => JournalFieldNaming.NormaliseFDItemName(m.FDName)))
             };
 
             message["odyssey"] = journal.IsOdyssey;     // new may 21
@@ -954,7 +959,7 @@ namespace EliteDangerousCore.EDDN
             message["StarPos"] = new JArray(new float[] { (float)system.X, (float)system.Y, (float)system.Z });
 
             JArray ja = new JArray();
-            foreach( var sig in sd.Signals)
+            foreach (var sig in sd.Signals)
             {
                 if (sig.USSType == null || !sig.USSType.Contains("$USS_Type_MissionTarget"))        // not mission targets
                 {
@@ -983,10 +988,47 @@ namespace EliteDangerousCore.EDDN
             message["signals"] = ja;
 
             msg["message"] = message;
-            
+
             return msg;
         }
 
+        public JObject CreateEDDNFCMaterials(JournalFCMaterials sd, ISystem system)
+        {
+            if (sd.Items == null)
+                return null;
+
+            JObject msg = new JObject();
+            msg["header"] = Header();
+            msg["$schemaRef"] = FCMaterialsSchema;
+
+            JObject message = new JObject();
+
+            message["timestamp"] = sd.EventTimeUTC.ToStringZuluInvariant();
+            message["event"] = "FCMaterials";
+            message["horizons"] = sd.IsHorizons;
+            message["odyssey"] = sd.IsOdyssey;
+            message["MarketID"] = sd.MarketID;
+            message["CarrierName"] = sd.CarrierName;
+            message["CarrierID"] = sd.CarrierID;
+
+            JArray ja = new JArray();
+            foreach (var commodity in sd.Items)
+            {
+                JObject sj = new JObject();
+                sj["id"] = commodity.id;
+                sj["Name"] = commodity.fdname_unnormalised;
+                sj["Price"] = commodity.buyPrice;
+                sj["Stock"] = commodity.stock;
+                sj["Demand"] = commodity.demand;
+                ja.Add(sj);
+            }
+
+            message["Items"] = ja;
+        
+            msg["message"] = message;
+
+            return msg;
+        }
 
 
         public bool PostMessage(JObject msg)

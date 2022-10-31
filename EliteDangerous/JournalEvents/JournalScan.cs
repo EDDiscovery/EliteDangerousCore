@@ -373,6 +373,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public string ParentList() { return Parents != null ? string.Join(",", Parents.Select(x => x.Type + ":" + x.BodyID)) : ""; }     // not get on purpose
 
+        [PropertyNameAttribute("N/A")]
+        public string ShipIDForStatsOnly { get; set; }         // used in stats computation only.  Not in main code.
+
         public JournalScan(JObject evt) : base(evt, JournalTypeEnum.Scan)
         {
             ScanType = evt["ScanType"].Str();                               // ALL
@@ -775,13 +778,13 @@ namespace EliteDangerousCore.JournalEvents
         public ScanEstimatedValues GetEstimatedValues()
         {
             if (EstimatedValues == null)
-                EstimatedValues = new ScanEstimatedValues(EventTimeUTC, IsStar, StarTypeID, IsPlanet, PlanetTypeID, Terraformable, nStellarMass, nMassEM, IsOdyssey);
+                EstimatedValues = new ScanEstimatedValues(EventTimeUTC, IsStar, StarTypeID, IsPlanet, PlanetTypeID, Terraformable, nStellarMass, nMassEM, IsOdysseyEstimatedValues);
             return EstimatedValues;
         }
 
         public ScanEstimatedValues RecalcEstimatedValues()
         {
-            return new ScanEstimatedValues(EventTimeUTC, IsStar, StarTypeID, IsPlanet, PlanetTypeID, Terraformable, nStellarMass, nMassEM, IsOdyssey);
+            return new ScanEstimatedValues(EventTimeUTC, IsStar, StarTypeID, IsPlanet, PlanetTypeID, Terraformable, nStellarMass, nMassEM, IsOdysseyEstimatedValues);
         }
 
         public void AccumulateJumponium(ref string jumponium, string sysname)

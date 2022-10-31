@@ -53,7 +53,7 @@ namespace EliteDangerousCore
         public JObject Options { set; get; } = new JObject();
 
         public bool ConsoleCommander { get { return Options.Contains("CONSOLE"); } set { if (value) Options["CONSOLE"] = true; else Options.Remove("CONSOLE"); } }
-
+        public bool IncludeSubFolders { get { return Options["SUBFOLDERS"].Bool(true); } set { Options["SUBFOLDERS"] = value; } }       // default if key is not there is true, past behaviour
         public bool SyncToEDAstro { get { return Options["EDASTRO"].Bool(false); } set { Options["EDASTRO"] = value; } }
 
         // may be null
@@ -125,7 +125,8 @@ namespace EliteDangerousCore
                                         bool toeddn = true,
                                         bool toinara = false, string inaraname = null, string inaraapikey = null,
                                         string homesystem = null, int mapcolour = -1,
-                                        bool toigau = false, string options = "{}")
+                                        bool toigau = false, 
+                                        string options = "{\"SUBFOLDERS\":false}")      // default now is no subfolders
         {
             EDCommander cmdr = UserDatabase.Instance.DBWrite<EDCommander>(cn =>
             {
@@ -316,6 +317,7 @@ namespace EliteDangerousCore
         public EDCommander()
         {
             SyncToEddn = true;          // set it default to try and make them send it.
+            IncludeSubFolders = false;  // and no subfolders as the default now
         }
 
         public EDCommander(DbDataReader reader)

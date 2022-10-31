@@ -54,10 +54,22 @@ namespace EliteDangerousCore
         public bool StartMarker { get { return (Synced & (int)SyncFlags.StartMarker) != 0; } }
         public bool StopMarker { get { return (Synced & (int)SyncFlags.StopMarker) != 0; } }
 
-        public virtual bool IsBeta { get { return TravelLogUnit.Get(TLUId)?.Beta ?? DefaultBetaFlag; } }        // TLUs are cached via the dictionary, no point also holding a local copy
-        public virtual bool IsHorizons { get { return TravelLogUnit.Get(TLUId)?.Horizons ?? DefaultHorizonsFlag; } }
-        public virtual bool IsOdyssey { get { return TravelLogUnit.Get(TLUId)?.Odyssey ?? DefaultOdysseyFlag; } }
-        public virtual string FullPath { get { return TravelLogUnit.Get(TLUId)?.FullName; } }
+        public virtual bool IsBeta { get { return TravelLogUnit.Get(TLUId)?.IsBeta ?? DefaultBetaFlag; } }        // TLUs are cached via the dictionary, no point also holding a local copy
+        public virtual bool IsHorizons { get { return TravelLogUnit.Get(TLUId)?.IsHorizons ?? DefaultHorizonsFlag; } }  // horizons flag from loadgame
+        public virtual bool IsOdyssey { get { return TravelLogUnit.Get(TLUId)?.IsOdyssey ?? DefaultOdysseyFlag; } } // odyseey flag from loadgame
+      
+        public bool IsOdysseyEstimatedValues { get      // work out which estimated values algorithm to use
+            {
+                var tlu = TravelLogUnit.Get(TLUId);
+                if (tlu != null)
+                    return IsOdyssey || GameVersion.StartsWith("4.");       // if odyssey flag is set, OR we have a horizons 4.0 situation
+                else
+                    return DefaultOdysseyFlag;
+            } }
+
+        public virtual string GameVersion { get { return TravelLogUnit.Get(TLUId)?.GameVersion ?? ""; } }
+        public virtual string Build { get { return TravelLogUnit.Get(TLUId)?.Build ?? ""; } }
+        public virtual string FullPath { get { return TravelLogUnit.Get(TLUId)?.FullName ?? ""; } }
 
         public static bool DefaultBetaFlag { get; set; } = false;
         public static bool DefaultHorizonsFlag { get; set; } = false;       // for entries without a TLU (EDSM downloaded made up ones for instance) provide default value
@@ -279,9 +291,9 @@ namespace EliteDangerousCore
         {
             JournalEntry[] jlist = new JournalEntry[tabledata.Count];
 
-            if (tabledata.Count > 10000 )        // a good amount, worth MTing
+            if (tabledata.Count > 10000 && System.Environment.ProcessorCount>1)  // a good amount, worth MTing - just in case someone is using this on a potato
             {
-                int threads = System.Environment.ProcessorCount/2;        // on Rob's system 4 from 8 seems optimal, any more gives little more return
+                int threads = Math.Max(System.Environment.ProcessorCount/2,2);   // leave a few processors for other things
 
                 CountdownEvent cd = new CountdownEvent(threads);
                 for (int i = 0; i < threads; i++)
@@ -291,7 +303,7 @@ namespace EliteDangerousCore
                     Thread t1 = new Thread(new ParameterizedThreadStart(CreateJEinThread));
                     t1.Priority = ThreadPriority.Highest;
                     t1.Name = $"GetAll {i}";
-                    System.Diagnostics.Debug.WriteLine($"Journal Creation Spawn {s}..{e}");
+                    System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.TickCount} Journal Creation Spawn {s}..{e}");
                     t1.Start(new Tuple<List<TableData>, JournalEntry[], int, int, CountdownEvent, Func<bool>>(tabledata, jlist, s, e, cd, cancelRequested));
                 }
 
@@ -323,6 +335,47 @@ namespace EliteDangerousCore
                     break;
                 var e = cmd.Item1[j];
                 cmd.Item2[j] = CreateJournalEntry(e.ID, e.TLUID, e.Cmdr, e.Json, e.Syncflag);
+            }
+
+            cmd.Item5.Signal();
+        }
+
+        #endregion
+
+        #region MT process table data to a callback
+
+        // from table data ID, travellogid, commanderid, event json, sync flag
+        // create journal entries and dispatch to a thread. Entries will bombard the thread in any order, in multiple threads
+        // unused idea but worth keeping
+        static public void MTJournalEntries(List<TableData> tabledata, Action<JournalEntry> dispatchinthread, Func<bool> cancelRequested = null)
+        {
+            int threads = System.Environment.ProcessorCount / 2;        // on Rob's system 4 from 8 seems optimal, any more gives little more return
+
+            CountdownEvent cd = new CountdownEvent(threads);
+            for (int i = 0; i < threads; i++)
+            {
+                int s = i * tabledata.Count / threads;
+                int e = (i + 1) * tabledata.Count / threads;
+                Thread t1 = new Thread(new ParameterizedThreadStart(MTJEinThread));
+                t1.Priority = ThreadPriority.Highest;
+                t1.Name = $"MTGetAll {i}";
+                System.Diagnostics.Debug.WriteLine($"MTJournal Creation Spawn {s}..{e}");
+                t1.Start(new Tuple<List<TableData>, Action<JournalEntry>, int, int, CountdownEvent, Func<bool>>(tabledata, dispatchinthread, s, e, cd, cancelRequested));
+            }
+
+            cd.Wait();
+        }
+
+        private static void MTJEinThread(Object o)
+        {
+            var cmd = (Tuple<List<TableData>, Action<JournalEntry>, int, int, CountdownEvent, Func<bool>>)o;
+
+            for (int j = cmd.Item3; j < cmd.Item4; j++)
+            {
+                if (j % 10000 == 0 && (cmd.Item6?.Invoke() ?? false))       // check every X entries
+                    break;
+                var e = cmd.Item1[j];
+                cmd.Item2.Invoke(CreateJournalEntry(e.ID, e.TLUID, e.Cmdr, e.Json, e.Syncflag)); // and dispatch to caller
             }
 
             cmd.Item5.Signal();

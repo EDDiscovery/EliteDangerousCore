@@ -247,6 +247,7 @@ namespace EliteDangerousCore
         JournalEntry_RemainingJumps,  // Remaining Jumps
         JournalEntry_Nearest, // Nearest:
         JournalEntry_Near, // Near:
+        JournalEntry_BartenderMaterials, 
 
 
         JournalLocOrJump_Type, // "Type " @
@@ -826,6 +827,7 @@ namespace EliteDangerousCore
         CommanderForm_textBoxBorderCmdr_ToolTip, // ToolTip 'Enter commander name as used in Elite Dangerous'
         CommanderForm_buttonExtBrowse_ToolTip, // ToolTip 'Browse to the the journal folder'
         CommanderForm_textBoxBorderJournal_ToolTip, // ToolTip 'Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\\nLeave override journal location blank to use the standard Frontier location for journals'
+        CommanderForm_extCheckBoxIncludeSubfolders,
         CommanderForm_LF, // Select folder where Journal*.log files are stored by Frontier in
         CommanderForm_ND, // Folder does not exist
 
@@ -899,6 +901,10 @@ namespace EliteDangerousCore
         JournalScanInfo_PFSD, //  Premium
         JournalScanInfo_LE, // {0} has {1} level elements.
         JournalScanInfo_scanorganics, // Has been scanned for organics
+
+        Services_BridgeCrew, Services_CommodityTrading, Services_TritiumDepot,        // not listed in crew services, but core items
+        Services_Refuel, Services_Repair, Services_Rearm, Services_VoucherRedemption, Services_Shipyard, Services_Outfitting, Services_BlackMarket,
+        Services_Exploration, Services_Bartender, Services_VistaGenomics, Services_PioneerSupplies,
 
     }
 

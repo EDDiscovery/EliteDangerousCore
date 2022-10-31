@@ -199,9 +199,9 @@ namespace EliteDangerousCore.DB
             }
         }
 
-        public CaptainsLogClass[] FindUTC(DateTime start, DateTime end, int cmdr)
+        public CaptainsLogClass[] FindUTC(DateTime startutc, DateTime endutc, int cmdr)
         {
-            return (from x in LogEntries where x.TimeUTC >= start && x.TimeUTC <= end && x.Commander == cmdr select x).ToArray();
+            return (from x in LogEntries where x.TimeUTC >= startutc && x.TimeUTC <= endutc && x.Commander == cmdr select x).ToArray();
         }
 
         // bk = null, new note, else update. Note systemname/bodyname are not unique.  Id it the only unique property

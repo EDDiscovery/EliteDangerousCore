@@ -32,14 +32,16 @@ namespace EliteDangerousCore.DB
         public const int OdysseyMarker = 0x4000;
         public const int HorizonsMarker = 0x2000;
 
-        public long ID;
-        public int Type;            // bit 15-8 are flags, bits 0-7 are type, see above
-        public int Size;
-        public int? CommanderId;
-        public string FullName { get { return System.IO.Path.Combine(Path, FileName); } }
-        public string Path;
+        public long ID { get; set; }
+        public int Type { get; set; }           // bit 15-8 are flags, bits 0-7 are type, see above
+        public int Size { get; set; }
+        public int? CommanderId { get; set; }
+        public string FullName { get { return System.IO.Path.Combine(Path, filename); } }
+        public string Path { get; set; }
+        public string GameVersion { get; set; } = "";    // either empty, or gameversion from fileheader, overritten by loadgame
+        public string Build { get; set; } = ""; // either empty, or gameversion from fileheader, overritten by loadgame
 
-        private string FileName;        // should not be using this
+        private string filename;       
 
         public TravelLogUnit()
         {
@@ -47,20 +49,22 @@ namespace EliteDangerousCore.DB
 
         public TravelLogUnit(string s)
         {
-            FileName = System.IO.Path.GetFileName(s);
+            filename = System.IO.Path.GetFileName(s);
             Path = System.IO.Path.GetDirectoryName(s);
-            Size = 0;
         }
 
         public TravelLogUnit(DbDataReader dr)
         {
             Object obj;
             ID = (long)dr["id"];
-            FileName = (string)dr["Name"];
+            filename = (string)dr["Name"];
             Type = (int)(long)dr["type"];
             Size = (int)(long)dr["size"];
             Path = (string)dr["Path"];
-            obj =dr["CommanderId"];
+            GameVersion = (string)dr["GameVersion"];
+            Build = (string)dr["Build"];
+
+            obj = dr["CommanderId"];
 
             if (obj == DBNull.Value)
                 CommanderId = null;  
@@ -68,9 +72,10 @@ namespace EliteDangerousCore.DB
                 CommanderId = (int)(long)dr["CommanderId"];
         }
 
-        public bool Beta { get { return ((Path != null && Path.Contains("PUBLIC_TEST_SERVER")) || (Type & BetaMarker) == BetaMarker); } }
-        public bool Horizons { get { return (Type & HorizonsMarker) != 0; } }
-        public bool Odyssey { get { return (Type & OdysseyMarker) != 0; } }
+        public bool IsBeta { get { return ((Path != null && Path.Contains("PUBLIC_TEST_SERVER")) || (Type & BetaMarker) == BetaMarker); } }
+        public bool IsHorizons { get { return (Type & HorizonsMarker) != 0; } }
+        public bool IsOdyssey { get { return (Type & OdysseyMarker) != 0; } }
+        public bool IsBetaFlag { get { return (Type & BetaMarker) == BetaMarker; } }
 
         public bool Add()
         {
@@ -80,15 +85,18 @@ namespace EliteDangerousCore.DB
         internal bool Add(SQLiteConnectionUser cn, DbTransaction tn = null)
         {
             FetchAll();
-            System.Diagnostics.Debug.WriteLine($"Add TLU {Path} {FileName}");
+            System.Diagnostics.Debug.WriteLine($"Add TLU {Path} {filename}");
 
-            using (DbCommand cmd = cn.CreateCommand("Insert into TravelLogUnit (Name, type, size, Path, CommanderID) values (@name, @type, @size, @Path, @CommanderID)", tn))
+            using (DbCommand cmd = cn.CreateCommand(
+            "Insert into TravelLogUnit (Name, type, size, Path, CommanderID, GameVersion, Build) values (@name, @type, @size, @Path, @CommanderID, @GameVersion, @Build)", tn))
             {
-                cmd.AddParameterWithValue("@name", FileName);
+                cmd.AddParameterWithValue("@name", filename);
                 cmd.AddParameterWithValue("@type", Type);
                 cmd.AddParameterWithValue("@size", Size);
                 cmd.AddParameterWithValue("@Path", Path);
                 cmd.AddParameterWithValue("@CommanderID", CommanderId);
+                cmd.AddParameterWithValue("@GameVersion", GameVersion);
+                cmd.AddParameterWithValue("@Build", Build);
 
                 cmd.ExecuteNonQuery();
 
@@ -98,7 +106,7 @@ namespace EliteDangerousCore.DB
                 }
 
                 //System.Diagnostics.Debug.WriteLine("Update cache with " + ID);
-                cache[ID] = this;
+                cacheid[ID] = this;
                 return true;
             }
         }
@@ -110,14 +118,17 @@ namespace EliteDangerousCore.DB
 
         internal bool Update(SQLiteConnectionUser cn, DbTransaction tn = null)
         {
-            using (DbCommand cmd = cn.CreateCommand("Update TravelLogUnit set Name=@Name, Type=@type, size=@size, Path=@Path, CommanderID=@CommanderID  where ID=@id", tn))
+            using (DbCommand cmd = cn.CreateCommand(
+            "Update TravelLogUnit set Name=@Name, Type=@type, size=@size, Path=@Path, CommanderID=@CommanderID, GameVersion=@GameVersion, Build=@Build where ID=@id", tn))
             {
                 cmd.AddParameterWithValue("@ID", ID);
-                cmd.AddParameterWithValue("@Name", FileName);
+                cmd.AddParameterWithValue("@Name", filename);
                 cmd.AddParameterWithValue("@Type", Type);
                 cmd.AddParameterWithValue("@size", Size);
                 cmd.AddParameterWithValue("@Path", Path);
                 cmd.AddParameterWithValue("@CommanderID", CommanderId);
+                cmd.AddParameterWithValue("@GameVersion", GameVersion);
+                cmd.AddParameterWithValue("@Build", Build);
 
                 //System.Diagnostics.Debug.WriteLine("TLU Update " + Name + " " + Size);
                 cmd.ExecuteNonQuery();
@@ -128,9 +139,10 @@ namespace EliteDangerousCore.DB
 
         static private void FetchAll()
         {
-            if (cache == null)
+            if (cacheid == null)
             {
-                cache = new Dictionary<long, TravelLogUnit>();
+                cacheid = new Dictionary<long, TravelLogUnit>();
+                cachepath = new Dictionary<string, TravelLogUnit>();
 
                 UserDatabase.Instance.DBRead(cn =>
                 {
@@ -141,8 +153,9 @@ namespace EliteDangerousCore.DB
                             while (rdr.Read())
                             {
                                 TravelLogUnit sys = new TravelLogUnit(rdr);
-                                System.Diagnostics.Debug.Assert(!cache.ContainsKey(sys.ID));
-                                cache[sys.ID] = sys;
+                                System.Diagnostics.Debug.Assert(!cacheid.ContainsKey(sys.ID));
+                                cacheid[sys.ID] = sys;
+                                cachepath[sys.FullName.ToLowerInvariant()] = sys;       // name is v.important for speed
                             }
                         }
                     }
@@ -153,19 +166,22 @@ namespace EliteDangerousCore.DB
         static public List<TravelLogUnit> GetAll()
         {
             FetchAll();
-            return cache.Values.ToList();
+            return cacheid.Values.ToList();
         }
 
         public static List<string> GetAllNames()
         {
             FetchAll();
-            return cache.Values.Select(x=>x.FullName).ToList();
+            return cacheid.Values.Select(x=>x.FullName).ToList();
         }
 
         public static TravelLogUnit Get(string pathfilename)
         {
             FetchAll();
-            return cache.Values.ToList().Find(x => x.FullName == pathfilename); // null if not there
+            if (cachepath.TryGetValue(pathfilename.ToLowerInvariant(), out TravelLogUnit res))
+                return res;
+            else
+                return null;
         }
 
         public static bool TryGet(string name, out TravelLogUnit tlu)
@@ -177,7 +193,7 @@ namespace EliteDangerousCore.DB
         public static TravelLogUnit Get(long id)
         {
             FetchAll();
-            return cache.ContainsKey(id) ? cache[id] : null;
+            return cacheid.ContainsKey(id) ? cacheid[id] : null;
         }
 
         public static bool TryGet(long id, out TravelLogUnit tlu)
@@ -186,7 +202,8 @@ namespace EliteDangerousCore.DB
             return tlu != null;
         }
 
-        public static Dictionary<long, TravelLogUnit> cache = null;
+        public static Dictionary<long, TravelLogUnit> cacheid = null;
+        public static Dictionary<string, TravelLogUnit> cachepath = null;
     }
 }
 

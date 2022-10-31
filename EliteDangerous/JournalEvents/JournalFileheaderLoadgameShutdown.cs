@@ -30,8 +30,8 @@ namespace EliteDangerousCore.JournalEvents
             Odyssey = evt["Odyssey"].Bool();
         }
 
-        public string GameVersion { get; set; }
-        public string Build { get; set; }
+        public override string GameVersion { get; }
+        public override string Build { get; }
         public string Language { get; set; }
         public int Part { get; set; }
         public bool Odyssey { get; set; }       // NOTE 4.0 'Horizons' has this true, its indicating the client build, not if the user has odyssey. Source Fdev
@@ -131,8 +131,8 @@ namespace EliteDangerousCore.JournalEvents
         public override bool IsOdyssey { get { return Odyssey; } }
 
         public string Language { get; set; }         // odyssey release 2 27/5/21
-        public string GameVersion { get; set; }      // odyssey release 2 27/5/21
-        public string Build { get; set; }            // odyssey release 2 27/5/21
+        public override string GameVersion { get;  }      // odyssey release 2 27/5/21
+        public override string Build { get; }            // odyssey release 2 27/5/21
 
         public string FID { get; set; }
 

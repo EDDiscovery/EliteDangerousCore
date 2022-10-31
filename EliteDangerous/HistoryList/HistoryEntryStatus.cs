@@ -62,6 +62,7 @@ namespace EliteDangerousCore
         public long? MarketId { get; private set; } 
         public TravelStateType TravelState { get; private set; } = TravelStateType.Unknown;  // travel state
         public bool OnFoot { get { return TravelState >= TravelStateType.OnFootStarPort; } }
+        public bool OnFootFleetCarrier { get { return TravelState == TravelStateType.OnFootFleetCarrier; } }
         public ulong ShipID { get; private set; } = ulong.MaxValue;
         public string ShipType { get; private set; } = "Unknown";         // and the ship nice name
         public string ShipTypeFD { get; private set; } = "Unknown";      // FD name
@@ -117,12 +118,12 @@ namespace EliteDangerousCore
                         JournalLocation jloc = je as JournalLocation;
 
                         bool locinstation = jloc.StationType.HasChars() || prev.StationType.HasChars();     // second is required due to alpha 4 stationtype being missing
-                        bool fc1 = prev.StationType.HasChars() && prev.StationType.Equals("Fleet Carrier", System.StringComparison.CurrentCultureIgnoreCase);
+                        bool stationisfc = prev.StationType.HasChars() && prev.StationType.Equals("Fleet Carrier", System.StringComparison.CurrentCultureIgnoreCase);
 
-                        TravelStateType t = fc1 ? TravelStateType.OnFootFleetCarrier : 
+                        TravelStateType t = (stationisfc && !jloc.Docked) ? TravelStateType.OnFootFleetCarrier : 
                            
                             jloc.Docked ? (jloc.Multicrew == true ? TravelStateType.MulticrewDocked : TravelStateType.Docked) :
-                                                (jloc.InSRV == true) ? (jloc.Multicrew == true ? TravelStateType.MulticrewSRV : TravelStateType.SRV) :      // lat is pre 4.0 check
+                                                (jloc.InSRV == true) ? (jloc.Multicrew == true ? TravelStateType.MulticrewSRV : TravelStateType.SRV) :    
                                                     jloc.Taxi == true ? TravelStateType.TaxiNormalSpace :          // can't be in dropship, must be in normal space.
                                                         jloc.OnFoot == true ? (locinstation ? TravelStateType.OnFootStarPort : TravelStateType.OnFootPlanet) :
                                                             jloc.Latitude.HasValue ? (jloc.Multicrew == true ? TravelStateType.MulticrewLanded : TravelStateType.Landed) :
@@ -137,18 +138,17 @@ namespace EliteDangerousCore
                             BodyType = jloc.BodyType,
                             BodyName = jloc.Body,
                             Wanted = jloc.Wanted,
-                            StationName = fc1 ? prev.StationName: (jloc.StationName.Alt(jloc.Docked || locinstation ? jloc.Body : null)),
-                            StationType = fc1 ? prev.StationType : ( jloc.StationType.Alt(prev.StationType).Alt(jloc.Docked || locinstation ? jloc.BodyType : null)),
+                            StationName = stationisfc ? prev.StationName: (jloc.StationName.Alt(jloc.Docked || locinstation ? jloc.Body : null)),
+                            StationType = stationisfc ? prev.StationType : ( jloc.StationType.Alt(prev.StationType).Alt(jloc.Docked || locinstation ? jloc.BodyType : null)),
                             StationFaction = jloc.StationFaction,          // may be null
                         };
                         break;
                     }
 
-                case JournalTypeEnum.CarrierJump:
+                case JournalTypeEnum.CarrierJump:       // missing from 4.0 odyssey
                     var jcj = (je as JournalCarrierJump);
-                    hes = new HistoryEntryStatus(prev)     // we are docked on a carrier
+                    hes = new HistoryEntryStatus(prev)     // we are docked or on foot on a carrier - travel state stays the same
                     {
-                        TravelState = TravelStateType.Docked,
                         MarketId = jcj.MarketID,
                         BodyID = jcj.BodyID,
                         BodyType = jcj.BodyType,
