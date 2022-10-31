@@ -917,6 +917,7 @@ CommanderForm: "CommanderForm" => "Kommandantenformular"
 .extCheckBoxConsoleCommander: "Console Commander" => "Konsolenkommandant"
 .extGroupBoxEDAstro: "EDAstro" => "EDAstro"
 .extCheckBoxEDAstro: "Send Events to EDAstro" => "Sende Ereignisse an EDAstro"
+.extCheckBoxIncludeSubfolders: "Include Subfolders" => "Unterordner einschließen"
 
 SECTION ScreenshotDirectoryWatcher
 
