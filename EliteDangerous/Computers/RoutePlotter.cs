@@ -32,7 +32,7 @@ namespace EliteDangerousCore
         public Point3D Coordsto;
         public string FromSystem;
         public string ToSystem;
-        public SystemsDB.SystemsNearestMetric RouteMethod;
+        public SystemCache.SystemsNearestMetric RouteMethod;
         public bool UseFsdBoost;
         public bool EDSM;
 

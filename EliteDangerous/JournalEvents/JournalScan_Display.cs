@@ -221,7 +221,8 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Signals != null)
                 scanText.AppendFormat("Signals".T(EDCTx.ScanDisplayUserControl_Signals) + ":\n" + JournalSAASignalsFound.SignalList(Signals, 4, "\n") + "\n");
-
+            if (Genuses != null)
+                scanText.AppendFormat("Genuses".T(EDCTx.ScanDisplayUserControl_Genuses) + ":\n" + JournalSAASignalsFound.GenusList(Genuses, 4, "\n") + "\n");
             if (Organics != null)
                 scanText.AppendFormat("Organics".T(EDCTx.ScanDisplayUserControl_Organics) + ":\n" + JournalScanOrganic.OrganicList(Organics, 4, "\n") + "\n");
 
@@ -329,7 +330,7 @@ namespace EliteDangerousCore.JournalEvents
             foreach (KeyValuePair<string, double> comp in PlanetComposition)
             {
                 if (comp.Value > 0)
-                    scanText.AppendFormat(indents + "{0} - {1}%\n", comp.Key, (comp.Value * 100).ToString("N2"));
+                    scanText.AppendFormat(indents + "{0} - {1}%\n", comp.Key, comp.Value.ToString("N2"));
             }
 
             return scanText.ToNullSafeString();
@@ -435,7 +436,14 @@ namespace EliteDangerousCore.JournalEvents
                 information.Append(" (Discovered)".T(EDCTx.JournalScanInfo_DIS));
                 if (showvalues)
                 {
-                    information.Append(' ').Append(ev.EstimatedValueFirstMappedEfficiently.ToString("N0")).Append(" cr");
+                    information.Append(' ').Append((ev.EstimatedValueFirstMappedEfficiently > 0 ? ev.EstimatedValueFirstMappedEfficiently : ev.EstimatedValueBase).ToString("N0")).Append(" cr");
+                }
+            }
+            else if (js.WasDiscovered == false && js.IsStar)
+            {
+                if (showvalues)
+                {
+                    information.Append(' ').Append((ev.EstimatedValueFirstDiscovered > 0 ? ev.EstimatedValueFirstDiscovered : ev.EstimatedValueBase).ToString("N0")).Append(" cr");
                 }
             }
             else

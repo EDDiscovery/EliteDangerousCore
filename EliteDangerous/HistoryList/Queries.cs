@@ -147,6 +147,8 @@ namespace EliteDangerousCore
                 new Query("Contains a Carrier",  "CountCarrierSignals >= 1", QueryType.BuiltIn ),
                 new Query("Contains a NSP",  "CountNotableStellarPhenomenaSignals >= 1", QueryType.BuiltIn ),
 
+                new Query("Ring contains Painite",  "Signals[Iter1].Type Contains Painite", QueryType.BuiltIn ),
+
                 new Query("Scanned all organics on a planet","CountOrganicsScansAnalysed >= 1 And CountOrganicsScansAnalysed == CountBioSignals", QueryType.BuiltIn ),
 
                 new Query("Star has Rings","HasRings IsTrue And IsStar IsTrue", QueryType.BuiltIn ),
@@ -512,16 +514,22 @@ namespace EliteDangerousCore
                         }
                     }
 
+                    // concurrency with the foreground adding new scan nodes as we process
+                    // we don't change data here
+                    // he.Scannode will either be set or not, the foreground does not set it, its only updated by the filler 
+                    // only child lists could be affected. Parents won't get deleted
+
                     if (he.ScanNode != null)      // if it has a scan node
                     {
                         if (wantlevel)
                             scandatavars["Level"] = he.ScanNode.Level.ToStringInvariant();
 
-                        if (he.ScanNode.Parent != null) // if we have a parent..
+                        if (he.ScanNode.Parent != null) // if we have a parent..  conconcurrency should be okay, parent won't be removed
                         {
                             if (varsparent.Count > 0)
                             {
-                                var parentjs = he.ScanNode.Parent.ScanData;               // parent journal entry, may be null
+                                // parent journal entry, may be null. No concurrency issues 
+                                var parentjs = he.ScanNode.Parent.ScanData;         
 
                                 if (parentjs != null) // if want parent scan data
                                 {
@@ -543,7 +551,7 @@ namespace EliteDangerousCore
 
                             if (varsstar.Count > 0)
                             {
-                                var scandata = FindStarOf(he.ScanNode, 0);
+                                var scandata = FindStarJournalScanOf(he.ScanNode, 0);
 
                                 if (scandata != null)
                                 {
@@ -558,7 +566,7 @@ namespace EliteDangerousCore
 
                             if (varsstarstar.Count > 0)
                             {
-                                var scandata = FindStarOf(he.ScanNode, 1);
+                                var scandata = FindStarJournalScanOf(he.ScanNode, 1);
 
                                 if (scandata != null)
                                 {
@@ -572,41 +580,57 @@ namespace EliteDangerousCore
 
 
                             if (wantsiblingcount)
-                                scandatavars["Sibling.Count"] = ((he.ScanNode.Parent.Children.Count - 1)).ToStringInvariant();      // count of children or parent less ours
+                            {
+                                lock ( he.ScanNode.Parent)      // parent.children may have items added, protect
+                                {
+                                    scandatavars["Sibling.Count"] = ((he.ScanNode.Parent.Children.Count - 1)).ToStringInvariant();      // count of children or parent less ours
+                                }
+                            }
 
                             if (varssiblings.Count > 0)        // if want sibling[
                             {
-                                int cno = 1;
-                                foreach (var sn in he.ScanNode.Parent.Children)
+                                lock (he.ScanNode.Parent)
                                 {
-                                    if (sn.Value != he.ScanNode && sn.Value.ScanData != null)        // if not ours and has a scan
+                                    int cno = 1;
+                                    foreach (var sn in he.ScanNode.Parent.Children.EmptyIfNull())
                                     {
-                                        scandatavars.AddPropertiesFieldsOfClass(sn.Value.ScanData, $"Sibling[{cno}].",
-                                                new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                                                varssiblings, ensuredoublerep: true, classsepar: ".");
-                                        cno++;
+                                        if (sn.Value != he.ScanNode && sn.Value.ScanData != null)        // if not ours and has a scan
+                                        {
+                                            scandatavars.AddPropertiesFieldsOfClass(sn.Value.ScanData, $"Sibling[{cno}].",
+                                                    new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
+                                                    varssiblings, ensuredoublerep: true, classsepar: ".");
+                                            cno++;
+                                        }
                                     }
                                 }
                             }
                         }
 
                         if (wantchildcount)
-                            scandatavars["Child.Count"] = ((he.ScanNode.Children?.Count ?? 0)).ToStringInvariant();      // count of children
+                        {
+                            lock ( he.ScanNode)        // Scannode.children may have items added, protect
+                            {
+                                scandatavars["Child.Count"] = ((he.ScanNode.Children?.Count ?? 0)).ToStringInvariant();      // count of children
+                            }
+                        }
 
                         if (varschildren.Count > 0)        // if want children[
                         {
-                            int cno = 1;
-                            foreach (var sn in he.ScanNode.Children.EmptyIfNull())
+                            lock (he.ScanNode)      // Scannode.Children may have items added to
                             {
-                                if (sn.Value.ScanData != null)        // if not ours and has a scan
+                                int cno = 1;
+                                foreach (var sn in he.ScanNode.Children.EmptyIfNull())
                                 {
-                                    int cc = scandatavars.Count;
+                                    if (sn.Value.ScanData != null)        // if not ours and has a scan
+                                    {
+                                        int cc = scandatavars.Count;
 
-                                    scandatavars.AddPropertiesFieldsOfClass(sn.Value.ScanData, $"Child[{cno}].",
-                                            new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                                            varschildren, ensuredoublerep: true, classsepar: ".");
+                                        scandatavars.AddPropertiesFieldsOfClass(sn.Value.ScanData, $"Child[{cno}].",
+                                                new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
+                                                varschildren, ensuredoublerep: true, classsepar: ".");
 
-                                    cno++;
+                                        cno++;
+                                    }
                                 }
                             }
                         }
@@ -707,7 +731,7 @@ namespace EliteDangerousCore
             });
         }
 
-        private static JournalScan FindStarOf(StarScan.ScanNode node, int stardepth)
+        private static JournalScan FindStarJournalScanOf(StarScan.ScanNode node, int stardepth)
         {
             var plist = node?.ScanData?.Parents;
             if (plist != null)
@@ -763,7 +787,7 @@ namespace EliteDangerousCore
 
                 if (sinfowanted)
                 {
-                    var scandata = FindStarOf(hescan.ScanNode, 0);
+                    var scandata = FindStarJournalScanOf(hescan.ScanNode, 0);
 
                     if (scandata != null)
                     {
@@ -773,7 +797,7 @@ namespace EliteDangerousCore
 
                 if (ssinfowanted)
                 {
-                    var scandata = FindStarOf(hescan.ScanNode, 1);
+                    var scandata = FindStarJournalScanOf(hescan.ScanNode, 1);
 
                     if (scandata != null)
                     {

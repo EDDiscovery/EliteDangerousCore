@@ -419,7 +419,7 @@ namespace EliteDangerousCore.EDSM
         "CollectItems",
         "DropItems",
 
-        "Disembark", //TODO: Use for Foot discovery
+        "Disembark", 
         "Embark",
 
         // Load events
@@ -478,7 +478,7 @@ namespace EliteDangerousCore.EDSM
         "AfmuRepairs",
         "CockpitBreached",
         "ReservoirReplenished",
-        "CargoTransfer", //TODO: Synched in Cargo?!
+        "CargoTransfer", 
 
         "ApproachBody",
         "LeaveBody",

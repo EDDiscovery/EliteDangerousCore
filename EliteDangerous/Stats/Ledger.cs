@@ -25,19 +25,14 @@ namespace EliteDangerousCore
     {
         public class Transaction
         {
-            public long jid;
-            public DateTime utctime;                                // when it was done.
-            public JournalTypeEnum jtype;                           // what caused it..
-            public string notes;                                    // notes about the entry
-            public long cashadjust;                                 // cash adjustment for this transaction 0 if none (negative for cost, positive for profit)
-            public long profit;                                     // profit on this transaction
-            public double profitperunit;                            // profit per unit
-            public long cash;                                       // cash total at this point
-
-            public bool IsJournalEventInEventFilter(string[] events)        // events are the uncompressed journal names ModuleBuy etc.
-            {
-                return events.Contains(jtype.ToString());
-            }
+            public long JID { get; set; }
+            public DateTime EventTimeUTC { get; set; }                           // when it was done.
+            public JournalTypeEnum EventType { get; set; }                       // what caused it..
+            public string Notes { get; set; }                                    // notes about the entry
+            public long CashAdjust { get; set; }                                 // cash adjustment for this transaction 0 if none (negative for cost, positive for profit)
+            public long Profit { get; set; }                                     // profit on this transaction
+            public double ProfitPerUnit { get; set; }                            // profit per unit
+            public long CashTotal { get; set; }                                  // cash total at this point
         }
 
         public List<Transaction> Transactions { get; private set; } = new List<Transaction>();
@@ -47,6 +42,12 @@ namespace EliteDangerousCore
 
         public Ledger()
         {
+        }
+
+        public Transaction TransactionBefore(DateTime dateutc)
+        {
+            int index = Transactions.FindLastIndex(x => x.EventTimeUTC < dateutc);
+            return index >= 0 ? Transactions[index] : null;
         }
 
         public void AddEvent(long jidn, DateTime t, JournalTypeEnum j, string n, long? ca)      // event with cash adjust but no profit
@@ -67,14 +68,14 @@ namespace EliteDangerousCore
 
             Transaction tr = new Transaction
             {
-                jid = jidn,
-                utctime = t,
-                jtype = j,
-                notes = text,
-                cashadjust = adjust,
-                profit = profitp,
-                cash = CashTotal,
-                profitperunit = ppu
+                JID = jidn,
+                EventTimeUTC = t,
+                EventType = j,
+                Notes = text,
+                CashAdjust = adjust,
+                Profit = profitp,
+                CashTotal = CashTotal,
+                ProfitPerUnit = ppu
             };
 
             Transactions.Add(tr);

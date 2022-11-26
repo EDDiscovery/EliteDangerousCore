@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2021 EDDiscovery development team
+ * Copyright © 2015 - 2022 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using EliteDangerousCore.JournalEvents;
@@ -53,6 +51,7 @@ namespace EliteDangerousCore
             private JournalScan scandata;            // can be null if no scan, its a place holder, else its a journal scan
             private JournalScan.StarPlanetRing beltdata;    // can be null if not belt. if its a type==belt, it is populated with belt data
             private List<JournalSAASignalsFound.SAASignal> signals; // can be null if no signals for this node, else its a list of signals.
+            private List<JournalSAASignalsFound.SAAGenus> genusus; // can be null if no signals for this node, else its a list of signals.
             private List<JournalScanOrganic> organics;  // can be null if nothing for this node, else a list of organics
 
             public ScanNode() { }
@@ -116,6 +115,20 @@ namespace EliteDangerousCore
                         return;
 
                     signals = value;
+                }
+            }
+            public List<JournalSAASignalsFound.SAAGenus> Genuses       // can be null
+            {
+                get
+                {
+                    return genusus;
+                }
+                set
+                {
+                    if (value == null)
+                        return;
+
+                    genusus = value;
                 }
             }
 

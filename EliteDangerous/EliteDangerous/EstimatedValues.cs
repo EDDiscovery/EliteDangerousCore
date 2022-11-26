@@ -10,12 +10,9 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using System;
-using System.Linq;
 
 namespace EliteDangerousCore
 {
@@ -81,7 +78,12 @@ namespace EliteDangerousCore
                         break;
                 }
 
-                EstimatedValueBase = (int)StarValue32And33(kValue, massstar.HasValue ? massstar.Value : 1.0);
+                double firstdiscovery = 2.6;
+
+                double basevalue = StarValue32And33(kValue, massstar.HasValue ? massstar.Value : 1.0);
+
+                EstimatedValueBase = (int)basevalue;
+                EstimatedValueFirstDiscovered = (int)(basevalue * firstdiscovery);
             }
             else
             {

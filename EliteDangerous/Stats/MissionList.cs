@@ -223,6 +223,7 @@ namespace EliteDangerousCore
             MissionState m = history.GetLast(key);       // we must have a last entry to add
             if (m != null)
             {
+                c.LocalisedName = m.Mission.LocalisedName;      // copy localised name from Mission to this for display purposes
                 history.NextGeneration();
                 history[key] = new MissionState(m, c);
             }
@@ -261,6 +262,7 @@ namespace EliteDangerousCore
             MissionState m = history.GetLast(key);       // we must have a last entry to add
             if (m != null)
             {
+                a.LocalisedName = m.Mission.LocalisedName;      // copy localised name from Mission to this for display purposes
                 history.NextGeneration();
                 history[key] = new MissionState(m, MissionState.StateTypes.Abandoned, a.EventTimeUTC);
             }
@@ -276,6 +278,7 @@ namespace EliteDangerousCore
             MissionState m = history.GetLast(key);       // we must have a last entry to add
             if (m != null)
             {
+                f.LocalisedName = m.Mission.LocalisedName;      // copy localised name from Mission to this for display purposes
                 history.NextGeneration();
                 history[key] = new MissionState(m, MissionState.StateTypes.Failed, f.EventTimeUTC);
             }
@@ -291,6 +294,7 @@ namespace EliteDangerousCore
             MissionState m = history.GetLast(key);       // we must have a last entry to add
             if (m != null)
             {
+                r.LocalisedName = m.Mission.LocalisedName;      // copy localised name from Mission to this for display purposes
                 history.NextGeneration();
                 history[key] = new MissionState(m, r);
             }

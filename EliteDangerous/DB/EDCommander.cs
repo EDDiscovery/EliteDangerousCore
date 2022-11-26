@@ -53,11 +53,17 @@ namespace EliteDangerousCore
         public JObject Options { set; get; } = new JObject();
 
         public bool ConsoleCommander { get { return Options.Contains("CONSOLE"); } set { if (value) Options["CONSOLE"] = true; else Options.Remove("CONSOLE"); } }
-
+        public bool IncludeSubFolders { get { return Options["SUBFOLDERS"].Bool(true); } set { Options["SUBFOLDERS"] = value; } }       // default if key is not there is true, past behaviour
         public bool SyncToEDAstro { get { return Options["EDASTRO"].Bool(false); } set { Options["EDASTRO"] = value; } }
+        public int LinkedCommanderID { get { return Options["LinkedCommander"].I("ID").Int(-1); } }         // if load previous commander exists, its id, else -1
+        public DateTime LinkedCommanderEndTime { get { return Options["LinkedCommander"].I("EndTime").DateTimeUTC(); } }  // DateTime.Min if does not exist
+        public void SetLinkedCommander(int id, DateTime endloadtimeutc)     // set linked commander with an end time load limit
+        {
+            Options["LinkedCommander"] = new JObject() { ["ID"] = id, ["EndTime"] = endloadtimeutc };
+        }
+        public bool LegacyCommander { get { return Options["Legacy"].Bool(); } set { Options["Legacy"] = value; } }         // indicate legacy commander
 
-        // may be null
-        public JObject ConsoleUploadHistory { get { return Options["ConsoleUpload"].Object(); } set { Options["ConsoleUpload"] = value; } }
+        public JObject ConsoleUploadHistory { get { return Options["ConsoleUpload"].Object(); } set { Options["ConsoleUpload"] = value; } }     // may be null
 
         private string homesystem = "";
         private ISystem lookuphomesys = null;
@@ -90,7 +96,10 @@ namespace EliteDangerousCore
         {
             get
             {
-                return BaseUtils.FieldBuilder.Build(";Console", ConsoleCommander, ";EDDN", SyncToEddn, ";EDSM", SyncToEdsm, ";From EDSM", SyncFromEdsm, ";Inara", SyncToInara, ";IGAU", SyncToIGAU, ";EDAstro", SyncToEDAstro );
+                return BaseUtils.FieldBuilder.Build(";Console", ConsoleCommander, ";EDDN", SyncToEddn, ";EDSM", SyncToEdsm, 
+                                                    ";From EDSM", SyncFromEdsm, ";Inara", SyncToInara, ";IGAU", SyncToIGAU, ";EDAstro", SyncToEDAstro,
+                                                    ";Linked", LinkedCommanderID>=0
+                                                    );
             }
         }
 
@@ -125,7 +134,8 @@ namespace EliteDangerousCore
                                         bool toeddn = true,
                                         bool toinara = false, string inaraname = null, string inaraapikey = null,
                                         string homesystem = null, int mapcolour = -1,
-                                        bool toigau = false, string options = "{}")
+                                        bool toigau = false, 
+                                        string options = "{\"SUBFOLDERS\":false}")      // default now is no subfolders
         {
             EDCommander cmdr = UserDatabase.Instance.DBWrite<EDCommander>(cn =>
             {
@@ -316,6 +326,7 @@ namespace EliteDangerousCore
         public EDCommander()
         {
             SyncToEddn = true;          // set it default to try and make them send it.
+            IncludeSubFolders = false;  // and no subfolders as the default now
         }
 
         public EDCommander(DbDataReader reader)

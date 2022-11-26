@@ -137,6 +137,7 @@ namespace EliteDangerousCore.JournalEvents
 
             Count = evt["Count"].IntNull();
             Expiry = evt["Expiry"].DateTimeUTC();
+            System.Diagnostics.Debug.Assert(Expiry.Kind == DateTimeKind.Utc);
 
             PassengerCount = evt["PassengerCount"].IntNull();
             PassengerVIPs = evt["PassengerVIPs"].BoolNull();
@@ -197,7 +198,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string MissionBasicInfo(bool translate)          // MissionList::FullInfo uses this. Journal Entry info brief uses this
         {
-            DateTime exp = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(Expiry);
+            DateTime? exp = Expiry > DateTime.MinValue ? EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(Expiry) : default(DateTime?);
 
             return BaseUtils.FieldBuilder.Build("", LocalisedName,
                                       EDTranslatorExtensions.TCond(translate, "< from ", EDCTx.JournalMissionAccepted_from), Faction,
@@ -336,6 +337,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string Name { get; set; }
+        public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
         public string FDName { get; set; }
         public string Faction { get; set; }
 
@@ -405,7 +407,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
 
-            info = BaseUtils.FieldBuilder.Build("", Name,
+            info = BaseUtils.FieldBuilder.Build("", LocalisedName,
                                         "< from ".T(EDCTx.JournalEntry_from), Faction,
                                         "Reward: ; cr;N0".T(EDCTx.JournalEntry_Reward), Reward,
                                         "Donation: ".T(EDCTx.JournalEntry_Donation), Donation,
@@ -617,6 +619,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string Name { get; set; }
+        public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
         public string FDName { get; set; }
         public ulong MissionId { get; set; }
         public long? Fine { get; set; }
@@ -624,7 +627,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
 
-            info = BaseUtils.FieldBuilder.Build("", Name, "Fine: ".T(EDCTx.JournalEntry_Fine), Fine);
+            info = BaseUtils.FieldBuilder.Build("", LocalisedName, "Fine: ".T(EDCTx.JournalEntry_Fine), Fine);
             detailed = "";
         }
 
@@ -657,11 +660,12 @@ namespace EliteDangerousCore.JournalEvents
 
         public ulong MissionId { get; set; }
         public string Name { get; set; }
+        public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
         public string FDName { get; set; }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = info = BaseUtils.FieldBuilder.Build("Mission name: ".T(EDCTx.JournalEntry_Missionname), Name,
+            info = info = BaseUtils.FieldBuilder.Build("Mission name: ".T(EDCTx.JournalEntry_Missionname), LocalisedName,
                                       "From: ".T(EDCTx.JournalMissionRedirected_From), OldDestinationSystem,
                                       "", OldDestinationStation,
                                       "To: ".T(EDCTx.JournalMissionRedirected_To), NewDestinationSystem,
@@ -691,13 +695,15 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string Name { get; set; }
+        public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
         public string FDName { get; set; }
         public ulong MissionId { get; set; }
         public long? Fine { get; set; }
 
+
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", Name, "Fine: ".T(EDCTx.JournalEntry_Fine), Fine);
+            info = BaseUtils.FieldBuilder.Build("", LocalisedName, "Fine: ".T(EDCTx.JournalEntry_Fine), Fine);
             detailed = "";
         }
 

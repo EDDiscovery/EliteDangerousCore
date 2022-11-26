@@ -33,6 +33,7 @@ namespace EliteDangerousCore
         public SuitList SuitList { get; private set; } = new SuitList();
         public SuitLoadoutList SuitLoadoutList { get; private set; } = new SuitLoadoutList();
         public EngineeringList Engineering { get; private set; } = new EngineeringList();
+        public CarrierStats Carrier { get; private set; } = new CarrierStats();
 
         private List<HistoryEntry> historylist = new List<HistoryEntry>();  // oldest first here
         private Stats statisticsaccumulator = new Stats();
@@ -60,7 +61,6 @@ namespace EliteDangerousCore
             he.UpdateLoadouts(SuitLoadoutList.Process(je, WeaponList, he.WhereAmI, he.System));
 
             he.UpdateStats(je, statisticsaccumulator, he.StationFaction);
-            he.UpdateSystemNote();
 
             CashLedger.Process(je);
             he.Credits = CashLedger.CashTotal;
@@ -69,6 +69,8 @@ namespace EliteDangerousCore
 
             Shipyards.Process(je);
             Outfitting.Process(je);
+
+            Carrier.Process(je,he.Status.OnFootFleetCarrier);
 
             Tuple<ShipInformation, ModulesInStore> ret = ShipInformationList.Process(je, he.WhereAmI, he.System);
             he.UpdateShipInformation(ret.Item1);
@@ -99,38 +101,35 @@ namespace EliteDangerousCore
             return reorderlist;
         }
 
-        // History load system, read DB for entries and make a history up
-
-        public static HistoryList LoadHistory(  Action<string> reportProgress, Func<bool> cancelRequested,
-                                                int CurrentCommander, 
-                                                int fullhistoryloaddaylimit, string essentialitems
-                                             )
+        // History load, read DB for entries and add entries to passed in history
+        // commanderid is table searched, cmdname is for reporting only
+        // if fullhistoryloaddaylimit >0 (days before today), then load ids[] before time, afterwards all items are loaded
+        // if maxdateload set, only load up to that date
+        
+        public static void LoadHistory( HistoryList hist, 
+                                        Action<string> reportProgress, Func<bool> cancelRequested,
+                                        int commanderid, string cmdname, 
+                                        int fullhistoryloaddaylimit, JournalTypeEnum[] loadedbeforelimitids, 
+                                        DateTime? maxdateload
+                                        )
         {
-            HistoryList hist = new HistoryList();
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL", true).Item1 + " History Load");
 
-            reportProgress("Reading Database");
+            reportProgress($"Reading Cmdr. {cmdname} database records");
 
             List<JournalEntry.TableData> tabledata;
 
-            if (fullhistoryloaddaylimit > 0)
+            if (fullhistoryloaddaylimit > 0)            // if we are limiting 
             {
-                var list = (essentialitems == nameof(JournalEssentialEvents.JumpScanEssentialEvents)) ? JournalEssentialEvents.JumpScanEssentialEvents :
-                           (essentialitems == nameof(JournalEssentialEvents.JumpEssentialEvents)) ? JournalEssentialEvents.JumpEssentialEvents :
-                           (essentialitems == nameof(JournalEssentialEvents.NoEssentialEvents)) ? JournalEssentialEvents.NoEssentialEvents :
-                           (essentialitems == nameof(JournalEssentialEvents.FullStatsEssentialEvents)) ? JournalEssentialEvents.FullStatsEssentialEvents :
-                            JournalEssentialEvents.EssentialEvents;
-
-                tabledata = JournalEntry.GetTableData(CurrentCommander,
-                    ids: list,
-                    allidsafterutc: DateTime.UtcNow.Subtract(new TimeSpan(fullhistoryloaddaylimit, 0, 0, 0)),
+                tabledata = JournalEntry.GetTableData(commanderid, enddateutc:maxdateload,
+                    ids: loadedbeforelimitids, allidsafterutc: DateTime.UtcNow.Subtract(new TimeSpan(fullhistoryloaddaylimit, 0, 0, 0)),
                     cancelRequested:cancelRequested
                     );
             }
             else
             {
-                tabledata = JournalEntry.GetTableData(CurrentCommander, cancelRequested:cancelRequested);
+                tabledata = JournalEntry.GetTableData(commanderid, cancelRequested:cancelRequested, enddateutc:maxdateload);
             }
  
             JournalEntry[] journalentries = new JournalEntry[0];       // default empty array so rest of code works
@@ -141,7 +140,8 @@ namespace EliteDangerousCore
             {
                 Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Journal Creation");
 
-                reportProgress($"Creating {tabledata.Count} Journal Entries");
+                reportProgress($"Creating Cmdr. {cmdname} {tabledata.Count.ToString("N0")} journal entries");
+
                 var jes = JournalEntry.CreateJournalEntries(tabledata, cancelRequested);
                 if (jes != null)        // if not cancelled, use it
                     journalentries = jes;
@@ -156,8 +156,6 @@ namespace EliteDangerousCore
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Journals read from DB");
 
-            hist.hlastprocessed = null;
-
             int eno = 0;
 
             foreach (JournalEntry je in journalentries)
@@ -167,7 +165,7 @@ namespace EliteDangerousCore
                     if (cancelRequested?.Invoke() ?? false)     // if cancelling, stop processing
                         break;
 
-                    reportProgress($"Creating History {eno-1}/{journalentries.Length}");
+                    reportProgress($"Creating Cmdr. {cmdname} history {(eno-1).ToString("N0")}/{journalentries.Length.ToString("N0")}");
                 }
 
                 if (MergeJournalEntries(hist.hlastprocessed?.journalEntry, je))        // if we merge, don't store into HE
@@ -182,26 +180,25 @@ namespace EliteDangerousCore
                     continue;
                 }
 
-                HistoryEntry he = hist.MakeHistoryEntry(je);
-
-                //if (he.EntryType == JournalTypeEnum.FCMaterials)      // Solely for debugging if you've missed the event.
-                //{
-                //    var jfcm = je as JournalFCMaterials;
-                //    jfcm.ReadAdditionalFiles(System.IO.Path.GetDirectoryName(jfcm.FullPath));
-                //}
+                HistoryEntry hecur = hist.MakeHistoryEntry(je);
 
                 // System.Diagnostics.Debug.WriteLine("++ {0} {1}", he.EventTimeUTC.ToString(), he.EntryType);
-                var reorderlist = hist.ReorderRemove(he);
+                var reorderlist = hist.ReorderRemove(hecur);
 
                 foreach (var heh in reorderlist.EmptyIfNull())
                 {
+                    heh.journalEntry.SetSystemNote();                // since we are displaying it, we can check here to see if a system note needs assigning
+
                     // System.Diagnostics.Debug.WriteLine("   ++ {0} {1}", heh.EventTimeUTC.ToString(), heh.EntryType);
                     heh.Index = hist.historylist.Count; // store its index for quick ordering, after all removal etc
+
                     hist.historylist.Add(heh);        // then add to history
                     hist.AddToVisitsScan(null);  // add to scan database but don't complain
                     //System.Diagnostics.Debug.WriteLine($"Add {heh.EventTimeUTC} {heh.EntryType} {hist.StarScan.ScanDataByName.Count} {hist.Visited.Count}");
                 }
            }
+
+            hist.Carrier.CheckCarrierJump(DateTime.UtcNow);         // lets see if a jump has completed.
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " History List Created");
 
@@ -211,7 +208,20 @@ namespace EliteDangerousCore
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Anaylsis End");
 
-            hist.CommanderId = CurrentCommander;
+            hist.CommanderId = commanderid;        // last thing, and this indicates history is loaded.
+
+            // now, with a history, we set some globals used by EDSM/EDDN for sending or creating new entries, in the same style as the last good TLU entry
+
+            for( int entry = hist.Count-1; entry>=0; entry--)
+            {
+                if (hist[entry].journalEntry.IsJournalSourced )      // if we have a journal record
+                {
+                    JournalEntry.DefaultHorizonsFlag = hist[entry].journalEntry.IsHorizons;
+                    JournalEntry.DefaultOdysseyFlag = hist[entry].journalEntry.IsOdyssey;
+                    JournalEntry.DefaultBetaFlag = hist[entry].journalEntry.IsBeta;
+                    break;
+                }
+            }
 
             //foreach( var kvp in hist.StarScan.ScanDataByName) if (kvp.Value.System.SystemAddress == null) System.Diagnostics.Debug.WriteLine($"{kvp.Value.System.Name} no SA");
 
@@ -232,8 +242,6 @@ namespace EliteDangerousCore
                 }
             }
 #endif
-
-            return hist;
         }
 
         private void AddToVisitsScan(Action<string> logerror)
@@ -387,12 +395,6 @@ namespace EliteDangerousCore
 
             return false;
         }
-
- /* 
-  * need to check
-        Odyssey 5: Trade MR: TradeMicroResource Shiplocker 
-        Odyssey 5: Sell MR: SellMicroResource Shiplocker 
-*/
 
         private List<HistoryEntry> ReorderRemove(HistoryEntry he)
         {

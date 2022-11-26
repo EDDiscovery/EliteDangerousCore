@@ -28,20 +28,23 @@ namespace EliteDangerousCore
         {
             if (ScanDataBySysaddr.TryGetValue(jsa.SystemAddress, out SystemNode sn))       // if we have it
             {
-              //  System.Diagnostics.Debug.WriteLine($"Add barycentre {jsa.StarSystem} {jsa.BodyID}");
-                sn.Barycentres[jsa.BodyID] = jsa;        // add it
-
-                // find any stored scans associated with this scanbarycentre and assign
-
-                var scannodelist = sn.Bodies.Where(x => x.ScanData?.Parents != null && x.ScanData.Parents.FindIndex(y=>y.BodyID==jsa.BodyID)>=0);   // all entries where JSA BodyID occurs
-
-                foreach (var scannode in scannodelist)
+                lock (sn)
                 {
-                    for ( int i = 0; i < scannode.ScanData.Parents.Count; i++)   // look thru the list, and assign at the correct level
+                    //  System.Diagnostics.Debug.WriteLine($"Add barycentre {jsa.StarSystem} {jsa.BodyID}");
+                    sn.Barycentres[jsa.BodyID] = jsa;        // add it
+
+                    // find any stored scans associated with this scanbarycentre and assign
+
+                    var scannodelist = sn.Bodies.Where(x => x.ScanData?.Parents != null && x.ScanData.Parents.FindIndex(y => y.BodyID == jsa.BodyID) >= 0);   // all entries where JSA BodyID occurs
+
+                    foreach (var scannode in scannodelist)
                     {
-                        if (scannode.ScanData.Parents[i].BodyID == jsa.BodyID)
+                        for (int i = 0; i < scannode.ScanData.Parents.Count; i++)   // look thru the list, and assign at the correct level
                         {
-                            scannode.ScanData.Parents[i].Barycentre = jsa;
+                            if (scannode.ScanData.Parents[i].BodyID == jsa.BodyID)
+                            {
+                                scannode.ScanData.Parents[i].Barycentre = jsa;
+                            }
                         }
                     }
                 }

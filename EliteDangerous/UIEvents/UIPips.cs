@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 using System;
 
@@ -29,6 +29,12 @@ namespace EliteDangerousCore.UIEvents
         }
 
         public Pips Value { get; private set; }     // these are in PIPS, not in half pips like the journal gives us.
+
+        public override string ToString()
+        {
+            return $"{Value.Systems}-{Value.Engines}-{Value.Weapons}";
+        }
+
 
         public class Pips
         {
@@ -51,9 +57,9 @@ namespace EliteDangerousCore.UIEvents
 
             public bool Valid { get { return Systems > double.MinValue; } }
 
-            public double Systems;
-            public double Engines;
-            public double Weapons;
+            public double Systems { get; set; }
+            public double Engines { get; set; }
+            public double Weapons { get; set; }
 
         }
     }

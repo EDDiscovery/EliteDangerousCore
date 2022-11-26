@@ -34,8 +34,6 @@ namespace EliteDangerousCore
             {
                 bool hasmodule;
 
-                // TODO: Implement thread-safe TValue IDictionary<TKey, TValue>.GetOrAdd<TState>(TKey key, TState state, Func<TKey, TState, TValue> valueCreator) extension method
-
                 lock (synthesisedmodules)  // Ensure synthesisedmodules is in a valid state
                 {
                     hasmodule = synthesisedmodules.TryGetValue(lowername, out m);
@@ -1466,7 +1464,7 @@ namespace EliteDangerousCore
             { "int_shieldgenerator_size8_class4", new ShipModule(128064296, 256, 4.8F, "OptMass:1800t, MaxMass:4500t, MinMass:900t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 8 Rating B", "Shield Generator")},
             { "int_shieldgenerator_size8_class5", new ShipModule(128064297, 160, 5.6F, "OptMass:1800t, MaxMass:4500t, MinMass:900t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 8 Rating A", "Shield Generator")},
             { "int_supercruiseassist", new ShipModule(128932273, 0, 0.3F, null,"Supercruise Assist", "Supercruise Assist")},
-            { "int_detailedsurfacescanner_tiny", new ShipModule(128666634, 1.3, 0, null,"Detailed Surface Scanner", "Detailed Surface Scanner")},
+            { "int_detailedsurfacescanner_tiny", new ShipModule(128666634, 0, 0, null,"Detailed Surface Scanner", "Detailed Surface Scanner")},     //FRONTIER DATA has this 1.3t, EDSY/Coriolis/Looking at the journal unladenmass has it at 0t
 
             ///////////////////////////////////// FROM STANDARD FOLDER SCAN
 

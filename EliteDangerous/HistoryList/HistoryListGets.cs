@@ -31,7 +31,9 @@ namespace EliteDangerousCore
         public ShipYardList Shipyards = new ShipYardList(); // yards in space (not meters)
         public OutfittingList Outfitting = new OutfittingList();        // outfitting on stations
         public StarScan StarScan { get; private set; } = new StarScan();      // the results of scanning
-        public int CommanderId { get; private set; }
+        public int CommanderId { get; private set; } = -999;                 // set by history load at end, indicating commander loaded
+        public bool HistoryLoaded { get { return CommanderId > -999; } }      // history is loaded
+        public bool IsRealCommanderId { get { return CommanderId >= 0; } }      // history is loaded with a non hidden commander log etc
         public Dictionary<string, HistoryEntry> Visited { get; private set; } = new Dictionary<string, HistoryEntry>(StringComparer.InvariantCultureIgnoreCase);  // not in any particular order.
         public string LastSystem { get; private set; }                          // last system seen in
 
@@ -354,7 +356,7 @@ namespace EliteDangerousCore
         {
             if (frominclusive is null)
                 return GetLastHistoryEntry(where);
-            else 
+            else
             {
                 for (int index = frominclusive.EntryNumber - 1; index >= 0 && index < historylist.Count; index--)
                 {
@@ -364,6 +366,18 @@ namespace EliteDangerousCore
 
                 return null;
             }
+        }
+
+        // find the condition, from this HE inclusive, backwards, until stop date is passed.
+        public HistoryEntry GetLastHistoryEntry(Predicate<HistoryEntry> where, HistoryEntry frominclusive, DateTime stopbeforeinc)
+        {
+            for (int index = frominclusive.EntryNumber - 1; index >= 0 && index < historylist.Count && historylist[index].EventTimeUTC >= stopbeforeinc; index--)
+            {
+                if (where(historylist[index]))
+                    return historylist[index];
+            }
+
+            return null;
         }
 
         // sysinfo, discoveryform
@@ -379,22 +393,30 @@ namespace EliteDangerousCore
         }
 
         //stats
-        public bool IsTravellingUTC(out DateTime startTimeutc)
+        // return trip start/stop he's within the date range.
+        // may return start but no end, or end without a start, or both null
+        public void FindStartStopMarkersWithinDateTimeRange(DateTime starttimeutc, DateTime endtimeutc, out HistoryEntry tripstarthe, out HistoryEntry tripendhe)
         {
-            bool inTrip = false;
-            startTimeutc = DateTime.UtcNow;
-            HistoryEntry lastStartMark = GetLastHistoryEntry(x => x.StartMarker);
-            if (lastStartMark != null)
+            tripstarthe = tripendhe = null;
+
+            HistoryEntry firstdatebeforeend = GetLastHistoryEntry(x => x.EventTimeUTC <= endtimeutc);        // where is the entry at the end time..
+
+            if (firstdatebeforeend != null)     // found an entry within the range.
             {
-                HistoryEntry lastStopMark = GetLastHistoryEntry(x => x.StopMarker);
-                inTrip = lastStopMark == null || lastStopMark.EventTimeUTC < lastStartMark.EventTimeUTC;
-                if (inTrip)
-                    startTimeutc = lastStartMark.EventTimeUTC;
+                tripendhe = GetLastHistoryEntry(x => x.StopMarker, firstdatebeforeend, starttimeutc);       // from endtime, find the first stop marker
+
+                if (tripendhe != null)            // found one
+                {
+                    tripstarthe = GetLastHistoryEntry(x => x.StartMarker, tripendhe, starttimeutc);        // find the start marker if in the range.  May be null
+                }
+                else
+                {           // no end marker, is there a start?
+                    tripstarthe = GetLastHistoryEntry(x => x.StartMarker, firstdatebeforeend, starttimeutc);        // find the start marker if in the range.  May be null
+                }
             }
-            return inTrip;
         }
 
-       // historylist
+        // historylist
         public string GetCommanderFID()     // may be null
         {
             var cmdr = historylist.FindLast(x => x.EntryType == JournalTypeEnum.Commander);
@@ -608,22 +630,13 @@ namespace EliteDangerousCore
         public void ReturnSystemInfo(HistoryEntry he, out string allegiance, out string economy, out string gov,
                                 out string faction, out string factionstate, out string security)
         {
-            EliteDangerousCore.JournalEvents.JournalFSDJump lastfsd =
-                GetLastHistoryEntry(x => x.journalEntry is EliteDangerousCore.JournalEvents.JournalFSDJump, he)?.journalEntry as EliteDangerousCore.JournalEvents.JournalFSDJump;
-            // same code in spanel.. not sure where to put it
-            allegiance = lastfsd != null && lastfsd.Allegiance.Length > 0 ? lastfsd.Allegiance : he.System.Allegiance.ToNullUnknownString();
-            if (allegiance.IsEmpty())
-                allegiance = "-";
-            economy = lastfsd != null && lastfsd.Economy_Localised.Length > 0 ? lastfsd.Economy_Localised : he.System.PrimaryEconomy.ToNullUnknownString();
-            if (economy.IsEmpty())
-                economy = "-";
-            gov = lastfsd != null && lastfsd.Government_Localised.Length > 0 ? lastfsd.Government_Localised : he.System.Government.ToNullUnknownString();
-            faction = lastfsd != null && lastfsd.FactionState.Length > 0 ? lastfsd.Faction : "-";
-            factionstate = lastfsd != null && lastfsd.FactionState.Length > 0 ? lastfsd.FactionState : he.System.State.ToNullUnknownString();
-            factionstate = factionstate.SplitCapsWord();
-            if (factionstate.IsEmpty())
-                factionstate = "-";
+            JournalFSDJump lastfsd = GetLastHistoryEntry(x => x.journalEntry is EliteDangerousCore.JournalEvents.JournalFSDJump, he)?.journalEntry as EliteDangerousCore.JournalEvents.JournalFSDJump;
 
+            allegiance = lastfsd != null && lastfsd.Allegiance.Length > 0 ? lastfsd.Allegiance.SplitCapsWordFull() : "?";
+            economy = lastfsd != null && lastfsd.Economy_Localised.Length > 0 ? lastfsd.Economy_Localised : "?";
+            gov = lastfsd != null && lastfsd.Government_Localised.Length > 0 ? lastfsd.Government_Localised : "?";
+            faction = lastfsd != null && lastfsd.Faction.Length > 0 ? lastfsd.Faction.SplitCapsWordFull() : "-";
+            factionstate = lastfsd != null && lastfsd.FactionState.Length > 0 ? lastfsd.FactionState.SplitCapsWordFull() : "?";
             security = lastfsd != null && lastfsd.Security_Localised.Length > 0 ? lastfsd.Security_Localised : "-";
         }
 

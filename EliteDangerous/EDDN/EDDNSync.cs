@@ -123,6 +123,8 @@ namespace EliteDangerousCore.EDDN
         {
             EDDNClass eddn = new EDDNClass();
 
+            bool beta = false;
+
             if (he.Commander != null)
             {
                 eddn.CommanderName = he.Commander.EdsmName;
@@ -131,11 +133,11 @@ namespace EliteDangerousCore.EDDN
                     eddn.CommanderName = he.Commander.Name;
 
                 if (he.Commander.Name.StartsWith("[BETA]", StringComparison.InvariantCultureIgnoreCase))
-                    eddn.IsBeta = true;
+                    beta = true;
             }
 
-            if (he.journalEntry.IsBeta || sendtotest )      
-                eddn.IsBeta = true;
+            if (he.journalEntry.IsBeta)
+                beta = true;
 
             JournalEntry je = he.journalEntry;
 
@@ -178,15 +180,15 @@ namespace EliteDangerousCore.EDDN
             {
                 msg = eddn.CreateEDDNShipyardMessage(je as JournalShipyard);
             }
-            else if (je.EventTypeID == JournalTypeEnum.Market)
+            else if (je.EventTypeID == JournalTypeEnum.Market)      // from the journal
             {
                 JournalMarket jm = je as JournalMarket;
-                msg = eddn.CreateEDDNCommodityMessage(jm.Commodities, jm.IsOdyssey, jm.IsHorizons, jm.StarSystem, jm.Station, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned
+                msg = eddn.CreateEDDNCommodityMessage(jm.GameVersion,jm.Build, jm.Commodities, jm.IsOdyssey, jm.IsHorizons, jm.StarSystem, jm.Station, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned
             }
-            else if (je.EventTypeID == JournalTypeEnum.EDDCommodityPrices)
+            else if (je.EventTypeID == JournalTypeEnum.EDDCommodityPrices)  // synthesised EDD
             {
                 JournalEDDCommodityPrices jm = je as JournalEDDCommodityPrices;
-                msg = eddn.CreateEDDNCommodityMessage(jm.Commodities, jm.IsOdyssey, jm.IsHorizons, jm.StarSystem, jm.Station, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned
+                msg = eddn.CreateEDDNCommodityMessage( "CAPI-market", "", jm.Commodities, jm.IsOdyssey, jm.IsHorizons, jm.StarSystem, jm.Station, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned
             }
             else if (je.EventTypeID == JournalTypeEnum.FSSDiscoveryScan)
             {
@@ -222,13 +224,17 @@ namespace EliteDangerousCore.EDDN
                 var fss = je as JournalFSSSignalDiscovered;
                 msg = eddn.CreateEDDNFSSSignalDiscovered(fss, fss.EDDNSystem != null ? fss.EDDNSystem : he.System);
             }
+            else if (je.EventTypeID == JournalTypeEnum.FCMaterials)       // not yet
+            {
+                msg = eddn.CreateEDDNFCMaterials(je as JournalFCMaterials, he.System);
+            }
 
             if (msg != null)
             {
                 if (sendtotest) // make sure it looks fresh if send to test
                     msg["message"]["timestamp"] = DateTime.UtcNow.ToStringZuluInvariant();
 
-                if (eddn.PostMessage(msg) )
+                if (eddn.PostMessage(msg,beta,sendtotest))
                 {
                     he.journalEntry.SetEddnSync();
                     return true;

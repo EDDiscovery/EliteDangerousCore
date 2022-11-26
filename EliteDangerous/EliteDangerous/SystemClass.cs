@@ -146,17 +146,6 @@ namespace EliteDangerousCore
         {
             this.EDSMID = sys.EDSMID;
             this.Source = sys.Source;
-
-            this.Population = sys.Population;
-            this.Faction = sys.Faction;
-            this.Government = sys.Government;
-            this.Allegiance = sys.Allegiance;
-            this.State = sys.State;
-            this.Security = sys.Security;
-            this.PrimaryEconomy = sys.PrimaryEconomy;
-            this.Power = sys.Power;
-            this.PowerState = sys.PowerState;
-            this.NeedsPermit = sys.NeedsPermit;
         }
 
         public SystemClass(string name) : base()
@@ -199,26 +188,6 @@ namespace EliteDangerousCore
         public long EDSMID { get; set; }
         public SystemSource Source { get; set; }
 
-        public long Population { get; set; }        // just because its 0 does not mean it may have other info
-        public string Faction { get; set; }
-        public EDGovernment Government { get; set; }
-        public EDAllegiance Allegiance { get; set; }
-        public EDState State { get; set; }
-        public EDSecurity Security { get; set; }
-        public EDEconomy PrimaryEconomy { get; set; }
-        public string Power { get; set; }
-        public string PowerState { get; set; }
-        public int NeedsPermit { get; set; }
-
-        public bool HasSystemStateInfo
-        {
-            get
-            {
-                return Government != EDGovernment.Unknown || NeedsPermit != 0 || Allegiance != EDAllegiance.Unknown ||
-                       State != EDState.Unknown || Security != EDSecurity.Unknown || PrimaryEconomy != EDEconomy.Unknown || (Faction != null && Faction.Length > 0);
-            }
-        }
-
         public override string ToString()
         {
             return string.Format("{0} @ {1:N1},{2:N1},{3:N1}", Name, X, Y, Z);
@@ -227,11 +196,6 @@ namespace EliteDangerousCore
         public string ToStringVerbose()
         {
             string x = string.Format("{0} @ {1:N1},{2:N1},{3:N1} EDSMID:{4}", Name, X, Y, Z, EDSMID);
-            if (HasSystemStateInfo)
-            {
-                x += " " + Population + " " + Faction + " " + Government + " " + Allegiance + " " + State + " " + Security + " " + PrimaryEconomy
-                                    + " " + Power + " " + PowerState + " " + NeedsPermit;
-            }
             return x;
         }
     }

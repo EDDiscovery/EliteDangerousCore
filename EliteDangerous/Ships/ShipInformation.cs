@@ -38,7 +38,7 @@ namespace EliteDangerousCore
         public long HullValue { get; private set; }         // may be 0, not known
         public long ModulesValue { get; private set; }      // may be 0, not known
         public double HullHealthAtLoadout { get; private set; } // may be 0, in range 0-100.
-        public double UnladenMass { get; private set; }     // may be 0, not known
+        public double UnladenMass { get; private set; }     // may be 0, not known, from loadout
         public double FuelLevel { get; private set; }       // fuel level may be 0 not known
         public double FuelCapacity { get; private set; }    // fuel capacity may be 0 not known. Calculated as previous loadouts did not include this. 3.4 does
         public double ReserveFuelCapacity { get; private set; }  // 3.4 from loadout..
@@ -200,7 +200,7 @@ namespace EliteDangerousCore
                     int classpos;
                     if (sm.Item.Contains("Guardian FSD Booster") && (classpos = sm.Item.IndexOf("Class ")) != -1)
                     {
-                        spec.SetFSDBooster(sm.Item[classpos + 6] - '0');
+                        spec.SetGuardianFSDBooster(sm.Item[classpos + 6] - '0');
                         break;
                     }
                 }
@@ -212,6 +212,7 @@ namespace EliteDangerousCore
 
         public double ModuleMass()
         {
+            //foreach( var x in Modules)  System.Diagnostics.Debug.WriteLine($"Module {x.Value.Item} mass {x.Value.Mass}");
             return (from var in Modules select var.Value.Mass).Sum();
         }
 
@@ -219,6 +220,11 @@ namespace EliteDangerousCore
         {
             ItemData.IModuleInfo md = ItemData.Instance.GetShipProperty(ShipFD, ItemData.ShipPropID.HullMass);
             return md != null ? (md as ItemData.ShipInfoDouble).Value : 0;
+        }
+
+        public double HullModuleMass()      // based on modules and hull, not on FDev unladen mass in loadout
+        {
+            return ModuleMass() + HullMass();
         }
 
         public double FuelWarningPercent

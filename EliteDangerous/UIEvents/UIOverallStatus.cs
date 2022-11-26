@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 using System;
 using System.Collections.Generic;
@@ -30,6 +30,7 @@ namespace EliteDangerousCore.UIEvents
             double health, bool lowh, double gravity, double temp, UITemperature.TempState tempstate, double oxygen, bool lowox,
             string selw, string selwloc,
             FSDStateType fsd, bool breathableatmosphere,
+            string dname, int did, long dsysaddr,
             DateTime time, bool refresh) : this(time, refresh)
         {
             MajorMode = mm;
@@ -57,6 +58,9 @@ namespace EliteDangerousCore.UIEvents
             BreathableAtmosphere = breathableatmosphere;
             SelectedWeapon = selw;
             SelectedWeapon_Localised = selwloc;
+            DestinationName = dname;
+            DestinationBodyID = did;
+            DestinationSystemAddress = dsysaddr;
         }
 
         public UIMode.MajorModeType MajorMode { get; private set; }
@@ -88,6 +92,10 @@ namespace EliteDangerousCore.UIEvents
         public FSDStateType FSDState { get; private set; }
         public string SelectedWeapon { get; private set; }      // may be null
         public string SelectedWeapon_Localised { get; private set; }      // may be null
+        public string DestinationName { get; private set; }      // may be empty
+        public int DestinationBodyID { get; private set; }      // may be null
+        public long DestinationSystemAddress { get; private set; }      
+
 
     }
 }

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2021 EDDiscovery development team
+ * Copyright © 2015 - 2022 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -11,10 +11,8 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
-using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -189,34 +187,40 @@ namespace EliteDangerousCore
                         currentnodelist = previousnode.Children = new SortedList<string, ScanNode>(new CollectionStaticHelpers.BasicLengthBasedNumberComparitor<string>());
 
                     string ownname = elements[lvl];
-                    
-                    subnode = new ScanNode
-                    {
-                        OwnName = ownname,
-                        FullName = lvl == 0 ? (sys.Name + (ownname.Contains("Main") ? "" : (" " + ownname))) : previousnode.FullName + " " + ownname,
-                        ScanData = null,
-                        Children = null,
-                        NodeType = sublvtype,
-                        Level = lvl,
-                        Parent = previousnode,
-                    };
 
-                    currentnodelist.Add(ownname, subnode);
+                    lock (currentnodelist)
+                    {
+                        subnode = new ScanNode
+                        {
+                            OwnName = ownname,
+                            FullName = lvl == 0 ? (sys.Name + (ownname.Contains("Main") ? "" : (" " + ownname))) : previousnode.FullName + " " + ownname,
+                            ScanData = null,
+                            Children = null,
+                            NodeType = sublvtype,
+                            Level = lvl,
+                            Parent = previousnode,
+                        };
+
+                        currentnodelist.Add(ownname, subnode);
+                    }
                 }
 
                 if (lvl == elements.Count - 1)
                 {
-                    subnode.CustomName = customname;
-
-                    if (sc.BodyID != null)
+                    lock (subnode)
                     {
-                        subnode.BodyID = sc.BodyID;
-                    }
+                        subnode.CustomName = customname;
 
-                    if (sc.BodyType == "" || sc.BodyType == "Null" || sc.BodyType == "Barycentre")
-                        subnode.NodeType = ScanNodeType.barycentre;
-                    else if (sc.BodyType == "Belt")
-                        subnode.NodeType = ScanNodeType.belt;
+                        if (sc.BodyID != null)
+                        {
+                            subnode.BodyID = sc.BodyID;
+                        }
+
+                        if (sc.BodyType == "" || sc.BodyType == "Null" || sc.BodyType == "Barycentre")
+                            subnode.NodeType = ScanNodeType.barycentre;
+                        else if (sc.BodyType == "Belt")
+                            subnode.NodeType = ScanNodeType.belt;
+                    }
                 }
 
                 previousnode = subnode;

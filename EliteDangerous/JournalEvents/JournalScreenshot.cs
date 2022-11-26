@@ -15,6 +15,8 @@
  */
 using QuickJSON;
 using System;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
@@ -79,5 +81,38 @@ namespace EliteDangerousCore.JournalEvents
                 EliteDangerousCore.DB.UserDatabase.Instance.DBWrite(cn=> UpdateJsonEntry(jo,cn) );
             }
         }
+
+        static public string DefaultInputDir()
+        {
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Frontier Developments", "Elite Dangerous");
+        }
+
+        public Tuple<string,Size?> GetScreenshotPath(string convertedfolder = null)
+        {
+            if (EDDOutputFile.HasChars() && File.Exists(EDDOutputFile))
+                return new Tuple<string,Size?>(EDDOutputFile,new Size(EDDOutputWidth,EDDOutputHeight));
+
+            if (Filename.StartsWith("\\ED_Pictures\\"))     // if its an ss record, try and find it either in watchedfolder or in default loc
+            {
+                string filepart = Filename.Substring(13);
+
+                if ( convertedfolder != null )
+                {
+                    string filenameout = Path.Combine(convertedfolder, filepart);
+                    if (File.Exists(filenameout))
+                    {
+                        return new Tuple<string, Size?>(filenameout, null);
+                    }
+                }
+
+                string defloc = Path.Combine(DefaultInputDir(), filepart);
+                if (File.Exists(defloc))
+                    return new Tuple<string, Size?>(defloc, null);
+            }
+
+            return null;
+        }
+
+
     }
 }

@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 
 using System;
@@ -32,5 +32,11 @@ namespace EliteDangerousCore.UIEvents
 
         public string SelectedWeapon { get; private set; } // may be null, meaning not known
         public string SelectedWeapon_Localised { get; private set; } // may be null, meaning not known
+
+        public override string ToString()
+        {
+            return $"{SelectedWeapon}: {SelectedWeapon_Localised}";
+        }
+
     }
 }

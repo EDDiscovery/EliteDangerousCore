@@ -337,10 +337,22 @@ namespace EliteDangerousCore.JournalEvents
                     }
                 }
             }
+
+            // for quick use, work out some extra info for jet cone boosts
+
+            if (Name.Contains("FSD Basic", StringComparison.InvariantCultureIgnoreCase))
+                FSDBoostValue = 1.25;
+            else if (Name.Contains("FSD Standard", StringComparison.InvariantCultureIgnoreCase))
+                FSDBoostValue = 1.5;
+            else if (Name.Contains("FSD Premium", StringComparison.InvariantCultureIgnoreCase))
+                FSDBoostValue = 2;
+
         }
         public string Name { get; set; }
         public Dictionary<string, int> Materials { get; set; }
 
+        public double FSDBoostValue { get; set; }           // set non zero if its a FSD injection
+        
         public void UpdateMaterials(MaterialCommoditiesMicroResourceList mc)
         {
             if (Materials != null)

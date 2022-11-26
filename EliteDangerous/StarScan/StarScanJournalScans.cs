@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2021 EDDiscovery development team
+ * Copyright © 2015 - 2022 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using EliteDangerousCore.JournalEvents;
@@ -128,14 +126,17 @@ namespace EliteDangerousCore
                         // get bodies with scans
                         List<ScanNode> bodies = sn.Bodies.Where(b => b.ScanData != null).ToList();
 
-                        // reset the nodes to zero
-                        sn.ClearChildren();
-
-                        foreach (var body in bodies)              // replay into process the body scans.. using the newly updated body designation (primary star cache) to correct any errors
+                        lock (sn)
                         {
-                            var js = body.ScanData;
-                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sn.System.Name);
-                            ProcessJournalScan(js, sn.System, oldnode: body);
+                            // reset the nodes to zero
+                            sn.ClearChildren();
+
+                            foreach (var body in bodies)              // replay into process the body scans.. using the newly updated body designation (primary star cache) to correct any errors
+                            {
+                                var js = body.ScanData;
+                                js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sn.System.Name);
+                                ProcessJournalScan(js, sn.System, oldnode: body);
+                            }
                         }
                     }
                 }
@@ -270,76 +271,87 @@ namespace EliteDangerousCore
 
                 if (currentnodelist == null || !currentnodelist.TryGetValue(elements[lvl], out ScanNode subnode)) // either no nodes, or not found the element name in the node list.
                 {
-                    if ( currentnodelist == null)    // no node list, happens when we are at least 1 level down as systemnode always has a node list, make one 
-                        currentnodelist = previousnode.Children = new SortedList<string, ScanNode>(new CollectionStaticHelpers.BasicLengthBasedNumberComparitor<string>()); 
+                    if (currentnodelist == null)    // no node list, happens when we are at least 1 level down as systemnode always has a node list, make one 
+                        currentnodelist = previousnode.Children = new SortedList<string, ScanNode>(new CollectionStaticHelpers.BasicLengthBasedNumberComparitor<string>());
 
-                    string ownname = elements[lvl];
-
-                    subnode = new ScanNode
+                    lock (currentnodelist)                  // lock the node list during the add
                     {
-                        OwnName = ownname,
-                        FullName = previousnode == null ? (sys.Name + (ownname.Contains("Main") ? "" : (" " + ownname))) : previousnode.FullName + " " + ownname,
-                        ScanData = null,
-                        Children = null,
-                        NodeType = sublvtype,
-                        Level = lvl,
-                        Parent = previousnode,
-                    };
+                        string ownname = elements[lvl];
 
-                    currentnodelist.Add(ownname, subnode);
-                }
-
-                if (ancestorbodies != null && lvl < ancestorbodies.Count)       // if we have the ancestor list, we can fill in the bodyid for each part.
-                {
-                    subnode.BodyID = ancestorbodies[lvl].BodyID;
-                    systemnode.NodesByID[(int)subnode.BodyID] = subnode;
-                }
-
-                if (lvl == elements.Count - 1)                                  // if we are at the end node..
-                {
-                    if (oldnode != null && oldnode.FullName == subnode.FullName && !object.ReferenceEquals(subnode, oldnode))       // if we are replacing the node, make sure we dup across some info
-                    {
-                        subnode.IsMapped = oldnode.IsMapped;
-                        subnode.WasMappedEfficiently = oldnode.WasMappedEfficiently;
-                        subnode.Signals = oldnode.Signals;
-                        subnode.Organics = oldnode.Organics;
-                    }
-
-                    // if its a belt cluster we are adding, then the previous node is a belt but it does not have a scan data, therefore it was artifically created and has no body id
-                    // if we have a parent list, we can push the body id of it up. makes the IDs look better
-
-                    if (subnode.NodeType == ScanNodeType.beltcluster && sc.Parents != null)     
-                        previousnode.BodyID = sc.Parents[0].BodyID;                        
-
-                    subnode.ScanData = sc;                                      // only overwrites if scan is better
-                    subnode.ScanData.SetMapped(subnode.IsMapped, subnode.WasMappedEfficiently);      // pass this data to node, as we may have previously had a SAA Scan
-                    subnode.CustomName = customname;                            // and its custom name
-
-                    if (sc.BodyID != null)                                      // if scan has a body ID, pass it to the node
-                    {
-                        subnode.BodyID = sc.BodyID;
-                    }
-
-                    if (sc.Parents != null)
-                    {
-                        for (int i = 0; i < sc.Parents.Count - 1; i++)   // look thru the list, and assign at the correct level
+                        subnode = new ScanNode
                         {
-                            if (systemnode.Barycentres.TryGetValue(sc.Parents[i].BodyID, out JournalScanBaryCentre jsa))
+                            OwnName = ownname,
+                            FullName = previousnode == null ? (sys.Name + (ownname.Contains("Main") ? "" : (" " + ownname))) : previousnode.FullName + " " + ownname,
+                            ScanData = null,
+                            Children = null,
+                            NodeType = sublvtype,
+                            Level = lvl,
+                            Parent = previousnode,
+                        };
+
+                        currentnodelist.Add(ownname, subnode);
+                    }
+                }
+
+                lock (subnode)
+                {
+                    if (ancestorbodies != null && lvl < ancestorbodies.Count)       // if we have the ancestor list, we can fill in the bodyid for each part.
+                    {
+                        subnode.BodyID = ancestorbodies[lvl].BodyID;
+                        systemnode.NodesByID[(int)subnode.BodyID] = subnode;
+                    }
+
+                    if (lvl == elements.Count - 1)                                  // if we are at the end node..
+                    {
+                        if (oldnode != null && oldnode.FullName == subnode.FullName && !object.ReferenceEquals(subnode, oldnode))       // if we are replacing the node, make sure we dup across some info
+                        {
+                            subnode.IsMapped = oldnode.IsMapped;
+                            subnode.WasMappedEfficiently = oldnode.WasMappedEfficiently;
+                            subnode.Signals = oldnode.Signals;
+                            subnode.Genuses = oldnode.Genuses;
+                            subnode.Organics = oldnode.Organics;
+                        }
+
+                        // if its a belt cluster we are adding, then the previous node is a belt but it does not have a scan data, therefore it was artifically created and has no body id
+                        // if we have a parent list, we can push the body id of it up. makes the IDs look better
+
+                        if (subnode.NodeType == ScanNodeType.beltcluster && sc.Parents != null)
+                            previousnode.BodyID = sc.Parents[0].BodyID;
+
+                        subnode.ScanData = sc;                                      // only overwrites if scan is better
+                        subnode.ScanData.SetMapped(subnode.IsMapped, subnode.WasMappedEfficiently);      // pass this data to node, as we may have previously had a SAA Scan
+                        subnode.CustomName = customname;                            // and its custom name
+
+                        if (sc.BodyID != null)                                      // if scan has a body ID, pass it to the node
+                        {
+                            subnode.BodyID = sc.BodyID;
+                        }
+
+                        if (sc.Parents != null)
+                        {
+                            for (int i = 0; i < sc.Parents.Count - 1; i++)   // look thru the list, and assign at the correct level
                             {
-                                sc.Parents[i].Barycentre = jsa;
+                                if (systemnode.Barycentres.TryGetValue(sc.Parents[i].BodyID, out JournalScanBaryCentre jsa))
+                                {
+                                    sc.Parents[i].Barycentre = jsa;
+                                }
                             }
                         }
-                    }
 
-                    if (subnode.Signals != null)
-                    {
-                       // System.Diagnostics.Debug.WriteLine($"Assign JS signal list {string.Join(",", subnode.Signals.Select(x => x.Type).ToList())} to {subnode.FullName}");
-                        sc.Signals = subnode.Signals;       // make sure Scan node has same list as subnode
-                    }
-                    if (subnode.Organics != null)
-                    {
-                       // System.Diagnostics.Debug.WriteLine($"Assign JS organic list {string.Join(",", subnode.Organics.Select(x => x.Species).ToList())} to {subnode.FullName}");
-                        sc.Organics = subnode.Organics;       // make sure Scan node has same list as subnode
+                        if (subnode.Signals != null)
+                        {
+                            // System.Diagnostics.Debug.WriteLine($"Assign JS signal list {string.Join(",", subnode.Signals.Select(x => x.Type).ToList())} to {subnode.FullName}");
+                            sc.Signals = subnode.Signals;       // make sure Scan node has same list as subnode
+                        }
+                        if (subnode.Genuses != null)
+                        {
+                            sc.Genuses = subnode.Genuses;       // make sure Scan node has same list as subnode
+                        }
+                        if (subnode.Organics != null)
+                        {
+                            // System.Diagnostics.Debug.WriteLine($"Assign JS organic list {string.Join(",", subnode.Organics.Select(x => x.Species).ToList())} to {subnode.FullName}");
+                            sc.Organics = subnode.Organics;       // make sure Scan node has same list as subnode
+                        }
                     }
                 }
 
@@ -375,20 +387,23 @@ namespace EliteDangerousCore
                         if (node.Children == null)
                             node.Children = new SortedList<string, ScanNode>(new CollectionStaticHelpers.BasicLengthBasedNumberComparitor<string>());
 
-                        belt = new ScanNode
+                        lock (node.Children)
                         {
-                            OwnName = beltname,
-                            FullName = node.FullName + " " + beltname,
-                            CustomName = ring.Name,
-                            ScanData = null,
-                            BeltData = ring,
-                            Children = null,
-                            NodeType = ScanNodeType.belt,
-                            Level = 1,
-                            Parent = node,
-                        };
+                            belt = new ScanNode
+                            {
+                                OwnName = beltname,
+                                FullName = node.FullName + " " + beltname,
+                                CustomName = ring.Name,
+                                ScanData = null,
+                                BeltData = ring,
+                                Children = null,
+                                NodeType = ScanNodeType.belt,
+                                Level = 1,
+                                Parent = node,
+                            };
 
-                        node.Children.Add(beltname, belt);
+                            node.Children.Add(beltname, belt);
+                        }
                     }
 
                     belt.BeltData = ring;

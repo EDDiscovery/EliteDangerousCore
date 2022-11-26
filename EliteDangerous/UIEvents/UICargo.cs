@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 using System;
 
@@ -31,5 +31,11 @@ namespace EliteDangerousCore.UIEvents
 
         public int Count { get; private set; }     // number of items
         public UIMode.ModeType Mode { get; private set; }   // Ship type flags.. per flags
+
+        public override string ToString()
+        {
+            return $"{Count}: {Mode}";
+        }
+
     }
 }

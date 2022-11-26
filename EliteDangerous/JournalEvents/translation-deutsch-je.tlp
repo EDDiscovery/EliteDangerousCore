@@ -257,6 +257,7 @@ SECTION JournalTypeEnum
 .FSSBodySignals: "FSS Body Signals" => "VSS Körpersignale"
 .ModuleBuyAndStore: "Module Buy And Store" => "Modul kaufen und lagern"
 .ScanBaryCentre: "Scan Barycentre" => "Baryzentrumsscan"
+.NavRouteClear: "Nav Route Clear" => "Navroute leeren"
 
 SECTION JournalCargo
 
@@ -440,14 +441,14 @@ SECTION JournalProspectedAsteroid
 
 SECTION JournalPromotion
 
-.Combat: "Combat: " => "Kampf: "
+.Combat: "Combat: " => "Kampf"
 .Trade: "Trade: " => "Handel"
-.Exploration: "Exploration: " => "Erkundung: "
-.Empire: "Empire: " => "Imperium: "
-.Federation: "Federation: " => "Föderation: "
-.CQC: "CQC: " => "CQC: "
-.Soldier: "Soldier: " => "Soldat: "
-.ExoBiologist: "ExoBiologist: " => "Exobiologe: "
+.Exploration: "Exploration: " => "Erkundung"
+.Empire: "Empire: " => "Imperium"
+.Federation: "Federation: " => "Föderation"
+.CQC: "CQC: " => "CQC"
+.Soldier: "Soldier: " => "Soldat"
+.ExoBiologist: "ExoBiologist: " => "Exobiologe"
 
 SECTION JournalReceiveText
 
@@ -602,8 +603,8 @@ SECTION JournalShipyardSell
 
 SECTION JournalShipyardSwap
 
-.Swap: "Swap " => "Tausch "
-.fora: "< for a " => "< für ein "
+.Swap: "Swap " => "Tausche "
+.fora: "< for a " => "< gegen "
 
 SECTION JournalShipyardTransfer
 
@@ -1028,6 +1029,7 @@ SECTION JournalEntry
 .Failed: "Failed: " => "Gescheitert: "
 .Completed: "Completed: " => "Abgeschlossen: "
 .Station: "Station: " => "Station: "
+.Settlement: "Settlement: " => "Siedlung: "
 .TargetFaction: "Target Faction: " => "Zielfraktion: "
 .Donation: "Donation: " => "Spende: "
 .Permits: "Permits: " => "Autorisierungen: "
@@ -1164,3 +1166,20 @@ SECTION JournalScanInfo
 .PFSD: " Premium" => "Premium"
 .LE: "{0} has {1} level elements." => "{0} hat Stufe {1} Elemente."
 .scanorganics: " Has been scanned for organics." => " Wurde nach Organsimen gescannt."
+
+SECTION Services
+
+.BridgeCrew: "Bridge Crew" => "Brückencrew"
+.CommodityTrading: "Commodity Trading" => "Warenhandel"
+.TritiumDepot: "Tritium Depot" => "Tritiumdepot"
+.Refuel: "Refuel Station" => "Auftankstation"
+.Repair: "Repair Crews" => "Reparaturcrews"
+.Rearm: "Armoury" => "Waffenkammer"
+.VoucherRedemption: "Redemption Office" => "Auszahlungsbüro"
+.Shipyard: "Shipyard" => "Werft"
+.Outfitting: "Outfitting" => "Ausrüstung"
+.BlackMarket: "Secure Warehouse" => "Sicheres Lager"
+.Exploration: "Universal Cartographics" => "Universal Cartographics"
+.Bartender: "Concourse Bar" => "Hallenbar"
+.VistaGenomics: "Vista Genomics" => "Vista Genomics"
+.PioneerSupplies: "Pioneer Supplies" => "Pionierausrüstungen"

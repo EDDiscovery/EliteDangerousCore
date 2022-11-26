@@ -21,10 +21,12 @@ namespace EliteDangerousCore
 {
     public class CCommodities : System.IEquatable<CCommodities>
     {
-        public int id { get; private set; }
+        public long id { get; private set; }
 
-        [JsonName("name")]                                  // Maintain CAPI output names when emitting, even though we use a different naming
+        [JsonName("name")]                                  // Oct 22: No sign of a FromObject for JSON.  I think this is old but may as well maintain. Maintain CAPI output names when emitting, even though we use a different naming
         public string fdname { get; private set; }          // EDDN use : name is lower cased in CAPI but thats all to match Marketing use of it
+        [JsonIgnore]
+        public string fdname_unnormalised { get; private set; }  // unnormalised, with FD decoration, if present
         public string locName { get; private set; }
 
         [JsonName("categoryname")]
@@ -106,8 +108,9 @@ namespace EliteDangerousCore
         {
             try
             {
-                id = jo["id"].Int();
-                fdname = jo["name"].Str().ToLowerInvariant();
+                id = jo["id"].Long();
+                fdname_unnormalised = jo["name"].Str();
+                fdname = fdname_unnormalised.ToLowerInvariant();
 
                 locName = jo["locName"].Str();
                 locName = locName.Alt(fdname.SplitCapsWord());      // use locname, if not there, make best loc name possible
@@ -158,8 +161,9 @@ namespace EliteDangerousCore
         {
             try
             {
-                id = jo["id"].Int();
-                fdname = JournalFieldNaming.FixCommodityName(jo["Name"].Str());
+                id = jo["id"].Long();
+                fdname_unnormalised = jo["Name"].Str();
+                fdname = JournalFieldNaming.FixCommodityName(fdname_unnormalised);
                 locName = jo["Name_Localised"].Str();
                 if (locName.IsEmpty())
                     locName = fdname.SplitCapsWordFull();
@@ -203,15 +207,16 @@ namespace EliteDangerousCore
         {
             try
             {
-                fdname = JournalFieldNaming.FixCommodityName(jo["Name"].Str());
+                id = jo["id"].Long();
+                fdname_unnormalised = jo["Name"].Str();
+                fdname = JournalFieldNaming.FixCommodityName(fdname_unnormalised);
                 locName = jo["Name_Localised"].Str();
                 if (locName.IsEmpty())
                     locName = fdname.SplitCapsWordFull();
 
                 loccategory = "";
-                category = "Microresources";        // fixed
-
-                legality = "";  // not in market data
+                category = "";   
+                legality = ""; 
                 
                 meanPrice = sellPrice = buyPrice = jo["Price"].Int();
                 demandBracket = 0;

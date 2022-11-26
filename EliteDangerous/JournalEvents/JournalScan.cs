@@ -159,12 +159,16 @@ namespace EliteDangerousCore.JournalEvents
         public double? nOrbitalInclination { get; private set; }            // direct, degrees
         [PropertyNameAttribute("Degrees")]
         public double? nPeriapsis { get; private set; }                     // direct, degrees
+        [PropertyNameAttribute("Kepler Periapsis Degrees")]
+        public double? nPeriapsisKepler { get { if (nPeriapsis.HasValue) return (360.0 - nPeriapsis.Value) % 360.0; else return null; } set { nPeriapsis = (360.0 - value) % 360; } }
         [PropertyNameAttribute("Seconds")]
         public double? nOrbitalPeriod { get; private set; }                 // direct, seconds
         [PropertyNameAttribute("Days")]
         public double? nOrbitalPeriodDays { get { if (nOrbitalPeriod.HasValue) return nOrbitalPeriod.Value / BodyPhysicalConstants.oneDay_s; else return null; } }
         [PropertyNameAttribute("Degrees")]
         public double? nAscendingNode { get; private set; }                  // odyssey update 7 22/9/21, degrees
+        [PropertyNameAttribute("Kepler AN Degrees")]
+        public double? nAscendingNodeKepler { get { if (nAscendingNode.HasValue) return (360.0 - nAscendingNode.Value) % 360.0; else return null; } set { nAscendingNode = (360.0 - value) % 360; } }
         [PropertyNameAttribute("Degrees")]
         public double? nMeanAnomaly { get; private set; }                    // odyssey update 7 22/9/21, degrees
 
@@ -234,7 +238,7 @@ namespace EliteDangerousCore.JournalEvents
                 return null;
         }
 
-        [PropertyNameAttribute("Dictionary of planet composition, in fractional percent")]
+        [PropertyNameAttribute("Dictionary of planet composition, in %")]
         public Dictionary<string, double> PlanetComposition { get; private set; }
         [PropertyNameAttribute("Does it have planetary composition stats")]
         public bool HasPlanetaryComposition { get { return PlanetComposition != null && PlanetComposition.Any(); } }
@@ -314,12 +318,18 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Count of uncategorised signals")]
         public int CountUncategorisedSignals { get { return Signals?.Where(x => x.IsUncategorised).Sum(y => y.Count) ?? 0; } }
 
+        [PropertyNameAttribute("Genuses information")]
+        public List<JournalSAASignalsFound.SAAGenus> Genuses { get; set; }          // can be null if no genusus for this node, else its a list of genusus.  set up by StarScan
+        [PropertyNameAttribute("Any Genuses")]
+        public bool ContainsGenusus { get { return (Genuses?.Count ?? 0) > 0; } }
+        [PropertyNameAttribute("Count of all genuses")]
+        public int CountGenusus { get { return Genuses?.Count ?? 0; } }
 
         [PropertyNameAttribute("Organics information")]
         public List<JournalScanOrganic> Organics { get; set; }  // can be null if nothing for this node, else a list of organics. Set up by StarScan
         [PropertyNameAttribute("Any organic scans")]
-        public bool ContainsOrganicsScans { get { return (Organics?.Count ?? 0) > 0 ; } }
-        [PropertyNameAttribute("Count of all scans")]
+        public bool ContainsOrganicsScans { get { return (Organics?.Count ?? 0) > 0; } }
+        [PropertyNameAttribute("Count of all organic scans")]
         public int CountOrganicsScans { get { return Organics?.Count ?? 0; } }
         [PropertyNameAttribute("Count of fully analysed scans")]
         public int CountOrganicsScansAnalysed { get { return Organics?.Where(x => x.ScanType == JournalScanOrganic.ScanTypeEnum.Analyse).Count() ?? 0; } }
@@ -362,6 +372,9 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string ParentList() { return Parents != null ? string.Join(",", Parents.Select(x => x.Type + ":" + x.BodyID)) : ""; }     // not get on purpose
+
+        [PropertyNameAttribute("N/A")]
+        public string ShipIDForStatsOnly { get; set; }         // used in stats computation only.  Not in main code.
 
         public JournalScan(JObject evt) : base(evt, JournalTypeEnum.Scan)
         {
@@ -517,7 +530,7 @@ namespace EliteDangerousCore.JournalEvents
                     PlanetComposition = new Dictionary<string, double>();
                     foreach (var kvp in composition)
                     {
-                        PlanetComposition[kvp.Key] = kvp.Value.Double();
+                        PlanetComposition[kvp.Key] = kvp.Value.Double() * 100.0;        // convert to %
                     }
                 }
 
@@ -685,23 +698,15 @@ namespace EliteDangerousCore.JournalEvents
 
         public double GetMaterial(string v)
         {
-            if (Materials == null)
-                return 0.0;
-
-            if (!Materials.ContainsKey(v.ToLowerInvariant()))
-                return 0.0;
-
-            return Materials[v.ToLowerInvariant()];
+            return Materials == null || !Materials.ContainsKey(v.ToLowerInvariant()) ? 0.0 : Materials[v.ToLowerInvariant()];
         }
 
         public double? GetAtmosphereComponent(string c)
         {
             if (!HasAtmosphericComposition)
                 return null;
-
             if (!AtmosphereComposition.ContainsKey(c))
                 return 0.0;
-
             return AtmosphereComposition[c];
 
         }
@@ -710,11 +715,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (!HasPlanetaryComposition)
                 return null;
-
             if (!PlanetComposition.ContainsKey(c))
                 return 0.0;
-
-            return PlanetComposition[c] * 100;
+            return PlanetComposition[c];
         }
 
         // is the name in starname 

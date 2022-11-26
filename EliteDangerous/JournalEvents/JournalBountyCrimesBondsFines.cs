@@ -40,7 +40,7 @@ namespace EliteDangerousCore.JournalEvents
 
             TargetLocalised = Target = evt["Target"].StrNull();       // only set for skimmer target missions
 
-            if (Target != null)
+            if (Target != null)         
             {
                 TargetLocalised = JournalFieldNaming.CheckLocalisation(evt["Target_Localised"].Str(), Target);  // 3.7 added a localised target field, so try it
 
@@ -50,14 +50,17 @@ namespace EliteDangerousCore.JournalEvents
                     TargetLocalised = ((ItemData.ShipInfoString)sp[ItemData.ShipPropID.Name]).Value;
                 }
             }
+            else
+            {
 
+            }
 
             if ( Rewards == null )                  // for skimmers, its Faction/Reward.  Bug in manual reported to FD 23/5/2018
             {
                 string faction = evt["Faction"].StrNull();
                 long? reward = evt["Reward"].IntNull();
 
-                if (faction != null && reward != null)
+                if (faction != null && reward != null)      // create an array from it
                 {
                     string factionloc = JournalFieldNaming.CheckLocalisation(evt["Faction_Localised"].Str(), faction);      // not mentioned in frontiers documents, but seen with $alliance, $fed etc
                     Rewards = new BountyReward[1];
@@ -81,6 +84,22 @@ namespace EliteDangerousCore.JournalEvents
         public string TargetLocalised { get; set; }
         public bool SharedWithOthers { get; set; }
         public BountyReward[] Rewards { get; set; }
+
+        // very old logs did not have target or victim faction, and therefore must be a ship
+        public bool IsThargoid { get { return VictimFaction != null && VictimFaction.Contains("Thargoid", System.StringComparison.InvariantCultureIgnoreCase); } }       // seen both "Thargoid" and later "$faction_Thargoid;"
+        public bool IsSkimmer { get { return Target != null && Target.Contains("Skimmer", System.StringComparison.InvariantCultureIgnoreCase); } }  
+        public bool IsOnFootNPC { get { return Target != null && Target.Contains("suitai_", System.StringComparison.InvariantCultureIgnoreCase); } }       // Its a on foot NPC
+
+        public bool IsShip { get { return !IsThargoid && !IsOnFootNPC && !IsSkimmer; } }
+
+        // following only for Stats
+
+        public JournalShipTargeted ShipTargettedForStatsOnly { get; set; }         // used in stats computation only.  Not in main code.
+        public bool StatsUnknownShip { get => ShipTargettedForStatsOnly == null && IsShip; }
+        public bool StatsEliteAboveShip { get => ShipTargettedForStatsOnly != null && ShipTargettedForStatsOnly.PilotCombatRank >= CombatRank.Elite; }
+        public bool StatsRankShip(CombatRank r) { return ShipTargettedForStatsOnly != null && ShipTargettedForStatsOnly.PilotCombatRank == r; }
+        public bool StatsDangerousShip { get => ShipTargettedForStatsOnly != null && ShipTargettedForStatsOnly.PilotCombatRank == CombatRank.Dangerous; }
+        public bool StatsHarmlessShip { get => ShipTargettedForStatsOnly != null && ShipTargettedForStatsOnly.PilotCombatRank <= CombatRank.Mostly_Harmless && ShipTargettedForStatsOnly.PilotCombatRank>= CombatRank.Harmless; }
 
         public void LedgerNC(Ledger mcl)
         {

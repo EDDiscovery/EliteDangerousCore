@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 using System;
 
@@ -80,5 +80,11 @@ namespace EliteDangerousCore.UIEvents
 
         public ModeType Mode { get; private set; }
         public MajorModeType MajorMode { get; private set; }
+
+        public override string ToString()
+        {
+            return $"{MajorMode}: {Mode}";
+        }
+
     }
 }

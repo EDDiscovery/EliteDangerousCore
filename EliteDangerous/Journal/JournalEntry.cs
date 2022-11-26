@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2019 EDDiscovery development team
+ * Copyright © 2016-2022 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using EliteDangerousCore.DB;
@@ -37,6 +35,7 @@ namespace EliteDangerousCore
 
         public long Id { get; private set; }                    // this is the entry ID
         public long TLUId { get; private set; }                 // this ID of the journal tlu (aka TravelLogId)
+        public bool IsJournalSourced { get { return TLUId > 0; } }      // generated entries by EDD will have a TLU of 0 - others, file and CAPI journal downloaded, will not
         public int CommanderId { get; private set; }            // commander Id of entry
 
         public JournalTypeEnum EventTypeID { get; private set; }
@@ -57,7 +56,7 @@ namespace EliteDangerousCore
         public virtual bool IsBeta { get { return TravelLogUnit.Get(TLUId)?.IsBeta ?? DefaultBetaFlag; } }        // TLUs are cached via the dictionary, no point also holding a local copy
         public virtual bool IsHorizons { get { return TravelLogUnit.Get(TLUId)?.IsHorizons ?? DefaultHorizonsFlag; } }  // horizons flag from loadgame
         public virtual bool IsOdyssey { get { return TravelLogUnit.Get(TLUId)?.IsOdyssey ?? DefaultOdysseyFlag; } } // odyseey flag from loadgame
-      
+
         public bool IsOdysseyEstimatedValues { get      // work out which estimated values algorithm to use
             {
                 var tlu = TravelLogUnit.Get(TLUId);
@@ -74,6 +73,8 @@ namespace EliteDangerousCore
         public static bool DefaultBetaFlag { get; set; } = false;
         public static bool DefaultHorizonsFlag { get; set; } = false;       // for entries without a TLU (EDSM downloaded made up ones for instance) provide default value
         public static bool DefaultOdysseyFlag { get; set; } = false;
+
+        public SystemNoteClass SNC { get; set; }                            // if journal entry has a system note attached. Null if not
 
         public abstract void FillInformation(ISystem sys, string whereami, out string info, out string detailed);     // all entries must implement
 
@@ -101,6 +102,32 @@ namespace EliteDangerousCore
         public void SetJID(long id)         // used if substituting one record for another
         {
             Id = id;
+        }
+
+        public void SetSystemNote()         // see if a system note can be assigned.
+        {
+            SNC = SystemNoteClass.GetJIDNote(Id);
+            if (SNC == null && EventTypeID == JournalTypeEnum.FSDJump)      // if null and FSD Jump
+            {
+                string system = ((JournalFSDJump)this).StarSystem;          // try the star system
+                SNC = SystemNoteClass.GetSystemNote(system);
+            }
+
+            //if (SNC != null) System.Diagnostics.Debug.WriteLine($"Journal System note found for {Id}");
+        }
+
+        // update the note. If text is blank, delete it
+        public void UpdateSystemNote(string text, string system, bool sendtoedsm)
+        {
+            bool fsdentry = EventTypeID == JournalTypeEnum.FSDJump;
+
+            if (SNC == null)            // if no system note, we make one. Its a JID note unless its on a FSD jump, in which case its a system note. Syncs with EDSM in that case
+                SNC = SystemNoteClass.MakeNote(text, DateTime.Now, system, fsdentry ? 0 : Id, GetJson().ToString());        
+            else
+                SNC = SNC.UpdateNote(text, DateTime.Now, GetJson().ToString());    // and update info, and update our ref in case it has changed or gone null
+
+            if (SNC != null && sendtoedsm && fsdentry )    // if still have a note and send to esdm, and its on an FSD entry, then its a system note
+                EDSM.EDSMClass.SendComments(SNC.SystemName, SNC.Note);
         }
 
         #endregion
@@ -291,9 +318,9 @@ namespace EliteDangerousCore
         {
             JournalEntry[] jlist = new JournalEntry[tabledata.Count];
 
-            if (tabledata.Count > 10000 )        // a good amount, worth MTing
+            if (tabledata.Count > 10000 && System.Environment.ProcessorCount>1)  // a good amount, worth MTing - just in case someone is using this on a potato
             {
-                int threads = System.Environment.ProcessorCount/2;        // on Rob's system 4 from 8 seems optimal, any more gives little more return
+                int threads = Math.Max(System.Environment.ProcessorCount/2,2);   // leave a few processors for other things
 
                 CountdownEvent cd = new CountdownEvent(threads);
                 for (int i = 0; i < threads; i++)
@@ -303,7 +330,7 @@ namespace EliteDangerousCore
                     Thread t1 = new Thread(new ParameterizedThreadStart(CreateJEinThread));
                     t1.Priority = ThreadPriority.Highest;
                     t1.Name = $"GetAll {i}";
-                    System.Diagnostics.Debug.WriteLine($"Journal Creation Spawn {s}..{e}");
+                    System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.TickCount} Journal Creation Spawn {s}..{e}");
                     t1.Start(new Tuple<List<TableData>, JournalEntry[], int, int, CountdownEvent, Func<bool>>(tabledata, jlist, s, e, cd, cancelRequested));
                 }
 
@@ -335,6 +362,47 @@ namespace EliteDangerousCore
                     break;
                 var e = cmd.Item1[j];
                 cmd.Item2[j] = CreateJournalEntry(e.ID, e.TLUID, e.Cmdr, e.Json, e.Syncflag);
+            }
+
+            cmd.Item5.Signal();
+        }
+
+        #endregion
+
+        #region MT process table data to a callback
+
+        // from table data ID, travellogid, commanderid, event json, sync flag
+        // create journal entries and dispatch to a thread. Entries will bombard the thread in any order, in multiple threads
+        // unused idea but worth keeping
+        static public void MTJournalEntries(List<TableData> tabledata, Action<JournalEntry> dispatchinthread, Func<bool> cancelRequested = null)
+        {
+            int threads = System.Environment.ProcessorCount / 2;        // on Rob's system 4 from 8 seems optimal, any more gives little more return
+
+            CountdownEvent cd = new CountdownEvent(threads);
+            for (int i = 0; i < threads; i++)
+            {
+                int s = i * tabledata.Count / threads;
+                int e = (i + 1) * tabledata.Count / threads;
+                Thread t1 = new Thread(new ParameterizedThreadStart(MTJEinThread));
+                t1.Priority = ThreadPriority.Highest;
+                t1.Name = $"MTGetAll {i}";
+                System.Diagnostics.Debug.WriteLine($"MTJournal Creation Spawn {s}..{e}");
+                t1.Start(new Tuple<List<TableData>, Action<JournalEntry>, int, int, CountdownEvent, Func<bool>>(tabledata, dispatchinthread, s, e, cd, cancelRequested));
+            }
+
+            cd.Wait();
+        }
+
+        private static void MTJEinThread(Object o)
+        {
+            var cmd = (Tuple<List<TableData>, Action<JournalEntry>, int, int, CountdownEvent, Func<bool>>)o;
+
+            for (int j = cmd.Item3; j < cmd.Item4; j++)
+            {
+                if (j % 10000 == 0 && (cmd.Item6?.Invoke() ?? false))       // check every X entries
+                    break;
+                var e = cmd.Item1[j];
+                cmd.Item2.Invoke(CreateJournalEntry(e.ID, e.TLUID, e.Cmdr, e.Json, e.Syncflag)); // and dispatch to caller
             }
 
             cmd.Item5.Signal();

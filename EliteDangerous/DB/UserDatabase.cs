@@ -153,5 +153,12 @@ namespace EliteDangerousCore.DB
                 db.ClearJournal();
             });
         }
+        public void ClearCommanderTable()
+        {
+            DBWrite(db =>
+            {
+                db.ClearCommanderTable();
+            });
+        }
     }
 }

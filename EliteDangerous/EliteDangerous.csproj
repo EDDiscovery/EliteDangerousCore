@@ -41,8 +41,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="QuickJSON, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RJKJSoft.QuickJSON.0.9.0\lib\net48\QuickJSON.dll</HintPath>
+    <Reference Include="QuickJSON, Version=0.9.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\RJKJSoft.QuickJSON.0.9.5\lib\net48\QuickJSON.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -135,6 +135,7 @@
     <Compile Include="Journal\JournalEssentialEvents.cs" />
     <Compile Include="Journal\JournalEntryDB.cs" />
     <Compile Include="Journal\JournalEnums.cs" />
+    <Compile Include="Computers\JournalStatsComputer.cs" />
     <Compile Include="Scanner\EDScanner.cs" />
     <Compile Include="Screenshots\ScreenShotConfigureForm.cs">
       <SubType>Form</SubType>
@@ -162,6 +163,7 @@
     <Compile Include="StarScan\StarScanFSSSignalsDiscovered.cs" />
     <Compile Include="StarScan\StarScanSAASignalsFound.cs" />
     <Compile Include="StarScan\StarScanSAAScan.cs" />
+    <Compile Include="Stats\Carrier.cs" />
     <Compile Include="Stats\Stats.cs" />
     <Compile Include="Status\EDStatusReader.cs" />
     <Compile Include="Bindings\FrontierToVKey.cs" />
@@ -170,13 +172,13 @@
     <Compile Include="Journal\JournalEntryAttributes.cs" />
     <Compile Include="Journal\JournalEntryInterfaces.cs" />
     <Compile Include="Journal\JournalFieldNaming.cs" />
-    <Compile Include="HistoryList\Ledger.cs" />
+    <Compile Include="Stats\Ledger.cs" />
     <Compile Include="DB\TravelLogUnitLogReader.cs" />
     <Compile Include="MaterialsCommodities\MCMRType.cs" />
     <Compile Include="MaterialsCommodities\MCMRList.cs" />
     <Compile Include="MaterialsCommodities\MaterialRecipesData.cs" />
-    <Compile Include="HistoryList\MissionList.cs" />
-    <Compile Include="HistoryList\Outfitting.cs" />
+    <Compile Include="Stats\MissionList.cs" />
+    <Compile Include="Stats\Outfitting.cs" />
     <Compile Include="MaterialsCommodities\MaterialCommoditiesRecipes.cs" />
     <Compile Include="Ships\ShipModulesInStore.cs" />
     <Compile Include="Ships\ShipInformationList.cs" />
@@ -237,8 +239,7 @@
     <Compile Include="JournalEvents\JournalModules.cs" />
     <Compile Include="JournalEvents\JournalPVPKill.cs" />
     <Compile Include="JournalEvents\JournalPassengers.cs" />
-    <Compile Include="JournalEvents\JournalProgress.cs" />
-    <Compile Include="JournalEvents\JournalRank.cs" />
+    <Compile Include="JournalEvents\JournalRankProgress.cs" />
     <Compile Include="JournalEvents\JournalRefuel.cs" />
     <Compile Include="JournalEvents\JournalMusic.cs" />
     <Compile Include="JournalEvents\JournalDrones.cs" />
@@ -284,6 +285,7 @@
     <Compile Include="SystemDisplay\SystemDisplayNodes.cs" />
     <Compile Include="SystemDisplay\SystemDisplay.cs" />
     <Compile Include="SystemDisplay\SystemDisplayBarycentres.cs" />
+    <Compile Include="UIEvents\UIDestination.cs" />
     <Compile Include="UIEvents\UINavRouteClear.cs" />
     <Compile Include="UIEvents\UISrvHighBeam.cs" />
     <Compile Include="UIEvents\UIFsdJump.cs" />

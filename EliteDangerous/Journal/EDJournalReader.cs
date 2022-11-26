@@ -74,8 +74,8 @@ namespace EliteDangerousCore
                     TravelLogUnit.Type |= TravelLogUnit.BetaMarker;
                 }
 
-                TravelLogUnit.Build = header.Build?.Trim() ?? "";                 // Probably never null, but we will protect
-                TravelLogUnit.GameVersion = header.GameVersion?.Trim() ?? "";     // trimming because there are spaces in their naming system
+                TravelLogUnit.Build = header.Build ?? "";             // Probably never null, but we will protect
+                TravelLogUnit.GameVersion = header.GameVersion ?? "";     // no trim
 
                 if (header.Part > 1)
                 {
@@ -106,49 +106,79 @@ namespace EliteDangerousCore
             else if (je.EventTypeID == JournalTypeEnum.LoadGame)
             {
                 var jlg = je as JournalEvents.JournalLoadGame;
-                string newname = jlg.LoadGameCommander;
+                string cmdrrootname = jlg.LoadGameCommander;
 
                 if (TravelLogUnit.IsBetaFlag)
                 {
-                    newname = "[BETA] " + newname;
+                    cmdrrootname = "[BETA] " + cmdrrootname;
                 }
+
+                // a legacy loadgame, from 3.x or before, created after U14 release. Gameversion appeared in Odyssey 2, and is not being sent by horizons clients
+
+                DateTime EDOdyssey14UTC = new DateTime(2022, 11, 29, 12, 0, 0);
+                bool legacy = jlg.GameVersion.IsEmpty() && jlg.EventTimeUTC >= EDOdyssey14UTC;
+
+                legacy = false;         // TBD DISABLE FOR NOW UNTIL WE KNOW THE LAUNCH DATE
+
+                string cmdrcreatedname = legacy ? cmdrrootname + " (Legacy)" : cmdrrootname;
+
+                // set TLU flags
 
                 if (jlg.IsOdyssey == true)                                      // new! mark TLU with odyssey and horizons markers
                     TravelLogUnit.Type |= TravelLogUnit.OdysseyMarker;
                 if (jlg.IsHorizons == true)
                     TravelLogUnit.Type |= TravelLogUnit.HorizonsMarker;
 
-                if (jlg.Build.HasChars() && jlg.GameVersion.HasChars())        // journals before odyssey did not have these, so strings will be empty
-                { 
-                    TravelLogUnit.Build = jlg.Build.Trim();                  
-                    TravelLogUnit.GameVersion = jlg.GameVersion.Trim();        // trimming because there are spaces in their naming system
-                }
+                if (jlg.GameVersion.HasChars())                                 // journals before odyssey did not have these, so strings will be empty
+                    TravelLogUnit.GameVersion = jlg.GameVersion;                // no trim         
+                if (jlg.Build.HasChars())
+                    TravelLogUnit.Build = jlg.Build;
 
-                JournalEntry.DefaultHorizonsFlag = jlg.IsHorizons;      // for made up entries without a TLU (EDSM downloads) assign the default flag
+                // for made up entries without a TLU (EDSM downloads, EDD created ones) assign the default flag
+
+                JournalEntry.DefaultHorizonsFlag = jlg.IsHorizons;              
                 JournalEntry.DefaultOdysseyFlag = jlg.IsOdyssey;
                 JournalEntry.DefaultBetaFlag = jlg.IsBeta;
 
-                EDCommander commander = EDCommander.GetCommander(newname);
+                // find commander
+
+                EDCommander commander = EDCommander.GetCommander(cmdrcreatedname);
 
                 if (commander == null )
                 {
                     // in the default condition, we have a hidden commander, and first Cmdr. Jameson.
+
                     commander = EDCommander.GetListCommanders().FirstOrDefault();
                     if (EDCommander.NumberOfCommanders == 2 && commander != null && commander.Name == "Jameson (Default)")
                     {
-                        commander.Name = newname;
-                        commander.EdsmName = newname;
+                        commander.Name = cmdrcreatedname;
+                        commander.EdsmName = cmdrcreatedname;
                         commander.JournalDir = TravelLogUnit.Path;
                         EDCommander.Update(commander);
                     }
                     else
                     {
-                        commander = EDCommander.Add(name: newname, journalpath: TravelLogUnit.Path);            // always add the path from now on
-
-                        if (EDCommander.Current.Name.Contains("[BETA]") && !newname.Contains("[BETA]"))        // if current commander is beta, and we dont, swap to it
-                            EDCommander.CurrentCmdrID = commander.Id;
+                        // make a new commander
+                        // always add the path from now on
+                        // note changing commander in EDCommander here does not work - it shows a mess of data - removed nov 22
+                        commander = EDCommander.Add(name: cmdrcreatedname, journalpath: TravelLogUnit.Path);        
                     }
 
+                    if ( legacy )
+                    {
+                        commander.LegacyCommander = true;       // record legacy
+                        System.Diagnostics.Trace.WriteLine($"Legacy commander {cmdrcreatedname} created");
+
+                        var cmdr = EDCommander.GetCommander(cmdrrootname);     // if a commander exist
+
+                        if (cmdr!=null)
+                        {
+                            commander.SetLinkedCommander(cmdr.Id, EDOdyssey14UTC);       // record linked
+                            System.Diagnostics.Trace.WriteLine($"Found existing commander {cmdrrootname}, linked");
+                        }
+
+                        commander.Update();
+                    }
                 }
 
                 commander.FID = jlg.FID;

@@ -52,7 +52,7 @@ namespace EliteDangerousCore
         public double Heading { get; private set; } = UIEvents.UIPosition.InvalidValue;    // this forces a pos report
         public double BodyRadius { get; private set; } = UIEvents.UIPosition.InvalidValue;    // this forces a pos report
 
-        public string BodyName { get; private set; } = null;
+        public string BodyName { get; private set; } = null;        // which you are present on, landed/on foot
 
         public double Oxygen { get; private set; } = NotPresent;        // odyssey
         public double Temperature { get; private set; } = NotPresent;
@@ -60,6 +60,10 @@ namespace EliteDangerousCore
         public double Health { get; private set; } = NotPresent;
         public string SelectedWeapon { get; private set; } = null;
         public string SelectedWeaponLocalised { get; private set; } = null;
+
+        public string DestinationName { get; private set; } = "";           // when you have set a target, a body, station, system
+        public long DestinationSystemAddress { get; private set; } = 0;
+        public int DestinationBodyID { get; private set; } = 0;
 
         private string prev_text = null;
 
@@ -271,9 +275,10 @@ namespace EliteDangerousCore
                     double curfuel = jfuel != null ? jfuel["FuelMain"].Double(-1) : -1;
                     double curres = jfuel != null ? jfuel["FuelReservoir"].Double(-1) : -1;
 
-                    if (Math.Abs(curfuel - FuelLevel) >= 0.1 || Math.Abs(curres - ReserveLevel) >= 0.01 || changedmajormode)  // don't fire if small changes
+                    // don't fire if small changes.  Reserve fires less if its above 0.2
+                    if (Math.Abs(curfuel - FuelLevel) >= 0.1 || Math.Abs(curres - ReserveLevel) >= (curres>0.2?0.05:0.01) || changedmajormode)  
                     {
-                        events.Add(new UIEvents.UIFuel(curfuel, curres, shiptype.Mode, EventTimeUTC, changedmajormode));
+                        events.Add(new UIEvents.UIFuel(curfuel, curres, shiptype.Mode, (curflags& (int)StatusFlagsShip.ScoopingFuel) !=0, EventTimeUTC, changedmajormode));
                         FuelLevel = curfuel;
                         ReserveLevel = curres;
                         fireoverall = true;
@@ -323,6 +328,31 @@ namespace EliteDangerousCore
                     {
                         events.Add(new UIEvents.UIBodyName(cur_bodyname, EventTimeUTC, changedmajormode));
                         BodyName = cur_bodyname;
+                        fireoverall = true;
+                    }
+
+                    JObject destination = jo["Destination"].Object();
+                    if ( destination != null )
+                    {
+                        string newdestination = destination["Name"].Str();
+                        int newbody = destination["Body"].Int(0);
+                        long newsys = destination["System"].Long(0);
+
+                        if ( newdestination != DestinationName || newbody != DestinationBodyID || newsys != DestinationSystemAddress)       // if changed
+                        {
+                            DestinationName = newdestination;
+                            DestinationBodyID = newbody;
+                            DestinationSystemAddress = newsys;
+                            events.Add(new UIEvents.UIDestination(DestinationName, DestinationBodyID, DestinationSystemAddress, EventTimeUTC, changedmajormode));
+                            fireoverall = true;
+                        }
+                    }
+                    else if ( DestinationName.HasChars())
+                    {
+                        DestinationName = "";
+                        DestinationBodyID = 0;
+                        DestinationSystemAddress = 0;
+                        events.Add(new UIEvents.UIDestination(DestinationName, DestinationBodyID, DestinationSystemAddress, EventTimeUTC, changedmajormode));
                         fireoverall = true;
                     }
 
@@ -413,20 +443,24 @@ namespace EliteDangerousCore
                                                                 Health,lowhealth,gravity,Temperature,tempstate,Oxygen,lowoxygen,
                                                                 SelectedWeapon, SelectedWeaponLocalised,
                                                                 fsdstate, breathableatmos,
+                                                                DestinationName, DestinationBodyID,DestinationSystemAddress,
                                                                 EventTimeUTC, 
                                                                 changedmajormode));        // overall list of flags set
                     }
 
                     //for debugging, keep
-#if false
+#if true
                     foreach (var uient in events)
+                    {
+                        if (!(uient is UIOverallStatus))        // dont report this, its due to individual ones
                         {
-                            System.Diagnostics.Trace.WriteLine(string.Format("New UI entry from journal {0} {1} refresh {2}", uient.EventTimeUTC, uient.EventTypeStr, changedmajormode));
+                            System.Diagnostics.Trace.WriteLine($"New UI entry from journal {uient.EventTimeUTC} {uient.EventTypeStr} : {uient.ToString()}");
                             //BaseUtils.Variables v = new BaseUtils.Variables();
                             //v.AddPropertiesFieldsOfClass(uient, "", null, 2);
                             //foreach (var x in v.NameEnumuerable)
                             //    System.Diagnostics.Trace.WriteLine(string.Format("  {0} = {1}", x, v[x]));
                         }
+                    }
 #endif
 
                     return events;

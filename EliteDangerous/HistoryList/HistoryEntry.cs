@@ -89,6 +89,8 @@ namespace EliteDangerousCore
                     return null;
             } }
 
+        public string GetNoteText { get { return journalEntry.SNC?.Note ?? ""; } }      // get SNC note text or empty string
+
         public string DebugStatus { get {      // Use as a replacement for note in travel grid to debug
                 return
                      WhereAmI
@@ -104,9 +106,12 @@ namespace EliteDangerousCore
                      ;
             } }
 
+        // These parts are held here so we don't create new Status Entries each time
+
         public long Credits { get; set; }       // set up by Historylist during ledger accumulation
-        public long Loan { get; set; }       // set up by Historylist during ledger accumulation
+        public long Loan { get; set; }          // set up by Historylist during ledger accumulation
         public long Assets { get; set; }       // set up by Historylist during ledger accumulation
+        public bool FSDJumpSequence { get; private set; }   // set during StartJump..FSDJump. 
 
         // Calculated values, not from JE
 
@@ -119,8 +124,6 @@ namespace EliteDangerousCore
         public uint Suits { get; private set; }             // generation index
         public uint Loadouts { get; private set; }          // generation index
         public uint Engineering { get; private set; }       // generation index
-
-        public SystemNoteClass SNC;     // system note class found attached to this entry. May be null
 
         public StarScan.ScanNode ScanNode {get; set; } // only for journal scan, and only after you called FillScanNode in history list.
 
@@ -143,6 +146,8 @@ namespace EliteDangerousCore
         {
             ISystem isys = prev == null ? new SystemClass("Unknown") : prev.System;
 
+            bool fsdjumpseq = prev?.FSDJumpSequence ?? false;
+
             if (je.EventTypeID == JournalTypeEnum.Location || je.EventTypeID == JournalTypeEnum.FSDJump || je.EventTypeID == JournalTypeEnum.CarrierJump)
             {
                 JournalLocOrJump jl = je as JournalLocOrJump;
@@ -155,15 +160,6 @@ namespace EliteDangerousCore
                     {
                         EDSMID = 0,         // not an EDSM entry
                         SystemAddress = jl.SystemAddress,
-                        Population = jl.Population ?? 0,
-                        Faction = jl.Faction,
-                        Government = jl.EDGovernment,
-                        Allegiance = jl.EDAllegiance,
-                        State = jl.EDState,
-                        Security = jl.EDSecurity,
-                        PrimaryEconomy = jl.EDEconomy,
-                        Power = jl.PowerList,
-                        PowerState = jl.PowerplayState,
                         Source = jl.StarPosFromEDSM ? SystemSource.FromEDSM : SystemSource.FromJournal,
                     };
 
@@ -177,22 +173,24 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    // NOTE Rob: 09-JAN-2018 I've removed the Jumpstart looking up a system by name since they were using up lots of lookup time during history reading.  
-                    // This is used for pre 2.2 systems without co-ords, which now should be limited.
-                    // JumpStart still gets the system when the FSD loc is processed, see above.
-                    // Jumpstart was also screwing about with the EDSM ID fill in which was broken.  This is now working again.
-
                     newsys = new SystemClass(jl.StarSystem);         // this will be a synthesised one
                 }
 
                 isys = newsys;
+
+                fsdjumpseq = false;                     // any of these cancel the sequence. Since we get location on start up, it will cancel it
+            }
+            else if (je.EventTypeID == JournalTypeEnum.StartJump)
+            {
+                fsdjumpseq = true;
             }
 
             HistoryEntry he = new HistoryEntry
             {
                 journalEntry = je,
                 System = isys,
-                EntryStatus = HistoryEntryStatus.Update(prev?.EntryStatus, je, isys.Name)
+                EntryStatus = HistoryEntryStatus.Update(prev?.EntryStatus, je, isys.Name),
+                FSDJumpSequence = fsdjumpseq,
             };
 
             he.TravelStatus = HistoryTravelStatus.Update(prev?.TravelStatus, prev , he);    // need a real he so can't do that as part of the constructor.
@@ -210,11 +208,6 @@ namespace EliteDangerousCore
         public void UpdateStats(JournalEntry je, Stats stats, string station)
         {
             Statistics = stats.Process(je, station);
-        }
-
-        public void UpdateSystemNote()
-        { 
-            SNC = SystemNoteClass.GetSystemNote(Journalid, IsFSDCarrierJump ?  System.Name : null);       // may be null
         }
 
         public void UpdateShipInformation(ShipInformation si)       // something externally updated SI
@@ -267,17 +260,7 @@ namespace EliteDangerousCore
 
         #region Interaction
 
-        public void SetJournalSystemNoteText(string text, bool commit, bool sendtoedsm)
-        {
-            if (SNC == null || SNC.Journalid == 0)           // if no system note, or its one on a system, from now on we assign journal system notes only from this IF
-                SNC = SystemNoteClass.MakeSystemNote("", DateTime.Now, System.Name, Journalid, IsFSDCarrierJump);
 
-            SNC = SNC.UpdateNote(text, commit, DateTime.Now, IsFSDCarrierJump);        // and update info, and update our ref in case it has changed or gone null
-                                                                                       // remember for EDSM send purposes if its an FSD entry
-
-            if (SNC != null && commit && sendtoedsm && SNC.FSDEntry)                   // if still have a note, and commiting, and send to esdm, and FSD jump
-                EDSMClass.SendComments(SNC.SystemName, SNC.Note);
-        }
 
         public bool IsJournalEventInEventFilter(string[] events)
         {
@@ -298,7 +281,7 @@ namespace EliteDangerousCore
                 double mass = ShipInformation.HullMass() + ShipInformation.ModuleMass();
 
                 if (mass > 0)
-                    return fsdspec.GetJumpInfo(cargo, mass, ShipInformation.FuelLevel, ShipInformation.FuelCapacity/2);
+                    return fsdspec.GetJumpInfo(cargo, mass, ShipInformation.FuelLevel, ShipInformation.FuelCapacity/2, Status.CurrentBoost);
             }
 
             return null;

@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using EliteDangerousCore.JournalEvents;
@@ -26,7 +24,7 @@ namespace EliteDangerousCore
             // jsd should always have a system address.  If it matches current system, we can go for an immediate add
             if (sys.SystemAddress.HasValue && jsaa.SystemAddress == sys.SystemAddress.Value)
             {
-                bool ret = ProcessSignalsFound(jsaa.BodyID.Value,jsaa.BodyName,jsaa.Signals, sys);
+                bool ret = ProcessSignalsFound(jsaa.BodyID.Value,jsaa.BodyName,jsaa.Signals, null, sys);
                 if (!ret)
                     SaveForProcessing(jsaa, sys);
                 return ret;

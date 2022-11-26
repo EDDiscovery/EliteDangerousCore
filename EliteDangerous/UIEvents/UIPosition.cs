@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 using System;
 
@@ -30,6 +30,15 @@ namespace EliteDangerousCore.UIEvents
             Location = value;
             Heading = head;
             PlanetRadius = planetradius;
+        }
+
+
+        public override string ToString()
+        {
+            if (Location.ValidPosition)
+                return $"{Location.Latitude} {Location.Longitude} {Location.Altitude}m {Heading}";
+            else
+                return "";
         }
 
         public Position Location { get; private set; }
@@ -55,11 +64,11 @@ namespace EliteDangerousCore.UIEvents
             // you MAY get position without Altitude.. seen in SRV it doing that.  Code defensively
 
             public bool ValidPosition { get { return Latitude != InvalidValue && Latitude != InvalidValue; } }
-            public double Latitude;
-            public double Longitude;
+            public double Latitude { get; set; }
+            public double Longitude { get; set; }
             public bool ValidAltitude { get { return Altitude != InvalidValue; } }
-            public double Altitude;
-            public bool AltitudeFromAverageRadius;
+            public double Altitude { get; set; }
+            public bool AltitudeFromAverageRadius { get; set; }
         }
     }
 }

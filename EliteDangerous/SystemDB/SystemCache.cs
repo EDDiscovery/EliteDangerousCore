@@ -265,31 +265,43 @@ namespace EliteDangerousCore.DB
         }
 
         // system list with distances
+        // may return slightly over maxitems, but only if systems were not in db but were in the cache due to the journal
+        // if all systems are in the db, maxitems will be obeyed
 
-        public static void GetSystemListBySqDistancesFrom(BaseUtils.SortedListDoubleDuplicate<ISystem> distlist, double x, double y, double z,
-                                                    int maxitems,
-                                                    double mindist, double maxdist, bool spherical)
+        public static void GetSystemListBySqDistancesFrom(SortedListDoubleDuplicate<ISystem> distlist, double x, double y, double z,
+                                                    int approxmaxitems,
+                                                    double mindist, double maxdist, bool spherical,
+                                                    HashSet<string> excludenames = null)
         {
+            if (excludenames == null)
+                excludenames = new HashSet<string>();       // empty set
+
             lock(cachelockobject)
             {
-                var sysdist = systemsByName.Values
-                                            .SelectMany(s => s)
-                                            .Select(s => new { distsq = s.DistanceSq(x, y, z), sys = s })
-                                            .OrderBy(s => s.distsq)
-                                            .ToList();
-                var minsq = mindist * mindist;
-                var maxsq = maxdist * maxdist;
-
-                foreach (var sd in sysdist)
+                if (spherical)
                 {
-                    if (sd.distsq <= minsq && sd.distsq >= maxsq)
-                    {
-                        distlist.Add(sd.distsq, sd.sys);
-                    }
+                    var sphericalset = systemsByName.Values.SelectMany(s => s)
+                                        .Where(sys => sys.DistanceSq(x, y, z) <= maxdist*maxdist && sys.DistanceSq(x, y, z) >= mindist*mindist && !excludenames.Contains(sys.Name))
+                                        .Select(s => new { distsq = s.DistanceSq(x, y, z), sys = s })
+                                        .ToList();
 
-                    if (distlist.Count >= maxitems)
+                    foreach (var s in sphericalset.Take(approxmaxitems))
                     {
-                        break;
+                        distlist.Add(s.distsq, s.sys);      // add system and exclude for further use
+                        excludenames.Add(s.sys.Name);
+                    }
+                }
+                else
+                {
+                    var cubeset = systemsByName.Values.SelectMany(s => s)
+                                .Where(sys => Math.Abs(sys.X - x) <= maxdist && Math.Abs(sys.Y - y) <= maxdist && Math.Abs(sys.Z - z) <= maxdist && sys.DistanceSq(x, y, z) >= mindist && !excludenames.Contains(sys.Name))
+                                .Select(s => new { distsq = s.DistanceSq(x, y, z), sys = s })
+                                .ToList();
+
+                    foreach (var s in cubeset.Take(approxmaxitems))
+                    {
+                        distlist.Add(s.distsq, s.sys);
+                        excludenames.Add(s.sys.Name);
                     }
                 }
             }
@@ -298,27 +310,36 @@ namespace EliteDangerousCore.DB
             {
                 SystemsDatabase.Instance.DBRead(cn =>
                 {
-                    DB.SystemsDB.GetSystemListBySqDistancesFrom(distlist, x, y, z, maxitems, mindist, maxdist, spherical, cn, (s) => AddToCache(s));
+                SystemsDB.GetSystemListBySqDistancesFrom( x, y, z, approxmaxitems, mindist, maxdist, spherical, cn,
+                        (distsq,sys) =>
+                        {
+                            if (!excludenames.Contains(sys.Name))     // if not allowed or already there (if we run this twice, this should always trigger since they are all in the cache)
+                            {
+                                //System.Diagnostics.Debug.WriteLine($"Found from db {sys.Name}");
+                                distlist.Add(distsq,sys);
+                                AddToCache(sys);
+                            }
+                        });
                 });
             }
         }
 
-        // find by position
+        //// find by position, using cache and db
         public static ISystem GetSystemByPosition(double x, double y, double z, uint warnthreshold = 500)
         {
             return FindNearestSystemTo(x, y, z, 0.125, warnthreshold);
         }
 
-        // find nearest system
+        //// find nearest system
         public static ISystem FindNearestSystemTo(double x, double y, double z, double maxdistance, uint warnthreshold = 500)
         {
-            ISystem sys = null;
+            ISystem cachesys = null;
             lock (cachelockobject)
             {
-                sys = systemsByName.Values
+                cachesys = systemsByName.Values
                                     .SelectMany(s => s)
                                     .OrderBy(s => s.Distance(x, y, z))
-                                    .FirstOrDefault(e => e.Distance(x, y, z) < maxdistance);
+                                    .FirstOrDefault(e => e.Distance(x, y, z) < maxdistance);        // find one in cache which matches, or null
             }
 
             if (!SystemsDatabase.Instance.RebuildRunning)
@@ -326,24 +347,24 @@ namespace EliteDangerousCore.DB
                 ISystem dbsys = null;
                 SystemsDatabase.Instance.DBRead(cn =>
                 {
-                    dbsys = DB.SystemsDB.GetSystemByPosition(x, y, z, cn, maxdistance);
+                    dbsys = DB.SystemsDB.GetSystemByPosition(x, y, z, cn, maxdistance);         // need to check the db as well, as it may have a closer one than the cache
                 });
 
-                if (dbsys != null && sys != null && dbsys.Distance(x, y, z) < sys.Distance(x, y, z))
+                if (dbsys != null && cachesys != null && dbsys.Distance(x, y, z) < cachesys.Distance(x, y, z))        // if cache one better than db one
                 {
-                    sys = dbsys;
+                    cachesys = dbsys;
                 }
             }
 
-            return sys;
+            return cachesys;
         }
 
-        // return system nearest to, given range
+        // return system nearest to wantedpos, with ranges from curpos/wantedpos, with a route method
         public static ISystem GetSystemNearestTo(Point3D currentpos,
                                                  Point3D wantedpos,
                                                  double maxfromcurpos,
                                                  double maxfromwanted,
-                                                 SystemsDB.SystemsNearestMetric routemethod,
+                                                 SystemsNearestMetric routemethod,
                                                  int limitto)
         {
             List<ISystem> candidates;
@@ -368,13 +389,81 @@ namespace EliteDangerousCore.DB
             {
                 SystemsDatabase.Instance.DBRead(cn =>
                 {
-                    var list = DB.SystemsDB.GetSystemNearestTo(currentpos, wantedpos, maxfromcurpos, maxfromwanted, routemethod, cn, (s) => AddToCache(s), limitto);
-                    candidates.AddRange(list);
+                    DB.SystemsDB.GetSystemNearestTo(currentpos, wantedpos, maxfromcurpos, maxfromwanted, limitto, cn, (s) => { AddToCache(s); candidates.Add(s); });
                 });
             }
 
-            return DB.SystemsDB.GetSystemNearestTo(candidates, currentpos, wantedpos, maxfromcurpos, maxfromwanted, routemethod);
+            return GetSystemNearestTo(candidates, currentpos, wantedpos, maxfromcurpos, maxfromwanted, routemethod);
         }
+
+        public enum SystemsNearestMetric
+        {
+            IterativeNearestWaypoint,
+            IterativeMinDevFromPath,
+            IterativeMaximumDev100Ly,
+            IterativeMaximumDev250Ly,
+            IterativeMaximumDev500Ly,
+            IterativeWaypointDevHalf,
+        }
+
+        internal static ISystem GetSystemNearestTo(IEnumerable<ISystem> systems,           
+                                                   Point3D currentpos,
+                                                   Point3D wantedpos,
+                                                   double maxfromcurpos,
+                                                   double maxfromwanted,
+                                                   SystemsNearestMetric routemethod)
+        {
+            double bestmindistance = double.MaxValue;
+            ISystem nearestsystem = null;
+
+            foreach (var s in systems)
+            {
+                Point3D syspos = new Point3D(s.X, s.Y, s.Z);
+                double distancefromwantedx2 = Point3D.DistanceBetweenX2(wantedpos, syspos); // range between the wanted point and this, ^2
+                double distancefromcurposx2 = Point3D.DistanceBetweenX2(currentpos, syspos);    // range between the wanted point and this, ^2
+
+                // ENSURE its withing the circles now
+                if (distancefromcurposx2 <= (maxfromcurpos * maxfromcurpos) && distancefromwantedx2 <= (maxfromwanted * maxfromwanted))
+                {
+                    if (routemethod == SystemsNearestMetric.IterativeNearestWaypoint)
+                    {
+                        if (distancefromwantedx2 < bestmindistance)
+                        {
+                            nearestsystem = s;
+                            bestmindistance = distancefromwantedx2;
+                        }
+                    }
+                    else
+                    {
+                        Point3D interceptpoint = currentpos.InterceptPoint(wantedpos, syspos);      // work out where the perp. intercept point is..
+                        double deviation = Point3D.DistanceBetween(interceptpoint, syspos);
+                        double metric = 1E39;
+
+                        if (routemethod == SystemsNearestMetric.IterativeMinDevFromPath)
+                            metric = deviation;
+                        else if (routemethod == SystemsNearestMetric.IterativeMaximumDev100Ly)
+                            metric = (deviation <= 100) ? distancefromwantedx2 : metric;        // no need to sqrt it..
+                        else if (routemethod == SystemsNearestMetric.IterativeMaximumDev250Ly)
+                            metric = (deviation <= 250) ? distancefromwantedx2 : metric;
+                        else if (routemethod == SystemsNearestMetric.IterativeMaximumDev500Ly)
+                            metric = (deviation <= 500) ? distancefromwantedx2 : metric;
+                        else if (routemethod == SystemsNearestMetric.IterativeWaypointDevHalf)
+                            metric = Math.Sqrt(distancefromwantedx2) + deviation / 2;
+                        else
+                            throw new ArgumentOutOfRangeException(nameof(routemethod));
+
+                        if (metric < bestmindistance)
+                        {
+                            nearestsystem = s;
+                            bestmindistance = metric;
+                        }
+                    }
+                }
+            }
+
+            return nearestsystem;
+        }
+
 
         #endregion
 
@@ -472,6 +561,7 @@ namespace EliteDangerousCore.DB
                 if (!systemsByName.TryGetValue(found.Name, out byname))
                 {
                     systemsByName[found.Name] = byname = new List<ISystem>();
+                    //System.Diagnostics.Debug.WriteLine($"Added to cache {found.Name}");
                 }
 
                 int idx = -1;

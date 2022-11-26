@@ -24,16 +24,15 @@ namespace EliteDangerousCore.DB
 {
     public partial class SystemsDB
     {
-        ///////////////////////////////////////// List of systems near xyz between mindist and maxdist
-
-        internal static void GetSystemListBySqDistancesFrom(BaseUtils.SortedListDoubleDuplicate<ISystem> distlist, // MUST use duplicate double list to protect against EDSM having two at the same point
-                                                            double x, double y, double z,
+        // search the DB for stars, at x/y/z with min/max distances.
+        // callback as found
+        internal static void GetSystemListBySqDistancesFrom(double x, double y, double z,
                                                             int maxitems,
                                                             double mindist,         // 0 = no min dist, always spherical
                                                             double maxdist,
                                                             bool spherical,     // enforces sphere on maxdist, else its a cube for maxdist
                                                             SQLiteConnectionSystem cn,
-                                                            Action<ISystem> LookedUp = null
+                                                            Action<double, ISystem> callback
                                                         )
 
         {
@@ -42,7 +41,7 @@ namespace EliteDangerousCore.DB
             //var gridids = GridId.Ids(x - maxdist, x + maxdist, z - maxdist, z + maxdist);       // find applicable grid ids across this range..
             //var strinlist = string.Join(",", (from x1 in gridids select x1.ToStringInvariant()));     // here we convert using invariant for paranoia sake.
 
-           // System.Diagnostics.Debug.WriteLine("Time1 " + BaseUtils.AppTicks.TickCountLap("SDC"));
+            // System.Diagnostics.Debug.WriteLine("Time1 " + BaseUtils.AppTicks.TickCountLap("SDC"));
 
             int mindistint = mindist > 0 ? SystemClass.DoubleToInt(mindist) * SystemClass.DoubleToInt(mindist) : 0;
 
@@ -76,7 +75,6 @@ namespace EliteDangerousCore.DB
                 int zi = SystemClass.DoubleToInt(z);
                 long maxdistsqi = (long)SystemClass.DoubleToInt(maxdist) * (long)SystemClass.DoubleToInt(maxdist);
 
-                long count = 0;
                 using (DbDataReader reader = cmd.ExecuteReader())
                 {
                   //  System.Diagnostics.Debug.WriteLine("Time1.5 " + BaseUtils.AppTicks.TickCountLap("SDC"));
@@ -93,12 +91,8 @@ namespace EliteDangerousCore.DB
                         {
                             SystemClass s = MakeSystem(reader);
                             double distnorm = ((double)distsqi) / SystemClass.XYZScalar / SystemClass.XYZScalar;
-                            //System.Diagnostics.Debug.WriteLine("System " + s.Name + " " + Math.Sqrt(distnorm).ToString("0.0"));
-                            LookedUp?.Invoke(s);                            // callback to say looked up
-                            distlist.Add(distnorm, s);                  // which Rob has seen crashing the program! Bad EDSM!
+                            callback(distnorm, s);
                         }
-
-                        count++;
                     }
 
                   //  System.Diagnostics.Debug.WriteLine("Time2 " + BaseUtils.AppTicks.TickCountLap("SDC") + "  count " + count);
@@ -106,35 +100,29 @@ namespace EliteDangerousCore.DB
             }
         }
 
+        // get system near x/y/z from DB only
         internal static ISystem GetSystemByPosition(double x, double y, double z, SQLiteConnectionSystem cn, double maxdist = 0.125)
         {
             BaseUtils.SortedListDoubleDuplicate<ISystem> distlist = new BaseUtils.SortedListDoubleDuplicate<ISystem>();
-            GetSystemListBySqDistancesFrom(distlist, x, y, z, 1, 0, maxdist, true, cn); // return 1 item, min dist 0, maxdist
+            GetSystemListBySqDistancesFrom(x, y, z, 1, 0, maxdist, true, cn, (d,s)=> { distlist.Add(d, s); }); // return 1 item, min dist 0, maxdist
             return (distlist.Count > 0) ? distlist.First().Value : null;
         }
 
         /////////////////////////////////////////////// Nearest to a point determined by a metric
 
-        public enum SystemsNearestMetric
-        {
-            IterativeNearestWaypoint,
-            IterativeMinDevFromPath,
-            IterativeMaximumDev100Ly,
-            IterativeMaximumDev250Ly,
-            IterativeMaximumDev500Ly,
-            IterativeWaypointDevHalf,
-        }
-
-        internal static List<ISystem> GetSystemNearestTo(
+        // either use CallBack or List
+        internal static void GetSystemNearestTo(
                                                   Point3D currentpos,
                                                   Point3D wantedpos,
                                                   double maxfromcurpos,
                                                   double maxfromwanted,
-                                                  SystemsNearestMetric routemethod,
+                                                  int limitto,
                                                   SQLiteConnectionSystem cn,
-                                                  Action<ISystem> LookedUp = null,
-                                                  int limitto = 1000)
+                                                  Action<ISystem> CallBack = null,
+                                                  List<ISystem> list = null)
         {
+            System.Diagnostics.Debug.Assert(CallBack != null || list != null);
+
             using (DbCommand cmd = cn.CreateSelect("Systems s",
                         MakeSystemQueryNamed,
                         where:
@@ -165,77 +153,20 @@ namespace EliteDangerousCore.DB
 
                 //System.Diagnostics.Debug.WriteLine(cn.ExplainQueryPlanString(cmd));
 
-                List<ISystem> list = new List<ISystem>();
                 using (DbDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
                         var sys = MakeSystem(reader);
-                        list.Add(sys);
-                    }
-                }
-
-                return list;
-            }
-        }
-
-        internal static ISystem GetSystemNearestTo(IEnumerable<ISystem> systems,            // non database helper function
-                                                   Point3D currentpos,
-                                                   Point3D wantedpos,
-                                                   double maxfromcurpos,
-                                                   double maxfromwanted,
-                                                   SystemsNearestMetric routemethod)
-        {
-            double bestmindistance = double.MaxValue;
-            ISystem nearestsystem = null;
-
-            foreach (var s in systems)
-            {
-                Point3D syspos = new Point3D(s.X, s.Y, s.Z);
-                double distancefromwantedx2 = Point3D.DistanceBetweenX2(wantedpos, syspos); // range between the wanted point and this, ^2
-                double distancefromcurposx2 = Point3D.DistanceBetweenX2(currentpos, syspos);    // range between the wanted point and this, ^2
-
-                // ENSURE its withing the circles now
-                if (distancefromcurposx2 <= (maxfromcurpos * maxfromcurpos) && distancefromwantedx2 <= (maxfromwanted * maxfromwanted))
-                {
-                    if (routemethod == SystemsNearestMetric.IterativeNearestWaypoint)
-                    {
-                        if (distancefromwantedx2 < bestmindistance)
-                        {
-                            nearestsystem = s;
-                            bestmindistance = distancefromwantedx2;
-                        }
-                    }
-                    else
-                    {
-                        Point3D interceptpoint = currentpos.InterceptPoint(wantedpos, syspos);      // work out where the perp. intercept point is..
-                        double deviation = Point3D.DistanceBetween(interceptpoint, syspos);
-                        double metric = 1E39;
-
-                        if (routemethod == SystemsNearestMetric.IterativeMinDevFromPath)
-                            metric = deviation;
-                        else if (routemethod == SystemsNearestMetric.IterativeMaximumDev100Ly)
-                            metric = (deviation <= 100) ? distancefromwantedx2 : metric;        // no need to sqrt it..
-                        else if (routemethod == SystemsNearestMetric.IterativeMaximumDev250Ly)
-                            metric = (deviation <= 250) ? distancefromwantedx2 : metric;
-                        else if (routemethod == SystemsNearestMetric.IterativeMaximumDev500Ly)
-                            metric = (deviation <= 500) ? distancefromwantedx2 : metric;
-                        else if (routemethod == SystemsNearestMetric.IterativeWaypointDevHalf)
-                            metric = Math.Sqrt(distancefromwantedx2) + deviation / 2;
+                        if (CallBack!=null)
+                            CallBack(sys);
                         else
-                            throw new ArgumentOutOfRangeException(nameof(routemethod));
-
-                        if (metric < bestmindistance)
-                        {
-                            nearestsystem = s;
-                            bestmindistance = metric;
-                        }
+                            list.Add(sys);
                     }
                 }
             }
-
-            return nearestsystem;
         }
+
     }
 }
 

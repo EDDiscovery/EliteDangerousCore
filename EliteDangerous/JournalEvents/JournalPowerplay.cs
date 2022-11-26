@@ -37,7 +37,8 @@ namespace EliteDangerousCore.JournalEvents
         public int Merits { get; set; }
         public int Votes { get; set; }
         public long TimePledged { get; set; }
-        public TimeSpan TimePledgedSpan { get; set; }
+        public TimeSpan TimePledgedSpan { get;}
+        public DateTime TimeJoinedUTC { get { return EventTimeUTC.Subtract(TimePledgedSpan); } }
         public string TimePledgedString { get; set; }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 

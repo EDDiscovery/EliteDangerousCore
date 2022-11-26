@@ -257,6 +257,7 @@ SECTION JournalTypeEnum
 .FSSBodySignals: "FSS Body Signals" @
 .ModuleBuyAndStore: "Module Buy And Store" @
 .ScanBaryCentre: "Scan Barycentre" @
+.NavRouteClear: "Nav Route Clear" @
 
 SECTION JournalCargo
 
@@ -441,7 +442,7 @@ SECTION JournalProspectedAsteroid
 SECTION JournalPromotion
 
 .Combat: "Combat: " @
-.Trade: "Trade: " => "Commerce: "
+.Trade: "Trade: " => "Commerce"
 .Exploration: "Exploration: " @
 .Empire: "Empire: " @
 .Federation: "Federation: " => "Fédération"
@@ -1028,6 +1029,7 @@ SECTION JournalEntry
 .Failed: "Failed: " => "Échoué: "
 .Completed: "Completed: " => "Terminé: "
 .Station: "Station: " @
+.Settlement: "Settlement: " @
 .TargetFaction: "Target Faction: " => "Faction Cible: "
 .Donation: "Donation: " => "Don: "
 .Permits: "Permits: " => "Permis: "
@@ -1164,3 +1166,20 @@ SECTION JournalScanInfo
 .PFSD: " Premium" @
 .LE: "{0} has {1} level elements." @
 .scanorganics: " Has been scanned for organics." @
+
+SECTION Services
+
+.BridgeCrew: "Bridge Crew" @
+.CommodityTrading: "Commodity Trading" @
+.TritiumDepot: "Tritium Depot" @
+.Refuel: "Refuel Station" @
+.Repair: "Repair Crews" @
+.Rearm: "Armoury" @
+.VoucherRedemption: "Redemption Office" @
+.Shipyard: "Shipyard" @
+.Outfitting: "Outfitting" @
+.BlackMarket: "Secure Warehouse" @
+.Exploration: "Universal Cartographics" @
+.Bartender: "Concourse Bar" @
+.VistaGenomics: "Vista Genomics" @
+.PioneerSupplies: "Pioneer Supplies" @

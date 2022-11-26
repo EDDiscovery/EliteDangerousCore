@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 using System;
 
@@ -23,18 +23,25 @@ namespace EliteDangerousCore.UIEvents
         {
         }
 
-        public UIFuel(double value, double res, UIMode.ModeType shiptype, DateTime time, bool refresh) : this( time, refresh)
+        public UIFuel(double value, double res, UIMode.ModeType shiptype, bool scooping, DateTime time, bool refresh) : this( time, refresh)
         {
             Fuel = value;
             FuelRes = res;
             Mode = shiptype;
+            Scooping = scooping;
         }
 
         public double Fuel { get; private set; }     // level,
         public double FuelRes { get; private set; }     // level 3.3.2
+        public bool Scooping { get; private set; }     // scooping
 
         public bool Valid { get { return Fuel >= 0; } }
 
         public UIMode.ModeType Mode { get; private set; }   // Ship type flags.. per flags
+
+        public override string ToString()
+        {
+            return $"{Fuel:N2} res {FuelRes:N2} scooping {Scooping}";
+        }
     }
 }

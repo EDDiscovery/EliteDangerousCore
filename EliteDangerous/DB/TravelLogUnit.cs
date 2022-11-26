@@ -106,7 +106,7 @@ namespace EliteDangerousCore.DB
                 }
 
                 //System.Diagnostics.Debug.WriteLine("Update cache with " + ID);
-                cache[ID] = this;
+                cacheid[ID] = this;
                 return true;
             }
         }
@@ -139,9 +139,10 @@ namespace EliteDangerousCore.DB
 
         static private void FetchAll()
         {
-            if (cache == null)
+            if (cacheid == null)
             {
-                cache = new Dictionary<long, TravelLogUnit>();
+                cacheid = new Dictionary<long, TravelLogUnit>();
+                cachepath = new Dictionary<string, TravelLogUnit>();
 
                 UserDatabase.Instance.DBRead(cn =>
                 {
@@ -152,8 +153,9 @@ namespace EliteDangerousCore.DB
                             while (rdr.Read())
                             {
                                 TravelLogUnit sys = new TravelLogUnit(rdr);
-                                System.Diagnostics.Debug.Assert(!cache.ContainsKey(sys.ID));
-                                cache[sys.ID] = sys;
+                                System.Diagnostics.Debug.Assert(!cacheid.ContainsKey(sys.ID));
+                                cacheid[sys.ID] = sys;
+                                cachepath[sys.FullName.ToLowerInvariant()] = sys;       // name is v.important for speed
                             }
                         }
                     }
@@ -164,19 +166,22 @@ namespace EliteDangerousCore.DB
         static public List<TravelLogUnit> GetAll()
         {
             FetchAll();
-            return cache.Values.ToList();
+            return cacheid.Values.ToList();
         }
 
         public static List<string> GetAllNames()
         {
             FetchAll();
-            return cache.Values.Select(x=>x.FullName).ToList();
+            return cacheid.Values.Select(x=>x.FullName).ToList();
         }
 
         public static TravelLogUnit Get(string pathfilename)
         {
             FetchAll();
-            return cache.Values.ToList().Find(x => x.FullName == pathfilename); // null if not there
+            if (cachepath.TryGetValue(pathfilename.ToLowerInvariant(), out TravelLogUnit res))
+                return res;
+            else
+                return null;
         }
 
         public static bool TryGet(string name, out TravelLogUnit tlu)
@@ -188,7 +193,7 @@ namespace EliteDangerousCore.DB
         public static TravelLogUnit Get(long id)
         {
             FetchAll();
-            return cache.ContainsKey(id) ? cache[id] : null;
+            return cacheid.ContainsKey(id) ? cacheid[id] : null;
         }
 
         public static bool TryGet(long id, out TravelLogUnit tlu)
@@ -197,7 +202,8 @@ namespace EliteDangerousCore.DB
             return tlu != null;
         }
 
-        public static Dictionary<long, TravelLogUnit> cache = null;
+        public static Dictionary<long, TravelLogUnit> cacheid = null;
+        public static Dictionary<string, TravelLogUnit> cachepath = null;
     }
 }
 

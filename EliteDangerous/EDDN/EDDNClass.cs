@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 EDDiscovery development team
+ * Copyright © 2016-2022 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,15 +10,12 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using QuickJSON;
 using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
@@ -27,7 +24,6 @@ namespace EliteDangerousCore.EDDN
     public class EDDNClass : BaseUtils.HttpCom
     {
         public string CommanderName { get; set; }
-        public bool IsBeta { get; set; } = false;
 
         static public string SoftwareName { get; set; } = "EDDiscovery";
 
@@ -47,6 +43,7 @@ namespace EliteDangerousCore.EDDN
         private readonly string ApproachSettlementSchema = "https://eddn.edcd.io/schemas/approachsettlement/1";
         private readonly string FSSAllBodiesFoundSchema = "https://eddn.edcd.io/schemas/fssallbodiesfound/1";
         private readonly string FSSSignalDiscoveredSchema = "https://eddn.edcd.io/schemas/fsssignaldiscovered/1";
+        private readonly string FCMaterialsSchema = "https://eddn.edcd.io/schemas/fcmaterials_journal/1";
 
         public EDDNClass()
         {
@@ -55,14 +52,15 @@ namespace EliteDangerousCore.EDDN
             CommanderName = EDCommander.Current.Name;
         }
 
-        private JObject Header()
+        private JObject Header(string gameversion, string build)
         {
             JObject header = new JObject();
 
             header["uploaderID"] = CommanderName;
             header["softwareName"] = SoftwareName;
             header["softwareVersion"] = fromSoftwareVersion;
-
+            header["gameversion"] = gameversion ?? "";
+            header["gamebuild"] = build ?? ""; 
             return header;
         }
 
@@ -85,7 +83,8 @@ namespace EliteDangerousCore.EDDN
                  EntryType == JournalTypeEnum.NavRoute ||
                  EntryType == JournalTypeEnum.FSSAllBodiesFound ||
                  EntryType == JournalTypeEnum.ApproachSettlement ||
-                 EntryType == JournalTypeEnum.FSSSignalDiscovered
+                 EntryType == JournalTypeEnum.FSSSignalDiscovered ||
+                 EntryType == JournalTypeEnum.FCMaterials
                  );
         }
 
@@ -404,7 +403,7 @@ namespace EliteDangerousCore.EDDN
 
             JObject msg = new JObject();
             
-            msg["header"] = Header();
+            msg["header"] = Header(journal.GameVersion,journal.Build);
             msg["$schemaRef"] = JournalSchema;
 
             JObject message = journal.GetJsonCloned();
@@ -446,7 +445,7 @@ namespace EliteDangerousCore.EDDN
 
             JObject msg = new JObject();
 
-            msg["header"] = Header();
+            msg["header"] = Header(journal.GameVersion,journal.Build);
             msg["$schemaRef"] = JournalSchema;
 
             JObject message = journal.GetJsonCloned();
@@ -484,7 +483,7 @@ namespace EliteDangerousCore.EDDN
 
             JObject msg = new JObject();
 
-            msg["header"] = Header();
+            msg["header"] = Header(journal.GameVersion,journal.Build);
             msg["$schemaRef"] = JournalSchema;
 
             JObject message = journal.GetJsonCloned();
@@ -525,7 +524,7 @@ namespace EliteDangerousCore.EDDN
 
             JObject msg = new JObject();
 
-            msg["header"] = Header();
+            msg["header"] = Header(journal.GameVersion,journal.Build);
             msg["$schemaRef"] = JournalSchema;
 
             JObject message = journal.GetJsonCloned();
@@ -559,7 +558,10 @@ namespace EliteDangerousCore.EDDN
 
             JObject msg = new JObject();
 
-            msg["header"] = Header();
+            // header matches Athan wishes for capi sourced data
+
+            bool capi = !journal.IsJournalSourced;
+            msg["header"] = Header(capi ? "CAPI-shipyard" : journal.GameVersion, capi ? "" : journal.Build);
             msg["$schemaRef"] = OutfittingSchema;
 
             JObject message = new JObject
@@ -569,7 +571,10 @@ namespace EliteDangerousCore.EDDN
                 ["stationName"] = journal.YardInfo.StationName,
                 ["stationName"] = journal.YardInfo.StationName,
                 ["marketId"] = journal.MarketID,
-                ["modules"] = new JArray(journal.YardInfo.Items.Select(m => JournalFieldNaming.NormaliseFDItemName(m.FDName)))
+                ["modules"] = new JArray(journal.YardInfo.Items
+                                .Where(m => m.FDName.StartsWith("Hpt_", StringComparison.InvariantCultureIgnoreCase) || m.FDName.StartsWith("Int_", StringComparison.InvariantCultureIgnoreCase)
+                                        || m.FDName.Contains("_armour_", StringComparison.InvariantCultureIgnoreCase))
+                                .Select(m => JournalFieldNaming.NormaliseFDItemName(m.FDName)))
             };
 
             message["odyssey"] = journal.IsOdyssey;     // new may 21
@@ -586,7 +591,10 @@ namespace EliteDangerousCore.EDDN
 
             JObject msg = new JObject();
 
-            msg["header"] = Header();
+            // header matches Athan wishes for capi sourced data
+
+            bool capi = !journal.IsJournalSourced;
+            msg["header"] = Header(capi ? "CAPI-shipyard" : journal.GameVersion, capi ? "" : journal.Build);
             msg["$schemaRef"] = ShipyardSchema;
 
             JObject message = new JObject
@@ -616,7 +624,7 @@ namespace EliteDangerousCore.EDDN
 
             JObject msg = new JObject();
 
-            msg["header"] = Header();
+            msg["header"] = Header(journal.GameVersion,journal.Build);
             msg["$schemaRef"] = JournalSchema;
 
             JObject message = journal.GetJsonCloned();
@@ -679,7 +687,7 @@ namespace EliteDangerousCore.EDDN
 
             JObject msg = new JObject();
 
-            msg["header"] = Header();
+            msg["header"] = Header(journal.GameVersion,journal.Build);
             msg["$schemaRef"] = JournalSchema;
 
             JObject message = journal.GetJsonCloned();
@@ -712,21 +720,21 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
-        public JObject CreateEDDNFSSDiscoveryScan(JournalFSSDiscoveryScan fds, ISystem system)
+        public JObject CreateEDDNFSSDiscoveryScan(JournalFSSDiscoveryScan journal, ISystem system)
         {
             JObject msg = new JObject();
-            msg["header"] = Header();
+            msg["header"] = Header(journal.GameVersion,journal.Build);
             msg["$schemaRef"] = FSSDiscoveryScanSchema;
 
-            JObject message = fds.GetJsonCloned();
+            JObject message = journal.GetJsonCloned();
 
             if (message == null)
                 return null;
 
             // verified against EDDN logs 25/1/22
             message.Remove("Progress");
-            message["odyssey"] = fds.IsOdyssey;
-            message["horizons"] = fds.IsHorizons;
+            message["odyssey"] = journal.IsOdyssey;
+            message["horizons"] = journal.IsHorizons;
             message["StarPos"] = new JArray(new float[] { (float)system.X, (float)system.Y, (float)system.Z });
             message["SystemAddress"] = system.SystemAddress;
             message["SystemName"] = system.Name;
@@ -734,19 +742,19 @@ namespace EliteDangerousCore.EDDN
             msg["message"] = message;
             return msg;
         }
-        public JObject CreateEDDNNavBeaconScan( JournalNavBeaconScan nbs, ISystem system)
+        public JObject CreateEDDNNavBeaconScan( JournalNavBeaconScan journal, ISystem system)
         {
             JObject msg = new JObject();
-            msg["header"] = Header();
+            msg["header"] = Header(journal.GameVersion,journal.Build);
             msg["$schemaRef"] = NavBeaconSchema;
 
-            JObject message = nbs.GetJsonCloned();
+            JObject message = journal.GetJsonCloned();
 
             if (message == null)
                 return null;
 
-            message["odyssey"] = nbs.IsOdyssey;
-            message["horizons"] = nbs.IsHorizons;
+            message["odyssey"] = journal.IsOdyssey;
+            message["horizons"] = journal.IsHorizons;
             message["StarPos"] = new JArray(new float[] { (float)system.X, (float)system.Y, (float)system.Z });
             message["SystemAddress"] = system.SystemAddress;
             message["StarSystem"] = system.Name;
@@ -755,13 +763,13 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
-        public JObject CreateEDDNCodexEntry(JournalCodexEntry cx, ISystem system)
+        public JObject CreateEDDNCodexEntry(JournalCodexEntry journal, ISystem system)
         {
             JObject msg = new JObject();
-            msg["header"] = Header();
+            msg["header"] = Header(journal.GameVersion,journal.Build);
             msg["$schemaRef"] = CodexSchema;
 
-            JObject message = cx.GetJsonCloned();
+            JObject message = journal.GetJsonCloned();
 
             if (message == null)
                 return null;
@@ -773,13 +781,13 @@ namespace EliteDangerousCore.EDDN
                 message.Remove("NearestDestination");
 
             // verified against EDDN logs 25/1/22
-            message["odyssey"] = cx.IsOdyssey;
-            message["horizons"] = cx.IsHorizons;
+            message["odyssey"] = journal.IsOdyssey;
+            message["horizons"] = journal.IsHorizons;
             message["StarPos"] = new JArray(new float[] { (float)system.X, (float)system.Y, (float)system.Z });
             message["SystemAddress"] = system.SystemAddress;
             message["System"] = system.Name;
 
-            JObject orgmsg = cx.GetJson();
+            JObject orgmsg = journal.GetJson();
             if (orgmsg["EDDBodyID"].Int(-1) != -1)
                 message["BodyID"] = orgmsg["EDDBodyID"];
             if (orgmsg["EDDBodyName"].StrNull() != null)
@@ -788,13 +796,13 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
-        public JObject CreateEDDNNavRoute(JournalNavRoute nr, ISystem system)
+        public JObject CreateEDDNNavRoute(JournalNavRoute journal, ISystem system)
         {
             JObject msg = new JObject();
-            msg["header"] = Header();
+            msg["header"] = Header(journal.GameVersion,journal.Build);
             msg["$schemaRef"] = NavRouteSchema;
 
-            JObject message = nr.GetJsonCloned();       // only has Route inside it.
+            JObject message = journal.GetJsonCloned();       // only has Route inside it.
 
             if (message == null)                   // must have something
                 return null;
@@ -805,19 +813,19 @@ namespace EliteDangerousCore.EDDN
             if (ja == null || ja.Count == 0)
                 return null;
 
-            message["odyssey"] = nr.IsOdyssey;
-            message["horizons"] = nr.IsHorizons;
+            message["odyssey"] = journal.IsOdyssey;
+            message["horizons"] = journal.IsHorizons;
 
             msg["message"] = message;
             return msg;
         }
-        public JObject CreateEDDNScanBaryCentre(JournalScanBaryCentre sbc, ISystem system)
+        public JObject CreateEDDNScanBaryCentre(JournalScanBaryCentre journal, ISystem system)
         {
             JObject msg = new JObject();
-            msg["header"] = Header();
+            msg["header"] = Header(journal.GameVersion,journal.Build);
             msg["$schemaRef"] = ScanBarycentreSchema;
 
-            JObject message = sbc.GetJsonCloned();      // has all fields for  
+            JObject message = journal.GetJsonCloned();      // has all fields for  
 
             if (message == null)                        // must have something, all the rest of the fields are valid to send
                 return null;
@@ -825,52 +833,52 @@ namespace EliteDangerousCore.EDDN
             RemoveCommonKeys(message);          // remove _localised
             
             message["StarPos"] = new JArray(new float[] { (float)system.X, (float)system.Y, (float)system.Z });
-            message["odyssey"] = sbc.IsOdyssey;
-            message["horizons"] = sbc.IsHorizons;
+            message["odyssey"] = journal.IsOdyssey;
+            message["horizons"] = journal.IsHorizons;
 
             msg["message"] = message;
             return msg;
         }
 
-        public JObject CreateEDDNFSSAllBodiesFound(JournalFSSAllBodiesFound fabf, ISystem system)
+        public JObject CreateEDDNFSSAllBodiesFound(JournalFSSAllBodiesFound journal, ISystem system)
         {
             JObject msg = new JObject();
-            msg["header"] = Header();
+            msg["header"] = Header(journal.GameVersion,journal.Build);
             msg["$schemaRef"] = FSSAllBodiesFoundSchema;
 
-            JObject message = fabf.GetJsonCloned();
+            JObject message = journal.GetJsonCloned();
 
             if (message == null)
                 return null;
 
             RemoveCommonKeys(message);          // remove _localised
 
-            message["odyssey"] = fabf.IsOdyssey;
-            message["horizons"] = fabf.IsHorizons;
+            message["odyssey"] = journal.IsOdyssey;
+            message["horizons"] = journal.IsHorizons;
             message["StarPos"] = new JArray(new float[] { (float)system.X, (float)system.Y, (float)system.Z });
 
             msg["message"] = message;
             return msg;
         }
 
-        public JObject CreateEDDNApproachSettlement(JournalApproachSettlement ap, ISystem system)
+        public JObject CreateEDDNApproachSettlement(JournalApproachSettlement journal, ISystem system)
         {
-            if (ap.Latitude == null || ap.Longitude == null)        // sometimes these are missing, so ignore these. 
+            if (journal.Latitude == null || journal.Longitude == null)        // sometimes these are missing, so ignore these. 
                 return null;
 
             JObject msg = new JObject();
-            msg["header"] = Header();
+            msg["header"] = Header(journal.GameVersion,journal.Build);
             msg["$schemaRef"] = ApproachSettlementSchema;
 
-            JObject message = ap.GetJsonCloned();
+            JObject message = journal.GetJsonCloned();
 
             if (message == null)
                 return null;
 
             RemoveCommonKeys(message);          // remove _localised
 
-            message["odyssey"] = ap.IsOdyssey;
-            message["horizons"] = ap.IsHorizons;
+            message["odyssey"] = journal.IsOdyssey;
+            message["horizons"] = journal.IsHorizons;
             message["StarSystem"] = system.Name;
             message["StarPos"] = new JArray(new float[] { (float)system.X, (float)system.Y, (float)system.Z });
 
@@ -878,14 +886,16 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
-        public JObject CreateEDDNCommodityMessage(List<CCommodities> commodities, bool odyssey, bool horizons, string systemName, string stationName, long? marketID, DateTime time)
+        // pass thru gameversion/build as its used for both journal market and capi EDDCommodityPrices
+
+        public JObject CreateEDDNCommodityMessage(string gameversion, string build, List<CCommodities> commodities, bool odyssey, bool horizons, string systemName, string stationName, long? marketID, DateTime time)
         {
             if (commodities == null) // now allowed to send empty lists for FC purposes (jan 21)
                 return null;
 
             JObject msg = new JObject();
 
-            msg["header"] = Header();
+            msg["header"] = Header(gameversion,build);
             msg["$schemaRef"] = CommoditySchema;
 
             JObject message = new JObject();
@@ -934,27 +944,27 @@ namespace EliteDangerousCore.EDDN
         }
 
 
-        public JObject CreateEDDNFSSSignalDiscovered(JournalFSSSignalDiscovered sd, ISystem system)
+        public JObject CreateEDDNFSSSignalDiscovered(JournalFSSSignalDiscovered journal, ISystem system)
         {
-            if (sd.Signals == null)
+            if (journal.Signals == null)
                 return null;
 
             JObject msg = new JObject();
-            msg["header"] = Header();
+            msg["header"] = Header(journal.GameVersion,journal.Build);
             msg["$schemaRef"] = FSSSignalDiscoveredSchema;
 
             JObject message = new JObject();
 
             message["event"] = "FSSSignalDiscovered";
-            message["horizons"] = sd.IsHorizons;
-            message["odyssey"] = sd.IsOdyssey;
-            message["timestamp"] = sd.Signals[0].RecordedUTC.ToStringZuluInvariant();
+            message["horizons"] = journal.IsHorizons;
+            message["odyssey"] = journal.IsOdyssey;
+            message["timestamp"] = journal.Signals[0].RecordedUTC.ToStringZuluInvariant();
             message["SystemAddress"] = system.SystemAddress ?? 0;
             message["StarSystem"] = system.Name;
             message["StarPos"] = new JArray(new float[] { (float)system.X, (float)system.Y, (float)system.Z });
 
             JArray ja = new JArray();
-            foreach( var sig in sd.Signals)
+            foreach (var sig in journal.Signals)
             {
                 if (sig.USSType == null || !sig.USSType.Contains("$USS_Type_MissionTarget"))        // not mission targets
                 {
@@ -983,22 +993,59 @@ namespace EliteDangerousCore.EDDN
             message["signals"] = ja;
 
             msg["message"] = message;
-            
+
+            return msg;
+        }
+
+        public JObject CreateEDDNFCMaterials(JournalFCMaterials journal, ISystem system)
+        {
+            if (journal.Items == null)
+                return null;
+
+            JObject msg = new JObject();
+            msg["header"] = Header(journal.GameVersion,journal.Build);
+            msg["$schemaRef"] = FCMaterialsSchema;
+
+            JObject message = new JObject();
+
+            message["timestamp"] = journal.EventTimeUTC.ToStringZuluInvariant();
+            message["event"] = "FCMaterials";
+            message["horizons"] = journal.IsHorizons;
+            message["odyssey"] = journal.IsOdyssey;
+            message["MarketID"] = journal.MarketID;
+            message["CarrierName"] = journal.CarrierName;
+            message["CarrierID"] = journal.CarrierID;
+
+            JArray ja = new JArray();
+            foreach (var commodity in journal.Items)
+            {
+                JObject sj = new JObject();
+                sj["id"] = commodity.id;
+                sj["Name"] = commodity.fdname_unnormalised;
+                sj["Price"] = commodity.buyPrice;
+                sj["Stock"] = commodity.stock;
+                sj["Demand"] = commodity.demand;
+                ja.Add(sj);
+            }
+
+            message["Items"] = ja;
+        
+            msg["message"] = message;
+
             return msg;
         }
 
 
-
-        public bool PostMessage(JObject msg)
+        public bool PostMessage(JObject msg, bool beta, bool test)
         {
             try
             {
-                httpserveraddress = IsBeta ? EDDNServerBeta : EDDNServer;
+                httpserveraddress = beta ? EDDNServerBeta : EDDNServer;
 
-                if (IsBeta)
+                if (test)
                     msg["$schemaRef"] = msg["$schemaRef"].Str() + "/test";
 
-                System.Diagnostics.Debug.WriteLine($"EDDN Send to {httpserveraddress} {msg.ToString(true)}");
+                System.Diagnostics.Debug.WriteLine($"EDDN Send to {httpserveraddress} {msg.ToString()}");
 
                 BaseUtils.ResponseData resp = RequestPost(msg.ToString(), "");
 

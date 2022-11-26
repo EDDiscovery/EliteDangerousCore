@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2015-2021 EDDiscovery development team
+ * Copyright 2015-2022 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,28 +10,26 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 
 namespace EliteDangerousCore.DB
 {
     public class SystemNoteClass
     {
-        public long id;
-        public long Journalid;              // if Journalid <> 0, its a journal marker.  SystemName can be set or clear
-        public string SystemName;           // with JournalId=0, this is a system marker
-        public DateTime Time;
-        public string Note { get; private set; }
+        public bool IsSystemNote { get { return JournalID <= 0; } } 
 
-        public bool Dirty;                  // NOT DB changed but uncommitted
-        public bool FSDEntry;               // is a FSD entry.. used to mark it for EDSM send purposes
-        
-        public static List<SystemNoteClass> globalSystemNotes = new List<SystemNoteClass>();        // global cache, kept updated
+        public long ID { get; private set; }
+        public long JournalID { get; private set; }
+        public string SystemName { get; private set; }
+        public DateTime LocalTimeLastCreatedEdited { get; private set; }     // when created or last edited.
+        public DateTime UTCTimeCreated { get; private set; }     // Introduced nov 22 - utc time created. May be MinDate
+        public string JournalText { get; private set; }     // Introduced nov 22 - may be null
+        public string Note { get; private set; }
 
         public SystemNoteClass()
         {
@@ -39,13 +37,19 @@ namespace EliteDangerousCore.DB
 
         public SystemNoteClass(DbDataReader dr)
         {
-            id = (long)dr["id"];
-            Journalid = (long)dr["journalid"];
+            ID = (long)dr["id"];
+            JournalID = (long)dr["journalid"];
             SystemName = (string)dr["Name"];
-            Time = (DateTime)dr["Time"];
+            LocalTimeLastCreatedEdited = ((DateTime)dr["Time"]).ToLocalKind();
+            if (System.DBNull.Value != dr["UTCTime"])
+                UTCTimeCreated = ((DateTime)dr["UTCTime"]);//.ToUniversalKind();
+            else
+                UTCTimeCreated = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);           // default don't have value
+
+            if (System.DBNull.Value != dr["JournalText"])
+                JournalText = (string)dr["JournalText"];
             Note = (string)dr["Note"];
         }
-
 
         private bool AddToDbAndGlobal()
         {
@@ -54,23 +58,26 @@ namespace EliteDangerousCore.DB
 
         private bool AddToDbAndGlobal(SQLiteConnectionUser cn)
         {
-            using (DbCommand cmd = cn.CreateCommand("Insert into SystemNote (Name, Time, Note, journalid) values (@name, @time, @note, @journalid)"))
+            using (DbCommand cmd = cn.CreateCommand("Insert into SystemNote (Name, Time, Note, journalid,UTCTime,JournalText) values (@name, @time, @note, @journalid,@utc,@jt)"))
             {
                 cmd.AddParameterWithValue("@name", SystemName);
-                cmd.AddParameterWithValue("@time", Time);
+                cmd.AddParameterWithValue("@time", LocalTimeLastCreatedEdited);
                 cmd.AddParameterWithValue("@note", Note);
-                cmd.AddParameterWithValue("@journalid", Journalid);
+                cmd.AddParameterWithValue("@journalid", JournalID);
+                cmd.AddParameterWithValue("@utc", UTCTimeCreated);
+                cmd.AddParameterWithValue("@jt", JournalText);
 
                 cmd.ExecuteNonQuery();
 
                 using (DbCommand cmd2 = cn.CreateCommand("Select Max(id) as id from SystemNote"))
                 {
-                    id = (long)cmd2.ExecuteScalar();
+                    ID = (long)cmd2.ExecuteScalar();
                 }
 
-                globalSystemNotes.Add(this);
-
-                Dirty = false;
+                if (IsSystemNote)
+                    notesbyname[SystemName.ToLowerInvariant()] = this;
+                else
+                    notesbyjid[JournalID] = this;
 
                 return true;
             }
@@ -83,22 +90,21 @@ namespace EliteDangerousCore.DB
 
         private bool Update(SQLiteConnectionUser cn)
         {
-            using (DbCommand cmd = cn.CreateCommand("Update SystemNote set Name=@Name, Time=@Time, Note=@Note, Journalid=@journalid where ID=@id"))
+            using (DbCommand cmd = cn.CreateCommand("Update SystemNote set Name=@Name, Time=@Time, Note=@Note, Journalid=@journalid, JournalText=@jt, UTCTime=@utc where ID=@id"))
             {
-                cmd.AddParameterWithValue("@ID", id);
+                cmd.AddParameterWithValue("@ID", ID);
                 cmd.AddParameterWithValue("@Name", SystemName);
                 cmd.AddParameterWithValue("@Note", Note);
-                cmd.AddParameterWithValue("@Time", Time);
-                cmd.AddParameterWithValue("@journalid", Journalid);
+                cmd.AddParameterWithValue("@Time", LocalTimeLastCreatedEdited);
+                cmd.AddParameterWithValue("@journalid", JournalID);
+                cmd.AddParameterWithValue("@utc", UTCTimeCreated);
+                cmd.AddParameterWithValue("@jt", JournalText);
 
                 cmd.ExecuteNonQuery();
-
-                Dirty = false;
             }
 
             return true;
         }
-
         public bool Delete()
         {
             return UserDatabase.Instance.DBWrite<bool>(cn => { return Delete(cn); });
@@ -108,133 +114,121 @@ namespace EliteDangerousCore.DB
         {
             using (DbCommand cmd = cn.CreateCommand("DELETE FROM SystemNote WHERE id = @id"))
             {
-                cmd.AddParameterWithValue("@id", id);
+                cmd.AddParameterWithValue("@id", ID);
                 cmd.ExecuteNonQuery();
 
-                globalSystemNotes.RemoveAll(x => x.id == id);     // remove from list any containing id.
+                if (IsSystemNote)
+                    notesbyname.Remove(SystemName.ToLowerInvariant());
+                else
+                    notesbyjid.Remove(JournalID);
+
                 return true;
             }
         }
 
-        public static bool GetAllSystemNotes()
+        public static void GetAllSystemNotes()
         {
-            try
+            var list = UserDatabase.Instance.DBRead<List<SystemNoteClass>>(cn =>
             {
-                return UserDatabase.Instance.DBRead<bool>(cn =>
+                using (DbCommand cmd = cn.CreateCommand("select * from SystemNote"))
                 {
-                    using (DbCommand cmd = cn.CreateCommand("select * from SystemNote"))
+                    List<SystemNoteClass> notes = new List<SystemNoteClass>();
+
+                    using (DbDataReader rdr = cmd.ExecuteReader())
                     {
-                        List<SystemNoteClass> notes = new List<SystemNoteClass>();
-
-                        using (DbDataReader rdr = cmd.ExecuteReader())
+                        while (rdr.Read())
                         {
-                            while (rdr.Read())
-                            {
-                                notes.Add(new SystemNoteClass(rdr));
-                            }
-                        }
-
-                        if (notes.Count == 0)
-                        {
-                            return false;
-                        }
-                        else
-                        {
-                            foreach (var sys in notes)
-                            {
-                                globalSystemNotes.Add(sys);
-                            }
-
-                            return true;
+                            notes.Add(new SystemNoteClass(rdr));
                         }
                     }
-                });
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine("Exception " + ex.ToString());
-                return false;
-            }
-        }
 
-        public static void CommitDirtyNotes( Action<SystemNoteClass> actionondirty )   // can be null
-        {
-            foreach (SystemNoteClass snc in globalSystemNotes)
-            {
-                if (snc.Dirty)
-                {
-                    System.Diagnostics.Debug.WriteLine("Commit dirty note " + snc.Journalid + " " + snc.SystemName + " " + snc.Note);
-                    snc.Update();       // clears the dirty flag
-                    actionondirty?.Invoke(snc);     // pass back in case it needs to do something with it
+                    return notes;
                 }
+            });
+
+            foreach (var sys in list)
+            {
+                if (sys.IsSystemNote)
+                    notesbyname[sys.SystemName.ToLowerInvariant()] = sys;
+                else
+                    notesbyjid[sys.JournalID] = sys;
             }
         }
 
-        public static SystemNoteClass GetNoteOnSystem(string name)      // case insensitive.. null if not there
-        {
-            return globalSystemNotes.FindLast(x => x.SystemName.Equals(name, StringComparison.InvariantCultureIgnoreCase) );
-        }
 
-        public static SystemNoteClass GetNoteOnJournalEntry(long jid)
+        // return all text notes on this system, newline spaced. Returns empty string if none
+        public static string GetTextNotesOnSystem(string systemname)      // case insensitive.. null if not there
         {
-            if (jid > 0)
-                return globalSystemNotes.FindLast(x => x.Journalid == jid);
+            var jidlist = notesbyjid.Values.Where(x => x.SystemName.Equals(systemname, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Note).ToList();
+
+            notesbyname.TryGetValue(systemname.ToLowerInvariant(), out SystemNoteClass snc);
+
+            if (jidlist.Count > 0)
+            {
+                if (snc != null)
+                    jidlist.Add(snc.Note);
+
+                return string.Join(Environment.NewLine, jidlist);
+            }
             else
-                return null;
+                return snc != null ? snc.Note : String.Empty;
         }
 
-        public static SystemNoteClass GetSystemNote(long jid, string systemname = null)
+        // get a JID note
+        public static SystemNoteClass GetJIDNote(long jid)
         {
-            if (systemname != null)  // if we have a name, find the old ones with no JID but at system
-                return globalSystemNotes.FindLast(x => x.Journalid == jid || (x.Journalid <= 0 && systemname.Equals(x.SystemName, StringComparison.InvariantCultureIgnoreCase)));
-            else
-                return globalSystemNotes.FindLast(x => x.Journalid == jid);
+            notesbyjid.TryGetValue(jid, out SystemNoteClass snc);
+            return snc;
         }
 
-        public static SystemNoteClass MakeSystemNote(string text, DateTime time, string sysname, long journalid, bool fsdentry )
+        // get a system note on this system - system notes are now only made by EDSM
+        public static SystemNoteClass GetSystemNote(string systemname)
+        {
+            notesbyname.TryGetValue(systemname.ToLowerInvariant(), out SystemNoteClass snc);
+            return snc;
+        }
+
+        // set journalid = 0 for a system note
+        public static SystemNoteClass MakeNote(string text, DateTime localtime, string sysname, long journalid, string journaltext )
         {
             SystemNoteClass sys = new SystemNoteClass();
             sys.Note = text;
-            sys.Time = time;
+            sys.LocalTimeLastCreatedEdited = localtime;
+            sys.UTCTimeCreated = DateTime.UtcNow;
             sys.SystemName = sysname;
-            sys.Journalid = journalid;                          // any new ones gets a journal id, making the Get always lock it to a journal entry
-            sys.FSDEntry = fsdentry;
+            sys.JournalID = journalid;                          // any new ones gets a journal id, making the Get always lock it to a journal entry
+            sys.JournalText = journaltext;
             sys.AddToDbAndGlobal();  // adds it to the global cache AND the db
-            System.Diagnostics.Debug.WriteLine("made note " + sys.Journalid + " " + sys.SystemName + " " + sys.Note);
+            System.Diagnostics.Debug.WriteLine($"System Note New note {sys.LocalTimeLastCreatedEdited} {sys.UTCTimeCreated} {sys.JournalID} {sys.SystemName} {sys.Note}");
             return sys;
         }
 
         // we update our note, time, and set dirty true.  
-        // if commit = true, we write the note to the db, which clears the dirty flag
-        public SystemNoteClass UpdateNote(string s, bool commit, DateTime time, bool fsdentry)
+        // commit to DB and to globals
+        public SystemNoteClass UpdateNote(string s, DateTime localtime, string journaltext)
         {
             Note = s;
-            Time = time;
-            FSDEntry = fsdentry;
+            LocalTimeLastCreatedEdited = localtime;
+            JournalText = journaltext;
+            if ( UTCTimeCreated.Year < 2014)            // if an old note, create now
+                UTCTimeCreated = DateTime.UtcNow;
 
-            Dirty = true;
-
-            if (commit)
+            if (s.Length == 0)        // empty ones delete the note
             {
-                if (s.Length == 0)        // empty ones delete the note
-                {
-                    System.Diagnostics.Debug.WriteLine("Delete note " + Journalid + " " + SystemName + " " + Note);
-                    Delete();           // delete and remove note
-                    return null;
-                }
-                else
-                {
-                    System.Diagnostics.Debug.WriteLine("Update note " + Journalid + " " + SystemName + " " + Note);
-                    Update();
-                }
+                System.Diagnostics.Debug.WriteLine($"System Note Delete {LocalTimeLastCreatedEdited} {JournalID} {SystemName} {Note}");
+                Delete();           // delete and remove note
+                return null;
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("Note edit in memory " + Journalid + " " + SystemName + " " + Note);
+                System.Diagnostics.Debug.WriteLine($"System Note Update {LocalTimeLastCreatedEdited} {JournalID} {SystemName} {Note}");
+                Update();           // update note
+                return this;
             }
-
-            return this;
         }
+
+        private static Dictionary<long, SystemNoteClass> notesbyjid = new Dictionary<long, SystemNoteClass>();
+        private static Dictionary<string, SystemNoteClass> notesbyname = new Dictionary<string, SystemNoteClass>();
 
 
     }

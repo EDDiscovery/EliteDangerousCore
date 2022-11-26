@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 using System;
 
@@ -28,5 +28,11 @@ namespace EliteDangerousCore.UIEvents
         }
 
         public int Group { get; private set; }      // 1,2,3 etc to match UI (journal has it 0 of course)
+
+        public override string ToString()
+        {
+            return $"{Group}";
+        }
+
     }
 }

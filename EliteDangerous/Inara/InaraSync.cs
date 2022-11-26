@@ -49,6 +49,9 @@ namespace EliteDangerousCore.Inara
 
         public static bool Refresh(Action<string> logger, HistoryEntry lasthe, EDCommander cmdr)
         {
+            if (cmdr.LegacyCommander == true)
+                return false;
+
             List<JToken> events = RefreshList(lasthe);
             if (events.Count > 0)
                 Submit(events,logger, cmdr, true);
@@ -57,9 +60,13 @@ namespace EliteDangerousCore.Inara
 
         public static bool HistoricData(Action<string> logger, HistoryList history, EDCommander cmdr)
         {
+            if (cmdr.LegacyCommander == true)
+                return false;
+
             List<JToken> events = HistoricList(history);
             if (events.Count > 0)
                 Submit(events, logger, cmdr, true);
+
             return true;
         }
 
@@ -74,6 +81,9 @@ namespace EliteDangerousCore.Inara
 
         public static bool NewEvent(Action<string> logger, HistoryEntry he, Dictionary<string,MaterialCommodityMicroResource> mcmr)
         {
+            if (he.Commander.LegacyCommander == true)
+                return false;
+
             List<JToken> events = NewEntryList(he, mcmr);
             if (events.Count > 0)
                 Submit(events, logger, he.Commander, false);
@@ -313,8 +323,8 @@ namespace EliteDangerousCore.Inara
                             eventstosend.Add(InaraClass.setCommanderRankPilot("combat", (int)ranksave.Combat, progress?.Combat ?? -1, ranksave.EventTimeUTC));
                             eventstosend.Add(InaraClass.setCommanderRankPilot("trade", (int)ranksave.Trade, progress?.Trade ?? -1, ranksave.EventTimeUTC));
                             eventstosend.Add(InaraClass.setCommanderRankPilot("explore", (int)ranksave.Explore, progress?.Explore ?? -1, ranksave.EventTimeUTC));
-                            eventstosend.Add(InaraClass.setCommanderRankPilot("soldier", (int)ranksave.SoldierRank, progress?.Soldier ?? -1, ranksave.EventTimeUTC));
-                            eventstosend.Add(InaraClass.setCommanderRankPilot("exobiologist", (int)ranksave.ExoBiologistRank, progress?.Exobiologist ?? -1, ranksave.EventTimeUTC));
+                            eventstosend.Add(InaraClass.setCommanderRankPilot("soldier", (int)ranksave.Soldier, progress?.Soldier ?? -1, ranksave.EventTimeUTC));
+                            eventstosend.Add(InaraClass.setCommanderRankPilot("exobiologist", (int)ranksave.ExoBiologist, progress?.ExoBiologist ?? -1, ranksave.EventTimeUTC));
                             eventstosend.Add(InaraClass.setCommanderRankPilot("empire", (int)ranksave.Empire, progress?.Empire ?? -1, ranksave.EventTimeUTC));
                             eventstosend.Add(InaraClass.setCommanderRankPilot("federation", (int)ranksave.Federation, progress?.Federation ?? -1, ranksave.EventTimeUTC));
                             eventstosend.Add(InaraClass.setCommanderRankPilot("cqc", (int)ranksave.CQC, progress?.CQC ?? -1, ranksave.EventTimeUTC));

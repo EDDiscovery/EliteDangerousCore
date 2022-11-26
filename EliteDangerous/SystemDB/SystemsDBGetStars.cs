@@ -170,52 +170,122 @@ namespace EliteDangerousCore.DB
                 }
             }
             else
-            {                             // named
-                if (ec.StarName.Length > 0)      // if we have a starname component and a sector name, look up sectorname + starname%
+            {
+                // if we have a starname component and a sector name, look up sectorname + starname%
+                // lengths based on no stars with 1 char and no sectors with 1 char
+
+                if (ec.SectorName != EliteNameClassifier.NoSectorName)     // we have a sector name
                 {
-                    // needs index on Systems(sectorid, Nameid)
-
-                    using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
-                                                        "s.nameid IN (Select id FROM Names WHERE name LIKE @p1) AND s.sectorid IN (Select id FROM Sectors c WHERE c.name=@p2)",
-                                                        new Object[] { ec.StarName + "%", ec.SectorName },
-                                                        limit: limit,
-                                                        joinlist: MakeSystemQueryNamedJoinList))
+                    if (ec.SectorName.Length > 1)   // its a decent length
                     {
-                        //System.Diagnostics.Debug.WriteLine(cn.ExplainQueryPlanString(selectSysCmd));
-
-                        using (DbDataReader reader = selectSysCmd.ExecuteReader())
+                        if (ec.StarName.Length > 0) // and we have a star name (of any length as its been split)
                         {
-                            while (reader.Read())
-                            {
-                                SystemClass sc = MakeSystem(reader);
-                                ret.Add(sc);
-                            }
+                           // System.Diagnostics.Debug.WriteLine($"******************** {BaseUtils.AppTicks.TickCountLap("SS1", true)} Search sector-name {ec.SectorName} {ec.StarName}");
 
-                            limit -= ret.Count;
+                            // needs index on Systems(sectorid, Nameid)
+
+                            using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
+                                                                "s.nameid IN (Select id FROM Names WHERE name LIKE @p1) AND s.sectorid IN (Select id FROM Sectors c WHERE c.name=@p2)",
+                                                                new Object[] { ec.StarName + "%", ec.SectorName },
+                                                                limit: limit,
+                                                                joinlist: MakeSystemQueryNamedJoinList))
+                            {
+                                //System.Diagnostics.Debug.WriteLine(cn.ExplainQueryPlanString(selectSysCmd));
+
+                                using (DbDataReader reader = selectSysCmd.ExecuteReader())
+                                {
+                                    while (reader.Read())
+                                    {
+                                        SystemClass sc = MakeSystem(reader);
+                                        ret.Add(sc);
+                                    }
+
+                                   // System.Diagnostics.Debug.WriteLine($"************** {BaseUtils.AppTicks.TickCountLap("SS1")} Search sector-name result {ret.Count}");
+
+                                    limit -= ret.Count;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            //System.Diagnostics.Debug.WriteLine($"Sector sector - noname {ec.SectorName}");
+
+                          //  System.Diagnostics.Debug.WriteLine($"******************** {BaseUtils.AppTicks.TickCountLap("SS1", true)} Search sector-noname {ec.SectorName} {ec.StarName}");
+
+                            using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
+                                                                "s.sectorid IN (Select id FROM Sectors c WHERE c.name LIKE @p1)",
+                                                                new Object[] { ec.SectorName + "%" },
+                                                                limit: limit,
+                                                                joinlist: MakeSystemQueryNamedJoinList))
+                            {
+                                //System.Diagnostics.Debug.WriteLine(cn.ExplainQueryPlanString(selectSysCmd));
+
+                                using (DbDataReader reader = selectSysCmd.ExecuteReader())
+                                {
+                                    while (reader.Read())
+                                    {
+                                        SystemClass sc = MakeSystem(reader);
+                                        ret.Add(sc);
+                                    }
+
+                              //      System.Diagnostics.Debug.WriteLine($"************** {BaseUtils.AppTicks.TickCountLap("SS1")} Search sector-noname result {ret.Count}");
+                                }
+                            }
                         }
                     }
                 }
-
-                // look up Sector. Use sectorname, unless it NoSectorName in which case use the starname as a presumed sector name
-
-                // needs index on Systems(sectorid, [Nameid])
-
-                if (limit > 0)
+                else
                 {
-                    using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
-                                                        "s.sectorid IN (Select id FROM Sectors c WHERE c.name LIKE @p1)",
-                                                        new Object[] { (ec.SectorName != EliteNameClassifier.NoSectorName ? ec.SectorName : ec.StarName) + "%" },
-                                                        limit: limit,
-                                                        joinlist: MakeSystemQueryNamedJoinList))
+                    if (ec.StarName.Length >= 2)     // min 2 chars for name
                     {
-                       // System.Diagnostics.Debug.WriteLine(cn.ExplainQueryPlanString(selectSysCmd));
+                       // System.Diagnostics.Debug.WriteLine($"************** {BaseUtils.AppTicks.TickCountLap("SS1", true)} Search-NoSector-name, check names {ec.StarName}");
 
-                        using (DbDataReader reader = selectSysCmd.ExecuteReader())
+                        using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
+                                                            "s.nameid IN (Select id FROM Names WHERE name LIKE @p1) ",
+                                                            new Object[] { ec.StarName + "%" },
+                                                            limit: limit,
+                                                            joinlist: MakeSystemQueryNamedJoinList))
                         {
-                            while (reader.Read())
+                            //System.Diagnostics.Debug.WriteLine(cn.ExplainQueryPlanString(selectSysCmd));
+
+                            using (DbDataReader reader = selectSysCmd.ExecuteReader())
                             {
-                                SystemClass sc = MakeSystem(reader);
-                                ret.Add(sc);
+                                while (reader.Read())
+                                {
+                                    SystemClass sc = MakeSystem(reader);
+                                    ret.Add(sc);
+                                }
+
+                          //      System.Diagnostics.Debug.WriteLine($"**************** {BaseUtils.AppTicks.TickCountLap("SS1")}Search-NoSector-name, check names {ret.Count}");
+
+                                limit -= ret.Count;
+                            }
+                        }
+
+
+
+                        if (limit > 0)
+                        {
+                           // System.Diagnostics.Debug.WriteLine($"****************** {BaseUtils.AppTicks.TickCountLap("SS2", true)} Search-nosector-name, check sectors {ec.StarName}");
+                            using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
+                                                                "s.sectorid IN (Select id FROM Sectors c WHERE c.name LIKE @p1)",
+                                                                new Object[] { ec.StarName + "%" },
+                                                                limit: limit,
+                                                                joinlist: MakeSystemQueryNamedJoinList))
+                            {
+                                //System.Diagnostics.Debug.WriteLine(cn.ExplainQueryPlanString(selectSysCmd));
+
+                                using (DbDataReader reader = selectSysCmd.ExecuteReader())
+                                {
+                                    while (reader.Read())
+                                    {
+                                        SystemClass sc = MakeSystem(reader);
+                                        ret.Add(sc);
+                                    }
+
+                                 //   System.Diagnostics.Debug.WriteLine($"**************** {BaseUtils.AppTicks.TickCountLap("SS2")} Search-NoSector-name, check sectors {ret.Count}");
+
+                                }
                             }
                         }
                     }
@@ -224,6 +294,47 @@ namespace EliteDangerousCore.DB
 
             return ret;
         }
+
+        public static void DebugListNamedSectorStars()
+        {
+            SystemsDatabase.Instance.DBRead(cn =>
+            {
+                using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
+                                                "s.nameid < 10000000",
+                                                joinlist: MakeSystemQueryNamedJoinList))
+                {
+                    //System.Diagnostics.Debug.WriteLine( cn.ExplainQueryPlanString(selectSysCmd));
+
+                    using (DbDataReader reader = selectSysCmd.ExecuteReader())
+                    {
+                        Dictionary<string, int> prefixes = new Dictionary<string, int>();
+                        while (reader.Read())
+                        {
+                            SystemClass sc = MakeSystem(reader);
+                            int spc = sc.Name.IndexOf(' ');
+                            if (spc >= 0)
+                            {
+                                string p = sc.Name.Substring(0, spc);
+                                if (!prefixes.ContainsKey(p))
+                                    prefixes[p] = 1;
+                                else
+                                    prefixes[p] = prefixes[p] + 1;
+                            }
+                        }
+
+                        foreach (var kvp in prefixes)
+                        {
+                            if (kvp.Value > 1)
+                                System.Diagnostics.Debug.WriteLine($"Prefix {kvp.Key} = {kvp.Value}");
+                        }
+
+                    }
+                }
+            });
+
+        }
+
+
 
         #region Helpers for getting stars
 

@@ -92,6 +92,7 @@ namespace EliteDangerousCore
 
         NavRouteClear,      // redirected journal entries
 
+        Destination,
     }
 
     public abstract class UIEvent

@@ -14,6 +14,7 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 using QuickJSON;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -55,7 +56,10 @@ namespace EliteDangerousCore.JournalEvents
             PilotName = evt["PilotName"].StrNull();
             PilotName_Localised = JournalFieldNaming.CheckLocalisation(evt["PilotName_Localised"].Str(), PilotName);
 
-            PilotRank = evt["PilotRank"].StrNull();
+            PilotRank = evt["PilotRank"].StrNull();     
+            if (PilotRank != null && Enum.TryParse<CombatRank>(PilotRank.Replace(" ","_"), true, out CombatRank cr))
+                PilotCombatRank = cr;           // default for CombatRank is Unknown
+
             ShieldHealth = evt["ShieldHealth"].DoubleNull();
             HullHealth = evt["HullHealth"].DoubleNull();
             Faction = evt["Faction"].StrNull();
@@ -70,11 +74,12 @@ namespace EliteDangerousCore.JournalEvents
         public int? ScanStage { get; set; }             // targetlocked= true, 0/1/2/3
 
         public string Ship { get; set; }                // 0 null
-        public string ShipFD { get; set; }                // 0 null
+        public string ShipFD { get; set; }              // 0 null
         public string Ship_Localised { get; set; }      // 0 will be empty
         public string PilotName { get; set; }           // 1 null
         public string PilotName_Localised { get; set; } // 1 will be empty 
         public string PilotRank { get; set; }           // 1 null
+        public CombatRank PilotCombatRank { get; set; } // 1 May be unknown at any level
         public double? ShieldHealth { get; set; }       // 2 null
         public double? HullHealth { get; set; }         // 2 null
         public string Faction { get; set; }             // 3 null
@@ -94,7 +99,7 @@ namespace EliteDangerousCore.JournalEvents
             MergedEntries.Add(next);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(ISystem sysunused, string whereamiunused, out string info, out string detailed)
         {
             detailed = "";
             if (MergedEntries == null)

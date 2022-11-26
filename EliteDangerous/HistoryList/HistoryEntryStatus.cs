@@ -62,6 +62,7 @@ namespace EliteDangerousCore
         public long? MarketId { get; private set; } 
         public TravelStateType TravelState { get; private set; } = TravelStateType.Unknown;  // travel state
         public bool OnFoot { get { return TravelState >= TravelStateType.OnFootStarPort; } }
+        public bool OnFootFleetCarrier { get { return TravelState == TravelStateType.OnFootFleetCarrier; } }
         public ulong ShipID { get; private set; } = ulong.MaxValue;
         public string ShipType { get; private set; } = "Unknown";         // and the ship nice name
         public string ShipTypeFD { get; private set; } = "Unknown";      // FD name
@@ -74,6 +75,8 @@ namespace EliteDangerousCore
         public bool BodyApproached { get; private set; } = false;         // set at approach body, cleared at leave body or fsd jump
         public bool BookedDropship { get; private set; } = false;         // cleared on embark - need this to tell difference between booking a taxi or a dropship when entering the taxi
         public bool BookedTaxi { get; private set; } = false;             // cleared on embark - need this to tell difference between booking a taxi or a dropship when entering the taxi
+
+        public double CurrentBoost { get; private set; } = 1;             // current boost multiplier due to jet cones and synthesis
 
         private HistoryEntryStatus()
         {
@@ -117,12 +120,12 @@ namespace EliteDangerousCore
                         JournalLocation jloc = je as JournalLocation;
 
                         bool locinstation = jloc.StationType.HasChars() || prev.StationType.HasChars();     // second is required due to alpha 4 stationtype being missing
-                        bool fc1 = prev.StationType.HasChars() && prev.StationType.Equals("Fleet Carrier", System.StringComparison.CurrentCultureIgnoreCase);
+                        bool stationisfc = prev.StationType.HasChars() && prev.StationType.Equals("Fleet Carrier", System.StringComparison.CurrentCultureIgnoreCase);
 
-                        TravelStateType t = fc1 ? TravelStateType.OnFootFleetCarrier : 
+                        TravelStateType t = (stationisfc && !jloc.Docked) ? TravelStateType.OnFootFleetCarrier : 
                            
                             jloc.Docked ? (jloc.Multicrew == true ? TravelStateType.MulticrewDocked : TravelStateType.Docked) :
-                                                (jloc.InSRV == true) ? (jloc.Multicrew == true ? TravelStateType.MulticrewSRV : TravelStateType.SRV) :      // lat is pre 4.0 check
+                                                (jloc.InSRV == true) ? (jloc.Multicrew == true ? TravelStateType.MulticrewSRV : TravelStateType.SRV) :    
                                                     jloc.Taxi == true ? TravelStateType.TaxiNormalSpace :          // can't be in dropship, must be in normal space.
                                                         jloc.OnFoot == true ? (locinstation ? TravelStateType.OnFootStarPort : TravelStateType.OnFootPlanet) :
                                                             jloc.Latitude.HasValue ? (jloc.Multicrew == true ? TravelStateType.MulticrewLanded : TravelStateType.Landed) :
@@ -137,18 +140,18 @@ namespace EliteDangerousCore
                             BodyType = jloc.BodyType,
                             BodyName = jloc.Body,
                             Wanted = jloc.Wanted,
-                            StationName = fc1 ? prev.StationName: (jloc.StationName.Alt(jloc.Docked || locinstation ? jloc.Body : null)),
-                            StationType = fc1 ? prev.StationType : ( jloc.StationType.Alt(prev.StationType).Alt(jloc.Docked || locinstation ? jloc.BodyType : null)),
+                            StationName = stationisfc ? prev.StationName: (jloc.StationName.Alt(jloc.Docked || locinstation ? jloc.Body : null)),
+                            StationType = stationisfc ? prev.StationType : ( jloc.StationType.Alt(prev.StationType).Alt(jloc.Docked || locinstation ? jloc.BodyType : null)),
                             StationFaction = jloc.StationFaction,          // may be null
+                            CurrentBoost = 1,
                         };
                         break;
                     }
 
-                case JournalTypeEnum.CarrierJump:
+                case JournalTypeEnum.CarrierJump:       // missing from 4.0 odyssey
                     var jcj = (je as JournalCarrierJump);
-                    hes = new HistoryEntryStatus(prev)     // we are docked on a carrier
+                    hes = new HistoryEntryStatus(prev)     // we are docked or on foot on a carrier - travel state stays the same
                     {
-                        TravelState = TravelStateType.Docked,
                         MarketId = jcj.MarketID,
                         BodyID = jcj.BodyID,
                         BodyType = jcj.BodyType,
@@ -213,6 +216,7 @@ namespace EliteDangerousCore
                             StationType = null,
                             StationFaction = null, // to ensure
                             BodyApproached = false,
+                            CurrentBoost = 1,
                         };
                         break;
                     }
@@ -235,6 +239,7 @@ namespace EliteDangerousCore
                         ShipTypeFD = jlg.InShip ? jlg.ShipFD : prev.ShipTypeFD,
                         BookedTaxi = false,
                         BookedDropship = false, //  to ensure
+                        CurrentBoost = 1,
                     };
                     break;
 
@@ -253,6 +258,7 @@ namespace EliteDangerousCore
                             StationName = jdocked.StationName.Alt("Unknown"),
                             StationType = jdocked.StationType.Alt("Station"),
                             StationFaction = jdocked.Faction,
+                            CurrentBoost = 1,
                         };
                         break;
                     }
@@ -303,6 +309,7 @@ namespace EliteDangerousCore
                                             TravelStateType.OnFootPlanet,
                         StationName = disem.StationType.HasChars() ? disem.StationName.Alt("Unknown") : prev.StationName,       // copying it over due to bug in alpha4
                         StationType = disem.StationType.HasChars() ? disem.StationType : prev.StationType,
+                        CurrentBoost = 1,
                     };
                     break;
 
@@ -337,6 +344,7 @@ namespace EliteDangerousCore
                             TravelState = prev.TravelState == TravelStateType.MulticrewNormalSpace ? TravelStateType.MulticrewLanded : TravelStateType.Landed,
                             BodyName = td.Body ?? prev.BodyName,
                             BodyID = td.BodyID.HasValue ? td.BodyID.Value :prev.BodyID,
+                            CurrentBoost = 1,
                         };
                     }
                     else
@@ -505,6 +513,28 @@ namespace EliteDangerousCore
                         BookedDropship = false,
                         BookedTaxi = true,
                     };
+                    break;
+
+                case JournalTypeEnum.JetConeBoost:
+                    {
+                        JournalJetConeBoost jjcb = (JournalJetConeBoost)je;
+                        hes = new HistoryEntryStatus(prev)
+                        {
+                            CurrentBoost = jjcb.BoostValue
+                        };
+                    }
+                    break;
+                case JournalTypeEnum.Synthesis:
+                    {
+                        JournalSynthesis jsyn = (JournalSynthesis)je;
+                        if (jsyn.FSDBoostValue > 0)     // only if FSD boost
+                        {
+                            hes = new HistoryEntryStatus(prev)
+                            {
+                                CurrentBoost = jsyn.FSDBoostValue
+                        };
+                    }
+                    }
                     break;
             }
 

@@ -284,26 +284,29 @@ namespace EliteDangerousCore.EDSM
 
                         foreach (JObject jo in comments)
                         {
-                            string name = jo["system"].Str();
+                            string systemname = jo["system"].Str();
                             string note = jo["comment"].Str();
                             DateTime utctime = jo["lastUpdate"].DateTime(DateTime.UtcNow, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
                             int edsmid = jo["systemId"].Int(0);
                             var localtime = utctime.ToLocalTime();
 
-                            SystemNoteClass curnote = SystemNoteClass.GetNoteOnSystem(name);
-
-                            if (curnote != null)                // curnote uses local time to store
+                            if (note.HasChars())
                             {
-                                if (localtime.Ticks > curnote.Time.Ticks)   // if newer, add on (verified with EDSM 29/9/2016)
+                                SystemNoteClass curnote = SystemNoteClass.GetSystemNote(systemname);
+
+                                if (curnote != null)                // curnote uses local time to store
                                 {
-                                    curnote.UpdateNote(curnote.Note + ". EDSM: " + note, true, localtime, true);
+                                    if (localtime.Ticks > curnote.LocalTimeLastCreatedEdited.Ticks)   // if newer, add on (verified with EDSM 29/9/2016 + 25/11/22)
+                                    {
+                                        curnote.UpdateNote(curnote.Note + Environment.NewLine + note, localtime, curnote.JournalText);  // keep same journal text
+                                        commentsadded++;
+                                    }
+                                }
+                                else
+                                {
+                                    SystemNoteClass.MakeNote(note, localtime, systemname, 0, "EDSM");   // new one! we use EDSM in the journal text to indicate
                                     commentsadded++;
                                 }
-                            }
-                            else
-                            {
-                                SystemNoteClass.MakeSystemNote(note, localtime, name, 0, true);   // new one!  its an FSD one as well
-                                commentsadded++;
                             }
                         }
 
@@ -312,7 +315,7 @@ namespace EliteDangerousCore.EDSM
                 }
                 catch ( Exception e)
                 {
-                    System.Diagnostics.Debug.WriteLine("Failed due to " + e.ToString());
+                    System.Diagnostics.Debug.WriteLine("EDSM Get comments failed due to " + e.ToString());
                 }
             }
         }
@@ -581,25 +584,6 @@ namespace EliteDangerousCore.EDSM
                             sys.Z = co["z"].Double();
                         }
 
-                        sys.NeedsPermit = sysname["requirePermit"].Bool(false) ? 1 : 0;
-
-                        JObject info = sysname["information"] as JObject;
-
-                        if (info != null)
-                        {
-                            sys.Population = info["population"].Long(0);
-                            sys.Faction = info["faction"].StrNull();
-                            EDAllegiance allegiance = EDAllegiance.None;
-                            EDGovernment government = EDGovernment.None;
-                            EDState state = EDState.None;
-                            EDEconomy economy = EDEconomy.None;
-                            EDSecurity security = EDSecurity.Unknown;
-                            sys.Allegiance = Enum.TryParse(info["allegiance"].Str(), out allegiance) ? allegiance : EDAllegiance.None;
-                            sys.Government = Enum.TryParse(info["government"].Str(), out government) ? government : EDGovernment.None;
-                            sys.State = Enum.TryParse(info["factionState"].Str(), out state) ? state : EDState.None;
-                            sys.PrimaryEconomy = Enum.TryParse(info["economy"].Str(), out economy) ? economy : EDEconomy.None;
-                            sys.Security = Enum.TryParse(info["security"].Str(), out security) ? security : EDSecurity.Unknown;
-                        }
                         systems.Add(sys);
                     }
                 }
