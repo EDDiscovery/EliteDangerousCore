@@ -424,17 +424,6 @@ SECTION JournalMultiSellExplorationData
 
 .Total: "Total: ; cr;N0" => "Total: ; cr;N0"
 
-SECTION JournalProgress
-
-.Combat: "Combat: ;%" => "Combate: ;%"
-.Trade: "Trade: ;%" => "Comercio: ;%"
-.Exploration: "Exploration: ;%" => "Exploración: ;%"
-.Federation: "Federation: ;%" => "Federación: ;%"
-.Soldier: "Soldier: ;%" @
-.Exobiologist: "Exobiologist: ;%" @
-.Empire: "Empire: ;%" => "Imperio: ;%"
-.CQC: "CQC: ;%" => "CQC: ;%"
-
 SECTION JournalProspectedAsteroid
 
 .Remaining: "Remaining: ;%;N1" => "Restante: ;%;N1"
@@ -900,6 +889,7 @@ SECTION JournalApproachBody
 
 SECTION JournalEntry
 
+.BartenderMaterials: "Bartender Materials" @
 .TME: "{0} days {1} hours {2} minutes" => "{0} días {1} horas {2} minutos"
 .Hyperspace: "Hyperspace" => "Hiperespacio"
 .Supercruise: "Supercruise" => "Supercrucero"

@@ -424,29 +424,18 @@ SECTION JournalMultiSellExplorationData
 
 .Total: "Total: ; cr;N0" => "总收益: ; Cr;N0"
 
-SECTION JournalProgress
-
-.Combat: "Combat: ;%" => "战斗：;%"
-.Trade: "Trade: ;%" => "贸易：;%"
-.Exploration: "Exploration: ;%" => "探索：;%"
-.Federation: "Federation: ;%" => "联邦：;%"
-.Soldier: "Soldier: ;%" @
-.Exobiologist: "Exobiologist: ;%" @
-.Empire: "Empire: ;%" => "帝国：;%"
-.CQC: "CQC: ;%" => "CQC缠斗：;%"
-
 SECTION JournalProspectedAsteroid
 
 .Remaining: "Remaining: ;%;N1" @
 
 SECTION JournalPromotion
 
-.Combat: "Combat: " => "战斗"
-.Trade: "Trade: " => "贸易"
-.Exploration: "Exploration: " => "探索"
-.Empire: "Empire: " => "帝国"
-.Federation: "Federation: " => "帝国"
-.CQC: "CQC: " => "CQC缠斗"
+.Combat: "Combat" => "战斗"
+.Trade: "Trade" => "贸易"
+.Exploration: "Exploration" => "探索"
+.Empire: "Empire" => "帝国"
+.Federation: "Federation" => "帝国"
+.CQC: "CQC" => "CQC缠斗"
 .Soldier: "Soldier" @
 .ExoBiologist: "ExoBiologist" @
 
@@ -900,6 +889,7 @@ SECTION JournalApproachBody
 
 SECTION JournalEntry
 
+.BartenderMaterials: "Bartender Materials" @
 .TME: "{0} days {1} hours {2} minutes" => "{0}天{1}小时{2}分"
 .Hyperspace: "Hyperspace" @
 .Supercruise: "Supercruise" @

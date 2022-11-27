@@ -118,8 +118,6 @@ namespace EliteDangerousCore
                 DateTime EDOdyssey14UTC = new DateTime(2022, 11, 29, 12, 0, 0);
                 bool legacy = jlg.GameVersion.IsEmpty() && jlg.EventTimeUTC >= EDOdyssey14UTC;
 
-                legacy = false;         // TBD DISABLE FOR NOW UNTIL WE KNOW THE LAUNCH DATE
-
                 string cmdrcreatedname = legacy ? cmdrrootname + " (Legacy)" : cmdrrootname;
 
                 // set TLU flags

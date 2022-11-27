@@ -32,7 +32,10 @@ namespace EliteDangerousCore.UIEvents
 
         public override string ToString()
         {
-            return $"{Value.Systems}-{Value.Engines}-{Value.Weapons}";
+            if (Value.Valid)
+                return $"{Value.Systems}-{Value.Engines}-{Value.Weapons}";
+            else
+                return $"Invalid";
         }
 
 

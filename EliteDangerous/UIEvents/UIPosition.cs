@@ -35,10 +35,17 @@ namespace EliteDangerousCore.UIEvents
 
         public override string ToString()
         {
+            string s = "Invalid";
             if (Location.ValidPosition)
-                return $"{Location.Latitude} {Location.Longitude} {Location.Altitude}m {Heading}";
-            else
-                return "";
+            {
+                s = $"{Location.Latitude} {Location.Longitude}";
+                if (Location.ValidAltitude)
+                    s += $" {Location.Altitude}m";
+                if (ValidHeading)
+                    s += $" {Heading} deg";
+            }
+
+            return s;
         }
 
         public Position Location { get; private set; }

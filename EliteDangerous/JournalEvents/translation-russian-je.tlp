@@ -424,31 +424,20 @@ SECTION JournalMultiSellExplorationData
 
 .Total: "Total: ; cr;N0" => "всего: ; кр.;N0"
 
-SECTION JournalProgress
-
-.Combat: "Combat: ;%" => "Боевой ранг: ;%"
-.Trade: "Trade: ;%" => "торговый ранг: ;%"
-.Exploration: "Exploration: ;%" => "исследовательский ранг: ;%"
-.Federation: "Federation: ;%" => "Федерация: ;%"
-.Soldier: "Soldier: ;%" @
-.Exobiologist: "Exobiologist: ;%" @
-.Empire: "Empire: ;%" => "Империя: ;%"
-.CQC: "CQC: ;%" => "CQC: ;%"
-
 SECTION JournalProspectedAsteroid
 
 .Remaining: "Remaining: ;%;N1" => "осталось минералов: ;%;N1"
 
 SECTION JournalPromotion
 
-.Combat: "Combat: " => "Боевой ранг: "
-.Trade: "Trade: " => "Торговый ранг: "
-.Exploration: "Exploration: " => "Исследовательский ранг: "
-.Empire: "Empire: " => "Империя: "
-.Federation: "Federation: " => "Федерация: "
-.CQC: "CQC: " @
-.Soldier: "Soldier: " @
-.ExoBiologist: "ExoBiologist: " @
+.Combat: "Combat" => "Боевой ранг: "
+.Trade: "Trade" => "Торговый ранг: "
+.Exploration: "Exploration" => "Исследовательский ранг: "
+.Empire: "Empire" => "Империя: "
+.Federation: "Federation" => "Федерация: "
+.CQC: "CQC" @
+.Soldier: "Soldier" @
+.ExoBiologist: "ExoBiologist" @
 
 SECTION JournalReceiveText
 
@@ -900,6 +889,7 @@ SECTION JournalApproachBody
 
 SECTION JournalEntry
 
+.BartenderMaterials: "Bartender Materials" @
 .TME: "{0} days {1} hours {2} minutes" => "{0} дн. {1} ч. {2} мин."
 .Hyperspace: "Hyperspace" @
 .Supercruise: "Supercruise" @

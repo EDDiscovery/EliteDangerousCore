@@ -424,31 +424,20 @@ SECTION JournalMultiSellExplorationData
 
 .Total: "Total: ; cr;N0" @
 
-SECTION JournalProgress
-
-.Combat: "Combat: ;%" @
-.Trade: "Trade: ;%" => "Commerce: ;%"
-.Exploration: "Exploration: ;%" @
-.Federation: "Federation: ;%" => "Fédération: ;%"
-.Soldier: "Soldier: ;%" @
-.Exobiologist: "Exobiologist: ;%" @
-.Empire: "Empire: ;%" @
-.CQC: "CQC: ;%" @
-
 SECTION JournalProspectedAsteroid
 
 .Remaining: "Remaining: ;%;N1" => "Reste: ;%;N1"
 
 SECTION JournalPromotion
 
-.Combat: "Combat: " @
-.Trade: "Trade: " => "Commerce"
-.Exploration: "Exploration: " @
-.Empire: "Empire: " @
-.Federation: "Federation: " => "Fédération"
-.CQC: "CQC: " @
-.Soldier: "Soldier: " @
-.ExoBiologist: "ExoBiologist: " @
+.Combat: "Combat" @
+.Trade: "Trade" => "Commerce"
+.Exploration: "Exploration" @
+.Empire: "Empire" @
+.Federation: "Federation" => "Fédération"
+.CQC: "CQC" @
+.Soldier: "Soldier" @
+.ExoBiologist: "ExoBiologist" @
 
 SECTION JournalReceiveText
 
@@ -900,6 +889,7 @@ SECTION JournalApproachBody
 
 SECTION JournalEntry
 
+.BartenderMaterials: "Bartender Materials" @
 .TME: "{0} days {1} hours {2} minutes" => "{0} jours {1} heures {2} minutes"
 .Hyperspace: "Hyperspace" @
 .Supercruise: "Supercruise" @
