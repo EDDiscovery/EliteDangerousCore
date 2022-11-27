@@ -889,7 +889,7 @@ SECTION JournalApproachBody
 
 SECTION JournalEntry
 
-.BartenderMaterials: "Bartender Materials" @
+.BartenderMaterials: "Bartender Materials" => "Barkeeper Materialien"
 .TME: "{0} days {1} hours {2} minutes" => "{0} Tage {1} Stunden {2} Minuten"
 .Hyperspace: "Hyperspace" => "Hyperraum"
 .Supercruise: "Supercruise" => "Supercruise"
