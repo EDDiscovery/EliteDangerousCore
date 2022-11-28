@@ -125,6 +125,8 @@ namespace EliteDangerousCore.EDSM
                     {
                         HistoryEntry first = hqe.HistoryEntry;
 
+                        bool firstjournalsourced = first.journalEntry.IsJournalSourced;
+
                         historyevent.Reset();
                         Action<string> logger = hqe.Logger;
 
@@ -140,7 +142,10 @@ namespace EliteDangerousCore.EDSM
                             }
                         }
 
-                        while (hl.Count < maxEventsPerMessage && historylist.TryPeek(out hqe)) // Leave event in queue if commander changes
+                        // Leave event in queue if commander changes, or journal sourced is different
+                        // we don't send multiple commanders, or different sourced journal entries, in one go
+
+                        while (hl.Count < maxEventsPerMessage && historylist.TryPeek(out hqe) && hqe.HistoryEntry.journalEntry.IsJournalSourced == firstjournalsourced) 
                         {
                             HistoryEntry he = hqe.HistoryEntry;
 
@@ -270,7 +275,12 @@ namespace EliteDangerousCore.EDSM
                 entries.Add(json);
             }
 
-            List<JObject> results = edsm.SendJournalEvents(entries, out errmsg);
+            // game version on all should be the same as hl[0].
+
+            string gameversion = hl[0].journalEntry.IsJournalSourced ? hl[0].journalEntry.GameVersion : "CAPI-journal";
+            string gamebuild = hl[0].journalEntry.IsJournalSourced ? hl[0].journalEntry.Build : "";
+
+            List<JObject> results = edsm.SendJournalEvents(entries, gameversion, gamebuild, out errmsg);
             //List<JObject> results = new List<JObject>();    for( int i = 0; i < hl.Count; i++ ) results.Add(new JObject { ["msgnum"] = 100, ["systemId"] = 200 }); //debug
 
             if (results == null)

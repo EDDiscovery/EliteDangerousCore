@@ -113,10 +113,12 @@ namespace EliteDangerousCore
                     cmdrrootname = "[BETA] " + cmdrrootname;
                 }
 
-                // a legacy loadgame, from 3.x or before, created after U14 release. Gameversion appeared in Odyssey 2, and is not being sent by horizons clients
+                // a legacy loadgame, from 3.x or before, created after U14 release.
+                // Gameversion appeared in Odyssey 2, and is not being sent by horizons clients
+                // just in case they turn it on, 3.X is also a legacy version
 
                 DateTime EDOdyssey14UTC = new DateTime(2022, 11, 29, 12, 0, 0);
-                bool legacy = jlg.GameVersion.IsEmpty() && jlg.EventTimeUTC >= EDOdyssey14UTC;
+                bool legacy = (jlg.GameVersion.IsEmpty() || jlg.GameVersion.Trim().StartsWith("3.")) && jlg.EventTimeUTC >= EDOdyssey14UTC;
 
                 string cmdrcreatedname = legacy ? cmdrrootname + " (Legacy)" : cmdrrootname;
 
