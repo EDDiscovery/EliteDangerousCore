@@ -24,7 +24,10 @@ namespace EliteDangerousCore.Forms
     public partial class CommanderForm : ExtendedControls.DraggableForm
     {
         public bool Valid { get { return textBoxBorderCmdr.Text != ""; } }
-        public string CommanderName { get { return (extCheckBoxConsoleCommander.Checked ? "[C] " : "" ) + textBoxBorderCmdr.Text; } }
+        public string CommanderName { get { return (extCheckBoxConsoleCommander.Checked ? "[C] " : "") + textBoxBorderCmdr.Text; } }
+
+        // CAPI root name
+        public string CommanderRootName { get { return EDCommander.GetRootName(CommanderName); } }
 
         public CommanderForm(List<ExtendedControls.ExtGroupBox> additionalcontrols = null)
         {

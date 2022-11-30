@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2015-2021 EDDiscovery development team
+ * Copyright 2015-2022 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- *
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using QuickJSON;
@@ -33,6 +31,20 @@ namespace EliteDangerousCore
 
         public int Id { set; get; }
         public string Name { set; get; } = "";
+        
+        public string RootName { get { return GetRootName(Name); } }
+
+        // the root name is used by CAPI to associate legacy/live/beta commanders with one oAUTH login
+        // this is the name CAPI uses to store credentials in its files
+        // note console commanders [C] name are purposely not removed by this, as we want them seperate
+
+        public static string GetRootName(string s)
+        {
+            return s.Replace(" (Legacy)", "").Replace("[BETA] ", "");        // sync with EDJournalReader.cs
+        }
+
+        public bool NameIsBeta { get { return Name.StartsWith("[BETA] "); } }
+
         public bool Deleted { set; get; }
 
         public string JournalDir { set; get; }
@@ -311,6 +323,11 @@ namespace EliteDangerousCore
         {
             return Commanders.Values.ToList().FindIndex(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)) != -1;
         }
+        public static bool IsLegacyCommander(int id)
+        {
+            return GetCommander(id)?.LegacyCommander ?? false;
+        }
+
 
         public static List<EDCommander> GetListInclHidden()
         {

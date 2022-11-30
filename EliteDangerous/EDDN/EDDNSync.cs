@@ -188,7 +188,8 @@ namespace EliteDangerousCore.EDDN
             else if (je.EventTypeID == JournalTypeEnum.EDDCommodityPrices)  // synthesised EDD
             {
                 JournalEDDCommodityPrices jm = je as JournalEDDCommodityPrices;
-                msg = eddn.CreateEDDNCommodityMessage( "CAPI-market", "", jm.Commodities, jm.IsOdyssey, jm.IsHorizons, jm.StarSystem, jm.Station, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned
+                bool legacy = EDCommander.IsLegacyCommander(je.CommanderId);
+                msg = eddn.CreateEDDNCommodityMessage( legacy ? "CAPI-Legacy-market" : "CAPI-Live-market", "", jm.Commodities, jm.IsOdyssey, jm.IsHorizons, jm.StarSystem, jm.Station, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned
             }
             else if (je.EventTypeID == JournalTypeEnum.FSSDiscoveryScan)
             {

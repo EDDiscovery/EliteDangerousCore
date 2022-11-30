@@ -561,7 +561,9 @@ namespace EliteDangerousCore.EDDN
             // header matches Athan wishes for capi sourced data
 
             bool capi = !journal.IsJournalSourced;
-            msg["header"] = Header(capi ? "CAPI-shipyard" : journal.GameVersion, capi ? "" : journal.Build);
+            bool legacy = EDCommander.IsLegacyCommander(journal.CommanderId);
+            msg["header"] = Header(capi ? (legacy ? "CAPI-Legacy-shipyard" : "CAPI-Live-shipyard") : journal.GameVersion, capi ? "" : journal.Build);
+
             msg["$schemaRef"] = OutfittingSchema;
 
             JObject message = new JObject
@@ -594,7 +596,9 @@ namespace EliteDangerousCore.EDDN
             // header matches Athan wishes for capi sourced data
 
             bool capi = !journal.IsJournalSourced;
-            msg["header"] = Header(capi ? "CAPI-shipyard" : journal.GameVersion, capi ? "" : journal.Build);
+            bool legacy = EDCommander.IsLegacyCommander(journal.CommanderId);
+            msg["header"] = Header(capi ? (legacy ? "CAPI-Legacy-shipyard" : "CAPI-Live-shipyard") : journal.GameVersion, capi ? "" : journal.Build);
+
             msg["$schemaRef"] = ShipyardSchema;
 
             JObject message = new JObject

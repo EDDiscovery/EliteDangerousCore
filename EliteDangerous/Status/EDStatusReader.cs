@@ -166,7 +166,7 @@ namespace EliteDangerousCore
             VeryCold = 10,
             VeryHot = 11,
             TempBits = (1 << Cold) | (1 << Hot) | (1 << VeryCold) | (1 << VeryHot),
-            FSDHyperdriveCharging = 29,         // U14 nov 22
+            FSDHyperdriveCharging = 19,         // U14 nov 22
         }
 
         public List<UIEvent> Scan()
