@@ -29,10 +29,11 @@ namespace EliteDangerousCore.UIEvents
         }
 
         public bool Charging { get; private set; }
+        public bool FsdCharging { get; set; }       // only for 4.0 Update 14 Nov 22 onwards. 3.8 will report zero
 
         public override string ToString()
         {
-            return $"{Charging}";
+            return $"{Charging} fsd {FsdCharging}";
         }
 
     }

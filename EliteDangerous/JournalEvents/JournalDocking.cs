@@ -24,6 +24,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             StationName = evt["StationName"].Str();
             StationType = evt["StationType"].Str().SplitCapsWord();
+            StationState = evt["StationState"].StrNull();           // missed, added, nov 22, only on bad starports.  Null otherwise
             StarSystem = evt["StarSystem"].Str();
             SystemAddress = evt["SystemAddress"].LongNull();
             MarketID = evt["MarketID"].LongNull();
@@ -71,6 +72,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string StationName { get; set; }
         public string StationType { get; set; }
+        public string StationState { get; set; }            // only present in stations not normal - UnderAttack, Damaged, UnderRepairs. Null otherwise
         public string StarSystem { get; set; }
         public long? SystemAddress { get; set; }
         public long? MarketID { get; set; }
@@ -111,7 +113,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)      
         {
-            info = BaseUtils.FieldBuilder.Build("Type: ".T(EDCTx.JournalEntry_Type), StationType, "< in system ".T(EDCTx.JournalEntry_insystem), StarSystem, ";(Wanted)".T(EDCTx.JournalEntry_Wanted), Wanted, 
+            info = "Docked".T(EDCTx.JournalTypeEnum_Docked) + ", ";
+            info += BaseUtils.FieldBuilder.Build("Type: ".T(EDCTx.JournalEntry_Type), StationType, "< in system ".T(EDCTx.JournalEntry_insystem), StarSystem, 
+                "State: ".TxID(EDCTx.JournalLocOrJump_State),StationState,
+                ";(Wanted)".T(EDCTx.JournalEntry_Wanted), Wanted, 
                 ";Active Fine".T(EDCTx.JournalEntry_ActiveFine),ActiveFine,
                 "Faction: ".T(EDCTx.JournalEntry_Faction), Faction,  "< in state ".T(EDCTx.JournalEntry_instate), FactionState.SplitCapsWord());
 

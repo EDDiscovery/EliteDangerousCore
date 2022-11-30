@@ -49,9 +49,6 @@ namespace EliteDangerousCore.Inara
 
         public static bool Refresh(Action<string> logger, HistoryEntry lasthe, EDCommander cmdr)
         {
-            if (cmdr.LegacyCommander == true)
-                return false;
-
             List<JToken> events = RefreshList(lasthe);
             if (events.Count > 0)
                 Submit(events,logger, cmdr, true);
@@ -60,9 +57,6 @@ namespace EliteDangerousCore.Inara
 
         public static bool HistoricData(Action<string> logger, HistoryList history, EDCommander cmdr)
         {
-            if (cmdr.LegacyCommander == true)
-                return false;
-
             List<JToken> events = HistoricList(history);
             if (events.Count > 0)
                 Submit(events, logger, cmdr, true);
@@ -81,9 +75,6 @@ namespace EliteDangerousCore.Inara
 
         public static bool NewEvent(Action<string> logger, HistoryEntry he, Dictionary<string,MaterialCommodityMicroResource> mcmr)
         {
-            if (he.Commander.LegacyCommander == true)
-                return false;
-
             List<JToken> events = NewEntryList(he, mcmr);
             if (events.Count > 0)
                 Submit(events, logger, he.Commander, false);

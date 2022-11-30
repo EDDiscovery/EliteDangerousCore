@@ -37,12 +37,15 @@ namespace EliteDangerousCore
 
         public string JournalDir { set; get; }
 
-        public bool SyncToEdsm { set; get; }
-        public bool SyncFromEdsm { set; get; }
+        // Nov 22 update 14 syncing to these are only for Live commanders
+        public bool SyncToEdsm { set { if (!LegacyCommander) synctoedsm = value; } get { return LegacyCommander ? false : synctoedsm; } }
+        public bool SyncFromEdsm { set { if (!LegacyCommander) syncfromedsm = value; } get { return LegacyCommander ? false : syncfromedsm; } }
+
+        public bool SyncToInara { set { if (!LegacyCommander) synctoinara = value; } get { return LegacyCommander ? false : synctoinara; } }
+
         public string EdsmName { set; get; } = "";
         public string EDSMAPIKey { set; get; } = "";
 
-        public bool SyncToInara { set; get; }
         public string InaraName { set; get; } = "";
         public string InaraAPIKey { set; get; } = "";
 
@@ -405,6 +408,9 @@ namespace EliteDangerousCore
         private static Object locker = new object();
         private static Dictionary<int, EDCommander> intcmdrdict = null;
         private static int currentcommander = Int32.MinValue;
+        private bool syncfromedsm = false;
+        private bool synctoedsm = false;
+        private bool synctoinara = false;
 
         #endregion
 

@@ -105,6 +105,12 @@ namespace EliteDangerousCore.Forms
 
             panel_defaultmapcolor.BackColor = System.Drawing.Color.FromArgb(cmdr.MapColour);
             panel_defaultmapcolor.Click += Panel_defaultmapcolor_Click;
+
+            // nov 22 update 14 inara/edsm don't want legacy data
+
+            textBoxBorderEDSMAPI.Enabled = textBoxBorderEDSMName.Enabled = 
+            textBoxBorderInaraAPIKey.Enabled = textBoxBorderInaraName.Enabled =
+            checkBoxCustomEDSMFrom.Enabled = checkBoxCustomEDSMTo.Enabled = checkBoxCustomInara.Enabled = !cmdr.LegacyCommander;
         }
 
         public bool Update(EDCommander cmdr)

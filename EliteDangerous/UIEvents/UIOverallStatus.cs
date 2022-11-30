@@ -88,7 +88,7 @@ namespace EliteDangerousCore.UIEvents
         public double Oxygen { get; private set; }
         public bool LowOxygen { get; private set; }
         public bool BreathableAtmosphere { get; private set; }
-        public enum FSDStateType { Normal, Charging, Jumping, Gliding, Cooldown , MassLock};
+        public enum FSDStateType { Normal, Charging, Jumping, Gliding, Cooldown , MassLock, ChargingFSDFlagSet};
         public FSDStateType FSDState { get; private set; }
         public string SelectedWeapon { get; private set; }      // may be null
         public string SelectedWeapon_Localised { get; private set; }      // may be null

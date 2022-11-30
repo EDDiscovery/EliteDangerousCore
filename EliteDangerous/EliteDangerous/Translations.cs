@@ -12,6 +12,8 @@ namespace EliteDangerousCore
         Unknown, // Unknown
         RemoveAll, // Remove All
 
+        JournalTypeEnum_Docked,
+
         ScreenShotImageConverter_CNV, 
         ScreenshotDirectoryWatcher_Scan,
         ScreenshotDirectoryWatcher_NOF,
