@@ -132,7 +132,7 @@ namespace EliteDangerousCore.EDDN
                 if (string.IsNullOrEmpty(eddn.CommanderName))
                     eddn.CommanderName = he.Commander.Name;
 
-                if (he.Commander.Name.StartsWith("[BETA]", StringComparison.InvariantCultureIgnoreCase))
+                if (he.Commander.NameIsBeta)
                     beta = true;
             }
 

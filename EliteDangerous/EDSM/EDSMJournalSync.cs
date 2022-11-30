@@ -54,7 +54,7 @@ namespace EliteDangerousCore.EDSM
                     {
                         continue;
                     }
-                    else if (he.Commander.Name.StartsWith("[BETA]", StringComparison.InvariantCultureIgnoreCase) || he.journalEntry.IsBeta)
+                    else if (he.Commander.NameIsBeta || he.journalEntry.IsBeta )
                     {
                         he.journalEntry.SetEdsmSync();       // crappy slow but unusual, but lets mark them as sent..
                         hasbeta = true;
@@ -78,20 +78,20 @@ namespace EliteDangerousCore.EDSM
             lock (alwaysDiscard)        // use this as a perm proxy to lock discardEvents
             {
                 string eventtype = he.EntryType.ToString();
-                return !(he.Commander?.Name.StartsWith("[BETA]", StringComparison.InvariantCultureIgnoreCase) != false || he.journalEntry.IsBeta || he.MultiPlayer ||
-                            discardEvents.Contains(eventtype) || alwaysDiscard.Contains(eventtype));
+                return !(he.Commander.NameIsBeta || he.journalEntry.IsBeta || he.MultiPlayer || discardEvents.Contains(eventtype) || alwaysDiscard.Contains(eventtype));
             }
         }
 
         // called by onNewEntry
         // Called by Perform, by Sync, by above.
 
-        public static bool SendEDSMEvents(Action<string> log, List<HistoryEntry> helist)
+        public static bool SendEDSMEvents(Action<string> log, List<HistoryEntry> helist, string gameversionv, string buildv)
         {
-            System.Diagnostics.Debug.WriteLine("EDSM Send Events " + helist.Count() + " " + String.Join(",", helist.Select(x => x.EntryType)));
+            System.Diagnostics.Debug.WriteLine($"EDSM Send Events {helist.Count()} {String.Join(",", helist.Select(x => x.EntryType))}");
 
-            foreach( var he in helist )
-                historylist.Enqueue(new HistoryQueueEntry { HistoryEntry = he, Logger = log });
+            // pass in he's into queue giving the logger, version and build
+            foreach ( var he in helist )
+                queue.Enqueue(new HistoryQueueEntry { HistoryEntry = he, Logger = log, gameversion = gameversionv, build = buildv});      
 
             historyevent.Set();
 
@@ -117,18 +117,20 @@ namespace EliteDangerousCore.EDSM
 
                 UpdateDiscardList();                // make sure the list is up to date
 
-                while (historylist.Count != 0)      // while stuff to send
+                while (queue.Count != 0)      // while stuff to send
                 {
                     HistoryQueueEntry hqe = null;
 
-                    if (historylist.TryDequeue(out hqe))        // next history event...
+                    if (queue.TryDequeue(out hqe))        // next history event...
                     {
+                        historyevent.Reset();
+
                         HistoryEntry first = hqe.HistoryEntry;
 
                         bool firstjournalsourced = first.journalEntry.IsJournalSourced;
-
-                        historyevent.Reset();
                         Action<string> logger = hqe.Logger;
+                        string gameversion = hqe.gameversion;
+                        string build = hqe.build;
 
                         List<HistoryEntry> hl = new List<HistoryEntry>() { first };
 
@@ -136,16 +138,17 @@ namespace EliteDangerousCore.EDSM
                         {
                             System.Diagnostics.Debug.WriteLine("EDSM Holding for another event");
 
-                            if (historylist.IsEmpty)
+                            if (queue.IsEmpty)
                             {
                                 historyevent.WaitOne(20000); // Wait up to 20 seconds for another entry to come through
                             }
                         }
 
                         // Leave event in queue if commander changes, or journal sourced is different
-                        // we don't send multiple commanders, or different sourced journal entries, in one go
+                        // we don't send multiple commanders, or different sourced journal entries, or different builds together
 
-                        while (hl.Count < maxEventsPerMessage && historylist.TryPeek(out hqe) && hqe.HistoryEntry.journalEntry.IsJournalSourced == firstjournalsourced) 
+                        while (hl.Count < maxEventsPerMessage && queue.TryPeek(out hqe) && hqe.HistoryEntry.journalEntry.IsJournalSourced == firstjournalsourced &&
+                               hqe.gameversion == gameversion && hqe.build == build) 
                         {
                             HistoryEntry he = hqe.HistoryEntry;
 
@@ -154,7 +157,7 @@ namespace EliteDangerousCore.EDSM
                                 break;
                             }
 
-                            historylist.TryDequeue(out hqe);
+                            queue.TryDequeue(out hqe);
                             historyevent.Reset();
 
                             // now we have an updated discard list, 
@@ -167,7 +170,7 @@ namespace EliteDangerousCore.EDSM
 
                             hl.Add(he);
 
-                            if ((holdEvents.Contains(he.EntryType) || (he.EntryType == JournalTypeEnum.Location && he.IsDocked)) && historylist.IsEmpty)
+                            if ((holdEvents.Contains(he.EntryType) || (he.EntryType == JournalTypeEnum.Location && he.IsDocked)) && queue.IsEmpty)
                             {
                                 historyevent.WaitOne(20000); // Wait up to 20 seconds for another entry to come through
                             }
@@ -182,7 +185,7 @@ namespace EliteDangerousCore.EDSM
                         int waittime = 30000;
                         string firstdiscovery = "";
 
-                        while (sendretries > 0 && !SendToEDSM(hl, first.Commander, out string errmsg, out firstdiscovery))
+                        while (sendretries > 0 && !SendToEDSM(hl, first.Commander, gameversion, build, out string errmsg, out firstdiscovery))
                         {
                             logger?.Invoke($"Error sending EDSM events {errmsg}");
                             System.Diagnostics.Trace.WriteLine($"Error sending EDSM events {errmsg}");
@@ -214,7 +217,7 @@ namespace EliteDangerousCore.EDSM
                     if (Exit)
                         return;
 
-                    if (historylist.IsEmpty)
+                    if (queue.IsEmpty)
                         historyevent.WaitOne(120000);       // wait for another event keeping the thread open.. Note stop also sets this
 
                     if (Exit)
@@ -231,7 +234,7 @@ namespace EliteDangerousCore.EDSM
             }
         }
 
-        static private bool SendToEDSM(List<HistoryEntry> hl, EDCommander cmdr, out string errmsg , out string firstdiscovers )
+        static private bool SendToEDSM(List<HistoryEntry> hl, EDCommander cmdr, string gameversion, string build, out string errmsg , out string firstdiscovers )
         {
             EDSMClass edsm = new EDSMClass(cmdr);       // Ensure we use the commanders EDSM credentials.
             errmsg = null;
@@ -277,10 +280,14 @@ namespace EliteDangerousCore.EDSM
 
             // game version on all should be the same as hl[0].
 
-            string gameversion = hl[0].journalEntry.IsJournalSourced ? hl[0].journalEntry.GameVersion : "CAPI-journal";
-            string gamebuild = hl[0].journalEntry.IsJournalSourced ? hl[0].journalEntry.Build : "";
+            if (!hl[0].journalEntry.IsJournalSourced)        // override for capi stuff
+            { 
+                gameversion = "CAPI-journal";
+                build = "";
+            }
 
-            List<JObject> results = edsm.SendJournalEvents(entries, gameversion, gamebuild, out errmsg);
+            List<JObject> results = edsm.SendJournalEvents(entries, gameversion, build, out errmsg);
+            System.Diagnostics.Debug.WriteLine($"EDSM Send of {entries.Count} {gameversion} {build} result {errmsg}");
             //List<JObject> results = new List<JObject>();    for( int i = 0; i < hl.Count; i++ ) results.Add(new JObject { ["msgnum"] = 100, ["systemId"] = 200 }); //debug
 
             if (results == null)
@@ -589,6 +596,8 @@ namespace EliteDangerousCore.EDSM
         {
             public Action<string> Logger;
             public HistoryEntry HistoryEntry;
+            public string gameversion;
+            public string build;
         }
 
         static public Action<int, string> SentEvents;       // called in thread when sync thread has finished and is terminating. first discovery list
@@ -596,7 +605,7 @@ namespace EliteDangerousCore.EDSM
         private static Thread ThreadEDSMSync;
         private static int running = 0;
         private static bool Exit = false;
-        private static ConcurrentQueue<HistoryQueueEntry> historylist = new ConcurrentQueue<HistoryQueueEntry>();
+        private static ConcurrentQueue<HistoryQueueEntry> queue = new ConcurrentQueue<HistoryQueueEntry>();
         private static AutoResetEvent historyevent = new AutoResetEvent(false);
         private static ManualResetEvent exitevent = new ManualResetEvent(false);
         private static DateTime lastDiscardFetch;

@@ -1093,7 +1093,7 @@ namespace EliteDangerousCore.EDSM
 
         // Visual inspection Nov 20
 
-        public List<JObject> SendJournalEvents(List<JObject> entries, string gameversion, string gamebuild, out string errmsg)    // protected against bad JSON
+        public List<JObject> SendJournalEvents(List<JObject> entries, string gameversion, string gamebuild, out string errmsg)    
         {
             JArray message = new JArray(entries);
 
