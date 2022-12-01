@@ -170,10 +170,12 @@ namespace EliteDangerousCore.JournalEvents
             Security = evt.MultiStr(new string[] { "SystemSecurity", "Security" });
             Security_Localised = JournalFieldNaming.CheckLocalisation(evt.MultiStr(new string[] { "SystemSecurity_Localised", "Security_Localised" }), Security);
 
-            Wanted = evt["Wanted"].Bool();      // if absence, your not wanted, by definition of frontier in journal (only present if wanted, see docked)
+            Population = evt["Population"].LongNull();
 
             PowerplayState = evt["PowerplayState"].Str();            // NO evidence
             PowerplayPowers = evt["Powers"]?.ToObjectQ<string[]>();
+
+            Wanted = evt["Wanted"].Bool();      // if absence, your not wanted, by definition of frontier in journal (only present if wanted, see docked)
 
             Conflicts = evt["Conflicts"]?.ToObjectQ<ConflictInfo[]>();   // 3.4
 

@@ -24,9 +24,9 @@ namespace EliteDangerousCore.Forms
     public partial class CommanderForm : ExtendedControls.DraggableForm
     {
         public bool Valid { get { return textBoxBorderCmdr.Text != ""; } }
-        public string CommanderName { get { return (extCheckBoxConsoleCommander.Checked ? "[C] " : "") + textBoxBorderCmdr.Text; } }
 
-        // CAPI root name
+        // see EDCommander.cs for subtle differences between the two
+        public string CommanderName { get { return extCheckBoxConsoleCommander.Checked ? EDCommander.AddConsoleTagToName(textBoxBorderCmdr.Text) : textBoxBorderCmdr.Text; } }
         public string CommanderRootName { get { return EDCommander.GetRootName(CommanderName); } }
 
         public CommanderForm(List<ExtendedControls.ExtGroupBox> additionalcontrols = null)
@@ -79,7 +79,7 @@ namespace EliteDangerousCore.Forms
         {
             InitInt(enablecmdredit, disablefromedsm, disable3dmapsettings, disableconsolesupport);
 
-            textBoxBorderCmdr.Text = cmdr.Name.ReplaceIfStartsWith("[C] ", "");
+            textBoxBorderCmdr.Text = EDCommander.RemoveConsoleTagFromName(cmdr.Name);
 
             if (!disableconsolesupport)
             {
@@ -111,9 +111,8 @@ namespace EliteDangerousCore.Forms
 
             // nov 22 update 14 inara/edsm don't want legacy data
 
-            textBoxBorderEDSMAPI.Enabled = textBoxBorderEDSMName.Enabled = 
-            textBoxBorderInaraAPIKey.Enabled = textBoxBorderInaraName.Enabled =
-            checkBoxCustomEDSMFrom.Enabled = checkBoxCustomEDSMTo.Enabled = checkBoxCustomInara.Enabled = !cmdr.LegacyCommander;
+            textBoxBorderEDSMAPI.Enabled = textBoxBorderEDSMName.Enabled = checkBoxCustomEDSMFrom.Enabled = checkBoxCustomEDSMTo.Enabled = cmdr.EDSMSupported;
+            textBoxBorderInaraAPIKey.Enabled = textBoxBorderInaraName.Enabled = checkBoxCustomInara.Enabled = cmdr.InaraSupported;
         }
 
         public bool Update(EDCommander cmdr)

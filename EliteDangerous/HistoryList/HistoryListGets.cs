@@ -641,5 +641,24 @@ namespace EliteDangerousCore
         }
 
         #endregion
+
+        #region Gameversion helpers
+
+        // find last entry in history with a good gameversion, or ""
+        public Tuple<string,string> GetLastGameversionBuild()
+        {
+            for (int i = historylist.Count - 1; i >= 0; i--)
+            {
+                if (historylist[i].journalEntry.GameVersion.HasChars())
+                {
+                    return new Tuple<string, string>(historylist[i].journalEntry.GameVersion, historylist[i].journalEntry.Build);
+                }
+            }
+
+            return new Tuple<string, string>("", "");
+        }
+
+
+        #endregion
     }
 }

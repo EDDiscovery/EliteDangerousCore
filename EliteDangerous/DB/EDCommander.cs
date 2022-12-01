@@ -34,26 +34,32 @@ namespace EliteDangerousCore
         
         public string RootName { get { return GetRootName(Name); } }
 
-        // the root name is used by CAPI to associate legacy/live/beta commanders with one oAUTH login
-        // this is the name CAPI uses to store credentials in its files
-        // note console commanders [C] name are purposely not removed by this, as we want them seperate
-
+        // The root name is used by CAPI to associate legacy/live/beta commanders with one oAUTH login
+        // Commanders 'name' and 'name (Legacy)' share a single oAUTH login, so in the CAPI folder the oAuth is saved in the 'name' file
+        // note console commanders [C] name are purposely not removed by this, as we want them seperate, so they stay [C] name. That name gets placed in the downloaded journals, and is used in the capi login
         public static string GetRootName(string s)
         {
-            return s.Replace(" (Legacy)", "").Replace("[BETA] ", "");        // sync with EDJournalReader.cs
+            return s.Replace(" (Legacy)", "").Replace("[BETA] ", "");        
         }
 
+        public static bool NameIsConsoleCommander(string name) { return name.StartsWith("[C] "); }
+        public static string AddConsoleTagToName(string name) { return "[C] " + name; }
+        public static string RemoveConsoleTagFromName(string name) { return name.ReplaceIfStartsWith("[C] ", ""); }
+        public static string AddLegacyTagToName(string name) { return name + " (Legacy)"; }
         public bool NameIsBeta { get { return Name.StartsWith("[BETA] "); } }
+        public static string AddBetaTagToName(string name) { return "[BETA] " + name; }
 
         public bool Deleted { set; get; }
 
         public string JournalDir { set; get; }
 
         // Nov 22 update 14 syncing to these are only for Live commanders
-        public bool SyncToEdsm { set { if (!LegacyCommander) synctoedsm = value; } get { return LegacyCommander ? false : synctoedsm; } }
-        public bool SyncFromEdsm { set { if (!LegacyCommander) syncfromedsm = value; } get { return LegacyCommander ? false : syncfromedsm; } }
+        public bool EDSMSupported { get { return !LegacyCommander && !ConsoleCommander; } }
+        public bool SyncToEdsm { set { if (EDSMSupported) synctoedsm = value; } get { return EDSMSupported ? synctoedsm : false; } }
+        public bool SyncFromEdsm { set { if (EDSMSupported) syncfromedsm = value; } get { return EDSMSupported ? syncfromedsm : false; } }
 
-        public bool SyncToInara { set { if (!LegacyCommander) synctoinara = value; } get { return LegacyCommander ? false : synctoinara; } }
+        public bool InaraSupported { get { return !LegacyCommander && !ConsoleCommander; } }
+        public bool SyncToInara { set { if (InaraSupported) synctoinara = value; } get { return InaraSupported ? synctoinara: false; } }
 
         public string EdsmName { set; get; } = "";
         public string EDSMAPIKey { set; get; } = "";

@@ -106,11 +106,15 @@ namespace EliteDangerousCore
             else if (je.EventTypeID == JournalTypeEnum.LoadGame)
             {
                 var jlg = je as JournalEvents.JournalLoadGame;
-                string cmdrrootname = jlg.LoadGameCommander;
+
+                // for console logs, it will be [C] name
+                // for journal logs, it will be frontier name
+
+                string cmdrrootname = jlg.LoadGameCommander;            
 
                 if (TravelLogUnit.IsBetaFlag)
                 {
-                    cmdrrootname = "[BETA] " + cmdrrootname;
+                    cmdrrootname = EDCommander.AddBetaTagToName(cmdrrootname);
                 }
 
                 // a legacy loadgame, from 3.x or before, created after U14 release.
@@ -119,8 +123,6 @@ namespace EliteDangerousCore
 
                 DateTime EDOdyssey14UTC = new DateTime(2022, 11, 29, 12, 0, 0);
                 bool legacy = (jlg.GameVersion.IsEmpty() || jlg.GameVersion.Trim().StartsWith("3.")) && jlg.EventTimeUTC >= EDOdyssey14UTC;
-
-                string cmdrcreatedname = legacy ? cmdrrootname + " (Legacy)" : cmdrrootname;
 
                 // set TLU flags
 
@@ -140,7 +142,12 @@ namespace EliteDangerousCore
                 JournalEntry.DefaultOdysseyFlag = jlg.IsOdyssey;
                 JournalEntry.DefaultBetaFlag = jlg.IsBeta;
 
-                // find commander
+                // transform journal commander name  to db name
+                // console commanders, with the [C] form placed in the downloader, are left alone, and (Legacy) is not added (even though legacy flag above will be true)
+                // legacy commanders get (Legacy) added onto it
+                // Live commanders are left alone
+
+                string cmdrcreatedname = legacy && !EDCommander.NameIsConsoleCommander(cmdrrootname) ? EDCommander.AddLegacyTagToName(cmdrrootname) : cmdrrootname;
 
                 EDCommander commander = EDCommander.GetCommander(cmdrcreatedname);
 
@@ -169,7 +176,7 @@ namespace EliteDangerousCore
                         commander.LegacyCommander = true;       // record legacy
                         System.Diagnostics.Trace.WriteLine($"Legacy commander {cmdrcreatedname} created");
 
-                        var cmdr = EDCommander.GetCommander(cmdrrootname);     // if a commander exist
+                        var cmdr = EDCommander.GetCommander(cmdrrootname);     // if a live commander exist with this name
 
                         if (cmdr!=null)
                         {
