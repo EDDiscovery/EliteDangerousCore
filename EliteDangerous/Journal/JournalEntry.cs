@@ -119,6 +119,8 @@ namespace EliteDangerousCore
         // update the note. If text is blank, delete it
         public void UpdateSystemNote(string text, string system, bool sendtoedsm)
         {
+            System.Diagnostics.Trace.Assert(text != null && system != null);
+
             bool fsdentry = EventTypeID == JournalTypeEnum.FSDJump;
 
             if (SNC == null)            // if no system note, we make one. Its a JID note unless its on a FSD jump, in which case its a system note. Syncs with EDSM in that case

@@ -41,6 +41,7 @@ namespace EliteDangerousCore.DB
             JournalID = (long)dr["journalid"];
             SystemName = (string)dr["Name"];
             LocalTimeLastCreatedEdited = ((DateTime)dr["Time"]).ToLocalKind();
+
             if (System.DBNull.Value != dr["UTCTime"])
                 UTCTimeCreated = ((DateTime)dr["UTCTime"]);//.ToUniversalKind();
             else
@@ -48,7 +49,13 @@ namespace EliteDangerousCore.DB
 
             if (System.DBNull.Value != dr["JournalText"])
                 JournalText = (string)dr["JournalText"];
-            Note = (string)dr["Note"];
+            
+            Note = dr["Note"] as string;        // paranoia defense from #3350
+            if ( Note == null)
+            {
+                System.Diagnostics.Trace.WriteLine($"Note {ID} does not have a valid note!");
+                Note = "<Note was Null!>";
+            }
         }
 
         private bool AddToDbAndGlobal()
@@ -191,6 +198,8 @@ namespace EliteDangerousCore.DB
         // set journalid = 0 for a system note
         public static SystemNoteClass MakeNote(string text, DateTime localtime, string sysname, long journalid, string journaltext )
         {
+            System.Diagnostics.Trace.Assert(text != null && sysname != null && journaltext != null);
+
             SystemNoteClass sys = new SystemNoteClass();
             sys.Note = text;
             sys.LocalTimeLastCreatedEdited = localtime;
@@ -207,6 +216,8 @@ namespace EliteDangerousCore.DB
         // commit to DB and to globals
         public SystemNoteClass UpdateNote(string s, DateTime localtime, string journaltext)
         {
+            System.Diagnostics.Trace.Assert(s != null && journaltext != null);
+
             Note = s;
             LocalTimeLastCreatedEdited = localtime;
             JournalText = journaltext;

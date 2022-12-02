@@ -23,11 +23,11 @@ namespace EliteDangerousCore.EDDN
 {
     public class EDDNClass : BaseUtils.HttpCom
     {
-        public string CommanderName { get; set; }
+        static public string SoftwareName { get; set; } = "EDDiscovery";            // override if sending from another program
 
-        static public string SoftwareName { get; set; } = "EDDiscovery";
+        private string commandername { get; set; }
+        private string fromSoftwareVersion;
 
-        private readonly string fromSoftwareVersion;
         private readonly string EDDNServer = "https://eddn.edcd.io:4430/upload/";
         private readonly string EDDNServerBeta = "https://beta.eddn.edcd.io:4431/upload/";
 
@@ -45,18 +45,17 @@ namespace EliteDangerousCore.EDDN
         private readonly string FSSSignalDiscoveredSchema = "https://eddn.edcd.io/schemas/fsssignaldiscovered/1";
         private readonly string FCMaterialsSchema = "https://eddn.edcd.io/schemas/fcmaterials_journal/1";
 
-        public EDDNClass()
+        public EDDNClass(string commandernamep)
         {
             var assemblyFullName = Assembly.GetEntryAssembly().FullName;
             fromSoftwareVersion = assemblyFullName.Split(',')[1].Split('=')[1];
-            CommanderName = EDCommander.Current.Name;
+            commandername = commandernamep;
         }
 
         private JObject Header(string gameversion, string build)
         {
             JObject header = new JObject();
-
-            header["uploaderID"] = CommanderName;
+            header["uploaderID"] = commandername;
             header["softwareName"] = SoftwareName;
             header["softwareVersion"] = fromSoftwareVersion;
             header["gameversion"] = gameversion ?? "";
@@ -1040,13 +1039,13 @@ namespace EliteDangerousCore.EDDN
         }
 
 
-        public bool PostMessage(JObject msg, bool beta, bool test)
+        public bool PostMessage(JObject msg, bool betaserver, bool testschema)
         {
             try
             {
-                httpserveraddress = beta ? EDDNServerBeta : EDDNServer;
+                httpserveraddress = betaserver ? EDDNServerBeta : EDDNServer;
 
-                if (test)
+                if (testschema)
                     msg["$schemaRef"] = msg["$schemaRef"].Str() + "/test";
 
                 System.Diagnostics.Debug.WriteLine($"EDDN Send to {httpserveraddress} {msg.ToString()}");

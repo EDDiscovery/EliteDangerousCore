@@ -404,6 +404,7 @@ namespace EliteDangerousCore
                 reader.TravelLogUnit.Type = TravelLogUnit.JournalType;
                 var filename = Path.GetFileName(filepath);
                 if (filename.StartsWith("JournalBeta.", StringComparison.InvariantCultureIgnoreCase) ||
+                    filename.StartsWith("JournalGamma.", StringComparison.InvariantCultureIgnoreCase) ||
                     filename.StartsWith("JournalAlpha.", StringComparison.InvariantCultureIgnoreCase))
                 {
                     reader.TravelLogUnit.Type |= TravelLogUnit.BetaMarker;

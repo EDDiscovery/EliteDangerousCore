@@ -121,30 +121,12 @@ namespace EliteDangerousCore.EDDN
         // Send to test vectors it to the beta server
         static public bool? SendToEDDN(HistoryEntry he, bool sendtotest = false)
         {
-            EDDNClass eddn = new EDDNClass();
+            if (he.Commander == null || he.journalEntry == null)     // why ever? but protect since code in here did.  But its probably v.old code reasons not valid now
+                return null;
 
-            bool beta = false;
-
-            if (he.Commander != null)
-            {
-                eddn.CommanderName = he.Commander.EdsmName;
-
-                if (string.IsNullOrEmpty(eddn.CommanderName))
-                    eddn.CommanderName = he.Commander.Name;
-
-                if (he.Commander.NameIsBeta)
-                    beta = true;
-            }
-
-            if (he.journalEntry.IsBeta)
-                beta = true;
+            EDDNClass eddn = new EDDNClass(he.Commander.Name);
 
             JournalEntry je = he.journalEntry;
-
-            if (je == null)
-            {
-                je = JournalEntry.Get(he.Journalid);
-            }
 
             QuickJSON.JObject msg = null;
 
@@ -234,6 +216,8 @@ namespace EliteDangerousCore.EDDN
             {
                 if (sendtotest) // make sure it looks fresh if send to test
                     msg["message"]["timestamp"] = DateTime.UtcNow.ToStringZuluInvariant();
+
+                bool beta = he.Commander.NameIsBeta || he.journalEntry.IsBeta;      // either beta it
 
                 if (eddn.PostMessage(msg,beta,sendtotest))
                 {
