@@ -113,8 +113,8 @@
     <Compile Include="HistoryList\Queries.cs" />
     <Compile Include="IGAU\IGAUSync.cs" />
     <Compile Include="IGAU\IGAUClass.cs" />
-    <Compile Include="Items\ItemEngineers.cs" />
     <Compile Include="Items\ItemData.cs" />
+    <Compile Include="Items\ItemEngineers.cs" />
     <Compile Include="Items\ItemShips.cs" />
     <Compile Include="Items\ItemActors.cs" />
     <Compile Include="Items\ItemSuits.cs" />

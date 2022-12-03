@@ -396,7 +396,10 @@ namespace EliteDangerousCore.JournalEvents
             long rv = Reward.HasValue ? Reward.Value : 0;
             long dv = Donation.HasValue ? Donation.Value : 0;
 
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name, (rv - dv));
+            if (rv - dv != 0)
+            {
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name, (rv - dv));
+            }
         }
 
         public void UpdateMissions(MissionListAccumulator mlist, EliteDangerousCore.ISystem sys, string body)
@@ -608,7 +611,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.MissionFailed)]
-    public class JournalMissionFailed : JournalEntry, IMissions
+    public class JournalMissionFailed : JournalEntry, IMissions, ILedgerJournalEntry
     {
         public JournalMissionFailed(JObject evt) : base(evt, JournalTypeEnum.MissionFailed)
         {
@@ -626,9 +629,16 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
-
             info = BaseUtils.FieldBuilder.Build("", LocalisedName, "Fine: ".T(EDCTx.JournalEntry_Fine), Fine);
             detailed = "";
+        }
+
+        public void Ledger(Ledger mcl)
+        {
+            if ( Fine.HasValue && Fine.Value != 0 )
+            {
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "Fine: ".T(EDCTx.JournalEntry_Fine) + LocalisedName, Fine.Value);
+            }
         }
 
         public void UpdateMissions(MissionListAccumulator mlist, EliteDangerousCore.ISystem sys, string body)

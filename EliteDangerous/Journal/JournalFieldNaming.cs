@@ -109,27 +109,71 @@ namespace EliteDangerousCore
             return s.SplitCapsWordFull(replaceslots);
         }
 
-        static public string GetBetterItemName(string s)           
+        static public string GetBetterModuleName(string s)           
         {
             if (s.Length>0)         // accept empty string, some of the fields are purposely blank from the journal because they are not set for a particular transaction
             {
-                ItemData.ShipModule item = ItemData.Instance.GetShipModuleProperties(s);
+                ItemData.ShipModule item = ItemData.GetShipModuleProperties(s);
                 return item.ModName;
             }
             else
                 return s;
         }
 
+        // use when an identifier should be a ship
         static public string GetBetterShipName(string inname)
         {
-            ItemData.IModuleInfo i = ItemData.Instance.GetShipProperty(inname, ItemData.ShipPropID.Name);
+            ItemData.IModuleInfo i = ItemData.GetShipProperty(inname, ItemData.ShipPropID.Name);
 
+            if (i != null)
+            {
+                return (i as ItemData.ShipInfoString).Value;
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Unknown FD ship ID:" + inname);
+                return inname.SplitCapsWordFull();
+            }
+        }
+
+        // use when an identifier could be a ship, an actor or a suit
+        static public string GetBetterShipSuitActorName(string inname)
+        {
+            ItemData.IModuleInfo i = ItemData.GetShipProperty(inname, ItemData.ShipPropID.Name);
+
+            if (i != null)
+            {
+                return (i as ItemData.ShipInfoString).Value;
+            }
+            else if (ItemData.IsActor(inname))
+            {
+                string n = ItemData.GetActor(inname).Name;
+                return n;
+            }
+            else if (ItemData.IsSuit(inname))
+            {
+                var suit = ItemData.GetSuit(inname);
+                if (suit != null)
+                    inname = suit.Name;
+                return inname;
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Unknown FD ship ID:" + inname);
+                return inname.SplitCapsWordFull();
+            }
+        }
+
+        // use when you know its a ship
+        static public string NormaliseFDShipName(string inname)       
+        {
+            ItemData.IModuleInfo i = ItemData.GetShipProperty(inname, ItemData.ShipPropID.FDID);
             if (i != null)
                 return (i as ItemData.ShipInfoString).Value;
             else
             {
                 System.Diagnostics.Debug.WriteLine("Unknown FD ship ID:" + inname);
-                return inname.SplitCapsWordFull();
+                return inname;
             }
         }
 
@@ -181,17 +225,6 @@ namespace EliteDangerousCore
             return s;
         }
 
-        static public string NormaliseFDShipName(string inname)            // FD ship names.. tend to change case.. Fix
-        {
-            ItemData.IModuleInfo i = ItemData.Instance.GetShipProperty(inname, ItemData.ShipPropID.FDID);
-            if (i != null)
-                return (i as ItemData.ShipInfoString).Value;
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("Unknown FD ship ID:" + inname);
-                return inname;
-            }
-        }
 
         static public string CheckLocalisation(string loc, string alt)      
         {

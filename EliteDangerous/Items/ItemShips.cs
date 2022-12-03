@@ -58,7 +58,7 @@ namespace EliteDangerousCore
 
         public enum ShipPropID { FDID, HullMass, Name, Manu, Speed, Boost, HullCost, Class }
 
-        public Dictionary<ShipPropID, IModuleInfo> GetShipProperties(string fdshipname)        // get properties of a ship, case insensitive, may be null
+        static public Dictionary<ShipPropID, IModuleInfo> GetShipProperties(string fdshipname)        // get properties of a ship, case insensitive, may be null
         {
             fdshipname = fdshipname.ToLowerInvariant();
             if (coriolisships.ContainsKey(fdshipname))
@@ -70,7 +70,7 @@ namespace EliteDangerousCore
         }
         
         // get property of a ship, case insensitive.  may be null
-        public IModuleInfo GetShipProperty(string fdshipname, ShipPropID property)        
+        static public IModuleInfo GetShipProperty(string fdshipname, ShipPropID property)        
         {
             Dictionary<ShipPropID, IModuleInfo> info = GetShipProperties(fdshipname);
             return info != null ? (info.ContainsKey(property) ? info[property] : null) : null;
@@ -79,7 +79,7 @@ namespace EliteDangerousCore
         // get property of a ship, case insensitive.
         // format/fp is used for ints/doubles and must be provided. Not used for string.
         // May be null
-        public string GetShipPropertyAsString(string fdshipname, ShipPropID property, string format, IFormatProvider fp)        
+        static public string GetShipPropertyAsString(string fdshipname, ShipPropID property, string format, IFormatProvider fp)        
         {
             Dictionary<ShipPropID, IModuleInfo> info = GetShipProperties(fdshipname);
             if ( info != null && info.TryGetValue(property, out IModuleInfo i))

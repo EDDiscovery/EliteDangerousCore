@@ -38,7 +38,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.DatalinkVoucher)]
-    public class JournalDatalinkVoucher : JournalEntry, ILedgerNoCashJournalEntry
+    public class JournalDatalinkVoucher : JournalEntry
     {
         public JournalDatalinkVoucher(JObject evt) : base(evt, JournalTypeEnum.DatalinkVoucher)
         {
@@ -50,11 +50,6 @@ namespace EliteDangerousCore.JournalEvents
         public string PayeeFaction { get; set; }
         public long Reward { get; set; }
         public string VictimFaction { get; set; }
-
-        public void LedgerNC(Ledger mcl)
-        {
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, PayeeFaction + " " + Reward.ToString("N0"));
-        }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {

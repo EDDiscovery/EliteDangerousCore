@@ -19,7 +19,7 @@ using System.Linq;
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.MiningRefined)]
-    public class JournalMiningRefined : JournalEntry, ICommodityJournalEntry, ILedgerNoCashJournalEntry
+    public class JournalMiningRefined : JournalEntry, ICommodityJournalEntry
     {
         public JournalMiningRefined(JObject evt) : base(evt, JournalTypeEnum.MiningRefined)
         {
@@ -39,11 +39,6 @@ namespace EliteDangerousCore.JournalEvents
         {
             mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Type, 1, 0);
             Total = mc.GetLast(Type)?.Count ?? 0;
-        }
-
-        public void LedgerNC(Ledger mcl)
-        {
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Type_Localised);
         }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)

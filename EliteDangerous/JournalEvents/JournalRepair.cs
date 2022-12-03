@@ -33,7 +33,7 @@ namespace EliteDangerousCore.JournalEvents
                 foreach (var jitem in evt["Items"])
                 {
                     var itemfd = JournalFieldNaming.NormaliseFDItemName(jitem.Str());
-                    var item = JournalFieldNaming.GetBetterItemName(itemfd);
+                    var item = JournalFieldNaming.GetBetterModuleName(itemfd);
 
                     var repairitem = new RepairItem
                     {
@@ -50,7 +50,7 @@ namespace EliteDangerousCore.JournalEvents
             else
             {
                 ItemFD = JournalFieldNaming.NormaliseFDItemName(evt["Item"].Str());
-                Item = JournalFieldNaming.GetBetterItemName(ItemFD);
+                Item = JournalFieldNaming.GetBetterModuleName(ItemFD);
                 ItemLocalised = JournalFieldNaming.CheckLocalisation(evt["Item_Localised"].Str(),Item);
             }
 
@@ -73,7 +73,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public void Ledger(Ledger mcl)
         {
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, ItemLocalised, -Cost);
+            if ( Cost != 0)
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, ItemLocalised, -Cost);
         }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
@@ -113,7 +114,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalAfmuRepairs(JObject evt) : base(evt, JournalTypeEnum.AfmuRepairs)
         {
             ModuleFD = JournalFieldNaming.NormaliseFDItemName(evt["Module"].Str());
-            Module = JournalFieldNaming.GetBetterItemName(ModuleFD);
+            Module = JournalFieldNaming.GetBetterModuleName(ModuleFD);
             ModuleLocalised = JournalFieldNaming.CheckLocalisation(evt["Module_Localised"].Str(), Module);
             FullyRepaired = evt["FullyRepaired"].Bool();
             Health = evt["Health"].Float() * 100.0F;

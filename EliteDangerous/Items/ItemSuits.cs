@@ -37,7 +37,9 @@ namespace EliteDangerousCore
                 return var;
             else
             {
-                System.Diagnostics.Debug.WriteLine("Unknown Suit: {{ \"{0}\", new Suit(\"{1}\") }},", fdname, locname ?? fdname.SplitCapsWordFull());
+                int ci = fdname.IndexOf("class");
+                int classn = ci > 0 ? fdname.Substring(ci + 5, 1).InvariantParseInt(0) : 0;
+                System.Diagnostics.Debug.WriteLine($"Unknown Suit: {{ \"{fdname}\", new Suit(\"{locname??fdname.SplitCapsWordFull()}\",{classn},0,0,\"\",\"\",\"\",null) }},");
                 return null;
             }
         }
@@ -105,7 +107,7 @@ namespace EliteDangerousCore
             public string U1;
             public string U2;
             public string U3;
-            public SuitStats Stats;
+            public SuitStats Stats;     // may be null! if for ai suits
 
             public Suit(string type, int cls, int primary, int secondary, string u1, string u2, string u3, SuitStats values)
             {
@@ -218,8 +220,43 @@ namespace EliteDangerousCore
                 0.4, 1.5, 1, 0.5, // shield kinetic, thermal, plasma, explosive
                 2.23, 30.5, // regen, shield health wrong in frontier data, corrected according to https://elite-dangerous.fandom.com/wiki/Artemis_Suit
                 13.5, 60, 15,30,10 )) }, // battery, oxygen, items, components, data
-         };
 
+
+                 { "lightassaultsuitai_class1", new Suit("AI Light Assault Suit Class 1",1,0,0,"","","",null) },
+                 { "lightassaultsuitai_class2", new Suit("AI Light Assault Suit Class 2",2,0,0,"","","",null) },
+                 { "lightassaultsuitai_class3", new Suit("AI Light Assault Suit Class 3",3,0,0,"","","",null) },
+                 { "lightassaultsuitai_class4", new Suit("AI Light Assault Suit Class 4",4,0,0,"","","",null) },
+                 { "lightassaultsuitai_class5", new Suit("AI Light Assault Suit Class 5", 5, 0, 0, "", "", "", null) },
+
+                 { "assaultsuitai_class1", new Suit("AI Assault Suit Class 1",1,0,0,"","","",null) },
+                 { "assaultsuitai_class2", new Suit("AI Assault Suit Class 2",2,0,0,"","","",null) },
+                 { "assaultsuitai_class3", new Suit("AI Assault Suit Class 3",3,0,0,"","","",null) },
+                 { "assaultsuitai_class4", new Suit("AI Assault Suit Class 4", 4, 0, 0, "", "", "", null) },
+                 { "assaultsuitai_class5", new Suit("AI Assault Suit Class 5", 5, 0, 0, "", "", "", null) },
+
+                 { "closesuitai_class1", new Suit("AI Close Suit Class 1", 1, 0, 0, "", "", "", null) },
+                 { "closesuitai_class2", new Suit("AI Close Suit Class 2", 2, 0, 0, "", "", "", null) },
+                 { "closesuitai_class3", new Suit("AI Close Suit Class 3", 3, 0, 0, "", "", "", null) },
+                 { "closesuitai_class4", new Suit("AI Close Suit Class 4", 4, 0, 0, "", "", "", null) },
+                 { "closesuitai_class5", new Suit("AI Close Suit Class 3", 5, 0, 0, "", "", "", null) },
+
+                 { "rangedsuitai_class1", new Suit("AI Ranger Suit Class 1", 1, 0, 0, "", "", "", null) },
+                 { "rangedsuitai_class2", new Suit("AI Ranger Suit Class 2", 2, 0, 0, "", "", "", null) },
+                 { "rangedsuitai_class3", new Suit("AI Ranger Suit Class 3", 3, 0, 0, "", "", "", null) },
+                 { "rangedsuitai_class4", new Suit("AI Ranger Suit Class 4", 4, 0, 0, "", "", "", null) },
+                 { "rangedsuitai_class5", new Suit("AI Ranger Suit Class 5", 5, 0, 0, "", "", "", null) },
+
+                 { "heavysuitai_class1", new Suit("AI Heavy Suit Class 1", 1, 0, 0, "", "", "", null) },
+                 { "heavysuitai_class2", new Suit("AI Heavy Suit Class 2", 2, 0, 0, "", "", "", null) },
+                 { "heavysuitai_class3", new Suit("AI Heavy Suit Class 3", 3, 0, 0, "", "", "", null) },       
+                 { "heavysuitai_class4", new Suit("AI Heavy Suit Class 4", 4, 0, 0, "", "", "", null) },       
+                 { "heavysuitai_class5", new Suit("AI Heavy Suit Class 5", 5, 0, 0, "", "", "", null) },
+
+                 { "citizensuitai_admin", new Suit("AI Citizen Suit Admin", 0, 0, 0, "", "", "", null) },
+                 { "citizensuitai_scientific", new Suit("AI Citizen Suit Scientific", 0, 0, 0, "", "", "", null) },
+                 { "citizensuitai_industrial", new Suit("AI Citizen Suit Industrial", 0, 0, 0, "", "", "", null) },
+
+         };
 
     }
 }

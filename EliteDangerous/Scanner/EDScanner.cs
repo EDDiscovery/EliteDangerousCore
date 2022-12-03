@@ -172,7 +172,12 @@ namespace EliteDangerousCore
 
             foreach (string std in stdfolders)          // setup the std folders
             {
-                folderlist.Add(new Tuple<string, bool>(std, false));        // std folders are not sub folder scanned
+                var path = Path.GetFullPath(std);
+
+                if (Directory.Exists(path))             // make sure the bugger exists
+                {
+                    folderlist.Add(new Tuple<string, bool>(path, false));        // std folders are not sub folder scanned
+                }
             }
 
             foreach (var cmdr in EDCommander.GetListCommanders())       // setup any commander folders first, so the watches are established with subfolder search

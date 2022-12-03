@@ -80,7 +80,7 @@ namespace EliteDangerousCore.JournalEvents
             if ( ItemData.IsShip(ShipFD) || ItemData.IsSRVOrFighter(ShipFD))
             { 
                 ShipFD = JournalFieldNaming.NormaliseFDShipName(ShipFD);
-                Ship = JournalFieldNaming.GetBetterShipName(ShipFD);
+                Ship = JournalFieldNaming.GetBetterShipSuitActorName(ShipFD);
             }
             else 
             {

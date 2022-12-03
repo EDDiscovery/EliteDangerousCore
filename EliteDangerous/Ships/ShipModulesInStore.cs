@@ -50,7 +50,7 @@ namespace EliteDangerousCore
             {
                 get
                 {
-                    ItemData.ShipModule smd = ItemData.Instance.GetShipModuleProperties(NameFD);
+                    ItemData.ShipModule smd = ItemData.GetShipModuleProperties(NameFD);
                     return smd?.Mass ?? 0;
                 }
             }
@@ -58,7 +58,7 @@ namespace EliteDangerousCore
             public void Normalise()
             {
                 NameFD = JournalFieldNaming.NormaliseFDItemName(Name);          // Name comes in with strange characters, normalise out
-                Name = JournalFieldNaming.GetBetterItemName(NameFD);      // and look up a better name
+                Name = JournalFieldNaming.GetBetterModuleName(NameFD);      // and look up a better name
                 Name_Localised = Name_Localised.Alt(Name);
                 TransferTimeSpan = new System.TimeSpan((int)(TransferTime / 60 / 60), (int)((TransferTime / 60) % 60), (int)(TransferTime % 60));
                 TransferTimeString = TransferTime > 0 ? TransferTimeSpan.ToString() : "";

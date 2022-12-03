@@ -39,12 +39,6 @@ namespace EliteDangerousCore
     {
         void Ledger(Ledger mcl);
     }
-
-    public interface ILedgerNoCashJournalEntry
-    {
-        void LedgerNC(Ledger mcl);
-    }
-
     public interface IShipInformation
     {
         void ShipInformation(ShipInformationList shp, string whereami, ISystem system);

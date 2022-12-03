@@ -76,8 +76,8 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (Killer k in Killers)
                 {
-                    if ( ItemData.IsShip(k.Ship))
-                        k.Ship = JournalFieldNaming.GetBetterShipName(k.Ship);
+                    if ( k.Ship.HasChars())
+                        k.Ship = JournalFieldNaming.GetBetterShipSuitActorName(k.Ship);
                     k.Name_Localised = JournalFieldNaming.CheckLocalisation(k.Name_Localised??"",k.Name);
                 }
             }
@@ -151,7 +151,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public void Ledger(Ledger mcl)
         {
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Option, -Cost);
+            if ( Cost != 0 )
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Option, -Cost);
         }
 
         public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)

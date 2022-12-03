@@ -24,22 +24,6 @@ namespace EliteDangerousCore
 {
     public partial class ItemData
     {
-        static ItemData instance = null;
-        private ItemData()
-        {
-        }
-
-        public static ItemData Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new ItemData();
-                }
-                return instance;
-            }
-        }
         public interface IModuleInfo
         {
         };

@@ -19,7 +19,7 @@ using QuickJSON;
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.Bounty)]
-    public class JournalBounty : JournalEntry, ILedgerNoCashJournalEntry, IStatsJournalEntry, IStatsJournalEntryBountyOrBond
+    public class JournalBounty : JournalEntry,  IStatsJournalEntry, IStatsJournalEntryBountyOrBond
     {
         public class BountyReward
         {
@@ -44,7 +44,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 TargetLocalised = JournalFieldNaming.CheckLocalisation(evt["Target_Localised"].Str(), Target);  // 3.7 added a localised target field, so try it
 
-                var sp = ItemData.Instance.GetShipProperties(Target);
+                var sp = ItemData.GetShipProperties(Target);
                 if (sp != null)
                 {
                     TargetLocalised = ((ItemData.ShipInfoString)sp[ItemData.ShipPropID.Name]).Value;
@@ -100,11 +100,6 @@ namespace EliteDangerousCore.JournalEvents
         public bool StatsRankShip(CombatRank r) { return ShipTargettedForStatsOnly != null && ShipTargettedForStatsOnly.PilotCombatRank == r; }
         public bool StatsDangerousShip { get => ShipTargettedForStatsOnly != null && ShipTargettedForStatsOnly.PilotCombatRank == CombatRank.Dangerous; }
         public bool StatsHarmlessShip { get => ShipTargettedForStatsOnly != null && ShipTargettedForStatsOnly.PilotCombatRank <= CombatRank.Mostly_Harmless && ShipTargettedForStatsOnly.PilotCombatRank>= CombatRank.Harmless; }
-
-        public void LedgerNC(Ledger mcl)
-        {
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, string.Format("{0} total {1:N0}".T(EDCTx.JournalEntry_LegBounty), VictimFactionLocalised, TotalReward));
-        }
 
         public void UpdateStats(Stats stats, string unusedstationfaction)
         {
@@ -173,7 +168,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.CapShipBond)]
-    public class JournalCapShipBond : JournalEntry, ILedgerNoCashJournalEntry, IStatsJournalEntry, IStatsJournalEntryBountyOrBond
+    public class JournalCapShipBond : JournalEntry, IStatsJournalEntry, IStatsJournalEntryBountyOrBond
     {
         public JournalCapShipBond(JObject evt) : base(evt, JournalTypeEnum.CapShipBond)
         {
@@ -190,11 +185,6 @@ namespace EliteDangerousCore.JournalEvents
         public string VictimFaction_Localised { get; set; }         // may be empty
 
         public long Reward { get; set; }
-
-        public void LedgerNC(Ledger mcl)
-        {
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, AwardingFaction_Localised.Alt(AwardingFaction) + " " + Reward);
-        }
 
         public void UpdateStats(Stats stats, string unusedstationfaction)
         {
@@ -224,7 +214,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.CommitCrime)]
-    public class JournalCommitCrime : JournalEntry, ILedgerNoCashJournalEntry, IStatsJournalEntry
+    public class JournalCommitCrime : JournalEntry, IStatsJournalEntry
     {
         public JournalCommitCrime(JObject evt) : base(evt, JournalTypeEnum.CommitCrime)
         {
@@ -242,22 +232,6 @@ namespace EliteDangerousCore.JournalEvents
         public long? Fine { get; set; }
         public long? Bounty { get; set; }
         public long Cost { get { return (Fine.HasValue ? Fine.Value : 0) + (Bounty.HasValue ? Bounty.Value : 0); } }
-
-        public void LedgerNC(Ledger mcl)
-        {
-            string v = (VictimLocalised.Length > 0) ? VictimLocalised : Victim;
-
-            if (v.Length == 0)
-                v = Faction;
-
-            if (Fine.HasValue)
-                v += string.Format(" Fine {0:N0}".T(EDCTx.JournalCommitCrime_Fine), Fine.Value);
-
-            if (Bounty.HasValue)
-                v += string.Format(" Bounty {0:N0}".T(EDCTx.JournalCommitCrime_Bounty), Bounty.Value);
-
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, string.Format("{0} on {1}".T(EDCTx.JournalEntry_0), CrimeType, v));
-        }
 
         public void UpdateStats(Stats stats, string unusedstationfaction)
         {
@@ -294,7 +268,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.FactionKillBond)]
-    public class JournalFactionKillBond : JournalEntry, ILedgerNoCashJournalEntry, IStatsJournalEntry, IStatsJournalEntryBountyOrBond
+    public class JournalFactionKillBond : JournalEntry, IStatsJournalEntry, IStatsJournalEntryBountyOrBond
     {
         public JournalFactionKillBond(JObject evt) : base(evt, JournalTypeEnum.FactionKillBond)
         {
@@ -315,10 +289,6 @@ namespace EliteDangerousCore.JournalEvents
         public string Target { get { return ""; } }
         public string TargetFaction { get { return VictimFaction; } }
 
-        public void LedgerNC(Ledger mcl)
-        {
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, AwardingFaction_Localised.Alt(AwardingFaction) + " " + Reward.ToString("N0"));
-        }
 
         public void UpdateStats(Stats stats, string unusedstationfaction)
         {

@@ -50,14 +50,13 @@ namespace EliteDangerousCore
             return index >= 0 ? Transactions[index] : null;
         }
 
-        public void AddEvent(long jidn, DateTime t, JournalTypeEnum j, string n, long? ca)      // event with cash adjust but no profit
+        public void AddEvent(long jidn, DateTime t, JournalTypeEnum j, string n, long ca)      // event with cash adjust but no profit
         {
-            AddEvent(jidn, t, j, n, ca ?? 0, 0 , 0);
-        }
-
-        public void AddEvent(long jidn, DateTime t, JournalTypeEnum j, string n)        // event with no adjust
-        {
-            AddEvent(jidn, t, j, n, 0, 0, 0);
+            if (ca == 0)
+            {
+                System.Diagnostics.Debug.WriteLine($"Ledger no cash transaction detected {j} {n} ");
+            }
+            AddEvent(jidn, t, j, n, ca, 0 , 0);
         }
 
         public void AddEvent(long jidn, DateTime t, JournalTypeEnum j, string text, long adjust, long profitp, double ppu) // full monty
@@ -87,10 +86,7 @@ namespace EliteDangerousCore
             {
                 ((ILedgerJournalEntry)je).Ledger(this);
             }
-            else if (je is ILedgerNoCashJournalEntry)
-            {
-                ((ILedgerNoCashJournalEntry)je).LedgerNC(this);
-            }
+
         }
 
     }

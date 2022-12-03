@@ -48,7 +48,7 @@ namespace EliteDangerousCore.JournalEvents
             if (ItemData.IsShip(ShipFD))
             {
                 ShipFD = JournalFieldNaming.NormaliseFDShipName(ShipFD);
-                Ship = JournalFieldNaming.GetBetterShipName(ShipFD);
+                Ship = JournalFieldNaming.GetBetterShipSuitActorName(ShipFD);
             }
             Ship_Localised = JournalFieldNaming.CheckLocalisation(evt["Ship_Localised"].Str(), Ship);
 

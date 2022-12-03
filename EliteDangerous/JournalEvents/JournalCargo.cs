@@ -146,7 +146,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.EjectCargo)]
-    public class JournalEjectCargo : JournalEntry, ICommodityJournalEntry, ILedgerNoCashJournalEntry
+    public class JournalEjectCargo : JournalEntry, ICommodityJournalEntry
     {
         public JournalEjectCargo(JObject evt) : base(evt, JournalTypeEnum.EjectCargo)
         {
@@ -173,11 +173,6 @@ namespace EliteDangerousCore.JournalEvents
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
             mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Type, -Count, 0);   // same in the srv or ship, we lose count
-        }
-
-        public void LedgerNC(Ledger mcl)
-        {
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, FriendlyType + " " + Count);
         }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
@@ -271,7 +266,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.CollectCargo)]
-    public class JournalCollectCargo : JournalEntry, ICommodityJournalEntry, ILedgerNoCashJournalEntry
+    public class JournalCollectCargo : JournalEntry, ICommodityJournalEntry
     {
         public JournalCollectCargo(JObject evt) : base(evt, JournalTypeEnum.CollectCargo)
         {
@@ -293,12 +288,6 @@ namespace EliteDangerousCore.JournalEvents
         {
             mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Type, 1, 0);     // collecting cargo in srv same as collecting cargo in ship. srv autotransfers it to ship
         }
-
-        public void LedgerNC(Ledger mcl)
-        {
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, FriendlyType);
-        }
-
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Type_Localised, ";Stolen".T(EDCTx.JournalEntry_Stolen), Stolen, "<; (Mission Cargo)".T(EDCTx.JournalEntry_MissionCargo), MissionID != null);

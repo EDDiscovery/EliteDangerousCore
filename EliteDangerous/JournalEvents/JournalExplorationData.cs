@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2018 EDDiscovery development team
+ * Copyright © 2016-2022 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,12 +10,10 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- *
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
+
 using System;
 using QuickJSON;
-using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -67,9 +65,11 @@ namespace EliteDangerousCore.JournalEvents
 
         public void Ledger(Ledger mcl)
         {
-            int count = (Systems?.Length ?? 0) + (Discovered?.Length ?? 0);
-
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, count + " systems", TotalEarnings);
+            if (TotalEarnings != 0)
+            {
+                int count = (Systems?.Length ?? 0) + (Discovered?.Length ?? 0);
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, count + " systems", TotalEarnings);
+            }
         }
 
         public void UpdateStats(Stats stats, string stationfaction)
@@ -108,7 +108,9 @@ namespace EliteDangerousCore.JournalEvents
             Systems = evt["Discovered"]?.ToObjectQ<Discovered[]>();
             BaseValue = evt["BaseValue"].Long();
             Bonus = evt["Bonus"].Long();
-            TotalEarnings = evt["TotalEarnings"].Long(0);       
+            TotalEarnings = evt["TotalEarnings"].Long(0);
+            if (TotalEarnings < BaseValue + Bonus)                      // BUG in frontier journal, can be zero even though base value is set.
+                TotalEarnings = BaseValue + Bonus;
         }
 
         public class Discovered
@@ -124,8 +126,15 @@ namespace EliteDangerousCore.JournalEvents
 
         public void Ledger(Ledger mcl)
         {
-            int count = (Systems?.Length ?? 0);
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, count + " systems", TotalEarnings);
+            if (TotalEarnings != 0)
+            {
+                int count = (Systems?.Length ?? 0);
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, count + " systems", TotalEarnings);
+            }
+            else
+            {
+
+            }
         }
 
         public void UpdateStats(Stats stats, string stationfaction)
@@ -189,7 +198,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public void Ledger(Ledger mcl)
         {
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, (Bios?.Length??0).ToString("N0"), TotalValue);
+            if (TotalValue != 0)
+            {
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, (Bios?.Length ?? 0).ToString("N0"), TotalValue);
+            }
         }
 
     }

@@ -131,7 +131,7 @@ namespace EliteDangerousCore.JournalEvents
             Slot = JournalFieldNaming.GetBetterSlotName(SlotFD);
 
             ModuleFD = JournalFieldNaming.NormaliseFDItemName(evt["Module"].Str());
-            Module = JournalFieldNaming.GetBetterItemName(ModuleFD);
+            Module = JournalFieldNaming.GetBetterModuleName(ModuleFD);
 
             Engineering = new ShipModule.EngineeringData(evt);
 

@@ -218,7 +218,7 @@ namespace EliteDangerousCore
 
         public double HullMass()
         {
-            ItemData.IModuleInfo md = ItemData.Instance.GetShipProperty(ShipFD, ItemData.ShipPropID.HullMass);
+            ItemData.IModuleInfo md = ItemData.GetShipProperty(ShipFD, ItemData.ShipPropID.HullMass);
             return md != null ? (md as ItemData.ShipInfoDouble).Value : 0;
         }
 
@@ -237,7 +237,7 @@ namespace EliteDangerousCore
         {
             get
             {
-                ItemData.IModuleInfo md = ItemData.Instance.GetShipProperty(ShipFD, ItemData.ShipPropID.Manu);
+                ItemData.IModuleInfo md = ItemData.GetShipProperty(ShipFD, ItemData.ShipPropID.Manu);
                 return md != null ? (md as ItemData.ShipInfoString).Value : "Unknown";
             }
         }
@@ -246,7 +246,7 @@ namespace EliteDangerousCore
         {
             get
             {
-                ItemData.IModuleInfo md = ItemData.Instance.GetShipProperty(ShipFD, ItemData.ShipPropID.Boost);
+                ItemData.IModuleInfo md = ItemData.GetShipProperty(ShipFD, ItemData.ShipPropID.Boost);
                 double v = md != null ? (md as ItemData.ShipInfoInt).Value : 0;
                 ShipModule.EngineeringData ed = GetEngineering("Main Thrusters"); // aka "MainEngines" in fd speak, but we use a slot naming conversion
                 ed?.EngineerThrusters(ref v);
@@ -258,7 +258,7 @@ namespace EliteDangerousCore
         {
             get
             {
-                ItemData.IModuleInfo md = ItemData.Instance.GetShipProperty(ShipFD, ItemData.ShipPropID.Speed);
+                ItemData.IModuleInfo md = ItemData.GetShipProperty(ShipFD, ItemData.ShipPropID.Speed);
                 double v = md != null ? (md as ItemData.ShipInfoInt).Value : 0;
                 ShipModule.EngineeringData ed = GetEngineering("Main Thrusters");
                 ed?.EngineerThrusters(ref v);
@@ -270,7 +270,7 @@ namespace EliteDangerousCore
         {
             get
             {
-                ItemData.IModuleInfo md = ItemData.Instance.GetShipProperty(ShipFD, ItemData.ShipPropID.Class);
+                ItemData.IModuleInfo md = ItemData.GetShipProperty(ShipFD, ItemData.ShipPropID.Class);
                 if (md == null)
                     return "Unknown";
                 else
@@ -665,7 +665,7 @@ namespace EliteDangerousCore
             {
                 JObject module = new JObject();
 
-                ItemData.ShipModule si = ItemData.Instance.GetShipModuleProperties(sm.ItemFD);
+                ItemData.ShipModule si = ItemData.GetShipModuleProperties(sm.ItemFD);
 
                 if (si.ModuleID == 0)
                 {

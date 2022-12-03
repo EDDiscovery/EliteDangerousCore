@@ -24,10 +24,15 @@ namespace EliteDangerousCore
 {
     public partial class ItemData
     {
+        static public bool IsActor(string fdname)
+        {
+            return actors.ContainsKey(fdname.ToLowerInvariant());
+        }
+
         static public Actor GetActor(string fdname, string locname = null)         // actors are things like skimmer drones
         {
             fdname = fdname.ToLowerInvariant();
-            if (actors2.TryGetValue(fdname, out Actor var))
+            if (actors.TryGetValue(fdname, out Actor var))
                 return var;
             else
             {
@@ -42,11 +47,22 @@ namespace EliteDangerousCore
             public Actor(string name) { Name = name; }
         }
 
-        public static Dictionary<string, Actor> actors2 = new Dictionary<string, Actor>   // DO NOT USE DIRECTLY - public is for checking only
+        public static Dictionary<string, Actor> actors = new Dictionary<string, Actor>   // DO NOT USE DIRECTLY - public is for checking only
         {
              { "skimmerdrone", new Actor("Skimmer Drone") },
              { "ps_turretbasemedium02_6m", new Actor("Turret medium 2-6-M") },
              { "ps_turretbasesmall_3m", new Actor("Turret Small 3 M") },
+             { "scout", new Actor("Thargoid Scout") },
+             { "scout_q", new Actor("Thargoid Scout (Q)") },
+             { "scout_hq", new Actor("Thargoid Scout (HQ)") },
+             { "scout_nq", new Actor("Thargoid Scout (NQ)") },
+             { "planetporta", new Actor("Planet Port") },
+             { "planetportb", new Actor("Planet Port") },
+             { "planetportc", new Actor("Planet Port") },
+             { "planetportd", new Actor("Planet Port") },
+             { "planetporte", new Actor("Planet Port") },
+             { "planetportf", new Actor("Planet Port") },
+             { "planetportg", new Actor("Planet Port") },           // seen g, presuming at least a-f
         };
 
 

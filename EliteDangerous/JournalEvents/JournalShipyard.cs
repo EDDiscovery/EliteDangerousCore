@@ -277,8 +277,14 @@ namespace EliteDangerousCore.JournalEvents
             ShipType = JournalFieldNaming.GetBetterShipName(ShipFD);
             ShipId = evt["ShipID"].ULong();
 
-            StoreOldShipFD = JournalFieldNaming.NormaliseFDShipName(evt["StoreOldShip"].Str());
-            StoreOldShip = JournalFieldNaming.GetBetterShipName(StoreOldShipFD);
+            StoreOldShip = StoreOldShipFD = evt["StoreOldShip"].Str();      // set to evt value first
+            
+            if (StoreOldShip.HasChars())    // if we have something, normalise
+            {
+                StoreOldShipFD = JournalFieldNaming.NormaliseFDShipName(StoreOldShipFD);
+                StoreOldShip = JournalFieldNaming.GetBetterShipName(StoreOldShipFD);
+            }
+
             StoreShipId = evt["StoreShipID"].ULongNull();
 
             MarketID = evt["MarketID"].LongNull();
