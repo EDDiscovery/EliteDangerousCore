@@ -215,9 +215,8 @@ namespace EliteDangerousCore
 
                         if (sw.ElapsedMilliseconds >= 50)        // this is written to the log to try and debug bad DB behaviour
                         {
-                            System.Diagnostics.Trace.WriteLine("Warning access to DB to write new journal entries slow " + sw.ElapsedMilliseconds);
-                            foreach (var e in entries)
-                                System.Diagnostics.Trace.WriteLine(".." + e.EventTimeUTC + " " + e.EventTypeStr);
+                            System.Diagnostics.Trace.WriteLine($"Warning access to DB to write new journal entries slow {sw.ElapsedMilliseconds} for {entries.Count}");
+                            //foreach (var e in entries)   System.Diagnostics.Trace.WriteLine(".." + e.EventTimeUTC + " " + e.EventTypeStr);
                         }
 
                     });

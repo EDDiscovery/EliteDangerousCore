@@ -36,7 +36,7 @@ namespace EliteDangerousCore
                 return var;
             else
             {
-                System.Diagnostics.Debug.WriteLine("Unknown Actor: {{ \"{0}\", new Actor(\"{1}\") }},", fdname, locname ?? fdname.SplitCapsWordFull());
+                System.Diagnostics.Debug.WriteLine("*********** Unknown Actor: {{ \"{0}\", new Actor(\"{1}\") }},", fdname, locname ?? fdname.SplitCapsWordFull());
                 return null;
             }
         }
@@ -63,6 +63,9 @@ namespace EliteDangerousCore
              { "planetporte", new Actor("Planet Port") },
              { "planetportf", new Actor("Planet Port") },
              { "planetportg", new Actor("Planet Port") },           // seen g, presuming at least a-f
+             { "megashipdockrehab", new Actor("Mega Ship Prison") },      
+
+
         };
 
 

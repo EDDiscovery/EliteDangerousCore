@@ -31,7 +31,7 @@ namespace EliteDangerousCore
 
         static public bool IsShip(string ifd)      // any which are not one of the others is called a ship, to allow for new unknown ships
         {
-            return ifd.HasChars() && !IsSRVOrFighter(ifd) && !IsSuit(ifd) && !IsTaxi(ifd);
+            return ifd.HasChars() && !IsSRVOrFighter(ifd) && !IsSuit(ifd) && !IsTaxi(ifd) && !IsActor(ifd);
         }
 
         static public bool IsShipSRVOrFighter(string ifd)

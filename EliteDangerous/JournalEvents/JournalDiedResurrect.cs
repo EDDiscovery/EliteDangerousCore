@@ -22,38 +22,32 @@ namespace EliteDangerousCore.JournalEvents
     {
         public class Killer
         {
-            public string Name;
-            public string Name_Localised;
-            public string Ship;          
-            public string Rank;
+            public string Name;             // always non null 
+            public string Name_Localised;   // always non null 
+            public string Ship;             // always non null 
+            public string Rank;             // may be null
+
+            public string FriendlyShip;     // EDD addition, always non null
         }
 
         public JournalDied(JObject evt ) : base(evt, JournalTypeEnum.Died)
         {
+            //System.Diagnostics.Debug.WriteLine($"Died {evt.ToString()}");
+
             string killerName = evt["KillerName"].Str();
-            if (string.IsNullOrEmpty(killerName))       // no killer name
+
+            if (killerName.IsEmpty())                       // no killer name
             {
                 if (evt["Killers"] != null)                 // by a wing
-                    Killers = evt["Killers"].ToObjectQ<Killer[]>();
-                else
                 {
-                    string killerShip = evt["KillerShip"].Str();        // by an automated device
-                    if ( killerShip.HasChars())
-                    {
-                        ItemData.Actor a = ItemData.GetActor(killerShip);
-
-                        Killers = new Killer[1]
-                        {
-                            new Killer
-                            {
-                                Name = killerShip,
-                                Name_Localised = a != null ? a.Name : killerShip.SplitCapsWordFull(),
-                                Ship = "",
-                                Rank = "",
-                            }
-                        };
-
-
+                    Killers = evt["Killers"].ToObjectQ<Killer[]>();
+                }
+                else 
+                {
+                    string kship = evt["KillerShip"].StrNull();
+                    if (kship != null)
+                    { // by an automated device
+                        Killers = new Killer[1] { new Killer { Name = "", Name_Localised = "", Ship = kship } };
                     }
                 }
             }
@@ -62,13 +56,7 @@ namespace EliteDangerousCore.JournalEvents
                 // it was an individual
                 Killers = new Killer[1]
                 {
-                        new Killer
-                        {
-                            Name = killerName,
-                            Name_Localised = evt["KillerName_Localised"].Str(),
-                            Ship = evt["KillerShip"].Str(),
-                            Rank = evt["KillerRank"].Str()
-                        }
+                    new Killer {  Name = killerName, Name_Localised = evt["KillerName_Localised"].Str(), Ship = evt["KillerShip"].Str(),  Rank = evt["KillerRank"].Str() }
                 };
             }
 
@@ -76,14 +64,18 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (Killer k in Killers)
                 {
-                    if ( k.Ship.HasChars())
-                        k.Ship = JournalFieldNaming.GetBetterShipSuitActorName(k.Ship);
-                    k.Name_Localised = JournalFieldNaming.CheckLocalisation(k.Name_Localised??"",k.Name);
+                    k.Name = k.Name ?? "";      // ensure set - may not be set for a bad Killers array
+                    k.Name_Localised = JournalFieldNaming.CheckLocalisation(k.Name_Localised ?? "", k.Name);
+                    k.Ship = k.Ship ?? "";      // ensure set
+                    k.FriendlyShip = k.Ship.HasChars() ? JournalFieldNaming.GetBetterShipSuitActorName(k.Ship) : "";
+                    //System.Diagnostics.Debug.WriteLine($" >> Died '{k.Name}' '{k.Name_Localised}' '{k.Ship}' '{k.FriendlyShip}' '{k.Rank}'");
                 }
             }
+
+            //FillInformation(null, null, out string info, out string detailed); System.Diagnostics.Debug.WriteLine($"Died: {info}");
         }
 
-        public Killer[] Killers { get; set; }
+        public Killer[] Killers { get; set; }           // may be null if no killer listed
 
         public void UpdateMissions(MissionListAccumulator mlist, EliteDangerousCore.ISystem sys, string body)
         {
@@ -97,17 +89,32 @@ namespace EliteDangerousCore.JournalEvents
             mc.Clear(MicroResource.BackPack, MaterialCommodityMicroResourceType.CatType.Component, MaterialCommodityMicroResourceType.CatType.Data, MaterialCommodityMicroResourceType.CatType.Consumable, MaterialCommodityMicroResourceType.CatType.Item );      // clear all count zero of commodities
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
+        public override void FillInformation(ISystem sysunused, string whereamiunused, out string info, out string detailed) 
         {
             info = "";
             if (Killers != null)
             {
                 foreach (Killer k in Killers)
                 {
-                    if (k.Ship.HasChars() && ItemData.IsShip(k.Ship))
-                        info = info.AppendPrePad(string.Format("{0} in ship type {1} rank {2}".T(EDCTx.JournalEntry_Died), k.Name_Localised, k.Ship ?? "?", k.Rank ?? "?"), ", ");
+                    string kstr="";
+                   
+                    if (ItemData.IsSuit(k.Ship))
+                    {
+                        string type = k.Ship.ContainsIIC("Citizen") ? k.FriendlyShip.Replace("Suit ", "") : k.FriendlyShip.Replace("Suit", "Trooper");
+                        kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "", type);
+                    }
+                    else if ( ItemData.IsShip(k.Ship))
+                    {
+                        kstr = string.Format("{0} in ship type {1} rank {2}".T(EDCTx.JournalEntry_Died), k.Name_Localised, k.FriendlyShip, k.Rank ?? "?");
+                    }
+                    else if ( k.FriendlyShip.HasChars() )
+                    {
+                        kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "", k.FriendlyShip, "Rank: ".T(EDCTx.JournalEntry_Rank), k.Rank);
+                    }
                     else
-                        info = BaseUtils.FieldBuilder.Build("",k.Name_Localised,"Rank: ".T(EDCTx.JournalEntry_Rank),k.Rank);
+                        kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "Rank: ".T(EDCTx.JournalEntry_Rank), k.Rank);
+
+                    info = info.AppendPrePad(kstr, ", ");
                 }
 
                 info = "Killed by ".T(EDCTx.JournalEntry_Killedby) + info;

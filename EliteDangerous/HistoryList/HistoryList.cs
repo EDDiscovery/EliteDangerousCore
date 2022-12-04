@@ -114,7 +114,7 @@ namespace EliteDangerousCore
                                         )
         {
 
-            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL", true).Item1 + " History Load");
+            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL", true).Item1 + $" History Load of {commanderid} {cmdname} {fullhistoryloaddaylimit} {maxdateload??DateTime.MinValue}");
 
             reportProgress($"Reading Cmdr. {cmdname} database records");
 
@@ -138,7 +138,7 @@ namespace EliteDangerousCore
 
             if (tabledata != null)          // if not cancelled table read
             {
-                Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Journal Creation");
+                Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + $" Journal Creation of {tabledata.Count}");
 
                 reportProgress($"Creating Cmdr. {cmdname} {tabledata.Count.ToString("N0")} journal entries");
 
@@ -149,7 +149,7 @@ namespace EliteDangerousCore
 
             tabledata = null;
 
-            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Table Clean");
+            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + $" Table Clean {journalentries.Length} records");
 
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect();       // to try and lose the tabledata
@@ -200,13 +200,11 @@ namespace EliteDangerousCore
 
             hist.Carrier.CheckCarrierJump(DateTime.UtcNow);         // lets see if a jump has completed.
 
-            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " History List Created");
+            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + $" History List Created {hist.Count}");
 
             foreach (var s in hist.StarScan.ToProcess) System.Diagnostics.Debug.WriteLine($"StarScan could not assign {s.Item1.GetType().Name} {s.Item2?.Name ?? "???"} {s.Item2?.SystemAddress} at {s.Item1.EventTimeUTC}");
 
             //for (int i = hist.Count - 10; i < hist.Count; i++)  System.Diagnostics.Debug.WriteLine("Hist {0} {1} {2}", hist[i].EventTimeUTC, hist[i].Indexno , hist[i].EventSummary);
-
-            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Anaylsis End");
 
             hist.CommanderId = commanderid;        // last thing, and this indicates history is loaded.
 
