@@ -152,6 +152,8 @@ namespace EliteDangerousCore
                 new Query("Scanned all organics on a planet","CountOrganicsScansAnalysed >= 1 And CountOrganicsScansAnalysed == CountBioSignals", QueryType.BuiltIn ),
 
                 new Query("Star has Rings","HasRings IsTrue And IsStar IsTrue", QueryType.BuiltIn ),
+                new Query("Star is Main Sequence","IsStar IsTrue And StarType MatchSemicolon O;B;A;F;G;K;M", QueryType.BuiltIn ),
+                new Query("Star is Non Main Sequence","IsStar IsTrue And StarType NotMatchSemicolon O;B;A;F;G;K;M", QueryType.BuiltIn ),
                 new Query("Star is brighter in magnitude than Sirius","nAbsoluteMagnitude <= 1.5", QueryType.BuiltIn, false, "Compare(left.nAbsoluteMagnitude,right.nAbsoluteMagnitude)", true  ),
                 new Query("Star is super bright","nAbsoluteMagnitude <= -2", QueryType.BuiltIn , false, "Compare(left.nAbsoluteMagnitude,right.nAbsoluteMagnitude)", true  ),
                 new Query("Star has same magnitude as Sol","nAbsoluteMagnitudeSol >= -0.5 And nAbsoluteMagnitudeSol <= 0.5", QueryType.BuiltIn, false, "Compare(left.nAbsoluteMagnitude,right.nAbsoluteMagnitude)", true),
