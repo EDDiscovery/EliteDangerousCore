@@ -25,6 +25,7 @@ SECTION JournalTypeEnum
 .CrewAssign: "Crew Assign" => "Назначен член экипажа"
 .CrewFire: "Crew Fire" => "Уволен член экипажа"
 .CrewHire: "Crew Hire" => "Нанят член экипажа"
+.ClearImpound: "Clear Impound" @
 .DatalinkScan: "Datalink Scan" => "Сканирование канала данных"
 .Died: "Died" => "Корабль уничтожен"
 .DiscoveryScan: "Discovery Scan" => "Сканирование системы"

@@ -25,6 +25,7 @@ SECTION JournalTypeEnum
 .CrewAssign: "Crew Assign" => "Przypisanie Załogi"
 .CrewFire: "Crew Fire" => "Zwolnienie Załogi"
 .CrewHire: "Crew Hire" => "Zatrudnienie Załogi"
+.ClearImpound: "Clear Impound" @
 .DatalinkScan: "Datalink Scan" => "Skan Łącza Danych"
 .Died: "Died" => "Śmierć"
 .DiscoveryScan: "Discovery Scan" => "Skan Badawczy"

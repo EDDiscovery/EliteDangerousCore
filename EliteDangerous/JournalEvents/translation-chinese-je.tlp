@@ -25,6 +25,7 @@ SECTION JournalTypeEnum
 .CrewAssign: "Crew Assign" => "NPC船员分配职责"
 .CrewFire: "Crew Fire" => "NPC船员解雇"
 .CrewHire: "Crew Hire" => "NPC船员雇佣"
+.ClearImpound: "Clear Impound" @
 .DatalinkScan: "Datalink Scan" => "扫描数据链接"
 .Died: "Died" => "死亡"
 .DiscoveryScan: "Discovery Scan" => "发现式扫描"
