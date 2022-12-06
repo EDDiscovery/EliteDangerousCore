@@ -36,7 +36,7 @@ namespace EliteDangerousCore
         public int BodyID { get; private set; } = 0;                             
         public long SystemAddress { get; private set; }                          // its ID
 
-        public string CurrentPositionText { get { return StarSystem.Name + (Body.Equals(StarSystem.Name, StringComparison.InvariantCultureIgnoreCase) ? "" : (": " + Body)); } }
+        public string CurrentPositionText { get { return StarSystem.Name + (Body.Equals(StarSystem.Name, StringComparison.InvariantCultureIgnoreCase) || Body.IsEmpty() ? "" : (": " + Body)); } }
 
         // CarrierBuy
 
@@ -220,20 +220,20 @@ namespace EliteDangerousCore
             if (State.HaveCarrier)                     // must have a carrier
             {
                 State.CarrierID = j.CarrierID;
-                SetCarrierJump(j.SystemName, j.SystemAddress, j.Body, j.BodyID, j.EventTimeUTC);
+                SetCarrierJump(j.SystemName, j.SystemAddress, j.Body, j.BodyID, j.EventTimeUTC,j.DepartureTime);
             }
             else
                 System.Diagnostics.Debug.WriteLine($"Carrier Jump Request but no carrier!");
         }
 
-        public void SetCarrierJump(string system, long sysaddr, string body, int bodyid, DateTime now)
+        public void SetCarrierJump(string system, long sysaddr, string body, int bodyid, DateTime utcjt, DateTime? esttime)
         {
             System.Diagnostics.Debug.Assert(body != null && system != null);
             NextStarSystem = system;
             NextSystemAddress = sysaddr;
             NextBody = body;
             NextBodyID = bodyid;
-            EstimatedJumpTimeUTC = now.AddSeconds(CarrierNormalJumpTimeSeconds);
+            EstimatedJumpTimeUTC = esttime ?? utcjt.AddSeconds(CarrierNormalJumpTimeSeconds);
         }
 
         public void Update(JournalCarrierJumpCancelled junused)

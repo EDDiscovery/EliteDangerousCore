@@ -348,6 +348,8 @@ namespace EliteDangerousCore.JournalEvents
         public string Body { get; set; }        // if to system, journal seems to write Body==System Name. Body will always be non null
         public int BodyID { get; set; }         // will be 0 or the body id
 
+        public DateTime? DepartureTime { get; set; } // pre u14 not there
+
         public JournalCarrierJumpRequest(JObject evt) : base(evt, JournalTypeEnum.CarrierJumpRequest)
         {
             CarrierID = evt["CarrierID"].Long();
@@ -355,12 +357,19 @@ namespace EliteDangerousCore.JournalEvents
             Body = evt["Body"].Str();
             SystemAddress = evt["SystemAddress"].Long();
             BodyID = evt["BodyID"].Int();
+            if (evt["DepartureTime"]!=null)
+                DepartureTime = evt["DepartureTime"].DateTimeUTC();
         }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
         {
+            DateTime? dtime = null;
+            if (DepartureTime.HasValue)
+                dtime = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(DepartureTime.Value);
+
             info = BaseUtils.FieldBuilder.Build("To ".T(EDCTx.JournalCarrier_ToSystem), SystemName,
-                                                "Body ".T(EDCTx.JournalCarrier_Body), Body
+                                                "Body ".T(EDCTx.JournalCarrier_Body), Body,
+                                                "@ ", dtime
                                                 );
             detailed = "";
         }
