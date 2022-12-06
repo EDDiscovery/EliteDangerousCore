@@ -61,6 +61,7 @@ namespace EliteDangerousCore
         CarrierJumpCancelled = 1367,
         ChangeCrewRole = 65,
         ClearSavedGame = 70,
+        ClearImpound = 4028,
         CockpitBreached = 80,
         CodexEntry = 85,
         CollectCargo = 90,

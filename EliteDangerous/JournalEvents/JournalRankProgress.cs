@@ -174,8 +174,8 @@ namespace EliteDangerousCore.JournalEvents
                                       names[2] + ": ;%", Explore,
                                       names[3] + ": ;%", Soldier,
                                       names[4] + ": ;%", ExoBiologist,
-                                      names[5] + ": ;%", Federation,
-                                      names[6] + ": ;%", Empire,
+                                      names[5] + ": ;%", Empire,
+                                      names[6] + ": ;%", Federation,
                                       names[7] + ": ;%", CQC);
             detailed = "";
         }

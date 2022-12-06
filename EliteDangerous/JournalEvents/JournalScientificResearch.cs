@@ -24,19 +24,21 @@ namespace EliteDangerousCore.JournalEvents
         public JournalScientificResearch(JObject evt) : base(evt, JournalTypeEnum.ScientificResearch)
         {
             Name = JournalFieldNaming.FDNameTranslation(evt["Name"].Str());
+            Name_Localised = JournalFieldNaming.CheckLocalisation(evt["Name_Localised"].Str(), Name);
             Count = evt["Count"].Int();
             Category = JournalFieldNaming.NormaliseMaterialCategory(evt["Category"].Str());
             MarketID = evt["MarketID"].LongNull();
         }
 
         public string Name { get; set; }
+        public string Name_Localised { get; set; }
         public int Count { get; set; }
         public string Category { get; set; }
         public long? MarketID { get; set; }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
         {
-            info = BaseUtils.FieldBuilder.Build("",Name, "Count: ".T(EDCTx.JournalEntry_Count),  Count , "Category: ".T(EDCTx.JournalEntry_Category), Category);
+            info = BaseUtils.FieldBuilder.Build("",Name_Localised, "Count: ".T(EDCTx.JournalEntry_Count),  Count , "Category: ".T(EDCTx.JournalEntry_Category), Category);
             detailed = "";
         }
     }

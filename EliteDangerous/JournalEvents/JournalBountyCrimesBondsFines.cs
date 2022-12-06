@@ -438,5 +438,29 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
+    [JournalEntryType(JournalTypeEnum.ClearImpound)]
+    public class JournalClearImpound : JournalEntry
+    {
+        public JournalClearImpound(JObject evt) : base(evt, JournalTypeEnum.ClearImpound)
+        {
+            ShipType = JournalFieldNaming.NormaliseFDShipName(evt["ShipType"].Str());
+            ShipType_Localised = JournalFieldNaming.CheckLocalisation(evt["ShipType_Localised"].Str(), ShipType);
+            ShipId = evt["ShipID"].ULong();
+            MarketID = evt["MarketID"].Long();
+            ShipMarketID = evt["ShipMarketID"].Long();
+        }
+
+        public string ShipType { get; set; }
+        public string ShipType_Localised { get; set; }
+        public ulong ShipId { get; set; }
+        public long ShipMarketID { get; set; }
+        public long MarketID { get; set; }
+
+        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        {
+            info = BaseUtils.FieldBuilder.Build("Ship: ".T(EDCTx.JournalEntry_Ship), ShipType_Localised);
+            detailed = "";
+        }
+    }
 
 }
