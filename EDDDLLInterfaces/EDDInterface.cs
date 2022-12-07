@@ -113,7 +113,7 @@ namespace EDDDLLInterfaces
             // Version 5 Ends here
         };
 
-        public const int CallBackVersion = 6;
+        /// Callbacks - Host uses CALLBACKVERSION to tell DLL what version it implements
 
         public delegate bool EDDRequestHistory(long index, bool isjid, out JournalEntry f); //index =1..total records, or jid
         public delegate bool EDDRunAction([MarshalAs(UnmanagedType.BStr)]string eventname,
@@ -121,7 +121,6 @@ namespace EDDDLLInterfaces
 
         [return: MarshalAs(UnmanagedType.BStr)]
         public delegate string EDDShipLoadout(string name); //index =1..total records, or jid
-
 
         [StructLayout(LayoutKind.Explicit)]
         public struct EDDCallBacks
@@ -135,27 +134,33 @@ namespace EDDDLLInterfaces
 
         }
 
+        /// Interface to DLL. 
+
         // c# assemblies implement the following functions inside a class named *MainDLL.  This is the class which is instanced
         // and gets EDDInitialise, EDDTerminate etc called on it with the parameters as below.
-
         // C++ DLLs implement these functions with the types indicated in the MarshalAs
 
-        public const string FLAG_HOSTNAME = "HOSTNAME=";                    // flags in vstr
-        public const string FLAG_JOURNALVERSION = "JOURNALVERSION=";        // see EDDDLLHistoryEntry
-        public const string FLAG_CALLBACKVERSION = "CALLBACKVERSION=";      // see EDDCallBacks
-        public const string FLAG_CALLVERSION = "CALLVERSION=";              // this file, CallBackVersion
+        // Flags passed by EDDInitialise in vstr:
+
+        public const string FLAG_HOSTNAME = "HOSTNAME=";                    // aka EDDiscovery, EDDLite
+        public const string FLAG_JOURNALVERSION = "JOURNALVERSION=";        // see EDDDLLHistoryEntry.cs for JournalVersion, version of the journal implemented by host
+        public const string FLAG_CALLBACKVERSION = "CALLBACKVERSION=";      // see EDDCallBacks.cs, callback version implemented by host for the structure EDDCallBacks
+        public const string FLAG_CALLVERSION = "CALLVERSION=";              // The version of the DLL interface the host implements (see CallVersion for the best)
 
         public const string FLAG_PLAYLASTFILELOAD = "PLAYLASTFILELOAD";     // flags back
 
-        // Called by Discoveryform Load - system is not fully up at this point. History is not available etc. No callbacks work
+        // Init. Called by Discoveryform Load - system is not fully up at this point. History is not available etc. No callbacks work
         // Mandatory
         // vstr = Host Vnum [;InOptions]..
         //      HOSTNAME=x
         //      JOURNALVERSION=x
+        //      CALLBACKVERSION=x
+        //      CALLVERSION=x
         // return !errorstring || DLLVNumber [;RetOptions]..
         // DLLVnumber = 0.0.0.0 [;OutOptions]
         //      PLAYLASTFILELOAD - play the start events on Commander refresh Fileheader, Commander, Materials, LoadGame, Rank, Progress, reputation, EngineerProgress, Location, Missions
 
+        // Manadatory
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         [return: MarshalAs(UnmanagedType.BStr)]     
         public delegate String EDDInitialise([MarshalAs(UnmanagedType.BStr)]string vstr,               
@@ -215,6 +220,9 @@ namespace EDDDLLInterfaces
         public delegate void EDDMainFormShown();                                    // after main form is shown
 
         // version 6 ends
+
+        public const int CallVersion = 6;
+
     }
 
 }
