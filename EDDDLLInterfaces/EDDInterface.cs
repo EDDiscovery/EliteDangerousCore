@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2020 EDDiscovery development team
+ * Copyright © 2015 - 2022 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,10 +10,9 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
+using System.Drawing;
 using System;
 using System.Runtime.InteropServices;
 
@@ -21,6 +20,7 @@ namespace EDDDLLInterfaces
 {
     public static class EDDDLLIF      
     {
+        #region Journal Structure
 
         [StructLayout(LayoutKind.Explicit)]
         public struct JournalEntry
@@ -46,7 +46,7 @@ namespace EDDDLLInterfaces
             [FieldOffset(72)] public double y;
             [FieldOffset(80)] public double z;
 
-            [FieldOffset(88)] public double travelleddistance;
+            [FieldOffset(88)] public double travelleddistance;      // from start/stop flags
             [FieldOffset(96)] public long travelledseconds;
 
             [FieldOffset(100)] public bool islanded;
@@ -70,8 +70,8 @@ namespace EDDDLLInterfaces
             [FieldOffset(176)] [MarshalAs(UnmanagedType.BStr)] public string json;
             [FieldOffset(184)] [MarshalAs(UnmanagedType.BStr)] public string cmdrname;
             [FieldOffset(192)] [MarshalAs(UnmanagedType.BStr)] public string cmdrfid;
-            [FieldOffset(200)] [MarshalAs(UnmanagedType.BStr)] public string shipident;
-            [FieldOffset(208)] [MarshalAs(UnmanagedType.BStr)] public string shipname;
+            [FieldOffset(200)] [MarshalAs(UnmanagedType.BStr)] public string shipident;     // if not known "Unknown" is used
+            [FieldOffset(208)] [MarshalAs(UnmanagedType.BStr)] public string shipname;     // if not known "Unknown" is used
             [FieldOffset(216)] public long hullvalue;       // offsets here are not right for the thunk to a WIN32 DLL. should have been 8.  C# will see a long, c++ will see a uint
             [FieldOffset(220)] public long rebuy;
             [FieldOffset(224)] public long modulesvalue;
@@ -97,44 +97,123 @@ namespace EDDDLLInterfaces
             [FieldOffset(255)] public bool isfighter;
             [FieldOffset(256)] public bool onfoot;
             [FieldOffset(257)] public bool bookedtaxi;
-
-            // if not known "Unknown" is used
-
-            [FieldOffset(264)] [MarshalAs(UnmanagedType.BStr)] public string bodyname;      
-            [FieldOffset(272)] [MarshalAs(UnmanagedType.BStr)] public string bodytype;   
-            [FieldOffset(280)] [MarshalAs(UnmanagedType.BStr)] public string stationname;    
-            [FieldOffset(288)] [MarshalAs(UnmanagedType.BStr)] public string stationtype;
-            [FieldOffset(296)] [MarshalAs(UnmanagedType.BStr)] public string stationfaction;
-            [FieldOffset(304)] [MarshalAs(UnmanagedType.BStr)] public string shiptypefd;   
+            [FieldOffset(264)] [MarshalAs(UnmanagedType.BStr)] public string bodyname;          // if not known "Unknown" is used, or may be blank
+            [FieldOffset(272)] [MarshalAs(UnmanagedType.BStr)] public string bodytype;          // if not known "Unknown" is used, or may be blank
+            [FieldOffset(280)] [MarshalAs(UnmanagedType.BStr)] public string stationname;       // if not known "Unknown" is used, or may be blank
+            [FieldOffset(288)] [MarshalAs(UnmanagedType.BStr)] public string stationtype;       // if not known "Unknown" is used, or may be blank
+            [FieldOffset(296)] [MarshalAs(UnmanagedType.BStr)] public string stationfaction;    // if not known "Unknown" is used, or may be blank
+            [FieldOffset(304)] [MarshalAs(UnmanagedType.BStr)] public string shiptypefd;        // if not known "Unknown" is used, or may be blank
             [FieldOffset(312)] [MarshalAs(UnmanagedType.BStr)] public string oncrewwithcaptain;    // empty not in multiplayer
             [FieldOffset(320)] public ulong shipid;        // ulong.maxvalue = unknown
             [FieldOffset(328)] public int bodyid;        //  -1 not on body
 
             // Version 5 Ends here
+
+            [FieldOffset(336)] [MarshalAs(UnmanagedType.BStr)] public string gameversion;
+            [FieldOffset(344)] [MarshalAs(UnmanagedType.BStr)] public string gamebuild;
+
+            // Version 6 Ends here (16.0.4 Dec 22)
         };
 
+        #endregion
+
+
+        #region Callbacks
+
         /// Callbacks - Host uses CALLBACKVERSION to tell DLL what version it implements
-
-        public delegate bool EDDRequestHistory(long index, bool isjid, out JournalEntry f); //index =1..total records, or jid
-        public delegate bool EDDRunAction([MarshalAs(UnmanagedType.BStr)]string eventname,
-                                             [MarshalAs(UnmanagedType.BStr)]string parameters);  // parameters in format v="k",X="k"
-
-        [return: MarshalAs(UnmanagedType.BStr)]
-        public delegate string EDDShipLoadout(string name); //index =1..total records, or jid
 
         [StructLayout(LayoutKind.Explicit)]
         public struct EDDCallBacks
         {
+            public delegate bool EDDRequestHistory(long index, bool isjid, out JournalEntry f); //index =1..total records, or jid
+            public delegate bool EDDRunAction([MarshalAs(UnmanagedType.BStr)] string eventname,
+                                                 [MarshalAs(UnmanagedType.BStr)] string parameters);  // parameters in format v="k",X="k"
+
+            [return: MarshalAs(UnmanagedType.BStr)]
+            public delegate string EDDShipLoadout([MarshalAs(UnmanagedType.BStr)] string name); //index =1..total records, or jid
+
+            public delegate void EDDAddPanel(string id, Type paneltype, string wintitle, string refname, string description, System.Drawing.Image img);
+
             [FieldOffset(0)] public int ver;
             [FieldOffset(8)] public EDDRequestHistory RequestHistory;
             [FieldOffset(16)] public EDDRunAction RunAction;
             // Version 1 Ends here
             [FieldOffset(24)] public EDDShipLoadout GetShipLoadout;
             // Version 2 Ends here
-
+            [FieldOffset(32)] public EDDAddPanel AddPanel;          // c# only DLLs, may be null. Check both ver and if non null. Only valid during EDDInitialise
+                                                                    // give an id name globally unique, like "author-panel-version"
+            // Version 3 Ends here (16.0.4 Dec 22)
         }
 
-        /// Interface to DLL. 
+        // This class is passed to panel on Init.
+        public class EDDPanelCallbacks
+        {
+            public int ver;
+
+            public delegate void PanelSave<T>(string key, T value);
+            public delegate T PanelGet<T>(string key, T defvalue);
+            public delegate void PanelSaveGridLayout(object grid, string auxkey = "");
+            public delegate void PanelLoadGridLayout(object grid, string auxkey = "");
+            public delegate bool PanelBool();
+            public delegate void PanelString(string s);
+            public delegate void PanelDGVTransparent(object grid, bool on, Color curcol);
+            public delegate JournalEntry PanelJournalEntry(int index);
+            public delegate Tuple<string, double, double, double> PanelGetTarget();
+
+            public PanelSave<string> SaveString;
+            public PanelSave<double> SaveDouble;
+            public PanelSave<long> SaveLong;
+            public PanelSave<int> SaveInt;
+            public PanelGet<string> GetString;
+            public PanelGet<double> GetDouble;
+            public PanelGet<long> GetLong;
+            public PanelGet<int> GetInt;
+            public PanelSaveGridLayout SaveGridLayout;
+            public PanelLoadGridLayout LoadGridLayout;
+            public PanelString SetControlText;
+            public PanelBool HasControlTextArea;
+            public PanelBool IsControlTextVisible;
+            public PanelBool IsTransparentModeOn;       // is transparent mode allowed? (does not mean its currently transparent)
+            public PanelBool IsFloatingWindow;          // is it a floating window outside (in a form)
+            public PanelBool IsClosed;                  // very important if your doing async programming - the window may have closed when the async returns!
+            public PanelDGVTransparent DGVTransparent;  // Theme the DGV with transparency or not
+            public PanelJournalEntry GetHistoryEntry;   // if index is out of range, you get a history entry with indexno = -1. Returns filtered history
+            public PanelGetTarget GetTarget;            // null if target is not set
+            public PanelString WriteToLog;
+            public PanelString WriteToLogHighlight;
+
+            // ver 1 ends
+        };
+
+        public interface IEDDPanelExtension                         // an external panel implements this interface
+        {
+            // Theme is json per ExtendedControls.Theme.  Make sure you cope with any changes we make - don't presume a key is there. Be defensive
+            // configuration is for future use
+            void Initialise(EDDPanelCallbacks callbacks, string themeasjson, string configuration);
+            void SetTransparency(bool ison, Color curcol);          // called when transparency changes. curcol is the colour you should apply to back color of controls
+            void LoadLayout();
+            void InitialDisplay();
+            void CursorChanged(JournalEntry je);                    // fed thru when the external panel history cursor changes
+            void Closing();
+            bool SupportTransparency { get; }
+            bool DefaultTransparent { get; }
+            bool AllowClose();
+            string HelpKeyOrAddress();
+            void ControlTextVisibleChange(bool on);
+
+            // event interface
+            void HistoryChange(int count, string commander, bool beta, bool legacy);        // when a history is loaded
+            void NewUnfilteredJournal(JournalEntry je);
+            void NewFilteredJournal(JournalEntry je);
+            void NewUIEvent(string jsonui);     // see UIEvent and subclasses in EliteDangerousCore - has EventTimeUTC, EventTypeID, EventTypeStr, EventRefresh plus fields unique to EventType
+            void NewTarget(Tuple<string, double, double, double> target);    // null if target has been removed
+            void ScreenShotCaptured(string file, Size s);
+            void ThemeChanged(string themeasjson);
+        }
+
+        #endregion
+
+        #region Calls to DLL
 
         // c# assemblies implement the following functions inside a class named *MainDLL.  This is the class which is instanced
         // and gets EDDInitialise, EDDTerminate etc called on it with the parameters as below.
@@ -221,8 +300,9 @@ namespace EDDDLLInterfaces
 
         // version 6 ends
 
-        public const int CallVersion = 6;
+        public const int CallBackVersion = 6;
 
+        #endregion
     }
 
 }

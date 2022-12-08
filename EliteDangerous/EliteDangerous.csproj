@@ -76,6 +76,12 @@
     <Compile Include="DB\TargetClass.cs" />
     <Compile Include="DB\TravelLogUnit.cs" />
     <Compile Include="DB\WantedSystemClass.cs" />
+    <Compile Include="DLL\DemonstrationUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DLL\DemonstrationUserControl.Designer.cs">
+      <DependentUpon>DemonstrationUserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="DLL\EDDDLLAssemblyFinder.cs" />
     <Compile Include="DLL\EDDDLLCaller.cs" />
     <Compile Include="DLL\EDDDLLHistoryEntry.cs" />
@@ -339,6 +345,9 @@
     <Compile Include="UIEvents\UISrvTurret.cs" />
     <Compile Include="UIEvents\UISrvUnderShip.cs" />
     <Compile Include="UIEvents\UISupercruise.cs" />
+    <EmbeddedResource Include="DLL\DemonstrationUserControl.resx">
+      <DependentUpon>DemonstrationUserControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\CommanderForm.resx">
       <DependentUpon>CommanderForm.cs</DependentUpon>
     </EmbeddedResource>

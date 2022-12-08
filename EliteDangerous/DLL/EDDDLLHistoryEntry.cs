@@ -67,7 +67,7 @@ namespace EliteDangerousCore.DLL
 
             EDDDLLInterfaces.EDDDLLIF.JournalEntry je = new EDDDLLInterfaces.EDDDLLIF.JournalEntry()
             {
-                ver = 5,
+                ver = 6,
                 //v1
                 indexno = he.EntryNumber,
                 utctime = he.EventTimeUTC.ToStringZuluInvariant(),
@@ -126,6 +126,11 @@ namespace EliteDangerousCore.DLL
                 oncrewwithcaptain = he.Status.OnCrewWithCaptain ?? "",
                 shipid = he.Status.ShipID,
                 bodyid = he.Status.BodyID ?? -1,
+
+                //v6
+                gamebuild = he.journalEntry.Build,
+                gameversion = he.journalEntry.GameVersion,
+
             };
 
             // v1

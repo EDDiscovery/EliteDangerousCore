@@ -127,6 +127,9 @@ namespace EliteDangerousCore.DLL
                 }
             }
 
+            // debug demo of external DLL panels can be placed here
+            //callbacks.AddPanel.Invoke("EDDDDemo-Panel1-0.1.0", typeof(EliteDangerous.DLL.DemonstrationUserControl), "InternalDemo1", "InternalDemo1", "Demo installed panel", BaseUtils.Icons.IconSet.GetIcon("star") );
+
             return new Tuple<string, string, string, string>(loaded, failed, newdlls, disabled);
         }
 
