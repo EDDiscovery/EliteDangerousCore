@@ -337,7 +337,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void AddStarScan(StarScan s, ISystem system)
         {
-            s.AddLocation(StarSystem, SystemAddress);
+            s.AddLocation(new SystemClass(SystemAddress, StarSystem, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }
 
         public void UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrier)
@@ -420,7 +420,7 @@ namespace EliteDangerousCore.JournalEvents
         }
         public void AddStarScan(StarScan s, ISystem system)
         {
-            s.AddLocation(StarSystem, SystemAddress);
+            s.AddLocation(new SystemClass(SystemAddress, StarSystem, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }
 
 
@@ -522,7 +522,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string SummaryName(ISystem sys) { return string.Format("Jump to {0}".T(EDCTx.JournalFSDJump_Jumpto), StarSystem); }
         public void AddStarScan(StarScan s, ISystem system)
         {
-            s.AddLocation(StarSystem, SystemAddress);
+            s.AddLocation(new SystemClass(SystemAddress, StarSystem, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }
 
         public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
@@ -709,7 +709,7 @@ namespace EliteDangerousCore.JournalEvents
         public void AddStarScan(StarScan s, ISystem system)
         {
             if ( IsHyperspace )
-                s.AddLocation(StarSystem, SystemAddress);
+                s.AddLocation(new SystemClass(SystemAddress, StarSystem));      // add so there is placeholder
         }
     }
 }

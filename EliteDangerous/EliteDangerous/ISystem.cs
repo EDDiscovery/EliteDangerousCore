@@ -38,8 +38,6 @@ namespace EliteDangerousCore
         int GridID { get; set; }
         long? SystemAddress { get; set; }
 
-        Tuple<string, long?> NameSystemAddress { get; }
-
         double Distance(ISystemBase other);
         double Distance(double x, double y, double z);
         double DistanceSq(double x, double y, double z);

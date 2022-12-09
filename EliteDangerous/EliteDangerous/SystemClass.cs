@@ -45,8 +45,6 @@ namespace EliteDangerousCore
         public int GridID { get; set; }
         public long? SystemAddress { get; set; }
 
-        public Tuple<string, long?> NameSystemAddress { get { return new Tuple<string, long?>(Name, SystemAddress); } }
-
         public SystemClassBase()
         {
             Xi = int.MinValue;
@@ -158,6 +156,13 @@ namespace EliteDangerousCore
         {
             Name = name;
             SystemAddress = sysaddr;
+            Source = SystemSource.Synthesised;
+        }
+        public SystemClass(long? sysaddr, string name, double x, double y, double z) : base()
+        {
+            Name = name;
+            SystemAddress = sysaddr;
+            X = x; Y = y; Z = z;
             Source = SystemSource.Synthesised;
         }
 

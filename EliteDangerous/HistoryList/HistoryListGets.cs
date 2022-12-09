@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 - 2020 EDDiscovery development team
+ * Copyright © 2016 - 2022 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using EliteDangerousCore.DB;
@@ -24,17 +22,9 @@ namespace EliteDangerousCore
 {
     public partial class HistoryList 
     {
-        #region List access
-
-        public Ledger CashLedger { get; private set; } = new Ledger();       // and the ledger..
-        public ShipInformationList ShipInformationList { get; private set; } = new ShipInformationList();     // ship info
-        public ShipYardList Shipyards = new ShipYardList(); // yards in space (not meters)
-        public OutfittingList Outfitting = new OutfittingList();        // outfitting on stations
-        public StarScan StarScan { get; private set; } = new StarScan();      // the results of scanning
-        public int CommanderId { get; private set; } = -999;                 // set by history load at end, indicating commander loaded
+        #region General gets
         public bool HistoryLoaded { get { return CommanderId > -999; } }      // history is loaded
         public bool IsRealCommanderId { get { return CommanderId >= 0; } }      // history is loaded with a non hidden commander log etc
-        public Dictionary<string, HistoryEntry> Visited { get; private set; } = new Dictionary<string, HistoryEntry>(StringComparer.InvariantCultureIgnoreCase);  // not in any particular order.
         public string LastSystem { get; private set; }                          // last system seen in
 
         public int Count { get { return historylist.Count; } }
@@ -49,11 +39,6 @@ namespace EliteDangerousCore
 
         // combat, spanel,stats, history filter
         public List<HistoryEntry> LatestFirst() { return historylist.OrderByDescending(s => s.EntryNumber).ToList(); }
-
-        public Dictionary<string, Stats.FactionInfo> GetStatsAtGeneration(uint g)
-        {
-            return statisticsaccumulator.GetAtGeneration(g);
-        }
 
         #endregion
 

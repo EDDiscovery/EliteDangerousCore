@@ -36,15 +36,14 @@ namespace EliteDangerous.DLL
 
         Color FromJson(JToken color) { return Color.FromArgb(color["A"].Int(), color["R"].Int(), color["G"].Int(), color["B"].Int()); }
 
-        public void Initialise(EDDPanelCallbacks callbacks, string themeasjson, string configurationunsed)
+        public void Initialise(EDDPanelCallbacks callbacks, int displayid, string themeasjson, string configurationunsed)
         {
             this.callbacks = callbacks;
 
             ThemeChanged(themeasjson);
 
             dataGridView1.Rows.Add(new string[] { "Event grid", "1-1", "1-2" ,"1-3"});
-            richTextBox1.AppendText("New Panel init\r\n");
-            callbacks.WriteToLogHighlight("Demo DLL Initialised");
+            richTextBox1.AppendText($"Panel init {displayid}\r\n");
         }
         public void SetTransparency(bool ison, Color curcol)
         {
@@ -96,25 +95,6 @@ namespace EliteDangerous.DLL
         {
             richTextBox1.AppendText($"History change {count} {commander} {beta} {legacy}\r\n");
             dataGridView1.Rows.Clear();
-
-            for( int i = 5; i > 0; i-- )    // demo - load last 5 HEs
-            {
-                JournalEntry je = callbacks.GetHistoryEntry(count - i);
-                if (je.indexno >= 0)
-                {
-                    dataGridView1.Rows.Add(new string[] { je.utctime, je.name, je.info, je.detailedinfo });
-                }
-                else
-                    break;
-            }
-
-            var target = callbacks.GetTarget();
-            if (target != null)
-                richTextBox1.AppendText($"Target is {target.Item1} {target.Item2} {target.Item3} {target.Item4}\r\n");
-            else
-                richTextBox1.AppendText($"No Target\r\n");
-
-            callbacks.WriteToLog("Demo DLL User Control History Changed");
         }
 
         public void NewUnfilteredJournal(JournalEntry je)

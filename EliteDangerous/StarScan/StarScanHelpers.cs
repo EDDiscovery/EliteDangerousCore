@@ -26,15 +26,31 @@ namespace EliteDangerousCore
         private SystemNode GetOrCreateSystemNode(ISystem sys)
         {
             if (sys.SystemAddress.HasValue && ScanDataBySysaddr.TryGetValue(sys.SystemAddress.Value, out SystemNode sn))
+            {
+                if ( !sn.System.HasCoordinate && sys.HasCoordinate)     // update our co-ord knowledge. For instance StartJump makes a location but does not have co-ords
+                {
+                    sn.System.X = sys.X;
+                    sn.System.Y = sys.Y;
+                    sn.System.Z = sys.Z;
+                    //System.Diagnostics.Debug.WriteLine($"StarScan {sys.Name} {sn.System.SystemAddress} now has coords (1) {sn.System.X} {sn.System.Y} {sn.System.Z}");
+                }
                 return sn;
+            }
 
             if (ScanDataByName.TryGetValue(sys.Name, out sn))            // try name, it may have been stored with an old entry without sys address 
             {
-                if ( sys.SystemAddress.HasValue)
+                if ( sys.SystemAddress.HasValue)                        // we obv did not have a system address, but we do now, lets refresh
                 {
-                    sn.System = sys;            // refresh our node knowledge of the system
+                    sn.System = sys;                                    // refresh our node knowledge of the system
                     ScanDataBySysaddr[sys.SystemAddress.Value] = sn;    // previously without a known system address, now we have it, assign
-                 //   System.Diagnostics.Debug.WriteLine($"StarScan {sys.Name} now has address {sys.SystemAddress}" );
+                    //System.Diagnostics.Debug.WriteLine($"StarScan {sys.Name} now has address {sys.SystemAddress}");
+                }
+                else if ( sys.HasCoordinate && !sn.System.HasCoordinate)    // we did not know the co-ords, update just the co-ords
+                {
+                    sn.System.X = sys.X;
+                    sn.System.Y = sys.Y;
+                    sn.System.Z = sys.Z;
+                    //System.Diagnostics.Debug.WriteLine($"StarScan {sys.Name} now has coords (2) {sn.System.X} {sn.System.Y} {sn.System.Z}");
                 }
 
                 return sn;                                              

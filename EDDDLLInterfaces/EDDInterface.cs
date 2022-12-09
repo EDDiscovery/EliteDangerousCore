@@ -30,7 +30,7 @@ namespace EDDDLLInterfaces
             // bool = 1 offset, next aligned to 1, first aligned 4
             // BSTR/Safearray = 8 offset, aligned 8
 
-            [FieldOffset(0)] public int ver;
+            [FieldOffset(0)] public int ver;            // indicate version (JOURNALVERSION in init string)
             [FieldOffset(4)] public int indexno;        // if -1, null record, rest is invalid.  For NewJournalEntry, its HL position (0..). Not valid for NewUnfilteredJournalEntry
 
             [FieldOffset(8)] [MarshalAs(UnmanagedType.BStr)] public string utctime;
@@ -120,28 +120,60 @@ namespace EDDDLLInterfaces
 
         #region Callbacks
 
-        /// Callbacks - Host uses CALLBACKVERSION to tell DLL what version it implements
+        /// Callbacks - CALLBACKVERSION is used in Initialise to tell DLL what version it implements or use ver
+
+        public delegate bool EDDRequestHistory(long index, bool isjid, out JournalEntry f); //index =1..total records, or jid
+        public delegate bool EDDRunAction([MarshalAs(UnmanagedType.BStr)] string eventname,
+                                             [MarshalAs(UnmanagedType.BStr)] string parameters);  // parameters in format v="k",X="k"
+
+        [return: MarshalAs(UnmanagedType.BStr)]
+        public delegate string EDDShipLoadout([MarshalAs(UnmanagedType.BStr)] string name); //index =1..total records, or jid
+
+        public delegate void EDDAddPanel(string id, Type paneltype, string wintitle, string refname, string description, System.Drawing.Image img);
+
+        public delegate void EDDString(string s);
+        public delegate string EDDReturnString();
+        public delegate string EDDGetScanData(string system, bool edsmlookup);
+        public delegate Tuple<string, double, double, double> EDDGetTarget();
 
         [StructLayout(LayoutKind.Explicit)]
         public struct EDDCallBacks
         {
-            public delegate bool EDDRequestHistory(long index, bool isjid, out JournalEntry f); //index =1..total records, or jid
-            public delegate bool EDDRunAction([MarshalAs(UnmanagedType.BStr)] string eventname,
-                                                 [MarshalAs(UnmanagedType.BStr)] string parameters);  // parameters in format v="k",X="k"
+            [FieldOffset(0)] public int ver;                        // version (same as CALLBACKVERSION)
+            [FieldOffset(8)] public EDDRequestHistory RequestHistory;   // DLL get history entry by index or jid
+            [FieldOffset(16)] public EDDRunAction RunAction;        // DLL run an action script
 
-            [return: MarshalAs(UnmanagedType.BStr)]
-            public delegate string EDDShipLoadout([MarshalAs(UnmanagedType.BStr)] string name); //index =1..total records, or jid
-
-            public delegate void EDDAddPanel(string id, Type paneltype, string wintitle, string refname, string description, System.Drawing.Image img);
-
-            [FieldOffset(0)] public int ver;
-            [FieldOffset(8)] public EDDRequestHistory RequestHistory;
-            [FieldOffset(16)] public EDDRunAction RunAction;
             // Version 1 Ends here
+
+            // get loadout as JSON string from ShipInformation
+            // ALL returns objects (0-N) of all ships known
+            // "" returns current ship
+            // "Name" "Ident" returns specific ship
+            // may return null - not known
             [FieldOffset(24)] public EDDShipLoadout GetShipLoadout;
+
             // Version 2 Ends here
-            [FieldOffset(32)] public EDDAddPanel AddPanel;          // c# only DLLs, may be null. Check both ver and if non null. Only valid during EDDInitialise
-                                                                    // give an id name globally unique, like "author-panel-version"
+
+            // c# only DLLs, may be null. Check both ver and if non null. Only valid during EDDInitialise
+            // give an id name globally unique, like "author-panelname"
+
+            [FieldOffset(32)] public EDDAddPanel AddPanel;          
+            [FieldOffset(40)] public EDDGetTarget GetTarget;        // null if target is not set
+            [FieldOffset(48)] public EDDString WriteToLog;
+            [FieldOffset(56)] public EDDString WriteToLogHighlight;
+
+            // the following are JSON outputs of EDD structures - structures may change. DLLs will have to keep up. Be defensive.
+
+            // Get StarNode structure with ScanData on all bodies in a system. Empty string for current, else star system
+            [FieldOffset(64)] public EDDGetScanData GetScanData;
+
+            [FieldOffset(72)] public EDDReturnString GetSuitsWeaponsLoadouts;   // current state
+            [FieldOffset(80)] public EDDReturnString GetCarrierData;   // current state
+
+            [FieldOffset(88)] public EDDReturnString GetVisitedList;    // expensive in time - do not use frequently. Will hold up EDD
+            [FieldOffset(96)] public EDDReturnString GetShipyards;      // expensive in time - do not use frequently. Will hold up EDD
+            [FieldOffset(104)] public EDDReturnString GetOutfitting;    // expensive in time - do not use frequently. Will hold up EDD
+
             // Version 3 Ends here (16.0.4 Dec 22)
         }
 
@@ -158,7 +190,6 @@ namespace EDDDLLInterfaces
             public delegate void PanelString(string s);
             public delegate void PanelDGVTransparent(object grid, bool on, Color curcol);
             public delegate JournalEntry PanelJournalEntry(int index);
-            public delegate Tuple<string, double, double, double> PanelGetTarget();
 
             public PanelSave<string> SaveString;
             public PanelSave<double> SaveDouble;
@@ -177,10 +208,6 @@ namespace EDDDLLInterfaces
             public PanelBool IsFloatingWindow;          // is it a floating window outside (in a form)
             public PanelBool IsClosed;                  // very important if your doing async programming - the window may have closed when the async returns!
             public PanelDGVTransparent DGVTransparent;  // Theme the DGV with transparency or not
-            public PanelJournalEntry GetHistoryEntry;   // if index is out of range, you get a history entry with indexno = -1. Returns filtered history
-            public PanelGetTarget GetTarget;            // null if target is not set
-            public PanelString WriteToLog;
-            public PanelString WriteToLogHighlight;
 
             // ver 1 ends
         };
@@ -188,8 +215,10 @@ namespace EDDDLLInterfaces
         public interface IEDDPanelExtension                         // an external panel implements this interface
         {
             // Theme is json per ExtendedControls.Theme.  Make sure you cope with any changes we make - don't presume a key is there. Be defensive
+            // displayid is a number given to identify an unique panel - just use it if your going to store per window configuration
+            // outside of the callback Get functions. Do not derive any other info from it - the meaning of number may change in future
             // configuration is for future use
-            void Initialise(EDDPanelCallbacks callbacks, string themeasjson, string configuration);
+            void Initialise(EDDPanelCallbacks callbacks, int displayid, string themeasjson, string configuration);
             void SetTransparency(bool ison, Color curcol);          // called when transparency changes. curcol is the colour you should apply to back color of controls
             void LoadLayout();
             void InitialDisplay();

@@ -16,9 +16,9 @@ namespace EliteDangerousCore
 {
     public partial class StarScan
     {
-        public void AddLocation(string name, long? sysaddr)      // called when we have a new system address
+        public void AddLocation(ISystem sys)      // called when we have a new system 
         {
-            SystemClass sys = new SystemClass(sysaddr, name);
+            //System.Diagnostics.Debug.WriteLine($"Add Location {sys.Name} co {sys.HasCoordinate} sa {sys.SystemAddress.HasValue}");
             GetOrCreateSystemNode(sys);
         }
     }

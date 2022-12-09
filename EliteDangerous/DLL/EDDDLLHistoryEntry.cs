@@ -52,7 +52,7 @@ namespace EliteDangerousCore.DLL
             }
         }
 
-        static public int JournalVersion = 5;       // keep this up to date
+        static public int JournalVersion = 6;       // keep this up to date
 
         static private EDDDLLInterfaces.EDDDLLIF.JournalEntry CreateFromHistoryEntry(EliteDangerousCore.HistoryEntry he,
                                                                                          List<MaterialCommodityMicroResource> mats,
@@ -67,7 +67,7 @@ namespace EliteDangerousCore.DLL
 
             EDDDLLInterfaces.EDDDLLIF.JournalEntry je = new EDDDLLInterfaces.EDDDLLIF.JournalEntry()
             {
-                ver = 6,
+                ver = JournalVersion,
                 //v1
                 indexno = he.EntryNumber,
                 utctime = he.EventTimeUTC.ToStringZuluInvariant(),
