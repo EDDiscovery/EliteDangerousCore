@@ -115,12 +115,15 @@ namespace EDDDLLInterfaces
             // Version 6 Ends here (16.0.4 Dec 22)
         };
 
+        public const int JournalVersion = 6;
+
         #endregion
 
 
         #region Callbacks
 
         /// Callbacks - CALLBACKVERSION is used in Initialise to tell DLL what version it implements or use ver
+        /// Do not use tuple or complicated generic returns/parameters as the marshaller with win32 dll does barfe on them!
 
         public delegate bool EDDRequestHistory(long index, bool isjid, out JournalEntry f); //index =1..total records, or jid
         public delegate bool EDDRunAction([MarshalAs(UnmanagedType.BStr)] string eventname,
@@ -131,17 +134,25 @@ namespace EDDDLLInterfaces
 
         public delegate void EDDAddPanel(string id, Type paneltype, string wintitle, string refname, string description, System.Drawing.Image img);
 
-        public delegate void EDDString(string s);
+        public delegate void EDDString([MarshalAs(UnmanagedType.BStr)] string s);
+
+        [return: MarshalAs(UnmanagedType.BStr)] 
         public delegate string EDDReturnString();
-        public delegate string EDDGetScanData(string system, bool edsmlookup);
-        public delegate Tuple<string, double, double, double> EDDGetTarget();
+        [return: MarshalAs(UnmanagedType.BStr)]
+        public delegate string EDDVisitedList(int number);
+
+        public delegate void EDDRequestScanData(object requesttag, object usertag, string system, bool edsmlookup);
 
         [StructLayout(LayoutKind.Explicit)]
         public struct EDDCallBacks
         {
             [FieldOffset(0)] public int ver;                        // version (same as CALLBACKVERSION)
-            [FieldOffset(8)] public EDDRequestHistory RequestHistory;   // DLL get history entry by index or jid
-            [FieldOffset(16)] public EDDRunAction RunAction;        // DLL run an action script
+
+            // DLL get history entry by index or jid. If program does not have history or out of range, return false
+            [FieldOffset(8)] public EDDRequestHistory RequestHistory;
+
+            // DLL run an action script. If program does not have action, return false.
+            [FieldOffset(16)] public EDDRunAction RunAction;        
 
             // Version 1 Ends here
 
@@ -149,36 +160,49 @@ namespace EDDDLLInterfaces
             // ALL returns objects (0-N) of all ships known
             // "" returns current ship
             // "Name" "Ident" returns specific ship
-            // may return null - not known
+            // may return null - not known or not supported
             [FieldOffset(24)] public EDDShipLoadout GetShipLoadout;
 
             // Version 2 Ends here
-
             // c# only DLLs, may be null. Check both ver and if non null. Only valid during EDDInitialise
             // give an id name globally unique, like "author-panelname"
+            [FieldOffset(32)] public EDDAddPanel AddPanel;
 
-            [FieldOffset(32)] public EDDAddPanel AddPanel;          
-            [FieldOffset(40)] public EDDGetTarget GetTarget;        // null if target is not set
+            // Return JSON of target,X,Y,Z as an object, or empty object
+            [FieldOffset(40)] public EDDReturnString GetTarget;        
+            
             [FieldOffset(48)] public EDDString WriteToLog;
             [FieldOffset(56)] public EDDString WriteToLogHighlight;
 
             // the following are JSON outputs of EDD structures - structures may change. DLLs will have to keep up. Be defensive.
 
-            // Get StarNode structure with ScanData on all bodies in a system. Empty string for current, else star system
-            [FieldOffset(64)] public EDDGetScanData GetScanData;
+            // c# only Request a Scan Data
+            // Get StarNode structure with ScanData on all bodies in a system. Empty string for current, else star system.  
+            // when ready, you will receive a EDDDataResult
+            [FieldOffset(64)] public EDDRequestScanData RequestScanData;
 
-            [FieldOffset(72)] public EDDReturnString GetSuitsWeaponsLoadouts;   // current state
-            [FieldOffset(80)] public EDDReturnString GetCarrierData;   // current state
+            // Get suit, weapons and loadout structures, current state.
+            [FieldOffset(72)] public EDDReturnString GetSuitsWeaponsLoadouts;   
 
-            [FieldOffset(88)] public EDDReturnString GetVisitedList;    // expensive in time - do not use frequently. Will hold up EDD
-            [FieldOffset(96)] public EDDReturnString GetShipyards;      // expensive in time - do not use frequently. Will hold up EDD
-            [FieldOffset(104)] public EDDReturnString GetOutfitting;    // expensive in time - do not use frequently. Will hold up EDD
+            // Get carrier data structure, current state.
+            [FieldOffset(80)] public EDDReturnString GetCarrierData;   
+
+            // Get last N visited systems. N may be bigger than list, in which case all are returned. <0 means all. Expensive in time - do not use frequently.
+            [FieldOffset(88)] public EDDVisitedList GetVisitedList;
+
+            // Get shipyards visited with data. Expensive in time - do not use frequently.
+            [FieldOffset(96)] public EDDReturnString GetShipyards;
+
+            // Get Outfittings visited with data. Expensive in time - do not use frequently.
+            [FieldOffset(104)] public EDDReturnString GetOutfitting;
 
             // Version 3 Ends here (16.0.4 Dec 22)
         }
 
+        public const int DLLCallBackVersion = 3;
+
         // This class is passed to panel on Init.
-        public class EDDPanelCallbacks
+        public class EDDPanelCallbacks      // Must be fixed once released.  Use an EDDPanelCallBacks2 etc interface to expand later, and you'll need to add a new ExtPanel host
         {
             public int ver;
 
@@ -212,7 +236,12 @@ namespace EDDDLLInterfaces
             // ver 1 ends
         };
 
-        public interface IEDDPanelExtension                         // an external panel implements this interface
+
+
+        public const int PanelCallBackVersion = 1;
+
+        // an external panel implements this interface.  You need to match your DLL to this interface
+        public interface IEDDPanelExtension
         {
             // Theme is json per ExtendedControls.Theme.  Make sure you cope with any changes we make - don't presume a key is there. Be defensive
             // displayid is a number given to identify an unique panel - just use it if your going to store per window configuration
@@ -240,9 +269,13 @@ namespace EDDDLLInterfaces
             void ThemeChanged(string themeasjson);
         }
 
-        #endregion
+        // for the future. We would declare an extension class, we would create a second UserControlExtPanel handling this
+        // the type passed in AddPanel gives you the interface it needs
+        // public interface IEDDPanelExtensionV2 : IEDDPanelExtension          // Example extension - we would declare a extension class
 
-        #region Calls to DLL
+#endregion
+
+#region Calls to DLL
 
         // c# assemblies implement the following functions inside a class named *MainDLL.  This is the class which is instanced
         // and gets EDDInitialise, EDDTerminate etc called on it with the parameters as below.
@@ -251,9 +284,10 @@ namespace EDDDLLInterfaces
         // Flags passed by EDDInitialise in vstr:
 
         public const string FLAG_HOSTNAME = "HOSTNAME=";                    // aka EDDiscovery, EDDLite
-        public const string FLAG_JOURNALVERSION = "JOURNALVERSION=";        // see EDDDLLHistoryEntry.cs for JournalVersion, version of the journal implemented by host
-        public const string FLAG_CALLBACKVERSION = "CALLBACKVERSION=";      // see EDDCallBacks.cs, callback version implemented by host for the structure EDDCallBacks
-        public const string FLAG_CALLVERSION = "CALLVERSION=";              // The version of the DLL interface the host implements (see CallVersion for the best)
+        public const string FLAG_JOURNALVERSION = "JOURNALVERSION=";        // JournalVersion: version of the journal implemented by host for structure JournalEntry
+        public const string FLAG_CALLBACKVERSION = "CALLBACKVERSION=";      // DLLCallBackVersion: version implemented by host for the structure EDDCallBacks
+        public const string FLAG_CALLVERSION = "CALLVERSION=";              // The version of the DLL interface the host implements (see CallerVersion for the best)
+        public const string FLAG_PANELCALLBACKVERSION = "PANELCALLBACKVERSION=";   // PanelCallBackVersion: Callback version implemented by host for panels. Missing if no panel support.
 
         public const string FLAG_PLAYLASTFILELOAD = "PLAYLASTFILELOAD";     // flags back
 
@@ -329,9 +363,13 @@ namespace EDDDLLInterfaces
 
         // version 6 ends
 
-        public const int CallBackVersion = 6;
+        // Optional, c#
+        public delegate void EDDDataResult(object requesttag, object usertag, string data);  // call back from RequestScanData callback and maybe more in future
 
-        #endregion
+        // version 7 ends
+        public const int CallerVersion = 7;
+
+#endregion
     }
 
 }

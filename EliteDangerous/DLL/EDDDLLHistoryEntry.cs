@@ -62,6 +62,8 @@ namespace EliteDangerousCore.DLL
                                                                                          int totalrecords,
                                                                                          bool storedflag = false)
         {
+            System.Diagnostics.Debug.Assert(JournalVersion == EDDDLLInterfaces.EDDDLLIF.JournalVersion, "***** Updated EDD DLL IF but not updated journal history maker");
+
             JObject json = he.journalEntry.GetJsonCloned();
             json.RemoveWildcard("EDD*");        // remove any EDD specials
 

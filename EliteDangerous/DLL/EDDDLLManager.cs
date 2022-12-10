@@ -183,6 +183,25 @@ namespace EliteDangerousCore.DLL
             }
         }
 
+        public EDDDLLCaller FindCSharpCallerByStackTrace()        // go down the stack , and see which DLL called 
+        {
+            System.Reflection.Assembly thisAssembly = System.Reflection.Assembly.GetExecutingAssembly();
+
+            System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
+            System.Diagnostics.StackFrame[] frames = stackTrace.GetFrames();
+
+            foreach (var stackFrame in frames)
+            {
+                var ownerAssembly = stackFrame.GetMethod().DeclaringType.Assembly;
+                var dll = DLLs.Find(x => x.Assembly == ownerAssembly);
+
+                if (dll != null)
+                    return dll;
+            }
+
+            return null;
+        }
+
         public EDDDLLCaller FindCaller(string name)
         {
             return DLLs.Find(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));

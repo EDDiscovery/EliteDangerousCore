@@ -23,7 +23,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading;
 
 namespace EliteDangerousCore
