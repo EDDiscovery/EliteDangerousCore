@@ -166,11 +166,11 @@ namespace EliteDangerousCore.DLL
             }
         }
 
-        public void NewUnfilteredJournalEntry(EDDDLLInterfaces.EDDDLLIF.JournalEntry nje)
+        public void NewUnfilteredJournalEntry(EDDDLLInterfaces.EDDDLLIF.JournalEntry nje, bool stored)
         {
             foreach (EDDDLLCaller caller in DLLs)
             {
-                caller.NewUnfilteredJournalEntry(nje);
+                caller.NewUnfilteredJournalEntry(nje,stored);
             }
         }
 

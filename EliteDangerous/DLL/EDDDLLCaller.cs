@@ -366,8 +366,11 @@ namespace EliteDangerousCore.DLL
             return null;
         }
 
-        public bool NewUnfilteredJournalEntry(EDDDLLInterfaces.EDDDLLIF.JournalEntry nje)
+        public bool NewUnfilteredJournalEntry(EDDDLLInterfaces.EDDDLLIF.JournalEntry nje, bool stored)
         {
+            if (stored && DLLOptions.ContainsIn(EDDDLLInterfaces.EDDDLLIF.FLAG_PLAYLASTFILELOAD) < 0)
+                return false;
+
             if (AssemblyMainType != null)
             {
                 if (AssemblyMainType.GetType().GetMethod("EDDNewUnfilteredJournalEntry") != null)
