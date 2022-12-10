@@ -60,7 +60,7 @@ namespace EliteDangerousCore.DLL
                     {
                         if (type.IsClass && type.FullName.EndsWith("EDDClass"))
                         {
-                            System.Diagnostics.Debug.WriteLine($"DLL Found Type {type.FullName} in {path}");
+                            System.Diagnostics.Trace.WriteLine($"DLL c# Found Type {type.FullName} in {path}");
                             AssemblyMainType = Activator.CreateInstance(type);
                             Name = System.IO.Path.GetFileNameWithoutExtension(path);
                             return true;
@@ -71,14 +71,14 @@ namespace EliteDangerousCore.DLL
                 }
                 catch (System.Reflection.ReflectionTypeLoadException exl)
                 {
-                    System.Diagnostics.Debug.WriteLine($"C# DLL failed to load {exl}");
+                    System.Diagnostics.Trace.WriteLine($"DLL c# failed to load {exl}");
                     foreach ( var m in exl.LoaderExceptions)
                         System.Diagnostics.Debug.WriteLine(m);
                     return false;
                 }
-                catch ( Exception exb)
+                catch 
                 {
-                    System.Diagnostics.Debug.WriteLine($"c# load try : {exb}");
+                    //System.Diagnostics.Debug.WriteLine($"c# load try : {exb}");
                 }
 
                 pDll = BaseUtils.Win32.UnsafeNativeMethods.LoadLibrary(path);
@@ -89,6 +89,7 @@ namespace EliteDangerousCore.DLL
 
                     if (peddinit != IntPtr.Zero)        // must have this to be an EDD DLL
                     {
+                        System.Diagnostics.Trace.WriteLine($"DLL WIN32 Found Initialise {path}");
                         Name = System.IO.Path.GetFileNameWithoutExtension(path);
                         pNewJournalEntry = BaseUtils.Win32.UnsafeNativeMethods.GetProcAddress(pDll, "EDDNewJournalEntry");
                         pNewUnfilteredJournalEntry = BaseUtils.Win32.UnsafeNativeMethods.GetProcAddress(pDll, "EDDNewUnfilteredJournalEntry");
@@ -116,11 +117,12 @@ namespace EliteDangerousCore.DLL
             string strto = ourversion + (optioninlist != null ? (';' + String.Join(";", optioninlist)) : "");
             if (AssemblyMainType != null)
             {
-                System.Diagnostics.Debug.WriteLine($"Calling Init on {Name} {strto} {dllfolder}");
+                System.Diagnostics.Trace.WriteLine($"DLL Calling c# Init on {Name} {strto} {dllfolder}");
                 Version = AssemblyMainType.EDDInitialise(strto, dllfolder, callbacks);
             }
             else if (pDll != IntPtr.Zero)
             {
+                System.Diagnostics.Trace.WriteLine($"DLL Calling WIN32 Init on {Name} {strto} {dllfolder}");
                 IntPtr peddinit = BaseUtils.Win32.UnsafeNativeMethods.GetProcAddress(pDll, "EDDInitialise");
 
                 EDDDLLInterfaces.EDDDLLIF.EDDInitialise edinit = (EDDDLLInterfaces.EDDDLLIF.EDDInitialise)Marshal.GetDelegateForFunctionPointer(

@@ -64,7 +64,7 @@ namespace EliteDangerousCore.DLL
                         {
                             EDDDLLCaller caller = new EDDDLLCaller();
 
-                            System.Diagnostics.Debug.WriteLine("Try to load " + f.FullName);
+                            System.Diagnostics.Trace.WriteLine("\r\nTry to load " + f.FullName);
 
                             string filename = System.IO.Path.GetFileNameWithoutExtension(f.FullName);
 
