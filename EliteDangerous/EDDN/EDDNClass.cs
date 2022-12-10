@@ -518,7 +518,10 @@ namespace EliteDangerousCore.EDDN
             if (!String.Equals(system.Name, journal.StarSystem, StringComparison.InvariantCultureIgnoreCase))
                 return null;
 
-            if (system.SystemAddress == null || journal.SystemAddress == null || system.SystemAddress != journal.SystemAddress)
+            if (system.SystemAddress == null || !system.HasCoordinate)  // don't have a valid system..
+                return null;
+
+            if (journal.SystemAddress == null || system.SystemAddress != journal.SystemAddress )    // can't agree where we are from the journal 
                 return null;
 
             JObject msg = new JObject();
@@ -618,7 +621,7 @@ namespace EliteDangerousCore.EDDN
 
         public JObject CreateEDDNMessage(JournalScan journal, ISystem system)
         {
-            if (system.SystemAddress == null)
+            if (system.SystemAddress == null || !system.HasCoordinate)
                 return null;
 
             // Reject scan if system doesn't match scan system
@@ -681,7 +684,7 @@ namespace EliteDangerousCore.EDDN
 
         public JObject CreateEDDNMessage(JournalSAASignalsFound journal, ISystem system)
         {
-            if (system.SystemAddress == null)
+            if (system.SystemAddress == null || !system.HasCoordinate)
                 return null;
 
             // Reject scan if system doesn't match scan system
@@ -725,6 +728,9 @@ namespace EliteDangerousCore.EDDN
 
         public JObject CreateEDDNFSSDiscoveryScan(JournalFSSDiscoveryScan journal, ISystem system)
         {
+            if (system.SystemAddress == null || !system.HasCoordinate)
+                return null;
+
             JObject msg = new JObject();
             msg["header"] = Header(journal.GameVersion,journal.Build);
             msg["$schemaRef"] = FSSDiscoveryScanSchema;
@@ -747,6 +753,9 @@ namespace EliteDangerousCore.EDDN
         }
         public JObject CreateEDDNNavBeaconScan( JournalNavBeaconScan journal, ISystem system)
         {
+            if (system.SystemAddress == null || !system.HasCoordinate)
+                return null;
+
             JObject msg = new JObject();
             msg["header"] = Header(journal.GameVersion,journal.Build);
             msg["$schemaRef"] = NavBeaconSchema;
@@ -768,6 +777,9 @@ namespace EliteDangerousCore.EDDN
 
         public JObject CreateEDDNCodexEntry(JournalCodexEntry journal, ISystem system)
         {
+            if (system.SystemAddress == null || !system.HasCoordinate)
+                return null;
+
             JObject msg = new JObject();
             msg["header"] = Header(journal.GameVersion,journal.Build);
             msg["$schemaRef"] = CodexSchema;
@@ -816,14 +828,19 @@ namespace EliteDangerousCore.EDDN
             if (ja == null || ja.Count == 0)
                 return null;
 
+            // already has StarSystem/SystemAddress/StarPos
             message["odyssey"] = journal.IsOdyssey;
             message["horizons"] = journal.IsHorizons;
 
             msg["message"] = message;
             return msg;
         }
+
         public JObject CreateEDDNScanBaryCentre(JournalScanBaryCentre journal, ISystem system)
         {
+            if (system.SystemAddress == null || !system.HasCoordinate)
+                return null;
+
             JObject msg = new JObject();
             msg["header"] = Header(journal.GameVersion,journal.Build);
             msg["$schemaRef"] = ScanBarycentreSchema;
@@ -834,7 +851,8 @@ namespace EliteDangerousCore.EDDN
                 return null;
 
             RemoveCommonKeys(message);          // remove _localised
-            
+
+            // already has StarSystem/SystemAddress
             message["StarPos"] = new JArray(new float[] { (float)system.X, (float)system.Y, (float)system.Z });
             message["odyssey"] = journal.IsOdyssey;
             message["horizons"] = journal.IsHorizons;
@@ -845,6 +863,9 @@ namespace EliteDangerousCore.EDDN
 
         public JObject CreateEDDNFSSAllBodiesFound(JournalFSSAllBodiesFound journal, ISystem system)
         {
+            if (system.SystemAddress == null || !system.HasCoordinate)
+                return null;
+
             JObject msg = new JObject();
             msg["header"] = Header(journal.GameVersion,journal.Build);
             msg["$schemaRef"] = FSSAllBodiesFoundSchema;
@@ -856,9 +877,10 @@ namespace EliteDangerousCore.EDDN
 
             RemoveCommonKeys(message);          // remove _localised
 
+            // Already has SystemName/SystemAddress
+            message["StarPos"] = new JArray(new float[] { (float)system.X, (float)system.Y, (float)system.Z });
             message["odyssey"] = journal.IsOdyssey;
             message["horizons"] = journal.IsHorizons;
-            message["StarPos"] = new JArray(new float[] { (float)system.X, (float)system.Y, (float)system.Z });
 
             msg["message"] = message;
             return msg;
@@ -866,7 +888,12 @@ namespace EliteDangerousCore.EDDN
 
         public JObject CreateEDDNApproachSettlement(JournalApproachSettlement journal, ISystem system)
         {
-            if (journal.Latitude == null || journal.Longitude == null)        // sometimes these are missing, so ignore these. 
+            if (system.SystemAddress == null || !system.HasCoordinate)
+                return null;
+
+            // sometimes these are missing, so ignore these. 
+            // system may not be set if in EDDLite if we carrier jumped in prev log, then we got approach before Location on second log
+            if (journal.Latitude == null || journal.Longitude == null )
                 return null;
 
             JObject msg = new JObject();
@@ -880,10 +907,11 @@ namespace EliteDangerousCore.EDDN
 
             RemoveCommonKeys(message);          // remove _localised
 
-            message["odyssey"] = journal.IsOdyssey;
-            message["horizons"] = journal.IsHorizons;
+            // already has SystemAddress
             message["StarSystem"] = system.Name;
             message["StarPos"] = new JArray(new float[] { (float)system.X, (float)system.Y, (float)system.Z });
+            message["odyssey"] = journal.IsOdyssey;
+            message["horizons"] = journal.IsHorizons;
 
             msg["message"] = message;
             return msg;
@@ -949,7 +977,10 @@ namespace EliteDangerousCore.EDDN
 
         public JObject CreateEDDNFSSSignalDiscovered(JournalFSSSignalDiscovered journal, ISystem system)
         {
-            if (journal.Signals == null)
+            if (system.SystemAddress == null || !system.HasCoordinate)
+                return null;
+
+            if (journal.Signals == null )
                 return null;
 
             JObject msg = new JObject();
