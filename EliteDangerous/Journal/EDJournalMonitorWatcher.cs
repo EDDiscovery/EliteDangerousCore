@@ -30,7 +30,7 @@ namespace EliteDangerousCore
     [System.Diagnostics.DebuggerDisplay("{WatcherFolder}")]
     public class JournalMonitorWatcher
     {
-        public string WatcherFolder { get; set; }
+        public string Folder { get; set; }
         public bool IncludeSubfolders;
 
         private Dictionary<string, EDJournalReader> netlogreaders = new Dictionary<string, EDJournalReader>();
@@ -44,7 +44,7 @@ namespace EliteDangerousCore
 
         public JournalMonitorWatcher(string folder, string journalmatchpattern, DateTime mindateutcp, bool pincludesubfolders)
         {
-            WatcherFolder = folder;
+            Folder = folder;
             journalfilematch = journalmatchpattern;
             mindateutc = mindateutcp;
             IncludeSubfolders = pincludesubfolders;
@@ -63,7 +63,7 @@ namespace EliteDangerousCore
                     StoreToDBDuringUpdateRead = storetodb;
                     m_netLogFileQueue = new ConcurrentQueue<string>();
                     m_Watcher = new System.IO.FileSystemWatcher();
-                    m_Watcher.Path = WatcherFolder + Path.DirectorySeparatorChar;
+                    m_Watcher.Path = Folder + Path.DirectorySeparatorChar;
                     m_Watcher.Filter = journalfilematch;
                     m_Watcher.IncludeSubdirectories = IncludeSubfolders;
                     m_Watcher.NotifyFilter = NotifyFilters.FileName;
@@ -71,7 +71,7 @@ namespace EliteDangerousCore
                     m_Watcher.Created += new FileSystemEventHandler(OnNewFile);
                     m_Watcher.EnableRaisingEvents = true;
 
-                    System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCount} Start Monitor on {WatcherFolder} incl {IncludeSubfolders}");
+                    System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCount} Start Monitor on {Folder} incl {IncludeSubfolders}");
                 }
                 catch (Exception ex)
                 {
@@ -90,7 +90,7 @@ namespace EliteDangerousCore
                 m_Watcher.Dispose();
                 m_Watcher = null;
 
-                System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCount} Stop Monitor on {WatcherFolder} incl {IncludeSubfolders}");
+                System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCount} Stop Monitor on {Folder} incl {IncludeSubfolders}");
             }
         }
 
@@ -147,7 +147,7 @@ namespace EliteDangerousCore
                 try
                 {
                     HashSet<string> tlunames = new HashSet<string>(TravelLogUnit.GetAllNames());
-                    string[] filenames = Directory.EnumerateFiles(WatcherFolder, journalfilematch, IncludeSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
+                    string[] filenames = Directory.EnumerateFiles(Folder, journalfilematch, IncludeSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
                                                     .Select(s => new { name = Path.GetFileName(s), fullname = s })
                                                     .Where(s => !tlunames.Contains(s.fullname))           // find any new ones..
                                                     .Where(g => new FileInfo(g.fullname).LastWriteTime >= mindateutc)
@@ -243,7 +243,7 @@ namespace EliteDangerousCore
             //            System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLap("PJF", true), "Scanned " + WatcherFolder);
 
             // order by file write time so we end up on the last one written
-            FileInfo[] allFiles = Directory.EnumerateFiles(WatcherFolder, journalfilematch, IncludeSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).
+            FileInfo[] allFiles = Directory.EnumerateFiles(Folder, journalfilematch, IncludeSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).
                                         Select(f => new FileInfo(f)).Where(g=>g.LastWriteTime >= minjournaldateutc).OrderBy(p => p.LastWriteTime).ToArray();
 
             List<EDJournalReader> readersToUpdate = new List<EDJournalReader>();
@@ -297,51 +297,40 @@ namespace EliteDangerousCore
             return readersToUpdate;
         }
 
-        // given a list of files to reparse, read them and store to db or fire them back (and set firebacklastn to make it work)
-
-        public void ProcessDetectedNewFiles(List<EDJournalReader> readersToUpdate,  Action<int, string> updateProgress, 
-                                            Action<JournalEntry, int,int,int,int> fireback = null, int firebacklastn = 0,
-                                            EventWaitHandle closerequested = null
-                                            )
+        // given a list of files to reparse, either return a list of them (if jes != null), or store them in the db
+        public void ProcessDetectedNewFiles(List<EDJournalReader> readersToUpdate,  Action<int, string> updateProgress, List<JournalEntry> jeslist, EventWaitHandle closerequested = null)
         {
             for (int i = 0; i < readersToUpdate.Count; i++)
             {
                 if (closerequested?.WaitOne(0) ?? false)
                     break;
+
                 EDJournalReader reader = readersToUpdate[i];
             
                 //System.Diagnostics.Debug.WriteLine($"Processing {reader.FullName}");
 
-                List<JournalEntry> entries = new List<JournalEntry>();
-                List<UIEvent> uievents = new List<UIEvent>();
-                bool readanything = reader.ReadJournal(entries, uievents, historyrefreshparsing: true);      // this may create new commanders, and may write to the TLU
+                List<JournalEntry> dbentries = new List<JournalEntry>();          // entries found for db
+                List<UIEvent> uieventswasted = new List<UIEvent>();             // any UI events converted are wasted here
 
-                if (fireback != null)
+                bool readanything = reader.ReadJournal(jeslist != null ? jeslist : dbentries, uieventswasted, historyrefreshparsing: true);      // this may create new commanders, and may write (but not commit) to the TLU
+                    
+                if ( jeslist != null )                  // if updating jes list
                 {
                     if (readanything)               // need to update TLU pos if read anything
                         reader.TravelLogUnit.Update();
-
-                    if (i >= readersToUpdate.Count - firebacklastn) // if within fireback window
-                    {
-                        for( int e = 0; e < entries.Count; e++ )
-                        {
-                            //System.Diagnostics.Debug.WriteLine("Fire {0} {1} {2} {3} {4} {5}", entries[e].CommanderId, i, readersToUpdate.Count, e, entries.Count, entries[e].EventTypeStr );
-                            fireback(entries[e], i, readersToUpdate.Count, e, entries.Count);
-                        }
-                    }
                 }
                 else
                 {
                     UserDatabase.Instance.DBWrite(cn =>
                     {
                         // only lookup TLUs if there is actually anything to compare against
-                        ILookup<DateTime, JournalEntry> existing = entries.Count > 0 ? JournalEntry.GetAllByTLU(reader.ID, cn).ToLookup(e => e.EventTimeUTC) : null;
+                        ILookup<DateTime, JournalEntry> existing = dbentries.Count > 0 ? JournalEntry.GetAllByTLU(reader.ID, cn).ToLookup(e => e.EventTimeUTC) : null;
 
                         //System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLap("PJF"), i + " into db");
 
                         using (DbTransaction tn = cn.BeginTransaction())
                         {
-                            foreach (JournalEntry jre in entries)
+                            foreach (JournalEntry jre in dbentries)
                             {
                                 //System.Diagnostics.Trace.WriteLine(string.Format("--- Check {0} {1} Existing {2} : {3}", jre.EventTimeUTC, jre.EventTypeStr, existing[jre.EventTimeUTC].Count(), jre.GetJson().ToString()));
 

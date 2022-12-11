@@ -209,7 +209,7 @@ namespace EliteDangerousCore
             List<int> del = new List<int>();
             for (int i = 0; i < watchers.Count; i++)           // for all current watchers, are we still in use?
             {
-                var exists = folderlist.Find(x => x.Item1.Equals(watchers[i].WatcherFolder, StringComparison.CurrentCultureIgnoreCase));
+                var exists = folderlist.Find(x => x.Item1.Equals(watchers[i].Folder, StringComparison.CurrentCultureIgnoreCase));
 
                 if (exists == null || watchers[i].IncludeSubfolders != exists.Item2 )       // if not in list, or in list but sub folders are different..
                     del.Add(i);    
@@ -228,7 +228,7 @@ namespace EliteDangerousCore
 
             foreach (var tw in folderlist)      // make sure all folders are watched
             {
-                var exists = watchers.Find(x => x.WatcherFolder.Equals(tw.Item1, StringComparison.InvariantCultureIgnoreCase));
+                var exists = watchers.Find(x => x.Folder.Equals(tw.Item1, StringComparison.InvariantCultureIgnoreCase));
                 if (exists == null)     // if not watching in list, add
                 {
                     try
@@ -241,7 +241,7 @@ namespace EliteDangerousCore
                     }
                     catch (Exception ex)
                     {
-                        System.Diagnostics.Debug.WriteLine($"Watcher path exception {exists.WatcherFolder} {ex}");
+                        System.Diagnostics.Debug.WriteLine($"Watcher path exception {exists.Folder} {ex}");
                     }
                 }
                 else
@@ -256,21 +256,29 @@ namespace EliteDangerousCore
 
         #region History reload - scan of watchers for new files
 
-        // Go thru all watchers and check to see if any new files have been found, if so, process them and either store to DB or fireback
+        // Go thru all watchers and check to see if any new files have been found, if so, process them and either store to DB return a list of them (if jes != null)
         // options to force reload of last N files, to fireback instead of storing the last n
 
         public void ParseJournalFilesOnWatchers(Action<int, string> updateProgress,
-                                                DateTime minjournaldateutc, int reloadlastn,
-                                                Action<JournalEntry, int, int, int, int> firebacknostore = null, int firebacklastn = 0,
+                                                DateTime minjournaldateutc, int reloadlastn, List<JournalEntry> jeslist = null,
                                                 EventWaitHandle closerequested = null)
         {
             System.Diagnostics.Debug.Assert(ScanThread == null);        // double check we are not scanning.
 
+            List<JournalEntry> accumulatedjes = new List<JournalEntry>();
+
+            //System.Diagnostics.Debug.WriteLine($"Parse Start {BaseUtils.AppTicks.TickCountLap("LL",true)}");
+
             for (int i = 0; i < watchers.Count; i++)             // parse files of all folders being watched
             {
                 // may create new commanders at the end, but won't need any new watchers, because they will obv be in the same folder
+                
+                //System.Diagnostics.Debug.WriteLine($"Parse scan {BaseUtils.AppTicks.TickCountLap("LL")} {watchers[i].Folder}");
                 var list = watchers[i].ScanJournalFiles(minjournaldateutc,reloadlastn);
-                watchers[i].ProcessDetectedNewFiles(list, updateProgress, firebacknostore, firebacklastn, closerequested);
+                
+                //System.Diagnostics.Debug.WriteLine($"Parse process {BaseUtils.AppTicks.TickCountLap("LL")} {watchers[i].Folder}");
+                watchers[i].ProcessDetectedNewFiles(list, updateProgress, jeslist, closerequested);
+                //System.Diagnostics.Debug.WriteLine($"Parse Process Finished {BaseUtils.AppTicks.TickCountLap("LL")} {watchers[i].Folder}");
             }
         }
 

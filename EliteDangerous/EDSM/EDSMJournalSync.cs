@@ -288,7 +288,7 @@ namespace EliteDangerousCore.EDSM
             }
 
             List<JObject> results = edsm.SendJournalEvents(entries, gameversion, build, out errmsg);
-            System.Diagnostics.Debug.WriteLine($"EDSM Send of {entries.Count} {gameversion} {build} result {errmsg}");
+            System.Diagnostics.Debug.WriteLine($"EDSM Result of sending {entries.Count} events : gv {gameversion} bu {build} result {errmsg}");
             //List<JObject> results = new List<JObject>();    for( int i = 0; i < hl.Count; i++ ) results.Add(new JObject { ["msgnum"] = 100, ["systemId"] = 200 }); //debug
 
             if (results == null)
