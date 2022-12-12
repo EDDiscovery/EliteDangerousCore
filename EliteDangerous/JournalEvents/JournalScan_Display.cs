@@ -228,9 +228,9 @@ namespace EliteDangerousCore.JournalEvents
 
             scanText.AppendFormat("Scan Type: {0}".T(EDCTx.JournalScan_SCNT) + "\n", ScanType);
 
-            JournalScanBaryCentre barycentrejs = Parents?[0].Barycentre;
-            if ( barycentrejs != null )     
-            {
+            if ( Parents!=null && Parents.Count > 0 && Parents[0].Barycentre != null)      // dec 22 bug here on edsm data received a empty parent array- be more defensive
+            { 
+                JournalScanBaryCentre barycentrejs = Parents[0].Barycentre;
                 scanText.AppendLine();
                 scanText.AppendLine("Barycentre: " + barycentrejs.BodyID.ToString());
                 barycentrejs.FillInformation(null, null, out string info, out string detailed);
