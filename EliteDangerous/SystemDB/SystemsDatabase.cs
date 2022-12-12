@@ -197,7 +197,7 @@ namespace EliteDangerousCore.DB
                 DateTime edsmdate;
 
                 if (!DateTime.TryParse(rwsystime, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out edsmdate))
-                    edsmdate = new DateTime(2000, 1, 1);
+                    edsmdate = EliteReleaseDates.GammaStart;
 
                 return edsmdate;
             });

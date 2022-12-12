@@ -198,8 +198,6 @@ namespace EliteDangerousCore.DB
         public bool hasPlanetaryMarks
         { get { return PlanetaryMarks != null && PlanetaryMarks.hasMarks; } }
 
-        DateTime utcswitchover = new DateTime(2020, 1, 23);
-
         public BookmarkClass()
         {
         }
@@ -214,7 +212,7 @@ namespace EliteDangerousCore.DB
             z = (double)dr["z"];
 
             DateTime t = (DateTime)dr["Time"];
-            if (t < utcswitchover)      // dates before this was stupidly recorded in here in local time.
+            if (t < EDDFixesDates.BookmarkUTCswitchover)      // dates before this was stupidly recorded in here in local time.
             {
                 t = new DateTime(t.Year, t.Month, t.Day, t.Hour, t.Minute, t.Second, DateTimeKind.Local);
                 t = t.ToUniversalTime();
@@ -241,7 +239,7 @@ namespace EliteDangerousCore.DB
             using (DbCommand cmd = cn.CreateCommand("Insert into Bookmarks (StarName, x, y, z, Time, Heading, Note, PlanetMarks) values (@sname, @xp, @yp, @zp, @time, @head, @note, @pmarks)"))
             {
                 DateTime tme = TimeUTC;
-                if (TimeUTC < utcswitchover)
+                if (TimeUTC < EDDFixesDates.BookmarkUTCswitchover)
                     tme = TimeUTC.ToLocalTime();
 
                 cmd.AddParameterWithValue("@sname", StarName);
@@ -274,7 +272,7 @@ namespace EliteDangerousCore.DB
             using (DbCommand cmd = cn.CreateCommand("Update Bookmarks set StarName=@sname, x = @xp, y = @yp, z = @zp, Time=@time, Heading = @head, Note=@note, PlanetMarks=@pmarks  where ID=@id"))
             {
                 DateTime tme = TimeUTC;
-                if (TimeUTC < utcswitchover)
+                if (TimeUTC < EDDFixesDates.BookmarkUTCswitchover)
                     tme = TimeUTC.ToLocalTime();
 
                 cmd.AddParameterWithValue("@ID", id);

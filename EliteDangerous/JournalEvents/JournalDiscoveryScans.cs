@@ -646,13 +646,13 @@ namespace EliteDangerousCore.JournalEvents
 
             if (ScanType == ScanTypeEnum.Analyse)
             {
-                if (EventTimeUTC < new DateTime(2022, 11, 29, 9, 0, 0, DateTimeKind.Utc)) //pre update 14
+                if (EventTimeUTC < EliteReleaseDates.Odyssey14) //pre update 14
                 {
                     var value = OrganicEstimatedValues.GetValue(Species);
                     if (value != null)
                         EstimatedValue = value.Value;
                 }
-                if (EventTimeUTC > new DateTime(2022, 11, 29, 9, 0, 0, DateTimeKind.Utc)) //post update 14
+                else
                 {
                     var value = OrganicEstimatedValues414.GetValue(Species);
                     if (value != null)

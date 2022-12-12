@@ -121,8 +121,7 @@ namespace EliteDangerousCore
                 // Gameversion appeared in Odyssey 2, and is not being sent by horizons clients
                 // just in case they turn it on, 3.X is also a legacy version
 
-                DateTime EDOdyssey14UTC = new DateTime(2022, 11, 29, 12, 0, 0);
-                bool legacy = (jlg.GameVersion.IsEmpty() || jlg.GameVersion.Trim().StartsWith("3.")) && jlg.EventTimeUTC >= EDOdyssey14UTC;
+                bool legacy = (jlg.GameVersion.IsEmpty() || jlg.GameVersion.Trim().StartsWith("3.")) && jlg.EventTimeUTC >= EliteReleaseDates.Odyssey14;
 
                 // set TLU flags
 
@@ -180,7 +179,7 @@ namespace EliteDangerousCore
 
                         if (cmdr!=null)
                         {
-                            commander.SetLinkedCommander(cmdr.Id, EDOdyssey14UTC);       // record linked
+                            commander.SetLinkedCommander(cmdr.Id, EliteReleaseDates.Odyssey14);       // record linked
                             System.Diagnostics.Trace.WriteLine($"Found existing commander {cmdrrootname}, linked");
                         }
 

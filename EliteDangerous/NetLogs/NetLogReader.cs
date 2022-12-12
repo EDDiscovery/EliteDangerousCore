@@ -31,9 +31,6 @@ namespace EliteDangerousCore
         private static Regex netlogHeaderRe = new Regex(@"^(?<Localtime>\d\d-\d\d-\d\d-\d\d:\d\d) (?<Timezone>.*) [(](?<GMT>\d\d:\d\d) GMT[)]");
         private static Regex netlogHeaderRe23 = new Regex(@"^(?<Localtime>\d\d\d\d-\d\d-\d\d \d\d:\d\d) (?<Timezone>.*)");
 
-        // Public release date of Elite: Dangerous
-        DateTime gammastart = new DateTime(2014, 11, 22, 13, 00, 00);
-
         // Close Quarters Combat
         public bool CQC { get; set; }
 
@@ -471,7 +468,7 @@ namespace EliteDangerousCore
                                      && (!je.HasCoordinate || !last.HasCoordinate || (je.StarPos - last.StarPos).LengthSquared < 0.001))
                         continue;
 
-                    if (je.EventTimeUTC.Subtract(gammastart).TotalMinutes > 0)  // Ta bara med efter gamma.
+                    if (je.EventTimeUTC.Subtract(EliteReleaseDates.GammaStart).TotalMinutes > 0)  // Ta bara med efter gamma.
                     {
                         yield return jo;
                         last = je;

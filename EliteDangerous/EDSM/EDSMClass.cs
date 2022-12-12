@@ -213,11 +213,8 @@ namespace EliteDangerousCore.EDSM
         // Verified Nov 20 - EDSM update working
         public BaseUtils.ResponseData RequestSystemsData(DateTime startdate, DateTime enddate, int timeout = 5000)      // protect yourself against JSON errors!
         {
-            DateTime gammadate = new DateTime(2015, 5, 10, 0, 0, 0, DateTimeKind.Utc);
-            if (startdate < gammadate)
-            {
-                startdate = gammadate;
-            }
+            if (startdate < EDDFixesDates.EDSMMinimumSystemsDate)
+                startdate = EDDFixesDates.EDSMMinimumSystemsDate;
 
             string query = "api-v1/systems" +
                 "?startdatetime=" + HttpUtility.UrlEncode(startdate.ToUniversalTime().ToStringYearFirstInvariant()) +

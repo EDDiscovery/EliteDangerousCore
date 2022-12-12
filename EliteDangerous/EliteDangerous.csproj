@@ -99,6 +99,7 @@
     <Compile Include="EDSM\GalacticMapSystem.cs" />
     <Compile Include="EDSM\GalacticMapping.cs" />
     <Compile Include="Bindings\BindingsFile.cs" />
+    <Compile Include="EliteDangerous\EliteReleaseDates.cs" />
     <Compile Include="EliteDangerous\Bodies.cs" />
     <Compile Include="BodyDesignations\BodyDesignationsDefaults.cs" />
     <Compile Include="EliteDangerous\CommodityPrices.cs" />

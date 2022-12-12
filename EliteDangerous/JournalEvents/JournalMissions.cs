@@ -251,11 +251,9 @@ namespace EliteDangerousCore.JournalEvents
             "Chain_HelpFinishTheOrder",
         };
 
-        private static DateTime ED32Date = new DateTime(2018, 8, 28, 10, 0, 0, DateTimeKind.Utc);
-
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
-            if (Commodity != null && Count != null && EventTimeUTC < ED32Date)           // after this we will rely on Cargo to update us, only safe way to know if something has been stowed
+            if (Commodity != null && Count != null && EventTimeUTC < EliteReleaseDates.Release_3_2)           // after this we will rely on Cargo to update us, only safe way to know if something has been stowed
             {
                 if (DeliveryMissions.StartsWith(FDName, StringComparison.InvariantCultureIgnoreCase)>=0 )   // before, we accept only these as mission deliveries
                 {

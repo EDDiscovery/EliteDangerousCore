@@ -22,13 +22,13 @@ namespace EliteDangerousCore
         {
             // see https://forums.frontier.co.uk/showthread.php/232000-Exploration-value-formulae/ for detail
 
-            if (utc < new DateTime(2017, 4, 11, 12, 0, 0, 0, DateTimeKind.Utc))
+            if (utc < EliteReleaseDates.Release_2_2)
             {
                 EstimatedValueBase = EstimatedValueED22(isstar, st, isplanet, pl, terraformable, massstar, massem);
                 return;
             }
 
-            if (utc < new DateTime(2018, 12, 11, 9, 0, 0, DateTimeKind.Utc))
+            if (utc < EliteReleaseDates.Release_3_3)
             {
                 EstimatedValueBase = EstimatedValue32(isstar, st, isplanet, pl, terraformable, massstar, massem);
                 return;

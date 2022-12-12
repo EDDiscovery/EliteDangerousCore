@@ -27,7 +27,6 @@ namespace EliteDangerousCore.EDSM
 {
     public class EDSMLogFetcher
     {
-        private static DateTime GammaStart = new DateTime(2014, 11, 22, 4, 0, 0, DateTimeKind.Utc);
         private static int EDSMMaxLogAgeMinutes = 15;
 
         private Thread ThreadEDSMFetchLogs;
@@ -122,7 +121,7 @@ namespace EliteDangerousCore.EDSM
                         lastCommentFetch = DateTime.UtcNow;
                     }
 
-                    DateTime latestentry = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingDate(latestdatekeyname, GammaStart); // lastest entry
+                    DateTime latestentry = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingDate(latestdatekeyname, EliteReleaseDates.GammaStart); // lastest entry
                     DateTime oldestentry = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingDate(oldestdatekeyname, DateTime.UtcNow); // oldest entry
 
                     DateTime logstarttime = DateTime.MinValue;      // return what we got..
@@ -138,7 +137,7 @@ namespace EliteDangerousCore.EDSM
                         res = edsm.GetLogs(null, askfor, out edsmlogs, out logstarttime, out logendtime, out response);
                         //res = 100;  logstarttime = askfor.AddDays(-7); logendtime = askfor; // debug it
                     }
-                    else if ( oldestentry > GammaStart )    // if oldest entry younger than gamma?
+                    else if ( oldestentry > EliteReleaseDates.GammaStart )    // if oldest entry younger than gamma?
                     {
                         System.Diagnostics.Debug.WriteLine("Go back in time to gamma ");
                         res = edsm.GetLogs(null, oldestentry, out edsmlogs, out logstarttime, out logendtime, out response);

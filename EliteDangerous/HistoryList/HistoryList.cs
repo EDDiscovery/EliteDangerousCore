@@ -463,7 +463,7 @@ namespace EliteDangerousCore
             }
 
             // this stuff only works on journals after Odyssey 5 (1/7/21)
-            if (he.EventTimeUTC >= new DateTime(2021, 7, 1))        
+            if (he.EventTimeUTC >= EliteReleaseDates.Odyssey5)        
             {
                 JournalTypeEnum queuetype = reorderqueue.Count > 0 ? reorderqueue[0].EntryType : JournalTypeEnum.Unknown;
 

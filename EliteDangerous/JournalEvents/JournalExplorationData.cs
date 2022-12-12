@@ -44,8 +44,6 @@ namespace EliteDangerousCore.JournalEvents
     [JournalEntryType(JournalTypeEnum.SellExplorationData)]
     public class JournalSellExplorationData : JournalEntry, ILedgerJournalEntry, IStatsJournalEntry
     {
-        private static DateTime TotalEarningsCorrectDate = new DateTime(2018, 5, 1, 0, 0, 0, DateTimeKind.Utc);
-
         public JournalSellExplorationData(JObject evt) : base(evt, JournalTypeEnum.SellExplorationData)
         {
             Systems = evt["Systems"]?.ToObjectQ<string[]>() ?? new string[0];
@@ -53,7 +51,7 @@ namespace EliteDangerousCore.JournalEvents
             BaseValue = evt["BaseValue"].Long();
             Bonus = evt["Bonus"].Long();
             TotalEarnings = evt["TotalEarnings"].Long(0);        // may not be present - get 0. also 3.02 has a bug with incorrect value - actually fed from the FD web server so may not be version tied
-            if (TotalEarnings < BaseValue + Bonus && EventTimeUTC < TotalEarningsCorrectDate)        // so if less than the bv+bonus, it's either not there or bugged.  Fix
+            if (TotalEarnings < BaseValue + Bonus && EventTimeUTC < EliteFixesDates.TotalEarningsCorrectDate)        // so if less than the bv+bonus, it's either not there or bugged.  Fix
                 TotalEarnings = BaseValue + Bonus;
         }
 
