@@ -925,18 +925,18 @@ namespace EliteDangerousCore.EDSM
                 jout["discovery"] = jo["discovery"];
             }
 
-            if (jo["orbitalInclination"] != null) jout["OrbitalInclination"] = jo["orbitalInclination"];
-            if (jo["orbitalEccentricity"] != null) jout["Eccentricity"] = jo["orbitalEccentricity"];
-            if (jo["argOfPeriapsis"] != null) jout["Periapsis"] = jo["argOfPeriapsis"];
+            if (jo["orbitalInclination"].DoubleNull() != null) jout["OrbitalInclination"] = jo["orbitalInclination"];
+            if (jo["orbitalEccentricity"].DoubleNull() != null) jout["Eccentricity"] = jo["orbitalEccentricity"];
+            if (jo["argOfPeriapsis"].DoubleNull() != null) jout["Periapsis"] = jo["argOfPeriapsis"];
             if (jo["semiMajorAxis"].Double() != 0) jout["SemiMajorAxis"] = jo["semiMajorAxis"].Double() * BodyPhysicalConstants.oneAU_m; // AU -> metres
             if (jo["orbitalPeriod"].Double() != 0) jout["OrbitalPeriod"] = jo["orbitalPeriod"].Double() * BodyPhysicalConstants.oneDay_s; // days -> seconds
-            if (jo["rotationalPeriodTidallyLocked"] != null) jout["TidalLock"] = jo["rotationalPeriodTidallyLocked"];
-            if (jo["axialTilt"] != null) jout["AxialTilt"] = jo["axialTilt"].Double() * Math.PI / 180.0; // degrees -> radians
+            if (jo["rotationalPeriodTidallyLocked"].BoolNull() != null) jout["TidalLock"] = jo["rotationalPeriodTidallyLocked"];
+            if (jo["axialTilt"].DoubleNull() != null) jout["AxialTilt"] = jo["axialTilt"].Double() * Math.PI / 180.0; // degrees -> radians
             if (jo["rotationalPeriod"].Double() != 0) jout["RotationalPeriod"] = jo["rotationalPeriod"].Double() * BodyPhysicalConstants.oneDay_s; // days -> seconds
-            if (jo["surfaceTemperature"] != null) jout["SurfaceTemperature"] = jo["surfaceTemperature"];
-            if (jo["distanceToArrival"] != null) jout["DistanceFromArrivalLS"] = jo["distanceToArrival"];
-            if (jo["parents"] != null) jout["Parents"] = jo["parents"];
-            if (jo["id64"] != null) jout["BodyID"] = jo["id64"].Long() >> 55;
+            if (jo["surfaceTemperature"].DoubleNull() != null) jout["SurfaceTemperature"] = jo["surfaceTemperature"];
+            if (jo["distanceToArrival"].DoubleNull() != null) jout["DistanceFromArrivalLS"] = jo["distanceToArrival"];
+            if (jo["parents"].Array() != null) jout["Parents"] = jo["parents"];
+            if (jo["id64"].ULongNull() != null) jout["BodyID"] = jo["id64"].Long() >> 55;
 
             if (!jo["type"].IsNull())
             {
