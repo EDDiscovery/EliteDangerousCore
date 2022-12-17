@@ -29,20 +29,29 @@ namespace EliteDangerousCore.DB
     [DebuggerDisplay("{Name} {Id} {Systems.Count}")]
     public class SavedRouteClass : IEquatable<SavedRouteClass>
     {
+        public class SystemEntry
+        {
+            public string SystemName { get; set; }
+            public string Note { get; set; }
+            public SystemEntry(string sys, string note = "") { SystemName = sys; Note = note; }
+        }
+
         public SavedRouteClass()
         {
             this.Id = -1;
-            this.Systems = new List<string>();
+            this.Systems = new List<SystemEntry>();
         }
 
+        // create from name and no notes
         public SavedRouteClass(string name, params string[] systems)
         {
             this.Id = -1;
             this.Name = name;
-            this.Systems = systems.ToList();
+            this.Systems = new List<SystemEntry>();
+            this.Systems = systems.Select(x => new SystemEntry(x)).ToList();
         }
 
-        public SavedRouteClass(DbDataReader dr, List<string> syslist)
+        public SavedRouteClass(DbDataReader dr, List<SystemEntry> syslist)
         {
             this.Id = (long)dr["id"];
             this.Name = (string)dr["name"];
@@ -50,13 +59,14 @@ namespace EliteDangerousCore.DB
                 this.StartDateUTC = ((DateTime)dr["start"]);
             if (dr["end"] != DBNull.Value)
                 this.EndDateUTC = ((DateTime)dr["end"]);
-               
+
             this.Systems = syslist;
+
             int statusbits = (int)dr["Status"];
             this.Deleted = (statusbits & 1) != 0;
             this.EDSM = (statusbits & 2) != 0;
 
-            if ( this.Name.StartsWith("\x7F"))  // marker 7F meant pre 9.1 a EDSM system which was deleted.
+            if (this.Name.StartsWith("\x7F"))  // marker 7F meant pre 9.1 a EDSM system which was deleted.
             {
                 this.Name = this.Name.Substring(1);
                 Deleted = true;
@@ -69,10 +79,11 @@ namespace EliteDangerousCore.DB
         public DateTime? StartDateUTC { get; set; }            // UTC times now since jan 2020, changed to make compatible with gametime
         [JsonName("EndDate")]
         public DateTime? EndDateUTC { get; set; }
-        public List<string> Systems { get; private set; }
+        public List<SystemEntry> Systems { get; private set; }
+        
         public bool EDSM { get; set; }          // supplied by EDSM
         public bool Deleted { get; set; }       // Deleted by us
-        public string LastSystem { get { return Systems.Count > 0 ? Systems[Systems.Count - 1] : null; } }
+        public string LastSystemName { get { return Systems.Count > 0 ? Systems[Systems.Count - 1].SystemName : null; } }
 
         public bool Equals(SavedRouteClass other)
         {
@@ -84,7 +95,9 @@ namespace EliteDangerousCore.DB
             return (this.Name == other.Name || (String.IsNullOrEmpty(this.Name) && String.IsNullOrEmpty(other.Name))) &&
                    this.StartDateUTC == other.StartDateUTC &&
                    this.EndDateUTC == other.EndDateUTC &&
-                   this.Systems.SequenceEqual(other.Systems);
+                   this.Systems.Select(x => x.SystemName).SequenceEqual(other.Systems.Select(x => x.SystemName)) &&
+                   this.Systems.Select(x => x.Note).SequenceEqual(other.Systems.Select(x => x.Note) 
+                   );
         }
 
         public override bool Equals(object obj)
@@ -102,6 +115,11 @@ namespace EliteDangerousCore.DB
         public override int GetHashCode()
         {
             return (Name == null) ? 0 : Name.GetHashCode();
+        }
+
+        public void ReverseSystemList()
+        {
+            Systems.Reverse();
         }
 
         public bool Add()
@@ -125,15 +143,17 @@ namespace EliteDangerousCore.DB
                     Id = (long)cmd2.ExecuteScalar();
                 }
 
-                using (DbCommand cmd3 = cn.CreateCommand("INSERT INTO route_systems (routeid, systemname) VALUES (@routeid, @name)"))
+                using (DbCommand cmd3 = cn.CreateCommand("INSERT INTO route_systems (routeid, systemname, note) VALUES (@routeid, @name, @note)"))
                 {
                     cmd3.AddParameter("@routeid", DbType.String);
                     cmd3.AddParameter("@name", DbType.String);
+                    cmd3.AddParameter("@note", DbType.String);
 
-                    foreach (var sysname in Systems)
+                    foreach (var sys in Systems)
                     {
                         cmd3.Parameters["@routeid"].Value = Id;
-                        cmd3.Parameters["@name"].Value = sysname;
+                        cmd3.Parameters["@name"].Value = sys.SystemName;
+                        cmd3.Parameters["@note"].Value = sys.Note;
                         cmd3.ExecuteNonQuery();
                     }
                 }
@@ -164,15 +184,17 @@ namespace EliteDangerousCore.DB
                     cmd2.ExecuteNonQuery();
                 }
 
-                using (DbCommand cmd2 = cn.CreateCommand("INSERT INTO route_systems (routeid, systemname) VALUES (@routeid, @name)"))
+                using (DbCommand cmd2 = cn.CreateCommand("INSERT INTO route_systems (routeid, systemname, note) VALUES (@routeid, @name, @note)"))
                 {
                     cmd2.AddParameter("@routeid", DbType.String);
                     cmd2.AddParameter("@name", DbType.String);
+                    cmd2.AddParameter("@note", DbType.String);
 
-                    foreach (var sysname in Systems)
+                    foreach (var sys in Systems)
                     {
                         cmd2.Parameters["@routeid"].Value = Id;
-                        cmd2.Parameters["@name"].Value = sysname;
+                        cmd2.Parameters["@name"].Value = sys.SystemName;
+                        cmd2.Parameters["@note"].Value = sys.Note;
                         cmd2.ExecuteNonQuery();
                     }
                 }
@@ -212,9 +234,9 @@ namespace EliteDangerousCore.DB
             {
                 UserDatabase.Instance.DBRead(cn =>
                 {
-                    Dictionary<int, List<string>> routesystems = new Dictionary<int, List<string>>();
+                    Dictionary<int, List<SystemEntry>> routesystems = new Dictionary<int, List<SystemEntry>>();
 
-                    using (DbCommand cmd = cn.CreateCommand("SELECT routeid, systemname FROM route_systems ORDER BY id ASC"))
+                    using (DbCommand cmd = cn.CreateCommand("SELECT routeid, systemname, note FROM route_systems ORDER BY id ASC"))
                     {
                         using (DbDataReader rdr = cmd.ExecuteReader())
                         {
@@ -222,11 +244,12 @@ namespace EliteDangerousCore.DB
                             {
                                 int routeid = (int)(long)rdr[0];
                                 string sysname = (string)rdr[1];
+                                string note = (string)rdr[2];
                                 if (!routesystems.ContainsKey(routeid))
                                 {
-                                    routesystems[routeid] = new List<string>();
+                                    routesystems[routeid] = new List<SystemEntry>();
                                 }
-                                routesystems[routeid].Add(sysname);
+                                routesystems[routeid].Add(new SystemEntry(sysname,note));
                             }
                         }
                     }
@@ -238,7 +261,7 @@ namespace EliteDangerousCore.DB
                             while (rdr.Read())
                             {
                                 int routeid = (int)(long)rdr[0];
-                                List<string> syslist = routesystems.ContainsKey(routeid) ? routesystems[routeid] : new List<string>();
+                                List<SystemEntry> syslist = routesystems.ContainsKey(routeid) ? routesystems[routeid] : new List<SystemEntry>();
                                 SavedRouteClass sys = new SavedRouteClass(rdr, syslist);
                                 retVal.Add(sys);
                             }
@@ -259,15 +282,15 @@ namespace EliteDangerousCore.DB
         // and importing routes also tries to fill in the db
         // list of known system only.  ID holds original index of entry from Systems
 
-        public List<Tuple<ISystem,int>> KnownSystemList()          
+        public List<Tuple<ISystem, int>> KnownSystemList()
         {
             List<Tuple<ISystem, int>> list = new List<Tuple<ISystem, int>>();
             for (int i = 0; i < Systems.Count; i++)
             {
-                ISystem s = SystemCache.FindSystem(Systems[i]);     // don't edsm find it, its already should have been cached into the DB
+                ISystem s = SystemCache.FindSystem(Systems[i].SystemName);     // don't edsm find it, its already should have been cached into the DB
                 if (s != null)
                 {
-                    list.Add(new Tuple<ISystem,int>(s,i));
+                    list.Add(new Tuple<ISystem, int>(s, i));
                 }
             }
 
@@ -276,13 +299,13 @@ namespace EliteDangerousCore.DB
 
         public double CumulativeDistance(ISystem start = null, List<Tuple<ISystem, int>> knownsystems = null)   // optional first system to measure from
         {
-            if ( knownsystems == null )
+            if (knownsystems == null)
                 knownsystems = KnownSystemList();
 
             double distance = 0;
             int i = 0;
 
-            if ( start != null)
+            if (start != null)
             {
                 i = knownsystems.FindIndex(x => x.Item1.Name.Equals(start.Name, StringComparison.InvariantCultureIgnoreCase));
                 if (i == -1)
@@ -290,17 +313,16 @@ namespace EliteDangerousCore.DB
             }
 
             for (i++; i < knownsystems.Count; i++)                          // from 1, or 1 past found, to end, accumulate distance
-                distance += knownsystems[i].Item1.Distance(knownsystems[i-1].Item1);
+                distance += knownsystems[i].Item1.Distance(knownsystems[i - 1].Item1);
 
             return distance;
         }
-
 
         public ISystem PosAlongRoute(double percentage, int error = 0)             // go along route and give me a co-ord along it..
         {
             List<Tuple<ISystem, int>> knownsystems = KnownSystemList();
 
-            double totaldist = CumulativeDistance(null,knownsystems);
+            double totaldist = CumulativeDistance(null, knownsystems);
             double distleft = totaldist * percentage / 100.0;
 
             if (knownsystems.Count < 2)     // need a path
@@ -317,7 +339,7 @@ namespace EliteDangerousCore.DB
                 Point3D pos2 = P3D(knownsystems[i + 1].Item1);
                 double p12dist = pos1.Distance(pos2);
                 double pospath = (percentage > 100) ? (1.0 + (percentage - 100) * totaldist / p12dist / 100.0) : (percentage * totaldist / p12dist / 100.0);
-                syspos = pos1.PointAlongPath(pos2, pospath );       // amplify percentage by totaldist/this path dist
+                syspos = pos1.PointAlongPath(pos2, pospath);       // amplify percentage by totaldist/this path dist
                 name = "System at " + percentage.ToString("N1");
             }
             else
@@ -326,7 +348,7 @@ namespace EliteDangerousCore.DB
                 {
                     double d = knownsystems[i].Item1.Distance(knownsystems[i - 1].Item1);
 
-                    if (distleft<d || (i==knownsystems.Count-1))        // if left, OR last system (allows for some rounding errors on floats)
+                    if (distleft < d || (i == knownsystems.Count - 1))        // if left, OR last system (allows for some rounding errors on floats)
                     {
                         d = distleft / d;
                         //System.Diagnostics.Debug.WriteLine(percentage + " " + d + " last:" + last.X + " " + last.Y + " " + last.Z + " s:" + s.X + " " + s.Y + " " + s.Z);
@@ -354,13 +376,13 @@ namespace EliteDangerousCore.DB
         {
             public ISystem lastsystem;              // from
             public ISystem nextsystem;              // to
-            public ISystem firstsystem;        
-            public ISystem finalsystem;        
+            public ISystem firstsystem;
+            public ISystem finalsystem;
             public int waypoint;                    // index of Systems
             public double deviation;                // -1 if not on path
             public double cumulativewpdist;         // distance to end, 0 means no more WPs after this
             public double disttowaypoint;           // distance to WP
-            public ClosestInfo( ISystem s, ISystem p, ISystem first, ISystem final, int w, double dv, double wdl, double dtwp) 
+            public ClosestInfo(ISystem s, ISystem p, ISystem first, ISystem final, int w, double dv, double wdl, double dtwp)
             { lastsystem = s; nextsystem = p; firstsystem = first; finalsystem = final; waypoint = w; deviation = dv; cumulativewpdist = wdl; disttowaypoint = dtwp; }
         }
 
@@ -373,7 +395,7 @@ namespace EliteDangerousCore.DB
         {
             Point3D currentsystemp3d = P3D(currentsystem);
 
-            List<Tuple<ISystem,int>> knownsystems = KnownSystemList();
+            List<Tuple<ISystem, int>> knownsystems = KnownSystemList();
 
             if (knownsystems.Count < 1)     // need at least one
                 return null;
@@ -427,20 +449,20 @@ namespace EliteDangerousCore.DB
             double distto = currentsystemp3d.Distance(P3D(knownsystems[wpto].Item1));
             double cumldist = CumulativeDistance(knownsystems[wpto].Item1, knownsystems);
 
-            return new ClosestInfo( wpto>0 ? knownsystems[wpto - 1].Item1 : null,
+            return new ClosestInfo(wpto > 0 ? knownsystems[wpto - 1].Item1 : null,
                                     knownsystems[wpto].Item1,
                                     knownsystems[0].Item1,
                                     knownsystems.Last().Item1,
-                                    (int)knownsystems[wpto].Item2, 
+                                    (int)knownsystems[wpto].Item2,
                                     mininterceptdist,       // deviation from path
-                                    cumldist, 
+                                    cumldist,
                                     distto);
         }
 
         // Given a set of expedition files, update the DB.  Add any new ones, and make sure the EDSM marker is on.
         // use a blank file to retire older ones
 
-        public static bool UpdateDBFromExpeditionFiles(string expeditiondir )
+        public static bool UpdateDBFromExpeditionFiles(string expeditiondir)
         {
             bool changed = false;
 
@@ -452,7 +474,7 @@ namespace EliteDangerousCore.DB
                 {
                     string text = File.ReadAllText(f.FullName); // may except
 
-                    if (text != null && text.Length>0)      // use a blank file to overwrite an old one you want to get rid of
+                    if (text != null && text.Length > 0)      // use a blank file to overwrite an old one you want to get rid of
                     {
                         var ja = JArray.Parse(text, JToken.ParseOptions.AllowTrailingCommas);        // JSON has trailing commas illegally but keep for backwards compat
                         var array = ja?.ToObject<SavedRouteClass[]>();   // try and toobject
@@ -528,7 +550,7 @@ namespace EliteDangerousCore.DB
         {
             for (double percent = -10; percent < 110; percent += 0.1)
             {
-                ISystem cursys = PosAlongRoute(percent,100);
+                ISystem cursys = PosAlongRoute(percent, 100);
                 System.Diagnostics.Debug.WriteLine(Environment.NewLine + "Sys {0} {1} {2} {3}", cursys.X, cursys.Y, cursys.Z, cursys.Name);
 
                 if (cursys != null)
