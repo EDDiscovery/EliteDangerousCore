@@ -215,7 +215,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool CanBeTerraformable { get { return TerraformState != null && new[] { "terraformable", "terraforming" }.Contains(TerraformState, StringComparer.InvariantCultureIgnoreCase); } }
 
         [PropertyNameAttribute("Does it have atmosphere")]
-        public bool HasAtmosphere { get { return Atmosphere != "none"; } }  // none is used if no atmosphere
+        public bool HasAtmosphere { get { return Atmosphere != null && Atmosphere != "none"; } }  // none is used if no atmosphere
         [PropertyNameAttribute("Atmosphere string, can be none")]
         public string Atmosphere { get; private set; }                      // processed data, always there, may be "none"
         [PropertyNameAttribute("EDD ID")]
