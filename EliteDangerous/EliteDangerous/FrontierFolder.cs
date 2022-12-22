@@ -22,8 +22,6 @@ namespace EliteDangerousCore
 {
     public static class FrontierFolder
     {
-        private static Guid Win32FolderId_SavedGames = new Guid("4C5C32FF-BB9D-43b0-B5B4-2D72E54EAAA4");
-
         public static string FolderName() // may return null if not known on system
         {
             string path;
@@ -31,13 +29,9 @@ namespace EliteDangerousCore
             // Windows Saved Games path (Vista and above)
             if (Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version.Major >= 6)
             {
-                IntPtr pszPath;
-                if (BaseUtils.Win32.UnsafeNativeMethods.SHGetKnownFolderPath(Win32FolderId_SavedGames, 0, IntPtr.Zero, out pszPath) == 0)
-                {
-                    path = Marshal.PtrToStringUni(pszPath);
-                    Marshal.FreeCoTaskMem(pszPath);
+                path = BaseUtils.Win32.UnsafeNativeMethods.KnownFolderPath(BaseUtils.Win32.UnsafeNativeMethods.Win32FolderId_SavedGames);
+                if ( path != null )
                     return Path.Combine(path, "Frontier Developments", "Elite Dangerous");
-                }
             }
 
             // OS X ApplicationSupportDirectory path (Darwin 12.0 == OS X 10.8)
