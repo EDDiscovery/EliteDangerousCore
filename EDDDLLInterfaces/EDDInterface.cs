@@ -141,7 +141,7 @@ namespace EDDDLLInterfaces
         [return: MarshalAs(UnmanagedType.BStr)]
         public delegate string EDDVisitedList(int number);
 
-        public delegate void EDDRequestScanData(object requesttag, object usertag, string system, bool edsmlookup);
+        public delegate void EDDRequestScanData(object requesttag, object usertag, [MarshalAs(UnmanagedType.BStr)] string system, bool edsmlookup);
 
         [StructLayout(LayoutKind.Explicit)]
         public struct EDDCallBacks
@@ -363,8 +363,9 @@ namespace EDDDLLInterfaces
 
         // version 6 ends
 
-        // Optional, c#
-        public delegate void EDDDataResult(object requesttag, object usertag, string data);  // call back from RequestScanData callback and maybe more in future
+        // Optional (TBD if it works in c++)
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void EDDDataResult(object requesttag, object usertag, [MarshalAs(UnmanagedType.BStr)] string data);  // call back from RequestScanData callback and maybe more in future
 
         // version 7 ends
         public const int CallerVersion = 7;
