@@ -286,16 +286,26 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        static public List<FSSSignal> SignalList( List<JournalFSSSignalDiscovered> jsd)      // from a set of jsd's, extract all signals which are not the same
+        // return signals, removing duplicates, and starting with the latest jsd.
+        // jsd is in add order, so latest one is at end
+        // expensive, only done on scan and surveyor display as of dec 22
+        static public List<FSSSignal> SignalList( List<JournalFSSSignalDiscovered> jsd)
         {
             List<FSSSignal> list = new List<FSSSignal>();
-            foreach( var j in jsd)
+            for(int i = jsd.Count-1; i>=0; i--)
             {
-                foreach( var s in j.Signals)
+                var j = jsd[i];
+                foreach (var s in j.Signals)
                 {
                     int present = list.FindIndex(x => x.IsSame(s));
                     if (present == -1)
+                    {
                         list.Add(s);
+                    }
+                    else
+                    {
+                        //System.Diagnostics.Debug.WriteLine($"Rejected signal {s.SignalName}");
+                    }
                 }
             }
 
