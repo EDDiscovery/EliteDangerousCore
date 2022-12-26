@@ -160,12 +160,8 @@ namespace EliteDangerousCore.JournalEvents
                 else if (SignalName.StartsWith("$Fixed_Event_Life", StringComparison.InvariantCultureIgnoreCase))
                     ClassOfSignal = Classification.NotableStellarPhenomena;
                 else if (SignalName.StartsWith("$MULTIPLAYER_SCENARIO14", StringComparison.InvariantCultureIgnoreCase) || SignalName.StartsWith("$MULTIPLAYER_SCENARIO7", StringComparison.InvariantCultureIgnoreCase))
-                    ClassOfSignal = Classification.ResourceExtraction;
-                else if (SignalName.Contains("Alcatraz-class") || SignalName.Contains("Amaethon-class") || SignalName.Contains("Aquarius-class") || SignalName.Contains("Banner-class") || SignalName.Contains("Beckett-class")
-                        || SignalName.Contains("Bellmarsh-class") || SignalName.Contains("Bowman-class") || SignalName.Contains("Demeter-class") || SignalName.Contains("Dionysus-class") || SignalName.Contains("Drake-Class")
-                        || SignalName.Contains("Freedom-class") || SignalName.Contains("Gordon-class") || SignalName.Contains("Henry-class") || SignalName.Contains("Hercules-class") || SignalName.Contains("Hogan-class")
-                        || SignalName.Contains("James-class") || SignalName.Contains("Lichfield-class") || SignalName.Contains("Lowell-class") || SignalName.Contains("Naphtha-class") || SignalName.Contains("Riker-class")
-                        || SignalName.Contains("Sagan-class") || SignalName.Contains("Samson-class") || SignalName.Contains("Sanchez-class") || SignalName.Contains("Thomas-class"))
+                    ClassOfSignal = Classification.ResourceExtraction;                
+                else if (SignalName.Contains("-class"))
                     ClassOfSignal = Classification.Megaship;
                 else if (loc.Length == 0)      // other types, and old station entries, don't have localisation, so its an installation, put at end of list because other things than installations have no localised name too
                     ClassOfSignal = Classification.Installation;
