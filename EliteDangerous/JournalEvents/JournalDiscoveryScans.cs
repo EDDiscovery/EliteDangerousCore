@@ -113,7 +113,7 @@ namespace EliteDangerousCore.JournalEvents
             [PropertyNameAttribute("Optional signal expiry time, Local")]
             public System.DateTime ExpiryLocal { get; set; }
 
-            public enum Classification { Station,Installation, NotableStellarPhenomena, ConflictZone, ResourceExtraction, Carrier, USS, Other};
+            public enum Classification { Station,Installation, NotableStellarPhenomena, ConflictZone, ResourceExtraction, Carrier, USS, Megaship, Other};
             [PropertyNameAttribute("Signal class")]
             public Classification ClassOfSignal { get; set; }
 
@@ -153,8 +153,6 @@ namespace EliteDangerousCore.JournalEvents
                     else
                         ClassOfSignal = Classification.Station;
                 }
-                else if (loc.Length == 0 )      // other types, and old station entries, don't have localisation, so its an installation
-                    ClassOfSignal = Classification.Installation;
                 else if (SignalName.StartsWith("$USS", StringComparison.InvariantCultureIgnoreCase) || SignalName.StartsWith("$RANDOM", StringComparison.InvariantCultureIgnoreCase))
                     ClassOfSignal = Classification.USS;
                 else if (SignalName.StartsWith("$Warzone", StringComparison.InvariantCultureIgnoreCase))
@@ -162,7 +160,11 @@ namespace EliteDangerousCore.JournalEvents
                 else if (SignalName.StartsWith("$Fixed_Event_Life", StringComparison.InvariantCultureIgnoreCase))
                     ClassOfSignal = Classification.NotableStellarPhenomena;
                 else if (SignalName.StartsWith("$MULTIPLAYER_SCENARIO14", StringComparison.InvariantCultureIgnoreCase) || SignalName.StartsWith("$MULTIPLAYER_SCENARIO7", StringComparison.InvariantCultureIgnoreCase))
-                    ClassOfSignal = Classification.ResourceExtraction;
+                    ClassOfSignal = Classification.ResourceExtraction;                
+                else if (SignalName.Contains("-class"))
+                    ClassOfSignal = Classification.Megaship;
+                else if (loc.Length == 0)      // other types, and old station entries, don't have localisation, so its an installation, put at end of list because other things than installations have no localised name too
+                    ClassOfSignal = Classification.Installation;
                 else
                     ClassOfSignal = Classification.Other;
 
@@ -189,7 +191,7 @@ namespace EliteDangerousCore.JournalEvents
                     outoftime = ExpiryLocal;
 
                 DateTime? seen = null;
-                if (showseentime && ClassOfSignal == Classification.Carrier)
+                if (showseentime && (ClassOfSignal == Classification.Carrier || ClassOfSignal == Classification.Megaship)) //both move in and out of systems, so show last seen
                     seen = RecordedUTC;
 
                 string signname = ClassOfSignal == Classification.USS ? null : SignalName_Localised;        // signal name for USS is boring, remove
@@ -199,6 +201,7 @@ namespace EliteDangerousCore.JournalEvents
                 return BaseUtils.FieldBuilder.Build(
                             ";Station: ".T(EDCTx.FSSSignal_StationBool), ClassOfSignal == Classification.Station,
                             ";Carrier: ".T(EDCTx.FSSSignal_CarrierBool), ClassOfSignal == Classification.Carrier,
+                            ";Megaship: ".T(EDCTx.FSSSignal_MegashipBool), ClassOfSignal == Classification.Megaship,
                             ";Installation: ".T(EDCTx.FSSSignal_InstallationBool), ClassOfSignal == Classification.Installation,
                             "<", signname,
                             "", USSTypeLocalised,

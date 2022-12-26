@@ -570,6 +570,7 @@ namespace EliteDangerousCore
         FSSSignal_ThreatLevel, //  Threat Level:
         FSSSignal_StationBool, // ;Station:
         FSSSignal_CarrierBool, // ;Carrier:
+        FSSSignal_MegashipBool, // ;Megaship:
         FSSSignal_InstallationBool, // ;Installation:
         FSSSignal_LastSeen, // Last Seen
 
