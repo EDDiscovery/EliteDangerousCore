@@ -50,12 +50,15 @@ namespace EliteDangerousCore.JournalEvents
             Progress = evt["Progress"].Double() * 100.0;
             BodyCount = evt["BodyCount"].Int();
             NonBodyCount = evt["NonBodyCount"].Int();
+            SystemAddress = evt["SystemAddress"].LongNull();        // appeared later
+            SystemName = evt["SystemName"].StrNull();               // appeared later
         }
 
         public double Progress { get; set; }
         public int BodyCount { get; set; }
         public int NonBodyCount { get; set; }
-
+        public string SystemName { get; set; }      // not always present, may be null
+        public long? SystemAddress { get; set; }
         public void AddStarScan(StarScan s, ISystem system)
         {
             s.SetFSSDiscoveryScan(this, system);
