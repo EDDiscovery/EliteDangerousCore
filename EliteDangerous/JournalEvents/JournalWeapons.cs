@@ -100,7 +100,6 @@ namespace EliteDangerousCore.JournalEvents
 
     }
 
-    // TBD Test
     [JournalEntryType(JournalTypeEnum.UpgradeWeapon)]
     public class JournalUpgradeWeapon : JournalEntry, IWeaponInformation
     {

@@ -169,7 +169,7 @@ namespace EliteDangerousCore
         {
             State = new CarrierState(j.State);      // State array is a direct copy of carrier..
 
-            ////debug TBD 
+            ////debug
             //var si = State.GetService(JournalCarrierCrewServices.ServiceType.BlackMarket);
             //if (si != null) si.Activated = false;
             //si = State.GetService(JournalCarrierCrewServices.ServiceType.Exploration);
