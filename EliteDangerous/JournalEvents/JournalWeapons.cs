@@ -60,7 +60,8 @@ namespace EliteDangerousCore.JournalEvents
         }
         public void Ledger(Ledger mcl)
         {
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name_Localised, -Price);
+            if (Price != 0)
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name_Localised, -Price);
         }
 
     }
@@ -104,14 +105,15 @@ namespace EliteDangerousCore.JournalEvents
         }
         public void Ledger(Ledger mcl)
         {
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name_Localised, Price);
+            if (Price != 0)
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name_Localised, Price);
         }
 
 
     }
 
     [JournalEntryType(JournalTypeEnum.UpgradeWeapon)]
-    public class JournalUpgradeWeapon : JournalEntry, IWeaponInformation
+    public class JournalUpgradeWeapon : JournalEntry, IWeaponInformation, ILedgerJournalEntry
     {
         public JournalUpgradeWeapon(JObject evt) : base(evt, JournalTypeEnum.UpgradeWeapon)
         {
@@ -147,7 +149,12 @@ namespace EliteDangerousCore.JournalEvents
                 shp.Upgrade(EventTimeUTC, SuitModuleID, Class, WeaponMods);
             }
         }
-    }
+        public void Ledger(Ledger mcl)
+        {
+            if (Cost != 0)
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name_Localised, -Cost);
+        }
+}
 
 }
 

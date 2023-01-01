@@ -15,6 +15,7 @@
  */
 using QuickJSON;
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
@@ -58,7 +59,8 @@ namespace EliteDangerousCore.JournalEvents
         }
         public void Ledger(Ledger mcl)
         {
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name_Localised, -Price);
+            if (Price != 0)
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name_Localised, -Price);
         }
     }
 
@@ -106,7 +108,8 @@ namespace EliteDangerousCore.JournalEvents
         }
         public void Ledger(Ledger mcl)
         {
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name_Localised, Price);
+            if (Price != 0)
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name_Localised, Price);
         }
 
         public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)
@@ -514,7 +517,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.UpgradeSuit)]
-    public class JournalUpgradeSuit : JournalEntry, ISuitInformation
+    public class JournalUpgradeSuit : JournalEntry, ISuitInformation, ILedgerJournalEntry
     {
         public JournalUpgradeSuit(JObject evt) : base(evt, JournalTypeEnum.UpgradeSuit)
         {
@@ -552,9 +555,13 @@ namespace EliteDangerousCore.JournalEvents
                 shp.Upgrade(EventTimeUTC, SuitID, Name, Class, Cost);
             }
         }
+        public void Ledger(Ledger mcl)
+        {
+            if (Cost != 0)
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name_Localised, -Cost);
+        }
 
-
-    }
+        }
 
 }
 
