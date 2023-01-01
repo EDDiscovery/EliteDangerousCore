@@ -20,7 +20,7 @@ namespace EliteDangerousCore.JournalEvents
 {
 
     [JournalEntryType(JournalTypeEnum.BuyWeapon)]
-    public class JournalBuyWeapon : JournalEntry, IWeaponInformation
+    public class JournalBuyWeapon : JournalEntry, IWeaponInformation, ILedgerJournalEntry
     {
         public JournalBuyWeapon(JObject evt) : base(evt, JournalTypeEnum.BuyWeapon)
         {
@@ -58,10 +58,15 @@ namespace EliteDangerousCore.JournalEvents
                 shp.Buy(EventTimeUTC, SuitModuleID, Name, Name_Localised, Price, Class, WeaponMods);    
             }
         }
+        public void Ledger(Ledger mcl)
+        {
+            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name_Localised, -Price);
+        }
+
     }
 
     [JournalEntryType(JournalTypeEnum.SellWeapon)]
-    public class JournalSellWeapon : JournalEntry, IWeaponInformation
+    public class JournalSellWeapon : JournalEntry, IWeaponInformation, ILedgerJournalEntry
     {
         public JournalSellWeapon(JObject evt) : base(evt, JournalTypeEnum.SellWeapon)
         {
@@ -97,10 +102,14 @@ namespace EliteDangerousCore.JournalEvents
                 shp.Sell(EventTimeUTC, SuitModuleID);
             }
         }
+        public void Ledger(Ledger mcl)
+        {
+            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name_Localised, Price);
+        }
+
 
     }
 
-    // TBD Test
     [JournalEntryType(JournalTypeEnum.UpgradeWeapon)]
     public class JournalUpgradeWeapon : JournalEntry, IWeaponInformation
     {
