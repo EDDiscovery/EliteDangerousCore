@@ -20,7 +20,7 @@ using System.Linq;
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.BuySuit)]
-    public class JournalBuySuit : JournalEntry, ISuitInformation
+    public class JournalBuySuit : JournalEntry, ISuitInformation, ILedgerJournalEntry
     {
         public JournalBuySuit(JObject evt) : base(evt, JournalTypeEnum.BuySuit)
         {
@@ -56,10 +56,14 @@ namespace EliteDangerousCore.JournalEvents
                 shp.Buy(EventTimeUTC, SuitID, Name, Name_Localised, Price, SuitMods);
             }
         }
+        public void Ledger(Ledger mcl)
+        {
+            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name_Localised, -Price);
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.SellSuit)]
-    public class JournalSellSuit : JournalEntry, ISuitInformation, ISuitLoadoutInformation
+    public class JournalSellSuit : JournalEntry, ISuitInformation, ISuitLoadoutInformation, ILedgerJournalEntry
     {
         public JournalSellSuit(JObject evt) : base(evt, JournalTypeEnum.SellSuit)
         {
@@ -99,6 +103,10 @@ namespace EliteDangerousCore.JournalEvents
             {
                 shp.Sell(EventTimeUTC, SuitID);
             }
+        }
+        public void Ledger(Ledger mcl)
+        {
+            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name_Localised, Price);
         }
 
         public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)
