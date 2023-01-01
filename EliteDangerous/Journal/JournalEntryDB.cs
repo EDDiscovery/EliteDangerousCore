@@ -23,6 +23,7 @@ using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
+using BaseUtils;
 
 namespace EliteDangerousCore
 {
@@ -378,7 +379,7 @@ namespace EliteDangerousCore
             return new JournalEntry[] { };  // default is empty array
         }
 
- 
+
         public static List<JournalEntry> GetByEventType(JournalTypeEnum eventtype, int commanderid, DateTime startutc, DateTime stoputc)
         {
             List<JournalEntry> entries = new List<JournalEntry>();
@@ -406,7 +407,53 @@ namespace EliteDangerousCore
                 }
             });
         }
-               
+
+        // Find start/stop areas for commander, return list of start/stop pairs : Startjid, StartTime, Endjid, EndTime
+        public static List<Tuple<long,DateTime,long,DateTime>> GetStartStopDates(int commanderid)
+        {
+            // in the connection thread, execute the 
+            return UserDatabase.Instance.DBRead(cn =>
+            {
+                string syncflags = ((int)SyncFlags.StartMarker + (int)SyncFlags.StopMarker).ToStringInvariant();
+
+                var cmd = cn.CreateSelect("JournalEntries", "Synced, EventTime, Id", $"(Synced & {syncflags})<>0 AND CommanderID == @p1", new Object[] { commanderid }, "EventTime");
+
+                var entries = new List<Tuple<long, DateTime, long, DateTime>>();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    bool running = false;
+                    DateTime startutc = DateTime.MinValue;
+                    long startjid = 0;
+
+                    while (reader.Read())
+                    {
+                        //System.Diagnostics.Debug.WriteLine($"Entry {reader[0]} {reader[1]}");
+
+                        bool isstart = (((int)(long)reader[0]) & (int)SyncFlags.StartMarker) != 0;      // read db
+                        DateTime entrytime = ((DateTime)reader[1]).ToUniversalKind();
+                        long id = (long)reader[2];
+
+                        if (running)        // we had a start, we either have another stop, or another start, anyway its complete
+                        {
+                            entries.Add(new Tuple<long, DateTime, long, DateTime>(startjid, startutc, id, entrytime));
+                            running = false;
+                        }
+
+                        if ( isstart )      // we have a new start, begin again
+                        {
+                            running = true;
+                            startutc = entrytime;
+                            startjid = id;
+                        }
+
+                    }
+
+                    return entries;
+                }
+            });
+        }
+
         internal static List<JournalEntry> GetAllByTLU(long tluid, SQLiteConnectionUser cn)
         {
             TravelLogUnit tlu = TravelLogUnit.Get(tluid);

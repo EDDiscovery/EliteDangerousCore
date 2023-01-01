@@ -292,6 +292,15 @@ namespace EliteDangerousCore
             journalEntry.FillInformation(System, WhereAmI, out EventDescription, out EventDetailedInfo);
         }
 
+        public void SetStartStop()
+        {
+            if (journalEntry.StartMarker || journalEntry.StopMarker)
+                journalEntry.ClearStartEndFlag();
+            else if (isTravelling)
+                journalEntry.SetEndFlag();
+            else
+                journalEntry.SetStartFlag();
+        }
 
         #endregion
     }

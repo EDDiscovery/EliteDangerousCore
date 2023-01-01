@@ -581,35 +581,6 @@ namespace EliteDangerousCore
 
         #endregion
 
-        #region Markers
-
-        public void SetStartStop(HistoryEntry hs)
-        {
-            bool started = false;
-
-            foreach (HistoryEntry he in historylist)
-            {
-                if (hs == he)
-                {
-                    if (he.StartMarker || he.StopMarker)
-                        hs.journalEntry.ClearStartEndFlag();
-                    else if (started == false)
-                        hs.journalEntry.SetStartFlag();
-                    else
-                        hs.journalEntry.SetEndFlag();
-
-                    break;
-                }
-                else if (he.StartMarker)
-                    started = true;
-                else if (he.StopMarker)
-                    started = false;
-            }
-        }
-
-        #endregion
-
-
         #region Common info extractors
 
         public void ReturnSystemInfo(HistoryEntry he, out string allegiance, out string economy, out string gov,
