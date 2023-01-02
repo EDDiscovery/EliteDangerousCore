@@ -52,6 +52,11 @@ namespace EliteDangerous.DLL
             callbacks.DGVTransparent(dataGridView1, ison, curcol);
         }
 
+        public void TransparencyModeChanged(bool on)
+        {
+            richTextBox1.AppendText($"Transparency Mode {on}\r\n");
+        }
+
         public void LoadLayout()
         {
             richTextBox1.AppendText("load layout\r\n");

@@ -255,6 +255,7 @@ namespace EDDDLLInterfaces
             void Closing();
             bool SupportTransparency { get; }
             bool DefaultTransparent { get; }
+            void TransparencyModeChanged(bool on);
             bool AllowClose();
             string HelpKeyOrAddress();
             void ControlTextVisibleChange(bool on);
