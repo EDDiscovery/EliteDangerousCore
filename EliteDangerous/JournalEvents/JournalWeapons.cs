@@ -20,7 +20,7 @@ namespace EliteDangerousCore.JournalEvents
 {
 
     [JournalEntryType(JournalTypeEnum.BuyWeapon)]
-    public class JournalBuyWeapon : JournalEntry, IWeaponInformation
+    public class JournalBuyWeapon : JournalEntry, IWeaponInformation, ILedgerJournalEntry
     {
         public JournalBuyWeapon(JObject evt) : base(evt, JournalTypeEnum.BuyWeapon)
         {
@@ -58,10 +58,16 @@ namespace EliteDangerousCore.JournalEvents
                 shp.Buy(EventTimeUTC, SuitModuleID, Name, Name_Localised, Price, Class, WeaponMods);    
             }
         }
+        public void Ledger(Ledger mcl)
+        {
+            if (Price != 0)
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name_Localised, -Price);
+        }
+
     }
 
     [JournalEntryType(JournalTypeEnum.SellWeapon)]
-    public class JournalSellWeapon : JournalEntry, IWeaponInformation
+    public class JournalSellWeapon : JournalEntry, IWeaponInformation, ILedgerJournalEntry
     {
         public JournalSellWeapon(JObject evt) : base(evt, JournalTypeEnum.SellWeapon)
         {
@@ -97,11 +103,17 @@ namespace EliteDangerousCore.JournalEvents
                 shp.Sell(EventTimeUTC, SuitModuleID);
             }
         }
+        public void Ledger(Ledger mcl)
+        {
+            if (Price != 0)
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name_Localised, Price);
+        }
+
 
     }
 
     [JournalEntryType(JournalTypeEnum.UpgradeWeapon)]
-    public class JournalUpgradeWeapon : JournalEntry, IWeaponInformation
+    public class JournalUpgradeWeapon : JournalEntry, IWeaponInformation, ILedgerJournalEntry
     {
         public JournalUpgradeWeapon(JObject evt) : base(evt, JournalTypeEnum.UpgradeWeapon)
         {
@@ -137,7 +149,12 @@ namespace EliteDangerousCore.JournalEvents
                 shp.Upgrade(EventTimeUTC, SuitModuleID, Class, WeaponMods);
             }
         }
-    }
+        public void Ledger(Ledger mcl)
+        {
+            if (Cost != 0)
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name_Localised, -Cost);
+        }
+}
 
 }
 
