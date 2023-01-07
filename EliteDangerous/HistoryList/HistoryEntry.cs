@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 - 2020 EDDiscovery development team
+ * Copyright © 2016 - 2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using EliteDangerousCore.DB;
@@ -53,14 +51,12 @@ namespace EliteDangerousCore
         public bool IsLocOrJump { get { return EntryType == JournalTypeEnum.FSDJump || EntryType == JournalTypeEnum.Location || EntryType == JournalTypeEnum.CarrierJump; } }
         public bool IsFuelScoop { get { return EntryType == JournalTypeEnum.FuelScoop; } }
 
-        public double TravelledDistance { get { return TravelStatus.TravelledDistance; } }
-        public TimeSpan TravelledSeconds { get { return TravelStatus.TravelledSeconds; } }
         public bool isTravelling { get { return TravelStatus.IsTravelling; } }
-        public int TravelledMissingjump { get { return TravelStatus.TravelledMissingjump; } }
-        public int Travelledjumps { get { return TravelStatus.Travelledjumps; } }
-        public string TravelInfo() { return TravelStatus.ToString("TT: "); }
-        public string TravelledJumpsAndMisses { get { return Travelledjumps.ToString() + ((TravelledMissingjump > 0) ? (" (" + TravelledMissingjump.ToString() + ")") : ""); } }
-
+        public TimeSpan TravelledSeconds { get { return TravelStatus.IsTravelling ? (EventTimeUTC - TravelStatus.TravelStartTimeUTC) : new TimeSpan(0); } }  // 0 if not travelling, else time since start
+        public double TravelledDistance { get { return TravelStatus.TravelledDistance(Index); } }
+        public int TravelledJumps { get { return TravelStatus.TravelledJumps(Index); } }
+        public int TravelledMissingJumps { get { return TravelStatus.TravelledMissingjump; } }
+        public string TravelledStats { get { return TravelStatus.Stats(Index,EventTimeUTC); } }
         public HistoryEntryStatus Status { get { return EntryStatus; } }
 
         // is landed in own ship
@@ -193,8 +189,6 @@ namespace EliteDangerousCore
                 FSDJumpSequence = fsdjumpseq,
             };
 
-            he.TravelStatus = HistoryTravelStatus.Update(prev?.TravelStatus, prev , he);    // need a real he so can't do that as part of the constructor.
-            
             return he;
         }
 
@@ -250,6 +244,11 @@ namespace EliteDangerousCore
             Engineering = gen;
         }
 
+        public void UpdateTravelStatus(HistoryEntry prev)      // update travel status from previous given current.
+        {
+            TravelStatus = HistoryTravelStatus.Update(prev?.TravelStatus, prev, this);
+        }
+
         public void ReplaceJournalEntry(JournalEntry p, DateTime utc)
         {
             journalEntry = p;
@@ -287,9 +286,13 @@ namespace EliteDangerousCore
             return null;
         }
 
-        public void FillInformation(out string EventDescription, out string EventDetailedInfo)
+        public void FillInformation(out string eventDescription, out string eventDetailedInfo)
         {
-            journalEntry.FillInformation(System, WhereAmI, out EventDescription, out EventDetailedInfo);
+            journalEntry.FillInformation(System, WhereAmI, out eventDescription, out eventDetailedInfo);
+            if (IsFSDCarrierJump)
+            {
+                eventDescription = TravelledStats + ", " + eventDescription;
+            }
         }
 
         public void SetStartStop()

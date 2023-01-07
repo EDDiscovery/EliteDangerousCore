@@ -428,11 +428,12 @@ namespace EliteDangerousCore
 
                     while (reader.Read())
                     {
-                        //System.Diagnostics.Debug.WriteLine($"Entry {reader[0]} {reader[1]}");
 
                         bool isstart = (((int)(long)reader[0]) & (int)SyncFlags.StartMarker) != 0;      // read db
                         DateTime entrytime = ((DateTime)reader[1]).ToUniversalKind();
                         long id = (long)reader[2];
+
+                        //System.Diagnostics.Debug.WriteLine($"Start/Stop {entrytime} {isstart} {id}");
 
                         if (running)        // we had a start, we either have another stop, or another start, anyway its complete
                         {
@@ -447,6 +448,11 @@ namespace EliteDangerousCore
                             startjid = id;
                         }
 
+                    }
+
+                    if ( running )      // if still running, its a start marker without end, so its to the end of time!
+                    {
+                        entries.Add(new Tuple<long, DateTime, long, DateTime>(startjid, startutc, -1, DateTime.MaxValue.ToUniversalKind()));
                     }
 
                     return entries;

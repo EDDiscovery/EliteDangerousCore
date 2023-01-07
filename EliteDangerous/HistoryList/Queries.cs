@@ -813,7 +813,7 @@ namespace EliteDangerousCore
                 if (he.EntryType != JournalTypeEnum.Scan)      // for all the rest of the results, ignoring scan
                 {
                     string time = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(he.EventTimeUTC).ToString();
-                    he.journalEntry.FillInformation(he.System, "", out string info2, out string detailed);
+                    he.FillInformation(out string info2, out string detailed);
                     if (info.HasChars())
                         info = info.AppendPrePad(time + ": " + info2, Environment.NewLine);
                     else
