@@ -55,9 +55,10 @@ namespace EliteDangerousCore
         public bool isTravelling { get { return TravelStatus.IsTravelling; } }
         public TimeSpan TravelledSeconds { get { return TravelStatus.IsTravelling ? (EventTimeUTC - TravelStatus.TravelStartTimeUTC) : new TimeSpan(0); } }  // 0 if not travelling, else time since start
         public double TravelledDistance { get { return TravelStatus.TravelledDistance(Index); } }
+        public TimeSpan TravelledTime { get { return TravelStatus.TravelledTime(Index); } }
         public int TravelledJumps { get { return TravelStatus.TravelledJumps(Index); } }
         public int TravelledMissingJumps { get { return TravelStatus.TravelledMissingjump; } }
-        public string TravelledStats { get { return TravelStatus.Stats(Index,EventTimeUTC); } }
+        public string TravelledStats { get { return TravelStatus.Stats(Index, EventTimeUTC); } }
         public HistoryEntryStatus Status { get { return EntryStatus; } }
 
         // is landed in own ship
@@ -290,7 +291,8 @@ namespace EliteDangerousCore
         public void FillInformation(out string eventDescription, out string eventDetailedInfo)
         {
             journalEntry.FillInformation(System, WhereAmI, out eventDescription, out eventDetailedInfo);
-            if (IsFSD && isTravelling)
+        
+            if (isTravelling && (IsFSD || StopMarker))
             {
                 eventDescription = TravelledStats + ", " + eventDescription;
             }

@@ -428,20 +428,18 @@ namespace EliteDangerousCore
 
                     while (reader.Read())
                     {
-
-                        bool isstart = (((int)(long)reader[0]) & (int)SyncFlags.StartMarker) != 0;      // read db
+                        bool isstart = (((int)(long)reader[0]) & (int)SyncFlags.StartMarker) != 0;      // is it a start, otherwise a stop
                         DateTime entrytime = ((DateTime)reader[1]).ToUniversalKind();
                         long id = (long)reader[2];
 
-                        //System.Diagnostics.Debug.WriteLine($"Start/Stop {entrytime} {isstart} {id}");
+                        System.Diagnostics.Debug.WriteLine($"Start/Stop {entrytime} {isstart} {id}");
 
-                        if (running)        // we had a start, we either have another stop, or another start, anyway its complete
+                        if (!isstart && running)        // we had a stop and we are running
                         {
                             entries.Add(new Tuple<long, DateTime, long, DateTime>(startjid, startutc, id, entrytime));
                             running = false;
                         }
-
-                        if ( isstart )      // we have a new start, begin again
+                        else if ( isstart && running == false)      // we have a new start, not running (ignore multiple starts), begin again
                         {
                             running = true;
                             startutc = entrytime;

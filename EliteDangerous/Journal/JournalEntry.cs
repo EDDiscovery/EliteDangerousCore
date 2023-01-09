@@ -68,6 +68,7 @@ namespace EliteDangerousCore
         public virtual string GameVersion { get { return TravelLogUnit.Get(TLUId)?.GameVersion ?? ""; } }
         public virtual string Build { get { return TravelLogUnit.Get(TLUId)?.Build ?? ""; } }
         public virtual string FullPath { get { return TravelLogUnit.Get(TLUId)?.FullName ?? ""; } }
+        public virtual string FileName { get { return TravelLogUnit.Get(TLUId)?.FileName ?? ""; } }
 
         public static bool DefaultBetaFlag { get; set; } = false;
         public static bool DefaultHorizonsFlag { get; set; } = false;       // for entries without a TLU (EDSM downloaded made up ones for instance) provide default value

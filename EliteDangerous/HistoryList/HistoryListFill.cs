@@ -108,11 +108,11 @@ namespace EliteDangerousCore
             }
         }
 
-        // use when you change start/stop, to recalculate the travel status.  from index to the end
+        // use when you change start/stop, to recalculate the travel status. 
 
-        public void RecalculateTravel(int index)
+        public void RecalculateTravel()
         {
-            for( int i = index; i < historylist.Count; i++)
+            for( int i = 0; i < historylist.Count; i++)
             {
                 historylist[i].UpdateTravelStatus(i > 0 ? historylist[i - 1] : null);
             }
