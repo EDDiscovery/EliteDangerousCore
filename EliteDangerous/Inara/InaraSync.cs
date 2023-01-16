@@ -699,14 +699,9 @@ namespace EliteDangerousCore.Inara
                         }
 
                         InaraClass inara = new InaraClass(firstheq.cmdr);
-                        string errs = inara.Send(tosend);
-                        if ( errs != null)
-                        {
-                            System.Diagnostics.Debug.WriteLine("Inara reports error" + errs);
-                            firstheq?.logger("INARA Reports: " + errs);
-                        }
-                        else if ( verbose )
-                            firstheq?.logger("Sent " + tosend.Count + " events to INARA" );
+                        string response = inara.Send(tosend);
+                        System.Diagnostics.Debug.WriteLine(response);
+                        firstheq?.logger(response);
                     }
 
                     exitevent.WaitOne(30000);       // space out events well
