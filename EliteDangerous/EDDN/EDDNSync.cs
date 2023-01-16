@@ -95,12 +95,12 @@ namespace EliteDangerousCore.EDDN
                             {
                                 if (res.Value == true)
                                 {
-                                    logger?.Invoke($"Sent {he.EntryType.ToString()} event to EDDN ({he.EventSummary})");
+                                    logger?.Invoke($"[EDDN] Sent {he.EntryType.ToString()} event ({he.EventSummary})");
                                     eventcount++;
                                     Thread.Sleep(500);     // just a little pause between sending to space them out
                                 }
                                 else
-                                    logger?.Invoke($"Failed sending {he.EntryType.ToString()} event to EDDN ({he.EventSummary})");
+                                    logger?.Invoke($"[EDDN] Failed sending {he.EntryType.ToString()} event ({he.EventSummary})");
                             }
                         }
                     }
@@ -108,7 +108,7 @@ namespace EliteDangerousCore.EDDN
                     {
                         System.Diagnostics.Trace.WriteLine("Exception ex:" + ex.Message);
                         System.Diagnostics.Trace.WriteLine("Exception ex:" + ex.StackTrace);
-                        logger?.Invoke("EDDN sync Exception " + ex.Message + Environment.NewLine + ex.StackTrace);
+                        logger?.Invoke("[EDDN] Sync exception " + ex.Message + Environment.NewLine + ex.StackTrace);
                     }
                 }   // end while
 
