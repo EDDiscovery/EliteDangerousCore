@@ -368,7 +368,10 @@ namespace EliteDangerousCore.Inara
                     {
                         var je = he.journalEntry as JournalEngineerProgress;
                         foreach( var x in je.Engineers )
-                            eventstosend.Add(InaraClass.setCommanderRankEngineer(x.Engineer, x.Progress, x.Rank, he.EventTimeUTC));
+                        {
+                            if (x.Valid)      // Frontier lovely logs again - check for validity
+                                eventstosend.Add(InaraClass.setCommanderRankEngineer(x.Engineer, x.Progress, x.Rank, he.EventTimeUTC));
+                        }
                         break;
                     }
 

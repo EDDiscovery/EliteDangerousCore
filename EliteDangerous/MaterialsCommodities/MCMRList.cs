@@ -30,6 +30,10 @@ namespace EliteDangerousCore
         public int[] Counts { get; set; }
         public bool NonZero { get { return Counts[0] != 0 || Counts[1] != 0; } }
 
+        public int Total { get { return Counts.Sum(); } }
+
+        static public int[] ZeroCounts { get { return new int[NoCounts]; } }
+
         public double Price { get; set; }
         public MaterialCommodityMicroResourceType Details { get; set; }
 
