@@ -124,7 +124,7 @@ namespace EliteDangerousCore.Inara
                             ret += "Error to request " + (events[i])["eventName"].Str() + " " + events[i].ToString() + " with " + ro["eventStatusText"].Str() + Environment.NewLine;
                     }
 
-                    //if (ret == "") ret = "ALL OK"; // debug!
+                    //if (ret.Equals("[Inara] ")) ret = "ALL OK"; // debug!
                     return ret.Equals("[Inara] ") ? $"{ret}Data sent successfully ({responses.Count} events)" : ret;
                 }
             }
