@@ -163,7 +163,7 @@ namespace EliteDangerousCore
                 if (node.ScanData?.Parents != null)
                     return node.ScanData.Parents;
 
-                foreach (var kvp in node.Children)
+                foreach (var kvp in node?.Children.EmptyIfNull())
                 {
                     var ret = FindFirstParentList(kvp.Value);
                     if (ret != null)
