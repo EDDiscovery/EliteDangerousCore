@@ -42,7 +42,7 @@ namespace EliteDangerousCore.EDSM
             {
                 CSVFile csv = new CSVFile();
 
-                return csv.Read(t, true, (r, rw) => {
+                return csv.Read(t, (r, rw) => {
                     var pos = new EMK.LightGeometry.Vector3((float)(rw[2].InvariantParseDoubleNull() ?? 0),
                                                         (float)(rw[3].InvariantParseDoubleNull() ?? 0),
                                                         (float)(rw[4].InvariantParseDoubleNull() ?? 0));
