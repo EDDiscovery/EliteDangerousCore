@@ -40,7 +40,8 @@ namespace EliteDangerousCore
             public string OwnName;                  // own name excluding star system
             public string CustomName;               // if we can extract from the journals a custom name of it, this holds it. Mostly null
             public SortedList<string, ScanNode> Children;         // kids
-            public ScanNode Parent;                 // Parent node 
+            public ScanNode Parent;                 // Parent of this node 
+            public SystemNode SystemNode;           // the system node the entry is associated with
             public int Level;                       // level within SystemNode
             public int? BodyID;
             public bool IsMapped;                   // recorded here since the scan data can be replaced by a better version later.
@@ -208,13 +209,13 @@ namespace EliteDangerousCore
             {
                 get
                 {
-                    if (Children != null)
-                    {
-                        foreach (ScanNode sn in Children.Values)
+                    if (Children != null)                                   
+                    {       
+                        foreach (ScanNode sn in Children.Values)            
                         {
                             yield return sn;
 
-                            foreach (ScanNode c in sn.Descendants)
+                            foreach (ScanNode c in sn.Descendants)          // recurse back up to go as deep as required
                             {
                                 yield return c;
                             }

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2022 EDDiscovery development team
+ * Copyright © 2015 - 2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -111,7 +111,7 @@ namespace EliteDangerousCore
             if (elements.Count == 1)
             {
                 // Process any belts if present
-                ProcessBelts(sc, node);
+                ProcessBelts(sc, sn, node);
 
                 // Process primary star in multi-star system
                 if (elements[0].Equals("A", StringComparison.InvariantCultureIgnoreCase))
@@ -287,6 +287,7 @@ namespace EliteDangerousCore
                             NodeType = sublvtype,
                             Level = lvl,
                             Parent = previousnode,
+                            SystemNode = systemnode,
                         };
 
                         currentnodelist.Add(ownname, subnode);
@@ -364,7 +365,7 @@ namespace EliteDangerousCore
 
         // asteroid belts, not rings, are assigned to sub nodes of the star in the node heirarchy as type==belt.
 
-        private void ProcessBelts(JournalScan sc, ScanNode node)
+        private void ProcessBelts(JournalScan sc, SystemNode sn, ScanNode node)
         {
             if (sc.HasRingsOrBelts)
             {
@@ -400,6 +401,7 @@ namespace EliteDangerousCore
                                 NodeType = ScanNodeType.belt,
                                 Level = 1,
                                 Parent = node,
+                                SystemNode = sn,
                             };
 
                             node.Children.Add(beltname, belt);

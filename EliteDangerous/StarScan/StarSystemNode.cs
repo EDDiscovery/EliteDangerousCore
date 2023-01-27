@@ -49,16 +49,13 @@ namespace EliteDangerousCore
             {
                 get
                 {
-                    if (StarNodes != null)
+                    foreach (ScanNode sn in StarNodes.Values.EmptyIfNull())     // StarNodes is never empty, but defend
                     {
-                        foreach (ScanNode sn in StarNodes.Values)
-                        {
-                            yield return sn;
+                        yield return sn;
 
-                            foreach (ScanNode c in sn.Descendants)
-                            {
-                                yield return c;
-                            }
+                        foreach (ScanNode c in sn.Descendants)
+                        {
+                            yield return c;
                         }
                     }
                 }

@@ -496,6 +496,9 @@ namespace EliteDangerousCore
                 //foreach (var he in helist.GetRange(helist.Count-100,100))
                 foreach (var he in helist)
                 {
+                    //if (he.System.Name != "Col 69 Sector YV-C c13-5")
+                    //    continue;
+
                     BaseUtils.Variables scandatavars = defaultvars != null ? new BaseUtils.Variables(defaultvars) : new BaseUtils.Variables();
 
                     bool debugit = false;
@@ -604,6 +607,52 @@ namespace EliteDangerousCore
                                             cno++;
                                         }
                                     }
+                                }
+                            }
+                        }
+                        else
+                        {                                                                           // does not have a parent, so at top of the tree, must be a star node.
+
+                            System.Diagnostics.Debug.Assert(he.ScanNode.SystemNode != null);        // must be otherwise code error
+
+                            if (wantsiblingcount)
+                            {
+                                lock (he.ScanNode.SystemNode.StarNodes)      // lock this node, note its locked in journalscans and scanbodyid when being added to.. (as currentnodelist)
+                                {
+                                    var starnodes = he.ScanNode.SystemNode.StarNodes.Where(x => x.Value.NodeType == StarScan.ScanNodeType.star).Count();
+                                    scandatavars["Sibling.Count"] = (starnodes-1).ToStringInvariant();      // count of nodes under this
+                                }
+                            }
+
+                            if (varssiblings.Count > 0)        // if want sibling[
+                            {
+                                lock (he.ScanNode.SystemNode.StarNodes)
+                                {
+                                    int cno = 1;
+                                    foreach (var kvp in he.ScanNode.SystemNode.StarNodes.EmptyIfNull())
+                                    {
+                                        if (kvp.Value != he.ScanNode && kvp.Value.ScanData != null)        // if not ours and has a scan
+                                        {
+                                            scandatavars.AddPropertiesFieldsOfClass(kvp.Value.ScanData, $"Sibling[{cno}].",
+                                                    new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
+                                                    varssiblings, ensuredoublerep: true, classsepar: ".");
+                                            cno++;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (varsstar.Count > 0)
+                            {
+                                var scandata = FindStarJournalScanOf(he.ScanNode, 0);
+
+                                if (scandata != null)
+                                {
+                                    //System.Diagnostics.Debug.WriteLine($"{scandata.BodyName} is the Star parent");
+
+                                    scandatavars.AddPropertiesFieldsOfClass(scandata, "Star.",
+                                            new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
+                                            varsstar, ensuredoublerep: true, classsepar: ".");
                                 }
                             }
                         }
@@ -733,22 +782,43 @@ namespace EliteDangerousCore
             });
         }
 
+        // node will not be null
         private static JournalScan FindStarJournalScanOf(StarScan.ScanNode node, int stardepth)
         {
-            var plist = node?.ScanData?.Parents;
-            if (plist != null)
-            {
-                for (int i = 0; i < plist.Count; i++)
-                {
-                    if (plist[i].IsStar && stardepth-- == 0)    // use bodyid to find it in parents list to get a definitive parent id, accounting for star depth
-                    {
-                        var pnode = node.Parent;    // now lets see if we can find it
-                        while (pnode != null && pnode.BodyID != plist[i].BodyID)        // look up the star node list and see if we have a body id to match
-                        {
-                            pnode = pnode.Parent;
-                        }
+            System.Diagnostics.Debug.Assert(node != null);
 
-                        return pnode?.ScanData;
+            if (node.Parent == null)        // top level node with no parents, we are a top level node, its star
+            {
+                if (stardepth == 0)     // only 1 deep
+                {
+                    var starnodes = node.SystemNode.StarNodes.Where(x => x.Value.NodeType == StarScan.ScanNodeType.star).ToList();       // nodes with star..
+
+                    if (starnodes.Count > 1 && starnodes[0].Value != node)      // find first star, and if not the same node, lets call it a Ealhstan special and its the primary star
+                    {
+                        return starnodes[0].Value?.ScanData;
+                    }
+                }
+
+            }
+            else
+            {
+                var plist = node.ScanData?.Parents;        // this is the Frontier Parent List, with star, null (barycentre), body types.  Null if no parents list or scan data
+
+                if (plist != null)          // if we have a parents list, we traverse it.  entry 0 is next body up..
+                {
+                    for (int i = 0; i < plist.Count; i++)
+                    {
+                        if (plist[i].IsStar && stardepth-- == 0)    // use bodyid to find it in parents list to get a definitive parent id, accounting for star depth
+                        {
+                            var pnode = node.Parent;    // now lets see if we can find it by traversing back up the chain of scan nodes
+
+                            while (pnode != null && pnode.BodyID != plist[i].BodyID)        // look up the star node list and see if we have a body id to match
+                            {
+                                pnode = pnode.Parent;
+                            }
+
+                            return pnode?.ScanData;     // return null if not found, or null if no scan data
+                        }
                     }
                 }
             }
@@ -774,36 +844,39 @@ namespace EliteDangerousCore
                 JournalScan js = hescan.journalEntry as JournalScan;
                 info = js.DisplayString();
 
-                if (pinfowanted && hescan.ScanNode?.Parent != null)
+                if (hescan.ScanNode != null)
                 {
-                    var parentjs = hescan.ScanNode?.Parent?.ScanData;               // parent journal entry, may be null
-                    pinfo = parentjs != null ? parentjs.DisplayString() : hescan.ScanNode.Parent.CustomNameOrOwnname + " " + hescan.ScanNode.Parent.NodeType;
-                }
-
-                if (ppinfowanted && hescan.ScanNode?.Parent?.Parent != null)        // if want parent.parent and we have one
-                {
-                    var parentparentjs = hescan.ScanNode.Parent.Parent.ScanData;               // parent journal entry, may be null
-
-                    ppinfo = parentparentjs != null ? parentparentjs.DisplayString() : hescan.ScanNode.Parent.Parent.CustomNameOrOwnname + " " + hescan.ScanNode.Parent.Parent.NodeType;
-                }
-
-                if (sinfowanted)
-                {
-                    var scandata = FindStarJournalScanOf(hescan.ScanNode, 0);
-
-                    if (scandata != null)
+                    if (pinfowanted && hescan.ScanNode.Parent != null)
                     {
-                        sinfo = scandata.DisplayString();
+                        var parentjs = hescan.ScanNode?.Parent?.ScanData;               // parent journal entry, may be null
+                        pinfo = parentjs != null ? parentjs.DisplayString() : hescan.ScanNode.Parent.CustomNameOrOwnname + " " + hescan.ScanNode.Parent.NodeType;
                     }
-                }
 
-                if (ssinfowanted)
-                {
-                    var scandata = FindStarJournalScanOf(hescan.ScanNode, 1);
-
-                    if (scandata != null)
+                    if (ppinfowanted && hescan.ScanNode.Parent?.Parent != null)        // if want parent.parent and we have one
                     {
-                        ssinfo = scandata.DisplayString();
+                        var parentparentjs = hescan.ScanNode.Parent.Parent.ScanData;               // parent journal entry, may be null
+
+                        ppinfo = parentparentjs != null ? parentparentjs.DisplayString() : hescan.ScanNode.Parent.Parent.CustomNameOrOwnname + " " + hescan.ScanNode.Parent.Parent.NodeType;
+                    }
+
+                    if (sinfowanted)
+                    {
+                        var scandata = FindStarJournalScanOf(hescan.ScanNode, 0);
+
+                        if (scandata != null)
+                        {
+                            sinfo = scandata.DisplayString();
+                        }
+                    }
+
+                    if (ssinfowanted)
+                    {
+                        var scandata = FindStarJournalScanOf(hescan.ScanNode, 1);
+
+                        if (scandata != null)
+                        {
+                            ssinfo = scandata.DisplayString();
+                        }
                     }
                 }
             }
