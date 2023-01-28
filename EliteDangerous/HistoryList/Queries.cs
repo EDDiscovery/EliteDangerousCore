@@ -496,8 +496,8 @@ namespace EliteDangerousCore
                 //foreach (var he in helist.GetRange(helist.Count-100,100))
                 foreach (var he in helist)
                 {
-                    if (he.System.Name != "Col 69 Sector YV-C c13-5")
-                        continue;
+                    //if (he.System.Name != "Col 69 Sector YV-C c13-5")
+                    //    continue;
 
                     BaseUtils.Variables scandatavars = defaultvars != null ? new BaseUtils.Variables(defaultvars) : new BaseUtils.Variables();
 
