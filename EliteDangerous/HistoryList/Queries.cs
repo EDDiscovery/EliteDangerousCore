@@ -496,8 +496,8 @@ namespace EliteDangerousCore
                 //foreach (var he in helist.GetRange(helist.Count-100,100))
                 foreach (var he in helist)
                 {
-                    //if (he.System.Name != "Col 69 Sector YV-C c13-5")
-                    //    continue;
+                    if (he.System.Name != "Col 69 Sector YV-C c13-5")
+                        continue;
 
                     BaseUtils.Variables scandatavars = defaultvars != null ? new BaseUtils.Variables(defaultvars) : new BaseUtils.Variables();
 
@@ -787,39 +787,41 @@ namespace EliteDangerousCore
         {
             System.Diagnostics.Debug.Assert(node != null);
 
-            if (node.Parent == null)        // top level node with no parents, we are a top level node, its star
-            {
-                if (stardepth == 0)     // only 1 deep
-                {
-                    var starnodes = node.SystemNode.StarNodes.Where(x => x.Value.NodeType == StarScan.ScanNodeType.star).ToList();       // nodes with star..
+            // we want a star above the body, so we use the Frontier Parent List, with star, null (barycentre), body types.  Null if no parents list or scan data
 
-                    if (starnodes.Count > 1 && starnodes[0].Value != node)      // find first star, and if not the same node, lets call it a Ealhstan special and its the primary star
+            var plist = node.ScanData?.Parents;        // make sure its there, may not be
+
+            if (plist != null)                         // if we have a parents list, we traverse it.  entry 0 is next body up..
+            {
+                int sd = stardepth;                    // count back star depth
+
+                for (int i = 0; i < plist.Count; i++)
+                {
+                    if (plist[i].IsStar && sd-- == 0)    // use bodyid to find it in parents list to get a definitive parent id, accounting for star depth
                     {
-                        return starnodes[0].Value?.ScanData;
+                        // got a star, so try and find it the chain of scan nodes by bodyid
+
+                        var pnode = node.Parent;    
+
+                        while (pnode != null && pnode.BodyID != plist[i].BodyID)        // look up the star node list and see if we have a body id to match
+                        {
+                            pnode = pnode.Parent;
+                        }
+
+                        return pnode?.ScanData;     // return null if not found, or null if no scan data
                     }
                 }
-
             }
-            else
+
+            // we did not find a star in the parents list, so.. we then go to the SystemNode and find one
+
+            if (stardepth == 0)     // only 1 deep, can't go 2 deep on this one (star of star)
             {
-                var plist = node.ScanData?.Parents;        // this is the Frontier Parent List, with star, null (barycentre), body types.  Null if no parents list or scan data
+                var starnodes = node.SystemNode.StarNodes.Where(x => x.Value.NodeType == StarScan.ScanNodeType.star).ToList();       // star nodes from top level system structure
 
-                if (plist != null)          // if we have a parents list, we traverse it.  entry 0 is next body up..
+                if (starnodes.Count > 1 && starnodes[0].Value != node)      // find first star, and if not the same node, lets call it a Ealhstan special and its the primary star
                 {
-                    for (int i = 0; i < plist.Count; i++)
-                    {
-                        if (plist[i].IsStar && stardepth-- == 0)    // use bodyid to find it in parents list to get a definitive parent id, accounting for star depth
-                        {
-                            var pnode = node.Parent;    // now lets see if we can find it by traversing back up the chain of scan nodes
-
-                            while (pnode != null && pnode.BodyID != plist[i].BodyID)        // look up the star node list and see if we have a body id to match
-                            {
-                                pnode = pnode.Parent;
-                            }
-
-                            return pnode?.ScanData;     // return null if not found, or null if no scan data
-                        }
-                    }
+                    return starnodes[0].Value?.ScanData;
                 }
             }
 
