@@ -820,7 +820,7 @@ namespace EliteDangerousCore
             {
                 var topnode = node.Parent;
 
-                while (topnode.Parent != null )       // find top node in tree
+                while (topnode != null && topnode.Parent != null )       // find top node in tree
                 {
                     topnode = topnode.Parent;
                 }
