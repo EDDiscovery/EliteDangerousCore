@@ -496,7 +496,7 @@ namespace EliteDangerousCore
                 //foreach (var he in helist.GetRange(helist.Count-100,100))
                 foreach (var he in helist)
                 {
-                    //if (he.System.Name != "Col 69 Sector YV-C c13-5")
+                    //if (he.System.Name != "Byeia Euq WU-O d6-26")
                     //    continue;
 
                     BaseUtils.Variables scandatavars = defaultvars != null ? new BaseUtils.Variables(defaultvars) : new BaseUtils.Variables();
@@ -801,7 +801,7 @@ namespace EliteDangerousCore
                     {
                         // got a star, so try and find it the chain of scan nodes by bodyid
 
-                        var pnode = node.Parent;    
+                        var pnode = node.Parent;
 
                         while (pnode != null && pnode.BodyID != plist[i].BodyID)        // look up the star node list and see if we have a body id to match
                         {
@@ -813,13 +813,30 @@ namespace EliteDangerousCore
                 }
             }
 
-            // we did not find a star in the parents list, so.. we then go to the SystemNode and find one
+            // we did not find a star in the parents list, we either have a barycentre as our top level parent, or its a star
+            // so.. we then go to the SystemNode and find one
 
             if (stardepth == 0)     // only 1 deep, can't go 2 deep on this one (star of star)
             {
-                var starnodes = node.SystemNode.StarNodes.Where(x => x.Value.NodeType == StarScan.ScanNodeType.star).ToList();       // star nodes from top level system structure
+                var topnode = node.Parent;
 
-                if (starnodes.Count > 1 && starnodes[0].Value != node)      // find first star, and if not the same node, lets call it a Ealhstan special and its the primary star
+                while (topnode.Parent != null )       // find top node in tree
+                {
+                    topnode = topnode.Parent;
+                }
+
+                string startofind = "A";        // default is A
+
+                // on the top node of the tree, if its a barycentre, we can use its first char name to work out which star to pick
+
+                if ( topnode != null && topnode.NodeType == StarScan.ScanNodeType.barycentre )  
+                {
+                    startofind = topnode.OwnName.Substring(0, 1);       // first char
+                }
+
+                var starnodes = node.SystemNode.StarNodes.Where(x => x.Value.NodeType == StarScan.ScanNodeType.star && x.Value.OwnName == startofind).ToList();       // star nodes from top level system structure
+
+                if (starnodes.Count >= 1 && starnodes[0].Value != node)      // find first star, and if not the same node, lets call it a Ealhstan special and its the primary star
                 {
                     return starnodes[0].Value?.ScanData;
                 }
