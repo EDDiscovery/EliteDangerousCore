@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2021 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -55,7 +55,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
+        public override void FillInformation(out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("Version: ".T(EDCTx.JournalEntry_Version), GameVersion , "Build: ".T(EDCTx.JournalEntry_Build), Build , "Part: ".T(EDCTx.JournalEntry_Part), Part);
             detailed = "";
@@ -145,7 +145,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool InFighter { get { return ItemData.IsFighter(ShipFD); } }
         public bool InShipSRVOrFighter { get { return ItemData.IsShipSRVOrFighter(ShipFD); } }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Cmdr ", LoadGameCommander, "Ship: ".T(EDCTx.JournalEntry_Ship), Ship, "Name: ".T(EDCTx.JournalEntry_Name), ShipName, "Ident: ".T(EDCTx.JournalEntry_Ident), ShipIdent, "Credits: ;;N0".T(EDCTx.JournalEntry_Credits), Credits);
             detailed = BaseUtils.FieldBuilder.Build("Mode: ".T(EDCTx.JournalEntry_Mode), GameMode, "Group: ".T(EDCTx.JournalEntry_Group), Group, "Not Landed;Landed".T(EDCTx.JournalEntry_NotLanded), StartLanded, "Fuel Level: ;;0.0".T(EDCTx.JournalEntry_FuelLevel), FuelLevel, "Capacity: ;;0.0".T(EDCTx.JournalEntry_Capacity), FuelCapacity);
@@ -177,7 +177,7 @@ namespace EliteDangerousCore.JournalEvents
         {
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = "";
             detailed = "";
@@ -195,7 +195,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public int Part { get; set; }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = Part.ToString();
             detailed = "";

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2018 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  *
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 using QuickJSON;
 using System.Linq;
@@ -44,7 +44,7 @@ namespace EliteDangerousCore.JournalEvents
             stats.Interdicted(Faction);
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
+        public override void FillInformation(out string info, out string detailed) 
         {
             if ( Submitted )
                 info = BaseUtils.FieldBuilder.Build(";Submitted".T(EDCTx.JournalEntry_Submitted), Submitted, "< to ".T(EDCTx.JournalEntry_to), Interdictor_Localised, "< (NPC);(Player)".T(EDCTx.JournalEntry_NPC), IsPlayer, "Rank: ", CombatRank.ToString().SplitCapsWord(), "Faction: ".T(EDCTx.JournalEntry_Faction), Faction, "Power: ".T(EDCTx.JournalEntry_Power), Power);
@@ -82,7 +82,7 @@ namespace EliteDangerousCore.JournalEvents
             stats.Interdiction(Faction);
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
 
             info = BaseUtils.FieldBuilder.Build("Failed to interdict;Interdicted".T(EDCTx.JournalEntry_Failedtointerdict), Success, "< ", Interdicted_Localised, "< (NPC);(Player)".T(EDCTx.JournalEntry_NPC), IsPlayer, "Rank: ", CombatRank.ToString().SplitCapsWord(), "Faction: ".T(EDCTx.JournalEntry_Faction), Faction, "Power: ".T(EDCTx.JournalEntry_Power), Power);
@@ -105,7 +105,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Interdictor_Localised { get; set; }
         public bool IsPlayer { get; set; }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("By: ".T(EDCTx.JournalEntry_By), Interdictor_Localised, "< (NPC);(Player)".T(EDCTx.JournalEntry_NPC), IsPlayer);
             detailed = "";

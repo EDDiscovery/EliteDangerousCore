@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2022 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -34,7 +34,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, System, -Cost);
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
+        public override void FillInformation(out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("System: ".T(EDCTx.JournalEntry_System), System, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost);
             detailed = "";
@@ -76,7 +76,7 @@ namespace EliteDangerousCore.JournalEvents
                 stats.CartographicSold(stationfaction, TotalEarnings);
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), BaseValue, "Bonus: ; cr;N0".T(EDCTx.JournalEntry_Bonus), Bonus,
                                 "Total: ; cr;N0".T(EDCTx.JournalSellExplorationData_Total), TotalEarnings);
@@ -141,7 +141,7 @@ namespace EliteDangerousCore.JournalEvents
                 stats.CartographicSold(stationfaction, TotalEarnings);
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), BaseValue, "Bonus: ; cr;N0".T(EDCTx.JournalEntry_Bonus), Bonus,
                                 "Total: ; cr;N0".T(EDCTx.JournalMultiSellExplorationData_Total), TotalEarnings);
@@ -183,7 +183,7 @@ namespace EliteDangerousCore.JournalEvents
         public long MarketID;
         public long TotalValue;
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Count: ".T(EDCTx.JournalEntry_Count), Bios?.Length ?? 0, "Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), TotalValue);
             detailed = "";

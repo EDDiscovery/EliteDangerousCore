@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2018 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  *
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 
 using QuickJSON;
@@ -102,7 +102,7 @@ namespace EliteDangerousCore.JournalEvents
         public Cargo[] Inventory { get; set; }      // may be NULL
         public bool EDDFromFile { get; set; }       // set if from file, but only from nov 2020
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
+        public override void FillInformation(out string info, out string detailed) 
         {
             info = "No Cargo".T(EDCTx.JournalEntry_NoCargo);
             detailed = "";
@@ -175,7 +175,7 @@ namespace EliteDangerousCore.JournalEvents
             mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Type, -Count, 0);   // same in the srv or ship, we lose count
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Type_Localised, "Count: ".T(EDCTx.JournalEntry_Count), Count,
                             "<; (Mission Cargo)".T(EDCTx.JournalEntry_MissionCargo), MissionID != null,
@@ -241,7 +241,7 @@ namespace EliteDangerousCore.JournalEvents
             mlist.CargoDepot(this);
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             if (UpdateEnum == UpdateTypeEnum.Collect)
             {
@@ -288,7 +288,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Type, 1, 0);     // collecting cargo in srv same as collecting cargo in ship. srv autotransfers it to ship
         }
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Type_Localised, ";Stolen".T(EDCTx.JournalEntry_Stolen), Stolen, "<; (Mission Cargo)".T(EDCTx.JournalEntry_MissionCargo), MissionID != null);
             detailed = "";
@@ -319,7 +319,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = "";
             detailed = "";

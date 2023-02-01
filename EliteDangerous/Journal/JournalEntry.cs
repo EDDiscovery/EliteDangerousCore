@@ -80,9 +80,14 @@ namespace EliteDangerousCore
         {
             public ISystem System { get; set; }
             public string WhereAmI { get; set; }
+            public string NextJumpSystemName { get; set; }
         };
 
-        public abstract void FillInformation(FillInformationData fid, out string info, out string detailed);     // all entries must implement
+        // define one of these, either FillInformation or FillInformationExtended
+        public virtual void FillInformationExtended(FillInformationData fid, out string info, out string detailed) 
+        { System.Diagnostics.Debug.Assert(false, "Called but not defined"); info = detailed = null; }     // if entries return info =null, this is called
+
+        public virtual void FillInformation(out string info, out string detailed) { info = detailed = null; }     // if entries return info =null, this is called
 
         // the long name of it, such as Approach Body. May be overridden, is translated
         public virtual string SummaryName(ISystem sys) { return TranslatedEventNames.ContainsKey(EventTypeID) ? TranslatedEventNames[EventTypeID] : EventTypeID.ToString(); }  // entry may be overridden for specialist output

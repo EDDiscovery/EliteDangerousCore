@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2021 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  *
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 using QuickJSON;
 using System;
@@ -33,7 +33,7 @@ namespace EliteDangerousCore.JournalEvents
         public long SystemAddress { get; set; }
         public int Bodies { get; set; }
 
-        public override void FillInformation(FillInformationData fid, out string info, out string detailed)
+        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("New bodies discovered: ".T(EDCTx.JournalEntry_Dscan), Bodies,
                                                 "@ ", fid.System.Name);
@@ -64,7 +64,7 @@ namespace EliteDangerousCore.JournalEvents
             s.SetFSSDiscoveryScan(this, system);
         }
 
-        public override void FillInformation(FillInformationData fid, out string info, out string detailed)
+        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Progress: ;%;N1".T(EDCTx.JournalFSSDiscoveryScan_Progress), Progress, 
                 "Bodies: ".T(EDCTx.JournalFSSDiscoveryScan_Bodies), BodyCount, 
@@ -257,13 +257,10 @@ namespace EliteDangerousCore.JournalEvents
             s.AddFSSSignalsDiscoveredToSystem(this);
         }
 
-        public override void FillInformation(FillInformationData fid, out string info, out string detailed)
+        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
         {
-            FillInformation(fid, 20, out info, out detailed);
-        }
+            const int maxsignals = 20;
 
-        public void FillInformation(FillInformationData fid, int maxsignals, out string info, out string detailed)
-        {
             detailed = "";
 
             if (Signals.Count > 1)
@@ -281,7 +278,9 @@ namespace EliteDangerousCore.JournalEvents
                     }
                 }
 
-                info = info.AppendPrePad("@ " + fid.System.Name, ", ");
+                // in a jump seqence, those frontier people send a FSD while jumping, and HES records there is a jump system name, so use it. else use current system name
+
+                info = info.AppendPrePad("@ " + (fid.NextJumpSystemName ?? fid.System.Name), ", ");
 
                 foreach (var s in Signals)
                     detailed = detailed.AppendPrePad(s.ToString(false), System.Environment.NewLine);
@@ -333,7 +332,7 @@ namespace EliteDangerousCore.JournalEvents
         public int NumBodies { get; set; }
         public long? SystemAddress { get; set; }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Bodies: ".T(EDCTx.JournalEntry_Bodies), NumBodies);
             detailed = "";
@@ -368,7 +367,7 @@ namespace EliteDangerousCore.JournalEvents
             return base.SummaryName(sys) + " " + "of ".T(EDCTx.JournalEntry_ofa) + BodyName.ReplaceIfStartsWith(sys.Name);
         }
 
-        public override void FillInformation(FillInformationData fid, out string info, out string detailed)
+        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
         {
             string name = BodyName.Contains(fid.System.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : fid.System.Name + ":" + BodyName;
             info = BaseUtils.FieldBuilder.Build("Probes: ".T(EDCTx.JournalSAAScanComplete_Probes), ProbesUsed,
@@ -519,7 +518,7 @@ namespace EliteDangerousCore.JournalEvents
             return info;
         }
 
-        public override void FillInformation(FillInformationData fid, out string info, out string detailed)
+        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
         {
             info = SignalList(Signals);
             string name = BodyName.Contains(fid.System.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : fid.System.Name + ":" + BodyName;
@@ -562,7 +561,7 @@ namespace EliteDangerousCore.JournalEvents
         public string SystemName { get; set; }
         public int Count { get; set; }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = Count.ToString() + " @ " + SystemName;
             detailed = "";
@@ -639,7 +638,7 @@ namespace EliteDangerousCore.JournalEvents
             return base.SummaryName(sys) + " " + "of ".T(EDCTx.JournalEntry_ofa) + BodyName.ReplaceIfStartsWith(sys.Name);
         }
 
-        public override void FillInformation(FillInformationData fid, out string info, out string detailed)
+        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
         {
             info = JournalSAASignalsFound.SignalList(Signals);
             string name = BodyName.Contains(fid.System.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : fid.System.Name + ":" + BodyName;
@@ -702,7 +701,7 @@ namespace EliteDangerousCore.JournalEvents
             s.AddScanOrganicToSystem(this,system);
         }
 
-        public override void FillInformation(FillInformationData fid, out string info, out string detailed)
+        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
         {
             int? ev = ScanType == ScanTypeEnum.Analyse ? EstimatedValue : null;
             info = BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised, "; cr;N0", ev, "< @ ", fid.WhereAmI);

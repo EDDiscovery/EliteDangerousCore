@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  *
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 
 using System;
@@ -233,7 +233,7 @@ namespace EliteDangerousCore.JournalEvents
                 JournalScanBaryCentre barycentrejs = Parents[0].Barycentre;
                 scanText.AppendLine();
                 scanText.AppendLine("Barycentre: " + barycentrejs.BodyID.ToString());
-                barycentrejs.FillInformation(null, out string info, out string detailed);
+                barycentrejs.FillInformation(out string info, out string detailed);
                 scanText.AppendLine(info);
                 scanText.AppendLine(detailed);
             }

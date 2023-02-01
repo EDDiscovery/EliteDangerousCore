@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 using QuickJSON;
 using System;
@@ -196,7 +196,7 @@ namespace EliteDangerousCore.JournalEvents
             Callsign = evt["Callsign"].Str();
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("At ".T(EDCTx.JournalCarrier_At), Location,
                                               "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Price,
@@ -276,7 +276,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Name: ".T(EDCTx.JournalCarrier_Name), State.Name,
                                                 "Call Sign: ".T(EDCTx.JournalCarrier_Callsign), State.Callsign,
@@ -361,7 +361,7 @@ namespace EliteDangerousCore.JournalEvents
                 DepartureTime = evt["DepartureTime"].DateTimeUTC();
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             DateTime? dtime = null;
             if (DepartureTime.HasValue)
@@ -396,7 +396,7 @@ namespace EliteDangerousCore.JournalEvents
             ScrapDateTimeUTC = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(ScrapTime);
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Refund: ; cr;N0".T(EDCTx.JournalCarrier_Refund), ScrapRefund,
                                                 "at UTC ".T(EDCTx.JournalCarrier_RefundTime), ScrapDateTimeUTC
@@ -420,7 +420,7 @@ namespace EliteDangerousCore.JournalEvents
             CarrierID = evt["CarrierID"].Long();
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = "";
             detailed = "";
@@ -450,7 +450,7 @@ namespace EliteDangerousCore.JournalEvents
             CarrierBalance = evt["CarrierBalance"].Long();
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             if (Deposit > 0)
                 info = BaseUtils.FieldBuilder.Build("Deposit: ; cr;N0".T(EDCTx.JournalCarrier_Deposit), Deposit, "Carrier Balance: ; cr;N0".T(EDCTx.JournalCarrier_Balance), CarrierBalance);
@@ -490,7 +490,7 @@ namespace EliteDangerousCore.JournalEvents
             Total = evt["Total"].Int();
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Amount: ;;N0".T(EDCTx.JournalCarrier_Amount), Amount,
                                                 "Fuel Level: ;;N0".T(EDCTx.JournalCarrier_FuelLevel), Total);
@@ -568,7 +568,7 @@ namespace EliteDangerousCore.JournalEvents
             CrewName = evt["CrewName"].Str();
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Role: ".T(EDCTx.JournalEntry_Role), CrewRole.SplitCapsWordFull(),
                                                 "Operation: ".T(EDCTx.JournalCarrier_Operation), Operation,
@@ -641,7 +641,7 @@ namespace EliteDangerousCore.JournalEvents
             Finance.ReservePercent = evt["ReservePercent"].Double();
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Carrier Balance: ; cr;N0".T(EDCTx.JournalCarrier_Balance), Finance.CarrierBalance,
                                                 "Reserve Balance: ; cr;N0".T(EDCTx.JournalCarrier_ReserveBalance), Finance.ReserveBalance,
@@ -683,7 +683,7 @@ namespace EliteDangerousCore.JournalEvents
             Refund = evt["Refund"].LongNull();
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build(
                                                 "", Operation.SplitCapsWordFull(),
@@ -722,7 +722,7 @@ namespace EliteDangerousCore.JournalEvents
             Refund = evt["Refund"].LongNull();
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Operation.SplitCapsWordFull(),
                                                 "", PackTheme,
@@ -790,7 +790,7 @@ namespace EliteDangerousCore.JournalEvents
             Order.Placed = this.EventTimeUTC;
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             if (Order.PurchaseOrder != null)
             {
@@ -838,7 +838,7 @@ namespace EliteDangerousCore.JournalEvents
             AllowNotorious = evt["AllowNotorious"].Bool();
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Access: ".T(EDCTx.JournalCarrier_Access), DockingAccess,
                                                 ";Allow Notorious".T(EDCTx.JournalCarrier_AllowNotorious), AllowNotorious);
@@ -865,7 +865,7 @@ namespace EliteDangerousCore.JournalEvents
             Name = evt["Name"].Str();
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Name: ".T(EDCTx.JournalCarrier_Name), Name, "Call Sign: ".T(EDCTx.JournalCarrier_Callsign), Callsign);
             detailed = "";
@@ -887,7 +887,7 @@ namespace EliteDangerousCore.JournalEvents
             CarrierID = evt["CarrierID"].Long();
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = "";
             detailed = "";
@@ -945,7 +945,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys) { return "Bartender Materials".TxID(EDCTx.JournalEntry_BartenderMaterials); }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             if (Items == null)
             {

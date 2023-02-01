@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2017 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  *
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 using QuickJSON;
 using System;
@@ -30,7 +30,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string ScanType { get; set; }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
+        public override void FillInformation(out string info, out string detailed) 
         {
             info = ScanType;
             detailed = "";
@@ -99,7 +99,7 @@ namespace EliteDangerousCore.JournalEvents
             MergedEntries.Add(next);
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             detailed = "";
             if (MergedEntries == null)
@@ -172,7 +172,7 @@ namespace EliteDangerousCore.JournalEvents
         public List<string> MergedEntries { get; set; }     // if verbose.. doing it this way does not break action packs as the variables are maintained
                                                             // This is second, third merge etc.  First one is in above variables
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             detailed = "";
             if (MergedEntries != null)
@@ -209,7 +209,7 @@ namespace EliteDangerousCore.JournalEvents
 
         protected override JournalTypeEnum IconEventType { get { return ShieldsUp ? JournalTypeEnum.ShieldState_ShieldsUp : JournalTypeEnum.ShieldState_ShieldsDown; } }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Shields Down;Shields Up".T(EDCTx.JournalEntry_ShieldsDown), ShieldsUp);
             detailed = "";

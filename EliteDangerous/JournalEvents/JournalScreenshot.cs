@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2018 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  *
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 using QuickJSON;
 using System;
@@ -57,7 +57,7 @@ namespace EliteDangerousCore.JournalEvents
         public int EDDOutputWidth { get; set; }
         public int EDDOutputHeight { get; set; }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)  
+        public override void FillInformation(out string info, out string detailed)  
         {
             info = BaseUtils.FieldBuilder.Build("At ".T(EDCTx.JournalScreenshot_At), Body , "< in ".T(EDCTx.JournalScreenshot_in), System , "File: ".T(EDCTx.JournalScreenshot_File), Filename, 
                         "Width: ".T(EDCTx.JournalScreenshot_Width), Width , "Height: ".T(EDCTx.JournalScreenshot_Height), Height, "Latitude: ".T(EDCTx.JournalEntry_Latitude), JournalFieldNaming.RLat(nLatitude), "Longitude: ".T(EDCTx.JournalEntry_Longitude), JournalFieldNaming.RLong(nLongitude));

@@ -271,10 +271,16 @@ namespace EliteDangerousCore
 
         public void FillInformation(out string eventDescription, out string eventDetailedInfo)
         {
-            JournalEntry.FillInformationData fid = new JournalEntry.FillInformationData() { System = this.System, WhereAmI = this.WhereAmI };
-            
-            journalEntry.FillInformation(fid, out eventDescription, out eventDetailedInfo);
-        
+            journalEntry.FillInformation(out eventDescription, out eventDetailedInfo);
+
+            if (eventDescription == null)       // FillInformation was not implemented, try the next one
+            {
+                JournalEntry.FillInformationData fid = new JournalEntry.FillInformationData() 
+                { System = this.System, WhereAmI = this.WhereAmI , NextJumpSystemName = this.Status.FSDJumpNextSystemName };
+
+                journalEntry.FillInformationExtended(fid,out eventDescription, out eventDetailedInfo);
+            }
+
             if (isTravelling && (IsFSD || StopMarker))
             {
                 eventDescription = TravelledStats + ", " + eventDescription;

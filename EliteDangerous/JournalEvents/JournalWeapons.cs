@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2021-2021 EDDiscovery development team
+ * Copyright © 2021-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 using QuickJSON;
 using System.Linq;
@@ -44,7 +44,7 @@ namespace EliteDangerousCore.JournalEvents
         public int Class { get; set; }
         public string[] WeaponMods { get; set; }    // may be null/empty
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             string wmod = WeaponMods != null ? string.Join(", ", WeaponMods.Select(x => Recipes.GetBetterNameForEngineeringRecipe(x))) : null;
             info = BaseUtils.FieldBuilder.Build("", FriendlyName, "Class: ".T(EDCTx.JournalEntry_Class), Class, "Mods: ".T(EDCTx.JournalEntry_Mods), wmod, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Price);
@@ -90,7 +90,7 @@ namespace EliteDangerousCore.JournalEvents
         public string[] WeaponMods { get; set; }    // may be null/empty
 
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< sell price ; cr;N0".T(EDCTx.JournalEntry_sellprice), Price);
             detailed = "";
@@ -134,7 +134,7 @@ namespace EliteDangerousCore.JournalEvents
         public int Class { get; set; }
         public string[] WeaponMods { get; set; }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             string wmod = WeaponMods != null ? string.Join(", ", WeaponMods.Select(x => Recipes.GetBetterNameForEngineeringRecipe(x))) : null;
             long? p = Cost > 0 ? Cost : default(long?);

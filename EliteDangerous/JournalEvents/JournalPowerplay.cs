@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2018 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  *
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 using QuickJSON;
 using System;
@@ -41,7 +41,7 @@ namespace EliteDangerousCore.JournalEvents
         public DateTime TimeJoinedUTC { get { return EventTimeUTC.Subtract(TimePledgedSpan); } }
         public string TimePledgedString { get; set; }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
+        public override void FillInformation(out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("", Power, "Rank: ".T(EDCTx.JournalEntry_Rank), Rank, "Merits: ".T(EDCTx.JournalEntry_Merits), Merits, "Votes: ".T(EDCTx.JournalEntry_Votes), Votes, "Pledged: ".T(EDCTx.JournalEntry_Pledged), TimePledgedString);
             detailed = "";
@@ -64,7 +64,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Type_Localised { get; set; }
         public int Count { get; set; }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Power, "Type: ".T(EDCTx.JournalEntry_Type), Type_Localised, "Count: ".T(EDCTx.JournalEntry_Count), Count);
             detailed = "";
@@ -88,7 +88,7 @@ namespace EliteDangerousCore.JournalEvents
         public string FromPower { get; set; }
         public string ToPower { get; set; }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("From Power: ".T(EDCTx.JournalEntry_FromPower), FromPower, "To Power: ".T(EDCTx.JournalEntry_ToPower), ToPower);
             detailed = "";
@@ -111,7 +111,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Type_Localised { get; set; }
         public int Count { get; set; }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Power, "Type: ".T(EDCTx.JournalEntry_Type), Type_Localised, "Count: ".T(EDCTx.JournalEntry_Count), Count);
             detailed = "";
@@ -140,7 +140,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Power, -Cost);
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Power, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost);
             detailed = "";
@@ -157,7 +157,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Power { get; set; }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = Power;
             detailed = "";
@@ -174,7 +174,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Power { get; set; }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = Power;
             detailed = "";
@@ -198,7 +198,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Power, Amount);
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Power, "Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), Amount);
             detailed = "";
@@ -219,7 +219,7 @@ namespace EliteDangerousCore.JournalEvents
         public string System { get; set; }
         public int Votes { get; set; }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Power, "System: ".T(EDCTx.JournalEntry_System), System, "Votes: ".T(EDCTx.JournalEntry_Votes), Votes);
             detailed = "";
@@ -238,7 +238,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Power { get; set; }
         public string[] Systems { get; set; }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = Power;
 

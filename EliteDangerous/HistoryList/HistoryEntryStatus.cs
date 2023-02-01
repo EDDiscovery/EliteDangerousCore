@@ -90,8 +90,8 @@ namespace EliteDangerousCore
         public bool BookedDropship { get; private set; } = false;         // cleared on embark - need this to tell difference between booking a taxi or a dropship when entering the taxi
         public bool BookedTaxi { get; private set; } = false;             // cleared on embark - need this to tell difference between booking a taxi or a dropship when entering the taxi
         public double CurrentBoost { get; private set; } = 1;             // current boost multiplier due to jet cones and synthesis
-        public string FSDJumpNextSystemName { get; private set; } = null;
-        public long? FSDJumpNextSystemAddress { get; private set; } = null;
+        public string FSDJumpNextSystemName { get; private set; } = null;   // null when not jumping
+        public long? FSDJumpNextSystemAddress { get; private set; } = null; // null when not jumping
         public bool FSDJumpSequence{ get { return FSDJumpNextSystemName != null; } }    // true from startjump until location/fsdjump
 
         private HistoryEntryStatus()
@@ -247,11 +247,14 @@ namespace EliteDangerousCore
                 case JournalTypeEnum.StartJump:
                     {
                         var jsj = (je as JournalStartJump);
-                        hes = new HistoryEntryStatus(prev)
+                        if (jsj.IsHyperspace)
                         {
-                            FSDJumpNextSystemAddress = jsj.SystemAddress,        // jumping
-                            FSDJumpNextSystemName = jsj.StarSystem
-                        };
+                            hes = new HistoryEntryStatus(prev)
+                            {
+                                FSDJumpNextSystemAddress = jsj.SystemAddress,        // jumping
+                                FSDJumpNextSystemName = jsj.StarSystem
+                            };
+                        }
                         break;
                     }
 

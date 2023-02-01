@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  *
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 
 using QuickJSON;
@@ -623,7 +623,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(FillInformationData fid, out string info, out string detailed)
+        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
         {
             if (IsStar)
             {

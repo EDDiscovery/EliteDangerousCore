@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2018 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  *
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 
 using QuickJSON;
@@ -115,7 +115,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
+        public override void FillInformation(out string info, out string detailed) 
         {
             
             info = BaseUtils.FieldBuilder.Build("; cr;N0", TotalReward, "Target: ".T(EDCTx.JournalEntry_Target), TargetLocalised, "Victim faction: ".T(EDCTx.JournalEntry_Victimfaction), VictimFactionLocalised);
@@ -191,7 +191,7 @@ namespace EliteDangerousCore.JournalEvents
             stats.CapShipAward(AwardingFaction_Localised, VictimFaction_Localised, Reward);
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("; cr;N0", Reward, "< from ".T(EDCTx.JournalEntry_from), AwardingFaction_Localised,
                 "<, due to ".T(EDCTx.JournalEntry_dueto), VictimFaction_Localised);
@@ -238,7 +238,7 @@ namespace EliteDangerousCore.JournalEvents
             stats.CommitCrime(Faction);
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", CrimeType, "< on faction ".T(EDCTx.JournalEntry_onfaction), Faction, "Against ".T(EDCTx.JournalEntry_Against), VictimLocalised, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Fine, "Bounty: ; cr;N0".T(EDCTx.JournalEntry_Bounty), Bounty);
             detailed = "";
@@ -260,7 +260,7 @@ namespace EliteDangerousCore.JournalEvents
         public string OffenderLocalised { get; set; }
         public long Bounty { get; set; }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", CrimeType, "Offender ".T(EDCTx.JournalEntry_Offender), OffenderLocalised, "Bounty: ; cr;N0".T(EDCTx.JournalEntry_Bounty), Bounty);
             detailed = "";
@@ -295,7 +295,7 @@ namespace EliteDangerousCore.JournalEvents
             stats.KillBond(AwardingFaction_Localised, VictimFaction_Localised, Reward);
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Reward: ; cr;N0".T(EDCTx.JournalEntry_Reward), Reward, "< from ".T(EDCTx.JournalEntry_from), AwardingFaction_Localised,
                 "<, due to ".T(EDCTx.JournalEntry_dueto), VictimFaction_Localised);
@@ -339,7 +339,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, (Faction_Localised.Length > 0 ? "Faction " + Faction_Localised : "") + " Broker " + BrokerPercentage.ToString("0.0") + "%", -Amount);
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Amount, "< to ".T(EDCTx.JournalEntry_to), Faction_Localised);
             if (BrokerPercentage > 0)
@@ -373,7 +373,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, (Faction_Localised.Length > 0 ? "Faction " + Faction_Localised : "") + " Broker " + BrokerPercentage.ToString("0.0") + "%", -Amount);
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Amount, "< to ".T(EDCTx.JournalEntry_to), Faction_Localised);
             if (BrokerPercentage > 0)
@@ -399,7 +399,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "Broker " + BrokerPercentage.ToString("0.0") + "%", -Amount);
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Amount);
             if (BrokerPercentage > 0)
@@ -429,7 +429,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Type + " Broker " + BrokerPercentage.ToString("0.0") + "%", Amount);
         }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Type: ".T(EDCTx.JournalEntry_Type), Type, "Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), Amount, "Faction: ".T(EDCTx.JournalEntry_Faction), Faction);
             if (BrokerPercentage > 0)
@@ -456,7 +456,7 @@ namespace EliteDangerousCore.JournalEvents
         public long ShipMarketID { get; set; }
         public long MarketID { get; set; }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Ship: ".T(EDCTx.JournalEntry_Ship), ShipType_Localised);
             detailed = "";

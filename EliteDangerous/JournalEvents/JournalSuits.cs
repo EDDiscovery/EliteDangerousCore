@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2021-2021 EDDiscovery development team
+ * Copyright © 2021-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 using QuickJSON;
 using System;
@@ -43,7 +43,7 @@ namespace EliteDangerousCore.JournalEvents
         public long Price { get; set; }
         public string[] SuitMods { get; set; }          // may be null or empty
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             string smod = SuitMods != null ? string.Join(", ", SuitMods.Select(x=>Recipes.GetBetterNameForEngineeringRecipe(x))) : null;
             info = BaseUtils.FieldBuilder.Build("", FriendlyName, "Mods: ".T(EDCTx.JournalEntry_Mods), smod, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Price);
@@ -93,7 +93,7 @@ namespace EliteDangerousCore.JournalEvents
         public long Price { get; set; }
         public string[] SuitMods { get; set; }      // may be null
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< sell price ; cr;N0".T(EDCTx.JournalEntry_sellprice), Price);
             detailed = "";
@@ -162,7 +162,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public SuitLoadout.LoadoutModule[] Modules { get; set; }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "< ++> ", LoadoutName);
             detailed = "";
@@ -221,7 +221,7 @@ namespace EliteDangerousCore.JournalEvents
         public ulong LoadoutID { get; set; }
         public SuitLoadout.LoadoutModule[] Modules { get; set; }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", SuitID % 10000, "", LoadoutID % 10000, "", SuitFriendlyName, "< ==> ", LoadoutName);
             detailed = "";
@@ -276,7 +276,7 @@ namespace EliteDangerousCore.JournalEvents
         public string LoadoutName { get; set; }
         public ulong LoadoutID { get; set; }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "< --> ", LoadoutName);
             detailed = "";
@@ -327,7 +327,7 @@ namespace EliteDangerousCore.JournalEvents
         public string[] WeaponMods { get; set; }    // may be null or empty
         public ulong SuitModuleID { get; set; }         // aka weapon ID
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             string wmod = WeaponMods != null ? string.Join(", ", WeaponMods) : null;
             info = BaseUtils.FieldBuilder.Build("", SuitID % 10000, "", LoadoutID%10000, "", SuitFriendlyName, "<: ", LoadoutName, "<: ", SlotFriendlyName, "< ++> ", ModuleNameFriendly, "Class: ".T(EDCTx.JournalEntry_Class), Class, "Mods: ".T(EDCTx.JournalEntry_Mods), wmod);
@@ -401,7 +401,7 @@ namespace EliteDangerousCore.JournalEvents
         public int Class { get; set; }        // may not be there
         public string[] WeaponMods { get; set; }    // may be null or empty
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "<: ", LoadoutName, "<: ", SlotFriendlyName, "< --> ", ModuleNameFriendly);
             detailed = "";
@@ -447,7 +447,7 @@ namespace EliteDangerousCore.JournalEvents
         public ulong LoadoutID { get; set; }
         public string LoadoutName { get; set; }
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "<: ==> ", LoadoutName);
             detailed = "";
@@ -491,7 +491,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public SuitLoadout.LoadoutModule[] Modules;
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "< ==> ", LoadoutName);
             detailed = "";
@@ -540,7 +540,7 @@ namespace EliteDangerousCore.JournalEvents
         public int Class { get; set; }
         public string[] SuitMods { get; set; }          // may be null or empty
 
-        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             long? p = Cost > 0 ? Cost : default(long?);
             string smod = SuitMods != null ? string.Join(", ", SuitMods.Select(x => Recipes.GetBetterNameForEngineeringRecipe(x))) : null;
