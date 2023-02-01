@@ -34,7 +34,7 @@ namespace EliteDangerousCore.JournalEvents
         public double CockpitRepaired { get; set; }
         public double CorrosionRepaired { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("Hull: ".T(EDCTx.JournalRepairDrone_Hull), HullRepaired.ToString("0.0"), "Cockpit: ".T(EDCTx.JournalEntry_Cockpit), CockpitRepaired.ToString("0.0"), 
                                 "Corrosion: ".T(EDCTx.JournalEntry_Corrosion), CorrosionRepaired.ToString("0.0"));
@@ -81,7 +81,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Type + " " + Count + " drones", -TotalCost);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Type: ".T(EDCTx.JournalEntry_Type), Type, "Count: ".T(EDCTx.JournalEntry_Count), Count, "Total Cost: ; cr;N0".T(EDCTx.JournalEntry_TotalCost), TotalCost, "each: ; cr;N0".T(EDCTx.JournalEntry_each), BuyPrice);
             detailed = "";
@@ -123,7 +123,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Count.ToString() + " " + "Drones".T(EDCTx.JournalEntry_Drones), TotalSale);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Type, "Count: ".T(EDCTx.JournalEntry_Count), Count, "Price: ; cr;N0".T(EDCTx.JournalEntry_Price), SellPrice, "Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), TotalSale);
             detailed = "";
@@ -149,7 +149,7 @@ namespace EliteDangerousCore.JournalEvents
             mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, "drones", -1, 0);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Type: ".T(EDCTx.JournalEntry_Type), FriendlyType);
             detailed = "";

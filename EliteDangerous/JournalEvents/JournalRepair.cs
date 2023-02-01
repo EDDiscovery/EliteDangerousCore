@@ -77,7 +77,7 @@ namespace EliteDangerousCore.JournalEvents
                 mcl.AddEvent(Id, EventTimeUTC, EventTypeID, ItemLocalised, -Cost);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("",ItemLocalised, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost) , Cost );
             detailed = "";
@@ -100,7 +100,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "", -Cost);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost);
             detailed = "";
@@ -126,7 +126,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool FullyRepaired { get; set; }
         public float Health { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", ModuleLocalised, "Health: ;%", (int)Health, ";Fully Repaired", FullyRepaired);
             detailed = "";
@@ -151,7 +151,7 @@ namespace EliteDangerousCore.JournalEvents
         public string[] Slots { get; set; }
         public string[] FriendlySlots { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = "";
             if (FriendlySlots != null)
@@ -166,7 +166,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSystemsShutdown(JObject evt) : base(evt, JournalTypeEnum.SystemsShutdown) { }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = "";
             detailed = "";

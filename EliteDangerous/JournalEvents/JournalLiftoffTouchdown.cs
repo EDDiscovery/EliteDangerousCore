@@ -49,7 +49,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? OnStation { get; set; }
         public bool? OnPlanet { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
         {
             info = JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude);
             info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", Body, "NPC Controlled;".T(EDCTx.JournalEntry_NPCControlled), PlayerControlled, 
@@ -89,7 +89,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? OnStation { get; set; }
         public bool? OnPlanet { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude);
             info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", Body, "NPC Controlled;".T(EDCTx.JournalEntry_NPCControlled), PlayerControlled, 

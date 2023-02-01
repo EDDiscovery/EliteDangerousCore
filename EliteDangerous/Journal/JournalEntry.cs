@@ -76,7 +76,13 @@ namespace EliteDangerousCore
 
         public SystemNoteClass SNC { get; set; }                            // if journal entry has a system note attached. Null if not
 
-        public abstract void FillInformation(ISystem sys, string whereami, out string info, out string detailed);     // all entries must implement
+        public class FillInformationData
+        {
+            public ISystem System { get; set; }
+            public string WhereAmI { get; set; }
+        };
+
+        public abstract void FillInformation(FillInformationData fid, out string info, out string detailed);     // all entries must implement
 
         // the long name of it, such as Approach Body. May be overridden, is translated
         public virtual string SummaryName(ISystem sys) { return TranslatedEventNames.ContainsKey(EventTypeID) ? TranslatedEventNames[EventTypeID] : EventTypeID.ToString(); }  // entry may be overridden for specialist output

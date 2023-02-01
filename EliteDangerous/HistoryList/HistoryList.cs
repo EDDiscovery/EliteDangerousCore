@@ -23,7 +23,7 @@ using System.Linq;
 namespace EliteDangerousCore
 {
     [System.Diagnostics.DebuggerDisplay("HL {historylist.Count}")]
-    public partial class HistoryList //: IEnumerable<HistoryEntry>
+    public partial class HistoryList
     {
         // Databases accumulated on history
         public MissionListAccumulator MissionListAccumulator { get; private set; } = new MissionListAccumulator(); // and mission list..
@@ -70,7 +70,7 @@ namespace EliteDangerousCore
             he.UpdateWeapons(WeaponList.Process(je, he.WhereAmI, he.System));
             he.UpdateLoadouts(SuitLoadoutList.Process(je, WeaponList, he.WhereAmI, he.System));
 
-            he.UpdateStats(je, statisticsaccumulator, he.StationFaction);
+            he.UpdateStats(je, statisticsaccumulator, he.Status.StationFaction);
 
             CashLedger.Process(je);
             he.Credits = CashLedger.CashTotal;
@@ -267,12 +267,12 @@ namespace EliteDangerousCore
             {
                 if (Visited.TryGetValue(he.System.Name, out var value))
                 {
-                    he.Visits = value.Visits + 1;               // visits is 1 more than previous entry
+                    he.UpdateVisits(value.Visits + 1);               // visits is 1 more than previous entry
                     Visited[he.System.Name] = he;          // reset to point to latest he
                 }
                 else
                 {
-                    he.Visits = 1;                              // first visit
+                    he.UpdateVisits(1);               // visits is 1 more than previous entry
                     Visited[he.System.Name] = he;          // point to he
                 }
 

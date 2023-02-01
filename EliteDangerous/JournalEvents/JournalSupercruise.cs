@@ -37,7 +37,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? Taxi { get; set; }             //4.0 alpha 4
         public bool? Multicrew { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = StarSystem;
             detailed = "";
@@ -73,7 +73,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? Taxi { get; set; }             //4.0 alpha 4
         public bool? Multicrew { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("At ".T(EDCTx.JournalSupercruiseExit_At), Body, "< in ".T(EDCTx.JournalSupercruiseExit_in), StarSystem, "Type: ".T(EDCTx.JournalEntry_Type), BodyType);
             detailed = "";

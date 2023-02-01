@@ -80,7 +80,7 @@ namespace EliteDangerousCore.JournalEvents
         public long? MarketID { get; set; }
         public bool? Horizons { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
         {
             info = "";
             detailed = "";

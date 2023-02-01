@@ -34,7 +34,7 @@ namespace EliteDangerousCore.JournalEvents
         public double? Independent { get; set; }
         public double? Alliance { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("Federation: ;;0.#".T(EDCTx.JournalReputation_Federation), Federation , "Empire: ;;0.#".T(EDCTx.JournalReputation_Empire), Empire, "Independent: ;;0.#".T(EDCTx.JournalReputation_Independent), Independent , "Alliance: ;;0.#".T(EDCTx.JournalReputation_Alliance), Alliance);
             detailed = "";

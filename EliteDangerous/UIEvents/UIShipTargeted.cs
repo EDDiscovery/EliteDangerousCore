@@ -32,7 +32,7 @@ namespace EliteDangerousCore.UIEvents
 
         public override string ToString()
         {
-            ShipTargeted.FillInformation(null, "", out string info, out string detailed);
+            ShipTargeted.FillInformation(null,  out string info, out string detailed);
             return $"{info} {detailed}";
         }
     }

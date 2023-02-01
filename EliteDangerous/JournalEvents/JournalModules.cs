@@ -111,7 +111,7 @@ namespace EliteDangerousCore.JournalEvents
                                 UnladenMass ?? 0, ReserveFuelCapacity ?? 0, HullHealth ?? 0, Hot);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Ship: ".T(EDCTx.JournalEntry_Ship), Ship, "Name: ".T(EDCTx.JournalEntry_Name), ShipName, "Ident: ".T(EDCTx.JournalEntry_Ident), ShipIdent, ";(Hot)".T(EDCTx.JournalEntry_Hot), Hot,
                 "Modules: ".T(EDCTx.JournalLoadout_Modules), ShipModules.Count, "Hull Health: ;%;N1".T(EDCTx.JournalEntry_HullHealth), HullHealth, "Hull: ; cr;N0".T(EDCTx.JournalEntry_Hull), HullValue, "Modules: ; cr;N0".T(EDCTx.JournalEntry_Modules), ModulesValue, "Rebuy: ; cr;N0".T(EDCTx.JournalEntry_Rebuy), Rebuy);
@@ -196,7 +196,7 @@ namespace EliteDangerousCore.JournalEvents
             shp.ModuleBuy(this, system);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
         {
             
             info = BaseUtils.FieldBuilder.Build("", BuyItemLocalised, "< into ".T(EDCTx.JournalEntry_into), Slot, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), BuyPrice);
@@ -250,7 +250,7 @@ namespace EliteDangerousCore.JournalEvents
             shp.ModuleBuyAndStore(this,system);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", BuyItemLocalised, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), BuyPrice);
             detailed = "";
@@ -303,7 +303,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             shp.ModuleSell(this);
         }
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
 
             info = BaseUtils.FieldBuilder.Build("", SellItemLocalised, "< from ".T(EDCTx.JournalEntry_from), Slot, "Price: ; cr;N0".T(EDCTx.JournalEntry_Price), SellPrice);
@@ -356,7 +356,7 @@ namespace EliteDangerousCore.JournalEvents
             shp.ModuleSellRemote(this);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
 
             info = BaseUtils.FieldBuilder.Build("Item: ".T(EDCTx.JournalEntry_Item), SellItemLocalised, "Price: ; cr;N0".T(EDCTx.JournalEntry_Price), SellPrice);
@@ -428,7 +428,7 @@ namespace EliteDangerousCore.JournalEvents
             shp.ModuleRetrieve(this,system);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
 
             info = BaseUtils.FieldBuilder.Build("", RetrievedItemLocalised, "< into ".T(EDCTx.JournalEntry_into), Slot, ";(Hot)".T(EDCTx.JournalEntry_Hot), Hot);
@@ -507,7 +507,7 @@ namespace EliteDangerousCore.JournalEvents
             shp.ModuleStore(this,system);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
 
             info = BaseUtils.FieldBuilder.Build("", StoredItemLocalised, "< from ".T(EDCTx.JournalEntry_from), Slot, ";(Hot)".T(EDCTx.JournalEntry_Hot), Hot, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost);
@@ -566,7 +566,7 @@ namespace EliteDangerousCore.JournalEvents
             shp.ModuleSwap(this);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
 
             info = BaseUtils.FieldBuilder.Build("Slot: ".T(EDCTx.JournalEntry_Slot), FromSlot, "< to ".T(EDCTx.JournalEntry_to), ToSlot, "Item: ".T(EDCTx.JournalEntry_Item), FromItemLocalised);
@@ -632,7 +632,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public List<ShipModule> ShipModules;
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
 
             info = BaseUtils.FieldBuilder.Build("Modules: ".T(EDCTx.JournalModuleInfo_Modules), ShipModules.Count);
@@ -677,7 +677,7 @@ namespace EliteDangerousCore.JournalEvents
             shp.UpdateStoredModules(this);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Total: ".T(EDCTx.JournalEntry_Total), ModuleItems?.Count());
             detailed = "";
@@ -731,7 +731,7 @@ namespace EliteDangerousCore.JournalEvents
             shp.MassModuleStore(this,system);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Total modules: ".T(EDCTx.JournalEntry_Totalmodules), ModuleItems?.Count());
             detailed = "";
@@ -796,7 +796,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, StoredItemLocalised + " on " + Ship, -TransferCost);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", StoredItemLocalised, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), TransferCost, "Into ship: ".T(EDCTx.JournalEntry_Intoship), Ship, "Transfer Time: ".T(EDCTx.JournalEntry_TransferTime), FriendlyTransferTime);
             detailed = "";

@@ -58,7 +58,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public Passengers[] Manifest { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) //U
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) //U
         {
             info = "No Passengers".T(EDCTx.JournalEntry_NoPassengers);
 

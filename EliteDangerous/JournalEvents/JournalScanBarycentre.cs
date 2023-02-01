@@ -75,7 +75,7 @@ namespace EliteDangerousCore.JournalEvents
             s.AddBarycentre(this,system);
         }
 
-        public override void FillInformation(ISystem sysunused, string whereamiunused, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("SMA:", SemiMajorAxisLSKM, "Period:;d;0.0", OrbitalPeriodDays, "ID:", BodyID);
             detailed = BaseUtils.FieldBuilder.Build("e:;;0.000", Eccentricity, "OI:;;0.000", OrbitalInclination,

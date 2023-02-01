@@ -36,7 +36,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Category { get; set; }
         public long? MarketID { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("",Name_Localised, "Count: ".T(EDCTx.JournalEntry_Count),  Count , "Category: ".T(EDCTx.JournalEntry_Category), Category);
             detailed = "";

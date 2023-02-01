@@ -623,7 +623,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fid, out string info, out string detailed)
         {
             if (IsStar)
             {
@@ -631,7 +631,7 @@ namespace EliteDangerousCore.JournalEvents
                                                 "Age: ;my;0.0".T(EDCTx.JournalScan_Age), nAge,
                                                 "Radius: ".T(EDCTx.JournalScan_RS), RadiusText(),
                                                 "Dist: ;ls;0.0".T(EDCTx.JournalScan_DISTA), DistanceFromArrivalLS,
-                                                "Name: ".T(EDCTx.JournalScan_BNME), BodyName.ReplaceIfStartsWith(sys.Name));
+                                                "Name: ".T(EDCTx.JournalScan_BNME), BodyName.ReplaceIfStartsWith(fid.System.Name));
             }
             else
             {
@@ -641,7 +641,7 @@ namespace EliteDangerousCore.JournalEvents
                                                  "Gravity: ;G;0.00".T(EDCTx.JournalScan_Gravity), nSurfaceGravityG,
                                                  "Radius: ".T(EDCTx.JournalScan_RS), RadiusText(),
                                                  "Dist: ;ls;0.0".T(EDCTx.JournalScan_DISTA), DistanceFromArrivalLS,
-                                                 "Name: ".T(EDCTx.JournalScan_SNME), BodyName.ReplaceIfStartsWith(sys.Name));
+                                                 "Name: ".T(EDCTx.JournalScan_SNME), BodyName.ReplaceIfStartsWith(fid.System.Name));
             }
 
             detailed = DisplayString(0, includefront: false);

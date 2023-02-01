@@ -89,7 +89,7 @@ namespace EliteDangerousCore.JournalEvents
             mc.Clear(MicroResource.BackPack, MaterialCommodityMicroResourceType.CatType.Component, MaterialCommodityMicroResourceType.CatType.Data, MaterialCommodityMicroResourceType.CatType.Consumable, MaterialCommodityMicroResourceType.CatType.Item );      // clear all count zero of commodities
         }
 
-        public override void FillInformation(ISystem sysunused, string whereamiunused, out string info, out string detailed) 
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
         {
             info = "";
             if (Killers != null)
@@ -133,7 +133,7 @@ namespace EliteDangerousCore.JournalEvents
         {
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = "Boom!".T(EDCTx.JournalEntry_Boom);
             detailed = "";
@@ -167,7 +167,7 @@ namespace EliteDangerousCore.JournalEvents
             shp.Resurrect(Option.Equals("free", System.StringComparison.InvariantCultureIgnoreCase));    // if free, we did not rebuy the ship
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Option: ".T(EDCTx.JournalEntry_Option), Option, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost, ";Bankrupt".T(EDCTx.JournalEntry_Bankrupt), Bankrupt);
             detailed = "";

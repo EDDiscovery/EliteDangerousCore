@@ -29,7 +29,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Name { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = Name;
             detailed = "";
@@ -108,7 +108,7 @@ namespace EliteDangerousCore.JournalEvents
             NewRank = (SquadronRank)evt["NewRank"].Int();
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Name, "Old: ".T(EDCTx.JournalEntry_Old), OldRank.ToString().SplitCapsWord(), "New: ".T(EDCTx.JournalEntry_New), NewRank.ToString().SplitCapsWord());
             detailed = "";
@@ -153,7 +153,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public SquadronRank CurrentRank { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Name, "Rank: ".T(EDCTx.JournalEntry_Rank), CurrentRank.ToString().SplitCapsWord());
             detailed = "";

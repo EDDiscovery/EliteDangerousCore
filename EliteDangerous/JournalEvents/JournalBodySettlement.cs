@@ -43,7 +43,7 @@ namespace EliteDangerousCore.JournalEvents
             return sn;
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
         {
             info = "In ".T(EDCTx.JournalApproachBody_In) + StarSystem;
             detailed = "";
@@ -75,7 +75,7 @@ namespace EliteDangerousCore.JournalEvents
             return sn;
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = "In ".T(EDCTx.JournalLeaveBody_In) + StarSystem;
             detailed = "";
@@ -107,7 +107,7 @@ namespace EliteDangerousCore.JournalEvents
         public string BodyName { get; set; }
         public string BodyType { get { return "Settlement"; } }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = Name_Localised + " (" + BodyName + ")";
 

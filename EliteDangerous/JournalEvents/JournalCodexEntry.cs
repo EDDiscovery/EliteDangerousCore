@@ -111,7 +111,7 @@ namespace EliteDangerousCore.JournalEvents
             s.AddCodexEntryToSystem(this);
         }
 
-        public override void FillInformation(ISystem sysunused, string whereamiunused, out string info, out string detailed)   
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)   
         {
             info = BaseUtils.FieldBuilder.Build("At ".T(EDCTx.JournalCodexEntry_At), System, ";", EDDBodyName, "ID", EDDBodyId, "in ".T(EDCTx.JournalCodexEntry_in), Region_Localised,
                                                 "", Name_Localised,

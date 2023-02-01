@@ -233,7 +233,7 @@ namespace EliteDangerousCore.JournalEvents
                 JournalScanBaryCentre barycentrejs = Parents[0].Barycentre;
                 scanText.AppendLine();
                 scanText.AppendLine("Barycentre: " + barycentrejs.BodyID.ToString());
-                barycentrejs.FillInformation(null, null, out string info, out string detailed);
+                barycentrejs.FillInformation(null, out string info, out string detailed);
                 scanText.AppendLine(info);
                 scanText.AppendLine(detailed);
             }

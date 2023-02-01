@@ -111,7 +111,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys) { return string.Format("At {0}".T(EDCTx.JournalDocked_At), StationName); }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)      
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)      
         {
             info = "Docked".T(EDCTx.JournalTypeEnum_Docked) + ", ";
             info += BaseUtils.FieldBuilder.Build("Type: ".T(EDCTx.JournalEntry_Type), StationType, "< in system ".T(EDCTx.JournalEntry_insystem), StarSystem, 
@@ -154,7 +154,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationType { get; set; }
         public long? MarketID { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = StationName;
             detailed = "";
@@ -177,7 +177,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationType { get; set; }
         public long? MarketID { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", StationName, "", Reason);
             detailed = "";
@@ -200,7 +200,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationType { get; set; }
         public long? MarketID { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", StationName, "< on pad ".T(EDCTx.JournalEntry_onpad), LandingPad, "Type: ".T(EDCTx.JournalEntry_Type), StationType);
             detailed = "";
@@ -223,7 +223,7 @@ namespace EliteDangerousCore.JournalEvents
         public long? MarketID { get; set; }
         public JournalDocked.LandingPadList LandingPads { get; set; } // 4.0 update 5
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = StationName;
             detailed = "";
@@ -244,7 +244,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationType { get; set; }
         public long? MarketID { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = StationName;
             detailed = "";
@@ -271,7 +271,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? Taxi { get; set; }             //4.0 alpha 4
         public bool? Multicrew { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", StationName, "Type: ".T(EDCTx.JournalEntry_Type), StationType);
             detailed = "";

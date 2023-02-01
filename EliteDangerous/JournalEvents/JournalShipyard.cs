@@ -81,7 +81,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? Horizons { get; set; }
         public bool? AllowCobraMkIV { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
         {
             info = "";
             detailed = "";
@@ -166,7 +166,7 @@ namespace EliteDangerousCore.JournalEvents
                 shp.Sell(SellOldShipFD, SellOldShipId.Value);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", ShipType, "Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), ShipPrice);
             if (StoreOldShip != null)
@@ -198,7 +198,7 @@ namespace EliteDangerousCore.JournalEvents
             shp.ShipyardNew(ShipType, ShipFD, ShipId);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = ShipType;
             detailed = "";
@@ -244,7 +244,7 @@ namespace EliteDangerousCore.JournalEvents
             shp.Sell(ShipTypeFD, SellShipId);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", ShipType, "Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), ShipPrice, "At: ".T(EDCTx.JournalShipyardSell_At), System);
             detailed = "";
@@ -306,7 +306,7 @@ namespace EliteDangerousCore.JournalEvents
             shp.ShipyardSwap(this, whereami, system.Name);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Swap ".T(EDCTx.JournalShipyardSwap_Swap), StoreOldShip, "< for a ".T(EDCTx.JournalShipyardSwap_fora), ShipType);
             detailed = "";
@@ -359,7 +359,7 @@ namespace EliteDangerousCore.JournalEvents
             shp.Transfer(ShipType, ShipTypeFD, ShipId, FromSystem, system.Name, whereami, arrival);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Of ".T(EDCTx.JournalShipyardTransfer_Of), ShipType, "< from ".T(EDCTx.JournalEntry_from), FromSystem, "Distance: ; ly;0.0".T(EDCTx.JournalEntry_Distance), 
                             Distance, "Price: ; cr;N0".T(EDCTx.JournalEntry_Price), TransferPrice, "Transfer Time: ".T(EDCTx.JournalEntry_TransferTime), FriendlyTransferTime);
@@ -400,7 +400,7 @@ namespace EliteDangerousCore.JournalEvents
         public StoredShipInformation[] ShipsHere { get; set; }
         public StoredShipInformation[] ShipsRemote { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
 
             info = BaseUtils.FieldBuilder.Build("At starport: ".T(EDCTx.JournalStoredShips_Atstarport), ShipsHere?.Count(), "Other locations: ".T(EDCTx.JournalStoredShips_Otherlocations), ShipsRemote?.Count());
@@ -485,7 +485,7 @@ namespace EliteDangerousCore.JournalEvents
             shp.Sell(ShipType, SellShipId);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Ship: ".T(EDCTx.JournalEntry_Ship), ShipType, "System: ".T(EDCTx.JournalEntry_System), System, "Price: ; cr;N0".T(EDCTx.JournalEntry_Price), ShipPrice);
             detailed = "";

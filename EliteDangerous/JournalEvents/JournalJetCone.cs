@@ -28,7 +28,7 @@ namespace EliteDangerousCore.JournalEvents
         }
         public double BoostValue { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("Boost: ;;0.0".T(EDCTx.JournalEntry_Boost), BoostValue);
             detailed = "";
@@ -52,7 +52,7 @@ namespace EliteDangerousCore.JournalEvents
         public string ModuleFD { get; set; }
         public string ModuleLocalised { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = ModuleLocalised;
             detailed = "";

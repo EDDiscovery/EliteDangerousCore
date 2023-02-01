@@ -59,7 +59,7 @@ namespace EliteDangerousCore.JournalEvents
 
         protected override JournalTypeEnum IconEventType { get { return SRV ? JournalTypeEnum.EmbarkSRV : JournalTypeEnum.Embark; } }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             if (Taxi)
                 info = "Taxi".T(EDCTx.JournalEntry_Taxi);
@@ -116,7 +116,7 @@ namespace EliteDangerousCore.JournalEvents
 
         protected override JournalTypeEnum IconEventType { get { return SRV ? JournalTypeEnum.DisembarkSRV : JournalTypeEnum.Disembark; } }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             if (Taxi)
                 info = "Taxi".T(EDCTx.JournalEntry_Taxi);

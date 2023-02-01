@@ -40,7 +40,7 @@ namespace EliteDangerousCore.JournalEvents
         public FederationRank Federation { get; set; }
         public CQCRank CQC { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("", Combat.ToString().Replace("_", " "),
                                       "", Trade.ToString().Replace("_", " "),
@@ -124,7 +124,7 @@ namespace EliteDangerousCore.JournalEvents
         public FederationRank? Federation { get; set; }
         public CQCRank? CQC { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             var names = JournalRank.TranslatedRankNames();
 
@@ -165,7 +165,7 @@ namespace EliteDangerousCore.JournalEvents
         public int Federation { get; set; }
         public int CQC { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             var names = JournalRank.TranslatedRankNames();
             info = BaseUtils.FieldBuilder.Build(

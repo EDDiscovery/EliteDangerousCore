@@ -30,7 +30,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Message { get; set; }
         public string MessageLocalised { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
         {            
             info = MessageLocalised;
             detailed = "";
@@ -51,7 +51,7 @@ namespace EliteDangerousCore.JournalEvents
         public long Reward { get; set; }
         public string VictimFaction { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
 
             info = BaseUtils.FieldBuilder.Build("Reward: ; cr;N0".T(EDCTx.JournalEntry_Reward), Reward, "< from faction ".T(EDCTx.JournalEntry_fromfaction), PayeeFaction, "Against ".T(EDCTx.JournalEntry_Against), VictimFaction);
@@ -71,7 +71,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Type { get; set; }
         public string TypeLocalised { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = TypeLocalised;
             detailed = "";

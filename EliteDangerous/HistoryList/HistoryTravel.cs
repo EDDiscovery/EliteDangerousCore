@@ -156,7 +156,7 @@ namespace EliteDangerousCore
                     }
                 }
 
-                if (!hecur.MultiPlayer && hecur.journalEntry is JournalFSDJump) // if not multiplayer, and fsd..
+                if (!hecur.Status.MultiPlayer && hecur.journalEntry is JournalFSDJump) // if not multiplayer, and fsd..
                 {
                     double dist = ((JournalFSDJump)hecur.journalEntry).JumpDist;
 

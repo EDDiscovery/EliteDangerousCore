@@ -79,7 +79,7 @@ namespace EliteDangerousCore.JournalEvents
             public int Count;
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("Type: ".T(EDCTx.JournalEntry_Type), BrokerType);
 

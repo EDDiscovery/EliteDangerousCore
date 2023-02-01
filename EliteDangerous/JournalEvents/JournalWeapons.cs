@@ -44,7 +44,7 @@ namespace EliteDangerousCore.JournalEvents
         public int Class { get; set; }
         public string[] WeaponMods { get; set; }    // may be null/empty
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             string wmod = WeaponMods != null ? string.Join(", ", WeaponMods.Select(x => Recipes.GetBetterNameForEngineeringRecipe(x))) : null;
             info = BaseUtils.FieldBuilder.Build("", FriendlyName, "Class: ".T(EDCTx.JournalEntry_Class), Class, "Mods: ".T(EDCTx.JournalEntry_Mods), wmod, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Price);
@@ -90,7 +90,7 @@ namespace EliteDangerousCore.JournalEvents
         public string[] WeaponMods { get; set; }    // may be null/empty
 
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< sell price ; cr;N0".T(EDCTx.JournalEntry_sellprice), Price);
             detailed = "";
@@ -134,7 +134,7 @@ namespace EliteDangerousCore.JournalEvents
         public int Class { get; set; }
         public string[] WeaponMods { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             string wmod = WeaponMods != null ? string.Join(", ", WeaponMods.Select(x => Recipes.GetBetterNameForEngineeringRecipe(x))) : null;
             long? p = Cost > 0 ? Cost : default(long?);

@@ -38,7 +38,7 @@ namespace EliteDangerousCore.JournalEvents
         public MissionItem[] FailedMissions { get; set; }
         public MissionItem[] CompletedMissions { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("Active: ".T(EDCTx.JournalEntry_Active), ActiveMissions?.Length, "Failed: ".T(EDCTx.JournalEntry_Failed), FailedMissions?.Length, "Completed: ".T(EDCTx.JournalEntry_Completed), CompletedMissions?.Length);
             detailed = "";
@@ -190,7 +190,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public bool? Wing { get; private set; }     // 3.02
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = MissionBasicInfo(true);
             detailed = MissionDetailedInfo(true);
@@ -405,7 +405,7 @@ namespace EliteDangerousCore.JournalEvents
             mlist.Completed(this);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
 
             info = BaseUtils.FieldBuilder.Build("", LocalisedName,
@@ -625,7 +625,7 @@ namespace EliteDangerousCore.JournalEvents
         public ulong MissionId { get; set; }
         public long? Fine { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", LocalisedName, "Fine: ".T(EDCTx.JournalEntry_Fine), Fine);
             detailed = "";
@@ -671,7 +671,7 @@ namespace EliteDangerousCore.JournalEvents
         public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
         public string FDName { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = info = BaseUtils.FieldBuilder.Build("Mission name: ".T(EDCTx.JournalEntry_Missionname), LocalisedName,
                                       "From: ".T(EDCTx.JournalMissionRedirected_From), OldDestinationSystem,
@@ -709,7 +709,7 @@ namespace EliteDangerousCore.JournalEvents
         public long? Fine { get; set; }
 
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", LocalisedName, "Fine: ".T(EDCTx.JournalEntry_Fine), Fine);
             detailed = "";

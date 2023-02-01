@@ -28,7 +28,7 @@ namespace EliteDangerousCore.JournalEvents
             ID = evt["ID"].IntNull();
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
         {
             info = "";
             detailed = "";
@@ -42,7 +42,7 @@ namespace EliteDangerousCore.JournalEvents
         {
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = "";
             detailed = "";
@@ -64,7 +64,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? PlayerPilot { get; set; }      // 2.4+
         public bool? Fighter { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build(";%", (int)(Health * 100));
             detailed = "";

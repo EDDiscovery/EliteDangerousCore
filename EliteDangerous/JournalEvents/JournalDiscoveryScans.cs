@@ -33,10 +33,10 @@ namespace EliteDangerousCore.JournalEvents
         public long SystemAddress { get; set; }
         public int Bodies { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fid, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("New bodies discovered: ".T(EDCTx.JournalEntry_Dscan), Bodies,
-                                                "@ ", sys.Name);
+                                                "@ ", fid.System.Name);
             detailed = "";
         }
     }
@@ -64,12 +64,12 @@ namespace EliteDangerousCore.JournalEvents
             s.SetFSSDiscoveryScan(this, system);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fid, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Progress: ;%;N1".T(EDCTx.JournalFSSDiscoveryScan_Progress), Progress, 
                 "Bodies: ".T(EDCTx.JournalFSSDiscoveryScan_Bodies), BodyCount, 
                 "Others: ".T(EDCTx.JournalFSSDiscoveryScan_Others), NonBodyCount,
-                "@ ", sys.Name);
+                "@ ", fid.System.Name);
             detailed = "";
         }
     }
@@ -257,12 +257,12 @@ namespace EliteDangerousCore.JournalEvents
             s.AddFSSSignalsDiscoveredToSystem(this);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fid, out string info, out string detailed)
         {
-            FillInformation(sys, whereami, 20, out info, out detailed);
+            FillInformation(fid, 20, out info, out detailed);
         }
 
-        public void FillInformation(ISystem sys, string whereami, int maxsignals, out string info, out string detailed)
+        public void FillInformation(FillInformationData fid, int maxsignals, out string info, out string detailed)
         {
             detailed = "";
 
@@ -281,7 +281,7 @@ namespace EliteDangerousCore.JournalEvents
                     }
                 }
 
-                info = info.AppendPrePad("@ " + sys.Name, ", ");
+                info = info.AppendPrePad("@ " + fid.System.Name, ", ");
 
                 foreach (var s in Signals)
                     detailed = detailed.AppendPrePad(s.ToString(false), System.Environment.NewLine);
@@ -333,7 +333,7 @@ namespace EliteDangerousCore.JournalEvents
         public int NumBodies { get; set; }
         public long? SystemAddress { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Bodies: ".T(EDCTx.JournalEntry_Bodies), NumBodies);
             detailed = "";
@@ -368,9 +368,9 @@ namespace EliteDangerousCore.JournalEvents
             return base.SummaryName(sys) + " " + "of ".T(EDCTx.JournalEntry_ofa) + BodyName.ReplaceIfStartsWith(sys.Name);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fid, out string info, out string detailed)
         {
-            string name = BodyName.Contains(sys.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : sys.Name + ":" + BodyName;
+            string name = BodyName.Contains(fid.System.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : fid.System.Name + ":" + BodyName;
             info = BaseUtils.FieldBuilder.Build("Probes: ".T(EDCTx.JournalSAAScanComplete_Probes), ProbesUsed,
                                                 "Efficiency Target: ".T(EDCTx.JournalSAAScanComplete_EfficiencyTarget), EfficiencyTarget,
                                                 "@ ", name);
@@ -519,10 +519,10 @@ namespace EliteDangerousCore.JournalEvents
             return info;
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fid, out string info, out string detailed)
         {
             info = SignalList(Signals);
-            string name = BodyName.Contains(sys.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : sys.Name + ":" + BodyName;
+            string name = BodyName.Contains(fid.System.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : fid.System.Name + ":" + BodyName;
             info = info.AppendPrePad("@ " + name, ", ");
             if (Genuses != null)
                 info = info.AppendPrePad(GenusList(Genuses), "; ");
@@ -562,7 +562,7 @@ namespace EliteDangerousCore.JournalEvents
         public string SystemName { get; set; }
         public int Count { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = Count.ToString() + " @ " + SystemName;
             detailed = "";
@@ -639,10 +639,10 @@ namespace EliteDangerousCore.JournalEvents
             return base.SummaryName(sys) + " " + "of ".T(EDCTx.JournalEntry_ofa) + BodyName.ReplaceIfStartsWith(sys.Name);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fid, out string info, out string detailed)
         {
             info = JournalSAASignalsFound.SignalList(Signals);
-            string name = BodyName.Contains(sys.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : sys.Name + ":" + BodyName;
+            string name = BodyName.Contains(fid.System.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : fid.System.Name + ":" + BodyName;
             info = info.AppendPrePad("@ " + name, ", ");
             detailed = "";
         }
@@ -702,10 +702,10 @@ namespace EliteDangerousCore.JournalEvents
             s.AddScanOrganicToSystem(this,system);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fid, out string info, out string detailed)
         {
             int? ev = ScanType == ScanTypeEnum.Analyse ? EstimatedValue : null;
-            info = BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised, "; cr;N0", ev, "< @ ", whereami);
+            info = BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised, "; cr;N0", ev, "< @ ", fid.WhereAmI);
             detailed = "";
         }
 

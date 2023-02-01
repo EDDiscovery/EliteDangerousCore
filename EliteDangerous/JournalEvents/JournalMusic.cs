@@ -42,7 +42,7 @@ namespace EliteDangerousCore.JournalEvents
         public string MusicTrack { get; set; }
         public EDMusicTrackEnum MusicTrackID { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("Music Track: ".T(EDCTx.JournalEntry_MusicTrack), MusicTrack);
             detailed = "";

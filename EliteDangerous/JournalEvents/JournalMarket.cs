@@ -108,7 +108,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, FriendlyType + " " + Count, -TotalCost);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", FriendlyType, "", Count, "< buy price ; cr;N0".T(EDCTx.JournalEntry_buyprice), BuyPrice, "Total Cost: ; cr;N0".T(EDCTx.JournalEntry_TotalCost), TotalCost);
             detailed = "";
@@ -169,7 +169,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, FriendlyType + " " + Count + " Avg " + AvgPricePaid, TotalSale, Profit, (double)(SellPrice - AvgPricePaid));
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             long profit = TotalSale - (AvgPricePaid * Count);
             info = BaseUtils.FieldBuilder.Build("", FriendlyType, "", Count, "< sell price ; cr;N0".T(EDCTx.JournalEntry_sellprice), SellPrice, "Total Sale: ; cr;N0".T(EDCTx.JournalEntry_TotalSale), TotalSale, "Profit: ; cr;N0".T(EDCTx.JournalEntry_Profit), profit);

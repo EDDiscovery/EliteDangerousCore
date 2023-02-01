@@ -32,7 +32,7 @@ namespace EliteDangerousCore.JournalEvents
         public string DestinationSystem { get; set; }
         public string DestinationLocation { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", DestinationSystem, "<: ", DestinationLocation );
             detailed = "";
@@ -46,7 +46,7 @@ namespace EliteDangerousCore.JournalEvents
         {
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = "";
             detailed = "";
@@ -73,7 +73,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool OnStation { get; set; }
         public bool OnPlanet { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Body);
             detailed = "";
@@ -94,7 +94,7 @@ namespace EliteDangerousCore.JournalEvents
         public string DestinationLocation { get; set; }
         public long Cost { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             long? cost = Cost > 0 ? Cost : default(long?);
             info = BaseUtils.FieldBuilder.Build("", DestinationSystem, "<:", DestinationLocation, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), cost);
@@ -118,7 +118,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public long Refund { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             long? refund = Refund > 0 ? Refund : default(long?);
             info = BaseUtils.FieldBuilder.Build("", refund);

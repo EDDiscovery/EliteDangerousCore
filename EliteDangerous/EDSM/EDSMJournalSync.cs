@@ -57,7 +57,7 @@ namespace EliteDangerousCore.EDSM
                         he.journalEntry.SetEdsmSync();       // crappy slow but unusual, but lets mark them as sent..
                         hasbeta = true;
                     }
-                    else if (!(he.MultiPlayer || discardEvents.Contains(eventtype) || alwaysDiscard.Contains(eventtype)))
+                    else if (!(he.Status.MultiPlayer || discardEvents.Contains(eventtype) || alwaysDiscard.Contains(eventtype)))
                     {
                         list.Add(he);
                     }
@@ -76,7 +76,7 @@ namespace EliteDangerousCore.EDSM
             lock (alwaysDiscard)        // use this as a perm proxy to lock discardEvents
             {
                 string eventtype = he.EntryType.ToString();
-                return !(he.Commander.NameIsBeta || he.journalEntry.IsBeta || he.MultiPlayer || discardEvents.Contains(eventtype) || alwaysDiscard.Contains(eventtype));
+                return !(he.Commander.NameIsBeta || he.journalEntry.IsBeta || he.Status.MultiPlayer || discardEvents.Contains(eventtype) || alwaysDiscard.Contains(eventtype));
             }
         }
 
@@ -133,7 +133,7 @@ namespace EliteDangerousCore.EDSM
 
                         List<HistoryEntry> hl = new List<HistoryEntry>() { first };
 
-                        if (holdEvents.Contains(first.EntryType) || (first.EntryType == JournalTypeEnum.Location && first.IsDocked))
+                        if (holdEvents.Contains(first.EntryType) || (first.EntryType == JournalTypeEnum.Location && first.Status.IsDocked))
                         {
                             System.Diagnostics.Debug.WriteLine("EDSM Holding for another event");
 
@@ -169,7 +169,7 @@ namespace EliteDangerousCore.EDSM
 
                             hl.Add(he);
 
-                            if ((holdEvents.Contains(he.EntryType) || (he.EntryType == JournalTypeEnum.Location && he.IsDocked)) && queue.IsEmpty)
+                            if ((holdEvents.Contains(he.EntryType) || (he.EntryType == JournalTypeEnum.Location && he.Status.IsDocked)) && queue.IsEmpty)
                             {
                                 historyevent.WaitOne(20000); // Wait up to 20 seconds for another entry to come through
                             }
@@ -269,11 +269,11 @@ namespace EliteDangerousCore.EDSM
                 json["_systemCoordinates"] = new JArray(he.System.X, he.System.Y, he.System.Z);
                 if (he.System.SystemAddress != null)
                     json["_systemAddress"] = he.System.SystemAddress;
-                if (he.IsDocked)
+                if (he.Status.IsDocked)
                 {
                     json["_stationName"] = he.WhereAmI;
-                    if (he.MarketID != null)
-                        json["_stationMarketId"] = he.MarketID;
+                    if (he.Status.MarketID != null)
+                        json["_stationMarketId"] = he.Status.MarketID;
                 }
                 json["_shipId"] = he.Status.ShipID;
                 entries.Add(json);

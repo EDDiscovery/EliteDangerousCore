@@ -41,7 +41,7 @@ namespace EliteDangerousCore.JournalEvents
 
         protected override JournalTypeEnum IconEventType { get { return Type.Contains("SRV") ? JournalTypeEnum.RestockVehicle_SRV : JournalTypeEnum.RestockVehicle_Fighter; } }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("",Type , "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost , "Count: ".T(EDCTx.JournalEntry_Count), Count , "Loadout: ".T(EDCTx.JournalEntry_Loadout), Loadout);
             detailed = "";
@@ -67,7 +67,7 @@ namespace EliteDangerousCore.JournalEvents
             shp.VehicleSwitch(To);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(FillInformationData fidunused, out string info, out string detailed)
         {
             info = To;
             detailed = "";
