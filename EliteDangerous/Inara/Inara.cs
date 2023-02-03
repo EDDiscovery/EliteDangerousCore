@@ -75,22 +75,21 @@ namespace EliteDangerousCore.Inara
 
         public string Send(List<JToken> events, out List<JObject> datalist) // string returned is errors, null if none..
         {
+            string ret = "[Inara] ";
             datalist = new List<JObject>();
 
             if (!ValidCredentials)
-                return "No valid Inara Credentials" + Environment.NewLine;
+                return ret + "No valid Inara Credentials" + Environment.NewLine;
 
             string request = ToJSONString(events);
 
             //File.WriteAllText(@"c:\code\json.txt", request); 
-            System.Diagnostics.Debug.WriteLine("Send inara " + request);
+            System.Diagnostics.Debug.WriteLine(ret + "Send inara " + request);
 
             var response = RequestPost(request, InaraAPI, handleException: true);
 
             if (response.Error)
-                return "No Response" + Environment.NewLine;
-
-            string ret = "";
+                return ret + "No Response" + Environment.NewLine;
 
             try
             {
@@ -101,7 +100,7 @@ namespace EliteDangerousCore.Inara
 
                 if (headerstatus >= 300 || headerstatus < 200)      // 2xx good
                 {
-                    ret += "Rejected Send: " + header["eventStatusText"].Str() + Environment.NewLine;
+                    return ret + "Rejected Send: " + header["eventStatusText"].Str() + Environment.NewLine;
                 }
                 else
                 {
@@ -124,16 +123,15 @@ namespace EliteDangerousCore.Inara
                         else if (eventstate >= 300 || eventstate < 200)         // 2xx good
                             ret += "Error to request " + (events[i])["eventName"].Str() + " " + events[i].ToString() + " with " + ro["eventStatusText"].Str() + Environment.NewLine;
                     }
+
+                    //if (ret.Equals("[Inara] ")) ret = "ALL OK"; // debug!
+                    return ret.Equals("[Inara] ") ? $"{ret}Data sent successfully ({responses.Count} events)" : ret;
                 }
             }
             catch( Exception e)
             {
-                ret = "Exception " + e.ToString() + Environment.NewLine;
+                return "[Inara] Exception " + e.ToString() + Environment.NewLine;
             }
-
-            //if (ret == "") ret = "ALL OK"; // debug!
-
-            return ret.HasChars() ? ret : null;
         }
 
         #endregion
