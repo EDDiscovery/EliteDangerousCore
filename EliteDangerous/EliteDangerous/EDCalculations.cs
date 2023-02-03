@@ -95,10 +95,10 @@ namespace EliteDangerousCore
                 double mass = currentCargo + unladenMassHullModules + fuel;
                 double massf = OptimalMass / mass;
                 double fuelmultiplier = (LinearConstant * 0.001);
-                double powerf = Math.Pow(MaxFuelPerJump / fuelmultiplier, 1 / PowerConstant);
-                double basev = powerf * massf;
                 if (fuel >= MaxFuelPerJump)
-                {
+                { 
+                    double powerf = Math.Pow(MaxFuelPerJump / fuelmultiplier, 1 / PowerConstant);
+                    double basev = powerf * massf;
                     return (basev + FSDGuardianBoosterRange) * boost;
                 }
                 else
