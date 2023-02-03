@@ -195,7 +195,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 DateTime? seen = null;
                 if (showseentime && (ClassOfSignal == Classification.Carrier || ClassOfSignal == Classification.Megaship)) //both move in and out of systems, so show last seen
-                    seen = RecordedUTC;
+                    seen = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(RecordedUTC);
 
                 string signname = ClassOfSignal == Classification.USS ? null : SignalName_Localised;        // signal name for USS is boring, remove
 
