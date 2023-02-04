@@ -262,7 +262,8 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Is it landable (may be null if not valid for body)")]
         public bool? nLandable { get; private set; }                        // direct
         [PropertyNameAttribute("Is it def landable")]
-        public bool IsLandable { get { return nLandable.HasValue && nLandable.Value; } }
+        public bool IsLandable { get { return nLandable.HasValue && nLandable.Value && (!HasAtmosphericComposition || (HasAtmosphericComposition && IsOdyssey)); } }
+        public bool IsLandableOdyssey { get { return nLandable.HasValue && nLandable.Value && HasAtmosphericComposition; } }
         [PropertyNameAttribute("Earths")]
         public double? nMassEM { get; private set; }                        // direct, not in description of event, mass in EMs
         [PropertyNameAttribute("Moons")]
