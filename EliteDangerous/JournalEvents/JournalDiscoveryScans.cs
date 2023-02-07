@@ -231,7 +231,7 @@ namespace EliteDangerousCore.JournalEvents
         private string SignalNames() { return string.Join(",", Signals?.Select(x => x.SignalName)); }       // for debugger
 
         [PropertyNameAttribute("List of FSS signals")]
-        public List<FSSSignal> Signals { get; set; }            // name used in action packs not changeable
+        public List<FSSSignal> Signals { get; set; }            // name used in action packs not changeable. Never null 
 
         public ISystem EDDNSystem { get; set; }                 // set if FSS has been detected in the wrong system                  
 

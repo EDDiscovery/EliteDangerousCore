@@ -977,10 +977,7 @@ namespace EliteDangerousCore.EDDN
 
         public JObject CreateEDDNFSSSignalDiscovered(JournalFSSSignalDiscovered journal, ISystem system)
         {
-            if (system.SystemAddress == null || !system.HasCoordinate)
-                return null;
-
-            if (journal.Signals == null )
+            if (system.SystemAddress == null || !system.HasCoordinate || journal.Signals == null || journal.Signals.Count == 0 || system.SystemAddress != journal.Signals[0].SystemAddress)
                 return null;
 
             JObject msg = new JObject();
