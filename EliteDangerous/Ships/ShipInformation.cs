@@ -374,19 +374,24 @@ namespace EliteDangerousCore
                                     long hullvalue = 0, long modulesvalue = 0, long rebuy = 0,
                                     double unladenmass = 0, double reservefuelcap = 0 , double hullhealth = 0, bool? hot = null)
         {
-            if (ShipFD != shipfd || ship != ShipType || (name != null && name != ShipUserName) ||
-                                (ident != null && ident != ShipUserIdent) ||
-                                (fuellevel != 0 && fuellevel != FuelLevel) ||
-                                (fueltotal != 0 && fueltotal != FuelCapacity) ||
-                                (hullvalue != 0 && hullvalue != HullValue) ||
-                                (modulesvalue != 0 && modulesvalue != ModulesValue) ||
-                                (rebuy != 0 && rebuy != Rebuy) ||
-                                (unladenmass != 0 && unladenmass != UnladenMass) ||
-                                (reservefuelcap != 0 && reservefuelcap != ReserveFuelCapacity) ||
-                                (hullhealth != 0 && HullHealthAtLoadout != hullhealth) ||
-                                (hot != null && hot.Value != Hot)
-                                )
+            bool s1 = ShipFD != shipfd;
+            bool s2 = ship != ShipType;
+            bool s3 = name != null && name != ShipUserName;
+            bool s4 = ident != null && ident != ShipUserIdent;
+            bool s5 = fuellevel != 0 && fuellevel != FuelLevel;
+            bool s6 = fueltotal != 0 && fueltotal != FuelCapacity;
+            bool s7 = hullvalue != 0 && hullvalue != HullValue;
+            bool s8 = modulesvalue != 0 && modulesvalue != ModulesValue;
+            bool s9 = rebuy != 0 && rebuy != Rebuy;
+            bool s10 = unladenmass != 0 && unladenmass != UnladenMass;
+            bool s11 = reservefuelcap != 0 && reservefuelcap != ReserveFuelCapacity;
+            bool s12 = hullhealth != 0 && HullHealthAtLoadout != hullhealth;
+            bool s13 = hot != null && hot.Value != Hot;
+
+            if (s1 || s2 || s3 || s4 || s5 || s6 || s7 || s8 || s9 || s10 || s11 || s12 || s13 )
             {
+                //System.Diagnostics.Debug.WriteLine($".. update SetShipDetails");
+
                 ShipInformation sm = this.ShallowClone();
 
                 sm.ShipType = ship;
@@ -421,8 +426,11 @@ namespace EliteDangerousCore
 
                 return sm;
             }
-
-            return this;
+            else
+            {
+                //System.Diagnostics.Debug.WriteLine($".. don't update SetShipDetails");
+                return this;
+            }
         }
 
         public ShipInformation SetSubVehicle(SubVehicleType vh)

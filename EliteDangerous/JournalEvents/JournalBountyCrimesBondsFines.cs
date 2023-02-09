@@ -38,17 +38,23 @@ namespace EliteDangerousCore.JournalEvents
             SharedWithOthers = evt["SharedWithOthers"].Bool(false);
             Rewards = evt["Rewards"]?.ToObjectQ<BountyReward[]>();
 
-            TargetLocalised = Target = evt["Target"].StrNull();       // only set for skimmer target missions
+            TargetLocalised = Target = evt["Target"].StrNull();       // set for skimmer target missions and for on foot bounties
 
             if (Target != null)         
             {
-                TargetLocalised = JournalFieldNaming.CheckLocalisation(evt["Target_Localised"].Str(), Target);  // 3.7 added a localised target field, so try it
+                TargetLocalised = evt["Target_Localised"].Str("$");     // if not there, trigger the getter suit naming
 
-                var sp = ItemData.GetShipProperties(Target);
+                var sp = ItemData.GetShipProperties(Target);        // if its a ship, replace with ship name
                 if (sp != null)
                 {
                     TargetLocalised = ((ItemData.ShipInfoString)sp[ItemData.ShipPropID.Name]).Value;
                 }
+                else if (TargetLocalised.StartsWith("$"))
+                {
+                    TargetLocalised = JournalFieldNaming.GetBetterShipSuitActorName(Target);    // else use suit etc naming
+                }
+
+                System.Diagnostics.Debug.WriteLine($"Bounty {Target} -> {TargetLocalised}");
             }
             else
             {
