@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2022 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  * 
- * Part of this data is courtesy of Coriolis.IO https://github.com/EDCD/coriolis , data is intellectual property and copyright of Frontier Developments plc ('Frontier', 'Frontier Developments') and are subject to their terms and conditions.
+ * Data is intellectual property and copyright of Frontier Developments plc ('Frontier', 'Frontier Developments') and are subject to their terms and conditions.
  */
 
 using System;
@@ -22,13 +22,19 @@ namespace EliteDangerousCore
 {
     public partial class ItemData
     {
+        static public bool ShipModuleExists(string fdid)
+        {
+            string lowername = fdid.ToLowerInvariant();
+            return modules.ContainsKey(lowername) || othermodules.ContainsKey(lowername);
+        }
+
         static public ShipModule GetShipModuleProperties(string fdid)        // given an item name, return its ShipModule properties (id, mass, names). Always returns one
         {
             string lowername = fdid.ToLowerInvariant();
 
             ShipModule m = null;
 
-            if (!modules.TryGetValue(lowername, out m) && !noncorolismodules.TryGetValue(lowername, out m))
+            if (!modules.TryGetValue(lowername, out m) && !othermodules.TryGetValue(lowername, out m))
             {
                 bool hasmodule;
 
@@ -82,10 +88,10 @@ namespace EliteDangerousCore
         private const string CargoBayDoorType = "Cargo Bay Door";
         private const string WearAndTearType = "Wear and Tear";
 
-       static public List<string> GetAllModTypes(bool removenonbuyable = true)                            // all module types..
+        static public List<string> GetAllModTypes(bool removenonbuyable = true)                            // all module types..
         {
             List<ShipModule> ret = new List<ShipModule>(modules.Values);
-            ret.AddRange(noncorolismodules.Values);
+            ret.AddRange(othermodules.Values);
             var slist = (from x in ret orderby x.ModType select x.ModType).Distinct().ToList();
             slist.Add(UnknownType);                 // account for this..
             if (removenonbuyable)
@@ -116,9 +122,9 @@ namespace EliteDangerousCore
             public string ModType;
             public double Power;
             public string Info;
-            public ShipModule(int id, double m, string n, string t) { ModuleID = id; Mass = m; ModName = n; ModType = t; }
-            public ShipModule(int id, double m, double p, string n, string t) { ModuleID = id; Mass = m; Power = p; ModName = n; ModType = t; }
-            public ShipModule(int id, double m, double p, string i, string n, string t) { ModuleID = id; Mass = m; Power = p; Info = i; ModName = n; ModType = t; }
+            public ShipModule(int id, double mass, string descr, string modtype) { ModuleID = id; Mass = mass; ModName = descr; ModType = modtype; }
+            public ShipModule(int id, double mass, double power, string descr, string modtype) { ModuleID = id; Mass = mass; Power = power; ModName = descr; ModType = modtype; }
+            public ShipModule(int id, double mass, double power, string info, string descr, string modtype) { ModuleID = id; Mass = mass; Power = power; Info = info; ModName = descr; ModType = modtype; }
 
             public string InfoMassPower(bool mass)
             {
@@ -132,9 +138,9 @@ namespace EliteDangerousCore
         };
         #endregion
 
-        #region Modules not in corolis
-          
-        public static Dictionary<string, ShipModule> noncorolismodules = new Dictionary<string, ShipModule>   // DO NOT USE DIRECTLY - public is for checking only
+        #region Modules collected from logs mainly
+
+        public static Dictionary<string, ShipModule> othermodules = new Dictionary<string, ShipModule>   // DO NOT USE DIRECTLY - public is for checking only
         {
             { "empire_fighter_armour_standard", new ShipModule(-1,0,0,null,"Empire Fighter Armour Standard","Armour") },
             { "federation_fighter_armour_standard", new ShipModule(-1,0,0,null,"Federation Fighter Armour Standard","Armour") },
@@ -279,9 +285,9 @@ namespace EliteDangerousCore
             { "int_sinewavescanner_size1_class1", new ShipModule(-1,0,0,null,"SRV Scarab Scanner","Sensors") },
             { "int_sensors_surface_size1_class1", new ShipModule(-1,0,0,null,"SRV Sensors","Sensors") },
 
-            { "int_shieldgenerator_size1_class1", new ShipModule(-1,1.29999995231628,0.720000028610229,null,"Shield Generator Class 1 Rating E","Shield Generator") },
-            { "int_shieldgenerator_size1_class2", new ShipModule(-1,0.5,0.959999978542328,null,"Shield Generator Class 1 Rating E","Shield Generator") },
-            { "int_shieldgenerator_size1_class3", new ShipModule(-1,1.29999995231628,1.20000004768372,null,"Shield Generator Class 1 Rating E","Shield Generator") },
+            { "int_shieldgenerator_size1_class1", new ShipModule(128064258, 1.29999995231628, 0.720000028610229, null, "Shield Generator Class 1 Rating E", "Shield Generator" ) },
+            { "int_shieldgenerator_size1_class2", new ShipModule(128064259, 0.5, 0.959999978542328, null, "Shield Generator Class 1 Rating E", "Shield Generator" ) },
+            { "int_shieldgenerator_size1_class3", new ShipModule(128064260, 1.29999995231628, 1.20000004768372, null, "Shield Generator Class 1 Rating E", "Shield Generator" ) },
             { "int_shieldgenerator_size1_class4", new ShipModule(-1,2,1.44000005722046,null,"Shield Generator Class 1 Rating E","Shield Generator") },
             { "int_shieldgenerator_size0_class3", new ShipModule(-1,0,0,null,"SRV Shields","Shield Generator") },
 
@@ -290,6 +296,7 @@ namespace EliteDangerousCore
             { "int_stellarbodydiscoveryscanner_advanced", new ShipModule(128663561,2,0,null,"Stellar Body Discovery Scanner Advanced","Stellar Body Discovery Scanner") },
             { "int_stellarbodydiscoveryscanner_intermediate", new ShipModule(128663560,2,0,"Range:1000ls","Stellar Body Discovery Scanner Intermediate","Stellar Body Discovery Scanner") },
             { "int_stellarbodydiscoveryscanner_standard", new ShipModule(128662535,2,0,"Range:500ls","Stellar Body Discovery Scanner Standard","Stellar Body Discovery Scanner") },
+            { "int_stellarbodydiscoveryscanner_standard_free", new ShipModule(128666642,2,0,"Range:500ls","Stellar Body Discovery Scanner Standard","Stellar Body Discovery Scanner") },
 
             { "null", new ShipModule(-1,0,0,null,"Error in frontier journal - Null module",UnknownType) },
 
@@ -1147,26 +1154,47 @@ namespace EliteDangerousCore
             { "weaponcustomisation_white", new ShipModule(-1,0,0,null,"Weapon Customisation White",VanityType) },
             { "weaponcustomisation_yellow", new ShipModule(-1,0,0,null,"Weapon Customisation Yellow",VanityType) },
 
-            { "hpt_dumbfiremissilerack_fixed_medium_advanced", new ShipModule(-1,1,1.2,null,"Dumbfire Missile Rack Fixed Medium Advanced","Weapon") },
-            { "hpt_dumbfiremissilerack_fixed_small_advanced", new ShipModule(-1,1,0.4,null,"Dumbfire Missile Rack Fixed Small Advanced","Weapon") },
+            { "hpt_dumbfiremissilerack_fixed_small_advanced", new ShipModule(128935982, 1, 0.4, null, "Dumbfire Missile Rack Fixed Small Advanced", "Weapon" ) },
+            { "hpt_dumbfiremissilerack_fixed_medium_advanced", new ShipModule(128935983, 1, 1.2, null, "Dumbfire Missile Rack Fixed Medium Advanced", "Weapon" ) },
             { "hpt_guardiangauss_fixed_gdn_fighter", new ShipModule(-1,1,1,null,"Guardian Gauss Fixed GDN Fighter","Weapon") },
             { "hpt_guardianplasma_fixed_gdn_fighter", new ShipModule(-1,1,1,null,"Guardian Plasma Fixed GDN Fighter","Weapon") },
             { "hpt_guardianshard_fixed_gdn_fighter", new ShipModule(-1,1,1,null,"Guardian Shard Fixed GDN Fighter","Weapon") },
-            { "hpt_multicannon_fixed_medium_advanced", new ShipModule(-1,1,0.5,null,"Multi Cannon Fixed Medium Advanced","Weapon") },
-            { "hpt_multicannon_fixed_small_advanced", new ShipModule(-1,1,0.3,null,"Multi Cannon Fixed Small Advanced","Weapon") },
-
+            { "hpt_multicannon_fixed_medium_advanced", new ShipModule(128935980, 1, 0.5, null, "Multi Cannon Fixed Medium Advanced", "Weapon" ) },
+            { "hpt_multicannon_fixed_small_advanced", new ShipModule(128935981, 1, 0.3, null, "Multi Cannon Fixed Small Advanced", "Weapon" ) },
             { "paint", new ShipModule(-1,0,0,null,"Paint",WearAndTearType) },
             { "all", new ShipModule(-1,0,0,null,"Repair All",WearAndTearType) },
             { "hull", new ShipModule(-1,0,0,null,"Repair All",WearAndTearType) },
             { "wear", new ShipModule(-1,0,0,null,"Wear",WearAndTearType) },
+
+            // Odyssey V14 new modules
+
+            { "hpt_atmulticannon_fixed_medium_v2", new ShipModule(129022080, 4, 0.48, "Damage: 10/S", "Enhanced AX Multi Cannon", "Weapon" ) },   // from devtalk
+            { "hpt_atmulticannon_fixed_large_v2", new ShipModule(129022084, 8, 0.69, "Damage: 15.6/S", "Enhanced AX Multi Cannon", "Weapon" ) },  // from devtalk
+
+            { "hpt_atmulticannon_turret_medium_v2", new ShipModule(129022086, 0, 0, "", "Enhanced AX Multi Cannon", "Weapon" ) },
+            { "hpt_atmulticannon_turret_large_v2", new ShipModule(129022085, 0, 0, "", "Enhanced AX Multi Cannon", "Weapon" ) },
+
+            { "hpt_atmulticannon_gimbal_medium", new ShipModule(129022089, 4, 0.46, "Damage: 9/6/S", "Enhanced AX Multi Cannon", "Weapon" ) },       // from devtalk
+            { "hpt_atmulticannon_gimbal_large", new ShipModule(129022088, 8, 0.64, "Damage: 15.2/S", "Enhanced AX Multi Cannon", "Weapon" ) },        // from devtalk
+
+            { "hpt_atdumbfiremissile_fixed_medium_v2", new ShipModule(129022081, 4, 1.3, "Damage: 16.0/S", "Enhanced AX Missile Rack", "Weapon" ) },// from devtalk
+            { "hpt_atdumbfiremissile_fixed_large_v2", new ShipModule(129022079, 8, 1.72, "Damage: 16.0/S", "Enhanced AX Missile Rack", "Weapon" ) },// from devtalk
+
+            { "hpt_atdumbfiremissile_turret_medium_v2", new ShipModule(129022083, 4, 1.3, "Damage: 12.2/S", "Enhanced AX Missile Rack", "Weapon" ) },// from devtalk
+            { "hpt_atdumbfiremissile_turret_large_v2", new ShipModule(129022082, 7, 1.85, "Damage: 12.2/S", "Enhanced AX Missile Rack", "Weapon" ) },// from devtalk
+
+            { "hpt_xenoscannermk2_basic_tiny", new ShipModule(128808878, 0, 0, "", "Xeno Scanner MK 2", "Xeno Scanner" ) },
+
+            { "int_expmodulestabiliser_size3_class3", new ShipModule(129019260, 0, 0, "", "Exp Module Stabiliser", "Stabiliser" ) },
+            { "int_expmodulestabiliser_size5_class3", new ShipModule(129019261, 0, 0, "", "Exp Module Stabiliser", "Stabiliser" ) },
         };
 
         // use when the list gets unsorted
         // Run, and put new list into noncoriolismodulesredux, and uncomment bottom, and it will double check
-        static public void ReformatNonCoriolisModules()     
+        static public void ReformatNonCoriolisModules()
         {
             var sd = new BaseUtils.SortedDictionaryDuplicate<string, Tuple<string, ShipModule>>();
-            foreach (var kvp in noncorolismodules)
+            foreach (var kvp in othermodules)
                 sd.Add(kvp.Value.ModType + kvp.Value.ModName, new Tuple<string, ShipModule>(kvp.Key, kvp.Value));
 
             string lastmod = "";
@@ -1184,14 +1212,14 @@ namespace EliteDangerousCore
                     mtype = "VanityType";
                 else if (mtype == UnknownType)
                     mtype = "UnknownType";
-                else if (mtype == CargoBayDoorType )
+                else if (mtype == CargoBayDoorType)
                     mtype = "CargoBayDoorType";
                 else if (mtype == WearAndTearType)
                     mtype = "WearAndTearType";
                 else if (mtype == CockpitType)
                     mtype = "CockpitType";
                 else
-                    mtype = "\""+mtype+"\"";
+                    mtype = "\"" + mtype + "\"";
 
                 if (m.Info != null)
                     System.Diagnostics.Debug.WriteLine($"            {{ \"{kvp.Value.Item1}\", new ShipModule({m.ModuleID},{m.Mass},{m.Power},\"{m.Info}\",\"{m.ModName}\",{mtype}) }},");
@@ -1210,12 +1238,10 @@ namespace EliteDangerousCore
         #endregion
 
 
-        #region FROM COROLIS  NEVER EVER do this manually, its done using a corolis-data scanner in testnetlogentry!
+        #region Originally from Coriolis, now manually managed, synced with Frontier.
 
-        public static Dictionary<string, ShipModule> modules = new Dictionary<string, ShipModule>       // DO NOT USE DIRECTLY - public is for checking only
+        public static Dictionary<string, ShipModule> modules = new Dictionary<string, ShipModule>       
         {
-            ///////////////////////////////////// FROM HARDPOINT FOLDER MODULE SCAN
-
             { "hpt_mining_abrblstr_fixed_small", new ShipModule(128915458, 2, 0.34F, "Damage:4, Range:1000m, Speed:667m/s, Reload:2s, ThermL:1.8","Mining Abrasion Blaster Fixed Small", "Mining")},
             { "hpt_mining_abrblstr_turret_small", new ShipModule(128915459, 2, 0.47F, "Damage:4, Range:1000m, Speed:667m/s, Reload:2s, ThermL:1.8","Mining Abrasion Blaster Turret Small", "Mining")},
             { "hpt_atdumbfiremissile_fixed_medium", new ShipModule(128788699, 4, 1.2F, "Ammo:64/8, Damage:64, Speed:750m/s, Reload:5s, ThermL:2.4","AX Dumbfire Missile Fixed Medium", "Missile Rack")},
@@ -1337,6 +1363,7 @@ namespace EliteDangerousCore
             { "hpt_plasmaaccelerator_fixed_large_advanced", new ShipModule(128671339, 8, 1.97F, "Ammo:300/20, Damage:34.5, Range:3500m, Speed:875m/s, Reload:6s, ThermL:11","Plasma Accelerator Fixed Large Advanced", "Plasma Accelerator")},
             { "hpt_plasmaaccelerator_fixed_huge", new ShipModule(128049467, 16, 2.63F, "Ammo:100/5, Damage:125.2, Range:3500m, Speed:875m/s, Reload:6s, ThermL:29.5","Plasma Accelerator Fixed Huge", "Plasma Accelerator")},
             { "hpt_plasmapointdefence_turret_tiny", new ShipModule(128049522, 0.5F, 0.2F, "Ammo:10000/12, Damage:0.2, Range:2500m, Speed:1000m/s, Reload:0.4s, ThermL:0.1","Plasma Point Defence Turret", "Point Defence")},
+            { "hpt_pulselaser_fixed_smallfree", new ShipModule(128049673, 1, 0.4, null, "Pulse Laser Fixed Small Free", "Pulse Laser" ) },
             { "hpt_pulselaser_fixed_small", new ShipModule(128049381, 2, 0.39F, "Damage:2.1, Range:3000m, ThermL:0.3","Pulse Laser Fixed Small", "Pulse Laser")},
             { "hpt_pulselaser_gimbal_small", new ShipModule(128049385, 2, 0.39F, "Damage:1.6, Range:3000m, ThermL:0.3","Pulse Laser Gimbal Small", "Pulse Laser")},
             { "hpt_pulselaser_turret_small", new ShipModule(128049388, 2, 0.38F, "Damage:1.2, Range:3000m, ThermL:0.2","Pulse Laser Turret Small", "Pulse Laser")},
@@ -1362,7 +1389,7 @@ namespace EliteDangerousCore
             { "hpt_flechettelauncher_fixed_medium", new ShipModule(128833996, 4, 1.2F, "Ammo:72/1, Damage:13, Speed:550m/s, Reload:2s, ThermL:3.6","Flechette Launcher Fixed Medium", "Flechette Launcher")},
             { "hpt_flechettelauncher_turret_medium", new ShipModule(128833997, 4, 1.2F, "Ammo:72/1, Damage:13, Speed:550m/s, Reload:2s, ThermL:3.6","Flechette Launcher Turret Medium", "Flechette Launcher")},
             { "hpt_mining_seismchrgwarhd_turret_medium", new ShipModule(128915461, 4, 1.2F, "Ammo:72/1, Damage:15, Range:3000m, Speed:350m/s, ThermL:3.6","Mining Seismic Charge Warhead Turret Medium", "Mining")},
-            { "hpt_mining_seismchrgwarhd_fixed_medium", new ShipModule(128049381, 4, 1.2F, "Ammo:72/1, Damage:15, Range:3000m, Speed:350m/s, ThermL:3.6","Mining Seismic Charge Warhead Fixed Medium", "Mining")},
+            { "hpt_mining_seismchrgwarhd_fixed_medium", new ShipModule(128915460, 4, 1.2F, "Ammo:72/1, Damage:15, Range:3000m, Speed:350m/s, ThermL:3.6","Mining Seismic Charge Warhead Fixed Medium", "Mining")},
             { "hpt_shieldbooster_size0_class1", new ShipModule(128668532, 0.5F, 0.2F, "Boost:4.0%, Explosive:0%, Kinetic:0%, Thermal:0%","Shield Booster Rating E", "Shield Booster")},
             { "hpt_shieldbooster_size0_class2", new ShipModule(128668533, 1, 0.5F, "Boost:8.0%, Explosive:0%, Kinetic:0%, Thermal:0%","Shield Booster Rating D", "Shield Booster")},
             { "hpt_shieldbooster_size0_class3", new ShipModule(128668534, 2, 0.7F, "Boost:12.0%, Explosive:0%, Kinetic:0%, Thermal:0%","Shield Booster Rating C", "Shield Booster")},
@@ -1378,16 +1405,14 @@ namespace EliteDangerousCore
             { "hpt_plasmashockcannon_gimbal_small", new ShipModule(128891604, 2, 0.47F, "Ammo:240/16, Damage:6.9, Range:3000m, Speed:1200m/s, Reload:6s, ThermL:1.5","Plasma Shock Cannon Gimbal Small", "Plasma Shock Cannon")},
             { "hpt_plasmashockcannon_turret_small", new ShipModule(128891603, 2, 0.54F, "Ammo:240/16, Damage:4.5, Range:3000m, Speed:1200m/s, Reload:6s, ThermL:0.7","Plasma Shock Cannon Turret Small", "Plasma Shock Cannon")},
             { "hpt_antiunknownshutdown_tiny", new ShipModule(128771884, 1.3F, 0.2F, "Range:3000m","Shutdown Field Neutraliser", "Shutdown Field Neutraliser")},
-            { "hpt_mining_subsurfdispmisle_fixed_medium", new ShipModule(128915457, 4, 1.01F, "Ammo:96/1, Damage:5, Range:3000m, Speed:550m/s, Reload:2s, ThermL:2.9","Mining Sub Surface Displacement Missile Fixed Medium", "Mining")},
-            { "hpt_mining_subsurfdispmisle_turret_medium", new ShipModule(128049381, 4, 0.93F, "Ammo:96/1, Damage:5, Range:3000m, Speed:550m/s, Reload:2s, ThermL:2.9","Mining Subsurface Displacement Missile Turret Medium", "Mining")},
-            { "hpt_mining_subsurfdispmisle_fixed_small", new ShipModule(128915455, 2, 0.42F, "Ammo:32/1, Damage:5, Range:3000m, Speed:550m/s, Reload:2s, ThermL:2.2","Mining Sub Surface Displacement Missile Fixed Small", "Mining")},
-            { "hpt_mining_subsurfdispmisle_turret_small", new ShipModule(128049381, 2, 0.53F, "Ammo:32/1, Damage:5, Range:3000m, Speed:550m/s, Reload:2s, ThermL:2.2","Mining Subsurface Displacement Missile Turret Small", "Mining")},
+            { "hpt_mining_subsurfdispmisle_fixed_small", new ShipModule(128915454, 2, 0.419999986886978, "Ammo:32/1, Damage:5, Range:3000m, Speed:550m/s, Reload:2s, ThermL:2.2", "Mining Sub Surface Displacement Missile Fixed Small", "Mining" ) },
+            { "hpt_mining_subsurfdispmisle_turret_small", new ShipModule(128915455, 2, 0.529999971389771, "Ammo:32/1, Damage:5, Range:3000m, Speed:550m/s, Reload:2s, ThermL:2.2", "Mining Subsurface Displacement Missile Turret Small", "Mining" ) },
+            { "hpt_mining_subsurfdispmisle_fixed_medium", new ShipModule(128915456, 4, 1.00999999046326, "Ammo:96/1, Damage:5, Range:3000m, Speed:550m/s, Reload:2s, ThermL:2.9", "Mining Sub Surface Displacement Missile Fixed Medium", "Mining" ) },
+            { "hpt_mining_subsurfdispmisle_turret_medium", new ShipModule(128915457, 4, 0.930000007152557, "Ammo:96/1, Damage:5, Range:3000m, Speed:550m/s, Reload:2s, ThermL:2.9", "Mining Subsurface Displacement Missile Turret Medium", "Mining" ) },
             { "hpt_advancedtorppylon_fixed_small", new ShipModule(128049509, 2, 0.4F, "Ammo:1/1, Damage:120, Speed:250m/s, Reload:5s, ThermL:45","Advanced Torp Pylon Fixed Small", "Missile Rack")},
             { "hpt_advancedtorppylon_fixed_medium", new ShipModule(128049510, 4, 0.4F, "Ammo:2/1, Damage:120, Speed:250m/s, Reload:5s, ThermL:50","Advanced Torp Pylon Fixed Medium", "Missile Rack")},
             { "hpt_advancedtorppylon_fixed_large", new ShipModule(128049511, 8, 0.6F, "Ammo:4/4, Damage:120, Speed:250m/s, Reload:5s, ThermL:55","Advanced Torp Pylon Fixed Large", "Missile Rack")},
             { "hpt_xenoscanner_basic_tiny", new ShipModule(128793115, 1.3F, 0.2F, "Range:500m","Xeno Scanner Seeker", "Xeno Scanner")},
-
-            ///////////////////////////////////// FROM INTERNAL FOLDER SCAN
 
             { "int_repairer_size1_class1", new ShipModule(128667598, 0, 0.54F, "Ammo:1000, Repair:12","Auto Field Maintenance Class 1 Rating E", "Auto Field Maintenance")},
             { "int_repairer_size1_class2", new ShipModule(128667606, 0, 0.72F, "Ammo:900, Repair:14.4","Auto Field Maintenance Class 1 Rating D", "Auto Field Maintenance")},
@@ -1443,6 +1468,7 @@ namespace EliteDangerousCore
             { "int_passengercabin_size6_class2", new ShipModule(128727927, 40, 0, "Passengers:16","Business Class Passenger Cabin Class 6 Rating D", "Passenger Cabin")},
             { "int_cargorack_size1_class1", new ShipModule(128064338, 0, 0, "Size:2t","Cargo Rack Class 1 Rating E", "Cargo Rack")},
             { "int_cargorack_size2_class1", new ShipModule(128064339, 0, 0, "Size:4t","Cargo Rack Class 2 Rating E", "Cargo Rack")},
+            { "int_cargorack_size2_class1_free", new ShipModule(128666643, 0, 0, "Size:4t","Cargo Rack Class 2 Rating E", "Cargo Rack")},
             { "int_cargorack_size3_class1", new ShipModule(128064340, 0, 0, "Size:8t","Cargo Rack Class 3 Rating E", "Cargo Rack")},
             { "int_cargorack_size4_class1", new ShipModule(128064341, 0, 0, "Size:16t","Cargo Rack Class 4 Rating E", "Cargo Rack")},
             { "int_cargorack_size5_class1", new ShipModule(128064342, 0, 0, "Size:32t","Cargo Rack Class 5 Rating E", "Cargo Rack")},
@@ -1635,6 +1661,7 @@ namespace EliteDangerousCore
             { "int_hullreinforcement_size5_class1", new ShipModule(128668545, 32, 0, "Explosive:2.5%, Kinetic:2.5%, Thermal:2.5%","Hull Reinforcement Class 5 Rating E", "Hull Reinforcement")},
             { "int_hullreinforcement_size5_class2", new ShipModule(128668546, 16, 0, "Explosive:2.5%, Kinetic:2.5%, Thermal:2.5%","Hull Reinforcement Class 5 Rating D", "Hull Reinforcement")},
             { "int_fueltank_size1_class3", new ShipModule(128064346, 0, 0, "Size:2t","Fuel Tank Class 1 Rating C", "Fuel Tank")},
+            { "int_fueltank_size1_class3_free", new ShipModule(128667018, 0, 0, "Size:2t","Fuel Tank Class 1 Rating C", "Fuel Tank")},
             { "int_fueltank_size2_class3", new ShipModule(128064347, 0, 0, "Size:4t","Fuel Tank Class 2 Rating C", "Fuel Tank")},
             { "int_fueltank_size3_class3", new ShipModule(128064348, 0, 0, "Size:8t","Fuel Tank Class 3 Rating C", "Fuel Tank")},
             { "int_fueltank_size4_class3", new ShipModule(128064349, 0, 0, "Size:16t","Fuel Tank Class 4 Rating C", "Fuel Tank")},
@@ -1697,6 +1724,7 @@ namespace EliteDangerousCore
             { "int_dronecontrol_prospector_size7_class2", new ShipModule(128671285, 32, 0.41F, "Range:6.8km","Prospector Drone Controller Class 7 Rating D", "Limpet Controller")},
             { "int_dronecontrol_prospector_size7_class3", new ShipModule(128671286, 80, 0.69F, "Range:8.5km","Prospector Drone Controller Class 7 Rating C", "Limpet Controller")},
             { "int_dronecontrol_prospector_size7_class4", new ShipModule(128671287, 128, 0.97F, "Range:10.2km","Prospector Drone Controller Class 7 Rating B", "Limpet Controller")},
+            { "int_dronecontrol_resourcesiphon", new ShipModule(128066402, 0, 0, "", "Hatch Breaker Limpet Controller", "Limpet Controller" ) },
             { "int_dronecontrol_prospector_size7_class5", new ShipModule(128671288, 80, 0.83F, "Range:11.9km","Prospector Drone Controller Class 7 Rating A", "Limpet Controller")},
             { "int_dronecontrol_recon_size1_class1", new ShipModule(128837858, 1.3F, 0.18F, "Range:1.2km","Recon Drone Controller Class 1 Rating E", "Drone Control Recon")},
             { "int_dronecontrol_recon_size3_class1", new ShipModule(128841592, 2, 0.2F, "Range:1.4km","Recon Drone Controller Class 3 Rating E", "Drone Control Recon")},
@@ -1785,6 +1813,7 @@ namespace EliteDangerousCore
             { "int_shieldcellbank_size8_class5", new ShipModule(128064337, 160, 3.36F, "Ammo:4/1, ThermL:800","Shield Cell Bank Class 8 Rating A", "Shield Cell Bank")},
             { "int_shieldgenerator_size1_class5", new ShipModule(128064262, 1.3F, 1.68F, "OptMass:25t, MaxMass:63t, MinMass:13t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 1 Rating A", "Shield Generator")},
             { "int_shieldgenerator_size2_class1", new ShipModule(128064263, 2.5F, 0.9F, "OptMass:55t, MaxMass:138t, MinMass:28t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 2 Rating E", "Shield Generator")},
+            { "int_shieldgenerator_size2_class1_free", new ShipModule(128666641, 2.5F, 0.9F, "OptMass:55t, MaxMass:138t, MinMass:28t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 2 Rating E", "Shield Generator")},
             { "int_shieldgenerator_size2_class2", new ShipModule(128064264, 1, 1.2F, "OptMass:55t, MaxMass:138t, MinMass:28t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 2 Rating D", "Shield Generator")},
             { "int_shieldgenerator_size2_class3", new ShipModule(128064265, 2.5F, 1.5F, "OptMass:55t, MaxMass:138t, MinMass:28t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 2 Rating C", "Shield Generator")},
             { "int_shieldgenerator_size2_class4", new ShipModule(128064266, 4, 1.8F, "OptMass:55t, MaxMass:138t, MinMass:28t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 2 Rating B", "Shield Generator")},
@@ -1822,8 +1851,6 @@ namespace EliteDangerousCore
             { "int_supercruiseassist", new ShipModule(128932273, 0, 0.3F, null,"Supercruise Assist", "Supercruise Assist")},
             { "int_detailedsurfacescanner_tiny", new ShipModule(128666634, 0, 0, null,"Detailed Surface Scanner", "Detailed Surface Scanner")},     //FRONTIER DATA has this 1.3t, EDSY/Coriolis/Looking at the journal unladenmass has it at 0t
 
-            ///////////////////////////////////// FROM STANDARD FOLDER SCAN
-
             { "int_hyperdrive_size8_class1", new ShipModule(128064133, 160, 0.56F, "OptMass:0t","Hyperdrive Class 8 Rating E", "Hyperdrive")},
             { "int_hyperdrive_size8_class2", new ShipModule(128064134, 64, 0.63F, "OptMass:0t","Hyperdrive Class 8 Rating D", "Hyperdrive")},
             { "int_hyperdrive_size8_class3", new ShipModule(128064135, 160, 0.7F, "OptMass:0t","Hyperdrive Class 8 Rating C", "Hyperdrive")},
@@ -1855,6 +1882,7 @@ namespace EliteDangerousCore
             { "int_hyperdrive_size3_class4", new ShipModule(128064111, 8, 0.38F, "OptMass:125t","Hyperdrive Class 3 Rating B", "Hyperdrive")},
             { "int_hyperdrive_size3_class5", new ShipModule(128064112, 5, 0.45F, "OptMass:150t","Hyperdrive Class 3 Rating A", "Hyperdrive")},
             { "int_hyperdrive_size2_class1", new ShipModule(128064103, 2.5F, 0.16F, "OptMass:48t","Hyperdrive Class 2 Rating E", "Hyperdrive")},
+            { "int_hyperdrive_size2_class1_free", new ShipModule(128666637, 2.5F, 0.16F, "OptMass:48t","Hyperdrive Class 2 Rating E", "Hyperdrive")},
             { "int_hyperdrive_size2_class2", new ShipModule(128064104, 1, 0.18F, "OptMass:54t","Hyperdrive Class 2 Rating D", "Hyperdrive")},
             { "int_hyperdrive_size2_class3", new ShipModule(128064105, 2.5F, 0.2F, "OptMass:60t","Hyperdrive Class 2 Rating C", "Hyperdrive")},
             { "int_hyperdrive_size2_class4", new ShipModule(128064106, 4, 0.25F, "OptMass:75t","Hyperdrive Class 2 Rating B", "Hyperdrive")},
@@ -1895,11 +1923,12 @@ namespace EliteDangerousCore
             { "int_lifesupport_size2_class4", new ShipModule(128064146, 4, 0.51F, "Time:900s","Life Support Class 2 Rating B", "Life Support")},
             { "int_lifesupport_size2_class5", new ShipModule(128064147, 2.5F, 0.55F, "Time:1500s","Life Support Class 2 Rating A", "Life Support")},
             { "int_lifesupport_size1_class1", new ShipModule(128064138, 1.3F, 0.32F, "Time:300s","Life Support Class 1 Rating E", "Life Support")},
+            { "int_lifesupport_size1_class1_free", new ShipModule(128666638, 1.3F, 0.32F, "Time:300s","Life Support Class 1 Rating E", "Life Support")},
             { "int_lifesupport_size1_class2", new ShipModule(128064139, 0.5F, 0.36F, "Time:450s","Life Support Class 1 Rating D", "Life Support")},
             { "int_lifesupport_size1_class3", new ShipModule(128064140, 1.3F, 0.4F, "Time:600s","Life Support Class 1 Rating C", "Life Support")},
             { "int_lifesupport_size1_class4", new ShipModule(128064141, 2, 0.44F, "Time:900s","Life Support Class 1 Rating B", "Life Support")},
             { "int_lifesupport_size1_class5", new ShipModule(128064142, 1.3F, 0.48F, "Time:1500s","Life Support Class 1 Rating A", "Life Support")},
-            { "int_planetapproachsuite_advanced", new ShipModule(-1,0,0,null, "Advanced Planet Approach Suite", "Planet Approach Suite" ) },
+            { "int_planetapproachsuite_advanced", new ShipModule(128975719,0,0,null, "Advanced Planet Approach Suite", "Planet Approach Suite" ) },
             { "int_planetapproachsuite", new ShipModule(128672317, 0, 0, null,"Planet Approach Suite", "Planet Approach Suite")},
             { "int_powerdistributor_size8_class1", new ShipModule(128064213, 160, 0.64F, "Sys:3.2MW, Eng:3.2MW, Wep:4.8MW","Power Distributor Class 8 Rating E", "Power Distributor")},
             { "int_powerdistributor_size8_class2", new ShipModule(128064214, 64, 0.72F, "Sys:3.6MW, Eng:3.6MW, Wep:5.4MW","Power Distributor Class 8 Rating D", "Power Distributor")},
@@ -1937,6 +1966,7 @@ namespace EliteDangerousCore
             { "int_powerdistributor_size2_class4", new ShipModule(128064186, 4, 0.5F, "Sys:0.8MW, Eng:0.8MW, Wep:2MW","Power Distributor Class 2 Rating B", "Power Distributor")},
             { "int_powerdistributor_size2_class5", new ShipModule(128064187, 2.5F, 0.54F, "Sys:0.8MW, Eng:0.8MW, Wep:2.2MW","Power Distributor Class 2 Rating A", "Power Distributor")},
             { "int_powerdistributor_size1_class1", new ShipModule(128064178, 1.3F, 0.32F, "Sys:0.4MW, Eng:0.4MW, Wep:1.2MW","Power Distributor Class 1 Rating E", "Power Distributor")},
+            { "int_powerdistributor_size1_class1_free", new ShipModule(128666639, 1.3F, 0.32F, "Sys:0.4MW, Eng:0.4MW, Wep:1.2MW","Power Distributor Class 1 Rating E", "Power Distributor")},
             { "int_powerdistributor_size1_class2", new ShipModule(128064179, 0.5F, 0.36F, "Sys:0.5MW, Eng:0.5MW, Wep:1.4MW","Power Distributor Class 1 Rating D", "Power Distributor")},
             { "int_powerdistributor_size1_class3", new ShipModule(128064180, 1.3F, 0.4F, "Sys:0.5MW, Eng:0.5MW, Wep:1.5MW","Power Distributor Class 1 Rating C", "Power Distributor")},
             { "int_powerdistributor_size1_class4", new ShipModule(128064181, 2, 0.44F, "Sys:0.6MW, Eng:0.6MW, Wep:1.7MW","Power Distributor Class 1 Rating B", "Power Distributor")},
@@ -1980,6 +2010,7 @@ namespace EliteDangerousCore
             { "int_powerplant_size3_class4", new ShipModule(128064041, 4, 0, "Power:11MW","Powerplant Class 3 Rating B", "Powerplant")},
             { "int_powerplant_size3_class5", new ShipModule(128064042, 2.5F, 0, "Power:12MW","Powerplant Class 3 Rating A", "Powerplant")},
             { "int_powerplant_size2_class1", new ShipModule(128064033, 2.5F, 0, "Power:6.4MW","Powerplant Class 2 Rating E", "Powerplant")},
+            { "int_powerplant_size2_class1_free", new ShipModule(128666635, 2.5F, 0, "Power:6.4MW","Powerplant Class 2 Rating E", "Powerplant")},
             { "int_powerplant_size2_class2", new ShipModule(128064034, 1, 0, "Power:7.2MW","Powerplant Class 2 Rating D", "Powerplant")},
             { "int_powerplant_size2_class3", new ShipModule(128064035, 1.3F, 0, "Power:8MW","Powerplant Class 2 Rating C", "Powerplant")},
             { "int_powerplant_size2_class4", new ShipModule(128064036, 2, 0, "Power:8.8MW","Powerplant Class 2 Rating B", "Powerplant")},
@@ -2027,6 +2058,7 @@ namespace EliteDangerousCore
             { "int_sensors_size2_class4", new ShipModule(128064226, 4, 0.38F, "Range:5.7km","Sensors Class 2 Rating B", "Sensors")},
             { "int_sensors_size2_class5", new ShipModule(128064227, 2.5F, 0.69F, "Range:6.2km","Sensors Class 2 Rating A", "Sensors")},
             { "int_sensors_size1_class1", new ShipModule(128064218, 1.3F, 0.16F, "Range:4km","Sensors Class 1 Rating E", "Sensors")},
+            { "int_sensors_size1_class1_free", new ShipModule(128666640, 1.3F, 0.16F, "Range:4km","Sensors Class 1 Rating E", "Sensors")},
             { "int_sensors_size1_class2", new ShipModule(128064219, 0.5F, 0.18F, "Range:4.5km","Sensors Class 1 Rating D", "Sensors")},
             { "int_sensors_size1_class3", new ShipModule(128064220, 1.3F, 0.2F, "Range:5km","Sensors Class 1 Rating C", "Sensors")},
             { "int_sensors_size1_class4", new ShipModule(128064221, 2, 0.33F, "Range:5.5km","Sensors Class 1 Rating B", "Sensors")},
@@ -2062,6 +2094,7 @@ namespace EliteDangerousCore
             { "int_engine_size3_class4", new ShipModule(128064076, 8, 3.41F, "OptMass:110t, MaxMass:165t, MinMass:55t","Thrusters Class 3 Rating B", "Thrusters")},
             { "int_engine_size3_class5", new ShipModule(128064077, 5, 3.72F, "OptMass:120t, MaxMass:180t, MinMass:60t","Thrusters Class 3 Rating A", "Thrusters")},
             { "int_engine_size2_class1", new ShipModule(128064068, 2.5F, 2, "OptMass:48t, MaxMass:72t, MinMass:24t","Thrusters Class 2 Rating E", "Thrusters")},
+            { "int_engine_size2_class1_free", new ShipModule(128666636, 2.5, 2, "OptMass:48t, MaxMass:72t, MinMass:24t", "Thrusters Class 2 Rating E", "Thrusters" ) },
             { "int_engine_size2_class2", new ShipModule(128064069, 1, 2.25F, "OptMass:54t, MaxMass:81t, MinMass:27t","Thrusters Class 2 Rating D", "Thrusters")},
             { "int_engine_size2_class3", new ShipModule(128064070, 2.5F, 2.5F, "OptMass:60t, MaxMass:90t, MinMass:30t","Thrusters Class 2 Rating C", "Thrusters")},
             { "int_engine_size2_class4", new ShipModule(128064071, 4, 2.75F, "OptMass:66t, MaxMass:99t, MinMass:33t","Thrusters Class 2 Rating B", "Thrusters")},
@@ -2069,7 +2102,6 @@ namespace EliteDangerousCore
             { "int_engine_size3_class5_fast", new ShipModule(128682013, 5, 5, "OptMass:90t, MaxMass:200t, MinMass:70t","Thrusters Class 3 Rating A Fast", "Thrusters")},
             { "int_engine_size2_class5_fast", new ShipModule(128682014, 2.5F, 4, "OptMass:60t, MaxMass:120t, MinMass:50t","Thrusters Class 2 Rating A Fast", "Thrusters")},
 
-            ///////////////////////////////////// FROM SHIP DATA SCAN - Corolis has some module info in the ships folder
 
             { "adder_armour_grade1", new ShipModule(128049268,0,0,"Explosive:-40%, Kinetic:-20%, Thermal:0%","Adder Lightweight Armour","Armour")},
             { "adder_armour_grade2", new ShipModule(128049269,3,0,"Explosive:-40%, Kinetic:-20%, Thermal:0%","Adder Reinforced Armour","Armour")},
