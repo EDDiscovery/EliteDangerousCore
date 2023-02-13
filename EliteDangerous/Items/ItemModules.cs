@@ -1165,28 +1165,6 @@ namespace EliteDangerousCore
             { "all", new ShipModule(-1,0,0,null,"Repair All",WearAndTearType) },
             { "hull", new ShipModule(-1,0,0,null,"Repair All",WearAndTearType) },
             { "wear", new ShipModule(-1,0,0,null,"Wear",WearAndTearType) },
-
-            // Odyssey V14 new modules
-
-            { "hpt_atmulticannon_fixed_medium_v2", new ShipModule(129022080, 4, 0.48, "Damage: 10/S", "Enhanced AX Multi Cannon", "Weapon" ) },   // from devtalk
-            { "hpt_atmulticannon_fixed_large_v2", new ShipModule(129022084, 8, 0.69, "Damage: 15.6/S", "Enhanced AX Multi Cannon", "Weapon" ) },  // from devtalk
-
-            { "hpt_atmulticannon_turret_medium_v2", new ShipModule(129022086, 0, 0, "", "Enhanced AX Multi Cannon", "Weapon" ) },
-            { "hpt_atmulticannon_turret_large_v2", new ShipModule(129022085, 0, 0, "", "Enhanced AX Multi Cannon", "Weapon" ) },
-
-            { "hpt_atmulticannon_gimbal_medium", new ShipModule(129022089, 4, 0.46, "Damage: 9/6/S", "Enhanced AX Multi Cannon", "Weapon" ) },       // from devtalk
-            { "hpt_atmulticannon_gimbal_large", new ShipModule(129022088, 8, 0.64, "Damage: 15.2/S", "Enhanced AX Multi Cannon", "Weapon" ) },        // from devtalk
-
-            { "hpt_atdumbfiremissile_fixed_medium_v2", new ShipModule(129022081, 4, 1.3, "Damage: 16.0/S", "Enhanced AX Missile Rack", "Weapon" ) },// from devtalk
-            { "hpt_atdumbfiremissile_fixed_large_v2", new ShipModule(129022079, 8, 1.72, "Damage: 16.0/S", "Enhanced AX Missile Rack", "Weapon" ) },// from devtalk
-
-            { "hpt_atdumbfiremissile_turret_medium_v2", new ShipModule(129022083, 4, 1.3, "Damage: 12.2/S", "Enhanced AX Missile Rack", "Weapon" ) },// from devtalk
-            { "hpt_atdumbfiremissile_turret_large_v2", new ShipModule(129022082, 7, 1.85, "Damage: 12.2/S", "Enhanced AX Missile Rack", "Weapon" ) },// from devtalk
-
-            { "hpt_xenoscannermk2_basic_tiny", new ShipModule(128808878, 0, 0, "", "Xeno Scanner MK 2", "Xeno Scanner" ) },
-
-            { "int_expmodulestabiliser_size3_class3", new ShipModule(129019260, 0, 0, "", "Exp Module Stabiliser", "Stabiliser" ) },
-            { "int_expmodulestabiliser_size5_class3", new ShipModule(129019261, 0, 0, "", "Exp Module Stabiliser", "Stabiliser" ) },
         };
 
         // use when the list gets unsorted
@@ -1244,6 +1222,7 @@ namespace EliteDangerousCore
         {
             { "hpt_mining_abrblstr_fixed_small", new ShipModule(128915458, 2, 0.34F, "Damage:4, Range:1000m, Speed:667m/s, Reload:2s, ThermL:1.8","Mining Abrasion Blaster Fixed Small", "Mining")},
             { "hpt_mining_abrblstr_turret_small", new ShipModule(128915459, 2, 0.47F, "Damage:4, Range:1000m, Speed:667m/s, Reload:2s, ThermL:1.8","Mining Abrasion Blaster Turret Small", "Mining")},
+
             { "hpt_atdumbfiremissile_fixed_medium", new ShipModule(128788699, 4, 1.2F, "Ammo:64/8, Damage:64, Speed:750m/s, Reload:5s, ThermL:2.4","AX Dumbfire Missile Fixed Medium", "Missile Rack")},
             { "hpt_atdumbfiremissile_turret_medium", new ShipModule(128788704, 4, 1.2F, "Ammo:64/8, Damage:50, Speed:750m/s, Reload:5s, ThermL:1.5","AX Dumbfire Missile Turret Medium", "Missile Rack")},
             { "hpt_atdumbfiremissile_fixed_large", new ShipModule(128788700, 8, 1.62F, "Ammo:128/12, Damage:64, Speed:750m/s, Reload:5s, ThermL:3.6","AX Dumbfire Missile Fixed Large", "Missile Rack")},
@@ -1252,6 +1231,20 @@ namespace EliteDangerousCore
             { "hpt_atmulticannon_turret_medium", new ShipModule(128793059, 4, 0.5F, "Ammo:2100/90, Damage:1.7, Range:4000m, Speed:1600m/s, Reload:4s, ThermL:0.1","AX Multi Cannon Turret Medium", "Multi Cannon")},
             { "hpt_atmulticannon_fixed_large", new ShipModule(128788702, 8, 0.64F, "Ammo:2100/100, Damage:6.1, Range:4000m, Speed:1600m/s, Reload:4s, ThermL:0.3","AX Multi Cannon Fixed Large", "Multi Cannon")},
             { "hpt_atmulticannon_turret_large", new ShipModule(128793060, 8, 0.64F, "Ammo:2100/90, Damage:3.3, Range:4000m, Speed:1600m/s, Reload:4s, ThermL:0.1","AX Multi Cannon Turret Large", "Multi Cannon")},
+
+            // odyssey v14
+            { "hpt_atmulticannon_fixed_medium_v2", new ShipModule(129022080, 4, 0.48, "Damage: 10/S", "Enhanced AX Multi Cannon 2D", "Weapon" ) },   // from devtalk, edsy
+            { "hpt_atmulticannon_fixed_large_v2", new ShipModule(129022084, 8, 0.69, "Damage: 15.6/S", "Enhanced AX Multi Cannon 3B", "Weapon" ) },  // from devtalk
+            { "hpt_atmulticannon_gimbal_medium", new ShipModule(129022089, 4, 0.46, "Damage: 9/6/S", "Enhanced AX Multi Cannon 2E", "Weapon" ) },       // from devtalk, edsy
+            { "hpt_atmulticannon_gimbal_large", new ShipModule(129022088, 8, 0.64, "Damage: 15.2/S", "Enhanced AX Multi Cannon 3C", "Weapon" ) },        // from devtalk
+            { "hpt_atmulticannon_turret_medium_v2", new ShipModule(129022086, 4, 0.52, "", "Enhanced AX Multi Cannon 2E", "Weapon" ) },     // edsy
+            { "hpt_atmulticannon_turret_large_v2", new ShipModule(129022085, 8, 0.69, "", "Enhanced AX Multi Cannon 3D", "Weapon" ) },       // edsy
+            { "hpt_atdumbfiremissile_fixed_medium_v2", new ShipModule(129022081, 4, 1.3, "Damage: 16.0/S", "Enhanced AX Missile Rack 2D", "Weapon" ) },// from devtalk, edsy confirms
+            { "hpt_atdumbfiremissile_fixed_large_v2", new ShipModule(129022079, 8, 1.72, "Damage: 16.0/S", "Enhanced AX Missile Rack 3B", "Weapon" ) },// from devtalk, edsy confirms
+            { "hpt_atdumbfiremissile_turret_medium_v2", new ShipModule(129022083, 4, 1.3, "Damage: 12.2/S", "Enhanced AX Missile Rack 2E", "Weapon" ) },// from devtalk, edsy confirms
+            { "hpt_atdumbfiremissile_turret_large_v2", new ShipModule(129022082, 8, 1.85, "Damage: 12.2/S", "Enhanced AX Missile Rack 3D", "Weapon" ) },// from devtalk, edsy confirms
+
+
             { "hpt_beamlaser_fixed_small", new ShipModule(128049428, 2, 0.62F, "Damage:9.8, Range:3000m, ThermL:3.5","Beam Laser Fixed Small", "Beam Laser")},
             { "hpt_beamlaser_gimbal_small", new ShipModule(128049432, 2, 0.6F, "Damage:7.7, Range:3000m, ThermL:3.6","Beam Laser Gimbal Small", "Beam Laser")},
             { "hpt_beamlaser_turret_small", new ShipModule(128049435, 2, 0.57F, "Damage:5.4, Range:3000m, ThermL:2.4","Beam Laser Turret Small", "Beam Laser")},
@@ -1264,6 +1257,7 @@ namespace EliteDangerousCore
             { "hpt_beamlaser_turret_large", new ShipModule(128049437, 8, 1.51F, "Damage:14.3, Range:3000m, ThermL:5.1","Beam Laser Turret Large", "Beam Laser")},
             { "hpt_beamlaser_fixed_huge", new ShipModule(128049431, 16, 2.61F, "Damage:41.4, Range:3000m, ThermL:9.9","Beam Laser Fixed Huge", "Beam Laser")},
             { "hpt_beamlaser_gimbal_huge", new ShipModule(128681994, 16, 2.57F, "Damage:32.7, Range:3000m, ThermL:10.6","Beam Laser Gimbal Huge", "Beam Laser")},
+         
             { "hpt_pulselaserburst_fixed_small", new ShipModule(128049400, 2, 0.65F, "Damage:1.7, Range:3000m, ThermL:0.4","Burst Laser Fixed Small", "Burst Laser")},
             { "hpt_pulselaserburst_gimbal_small", new ShipModule(128049404, 2, 0.64F, "Damage:1.2, Range:3000m, ThermL:0.3","Burst Laser Gimbal Small", "Burst Laser")},
             { "hpt_pulselaserburst_turret_small", new ShipModule(128049407, 2, 0.6F, "Damage:0.9, Range:3000m, ThermL:0.2","Burst Laser Turret Small", "Burst Laser")},
@@ -1276,6 +1270,7 @@ namespace EliteDangerousCore
             { "hpt_pulselaserburst_turret_large", new ShipModule(128049409, 8, 1.57F, "Damage:3.5, Range:3000m, ThermL:0.8","Burst Laser Turret Large", "Burst Laser")},
             { "hpt_pulselaserburst_fixed_huge", new ShipModule(128049403, 16, 2.58F, "Damage:20.6, Range:3000m, ThermL:4.5","Burst Laser Fixed Huge", "Burst Laser")},
             { "hpt_pulselaserburst_gimbal_huge", new ShipModule(128727920, 16, 2.59F, "Damage:12.1, Range:3000m, ThermL:3.3","Burst Laser Gimbal Huge", "Burst Laser")},
+          
             { "hpt_cannon_fixed_small", new ShipModule(128049438, 2, 0.34F, "Ammo:120/6, Damage:22.5, Range:3000m, Speed:1200m/s, Reload:3s, ThermL:1.4","Cannon Fixed Small", "Cannon")},
             { "hpt_cannon_gimbal_small", new ShipModule(128049442, 2, 0.38F, "Ammo:100/5, Damage:16, Range:3000m, Speed:1000m/s, Reload:4s, ThermL:1.3","Cannon Gimbal Small", "Cannon")},
             { "hpt_cannon_turret_small", new ShipModule(128049445, 2, 0.32F, "Ammo:100/5, Damage:12.8, Range:3000m, Speed:1000m/s, Reload:4s, ThermL:0.7","Cannon Turret Small", "Cannon")},
@@ -1287,14 +1282,19 @@ namespace EliteDangerousCore
             { "hpt_cannon_turret_large", new ShipModule(128049447, 8, 0.64F, "Ammo:100/5, Damage:30.4, Range:4000m, Speed:800m/s, Reload:4s, ThermL:1.6","Cannon Turret Large", "Cannon")},
             { "hpt_cannon_fixed_huge", new ShipModule(128049441, 16, 0.92F, "Ammo:120/6, Damage:82.1, Range:4500m, Speed:900m/s, Reload:3s, ThermL:4.8","Cannon Fixed Huge", "Cannon")},
             { "hpt_cannon_gimbal_huge", new ShipModule(128049444, 16, 1.03F, "Ammo:100/5, Damage:56.6, Range:4500m, Speed:750m/s, Reload:4s, ThermL:4.4","Cannon Gimbal Huge", "Cannon")},
+         
             { "hpt_cargoscanner_size0_class1", new ShipModule(128662520, 1.3F, 0.2F, "Range:2000m","Cargo Scanner Rating E", "Cargo Scanner")},
             { "hpt_cargoscanner_size0_class2", new ShipModule(128662521, 1.3F, 0.4F, "Range:2500m","Cargo Scanner Rating D", "Cargo Scanner")},
             { "hpt_cargoscanner_size0_class3", new ShipModule(128662522, 1.3F, 0.8F, "Range:3000m","Cargo Scanner Rating C", "Cargo Scanner")},
             { "hpt_cargoscanner_size0_class4", new ShipModule(128662523, 1.3F, 1.6F, "Range:3500m","Cargo Scanner Rating B", "Cargo Scanner")},
             { "hpt_cargoscanner_size0_class5", new ShipModule(128662524, 1.3F, 3.2F, "Range:4000m","Cargo Scanner Rating A", "Cargo Scanner")},
+         
             { "hpt_chafflauncher_tiny", new ShipModule(128049513, 1.3F, 0.2F, "Ammo:10/1, Reload:10s, ThermL:4","Chaff Launcher", "Chaff Launcher")},
+          
             { "hpt_electroniccountermeasure_tiny", new ShipModule(128049516, 1.3F, 0.2F, "Range:3000m, Reload:10s, ThermL:4","Electronic Countermeasure", "Electronic Countermeasure")},
+          
             { "hpt_causticmissile_fixed_medium", new ShipModule(128833995, 4, 1.2F, "Ammo:64/8, Damage:5, Speed:750m/s, Reload:5s, ThermL:1.5","Caustic Missile Fixed Medium", "Caustic Missile")},
+           
             { "hpt_slugshot_fixed_small", new ShipModule(128049448, 2, 0.45F, "Ammo:180/3, Damage:1.4, Range:2000m, Speed:667m/s, Reload:5s, ThermL:0.4","Fragment Cannon Fixed Small", "Fragment Cannon")},
             { "hpt_slugshot_gimbal_small", new ShipModule(128049451, 2, 0.59F, "Ammo:180/3, Damage:1, Range:2000m, Speed:667m/s, Reload:5s, ThermL:0.4","Fragment Cannon Gimbal Small", "Fragment Cannon")},
             { "hpt_slugshot_turret_small", new ShipModule(128049453, 2, 0.42F, "Ammo:180/3, Damage:0.7, Range:2000m, Speed:667m/s, Reload:5s, ThermL:0.2","Fragment Cannon Turret Small", "Fragment Cannon")},
@@ -1305,11 +1305,13 @@ namespace EliteDangerousCore
             { "hpt_slugshot_gimbal_large", new ShipModule(128671321, 8, 1.55F, "Ammo:180/3, Damage:3.8, Range:2000m, Speed:667m/s, Reload:5s, ThermL:1.4","Fragment Cannon Gimbal Large", "Fragment Cannon")},
             { "hpt_slugshot_turret_large", new ShipModule(128671322, 8, 1.29F, "Ammo:180/3, Damage:3, Range:2000m, Speed:667m/s, Reload:5s, ThermL:0.7","Fragment Cannon Turret Large", "Fragment Cannon")},
             { "hpt_slugshot_fixed_large_range", new ShipModule(128671343, 8, 1.02F, "Ammo:180/3, Damage:4, Speed:1000m/s, Reload:5s, ThermL:1.1","Fragment Cannon Fixed Large Range", "Fragment Cannon")},
+           
             { "hpt_cloudscanner_size0_class1", new ShipModule(128662525, 1.3F, 0.2F, "Range:2000m","Cloud Scanner Rating E", "Hyperspace Cloud Scanner")},
             { "hpt_cloudscanner_size0_class2", new ShipModule(128662526, 1.3F, 0.4F, "Range:2500m","Cloud Scanner Rating D", "Hyperspace Cloud Scanner")},
             { "hpt_cloudscanner_size0_class3", new ShipModule(128662527, 1.3F, 0.8F, "Range:3000m","Cloud Scanner Rating C", "Hyperspace Cloud Scanner")},
             { "hpt_cloudscanner_size0_class4", new ShipModule(128662528, 1.3F, 1.6F, "Range:3500m","Cloud Scanner Rating B", "Hyperspace Cloud Scanner")},
             { "hpt_cloudscanner_size0_class5", new ShipModule(128662529, 1.3F, 3.2F, "Range:4000m","Cloud Scanner Rating A", "Hyperspace Cloud Scanner")},
+        
             { "hpt_guardian_gausscannon_fixed_small", new ShipModule(128891610, 2, 1.91F, "Ammo:80/1, Damage:22, Range:3000m, Reload:1s, ThermL:15","Guardian Gauss Cannon Fixed Small", "Guardian")},
             { "hpt_guardian_gausscannon_fixed_medium", new ShipModule(128833687, 4, 2.61F, "Ammo:80/1, Damage:38.5, Range:3000m, Reload:1s, ThermL:25","Guardian Gauss Cannon Fixed Medium", "Guardian")},
             { "hpt_guardian_plasmalauncher_fixed_small", new ShipModule(128891607, 2, 1.4F, "Ammo:200/15, Damage:1.7, Range:3000m, Speed:1200m/s, Reload:3s, ThermL:4.2","Guardian Plasma Launcher Fixed Small", "Guardian")},
@@ -1324,20 +1326,25 @@ namespace EliteDangerousCore
             { "hpt_guardian_shardcannon_turret_medium", new ShipModule(128834001, 4, 1.16F, "Ammo:180/5, Damage:2.4, Range:1700m, Speed:1133m/s, Reload:5s, ThermL:1.1","Guardian Shard Cannon Turret Medium", "Guardian")},
             { "hpt_guardian_shardcannon_fixed_large", new ShipModule(128834778, 8, 1.68F, "Ammo:180/5, Damage:5.2, Range:1700m, Speed:1133m/s, Reload:5s, ThermL:2.2","Guardian Shard Cannon Fixed Large", "Guardian")},
             { "hpt_guardian_shardcannon_turret_large", new ShipModule(128834779, 8, 1.39F, "Ammo:180/5, Damage:3.4, Range:1700m, Speed:1133m/s, Reload:5s, ThermL:2","Guardian Shard Cannon Turret Large", "Guardian")},
+            
             { "hpt_heatsinklauncher_turret_tiny", new ShipModule(128049519, 1.3F, 0.2F, "Ammo:2/1, Reload:10s","Heat Sink Launcher Turret", "Heat Sink Launcher")},
+            
             { "hpt_crimescanner_size0_class1", new ShipModule(128662530, 1.3F, 0.2F, "Range:2000m","Crime Scanner Rating E", "Crime Scanner")},
             { "hpt_crimescanner_size0_class2", new ShipModule(128662531, 1.3F, 0.4F, "Range:2500m","Crime Scanner Rating D", "Crime Scanner")},
             { "hpt_crimescanner_size0_class3", new ShipModule(128662532, 1.3F, 0.8F, "Range:3000m","Crime Scanner Rating C", "Crime Scanner")},
             { "hpt_crimescanner_size0_class4", new ShipModule(128662533, 1.3F, 1.6F, "Range:3500m","Crime Scanner Rating B", "Crime Scanner")},
             { "hpt_crimescanner_size0_class5", new ShipModule(128662534, 1.3F, 3.2F, "Range:4000m","Crime Scanner Rating A", "Crime Scanner")},
+            
             { "hpt_minelauncher_fixed_small", new ShipModule(128049500, 2, 0.4F, "Ammo:36/1, Damage:44, Reload:2s, ThermL:5","Mine Launcher Fixed Small", "Mine Launcher")},
             { "hpt_minelauncher_fixed_small_impulse", new ShipModule(128671448, 2, 0.4F, "Ammo:36/1, Damage:32, Reload:2s, ThermL:5","Mine Launcher Fixed Small Impulse", "Mine Launcher")},
             { "hpt_minelauncher_fixed_medium", new ShipModule(128049501, 4, 0.4F, "Ammo:72/3, Damage:44, Reload:6.6s, ThermL:7.5","Mine Launcher Fixed Medium", "Mine Launcher")},
+            
             { "hpt_mininglaser_fixed_small", new ShipModule(128049525, 2, 0.5F, "Damage:2, Range:500m, ThermL:2","Mining Laser Fixed Small", "Mining Laser")},
             { "hpt_mininglaser_turret_small", new ShipModule(128740819, 2, 0.5F, "Damage:2, Range:500m, ThermL:2","Mining Laser Turret Small", "Mining Laser")},
             { "hpt_mininglaser_fixed_small_advanced", new ShipModule(128671340, 2, 0.7F, "Damage:8, Range:2000m, ThermL:6","Mining Laser Fixed Small Advanced", "Mining Laser")},
             { "hpt_mininglaser_fixed_medium", new ShipModule(128049526, 2, 0.75F, "Damage:4, Range:500m, ThermL:4","Mining Laser Fixed Medium", "Mining Laser")},
             { "hpt_mininglaser_turret_medium", new ShipModule(128740820, 2, 0.75F, "Damage:4, Range:500m, ThermL:4","Mining Laser Turret Medium", "Mining Laser")},
+            
             { "hpt_dumbfiremissilerack_fixed_small", new ShipModule(128666724, 2, 0.4F, "Ammo:16/8, Damage:50, Speed:750m/s, Reload:5s, ThermL:3.6","Dumbfire Missile Rack Fixed Small", "Missile Rack")},
             { "hpt_basicmissilerack_fixed_small", new ShipModule(128049492, 2, 0.6F, "Ammo:6/6, Damage:40, Speed:625m/s, Reload:12s, ThermL:3.6","Seeker Missile Rack Fixed Small", "Missile Rack")},
             { "hpt_dumbfiremissilerack_fixed_medium", new ShipModule(128666725, 4, 1.2F, "Ammo:48/12, Damage:50, Speed:750m/s, Reload:5s, ThermL:3.6","Dumbfire Missile Rack Fixed Medium", "Missile Rack")},
@@ -1346,6 +1353,7 @@ namespace EliteDangerousCore
             { "hpt_drunkmissilerack_fixed_medium", new ShipModule(128671344, 4, 1.2F, "Ammo:120/12, Damage:7.5, Speed:600m/s, Reload:5s, ThermL:3.6","Pack Hound Missile Rack Fixed Medium", "Missile Rack")},
             { "hpt_dumbfiremissilerack_fixed_large", new ShipModule(128891602, 8, 1.62F, "Ammo:96/12, Damage:50, Speed:750m/s, Reload:5s, ThermL:3.6","Dumbfire Missile Rack Fixed Large", "Missile Rack")},
             { "hpt_basicmissilerack_fixed_large", new ShipModule(128049494, 8, 1.62F, "Ammo:36/6, Damage:40, Speed:625m/s, Reload:12s, ThermL:3.6","Seeker Missile Rack Fixed Large", "Missile Rack")},
+         
             { "hpt_multicannon_fixed_small", new ShipModule(128049455, 2, 0.28F, "Ammo:2100/100, Damage:1.1, Range:4000m, Speed:1600m/s, Reload:4s, ThermL:0.1","Multi Cannon Fixed Small", "Multi Cannon")},
             { "hpt_multicannon_gimbal_small", new ShipModule(128049459, 2, 0.37F, "Ammo:2100/90, Damage:0.8, Range:4000m, Speed:1600m/s, Reload:5s, ThermL:0.1","Multi Cannon Gimbal Small", "Multi Cannon")},
             { "hpt_multicannon_turret_small", new ShipModule(128049462, 2, 0.26F, "Ammo:2100/90, Damage:0.6, Range:4000m, Speed:1600m/s, Reload:4s, ThermL:0","Multi Cannon Turret Small", "Multi Cannon")},
@@ -1358,11 +1366,13 @@ namespace EliteDangerousCore
             { "hpt_multicannon_turret_large", new ShipModule(128049464, 8, 0.86F, "Ammo:2100/90, Damage:2.2, Range:4000m, Speed:1600m/s, Reload:4s, ThermL:0.2","Multi Cannon Turret Large", "Multi Cannon")},
             { "hpt_multicannon_fixed_huge", new ShipModule(128049458, 16, 0.73F, "Ammo:2100/100, Damage:4.6, Range:4000m, Speed:1600m/s, Reload:4s, ThermL:0.4","Multi Cannon Fixed Huge", "Multi Cannon")},
             { "hpt_multicannon_gimbal_huge", new ShipModule(128681996, 16, 1.22F, "Ammo:2100/90, Damage:3.5, Range:4000m, Speed:1600m/s, Reload:5s, ThermL:0.5","Multi Cannon Gimbal Huge", "Multi Cannon")},
+          
             { "hpt_plasmaaccelerator_fixed_medium", new ShipModule(128049465, 4, 1.43F, "Ammo:100/5, Damage:54.3, Range:3500m, Speed:875m/s, Reload:6s, ThermL:15.6","Plasma Accelerator Fixed Medium", "Plasma Accelerator")},
             { "hpt_plasmaaccelerator_fixed_large", new ShipModule(128049466, 8, 1.97F, "Ammo:100/5, Damage:83.4, Range:3500m, Speed:875m/s, Reload:6s, ThermL:21.8","Plasma Accelerator Fixed Large", "Plasma Accelerator")},
             { "hpt_plasmaaccelerator_fixed_large_advanced", new ShipModule(128671339, 8, 1.97F, "Ammo:300/20, Damage:34.5, Range:3500m, Speed:875m/s, Reload:6s, ThermL:11","Plasma Accelerator Fixed Large Advanced", "Plasma Accelerator")},
             { "hpt_plasmaaccelerator_fixed_huge", new ShipModule(128049467, 16, 2.63F, "Ammo:100/5, Damage:125.2, Range:3500m, Speed:875m/s, Reload:6s, ThermL:29.5","Plasma Accelerator Fixed Huge", "Plasma Accelerator")},
             { "hpt_plasmapointdefence_turret_tiny", new ShipModule(128049522, 0.5F, 0.2F, "Ammo:10000/12, Damage:0.2, Range:2500m, Speed:1000m/s, Reload:0.4s, ThermL:0.1","Plasma Point Defence Turret", "Point Defence")},
+            
             { "hpt_pulselaser_fixed_smallfree", new ShipModule(128049673, 1, 0.4, null, "Pulse Laser Fixed Small Free", "Pulse Laser" ) },
             { "hpt_pulselaser_fixed_small", new ShipModule(128049381, 2, 0.39F, "Damage:2.1, Range:3000m, ThermL:0.3","Pulse Laser Fixed Small", "Pulse Laser")},
             { "hpt_pulselaser_gimbal_small", new ShipModule(128049385, 2, 0.39F, "Damage:1.6, Range:3000m, ThermL:0.3","Pulse Laser Gimbal Small", "Pulse Laser")},
@@ -1376,25 +1386,32 @@ namespace EliteDangerousCore
             { "hpt_pulselaser_turret_large", new ShipModule(128049390, 8, 0.89F, "Damage:3.5, Range:3000m, ThermL:0.6","Pulse Laser Turret Large", "Pulse Laser")},
             { "hpt_pulselaser_fixed_huge", new ShipModule(128049384, 16, 1.33F, "Damage:10.2, Range:3000m, ThermL:1.6","Pulse Laser Fixed Huge", "Pulse Laser")},
             { "hpt_pulselaser_gimbal_huge", new ShipModule(128681995, 16, 1.37F, "Damage:7.8, Range:3000m, ThermL:1.6","Pulse Laser Gimbal Huge", "Pulse Laser")},
+           
             { "hpt_mrascanner_size0_class5", new ShipModule(128915722, 1.3F, 3.2F, null,"MRA Scanner Rating A", "Pulse Wave Analyser")},
             { "hpt_mrascanner_size0_class4", new ShipModule(128915721, 1.3F, 1.6F, null,"Mrascanner Size 0 Rating B", "Pulse Wave Analyser")},
             { "hpt_mrascanner_size0_class3", new ShipModule(128915720, 1.3F, 0.8F, null,"Mrascanner Size 0 Rating C", "Pulse Wave Analyser")},
             { "hpt_mrascanner_size0_class2", new ShipModule(128915719, 1.3F, 0.4F, null,"Mrascanner Size 0 Rating D", "Pulse Wave Analyser")},
             { "hpt_mrascanner_size0_class1", new ShipModule(128915718, 1.3F, 0.2F, null,"Mrascanner Size 0 Rating E", "Pulse Wave Analyser")},
+           
             { "hpt_railgun_fixed_small", new ShipModule(128049488, 2, 1.15F, "Ammo:80/1, Damage:23.3, Range:3000m, Reload:1s, ThermL:12","Railgun Fixed Small", "Railgun")},
             { "hpt_railgun_fixed_medium", new ShipModule(128049489, 4, 1.63F, "Ammo:80/1, Damage:41.5, Range:3000m, Reload:1s, ThermL:20","Railgun Fixed Medium", "Railgun")},
             { "hpt_railgun_fixed_medium_burst", new ShipModule(128671341, 4, 1.63F, "Ammo:240/3, Damage:15, Range:3000m, Reload:1s, ThermL:11","Railgun Fixed Medium Burst", "Railgun")},
+          
             { "hpt_flakmortar_fixed_medium", new ShipModule(128785626, 4, 1.2F, "Ammo:32/1, Damage:34, Speed:550m/s, Reload:2s, ThermL:3.6","Flak Mortar Fixed Medium", "Flak Mortar")},
             { "hpt_flakmortar_turret_medium", new ShipModule(128793058, 4, 1.2F, "Ammo:32/1, Damage:34, Speed:550m/s, Reload:2s, ThermL:3.6","Flak Mortar Turret Medium", "Flak Mortar")},
+          
             { "hpt_flechettelauncher_fixed_medium", new ShipModule(128833996, 4, 1.2F, "Ammo:72/1, Damage:13, Speed:550m/s, Reload:2s, ThermL:3.6","Flechette Launcher Fixed Medium", "Flechette Launcher")},
             { "hpt_flechettelauncher_turret_medium", new ShipModule(128833997, 4, 1.2F, "Ammo:72/1, Damage:13, Speed:550m/s, Reload:2s, ThermL:3.6","Flechette Launcher Turret Medium", "Flechette Launcher")},
+          
             { "hpt_mining_seismchrgwarhd_turret_medium", new ShipModule(128915461, 4, 1.2F, "Ammo:72/1, Damage:15, Range:3000m, Speed:350m/s, ThermL:3.6","Mining Seismic Charge Warhead Turret Medium", "Mining")},
             { "hpt_mining_seismchrgwarhd_fixed_medium", new ShipModule(128915460, 4, 1.2F, "Ammo:72/1, Damage:15, Range:3000m, Speed:350m/s, ThermL:3.6","Mining Seismic Charge Warhead Fixed Medium", "Mining")},
+          
             { "hpt_shieldbooster_size0_class1", new ShipModule(128668532, 0.5F, 0.2F, "Boost:4.0%, Explosive:0%, Kinetic:0%, Thermal:0%","Shield Booster Rating E", "Shield Booster")},
             { "hpt_shieldbooster_size0_class2", new ShipModule(128668533, 1, 0.5F, "Boost:8.0%, Explosive:0%, Kinetic:0%, Thermal:0%","Shield Booster Rating D", "Shield Booster")},
             { "hpt_shieldbooster_size0_class3", new ShipModule(128668534, 2, 0.7F, "Boost:12.0%, Explosive:0%, Kinetic:0%, Thermal:0%","Shield Booster Rating C", "Shield Booster")},
             { "hpt_shieldbooster_size0_class4", new ShipModule(128668535, 3, 1, "Boost:16.0%, Explosive:0%, Kinetic:0%, Thermal:0%","Shield Booster Rating B", "Shield Booster")},
             { "hpt_shieldbooster_size0_class5", new ShipModule(128668536, 3.5F, 1.2F, "Boost:20.0%, Explosive:0%, Kinetic:0%, Thermal:0%","Shield Booster Rating A", "Shield Booster")},
+        
             { "hpt_plasmashockcannon_fixed_large", new ShipModule(128834780, 8, 0.89F, "Ammo:240/16, Damage:18.1, Range:3000m, Speed:1200m/s, Reload:6s, ThermL:2.7","Plasma Shock Cannon Fixed Large", "Plasma Shock Cannon")},
             { "hpt_plasmashockcannon_gimbal_large", new ShipModule(128834781, 8, 0.89F, "Ammo:240/16, Damage:14.9, Range:3000m, Speed:1200m/s, Reload:6s, ThermL:3.1","Plasma Shock Cannon Gimbal Large", "Plasma Shock Cannon")},
             { "hpt_plasmashockcannon_turret_large", new ShipModule(128834782, 8, 0.64F, "Ammo:240/16, Damage:12.3, Range:3000m, Speed:1200m/s, Reload:6s, ThermL:2.2","Plasma Shock Cannon Turret Large", "Plasma Shock Cannon")},
@@ -1404,15 +1421,23 @@ namespace EliteDangerousCore
             { "hpt_plasmashockcannon_fixed_small", new ShipModule(128891605, 2, 0.41F, "Ammo:240/16, Damage:8.6, Range:3000m, Speed:1200m/s, Reload:6s, ThermL:1.1","Plasma Shock Cannon Fixed Small", "Plasma Shock Cannon")},
             { "hpt_plasmashockcannon_gimbal_small", new ShipModule(128891604, 2, 0.47F, "Ammo:240/16, Damage:6.9, Range:3000m, Speed:1200m/s, Reload:6s, ThermL:1.5","Plasma Shock Cannon Gimbal Small", "Plasma Shock Cannon")},
             { "hpt_plasmashockcannon_turret_small", new ShipModule(128891603, 2, 0.54F, "Ammo:240/16, Damage:4.5, Range:3000m, Speed:1200m/s, Reload:6s, ThermL:0.7","Plasma Shock Cannon Turret Small", "Plasma Shock Cannon")},
+       
             { "hpt_antiunknownshutdown_tiny", new ShipModule(128771884, 1.3F, 0.2F, "Range:3000m","Shutdown Field Neutraliser", "Shutdown Field Neutraliser")},
+       
             { "hpt_mining_subsurfdispmisle_fixed_small", new ShipModule(128915454, 2, 0.419999986886978, "Ammo:32/1, Damage:5, Range:3000m, Speed:550m/s, Reload:2s, ThermL:2.2", "Mining Sub Surface Displacement Missile Fixed Small", "Mining" ) },
             { "hpt_mining_subsurfdispmisle_turret_small", new ShipModule(128915455, 2, 0.529999971389771, "Ammo:32/1, Damage:5, Range:3000m, Speed:550m/s, Reload:2s, ThermL:2.2", "Mining Subsurface Displacement Missile Turret Small", "Mining" ) },
             { "hpt_mining_subsurfdispmisle_fixed_medium", new ShipModule(128915456, 4, 1.00999999046326, "Ammo:96/1, Damage:5, Range:3000m, Speed:550m/s, Reload:2s, ThermL:2.9", "Mining Sub Surface Displacement Missile Fixed Medium", "Mining" ) },
             { "hpt_mining_subsurfdispmisle_turret_medium", new ShipModule(128915457, 4, 0.930000007152557, "Ammo:96/1, Damage:5, Range:3000m, Speed:550m/s, Reload:2s, ThermL:2.9", "Mining Subsurface Displacement Missile Turret Medium", "Mining" ) },
+       
             { "hpt_advancedtorppylon_fixed_small", new ShipModule(128049509, 2, 0.4F, "Ammo:1/1, Damage:120, Speed:250m/s, Reload:5s, ThermL:45","Advanced Torp Pylon Fixed Small", "Missile Rack")},
             { "hpt_advancedtorppylon_fixed_medium", new ShipModule(128049510, 4, 0.4F, "Ammo:2/1, Damage:120, Speed:250m/s, Reload:5s, ThermL:50","Advanced Torp Pylon Fixed Medium", "Missile Rack")},
             { "hpt_advancedtorppylon_fixed_large", new ShipModule(128049511, 8, 0.6F, "Ammo:4/4, Damage:120, Speed:250m/s, Reload:5s, ThermL:55","Advanced Torp Pylon Fixed Large", "Missile Rack")},
-            { "hpt_xenoscanner_basic_tiny", new ShipModule(128793115, 1.3F, 0.2F, "Range:500m","Xeno Scanner Seeker", "Xeno Scanner")},
+
+            // odyssey 14
+            { "hpt_xenoscanner_basic_tiny", new ShipModule(128793115, 1.3F, 0.2F, "Range:500m","Xeno Scanner", "Xeno Scanner")},
+            { "hpt_xenoscannermk2_basic_tiny", new ShipModule(128808878, 1.3, 0.8, "Range:2000m", "Xeno Scanner MK 2", "Xeno Scanner" ) },
+            { "int_expmodulestabiliser_size3_class3", new ShipModule(129019260, 8, 1.5, "", "Exp Module Weapon Stabiliser 3F", "Stabiliser" ) },
+            { "int_expmodulestabiliser_size5_class3", new ShipModule(129019261, 20, 3, "", "Exp Module Weapon Stabiliser 5F", "Stabiliser" ) },
 
             { "int_repairer_size1_class1", new ShipModule(128667598, 0, 0.54F, "Ammo:1000, Repair:12","Auto Field Maintenance Class 1 Rating E", "Auto Field Maintenance")},
             { "int_repairer_size1_class2", new ShipModule(128667606, 0, 0.72F, "Ammo:900, Repair:14.4","Auto Field Maintenance Class 1 Rating D", "Auto Field Maintenance")},
@@ -1454,6 +1479,7 @@ namespace EliteDangerousCore
             { "int_repairer_size8_class3", new ShipModule(128667621, 0, 3, "Ammo:10000, Repair:200","Auto Field Maintenance Class 8 Rating C", "Auto Field Maintenance")},
             { "int_repairer_size8_class4", new ShipModule(128667629, 0, 3.45F, "Ammo:12000, Repair:276","Auto Field Maintenance Class 8 Rating B", "Auto Field Maintenance")},
             { "int_repairer_size8_class5", new ShipModule(128667637, 0, 4.2F, "Ammo:11000, Repair:308","Auto Field Maintenance Class 8 Rating A", "Auto Field Maintenance")},
+
             { "int_shieldgenerator_size1_class3_fast", new ShipModule(128671331, 1.3F, 1.2F, "OptMass:25t, MaxMass:63t, MinMass:13t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 1 Rating C Fast", "Shield Generator")},
             { "int_shieldgenerator_size2_class3_fast", new ShipModule(128671332, 2.5F, 1.5F, "OptMass:55t, MaxMass:138t, MinMass:28t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 2 Rating C Fast", "Shield Generator")},
             { "int_shieldgenerator_size3_class3_fast", new ShipModule(128671333, 5, 1.8F, "OptMass:165t, MaxMass:413t, MinMass:83t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 3 Rating C Fast", "Shield Generator")},
@@ -1462,10 +1488,12 @@ namespace EliteDangerousCore
             { "int_shieldgenerator_size6_class3_fast", new ShipModule(128671336, 40, 3.1F, "OptMass:540t, MaxMass:1350t, MinMass:270t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 6 Rating C Fast", "Shield Generator")},
             { "int_shieldgenerator_size7_class3_fast", new ShipModule(128671337, 80, 3.5F, "OptMass:1060t, MaxMass:2650t, MinMass:530t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 7 Rating C Fast", "Shield Generator")},
             { "int_shieldgenerator_size8_class3_fast", new ShipModule(128671338, 160, 4, "OptMass:1800t, MaxMass:4500t, MinMass:900t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 8 Rating C Fast", "Shield Generator")},
+
             { "int_passengercabin_size3_class2", new ShipModule(128734692, 5, 0, "Passengers:3","Business Class Passenger Cabin Class 3 Rating D", "Passenger Cabin")},
             { "int_passengercabin_size4_class2", new ShipModule(128727923, 10, 0, "Passengers:6","Business Class Passenger Cabin Class 4 Rating D", "Passenger Cabin")},
             { "int_passengercabin_size5_class2", new ShipModule(128734694, 20, 0, "Passengers:10","Business Class Passenger Cabin Class 5 Rating D", "Passenger Cabin")},
             { "int_passengercabin_size6_class2", new ShipModule(128727927, 40, 0, "Passengers:16","Business Class Passenger Cabin Class 6 Rating D", "Passenger Cabin")},
+
             { "int_cargorack_size1_class1", new ShipModule(128064338, 0, 0, "Size:2t","Cargo Rack Class 1 Rating E", "Cargo Rack")},
             { "int_cargorack_size2_class1", new ShipModule(128064339, 0, 0, "Size:4t","Cargo Rack Class 2 Rating E", "Cargo Rack")},
             { "int_cargorack_size2_class1_free", new ShipModule(128666643, 0, 0, "Size:4t","Cargo Rack Class 2 Rating E", "Cargo Rack")},
@@ -1475,9 +1503,11 @@ namespace EliteDangerousCore
             { "int_cargorack_size6_class1", new ShipModule(128064343, 0, 0, "Size:64t","Cargo Rack Class 6 Rating E", "Cargo Rack")},
             { "int_cargorack_size7_class1", new ShipModule(128064344, 0, 0, "Size:128t","Cargo Rack Class 7 Rating E", "Cargo Rack")},
             { "int_cargorack_size8_class1", new ShipModule(128064345, 0, 0, "Size:256t","Cargo Rack Class 8 Rating E", "Cargo Rack")},
+
             { "int_corrosionproofcargorack_size1_class1", new ShipModule(128681641, 0, 0, "Size:1t","Corrosion Proof Cargo Rack Class 1 Rating E", "Cargo Rack")},
             { "int_corrosionproofcargorack_size1_class2", new ShipModule(128681992, 0, 0, "Size:2t","Corrosion Proof Cargo Rack Class 1 Rating D", "Cargo Rack")},
             { "int_corrosionproofcargorack_size4_class1", new ShipModule(128833944, 0, 0, "Size:16t","Corrosion Proof Cargo Rack Class 4 Rating E", "Cargo Rack")},
+
             { "int_dronecontrol_collection_size1_class1", new ShipModule(128671229, 0.5F, 0.14F, "Time:300s, Range:0.8km","Collection Drone Controller Class 1 Rating E", "Limpet Controller")},
             { "int_dronecontrol_collection_size1_class2", new ShipModule(128671230, 0.5F, 0.18F, "Time:600s, Range:0.6km","Collection Drone Controller Class 1 Rating D", "Limpet Controller")},
             { "int_dronecontrol_collection_size1_class3", new ShipModule(128671231, 1.3F, 0.23F, "Time:510s, Range:1km","Collection Drone Controller Class 1 Rating C", "Limpet Controller")},
@@ -1502,19 +1532,24 @@ namespace EliteDangerousCore
             { "int_dronecontrol_decontamination_size3_class1", new ShipModule(128793942, 2, 0.2F, "Range:0.9km","Decontamination Drone Controller Class 3 Rating E", "Drone Control Decontamination")},
             { "int_dronecontrol_decontamination_size5_class1", new ShipModule(128793943, 20, 0.5F, "Range:1.3km","Decontamination Drone Controller Class 5 Rating E", "Drone Control Decontamination")},
             { "int_dronecontrol_decontamination_size7_class1", new ShipModule(128793944, 128, 0.97F, "Range:2km","Decontamination Drone Controller Class 7 Rating E", "Drone Control Decontamination")},
+
             { "int_dockingcomputer_standard", new ShipModule(128049549, 0, 0.39F, null,"Docking Computer Standard", "Docking Computer")},
             { "int_dockingcomputer_advanced", new ShipModule(128935155, 0, 0.45F, null,"Docking Computer Advanced", "Docking Computer")},
+
             { "int_passengercabin_size2_class1", new ShipModule(128734690, 2.5F, 0, "Passengers:2","Economy Passenger Cabin Class 2 Rating E", "Passenger Cabin")},
             { "int_passengercabin_size3_class1", new ShipModule(128734691, 5, 0, "Passengers:4","Economy Passenger Cabin Class 3 Rating E", "Passenger Cabin")},
             { "int_passengercabin_size4_class1", new ShipModule(128727922, 10, 0, "Passengers:8","Economy Passenger Cabin Class 4 Rating E", "Passenger Cabin")},
             { "int_passengercabin_size5_class1", new ShipModule(128734693, 20, 0, "Passengers:16","Economy Passenger Cabin Class 5 Rating E", "Passenger Cabin")},
             { "int_passengercabin_size6_class1", new ShipModule(128727926, 40, 0, "Passengers:32","Economy Passenger Cabin Class 6 Rating E", "Passenger Cabin")},
+
             { "int_fighterbay_size5_class1", new ShipModule(128727930, 20, 0.25F, "Rebuilds:6t","Fighter Hangar Class 5 Rating E", "Fighter Bay")},
             { "int_fighterbay_size6_class1", new ShipModule(128727931, 40, 0.35F, "Rebuilds:8t","Fighter Hangar Class 6 Rating E", "Fighter Bay")},
             { "int_fighterbay_size7_class1", new ShipModule(128727932, 60, 0.35F, "Rebuilds:15t","Fighter Hangar Class 7 Rating E", "Fighter Bay")},
+
             { "int_passengercabin_size4_class3", new ShipModule(128727924, 10, 0, "Passengers:3","First Class Passenger Cabin Class 4 Rating C", "Passenger Cabin")},
             { "int_passengercabin_size5_class3", new ShipModule(128734695, 20, 0, "Passengers:6","First Class Passenger Cabin Class 5 Rating C", "Passenger Cabin")},
             { "int_passengercabin_size6_class3", new ShipModule(128727928, 40, 0, "Passengers:12","First Class Passenger Cabin Class 6 Rating C", "Passenger Cabin")},
+            
             { "int_fsdinterdictor_size1_class1", new ShipModule(128666704, 1.3F, 0.14F, null,"FSD Interdictor Class 1 Rating E", "FSD Interdictor")},
             { "int_fsdinterdictor_size1_class2", new ShipModule(128666708, 0.5F, 0.18F, null,"FSD Interdictor Class 1 Rating D", "FSD Interdictor")},
             { "int_fsdinterdictor_size1_class3", new ShipModule(128666712, 1.3F, 0.23F, null,"FSD Interdictor Class 1 Rating C", "FSD Interdictor")},
@@ -1535,6 +1570,7 @@ namespace EliteDangerousCore
             { "int_fsdinterdictor_size4_class3", new ShipModule(128666715, 10, 0.41F, null,"FSD Interdictor Class 4 Rating C", "FSD Interdictor")},
             { "int_fsdinterdictor_size4_class4", new ShipModule(128666719, 16, 0.49F, null,"FSD Interdictor Class 4 Rating B", "FSD Interdictor")},
             { "int_fsdinterdictor_size4_class5", new ShipModule(128666723, 10, 0.57F, null,"FSD Interdictor Class 4 Rating A", "FSD Interdictor")},
+
             { "int_fuelscoop_size1_class1", new ShipModule(128666644, 0, 0.14F, "Rate:18","Fuel Scoop Class 1 Rating E", "Fuel Scoop")},
             { "int_fuelscoop_size1_class2", new ShipModule(128666652, 0, 0.18F, "Rate:24","Fuel Scoop Class 1 Rating D", "Fuel Scoop")},
             { "int_fuelscoop_size1_class3", new ShipModule(128666660, 0, 0.23F, "Rate:30","Fuel Scoop Class 1 Rating C", "Fuel Scoop")},
@@ -1575,6 +1611,7 @@ namespace EliteDangerousCore
             { "int_fuelscoop_size8_class3", new ShipModule(128666667, 0, 0.8F, "Rate:1200","Fuel Scoop Class 8 Rating C", "Fuel Scoop")},
             { "int_fuelscoop_size8_class4", new ShipModule(128666675, 0, 0.96F, "Rate:1440","Fuel Scoop Class 8 Rating B", "Fuel Scoop")},
             { "int_fuelscoop_size8_class5", new ShipModule(128666683, 0, 1.12F, "Rate:1680","Fuel Scoop Class 8 Rating A", "Fuel Scoop")},
+            
             { "int_dronecontrol_fueltransfer_size1_class1", new ShipModule(128671249, 1.3F, 0.18F, "Range:0.6km","Fuel Transfer Drone Controller Class 1 Rating E", "Limpet Controller")},
             { "int_dronecontrol_fueltransfer_size1_class2", new ShipModule(128671250, 0.5F, 0.14F, "Range:0.8km","Fuel Transfer Drone Controller Class 1 Rating D", "Limpet Controller")},
             { "int_dronecontrol_fueltransfer_size1_class3", new ShipModule(128671251, 1.3F, 0.23F, "Range:1km","Fuel Transfer Drone Controller Class 1 Rating C", "Limpet Controller")},
@@ -1595,11 +1632,13 @@ namespace EliteDangerousCore
             { "int_dronecontrol_fueltransfer_size7_class3", new ShipModule(128671266, 80, 0.69F, "Range:1.7km","Fuel Transfer Drone Controller Class 7 Rating C", "Limpet Controller")},
             { "int_dronecontrol_fueltransfer_size7_class4", new ShipModule(128671267, 128, 0.97F, "Range:2km","Fuel Transfer Drone Controller Class 7 Rating B", "Limpet Controller")},
             { "int_dronecontrol_fueltransfer_size7_class5", new ShipModule(128671268, 80, 0.83F, "Range:2.4km","Fuel Transfer Drone Controller Class 7 Rating A", "Limpet Controller")},
+            
             { "int_guardianfsdbooster_size1", new ShipModule(128833975, 1.3F, 0.75F, null,"Guardian FSD Booster Class 1", "Guardian FSD Booster")},
             { "int_guardianfsdbooster_size2", new ShipModule(128833976, 1.3F, 0.98F, null,"Guardian FSD Booster Class 2", "Guardian FSD Booster")},
             { "int_guardianfsdbooster_size3", new ShipModule(128833977, 1.3F, 1.27F, null,"Guardian FSD Booster Class 3", "Guardian FSD Booster")},
             { "int_guardianfsdbooster_size4", new ShipModule(128833978, 1.3F, 1.65F, null,"Guardian FSD Booster Class 4", "Guardian FSD Booster")},
             { "int_guardianfsdbooster_size5", new ShipModule(128833979, 1.3F, 2.14F, null,"Guardian FSD Booster Class 5", "Guardian FSD Booster")},
+            
             { "int_guardianhullreinforcement_size1_class2", new ShipModule(128833946, 1, 0.56F, "Explosive:0%, Kinetic:0%, Thermal:2%","Guardian Hull Reinforcement Class 1 Rating D", "Guardian Hull Reinforcement")},
             { "int_guardianhullreinforcement_size1_class1", new ShipModule(128833945, 2, 0.45F, "Explosive:0%, Kinetic:0%, Thermal:2%","Guardian Hull Reinforcement Class 1 Rating E", "Guardian Hull Reinforcement")},
             { "int_guardianhullreinforcement_size2_class2", new ShipModule(128833948, 2, 0.79F, "Explosive:0%, Kinetic:0%, Thermal:2%","Guardian Hull Reinforcement Class 2 Rating D", "Guardian Hull Reinforcement")},
@@ -1630,6 +1669,7 @@ namespace EliteDangerousCore
             { "int_guardianshieldreinforcement_size4_class2", new ShipModule(128833972, 8, 1.05F, null,"Guardian Shield Reinforcement Class 4 Rating D", "Guardian Shield Reinforcement")},
             { "int_guardianshieldreinforcement_size5_class2", new ShipModule(128833974, 16, 1.26F, null,"Guardian Shield Reinforcement Class 5 Rating D", "Guardian Shield Reinforcement")},
             { "int_guardianshieldreinforcement_size5_class1", new ShipModule(128833973, 32, 1.16F, null,"Guardian Shield Reinforcement Class 5 Rating E", "Guardian Shield Reinforcement")},
+           
             { "int_dronecontrol_resourcesiphon_size1_class1", new ShipModule(128066532, 1.3F, 0.12F, "Time:42s, Range:1.5km","Hatch Breaker Drone Controller Class 1 Rating E", "Limpet Controller")},
             { "int_dronecontrol_resourcesiphon_size1_class2", new ShipModule(128066533, 0.5F, 0.16F, "Time:36s, Range:2km","Hatch Breaker Drone Controller Class 1 Rating D", "Limpet Controller")},
             { "int_dronecontrol_resourcesiphon_size1_class3", new ShipModule(128066534, 1.3F, 0.2F, "Time:30s, Range:2.5km","Hatch Breaker Drone Controller Class 1 Rating C", "Limpet Controller")},
@@ -1650,6 +1690,7 @@ namespace EliteDangerousCore
             { "int_dronecontrol_resourcesiphon_size7_class3", new ShipModule(128066549, 80, 0.7F, "Time:18s, Range:4.3km","Hatch Breaker Drone Controller Class 7 Rating C", "Limpet Controller")},
             { "int_dronecontrol_resourcesiphon_size7_class4", new ShipModule(128066550, 128, 0.84F, "Time:14s, Range:5.2km","Hatch Breaker Drone Controller Class 7 Rating B", "Limpet Controller")},
             { "int_dronecontrol_resourcesiphon_size7_class5", new ShipModule(128066551, 80, 0.98F, "Time:11s, Range:6km","Hatch Breaker Drone Controller Class 7 Rating A", "Limpet Controller")},
+          
             { "int_hullreinforcement_size1_class1", new ShipModule(128668537, 2, 0, "Explosive:0.5%, Kinetic:0.5%, Thermal:0.5%","Hull Reinforcement Class 1 Rating E", "Hull Reinforcement")},
             { "int_hullreinforcement_size1_class2", new ShipModule(128668538, 1, 0, "Explosive:0.5%, Kinetic:0.5%, Thermal:0.5%","Hull Reinforcement Class 1 Rating D", "Hull Reinforcement")},
             { "int_hullreinforcement_size2_class1", new ShipModule(128668539, 4, 0, "Explosive:1%, Kinetic:1%, Thermal:1%","Hull Reinforcement Class 2 Rating E", "Hull Reinforcement")},
@@ -1660,6 +1701,7 @@ namespace EliteDangerousCore
             { "int_hullreinforcement_size4_class2", new ShipModule(128668544, 8, 0, "Explosive:2%, Kinetic:2%, Thermal:2%","Hull Reinforcement Class 4 Rating D", "Hull Reinforcement")},
             { "int_hullreinforcement_size5_class1", new ShipModule(128668545, 32, 0, "Explosive:2.5%, Kinetic:2.5%, Thermal:2.5%","Hull Reinforcement Class 5 Rating E", "Hull Reinforcement")},
             { "int_hullreinforcement_size5_class2", new ShipModule(128668546, 16, 0, "Explosive:2.5%, Kinetic:2.5%, Thermal:2.5%","Hull Reinforcement Class 5 Rating D", "Hull Reinforcement")},
+        
             { "int_fueltank_size1_class3", new ShipModule(128064346, 0, 0, "Size:2t","Fuel Tank Class 1 Rating C", "Fuel Tank")},
             { "int_fueltank_size1_class3_free", new ShipModule(128667018, 0, 0, "Size:2t","Fuel Tank Class 1 Rating C", "Fuel Tank")},
             { "int_fueltank_size2_class3", new ShipModule(128064347, 0, 0, "Size:4t","Fuel Tank Class 2 Rating C", "Fuel Tank")},
@@ -1669,8 +1711,10 @@ namespace EliteDangerousCore
             { "int_fueltank_size6_class3", new ShipModule(128064351, 0, 0, "Size:64t","Fuel Tank Class 6 Rating C", "Fuel Tank")},
             { "int_fueltank_size7_class3", new ShipModule(128064352, 0, 0, "Size:128t","Fuel Tank Class 7 Rating C", "Fuel Tank")},
             { "int_fueltank_size8_class3", new ShipModule(128064353, 0, 0, "Size:256t","Fuel Tank Class 8 Rating C", "Fuel Tank")},
+        
             { "int_passengercabin_size5_class4", new ShipModule(128727925, 20, 0, "Passengers:4","Luxury Passenger Cabin Class 5 Rating B", "Passenger Cabin")},
             { "int_passengercabin_size6_class4", new ShipModule(128727929, 40, 0, "Passengers:8","Luxury Passenger Cabin Class 6 Rating B", "Passenger Cabin")},
+        
             { "int_metaalloyhullreinforcement_size1_class1", new ShipModule(128793117, 2, 0, "Explosive:0%, Kinetic:0%, Thermal:0%","Meta Alloy Hull Reinforcement Class 1 Rating E", "Meta Alloy Hull Reinforcement")},
             { "int_metaalloyhullreinforcement_size1_class2", new ShipModule(128793118, 2, 0, "Explosive:0%, Kinetic:0%, Thermal:0%","Meta Alloy Hull Reinforcement Class 1 Rating D", "Meta Alloy Hull Reinforcement")},
             { "int_metaalloyhullreinforcement_size2_class1", new ShipModule(128793119, 4, 0, "Explosive:0%, Kinetic:0%, Thermal:0%","Meta Alloy Hull Reinforcement Class 2 Rating E", "Meta Alloy Hull Reinforcement")},
@@ -1681,6 +1725,7 @@ namespace EliteDangerousCore
             { "int_metaalloyhullreinforcement_size4_class2", new ShipModule(128793124, 8, 0, "Explosive:0%, Kinetic:0%, Thermal:0%","Meta Alloy Hull Reinforcement Class 4 Rating D", "Meta Alloy Hull Reinforcement")},
             { "int_metaalloyhullreinforcement_size5_class1", new ShipModule(128793125, 32, 0, "Explosive:0%, Kinetic:0%, Thermal:0%","Meta Alloy Hull Reinforcement Class 5 Rating E", "Meta Alloy Hull Reinforcement")},
             { "int_metaalloyhullreinforcement_size5_class2", new ShipModule(128793126, 16, 0, "Explosive:0%, Kinetic:0%, Thermal:0%","Meta Alloy Hull Reinforcement Class 5 Rating D", "Meta Alloy Hull Reinforcement")},
+       
             { "int_modulereinforcement_size1_class1", new ShipModule(128737270, 2, 0, "Protection:0.3","Module Reinforcement Class 1 Rating E", "Module Reinforcement")},
             { "int_modulereinforcement_size1_class2", new ShipModule(128737271, 1, 0, "Protection:0.6","Module Reinforcement Class 1 Rating D", "Module Reinforcement")},
             { "int_modulereinforcement_size2_class1", new ShipModule(128737272, 4, 0, "Protection:0.3","Module Reinforcement Class 2 Rating E", "Module Reinforcement")},
@@ -1691,12 +1736,14 @@ namespace EliteDangerousCore
             { "int_modulereinforcement_size4_class2", new ShipModule(128737277, 8, 0, "Protection:0.6","Module Reinforcement Class 4 Rating D", "Module Reinforcement")},
             { "int_modulereinforcement_size5_class1", new ShipModule(128737278, 32, 0, "Protection:0.3","Module Reinforcement Class 5 Rating E", "Module Reinforcement")},
             { "int_modulereinforcement_size5_class2", new ShipModule(128737279, 16, 0, "Protection:0.6","Module Reinforcement Class 5 Rating D", "Module Reinforcement")},
+         
             { "int_buggybay_size2_class1", new ShipModule(128672288, 12, 0.25F, null,"Planetary Vehicle Hangar Class 2 Rating H", "Planetary Vehicle Hangar")},
             { "int_buggybay_size2_class2", new ShipModule(128672289, 6, 0.75F, null,"Planetary Vehicle Hangar Class 2 Rating G", "Planetary Vehicle Hangar")},
             { "int_buggybay_size4_class1", new ShipModule(128672290, 20, 0.4F, null,"Planetary Vehicle Hangar Class 4 Rating H", "Planetary Vehicle Hangar")},
             { "int_buggybay_size4_class2", new ShipModule(128672291, 10, 1.2F, null,"Planetary Vehicle Hangar Class 4 Rating G", "Planetary Vehicle Hangar")},
             { "int_buggybay_size6_class1", new ShipModule(128672292, 34, 0.6F, null,"Planetary Vehicle Hangar Class 6 Rating H", "Planetary Vehicle Hangar")},
             { "int_buggybay_size6_class2", new ShipModule(128672293, 17, 1.8F, null,"Planetary Vehicle Hangar Class 6 Rating G", "Planetary Vehicle Hangar")},
+        
             { "int_shieldgenerator_size1_class5_strong", new ShipModule(128671323, 2.6F, 2.52F, "OptMass:25t, MaxMass:63t, MinMass:13t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 1 Rating A Strong", "Shield Generator")},
             { "int_shieldgenerator_size2_class5_strong", new ShipModule(128671324, 5, 3.15F, "OptMass:55t, MaxMass:138t, MinMass:23t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 2 Rating A Strong", "Shield Generator")},
             { "int_shieldgenerator_size3_class5_strong", new ShipModule(128671325, 10, 3.78F, "OptMass:165t, MaxMass:413t, MinMass:83t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 3 Rating A Strong", "Shield Generator")},
@@ -1705,6 +1752,7 @@ namespace EliteDangerousCore
             { "int_shieldgenerator_size6_class5_strong", new ShipModule(128671328, 80, 6.51F, "OptMass:540t, MaxMass:1350t, MinMass:270t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 6 Rating A Strong", "Shield Generator")},
             { "int_shieldgenerator_size7_class5_strong", new ShipModule(128671329, 160, 7.35F, "OptMass:1060t, MaxMass:2650t, MinMass:530t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 7 Rating A Strong", "Shield Generator")},
             { "int_shieldgenerator_size8_class5_strong", new ShipModule(128671330, 320, 8.4F, "OptMass:1800t, MaxMass:4500t, MinMass:900t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 8 Rating A Strong", "Shield Generator")},
+        
             { "int_dronecontrol_prospector_size1_class1", new ShipModule(128671269, 1.3F, 0.18F, "Range:3km","Prospector Drone Controller Class 1 Rating E", "Limpet Controller")},
             { "int_dronecontrol_prospector_size1_class2", new ShipModule(128671270, 0.5F, 0.14F, "Range:4km","Prospector Drone Controller Class 1 Rating D", "Limpet Controller")},
             { "int_dronecontrol_prospector_size1_class3", new ShipModule(128671271, 1.3F, 0.23F, "Range:5km","Prospector Drone Controller Class 1 Rating C", "Limpet Controller")},
@@ -1730,6 +1778,7 @@ namespace EliteDangerousCore
             { "int_dronecontrol_recon_size3_class1", new ShipModule(128841592, 2, 0.2F, "Range:1.4km","Recon Drone Controller Class 3 Rating E", "Drone Control Recon")},
             { "int_dronecontrol_recon_size5_class1", new ShipModule(128841593, 20, 0.5F, "Range:1.7km","Recon Drone Controller Class 5 Rating E", "Drone Control Recon")},
             { "int_dronecontrol_recon_size7_class1", new ShipModule(128841594, 128, 0.97F, "Range:2km","Recon Drone Controller Class 7 Rating E", "Drone Control Recon")},
+    
             { "int_refinery_size1_class1", new ShipModule(128666684, 0, 0.14F, null,"Refinery Class 1 Rating E", "Refinery")},
             { "int_refinery_size1_class2", new ShipModule(128666688, 0, 0.18F, null,"Refinery Class 1 Rating D", "Refinery")},
             { "int_refinery_size1_class3", new ShipModule(128666692, 0, 0.23F, null,"Refinery Class 1 Rating C", "Refinery")},
@@ -1750,6 +1799,7 @@ namespace EliteDangerousCore
             { "int_refinery_size4_class3", new ShipModule(128666695, 0, 0.41F, null,"Refinery Class 4 Rating C", "Refinery")},
             { "int_refinery_size4_class4", new ShipModule(128666699, 0, 0.49F, null,"Refinery Class 4 Rating B", "Refinery")},
             { "int_refinery_size4_class5", new ShipModule(128666703, 0, 0.57F, null,"Refinery Class 4 Rating A", "Refinery")},
+      
             { "int_dronecontrol_repair_size1_class1", new ShipModule(128777327, 1.3F, 0.18F, "Range:0.6km","Repair Drone Controller Class 1 Rating E", "Limpet Controller")},
             { "int_dronecontrol_repair_size1_class2", new ShipModule(128777328, 0.5F, 0.14F, "Range:0.8km","Repair Drone Controller Class 1 Rating D", "Limpet Controller")},
             { "int_dronecontrol_repair_size1_class3", new ShipModule(128777329, 1.3F, 0.23F, "Range:1km","Repair Drone Controller Class 1 Rating C", "Limpet Controller")},
@@ -1771,6 +1821,7 @@ namespace EliteDangerousCore
             { "int_dronecontrol_repair_size7_class4", new ShipModule(128777345, 128, 0.97F, "Range:2km","Repair Drone Controller Class 7 Rating B", "Limpet Controller")},
             { "int_dronecontrol_repair_size7_class5", new ShipModule(128777346, 80, 0.83F, "Range:2.4km","Repair Drone Controller Class 7 Rating A", "Limpet Controller")},
             { "int_dronecontrol_unkvesselresearch", new ShipModule(128793116, 1.3F, 0.4F, "Time:300s, Range:2km","Drone Controller Vessel Research", "Research Limpet Controller")},
+        
             { "int_shieldcellbank_size1_class1", new ShipModule(128064298, 1.3F, 0.41F, "Ammo:3/1, ThermL:170","Shield Cell Bank Class 1 Rating E", "Shield Cell Bank")},
             { "int_shieldcellbank_size1_class2", new ShipModule(128064299, 0.5F, 0.55F, "Ammo:0/1, ThermL:170","Shield Cell Bank Class 1 Rating D", "Shield Cell Bank")},
             { "int_shieldcellbank_size1_class3", new ShipModule(128064300, 1.3F, 0.69F, "Ammo:2/1, ThermL:170","Shield Cell Bank Class 1 Rating C", "Shield Cell Bank")},
@@ -1811,6 +1862,7 @@ namespace EliteDangerousCore
             { "int_shieldcellbank_size8_class3", new ShipModule(128064335, 160, 2.4F, "Ammo:4/1, ThermL:800","Shield Cell Bank Class 8 Rating C", "Shield Cell Bank")},
             { "int_shieldcellbank_size8_class4", new ShipModule(128064336, 256, 2.88F, "Ammo:5/1, ThermL:800","Shield Cell Bank Class 8 Rating B", "Shield Cell Bank")},
             { "int_shieldcellbank_size8_class5", new ShipModule(128064337, 160, 3.36F, "Ammo:4/1, ThermL:800","Shield Cell Bank Class 8 Rating A", "Shield Cell Bank")},
+        
             { "int_shieldgenerator_size1_class5", new ShipModule(128064262, 1.3F, 1.68F, "OptMass:25t, MaxMass:63t, MinMass:13t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 1 Rating A", "Shield Generator")},
             { "int_shieldgenerator_size2_class1", new ShipModule(128064263, 2.5F, 0.9F, "OptMass:55t, MaxMass:138t, MinMass:28t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 2 Rating E", "Shield Generator")},
             { "int_shieldgenerator_size2_class1_free", new ShipModule(128666641, 2.5F, 0.9F, "OptMass:55t, MaxMass:138t, MinMass:28t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 2 Rating E", "Shield Generator")},
@@ -1848,7 +1900,9 @@ namespace EliteDangerousCore
             { "int_shieldgenerator_size8_class3", new ShipModule(128064295, 160, 4, "OptMass:1800t, MaxMass:4500t, MinMass:900t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 8 Rating C", "Shield Generator")},
             { "int_shieldgenerator_size8_class4", new ShipModule(128064296, 256, 4.8F, "OptMass:1800t, MaxMass:4500t, MinMass:900t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 8 Rating B", "Shield Generator")},
             { "int_shieldgenerator_size8_class5", new ShipModule(128064297, 160, 5.6F, "OptMass:1800t, MaxMass:4500t, MinMass:900t, Explosive:50%, Kinetic:40%, Thermal:-20%","Shield Generator Class 8 Rating A", "Shield Generator")},
+       
             { "int_supercruiseassist", new ShipModule(128932273, 0, 0.3F, null,"Supercruise Assist", "Supercruise Assist")},
+        
             { "int_detailedsurfacescanner_tiny", new ShipModule(128666634, 0, 0, null,"Detailed Surface Scanner", "Detailed Surface Scanner")},     //FRONTIER DATA has this 1.3t, EDSY/Coriolis/Looking at the journal unladenmass has it at 0t
 
             { "int_hyperdrive_size8_class1", new ShipModule(128064133, 160, 0.56F, "OptMass:0t","Hyperdrive Class 8 Rating E", "Hyperdrive")},
@@ -1887,6 +1941,7 @@ namespace EliteDangerousCore
             { "int_hyperdrive_size2_class3", new ShipModule(128064105, 2.5F, 0.2F, "OptMass:60t","Hyperdrive Class 2 Rating C", "Hyperdrive")},
             { "int_hyperdrive_size2_class4", new ShipModule(128064106, 4, 0.25F, "OptMass:75t","Hyperdrive Class 2 Rating B", "Hyperdrive")},
             { "int_hyperdrive_size2_class5", new ShipModule(128064107, 2.5F, 0.3F, "OptMass:90t","Hyperdrive Class 2 Rating A", "Hyperdrive")},
+    
             { "int_lifesupport_size8_class1", new ShipModule(128064173, 160, 0.8F, "Time:300s","Life Support Class 8 Rating E", "Life Support")},
             { "int_lifesupport_size8_class2", new ShipModule(128064174, 64, 0.9F, "Time:450s","Life Support Class 8 Rating D", "Life Support")},
             { "int_lifesupport_size8_class3", new ShipModule(128064175, 160, 1, "Time:600s","Life Support Class 8 Rating C", "Life Support")},
@@ -1928,8 +1983,10 @@ namespace EliteDangerousCore
             { "int_lifesupport_size1_class3", new ShipModule(128064140, 1.3F, 0.4F, "Time:600s","Life Support Class 1 Rating C", "Life Support")},
             { "int_lifesupport_size1_class4", new ShipModule(128064141, 2, 0.44F, "Time:900s","Life Support Class 1 Rating B", "Life Support")},
             { "int_lifesupport_size1_class5", new ShipModule(128064142, 1.3F, 0.48F, "Time:1500s","Life Support Class 1 Rating A", "Life Support")},
+     
             { "int_planetapproachsuite_advanced", new ShipModule(128975719,0,0,null, "Advanced Planet Approach Suite", "Planet Approach Suite" ) },
             { "int_planetapproachsuite", new ShipModule(128672317, 0, 0, null,"Planet Approach Suite", "Planet Approach Suite")},
+    
             { "int_powerdistributor_size8_class1", new ShipModule(128064213, 160, 0.64F, "Sys:3.2MW, Eng:3.2MW, Wep:4.8MW","Power Distributor Class 8 Rating E", "Power Distributor")},
             { "int_powerdistributor_size8_class2", new ShipModule(128064214, 64, 0.72F, "Sys:3.6MW, Eng:3.6MW, Wep:5.4MW","Power Distributor Class 8 Rating D", "Power Distributor")},
             { "int_powerdistributor_size8_class3", new ShipModule(128064215, 160, 0.8F, "Sys:4MW, Eng:4MW, Wep:6MW","Power Distributor Class 8 Rating C", "Power Distributor")},
@@ -1971,6 +2028,7 @@ namespace EliteDangerousCore
             { "int_powerdistributor_size1_class3", new ShipModule(128064180, 1.3F, 0.4F, "Sys:0.5MW, Eng:0.5MW, Wep:1.5MW","Power Distributor Class 1 Rating C", "Power Distributor")},
             { "int_powerdistributor_size1_class4", new ShipModule(128064181, 2, 0.44F, "Sys:0.6MW, Eng:0.6MW, Wep:1.7MW","Power Distributor Class 1 Rating B", "Power Distributor")},
             { "int_powerdistributor_size1_class5", new ShipModule(128064182, 1.3F, 0.48F, "Sys:0.6MW, Eng:0.6MW, Wep:1.8MW","Power Distributor Class 1 Rating A", "Power Distributor")},
+  
             { "int_guardianpowerdistributor_size1", new ShipModule(128833980, 1.4F, 0.62F, "Sys:0.8MW, Eng:0.8MW, Wep:2.5MW","Guardian Power Distributor Class 1", "Guardian Power Distributor")},
             { "int_guardianpowerdistributor_size2", new ShipModule(128833981, 2.6F, 0.73F, "Sys:0.8MW, Eng:0.8MW, Wep:2.5MW","Guardian Power Distributor Class 2", "Guardian Power Distributor")},
             { "int_guardianpowerdistributor_size3", new ShipModule(128833982, 5.25F, 0.78F, "Sys:1.7MW, Eng:1.7MW, Wep:3.1MW","Guardian Power Distributor Class 3", "Guardian Power Distributor")},
@@ -1979,6 +2037,7 @@ namespace EliteDangerousCore
             { "int_guardianpowerdistributor_size6", new ShipModule(128833985, 42, 1.07F, "Sys:4.2MW, Eng:4.2MW, Wep:7.3MW","Guardian Power Distributor Class 6", "Guardian Power Distributor")},
             { "int_guardianpowerdistributor_size7", new ShipModule(128833986, 84, 1.16F, "Sys:5.2MW, Eng:5.2MW, Wep:8.5MW","Guardian Power Distributor Class 7", "Guardian Power Distributor")},
             { "int_guardianpowerdistributor_size8", new ShipModule(128833987, 168, 1.25F, "Sys:6.2MW, Eng:6.2MW, Wep:10.1MW","Guardian Power Distributor Class 8", "Guardian Power Distributor")},
+ 
             { "int_powerplant_size8_class1", new ShipModule(128064063, 160, 0, "Power:24MW","Powerplant Class 8 Rating E", "Powerplant")},
             { "int_powerplant_size8_class2", new ShipModule(128064064, 64, 0, "Power:27MW","Powerplant Class 8 Rating D", "Powerplant")},
             { "int_powerplant_size8_class3", new ShipModule(128064065, 80, 0, "Power:30MW","Powerplant Class 8 Rating C", "Powerplant")},
@@ -2015,6 +2074,7 @@ namespace EliteDangerousCore
             { "int_powerplant_size2_class3", new ShipModule(128064035, 1.3F, 0, "Power:8MW","Powerplant Class 2 Rating C", "Powerplant")},
             { "int_powerplant_size2_class4", new ShipModule(128064036, 2, 0, "Power:8.8MW","Powerplant Class 2 Rating B", "Powerplant")},
             { "int_powerplant_size2_class5", new ShipModule(128064037, 1.3F, 0, "Power:9.6MW","Powerplant Class 2 Rating A", "Powerplant")},
+      
             { "int_guardianpowerplant_size2", new ShipModule(128833988, 1.5F, 0, "Power:12.7MW","Guardian Powerplant Class 2", "Guardian Powerplant")},
             { "int_guardianpowerplant_size3", new ShipModule(128833989, 2.9F, 0, "Power:15.8MW","Guardian Powerplant Class 3", "Guardian Powerplant")},
             { "int_guardianpowerplant_size4", new ShipModule(128833990, 5.9F, 0, "Power:20.6MW","Guardian Powerplant Class 4", "Guardian Powerplant")},
@@ -2022,6 +2082,7 @@ namespace EliteDangerousCore
             { "int_guardianpowerplant_size6", new ShipModule(128833992, 23.4F, 0, "Power:33.3MW","Guardian Powerplant Class 6", "Guardian Powerplant")},
             { "int_guardianpowerplant_size7", new ShipModule(128833993, 46.8F, 0, "Power:39.6MW","Guardian Powerplant Class 7", "Guardian Powerplant")},
             { "int_guardianpowerplant_size8", new ShipModule(128833994, 93.6F, 0, "Power:47.5MW","Guardian Powerplant Class 8", "Guardian Powerplant")},
+      
             { "int_sensors_size8_class1", new ShipModule(128064253, 160, 0.55F, "Range:5.1km","Sensors Class 8 Rating E", "Sensors")},
             { "int_sensors_size8_class2", new ShipModule(128064254, 64, 0.62F, "Range:5.8km","Sensors Class 8 Rating D", "Sensors")},
             { "int_sensors_size8_class3", new ShipModule(128064255, 160, 0.69F, "Range:6.4km","Sensors Class 8 Rating C", "Sensors")},
@@ -2063,6 +2124,7 @@ namespace EliteDangerousCore
             { "int_sensors_size1_class3", new ShipModule(128064220, 1.3F, 0.2F, "Range:5km","Sensors Class 1 Rating C", "Sensors")},
             { "int_sensors_size1_class4", new ShipModule(128064221, 2, 0.33F, "Range:5.5km","Sensors Class 1 Rating B", "Sensors")},
             { "int_sensors_size1_class5", new ShipModule(128064222, 1.3F, 0.6F, "Range:6km","Sensors Class 1 Rating A", "Sensors")},
+       
             { "int_engine_size8_class1", new ShipModule(128064098, 160, 7.2F, "OptMass:2240t, MaxMass:3360t, MinMass:1120t","Thrusters Class 8 Rating E", "Thrusters")},
             { "int_engine_size8_class2", new ShipModule(128064099, 64, 8.1F, "OptMass:2520t, MaxMass:3780t, MinMass:1260t","Thrusters Class 8 Rating D", "Thrusters")},
             { "int_engine_size8_class3", new ShipModule(128064100, 160, 9, "OptMass:2800t, MaxMass:4200t, MinMass:1400t","Thrusters Class 8 Rating C", "Thrusters")},
@@ -2101,7 +2163,6 @@ namespace EliteDangerousCore
             { "int_engine_size2_class5", new ShipModule(128064072, 2.5F, 3, "OptMass:72t, MaxMass:108t, MinMass:36t","Thrusters Class 2 Rating A", "Thrusters")},
             { "int_engine_size3_class5_fast", new ShipModule(128682013, 5, 5, "OptMass:90t, MaxMass:200t, MinMass:70t","Thrusters Class 3 Rating A Fast", "Thrusters")},
             { "int_engine_size2_class5_fast", new ShipModule(128682014, 2.5F, 4, "OptMass:60t, MaxMass:120t, MinMass:50t","Thrusters Class 2 Rating A Fast", "Thrusters")},
-
 
             { "adder_armour_grade1", new ShipModule(128049268,0,0,"Explosive:-40%, Kinetic:-20%, Thermal:0%","Adder Lightweight Armour","Armour")},
             { "adder_armour_grade2", new ShipModule(128049269,3,0,"Explosive:-40%, Kinetic:-20%, Thermal:0%","Adder Reinforced Armour","Armour")},
