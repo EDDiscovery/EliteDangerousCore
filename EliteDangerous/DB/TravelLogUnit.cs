@@ -108,6 +108,7 @@ namespace EliteDangerousCore.DB
 
                 //System.Diagnostics.Debug.WriteLine("Update cache with " + ID);
                 cacheid[ID] = this;
+                cachepath[FullName.ToLowerInvariant()] = this;       // name is v.important for speed
                 return true;
             }
         }
