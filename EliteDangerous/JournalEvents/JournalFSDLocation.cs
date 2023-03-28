@@ -525,9 +525,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(out string info, out string detailed)
         {
             StringBuilder sb = new StringBuilder();
-#if DEBUG
-            sb.Append($"SA {SystemAddress} ");
-#endif
+
             if (JumpDist > 0)
                 sb.Append(JumpDist.ToString("N2") + " ly");
             if (FuelUsed > 0)
