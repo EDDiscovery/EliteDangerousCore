@@ -32,12 +32,13 @@ namespace EliteDangerous.DLL
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonReqTPos = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.buttonPushStars = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -54,7 +55,8 @@ namespace EliteDangerous.DLL
             // panel1
             // 
             this.panel1.Controls.Add(this.textBox1);
-            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.buttonPushStars);
+            this.panel1.Controls.Add(this.buttonReqTPos);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
@@ -68,18 +70,19 @@ namespace EliteDangerous.DLL
             this.textBox1.Size = new System.Drawing.Size(100, 20);
             this.textBox1.TabIndex = 1;
             // 
-            // button1
+            // buttonReqTPos
             // 
-            this.button1.BackColor = System.Drawing.SystemColors.MenuHighlight;
-            this.button1.FlatAppearance.BorderColor = System.Drawing.Color.Red;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button1.Location = new System.Drawing.Point(22, 20);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(87, 33);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = false;
+            this.buttonReqTPos.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.buttonReqTPos.FlatAppearance.BorderColor = System.Drawing.Color.Red;
+            this.buttonReqTPos.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonReqTPos.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.buttonReqTPos.Location = new System.Drawing.Point(13, 20);
+            this.buttonReqTPos.Name = "buttonReqTPos";
+            this.buttonReqTPos.Size = new System.Drawing.Size(70, 22);
+            this.buttonReqTPos.TabIndex = 0;
+            this.buttonReqTPos.Text = "Req TPOS";
+            this.buttonReqTPos.UseVisualStyleBackColor = false;
+            this.buttonReqTPos.Click += new System.EventHandler(this.buttonReqTPos_Click);
             // 
             // dataGridView1
             // 
@@ -118,6 +121,20 @@ namespace EliteDangerous.DLL
             this.Column4.HeaderText = "Column4";
             this.Column4.Name = "Column4";
             // 
+            // buttonPushStars
+            // 
+            this.buttonPushStars.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.buttonPushStars.FlatAppearance.BorderColor = System.Drawing.Color.Red;
+            this.buttonPushStars.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonPushStars.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.buttonPushStars.Location = new System.Drawing.Point(89, 20);
+            this.buttonPushStars.Name = "buttonPushStars";
+            this.buttonPushStars.Size = new System.Drawing.Size(70, 22);
+            this.buttonPushStars.TabIndex = 0;
+            this.buttonPushStars.Text = "Push Stars";
+            this.buttonPushStars.UseVisualStyleBackColor = false;
+            this.buttonPushStars.Click += new System.EventHandler(this.buttonPushStars_Click);
+            // 
             // DemonstrationUserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -138,12 +155,13 @@ namespace EliteDangerous.DLL
 
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonReqTPos;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
+        private System.Windows.Forms.Button buttonPushStars;
     }
 }

@@ -14,6 +14,7 @@
 
 using QuickJSON;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using static EDDDLLInterfaces.EDDDLLIF;
@@ -142,9 +143,9 @@ namespace EliteDangerous.DLL
             Color butbordercolor = FromJson(theme["ButtonBorderColor"]);
             Color butforecolor = FromJson(theme["ButtonTextColor"]);
             Color butbackcolor = FromJson(theme["ButtonBackColor"]);
-            button1.ForeColor = butforecolor;
-            button1.FlatAppearance.BorderColor = butbordercolor;
-            button1.BackColor = butbackcolor;
+            buttonReqTPos.ForeColor = butforecolor;
+            buttonReqTPos.FlatAppearance.BorderColor = butbordercolor;
+            buttonReqTPos.BackColor = butbackcolor;
 
             Color textbordercolor = FromJson(theme["TextBlockBorderColor"]);
             Color textforecolor = FromJson(theme["TextBlockColor"]);
@@ -165,6 +166,16 @@ namespace EliteDangerous.DLL
             Color formbackcolor = FromJson(theme["Form"]);
 
             callbacks.DGVTransparent(dataGridView1, false, formbackcolor); // presuming its not transparent.. would need to make this more clever by saving Settransparent state
+        }
+
+        private void buttonReqTPos_Click(object sender, EventArgs e)
+        {
+            callbacks.RequestTravelGridPosition();
+        }
+
+        private void buttonPushStars_Click(object sender, EventArgs e)
+        {
+            callbacks.PushStars("expedition", new List<string> { "Star1", "Star2" });
         }
     }
 }

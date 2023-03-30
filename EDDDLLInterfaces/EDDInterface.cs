@@ -214,6 +214,8 @@ namespace EDDDLLInterfaces
             public delegate void PanelString(string s);
             public delegate void PanelDGVTransparent(object grid, bool on, Color curcol);
             public delegate JournalEntry PanelJournalEntry(int index);
+            public delegate bool PanelPushStarsList(string panelname, System.Collections.Generic.List<string> stars);
+            public delegate bool PanelPushCSV(string filename);
 
             public PanelSave<string> SaveString;
             public PanelSave<double> SaveDouble;
@@ -232,6 +234,9 @@ namespace EDDDLLInterfaces
             public PanelBool IsFloatingWindow;          // is it a floating window outside (in a form)
             public PanelBool IsClosed;                  // very important if your doing async programming - the window may have closed when the async returns!
             public PanelDGVTransparent DGVTransparent;  // Theme the DGV with transparency or not
+            public PanelBool RequestTravelGridPosition;    // ask for the travel grid position to be sent via CursorChanged
+            public PanelPushStarsList PushStars;        // push a star list to "triwanted","trisystems" or "expedition".
+            public PanelPushCSV PushCSVToExpedition;    // push a CSV file to the expedition panel
 
             // ver 1 ends
         };
@@ -266,6 +271,8 @@ namespace EDDDLLInterfaces
             void NewFilteredJournal(JournalEntry je);
             void NewUIEvent(string jsonui);     // see UIEvent and subclasses in EliteDangerousCore - has EventTimeUTC, EventTypeID, EventTypeStr, EventRefresh plus fields unique to EventType
             void NewTarget(Tuple<string, double, double, double> target);    // null if target has been removed
+
+            // other callbacks
             void ScreenShotCaptured(string file, Size s);
             void ThemeChanged(string themeasjson);
         }

@@ -54,7 +54,7 @@ namespace EliteDangerousCore.JournalEvents
                     TargetLocalised = JournalFieldNaming.GetBetterShipSuitActorName(Target);    // else use suit etc naming
                 }
 
-                System.Diagnostics.Debug.WriteLine($"Bounty {Target} -> {TargetLocalised}");
+               // System.Diagnostics.Debug.WriteLine($"Bounty {Target} -> {TargetLocalised}");
             }
             else
             {
