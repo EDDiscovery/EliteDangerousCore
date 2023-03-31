@@ -225,7 +225,7 @@ namespace EliteDangerousCore
             }
 
             // Using info here, and the indicated journal scan node, return suryeyor info on this node
-            public string SurveyorInfoLine(ISystem sys, bool showsignals, bool showorganics, bool showvolcanism, bool showvalues, bool shortinfo, bool showGravity, bool showAtmos, bool showRings,
+            public string SurveyorInfoLine(ISystem sys, bool showsignals, bool showorganics, bool showvolcanism, bool showvalues, bool shortinfo, bool showGravity, bool showAtmos, bool showTemp, bool showRings,
                             int lowRadiusLimit, int largeRadiusLimit, double eccentricityLimit)
             {
                 if (scandata != null)
@@ -241,7 +241,7 @@ namespace EliteDangerousCore
 
                     return scandata.SurveyorInfoLine(sys, hasminingsignals, hasgeosignals, hasbiosignals,
                                 hasthargoidsignals, hasguardiansignals, hashumansignals, hasothersignals, hasscanorganics,
-                                showvolcanism, showvalues, shortinfo, showGravity, showAtmos, showRings,
+                                showvolcanism, showvalues, shortinfo, showGravity, showAtmos, showTemp, showRings,
                                 lowRadiusLimit,largeRadiusLimit, eccentricityLimit);
                 }
                 else

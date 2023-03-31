@@ -366,7 +366,7 @@ namespace EliteDangerousCore.JournalEvents
         public string SurveyorInfoLine(ISystem sys,
                             bool hasminingsignals, bool hasgeosignals, bool hasbiosignals, bool hasthargoidsignals, bool hasguardiansignals, bool hashumansignals, bool hasothersignals,
                             bool hasscanorganics,
-                            bool showvolcanism, bool showvalues, bool shortinfo, bool showGravity, bool showAtmos, bool showRings,
+                            bool showvolcanism, bool showvalues, bool shortinfo, bool showGravity, bool showAtmos, bool showTemp, bool showRings,
                             int lowRadiusLimit, int largeRadiusLimit, double eccentricityLimit)
         {
             JournalScan js = this;            
@@ -401,6 +401,7 @@ namespace EliteDangerousCore.JournalEvents
             information.Append((js.IsLandable) ? @" Is landable.".T(EDCTx.JournalScanInfo_islandable) : null);
             information.Append((js.IsLandable && showGravity && js.nSurfaceGravityG.HasValue) ? @" (" + Math.Round(js.nSurfaceGravityG.Value, 2, MidpointRounding.AwayFromZero) + "g)" : null);
             information.Append((js.HasAtmosphericComposition && showAtmos) ? @" Atmosphere: ".T(EDCTx.JournalScanInfo_Atmosphere) + (js.Atmosphere?.Replace(" atmosphere", "") ?? "unknown".T(EDCTx.JournalScanInfo_unknownAtmosphere)) + "." : null);
+            information.Append((js.IsLandable && showTemp) ? @" Surface temperature: ".T(EDCTx.JournalScanInfo_SurfaceTemperature) + Math.Round(js.nSurfaceTemperature.Value, 1, MidpointRounding.AwayFromZero) + "K" : null);
             information.Append((js.HasMeaningfulVolcanism && showvolcanism) ? @" Has ".T(EDCTx.JournalScanInfo_Has) + js.Volcanism + "." : null);
             information.Append((hasminingsignals) ? " Has mining signals.".T(EDCTx.JournalScanInfo_Signals) : null);
             information.Append((hasgeosignals) ? " Geological signals: ".T(EDCTx.JournalScanInfo_GeoSignals) + js.CountGeoSignals + "." : null);

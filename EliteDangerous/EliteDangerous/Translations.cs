@@ -874,6 +874,7 @@ namespace EliteDangerousCore
 
         JournalScanInfo_isa, // is a(n)
         JournalScanInfo_Atmosphere, // Atmosphere
+        JournalScanInfo_SurfaceTemperature, //Surface temperature: 
         JournalScanInfo_terraformable, // terraformable
         JournalScanInfo_LowRadius, //  Low Radius.
         JournalScanInfo_LargeRadius, //  Large Radius.
