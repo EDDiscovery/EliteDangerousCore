@@ -88,7 +88,7 @@ namespace EliteDangerousCore
             public string Body { get; private set; }        // may be null, may be empty.
             public int BodyID { get; private set; }
             public DateTime JumpTime { get; private set; }
-            public string PositionText { get { return StarSystem.Name + (Body.Equals(StarSystem.Name, StringComparison.InvariantCultureIgnoreCase) ? "" : (": " + Body)); } }
+            public string PositionText { get { return StarSystem.Name + (Body.IsEmpty() || Body.Equals(StarSystem.Name, StringComparison.InvariantCultureIgnoreCase) ? "" : (": " + Body)); } }
 
             public void SetSystem(ISystem sys)
             {
