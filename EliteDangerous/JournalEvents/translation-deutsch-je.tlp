@@ -1134,6 +1134,7 @@ SECTION JournalScanInfo
 
 .isa: " is a " => " ist ein(e) "
 .Atmosphere: " Atmosphere: " => " Atmosphäre: "
+.SurfaceTemperature: "Surface temperature: " => "Oberflächentemperatur: "
 .terraformable: "terraformable " => "terraformierbare/r "
 .LowRadius: " Is tiny " => " ist winzig"
 .LargeRadius: " Is large." => " Ist groß."

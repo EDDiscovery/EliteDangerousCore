@@ -1133,6 +1133,7 @@ SECTION JournalScanInfo
 
 .isa: " is a " @
 .Atmosphere: " Atmosphere: " @
+.SurfaceTemperature: "Surface temperature: " @
 .terraformable: "terraformable " @
 .LowRadius: " Is tiny " @
 .LargeRadius: " Is large." @
