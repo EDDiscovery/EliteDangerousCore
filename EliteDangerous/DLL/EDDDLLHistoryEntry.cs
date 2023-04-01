@@ -71,7 +71,7 @@ namespace EliteDangerousCore.DLL
             {
                 ver = JournalVersion,
                 //v1
-                indexno = he.EntryNumber,
+                indexno = he.Index == -1 ? (he.UnfilteredIndex+1) : he.EntryNumber,     // if we are making an unfiltered entry, set to unfiltered, else entry number
                 utctime = he.EventTimeUTC.ToStringZuluInvariant(),
                 name = he.EventSummary,
                 systemname = he.System.Name,

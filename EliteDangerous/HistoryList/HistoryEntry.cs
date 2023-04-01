@@ -26,7 +26,8 @@ namespace EliteDangerousCore
         #region Public Variables
 
         public int EntryNumber { get { return Index + 1; } }   // for display purposes.  from 1 to number of records
-        public int Index { get; set; }// zero based index number
+        public int Index { get; set; } = -1; // zero based filtered index number - after reorder/remove, and is the entry number in historylist
+        public int UnfilteredIndex { get; set; } = -1; // zero based unfiltered index number
 
         public JournalEntry journalEntry { get; private set; }       // MUST be present
 
@@ -53,11 +54,11 @@ namespace EliteDangerousCore
 
         public bool isTravelling { get { return TravelStatus.IsTravelling; } }
         public TimeSpan TravelledSeconds { get { return TravelStatus.IsTravelling ? (EventTimeUTC - TravelStatus.TravelStartTimeUTC) : new TimeSpan(0); } }  // 0 if not travelling, else time since start
-        public double TravelledDistance { get { return TravelStatus.TravelledDistance(Index); } }
-        public TimeSpan TravelledTime { get { return TravelStatus.TravelledTime(Index); } }
-        public int TravelledJumps { get { return TravelStatus.TravelledJumps(Index); } }
+        public double TravelledDistance { get { return TravelStatus.TravelledDistance(EventTimeUTC); } }
+        public TimeSpan TravelledTime { get { return TravelStatus.TravelledTime(EventTimeUTC); } }
+        public int TravelledJumps { get { return TravelStatus.TravelledJumps(EventTimeUTC); } }
         public int TravelledMissingJumps { get { return TravelStatus.TravelledMissingjump; } }
-        public string TravelledStats { get { return TravelStatus.Stats(Index, EventTimeUTC); } }
+        public string TravelledStats { get { return TravelStatus.Stats(EventTimeUTC); } }
         public HistoryEntryStatus.TravelStateType TravelState { get { return EntryStatus.TravelState; } }
 
         public HistoryEntryStatus Status { get { return EntryStatus; } }

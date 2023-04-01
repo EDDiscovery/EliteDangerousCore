@@ -25,7 +25,6 @@ namespace EliteDangerousCore
         {
             public DateTime JumptimeUTC;        // jump time
             public double Distance;             
-            public int Index;
             public TimeSpan TravelTime = new TimeSpan();        // accumulated time to this point
         };
 
@@ -36,56 +35,53 @@ namespace EliteDangerousCore
         public int TravelledMissingjump { get; private set; }               // any missing positions
         public TimeSpan TimeAccumulator { get; private set; } = new TimeSpan();     // time accumulated on this state, added to on each shutdown and final stop - total flight time of this state
 
-        public int TravelledJumps(int heindex)          // 0 if before first jump, else count to date
+        public int TravelledJumps(DateTime heutctime)          // 0 if before first jump, else count to date
         {
             if (IsTravelling)
             {
-                int i = IndexOf(heindex);               // will return -1 if before first jump, or 0 for first jump, etc.
+                int i = IndexOf(heutctime);               // will return -1 if before first jump, or 0 for first jump, etc.
                 return i + 1;
             }
             else
                 return 0;
         }
-        public double TravelledDistance(int heindex)
+        public double TravelledDistance(DateTime heutctime)
         {
             if (IsTravelling)
             {
-                int index = IndexOf(heindex);           // will return -1 if before first jump, or 0 for first jump, etc.
+                int index = IndexOf(heutctime);           // will return -1 if before first jump, or 0 for first jump, etc.
                 return index < 0 ? 0 : TravelJumps[index].Distance;     // <0, 0. else travel distance at index, unless index == length, in which case last
             }
             else
                 return 0;
         }
-        public TimeSpan TravelledTime(int heindex)
+        public TimeSpan TravelledTime(DateTime heutctime)
         {
             if (IsTravelling)
             {
-                int index = IndexOf(heindex);           // will return -1 if before first jump, or 0 for first jump, etc.
+                int index = IndexOf(heutctime);           // will return -1 if before first jump, or 0 for first jump, etc.
                 if ( index >= 0 )
                     return TravelJumps[index].TravelTime;     
             }
             return new TimeSpan(0);
         }
-        public string Stats(int heindex, DateTime hetime)
+        public string Stats(DateTime hetimeutc)
         {
-            int index = IndexOf(heindex);           // will return -1 if before first jump, or 0 for first jump, etc.
+            int index = IndexOf(hetimeutc);           // will return -1 if before first jump, or 0 for first jump, etc.
 
-            if (index>=0)
+            if (index>=0)                            // if we have a jump..
             {
                 TimeSpan ts = TravelJumps[index].TravelTime;     // travel time to last one
 
                 if (index == TravelJumps.Count - 1)             // if at last entry, so we may be beyond in time this..
                 {
-                    if (heindex > TravelJumps[index].Index)      // if past the last jump, then use the time accumulator, not the time of the last jump
+                    if (hetimeutc > TravelJumps[index].JumptimeUTC)      // if past the last jump, then use the time accumulator, not the time of the last jump
                     {
                         ts = TimeAccumulator;                    
                     }
-                    else
-                    {
-                    }
                 }
 
-                return $"{TravelJumps[index].Distance:0.0} ly, J {index+1}, \u0394" + (hetime - TravelStartTimeUTC).ToString(@"d\:hh\:mm\:ss") +
+                return $"{TravelJumps[index].Distance:0.0} ly, J {index+1}, \u0394" + (hetimeutc - TravelStartTimeUTC).ToString(@"d\:hh\:mm\:ss") +
                     " T\u0394" + ts.ToString(@"d\:hh\:mm\:ss");
             }
             else
@@ -172,7 +168,6 @@ namespace EliteDangerousCore
                         JumptimeUTC = hecur.EventTimeUTC,
                         // work out the accumulated time, as long as the last load game time is set (it should be) we can add that on
                         TravelTime = state.TimeAccumulator + (state.LastLoadGameTime!=DateTime.MinValue ? (hecur.EventTimeUTC-state.LastLoadGameTime) : new TimeSpan(0)),
-                        Index = hecur.Index
                     };
 
                     state.TravelJumps.Add(jmp);
@@ -197,15 +192,15 @@ namespace EliteDangerousCore
             return state;
         }
 
-        private int IndexOf(int heindex)                 // -1 if before first jump, else points to last jump 
+        private int IndexOf(DateTime hetimeutc)                 // -1 if before first jump, else points to array index of last jump 
         {
             for (int i = 0; i < TravelJumps.Count; i++)
             {
-                if (TravelJumps[i].Index > heindex)
-                    return i - 1;
+                if (TravelJumps[i].JumptimeUTC > hetimeutc)     // if jump time is greater than hetime, we have got the last jump
+                    return i - 1;                               // -1 if before, else index of last jump
             }
 
-            return TravelJumps.Count-1;
+            return TravelJumps.Count-1;                         // hetimeutc is beyond all jumps, return last
         }
 
         private DateTime LastLoadGameTime = DateTime.MinValue;      // min value means we are in a shutdown

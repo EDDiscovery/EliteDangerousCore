@@ -63,6 +63,7 @@ namespace EliteDangerousCore
         {
             HistoryEntry he = HistoryEntry.FromJournalEntry(je, hlastprocessed);     // we may check edsm for this entry
 
+            he.UnfilteredIndex = (hlastprocessed?.UnfilteredIndex?? -1) +1;
             he.UpdateMaterialsCommodities(MaterialCommoditiesMicroResources.Process(je, hlastprocessed?.journalEntry, he.Status.TravelState == HistoryEntryStatus.TravelStateType.SRV));
 
             // IN THIS order, so suits can be added, then weapons, then loadouts
@@ -90,6 +91,8 @@ namespace EliteDangerousCore
 
             he.UpdateEngineering(Engineering.Process(he));
 
+            he.UpdateTravelStatus(hlastprocessed);
+
             hlastprocessed = he;
 
             return he;
@@ -104,10 +107,6 @@ namespace EliteDangerousCore
             foreach(var heh in reorderlist.EmptyIfNull())
             {
                 heh.Index = historylist.Count;  // store its index
-
-                // travel uses index, so need to do this now
-                heh.UpdateTravelStatus(heh.Index > 0 ? historylist[heh.Index - 1] : null);
-
                 historylist.Add(heh);        // then add to history
                 AddToVisitsScan(logerror);  // add to scan database and complain if can't add. Do this after history add, so it has a list.
             }
@@ -205,9 +204,6 @@ namespace EliteDangerousCore
 
                     // System.Diagnostics.Debug.WriteLine("   ++ {0} {1}", heh.EventTimeUTC.ToString(), heh.EntryType);
                     heh.Index = hist.historylist.Count; // store its index for quick ordering, after all removal etc
-
-                    // travel uses index, so need to do this now
-                    heh.UpdateTravelStatus(heh.Index > 0 ? hist.historylist[heh.Index - 1] : null);
 
                     hist.historylist.Add(heh);        // then add to history
                     hist.AddToVisitsScan(null);  // add to scan database but don't complain
