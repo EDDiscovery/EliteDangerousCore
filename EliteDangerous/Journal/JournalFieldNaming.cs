@@ -131,7 +131,7 @@ namespace EliteDangerousCore
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("Unknown FD ship ID:" + inname);
+                System.Diagnostics.Debug.WriteLine("Unknown Getter Ship Name:" + inname);
                 return inname.SplitCapsWordFull();
             }
         }
@@ -159,7 +159,7 @@ namespace EliteDangerousCore
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("Unknown FD ship ID:" + inname);
+                System.Diagnostics.Debug.WriteLine("Unknown Ship/Suit/Actor:" + inname);
                 return inname.SplitCapsWordFull();
             }
         }

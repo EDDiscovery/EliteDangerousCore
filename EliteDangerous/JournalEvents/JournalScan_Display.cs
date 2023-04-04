@@ -219,6 +219,8 @@ namespace EliteDangerousCore.JournalEvents
             if (EDSMDiscoveryCommander != null)
                 scanText.AppendFormat("Discovered by {0} on {1}".T(EDCTx.JournalScan_DB) + "\n", EDSMDiscoveryCommander, EDSMDiscoveryUTC.ToStringZulu());
 
+            if (SurfaceFeatures != null)
+                scanText.AppendFormat("Surface features".T(EDCTx.ScanDisplayUserControl_Organics) + ":\n" + StarScan.SurfaceFeatureList(SurfaceFeatures, 4, "\n") + "\n");
             if (Signals != null)
                 scanText.AppendFormat("Signals".T(EDCTx.ScanDisplayUserControl_Signals) + ":\n" + JournalSAASignalsFound.SignalList(Signals, 4, "\n") + "\n");
             if (Genuses != null)

@@ -339,19 +339,23 @@ namespace EliteDangerousCore
                             }
                         }
 
-                        if (subnode.Signals != null)
+                        if (subnode.Signals != null)            // make sure Scan node has same list as subnode
                         {
                             // System.Diagnostics.Debug.WriteLine($"Assign JS signal list {string.Join(",", subnode.Signals.Select(x => x.Type).ToList())} to {subnode.FullName}");
-                            sc.Signals = subnode.Signals;       // make sure Scan node has same list as subnode
+                            sc.Signals = subnode.Signals;       
                         }
-                        if (subnode.Genuses != null)
+                        if (subnode.Genuses != null)            // make sure Scan node has same list as subnode
                         {
-                            sc.Genuses = subnode.Genuses;       // make sure Scan node has same list as subnode
+                            sc.Genuses = subnode.Genuses;       
                         }
-                        if (subnode.Organics != null)
+                        if (subnode.Organics != null)           // make sure Scan node has same list as subnode
                         {
                             // System.Diagnostics.Debug.WriteLine($"Assign JS organic list {string.Join(",", subnode.Organics.Select(x => x.Species).ToList())} to {subnode.FullName}");
-                            sc.Organics = subnode.Organics;       // make sure Scan node has same list as subnode
+                            sc.Organics = subnode.Organics;       
+                        }
+                        if (subnode.SurfaceFeatures != null)    // mask sure scan node has same list as subnode
+                        {
+                            sc.SurfaceFeatures = subnode.SurfaceFeatures;
                         }
                     }
                 }

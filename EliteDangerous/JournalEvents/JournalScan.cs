@@ -337,6 +337,11 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Are all organics on this body analysed")]
         public bool OrganicsFullyAnalysed { get { return CountOrganicsScansAnalysed == CountBioSignals; } }
 
+        [PropertyNameAttribute("Surface features information")]
+        public List<IBodyFeature> SurfaceFeatures { get; set; }// can be null if nothing for this node, else a list of body features. Set up by StarScan
+        [PropertyNameAttribute("Count of surface featurss")]
+        public int CountSurfaceFeatures { get { return SurfaceFeatures?.Count ?? 0; } }
+
         [PropertyNameAttribute("Have we mapped it")]
         public bool Mapped { get; private set; }                        // WE Mapped it - affects prices
         [PropertyNameAttribute("Have we efficiently mapped it")]

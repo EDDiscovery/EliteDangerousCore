@@ -59,12 +59,12 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.Touchdown)]
-    public class JournalTouchdown : JournalEntry
+    public class JournalTouchdown : JournalEntry, IBodyFeature
     {
         public JournalTouchdown(JObject evt) : base(evt, JournalTypeEnum.Touchdown)
         {
-            Latitude = evt["Latitude"].Double();
-            Longitude = evt["Longitude"].Double();
+            Latitude = evt["Latitude"].DoubleNull();
+            Longitude = evt["Longitude"].DoubleNull();
             PlayerControlled = evt["PlayerControlled"].BoolNull();
             NearestDestination = evt["NearestDestination"].StrNull();
             NearestDestination_Localised = JournalFieldNaming.CheckLocalisation(evt["NearestDestination_Localised"].StrNull(), NearestDestination);
@@ -76,8 +76,9 @@ namespace EliteDangerousCore.JournalEvents
             OnStation = evt["OnStation"].BoolNull();
         }
 
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
+        public bool HasLatLong { get { return Latitude.HasValue && Longitude.HasValue; } }  // some touchdowns don't have lat/long, computer controlled for instance, in the past
         public bool? PlayerControlled { get; set; }
         public string NearestDestination { get; set; }
         public string NearestDestination_Localised { get; set; }
@@ -88,6 +89,12 @@ namespace EliteDangerousCore.JournalEvents
         public int? BodyID { get; set; }
         public bool? OnStation { get; set; }
         public bool? OnPlanet { get; set; }
+
+        // IBodyFeature only
+        public string BodyType { get { return "Planet"; } }
+        public string Name { get { return $"Touchdown {Body} @ {EventTimeUTC}"; } }
+        public string Name_Localised { get { return "Touchdown"; } }
+        public string BodyDesignation { get; set; }
 
         public override void FillInformation(out string info, out string detailed)
         {

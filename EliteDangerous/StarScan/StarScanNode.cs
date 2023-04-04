@@ -54,6 +54,7 @@ namespace EliteDangerousCore
             private List<JournalSAASignalsFound.SAASignal> signals; // can be null if no signals for this node, else its a list of signals.
             private List<JournalSAASignalsFound.SAAGenus> genusus; // can be null if no signals for this node, else its a list of signals.
             private List<JournalScanOrganic> organics;  // can be null if nothing for this node, else a list of organics
+            private List<IBodyFeature> surfacefeatures;   // can be null if nothing for this node, else a list of journal entries
 
             public ScanNode() { }
             public ScanNode(string name, ScanNodeType node, int? bodyid) { FullName = OwnName = name; NodeType = node; BodyID = bodyid; 
@@ -79,7 +80,9 @@ namespace EliteDangerousCore
                         return;
 
                     if (scandata == null)
+                    {
                         scandata = value;
+                    }
                     else if ((!value.IsEDSMBody && value.ScanType != "Basic") || scandata.ScanType == "Basic") // Always overwrtite if its a journalscan (except basic scans)
                     {
                         //System.Diagnostics.Debug.WriteLine(".. overwrite " + scandata.ScanType + " with " + value.ScanType + " for " + scandata.BodyName);
@@ -97,10 +100,8 @@ namespace EliteDangerousCore
 
                 set
                 {
-                    if (value == null)
-                        return;
-
-                    beltdata = value;
+                    if (value != null)
+                        beltdata = value;
                 }
             }
 
@@ -112,10 +113,8 @@ namespace EliteDangerousCore
                 }
                 set
                 {
-                    if (value == null)
-                        return;
-
-                    signals = value;
+                    if (value != null)
+                        signals = value;
                 }
             }
             public List<JournalSAASignalsFound.SAAGenus> Genuses       // can be null
@@ -126,10 +125,8 @@ namespace EliteDangerousCore
                 }
                 set
                 {
-                    if (value == null)
-                        return;
-
-                    genusus = value;
+                    if (value != null)
+                        genusus = value;
                 }
             }
 
@@ -149,16 +146,40 @@ namespace EliteDangerousCore
                 }
                 set
                 {
-                    if (value == null)
-                        return;
-
-                    organics = value;
+                    if (value != null)
+                        organics = value;
+                }
+            }
+            public List<IBodyFeature> SurfaceFeatures        // can be null
+            {
+                get
+                {
+                    return surfacefeatures;
+                }
+                set
+                {
+                    if (value != null)
+                        surfacefeatures = value;
                 }
             }
 
+            // which feature is nearby?  Handles no surface features
+            public IBodyFeature FindSurfaceFeatureNear( double? latitude, double ?longitude, double delta = 0.1)
+            {
+                if (latitude.HasValue && longitude.HasValue && surfacefeatures != null)
+                    return surfacefeatures.Find(x => x.HasLatLong &&
+                                                           System.Math.Abs(x.Latitude.Value - latitude.Value) < delta && System.Math.Abs(x.Longitude.Value - longitude.Value) < delta);
+                else
+                    return null;
+            }
+
+            // does node have any non edsm scans (or empty scans) below it
             public bool DoesNodeHaveNonEDSMScansBelow()
             {
-                if (ScanData != null && ScanData.IsEDSMBody == false)
+                if (ScanData == null)       // if no scan data, but we have a node, its not an EDSM scan, true
+                    return true;
+                
+                if ( ScanData.IsEDSMBody == false)  // we have scan data, its not edsm, true
                     return true;
 
                 if (Children != null)

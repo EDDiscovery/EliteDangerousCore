@@ -83,7 +83,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.ApproachSettlement)]
-    public class JournalApproachSettlement : JournalEntry
+    public class JournalApproachSettlement : JournalEntry, IBodyFeature
     {
         public JournalApproachSettlement(JObject evt) : base(evt, JournalTypeEnum.ApproachSettlement)
         {
@@ -102,10 +102,16 @@ namespace EliteDangerousCore.JournalEvents
         public long? MarketID { get; set; }
         public double? Latitude { get; set; }    // 3.3
         public double? Longitude { get; set; }
+        public bool HasLatLong { get { return Latitude.HasValue && Longitude.HasValue; } }  
         public long? SystemAddress { get; set; }
         public int? BodyID { get; set; }
-        public string BodyName { get; set; }
+        public string BodyName { get; set; }        // from event
         public string BodyType { get { return "Settlement"; } }
+
+        // IBodyFeature only
+        public string Body { get { return BodyName; } }     // this is an alias
+        public string BodyDesignation { get; set; }
+        public string StarSystem { get; set; }      // filled in by StarScan::AddApproachSettlement
 
         public override void FillInformation(out string info, out string detailed)
         {

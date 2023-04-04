@@ -153,6 +153,7 @@
     <Compile Include="Screenshots\ScreenShotConverter.cs" />
     <Compile Include="Screenshots\ScreenShotDirectoryWatcher.cs" />
     <Compile Include="Screenshots\ScreenShotImageConverter.cs" />
+    <Compile Include="StarScan\StarScanApproachTouchdown.cs" />
     <Compile Include="StarScan\StarScanFSSBodySignals.cs" />
     <Compile Include="StarScan\StarScanBaryCentre.cs" />
     <Compile Include="StarScan\StarScanLocation.cs" />

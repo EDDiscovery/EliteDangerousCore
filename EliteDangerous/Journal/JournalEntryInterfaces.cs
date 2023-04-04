@@ -49,20 +49,30 @@ namespace EliteDangerousCore
         void AddStarScan( StarScan s, ISystem system);
     }
 
-    public interface IBodyNameIDOnly
+    public interface IBodyNameIDOnly        // used for query system
     {
         string BodyName { get; }
         int? BodyID { get; }
     }
 
-    public interface IBodyNameAndID 
+    public interface IBodyNameAndID     // events containing body information
     {
+        DateTime EventTimeUTC { get; }
         string Body { get; }
         string BodyType { get; }
         int? BodyID { get; }
         string BodyDesignation { get; set; }
         string StarSystem { get; }
         long? SystemAddress { get; }
+    }
+
+    public interface IBodyFeature : IBodyNameAndID  // events containing feature information on a body
+    {   
+        double? Latitude { get; set; }
+        double? Longitude { get; set; }
+        bool HasLatLong { get; }
+        string Name { get; }
+        string Name_Localised { get; }
     }
 
     public interface IMissions
