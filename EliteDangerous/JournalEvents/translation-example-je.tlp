@@ -1133,24 +1133,24 @@ SECTION JournalScanInfo
 
 .isa: " is a " @
 .Atmosphere: " Atmosphere: " @
-.SurfaceTemperature: "Surface temperature: " @
+.SurfaceTemperature: " Surface temperature: {0} K." @
 .terraformable: "terraformable " @
 .LowRadius: " Is tiny " @
 .LargeRadius: " Is large." @
 .Signals: " Has mining signals." @
-.BioSignals: " Biological signals: " @
-.GeoSignals: " Geological signals: " @
-.ThargoidSignals: " Thargoid signals: " @
-.GuardianSignals: " Guardian signals: " @
-.HumanSignals: " Human signals: " @
-.OtherSignals: " 'Other' signals: " @
+.BioSignals: " Biological signals: {0}." @
+.GeoSignals: " Geological signals: {0}." @
+.ThargoidSignals: " Thargoid signals: {0}." @
+.GuardianSignals: " Guardian signals: {0}." @
+.HumanSignals: " Human signals: {0}." @
+.OtherSignals: " 'Other' signals: {0}." @
 .MandD: " (Mapped & Discovered)" @
 .MP: " (Mapped)" @
 .DIS: " (Discovered)" @
 .islandable: " Is landable." @
 .Hasring: " Is ringed." @
 .Has: " Has " @
-.eccentricity: " Has an high eccentricity of " @
+.eccentricity: " Has an high eccentricity of {0}." @
 .unknownAtmosphere: "unknown" @
 .BFSD: " Basic" @
 .SFSD: " Standard" @
