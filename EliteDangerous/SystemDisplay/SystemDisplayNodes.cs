@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Text;
 
 namespace EliteDangerousCore
 {
@@ -318,7 +319,21 @@ namespace EliteDangerousCore
                 if (sn.NodeType == StarScan.ScanNodeType.barycentre)
                     tip = string.Format("Barycentre of {0}".T(EDCTx.ScanDisplayUserControl_BC), sn.OwnName);
                 else
-                    tip = sn.OwnName + Environment.NewLine + Environment.NewLine + "No scan data available".T(EDCTx.ScanDisplayUserControl_NSD);
+                {
+                    tip = sn.FullName + Environment.NewLine + Environment.NewLine + "No scan data available".T(EDCTx.ScanDisplayUserControl_NSD) + Environment.NewLine;
+                    string addtext = "";
+
+                    if (sn.SurfaceFeatures != null)
+                        addtext += string.Format("Surface features".T(EDCTx.ScanDisplayUserControl_Organics) + ":\n" + StarScan.SurfaceFeatureList(sn.SurfaceFeatures, 4, "\n") + "\n");
+                    if (sn.Signals != null)
+                        addtext += string.Format("Signals".T(EDCTx.ScanDisplayUserControl_Signals) + ":\n" + JournalSAASignalsFound.SignalList(sn.Signals, 4, "\n") + "\n");
+                    if (sn.Genuses != null)
+                        addtext += string.Format("Genuses".T(EDCTx.ScanDisplayUserControl_Genuses) + ":\n" + JournalSAASignalsFound.GenusList(sn.Genuses, 4, "\n") + "\n");
+                    if (sn.Organics != null)
+                        addtext += string.Format("Organics".T(EDCTx.ScanDisplayUserControl_Organics) + ":\n" + JournalScanOrganic.OrganicList(sn.Organics, 4, "\n") + "\n");
+
+                    tip = tip.AppendPrePad(addtext, Environment.NewLine);
+                }
 
                 string nodelabel = sn.CustomName ?? sn.OwnName;
                 nodelabel = nodelabel.AppendPrePad(appendlabeltext,Environment.NewLine);

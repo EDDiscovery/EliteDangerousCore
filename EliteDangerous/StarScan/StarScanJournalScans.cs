@@ -269,6 +269,8 @@ namespace EliteDangerousCore
 
                 // if not got a node list (only happens when we have a scannode from another scannode), or we are not in the node list
 
+                bool madenew = false;
+
                 if (currentnodelist == null || !currentnodelist.TryGetValue(elements[lvl], out ScanNode subnode)) // either no nodes, or not found the element name in the node list.
                 {
                     if (currentnodelist == null)    // no node list, happens when we are at least 1 level down as systemnode always has a node list, make one 
@@ -288,10 +290,17 @@ namespace EliteDangerousCore
                             Level = lvl,
                             Parent = previousnode,
                             SystemNode = systemnode,
+                            EDSMCreatedNode = sc.IsEDSMBody,                // is the node made by edsm
                         };
 
                         currentnodelist.Add(ownname, subnode);
+                        madenew = true;
+                      //  System.Diagnostics.Debug.WriteLine($"StarScan JS Created subnode {subnode.FullName}");
                     }
+                }
+                else
+                {
+                   // System.Diagnostics.Debug.WriteLine($"StarScan JS Existing subnode {subnode.FullName} {subnode.EDSMCreatedNode}");
                 }
 
                 lock (subnode)
@@ -304,23 +313,33 @@ namespace EliteDangerousCore
 
                     if (lvl == elements.Count - 1)                                  // if we are at the end node..
                     {
-                        if (oldnode != null && oldnode.FullName == subnode.FullName && !object.ReferenceEquals(subnode, oldnode))       // if we are replacing the node, make sure we dup across some info
+                        // if we are replacing the node, make sure we dup across some info
+                        if (oldnode != null && oldnode.FullName == subnode.FullName && !object.ReferenceEquals(subnode, oldnode))      
                         {
                             subnode.IsMapped = oldnode.IsMapped;
                             subnode.WasMappedEfficiently = oldnode.WasMappedEfficiently;
                             subnode.Signals = oldnode.Signals;
                             subnode.Genuses = oldnode.Genuses;
                             subnode.Organics = oldnode.Organics;
+                            subnode.EDSMCreatedNode = oldnode.EDSMCreatedNode;      // we copy the creation flag
                         }
-
+    
                         // if its a belt cluster we are adding, then the previous node is a belt but it does not have a scan data, therefore it was artifically created and has no body id
                         // if we have a parent list, we can push the body id of it up. makes the IDs look better
 
                         if (subnode.NodeType == ScanNodeType.beltcluster && sc.Parents != null)
                             previousnode.BodyID = sc.Parents[0].BodyID;
 
-                        subnode.ScanData = sc;                                      // only overwrites if scan is better
+                        // an older node, with a new scan which is not edsm, but the current one is edsm, we clear the created node flag, as we have in effect created it again
+
+                        if (!madenew && sc.IsEDSMBody == false && subnode.EDSMCreatedNode == true)
+                            subnode.EDSMCreatedNode = false;
+
+                        // only overwrites if scan is better
+                        subnode.ScanData = sc;                                      
+
                         subnode.ScanData.SetMapped(subnode.IsMapped, subnode.WasMappedEfficiently);      // pass this data to node, as we may have previously had a SAA Scan
+
                         subnode.CustomName = customname;                            // and its custom name
 
                         if (sc.BodyID != null)                                      // if scan has a body ID, pass it to the node

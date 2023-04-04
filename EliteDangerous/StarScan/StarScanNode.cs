@@ -46,6 +46,7 @@ namespace EliteDangerousCore
             public int? BodyID;
             public bool IsMapped;                   // recorded here since the scan data can be replaced by a better version later.
             public bool WasMappedEfficiently;
+            public bool EDSMCreatedNode;            // did EDSM create the node? BodyID sets this false, JournalScan sets it to ScanData.EDSMBody.  Never changed after creation
 
             public string CustomNameOrOwnname { get { return CustomName ?? OwnName; } }
 
@@ -176,22 +177,19 @@ namespace EliteDangerousCore
             // does node have any non edsm scans (or empty scans) below it
             public bool DoesNodeHaveNonEDSMScansBelow()
             {
-                if (ScanData == null)       // if no scan data, but we have a node, its not an EDSM scan, true
-                    return true;
-                
-                if ( ScanData.IsEDSMBody == false)  // we have scan data, its not edsm, true
-                    return true;
+                if (EDSMCreatedNode)        // its EDSM created, so answer is false
+                    return false;
 
                 if (Children != null)
                 {
                     foreach (KeyValuePair<string, ScanNode> csn in Children)
                     {
-                        if (csn.Value.DoesNodeHaveNonEDSMScansBelow())
+                        if (csn.Value.DoesNodeHaveNonEDSMScansBelow() == true)  // we do have non edsm ones under this child
                             return true;
                     }
                 }
 
-                return false;
+                return true;
             }
 
             public bool IsBodyInFilter(string[] filternames, bool checkchildren)

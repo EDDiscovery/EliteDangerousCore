@@ -222,7 +222,12 @@ namespace EliteDangerousCore
                         };
 
                         currentnodelist.Add(ownname, subnode);
+                      //  System.Diagnostics.Debug.WriteLine($"StarScan BID Created subnode {subnode.FullName}");
                     }
+                }
+                else
+                {
+                  //  System.Diagnostics.Debug.WriteLine($"StarScan BID Existing subnode {subnode.FullName}");
                 }
 
                 if (lvl == elements.Count - 1)

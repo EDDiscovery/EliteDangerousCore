@@ -915,6 +915,7 @@ namespace EliteDangerousCore.EDSM
                 ["SystemAddress"] = jo["id64"].Long(0),
                 ["WasDiscovered"] = true,
                 ["WasMapped"] = false,
+                ["ScanType"] = "Detailed",
             };
 
             if (!jo["discovery"].IsNull())       // much more defense around this.. EDSM gives discovery=null back

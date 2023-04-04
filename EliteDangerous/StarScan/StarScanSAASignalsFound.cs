@@ -86,18 +86,21 @@ namespace EliteDangerousCore
                 lock (relatednode)
                 {
                     //  System.Diagnostics.Debug.WriteLine("Setting SAA Signals Found for " + bodyname + " @ " + sys.Name + " body "  + jsaa.BodyDesignation);
-                    if (relatednode.Signals == null)
-                        relatednode.Signals = new List<JournalSAASignalsFound.SAASignal>();
-
-                    foreach (var x in signals)
+                    if (signals != null && signals.Count > 0)
                     {
-                        if (relatednode.Signals.Find(y => y.Type == x.Type && y.Count == x.Count) == null)
+                        if (relatednode.Signals == null)
+                            relatednode.Signals = new List<JournalSAASignalsFound.SAASignal>();
+
+                        foreach (var x in signals)
                         {
-                            relatednode.Signals.Add(x);
+                            if (relatednode.Signals.Find(y => y.Type == x.Type && y.Count == x.Count) == null)
+                            {
+                                relatednode.Signals.Add(x);
+                            }
                         }
                     }
 
-                    if (genuses != null)        // if we have any - ones before Odyssey v4.0 r 13 did not
+                    if (genuses != null && genuses.Count>0)        // if we have any - ones before Odyssey v4.0 r 13 did not
                     {
                         if (relatednode.Genuses == null)
                             relatednode.Genuses = new List<JournalSAASignalsFound.SAAGenus>();

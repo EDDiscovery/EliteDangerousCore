@@ -92,7 +92,7 @@ namespace EliteDangerousCore.JournalEvents
 
         // IBodyFeature only
         public string BodyType { get { return "Planet"; } }
-        public string Name { get { return $"Touchdown {Body} @ {EventTimeUTC}"; } }
+        public string Name { get { return "Touchdown"; } }
         public string Name_Localised { get { return "Touchdown"; } }
         public string BodyDesignation { get; set; }
 

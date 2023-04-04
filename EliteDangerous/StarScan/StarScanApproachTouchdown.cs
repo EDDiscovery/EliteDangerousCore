@@ -66,7 +66,7 @@ namespace EliteDangerousCore
                             node.ScanData.SurfaceFeatures = node.SurfaceFeatures;       // make sure Scan node has same list as subnode
                         }
 
-                        System.Diagnostics.Debug.WriteLine($"Starscan new approach settlement {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude}");
+                        //System.Diagnostics.Debug.WriteLine($"Starscan new approach settlement {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude}");
                     }
                 }
             }
@@ -99,7 +99,7 @@ namespace EliteDangerousCore
                             node.ScanData.SurfaceFeatures = node.SurfaceFeatures;       // make sure Scan node has same list as subnode
                         }
 
-                        System.Diagnostics.Debug.WriteLine($"Starscan new touchdown {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude}");
+                       // System.Diagnostics.Debug.WriteLine($"Starscan new touchdown {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude}");
                     }
                     else
                     {
@@ -122,7 +122,7 @@ namespace EliteDangerousCore
             foreach (var ibf in listsorted)
             {
                 //System.Diagnostics.Debug.WriteLine($"{s.ScanType} {s.Genus_Localised} {s.Species_Localised}");
-                res = res.AppendPrePad(inds + $"{ibf.EventTimeUTC} : {ibf.Name_Localised??ibf.Name} {ibf.Latitude},{ibf.Longitude}", separ ?? System.Environment.NewLine);
+                res = res.AppendPrePad(inds + $"{ EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(ibf.EventTimeUTC)} : {ibf.Name_Localised??ibf.Name} {ibf.Latitude:0.####},{ibf.Longitude:0.####}", separ ?? System.Environment.NewLine);
             }
 
             return res;
