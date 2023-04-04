@@ -85,9 +85,9 @@ namespace EliteDangerousCore
             {
                 lock (node)
                 {
-                    var existingnode = node.FindSurfaceFeatureNear(je.Latitude, je.Longitude);
+                    var existingibf = node.FindSurfaceFeatureNear(je.Latitude, je.Longitude);
 
-                    if (existingnode == null)
+                    if (existingibf == null)
                     {
                         if (node.SurfaceFeatures == null)
                             node.SurfaceFeatures = new List<IBodyFeature>();
@@ -101,9 +101,14 @@ namespace EliteDangerousCore
 
                        // System.Diagnostics.Debug.WriteLine($"Starscan new touchdown {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude}");
                     }
+                    else if ( existingibf is JournalTouchdown )     // touchdown, after this touchdown
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Starscan touchdown near previous touchdown replaced it {existingibf.EventTimeUTC} -> {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude} {je.NearestDestination}");
+                        node.SurfaceFeatures[node.SurfaceFeatures.IndexOf(existingibf)] = je;
+                    }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine($"Starscan touchdown rejected as near another feature {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude} {je.NearestDestination}");
+                        System.Diagnostics.Debug.WriteLine($"Starscan touchdown rejected as near approach settlement {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude} {je.NearestDestination}");
                     }
                 }
             }
