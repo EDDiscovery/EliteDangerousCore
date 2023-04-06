@@ -324,7 +324,7 @@ namespace EliteDangerousCore
                     string addtext = "";
 
                     if (sn.SurfaceFeatures != null)
-                        addtext += string.Format("Surface features".T(EDCTx.ScanDisplayUserControl_Organics) + ":\n" + StarScan.SurfaceFeatureList(sn.SurfaceFeatures, 4, "\n") + "\n");
+                        addtext += string.Format("Surface features".T(EDCTx.ScanDisplayUserControl_SurfaceFeatures) + ":\n" + StarScan.SurfaceFeatureList(sn.SurfaceFeatures, 4, "\n") + "\n");
                     if (sn.Signals != null)
                         addtext += string.Format("Signals".T(EDCTx.ScanDisplayUserControl_Signals) + ":\n" + JournalSAASignalsFound.SignalList(sn.Signals, 4, "\n") + "\n");
                     if (sn.Genuses != null)

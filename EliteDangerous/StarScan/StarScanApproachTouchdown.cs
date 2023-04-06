@@ -131,7 +131,7 @@ namespace EliteDangerousCore
             foreach (var ibf in listsorted)
             {
                 //System.Diagnostics.Debug.WriteLine($"{s.ScanType} {s.Genus_Localised} {s.Species_Localised}");
-                res = res.AppendPrePad(inds + $"{ EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(ibf.EventTimeUTC)} : {ibf.Name_Localised??ibf.Name} {ibf.Latitude:0.####},{ibf.Longitude:0.####}", separ ?? System.Environment.NewLine);
+                res = res.AppendPrePad(inds + $"{ EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(ibf.EventTimeUTC)} : {ibf.Name_Localised??ibf.Name} {ibf.Latitude:0.####}, {ibf.Longitude:0.####}", separ ?? System.Environment.NewLine);
             }
 
             return res;

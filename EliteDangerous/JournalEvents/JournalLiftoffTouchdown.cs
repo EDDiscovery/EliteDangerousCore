@@ -92,8 +92,8 @@ namespace EliteDangerousCore.JournalEvents
 
         // IBodyFeature only
         public string BodyType { get { return "Planet"; } }
-        public string Name { get { return "Touchdown"; } }
-        public string Name_Localised { get { return "Touchdown"; } }
+        public string Name { get { return "Touchdown".TxID(EDCTx.JournalTypeEnum_Touchdown); } }
+        public string Name_Localised { get { return "Touchdown".TxID(EDCTx.JournalTypeEnum_Touchdown); } }
         public string BodyDesignation { get; set; }
 
         public override void FillInformation(out string info, out string detailed)
