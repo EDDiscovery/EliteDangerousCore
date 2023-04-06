@@ -24,6 +24,8 @@ namespace EliteDangerousCore
         {
             SystemNode sn = GetOrCreateSystemNode(sys);
 
+            // caller has already screened bodyid,systemaddress.  Also body has already been added so this should always work!
+
             if (sn.NodesByID.TryGetValue(je.BodyID.Value, out ScanNode node))
             {
                 lock (node)
@@ -80,6 +82,8 @@ namespace EliteDangerousCore
         public void AddTouchdown(JournalTouchdown je, ISystem sys)
         {
             SystemNode sn = GetOrCreateSystemNode(sys);
+
+            // caller has already screened bodyid,systemaddress.  Also body has already been added so this should always work!
 
             if (sn.NodesByID.TryGetValue(je.BodyID.Value, out ScanNode node))
             {
