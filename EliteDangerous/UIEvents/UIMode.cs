@@ -78,8 +78,16 @@ namespace EliteDangerousCore.UIEvents
             OnFoot, 
         }
 
+        
         public ModeType Mode { get; private set; }
         public MajorModeType MajorMode { get; private set; }
+
+        public bool InFlight { get { return Mode == ModeType.MainShipNormalSpace ||
+                                            Mode == ModeType.MainShipSupercruise ||
+                                            Mode == ModeType.MulticrewNormalSpace ||
+                                            Mode == ModeType.MulticrewSupercruise;
+                                }}
+
 
         public override string ToString()
         {

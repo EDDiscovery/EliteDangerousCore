@@ -50,6 +50,8 @@ namespace EliteDangerousCore
                 mw.StartMonitor(storetodb);
             }
 
+            ResetUIStatus();
+
             ScanThread = new Thread(ScanThreadProc) { Name = "Journal Monitor Thread", IsBackground = true };
             ScanThread.Start();
         }

@@ -29,7 +29,7 @@ namespace EliteDangerousCore.UIEvents
             BodyName = status;
         }
 
-        public string BodyName { get; private set; } // may be null, meaning not known
+        public string BodyName { get; private set; } // may be null, meaning not known. Full body name, such as Sol 2
 
         public override string ToString()
         {

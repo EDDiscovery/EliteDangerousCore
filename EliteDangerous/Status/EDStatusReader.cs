@@ -80,6 +80,9 @@ namespace EliteDangerousCore
             BodyName = null;
             Oxygen = Temperature = Gravity = Health = NotPresent;
             SelectedWeapon = SelectedWeaponLocalised = null;
+            DestinationName = "";
+            DestinationSystemAddress = 0;
+            DestinationBodyID = 0;
             prev_text = null;
         }
 
@@ -301,13 +304,27 @@ namespace EliteDangerousCore
                         fireoverall = true;
                     }
 
+                    string cur_bodyname = jo["BodyName"].StrNull();
+                    bool bodynamechanged = false;
+
+                    if (cur_bodyname != BodyName || changedmajormode)
+                    {
+                        events.Add(new UIEvents.UIBodyName(cur_bodyname, EventTimeUTC, changedmajormode));
+                        BodyName = cur_bodyname;
+                        fireoverall = true;
+                        bodynamechanged = true;
+                    }
+
                     double jlat = jo["Latitude"].Double(UIEvents.UIPosition.InvalidValue);       // if not there, min value
                     double jlon = jo["Longitude"].Double(UIEvents.UIPosition.InvalidValue);
                     double jalt = jo["Altitude"].Double(UIEvents.UIPosition.InvalidValue);
                     double jheading = jo["Heading"].Double(UIEvents.UIPosition.InvalidValue);
+                    if (jheading != UIEvents.UIPosition.InvalidValue)
+                        jheading = (jheading + 360.0) % 360.0;          // april 23 seen on foot heading be negative, normalise to 0-360
                     double jpradius = jo["PlanetRadius"].Double(UIEvents.UIPosition.InvalidValue);       // 3.4
 
-                    if (jlat != Position.Latitude || jlon != Position.Longitude || jalt != Position.Altitude || jheading != Heading || jpradius != BodyRadius || changedmajormode)
+                    if (jlat != Position.Latitude || jlon != Position.Longitude || jalt != Position.Altitude || jheading != Heading || 
+                                    jpradius != BodyRadius || bodynamechanged || changedmajormode)
                     {
                         UIEvents.UIPosition.Position newpos = new UIEvents.UIPosition.Position()
                         {
@@ -315,7 +332,7 @@ namespace EliteDangerousCore
                             Altitude = jalt, AltitudeFromAverageRadius = CheckFlags(curflags1, StatusFlags1NotDirectEvents.AltitudeFromAverageRadius)
                         };
 
-                        events.Add(new UIEvents.UIPosition(newpos, jheading, jpradius, EventTimeUTC, changedmajormode));
+                        events.Add(new UIEvents.UIPosition(newpos, jheading, jpradius, cur_bodyname, EventTimeUTC, changedmajormode));
                         Position = newpos;
                         Heading = jheading;
                         BodyRadius = jpradius;
@@ -328,15 +345,6 @@ namespace EliteDangerousCore
                     {
                         events.Add(new UIEvents.UILegalStatus(cur_legalstatus, EventTimeUTC, changedmajormode));
                         LegalStatus = cur_legalstatus;
-                        fireoverall = true;
-                    }
-
-                    string cur_bodyname = jo["BodyName"].StrNull();
-
-                    if (cur_bodyname != BodyName || changedmajormode)
-                    {
-                        events.Add(new UIEvents.UIBodyName(cur_bodyname, EventTimeUTC, changedmajormode));
-                        BodyName = cur_bodyname;
                         fireoverall = true;
                     }
 
