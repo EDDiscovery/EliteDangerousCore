@@ -424,7 +424,7 @@ namespace EliteDangerousCore
                         CheckFlags(curflags2,StatusFlags2ReportedInOtherMessages.Hot) ? UIEvents.UITemperature.TempState.Hot :
                                                             UIEvents.UITemperature.TempState.Normal;
 
-                    if (temperature != Temperature || (flagsdelta2 & (long)StatusFlags2ReportedInOtherMessages.TempBits) != 0 || changedmajormode)
+                    if (Math.Abs(temperature-Temperature) >= 1 || (flagsdelta2 & (long)StatusFlags2ReportedInOtherMessages.TempBits) != 0 || changedmajormode)
                     {
 
                         events.Add(new UIEvents.UITemperature(temperature,tempstate, EventTimeUTC, changedmajormode));
