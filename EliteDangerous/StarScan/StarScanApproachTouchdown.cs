@@ -41,7 +41,7 @@ namespace EliteDangerousCore
                         {
                             if (System.Math.Abs(existingnode.Latitude.Value - je.Latitude.Value) > 0.01 || System.Math.Abs(existingnode.Longitude.Value - je.Longitude.Value) > 0.01)
                             {
-                                System.Diagnostics.Debug.WriteLine($"Starscan approach settlement new pos {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude}");
+                                //System.Diagnostics.Debug.WriteLine($"Starscan approach settlement new pos {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude}");
                                 existingnode.Latitude = je.Latitude;
                                 existingnode.Longitude = je.Longitude;
                             }
@@ -57,7 +57,7 @@ namespace EliteDangerousCore
 
                         if (existingnode != null && existingnode is JournalTouchdown)             // okay we touched down near it, lets remove the touchdown and keep the approach
                         {
-                            System.Diagnostics.Debug.WriteLine($"Starscan approach settlement touchdown removal {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude}");
+                            //System.Diagnostics.Debug.WriteLine($"Starscan approach settlement touchdown removal {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude}");
                             node.SurfaceFeatures.Remove(existingnode);
                         }
 
@@ -107,12 +107,12 @@ namespace EliteDangerousCore
                     }
                     else if ( existingibf is JournalTouchdown )     // touchdown, after this touchdown
                     {
-                        System.Diagnostics.Debug.WriteLine($"Starscan touchdown near previous touchdown replaced it {existingibf.EventTimeUTC} -> {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude} {je.NearestDestination}");
+                        //System.Diagnostics.Debug.WriteLine($"Starscan touchdown near previous touchdown replaced it {existingibf.EventTimeUTC} -> {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude} {je.NearestDestination}");
                         node.SurfaceFeatures[node.SurfaceFeatures.IndexOf(existingibf)] = je;
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine($"Starscan touchdown rejected as near approach settlement {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude} {je.NearestDestination}");
+                        //System.Diagnostics.Debug.WriteLine($"Starscan touchdown rejected as near approach settlement {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude} {je.NearestDestination}");
                     }
                 }
             }

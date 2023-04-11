@@ -89,7 +89,7 @@ namespace EliteDangerousCore
                 {
                     scannode.BodyID = sc.BodyID;
                     sn.NodesByID[sc.BodyID.Value] = scannode;
-                    System.Diagnostics.Debug.WriteLine($"ProcessBodyAndID found existing scan node and updated BID {sys.Name} {sc.Body} bid {sc.BodyID} vs bid {scannode.BodyID} {scannode.CustomNameOrOwnname}");
+                    //System.Diagnostics.Debug.WriteLine($"ProcessBodyAndID found existing scan node and updated BID {sys.Name} {sc.Body} bid {sc.BodyID} vs bid {scannode.BodyID} {scannode.CustomNameOrOwnname}");
                 }
                 else
                 {
