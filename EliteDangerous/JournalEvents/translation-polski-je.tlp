@@ -302,6 +302,7 @@ SECTION FSSSignal
 .ThreatLevel: "Threat Level: " => " Poziom Zagrożenia: "
 .StationBool: ";Station: " => ";Stacja"
 .CarrierBool: ";Carrier: " @
+.MegashipBool: ";Megaship: " @
 .InstallationBool: ";Installation: " @
 .LastSeen: "Last Seen: " @
 

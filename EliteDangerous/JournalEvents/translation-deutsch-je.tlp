@@ -302,6 +302,7 @@ SECTION FSSSignal
 .ThreatLevel: "Threat Level: " => "Bedrohungsstufe: "
 .StationBool: ";Station: " => ";Station: "
 .CarrierBool: ";Carrier: " => ";Carrier: "
+.MegashipBool: ";Megaship: " @
 .InstallationBool: ";Installation: " => ";Installation: "
 .LastSeen: "Last Seen: " => "Zuletzt gesehen: "
 
@@ -1134,7 +1135,7 @@ SECTION JournalScanInfo
 
 .isa: " is a " => " ist ein(e) "
 .Atmosphere: " Atmosphere: " => " Atmosphäre: "
-.SurfaceTemperature: "Surface temperature: {0} K." => "Oberflächentemperatur: {0} K."
+.SurfaceTemperature: " Surface temperature: {0} K." => "Oberflächentemperatur: {0} K."
 .terraformable: "terraformable " => "terraformierbare/r "
 .LowRadius: " Is tiny " => " ist winzig"
 .LargeRadius: " Is large." => " Ist groß."

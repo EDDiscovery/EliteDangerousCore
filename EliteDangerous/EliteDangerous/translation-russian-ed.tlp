@@ -972,6 +972,7 @@ SECTION ScanDisplayUserControl
 
 .NSD: "No scan data available" => "Нет доступных данных сканирования"
 .BC: "Barycentre of {0}" => "Барицентр {0}"
+.SurfaceFeatures: "Surface features" @
 .Signals: "Signals" @
 .Codex: "Codex" @
 .Organics: "Organics" @
