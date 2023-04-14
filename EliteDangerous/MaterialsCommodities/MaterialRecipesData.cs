@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2021 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- *
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using System;
@@ -24,12 +22,10 @@ namespace EliteDangerousCore
     {
         public class Recipe
         {
-            public string Name;
-            public MaterialCommodityMicroResourceType[] Ingredients;
-            public int[] Amount;
-
+            public string Name { get; private set; }
+            public MaterialCommodityMicroResourceType[] Ingredients { get; private set; }
+            public int[] Amount { get; private set; }
             public int Count { get { return Ingredients.Length; } }
-
             public int Amounts { get { return Amount.Sum(); } }     // number of items
 
             public Recipe(string n, string ingredientsstring)
@@ -81,72 +77,67 @@ namespace EliteDangerousCore
 
         public class SynthesisRecipe : Recipe
         {
-            public string level;
+            public string Level { get; set; }
 
             public SynthesisRecipe(string n, string l, string indg)
                 : base(n, indg)
             {
-                level = l;
+                Level = l;
             }
         }
 
 
-        [System.Diagnostics.DebuggerDisplay("Rec {fdname} {level} {modulesstring} {string.Join(\",\",engineers)}")]
+        [System.Diagnostics.DebuggerDisplay("Rec {FDName} {Level} {ModulesString} {string.Join(\",\",Engineers)}")]
         public class EngineeringRecipe : Recipe
         {
-            public string level;
-            public int LevelInt { get { return level.InvariantParseInt(-1); } }     
-            public string modulesstring;
-            public string[] modules;
-            public string[] engineers;
-            public string fdname;       // only certain types have a fdname
+            public string Level { get; private set; }       // may be NA or 1 to 5
+            public int LevelInt { get { return Level.InvariantParseInt(-1); } }     // -1 or 1 to 5
+            public string ModuleList { get; private set; }
+            public string[] Modules { get { return ModuleList.Split(','); } }
+            public string[] Engineers { get ; private set; }
+            public string FDName { get; private set; }       // only certain types have a fdname
 
             public EngineeringRecipe(string n, string fdname, string indg, string mod, string lvl, string engnrs)
                 : base(n, indg)
             {
-                this.fdname = fdname;
-                level = lvl;
-                modulesstring = mod;
-                modules = modulesstring.Split(',');
-                engineers = engnrs.Split(',');
+                this.FDName = fdname;
+                Level = lvl;
+                ModuleList = mod;
+                Engineers = engnrs.Split(',');
             }
 
             public EngineeringRecipe(string n, string fdname, string type, string mod, string indg)        // for tech broker
                 : base(n, indg)
             {
-                level = "NA";
-                this.fdname = fdname;
-                modulesstring = mod;
-                modules = modulesstring.Split(',');
-                engineers = type.Split(',');
+                Level = "NA";
+                this.FDName = fdname;
+                ModuleList = mod;
+                Engineers = type.Split(',');
             }
 
             public EngineeringRecipe(string n, string mod, string indg)        // for special effects
                 : base(n, indg)
             {
-                level = "NA";
-                modulesstring = mod;
-                modules = modulesstring.Split(',');
-                engineers = new string[] { "Special Effect" };
+                Level = "NA";
+                ModuleList = mod;
+                Engineers = new string[] { "Special Effect" };
             }
 
             public EngineeringRecipe(string type, string manu, int lvl, string indg)        // for suit/weapon upgrades
                 : base(manu, indg)
             {
-                level = lvl.ToString();
-                modulesstring = type;
-                modules = modulesstring.Split(',');
-                engineers = type.Split(',');
+                Level = lvl.ToString();
+                ModuleList = type;
+                Engineers = type.Split(',');
             }
 
             public EngineeringRecipe(string type, string fdname, string manu, string n, int cost, string indg, string eng)        // for suit/weapon engineer mods
                 : base(n + (manu != "All" ? (": " + manu) : ""), indg)
             {
-                level = "NA";
-                modulesstring = type;
-                this.fdname = fdname;
-                modules = modulesstring.Split(',');
-                engineers = eng.Split(',');
+                Level = "NA";
+                ModuleList = type;
+                this.FDName = fdname;
+                Engineers = eng.Split(',');
             }
         }
 
@@ -157,12 +148,14 @@ namespace EliteDangerousCore
             return s;
         }
 
-
         public static string UsedInSythesisByFDName(string fdname, string join = ", ")
         {
             MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);
             if (mc != null && SynthesisRecipesByMaterial.ContainsKey(mc))
-                return String.Join(join, SynthesisRecipesByMaterial[mc].Select(x => x.Name + "-" + x.level + ": " + x.IngredientsStringLong));
+            {
+                string str = string.Join(join, SynthesisRecipesByMaterial[mc].Select(x => x.Name + "-" + x.Level + ": " + x.IngredientsStringLong));
+                return str;
+            }
             else
                 return "";
         }
@@ -171,7 +164,10 @@ namespace EliteDangerousCore
         {
             MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);
             if (mc != null && EngineeringRecipesByMaterial.ContainsKey(mc))
-                return String.Join(join, EngineeringRecipesByMaterial[mc].Select(x => x.modulesstring + " " + x.Name + "-" + x.level + ": " + x.IngredientsStringLong + " @ " + string.Join(",",x.engineers)));
+            {
+                string str = String.Join(join, EngineeringRecipesByMaterial[mc].Select(x => x.ModuleList + " " + x.Name + (x.Level!="NA" ? ("-" + x.Level):"") + ": " + x.IngredientsStringLong + " @ " + string.Join(",", x.Engineers)));
+                return str;
+            }
             else
                 return "";
         }
@@ -179,13 +175,13 @@ namespace EliteDangerousCore
         public static string GetBetterNameForEngineeringRecipe(string fdname)
         {
             var lfdname = fdname.ToLowerInvariant();
-            var f = EngineeringRecipes.Find(x => x.fdname == lfdname);
+            var f = EngineeringRecipes.Find(x => x.FDName == lfdname);
             return f == null ? fdname : f.Name;
         }
 
         public static SynthesisRecipe FindSynthesis(string recipename, string level)
         {
-            return SynthesisRecipes.Find(x => x.Name.Equals(recipename, StringComparison.InvariantCultureIgnoreCase) && x.level.Equals(level, StringComparison.InvariantCultureIgnoreCase));
+            return SynthesisRecipes.Find(x => x.Name.Equals(recipename, StringComparison.InvariantCultureIgnoreCase) && x.Level.Equals(level, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public static List<SynthesisRecipe> SynthesisRecipes = new List<SynthesisRecipe>()
