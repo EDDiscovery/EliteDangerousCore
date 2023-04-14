@@ -25,7 +25,7 @@ SECTION JournalTypeEnum
 .CrewAssign: "Crew Assign" => "Besatzung zugewiesen"
 .CrewFire: "Crew Fire" => "Besatzung entlassen"
 .CrewHire: "Crew Hire" => "Besatzung eingestellt"
-.ClearImpound: "Clear Impound" @
+.ClearImpound: "Clear Impound" => "Begleiche Pfändung"
 .DatalinkScan: "Datalink Scan" => "Datenverbindungsscan"
 .Died: "Died" => "Verstorben"
 .DiscoveryScan: "Discovery Scan" => "Entdeckungsscan"
@@ -302,7 +302,7 @@ SECTION FSSSignal
 .ThreatLevel: "Threat Level: " => "Bedrohungsstufe: "
 .StationBool: ";Station: " => ";Station: "
 .CarrierBool: ";Carrier: " => ";Carrier: "
-.MegashipBool: ";Megaship: " @
+.MegashipBool: ";Megaship: " => ";Megaschiff: "
 .InstallationBool: ";Installation: " => ";Installation: "
 .LastSeen: "Last Seen: " => "Zuletzt gesehen: "
 
