@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2018 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 using QuickJSON;
 using System.Linq;
@@ -43,7 +43,7 @@ namespace EliteDangerousCore.JournalEvents
             return sn;
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
+        public override void FillInformation(out string info, out string detailed) 
         {
             info = "In ".T(EDCTx.JournalApproachBody_In) + StarSystem;
             detailed = "";
@@ -75,7 +75,7 @@ namespace EliteDangerousCore.JournalEvents
             return sn;
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = "In ".T(EDCTx.JournalLeaveBody_In) + StarSystem;
             detailed = "";
@@ -83,7 +83,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.ApproachSettlement)]
-    public class JournalApproachSettlement : JournalEntry
+    public class JournalApproachSettlement : JournalEntry, IBodyFeature
     {
         public JournalApproachSettlement(JObject evt) : base(evt, JournalTypeEnum.ApproachSettlement)
         {
@@ -102,12 +102,18 @@ namespace EliteDangerousCore.JournalEvents
         public long? MarketID { get; set; }
         public double? Latitude { get; set; }    // 3.3
         public double? Longitude { get; set; }
+        public bool HasLatLong { get { return Latitude.HasValue && Longitude.HasValue; } }  
         public long? SystemAddress { get; set; }
         public int? BodyID { get; set; }
-        public string BodyName { get; set; }
+        public string BodyName { get; set; }        // from event
         public string BodyType { get { return "Settlement"; } }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        // IBodyFeature only
+        public string Body { get { return BodyName; } }     // this is an alias
+        public string BodyDesignation { get; set; }
+        public string StarSystem { get; set; }      // filled in by StarScan::AddApproachSettlement
+
+        public override void FillInformation(out string info, out string detailed)
         {
             info = Name_Localised + " (" + BodyName + ")";
 

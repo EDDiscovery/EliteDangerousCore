@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2021 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  *
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 using QuickJSON;
 
@@ -111,7 +111,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys) { return string.Format("At {0}".T(EDCTx.JournalDocked_At), StationName); }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)      
+        public override void FillInformation(out string info, out string detailed)      
         {
             info = "Docked".T(EDCTx.JournalTypeEnum_Docked) + ", ";
             info += BaseUtils.FieldBuilder.Build("Type: ".T(EDCTx.JournalEntry_Type), StationType, "< in system ".T(EDCTx.JournalEntry_insystem), StarSystem, 
@@ -154,7 +154,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationType { get; set; }
         public long? MarketID { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = StationName;
             detailed = "";
@@ -177,7 +177,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationType { get; set; }
         public long? MarketID { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", StationName, "", Reason);
             detailed = "";
@@ -200,7 +200,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationType { get; set; }
         public long? MarketID { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", StationName, "< on pad ".T(EDCTx.JournalEntry_onpad), LandingPad, "Type: ".T(EDCTx.JournalEntry_Type), StationType);
             detailed = "";
@@ -223,7 +223,7 @@ namespace EliteDangerousCore.JournalEvents
         public long? MarketID { get; set; }
         public JournalDocked.LandingPadList LandingPads { get; set; } // 4.0 update 5
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = StationName;
             detailed = "";
@@ -244,7 +244,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationType { get; set; }
         public long? MarketID { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = StationName;
             detailed = "";
@@ -271,7 +271,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? Taxi { get; set; }             //4.0 alpha 4
         public bool? Multicrew { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", StationName, "Type: ".T(EDCTx.JournalEntry_Type), StationType);
             detailed = "";

@@ -88,7 +88,7 @@ namespace EliteDangerousCore
             public string Body { get; private set; }        // may be null, may be empty.
             public int BodyID { get; private set; }
             public DateTime JumpTime { get; private set; }
-            public string PositionText { get { return StarSystem.Name + (Body.Equals(StarSystem.Name, StringComparison.InvariantCultureIgnoreCase) ? "" : (": " + Body)); } }
+            public string PositionText { get { return StarSystem.Name + (Body.IsEmpty() || Body.Equals(StarSystem.Name, StringComparison.InvariantCultureIgnoreCase) ? "" : (": " + Body)); } }
 
             public void SetSystem(ISystem sys)
             {
@@ -169,7 +169,7 @@ namespace EliteDangerousCore
         {
             State = new CarrierState(j.State);      // State array is a direct copy of carrier..
 
-            ////debug TBD 
+            ////debug
             //var si = State.GetService(JournalCarrierCrewServices.ServiceType.BlackMarket);
             //if (si != null) si.Activated = false;
             //si = State.GetService(JournalCarrierCrewServices.ServiceType.Exploration);

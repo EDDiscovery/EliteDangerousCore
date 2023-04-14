@@ -238,5 +238,19 @@ namespace EliteDangerousCore.DB
         }
 
         #endregion
+
+        #region Check
+
+        public bool VerifyTablesExist()
+        {
+            bool res = DBRead(db => {
+                    var tlist = db.Tables();
+                    return tlist.Contains("Systems") && tlist.Contains("Names") && tlist.Contains("Systems") && tlist.Contains("Aliases") && tlist.Contains("Register");
+                });
+
+            return res;
+        }
+
+        #endregion
     }
 }

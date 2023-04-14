@@ -128,7 +128,7 @@ namespace EliteDangerousCore
         // history filter, combat panel. List should be in entry order.
         static public List<HistoryEntry> ToLastDock(List<HistoryEntry> list, HashSet<JournalTypeEnum> entriestoaccept = null, bool reverse = true)
         {
-            int lastdock = list.FindLastIndex(x => !x.MultiPlayer && x.EntryType == JournalTypeEnum.Docked);
+            int lastdock = list.FindLastIndex(x => !x.Status.MultiPlayer && x.EntryType == JournalTypeEnum.Docked);
             if (lastdock >= 0)
             {
                 List<HistoryEntry> tolastdock = new List<HistoryEntry>();
@@ -453,6 +453,34 @@ namespace EliteDangerousCore
             return ents;
         }
 
+        public List<HistoryEntry> FilterByTravelTimeAndMulticrew(DateTime? starttimeutc, DateTime? endtimeutc, bool musthavecoord)        // filter, in its own order. return FSD,carrier and location events after death
+        {
+            List<HistoryEntry> ents = new List<HistoryEntry>();
+            string lastsystem = null;
+            foreach (HistoryEntry he in historylist)        // in add order, oldest first
+            {
+                if ((he.EntryType == JournalTypeEnum.Location || he.EntryType == JournalTypeEnum.CarrierJump || he.EntryType == JournalTypeEnum.FSDJump) &&
+                    (he.System.HasCoordinate || !musthavecoord) && !he.Status.MultiPlayer)
+                {
+                    if ((starttimeutc == null || he.EventTimeUTC >= starttimeutc) && (endtimeutc == null || he.EventTimeUTC <= endtimeutc))
+                    {
+                        if (lastsystem != he.System.Name)
+                        {
+                            ents.Add(he);
+                            lastsystem = he.System.Name;
+                            //  System.Diagnostics.Debug.WriteLine($"TH {he.EventTimeUTC} {he.System.Name}");
+                        }
+                        else
+                        {
+                            //  System.Diagnostics.Debug.WriteLine($"Reject {he.EventTimeUTC} {he.System.Name}");
+                        }
+                    }
+                }
+            }
+
+            return ents;
+        }
+
         // findsystemusercontrol
         public static IEnumerable<ISystem> FindSystemsWithinLy(List<HistoryEntry> he, ISystem centre, double minrad, double maxrad, bool spherical)
         {
@@ -580,35 +608,6 @@ namespace EliteDangerousCore
         }
 
         #endregion
-
-        #region Markers
-
-        public void SetStartStop(HistoryEntry hs)
-        {
-            bool started = false;
-
-            foreach (HistoryEntry he in historylist)
-            {
-                if (hs == he)
-                {
-                    if (he.StartMarker || he.StopMarker)
-                        hs.journalEntry.ClearStartEndFlag();
-                    else if (started == false)
-                        hs.journalEntry.SetStartFlag();
-                    else
-                        hs.journalEntry.SetEndFlag();
-
-                    break;
-                }
-                else if (he.StartMarker)
-                    started = true;
-                else if (he.StopMarker)
-                    started = false;
-            }
-        }
-
-        #endregion
-
 
         #region Common info extractors
 

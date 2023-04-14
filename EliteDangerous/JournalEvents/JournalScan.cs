@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  *
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 
 using QuickJSON;
@@ -215,7 +215,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool CanBeTerraformable { get { return TerraformState != null && new[] { "terraformable", "terraforming" }.Contains(TerraformState, StringComparer.InvariantCultureIgnoreCase); } }
 
         [PropertyNameAttribute("Does it have atmosphere")]
-        public bool HasAtmosphere { get { return Atmosphere != "none"; } }  // none is used if no atmosphere
+        public bool HasAtmosphere { get { return Atmosphere != null && Atmosphere != "none"; } }  // none is used if no atmosphere
         [PropertyNameAttribute("Atmosphere string, can be none")]
         public string Atmosphere { get; private set; }                      // processed data, always there, may be "none"
         [PropertyNameAttribute("EDD ID")]
@@ -262,7 +262,8 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Is it landable (may be null if not valid for body)")]
         public bool? nLandable { get; private set; }                        // direct
         [PropertyNameAttribute("Is it def landable")]
-        public bool IsLandable { get { return nLandable.HasValue && nLandable.Value; } }
+        public bool IsLandable { get { return nLandable.HasValue && nLandable.Value && (!HasAtmosphericComposition || (HasAtmosphericComposition && IsOdyssey)); } }
+        public bool IsLandableOdyssey { get { return nLandable.HasValue && nLandable.Value && HasAtmosphericComposition; } }
         [PropertyNameAttribute("Earths")]
         public double? nMassEM { get; private set; }                        // direct, not in description of event, mass in EMs
         [PropertyNameAttribute("Moons")]
@@ -335,6 +336,11 @@ namespace EliteDangerousCore.JournalEvents
         public int CountOrganicsScansAnalysed { get { return Organics?.Where(x => x.ScanType == JournalScanOrganic.ScanTypeEnum.Analyse).Count() ?? 0; } }
         [PropertyNameAttribute("Are all organics on this body analysed")]
         public bool OrganicsFullyAnalysed { get { return CountOrganicsScansAnalysed == CountBioSignals; } }
+
+        [PropertyNameAttribute("Surface features information")]
+        public List<IBodyFeature> SurfaceFeatures { get; set; }// can be null if nothing for this node, else a list of body features. Set up by StarScan
+        [PropertyNameAttribute("Count of surface featurss")]
+        public int CountSurfaceFeatures { get { return SurfaceFeatures?.Count ?? 0; } }
 
         [PropertyNameAttribute("Have we mapped it")]
         public bool Mapped { get; private set; }                        // WE Mapped it - affects prices
@@ -623,7 +629,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
         {
             if (IsStar)
             {
@@ -631,7 +637,7 @@ namespace EliteDangerousCore.JournalEvents
                                                 "Age: ;my;0.0".T(EDCTx.JournalScan_Age), nAge,
                                                 "Radius: ".T(EDCTx.JournalScan_RS), RadiusText(),
                                                 "Dist: ;ls;0.0".T(EDCTx.JournalScan_DISTA), DistanceFromArrivalLS,
-                                                "Name: ".T(EDCTx.JournalScan_BNME), BodyName.ReplaceIfStartsWith(sys.Name));
+                                                "Name: ".T(EDCTx.JournalScan_BNME), BodyName.ReplaceIfStartsWith(fid.System.Name));
             }
             else
             {
@@ -641,7 +647,7 @@ namespace EliteDangerousCore.JournalEvents
                                                  "Gravity: ;G;0.00".T(EDCTx.JournalScan_Gravity), nSurfaceGravityG,
                                                  "Radius: ".T(EDCTx.JournalScan_RS), RadiusText(),
                                                  "Dist: ;ls;0.0".T(EDCTx.JournalScan_DISTA), DistanceFromArrivalLS,
-                                                 "Name: ".T(EDCTx.JournalScan_SNME), BodyName.ReplaceIfStartsWith(sys.Name));
+                                                 "Name: ".T(EDCTx.JournalScan_SNME), BodyName.ReplaceIfStartsWith(fid.System.Name));
             }
 
             detailed = DisplayString(0, includefront: false);

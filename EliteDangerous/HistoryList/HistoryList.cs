@@ -23,7 +23,7 @@ using System.Linq;
 namespace EliteDangerousCore
 {
     [System.Diagnostics.DebuggerDisplay("HL {historylist.Count}")]
-    public partial class HistoryList //: IEnumerable<HistoryEntry>
+    public partial class HistoryList
     {
         // Databases accumulated on history
         public MissionListAccumulator MissionListAccumulator { get; private set; } = new MissionListAccumulator(); // and mission list..
@@ -63,6 +63,7 @@ namespace EliteDangerousCore
         {
             HistoryEntry he = HistoryEntry.FromJournalEntry(je, hlastprocessed);     // we may check edsm for this entry
 
+            he.UnfilteredIndex = (hlastprocessed?.UnfilteredIndex?? -1) +1;
             he.UpdateMaterialsCommodities(MaterialCommoditiesMicroResources.Process(je, hlastprocessed?.journalEntry, he.Status.TravelState == HistoryEntryStatus.TravelStateType.SRV));
 
             // IN THIS order, so suits can be added, then weapons, then loadouts
@@ -70,7 +71,7 @@ namespace EliteDangerousCore
             he.UpdateWeapons(WeaponList.Process(je, he.WhereAmI, he.System));
             he.UpdateLoadouts(SuitLoadoutList.Process(je, WeaponList, he.WhereAmI, he.System));
 
-            he.UpdateStats(je, statisticsaccumulator, he.StationFaction);
+            he.UpdateStats(je, statisticsaccumulator, he.Status.StationFaction);
 
             CashLedger.Process(je);
             he.Credits = CashLedger.CashTotal;
@@ -89,6 +90,8 @@ namespace EliteDangerousCore
             he.UpdateMissionList(MissionListAccumulator.Process(je, he.System, he.WhereAmI));
 
             he.UpdateEngineering(Engineering.Process(he));
+
+            he.UpdateTravelStatus(hlastprocessed);
 
             hlastprocessed = he;
 
@@ -212,7 +215,11 @@ namespace EliteDangerousCore
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + $" History List Created {hist.Count}");
 
-            foreach (var s in hist.StarScan.ToProcess) System.Diagnostics.Debug.WriteLine($"StarScan could not assign {s.Item1.GetType().Name} {s.Item2?.Name ?? "???"} {s.Item2?.SystemAddress} at {s.Item1.EventTimeUTC}");
+            foreach (var s in hist.StarScan.ToProcess)
+            {
+                s.Item1.FillInformation(out string info, out string detailed);
+                System.Diagnostics.Debug.WriteLine($"StarScan could not assign {s.Item1.EventTimeUTC} {s.Item1.GetType().Name} {info} {s.Item2?.Name ?? "???"} {s.Item2?.SystemAddress}");
+            }
 
             //for (int i = hist.Count - 10; i < hist.Count; i++)  System.Diagnostics.Debug.WriteLine("Hist {0} {1} {2}", hist[i].EventTimeUTC, hist[i].Indexno , hist[i].EventSummary);
 
@@ -260,12 +267,12 @@ namespace EliteDangerousCore
             {
                 if (Visited.TryGetValue(he.System.Name, out var value))
                 {
-                    he.Visits = value.Visits + 1;               // visits is 1 more than previous entry
+                    he.UpdateVisits(value.Visits + 1);               // visits is 1 more than previous entry
                     Visited[he.System.Name] = he;          // reset to point to latest he
                 }
                 else
                 {
-                    he.Visits = 1;                              // first visit
+                    he.UpdateVisits(1);               // visits is 1 more than previous entry
                     Visited[he.System.Name] = he;          // point to he
                 }
 
@@ -278,7 +285,7 @@ namespace EliteDangerousCore
             {
                 JournalScan js = he.journalEntry as JournalScan;
 
-                if (!StarScan.AddScanToBestSystem(js, pos-1, historylist, out HistoryEntry jlhe, out JournalLocOrJump jl))
+                if (!StarScan.AddScanToBestSystem(js, pos - 1, historylist, out HistoryEntry jlhe, out JournalLocOrJump jl))
                 {
                     if (logerror != null)
                     {
@@ -304,15 +311,62 @@ namespace EliteDangerousCore
             }
             else if (he.EntryType == JournalTypeEnum.SAAScanComplete)       // early entries did not have systemaddress, so need to match
             {
-                StarScan.AddSAAScanToBestSystem((JournalSAAScanComplete)he.journalEntry, he.System, pos , historylist);
+                StarScan.AddSAAScanToBestSystem((JournalSAAScanComplete)he.journalEntry, he.System, pos, historylist);
             }
-            else if (he.journalEntry is IStarScan)      // otherwise execute add
+            else if (he.journalEntry is IStarScan)      // a star scan type takes precendence
             {
-                (he.journalEntry as IStarScan).AddStarScan(StarScan,he.System);
+                (he.journalEntry as IStarScan).AddStarScan(StarScan, he.System);
             }
-            else if (he.journalEntry is IBodyNameAndID)
+            else if (he.journalEntry is IBodyNameAndID je)  // all entries under this type
             {
-                StarScan.AddBodyToBestSystem((IBodyNameAndID)he.journalEntry, pos, historylist);
+                if (he.EntryType == JournalTypeEnum.ApproachSettlement)    // we need to process this uniquely, as it has information for starscan as well as body info
+                {
+                    JournalApproachSettlement jas = he.journalEntry as JournalApproachSettlement;
+
+                    // only interested in some in same system with system addr and bodyids, and we can then set the system name (missing from the event) so the AddBodyworks
+
+                    if (jas.Body.HasChars() && jas.BodyID.HasValue && he.System.SystemAddress.HasValue && he.System.SystemAddress == jas.SystemAddress )
+                    {
+                        jas.StarSystem = he.System.Name;           // fill in the missing system name 
+                        StarScan.AddBodyToBestSystem(je, he.System, pos, historylist); // ensure its in the DB - note BodyType = Settlement
+                        StarScan.AddApproachSettlement(jas, he.System);
+                    }
+                    else
+                    {
+                        if (je.BodyID.HasValue) System.Diagnostics.Debug.WriteLine($"Starscan approach rejected {he.EventTimeUTC} {he.System.Name} {jas.BodyID} {jas.Body} {jas.Name} {jas.Name_Localised} {jas.Latitude} {jas.Longitude}");
+                    }
+                }
+                else if (he.EntryType == JournalTypeEnum.Touchdown)    // we need to process this uniquely, as it has information for starscan as well as body info
+                {
+                    JournalTouchdown jt = he.journalEntry as JournalTouchdown;
+
+                    // only interested in some in same system with system addr and bodyids, and we can then set the system name (missing from the event) so the AddBodyworks
+
+                    if (jt.Body.HasChars() && jt.BodyID.HasValue && he.System.SystemAddress.HasValue && he.System.SystemAddress == jt.SystemAddress && 
+                                    jt.HasLatLong )  // some touchdowns don't come with lat/long, ignore them, they are not important
+                    {
+                        jt.StarSystem = he.System.Name;           // fill in the possibly missing system name 
+                        StarScan.AddBodyToBestSystem(jt, he.System, pos, historylist); // ensure its in the DB - note BodyType = Settlement
+                        StarScan.AddTouchdown(jt, he.System);
+                    }
+                    else
+                    {
+                        if (jt.BodyID.HasValue) System.Diagnostics.Debug.WriteLine($"Starscan touchdown rejected {he.EventTimeUTC} {he.System.Name} {jt.BodyID} {jt.Body} {jt.Latitude} {jt.Longitude}");
+                    }
+                }
+                else if (je.Body.HasChars())    // we can add here with bodyid = null, so just check body
+                {
+                    // only these have a Body of a planet/star/barycentre, the other types (station etc see the frontier doc which is right for a change) are not useful
+
+                    if (je.BodyType.EqualsIIC("Planet") || je.BodyType.EqualsIIC("Star") || je.BodyType.EqualsIIC("Barycentre"))        
+                    {
+                        StarScan.AddBodyToBestSystem(je, he.System, pos, historylist);
+                    }
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"Starscan bodyid rejected {he.EventTimeUTC} {he.System.Name} {je.BodyID} {je.Body} {je.BodyType}");
+                }
             }
         }
 

@@ -37,6 +37,7 @@ namespace EliteDangerousCore.DB
         public int Size { get; set; }
         public int? CommanderId { get; set; }
         public string FullName { get { return System.IO.Path.Combine(Path, filename); } }
+        public string FileName { get { return filename; } }
         public string Path { get; set; }
         public string GameVersion { get; set; } = "";    // either empty, or gameversion from fileheader, overritten by loadgame
         public string Build { get; set; } = ""; // either empty, or gameversion from fileheader, overritten by loadgame
@@ -107,6 +108,7 @@ namespace EliteDangerousCore.DB
 
                 //System.Diagnostics.Debug.WriteLine("Update cache with " + ID);
                 cacheid[ID] = this;
+                cachepath[FullName.ToLowerInvariant()] = this;       // name is v.important for speed
                 return true;
             }
         }

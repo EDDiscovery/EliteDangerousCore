@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2021 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  *
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 using QuickJSON;
 using System;
@@ -33,10 +33,10 @@ namespace EliteDangerousCore.JournalEvents
         public long SystemAddress { get; set; }
         public int Bodies { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("New bodies discovered: ".T(EDCTx.JournalEntry_Dscan), Bodies,
-                                                "@ ", sys.Name);
+                                                "@ ", fid.System.Name);
             detailed = "";
         }
     }
@@ -50,23 +50,26 @@ namespace EliteDangerousCore.JournalEvents
             Progress = evt["Progress"].Double() * 100.0;
             BodyCount = evt["BodyCount"].Int();
             NonBodyCount = evt["NonBodyCount"].Int();
+            SystemAddress = evt["SystemAddress"].LongNull();        // appeared later
+            SystemName = evt["SystemName"].StrNull();               // appeared later
         }
 
         public double Progress { get; set; }
         public int BodyCount { get; set; }
         public int NonBodyCount { get; set; }
-
+        public string SystemName { get; set; }      // not always present, may be null
+        public long? SystemAddress { get; set; }
         public void AddStarScan(StarScan s, ISystem system)
         {
             s.SetFSSDiscoveryScan(this, system);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Progress: ;%;N1".T(EDCTx.JournalFSSDiscoveryScan_Progress), Progress, 
                 "Bodies: ".T(EDCTx.JournalFSSDiscoveryScan_Bodies), BodyCount, 
                 "Others: ".T(EDCTx.JournalFSSDiscoveryScan_Others), NonBodyCount,
-                "@ ", sys.Name);
+                "@ ", fid.System.Name);
             detailed = "";
         }
     }
@@ -113,7 +116,7 @@ namespace EliteDangerousCore.JournalEvents
             [PropertyNameAttribute("Optional signal expiry time, Local")]
             public System.DateTime ExpiryLocal { get; set; }
 
-            public enum Classification { Station,Installation, NotableStellarPhenomena, ConflictZone, ResourceExtraction, Carrier, USS, Other};
+            public enum Classification { Station,Installation, NotableStellarPhenomena, ConflictZone, ResourceExtraction, Carrier, USS, Megaship, Other};
             [PropertyNameAttribute("Signal class")]
             public Classification ClassOfSignal { get; set; }
 
@@ -153,8 +156,6 @@ namespace EliteDangerousCore.JournalEvents
                     else
                         ClassOfSignal = Classification.Station;
                 }
-                else if (loc.Length == 0 )      // other types, and old station entries, don't have localisation, so its an installation
-                    ClassOfSignal = Classification.Installation;
                 else if (SignalName.StartsWith("$USS", StringComparison.InvariantCultureIgnoreCase) || SignalName.StartsWith("$RANDOM", StringComparison.InvariantCultureIgnoreCase))
                     ClassOfSignal = Classification.USS;
                 else if (SignalName.StartsWith("$Warzone", StringComparison.InvariantCultureIgnoreCase))
@@ -162,7 +163,11 @@ namespace EliteDangerousCore.JournalEvents
                 else if (SignalName.StartsWith("$Fixed_Event_Life", StringComparison.InvariantCultureIgnoreCase))
                     ClassOfSignal = Classification.NotableStellarPhenomena;
                 else if (SignalName.StartsWith("$MULTIPLAYER_SCENARIO14", StringComparison.InvariantCultureIgnoreCase) || SignalName.StartsWith("$MULTIPLAYER_SCENARIO7", StringComparison.InvariantCultureIgnoreCase))
-                    ClassOfSignal = Classification.ResourceExtraction;
+                    ClassOfSignal = Classification.ResourceExtraction;                
+                else if (SignalName.Contains("-class"))
+                    ClassOfSignal = Classification.Megaship;
+                else if (loc.Length == 0)      // other types, and old station entries, don't have localisation, so its an installation, put at end of list because other things than installations have no localised name too
+                    ClassOfSignal = Classification.Installation;
                 else
                     ClassOfSignal = Classification.Other;
 
@@ -189,8 +194,8 @@ namespace EliteDangerousCore.JournalEvents
                     outoftime = ExpiryLocal;
 
                 DateTime? seen = null;
-                if (showseentime && ClassOfSignal == Classification.Carrier)
-                    seen = RecordedUTC;
+                if (showseentime && (ClassOfSignal == Classification.Carrier || ClassOfSignal == Classification.Megaship)) //both move in and out of systems, so show last seen
+                    seen = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(RecordedUTC);
 
                 string signname = ClassOfSignal == Classification.USS ? null : SignalName_Localised;        // signal name for USS is boring, remove
 
@@ -199,6 +204,7 @@ namespace EliteDangerousCore.JournalEvents
                 return BaseUtils.FieldBuilder.Build(
                             ";Station: ".T(EDCTx.FSSSignal_StationBool), ClassOfSignal == Classification.Station,
                             ";Carrier: ".T(EDCTx.FSSSignal_CarrierBool), ClassOfSignal == Classification.Carrier,
+                            ";Megaship: ".T(EDCTx.FSSSignal_MegashipBool), ClassOfSignal == Classification.Megaship,
                             ";Installation: ".T(EDCTx.FSSSignal_InstallationBool), ClassOfSignal == Classification.Installation,
                             "<", signname,
                             "", USSTypeLocalised,
@@ -225,7 +231,7 @@ namespace EliteDangerousCore.JournalEvents
         private string SignalNames() { return string.Join(",", Signals?.Select(x => x.SignalName)); }       // for debugger
 
         [PropertyNameAttribute("List of FSS signals")]
-        public List<FSSSignal> Signals { get; set; }            // name used in action packs not changeable
+        public List<FSSSignal> Signals { get; set; }            // name used in action packs not changeable. Never null 
 
         public ISystem EDDNSystem { get; set; }                 // set if FSS has been detected in the wrong system                  
 
@@ -251,13 +257,10 @@ namespace EliteDangerousCore.JournalEvents
             s.AddFSSSignalsDiscoveredToSystem(this);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
         {
-            FillInformation(sys, whereami, 20, out info, out detailed);
-        }
+            const int maxsignals = 20;
 
-        public void FillInformation(ISystem sys, string whereami, int maxsignals, out string info, out string detailed)
-        {
             detailed = "";
 
             if (Signals.Count > 1)
@@ -275,7 +278,9 @@ namespace EliteDangerousCore.JournalEvents
                     }
                 }
 
-                info = info.AppendPrePad("@ " + sys.Name, ", ");
+                // in a jump seqence, those frontier people send a FSD while jumping, and HES records there is a jump system name, so use it. else use current system name
+
+                info = info.AppendPrePad("@ " + (fid.NextJumpSystemName ?? fid.System.Name), ", ");
 
                 foreach (var s in Signals)
                     detailed = detailed.AppendPrePad(s.ToString(false), System.Environment.NewLine);
@@ -286,16 +291,26 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        static public List<FSSSignal> SignalList( List<JournalFSSSignalDiscovered> jsd)      // from a set of jsd's, extract all signals which are not the same
+        // return signals, removing duplicates, and starting with the latest jsd.
+        // jsd is in add order, so latest one is at end
+        // expensive, only done on scan and surveyor display as of dec 22
+        static public List<FSSSignal> SignalList( List<JournalFSSSignalDiscovered> jsd)
         {
             List<FSSSignal> list = new List<FSSSignal>();
-            foreach( var j in jsd)
+            for(int i = jsd.Count-1; i>=0; i--)
             {
-                foreach( var s in j.Signals)
+                var j = jsd[i];
+                foreach (var s in j.Signals)
                 {
                     int present = list.FindIndex(x => x.IsSame(s));
                     if (present == -1)
+                    {
                         list.Add(s);
+                    }
+                    else
+                    {
+                        //System.Diagnostics.Debug.WriteLine($"Rejected signal {s.SignalName}");
+                    }
                 }
             }
 
@@ -317,7 +332,7 @@ namespace EliteDangerousCore.JournalEvents
         public int NumBodies { get; set; }
         public long? SystemAddress { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Bodies: ".T(EDCTx.JournalEntry_Bodies), NumBodies);
             detailed = "";
@@ -352,9 +367,9 @@ namespace EliteDangerousCore.JournalEvents
             return base.SummaryName(sys) + " " + "of ".T(EDCTx.JournalEntry_ofa) + BodyName.ReplaceIfStartsWith(sys.Name);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
         {
-            string name = BodyName.Contains(sys.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : sys.Name + ":" + BodyName;
+            string name = BodyName.Contains(fid.System.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : fid.System.Name + ":" + BodyName;
             info = BaseUtils.FieldBuilder.Build("Probes: ".T(EDCTx.JournalSAAScanComplete_Probes), ProbesUsed,
                                                 "Efficiency Target: ".T(EDCTx.JournalSAAScanComplete_EfficiencyTarget), EfficiencyTarget,
                                                 "@ ", name);
@@ -503,10 +518,10 @@ namespace EliteDangerousCore.JournalEvents
             return info;
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
         {
             info = SignalList(Signals);
-            string name = BodyName.Contains(sys.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : sys.Name + ":" + BodyName;
+            string name = BodyName.Contains(fid.System.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : fid.System.Name + ":" + BodyName;
             info = info.AppendPrePad("@ " + name, ", ");
             if (Genuses != null)
                 info = info.AppendPrePad(GenusList(Genuses), "; ");
@@ -546,7 +561,7 @@ namespace EliteDangerousCore.JournalEvents
         public string SystemName { get; set; }
         public int Count { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = Count.ToString() + " @ " + SystemName;
             detailed = "";
@@ -623,10 +638,10 @@ namespace EliteDangerousCore.JournalEvents
             return base.SummaryName(sys) + " " + "of ".T(EDCTx.JournalEntry_ofa) + BodyName.ReplaceIfStartsWith(sys.Name);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
         {
             info = JournalSAASignalsFound.SignalList(Signals);
-            string name = BodyName.Contains(sys.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : sys.Name + ":" + BodyName;
+            string name = BodyName.Contains(fid.System.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : fid.System.Name + ":" + BodyName;
             info = info.AppendPrePad("@ " + name, ", ");
             detailed = "";
         }
@@ -686,10 +701,10 @@ namespace EliteDangerousCore.JournalEvents
             s.AddScanOrganicToSystem(this,system);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
         {
             int? ev = ScanType == ScanTypeEnum.Analyse ? EstimatedValue : null;
-            info = BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised, "; cr;N0", ev, "< @ ", whereami);
+            info = BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised, "; cr;N0", ev, "< @ ", fid.WhereAmI);
             detailed = "";
         }
 

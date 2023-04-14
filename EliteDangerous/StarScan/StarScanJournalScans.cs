@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2022 EDDiscovery development team
+ * Copyright © 2015 - 2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -111,7 +111,7 @@ namespace EliteDangerousCore
             if (elements.Count == 1)
             {
                 // Process any belts if present
-                ProcessBelts(sc, node);
+                ProcessBelts(sc, sn, node);
 
                 // Process primary star in multi-star system
                 if (elements[0].Equals("A", StringComparison.InvariantCultureIgnoreCase))
@@ -269,6 +269,8 @@ namespace EliteDangerousCore
 
                 // if not got a node list (only happens when we have a scannode from another scannode), or we are not in the node list
 
+                bool madenew = false;
+
                 if (currentnodelist == null || !currentnodelist.TryGetValue(elements[lvl], out ScanNode subnode)) // either no nodes, or not found the element name in the node list.
                 {
                     if (currentnodelist == null)    // no node list, happens when we are at least 1 level down as systemnode always has a node list, make one 
@@ -287,10 +289,18 @@ namespace EliteDangerousCore
                             NodeType = sublvtype,
                             Level = lvl,
                             Parent = previousnode,
+                            SystemNode = systemnode,
+                            EDSMCreatedNode = sc.IsEDSMBody,                // is the node made by edsm
                         };
 
                         currentnodelist.Add(ownname, subnode);
+                        madenew = true;
+                      //  System.Diagnostics.Debug.WriteLine($"StarScan JS Created subnode {subnode.FullName}");
                     }
+                }
+                else
+                {
+                   // System.Diagnostics.Debug.WriteLine($"StarScan JS Existing subnode {subnode.FullName} {subnode.EDSMCreatedNode}");
                 }
 
                 lock (subnode)
@@ -303,23 +313,33 @@ namespace EliteDangerousCore
 
                     if (lvl == elements.Count - 1)                                  // if we are at the end node..
                     {
-                        if (oldnode != null && oldnode.FullName == subnode.FullName && !object.ReferenceEquals(subnode, oldnode))       // if we are replacing the node, make sure we dup across some info
+                        // if we are replacing the node, make sure we dup across some info
+                        if (oldnode != null && oldnode.FullName == subnode.FullName && !object.ReferenceEquals(subnode, oldnode))      
                         {
                             subnode.IsMapped = oldnode.IsMapped;
                             subnode.WasMappedEfficiently = oldnode.WasMappedEfficiently;
                             subnode.Signals = oldnode.Signals;
                             subnode.Genuses = oldnode.Genuses;
                             subnode.Organics = oldnode.Organics;
+                            subnode.EDSMCreatedNode = oldnode.EDSMCreatedNode;      // we copy the creation flag
                         }
-
+    
                         // if its a belt cluster we are adding, then the previous node is a belt but it does not have a scan data, therefore it was artifically created and has no body id
                         // if we have a parent list, we can push the body id of it up. makes the IDs look better
 
                         if (subnode.NodeType == ScanNodeType.beltcluster && sc.Parents != null)
                             previousnode.BodyID = sc.Parents[0].BodyID;
 
-                        subnode.ScanData = sc;                                      // only overwrites if scan is better
+                        // an older node, with a new scan which is not edsm, but the current one is edsm, we clear the created node flag, as we have in effect created it again
+
+                        if (!madenew && sc.IsEDSMBody == false && subnode.EDSMCreatedNode == true)
+                            subnode.EDSMCreatedNode = false;
+
+                        // only overwrites if scan is better
+                        subnode.ScanData = sc;                                      
+
                         subnode.ScanData.SetMapped(subnode.IsMapped, subnode.WasMappedEfficiently);      // pass this data to node, as we may have previously had a SAA Scan
+
                         subnode.CustomName = customname;                            // and its custom name
 
                         if (sc.BodyID != null)                                      // if scan has a body ID, pass it to the node
@@ -338,19 +358,23 @@ namespace EliteDangerousCore
                             }
                         }
 
-                        if (subnode.Signals != null)
+                        if (subnode.Signals != null)            // make sure Scan node has same list as subnode
                         {
                             // System.Diagnostics.Debug.WriteLine($"Assign JS signal list {string.Join(",", subnode.Signals.Select(x => x.Type).ToList())} to {subnode.FullName}");
-                            sc.Signals = subnode.Signals;       // make sure Scan node has same list as subnode
+                            sc.Signals = subnode.Signals;       
                         }
-                        if (subnode.Genuses != null)
+                        if (subnode.Genuses != null)            // make sure Scan node has same list as subnode
                         {
-                            sc.Genuses = subnode.Genuses;       // make sure Scan node has same list as subnode
+                            sc.Genuses = subnode.Genuses;       
                         }
-                        if (subnode.Organics != null)
+                        if (subnode.Organics != null)           // make sure Scan node has same list as subnode
                         {
                             // System.Diagnostics.Debug.WriteLine($"Assign JS organic list {string.Join(",", subnode.Organics.Select(x => x.Species).ToList())} to {subnode.FullName}");
-                            sc.Organics = subnode.Organics;       // make sure Scan node has same list as subnode
+                            sc.Organics = subnode.Organics;       
+                        }
+                        if (subnode.SurfaceFeatures != null)    // mask sure scan node has same list as subnode
+                        {
+                            sc.SurfaceFeatures = subnode.SurfaceFeatures;
                         }
                     }
                 }
@@ -364,7 +388,7 @@ namespace EliteDangerousCore
 
         // asteroid belts, not rings, are assigned to sub nodes of the star in the node heirarchy as type==belt.
 
-        private void ProcessBelts(JournalScan sc, ScanNode node)
+        private void ProcessBelts(JournalScan sc, SystemNode sn, ScanNode node)
         {
             if (sc.HasRingsOrBelts)
             {
@@ -400,6 +424,7 @@ namespace EliteDangerousCore
                                 NodeType = ScanNodeType.belt,
                                 Level = 1,
                                 Parent = node,
+                                SystemNode = sn,
                             };
 
                             node.Children.Add(beltname, belt);

@@ -50,6 +50,7 @@ namespace EliteDangerousCore
         public static Dictionary<string, Actor> actors = new Dictionary<string, Actor>   // DO NOT USE DIRECTLY - public is for checking only
         {
              { "skimmerdrone", new Actor("Skimmer Drone") },
+             { "skimmer", new Actor("Skimmer Drone") },
              { "ps_turretbasemedium02_6m", new Actor("Turret medium 2-6-M") },
              { "ps_turretbasesmall_3m", new Actor("Turret Small 3 M") },
              { "scout", new Actor("Thargoid Scout") },

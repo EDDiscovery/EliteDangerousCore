@@ -31,7 +31,7 @@ namespace EliteDangerousCore
             public SortedList<int, ScanNode> NodesByID { get; private set; } = new SortedList<int, ScanNode>();               // by ID list
             public SortedList<int, JournalScanBaryCentre> Barycentres { get; private set; } = new SortedList<int, JournalScanBaryCentre>();
             public int? FSSTotalBodies { get; set; }         // if we have FSSDiscoveryScan, this will be set
-            public List<JournalFSSSignalDiscovered> FSSSignalList { get; private set; } = new List<JournalFSSSignalDiscovered>();       // we keep the FSS signal discovered not the signal list as the signals get merged, and we don't get a chance to see the merged signals
+            public List<JournalFSSSignalDiscovered> FSSSignalList { get; private set; } = new List<JournalFSSSignalDiscovered>();       // List of FSS Signals journal entries on this node, by add order
             public List<JournalCodexEntry> CodexEntryList { get; private set; } = new List<JournalCodexEntry>();
 
             public SystemNode(ISystem sys)
@@ -49,16 +49,13 @@ namespace EliteDangerousCore
             {
                 get
                 {
-                    if (StarNodes != null)
+                    foreach (ScanNode sn in StarNodes.Values.EmptyIfNull())     // StarNodes is never empty, but defend
                     {
-                        foreach (ScanNode sn in StarNodes.Values)
-                        {
-                            yield return sn;
+                        yield return sn;
 
-                            foreach (ScanNode c in sn.Descendants)
-                            {
-                                yield return c;
-                            }
+                        foreach (ScanNode c in sn.Descendants)
+                        {
+                            yield return c;
                         }
                     }
                 }

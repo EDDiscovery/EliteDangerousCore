@@ -45,6 +45,10 @@ namespace EliteDangerousCore
                     string iname = ilist[i].Substring(s.Length);
                     Ingredients[i] = MaterialCommodityMicroResourceType.GetByShortName(iname);
                     System.Diagnostics.Debug.Assert(Ingredients[i] != null, "Not found ingredient " + Name + " " + ingredientsstring + " i=" + i + " " + Ingredients[i]);
+
+                    // if (Ingredients[i].Category == MaterialCommodityMicroResourceType.CatType.Commodity) System.Diagnostics.Debug.WriteLine($"Recipe {Name} {ingredientsstring} has a commodity {Ingredients[i].Name}");
+                   // if (Ingredients[i].IsMicroResources) System.Diagnostics.Debug.WriteLine($"Recipe {Name} {ingredientsstring} has a MR {Ingredients[i].Name} {Ingredients[i].Category}");
+
                     bool countsuccess = int.TryParse(s, out Amount[i]);
                     System.Diagnostics.Debug.Assert(countsuccess, "Count missing from ingredient");
                 }

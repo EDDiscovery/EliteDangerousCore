@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2018 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  *
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 using QuickJSON;
 using System;
@@ -36,7 +36,7 @@ namespace EliteDangerousCore.JournalEvents
         public int Level { get; set; }
         public string Override { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
+        public override void FillInformation(out string info, out string detailed) 
         {
             
             info = BaseUtils.FieldBuilder.Build("", Engineer, "Blueprint: ".T(EDCTx.JournalEntry_Blueprint), Blueprint, "Level: ".T(EDCTx.JournalEntry_Level), Level, "Override: ".T(EDCTx.JournalEntry_Override), Override);
@@ -111,7 +111,7 @@ namespace EliteDangerousCore.JournalEvents
                 mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "Engineer Contribution Credits", -Quantity);
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("", Engineer, "Type: ".T(EDCTx.JournalEntry_Type), Type, "Commodity: ".T(EDCTx.JournalEntry_Commodity), Commodity_Localised,
                     "Material: ".T(EDCTx.JournalEntry_Material), Material_Localised, "Quantity: ".T(EDCTx.JournalEntry_Quantity), Quantity, "TotalQuantity: ".T(EDCTx.JournalEntry_TotalQuantity), TotalQuantity);
@@ -191,7 +191,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("In Slot: ".T(EDCTx.JournalEntry_InSlot), Slot, "", Module, "By: ".T(EDCTx.JournalEntry_By), Engineering.Engineer, "Blueprint: ".T(EDCTx.JournalEntry_Blueprint), Engineering.FriendlyBlueprintName, 
                 "Level: ".T(EDCTx.JournalEntry_Level), Engineering.Level);
@@ -236,6 +236,8 @@ namespace EliteDangerousCore.JournalEvents
             public int? Rank { get; set; }       // only when unlocked
             public string Progress { get; set; }
             public int? RankProgress { get; set; }  // newish 3.x only when unlocked
+
+            public bool Valid { get { return Engineer.HasChars() && !Engineer.EqualsIIC("Unknown");  } }    // valid..
         }
 
         public JournalEngineerProgress(JObject evt) : base(evt, JournalTypeEnum.EngineerProgress)
@@ -256,7 +258,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public ProgressInformation[] Engineers { get; set; }      // may be NULL if not startup or pre 3.3
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             string enginfo = "";
             foreach (var p in Engineers)

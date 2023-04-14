@@ -234,13 +234,11 @@ namespace EliteDangerousCore
             return je;
         }
 
-        // function needs to report two things, list of JREs (may be empty) and UIs, and if it read something, bool.. hence form changed
-        // bool reporting we have performed any sort of action is important.. it causes the TLU pos to be updated above even if we have junked all the events or delayed them
-        // function does not throw.
+        // read journal lines from file, return if its read anything.
+        // reporting if we have read anything is important.. it causes the TLU pos to be updated 
+        // add to the lists all unfiltered journal events, all events passed by the filter, and uievents generated from journal entries due to the filtering
         // historyrefreshparsing = reading from DB, else reading dynamically during play
-        // True if anything was processed, even if we rejected it
-
-        public bool ReadJournal(List<JournalEntry> jent, List<UIEvent> uievents, bool historyrefreshparsing ) 
+        public bool ReadJournal(List<JournalEntry> unfilteredjent, List<JournalEntry> filteredjent, List<UIEvent> uievents, bool historyrefreshparsing ) 
         {
             bool readanything = false;
 
@@ -271,20 +269,22 @@ namespace EliteDangerousCore
                         {
                             var dentry = StartEntries.Dequeue();
                             dentry.SetCommander(TravelLogUnit.CommanderId.Value);
+                            unfilteredjent.Add(dentry);
                             //System.Diagnostics.Debug.WriteLine("*** UnDelay " + dentry.JournalEntry.EventTypeStr);
-                            AddEntry(dentry, jent, uievents);
+                            FilterEntriesGoingToDB(dentry, filteredjent, uievents);
                         }
 
                         //System.Diagnostics.Debug.WriteLine("*** Send  " + newentry.JournalEntry.EventTypeStr);
-                        AddEntry(newentry, jent, uievents);
+                        unfilteredjent.Add(newentry);
+                        FilterEntriesGoingToDB(newentry, filteredjent, uievents);
                     }
                 }
             }
         }
 
-        // this class looks at the JE and decides if its really a UI not a journal entry
-
-        private void AddEntry( JournalEntry newentry, List<JournalEntry> jent, List<UIEvent> uievents )
+        // Determine if we want an entry to be filtered out of the DB and turned into a UI event instead
+        // removes spurious useless stuff from the DB
+        private void FilterEntriesGoingToDB( JournalEntry newentry, List<JournalEntry> jent, List<UIEvent> uievents )
         {
             if (newentry.EventTypeID == JournalTypeEnum.Music)     // MANUALLY sync this list with ActionEventList.cs::EventList function
             {

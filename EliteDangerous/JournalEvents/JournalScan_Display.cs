@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  *
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 
 using System;
@@ -219,6 +219,8 @@ namespace EliteDangerousCore.JournalEvents
             if (EDSMDiscoveryCommander != null)
                 scanText.AppendFormat("Discovered by {0} on {1}".T(EDCTx.JournalScan_DB) + "\n", EDSMDiscoveryCommander, EDSMDiscoveryUTC.ToStringZulu());
 
+            if (SurfaceFeatures != null)
+                scanText.AppendFormat("Surface features".T(EDCTx.ScanDisplayUserControl_SurfaceFeatures) + ":\n" + StarScan.SurfaceFeatureList(SurfaceFeatures, 4, "\n") + "\n");
             if (Signals != null)
                 scanText.AppendFormat("Signals".T(EDCTx.ScanDisplayUserControl_Signals) + ":\n" + JournalSAASignalsFound.SignalList(Signals, 4, "\n") + "\n");
             if (Genuses != null)
@@ -233,7 +235,7 @@ namespace EliteDangerousCore.JournalEvents
                 JournalScanBaryCentre barycentrejs = Parents[0].Barycentre;
                 scanText.AppendLine();
                 scanText.AppendLine("Barycentre: " + barycentrejs.BodyID.ToString());
-                barycentrejs.FillInformation(null, null, out string info, out string detailed);
+                barycentrejs.FillInformation(out string info, out string detailed);
                 scanText.AppendLine(info);
                 scanText.AppendLine(detailed);
             }
@@ -366,7 +368,7 @@ namespace EliteDangerousCore.JournalEvents
         public string SurveyorInfoLine(ISystem sys,
                             bool hasminingsignals, bool hasgeosignals, bool hasbiosignals, bool hasthargoidsignals, bool hasguardiansignals, bool hashumansignals, bool hasothersignals,
                             bool hasscanorganics,
-                            bool showvolcanism, bool showvalues, bool shortinfo, bool showGravity, bool showAtmos, bool showRings,
+                            bool showvolcanism, bool showvalues, bool shortinfo, bool showGravity, bool showAtmos, bool showTemp, bool showRings,
                             int lowRadiusLimit, int largeRadiusLimit, double eccentricityLimit)
         {
             JournalScan js = this;            
@@ -401,16 +403,17 @@ namespace EliteDangerousCore.JournalEvents
             information.Append((js.IsLandable) ? @" Is landable.".T(EDCTx.JournalScanInfo_islandable) : null);
             information.Append((js.IsLandable && showGravity && js.nSurfaceGravityG.HasValue) ? @" (" + Math.Round(js.nSurfaceGravityG.Value, 2, MidpointRounding.AwayFromZero) + "g)" : null);
             information.Append((js.HasAtmosphericComposition && showAtmos) ? @" Atmosphere: ".T(EDCTx.JournalScanInfo_Atmosphere) + (js.Atmosphere?.Replace(" atmosphere", "") ?? "unknown".T(EDCTx.JournalScanInfo_unknownAtmosphere)) + "." : null);
+            information.Append((js.IsLandable && js.nSurfaceTemperature.HasValue && showTemp) ? (string.Format(" Surface temperature: {0} K.".T(EDCTx.JournalScanInfo_SurfaceTemperature), Math.Round(js.nSurfaceTemperature.Value, 1, MidpointRounding.AwayFromZero))) : null);
             information.Append((js.HasMeaningfulVolcanism && showvolcanism) ? @" Has ".T(EDCTx.JournalScanInfo_Has) + js.Volcanism + "." : null);
             information.Append((hasminingsignals) ? " Has mining signals.".T(EDCTx.JournalScanInfo_Signals) : null);
-            information.Append((hasgeosignals) ? " Geological signals: ".T(EDCTx.JournalScanInfo_GeoSignals) + js.CountGeoSignals + "." : null);
-            information.Append((hasbiosignals) ? " Biological signals: ".T(EDCTx.JournalScanInfo_BioSignals) + js.CountBioSignals + "." : null);
-            information.Append((hasthargoidsignals) ? " Thargoid signals: ".T(EDCTx.JournalScanInfo_ThargoidSignals) + js.CountThargoidSignals + "." : null);
-            information.Append((hasguardiansignals) ? " Guardian signals: ".T(EDCTx.JournalScanInfo_GuardianSignals) + js.CountGuardianSignals + ".": null);
-            information.Append((hashumansignals) ? " Human signals: ".T(EDCTx.JournalScanInfo_HumanSignals) + js.CountHumanSignals + "." : null);
-            information.Append((hasothersignals) ? " 'Other' signals: ".T(EDCTx.JournalScanInfo_OtherSignals) + js.CountOtherSignals + "." : null);
+            information.Append((hasgeosignals) ? (string.Format(" Geological signals: {0}.".T(EDCTx.JournalScanInfo_GeoSignals), js.CountGeoSignals)) : null);
+            information.Append((hasbiosignals) ? (string.Format(" Biological signals: {0}.".T(EDCTx.JournalScanInfo_BioSignals), js.CountBioSignals)) : null);
+            information.Append((hasthargoidsignals) ? (string.Format(" Thargoid signals: {0}.".T(EDCTx.JournalScanInfo_ThargoidSignals), js.CountThargoidSignals)) : null);
+            information.Append((hasguardiansignals) ? (string.Format(" Guardian signals: {0}.".T(EDCTx.JournalScanInfo_GuardianSignals), js.CountGuardianSignals)) : null);
+            information.Append((hashumansignals) ? (string.Format(" Human signals: {0}.".T(EDCTx.JournalScanInfo_HumanSignals), js.CountHumanSignals)) : null);
+            information.Append((hasothersignals) ? (string.Format(" 'Other' signals: {0}.".T(EDCTx.JournalScanInfo_OtherSignals), js.CountOtherSignals)) : null);
             information.Append((js.HasRingsOrBelts && showRings) ? @" Is ringed.".T(EDCTx.JournalScanInfo_Hasring) : null);
-            information.Append((js.nEccentricity >= eccentricityLimit) ? @" Has an high eccentricity of ".T(EDCTx.JournalScanInfo_eccentricity) + js.nEccentricity + "." : null);
+            information.Append((js.nEccentricity >= eccentricityLimit) ? (string.Format(@" Has an high eccentricity of {0}.".T(EDCTx.JournalScanInfo_eccentricity), js.nEccentricity)) : null);
             information.Append(hasscanorganics ? " Has been scanned for organics.".T(EDCTx.JournalScanInfo_scanorganics) : null);
 
             var ev = js.GetEstimatedValues();

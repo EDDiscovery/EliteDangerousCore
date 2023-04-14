@@ -151,6 +151,7 @@ namespace EliteDangerousCore.DB
             DBWrite(db =>
             {
                 db.ClearJournal();
+                db.Vacuum();
             });
         }
         public void ClearCommanderTable()

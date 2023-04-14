@@ -621,7 +621,7 @@ namespace EliteDangerousCore.EDDN
 
         public JObject CreateEDDNMessage(JournalScan journal, ISystem system)
         {
-            if (system.SystemAddress == null || !system.HasCoordinate)
+            if (system.SystemAddress == null || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
                 return null;
 
             // Reject scan if system doesn't match scan system
@@ -684,7 +684,7 @@ namespace EliteDangerousCore.EDDN
 
         public JObject CreateEDDNMessage(JournalSAASignalsFound journal, ISystem system)
         {
-            if (system.SystemAddress == null || !system.HasCoordinate)
+            if (system.SystemAddress == null || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
                 return null;
 
             // Reject scan if system doesn't match scan system
@@ -728,7 +728,7 @@ namespace EliteDangerousCore.EDDN
 
         public JObject CreateEDDNFSSDiscoveryScan(JournalFSSDiscoveryScan journal, ISystem system)
         {
-            if (system.SystemAddress == null || !system.HasCoordinate)
+            if (system.SystemAddress == null || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
                 return null;
 
             JObject msg = new JObject();
@@ -753,7 +753,7 @@ namespace EliteDangerousCore.EDDN
         }
         public JObject CreateEDDNNavBeaconScan( JournalNavBeaconScan journal, ISystem system)
         {
-            if (system.SystemAddress == null || !system.HasCoordinate)
+            if (system.SystemAddress == null || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
                 return null;
 
             JObject msg = new JObject();
@@ -777,7 +777,7 @@ namespace EliteDangerousCore.EDDN
 
         public JObject CreateEDDNCodexEntry(JournalCodexEntry journal, ISystem system)
         {
-            if (system.SystemAddress == null || !system.HasCoordinate)
+            if (system.SystemAddress == null || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
                 return null;
 
             JObject msg = new JObject();
@@ -811,7 +811,7 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
-        public JObject CreateEDDNNavRoute(JournalNavRoute journal, ISystem system)
+        public JObject CreateEDDNNavRoute(JournalNavRoute journal)
         {
             JObject msg = new JObject();
             msg["header"] = Header(journal.GameVersion,journal.Build);
@@ -838,7 +838,7 @@ namespace EliteDangerousCore.EDDN
 
         public JObject CreateEDDNScanBaryCentre(JournalScanBaryCentre journal, ISystem system)
         {
-            if (system.SystemAddress == null || !system.HasCoordinate)
+            if (system.SystemAddress == null || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
                 return null;
 
             JObject msg = new JObject();
@@ -863,7 +863,7 @@ namespace EliteDangerousCore.EDDN
 
         public JObject CreateEDDNFSSAllBodiesFound(JournalFSSAllBodiesFound journal, ISystem system)
         {
-            if (system.SystemAddress == null || !system.HasCoordinate)
+            if (system.SystemAddress == null || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
                 return null;
 
             JObject msg = new JObject();
@@ -888,7 +888,7 @@ namespace EliteDangerousCore.EDDN
 
         public JObject CreateEDDNApproachSettlement(JournalApproachSettlement journal, ISystem system)
         {
-            if (system.SystemAddress == null || !system.HasCoordinate)
+            if (system.SystemAddress == null || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
                 return null;
 
             // sometimes these are missing, so ignore these. 
@@ -977,10 +977,7 @@ namespace EliteDangerousCore.EDDN
 
         public JObject CreateEDDNFSSSignalDiscovered(JournalFSSSignalDiscovered journal, ISystem system)
         {
-            if (system.SystemAddress == null || !system.HasCoordinate)
-                return null;
-
-            if (journal.Signals == null )
+            if (system.SystemAddress == null || !system.HasCoordinate || journal.Signals == null || journal.Signals.Count == 0 || system.SystemAddress != journal.Signals[0].SystemAddress)
                 return null;
 
             JObject msg = new JObject();
@@ -1000,7 +997,14 @@ namespace EliteDangerousCore.EDDN
             JArray ja = new JArray();
             foreach (var sig in journal.Signals)
             {
-                if (sig.USSType == null || !sig.USSType.Contains("$USS_Type_MissionTarget"))        // not mission targets
+                if (sig.SystemAddress != system.SystemAddress)          // double check we 
+                {
+                    System.Diagnostics.Trace.WriteLine($"EDDN FssSignalDiscovered disagree with {system.Name} {system.SystemAddress} vs signal {sig.SystemAddress}");
+                    return null;
+                }
+
+                // not mission targets, or we are disagreeing with system
+                if (sig.USSType == null || !sig.USSType.Contains("$USS_Type_MissionTarget") )
                 {
                     JObject sj = new JObject();
 

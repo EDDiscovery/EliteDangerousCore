@@ -71,7 +71,7 @@ namespace EliteDangerousCore.DLL
             {
                 ver = JournalVersion,
                 //v1
-                indexno = he.EntryNumber,
+                indexno = he.Index == -1 ? (he.UnfilteredIndex+1) : he.EntryNumber,     // if we are making an unfiltered entry, set to unfiltered, else entry number
                 utctime = he.EventTimeUTC.ToStringZuluInvariant(),
                 name = he.EventSummary,
                 systemname = he.System.Name,
@@ -80,12 +80,12 @@ namespace EliteDangerousCore.DLL
                 z = he.System.Z,
                 travelleddistance = he.TravelledDistance,
                 travelledseconds = (long)he.TravelledSeconds.TotalSeconds,
-                islanded = he.IsLanded,
-                isdocked = he.IsDocked,
+                islanded = he.Status.IsLandedInShipOrSRV,
+                isdocked = he.Status.IsDocked,
                 whereami = he.WhereAmI,
                 shiptype = he.Status.ShipType,      // 
-                gamemode = he.GameMode,
-                group = he.Group,
+                gamemode = he.Status.GameMode,
+                group = he.Status.Group,
                 credits = he.Credits,
                 eventid = he.journalEntry.EventTypeStr,
                 jid = he.journalEntry.Id,
@@ -136,7 +136,7 @@ namespace EliteDangerousCore.DLL
             };
 
             // v1
-            he.journalEntry.FillInformation(he.System, he.WhereAmI, out je.info, out je.detailedinfo);
+            he.FillInformation(out je.info, out je.detailedinfo);
             je.materials = (from x in mats select x.Details.Name + ":" + x.Count.ToStringInvariant() + ":" + x.Details.FDName).ToArray();
             je.commodities = (from x in commds select x.Details.Name + ":" + x.Count.ToStringInvariant() + ":" + x.Details.FDName).ToArray();
             je.currentmissions = missionlist.Select(x=>x.DLLInfo()).ToArray();

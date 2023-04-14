@@ -570,6 +570,7 @@ namespace EliteDangerousCore
         FSSSignal_ThreatLevel, //  Threat Level:
         FSSSignal_StationBool, // ;Station:
         FSSSignal_CarrierBool, // ;Carrier:
+        FSSSignal_MegashipBool, // ;Megaship:
         FSSSignal_InstallationBool, // ;Installation:
         FSSSignal_LastSeen, // Last Seen
 
@@ -862,10 +863,12 @@ namespace EliteDangerousCore
 
         JournalTypeEnum_CapShipBond, // Capital Ship Bond
         JournalTypeEnum_FactionKillBond, // Faction Kill Bond
+        JournalTypeEnum_Touchdown, // Touchdown
 
         UserControlScan_Expired,
         ScanDisplayUserControl_NSD, // No scan data available
         ScanDisplayUserControl_BC, // Barycentre of {0}
+        ScanDisplayUserControl_SurfaceFeatures, // Surface Features
         ScanDisplayUserControl_Signals, // Signals
         ScanDisplayUserControl_Genuses, // Signals
         ScanDisplayUserControl_Organics, // Organics
@@ -873,6 +876,7 @@ namespace EliteDangerousCore
 
         JournalScanInfo_isa, // is a(n)
         JournalScanInfo_Atmosphere, // Atmosphere
+        JournalScanInfo_SurfaceTemperature, //Surface temperature: 
         JournalScanInfo_terraformable, // terraformable
         JournalScanInfo_LowRadius, //  Low Radius.
         JournalScanInfo_LargeRadius, //  Large Radius.

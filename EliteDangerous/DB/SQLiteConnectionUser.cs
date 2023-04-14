@@ -34,7 +34,7 @@ namespace EliteDangerousCore.DB
         {
             int dbver = RegisterClass.GetSetting("DBVer", (int)1);        // use the constring one, as don't want to go back into ConnectionString code. Int is to force type
 
-            const int lastver = 129;
+            const int lastver = 131;
 
             if (dbver < lastver)
             {
@@ -118,7 +118,13 @@ namespace EliteDangerousCore.DB
                 if (dbver < 128)
                     UpgradeUserDB128();
 
-                UpgradeUserDB129();
+                if (dbver < 129)
+                    UpgradeUserDB129();
+
+                if (dbver < 130)
+                    UpgradeUserDB130();
+
+                UpgradeUserDB131();
 
                 CreateUserDBTableIndexes();
 
@@ -382,6 +388,19 @@ namespace EliteDangerousCore.DB
             string query1 = "ALTER TABLE SystemNote ADD COLUMN UTCTime DATETIME";
             string query2 = "ALTER TABLE SystemNote ADD COLUMN JournalText TEXT DEFAULT \"\"";
             ExecuteNonQueries(query1, query2);
+        }
+        private void UpgradeUserDB130()
+        {
+            string query1 = "ALTER TABLE route_systems ADD COLUMN note TEXT DEFAULT \"\"";
+            ExecuteNonQueries(query1);
+        }
+
+        private void UpgradeUserDB131()
+        {
+            string query1 = "ALTER TABLE route_systems ADD COLUMN X REAL DEFAULT -99999999";
+            string query2 = "ALTER TABLE route_systems ADD COLUMN Y REAL DEFAULT -99999999";
+            string query3 = "ALTER TABLE route_systems ADD COLUMN Z REAL DEFAULT -99999999";
+            ExecuteNonQueries(query1,query2,query3);
         }
 
         private void DropOldUserTables()

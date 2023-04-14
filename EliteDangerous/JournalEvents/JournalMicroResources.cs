@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2021-2021 EDDiscovery development team
+ * Copyright © 2021-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 using QuickJSON;
 using System;
@@ -168,7 +168,7 @@ namespace EliteDangerousCore.JournalEvents
         public MicroResource[] Consumables { get; set; }
         public MicroResource[] Data { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = "";
             detailed = "";
@@ -258,7 +258,7 @@ namespace EliteDangerousCore.JournalEvents
         public int TotalCount { get; set; }
         public long MarketID { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = "";
             detailed = "";
@@ -281,7 +281,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if ( Items != null )
             {
-                FillInformation(null, null, out string info, out string detailed);
+                FillInformation(out string info, out string detailed);
                 mcl.AddEvent(Id, EventTimeUTC, EventTypeID, info + (detailed.HasChars() ? Environment.NewLine + detailed : ""), -Price);
             }
         }
@@ -319,7 +319,7 @@ namespace EliteDangerousCore.JournalEvents
         public long MarketID { get; set; }
         public int TotalCount { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = "";
             detailed = "";
@@ -342,7 +342,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (Items != null)
             {
-                FillInformation(null, null, out string info, out string detailed);
+                FillInformation( out string info, out string detailed);
                 mcl.AddEvent(Id, EventTimeUTC, EventTypeID, info + (detailed.HasChars() ? Environment.NewLine + detailed : ""), Price);
             }
         }
@@ -387,7 +387,7 @@ namespace EliteDangerousCore.JournalEvents
         public int Count { get; set; }
         public long MarketID { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             int? itemcount = Count > 1 ? Count : default(int?);
             info = BaseUtils.FieldBuilder.Build("", Received_FriendlyName, "; items".T(EDCTx.JournalEntry_items), itemcount);
@@ -486,7 +486,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public bool ThrowGrenade { get { return Removed != null && Added == null && Removed.Length == 1 && Removed[0].Name.Equals("amm_grenade_frag"); } }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = "";
             detailed = "";
@@ -554,7 +554,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public bool Stolen { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Resource.Name);     // may be null
             int? itemcount = Resource.Count > 1 ? Resource.Count : default(int?);
@@ -586,7 +586,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public MicroResource Resource { get; set; } = new MicroResource();
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Resource.Name);     // may be null
             int? itemcount = Resource.Count > 1 ? Resource.Count : default(int?);
@@ -619,7 +619,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public MicroResource Resource { get; set; } = new MicroResource();
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = Resource.FriendlyName;
             detailed = "";

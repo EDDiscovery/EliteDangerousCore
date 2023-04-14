@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 - 2020 EDDiscovery development team
+ * Copyright © 2016 - 2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,12 +10,9 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using EliteDangerousCore.DB;
-using EliteDangerousCore.EDSM;
 using EliteDangerousCore.JournalEvents;
 using System;
 using System.Diagnostics;
@@ -29,7 +26,8 @@ namespace EliteDangerousCore
         #region Public Variables
 
         public int EntryNumber { get { return Index + 1; } }   // for display purposes.  from 1 to number of records
-        public int Index { get; set; }// zero based index number
+        public int Index { get; set; } = -1; // zero based filtered index number - after reorder/remove, and is the entry number in historylist
+        public int UnfilteredIndex { get; set; } = -1; // zero based unfiltered index number
 
         public JournalEntry journalEntry { get; private set; }       // MUST be present
 
@@ -50,37 +48,25 @@ namespace EliteDangerousCore
         public bool StartMarker { get { return journalEntry.StartMarker; } }
         public bool StopMarker { get { return journalEntry.StopMarker; } }
         public bool IsFSDCarrierJump { get { return EntryType == JournalTypeEnum.FSDJump || EntryType == JournalTypeEnum.CarrierJump; } }
+        public bool IsFSD{ get { return EntryType == JournalTypeEnum.FSDJump;  } }
         public bool IsLocOrJump { get { return EntryType == JournalTypeEnum.FSDJump || EntryType == JournalTypeEnum.Location || EntryType == JournalTypeEnum.CarrierJump; } }
         public bool IsFuelScoop { get { return EntryType == JournalTypeEnum.FuelScoop; } }
 
-        public double TravelledDistance { get { return TravelStatus.TravelledDistance; } }
-        public TimeSpan TravelledSeconds { get { return TravelStatus.TravelledSeconds; } }
         public bool isTravelling { get { return TravelStatus.IsTravelling; } }
-        public int TravelledMissingjump { get { return TravelStatus.TravelledMissingjump; } }
-        public int Travelledjumps { get { return TravelStatus.Travelledjumps; } }
-        public string TravelInfo() { return TravelStatus.ToString("TT: "); }
-        public string TravelledJumpsAndMisses { get { return Travelledjumps.ToString() + ((TravelledMissingjump > 0) ? (" (" + TravelledMissingjump.ToString() + ")") : ""); } }
-
-        public HistoryEntryStatus Status { get { return EntryStatus; } }
-
-        // is landed in own ship
-        public bool IsLanded { get { return EntryStatus.TravelState == HistoryEntryStatus.TravelStateType.Landed || EntryStatus.TravelState == HistoryEntryStatus.TravelStateType.SRV; } }
-        // is docked in own ship
-        public bool IsDocked { get { return EntryStatus.TravelState == HistoryEntryStatus.TravelStateType.Docked; } }
-        // is in hyperspace in own ship
-        public bool IsInHyperSpace { get { return EntryStatus.TravelState == HistoryEntryStatus.TravelStateType.Supercruise; } }
-
+        public TimeSpan TravelledSeconds { get { return TravelStatus.IsTravelling ? (EventTimeUTC - TravelStatus.TravelStartTimeUTC) : new TimeSpan(0); } }  // 0 if not travelling, else time since start
+        public double TravelledDistance { get { return TravelStatus.TravelledDistance(EventTimeUTC); } }
+        public TimeSpan TravelledTime { get { return TravelStatus.TravelledTime(EventTimeUTC); } }
+        public int TravelledJumps { get { return TravelStatus.TravelledJumps(EventTimeUTC); } }
+        public int TravelledMissingJumps { get { return TravelStatus.TravelledMissingjump; } }
+        public string TravelledStats { get { return TravelStatus.Stats(EventTimeUTC); } }
         public HistoryEntryStatus.TravelStateType TravelState { get { return EntryStatus.TravelState; } }
 
+        public HistoryEntryStatus Status { get { return EntryStatus; } }
         public string WhereAmI { get { return EntryStatus.StationName ?? EntryStatus.BodyName ?? "Unknown"; } }
-        public bool MultiPlayer { get { return EntryStatus.OnCrewWithCaptain != null; } }
-        public string GameMode { get { return EntryStatus.GameMode ?? ""; } }
-        public string Group { get { return EntryStatus.Group ?? ""; } }
-        public string GameModeGroup { get { return GameMode + (String.IsNullOrEmpty(Group) ? "" : (":" + Group)); } }
-        public bool Wanted { get { return EntryStatus.Wanted; } }
-        public long? MarketID { get { return EntryStatus.MarketId; } }
-        public string StationFaction { get { return EntryStatus.StationFaction; } }
-        public int Visits { get; set; }                                     // set by Historylist, visits up to this point in time
+        public string GameModeGroup { get { return Status.GameMode + (String.IsNullOrEmpty(Status.Group) ? "" : (":" + Status.Group)); } }
+
+
+        public int Visits { get; private set; }                                     // set by Historylist, visits up to this point in time
 
         public long? FullBodyID { get {                                     // only if at a body
                 if (System.SystemAddress.HasValue && Status.HasBodyID)
@@ -111,7 +97,6 @@ namespace EliteDangerousCore
         public long Credits { get; set; }       // set up by Historylist during ledger accumulation
         public long Loan { get; set; }          // set up by Historylist during ledger accumulation
         public long Assets { get; set; }       // set up by Historylist during ledger accumulation
-        public bool FSDJumpSequence { get; private set; }   // set during StartJump..FSDJump. 
 
         // Calculated values, not from JE
 
@@ -146,8 +131,6 @@ namespace EliteDangerousCore
         {
             ISystem isys = prev == null ? new SystemClass("Unknown") : prev.System;
 
-            bool fsdjumpseq = prev?.FSDJumpSequence ?? false;
-
             if (je.EventTypeID == JournalTypeEnum.Location || je.EventTypeID == JournalTypeEnum.FSDJump || je.EventTypeID == JournalTypeEnum.CarrierJump)
             {
                 JournalLocOrJump jl = je as JournalLocOrJump;
@@ -177,12 +160,6 @@ namespace EliteDangerousCore
                 }
 
                 isys = newsys;
-
-                fsdjumpseq = false;                     // any of these cancel the sequence. Since we get location on start up, it will cancel it
-            }
-            else if (je.EventTypeID == JournalTypeEnum.StartJump)
-            {
-                fsdjumpseq = true;
             }
 
             HistoryEntry he = new HistoryEntry
@@ -190,11 +167,8 @@ namespace EliteDangerousCore
                 journalEntry = je,
                 System = isys,
                 EntryStatus = HistoryEntryStatus.Update(prev?.EntryStatus, je, isys.Name),
-                FSDJumpSequence = fsdjumpseq,
             };
 
-            he.TravelStatus = HistoryTravelStatus.Update(prev?.TravelStatus, prev , he);    // need a real he so can't do that as part of the constructor.
-            
             return he;
         }
 
@@ -249,6 +223,15 @@ namespace EliteDangerousCore
         {
             Engineering = gen;
         }
+        public void UpdateVisits(int visits)
+        {
+            Visits = visits;
+        }
+
+        public void UpdateTravelStatus(HistoryEntry prev)      // update travel status from previous given current.
+        {
+            TravelStatus = HistoryTravelStatus.Update(prev?.TravelStatus, prev, this);
+        }
 
         public void ReplaceJournalEntry(JournalEntry p, DateTime utc)
         {
@@ -287,11 +270,33 @@ namespace EliteDangerousCore
             return null;
         }
 
-        public void FillInformation(out string EventDescription, out string EventDetailedInfo)
+        public void FillInformation(out string eventDescription, out string eventDetailedInfo)
         {
-            journalEntry.FillInformation(System, WhereAmI, out EventDescription, out EventDetailedInfo);
+            journalEntry.FillInformation(out eventDescription, out eventDetailedInfo);
+
+            if (eventDescription == null)       // FillInformation was not implemented, try the next one
+            {
+                JournalEntry.FillInformationData fid = new JournalEntry.FillInformationData() 
+                { System = this.System, WhereAmI = this.WhereAmI , NextJumpSystemName = this.Status.FSDJumpNextSystemName };
+
+                journalEntry.FillInformationExtended(fid,out eventDescription, out eventDetailedInfo);
+            }
+
+            if (isTravelling && (IsFSD || StopMarker))
+            {
+                eventDescription = TravelledStats + ", " + eventDescription;
+            }
         }
 
+        public void SetStartStop()
+        {
+            if (journalEntry.StartMarker || journalEntry.StopMarker)
+                journalEntry.ClearStartEndFlag();
+            else if (isTravelling)
+                journalEntry.SetEndFlag();
+            else
+                journalEntry.SetStartFlag();
+        }
 
         #endregion
     }

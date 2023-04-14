@@ -33,7 +33,7 @@ namespace EliteDangerousCore
                 if (jsaa.BodyName == null)
                     return false;
 
-                var best = FindBestSystem(startindex, hl, jsaa.BodyName, jsaa.BodyID, false);
+                var best = FindBestSystem(startindex, hl, jsaa.SystemAddress, jsaa.BodyName, jsaa.BodyID, false);
 
                 if (best == null)
                     return false;

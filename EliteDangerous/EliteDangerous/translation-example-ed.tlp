@@ -973,6 +973,7 @@ SECTION ScanDisplayUserControl
 
 .NSD: "No scan data available" @
 .BC: "Barycentre of {0}" @
+.SurfaceFeatures: "Surface features" @
 .Signals: "Signals" @
 .Codex: "Codex" @
 .Organics: "Organics" @

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 - 2021 EDDiscovery development team
+ * Copyright © 2016 - 2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using EliteDangerousCore.JournalEvents;
@@ -50,7 +48,25 @@ namespace EliteDangerousCore
             OnFootPlanetaryPort, 
             OnFootPlanet,
             OnFootFleetCarrier,
-        };       
+        };
+
+        public bool OnFoot { get { return TravelState >= TravelStateType.OnFootStarPort; } }
+        public bool OnFootFleetCarrier { get { return TravelState == TravelStateType.OnFootFleetCarrier; } }
+
+        public bool IsDocked { get { return TravelState == HistoryEntryStatus.TravelStateType.Docked || TravelState == TravelStateType.MulticrewDocked || 
+                                            TravelState == TravelStateType.TaxiDocked || TravelState == TravelStateType.DropShipDocked; } }
+
+
+        public bool IsLandedInShipOrSRV { get
+            {
+                return TravelState == HistoryEntryStatus.TravelStateType.Landed || TravelState == HistoryEntryStatus.TravelStateType.SRV ||
+                    TravelState == HistoryEntryStatus.TravelStateType.MulticrewLanded || TravelState == HistoryEntryStatus.TravelStateType.MulticrewSRV;
+            }}
+
+        public bool IsInSupercruise { get { return TravelState == HistoryEntryStatus.TravelStateType.Supercruise || TravelState == TravelStateType.TaxiSupercruise || 
+                                            TravelState == TravelStateType.MulticrewSupercruise || TravelState == TravelStateType.DropShipSupercruise; } }
+
+        public TravelStateType TravelState { get; private set; } = TravelStateType.Unknown;  // travel state
 
         public string BodyName { get; private set; }
         public int? BodyID { get; private set; }
@@ -59,24 +75,24 @@ namespace EliteDangerousCore
         public string StationName { get; private set; }     // will be null when undocked
         public string StationType { get; private set; }     // will be null when undocked
         public string StationFaction { get; private set; }  // will be null when undocked
-        public long? MarketId { get; private set; } 
-        public TravelStateType TravelState { get; private set; } = TravelStateType.Unknown;  // travel state
-        public bool OnFoot { get { return TravelState >= TravelStateType.OnFootStarPort; } }
-        public bool OnFootFleetCarrier { get { return TravelState == TravelStateType.OnFootFleetCarrier; } }
+        public long? MarketID { get; private set; } 
         public ulong ShipID { get; private set; } = ulong.MaxValue;
         public string ShipType { get; private set; } = "Unknown";         // and the ship nice name
         public string ShipTypeFD { get; private set; } = "Unknown";      // FD name
         public bool IsSRV { get { return ItemData.IsSRV(ShipTypeFD); } }
         public bool IsFighter { get { return ItemData.IsFighter(ShipTypeFD); } }
         public string OnCrewWithCaptain { get; private set; } = null;     // if not null, your in another multiplayer ship
-        public string GameMode { get; private set; } = "Unknown";         // game mode, from LoadGame event
-        public string Group { get; private set; } = "";                   // group..
+        public bool MultiPlayer { get { return OnCrewWithCaptain != null; } }
+        public string GameMode { get; private set; } = "Unknown";         // game mode, from LoadGame event, Unknown if not set or missing
+        public string Group { get; private set; } = "";                   // group.. empty if not in group
         public bool Wanted { get; private set; } = false;
         public bool BodyApproached { get; private set; } = false;         // set at approach body, cleared at leave body or fsd jump
         public bool BookedDropship { get; private set; } = false;         // cleared on embark - need this to tell difference between booking a taxi or a dropship when entering the taxi
         public bool BookedTaxi { get; private set; } = false;             // cleared on embark - need this to tell difference between booking a taxi or a dropship when entering the taxi
-
         public double CurrentBoost { get; private set; } = 1;             // current boost multiplier due to jet cones and synthesis
+        public string FSDJumpNextSystemName { get; private set; } = null;   // null when not jumping
+        public long? FSDJumpNextSystemAddress { get; private set; } = null; // null when not jumping
+        public bool FSDJumpSequence{ get { return FSDJumpNextSystemName != null; } }    // true from startjump until location/fsdjump
 
         private HistoryEntryStatus()
         {
@@ -89,7 +105,7 @@ namespace EliteDangerousCore
             BodyType = prevstatus.BodyType;
             StationName = prevstatus.StationName;
             StationType = prevstatus.StationType;
-            MarketId = prevstatus.MarketId;
+            MarketID = prevstatus.MarketID;
             TravelState = prevstatus.TravelState;
             ShipID = prevstatus.ShipID;
             ShipType = prevstatus.ShipType;
@@ -102,6 +118,9 @@ namespace EliteDangerousCore
             StationFaction = prevstatus.StationFaction;
             BookedDropship = prevstatus.BookedDropship;
             BookedTaxi = prevstatus.BookedTaxi;
+            CurrentBoost = prevstatus.CurrentBoost;
+            FSDJumpNextSystemName = prevstatus.FSDJumpNextSystemName;
+            FSDJumpNextSystemAddress = prevstatus.FSDJumpNextSystemAddress;
         }
 
         public static HistoryEntryStatus Update(HistoryEntryStatus prev, JournalEntry je, string curStarSystem)
@@ -135,7 +154,7 @@ namespace EliteDangerousCore
                         hes = new HistoryEntryStatus(prev)     // Bodyapproach copy over we should be in the same state as last..
                         {
                             TravelState = t,
-                            MarketId = jloc.MarketID,
+                            MarketID = jloc.MarketID,
                             BodyID = jloc.BodyID,
                             BodyType = jloc.BodyType,
                             BodyName = jloc.Body,
@@ -144,6 +163,8 @@ namespace EliteDangerousCore
                             StationType = stationisfc ? prev.StationType : ( jloc.StationType.Alt(prev.StationType).Alt(jloc.Docked || locinstation ? jloc.BodyType : null)),
                             StationFaction = jloc.StationFaction,          // may be null
                             CurrentBoost = 1,
+                            FSDJumpNextSystemAddress = null,
+                            FSDJumpNextSystemName = null,
                         };
                         break;
                     }
@@ -152,7 +173,7 @@ namespace EliteDangerousCore
                     var jcj = (je as JournalCarrierJump);
                     hes = new HistoryEntryStatus(prev)     // we are docked or on foot on a carrier - travel state stays the same
                     {
-                        MarketId = jcj.MarketID,
+                        MarketID = jcj.MarketID,
                         BodyID = jcj.BodyID,
                         BodyType = jcj.BodyType,
                         BodyName = jcj.Body,
@@ -207,7 +228,7 @@ namespace EliteDangerousCore
                             TravelState = jfsd.Taxi == true ? (prev.TravelState == TravelStateType.DropShipSupercruise || prev.TravelState == TravelStateType.DropShipNormalSpace ? TravelStateType.DropShipSupercruise : TravelStateType.TaxiSupercruise) :
                                             jfsd.Multicrew == true ? TravelStateType.MulticrewSupercruise :
                                                 TravelStateType.Supercruise,
-                            MarketId = null,
+                            MarketID = null,
                             BodyID = -1,
                             BodyType = "Star",
                             BodyName = jfsd.StarSystem,
@@ -217,7 +238,23 @@ namespace EliteDangerousCore
                             StationFaction = null, // to ensure
                             BodyApproached = false,
                             CurrentBoost = 1,
+                            FSDJumpNextSystemAddress = null,        // now jumped
+                            FSDJumpNextSystemName = null,
                         };
+                        break;
+                    }
+
+                case JournalTypeEnum.StartJump:
+                    {
+                        var jsj = (je as JournalStartJump);
+                        if (jsj.IsHyperspace)
+                        {
+                            hes = new HistoryEntryStatus(prev)
+                            {
+                                FSDJumpNextSystemAddress = jsj.SystemAddress,        // jumping
+                                FSDJumpNextSystemName = jsj.StarSystem
+                            };
+                        }
                         break;
                     }
 
@@ -227,8 +264,8 @@ namespace EliteDangerousCore
                     hes = new HistoryEntryStatus(prev) 
                     {
                         OnCrewWithCaptain = null,    // can't be in a crew at this point
-                        GameMode = jlg.GameMode,      // set game mode
-                        Group = jlg.Group,            // and group, may be empty
+                        GameMode = jlg.GameMode ?? "Unknown",  // set game mode
+                        Group = jlg.Group ?? "",            // and group, may be empty
                         TravelState = jlg.InSuit ? (prev.TravelState) : 
                                          jlg.InTaxi ? TravelStateType.TaxiNormalSpace :
                                              jlg.InSRV ? TravelStateType.SRV : 
@@ -253,7 +290,7 @@ namespace EliteDangerousCore
                             TravelState = jdocked.Taxi == true ? TravelStateType.TaxiDocked :
                                             jdocked.Multicrew == true ? TravelStateType.MulticrewDocked :
                                                 TravelStateType.Docked,
-                            MarketId = jdocked.MarketID,
+                            MarketID = jdocked.MarketID,
                             Wanted = jdocked.Wanted,
                             StationName = jdocked.StationName.Alt("Unknown"),
                             StationType = jdocked.StationType.Alt("Station"),
@@ -270,7 +307,7 @@ namespace EliteDangerousCore
                             TravelState = ju.Taxi == true ? (prev.TravelState == TravelStateType.DropShipDocked ? TravelStateType.DropShipNormalSpace : TravelStateType.TaxiNormalSpace) :
                                             ju.Multicrew == true ? TravelStateType.MulticrewNormalSpace :
                                                 TravelStateType.NormalSpace,
-                            MarketId = null,
+                            MarketID = null,
                             StationName = null,
                             StationType = null,
                             StationFaction = null, // to clear

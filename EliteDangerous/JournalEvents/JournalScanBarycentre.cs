@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 - 2021 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  *
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 
 using QuickJSON;
@@ -75,7 +75,7 @@ namespace EliteDangerousCore.JournalEvents
             s.AddBarycentre(this,system);
         }
 
-        public override void FillInformation(ISystem sysunused, string whereamiunused, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("SMA:", SemiMajorAxisLSKM, "Period:;d;0.0", OrbitalPeriodDays, "ID:", BodyID);
             detailed = BaseUtils.FieldBuilder.Build("e:;;0.000", Eccentricity, "OI:;;0.000", OrbitalInclination,

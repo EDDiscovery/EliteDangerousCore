@@ -59,7 +59,7 @@ namespace EliteDangerousCore
             // not found, make a new node
             sn = new SystemNode(sys);
 
-            // if it has a system address, we store it to the list that way. Else we add to name list
+            // if it has a system address, we store it to the list that way. 
             if (sys.SystemAddress.HasValue)
             {
                 ScanDataBySysaddr[sys.SystemAddress.Value] = sn;
@@ -74,27 +74,23 @@ namespace EliteDangerousCore
             return sn;
         }
 
-        public bool NameButNoAddress(string name, long sysaddr )
-        {
-            return ScanDataByName.TryGetValue(name, out StarScan.SystemNode v1) && !ScanDataBySysaddr.TryGetValue(sysaddr, out StarScan.SystemNode v2);
-        }
-
         private SystemNode FindSystemNode(ISystem sys)
         {
             if (sys.SystemAddress.HasValue && ScanDataBySysaddr.TryGetValue(sys.SystemAddress.Value, out SystemNode sn))
                 return sn;
 
-            if (ScanDataByName.TryGetValue(sys.Name, out sn))            // try name, it may have been stored with an old entry without sys address 
-                return sn;                                                          // so we check to see if we already have that first
+            if (ScanDataByName.TryGetValue(sys.Name, out sn))                       // try name, it may have been stored with an old entry without sys address 
+                return sn;                                                          
 
             return null;
         }
 
-        // bodyid can be null, bodyname must be set.
         // scan the history and try and find the best star system this bodyname is associated with
         // find best system for scan.  Note startindex might be -1, if only 1 entry is in the list
+        // bodyid can be null, bodyname must be set.
+        // sysaddr can be null
 
-        private static Tuple<string, ISystem> FindBestSystem(int startindex, List<HistoryEntry> hl, string bodyname, int? bodyid, bool isstar )
+        private static Tuple<string, ISystem> FindBestSystem( int startindex, List<HistoryEntry> hl, long? sysaddr, string bodyname, int? bodyid, bool isstar )
         {
             System.Diagnostics.Debug.Assert(bodyname != null);
 
@@ -105,17 +101,25 @@ namespace EliteDangerousCore
                 if (he.IsLocOrJump)
                 {
                     JournalLocOrJump jl = (JournalLocOrJump)he.journalEntry;
-                    string designation = BodyDesignations.GetBodyDesignation(bodyname, bodyid, isstar, he.System.Name);
 
-                    if (IsStarNameRelated(he.System.Name, designation))       // if its part of the name, use it
+                    if (sysaddr.HasValue && jl.SystemAddress == sysaddr)        // system address wins
                     {
-                        return new Tuple<string, ISystem>(designation, he.System);
+                        return new Tuple<string, ISystem>(he.System.Name, he.System);
                     }
-                    else if (jl != null && IsStarNameRelated(jl.StarSystem, designation))
+                    else
                     {
-                        // Ignore scans where the system name has changed
-                        System.Diagnostics.Trace.WriteLine($"Rejecting body {designation} ({bodyname}) in system {he.System.Name} => {jl.StarSystem} due to system rename");
-                        return null;
+                        string designation = BodyDesignations.GetBodyDesignation(bodyname, bodyid, isstar, he.System.Name);
+
+                        if (IsStarNameRelated(he.System.Name, designation))       // if its part of the name, use it
+                        {
+                            return new Tuple<string, ISystem>(designation, he.System);
+                        }
+                        else if (jl != null && IsStarNameRelated(jl.StarSystem, designation))
+                        {
+                            // Ignore scans where the system name has changed
+                            System.Diagnostics.Trace.WriteLine($"Rejecting body {designation} ({bodyname}) in system {he.System.Name} => {jl.StarSystem} due to system rename");
+                            return null;
+                        }
                     }
                 }
             }

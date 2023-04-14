@@ -141,10 +141,14 @@ namespace EliteDangerousCore
                 demand = jo["demand"].Int();
 
                 this.statusFlags = new List<string>();
-                foreach (dynamic statusFlag in jo["statusFlags"])
+                if (jo["statusFlags"] != null)
                 {
-                    statusFlags.Add((string)statusFlag);
+                    foreach (dynamic statusFlag in jo["statusFlags"])
+                    {
+                        statusFlags.Add((string)statusFlag);
+                    }
                 }
+
 
                 ComparisionLR = ComparisionRL = "";
 

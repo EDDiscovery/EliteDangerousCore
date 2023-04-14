@@ -41,8 +41,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="QuickJSON, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RJKJSoft.QuickJSON.1.0.1\lib\net48\QuickJSON.dll</HintPath>
+    <Reference Include="QuickJSON, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\RJKJSoft.QuickJSON.1.1.0\lib\net48\QuickJSON.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -153,6 +153,7 @@
     <Compile Include="Screenshots\ScreenShotConverter.cs" />
     <Compile Include="Screenshots\ScreenShotDirectoryWatcher.cs" />
     <Compile Include="Screenshots\ScreenShotImageConverter.cs" />
+    <Compile Include="StarScan\StarScanApproachTouchdown.cs" />
     <Compile Include="StarScan\StarScanFSSBodySignals.cs" />
     <Compile Include="StarScan\StarScanBaryCentre.cs" />
     <Compile Include="StarScan\StarScanLocation.cs" />

@@ -105,12 +105,12 @@ namespace EliteDangerousCore.Inara
                     eventstosend.Add(InaraClass.setCommanderShip(si.ShipFD, si.ID, last.EventTimeUTC,
                                                                 si.ShipUserName, si.ShipUserIdent, true, si.Hot,
                                                                 si.HullValue, si.ModulesValue, si.Rebuy, last.System.Name,
-                                                                last.IsDocked ? last.WhereAmI : null, last.IsDocked ? last.MarketID : null));
+                                                                last.Status.IsDocked ? last.WhereAmI : null, last.Status.IsDocked ? last.Status.MarketID : null));
                 }
 
                 eventstosend.Add(InaraClass.setCommanderCredits(last.Credits, last.Assets, last.Loan, last.EventTimeUTC));
 
-                eventstosend.Add(InaraClass.setCommanderTravelLocation(last.System.Name, last.IsDocked ? last.WhereAmI : null, last.MarketID.HasValue ? last.MarketID : null, last.EventTimeUTC));
+                eventstosend.Add(InaraClass.setCommanderTravelLocation(last.System.Name, last.Status.IsDocked ? last.WhereAmI : null, last.Status.MarketID.HasValue ? last.Status.MarketID : null, last.EventTimeUTC));
 
                 CmdrCredits = last.Credits;
             }
@@ -197,7 +197,7 @@ namespace EliteDangerousCore.Inara
                 case JournalTypeEnum.ShipyardTransfer: // VERIFIED 18/5/2018
                     {
                         var je = he.journalEntry as JournalShipyardTransfer;
-                        eventstosend.Add(InaraClass.setCommanderShipTransfer(je.ShipTypeFD, je.ShipId, he.System.Name, he.WhereAmI, he.MarketID, je.nTransferTime ?? 0, he.EventTimeUTC));
+                        eventstosend.Add(InaraClass.setCommanderShipTransfer(je.ShipTypeFD, je.ShipId, he.System.Name, he.WhereAmI, he.Status.MarketID, je.nTransferTime ?? 0, he.EventTimeUTC));
                         break;
                     }
 
@@ -368,7 +368,10 @@ namespace EliteDangerousCore.Inara
                     {
                         var je = he.journalEntry as JournalEngineerProgress;
                         foreach( var x in je.Engineers )
-                            eventstosend.Add(InaraClass.setCommanderRankEngineer(x.Engineer, x.Progress, x.Rank, he.EventTimeUTC));
+                        {
+                            if (x.Valid)      // Frontier lovely logs again - check for validity
+                                eventstosend.Add(InaraClass.setCommanderRankEngineer(x.Engineer, x.Progress, x.Rank, he.EventTimeUTC));
+                        }
                         break;
                     }
 

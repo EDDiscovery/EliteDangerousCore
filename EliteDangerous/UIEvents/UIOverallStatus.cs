@@ -22,7 +22,10 @@ namespace EliteDangerousCore.UIEvents
     {
         public UIOverallStatus( DateTime time, bool refresh) : base(UITypeEnum.OverallStatus, time, refresh)
         {
+        }
 
+        public UIOverallStatus() : base(UITypeEnum.OverallStatus, DateTime.UtcNow,false)
+        {
         }
 
         public UIOverallStatus(UIMode.MajorModeType mm, UIMode.ModeType mt, List<UITypeEnum> list, int focus, UIPips.Pips pips, int fg, double fuel, double res, int cargo,

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2021 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  *
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 using QuickJSON;
 
@@ -89,7 +89,7 @@ namespace EliteDangerousCore.JournalEvents
             mc.Clear(MicroResource.BackPack, MaterialCommodityMicroResourceType.CatType.Component, MaterialCommodityMicroResourceType.CatType.Data, MaterialCommodityMicroResourceType.CatType.Consumable, MaterialCommodityMicroResourceType.CatType.Item );      // clear all count zero of commodities
         }
 
-        public override void FillInformation(ISystem sysunused, string whereamiunused, out string info, out string detailed) 
+        public override void FillInformation(out string info, out string detailed) 
         {
             info = "";
             if (Killers != null)
@@ -133,7 +133,7 @@ namespace EliteDangerousCore.JournalEvents
         {
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = "Boom!".T(EDCTx.JournalEntry_Boom);
             detailed = "";
@@ -167,7 +167,7 @@ namespace EliteDangerousCore.JournalEvents
             shp.Resurrect(Option.Equals("free", System.StringComparison.InvariantCultureIgnoreCase));    // if free, we did not rebuy the ship
         }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Option: ".T(EDCTx.JournalEntry_Option), Option, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost, ";Bankrupt".T(EDCTx.JournalEntry_Bankrupt), Bankrupt);
             detailed = "";

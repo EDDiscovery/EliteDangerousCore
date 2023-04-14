@@ -36,7 +36,8 @@ namespace EliteDangerousCore
 
         public string TranslatedCategory { get; private set; }      // translation of above..
 
-        public string Name { get; private set; }                    // name of it in nice text
+        public string Name { get; private set; }                    // name of it in nice text. This gets translated
+        public string EnglishName { get; private set; }             // name of it in English
         public string FDName { get; private set; }                  // fdname, lower case..
 
         public enum ItemType
@@ -148,10 +149,10 @@ namespace EliteDangerousCore
             return i >= 0 ? lst[i] : null;
         }
 
-        public static MaterialCommodityMicroResourceType GetByName(string longname)
+        public static MaterialCommodityMicroResourceType GetByEnglishName(string name)
         {
             List<MaterialCommodityMicroResourceType> lst = cachelist.Values.ToList();
-            int i = lst.FindIndex(x => x.Name.Equals(longname));
+            int i = lst.FindIndex(x => x.EnglishName.Equals(name));
             return i >= 0 ? lst[i] : null;
         }
 
@@ -257,7 +258,7 @@ namespace EliteDangerousCore
             Category = cs;
             TranslatedCategory = (Category ==CatType.Item) ? "Goods" : (Category==CatType.Component) ? "Assets" : Category.ToString();      // name is as the game does
             TranslatedCategory = TranslatedCategory.TxID(typeof(MaterialCommodityMicroResourceType), TranslatedCategory);        // valid to pass this thru the Tx( system
-            Name = n;
+            EnglishName = Name = n;
             FDName = fd;
             Type = t;
             TranslatedType = Type.ToString().SplitCapsWord().TxID(typeof(MaterialCommodityMicroResourceType), Type.ToString());                // valid to pass this thru the Tx( system

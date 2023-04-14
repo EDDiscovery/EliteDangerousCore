@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2022 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -40,7 +40,7 @@ namespace EliteDangerousCore.JournalEvents
         public FederationRank Federation { get; set; }
         public CQCRank CQC { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
+        public override void FillInformation(out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("", Combat.ToString().Replace("_", " "),
                                       "", Trade.ToString().Replace("_", " "),
@@ -124,7 +124,7 @@ namespace EliteDangerousCore.JournalEvents
         public FederationRank? Federation { get; set; }
         public CQCRank? CQC { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             var names = JournalRank.TranslatedRankNames();
 
@@ -165,7 +165,7 @@ namespace EliteDangerousCore.JournalEvents
         public int Federation { get; set; }
         public int CQC { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        public override void FillInformation(out string info, out string detailed)
         {
             var names = JournalRank.TranslatedRankNames();
             info = BaseUtils.FieldBuilder.Build(

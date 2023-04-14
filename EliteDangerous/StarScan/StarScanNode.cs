@@ -40,11 +40,13 @@ namespace EliteDangerousCore
             public string OwnName;                  // own name excluding star system
             public string CustomName;               // if we can extract from the journals a custom name of it, this holds it. Mostly null
             public SortedList<string, ScanNode> Children;         // kids
-            public ScanNode Parent;                 // Parent node 
+            public ScanNode Parent;                 // Parent of this node 
+            public SystemNode SystemNode;           // the system node the entry is associated with
             public int Level;                       // level within SystemNode
             public int? BodyID;
             public bool IsMapped;                   // recorded here since the scan data can be replaced by a better version later.
             public bool WasMappedEfficiently;
+            public bool EDSMCreatedNode;            // did EDSM create the node? BodyID sets this false, JournalScan sets it to ScanData.EDSMBody.  Never changed after creation
 
             public string CustomNameOrOwnname { get { return CustomName ?? OwnName; } }
 
@@ -53,6 +55,7 @@ namespace EliteDangerousCore
             private List<JournalSAASignalsFound.SAASignal> signals; // can be null if no signals for this node, else its a list of signals.
             private List<JournalSAASignalsFound.SAAGenus> genusus; // can be null if no signals for this node, else its a list of signals.
             private List<JournalScanOrganic> organics;  // can be null if nothing for this node, else a list of organics
+            private List<IBodyFeature> surfacefeatures;   // can be null if nothing for this node, else a list of journal entries
 
             public ScanNode() { }
             public ScanNode(string name, ScanNodeType node, int? bodyid) { FullName = OwnName = name; NodeType = node; BodyID = bodyid; 
@@ -78,7 +81,9 @@ namespace EliteDangerousCore
                         return;
 
                     if (scandata == null)
+                    {
                         scandata = value;
+                    }
                     else if ((!value.IsEDSMBody && value.ScanType != "Basic") || scandata.ScanType == "Basic") // Always overwrtite if its a journalscan (except basic scans)
                     {
                         //System.Diagnostics.Debug.WriteLine(".. overwrite " + scandata.ScanType + " with " + value.ScanType + " for " + scandata.BodyName);
@@ -96,10 +101,8 @@ namespace EliteDangerousCore
 
                 set
                 {
-                    if (value == null)
-                        return;
-
-                    beltdata = value;
+                    if (value != null)
+                        beltdata = value;
                 }
             }
 
@@ -111,10 +114,8 @@ namespace EliteDangerousCore
                 }
                 set
                 {
-                    if (value == null)
-                        return;
-
-                    signals = value;
+                    if (value != null)
+                        signals = value;
                 }
             }
             public List<JournalSAASignalsFound.SAAGenus> Genuses       // can be null
@@ -125,10 +126,8 @@ namespace EliteDangerousCore
                 }
                 set
                 {
-                    if (value == null)
-                        return;
-
-                    genusus = value;
+                    if (value != null)
+                        genusus = value;
                 }
             }
 
@@ -148,28 +147,49 @@ namespace EliteDangerousCore
                 }
                 set
                 {
-                    if (value == null)
-                        return;
-
-                    organics = value;
+                    if (value != null)
+                        organics = value;
+                }
+            }
+            public List<IBodyFeature> SurfaceFeatures        // can be null
+            {
+                get
+                {
+                    return surfacefeatures;
+                }
+                set
+                {
+                    if (value != null)
+                        surfacefeatures = value;
                 }
             }
 
+            // which feature is nearby?  Handles no surface features
+            public IBodyFeature FindSurfaceFeatureNear( double? latitude, double ?longitude, double delta = 0.1)
+            {
+                if (latitude.HasValue && longitude.HasValue && surfacefeatures != null)
+                    return surfacefeatures.Find(x => x.HasLatLong &&
+                                                           System.Math.Abs(x.Latitude.Value - latitude.Value) < delta && System.Math.Abs(x.Longitude.Value - longitude.Value) < delta);
+                else
+                    return null;
+            }
+
+            // does node have any non edsm scans (or empty scans) below it
             public bool DoesNodeHaveNonEDSMScansBelow()
             {
-                if (ScanData != null && ScanData.IsEDSMBody == false)
-                    return true;
+                if (EDSMCreatedNode)        // its EDSM created, so answer is false
+                    return false;
 
                 if (Children != null)
                 {
                     foreach (KeyValuePair<string, ScanNode> csn in Children)
                     {
-                        if (csn.Value.DoesNodeHaveNonEDSMScansBelow())
+                        if (csn.Value.DoesNodeHaveNonEDSMScansBelow() == true)  // we do have non edsm ones under this child
                             return true;
                     }
                 }
 
-                return false;
+                return true;
             }
 
             public bool IsBodyInFilter(string[] filternames, bool checkchildren)
@@ -208,13 +228,13 @@ namespace EliteDangerousCore
             {
                 get
                 {
-                    if (Children != null)
-                    {
-                        foreach (ScanNode sn in Children.Values)
+                    if (Children != null)                                   
+                    {       
+                        foreach (ScanNode sn in Children.Values)            
                         {
                             yield return sn;
 
-                            foreach (ScanNode c in sn.Descendants)
+                            foreach (ScanNode c in sn.Descendants)          // recurse back up to go as deep as required
                             {
                                 yield return c;
                             }
@@ -224,7 +244,7 @@ namespace EliteDangerousCore
             }
 
             // Using info here, and the indicated journal scan node, return suryeyor info on this node
-            public string SurveyorInfoLine(ISystem sys, bool showsignals, bool showorganics, bool showvolcanism, bool showvalues, bool shortinfo, bool showGravity, bool showAtmos, bool showRings,
+            public string SurveyorInfoLine(ISystem sys, bool showsignals, bool showorganics, bool showvolcanism, bool showvalues, bool shortinfo, bool showGravity, bool showAtmos, bool showTemp, bool showRings,
                             int lowRadiusLimit, int largeRadiusLimit, double eccentricityLimit)
             {
                 if (scandata != null)
@@ -240,7 +260,7 @@ namespace EliteDangerousCore
 
                     return scandata.SurveyorInfoLine(sys, hasminingsignals, hasgeosignals, hasbiosignals,
                                 hasthargoidsignals, hasguardiansignals, hashumansignals, hasothersignals, hasscanorganics,
-                                showvolcanism, showvalues, shortinfo, showGravity, showAtmos, showRings,
+                                showvolcanism, showvalues, shortinfo, showGravity, showAtmos, showTemp, showRings,
                                 lowRadiusLimit,largeRadiusLimit, eccentricityLimit);
                 }
                 else

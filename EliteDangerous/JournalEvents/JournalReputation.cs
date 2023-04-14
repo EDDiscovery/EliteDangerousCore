@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2018 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  *
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 using QuickJSON;
 using System.Linq;
@@ -34,7 +34,7 @@ namespace EliteDangerousCore.JournalEvents
         public double? Independent { get; set; }
         public double? Alliance { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
+        public override void FillInformation(out string info, out string detailed) 
         {
             info = BaseUtils.FieldBuilder.Build("Federation: ;;0.#".T(EDCTx.JournalReputation_Federation), Federation , "Empire: ;;0.#".T(EDCTx.JournalReputation_Empire), Empire, "Independent: ;;0.#".T(EDCTx.JournalReputation_Independent), Independent , "Alliance: ;;0.#".T(EDCTx.JournalReputation_Alliance), Alliance);
             detailed = "";

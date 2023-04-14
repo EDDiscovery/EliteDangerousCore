@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2018 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  *
- * EDDiscovery is not affiliated with Frontier Developments plc.
+ *
  */
 using QuickJSON;
 using System.Linq;
@@ -49,7 +49,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? OnStation { get; set; }
         public bool? OnPlanet { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed) 
+        public override void FillInformation(out string info, out string detailed) 
         {
             info = JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude);
             info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", Body, "NPC Controlled;".T(EDCTx.JournalEntry_NPCControlled), PlayerControlled, 
@@ -59,12 +59,12 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.Touchdown)]
-    public class JournalTouchdown : JournalEntry
+    public class JournalTouchdown : JournalEntry, IBodyFeature
     {
         public JournalTouchdown(JObject evt) : base(evt, JournalTypeEnum.Touchdown)
         {
-            Latitude = evt["Latitude"].Double();
-            Longitude = evt["Longitude"].Double();
+            Latitude = evt["Latitude"].DoubleNull();
+            Longitude = evt["Longitude"].DoubleNull();
             PlayerControlled = evt["PlayerControlled"].BoolNull();
             NearestDestination = evt["NearestDestination"].StrNull();
             NearestDestination_Localised = JournalFieldNaming.CheckLocalisation(evt["NearestDestination_Localised"].StrNull(), NearestDestination);
@@ -76,8 +76,9 @@ namespace EliteDangerousCore.JournalEvents
             OnStation = evt["OnStation"].BoolNull();
         }
 
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
+        public bool HasLatLong { get { return Latitude.HasValue && Longitude.HasValue; } }  // some touchdowns don't have lat/long, computer controlled for instance, in the past
         public bool? PlayerControlled { get; set; }
         public string NearestDestination { get; set; }
         public string NearestDestination_Localised { get; set; }
@@ -89,7 +90,13 @@ namespace EliteDangerousCore.JournalEvents
         public bool? OnStation { get; set; }
         public bool? OnPlanet { get; set; }
 
-        public override void FillInformation(ISystem sys, string whereami, out string info, out string detailed)
+        // IBodyFeature only
+        public string BodyType { get { return "Planet"; } }
+        public string Name { get { return "Touchdown".TxID(EDCTx.JournalTypeEnum_Touchdown); } }
+        public string Name_Localised { get { return "Touchdown".TxID(EDCTx.JournalTypeEnum_Touchdown); } }
+        public string BodyDesignation { get; set; }
+
+        public override void FillInformation(out string info, out string detailed)
         {
             info = JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude);
             info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", Body, "NPC Controlled;".T(EDCTx.JournalEntry_NPCControlled), PlayerControlled, 

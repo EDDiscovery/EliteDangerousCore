@@ -187,7 +187,7 @@ namespace EliteDangerousCore.EDDN
             }
             else if (je.EventTypeID == JournalTypeEnum.NavRoute)
             {
-                msg = eddn.CreateEDDNNavRoute(je as JournalNavRoute, he.System);
+                msg = eddn.CreateEDDNNavRoute(je as JournalNavRoute);
             }
             else if (je.EventTypeID == JournalTypeEnum.ScanBaryCentre)
             {

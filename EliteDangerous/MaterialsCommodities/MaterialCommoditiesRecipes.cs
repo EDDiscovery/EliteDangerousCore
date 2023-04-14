@@ -33,57 +33,61 @@ namespace EliteDangerousCore
 
         // return maximum can make, how many made, needed string, needed string long format, and the % to having one recipe
         // select if totals is reduced by the making
-        static public Tuple<int, int, string, string,double> HowManyLeft(List<MaterialCommodityMicroResource> list, 
-                            Dictionary<string, int> totals, Recipes.Recipe r, int tomake = 0, bool reducetotals = true)
+        static public Tuple<int, int, string, string,double> HowManyLeft(
+                            Recipes.Recipe r,       // the receipe to do..
+                            int tomake,         // how many to make..
+                            List<MaterialCommodityMicroResource> currentcontents,   
+                            Dictionary<string, int> available,     // current available totals, started at what we have, then decreased if required as you process 
+                            Dictionary<MaterialCommodityMicroResourceType, int> totalneeded = null,      // This is the total amount needed of items
+                            bool reducetotals = true)
         {
             int max = int.MaxValue;
-            System.Text.StringBuilder needed = new System.Text.StringBuilder(256);
-            System.Text.StringBuilder neededlong = new System.Text.StringBuilder(256);
+
+            System.Text.StringBuilder neededstr = new System.Text.StringBuilder(256);
+            System.Text.StringBuilder neededstrverbose = new System.Text.StringBuilder(256);
 
             int itemsavailable = 0;
 
             for (int i = 0; i < r.Ingredients.Length; i++)
             {
-                string ingredient = r.Ingredients[i].Shortname;
+                MaterialCommodityMicroResourceType ingmct = MaterialCommodityMicroResourceType.GetByFDName(r.Ingredients[i].FDName);  
 
-                int mi = list.FindIndex(x => x.Details.Shortname.Equals(ingredient));
-                int got = (mi >= 0) ? totals[list[mi].Details.FDName] : 0;
-                int sets = got / r.Amount[i];
-
-                max = Math.Min(max, sets);
-
-                int need = r.Amount[i] * tomake;
-
-                itemsavailable += Math.Min(r.Amount[i], got);          // up to amount, how many of these have we got..
-
-                if (got < need)
+                if ( ingmct != null )       // must be known
                 {
-                    string dispshort;
-                    string displong;
-                    if (mi > 0)     // if got one..
+                    var curmct = currentcontents.Find(x => x.Details == ingmct);       // have we got it?
+                    
+                    int got = curmct!=null ? available[curmct.Details.FDName] : 0;      // what we have got
+                    int sets = got / r.Amount[i];
+
+                    max = Math.Min(max, sets);
+
+                    int need = r.Amount[i] * tomake;
+
+                    if (totalneeded != null)
                     {
-                        dispshort = (list[mi].Details.IsEncodedOrManufactured) ? " " + list[mi].Details.Name : list[mi].Details.Shortname;
-                        displong = " " + list[mi].Details.Name;
-                    }
-                    else
-                    {
-                        MaterialCommodityMicroResourceType db = MaterialCommodityMicroResourceType.GetByShortName(ingredient);
-                        dispshort = (db.Category == MaterialCommodityMicroResourceType.CatType.Encoded || db.Category == MaterialCommodityMicroResourceType.CatType.Manufactured) ? " " + db.Name : db.Shortname;
-                        displong = " " + db.Name;
+                        if (totalneeded.TryGetValue(ingmct, out int curneeded))     // update the total amount needed
+                            totalneeded[ingmct] += need;
+                        else
+                            totalneeded[ingmct] = need;
                     }
 
-                    string sshort = (need - got).ToString() + dispshort;
-                    string slong = (need - got).ToString() + " x " + displong + Environment.NewLine;
+                    itemsavailable += Math.Min(r.Amount[i], got);          // up to amount, how many of these have we got..
 
-                    if (needed.Length == 0)
+                    if (got < need)
                     {
-                        needed.Append("Need:" + sshort);
-                        neededlong.Append("Need:" + Environment.NewLine + slong);
-                    }
-                    else
-                    {
-                        needed.Append(", " + sshort);
-                        neededlong.Append(slong);
+                        string sshort = (need - got).ToString() + (ingmct.IsEncodedOrManufactured ? " " + ingmct.Name : ingmct.Shortname);
+                        string slong = (need - got).ToString() + " x " + ingmct.Name + Environment.NewLine;
+
+                        if (neededstr.Length == 0)
+                        {
+                            neededstr.Append("Need:" + sshort);
+                            neededstrverbose.Append("Need:" + Environment.NewLine + slong);
+                        }
+                        else
+                        {
+                            neededstr.Append(", " + sshort);
+                            neededstrverbose.Append(slong);
+                        }
                     }
                 }
             }
@@ -101,28 +105,29 @@ namespace EliteDangerousCore
                 for (int i = 0; i < r.Ingredients.Length; i++)
                 {
                     string ingredient = r.Ingredients[i].Shortname;
-                    int mi = list.FindIndex(x => x.Details.Shortname.Equals(ingredient));
+                    int mi = currentcontents.FindIndex(x => x.Details.Shortname.Equals(ingredient));
                     System.Diagnostics.Debug.Assert(mi != -1);
                     int used = r.Amount[i] * made;
 
                     if ( reducetotals)  // may not want to chain recipes
-                        totals[ list[mi].Details.FDName] -= used;
+                        available[ currentcontents[mi].Details.FDName] -= used;
 
-                    string dispshort = (list[mi].Details.IsEncodedOrManufactured) ? " " + list[mi].Details.Name : list[mi].Details.Shortname;
-                    string displong = " " + list[mi].Details.Name;
+                    string dispshort = (currentcontents[mi].Details.IsEncodedOrManufactured) ? " " + currentcontents[mi].Details.Name : currentcontents[mi].Details.Shortname;
+                    string displong = " " + currentcontents[mi].Details.Name;
 
                     usedstrshort.AppendPrePad(used.ToString() + dispshort, ", ");
                     usedstrlong.AppendPrePad(used.ToString() + " x " + displong, Environment.NewLine);
                 }
 
-                needed.AppendPrePad("Used: " + usedstrshort.ToString(), ", ");
-                neededlong.Append("Used: " + Environment.NewLine + usedstrlong.ToString());
+                neededstr.AppendPrePad("Used: " + usedstrshort.ToString(), ", ");
+                neededstrverbose.Append("Used: " + Environment.NewLine + usedstrlong.ToString());
             }
 
-            return new Tuple<int, int, string, string,double>(max, made, needed.ToNullSafeString(), neededlong.ToNullSafeString(),itemsavailable*100.0/r.Amounts);
+            return new Tuple<int, int, string, string,double>(max, made, neededstr.ToNullSafeString(), neededstrverbose.ToNullSafeString(),itemsavailable*100.0/r.Amounts);
         }
 
         // return shopping list/count given receipe list, list of current materials.
+        // get rid of..
 
         static public List<Tuple<MaterialCommodityMicroResource,int>> GetShoppingList(List<Tuple<Recipes.Recipe, int>> wantedrecipes, List<MaterialCommodityMicroResource> list)
         {

@@ -23,13 +23,19 @@ namespace EliteDangerousCore.UIEvents
     {
         public UIPosition(DateTime time, bool refresh) : base(UITypeEnum.Position, time, refresh)
         {
+            Location = new Position();
+        }
+        public UIPosition() : base(UITypeEnum.Position, DateTime.UtcNow, false)
+        {
+            Location = new Position();
         }
 
-        public UIPosition(Position value, double head, double planetradius, DateTime time, bool refresh) : this(time, refresh)
+        public UIPosition(Position value, double head, double planetradius, string bodyname, DateTime time, bool refresh) : this(time, refresh)
         {
             Location = value;
             Heading = head;
             PlanetRadius = planetradius;
+            BodyName = bodyname;
         }
 
 
@@ -50,15 +56,18 @@ namespace EliteDangerousCore.UIEvents
 
         public Position Location { get; private set; }
 
-        public const double InvalidValue = -999999;    // change to make it more JSON friendly
+        public const double InvalidValue = -999999;    // change to make it more JSON friendly, must be synchronised with EDStatusReader::InvalidValue
 
         // you MAY not get heading.
 
-        public double Heading { get; private set; }
+        public double Heading { get; private set; } = InvalidValue;
         public bool ValidHeading { get { return Heading != InvalidValue; } }
 
-        public double PlanetRadius { get; private set; }
+        public double PlanetRadius { get; private set; } = InvalidValue;
         public bool ValidRadius { get { return PlanetRadius != InvalidValue; } }
+
+        public string BodyName { get; private set; } = "";  // full body name, incl system
+        public bool ValidBodyName { get { return BodyName.HasChars(); } }
 
         public class Position
         {
