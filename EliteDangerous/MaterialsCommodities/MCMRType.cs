@@ -898,6 +898,7 @@ namespace EliteDangerousCore
             AddCommodityRare("Soontill Relics", ItemType.ConsumerItems, "SoontillRelics");
             AddCommodityRare("Onionhead Alpha Strain", ItemType.Narcotics, "OnionHeadA");
             AddCommodityRare("Onionhead Beta Strain", ItemType.Narcotics, "OnionHeadB");
+            AddCommodityRare("Onionhead Gamma Strain", ItemType.Narcotics, "OnionHeadC");
             AddCommodityRare("Galactic Travel Guide", sv, "GalacticTravelGuide");
             AddCommodityRare("Crom Silver Fesh", ItemType.Narcotics, "AnimalEffigies");
             AddCommodityRare("Shan's Charis Orchid", ItemType.ConsumerItems, "ShansCharisOrchid");

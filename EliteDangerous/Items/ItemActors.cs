@@ -53,6 +53,7 @@ namespace EliteDangerousCore
              { "skimmer", new Actor("Skimmer Drone") },
              { "ps_turretbasemedium02_6m", new Actor("Turret medium 2-6-M") },
              { "ps_turretbasesmall_3m", new Actor("Turret Small 3 M") },
+             { "ps_turretbasemedium_skiff_6m", new Actor("Turret Medium 6 M") },
              { "scout", new Actor("Thargoid Scout") },
              { "scout_q", new Actor("Thargoid Scout (Q)") },
              { "scout_hq", new Actor("Thargoid Scout (HQ)") },
@@ -64,9 +65,21 @@ namespace EliteDangerousCore
              { "planetporte", new Actor("Planet Port") },
              { "planetportf", new Actor("Planet Port") },
              { "planetportg", new Actor("Planet Port") },           // seen g, presuming at least a-f
-             { "megashipdockrehab", new Actor("Mega Ship Prison") },      
-
-
+             { "megashipdockrehab", new Actor("Mega Ship Prison") },
+             { "diamondback_taxi", new Actor("Taxi (Diamondback)") },
+             { "viper_taxi", new Actor("Taxi (Viper)") },
+             { "adder_taxi", new Actor("Taxi (Adder)") },
+             { "oneillcylinder", new Actor("O'Neill Cylinder") },
+             { "outpostcivilian", new Actor("Civilian Outpost") },
+             { "asteroidbase", new Actor("Asteroid Base") },
+             { "unknownsaucer", new Actor("Thargoid") },
+             { "unknownsaucer_f", new Actor("Thargoid") },
+             { "unknownsaucer_h", new Actor("Thargoid") },
+             { "thargon", new Actor("Thargon") },
+             { "coriolis", new Actor("Coriolis Station") },
+             { "carrierdocka", new Actor("Carrier Dock A") },
+             { "carrierdockb", new Actor("Carrier Dock B") },
+             { "missileskimmer", new Actor("Skimmer Missile") },
         };
 
 

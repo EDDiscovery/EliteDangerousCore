@@ -123,6 +123,9 @@ namespace EliteDangerousCore
         // use when an identifier should be a ship
         static public string GetBetterShipName(string inname)
         {
+            if (inname.IsEmpty())
+                return "No Ship Name Given";
+
             ItemData.IModuleInfo i = ItemData.GetShipProperty(inname, ItemData.ShipPropID.Name);
 
             if (i != null)
@@ -139,6 +142,9 @@ namespace EliteDangerousCore
         // use when an identifier could be a ship, an actor or a suit
         static public string GetBetterShipSuitActorName(string inname)
         {
+            if (inname.IsEmpty())
+                return "No Ship/Actor/Suit Name Given";
+
             ItemData.IModuleInfo i = ItemData.GetShipProperty(inname, ItemData.ShipPropID.Name);
 
             if (i != null)
@@ -159,7 +165,7 @@ namespace EliteDangerousCore
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("Unknown Ship/Suit/Actor:" + inname);
+                System.Diagnostics.Debug.WriteLine($"Unknown Ship/Suit/Actor: {{ \"{inname}\", new Actor(\"{inname.SplitCapsWordFull()}\") }},");
                 return inname.SplitCapsWordFull();
             }
         }
@@ -167,6 +173,9 @@ namespace EliteDangerousCore
         // use when you know its a ship
         static public string NormaliseFDShipName(string inname)       
         {
+            if (inname.IsEmpty())
+                return "No Ship Name Given";
+
             ItemData.IModuleInfo i = ItemData.GetShipProperty(inname, ItemData.ShipPropID.FDID);
             if (i != null)
                 return (i as ItemData.ShipInfoString).Value;

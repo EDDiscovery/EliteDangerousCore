@@ -33,11 +33,13 @@ namespace EliteDangerousCore
                     if (node.SurfaceFeatures == null)
                         node.SurfaceFeatures = new List<IBodyFeature>();
 
-                    var existingnode = node.SurfaceFeatures.Find(x => x.Name == je.Name);       // see if we have another settlement with this name (Note touchdowns get name "Touchdown bodyname @ UTC")
+                    // see if we have another settlement with this name (Note touchdowns get name "Touchdown bodyname @ UTC")
+
+                    var existingnode = node.SurfaceFeatures.Find(x => x.Name == je.Name);      
 
                     if (existingnode != null)       // already seen this
                     {
-                        if (je.Latitude.HasValue && je.Longitude.HasValue)      // may have changed lat
+                        if (je.HasLatLong && existingnode.HasLatLong)      // bug in 16.1 - must both have value to make a call on changing the lat/long
                         {
                             if (System.Math.Abs(existingnode.Latitude.Value - je.Latitude.Value) > 0.01 || System.Math.Abs(existingnode.Longitude.Value - je.Longitude.Value) > 0.01)
                             {
@@ -51,11 +53,13 @@ namespace EliteDangerousCore
                             }
                         }
                     }
-                    else
+                    else 
                     {
-                        existingnode = node.FindSurfaceFeatureNear(je.Latitude, je.Longitude);      // see if we have a record of it due to position
+                        // if we have lat long, lets see if we have a touchdown position record near it
+                        // this handles je not having lat/long
+                        existingnode = node.FindSurfaceFeatureNear(je.Latitude, je.Longitude);
 
-                        if (existingnode != null && existingnode is JournalTouchdown)             // okay we touched down near it, lets remove the touchdown and keep the approach
+                        if (existingnode is JournalTouchdown)             // okay we touched down near it, lets remove the touchdown and keep the approach
                         {
                             //System.Diagnostics.Debug.WriteLine($"Starscan approach settlement touchdown removal {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude}");
                             node.SurfaceFeatures.Remove(existingnode);
@@ -89,6 +93,7 @@ namespace EliteDangerousCore
             {
                 lock (node)
                 {
+                    // this handles je not having lat/long..
                     var existingibf = node.FindSurfaceFeatureNear(je.Latitude, je.Longitude);
 
                     if (existingibf == null)
@@ -108,6 +113,7 @@ namespace EliteDangerousCore
                     else if ( existingibf is JournalTouchdown )     // touchdown, after this touchdown
                     {
                         //System.Diagnostics.Debug.WriteLine($"Starscan touchdown near previous touchdown replaced it {existingibf.EventTimeUTC} -> {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude} {je.NearestDestination}");
+                        // update the entry..
                         node.SurfaceFeatures[node.SurfaceFeatures.IndexOf(existingibf)] = je;
                     }
                     else
