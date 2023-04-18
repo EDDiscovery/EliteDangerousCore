@@ -31,20 +31,19 @@ namespace EliteDangerousCore.DB
         // All of these needs the systems DB to be in write mode. Make sure it is
         // and check the system db rebuilding flag before using them - its above this level so can't logically be checked here
 
-        // store single system to DB
-
+        // store systems to DB
         public static long StoreSystems(List<ISystem> systems)
         {
             JArray jlist = new JArray();
 
             foreach (var sys in systems)
             {
-                if (sys.EDSMID > 0 && sys.HasCoordinate)
+                if (sys.HasCoordinate)
                 {
                     JObject jo = new JObject
                     {
                         ["name"] = sys.Name,
-                        ["id"] = sys.EDSMID,
+                        ["id"] = 0,
                         ["date"] = DateTime.UtcNow,
                         ["coords"] = new JObject { ["x"] = sys.X, ["y"] = sys.Y, ["z"] = sys.Z }
                     };

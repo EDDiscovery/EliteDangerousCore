@@ -284,9 +284,7 @@
     <Compile Include="SystemDB\SystemsDatabase.cs" />
     <Compile Include="SystemDB\SystemsDBEDSMRemove.cs" />
     <Compile Include="SystemDB\SystemsDBEDSMStore.cs" />
-    <Compile Include="SystemDB\SystemsDBEDSMSystemAliases.cs" />
     <Compile Include="SystemDB\SystemsDBGetByDistance.cs" />
-    <Compile Include="SystemDB\SystemsDBGetByGrid.cs" />
     <Compile Include="SystemDB\SystemsDBGetLists.cs" />
     <Compile Include="SystemDB\SystemsDBGetStars.cs" />
     <Compile Include="DB\UserDatabase.cs" />

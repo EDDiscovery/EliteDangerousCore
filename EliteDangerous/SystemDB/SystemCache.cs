@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2015 - 2021 EDDiscovery development team
+ * Copyright 2015 - 2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using BaseUtils;
@@ -97,7 +95,7 @@ namespace EliteDangerousCore.DB
 
                     // if found one, and EDSM ID/coords (paranoia), add back to our db so next time we have it
 
-                    if (found != null && found.EDSMID > 0 && found.HasCoordinate)       // if its a good system
+                    if (found != null && found.HasCoordinate)       // if its a good system
                     {
                         SystemsDatabase.Instance.StoreSystems(new List<ISystem> { found });     // won't do anything if rebuilding
                     }
@@ -120,33 +118,18 @@ namespace EliteDangerousCore.DB
             // not found, or not from EDSM, AND we have a database and its not rebuilding
             // see if we can find it in the DB
 
-            if ((found == null || found.Source != SystemSource.FromEDSM) && cn != null && !SystemsDatabase.Instance.RebuildRunning)   
+            if (found == null && cn != null && !SystemsDatabase.Instance.RebuildRunning)    // if not found from cache, and its okay to use the DB
             {
                 //System.Diagnostics.Debug.WriteLine("Look up from DB " + sys.name + " " + sys.id_edsm);
 
                 bool findnameok = find.Name.HasChars() && find.Name != "UnKnown";
                 ISystem dbfound = null;
 
-                if (find.EDSMID > 0)        // if we have an ID, look it up
-                {
-                    dbfound = DB.SystemsDB.FindStar(find.EDSMID,cn);
-
-                    if (dbfound != null && findnameok )      // if we find it, use the find name in the return as the EDSM name may be out of date..
-                        dbfound.Name = find.Name;
-                }
-
-                if (dbfound == null && findnameok)            // if not found but has a good name
+                if (findnameok)            // if not found but has a good name
                     dbfound = DB.SystemsDB.FindStar(find.Name,cn);   // find by name, no wildcards
 
                 if (dbfound == null && find.HasCoordinate)        // finally, not found, but we have a co-ord, find it from the db  by distance
                     dbfound = DB.SystemsDB.GetSystemByPosition(find.X, find.Y, find.Z, cn);
-
-                if (dbfound == null)
-                {
-                    long newid = DB.SystemsDB.FindAlias(find.EDSMID, find.Name , cn);   // is there a named alias in there due to a system being renamed..
-                    if (newid >= 0)
-                        dbfound = DB.SystemsDB.FindStar(newid,cn);  // find it using the new id
-                }
 
                 if (dbfound != null)                            // if we have a good db, go for it
                 {
@@ -197,13 +180,6 @@ namespace EliteDangerousCore.DB
 
             lock(cachelockobject)          // Rob seen instances of it being locked together in multiple star distance threads, we need to serialise access to these two dictionaries
             {                               // Concurrent dictionary no good, they could both be about to add the same thing at the same time and pass the contains test.
-
-                if (find.EDSMID > 0 && systemsByEdsmId.ContainsKey(find.EDSMID))        // add to list
-                {
-                    ISystem s = systemsByEdsmId[find.EDSMID];
-                    foundlist.Add(s);
-                }
-
                 if (systemsByName.ContainsKey(find.Name))            // and all names cached
                 {
                     List<ISystem> s = systemsByName[find.Name];
@@ -513,13 +489,6 @@ namespace EliteDangerousCore.DB
                         AddToCache(i);
                         set.Add(i.Name);
                     }
-
-                    List<ISystem> aliases = DB.SystemsDB.FindAliasWildcard(input);
-                    foreach (var i in aliases)
-                    {
-                        AddToCache(i);
-                        set.Add(i.Name);
-                    }
                 }
 
                 lock (cachelockobject)          // check out the cache object
@@ -553,8 +522,6 @@ namespace EliteDangerousCore.DB
             lock(cachelockobject)
             {
                 //System.Diagnostics.Debug.WriteLine($"SystemCache add {found.Name}");
-                if (found.EDSMID > 0)
-                    systemsByEdsmId[found.EDSMID] = found;  // must be definition the best ID found.. and if the update date of sys is better, its now been updated
 
                 List<ISystem> byname;
 
@@ -564,17 +531,7 @@ namespace EliteDangerousCore.DB
                     //System.Diagnostics.Debug.WriteLine($"Added to cache {found.Name}");
                 }
 
-                int idx = -1;
-
-                if (found.EDSMID > 0)
-                {
-                    idx = byname.FindIndex(e => e.EDSMID == found.EDSMID);
-                }
-
-                if (idx < 0)
-                {
-                    idx = byname.FindIndex(e => e.Xi == found.Xi && e.Yi == found.Yi && e.Zi == found.Zi);
-                }
+                int idx = byname.FindIndex(e => e.Xi == found.Xi && e.Yi == found.Yi && e.Zi == found.Zi);
 
                 if (idx < 0 && orgsys != null)
                 {
@@ -615,7 +572,6 @@ namespace EliteDangerousCore.DB
 
         private static Object cachelockobject = new object();        // so we are agnostic about systemsbyEDSM/Name as the locker
 
-        private static Dictionary<long, ISystem> systemsByEdsmId = new Dictionary<long, ISystem>();
         private static Dictionary<string, List<ISystem>> systemsByName = new Dictionary<string, List<ISystem>>(StringComparer.InvariantCultureIgnoreCase);
 
         private static List<string> AutoCompleteAdditionalList = new List<string>();

@@ -20,8 +20,6 @@ namespace EliteDangerousCore.EDSM
 {
     public class GalacticMapSystem : SystemClass
     {
-        private Regex EDSMIdRegex = new Regex("/system/id/([0-9]+)/");
-
         public GalacticMapObject GalMapObject { get; set; }
 
         public GalacticMapSystem(ISystem sys, GalacticMapObject gmo) : base(sys)
@@ -36,17 +34,6 @@ namespace EliteDangerousCore.EDSM
             this.Y = gmo.Points[0].Y;
             this.Z = gmo.Points[0].Z;
             this.GalMapObject = gmo;
-
-            if (gmo.GalMapUrl != null)
-            {
-                var rematch = EDSMIdRegex.Match(gmo.GalMapUrl);
-
-                long edsmid;
-                if (rematch != null && long.TryParse(rematch.Groups[1].Value, out edsmid))
-                {
-                    this.EDSMID = edsmid;
-                }
-            }
         }
     }
 }

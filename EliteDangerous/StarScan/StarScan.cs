@@ -98,7 +98,7 @@ namespace EliteDangerousCore
             // if we have data for a lookup
             // and node is null, or edsmweblookup is set and we have not done a body lookup 
 
-            if ((sys.EDSMID > 0 || (sys.SystemAddress != null && sys.SystemAddress > 0) || (sys.Name.HasChars())) &&
+            if (((sys.SystemAddress != null && sys.SystemAddress > 0) || (sys.Name.HasChars())) &&
                             (sn == null || (edsmweblookup && !EliteDangerousCore.EDSM.EDSMClass.HasBodyLookupOccurred(sys.Name))))
             {
                 var jl = EliteDangerousCore.EDSM.EDSMClass.GetBodiesList(sys, edsmweblookup); // lookup, with optional web
@@ -138,7 +138,7 @@ namespace EliteDangerousCore
             // if we have data for a lookup
             // and node is null, or edsmweblookup is set and we have not done a body lookup 
 
-            if ((sys.EDSMID > 0 || (sys.SystemAddress != null && sys.SystemAddress > 0) || (sys.Name.HasChars())) && 
+            if (((sys.SystemAddress != null && sys.SystemAddress > 0) || (sys.Name.HasChars())) && 
                             (sn == null || (edsmweblookup && !EliteDangerousCore.EDSM.EDSMClass.HasBodyLookupOccurred(sys.Name))))
             {
                 var jl = await EliteDangerousCore.EDSM.EDSMClass.GetBodiesListAsync(sys, edsmweblookup); // lookup, with optional web

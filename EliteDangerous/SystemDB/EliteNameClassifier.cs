@@ -24,21 +24,22 @@ namespace EliteDangerousCore
         public enum NameType        // describes the NID
         {
             NotSet,         // not set
-            Named,          // Named type in name table.  NameIDNumeric will hold index
-            Numeric,        // numeric name, NameIDNumeric will hold number, NumericDashPos and NumericDigits set to indicate format
+            Named,          // Named type (SOL or HIP-1234) 
+            Numeric,        // numeric name (29282-2902)
             Identifier,     // Pru Eurk CQ-L                                SectorName = sector, StarName = null, L1L2L3 set
             Masscode,       // Pru Eurk CQ-L d                              SectorName = sector, StarName = null, L1L2L3 set, MassCode set
             NValue,         // Pru Eurk CQ-L d2-3 or Pru Eurk CQ-L d2       SectorName = sector, StarName = null, L1L2L3 set, MassCode set, NValue set
             N1ValueOnly     // Pru Eurk CQ-L d2-                            SectorName = sector, StarName = null, L1L2L3 set, MassCode set, NValue set
         };
 
-        public NameType EntryType = NameType.NotSet;
-        public string SectorName = null;    // for string inputs, set always, the sector name (Pru Eurk or HIP) or "NotInSector" (Sol).            For numbers, null
-        public string StarName = null;      // for string inputs, set for HIP type names and non standard names, else                    For numbers, null
-        public uint L1, L2, L3, MassCode, NValue;   // set for standard names
-        public long NameIdNumeric = 0;      // NIndex into name table or numeric name
-        public uint NumericDashPos = 0;     // Numeric Dash position
-        public uint NumericDigits = 0;      // Numeric digits
+        public NameType EntryType { get; set; } = NameType.NotSet;
+        public string SectorName { get; set; } = null;    // for string inputs, set always. Either the sector name (Pru Eurk or survey HIP etc) or "NotInSector" for Named (Sol). For id input, null
+        public string StarName { get; set; } = null;      // for string inputs, set for surveys or non standard names, else null. For id input, null
+        public long NameIdNumeric { get; set; } = 0;      // for string inputs: if its a numeric, value, else 0. For id input, NIndex into name table (for Sol) or numeric name (for 12345=56) else null
+
+        private uint L1, L2, L3, MassCode, NValue;   // set for standard names
+        private uint NumericDashPos = 0;     // Numeric Dash position
+        private uint NumericDigits = 0;      // Numeric digits
 
         private const int StandardPosMarker = 47;   // Standard (L1/Mass/N apply).   47 means its in 6 bytes, fitting within a 6 byte SQL field
         private const int L1Marker = 38;            // Standard: 5 bits 38-42 (1 = A, 26=Z)
@@ -47,26 +48,26 @@ namespace EliteDangerousCore
         private const int MassMarker = 24;          // Standard: 3 bits 24-27 (0=A,7=H)
         private const int NMarker = 0;              // Standard: N2 + N1<<16  
 
-        private const int NumericMarker = 46;       // Numeric. bits 0-35 hold value.  
+        private const int NumericMarker = 46;       // Numeric (HIP 1232-23). bits 0-35 hold value.  
         private const int NumericCountMarker = 42;  // Numeric: 4 bits 42-45 Number of digits in number
         private const int NumericDashMarker = 38;   // Numeric: 4 bits 38-41 position of dash in number (0 = none, 1 = 0 char in, 2 = 1 char in etc) 
         private const long NameIDNumbericMask = 0x3fffffffff;     // 38 bits
 
         public bool IsStandard { get { return EntryType >= NameType.NValue; } }     // meaning L1L2L3 MassCode NValue is set..
-        public bool IsStandardParts { get { return EntryType >= NameType.Identifier; } }
-        public bool IsNamed { get { return EntryType == NameType.Named; } }
-        public bool IsNumeric { get { return EntryType == NameType.Numeric; } }
+        public bool IsStandardParts { get { return EntryType >= NameType.Identifier; } }    // is L1L2L3 is set at least
+        public bool IsNamed { get { return EntryType == NameType.Named; } }     // name, such as Sol
+        public bool IsNumeric { get { return EntryType == NameType.Numeric; } } // numberic, such as HIP1234-33
 
-        public static bool IsIDStandard(ulong id)
+        public static bool IsIDStandard(ulong id)       // if encoded ID a standard masscode type
         {
             return (id & (1UL << StandardPosMarker)) != 0;
         }
-        public static bool IsIDNumeric(ulong id)
+        public static bool IsIDNumeric(ulong id)        // if encoded ID a numeric marker
         {
             return (id & (1UL << NumericMarker)) != 0;
         }
 
-        public ulong ID // get the ID code
+        public ulong ID // get the ID code which goes into the DB in the nameid field
         {
             get
             {
@@ -133,14 +134,14 @@ namespace EliteDangerousCore
             Classify(n);
         }
 
-        public EliteNameClassifier(ulong id)
+        public EliteNameClassifier(ulong id)        // set from DB encoded ID
         {
             Classify(id);
         }
 
-        public void Classify(ulong id)     // classify an ID.
+        public void Classify(ulong id)              // take the ID from the DB and turn it back into parts
         {
-            if (IsIDStandard(id))
+            if (IsIDStandard(id))       // ID has standard L1L2L3 masscode NValues
             {
                 NValue = (uint)(id >> NMarker) & 0xffffff;
                 MassCode = (char)(((id >> MassMarker) & 7));
@@ -150,7 +151,7 @@ namespace EliteDangerousCore
                 EntryType = NameType.NValue;
                 System.Diagnostics.Debug.Assert(L1 < 31 && L2 < 32 && L3 < 32 && NValue < 0xffffff && MassCode < 8);
             }
-            else if (IsIDNumeric(id))
+            else if (IsIDNumeric(id))   // 192929-290
             {
                 NameIdNumeric = (long)(id & NameIDNumbericMask);
                 NumericDashPos = (uint)((id >> NumericDashMarker) & 15);
@@ -159,7 +160,7 @@ namespace EliteDangerousCore
             }
             else
             {
-                NameIdNumeric = (long)(id & NameIDNumbericMask);
+                NameIdNumeric = (long)(id & NameIDNumbericMask);        // set the index into the name table
                 EntryType = NameType.Named;
             }
 

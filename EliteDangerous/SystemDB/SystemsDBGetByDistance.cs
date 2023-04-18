@@ -36,11 +36,6 @@ namespace EliteDangerousCore.DB
                                                         )
 
         {
-            // for comparision, using the grid screener is slower than the xy index. keep code for record
-            // grid screener..  "s.sectorid IN (Select id FROM Sectors sx where sx.gridid IN (" + strinlist + ")) " +
-            //var gridids = GridId.Ids(x - maxdist, x + maxdist, z - maxdist, z + maxdist);       // find applicable grid ids across this range..
-            //var strinlist = string.Join(",", (from x1 in gridids select x1.ToStringInvariant()));     // here we convert using invariant for paranoia sake.
-
             // System.Diagnostics.Debug.WriteLine("Time1 " + BaseUtils.AppTicks.TickCountLap("SDC"));
 
             int mindistint = mindist > 0 ? SystemClass.DoubleToInt(mindist) * SystemClass.DoubleToInt(mindist) : 0;

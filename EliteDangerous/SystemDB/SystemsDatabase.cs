@@ -212,21 +212,6 @@ namespace EliteDangerousCore.DB
             });
         }
 
-        public DateTime GetLastAliasDownloadTime()
-        {
-            return DBRead(db => db.RegisterClass.GetSetting("EDSMAliasLastDownloadTime", DateTime.MinValue));
-        }
-
-        public void SetLastEDSMAliasDownloadTime()
-        {
-            DBWrite(db => db.RegisterClass.PutSetting("EDSMAliasLastDownloadTime", DateTime.UtcNow));
-        }
-
-        public void ForceEDSMAliasFullUpdate()
-        {
-            DBWrite(db => db.RegisterClass.PutSetting("EDSMAliasLastDownloadTime", DateTime.MinValue));
-        }
-
         public int GetEDSMSectorIDNext()
         {
             return DBRead( db => db.RegisterClass.GetSetting("EDSMSectorIDNext", 1));

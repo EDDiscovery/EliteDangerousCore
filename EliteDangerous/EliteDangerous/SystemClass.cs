@@ -140,66 +140,42 @@ namespace EliteDangerousCore
 
         public SystemClass(ISystem sys) : base(sys)
         {
-            this.EDSMID = sys.EDSMID;
             this.Source = sys.Source;
         }
 
         public SystemClass(string name) : base()
         {
             Name = name;
-            Source = SystemSource.Synthesised;
         }
 
         public SystemClass(long? sysaddr, string name) : base()
         {
             Name = name;
             SystemAddress = sysaddr;
-            Source = SystemSource.Synthesised;
         }
         public SystemClass(long? sysaddr, string name, double x, double y, double z) : base()
         {
             Name = name;
             SystemAddress = sysaddr;
             X = x; Y = y; Z = z;
-            Source = SystemSource.Synthesised;
         }
 
-        public SystemClass(string name, long edsmid)
+        public SystemClass(string name, double vx, double vy, double vz, SystemSource src = SystemSource.Synthesised) : base(name, vx, vy, vz)
         {
-            Name = name;
-            EDSMID = edsmid;
-            Source = EDSMID <= 0 ? SystemSource.Synthesised : SystemSource.FromEDSM;
+            Source = src;
         }
 
-        public SystemClass(string name, double vx, double vy, double vz, long edsmid) : base(name, vx, vy, vz)
+        public SystemClass(string name, int xi, int yi, int zi, int gridid, SystemSource src) : base(name,xi,yi,zi,gridid)
         {
-            EDSMID = edsmid;
-            Source = SystemSource.FromEDSM;
+            Source = src;
         }
 
-        public SystemClass(string name, double vx, double vy, double vz) : base(name, vx, vy, vz)
-        {
-            Source = SystemSource.Synthesised;
-        }
-
-        public SystemClass(string name, int xi, int yi, int zi, long edsmid, int gridid = -1) : base(name,xi,yi,zi,gridid)
-        {
-            EDSMID = edsmid;
-            Source = EDSMID <= 0 ? SystemSource.Synthesised : SystemSource.FromEDSM;
-        }
-
-        public long EDSMID { get; set; }
-        public SystemSource Source { get; set; }
+        public SystemSource Source { get; set; }        // default source is Sythesised
 
         public override string ToString()
         {
             return string.Format("{0} @ {1:N1},{2:N1},{3:N1}", Name, X, Y, Z);
         }
 
-        public string ToStringVerbose()
-        {
-            string x = string.Format("{0} @ {1:N1},{2:N1},{3:N1} EDSMID:{4}", Name, X, Y, Z, EDSMID);
-            return x;
-        }
     }
 }

@@ -47,11 +47,9 @@ namespace EliteDangerousCore
 
     public interface ISystem : ISystemBase
     {
-        long EDSMID { get; set; }
         SystemSource Source { get; set; }        // Who made this entry, where did the info come from?
 
         string ToString();
-        string ToStringVerbose();
     }
 
     // useful to pass for isystem comparision of name only

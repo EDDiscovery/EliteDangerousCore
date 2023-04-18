@@ -35,7 +35,7 @@ namespace EliteDangerousCore.DB
 
             if (ec.IsNamed)
             {
-                // needs index on sectorid [nameid]. Relies on Names.id being the edsmid.   
+                // needs index on sectorid [nameid]. Relies on Names.id being the systems.edsmid
 
                 using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
                                                     "s.edsmid IN (Select id FROM Names WHERE name=@p1) AND s.sectorid IN (Select id FROM Sectors c WHERE c.name=@p2)",
@@ -77,35 +77,6 @@ namespace EliteDangerousCore.DB
                 }
             }
 
-            return null;
-        }
-
-        ///////////////////////////////////////// By EDSMID
-
-        internal static ISystem FindStar(long edsmid)
-        {
-            return SystemsDatabase.Instance.DBRead(cn => FindStar(edsmid, cn));
-        }
-
-        internal static ISystem FindStar(long edsmid, SQLiteConnectionSystem cn)
-        {
-            // No indexes needed- edsmid is primary key
-
-            using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
-                                                "s.edsmid=@p1",
-                                                new Object[] { edsmid },
-                                                joinlist: MakeSystemQueryNamedJoinList))
-            {
-                //System.Diagnostics.Debug.WriteLine( cn.ExplainQueryPlanString(selectSysCmd));
-
-                using (DbDataReader reader = selectSysCmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        return MakeSystem(reader); 
-                    }
-                }
-            }
             return null;
         }
 
@@ -346,7 +317,7 @@ namespace EliteDangerousCore.DB
         {
             EliteNameClassifier ec = new EliteNameClassifier(nid);
             ec.SectorName = reader.GetString(4);
-            return new SystemClass(ec.ToString(), reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt64(3), reader.GetInt32(5));
+            return new SystemClass(ec.ToString(), reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(5), SystemSource.FromEDSM);
         }
 
         //                                     0   1   2   3        4      5        6        7      8            
@@ -361,7 +332,7 @@ namespace EliteDangerousCore.DB
             if (ec.IsNamed)
                 ec.StarName = reader.GetString(7);
 
-            return new SystemClass(ec.ToString(), reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt64(3), reader.GetInt32(5));
+            return new SystemClass(ec.ToString(), reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(5), SystemSource.FromEDSM);
         }
 
         #endregion
