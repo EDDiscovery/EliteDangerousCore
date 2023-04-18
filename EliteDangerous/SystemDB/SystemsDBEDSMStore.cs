@@ -460,8 +460,8 @@ namespace EliteDangerousCore.DB
 
         #region Internal Vars and Classes
 
-        private static int GetNextSectorID() { return SystemsDatabase.Instance.GetEDSMSectorIDNext(); }
-        private static void PutNextSectorID(int v) { SystemsDatabase.Instance.SetEDSMSectorIDNext(v); }  
+        private static int GetNextSectorID() { return SystemsDatabase.Instance.GetSectorIDNext(); }
+        private static void PutNextSectorID(int v) { SystemsDatabase.Instance.SetSectorIDNext(v); }  
 
         private class SectorCache
         {
