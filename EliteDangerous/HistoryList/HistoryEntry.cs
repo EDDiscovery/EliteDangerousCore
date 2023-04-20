@@ -139,11 +139,7 @@ namespace EliteDangerousCore
 
                 if (jl != null && jl.HasCoordinate)       // LAZY LOAD IF it has a co-ord.. the front end will when it needs it
                 {
-                    newsys = new SystemClass(jl.StarSystem, jl.StarPos.X, jl.StarPos.Y, jl.StarPos.Z, jl.StarPosFromEDSM ? SystemSource.FromEDSM : SystemSource.FromJournal)
-                    {
-                        SystemAddress = jl.SystemAddress,
-                    };
-
+                    newsys = new SystemClass(jl.StarSystem, jl.SystemAddress, jl.StarPos.X, jl.StarPos.Y, jl.StarPos.Z, jl.StarPosFromEDSM ? SystemSource.FromEDSM : SystemSource.FromJournal);
                     SystemCache.AddSystemToCache(newsys);        // this puts it in the cache
 
                     // If it was a new system, pass the coords back to the StartJump

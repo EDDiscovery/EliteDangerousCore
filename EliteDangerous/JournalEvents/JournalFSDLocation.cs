@@ -102,6 +102,7 @@ namespace EliteDangerousCore.JournalEvents
         protected JournalLocOrJump(DateTime utc, ISystem sys, JournalTypeEnum jtype, bool edsmsynced ) : base(utc, jtype, edsmsynced)
         {
             StarSystem = sys.Name;
+            SystemAddress = sys.SystemAddress;
             StarPos = new EMK.LightGeometry.Vector3((float)sys.X, (float)sys.Y, (float)sys.Z);
         }
 
@@ -334,7 +335,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void AddStarScan(StarScan s, ISystem system)
         {
-            s.AddLocation(new SystemClass(SystemAddress, StarSystem, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
+            s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }
 
         public void UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrier)
@@ -417,7 +418,7 @@ namespace EliteDangerousCore.JournalEvents
         }
         public void AddStarScan(StarScan s, ISystem system)
         {
-            s.AddLocation(new SystemClass(SystemAddress, StarSystem, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
+            s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }
 
 
@@ -519,7 +520,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string SummaryName(ISystem sys) { return string.Format("Jump to {0}".T(EDCTx.JournalFSDJump_Jumpto), StarSystem); }
         public void AddStarScan(StarScan s, ISystem system)
         {
-            s.AddLocation(new SystemClass(SystemAddress, StarSystem, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
+            s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }
 
         public override void FillInformation(out string info, out string detailed)
@@ -707,7 +708,7 @@ namespace EliteDangerousCore.JournalEvents
         public void AddStarScan(StarScan s, ISystem system)
         {
             if ( IsHyperspace )
-                s.AddLocation(new SystemClass(SystemAddress, StarSystem));      // add so there is placeholder
+                s.AddLocation(new SystemClass(StarSystem,SystemAddress));      // add so there is placeholder
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2015-2021 EDDiscovery development team
+ * Copyright 2015-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using SQLLiteExtensions;
@@ -27,7 +25,13 @@ namespace EliteDangerousCore.DB
         {
         }
 
-        public static SystemsDatabase Instance { get; } = new SystemsDatabase();        //STATIC constructor, make once at start of program
+        public static SystemsDatabase Instance { get; private set; } = new SystemsDatabase();        //STATIC constructor, make once at start of program
+
+        public static void Reset()
+        {
+            Instance?.Stop();
+            Instance = new SystemsDatabase();
+        }
 
         // will throw on error, cope with it.
         public void Initialize()
@@ -58,8 +62,6 @@ namespace EliteDangerousCore.DB
         }
 
         const string TempTablePostfix = "temp"; // postfix for temp tables
-        //const string DebugOutfile = @"c:\code\edsm\Jsonprocess.lst";        // null off
-        const string DebugOutfile = null;
 
         public bool RebuildRunning { get; private set; } = true;                // we are rebuilding until we have the system db table in there
 
@@ -68,7 +70,9 @@ namespace EliteDangerousCore.DB
             return new SQLiteConnectionSystem();
         }
 
-        public long UpgradeSystemTableFromFile(string filename, bool[] gridids, Func<bool> cancelRequested, Action<string> reportProgress)
+        // this deletes the current DB data, reloads from the file, and recreates the indexes etc
+
+        public long MakeSystemTableFromFile(string filename, bool[] gridids, Func<bool> cancelRequested, Action<string> reportProgress, string debugoutputfile = null)
         {
             DBWrite( action: conn =>
             {
@@ -77,7 +81,7 @@ namespace EliteDangerousCore.DB
             });
 
             DateTime maxdate = DateTime.MinValue;
-            long updates = SystemsDB.ParseEDSMJSONFile(filename, gridids, ref maxdate, cancelRequested, reportProgress, TempTablePostfix, presumeempty: true, debugoutputfile: DebugOutfile);
+            long updates = SystemsDB.ParseJSONFile(filename, gridids, ref maxdate, cancelRequested, reportProgress, TempTablePostfix, true, debugoutputfile);
 
             if (updates > 0)
             {
@@ -128,11 +132,12 @@ namespace EliteDangerousCore.DB
             RebuildRunning = false;
         }
 
-        public long StoreSystems( List<ISystem> systems)            // dynamically update db
+        public long StoreSystems( IEnumerable<ISystem> systems)            // dynamically update db
         {
             long count = 0;
             if (!RebuildRunning)
             {
+                System.Diagnostics.Debug.WriteLine("********************** STORE SYSTEMS NEEDS REWORKING");
                 count = SystemsDB.StoreSystems(systems);
             }
 
@@ -177,7 +182,15 @@ namespace EliteDangerousCore.DB
 
         public bool SetEDSMGalMapLast(DateTime value)
         {
-            return DBWrite( (db) => db.RegisterClass.PutSetting("EDSMGalMapLast", value));
+            return DBWrite((db) => db.RegisterClass.PutSetting("EDSMGalMapLast", value));
+        }
+        public bool SetDBSource(string name)
+        {
+            return DBWrite((db) => db.RegisterClass.PutSetting("DBSource", name));
+        }
+        public string GetDBSource()
+        {
+            return DBRead((db) => db.RegisterClass.GetSetting("DBSource", "EDSM"));
         }
 
         #region Time markers

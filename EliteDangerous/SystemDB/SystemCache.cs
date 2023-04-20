@@ -87,7 +87,7 @@ namespace EliteDangerousCore.DB
                 found = SystemsDatabase.Instance.DBRead(conn => FindSystemInCacheDB(find, conn));
 
                 // if not found, checking edsm, and its a good name
-
+#if !TESTHARNESS
                 if (found == null && checkedsm && find.Name.HasChars() && find.Name != "UnKnown")
                 {
                     EDSM.EDSMClass edsm = new EDSM.EDSMClass();
@@ -97,9 +97,10 @@ namespace EliteDangerousCore.DB
 
                     if (found != null && found.HasCoordinate)       // if its a good system
                     {
-                        SystemsDatabase.Instance.StoreSystems(new List<ISystem> { found });     // won't do anything if rebuilding
+                      //  SystemsDatabase.Instance.StoreSystems(new List<ISystem> { found });     // won't do anything if rebuilding
                     }
                 }
+#endif
             }
 
             return found;
@@ -201,8 +202,8 @@ namespace EliteDangerousCore.DB
             var found = FindCachedSystem(system);
 
             // Existing finds with journal or edsm override the add..
-            // if not found or found is not journal/edsm, AND the system has coord and name, add
-            if ((found == null || (found.Source != SystemSource.FromJournal && found.Source != SystemSource.FromEDSM)) && system.HasCoordinate == true && system.Name.HasChars())
+            // if not found or found is synthesised, AND the system has coord and name, add
+            if ((found == null || (found.Source == SystemSource.Synthesised)) && system.HasCoordinate == true && system.Name.HasChars())
             {
                 AddToCache(system, found);
             }

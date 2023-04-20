@@ -282,8 +282,8 @@
     <Compile Include="SystemDB\SystemCache.cs" />
     <Compile Include="SystemDB\SystemGridID.cs" />
     <Compile Include="SystemDB\SystemsDatabase.cs" />
-    <Compile Include="SystemDB\SystemsDBEDSMRemove.cs" />
-    <Compile Include="SystemDB\SystemsDBEDSMStore.cs" />
+    <Compile Include="SystemDB\SystemsDBRemove.cs" />
+    <Compile Include="SystemDB\SystemsDBStore.cs" />
     <Compile Include="SystemDB\SystemsDBGetByDistance.cs" />
     <Compile Include="SystemDB\SystemsDBGetLists.cs" />
     <Compile Include="SystemDB\SystemsDBGetStars.cs" />

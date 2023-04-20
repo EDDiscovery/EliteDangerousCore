@@ -21,8 +21,9 @@ namespace EliteDangerousCore
     public enum SystemSource                // Who made the information?
     {
         Synthesised,
-        FromEDSM,
+        FromDB,
         FromJournal,
+        FromEDSM,
     }
 
     public interface ISystemBase : IEquatable<ISystemBase>
@@ -37,6 +38,7 @@ namespace EliteDangerousCore
         bool HasCoordinate { get; }
         int GridID { get; set; }
         long? SystemAddress { get; set; }
+        long? EDSMID { get; set; }      // if sourced from EDSM DB or web
 
         double Distance(ISystemBase other);
         double Distance(double x, double y, double z);
@@ -48,6 +50,7 @@ namespace EliteDangerousCore
     public interface ISystem : ISystemBase
     {
         SystemSource Source { get; set; }        // Who made this entry, where did the info come from?
+        EDStar MainStarType { get; set; }        // some DB hold main star type..  will be EDStar.Unknown if not known
 
         string ToString();
     }

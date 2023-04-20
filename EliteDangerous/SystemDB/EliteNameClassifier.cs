@@ -35,7 +35,7 @@ namespace EliteDangerousCore
         public NameType EntryType { get; set; } = NameType.NotSet;
         public string SectorName { get; set; } = null;    // for string inputs, set always. Either the sector name (Pru Eurk or survey HIP etc) or "NotInSector" for Named (Sol). For id input, null
         public string StarName { get; set; } = null;      // for string inputs, set for surveys or non standard names, else null. For id input, null
-        public long NameIdNumeric { get; set; } = 0;      // for string inputs: if its a numeric, value, else 0. For id input, NIndex into name table (for Sol) or numeric name (for 12345=56) else null
+        public ulong NameIdNumeric { get; set; } = 0;      // for string inputs: if its a numeric, value, else 0. For id input, NIndex into name table (for Sol) or numeric name (for 12345=56) else null
 
         private uint L1, L2, L3, MassCode, NValue;   // set for standard names
         private uint NumericDashPos = 0;     // Numeric Dash position
@@ -153,14 +153,14 @@ namespace EliteDangerousCore
             }
             else if (IsIDNumeric(id))   // 192929-290
             {
-                NameIdNumeric = (long)(id & NameIDNumbericMask);
+                NameIdNumeric = (ulong)(id & NameIDNumbericMask);
                 NumericDashPos = (uint)((id >> NumericDashMarker) & 15);
                 NumericDigits = (uint)((id >> NumericCountMarker) & 15);
                 EntryType = NameType.Numeric;
             }
             else
             {
-                NameIdNumeric = (long)(id & NameIDNumbericMask);        // set the index into the name table
+                NameIdNumeric = (ulong)(id & NameIDNumbericMask);        // set the index into the name table
                 EntryType = NameType.Named;
             }
 
@@ -245,14 +245,14 @@ namespace EliteDangerousCore
                                                 "SSTGLMC", "StKM", "UGCS"};
 
                 int dashpos = 0;
-                long? namenum = null;
+                ulong? namenum = null;
                 int countof = 0;
 
                 if (nameparts.Length >= 2)     // see if last is a number or number-number
                 {
                     dashpos = nameparts.Last().IndexOf('-');
                     string num = (dashpos >= 0 && nameparts.Last().Count(x => x == '-') == 1) ? nameparts.Last().Replace("-", "") : nameparts.Last();
-                    namenum = num.InvariantParseLongNull();
+                    namenum = num.InvariantParseULongNull();
                     countof = num.Length;
 
                     if (namenum.HasValue && namenum.Value > NameIDNumbericMask)

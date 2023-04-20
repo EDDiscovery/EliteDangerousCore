@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2015-2021 EDDiscovery development team
+ * Copyright 2015-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using System;
@@ -109,7 +107,8 @@ namespace EliteDangerousCore.DB
         // it returns a too long vector, for speed reasons
         // may return zero entries with empty arrays if nothing is present
         // may return zero/null if system DB is being built
-        public static int GetSystemList<V>(float x, float y, float z, float blocksize, ref string[] names, ref V[] vectors, Func<int, int, int, V> tovect,
+        // tovect is used to transform x,y,z,star type to a V type
+        public static int GetSystemList<V>(float x, float y, float z, float blocksize, ref string[] names, ref V[] vectors, Func<int, int, int, EDStar, V> tovect,
                                             Func<V, string, string> additionaltext, int chunksize = 10000)
         {
             string[] namesout = null;
@@ -130,7 +129,8 @@ namespace EliteDangerousCore.DB
         }
 
 
-        public static int GetSystemList<V>(SQLiteConnectionSystem cn, float x, float y, float z, float blocksize, ref string[] names, ref V[] vectors, Func<int, int, int, V> tovect,
+        public static int GetSystemList<V>(SQLiteConnectionSystem cn, float x, float y, float z, float blocksize, ref string[] names, ref V[] vectors, 
+                                                Func<int, int, int, EDStar, V> tovect,
                                                 Func<V, string, string> additionaltext, int chunksize )
         {
             names = new string[chunksize];
@@ -138,7 +138,7 @@ namespace EliteDangerousCore.DB
             int fillpos = 0;
 
             using (DbCommand cmd = cn.CreateSelect("Systems s",
-                                                    outparas: "s.x, s.y, s.z, c.name, s.nameid, n.Name",
+                                                    outparas: "s.x, s.y, s.z, c.name, s.nameid, n.Name, s.info",
                                                     where: "s.x>=@p1 AND s.x<@p2 AND s.y>=@p3 AND s.y<@p4 AND s.z>=@p5 AND s.z<@p6",
                                                     paras: new Object[] {   SystemClass.DoubleToInt(x), SystemClass.DoubleToInt(x+blocksize),
                                                                             SystemClass.DoubleToInt(y), SystemClass.DoubleToInt(y+blocksize),
@@ -166,8 +166,9 @@ namespace EliteDangerousCore.DB
                         int sx = reader.GetInt32(0);
                         int sy = reader.GetInt32(1);
                         int sz = reader.GetInt32(2);
+                        EDStar startype = reader.IsDBNull(6) ? EDStar.Unknown : (EDStar)reader.GetInt32(6);
 
-                        vectors[fillpos] = tovect(sx, sy, sz);
+                        vectors[fillpos] = tovect(sx, sy, sz, startype);
 
                         EliteNameClassifier ec = new EliteNameClassifier((ulong)reader.GetInt64(4));
                         ec.SectorName = reader.GetString(3);

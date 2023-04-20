@@ -42,6 +42,7 @@ namespace EliteDangerousCore
 
         public int GridID { get; set; }
         public long? SystemAddress { get; set; }
+        public long? EDSMID { get; set; }
 
         public SystemClassBase()
         {
@@ -148,33 +149,51 @@ namespace EliteDangerousCore
             Name = name;
         }
 
-        public SystemClass(long? sysaddr, string name) : base()
+        // with no co-ords
+        public SystemClass(string name, long? systemaddress, SystemSource src = SystemSource.Synthesised) : base()
         {
             Name = name;
-            SystemAddress = sysaddr;
-        }
-        public SystemClass(long? sysaddr, string name, double x, double y, double z) : base()
-        {
-            Name = name;
-            SystemAddress = sysaddr;
-            X = x; Y = y; Z = z;
+            SystemAddress = systemaddress;
         }
 
-        public SystemClass(string name, double vx, double vy, double vz, SystemSource src = SystemSource.Synthesised) : base(name, vx, vy, vz)
+        // with co-ords
+        public SystemClass(string name, long? systemaddress, double vx, double vy, double vz, SystemSource src = SystemSource.Synthesised) : base(name, vx, vy, vz)
         {
+            SystemAddress = systemaddress;
+        }
+
+        // used by EDSMClass
+        public SystemClass(string name, long edsmid, long? systemaddress, SystemSource src) : base()
+        {
+            Name = name;
+            EDSMID = edsmid;
+            SystemAddress = systemaddress;
             Source = src;
         }
 
-        public SystemClass(string name, int xi, int yi, int zi, int gridid, SystemSource src) : base(name,xi,yi,zi,gridid)
+        // used by EDSMClass
+        public SystemClass(string name, long edsmid, long? systemaddress, double vx, double vy, double vz, SystemSource src) : base(name, vx, vy, vz)
         {
+            EDSMID = edsmid;
+            SystemAddress = systemaddress;
+            Source = src;
+        }
+
+        // used by StoreDB
+        public SystemClass(string name, int xi, int yi, int zi, long? sysaddress, long? edsmid, int gridid, EDStar startype, SystemSource src) : base(name, xi, yi, zi, gridid)
+        {
+            SystemAddress = sysaddress;
+            EDSMID = edsmid;
+            MainStarType = startype;
             Source = src;
         }
 
         public SystemSource Source { get; set; }        // default source is Sythesised
+        public EDStar MainStarType { get; set; }
 
         public override string ToString()
         {
-            return string.Format("{0} @ {1:N1},{2:N1},{3:N1}", Name, X, Y, Z);
+            return string.Format("{0} @ {1:N1},{2:N1},{3:N1}: {4}, {5}", Name, X, Y, Z, EDSMID, SystemAddress);
         }
 
     }

@@ -57,7 +57,7 @@ namespace EliteDangerousCore
             List<ISystem> routeSystems = new List<ISystem>();
             System.Diagnostics.Debug.WriteLine("From " + FromSystem + " to  " + ToSystem + ", using metric " + RouteMethod.ToString());
 
-            routeSystems.Add(new SystemClass(FromSystem, Coordsfrom.X, Coordsfrom.Y, Coordsfrom.Z, SystemSource.Synthesised));
+            routeSystems.Add(new SystemClass(FromSystem, null, Coordsfrom.X, Coordsfrom.Y, Coordsfrom.Z));
 
             info(new ReturnInfo(FromSystem, double.NaN, Coordsfrom,double.NaN,double.NaN,routeSystems[0]));
 
@@ -123,7 +123,7 @@ namespace EliteDangerousCore
 
             } while ( !StopPlotter);
 
-            routeSystems.Add(new SystemClass(ToSystem, Coordsto.X, Coordsto.Y, Coordsto.Z));
+            routeSystems.Add(new SystemClass(ToSystem, null, Coordsto.X, Coordsto.Y, Coordsto.Z));
 
             actualdistance += Point3D.DistanceBetween(curpos, Coordsto);
 

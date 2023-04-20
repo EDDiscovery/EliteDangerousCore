@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2015 - 2021 EDDiscovery development team
+ * Copyright 2015 - 2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using QuickJSON;
@@ -24,29 +22,42 @@ using System.IO.Compression;
 
 namespace EliteDangerousCore.DB
 {
+    // EDSM Store - db.edsmid contains edsmid, and db.info is null
+    // Spansh Store - db.edsmid contains the system address, and db.info is non null
+
     public partial class SystemsDB
     {
         #region Table Update from JSON FILE
 
-        // All of these needs the systems DB to be in write mode. Make sure it is
-        // and check the system db rebuilding flag before using them - its above this level so can't logically be checked here
-
-        // store systems to DB
-        public static long StoreSystems(List<ISystem> systems)
+        // store systems to DB.  Data is checked against the mode. Verified april 23 with a load against an empty db in spansh and edsm mode
+        public static long StoreSystems(IEnumerable<ISystem> systems)
         {
             JArray jlist = new JArray();
 
+            string currentdb = SystemsDatabase.Instance.GetDBSource();
+            bool spansh = currentdb.Equals("SPANSH");
+
             foreach (var sys in systems)
             {
-                if (sys.HasCoordinate)
+                // so we need coords, and if edsm db, we need an edsm id, or for spansh we need a system address
+                if (sys.HasCoordinate && ((!spansh && sys.EDSMID.HasValue) || (spansh && sys.SystemAddress.HasValue)))  
                 {
                     JObject jo = new JObject
                     {
                         ["name"] = sys.Name,
-                        ["id"] = 0,
-                        ["date"] = DateTime.UtcNow,
                         ["coords"] = new JObject { ["x"] = sys.X, ["y"] = sys.Y, ["z"] = sys.Z }
                     };
+
+                    if ( spansh )       // we format either for a spansh DB or an EDSM db
+                    {
+                        jo["id64"] = sys.SystemAddress.Value;
+                        jo["updateTime"] = DateTime.UtcNow;
+                    }
+                    else
+                    {
+                        jo["id"] = sys.EDSMID.Value;
+                        jo["date"] = DateTime.UtcNow;
+                    }
 
                     jlist.Add(jo);
                 }
@@ -55,13 +66,15 @@ namespace EliteDangerousCore.DB
             if ( jlist.Count>0)
             { 
                 DateTime unusedate = DateTime.UtcNow;
-                // we need rewrite access, and run it with the cn passed to us
-                return SystemsDB.ParseEDSMJSONString(jlist.ToString(), null, ref unusedate, () => false, (t) => { }, "");
+                return SystemsDB.ParseJSONString(jlist.ToString(), null, ref unusedate, () => false, (t) => { }, "");
             }
 
             return 0;
         }
-        public static long ParseEDSMJSONFile(string filename, bool[] grididallow, ref DateTime date, Func<bool> cancelRequested, Action<string> reportProgress, string tableposfix, bool presumeempty = false, string debugoutputfile = null)
+
+        public static long ParseJSONFile(string filename, bool[] grididallow, ref DateTime date, 
+                                             Func<bool> cancelRequested, Action<string> reportProgress, 
+                                             string tableposfix, bool presumeempty = false, string debugoutputfile = null)
         {
             // if the filename ends in .gz, then decompress it on the fly
             if (filename.EndsWith("gz"))
@@ -72,7 +85,7 @@ namespace EliteDangerousCore.DB
                     {
                         using (StreamReader sr = new StreamReader(gz))
                         {
-                            return ParseEDSMJSON(sr, grididallow, ref date, cancelRequested, reportProgress, tableposfix, presumeempty, debugoutputfile);
+                            return ParseJSONTextReader(sr, grididallow, ref date, cancelRequested, reportProgress, tableposfix, presumeempty, debugoutputfile);
                         }
                     }
                 }
@@ -80,19 +93,19 @@ namespace EliteDangerousCore.DB
             else
             {
                 using (StreamReader sr = new StreamReader(filename))         // read directly from file..
-                    return ParseEDSMJSON(sr, grididallow, ref date, cancelRequested, reportProgress, tableposfix, presumeempty, debugoutputfile);
+                    return ParseJSONTextReader(sr,  grididallow, ref date, cancelRequested, reportProgress, tableposfix, presumeempty, debugoutputfile);
             }
         }
 
-        public static long ParseEDSMJSONString(string data, bool[] grididallow, ref DateTime date, Func<bool> cancelRequested, Action<string> reportProgress, string tableposfix, bool presumeempty = false, string debugoutputfile = null)
+        public static long ParseJSONString(string data, bool[] grididallow, ref DateTime date, Func<bool> cancelRequested, Action<string> reportProgress, string tableposfix, bool presumeempty = false, string debugoutputfile = null)
         {
             using (StringReader sr = new StringReader(data))         // read directly from file..
-                return ParseEDSMJSON(sr, grididallow, ref date, cancelRequested, reportProgress, tableposfix, presumeempty, debugoutputfile);
+                return ParseJSONTextReader(sr,  grididallow, ref date, cancelRequested, reportProgress, tableposfix, presumeempty, debugoutputfile);
         }
 
         // set tempostfix to use another set of tables
 
-        public static long ParseEDSMJSON(TextReader textreader, 
+        public static long ParseJSONTextReader(TextReader textreader,
                                         bool[] grididallowed,       // null = all, else grid bool value
                                         ref DateTime maxdate,       // updated with latest date
                                         Func<bool> cancelRequested,
@@ -133,13 +146,13 @@ namespace EliteDangerousCore.DB
 
                     int recordstostore = ProcessBlock(cache, enumerator, grididallowed, tablesareempty, tablepostfix, ref maxdate, ref nextsectorid, out bool jr_eof);
 
-                    System.Diagnostics.Debug.WriteLine($"{Environment.TickCount} Process {BaseUtils.AppTicks.TickCountLap("L1")}  {updates}");
+                    System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.TickCountLap("L1")} Process Block {recordstostore} {maxdate}");
 
                     if (recordstostore > 0)
                     {
                         updates += StoreNewEntries(cache, tablepostfix, sw);
 
-                        reportProgress?.Invoke("EDSM Star database updated " + recordstostore + " total so far " + updates);
+                        reportProgress?.Invoke("Star database updated " + recordstostore + " total so far " + updates);
                     }
 
                     if (jr_eof)
@@ -150,7 +163,7 @@ namespace EliteDangerousCore.DB
             }
             catch ( Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("Exception during EDSM parse " + ex);
+                System.Diagnostics.Debug.WriteLine("Exception during SystemDB parse " + ex);
             }
             finally
             {
@@ -160,8 +173,8 @@ namespace EliteDangerousCore.DB
                 }
             }
 
-            System.Diagnostics.Debug.WriteLine("Process " + BaseUtils.AppTicks.TickCountLap("L1") + "   " + updates);
-            reportProgress?.Invoke("EDSM Star database updated " + updates);
+            System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.TickCountLap("L1")} End Process {updates} maxdate {maxdate} maxsec {nextsectorid}");
+            reportProgress?.Invoke("Star database updated " + updates);
 
             PutNextSectorID(nextsectorid);    // and store back
 
@@ -171,7 +184,7 @@ namespace EliteDangerousCore.DB
         #endregion
 
         #region Table Update Helpers
-        private static int ProcessBlock(SectorCache cache,
+        private static int ProcessBlock( SectorCache cache,
                                          IEnumerator<JToken> enumerator,
                                          bool[] grididallowed,       // null = all, else grid bool value
                                          bool tablesareempty,
@@ -201,14 +214,15 @@ namespace EliteDangerousCore.DB
 
                 if ( t.IsObject )                   // if start of object..
                 {
-                    EDSMFileEntry d = new EDSMFileEntry();
+                    StarFileEntry d = new StarFileEntry();
 
-                    if (d.Deserialize(enumerator) && d.id >= 0 && d.name.HasChars() && d.z != int.MinValue)     // if we have a valid record
+                    // if we have a valid record
+                    if (d.Deserialize(enumerator))     
                     {
                         int gridid = GridId.Id128(d.x, d.z);
                         if (grididallowed == null || (grididallowed.Length > gridid && grididallowed[gridid]))    // allows a null or small grid
                         {
-                            TableWriteData data = new TableWriteData() { edsm = d, classifier = new EliteNameClassifier(d.name), gridid = gridid };
+                            TableWriteData data = new TableWriteData() { starentry = d, classifier = new EliteNameClassifier(d.name), gridid = gridid };
 
                             // try and add data to sector
                             // if sector is not in cache, do not make it, return false, instead add to entries
@@ -221,6 +235,10 @@ namespace EliteDangerousCore.DB
 
                             recordstostore++;
                         }
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Failed to deserialise");
                     }
 
                     if (--Limit == 0)
@@ -274,8 +292,8 @@ namespace EliteDangerousCore.DB
         private static bool TryCreateNewUpdate(SectorCache cache, TableWriteData data, bool tablesareempty, ref DateTime maxdate, ref int nextsectorid, 
                                                 out Sector t, bool makenewiftablesarepresent = false)
         {
-            if (data.edsm.date > maxdate)                                   // for all, record last recorded date processed
-                maxdate = data.edsm.date;
+            if (data.starentry.date > maxdate)                                   // for all, record last recorded date processed
+                maxdate = data.starentry.date;
 
             Sector prev = null;
 
@@ -310,21 +328,21 @@ namespace EliteDangerousCore.DB
                 }
             }
 
-            if (t.Id == -1)   // if unknown sector ID..
+            if (t.SId == -1)   // if unknown sector ID..
             {
                 if (tablesareempty)     // if tables are empty, we can just presume its id
                 {
-                    t.Id = nextsectorid++;      // insert the sector with the guessed ID
+                    t.SId = nextsectorid++;      // insert the sector with the guessed ID
                     t.insertsec = true;
-                    cache.SectorIDCache[t.Id] = t;    // and cache
+                    cache.SectorIDCache[t.SId] = t;    // and cache
                     //System.Diagnostics.Debug.WriteLine("Made sector " + t.Name + ":" + t.GId);
                 }
             }
 
-            if (t.edsmdatalist == null)
-                t.edsmdatalist = new List<TableWriteData>(5000);
+            if (t.datalist == null)
+                t.datalist = new List<TableWriteData>(5000);
 
-            t.edsmdatalist.Add(data);                       // add to list of systems to process for this sector
+            t.datalist.Add(data);                       // add to list of systems to process for this sector
 
             return true;
         }
@@ -336,7 +354,7 @@ namespace EliteDangerousCore.DB
             // force the entry into the sector cache.
             TryCreateNewUpdate(cache, data, tablesareempty, ref maxdate, ref nextsectorid, out Sector t, true);
 
-            if (t.Id == -1)   // if unknown sector ID..
+            if (t.SId == -1)   // if unknown sector ID..
             {
                 selectSectorCmd.Parameters[0].Value = t.Name;   
                 selectSectorCmd.Parameters[1].Value = t.GId;
@@ -345,15 +363,15 @@ namespace EliteDangerousCore.DB
                 {
                     if (reader.Read())      // if found name:gid
                     {
-                        t.Id = (long)reader[0];
+                        t.SId = (long)reader[0];
                     }
                     else
                     {
-                        t.Id = nextsectorid++;      // insert the sector with the guessed ID
+                        t.SId = nextsectorid++;      // insert the sector with the guessed ID
                         t.insertsec = true;
                     }
 
-                    cache.SectorIDCache[t.Id] = t;                // and cache
+                    cache.SectorIDCache[t.SId] = t;                // and cache
                     //  System.Diagnostics.Debug.WriteLine("Made sector " + t.Name + ":" + t.GId);
                 }
             }
@@ -380,8 +398,8 @@ namespace EliteDangerousCore.DB
 
                     replaceSectorCmd = cn.CreateReplace("Sectors" + tablepostfix, new string[] { "name", "gridid", "id" }, new DbType[] { DbType.String, DbType.Int32, DbType.Int64 }, txn);
 
-                    replaceSysCmd = cn.CreateReplace("Systems" + tablepostfix, new string[] { "sectorid", "nameid", "x", "y", "z", "edsmid" },
-                                        new DbType[] { DbType.Int64, DbType.Int64, DbType.Int32, DbType.Int32, DbType.Int32, DbType.Int64 }, txn);
+                    replaceSysCmd = cn.CreateReplace("Systems" + tablepostfix, new string[] { "sectorid", "nameid", "x", "y", "z", "edsmid", "info" },
+                                        new DbType[] { DbType.Int64, DbType.Int64, DbType.Int32, DbType.Int32, DbType.Int32, DbType.Int64, DbType.Int64 }, txn);
 
                     replaceNameCmd = cn.CreateReplace("Names" + tablepostfix, new string[] { "name", "id" }, new DbType[] { DbType.String, DbType.Int64 }, txn);
 
@@ -393,41 +411,42 @@ namespace EliteDangerousCore.DB
                         {
                             replaceSectorCmd.Parameters[0].Value = t.Name;     // make a new one so we can get the ID
                             replaceSectorCmd.Parameters[1].Value = t.GId;
-                            replaceSectorCmd.Parameters[2].Value = t.Id;        // and we insert with ID, managed by us, and replace in case there are any repeat problems (which there should not be)
+                            replaceSectorCmd.Parameters[2].Value = t.SId;        // and we insert with ID, managed by us, and replace in case there are any repeat problems (which there should not be)
                             replaceSectorCmd.ExecuteNonQuery();
                             //System.Diagnostics.Debug.WriteLine("Written sector " + t.GId + " " +t.Name);
                             t.insertsec = false;
                         }
 
-                        if (t.edsmdatalist != null)       // if updated..
+                        if (t.datalist != null)       // if updated..
                         {
 #if DEBUG
-                            t.edsmdatalist.Sort(delegate (TableWriteData left, TableWriteData right) { return left.edsm.id.CompareTo(right.edsm.id); });
+                            t.datalist.Sort(delegate (TableWriteData left, TableWriteData right) { return left.starentry.id.CompareTo(right.starentry.id); });
 #endif
 
-                            foreach (var data in t.edsmdatalist)            // now write the star list in this sector
+                            foreach (var data in t.datalist)            // now write the star list in this sector
                             {
                                 try
                                 {
                                     if (data.classifier.IsNamed)    // if its a named entry, we need a name
                                     {
-                                        data.classifier.NameIdNumeric = data.edsm.id;           // name is the edsm id
+                                        data.classifier.NameIdNumeric = data.starentry.id;           // name is the id
                                         replaceNameCmd.Parameters[0].Value = data.classifier.StarName;       // insert a new name
-                                        replaceNameCmd.Parameters[1].Value = data.edsm.id;      // we use edsmid as the nameid, and use replace to ensure that if a prev one is there, its replaced
+                                        replaceNameCmd.Parameters[1].Value = data.starentry.id;      // we use the systems id as the nameid, and use replace to ensure that if a prev one is there, its replaced
                                         replaceNameCmd.ExecuteNonQuery();
                                         // System.Diagnostics.Debug.WriteLine("Make name " + data.classifier.NameIdNumeric);
                                     }
 
-                                    replaceSysCmd.Parameters[0].Value = t.Id;
+                                    replaceSysCmd.Parameters[0].Value = t.SId;
                                     replaceSysCmd.Parameters[1].Value = data.classifier.ID;
-                                    replaceSysCmd.Parameters[2].Value = data.edsm.x;
-                                    replaceSysCmd.Parameters[3].Value = data.edsm.y;
-                                    replaceSysCmd.Parameters[4].Value = data.edsm.z;
-                                    replaceSysCmd.Parameters[5].Value = data.edsm.id;       // in the event a new entry has the same edsmid, the system table edsmid is replace with new data
+                                    replaceSysCmd.Parameters[2].Value = data.starentry.x;
+                                    replaceSysCmd.Parameters[3].Value = data.starentry.y;
+                                    replaceSysCmd.Parameters[4].Value = data.starentry.z;
+                                    replaceSysCmd.Parameters[5].Value = data.starentry.id;       // in the event a new entry has the same id, the system table id is replace with new data
+                                    replaceSysCmd.Parameters[6].Value = (object)data.starentry.startype ?? System.DBNull.Value;       // if we have a startype, send it in, else DBNull
                                     replaceSysCmd.ExecuteNonQuery();
 
                                     if (sw != null)
-                                        sw.WriteLine(data.edsm.name + " " + data.edsm.x + "," + data.edsm.y + "," + data.edsm.z + ", EDSM:" + data.edsm.id + " Grid:" + data.gridid);
+                                        sw.WriteLine(data.starentry.name + " " + data.starentry.x + "," + data.starentry.y + "," + data.starentry.z + ", ID:" + data.starentry.id + " Grid:" + data.gridid);
 
                                     updates++;
                                 }
@@ -439,7 +458,7 @@ namespace EliteDangerousCore.DB
                             }
                         }
 
-                        t.edsmdatalist = null;     // and delete back
+                        t.datalist = null;     // and delete back
                     }
 
                     txn.Commit();
@@ -471,7 +490,7 @@ namespace EliteDangerousCore.DB
 
         private class Sector
         {
-            public long Id;
+            public long SId;
             public int GId;
             public string Name;
 
@@ -479,30 +498,32 @@ namespace EliteDangerousCore.DB
 
             public Sector(string name, long id = -1, int gridid = -1 )
             {
-                this.Name = name;
+                this.SId = id;
                 this.GId = gridid;
-                this.Id = id;
+                this.Name = name;
                 this.NextSector = null;
             }
 
             // for write table purposes only
 
-            public List<TableWriteData> edsmdatalist;
+            public List<TableWriteData> datalist;
             public bool insertsec = false;
         };
 
         private class TableWriteData
         {
-            public EDSMFileEntry edsm;
+            public StarFileEntry starentry;
             public EliteNameClassifier classifier;
             public int gridid;
         }
 
-        public class EDSMFileEntry
+        public class StarFileEntry
         {
             public bool Deserialize(IEnumerator<JToken> enumerator)
             {
-                while( enumerator.MoveNext() && enumerator.Current.IsProperty)   // while more tokens, and JProperty
+                bool spansh = false;
+
+                while (enumerator.MoveNext() && enumerator.Current.IsProperty)   // while more tokens, and JProperty
                 {
                     var p = enumerator.Current;
                     string field = p.Name;
@@ -512,11 +533,19 @@ namespace EliteDangerousCore.DB
                         case "name":
                             name = p.StrNull();
                             break;
-                        case "id":
-                            id = p.Int();
+                        case "id":      // EDSM name
+                            id = p.ULong();
                             break;
-                        case "date":
+                        case "id64":      // EDSM and Spansh name. 
+                            systemaddress = p.ULong();
+                            break;
+                        case "date":        // edsm name
                             date = p.DateTimeUTC();
+                            spansh = false;
+                            break;
+                        case "updateTime":        // Spansh name
+                            date = p.DateTimeUTC();
+                            spansh = true;
                             break;
                         case "coords":
                             {
@@ -545,20 +574,107 @@ namespace EliteDangerousCore.DB
 
                                 break;
                             }
+
+                        case "mainStar":    // spansh
+                            {
+                                spansh = true;
+                                string name = p.Str();
+                                if (spanshtoedstar.TryGetValue(name, out EDStar value))
+                                {
+                                    startype = (int)value;
+                                }
+                                else
+                                    System.Diagnostics.Debug.WriteLine($"DB read of spansh unknown star type {name}");
+                                break;
+                            }
                         default:        // any other, ignore
                             break;
                     }
                 }
 
-                return true;
+                if (spansh )                    // if detected spansh above
+                {
+                    if ( startype == null)      // for spansh, we always set startype non null, so that we know the db.edsmid is really the system address
+                        startype = (int)EDStar.Unknown;
+                    id = systemaddress;         // for spansh, the id
+                }
+
+                return id != ulong.MaxValue && name.HasChars() && x != int.MinValue && y != int.MinValue && z != int.MinValue && date != DateTime.MinValue;
             }
 
+            public ulong id = ulong.MaxValue;                       //ID to use, either edsmid or system address
             public string name;
-            public long id = -1;
-            public DateTime date;
             public int x = int.MinValue;
             public int y = int.MinValue;
             public int z = int.MinValue;
+            public int? startype;       // null default
+            public DateTime date;
+
+            private ulong systemaddress = ulong.MaxValue;
+
+            // from https://spansh.co.uk/api/bodies/field_values/subtype
+            static private Dictionary<string, EDStar> spanshtoedstar = new Dictionary<string, EDStar>
+            {
+                { "O (Blue-White) Star", EDStar.O },
+                { "B (Blue-White) Star", EDStar.B },
+                { "A (Blue-White) Star", EDStar.A },
+                { "F (White) Star", EDStar.F },
+                { "G (White-Yellow) Star", EDStar.G },
+                { "K (Yellow-Orange) Star", EDStar.K },
+                { "M (Red dwarf) Star", EDStar.M },
+
+                { "L (Brown dwarf) Star", EDStar.L },
+                { "T (Brown dwarf) Star", EDStar.T },
+                { "Y (Brown dwarf) Star", EDStar.Y },
+
+                { "Herbig Ae Be Star", EDStar.AeBe },
+                { "T Tauri Star", EDStar.TTS },
+
+                { "Wolf-Rayet Star", EDStar.W },
+                { "Wolf-Rayet N Star", EDStar.WN },
+                { "Wolf-Rayet NC Star", EDStar.WNC },
+                { "Wolf-Rayet C Star", EDStar.WC },
+                { "Wolf-Rayet O Star", EDStar.WO },
+
+                // missing CS
+                { "C Star", EDStar.C },
+                { "CN Star", EDStar.CN },
+                { "CJ Star", EDStar.CJ },
+                // missing CHd
+
+                { "MS-type Star", EDStar.MS },
+                { "S-type Star", EDStar.S },
+
+                { "White Dwarf (D) Star", EDStar.D },
+                { "White Dwarf (DA) Star", EDStar.DA },
+                { "White Dwarf (DAB) Star", EDStar.DAB },
+                // missing DAO
+                { "White Dwarf (DAZ) Star", EDStar.DAZ },
+                { "White Dwarf (DAV) Star", EDStar.DAV },
+                { "White Dwarf (DB) Star", EDStar.DB },
+                { "White Dwarf (DBZ) Star", EDStar.DBZ },
+                { "White Dwarf (DBV) Star", EDStar.DBV },
+                // missing DO,DOV
+                { "White Dwarf (DQ) Star", EDStar.DQ },
+                { "White Dwarf (DC) Star", EDStar.DC },
+                { "White Dwarf (DCV) Star", EDStar.DCV },
+                // missing DX
+                { "Neutron Star", EDStar.N },
+                { "Black Hole", EDStar.H },
+                // missing X but not confirmed with actual journal data
+
+
+                { "A (Blue-White super giant) Star", EDStar.A_BlueWhiteSuperGiant },
+                { "F (White super giant) Star", EDStar.F_WhiteSuperGiant },
+                { "M (Red super giant) Star", EDStar.M_RedSuperGiant },
+                { "M (Red giant) Star", EDStar.M_RedGiant},
+                { "K (Yellow-Orange giant) Star", EDStar.K_OrangeGiant },
+                // missing rogueplanet, nebula, stellarremanant
+                { "Supermassive Black Hole", EDStar.SuperMassiveBlackHole },
+                { "B (Blue-White super giant) Star", EDStar.B_BlueWhiteSuperGiant },
+                { "G (White-Yellow super giant) Star", EDStar.G_WhiteSuperGiant },
+            };
+
         }
 
         #endregion

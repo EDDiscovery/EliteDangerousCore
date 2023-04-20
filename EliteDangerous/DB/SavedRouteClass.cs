@@ -40,7 +40,7 @@ namespace EliteDangerousCore.DB
             public double Z { get; set; }
             public bool HasCoordinate { get { return X != NotKnown && Y != NotKnown && Z != NotKnown; } }
 
-            public SystemClass System { get { return HasCoordinate ? new SystemClass(Name, X, Y, Z) : new SystemClass(Name); } }
+            public SystemClass System { get { return HasCoordinate ? new SystemClass(Name, null, X, Y, Z) : new SystemClass(Name); } }
         }
 
         public SavedRouteClass()
@@ -393,9 +393,9 @@ namespace EliteDangerousCore.DB
             }
 
             if (error > 0)
-                return new SystemClass(name, syspos.X + rnd.Next(error), syspos.Y + rnd.Next(error), syspos.Z + rnd.Next(error));
+                return new SystemClass(name, null,syspos.X + rnd.Next(error), syspos.Y + rnd.Next(error), syspos.Z + rnd.Next(error));
             else
-                return new SystemClass(name, syspos.X, syspos.Y, syspos.Z);
+                return new SystemClass(name, null,syspos.X, syspos.Y, syspos.Z);
         }
 
         Random rnd = new Random();

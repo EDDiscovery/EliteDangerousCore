@@ -243,7 +243,7 @@ namespace EliteDangerousCore
 
         public void Update(JournalCarrierJump j)
         {
-            StarSystem = new SystemClass(j.StarSystem, j.StarPos.X, j.StarPos.Y, j.StarPos.Z);                  // set new location with position
+            StarSystem = new SystemClass(j.StarSystem, null, j.StarPos.X, j.StarPos.Y, j.StarPos.Z);                  // set new location with position
             SystemAddress = j.SystemAddress ?? 0;
             Body = NextBody ?? j.StarSystem;        // you should always have a nextbody, but if debugging.. 
             BodyID = NextBodyID;
@@ -257,7 +257,7 @@ namespace EliteDangerousCore
             
             if (NextStarSystem != null && (onfootfleetcarrier || j.StationType.Contains("carrier",StringComparison.InvariantCultureIgnoreCase))) 
             {
-                StarSystem = new SystemClass(j.StarSystem, j.StarPos.X, j.StarPos.Y, j.StarPos.Z);                  // set new location with position
+                StarSystem = new SystemClass(j.StarSystem, null, j.StarPos.X, j.StarPos.Y, j.StarPos.Z);                  // set new location with position
                 SystemAddress = NextSystemAddress;
                 Body = NextBody;
                 BodyID = NextBodyID;

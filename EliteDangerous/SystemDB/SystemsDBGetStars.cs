@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2015-2021 EDDiscovery development team
+ * Copyright 2015-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using System;
@@ -309,19 +307,28 @@ namespace EliteDangerousCore.DB
 
         #region Helpers for getting stars
 
-        //                                         0   1   2   3        4      5        6 
-        const string MakeSysStdNumericQuery = "s.x,s.y,s.z,s.edsmid,c.name,c.gridid";
+        //                                     0   1   2   3        4      5        6 
+        const string MakeSysStdNumericQuery = "s.x,s.y,s.z,s.edsmid,c.name,c.gridid,s.info";
         static string[] MakeSysStdNumericQueryJoinList = new string[] { "JOIN Sectors c on s.sectorid=c.id" };
 
         static SystemClass MakeSystem(DbDataReader reader, ulong nid)
         {
             EliteNameClassifier ec = new EliteNameClassifier(nid);
             ec.SectorName = reader.GetString(4);
-            return new SystemClass(ec.ToString(), reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(5), SystemSource.FromEDSM);
+
+            bool isspansh = !reader.IsDBNull(6);
+
+            return new SystemClass(ec.ToString(), 
+                                        reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2),         // xyz
+                                        isspansh ? reader.GetInt64(3) : default(long?),     // for spansh carries in s.edsmid the system address
+                                        isspansh ? default(long?) : reader.GetInt64(3),     // for edsm carriers in s.edsmid the edsmid
+                                        reader.GetInt32(5),
+                                        isspansh ? (EDStar)reader.GetInt32(6) : EDStar.Unknown, // spansh records have star set
+                                        SystemSource.FromDB);   // gridid
         }
 
-        //                                     0   1   2   3        4      5        6        7      8            
-        const string MakeSystemQueryNamed = "s.x,s.y,s.z,s.edsmid,c.name,c.gridid,s.nameid,n.Name";
+        //                                   0   1   2   3        4      5        6        7      8            
+        const string MakeSystemQueryNamed = "s.x,s.y,s.z,s.edsmid,c.name,c.gridid,s.nameid,n.Name,s.info";
         static string[] MakeSystemQueryNamedJoinList = new string[] { "LEFT OUTER JOIN Names n On s.nameid=n.id", "JOIN Sectors c on s.sectorid=c.id" };
 
         static SystemClass MakeSystem(DbDataReader reader)
@@ -332,7 +339,15 @@ namespace EliteDangerousCore.DB
             if (ec.IsNamed)
                 ec.StarName = reader.GetString(7);
 
-            return new SystemClass(ec.ToString(), reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(5), SystemSource.FromEDSM);
+            bool isspansh = !reader.IsDBNull(8);
+
+            return new SystemClass(ec.ToString(), 
+                                        reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2),     // xyz
+                                        isspansh ? reader.GetInt64(3) : default(long?),     // for spansh carries in s.edsmid the system address
+                                        isspansh ? default(long?) : reader.GetInt64(3),     // for edsm carriers in s.edsmid the edsmid
+                                        reader.GetInt32(5),
+                                        isspansh ? (EDStar)reader.GetInt32(8) : EDStar.Unknown, // for spansh, presence of s.info signals that its a spansh record
+                                        SystemSource.FromDB);   // gridid
         }
 
         #endregion
