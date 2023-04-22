@@ -41,6 +41,8 @@ namespace EliteDangerousCore
         public Dictionary<string, HistoryEntry> Visited { get; private set; } = new Dictionary<string, HistoryEntry>(StringComparer.InvariantCultureIgnoreCase);  // not in any particular order.
         public Dictionary<string, Stats.FactionInfo> GetStatsAtGeneration(uint g) { return statisticsaccumulator.GetAtGeneration(g); }
 
+        public Identifiers IdentifierList = new Identifiers();
+
         // History variables
         public int CommanderId { get; private set; } = -999;                 // set by history load at end, indicating commander loaded
 
@@ -92,6 +94,8 @@ namespace EliteDangerousCore
             he.UpdateEngineering(Engineering.Process(he));
 
             he.UpdateTravelStatus(hlastprocessed);
+
+            IdentifierList.Process(je);
 
             hlastprocessed = he;
 

@@ -59,7 +59,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.Touchdown)]
-    public class JournalTouchdown : JournalEntry, IBodyFeature
+    public class JournalTouchdown : JournalEntry, IBodyFeature, IIdentifiers
     {
         public JournalTouchdown(JObject evt) : base(evt, JournalTypeEnum.Touchdown)
         {
@@ -102,6 +102,12 @@ namespace EliteDangerousCore.JournalEvents
             info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", Body, "NPC Controlled;".T(EDCTx.JournalEntry_NPCControlled), PlayerControlled, 
                                                                 "Nearest: ".T(EDCTx.JournalEntry_Nearest), NearestDestination_Localised), ". ");
             detailed = "";
+        }
+
+        public void UpdateIdentifiers(Identifiers ilist)
+        {
+            if (NearestDestination.HasChars() && NearestDestination_Localised.HasChars())
+                ilist.Add(NearestDestination, NearestDestination_Localised);
         }
     }
 

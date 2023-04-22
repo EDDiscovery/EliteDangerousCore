@@ -76,7 +76,7 @@ namespace EliteDangerousCore.JournalEvents
 
     [System.Diagnostics.DebuggerDisplay("{SignalNames()}")]
     [JournalEntryType(JournalTypeEnum.FSSSignalDiscovered)]
-    public class JournalFSSSignalDiscovered : JournalEntry, IStarScan
+    public class JournalFSSSignalDiscovered : JournalEntry, IStarScan, IIdentifiers
     {
         [System.Diagnostics.DebuggerDisplay("{ClassOfSignal} {SignalName}")]
         public class FSSSignal
@@ -315,6 +315,19 @@ namespace EliteDangerousCore.JournalEvents
             }
 
             return list;
+        }
+
+        public void UpdateIdentifiers(Identifiers ilist)
+        {
+            System.Diagnostics.Debug.Assert(Signals.Count == 1);    // check we are calling this before any merger
+
+            foreach ( var s in Signals)
+            {
+                if ( s.SignalName.HasChars() && s.SignalName_Localised.HasChars() )
+                {
+                    ilist.Add(s.SignalName, s.SignalName_Localised);
+                }
+            }
         }
     }
 
