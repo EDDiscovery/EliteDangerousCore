@@ -392,7 +392,7 @@ namespace EliteDangerousCore.JournalEvents
 
     [System.Diagnostics.DebuggerDisplay("{BodyName} {BodyID} {SignalNames()}")]
     [JournalEntryType(JournalTypeEnum.SAASignalsFound)]
-    public class JournalSAASignalsFound : JournalEntry, IStarScan, IBodyNameIDOnly
+    public class JournalSAASignalsFound : JournalEntry, IStarScan, IBodyNameIDOnly, IIdentifiers
     {
         public JournalSAASignalsFound(JObject evt) : base(evt, JournalTypeEnum.SAASignalsFound)
         {
@@ -556,6 +556,17 @@ namespace EliteDangerousCore.JournalEvents
         public void AddStarScan(StarScan s, ISystem system)
         {
             s.AddSAASignalsFoundToBestSystem(this, system);
+        }
+
+        public void UpdateIdentifiers(Identifiers ilist)
+        {
+            foreach (var s in Signals)
+            {
+                if (s.Type.HasChars() && s.Type_Localised.HasChars())
+                {
+                    ilist.Add(s.Type, s.Type_Localised);
+                }
+            }
         }
     }
 

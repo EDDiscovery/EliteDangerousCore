@@ -978,3 +978,8 @@ SECTION ScanDisplayUserControl
 .Codex: "Codex" @
 .Organics: "Organics" @
 
+
+SECTION Signals
+
+.RingHotSpot: "Ring Hot Spot of type " @
+

@@ -24,7 +24,7 @@ namespace EliteDangerousCore
     {
         public uint Generation { get; set; } = 0;
 
-        private Dictionary<string, string> identifiers = new Dictionary<string, string>();
+        public Dictionary<string, string> Items { get; private set; } = new Dictionary<string, string>();
 
         public void Add(string id, string text, bool alwaysadd = false)
         {
@@ -39,8 +39,8 @@ namespace EliteDangerousCore
                // lock (identifiers)    // since only changed by HistoryList accumulate, and accessed by foreground, no need I think for a lock
                 {
                     text = text.Replace("&NBSP;", " ");
-                    System.Diagnostics.Debug.WriteLine($"Identifier {id} -> {nid} -> {text}");
-                    identifiers[nid] = text;        // keep updating even if a repeat so the latest identifiers is there
+                    //System.Diagnostics.Debug.WriteLine($"Identifier {id} -> {nid} -> {text}");
+                    Items[nid] = text;        // keep updating even if a repeat so the latest identifiers is there
                     Generation++;
                 }
             }
@@ -62,7 +62,7 @@ namespace EliteDangerousCore
 
           //  lock (identifiers)
             {
-                if (identifiers.TryGetValue(nid, out string str))
+                if (Items.TryGetValue(nid, out string str))
                     return str;
                 else
                     return returnnull ? null : id;

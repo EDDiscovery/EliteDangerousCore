@@ -905,6 +905,7 @@ namespace EliteDangerousCore
         Services_Refuel, Services_Repair, Services_Rearm, Services_VoucherRedemption, Services_Shipyard, Services_Outfitting, Services_BlackMarket,
         Services_Exploration, Services_Bartender, Services_VistaGenomics, Services_PioneerSupplies,
 
+        Signals_RingHotSpot,
     }
 
     internal static class EDTranslatorExtensions

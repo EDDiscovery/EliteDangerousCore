@@ -275,9 +275,23 @@ namespace EliteDangerousCore
         }
 
         // attempt to find a better name for name as its a body name
-        static public string BodyName(Identifiers idlist, string name)
+        static public string SignalBodyName(Identifiers idlist, string name)
         {
             var res = idlist.Get(name);
+
+            if (res.StartsWith("$SAA_RingHotspot",StringComparison.InvariantCultureIgnoreCase))        // if still id
+            {
+                int indexof = res.IndexOf("#type=");
+                if ( indexof>0 && res.Length > indexof+6)
+                {
+                    string mintype = res.Substring(indexof + 6).Replace(";", "").Replace("_name","").Replace("$", "");
+                    var mcd = MaterialCommodityMicroResourceType.GetByFDName(mintype);
+                    if (mcd != null)    // if we find it, translate it, else leave it alone
+                        mintype = mcd.Name;
+
+                    res = "Ring Hot Spot of type ".TxID(EDCTx.Signals_RingHotSpot) + mintype;
+                }
+            }
             return res;
         }
 
