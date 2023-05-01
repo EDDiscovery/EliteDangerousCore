@@ -398,7 +398,7 @@ namespace EliteDangerousCore.DB
 
                     replaceSectorCmd = cn.CreateReplace("Sectors" + tablepostfix, new string[] { "name", "gridid", "id" }, new DbType[] { DbType.String, DbType.Int32, DbType.Int64 }, txn);
 
-                    replaceSysCmd = cn.CreateReplace("Systems" + tablepostfix, new string[] { "sectorid", "nameid", "x", "y", "z", "edsmid", "info" },
+                    replaceSysCmd = cn.CreateReplace("SystemTable" + tablepostfix, new string[] { "sectorid", "nameid", "x", "y", "z", "edsmid", "info" },
                                         new DbType[] { DbType.Int64, DbType.Int64, DbType.Int32, DbType.Int32, DbType.Int32, DbType.Int64, DbType.Int64 }, txn);
 
                     replaceNameCmd = cn.CreateReplace("Names" + tablepostfix, new string[] { "name", "id" }, new DbType[] { DbType.String, DbType.Int64 }, txn);

@@ -35,7 +35,7 @@ namespace EliteDangerousCore.DB
 
                     report?.Invoke(" " + string.Join(" ", todo));
 
-                    using (DbCommand cmd = cn.CreateDelete("Systems", "sectorid IN (Select id FROM Sectors WHERE gridid IN (" + string.Join(",", todo) + "))"))
+                    using (DbCommand cmd = cn.CreateDelete("SystemTable", "sectorid IN (Select id FROM Sectors WHERE gridid IN (" + string.Join(",", todo) + "))"))
                     {
                         cmd.ExecuteNonQuery();
                     }

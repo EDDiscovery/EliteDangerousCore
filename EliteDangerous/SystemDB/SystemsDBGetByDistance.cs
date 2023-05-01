@@ -40,7 +40,7 @@ namespace EliteDangerousCore.DB
 
             // needs a xz index for speed
 
-            using (DbCommand cmd = cn.CreateSelect("Systems s",
+            using (DbCommand cmd = cn.CreateSelect("SystemTable s",
                 MakeSystemQueryNamed,
                 where:
                     "s.x >= @xv - @maxdist " +
@@ -116,7 +116,7 @@ namespace EliteDangerousCore.DB
         {
             System.Diagnostics.Debug.Assert(CallBack != null || list != null);
 
-            using (DbCommand cmd = cn.CreateSelect("Systems s",
+            using (DbCommand cmd = cn.CreateSelect("SystemTable s",
                         MakeSystemQueryNamed,
                         where:
                                 "x >= @xc - @maxfromcurpos " +

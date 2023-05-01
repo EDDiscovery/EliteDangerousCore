@@ -243,7 +243,7 @@ namespace EliteDangerousCore.DB
         {
             bool res = DBRead(db => {
                     var tlist = db.Tables();
-                    return tlist.Contains("Systems") && tlist.Contains("Names") && tlist.Contains("Systems") && tlist.Contains("Aliases") && tlist.Contains("Register");
+                    return tlist.Contains("SystemTable") && tlist.Contains("Names") && tlist.Contains("Sectors") && tlist.Contains("Register");
                 });
 
             return res;

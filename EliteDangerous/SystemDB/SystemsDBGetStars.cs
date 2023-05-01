@@ -35,7 +35,7 @@ namespace EliteDangerousCore.DB
             {
                 // needs index on sectorid [nameid]. Relies on Names.id being the systems.edsmid
 
-                using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
+                using (DbCommand selectSysCmd = cn.CreateSelect("SystemTable s", MakeSystemQueryNamed,
                                                     "s.edsmid IN (Select id FROM Names WHERE name=@p1) AND s.sectorid IN (Select id FROM Sectors c WHERE c.name=@p2)",
                                                     new Object[] { ec.StarName, ec.SectorName },
                                                     joinlist: MakeSystemQueryNamedJoinList))
@@ -57,7 +57,7 @@ namespace EliteDangerousCore.DB
                 // Numeric or Standard - all data in ID
                 // needs index on Systems(sectorid, Nameid)
 
-                using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSysStdNumericQuery,
+                using (DbCommand selectSysCmd = cn.CreateSelect("SystemTable s", MakeSysStdNumericQuery,
                                                     "s.nameid = @p1 AND s.sectorid IN (Select id FROM Sectors c WHERE c.name=@p2)",
                                                     new Object[] { ec.ID, ec.SectorName },
                                                     joinlist: MakeSysStdNumericQueryJoinList))
@@ -95,7 +95,7 @@ namespace EliteDangerousCore.DB
             {
                 // needs index on Systems(sectorid, Nameid)
 
-                using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
+                using (DbCommand selectSysCmd = cn.CreateSelect("SystemTable s", MakeSystemQueryNamed,
                                                     "s.nameid >= @p1 AND s.nameid <= @p2 AND s.sectorid IN (Select id FROM Sectors c WHERE c.name=@p3)",
                                                     new Object[] { ec.ID, ec.IDHigh, ec.SectorName },
                                                     limit:limit,
@@ -119,7 +119,7 @@ namespace EliteDangerousCore.DB
                 // beware, 1<<46 works, 0x40 0000 0000 does not.. 
                 // needs index on Systems(sectorid, Nameid)
 
-                using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
+                using (DbCommand selectSysCmd = cn.CreateSelect("SystemTable s", MakeSystemQueryNamed,
                                                     "(s.nameid & (1<<46) != 0) AND cast((s.nameid & 0x3fffffffff) as text) LIKE @p1 AND s.sectorid IN (Select id FROM Sectors c WHERE c.name=@p2)",
                                                     new Object[] { ec.NameIdNumeric.ToStringInvariant() + "%", ec.SectorName },
                                                     limit:limit,
@@ -153,7 +153,7 @@ namespace EliteDangerousCore.DB
 
                             // needs index on Systems(sectorid, Nameid)
 
-                            using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
+                            using (DbCommand selectSysCmd = cn.CreateSelect("SystemTable s", MakeSystemQueryNamed,
                                                                 "s.nameid IN (Select id FROM Names WHERE name LIKE @p1) AND s.sectorid IN (Select id FROM Sectors c WHERE c.name=@p2)",
                                                                 new Object[] { ec.StarName + "%", ec.SectorName },
                                                                 limit: limit,
@@ -181,7 +181,7 @@ namespace EliteDangerousCore.DB
 
                           //  System.Diagnostics.Debug.WriteLine($"******************** {BaseUtils.AppTicks.TickCountLap("SS1", true)} Search sector-noname {ec.SectorName} {ec.StarName}");
 
-                            using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
+                            using (DbCommand selectSysCmd = cn.CreateSelect("SystemTable s", MakeSystemQueryNamed,
                                                                 "s.sectorid IN (Select id FROM Sectors c WHERE c.name LIKE @p1)",
                                                                 new Object[] { ec.SectorName + "%" },
                                                                 limit: limit,
@@ -209,7 +209,7 @@ namespace EliteDangerousCore.DB
                     {
                        // System.Diagnostics.Debug.WriteLine($"************** {BaseUtils.AppTicks.TickCountLap("SS1", true)} Search-NoSector-name, check names {ec.StarName}");
 
-                        using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
+                        using (DbCommand selectSysCmd = cn.CreateSelect("SystemTable s", MakeSystemQueryNamed,
                                                             "s.nameid IN (Select id FROM Names WHERE name LIKE @p1) ",
                                                             new Object[] { ec.StarName + "%" },
                                                             limit: limit,
@@ -236,7 +236,7 @@ namespace EliteDangerousCore.DB
                         if (limit > 0)
                         {
                            // System.Diagnostics.Debug.WriteLine($"****************** {BaseUtils.AppTicks.TickCountLap("SS2", true)} Search-nosector-name, check sectors {ec.StarName}");
-                            using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
+                            using (DbCommand selectSysCmd = cn.CreateSelect("SystemTable s", MakeSystemQueryNamed,
                                                                 "s.sectorid IN (Select id FROM Sectors c WHERE c.name LIKE @p1)",
                                                                 new Object[] { ec.StarName + "%" },
                                                                 limit: limit,
@@ -268,7 +268,7 @@ namespace EliteDangerousCore.DB
         {
             SystemsDatabase.Instance.DBRead(cn =>
             {
-                using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed,
+                using (DbCommand selectSysCmd = cn.CreateSelect("SystemTable s", MakeSystemQueryNamed,
                                                 "s.nameid < 10000000",
                                                 joinlist: MakeSystemQueryNamedJoinList))
                 {
