@@ -190,7 +190,7 @@ namespace EliteDangerousCore.JournalEvents
             if (Bios != null)
             {
                 foreach (var b in Bios)
-                    detailed = detailed.AppendPrePad(string.Format("{0} {1} : {2} {3}", b.Genus_Localised, b.Species_Localised, b.Value, b.Bonus), Environment.NewLine);
+                    detailed = detailed.AppendPrePad(string.Format("Genus: {0}, Species: {1}, Reward: {2} cr, First sample bonus: {3} cr, Total reward: {4} cr".T(EDCTx.JournalSellOrganics_Detailed), b.Genus_Localised, b.Species_Localised.ReplaceIfStartsWith(b.Genus_Localised, ""), b.Value.ToString("N0"), b.Bonus.ToString("N0"), (b.Value + b.Bonus).ToString("N0")), Environment.NewLine);
             }
         }
 

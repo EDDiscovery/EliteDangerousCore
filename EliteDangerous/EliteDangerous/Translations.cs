@@ -729,6 +729,7 @@ namespace EliteDangerousCore
         JournalSellExplorationData_Total, // Total:; cr;N0
         JournalSetUserShipName_On, // On:
         JournalMultiSellExplorationData_Total, // Total:; cr;N0
+        JournalSellOrganics_Detailed, // Genus: {0}, Species: {1}, Reward: {2} cr, First sample bonus: {3} cr, Total reward: {4} cr
 
         JournalMissionAccepted_from, // < from
         JournalMissionAccepted_Expiry, // Expiry:
