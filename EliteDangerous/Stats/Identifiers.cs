@@ -26,15 +26,21 @@ namespace EliteDangerousCore
 
         public Dictionary<string, string> Items { get; private set; } = new Dictionary<string, string>();
 
+        // signals have
+        // $name;
+        // $name:#type=typename;:#index=8       $SAA_Unknown_Signal:#type=$SAA_SignalType_Geological;:#index=7;
+        // $name:#index=8;                      $Settlement_Unflattened_WreckedUnknown:#index=1;
+        // $name; $name:#threadlevel=1;         $POIScenario_Watson_Wreckage_Buggy_01_Salvage_Easy; $USS_ThreatLevel:#threatLevel=1;
+        // $name; $name:#index=1;               $MARKET_POPULATION_Large; $FIXED_EVENT_DEBRIS:#index=1;
+
         public void Add(string id, string text, bool alwaysadd = false)
         {
             if (id != text || alwaysadd)        // don't add the same stuff
             {
-                string nid = id.ToLowerInvariant().Trim();
+                //if ( id.Contains("#"))
+                //    System.Diagnostics.Debug.WriteLine($"Signal {id}");
 
-                int i = nid.IndexOf(":#");
-                if (i > 0)
-                    nid = nid.Substring(0, i);
+                string nid = id.ToLowerInvariant().Trim();
 
                // lock (identifiers)    // since only changed by HistoryList accumulate, and accessed by foreground, no need I think for a lock
                 {
@@ -55,10 +61,6 @@ namespace EliteDangerousCore
         public string Get(string id, bool returnnull = false)
         {
             string nid = id.ToLowerInvariant().Trim();
-
-            int i = nid.IndexOf(":#");
-            if (i > 0)
-                nid = nid.Substring(0, i);
 
           //  lock (identifiers)
             {
