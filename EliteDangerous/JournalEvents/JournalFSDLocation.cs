@@ -49,6 +49,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public ConflictInfo[] Conflicts { get; set; }
 
+        public ThargoidWar ThargoidSystemState { get; set; }
+
         public bool HasCoordinate { get { return !float.IsNaN(StarPos.X); } }
 
         public bool IsTrainingEvent { get; private set; } // True if detected to be in training
@@ -97,6 +99,19 @@ namespace EliteDangerousCore.JournalEvents
             public string Status { get; set; }
             public ConflictFactionInfo Faction1 { get; set; }
             public ConflictFactionInfo Faction2 { get; set; }
+        }
+
+        public class ThargoidWar
+        {
+            // CurrentState and NextState are the same state values that are listed in factions, "Lockdown", "Bust", etc.. 
+            // new states related to thargoid systems are "Thargoid_Probing", "Thargoid_Harvest", "Thargoid_Controlled", "Thargoid_Stronghold", "Thargoid_Recovery"
+            public string CurrentState { get; set; }
+            public string NextStateSuccess {get;set; }       
+            public string NextStateFailure {get;set;}
+            public bool SuccessStateReached {get;set;}
+            public double WarProgress {get;set;}        // 0 to 1
+            public int RemainingPorts {get;set;}        
+            public double EstimatedRemainingTime {get;set;}    // days               
         }
 
         protected JournalLocOrJump(DateTime utc, ISystem sys, JournalTypeEnum jtype, bool edsmsynced ) : base(utc, jtype, edsmsynced)
@@ -175,6 +190,8 @@ namespace EliteDangerousCore.JournalEvents
             Wanted = evt["Wanted"].Bool();      // if absence, your not wanted, by definition of frontier in journal (only present if wanted, see docked)
 
             Conflicts = evt["Conflicts"]?.ToObjectQ<ConflictInfo[]>();   // 3.4
+
+            ThargoidSystemState = evt["ThargoidWar"].ToObjectQ<ThargoidWar>();  // Odyssey update 15
 
             // Allegiance without Faction only occurs in Training
             if (!String.IsNullOrEmpty(Allegiance) && Faction == null && EventTimeUTC <= EliteFixesDates.ED_No_Training_Timestamp && (EventTimeUTC <= EliteFixesDates.ED_No_Faction_Timestamp || EventTypeID != JournalTypeEnum.FSDJump || StarSystem == "Eranin"))
@@ -684,6 +701,7 @@ namespace EliteDangerousCore.JournalEvents
             StarClass = evt["StarClass"].Str();
             FriendlyStarClass = (StarClass.Length > 0) ? Bodies.StarName(Bodies.StarStr2Enum(StarClass)) : "";
             SystemAddress = evt["SystemAddress"].LongNull();
+            InTaxi = evt["Taxi"].BoolNull();
         }
 
         public string JumpType { get; set; }            // Hyperspace, Supercruise
@@ -692,6 +710,7 @@ namespace EliteDangerousCore.JournalEvents
         public long? SystemAddress { get; set; }
         public string StarClass { get; set; }
         public string FriendlyStarClass { get; set; }
+        public bool? InTaxi { get; set; }        // update 15+
 
         public override string SummaryName(ISystem sys) { return "Charging FSD".T(EDCTx.JournalStartJump_ChargingFSD); }
 

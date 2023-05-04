@@ -24,7 +24,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             StationName = evt["StationName"].Str();
             StationType = evt["StationType"].Str().SplitCapsWord();
-            StationState = evt["StationState"].StrNull();           // missed, added, nov 22, only on bad starports.  Null otherwise
+            StationState = evt["StationState"].StrNull();           // missed, added, nov 22, only on bad starports.  Null otherwise.  StationState can be any of the following: UnderRepairs, Damaged, Abandoned, UnderAttack
             StarSystem = evt["StarSystem"].Str();
             SystemAddress = evt["SystemAddress"].LongNull();
             MarketID = evt["MarketID"].LongNull();

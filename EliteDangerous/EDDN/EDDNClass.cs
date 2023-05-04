@@ -166,6 +166,16 @@ namespace EliteDangerousCore.EDDN
                     },
                 }
             }
+            ["ThargoidWar"] = new JObject       // update 15
+            {
+                ["CurrentState"] = true,
+                ["NextStateSuccess"] = true,
+                ["NextStateFailure"] = true,
+                ["SuccessStateReached"] = true,
+                ["WarProgress"] = true,
+                ["RemainingPorts"] = true,
+                ["EstimatedRemainingTime"] = true,      
+            }
         };
 
         private static readonly JObject AllowedFieldsFSDJump = new JObject(AllowedFieldsLocJump)

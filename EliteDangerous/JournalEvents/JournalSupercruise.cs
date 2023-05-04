@@ -80,4 +80,27 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
+    [JournalEntryType(JournalTypeEnum.SupercruiseDestinationDrop)]
+    public class JournalSupercruiseDestinationDrop : JournalEntry
+    {
+        public JournalSupercruiseDestinationDrop(JObject evt) : base(evt, JournalTypeEnum.SupercruiseDestinationDrop)
+        {
+            Location = evt["Type"].Str();
+            Location_Localised = evt["Type_Localised"].StrNull();
+            Threat = evt["Threat"].Int();
+            MarketID = evt["MarketID"].Long();
+        }
+
+        public string Location { get; set; }
+        public string Location_Localised { get; set; }      // may be null if not present
+        public int Threat { get; set; }
+        public long MarketID { get; set; }
+
+        public override void FillInformation(out string info, out string detailed)
+        {
+            info = BaseUtils.FieldBuilder.Build("At ".T(EDCTx.JournalSupercruiseExit_At), Location_Localised.Alt(Location), "Threat Level: ".T(EDCTx.FSSSignal_ThreatLevel), Threat);
+            detailed = "";
+        }
+    }
+
 }
