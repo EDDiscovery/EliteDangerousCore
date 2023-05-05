@@ -81,7 +81,7 @@ namespace EliteDangerousCore.DB
             });
 
             DateTime maxdate = DateTime.MinValue;
-            long updates = SystemsDB.ParseJSONFile(filename, gridids, ref maxdate, cancelRequested, reportProgress, TempTablePostfix, true, debugoutputfile);
+            long updates = SystemsDB.ParseJSONFile(filename, gridids, 500000, ref maxdate, cancelRequested, reportProgress, TempTablePostfix, true, debugoutputfile);
 
             if (updates > 0)
             {

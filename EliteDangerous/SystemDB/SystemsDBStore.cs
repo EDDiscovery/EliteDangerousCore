@@ -66,13 +66,13 @@ namespace EliteDangerousCore.DB
             if ( jlist.Count>0)
             { 
                 DateTime unusedate = DateTime.UtcNow;
-                return SystemsDB.ParseJSONString(jlist.ToString(), null, ref unusedate, () => false, (t) => { }, "");
+                return SystemsDB.ParseJSONString(jlist.ToString(), null, 10000, ref unusedate, () => false, (t) => { }, "");
             }
 
             return 0;
         }
 
-        public static long ParseJSONFile(string filename, bool[] grididallow, ref DateTime date, 
+        public static long ParseJSONFile(string filename, bool[] grididallow, int maxblocksize, ref DateTime date, 
                                              Func<bool> cancelRequested, Action<string> reportProgress, 
                                              string tableposfix, bool presumeempty = false, string debugoutputfile = null)
         {
@@ -85,7 +85,7 @@ namespace EliteDangerousCore.DB
                     {
                         using (StreamReader sr = new StreamReader(gz))
                         {
-                            return ParseJSONTextReader(sr, grididallow, ref date, cancelRequested, reportProgress, tableposfix, presumeempty, debugoutputfile);
+                            return ParseJSONTextReader(sr, grididallow, maxblocksize, ref date, cancelRequested, reportProgress, tableposfix, presumeempty, debugoutputfile);
                         }
                     }
                 }
@@ -93,20 +93,21 @@ namespace EliteDangerousCore.DB
             else
             {
                 using (StreamReader sr = new StreamReader(filename))         // read directly from file..
-                    return ParseJSONTextReader(sr,  grididallow, ref date, cancelRequested, reportProgress, tableposfix, presumeempty, debugoutputfile);
+                    return ParseJSONTextReader(sr,  grididallow, maxblocksize, ref date, cancelRequested, reportProgress, tableposfix, presumeempty, debugoutputfile);
             }
         }
 
-        public static long ParseJSONString(string data, bool[] grididallow, ref DateTime date, Func<bool> cancelRequested, Action<string> reportProgress, string tableposfix, bool presumeempty = false, string debugoutputfile = null)
+        public static long ParseJSONString(string data, bool[] grididallow, int maxblocksize, ref DateTime date, Func<bool> cancelRequested, Action<string> reportProgress, string tableposfix, bool presumeempty = false, string debugoutputfile = null)
         {
             using (StringReader sr = new StringReader(data))         // read directly from file..
-                return ParseJSONTextReader(sr,  grididallow, ref date, cancelRequested, reportProgress, tableposfix, presumeempty, debugoutputfile);
+                return ParseJSONTextReader(sr,  grididallow, maxblocksize, ref date, cancelRequested, reportProgress, tableposfix, presumeempty, debugoutputfile);
         }
 
         // set tempostfix to use another set of tables
 
         public static long ParseJSONTextReader(TextReader textreader,
                                         bool[] grididallowed,       // null = all, else grid bool value
+                                        int maxblocksize,
                                         ref DateTime maxdate,       // updated with latest date
                                         Func<bool> cancelRequested,
                                         Action<string> reportProgress,
@@ -121,6 +122,8 @@ namespace EliteDangerousCore.DB
 
             int nextsectorid = GetNextSectorID();
             StreamWriter sw = null;
+
+            System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCountLap("SDBS",true)} System DB store start");
 
             try
             {
@@ -144,13 +147,17 @@ namespace EliteDangerousCore.DB
                         break;
                     }
 
-                    int recordstostore = ProcessBlock(cache, enumerator, grididallowed, tablesareempty, tablepostfix, ref maxdate, ref nextsectorid, out bool jr_eof);
+                    // read records from JSON,
 
-                    System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.TickCountLap("L1")} Process Block {recordstostore} {maxdate}");
+                    int recordstostore = ReadBlockFromJSON(cache, enumerator, grididallowed, maxblocksize, tablesareempty, tablepostfix, ref maxdate, ref nextsectorid, out bool jr_eof);
+
+                    System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCountLap("SDBS")} Process Block {recordstostore} {maxdate}");
 
                     if (recordstostore > 0)
                     {
                         updates += StoreNewEntries(cache, tablepostfix, sw);
+
+                        System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCountLap("SDBS")} .. Update Block finished");
 
                         reportProgress?.Invoke("Star database updated " + recordstostore + " total so far " + updates);
                     }
@@ -173,7 +180,7 @@ namespace EliteDangerousCore.DB
                 }
             }
 
-            System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.TickCountLap("L1")} End Process {updates} maxdate {maxdate} maxsec {nextsectorid}");
+            System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.TickCountLap("SDBS")} System DB End {updates} maxdate {maxdate} maxsec {nextsectorid}");
             reportProgress?.Invoke("Star database updated " + updates);
 
             PutNextSectorID(nextsectorid);    // and store back
@@ -184,9 +191,10 @@ namespace EliteDangerousCore.DB
         #endregion
 
         #region Table Update Helpers
-        private static int ProcessBlock( SectorCache cache,
+        private static int ReadBlockFromJSON( SectorCache sectorcache,
                                          IEnumerator<JToken> enumerator,
                                          bool[] grididallowed,       // null = all, else grid bool value
+                                         int maxstoresize,
                                          bool tablesareempty,
                                          string tablepostfix,
                                          ref DateTime maxdate,       // updated with latest date
@@ -197,7 +205,6 @@ namespace EliteDangerousCore.DB
             DbCommand selectSectorCmd = null;
             DateTime cpmaxdate = maxdate;
             int cpnextsectorid = nextsectorid;
-            const int BlockSize = 1000000;      // for 66mil stars, 20000 = 38.66m, 100000=34.67m, 1e6 = 28.02m
             int Limit = int.MaxValue;
             var unknownsectorentries = new List<TableWriteData>();
             jr_eof = false;
@@ -224,11 +231,11 @@ namespace EliteDangerousCore.DB
                         {
                             TableWriteData data = new TableWriteData() { starentry = d, classifier = new EliteNameClassifier(d.name), gridid = gridid };
 
-                            // try and add data to sector
-                            // if sector is not in cache, do not make it, return false, instead add to entries
-                            // if sector is in cache, add it to the sector update list, return false,
-                            // so this accumulates entries which need new sectors.
-                            if (!TryCreateNewUpdate(cache, data, tablesareempty, ref cpmaxdate, ref cpnextsectorid, out Sector sector , false))
+                            // try to add tablewritedata to sectorcache list
+                            // do not make new sectors if tables are present, instead return false, and we add to unknownsectorentries
+                            // if sector is in cache, add data to sectorcache.datalist
+
+                            if (!TryCreateSectorCacheEntry(sectorcache, data, tablesareempty, ref cpmaxdate, ref cpnextsectorid, out Sector sector , false))
                             {
                                 unknownsectorentries.Add(data); // unknown sector, process below
                             }
@@ -247,7 +254,7 @@ namespace EliteDangerousCore.DB
                         break;
                     }
 
-                    if (recordstostore >= BlockSize)
+                    if (recordstostore >= maxstoresize)
                         break;
                 }
             }
@@ -263,9 +270,34 @@ namespace EliteDangerousCore.DB
                     selectSectorCmd = cn.CreateSelect("Sectors" + tablepostfix, "id", "name = @sname AND gridid = @gid", null,
                                                             new string[] { "sname", "gid" }, new DbType[] { DbType.String, DbType.Int32 });
 
-                    foreach (var entry in unknownsectorentries)
+                    
+                    foreach (var data in unknownsectorentries) // for each star system
                     {
-                        CreateSectorInCacheIfRequired(cache, selectSectorCmd, entry, tablesareempty, ref cpmaxdate, ref cpnextsectorid);
+                        // add the data to the sector list.  Create the sector if required.
+
+                        TryCreateSectorCacheEntry(sectorcache, data, tablesareempty, ref cpmaxdate, ref cpnextsectorid, out Sector sector, true);
+
+                        if (sector.SId == -1)   // if unknown sector ID..
+                        {
+                            selectSectorCmd.Parameters[0].Value = sector.Name;
+                            selectSectorCmd.Parameters[1].Value = sector.GId;
+
+                            using (DbDataReader reader = selectSectorCmd.ExecuteReader())       // find name:gid
+                            {
+                                if (reader.Read())      // if found name:gid
+                                {
+                                    sector.SId = (long)reader[0];
+                                }
+                                else
+                                {
+                                    sector.SId = cpnextsectorid++;      // insert the sector with the guessed ID
+                                    sector.insertsec = true;
+                                }
+
+                                sectorcache.SectorIDCache[sector.SId] = sector;                // and cache
+                                //System.Diagnostics.Debug.WriteLine("Made sector " + t.Name + ":" + t.GId);
+                            }
+                        }
                     }
                 }
                 finally
@@ -284,102 +316,81 @@ namespace EliteDangerousCore.DB
         }
 
 
-        // create a new entry for insert in the sector tables 
-        // tablesareempty means the tables are fresh and this is the first read
-        // makenewiftablesarepresent allows new sectors to be made
+        // given sectorcache, and system data
+        // if sector given in system data is present, and gridid matches sector, then store data into sector datalist 
+        // if sector is not present with/or wrong grid id, either create a new sector with the right gridid, or return false saying we need to do it later
+        // tablesareempty means the tables are fresh and this is the first read, which means we can just go and make a new sector
+        // makenewiftablesarepresent allows new sectors to be made even with the tables being non empty
         // false means tables are not empty , not making new, and sector not found in cache.. 
-        // true means sector is found, and entry is added to sector update list
-        private static bool TryCreateNewUpdate(SectorCache cache, TableWriteData data, bool tablesareempty, ref DateTime maxdate, ref int nextsectorid, 
-                                                out Sector t, bool makenewiftablesarepresent = false)
+        // true means sector is found, and entry is added to sector data update list
+        private static bool TryCreateSectorCacheEntry(SectorCache sectorcache, TableWriteData systemdata, bool tablesareempty, ref DateTime maxdate, ref int nextsectorid, 
+                                                out Sector sector, bool makenewiftablesarepresent = false)
         {
-            if (data.starentry.date > maxdate)                                   // for all, record last recorded date processed
-                maxdate = data.starentry.date;
+            if (systemdata.starentry.date > maxdate)                                   // for all, record last recorded date processed
+                maxdate = systemdata.starentry.date;
 
             Sector prev = null;
 
-            t = null;
+            sector = null;
 
-            if (!cache.SectorNameCache.ContainsKey(data.classifier.SectorName))   // if unknown to cache
+            // if unknown name
+
+            if (!sectorcache.SectorNameCache.ContainsKey(systemdata.classifier.SectorName))   
             {
-                if (!tablesareempty && !makenewiftablesarepresent)        // if the tables are NOT empty and we can't make new..
+                if (!tablesareempty && !makenewiftablesarepresent)        // if the tables are NOT empty and we can't make new ones, return false, saying you deal with it
                 {
                     return false;
                 }
 
-                cache.SectorNameCache[data.classifier.SectorName] = t = new Sector(data.classifier.SectorName, gridid: data.gridid);   // make a sector of sectorname and with gridID n , id == -1
+                // make a sector of sectorname and with gridID n , sector id == -1
+
+                sectorcache.SectorNameCache[systemdata.classifier.SectorName] = sector = new Sector(systemdata.classifier.SectorName, gridid: systemdata.gridid);   
             }
             else
             {
-                t = cache.SectorNameCache[data.classifier.SectorName];        // find the first sector of name
-                while (t != null && t.GId != data.gridid)        // if GID of sector disagrees
+                // find the sector head by name
+                sector = sectorcache.SectorNameCache[systemdata.classifier.SectorName];        
+
+                while (sector != null && sector.GId != systemdata.gridid)        // if GID of sector disagrees, go thru the linked list
                 {
-                    prev = t;                          // go thru list
-                    t = t.NextSector;
+                    prev = sector;                     
+                    sector = sector.NextSector;
                 }
 
-                if (t == null)      // still not got it, its a new one.
+                if (sector == null)      // still not got it, its a new one.
                 {
-                    if (!tablesareempty && !makenewiftablesarepresent)
+                    if (!tablesareempty && !makenewiftablesarepresent) // if the tables are NOT empty and we can't make new ones, return false, saying you deal with it
                     {
                         return false;
                     }
 
-                    prev.NextSector = t = new Sector(data.classifier.SectorName, gridid: data.gridid);   // make a sector of sectorname and with gridID n , id == -1
+                    // make a sector of sectorname and with gridID n , sector id == -1, and link the previous sector to it to form a linked list
+
+                    prev.NextSector = sector = new Sector(systemdata.classifier.SectorName, gridid: systemdata.gridid);   
                 }
             }
 
-            if (t.SId == -1)   // if unknown sector ID..
+            if (sector.SId == -1)   // if unknown sector ID..
             {
                 if (tablesareempty)     // if tables are empty, we can just presume its id
                 {
-                    t.SId = nextsectorid++;      // insert the sector with the guessed ID
-                    t.insertsec = true;
-                    cache.SectorIDCache[t.SId] = t;    // and cache
+                    sector.SId = nextsectorid++;      // insert the sector with the guessed ID
+                    sector.insertsec = true;
+                    sectorcache.SectorIDCache[sector.SId] = sector;    // and cache
                     //System.Diagnostics.Debug.WriteLine("Made sector " + t.Name + ":" + t.GId);
                 }
             }
 
-            if (t.datalist == null)
-                t.datalist = new List<TableWriteData>(5000);
+            if (sector.datalist == null)
+                sector.datalist = new List<TableWriteData>(5000);
 
-            t.datalist.Add(data);                       // add to list of systems to process for this sector
+            sector.datalist.Add(systemdata);                       // add to list of systems to process for this sector
 
             return true;
         }
 
-        // add the data to the sector cache, making it if required.
-        // If it was made (id==-1) then find sector, and if not there, assign an ID
-        private static void CreateSectorInCacheIfRequired(SectorCache cache, DbCommand selectSectorCmd, TableWriteData data, bool tablesareempty, ref DateTime maxdate, ref int nextsectorid)
-        {
-            // force the entry into the sector cache.
-            TryCreateNewUpdate(cache, data, tablesareempty, ref maxdate, ref nextsectorid, out Sector t, true);
-
-            if (t.SId == -1)   // if unknown sector ID..
-            {
-                selectSectorCmd.Parameters[0].Value = t.Name;   
-                selectSectorCmd.Parameters[1].Value = t.GId;
-
-                using (DbDataReader reader = selectSectorCmd.ExecuteReader())       // find name:gid
-                {
-                    if (reader.Read())      // if found name:gid
-                    {
-                        t.SId = (long)reader[0];
-                    }
-                    else
-                    {
-                        t.SId = nextsectorid++;      // insert the sector with the guessed ID
-                        t.insertsec = true;
-                    }
-
-                    cache.SectorIDCache[t.SId] = t;                // and cache
-                    //  System.Diagnostics.Debug.WriteLine("Made sector " + t.Name + ":" + t.GId);
-                }
-            }
-        }
-
-        private static long StoreNewEntries(SectorCache cache, string tablepostfix = "",        // set to add on text to table names to redirect to another table
-                                           StreamWriter sw = null
-                                        )
+        // Given the sector cache, update the DB
+        private static long StoreNewEntries(SectorCache sectorcache, string tablepostfix = "", StreamWriter debugfile = null )
         {
             ////////////////////////////////////////////////////////////// push all new data to the db without any selects
 
@@ -403,27 +414,27 @@ namespace EliteDangerousCore.DB
 
                     replaceNameCmd = cn.CreateReplace("Names" + tablepostfix, new string[] { "name", "id" }, new DbType[] { DbType.String, DbType.Int64 }, txn);
 
-                    foreach (var kvp in cache.SectorIDCache)                  // all sectors cached, id is unique so its got all sectors                           
+                    foreach (var kvp in sectorcache.SectorIDCache)                  // all sectors cached, id is unique so its got all sectors                           
                     {
-                        Sector t = kvp.Value;
+                        Sector sector = kvp.Value;
 
-                        if (t.insertsec)         // if we have been told to insert the sector, do it
+                        if (sector.insertsec)         // if we have been told to insert the sector, do it
                         {
-                            replaceSectorCmd.Parameters[0].Value = t.Name;     // make a new one so we can get the ID
-                            replaceSectorCmd.Parameters[1].Value = t.GId;
-                            replaceSectorCmd.Parameters[2].Value = t.SId;        // and we insert with ID, managed by us, and replace in case there are any repeat problems (which there should not be)
+                            replaceSectorCmd.Parameters[0].Value = sector.Name;     // make a new one so we can get the ID
+                            replaceSectorCmd.Parameters[1].Value = sector.GId;
+                            replaceSectorCmd.Parameters[2].Value = sector.SId;        // and we insert with ID, managed by us, and replace in case there are any repeat problems (which there should not be)
                             replaceSectorCmd.ExecuteNonQuery();
                             //System.Diagnostics.Debug.WriteLine("Written sector " + t.GId + " " +t.Name);
-                            t.insertsec = false;
+                            sector.insertsec = false;
                         }
 
-                        if (t.datalist != null)       // if updated..
+                        if (sector.datalist != null)       // if updated..
                         {
 #if DEBUG
-                            t.datalist.Sort(delegate (TableWriteData left, TableWriteData right) { return left.starentry.id.CompareTo(right.starentry.id); });
+                            sector.datalist.Sort(delegate (TableWriteData left, TableWriteData right) { return left.starentry.id.CompareTo(right.starentry.id); });
 #endif
 
-                            foreach (var data in t.datalist)            // now write the star list in this sector
+                            foreach (var data in sector.datalist)            // now write the star list in this sector
                             {
                                 try
                                 {
@@ -436,7 +447,7 @@ namespace EliteDangerousCore.DB
                                         // System.Diagnostics.Debug.WriteLine("Make name " + data.classifier.NameIdNumeric);
                                     }
 
-                                    replaceSysCmd.Parameters[0].Value = t.SId;
+                                    replaceSysCmd.Parameters[0].Value = sector.SId;
                                     replaceSysCmd.Parameters[1].Value = data.classifier.ID;
                                     replaceSysCmd.Parameters[2].Value = data.starentry.x;
                                     replaceSysCmd.Parameters[3].Value = data.starentry.y;
@@ -445,8 +456,8 @@ namespace EliteDangerousCore.DB
                                     replaceSysCmd.Parameters[6].Value = (object)data.starentry.startype ?? System.DBNull.Value;       // if we have a startype, send it in, else DBNull
                                     replaceSysCmd.ExecuteNonQuery();
 
-                                    if (sw != null)
-                                        sw.WriteLine(data.starentry.name + " " + data.starentry.x + "," + data.starentry.y + "," + data.starentry.z + ", ID:" + data.starentry.id + " Grid:" + data.gridid);
+                                    if (debugfile != null)
+                                        debugfile.WriteLine(data.starentry.name + " " + data.starentry.x + "," + data.starentry.y + "," + data.starentry.z + ", ID:" + data.starentry.id + " Grid:" + data.gridid);
 
                                     updates++;
                                 }
@@ -458,7 +469,7 @@ namespace EliteDangerousCore.DB
                             }
                         }
 
-                        t.datalist = null;     // and delete back
+                        sector.datalist = null;     // and delete back
                     }
 
                     txn.Commit();

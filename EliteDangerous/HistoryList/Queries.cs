@@ -400,7 +400,7 @@ namespace EliteDangerousCore
             var cond = search != null ? new BaseUtils.ConditionLists(search.Condition) : null;
 
             if (cond == null)
-                System.Diagnostics.Trace.WriteLine($"Search missing {searchname}");
+                System.Diagnostics.Trace.WriteLine($"Queries did not find search {searchname} - probably the search list is out of date in surveyor");
 
             return Find(helist, results, searchname, cond, defaultvars, starscan, wantdebug);
         }
