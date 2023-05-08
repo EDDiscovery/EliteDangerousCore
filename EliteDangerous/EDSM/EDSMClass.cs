@@ -626,7 +626,8 @@ namespace EliteDangerousCore.EDSM
         public List<Tuple<ISystem, double>> GetSphereSystems(String systemName, double maxradius, double minradius)      // may return null
         {
             // api does not state id64, but tested 20/4/23 it supports it
-            string query = String.Format("api-v1/sphere-systems?systemName={0}&radius={1}&minRadius={2}&showCoordinates=1&showId=1", Uri.EscapeDataString(systemName), maxradius, minradius);
+            string query = String.Format("api-v1/sphere-systems?systemName={0}&radius={1}&minRadius={2}&showCoordinates=1&showId=1",
+                                Uri.EscapeDataString(systemName), maxradius.ToStringInvariant(), minradius.ToStringInvariant());
 
             var response = RequestGet(query, handleException: true, timeout: 30000);
             if (response.Error)
@@ -673,7 +674,10 @@ namespace EliteDangerousCore.EDSM
         public List<Tuple<ISystem, double>> GetSphereSystems(double x, double y, double z, double maxradius, double minradius)      // may return null
         {
             // api does not state id64, but tested 20/4/23 it supports it
-            string query = String.Format("api-v1/sphere-systems?x={0}&y={1}&z={2}&radius={3}&minRadius={4}&showCoordinates=1&showId=1", x, y, z, maxradius, minradius);
+            string query = String.Format("api-v1/sphere-systems?x={0}&y={1}&z={2}&radius={3}&minRadius={4}&showCoordinates=1&showId=1",
+                                x.ToStringInvariant("0.##"), y.ToStringInvariant("0.##"), z.ToStringInvariant("0.##"), maxradius.ToStringInvariant("0.#"), minradius.ToStringInvariant("0.#"));
+
+            System.Diagnostics.Debug.WriteLine($"EDSM Query sphere {x} {y} {z} at {minradius} - {maxradius} ly");
 
             var response = RequestGet(query, handleException: true, timeout: 30000);
             if (response.Error)
@@ -702,6 +706,7 @@ namespace EliteDangerousCore.EDSM
                                 sys.Z = co["z"].Double();
                             }
                             systems.Add(new Tuple<ISystem, double>(sys, sysname["distance"].Double()));
+                            //System.Diagnostics.Debug.WriteLine($"  EDSM returned sphere {sys.Name} {sys.X} {sys.Y} {sys.Z} dist {dist}");
                         }
 
                         return systems;
@@ -762,7 +767,7 @@ namespace EliteDangerousCore.EDSM
         // Verified april 23 with xyz return and edsmid/system 64 return
         public JObject GetSystemByAddress(long id64)
         {
-            string query = "?systemId64=" + id64.ToString() + "&showInformation=1&includeHidden=1&showCoordinates=1&&showId=1";
+            string query = "?systemId64=" + id64.ToStringInvariant() + "&showInformation=1&includeHidden=1&showCoordinates=1&&showId=1";
             var response = RequestGet("api-v1/system" + query, handleException: true);
             if (response.Error)
                 return null;
@@ -778,7 +783,7 @@ namespace EliteDangerousCore.EDSM
         // Verified april 23 with xyz return and edsmid/system 64 return
         public JObject GetSystemByEDSMID(long edsmid)
         {
-            string query = "?systemId=" + edsmid.ToString() + "&showInformation=1&includeHidden=1&showCoordinates=1&&showId=1";
+            string query = "?systemId=" + edsmid.ToStringInvariant() + "&showInformation=1&includeHidden=1&showCoordinates=1&&showId=1";
             var response = RequestGet("api-v1/system" + query, handleException: true);
             if (response.Error)
                 return null;
@@ -814,7 +819,7 @@ namespace EliteDangerousCore.EDSM
 
         private JObject GetBodiesByID64(long id64)       // Verified Nov 20, null if bad json
         {
-            string query = "bodies?systemId64=" + id64.ToString();
+            string query = "bodies?systemId64=" + id64.ToStringInvariant();
             var response = RequestGet("api-system-v1/" + query, handleException: true);
             if (response.Error)
                 return null;
