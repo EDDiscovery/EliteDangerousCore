@@ -202,7 +202,8 @@ namespace EliteDangerousCore
                 {
                     heh.journalEntry.SetSystemNote();                // since we are displaying it, we can check here to see if a system note needs assigning
 
-                    // System.Diagnostics.Debug.WriteLine("   ++ {0} {1}", heh.EventTimeUTC.ToString(), heh.EntryType);
+                    //if ( heh.EventTimeUTC > new DateTime(2021,8,1)) System.Diagnostics.Debug.WriteLine("   ++ {0} {1}", heh.EventTimeUTC.ToString(), heh.EntryType);
+
                     heh.Index = hist.historylist.Count; // store its index for quick ordering, after all removal etc
 
                     hist.historylist.Add(heh);        // then add to history
@@ -520,12 +521,12 @@ namespace EliteDangerousCore
             if (he.EventTimeUTC >= EliteReleaseDates.Odyssey5)        
             {
                 JournalTypeEnum queuetype = reorderqueue.Count > 0 ? reorderqueue[0].EntryType : JournalTypeEnum.Unknown;
-
-                //if ( queuetype != JournalTypeEnum.Unknown) System.Diagnostics.Debug.WriteLine("{0}     Queue {1} Event {2} Count {3}", he.EventTimeUTC.ToString(), queuetype, he.EntryType, reorderqueue.Count);
+                //System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} Event {he.EntryType} Queuetype {queuetype} # {reorderqueue.Count}");
 
                 // Disembark ship to planet: disembark shiplocker suitloadout backpack  shiplocker
                 // Board ship:  embark loadout shiplocker
                 // Disembark ship to station: disembark suit loadout backpack  ship locker
+                // Disembark srv to foot disembark shiplocker suitloadout backpack 
 
                 if (he.EntryType == JournalTypeEnum.Embark || he.EntryType == JournalTypeEnum.Disembark)
                 {
@@ -627,7 +628,7 @@ namespace EliteDangerousCore
                             he.EntryType == JournalTypeEnum.Resupply ||
                             he.EntryType == JournalTypeEnum.BuyMicroResources || he.EntryType == JournalTypeEnum.SellMicroResources || he.EntryType == JournalTypeEnum.TradeMicroResources)
                 {
-                    //System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} Start of queue {he.EntryType}");
+                   // System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} Start of queue {he.EntryType}");
                     var prevreorder = reorderqueue;
                     reorderqueue = new List<HistoryEntry> { he };       // reset the queue, and run with it
                     return prevreorder;                                 // if anything queued up, play it out..
@@ -643,7 +644,7 @@ namespace EliteDangerousCore
                     {
                         //System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC.ToString()} **** End of queue {queuetype}");
                         he.ReplaceJournalEntry(reorderqueue[0].journalEntry, he.EventTimeUTC);
-                        reorderqueue.Clear();
+                        reorderqueue.Clear();       // then return he
                     }
 
                     // If we are in a backpackchange queue, sum it up. We are in a Backpackchange/Shiplocker transfer to ship sequence
@@ -671,7 +672,23 @@ namespace EliteDangerousCore
                         return prevreorder;                                 // if anything queued up, play it out..
                     }
                 }
+
+                /// Update 14 of Odyssey
+
+                if (he.EntryType == JournalTypeEnum.SupercruiseDestinationDrop)        // destination drops are stored onto the reorder queue 
+                {
+                    var prevreorder = reorderqueue;
+                    reorderqueue = new List<HistoryEntry> { he };       // reset the queue, and run with it
+                    return prevreorder;                                 // if anything queued up, play it out..
+                }
+                else if (he.EntryType == JournalTypeEnum.SupercruiseExit)             // with a supercruise exit, and a destination drop reorder, store the drop in the event
+                {
+                    if (queuetype == JournalTypeEnum.SupercruiseDestinationDrop)
+                        (he.journalEntry as JournalSupercruiseExit).DestinationDrop = reorderqueue[0].journalEntry as JournalSupercruiseDestinationDrop;
+                }
             }
+
+            // we can issue this He, not part of a sequence, with the re-order active, presuming the next entries will complete the reorder
 
             return new List<HistoryEntry> { he };       // pass it through
         }

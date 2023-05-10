@@ -72,10 +72,19 @@ namespace EliteDangerousCore.JournalEvents
 
         public bool? Taxi { get; set; }             //4.0 alpha 4
         public bool? Multicrew { get; set; }
+        public JournalSupercruiseDestinationDrop DestinationDrop { get; set; }       // update 15 associated destination drop. 
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("At ".T(EDCTx.JournalSupercruiseExit_At), Body, "< in ".T(EDCTx.JournalSupercruiseExit_in), StarSystem, "Type: ".T(EDCTx.JournalEntry_Type), BodyType);
+            if ( DestinationDrop != null )                                          // this gets set during history merge
+            {
+                DestinationDrop.FillInformation(out info, out string d);
+                info += ", ";
+            }
+            else
+                info = "At ".T(EDCTx.JournalSupercruiseExit_At);
+
+            info += BaseUtils.FieldBuilder.Build("",Body, "< in ".T(EDCTx.JournalSupercruiseExit_in), StarSystem, "Type: ".T(EDCTx.JournalEntry_Type), BodyType);
             detailed = "";
         }
     }
