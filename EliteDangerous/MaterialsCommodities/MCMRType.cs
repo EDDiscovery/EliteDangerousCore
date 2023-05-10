@@ -254,7 +254,7 @@ namespace EliteDangerousCore
         public MaterialCommodityMicroResourceType(CatType cs, string n, string fd, ItemType t, MaterialGroupType mtg, string shortn, Color cl, bool rare)
         {
             Category = cs;
-            TranslatedCategory = (Category ==CatType.Item) ? "Goods" : (Category==CatType.Component) ? "Assets" : Category.ToString();      // name is as the game does
+            TranslatedCategory = (Category == CatType.Item) ? "Goods" : (Category == CatType.Component) ? "Assets" : Category.ToString();      // name is as the game does
             TranslatedCategory = TranslatedCategory.TxID(typeof(MaterialCommodityMicroResourceType), TranslatedCategory);        // valid to pass this thru the Tx( system
             EnglishName = Name = n;
             FDName = fd;
@@ -597,15 +597,15 @@ namespace EliteDangerousCore
             AddEnc("Ship Systems Data", ItemType.Rare, MaterialGroupType.NA, "SSD", "TG_ShipSystemsData");
 
             // new to update 15 - inara/devtalk
-            AddManu("Hardened Surface Fragments", ItemType.VeryCommon, MaterialGroupType.NA, "tg_abrasion03");
-            AddManu("Phasing Membrane Residue", ItemType.Standard, MaterialGroupType.NA, "tg_abrasion02");
+            AddManu("Hardened Surface Fragments", ItemType.VeryCommon, MaterialGroupType.NA, "HSF", "tg_abrasion03");
+            AddManu("Phasing Membrane Residue", ItemType.Standard, MaterialGroupType.NA, "PMR", "tg_abrasion02");
             AddManu("Heat Exposure Specimen", ItemType.VeryRare, MaterialGroupType.NA, "tg_abrasion01");
 
-            AddManu("Caustic Crystal", ItemType.Rare, MaterialGroupType.NA, "tg_causticcrystal");       // inara
-            AddManu("Caustic Shard", ItemType.Standard, MaterialGroupType.NA, "tg_causticshard");      
-            AddManu("Corrosive Mechanisms", ItemType.Standard, MaterialGroupType.NA, "tg_causticgeneratorparts");     
-            AddManu("Massive Energy Surge Analytics", ItemType.Standard, MaterialGroupType.NA, "tg_shutdowndata");    
-            AddManu("Thargoid Interdiction Telemetry", ItemType.Standard, MaterialGroupType.NA, "tg_interdictiondata");
+            AddManu("Caustic Crystal", ItemType.Rare, MaterialGroupType.NA, "CACR", "tg_causticcrystal");       // inara
+            AddManu("Caustic Shard", ItemType.Standard, MaterialGroupType.NA, "CASH", "tg_causticshard");
+            AddManu("Corrosive Mechanisms", ItemType.Standard, MaterialGroupType.NA, "COMEC", "tg_causticgeneratorparts");
+            AddManu("Massive Energy Surge Analytics", ItemType.Standard, MaterialGroupType.NA, "MESA", "tg_shutdowndata");
+            AddManu("Thargoid Interdiction Telemetry", ItemType.Standard, MaterialGroupType.NA, "TIT", "tg_interdictiondata");
 
             ItemType sv = ItemType.Salvage;
             AddCommodity("Thargoid Sensor", sv, "UnknownArtifact");
@@ -661,7 +661,7 @@ namespace EliteDangerousCore
             AddCommodityList("Building Fabricators;Crop Harvesters;Emergency Power Cells;Exhaust Manifold;Geological Equipment", m);
             AddCommoditySN("HN Shock Mount", m, "HNSM", "");
             AddCommodityList("Mineral Extractors;Modular Terminals;Power Generators", m);
-            AddCommoditySN("Thermal Cooling Units", m, "TCU","");
+            AddCommoditySN("Thermal Cooling Units", m, "TCU", "");
             AddCommoditySN("Water Purifiers", m, "WPURE", "");
             AddCommoditySN("Heatsink Interlink", m, "HSI", "");
             AddCommoditySN("Energy Grid Assembly", m, "EGA", "powergridassembly");
@@ -733,6 +733,7 @@ namespace EliteDangerousCore
             AddCommodity("Technical Blueprints", sv, "USSCargoTechnicalBlueprints");
             AddCommodity("Trade Data", sv, "USSCargoTradeData");
             AddCommodity("Guardian Relic", sv, "AncientRelic");
+            AddCommoditySN("Unclassified Relic", sv, "ARTG", "AncientRelicTG");
             AddCommodity("Guardian Orb", sv, "AncientOrb");
             AddCommodity("Guardian Casket", sv, "AncientCasket");
             AddCommodity("Guardian Tablet", sv, "AncientTablet");
@@ -752,6 +753,11 @@ namespace EliteDangerousCore
             AddCommodity("Mollusc Fluid", ItemType.Salvage, "M_TissueSample_Fluid");
             AddCommodity("Mollusc Brain Tissue", ItemType.Salvage, "M_TissueSample_Nerves");
             AddCommodity("Pod Tissue", ItemType.Salvage, "S9_TissueSample_Shell");
+            AddCommodity("Anomaly Particles Missing", sv, "P_ParticulateSample");
+            AddCommodity("Titan Maw Partial Tissue Sample", sv, "ThargoidTissueSampleType10c");
+            AddCommodity("Thargoid Orthrus Tissue Sample", sv, "ThargoidTissueSampleType5");
+            AddCommodity("Caustic Tissue Sample", sv, "ThargoidGeneratorTissueSample");
+            AddCommodity("Unoccupied Escape Pod", sv, "UnocuppiedEscapePod");
 
             // update 15
             AddCommodity("Thargoid Glaive Tissue Sample", sv, "ThargoidTissueSampleType6");
@@ -933,6 +939,7 @@ namespace EliteDangerousCore
             AddCommodityRare("Ultra-Compact Processor Prototypes", ItemType.ConsumerItems, "Advert1");
             AddCommodityRare("Harma Silver Sea Rum", ItemType.Narcotics, "HarmaSilverSeaRum");
             AddCommodityRare("Earth Relics", sv, "EarthRelics");
+            AddCommodityRare("Classified Experimental Equipment", sv, "ClassifiedExperimentalEquipment");
 
             #endregion
 
@@ -1196,7 +1203,7 @@ namespace EliteDangerousCore
 
             foreach (var x in cachelist.Values)
             {
-                x.Name = x.Name.TxID(typeof(MaterialCommodityMicroResourceType),x.FDName);
+                x.Name = x.Name.TxID(typeof(MaterialCommodityMicroResourceType), x.FDName);
             }
 
             // foreach (MaterialCommodityData d in cachelist.Values) System.Diagnostics.Debug.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6}", d.Category, d.Type.ToString().SplitCapsWord(), d.MaterialGroup.ToString(), d.FDName, d.Name, d.Shortname, d.Rarity ));
