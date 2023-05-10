@@ -165,7 +165,7 @@ namespace EliteDangerousCore.EDDN
                         ["WonDays"] = true
                     },
                 }
-            }
+            },
             ["ThargoidWar"] = new JObject       // update 15
             {
                 ["CurrentState"] = true,
@@ -174,7 +174,7 @@ namespace EliteDangerousCore.EDDN
                 ["SuccessStateReached"] = true,
                 ["WarProgress"] = true,
                 ["RemainingPorts"] = true,
-                ["EstimatedRemainingTime"] = true,      
+                ["EstimatedRemainingTime"] = true,
             }
         };
 
@@ -213,6 +213,7 @@ namespace EliteDangerousCore.EDDN
                     ["Proportion"] = true
                 }
             },
+            ["OnFoot"] = true,
         };
 
         private static readonly JObject AllowedFieldsDocked = new JObject(AllowedFieldsCommon)

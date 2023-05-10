@@ -111,7 +111,7 @@ namespace EliteDangerousCore.JournalEvents
             public bool SuccessStateReached {get;set;}
             public double WarProgress {get;set;}        // 0 to 1
             public int RemainingPorts {get;set;}        
-            public double EstimatedRemainingTime {get;set;}    // days               
+            public string EstimatedRemainingTime {get;set;}    // "0 days" !
         }
 
         protected JournalLocOrJump(DateTime utc, ISystem sys, JournalTypeEnum jtype, bool edsmsynced ) : base(utc, jtype, edsmsynced)
