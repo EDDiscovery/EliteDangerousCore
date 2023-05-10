@@ -270,7 +270,14 @@ namespace EliteDangerousCore
 
         private void SetCache()
         {
-            cachelist[this.FDName.ToLowerInvariant()] = this;
+            try
+            {
+                cachelist.Add(FDName.ToLowerInvariant(), this);     // on purpose, an add to cause errors if dup
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"**** Duplicate MCD type {FDName} {ex}");
+            }
         }
 
         public static MaterialCommodityMicroResourceType EnsurePresent(string catname, string fdname, string locname = "")  // By FDNAME
@@ -590,9 +597,9 @@ namespace EliteDangerousCore
             AddEnc("Ship Systems Data", ItemType.Rare, MaterialGroupType.NA, "SSD", "TG_ShipSystemsData");
 
             // new to update 15 - inara/devtalk
-            AddManu("Heat Exposure Specimen", ItemType.VeryRare, MaterialGroupType.NA, "tg_abrasion01");        
-            AddManu("Phasing Membrane Residue", ItemType.VeryRare, MaterialGroupType.NA, "tg_abrasion02");
-            AddManu("Hardened Surface Fragments", ItemType.VeryRare, MaterialGroupType.NA, "tg_abrasion03");
+            AddManu("Hardened Surface Fragments", ItemType.VeryCommon, MaterialGroupType.NA, "tg_abrasion03");
+            AddManu("Phasing Membrane Residue", ItemType.Standard, MaterialGroupType.NA, "tg_abrasion02");
+            AddManu("Heat Exposure Specimen", ItemType.VeryRare, MaterialGroupType.NA, "tg_abrasion01");
 
             AddManu("Caustic Crystal", ItemType.Rare, MaterialGroupType.NA, "tg_causticcrystal");       // inara
             AddManu("Caustic Shard", ItemType.Standard, MaterialGroupType.NA, "tg_causticshard");      
@@ -664,7 +671,7 @@ namespace EliteDangerousCore
             AddCommoditySN("Reinforced Mounting Plate", m, "RMP", "");
             AddCommoditySN("Power Transfer Bus", m, "PTB", "PowerTransferConduits");
             AddCommoditySN("Power Converter", m, "PC", "");
-            AddCommoditySN("Ion Distributor", m, "ID", "");
+            AddCommoditySN("Ion Distributor", m, "IOD", "");
 
             ItemType md = ItemType.Medicines;
             AddCommodityList("Advanced Medicines;Basic Medicines;Combat Stabilisers;Performance Enhancers;Progenitor Cells", md);
@@ -707,7 +714,7 @@ namespace EliteDangerousCore
             AddCommodity("Ancient Key", sv, "AncientKey");
 
             AddCommodityList("Ai Relics;Antimatter Containment Unit;Antiquities;Assault Plans;Data Core;Diplomatic Bag;Encrypted Correspondence;Fossil Remnants", sv);
-            AddCommodityList("Geological Samples;Military Intelligence;Mysterious Idol;Occupied CryoPod;Personal Effects;Precious Gems;Prohibited Research Materials", sv);
+            AddCommodityList("Geological Samples;Military Intelligence;Mysterious Idol;Personal Effects;Precious Gems;Prohibited Research Materials", sv);
             AddCommodityList("Sap 8 Core Container;Scientific Research;Scientific Samples;Space Pioneer Relics;Tactical Data;Unstable Data Core", sv);
             AddCommodity("Large Survey Data Cache", sv, "largeexplorationdatacash");
             AddCommodity("Small Survey Data Cache", sv, "smallexplorationdatacash");
@@ -746,6 +753,15 @@ namespace EliteDangerousCore
             AddCommodity("Mollusc Brain Tissue", ItemType.Salvage, "M_TissueSample_Nerves");
             AddCommodity("Pod Tissue", ItemType.Salvage, "S9_TissueSample_Shell");
 
+            // update 15
+            AddCommodity("Thargoid Glaive Tissue Sample", sv, "ThargoidTissueSampleType6");
+            AddCommodity("Titan Deep Tissue Sample", sv, "ThargoidTissueSampleType9a");
+            AddCommodity("Titan Tissue Sample", sv, "ThargoidTissueSampleType9b");
+            AddCommodity("Titan Partial Tissue Sample", sv, "ThargoidTissueSampleType9c");
+            AddCommodity("Titan Maw Deep Tissue Sample", sv, "ThargoidTissueSampleType10a");
+            AddCommodity("Titan Maw Tissue Sample", sv, "ThargoidTissueSampleType10b");
+            AddCommodity("Titan Maw Partial Tissue Sample", sv, "ThargoidTissueSampleType10c");
+
             ItemType nc = ItemType.Narcotics;
             AddCommodity("Narcotics", nc, "BasicNarcotics");
 
@@ -753,7 +769,6 @@ namespace EliteDangerousCore
             AddCommodityList("Imperial Slaves;Slaves", sl);
 
             ItemType tc = ItemType.Technology;
-            AddCommoditySN("Ion Distributor", tc, "IOD", "IonDistributor");
             AddCommodityList("Advanced Catalysers;Animal Monitors;Aquaponic Systems;Bioreducing Lichen;Computer Components", tc);
             AddCommodity("Auto-Fabricators", tc, "autofabricators");
             AddCommoditySN("Micro Controllers", tc, "MCC", "MicroControllers");
