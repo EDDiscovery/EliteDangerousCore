@@ -77,13 +77,22 @@ namespace EliteDangerousCore
 
                 Point3D travelvector = new Point3D(Coordsto.X - curpos.X, Coordsto.Y - curpos.Y, Coordsto.Z - curpos.Z); // vector to destination
                 Point3D travelvectorperly = new Point3D(travelvector.X / distancetogo, travelvector.Y / distancetogo, travelvector.Z / distancetogo); // per ly travel vector
-
                 Point3D expectedNextPosition = GetNextPosition(curpos, travelvectorperly, MaxRange);    // where we would like to be..
+
+                System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.MSd} Route Plotter Query {curpos} -> {expectedNextPosition}");
+
                 ISystem bestsystem = GetBestJumpSystem(curpos, travelvectorperly, maxfromwanted, MaxRange);    // see if we can find a system near  our target
 
-                if ( bestsystem == null && EDSM)
+                if (bestsystem == null)
                 {
-                    bestsystem = GetBestEDSMSystem(curpos, travelvectorperly, maxfromwanted, MaxRange);
+                    if (EDSM)
+                    {
+                        bestsystem = GetBestEDSMSystem(curpos, travelvectorperly, maxfromwanted, MaxRange);
+                    }
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.MSd} .. found in EDD {bestsystem}");
                 }
 
                 // if we haven't found a system in range, let's try boosting
@@ -149,11 +158,30 @@ namespace EliteDangerousCore
                 currentPosition.Z + maxRange * travelVectorPerLy.Z); // where we would like to be..
         }
 
+        static BaseUtils.MSTicks ratelimiter = new BaseUtils.MSTicks();
+        const int maxqueriesrate = 5000;
+
         // return an EDSM ISystem or null based on parameters
         private static ISystem GetBestEDSMSystem( Point3D currentPosition, Point3D travelVectorPerLy, float maxDistanceFromWanted, float maxRange)
         {
+            if (ratelimiter.IsRunning)      // first time, won't be running
+            {
+                uint timerunning = ratelimiter.TimeRunning; // how long since ran?
+
+                if (timerunning < maxqueriesrate)       // if it is less than query rate, pause
+                {
+                    int delay = maxqueriesrate - (int)timerunning;
+                    System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.MSd} Rate limit EDSM queries by pausing for {delay}");
+                    System.Threading.Thread.Sleep(delay);
+                }
+            }
+
+            ratelimiter.Run();      // mark the start
+
             EDSMClass edsm = new EDSMClass();
             Point3D next = GetNextPosition(currentPosition, travelVectorPerLy, maxRange);
+
+            System.Diagnostics.Debug.Write($"EDSM Query next pos wanted {next.X} {next.Y} {next.Z}");
 
             Point3D centrepos = GetNextPosition(currentPosition, travelVectorPerLy, maxRange - maxDistanceFromWanted / 2);        // centre of edsm sphere is made here, at maxdistance-maxwanted/2
             var edsmresponse = edsm.GetSphereSystems(centrepos.X, centrepos.Y, centrepos.Z, maxDistanceFromWanted, 0);
