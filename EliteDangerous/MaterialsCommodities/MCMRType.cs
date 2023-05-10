@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2021 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using System;
@@ -590,6 +588,17 @@ namespace EliteDangerousCore
             AddManu("Wreckage Components", ItemType.Standard, MaterialGroupType.NA, "WRC", "TG_WreckageComponents");
             AddEnc("Ship Flight Data", ItemType.Standard, MaterialGroupType.NA, "SFD", "TG_ShipFlightData");
             AddEnc("Ship Systems Data", ItemType.Rare, MaterialGroupType.NA, "SSD", "TG_ShipSystemsData");
+
+            // new to update 15 - inara/devtalk
+            AddManu("Heat Exposure Specimen", ItemType.VeryRare, MaterialGroupType.NA, "tg_abrasion01");        
+            AddManu("Phasing Membrane Residue", ItemType.VeryRare, MaterialGroupType.NA, "tg_abrasion02");
+            AddManu("Hardened Surface Fragments", ItemType.VeryRare, MaterialGroupType.NA, "tg_abrasion03");
+
+            AddManu("Caustic Crystal", ItemType.Rare, MaterialGroupType.NA, "tg_causticcrystal");       // inara
+            AddManu("Caustic Shard", ItemType.Standard, MaterialGroupType.NA, "tg_causticshard");      
+            AddManu("Corrosive Mechanisms", ItemType.Standard, MaterialGroupType.NA, "tg_causticgeneratorparts");     
+            AddManu("Massive Energy Surge Analytics", ItemType.Standard, MaterialGroupType.NA, "tg_shutdowndata");    
+            AddManu("Thargoid Interdiction Telemetry", ItemType.Standard, MaterialGroupType.NA, "tg_interdictiondata");
 
             ItemType sv = ItemType.Salvage;
             AddCommodity("Thargoid Sensor", sv, "UnknownArtifact");
