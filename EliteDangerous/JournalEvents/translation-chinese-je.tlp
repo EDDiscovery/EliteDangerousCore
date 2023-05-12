@@ -154,6 +154,7 @@ SECTION JournalTypeEnum
 .Statistics: "Statistics" => "统计资料"
 .SupercruiseEntry: "Supercruise Entry" => "进入巡航"
 .SupercruiseExit: "Supercruise Exit" => "跳出巡航"
+.SupercruiseDestinationDrop: "Supercruise Destination Drop" @
 .Synthesis: "Synthesis" => "合成"
 .SystemsShutdown: "Systems Shutdown" => "系统关闭"
 .TechnologyBroker: "Technology Broker" => "科技商"
@@ -257,7 +258,7 @@ SECTION JournalTypeEnum
 .ShipLocker: "Ship Locker" @
 .FSSBodySignals: "FSS Body Signals" @
 .ModuleBuyAndStore: "Module Buy And Store" @
-.ScanBaryCentre: "Scan Barycentre" @
+.ScanBaryCentre: "Scan Bary Centre" @
 .NavRouteClear: "Nav Route Clear" @
 
 SECTION JournalCargo
