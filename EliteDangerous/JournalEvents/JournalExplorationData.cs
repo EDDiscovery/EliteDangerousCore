@@ -175,6 +175,8 @@ namespace EliteDangerousCore.JournalEvents
             public string Genus_Localised;
             public string Species;
             public string Species_Localised;
+            public string Variant;              // update 15, will be null before
+            public string Variant_Localised;    // update 15, will be null before
             public long Value;
             public long Bonus;
         };
@@ -190,7 +192,11 @@ namespace EliteDangerousCore.JournalEvents
             if (Bios != null)
             {
                 foreach (var b in Bios)
-                    detailed = detailed.AppendPrePad(string.Format("{0} {1} : {2} {3}", b.Genus_Localised, b.Species_Localised, b.Value, b.Bonus), Environment.NewLine);
+                {
+                    detailed = detailed.AppendPrePad(string.Format("{0}, {1}{2}: {2} {3}", 
+                                b.Genus_Localised, b.Species_Localised, b.Variant_Localised != null ? (", " + b.Variant_Localised) : null, 
+                                b.Value, b.Bonus), Environment.NewLine);
+                }
             }
         }
 

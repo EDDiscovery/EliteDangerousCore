@@ -656,7 +656,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
 
-            Species = Species.Alt("Unknown");       // seen entries with no genus/species, set to unknown.
+            Species = Species.Alt("Unknown");       // seen entries with empty entries for these, set to unknown.
             Genus = Genus.Alt("Unknown");
 
             if (ScanType == ScanTypeEnum.Analyse)
@@ -689,6 +689,10 @@ namespace EliteDangerousCore.JournalEvents
         public string Species { get; set; }
         [PropertyNameAttribute("Species in localised text")]
         public string Species_Localised { get; set; }
+        [PropertyNameAttribute("Frontier Variant ID")]
+        public string Variant { get; set; }                         // update 15, before it will be null
+        [PropertyNameAttribute("Variant in localised text")]
+        public string Variant_Localised { get; set; }                // update 15, before it will be null
         public enum ScanTypeEnum { Log, Sample, Analyse };
         [PropertyNameAttribute("Log type")]
         public ScanTypeEnum ScanType { get; set; }     //Analyse, Log, Sample
@@ -704,7 +708,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
         {
             int? ev = ScanType == ScanTypeEnum.Analyse ? EstimatedValue : null;
-            info = BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised, "; cr;N0", ev, "< @ ", fid.WhereAmI);
+            info = BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised, "", Variant_Localised, "; cr;N0", ev, "< @ ", fid.WhereAmI);
             detailed = "";
         }
 
@@ -723,7 +727,8 @@ namespace EliteDangerousCore.JournalEvents
             string currentkey = null;
             foreach( var so in list)
             {
-                var key = so.Genus + ":" + so.Species;
+                var key = so.Genus + ":" + so.Species + ":" + (so.Variant??"");     // add variant to key, if not set, its empty.
+
                 if (currentkey == null || currentkey == key)
                 {
                 }
@@ -760,7 +765,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 var s = t.Item2;
                 //System.Diagnostics.Debug.WriteLine($"{s.ScanType} {s.Genus_Localised} {s.Species_Localised}");
-                res = res.AppendPrePad(inds + BaseUtils.FieldBuilder.Build(";/3", t.Item1, "", s.ScanType, "<: ", s.Genus_Localised, "", s.Species_Localised), separ ?? Environment.NewLine);
+                res = res.AppendPrePad(inds + BaseUtils.FieldBuilder.Build(";/3", t.Item1, "", s.ScanType, "<: ", s.Genus_Localised, "", s.Species_Localised, "", s.Variant_Localised), separ ?? Environment.NewLine);
             }
 
             return res;
