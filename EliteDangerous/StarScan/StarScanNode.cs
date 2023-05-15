@@ -83,10 +83,11 @@ namespace EliteDangerousCore
                     if (scandata == null)
                     {
                         scandata = value;
+                        //System.Diagnostics.Debug.WriteLine($".. attach {scandata.ScanType} {scandata.EventTimeUTC} to {scandata.BodyName}");
                     }
                     else if ((!value.IsEDSMBody && value.ScanType != "Basic") || scandata.ScanType == "Basic") // Always overwrtite if its a journalscan (except basic scans)
                     {
-                        //System.Diagnostics.Debug.WriteLine(".. overwrite " + scandata.ScanType + " with " + value.ScanType + " for " + scandata.BodyName);
+                        //System.Diagnostics.Debug.WriteLine($".. overwrite {scandata.ScanType} {scandata.EventTimeUTC} with {value.ScanType} {value.EventTimeUTC} for {scandata.BodyName}");
                         scandata = value;
                     }
                 }
