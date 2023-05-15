@@ -519,21 +519,23 @@ namespace EliteDangerousCore
                         }
                     }
 
-                    // if this is a journal scan, and we have a results on this bodyname, and in there is a journal scan, its a repeat scan.
-                    if ( he.EntryType == JournalTypeEnum.Scan && results.TryGetValue((he.journalEntry as JournalScan).BodyName, out List<ResultEntry> prevres) &&
-                            prevres.Select(xy=>xy.HistoryEntry.EntryType == JournalTypeEnum.Scan).Count() > 0 )
+                    // if this is a journal scan, and we have a results on this bodyname
+                    if (he.EntryType == JournalTypeEnum.Scan && results.TryGetValue((he.journalEntry as JournalScan).BodyName, out List<ResultEntry> prevres))
                     {
-                        string bodyname = (he.journalEntry as JournalScan).BodyName;
-                        //System.Diagnostics.Debug.WriteLine($"Detected repeated scan result on {bodyname} remove previous");
-                        prevres.RemoveAll(x => x.HistoryEntry.EntryType == JournalTypeEnum.Scan);
-                        if (prevres.Count == 0)
-                            results.Remove(bodyname);
-                    }
-                    else
-                    {
+                        // if we have a prev scan, we may have a repeat
+                        var prevscan = prevres.Find(x => x.HistoryEntry.EntryType == JournalTypeEnum.Scan);
 
-                    }
+                        // we have a scan, and its got the same search ID name (note discoveries/surveyor reuse the results structure across search names, so need to screen it out)
+                        if (prevscan != null && prevscan.FilterPassed.Equals(filterdescription))      
+                        {
+                            string bodyname = (he.journalEntry as JournalScan).BodyName;
 
+                           // System.Diagnostics.Debug.WriteLine($"Detected repeated scan result on {bodyname}:`{filterdescription}` remove previous");
+                            prevres.Remove(prevscan);
+                            if (prevres.Count == 0)
+                                results.Remove(bodyname);
+                        }
+                    }
                     // concurrency with the foreground adding new scan nodes as we process
                     // we don't change data here
                     // he.Scannode will either be set or not, the foreground does not set it, its only updated by the filler 
@@ -782,10 +784,12 @@ namespace EliteDangerousCore
                                 if (results.TryGetValue(key, out List<ResultEntry> value))       // if key already exists, maybe set HE to us, and update filters passed
                                 {
                                     value.Add( re );
+                                  //  System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC} `{filterdescription}` matched {key} added to list");
                                 }
                                 else
                                 {                                                       // else make a new list
                                     results[key] = new List<ResultEntry> { re };
+                                 //   System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC} `{filterdescription}` matched {key} new body");
                                 }
                             }
                         }
