@@ -175,6 +175,8 @@ namespace EliteDangerousCore.JournalEvents
             public string Genus_Localised;
             public string Species;
             public string Species_Localised;
+            public string Variant;              // update 15, will be null before
+            public string Variant_Localised;    // update 15, will be null before
             public long Value;
             public long Bonus;
         };
@@ -190,7 +192,11 @@ namespace EliteDangerousCore.JournalEvents
             if (Bios != null)
             {
                 foreach (var b in Bios)
-                    detailed = detailed.AppendPrePad(string.Format("Genus: {0}, Species: {1}, Reward: {2} cr, First sample bonus: {3} cr, Total reward: {4} cr".T(EDCTx.JournalSellOrganics_Detailed), b.Genus_Localised, b.Species_Localised.ReplaceIfStartsWith(b.Genus_Localised, ""), b.Value.ToString("N0"), b.Bonus.ToString("N0"), (b.Value + b.Bonus).ToString("N0")), Environment.NewLine);
+                {
+                    detailed = detailed.AppendPrePad(string.Format("{0}, {1}{2}: {2} {3}", 
+                                b.Genus_Localised, b.Species_Localised, b.Variant_Localised != null ? (", " + b.Variant_Localised) : null, 
+                                b.Value, b.Bonus), Environment.NewLine);
+                }
             }
         }
 

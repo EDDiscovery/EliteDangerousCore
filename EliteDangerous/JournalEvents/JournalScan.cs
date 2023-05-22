@@ -335,8 +335,9 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Count of fully analysed scans")]
         public int CountOrganicsScansAnalysed { get { return Organics?.Where(x => x.ScanType == JournalScanOrganic.ScanTypeEnum.Analyse).Count() ?? 0; } }
         [PropertyNameAttribute("Are all organics on this body analysed")]
-        public bool OrganicsFullyAnalysed { get { return CountOrganicsScansAnalysed == CountBioSignals; } }
-
+        public bool OrganicsFullyAnalysed { get { return (CountOrganicsScansAnalysed == CountBioSignals && CountBioSignals > 0); } }
+        [PropertyNameAttribute("Are there organics that haven't been analysed")]
+        public bool UnanalysedBiosPresent { get { return CountOrganicsScansAnalysed != CountBioSignals; } }
         [PropertyNameAttribute("Surface features information")]
         public List<IBodyFeature> SurfaceFeatures { get; set; }// can be null if nothing for this node, else a list of body features. Set up by StarScan
         [PropertyNameAttribute("Count of surface featurss")]

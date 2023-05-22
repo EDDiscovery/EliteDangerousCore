@@ -254,8 +254,8 @@ namespace EliteDangerousCore.ScreenShots
 
         private void UpdateExample()
         {
-            textBoxFileNameExample.Text = Path.Combine(ScreenShotImageConverter.SubFolder(comboBoxSubFolder.SelectedIndex, OutputFolder, "Sol","Jameson",DateTime.Now),
-                                          ScreenShotImageConverter.CreateFileName("Sol", "Earth", "HighResScreenshot_0000.bmp", comboBoxFileNameFormat.SelectedIndex, extCheckBoxHiRes.Checked, DateTime.Now) + "." + comboBoxOutputAs.Text);
+            textBoxFileNameExample.Text = Path.Combine(ScreenShotImageConverter.SubFolder(comboBoxSubFolder.SelectedIndex, OutputFolder, "Sol","Jameson",DateTime.UtcNow),
+                                          ScreenShotImageConverter.CreateFileName("Sol", "Earth", "HighResScreenshot_0000.bmp", comboBoxFileNameFormat.SelectedIndex, extCheckBoxHiRes.Checked, DateTime.UtcNow) + "." + comboBoxOutputAs.Text);
         }
 
         private void extButtonBrowseMoveOrg_Click(object sender, EventArgs e)

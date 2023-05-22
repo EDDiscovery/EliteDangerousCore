@@ -53,7 +53,6 @@ namespace EliteDangerousCore
             {
                 lock (relatednode)
                 {
-                    //System.Diagnostics.Debug.WriteLine("Setting Scan Organic Found for " + jsaa.Body + " @ " + sys.Name );
                     if (relatednode.Organics == null)
                         relatednode.Organics = new List<JournalScanOrganic>();
 
@@ -61,6 +60,8 @@ namespace EliteDangerousCore
 
                     if (relatednode.ScanData != null)
                     {
+                        //System.Diagnostics.Debug.WriteLine($"Attach Scan Organic for {sys.Name} {jsaa.Body} {relatednode.FullName} to {relatednode.ScanData.EventTimeUTC}" );
+
                         relatednode.ScanData.Organics = relatednode.Organics;       // make sure Scan node has same list as subnode
                                                                                     // System.Diagnostics.Debug.WriteLine($"Assign Scan organic signal list {string.Join(",", relatednode.Organics.Select(x => x.Species).ToList())} to {relatednode.FullName}");
                     }

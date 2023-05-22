@@ -1141,6 +1141,7 @@ namespace EliteDangerousCore
             new EngineeringRecipe("Plasma Shock Cannon Gimbal Large","hpt_plasmashockcannon_gimbal_large","Human","Shock Cannon","28V,24W,24Re,22Tc,12PTB"),
             new EngineeringRecipe("Plasma Shock Cannon Gimbal Medium","hpt_plasmashockcannon_gimbal_medium","Human","Shock Cannon","24V,22W,20Re,28Tc,10PC"),
             new EngineeringRecipe("Plasma Shock Cannon Gimbal Small","hpt_plasmashockcannon_gimbal_small","Human","Shock Cannon","10V,11W,8Re,10Tc,4PTB"),
+            new EngineeringRecipe("TG Pulse Neutraliser","hpt_antiunknownshutdown_tiny_v2","Human","Anti Thargoid","5MESA,5PE,5UES,1ARTG"),
 
             // Inara 9
 

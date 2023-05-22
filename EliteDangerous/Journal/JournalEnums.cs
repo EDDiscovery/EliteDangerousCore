@@ -253,6 +253,7 @@ namespace EliteDangerousCore
         SquadronDemotion = 892,
         SquadronPromotion = 893,
         SquadronStartup = 894,
+        SupercruiseDestinationDrop = 895,
         SupercruiseExit = 900,
         SwitchSuitLoadout = 4023,
         SuitLoadout = 4029,

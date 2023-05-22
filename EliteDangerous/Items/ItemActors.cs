@@ -80,8 +80,10 @@ namespace EliteDangerousCore
              { "carrierdocka", new Actor("Carrier Dock A") },
              { "carrierdockb", new Actor("Carrier Dock B") },
              { "missileskimmer", new Actor("Skimmer Missile") },
+             { "bossskimmer", new Actor("Boss Skimmer") }
         };
 
 
     }
 }
+

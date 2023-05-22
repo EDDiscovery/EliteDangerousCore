@@ -680,8 +680,10 @@ namespace EliteDangerousCore.JournalEvents
         {
             evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
 
-            Species = Species.Alt("Unknown");       // seen entries with no genus/species, set to unknown.
+            Species = Species.Alt("Unknown");       // seen entries with empty entries for these, set to unknown.
+            Species_Localised = Species_Localised.Alt(Species);
             Genus = Genus.Alt("Unknown");
+            Genus_Localised = Genus_Localised.Alt(Genus);
 
             if (ScanType == ScanTypeEnum.Analyse)
             {
@@ -706,13 +708,21 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Internal Frontier ID")]
         public int Body { get; set; }
         [PropertyNameAttribute("Frontier Genus ID")]
-        public string Genus { get; set; }
+        public string Genus { get; set; }                       // never null
         [PropertyNameAttribute("Genus in localised text")]
-        public string Genus_Localised { get; set; }
+        public string Genus_Localised { get; set; }                 // never null
         [PropertyNameAttribute("Frontier Species ID")]
-        public string Species { get; set; }
+        public string Species { get; set; }                     // never null
         [PropertyNameAttribute("Species in localised text")]
-        public string Species_Localised { get; set; }
+        public string Species_Localised { get; set; }               // never null
+        [PropertyNameAttribute("Species in localised text without Genus")]
+        public string Species_Localised_Short { get { return Species_Localised.Alt(Species).ReplaceIfStartsWith(Genus_Localised + " "); } }
+        [PropertyNameAttribute("Frontier Variant ID, may be null/empty")]
+        public string Variant { get; set; }                         // update 15, before it will be null
+        [PropertyNameAttribute("Variant in localised text, may be null/empty")]
+        public string Variant_Localised { get; set; }                // update 15, before it will be null
+        [PropertyNameAttribute("Variant in localised text without Species, or empty string if not present")]
+        public string Variant_Localised_Short { get { return Variant_Localised.Alt(Variant)?.ReplaceIfStartsWith(Species_Localised + " -") ?? ""; } }
         public enum ScanTypeEnum { Log, Sample, Analyse };
         [PropertyNameAttribute("Log type")]
         public ScanTypeEnum ScanType { get; set; }     //Analyse, Log, Sample
@@ -728,7 +738,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
         {
             int? ev = ScanType == ScanTypeEnum.Analyse ? EstimatedValue : null;
-            info = BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised, "; cr;N0", ev, "< @ ", fid.WhereAmI);
+            info = BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised_Short, "", Variant_Localised_Short, "; cr;N0", ev, "< @ ", fid.WhereAmI);
             detailed = "";
         }
 
@@ -747,7 +757,8 @@ namespace EliteDangerousCore.JournalEvents
             string currentkey = null;
             foreach( var so in list)
             {
-                var key = so.Genus + ":" + so.Species;
+                var key = so.Genus + ":" + so.Species + ":" + (so.Variant??"");     // add variant to key, if not set, its empty.
+
                 if (currentkey == null || currentkey == key)
                 {
                 }
@@ -784,7 +795,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 var s = t.Item2;
                 //System.Diagnostics.Debug.WriteLine($"{s.ScanType} {s.Genus_Localised} {s.Species_Localised}");
-                res = res.AppendPrePad(inds + BaseUtils.FieldBuilder.Build(";/3", t.Item1, "", s.ScanType, "<: ", s.Genus_Localised, "", s.Species_Localised), separ ?? Environment.NewLine);
+                res = res.AppendPrePad(inds + BaseUtils.FieldBuilder.Build(";/3", t.Item1, "", s.ScanType, "<: ", s.Genus_Localised, "", s.Species_Localised_Short, "", s.Variant_Localised_Short), separ ?? Environment.NewLine);
             }
 
             return res;

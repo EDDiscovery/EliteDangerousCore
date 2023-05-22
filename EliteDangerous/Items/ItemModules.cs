@@ -1089,6 +1089,11 @@ namespace EliteDangerousCore
             { "paintjob_viper_mkiv_tactical_white", new ShipModule(-1,0,0,null,"Paintjob Viper MK IV Tactical White",VanityType) },
             { "paintjob_vulture_tactical_blue", new ShipModule(-1,0,0,null,"Paintjob Vulture Tactical Blue",VanityType) },
             { "paintjob_vulture_tactical_white", new ShipModule(-1,0,0,null,"Paintjob Vulture Tactical White",VanityType) },
+            { "paintjob_diamondbackxl_tactical_grey", new ShipModule(-1, 0, "Paintjob Diamondbackxl Tactical Grey", VanityType) },
+            { "paintjob_python_tactical_grey", new ShipModule(-1, 0, "Paintjob Python Tactical Grey", VanityType) },
+            { "paintjob_krait_light_tactical_grey", new ShipModule(-1, 0, "Paintjob Krait Light Tactical Grey", VanityType) },
+            { "paintjob_cutter_militaire_earth_yellow", new ShipModule(-1, 0, "Paintjob Cutter Militaire Earth Yellow", VanityType) },
+            { "paintjob_anaconda_fullmetal_cobalt", new ShipModule(-1, 0, "Paintjob Anaconda Fullmetal Cobalt", VanityType) },
 
             { "nameplate_expedition02_grey", new ShipModule(-1,0, "Nameplate Expedition 2 Grey", VanityType ) },
             { "paintjob_adder_lrpo_azure", new ShipModule(-1,0, "Paintjob Adder Lrpo Azure", VanityType ) },

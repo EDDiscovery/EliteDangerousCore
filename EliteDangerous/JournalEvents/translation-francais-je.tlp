@@ -154,6 +154,7 @@ SECTION JournalTypeEnum
 .Statistics: "Statistics" => "Statistiques"
 .SupercruiseEntry: "Supercruise Entry" => "Entrée en super-navigation"
 .SupercruiseExit: "Supercruise Exit" => "Sortie de super-navigation"
+.SupercruiseDestinationDrop: "Supercruise Destination Drop" @
 .Synthesis: "Synthesis" => "Synthèse"
 .SystemsShutdown: "Systems Shutdown" => "Arrêt des systèmes"
 .TechnologyBroker: "Technology Broker" => "Marchand de technologie"
@@ -257,7 +258,7 @@ SECTION JournalTypeEnum
 .ShipLocker: "Ship Locker" @
 .FSSBodySignals: "FSS Body Signals" @
 .ModuleBuyAndStore: "Module Buy And Store" @
-.ScanBaryCentre: "Scan Barycentre" @
+.ScanBaryCentre: "Scan Bary Centre" @
 .NavRouteClear: "Nav Route Clear" @
 
 SECTION JournalCargo
