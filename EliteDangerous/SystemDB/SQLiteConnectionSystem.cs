@@ -11,7 +11,7 @@
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
- 
+
 using SQLLiteExtensions;
 using System;
 
@@ -19,7 +19,7 @@ namespace EliteDangerousCore.DB
 {
     public class SQLiteConnectionSystem : SQLExtConnectionRegister
     {
-        public SQLiteConnectionSystem() : base(EliteDangerousCore.EliteConfigInstance.InstanceOptions.SystemDatabasePath, utctimeindicator: true)
+        public SQLiteConnectionSystem(JournalModes journalmode) : base(EliteDangerousCore.EliteConfigInstance.InstanceOptions.SystemDatabasePath, utctimeindicator: true, journalmode: journalmode)
         {
         }
 
@@ -135,13 +135,13 @@ namespace EliteDangerousCore.DB
         {
             ExecuteNonQueries(new string[]
             {
-                "ALTER TABLE Sectors" + frompostfix + " RENAME TO Sectors" + topostfix,       
-                "ALTER TABLE SystemTable" + frompostfix + " RENAME TO SystemTable" + topostfix,       
-                "ALTER TABLE Names" + frompostfix + " RENAME TO Names" + topostfix,       
+                "ALTER TABLE Sectors" + frompostfix + " RENAME TO Sectors" + topostfix,
+                "ALTER TABLE SystemTable" + frompostfix + " RENAME TO SystemTable" + topostfix,
+                "ALTER TABLE Names" + frompostfix + " RENAME TO Names" + topostfix,
             });
         }
 
-        public void CreateSystemDBTableIndexes() 
+        public void CreateSystemDBTableIndexes()
         {
             string[] queries = new[]
             {

@@ -34,7 +34,7 @@ namespace EliteDangerousCore.DB
         {
             return System.Threading.Tasks.Task.Run(() =>
             {
-                 return FindSystem(name, glist, checkedsm);
+                return FindSystem(name, glist, checkedsm);
             });
         }
 
@@ -50,7 +50,7 @@ namespace EliteDangerousCore.DB
         {
             ISystem sys = FindSystem(name, checkedsm);
 
-            if ( sys == null && glist != null)
+            if (sys == null && glist != null)
             {
                 EDSM.GalacticMapObject gmo = glist.Find(name, true);
 
@@ -66,7 +66,7 @@ namespace EliteDangerousCore.DB
 
             return sys;
         }
-    
+
         public static ISystem FindSystem(string name, bool checkedsm = false)
         {
             return FindSystem(new SystemClass(name), checkedsm);
@@ -97,7 +97,7 @@ namespace EliteDangerousCore.DB
 
                     if (found != null && found.HasCoordinate)       // if its a good system
                     {
-                      //  SystemsDatabase.Instance.StoreSystems(new List<ISystem> { found });     // won't do anything if rebuilding
+                        //  SystemsDatabase.Instance.StoreSystems(new List<ISystem> { found });     // won't do anything if rebuilding
                     }
                 }
 #endif
@@ -127,7 +127,12 @@ namespace EliteDangerousCore.DB
                 ISystem dbfound = null;
 
                 if (findnameok)            // if not found but has a good name
-                    dbfound = DB.SystemsDB.FindStar(find.Name,cn);   // find by name, no wildcards
+                {
+                    var list = DB.SystemsDB.FindStars(find.Name, cn);   // find all by name, case insensitive
+
+                    if (list.Count == 1 || (list.Count > 0 && !find.HasCoordinate))     // if we have 1 match only, or we have many matches, but no coord
+                        dbfound = list[0];      // take the first entry
+                }
 
                 if (dbfound == null && find.HasCoordinate)        // finally, not found, but we have a co-ord, find it from the db  by distance
                     dbfound = DB.SystemsDB.GetSystemByPosition(find.X, find.Y, find.Z, cn);
@@ -139,7 +144,7 @@ namespace EliteDangerousCore.DB
                         dbfound.X = find.X; dbfound.Y = find.Y; dbfound.Z = find.Z;
                     }
 
-                    lock(cachelockobject)          // lock to prevent multi change over these classes
+                    lock (cachelockobject)          // lock to prevent multi change over these classes
                     {
                         if (systemsByName.ContainsKey(orgsys.Name))   // so, if name database already has name
                             systemsByName[orgsys.Name].Remove(orgsys);  // and remove the ISystem if present on that orgsys
@@ -179,7 +184,7 @@ namespace EliteDangerousCore.DB
             List<ISystem> foundlist = new List<ISystem>();
             ISystem found = null;
 
-            lock(cachelockobject)          // Rob seen instances of it being locked together in multiple star distance threads, we need to serialise access to these two dictionaries
+            lock (cachelockobject)          // Rob seen instances of it being locked together in multiple star distance threads, we need to serialise access to these two dictionaries
             {                               // Concurrent dictionary no good, they could both be about to add the same thing at the same time and pass the contains test.
                 if (systemsByName.ContainsKey(find.Name))            // and all names cached
                 {
@@ -232,7 +237,7 @@ namespace EliteDangerousCore.DB
             {
                 SystemsDatabase.Instance.DBRead(cn =>
                 {
-                    var list = DB.SystemsDB.FindStarWildcard(name, cn, limit);
+                    var list = DB.SystemsDB.FindStarsWildcard(name, cn, limit);
                     if (list != null)
                         systems.AddRange(list);
                 });
@@ -253,12 +258,12 @@ namespace EliteDangerousCore.DB
             if (excludenames == null)
                 excludenames = new HashSet<string>();       // empty set
 
-            lock(cachelockobject)
+            lock (cachelockobject)
             {
                 if (spherical)
                 {
                     var sphericalset = systemsByName.Values.SelectMany(s => s)
-                                        .Where(sys => sys.DistanceSq(x, y, z) <= maxdist*maxdist && sys.DistanceSq(x, y, z) >= mindist*mindist && !excludenames.Contains(sys.Name))
+                                        .Where(sys => sys.DistanceSq(x, y, z) <= maxdist * maxdist && sys.DistanceSq(x, y, z) >= mindist * mindist && !excludenames.Contains(sys.Name))
                                         .Select(s => new { distsq = s.DistanceSq(x, y, z), sys = s })
                                         .ToList();
 
@@ -287,16 +292,16 @@ namespace EliteDangerousCore.DB
             {
                 SystemsDatabase.Instance.DBRead(cn =>
                 {
-                SystemsDB.GetSystemListBySqDistancesFrom( x, y, z, approxmaxitems, mindist, maxdist, spherical, cn,
-                        (distsq,sys) =>
-                        {
-                            if (!excludenames.Contains(sys.Name))     // if not allowed or already there (if we run this twice, this should always trigger since they are all in the cache)
+                    SystemsDB.GetSystemListBySqDistancesFrom(x, y, z, approxmaxitems, mindist, maxdist, spherical, cn,
+                            (distsq, sys) =>
+                            {
+                                if (!excludenames.Contains(sys.Name))     // if not allowed or already there (if we run this twice, this should always trigger since they are all in the cache)
                             {
                                 //System.Diagnostics.Debug.WriteLine($"Found from db {sys.Name}");
-                                distlist.Add(distsq,sys);
-                                AddToCache(sys);
-                            }
-                        });
+                                distlist.Add(distsq, sys);
+                                    AddToCache(sys);
+                                }
+                            });
                 });
             }
         }
@@ -383,7 +388,7 @@ namespace EliteDangerousCore.DB
             IterativeWaypointDevHalf,
         }
 
-        internal static ISystem GetSystemNearestTo(IEnumerable<ISystem> systems,           
+        internal static ISystem GetSystemNearestTo(IEnumerable<ISystem> systems,
                                                    Point3D currentpos,
                                                    Point3D wantedpos,
                                                    double maxfromcurpos,
@@ -455,7 +460,7 @@ namespace EliteDangerousCore.DB
             }
         }
 
-        public static void ReturnSystemAdditionalListForAutoComplete(string input, Object ctrl, SortedSet<string> set )
+        public static void ReturnSystemAdditionalListForAutoComplete(string input, Object ctrl, SortedSet<string> set)
         {
             ReturnAdditionalAutoCompleteList(input, ctrl, set);
             ReturnSystemAutoCompleteList(input, ctrl, set);
@@ -484,7 +489,7 @@ namespace EliteDangerousCore.DB
             {
                 if (!SystemsDatabase.Instance.RebuildRunning)           // DB okay, go and use it to find stars
                 {
-                    List<ISystem> systems = DB.SystemsDB.FindStarWildcard(input, MaximumStars);
+                    List<ISystem> systems = DB.SystemsDB.FindStarsWildcard(input, MaximumStars);
                     foreach (var i in systems)
                     {
                         AddToCache(i);
@@ -520,7 +525,7 @@ namespace EliteDangerousCore.DB
         // if orgsys is set, then we can use its position to try and find a star match in the name found list
         static private void AddToCache(ISystem found, ISystem orgsys = null)
         {
-            lock(cachelockobject)
+            lock (cachelockobject)
             {
                 //System.Diagnostics.Debug.WriteLine($"SystemCache add {found.Name}");
 

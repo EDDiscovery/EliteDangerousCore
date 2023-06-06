@@ -37,7 +37,7 @@ namespace EliteDangerousCore.DB
 
         // Beware with no extra conditions, you get them all..  Mostly used for debugging
         // use starreport to avoid storing the entries instead pass back one by one
-        public static List<ISystem> ListStars(string where = null, string orderby = null, string limit = null, 
+        public static List<ISystem> ListStars(string where = null, string orderby = null, string limit = null,
                                                 Action<ISystem> starreport = null)
         {
             List<ISystem> ret = new List<ISystem>();
@@ -119,7 +119,7 @@ namespace EliteDangerousCore.DB
             {
                 SystemsDatabase.Instance.DBRead(db =>
                 {
-                    fill = GetSystemList<V>(db,x, y, z, blocksize, ref namesout, ref vectsout, tovect, additionaltext, chunksize);
+                    fill = GetSystemList<V>(db, x, y, z, blocksize, ref namesout, ref vectsout, tovect, additionaltext, chunksize);
                 }, warnthreshold: 5000);
             }
 
@@ -129,9 +129,9 @@ namespace EliteDangerousCore.DB
         }
 
 
-        public static int GetSystemList<V>(SQLiteConnectionSystem cn, float x, float y, float z, float blocksize, ref string[] names, ref V[] vectors, 
+        public static int GetSystemList<V>(SQLiteConnectionSystem cn, float x, float y, float z, float blocksize, ref string[] names, ref V[] vectors,
                                                 Func<int, int, int, EDStar, V> tovect,
-                                                Func<V, string, string> additionaltext, int chunksize )
+                                                Func<V, string, string> additionaltext, int chunksize)
         {
             names = new string[chunksize];
             vectors = new V[chunksize];

@@ -766,7 +766,6 @@ namespace EliteDangerousCore
             AddCommodity("Titan Partial Tissue Sample", sv, "ThargoidTissueSampleType9c");
             AddCommodity("Titan Maw Deep Tissue Sample", sv, "ThargoidTissueSampleType10a");
             AddCommodity("Titan Maw Tissue Sample", sv, "ThargoidTissueSampleType10b");
-            AddCommodity("Titan Maw Partial Tissue Sample", sv, "ThargoidTissueSampleType10c");
 
             ItemType nc = ItemType.Narcotics;
             AddCommodity("Narcotics", nc, "BasicNarcotics");

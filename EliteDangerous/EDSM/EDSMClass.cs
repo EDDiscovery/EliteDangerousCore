@@ -217,7 +217,7 @@ namespace EliteDangerousCore.EDSM
             string query = "api-v1/systems" +
                 "?startdatetime=" + HttpUtility.UrlEncode(startdate.ToUniversalTime().ToStringYearFirstInvariant()) +
                 "&enddatetime=" + HttpUtility.UrlEncode(enddate.ToUniversalTime().ToStringYearFirstInvariant()) +
-                "&coords=1&submitted=1&known=1&showId=1";
+                "&coords=1&known=1&showId=1";
             return RequestGet(query, handleException: true, timeout: timeout);
         }
 

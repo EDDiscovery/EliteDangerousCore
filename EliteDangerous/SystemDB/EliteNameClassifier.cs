@@ -167,7 +167,9 @@ namespace EliteDangerousCore
             SectorName = StarName = null;
         }
 
-        public void Classify(string starname)   // classify a string
+        // classify a string
+        // starname is case sensitive and case preserving
+        public void Classify(string starname)
         {
             EntryType = NameType.NotSet;
 
@@ -270,7 +272,7 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    if (surveys.Contains(nameparts[0],StringComparer.InvariantCultureIgnoreCase))
+                    if (surveys.Contains(nameparts[0], StringComparer.InvariantCultureIgnoreCase))
                     {
                         SectorName = nameparts[0];
                         StarName = starname.Mid(nameparts[0].Length + 1).Trim();
