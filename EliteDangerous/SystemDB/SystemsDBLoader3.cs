@@ -79,6 +79,9 @@ namespace EliteDangerousCore.DB
 
                 SystemsDatabase.Instance.SetSectorIDNext(nextsectorid);
                 SystemsDatabase.Instance.SetLastRecordTimeUTC(LastDate);
+
+                SystemsDatabase.Instance.WALCheckPoint();       // just make sure we don't leave behind a big WAL file
+
             }
 
             public long ParseJSONFile(string filename, Func<bool> cancelRequested, Action<string> reportProgress)
@@ -135,6 +138,7 @@ namespace EliteDangerousCore.DB
                 uint datev = QuickJSON.Utils.Extensions.Checksum("date");
                 uint updatetimev = QuickJSON.Utils.Extensions.Checksum("updateTime");
                 uint coordsv = QuickJSON.Utils.Extensions.Checksum("coords");
+                uint coordsLockedv = QuickJSON.Utils.Extensions.Checksum("coordsLocked");
                 uint mainstarv = QuickJSON.Utils.Extensions.Checksum("mainStar");
                 uint needspermitv = QuickJSON.Utils.Extensions.Checksum("needsPermit");
 
@@ -245,6 +249,10 @@ namespace EliteDangerousCore.DB
                                     {
                                         // we don't store this
                                         bool _ = parser.IsStringMoveOn("true") ? true : !parser.IsStringMoveOn("false");
+                                    }
+                                    else if ( sc == coordsLockedv ) //EDSM
+                                    { 
+                                        var token = parser.JNextValue(charbuf, false);      // just remove true
                                     }
                                     else
                                     {
@@ -401,7 +409,7 @@ namespace EliteDangerousCore.DB
                         curwb = new WriteBlock(++wbno); // make a new one
 
                         updates += recordstostore;
-                        //    reportProgress?.Invoke($"Star database updated {recordstostore:N0} total so far {(updates):N0}");
+                        reportProgress?.Invoke($"Star database updated {recordstostore:N0} total so far {updates:N0}");
                         recordstostore = 0;
                     }
                 }
@@ -414,7 +422,8 @@ namespace EliteDangerousCore.DB
                     prevwb.sqlop = null;
                 }
 
-                reportProgress?.Invoke($"Star database updated {updates:N0}");
+                reportProgress?.Invoke($"Star database updated complete {updates:N0}");
+
                 System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCountLap("SDBS")} System DB L3 finish {updates}");
 
                 // update max date - from string
