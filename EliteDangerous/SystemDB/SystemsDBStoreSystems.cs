@@ -20,6 +20,7 @@ namespace EliteDangerousCore.DB
 {
     // EDSM Store - db.edsmid contains edsmid, and db.info is null
     // Spansh Store - db.edsmid contains the system address, and db.info is non null
+    // tbd - what if the data we are replacing in spansh mode
 
     public partial class SystemsDB
     {
@@ -59,7 +60,7 @@ namespace EliteDangerousCore.DB
 
             if (jlist.Count > 0)
             {
-                SystemsDB.Loader3 loader3 = new SystemsDB.Loader3("", 10000, null, false);
+                SystemsDB.Loader3 loader3 = new SystemsDB.Loader3("", 10000, null, poverlapped:false, pdontoverwrite:true);
                 long updates = loader3.ParseJSONFile(jlist.ToString(), () => false, (s) => System.Diagnostics.Debug.WriteLine($"Store Systems: {s}"));
                 loader3.Finish();
                 return updates;

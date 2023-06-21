@@ -118,7 +118,7 @@ namespace EliteDangerousCore.DB
             //else 
             if (method == 3)
             {
-                SystemsDB.Loader3 loader = new SystemsDB.Loader3(TempTablePostfix, blocksize, gridids, true, debugoutputfile);   // overlap write
+                SystemsDB.Loader3 loader = new SystemsDB.Loader3(TempTablePostfix, blocksize, gridids, true, false, debugoutputfile);   // overlap write with insert or replace
                 updates = loader.ParseJSONFile(filename, cancelRequested, reportProgress);
                 loader.Finish();
             }
@@ -183,7 +183,7 @@ namespace EliteDangerousCore.DB
             long count = 0;
             if (!RebuildRunning)
             {
-                System.Diagnostics.Debug.WriteLine("********************** STORE SYSTEMS NEEDS REWORKING");
+                System.Diagnostics.Debug.WriteLine("********************** STORE SYSTEMS NEEDS REWORKING - these come from EDSM, don't have star class, don't update if present in spansh db");
                 count = SystemsDB.StoreSystems(systems);
             }
 

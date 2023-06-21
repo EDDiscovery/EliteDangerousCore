@@ -38,13 +38,16 @@ namespace EliteDangerousCore.DB
             // create - postfix allows a different table set to be created
             // maxblocksize - write back when reached this
             // gridids - null or array of allowed gridid
+            // poverlapped - allow overlapped reading/db writing
+            // dontoverwrite - do INSERT OR IGNORE
             // debugoutputfile - write file of loaded systems
-            public Loader3(string ptablepostfix, int pmaxblocksize, bool[] gridids, bool poverlapped, string debugoutputfile = null)
+            public Loader3(string ptablepostfix, int pmaxblocksize, bool[] gridids, bool poverlapped, bool pdontoverwrite, string debugoutputfile = null)
             {
                 tablepostfix = ptablepostfix;
                 maxblocksize = pmaxblocksize;
                 grididallowed = gridids;
                 overlapped = poverlapped;
+                dontoverwrite = pdontoverwrite;
 
                 nextsectorid = SystemsDatabase.Instance.GetSectorIDNext();
                 LastDate = SystemsDatabase.Instance.GetLastRecordTimeUTC();
@@ -436,7 +439,7 @@ namespace EliteDangerousCore.DB
             // we need this in a func. The function executes the c.Write in a thread, so we can't let c change
             void Write(WriteBlock c)
             {
-                c.sqlop = SystemsDatabase.Instance.DBWriteNoWait(db => c.Write(db, tablepostfix), jobname: "SystemDBLoad");
+                c.sqlop = SystemsDatabase.Instance.DBWriteNoWait(db => c.Write(db, tablepostfix, dontoverwrite), jobname: "SystemDBLoad");
             }
 
             private class WriteBlock
@@ -452,7 +455,7 @@ namespace EliteDangerousCore.DB
                     wbno = n;
                 }
 
-                public void Write(SQLiteConnectionSystem db, string tablepostfix)
+                public void Write(SQLiteConnectionSystem db, string tablepostfix, bool dontoverwrite)
                 {
                     using (var txn = db.BeginTransaction())
                     {
@@ -484,7 +487,8 @@ namespace EliteDangerousCore.DB
 
                             //System.Diagnostics.Debug.Assert(!systeminsertcmd.ToString().Contains("."));
 
-                            using (var cmd = db.CreateCommand("INSERT OR REPLACE INTO SystemTable" + tablepostfix + " (edsmid,sectorid,nameid,x,y,z,info) VALUES " + systeminsertcmd.ToString(), txn))
+                            using (var cmd = db.CreateCommand(
+                                (dontoverwrite ? "INSERT OR IGNORE INTO SystemTable" : "INSERT OR REPLACE INTO SystemTable") + tablepostfix + " (edsmid,sectorid,nameid,x,y,z,info) VALUES " + systeminsertcmd.ToString(), txn))
                             {
                                 cmd.ExecuteNonQuery();
                             }
@@ -500,6 +504,7 @@ namespace EliteDangerousCore.DB
             private int nextsectorid;
             private int maxblocksize;
             private bool overlapped;
+            private bool dontoverwrite;
             private bool[] grididallowed;
             private StreamWriter debugfile = null;
 

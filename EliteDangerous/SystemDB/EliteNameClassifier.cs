@@ -191,7 +191,7 @@ namespace EliteDangerousCore
                     {
                         string p = nameparts[i + 1];
 
-                        if (p.Length > 0)
+                        if (p.Length > 0)           // should have a or a56-229 or a56
                         {
                             char mc = char.ToLower(p[0]);
                             if (mc >= 'a' && mc <= 'h')
@@ -199,34 +199,54 @@ namespace EliteDangerousCore
                                 MassCode = (uint)(mc - 'a');
                                 EntryType = NameType.Masscode;
 
-                                int slash = p.IndexOf("-");
-
-                                int first = (slash >= 0 ? p.Substring(1, slash - 1) : p.Substring(1)).InvariantParseInt(-1);
-
-                                if (first >= 0)
+                                if (p.Length > 1)       // if we have text after, needs to be x or x-y.  No text, just masscode
                                 {
-                                    if (slash >= 0)
+                                    int slash = p.IndexOf("-");
+                                    int? first = (slash >= 0 ? p.Substring(1, slash - 1) : p.Substring(1)).InvariantParseIntNull();
+
+                                    if (first >= 0)     // must be a number which converted positive, else its a unique name
                                     {
-                                        System.Diagnostics.Debug.Assert(first < 256);
-                                        int second = p.Substring(slash + 1).InvariantParseInt(-1);
-                                        System.Diagnostics.Debug.Assert(second < 65536);
-                                        if (second >= 0)
+                                        if (slash > 0)     // if we have a slash
                                         {
-                                            NValue = (uint)first * 0x10000 + (uint)second;
-                                            EntryType = NameType.NValue;
+                                            string spart = p.Substring(slash + 1);  // the slash part
+
+                                            if (spart.Length > 0)     // if present
+                                            {
+                                                int? second = spart.InvariantParseIntNull();
+
+                                                if (first >= 0 && first < 256 && second >= 0 && second < 65536)    // first and second part must be a number in range
+                                                {
+                                                    NValue = (uint)first * 0x10000 + (uint)second;
+                                                    EntryType = NameType.NValue;
+                                                }
+                                                else
+                                                    EntryType = NameType.NotSet; // abandon, treat as a unique name
+                                            }
+                                            else
+                                            {
+                                                // just first, not second, so d29-
+                                                if (first >= 0 && first < 256)
+                                                {
+                                                    NValue = (uint)first * 0x10000;
+                                                    EntryType = NameType.N1ValueOnly;
+                                                }
+                                                else
+                                                    EntryType = NameType.NotSet; // abandon, treat as a unique name
+                                            }
                                         }
                                         else
-                                        {               // thats d29-
-                                            NValue = (uint)first * 0x10000;
-                                            EntryType = NameType.N1ValueOnly;
+                                        {       /// no slash, just a number
+                                            if (first >= 0 && first < 65536)
+                                            {
+                                                NValue = (uint)first;
+                                                EntryType = NameType.NValue;
+                                            }
+                                            else
+                                                EntryType = NameType.NotSet; // abandon, treat as a unique name
                                         }
                                     }
                                     else
-                                    {       // got to presume its the whole monty, d23
-                                        System.Diagnostics.Debug.Assert(first < 65536);
-                                        NValue = (uint)first;
-                                        EntryType = NameType.NValue;
-                                    }
+                                        EntryType = NameType.NotSet; // abandon, treat as a unique name
                                 }
                             }
                         }
