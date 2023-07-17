@@ -98,7 +98,7 @@ namespace EliteDangerousCore
 
         private void OnNewFile(object sender, FileSystemEventArgs e)        // only picks up new files
         {                                                                   // and it can kick in before any data has had time to be written to it...
-            string filename = e.FullPath;
+            string filename = Path.IsPathRooted(e.Name) ? e.Name : e.FullPath; // Work around https://github.com/mono/mono/issues/21677
             m_netLogFileQueue.Enqueue(filename);
         }
 
