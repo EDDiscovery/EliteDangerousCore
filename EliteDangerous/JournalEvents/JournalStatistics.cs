@@ -254,7 +254,7 @@ namespace EliteDangerousCore.JournalEvents
                     "Turrets Overloaded: ;;N0".T(EDCTx.CrimeClass_TurretsOverloaded), TurretsOverloaded,
                     "Total Turrets shut down: ;;N0".T(EDCTx.CrimeClass_TurretsTotal), TurretsTotal,
                     "Stolen Items Value: ; cr;N0".T(EDCTx.CrimeClass_ValueStolenStateChange), ValueStolenStateChange,
-                    "Profiles Cloned: ;;N0".T(EDCTx.CrimeClass_ProfilesCloned), ProfilesCloned);
+                    "ProfilesCloned: ;;N0".T(EDCTx.CrimeClass_ProfilesCloned), ProfilesCloned);
             }
         }
 
