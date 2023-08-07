@@ -113,7 +113,7 @@ namespace EliteDangerousCore.ScreenShots
         // into outputfolder with properties body,system,cmdrname
         // return final inputfilename, output filename, size. or null if failed.
 
-        public Tuple<string, string, Size> Convert(Bitmap bmp, string inputfilename, DateTime filetime, string outputfolder, 
+        public Tuple<string, string, Size> Convert(Bitmap bmp, string inputfilepath, DateTime filetime, string outputfolder, 
                                                    string bodyname, string systemname, string cmdrname, Action<string> logit ) // can call independent of watcher, pass in bmp to convert
         {
             outputfolder = SubFolder(FolderNameFormat, outputfolder, systemname, cmdrname, filetime);
@@ -125,22 +125,22 @@ namespace EliteDangerousCore.ScreenShots
 
             int index = 0;
 
-            string outputfilename;
-            string secondfilename, thirdfilename;
+            string outputfilepath;
+            string secondfilepath, thirdfilepath;
 
             do                                          // add _N on the filename for index>0, to make them unique.
             {
-                string fn = CreateFileName(systemname, bodyname, inputfilename, FileNameFormat, HighRes, filetime) + (index == 0 ? "" : "_" + index);
+                string fn = CreateFileName(systemname, bodyname, inputfilepath, FileNameFormat, HighRes, filetime) + (index == 0 ? "" : "_" + index);
 
-                outputfilename = Path.Combine(outputfolder, fn + "." + OutputFileExtension.ToString());
-                secondfilename = Path.Combine(outputfolder, fn + "-1." + OutputFileExtension.ToString());
-                thirdfilename = Path.Combine(outputfolder, fn + "-2." + OutputFileExtension.ToString());
+                outputfilepath = Path.Combine(outputfolder, fn + "." + OutputFileExtension.ToString());
+                secondfilepath = Path.Combine(outputfolder, fn + "-1." + OutputFileExtension.ToString());
+                thirdfilepath = Path.Combine(outputfolder, fn + "-2." + OutputFileExtension.ToString());
                 index++;
-            } while (File.Exists(outputfilename));          // if name exists, pick another
+            } while (File.Exists(outputfilepath));          // if name exists, pick another
 
-            if ( outputfilename.Equals(inputfilename,StringComparison.InvariantCultureIgnoreCase))
+            if ( outputfilepath.Equals(inputfilepath,StringComparison.InvariantCultureIgnoreCase))
             {
-                logit(string.Format(("Cannot convert {0} to {1} as names clash" + Environment.NewLine + "Pick a different conversion folder or a different output format"),inputfilename, outputfilename));
+                logit(string.Format(("Cannot convert {0} to {1} as names clash" + Environment.NewLine + "Pick a different conversion folder or a different output format"),inputfilepath, outputfilepath));
                 return null;
             }
 
@@ -150,7 +150,7 @@ namespace EliteDangerousCore.ScreenShots
 
             if (CropResizeImage1 == CropResizeOptions.Off || KeepMasterConvertedImage) // if resize 1 off, or keep full size.
             {
-                WriteBMP(bmp, outputfilename, filetime);
+                WriteBMP(bmp, outputfilepath, filetime);
                 finalsize = bmp.Size;        // this is our image to use in the rest of the system
 
                 if (ClipboardOption == ClipboardOptions.CopyMaster)
@@ -172,7 +172,7 @@ namespace EliteDangerousCore.ScreenShots
                     converted = bmp.ResizeImage(CropResizeArea1.Width, CropResizeArea1.Height);
                 }
 
-                string nametouse = KeepMasterConvertedImage ? secondfilename : outputfilename;     // if keep full sized off, we use this one as our image
+                string nametouse = KeepMasterConvertedImage ? secondfilepath : outputfilepath;     // if keep full sized off, we use this one as our image
                 WriteBMP(converted, nametouse, filetime);
 
                 if (!KeepMasterConvertedImage)       // if not keeping the full sized one, its final
@@ -199,7 +199,7 @@ namespace EliteDangerousCore.ScreenShots
                     converted = bmp.ResizeImage(CropResizeArea2.Width, CropResizeArea2.Height);
                 }
 
-                WriteBMP(converted, thirdfilename, filetime);
+                WriteBMP(converted, thirdfilepath, filetime);
 
                 if (ClipboardOption == ClipboardOptions.CopyImage2)
                 {
@@ -209,31 +209,33 @@ namespace EliteDangerousCore.ScreenShots
                 converted.Dispose();
             }
 
+            string inputfilename = Path.GetFileName(inputfilepath);     // bug #115 keep inputfilename for use later for logging
+
             if (OriginalImageOption == OriginalImageOptions.Delete)
             {
                 try
                 {
-                    System.Diagnostics.Debug.WriteLine("Delete {0}", inputfilename);
-                    File.Delete(inputfilename);
-                    inputfilename = null;
+                    System.Diagnostics.Debug.WriteLine("Delete {0}", inputfilepath);
+                    File.Delete(inputfilepath);
+                    inputfilepath = null;
                 }
                 catch
                 {
-                    logit($"Unable to remove file {inputfilename}");
+                    logit($"Unable to remove file {inputfilepath}");
                 }
 
             }
             else if (OriginalImageOption == OriginalImageOptions.Move)
             {
-                string outfile = Path.Combine(OriginalImageOptionDirectory, Path.GetFileNameWithoutExtension(outputfilename) + Path.GetExtension(inputfilename));
+                string outfile = Path.Combine(OriginalImageOptionDirectory, Path.GetFileNameWithoutExtension(outputfilepath) + Path.GetExtension(inputfilepath));
                 int indexi = 1;
                 while (true)
                 {
                     try
                     {
-                        System.Diagnostics.Debug.WriteLine("Move {0} to {1}", inputfilename, outfile);
-                        File.Move(inputfilename, outfile);
-                        inputfilename = outfile;
+                        System.Diagnostics.Debug.WriteLine("Move {0} to {1}", inputfilepath, outfile);
+                        File.Move(inputfilepath, outfile);
+                        inputfilepath = outfile;
                         break;
                     }
                     catch
@@ -243,11 +245,11 @@ namespace EliteDangerousCore.ScreenShots
                 }
             }
 
-            System.Diagnostics.Debug.WriteLine("Convert " + inputfilename + " at " + systemname + " to " + outputfilename);
+            System.Diagnostics.Debug.WriteLine("Convert " + inputfilename + " at " + systemname + " to " + outputfilepath);
 
-            logit(string.Format("Converted {0} to {1}".T(EDCTx.ScreenShotImageConverter_CNV), Path.GetFileName(inputfilename) , outputfilename));
+            logit(string.Format("Converted {0} to {1}".T(EDCTx.ScreenShotImageConverter_CNV), inputfilename , outputfilepath));
 
-            return new Tuple<string, string, Size>(inputfilename, outputfilename, finalsize);
+            return new Tuple<string, string, Size>(inputfilepath, outputfilepath, finalsize);
         }
 
         private System.Drawing.Imaging.ImageCodecInfo GetCodec(System.Drawing.Imaging.ImageFormat format)
