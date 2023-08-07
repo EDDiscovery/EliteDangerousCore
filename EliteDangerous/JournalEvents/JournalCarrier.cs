@@ -281,7 +281,7 @@ namespace EliteDangerousCore.JournalEvents
             info = BaseUtils.FieldBuilder.Build("Name: ".T(EDCTx.JournalCarrier_Name), State.Name,
                                                 "Call Sign: ".T(EDCTx.JournalCarrier_Callsign), State.Callsign,
                                                 "Fuel Level: ;;N0".T(EDCTx.JournalCarrier_FuelLevel), State.FuelLevel,
-                                                "Jump Range: ;ly;0.0".T(EDCTx.JournalCarrier_JumpRange), State.JumpRangeCurr,
+                                                "Jump Range: ; ly;0.0".T(EDCTx.JournalCarrier_JumpRange), State.JumpRangeCurr,
                                                 "Carrier Balance: ; cr;N0".T(EDCTx.JournalCarrier_Balance), State.Finance.CarrierBalance,
                                                 "Reserve Balance: ; cr;N0".T(EDCTx.JournalCarrier_ReserveBalance), State.Finance.ReserveBalance,
                                                 "Available Balance: ; cr;N0".T(EDCTx.JournalCarrier_AvailableBalance), State.Finance.AvailableBalance,
