@@ -701,7 +701,7 @@ SECTION CrimeClass
 .TurretsOverloaded: "Turrets Overloaded: ;;N0" @
 .TurretsTotal: "Total Turrets shut down: ;;N0" @
 .ValueStolenStateChange: "Stolen Items Value: ; cr;N0" @
-.ProfilesCloned: "ProfilesCloned: ;;N0" @
+.ProfilesCloned: "Profiles Cloned: ;;N0" @
 
 SECTION SmugglingClass
 
