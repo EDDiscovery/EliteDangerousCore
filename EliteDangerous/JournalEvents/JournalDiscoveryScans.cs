@@ -547,10 +547,10 @@ namespace EliteDangerousCore.JournalEvents
             return (index >= 0) ? Signals[index].Count : 0;
         }
 
-        public string ContainsStr(string fdname, bool showit = true)      // give count if contains fdname, else empty string
+        public object ContainsStr(string fdname, bool showit = true)      // give count if contains fdname, else empty string
         {
             int contains = Contains(fdname);
-            return showit && contains > 0 ? contains.ToStringInvariant() : "";
+            return showit && contains > 0 ? (object)contains : "";
         }
 
         public void AddStarScan(StarScan s, ISystem system)
