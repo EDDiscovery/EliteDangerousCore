@@ -329,7 +329,7 @@ namespace EliteDangerousCore
             Image barycentre = BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Barycentre");
 
             Point maxtreepos = DrawNode(pc, planetnode, historicmats, curmats, 
-                                (planetnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre : JournalScan.GetPlanetImageNotScanned(),
+                                (planetnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre : BodyToImages.GetPlanetImageNotScanned(),
                                 leftmiddle, false, out Rectangle planetpos, planetsize, DrawLevel.PlanetLevel, backwash: backwash);        // offset passes in the suggested offset, returns the centre offset
 
             planetcentre = planetpos.X + planetpos.Width / 2;
@@ -352,7 +352,7 @@ namespace EliteDangerousCore
 
                     if (nonedsmscans || ShowEDSMBodies)
                     {
-                        Point mmax = DrawNode(pc, moonnode, historicmats, curmats, (moonnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre : JournalScan.GetMoonImageNotScanned(), moonposcentremid, true, out Rectangle moonimagepos, moonsize, DrawLevel.MoonLevel);
+                        Point mmax = DrawNode(pc, moonnode, historicmats, curmats, (moonnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre : BodyToImages.GetMoonImageNotScanned(), moonposcentremid, true, out Rectangle moonimagepos, moonsize, DrawLevel.MoonLevel);
                         int mooncentre = moonimagepos.X + moonimagepos.Width / 2;
 
                         maxtreepos = new Point(Math.Max(maxtreepos.X, mmax.X), Math.Max(maxtreepos.Y, mmax.Y));
@@ -371,7 +371,7 @@ namespace EliteDangerousCore
 
                                 if (nonedsmsubmoonscans || ShowEDSMBodies)
                                 {
-                                    Point sbmax = DrawNode(pc, submoonnode, historicmats, curmats, (moonnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre : JournalScan.GetMoonImageNotScanned(), submoonpos, xiscentre, out Rectangle submoonimagepos, moonsize, DrawLevel.MoonLevel);
+                                    Point sbmax = DrawNode(pc, submoonnode, historicmats, curmats, (moonnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre : BodyToImages.GetMoonImageNotScanned(), submoonpos, xiscentre, out Rectangle submoonimagepos, moonsize, DrawLevel.MoonLevel);
 
                                     if (xiscentre)
                                         submoonpos = new Point(submoonpos.X, sbmax.Y + moonspacery + moonsize.Height / 2);
