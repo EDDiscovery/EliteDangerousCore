@@ -12,18 +12,17 @@
  * governing permissions and limitations under the License.
  */
 
+using BaseUtils;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace EliteDangerousCore
 {
     public class BodyToImages
-    { 
+    {
         static public string StarTypeImageName(EDStar StarTypeID, double? nStellarMass, double? nSurfaceTemperature)
         {
-            // parameters needed for variations
-            var sm = nStellarMass;
-            var st = nSurfaceTemperature;
-
             string iconName = StarTypeID.ToString(); // fallback
 
             // black holes variations. According to theorethical papers, we should find four classes of black holes:
@@ -33,9 +32,9 @@ namespace EliteDangerousCore
             // of the couple should be more than some hundrends of thousands of solar masses, which is the expected mass range of an intermediate black holes...
             if (StarTypeID == EDStar.H)
             {
-                if (sm <= 7.0)
+                if (nStellarMass <= 7.0)
                     iconName = "H_stellar";
-                else if (sm < 70.0)
+                else if (nStellarMass < 70.0)
                     iconName = "H";
                 else
                     iconName = "H_intermediate";
@@ -49,9 +48,9 @@ namespace EliteDangerousCore
             // Uses theorethical masses: https://en.wikipedia.org/wiki/Neutron_star
             if (StarTypeID == EDStar.N)
             {
-                if (sm < 1.1)
+                if (nStellarMass < 1.1)
                     iconName = "N";
-                else if (sm < 1.9)
+                else if (nStellarMass < 1.9)
                     iconName = "N_massive";
                 else
                     iconName = "N_veryMassive";
@@ -62,13 +61,13 @@ namespace EliteDangerousCore
                 StarTypeID == EDStar.DBV || StarTypeID == EDStar.DBZ || StarTypeID == EDStar.DC || StarTypeID == EDStar.DCV || StarTypeID == EDStar.DO || StarTypeID == EDStar.DOV || StarTypeID == EDStar.DQ ||
                 StarTypeID == EDStar.DX)
             {
-                if (st <= 5500)
+                if (nSurfaceTemperature <= 5500)
                     iconName = "D";
-                else if (st < 8000)
+                else if (nSurfaceTemperature < 8000)
                     iconName = "D_hot";
-                else if (st < 14000)
+                else if (nSurfaceTemperature < 14000)
                     iconName = "D_veryHot";
-                else if (st >= 14000)
+                else if (nSurfaceTemperature >= 14000)
                     iconName = "D_extremelyHot";
             }
 
@@ -81,7 +80,7 @@ namespace EliteDangerousCore
             // This kind of star classes show a spectrum of an A or B star class. It all depend on their surface temperature
             if (StarTypeID == EDStar.AeBe)
             {
-                if (st < 5000)
+                if (nSurfaceTemperature < 5000)
                     iconName = "A";
                 else
                     iconName = "B";
@@ -124,17 +123,17 @@ namespace EliteDangerousCore
             // https://en.wikipedia.org/wiki/T_Tauri_star
             if (StarTypeID == EDStar.TTS)
             {
-                if (st < 3700)
+                if (nSurfaceTemperature < 3700)
                     iconName = "M";
-                else if (st < 5200)
+                else if (nSurfaceTemperature < 5200)
                     iconName = "K";
-                else if (st < 6000)
+                else if (nSurfaceTemperature < 6000)
                     iconName = "G";
-                else if (st < 7500)
+                else if (nSurfaceTemperature < 7500)
                     iconName = "F";
-                else if (st < 10000)
+                else if (nSurfaceTemperature < 10000)
                     iconName = "A";
-                else if (st < 30000)
+                else if (nSurfaceTemperature < 30000)
                     iconName = "B";
                 else
                     iconName = "O";
@@ -144,13 +143,13 @@ namespace EliteDangerousCore
             // https://en.wikipedia.org/wiki/Wolf%E2%80%93Rayet_star
             if (StarTypeID == EDStar.W || StarTypeID == EDStar.WC || StarTypeID == EDStar.WN || StarTypeID == EDStar.WNC || StarTypeID == EDStar.WO)
             {
-                if (st < 50000)
+                if (nSurfaceTemperature < 50000)
                     iconName = "F";
-                if (st < 90000)
+                if (nSurfaceTemperature < 90000)
                     iconName = "A";
-                if (st < 140000)
+                if (nSurfaceTemperature < 140000)
                     iconName = "B";
-                if (st > 140000)
+                if (nSurfaceTemperature > 140000)
                     iconName = "O";
             }
 
@@ -175,9 +174,9 @@ namespace EliteDangerousCore
             }
         }
 
-        static public string PlanetClassImageName( EDPlanet PlanetTypeID, double? nSurfaceTemperature, 
-                                            Dictionary<string,double> AtmosphereComposition, EDAtmosphereProperty AtmosphereProperty, EDAtmosphereType AtmosphereID,
-                                            bool Terraformable, bool? nLandable, double? nMassEM, bool? nTidalLock )
+        static public string PlanetClassImageName(EDPlanet PlanetTypeID, double? nSurfaceTemperature,
+                                            Dictionary<string, double> AtmosphereComposition, EDAtmosphereProperty AtmosphereProperty, EDAtmosphereType AtmosphereID,
+                                            bool Terraformable, bool? nLandable, double? nMassEM, bool? nTidalLock)
         {
             string iconName = PlanetTypeID.ToString();
 
@@ -727,7 +726,7 @@ namespace EliteDangerousCore
             {
                 iconName = "RBDv1"; // fallback
 
-                if (nSurfaceTemperature == 55 && nLandable!=true) // pluto (actually, pluto is a rocky-ice body, in real life; however, the game consider it a rocky body. Too bad...)
+                if (nSurfaceTemperature == 55 && nLandable != true) // pluto (actually, pluto is a rocky-ice body, in real life; however, the game consider it a rocky body. Too bad...)
                     iconName = "RBDv6";
                 else if (nSurfaceTemperature < 150)
                     iconName = "RBDv2";
@@ -830,6 +829,45 @@ namespace EliteDangerousCore
             return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Unknown");
         }
 
-   }
+        static public Dictionary<EDStar, Color> StarColourKey()
+        {
+            Dictionary<EDStar, Color> map = new Dictionary<EDStar, Color>();
+
+            foreach (EDStar star in Enum.GetValues(typeof(EDStar)))
+            {
+                string name = StarTypeImageName(star, 1, 5000);
+                Bitmap b = (Bitmap)BaseUtils.Icons.IconSet.GetIcon(name);
+                Color c = b.AverageColour(new RectangleF(20, 20, 60, 60));
+                //System.Diagnostics.Debug.WriteLine($"Star {star} name {name} Colour {c}");
+                map[star] = Color.FromArgb(255, c);
+            }
+
+            return map;
+        }
+
+        // use for checking..
+        static public void DebugDisplayStarColourKey(ExtendedControls.ExtPictureBox imagebox, Font font)
+        {
+            var sil = BodyToImages.StarColourKey();
+            int i = 0;
+            foreach (var kvp in sil)
+            {
+                int x = (i % 10) * 150;
+                int y = (i / 10) * 50 + 4;
+                imagebox.AddOwnerDraw((g, e) => {
+                    using (var b = new SolidBrush(kvp.Value))
+                    {
+                        using (var bt = new SolidBrush(Color.FromArgb(255, 0, 255, 255)))
+                        {
+                            g.FillRectangle(b, e.Location);
+                            g.DrawString($"{kvp.Key}", font, bt, new Point(e.Location.X, e.Location.Y + 20));
+                        }
+                    }
+                }, new Rectangle(x, y, 140, 40));
+
+                i++;
+            }
+        }
+    }
 
 }

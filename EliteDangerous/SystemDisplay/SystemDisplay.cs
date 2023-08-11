@@ -77,6 +77,8 @@ namespace EliteDangerousCore
                                StarScan.SystemNode systemnode, List<MaterialCommodityMicroResource> historicmats, List<MaterialCommodityMicroResource> curmats,string opttext = null, string[] filter=  null ) 
         {
             imagebox.ClearImageList();  // does not clear the image, render will do that
+
+           // BodyToImages.DebugDisplayStarColourKey(imagebox, Font); enable for checking
             
             if (systemnode != null)
             {
