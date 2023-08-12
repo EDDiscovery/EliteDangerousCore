@@ -192,10 +192,10 @@ namespace EliteDangerousCore.JournalEvents
             if (Bios != null)
             {
                 foreach (var b in Bios)
-                {
-                    detailed = detailed.AppendPrePad(string.Format("{0}, {1}{2}: {2} {3}", 
+                {                    
+                    detailed = detailed.AppendPrePad(string.Format("{0}, {1}{2}: {3}", 
                                 b.Genus_Localised, b.Species_Localised, b.Variant_Localised != null ? (", " + b.Variant_Localised) : null, 
-                                b.Value, b.Bonus), Environment.NewLine);
+                                (b.Value + b.Bonus).ToString("N0")), Environment.NewLine);
                 }
             }
         }
