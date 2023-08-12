@@ -175,8 +175,10 @@ namespace EliteDangerousCore.JournalEvents
             public string Genus_Localised;
             public string Species;
             public string Species_Localised;
+            public string Species_Localised_Short { get { return Species_Localised.Alt(Species).ReplaceIfStartsWith(Genus_Localised + " "); } }
             public string Variant;              // update 15, will be null before
             public string Variant_Localised;    // update 15, will be null before
+            public string Variant_Localised_Short { get { return Variant_Localised.Alt(Variant)?.ReplaceIfStartsWith(Species_Localised + " -") ?? ""; } }
             public long Value;
             public long Bonus;
         };
@@ -194,7 +196,7 @@ namespace EliteDangerousCore.JournalEvents
                 foreach (var b in Bios)
                 {                    
                     detailed = detailed.AppendPrePad(string.Format("{0}, {1}{2}: {3}", 
-                                b.Genus_Localised, b.Species_Localised, b.Variant_Localised != null ? (", " + b.Variant_Localised) : null, 
+                                b.Genus_Localised, b.Species_Localised_Short, b.Variant_Localised != null ? (", " + b.Variant_Localised_Short) : null, 
                                 (b.Value + b.Bonus).ToString("N0")), Environment.NewLine);
                 }
             }
