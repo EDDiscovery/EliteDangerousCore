@@ -49,7 +49,7 @@ namespace EliteDangerousCore.DB
                 overlapped = poverlapped;
                 dontoverwrite = pdontoverwrite;
 
-                nextsectorid = SystemsDatabase.Instance.GetSectorIDNext();
+                nextsectorid = SystemsDatabase.Instance.GetMaxSectorID() + 1;       // this is the next value to use
                 LastDate = SystemsDatabase.Instance.GetLastRecordTimeUTC();
 
                 if (debugoutputfile != null)
@@ -80,7 +80,6 @@ namespace EliteDangerousCore.DB
                 if (debugfile != null)
                     debugfile.Close();
 
-                SystemsDatabase.Instance.SetSectorIDNext(nextsectorid);
                 SystemsDatabase.Instance.SetLastRecordTimeUTC(LastDate);
 
                 SystemsDatabase.Instance.WALCheckPoint();       // just make sure we don't leave behind a big WAL file

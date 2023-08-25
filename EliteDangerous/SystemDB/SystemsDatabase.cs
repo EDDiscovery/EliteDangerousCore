@@ -276,14 +276,13 @@ namespace EliteDangerousCore.DB
             });
         }
 
-        public int GetSectorIDNext()        // what is the next allocate sector ID to use?
+        public int GetMaxSectorID()        // what is the maximum sector id in use
         {
-            return DBRead(db => db.RegisterClass.GetSetting("EDSMSectorIDNext", 1));       // use old name
-        }
-
-        public void SetSectorIDNext(int val)
-        {
-            DBWrite(db => db.RegisterClass.PutSetting("EDSMSectorIDNext", val));
+            return DBRead(db =>
+            {
+                long v = db.MaxIdOf("Sectors", "id");
+                return (int)v;
+            });
         }
 
         #endregion
