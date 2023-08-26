@@ -381,6 +381,8 @@ namespace EliteDangerousCore
             SyncToIGAU = Convert.ToBoolean(reader["SyncToIGAU"]);
 
             Options = JObject.Parse(Convert.ToString(reader["Options"]));
+            if (Options == null)        // in case the string is garbarge, defend as we need a good Options object
+                Options = new JObject();
         }
 
         public EDCommander(int id, string Name)
