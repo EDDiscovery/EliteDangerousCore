@@ -63,7 +63,8 @@ namespace EliteDangerousCore.JournalEvents
                             StarSystem = starsys.Str(),
                             SystemAddress = sysaddr.Long(),
                             StarPos = starpos,
-                            StarClass = starclass
+                            StarClass = starclass,
+                            EDStarClass = Bodies.StarStr2Enum(starclass)
                         });
 
                         SystemClass s = new SystemClass(routeents.Last().StarSystem, sysaddr.Long(), starpos.X, starpos.Y, starpos.Z, SystemSource.FromJournal);
@@ -138,6 +139,7 @@ namespace EliteDangerousCore.JournalEvents
             public long SystemAddress { get; set; }
             public EMK.LightGeometry.Vector3 StarPos { get; set; }
             public string StarClass { get; set; }
+            public EDStar EDStarClass { get; set; }
         }
     }
 

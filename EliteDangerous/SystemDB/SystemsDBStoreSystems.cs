@@ -34,7 +34,7 @@ namespace EliteDangerousCore.DB
 
             foreach (var sys in systems)
             {
-                // so we need coords, and if edsm db, we need an edsm id, or for spansh we need a system address
+                // so we need coords, and if edsm db, we need an edsm id, or for spansh we need a system address 
                 if (sys.HasCoordinate && ((!spansh && sys.EDSMID.HasValue) || (spansh && sys.SystemAddress.HasValue)))
                 {
                     JObject jo = new JObject
@@ -60,6 +60,8 @@ namespace EliteDangerousCore.DB
 
             if (jlist.Count > 0)
             {
+                // start loader, 10000 at a time, no overlapped so we don't load up the pc, and don't overwrite stuff already there
+
                 SystemsDB.Loader3 loader3 = new SystemsDB.Loader3("", 10000, null, poverlapped:false, pdontoverwrite:true);
                 long updates = loader3.ParseJSONFile(jlist.ToString(), () => false, (s) => System.Diagnostics.Debug.WriteLine($"Store Systems: {s}"));
                 loader3.Finish();

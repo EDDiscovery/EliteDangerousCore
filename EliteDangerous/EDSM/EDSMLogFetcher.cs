@@ -189,7 +189,7 @@ namespace EliteDangerousCore.EDSM
 
             List<HistoryEntry> hlfsdlist = JournalEntry.GetAll(Commander.Id, logstarttime.AddDays(-1), logendtime.AddDays(1)).
                 OfType<JournalLocOrJump>().OrderBy(je => je.EventTimeUTC).
-                Select(je => HistoryEntry.FromJournalEntry(je, null)).ToList();   
+                Select(je => HistoryEntry.FromJournalEntry(je, null, null)).ToList();   
 
             List<JournalFSDJump> toadd = new List<JournalFSDJump>();
 

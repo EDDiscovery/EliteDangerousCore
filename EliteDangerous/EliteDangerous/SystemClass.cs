@@ -71,6 +71,7 @@ namespace EliteDangerousCore
             this.Zi = sys.Zi;
             this.GridID = sys.GridID;
             this.SystemAddress = sys.SystemAddress;
+            this.EDSMID = sys.EDSMID;
         }
 
         public bool Equals(ISystemBase other)
@@ -142,6 +143,7 @@ namespace EliteDangerousCore
         public SystemClass(ISystem sys) : base(sys)
         {
             this.Source = sys.Source;
+            this.MainStarType = sys.MainStarType;
         }
 
         public SystemClass(string name) : base()
@@ -154,12 +156,15 @@ namespace EliteDangerousCore
         {
             Name = name;
             SystemAddress = systemaddress;
+            Source = src;
         }
 
         // with co-ords
-        public SystemClass(string name, long? systemaddress, double vx, double vy, double vz, SystemSource src = SystemSource.Synthesised) : base(name, vx, vy, vz)
+        public SystemClass(string name, long? systemaddress, double vx, double vy, double vz, SystemSource src = SystemSource.Synthesised, EDStar starclass = EDStar.Unknown) : base(name, vx, vy, vz)
         {
             SystemAddress = systemaddress;
+            Source = src;
+            MainStarType = starclass;
         }
 
         // used by EDSMClass

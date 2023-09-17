@@ -162,16 +162,14 @@ namespace EliteDangerousCore
             if (StarTypeID == EDStar.StellarRemnantNebula)
                 return $"Bodies.StellarRemnantNebula";
 
-            if (StarTypeID == EDStar.X || StarTypeID == EDStar.RoguePlanet)
-            {
-                // System.Diagnostics.Debug.WriteLine(StarTypeID + ": " + iconName);
-                return "Bodies.Unknown";
-            }
-            else
-            {
-                //   System.Diagnostics.Debug.WriteLine(StarTypeID + ": " + iconName);
-                return $"Bodies.Stars.{iconName}";
-            }
+            if (StarTypeID == EDStar.Unknown)
+                return $"Bodies.Unknown";
+            
+            if (StarTypeID == EDStar.RoguePlanet)
+                return $"Bodies.RoguePlanet";
+
+            //   System.Diagnostics.Debug.WriteLine(StarTypeID + ": " + iconName);
+            return $"Bodies.Stars.{iconName}";
         }
 
         static public string PlanetClassImageName(EDPlanet PlanetTypeID, double? nSurfaceTemperature,
@@ -827,6 +825,21 @@ namespace EliteDangerousCore
         static public System.Drawing.Image GetMoonImageNotScanned()
         {
             return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Unknown");
+        }
+
+        // return bitmaps of stars, cropped.  You own the bitmaps afterwards as images are cloned
+        static public Bitmap[] StarBitmaps(RectangleF croparea)
+        {
+            Bitmap[] bitmaps = new Bitmap[Enum.GetNames(typeof(EDStar)).Length];
+            int bm = 0;
+            foreach (EDStar star in Enum.GetValues(typeof(EDStar)))
+            {
+                string name = StarTypeImageName(star, 1, 5000);
+                bitmaps[bm] = ((Bitmap)BaseUtils.Icons.IconSet.GetIcon(name)).CropImage(croparea);
+                bm++;
+            }
+
+            return bitmaps;
         }
 
         static public Dictionary<EDStar, Color> StarColourKey()

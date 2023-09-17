@@ -39,6 +39,7 @@ namespace EliteDangerousCore
         public OutfittingList Outfitting { get; private set; } = new OutfittingList();        // outfitting on stations
         public StarScan StarScan { get; private set; } = new StarScan();      // the results of scanning
         public Dictionary<string, HistoryEntry> Visited { get; private set; } = new Dictionary<string, HistoryEntry>(StringComparer.InvariantCultureIgnoreCase);  // not in any particular order.
+        public Dictionary<string, EDStar> StarClass { get; private set; } = new Dictionary<string, EDStar>();     // not in any particular order.
         public Dictionary<string, Stats.FactionInfo> GetStatsAtGeneration(uint g) { return statisticsaccumulator.GetAtGeneration(g); }
 
         public Identifiers IdentifierList = new Identifiers();
@@ -64,7 +65,7 @@ namespace EliteDangerousCore
 
         public HistoryEntry MakeHistoryEntry(JournalEntry je)
         {
-            HistoryEntry he = HistoryEntry.FromJournalEntry(je, hlastprocessed);     // we may check edsm for this entry
+            HistoryEntry he = HistoryEntry.FromJournalEntry(je, hlastprocessed, StarClass);     // we may check edsm for this entry
 
             he.UnfilteredIndex = (hlastprocessed?.UnfilteredIndex?? -1) +1;
             he.UpdateMaterialsCommodities(MaterialCommoditiesMicroResources.Process(je, hlastprocessed?.journalEntry, he.Status.TravelState == HistoryEntryStatus.TravelStateType.SRV));
@@ -215,7 +216,7 @@ namespace EliteDangerousCore
                     hist.AddToVisitsScan(null);  // add to scan database but don't complain
                     //System.Diagnostics.Debug.WriteLine($"Add {heh.EventTimeUTC} {heh.EntryType} {hist.StarScan.ScanDataByName.Count} {hist.Visited.Count}");
                 }
-           }
+            }
 
             hist.Carrier.CheckCarrierJump(DateTime.UtcNow);         // lets see if a jump has completed.
 
@@ -288,6 +289,16 @@ namespace EliteDangerousCore
             }
 
             int pos = historylist.Count - 1;                // current entry index
+
+            if (he.EntryType == JournalTypeEnum.StartJump)
+            {
+                var stj = he.journalEntry as JournalStartJump;
+                if (stj.EDStarClass != EDStar.Unknown)
+                {
+                    StarClass[stj.StarSystem] = stj.EDStarClass;
+                    System.Diagnostics.Debug.WriteLine($"Star Jump gives star {stj.StarSystem} as class {stj.EDStarClass}");
+                }
+            }
 
             if (he.EntryType == JournalTypeEnum.Scan)       // may need to do a history match, so intercept
             {

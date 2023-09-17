@@ -671,6 +671,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             StarSystem = evt["Name"].Str();
             StarClass = evt["StarClass"].Str();
+            EDStarClass = Bodies.StarStr2Enum(StarClass);
             SystemAddress = evt["SystemAddress"].Long();
             RemainingJumpsInRoute = evt["RemainingJumpsInRoute"].IntNull();
             FriendlyStarClass = (StarClass.Length > 0) ? Bodies.StarName(Bodies.StarStr2Enum(StarClass)) : "";
@@ -678,6 +679,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string StarSystem { get; set; }
         public string StarClass { get; set; }
+        public EDStar EDStarClass { get; set; }
         public long SystemAddress { get; set; }
         public int? RemainingJumpsInRoute { get; set; }
         public string FriendlyStarClass { get; set; }
@@ -700,6 +702,7 @@ namespace EliteDangerousCore.JournalEvents
             IsHyperspace = JumpType.Equals("Hyperspace", System.StringComparison.InvariantCultureIgnoreCase);
             StarSystem = evt["StarSystem"].Str();
             StarClass = evt["StarClass"].Str();
+            EDStarClass = Bodies.StarStr2Enum(StarClass);
             FriendlyStarClass = (StarClass.Length > 0) ? Bodies.StarName(Bodies.StarStr2Enum(StarClass)) : "";
             SystemAddress = evt["SystemAddress"].LongNull();
             InTaxi = evt["Taxi"].BoolNull();
@@ -710,6 +713,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StarSystem { get; set; }
         public long? SystemAddress { get; set; }
         public string StarClass { get; set; }
+        public EDStar EDStarClass { get; set; }
         public string FriendlyStarClass { get; set; }
         public bool? InTaxi { get; set; }        // update 15+
 
