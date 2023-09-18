@@ -58,16 +58,18 @@ namespace EliteDangerousCore.JournalEvents
                     }
                     else
                     {
+                        var sedsc = Bodies.StarStr2Enum(starclass);
+
                         routeents.Add(new NavRouteEntry     // 3.7 will have this
                         {
                             StarSystem = starsys.Str(),
                             SystemAddress = sysaddr.Long(),
                             StarPos = starpos,
                             StarClass = starclass,
-                            EDStarClass = Bodies.StarStr2Enum(starclass)
-                        });
+                            EDStarClass = sedsc
+                        }) ;
 
-                        SystemClass s = new SystemClass(routeents.Last().StarSystem, sysaddr.Long(), starpos.X, starpos.Y, starpos.Z, SystemSource.FromJournal);
+                        SystemClass s = new SystemClass(routeents.Last().StarSystem, sysaddr.Long(), starpos.X, starpos.Y, starpos.Z, SystemSource.FromJournal, sedsc);
                         DB.SystemCache.AddSystemToCache(s);     // inform cache of this known system
                     }
                 }

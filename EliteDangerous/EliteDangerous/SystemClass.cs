@@ -133,7 +133,7 @@ namespace EliteDangerousCore
         }
     }
 
-    [DebuggerDisplay("System {Name} ({X,nq},{Y,nq},{Z,nq}) {SystemAddress} {Source}")]
+    [DebuggerDisplay("System {Name} ({X,nq},{Y,nq},{Z,nq}) {SystemAddress} {MainStarType} {Source}")]
     public class SystemClass : SystemClassBase, ISystem
     {
         public SystemClass() : base()
