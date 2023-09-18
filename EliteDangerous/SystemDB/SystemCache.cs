@@ -116,10 +116,8 @@ namespace EliteDangerousCore.DB
 
             ISystem found = FindCachedSystem(find);
 
-            // not found, or not from EDSM, AND we have a database and its not rebuilding
-            // see if we can find it in the DB
-
-            if (found == null && cn != null && !SystemsDatabase.Instance.RebuildRunning)    // if not found from cache, and its okay to use the DB
+            // if we have a db and its okay, and either not found, or found but with no main star info and the db does have star type info, check the db
+            if (cn != null && !SystemsDatabase.Instance.RebuildRunning && (found == null || (found.MainStarType == EDStar.Unknown && SystemsDatabase.Instance.HasStarType) ))
             {
                 //System.Diagnostics.Debug.WriteLine("Look up from DB " + sys.name + " " + sys.id_edsm);
 
@@ -202,13 +200,13 @@ namespace EliteDangerousCore.DB
             return found;
         }
 
+        // add system to cache - trying to improve information as we get the same system
         public static void AddSystemToCache(ISystem system)
         {
             var found = FindCachedSystem(system);
 
-            // Existing finds with journal or edsm override the add..
-            // if not found or found is synthesised, AND the system has coord and name, add
-            if ((found == null || (found.Source == SystemSource.Synthesised)) && system.HasCoordinate == true && system.Name.HasChars())
+            // if not found, or found is synthesised or found has no star type, AND the system has coord and name, add as it may be better
+            if ((found == null || found.Source == SystemSource.Synthesised || found.MainStarType == EDStar.Unknown) && system.HasCoordinate == true && system.Name.HasChars())
             {
                 AddToCache(system, found);
             }

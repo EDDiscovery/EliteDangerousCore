@@ -57,7 +57,11 @@ namespace EliteDangerousCore
             List<ISystem> routeSystems = new List<ISystem>();
             System.Diagnostics.Debug.WriteLine("From " + FromSystem + " to  " + ToSystem + ", using metric " + RouteMethod.ToString());
 
-            routeSystems.Add(new SystemClass(FromSystem, null, Coordsfrom.X, Coordsfrom.Y, Coordsfrom.Z));
+            ISystem startsystem = new SystemClass(FromSystem, null, Coordsfrom.X, Coordsfrom.Y, Coordsfrom.Z);
+            ISystem startfromdb = SystemCache.FindSystem(startsystem, EDSM); // see if the cache knows more about it, if so, use that..
+            if (startfromdb != null)
+                startsystem = startfromdb;
+            routeSystems.Add(startsystem);
 
             info(new ReturnInfo(FromSystem, double.NaN, Coordsfrom,double.NaN,double.NaN,routeSystems[0]));
 
@@ -132,7 +136,11 @@ namespace EliteDangerousCore
 
             } while ( !StopPlotter);
 
-            routeSystems.Add(new SystemClass(ToSystem, null, Coordsto.X, Coordsto.Y, Coordsto.Z));
+            ISystem endsystem = new SystemClass(ToSystem, null, Coordsto.X, Coordsto.Y, Coordsto.Z);
+            ISystem endfromdb = SystemCache.FindSystem(endsystem, EDSM); // see if the cache knows more about it, if so, use that..
+            if (endfromdb != null)
+                endsystem = endfromdb;
+            routeSystems.Add(endsystem);
 
             actualdistance += Point3D.DistanceBetween(curpos, Coordsto);
 

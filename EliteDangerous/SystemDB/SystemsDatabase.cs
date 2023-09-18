@@ -28,6 +28,8 @@ namespace EliteDangerousCore.DB
         }
 
         public static bool WALMode { get; set; } = false;
+        public string DBSource { get; private set; } = "Unknown";
+        public bool HasStarType { get { return DBSource == "SPANSH"; } }
 
         public static SystemsDatabase Instance
         {
@@ -78,6 +80,8 @@ namespace EliteDangerousCore.DB
                     reg.PutSetting("DBVer", dbno);
                 });
             }
+
+            DBSource = GetDBSource();           // get what was set up and cache
         }
 
         const string TempTablePostfix = "temp"; // postfix for temp tables
@@ -239,7 +243,7 @@ namespace EliteDangerousCore.DB
         {
             return DBWrite((db) => db.RegisterClass.PutSetting("DBSource", name));
         }
-        public string GetDBSource()
+        private string GetDBSource()
         {
             return DBRead((db) => db.RegisterClass.GetSetting("DBSource", "EDSM"));
         }

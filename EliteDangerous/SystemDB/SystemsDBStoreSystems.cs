@@ -29,7 +29,7 @@ namespace EliteDangerousCore.DB
         {
             JArray jlist = new JArray();
 
-            string currentdb = SystemsDatabase.Instance.GetDBSource();
+            string currentdb = SystemsDatabase.Instance.DBSource;
             bool spansh = currentdb.Equals("SPANSH");
 
             foreach (var sys in systems)
