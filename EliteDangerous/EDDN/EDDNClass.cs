@@ -83,7 +83,8 @@ namespace EliteDangerousCore.EDDN
                  EntryType == JournalTypeEnum.FSSAllBodiesFound ||
                  EntryType == JournalTypeEnum.ApproachSettlement ||
                  EntryType == JournalTypeEnum.FSSSignalDiscovered ||
-                 EntryType == JournalTypeEnum.FCMaterials
+                 EntryType == JournalTypeEnum.FCMaterials ||
+                 EntryType == JournalTypeEnum.ScanBaryCentre
                  );
         }
 
