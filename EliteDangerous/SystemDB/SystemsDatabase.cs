@@ -241,6 +241,7 @@ namespace EliteDangerousCore.DB
         }
         public bool SetDBSource(string name)
         {
+            DBSource = name;
             return DBWrite((db) => db.RegisterClass.PutSetting("DBSource", name));
         }
         private string GetDBSource()
