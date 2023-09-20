@@ -521,8 +521,8 @@ namespace EliteDangerousCore.DB
                 { "L (Brown dwarf) Star", EDStar.L },
                 { "T (Brown dwarf) Star", EDStar.T },
                 { "Y (Brown dwarf) Star", EDStar.Y },
-
                 { "Herbig Ae Be Star", EDStar.AeBe },
+                { "Herbig Ae/Be Star", EDStar.AeBe },
                 { "T Tauri Star", EDStar.TTS },
 
                 { "Wolf-Rayet Star", EDStar.W },
