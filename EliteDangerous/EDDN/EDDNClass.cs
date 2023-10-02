@@ -66,9 +66,9 @@ namespace EliteDangerousCore.EDDN
         static public bool IsEDDNMessage( JournalTypeEnum EntryType)
         {
             return (        // in order in EDDSync.cs
-                 EntryType == JournalTypeEnum.FSDJump || 
-                 EntryType == JournalTypeEnum.CarrierJump || 
+                 EntryType == JournalTypeEnum.FSDJump ||
                  EntryType == JournalTypeEnum.Location ||
+                 EntryType == JournalTypeEnum.CarrierJump ||
                  EntryType == JournalTypeEnum.Docked ||
                  EntryType == JournalTypeEnum.Scan ||
                  EntryType == JournalTypeEnum.SAASignalsFound ||
@@ -80,10 +80,11 @@ namespace EliteDangerousCore.EDDN
                  EntryType == JournalTypeEnum.CodexEntry ||
                  EntryType == JournalTypeEnum.NavBeaconScan ||
                  EntryType == JournalTypeEnum.NavRoute ||
-                 EntryType == JournalTypeEnum.FSSAllBodiesFound ||
+                 EntryType == JournalTypeEnum.ScanBaryCentre ||
                  EntryType == JournalTypeEnum.ApproachSettlement ||
+                 EntryType == JournalTypeEnum.FSSAllBodiesFound ||
                  EntryType == JournalTypeEnum.FSSSignalDiscovered ||
-                 EntryType == JournalTypeEnum.FCMaterials
+                 EntryType == JournalTypeEnum.FCMaterials 
                  );
         }
 
