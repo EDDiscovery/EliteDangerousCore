@@ -30,7 +30,7 @@ namespace EliteDangerousCore.DB
         #region Public Interface for Find System
 
         // in historylist, addtocache for all fsd jumps and navroutes.
-        public static System.Threading.Tasks.Task<ISystem> FindSystemAsync(string name, EDSM.GalacticMapping glist, bool checkedsm = false)
+        public static System.Threading.Tasks.Task<ISystem> FindSystemAsync(string name, GMO.GalacticMapping glist, bool checkedsm = false)
         {
             return System.Threading.Tasks.Task.Run(() =>
             {
@@ -46,21 +46,18 @@ namespace EliteDangerousCore.DB
             });
         }
 
-        public static ISystem FindSystem(string name, EDSM.GalacticMapping glist, bool checkedsm)
+        public static ISystem FindSystem(string name, GMO.GalacticMapping glist, bool checkedsm)
         {
             ISystem sys = FindSystem(name, checkedsm);
 
             if (sys == null && glist != null)
             {
-                EDSM.GalacticMapObject gmo = glist.Find(name, true);
+                GMO.GalacticMapObject gmo = glist.Find(name, true);
 
                 if (gmo != null && gmo.Points.Count > 0)                // valid item, and has position
                 {
-                    var sys1 = SystemCache.FindSystem(gmo.GalMapSearch);     // only thru the db/cache, as we checked above for edsm direct, may be null
-                    if (sys1 != null)
-                        sys = sys1;
-
-                    return gmo.GetSystem(sys);                          // and return a ISystem.  If sys=null, we use the points pos, if sys is found, we use the cache position 
+                    var sysviadb = SystemCache.FindSystem(gmo.GalMapSearch);     // only thru the db/cache, as we checked above for edsm direct, may be null
+                    return sysviadb != null ? sysviadb : gmo.GetSystem();
                 }
             }
 

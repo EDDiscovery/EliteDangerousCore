@@ -83,10 +83,9 @@
     <Compile Include="EDSM\EDSMJournalSync.cs" />
     <Compile Include="EDSM\EDSMClass.cs" />
     <Compile Include="EDSM\EDSMLogFetcher.cs" />
-    <Compile Include="EDSM\GalMapType.cs" />
-    <Compile Include="EDSM\GalacticMapObject.cs" />
-    <Compile Include="EDSM\GalacticMapSystem.cs" />
-    <Compile Include="EDSM\GalacticMapping.cs" />
+    <Compile Include="GMO\GalMapType.cs" />
+    <Compile Include="GMO\GalacticMapObject.cs" />
+    <Compile Include="GMO\GalacticMapping.cs" />
     <Compile Include="Bindings\BindingsFile.cs" />
     <Compile Include="EliteDangerous\BodyImages.cs" />
     <Compile Include="EliteDangerous\EliteReleaseDates.cs" />

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2021 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,14 +10,12 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EliteDangerousCore.EDSM
+namespace EliteDangerousCore.GMO
 {
     public class GalMapType
     {
@@ -97,8 +95,22 @@ namespace EliteDangerousCore.EDSM
             type.Add(new GalMapType("independentOutpost", "Independent Outpost", GroupType.Markers, VisibleObjectsType.independentOutpost,index++));
             type.Add(new GalMapType("regional", "Regional Marker", GroupType.Markers, VisibleObjectsType.Regional,index++));
             type.Add(new GalMapType("geyserPOI", "Geyser", GroupType.Markers, VisibleObjectsType.GeyserPOI,index++));
-            type.Add(new GalMapType("organicPOI", "Organic Material", GroupType.Markers, VisibleObjectsType.OrganicPOI,index++));
+            type.Add(new GalMapType("organicPOI", "Organic Material", GroupType.Markers, VisibleObjectsType.OrganicPOI, index++));
             type.Add(new GalMapType("EDSMUnknown", "EDSM other POI type", GroupType.Markers, VisibleObjectsType.EDSMUnknown,index++));
+
+            // GEC
+            type.Add(new GalMapType("GECSS", "Sights and Scenery", GroupType.Markers, VisibleObjectsType.historicalLocation, index++));     //?
+            type.Add(new GalMapType("GECMX", "Mystery and Xenology", GroupType.Markers, VisibleObjectsType.mysteryPOI, index++));     
+            type.Add(new GalMapType("GECTB", "Tourist Beacons", GroupType.Markers, VisibleObjectsType.beacon, index++));     
+            type.Add(new GalMapType("GECTB", "Notable Stellar Phenomena", GroupType.Markers, VisibleObjectsType.historicalLocation, index++));     //?
+            type.Add(new GalMapType("GECTB", "Community", GroupType.Markers, VisibleObjectsType.minorPOI, index++));     
+            type.Add(new GalMapType("GECTB", "Deep Space Outpost", GroupType.Markers, VisibleObjectsType.deepSpaceOutpost, index++));     
+            type.Add(new GalMapType("GECTB", "Nebulae", GroupType.Markers, VisibleObjectsType.nebula, index++));    
+            type.Add(new GalMapType("GECTB", "Memorials", GroupType.Markers, VisibleObjectsType.historicalLocation, index++));     //?
+            type.Add(new GalMapType("GECTB", "Green Gas Giants", GroupType.Markers, VisibleObjectsType.planetFeatures, index++));     
+            type.Add(new GalMapType("GECTB", "Planetary Circumnavigation", GroupType.Markers, VisibleObjectsType.planetFeatures, index++));     
+            type.Add(new GalMapType("GECTB", "Glitches", GroupType.Markers, VisibleObjectsType.minorPOI, index++));     
+            type.Add(new GalMapType("GECTB", "System Features", GroupType.Markers, VisibleObjectsType.minorPOI, index++));     //?
 
             // not EDSM
 

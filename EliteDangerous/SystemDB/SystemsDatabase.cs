@@ -239,6 +239,15 @@ namespace EliteDangerousCore.DB
         {
             return DBWrite((db) => db.RegisterClass.PutSetting("EDSMGalMapLast", value));
         }
+        public DateTime GetGECGalMapLast()
+        {
+            return DBRead(db => db.RegisterClass.GetSetting("GECGalMapLast", DateTime.MinValue));
+        }
+
+        public bool SetGECGalMapLast(DateTime value)
+        {
+            return DBWrite((db) => db.RegisterClass.PutSetting("GECGalMapLast", value));
+        }
         public bool SetDBSource(string name)
         {
             DBSource = name;
