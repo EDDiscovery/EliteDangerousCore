@@ -198,7 +198,7 @@ namespace EliteDangerousCore
 
         public override string ToString()
         {
-            return string.Format("{0} @ {1:N1},{2:N1},{3:N1}: {4}, {5}", Name, X, Y, Z, EDSMID, SystemAddress);
+            return string.Format("{0} @ {1:N3},{2:N3},{3:N3}: {4}, {5}", Name, X, Y, Z, EDSMID, SystemAddress);
         }
 
     }

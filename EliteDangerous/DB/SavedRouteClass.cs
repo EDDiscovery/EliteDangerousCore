@@ -18,15 +18,15 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
 namespace EliteDangerousCore.DB
 {
-    [DebuggerDisplay("{Name} {Id} {Systems.Count}")]
+    [System.Diagnostics.DebuggerDisplay("{Name} {Id} {Systems.Count}")]
     public class SavedRouteClass : IEquatable<SavedRouteClass>
     {
+        [System.Diagnostics.DebuggerDisplay("{Name} {X} {Y} {Z}")]
         public class SystemEntry
         {
             public string Name { get; set; }
@@ -326,6 +326,72 @@ namespace EliteDangerousCore.DB
             return newlist;
         }
 
+        // Given a set of expedition files, update the DB.  Add any new ones, and make sure the EDSM marker is on.
+
+        public static bool UpdateDBFromExpeditionFiles(string expeditiondir)
+        {
+            bool changed = false;
+
+            FileInfo[] allfiles = Directory.EnumerateFiles(expeditiondir, "*.json", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToArray();
+
+            foreach (FileInfo f in allfiles)        // iterate thru all files found
+            {
+                try
+                {
+                    string text = File.ReadAllText(f.FullName); // may except
+
+                    if (text != null && text.Length > 0)      // use a blank file to overwrite an old one you want to get rid of
+                    {
+                        var ja = JArray.Parse(text, JToken.ParseOptions.AllowTrailingCommas);        // JSON has trailing commas illegally but keep for backwards compat
+
+                        List<SavedRouteClass> stored = SavedRouteClass.GetAllSavedRoutes();
+
+                        foreach (var route in ja)           // for each defined route object
+                        {
+                            SavedRouteClass rt = new SavedRouteClass();
+                            rt.Name = route["Name"].Str();
+                            rt.StartDateUTC = route["StartDate"].DateTimeUTC();
+                            rt.EndDateUTC = route["EndDate"].DateTimeUTC();
+                            rt.EDSM = true;
+
+                            var sysa = route["Systems"].Array();
+                            if (sysa != null)
+                            {
+                                foreach (var syse in sysa)
+                                {
+                                    rt.Systems.Add(new SystemEntry(syse.Str("Unknown")));
+                                }
+
+                                SavedRouteClass storedentry = stored.Find(x => x.Name.Equals(rt.Name));     // find it..
+
+                                if (storedentry != null)        // if found.. and different, delete and update
+                                {
+                                    if (!storedentry.Systems.Select(x => x.Name).SequenceEqual(rt.Systems.Select(y => y.Name))) // systems changed, we need to reset..
+                                    {
+                                        storedentry.Delete();
+                                        rt.Add();
+                                        changed = true;
+                                    }
+                                }
+                                else
+                                {
+                                    rt.Add();
+                                    changed = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Read DB files excepted {ex}");
+                }
+            }
+
+            return changed;
+        }
+
+
         // distance along route from start, given knownsystems
         // optional first system to measure from
         public double CumulativeDistance(ISystem start = null, List<Tuple<ISystem, int, SystemEntry>> knownsystems = null)   
@@ -393,16 +459,16 @@ namespace EliteDangerousCore.DB
             }
 
             if (error > 0)
-                return new SystemClass(name, null,syspos.X + rnd.Next(error), syspos.Y + rnd.Next(error), syspos.Z + rnd.Next(error));
+                return new SystemClass(name, null, syspos.X + rnd.Next(error), syspos.Y + rnd.Next(error), syspos.Z + rnd.Next(error));
             else
-                return new SystemClass(name, null,syspos.X, syspos.Y, syspos.Z);
+                return new SystemClass(name, null, syspos.X, syspos.Y, syspos.Z);
         }
 
         Random rnd = new Random();
 
         // given the system list, which is the next waypoint to go to.  return the system (or null if not available or past end) and the waypoint.. (0 based) and the distance on the path left..
 
-        [DebuggerDisplay("{system.Name} w {waypoint} d {deviation} cwpd {cumulativewpdist} distto {disttowaypoint}")]
+        [System.Diagnostics.DebuggerDisplay("{system.Name} w {waypoint} d {deviation} cwpd {cumulativewpdist} distto {disttowaypoint}")]
         public class ClosestInfo
         {
             public ISystem lastsystem;              // from
@@ -446,16 +512,21 @@ namespace EliteDangerousCore.DB
                     Point3D lastp3d = P3D(knownsystems[i - 1].Item1);
                     Point3D top3d = P3D(knownsystems[i].Item1);
 
+                    double disttostart = currentsystemp3d.Distance(lastp3d);
+                    double disttoend = currentsystemp3d.Distance(top3d);
                     double distbetween = lastp3d.Distance(top3d);
 
-                    double interceptpercent = lastp3d.InterceptPercentageDistance(top3d, currentsystemp3d, out double dist);       //dist to intercept point on line note.
-                    //System.Diagnostics.Debug.WriteLine("From " + knownsystems[i - 1].ToString() + " to " + knownsystems[i].ToString() + " Percent " + interceptpercent + " Distance " + dist);
+                    double interceptvalue = lastp3d.InterceptPercentageDistance(top3d, currentsystemp3d, out double distancefrominterceptpoint);       //dist to intercept point on line note.
 
-                    // allow a little margin in the intercept point for randomness, must be min dist, and not stupidly far.
-                    if (interceptpercent >= -0.01 && interceptpercent < 1.01 && dist <= mininterceptdist && dist < distbetween)
+                    System.Diagnostics.Debug.WriteLine($"From {knownsystems[i - 1].Item1} to {knownsystems[i].Item1} intercept {interceptvalue:N5} Point Distance from path {distancefrominterceptpoint:N5} Distance to Start {disttostart:N5} end {disttoend:N5}");
+
+                    if (interceptvalue >= -0.01 && interceptvalue < 1.01        // allow a little margin in the intercept point for randomness
+                            && (distancefrominterceptpoint <= mininterceptdist || disttostart <= 2)        // if closer to line than last, or we are very close to the start
+                            && distancefrominterceptpoint < distbetween)        // and we are not stupidly far from the path
                     {
+                        System.Diagnostics.Debug.WriteLine($"   chosen ");
                         wpto = i;
-                        mininterceptdist = dist;
+                        mininterceptdist = distancefrominterceptpoint;
                     }
                 }
 
@@ -493,69 +564,15 @@ namespace EliteDangerousCore.DB
                                     distto);
         }
 
-        // Given a set of expedition files, update the DB.  Add any new ones, and make sure the EDSM marker is on.
-
-        public static bool UpdateDBFromExpeditionFiles(string expeditiondir)
+        public void TestHarness2()       // fly the route and debug the closestto.. keep this for testing
         {
-            bool changed = false;
+            ISystem db = SystemCache.FindSystem("Aiphaitt CA-A d250", null, false);
+            ISystem cursys = SystemCache.FindSystem("Hypoae Chrea KO-Z d13-2308", null, false);
 
-            FileInfo[] allfiles = Directory.EnumerateFiles(expeditiondir, "*.json", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToArray();
+            System.Diagnostics.Debug.WriteLine($"At {cursys.Name} @ {cursys.X:N5}, {cursys.Y:N5}, {cursys.Z:N5}");
 
-            foreach (FileInfo f in allfiles)        // iterate thru all files found
-            {
-                try
-                {
-                    string text = File.ReadAllText(f.FullName); // may except
-
-                    if (text != null && text.Length > 0)      // use a blank file to overwrite an old one you want to get rid of
-                    {
-                        var ja = JArray.Parse(text, JToken.ParseOptions.AllowTrailingCommas);        // JSON has trailing commas illegally but keep for backwards compat
-
-                        List<SavedRouteClass> stored = SavedRouteClass.GetAllSavedRoutes();
-
-                        foreach (var route in ja)           // for each defined route object
-                        {
-                            SavedRouteClass rt = new SavedRouteClass();
-                            rt.Name = route["Name"].Str();
-                            rt.StartDateUTC = route["StartDate"].DateTimeUTC();
-                            rt.EndDateUTC = route["EndDate"].DateTimeUTC();
-                            rt.EDSM = true;
-
-                            var sysa = route["Systems"].Array();
-                            if (sysa != null)
-                            {
-                                foreach (var syse in sysa)
-                                {
-                                    rt.Systems.Add(new SystemEntry(syse.Str("Unknown")));
-                                }
-
-                                SavedRouteClass storedentry = stored.Find(x => x.Name.Equals(rt.Name));     // find it..
-
-                                if (storedentry != null)        // if found.. and different, delete and update
-                                {
-                                    if (!storedentry.Systems.Select(x => x.Name).SequenceEqual(rt.Systems.Select(y => y.Name))) // systems changed, we need to reset..
-                                    {
-                                        storedentry.Delete();
-                                        rt.Add();
-                                        changed = true;
-                                    }
-                                }
-                                else
-                                {
-                                    rt.Add();
-                                    changed = true;
-                                }
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Read DB files excepted {ex}");
-                }
-            }
-
-            return changed;
+            ClosestInfo closest = ClosestTo(cursys);
+            System.Diagnostics.Debug.WriteLine($"           Closest gave {closest.lastsystem?.Name} ->{ closest.nextsystem.Name}");
         }
 
         public void TestHarness()       // fly the route and debug the closestto.. keep this for testing
@@ -563,7 +580,7 @@ namespace EliteDangerousCore.DB
             for (double percent = -10; percent < 110; percent += 0.1)
             {
                 ISystem cursys = PosAlongRoute(percent, 100);
-                System.Diagnostics.Debug.WriteLine(Environment.NewLine + "Sys {0} {1} {2} {3}", cursys.X, cursys.Y, cursys.Z, cursys.Name);
+                System.Diagnostics.Debug.WriteLine(Environment.NewLine + $"{cursys.Name} @ {cursys.X}, {cursys.Y}, {cursys.Z}");
 
                 if (cursys != null)
                 {
@@ -576,5 +593,6 @@ namespace EliteDangerousCore.DB
                 }
             }
         }
+
     }
 }
