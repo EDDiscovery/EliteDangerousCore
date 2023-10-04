@@ -767,6 +767,12 @@ namespace EliteDangerousCore
             AddCommodity("Titan Maw Deep Tissue Sample", sv, "ThargoidTissueSampleType10a");
             AddCommodity("Titan Maw Tissue Sample", sv, "ThargoidTissueSampleType10b");
 
+            // update 16, devtalk
+            AddCommodity("Thargoid Scythe Tissue Sample", sv, "ThargoidTissueSampleType7");
+            AddCommodity("Protective Membrane Scrap", sv, "UnknownSack");
+            AddCommodity("Xenobiological Prison Pod", sv, "ThargoidPod");
+            AddCommodity("Coral Sap", sv, "CoralSap");
+
             ItemType nc = ItemType.Narcotics;
             AddCommodity("Narcotics", nc, "BasicNarcotics");
 

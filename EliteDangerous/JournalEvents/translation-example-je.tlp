@@ -644,7 +644,7 @@ SECTION BankAccountClass
 .SpentOnWeapons: "Spent on Weapons: ; cr;N0" @
 .SpentOnSuitConsumables: "Spent on Suit Consumables: ; cr;N0" @
 .SuitsOwned: "Suits Owned: ;;N0" @
-.WeaponsOwned: "WeaponsOwned: ;;N0" @
+.WeaponsOwned: "Weapons Owned: ;;N0" @
 .SpentOnPremiumStock: "Spent on Premium Stock: ; cr;N0" @
 .PremiumStockBought: "Premium Stock bought: ;;N0" @
 
@@ -739,7 +739,7 @@ SECTION ExplorationClass
 .NoofJumps: "No of Jumps: ;;N0" @
 .GreatestDistance: "Greatest Distance: ; ly;N0" @
 .TimePlayed: "Time Played: " @
-.OnFootDistanceTravelled: "Distance Travelled on Foot: ;m;N0" @
+.OnFootDistanceTravelled: "Distance Travelled on Foot: ; m;N0" @
 .EfficientScans: "Efficient Scans: ;;N0" @
 .ShuttleJourneys: "Shuttle Journeys: ;;N0" @
 .ShuttleDistanceTravelled: "Shuttle Distance Travelled: ; ly;N0" @
