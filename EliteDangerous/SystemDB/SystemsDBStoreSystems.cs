@@ -15,6 +15,7 @@
 using QuickJSON;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 
 namespace EliteDangerousCore.DB
 {
@@ -71,6 +72,85 @@ namespace EliteDangerousCore.DB
 
             return 0;
         }
+
+
+        #region debug
+
+        internal static void ExplainPlans(SQLiteConnectionSystem cn, int limit = int.MaxValue)
+        {
+            using (DbCommand selectSysCmd = cn.CreateSelect("SystemTable s", MakeSystemQueryNamed,
+                                                "s.nameid >= @p1 AND s.nameid <= @p2 AND s.sectorid IN (Select id FROM Sectors c WHERE c.name=@p3)",
+                                                new Object[] { 1, 2, "name" },
+                                                limit: limit,
+                                                joinlist: MakeSystemQueryNamedJoinList))
+            {
+                System.Diagnostics.Debug.WriteLine(cn.ExplainQueryPlanString(selectSysCmd));
+            }
+
+            using (DbCommand selectSysCmd = cn.CreateSelect("SystemTable s", MakeSystemQueryNamed,
+                                                    "(s.nameid & (1<<46) != 0) AND cast((s.nameid & 0x3fffffffff) as text) LIKE @p1 AND s.sectorid IN (Select id FROM Sectors c WHERE c.name=@p2)",
+                                                    new Object[] { 10.ToStringInvariant() + "%", "name" },
+                                                    limit: limit,
+                                                    joinlist: MakeSystemQueryNamedJoinList))
+            {
+                System.Diagnostics.Debug.WriteLine(cn.ExplainQueryPlanString(selectSysCmd));
+            }
+
+            using (DbCommand selectSysCmd = cn.CreateSelect("SystemTable s", MakeSystemQueryNamed,
+                                                 "s.nameid IN (Select id FROM Names WHERE name LIKE @p1) AND s.sectorid IN (Select id FROM Sectors c WHERE c.name=@p2)",
+                                                 new Object[] { "Sol" + "%", 12 },
+                                                 limit: limit,
+                                                 joinlist: MakeSystemQueryNamedJoinList))
+            {
+                System.Diagnostics.Debug.WriteLine(cn.ExplainQueryPlanString(selectSysCmd));
+
+            }
+
+            using (DbCommand selectSysCmd = cn.CreateSelect("SystemTable s", MakeSystemQueryNamed,
+                                                  "s.sectorid IN (Select id FROM Sectors c WHERE c.name LIKE @p1)",
+                                                  new Object[] { "wkwk" + "%" },
+                                                  limit: limit,
+                                                  joinlist: MakeSystemQueryNamedJoinList))
+            {
+                System.Diagnostics.Debug.WriteLine(cn.ExplainQueryPlanString(selectSysCmd));
+            }
+
+
+            using (DbCommand selectSysCmd = cn.CreateSelect("SystemTable s", MakeSystemQueryNamed,
+                                                "s.nameid IN (Select id FROM Names WHERE name LIKE @p1) ",
+                                                new Object[] { "kwk" + "%" },
+                                                limit: limit,
+                                                joinlist: MakeSystemQueryNamedJoinList))
+            {
+                System.Diagnostics.Debug.WriteLine(cn.ExplainQueryPlanString(selectSysCmd));
+
+            }
+
+            using (DbCommand selectSysCmd = cn.CreateSelect("SystemTable s", MakeSystemQueryNamed,
+                                                 "s.sectorid IN (Select id FROM Sectors c WHERE c.name LIKE @p1)",
+                                                 new Object[] { "Sol" + "%" },
+                                                 limit: limit,
+                                                 joinlist: MakeSystemQueryNamedJoinList))
+            {
+                System.Diagnostics.Debug.WriteLine(cn.ExplainQueryPlanString(selectSysCmd));
+            }
+
+            System.Diagnostics.Debug.Write("NEW!");
+
+            using (DbCommand selectSysCmd = cn.CreateSelect("SystemTable s", MakeSystemQueryNamed,
+                                                "s.edsmid IN (Select id FROM Names WHERE name LIKE @p1)",
+                                                new Object[] { "kwk" + "%" },
+                                                limit: limit,
+                                                joinlist: MakeSystemQueryNamedJoinList))
+            {
+                System.Diagnostics.Debug.WriteLine(cn.ExplainQueryPlanString(selectSysCmd));
+
+            }
+
+        }
+
+        #endregion
+
     }
 }
 
