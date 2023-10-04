@@ -567,7 +567,7 @@ namespace EliteDangerousCore.JournalEvents
                     }
                 }
 
-                ReserveLevel = Bodies.ReserveStr2Enum(evt["ReserveLevel"].Str());
+                ReserveLevel = Bodies.ReserveStr2Enum(evt["ReserveLevel"].Str().Replace("Resources", ""));
             }
             else
                 PlanetTypeID = EDPlanet.Unknown_Body_Type;
