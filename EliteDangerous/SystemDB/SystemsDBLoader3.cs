@@ -292,7 +292,7 @@ namespace EliteDangerousCore.DB
                         {
                             //    System.Diagnostics.Debug.WriteLine($"Read {systemaddress} {id} {starname} {x} {y} {z}");
 
-                            if (true)
+                            if (starname == "Sol" || x!=0 || y != 0 || z != 0)      // triage
                             {
                                 int xi = (int)(x * SystemClass.XYZScalar);
                                 int yi = (int)(y * SystemClass.XYZScalar);
@@ -364,6 +364,10 @@ namespace EliteDangerousCore.DB
 
                                     recordstostore++;
                                 }
+                            }
+                            else
+                            {
+                                System.Diagnostics.Debug.WriteLine($"Rejected {starname} {x} {y} {z}");
                             }
                         }
                         else

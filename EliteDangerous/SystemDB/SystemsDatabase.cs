@@ -82,6 +82,14 @@ namespace EliteDangerousCore.DB
             }
 
             DBSource = GetDBSource();           // get what was set up and cache
+
+            if ( DBSource == "EDSM")
+            {
+                SystemsDB.Remove(81517618); // test render
+                SystemsDB.Remove(81496114); //single light test
+                SystemsDB.Remove(81517627); //test
+                SystemsDB.Remove(81498438);
+            }
         }
 
         const string TempTablePostfix = "temp"; // postfix for temp tables

@@ -61,6 +61,18 @@ namespace EliteDangerousCore.DB
                 db.Vacuum();
             });
         }
+
+        public static void Remove(long id)
+        {
+            SystemsDatabase.Instance.DBWrite(db =>
+            {
+                using (DbCommand cmd = db.CreateDelete("SystemTable", "edsmid=@p1", new string[] { "p1:int64" }))
+                {
+                    cmd.AddParameterWithValue("p1", id);
+                    cmd.ExecuteNonQuery();
+                }
+            });
+        }
     }
 }
 
