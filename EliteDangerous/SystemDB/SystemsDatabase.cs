@@ -89,6 +89,11 @@ namespace EliteDangerousCore.DB
                 SystemsDB.Remove(81496114); //single light test
                 SystemsDB.Remove(81517627); //test
                 SystemsDB.Remove(81498438);
+                
+            }
+            else
+            {
+                SystemsDB.Remove(4099286239595);
             }
         }
 

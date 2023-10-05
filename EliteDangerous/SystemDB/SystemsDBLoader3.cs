@@ -292,7 +292,7 @@ namespace EliteDangerousCore.DB
                         {
                             //    System.Diagnostics.Debug.WriteLine($"Read {systemaddress} {id} {starname} {x} {y} {z}");
 
-                            if (starname == "Sol" || x!=0 || y != 0 || z != 0)      // triage
+                            if (x!=0 || y != 0 || z != 0 || starname == "Sol")      // triage because bad tools are leaking systems on 0/0/0 oct 23
                             {
                                 int xi = (int)(x * SystemClass.XYZScalar);
                                 int yi = (int)(y * SystemClass.XYZScalar);
