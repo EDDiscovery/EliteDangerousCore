@@ -647,7 +647,7 @@ namespace EliteDangerousCore.EDSM
                         foreach (JObject sysname in msg)
                         {
                             // tbd sys addr
-                            ISystem sys = new SystemClass(sysname["name"].Str("Unknown"),sysname["id"].Long(), sysname["id64"].LongNull(), SystemSource.FromEDSM);        // make a system from EDSM
+                            SystemClass sys = new SystemClass(sysname["name"].Str("Unknown"),sysname["id"].Long(), sysname["id64"].LongNull(), SystemSource.FromEDSM);        // make a system from EDSM
                             JObject co = (JObject)sysname["coords"];
                             if (co != null)
                             {
@@ -656,7 +656,7 @@ namespace EliteDangerousCore.EDSM
                                 sys.Z = co["z"].Double();
                             }
 
-                            if (EDSMTriage(sys))
+                            if (sys.Triage())
                             {
                                 systems.Add(new Tuple<ISystem, double>(sys, sysname["distance"].Double()));
                             }
@@ -701,7 +701,7 @@ namespace EliteDangerousCore.EDSM
                         foreach (JObject sysname in msg)
                         {
                             // tbd sys addr
-                            ISystem sys = new SystemClass(sysname["name"].Str("Unknown"), sysname["id"].Long(), sysname["id64"].LongNull(), SystemSource.FromEDSM);   // make a EDSM system
+                            SystemClass sys = new SystemClass(sysname["name"].Str("Unknown"), sysname["id"].Long(), sysname["id64"].LongNull(), SystemSource.FromEDSM);   // make a EDSM system
                             JObject co = (JObject)sysname["coords"];
                             if (co != null)
                             {
@@ -710,7 +710,7 @@ namespace EliteDangerousCore.EDSM
                                 sys.Z = co["z"].Double();
                             }
 
-                            if (EDSMTriage(sys))
+                            if (sys.Triage())
                             {
                                 systems.Add(new Tuple<ISystem, double>(sys, sysname["distance"].Double()));
                             }
@@ -728,22 +728,6 @@ namespace EliteDangerousCore.EDSM
 
             return null;
         }
-
-        // added oct 23 since edsm has faulty data
-        public bool EDSMTriage(ISystem sys)
-        {
-            if (sys.Name == "Sol")
-                return true;
-
-            if (sys.X == 0 && sys.Y == 0 && sys.Z == 0)
-                return false;
-
-            if (sys.Distance(0, 0, 0) < 4)
-                return false;
-
-            return true;
-        }
-
 
         public string GetUrlToSystem(string sysName)            // get a direct name, no check if exists
         {

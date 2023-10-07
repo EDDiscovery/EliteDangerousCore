@@ -13,6 +13,8 @@
  */
 
 using QuickJSON;
+using System;
+using System.Collections.Generic;
 using System.Web;
 
 namespace EliteDangerousCore.Spansh
@@ -38,9 +40,11 @@ namespace EliteDangerousCore.Spansh
             return json;
         }
 
-        public JObject GetSystemsByCoord(double x, double y, double z, double maxradius, double minradius, int max)
+        public List<Tuple<ISystem, double>> GetSystemsByCoord(double x, double y, double z, double maxradius, double minradius, int max)
         {
-            // POST, systems : { "filters":{ "distance":{ "min":"0","max":"7"} },"sort":[{ "distance":{ "direction":"asc"} }],"size":10,"page":0,"reference_coords":{ "x":100,"y":100,"z":100} }: 
+            // POST, systems :  { "filters":{ "distance":{ "min":"0","max":"7"} },"sort":[{ "distance":{ "direction":"asc"}}],"size":10,"page":0,"reference_coords":{ "x":100,"y":100,"z":100} }: 
+            //                  {"filters": { "distance":{"min":"0","max":"10"}}, "sort":[{"distance":{"direction":"asc"}}],"size":10,"reference_coords":{"x":0.0,"y":0.0,"z":0.0}}
+            // size relates to number returned per page
 
             JObject jo = new JObject()
             {
@@ -48,18 +52,20 @@ namespace EliteDangerousCore.Spansh
                 {
                     ["distance"] = new JObject()
                     {
-                        ["min"] = minradius,
-                        ["max"] = maxradius,
+                        ["min"] = minradius.ToStringInvariant(),
+                        ["max"] = maxradius.ToStringInvariant(),
                     }
                 },
-                ["sort"] = new JObject()
+                ["sort"] = new JArray()
                 {
-                    ["distance"] = new JObject()
+                    new JObject()
                     {
-                        ["direction"] = "asc"
+                        ["distance"] = new JObject()
+                        {
+                            ["direction"] = "asc"
+                        }
                     }
                 },
-                ["size"] = max,
                 ["reference_coords"] = new JObject()
                 {
                     ["x"] = x,
@@ -68,14 +74,17 @@ namespace EliteDangerousCore.Spansh
                 }
             };
 
-            var response = RequestPost(jo.ToString(), "systems", handleException: true);
+            System.Diagnostics.Debug.WriteLine($"Spansh post data for systems {jo.ToString()}");
+
+            var response = RequestPost(jo.ToString(), "systems/search", handleException: true);
 
             if (response.Error)
                 return null;
 
             var data = response.Body;
             var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
-            return json;
+            System.Diagnostics.Debug.Write($"SPansh returned {json.ToString(true)}");
+            return null;
         }
 
     }

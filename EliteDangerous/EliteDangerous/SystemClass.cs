@@ -193,6 +193,18 @@ namespace EliteDangerousCore
             Source = src;
         }
 
+        // added oct 23 since edsm has faulty data
+        public bool Triage()
+        {
+            if (Name == "Sol")
+                return true;
+
+            if (Math.Abs(Xi) < 3 * XYZScalar && Math.Abs(Yi) < 3 * XYZScalar && Math.Abs(Zi) < 3 * XYZScalar)
+                return false;
+
+            return true;
+        }
+
         public SystemSource Source { get; set; }        // default source is Sythesised
         public EDStar MainStarType { get; set; }
 
