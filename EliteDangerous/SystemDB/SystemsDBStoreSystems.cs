@@ -55,6 +55,7 @@ namespace EliteDangerousCore.DB
                         jo["date"] = DateTime.UtcNow;
                     }
 
+                    System.Diagnostics.Debug.WriteLine($"DB Store systems {jo.ToString()}");
                     jlist.Add(jo);
                 }
             }
@@ -63,8 +64,8 @@ namespace EliteDangerousCore.DB
             {
                 // start loader, 10000 at a time, no overlapped so we don't load up the pc, and don't overwrite stuff already there
 
-                SystemsDB.Loader3 loader3 = new SystemsDB.Loader3("", 10000, null, poverlapped:false, pdontoverwrite:true);
-                long updates = loader3.ParseJSONFile(jlist.ToString(), () => false, (s) => System.Diagnostics.Debug.WriteLine($"Store Systems: {s}"));
+                SystemsDB.Loader3 loader3 = new SystemsDB.Loader3("", 10000, null, poverlapped: false, pdontoverwrite: true);
+                long updates = loader3.ParseJSONString(jlist.ToString(), () => false, (s) => System.Diagnostics.Debug.WriteLine($"Store Systems: {s}"));
                 loader3.Finish();
                 return updates;
 

@@ -655,7 +655,11 @@ namespace EliteDangerousCore.EDSM
                                 sys.Y = co["y"].Double();
                                 sys.Z = co["z"].Double();
                             }
-                            systems.Add(new Tuple<ISystem, double>(sys, sysname["distance"].Double()));
+
+                            if (EDSMTriage(sys))
+                            {
+                                systems.Add(new Tuple<ISystem, double>(sys, sysname["distance"].Double()));
+                            }
                         }
 
                         return systems;
@@ -705,7 +709,11 @@ namespace EliteDangerousCore.EDSM
                                 sys.Y = co["y"].Double();
                                 sys.Z = co["z"].Double();
                             }
-                            systems.Add(new Tuple<ISystem, double>(sys, sysname["distance"].Double()));
+
+                            if (EDSMTriage(sys))
+                            {
+                                systems.Add(new Tuple<ISystem, double>(sys, sysname["distance"].Double()));
+                            }
                             //System.Diagnostics.Debug.WriteLine($"  EDSM returned sphere {sys.Name} {sys.X} {sys.Y} {sys.Z} dist {dist}");
                         }
 
@@ -720,6 +728,22 @@ namespace EliteDangerousCore.EDSM
 
             return null;
         }
+
+        // added oct 23 since edsm has faulty data
+        public bool EDSMTriage(ISystem sys)
+        {
+            if (sys.Name == "Sol")
+                return true;
+
+            if (sys.X == 0 && sys.Y == 0 && sys.Z == 0)
+                return false;
+
+            if (sys.Distance(0, 0, 0) < 4)
+                return false;
+
+            return true;
+        }
+
 
         public string GetUrlToSystem(string sysName)            // get a direct name, no check if exists
         {
