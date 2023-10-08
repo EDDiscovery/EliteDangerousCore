@@ -75,9 +75,44 @@ namespace EliteDangerousCore.Spansh
                 }
             };
 
+            return GetSphereSystems(jo, maxradius, minradius);
+        }
+
+
+        // null, or list of found systems (may be empty)
+        public List<Tuple<ISystem, double>> GetSphereSystems(string name, double maxradius, double minradius)
+        {
+            JObject jo = new JObject()
+            {
+                ["filters"] = new JObject()
+                {
+                    ["distance"] = new JObject()
+                    {
+                        ["min"] = minradius.ToStringInvariant(),
+                        ["max"] = maxradius.ToStringInvariant(),
+                    }
+                },
+                ["sort"] = new JArray()
+                {
+                    new JObject()
+                    {
+                        ["distance"] = new JObject()
+                        {
+                            ["direction"] = "asc"
+                        }
+                    }
+                },
+                ["reference_system"] = name
+            };
+
+            return GetSphereSystems(jo, maxradius, minradius);
+        }
+
+        public List<Tuple<ISystem, double>> GetSphereSystems(JObject query, double maxradius, double minradius)
+        { 
             //System.Diagnostics.Debug.WriteLine($"Spansh post data for systems {jo.ToString()}");
 
-            var response = RequestPost(jo.ToString(), "systems/search", handleException: true);
+            var response = RequestPost(query.ToString(), "systems/search", handleException: true);
 
             if (response.Error)
                 return null;
