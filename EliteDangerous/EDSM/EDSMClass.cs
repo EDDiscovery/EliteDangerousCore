@@ -665,9 +665,9 @@ namespace EliteDangerousCore.EDSM
                         return systems;
                     }
                 }
-                catch (Exception e)      // json may be garbage
+                catch (Exception ex)      // json may be garbage
                 {
-                    System.Diagnostics.Debug.WriteLine("Failed due to " + e.ToString());
+                    System.Diagnostics.Debug.WriteLine("EDSM Sphere names failed due to " + ex);
                 }
             }
 
@@ -720,9 +720,9 @@ namespace EliteDangerousCore.EDSM
                         return systems;
                     }
                 }
-                catch (Exception e)      // json may be garbage
+                catch (Exception ex)      // json may be garbage
                 {
-                    System.Diagnostics.Debug.WriteLine("Failed due to " + e.ToString());
+                    System.Diagnostics.Debug.WriteLine("EDSM Sphere systems failed due to " + ex);
                 }
             }
 

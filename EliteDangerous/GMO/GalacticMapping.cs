@@ -109,7 +109,7 @@ namespace EliteDangerousCore.GMO
                                 {
                                     string gmodesc = Environment.NewLine + "+++ " + newgmo.Names[0] + Environment.NewLine + newgmo.Description;
                                     previousstored.AddDuplicateGMODescription(newgmo.Names[0], gmodesc);
-                                    SystemCache.AddSystemToCache(newgmo.GetSystem());        // also add this name
+                               //     SystemCache.AddSystemToCache(newgmo.GetSystem());        // also add this name
                                    // System.Diagnostics.Debug.WriteLine($"GMO Merge name {newgmo.NameList} with previous {previousstored.NameList}");
                                 }
                                 else
@@ -119,9 +119,9 @@ namespace EliteDangerousCore.GMO
                             }
                             else
                             {
-                               // System.Diagnostics.Debug.WriteLine($"GMO Add {newgmo.NameList}");
+                                System.Diagnostics.Debug.WriteLine($"GMO Add {newgmo.NameList} {newgmo.Type}");
                                 GalacticMapObjects.Add(newgmo);
-                                SystemCache.AddSystemToCache(newgmo.GetSystem());        // also add this name
+                             //   SystemCache.AddSystemToCache(newgmo.GetSystem());        // also add this name
                             }
                         }
                         else

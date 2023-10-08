@@ -24,6 +24,7 @@ namespace EliteDangerousCore
         FromDB,
         FromJournal,
         FromEDSM,
+        FromSpansh,
     }
 
     public interface ISystemBase : IEquatable<ISystemBase>
