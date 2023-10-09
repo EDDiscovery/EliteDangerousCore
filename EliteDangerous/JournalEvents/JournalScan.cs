@@ -281,8 +281,12 @@ namespace EliteDangerousCore.JournalEvents
         public EDReserve ReserveLevel { get; private set; }
 
         // EDD additions
-        [PropertyNameAttribute("Body loaded from ESDM")]
-        public bool IsEDSMBody { get; private set; }
+        [PropertyNameAttribute("Body data source")]
+        public SystemSource DataSource { get; private set; } = SystemSource.FromJournal;        // FromJournal, FromEDSM, FromSpansh
+        [PropertyNameAttribute("Web data source name (Empty if not)")]
+        public string DataSourceName { get { return DataSource != SystemSource.FromJournal ? DataSource.ToString().Replace("From", "") : ""; } }
+        [PropertyNameAttribute("Is scan web sourced?")]
+        public bool IsWebSourced { get { return DataSource != SystemSource.FromJournal; } }
         [PropertyNameAttribute("EDSM first commander")]
         public string EDSMDiscoveryCommander { get; private set; }      // may be null if not known
         [PropertyNameAttribute("EDSM first reported time UTC")]
@@ -354,7 +358,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         [PropertyNameAttribute("cr")]
-        public int EstimatedValue { get { return GetEstimatedValues().EstimatedValue(WasDiscovered, WasMapped, Mapped, EfficientMapped, IsEDSMBody); } }     // Direct access to its current EstimatedValue, provides backwards compatibility for code and action packs.
+        public int EstimatedValue { get { return GetEstimatedValues().EstimatedValue(WasDiscovered, WasMapped, Mapped, EfficientMapped, IsWebSourced); } }     // Direct access to its current EstimatedValue, provides backwards compatibility for code and action packs.
         [PropertyNameAttribute("cr")]
         public int MaximumEstimatedValue { get { return GetEstimatedValues().EstimatedValue(WasDiscovered, WasMapped, true, true,false); } }     // Direct access to its current EstimatedValue, provides backwards compatibility for code and action packs.
 
@@ -572,10 +576,13 @@ namespace EliteDangerousCore.JournalEvents
             else
                 PlanetTypeID = EDPlanet.Unknown_Body_Type;
 
+            // scans are presumed FromJournal. These markers show that either EDSMClass made it for SpanshClass
+            if (evt["EDDFromEDSMBodie"].Bool(false))                    // Note the Finwenism!
+                DataSource = SystemSource.FromEDSM;
+            else if (evt["EDDFromSpanshBody"].Bool(false))
+                DataSource = SystemSource.FromSpansh;
+
             // EDSM bodies fields
-
-            IsEDSMBody = evt["EDDFromEDSMBodie"].Bool(false);           // Bodie? Who is bodie?  Did you mean Body Finwen ;-)
-
             JToken discovery = evt["discovery"];
             if (!discovery.IsNull())
             {

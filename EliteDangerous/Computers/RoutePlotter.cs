@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2019 EDDiscovery development team
+ * Copyright © 2019-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using EliteDangerousCore.DB;
@@ -19,7 +17,6 @@ using EliteDangerousCore.EDSM;
 using EMK.LightGeometry;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace EliteDangerousCore
@@ -34,7 +31,7 @@ namespace EliteDangerousCore
         public string ToSystem;
         public SystemCache.SystemsNearestMetric RouteMethod;
         public bool UseFsdBoost;
-        public bool EDSM;
+        public WebExternalDataLookup WebLookup;
 
         public class ReturnInfo
         {
@@ -58,7 +55,7 @@ namespace EliteDangerousCore
             System.Diagnostics.Debug.WriteLine("From " + FromSystem + " to  " + ToSystem + ", using metric " + RouteMethod.ToString());
 
             ISystem startsystem = new SystemClass(FromSystem, null, Coordsfrom.X, Coordsfrom.Y, Coordsfrom.Z);
-            ISystem startfromdb = SystemCache.FindSystem(startsystem, EDSM); // see if the cache knows more about it, if so, use that..
+            ISystem startfromdb = SystemCache.FindSystem(startsystem, WebLookup); // see if the cache knows more about it, if so, use that..
             if (startfromdb != null)
                 startsystem = startfromdb;
             routeSystems.Add(startsystem);
@@ -89,9 +86,9 @@ namespace EliteDangerousCore
 
                 if (bestsystem == null)
                 {
-                    if (EDSM)
+                    if (WebLookup != EliteDangerousCore.WebExternalDataLookup.None)
                     {
-                        bestsystem = GetBestEDSMSystem(curpos, travelvectorperly, maxfromwanted, MaxRange);
+                        bestsystem = GetBestWebSystem(curpos, travelvectorperly, maxfromwanted, MaxRange);
                     }
                 }
                 else
@@ -106,8 +103,8 @@ namespace EliteDangerousCore
                     boostStrength = 1 << boostStrength;
                     float maxRangeWithBoost = MaxRange * (1.0f + BoostPercentage(boostStrength));
                     ISystem bestSystemWithBoost = GetBestJumpSystem(curpos, travelvectorperly, maxfromwanted, maxRangeWithBoost);
-                    if ( bestSystemWithBoost == null && EDSM)
-                        bestSystemWithBoost = GetBestEDSMSystem(curpos, travelvectorperly, maxfromwanted, maxRangeWithBoost);
+                    if ( bestSystemWithBoost == null && WebLookup != WebExternalDataLookup.None)
+                        bestSystemWithBoost = GetBestWebSystem(curpos, travelvectorperly, maxfromwanted, maxRangeWithBoost);
                     if (bestSystemWithBoost != null)
                         bestsystem = bestSystemWithBoost;
                 }
@@ -137,7 +134,7 @@ namespace EliteDangerousCore
             } while ( !StopPlotter);
 
             ISystem endsystem = new SystemClass(ToSystem, null, Coordsto.X, Coordsto.Y, Coordsto.Z);
-            ISystem endfromdb = SystemCache.FindSystem(endsystem, EDSM); // see if the cache knows more about it, if so, use that..
+            ISystem endfromdb = SystemCache.FindSystem(endsystem, WebLookup); // see if the cache knows more about it, if so, use that..
             if (endfromdb != null)
                 endsystem = endfromdb;
             routeSystems.Add(endsystem);
@@ -170,7 +167,8 @@ namespace EliteDangerousCore
         const int maxqueriesrate = 5000;
 
         // return an EDSM ISystem or null based on parameters
-        private static ISystem GetBestEDSMSystem( Point3D currentPosition, Point3D travelVectorPerLy, float maxDistanceFromWanted, float maxRange)
+        // tbd spansh
+        private static ISystem GetBestWebSystem( Point3D currentPosition, Point3D travelVectorPerLy, float maxDistanceFromWanted, float maxRange)
         {
             if (ratelimiter.IsRunning)      // first time, won't be running
             {

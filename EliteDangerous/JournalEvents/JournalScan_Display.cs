@@ -37,7 +37,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (includefront)
             {
-                scanText.AppendFormat("{0} {1}" + Environment.NewLine, BodyName, IsEDSMBody ? " (EDSM)" : "");
+                scanText.AppendFormat("{0} {1}" + Environment.NewLine, BodyName, IsWebSourced ? $" ({DataSourceName})" : "");
                 scanText.Append(Environment.NewLine);
 
                 if (IsStar)
@@ -187,7 +187,7 @@ namespace EliteDangerousCore.JournalEvents
 
             ScanEstimatedValues ev = GetEstimatedValues();
 
-            scanText.AppendFormat("Current value: {0:N0}".T(EDCTx.JournalScan_CV) + "\n", ev.EstimatedValue(WasDiscovered, WasMapped, Mapped, EfficientMapped, IsEDSMBody));
+            scanText.AppendFormat("Current value: {0:N0}".T(EDCTx.JournalScan_CV) + "\n", ev.EstimatedValue(WasDiscovered, WasMapped, Mapped, EfficientMapped, IsWebSourced));
 
             if (ev.EstimatedValueFirstDiscoveredFirstMapped > 0 && (!WasDiscovered.HasValue || !WasDiscovered.Value))  // if we don't know, or its not discovered
             {

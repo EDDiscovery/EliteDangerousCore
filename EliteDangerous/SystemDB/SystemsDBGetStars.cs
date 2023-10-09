@@ -295,7 +295,7 @@ namespace EliteDangerousCore.DB
                                                                 limit: limit,
                                                                 joinlist: MakeSystemQueryNamedJoinList))
                             {
-                                System.Diagnostics.Debug.WriteLine(cn.ExplainQueryPlanString(selectSysCmd));
+                                //System.Diagnostics.Debug.WriteLine(cn.ExplainQueryPlanString(selectSysCmd));
 
                                 using (DbDataReader reader = selectSysCmd.ExecuteReader())
                                 {

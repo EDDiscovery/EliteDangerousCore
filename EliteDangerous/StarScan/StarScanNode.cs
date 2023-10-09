@@ -46,7 +46,8 @@ namespace EliteDangerousCore
             public int? BodyID;
             public bool IsMapped;                   // recorded here since the scan data can be replaced by a better version later.
             public bool WasMappedEfficiently;
-            public bool EDSMCreatedNode;            // did EDSM create the node? BodyID sets this false, JournalScan sets it to ScanData.EDSMBody.  Never changed after creation
+            public SystemSource DataSource;         // where did it come from ? FromJournal, etc
+            public bool WebCreatedNode { get { return DataSource != SystemSource.FromJournal; } }       // did Web create the node? BodyID sets this false, JournalScan sets it to ScanData.WebsourcedBody.  Never changed after creation
 
             public string CustomNameOrOwnname { get { return CustomName ?? OwnName; } }
 
@@ -85,7 +86,7 @@ namespace EliteDangerousCore
                         scandata = value;
                         //System.Diagnostics.Debug.WriteLine($".. attach {scandata.ScanType} {scandata.EventTimeUTC} to {scandata.BodyName}");
                     }
-                    else if ((!value.IsEDSMBody && value.ScanType != "Basic") || scandata.ScanType == "Basic") // Always overwrtite if its a journalscan (except basic scans)
+                    else if ((!value.IsWebSourced && value.ScanType != "Basic") || scandata.ScanType == "Basic") // Always overwrtite if its a journalscan (except basic scans)
                     {
                         //System.Diagnostics.Debug.WriteLine($".. overwrite {scandata.ScanType} {scandata.EventTimeUTC} with {value.ScanType} {value.EventTimeUTC} for {scandata.BodyName}");
                         scandata = value;
@@ -175,17 +176,17 @@ namespace EliteDangerousCore
                     return null;
             }
 
-            // does node have any non edsm scans (or empty scans) below it
-            public bool DoesNodeHaveNonEDSMScansBelow()
+            // does node have any non web scans (or empty scans) below it
+            public bool DoesNodeHaveNonWebScansBelow()
             {
-                if (EDSMCreatedNode)        // its EDSM created, so answer is false
+                if (WebCreatedNode)        // its web created, so answer is false
                     return false;
 
                 if (Children != null)
                 {
                     foreach (KeyValuePair<string, ScanNode> csn in Children)
                     {
-                        if (csn.Value.DoesNodeHaveNonEDSMScansBelow() == true)  // we do have non edsm ones under this child
+                        if (csn.Value.DoesNodeHaveNonWebScansBelow() == true)  // we do have non web ones under this child
                             return true;
                     }
                 }

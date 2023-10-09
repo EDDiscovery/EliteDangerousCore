@@ -85,8 +85,7 @@ namespace EliteDangerousCore
         }
 
         // ONLY use this if you must because the async await won't work in the call stack.  edsmweblookup here with true is strongly discouraged
-
-        public SystemNode FindSystemSynchronous(ISystem sys, bool edsmweblookup)    // Find the system. Optionally do a EDSM web lookup
+        public SystemNode FindSystemSynchronous(ISystem sys, WebExternalDataLookup weblookup = WebExternalDataLookup.None)    // Find the system. Optionally do a EDSM web lookup
         {
             System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);  // foreground only
             System.Diagnostics.Debug.Assert(sys != null);
@@ -98,10 +97,12 @@ namespace EliteDangerousCore
             // if we have data for a lookup
             // and node is null, or edsmweblookup is set and we have not done a body lookup 
 
+            bool useedsm = weblookup == WebExternalDataLookup.EDSM || weblookup == WebExternalDataLookup.All;
+
             if (((sys.SystemAddress != null && sys.SystemAddress > 0) || (sys.Name.HasChars())) &&
-                            (sn == null || (edsmweblookup && !EliteDangerousCore.EDSM.EDSMClass.HasBodyLookupOccurred(sys.Name))))
+                            (sn == null || (useedsm && !EliteDangerousCore.EDSM.EDSMClass.HasBodyLookupOccurred(sys.Name))))
             {
-                var jl = EliteDangerousCore.EDSM.EDSMClass.GetBodiesList(sys, edsmweblookup); // lookup, with optional web
+                var jl = EliteDangerousCore.EDSM.EDSMClass.GetBodiesList(sys, useedsm); // lookup, with optional web lookup
 
                 //if (edsmweblookup) System.Diagnostics.Debug.WriteLine("EDSM WEB Lookup bodies " + sys.Name + " " + sys.EDSMID + " result " + (jl?.Count ?? -1));
 
@@ -124,7 +125,7 @@ namespace EliteDangerousCore
 
         // you must be returning void to use this..
 
-        public async System.Threading.Tasks.Task<SystemNode> FindSystemAsync(ISystem sys, bool edsmweblookup )    // Find the system. Optionally do a EDSM web lookup
+        public async System.Threading.Tasks.Task<SystemNode> FindSystemAsync(ISystem sys, WebExternalDataLookup weblookup = WebExternalDataLookup.None)    // Find the system. Optionally do a EDSM web lookup
         {
             System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);  // foreground only
             System.Diagnostics.Debug.Assert(sys != null);
@@ -138,10 +139,12 @@ namespace EliteDangerousCore
             // if we have data for a lookup
             // and node is null, or edsmweblookup is set and we have not done a body lookup 
 
+            bool useedsm = weblookup == WebExternalDataLookup.EDSM || weblookup == WebExternalDataLookup.All;
+
             if (((sys.SystemAddress != null && sys.SystemAddress > 0) || (sys.Name.HasChars())) && 
-                            (sn == null || (edsmweblookup && !EliteDangerousCore.EDSM.EDSMClass.HasBodyLookupOccurred(sys.Name))))
+                            (sn == null || (useedsm && !EliteDangerousCore.EDSM.EDSMClass.HasBodyLookupOccurred(sys.Name))))
             {
-                var jl = await EliteDangerousCore.EDSM.EDSMClass.GetBodiesListAsync(sys, edsmweblookup); // lookup, with optional web
+                var jl = await EliteDangerousCore.EDSM.EDSMClass.GetBodiesListAsync(sys, useedsm); // lookup, with optional web
 
                 // return bodies and a flag indicating if from cache.
                 // Scenario: Three panels are asking for data, one at a time, since its the foreground thread

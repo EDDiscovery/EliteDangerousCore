@@ -101,7 +101,7 @@ namespace EliteDangerousCore
                     if (lastlookuphomename != homesystem)
                     {
                         lastlookuphomename = homesystem;
-                        lookuphomesys = SystemCache.FindSystem(homesystem, true);      // look up thru edsm. note we cache ISystem so once done, it won't be checked again
+                        lookuphomesys = SystemCache.FindSystem(homesystem, EliteDangerousCore.WebExternalDataLookup.All);      // look up thru edsm. note we cache ISystem so once done, it won't be checked again
                     }
                 }
 

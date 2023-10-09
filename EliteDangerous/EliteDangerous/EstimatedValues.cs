@@ -506,9 +506,9 @@ namespace EliteDangerousCore
 
         #endregion
 
-        public int EstimatedValue(bool? wasdiscovered, bool? wasmapped, bool mapped, bool efficientlymapped, bool isedsm)
+        public int EstimatedValue(bool? wasdiscovered, bool? wasmapped, bool mapped, bool efficientlymapped, bool iswebsourced)
         {
-            if (isedsm)     // no value if its an edsm body - we have not scanned it.
+            if (iswebsourced)     // no value if its an web body - we have not scanned it.
                 return 0;
 
             if (EstimatedValueFirstDiscovered > 0)      // for previous scans before 3.3 and stars, these are not set.

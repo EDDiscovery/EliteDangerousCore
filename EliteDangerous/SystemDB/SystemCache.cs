@@ -30,25 +30,25 @@ namespace EliteDangerousCore.DB
         #region Public Interface for Find System
 
         // in historylist, addtocache for all fsd jumps and navroutes.
-        public static System.Threading.Tasks.Task<ISystem> FindSystemAsync(string name, GMO.GalacticMapping glist, bool checkedsm = false)
+        public static System.Threading.Tasks.Task<ISystem> FindSystemAsync(string name, GMO.GalacticMapping glist, WebExternalDataLookup lookup = WebExternalDataLookup.None)
         {
             return System.Threading.Tasks.Task.Run(() =>
             {
-                return FindSystem(name, glist, checkedsm);
+                return FindSystem(name, glist, lookup);
             });
         }
 
-        public static System.Threading.Tasks.Task<ISystem> FindSystemAsync(ISystem find, bool checkedsm = false)
+        public static System.Threading.Tasks.Task<ISystem> FindSystemAsync(ISystem find, WebExternalDataLookup lookup = WebExternalDataLookup.None)
         {
             return System.Threading.Tasks.Task.Run(() =>
             {
-                return FindSystem(find, checkedsm);
+                return FindSystem(find, lookup);
             });
         }
 
-        public static ISystem FindSystem(string name, GMO.GalacticMapping glist, bool checkedsm)
+        public static ISystem FindSystem(string name, GMO.GalacticMapping glist, WebExternalDataLookup lookup = WebExternalDataLookup.None)
         {
-            ISystem sys = FindSystem(name, checkedsm);
+            ISystem sys = FindSystem(name, lookup);
 
             if (sys == null && glist != null)
             {
@@ -64,14 +64,14 @@ namespace EliteDangerousCore.DB
             return sys;
         }
 
-        public static ISystem FindSystem(string name, bool checkedsm = false)
+        public static ISystem FindSystem(string name, WebExternalDataLookup lookup = WebExternalDataLookup.None)
         {
-            return FindSystem(new SystemClass(name), checkedsm);
+            return FindSystem(new SystemClass(name), lookup);
         }
 
         // look up thru cache and db, and optionally edsm
         // thread safe
-        public static ISystem FindSystem(ISystem find, bool checkedsm = false)
+        public static ISystem FindSystem(ISystem find, WebExternalDataLookup lookup = WebExternalDataLookup.None)
         {
             ISystem found;
 
@@ -85,8 +85,10 @@ namespace EliteDangerousCore.DB
 
                 // if not found, checking edsm, and its a good name
 #if !TESTHARNESS
-                if (found == null && checkedsm && find.Name.HasChars() && find.Name != "UnKnown")
+                if (found == null && lookup != WebExternalDataLookup.None && find.Name.HasChars() && find.Name != "UnKnown")
                 {
+                    // tbd edsm and spansh
+
                     EDSM.EDSMClass edsm = new EDSM.EDSMClass();
                     found = edsm.GetSystem(find.Name)?.FirstOrDefault();     // this may return null, an empty list, so first or default, or it may return null
 

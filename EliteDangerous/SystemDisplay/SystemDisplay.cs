@@ -26,7 +26,7 @@ namespace EliteDangerousCore
 {
     public partial class SystemDisplay 
     {
-        public bool ShowEDSMBodies { get; set; }
+        public bool ShowWebBodies { get; set; }
         public bool ShowMoons { get; set; } = true;
         public bool ShowOverlays { get; set; } = true;
         public bool ShowMaterials { get; set; } = true;
@@ -111,7 +111,7 @@ namespace EliteDangerousCore
                         continue;
                     }
 
-                    if (!starnode.DoesNodeHaveNonEDSMScansBelow() && !ShowEDSMBodies)      // if we don't have any non edsm bodies at or under the node, and we are not showing edsm bodies, ignore
+                    if (!starnode.DoesNodeHaveNonWebScansBelow() && !ShowWebBodies)      // if we don't have any non edsm bodies at or under the node, and we are not showing edsm bodies, ignore
                     {
                         continue;
                     }
@@ -142,7 +142,7 @@ namespace EliteDangerousCore
                         Point firstcolumn = leftmiddle;
 
                         Queue<StarScan.ScanNode> belts;
-                        if (starnode.ScanData != null && (!starnode.ScanData.IsEDSMBody || ShowEDSMBodies))  // have scandata on star, and its not edsm or allowed edsm
+                        if (starnode.ScanData != null && (!starnode.ScanData.IsWebSourced || ShowWebBodies))  // have scandata on star, and its not edsm or allowed edsm
                         {
                             belts = new Queue<StarScan.ScanNode>(starnode.Children.Values.Where(s => s.NodeType == StarScan.ScanNodeType.belt));    // find belts in children of star
                         }
@@ -207,7 +207,7 @@ namespace EliteDangerousCore
 
                            //System.Diagnostics.Debug.WriteLine("Planet Node " + planetnode.ownname + " has scans " + nonedsmscans);
 
-                            if (planetnode.DoesNodeHaveNonEDSMScansBelow() || ShowEDSMBodies)
+                            if (planetnode.DoesNodeHaveNonWebScansBelow() || ShowWebBodies)
                             {
                                 List<ExtPictureBox.ImageElement> pc = new List<ExtPictureBox.ImageElement>();
 
@@ -350,9 +350,9 @@ namespace EliteDangerousCore
                     if (filter != null && moonnode.IsBodyInFilter(filter, true) == false)       // if filter active, but no body or children in filter
                         continue;
 
-                    bool nonedsmscans = moonnode.DoesNodeHaveNonEDSMScansBelow();     // is there any scans here, either at this node or below?
+                    bool nonedsmscans = moonnode.DoesNodeHaveNonWebScansBelow();     // is there any scans here, either at this node or below?
 
-                    if (nonedsmscans || ShowEDSMBodies)
+                    if (nonedsmscans || ShowWebBodies)
                     {
                         Point mmax = DrawNode(pc, moonnode, historicmats, curmats, (moonnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre : BodyToImages.GetMoonImageNotScanned(), moonposcentremid, true, out Rectangle moonimagepos, moonsize, DrawLevel.MoonLevel);
                         int mooncentre = moonimagepos.X + moonimagepos.Width / 2;
@@ -369,9 +369,9 @@ namespace EliteDangerousCore
                                 if (filter != null && submoonnode.IsBodyInFilter(filter, true) == false)       // if filter active, but no body or children in filter
                                     continue;
 
-                                bool nonedsmsubmoonscans = submoonnode.DoesNodeHaveNonEDSMScansBelow();     // is there any scans here, either at this node or below?
+                                bool nonedsmsubmoonscans = submoonnode.DoesNodeHaveNonWebScansBelow();     // is there any scans here, either at this node or below?
 
-                                if (nonedsmsubmoonscans || ShowEDSMBodies)
+                                if (nonedsmsubmoonscans || ShowWebBodies)
                                 {
                                     Point sbmax = DrawNode(pc, submoonnode, historicmats, curmats, (moonnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre : BodyToImages.GetMoonImageNotScanned(), submoonpos, xiscentre, out Rectangle submoonimagepos, moonsize, DrawLevel.MoonLevel);
 

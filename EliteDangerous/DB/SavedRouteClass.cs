@@ -566,8 +566,8 @@ namespace EliteDangerousCore.DB
 
         public void TestHarness2()       // fly the route and debug the closestto.. keep this for testing
         {
-            ISystem db = SystemCache.FindSystem("Aiphaitt CA-A d250", null, false);
-            ISystem cursys = SystemCache.FindSystem("Hypoae Chrea KO-Z d13-2308", null, false);
+            ISystem db = SystemCache.FindSystem("Aiphaitt CA-A d250", null);
+            ISystem cursys = SystemCache.FindSystem("Hypoae Chrea KO-Z d13-2308", null);
 
             System.Diagnostics.Debug.WriteLine($"At {cursys.Name} @ {cursys.X:N5}, {cursys.Y:N5}, {cursys.Z:N5}");
 

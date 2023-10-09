@@ -54,7 +54,7 @@ namespace EliteDangerousCore
 
             JournalScan sc = sn.ScanData;
 
-            if (sc != null && (!sc.IsEDSMBody || ShowEDSMBodies))     // has a scan and its our scan, or we are showing EDSM
+            if (sc != null && (!sc.IsWebSourced || ShowWebBodies))     // has a scan and its our scan, or we are showing EDSM
             {
                 if (sn.NodeType != StarScan.ScanNodeType.ring)       // not rings
                 {
@@ -66,7 +66,7 @@ namespace EliteDangerousCore
                     var nodelabels = new string[2] { "", "" };
 
                     nodelabels[0] = sn.CustomNameOrOwnname;
-                    if (sc.IsEDSMBody)
+                    if (sc.IsWebSourced)
                         nodelabels[0] = "_" + nodelabels[0];
 
                     if (sc.IsStar)

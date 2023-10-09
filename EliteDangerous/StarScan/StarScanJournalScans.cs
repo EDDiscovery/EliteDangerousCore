@@ -164,7 +164,7 @@ namespace EliteDangerousCore
 
             if (rest != null)                                   // if we have a relationship between the system name and the body name
             {
-                if (sc.IsStar && !sc.IsEDSMBody && sc.DistanceFromArrivalLS == 0 && rest.Length >= 2)       // star, primary, with name >= 2 (AB)
+                if (sc.IsStar && !sc.IsWebSourced && sc.DistanceFromArrivalLS == 0 && rest.Length >= 2)       // star, primary, with name >= 2 (AB)
                 {
                     elements = new List<string> { rest };       // its a star, default
                 }
@@ -210,7 +210,7 @@ namespace EliteDangerousCore
                     elements.Add(MainStar);                                             // Sol / SN:Sol should come thru here
                 }
             }
-            else if (sc.IsStar && !sc.IsEDSMBody && sc.DistanceFromArrivalLS == 0)      // name has no relationship to system (Gliese..) and its a star at LS=0
+            else if (sc.IsStar && !sc.IsWebSourced && sc.DistanceFromArrivalLS == 0)      // name has no relationship to system (Gliese..) and its a star at LS=0
             {
                 elements = new List<string> { sc.BodyName };                            // its a star
             }
@@ -290,7 +290,7 @@ namespace EliteDangerousCore
                             Level = lvl,
                             Parent = previousnode,
                             SystemNode = systemnode,
-                            EDSMCreatedNode = sc.IsEDSMBody,                // is the node made by edsm
+                            DataSource = sc.DataSource,
                         };
 
                         currentnodelist.Add(ownname, subnode);
@@ -321,7 +321,7 @@ namespace EliteDangerousCore
                             subnode.Signals = oldnode.Signals;
                             subnode.Genuses = oldnode.Genuses;
                             subnode.Organics = oldnode.Organics;
-                            subnode.EDSMCreatedNode = oldnode.EDSMCreatedNode;      // we copy the creation flag
+                            subnode.DataSource = oldnode.DataSource;      // we copy the creation flag
                         }
     
                         // if its a belt cluster we are adding, then the previous node is a belt but it does not have a scan data, therefore it was artifically created and has no body id
@@ -330,10 +330,10 @@ namespace EliteDangerousCore
                         if (subnode.NodeType == ScanNodeType.beltcluster && sc.Parents != null)
                             previousnode.BodyID = sc.Parents[0].BodyID;
 
-                        // an older node, with a new scan which is not edsm, but the current one is edsm, we clear the created node flag, as we have in effect created it again
+                        // an older node, with a new scan which is not edsm, but the current one is edsm, we set the data source to journal, as we have in effect created it again
 
-                        if (!madenew && sc.IsEDSMBody == false && subnode.EDSMCreatedNode == true)
-                            subnode.EDSMCreatedNode = false;
+                        if (!madenew && sc.IsWebSourced == false && subnode.WebCreatedNode == true)
+                            subnode.DataSource = SystemSource.FromJournal;
 
                         // only overwrites if scan is better
                         subnode.ScanData = sc;                                      

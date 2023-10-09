@@ -15,6 +15,7 @@
 using QuickJSON;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 
 namespace EliteDangerousCore.Spansh
@@ -23,7 +24,28 @@ namespace EliteDangerousCore.Spansh
     {
         public SpanshClass()
         {
-            base.httpserveraddress = "https://www.spansh.co.uk/api/";
+            base.httpserveraddress = RootURL + "api/";
+        }
+
+        public const string RootURL = "https://spansh.co.uk/";
+
+        static public void LaunchBrowserForSystem(long sysaddr)
+        {
+            BaseUtils.BrowserInfo.LaunchBrowser(RootURL + "system/" + sysaddr.ToStringInvariant());
+        }
+        static public string URLForSystem(long sysaddr)
+        {
+            return RootURL + "system/" + sysaddr.ToStringInvariant();
+        }
+
+        static public void LaunchBrowserForStationByMarketID(long marketid)
+        {
+            BaseUtils.BrowserInfo.LaunchBrowser(RootURL + "station/" + marketid.ToStringInvariant());
+        }
+
+        static public void LaunchBrowserForStationByFullBodyID(long fullbodyid)
+        {
+            BaseUtils.BrowserInfo.LaunchBrowser(RootURL + "body/" + fullbodyid.ToStringInvariant());
         }
 
         public JObject GetSystemNames(string name)
@@ -39,6 +61,36 @@ namespace EliteDangerousCore.Spansh
             var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
             return json;
         }
+
+        // null, or list of found systems (may be empty)
+        public List<ISystem> GetSystems(string systemname, bool wildcard = true)
+        {
+            JObject jo = new JObject()
+            {
+                ["filters"] = new JObject()
+                {
+                    ["name"] = new JObject()
+                    {
+                        ["value"] = systemname + (wildcard ? "*" : ""),
+                    }
+                },
+                ["sort"] = new JArray()
+                {
+                    new JObject()
+                    {
+                        ["distance"] = new JObject()
+                        {
+                            ["direction"] = "asc"
+                        }
+                    }
+                },
+            };
+
+            var ret = IssueSystemsQuery(jo);
+
+            return ret != null ? ret.Select(x=>x.Item1).ToList() : null;
+        }
+
 
         // null, or list of found systems (may be empty)
         public List<Tuple<ISystem, double>> GetSphereSystems(double x, double y, double z, double maxradius, double minradius)
@@ -75,7 +127,7 @@ namespace EliteDangerousCore.Spansh
                 }
             };
 
-            return GetSphereSystems(jo, maxradius, minradius);
+            return IssueSystemsQuery(jo);
         }
 
 
@@ -105,10 +157,10 @@ namespace EliteDangerousCore.Spansh
                 ["reference_system"] = name
             };
 
-            return GetSphereSystems(jo, maxradius, minradius);
+            return IssueSystemsQuery(jo);
         }
 
-        public List<Tuple<ISystem, double>> GetSphereSystems(JObject query, double maxradius, double minradius)
+        private List<Tuple<ISystem, double>> IssueSystemsQuery(JObject query)
         { 
             //System.Diagnostics.Debug.WriteLine($"Spansh post data for systems {jo.ToString()}");
 
@@ -119,6 +171,9 @@ namespace EliteDangerousCore.Spansh
 
             var data = response.Body;
             var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
+
+            System.Diagnostics.Debug.WriteLine($"Spansh returns {json?.ToString(true)}");
+
             if ( json != null && json["results"] != null)
             {
                 // structure tested oct 23

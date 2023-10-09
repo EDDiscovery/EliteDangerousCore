@@ -119,7 +119,7 @@ namespace EliteDangerousCore.GMO
                             }
                             else
                             {
-                                System.Diagnostics.Debug.WriteLine($"GMO Add {newgmo.NameList} {newgmo.Type}");
+                               // System.Diagnostics.Debug.WriteLine($"GMO Add {newgmo.NameList} {newgmo.Type}");
                                 GalacticMapObjects.Add(newgmo);
                              //   SystemCache.AddSystemToCache(newgmo.GetSystem());        // also add this name
                             }
