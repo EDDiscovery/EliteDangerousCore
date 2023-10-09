@@ -28,6 +28,7 @@ namespace EliteDangerousCore.Spansh
         }
 
         public const string RootURL = "https://spansh.co.uk/";
+        public const int MaxReturnSize = 500;       // as coded by spansh
 
         static public void LaunchBrowserForSystem(long sysaddr)
         {
@@ -84,6 +85,8 @@ namespace EliteDangerousCore.Spansh
                         }
                     }
                 },
+
+                ["size"] = MaxReturnSize, // this appears the max, oct 23
             };
 
             var ret = IssueSystemsQuery(jo);
@@ -124,7 +127,8 @@ namespace EliteDangerousCore.Spansh
                     ["x"] = x,
                     ["y"] = y,
                     ["z"] = z,
-                }
+                },
+                ["size"] = MaxReturnSize, // this appears the max, oct 23
             };
 
             return IssueSystemsQuery(jo);
@@ -154,7 +158,8 @@ namespace EliteDangerousCore.Spansh
                         }
                     }
                 },
-                ["reference_system"] = name
+                ["reference_system"] = name,
+                ["size"] = MaxReturnSize, // this appears the max, oct 23
             };
 
             return IssueSystemsQuery(jo);
