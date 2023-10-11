@@ -94,7 +94,7 @@ namespace EliteDangerousCore
                 return false;
             }
 
-            System.Diagnostics.Debug.WriteLine($"StarScan Made body JS {sc.BodyName}");
+            //System.Diagnostics.Debug.WriteLine($"StarScan Made body JS {sc.BodyName}");
 
             // Get custom name if different to designation
             string customname = GetCustomNameJournalScan(sc, sys);

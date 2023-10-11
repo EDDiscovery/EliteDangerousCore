@@ -296,7 +296,7 @@ namespace EliteDangerousCore
                 if (stj.EDStarClass != EDStar.Unknown)
                 {
                     StarClass[stj.StarSystem] = stj.EDStarClass;
-                    System.Diagnostics.Debug.WriteLine($"Star Jump gives star {stj.StarSystem} as class {stj.EDStarClass}");
+                   // System.Diagnostics.Debug.WriteLine($"Star Jump gives star {stj.StarSystem} as class {stj.EDStarClass}");
                 }
             }
 
