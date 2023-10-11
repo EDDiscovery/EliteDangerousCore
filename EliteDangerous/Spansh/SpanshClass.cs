@@ -320,8 +320,7 @@ namespace EliteDangerousCore.Spansh
                     {
                         // this follows the order found in JournalScan constructor
 
-                        //so["stations"] = null;
-                        //System.Diagnostics.Debug.WriteLine($"Spansh Body JSON {so.ToString()}");
+                        //so["stations"] = null;   System.Diagnostics.Debug.WriteLine($"Spansh Body JSON {so.ToString()}");
 
                         JObject evt = new JObject();
                         evt["ScanType"] = "Detailed";
@@ -372,7 +371,7 @@ namespace EliteDangerousCore.Spansh
                                     ["OuterRad"] = node["outer_radius"],
                                     ["MassMT"] = node["mass"],
                                     ["Name"] = node["name"],
-                                    ["RingClass"] = "eRingClass_" + node["type"],
+                                    ["RingClass"] = "eRingClass_" + node["type"].Str(),
                                 };
                                 rings.Add(entry);
                             }
@@ -468,7 +467,7 @@ namespace EliteDangerousCore.Spansh
                                     evt["Composition"] = ac;
                                     foreach (var node in so["solid_composition"])
                                     {
-                                        ac[so["name"].Str("?")] = so["share"];
+                                        ac[node["name"].Str("?")] = node["share"].Double(1/100.0,0);
                                     }
                                 }
                             }
@@ -477,7 +476,7 @@ namespace EliteDangerousCore.Spansh
 
                             evt["SurfaceGravity"] = so["gravity"].Double(0) * BodyPhysicalConstants.oneGee_m_s2;        // its in G, convert back into m/s
                             evt["SurfacePressure"] = so[dump ? "surfacePressure" : "surface_pressure"].Double(0) * BodyPhysicalConstants.oneAtmosphere_Pa;
-                            evt["Landable"] = so[dump ? "isLandable" : "is_lanable"].Bool(false);
+                            evt["Landable"] = so[dump ? "isLandable" : "is_landable"].Bool(false);
                             evt["MassEM"] = so[dump ? "earthMasses" : "earth_masses"];
 
                             if (dump)
@@ -492,8 +491,8 @@ namespace EliteDangerousCore.Spansh
                                     {
                                         JObject entry = new JObject
                                         {
-                                            ["Name"] = so["name"],
-                                            ["Percent"] = so["share"],
+                                            ["Name"] = node["name"],
+                                            ["Percent"] = node["share"],
                                         };
                                         mats.Add(entry);
                                     }

@@ -92,23 +92,8 @@ namespace EliteDangerousCore
 
             if ((sys.SystemAddress.HasValue && sys.SystemAddress > 0) || sys.Name.HasChars())      // we have good enough data (should have)
             {
-                bool useedsm = weblookup == WebExternalDataLookup.EDSM || weblookup == WebExternalDataLookup.All;
-
-                if (useedsm && !EDSM.EDSMClass.HasBodyLookupOccurred(sys.Name))    
-                {
-                    var jl = EDSM.EDSMClass.GetBodiesList(sys, useedsm);            // see if edsm has it cached or optionally look it up
-                    if (jl != null)
-                    {
-                        foreach (JournalScan js in jl.Item1)
-                        {
-                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
-                            System.Diagnostics.Debug.WriteLine($"FindSystemSync edsn add {sys.Name} {js.BodyName}");
-                            ProcessJournalScan(js, sys, true);
-                        }
-                    }
-                }
-
-                bool usespansh = weblookup == WebExternalDataLookup.Spansh || weblookup == WebExternalDataLookup.All;
+                bool usespansh = weblookup == WebExternalDataLookup.Spansh || weblookup == WebExternalDataLookup.SpanshThenEDSM || weblookup == WebExternalDataLookup.All;
+                bool useedsm = weblookup == WebExternalDataLookup.EDSM || weblookup == WebExternalDataLookup.SpanshThenEDSM || weblookup == WebExternalDataLookup.All;
 
                 if ( usespansh && !Spansh.SpanshClass.HasBodyLookupOccurred(sys.Name))
                 {
@@ -121,8 +106,24 @@ namespace EliteDangerousCore
                             System.Diagnostics.Debug.WriteLine($"FindSystemSync spansh add {sys.Name} {js.BodyName}");
                             ProcessJournalScan(js, sys, true);
                         }
-                    }
 
+                        if (weblookup == WebExternalDataLookup.SpanshThenEDSM)      // we got something, for this option, we are fine, don't use edsm
+                            useedsm = false;
+                    }
+                }
+
+                if (useedsm && !EDSM.EDSMClass.HasBodyLookupOccurred(sys.Name))
+                {
+                    var jl = EDSM.EDSMClass.GetBodiesList(sys, useedsm);            // see if edsm has it cached or optionally look it up
+                    if (jl != null)
+                    {
+                        foreach (JournalScan js in jl.Item1)
+                        {
+                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
+                            System.Diagnostics.Debug.WriteLine($"FindSystemSync edsn add {sys.Name} {js.BodyName}");
+                            ProcessJournalScan(js, sys, true);
+                        }
+                    }
                 }
             }
 
@@ -139,7 +140,26 @@ namespace EliteDangerousCore
 
             if ((sys.SystemAddress.HasValue && sys.SystemAddress > 0) || sys.Name.HasChars())      // we have good enough data (should have)
             {
-                bool useedsm = weblookup == WebExternalDataLookup.EDSM || weblookup == WebExternalDataLookup.All;
+                bool usespansh = weblookup == WebExternalDataLookup.Spansh || weblookup == WebExternalDataLookup.SpanshThenEDSM || weblookup == WebExternalDataLookup.All;
+                bool useedsm = weblookup == WebExternalDataLookup.EDSM || weblookup == WebExternalDataLookup.SpanshThenEDSM || weblookup == WebExternalDataLookup.All;
+
+                if (usespansh && !Spansh.SpanshClass.HasBodyLookupOccurred(sys.Name))
+                {
+                    var jl = await Spansh.SpanshClass.GetBodiesListAsync(sys, usespansh);          // see if spansh has it cached or optionally look it up
+
+                    if (jl != null)
+                    {
+                        foreach (JournalScan js in jl.Item1)
+                        {
+                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
+                            System.Diagnostics.Debug.WriteLine($"FindSystemASync spansh add {sys.Name} {js.BodyName}");
+                            ProcessJournalScan(js, sys, true);
+                        }
+
+                        if (weblookup == WebExternalDataLookup.SpanshThenEDSM)      // we got something, for this option, we are fine, don't use edsm
+                            useedsm = false;
+                    }
+                }
 
                 if (useedsm && !EDSM.EDSMClass.HasBodyLookupOccurred(sys.Name))     // using edsm, no lookup, go
                 {
@@ -167,23 +187,7 @@ namespace EliteDangerousCore
                     }
                 }
 
-                bool usespansh = weblookup == WebExternalDataLookup.Spansh || weblookup == WebExternalDataLookup.All;
 
-                if (usespansh && !Spansh.SpanshClass.HasBodyLookupOccurred(sys.Name))
-                {
-                    var jl = await Spansh.SpanshClass.GetBodiesListAsync(sys, usespansh);          // see if spansh has it cached or optionally look it up
-
-                    if (jl != null)
-                    {
-                        foreach (JournalScan js in jl.Item1)
-                        {
-                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
-                            System.Diagnostics.Debug.WriteLine($"FindSystemASync spansh add {sys.Name} {js.BodyName}");
-                            ProcessJournalScan(js, sys, true);
-                        }
-                    }
-
-                }
             }
 
             SystemNode sn = FindSystemNode(sys);

@@ -32,6 +32,7 @@ namespace EliteDangerousCore
         None,
         EDSM,
         Spansh,
+        SpanshThenEDSM,
         All
     };
 
