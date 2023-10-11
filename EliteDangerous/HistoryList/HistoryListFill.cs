@@ -87,7 +87,7 @@ namespace EliteDangerousCore
                     // if we have two scans of the same body, the starscan always replaces the journal scan with the latest.
                     // Don't try and find the scan node from the web
 
-                    var sysnode = StarScan.FindSystemSynchronous(he.System, WebExternalDataLookup.None);
+                    var sysnode = StarScan.FindSystemSynchronous(he.System);
 
                     // prob not null, but check. 
                     if ( sysnode != null)

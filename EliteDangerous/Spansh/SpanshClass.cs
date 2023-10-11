@@ -396,7 +396,7 @@ namespace EliteDangerousCore.Spansh
                         else
                         {
                             System.Diagnostics.Debug.WriteLine($"Spansh bodies ignore {so["type"].Str()}");
-                            continue;       // ign
+                            continue;    
                         }
 
                         if (so[dump ? "semiMajorAxis" : "semi_major_axis"] != null)
