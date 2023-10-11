@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2022 EDDiscovery development team
+ * Copyright © 2015 - 2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -84,43 +84,50 @@ namespace EliteDangerousCore
                 ToProcess.Remove(je);
         }
 
-        // ONLY use this if you must because the async await won't work in the call stack.  edsmweblookup here with true is strongly discouraged
+        // ONLY use this if you must because the async await won't work in the call stack.  
         public SystemNode FindSystemSynchronous(ISystem sys, WebExternalDataLookup weblookup = WebExternalDataLookup.None)    // Find the system. Optionally do a EDSM web lookup
         {
             System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);  // foreground only
             System.Diagnostics.Debug.Assert(sys != null);
 
-            SystemNode sn = FindSystemNode(sys);
-
-            // System.Diagnostics.Debug.WriteLine("Scan Lookup " + sys.Name + " found " + (sn != null) + " web? " + edsmweblookup + " edsm lookup " + (sn?.EDSMAdded ?? false));
-
-            // if we have data for a lookup
-            // and node is null, or edsmweblookup is set and we have not done a body lookup 
-
-            bool useedsm = weblookup == WebExternalDataLookup.EDSM || weblookup == WebExternalDataLookup.All;
-
-            if (((sys.SystemAddress != null && sys.SystemAddress > 0) || (sys.Name.HasChars())) &&
-                            (sn == null || (useedsm && !EliteDangerousCore.EDSM.EDSMClass.HasBodyLookupOccurred(sys.Name))))
+            if ((sys.SystemAddress.HasValue && sys.SystemAddress > 0) || sys.Name.HasChars())      // we have good enough data (should have)
             {
-                var jl = EliteDangerousCore.EDSM.EDSMClass.GetBodiesList(sys, useedsm); // lookup, with optional web lookup
+                bool useedsm = weblookup == WebExternalDataLookup.EDSM || weblookup == WebExternalDataLookup.All;
 
-                //if (edsmweblookup) System.Diagnostics.Debug.WriteLine("EDSM WEB Lookup bodies " + sys.Name + " " + sys.EDSMID + " result " + (jl?.Count ?? -1));
-
-                if (jl != null && jl.Item2 == false) // found some bodies, not from the cache
+                if (useedsm && !EDSM.EDSMClass.HasBodyLookupOccurred(sys.Name))    
                 {
-                    foreach (JournalScan js in jl.Item1)
+                    var jl = EDSM.EDSMClass.GetBodiesList(sys, useedsm);            // see if edsm has it cached or optionally look it up
+                    if (jl != null)
                     {
-                        js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
-                        ProcessJournalScan(js, sys, true);
+                        foreach (JournalScan js in jl.Item1)
+                        {
+                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
+                            System.Diagnostics.Debug.WriteLine($"FindSystemSync edsn add {sys.Name} {js.BodyName}");
+                            ProcessJournalScan(js, sys, true);
+                        }
                     }
                 }
 
-                if (sn == null) // refind to make sure SN is set
-                    sn = FindSystemNode(sys);
+                bool usespansh = weblookup == WebExternalDataLookup.Spansh || weblookup == WebExternalDataLookup.All;
+
+                if ( usespansh && !Spansh.SpanshClass.HasBodyLookupOccurred(sys.Name))
+                {
+                    var jl = Spansh.SpanshClass.GetBodiesList(sys, usespansh);          // see if spansh has it cached or optionally look it up
+                    if (jl != null)
+                    {
+                        foreach (JournalScan js in jl.Item1)
+                        {
+                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
+                            System.Diagnostics.Debug.WriteLine($"FindSystemSync spansh add {sys.Name} {js.BodyName}");
+                            ProcessJournalScan(js, sys, true);
+                        }
+                    }
+
+                }
             }
 
+            SystemNode sn = FindSystemNode(sys);
             return sn;
-
         }
 
         // you must be returning void to use this..
@@ -130,48 +137,56 @@ namespace EliteDangerousCore
             System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);  // foreground only
             System.Diagnostics.Debug.Assert(sys != null);
 
-            SystemNode sn = FindSystemNode(sys);
-
-            //string trace = Environment.StackTrace.StackTrace("FindSystemAsync", 4);
-
-            //System.Diagnostics.Debug.WriteLine("Scan Lookup " + trace + " " + sys.Name + " found " + (sn != null) + " web? " + edsmweblookup + " edsm lookup " + (sn?.EDSMWebChecked ?? false));
-
-            // if we have data for a lookup
-            // and node is null, or edsmweblookup is set and we have not done a body lookup 
-
-            bool useedsm = weblookup == WebExternalDataLookup.EDSM || weblookup == WebExternalDataLookup.All;
-
-            if (((sys.SystemAddress != null && sys.SystemAddress > 0) || (sys.Name.HasChars())) && 
-                            (sn == null || (useedsm && !EliteDangerousCore.EDSM.EDSMClass.HasBodyLookupOccurred(sys.Name))))
+            if ((sys.SystemAddress.HasValue && sys.SystemAddress > 0) || sys.Name.HasChars())      // we have good enough data (should have)
             {
-                var jl = await EliteDangerousCore.EDSM.EDSMClass.GetBodiesListAsync(sys, useedsm); // lookup, with optional web
+                bool useedsm = weblookup == WebExternalDataLookup.EDSM || weblookup == WebExternalDataLookup.All;
 
-                // return bodies and a flag indicating if from cache.
-                // Scenario: Three panels are asking for data, one at a time, since its the foreground thread
-                // each one awaits, sets and runs a task, blocks until tasks completes, foreground continues to next panel where it does the same
-                // we have three tasks, any which could run in any order. 
-                // The tasks all go thru GetBodiesListAsync, which locks.  Only 1 task gets to do the lookup, the one which got there first, because it did not see
-                // a cached version
-                // once that task completes the lookups, and it unlocks, the other tasks can run, and they will see the cache setup.  They won't do an EDSM web access
-                // since the body is in the cache.  
-                // for now, i can't guarantee that the task which gives back the bodies first runs on the foreground task.  It may be task2 gets the bodies.
-                // so we will just add them in again
-
-                if (jl != null && jl.Item1 != null)
+                if (useedsm && !EDSM.EDSMClass.HasBodyLookupOccurred(sys.Name))     // using edsm, no lookup, go
                 {
-                    //System.Diagnostics.Debug.WriteLine("Process bodies from EDSM " + trace + " " + sys.Name + " " + sys.EDSMID + " result " + (jl.Item1?.Count ?? -1));
-                    foreach (JournalScan js in jl.Item1)
+                    var jl = await EliteDangerousCore.EDSM.EDSMClass.GetBodiesListAsync(sys, useedsm);
+
+                    // return bodies and a flag indicating if from cache.
+                    // Scenario: Three panels are asking for data, one at a time, since its the foreground thread
+                    // each one awaits, sets and runs a task, blocks until tasks completes, foreground continues to next panel where it does the same
+                    // we have three tasks, any which could run in any order. 
+                    // The tasks all go thru GetBodiesListAsync, which locks.  Only 1 task gets to do the lookup, the one which got there first, because it did not see
+                    // a cached version
+                    // once that task completes the lookups, and it unlocks, the other tasks can run, and they will see the cache setup.  They won't do an EDSM web access
+                    // since the body is in the cache.  
+                    // for now, i can't guarantee that the task which gives back the bodies first runs on the foreground task.  It may be task2 gets the bodies.
+                    // so we will just add them in again
+
+                    if (jl != null)
                     {
-                        js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
-                        ProcessJournalScan(js, sys, true);
+                        foreach (JournalScan js in jl.Item1)
+                        {
+                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
+                            System.Diagnostics.Debug.WriteLine($"FindSystemASync edsm add {sys.Name} {js.BodyName}");
+                            ProcessJournalScan(js, sys, true);
+                        }
                     }
                 }
 
-                //System.Diagnostics.Debug.WriteLine("Lookup System node again");
-                if (sn == null) // refind to make sure SN is set
-                    sn = FindSystemNode(sys);
+                bool usespansh = weblookup == WebExternalDataLookup.Spansh || weblookup == WebExternalDataLookup.All;
+
+                if (usespansh && !Spansh.SpanshClass.HasBodyLookupOccurred(sys.Name))
+                {
+                    var jl = await Spansh.SpanshClass.GetBodiesListAsync(sys, usespansh);          // see if spansh has it cached or optionally look it up
+
+                    if (jl != null)
+                    {
+                        foreach (JournalScan js in jl.Item1)
+                        {
+                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
+                            System.Diagnostics.Debug.WriteLine($"FindSystemASync spansh add {sys.Name} {js.BodyName}");
+                            ProcessJournalScan(js, sys, true);
+                        }
+                    }
+
+                }
             }
 
+            SystemNode sn = FindSystemNode(sys);
             return sn;
         }
     }

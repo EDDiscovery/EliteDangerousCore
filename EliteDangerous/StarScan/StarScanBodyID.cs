@@ -203,23 +203,19 @@ namespace EliteDangerousCore
                 if (currentnodelist == null || !currentnodelist.TryGetValue(elements[lvl], out ScanNode subnode))
                 {
                     if (currentnodelist == null)    // no node list, happens when we are at least 1 level down as systemnode always has a node list, make one 
-                        currentnodelist = previousnode.Children = new SortedList<string, ScanNode>(new CollectionStaticHelpers.BasicLengthBasedNumberComparitor<string>());
+                        currentnodelist = previousnode.MakeChildList();
 
                     string ownname = elements[lvl];
 
                     lock (currentnodelist)
                     {
-                        subnode = new ScanNode
-                        {
-                            OwnName = ownname,
-                            FullName = lvl == 0 ? (sys.Name + (ownname.Contains("Main") ? "" : (" " + ownname))) : previousnode.FullName + " " + ownname,
-                            ScanData = null,
-                            Children = null,
-                            NodeType = sublvtype,
-                            Level = lvl,
-                            Parent = previousnode,
-                            SystemNode = sn,
-                        };
+                        subnode = new ScanNode(ownname,
+                                                lvl == 0 ? (sys.Name + (ownname.Contains("Main") ? "" : (" " + ownname))) : previousnode.FullName + " " + ownname,
+                                                sublvtype,
+                                                lvl,
+                                                previousnode,
+                                                sn,
+                                                SystemSource.Synthesised);   
 
                         currentnodelist.Add(ownname, subnode);
                       //  System.Diagnostics.Debug.WriteLine($"StarScan BID Created subnode {subnode.FullName}");

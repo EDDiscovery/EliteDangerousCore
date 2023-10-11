@@ -29,9 +29,10 @@ namespace EliteDangerousCore
 
     public enum WebExternalDataLookup           // used throughout the star lookup and scan cache lookup so hold here
     { 
-        None, 
-        EDSM, 
-        All 
+        None,
+        EDSM,
+        Spansh,
+        All
     };
 
     public interface ISystemBase : IEquatable<ISystemBase>

@@ -17,7 +17,6 @@ using EliteDangerousCore.JournalEvents;
 using QuickJSON;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -236,8 +235,7 @@ namespace EliteDangerousCore.EDSM
 
             catch (Exception ex)
             {
-                Trace.WriteLine($"Exception: {ex.Message}");
-                Trace.WriteLine($"ETrace: {ex.StackTrace}");
+                System.Diagnostics.Trace.WriteLine($"EDSM Hidden system Exception: {ex.Message}");
                 return null;
             }
 
@@ -864,15 +862,15 @@ namespace EliteDangerousCore.EDSM
         }
 
         // EDSMBodiesCache gets either the body list, or null marking no EDSM server data
-        static private Dictionary<string, List<JournalScan>> EDSMBodiesCache = new Dictionary<string, List<JournalScan>>();
+        static private Dictionary<string, List<JournalScan>> BodyCache = new Dictionary<string, List<JournalScan>>();
 
         public static bool HasBodyLookupOccurred(string name)
         {
-            return EDSMBodiesCache.ContainsKey(name);
+            return BodyCache.ContainsKey(name);
         }
         public static bool HasNoDataBeenStoredOnBody(string name)      // true if lookup occurred, but no data. false otherwise
         {
-            return EDSMBodiesCache.TryGetValue(name, out List<JournalScan> d) && d == null;
+            return BodyCache.TryGetValue(name, out List<JournalScan> d) && d == null;
         }
 
         // returns null if EDSM says not there, else if returns list of bodies and a flag indicating if from cache. 
@@ -880,16 +878,16 @@ namespace EliteDangerousCore.EDSM
         // so we must pass back all the info we can to tell the caller what happened.
         // Verified Nov 21
 
-        public static Tuple<List<JournalScan>, bool> GetBodiesList(ISystem sys, bool edsmweblookup = true)
+        public static Tuple<List<JournalScan>, bool> GetBodiesList(ISystem sys, bool weblookup = true)
         {
             try
             {
-                lock (EDSMBodiesCache) // only one request at a time going, this is to prevent multiple requests for the same body
+                lock (BodyCache) // only one request at a time going, this is to prevent multiple requests for the same body
                 {
                     // System.Threading.Thread.Sleep(2000); //debug - delay to show its happening 
                     // System.Diagnostics.Debug.WriteLine("EDSM Cache check " + sys.EDSMID + " " + sys.SystemAddress + " " + sys.Name);
 
-                    if (EDSMBodiesCache.TryGetValue(sys.Name, out List<JournalScan> we))
+                    if (BodyCache.TryGetValue(sys.Name, out List<JournalScan> we))
                     {
                         System.Diagnostics.Debug.WriteLine($"EDSM Bodies Cache hit on {sys.Name} {we != null}");
                         if (we == null) // lookedup but not found
@@ -898,7 +896,7 @@ namespace EliteDangerousCore.EDSM
                             return new Tuple<List<JournalScan>, bool>(we, true);        // mark from cache
                     }
 
-                    if (!edsmweblookup)      // must be set for a web lookup
+                    if (!weblookup)      // must be set for a web lookup
                         return null;
 
                     System.Diagnostics.Debug.WriteLine($"EDSM Web lookup on {sys.Name}");
@@ -929,29 +927,24 @@ namespace EliteDangerousCore.EDSM
                             catch (Exception ex)
                             {
                                 BaseUtils.HttpCom.WriteLog($"Exception Loop: {ex.Message}", "");
-                                BaseUtils.HttpCom.WriteLog($"ETrace: {ex.StackTrace}", "");
-                                Trace.WriteLine($"Exception Loop: {ex.Message}");
-                                Trace.WriteLine($"ETrace: {ex.StackTrace}");
+                                System.Diagnostics.Trace.WriteLine($"Body List Exception Loop: {ex.Message}");
                             }
                         }
 
-                        EDSMBodiesCache[sys.Name] = bodies;
-
-                        System.Diagnostics.Debug.WriteLine("EDSM Web Lookup complete " + sys.Name + " " + bodies.Count);
+                        BodyCache[sys.Name] = bodies;
+                        System.Diagnostics.Debug.WriteLine($"EDSM Web Lookup complete {sys.Name} {bodies.Count}");
                         return new Tuple<List<JournalScan>, bool>(bodies, false);       // not from cache
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine("EDSM Web Lookup complete no info");
-                        EDSMBodiesCache[sys.Name] = null;
-                        return null;
+                        System.Diagnostics.Debug.WriteLine($"EDSM Web Lookup complete no info {sys.Name}");
+                        BodyCache[sys.Name] = null;
                     }
                 }
             }
             catch (Exception ex)
             {
-                Trace.WriteLine($"Exception: {ex.Message}");
-                Trace.WriteLine($"ETrace: {ex.StackTrace}");
+                System.Diagnostics.Trace.WriteLine($"EDSM Body Extraction exception: {ex.Message}");
             }
 
             return null;
@@ -969,7 +962,7 @@ namespace EliteDangerousCore.EDSM
                 ["BodyName"] = jo["name"],
                 ["SystemAddress"] = jo["id64"].Long(0),
                 ["WasDiscovered"] = true,
-                ["WasMapped"] = false,
+                ["WasMapped"] = false,          // tbd ? why false?
                 ["ScanType"] = "Detailed",
             };
 

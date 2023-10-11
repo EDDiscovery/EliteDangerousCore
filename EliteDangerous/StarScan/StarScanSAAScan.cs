@@ -68,8 +68,7 @@ namespace EliteDangerousCore
             {
                 lock (relatednode)
                 {
-                    relatednode.IsMapped = true;        // keep data here since we can get scans replaced later..
-                    relatednode.WasMappedEfficiently = jsaa.ProbesUsed <= jsaa.EfficiencyTarget;
+                    relatednode.SetMapped(jsaa.ProbesUsed <= jsaa.EfficiencyTarget);
                     //System.Diagnostics.Debug.WriteLine("Setting SAA Scan for " + jsaa.BodyName + " " + sys.Name + " to Mapped: " + relatednode.WasMappedEfficiently);
 
                     if (relatednode.ScanData != null)       // if we have a scan, set its values - this keeps the calculation self contained in the class.

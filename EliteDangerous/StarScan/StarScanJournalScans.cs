@@ -94,7 +94,7 @@ namespace EliteDangerousCore
                 return false;
             }
 
-            //System.Diagnostics.Debug.WriteLine("Made body JS " + sc.BodyName);
+            System.Diagnostics.Debug.WriteLine($"StarScan Made body JS {sc.BodyName}");
 
             // Get custom name if different to designation
             string customname = GetCustomNameJournalScan(sc, sys);
@@ -273,25 +273,20 @@ namespace EliteDangerousCore
 
                 if (currentnodelist == null || !currentnodelist.TryGetValue(elements[lvl], out ScanNode subnode)) // either no nodes, or not found the element name in the node list.
                 {
-                    if (currentnodelist == null)    // no node list, happens when we are at least 1 level down as systemnode always has a node list, make one 
-                        currentnodelist = previousnode.Children = new SortedList<string, ScanNode>(new CollectionStaticHelpers.BasicLengthBasedNumberComparitor<string>());
+                    if (currentnodelist == null)                            // no node list, happens when we are at least 1 level down as systemnode always has a node list, make one 
+                        currentnodelist = previousnode.MakeChildList();
 
                     lock (currentnodelist)                  // lock the node list during the add
                     {
                         string ownname = elements[lvl];
 
-                        subnode = new ScanNode
-                        {
-                            OwnName = ownname,
-                            FullName = previousnode == null ? (sys.Name + (ownname.Contains("Main") ? "" : (" " + ownname))) : previousnode.FullName + " " + ownname,
-                            ScanData = null,
-                            Children = null,
-                            NodeType = sublvtype,
-                            Level = lvl,
-                            Parent = previousnode,
-                            SystemNode = systemnode,
-                            DataSource = sc.DataSource,
-                        };
+                        subnode = new ScanNode(ownname,
+                                                previousnode == null ? (sys.Name + (ownname.Contains("Main") ? "" : (" " + ownname))) : previousnode.FullName + " " + ownname,
+                                                sublvtype,
+                                                lvl,
+                                                previousnode,
+                                                systemnode,
+                                                sc.DataSource);
 
                         currentnodelist.Add(ownname, subnode);
                         madenew = true;
@@ -316,12 +311,7 @@ namespace EliteDangerousCore
                         // if we are replacing the node, make sure we dup across some info
                         if (oldnode != null && oldnode.FullName == subnode.FullName && !object.ReferenceEquals(subnode, oldnode))      
                         {
-                            subnode.IsMapped = oldnode.IsMapped;
-                            subnode.WasMappedEfficiently = oldnode.WasMappedEfficiently;
-                            subnode.Signals = oldnode.Signals;
-                            subnode.Genuses = oldnode.Genuses;
-                            subnode.Organics = oldnode.Organics;
-                            subnode.DataSource = oldnode.DataSource;      // we copy the creation flag
+                            subnode.CopyExternalDataFromOldNode(oldnode);
                         }
     
                         // if its a belt cluster we are adding, then the previous node is a belt but it does not have a scan data, therefore it was artifically created and has no body id
@@ -333,10 +323,12 @@ namespace EliteDangerousCore
                         // an older node, with a new scan which is not edsm, but the current one is edsm, we set the data source to journal, as we have in effect created it again
 
                         if (!madenew && sc.IsWebSourced == false && subnode.WebCreatedNode == true)
-                            subnode.DataSource = SystemSource.FromJournal;
+                        {
+                            subnode.OverrideDataSourceToJournal();
+                        }
 
                         // only overwrites if scan is better
-                        subnode.ScanData = sc;                                      
+                        subnode.SetScanDataIfBetter(sc);
 
                         subnode.ScanData.SetMapped(subnode.IsMapped, subnode.WasMappedEfficiently);      // pass this data to node, as we may have previously had a SAA Scan
 
@@ -409,24 +401,13 @@ namespace EliteDangerousCore
                     if (node.Children == null || !node.Children.TryGetValue(beltname, out ScanNode belt))
                     {
                         if (node.Children == null)
-                            node.Children = new SortedList<string, ScanNode>(new CollectionStaticHelpers.BasicLengthBasedNumberComparitor<string>());
+                            node.MakeChildList();
 
                         lock (node.Children)
                         {
-                            belt = new ScanNode
-                            {
-                                OwnName = beltname,
-                                FullName = node.FullName + " " + beltname,
-                                CustomName = ring.Name,
-                                ScanData = null,
-                                BeltData = ring,
-                                Children = null,
-                                NodeType = ScanNodeType.belt,
-                                Level = 1,
-                                Parent = node,
-                                SystemNode = sn,
-                            };
-
+                            belt = new ScanNode(beltname, node.FullName + " " + beltname, ScanNodeType.belt, 1, node, sn, SystemSource.FromJournal);
+                            belt.CustomName = ring.Name;
+                            belt.BeltData = ring;
                             node.Children.Add(beltname, belt);
                         }
                     }

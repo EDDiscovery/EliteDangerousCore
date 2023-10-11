@@ -26,7 +26,7 @@ namespace EliteDangerousCore
             public static void DumpTree(ScanNode top, string introtext, int level)        // debug dump out
             {
                 string pad = new string(' ', 64);
-                System.Diagnostics.Debug.WriteLine(pad.Substring(0, level * 3) + introtext + ": ID " + top.BodyID + " " + top.FullName + " : " + top.NodeType + (top.scandata != null ? " : sd" : ""));
+                System.Diagnostics.Debug.WriteLine(pad.Substring(0, level * 3) + introtext + ": ID " + top.BodyID + " " + top.FullName + " : " + top.NodeType + (top.ScanData != null ? " : sd" : ""));
                 if (top.Children != null)
                 {
                     foreach (var c in top.Children)
@@ -36,7 +36,7 @@ namespace EliteDangerousCore
 
             public static bool AllWithScanData(ScanNode top)
             {
-                if (top.scandata == null)
+                if (top.ScanData == null)
                     return false;
                 if (top.Children != null)
                 {
@@ -91,25 +91,25 @@ namespace EliteDangerousCore
                     if (top.ScanData.nRadius.HasValue)
                         obj["Radius"] = top.ScanData.nRadius / 1000.0;  // in km
 
-                    if (top.scandata.nSemiMajorAxis.HasValue)       // if we have semi major axis, we have orbital elements
+                    if (top.ScanData.nSemiMajorAxis.HasValue)       // if we have semi major axis, we have orbital elements
                     {
                         obj["SemiMajorAxis"] = top.ScanData.nSemiMajorAxis / 1000.0;        // in km
                         obj["Eccentricity"] = top.ScanData.nEccentricity;  // degrees
                         obj["Inclination"] = top.ScanData.nOrbitalInclination;  // degrees
                         obj["AscendingNode"] = top.ScanData.nAscendingNodeKepler; // degrees
                         obj["Periapis"] = top.ScanData.nPeriapsisKepler;// degrees
-                        obj["MeanAnomaly"] = top.scandata.nMeanAnomaly;// degrees
-                        obj["OrbitalPeriod"] = top.scandata.nOrbitalPeriod;// in seconds
+                        obj["MeanAnomaly"] = top.ScanData.nMeanAnomaly;// degrees
+                        obj["OrbitalPeriod"] = top.ScanData.nOrbitalPeriod;// in seconds
                     }
 
-                    if (top.scandata.nAxialTilt.HasValue)
-                        obj["AxialTilt"] = top.scandata.nAxialTiltDeg;  // degrees
+                    if (top.ScanData.nAxialTilt.HasValue)
+                        obj["AxialTilt"] = top.ScanData.nAxialTiltDeg;  // degrees
 
-                    if (top.scandata.nRotationPeriod.HasValue)      // seconds
-                        obj["RotationPeriod"] = top.scandata.nRotationPeriod;
+                    if (top.ScanData.nRotationPeriod.HasValue)      // seconds
+                        obj["RotationPeriod"] = top.ScanData.nRotationPeriod;
 
-                    if (top.scandata.nMassKG.HasValue)
-                        obj["Mass"] = top.scandata.nMassKG; // kg
+                    if (top.ScanData.nMassKG.HasValue)
+                        obj["Mass"] = top.ScanData.nMassKG; // kg
 
                     if (top.ScanData.nSurfaceTemperature.HasValue)
                         obj["SurfaceTemp"] = top.ScanData.nSurfaceTemperature;
