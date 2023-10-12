@@ -103,7 +103,7 @@ namespace EliteDangerousCore
                         foreach (JournalScan js in jl.Item1)
                         {
                             js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
-                            System.Diagnostics.Debug.WriteLine($"FindSystemSync spansh add {sys.Name} {js.BodyName}");
+                            //System.Diagnostics.Debug.WriteLine($"FindSystemSync spansh add {sys.Name} {js.BodyName}");
                             ProcessJournalScan(js, sys, true);
                         }
 
@@ -120,7 +120,7 @@ namespace EliteDangerousCore
                         foreach (JournalScan js in jl.Item1)
                         {
                             js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
-                            System.Diagnostics.Debug.WriteLine($"FindSystemSync edsn add {sys.Name} {js.BodyName}");
+                            //System.Diagnostics.Debug.WriteLine($"FindSystemSync edsn add {sys.Name} {js.BodyName}");
                             ProcessJournalScan(js, sys, true);
                         }
                     }
@@ -152,7 +152,7 @@ namespace EliteDangerousCore
                         foreach (JournalScan js in jl.Item1)
                         {
                             js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
-                            System.Diagnostics.Debug.WriteLine($"FindSystemASync spansh add {sys.Name} {js.BodyName}");
+                           // System.Diagnostics.Debug.WriteLine($"FindSystemASync spansh add {sys.Name} {js.BodyName}");
                             ProcessJournalScan(js, sys, true);
                         }
 
@@ -181,7 +181,7 @@ namespace EliteDangerousCore
                         foreach (JournalScan js in jl.Item1)
                         {
                             js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
-                            System.Diagnostics.Debug.WriteLine($"FindSystemASync edsm add {sys.Name} {js.BodyName}");
+                         //   System.Diagnostics.Debug.WriteLine($"FindSystemASync edsm add {sys.Name} {js.BodyName}");
                             ProcessJournalScan(js, sys, true);
                         }
                     }

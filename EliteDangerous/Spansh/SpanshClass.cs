@@ -31,6 +31,8 @@ namespace EliteDangerousCore.Spansh
         public const string RootURL = "https://spansh.co.uk/";
         public const int MaxReturnSize = 500;       // as coded by spansh
 
+        public static TimeSpan MaxCacheAge = new TimeSpan(7, 0, 0, 0);
+
         static public void LaunchBrowserForSystem(long sysaddr)
         {
             BaseUtils.BrowserInfo.LaunchBrowser(RootURL + "system/" + sysaddr.ToStringInvariant());
@@ -320,7 +322,7 @@ namespace EliteDangerousCore.Spansh
                     {
                         // this follows the order found in JournalScan constructor
 
-                        //so["stations"] = null;   System.Diagnostics.Debug.WriteLine($"Spansh Body JSON {so.ToString()}");
+                        so["stations"] = null;   System.Diagnostics.Debug.WriteLine($"Spansh Body JSON {so.ToString()}");
 
                         JObject evt = new JObject();
                         evt["ScanType"] = "Detailed";
@@ -359,6 +361,7 @@ namespace EliteDangerousCore.Spansh
                         else
                             evt["Radius"] = so["radius"].Double(0) * 1000;
 
+                        // https://spansh.co.uk/api/bodies/field_values/rings
                         if (so["rings"] != null)
                         {
                             JArray rings = new JArray();
@@ -371,7 +374,7 @@ namespace EliteDangerousCore.Spansh
                                     ["OuterRad"] = node["outer_radius"],
                                     ["MassMT"] = node["mass"],
                                     ["Name"] = node["name"],
-                                    ["RingClass"] = "eRingClass_" + node["type"].Str(),
+                                    ["RingClass"] = "eRingClass_" + node["type"].Str().Replace(" ",""),
                                 };
                                 rings.Add(entry);
                             }
@@ -504,7 +507,7 @@ namespace EliteDangerousCore.Spansh
 
                         evt["EDDFromSpanshBody"] = true;
 
-                        //JournalScan js = new JournalScan(evt); System.Diagnostics.Debug.WriteLine($"Journal scan {js.DisplayString(0, includefront: true)}");
+                        JournalScan js = new JournalScan(evt); System.Diagnostics.Debug.WriteLine($"Journal scan {js.DisplayString(0, includefront: true)}");
 
                         retresult.Add(evt);
                     }
@@ -558,16 +561,37 @@ namespace EliteDangerousCore.Spansh
                             return new Tuple<List<JournalScan>, bool>(we, true);        // mark from cache
                     }
 
-                    if (!weblookup)      // must be set for a web lookup
-                        return null;
+                    JArray jlist = null;
 
-                    System.Diagnostics.Debug.WriteLine($"Spansh Web lookup on {sys.Name} {sys.SystemAddress}");
+                    // calc name of cache file
 
-                    SpanshClass sp = new SpanshClass();
+                    string cachefile = EliteConfigInstance.InstanceOptions.ScanCachePath != null ?
+                            System.IO.Path.Combine(EliteConfigInstance.InstanceOptions.ScanCachePath, $"spansh_{(sys.SystemAddress.HasValue ? sys.SystemAddress.Value.ToStringInvariant() : sys.Name.SafeFileString())}.json") :
+                            null;
 
-                    var jlist = sp.GetBodies(sys);          // get by id64, or name if required
+                    if (cachefile != null && System.IO.File.Exists(cachefile))      // if we have that file
+                    {
+                        string cachedata = BaseUtils.FileHelpers.TryReadAllTextFromFile(cachefile); // try and read it
+                        if (cachedata != null)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Spansh Cache File read on {sys.Name} {sys.SystemAddress} from {cachefile}");
+                            jlist = JArray.Parse(cachedata, JToken.ParseOptions.CheckEOL);  // if so, try a conversion
+                        }
+                    }
 
-                    if ( jlist != null)
+                    if (jlist == null)          // no data as yet, look at web
+                    {
+                        if (!weblookup)         // must be set for a web lookup
+                            return null;
+
+                        System.Diagnostics.Debug.WriteLine($"Spansh Web lookup on {sys.Name} {sys.SystemAddress}");
+
+                        SpanshClass sp = new SpanshClass();
+
+                        jlist = sp.GetBodies(sys);          // get by id64, or name if required
+                    }
+
+                    if ( jlist != null)         // we have data from file or from web
                     {
                         List<JournalScan> bodies = new List<JournalScan>();
 
@@ -577,8 +601,12 @@ namespace EliteDangerousCore.Spansh
                             bodies.Add(js);
                         }
 
+                        if ( cachefile != null )
+                            BaseUtils.FileHelpers.TryWriteToFile(cachefile, jlist.ToString(true));      // save to file so we don't have to reload
+
                         BodyCache[sys.Name] = bodies;
-                        System.Diagnostics.Debug.WriteLine($"Spansh Web Lookup complete {sys.Name} {bodies.Count}");
+
+                        System.Diagnostics.Debug.WriteLine($"Spansh Web/File Lookup complete {sys.Name} {bodies.Count}");
                         return new Tuple<List<JournalScan>, bool>(bodies, false);       // not from cache
                     }
                     else

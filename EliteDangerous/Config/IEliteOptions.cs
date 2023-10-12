@@ -23,5 +23,6 @@ namespace EliteDangerousCore
         bool ForceBetaOnCommander { get; }
         bool DisableMerge { get; }
         bool DisableBetaCommanderCheck { get; }
+        string ScanCachePath { get; }
     }
 }

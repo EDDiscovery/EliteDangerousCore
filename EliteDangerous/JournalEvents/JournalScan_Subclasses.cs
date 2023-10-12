@@ -28,7 +28,7 @@ namespace EliteDangerousCore.JournalEvents
             public string Name { get; set; }        
             [PropertyNameAttribute("Ring class")]
             public string RingClass { get; set; }               // FDName 
-            public enum RingClassEnum { Unknown , Rocky, Metalic, Icy, MetalRich }
+            public enum RingClassEnum { Unknown , Rocky, Metallic, Icy, MetalRich }
 
             [PropertyNameAttribute("Ring class as enumeration")]
             public RingClassEnum RingClassID { get; set; }      // Default will be unknown
@@ -44,7 +44,8 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise()
             {
-                if (Enum.TryParse<RingClassEnum>(RingClass.ReplaceIfStartsWith("eRingClass_"), true, out RingClassEnum rc))     // may not have eringclass on it if from EDSM
+                // typos  on metalic is in the journals, edsm/spansh seems to give metallic
+                if (Enum.TryParse<RingClassEnum>(RingClass.ReplaceIfStartsWith("eRingClass_").Replace("Metalic","Metallic"), true, out RingClassEnum rc))     // may not have eringclass on it if from EDSM
                     RingClassID = rc;
                 else
                 {
@@ -90,7 +91,7 @@ namespace EliteDangerousCore.JournalEvents
                         return "Rocky".T(EDCTx.StarPlanetRing_Rocky);
                     case RingClassEnum.MetalRich:
                         return "Metal Rich".T(EDCTx.StarPlanetRing_MetalRich);
-                    case RingClassEnum.Metalic:
+                    case RingClassEnum.Metallic:
                         return "Metallic".T(EDCTx.StarPlanetRing_Metallic);
                 }
             }

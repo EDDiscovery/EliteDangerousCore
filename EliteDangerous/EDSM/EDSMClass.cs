@@ -896,25 +896,44 @@ namespace EliteDangerousCore.EDSM
                             return new Tuple<List<JournalScan>, bool>(we, true);        // mark from cache
                     }
 
-                    if (!weblookup)      // must be set for a web lookup
-                        return null;
+                    JObject jlist = null;
 
-                    System.Diagnostics.Debug.WriteLine($"EDSM Web lookup on {sys.Name}");
+                    // calc name of cache file
 
-                    List<JournalScan> bodies = new List<JournalScan>();
+                    string cachefile = EliteConfigInstance.InstanceOptions.ScanCachePath != null ?
+                            System.IO.Path.Combine(EliteConfigInstance.InstanceOptions.ScanCachePath, $"edsm_{(sys.SystemAddress.HasValue ? sys.SystemAddress.Value.ToStringInvariant() : sys.Name.SafeFileString())}.json") :
+                            null;
 
-                    EDSMClass edsm = new EDSMClass();
-
-                    JObject jo = null;
-
-                    if (sys.SystemAddress != null && sys.SystemAddress > 0)
-                        jo = edsm.GetBodiesByID64(sys.SystemAddress.Value);
-                    else if (sys.Name != null)
-                        jo = edsm.GetBodies(sys.Name);
-
-                    if (jo != null && jo["bodies"] != null)
+                    if (cachefile != null && System.IO.File.Exists(cachefile))      // if we have that file
                     {
-                        foreach (JObject edsmbody in jo["bodies"])
+                        string cachedata = BaseUtils.FileHelpers.TryReadAllTextFromFile(cachefile); // try and read it
+                        if (cachedata != null)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"EDSM Cache File read on {sys.Name} {sys.SystemAddress} from {cachefile}");
+                            jlist = JObject.Parse(cachedata, JToken.ParseOptions.CheckEOL);  // if so, try a conversion
+                        }
+                    }
+
+                    if (jlist == null)
+                    {
+                        if (!weblookup)      // must be set for a web lookup
+                            return null;
+
+                        System.Diagnostics.Debug.WriteLine($"EDSM Web lookup on {sys.Name}");
+
+                        EDSMClass edsm = new EDSMClass();
+
+                        if (sys.SystemAddress != null && sys.SystemAddress > 0)
+                            jlist = edsm.GetBodiesByID64(sys.SystemAddress.Value);
+                        else if (sys.Name != null)
+                            jlist = edsm.GetBodies(sys.Name);
+                    }
+
+                    if (jlist != null && jlist["bodies"] != null)
+                    {
+                        List<JournalScan> bodies = new List<JournalScan>();
+
+                        foreach (JObject edsmbody in jlist["bodies"])
                         {
                             try
                             {
@@ -931,7 +950,11 @@ namespace EliteDangerousCore.EDSM
                             }
                         }
 
+                        if (cachefile != null)
+                            BaseUtils.FileHelpers.TryWriteToFile(cachefile, jlist.ToString(true));      // save to file so we don't have to reload
+                        
                         BodyCache[sys.Name] = bodies;
+
                         System.Diagnostics.Debug.WriteLine($"EDSM Web Lookup complete {sys.Name} {bodies.Count}");
                         return new Tuple<List<JournalScan>, bool>(bodies, false);       // not from cache
                     }
