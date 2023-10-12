@@ -66,6 +66,21 @@ namespace EliteDangerousCore.Spansh
             return json;
         }
 
+        // list of names matching name in some way
+        public JObject GetSystem(string name)
+        {
+            string query = "?q=" + HttpUtility.UrlEncode(name);
+
+            var response = RequestGet("search/systems" + query, handleException: true);
+
+            if (response.Error)
+                return null;
+
+            var data = response.Body;
+            var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
+            return json;
+        }
+
         // null, or list of found systems (may be empty)
         public List<ISystem> GetSystems(string systemname, bool wildcard = true)
         {
@@ -312,7 +327,7 @@ namespace EliteDangerousCore.Spansh
 
             if (resultsarray != null)
             {
-                //System.Diagnostics.Debug.WriteLine($"Spansh returns {json?.ToString(true)}");
+                System.Diagnostics.Debug.WriteLine($"Spansh returns {json?.ToString(true)}");
 
                 JArray retresult = new JArray();
 
@@ -502,6 +517,9 @@ namespace EliteDangerousCore.Spansh
                                 }
                             }
 
+                            if (dump)       // only dump has a timestamp relevant, search does not. if it becomes a problem, we would need to look up id 64 and then always use dump
+                                evt["EDDMeanAnomalyTimestamp"] = so["timestamps"].I("meanAnomaly");
+
                             evt["ReserveLevel"] = so[dump ? "reserveLevel" : "reserve_level"];
                         }
 
@@ -595,9 +613,16 @@ namespace EliteDangerousCore.Spansh
                     {
                         List<JournalScan> bodies = new List<JournalScan>();
 
-                        foreach ( var jo in jlist)
+                        foreach ( JObject jo in jlist)
                         {
                             JournalScan js = new JournalScan(jo.Object());
+                            
+                            if ( jo.Contains("EDDMeanAnomalyTimestamp"))        // this name is used to carry time info which is not in the journal
+                            {
+                                DateTime t = jo["EDDMeanAnomalyTimestamp"].DateTimeUTC();
+                                js.EventTimeUTC = t;
+                            }
+
                             bodies.Add(js);
                         }
 
