@@ -308,7 +308,8 @@ namespace EliteDangerousCore
 
                     if (lvl == elements.Count - 1)                                  // if we are at the end node..
                     {
-                        // if we are replacing the node, make sure we dup across some info
+                        // if we are replacing the node, make sure we dup across some info which was injected into it by other events
+
                         if (oldnode != null && oldnode.FullName == subnode.FullName && !object.ReferenceEquals(subnode, oldnode))      
                         {
                             subnode.CopyExternalDataFromOldNode(oldnode);
@@ -320,7 +321,8 @@ namespace EliteDangerousCore
                         if (subnode.NodeType == ScanNodeType.beltcluster && sc.Parents != null)
                             previousnode.BodyID = sc.Parents[0].BodyID;
 
-                        // an older node, with a new scan which is not edsm, but the current one is edsm, we set the data source to journal, as we have in effect created it again
+                        // an older node, with a new scan which is not websourced, but the current one is websourced,
+                        // we set the data source to journal, as we have in effect created it again
 
                         if (!madenew && sc.IsWebSourced == false && subnode.WebCreatedNode == true)
                         {

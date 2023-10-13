@@ -143,6 +143,15 @@ namespace EliteDangerousCore
             return res;
         }
 
+        static public bool SurfaceFeatureListContainsSettlements(List<IBodyFeature> list)
+        {
+            return list != null && list.FindIndex(x => x is JournalApproachSettlement) >= 0;
+        }
+
+        static public int SurfaceFeatureListSettlementsCount(List<IBodyFeature> list)
+        {
+            return list != null ? list.Count(x => x is JournalApproachSettlement) : 0;
+        }
 
     }
 }

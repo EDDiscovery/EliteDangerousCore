@@ -82,7 +82,9 @@ namespace EliteDangerousCore
             
             if (systemnode != null)
             {
-                var notscannedbitmap = (Bitmap)BaseUtils.Icons.IconSet.GetIcon("Bodies.Unknown");
+                Random rnd = new Random(systemnode.System.Name.GetHashCode());         // always start with same seed so points are in same places
+
+                var notscannedbitmap = BodyToImages.GetStarImageNotScanned();
 
                 Point leftmiddle = new Point(leftmargin, topmargin + StarSize.Height * nodeheightratio / 2 / noderatiodivider);  // half down (h/2 * ratio)
 
@@ -117,11 +119,11 @@ namespace EliteDangerousCore
                     }
 
                     {  // Draw star
-                        Image barycentre = BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Barycentre");
+                        Image barycentre =BodyToImages.GetBarycentreImage();
 
                         Point maxpos = DrawNode(starcontrols, starnode, historicmats, curmats,
                                 (starnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre: notscannedbitmap,
-                                leftmiddle, false, out Rectangle starimagepos, StarSize, DrawLevel.TopLevelStar);       // the last part nerfs the label down to the right position
+                                leftmiddle, false, out Rectangle starimagepos, StarSize, DrawLevel.TopLevelStar, rnd);       // the last part nerfs the label down to the right position
 
                         maxitemspos = new Point(Math.Max(maxitemspos.X, maxpos.X), Math.Max(maxitemspos.Y, maxpos.Y));
 
@@ -158,7 +160,7 @@ namespace EliteDangerousCore
                         double habzonestartls = hz != null ? hz.HabitableZoneInner : 0;
                         double habzoneendls = hz != null ? hz.HabitableZoneOuter : 0;
 
-                        Image beltsi = BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Belt");
+                        Image beltsi = BodyToImages.GetBeltImage();
 
                         // process body and stars only
 
@@ -197,7 +199,8 @@ namespace EliteDangerousCore
                                 appendlabel = appendlabel.AppendPrePad("" + lastbelt.ScanData?.BodyID, Environment.NewLine);
 
 
-                                Point maxbeltpos = DrawNode(starcontrols, lastbelt, historicmats, curmats, beltsi, leftmiddle,false,out Rectangle unusedbeltcentre, beltsize, DrawLevel.PlanetLevel, appendlabeltext:appendlabel);
+                                Point maxbeltpos = DrawNode(starcontrols, lastbelt, historicmats, curmats, beltsi, leftmiddle,false,out Rectangle unusedbeltcentre, 
+                                                beltsize, DrawLevel.PlanetLevel, rnd, appendlabeltext:appendlabel);
 
                                 leftmiddle = new Point(maxbeltpos.X + planetspacerx, leftmiddle.Y);
                                 lastbelt = belts.Count != 0 ? belts.Dequeue() : null;
@@ -219,7 +222,7 @@ namespace EliteDangerousCore
                                     habzone =  dist >= habzonestartls && dist <= habzoneendls;
                                 }
 
-                                Point maxplanetpos = CreatePlanetTree(pc, planetnode, historicmats, curmats, leftmiddle, filter, habzone , out int centreplanet);
+                                Point maxplanetpos = CreatePlanetTree(pc, planetnode, historicmats, curmats, leftmiddle, filter, habzone , out int centreplanet, rnd);
 
                                 Point pcnt = new Point(centreplanet, leftmiddle.Y);
 
@@ -265,7 +268,8 @@ namespace EliteDangerousCore
 
                             appendlabel = appendlabel.AppendPrePad("" + lastbelt.ScanData?.BodyID, Environment.NewLine);
 
-                            Point maxbeltpos = DrawNode(starcontrols, lastbelt, historicmats, curmats, beltsi, leftmiddle, false, out Rectangle unusedbelt2centre, beltsize, DrawLevel.PlanetLevel, appendlabeltext: appendlabel);
+                            Point maxbeltpos = DrawNode(starcontrols, lastbelt, historicmats, curmats, beltsi, leftmiddle, false, out Rectangle unusedbelt2centre, 
+                                        beltsize, DrawLevel.PlanetLevel, rnd, appendlabeltext: appendlabel);
 
                             leftmiddle = new Point(maxbeltpos.X + planetspacerx, leftmiddle.Y);
                             lastbelt = belts.Count != 0 ? belts.Dequeue() : null;
@@ -322,17 +326,17 @@ namespace EliteDangerousCore
         // return right bottom of area used from curpos
         Point CreatePlanetTree(List<ExtPictureBox.ImageElement> pc, StarScan.ScanNode planetnode, 
                                         List<MaterialCommodityMicroResource> historicmats, List<MaterialCommodityMicroResource> curmats,
-                                         Point leftmiddle, string[] filter, bool habzone, out int planetcentre )
+                                         Point leftmiddle, string[] filter, bool habzone, out int planetcentre, Random rnd )
         {
             Color? backwash = null;
             if ( habzone )
                 backwash = Color.FromArgb(64, 0, 128, 0);       // transparent in case we have a non black background
 
-            Image barycentre = BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Barycentre");
+            Image barycentre = BodyToImages.GetBarycentreImage();
 
             Point maxtreepos = DrawNode(pc, planetnode, historicmats, curmats, 
                                 (planetnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre : BodyToImages.GetPlanetImageNotScanned(),
-                                leftmiddle, false, out Rectangle planetpos, planetsize, DrawLevel.PlanetLevel, backwash: backwash);        // offset passes in the suggested offset, returns the centre offset
+                                leftmiddle, false, out Rectangle planetpos, planetsize, DrawLevel.PlanetLevel, rnd, backwash: backwash);        // offset passes in the suggested offset, returns the centre offset
 
             planetcentre = planetpos.X + planetpos.Width / 2;
 
@@ -354,7 +358,9 @@ namespace EliteDangerousCore
 
                     if (nonedsmscans || ShowWebBodies)
                     {
-                        Point mmax = DrawNode(pc, moonnode, historicmats, curmats, (moonnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre : BodyToImages.GetMoonImageNotScanned(), moonposcentremid, true, out Rectangle moonimagepos, moonsize, DrawLevel.MoonLevel);
+                        Point mmax = DrawNode(pc, moonnode, historicmats, curmats, 
+                                (moonnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre : BodyToImages.GetMoonImageNotScanned(), 
+                                moonposcentremid, true, out Rectangle moonimagepos, moonsize, DrawLevel.MoonLevel, rnd);
                         int mooncentre = moonimagepos.X + moonimagepos.Width / 2;
 
                         maxtreepos = new Point(Math.Max(maxtreepos.X, mmax.X), Math.Max(maxtreepos.Y, mmax.Y));
@@ -373,7 +379,9 @@ namespace EliteDangerousCore
 
                                 if (nonedsmsubmoonscans || ShowWebBodies)
                                 {
-                                    Point sbmax = DrawNode(pc, submoonnode, historicmats, curmats, (moonnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre : BodyToImages.GetMoonImageNotScanned(), submoonpos, xiscentre, out Rectangle submoonimagepos, moonsize, DrawLevel.MoonLevel);
+                                    Point sbmax = DrawNode(pc, submoonnode, historicmats, curmats, 
+                                            (moonnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre : BodyToImages.GetMoonImageNotScanned(), 
+                                            submoonpos, xiscentre, out Rectangle submoonimagepos, moonsize, DrawLevel.MoonLevel, rnd);
 
                                     if (xiscentre)
                                         submoonpos = new Point(submoonpos.X, sbmax.Y + moonspacery + moonsize.Height / 2);

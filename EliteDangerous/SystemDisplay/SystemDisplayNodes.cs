@@ -44,8 +44,10 @@ namespace EliteDangerousCore
                             out Rectangle imagepos, 
                             Size size,                      // nominal size
                             DrawLevel drawtype,          // drawing..
+                            Random random,              // for random placements
                             Color? backwash = null,         // optional back wash on image 
                             string appendlabeltext = ""     // any label text to append
+                            
                 )
         {
             string tip;
@@ -162,7 +164,7 @@ namespace EliteDangerousCore
 
                     using (Graphics g = Graphics.FromImage(bmp))
                     {
-        //  backwash = Color.FromArgb(128, 40, 40, 40); // debug
+          //backwash = Color.FromArgb(128, 40, 40, 40); // debug
 
                         if (backwash.HasValue)
                         {
@@ -170,6 +172,11 @@ namespace EliteDangerousCore
                             {
                                 g.FillRectangle(b, new Rectangle(iconwidtharea, 0, imagewidtharea, bitmapheight));
                             }
+                        }
+
+                        if (sc.IsLandableOdyssey)           // odyssey atmospheric landable planet
+                        {
+                            g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Atmosphere"), imageleft, imagetop, size.Width, size.Height);
                         }
 
                         g.DrawImage(nodeimage, imageleft, imagetop, size.Width, size.Height);
@@ -186,6 +193,21 @@ namespace EliteDangerousCore
                         {
                             g.DrawImage(sc.Rings.Count() > 1 ? BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RingGap") : BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RingOnly"),
                                             new Rectangle(imageleft - size.Width / 2, imagetop, size.Width * 2, size.Height));
+                        }
+
+                        int ss = StarScan.SurfaceFeatureListSettlementsCount(sc.SurfaceFeatures);
+                        if ( ss>0 )
+                        {
+                            using (Brush b = new SolidBrush(Color.FromArgb(255, 255,255,255)))
+                            {
+                                for (int i = 0; i < ss; i++)
+                                {
+                                    int hpos = imageleft + size.Width / 3 + random.Next(size.Width / 3);
+                                    int vpos = (i % 2 == 0 ? imagetop + size.Height / 4 : imagetop + size.Height * 5 / 8) + random.Next(size.Width / 8);
+                                    //System.Diagnostics.Debug.WriteLine($"Draw {sn.OwnName} settlement {hpos} {vpos}");
+                                    g.FillRectangle(b, new Rectangle(hpos, vpos, 2, 2));
+                                }
+                            }
                         }
 
                         if (iconoverlays > 0)

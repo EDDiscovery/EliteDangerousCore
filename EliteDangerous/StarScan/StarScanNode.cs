@@ -86,9 +86,30 @@ namespace EliteDangerousCore
             {
                 IsMapped = oldnode.IsMapped;
                 WasMappedEfficiently = oldnode.WasMappedEfficiently;
-                Signals = oldnode.Signals;
-                Genuses = oldnode.Genuses;
-                Organics = oldnode.Organics;
+                if (oldnode.Signals != null)
+                {
+                    if (Signals == null)
+                        Signals = new List<JournalSAASignalsFound.SAASignal>();
+                    Signals.AddRange(oldnode.Signals);
+                }
+                if (oldnode.Genuses != null)
+                {
+                    if (Genuses == null)
+                        Genuses = new List<JournalSAASignalsFound.SAAGenus>();
+                    Genuses.AddRange(oldnode.Genuses);
+                }
+                if (oldnode.Organics != null)
+                {
+                    if (Organics == null)
+                        Organics = new List<JournalScanOrganic>();
+                    Organics.AddRange(oldnode.Organics);
+                }
+                if (oldnode.SurfaceFeatures != null)
+                {
+                    if (SurfaceFeatures == null)
+                        SurfaceFeatures = new List<IBodyFeature>();
+                    SurfaceFeatures.AddRange(oldnode.SurfaceFeatures);
+                }
                 DataSource = oldnode.DataSource;      // we copy the creation flag
             }
 

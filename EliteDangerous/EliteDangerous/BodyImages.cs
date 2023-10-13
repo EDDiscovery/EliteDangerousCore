@@ -157,16 +157,16 @@ namespace EliteDangerousCore
                 iconName = "M";
 
             if (StarTypeID == EDStar.Nebula)
-                return "Bodies.Nebula";
+                return "Bodies.Stars.Nebula";
 
             if (StarTypeID == EDStar.StellarRemnantNebula)
-                return $"Bodies.StellarRemnantNebula";
+                return $"Bodies.Stars.StellarRemnantNebula";
 
             if (StarTypeID == EDStar.Unknown)
-                return $"Bodies.Unknown";
+                return $"Bodies.Stars.Unknown";
             
             if (StarTypeID == EDStar.RoguePlanet)
-                return $"Bodies.RoguePlanet";
+                return $"Bodies.Stars.RoguePlanet";
 
             //   System.Diagnostics.Debug.WriteLine(StarTypeID + ": " + iconName);
             return $"Bodies.Stars.{iconName}";
@@ -817,14 +817,25 @@ namespace EliteDangerousCore
             return $"Bodies.Planets.Terrestrial.{iconName}";
         }
 
+        static public System.Drawing.Image GetStarImageNotScanned()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon($"Bodies.NotScanned");
+        }
         static public System.Drawing.Image GetPlanetImageNotScanned()
         {
-            return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Unknown");
+            return BaseUtils.Icons.IconSet.GetIcon($"Bodies.NotScanned");
         }
-
         static public System.Drawing.Image GetMoonImageNotScanned()
         {
-            return BaseUtils.Icons.IconSet.GetIcon($"Bodies.Unknown");
+            return BaseUtils.Icons.IconSet.GetIcon($"Bodies.NotScanned");
+        }
+        static public System.Drawing.Image GetBarycentreImage()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.Bodies.Barycentre");
+        }
+        static public System.Drawing.Image GetBeltImage()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.Bodies.Belt");
         }
 
         // return bitmaps of stars, cropped.  You own the bitmaps afterwards as images are cloned
