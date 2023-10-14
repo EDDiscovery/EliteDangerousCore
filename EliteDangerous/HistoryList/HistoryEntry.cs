@@ -281,7 +281,9 @@ namespace EliteDangerousCore
 
             if (isTravelling && (IsFSD || StopMarker))
             {
-                eventDescription = TravelledStats + ", " + eventDescription;
+                string ts = TravelledStats;
+                if ( ts.Length>0)
+                    eventDescription = ts + ", " + eventDescription;
             }
         }
 

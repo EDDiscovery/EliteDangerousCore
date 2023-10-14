@@ -174,7 +174,7 @@ namespace EliteDangerousCore
                             }
                         }
 
-                        if (sc.IsLandableOdyssey)           // odyssey atmospheric landable planet
+                        if (!sc.GasWorld && (sc.HasAtmosphericComposition || sc.HasAtmosphere))            // show atmopshere of terrestrial worlds
                         {
                             g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Atmosphere"), imageleft, imagetop, size.Width, size.Height);
                         }
