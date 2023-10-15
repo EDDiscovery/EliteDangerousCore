@@ -174,7 +174,7 @@ namespace EliteDangerousCore
                             }
                         }
 
-                        if (!sc.GasWorld && (sc.HasAtmosphericComposition || sc.HasAtmosphere))            // show atmopshere of terrestrial worlds
+                        if ((sc.WaterGiant || !sc.GasWorld) && (sc.HasAtmosphericComposition || sc.HasAtmosphere))            // show atmosphere as it is shown in game
                         {
                             g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Atmosphere"), imageleft, imagetop, size.Width, size.Height);
                         }
