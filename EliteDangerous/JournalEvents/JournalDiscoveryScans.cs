@@ -118,7 +118,7 @@ namespace EliteDangerousCore.JournalEvents
             [PropertyNameAttribute("Optional signal expiry time, Local")]
             public System.DateTime ExpiryLocal { get; set; }
 
-            public enum Classification { Station, Installation, NotableStellarPhenomena, ConflictZone, ResourceExtraction, Carrier, USS, Megaship, Other, NavBeacon, Titan, TouristBeacon};
+            public enum Classification { Station, Installation, NotableStellarPhenomena, ConflictZone, ResourceExtraction, Carrier, USS, Megaship, Other, NavBeacon, Titan, TouristBeacon, Codex};
             [PropertyNameAttribute("Signal class")]
             public Classification ClassOfSignal { get; set; }
 
@@ -148,33 +148,35 @@ namespace EliteDangerousCore.JournalEvents
 
                 IsStation = evt["IsStation"].BoolNull();
 
-                if (!string.IsNullOrEmpty(SignalType))
+                if (SignalType.HasChars())
                 {
-                    if (SignalType.Contains("Station") || (SignalType.Equals("Outpost")))
+                    if (SignalType.Contains("Station", StringComparison.InvariantCultureIgnoreCase) || (SignalType.Equals("Outpost", StringComparison.InvariantCultureIgnoreCase)))
                         ClassOfSignal = Classification.Station;
-                    else if (SignalType.Equals("FleetCarrier"))
+                    else if (SignalType.Equals("FleetCarrier", StringComparison.InvariantCultureIgnoreCase))
                         {
                             ClassOfSignal = Classification.Carrier;
                             TimeRemaining = CarrierExpiryTime;
                         }
-                    else if (SignalType.Equals("Installation"))
+                    else if (SignalType.Equals("Installation", StringComparison.InvariantCultureIgnoreCase))
                         ClassOfSignal = Classification.Installation;
-                    else if (SignalType.Equals("Megaship"))
+                    else if (SignalType.Equals("Megaship", StringComparison.InvariantCultureIgnoreCase))
                         ClassOfSignal = Classification.Megaship;
-                    else if (SignalType.Equals("Combat"))
+                    else if (SignalType.Equals("Combat", StringComparison.InvariantCultureIgnoreCase))
                         ClassOfSignal = Classification.ConflictZone;
-                    else if (SignalType.Equals("ResourceExtraction"))
+                    else if (SignalType.Equals("ResourceExtraction", StringComparison.InvariantCultureIgnoreCase))
                         ClassOfSignal = Classification.ResourceExtraction;
-                    else if (SignalType.Equals("NavBeacon"))
+                    else if (SignalType.Equals("NavBeacon", StringComparison.InvariantCultureIgnoreCase))
                         ClassOfSignal = Classification.NavBeacon;
-                    else if (SignalType.Equals("Titan"))
+                    else if (SignalType.Equals("Titan", StringComparison.InvariantCultureIgnoreCase))
                         ClassOfSignal = Classification.Titan;
-                    else if (SignalType.Equals("TouristBeacon"))
+                    else if (SignalType.Equals("TouristBeacon", StringComparison.InvariantCultureIgnoreCase))
                         ClassOfSignal = Classification.TouristBeacon;
-                    else if (SignalType.Equals("USS"))
+                    else if (SignalType.Equals("USS", StringComparison.InvariantCultureIgnoreCase))
                         ClassOfSignal = Classification.USS;
-                    else if (SignalType.Equals("Generic"))
+                    else if (SignalType.Equals("Generic", StringComparison.InvariantCultureIgnoreCase))
                         ClassOfSignal = Classification.Other;
+                    else if (SignalType.Equals("Codex", StringComparison.InvariantCultureIgnoreCase))
+                        ClassOfSignal = Classification.Codex;
                     else
                         ClassOfSignal = Classification.Other;
 
@@ -203,7 +205,7 @@ namespace EliteDangerousCore.JournalEvents
                     else if (SignalName.Contains("-class"))
                         ClassOfSignal = Classification.Megaship;
                     else if (loc.Length == 0)      // other types, and old station entries, don't have localisation, so its an installation, put at end of list because other things than installations have no localised name too
-                        ClassOfSignal = Classification.Installation;
+                        ClassOfSignal = Classification.Installation;                    
                     else
                         ClassOfSignal = Classification.Other;
                 }
@@ -219,7 +221,7 @@ namespace EliteDangerousCore.JournalEvents
             public bool IsSame(FSSSignal other)     // is this signal the same as the other one
             {
                 return SignalName.Equals(other.SignalName) && SpawningFaction.Equals(other.SpawningFaction) && SpawningState.Equals(other.SpawningState) &&
-                       USSType.Equals(other.USSType) && ThreatLevel == other.ThreatLevel && ClassOfSignal == other.ClassOfSignal &&
+                       USSType.Equals(other.USSType) && ThreatLevel == other.ThreatLevel &&
                        (ClassOfSignal == Classification.Carrier || ExpiryUTC == other.ExpiryUTC);       // note carriers have our own expiry on it, so we don't
             }
 
