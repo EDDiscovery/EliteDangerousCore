@@ -81,10 +81,12 @@ namespace EliteDangerousCore.JournalEvents
         [System.Diagnostics.DebuggerDisplay("{ClassOfSignal} {SignalName}")]
         public class FSSSignal
         {
-            [PropertyNameAttribute("Signal type string, FDName")]
+            [PropertyNameAttribute("Signal name string, FDName")]
             public string SignalName { get; set; }
-            [PropertyNameAttribute("Signal type localised")]
+            [PropertyNameAttribute("Signal name localised")]
             public string SignalName_Localised { get; set; }
+            [PropertyNameAttribute("Signal type, live only")]
+            public string SignalType { get; set; } 
             [PropertyNameAttribute("Spawing state")]
             public string SpawningState { get; set; }
             [PropertyNameAttribute("Signal state localised")]
@@ -116,7 +118,7 @@ namespace EliteDangerousCore.JournalEvents
             [PropertyNameAttribute("Optional signal expiry time, Local")]
             public System.DateTime ExpiryLocal { get; set; }
 
-            public enum Classification { Station,Installation, NotableStellarPhenomena, ConflictZone, ResourceExtraction, Carrier, USS, Megaship, Other};
+            public enum Classification { Station, Installation, NotableStellarPhenomena, ConflictZone, ResourceExtraction, Carrier, USS, Megaship, Other, NavBeacon, Titan, TouristBeacon};
             [PropertyNameAttribute("Signal class")]
             public Classification ClassOfSignal { get; set; }
 
@@ -127,6 +129,7 @@ namespace EliteDangerousCore.JournalEvents
                 SignalName = evt["SignalName"].Str();
                 string loc = evt["SignalName_Localised"].Str();     // not present for stations/installations
                 SignalName_Localised = loc.Alt(SignalName);         // don't mangle if no localisation, its prob not there because its a proper name
+                SignalType = evt["SignalType"].Str();
 
                 SpawningState = evt["SpawningState"].Str();          // USS only, checked
                 SpawningState_Localised = JournalFieldNaming.CheckLocalisation(evt["SpawningState_Localised"].Str(), SpawningState);
@@ -145,32 +148,65 @@ namespace EliteDangerousCore.JournalEvents
 
                 IsStation = evt["IsStation"].BoolNull();
 
-                if (IsStation == true)          // station flag
+                if (!string.IsNullOrEmpty(SignalType))
                 {
-                    int dash = SignalName.LastIndexOf('-');
-                    if (SignalName.Length >= 5 && dash == SignalName.Length - 4 && char.IsLetterOrDigit(SignalName[dash + 1]) && char.IsLetterOrDigit(SignalName[dash - 1]))
-                    {
-                        ClassOfSignal = Classification.Carrier;
-                        TimeRemaining = CarrierExpiryTime;
-                    }
-                    else
+                    if (SignalType.Contains("Station") || (SignalType.Equals("Outpost")))
                         ClassOfSignal = Classification.Station;
-                }
-                else if (SignalName.StartsWith("$USS", StringComparison.InvariantCultureIgnoreCase) || SignalName.StartsWith("$RANDOM", StringComparison.InvariantCultureIgnoreCase))
-                    ClassOfSignal = Classification.USS;
-                else if (SignalName.StartsWith("$Warzone", StringComparison.InvariantCultureIgnoreCase))
-                    ClassOfSignal = Classification.ConflictZone;
-                else if (SignalName.StartsWith("$Fixed_Event_Life", StringComparison.InvariantCultureIgnoreCase))
-                    ClassOfSignal = Classification.NotableStellarPhenomena;
-                else if (SignalName.StartsWith("$MULTIPLAYER_SCENARIO14", StringComparison.InvariantCultureIgnoreCase) || SignalName.StartsWith("$MULTIPLAYER_SCENARIO7", StringComparison.InvariantCultureIgnoreCase))
-                    ClassOfSignal = Classification.ResourceExtraction;                
-                else if (SignalName.Contains("-class"))
-                    ClassOfSignal = Classification.Megaship;
-                else if (loc.Length == 0)      // other types, and old station entries, don't have localisation, so its an installation, put at end of list because other things than installations have no localised name too
-                    ClassOfSignal = Classification.Installation;
-                else
-                    ClassOfSignal = Classification.Other;
+                    else if (SignalType.Equals("FleetCarrier"))
+                        {
+                            ClassOfSignal = Classification.Carrier;
+                            TimeRemaining = CarrierExpiryTime;
+                        }
+                    else if (SignalType.Equals("Installation"))
+                        ClassOfSignal = Classification.Installation;
+                    else if (SignalType.Equals("Megaship"))
+                        ClassOfSignal = Classification.Megaship;
+                    else if (SignalType.Equals("Combat"))
+                        ClassOfSignal = Classification.ConflictZone;
+                    else if (SignalType.Equals("ResourceExtraction"))
+                        ClassOfSignal = Classification.ResourceExtraction;
+                    else if (SignalType.Equals("NavBeacon"))
+                        ClassOfSignal = Classification.NavBeacon;
+                    else if (SignalType.Equals("Titan"))
+                        ClassOfSignal = Classification.Titan;
+                    else if (SignalType.Equals("TouristBeacon"))
+                        ClassOfSignal = Classification.TouristBeacon;
+                    else if (SignalType.Equals("USS"))
+                        ClassOfSignal = Classification.USS;
+                    else if (SignalType.Equals("Generic"))
+                        ClassOfSignal = Classification.Other;
+                    else
+                        ClassOfSignal = Classification.Other;
 
+                }
+                else
+                {
+                    if (IsStation == true)          // station flag
+                    {
+                        int dash = SignalName.LastIndexOf('-');
+                        if (SignalName.Length >= 5 && dash == SignalName.Length - 4 && char.IsLetterOrDigit(SignalName[dash + 1]) && char.IsLetterOrDigit(SignalName[dash - 1]))
+                        {
+                            ClassOfSignal = Classification.Carrier;
+                            TimeRemaining = CarrierExpiryTime;
+                        }
+                        else
+                            ClassOfSignal = Classification.Station;
+                    }
+                    else if (SignalName.StartsWith("$USS", StringComparison.InvariantCultureIgnoreCase) || SignalName.StartsWith("$RANDOM", StringComparison.InvariantCultureIgnoreCase))
+                        ClassOfSignal = Classification.USS;
+                    else if (SignalName.StartsWith("$Warzone", StringComparison.InvariantCultureIgnoreCase))
+                        ClassOfSignal = Classification.ConflictZone;
+                    else if (SignalName.StartsWith("$Fixed_Event_Life", StringComparison.InvariantCultureIgnoreCase))
+                        ClassOfSignal = Classification.NotableStellarPhenomena;
+                    else if (SignalName.StartsWith("$MULTIPLAYER_SCENARIO14", StringComparison.InvariantCultureIgnoreCase) || SignalName.StartsWith("$MULTIPLAYER_SCENARIO7", StringComparison.InvariantCultureIgnoreCase))
+                        ClassOfSignal = Classification.ResourceExtraction;
+                    else if (SignalName.Contains("-class"))
+                        ClassOfSignal = Classification.Megaship;
+                    else if (loc.Length == 0)      // other types, and old station entries, don't have localisation, so its an installation, put at end of list because other things than installations have no localised name too
+                        ClassOfSignal = Classification.Installation;
+                    else
+                        ClassOfSignal = Classification.Other;
+                }
                 RecordedUTC = EventTimeUTC;
 
                 if (TimeRemaining != null)
