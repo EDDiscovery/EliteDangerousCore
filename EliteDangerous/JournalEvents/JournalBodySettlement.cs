@@ -103,7 +103,11 @@ namespace EliteDangerousCore.JournalEvents
             StationEconomy_Localised = JournalFieldNaming.CheckLocalisation(evt["StationEconomy_Localised"].Str(), StationEconomy);
             EconomyList = evt["StationEconomies"]?.ToObjectQ<Economies[]>();
             StationServices = evt["StationServices"]?.ToObjectQ<string[]>();
-            StationFaction = evt["StationFaction"].Str();
+            JToken jk = (JToken)evt["StationFaction"];
+            if (jk != null && jk.IsObject)
+                {
+                Faction = jk["Name"].Str();                // system faction pick up                
+                }
         }
 
         public string Name { get; set; }
@@ -122,14 +126,15 @@ namespace EliteDangerousCore.JournalEvents
         public string StationEconomy_Localised { get; set; }
         public Economies[] EconomyList { get; set; }        // may be null
         public class Economies
-        {
-            public string Name;
-            public string Name_Localised;
-            public double Proportion;
-        }
+            {
+                public string Name;
+                public string Name_Localised;
+                public double Proportion;
+            }
 
         public string[] StationServices { get; set; }       // may be null
-        public string StationFaction { get; set; }
+        public string Faction { get; set; }       //may be null
+        
 
         // IBodyFeature only
         public string Body { get { return BodyName; } }     // this is an alias
