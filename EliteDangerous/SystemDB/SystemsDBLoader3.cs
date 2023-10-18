@@ -392,7 +392,8 @@ namespace EliteDangerousCore.DB
                             uint waitfortime = readyforblocktime - metric.Item2;                    // if job completed before read of json, it will be positive
                             int dbfinishedbeforeread = (int)waitfortime;                            // experiments with changing block size, but it does not really work well.
 
-                            prevwb.sqlop = null;
+                            prevwb.sqlop = null;                                                    // we are abandoning this work block
+                            prevwb = null;
 
                             System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCountLap("SDBS")} ready jobfinished {metric.Item2} delta {dbfinishedbeforeread}  ************ next BS {maxblocksize}");
                         }
@@ -427,6 +428,7 @@ namespace EliteDangerousCore.DB
                     SystemsDatabase.Instance.DBWait(prevwb.sqlop, 5000);
                     System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCountLap("SDBS")} last block {prevwb.wbno} complete");
                     prevwb.sqlop = null;
+                    prevwb = null;
                 }
 
                 reportProgress?.Invoke($"Star database updated complete {updates:N0}");
