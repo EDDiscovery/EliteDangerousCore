@@ -97,17 +97,14 @@ namespace EliteDangerousCore.JournalEvents
             BodyName = evt["BodyName"].StrNull();
 
             //patch 17 content below
-            StationGovernment = evt["StationGovernment"].Str();
-            StationGovernment_Localised = JournalFieldNaming.CheckLocalisation(evt["StationGovernment_Localised"].Str(), StationGovernment);
-            StationEconomy = evt["StationEconomy"].Str();
-            StationEconomy_Localised = JournalFieldNaming.CheckLocalisation(evt["StationEconomy_Localised"].Str(), StationEconomy);
-            EconomyList = evt["StationEconomies"]?.ToObjectQ<Economies[]>();
+            StationGovernment = evt["StationGovernment"].StrNull();
+            StationGovernment_Localised = JournalFieldNaming.CheckLocalisation(evt["StationGovernment_Localised"].StrNull(), StationGovernment);
+            StationEconomy = evt["StationEconomy"].StrNull();
+            StationEconomy_Localised = JournalFieldNaming.CheckLocalisation(evt["StationEconomy_Localised"].StrNull(), StationEconomy);
+            EconomyList = evt["StationEconomies"]?.ToObjectQ<JournalDocked.Economies[]>();
             StationServices = evt["StationServices"]?.ToObjectQ<string[]>();
-            JToken jk = (JToken)evt["StationFaction"];
-            if (jk != null && jk.IsObject)
-                {
-                Faction = jk["Name"].Str();                // system faction pick up                
-                }
+            Faction = evt["StationFaction"].I("Name").StrNull();
+            FactionState = evt["StationFaction"].I("FactionState").StrNull();
         }
 
         public string Name { get; set; }
@@ -116,25 +113,20 @@ namespace EliteDangerousCore.JournalEvents
         public double? Latitude { get; set; }    // 3.3
         public double? Longitude { get; set; }
         public bool HasLatLong { get { return Latitude.HasValue && Longitude.HasValue; } }  
-        public long? SystemAddress { get; set; }
-        public int? BodyID { get; set; }
-        public string BodyName { get; set; }        // from event
+        public long? SystemAddress { get; set; } // may be null
+        public int? BodyID { get; set; } // may be null
+        public string BodyName { get; set; }        // from event, may be null
         public string BodyType { get { return "Settlement"; } }
-        public string StationGovernment { get; set; }
-        public string StationGovernment_Localised { get; set; }
-        public string StationEconomy { get; set; }
-        public string StationEconomy_Localised { get; set; }
-        public Economies[] EconomyList { get; set; }        // may be null
-        public class Economies
-            {
-                public string Name;
-                public string Name_Localised;
-                public double Proportion;
-            }
+        public string StationGovernment { get; set; }// may be null
+        public string StationGovernment_Localised { get; set; }// may be null
+        public string StationEconomy { get; set; }// may be null
+        public string StationEconomy_Localised { get; set; }// may be null
+        public JournalDocked.Economies[] EconomyList { get; set; }        // may be null
 
         public string[] StationServices { get; set; }       // may be null
         public string Faction { get; set; }       //may be null
-        
+        public string FactionState { get; set; }       //may be null
+
 
         // IBodyFeature only
         public string Body { get { return BodyName; } }     // this is an alias
@@ -149,6 +141,29 @@ namespace EliteDangerousCore.JournalEvents
                 info += " " + JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude);
 
             detailed = "";
+
+            if (StationGovernment != null)      // update 17
+            {
+                detailed = BaseUtils.FieldBuilder.Build("Economy: ".T(EDCTx.JournalEntry_Economy), StationEconomy_Localised, "Government: ".T(EDCTx.JournalEntry_Government), StationGovernment_Localised,
+                    "Faction: ".T(EDCTx.JournalEntry_Faction), Faction, "< in state ".T(EDCTx.JournalEntry_instate), FactionState.SplitCapsWord());
+
+                if (StationServices != null)
+                {
+                    string l = "";
+                    foreach (string s in StationServices)
+                        l = l.AppendPrePad(s.SplitCapsWord(), ", ");
+                    detailed += System.Environment.NewLine + "Station services: ".T(EDCTx.JournalEntry_Stationservices) + l;
+                }
+
+                if (EconomyList != null)
+                {
+                    string l = "";
+                    foreach (JournalDocked.Economies e in EconomyList)
+                        l = l.AppendPrePad(e.Name_Localised.Alt(e.Name) + " " + (e.Proportion * 100).ToString("0.#") + "%", ", ");
+                    detailed += System.Environment.NewLine + "Economies: ".T(EDCTx.JournalEntry_Economies) + l;
+                }
+            }
+
         }
 
     }
