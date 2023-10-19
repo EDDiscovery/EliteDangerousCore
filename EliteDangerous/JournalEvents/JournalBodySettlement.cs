@@ -95,6 +95,19 @@ namespace EliteDangerousCore.JournalEvents
             SystemAddress = evt["SystemAddress"].LongNull();
             BodyID = evt["BodyID"].IntNull();
             BodyName = evt["BodyName"].StrNull();
+
+            //patch 17 content below
+            StationGovernment = evt["StationGovernment"].Str();
+            StationGovernment_Localised = JournalFieldNaming.CheckLocalisation(evt["StationGovernment_Localised"].Str(), StationGovernment);
+            StationEconomy = evt["StationEconomy"].Str();
+            StationEconomy_Localised = JournalFieldNaming.CheckLocalisation(evt["StationEconomy_Localised"].Str(), StationEconomy);
+            EconomyList = evt["StationEconomies"]?.ToObjectQ<Economies[]>();
+            StationServices = evt["StationServices"]?.ToObjectQ<string[]>();
+            JToken jk = (JToken)evt["StationFaction"];
+            if (jk != null && jk.IsObject)
+                {
+                Faction = jk["Name"].Str();                // system faction pick up                
+                }
         }
 
         public string Name { get; set; }
@@ -107,6 +120,21 @@ namespace EliteDangerousCore.JournalEvents
         public int? BodyID { get; set; }
         public string BodyName { get; set; }        // from event
         public string BodyType { get { return "Settlement"; } }
+        public string StationGovernment { get; set; }
+        public string StationGovernment_Localised { get; set; }
+        public string StationEconomy { get; set; }
+        public string StationEconomy_Localised { get; set; }
+        public Economies[] EconomyList { get; set; }        // may be null
+        public class Economies
+            {
+                public string Name;
+                public string Name_Localised;
+                public double Proportion;
+            }
+
+        public string[] StationServices { get; set; }       // may be null
+        public string Faction { get; set; }       //may be null
+        
 
         // IBodyFeature only
         public string Body { get { return BodyName; } }     // this is an alias
