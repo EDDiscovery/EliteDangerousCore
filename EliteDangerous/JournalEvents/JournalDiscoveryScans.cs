@@ -175,6 +175,8 @@ namespace EliteDangerousCore.JournalEvents
                         ClassOfSignal = Classification.USS;
                     else if (SignalType.Equals("Generic", StringComparison.InvariantCultureIgnoreCase))
                         ClassOfSignal = Classification.Other;
+                    else if (SignalType.Equals("Codex", StringComparison.InvariantCultureIgnoreCase) && SignalName.StartsWith("$Fixed_Event_Life", StringComparison.InvariantCultureIgnoreCase))
+                        ClassOfSignal = Classification.NotableStellarPhenomena;
                     else if (SignalType.Equals("Codex", StringComparison.InvariantCultureIgnoreCase))
                         ClassOfSignal = Classification.Codex;
                     else
