@@ -105,6 +105,7 @@ namespace EliteDangerousCore.JournalEvents
             StationServices = evt["StationServices"]?.ToObjectQ<string[]>();
             Faction = evt["StationFaction"].I("Name").StrNull();
             FactionState = evt["StationFaction"].I("FactionState").StrNull();
+            StationAllegiance = evt["StationAllegiance"].StrNull();
         }
 
         public string Name { get; set; }
@@ -126,6 +127,7 @@ namespace EliteDangerousCore.JournalEvents
         public string[] StationServices { get; set; }       // may be null
         public string Faction { get; set; }       //may be null
         public string FactionState { get; set; }       //may be null
+        public string StationAllegiance { get; set; } //may be null
 
 
         // IBodyFeature only
@@ -145,7 +147,7 @@ namespace EliteDangerousCore.JournalEvents
             if (StationGovernment != null)      // update 17
             {
                 detailed = BaseUtils.FieldBuilder.Build("Economy: ".T(EDCTx.JournalEntry_Economy), StationEconomy_Localised, "Government: ".T(EDCTx.JournalEntry_Government), StationGovernment_Localised,
-                    "Faction: ".T(EDCTx.JournalEntry_Faction), Faction, "< in state ".T(EDCTx.JournalEntry_instate), FactionState.SplitCapsWord());
+                    "Faction: ".T(EDCTx.JournalEntry_Faction), Faction, "< in state ".T(EDCTx.JournalEntry_instate), FactionState.SplitCapsWord(), "Allegiance: ".T(EDCTx.JournalEntry_Allegiance), StationAllegiance);
 
                 if (StationServices != null)
                 {
