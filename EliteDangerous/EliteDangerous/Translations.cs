@@ -252,6 +252,7 @@ namespace EliteDangerousCore
         JournalEntry_BartenderMaterials, 
         JournalEntry_ScanOrganicsValue, // Value: ; cr;N0
         JournalEntry_ScanOrganicsPotentialValue, // Value: ; cr;N0
+        JournalEntry_Pilot, //Pilot: 
 
 
         JournalLocOrJump_Type, // "Type " @
