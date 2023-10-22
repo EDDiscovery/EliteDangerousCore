@@ -1166,6 +1166,8 @@ SECTION JournalScanInfo
 .LE: "{0} has {1} level elements." @
 .scanorganics: " Has been scanned for organics." @
 
+.InSystem: "In System: " @
+
 SECTION Services
 
 .BridgeCrew: "Bridge Crew" @
