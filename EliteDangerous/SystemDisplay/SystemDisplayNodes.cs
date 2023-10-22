@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2019 EDDiscovery development team
+ * Copyright © 2019-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using BaseUtils;
@@ -28,23 +26,24 @@ namespace EliteDangerousCore
 {
     public partial class SystemDisplay
     {
-        enum DrawLevel { TopLevelStar, PlanetLevel, MoonLevel };
+        private enum DrawLevel { TopLevelStar, PlanetLevel, MoonLevel };
 
-        Dictionary<Bitmap, float> imageintensities = new Dictionary<Bitmap, float>();       // cached
+        private Dictionary<Bitmap, float> imageintensities = new Dictionary<Bitmap, float>();       // cached
 
         // return right bottom of area used from curpos
 
-        Point DrawNode(List<ExtPictureBox.ImageElement> pc,
+        private Point DrawNode(List<ExtPictureBox.ImageElement> pc,
                             StarScan.ScanNode sn,
                             List<MaterialCommodityMicroResource> historicmats,    // curmats may be null
                             List<MaterialCommodityMicroResource> curmats,    // curmats may be null
                             Image notscanned,               // image if sn is not known
                             Point position,                 // position is normally left/middle, unless xiscentre is set.
-                            bool xiscentre,
-                            out Rectangle imagepos, 
+                            bool xiscentre,                 // base x position as the centre, not the left
+                            out Rectangle imagepos,         // this is the rectangle used by the node to draw into
+                            out int planetxcentre,          // this is the x centre of the planet which may not be in the middle of the rectangle
                             Size size,                      // nominal size
-                            DrawLevel drawtype,          // drawing..
-                            Random random,              // for random placements
+                            DrawLevel drawtype,             // drawing..
+                            Random random,                  // for random placements
                             Color? backwash = null,         // optional back wash on image 
                             string appendlabeltext = ""     // any label text to append
                             
@@ -53,6 +52,7 @@ namespace EliteDangerousCore
             string tip;
             Point endpoint = position;
             imagepos = Rectangle.Empty;
+            planetxcentre = 0;
 
             JournalScan sc = sn.ScanData;
 
@@ -149,12 +149,15 @@ namespace EliteDangerousCore
                     //   if (sc.BodyName.Contains("4 b"))  iconoverlays = 0;
 
                     bool materialsicon = sc.HasMaterials && !ShowMaterials;
-                    bool imageoverlays = sc.IsLandable || (sc.HasRingsOrBelts && drawtype != DrawLevel.TopLevelStar) || materialsicon;
 
-                    int bitmapheight = size.Height * nodeheightratio / noderatiodivider;
-                    int overlaywidth = bitmapheight / 6;
-                    int imagewidtharea = (imageoverlays ? 2 : 1) * size.Width;            // area used by image+overlay if any
-                    int iconwidtharea = (iconoverlays > 0 ? overlaywidth : 0);          // area used by icon width area on left
+                    const int minicondivider = 4;       // this is the minimum divider for icon area to give width of icon based on height
+
+                    int bitmapheight = size.Height * nodeheightratio / noderatiodivider;        // what height it is in units of noderatiodivider
+
+                    // work out the width multipler dependent on what we draw
+                    int imagewidthmultiplier16th = (sc.HasRingsOrBelts && drawtype != DrawLevel.TopLevelStar) ? 31 : materialsicon || sc.IsLandable ? 20 : 16;
+                    int imagewidtharea = imagewidthmultiplier16th * size.Width / 16;          // area used by image+optional overlay for planet image
+                    int iconwidtharea = iconoverlays > 0 ? bitmapheight / minicondivider : 0;          // area used by icon width area on left
 
                     int bitmapwidth = iconwidtharea + imagewidtharea;                   // total width
                     int imageleft = iconwidtharea + imagewidtharea / 2 - size.Width / 2;  // calculate where the left of the image is 
@@ -164,13 +167,14 @@ namespace EliteDangerousCore
 
                     using (Graphics g = Graphics.FromImage(bmp))
                     {
-          //backwash = Color.FromArgb(128, 40, 40, 40); // debug
+          backwash = Color.FromArgb(128, 40, 40, 40); // debug
 
                         if (backwash.HasValue)
                         {
                             using (Brush b = new SolidBrush(backwash.Value))
                             {
-                                g.FillRectangle(b, new Rectangle(iconwidtharea, 0, imagewidtharea, bitmapheight));
+                                //g.FillRectangle(b, new Rectangle(iconwidtharea, 0, imagewidtharea, bitmapheight));
+                                g.FillRectangle(b, new Rectangle(0,0,bitmapwidth,bitmapheight));
                             }
                         }
 
@@ -200,7 +204,7 @@ namespace EliteDangerousCore
                         {
                             using (Brush b = new SolidBrush(Color.FromArgb(255, 255,255,255)))
                             {
-                                for (int i = 0; i < ss; i++)
+                                for (int i = 0; i < ss; i++)    // draw the number of settlements and pick alternately a random pos on X and top/bottom flick
                                 {
                                     int hpos = imageleft + size.Width / 3 + random.Next(size.Width / 3);
                                     int vpos = (i % 2 == 0 ? imagetop + size.Height / 4 : imagetop + size.Height * 5 / 8) + random.Next(size.Width / 8);
@@ -212,7 +216,7 @@ namespace EliteDangerousCore
 
                         if (iconoverlays > 0)
                         {
-                            int ovsize = bmp.Height / 6;
+                            int ovsize = bmp.Height / Math.Max(iconoverlays, minicondivider);       // get height, this is minicondivider normally, unless there are more than this, which scales it down
                             int pos = 4;
 
                             if (sc.Terraformable)
@@ -253,7 +257,13 @@ namespace EliteDangerousCore
 
                             if (sn.Signals != null)
                             {
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Signals"), new Rectangle(0, pos, ovsize, ovsize));
+                                string image = "Controls.Scan.Bodies.Signals";
+                                bool containsgeo = JournalSAASignalsFound.ContainsGeo(sn.Signals);
+                                if (JournalSAASignalsFound.ContainsBio(sn.Signals))
+                                    image = containsgeo ? "Controls.Scan.Bodies.SignalsGeoBio" : "Controls.Scan.Bodies.SignalsBio";
+                                else if (containsgeo)
+                                    image = "Controls.Scan.Bodies.SignalsGeo";
+                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon(image), new Rectangle(0, pos, ovsize, ovsize));
                                 pos += ovsize + 1;
                             }
 
@@ -304,6 +314,8 @@ namespace EliteDangerousCore
                     //System.Diagnostics.Debug.WriteLine("Body " + sc.BodyName + " plot at "  + postoplot + " " + bmp.Size + " " + (postoplot.X+imageleft) + "," + (postoplot.Y-bmp.Height/2+imagetop));
                     endpoint = CreateImageAndLabel(pc, bmp, postoplot, bmp.Size, out imagepos, nodelabels, tip);
                     //System.Diagnostics.Debug.WriteLine("Draw {0} at {1} {2} out {3}", nodelabels[0], postoplot, bmp.Size, imagepos);
+
+                    planetxcentre = imagepos.Left + iconwidtharea + imagewidtharea / 2;                 // where the x centre of the planet is
 
                     if (sc.HasMaterials && ShowMaterials)
                     {
@@ -537,12 +549,13 @@ namespace EliteDangerousCore
             if (icons > 4)
                 leftmiddle.X += shiftrightifreq;
 
-            return CreateImageAndLabel(pc, bmp, leftmiddle, bmp.Size, out Rectangle xic, new string[] { "" }, tip, false);
+            return CreateImageAndLabel(pc, bmp, leftmiddle, bmp.Size, out Rectangle _, new string[] { "" }, tip, false);
         }
 
 
         // plot at leftmiddle the image of size, return bot left accounting for label 
-        // label can be null. returns ximagecentre of image
+        // label can be null.
+        // returns max point and in imageloc the area drawn
 
         Point CreateImageAndLabel(List<ExtPictureBox.ImageElement> c, Image i, Point leftmiddle, Size size, out Rectangle imageloc , 
                                     string[] labels, string ttext, bool imgowned = true)
@@ -599,7 +612,7 @@ namespace EliteDangerousCore
             max = new Point(Math.Max(max.X, ie.Location.Right), Math.Max(max.Y, ie.Location.Bottom));
             c.Add(ie);
 
-            imageloc = ie.Location;     // used to be ximagecentre = ie.Location.X+ie.Location.Width/2
+            imageloc = ie.Location;    
 
             //System.Diagnostics.Debug.WriteLine(".. Max " + max);
 

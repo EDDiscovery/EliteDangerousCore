@@ -570,6 +570,14 @@ namespace EliteDangerousCore.JournalEvents
 
             return info;
         }
+        static public bool ContainsBio(List<SAASignal> list)
+        {
+            return list.Find(x => x.IsBio) != null;
+        }
+        static public bool ContainsGeo(List<SAASignal> list)
+        {
+            return list.Find(x => x.IsGeo) != null;
+        }
 
         public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
         {
