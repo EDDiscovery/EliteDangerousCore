@@ -25,7 +25,7 @@ namespace EliteDangerousCore
     public partial class SystemDisplay
     {
         // curmats may be null
-        Point CreateMaterialNodes(List<ExtPictureBox.ImageElement> pc, JournalScan sn, List<MaterialCommodityMicroResource> historicmats, List<MaterialCommodityMicroResource> curmats,
+        private Point CreateMaterialNodes(List<ExtPictureBox.ImageElement> pc, JournalScan sn, List<MaterialCommodityMicroResource> historicmats, List<MaterialCommodityMicroResource> curmats,
                                 Point matpos, Size matsize)
         {
             Point startpos = matpos;
@@ -92,7 +92,7 @@ namespace EliteDangerousCore
         }
 
         // Create a signals list
-        Point DrawSignals(List<ExtPictureBox.ImageElement> pc, Point leftmiddle,
+        private Point DrawSignals(List<ExtPictureBox.ImageElement> pc, Point leftmiddle,
                                 List<JournalFSSSignalDiscovered> listfsd, List<JournalCodexEntry> codex,
                                 int height, int shiftrightifreq)
         {
@@ -194,18 +194,18 @@ namespace EliteDangerousCore
             if (icons > 4)
                 leftmiddle.X += shiftrightifreq;
 
-            return CreateImageAndLabel(pc, bmp, leftmiddle, bmp.Size, out Rectangle _, new string[] { "" }, tip, false);
+            return CreateImageAndLabel(pc, bmp, leftmiddle, bmp.Size, false, out Rectangle _, new string[] { "" }, tip, false);
         }
 
 
         // plot at leftmiddle the image of size, return bot left accounting for label 
         // label can be null.
         // returns max point and in imageloc the area drawn
+        // you can shift right if required so you don't clip right
 
-        Point CreateImageAndLabel(List<ExtPictureBox.ImageElement> c, Image i, Point leftmiddle, Size size, out Rectangle imageloc,
+        private Point CreateImageAndLabel(List<ExtPictureBox.ImageElement> c, Image i, Point leftmiddle, Size size, bool shiftrightifneeded, out Rectangle imageloc,
                                     string[] labels, string ttext, bool imgowned = true, Color? backwash = null)
         {
-            //System.Diagnostics.Debug.WriteLine($"..Create Image and Label {leftmiddle} {size} {labels[0]}");
 
             ExtPictureBox.ImageElement ie = new ExtPictureBox.ImageElement(new Rectangle(leftmiddle.X, leftmiddle.Y - size.Height / 2, size.Width, size.Height), i, ttext, ttext, imgowned);
 
@@ -249,18 +249,22 @@ namespace EliteDangerousCore
 
                     labelie.Add(labie);
 
-                  //  if (labie.Location.X < leftmiddle.X)      // for now, turn off the shifting right of the labels as it stops the planets being below the above one. see if it does cause problems
-                   //     laboff = Math.Max(laboff, leftmiddle.X - labie.Location.X);
+                    // if we are allowed, and we are left of the instructed position in the label, set the laboff
+
+                    if (shiftrightifneeded && labie.Location.X < leftmiddle.X)      
+                        laboff = Math.Max(laboff, leftmiddle.X - labie.Location.X);
+
                     vpos += labie.Location.Height;
                 }
             }
+
+           // System.Diagnostics.Debug.WriteLine($"..Create Image and Label {leftmiddle} {size} {labels[0]} shiftright {laboff}");
 
             foreach (var l in labelie)
             {
                 l.Translate(laboff, 0);
                 c.Add(l);
                 max = new Point(Math.Max(max.X, l.Location.Right), Math.Max(max.Y, l.Location.Bottom));
-                //System.Diagnostics.Debug.WriteLine("Label " + l.Location);
             }
 
             ie.Translate(laboff, 0);

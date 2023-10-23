@@ -37,6 +37,7 @@ namespace EliteDangerousCore
                             Image notscanned,               // image if sn is not known
                             Point position,                 // position is normally left/middle, unless xiscentre is set.
                             bool xiscentre,                 // base x position as the centre, not the left
+                            bool shiftrightifneeded,        // are we allowed to nerf the object right to allow for labels
                             out Rectangle imagepos,         // this is the rectangle used by the node to draw into
                             out int imagexcentre,           // this is the x centre of the image which may not be in the middle of the rectangle
                             Size size,                      // nominal size
@@ -169,7 +170,7 @@ namespace EliteDangerousCore
                     // actual area width, which is only set to iconsize if we have icons
                     int iconwidtharea = numiconoverlays > 0 ? iconsize : 0;
 
-                    System.Diagnostics.Debug.WriteLine($"..DrawNode {sn.OwnName} imagewidtharea {imagewidtharea} iconsize {iconsize} total {imagewidtharea+iconsize}");
+                    //System.Diagnostics.Debug.WriteLine($"..DrawNode {sn.OwnName} imagewidtharea {imagewidtharea} iconsize {iconsize} total {imagewidtharea+iconsize}");
 
                     // total width, of icon and image area
                     int bitmapwidth = iconwidtharea + imagewidtharea;                   
@@ -320,12 +321,15 @@ namespace EliteDangerousCore
 
                     // need left middle, if xiscentre, translate to it
                     Point postoplot = xiscentre ? new Point(position.X - imagewidtharea/2 - iconwidtharea, position.Y) : position;
-                    imagexcentre = xiscentre ? position.X : postoplot.X + iconwidtharea + imagewidtharea / 2;                 // where the x centre of the planet is
 
                     //System.Diagnostics.Debug.WriteLine("Body " + sc.BodyName + " plot at "  + postoplot + " " + bmp.Size + " " + (postoplot.X+imageleft) + "," + (postoplot.Y-bmp.Height/2+imagetop));
-                    endpoint = CreateImageAndLabel(pc, bmp, postoplot, bmp.Size, out imagepos, nodelabels, tip);
-                    
-                    System.Diagnostics.Debug.WriteLine($"Draw {nodelabels[0]} at leftmid {postoplot}  out pos {imagepos} centre {imagexcentre}");
+                    endpoint = CreateImageAndLabel(pc, bmp, postoplot, bmp.Size, shiftrightifneeded, out imagepos, nodelabels, tip);
+
+                    int xshift = imagepos.X - postoplot.X;          // we may have shifted right if shiftrightifneeded is on, need to take account in imagexcentre
+
+                    imagexcentre = (xiscentre ? position.X : postoplot.X + iconwidtharea + imagewidtharea / 2) + xshift;  // where the x centre of the planet is
+
+                    //System.Diagnostics.Debug.WriteLine($"Draw {nodelabels[0]} at leftmid {postoplot}  out pos {imagepos} centre {imagexcentre}");
 
                     if (sc.HasMaterials && ShowMaterials)
                     {
@@ -358,7 +362,7 @@ namespace EliteDangerousCore
 
                 Point postoplot = xiscentre ? new Point(position.X - size.Width / 2, position.Y) : position;
 
-                endpoint = CreateImageAndLabel(pc, BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Belt"), postoplot, bmpsize, out imagepos, new string[] { sn.OwnName.AppendPrePad(appendlabeltext, Environment.NewLine) }, tip, false, backwash);
+                endpoint = CreateImageAndLabel(pc, BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Belt"), postoplot, bmpsize, shiftrightifneeded, out imagepos, new string[] { sn.OwnName.AppendPrePad(appendlabeltext, Environment.NewLine) }, tip, false, backwash);
 
                 imagexcentre = imagepos.Left + imagepos.Width / 2;                 // where the x centre of the belt is
             }
@@ -390,7 +394,7 @@ namespace EliteDangerousCore
 
                 Point postoplot = xiscentre ? new Point(position.X - size.Width / 2, position.Y) : position;
 
-                endpoint = CreateImageAndLabel(pc, notscanned, postoplot, size, out imagepos, new string[] { nodelabel }, tip, false, backwash);
+                endpoint = CreateImageAndLabel(pc, notscanned, postoplot, size, shiftrightifneeded, out imagepos, new string[] { nodelabel }, tip, false, backwash);
 
                 imagexcentre = imagepos.Left + imagepos.Width / 2;                 // where the x centre of the not scanned thing is
             }

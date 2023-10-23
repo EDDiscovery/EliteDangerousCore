@@ -120,7 +120,7 @@ namespace EliteDangerousCore
 
                         Point maxpos = DrawNode(starcontrols, starnode, historicmats, curmats,
                                 (starnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre: notscannedbitmap,
-                                leftmiddle, false, out Rectangle starimagepos, out int _, StarSize, DrawLevel.TopLevelStar, rnd);       // the last part nerfs the label down to the right position
+                                leftmiddle, false, true, out Rectangle starimagepos, out int _, StarSize, DrawLevel.TopLevelStar, rnd);       // the last part nerfs the label down to the right position
 
                         maxitemspos = new Point(Math.Max(maxitemspos.X, maxpos.X), Math.Max(maxitemspos.Y, maxpos.Y));
 
@@ -196,7 +196,7 @@ namespace EliteDangerousCore
                                 appendlabel = appendlabel.AppendPrePad("" + lastbelt.ScanData?.BodyID, Environment.NewLine);
 
 
-                                Point maxbeltpos = DrawNode(starcontrols, lastbelt, historicmats, curmats, beltsi, leftmiddle,false,out Rectangle _,  out int _,
+                                Point maxbeltpos = DrawNode(starcontrols, lastbelt, historicmats, curmats, beltsi, leftmiddle,false, true, out Rectangle _,  out int _,
                                                 beltsize, DrawLevel.PlanetLevel, rnd, appendlabeltext:appendlabel);
 
                                 leftmiddle = new Point(maxbeltpos.X + planetspacerx, leftmiddle.Y);
@@ -265,7 +265,7 @@ namespace EliteDangerousCore
 
                             appendlabel = appendlabel.AppendPrePad("" + lastbelt.ScanData?.BodyID, Environment.NewLine);
 
-                            Point maxbeltpos = DrawNode(starcontrols, lastbelt, historicmats, curmats, beltsi, leftmiddle, false, out Rectangle _, out int _,
+                            Point maxbeltpos = DrawNode(starcontrols, lastbelt, historicmats, curmats, beltsi, leftmiddle, false, true, out Rectangle _, out int _,
                                         beltsize, DrawLevel.PlanetLevel, rnd, appendlabeltext: appendlabel);
 
                             leftmiddle = new Point(maxbeltpos.X + planetspacerx, leftmiddle.Y);
@@ -313,7 +313,7 @@ namespace EliteDangerousCore
 
                 if (!drawnsignals && (systemnode.FSSSignalList.Count > 0 || systemnode.CodexEntryList.Count > 0))  // if no stars were drawn, but signals..
                 {
-                    Point maxpos = CreateImageAndLabel(starcontrols, notscannedbitmap, leftmiddle, StarSize, out Rectangle starpos, new string[] { "" }, "", false);
+                    Point maxpos = CreateImageAndLabel(starcontrols, notscannedbitmap, leftmiddle, StarSize, true, out Rectangle starpos, new string[] { "" }, "", false);
                     DrawSignals(starcontrols, new Point(starpos.Right + moonspacerx, leftmiddle.Y), 
                                                         systemnode.FSSSignalList, systemnode.CodexEntryList,
                                                         StarSize.Height * 6 / 4, 16);       // draw them, nothing else to follow
