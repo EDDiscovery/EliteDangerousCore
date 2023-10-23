@@ -141,33 +141,39 @@ namespace EliteDangerousCore
                                                         
                     bool valuable = sc.GetEstimatedValues().EstimatedValue(sc.WasDiscovered, sc.WasMapped, true, true,false) >= ValueLimit;
                     bool isdiscovered = sc.IsPreviouslyDiscovered && sc.IsPlanet;
-                    int iconoverlays = ShowOverlays ? ((sc.Terraformable ? 1 : 0) + (sc.HasMeaningfulVolcanism ? 1 : 0) + 
+                    int numiconoverlays = ShowOverlays ? ((sc.Terraformable ? 1 : 0) + (sc.HasMeaningfulVolcanism ? 1 : 0) + 
                                         (valuable ? 1 : 0) + (sc.Mapped ? 1 : 0) + (isdiscovered ? 1 : 0) + (sc.IsPreviouslyMapped ? 1 : 0) +
                                         (sn.Signals != null ? 1 : 0) + (sn.Organics != null ? 1 : 0)
                                         ) : 0;
-
-                    //   if (sc.BodyName.Contains("4 b"))  iconoverlays = 0;
-
+   
                     bool materialsicon = sc.HasMaterials && !ShowMaterials;
-
-                    const int minicondivider = 4;       // this is the minimum divider for icon area to give width of icon based on height
 
                     int bitmapheight = size.Height * nodeheightratio / noderatiodivider;        // what height it is in units of noderatiodivider
 
                     // work out the width multipler dependent on what we draw
                     int imagewidthmultiplier16th = (sc.HasRingsOrBelts && drawtype != DrawLevel.TopLevelStar) ? 31 : materialsicon || sc.IsLandable ? 20 : 16;
-                    int imagewidtharea = imagewidthmultiplier16th * size.Width / 16;          // area used by image+optional overlay for planet image
-                    int iconwidtharea = iconoverlays > 0 ? bitmapheight / minicondivider : 0;          // area used by icon width area on left
+                    // area used by image+optional overlay for planet image
+                    int imagewidtharea = imagewidthmultiplier16th * size.Width / 16;
 
-                    int bitmapwidth = iconwidtharea + imagewidtharea;                   // total width
-                    int imageleft = iconwidtharea + imagewidtharea / 2 - size.Width / 2;  // calculate where the left of the image is 
-                    int imagetop = bitmapheight / 2 - size.Height / 2;                  // and the top
+                    // this is the minimum divider for icon area to give width of icon based on height
+                    const int minicondivider = 4;
+                    // this divider is a max of number of icons and min divider
+                    int iconsizedivider = Math.Max(numiconoverlays, minicondivider);
+                    // space between icons if wanted
+                    const int iconvspacing = 0;
+                    // get icon size, bitmap height minus iconvspacing parts / divider.. (ie. 125 with 6 icons = 125-(6-1)*1 = 120 / 6 = 20
+                    int iconsize = (bitmapheight- iconvspacing * (numiconoverlays-1)) / iconsizedivider;       
+                    // actual area width, which is only set to iconsize if we have icons
+                    int iconwidtharea = numiconoverlays > 0 ? iconsize : 0;          
+
+                    // total width, of icon and image area
+                    int bitmapwidth = iconwidtharea + imagewidtharea;                   
 
                     Bitmap bmp = new Bitmap(bitmapwidth, bitmapheight);
 
                     using (Graphics g = Graphics.FromImage(bmp))
                     {
-          backwash = Color.FromArgb(128, 40, 40, 40); // debug
+          //backwash = Color.FromArgb(128, 40, 40, 40); // debug
 
                         if (backwash.HasValue)
                         {
@@ -177,6 +183,9 @@ namespace EliteDangerousCore
                                 g.FillRectangle(b, new Rectangle(0,0,bitmapwidth,bitmapheight));
                             }
                         }
+
+                        int imageleft = iconwidtharea + imagewidtharea / 2 - size.Width / 2;  // calculate where the left of the image is 
+                        int imagetop = bitmapheight / 2 - size.Height / 2;                  // and the top
 
                         if ((sc.WaterGiant || !sc.GasWorld) && (sc.HasAtmosphericComposition || sc.HasAtmosphere))            // show atmosphere as it is shown in game
                         {
@@ -214,45 +223,44 @@ namespace EliteDangerousCore
                             }
                         }
 
-                        if (iconoverlays > 0)
+                        if (numiconoverlays > 0)
                         {
-                            int ovsize = bmp.Height / Math.Max(iconoverlays, minicondivider);       // get height, this is minicondivider normally, unless there are more than this, which scales it down
-                            int pos = 4;
+                            int vpos = 0;
 
                             if (sc.Terraformable)
                             {
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Terraformable"), new Rectangle(0, pos, ovsize, ovsize));
-                                pos += ovsize + 1;
+                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Terraformable"), new Rectangle(0, vpos, iconsize, iconsize));
+                                vpos += iconsize + iconvspacing;
                             }
 
                             if (sc.HasMeaningfulVolcanism) //this renders below the terraformable icon if present
                             {
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Volcanism"), new Rectangle(0, pos, ovsize, ovsize));
-                                pos += ovsize + 1;
+                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Volcanism"), new Rectangle(0, vpos, iconsize, iconsize));
+                                vpos += iconsize + iconvspacing;
                             }
 
                             if (valuable)
                             {
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.HighValue"), new Rectangle(0, pos, ovsize, ovsize));
-                                pos += ovsize + 1;
+                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.HighValue"), new Rectangle(0, vpos, iconsize, iconsize));
+                                vpos += iconsize + iconvspacing;
                             }
 
                             if (sc.Mapped)
                             {
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Mapped"), new Rectangle(0, pos, ovsize, ovsize));
-                                pos += ovsize + 1;
+                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Mapped"), new Rectangle(0, vpos, iconsize, iconsize));
+                                vpos += iconsize + iconvspacing;
                             }
 
                             if (sc.IsPreviouslyMapped)
                             {
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.MappedByOthers"), new Rectangle(0, pos, ovsize, ovsize));
-                                pos += ovsize + 1;
+                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.MappedByOthers"), new Rectangle(0, vpos, iconsize, iconsize));
+                                vpos += iconsize + iconvspacing;
                             }
 
                             if (isdiscovered)
                             {
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.DiscoveredByOthers"), new Rectangle(0, pos, ovsize, ovsize));
-                                pos += ovsize + 1;
+                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.DiscoveredByOthers"), new Rectangle(0, vpos, iconsize, iconsize));
+                                vpos += iconsize + iconvspacing;
                             }
 
                             if (sn.Signals != null)
@@ -263,14 +271,14 @@ namespace EliteDangerousCore
                                     image = containsgeo ? "Controls.Scan.Bodies.SignalsGeoBio" : "Controls.Scan.Bodies.SignalsBio";
                                 else if (containsgeo)
                                     image = "Controls.Scan.Bodies.SignalsGeo";
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon(image), new Rectangle(0, pos, ovsize, ovsize));
-                                pos += ovsize + 1;
+                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon(image), new Rectangle(0, vpos, iconsize, iconsize));
+                                vpos += iconsize + iconvspacing;
                             }
 
-                            if ( sn.Organics != null )
+                            if (sn.Organics != null)
                             {
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Journal.ScanOrganic"), new Rectangle(0, pos, ovsize, ovsize));
-                                pos += ovsize + 1;
+                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Journal.ScanOrganic"), new Rectangle(0, vpos, iconsize, iconsize));
+                                vpos += iconsize + iconvspacing;
                             }
                         }
 
