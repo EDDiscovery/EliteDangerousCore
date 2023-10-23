@@ -933,11 +933,13 @@ namespace EliteDangerousCore.EDSM
                     {
                         List<JournalScan> bodies = new List<JournalScan>();
 
+                        long? sysaddr = jlist["id64"].LongNull();
+
                         foreach (JObject edsmbody in jlist["bodies"])
                         {
                             try
                             {
-                                JObject jbody = EDSMClass.ConvertFromEDSMBodies(edsmbody);
+                                JObject jbody = EDSMClass.ConvertFromEDSMBodies(edsmbody,sysaddr);
 
                                 JournalScan js = new JournalScan(jbody);
 
@@ -974,7 +976,7 @@ namespace EliteDangerousCore.EDSM
         }
 
         // Verified Nov 20,  by scan panel
-        private static JObject ConvertFromEDSMBodies(JObject jo)        // protect yourself against bad JSON
+        private static JObject ConvertFromEDSMBodies(JObject jo, long? sysaddr)        // protect yourself against bad JSON
         {
             //System.Diagnostics.Debug.WriteLine($"EDSM Body {jo.ToString(true)}");
             JObject jout = new JObject
@@ -983,11 +985,13 @@ namespace EliteDangerousCore.EDSM
                 ["event"] = "Scan",
                 ["EDDFromEDSMBodie"] = true,
                 ["BodyName"] = jo["name"],
-                ["SystemAddress"] = jo["id64"].Long(0),
                 ["WasDiscovered"] = true,
                 ["WasMapped"] = false,          // tbd ? why false?
                 ["ScanType"] = "Detailed",
             };
+
+            if ( sysaddr != null)
+                jout["SystemAddress"] = sysaddr.Value;
 
             if (!jo["discovery"].IsNull())       // much more defense around this.. EDSM gives discovery=null back
             {
