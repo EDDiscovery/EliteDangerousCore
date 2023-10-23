@@ -67,16 +67,27 @@ namespace EliteDangerousCore
         }
 
         // take the journal scan and add it to the node tree
+        // handle Earth, starname = Sol
+        // handle Eol Prou LW-L c8-306 A 4 a and Eol Prou LW-L c8-306
+        // handle Colonia 4 , starname = Colonia, planet 4
+        // handle Aurioum B A BELT
+        // Kyloasly OY-Q d5-906 13 1
 
         private bool ProcessJournalScan(JournalScan sc, ISystem sys, bool reprocessPrimary = false, ScanNode oldnode = null)  // background or foreground.. FALSE if you can't process it
         {
-            SystemNode sn = GetOrCreateSystemNode(sys);
-
-            // handle Earth, starname = Sol
-            // handle Eol Prou LW-L c8-306 A 4 a and Eol Prou LW-L c8-306
-            // handle Colonia 4 , starname = Colonia, planet 4
-            // handle Aurioum B A BELT
-            // Kyloasly OY-Q d5-906 13 1
+            if (sc.SystemAddress.HasValue)
+            {
+                if (sys.SystemAddress.HasValue && sc.SystemAddress.Value != sys.SystemAddress.Value)
+                {
+                    System.Diagnostics.Trace.WriteLine($"StarScan Rejected {sc.BodyName} in {sc.SystemAddress} {sc.StarSystem} due to not matching current system address {sys.SystemAddress} {sys.Name}");
+                    return false;
+                }
+            }
+            else if ( sc.BodyName.StartsWith("Procyon") && sys.Name == "Sol")       // this occurred in 2018 in Robby's journals
+            {
+                System.Diagnostics.Trace.WriteLine($"StarScan Rejected {sc.BodyName} in {sc.SystemAddress} {sc.StarSystem} due to bad scan in {sys.SystemAddress} {sys.Name}");
+                return false;
+            }
 
             // Extract elements from name, and extract if belt, top node type, if ring 
             List<string> elements = ExtractElementsJournalScan(sc, sys, out ScanNodeType starscannodetype, out bool isbeltcluster, out bool isring);
@@ -84,15 +95,19 @@ namespace EliteDangerousCore
             // Bail out if no elements extracted
             if (elements.Count == 0)
             {
-                System.Diagnostics.Trace.WriteLine($"Failed to add body {sc.BodyName} to system {sys.Name} - not enough elements");
+                System.Diagnostics.Trace.WriteLine($"StarScan Failed to add body {sc.BodyName} to system {sys.Name} - not enough elements");
                 return false;
             }
             // Bail out if more than 5 elements extracted
             else if (elements.Count > 5)
             {
-                System.Diagnostics.Trace.WriteLine($"Failed to add body {sc.BodyName} to system {sys.Name} - Versip");
+                System.Diagnostics.Trace.WriteLine($"StarScan Failed to add body {sc.BodyName} to system {sys.Name} - Versip");
                 return false;
             }
+
+            // goodish system, create node
+
+            SystemNode sn = GetOrCreateSystemNode(sys);
 
             //System.Diagnostics.Debug.WriteLine($"StarScan Made body JS {sc.BodyName}");
 

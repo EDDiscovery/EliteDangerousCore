@@ -17,10 +17,8 @@ using EliteDangerousCore.JournalEvents;
 using ExtendedControls;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 
 namespace EliteDangerousCore
 {
@@ -40,7 +38,7 @@ namespace EliteDangerousCore
                             Point position,                 // position is normally left/middle, unless xiscentre is set.
                             bool xiscentre,                 // base x position as the centre, not the left
                             out Rectangle imagepos,         // this is the rectangle used by the node to draw into
-                            out int planetxcentre,          // this is the x centre of the planet which may not be in the middle of the rectangle
+                            out int imagexcentre,           // this is the x centre of the image which may not be in the middle of the rectangle
                             Size size,                      // nominal size
                             DrawLevel drawtype,             // drawing..
                             Random random,                  // for random placements
@@ -49,10 +47,13 @@ namespace EliteDangerousCore
                             
                 )
         {
+            //System.Diagnostics.Debug.WriteLine($"DrawNode {sn.OwnName} at {position} xiscentre {xiscentre} : size {size} type {drawtype}");
+  //backwash = Color.FromArgb(128, 40, 40, 40); // debug
+
             string tip;
             Point endpoint = position;
             imagepos = Rectangle.Empty;
-            planetxcentre = 0;
+            imagexcentre = 0;
 
             JournalScan sc = sn.ScanData;
 
@@ -107,9 +108,11 @@ namespace EliteDangerousCore
                     {
                         if (drawtype != DrawLevel.MoonLevel)       // other than moons
                         {
+                            string s1 = sn.ScanData.DistanceFromArrivalLS < 10 ? $"{sn.ScanData.DistanceFromArrivalLS:N1}ls" : $"{sn.ScanData.DistanceFromArrivalLS:N0}ls";
+
                             if (sn.ScanData.IsOrbitingBarycentre)          // if in orbit of barycentre
                             {
-                                string s = $"{(sn.ScanData.DistanceFromArrivalLS):N1}ls";
+                                string s = s1;
                                 if (sn.ScanData.nSemiMajorAxis.HasValue)
                                     s += "/" + sn.ScanData.SemiMajorAxisLSKM;
                                 nodelabels[1] = nodelabels[1].AppendPrePad(s, Environment.NewLine);
@@ -117,21 +120,21 @@ namespace EliteDangerousCore
                             else
                             {
                                 //System.Diagnostics.Debug.WriteLine(sn.ScanData.BodyName + " SMA " + sn.ScanData.nSemiMajorAxis + " " + sn.ScanData.DistanceFromArrivalm);
-                                string s = sn.ScanData.nSemiMajorAxis.HasValue && Math.Abs(sn.ScanData.nSemiMajorAxis.Value- sn.ScanData.DistanceFromArrivalm) > BodyPhysicalConstants.oneAU_m ? (" / " + sn.ScanData.SemiMajorAxisLSKM) : "";
-                                nodelabels[1] = nodelabels[1].AppendPrePad($"{sn.ScanData.DistanceFromArrivalLS:N1}ls" + s, Environment.NewLine);
+                                string s2 = sn.ScanData.nSemiMajorAxis.HasValue && Math.Abs(sn.ScanData.nSemiMajorAxis.Value- sn.ScanData.DistanceFromArrivalm) > BodyPhysicalConstants.oneAU_m ? ("/" + sn.ScanData.SemiMajorAxisLSKM) : "";
+                                nodelabels[1] = nodelabels[1].AppendPrePad(s1 + s2, Environment.NewLine);
                             }
                         }
                         else
                         {
                             if (!sn.ScanData.IsOrbitingBarycentre && sn.ScanData.nSemiMajorAxis.HasValue)          // if not in orbit of barycentre
                             {
-                                nodelabels[1] = nodelabels[1].AppendPrePad($"{(sn.ScanData.nSemiMajorAxis / BodyPhysicalConstants.oneLS_m):N1}ls", Environment.NewLine);
+                                nodelabels[1] = nodelabels[1].AppendPrePad($"{(sn.ScanData.nSemiMajorAxis / BodyPhysicalConstants.oneLS_m):N0}ls", Environment.NewLine);
                             }
                         }
                     }
 
 #if DEBUG
-                    nodelabels[1] = nodelabels[1] + $" ID:{sc.BodyID}";
+                    //nodelabels[1] = nodelabels[1] + $" ID:{sc.BodyID}";
 #endif
 
 
@@ -164,7 +167,9 @@ namespace EliteDangerousCore
                     // get icon size, bitmap height minus iconvspacing parts / divider.. (ie. 125 with 6 icons = 125-(6-1)*1 = 120 / 6 = 20
                     int iconsize = (bitmapheight- iconvspacing * (numiconoverlays-1)) / iconsizedivider;       
                     // actual area width, which is only set to iconsize if we have icons
-                    int iconwidtharea = numiconoverlays > 0 ? iconsize : 0;          
+                    int iconwidtharea = numiconoverlays > 0 ? iconsize : 0;
+
+                    System.Diagnostics.Debug.WriteLine($"..DrawNode {sn.OwnName} imagewidtharea {imagewidtharea} iconsize {iconsize} total {imagewidtharea+iconsize}");
 
                     // total width, of icon and image area
                     int bitmapwidth = iconwidtharea + imagewidtharea;                   
@@ -173,14 +178,11 @@ namespace EliteDangerousCore
 
                     using (Graphics g = Graphics.FromImage(bmp))
                     {
-          //backwash = Color.FromArgb(128, 40, 40, 40); // debug
-
                         if (backwash.HasValue)
                         {
                             using (Brush b = new SolidBrush(backwash.Value))
                             {
-                                //g.FillRectangle(b, new Rectangle(iconwidtharea, 0, imagewidtharea, bitmapheight));
-                                g.FillRectangle(b, new Rectangle(0,0,bitmapwidth,bitmapheight));
+                                g.FillRectangle(b, new Rectangle(0, 0, bitmapwidth, bitmapheight));
                             }
                         }
 
@@ -317,13 +319,13 @@ namespace EliteDangerousCore
                     }
 
                     // need left middle, if xiscentre, translate to it
-                    Point postoplot = xiscentre ? new Point(position.X - bmp.Width/2, position.Y) : position; 
+                    Point postoplot = xiscentre ? new Point(position.X - imagewidtharea/2 - iconwidtharea, position.Y) : position;
+                    imagexcentre = xiscentre ? position.X : postoplot.X + iconwidtharea + imagewidtharea / 2;                 // where the x centre of the planet is
 
                     //System.Diagnostics.Debug.WriteLine("Body " + sc.BodyName + " plot at "  + postoplot + " " + bmp.Size + " " + (postoplot.X+imageleft) + "," + (postoplot.Y-bmp.Height/2+imagetop));
                     endpoint = CreateImageAndLabel(pc, bmp, postoplot, bmp.Size, out imagepos, nodelabels, tip);
-                    //System.Diagnostics.Debug.WriteLine("Draw {0} at {1} {2} out {3}", nodelabels[0], postoplot, bmp.Size, imagepos);
-
-                    planetxcentre = imagepos.Left + iconwidtharea + imagewidtharea / 2;                 // where the x centre of the planet is
+                    
+                    System.Diagnostics.Debug.WriteLine($"Draw {nodelabels[0]} at leftmid {postoplot}  out pos {imagepos} centre {imagexcentre}");
 
                     if (sc.HasMaterials && ShowMaterials)
                     {
@@ -354,12 +356,18 @@ namespace EliteDangerousCore
 
                 Size bmpsize = new Size(size.Width, planetsize.Height * nodeheightratio / noderatiodivider);
 
-                endpoint = CreateImageAndLabel(pc, BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Belt"), position, bmpsize, out imagepos, new string[] { sn.OwnName.AppendPrePad(appendlabeltext, Environment.NewLine) }, tip, false);
+                Point postoplot = xiscentre ? new Point(position.X - size.Width / 2, position.Y) : position;
+
+                endpoint = CreateImageAndLabel(pc, BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Belt"), postoplot, bmpsize, out imagepos, new string[] { sn.OwnName.AppendPrePad(appendlabeltext, Environment.NewLine) }, tip, false, backwash);
+
+                imagexcentre = imagepos.Left + imagepos.Width / 2;                 // where the x centre of the belt is
             }
             else
             {
                 if (sn.NodeType == StarScan.ScanNodeType.barycentre)
+                {
                     tip = string.Format("Barycentre of {0}".T(EDCTx.ScanDisplayUserControl_BC), sn.OwnName);
+                }
                 else
                 {
                     tip = sn.FullName + Environment.NewLine + Environment.NewLine + "No scan data available".T(EDCTx.ScanDisplayUserControl_NSD) + Environment.NewLine;
@@ -380,251 +388,15 @@ namespace EliteDangerousCore
                 string nodelabel = sn.CustomName ?? sn.OwnName;
                 nodelabel = nodelabel.AppendPrePad(appendlabeltext,Environment.NewLine);
 
-                endpoint = CreateImageAndLabel(pc, notscanned, position, size, out imagepos, new string[] { nodelabel }, tip, false);
+                Point postoplot = xiscentre ? new Point(position.X - size.Width / 2, position.Y) : position;
+
+                endpoint = CreateImageAndLabel(pc, notscanned, postoplot, size, out imagepos, new string[] { nodelabel }, tip, false, backwash);
+
+                imagexcentre = imagepos.Left + imagepos.Width / 2;                 // where the x centre of the not scanned thing is
             }
 
             //    System.Diagnostics.Debug.WriteLine("Node " + sn.ownname + " " + position + " " + size + " -> "+ endpoint);
             return endpoint;
-        }
-
-        // curmats may be null
-        Point CreateMaterialNodes(List<ExtPictureBox.ImageElement> pc, JournalScan sn, List<MaterialCommodityMicroResource> historicmats, List<MaterialCommodityMicroResource> curmats, 
-                                Point matpos, Size matsize)
-        {
-            Point startpos = matpos;
-            Point maximum = matpos;
-            int noperline = 0;
-
-            string matclicktext = sn.DisplayMaterials(2, historicmats, curmats );
-
-            foreach (KeyValuePair<string, double> sd in sn.Materials)
-            {
-                string tooltip = sn.DisplayMaterial(sd.Key, sd.Value, historicmats, curmats);
-
-                Color fillc = Color.Yellow;
-                string abv = sd.Key.Substring(0, 1);
-
-                MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(sd.Key);
-
-                if (mc != null)
-                {
-                    abv = mc.Shortname;
-                    fillc = mc.Colour;
-                    //System.Diagnostics.Debug.WriteLine("Colour {0} {1}", fillc.ToString(), fillc.GetBrightness());
-
-                    if (HideFullMaterials)                 // check full
-                    {
-                        int? limit = mc.MaterialLimit();
-                        MaterialCommodityMicroResource matnow = curmats?.Find(x=>x.Details == mc);  // allow curmats = null
-
-                        // debug if (matnow != null && mc.shortname == "Fe")  matnow.count = 10000;
-
-                        if (matnow != null && limit != null && matnow.Count >= limit)        // and limit
-                            continue;
-                    }
-
-                    if (ShowOnlyMaterialsRare && mc.IsCommonMaterial)
-                        continue;
-                }
-
-                System.Drawing.Imaging.ColorMap colormap = new System.Drawing.Imaging.ColorMap();
-                colormap.OldColor = Color.White;    // this is the marker colour to replace
-                colormap.NewColor = fillc;
-
-                Bitmap mat = BaseUtils.BitMapHelpers.ReplaceColourInBitmap((Bitmap)BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Material"), new System.Drawing.Imaging.ColorMap[] { colormap });
-
-                BaseUtils.BitMapHelpers.DrawTextCentreIntoBitmap(ref mat, abv, Font, fillc.GetBrightness() > 0.4f ?  Color.Black : Color.White);
-
-                ExtPictureBox.ImageElement ie = new ExtPictureBox.ImageElement(
-                                new Rectangle(matpos.X, matpos.Y, matsize.Width, matsize.Height), mat, tooltip + "\n\n" + "All " + matclicktext, tooltip);
-
-                pc.Add(ie);
-
-                maximum = new Point(Math.Max(maximum.X, matpos.X + matsize.Width), Math.Max(maximum.Y, matpos.Y + matsize.Height));
-
-                if (++noperline == 4)
-                {
-                    matpos = new Point(startpos.X, matpos.Y + matsize.Height + materiallinespacerxy);
-                    noperline = 0;
-                }
-                else
-                    matpos.X += matsize.Width + materiallinespacerxy;
-            }
-
-            return maximum;
-        }
-
-        // Create a signals list
-        Point DrawSignals(List<ExtPictureBox.ImageElement> pc, Point leftmiddle , 
-                                List<JournalFSSSignalDiscovered> listfsd, List<JournalCodexEntry> codex,
-                                int height, int shiftrightifreq)
-        {
-            const int maxicons = 5;
-            int iconsize = height / maxicons;
-            Bitmap bmp = new Bitmap(iconsize, height);
-
-            var signallist = JournalFSSSignalDiscovered.SignalList(listfsd);
-
-            int[] count = new int[]     // in priority order
-            {
-                signallist.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.Station).Count(),
-                signallist.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.Carrier).Count(),
-                signallist.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.Installation || x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.Megaship).Count(), //before the megaship calssification they were counted as installations, so put them here to not lose the count - might need something better in the future like their own icon
-                signallist.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.NotableStellarPhenomena).Count(),
-                signallist.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.ResourceExtraction).Count(),
-                signallist.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.ConflictZone).Count(),
-                signallist.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.USS).Count(),
-                0, // 7, slot for others
-                0, // 8, slot for codex
-            };
-
-            count[7] = signallist.Count - (from x in count select x).Sum();        // set seven to signals left
-
-            int icons;
-            int knockout = 6;       // starting from this signal, work backwards knocking out if required
-            while(true)
-            {
-                icons = (from x in count where x > 0 select 1).Sum();           // how many are set?
-                if (icons > maxicons)        // too many
-                {
-                    count[7] = 1;               // okay set the generic signal one
-                    count[knockout--] = 0;      // and knock this out
-                }
-                else
-                    break;
-            }
-
-            if ( icons < maxicons && codex.Count>0 )        // if we have space for codex, and we have codex, add in
-            {
-                icons++;
-                count[8] = 1;
-            }
-
-            Image[] images = new Image[]
-            {
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Stations"),
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Carriers"),
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Installations"),
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.NSP"),
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RES"),
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.CZ"),
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.USS"),
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Signals"),
-                BaseUtils.Icons.IconSet.GetIcon("Journal.CodexEntry"),
-            };
-
-            int vpos = height / 2 - iconsize * icons / 2;
-
-            using (Graphics g = Graphics.FromImage(bmp))
-            {
-            //    g.Clear(Color.FromArgb(20, 64, 64)); // debug
-                for (int i = 0; i < count.Length; i++)
-                {
-                    if (count[i] > 0)
-                    {
-                        g.DrawImage(images[i], new Rectangle(0, vpos, iconsize, iconsize));
-                        vpos += iconsize;
-                    }
-                }
-            }
-
-            string tip = "";
-
-            var notexpired = signallist.Where(x => !x.TimeRemaining.HasValue || x.ExpiryUTC >= DateTime.UtcNow).ToList();
-            notexpired.Sort(delegate (JournalFSSSignalDiscovered.FSSSignal l, JournalFSSSignalDiscovered.FSSSignal r) { return l.ClassOfSignal.CompareTo(r.ClassOfSignal); });
-            foreach (var sig in notexpired )
-                tip = tip.AppendPrePad(sig.ToString(true), Environment.NewLine);
-
-            var expired = signallist.Where(x => x.TimeRemaining.HasValue && x.ExpiryUTC < DateTime.UtcNow).ToList();
-
-            if (expired.Count > 0)
-            {
-                expired.Sort(delegate (JournalFSSSignalDiscovered.FSSSignal l, JournalFSSSignalDiscovered.FSSSignal r) { return r.ExpiryUTC.CompareTo(l.ExpiryUTC); });
-                tip = tip.AppendPrePad("Expired:".T(EDCTx.UserControlScan_Expired), Environment.NewLine + Environment.NewLine);
-                foreach (var sig in expired)
-                    tip = tip.AppendPrePad(sig.ToString(true), Environment.NewLine);
-            }
-
-            if ( codex.Count>0)
-            {
-                tip = tip.AppendPrePad("Codex".T(EDCTx.ScanDisplayUserControl_Codex) + ":", Environment.NewLine + Environment.NewLine);
-                foreach ( var c in codex)
-                {
-                    tip = tip.AppendPrePad(c.Info(), Environment.NewLine);
-                }
-            }
-
-            if (icons > 4)
-                leftmiddle.X += shiftrightifreq;
-
-            return CreateImageAndLabel(pc, bmp, leftmiddle, bmp.Size, out Rectangle _, new string[] { "" }, tip, false);
-        }
-
-
-        // plot at leftmiddle the image of size, return bot left accounting for label 
-        // label can be null.
-        // returns max point and in imageloc the area drawn
-
-        Point CreateImageAndLabel(List<ExtPictureBox.ImageElement> c, Image i, Point leftmiddle, Size size, out Rectangle imageloc , 
-                                    string[] labels, string ttext, bool imgowned = true)
-        {
-            //System.Diagnostics.Debug.WriteLine("    " + label + " " + postopright + " size " + size + " hoff " + labelhoff + " laby " + (postopright.Y + size.Height + labelhoff));
-
-            ExtPictureBox.ImageElement ie = new ExtPictureBox.ImageElement(new Rectangle(leftmiddle.X, leftmiddle.Y - size.Height / 2, size.Width, size.Height), i, ttext, ttext, imgowned);
-
-            Point max = new Point(leftmiddle.X + size.Width, leftmiddle.Y + size.Height / 2);
-
-            var labelie = new List<ExtPictureBox.ImageElement>();
-            int laboff = 0;
-            int vpos = leftmiddle.Y + size.Height / 2;
-
-            foreach (string label in labels)
-            {
-                if (label.HasChars())
-                {
-                    Font f = Font;
-                    int labcut = 0;
-                    if (label[0] == '_')
-                    {
-                        f = FontUnderlined;
-                        labcut = 1;
-                    }
-
-                    Point labposcenthorz = new Point(leftmiddle.X + size.Width / 2, vpos);
-
-                    ExtPictureBox.ImageElement labie = new ExtPictureBox.ImageElement();
-
-                    using (var frmt = new StringFormat() { Alignment = StringAlignment.Center })
-                    {
-                        labie.TextCentreAutoSize(labposcenthorz, new Size(0, 1000), label.Substring(labcut), f, LabelColor, BackColor, frmt: frmt);
-                    }
-
-                    labelie.Add(labie);
-
-                    if (labie.Location.X < leftmiddle.X)
-                        laboff = Math.Max(laboff, leftmiddle.X - labie.Location.X);
-                    vpos += labie.Location.Height;
-                }
-            }
-
-
-            foreach (var l in labelie)
-            {
-                l.Translate(laboff, 0);
-                c.Add(l);
-                max = new Point(Math.Max(max.X, l.Location.Right), Math.Max(max.Y, l.Location.Bottom));
-                //System.Diagnostics.Debug.WriteLine("Label " + l.Location);
-            }
-
-            ie.Translate(laboff, 0);
-            max = new Point(Math.Max(max.X, ie.Location.Right), Math.Max(max.Y, ie.Location.Bottom));
-            c.Add(ie);
-
-            imageloc = ie.Location;    
-
-            //System.Diagnostics.Debug.WriteLine(".. Max " + max);
-
-            return max;
         }
 
 

@@ -280,6 +280,8 @@
     <Compile Include="SystemDB\SystemsDBGetLists.cs" />
     <Compile Include="SystemDB\SystemsDBGetStars.cs" />
     <Compile Include="DB\UserDatabase.cs" />
+    <Compile Include="SystemDisplay\SystemDisplayDrawParts.cs" />
+    <Compile Include="SystemDisplay\SystemDisplayPlanetTree.cs" />
     <Compile Include="SystemDisplay\SystemDisplayNodes.cs" />
     <Compile Include="SystemDisplay\SystemDisplay.cs" />
     <Compile Include="SystemDisplay\SystemDisplayBarycentres.cs" />
