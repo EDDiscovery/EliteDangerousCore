@@ -861,6 +861,17 @@ SECTION ExobiologyClass
 .OrganicGenus: "Unique Genus Data Logged: ;;N0" @
 .OrganicSpecies: "Unique Species Data Logged: ;;N0" @
 
+SECTION ThargoidsClass
+
+.EncounterWakes: "Thargoid wakes scanned: ;;N0" @
+.EncounterKilled, "Thargoids killed: ;;N0" @
+.EncounterImprint, "Thargoid structures: ;;N0" @
+.EncounterTotal, "Total encounters: ;;N0" @
+.LastSystem, "Last seen in: " @
+.LastTime, "Last seen on: " @
+.LastShip, "Last ship involved: " @
+.ScoutCount, "Thargoid Scouts killed: ;;N0" @
+
 SECTION JournalStoredModules
 
 .at: "< at " @
@@ -1165,8 +1176,6 @@ SECTION JournalScanInfo
 .PFSD: " Premium" @
 .LE: "{0} has {1} level elements." @
 .scanorganics: " Has been scanned for organics." @
-
-.InSystem: "In System: " @
 
 SECTION Services
 

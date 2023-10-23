@@ -293,6 +293,7 @@ namespace EliteDangerousCore
         JournalStatistics_CQC, // CQC
         JournalStatistics_FLEETCARRIER, // Fleetcarrier
         JournalStatistics_Exobiology, // Exobiology
+        JournalStatistics_Thargoids, // Thargoids
         BankAccountClass_Wealth, // Wealth: ; cr;N0
         BankAccountClass_SpentonShips, // Spent on Ships: ; cr;N0
         BankAccountClass_SpentonOutfitting, // Spent on Outfitting: ; cr;N0
@@ -477,8 +478,16 @@ namespace EliteDangerousCore
         ExobiologyClass_OrganicPlanets, // Planets with Organic Life: ;;N0
         ExobiologyClass_OrganicGenus, // Unique Genus Data Logged: ;;N0
         ExobiologyClass_OrganicSpecies, // Unique Species Data Logged: ;;N0
+        ThargoidsClass_EncounterWakes, //Thargoid wakes scanned: ;;N0
+        ThargoidsClass_EncounterKilled, //Thargoids killed: ;;N0
+        ThargoidsClass_EncounterImprint, //Thargoid structures: ;;N0
+        ThargoidsClass_EncounterTotal, //Total encounters: ;;N0
+        ThargoidsClass_LastSystem, //Last seen in: 
+        ThargoidClass_LastTime, //Last seen on: 
+        ThargoidsClass_LastShip, //Last ship involved: 
+        ThargoidsClass_ScoutCount, //Thargoid Scouts killed: ;;N0
 
-    JournalNavRoute_Jumps, // "{0} jumps: "
+        JournalNavRoute_Jumps, // "{0} jumps: "
 
         JournalScan_Autoscanof, // Autoscan of {0}
         JournalScan_Detailedscanof, // Detailed scan of {0}
@@ -904,8 +913,6 @@ namespace EliteDangerousCore
         JournalScanInfo_PFSD, //  Premium
         JournalScanInfo_LE, // {0} has {1} level elements.
         JournalScanInfo_scanorganics, // Has been scanned for organics
-
-        JournalClearImpound_InSystem, //In System:
 
         Services_BridgeCrew, Services_CommodityTrading, Services_TritiumDepot,        // not listed in crew services, but core items
         Services_Refuel, Services_Repair, Services_Rearm, Services_VoucherRedemption, Services_Shipyard, Services_Outfitting, Services_BlackMarket,
