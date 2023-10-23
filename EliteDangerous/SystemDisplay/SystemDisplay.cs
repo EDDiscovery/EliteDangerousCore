@@ -34,6 +34,7 @@ namespace EliteDangerousCore
         public bool ShowPlanetClasses { get; set; } = true;
         public bool ShowStarClasses { get; set; } = true;
         public bool ShowDist { get; set; } = true;
+        public bool NoPlanetStarsOnSameLine { get; set; } = true;
 
         public int ValueLimit { get; set; } = 50000;
 
@@ -290,12 +291,19 @@ namespace EliteDangerousCore
                         starcontrols.InsertRange(0,pcb); // insert at start so drawn under
                     }
                     else
-                    {               // no planets, so just move across and plot another one
-                        leftmiddle = new Point(maxitemspos.X + starfirstplanetspacerx, leftmiddle.Y);
-
-                        if (leftmiddle.X + StarSize.Width > widthavailable) // if too far across..
+                    {
+                        if (NoPlanetStarsOnSameLine)     // no planets, config what to do
                         {
                             maxitemspos = leftmiddle = new Point(leftmargin, maxitemspos.Y + starplanetgroupspacery + StarSize.Height / 2); // move to left at maxy+space+h/2
+                        }
+                        else
+                        {
+                            leftmiddle = new Point(maxitemspos.X + starfirstplanetspacerx, leftmiddle.Y);
+
+                            if (leftmiddle.X + StarSize.Width > widthavailable) // if too far across..
+                            {
+                                maxitemspos = leftmiddle = new Point(leftmargin, maxitemspos.Y + starplanetgroupspacery + StarSize.Height / 2); // move to left at maxy+space+h/2
+                            }
                         }
                     }
 
