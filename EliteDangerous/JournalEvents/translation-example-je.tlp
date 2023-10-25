@@ -628,6 +628,7 @@ SECTION JournalStatistics
 .CQC: "CQC" @
 .FLEETCARRIER: "Fleetcarrier" @
 .Exobiology: "Exobiology" @
+.Thargoids: "Thargoids" @
 
 SECTION BankAccountClass
 

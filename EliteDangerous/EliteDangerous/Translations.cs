@@ -483,7 +483,6 @@ namespace EliteDangerousCore
         ThargoidsClass_LastSystem, //Last seen in: 
         ThargoidsClass_LastTime, //Last seen on: 
         ThargoidsClass_LastShip, //Last ship involved: 
-        ThargoidsClass_ScoutCount, //Thargoid Scouts killed: ;;N0
 
         JournalNavRoute_Jumps, // "{0} jumps: "
 
