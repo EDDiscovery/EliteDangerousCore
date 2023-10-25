@@ -250,8 +250,6 @@ namespace EliteDangerousCore
         JournalEntry_Nearest, // Nearest:
         JournalEntry_Near, // Near:
         JournalEntry_BartenderMaterials, 
-        JournalEntry_ScanOrganicsValue, // Value: ; cr;N0
-        JournalEntry_ScanOrganicsPotentialValue, // Value: ; cr;N0
         JournalEntry_Pilot, //Pilot: 
 
 
@@ -483,7 +481,7 @@ namespace EliteDangerousCore
         ThargoidsClass_EncounterImprint, //Thargoid structures: ;;N0
         ThargoidsClass_EncounterTotal, //Total encounters: ;;N0
         ThargoidsClass_LastSystem, //Last seen in: 
-        ThargoidClass_LastTime, //Last seen on: 
+        ThargoidsClass_LastTime, //Last seen on: 
         ThargoidsClass_LastShip, //Last ship involved: 
         ThargoidsClass_ScoutCount, //Thargoid Scouts killed: ;;N0
 

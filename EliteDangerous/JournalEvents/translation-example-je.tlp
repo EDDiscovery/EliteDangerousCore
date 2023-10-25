@@ -864,13 +864,13 @@ SECTION ExobiologyClass
 SECTION ThargoidsClass
 
 .EncounterWakes: "Thargoid wakes scanned: ;;N0" @
-.EncounterKilled, "Thargoids killed: ;;N0" @
-.EncounterImprint, "Thargoid structures: ;;N0" @
-.EncounterTotal, "Total encounters: ;;N0" @
-.LastSystem, "Last seen in: " @
-.LastTime, "Last seen on: " @
-.LastShip, "Last ship involved: " @
-.ScoutCount, "Thargoid Scouts killed: ;;N0" @
+.EncounterKilled: "Thargoids killed: ;;N0" @
+.EncounterImprint: "Thargoid structures: ;;N0" @
+.EncounterTotal: "Total encounters: ;;N0" @
+.LastSystem: "Last seen in: " @
+.LastTime: "Last seen on: " @
+.LastShip: "Last ship involved: " @
+.ScoutCount: "Thargoid Scouts killed: ;;N0" @
 
 SECTION JournalStoredModules
 
@@ -908,8 +908,6 @@ SECTION JournalApproachBody
 SECTION JournalEntry
 
 .BartenderMaterials: "Bartender Materials" @
-.JournalEntry_ScanOrganicsValue: "Value: ; cr;N0" @
-.JournalEntry_ScanOrganicsPotentialValue: Value: ; cr;N0" @
 .TME: "{0} days {1} hours {2} minutes" @
 .Hyperspace: "Hyperspace" @
 .Supercruise: "Supercruise" @

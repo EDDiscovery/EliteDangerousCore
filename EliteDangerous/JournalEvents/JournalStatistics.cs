@@ -41,6 +41,8 @@ namespace EliteDangerousCore.JournalEvents
             Exobiology = evt["Exobiology"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("Exobiology")?.ToObject<ExobiologyClass>() ?? new ExobiologyClass();
             Thargoids = evt["TG_ENCOUNTERS"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("TGENCOUNTER")?.ToObjectQ<ThargoidsClass>() ?? new ThargoidsClass();
 
+            //if (evt["TG_ENCOUNTERS"] != null) System.Diagnostics.Debug.WriteLine($"Thargoid read {Thargoids.Format("  ")}");
+
             FLEETCARRIER = evt["FLEETCARRIER"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("FLEETCARRIER")?.ToObject<FLEETCARRIERClass>(true,true) ?? new FLEETCARRIERClass();
             JToken dt = evt["FLEETCARRIER"].I("FLEETCARRIER_DISTANCE_TRAVELLED");   // this is a classic frontier eff up
             if ( dt !=null)
@@ -623,13 +625,13 @@ public string Format(string frontline = "    ")
         public class ThargoidsClass
         {
             public int WAKES { get; set; }
-            public int? KILLED { get; set; }   //from patch 17 on, seems to replace scout count
+            public int? KILLED { get; set; }   //from patch 17 on, seems to replace scout count. May be null
             public int IMPRINT { get; set; }
             public int TOTAL { get; set; }
             public string TOTALLASTSYSTEM { get; set; }
             public string TOTALLASTTIMESTAMP { get; set; }
             public string TOTALLASTSHIP { get; set; }
-            public int? TGSCOUTCOUNT { get; set; } //up to patch 17, seems to be replaced by encounter killed
+            public int? TGSCOUTCOUNT { get; set; } //up to patch 17, seems to be replaced by encounter killed. May be null
 
             public string Format(string frontline = "    ")
             {
@@ -638,9 +640,9 @@ public string Format(string frontline = "    ")
                     "Thargoids killed: ;;N0".T(EDCTx.ThargoidsClass_EncounterKilled), KILLED,
                     "Thargoid structures: ;;N0".T(EDCTx.ThargoidsClass_EncounterImprint), IMPRINT,
                     "Total encounters: ;;N0".T(EDCTx.ThargoidsClass_EncounterTotal), TOTAL,
-                    "Last seen in: ;;No".T(EDCTx.ThargoidsClass_LastSystem), TOTALLASTSYSTEM,
-                    "Last seen on: ;;N0".T(EDCTx.ThargoidClass_LastTime), TOTALLASTTIMESTAMP,
-                    "Last ship involved: ;;N0".T(EDCTx.ThargoidsClass_LastShip), TOTALLASTSHIP,
+                    "Last seen in: ".T(EDCTx.ThargoidsClass_LastSystem), TOTALLASTSYSTEM,
+                    "Last seen on: ".T(EDCTx.ThargoidsClass_LastTime), TOTALLASTTIMESTAMP,
+                    "Last ship involved: ".T(EDCTx.ThargoidsClass_LastShip), TOTALLASTSHIP,
                     "Thargoid Scouts killed: ;;N0".T(EDCTx.ThargoidsClass_ScoutCount), TGSCOUTCOUNT);
             }
         }

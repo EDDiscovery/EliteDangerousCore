@@ -393,11 +393,11 @@ namespace EliteDangerousCore
 
         private void StatisticsThread()
         {
-            System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.TickCountLap("JSC", true)} Stats table read start");
+            System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.TickCountLap("JSC", true)} Stats table read start for commander {cmdrid}");
 
             var jlist = JournalEntry.GetAll(cmdrid, ids: events, startdateutc: start, enddateutc: end, cancelRequested:()=> { return Exit; });
 
-            System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.TickCountLap("JSC")} Stats table read end");
+            System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.TickCountLap("JSC")} Stats table read end - no {jlist.Length}");
 
             JournalStats stats = new JournalStats();
 

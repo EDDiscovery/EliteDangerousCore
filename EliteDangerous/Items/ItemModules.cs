@@ -108,7 +108,7 @@ namespace EliteDangerousCore
         {
             ifd = ifd.ToLowerInvariant();
             string[] vlist = new[] { "bobble", "decal", "enginecustomisation", "nameplate", "paintjob",
-                                    "shipkit", "weaponcustomisation", "voicepack" , "lights", "spoiler" , "wings", "bumper "};
+                                    "shipkit", "weaponcustomisation", "voicepack" , "lights", "spoiler" , "wings", "bumper"};
             return Array.Find(vlist, x => ifd.Contains(x)) != null;
         }
 
@@ -138,7 +138,8 @@ namespace EliteDangerousCore
             public override string ToString()
             {
                 string i = Info == null ? "null" : $"\"{Info}\"";
-                string mt = ModType == VanityType ? "VanityType" : ModType == UnknownType ? "UnknownType" : ModType == CockpitType ? "CockpitType" : ModType == CargoBayDoorType ? "CargoBayDoorType" : ModType == WearAndTearType ? "WearAndTearType" : $"\"{ModType}\"";
+                string mt = ModType == VanityType ? "Vanity Item" : ModType == UnknownType ? "Unknown Type" : ModType == CockpitType ? "Cockpit" : 
+                            ModType == CargoBayDoorType ? "Cargo Bay Door " : ModType == WearAndTearType ? "Wear And Tear " : $"\"{ModType}\"";
                 return $"{ModuleID},{Mass:0.##},{Power:0.##},{i},\"{ModName}\",{mt}";
                 //return $"{ModuleID}, {Mass:0.##}, {Power:0.##}, {i}, \"{ModName}\", {mt}";
             }
@@ -356,6 +357,9 @@ namespace EliteDangerousCore
             { "asp_shipkit2raider_bumper3", new ShipModule(-1,0,0,null,"Asp Shipkit 2 Raider Bumper 3",VanityType) },
             { "asp_shipkit2raider_tail2", new ShipModule(-1,0,0,null,"Asp Shipkit 2 Raider Tail 2",VanityType) },
             { "asp_shipkit2raider_wings2", new ShipModule(-1,0,0,null,"Asp Shipkit 2 Raider Wings 2",VanityType) },
+            { "asp_science1_spoiler1", new ShipModule(-1,0, "Asp Science 1 Spoiler 1", VanityType ) },
+            { "asp_science1_wings1", new ShipModule(-1,0, "Asp Science 1 Wings 1", VanityType ) },
+            { "asp_science1_bumper1", new ShipModule(-1,0, "Asp Science 1 Bumper 1", VanityType ) },
             { "bobble_ap2_textexclam", new ShipModule(-1,0,0,null,"Bobble Ap 2 Text !",VanityType) },
             { "bobble_ap2_texte", new ShipModule(-1,0,0,null,"Bobble Ap 2 Text e",VanityType) },
             { "bobble_ap2_textl", new ShipModule(-1,0,0,null,"Bobble Ap 2 Text l",VanityType) },

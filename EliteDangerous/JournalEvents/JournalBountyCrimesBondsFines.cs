@@ -472,7 +472,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Ship: ".T(EDCTx.JournalEntry_Ship), ShipType_Localised, "In system: ".T(EDCTx.JournalClearImpound_InSystem), System);
+            info = BaseUtils.FieldBuilder.Build("Ship: ".T(EDCTx.JournalEntry_Ship), ShipType_Localised, "< in system ".T(EDCTx.JournalLocOrJump_insystem), System);
             detailed = "";
         }
     }
