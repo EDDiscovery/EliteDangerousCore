@@ -39,6 +39,7 @@ namespace EliteDangerousCore.JournalEvents
             MaterialTraderStats = evt["Material_Trader_Stats"]?.RenameObjectFieldsUnderscores()?.ToObjectQ<MaterialTraderStatsClass>() ?? new MaterialTraderStatsClass();
             CQC = evt["CQC"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("CQC")?.ToObjectQ<CQCClass>() ?? new CQCClass();
             Exobiology = evt["Exobiology"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("Exobiology")?.ToObject<ExobiologyClass>() ?? new ExobiologyClass();
+            Thargoids = evt["TG_ENCOUNTERS"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("TGENCOUNTER")?.ToObjectQ<ThargoidsClass>() ?? new ThargoidsClass();
 
             FLEETCARRIER = evt["FLEETCARRIER"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("FLEETCARRIER")?.ToObject<FLEETCARRIERClass>(true,true) ?? new FLEETCARRIERClass();
             JToken dt = evt["FLEETCARRIER"].I("FLEETCARRIER_DISTANCE_TRAVELLED");   // this is a classic frontier eff up
@@ -53,7 +54,7 @@ namespace EliteDangerousCore.JournalEvents
                 }
                 else
                     FLEETCARRIER.DISTANCETRAVELLED = dt.Double(0);
-            }
+            }            
         }
 
         public BankAccountClass BankAccount { get; set; }
@@ -72,6 +73,7 @@ namespace EliteDangerousCore.JournalEvents
         public CQCClass CQC { get; set; }
         public FLEETCARRIERClass FLEETCARRIER { get; set; }
         public ExobiologyClass Exobiology { get; set; }
+        public ThargoidsClass Thargoids { get; set; }
 
         public override void FillInformation(out string info, out string detailed) 
         {
@@ -92,7 +94,8 @@ namespace EliteDangerousCore.JournalEvents
                         "Materials and Commodity Trading".T(EDCTx.JournalStatistics_MaterialsandCommodityTrading) + Environment.NewLine + MaterialTraderStats?.Format() + Environment.NewLine +
                         "CQC".T(EDCTx.JournalStatistics_CQC) + Environment.NewLine + CQC?.Format() + Environment.NewLine +
                         "Fleetcarrier".T(EDCTx.JournalStatistics_FLEETCARRIER) + Environment.NewLine + FLEETCARRIER?.Format() + Environment.NewLine +
-                        "Exobiology".T(EDCTx.JournalStatistics_Exobiology) + Environment.NewLine + Exobiology.Format();
+                        "Exobiology".T(EDCTx.JournalStatistics_Exobiology) + Environment.NewLine + Exobiology.Format() + Environment.NewLine +
+                        "Thargoids".T(EDCTx.JournalStatistics_Thargoids) + Environment.NewLine + Thargoids.Format();
         }
 
         public void Ledger(Ledger mcl)
@@ -614,6 +617,31 @@ public string Format(string frontline = "    ")
                     "Planets with Organic Life: ;;N0".T(EDCTx.ExobiologyClass_OrganicPlanets), OrganicPlanets,
                     "Unique Genus Data Logged: ;;N0".T(EDCTx.ExobiologyClass_OrganicGenus), OrganicGenus,
                     "Unique Species Data Logged: ;;N0".T(EDCTx.ExobiologyClass_OrganicSpecies), OrganicSpecies);
+            }
+        }
+
+        public class ThargoidsClass
+        {
+            public int WAKES { get; set; }
+            public int? KILLED { get; set; }   //from patch 17 on, seems to replace scout count
+            public int IMPRINT { get; set; }
+            public int TOTAL { get; set; }
+            public string TOTALLASTSYSTEM { get; set; }
+            public string TOTALLASTTIMESTAMP { get; set; }
+            public string TOTALLASTSHIP { get; set; }
+            public int? TGSCOUTCOUNT { get; set; } //up to patch 17, seems to be replaced by encounter killed
+
+            public string Format(string frontline = "    ")
+            {
+                return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
+                    "Thargoid wakes scanned: ;;N0".T(EDCTx.ThargoidsClass_EncounterWakes), WAKES,
+                    "Thargoids killed: ;;N0".T(EDCTx.ThargoidsClass_EncounterKilled), KILLED,
+                    "Thargoid structures: ;;N0".T(EDCTx.ThargoidsClass_EncounterImprint), IMPRINT,
+                    "Total encounters: ;;N0".T(EDCTx.ThargoidsClass_EncounterTotal), TOTAL,
+                    "Last seen in: ;;No".T(EDCTx.ThargoidsClass_LastSystem), TOTALLASTSYSTEM,
+                    "Last seen on: ;;N0".T(EDCTx.ThargoidClass_LastTime), TOTALLASTTIMESTAMP,
+                    "Last ship involved: ;;N0".T(EDCTx.ThargoidsClass_LastShip), TOTALLASTSHIP,
+                    "Thargoid Scouts killed: ;;N0".T(EDCTx.ThargoidsClass_ScoutCount), TGSCOUTCOUNT);
             }
         }
     }

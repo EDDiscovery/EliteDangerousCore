@@ -460,6 +460,7 @@ namespace EliteDangerousCore.JournalEvents
             ShipId = evt["ShipID"].ULong();
             MarketID = evt["MarketID"].Long();
             ShipMarketID = evt["ShipMarketID"].Long();
+            System = evt["System"].StrNull();
         }
 
         public string ShipType { get; set; }
@@ -467,10 +468,11 @@ namespace EliteDangerousCore.JournalEvents
         public ulong ShipId { get; set; }
         public long ShipMarketID { get; set; }
         public long MarketID { get; set; }
+        public string System { get; set; }  //patch 17, so may be null
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Ship: ".T(EDCTx.JournalEntry_Ship), ShipType_Localised);
+            info = BaseUtils.FieldBuilder.Build("Ship: ".T(EDCTx.JournalEntry_Ship), ShipType_Localised, "In system: ".T(EDCTx.JournalClearImpound_InSystem), System);
             detailed = "";
         }
     }

@@ -293,6 +293,7 @@ namespace EliteDangerousCore
         JournalStatistics_CQC, // CQC
         JournalStatistics_FLEETCARRIER, // Fleetcarrier
         JournalStatistics_Exobiology, // Exobiology
+        JournalStatistics_Thargoids, // Thargoids
         BankAccountClass_Wealth, // Wealth: ; cr;N0
         BankAccountClass_SpentonShips, // Spent on Ships: ; cr;N0
         BankAccountClass_SpentonOutfitting, // Spent on Outfitting: ; cr;N0
@@ -477,8 +478,16 @@ namespace EliteDangerousCore
         ExobiologyClass_OrganicPlanets, // Planets with Organic Life: ;;N0
         ExobiologyClass_OrganicGenus, // Unique Genus Data Logged: ;;N0
         ExobiologyClass_OrganicSpecies, // Unique Species Data Logged: ;;N0
+        ThargoidsClass_EncounterWakes, //Thargoid wakes scanned: ;;N0
+        ThargoidsClass_EncounterKilled, //Thargoids killed: ;;N0
+        ThargoidsClass_EncounterImprint, //Thargoid structures: ;;N0
+        ThargoidsClass_EncounterTotal, //Total encounters: ;;N0
+        ThargoidsClass_LastSystem, //Last seen in: 
+        ThargoidClass_LastTime, //Last seen on: 
+        ThargoidsClass_LastShip, //Last ship involved: 
+        ThargoidsClass_ScoutCount, //Thargoid Scouts killed: ;;N0
 
-    JournalNavRoute_Jumps, // "{0} jumps: "
+        JournalNavRoute_Jumps, // "{0} jumps: "
 
         JournalScan_Autoscanof, // Autoscan of {0}
         JournalScan_Detailedscanof, // Detailed scan of {0}
