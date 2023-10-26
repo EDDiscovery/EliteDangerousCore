@@ -43,7 +43,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             info = StarSystem;
             if (Wanted == true)
-                info += "You are wanted.".T(EDCTx.JournalSuperCruiseEntry_Wanted);
+                info += ", You are wanted.".T(EDCTx.JournalSuperCruiseEntry_Wanted);
             detailed = "";
         }
 
