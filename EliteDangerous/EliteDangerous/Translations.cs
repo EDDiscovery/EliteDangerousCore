@@ -720,6 +720,7 @@ namespace EliteDangerousCore
 
         JournalSupercruiseExit_in, // < in
         JournalSupercruiseExit_At, // At
+        JournalSuperCruiseEntry_Wanted, //You are wanted.
 
         JournalReceiveText_From, // From:
         JournalReceiveText_Text, //  Texts

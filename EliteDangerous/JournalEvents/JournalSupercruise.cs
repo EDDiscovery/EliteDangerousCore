@@ -28,6 +28,7 @@ namespace EliteDangerousCore.JournalEvents
             SystemAddress = evt["SystemAddress"].LongNull();
             Taxi = evt["Taxi"].BoolNull();
             Multicrew = evt["Multicrew"].BoolNull();
+            Wanted = evt["Wanted"].BoolNull();
 
         }
 
@@ -37,9 +38,12 @@ namespace EliteDangerousCore.JournalEvents
         public bool? Taxi { get; set; }             //4.0 alpha 4
         public bool? Multicrew { get; set; }
 
+        public bool? Wanted { get; set; }   //seen in patch 17, but might be older
         public override void FillInformation(out string info, out string detailed)
         {
             info = StarSystem;
+            if (Wanted == true)
+                info += "You are wanted.".T(EDCTx.JournalSuperCruiseEntry_Wanted);
             detailed = "";
         }
 
