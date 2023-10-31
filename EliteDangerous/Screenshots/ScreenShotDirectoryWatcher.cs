@@ -105,9 +105,16 @@ namespace EliteDangerousCore.ScreenShots
                 string ssname = ss.Filename.StartsWith("\\ED_Pictures\\") ? ss.Filename.Substring(13) : ss.Filename;
                 invokeonui?.Invoke(cp => 
                     {
-                        bool leftinplace = ProcessScreenshot(ss.Filename, ss, cp);      
-                        if (leftinplace)
-                            journalScreenshotted[ssname] = ss;      // if we leave the file behind, tell the file watcher we have done it
+                        try
+                        {
+                            bool leftinplace = ProcessScreenshot(ss.Filename, ss, cp);      
+                            if (leftinplace)
+                                journalScreenshotted[ssname] = ss;      // if we leave the file behind, tell the file watcher we have done it
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Trace.WriteLine($"Error converting screenshot: {ex.Message}\n{ex.StackTrace}");
+                        }
                     });
             }
         }
