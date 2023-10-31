@@ -212,11 +212,18 @@ namespace EliteDangerousCore.ScreenShots
             }
             else
             {
-                System.Diagnostics.Debug.Assert(Application.MessageLoop);
-
-                if (AutoConvert)
+                try
                 {
-                    cb(converter);                                  // call the processor the system wants. Function needs an image converter.  Back to processScreenshot
+                    System.Diagnostics.Debug.Assert(Application.MessageLoop);
+    
+                    if (AutoConvert)
+                    {
+                        cb(converter);                                  // call the processor the system wants. Function needs an image converter.  Back to processScreenshot
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Trace.WriteLine($"Error converting screenshot: {ex.Message}\n{ex.StackTrace}");
                 }
             }
         }
