@@ -49,6 +49,7 @@ namespace EliteDangerousCore
         int GridID { get; set; }
         long? SystemAddress { get; set; }
         long? EDSMID { get; set; }      // if sourced from EDSM DB or web
+        object Tag { get; set; }        // Aux data on this isystem. Normally a string containing information on it
 
         double Distance(ISystemBase other);
         double Distance(double x, double y, double z);

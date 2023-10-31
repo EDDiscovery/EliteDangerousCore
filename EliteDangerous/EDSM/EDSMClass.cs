@@ -84,7 +84,6 @@ namespace EliteDangerousCore.EDSM
 
             query += "] } ";
 
-            MimeType = "application/json; charset=utf-8";
             var response = RequestPost("{ \"data\": " + query + " }", "api-v1/submit-distances", handleException: true);
             if (response.Error)
                 return null;
@@ -327,8 +326,7 @@ namespace EliteDangerousCore.EDSM
                 query += "&systemId=" + edsmid;
             }
 
-            MimeType = "application/x-www-form-urlencoded";
-            var response = RequestPost(query, "api-logs-v1/set-comment", handleException: true);
+            var response = RequestPost(query, "api-logs-v1/set-comment", handleException: true, contenttype: "application/x-www-form-urlencoded");
 
             if (response.Error)
                 return null;
@@ -1180,8 +1178,7 @@ namespace EliteDangerousCore.EDSM
 
             // System.Diagnostics.Debug.WriteLine("EDSM Send " + message.ToString());
 
-            MimeType = "application/x-www-form-urlencoded";
-            var response = RequestPost(postdata, "api-journal-v1", handleException: true);
+            var response = RequestPost(postdata, "api-journal-v1", handleException: true, contenttype: "application/x-www-form-urlencoded");
 
             if (response.Error)
             {

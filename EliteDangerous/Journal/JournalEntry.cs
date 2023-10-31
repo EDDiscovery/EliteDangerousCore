@@ -529,12 +529,8 @@ namespace EliteDangerousCore
                 JournalEntryTypeAttribute typeattrib = type.GetCustomAttributes(false).OfType<JournalEntryTypeAttribute>().FirstOrDefault();
                 if (typeattrib != null)
                 {
-                    System.Reflection.ConstructorInfo ctor = type.GetConstructors().First();        // this is freaking deep c# here.
-                    var r = ctor.GetParameters();
-                    System.Diagnostics.Debug.Assert(r.Count() == 1);
-                    var r0t = r[0].GetType();
-                    System.Diagnostics.Debug.Assert(r[0].ParameterType.Name == "JObject");      // checking we are picking the correct ctor
-                    actlist[typeattrib.EntryType.ToString()] = BaseUtils.ObjectActivator.GetActivator<JournalEntry>(ctor);
+                    var jobjectconstructor = type.GetConstructors().Where(x => x.GetParameters().Length == 1 && x.GetParameters()[0].ParameterType.Name == "JObject").First();
+                    actlist[typeattrib.EntryType.ToString()] = BaseUtils.ObjectActivator.GetActivator<JournalEntry>(jobjectconstructor);
                  //   System.Diagnostics.Debug.WriteLine("Activator " + typeattrib.EntryType.ToString());
                 }
             }

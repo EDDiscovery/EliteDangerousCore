@@ -44,6 +44,8 @@ namespace EliteDangerousCore
         public long? SystemAddress { get; set; }
         public long? EDSMID { get; set; }
 
+        public object Tag { get; set; }
+
         public SystemClassBase()
         {
             Xi = int.MinValue;

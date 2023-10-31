@@ -42,7 +42,6 @@ namespace EliteDangerousCore
         public bool HasDemand { get { return demand > 1; } }        // 1 because lots of them are marked as 1, as in, they want it, but not much
 
         public int buyPrice { get; private set; }
-
         public int sellPrice { get; private set; }
         public int meanPrice { get; private set; }
         public int demandBracket { get; private set; }
@@ -63,12 +62,18 @@ namespace EliteDangerousCore
         [JsonIgnore]
         public int CargoCarried { get; set; }                  // NOT in Frontier data, cargo currently carried for this item
 
-        public enum ReaderType { Market, CAPI, FCMaterials }
+        public CCommodities()
+        {
+        }
+
+        public enum ReaderType { Market, CAPI, FCMaterials, Spansh }
         public CCommodities(JObject jo, ReaderType ty )
         {
             if (ty == ReaderType.Market)
                 FromJsonMarket(jo);
             else if (ty == ReaderType.CAPI)
+                FromJsonCAPI(jo);
+            else if (ty == ReaderType.Spansh)
                 FromJsonCAPI(jo);
             else
                 FromJsonFCMaterials(jo);
@@ -240,12 +245,57 @@ namespace EliteDangerousCore
             }
         }
 
+        public bool FromJsonSpansh(JObject jo)
+        {
+            try
+            {
+                string spanshname = jo["commodity"].Str();
+                
+                var mcd = MaterialCommodityMicroResourceType.GetByEnglishName(spanshname);
+                if ( mcd != null )
+                {
+                    fdname = fdname_unnormalised = mcd.FDName;
+                    locName = mcd.Name;
+                    category = mcd.Type.ToString();
+                    loccategory = mcd.TranslatedType;
+                }
+                else
+                {
+                    fdname = fdname_unnormalised = locName = spanshname;
+                    loccategory = category = jo["category"].Str();
+                }
+
+                legality = "";
+
+                meanPrice = buyPrice = jo["buy_price"].Int();
+                demandBracket = 0;
+                stockBracket = 0;
+
+                sellPrice = jo["sell_price"].Int();
+                stock = jo["supply"].Int();
+                demand = jo["demand"].Int();
+                this.statusFlags = new List<string>(); // not present
+                //System.Diagnostics.Debug.WriteLine("Market field fd:'{0}' loc:'{1}' of type '{2}' '{3}'", fdname, locName, category, loccategory);
+
+                ComparisionLR = ComparisionRL = "";
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public override string ToString()
         {
-            return string.Format("{0} : {1} Buy {2} Sell {3} Mean {4}" + System.Environment.NewLine +
-                                 "Stock {5} Demand {6} " + System.Environment.NewLine + 
+            return string.Format("{0}: {1} Buy {2} Sell {3} Mean {4}" + System.Environment.NewLine +
+                                 "Stock {5} Demand {6} " + System.Environment.NewLine +
                                  "Stock Bracket {6} Demand Bracket {7}"
-                                 , loccategory, locName, buyPrice, sellPrice, meanPrice, stock, demand, stockBracket, demandBracket );
+                                 , loccategory, locName, buyPrice, sellPrice, meanPrice, stock, demand, stockBracket, demandBracket);
+        }
+        public string ToStringShort()
+        {
+            return string.Format("{0}: {1} Buy {2} Sell {3} Stock {4} Demand {5}" , loccategory, locName, buyPrice, sellPrice, stock, demand);
         }
 
         public static void Sort(List<CCommodities> list)

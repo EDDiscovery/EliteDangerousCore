@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+using BaseUtils;
 using EliteDangerousCore.JournalEvents;
 using QuickJSON;
 using System;
@@ -33,6 +34,7 @@ namespace EliteDangerousCore.Spansh
 
         public static TimeSpan MaxCacheAge = new TimeSpan(7, 0, 0, 0);
 
+        #region Browser
         static public void LaunchBrowserForSystem(long sysaddr)
         {
             BaseUtils.BrowserInfo.LaunchBrowser(RootURL + "system/" + sysaddr.ToStringInvariant());
@@ -51,6 +53,14 @@ namespace EliteDangerousCore.Spansh
         {
             BaseUtils.BrowserInfo.LaunchBrowser(RootURL + "body/" + fullbodyid.ToStringInvariant());
         }
+        static public void LaunchBrowserForSystem(string name)
+        {
+            //tbd
+        }
+
+        #endregion
+
+        #region Systems
 
         public JObject GetSystemNames(string name)
         {
@@ -205,7 +215,6 @@ namespace EliteDangerousCore.Spansh
                 {
                     List<Tuple<ISystem, double>> systems = new List<Tuple<ISystem, double>>();
 
-                    int? count = json["Count"].IntNull();
                     foreach (JToken list in json["results"].Array())    // array of objects
                     {
                         JObject sysobj = list.Object();
@@ -262,6 +271,10 @@ namespace EliteDangerousCore.Spansh
 
             return null;
         }
+
+        #endregion
+
+        #region Body list
 
         // return dump of bodies in journal scan format
         // use https://spansh.co.uk/api/dump/<systemid64> if we have one
@@ -541,6 +554,8 @@ namespace EliteDangerousCore.Spansh
             return null;
         }
 
+        // return list, if from cache, if web lookup occurred
+
         public async static System.Threading.Tasks.Task<Tuple<List<JournalScan>, bool>> GetBodiesListAsync(ISystem sys, bool weblookup = true) 
         {
             return await System.Threading.Tasks.Task.Run(() =>
@@ -757,6 +772,269 @@ namespace EliteDangerousCore.Spansh
             { "Water world", EDPlanet.Water_world },
         };
 
+        #endregion
+
+        #region Routing
+
+        // return SPANSH GUID search ID
+        public string RequestRoadToRiches( string from, string to, int jumprange, int radius, int maxsystems, bool usemappingvalue, bool avoidthargoids, bool loop, int maxlstoarrival, int minscanvalue)
+        {
+            string query = "radius=" + radius.ToStringInvariant() +
+                           "&range=" + jumprange.ToStringInvariant() +
+                           "&from=" + HttpUtility.UrlEncode(from) +
+                           "&to=" + HttpUtility.UrlEncode(to) +
+                           "&max_results=" + maxsystems.ToStringInvariant() +
+                           "&max_distance=" + maxlstoarrival.ToStringInvariant() +
+                           "&min_value=" + minscanvalue.ToStringInvariant() +
+                           "&use_mapping_value=" + usemappingvalue.ToStringIntValue() +
+                           "&avoid_thargoids=" + avoidthargoids.ToStringIntValue() +
+                           "&loop=" + loop.ToStringIntValue();
+
+            var response = RequestPost(query, "riches/route", handleException: true, contenttype: "application/x-www-form-urlencoded; charset=UTF-8");
+
+            if (response.Error)
+                return null;
+
+            var data = response.Body;
+            var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
+            var jobname = json?["job"].StrNull();
+            return jobname;
+        }
+
+        // null means bad. Else it will return false=still pending, true = result got.
+        public Tuple<bool,JToken> TryGetResponse(string jobname)
+        {
+            var response = RequestGet( "results/" + jobname , handleException: true);
+
+            if (response.Error)
+                return null;
+
+            var data = response.Body;
+
+
+            var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
+
+            System.Diagnostics.Debug.WriteLine($"Spansh returns {json?.ToString(true)}");
+            BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshresponse.txt", json?.ToString(true));
+
+            if ( json != null )
+            {
+                string status = json["status"].StrNull();
+                if ( status == "queued")
+                {
+                    return new Tuple<bool, JToken>(false, json);
+                }
+                else if ( status == "ok")
+                {
+                    return new Tuple<bool, JToken>(true, json);
+                }
+            }
+
+            return null;
+        }
+
+        public Tuple<bool,List<ISystem>> TryGetRoadToRiches(string jobname)
+        {
+            var res = TryGetResponse(jobname);
+
+            if (res == null)
+                return null;
+
+            if (res.Item1 == true)
+            {
+                List<ISystem> syslist = new List<ISystem>();
+
+                JArray bodies = res.Item2["result"].Array();
+
+                foreach( var body in bodies.EmptyIfNull())
+                {
+                    if ( body is JObject)
+                    {
+                        long id64 = body["id64"].Str("0").InvariantParseLong(0);
+                        string name = body["name"].Str();
+                        double x = body["x"].Double();
+                        double y = body["y"].Double();
+                        double z = body["z"].Double();
+                        int jumps = body["jumps"].Int();
+                        string notes = "Jump:" + jumps.ToString();
+                        foreach( var ib in body["bodies"].EmptyIfNull())
+                        {
+                            string fb = FieldBuilder.Build("Name:", ib["name"].StrNull(), "Type:", ib["type"].StrNull(), "Subtype:", ib["subtype"].StrNull(),
+                                                       "Distance:;ls;N1", ib["distance_to_arrival"].DoubleNull(), 
+                                                       "Map Value:", ib["estimated_mapping_value"].LongNull(), "Scan Value:", ib["estimated_scan_value"].LongNull());
+
+                            notes = notes.AppendPrePad(fb, Environment.NewLine);
+                        }
+
+                        var sc = new SystemClass(name, id64, x, y, z, SystemSource.FromSpansh);
+                        sc.Tag = notes;
+                    }
+                }
+
+                return new Tuple<bool, List<ISystem>>(true, syslist);
+            }
+            else
+                return new Tuple<bool, List<ISystem>>(false, null);
+        }
+
+        #endregion
+
+
+        #region Stations
+
+        public List<StationInfo> GetStations(string name, int distance, bool fleetcarriers = false)
+        {
+            JObject query = new JObject()
+            {
+                ["filters"] = new JObject()
+                {
+                    ["distance"] = new JObject()
+                    {
+                        ["min"] = 0,
+                        ["max"] = distance,
+                    }
+                },
+                ["sort"] = new JArray()
+                {
+                    new JObject()
+                    {
+                        ["distance"] = new JObject()
+                        {
+                            ["direction"] = "asc"
+                        }
+                    }
+                },
+                ["reference_system"] = name,
+                ["size"] = MaxReturnSize, // this appears the max, oct 23
+            };
+
+            //if ( haslargepad.HasValue )
+            //{
+            //    query["filters"] = new JObject
+            //    {
+            //        ["has_large_pad"] = new JObject()
+            //        {
+            //            ["value"] = haslargepad.Value,
+            //        }
+            //    };
+            //}
+
+            return IssueStationQuery(query, fleetcarriers);
+         }
+
+          private List<StationInfo> IssueStationQuery(JObject query, bool fleetcarriers)
+          {
+            System.Diagnostics.Debug.WriteLine($"Spansh post data for station {query.ToString()}");
+
+            var response = RequestPost(query.ToString(), "stations/search", handleException: true);
+
+            if (response.Error)
+                return null;
+
+            var data = response.Body;
+            
+            var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
+
+            System.Diagnostics.Debug.WriteLine($"Spansh returns {json?.ToString(true)}");
+            BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshresponse.txt", json?.ToString(true));
+
+            if (json != null && json["results"] != null)
+            {
+                // structure tested oct 23
+
+                try
+                {
+                    List<StationInfo> stationinfo = new List<StationInfo>();
+
+                    foreach (JToken list in json["results"].Array())    // array of objects
+                    {
+                        JObject evt = list.Object();
+                        if (evt != null)
+                        {
+                            DateTime updatedat = evt["updated_at"].DateTimeUTC();
+                            StationInfo station = new StationInfo(updatedat);
+
+                            station.Faction = evt["controlling_minor_faction"].StrNull();
+                         
+                            if (station.Faction == "FleetCarrier" && !fleetcarriers)
+                                continue;
+
+
+                            station.DistanceRefSystem =  evt["distance"].Double();      // system info at base of object
+                            station.System = new SystemClass(evt["system_name"].Str(), evt["system_id64"].LongNull(), evt["system_x"].Double(), evt["system_y"].Double(), evt["system_z"].Double(), SystemSource.FromSpansh);
+
+                            station.BodyName = evt["body_name"].StrNull();
+                            station.BodyType = evt["body_type"].StrNull();
+                            station.BodySubType = evt["body_subtype"].StrNull();
+                            station.DistanceToArrival = evt["distance_to_arrival"].Double();
+
+                            station.IsPlanetary = evt["is_planetary"].Bool();
+                            station.Latitude = evt["latitude"].DoubleNull();
+                            station.Longitude  = evt["longitude"].DoubleNull();
+
+                            station.StationName = evt["name"].StrNull();
+                            station.StationType = evt["type"].StrNull();
+                            station.StationState = evt["power_state"].StrNull();
+
+                            station.StarSystem = station.System.Name;
+                            station.SystemAddress = station.System.SystemAddress;
+                            station.MarketID = evt["market_id"].LongNull();
+                            station.HasMarket = evt["has_market"].Bool();
+                            station.Allegiance = evt["allegiance"].StrNull();
+                            station.Economy = station.Economy_Localised = evt["primary_economy"].StrNull();
+                            station.EconomyList = evt["economies"]?.ToObject<JournalDocked.Economies[]>(checkcustomattr:true);
+                            foreach (var x in station.EconomyList.EmptyIfNull())
+                            {
+                                x.Name_Localised = x.Name;
+                                x.Proportion /= 100;
+                            }
+                            station.Government = station.Government_Localised = evt["government"].StrNull();
+
+                            var ss = evt["services"].Array();
+                            if ( ss != null)
+                            {
+                                station.StationServices = new string[ss.Count];
+                                int i = 0;
+                                foreach (JObject sso in ss)
+                                    station.StationServices[i++] = sso["name"].Str();
+                            }
+
+                            station.LandingPads = new JournalDocked.LandingPadList() { Large = evt["large_pads"].Int(), Medium = evt["medium_pads"].Int(), Small = evt["small_pads"].Int() };
+
+                            // prohibited commodities
+
+                            JArray market = evt["market"].Array();
+                            if ( market != null )
+                            {
+                                station.Market = new List<CCommodities>();
+                                foreach( JObject commd in market)
+                                {
+                                    CCommodities cc = new CCommodities();
+                                    if ( cc.FromJsonSpansh(commd))
+                                    {
+                                        station.Market.Add(cc);
+                                    }
+                                }
+                            }
+
+                            station.FillInformation(out string info, out string detailed); System.Diagnostics.Debug.WriteLine($"Station info {info}\r\n{detailed}\r\n\r\n");
+                            stationinfo.Add(station);
+                        }
+                    }
+
+                    return stationinfo;
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine("Spansh Station Query failed due to " + ex);
+                }
+            }
+
+            return null;
+        }
+
+
+        #endregion
     }
 }
 

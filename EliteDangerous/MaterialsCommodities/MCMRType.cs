@@ -143,14 +143,14 @@ namespace EliteDangerousCore
         public static MaterialCommodityMicroResourceType GetByShortName(string shortname)
         {
             List<MaterialCommodityMicroResourceType> lst = cachelist.Values.ToList();
-            int i = lst.FindIndex(x => x.Shortname.Equals(shortname));
+            int i = lst.FindIndex(x => x.Shortname.Equals(shortname, StringComparison.InvariantCultureIgnoreCase));
             return i >= 0 ? lst[i] : null;
         }
 
         public static MaterialCommodityMicroResourceType GetByEnglishName(string name)
         {
             List<MaterialCommodityMicroResourceType> lst = cachelist.Values.ToList();
-            int i = lst.FindIndex(x => x.EnglishName.Equals(name));
+            int i = lst.FindIndex(x => x.EnglishName.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             return i >= 0 ? lst[i] : null;
         }
 
@@ -592,7 +592,6 @@ namespace EliteDangerousCore
             AddManu("Bio-Mechanical Conduits", ItemType.Standard, MaterialGroupType.NA, "BMC", "TG_BioMechanicalConduits");
             AddManu("Propulsion Elements", ItemType.VeryRare, MaterialGroupType.NA, "PE", "TG_PropulsionElement");
             AddManu("Weapon Parts", ItemType.Rare, MaterialGroupType.NA, "WP", "TG_WeaponParts");
-            AddManu("Wreckage Components", ItemType.Standard, MaterialGroupType.NA, "WRC", "TG_WreckageComponents");
             AddEnc("Ship Flight Data", ItemType.Standard, MaterialGroupType.NA, "SFD", "TG_ShipFlightData");
             AddEnc("Ship Systems Data", ItemType.Rare, MaterialGroupType.NA, "SSD", "TG_ShipSystemsData");
 
