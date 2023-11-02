@@ -87,16 +87,23 @@ namespace EliteDangerousCore.DB
 #if !TESTHARNESS
                 if (found == null && lookup != WebExternalDataLookup.None && find.Name.HasChars() && find.Name != "UnKnown")
                 {
-                    // tbd edsm and spansh
+                    if (lookup == WebExternalDataLookup.SpanshThenEDSM || lookup == WebExternalDataLookup.Spansh)
+                    {
+                        Spansh.SpanshClass sp = new Spansh.SpanshClass();       // proven 31 oct
+                        found = sp.GetSystem(find.Name);
+                    }
 
-                    EDSM.EDSMClass edsm = new EDSM.EDSMClass();
-                    found = edsm.GetSystem(find.Name)?.FirstOrDefault();     // this may return null, an empty list, so first or default, or it may return null
+                    if (found == null && (lookup == WebExternalDataLookup.SpanshThenEDSM || lookup == WebExternalDataLookup.EDSM))
+                    {
+                        EDSM.EDSMClass edsm = new EDSM.EDSMClass();
+                        found = edsm.GetSystem(find.Name)?.FirstOrDefault();     // this may return null, an empty list, so first or default, or it may return null
+                    }
 
-                    // if found one, and EDSM ID/coords (paranoia), add back to our db so next time we have it
+                    // if found one, and coords (paranoia), add back to our db so next time we have it
 
                     if (found != null && found.HasCoordinate)       // if its a good system
                     {
-                        //  SystemsDatabase.Instance.StoreSystems(new List<ISystem> { found });     // won't do anything if rebuilding
+                        SystemsDatabase.Instance.StoreSystems(new List<ISystem> { found });     // won't do anything if rebuilding
                     }
                 }
 #endif

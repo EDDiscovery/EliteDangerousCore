@@ -587,7 +587,6 @@ namespace EliteDangerousCore.EDSM
 
                 foreach (JObject sysname in msg)
                 {
-                    // tbd sys addr
                     ISystem sys = new SystemClass(sysname["name"].Str("Unknown"), sysname["id"].Long(), sysname["id64"].LongNull(), SystemSource.FromEDSM);
 
                     if (sys.Name.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
@@ -642,7 +641,6 @@ namespace EliteDangerousCore.EDSM
                     {
                         foreach (JObject sysname in msg)
                         {
-                            // tbd sys addr
                             SystemClass sys = new SystemClass(sysname["name"].Str("Unknown"),sysname["id"].Long(), sysname["id64"].LongNull(), SystemSource.FromEDSM);        // make a system from EDSM
                             JObject co = (JObject)sysname["coords"];
                             if (co != null)
@@ -696,7 +694,6 @@ namespace EliteDangerousCore.EDSM
                     {
                         foreach (JObject sysname in msg)
                         {
-                            // tbd sys addr
                             SystemClass sys = new SystemClass(sysname["name"].Str("Unknown"), sysname["id"].Long(), sysname["id64"].LongNull(), SystemSource.FromEDSM);   // make a EDSM system
                             JObject co = (JObject)sysname["coords"];
                             if (co != null)
@@ -851,7 +848,15 @@ namespace EliteDangerousCore.EDSM
             return msg;
         }
 
-        public async static System.Threading.Tasks.Task<Tuple<List<JournalScan>, bool>> GetBodiesListAsync(ISystem sys, bool edsmweblookup = true) // get this edsmid,  optionally lookup web protected against bad json
+        public class GetBodiesResults
+        {
+            public List<JournalScan> Bodies { get; set; }
+            public bool FromCache { get; set; }
+
+            public GetBodiesResults(List<JournalScan> list, bool fromcache) { Bodies = list; FromCache = fromcache; }
+        }
+
+        public async static System.Threading.Tasks.Task<GetBodiesResults> GetBodiesListAsync(ISystem sys, bool edsmweblookup = true) // get this edsmid,  optionally lookup web protected against bad json
         {
             return await System.Threading.Tasks.Task.Run(() =>
             {
@@ -876,7 +881,7 @@ namespace EliteDangerousCore.EDSM
         // so we must pass back all the info we can to tell the caller what happened.
         // Verified Nov 21
 
-        public static Tuple<List<JournalScan>, bool> GetBodiesList(ISystem sys, bool weblookup = true)
+        public static GetBodiesResults GetBodiesList(ISystem sys, bool weblookup = true)
         {
             try
             {
@@ -891,10 +896,11 @@ namespace EliteDangerousCore.EDSM
                         if (we == null) // lookedup but not found
                             return null;
                         else
-                            return new Tuple<List<JournalScan>, bool>(we, true);        // mark from cache
+                            return new GetBodiesResults(we, true);        // mark from cache
                     }
 
                     JObject jlist = null;
+                    bool fromcache = false;
 
                     // calc name of cache file
 
@@ -909,6 +915,7 @@ namespace EliteDangerousCore.EDSM
                         {
                             System.Diagnostics.Debug.WriteLine($"EDSM Cache File read on {sys.Name} {sys.SystemAddress} from {cachefile}");
                             jlist = JObject.Parse(cachedata, JToken.ParseOptions.CheckEOL);  // if so, try a conversion
+                            fromcache = true;
                         }
                     }
 
@@ -955,8 +962,8 @@ namespace EliteDangerousCore.EDSM
                         
                         BodyCache[sys.Name] = bodies;
 
-                        System.Diagnostics.Debug.WriteLine($"EDSM Web Lookup complete {sys.Name} {bodies.Count}");
-                        return new Tuple<List<JournalScan>, bool>(bodies, false);       // not from cache
+                        System.Diagnostics.Debug.WriteLine($"EDSM Lookup complete {sys.Name} {bodies.Count} cache {fromcache}");
+                        return new GetBodiesResults(bodies, fromcache);       // not from cache
                     }
                     else
                     {

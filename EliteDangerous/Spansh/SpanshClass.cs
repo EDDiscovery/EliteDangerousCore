@@ -55,7 +55,10 @@ namespace EliteDangerousCore.Spansh
         }
         static public void LaunchBrowserForSystem(string name)
         {
-            //tbd
+            SpanshClass sp = new SpanshClass();
+            ISystem s = sp.GetSystem(name);
+            if (s != null)
+                LaunchBrowserForSystem(s.SystemAddress.Value);
         }
 
         #endregion
@@ -76,8 +79,8 @@ namespace EliteDangerousCore.Spansh
             return json;
         }
 
-        // list of names matching name in some way
-        public JObject GetSystem(string name)
+        // find system info of name, case insensitive
+        public ISystem GetSystem(string name)
         {
             string query = "?q=" + HttpUtility.UrlEncode(name);
 
@@ -88,7 +91,20 @@ namespace EliteDangerousCore.Spansh
 
             var data = response.Body;
             var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
-            return json;
+            if ( json != null )
+            {
+                foreach( var body in json["results"].EmptyIfNull())
+                {
+                    string rname = body["name"].Str();
+                    if ( rname.Equals(name,StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return new SystemClass(rname, body["id64"].Long(), body["x"].Double(), body["y"].Double(), body["z"].Double(), SystemSource.FromSpansh);
+                    }
+
+                }
+            }
+
+            return null;
         }
 
         // null, or list of found systems (may be empty)
@@ -322,9 +338,6 @@ namespace EliteDangerousCore.Spansh
                 return null;
 
             var data = response.Body;
-
-//            string data = BaseUtils.FileHelpers.TryReadAllTextFromFile(@"c:\code\soldump.txt");
-
             var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
 
             JArray resultsarray = null;
@@ -360,7 +373,7 @@ namespace EliteDangerousCore.Spansh
                         evt["SystemAddress"] = sys.SystemAddress.HasValue ? sys.SystemAddress.Value : json["reference"]["id64"].Long();
                         evt["DistanceFromArrivalLS"] = so[dump ? "distanceToArrival" : "distance_to_arrival"];
                         evt["WasDiscovered"] = true;        // obv, since spansh has the data
-                        evt["WasMapped"] = true;
+                        evt["WasMapped"] = false;
 
                         if (so["parents"] != null)
                         {
@@ -554,9 +567,18 @@ namespace EliteDangerousCore.Spansh
             return null;
         }
 
+        public class GetBodiesResults
+        {
+            public List<JournalScan> Bodies { get; set; }
+            public bool FromCache { get; set; }
+
+            public GetBodiesResults(List<JournalScan> list, bool fromcache) { Bodies = list; FromCache = fromcache; }
+        }
+
+
         // return list, if from cache, if web lookup occurred
 
-        public async static System.Threading.Tasks.Task<Tuple<List<JournalScan>, bool>> GetBodiesListAsync(ISystem sys, bool weblookup = true) 
+        public async static System.Threading.Tasks.Task<GetBodiesResults> GetBodiesListAsync(ISystem sys, bool weblookup = true) 
         {
             return await System.Threading.Tasks.Task.Run(() =>
             {
@@ -576,7 +598,7 @@ namespace EliteDangerousCore.Spansh
             return BodyCache.TryGetValue(name, out List<JournalScan> d) && d == null;
         }
 
-        static public Tuple<List<JournalScan>, bool> GetBodiesList(ISystem sys, bool weblookup = true)
+        static public GetBodiesResults GetBodiesList(ISystem sys, bool weblookup = true)
         {
             try
             {
@@ -591,10 +613,11 @@ namespace EliteDangerousCore.Spansh
                         if (we == null) // lookedup but not found
                             return null;
                         else
-                            return new Tuple<List<JournalScan>, bool>(we, true);        // mark from cache
+                            return new GetBodiesResults(we, true);        // mark from cache
                     }
 
                     JArray jlist = null;
+                    bool fromcache = false;
 
                     // calc name of cache file
 
@@ -609,6 +632,7 @@ namespace EliteDangerousCore.Spansh
                         {
                             System.Diagnostics.Debug.WriteLine($"Spansh Cache File read on {sys.Name} {sys.SystemAddress} from {cachefile}");
                             jlist = JArray.Parse(cachedata, JToken.ParseOptions.CheckEOL);  // if so, try a conversion
+                            fromcache = true;
                         }
                     }
 
@@ -646,8 +670,8 @@ namespace EliteDangerousCore.Spansh
 
                         BodyCache[sys.Name] = bodies;
 
-                        System.Diagnostics.Debug.WriteLine($"Spansh Web/File Lookup complete {sys.Name} {bodies.Count}");
-                        return new Tuple<List<JournalScan>, bool>(bodies, false);       // not from cache
+                        System.Diagnostics.Debug.WriteLine($"Spansh Web/File Lookup complete {sys.Name} {bodies.Count} cache {fromcache}");
+                        return new GetBodiesResults(bodies, fromcache);       
                     }
                     else
                     {
@@ -776,21 +800,10 @@ namespace EliteDangerousCore.Spansh
 
         #region Routing
 
-        // return SPANSH GUID search ID
-        public string RequestRoadToRiches( string from, string to, int jumprange, int radius, int maxsystems, bool usemappingvalue, bool avoidthargoids, bool loop, int maxlstoarrival, int minscanvalue)
+        // api point and query string, null error
+        private string RequestJob(string api, string query)
         {
-            string query = "radius=" + radius.ToStringInvariant() +
-                           "&range=" + jumprange.ToStringInvariant() +
-                           "&from=" + HttpUtility.UrlEncode(from) +
-                           "&to=" + HttpUtility.UrlEncode(to) +
-                           "&max_results=" + maxsystems.ToStringInvariant() +
-                           "&max_distance=" + maxlstoarrival.ToStringInvariant() +
-                           "&min_value=" + minscanvalue.ToStringInvariant() +
-                           "&use_mapping_value=" + usemappingvalue.ToStringIntValue() +
-                           "&avoid_thargoids=" + avoidthargoids.ToStringIntValue() +
-                           "&loop=" + loop.ToStringIntValue();
-
-            var response = RequestPost(query, "riches/route", handleException: true, contenttype: "application/x-www-form-urlencoded; charset=UTF-8");
+            var response = RequestPost(query, api, handleException: true, contenttype: "application/x-www-form-urlencoded; charset=UTF-8");
 
             if (response.Error)
                 return null;
@@ -802,9 +815,9 @@ namespace EliteDangerousCore.Spansh
         }
 
         // null means bad. Else it will return false=still pending, true = result got.
-        public Tuple<bool,JToken> TryGetResponse(string jobname)
+        private Tuple<bool, JToken> TryGetResponseToJob(string jobname)
         {
-            var response = RequestGet( "results/" + jobname , handleException: true);
+            var response = RequestGet("results/" + jobname, handleException: true);
 
             if (response.Error)
                 return null;
@@ -814,17 +827,17 @@ namespace EliteDangerousCore.Spansh
 
             var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
 
-            System.Diagnostics.Debug.WriteLine($"Spansh returns {json?.ToString(true)}");
+            //System.Diagnostics.Debug.WriteLine($"Spansh returns {json?.ToString(true)}");
             BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshresponse.txt", json?.ToString(true));
 
-            if ( json != null )
+            if (json != null)
             {
                 string status = json["status"].StrNull();
-                if ( status == "queued")
+                if (status == "queued")
                 {
                     return new Tuple<bool, JToken>(false, json);
                 }
-                else if ( status == "ok")
+                else if (status == "ok")
                 {
                     return new Tuple<bool, JToken>(true, json);
                 }
@@ -833,45 +846,137 @@ namespace EliteDangerousCore.Spansh
             return null;
         }
 
-        public Tuple<bool,List<ISystem>> TryGetRoadToRiches(string jobname)
+        private List<ISystem> DecodeSystemsReturn(JToken data)
         {
-            var res = TryGetResponse(jobname);
+            List<ISystem> syslist = new List<ISystem>();
+
+            JArray systems = data["result"].Array();
+
+            foreach (var sys in systems.EmptyIfNull())
+            {
+                if (sys is JObject)
+                {
+                    long id64 = sys["id64"].Str("0").InvariantParseLong(0);
+                    string name = sys["name"].Str();
+                    double x = sys["x"].Double();
+                    double y = sys["y"].Double();
+                    double z = sys["z"].Double();
+                    int jumps = sys["jumps"].Int();
+                    string notes = "Jumps:" + jumps.ToString();
+                    long total = 0;
+                    foreach (var ib in sys["bodies"].EmptyIfNull())
+                    {
+                        string fb = FieldBuilder.Build("Body:", ib["name"].StrNull().ReplaceIfStartsWith(name),
+                                                   "Type:", ib["type"].StrNull(), "Subtype:", ib["subtype"].StrNull(),
+                                                   "Distance:;ls;N1", ib["distance_to_arrival"].DoubleNull(),
+                                                   "Map Value:", ib["estimated_mapping_value"].LongNull(), "Scan Value:", ib["estimated_scan_value"].LongNull());
+
+                        total += ib["estimated_mapping_value"].Long() + ib["estimated_scan_value"].Long();
+                        notes = notes.AppendPrePad(fb, Environment.NewLine);
+                    }
+
+                    notes = notes.AppendPrePad("Total:" + total.ToString("D"), Environment.NewLine);
+
+                    var sc = new SystemClass(name, id64, x, y, z, SystemSource.FromSpansh);
+                    sc.Tag = notes;
+                    syslist.Add(sc);
+                }
+            }
+
+            return syslist;
+        }
+
+        // return SPANSH GUID search ID
+        public string RequestRoadToRichesAmmonia( string from, string to, int jumprange, int radius, 
+                                            int maxsystems, bool avoidthargoids, 
+                                            bool loop, int maxlstoarrival, int minscanvalue,
+                                            bool? usemappingvalue = null,
+                                            string bodytypes = null)
+        {
+            string query = MakeQuery("radius" , radius , 
+                           "range", jumprange,
+                           "from", from,
+                           "to", to,
+                           "max_results", maxsystems,
+                           "max_distance" , maxlstoarrival,
+                           "min_value" , minscanvalue,
+                           "use_mapping_value" , usemappingvalue,
+                           "avoid_thargoids" , avoidthargoids,
+                           "loop" , loop,
+                           "body_types", bodytypes);
+
+            return RequestJob("riches/route", query);
+        }
+
+        public Tuple<bool,List<ISystem>> TryGetRoadToRichesAmmonia(string jobname)
+        {
+            var res = TryGetResponseToJob(jobname);
 
             if (res == null)
                 return null;
 
             if (res.Item1 == true)
             {
-                List<ISystem> syslist = new List<ISystem>();
+                return new Tuple<bool, List<ISystem>>(true, DecodeSystemsReturn(res.Item2));
+            }
+            else
+                return new Tuple<bool, List<ISystem>>(false, null);
+        }
 
-                JArray bodies = res.Item2["result"].Array();
 
-                foreach( var body in bodies.EmptyIfNull())
+        // return SPANSH GUID search ID
+        public string RequestNeutronRouter(string from, string to, int jumprange, int efficiency)
+        {
+            string query = MakeQuery("range", jumprange,
+                           "from", from,
+                           "to", to,
+                           "efficiency",  efficiency);
+            return RequestJob("route", query);
+        }
+
+        public Tuple<bool, List<ISystem>> TryGetNeutronRouter(string jobname)
+        {
+            var res = TryGetResponseToJob(jobname);
+
+            if (res == null)
+                return null;
+
+            if (res.Item1 == true)
+            {
+                JObject result = res.Item2["result"].Object();
+                JArray systems = result?["system_jumps"].Array();
+
+                if ( systems != null )
                 {
-                    if ( body is JObject)
-                    {
-                        long id64 = body["id64"].Str("0").InvariantParseLong(0);
-                        string name = body["name"].Str();
-                        double x = body["x"].Double();
-                        double y = body["y"].Double();
-                        double z = body["z"].Double();
-                        int jumps = body["jumps"].Int();
-                        string notes = "Jump:" + jumps.ToString();
-                        foreach( var ib in body["bodies"].EmptyIfNull())
-                        {
-                            string fb = FieldBuilder.Build("Name:", ib["name"].StrNull(), "Type:", ib["type"].StrNull(), "Subtype:", ib["subtype"].StrNull(),
-                                                       "Distance:;ls;N1", ib["distance_to_arrival"].DoubleNull(), 
-                                                       "Map Value:", ib["estimated_mapping_value"].LongNull(), "Scan Value:", ib["estimated_scan_value"].LongNull());
+                    List<ISystem> syslist = new List<ISystem>();
 
-                            notes = notes.AppendPrePad(fb, Environment.NewLine);
-                        }
+                    foreach( JObject sys in systems)
+                    {
+                        long id64 = sys["id64"].Str("0").InvariantParseLong(0);
+                        string name = sys["system"].Str();
+                        double x = sys["x"].Double();
+                        double y = sys["y"].Double();
+                        double z = sys["z"].Double();
+                        int jumps = sys["jumps"].Int();
+                        bool neutron = sys["neutron_star"].Bool();
+                        double distancejumped = sys["distance_jumped"].Double();
+
+                        string notes = neutron ? "Neutron Star" : "";
+                        if ( jumps>0)
+                            notes = notes.AppendPrePad("Est Jumps:" + jumps.ToString(), Environment.NewLine);
+                        if ( distancejumped>0)
+                            notes = notes.AppendPrePad("Distance:" + distancejumped.ToString("N1"), Environment.NewLine);
 
                         var sc = new SystemClass(name, id64, x, y, z, SystemSource.FromSpansh);
                         sc.Tag = notes;
+                        syslist.Add(sc);
+
                     }
+
+                    return new Tuple<bool, List<ISystem>>(true, syslist);
                 }
 
-                return new Tuple<bool, List<ISystem>>(true, syslist);
+                return null;
             }
             else
                 return new Tuple<bool, List<ISystem>>(false, null);
@@ -935,8 +1040,8 @@ namespace EliteDangerousCore.Spansh
             
             var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
 
-            System.Diagnostics.Debug.WriteLine($"Spansh returns {json?.ToString(true)}");
-            BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshresponse.txt", json?.ToString(true));
+            //System.Diagnostics.Debug.WriteLine($"Spansh returns {json?.ToString(true)}");
+            //BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshresponse.txt", json?.ToString(true));
 
             if (json != null && json["results"] != null)
             {

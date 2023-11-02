@@ -100,7 +100,7 @@ namespace EliteDangerousCore
                     var jl = Spansh.SpanshClass.GetBodiesList(sys, usespansh);          // see if spansh has it cached or optionally look it up
                     if (jl != null)
                     {
-                        foreach (JournalScan js in jl.Item1)
+                        foreach (JournalScan js in jl.Bodies)
                         {
                             js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
                             //System.Diagnostics.Debug.WriteLine($"FindSystemSync spansh add {sys.Name} {js.BodyName}");
@@ -117,7 +117,7 @@ namespace EliteDangerousCore
                     var jl = EDSM.EDSMClass.GetBodiesList(sys, useedsm);            // see if edsm has it cached or optionally look it up
                     if (jl != null)
                     {
-                        foreach (JournalScan js in jl.Item1)
+                        foreach (JournalScan js in jl.Bodies)
                         {
                             js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
                             //System.Diagnostics.Debug.WriteLine($"FindSystemSync edsn add {sys.Name} {js.BodyName}");
@@ -132,7 +132,6 @@ namespace EliteDangerousCore
         }
 
         // you must be returning void to use this..
-
         public async System.Threading.Tasks.Task<SystemNode> FindSystemAsync(ISystem sys, WebExternalDataLookup weblookup = WebExternalDataLookup.None)    // Find the system. Optionally do a EDSM web lookup
         {
             System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);  // foreground only
@@ -149,7 +148,7 @@ namespace EliteDangerousCore
 
                     if (jl != null)
                     {
-                        foreach (JournalScan js in jl.Item1)
+                        foreach (JournalScan js in jl.Bodies)
                         {
                             js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
                            // System.Diagnostics.Debug.WriteLine($"FindSystemASync spansh add {sys.Name} {js.BodyName}");
@@ -178,7 +177,7 @@ namespace EliteDangerousCore
 
                     if (jl != null)
                     {
-                        foreach (JournalScan js in jl.Item1)
+                        foreach (JournalScan js in jl.Bodies)
                         {
                             js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
                          //   System.Diagnostics.Debug.WriteLine($"FindSystemASync edsm add {sys.Name} {js.BodyName}");

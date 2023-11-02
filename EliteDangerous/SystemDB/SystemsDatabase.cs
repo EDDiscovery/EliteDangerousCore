@@ -200,7 +200,6 @@ namespace EliteDangerousCore.DB
             long count = 0;
             if (!RebuildRunning)
             {
-                System.Diagnostics.Debug.WriteLine("********************** STORE SYSTEMS NEEDS REWORKING - these come from EDSM, don't have star class, don't update if present in spansh db");
                 count = SystemsDB.StoreSystems(systems);
             }
 

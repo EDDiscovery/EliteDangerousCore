@@ -21,7 +21,6 @@ namespace EliteDangerousCore.DB
 {
     // EDSM Store - db.edsmid contains edsmid, and db.info is null
     // Spansh Store - db.edsmid contains the system address, and db.info is non null
-    // tbd - what if the data we are replacing in spansh mode
 
     public partial class SystemsDB
     {
