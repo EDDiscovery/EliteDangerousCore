@@ -805,13 +805,18 @@ namespace EliteDangerousCore.Spansh
         {
             var response = RequestPost(query, api, handleException: true, contenttype: "application/x-www-form-urlencoded; charset=UTF-8");
 
-            if (response.Error)
-                return null;
-
             var data = response.Body;
             var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
-            var jobname = json?["job"].StrNull();
-            return jobname;
+
+            if (response.Error)
+            {
+                return $"!{json?["error"].Str()}";
+            }
+            else
+            {
+                var jobname = json?["job"].StrNull();
+                return jobname;
+            }
         }
 
         // null means bad. Else it will return false=still pending, true = result got.
