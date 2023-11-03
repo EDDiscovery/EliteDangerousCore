@@ -866,8 +866,8 @@ namespace EliteDangerousCore.Spansh
                     long total = 0;
                     foreach (var ib in sys["bodies"].EmptyIfNull())
                     {
-                        string fb = FieldBuilder.Build("Body:", ib["name"].StrNull().ReplaceIfStartsWith(name),
-                                                   "Type:", ib["type"].StrNull(), "Subtype:", ib["subtype"].StrNull(),
+                        string fb = FieldBuilder.Build("", ib["name"].StrNull().ReplaceIfStartsWith(name),
+                                                   "", ib["type"].StrNull(), "", ib["subtype"].StrNull(),
                                                    "Distance:;ls;N1", ib["distance_to_arrival"].DoubleNull(),
                                                    "Map Value:", ib["estimated_mapping_value"].LongNull(), "Scan Value:", ib["estimated_scan_value"].LongNull());
 
@@ -886,11 +886,14 @@ namespace EliteDangerousCore.Spansh
             return syslist;
         }
 
-        // return SPANSH GUID search ID
-        public string RequestRoadToRichesAmmonia( string from, string to, int jumprange, int radius, 
+        /// <summary>
+        /// Return spansh job id
+        /// </summary>
+        public string RequestRoadToRichesAmmoniaEarthlikes( string from, string to, int jumprange, int radius, 
                                             int maxsystems, bool avoidthargoids, 
-                                            bool loop, int maxlstoarrival, int minscanvalue,
-                                            bool? usemappingvalue = null,
+                                            bool loop, int maxlstoarrival, 
+                                            int minscanvalue,
+                                            bool? usemappingvalue = null,  
                                             string bodytypes = null)
         {
             string query = MakeQuery("radius" , radius , 
@@ -914,15 +917,96 @@ namespace EliteDangerousCore.Spansh
 
             if (res == null)
                 return null;
-
-            if (res.Item1 == true)
-            {
+            else if (res.Item1 == true)
                 return new Tuple<bool, List<ISystem>>(true, DecodeSystemsReturn(res.Item2));
-            }
             else
                 return new Tuple<bool, List<ISystem>>(false, null);
         }
 
+
+        public string RequestTradeRouter(string fromsystem, string fromstation,
+                                            int max_hops, int max_hop_distance,
+                                            long starting_capital,
+                                            int max_cargo,
+                                            int max_system_distance,
+                                            int max_agesec,
+                                            bool requires_large_pad, bool allow_prohibited, bool allow_planetary, bool avoid_loops, bool permit)
+        {
+            string query = MakeQuery(nameof(max_hops), max_hops, nameof(max_hop_distance), max_hop_distance,
+                           "system", fromsystem, "station", fromstation,
+                           nameof(starting_capital), starting_capital, nameof(max_cargo), max_cargo, nameof(max_system_distance), max_system_distance,
+                           "max_price_age", max_agesec,
+                           nameof(requires_large_pad), requires_large_pad, nameof(allow_prohibited), allow_prohibited, nameof(allow_planetary), allow_planetary,
+                           "unique", avoid_loops, nameof(permit), permit);
+
+            return RequestJob("trade/route", query);
+        }
+
+        public Tuple<bool, List<ISystem>> TryGetTradeRouter(string jobname)
+        {
+            var res = TryGetResponseToJob(jobname);
+
+            if (res == null)
+            {
+
+                return null;
+            }
+            else if (res.Item1 == true)
+            {
+                List<ISystem> syslist = new List<ISystem>();
+                JArray deals = res.Item2["result"].Array();
+
+
+
+                for( int i = 0; i < deals.Count; i++ )
+                {
+                    var deal = deals[i];
+
+                    JObject source = deal["source"].Object();
+
+                    string notes = "";
+
+                    notes = notes.AppendPrePad("Station: " + source["station"].Str(), Environment.NewLine);
+
+                    foreach (var cm in deal["commodities"].Array().EmptyIfNull())
+                    {
+                        notes = notes.AppendPrePad($"{cm["name"].Str()} buy {cm["amount"].Int()} profit {cm["total_profit"].Int()}", Environment.NewLine);
+                    }
+
+                    notes = notes.AppendPrePad("Profit so far: " + deal["cumulative_profit"].Int(), Environment.NewLine);
+
+                    {
+                        long id64 = source["system_id64"].Long();
+                        string name = source["system"].Str();
+                        double x = source["x"].Double();
+                        double y = source["y"].Double();
+                        double z = source["z"].Double();
+
+                        SystemClass sy = new SystemClass(name, id64, x, y, z, SystemSource.FromSpansh);
+                        sy.Tag = notes;
+                        syslist.Add(sy);
+                    }
+
+                    if ( i == deals.Count-1)
+                    {
+                        JObject destination = deal["destination"].Object();
+                        long id64 = destination["system_id64"].Long();
+                        string name = destination["system"].Str();
+                        double x = destination["x"].Double();
+                        double y = destination["y"].Double();
+                        double z = destination["z"].Double();
+
+                        SystemClass sy = new SystemClass(name, id64, x, y, z, SystemSource.FromSpansh);
+                        sy.Tag = $"Fly to {destination["station"].Str()} and sell all";
+                        syslist.Add(sy);
+                    }
+                }
+
+                return new Tuple<bool, List<ISystem>>(true, syslist);
+            }
+            else
+                return new Tuple<bool, List<ISystem>>(false, null);
+        }
 
         // return SPANSH GUID search ID
         public string RequestNeutronRouter(string from, string to, int jumprange, int efficiency)
@@ -987,7 +1071,7 @@ namespace EliteDangerousCore.Spansh
 
         #region Stations
 
-        public List<StationInfo> GetStations(string name, int distance, bool fleetcarriers = false)
+        public List<StationInfo> GetStations(string name, double distance, bool fleetcarriers = false)
         {
             JObject query = new JObject()
             {
@@ -1025,10 +1109,10 @@ namespace EliteDangerousCore.Spansh
             //}
 
             return IssueStationQuery(query, fleetcarriers);
-         }
+        }
 
-          private List<StationInfo> IssueStationQuery(JObject query, bool fleetcarriers)
-          {
+        private List<StationInfo> IssueStationQuery(JObject query, bool fleetcarriers)
+        {
             System.Diagnostics.Debug.WriteLine($"Spansh post data for station {query.ToString()}");
 
             var response = RequestPost(query.ToString(), "stations/search", handleException: true);
@@ -1122,7 +1206,7 @@ namespace EliteDangerousCore.Spansh
                                 }
                             }
 
-                            station.FillInformation(out string info, out string detailed); System.Diagnostics.Debug.WriteLine($"Station info {info}\r\n{detailed}\r\n\r\n");
+                            //station.FillInformation(out string info, out string detailed); System.Diagnostics.Debug.WriteLine($"Station info {info}\r\n{detailed}\r\n\r\n");
                             stationinfo.Add(station);
                         }
                     }
