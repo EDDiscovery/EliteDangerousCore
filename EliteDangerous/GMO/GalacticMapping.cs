@@ -155,7 +155,7 @@ namespace EliteDangerousCore.GMO
             return null;
         }
 
-        public GalacticMapObject FindNearest(double x, double y, double z)
+        public GalacticMapObject FindNearest(double x, double y, double z, double maxdist)
         {
             GalacticMapObject nearest = null;
 
@@ -167,7 +167,7 @@ namespace EliteDangerousCore.GMO
                     if ( gmo.Points.Count == 1 )        // only for single point  bits
                     {
                         double distsq = (gmo.Points[0].X - x) * (gmo.Points[0].X - x) + (gmo.Points[0].Y - y) * (gmo.Points[0].Y - y) + (gmo.Points[0].Z - z) * (gmo.Points[0].Z - z);
-                        if ( distsq < mindist)
+                        if ( distsq <= maxdist*maxdist && distsq < mindist)
                         {
                             mindist = distsq;
                             nearest = gmo;

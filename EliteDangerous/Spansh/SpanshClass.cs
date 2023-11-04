@@ -800,7 +800,7 @@ namespace EliteDangerousCore.Spansh
 
         #region Routing
 
-        // api point and query string, null error
+        // api point and query string, !errormessage or job ID or null
         private string RequestJob(string api, string query)
         {
             var response = RequestPost(query, api, handleException: true, contenttype: "application/x-www-form-urlencoded; charset=UTF-8");

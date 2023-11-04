@@ -22,11 +22,6 @@ namespace EliteDangerousCore.DB
 {
     public static class SystemCache
     {
-        // may return null if not found
-        // by design, it keeps on trying.  Rob thought about caching the misses but the problem is, this is done at start up
-        // the system db may not be full at that point.  So a restart would be required to clear the misses..
-        // difficult
-
         #region Public Interface for Find System
 
         // in historylist, addtocache for all fsd jumps and navroutes.
@@ -310,16 +305,15 @@ namespace EliteDangerousCore.DB
             }
         }
 
-        //// find by position, using cache and db
-        public static ISystem GetSystemByPosition(double x, double y, double z, uint warnthreshold = 500)
-        {
-            return FindNearestSystemTo(x, y, z, 0.125, warnthreshold);
-        }
-
-        //// find nearest system
-        public static ISystem FindNearestSystemTo(double x, double y, double z, double maxdistance, uint warnthreshold = 500)
+        //// find nearest system, from cache, from db, from web (opt), and from gmo (opt)
+        public static ISystem FindNearestSystemTo(double x, double y, double z, double maxdistance, 
+                                        WebExternalDataLookup weblookup, GMO.GalacticMapping glist = null)
         {
             ISystem cachesys = null;
+            ISystem dbsys = null;
+            ISystem websys = null;
+            GMO.GalacticMapObject glistobj = null;
+
             lock (cachelockobject)
             {
                 cachesys = systemsByName.Values
@@ -330,19 +324,56 @@ namespace EliteDangerousCore.DB
 
             if (!SystemsDatabase.Instance.RebuildRunning)
             {
-                ISystem dbsys = null;
                 SystemsDatabase.Instance.DBRead(cn =>
                 {
                     dbsys = DB.SystemsDB.GetSystemByPosition(x, y, z, cn, maxdistance);         // need to check the db as well, as it may have a closer one than the cache
                 });
+            }
 
-                if (dbsys != null && cachesys != null && dbsys.Distance(x, y, z) < cachesys.Distance(x, y, z))        // if cache one better than db one
+            if (weblookup == WebExternalDataLookup.Spansh || weblookup == WebExternalDataLookup.SpanshThenEDSM)
+            {
+                Spansh.SpanshClass sp = new Spansh.SpanshClass();
+                var res = sp.GetSphereSystems(x, y, z, maxdistance, 0);
+                if (res?.Count > 0)
                 {
-                    cachesys = dbsys;
+                    websys = res[0].Item1;
                 }
             }
 
-            return cachesys;
+            if (websys == null && (weblookup == WebExternalDataLookup.EDSM || weblookup == WebExternalDataLookup.SpanshThenEDSM))
+            {
+                EDSM.EDSMClass edsm = new EDSM.EDSMClass();
+                var res = edsm.GetSphereSystems(x, y, z, maxdistance, 0);
+                if (res?.Count > 0)
+                {
+                    websys = res[0].Item1;
+                }
+            }
+
+            if ( glist != null )
+            {
+                glistobj = glist.FindNearest(x, y, z, maxdistance);
+            }
+
+            ISystem retsys = cachesys;
+
+            // if we have a gobj, and either we don't have a result, or glist is closer..
+            if (glistobj != null && (retsys == null || glistobj.GetSystem().Distance(x, y, z) < retsys.Distance(x, y, z)))
+            {
+                retsys = glistobj.GetSystem();
+            }
+
+            if (dbsys != null && (retsys == null || dbsys.Distance(x, y, z) < retsys.Distance(x, y, z)))
+            {
+                retsys = dbsys;
+            }
+
+            if (websys != null && (retsys == null || websys.Distance(x, y, z) < retsys.Distance(x, y, z)))
+            {
+                retsys = websys;
+            }
+
+            return retsys;
         }
 
         // return system nearest to wantedpos, with ranges from curpos/wantedpos, with a route method
@@ -531,7 +562,7 @@ namespace EliteDangerousCore.DB
         {
             lock (cachelockobject)
             {
-                //System.Diagnostics.Debug.WriteLine($"SystemCache add {found.Name}");
+               // System.Diagnostics.Debug.WriteLine($"SystemCache add {found.Name}");
 
                 List<ISystem> byname;
 

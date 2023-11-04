@@ -617,7 +617,7 @@ namespace EliteDangerousCore.EDSM
             return null;
         }
 
-        // Verified April 23 with ID64 system address return
+        // Verified April 23 with ID64 system address return. Sorted by distance
         public List<Tuple<ISystem, double>> GetSphereSystems(String systemName, double maxradius, double minradius)      // may return null
         {
             // api does not state id64, but tested 20/4/23 it supports it
@@ -656,6 +656,9 @@ namespace EliteDangerousCore.EDSM
                             }
                         }
 
+                        // ensure sorted by distance
+                        systems.Sort(delegate (Tuple<ISystem, double> left, Tuple<ISystem, double> right) { return left.Item2.CompareTo(right.Item2); });
+
                         return systems;
                     }
                 }
@@ -668,7 +671,7 @@ namespace EliteDangerousCore.EDSM
             return null;
         }
 
-        // Verified April 23 with ID64 system address return
+        // Verified April 23 with ID64 system address return.  Sorted by distance
         public List<Tuple<ISystem, double>> GetSphereSystems(double x, double y, double z, double maxradius, double minradius)      // may return null
         {
             // api does not state id64, but tested 20/4/23 it supports it
@@ -710,7 +713,10 @@ namespace EliteDangerousCore.EDSM
                             //System.Diagnostics.Debug.WriteLine($"  EDSM returned sphere {sys.Name} {sys.X} {sys.Y} {sys.Z} dist {dist}");
                         }
 
-                        return systems;
+                        // ensure sorted by distance
+                        systems.Sort(delegate (Tuple<ISystem, double> left, Tuple<ISystem, double> right) { return left.Item2.CompareTo(right.Item2); });
+
+                       return systems;
                     }
                 }
                 catch (Exception ex)      // json may be garbage
