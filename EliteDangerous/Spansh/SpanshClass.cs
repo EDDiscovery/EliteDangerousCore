@@ -803,6 +803,8 @@ namespace EliteDangerousCore.Spansh
         // api point and query string, !errormessage or job ID or null
         private string RequestJob(string api, string query)
         {
+            //query = "radius=500&range=50&from=Phoi+Aurb+HG-X+d1-499&to=Outotz+ZI-M+c22-0&max_results=100&max_distance=50000&min_value=1&avoid_thargoids=1&loop=1&body_types=Earth-like+world";
+
             var response = RequestPost(query, api, handleException: true, contenttype: "application/x-www-form-urlencoded; charset=UTF-8");
 
             var data = response.Body;
@@ -819,36 +821,30 @@ namespace EliteDangerousCore.Spansh
             }
         }
 
-        // null means bad. Else it will return false=still pending, true = result got.
-        private Tuple<bool, JToken> TryGetResponseToJob(string jobname)
+        // string = error string, or null if no error.
+        // on success, string is null and Jtoken != null
+        // always return a tuple
+        private Tuple<string, JToken> TryGetResponseToJob(string jobname)
         {
             var response = RequestGet("results/" + jobname, handleException: true);
-
-            if (response.Error)
-                return null;
-
             var data = response.Body;
+            var json = data != null ? JObject.Parse(data, JToken.ParseOptions.CheckEOL) : null;
 
-
-            var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
-
-            //System.Diagnostics.Debug.WriteLine($"Spansh returns {json?.ToString(true)}");
-            BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshresponse.txt", json?.ToString(true));
-
-            if (json != null)
+            if (response.Error)     // return
+            {
+                return new Tuple<string, JToken>(json?["error"].Str("Unknown error"), null);
+            }
+            else
             {
                 string status = json["status"].StrNull();
-                if (status == "queued")
-                {
-                    return new Tuple<bool, JToken>(false, json);
-                }
-                else if (status == "ok")
-                {
-                    return new Tuple<bool, JToken>(true, json);
-                }
-            }
 
-            return null;
+                if (status == "queued")
+                    return new Tuple<string, JToken>(null, null);
+                else if (status == "ok")
+                    return new Tuple<string, JToken>(null, json);
+                else
+                    return new Tuple<string, JToken>("Unknown spansh response", null);
+            }
         }
 
         private List<ISystem> DecodeSystemsReturn(JToken data)
@@ -916,16 +912,15 @@ namespace EliteDangerousCore.Spansh
             return RequestJob("riches/route", query);
         }
 
-        public Tuple<bool,List<ISystem>> TryGetRoadToRichesAmmonia(string jobname)
+        // string = error string, or null if no error.
+        // on success, string is null and Jtoken != null
+        public Tuple<string,List<ISystem>> TryGetRoadToRichesAmmonia(string jobname)
         {
             var res = TryGetResponseToJob(jobname);
-
-            if (res == null)
-                return null;
-            else if (res.Item1 == true)
-                return new Tuple<bool, List<ISystem>>(true, DecodeSystemsReturn(res.Item2));
+            if (res.Item1 == null && res.Item2 != null)
+                return new Tuple<string, List<ISystem>>(null, DecodeSystemsReturn(res.Item2));
             else
-                return new Tuple<bool, List<ISystem>>(false, null);
+                return new Tuple<string, List<ISystem>>(res.Item1, null);
         }
 
 
@@ -947,23 +942,16 @@ namespace EliteDangerousCore.Spansh
             return RequestJob("trade/route", query);
         }
 
-        public Tuple<bool, List<ISystem>> TryGetTradeRouter(string jobname)
+        // str
+        public Tuple<string, List<ISystem>> TryGetTradeRouter(string jobname)
         {
             var res = TryGetResponseToJob(jobname);
-
-            if (res == null)
-            {
-
-                return null;
-            }
-            else if (res.Item1 == true)
+            if (res.Item1 == null && res.Item2 != null)
             {
                 List<ISystem> syslist = new List<ISystem>();
                 JArray deals = res.Item2["result"].Array();
 
-
-
-                for( int i = 0; i < deals.Count; i++ )
+                for (int i = 0; i < deals.Count; i++)
                 {
                     var deal = deals[i];
 
@@ -992,7 +980,7 @@ namespace EliteDangerousCore.Spansh
                         syslist.Add(sy);
                     }
 
-                    if ( i == deals.Count-1)
+                    if (i == deals.Count - 1)
                     {
                         JObject destination = deal["destination"].Object();
                         long id64 = destination["system_id64"].Long();
@@ -1007,10 +995,10 @@ namespace EliteDangerousCore.Spansh
                     }
                 }
 
-                return new Tuple<bool, List<ISystem>>(true, syslist);
+                return new Tuple<string, List<ISystem>>(null, syslist);
             }
             else
-                return new Tuple<bool, List<ISystem>>(false, null);
+                return new Tuple<string, List<ISystem>>(res.Item1, null);
         }
 
         // return SPANSH GUID search ID
@@ -1023,14 +1011,11 @@ namespace EliteDangerousCore.Spansh
             return RequestJob("route", query);
         }
 
-        public Tuple<bool, List<ISystem>> TryGetNeutronRouter(string jobname)
+        public Tuple<string, List<ISystem>> TryGetNeutronRouter(string jobname)
         {
             var res = TryGetResponseToJob(jobname);
 
-            if (res == null)
-                return null;
-
-            if (res.Item1 == true)
+            if (res.Item1 == null && res.Item2 != null)
             {
                 JObject result = res.Item2["result"].Object();
                 JArray systems = result?["system_jumps"].Array();
@@ -1062,13 +1047,13 @@ namespace EliteDangerousCore.Spansh
 
                     }
 
-                    return new Tuple<bool, List<ISystem>>(true, syslist);
+                    return new Tuple<string, List<ISystem>>(null, syslist);
                 }
 
                 return null;
             }
             else
-                return new Tuple<bool, List<ISystem>>(false, null);
+                return new Tuple<string, List<ISystem>>(res.Item1, null);
         }
 
         #endregion
