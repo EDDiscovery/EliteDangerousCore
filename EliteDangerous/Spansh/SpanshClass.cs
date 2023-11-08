@@ -830,6 +830,8 @@ namespace EliteDangerousCore.Spansh
             var data = response.Body;
             var json = data != null ? JObject.Parse(data, JToken.ParseOptions.CheckEOL) : null;
 
+            if ( json != null)  BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshresponse.txt", json.ToString(true));
+
             if (response.Error)     // return
             {
                 return new Tuple<string, JToken>(json?["error"].Str("Unknown error"), null);
@@ -925,7 +927,7 @@ namespace EliteDangerousCore.Spansh
 
 
         public string RequestTradeRouter(string fromsystem, string fromstation,
-                                            int max_hops, int max_hop_distance,
+                                            int max_hops, double max_hop_distance,
                                             long starting_capital,
                                             int max_cargo,
                                             int max_system_distance,
@@ -1026,7 +1028,7 @@ namespace EliteDangerousCore.Spansh
 
                     foreach( JObject sys in systems)
                     {
-                        long id64 = sys["id64"].Str("0").InvariantParseLong(0);
+                        long id64 = sys["id64"].Long();
                         string name = sys["system"].Str();
                         double x = sys["x"].Double();
                         double y = sys["y"].Double();
@@ -1049,8 +1051,223 @@ namespace EliteDangerousCore.Spansh
 
                     return new Tuple<string, List<ISystem>>(null, syslist);
                 }
+                else
+                    return new Tuple<string, List<ISystem>>("Bad neutron router return", null);
+            }
+            else
+                return new Tuple<string, List<ISystem>>(res.Item1, null);
+        }
 
-                return null;
+        public string RequestFleetCarrierRouter(string source, List<string> destinations,
+                                            int capacity_used, bool calculate_starting_fuel)
+        {
+            string query = MakeQuery(nameof(source), source, nameof(capacity_used), capacity_used, nameof(calculate_starting_fuel), calculate_starting_fuel);
+            foreach (var d in destinations)
+                query += $"&destinations={HttpUtility.UrlEncode(d)}";
+
+            return RequestJob("fleetcarrier/route", query);
+        }
+
+        // str
+        public Tuple<string, List<ISystem>> TryGetFleetCarrierRouter(string jobname)
+        {
+            var res = TryGetResponseToJob(jobname);
+            if (res.Item1 == null && res.Item2 != null)
+            {
+                JObject result = res.Item2["result"].Object();
+                JArray jumps = result?["jumps"].Array();
+
+                if (jumps != null)
+                {
+                    List<ISystem> syslist = new List<ISystem>();
+                    //double totalused = 0, fuelcurrent = 0;
+
+                    foreach (JObject sys in jumps)
+                    {
+                        long id64 = sys["id64"].Long();
+                        string name = sys["name"].Str();
+                        double x = sys["x"].Double();
+                        double y = sys["y"].Double();
+                        double z = sys["z"].Double();
+                        double tank = sys["fuel_in_tank"].Double() ;
+                        double used = sys["fuel_used"].Double();
+                        double market = sys["tritium_in_market"].Double();
+                        double restock = sys["restock_amount"].Int();
+
+                        //totalused += used;
+                        //fuelcurrent += restock - used;
+
+                        string notes = "";
+
+                        if (used > 0)
+                            notes = notes.AppendPrePad($"Fuel used {used:N0}, left {tank+market:N0}", Environment.NewLine);
+
+                        if (sys["has_icy_ring"].Bool())
+                            notes = notes.AppendPrePad(sys["is_system_pristine"].Bool() ? "Has Pristine Icy ring" : "Has Icy ring", Environment.NewLine);
+
+                        if (restock>0)
+                            notes = notes.AppendPrePad($"Must restock {restock}", Environment.NewLine);
+
+//                        notes = notes.AppendPrePad($"Total fuel used {totalused:N0} available {fuelcurrent:N0}", Environment.NewLine);
+
+                        var sc = new SystemClass(name, id64, x, y, z, SystemSource.FromSpansh);
+                        sc.Tag = notes;
+                        syslist.Add(sc);
+                    }
+
+                    return new Tuple<string, List<ISystem>>(null, syslist);
+                }
+                else
+                    return new Tuple<string, List<ISystem>>("Bas Fleet carrier response", null);
+            }
+            else
+                return new Tuple<string, List<ISystem>>(res.Item1, null);
+        }
+
+        public string RequestGalaxyPlotter(string source, string destination, int cargo, bool is_supercharged, bool use_supercharge, bool use_injections, bool exclude_secondary,
+                                        ShipInformation si, string algorithm = "optimistic")
+        {
+            var fsdspec = si.GetFSDSpec();
+            var json = new JArray();
+            var obj = new JObject();
+            obj["data"] = si.JSONLoadout();
+            json.Add(obj);
+            System.Diagnostics.Debug.WriteLine($"JSON export to Spansh {json.ToString(true)}");
+
+            string query = MakeQuery(nameof(source), source, nameof(destination), destination, nameof(is_supercharged), is_supercharged, nameof(use_supercharge), use_supercharge,
+                            nameof(use_injections), use_injections, nameof(exclude_secondary), exclude_secondary,
+                            "fuel_power", fsdspec.PowerConstant, "fuel_multiplier", fsdspec.FuelMultiplier,
+                            "optimal_mass", fsdspec.OptimalMass, "base_mass", si.UnladenMass, "tank_size", si.FuelCapacity, "internal_tank_size", si.ReserveFuelCapacity,
+                            "max_fuel_per_jump", fsdspec.MaxFuelPerJump,
+                            nameof(cargo), cargo,
+                            nameof(algorithm), algorithm,
+                            "ship_build", json.ToString());
+
+            return RequestJob("generic/route", query);
+        }
+
+        public Tuple<string, List<ISystem>> TryGetGalaxyPlotter(string jobname)
+        {
+            var res = TryGetResponseToJob(jobname);
+            if (res.Item1 == null && res.Item2 != null)
+            {
+                JObject result = res.Item2["result"].Object();
+                JArray jumps = result?["jumps"].Array();
+
+                if (jumps != null)
+                {
+                    List<ISystem> syslist = new List<ISystem>();
+
+                    foreach (JObject sys in jumps)
+                    {
+                        long id64 = sys["id64"].Long(0);
+                        string name = sys["name"].Str();
+                        double x = sys["x"].Double();
+                        double y = sys["y"].Double();
+                        double z = sys["z"].Double();
+
+                        double tank = sys["fuel_in_tank"].Double();
+                        double used = sys["fuel_used"].Double();
+                        bool has_neutron = sys["has_neutron"].Bool();
+                        bool is_scoopable = sys["is_scoopable"].Bool();
+                        bool must_refuel = sys["must_refuel"].Bool();
+
+                        string notes = "";
+
+                        if (used > 0)
+                            notes = notes.AppendPrePad($"Fuel used {used:N0}", Environment.NewLine);
+
+                        notes = notes.AppendPrePad($"Fuel in tank {tank:N0}", Environment.NewLine);
+
+                        if (has_neutron)
+                            notes = notes.AppendPrePad("Neutron star", Environment.NewLine);
+                        if (is_scoopable)
+                            notes = notes.AppendPrePad("Scoopable star", Environment.NewLine);
+                        if (must_refuel)
+                            notes = notes.AppendPrePad("Must refuel", Environment.NewLine);
+
+                        var sc = new SystemClass(name, id64, x, y, z, SystemSource.FromSpansh);
+                        sc.Tag = notes;
+                        syslist.Add(sc);
+                    }
+
+                    return new Tuple<string, List<ISystem>>(null, syslist);
+                }
+                else
+                    return new Tuple<string, List<ISystem>>("Bas Fleet carrier response", null);
+            }
+            else
+                return new Tuple<string, List<ISystem>>(res.Item1, null);
+        }
+
+        public string RequestExomastery(string from, string to, double jumprange, int radius,
+                                            int maxsystems, 
+                                            bool loop, int maxlstoarrival,
+                                            int minscanvalue)
+        {
+            string query = MakeQuery("radius", radius,
+                           "range", jumprange,
+                           "from", from,
+                           "to", to,
+                           "max_results", maxsystems,
+                           "max_distance", maxlstoarrival,
+                           "min_value", minscanvalue,
+                           "loop", loop);
+
+            return RequestJob("exobiology/route", query);
+        }
+
+        public Tuple<string, List<ISystem>> TryGetExomastery(string jobname)
+        {
+            var res = TryGetResponseToJob(jobname);
+            if (res.Item1 == null && res.Item2 != null)
+            {
+                JArray results = res.Item2["result"].Array();
+
+                if (results != null)
+                {
+                    List<ISystem> syslist = new List<ISystem>();
+
+                    foreach (JObject sys in results)
+                    {
+                        long id64 = sys["id64"].Str("0").InvariantParseLong(0);
+                        string name = sys["name"].Str();
+                        double x = sys["x"].Double();
+                        double y = sys["y"].Double();
+                        double z = sys["z"].Double();
+
+                        int jumps = sys["jumps"].Int();
+                        string notes = "";
+
+                        if ( jumps>1)
+                            notes = notes.AppendPrePad("Jumps:" + jumps.ToString("D"), Environment.NewLine);
+
+                        long total = 0;
+
+                        foreach (var ib in sys["bodies"].EmptyIfNull())
+                        {
+                            string fb = FieldBuilder.Build("", ib["name"].StrNull().ReplaceIfStartsWith(name),
+                                                       "", ib["subtype"].StrNull(),
+                                                       "Distance:;ls;N1", ib["distance_to_arrival"].DoubleNull(),
+                                                       "Map Value:", ib["estimated_mapping_value"].LongNull(), 
+                                                       "Scan Value:", ib["estimated_scan_value"].LongNull(),
+                                                       "Landmark Value:", ib["landmark_value"].LongNull());
+
+                            total += ib["estimated_mapping_value"].Long() + ib["estimated_scan_value"].Long() + ib["landmark_value"].Long();
+                            notes = notes.AppendPrePad(fb, Environment.NewLine);
+                        }
+
+                        notes = notes.AppendPrePad("Total:" + total.ToString("D"), Environment.NewLine);
+
+                        var sc = new SystemClass(name, id64, x, y, z, SystemSource.FromSpansh);
+                        sc.Tag = notes;
+                        syslist.Add(sc);
+                    }
+
+                    return new Tuple<string, List<ISystem>>(null, syslist);
+                }
+                else
+                    return new Tuple<string, List<ISystem>>("Bas Fleet carrier response", null);
             }
             else
                 return new Tuple<string, List<ISystem>>(res.Item1, null);

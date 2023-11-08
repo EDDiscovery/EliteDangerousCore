@@ -40,7 +40,7 @@ namespace EliteDangerousCore.DLL
                 if (setting.Length >= 2)    // double check
                 {
                     string name = setting.Substring(1);
-                    f.Add(new ExtendedControls.ConfigurableForm.Entry(name, typeof(ExtendedControls.ExtCheckBox), name, new Point(margin, vpos), new Size(width - margin - 20, 20), null) { checkboxchecked = setting[0] == '+' });
+                    f.Add(new ExtendedControls.ConfigurableForm.Entry(name, typeof(ExtendedControls.ExtCheckBox), name, new Point(margin, vpos), new Size(width - margin - 20, 20), null) { CheckBoxChecked = setting[0] == '+' });
                     vpos += 30;
                 }
             }
@@ -70,8 +70,8 @@ namespace EliteDangerousCore.DLL
             if (res == DialogResult.OK)
             {
                 alloweddisallowed = "";
-                foreach (var e in f.Entries.Where(x => x.controltype == typeof(ExtendedControls.ExtCheckBox)))
-                    alloweddisallowed = alloweddisallowed.AppendPrePad((f.Get(e.controlname) == "1" ? "+" : "-") + e.controlname, ",");
+                foreach (var e in f.Entries.Where(x => x.ControlType == typeof(ExtendedControls.ExtCheckBox)))
+                    alloweddisallowed = alloweddisallowed.AppendPrePad((f.Get(e.Name) == "1" ? "+" : "-") + e.Name, ",");
 
                 return alloweddisallowed;
             }
