@@ -899,6 +899,9 @@ namespace EliteDangerousCore.Spansh
                                             bool? usemappingvalue = null,  
                                             string bodytypes = null)
         {
+            if (loop)               // don't give to if loop
+                to = null;
+
             string query = MakeQuery("radius" , radius , 
                            "range", jumprange,
                            "from", from,
@@ -1205,6 +1208,9 @@ namespace EliteDangerousCore.Spansh
                                             bool loop, int maxlstoarrival,
                                             int minscanvalue)
         {
+            if (loop)               // don't give to if loop
+                to = null;
+
             string query = MakeQuery("radius", radius,
                            "range", jumprange,
                            "from", from,
