@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- *
- *
  */
 using QuickJSON;
 using System.Collections.Generic;
@@ -70,7 +68,7 @@ namespace EliteDangerousCore.JournalEvents
                         }) ;
 
                         SystemClass s = new SystemClass(routeents.Last().StarSystem, sysaddr.Long(), starpos.X, starpos.Y, starpos.Z, SystemSource.FromJournal, sedsc);
-                        DB.SystemCache.AddSystemToCache(s);     // inform cache of this known system
+                        SystemCache.AddSystemToCache(s);     // inform cache of this known system
                     }
                 }
 

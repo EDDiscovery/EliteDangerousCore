@@ -166,7 +166,7 @@
     <Compile Include="Stats\Stats.cs" />
     <Compile Include="Status\EDStatusReader.cs" />
     <Compile Include="Bindings\FrontierToVKey.cs" />
-    <Compile Include="EliteDangerous\ISystem.cs" />
+    <Compile Include="Systems\ISystem.cs" />
     <Compile Include="Journal\JournalEntry.cs" />
     <Compile Include="Journal\JournalEntryAttributes.cs" />
     <Compile Include="Journal\JournalEntryInterfaces.cs" />
@@ -192,7 +192,7 @@
     <Compile Include="Ships\ShipYard.cs" />
     <Compile Include="Computers\StarDistanceComputer.cs" />
     <Compile Include="StarScan\StarScan.cs" />
-    <Compile Include="EliteDangerous\SystemClass.cs" />
+    <Compile Include="Systems\SystemClass.cs" />
     <Compile Include="EliteDangerous\VisitingStarsCacheFolder.cs" />
     <Compile Include="HistoryList\HistoryTravel.cs" />
     <Compile Include="HistoryList\HistoryEntry.cs" />
@@ -270,7 +270,7 @@
     <Compile Include="Suit\SuitInformation.cs" />
     <Compile Include="SystemDB\EliteNameClassifier.cs" />
     <Compile Include="SystemDB\SQLiteConnectionSystem.cs" />
-    <Compile Include="SystemDB\SystemCache.cs" />
+    <Compile Include="Systems\SystemCache.cs" />
     <Compile Include="SystemDB\SystemGridID.cs" />
     <Compile Include="SystemDB\SystemsDatabase.cs" />
     <Compile Include="SystemDB\SystemsDBLoader3.cs" />

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2022 EDDiscovery development team
+ * Copyright © 2015 - 2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -198,13 +198,25 @@ namespace EliteDangerousCore
         // added oct 23 since edsm has faulty data
         public bool Triage()
         {
-            if (Name == "Sol")
+            if (Xi == 0 && Name == "Sol")
                 return true;
 
             if (Math.Abs(Xi) < 3 * XYZScalar && Math.Abs(Yi) < 3 * XYZScalar && Math.Abs(Zi) < 3 * XYZScalar)
                 return false;
 
             return true;
+        }
+
+        static public bool Triage(string name, double x, double y, double z)
+        {
+            if (x == 0 && name == "Sol")
+                return true;
+
+            if (Math.Abs(x) < 3 && Math.Abs(y) < 3 && Math.Abs(z) < 3)
+                return false;
+
+            return true;
+
         }
 
         public SystemSource Source { get; set; }        // default source is Sythesised

@@ -96,9 +96,12 @@ namespace EliteDangerousCore.Spansh
                 foreach( var body in json["results"].EmptyIfNull())
                 {
                     string rname = body["name"].Str();
-                    if ( rname.Equals(name,StringComparison.InvariantCultureIgnoreCase))
+
+                    var sys = new SystemClass(rname, body["id64"].Long(), body["x"].Double(), body["y"].Double(), body["z"].Double(), SystemSource.FromSpansh);
+
+                    if ( rname.Equals(name,StringComparison.InvariantCultureIgnoreCase) && sys.Triage() )
                     {
-                        return new SystemClass(rname, body["id64"].Long(), body["x"].Double(), body["y"].Double(), body["z"].Double(), SystemSource.FromSpansh);
+                        return sys;
                     }
 
                 }
@@ -892,7 +895,7 @@ namespace EliteDangerousCore.Spansh
         /// <summary>
         /// Return spansh job id
         /// </summary>
-        public string RequestRoadToRichesAmmoniaEarthlikes( string from, string to, int jumprange, int radius, 
+        public string RequestRoadToRichesAmmoniaEarthlikes( string from, string to, double jumprange, int radius, 
                                             int maxsystems, bool avoidthargoids, 
                                             bool loop, int maxlstoarrival, 
                                             int minscanvalue,

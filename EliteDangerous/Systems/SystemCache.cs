@@ -13,12 +13,13 @@
  */
 
 using BaseUtils;
+using EliteDangerousCore.DB;
 using EMK.LightGeometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EliteDangerousCore.DB
+namespace EliteDangerousCore
 {
     public static class SystemCache
     {

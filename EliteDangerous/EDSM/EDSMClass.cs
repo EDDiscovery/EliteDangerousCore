@@ -424,7 +424,7 @@ namespace EliteDangerousCore.EDSM
                         foreach (JObject jo in logs)
                         {
                             string name = jo["system"].Str();
-                            ISystem sc = DB.SystemCache.FindSystemInCacheDB(new SystemClass(name), db);      // find in our DB only.  may be null
+                            ISystem sc = SystemCache.FindSystemInCacheDB(new SystemClass(name), db);      // find in our DB only.  may be null
                             if (sc != null)     // yes it is
                             {
                                 if (!sc.SystemAddress.HasValue)                                     // fill in any values
@@ -587,7 +587,7 @@ namespace EliteDangerousCore.EDSM
 
                 foreach (JObject sysname in msg)
                 {
-                    ISystem sys = new SystemClass(sysname["name"].Str("Unknown"), sysname["id"].Long(), sysname["id64"].LongNull(), SystemSource.FromEDSM);
+                    SystemClass sys = new SystemClass(sysname["name"].Str("Unknown"), sysname["id"].Long(), sysname["id64"].LongNull(), SystemSource.FromEDSM);
 
                     if (sys.Name.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -600,7 +600,8 @@ namespace EliteDangerousCore.EDSM
                             sys.Z = co["z"].Double();
                         }
 
-                        systems.Add(sys);
+                        if ( sys.Triage())
+                            systems.Add(sys);
                     }
                 }
 
@@ -651,9 +652,7 @@ namespace EliteDangerousCore.EDSM
                             }
 
                             if (sys.Triage())
-                            {
                                 systems.Add(new Tuple<ISystem, double>(sys, sysname["distance"].Double()));
-                            }
                         }
 
                         // ensure sorted by distance
@@ -707,9 +706,8 @@ namespace EliteDangerousCore.EDSM
                             }
 
                             if (sys.Triage())
-                            {
                                 systems.Add(new Tuple<ISystem, double>(sys, sysname["distance"].Double()));
-                            }
+
                             //System.Diagnostics.Debug.WriteLine($"  EDSM returned sphere {sys.Name} {sys.X} {sys.Y} {sys.Z} dist {dist}");
                         }
 
