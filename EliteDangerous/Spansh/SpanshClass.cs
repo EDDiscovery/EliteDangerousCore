@@ -1258,12 +1258,23 @@ namespace EliteDangerousCore.Spansh
                             string fb = FieldBuilder.Build("", ib["name"].StrNull().ReplaceIfStartsWith(name),
                                                        "", ib["subtype"].StrNull(),
                                                        "Distance:;ls;N1", ib["distance_to_arrival"].DoubleNull(),
-                                                       "Map Value:", ib["estimated_mapping_value"].LongNull(), 
+                                                       "Map Value:", ib["estimated_mapping_value"].LongNull(),
                                                        "Scan Value:", ib["estimated_scan_value"].LongNull(),
                                                        "Landmark Value:", ib["landmark_value"].LongNull());
 
-                            total += ib["estimated_mapping_value"].Long() + ib["estimated_scan_value"].Long() + ib["landmark_value"].Long();
                             notes = notes.AppendPrePad(fb, Environment.NewLine);
+
+                            foreach (var lm in ib["landmarks"].EmptyIfNull())
+                            {
+                                string lms = FieldBuilder.Build("", lm["type"].StrNull(),
+                                                           "", lm["subtype"].StrNull(),
+                                                           "x ", lm["count"].IntNull(),
+                                                           "Value:", lm["value"].IntNull());
+
+                                notes = notes.AppendPrePad(lms, Environment.NewLine);
+                            }
+
+                            total += ib["estimated_mapping_value"].Long() + ib["estimated_scan_value"].Long() + ib["landmark_value"].Long();
                         }
 
                         notes = notes.AppendPrePad("Total:" + total.ToString("D"), Environment.NewLine);
