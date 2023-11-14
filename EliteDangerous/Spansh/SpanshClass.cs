@@ -880,8 +880,8 @@ namespace EliteDangerousCore.Spansh
                     long total = 0;
                     foreach (var ib in sys["bodies"].EmptyIfNull())
                     {
-                        string fb = FieldBuilder.Build("", ib["name"].StrNull().ReplaceIfStartsWith(name),
-                                                   "", ib["type"].StrNull(), "", ib["subtype"].StrNull(),
+                        string fb = FieldBuilder.Build(";: ", ib["name"].StrNull().ReplaceIfStartsWith(name),
+                                                   "<", ib["subtype"].StrNull(),
                                                    "Distance:;ls;N1", ib["distance_to_arrival"].DoubleNull(),
                                                    "Map Value:", ib["estimated_mapping_value"].LongNull(), "Scan Value:", ib["estimated_scan_value"].LongNull());
 
