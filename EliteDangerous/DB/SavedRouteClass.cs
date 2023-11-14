@@ -31,8 +31,10 @@ namespace EliteDangerousCore.DB
         {
             public string Name { get; set; }
             public string Note { get; set; }
-            public SystemEntry(string sys, string note = "", double x = NotKnown, double y = NotKnown, double z = NotKnown) 
+            public SystemEntry(string sys, string note = "", double x = NotKnown, double y = NotKnown, double z = NotKnown)
             { Name = sys; Note = note; X = x; Y = y; Z = z; }
+            public SystemEntry(ISystem sys)
+            { Name = sys.Name; Note = sys.Tag is string ? (sys.Tag as string) : ""; X = sys.X; Y = sys.Y; Z = sys.Z; }
 
             public const double NotKnown = -99999999;       // X = if not known
             public double X { get; set; }
@@ -46,6 +48,12 @@ namespace EliteDangerousCore.DB
         public SavedRouteClass()
         {
             this.Id = -1;
+            this.Systems = new List<SystemEntry>();
+        }
+        public SavedRouteClass(string name)
+        {
+            this.Id = -1;
+            this.Name = name;
             this.Systems = new List<SystemEntry>();
         }
 

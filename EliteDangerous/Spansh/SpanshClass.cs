@@ -61,6 +61,14 @@ namespace EliteDangerousCore.Spansh
                 LaunchBrowserForSystem(s.SystemAddress.Value);
         }
 
+        static public void LaunchBrowserForSystem(ISystem sys)
+        {
+            if (sys.SystemAddress.HasValue)
+                LaunchBrowserForSystem(sys.SystemAddress.Value);
+            else
+                LaunchBrowserForSystem(sys.Name);
+        }
+
         #endregion
 
         #region Systems
