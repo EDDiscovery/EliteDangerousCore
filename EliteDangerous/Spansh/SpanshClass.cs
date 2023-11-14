@@ -882,8 +882,8 @@ namespace EliteDangerousCore.Spansh
                     {
                         string fb = FieldBuilder.Build(";: ", ib["name"].StrNull().ReplaceIfStartsWith(name),
                                                    "<", ib["subtype"].StrNull(),
-                                                   "Distance:;ls;N1", ib["distance_to_arrival"].DoubleNull(),
-                                                   "Map Value:", ib["estimated_mapping_value"].LongNull(), "Scan Value:", ib["estimated_scan_value"].LongNull());
+                                                   "Distance: ;ls;N1", ib["distance_to_arrival"].DoubleNull(),
+                                                   "Map Value: ", ib["estimated_mapping_value"].LongNull(), "Scan Value: ", ib["estimated_scan_value"].LongNull());
 
                         total += ib["estimated_mapping_value"].Long() + ib["estimated_scan_value"].Long();
                         notes = notes.AppendPrePad(fb, Environment.NewLine);
@@ -1053,9 +1053,9 @@ namespace EliteDangerousCore.Spansh
 
                         string notes = neutron ? "Neutron Star" : "";
                         if ( jumps>0)
-                            notes = notes.AppendPrePad("Est Jumps:" + jumps.ToString(), Environment.NewLine);
+                            notes = notes.AppendPrePad("Est Jumps: " + jumps.ToString(), Environment.NewLine);
                         if ( distancejumped>0)
-                            notes = notes.AppendPrePad("Distance:" + distancejumped.ToString("N1"), Environment.NewLine);
+                            notes = notes.AppendPrePad("Distance: " + distancejumped.ToString("N1"), Environment.NewLine);
 
                         var sc = new SystemClass(name, id64, x, y, z, SystemSource.FromSpansh);
                         sc.Tag = notes;
@@ -1265,10 +1265,10 @@ namespace EliteDangerousCore.Spansh
                         {
                             string fb = FieldBuilder.Build("", ib["name"].StrNull().ReplaceIfStartsWith(name),
                                                        "", ib["subtype"].StrNull(),
-                                                       "Distance:;ls;N1", ib["distance_to_arrival"].DoubleNull(),
-                                                       "Map Value:", ib["estimated_mapping_value"].LongNull(),
-                                                       "Scan Value:", ib["estimated_scan_value"].LongNull(),
-                                                       "Landmark Value:", ib["landmark_value"].LongNull());
+                                                       "Distance: ;ls;N1", ib["distance_to_arrival"].DoubleNull(),
+                                                       "Map Value: ", ib["estimated_mapping_value"].LongNull(),
+                                                       "Scan Value: ", ib["estimated_scan_value"].LongNull(),
+                                                       "Landmark Value: ", ib["landmark_value"].LongNull());
 
                             notes = notes.AppendPrePad(fb, Environment.NewLine);
 
