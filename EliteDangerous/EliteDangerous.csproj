@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Computers\JournalStatsInfo.cs" />
     <Compile Include="Config\EliteConfigInstance.cs" />
     <Compile Include="Config\IEliteConfig.cs" />
     <Compile Include="Config\IEliteOptions.cs" />

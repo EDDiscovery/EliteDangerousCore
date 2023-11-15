@@ -916,6 +916,32 @@ namespace EliteDangerousCore
         Services_Exploration, Services_Bartender, Services_VistaGenomics, Services_PioneerSupplies,
 
         Signals_RingHotSpot,
+
+
+        UserControlStats_BountiesThargoid,
+        UserControlStats_BountiesOnFootNPC,
+        UserControlStats_BountiesSkimmers,
+        UserControlStats_ShipsUnknown,
+        UserControlStats_ShipsElite,
+        UserControlStats_ShipsDeadly,
+        UserControlStats_ShipsDangerous,
+        UserControlStats_ShipsMaster,
+        UserControlStats_ShipsExpert,
+        UserControlStats_ShipsCompetent,
+        UserControlStats_ShipsNovice,
+        UserControlStats_ShipsHarmless,
+
+        UserControlStats_PVPElite,
+        UserControlStats_PVPDeadly,
+        UserControlStats_PVPDangerous,
+        UserControlStats_PVPMaster,
+        UserControlStats_PVPExpert,
+        UserControlStats_PVPCompetent,
+        UserControlStats_PVPNovice,
+        UserControlStats_PVPHarmless,
+
+        UserControlStats_Beltcluster, // Belt cluster
+
     }
 
     internal static class EDTranslatorExtensions
