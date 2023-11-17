@@ -245,11 +245,11 @@ namespace EliteDangerousCore
             }
         }
 
-        public bool FromJsonSpansh(JObject jo)
+        public bool FromJsonSpansh(JObject jo, bool dump)
         {
             try
             {
-                string spanshname = jo["commodity"].Str();
+                string spanshname = jo[dump ? "name" : "commodity"].Str();
                 
                 var mcd = MaterialCommodityMicroResourceType.GetByEnglishName(spanshname);
                 if ( mcd != null )
@@ -267,11 +267,11 @@ namespace EliteDangerousCore
 
                 legality = "";
 
-                meanPrice = buyPrice = jo["buy_price"].Int();
+                meanPrice = buyPrice = jo[dump ? "buyPrice" : "buy_price"].Int();
                 demandBracket = 0;
                 stockBracket = 0;
 
-                sellPrice = jo["sell_price"].Int();
+                sellPrice = jo[dump ? "sellPrice" : "sell_price"].Int();
                 stock = jo["supply"].Int();
                 demand = jo["demand"].Int();
                 this.statusFlags = new List<string>(); // not present

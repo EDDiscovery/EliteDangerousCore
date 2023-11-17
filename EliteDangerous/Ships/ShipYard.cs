@@ -43,6 +43,12 @@ namespace EliteDangerousCore
                 return id == other.id && string.Compare(ShipType, other.ShipType) == 0 &&
                             string.Compare(ShipType_Localised, other.ShipType_Localised) == 0 && ShipPrice == other.ShipPrice;
             }
+
+            public string ToStringShort()
+            {
+                long? buyprice = ShipPrice > 0 ? ShipPrice : default(long?);
+                return BaseUtils.FieldBuilder.Build("", ShipType_Localised, "< @ ", buyprice);
+            }
         }
 
         public ShipyardItem[] Ships { get; private set; }

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,16 +10,11 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
-using EliteDangerousCore.DB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EliteDangerousCore
 {
@@ -30,17 +25,17 @@ namespace EliteDangerousCore
         public class OutfittingItem: IEquatable<OutfittingItem>
         {
             public long id;             // json fields
-            public string Name;
+            public string Name;         // Text name after normalisation
             public long BuyPrice;
 
             public string ModType;      // computed fields..
-            public string FDName;
+            public string FDName;       // FDName normalised
 
             public void Normalise()
             {
-                FDName = JournalFieldNaming.NormaliseFDItemName(Name);
-                ItemData.ShipModule item = ItemData.GetShipModuleProperties(FDName);
-                Name = item.ModName;
+                FDName = JournalFieldNaming.NormaliseFDItemName(Name);          // clean name and move to FDName
+                ItemData.ShipModule item = ItemData.GetShipModuleProperties(FDName);    // find, or create
+                Name = item.ModName;            // set text name and modtype
                 ModType = item.ModType;
             }
 
@@ -49,6 +44,12 @@ namespace EliteDangerousCore
                 return (id == other.id && string.Compare(Name, other.Name) == 0 && string.Compare(FDName, other.FDName) == 0 &&
                          BuyPrice == other.BuyPrice);
             }
+
+            public string ToStringShort()
+            {
+                long? buyprice = BuyPrice > 0 ? BuyPrice : default(long?);
+                return BaseUtils.FieldBuilder.Build("", ModType, "<: ", Name, "< @ ", buyprice);
+            }
         }
 
         public OutfittingItem[] Items { get; private set; }     // can be null if its retrospecively read
@@ -56,10 +57,10 @@ namespace EliteDangerousCore
         public string StarSystem { get; private set; }
         public DateTime Datetimeutc { get; private set; }
 
-        public Outfitting(string st, string sy, DateTime dt, OutfittingItem[] it = null)        // items can be null if no data captured at the point
+        public Outfitting(string stationname, string starsystem, DateTime dt, OutfittingItem[] it = null)        // items can be null if no data captured at the point
         {
-            StationName = st;
-            StarSystem = sy;
+            StationName = stationname;
+            StarSystem = starsystem;
             Datetimeutc = dt;
             Items = it;
             if (it != null)

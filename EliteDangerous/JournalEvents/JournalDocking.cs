@@ -94,7 +94,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public bool? Taxi { get; set; }             //4.0 alpha 4
         public bool? Multicrew { get; set; }
-        public LandingPadList LandingPads { get; set; } // 4.0 update 5
+        public LandingPadList LandingPads { get; set; } // 4.0 update 5, may be null
 
         public bool IsTrainingEvent { get; private set; }
 
@@ -144,7 +144,7 @@ namespace EliteDangerousCore.JournalEvents
                 detailed += System.Environment.NewLine + "Station services: ".T(EDCTx.JournalEntry_Stationservices) + l;
             }
 
-            if ( EconomyList != null )
+            if (EconomyList != null)
             {
                 string l = "";
                 foreach (Economies e in EconomyList)
@@ -163,7 +163,7 @@ namespace EliteDangerousCore.JournalEvents
         {
         }
         public double DistanceRefSystem { get; set; }
-        public SystemClass System { get; set; }
+        public ISystem System { get; set; }
         public string BodyName { get; set; }
         public string BodyType { get; set; }
         public string BodySubType { get; set; }
@@ -172,8 +172,10 @@ namespace EliteDangerousCore.JournalEvents
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
 
+        public bool HasMarket { get; set; }
         public System.Collections.Generic.List<CCommodities> Market { get; set; }      // may be null
-        public bool HasMarket { get; set; } // not sure if this can be true with market null, defend
+        public System.Collections.Generic.List<Outfitting.OutfittingItem> OutFitting { get; set; }     // may be null
+        public System.Collections.Generic.List<ShipYard.ShipyardItem> Shipyard { get; set; }     // may be null
 
         public override void FillInformation(out string info, out string detailed)
         {
@@ -184,12 +186,33 @@ namespace EliteDangerousCore.JournalEvents
             if ( Market != null)
             {
                 string l = "";
-                foreach ( CCommodities m in Market)
+                foreach (CCommodities m in Market)
                 {
                     l = l.AppendPrePad(" " + m.ToStringShort(), global::System.Environment.NewLine);
                 }
 
                 detailed += global::System.Environment.NewLine + "Market: " + global::System.Environment.NewLine + l;
+            }
+            if (OutFitting != null)
+            {
+                string l = "";
+                foreach (var o in OutFitting)
+                {
+                    l = l.AppendPrePad(" " + o.ToStringShort(), global::System.Environment.NewLine);
+                }
+
+                detailed += global::System.Environment.NewLine + "Outfitting: " + global::System.Environment.NewLine + l;
+            }
+            if (Shipyard != null)
+            {
+                string l = "";
+                foreach (var s in Shipyard)
+                {
+                    l = l.AppendPrePad(" " + s.ToStringShort(), global::System.Environment.NewLine);
+                }
+
+                detailed += global::System.Environment.NewLine + "Shipyard: " + global::System.Environment.NewLine + l;
+
             }
         }
 

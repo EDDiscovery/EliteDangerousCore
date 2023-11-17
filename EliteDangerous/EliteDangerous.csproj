@@ -162,7 +162,7 @@
     <Compile Include="StarScan\StarScanFSSSignalsDiscovered.cs" />
     <Compile Include="StarScan\StarScanSAASignalsFound.cs" />
     <Compile Include="StarScan\StarScanSAAScan.cs" />
-    <Compile Include="Stats\Identifiers.cs" />
+    <Compile Include="Items\Identifiers.cs" />
     <Compile Include="Stats\Carrier.cs" />
     <Compile Include="Stats\Stats.cs" />
     <Compile Include="Status\EDStatusReader.cs" />
