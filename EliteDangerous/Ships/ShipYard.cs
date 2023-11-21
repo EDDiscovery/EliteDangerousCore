@@ -29,7 +29,7 @@ namespace EliteDangerousCore
             public string ShipType_Localised;
             public long ShipPrice;
 
-            public string FriendlyShipType;   // created
+            public string FriendlyShipType;   // from our database
 
             public void Normalise()
             {

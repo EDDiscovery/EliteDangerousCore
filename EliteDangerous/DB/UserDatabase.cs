@@ -14,6 +14,7 @@
 
 using SQLLiteExtensions;
 using System;
+using System.Windows.Forms;
 
 namespace EliteDangerousCore.DB
 {
@@ -22,6 +23,9 @@ namespace EliteDangerousCore.DB
     {
         T GetSetting<T>(string key, T defaultvalue);
         bool PutSetting<T>(string key, T value);
+
+        bool DGVLoadColumnLayout(System.Windows.Forms.DataGridView dgv, string auxname = "", bool rowheaderselection = false);
+        void DGVSaveColumnLayout(System.Windows.Forms.DataGridView dgv, string auxname = "");
     }
 
     public class UserDatabase : SQLAdvProcessingThread<SQLiteConnectionUser>, IUserDatabaseSettingsSaver
@@ -166,5 +170,59 @@ namespace EliteDangerousCore.DB
                 db.ClearCommanderTable();
             });
         }
+
+        // should not use these directly, always thru another class
+        public bool DGVLoadColumnLayout(DataGridView dgv, string auxname = "", bool rowheaderselection = false)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void DGVSaveColumnLayout(DataGridView dgv, string auxname = "")
+        {
+            throw new NotImplementedException();
+        }
     }
+
+
+    // instance this class and you can pass the class for saving settings with a defined rootname
+
+    public class UserDatabaseSettingsSaver : IUserDatabaseSettingsSaver     
+    {                                        
+        public UserDatabaseSettingsSaver(IUserDatabaseSettingsSaver b, string rootname)
+        {
+            root = rootname;
+            ba = b;
+        }
+        public T GetSetting<T>(string key, T defaultvalue)
+        {
+            return ba.GetSetting(root + key, defaultvalue);
+        }
+
+        public bool PutSetting<T>(string key, T value)
+        {
+            return ba.PutSetting(root + key, value);
+        }
+
+        public bool DGVLoadColumnLayout(DataGridView dgv, string auxname = "", bool rowheaderselection = false)
+        {
+            return dgv.LoadColumnSettings(root + "_DGV_" + auxname, rowheaderselection,
+                                        (a) => EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt(a, int.MinValue),
+                                        (b) => EliteDangerousCore.DB.UserDatabase.Instance.GetSettingDouble(b, double.MinValue));
+        }
+
+
+        public void DGVSaveColumnLayout(DataGridView dgv, string auxname = "")
+        {
+            dgv.SaveColumnSettings(root + "_DGV_" + auxname,
+                                        (a, b) => EliteDangerousCore.DB.UserDatabase.Instance.PutSettingInt(a, b),
+                                        (c, d) => EliteDangerousCore.DB.UserDatabase.Instance.PutSettingDouble(c, d));
+        }
+
+
+        private string root;
+        private IUserDatabaseSettingsSaver ba;
+    }
+
+
 }

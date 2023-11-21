@@ -22,7 +22,7 @@ using System.Data.Common;
 
 namespace EliteDangerousCore.JournalEvents
 {
-    public abstract class JournalLocOrJump : JournalEntry, ISystemStationEntry
+    public abstract class JournalLocOrJump : JournalEntry, ISystemStationEntry, IIdentifiers
     {
         public string StarSystem { get; set; }
         public EMK.LightGeometry.Vector3 StarPos { get; set; }
@@ -201,6 +201,13 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
+        public void UpdateIdentifiers()
+        {
+            if (Economy.HasChars() && Economy_Localised.HasChars())
+                Identifiers.Add(Economy, Economy_Localised);
+            if (Government.HasChars() && Government_Localised.HasChars())
+                Identifiers.Add(Government, Government_Localised);
+        }
     }
 
 

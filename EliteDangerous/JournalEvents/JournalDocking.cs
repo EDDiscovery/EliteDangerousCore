@@ -13,11 +13,12 @@
  */
 
 using QuickJSON;
+using System;
 
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.Docked)]
-    public class JournalDocked : JournalEntry, ISystemStationEntry
+    public class JournalDocked : JournalEntry, ISystemStationEntry, IIdentifiers
     {
         public JournalDocked(System.DateTime utc) : base(utc, JournalTypeEnum.Docked,false)
         {
@@ -98,6 +99,17 @@ namespace EliteDangerousCore.JournalEvents
 
         public bool IsTrainingEvent { get; private set; }
 
+        public bool HasAnyEconomyTypes(string[] fdnames)
+        {
+            return fdnames != null && (fdnames.IndexOf(Economy, StringComparison.InvariantCultureIgnoreCase) >= 0 ||
+                            (EconomyList != null && Array.FindIndex(EconomyList, 0, x => fdnames.IndexOf(x.Name, StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0));
+        }
+
+        public bool HasAnyServicesTypes(string[] fdnames)
+        {
+            return fdnames != null && StationServices != null && Array.FindIndex(StationServices, 0, x => fdnames.IndexOf(x, StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0;
+        }
+
         public class Economies
         {
             [JsonName("name", "Name")]                  //name is for spansh, Name is for journal
@@ -106,6 +118,7 @@ namespace EliteDangerousCore.JournalEvents
             [JsonName("Proportion", "share")]            //share is for spansh, proportion is for journal
             public double Proportion;
         }
+
 
         public class LandingPadList
         {
@@ -152,6 +165,16 @@ namespace EliteDangerousCore.JournalEvents
                 detailed += System.Environment.NewLine + "Economies: ".T(EDCTx.JournalEntry_Economies) + l;
             }
         }
+
+        public void UpdateIdentifiers()
+        {
+            if (Economy.HasChars() && Economy_Localised.HasChars())
+                Identifiers.Add(Economy, Economy_Localised);
+            foreach ( var e in EconomyList.EmptyIfNull())
+                Identifiers.Add(e.Name,e.Name_Localised);
+            if (Government.HasChars() && Government_Localised.HasChars())
+                Identifiers.Add(Government, Government_Localised);
+        }
     }
 
     // EDD expansion of JournalDocked to add more data about the station
@@ -169,13 +192,31 @@ namespace EliteDangerousCore.JournalEvents
         public string BodySubType { get; set; }
         public double DistanceToArrival { get; set; }
         public bool IsPlanetary { get; set; }
+        public bool IsFleetCarrier { get; set; }
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
 
         public bool HasMarket { get; set; }
         public System.Collections.Generic.List<CCommodities> Market { get; set; }      // may be null
+        public DateTime MarketUpdateUTC { get; set; }
+
+        // sync with journalcarrier..
+        public bool HasItem(string fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase)) >= 0; }
+        public bool HasItemToBuy(string fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase) && x.CanBeBought) >= 0; }
+        public bool HasItemToSell(string fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase) && x.CanBeSold) >= 0; }
+
+        // go thru the market array, and see if any of the fdnames given matches that market entry
+        public bool HasAnyItem(string[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname, StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0; }
+        public bool HasAnyItemToBuy(string[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname, StringComparison.InvariantCultureIgnoreCase) >= 0 && x.CanBeBought) >= 0; }
+        public bool HasAnyItemToSell(string[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname, StringComparison.InvariantCultureIgnoreCase) >= 0 && x.CanBeSold) >= 0; }
+
         public System.Collections.Generic.List<Outfitting.OutfittingItem> OutFitting { get; set; }     // may be null
+        public DateTime OutfittingUpdateUTC { get; set; }
+        public bool HasAnyModuleTypes(string[] fdnames) { return OutFitting != null && OutFitting.FindIndex(x => fdnames.IndexOf(x.ModType, StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0; }
+
         public System.Collections.Generic.List<ShipYard.ShipyardItem> Shipyard { get; set; }     // may be null
+        public DateTime ShipyardUpdateUTC { get; set; }
+        public bool HasAnyShipTypes(string[] fdnames) { return Shipyard != null && Shipyard.FindIndex(x => fdnames.IndexOf(x.ShipType, StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0; }
 
         public override void FillInformation(out string info, out string detailed)
         {

@@ -104,10 +104,10 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void UpdateIdentifiers(Identifiers ilist)
+        public void UpdateIdentifiers()
         {
             if (NearestDestination.HasChars() && NearestDestination_Localised.HasChars())
-                ilist.Add(NearestDestination, NearestDestination_Localised);
+                Identifiers.Add(NearestDestination, NearestDestination_Localised);
         }
     }
 

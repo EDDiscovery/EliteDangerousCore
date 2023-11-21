@@ -275,9 +275,9 @@ namespace EliteDangerousCore
         }
 
         // attempt to find a better name for name as its a body name
-        static public string SignalBodyName(Identifiers idlist, string name)
+        static public string SignalBodyName(string name)
         {
-            var res = idlist.Get(name);
+            var res = Identifiers.Get(name);
 
             if (res.StartsWith("$SAA_RingHotspot",StringComparison.InvariantCultureIgnoreCase))        // if still id
             {

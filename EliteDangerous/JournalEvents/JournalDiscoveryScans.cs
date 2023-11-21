@@ -357,7 +357,7 @@ namespace EliteDangerousCore.JournalEvents
             return list;
         }
 
-        public void UpdateIdentifiers(Identifiers ilist)
+        public void UpdateIdentifiers()
         {
             System.Diagnostics.Debug.Assert(Signals.Count == 1);    // check we are calling this before any merger
 
@@ -365,7 +365,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if ( s.SignalName.HasChars() && s.SignalName_Localised.HasChars() )
                 {
-                    ilist.Add(s.SignalName, s.SignalName_Localised);
+                    Identifiers.Add(s.SignalName, s.SignalName_Localised);
                 }
             }
         }
@@ -606,13 +606,13 @@ namespace EliteDangerousCore.JournalEvents
             s.AddSAASignalsFoundToBestSystem(this, system);
         }
 
-        public void UpdateIdentifiers(Identifiers ilist)
+        public void UpdateIdentifiers()
         {
             foreach (var s in Signals)
             {
                 if (s.Type.HasChars() && s.Type_Localised.HasChars())
                 {
-                    ilist.Add(s.Type, s.Type_Localised);
+                    Identifiers.Add(s.Type, s.Type_Localised);
                 }
             }
         }

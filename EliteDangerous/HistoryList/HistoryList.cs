@@ -42,8 +42,6 @@ namespace EliteDangerousCore
         public Dictionary<string, EDStar> StarClass { get; private set; } = new Dictionary<string, EDStar>();     // not in any particular order.
         public Dictionary<string, Stats.FactionInfo> GetStatsAtGeneration(uint g) { return statisticsaccumulator.GetAtGeneration(g); }
 
-        public Identifiers IdentifierList = new Identifiers();
-
         // History variables
         public int CommanderId { get; private set; } = -999;                 // set by history load at end, indicating commander loaded
 
@@ -97,7 +95,7 @@ namespace EliteDangerousCore
 
             he.UpdateTravelStatus(hlastprocessed);
 
-            IdentifierList.Process(je);
+            Identifiers.Process(je);
 
             hlastprocessed = he;
 
@@ -248,6 +246,9 @@ namespace EliteDangerousCore
             }
 
             //foreach( var kvp in hist.StarScan.ScanDataByName) if (kvp.Value.System.SystemAddress == null) System.Diagnostics.Debug.WriteLine($"{kvp.Value.System.Name} no SA");
+
+            //foreach (var x in Identifiers.Items) System.Diagnostics.Debug.WriteLine($"Identifiers {x.Key} = {x.Value}");
+
 
 #if LISTSCANS
             {

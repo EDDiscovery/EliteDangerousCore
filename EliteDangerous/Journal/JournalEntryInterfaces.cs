@@ -91,7 +91,7 @@ namespace EliteDangerousCore
     }
     public interface IIdentifiers
     {
-        void UpdateIdentifiers(Identifiers ilist);
+        void UpdateIdentifiers();
     }
 
     public interface IJournalJumpColor
