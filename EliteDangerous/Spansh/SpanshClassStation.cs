@@ -21,6 +21,8 @@ namespace EliteDangerousCore.Spansh
 {
     public partial class SpanshClass : BaseUtils.HttpCom
     {
+        #region Dump get
+
         public System.Threading.Tasks.Task<List<StationInfo>> GetStationsByDumpAsync(ISystem sys)
         {
             return System.Threading.Tasks.Task.Run(() =>
@@ -50,7 +52,7 @@ namespace EliteDangerousCore.Spansh
             if (jsystem == null)
                 return null;
 
-            BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshstations.txt", json?.ToString(true));
+            BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshstationdump.txt", json?.ToString(true));
 
             List<StationInfo> stationinfo = new List<StationInfo>();
 
@@ -73,7 +75,7 @@ namespace EliteDangerousCore.Spansh
 
                     foreach (var evt in body["stations"].EmptyIfNull())
                     {
-                        var si = ReadStationInfo(evt.Object(), sys, bodyname, bodytype, bodysubtype);
+                        var si = ReadStationInfoFromDump(evt.Object(), sys, bodyname, bodytype, bodysubtype);
                         if (si != null)
                         {
                             stationinfo.Add(si);
@@ -87,7 +89,7 @@ namespace EliteDangerousCore.Spansh
                 {
                     foreach (var evt in stationarray)
                     {
-                        var si = ReadStationInfo(evt.Object(), sys, "","","");
+                        var si = ReadStationInfoFromDump(evt.Object(), sys, "","","");
                         if (si != null)
                         {
                             stationinfo.Add(si);
@@ -102,7 +104,7 @@ namespace EliteDangerousCore.Spansh
         }
 
         // read evt for station info at bodyname.  may return null if it does not like it
-        public StationInfo ReadStationInfo(JObject evt, ISystem sys, string bodyname, string bodytype, string bodysubtype)
+        private StationInfo ReadStationInfoFromDump(JObject evt, ISystem sys, string bodyname, string bodytype, string bodysubtype)
         {
             DateTime updatedat = evt["updateTime"].DateTimeUTC();
             StationInfo station = new StationInfo(updatedat);
@@ -149,6 +151,8 @@ namespace EliteDangerousCore.Spansh
 
             station.MarketID = evt["id"].LongNull();
 
+            station.StationServices = evt["services"]?.ToObject<string[]>();
+
             if (evt.Contains("landingPads"))
             {
                 station.LandingPads = new JournalDocked.LandingPadList()
@@ -173,25 +177,29 @@ namespace EliteDangerousCore.Spansh
                 }
 
                 station.Market.Sort(delegate (CCommodities left, CCommodities right) { int v = left.category.CompareTo(right.category); return v != 0 ? v : left.locName.CompareTo(right.locName); });
-                station.HasMarket = market.Count>0;
  
                 station.MarketUpdateUTC = evt["market"].I("updateTime").DateTimeUTC();
             }
 
+            // if we have a market field or we have station services of market mark it as good (same as spansh)
+            station.HasMarket = station.Market != null || (station.StationServices != null && Array.IndexOf(station.StationServices, "Market") >= 0);
+
             JArray outfitting = evt["outfitting"].I("modules").Array();
             if (outfitting != null)
             {
-                station.OutFitting = new List<Outfitting.OutfittingItem>();
+                station.Outfitting = new List<Outfitting.OutfittingItem>();
                 foreach (JObject of in outfitting)
                 {
-                    var oi = new Outfitting.OutfittingItem { id = of["moduleId"].Long(), Name = of["symbol"].Str(), FDName = of["symbol"].Str().ToLower() };
+                    var oi = new Outfitting.OutfittingItem { id = of["moduleId"].Long(), Name = of["symbol"].Str(), BuyPrice = of["price"].Long() };
                     oi.Normalise();
-                    station.OutFitting.Add(oi);
+                    station.Outfitting.Add(oi);
                 }
-                station.OutFitting.Sort(delegate (Outfitting.OutfittingItem left, Outfitting.OutfittingItem right) { int v = left.ModType.CompareTo(right.ModType); return v != 0 ? v : left.Name.CompareTo(right.Name); });
+                station.Outfitting.Sort(delegate (Outfitting.OutfittingItem left, Outfitting.OutfittingItem right) { int v = left.ModType.CompareTo(right.ModType); return v != 0 ? v : left.Name.CompareTo(right.Name); });
 
                 station.OutfittingUpdateUTC = evt["outfitting"].I("updateTime").DateTimeUTC();
             }
+
+            station.HasOutfitting = station.Outfitting != null || (station.StationServices != null && Array.IndexOf(station.StationServices, "Outfitting") >= 0);
 
             JArray shipyard = evt["shipyard"].I("ships").Array();
             if (shipyard != null)
@@ -208,9 +216,9 @@ namespace EliteDangerousCore.Spansh
                 station.ShipyardUpdateUTC = evt["shipyard"].I("updateTime").DateTimeUTC();
             }
 
-            // commodities/prohibited
+            station.HasShipyard = station.Shipyard != null || (station.StationServices != null && Array.IndexOf(station.StationServices, "Shipyard") >= 0);
 
-            station.StationServices = evt["services"]?.ToObject<string[]>();
+            // commodities/prohibited
 
             station.DistanceRefSystem = 0;
 
@@ -231,21 +239,26 @@ namespace EliteDangerousCore.Spansh
             return station;
         }
 
-        // Search method has been abandoned for now, but kept for future.  Needs TLC if turned back on, for UTC times etc.
+        #endregion
 
-#if false
-        public System.Threading.Tasks.Task<List<StationInfo>> GetStationsBySearchAsync(string name)
-        {
-            return System.Threading.Tasks.Task.Run(() =>
-            {
-                return GetStationsBySearch(name);
-            });
-        }
+        #region Search
 
-        public List<StationInfo> GetStationsBySearch(string name)
+        public List<StationInfo> SearchServices(string systemname, string[] servicenames, double maxradius, int maxresults = 20)
         {
-            JObject query = new JObject()
+            JObject jo = new JObject()
             {
+                ["filters"] = new JObject()
+                {
+                    ["services"] = new JObject()
+                    {
+                        ["value"] = new JArray(servicenames)
+                    },
+                    ["distance"] = new JObject()
+                    {
+                        ["min"] = 0,
+                        ["max"] = maxradius.ToStringInvariant(),
+                    }
+                },
                 ["sort"] = new JArray()
                 {
                     new JObject()
@@ -256,27 +269,173 @@ namespace EliteDangerousCore.Spansh
                         }
                     }
                 },
-                ["reference_system"] = name,
-                ["size"] = MaxReturnSize, // this appears the max, oct 23
+                ["reference_system"] = systemname,
+                ["size"] = maxresults,
             };
 
-            //if ( haslargepad.HasValue )
-            //{
-            //    query["filters"] = new JObject
-            //    {
-            //        ["has_large_pad"] = new JObject()
-            //        {
-            //            ["value"] = haslargepad.Value,
-            //        }
-            //    };
-            //}
+            return IssueStationSearchQuery(jo);
+        }
+        public List<StationInfo> SearchCommodities(string systemname, string[] englishcommdnames, double maxradius, int maxresults = 20)
+        {
+            JObject jo = new JObject()
+            {
+                ["filters"] = new JObject()
+                {
+                    ["market"] = new JArray(),
 
-            return IssueStationQuery(query);
+                    ["distance"] = new JObject()
+                    {
+                        ["min"] = 0,
+                        ["max"] = maxradius.ToStringInvariant(),
+                    }
+                },
+                ["sort"] = new JArray()
+                {
+                    new JObject()
+                    {
+                        ["distance"] = new JObject()
+                        {
+                            ["direction"] = "asc"
+                        }
+                    }
+                },
+                ["reference_system"] = systemname,
+                ["size"] = maxresults,
+            };
+
+            JArray market = jo["filters"]["market"].Array();
+            foreach( var m in englishcommdnames)
+            {
+                JObject o = new JObject { ["name"] = m };
+                market.Add(o);
+            }
+
+            return IssueStationSearchQuery(jo);
         }
 
-        private List<StationInfo> IssueStationQuery(JObject query)
+        public List<StationInfo> SearchEconomy(string systemname, string[] englisheconomynames, double maxradius, int maxresults = 20)
         {
-            System.Diagnostics.Debug.WriteLine($"Spansh post data for station {query.ToString()}");
+            JObject jo = new JObject()
+            {
+                ["filters"] = new JObject()
+                {
+                    ["primary_economy"] = new JObject()
+                    {
+                        ["value"] = new JArray(englisheconomynames),
+                    },
+
+                    ["distance"] = new JObject()
+                    {
+                        ["min"] = 0,
+                        ["max"] = maxradius.ToStringInvariant(),
+                    }
+                },
+                ["sort"] = new JArray()
+                {
+                    new JObject()
+                    {
+                        ["distance"] = new JObject()
+                        {
+                            ["direction"] = "asc"
+                        }
+                    }
+                },
+                ["reference_system"] = systemname,
+                ["size"] = maxresults,
+            };
+
+            return IssueStationSearchQuery(jo);
+        }
+
+        // classlist = [0] = All, else 0..6
+        // ratingslist = [0] = All, else A..G
+        public List<StationInfo> SearchOutfitting(string systemname, string[] englishoutfittingnames, bool[] classlist, bool[] ratinglist, double maxradius, int maxresults = 20)
+        {
+            System.Diagnostics.Debug.Assert(classlist.Length == 8);
+            System.Diagnostics.Debug.Assert(ratinglist.Length == 8);
+            JObject jo = new JObject()
+            {
+                ["filters"] = new JObject()
+                {
+                    ["modules"] = new JObject()
+                    {
+                        ["name"] = new JArray(englishoutfittingnames),
+                        ["class"] = new JArray(),                      // class 1-6
+                        ["rating"] = new JArray(),                    // rating A-G
+                    },
+
+                    ["distance"] = new JObject()
+                    {
+                        ["min"] = 0,
+                        ["max"] = maxradius.ToStringInvariant(),
+                    }
+                },
+                ["sort"] = new JArray()
+                {
+                    new JObject()
+                    {
+                        ["distance"] = new JObject()
+                        {
+                            ["direction"] = "asc"
+                        }
+                    }
+                },
+                ["reference_system"] = systemname,
+                ["size"] = maxresults,
+            };
+
+            JArray classarray = jo["filters"]["modules"]["class"].Array();
+            for (int i = 1; i <= 7; i++)
+            {
+                if (classlist[i] || classlist[0])
+                    classarray.Add((i-1).ToStringInvariant());
+            }
+            JArray ratingarray = jo["filters"]["modules"]["rating"].Array();
+            for (int i = 1; i <= 7; i++)
+            {
+                if (ratinglist[i] || ratinglist[0])
+                    ratingarray.Add(new string((char)('A' + i - 1), 1));
+            }
+
+            return IssueStationSearchQuery(jo);
+        }
+
+        public List<StationInfo> SearchShips(string systemname, string[] englishshipnames, double maxradius, int maxresults = 20)
+        {
+            JObject jo = new JObject()
+            {
+                ["filters"] = new JObject()
+                {
+                    ["ships"] = new JObject()
+                    {
+                        ["value"] = new JArray(englishshipnames),
+                    },
+                    ["distance"] = new JObject()
+                    {
+                        ["min"] = 0,
+                        ["max"] = maxradius.ToStringInvariant(),
+                    }
+                },
+                ["sort"] = new JArray()
+                {
+                    new JObject()
+                    {
+                        ["distance"] = new JObject()
+                        {
+                            ["direction"] = "asc"
+                        }
+                    }
+                },
+                ["reference_system"] = systemname,
+                ["size"] = maxresults,
+            };
+
+            return IssueStationSearchQuery(jo);
+        }
+
+        private List<StationInfo> IssueStationSearchQuery(JObject query)
+        {
+            System.Diagnostics.Debug.WriteLine($"Spansh post data for station search {query.ToString()}");
 
             var response = RequestPost(query.ToString(), "stations/search", handleException: true);
 
@@ -284,16 +443,14 @@ namespace EliteDangerousCore.Spansh
                 return null;
 
             var data = response.Body;
-            
+
             var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
 
-            //System.Diagnostics.Debug.WriteLine($"Spansh returns {json?.ToString(true)}");
-            //BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshstations.txt", json?.ToString(true));
+          //  System.Diagnostics.Debug.WriteLine($"Spansh returns {json?.ToString(true)}");
+            BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshstationsearch.txt", json?.ToString(true));
 
             if (json != null && json["results"] != null)
             {
-                // structure tested oct 23
-
                 try
                 {
                     List<StationInfo> stationinfo = new List<StationInfo>();
@@ -307,8 +464,8 @@ namespace EliteDangerousCore.Spansh
                             StationInfo station = new StationInfo(updatedat);
 
                             station.Faction = evt["controlling_minor_faction"].StrNull();
-                         
-                            station.DistanceRefSystem =  evt["distance"].Double();      // system info at base of object
+
+                            station.DistanceRefSystem = evt["distance"].Double();      // system info at base of object
                             station.System = new SystemClass(evt["system_name"].Str(), evt["system_id64"].LongNull(), evt["system_x"].Double(), evt["system_y"].Double(), evt["system_z"].Double(), SystemSource.FromSpansh);
 
                             station.BodyName = evt["body_name"].StrNull();
@@ -318,7 +475,7 @@ namespace EliteDangerousCore.Spansh
 
                             station.IsPlanetary = evt["is_planetary"].Bool();
                             station.Latitude = evt["latitude"].DoubleNull();
-                            station.Longitude  = evt["longitude"].DoubleNull();
+                            station.Longitude = evt["longitude"].DoubleNull();
 
                             station.StationName = evt["name"].StrNull();
                             station.StationType = evt["type"].StrNull();
@@ -326,20 +483,25 @@ namespace EliteDangerousCore.Spansh
 
                             station.StarSystem = station.System.Name;
                             station.SystemAddress = station.System.SystemAddress;
-                            station.MarketID = evt["market_id"].LongNull();
-                            station.HasMarket = evt["has_market"].Bool();
                             station.Allegiance = evt["allegiance"].StrNull();
-                            station.Economy = station.Economy_Localised = evt["primary_economy"].StrNull();
-                            station.EconomyList = evt["economies"]?.ToObject<JournalDocked.Economies[]>(checkcustomattr:true);
+
+                            station.Economy_Localised = evt["primary_economy"].StrNull();
+                            if (station.Economy_Localised != null)
+                                station.Economy = EconomyDefinitions.ReverseLookup(station.Economy_Localised) ?? station.Economy_Localised;
+
+                            station.EconomyList = evt["economies"]?.ToObject<JournalDocked.Economies[]>(checkcustomattr: true);
                             foreach (var x in station.EconomyList.EmptyIfNull())
                             {
                                 x.Name_Localised = x.Name;
                                 x.Proportion /= 100;
                             }
-                            station.Government = station.Government_Localised = evt["government"].StrNull();
+
+                            station.Government_Localised = evt["government"].StrNull();
+                            if (station.Government_Localised != null)
+                                station.Government = GovernmentDefinitions.ReverseLookup(station.Government_Localised) ?? station.Government_Localised;
 
                             var ss = evt["services"].Array();
-                            if ( ss != null)
+                            if (ss != null)
                             {
                                 station.StationServices = new string[ss.Count];
                                 int i = 0;
@@ -352,24 +514,67 @@ namespace EliteDangerousCore.Spansh
 
                             // prohibited commodities
 
+                            station.MarketID = evt["market_id"].LongNull();
+
                             JArray market = evt["market"].Array();
-                            if ( market != null )
+                            if (market != null)
                             {
                                 station.Market = new List<CCommodities>();
-                                foreach( JObject commd in market)
+                                foreach (JObject commd in market)
                                 {
                                     CCommodities cc = new CCommodities();
-                                    if ( cc.FromJsonSpansh(commd, false))
+                                    if (cc.FromJsonSpansh(commd, false))
                                     {
                                         station.Market.Add(cc);
                                     }
                                 }
+
+                                station.MarketUpdateUTC = evt["market"].I("updateTime").DateTimeUTC();
                             }
 
-                            // tbd outfitting
-                            // tbd ships
+                            station.HasMarket = evt["has_market"].Bool() || market != null;     // note if no services structure, as of 23/11/23, it won't print has_market (same for the other two).
 
-                            //station.FillInformation(out string info, out string detailed); System.Diagnostics.Debug.WriteLine($"Station info {info}\r\n{detailed}\r\n\r\n");
+                            JArray outfitting = evt["modules"].Array();
+                            if (outfitting != null)
+                            {
+                                station.Outfitting = new List<Outfitting.OutfittingItem>();
+                                foreach (JObject of in outfitting)
+                                {
+                                    var oi = new Outfitting.OutfittingItem { Name = of["ed_symbol"].Str().ToLower(), BuyPrice = of["price"].Long() };
+                                    oi.Normalise();
+                                    station.Outfitting.Add(oi);
+                                }
+                                station.Outfitting.Sort(delegate (Outfitting.OutfittingItem left, Outfitting.OutfittingItem right) { int v = left.ModType.CompareTo(right.ModType); return v != 0 ? v : left.Name.CompareTo(right.Name); });
+
+                                station.OutfittingUpdateUTC = evt["outfitting_updated_at"].DateTimeUTC();
+                            }
+
+                            station.HasOutfitting = evt["has_outfitting"].Bool() || outfitting != null;
+
+                            JArray shipyard = evt["ships"].Array();
+                            if (shipyard != null)
+                            {
+                                station.Shipyard = new List<ShipYard.ShipyardItem>();
+                                foreach (JObject ship in shipyard)
+                                {
+                                    string shipname = ship["name"].Str();
+                                    string fdname = ItemData.ReverseShipLookup(shipname);
+                                    if (fdname != null)
+                                    {
+                                        var si = new ShipYard.ShipyardItem { ShipType = fdname, ShipPrice = ship["price"].Long() };
+                                        si.Normalise();
+                                        station.Shipyard.Add(si);
+                                    }
+                                }
+
+                                station.Shipyard.Sort(delegate (ShipYard.ShipyardItem left, ShipYard.ShipyardItem right) { int v = left.FriendlyShipType.CompareTo(right.FriendlyShipType); return v; });
+                                station.ShipyardUpdateUTC = evt["shipyard_updated_at"].DateTimeUTC();
+                            }
+
+                            station.HasShipyard = evt["has_shipyard"].Bool() || shipyard != null;
+
+                        //    station.FillInformation(out string info, out string detailed); System.Diagnostics.Debug.WriteLine($"{info}\r\n{detailed}\r\n\r\n");
+
                             stationinfo.Add(station);
                         }
                     }
@@ -384,7 +589,10 @@ namespace EliteDangerousCore.Spansh
 
             return null;
         }
-        #endif
+
+        #endregion
+
+
     }
 }
 

@@ -71,8 +71,8 @@ namespace EliteDangerousCore.Spansh
 
         #endregion
 
-        #region Systems
 
+        #region Systems
         public JObject GetSystemNames(string name)
         {
             string query = "?q=" + HttpUtility.UrlEncode(name);
@@ -99,15 +99,15 @@ namespace EliteDangerousCore.Spansh
 
             var data = response.Body;
             var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
-            if ( json != null )
+            if (json != null)
             {
-                foreach( var body in json["results"].EmptyIfNull())
+                foreach (var body in json["results"].EmptyIfNull())
                 {
                     string rname = body["name"].Str();
 
                     var sys = new SystemClass(rname, body["id64"].Long(), body["x"].Double(), body["y"].Double(), body["z"].Double(), SystemSource.FromSpansh);
 
-                    if ( rname.Equals(name,StringComparison.InvariantCultureIgnoreCase) && sys.Triage() )
+                    if (rname.Equals(name, StringComparison.InvariantCultureIgnoreCase) && sys.Triage())
                     {
                         return sys;
                     }
@@ -121,7 +121,7 @@ namespace EliteDangerousCore.Spansh
         // ensure we have a valid system address from a sys, null if can't
         public ISystem EnsureSystemAddress(ISystem sys)
         {
-            if ( sys.SystemAddress == null)
+            if (sys.SystemAddress == null)
             {
                 SpanshClass sp = new SpanshClass();
                 sys = sp.GetSystem(sys.Name);
@@ -130,191 +130,8 @@ namespace EliteDangerousCore.Spansh
             return sys;
         }
 
-        // null, or list of found systems (may be empty)
-        public List<ISystem> GetSystems(string systemname, bool wildcard = true)
-        {
-            JObject jo = new JObject()
-            {
-                ["filters"] = new JObject()
-                {
-                    ["name"] = new JObject()
-                    {
-                        ["value"] = systemname + (wildcard ? "*" : ""),
-                    }
-                },
-                ["sort"] = new JArray()
-                {
-                    new JObject()
-                    {
-                        ["distance"] = new JObject()
-                        {
-                            ["direction"] = "asc"
-                        }
-                    }
-                },
-
-                ["size"] = MaxReturnSize, // this appears the max, oct 23
-            };
-
-            var ret = IssueSystemsQuery(jo);
-
-            return ret != null ? ret.Select(x=>x.Item1).ToList() : null;
-        }
-
-
-        // null, or list of found systems (may be empty)
-        public List<Tuple<ISystem, double>> GetSphereSystems(double x, double y, double z, double maxradius, double minradius)
-        {
-            // POST, systems :  { "filters":{ "distance":{ "min":"0","max":"7"} },"sort":[{ "distance":{ "direction":"asc"}}],"size":10,"page":0,"reference_coords":{ "x":100,"y":100,"z":100} }: 
-            //                  {"filters": { "distance":{"min":"0","max":"10"}}, "sort":[{"distance":{"direction":"asc"}}],"size":10,"reference_coords":{"x":0.0,"y":0.0,"z":0.0}}
-            // size relates to number returned per page
-
-            JObject jo = new JObject()
-            {
-                ["filters"] = new JObject()
-                {
-                    ["distance"] = new JObject()
-                    {
-                        ["min"] = minradius.ToStringInvariant(),
-                        ["max"] = maxradius.ToStringInvariant(),
-                    }
-                },
-                ["sort"] = new JArray()
-                {
-                    new JObject()
-                    {
-                        ["distance"] = new JObject()
-                        {
-                            ["direction"] = "asc"
-                        }
-                    }
-                },
-                ["reference_coords"] = new JObject()
-                {
-                    ["x"] = x,
-                    ["y"] = y,
-                    ["z"] = z,
-                },
-                ["size"] = MaxReturnSize, // this appears the max, oct 23
-            };
-
-            return IssueSystemsQuery(jo);
-        }
-
-
-        // null, or list of found systems (may be empty)
-        public List<Tuple<ISystem, double>> GetSphereSystems(string name, double maxradius, double minradius)
-        {
-            JObject jo = new JObject()
-            {
-                ["filters"] = new JObject()
-                {
-                    ["distance"] = new JObject()
-                    {
-                        ["min"] = minradius.ToStringInvariant(),
-                        ["max"] = maxradius.ToStringInvariant(),
-                    }
-                },
-                ["sort"] = new JArray()
-                {
-                    new JObject()
-                    {
-                        ["distance"] = new JObject()
-                        {
-                            ["direction"] = "asc"
-                        }
-                    }
-                },
-                ["reference_system"] = name,
-                ["size"] = MaxReturnSize, // this appears the max, oct 23
-            };
-
-            return IssueSystemsQuery(jo);
-        }
-
-        private List<Tuple<ISystem, double>> IssueSystemsQuery(JObject query)
-        { 
-            //System.Diagnostics.Debug.WriteLine($"Spansh post data for systems {jo.ToString()}");
-
-            var response = RequestPost(query.ToString(), "systems/search", handleException: true);
-
-            if (response.Error)
-                return null;
-
-            var data = response.Body;
-            var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
-
-            System.Diagnostics.Debug.WriteLine($"Spansh returns {json?.ToString(true)}");
-
-            if ( json != null && json["results"] != null)
-            {
-                // structure tested oct 23
-
-                try
-                {
-                    List<Tuple<ISystem, double>> systems = new List<Tuple<ISystem, double>>();
-
-                    foreach (JToken list in json["results"].Array())    // array of objects
-                    {
-                        JObject sysobj = list.Object();
-                        if (sysobj != null)
-                        {
-                            double distance = sysobj["distance"].Double();      // system info at base of object
-                            double xr = sysobj["x"].Double();
-                            double yr = sysobj["y"].Double();
-                            double zr = sysobj["z"].Double();
-                            string name = sysobj["name"].StrNull();
-                            long? sa = sysobj["id64"].LongNull();
-
-                            if (name != null && sa != null)     // triage out
-                            {
-                                EDStar startype = EDStar.Unknown;
-
-                                JArray bodylist = sysobj["bodies"].Array();
-                                if (bodylist != null)   
-                                {
-                                    foreach (JObject body in bodylist)      // array of bodies, with main star noted
-                                    {
-                                        bool is_main_star = body["is_main_star"].Bool(false);
-                                        string spanshname = body["subtype"].StrNull();
-                                        if (is_main_star && spanshname != null)
-                                        {
-                                            var edstar = SpanshStarNameToEDStar(spanshname);
-                                            if (edstar != null)
-                                                startype = edstar.Value;
-                                            else
-                                                System.Diagnostics.Debug.WriteLine($"Spansh star did not decode {spanshname}");
-
-                                            break;
-                                        }
-                                    }
-                                }
-
-                                SystemClass sy = new SystemClass(name, sa, xr, yr, zr, SystemSource.FromSpansh , startype);
-
-                                if (sy.Triage())
-                                {
-                                    systems.Add(new Tuple<ISystem, double>(sy, distance));
-                                }
-                            }
-                        }
-                    }
-
-                    return systems;
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine("Spansh Sphere systems failed due to " + ex);
-                }
-            }
-
-            return null;
-        }
-
         #endregion
 
-    
-
-      }
+    }
 }
 

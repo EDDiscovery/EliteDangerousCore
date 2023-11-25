@@ -22,95 +22,6 @@ namespace EliteDangerousCore.Spansh
 {
     public partial class SpanshClass : BaseUtils.HttpCom
     {
-        // api point and query string, !errormessage or job ID or null
-        private string RequestJob(string api, string query)
-        {
-            //query = "radius=500&range=50&from=Phoi+Aurb+HG-X+d1-499&to=Outotz+ZI-M+c22-0&max_results=100&max_distance=50000&min_value=1&avoid_thargoids=1&loop=1&body_types=Earth-like+world";
-
-            var response = RequestPost(query, api, handleException: true, contenttype: "application/x-www-form-urlencoded; charset=UTF-8");
-
-            var data = response.Body;
-            var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
-
-            if (response.Error)
-            {
-                return $"!{json?["error"].Str()}";
-            }
-            else
-            {
-                var jobname = json?["job"].StrNull();
-                return jobname;
-            }
-        }
-
-        // string = error string, or null if no error.
-        // on success, string is null and Jtoken != null
-        // always return a tuple
-        private Tuple<string, JToken> TryGetResponseToJob(string jobname)
-        {
-            var response = RequestGet("results/" + jobname, handleException: true);
-            var data = response.Body;
-            var json = data != null ? JObject.Parse(data, JToken.ParseOptions.CheckEOL) : null;
-
-            //BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshresponse.txt", json?.ToString(true));
-
-            if (response.Error)     // return
-            {
-                return new Tuple<string, JToken>(json?["error"].Str("Unknown error"), null);
-            }
-            else
-            {
-                string status = json["status"].StrNull();
-
-                if (status == "queued")
-                    return new Tuple<string, JToken>(null, null);
-                else if (status == "ok")
-                    return new Tuple<string, JToken>(null, json);
-                else
-                    return new Tuple<string, JToken>("Unknown spansh response", null);
-            }
-        }
-
-        private List<ISystem> DecodeSystemsReturn(JToken data)
-        {
-            List<ISystem> syslist = new List<ISystem>();
-
-            JArray systems = data["result"].Array();
-
-            foreach (var sys in systems.EmptyIfNull())
-            {
-                if (sys is JObject)
-                {
-                    long id64 = sys["id64"].Str("0").InvariantParseLong(0);
-                    string name = sys["name"].Str();
-                    double x = sys["x"].Double();
-                    double y = sys["y"].Double();
-                    double z = sys["z"].Double();
-                    int jumps = sys["jumps"].Int();
-                    string notes = "Jumps:" + jumps.ToString();
-                    long total = 0;
-                    foreach (var ib in sys["bodies"].EmptyIfNull())
-                    {
-                        string fb = FieldBuilder.Build(";: ", ib["name"].StrNull().ReplaceIfStartsWith(name),
-                                                   "<", ib["subtype"].StrNull(),
-                                                   "Distance: ;ls;N1", ib["distance_to_arrival"].DoubleNull(),
-                                                   "Map Value: ", ib["estimated_mapping_value"].LongNull(), "Scan Value: ", ib["estimated_scan_value"].LongNull());
-
-                        total += ib["estimated_mapping_value"].Long() + ib["estimated_scan_value"].Long();
-                        notes = notes.AppendPrePad(fb, Environment.NewLine);
-                    }
-
-                    notes = notes.AppendPrePad("Total:" + total.ToString("D"), Environment.NewLine);
-
-                    var sc = new SystemClass(name, id64, x, y, z, SystemSource.FromSpansh);
-                    sc.Tag = notes;
-                    syslist.Add(sc);
-                }
-            }
-
-            return syslist;
-        }
-
         /// <summary>
         /// Return spansh job id
         /// </summary>
@@ -510,6 +421,96 @@ namespace EliteDangerousCore.Spansh
             }
             else
                 return new Tuple<string, List<ISystem>>(res.Item1, null);
+        }
+
+
+        // api point and query string, !errormessage or job ID or null
+        private string RequestJob(string api, string query)
+        {
+            //query = "radius=500&range=50&from=Phoi+Aurb+HG-X+d1-499&to=Outotz+ZI-M+c22-0&max_results=100&max_distance=50000&min_value=1&avoid_thargoids=1&loop=1&body_types=Earth-like+world";
+
+            var response = RequestPost(query, api, handleException: true, contenttype: "application/x-www-form-urlencoded; charset=UTF-8");
+
+            var data = response.Body;
+            var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
+
+            if (response.Error)
+            {
+                return $"!{json?["error"].Str()}";
+            }
+            else
+            {
+                var jobname = json?["job"].StrNull();
+                return jobname;
+            }
+        }
+
+        // string = error string, or null if no error.
+        // on success, string is null and Jtoken != null
+        // always return a tuple
+        private Tuple<string, JToken> TryGetResponseToJob(string jobname)
+        {
+            var response = RequestGet("results/" + jobname, handleException: true);
+            var data = response.Body;
+            var json = data != null ? JObject.Parse(data, JToken.ParseOptions.CheckEOL) : null;
+
+            //BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshresponse.txt", json?.ToString(true));
+
+            if (response.Error)     // return
+            {
+                return new Tuple<string, JToken>(json?["error"].Str("Unknown error"), null);
+            }
+            else
+            {
+                string status = json["status"].StrNull();
+
+                if (status == "queued")
+                    return new Tuple<string, JToken>(null, null);
+                else if (status == "ok")
+                    return new Tuple<string, JToken>(null, json);
+                else
+                    return new Tuple<string, JToken>("Unknown spansh response", null);
+            }
+        }
+
+        private List<ISystem> DecodeSystemsReturn(JToken data)
+        {
+            List<ISystem> syslist = new List<ISystem>();
+
+            JArray systems = data["result"].Array();
+
+            foreach (var sys in systems.EmptyIfNull())
+            {
+                if (sys is JObject)
+                {
+                    long id64 = sys["id64"].Str("0").InvariantParseLong(0);
+                    string name = sys["name"].Str();
+                    double x = sys["x"].Double();
+                    double y = sys["y"].Double();
+                    double z = sys["z"].Double();
+                    int jumps = sys["jumps"].Int();
+                    string notes = "Jumps:" + jumps.ToString();
+                    long total = 0;
+                    foreach (var ib in sys["bodies"].EmptyIfNull())
+                    {
+                        string fb = FieldBuilder.Build(";: ", ib["name"].StrNull().ReplaceIfStartsWith(name),
+                                                   "<", ib["subtype"].StrNull(),
+                                                   "Distance: ;ls;N1", ib["distance_to_arrival"].DoubleNull(),
+                                                   "Map Value: ", ib["estimated_mapping_value"].LongNull(), "Scan Value: ", ib["estimated_scan_value"].LongNull());
+
+                        total += ib["estimated_mapping_value"].Long() + ib["estimated_scan_value"].Long();
+                        notes = notes.AppendPrePad(fb, Environment.NewLine);
+                    }
+
+                    notes = notes.AppendPrePad("Total:" + total.ToString("D"), Environment.NewLine);
+
+                    var sc = new SystemClass(name, id64, x, y, z, SystemSource.FromSpansh);
+                    sc.Tag = notes;
+                    syslist.Add(sc);
+                }
+            }
+
+            return syslist;
         }
 
     }

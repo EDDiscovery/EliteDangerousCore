@@ -148,6 +148,7 @@
     <Compile Include="Screenshots\ScreenShotImageConverter.cs" />
     <Compile Include="Spansh\SpanshClassBodyList.cs" />
     <Compile Include="Spansh\SpanshClassRouters.cs" />
+    <Compile Include="Spansh\SpanshClassSystems.cs" />
     <Compile Include="Spansh\SpanshClassStation.cs" />
     <Compile Include="Spansh\SpanshClass.cs" />
     <Compile Include="StarScan\StarScanApproachTouchdown.cs" />

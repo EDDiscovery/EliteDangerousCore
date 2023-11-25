@@ -27,16 +27,16 @@ namespace EliteDangerousCore
             public long id;             // json fields
             public string Name;         // Text name after normalisation
             public long BuyPrice;
-
-            public string ModType;      // computed fields..
             public string FDName;       // FDName normalised
+
+            public ItemData.ShipModule ModuleInfo;      // Module data from item data, may be null if module not found
+            public string ModType { get { return ModuleInfo?.ModTypeString ?? "Unknown"; } }
 
             public void Normalise()
             {
                 FDName = JournalFieldNaming.NormaliseFDItemName(Name);          // clean name and move to FDName
-                ItemData.ShipModule item = ItemData.GetShipModuleProperties(FDName);    // find, or create
-                Name = item.ModName;            // set text name and modtype
-                ModType = item.ModType;
+                ModuleInfo = ItemData.GetShipModuleProperties(FDName);    // find, or create
+                Name = ModuleInfo?.ModName ?? FDName;            // set text name
             }
 
             public bool Equals(OutfittingItem other)
@@ -48,7 +48,7 @@ namespace EliteDangerousCore
             public string ToStringShort()
             {
                 long? buyprice = BuyPrice > 0 ? BuyPrice : default(long?);
-                return BaseUtils.FieldBuilder.Build("", ModType, "<: ", Name, "< @ ", buyprice);
+                return BaseUtils.FieldBuilder.Build("", ModType , "<: ", Name, "< @ ", buyprice);
             }
         }
 

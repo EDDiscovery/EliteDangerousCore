@@ -116,7 +116,7 @@ namespace EliteDangerousCore.JournalEvents
             public string Name;
             public string Name_Localised;
             [JsonName("Proportion", "share")]            //share is for spansh, proportion is for journal
-            public double Proportion;
+            public double Proportion;                   // 0-1
         }
 
 
@@ -175,88 +175,6 @@ namespace EliteDangerousCore.JournalEvents
             if (Government.HasChars() && Government_Localised.HasChars())
                 Identifiers.Add(Government, Government_Localised);
         }
-    }
-
-    // EDD expansion of JournalDocked to add more data about the station
-
-    [System.Diagnostics.DebuggerDisplay("Station {System.Name} {BodyName} {StationName}")]
-    public class StationInfo : JournalDocked
-    {
-        public StationInfo(System.DateTime utc) : base(utc)
-        {
-        }
-        public double DistanceRefSystem { get; set; }
-        public ISystem System { get; set; }
-        public string BodyName { get; set; }
-        public string BodyType { get; set; }
-        public string BodySubType { get; set; }
-        public double DistanceToArrival { get; set; }
-        public bool IsPlanetary { get; set; }
-        public bool IsFleetCarrier { get; set; }
-        public double? Latitude { get; set; }
-        public double? Longitude { get; set; }
-
-        public bool HasMarket { get; set; }
-        public System.Collections.Generic.List<CCommodities> Market { get; set; }      // may be null
-        public DateTime MarketUpdateUTC { get; set; }
-
-        // sync with journalcarrier..
-        public bool HasItem(string fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase)) >= 0; }
-        public bool HasItemToBuy(string fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase) && x.CanBeBought) >= 0; }
-        public bool HasItemToSell(string fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase) && x.CanBeSold) >= 0; }
-
-        // go thru the market array, and see if any of the fdnames given matches that market entry
-        public bool HasAnyItem(string[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname, StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0; }
-        public bool HasAnyItemToBuy(string[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname, StringComparison.InvariantCultureIgnoreCase) >= 0 && x.CanBeBought) >= 0; }
-        public bool HasAnyItemToSell(string[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname, StringComparison.InvariantCultureIgnoreCase) >= 0 && x.CanBeSold) >= 0; }
-
-        public System.Collections.Generic.List<Outfitting.OutfittingItem> OutFitting { get; set; }     // may be null
-        public DateTime OutfittingUpdateUTC { get; set; }
-        public bool HasAnyModuleTypes(string[] fdnames) { return OutFitting != null && OutFitting.FindIndex(x => fdnames.IndexOf(x.ModType, StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0; }
-
-        public System.Collections.Generic.List<ShipYard.ShipyardItem> Shipyard { get; set; }     // may be null
-        public DateTime ShipyardUpdateUTC { get; set; }
-        public bool HasAnyShipTypes(string[] fdnames) { return Shipyard != null && Shipyard.FindIndex(x => fdnames.IndexOf(x.ShipType, StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0; }
-
-        public override void FillInformation(out string info, out string detailed)
-        {
-            info = BaseUtils.FieldBuilder.Build("Station:" , StationName, "System:", System.Name, "Body:", BodyName, "Lat:;;N4", Latitude, "Long:;;N4", Longitude, "Distance to Arrival:;ls;N1", DistanceToArrival);
-            base.FillInformation(out string baseinfo, out string basedetailed, false);
-            info = info.AppendPrePad(baseinfo, global::System.Environment.NewLine);
-            detailed = basedetailed;
-            if ( Market != null)
-            {
-                string l = "";
-                foreach (CCommodities m in Market)
-                {
-                    l = l.AppendPrePad(" " + m.ToStringShort(), global::System.Environment.NewLine);
-                }
-
-                detailed += global::System.Environment.NewLine + "Market: " + global::System.Environment.NewLine + l;
-            }
-            if (OutFitting != null)
-            {
-                string l = "";
-                foreach (var o in OutFitting)
-                {
-                    l = l.AppendPrePad(" " + o.ToStringShort(), global::System.Environment.NewLine);
-                }
-
-                detailed += global::System.Environment.NewLine + "Outfitting: " + global::System.Environment.NewLine + l;
-            }
-            if (Shipyard != null)
-            {
-                string l = "";
-                foreach (var s in Shipyard)
-                {
-                    l = l.AppendPrePad(" " + s.ToStringShort(), global::System.Environment.NewLine);
-                }
-
-                detailed += global::System.Environment.NewLine + "Shipyard: " + global::System.Environment.NewLine + l;
-
-            }
-        }
-
     }
 
     [JournalEntryType(JournalTypeEnum.DockingCancelled)]

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2021 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,10 +10,8 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  *
- * Data courtesy of Coriolis.IO https://github.com/EDCD/coriolis , data is intellectual property and copyright of Frontier Developments plc ('Frontier', 'Frontier Developments') and are subject to their terms and conditions.
+ * Some data courtesy of Coriolis.IO https://github.com/EDCD/coriolis , data is intellectual property and copyright of Frontier Developments plc ('Frontier', 'Frontier Developments') and are subject to their terms and conditions.
  */
 
 using System;
@@ -69,7 +67,29 @@ namespace EliteDangerousCore
             else
                 return null;
         }
-        
+
+        public static string ReverseShipLookup(string englishname)
+        {
+            englishname = englishname.Replace(" ", "");     // remove spaces to make things like Viper Mk III and MkIII match
+            foreach (var kvp in spaceships)
+            {
+                var name = ((ShipInfoString)kvp.Value[ShipPropID.Name]).Value.Replace(" ", "");
+                if (englishname.Equals(name, System.StringComparison.InvariantCultureIgnoreCase))
+                    return kvp.Key;
+            }
+
+            foreach (var kvp in srvandfighters)
+            {
+                var name = ((ShipInfoString)kvp.Value[ShipPropID.Name]).Value.Replace(" ", "");
+                if (englishname.Equals(name, System.StringComparison.InvariantCultureIgnoreCase))
+                    return kvp.Key;
+            }
+
+            System.Diagnostics.Debug.WriteLine($"*** Reverse lookup shipname failed {englishname}");
+            return null;
+        }
+
+
         // get array of spaceships
 
         static public Dictionary<ShipPropID, IModuleInfo>[] GetSpaceships()
