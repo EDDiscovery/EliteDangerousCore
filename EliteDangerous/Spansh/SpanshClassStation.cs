@@ -529,7 +529,7 @@ namespace EliteDangerousCore.Spansh
                                     }
                                 }
 
-                                station.MarketUpdateUTC = evt["market"].I("updateTime").DateTimeUTC();
+                                station.MarketUpdateUTC = evt["market_updated_at"].DateTimeUTC();
                             }
 
                             station.HasMarket = evt["has_market"].Bool() || market != null;     // note if no services structure, as of 23/11/23, it won't print has_market (same for the other two).
