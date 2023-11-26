@@ -54,7 +54,7 @@ namespace EliteDangerousCore
         }
 
 
-        public enum ShipPropID { FDID, HullMass, Name, Manu, Speed, Boost, HullCost, Class }
+        public enum ShipPropID { FDID, HullMass, Name, Manu, Speed, Boost, HullCost, Class, EDCDName }
 
         // get properties of a ship, case insensitive, may be null
         static public Dictionary<ShipPropID, IModuleInfo> GetShipProperties(string fdshipname)        
@@ -234,6 +234,7 @@ namespace EliteDangerousCore
             { ShipPropID.FDID, new ShipInfoString("CobraMkIII")},
             { ShipPropID.HullMass, new ShipInfoDouble(180F)},
             { ShipPropID.Name, new ShipInfoString("Cobra Mk III")},
+            { ShipPropID.EDCDName, new ShipInfoString("Cobra MkIII")},
             { ShipPropID.Manu, new ShipInfoString("Faulcon DeLacy")},
             { ShipPropID.Speed, new ShipInfoInt(280)},
             { ShipPropID.Boost, new ShipInfoInt(400)},
@@ -245,6 +246,7 @@ namespace EliteDangerousCore
             { ShipPropID.FDID, new ShipInfoString("CobraMkIV")},
             { ShipPropID.HullMass, new ShipInfoDouble(210F)},
             { ShipPropID.Name, new ShipInfoString("Cobra Mk IV")},
+            { ShipPropID.EDCDName, new ShipInfoString("Cobra MkIV")},
             { ShipPropID.Manu, new ShipInfoString("Faulcon DeLacy")},
             { ShipPropID.Speed, new ShipInfoInt(200)},
             { ShipPropID.Boost, new ShipInfoInt(300)},
@@ -421,6 +423,7 @@ namespace EliteDangerousCore
             { ShipPropID.FDID, new ShipInfoString("Krait_MkII")},
             { ShipPropID.HullMass, new ShipInfoDouble(320F)},
             { ShipPropID.Name, new ShipInfoString("Krait Mk II")},
+            { ShipPropID.EDCDName, new ShipInfoString("Krait MkII")},
             { ShipPropID.Manu, new ShipInfoString("Faulcon DeLacy")},
             { ShipPropID.Speed, new ShipInfoInt(240)},
             { ShipPropID.Boost, new ShipInfoInt(330)},
@@ -531,6 +534,7 @@ namespace EliteDangerousCore
             { ShipPropID.FDID, new ShipInfoString("Viper")},
             { ShipPropID.HullMass, new ShipInfoDouble(50F)},
             { ShipPropID.Name, new ShipInfoString("Viper Mk III")},
+            { ShipPropID.EDCDName, new ShipInfoString("Viper MkIII")},
             { ShipPropID.Manu, new ShipInfoString("Faulcon DeLacy")},
             { ShipPropID.Speed, new ShipInfoInt(320)},
             { ShipPropID.Boost, new ShipInfoInt(400)},
@@ -542,6 +546,7 @@ namespace EliteDangerousCore
             { ShipPropID.FDID, new ShipInfoString("Viper_MkIV")},
             { ShipPropID.HullMass, new ShipInfoDouble(190F)},
             { ShipPropID.Name, new ShipInfoString("Viper Mk IV")},
+            { ShipPropID.EDCDName, new ShipInfoString("Viper MkIV")},
             { ShipPropID.Manu, new ShipInfoString("Faulcon DeLacy")},
             { ShipPropID.Speed, new ShipInfoInt(270)},
             { ShipPropID.Boost, new ShipInfoInt(340)},
@@ -559,6 +564,7 @@ namespace EliteDangerousCore
             { ShipPropID.HullCost, new ShipInfoInt(4689640)},
             { ShipPropID.Class, new ShipInfoInt(1)},
         };
+
         private static Dictionary<string, Dictionary<ShipPropID, IModuleInfo>> spaceships = new Dictionary<string, Dictionary<ShipPropID, IModuleInfo>>
         {
             { "adder",adder},
