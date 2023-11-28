@@ -12,8 +12,11 @@
  * governing permissions and limitations under the License.
  */
 
+using ExtendedControls;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace EliteDangerousCore
 {
@@ -167,6 +170,24 @@ namespace EliteDangerousCore
         public DateTime MarketUpdateUTC { get; set; }
         public double MarketAgeInDays { get { return DateTime.UtcNow.Subtract(MarketUpdateUTC).TotalDays; } }
         public string MarketStateString { get { if (HasMarket && Market != null) return $"\u2713 {MarketAgeInDays:N1}"; else if (HasMarket) return "\u2713 ND"; else return ""; } }
+        public CCommodities GetItem(string fdname) { return Market?.Find(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase)); }
+        public string GetItemPriceString(string fdname, bool stationtobuy)
+        {
+            var entry = Market?.Find(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase));
+            if (entry != null)
+                return stationtobuy ? (entry.buyPrice > 0 ? entry.buyPrice.ToString() : "?") : (entry.stock > 0 ? entry.sellPrice.ToString() : "-");
+            else
+                return "";
+        }
+
+        public string GetItemString(string fdname)
+        {
+            var entry = Market?.Find(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase));
+            if (entry != null)
+                return $"Category: {entry.loccategory}{Environment.NewLine}Buy Price: {entry.buyPrice}{Environment.NewLine}Stock: {entry.stock}{Environment.NewLine}Sell Price: {entry.sellPrice}{Environment.NewLine}Demand: {entry.demand}";
+            else
+                return null;
+        }
 
         // sync with journalcarrier..
         public bool HasItem(string fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase)) >= 0; }
@@ -230,6 +251,123 @@ namespace EliteDangerousCore
                 detailed += global::System.Environment.NewLine + "Shipyard: " + global::System.Environment.NewLine + l;
             }
         }
+
+        public void ViewMarket(Form fm, DB.IUserDatabaseSettingsSaver saver)
+        {
+            StationInfo si = this;
+
+            var dgvpanel = new ExtPanelDataGridViewScrollWithDGV<BaseUtils.DataGridViewColumnControl>();
+            dgvpanel.DataGrid.CreateTextColumns("Category", 100, 5,
+                                                "Name", 150, 5,
+                                                "Buy", 50, 5,
+                                                "Stock", 50, 5,
+                                                "Sell", 50, 5,
+                                                "Demand", 50, 5
+                                                );
+
+            dgvpanel.DataGrid.SortCompare += (s, ev) => { if (ev.Column.Index >= 2) ev.SortDataGridViewColumnNumeric(); };
+            dgvpanel.DataGrid.RowHeadersVisible = false;
+
+            saver.DGVLoadColumnLayout(dgvpanel.DataGrid, "ShowMarket");
+
+            foreach (var commd in si.Market.EmptyIfNull())
+            {
+                object[] rowobj = { commd.loccategory,
+                    commd.locName,
+                    commd.buyPrice.ToString("N0"),
+                    commd.stock.ToString("N0"),
+                    commd.sellPrice.ToString("N0"),
+                    commd.demand.ToString("N0")
+                };
+                var row = dgvpanel.DataGrid.RowTemplate.Clone() as DataGridViewRow;
+                row.CreateCells(dgvpanel.DataGrid, rowobj);
+                dgvpanel.DataGrid.Rows.Add(row);
+            }
+
+            ConfigurableForm f = new ConfigurableForm();
+            f.Add(new ConfigurableForm.Entry(dgvpanel, "Grid", "", new System.Drawing.Point(3, 30), new System.Drawing.Size(800, 400), null)
+            { Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom });
+            f.AddOK(new Point(800 - 100, 460), "OK", anchor: AnchorStyles.Right | AnchorStyles.Bottom);
+            f.InstallStandardTriggers();
+            f.AllowResize = true;
+
+            string title = $"Commodities for {si.StationName}" + (si.MarketUpdateUTC.Year > 2000 ? EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(si.MarketUpdateUTC).ToString() : "No Data");
+            f.ShowDialogCentred(fm,fm.Icon, title, closeicon: true);
+
+            saver.DGVSaveColumnLayout(dgvpanel.DataGrid, "ShowMarket");
+
+        }
+
+
+        public void ViewOutfitting(Form fm, DB.IUserDatabaseSettingsSaver saver)
+        {
+            StationInfo si = this;
+
+            var dgvpanel = new ExtPanelDataGridViewScrollWithDGV<BaseUtils.DataGridViewColumnControl>();
+            dgvpanel.DataGrid.CreateTextColumns("Category", 100, 5,
+                                                "Name", 150, 5);
+
+            dgvpanel.DataGrid.RowHeadersVisible = false;
+
+            saver.DGVLoadColumnLayout(dgvpanel.DataGrid, "ShowOutfitting");
+
+            foreach (var oi in si.Outfitting.EmptyIfNull())
+            {
+                object[] rowobj = { oi.ModType,
+                                    oi.Name };
+                var row = dgvpanel.DataGrid.RowTemplate.Clone() as DataGridViewRow;
+                row.CreateCells(dgvpanel.DataGrid, rowobj);
+                dgvpanel.DataGrid.Rows.Add(row);
+            }
+
+            ConfigurableForm f = new ConfigurableForm();
+            f.Add(new ConfigurableForm.Entry(dgvpanel, "Grid", "", new System.Drawing.Point(3, 30), new System.Drawing.Size(800, 400), null)
+            { Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom });
+            f.AddOK(new Point(800 - 100, 460), "OK", anchor: AnchorStyles.Right | AnchorStyles.Bottom);
+            f.InstallStandardTriggers();
+            f.AllowResize = true;
+
+            string title = "Outfitting for " + si.StationName + " " + (si.OutfittingUpdateUTC.Year > 2000 ? EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(si.OutfittingUpdateUTC).ToString() : "No Data");
+            f.ShowDialogCentred(fm,fm.Icon, title, closeicon: true);
+
+            saver.DGVSaveColumnLayout(dgvpanel.DataGrid, "ShowOutfitting");
+
+        }
+
+        public void ViewShipyard(Form fm, DB.IUserDatabaseSettingsSaver saver)
+        {
+            StationInfo si = this;
+
+            var dgvpanel = new ExtPanelDataGridViewScrollWithDGV<BaseUtils.DataGridViewColumnControl>();
+            dgvpanel.DataGrid.CreateTextColumns("Name", 100, 5);
+
+            dgvpanel.DataGrid.RowHeadersVisible = false;
+
+            saver.DGVLoadColumnLayout(dgvpanel.DataGrid, "ShowShipyard");
+
+            foreach (var oi in si.Shipyard.EmptyIfNull())
+            {
+                object[] rowobj = { oi.ShipType_Localised,
+                                    };
+                var row = dgvpanel.DataGrid.RowTemplate.Clone() as DataGridViewRow;
+                row.CreateCells(dgvpanel.DataGrid, rowobj);
+                dgvpanel.DataGrid.Rows.Add(row);
+            }
+
+            ConfigurableForm f = new ConfigurableForm();
+            f.Add(new ConfigurableForm.Entry(dgvpanel, "Grid", "", new System.Drawing.Point(3, 30), new System.Drawing.Size(800, 400), null)
+            { Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom });
+            f.AddOK(new Point(800 - 100, 460), "OK", anchor: AnchorStyles.Right | AnchorStyles.Bottom);
+            f.InstallStandardTriggers();
+            f.AllowResize = true;
+
+            string title = "Shipyard for " + si.StationName + " " + (si.ShipyardUpdateUTC.Year > 2000 ? EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(si.ShipyardUpdateUTC).ToString() : "No Data");
+            f.ShowDialogCentred(fm,fm.Icon, title, closeicon: true);
+
+            saver.DGVSaveColumnLayout(dgvpanel.DataGrid, "ShowShipyard");
+        }
+
+
 
     }
 

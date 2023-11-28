@@ -41,13 +41,13 @@ namespace EliteDangerousCore
         [JsonIgnore]
         public bool HasDemand { get { return demand > 1; } }        // 1 because lots of them are marked as 1, as in, they want it, but not much
 
-        public int buyPrice { get; private set; }
-        public int sellPrice { get; private set; }
+        public int buyPrice { get; private set; }       // price station will pay for it
+        public int demand { get; private set; }         // station demand for it
+        public int sellPrice { get; private set; }      // price station will sell to you
+        public int stock { get; private set; }          // how much station has
         public int meanPrice { get; private set; }
         public int demandBracket { get; private set; }
         public int stockBracket { get; private set; }
-        public int stock { get; private set; }
-        public int demand { get; private set; }
 
         public List<string> statusFlags { get; private set; }
 

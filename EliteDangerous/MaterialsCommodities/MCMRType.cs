@@ -72,6 +72,7 @@ namespace EliteDangerousCore
         public bool IsManufactured { get { return Category == CatType.Manufactured; } }
         public bool IsEncodedOrManufactured { get { return Category == CatType.Encoded || Category == CatType.Manufactured; } }
         public bool IsRareCommodity { get { return Rarity && IsCommodity; } }
+        public bool IsNormalCommodity { get { return !Rarity && IsCommodity; } }
         public bool IsCommonMaterial { get { return Type == ItemType.Common || Type == ItemType.VeryCommon; } }
 
         public bool IsMicroResources { get { return Category >= CatType.Item; } }     // odyssey 4.0
@@ -160,16 +161,41 @@ namespace EliteDangerousCore
             return cachelist.Values.ToArray();
         }
 
+        public enum SortMethod
+        {
+            None, Alphabetical, AlphabeticalRaresLast
+        }
+
         // use this delegate to find them
-        public static MaterialCommodityMicroResourceType[] Get(Func<MaterialCommodityMicroResourceType, bool> func, bool sorted)
+        public static MaterialCommodityMicroResourceType[] Get(Func<MaterialCommodityMicroResourceType, bool> func, SortMethod sort)
         {
             MaterialCommodityMicroResourceType[] items = cachelist.Values.Where(func).ToArray();
 
-            if (sorted)
+            if (sort != SortMethod.None)
             {
                 Array.Sort(items, delegate (MaterialCommodityMicroResourceType left, MaterialCommodityMicroResourceType right)     // in order, name
                 {
-                    return left.Name.CompareTo(right.Name.ToString());
+                    if ( sort == SortMethod.AlphabeticalRaresLast)
+                    {
+                        if ( left.IsRareCommodity )
+                        {
+                            if (right.IsRareCommodity)
+                                return left.Name.CompareTo(right.Name.ToString());
+                            else
+                                return 1;
+                        }
+                        else if ( right.IsRareCommodity )
+                        {
+                            if (left.IsRareCommodity)
+                                return left.Name.CompareTo(right.Name.ToString());
+                            else
+                                return -1;
+                        }
+                        else
+                            return left.Name.CompareTo(right.Name.ToString());
+                    }
+                    else
+                        return left.Name.CompareTo(right.Name.ToString());
                 });
 
             }
@@ -177,17 +203,27 @@ namespace EliteDangerousCore
             return items;
         }
 
-        public static MaterialCommodityMicroResourceType[] GetCommodities(bool sorted)
+        public static MaterialCommodityMicroResourceType[] GetCommodities(SortMethod sorted)
         {
             return Get(x => x.IsCommodity, sorted);
         }
 
-        public static MaterialCommodityMicroResourceType[] GetMaterials(bool sorted)
+        public static MaterialCommodityMicroResourceType[] GetRareCommodities(SortMethod sorted)
+        {
+            return Get(x => x.IsRareCommodity, sorted);
+        }
+
+        public static MaterialCommodityMicroResourceType[] GetNormalCommodities(SortMethod sorted)
+        {
+            return Get(x => x.IsNormalCommodity, sorted);
+        }
+
+        public static MaterialCommodityMicroResourceType[] GetMaterials(SortMethod sorted)
         {
             return Get(x => x.IsMaterial, sorted);
         }
 
-        public static MaterialCommodityMicroResourceType[] GetMicroResources(bool sorted)
+        public static MaterialCommodityMicroResourceType[] GetMicroResources(SortMethod sorted)
         {
             return Get(x => x.IsMicroResources, sorted);
         }

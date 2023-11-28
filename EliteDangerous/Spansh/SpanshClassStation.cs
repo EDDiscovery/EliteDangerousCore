@@ -275,7 +275,18 @@ namespace EliteDangerousCore.Spansh
 
             return IssueStationSearchQuery(jo);
         }
-        public List<StationInfo> SearchCommodities(string systemname, string[] englishcommdnames, double maxradius, int maxresults = 20)
+
+        public class SearchCommoditity
+        {
+            public string EnglishName { get; set; }
+            public Tuple<int, int> buyprice { get; set; } = null; // set to compare buy price
+            public Tuple<int, int> sellprice { get; set; } = null; // set to compare sell price
+            public Tuple<int, int> supply { get; set; } = null; // set to compare supply
+            public Tuple<int, int> demand { get; set; } = null; // set to compare sdemand
+        }
+
+
+        public List<StationInfo> SearchCommodities(string systemname, SearchCommoditity[] commodities, double maxradius, int maxresults = 20)
         {
             JObject jo = new JObject()
             {
@@ -304,9 +315,19 @@ namespace EliteDangerousCore.Spansh
             };
 
             JArray market = jo["filters"]["market"].Array();
-            foreach( var m in englishcommdnames)
+            foreach( var c in commodities)
             {
-                JObject o = new JObject { ["name"] = m };
+                JObject o = new JObject { ["name"] = c.EnglishName };
+
+                if (c.buyprice != null)
+                    o["buy_price"] = new JObject { ["value"] = new JArray(c.buyprice.Item1.ToStringInvariant(), c.buyprice.Item2.ToStringInvariant()), ["comparison"] = "<=>" };
+                if (c.sellprice != null)
+                    o["sell_price"] = new JObject { ["value"] = new JArray(c.sellprice.Item1.ToStringInvariant(), c.sellprice.Item2.ToStringInvariant()), ["comparison"] = "<=>" };
+                if (c.supply != null)
+                    o["supply"] = new JObject { ["value"] = new JArray(c.supply.Item1.ToStringInvariant(), c.supply.Item2.ToStringInvariant()), ["comparison"] = "<=>" };
+                if (c.demand != null)
+                    o["demand"] = new JObject { ["value"] = new JArray(c.demand.Item1.ToStringInvariant(), c.demand.Item2.ToStringInvariant()), ["comparison"] = "<=>" };
+
                 market.Add(o);
             }
 
