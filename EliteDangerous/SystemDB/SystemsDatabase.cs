@@ -30,6 +30,14 @@ namespace EliteDangerousCore.DB
         public static bool WALMode { get; set; } = false;
         public string DBSource { get; private set; } = "Unknown";
         public bool HasStarType { get { return DBSource == "SPANSH"; } }
+        public bool HasSystemAddresses { get { return DBSource == "SPANSH"; } }
+        public bool RebuildRunning { get; private set; } = true;                // we are rebuilding until we have the system db table in there
+        public HashSet<long> PermitSystems { get; private set; }                             // list of permit systems
+
+        public bool IsPermitSystem(ISystem s)
+        {
+            return HasSystemAddresses ? PermitSystems.Contains(s.SystemAddress ?? -1) : PermitSystems.Contains(s.EDSMID ?? -1);
+        }
 
         public static SystemsDatabase Instance
         {
@@ -95,11 +103,12 @@ namespace EliteDangerousCore.DB
             {
                 SystemsDB.Remove(4099286239595);
             }
+
+            PermitSystems = SystemsDB.GetPermitSystems();
         }
 
         const string TempTablePostfix = "temp"; // postfix for temp tables
 
-        public bool RebuildRunning { get; private set; } = true;                // we are rebuilding until we have the system db table in there
 
 
         // this deletes the current DB data, reloads from the file, and recreates the indexes etc
@@ -174,6 +183,7 @@ namespace EliteDangerousCore.DB
                 System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.TickCountLap("SDBS")} System DB Made");
                 ClearDownRestart();             // tables have changed, clear all connections down
 
+                PermitSystems = SystemsDB.GetPermitSystems();       // refresh permit systems
 
                 return updates;
             }

@@ -12,6 +12,8 @@
  * governing permissions and limitations under the License.
  */
 
+#define EDD     // here just for compatibility with the baseutils debug harness
+
 using BaseUtils;
 using EliteDangerousCore.DB;
 using EMK.LightGeometry;
@@ -25,6 +27,7 @@ namespace EliteDangerousCore
     {
         #region Public Interface for Find System
 
+#if EDD
         // in historylist, addtocache for all fsd jumps and navroutes.
         public static System.Threading.Tasks.Task<ISystem> FindSystemAsync(string name, GMO.GalacticMapping glist, WebExternalDataLookup lookup = WebExternalDataLookup.None)
         {
@@ -59,6 +62,7 @@ namespace EliteDangerousCore
 
             return sys;
         }
+#endif
 
         public static ISystem FindSystem(string name, WebExternalDataLookup lookup = WebExternalDataLookup.None)
         {
@@ -305,7 +309,7 @@ namespace EliteDangerousCore
                 });
             }
         }
-
+#if EDD
         //// find nearest system, from cache, from db, from web (opt), and from gmo (opt)
         public static ISystem FindNearestSystemTo(double x, double y, double z, double maxdistance, 
                                         WebExternalDataLookup weblookup, GMO.GalacticMapping glist = null)
@@ -376,14 +380,17 @@ namespace EliteDangerousCore
 
             return retsys;
         }
-
+#endif
         // return system nearest to wantedpos, with ranges from curpos/wantedpos, with a route method
+        // discard list is supported to knock out unwanted system by ID (EDSMID or System address)
+        // used by the route plotter.
         public static ISystem GetSystemNearestTo(Point3D currentpos,
                                                  Point3D wantedpos,
                                                  double maxfromcurpos,
                                                  double maxfromwanted,
                                                  SystemsNearestMetric routemethod,
-                                                 int limitto)
+                                                 int limitto,
+                                                 HashSet<long> discard)
         {
             List<ISystem> candidates;
 
@@ -397,7 +404,9 @@ namespace EliteDangerousCore
                                      dw = s.Distance(wantedpos.X, wantedpos.Y, wantedpos.Z),
                                      sys = s
                                  })
-                                 .Where(s => s.dw < maxfromwanted && s.dc < maxfromcurpos)
+                                 .Where(s => s.dw < maxfromwanted &&
+                                             s.dc < maxfromcurpos &&
+                                             (discard == null || (s.sys.EDSMID.HasValue ? !discard.Contains(s.sys.EDSMID.Value) : !discard.Contains(s.sys.SystemAddress ?? 0))))
                                  .OrderBy(s => s.dw)
                                  .Select(s => s.sys)
                                  .ToList();
@@ -407,11 +416,18 @@ namespace EliteDangerousCore
             {
                 SystemsDatabase.Instance.DBRead(cn =>
                 {
-                    DB.SystemsDB.GetSystemNearestTo(currentpos, wantedpos, maxfromcurpos, maxfromwanted, limitto, cn, (s) => { AddToCache(s); candidates.Add(s); });
+                    DB.SystemsDB.GetSystemNearestTo(currentpos, wantedpos, maxfromcurpos, maxfromwanted, limitto, cn, (s) =>
+                    {
+                        AddToCache(s);
+                        if (discard == null || (s.EDSMID.HasValue ? !discard.Contains(s.EDSMID.Value) : !discard.Contains(s.SystemAddress ?? 0)))
+                        {
+                            candidates.Add(s);
+                        }
+                    });
                 });
             }
 
-            return GetSystemNearestTo(candidates, currentpos, wantedpos, maxfromcurpos, maxfromwanted, routemethod);
+            return PickSystemFromCandidatesUsingMetric(candidates, currentpos, wantedpos, maxfromcurpos, maxfromwanted, routemethod);
         }
 
         public enum SystemsNearestMetric
@@ -424,7 +440,7 @@ namespace EliteDangerousCore
             IterativeWaypointDevHalf,
         }
 
-        internal static ISystem GetSystemNearestTo(IEnumerable<ISystem> systems,
+        internal static ISystem PickSystemFromCandidatesUsingMetric(IEnumerable<ISystem> systems,
                                                    Point3D currentpos,
                                                    Point3D wantedpos,
                                                    double maxfromcurpos,
@@ -483,9 +499,9 @@ namespace EliteDangerousCore
         }
 
 
-        #endregion
+#endregion
 
-        #region Autocomplete
+#region Autocomplete
 
         // use this for additional autocompletes outside of the normal stars
         public static void AddToAutoCompleteList(List<string> t)
@@ -551,9 +567,9 @@ namespace EliteDangerousCore
             }
         }
 
-        #endregion
+#endregion
 
-        #region Helpers
+#region Helpers
 
         // add found to cache
         // add to edsm id list if edsmid set
@@ -618,7 +634,7 @@ namespace EliteDangerousCore
 
         private static List<string> AutoCompleteAdditionalList = new List<string>();
 
-        #endregion
+#endregion
     }
 
 }

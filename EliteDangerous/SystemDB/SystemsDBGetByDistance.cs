@@ -101,21 +101,16 @@ namespace EliteDangerousCore.DB
             return (distlist.Count > 0) ? distlist.First().Value : null;
         }
 
-        /////////////////////////////////////////////// Nearest to a point determined by a metric
+        // nearest system to wantedpos with max from currentpos
 
-        // either use CallBack or List
-        internal static void GetSystemNearestTo(
-                                                  Point3D currentpos,
+        internal static void GetSystemNearestTo(  Point3D currentpos,
                                                   Point3D wantedpos,
                                                   double maxfromcurpos,
                                                   double maxfromwanted,
                                                   int limitto,
                                                   SQLiteConnectionSystem cn,
-                                                  Action<ISystem> CallBack = null,
-                                                  List<ISystem> list = null)
+                                                  Action<ISystem> CallBack)
         {
-            System.Diagnostics.Debug.Assert(CallBack != null || list != null);
-
             using (DbCommand cmd = cn.CreateSelect("SystemTable s",
                         MakeSystemQueryNamed,
                         where:
@@ -151,15 +146,11 @@ namespace EliteDangerousCore.DB
                     while (reader.Read())
                     {
                         var sys = MakeSystem(reader);
-                        if (CallBack != null)
-                            CallBack(sys);
-                        else
-                            list.Add(sys);
+                        CallBack(sys);
                     }
                 }
             }
         }
-
     }
 }
 

@@ -155,6 +155,7 @@ namespace EliteDangerousCore.DB
                         ulong? id = null, systemaddress = null;
                         int? startype = null;
                         bool spansh = false;
+                        bool permitsystem = false;
 
                         // skip to next non white, do not remove anything after, while not at EOL
                         while ((nextchar = parser.GetNextNonSpaceChar(false)) != char.MinValue)
@@ -250,8 +251,8 @@ namespace EliteDangerousCore.DB
                                     }
                                     else if (sc == needspermitv) // spansh
                                     {
-                                        // we don't store this
-                                        bool _ = parser.IsStringMoveOn("true") ? true : !parser.IsStringMoveOn("false");
+                                        permitsystem = parser.IsStringMoveOn("true") ? true : !parser.IsStringMoveOn("false");
+                                        permitsloaded++;
                                     }
                                     else if ( sc == coordsLockedv ) //EDSM
                                     { 
@@ -319,7 +320,7 @@ namespace EliteDangerousCore.DB
                                         curwb.sectorinsertcmd.Append(gridid.ToStringInvariant());
                                         curwb.sectorinsertcmd.Append(",'");
                                         curwb.sectorinsertcmd.Append(classifier.SectorName.Replace("'", "''"));
-                                        curwb.sectorinsertcmd.Append("') ");
+                                        curwb.sectorinsertcmd.Append("')");
 
                                         sectorcache.Add(skey, sectorid);        // add to sector cache
                                     }
@@ -330,31 +331,42 @@ namespace EliteDangerousCore.DB
                                             curwb.nameinsertcmd.Append(',');
 
                                         curwb.nameinsertcmd.Append('(');                            // add (id,name) to names insert string
-                                        curwb.nameinsertcmd.Append(id);
+                                        curwb.nameinsertcmd.Append(id.Value.ToStringInvariant());
                                         curwb.nameinsertcmd.Append(",'");
                                         curwb.nameinsertcmd.Append(classifier.StarName.Replace("'", "''"));
                                         curwb.nameinsertcmd.Append("') ");
                                         classifier.NameIdNumeric = id.Value;                      // the name becomes the id of the entry
                                     }
 
+                                    if (permitsystem)
+                                    {
+                                        //System.Diagnostics.Debug.WriteLine($"Permit system {starname} {id}");
+                                        if (curwb.permitsystemsinsertcmd.Length > 0)
+                                            curwb.permitsystemsinsertcmd.Append(',');
+
+                                        curwb.permitsystemsinsertcmd.Append('(');                 // add (id) to permit system insert string
+                                        curwb.permitsystemsinsertcmd.Append(id.Value.ToStringInvariant());
+                                        curwb.permitsystemsinsertcmd.Append(")");
+                                    }
+
                                     if (curwb.systeminsertcmd.Length > 0)
                                         curwb.systeminsertcmd.Append(",");
 
                                     curwb.systeminsertcmd.Append('(');                            // add (id,sectorid,nameid,x,y,z,info) to systems insert string
-                                    curwb.systeminsertcmd.Append(id);                           // locale independent, because its just a decimal with no N formatting
+                                    curwb.systeminsertcmd.Append(id.Value.ToStringInvariant());                           // locale independent, because its just a decimal with no N formatting
                                     curwb.systeminsertcmd.Append(',');
-                                    curwb.systeminsertcmd.Append(sectorid);
+                                    curwb.systeminsertcmd.Append(sectorid.ToStringInvariant());
                                     curwb.systeminsertcmd.Append(',');
-                                    curwb.systeminsertcmd.Append(classifier.ID);
+                                    curwb.systeminsertcmd.Append(classifier.ID.ToStringInvariant());
                                     curwb.systeminsertcmd.Append(',');
-                                    curwb.systeminsertcmd.Append(xi);
+                                    curwb.systeminsertcmd.Append(xi.ToStringInvariant());
                                     curwb.systeminsertcmd.Append(',');
-                                    curwb.systeminsertcmd.Append(yi);
+                                    curwb.systeminsertcmd.Append(yi.ToStringInvariant());
                                     curwb.systeminsertcmd.Append(',');
-                                    curwb.systeminsertcmd.Append(zi);
+                                    curwb.systeminsertcmd.Append(zi.ToStringInvariant());
                                     curwb.systeminsertcmd.Append(",");
                                     if (startype.HasValue)
-                                        curwb.systeminsertcmd.Append(startype);
+                                        curwb.systeminsertcmd.Append(startype.Value.ToStringInvariant());
                                     else
                                         curwb.systeminsertcmd.Append("NULL");
 
@@ -395,7 +407,7 @@ namespace EliteDangerousCore.DB
                             prevwb.sqlop = null;                                                    // we are abandoning this work block
                             prevwb = null;
 
-                            System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCountLap("SDBS")} ready jobfinished {metric.Item2} delta {dbfinishedbeforeread}  ************ next BS {maxblocksize}");
+                            System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCountLap("SDBS")} ready jobfinished {metric.Item2} delta {dbfinishedbeforeread}  ************ next BS {maxblocksize} Permits {permitsloaded}");
                         }
 
                         if (recordstostore > 0)
@@ -450,11 +462,12 @@ namespace EliteDangerousCore.DB
 
             private class WriteBlock
             {
-                public Object sqlop;
-                public int wbno;
+                public Object sqlop;    // id of write job
+                public int wbno;        // write block number
                 public StringBuilder sectorinsertcmd = new StringBuilder(100000);
                 public StringBuilder nameinsertcmd = new StringBuilder(300000);
                 public StringBuilder systeminsertcmd = new StringBuilder(32000000);
+                public StringBuilder permitsystemsinsertcmd = new StringBuilder(10000);
 
                 public WriteBlock(int n)
                 {
@@ -500,6 +513,15 @@ namespace EliteDangerousCore.DB
                             }
                         }
 
+                        if (permitsystemsinsertcmd.Length > 0)    
+                        {
+                            using (var cmd = db.CreateCommand(
+                                (dontoverwrite ? "INSERT OR IGNORE INTO PermitSystems" : "INSERT OR REPLACE INTO PermitSystems") + tablepostfix + " (edsmid) VALUES " + permitsystemsinsertcmd.ToString(), txn))
+                            {
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
+
                         txn.Commit();
                     }
                 }
@@ -513,7 +535,7 @@ namespace EliteDangerousCore.DB
             private bool dontoverwrite;
             private bool[] grididallowed;
             private StreamWriter debugfile = null;
-
+            private int permitsloaded;
         }
     }
 }

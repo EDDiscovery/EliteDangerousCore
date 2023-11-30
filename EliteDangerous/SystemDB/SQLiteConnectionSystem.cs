@@ -102,6 +102,17 @@ namespace EliteDangerousCore.DB
                 return 212;
             }
 
+            if (dbver < 213)           // if not 212, then rename the systems to systemtable from now on, to cause previous versions to break on this DB
+            {
+                ExecuteNonQueries(new string[]                  // always set up
+                    {
+                        "CREATE TABLE IF NOT EXISTS PermitSystems (edsmid INTEGER PRIMARY KEY NOT NULL)",
+                    });
+
+                CreateSystemDBTableIndexes();           // ensure they are there 
+                return 213;
+            }
+
             return 0;
         }
 
@@ -118,6 +129,7 @@ namespace EliteDangerousCore.DB
                 "CREATE TABLE IF NOT EXISTS Sectors" + postfix + " (id INTEGER PRIMARY KEY NOT NULL, gridid INTEGER, name TEXT NOT NULL COLLATE NOCASE)",
                 "CREATE TABLE IF NOT EXISTS SystemTable" + postfix + " (edsmid INTEGER PRIMARY KEY NOT NULL , sectorid INTEGER, nameid INTEGER, x INTEGER, y INTEGER, z INTEGER, info INTEGER DEFAULT NULL)",
                 "CREATE TABLE IF NOT EXISTS Names" + postfix + " (id INTEGER PRIMARY KEY NOT NULL , Name TEXT NOT NULL COLLATE NOCASE )",
+                "CREATE TABLE IF NOT EXISTS PermitSystems" + postfix + " (edsmid INTEGER PRIMARY KEY NOT NULL)",
             });
         }
 
@@ -128,6 +140,7 @@ namespace EliteDangerousCore.DB
                 "DROP TABLE IF EXISTS Sectors" + postfix,       // dropping the tables kills the indexes
                 "DROP TABLE IF EXISTS SystemTable" + postfix,
                 "DROP TABLE IF EXISTS Names" + postfix,
+                "DROP TABLE IF EXISTS PermitSystems" + postfix,
             });
         }
 
@@ -138,6 +151,7 @@ namespace EliteDangerousCore.DB
                 "ALTER TABLE Sectors" + frompostfix + " RENAME TO Sectors" + topostfix,
                 "ALTER TABLE SystemTable" + frompostfix + " RENAME TO SystemTable" + topostfix,
                 "ALTER TABLE Names" + frompostfix + " RENAME TO Names" + topostfix,
+                "ALTER TABLE PermitSystems" + frompostfix + " RENAME TO PermitSystems" + topostfix,
             });
         }
 

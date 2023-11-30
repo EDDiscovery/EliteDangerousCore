@@ -35,19 +35,23 @@ namespace EliteDangerousCore
         public NameType EntryType { get; set; } = NameType.NotSet;
         public string SectorName { get; set; } = null;    // for string inputs, set always. Either the sector name (Pru Eurk or survey HIP etc) or "NotInSector" for Named (Sol). For id input, null
         public string StarName { get; set; } = null;      // for string inputs, set for surveys or non standard names, else null. For id input, null
-        public ulong NameIdNumeric { get; set; } = 0;      // for string inputs: if its a numeric, value, else 0. For id input, NIndex into name table (for Sol) or numeric name (for 12345=56) else null
+        public ulong NameIdNumeric { get; set; } = 0;      // for string inputs: if its a numeric, value, else 0. For id input, NIndex into name table (for Sol) or numeric name (for 12345=56) else zero
 
         private uint L1, L2, L3, MassCode, NValue;   // set for standard names
         private uint NumericDashPos = 0;     // Numeric Dash position
         private uint NumericDigits = 0;      // Numeric digits
 
+        //   48    44   40   36   32   28   24   20   16   12    8    4    0
+        //       10xx x111 11L2 222L 3333 MMMM N111 1111 N222 2222 2222 2222               
         private const int StandardPosMarker = 47;   // Standard (L1/Mass/N apply).   47 means its in 6 bytes, fitting within a 6 byte SQL field
         private const int L1Marker = 38;            // Standard: 5 bits 38-42 (1 = A, 26=Z)
-        private const int L2Marker = 33;            // Standard: 5 bits 33-47 (1 = A, 26=Z)
-        private const int L3Marker = 28;            // Standard: 6 bits 28-32 (aligned for display purposes) (1 = A, 26=Z)
+        private const int L2Marker = 33;            // Standard: 5 bits 33-37 (1 = A, 26=Z)
+        private const int L3Marker = 28;            // Standard: 5 bits 28-32 (aligned for display purposes) (1 = A, 26=Z)
         private const int MassMarker = 24;          // Standard: 3 bits 24-27 (0=A,7=H)
         private const int NMarker = 0;              // Standard: N2 + N1<<16  
 
+        //  48    44   40   36   32   28   24   20   16   12    8    4    0
+        //      01CC CCDD DDNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN               
         private const int NumericMarker = 46;       // Numeric (HIP 1232-23). bits 0-35 hold value.  
         private const int NumericCountMarker = 42;  // Numeric: 4 bits 42-45 Number of digits in number
         private const int NumericDashMarker = 38;   // Numeric: 4 bits 38-41 position of dash in number (0 = none, 1 = 0 char in, 2 = 1 char in etc) 
@@ -77,9 +81,13 @@ namespace EliteDangerousCore
                     return ((ulong)NValue << NMarker) | ((ulong)(MassCode) << MassMarker) | ((ulong)(L3) << L3Marker) | ((ulong)(L2) << L2Marker) | ((ulong)(L1) << L1Marker) | (1UL << StandardPosMarker);
                 }
                 else if (IsNumeric)
+                {
                     return (ulong)(NameIdNumeric) | (1UL << NumericMarker) | ((ulong)(NumericDashPos) << NumericDashMarker) | ((ulong)(NumericDigits) << NumericCountMarker);
+                }
                 else
+                {
                     return (ulong)(NameIdNumeric);
+                }
             }
         }
 
@@ -104,7 +112,8 @@ namespace EliteDangerousCore
                     else
                         return lcodes | ((ulong)NValue << NMarker); // no wild card here
                 }
-                else return ID;
+                else 
+                    return ID;
             }
         }
 

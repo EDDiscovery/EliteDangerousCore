@@ -155,7 +155,7 @@ namespace EliteDangerousCore
         private ISystem GetBestJumpSystem(Point3D currentPosition, Point3D travelVectorPerLy, float maxDistanceFromWanted, float maxRange)
         {
             Point3D nextPosition = GetNextPosition(currentPosition, travelVectorPerLy, maxRange);
-            ISystem bestSystem = SystemCache.GetSystemNearestTo(currentPosition, nextPosition, maxRange, maxDistanceFromWanted, RouteMethod, 1000);  // at least get 1/4 way there, otherwise waypoint.  Best 1000 from waypoint checked
+            ISystem bestSystem = SystemCache.GetSystemNearestTo(currentPosition, nextPosition, maxRange, maxDistanceFromWanted, RouteMethod, 1000, null);  // at least get 1/4 way there, otherwise waypoint.  Best 1000 from waypoint checked
             return bestSystem;
         }
 
