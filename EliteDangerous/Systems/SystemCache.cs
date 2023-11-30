@@ -423,6 +423,8 @@ namespace EliteDangerousCore
                         {
                             candidates.Add(s);
                         }
+                        else
+                            System.Diagnostics.Debug.WriteLine($"GetSystem discarded {s.SystemAddress} {s.Name}");
                     });
                 });
             }
