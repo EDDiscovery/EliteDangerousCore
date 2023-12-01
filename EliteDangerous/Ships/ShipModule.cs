@@ -98,7 +98,7 @@ namespace EliteDangerousCore
         {
             get
             {
-                ItemData.ShipModule smd = ItemData.GetShipModuleProperties(ItemFD);
+                ItemData.TryGetShipModule(ItemFD, out ItemData.ShipModule smd, false);    // find
                 if (smd != null)
                 {
                     double mass = smd.Mass;

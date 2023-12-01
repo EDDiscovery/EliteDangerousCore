@@ -108,9 +108,11 @@ namespace EliteDangerousCore
 
         static public string GetBetterModuleName(string s)           
         {
-            if (s.Length>0)         // accept empty string, some of the fields are purposely blank from the journal because they are not set for a particular transaction
+            // screen out empty string, some of the fields are purposely blank from the journal because they are not set for a particular transaction
+            // do create as this is used by Loadout, ModuleBuy
+
+            if (s.Length>0 && ItemData.TryGetShipModule(s, out ItemData.ShipModule item, true))    
             {
-                ItemData.ShipModule item = ItemData.GetShipModuleProperties(s);
                 return item.ModName;
             }
             else

@@ -22,30 +22,27 @@ namespace EliteDangerousCore
 {
     public partial class ItemData
     {
-        static public bool ShipModuleExists(string fdid)
+        static public bool TryGetShipModule(string fdid, out ShipModule m, bool synthesiseit )
         {
-            string lowername = fdid.ToLowerInvariant();
-            return shipmodules.ContainsKey(lowername) || othershipmodules.ContainsKey(lowername) || srvmodules.ContainsKey(lowername) || fightermodules.ContainsKey(lowername) || vanitymodules.ContainsKey(lowername);
-        }
-
-        static public ShipModule GetShipModuleProperties(string fdid)        // given an item name, return its ShipModule properties (id, mass, names). Always returns one
-        {
+            m = null;
             string lowername = fdid.ToLowerInvariant();
 
-            ShipModule m = null;
+            // try the static values first, this is thread safe
+            bool state = shipmodules.TryGetValue(lowername, out m) || othershipmodules.TryGetValue(lowername, out m) ||
+                        srvmodules.TryGetValue(lowername, out m) || fightermodules.TryGetValue(lowername, out m) || vanitymodules.TryGetValue(lowername, out m);
 
-            if (!shipmodules.TryGetValue(lowername, out m) && !othershipmodules.TryGetValue(lowername, out m) && !srvmodules.TryGetValue(lowername, out m) && !fightermodules.TryGetValue(lowername, out m)
-                        && !vanitymodules.TryGetValue(lowername, out m))
+            if ( state == false)    // not found, try find the synth modules. Since we can be called in journal creation thread, we need some safety.
             {
-                bool hasmodule;
-
-                lock (synthesisedmodules)  // Ensure synthesisedmodules is in a valid state
+                lock(synthesisedmodules)
                 {
-                    hasmodule = synthesisedmodules.TryGetValue(lowername, out m);
+                    state = synthesisedmodules.TryGetValue(lowername, out m);
                 }
+            }
 
-                if (!hasmodule)
-                {               // synthesise one
+            if ( !state && synthesiseit )   // if not found, and we want to synthesise it
+            {
+                lock (synthesisedmodules)  // lock for safety
+                {
                     string candidatename = fdid;
                     candidatename = candidatename.Replace("weaponcustomisation", "WeaponCustomisation").Replace("testbuggy", "SRV").
                                             Replace("enginecustomisation", "EngineCustomisation");
@@ -56,27 +53,15 @@ namespace EliteDangerousCore
 
                     System.Diagnostics.Debug.WriteLine("******* Unknown Module { \"" + lowername + "\", new ShipModule(-1,0, \"" + newmodule.ModName + "\", " + (IsVanity(lowername) ? "VanityType" : "UnknownType") + " ) },");
 
-                    lock (synthesisedmodules) // Prevent modification from multiple threads
-                    {
-                        if (!synthesisedmodules.TryGetValue(lowername, out m))
-                        {
-                            synthesisedmodules[lowername] = m = newmodule;                   // lets cache them for completeness..
-
-                            //            string line = "{ \"" + lowername + "\", new ShipModule( -1, 0 , \"" + m.modname + "\",\"" + m.modtype + "\") },";     // DEBUG
-                            //            if (!synthresponses.Contains(line))  synthresponses.Add(line);
-                        }
-                    }
+                    synthesisedmodules[lowername] = m = newmodule;                   // lets cache them for completeness..
                 }
             }
 
-            // System.Diagnostics.Debug.WriteLine("Module item " + fdid + " >> " + m.ModName + " " + m.ModType + " " + m.ModuleID);
-            return m;
+            return state;
         }
 
-        static private Dictionary<string, ShipModule> synthesisedmodules = new Dictionary<string, ShipModule>();
-
-        // all module types.. can remove non buyable and add an Unknown type
-        static public List<ShipModule> GetModules(bool includenonbuyable = false, bool includesrv = false, bool includefighter = false, bool includevanity = false,  bool addunknowntype = false)       
+        // List of ship modules. Synthesised are not included
+        static public List<ShipModule> GetShipModulesList(bool includenonbuyable = false, bool includesrv = false, bool includefighter = false, bool includevanity = false,  bool addunknowntype = false)       
         {
             List<ShipModule> mlist = new List<ShipModule>(shipmodules.Values);
             if (includenonbuyable)
@@ -92,6 +77,34 @@ namespace EliteDangerousCore
             return mlist;
         }
 
+        // Dictionary of ship modules, merged. Using this can show up repeats between dictionaries. Synthesised are not included
+        static public Dictionary<string,ShipModule> GetShipModuleDictionary(bool includenonbuyable = false, bool includesrv = false, bool includefighter = false, bool includevanity = false)
+        {
+            Dictionary<string, ShipModule> res = new Dictionary<string, ShipModule>(shipmodules);
+            if (includenonbuyable)
+            {
+                foreach (var kvp in othershipmodules)
+                    res.Add(kvp.Key, kvp.Value);
+            }
+            if (includesrv)
+            {
+                foreach (var kvp in srvmodules)
+                    res.Add(kvp.Key, kvp.Value);
+            }
+            if (includefighter)
+            {
+                foreach (var kvp in fightermodules)
+                    res.Add(kvp.Key, kvp.Value);
+            }
+            if (includevanity)
+            {
+                foreach (var kvp in vanitymodules)
+                    res.Add(kvp.Key, kvp.Value);
+            }
+
+            return res;
+        }
+
         static public bool IsVanity(string ifd)
         {
             ifd = ifd.ToLowerInvariant();
@@ -100,7 +113,7 @@ namespace EliteDangerousCore
             return Array.Find(vlist, x => ifd.Contains(x)) != null;
         }
 
-        #region classes
+        #region ShipModule
 
         public class ShipModule : IModuleInfo
         {
@@ -258,15 +271,14 @@ namespace EliteDangerousCore
             }
 
         };
-        #endregion
-
-        #region Modules collected from logs mainly
-
 
         #endregion
 
+        // History
+        // Originally from coriolis
+        // Nov 1/12/23 synched with EDDI data, with outfitting.csv
 
-        #region Originally from Coriolis, now manually managed, synced with Frontier.
+        #region Ship Modules
 
         public static Dictionary<string, ShipModule> shipmodules = new Dictionary<string, ShipModule>
         {
@@ -1544,7 +1556,7 @@ namespace EliteDangerousCore
             // shield shutdown neutraliser
 
             { "hpt_antiunknownshutdown_tiny", new ShipModule(128771884,1.3,0.2,"Range:3000m","Shutdown Field Neutraliser",ShipModule.ModuleTypes.ShutdownFieldNeutraliser) },   // EDDI
-            { "hpt_antiunknownshutdown_tiny_V2", new ShipModule(129022663,1.3,0.2,"Range:3000m","Shutdown Field Neutraliser V2",ShipModule.ModuleTypes.ShutdownFieldNeutraliser) },   // EDDI
+            { "hpt_antiunknownshutdown_tiny_v2", new ShipModule(129022663,1.3,0.2,"Range:3000m","Shutdown Field Neutraliser V2",ShipModule.ModuleTypes.ShutdownFieldNeutraliser) },   // EDDI
 
             // weapon stabliser
             { "int_expmodulestabiliser_size3_class3", new ShipModule(129019260,8,1.5,"","Exp Module Weapon Stabiliser 3F",ShipModule.ModuleTypes.ExperimentalWeaponStabiliser) }, //EDDI
@@ -1609,83 +1621,6 @@ namespace EliteDangerousCore
             { "hpt_xenoscannermk2_basic_tiny", new ShipModule(128808878,1.3,0.8,"Range:2000m","Xeno Scanner MK 2",ShipModule.ModuleTypes.EnhancedXenoScanner) },
             { "hpt_xenoscanner_advanced_tiny", new ShipModule(129022952,1.3,0.8,"Range:2000m","Advanced Xeno Scanner",ShipModule.ModuleTypes.EnhancedXenoScanner) },
 
-        };
-
-        public static Dictionary<string, ShipModule> fightermodules = new Dictionary<string, ShipModule>
-        {
-            { "hpt_guardiangauss_fixed_gdn_fighter", new ShipModule(899990050,1,1,null,"Guardian Gauss Fixed GDN Fighter",ShipModule.ModuleTypes.FighterWeapon) },
-            { "hpt_guardianplasma_fixed_gdn_fighter", new ShipModule(899990050,1,1,null,"Guardian Plasma Fixed GDN Fighter",ShipModule.ModuleTypes.FighterWeapon) },
-            { "hpt_guardianshard_fixed_gdn_fighter", new ShipModule(899990050,1,1,null,"Guardian Shard Fixed GDN Fighter",ShipModule.ModuleTypes.FighterWeapon) },
-
-            { "empire_fighter_armour_standard", new ShipModule(899990059,0,0,null,"Empire Fighter Armour Standard",ShipModule.ModuleTypes.LightweightAlloy) },
-            { "federation_fighter_armour_standard", new ShipModule(899990060,0,0,null,"Federation Fighter Armour Standard",ShipModule.ModuleTypes.LightweightAlloy) },
-            { "independent_fighter_armour_standard", new ShipModule(899990070,0,0,null,"Independent Fighter Armour Standard",ShipModule.ModuleTypes.LightweightAlloy) },
-            { "gdn_hybrid_fighter_v1_armour_standard", new ShipModule(899990060,0,0,null,"GDN Hybrid Fighter V 1 Armour Standard",ShipModule.ModuleTypes.LightweightAlloy) },
-            { "gdn_hybrid_fighter_v2_armour_standard", new ShipModule(899990060,0,0,null,"GDN Hybrid Fighter V 2 Armour Standard",ShipModule.ModuleTypes.LightweightAlloy) },
-            { "gdn_hybrid_fighter_v3_armour_standard", new ShipModule(899990060,0,0,null,"GDN Hybrid Fighter V 3 Armour Standard",ShipModule.ModuleTypes.LightweightAlloy) },
-
-            { "hpt_beamlaser_fixed_empire_fighter", new ShipModule(899990018,0,1,null,"Beam Laser Fixed Empire Fighter",ShipModule.ModuleTypes.BeamLaser) },
-            { "hpt_beamlaser_fixed_fed_fighter", new ShipModule(899990019,0,1,null,"Beam Laser Fixed Federation Fighter",ShipModule.ModuleTypes.BeamLaser) },
-            { "hpt_beamlaser_fixed_indie_fighter", new ShipModule(899990020,0,1,null,"Beam Laser Fixed Indie Fighter",ShipModule.ModuleTypes.BeamLaser) },
-            { "hpt_beamlaser_gimbal_empire_fighter", new ShipModule(899990023,0,1,null,"Beam Laser Gimbal Empire Fighter",ShipModule.ModuleTypes.BeamLaser) },
-            { "hpt_beamlaser_gimbal_fed_fighter", new ShipModule(899990024,0,1,null,"Beam Laser Gimbal Federation Fighter",ShipModule.ModuleTypes.BeamLaser) },
-            { "hpt_beamlaser_gimbal_indie_fighter", new ShipModule(899990025,0,1,null,"Beam Laser Gimbal Indie Fighter",ShipModule.ModuleTypes.BeamLaser) },
-            { "hpt_plasmarepeater_fixed_empire_fighter", new ShipModule(899990026,0,1,null,"Plasma Repeater Fixed Empire Fighter",ShipModule.ModuleTypes.PlasmaAccelerator) },
-            { "hpt_plasmarepeater_fixed_fed_fighter", new ShipModule(899990027,0,1,null,"Plasma Repeater Fixed Fed Fighter",ShipModule.ModuleTypes.PlasmaAccelerator) },
-            { "hpt_plasmarepeater_fixed_indie_fighter", new ShipModule(899990028,0,1,null,"Plasma Repeater Fixed Indie Fighter",ShipModule.ModuleTypes.PlasmaAccelerator) },
-            { "hpt_pulselaser_fixed_empire_fighter", new ShipModule(899990029,0,1,null,"Pulse Laser Fixed Empire Fighter",ShipModule.ModuleTypes.PulseLaser) },
-            { "hpt_pulselaser_fixed_fed_fighter", new ShipModule(899990030,0,1,null,"Pulse Laser Fixed Federation Fighter",ShipModule.ModuleTypes.PulseLaser) },
-            { "hpt_pulselaser_fixed_indie_fighter", new ShipModule(899990031,0,1,null,"Pulse Laser Fixed Indie Fighter",ShipModule.ModuleTypes.PulseLaser) },
-            { "hpt_pulselaser_fixed_smallfree", new ShipModule(-1,1,0.4,null,"Pulse Laser Fixed Small Free",ShipModule.ModuleTypes.PulseLaser) },
-            { "hpt_pulselaser_gimbal_empire_fighter", new ShipModule(899990032,0,1,null,"Pulse Laser Gimbal Empire Fighter",ShipModule.ModuleTypes.PulseLaser) },
-            { "hpt_pulselaser_gimbal_fed_fighter", new ShipModule(899990033,0,1,null,"Pulse Laser Gimbal Federation Fighter",ShipModule.ModuleTypes.PulseLaser) },
-            { "hpt_pulselaser_gimbal_indie_fighter", new ShipModule(899990034,0,1,null,"Pulse Laser Gimbal Indie Fighter",ShipModule.ModuleTypes.PulseLaser) },
-
-            { "int_engine_fighter_class1", new ShipModule(-1,1,1,null,"Fighter Engine Class 1",ShipModule.ModuleTypes.Thrusters) },
-
-            { "gdn_hybrid_fighter_v1_cockpit", new ShipModule(899990101,0,0,null,"GDN Hybrid Fighter V 1 Cockpit",ShipModule.ModuleTypes.CockpitType) },
-            { "gdn_hybrid_fighter_v2_cockpit", new ShipModule(899990102,0,0,null,"GDN Hybrid Fighter V 2 Cockpit",ShipModule.ModuleTypes.CockpitType) },
-            { "gdn_hybrid_fighter_v3_cockpit", new ShipModule(899990103,0,0,null,"GDN Hybrid Fighter V 3 Cockpit",ShipModule.ModuleTypes.CockpitType) },
-
-            { "hpt_atmulticannon_fixed_indie_fighter", new ShipModule(899990040,0,1,null,"AX Multicannon Fixed Indie Fighter",ShipModule.ModuleTypes.AXMulti_Cannon) },
-            { "hpt_multicannon_fixed_empire_fighter", new ShipModule(899990050,0,1,null,"Multicannon Fixed Empire Fighter",ShipModule.ModuleTypes.Multi_Cannon) },
-            { "hpt_multicannon_fixed_fed_fighter", new ShipModule(899990051,0,1,null,"Multicannon Fixed Fed Fighter",ShipModule.ModuleTypes.Multi_Cannon) },
-            { "hpt_multicannon_fixed_indie_fighter", new ShipModule(899990052,0,1,null,"Multicannon Fixed Indie Fighter",ShipModule.ModuleTypes.Multi_Cannon) },
-
-            { "int_powerdistributor_fighter_class1", new ShipModule(-1,0,0,null,"Int Powerdistributor Fighter Class 1",ShipModule.ModuleTypes.PowerDistributor) },
-
-            { "int_powerplant_fighter_class1", new ShipModule(-1,0,0,null,"Int Powerplant Fighter Class 1",ShipModule.ModuleTypes.PowerPlant) },
-
-            { "int_sensors_fighter_class1", new ShipModule(-1,0,0,null,"Int Sensors Fighter Class 1",ShipModule.ModuleTypes.Sensors) },
-            { "int_shieldgenerator_fighter_class1", new ShipModule(899990080,0,0,null,"Shield Generator Fighter Class 1",ShipModule.ModuleTypes.ShieldGenerator) },
-            { "ext_emitter_guardian", new ShipModule(899990190,0,0,null,"Ext Emitter Guardian",ShipModule.ModuleTypes.Sensors) },
-            { "ext_emitter_standard", new ShipModule(899990090,0,0,null,"Ext Emitter Standard",ShipModule.ModuleTypes.Sensors) },
-
-        };
-
-        public static Dictionary<string, ShipModule> srvmodules = new Dictionary<string, ShipModule>
-        {
-            { "buggycargobaydoor", new ShipModule(-1,0,0,null,"SRV Cargo Bay Door",ShipModule.ModuleTypes.CargoBayDoorType) },
-            { "int_fueltank_size0_class3", new ShipModule(-1,0,0,null,"SRV Scarab Fuel Tank",ShipModule.ModuleTypes.FuelTank) },
-            { "vehicle_scorpion_missilerack_lockon", new ShipModule(-1,0,0,null,"SRV Scorpion Missile Rack",ShipModule.ModuleTypes.MissileRack) },
-            { "int_powerdistributor_size0_class1", new ShipModule(-1,0,0,null,"SRV Scarab Power Distributor",ShipModule.ModuleTypes.PowerDistributor) },
-            { "int_powerplant_size0_class1", new ShipModule(-1,0,0,null,"SRV Scarab Powerplant",ShipModule.ModuleTypes.PowerPlant) },
-            { "vehicle_plasmaminigun_turretgun", new ShipModule(-1,0,0,null,"SRV Scorpion Plasma Turret Gun",ShipModule.ModuleTypes.PulseLaser) },
-
-            { "testbuggy_cockpit", new ShipModule(-1,0,0,null,"SRV Scarab Cockpit",ShipModule.ModuleTypes.CockpitType) },
-            { "scarab_armour_grade1", new ShipModule(-1,0,0,null,"SRV Scarab Armour",ShipModule.ModuleTypes.LightweightAlloy) },
-            { "int_fueltank_size0_class2", new ShipModule(-1,0,0,null,"SRV Scopion Fuel tank Size 0 Class 2",ShipModule.ModuleTypes.FuelTank) },
-            { "combat_multicrew_srv_01_cockpit", new ShipModule(-1,0,0,null,"SRV Scorpion Cockpit",ShipModule.ModuleTypes.CockpitType) },
-            { "int_powerdistributor_size0_class1_cms", new ShipModule(-1,0,0,null,"SRV Scorpion Power Distributor Size 0 Class 1 Cms",ShipModule.ModuleTypes.PowerDistributor) },
-            { "int_powerplant_size0_class1_cms", new ShipModule(-1,0,0,null,"SRV Scorpion Powerplant Size 0 Class 1 Cms",ShipModule.ModuleTypes.PowerPlant) },
-            { "vehicle_turretgun", new ShipModule(-1,0,0,null,"SRV Scarab Turret",ShipModule.ModuleTypes.PulseLaser) },
-
-            { "hpt_datalinkscanner", new ShipModule(-1,0,0,null,"SRV Data Link Scanner",ShipModule.ModuleTypes.Sensors) },
-            { "int_sinewavescanner_size1_class1", new ShipModule(-1,0,0,null,"SRV Scarab Scanner",ShipModule.ModuleTypes.Sensors) },
-            { "int_sensors_surface_size1_class1", new ShipModule(-1,0,0,null,"SRV Sensors",ShipModule.ModuleTypes.Sensors) },
-
-            { "int_lifesupport_size0_class1", new ShipModule(-1,0,0,null,"SRV Life Support",ShipModule.ModuleTypes.LifeSupport) },
-            { "int_shieldgenerator_size0_class3", new ShipModule(-1,0,0,null,"SRV Shields",ShipModule.ModuleTypes.ShieldGenerator) },
         };
 
         // non buyable
@@ -1756,6 +1691,93 @@ namespace EliteDangerousCore
             ///{ "int_shieldgenerator_size1_class4", new ShipModule(-1,2,1.44,null,"Shield Generator Class 1 Rating E",ShipModule.ModuleTypes.ShieldGenerator) },
         };
 
+        #endregion
+
+        #region Fighters
+
+        public static Dictionary<string, ShipModule> fightermodules = new Dictionary<string, ShipModule>
+        {
+            { "hpt_guardiangauss_fixed_gdn_fighter", new ShipModule(899990050,1,1,null,"Guardian Gauss Fixed GDN Fighter",ShipModule.ModuleTypes.FighterWeapon) },
+            { "hpt_guardianplasma_fixed_gdn_fighter", new ShipModule(899990050,1,1,null,"Guardian Plasma Fixed GDN Fighter",ShipModule.ModuleTypes.FighterWeapon) },
+            { "hpt_guardianshard_fixed_gdn_fighter", new ShipModule(899990050,1,1,null,"Guardian Shard Fixed GDN Fighter",ShipModule.ModuleTypes.FighterWeapon) },
+
+            { "empire_fighter_armour_standard", new ShipModule(899990059,0,0,null,"Empire Fighter Armour Standard",ShipModule.ModuleTypes.LightweightAlloy) },
+            { "federation_fighter_armour_standard", new ShipModule(899990060,0,0,null,"Federation Fighter Armour Standard",ShipModule.ModuleTypes.LightweightAlloy) },
+            { "independent_fighter_armour_standard", new ShipModule(899990070,0,0,null,"Independent Fighter Armour Standard",ShipModule.ModuleTypes.LightweightAlloy) },
+            { "gdn_hybrid_fighter_v1_armour_standard", new ShipModule(899990060,0,0,null,"GDN Hybrid Fighter V 1 Armour Standard",ShipModule.ModuleTypes.LightweightAlloy) },
+            { "gdn_hybrid_fighter_v2_armour_standard", new ShipModule(899990060,0,0,null,"GDN Hybrid Fighter V 2 Armour Standard",ShipModule.ModuleTypes.LightweightAlloy) },
+            { "gdn_hybrid_fighter_v3_armour_standard", new ShipModule(899990060,0,0,null,"GDN Hybrid Fighter V 3 Armour Standard",ShipModule.ModuleTypes.LightweightAlloy) },
+
+            { "hpt_beamlaser_fixed_empire_fighter", new ShipModule(899990018,0,1,null,"Beam Laser Fixed Empire Fighter",ShipModule.ModuleTypes.BeamLaser) },
+            { "hpt_beamlaser_fixed_fed_fighter", new ShipModule(899990019,0,1,null,"Beam Laser Fixed Federation Fighter",ShipModule.ModuleTypes.BeamLaser) },
+            { "hpt_beamlaser_fixed_indie_fighter", new ShipModule(899990020,0,1,null,"Beam Laser Fixed Indie Fighter",ShipModule.ModuleTypes.BeamLaser) },
+            { "hpt_beamlaser_gimbal_empire_fighter", new ShipModule(899990023,0,1,null,"Beam Laser Gimbal Empire Fighter",ShipModule.ModuleTypes.BeamLaser) },
+            { "hpt_beamlaser_gimbal_fed_fighter", new ShipModule(899990024,0,1,null,"Beam Laser Gimbal Federation Fighter",ShipModule.ModuleTypes.BeamLaser) },
+            { "hpt_beamlaser_gimbal_indie_fighter", new ShipModule(899990025,0,1,null,"Beam Laser Gimbal Indie Fighter",ShipModule.ModuleTypes.BeamLaser) },
+            { "hpt_plasmarepeater_fixed_empire_fighter", new ShipModule(899990026,0,1,null,"Plasma Repeater Fixed Empire Fighter",ShipModule.ModuleTypes.PlasmaAccelerator) },
+            { "hpt_plasmarepeater_fixed_fed_fighter", new ShipModule(899990027,0,1,null,"Plasma Repeater Fixed Fed Fighter",ShipModule.ModuleTypes.PlasmaAccelerator) },
+            { "hpt_plasmarepeater_fixed_indie_fighter", new ShipModule(899990028,0,1,null,"Plasma Repeater Fixed Indie Fighter",ShipModule.ModuleTypes.PlasmaAccelerator) },
+            { "hpt_pulselaser_fixed_empire_fighter", new ShipModule(899990029,0,1,null,"Pulse Laser Fixed Empire Fighter",ShipModule.ModuleTypes.PulseLaser) },
+            { "hpt_pulselaser_fixed_fed_fighter", new ShipModule(899990030,0,1,null,"Pulse Laser Fixed Federation Fighter",ShipModule.ModuleTypes.PulseLaser) },
+            { "hpt_pulselaser_fixed_indie_fighter", new ShipModule(899990031,0,1,null,"Pulse Laser Fixed Indie Fighter",ShipModule.ModuleTypes.PulseLaser) },
+            { "hpt_pulselaser_gimbal_empire_fighter", new ShipModule(899990032,0,1,null,"Pulse Laser Gimbal Empire Fighter",ShipModule.ModuleTypes.PulseLaser) },
+            { "hpt_pulselaser_gimbal_fed_fighter", new ShipModule(899990033,0,1,null,"Pulse Laser Gimbal Federation Fighter",ShipModule.ModuleTypes.PulseLaser) },
+            { "hpt_pulselaser_gimbal_indie_fighter", new ShipModule(899990034,0,1,null,"Pulse Laser Gimbal Indie Fighter",ShipModule.ModuleTypes.PulseLaser) },
+
+            { "int_engine_fighter_class1", new ShipModule(-1,1,1,null,"Fighter Engine Class 1",ShipModule.ModuleTypes.Thrusters) },
+
+            { "gdn_hybrid_fighter_v1_cockpit", new ShipModule(899990101,0,0,null,"GDN Hybrid Fighter V 1 Cockpit",ShipModule.ModuleTypes.CockpitType) },
+            { "gdn_hybrid_fighter_v2_cockpit", new ShipModule(899990102,0,0,null,"GDN Hybrid Fighter V 2 Cockpit",ShipModule.ModuleTypes.CockpitType) },
+            { "gdn_hybrid_fighter_v3_cockpit", new ShipModule(899990103,0,0,null,"GDN Hybrid Fighter V 3 Cockpit",ShipModule.ModuleTypes.CockpitType) },
+
+            { "hpt_atmulticannon_fixed_indie_fighter", new ShipModule(899990040,0,1,null,"AX Multicannon Fixed Indie Fighter",ShipModule.ModuleTypes.AXMulti_Cannon) },
+            { "hpt_multicannon_fixed_empire_fighter", new ShipModule(899990050,0,1,null,"Multicannon Fixed Empire Fighter",ShipModule.ModuleTypes.Multi_Cannon) },
+            { "hpt_multicannon_fixed_fed_fighter", new ShipModule(899990051,0,1,null,"Multicannon Fixed Fed Fighter",ShipModule.ModuleTypes.Multi_Cannon) },
+            { "hpt_multicannon_fixed_indie_fighter", new ShipModule(899990052,0,1,null,"Multicannon Fixed Indie Fighter",ShipModule.ModuleTypes.Multi_Cannon) },
+
+            { "int_powerdistributor_fighter_class1", new ShipModule(-1,0,0,null,"Int Powerdistributor Fighter Class 1",ShipModule.ModuleTypes.PowerDistributor) },
+
+            { "int_powerplant_fighter_class1", new ShipModule(-1,0,0,null,"Int Powerplant Fighter Class 1",ShipModule.ModuleTypes.PowerPlant) },
+
+            { "int_sensors_fighter_class1", new ShipModule(-1,0,0,null,"Int Sensors Fighter Class 1",ShipModule.ModuleTypes.Sensors) },
+            { "int_shieldgenerator_fighter_class1", new ShipModule(899990080,0,0,null,"Shield Generator Fighter Class 1",ShipModule.ModuleTypes.ShieldGenerator) },
+            { "ext_emitter_guardian", new ShipModule(899990190,0,0,null,"Ext Emitter Guardian",ShipModule.ModuleTypes.Sensors) },
+            { "ext_emitter_standard", new ShipModule(899990090,0,0,null,"Ext Emitter Standard",ShipModule.ModuleTypes.Sensors) },
+
+        };
+
+        #endregion
+
+        #region SRV
+
+        public static Dictionary<string, ShipModule> srvmodules = new Dictionary<string, ShipModule>
+        {
+            { "buggycargobaydoor", new ShipModule(-1,0,0,null,"SRV Cargo Bay Door",ShipModule.ModuleTypes.CargoBayDoorType) },
+            { "int_fueltank_size0_class3", new ShipModule(-1,0,0,null,"SRV Scarab Fuel Tank",ShipModule.ModuleTypes.FuelTank) },
+            { "vehicle_scorpion_missilerack_lockon", new ShipModule(-1,0,0,null,"SRV Scorpion Missile Rack",ShipModule.ModuleTypes.MissileRack) },
+            { "int_powerdistributor_size0_class1", new ShipModule(-1,0,0,null,"SRV Scarab Power Distributor",ShipModule.ModuleTypes.PowerDistributor) },
+            { "int_powerplant_size0_class1", new ShipModule(-1,0,0,null,"SRV Scarab Powerplant",ShipModule.ModuleTypes.PowerPlant) },
+            { "vehicle_plasmaminigun_turretgun", new ShipModule(-1,0,0,null,"SRV Scorpion Plasma Turret Gun",ShipModule.ModuleTypes.PulseLaser) },
+
+            { "testbuggy_cockpit", new ShipModule(-1,0,0,null,"SRV Scarab Cockpit",ShipModule.ModuleTypes.CockpitType) },
+            { "scarab_armour_grade1", new ShipModule(-1,0,0,null,"SRV Scarab Armour",ShipModule.ModuleTypes.LightweightAlloy) },
+            { "int_fueltank_size0_class2", new ShipModule(-1,0,0,null,"SRV Scopion Fuel tank Size 0 Class 2",ShipModule.ModuleTypes.FuelTank) },
+            { "combat_multicrew_srv_01_cockpit", new ShipModule(-1,0,0,null,"SRV Scorpion Cockpit",ShipModule.ModuleTypes.CockpitType) },
+            { "int_powerdistributor_size0_class1_cms", new ShipModule(-1,0,0,null,"SRV Scorpion Power Distributor Size 0 Class 1 Cms",ShipModule.ModuleTypes.PowerDistributor) },
+            { "int_powerplant_size0_class1_cms", new ShipModule(-1,0,0,null,"SRV Scorpion Powerplant Size 0 Class 1 Cms",ShipModule.ModuleTypes.PowerPlant) },
+            { "vehicle_turretgun", new ShipModule(-1,0,0,null,"SRV Scarab Turret",ShipModule.ModuleTypes.PulseLaser) },
+
+            { "hpt_datalinkscanner", new ShipModule(-1,0,0,null,"SRV Data Link Scanner",ShipModule.ModuleTypes.Sensors) },
+            { "int_sinewavescanner_size1_class1", new ShipModule(-1,0,0,null,"SRV Scarab Scanner",ShipModule.ModuleTypes.Sensors) },
+            { "int_sensors_surface_size1_class1", new ShipModule(-1,0,0,null,"SRV Sensors",ShipModule.ModuleTypes.Sensors) },
+
+            { "int_lifesupport_size0_class1", new ShipModule(-1,0,0,null,"SRV Life Support",ShipModule.ModuleTypes.LifeSupport) },
+            { "int_shieldgenerator_size0_class3", new ShipModule(-1,0,0,null,"SRV Shields",ShipModule.ModuleTypes.ShieldGenerator) },
+        };
+
+        #endregion
+
+        #region Vanity Modules
 
         public static Dictionary<string, ShipModule> vanitymodules = new Dictionary<string, ShipModule>   // DO NOT USE DIRECTLY - public is for checking only
         {
@@ -2735,6 +2757,12 @@ namespace EliteDangerousCore
             { "wear", new ShipModule(-1,0,0,null,"Wear", ShipModule.ModuleTypes.WearAndTearType) },
         };
 
+
+        #endregion
+
+        #region Synth Modules
+
+        static private Dictionary<string, ShipModule> synthesisedmodules = new Dictionary<string, ShipModule>();        // ones made by edd
 
         #endregion
 

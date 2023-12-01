@@ -696,13 +696,7 @@ namespace EliteDangerousCore
             {
                 JObject module = new JObject();
 
-                ItemData.ShipModule si = ItemData.GetShipModuleProperties(sm.ItemFD);
-
-                if (si.ModuleID == 0)
-                {
-                    errstring += sm.Item + ":" + sm.ItemFD + Environment.NewLine;
-                }
-                else
+                if (ItemData.TryGetShipModule(sm.ItemFD, out ItemData.ShipModule si, false) && si.ModuleID != 0)   // don't synth it
                 {
                     module["Item"] = sm.ItemFD;
                     module["Slot"] = sm.SlotFD;
@@ -713,6 +707,10 @@ namespace EliteDangerousCore
                         module["Engineering"] = ToJsonCoriolisEngineering(sm);
 
                     mlist.Add(module);
+                }
+                else
+                {
+                    errstring += sm.Item + ":" + sm.ItemFD + Environment.NewLine;
                 }
             }
 

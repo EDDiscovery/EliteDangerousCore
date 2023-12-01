@@ -35,7 +35,8 @@ namespace EliteDangerousCore
             public void Normalise()
             {
                 FDName = JournalFieldNaming.NormaliseFDItemName(Name);          // clean name and move to FDName
-                ModuleInfo = ItemData.GetShipModuleProperties(FDName);    // find, or create
+                ItemData.TryGetShipModule(FDName, out ItemData.ShipModule m, true);    // find, or create
+                ModuleInfo = m;
                 Name = ModuleInfo?.ModName ?? FDName;            // set text name
             }
 
