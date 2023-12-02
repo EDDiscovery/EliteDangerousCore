@@ -16,6 +16,7 @@ using EliteDangerousCore.JournalEvents;
 using QuickJSON;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EliteDangerousCore.Spansh
 {
@@ -243,7 +244,7 @@ namespace EliteDangerousCore.Spansh
 
         #region Search
 
-        public List<StationInfo> SearchServices(string systemname, string[] servicenames, double maxradius, bool? largepad, int maxresults = 20)
+        public List<StationInfo> SearchServices(string systemname, string[] servicenames, double maxradius, bool? largepad, bool inclcarriers, int maxresults = 20)
         {
             JObject jo = new JObject()
             {
@@ -275,6 +276,8 @@ namespace EliteDangerousCore.Spansh
 
             if (largepad.HasValue)
                 jo["filters"]["has_large_pad"] = new JObject() { ["value"] = largepad.Value };
+            if (!inclcarriers)
+                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarportTypes.Values.Distinct().Where(x => x != "Drake-Class Carrier")) };
 
             return IssueStationSearchQuery(jo);
         }
@@ -289,7 +292,7 @@ namespace EliteDangerousCore.Spansh
         }
 
 
-        public List<StationInfo> SearchCommodities(string systemname, SearchCommoditity[] commodities, double maxradius, bool? largepad, int maxresults = 20)
+        public List<StationInfo> SearchCommodities(string systemname, SearchCommoditity[] commodities, double maxradius, bool? largepad, bool inclcarriers, int maxresults = 20)
         {
             JObject jo = new JObject()
             {
@@ -336,6 +339,8 @@ namespace EliteDangerousCore.Spansh
 
             if (largepad.HasValue)
                 jo["filters"]["has_large_pad"] = new JObject() { ["value"] = largepad.Value };
+            if (!inclcarriers)
+                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarportTypes.Values.Distinct().Where(x => x != "Drake-Class Carrier")) };
 
             return IssueStationSearchQuery(jo);
         }
@@ -379,7 +384,7 @@ namespace EliteDangerousCore.Spansh
 
         // classlist = [0] = All, else 0..6
         // ratingslist = [0] = All, else A..G
-        public List<StationInfo> SearchOutfitting(string systemname, string[] englishoutfittingnames, bool[] classlist, bool[] ratinglist, double maxradius, bool? largepad, int maxresults = 20)
+        public List<StationInfo> SearchOutfitting(string systemname, string[] englishoutfittingnames, bool[] classlist, bool[] ratinglist, double maxradius, bool? largepad, bool inclcarriers, int maxresults = 20)
         {
             System.Diagnostics.Debug.Assert(classlist.Length == 8);
             System.Diagnostics.Debug.Assert(ratinglist.Length == 8);
@@ -429,11 +434,13 @@ namespace EliteDangerousCore.Spansh
 
             if (largepad.HasValue)
                 jo["filters"]["has_large_pad"] = new JObject() { ["value"] = largepad.Value };
+            if (!inclcarriers)
+                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarportTypes.Values.Distinct().Where(x => x != "Drake-Class Carrier")) };
 
             return IssueStationSearchQuery(jo);
         }
 
-        public List<StationInfo> SearchShips(string systemname, string[] englishshipnames, double maxradius, bool? largepad, int maxresults = 20)
+        public List<StationInfo> SearchShips(string systemname, string[] englishshipnames, double maxradius, bool? largepad, bool inclcarriers, int maxresults = 20)
         {
             JObject jo = new JObject()
             {
@@ -465,13 +472,15 @@ namespace EliteDangerousCore.Spansh
 
             if (largepad.HasValue)
                 jo["filters"]["has_large_pad"] = new JObject() { ["value"] = largepad.Value };
+            if (!inclcarriers)
+                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarportTypes.Values.Distinct().Where(x => x != "Drake-Class Carrier")) };
 
             return IssueStationSearchQuery(jo);
         }
 
         private List<StationInfo> IssueStationSearchQuery(JObject query)
         {
-            System.Diagnostics.Debug.WriteLine($"Spansh post data for station search {query.ToString()}");
+            System.Diagnostics.Debug.WriteLine($"Spansh post data for station search {query.ToString(true)}");
 
             var response = RequestPost(query.ToString(), "stations/search", handleException: true);
 
