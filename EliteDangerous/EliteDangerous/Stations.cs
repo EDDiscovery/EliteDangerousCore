@@ -175,7 +175,15 @@ namespace EliteDangerousCore
         {
             var entry = Market?.Find(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase));
             if (entry != null)
-                return stationtobuy ? (entry.buyPrice > 0 ? entry.buyPrice.ToString() : "?") : (entry.stock > 0 ? entry.sellPrice.ToString() : "-");
+                return stationtobuy ? (entry.buyPrice.ToString("N0")) : (entry.sellPrice.ToString("N0"));
+            else
+                return "";
+        }
+        public string GetItemStockDemandString(string fdname, bool stationtobuy)
+        {
+            var entry = Market?.Find(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase));
+            if (entry != null)
+                return stationtobuy ? (entry.demand.ToString("N0")) : (entry.stock.ToString("N0"));
             else
                 return "";
         }
@@ -184,7 +192,7 @@ namespace EliteDangerousCore
         {
             var entry = Market?.Find(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase));
             if (entry != null)
-                return $"Category: {entry.loccategory}{Environment.NewLine}Buy Price: {entry.buyPrice}{Environment.NewLine}Stock: {entry.stock}{Environment.NewLine}Sell Price: {entry.sellPrice}{Environment.NewLine}Demand: {entry.demand}";
+                return $"Category: {entry.loccategory}{Environment.NewLine}Sell Price: {entry.sellPrice:N0}{Environment.NewLine}Stock: {entry.stock:N0}{Environment.NewLine}Buy Price: {entry.buyPrice:N0}{Environment.NewLine}Demand: {entry.demand:N0}";
             else
                 return null;
         }

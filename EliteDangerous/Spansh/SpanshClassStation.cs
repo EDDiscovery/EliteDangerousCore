@@ -243,7 +243,7 @@ namespace EliteDangerousCore.Spansh
 
         #region Search
 
-        public List<StationInfo> SearchServices(string systemname, string[] servicenames, double maxradius, int maxresults = 20)
+        public List<StationInfo> SearchServices(string systemname, string[] servicenames, double maxradius, bool? largepad, int maxresults = 20)
         {
             JObject jo = new JObject()
             {
@@ -273,6 +273,9 @@ namespace EliteDangerousCore.Spansh
                 ["size"] = maxresults,
             };
 
+            if (largepad.HasValue)
+                jo["filters"]["has_large_pad"] = new JObject() { ["value"] = largepad.Value };
+
             return IssueStationSearchQuery(jo);
         }
 
@@ -286,7 +289,7 @@ namespace EliteDangerousCore.Spansh
         }
 
 
-        public List<StationInfo> SearchCommodities(string systemname, SearchCommoditity[] commodities, double maxradius, int maxresults = 20)
+        public List<StationInfo> SearchCommodities(string systemname, SearchCommoditity[] commodities, double maxradius, bool? largepad, int maxresults = 20)
         {
             JObject jo = new JObject()
             {
@@ -331,10 +334,13 @@ namespace EliteDangerousCore.Spansh
                 market.Add(o);
             }
 
+            if (largepad.HasValue)
+                jo["filters"]["has_large_pad"] = new JObject() { ["value"] = largepad.Value };
+
             return IssueStationSearchQuery(jo);
         }
 
-        public List<StationInfo> SearchEconomy(string systemname, string[] englisheconomynames, double maxradius, int maxresults = 20)
+        public List<StationInfo> SearchEconomy(string systemname, string[] englisheconomynames, double maxradius, bool? largepad, int maxresults = 20)
         {
             JObject jo = new JObject()
             {
@@ -365,12 +371,15 @@ namespace EliteDangerousCore.Spansh
                 ["size"] = maxresults,
             };
 
+            if (largepad.HasValue)
+                jo["filters"]["has_large_pad"] = new JObject() { ["value"] = largepad.Value };
+
             return IssueStationSearchQuery(jo);
         }
 
         // classlist = [0] = All, else 0..6
         // ratingslist = [0] = All, else A..G
-        public List<StationInfo> SearchOutfitting(string systemname, string[] englishoutfittingnames, bool[] classlist, bool[] ratinglist, double maxradius, int maxresults = 20)
+        public List<StationInfo> SearchOutfitting(string systemname, string[] englishoutfittingnames, bool[] classlist, bool[] ratinglist, double maxradius, bool? largepad, int maxresults = 20)
         {
             System.Diagnostics.Debug.Assert(classlist.Length == 8);
             System.Diagnostics.Debug.Assert(ratinglist.Length == 8);
@@ -418,10 +427,13 @@ namespace EliteDangerousCore.Spansh
                     ratingarray.Add(new string((char)('A' + i - 1), 1));
             }
 
+            if (largepad.HasValue)
+                jo["filters"]["has_large_pad"] = new JObject() { ["value"] = largepad.Value };
+
             return IssueStationSearchQuery(jo);
         }
 
-        public List<StationInfo> SearchShips(string systemname, string[] englishshipnames, double maxradius, int maxresults = 20)
+        public List<StationInfo> SearchShips(string systemname, string[] englishshipnames, double maxradius, bool? largepad, int maxresults = 20)
         {
             JObject jo = new JObject()
             {
@@ -450,6 +462,9 @@ namespace EliteDangerousCore.Spansh
                 ["reference_system"] = systemname,
                 ["size"] = maxresults,
             };
+
+            if (largepad.HasValue)
+                jo["filters"]["has_large_pad"] = new JObject() { ["value"] = largepad.Value };
 
             return IssueStationSearchQuery(jo);
         }
