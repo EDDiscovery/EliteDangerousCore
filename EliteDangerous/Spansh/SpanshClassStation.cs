@@ -244,6 +244,14 @@ namespace EliteDangerousCore.Spansh
 
         #region Search
 
+        public System.Threading.Tasks.Task<List<StationInfo>> SearchServicesAsync(string systemname, string[] servicenames, double maxradius, bool? largepad, bool inclcarriers, int maxresults = 20)
+        {
+            return System.Threading.Tasks.Task.Run(() =>
+            {
+                return SearchServices(systemname, servicenames, maxradius, largepad, inclcarriers, maxresults);
+            });
+        }
+
         public List<StationInfo> SearchServices(string systemname, string[] servicenames, double maxradius, bool? largepad, bool inclcarriers, int maxresults = 20)
         {
             JObject jo = new JObject()
@@ -291,6 +299,13 @@ namespace EliteDangerousCore.Spansh
             public Tuple<int, int> demand { get; set; } = null; // set to compare sdemand
         }
 
+        public System.Threading.Tasks.Task<List<StationInfo>> SearchCommoditiesAsync(string systemname, SearchCommoditity[] commodities, double maxradius, bool? largepad, bool inclcarriers, int maxresults = 20)
+        {
+            return System.Threading.Tasks.Task.Run(() =>
+            {
+                return SearchCommodities(systemname, commodities, maxradius, largepad, inclcarriers, maxresults);
+            });
+        }
 
         public List<StationInfo> SearchCommodities(string systemname, SearchCommoditity[] commodities, double maxradius, bool? largepad, bool inclcarriers, int maxresults = 20)
         {
@@ -345,6 +360,14 @@ namespace EliteDangerousCore.Spansh
             return IssueStationSearchQuery(jo);
         }
 
+        public System.Threading.Tasks.Task<List<StationInfo>> SearchEconomyAsync(string systemname, string[] englisheconomynames, double maxradius, bool? largepad, int maxresults = 20)
+        {
+            return System.Threading.Tasks.Task.Run(() =>
+            {
+                return SearchEconomy(systemname, englisheconomynames, maxradius, largepad, maxresults);
+            });
+        }
+
         public List<StationInfo> SearchEconomy(string systemname, string[] englisheconomynames, double maxradius, bool? largepad, int maxresults = 20)
         {
             JObject jo = new JObject()
@@ -381,6 +404,15 @@ namespace EliteDangerousCore.Spansh
 
             return IssueStationSearchQuery(jo);
         }
+
+        public System.Threading.Tasks.Task<List<StationInfo>> SearchOutfittingAsync(string systemname, string[] englishoutfittingnames, bool[] classlist, bool[] ratinglist, double maxradius, bool? largepad, bool inclcarriers, int maxresults = 20)
+        {
+            return System.Threading.Tasks.Task.Run(() =>
+            {
+                return SearchOutfitting(systemname, englishoutfittingnames, classlist, ratinglist, maxradius, largepad, inclcarriers, maxresults);
+            });
+        }
+
 
         // classlist = [0] = All, else 0..6
         // ratingslist = [0] = All, else A..G
@@ -438,6 +470,14 @@ namespace EliteDangerousCore.Spansh
                 jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarportTypes.Values.Distinct().Where(x => x != "Drake-Class Carrier")) };
 
             return IssueStationSearchQuery(jo);
+        }
+
+        public System.Threading.Tasks.Task<List<StationInfo>> SearchShipsAsync(string systemname, string[] englishshipnames, double maxradius, bool? largepad, bool inclcarriers, int maxresults = 20)
+        {
+            return System.Threading.Tasks.Task.Run(() =>
+            {
+                return SearchShips(systemname, englishshipnames, maxradius, largepad, inclcarriers, maxresults);
+            });
         }
 
         public List<StationInfo> SearchShips(string systemname, string[] englishshipnames, double maxradius, bool? largepad, bool inclcarriers, int maxresults = 20)
