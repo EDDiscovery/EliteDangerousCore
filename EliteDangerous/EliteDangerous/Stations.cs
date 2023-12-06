@@ -171,19 +171,19 @@ namespace EliteDangerousCore
         public double MarketAgeInDays { get { return DateTime.UtcNow.Subtract(MarketUpdateUTC).TotalDays; } }
         public string MarketStateString { get { if (HasMarket && Market != null) return $"\u2713 {MarketAgeInDays:N1}"; else if (HasMarket) return "\u2713 ND"; else return ""; } }
         public CCommodities GetItem(string fdname) { return Market?.Find(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase)); }
-        public string GetItemPriceString(string fdname, bool stationtobuy)
+        public string GetItemPriceString(string fdname, bool selltostation)
         {
             var entry = Market?.Find(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase));
             if (entry != null)
-                return stationtobuy ? (entry.buyPrice.ToString("N0")) : (entry.sellPrice.ToString("N0"));
+                return selltostation ? (entry.sellPrice.ToString("N0")) : (entry.buyPrice.ToString("N0"));
             else
                 return "";
         }
-        public string GetItemStockDemandString(string fdname, bool stationtobuy)
+        public string GetItemStockDemandString(string fdname, bool selltostation)
         {
             var entry = Market?.Find(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase));
             if (entry != null)
-                return stationtobuy ? (entry.demand.ToString("N0")) : (entry.stock.ToString("N0"));
+                return selltostation ? (entry.demand.ToString("N0")) : (entry.stock.ToString("N0"));
             else
                 return "";
         }
@@ -192,20 +192,21 @@ namespace EliteDangerousCore
         {
             var entry = Market?.Find(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase));
             if (entry != null)
-                return $"Category: {entry.loccategory}{Environment.NewLine}Sell Price: {entry.sellPrice:N0}{Environment.NewLine}Stock: {entry.stock:N0}{Environment.NewLine}Buy Price: {entry.buyPrice:N0}{Environment.NewLine}Demand: {entry.demand:N0}";
+                return $"Category: {entry.loccategory}{Environment.NewLine}Sell to Station Price: {entry.sellPrice:N0}{Environment.NewLine}Demand: {entry.demand:N0}" +
+                    $"{Environment.NewLine}Buy from Station Price: {entry.buyPrice:N0}{Environment.NewLine}Stock: {entry.stock:N0}";
             else
                 return null;
         }
 
         // sync with journalcarrier..
         public bool HasItem(string fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase)) >= 0; }
-        public bool HasItemToBuy(string fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase) && x.CanBeBought) >= 0; }
-        public bool HasItemToSell(string fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase) && x.CanBeSold) >= 0; }
+        public bool HasItemInStock(string fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase) && x.HasStock) >= 0; }
+        public bool HasItemWithDemandAndPrice(string fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase) && x.HasDemandAndPrice) >= 0; }
 
         // go thru the market array, and see if any of the fdnames given matches that market entry
         public bool HasAnyItem(string[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname, StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0; }
-        public bool HasAnyItemToBuy(string[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname, StringComparison.InvariantCultureIgnoreCase) >= 0 && x.CanBeBought) >= 0; }
-        public bool HasAnyItemToSell(string[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname, StringComparison.InvariantCultureIgnoreCase) >= 0 && x.CanBeSold) >= 0; }
+        public bool HasAnyItemInStock(string[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname, StringComparison.InvariantCultureIgnoreCase) >= 0 && x.HasStock) >= 0; }
+        public bool HasAnyItemWithDemandAndPrice(string[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname, StringComparison.InvariantCultureIgnoreCase) >= 0 && x.HasDemandAndPrice) >= 0; }
 
         public bool HasOutfitting { get; set; }// see market
         public List<Outfitting.OutfittingItem> Outfitting { get; set; }     // may be null
@@ -267,9 +268,9 @@ namespace EliteDangerousCore
             var dgvpanel = new ExtPanelDataGridViewScrollWithDGV<BaseUtils.DataGridViewColumnControl>();
             dgvpanel.DataGrid.CreateTextColumns("Category", 100, 5,
                                                 "Name", 150, 5,
-                                                "Buy", 50, 5,
+                                                "Station Sells", 50, 5,
                                                 "Stock", 50, 5,
-                                                "Sell", 50, 5,
+                                                "Station Buys", 50, 5,
                                                 "Demand", 50, 5
                                                 );
 
@@ -299,7 +300,7 @@ namespace EliteDangerousCore
             f.InstallStandardTriggers();
             f.AllowResize = true;
 
-            string title = $"Commodities for {si.StationName}" + (si.MarketUpdateUTC.Year > 2000 ? EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(si.MarketUpdateUTC).ToString() : "No Data");
+            string title = $"Commodities for {si.StationName}" + (si.MarketUpdateUTC.Year > 2000 ? " " + EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(si.MarketUpdateUTC).ToString() : "No Data");
             f.ShowDialogCentred(fm,fm.Icon, title, closeicon: true);
 
             saver.DGVSaveColumnLayout(dgvpanel.DataGrid, "ShowMarket");
@@ -335,7 +336,7 @@ namespace EliteDangerousCore
             f.InstallStandardTriggers();
             f.AllowResize = true;
 
-            string title = "Outfitting for " + si.StationName + " " + (si.OutfittingUpdateUTC.Year > 2000 ? EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(si.OutfittingUpdateUTC).ToString() : "No Data");
+            string title = "Outfitting for " + si.StationName + " " + (si.OutfittingUpdateUTC.Year > 2000 ? " " + EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(si.OutfittingUpdateUTC).ToString() : "No Data");
             f.ShowDialogCentred(fm,fm.Icon, title, closeicon: true);
 
             saver.DGVSaveColumnLayout(dgvpanel.DataGrid, "ShowOutfitting");
@@ -369,7 +370,7 @@ namespace EliteDangerousCore
             f.InstallStandardTriggers();
             f.AllowResize = true;
 
-            string title = "Shipyard for " + si.StationName + " " + (si.ShipyardUpdateUTC.Year > 2000 ? EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(si.ShipyardUpdateUTC).ToString() : "No Data");
+            string title = "Shipyard for " + si.StationName + " " + (si.ShipyardUpdateUTC.Year > 2000 ? " " + EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(si.ShipyardUpdateUTC).ToString() : "No Data");
             f.ShowDialogCentred(fm,fm.Icon, title, closeicon: true);
 
             saver.DGVSaveColumnLayout(dgvpanel.DataGrid, "ShowShipyard");

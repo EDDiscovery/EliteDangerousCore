@@ -31,10 +31,12 @@ namespace EliteDangerousCore.JournalEvents
         public void Rescan(JObject evt)
         {
             Station = evt["StationName"].Str();
+            StationType = evt["StationType"].StrNull();
+            CarrierDockingAccess = evt["CarrierDockingAccess"].StrNull();
             StarSystem = evt["StarSystem"].Str();
             MarketID = evt["MarketID"].LongNull();
-            Commodities = new List<CCommodities>(); // always made..
 
+            Commodities = new List<CCommodities>(); // always made..
             JArray jcommodities = (JArray)evt["Items"];
             if (jcommodities != null )
             {

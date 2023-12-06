@@ -959,7 +959,7 @@ namespace EliteDangerousCore.JournalEvents
                 detailed = "Items to buy: ".T(EDCTx.JournalCommodityPricesBase_Itemstobuy) + System.Environment.NewLine;
                 foreach (CCommodities c in Items)
                 {
-                    if (c.CanBeBought)
+                    if (c.HasStock)
                     {
                         string name = MaterialCommodityMicroResourceType.GetNameByFDName(c.fdname);
                         detailed += string.Format("{0}: {1}  ".T(EDCTx.JournalCommodityPricesBase_CPBBuy), name, c.buyPrice) + Environment.NewLine;
@@ -969,7 +969,7 @@ namespace EliteDangerousCore.JournalEvents
                 detailed += "Sell only Items: ".T(EDCTx.JournalCommodityPricesBase_SO) + System.Environment.NewLine;
                 foreach (CCommodities c in Items)
                 {
-                    if (!c.CanBeBought)
+                    if (!c.HasStock)
                     {
                         string name = MaterialCommodityMicroResourceType.GetNameByFDName(c.fdname);
                         detailed += string.Format("{0}: {1}  ".T(EDCTx.JournalCommodityPricesBase_CPBBuy), name, c.sellPrice) + Environment.NewLine;
@@ -980,8 +980,8 @@ namespace EliteDangerousCore.JournalEvents
 
         // pattern also used in journaldocking stationinfo
         public bool HasItem(string fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase)) >= 0; }
-        public bool HasItemToBuy(string fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase) && x.CanBeBought) >= 0; }
-        public bool HasItemToSell(string fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase) && x.CanBeSold) >= 0; }
+        public bool HasItemToBuy(string fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase) && x.HasStock) >= 0; }
+        public bool HasItemToSell(string fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase) && x.HasDemandAndPrice) >= 0; }
     }
 }
 
