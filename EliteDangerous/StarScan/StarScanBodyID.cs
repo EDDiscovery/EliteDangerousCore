@@ -46,86 +46,90 @@ namespace EliteDangerousCore
 
         private bool ProcessBodyAndID(IBodyNameAndID sc, ISystem sys)  // background or foreground.. 
         {
-            SystemNode sn = GetOrCreateSystemNode(sys);
-            ScanNode scannode = null;
+            SystemNode systemnode = GetOrCreateSystemNode(sys);
 
-            // try and find the scan related to the body name
-
-            if (!sc.BodyID.HasValue || sn.NodesByID.TryGetValue(sc.BodyID.Value, out scannode) == false)     // if no ID, or can't find by ID
+            lock (systemnode)
             {
-                // no designation, or same designation AND not a star
-                if ((sc.BodyDesignation == null || sc.BodyDesignation == sc.Body) && (sc.Body != sc.StarSystem || sc.BodyType != "Star"))
+                ScanNode scannode = null;
+
+                // try and find the scan related to the body name
+
+                if (!sc.BodyID.HasValue || systemnode.NodesByID.TryGetValue(sc.BodyID.Value, out scannode) == false)     // if no ID, or can't find by ID
                 {
-                    foreach (var body in sn.Bodies)
+                    // no designation, or same designation AND not a star
+                    if ((sc.BodyDesignation == null || sc.BodyDesignation == sc.Body) && (sc.Body != sc.StarSystem || sc.BodyType != "Star"))
                     {
-                        if ((body.FullName == sc.Body || body.CustomName == sc.Body) &&
-                            (body.FullName != sc.StarSystem || (sc.BodyType == "Star" && body.Level == 0) || (sc.BodyType != "Star" && body.Level != 0)))
+                        foreach (var body in systemnode.Bodies)
                         {
-                            scannode = body;
-                            sc.BodyDesignation = body.FullName;
-                            break;
+                            if ((body.FullName == sc.Body || body.CustomName == sc.Body) &&
+                                (body.FullName != sc.StarSystem || (sc.BodyType == "Star" && body.Level == 0) || (sc.BodyType != "Star" && body.Level != 0)))
+                            {
+                                scannode = body;
+                                sc.BodyDesignation = body.FullName;
+                                break;
+                            }
+                        }
+                    }
+
+                    // else just try and find any matches
+                    if (scannode == null)
+                    {
+                        foreach (var body in systemnode.Bodies)
+                        {
+                            if ((body.FullName == sc.Body || body.CustomName == sc.Body) &&
+                                (body.FullName != sc.StarSystem || (sc.BodyType == "Star" && body.Level == 0) || (sc.BodyType != "Star" && body.Level != 0)))
+                            {
+                                scannode = body;
+                                break;
+                            }
                         }
                     }
                 }
 
-                // else just try and find any matches
-                if (scannode == null)
+                if (scannode != null)   // We already have the node - don't need another one
                 {
-                    foreach (var body in sn.Bodies)
+                    if (scannode.BodyID == null && sc.BodyID.HasValue)        // we may have made it before node IDs were introduced,so make sure its there
                     {
-                        if ((body.FullName == sc.Body || body.CustomName == sc.Body) &&
-                            (body.FullName != sc.StarSystem || (sc.BodyType == "Star" && body.Level == 0) || (sc.BodyType != "Star" && body.Level != 0)))
-                        {
-                            scannode = body;
-                            break;
-                        }
+                        scannode.BodyID = sc.BodyID;
+                        systemnode.NodesByID[sc.BodyID.Value] = scannode;
+                        //System.Diagnostics.Debug.WriteLine($"ProcessBodyAndID found existing scan node and updated BID {sys.Name} {sc.Body} bid {sc.BodyID} vs bid {scannode.BodyID} {scannode.CustomNameOrOwnname}");
                     }
-                }
-            }
+                    else
+                    {
+                        // System.Diagnostics.Debug.WriteLine($"ProcessBodyAndID found existing scan node for {sys.Name} {sc.Body} bid {sc.BodyID} vs bid {scannode.BodyID} {scannode.CustomNameOrOwnname}");
+                    }
 
-            if (scannode != null)   // We already have the node - don't need another one
-            {
-                if (scannode.BodyID == null && sc.BodyID.HasValue)        // we may have made it before node IDs were introduced,so make sure its there
+                    return true;
+                }
+
+                // System.Diagnostics.Debug.WriteLine($"AddBodyToBestSystem new body {sc.Body} {sc.BodyID} {sc.BodyType}");
+
+                // Extract elements from name
+                List<string> elements = ExtractElementsBodyAndID(sc, sys, out bool isbeltcluster, out ScanNodeType starscannodetype);
+
+                // Bail out if no elements extracted
+                if (elements.Count == 0)
                 {
-                    scannode.BodyID = sc.BodyID;
-                    sn.NodesByID[sc.BodyID.Value] = scannode;
-                    //System.Diagnostics.Debug.WriteLine($"ProcessBodyAndID found existing scan node and updated BID {sys.Name} {sc.Body} bid {sc.BodyID} vs bid {scannode.BodyID} {scannode.CustomNameOrOwnname}");
+                    System.Diagnostics.Trace.WriteLine($"Failed to add body {sc.Body} to system {sys.Name} - not enough elements");
+                    return false;
                 }
-                else
+                // Bail out if more than 5 elements extracted
+                else if (elements.Count > 5)
                 {
-                   // System.Diagnostics.Debug.WriteLine($"ProcessBodyAndID found existing scan node for {sys.Name} {sc.Body} bid {sc.BodyID} vs bid {scannode.BodyID} {scannode.CustomNameOrOwnname}");
+                    System.Diagnostics.Trace.WriteLine($"Failed to add body {sc.Body} to system {sys.Name} - too deep");
+                    return false;
                 }
 
-                return true; 
-            }
+                // Get custom name if different to designation
+                string customname = GetCustomNameBodyAndID(sc, sys);
 
-           // System.Diagnostics.Debug.WriteLine($"AddBodyToBestSystem new body {sc.Body} {sc.BodyID} {sc.BodyType}");
+                // Process elements
+                ScanNode node = ProcessElementsBodyAndID(sc, sys, systemnode, customname, elements, starscannodetype, isbeltcluster);
 
-            // Extract elements from name
-            List<string> elements = ExtractElementsBodyAndID(sc, sys, out bool isbeltcluster, out ScanNodeType starscannodetype);
-
-            // Bail out if no elements extracted
-            if (elements.Count == 0)
-            {
-                System.Diagnostics.Trace.WriteLine($"Failed to add body {sc.Body} to system {sys.Name} - not enough elements");
-                return false;
-            }
-            // Bail out if more than 5 elements extracted
-            else if (elements.Count > 5)
-            {
-                System.Diagnostics.Trace.WriteLine($"Failed to add body {sc.Body} to system {sys.Name} - too deep");
-                return false;
-            }
-
-            // Get custom name if different to designation
-            string customname = GetCustomNameBodyAndID(sc, sys);
-
-            // Process elements
-            ScanNode node = ProcessElementsBodyAndID(sc, sys, sn, customname, elements, starscannodetype, isbeltcluster);
-
-            if (node.BodyID != null)
-            {
-                sn.NodesByID[(int)node.BodyID] = node;
+                if (node.BodyID != null)
+                {
+                    systemnode.NodesByID[(int)node.BodyID] = node;
+                }
             }
 
             ProcessedSaved();  // any saved JEs due to no scan, add
@@ -183,9 +187,9 @@ namespace EliteDangerousCore
             return elements;
         }
 
-        private ScanNode ProcessElementsBodyAndID(IBodyNameAndID sc, ISystem sys, SystemNode sn, string customname, List<string> elements, ScanNodeType starscannodetype, bool isbeltcluster)
+        private ScanNode ProcessElementsBodyAndID(IBodyNameAndID sc, ISystem sys, SystemNode systemnode, string customname, List<string> elements, ScanNodeType starscannodetype, bool isbeltcluster)
         {
-            SortedList<string, ScanNode> currentnodelist = sn.StarNodes;                // current operating node list, always made
+            SortedList<string, ScanNode> currentnodelist = systemnode.StarNodes;                // current operating node list, always made
             ScanNode previousnode = null;                                               // trails subnode by 1 to point to previous node
 
             for (int lvl = 0; lvl < elements.Count; lvl++)
@@ -207,41 +211,35 @@ namespace EliteDangerousCore
 
                     string ownname = elements[lvl];
 
-                    lock (currentnodelist)
-                    {
-                        subnode = new ScanNode(ownname,
-                                                lvl == 0 ? (sys.Name + (ownname.Contains("Main") ? "" : (" " + ownname))) : previousnode.FullName + " " + ownname,
-                                                sublvtype,
-                                                lvl,
-                                                previousnode,
-                                                sn,
-                                                SystemSource.Synthesised);   
+                    subnode = new ScanNode(ownname,
+                                            lvl == 0 ? (sys.Name + (ownname.Contains("Main") ? "" : (" " + ownname))) : previousnode.FullName + " " + ownname,
+                                            sublvtype,
+                                            lvl,
+                                            previousnode,
+                                            systemnode,
+                                            SystemSource.Synthesised);
 
-                        currentnodelist.Add(ownname, subnode);
-                      //  System.Diagnostics.Debug.WriteLine($"StarScan BID Created subnode {subnode.FullName}");
-                    }
+                    currentnodelist.Add(ownname, subnode);
+                    //  System.Diagnostics.Debug.WriteLine($"StarScan BID Created subnode {subnode.FullName}");
                 }
                 else
                 {
-                  //  System.Diagnostics.Debug.WriteLine($"StarScan BID Existing subnode {subnode.FullName}");
+                    //  System.Diagnostics.Debug.WriteLine($"StarScan BID Existing subnode {subnode.FullName}");
                 }
 
                 if (lvl == elements.Count - 1)
                 {
-                    lock (subnode)
+                    subnode.CustomName = customname;
+
+                    if (sc.BodyID != null)
                     {
-                        subnode.CustomName = customname;
-
-                        if (sc.BodyID != null)
-                        {
-                            subnode.BodyID = sc.BodyID;
-                        }
-
-                        if (sc.BodyType == "" || sc.BodyType == "Null" || sc.BodyType == "Barycentre")
-                            subnode.NodeType = ScanNodeType.barycentre;
-                        else if (sc.BodyType == "Belt")
-                            subnode.NodeType = ScanNodeType.belt;
+                        subnode.BodyID = sc.BodyID;
                     }
+
+                    if (sc.BodyType == "" || sc.BodyType == "Null" || sc.BodyType == "Barycentre")
+                        subnode.NodeType = ScanNodeType.barycentre;
+                    else if (sc.BodyType == "Belt")
+                        subnode.NodeType = ScanNodeType.belt;
                 }
 
                 previousnode = subnode;

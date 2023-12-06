@@ -60,7 +60,7 @@ namespace EliteDangerousCore
                     }
                 }
             }
-
+ 
             public long ScanValue(bool includewebvalue)
             {
                 long value = 0;

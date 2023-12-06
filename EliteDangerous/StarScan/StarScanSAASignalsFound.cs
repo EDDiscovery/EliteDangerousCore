@@ -47,43 +47,44 @@ namespace EliteDangerousCore
                                             List<JournalSAASignalsFound.SAAGenus> genuses,
                                             ISystem sys)  // background or foreground.. FALSE if you can't process it
         {
-            SystemNode sn = GetOrCreateSystemNode(sys);
-            ScanNode relatednode = null;
+            SystemNode systemnode = GetOrCreateSystemNode(sys);
 
-            if (sn.NodesByID.ContainsKey((int)bodyid)) // find by ID
+            lock (systemnode)
             {
-                relatednode = sn.NodesByID[(int)bodyid];
-            }
+                ScanNode relatednode = null;
 
-            if (relatednode != null && relatednode.NodeType == ScanNodeType.ring && relatednode.ScanData != null && relatednode.ScanData.Parents != null && sn.NodesByID.ContainsKey(relatednode.ScanData.Parents[0].BodyID))
-            {
-                relatednode = sn.NodesByID[relatednode.ScanData.Parents[0].BodyID];
-            }
-
-            if (relatednode == null || relatednode.NodeType == ScanNodeType.ring)
-            {
-                bool ringname = bodyname.EndsWith("A Ring") || bodyname.EndsWith("B Ring") || bodyname.EndsWith("C Ring") || bodyname.EndsWith("D Ring");
-                string ringcutname = ringname ? bodyname.Left(bodyname.Length - 6).TrimEnd() : null;
-
-                foreach (var body in sn.Bodies)
+                if (systemnode.NodesByID.ContainsKey((int)bodyid)) // find by ID
                 {
-                    if ((body.FullName == bodyname || body.CustomName == bodyname) &&
-                        (body.FullName != sys.Name || body.Level != 0))
+                    relatednode = systemnode.NodesByID[(int)bodyid];
+                }
+
+                if (relatednode != null && relatednode.NodeType == ScanNodeType.ring && relatednode.ScanData != null && relatednode.ScanData.Parents != null && systemnode.NodesByID.ContainsKey(relatednode.ScanData.Parents[0].BodyID))
+                {
+                    relatednode = systemnode.NodesByID[relatednode.ScanData.Parents[0].BodyID];
+                }
+
+                if (relatednode == null || relatednode.NodeType == ScanNodeType.ring)
+                {
+                    bool ringname = bodyname.EndsWith("A Ring") || bodyname.EndsWith("B Ring") || bodyname.EndsWith("C Ring") || bodyname.EndsWith("D Ring");
+                    string ringcutname = ringname ? bodyname.Left(bodyname.Length - 6).TrimEnd() : null;
+
+                    foreach (var body in systemnode.Bodies)
                     {
-                        relatednode = body;
-                        break;
-                    }
-                    else if (ringcutname != null && body.FullName.Equals(ringcutname))
-                    {
-                        relatednode = body;
-                        break;
+                        if ((body.FullName == bodyname || body.CustomName == bodyname) &&
+                            (body.FullName != sys.Name || body.Level != 0))
+                        {
+                            relatednode = body;
+                            break;
+                        }
+                        else if (ringcutname != null && body.FullName.Equals(ringcutname))
+                        {
+                            relatednode = body;
+                            break;
+                        }
                     }
                 }
-            }
 
-            if (relatednode != null)
-            {
-                lock (relatednode)
+                if (relatednode != null)
                 {
                     //  System.Diagnostics.Debug.WriteLine("Setting SAA Signals Found for " + bodyname + " @ " + sys.Name + " body "  + jsaa.BodyDesignation);
                     if (signals != null && signals.Count > 0)
@@ -100,7 +101,7 @@ namespace EliteDangerousCore
                         }
                     }
 
-                    if (genuses != null && genuses.Count>0)        // if we have any - ones before Odyssey v4.0 r 13 did not
+                    if (genuses != null && genuses.Count > 0)        // if we have any - ones before Odyssey v4.0 r 13 did not
                     {
                         if (relatednode.Genuses == null)
                             relatednode.Genuses = new List<JournalSAASignalsFound.SAAGenus>();
@@ -120,13 +121,13 @@ namespace EliteDangerousCore
                         relatednode.ScanData.Genuses = relatednode.Genuses;
                         // System.Diagnostics.Debug.WriteLine($"Assign SAA signal list {string.Join(",", relatednode.Signals.Select(x => x.Type).ToList())} to {relatednode.FullName}");
                     }
-                }
 
-                return true;
-            }
-            else
-            {
-                return false;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
 

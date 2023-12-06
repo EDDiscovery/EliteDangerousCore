@@ -1,4 +1,4 @@
-﻿/*
+﻿/*ye
  * Copyright © 2015 - 2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -107,50 +107,50 @@ namespace EliteDangerousCore
 
             // goodish system, create node
 
-            SystemNode sn = GetOrCreateSystemNode(sys);
+            SystemNode systemnode = GetOrCreateSystemNode(sys);
 
-            //System.Diagnostics.Debug.WriteLine($"StarScan Made body JS {sc.BodyName}");
-
-            // Get custom name if different to designation
-            string customname = GetCustomNameJournalScan(sc, sys);
-
-            // Process elements, 
-            ScanNode node = ProcessElementsJournalScan(sc, sys, sn, customname, elements, starscannodetype, isbeltcluster, isring, oldnode);
-
-            if (node.BodyID != null)
+            lock (systemnode)
             {
-                sn.NodesByID[(int)node.BodyID] = node;
-            }
+                //System.Diagnostics.Debug.WriteLine($"StarScan Made body JS {sc.BodyName}");
 
-            // Process top-level star
-            if (elements.Count == 1)
-            {
-                // Process any belts if present
-                ProcessBelts(sc, sn, node);
+                // Get custom name if different to designation
+                string customname = GetCustomNameJournalScan(sc, sys);
 
-                // Process primary star in multi-star system
-                if (elements[0].Equals("A", StringComparison.InvariantCultureIgnoreCase))
+                // Process elements, 
+                ScanNode node = ProcessElementsJournalScan(sc, sys, systemnode, customname, elements, starscannodetype, isbeltcluster, isring, oldnode);
+
+                if (node.BodyID != null)
                 {
-                    BodyDesignations.CachePrimaryStar(sc, sys);
+                    systemnode.NodesByID[(int)node.BodyID] = node;
+                }
 
-                    // Reprocess if we've encountered the primary (A) star and we already have a "Main Star", we reprocess to 
-                    // allow any updates to PrimaryCache to make a difference
+                // Process top-level star
+                if (elements.Count == 1)
+                {
+                    // Process any belts if present
+                    ProcessBelts(sc, systemnode, node);
 
-                    if (reprocessPrimary && sn.StarNodes.Any(n => n.Key.Length > 1 && n.Value.NodeType == ScanNodeType.star))       
+                    // Process primary star in multi-star system
+                    if (elements[0].Equals("A", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        // get bodies with scans
-                        List<ScanNode> bodies = sn.Bodies.Where(b => b.ScanData != null).ToList();
+                        BodyDesignations.CachePrimaryStar(sc, sys);
 
-                        lock (sn)
+                        // Reprocess if we've encountered the primary (A) star and we already have a "Main Star", we reprocess to 
+                        // allow any updates to PrimaryCache to make a difference
+
+                        if (reprocessPrimary && systemnode.StarNodes.Any(n => n.Key.Length > 1 && n.Value.NodeType == ScanNodeType.star))
                         {
+                            // get bodies with scans
+                            List<ScanNode> bodies = systemnode.Bodies.Where(b => b.ScanData != null).ToList();
+
                             // reset the nodes to zero
-                            sn.ClearChildren();
+                            systemnode.ClearChildren();
 
                             foreach (var body in bodies)              // replay into process the body scans.. using the newly updated body designation (primary star cache) to correct any errors
                             {
                                 var js = body.ScanData;
-                                js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sn.System.Name);
-                                ProcessJournalScan(js, sn.System, oldnode: body);
+                                js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, systemnode.System.Name);
+                                ProcessJournalScan(js, systemnode.System, oldnode: body);
                             }
                         }
                     }
@@ -239,6 +239,7 @@ namespace EliteDangerousCore
         }
 
         // see above for elements
+        // protected by global lock on system node
 
         private ScanNode ProcessElementsJournalScan(JournalScan sc, ISystem sys, SystemNode systemnode, string customname, List<string> elements, 
                                                     ScanNodeType starscannodetype, bool isbeltcluster, bool isring, ScanNode oldnode = null)
@@ -291,100 +292,94 @@ namespace EliteDangerousCore
                     if (currentnodelist == null)                            // no node list, happens when we are at least 1 level down as systemnode always has a node list, make one 
                         currentnodelist = previousnode.MakeChildList();
 
-                    lock (currentnodelist)                  // lock the node list during the add
-                    {
-                        string ownname = elements[lvl];
+                    string ownname = elements[lvl];
 
-                        subnode = new ScanNode(ownname,
-                                                previousnode == null ? (sys.Name + (ownname.Contains("Main") ? "" : (" " + ownname))) : previousnode.FullName + " " + ownname,
-                                                sublvtype,
-                                                lvl,
-                                                previousnode,
-                                                systemnode,
-                                                sc.DataSource);
+                    subnode = new ScanNode(ownname,
+                                            previousnode == null ? (sys.Name + (ownname.Contains("Main") ? "" : (" " + ownname))) : previousnode.FullName + " " + ownname,
+                                            sublvtype,
+                                            lvl,
+                                            previousnode,
+                                            systemnode,
+                                            sc.DataSource);
 
-                        currentnodelist.Add(ownname, subnode);
-                        madenew = true;
+                    currentnodelist.Add(ownname, subnode);
+                    madenew = true;
                       //  System.Diagnostics.Debug.WriteLine($"StarScan JS Created subnode {subnode.FullName}");
-                    }
                 }
                 else
                 {
                    // System.Diagnostics.Debug.WriteLine($"StarScan JS Existing subnode {subnode.FullName} {subnode.EDSMCreatedNode}");
                 }
 
-                lock (subnode)
+                if (ancestorbodies != null && lvl < ancestorbodies.Count)       // if we have the ancestor list, we can fill in the bodyid for each part.
                 {
-                    if (ancestorbodies != null && lvl < ancestorbodies.Count)       // if we have the ancestor list, we can fill in the bodyid for each part.
+                    subnode.BodyID = ancestorbodies[lvl].BodyID;
+                    systemnode.NodesByID[(int)subnode.BodyID] = subnode;
+                }
+
+                if (lvl == elements.Count - 1)                                  // if we are at the end node..
+                {
+                    // if we are replacing the node, make sure we dup across some info which was injected into it by other events
+
+                    if (oldnode != null && oldnode.FullName == subnode.FullName && !object.ReferenceEquals(subnode, oldnode))      
                     {
-                        subnode.BodyID = ancestorbodies[lvl].BodyID;
-                        systemnode.NodesByID[(int)subnode.BodyID] = subnode;
+                        subnode.CopyExternalDataFromOldNode(oldnode);
+                    }
+    
+                    // if its a belt cluster we are adding, then the previous node is a belt but it does not have a scan data, therefore it was artifically created and has no body id
+                    // if we have a parent list, we can push the body id of it up. makes the IDs look better
+
+                    if (subnode.NodeType == ScanNodeType.beltcluster && sc.Parents != null)
+                        previousnode.BodyID = sc.Parents[0].BodyID;
+
+                    // an older node, with a new scan which is not websourced, but the current one is websourced,
+                    // we set the data source to journal, as we have in effect created it again
+
+                    if (!madenew && sc.IsWebSourced == false && subnode.WebCreatedNode == true)
+                    {
+                        subnode.OverrideDataSourceToJournal();
                     }
 
-                    if (lvl == elements.Count - 1)                                  // if we are at the end node..
+                    // only overwrites if scan is better
+                    subnode.SetScanDataIfBetter(sc);
+
+                    subnode.ScanData.SetMapped(subnode.IsMapped, subnode.WasMappedEfficiently);      // pass this data to node, as we may have previously had a SAA Scan
+
+                    subnode.CustomName = customname;                            // and its custom name
+
+                    if (sc.BodyID != null)                                      // if scan has a body ID, pass it to the node
                     {
-                        // if we are replacing the node, make sure we dup across some info which was injected into it by other events
+                        subnode.BodyID = sc.BodyID;
+                    }
 
-                        if (oldnode != null && oldnode.FullName == subnode.FullName && !object.ReferenceEquals(subnode, oldnode))      
+                    if (sc.Parents != null)
+                    {
+                        for (int i = 0; i < sc.Parents.Count - 1; i++)   // look thru the list, and assign at the correct level
                         {
-                            subnode.CopyExternalDataFromOldNode(oldnode);
-                        }
-    
-                        // if its a belt cluster we are adding, then the previous node is a belt but it does not have a scan data, therefore it was artifically created and has no body id
-                        // if we have a parent list, we can push the body id of it up. makes the IDs look better
-
-                        if (subnode.NodeType == ScanNodeType.beltcluster && sc.Parents != null)
-                            previousnode.BodyID = sc.Parents[0].BodyID;
-
-                        // an older node, with a new scan which is not websourced, but the current one is websourced,
-                        // we set the data source to journal, as we have in effect created it again
-
-                        if (!madenew && sc.IsWebSourced == false && subnode.WebCreatedNode == true)
-                        {
-                            subnode.OverrideDataSourceToJournal();
-                        }
-
-                        // only overwrites if scan is better
-                        subnode.SetScanDataIfBetter(sc);
-
-                        subnode.ScanData.SetMapped(subnode.IsMapped, subnode.WasMappedEfficiently);      // pass this data to node, as we may have previously had a SAA Scan
-
-                        subnode.CustomName = customname;                            // and its custom name
-
-                        if (sc.BodyID != null)                                      // if scan has a body ID, pass it to the node
-                        {
-                            subnode.BodyID = sc.BodyID;
-                        }
-
-                        if (sc.Parents != null)
-                        {
-                            for (int i = 0; i < sc.Parents.Count - 1; i++)   // look thru the list, and assign at the correct level
+                            if (systemnode.Barycentres.TryGetValue(sc.Parents[i].BodyID, out JournalScanBaryCentre jsa))
                             {
-                                if (systemnode.Barycentres.TryGetValue(sc.Parents[i].BodyID, out JournalScanBaryCentre jsa))
-                                {
-                                    sc.Parents[i].Barycentre = jsa;
-                                }
+                                sc.Parents[i].Barycentre = jsa;
                             }
                         }
+                    }
 
-                        if (subnode.Signals != null)            // make sure Scan node has same list as subnode
-                        {
-                            // System.Diagnostics.Debug.WriteLine($"Assign JS signal list {string.Join(",", subnode.Signals.Select(x => x.Type).ToList())} to {subnode.FullName}");
-                            sc.Signals = subnode.Signals;       
-                        }
-                        if (subnode.Genuses != null)            // make sure Scan node has same list as subnode
-                        {
-                            sc.Genuses = subnode.Genuses;       
-                        }
-                        if (subnode.Organics != null)           // make sure Scan node has same list as subnode
-                        {
-                            // System.Diagnostics.Debug.WriteLine($"Assign JS organic list {string.Join(",", subnode.Organics.Select(x => x.Species).ToList())} to {subnode.FullName}");
-                            sc.Organics = subnode.Organics;       
-                        }
-                        if (subnode.SurfaceFeatures != null)    // mask sure scan node has same list as subnode
-                        {
-                            sc.SurfaceFeatures = subnode.SurfaceFeatures;
-                        }
+                    if (subnode.Signals != null)            // make sure Scan node has same list as subnode
+                    {
+                        // System.Diagnostics.Debug.WriteLine($"Assign JS signal list {string.Join(",", subnode.Signals.Select(x => x.Type).ToList())} to {subnode.FullName}");
+                        sc.Signals = subnode.Signals;       
+                    }
+                    if (subnode.Genuses != null)            // make sure Scan node has same list as subnode
+                    {
+                        sc.Genuses = subnode.Genuses;       
+                    }
+                    if (subnode.Organics != null)           // make sure Scan node has same list as subnode
+                    {
+                        // System.Diagnostics.Debug.WriteLine($"Assign JS organic list {string.Join(",", subnode.Organics.Select(x => x.Species).ToList())} to {subnode.FullName}");
+                        sc.Organics = subnode.Organics;       
+                    }
+                    if (subnode.SurfaceFeatures != null)    // mask sure scan node has same list as subnode
+                    {
+                        sc.SurfaceFeatures = subnode.SurfaceFeatures;
                     }
                 }
 
@@ -420,13 +415,10 @@ namespace EliteDangerousCore
                         if (node.Children == null)
                             node.MakeChildList();
 
-                        lock (node.Children)
-                        {
-                            belt = new ScanNode(beltname, node.FullName + " " + beltname, ScanNodeType.belt, 1, node, sn, SystemSource.FromJournal);
-                            belt.CustomName = ring.Name;
-                            belt.BeltData = ring;
-                            node.Children.Add(beltname, belt);
-                        }
+                        belt = new ScanNode(beltname, node.FullName + " " + beltname, ScanNodeType.belt, 1, node, sn, SystemSource.FromJournal);
+                        belt.CustomName = ring.Name;
+                        belt.BeltData = ring;
+                        node.Children.Add(beltname, belt);
                     }
 
                     belt.BeltData = ring;

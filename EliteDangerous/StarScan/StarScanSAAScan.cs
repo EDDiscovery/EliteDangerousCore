@@ -44,29 +44,30 @@ namespace EliteDangerousCore
 
         private bool ProcessSAAScan(JournalSAAScanComplete jsaa, ISystem sys, bool saveprocessinglater = true)  // background or foreground.. FALSE if you can't process it
         {
-            SystemNode sn = GetOrCreateSystemNode(sys);
-            ScanNode relatednode = null;
+            SystemNode systemnode = GetOrCreateSystemNode(sys);
 
-            if (sn.NodesByID.ContainsKey((int)jsaa.BodyID))
+            lock (systemnode)
             {
-                relatednode = sn.NodesByID[(int)jsaa.BodyID];
-            }
-            else 
-            {
-                foreach (var body in sn.Bodies)
+                ScanNode relatednode = null;
+
+                if (systemnode.NodesByID.ContainsKey((int)jsaa.BodyID))
                 {
-                    if ((body.FullName == jsaa.BodyName || body.CustomName == jsaa.BodyName) &&
-                        (body.FullName != sys.Name || body.Level != 0))
+                    relatednode = systemnode.NodesByID[(int)jsaa.BodyID];
+                }
+                else
+                {
+                    foreach (var body in systemnode.Bodies)
                     {
-                        relatednode = body;
-                        break;
+                        if ((body.FullName == jsaa.BodyName || body.CustomName == jsaa.BodyName) &&
+                            (body.FullName != sys.Name || body.Level != 0))
+                        {
+                            relatednode = body;
+                            break;
+                        }
                     }
                 }
-            }
 
-            if (relatednode != null)
-            {
-                lock (relatednode)
+                if (relatednode != null)
                 {
                     relatednode.SetMapped(jsaa.ProbesUsed <= jsaa.EfficiencyTarget);
                     //System.Diagnostics.Debug.WriteLine("Setting SAA Scan for " + jsaa.BodyName + " " + sys.Name + " to Mapped: " + relatednode.WasMappedEfficiently);
@@ -80,15 +81,15 @@ namespace EliteDangerousCore
                     {
                         SaveForProcessing(jsaa, sys);
                     }
-                }
 
-                return true; // We already have the scan
-            }
-            else
-            {
-                if (saveprocessinglater)
-                    SaveForProcessing(jsaa,sys);
-                //System.Diagnostics.Debug.WriteLine("No body to attach data found for " + jsaa.BodyName + " @ " + sys.Name + " body " + jsaa.BodyDesignation);
+                    return true; // We already have the scan
+                }
+                else
+                {
+                    if (saveprocessinglater)
+                        SaveForProcessing(jsaa, sys);
+                    //System.Diagnostics.Debug.WriteLine("No body to attach data found for " + jsaa.BodyName + " @ " + sys.Name + " body " + jsaa.BodyDesignation);
+                }
             }
 
             return false;
@@ -99,8 +100,9 @@ namespace EliteDangerousCore
 
         public void SetFSSDiscoveryScan(JournalFSSDiscoveryScan je, ISystem sys)
         {
-            SystemNode sn = GetOrCreateSystemNode(sys);
-            sn.FSSTotalBodies = je.BodyCount;
+            SystemNode systemnode = GetOrCreateSystemNode(sys);
+            lock (systemnode )
+                systemnode.FSSTotalBodies = je.BodyCount;
         }
 
         #endregion
