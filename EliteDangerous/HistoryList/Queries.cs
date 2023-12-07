@@ -432,6 +432,8 @@ namespace EliteDangerousCore
 
                 bool wantiter1 = allvars.Contains("Iter1");
                 bool wantiter2 = allvars.Contains("Iter2");
+                bool wantiter3 = allvars.Contains("Iter3");
+                bool wantiter4 = allvars.Contains("Iter4");
                 bool wantjumponium = allvars.Contains("JumponiumCount");
                 bool wantsiblingcount = allvars.Contains("Sibling.Count");
                 bool wantchildcount = allvars.Contains("Child.Count");
@@ -722,10 +724,7 @@ namespace EliteDangerousCore
                         }
                     }
 
-                    if (wantiter1)      // set up default iter1
-                        scandatavars["Iter1"] = "1";
-                    if (wantiter2)      // set up default iter2
-                        scandatavars["Iter2"] = "1";
+                    scandatavars["Iter1"] = scandatavars["Iter2"] = scandatavars["Iter3"] = scandatavars["Iter4"] = "1";
 
                     List<BaseUtils.ConditionEntry> testspassed = wantreport ? new List<BaseUtils.ConditionEntry>() : null;
 
@@ -734,7 +733,7 @@ namespace EliteDangerousCore
                     //System.Diagnostics.Debug.WriteLine($"Star {he.System.Name}");
                     //foreach (var v in scandatavars.NameEnumuerable) System.Diagnostics.Debug.WriteLine($"Search scandata var {v} = {scandatavars[v]}");
 
-                    var res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, wantiter1 || wantiter2, debugit: debugit);
+                    var res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, wantiter1 || wantiter2 || wantiter3 || wantiter4, debugit: debugit);
                     
                     //var resold = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, out string errlist, out BaseUtils.ConditionLists.ErrorClass errcls, wantiter1 || wantiter2, debugit: debugit);
 
