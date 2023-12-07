@@ -431,7 +431,7 @@ namespace EliteDangerousCore
 
                 var allvars = BaseUtils.Condition.EvalVariablesUsed(cond.List);
 
-                int iterators = allvars.Where(x => x.StartsWith("Iter")).Select(x => x.Substring(4).InvariantParseInt(0)).Max();
+                int iterators = allvars.Where(x => x.StartsWith("Iter")).Select(x => x.Substring(4).InvariantParseInt(0)).DefaultIfEmpty(0).Max();
                 bool wantjumponium = allvars.Contains("JumponiumCount");
                 bool wantsiblingcount = allvars.Contains("Sibling.Count");
                 bool wantchildcount = allvars.Contains("Child.Count");
