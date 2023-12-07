@@ -329,6 +329,7 @@ namespace EliteDangerousCore
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Level", "Integer value: Level of body in system", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Sibling.Count", "Integer value: Number of siblings", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Bodies.Count", "Integer value: Number of bodies in the system", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("StarBodies.Count", "Integer value: Number of bodies in the star system the body is in", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Child.Count", "Integer value: Number of child moons", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("JumponiumCount", "Integer value: Number of jumponium materials available", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));     // add on ones we synthesise
 
@@ -377,7 +378,7 @@ namespace EliteDangerousCore
                 }
 
                 // specials, for scan
-                if (v.StartsWith("Parent.") || v.StartsWith("Sibling") || v.StartsWith("Child") || v.StartsWith("Star.") || v.StartsWith("Bodies"))      
+                if (v.StartsWith("Parent.") || v.StartsWith("Sibling") || v.StartsWith("Child") || v.StartsWith("Star.") || v.StartsWith("Bodies") || v.StartsWith("StarBodies"))      
                     res.Add(JournalTypeEnum.Scan);
             }
 
@@ -430,14 +431,12 @@ namespace EliteDangerousCore
 
                 var allvars = BaseUtils.Condition.EvalVariablesUsed(cond.List);
 
-                bool wantiter1 = allvars.Contains("Iter1");
-                bool wantiter2 = allvars.Contains("Iter2");
-                bool wantiter3 = allvars.Contains("Iter3");
-                bool wantiter4 = allvars.Contains("Iter4");
+                int iterators = allvars.Where(x => x.StartsWith("Iter")).Select(x => x.Substring(4).InvariantParseInt(0)).Max();
                 bool wantjumponium = allvars.Contains("JumponiumCount");
                 bool wantsiblingcount = allvars.Contains("Sibling.Count");
                 bool wantchildcount = allvars.Contains("Child.Count");
                 bool wantbodiescount = allvars.Contains("Bodies.Count");
+                bool wantstarbodiescount = allvars.Contains("StarBodies.Count");
                 bool wantlevel = allvars.Contains("Level");
 
                 // extract variables needed to be filled in by the AddPropertiesFieldsOfClass function. We extract only the ones we need for speed reason.
@@ -453,6 +452,7 @@ namespace EliteDangerousCore
                 HashSet<string> varsstar = new HashSet<string>();
                 HashSet<string> varsstarstar = new HashSet<string>();
                 HashSet<string> varsbodies = new HashSet<string>();
+                HashSet<string> varsstarbodies = new HashSet<string>();
 
                 foreach (var v in allvars)
                 {
@@ -487,6 +487,11 @@ namespace EliteDangerousCore
                         var v1 = v.Substring(v.IndexOfOrLength("]", offset: 2));
                         varsbodies.Add(v1.Substring(0, v1.IndexOfOrLength(stoptext)));
                     }
+                    else if (v.StartsWith("StarBodies["))
+                    {
+                        var v1 = v.Substring(v.IndexOfOrLength("]", offset: 2));
+                        varsstarbodies.Add(v1.Substring(0, v1.IndexOfOrLength(stoptext)));
+                    }
                     else
                     {
                         varsevent.Add(v.Substring(0, v.IndexOfOrLength(stoptext)));
@@ -500,7 +505,8 @@ namespace EliteDangerousCore
                 //foreach (var v in varsparentparent) System.Diagnostics.Debug.WriteLine($"Search Parent Parent Var {v}");
                 //foreach (var v in varssiblings) System.Diagnostics.Debug.WriteLine($"Search Sibling Var {v}");
                 //foreach (var v in varschildren) System.Diagnostics.Debug.WriteLine($"Search Child Var {v}");
-                foreach (var v in varsbodies) System.Diagnostics.Debug.WriteLine($"Search Bodies Var {v}");
+                //foreach (var v in varsbodies) System.Diagnostics.Debug.WriteLine($"Search Bodies Var {v}");
+                //foreach (var v in varsstarbodies) System.Diagnostics.Debug.WriteLine($"Search Star Bodies Var {v}");
 
                 Type[] ignoretypes = new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) };
 
@@ -721,10 +727,33 @@ namespace EliteDangerousCore
                                 if (wantbodiescount)
                                     scandatavars["Bodies.Count"] = count.ToStringInvariant();
                             }
+
+                            if (wantstarbodiescount || varsstarbodies.Count > 0)
+                            {
+                                var starnode = he.ScanNode;
+                                while (starnode.Parent != null)
+                                    starnode = starnode.Parent;
+
+                                int count = 0;
+                                foreach (var sn in starnode.Descendants.EmptyIfNull())
+                                {
+                                    if (varsstarbodies.Count > 0 && sn.ScanData != null)
+                                    {
+                                        scandatavars.AddPropertiesFieldsOfClass(sn.ScanData, $"StarBodies[{count + 1}].",
+                                                new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
+                                                varsstarbodies, ensuredoublerep: true, classsepar: ".");
+
+                                    }
+                                    count++;
+                                }
+
+                                if (wantstarbodiescount)
+                                    scandatavars["StarBodies.Count"] = count.ToStringInvariant();
+                            }
                         }
                     }
 
-                    scandatavars["Iter1"] = scandatavars["Iter2"] = scandatavars["Iter3"] = scandatavars["Iter4"] = "1";
+                  //  scandatavars["Iter1"] = scandatavars["Iter2"] = scandatavars["Iter3"] = scandatavars["Iter4"] = "1";
 
                     List<BaseUtils.ConditionEntry> testspassed = wantreport ? new List<BaseUtils.ConditionEntry>() : null;
 
@@ -733,7 +762,7 @@ namespace EliteDangerousCore
                     //System.Diagnostics.Debug.WriteLine($"Star {he.System.Name}");
                     //foreach (var v in scandatavars.NameEnumuerable) System.Diagnostics.Debug.WriteLine($"Search scandata var {v} = {scandatavars[v]}");
 
-                    var res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, wantiter1 || wantiter2 || wantiter3 || wantiter4, debugit: debugit);
+                    var res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, iterators, debugit: debugit);
                     
                     //var resold = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, out string errlist, out BaseUtils.ConditionLists.ErrorClass errcls, wantiter1 || wantiter2, debugit: debugit);
 
