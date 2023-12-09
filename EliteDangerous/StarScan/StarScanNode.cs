@@ -42,6 +42,7 @@ namespace EliteDangerousCore
             public SortedList<string, ScanNode> Children{ get; private set; }   // kids, may ne null
             public ScanNode Parent{ get; private set; }                 // Parent of this node 
             public SystemNode SystemNode{ get; private set; }           // the system node the entry is associated with
+            public ScanNode ParentStar { get { return FindStarNode(this); } }
             public int Level{ get; private set; }                       // level within SystemNode
             public int? BodyID{ get; internal set; }
             public bool IsMapped{ get; private set; }                   // recorded here since the scan data can be replaced by a better version later.
@@ -74,6 +75,127 @@ namespace EliteDangerousCore
             public ScanNode(string ownname, string fullname, ScanNodeType nodetype, int level, ScanNode parent, SystemNode sysn, SystemSource datasource)
             {
                 OwnName = ownname; FullName = fullname; NodeType = nodetype; Level = level; Parent = parent; SystemNode = sysn; DataSource = datasource;
+            }
+
+
+            public int CountGeoSignals { get { return Signals?.Where(x => x.IsGeo).Sum(y => y.Count) ?? 0; } }
+            public int CountBioSignals { get { return Signals?.Where(x => x.IsBio).Sum(y => y.Count) ?? 0; } }
+            public int CountThargoidSignals { get { return Signals?.Where(x => x.IsThargoid).Sum(y => y.Count) ?? 0; } }
+            public int CountGuardianSignals { get { return Signals?.Where(x => x.IsGuardian).Sum(y => y.Count) ?? 0; } }
+            public int CountHumanSignals { get { return Signals?.Where(x => x.IsHuman).Sum(y => y.Count) ?? 0; } }
+            public int CountOtherSignals { get { return Signals?.Where(x => x.IsOther).Sum(y => y.Count) ?? 0; } }
+            public int CountUncategorisedSignals { get { return Signals?.Where(x => x.IsUncategorised).Sum(y => y.Count) ?? 0; } }
+
+            // which feature is nearby?  Handles no surface features
+            public IBodyFeature FindSurfaceFeatureNear( double? latitude, double ?longitude, double delta = 0.1)
+            {
+                if (latitude.HasValue && longitude.HasValue && SurfaceFeatures != null)
+                    return SurfaceFeatures.Find(x => x.HasLatLong &&
+                                                           System.Math.Abs(x.Latitude.Value - latitude.Value) < delta && System.Math.Abs(x.Longitude.Value - longitude.Value) < delta);
+                else
+                    return null;
+            }
+
+            // does node have any non web scans (or empty scans) below it
+            public bool DoesNodeHaveNonWebScansBelow()
+            {
+                if (WebCreatedNode)        // its web created, so answer is false
+                    return false;
+
+                if (Children != null)
+                {
+                    foreach (KeyValuePair<string, ScanNode> csn in Children)
+                    {
+                        if (csn.Value.DoesNodeHaveNonWebScansBelow() == true)  // we do have non web ones under this child
+                            return true;
+                    }
+                }
+
+                return true;
+            }
+
+            public bool IsBodyInFilter(string[] filternames, bool checkchildren)
+            {
+                if (IsBodyInFilter(filternames))
+                    return true;
+
+                if (checkchildren)
+                {
+                    foreach (var body in Bodies)
+                    {
+                        if (body.IsBodyInFilter(filternames))
+                            return true;
+                    }
+                }
+                return false;
+            }
+
+            public bool IsBodyInFilter(string[] filternames)    // stars/bodies use the xID type, others use the type
+            {
+                if (filternames.Contains("All"))
+                    return true;
+                string name = NodeType.ToString();      // star etc..
+                if (ScanData != null)
+                {
+                    if (NodeType == ScanNodeType.star)
+                        name = ScanData.StarTypeID.ToString();
+                    else if (NodeType == ScanNodeType.body)
+                        name = ScanData.PlanetTypeID.ToString();
+                }
+
+                return filternames.Contains(name, StringComparer.InvariantCultureIgnoreCase);
+            }
+
+            public IEnumerable<ScanNode> Bodies
+            {
+                get
+                {
+                    if (Children != null)                                   
+                    {       
+                        foreach (ScanNode sn in Children.Values)            
+                        {
+                            yield return sn;
+
+                            foreach (ScanNode c in sn.Bodies)          // recurse back up to go as deep as required
+                            {
+                                yield return c;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Using info here, and the indicated journal scan node, return suryeyor info on this node
+            public string SurveyorInfoLine(ISystem sys, bool showsignals, bool showorganics, bool showvolcanism, bool showvalues, bool shortinfo, bool showGravity, bool showAtmos, bool showTemp, bool showRings,
+                            int lowRadiusLimit, int largeRadiusLimit, double eccentricityLimit)
+            {
+                if (ScanData != null)
+                {
+                    bool hasthargoidsignals = Signals?.Find(x => x.IsThargoid) != null && showsignals;
+                    bool hasguardiansignals = Signals?.Find(x => x.IsGuardian) != null && showsignals;
+                    bool hashumansignals = Signals?.Find(x => x.IsHuman) != null && showsignals;
+                    bool hasothersignals = Signals?.Find(x => x.IsOther) != null && showsignals;
+                    bool hasminingsignals = Signals?.Find(x => x.IsUncategorised) != null && showsignals;
+                    bool hasgeosignals = Signals?.Find(x => x.IsGeo) != null && showsignals;
+                    bool hasbiosignals = Signals?.Find(x => x.IsBio) != null && showsignals;
+                    bool hasscanorganics = Organics != null && showorganics;
+
+                    return ScanData.SurveyorInfoLine(sys, hasminingsignals, hasgeosignals, hasbiosignals,
+                                hasthargoidsignals, hasguardiansignals, hashumansignals, hasothersignals, hasscanorganics,
+                                showvolcanism, showvalues, shortinfo, showGravity, showAtmos, showTemp, showRings,
+                                lowRadiusLimit,largeRadiusLimit, eccentricityLimit);
+                }
+                else
+                    return string.Empty;
+            }
+
+
+            private ScanNode FindStarNode(ScanNode p)
+            {
+                if (p.Parent == null)
+                    return p;
+                else
+                    return FindStarNode(p.Parent);
             }
 
             internal SortedList<string, ScanNode> MakeChildList()
@@ -120,9 +242,9 @@ namespace EliteDangerousCore
 
             internal void SetScanDataIfBetter(JournalScan value)
             {
-                if ( value != null )
+                if (value != null)
                 {
-                    if ( ScanData == null || ((!value.IsWebSourced && value.ScanType != "Basic") || ScanData.ScanType == "Basic"))
+                    if (ScanData == null || ((!value.IsWebSourced && value.ScanType != "Basic") || ScanData.ScanType == "Basic"))
                         ScanData = value;
                 }
             }
@@ -135,117 +257,6 @@ namespace EliteDangerousCore
             internal void CopyChildren(ScanNode other)
             {
                 Children = other.Children;
-            }
-
-            public int CountGeoSignals { get { return Signals?.Where(x => x.IsGeo).Sum(y => y.Count) ?? 0; } }
-            public int CountBioSignals { get { return Signals?.Where(x => x.IsBio).Sum(y => y.Count) ?? 0; } }
-            public int CountThargoidSignals { get { return Signals?.Where(x => x.IsThargoid).Sum(y => y.Count) ?? 0; } }
-            public int CountGuardianSignals { get { return Signals?.Where(x => x.IsGuardian).Sum(y => y.Count) ?? 0; } }
-            public int CountHumanSignals { get { return Signals?.Where(x => x.IsHuman).Sum(y => y.Count) ?? 0; } }
-            public int CountOtherSignals { get { return Signals?.Where(x => x.IsOther).Sum(y => y.Count) ?? 0; } }
-            public int CountUncategorisedSignals { get { return Signals?.Where(x => x.IsUncategorised).Sum(y => y.Count) ?? 0; } }
-
-            // which feature is nearby?  Handles no surface features
-            public IBodyFeature FindSurfaceFeatureNear( double? latitude, double ?longitude, double delta = 0.1)
-            {
-                if (latitude.HasValue && longitude.HasValue && SurfaceFeatures != null)
-                    return SurfaceFeatures.Find(x => x.HasLatLong &&
-                                                           System.Math.Abs(x.Latitude.Value - latitude.Value) < delta && System.Math.Abs(x.Longitude.Value - longitude.Value) < delta);
-                else
-                    return null;
-            }
-
-            // does node have any non web scans (or empty scans) below it
-            public bool DoesNodeHaveNonWebScansBelow()
-            {
-                if (WebCreatedNode)        // its web created, so answer is false
-                    return false;
-
-                if (Children != null)
-                {
-                    foreach (KeyValuePair<string, ScanNode> csn in Children)
-                    {
-                        if (csn.Value.DoesNodeHaveNonWebScansBelow() == true)  // we do have non web ones under this child
-                            return true;
-                    }
-                }
-
-                return true;
-            }
-
-            public bool IsBodyInFilter(string[] filternames, bool checkchildren)
-            {
-                if (IsBodyInFilter(filternames))
-                    return true;
-
-                if (checkchildren)
-                {
-                    foreach (var body in Descendants)
-                    {
-                        if (body.IsBodyInFilter(filternames))
-                            return true;
-                    }
-                }
-                return false;
-            }
-
-            public bool IsBodyInFilter(string[] filternames)    // stars/bodies use the xID type, others use the type
-            {
-                if (filternames.Contains("All"))
-                    return true;
-                string name = NodeType.ToString();      // star etc..
-                if (ScanData != null)
-                {
-                    if (NodeType == ScanNodeType.star)
-                        name = ScanData.StarTypeID.ToString();
-                    else if (NodeType == ScanNodeType.body)
-                        name = ScanData.PlanetTypeID.ToString();
-                }
-
-                return filternames.Contains(name, StringComparer.InvariantCultureIgnoreCase);
-            }
-
-            public IEnumerable<ScanNode> Descendants
-            {
-                get
-                {
-                    if (Children != null)                                   
-                    {       
-                        foreach (ScanNode sn in Children.Values)            
-                        {
-                            yield return sn;
-
-                            foreach (ScanNode c in sn.Descendants)          // recurse back up to go as deep as required
-                            {
-                                yield return c;
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Using info here, and the indicated journal scan node, return suryeyor info on this node
-            public string SurveyorInfoLine(ISystem sys, bool showsignals, bool showorganics, bool showvolcanism, bool showvalues, bool shortinfo, bool showGravity, bool showAtmos, bool showTemp, bool showRings,
-                            int lowRadiusLimit, int largeRadiusLimit, double eccentricityLimit)
-            {
-                if (ScanData != null)
-                {
-                    bool hasthargoidsignals = Signals?.Find(x => x.IsThargoid) != null && showsignals;
-                    bool hasguardiansignals = Signals?.Find(x => x.IsGuardian) != null && showsignals;
-                    bool hashumansignals = Signals?.Find(x => x.IsHuman) != null && showsignals;
-                    bool hasothersignals = Signals?.Find(x => x.IsOther) != null && showsignals;
-                    bool hasminingsignals = Signals?.Find(x => x.IsUncategorised) != null && showsignals;
-                    bool hasgeosignals = Signals?.Find(x => x.IsGeo) != null && showsignals;
-                    bool hasbiosignals = Signals?.Find(x => x.IsBio) != null && showsignals;
-                    bool hasscanorganics = Organics != null && showorganics;
-
-                    return ScanData.SurveyorInfoLine(sys, hasminingsignals, hasgeosignals, hasbiosignals,
-                                hasthargoidsignals, hasguardiansignals, hashumansignals, hasothersignals, hasscanorganics,
-                                showvolcanism, showvalues, shortinfo, showGravity, showAtmos, showTemp, showRings,
-                                lowRadiusLimit,largeRadiusLimit, eccentricityLimit);
-                }
-                else
-                    return string.Empty;
             }
 
         };

@@ -35,7 +35,7 @@ namespace EliteDangerousCore
             }
         }
 
-        public static HashSet<JournalTypeEnum> AllSearchableJournalTypes { get; } = new HashSet<JournalTypeEnum> 
+        public static HashSet<JournalTypeEnum> AllSearchableJournalTypes { get; } = new HashSet<JournalTypeEnum>
             { JournalTypeEnum.Scan, JournalTypeEnum.FSSBodySignals, JournalTypeEnum.SAASignalsFound, JournalTypeEnum.FSSSignalDiscovered , JournalTypeEnum.CodexEntry ,JournalTypeEnum.ScanOrganic };
 
         public enum QueryType { BuiltIn, User, Example };
@@ -48,11 +48,11 @@ namespace EliteDangerousCore
             public bool SortAscending { get; }
 
             [JsonIgnore]
-            public QueryType QueryType { get;  }
+            public QueryType QueryType { get; }
             [JsonIgnore]
             public bool DefaultSearch { get; set; }
 
-            public Query(string n, string c, QueryType qt, bool def = false, string sortcond= null, bool sortascending = false) 
+            public Query(string n, string c, QueryType qt, bool def = false, string sortcond = null, bool sortascending = false)
             { Name = n; Condition = c; QueryType = qt; DefaultSearch = def; SortCondition = sortcond; SortAscending = sortascending; }
 
             [JsonIgnore]
@@ -111,8 +111,8 @@ namespace EliteDangerousCore
                                 "( \"Abs(Parent.Rings[Iter1].InnerRad-nSemiMajorAxis)\" < nRadius*10 Or  \"Abs(Parent.Rings[Iter1].OuterRad-nSemiMajorAxis)\" < nRadius*10 )",
                     QueryType.BuiltIn, true ),
 
-                new Query("Binary close to rings","(IsOrbitingBarycentre IsTrue And Parents[2].IsBarycentre IsFalse And Parent.HasRings IsTrue And IsPlanet IsTrue) And " + 
-                            "(\"Abs(Parent.Rings[Iter1].InnerRad-Parents[1].Barycentre.SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\" Or \"Abs(Parent.Rings[Iter1].OuterRad-Parents[1].Barycentre.SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\")", 
+                new Query("Binary close to rings","(IsOrbitingBarycentre IsTrue And Parents[2].IsBarycentre IsFalse And Parent.HasRings IsTrue And IsPlanet IsTrue) And " +
+                            "(\"Abs(Parent.Rings[Iter1].InnerRad-Parents[1].Barycentre.SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\" Or \"Abs(Parent.Rings[Iter1].OuterRad-Parents[1].Barycentre.SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\")",
                     QueryType.BuiltIn, true ),
 
                 new Query("Planet with a large number of Moons","IsPlanet IsTrue And Child.Count >= 8", QueryType.BuiltIn, true, "Compare(left.Child.Count,right.Child.Count)" ),
@@ -158,7 +158,7 @@ namespace EliteDangerousCore
                 new Query("Star is super bright","nAbsoluteMagnitude <= -2", QueryType.BuiltIn , false, "Compare(left.nAbsoluteMagnitude,right.nAbsoluteMagnitude)", true  ),
                 new Query("Star has same magnitude as Sol","nAbsoluteMagnitudeSol >= -0.5 And nAbsoluteMagnitudeSol <= 0.5", QueryType.BuiltIn, false, "Compare(left.nAbsoluteMagnitude,right.nAbsoluteMagnitude)", true),
                 new Query("Star has belts","HasBelts IsTrue", QueryType.BuiltIn ),
-                new Query("Star is heavier than Sol","nStellarMass > 1", QueryType.BuiltIn, false, "Compare(left.nStellarMass,right.nStellarMass)", false ), 
+                new Query("Star is heavier than Sol","nStellarMass > 1", QueryType.BuiltIn, false, "Compare(left.nStellarMass,right.nStellarMass)", false ),
                 new Query("Star is wider than Sol","nRadius > 695700000", QueryType.BuiltIn, false, "Compare(left.nRadius,right.nRadius)" ,false ),
 
                 new Query("Body Name","BodyName contains <name>", QueryType.Example ),
@@ -202,12 +202,12 @@ namespace EliteDangerousCore
         private HistoryListQueries()
         {
             JArray json = JArray.Parse(DB.UserDatabase.Instance.GetSettingString(DbUserQueries, ""));
-            if ( json != null )
+            if (json != null)
             {
-                foreach( var t in json )
+                foreach (var t in json)
                 {
-                    Searches.Insert(0, new Query(t["Name"].Str("Unknown"), t["Condition"].Str("Unknown"), QueryType.User, 
-                        sortcond:t["SortCondition"].Str(), sortascending:t["SortAscending"].Bool()));
+                    Searches.Insert(0, new Query(t["Name"].Str("Unknown"), t["Condition"].Str("Unknown"), QueryType.User,
+                        sortcond: t["SortCondition"].Str(), sortascending: t["SortAscending"].Bool()));
                 }
             }
         }
@@ -218,7 +218,7 @@ namespace EliteDangerousCore
             return names.Join(splitmarkerin);
         }
 
-        public void Set(string name, string expr, QueryType t, string sortcond = "", bool sortascending= false)
+        public void Set(string name, string expr, QueryType t, string sortcond = "", bool sortascending = false)
         {
             var entry = Searches.FindIndex(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             if (entry != -1)
@@ -262,7 +262,7 @@ namespace EliteDangerousCore
                     {
                         string sortcondition = to["SortCondition"].Str();
                         bool sortascending = to["SortAscending"].Bool();
-                        Set(name, condition, ty,sortcondition,sortascending);
+                        Set(name, condition, ty, sortcondition, sortascending);
                     }
                     else
                         return false;
@@ -332,6 +332,8 @@ namespace EliteDangerousCore
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("StarBodies.Count", "Integer value: Number of bodies in the star system the body is in", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Child.Count", "Integer value: Number of child moons", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("JumponiumCount", "Integer value: Number of jumponium materials available", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));     // add on ones we synthesise
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("BodiesCount(\"scan bool property\")", "Integer value: Number of bodies with scans with this boolean property true (Eathlike, HasAtmosphere etc)", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));     // add on ones we synthesise
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("StarBodiesCount(\"scan bool property\")", "Integer value: Number of bodies with scans in this star system with this boolean property true (Eathlike, HasAtmposhere etc)", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));     // add on ones we synthesise
 
             var defaultvars = new BaseUtils.Variables();
             defaultvars.AddPropertiesFieldsOfClass(new BodyPhysicalConstants(), "", null, 10);
@@ -344,7 +346,7 @@ namespace EliteDangerousCore
         }
 
         // Calculate from variables what is being searched for..
-        static public HashSet<JournalTypeEnum> NeededSearchableTypes(HashSet<string> allvars)
+        static public HashSet<JournalTypeEnum> NeededSearchableTypes(HashSet<string> allvars, HashSet<string> allfuncs)
         {
             var propertynames = PropertyList();
 
@@ -362,23 +364,29 @@ namespace EliteDangerousCore
                     {
                         var comment = propertynames[i].Comment;
                         bool all = comment.Contains("All");
-                        if (InComment(comment,"Scan",all))
+                        if (InComment(comment, "Scan", all))
                             res.Add(JournalTypeEnum.Scan);
-                        if (InComment(comment, "FSSSignalDiscovered",all))
+                        if (InComment(comment, "FSSSignalDiscovered", all))
                             res.Add(JournalTypeEnum.FSSSignalDiscovered);
-                        if (InComment(comment,"SAASignalsFound",all))
+                        if (InComment(comment, "SAASignalsFound", all))
                             res.Add(JournalTypeEnum.SAASignalsFound);
-                        if (InComment(comment,"FSSBodySignals",all))
+                        if (InComment(comment, "FSSBodySignals", all))
                             res.Add(JournalTypeEnum.FSSBodySignals);
-                        if (InComment(comment,"CodexEntry",all))
+                        if (InComment(comment, "CodexEntry", all))
                             res.Add(JournalTypeEnum.CodexEntry);
-                        if (InComment(comment,"ScanOrganic",all))
+                        if (InComment(comment, "ScanOrganic", all))
                             res.Add(JournalTypeEnum.ScanOrganic);
                     }
                 }
 
                 // specials, for scan
-                if (v.StartsWith("Parent.") || v.StartsWith("Sibling") || v.StartsWith("Child") || v.StartsWith("Star.") || v.StartsWith("Bodies") || v.StartsWith("StarBodies"))      
+                if (v.StartsWith("Parent.") || v.StartsWith("Sibling") || v.StartsWith("Child") || v.StartsWith("Star.") || v.StartsWith("Bodies") || v.StartsWith("StarBodies"))
+                    res.Add(JournalTypeEnum.Scan);
+            }
+
+            foreach(var v in allfuncs)
+            {
+                if ( v.StartsWith("Bodies") || v.StartsWith("StarBodies"))      // functions starting with these (sync with below) need scan
                     res.Add(JournalTypeEnum.Scan);
             }
 
@@ -395,7 +403,9 @@ namespace EliteDangerousCore
 
 
         //find a named search, async
-        public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist, Dictionary<string, List<ResultEntry>> results, string searchname, BaseUtils.Variables defaultvars,
+        public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist, Dictionary<string, List<ResultEntry>> results,
+                            string searchname,
+                            BaseUtils.Variables defaultvars,
                             StarScan starscan, bool wantdebug)
         {
             var search = Searches.Find(x => x.Name.Equals(searchname));
@@ -419,9 +429,10 @@ namespace EliteDangerousCore
         // default vars can be null
         static public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist,
                                    Dictionary<string, List<ResultEntry>> results, string filterdescription,
-                                   BaseUtils.ConditionLists cond, BaseUtils.Variables defaultvars, StarScan starscan, bool wantreport)
+                                   BaseUtils.ConditionLists cond,
+                                   BaseUtils.Variables defaultvars,
+                                   StarScan starscan, bool wantreport)
         {
-
             return System.Threading.Tasks.Task.Run(() =>
             {
                 if (cond == null || cond.Count == 0)
@@ -429,7 +440,10 @@ namespace EliteDangerousCore
 
                 StringBuilder resultinfo = new StringBuilder(10000);
 
-                var allvars = BaseUtils.Condition.EvalVariablesUsed(cond.List);
+                var func = new QueryFunctionHandler();
+                BaseUtils.Eval evl = new BaseUtils.Eval(func);          // evaluator, all true state, with a function handler..
+
+                BaseUtils.Condition.InUse(cond.List, evl, out HashSet<string> allvars, out HashSet<string> _);
 
                 int iterators = allvars.Where(x => x.StartsWith("Iter")).Select(x => x.Substring(4).InvariantParseInt(0)).DefaultIfEmpty(0).Max();
                 bool wantjumponium = allvars.Contains("JumponiumCount");
@@ -470,7 +484,7 @@ namespace EliteDangerousCore
                     }
                     else if (v.StartsWith("Parent."))
                     {
-                        varsparent.Add(v.Substring(7, v.IndexOfOrLength(stoptext, startindex:7) - 7));
+                        varsparent.Add(v.Substring(7, v.IndexOfOrLength(stoptext, startindex: 7) - 7));
                     }
                     else if (v.StartsWith("Sibling["))
                     {
@@ -525,7 +539,7 @@ namespace EliteDangerousCore
 
                     scandatavars["EventType"] = he.EntryType.ToString();
 
-                    scandatavars.AddPropertiesFieldsOfClass(he.journalEntry, "",ignoretypes, 5, varsevent, ensuredoublerep: true, classsepar:".");
+                    scandatavars.AddPropertiesFieldsOfClass(he.journalEntry, "", ignoretypes, 5, varsevent, ensuredoublerep: true, classsepar: ".");
 
                     if (wantjumponium)
                     {
@@ -730,12 +744,8 @@ namespace EliteDangerousCore
 
                             if (wantstarbodiescount || varsstarbodies.Count > 0)
                             {
-                                var starnode = he.ScanNode;
-                                while (starnode.Parent != null)
-                                    starnode = starnode.Parent;
-
                                 int count = 0;
-                                foreach (var sn in starnode.Descendants.EmptyIfNull())
+                                foreach (var sn in he.ScanNode.ParentStar.Bodies.EmptyIfNull())        // from parent star decending
                                 {
                                     if (varsstarbodies.Count > 0 && sn.ScanData != null)
                                     {
@@ -753,8 +763,6 @@ namespace EliteDangerousCore
                         }
                     }
 
-                  //  scandatavars["Iter1"] = scandatavars["Iter2"] = scandatavars["Iter3"] = scandatavars["Iter4"] = "1";
-
                     List<BaseUtils.ConditionEntry> testspassed = wantreport ? new List<BaseUtils.ConditionEntry>() : null;
 
                     //JournalScan jsc = he.journalEntry as JournalScan; if (jsc?.BodyName == "Blue Euq WA-E d12-32 7 a") debugit = true;
@@ -762,20 +770,16 @@ namespace EliteDangerousCore
                     //System.Diagnostics.Debug.WriteLine($"Star {he.System.Name}");
                     //foreach (var v in scandatavars.NameEnumuerable) System.Diagnostics.Debug.WriteLine($"Search scandata var {v} = {scandatavars[v]}");
 
-                    var res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, iterators, debugit: debugit);
-                    
-                    //var resold = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, out string errlist, out BaseUtils.ConditionLists.ErrorClass errcls, wantiter1 || wantiter2, debugit: debugit);
+                    evl.ReturnSymbolValue = scandatavars;                   // point the eval at our scan data variables for this particular instance
+                    func.SystemNode = he.ScanNode?.SystemNode;              // point the functions at system node, if it exists
+                    func.ParentStar = he.ScanNode?.ParentStar;              // point the functions at the parent star node, if it exists
 
-                    //if ( res.Item1 != resold.Item1)
-                    //{
-                    //}
-
-                    //if (res.Item1 == false && res.Item2.Last().ItemName.Contains("Parent.Rings[Iter1].OuterRad")) debugit = true;
+                    var res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(evl, scandatavars, cond.List, iterators, debugit: debugit);
 
                     if (wantreport)
                     {
                         JournalScan jsi = he.journalEntry as JournalScan;
-                        resultinfo.AppendLine($"{he.EventTimeUTC} Journal type {he.EntryType} {jsi?.BodyName} : {res.Item1} : Last {res.Item2.Last().ItemName} {res.Item2.Last().MatchCondition} {res.Item2.Last().MatchString} : {res.Item3.Last()??""}");
+                        resultinfo.AppendLine($"{he.EventTimeUTC} Journal type {he.EntryType} {jsi?.BodyName} : {res.Item1} : Last {res.Item2.Last().ItemName} {res.Item2.Last().MatchCondition} {res.Item2.Last().MatchString} : {res.Item3.Last() ?? ""}");
                         //foreach ( var x in res.Item2)    resultinfo.AppendLine($"  {x.ItemName} {x.MatchCondition} {x.MatchString}");
 
                         // System.Diagnostics.Debug.WriteLine($"For entry type {he.EventTimeUTC} {he.EntryType} error: {resultinfo}");
@@ -830,13 +834,13 @@ namespace EliteDangerousCore
                                 var re = new ResultEntry { HistoryEntry = he, FilterPassed = filterdescription };
                                 if (results.TryGetValue(key, out List<ResultEntry> value))       // if key already exists, maybe set HE to us, and update filters passed
                                 {
-                                    value.Add( re );
-                                  //  System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC} `{filterdescription}` matched {key} added to list");
+                                    value.Add(re);
+                                    //  System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC} `{filterdescription}` matched {key} added to list");
                                 }
                                 else
                                 {                                                       // else make a new list
                                     results[key] = new List<ResultEntry> { re };
-                                 //   System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC} `{filterdescription}` matched {key} new body");
+                                    //   System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC} `{filterdescription}` matched {key} new body");
                                 }
                             }
                         }
@@ -885,7 +889,7 @@ namespace EliteDangerousCore
             {
                 var topnode = node.Parent;
 
-                while (topnode != null && topnode.Parent != null )       // find top node in tree
+                while (topnode != null && topnode.Parent != null)       // find top node in tree
                 {
                     topnode = topnode.Parent;
                 }
@@ -894,7 +898,7 @@ namespace EliteDangerousCore
 
                 // on the top node of the tree, if its a barycentre, we can use its first char name to work out which star to pick
 
-                if ( topnode != null && topnode.NodeType == StarScan.ScanNodeType.barycentre )  
+                if (topnode != null && topnode.NodeType == StarScan.ScanNodeType.barycentre)
                 {
                     startofind = topnode.OwnName.Substring(0, 1);       // first char
                 }
@@ -911,20 +915,20 @@ namespace EliteDangerousCore
         }
 
 
-        public static void GenerateReportFields(string bodykey, List<ResultEntry> resultlist, out string name, out string info, out string infotooltip, 
-                                                bool pinfowanted, out string pinfo, 
-                                                bool ppinfowanted, out string ppinfo, 
-                                                bool sinfowanted, out string sinfo, 
+        public static void GenerateReportFields(string bodykey, List<ResultEntry> resultlist, out string name, out string info, out string infotooltip,
+                                                bool pinfowanted, out string pinfo,
+                                                bool ppinfowanted, out string ppinfo,
+                                                bool sinfowanted, out string sinfo,
                                                 bool ssinfowanted, out string ssinfo)
         {
             name = bodykey;
-            
+
             info = pinfo = infotooltip = ppinfo = sinfo = ssinfo = "";
 
             // if we have a scan in the results list, do that first
             HistoryEntry hescan = resultlist.Select(sd => sd.HistoryEntry).Where(x => x.EntryType == JournalTypeEnum.Scan).LastOrDefault();
 
-            if ( hescan != null)
+            if (hescan != null)
             {
                 JournalScan js = hescan.journalEntry as JournalScan;
                 info = js.DisplayString();
@@ -985,8 +989,65 @@ namespace EliteDangerousCore
                     }
                 }
             }
-
         }
     }
 
+    // Extra special functions for this dialog
+    public class QueryFunctionHandler : BaseUtils.BaseFunctionsForEval
+    {
+        public StarScan.SystemNode SystemNode { get; set; }     // node we are querying, may be null
+        public StarScan.ScanNode ParentStar { get; set; }       // Parent star node we are querying, may be null
+
+        public override object Execute(string name, BaseUtils.IEval evaluator, bool noop)
+        {
+            if ( name == "BodiesCount" || name == "StarBodiesCount")
+            {
+                List<Object> plist = evaluator.Parameters(name, 1, new BaseUtils.IEvalParaListType[] { BaseUtils.IEvalParaListType.String });
+
+                if (plist != null)
+                {
+                    string p1 = plist[0] as string;
+
+                    if (noop)       // noop during func/sym collection, just return 0L
+                    {
+                        return 0L;
+                    }
+                    else if (SystemNode != null)      
+                    {
+                        long count = 0;
+
+                        lock (SystemNode)
+                        {
+                            var bodies = name == "BodiesCount" ? SystemNode.Bodies: ParentStar.Bodies;
+
+                            foreach (var b in bodies.EmptyIfNull())
+                            {
+                                if (b.ScanData != null)
+                                {
+                                    if (BaseUtils.TypeHelpers.TryGetValue(b.ScanData, p1, out bool value))
+                                    {
+                                        if (value == true)
+                                            count++;
+                                    }
+                                    else
+                                        return new BaseUtils.StringParser.ConvertError(name + $"() property {p1} is not present or not bool");
+                                }
+                            }
+                        }
+
+                        if (count > 0) System.Diagnostics.Debug.WriteLine($"BodiesCount {SystemNode.System.Name} = {count}");
+
+                        return count;
+                    }
+                    else
+                        return new BaseUtils.StringParser.ConvertError(name + "() No system node");
+                }
+                else
+                    return new BaseUtils.StringParser.ConvertError(name + "() Missing string parameter of property name");
+            }
+
+            return base.Execute(name, evaluator, noop);
+        }
+
+    }
 }

@@ -53,7 +53,7 @@ namespace EliteDangerousCore
                     {
                         yield return sn;
 
-                        foreach (ScanNode c in sn.Descendants)
+                        foreach (ScanNode c in sn.Bodies)
                         {
                             yield return c;
                         }
