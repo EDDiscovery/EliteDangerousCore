@@ -326,14 +326,20 @@ namespace EliteDangerousCore
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("IsOdyssey", "Boolean value: 1 = true, 0 = false: Odyssey journal entry", BaseUtils.ConditionEntry.MatchType.IsTrue, "All"));
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("IsHorizons", "Boolean value: 1 = true, 0 = false: Horizons journal entry", BaseUtils.ConditionEntry.MatchType.IsTrue, "All"));
 
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Level", "Integer value: Level of body in system", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Sibling.Count", "Integer value: Number of siblings", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Bodies.Count", "Integer value: Number of bodies in the system", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("StarBodies.Count", "Integer value: Number of bodies in the star system the body is in", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
+            // add on ones we synthesise
+
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Level", "Integer value: Level of body in system", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Sibling.Count", "Integer value: Number of siblings", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Bodies.Count", "Integer value: Number of bodies in the system", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("StarBodies.Count", "Integer value: Number of bodies in the star system the body is in", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Child.Count", "Integer value: Number of child moons", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("JumponiumCount", "Integer value: Number of jumponium materials available", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));     // add on ones we synthesise
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("BodiesCount(\"scan bool property\")", "Integer value: Number of bodies with scans with this boolean property true (Eathlike, HasAtmosphere etc)", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));     // add on ones we synthesise
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("StarBodiesCount(\"scan bool property\")", "Integer value: Number of bodies with scans in this star system with this boolean property true (Eathlike, HasAtmposhere etc)", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));     // add on ones we synthesise
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("JumponiumCount", "Integer value: Number of jumponium materials available", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));
+
+            // Add functions
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("BodiesPropertyCount(\"scan bool property\")", "Integer value: Number of bodies with scans with this boolean property true (Eathlike, HasAtmosphere etc)", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("StarBodiesPropertyCount(\"scan bool property\")", "Integer value: Number of bodies with scans in this star system with this boolean property true", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("BodiesExprCount(expression)", "Integer value: Number of bodies with scans with this expression evaluating to non zero (mMassEM>=1 && nMassEM<2) etc", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("StarBodiesExprCount(expression)", "Integer value: Number of bodies with scans in this star system with this expression evaluating to non zero", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));
 
             var defaultvars = new BaseUtils.Variables();
             defaultvars.AddPropertiesFieldsOfClass(new BodyPhysicalConstants(), "", null, 10);
@@ -1000,7 +1006,7 @@ namespace EliteDangerousCore
 
         public override object Execute(string name, BaseUtils.IEval evaluator, bool noop)
         {
-            if ( name == "BodiesCount" || name == "StarBodiesCount")
+            if (name == "BodiesPropertyCount" || name == "StarBodiesPropertyCount")
             {
                 List<Object> plist = evaluator.Parameters(name, 1, new BaseUtils.IEvalParaListType[] { BaseUtils.IEvalParaListType.String });
 
@@ -1012,13 +1018,13 @@ namespace EliteDangerousCore
                     {
                         return 0L;
                     }
-                    else if (SystemNode != null)      
+                    else if (SystemNode != null)
                     {
                         long count = 0;
 
                         lock (SystemNode)
                         {
-                            var bodies = name == "BodiesCount" ? SystemNode.Bodies: ParentStar.Bodies;
+                            var bodies = name == "BodiesPropertyCount" ? SystemNode.Bodies : ParentStar.Bodies;
 
                             foreach (var b in bodies.EmptyIfNull())
                             {
@@ -1038,6 +1044,70 @@ namespace EliteDangerousCore
                         if (count > 0) System.Diagnostics.Debug.WriteLine($"BodiesCount {SystemNode.System.Name} = {count}");
 
                         return count;
+                    }
+                    else
+                        return new BaseUtils.StringParser.ConvertError(name + "() No system node");
+                }
+                else
+                    return new BaseUtils.StringParser.ConvertError(name + "() Missing string parameter of property name");
+            }
+            else if (name == "BodiesExprCount" || name == "StarBodiesExprCount")
+            {
+                List<Object> plist = evaluator.Parameters(name, 1, new BaseUtils.IEvalParaListType[] { BaseUtils.IEvalParaListType.CollectAsString});
+
+                if (plist != null)
+                {
+                    string expr = plist[0] as string;
+
+                    if (noop)       // noop during func/sym collection, just return 0L
+                    {
+                        return 0L;
+                    }
+                    else if (SystemNode != null)
+                    {
+                        if ( expr.HasChars() )
+                        { 
+                            BaseUtils.IEval neweval = evaluator.Clone(); // do not disturb the current eval
+
+                            neweval.SymbolsFuncsInExpression(expr, out HashSet<string> allvars, out HashSet<string> _);
+
+                            long count = 0;
+
+                            lock (SystemNode)
+                            {
+                                var bodies = name == "BodiesExprCount" ? SystemNode.Bodies : ParentStar.Bodies;
+
+                                foreach (var b in bodies.EmptyIfNull())
+                                {
+                                    if (b.ScanData != null)
+                                    {
+                                        BaseUtils.Variables scandatavars = new BaseUtils.Variables();
+
+                                        // enumerate this scan data into variable set
+
+                                        scandatavars.AddPropertiesFieldsOfClass(b.ScanData, "",
+                                                new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
+                                                allvars, ensuredoublerep: true, classsepar: ".");
+
+                                        neweval.ReturnSymbolValue = scandatavars;        // redirect symbols to gathered scandatavars
+
+                                        object res = neweval.Evaluate(expr);            // evaluate
+
+                                        if (res is long && (long)res != 0)              // if non zero and int, its a match
+                                        {
+                                            count++;
+                                        }
+                                    }
+                                }
+                            }
+
+                            //if (count > 0) System.Diagnostics.Debug.WriteLine($"BodiesCount {SystemNode.System.Name} = {count}");
+
+                            return count;
+                        }
+                        else
+                            return new BaseUtils.StringParser.ConvertError(name + "() Expression empty");
+
                     }
                     else
                         return new BaseUtils.StringParser.ConvertError(name + "() No system node");
