@@ -63,6 +63,7 @@ namespace EliteDangerousCore
 
         public List<Query> Searches = new List<Query>()
             {
+                // planet pos
                 new Query("Planet inside inner ring","(IsOrbitingBarycentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And nSemiMajorAxis <= Parent.RingsInnerm And Parent.Level >= 1)" + //single body
                             " Or (IsOrbitingBarycentre IsTrue And Parents[2].IsBarycentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[1].Barycentre.SemiMajorAxis <= Parent.RingsInnerm And Parent.Level >= 1)" + // binary body
                             " Or (IsOrbitingBarycentre IsTrue And Parents[3].IsBarycentre IsFalse And Parents[2].IsBarycentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[2].Barycentre.SemiMajorAxis <= Parent.RingsInnerm And Parent.Level >= 1)" + // trinary and ((O-O)-(O-O)) quarteries
@@ -88,6 +89,8 @@ namespace EliteDangerousCore
                             " Or (IsOrbitingBarycentre IsTrue And Parents[3].IsBarycentre IsFalse And Parents[2].IsBarycentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[2].Barycentre.SemiMajorAxis >= Parent.Rings[2].OuterRad And Parents[2].Barycentre.SemiMajorAxis <= Parent.Rings[3].InnerRad And Parent.Level >= 1)" + // trinary and ((O-O)-(O-O)) quarteries
                             " Or (IsOrbitingBarycentre IsTrue And Parents[3].IsBarycentre IsTrue And Parents[2].IsBarycentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[3].Barycentre.SemiMajorAxis >= Parent.Rings[2].OuterRad And Parents[3].Barycentre.SemiMajorAxis <= Parent.Rings[3].InnerRad And Parent.Level >= 1)", QueryType.BuiltIn ), // (((O-O)-O)-O) quartery
                 
+                // planet properties
+
                 new Query("Landable","IsPlanet IsTrue And IsLandable IsTrue", QueryType.BuiltIn ),
                 new Query("Landable and Terraformable","IsPlanet IsTrue And IsLandable IsTrue And Terraformable IsTrue", QueryType.BuiltIn , true ),
                 new Query("Landable with Atmosphere","IsPlanet IsTrue And IsLandable IsTrue And HasAtmosphere IsTrue", QueryType.BuiltIn ),
@@ -149,7 +152,17 @@ namespace EliteDangerousCore
 
                 new Query("Ring contains Painite",  "Signals[Iter1].Type Contains Painite", QueryType.BuiltIn ),
 
+                // exo biology
+
                 new Query("Scanned all organics on a planet","CountOrganicsScansAnalysed >= 1 And CountOrganicsScansAnalysed == CountBioSignals", QueryType.BuiltIn ),
+                new Query("Exobiology possible Amphora body","PlanetTypeID $== Metal_rich_body And IsLandable IsTrue And ContainsBioSignals IsTrue And Bodies[Iter1].StarTypeID $== A And Bodies[Iter2].PlanetTypeID MatchCommaList Gas_giant_with_water_based_life,Earthlike_body,Gas_giant_with_ammonia_based_life", QueryType.BuiltIn ),
+
+                // multiple bodies in systems
+                new Query("Systems with multiple Earth sized bodies","(nMassEM >= 0.8 And nMassEM <= 1.2) And (\"BodiesExprCount(nMassEM>=0.8 && nMassEM<=1.2)\" >= 2)", QueryType.BuiltIn ),
+                new Query("Systems with multiple Earth like bodies","(Earthlike IsTrue) And (\"BodiesPropertyCount(\\\"Earthlike\\\")\" >= 2)", QueryType.BuiltIn ),
+                new Query("Systems with many large gas giants","(GasWorld IsTrue) And (\"BodiesPropertyCount(\\\"GasWorld\\\")\" >= 4)", QueryType.BuiltIn ),
+
+                // stars
 
                 new Query("Star has Rings","HasRings IsTrue And IsStar IsTrue", QueryType.BuiltIn ),
                 new Query("Star is Main Sequence","IsStar IsTrue And StarType MatchSemicolon O;B;A;F;G;K;M", QueryType.BuiltIn ),
@@ -336,9 +349,9 @@ namespace EliteDangerousCore
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("JumponiumCount", "Integer value: Number of jumponium materials available", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));
 
             // Add functions
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("BodiesPropertyCount(\"scan bool property\")", "Integer value: Number of bodies with scans with this boolean property true (Eathlike, HasAtmosphere etc)", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("BodiesPropertyCount(\"scan bool property\")", "Integer value: Number of bodies with scans with this boolean property true (Earthlike, HasAtmosphere etc)", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("StarBodiesPropertyCount(\"scan bool property\")", "Integer value: Number of bodies with scans in this star system with this boolean property true", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("BodiesExprCount(expression)", "Integer value: Number of bodies with scans with this expression evaluating to non zero (mMassEM>=1 && nMassEM<2) etc", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("BodiesExprCount(expression)", "Integer value: Number of bodies with scans with this expression evaluating to non zero (nMassEM>=1 && nMassEM<2) etc", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("StarBodiesExprCount(expression)", "Integer value: Number of bodies with scans in this star system with this expression evaluating to non zero", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));
 
             var defaultvars = new BaseUtils.Variables();
