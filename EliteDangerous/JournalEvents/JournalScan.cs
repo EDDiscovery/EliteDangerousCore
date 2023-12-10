@@ -122,6 +122,8 @@ namespace EliteDangerousCore.JournalEvents
         public EDStar StarTypeID { get; }                           // star type -> identifier
         [PropertyNameAttribute("Long Name (Orange Main Sequence..) localised")]
         public string StarTypeText { get { return IsStar ? Bodies.StarName(StarTypeID) : ""; } }   // Long form star name, from StarTypeID, localised
+        [PropertyNameAttribute("Is it the main star")]
+        public bool IsMainStar { get { return IsStar && (BodyName == StarSystem || BodyName == StarSystem + " A"); } }
         [PropertyNameAttribute("Ratio of Sol")]
         public double? nStellarMass { get; private set; }                   // direct
         [PropertyNameAttribute("Absolute magnitude (less is more, Sol = 4.83)")]
