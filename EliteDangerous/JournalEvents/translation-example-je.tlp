@@ -880,6 +880,7 @@ SECTION JournalStoredModules
 SECTION JournalSupercruiseExit
 
 .in: "< in " @
+.At: "At " @
 
 SECTION JournalStoredShips
 
@@ -890,9 +891,9 @@ SECTION JournalStoredShips
 .intransit: "<; in transit" @
 .at: "< at " @
 
-SECTION JournalSupercruiseExit
+SECTION JournalSupercruiseEntry
 
-.At: "At " @
+.Wanted: ", You are wanted."
 
 SECTION JournalUnderAttack
 
