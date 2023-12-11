@@ -121,7 +121,7 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("OBAFGAKM,LTY,AeBe,N Neutron,H Black Hole,Proto (TTS,AeBe), Wolf (W,WN,WNC,WC,WO), Carbon (CS,C,CN,CJ,CHD), White Dwarfs (D,DA,DAB,DAO,DAZ,DAV,DB,DBZ,DBV,DO,DOV,DQ,DC,DCV,DX), others")]
         public EDStar StarTypeID { get; }                           // star type -> identifier
         [PropertyNameAttribute("Long Name (Orange Main Sequence..) localised")]
-        public string StarTypeText { get { return IsStar ? Bodies.StarName(StarTypeID) : ""; } }   // Long form star name, from StarTypeID, localised
+        public string StarTypeText { get { return IsStar ? Stars.StarName(StarTypeID) : ""; } }   // Long form star name, from StarTypeID, localised
         [PropertyNameAttribute("Is it the main star")]
         public bool IsMainStar { get { return IsStar && (BodyName == StarSystem || BodyName == StarSystem + " A"); } }
         [PropertyNameAttribute("Ratio of Sol")]
@@ -190,24 +190,24 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("EDD Enum")]
         public EDPlanet PlanetTypeID { get; }                       // planet class -> ID
         [PropertyNameAttribute("Localised Name")]
-        public string PlanetTypeText { get { return IsPlanet ? Bodies.PlanetTypeName(PlanetTypeID) : ""; } }   // Use in preference to planet class for display
+        public string PlanetTypeText { get { return IsPlanet ? Planets.PlanetName(PlanetTypeID) : ""; } }   // Use in preference to planet class for display
 
         [PropertyNameAttribute("Is it an ammonia world")]
-        public bool AmmoniaWorld { get { return Bodies.AmmoniaWorld(PlanetTypeID); } }
+        public bool AmmoniaWorld { get { return Planets.AmmoniaWorld(PlanetTypeID); } }
         [PropertyNameAttribute("Is it an earth like world")]
-        public bool Earthlike { get { return Bodies.Earthlike(PlanetTypeID); } }
+        public bool Earthlike { get { return Planets.Earthlike(PlanetTypeID); } }
         [PropertyNameAttribute("Is it a water world")]
-        public bool WaterWorld { get { return Bodies.WaterWorld(PlanetTypeID); } }
+        public bool WaterWorld { get { return Planets.WaterWorld(PlanetTypeID); } }
         [PropertyNameAttribute("Is it a sudarsky gas giant world")]
-        public bool SudarskyGasGiant { get { return Bodies.SudarskyGasGiant(PlanetTypeID); } }
+        public bool SudarskyGasGiant { get { return Planets.SudarskyGasGiant(PlanetTypeID); } }
         [PropertyNameAttribute("Is it a gas giant world")]
-        public bool GasGiant { get { return Bodies.GasGiant(PlanetTypeID); } }
+        public bool GasGiant { get { return Planets.GasGiant(PlanetTypeID); } }
         [PropertyNameAttribute("Is it a water giant world")]
-        public bool WaterGiant { get { return Bodies.WaterGiant(PlanetTypeID); } }
+        public bool WaterGiant { get { return Planets.WaterGiant(PlanetTypeID); } }
         [PropertyNameAttribute("Is it an helium gas world")]
-        public bool HeliumGasGiant { get { return Bodies.HeliumGasGiant(PlanetTypeID); } }
+        public bool HeliumGasGiant { get { return Planets.HeliumGasGiant(PlanetTypeID); } }
         [PropertyNameAttribute("Is it an gas world")]
-        public bool GasWorld { get { return Bodies.GasWorld(PlanetTypeID); } }          // any type of gas world
+        public bool GasWorld { get { return Planets.GasWorld(PlanetTypeID); } }          // any type of gas world
 
         [PropertyNameAttribute("Empty, Terraformable, Terraformed, Terraforming")]
         public string TerraformState { get; private set; }                  // direct, can be empty or a string
@@ -429,7 +429,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (IsStar)     // based on StarType
             {
-                StarTypeID = Bodies.StarStr2Enum(StarType);
+                StarTypeID = Stars.ToEnum(StarType);
 
                 nStellarMass = evt["StellarMass"].DoubleNull();
                 nAbsoluteMagnitude = evt["AbsoluteMagnitude"].DoubleNull();
@@ -460,7 +460,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (IsPlanet)
             {
-                PlanetTypeID = Bodies.PlanetStr2Enum(PlanetClass);
+                PlanetTypeID = Planets.ToEnum(PlanetClass);
                 // Fix naming to standard and fix case..
                 PlanetClass = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.
                                         ToTitleCase(PlanetClass.ToLowerInvariant()).Replace("Ii ", "II ").Replace("Iv ", "IV ").Replace("Iii ", "III ");
@@ -529,7 +529,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 System.Diagnostics.Debug.Assert(Atmosphere.HasChars());
 
-                AtmosphereID = Bodies.AtmosphereStr2Enum(Atmosphere.ToLowerInvariant(), out EDAtmosphereProperty ap);  // convert to internal ID
+                AtmosphereID = Planets.ToEnum(Atmosphere.ToLowerInvariant(), out EDAtmosphereProperty ap);  // convert to internal ID
                 AtmosphereProperty = ap;
 
                 if (AtmosphereID == EDAtmosphereType.Unknown)
@@ -548,7 +548,7 @@ namespace EliteDangerousCore.JournalEvents
                 }
 
                 Volcanism = evt["Volcanism"].StrNull();
-                VolcanismID = Bodies.VolcanismStr2Enum(Volcanism, out EDVolcanismProperty vp);
+                VolcanismID = Planets.ToEnum(Volcanism, out EDVolcanismProperty vp);
                 VolcanismProperty = vp;
 
                 nSurfaceGravity = evt["SurfaceGravity"].DoubleNull();
@@ -573,7 +573,7 @@ namespace EliteDangerousCore.JournalEvents
                     }
                 }
 
-                ReserveLevel = Bodies.ReserveStr2Enum(evt["ReserveLevel"].Str().Replace("Resources", ""));
+                ReserveLevel = Planets.ReserveToEnum(evt["ReserveLevel"].Str().Replace("Resources", ""));
             }
             else
                 PlanetTypeID = EDPlanet.Unknown_Body_Type;

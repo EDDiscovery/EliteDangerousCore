@@ -97,7 +97,7 @@ namespace EliteDangerousCore
                     else
                     {
                         if (ShowPlanetClasses)
-                            overlaytext = Bodies.PlanetAbv(sc.PlanetTypeID);
+                            overlaytext = Planets.PlanetAbv(sc.PlanetTypeID);
 
                         if ((sn.ScanData.IsLandable || ShowAllG) && sn.ScanData.nSurfaceGravity != null)
                         {

@@ -1194,3 +1194,6 @@ SECTION Services
 .VistaGenomics: "Vista Genomics" @
 .PioneerSupplies: "Pioneer Supplies" @
 
+SECTION JournalScanOrganics
+.Value: "Value: ; cr;N0" @
+.PotentialValue: "Potential Value: ; cr;N0" @

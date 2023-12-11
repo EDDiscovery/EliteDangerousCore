@@ -56,7 +56,7 @@ namespace EliteDangerousCore.JournalEvents
                     }
                     else
                     {
-                        var sedsc = Bodies.StarStr2Enum(starclass);
+                        var sedsc = Stars.ToEnum(starclass);
 
                         routeents.Add(new NavRouteEntry     // 3.7 will have this
                         {

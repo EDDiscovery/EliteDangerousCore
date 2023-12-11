@@ -678,10 +678,10 @@ namespace EliteDangerousCore.JournalEvents
         {
             StarSystem = evt["Name"].Str();
             StarClass = evt["StarClass"].Str();
-            EDStarClass = Bodies.StarStr2Enum(StarClass);
+            EDStarClass = Stars.ToEnum(StarClass);
             SystemAddress = evt["SystemAddress"].Long();
             RemainingJumpsInRoute = evt["RemainingJumpsInRoute"].IntNull();
-            FriendlyStarClass = (StarClass.Length > 0) ? Bodies.StarName(Bodies.StarStr2Enum(StarClass)) : "";
+            FriendlyStarClass = (StarClass.Length > 0) ? Stars.StarName(Stars.ToEnum(StarClass)) : "";
         }
 
         public string StarSystem { get; set; }
@@ -709,8 +709,8 @@ namespace EliteDangerousCore.JournalEvents
             IsHyperspace = JumpType.Equals("Hyperspace", System.StringComparison.InvariantCultureIgnoreCase);
             StarSystem = evt["StarSystem"].Str();
             StarClass = evt["StarClass"].Str();
-            EDStarClass = Bodies.StarStr2Enum(StarClass);
-            FriendlyStarClass = (StarClass.Length > 0) ? Bodies.StarName(Bodies.StarStr2Enum(StarClass)) : "";
+            EDStarClass = Stars.ToEnum(StarClass);
+            FriendlyStarClass = (StarClass.Length > 0) ? Stars.StarName(Stars.ToEnum(StarClass)) : "";
             SystemAddress = evt["SystemAddress"].LongNull();
             InTaxi = evt["Taxi"].BoolNull();
         }

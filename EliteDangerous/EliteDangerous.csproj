@@ -84,6 +84,8 @@
     <Compile Include="EDSM\EDSMJournalSync.cs" />
     <Compile Include="EDSM\EDSMClass.cs" />
     <Compile Include="EDSM\EDSMLogFetcher.cs" />
+    <Compile Include="EliteDangerous\PhysicalConstants.cs" />
+    <Compile Include="EliteDangerous\Stars.cs" />
     <Compile Include="EliteDangerous\Stations.cs" />
     <Compile Include="EliteDangerous\Government.cs" />
     <Compile Include="EliteDangerous\Economy.cs" />
@@ -93,7 +95,7 @@
     <Compile Include="Bindings\BindingsFile.cs" />
     <Compile Include="EliteDangerous\BodyImages.cs" />
     <Compile Include="EliteDangerous\EliteReleaseDates.cs" />
-    <Compile Include="EliteDangerous\Bodies.cs" />
+    <Compile Include="EliteDangerous\Planets.cs" />
     <Compile Include="BodyDesignations\BodyDesignationsDefaults.cs" />
     <Compile Include="EliteDangerous\CommodityPrices.cs" />
     <Compile Include="EliteDangerous\FSDSpec.cs" />

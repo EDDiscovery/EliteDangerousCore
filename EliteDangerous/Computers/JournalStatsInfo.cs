@@ -178,13 +178,13 @@ namespace EliteDangerousCore
                 {
                     int i = 0;
                     foreach (EDStar startype in Enum.GetValues(typeof(EDStar)))
-                        crs.chart1labels[i++] = Bodies.StarName(startype);
+                        crs.chart1labels[i++] = Stars.StarName(startype);
                 }
                 else
                 {
                     int i = 0;
                     foreach (EDPlanet planettype in Enum.GetValues(typeof(EDPlanet)))
-                        crs.chart1labels[i++] = planettype == EDPlanet.Unknown_Body_Type ? "Belt Cluster".T(EDCTx.UserControlStats_Beltcluster) : Bodies.PlanetTypeName(planettype);
+                        crs.chart1labels[i++] = planettype == EDPlanet.Unknown_Body_Type ? "Belt Cluster".T(EDCTx.UserControlStats_Beltcluster) : Planets.PlanetName(planettype);
                 }
 
                 int intervals = tupletimes.Item1.Length;

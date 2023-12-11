@@ -733,21 +733,14 @@ namespace EliteDangerousCore.JournalEvents
             Genus = Genus.Alt("Unknown");
             Genus_Localised = Genus_Localised.Alt(Genus);
 
-            if (ScanType == ScanTypeEnum.Analyse)
+            OrganicEstimatedValues.Values value = EventTimeUTC < EliteReleaseDates.Odyssey14 ? OrganicEstimatedValues.GetValuePreU14(Species) : OrganicEstimatedValues.GetValuePostU14(Species);
+
+            if (value != null)
             {
-                if (EventTimeUTC < EliteReleaseDates.Odyssey14) //pre update 14
-                {
-                    var value = OrganicEstimatedValues.GetValue(Species);
-                    if (value != null)
-                        EstimatedValue = value.Value;
-                }
+                if (ScanType == ScanTypeEnum.Analyse)
+                    EstimatedValue = value.Value;
                 else
-                {
-                    var value = OrganicEstimatedValues414.GetValue(Species);
-                    if (value != null)
-                        EstimatedValue = value.Value;
-                }
-                
+                    PotentialEstimatedValue = value.Value;
             }
         }
 
@@ -774,8 +767,10 @@ namespace EliteDangerousCore.JournalEvents
         public enum ScanTypeEnum { Log, Sample, Analyse };
         [PropertyNameAttribute("Log type")]
         public ScanTypeEnum ScanType { get; set; }     //Analyse, Log, Sample
-        [PropertyNameAttribute("cr")]
-        public int? EstimatedValue { get; set; }       // Value, if known
+        [PropertyNameAttribute("Estimated realisable value cr")]
+        public int? EstimatedValue { get; set; }       // set on analyse
+        [PropertyNameAttribute("Potential value cr")]
+        public int? PotentialEstimatedValue { get; set; }  // set on non analyse
 
         public void AddStarScan(StarScan s, ISystem system)
         {
@@ -785,8 +780,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
         {
-            int? ev = ScanType == ScanTypeEnum.Analyse ? EstimatedValue : null;
-            info = BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised_Short, "", Variant_Localised_Short, "; cr;N0", ev, "< @ ", fid.WhereAmI);
+            int? ev = ScanType == ScanTypeEnum.Analyse ? EstimatedValue : null;     // if analyse, its estimated value
+            int? pev = ev == null ? PotentialEstimatedValue : null;                 // if not at analyse, its potential value
+            info = BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised_Short, "", Variant_Localised_Short, "; cr;N0", ev, "(;) cr;N0", pev, "< @ ", fid.WhereAmI);
             detailed = "";
         }
 
@@ -843,7 +839,13 @@ namespace EliteDangerousCore.JournalEvents
             {
                 var s = t.Item2;
                 //System.Diagnostics.Debug.WriteLine($"{s.ScanType} {s.Genus_Localised} {s.Species_Localised}");
-                res = res.AppendPrePad(inds + BaseUtils.FieldBuilder.Build(";/3", t.Item1, "", s.ScanType, "<: ", s.Genus_Localised, "", s.Species_Localised_Short, "", s.Variant_Localised_Short), separ ?? Environment.NewLine);
+                res = res.AppendPrePad(inds + BaseUtils.FieldBuilder.Build(";/3", t.Item1, "", s.ScanType, 
+                            "<: ", s.Genus_Localised, 
+                            "", s.Species_Localised_Short, 
+                            "", s.Variant_Localised_Short,
+                            "Value: ; cr;N0".T(EDCTx.JournalScanOrganics_Value), s.EstimatedValue, 
+                            "Potential Value: ; cr;N0".T(EDCTx.JournalScanOrganics_PotentialValue), s.PotentialEstimatedValue),
+                            separ ?? Environment.NewLine);
             }
 
             return res;

@@ -558,6 +558,9 @@ namespace EliteDangerousCore
         JournalScan_InferredCircumstellarzones, // Inferred Circumstellar zones:
         JournalScan_MASS, // Mass:
 
+        JournalScanOrganics_Value,
+        JournalScanOrganics_PotentialValue,
+
         StarPlanetRing_Mass, //   Mass: {0:N4}{1}
         StarPlanetRing_InnerRadius, //   Inner Radius: {0:0.00}ls
         StarPlanetRing_OuterRadius, //   Outer Radius: {0:0.00}ls
