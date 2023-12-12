@@ -158,9 +158,11 @@ namespace EliteDangerousCore
                 new Query("Exobiology possible Amphora body","PlanetTypeID $== Metal_rich_body And IsLandable IsTrue And ContainsBioSignals IsTrue And Bodies[Iter1].StarTypeID $== A And Bodies[Iter2].PlanetTypeID MatchCommaList Gas_giant_with_water_based_life,Earthlike_body,Gas_giant_with_ammonia_based_life", QueryType.BuiltIn ),
 
                 // multiple bodies in systems
-                new Query("Systems with multiple Earth sized bodies","(nMassEM >= 0.8 And nMassEM <= 1.2) And (\"BodiesExprCount(nMassEM>=0.8 && nMassEM<=1.2)\" >= 2)", QueryType.BuiltIn ),
-                new Query("Systems with multiple Earth like bodies","(Earthlike IsTrue) And (\"BodiesPropertyCount(\\\"Earthlike\\\")\" >= 2)", QueryType.BuiltIn ),
-                new Query("Systems with many large gas giants","(GasWorld IsTrue) And (\"BodiesPropertyCount(\\\"GasWorld\\\")\" >= 4)", QueryType.BuiltIn ),
+                new Query("Multiple Earth sized bodies in system","(nMassEM >= 0.8 And nMassEM <= 1.2 And IsPlanet IsTrue) And (\"BodiesExprCount(nMassEM>=0.8 && nMassEM<=1.2 && IsPlanet)\" >= 2)", QueryType.BuiltIn ),
+                new Query("Multiple Earth like bodies in system","(Earthlike IsTrue) And (\"BodiesPropertyCount(\\\"Earthlike\\\")\" >= 2)", QueryType.BuiltIn ),
+                new Query("Multiple Earth like bodies under same star","(Earthlike IsTrue) And (\"StarBodiesPropertyCount(\\\"Earthlike\\\")\" >= 2)", QueryType.BuiltIn ),
+                new Query("Multiple Gas Giants in system","(GasWorld IsTrue) And (\"BodiesPropertyCount(\\\"GasWorld\\\")\" >= 4)", QueryType.BuiltIn ),
+                new Query("Multiple Large Gas Giants in system","(GasWorld IsTrue And nMassEM >= 2000) And (\"BodiesExprCount(GasWorld && nMassEM>=2000)\" >= 2)", QueryType.BuiltIn ),
 
                 // stars
 
@@ -291,31 +293,31 @@ namespace EliteDangerousCore
         static public List<BaseUtils.TypeHelpers.PropertyNameInfo> PropertyList()
         {
             List<BaseUtils.TypeHelpers.PropertyNameInfo> classnames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalScan),
-                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    bindingflags: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     classsepar: ".",
                     comment: "Scan");
 
             List<BaseUtils.TypeHelpers.PropertyNameInfo> othernames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalFSSSignalDiscovered),
-                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    bindingflags: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     classsepar: ".",
                     comment: "FSSSignalDiscovered");
             List<BaseUtils.TypeHelpers.PropertyNameInfo> saanames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalSAASignalsFound),
-                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    bindingflags: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     classsepar: ".",
                     comment: "SAASignalsFound");
             othernames.AddRange(saanames);
             List<BaseUtils.TypeHelpers.PropertyNameInfo> fssbodynames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalFSSBodySignals),
-                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    bindingflags: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     classsepar: ".",
                     comment: "FSSBodySignals");
             othernames.AddRange(fssbodynames);        // merge blind 
             List<BaseUtils.TypeHelpers.PropertyNameInfo> codexnames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalCodexEntry),
-                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    bindingflags: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     classsepar: ".",
                     comment: "CodexEntry");
             othernames.AddRange(codexnames);        // merge blind
             List<BaseUtils.TypeHelpers.PropertyNameInfo> scanorganicnames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalScanOrganic),
-                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    bindingflags: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     classsepar: ".",
                     comment: "ScanOrganic");
             othernames.AddRange(scanorganicnames);        // merge blind

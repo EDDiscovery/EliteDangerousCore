@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 - 2022 EDDiscovery development team
+ * Copyright 2016 - 2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- *
- *
  */
 
 using QuickJSON;
@@ -41,7 +39,8 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("EDD name or journal name")]
         public string BodyDesignationOrName { get { return BodyDesignation ?? BodyName; } }
 
-        // ALL
+        ////////////////////////////////////////////////////////////////////// ALL
+
         [PropertyNameAttribute("Scan type, Basic, Detailed, NavBeacon, NavBeaconDetail, AutoScan, may be empty for very old scans")]
         public string ScanType { get; private set; }                        // 3.0 scan type  Basic, Detailed, NavBeacon, NavBeaconDetail, (3.3) AutoScan, or empty for older ones
         [PropertyNameAttribute("Frontier body name")]
@@ -72,6 +71,8 @@ namespace EliteDangerousCore.JournalEvents
         public double? nRadiusSols { get { if (nRadius.HasValue) return nRadius.Value / BodyPhysicalConstants.oneSolRadius_m; else return null; } }
         [PropertyNameAttribute("Radius in units of Earth")]
         public double? nRadiusEarths { get { if (nRadius.HasValue) return nRadius.Value / BodyPhysicalConstants.oneEarthRadius_m; else return null; } }
+        [PropertyNameAttribute(null)]       // not useful for queries etc. Return in solar or km
+        public string RadiusText { get { if (nRadius != null) { if (nRadius >= BodyPhysicalConstants.oneSolRadius_m / 5) return nRadiusSols.Value.ToString("0.#" + " SR"); else return (nRadius.Value / 1000).ToString("0.#") + " km"; } else return null; } }
 
         [PropertyNameAttribute("Does the body have rings or belts")]
         public bool HasRingsOrBelts { get { return Rings != null && Rings.Length > 0; } }
@@ -115,7 +116,11 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Has the body been previously mapped")]
         public bool IsPreviouslyMapped { get { return WasMapped.HasValue && WasMapped == true; } }    // true if its there, and its mapped
 
-        // STAR
+        [PropertyNameAttribute("Mass of star or planet in KG")]
+        public double? nMassKG { get { return IsPlanet ? nMassEM * BodyPhysicalConstants.oneEarth_KG : nStellarMass * BodyPhysicalConstants.oneSol_KG; } }
+
+        ////////////////////////////////////////////////////////////////////// STAR
+
         [PropertyNameAttribute("Short Name (K,O etc)")]
         public string StarType { get; private set; }                        // null if no StarType, direct from journal, K, A, B etc
         [PropertyNameAttribute("OBAFGAKM,LTY,AeBe,N Neutron,H Black Hole,Proto (TTS,AeBe), Wolf (W,WN,WNC,WC,WO), Carbon (CS,C,CN,CJ,CHD), White Dwarfs (D,DA,DAB,DAO,DAZ,DAV,DB,DBZ,DBV,DO,DOV,DQ,DC,DCV,DX), others")]
@@ -141,7 +146,7 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Million Years")]
         public double? nAge { get; private set; }                           // direct, in million years
 
-        // All orbiting bodies (Stars/Planets), not main star
+        ////////////////////////////////////////////////////////////////////// All orbiting bodies (Stars/Planets), not main star
 
         [PropertyNameAttribute("Estimated distance allowing for a barycentre, m")]
         public double DistanceAccountingForBarycentre { get { return nSemiMajorAxis.HasValue && !IsOrbitingBarycentre ? nSemiMajorAxis.Value : DistanceFromArrivalLS * BodyPhysicalConstants.oneLS_m; } } // in metres
@@ -174,9 +179,6 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Degrees")]
         public double? nMeanAnomaly { get; private set; }                    // odyssey update 7 22/9/21, degrees
 
-        [PropertyNameAttribute("Mass of star or planet in KG")]
-        public double? nMassKG { get { return IsPlanet ? nMassEM * BodyPhysicalConstants.oneEarth_KG : nStellarMass * BodyPhysicalConstants.oneSol_KG; } }
-
         [PropertyNameAttribute("Tilt, radians")]
         public double? nAxialTilt { get; private set; }                     // direct, radians
         [PropertyNameAttribute("Tilt, degrees")]
@@ -184,7 +186,8 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Is in tidal lock")]
         public bool? nTidalLock { get; private set; }                       // direct
 
-        // Planets
+        ////////////////////////////////////////////////////////////////////// Planets
+        ///
         [PropertyNameAttribute("Long text name from journal")]
         public string PlanetClass { get; private set; }                     // planet class, direct. If belt cluster, null. Try to avoid. Not localised
         [PropertyNameAttribute("EDD Enum")]
@@ -224,27 +227,16 @@ namespace EliteDangerousCore.JournalEvents
         public EDAtmosphereType AtmosphereID { get; }                       // Atmosphere -> ID (Ammonia, Carbon etc)
         [PropertyNameAttribute("EDD atmospheric property")]
         public EDAtmosphereProperty AtmosphereProperty { get; private set; }  // Atomsphere -> Property (None, Rich, Thick , Thin, Hot)
+        [PropertyNameAttribute("Dictionary of atmosphere composition, in %. Use an Iter variable to search it")]
+        public Dictionary<string, double> AtmosphereComposition { get; private set; }       // from journal. value is in % (0-100)
+        [PropertyNameAttribute("Atmospheric composition list, comma separated")]
+        public string AtmosphericCompositionList { get { return AtmosphereComposition != null ? string.Join(", ", AtmosphereComposition.OrderByDescending(kvp => kvp.Value).Select(kvp => $"{kvp.Key} {kvp.Value:N2}%")) : ""; } }
         [PropertyNameAttribute("Does body have atmosphere composition list")]
         public bool HasAtmosphericComposition { get { return AtmosphereComposition != null && AtmosphereComposition.Any(); } }
-        [PropertyNameAttribute("Dictionary of atmosphere composition, in %")]
-        public Dictionary<string, double> AtmosphereComposition { get; private set; }
-        public List<KeyValuePair<string, double>> SortedAtmosphereComposition()     // highest first
-        {
-            if (AtmosphereComposition != null)
-            {
-                var sorted = AtmosphereComposition.ToList();
-                sorted.Sort((p1, p2) => p2.Value.CompareTo(p1.Value));
-                return sorted;
-            }
-            else
-                return null;
-        }
-
         [PropertyNameAttribute("Dictionary of planet composition, in %")]
         public Dictionary<string, double> PlanetComposition { get; private set; }
         [PropertyNameAttribute("Does it have planetary composition stats")]
         public bool HasPlanetaryComposition { get { return PlanetComposition != null && PlanetComposition.Any(); } }
-
         [PropertyNameAttribute("Journal volcanism string")]
         public string Volcanism { get; private set; }                       // direct from journal - can be null or a blank string
         [PropertyNameAttribute("EDD Volcanism ID")]
@@ -266,11 +258,12 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Is it def landable")]
         public bool IsLandable { get { return nLandable.HasValue && nLandable.Value && (!HasAtmosphericComposition || (HasAtmosphericComposition && IsOdyssey)); } }
         public bool IsLandableOdyssey { get { return nLandable.HasValue && nLandable.Value && HasAtmosphericComposition; } }
-        [PropertyNameAttribute("Earths")]
+        [PropertyNameAttribute("Mass in Earths")]
         public double? nMassEM { get; private set; }                        // direct, not in description of event, mass in EMs
-        [PropertyNameAttribute("Moons")]
+        [PropertyNameAttribute("Mass in Moons")]
         public double? nMassMM { get { if (nMassEM.HasValue) return nMassEM * BodyPhysicalConstants.oneEarthMoonMassRatio; else return null; } }
-
+        [PropertyNameAttribute(null)]       // this excludes it from any queries etc, as its not really useful. Mass in moons or earths
+        public string MassEMMM { get { if (nMassEM.HasValue) { if (nMassEM.Value < 0.01) return nMassMM.Value.ToString("0.####") + " MM"; else return nMassEM.Value.ToString("0.##") + " EM"; } else return null; } }
         [PropertyNameAttribute("Does it have materials list")]
         public bool HasMaterials { get { return Materials != null && Materials.Any(); } }
         [PropertyNameAttribute("Materials dictionary, in %")]
@@ -282,7 +275,8 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("What is the reserve level of the ring")]
         public EDReserve ReserveLevel { get; private set; }
 
-        // EDD additions
+        ///////////////////////////////////////////////////////////////////////// EDD additions
+       
         [PropertyNameAttribute("Body data source")]
         public SystemSource DataSource { get; private set; } = SystemSource.FromJournal;        // FromJournal, FromEDSM, FromSpansh
         [PropertyNameAttribute("Web data source name (Empty if not)")]
@@ -477,6 +471,7 @@ namespace EliteDangerousCore.JournalEvents
                     if (atmos.IsObject)
                     {
                         AtmosphereComposition = atmos?.ToObjectQ<Dictionary<string, double>>();
+                        //System.Diagnostics.Debug.WriteLine($"Atmos list {AtmosphericComppositionList}");
                     }
                     else if (atmos.IsArray)
                     {
@@ -485,6 +480,7 @@ namespace EliteDangerousCore.JournalEvents
                         {
                             AtmosphereComposition[jo["Name"].Str("Default")] = jo["Percent"].Double();
                         }
+                        //System.Diagnostics.Debug.WriteLine($"Atmos list {AtmosphericComppositionList}");
                     }
                 }
 
@@ -645,22 +641,40 @@ namespace EliteDangerousCore.JournalEvents
             {
                 info = BaseUtils.FieldBuilder.Build("", StarTypeText, "Mass: ;SM;0.00".T(EDCTx.JournalScan_MSM), nStellarMass,
                                                 "Age: ;my;0.0".T(EDCTx.JournalScan_Age), nAge,
-                                                "Radius: ".T(EDCTx.JournalScan_RS), RadiusText(),
+                                                "Radius: ".T(EDCTx.JournalScan_RS), RadiusText,
                                                 "Dist: ;ls;0.0".T(EDCTx.JournalScan_DISTA), DistanceFromArrivalLS,
                                                 "Name: ".T(EDCTx.JournalScan_BNME), BodyName.ReplaceIfStartsWith(fid.System.Name));
             }
             else
             {
-                info = BaseUtils.FieldBuilder.Build("", PlanetTypeText, "Mass: ".T(EDCTx.JournalScan_MASS), MassEMText(),
+                info = BaseUtils.FieldBuilder.Build("", PlanetTypeText, "Mass: ".T(EDCTx.JournalScan_MASS), MassEMMM,
                                                 "<;, Landable".T(EDCTx.JournalScan_Landable), IsLandable,
                                                 "<;, Terraformable".T(EDCTx.JournalScan_Terraformable), TerraformState == "Terraformable", "", Atmosphere,
                                                  "Gravity: ;G;0.00".T(EDCTx.JournalScan_Gravity), nSurfaceGravityG,
-                                                 "Radius: ".T(EDCTx.JournalScan_RS), RadiusText(),
+                                                 "Radius: ".T(EDCTx.JournalScan_RS), RadiusText,
                                                  "Dist: ;ls;0.0".T(EDCTx.JournalScan_DISTA), DistanceFromArrivalLS,
                                                  "Name: ".T(EDCTx.JournalScan_SNME), BodyName.ReplaceIfStartsWith(fid.System.Name));
             }
 
             detailed = DisplayString(0, includefront: false);
+        }
+
+        public string ShortInformation()
+        {
+            if (IsStar)
+            {
+
+                return BaseUtils.FieldBuilder.Build("Mass: ;SM;0.00".T(EDCTx.JournalScan_MSM), nStellarMass,
+                                                "Age: ;my;0.0".T(EDCTx.JournalScan_Age), nAge,
+                                                "Radius: ".T(EDCTx.JournalScan_RS), RadiusText,
+                                                "Dist: ".T(EDCTx.JournalScan_DIST), DistanceFromArrivalLS > 0 ? DistanceFromArrivalText : null);
+            }
+            else
+            {
+                return BaseUtils.FieldBuilder.Build("Mass: ".T(EDCTx.JournalScan_MASS), MassEMMM,
+                                                 "Radius: ".T(EDCTx.JournalScan_RS), RadiusText,
+                                                 "Dist: ".T(EDCTx.JournalScan_DIST), DistanceFromArrivalLS > 0 ? DistanceFromArrivalText : null);
+            }
         }
 
         // this structure is reflected by JournalFilterSelector to allow a journal class to add extra filter items to the journal filter lists. Its in use!
@@ -680,158 +694,6 @@ namespace EliteDangerousCore.JournalEvents
 
         #endregion
 
-        #region Other Queries
-
-        // adds to mats hash (if required) if one found.
-        // returns number of jumponiums in body
-        public int Jumponium(HashSet<string> mats = null)
-        {
-            int count = 0;
-
-            foreach (var m in Materials.EmptyIfNull())
-            {
-                string n = m.Key.ToLowerInvariant();
-                if (MaterialCommodityMicroResourceType.IsJumponiumType(n))
-                {
-                    count++;
-                    if (mats != null && !mats.Contains(n))      // and we have not counted it
-                    {
-                        mats.Add(n);
-                    }
-                }
-            }
-
-            return count;
-        }
-   
-        public StarPlanetRing FindRing(string name)
-        {
-            if (Rings != null)
-                return Array.Find(Rings, x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-            else
-                return null;
-        }
-
-        public double GetMaterial(string v)
-        {
-            return Materials == null || !Materials.ContainsKey(v.ToLowerInvariant()) ? 0.0 : Materials[v.ToLowerInvariant()];
-        }
-
-        public double? GetAtmosphereComponent(string c)
-        {
-            if (!HasAtmosphericComposition)
-                return null;
-            if (!AtmosphereComposition.ContainsKey(c))
-                return 0.0;
-            return AtmosphereComposition[c];
-
-        }
-
-        public double? GetCompositionPercent(string c)
-        {
-            if (!HasPlanetaryComposition)
-                return null;
-            if (!PlanetComposition.ContainsKey(c))
-                return 0.0;
-            return PlanetComposition[c];
-        }
-
-        // is the name in starname 
-
-        public bool IsStarNameRelated(string starname,  long? sysaddr, string designation )
-        {
-            if (StarSystem != null && SystemAddress != null && sysaddr != null)     // if we are a star system AND sysaddr in the scan is set, and we got passed a system addr, direct compare
-            {
-                return starname.Equals(StarSystem, StringComparison.InvariantCultureIgnoreCase) && sysaddr == SystemAddress;    // star is the same name and sys addr same
-            }
-
-            if (designation.Length >= starname.Length)      // and compare against starname root
-            {
-                string s = designation.Substring(0, starname.Length);
-                return starname.Equals(s, StringComparison.InvariantCultureIgnoreCase);
-            }
-            else
-                return false;
-        }
-
-        public string IsStarNameRelatedReturnRest(string starname, long? sysaddr )          // null if not related, else rest of string
-        {
-            string designation = BodyDesignation ?? BodyName;
-            string desigrest = null;
-
-            if (this.StarSystem != null && this.SystemAddress != null && sysaddr != null)
-            {
-                if (starname != this.StarSystem || sysaddr != this.SystemAddress)
-                {
-                    return null;        // no relationship between starname and system in JE
-                }
-
-                desigrest = designation;
-            }
-
-            if (designation.Length >= starname.Length)
-            {
-                string s = designation.Substring(0, starname.Length);
-                if (starname.Equals(s, StringComparison.InvariantCultureIgnoreCase))
-                    desigrest = designation.Substring(starname.Length).Trim();
-            }
-
-            return desigrest;
-        }
-
-        private ScanEstimatedValues EstimatedValues = null;
-
-        public ScanEstimatedValues GetEstimatedValues()
-        {
-            if (EstimatedValues == null)
-                EstimatedValues = new ScanEstimatedValues(EventTimeUTC, IsStar, StarTypeID, IsPlanet, PlanetTypeID, Terraformable, nStellarMass, nMassEM, IsOdysseyEstimatedValues);
-            return EstimatedValues;
-        }
-
-        public ScanEstimatedValues RecalcEstimatedValues()
-        {
-            return new ScanEstimatedValues(EventTimeUTC, IsStar, StarTypeID, IsPlanet, PlanetTypeID, Terraformable, nStellarMass, nMassEM, IsOdysseyEstimatedValues);
-        }
-
-        public void AccumulateJumponium(ref string jumponium, string sysname)
-        {
-            if (IsLandable == true && HasMaterials) // Landable bodies with valuable materials, collect into jumponimum
-            {
-                int basic = 0;
-                int standard = 0;
-                int premium = 0;
-
-                foreach (KeyValuePair<string, double> mat in Materials)
-                {
-                    string usedin = Recipes.UsedInSythesisByFDName(mat.Key);
-                    if (usedin.Contains("FSD-Basic"))
-                        basic++;
-                    if (usedin.Contains("FSD-Standard"))
-                        standard++;
-                    if (usedin.Contains("FSD-Premium"))
-                        premium++;
-                }
-
-                if (basic > 0 || standard > 0 || premium > 0)
-                {
-                    int mats = basic + standard + premium;
-
-                    StringBuilder jumpLevel = new StringBuilder();
-
-                    if (basic != 0)
-                        jumpLevel.AppendPrePad(basic + "/" + Recipes.FindSynthesis("FSD", "Basic").Count + " Basic".T(EDCTx.JournalScanInfo_BFSD), ", ");
-                    if (standard != 0)
-                        jumpLevel.AppendPrePad(standard + "/" + Recipes.FindSynthesis("FSD", "Standard").Count + " Standard".T(EDCTx.JournalScanInfo_SFSD), ", ");
-                    if (premium != 0)
-                        jumpLevel.AppendPrePad(premium + "/" + Recipes.FindSynthesis("FSD", "Premium").Count + " Premium".T(EDCTx.JournalScanInfo_PFSD), ", ");
-
-                    jumponium = jumponium.AppendPrePad(string.Format("{0} has {1} level elements.".T(EDCTx.JournalScanInfo_LE), sysname, jumpLevel), Environment.NewLine);
-                }
-            }
-        }
-
-
-        #endregion
     }
 
 }

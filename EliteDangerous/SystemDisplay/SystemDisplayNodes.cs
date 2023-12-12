@@ -73,17 +73,17 @@ namespace EliteDangerousCore
                     if (sc.IsWebSourced)
                         nodelabels[0] = "_" + nodelabels[0];
 
-                    if (sc.IsStar)
+                    if (sc.IsStar)                                      // Make node information for star
                     {
                         if (ShowStarClasses)
                             overlaytext = sc.StarClassificationAbv;
 
-                        if (sc.nStellarMass.HasValue)
+                        if (sc.nStellarMass.HasValue && ShowStarMass)
                             nodelabels[1] = nodelabels[1].AppendPrePad($"{sc.nStellarMass.Value:N2} SM", Environment.NewLine);
 
                         if (drawtype == DrawLevel.TopLevelStar)
                         {
-                            if (sc.nAge.HasValue)
+                            if (sc.nAge.HasValue && ShowStarAge)
                                 nodelabels[1] = nodelabels[1].AppendPrePad($"{sc.nAge.Value:N0} MY", Environment.NewLine);
 
                             if (ShowHabZone)
@@ -95,7 +95,7 @@ namespace EliteDangerousCore
                         }
                     }
                     else
-                    {
+                    {                                                   // Make node information for planets
                         if (ShowPlanetClasses)
                             overlaytext = Planets.PlanetAbv(sc.PlanetTypeID);
 
@@ -103,9 +103,14 @@ namespace EliteDangerousCore
                         {
                             nodelabels[1] = nodelabels[1].AppendPrePad($"{(sn.ScanData.nSurfaceGravity / BodyPhysicalConstants.oneGee_m_s2):N2}g", Environment.NewLine);
                         }
+
+                        if ( ShowPlanetMass && sn.ScanData.nMassEM.HasValue)
+                        {
+                            nodelabels[1] = nodelabels[1].AppendPrePad(sn.ScanData.MassEMMM, Environment.NewLine);
+                        }
                     }
 
-                    if (ShowDist)
+                    if (ShowDist && sn.ScanData.DistanceFromArrivalLS > 0 )         // show distance, and not 0 (thus main star)
                     {
                         if (drawtype != DrawLevel.MoonLevel)       // other than moons
                         {

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 - 2022 EDDiscovery development team
+ * Copyright 2016 - 2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- *
- *
  */
 
 using System;
@@ -68,10 +66,10 @@ namespace EliteDangerousCore.JournalEvents
                     scanText.AppendFormat("Solar Masses: {0:0.00}\n".T(EDCTx.JournalScan_SolarMasses), nStellarMass.Value);
 
                 if (nMassEM.HasValue)
-                    scanText.AppendFormat("Mass: ".T(EDCTx.JournalScan_MASS) + " " + MassEMText() + "\n");
+                    scanText.AppendFormat("Mass: ".T(EDCTx.JournalScan_MASS) + " " + MassEMMM + "\n");
 
                 if (nRadius.HasValue)
-                    scanText.AppendFormat("Radius: ".T(EDCTx.JournalScan_RS) + " " + RadiusText() + "\n");
+                    scanText.AppendFormat("Radius: ".T(EDCTx.JournalScan_RS) + " " + RadiusText + "\n");
 
                 if (DistanceFromArrivalLS > 0)
                     scanText.AppendFormat("Distance from Arrival Point {0:N1}ls\n".T(EDCTx.JournalScan_DistancefromArrivalPoint), DistanceFromArrivalLS);
@@ -259,232 +257,6 @@ namespace EliteDangerousCore.JournalEvents
 
             return scanText.ToNullSafeString().Replace("\n", "\n" + inds);
         }
-
-
-        // show material counts at the historic point and current.  Has trailing LF if text present.
-        public string DisplayMaterials(int indent = 0, List<MaterialCommodityMicroResource> historicmatlist = null, List<MaterialCommodityMicroResource> currentmatlist = null)
-        {
-            StringBuilder scanText = new StringBuilder();
-
-            if (HasMaterials)
-            {
-                string indents = new string(' ', indent);
-
-                scanText.Append("Materials:\n".T(EDCTx.JournalScan_Materials));
-                foreach (KeyValuePair<string, double> mat in Materials)
-                {
-                    scanText.Append(indents + DisplayMaterial(mat.Key, mat.Value, historicmatlist, currentmatlist));
-                }
-            }
-
-            return scanText.ToNullSafeString();
-        }
-
-        public string DisplayMaterial(string fdname, double percent, List<MaterialCommodityMicroResource> historicmatlist = null,
-                                                                      List<MaterialCommodityMicroResource> currentmatlist = null)  // has trailing LF
-        {
-            StringBuilder scanText = new StringBuilder();
-
-            MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);
-
-            if (mc != null && (historicmatlist != null || currentmatlist != null))
-            {
-                MaterialCommodityMicroResource historic = historicmatlist?.Find(x => x.Details == mc);
-                MaterialCommodityMicroResource current = ReferenceEquals(historicmatlist, currentmatlist) ? null : currentmatlist?.Find(x => x.Details == mc);
-                int? limit = mc.MaterialLimit();
-
-                string matinfo = historic?.Count.ToString() ?? "0";
-                if (limit != null)
-                    matinfo += "/" + limit.Value.ToString();
-
-                if (current != null && (historic == null || historic.Count != current.Count))
-                    matinfo += " Cur " + current.Count.ToString();
-
-                scanText.AppendFormat("{0} ({1}) {2} {3}% {4}\n", mc.Name, mc.Shortname, mc.TranslatedType, percent.ToString("N1"), matinfo);
-            }
-            else
-                scanText.AppendFormat("{0} {1}%\n", System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(fdname.ToLowerInvariant()),
-                                                            percent.ToString("N1"));
-
-            return scanText.ToNullSafeString();
-        }
-
-        private string DisplayAtmosphere(int indent = 0)     // has trailing LF
-        {
-            StringBuilder scanText = new StringBuilder();
-            string indents = new string(' ', indent);
-
-            scanText.Append("Atmospheric Composition:\n".T(EDCTx.JournalScan_AtmosphericComposition));
-            foreach (KeyValuePair<string, double> comp in AtmosphereComposition)
-            {
-                scanText.AppendFormat(indents + "{0} - {1}%\n", comp.Key, comp.Value.ToString("N2"));
-            }
-
-            return scanText.ToNullSafeString();
-        }
-
-        private string DisplayComposition(int indent = 0)   // has trailing LF
-        {
-            StringBuilder scanText = new StringBuilder();
-            string indents = new string(' ', indent);
-
-            scanText.Append("Planetary Composition:\n".T(EDCTx.JournalScan_PlanetaryComposition));
-            foreach (KeyValuePair<string, double> comp in PlanetComposition)
-            {
-                if (comp.Value > 0)
-                    scanText.AppendFormat(indents + "{0} - {1}%\n", comp.Key, comp.Value.ToString("N2"));
-            }
-
-            return scanText.ToNullSafeString();
-        }
-
-
-        public string RadiusText()  // null if not set, or the best representation
-        {
-            if (nRadius != null)
-            {
-                if (nRadius >= BodyPhysicalConstants.oneSolRadius_m / 5)
-                    return nRadiusSols.Value.ToString("0.#" + " SR");
-                else
-                    return (nRadius.Value / 1000).ToString("0.#") + " km";
-            }
-            else
-                return null;
-        }
-
-        public string MassEMText()
-        {
-            if (nMassEM.HasValue)
-            {
-                if (nMassEM.Value < 0.01)
-                    return nMassMM.Value.ToString("0.####") + " MM";
-                else
-                    return nMassEM.Value.ToString("0.##") + " EM";
-            }
-            else
-                return null;
-        }
-
-        public string SurveyorInfoLine(ISystem sys,
-                            bool hasminingsignals, bool hasgeosignals, bool hasbiosignals, bool hasthargoidsignals, bool hasguardiansignals, bool hashumansignals, bool hasothersignals,
-                            bool hasscanorganics,
-                            bool showvolcanism, bool showvalues, bool shortinfo, bool showGravity, bool showAtmos, bool showTemp, bool showRings,
-                            int lowRadiusLimit, int largeRadiusLimit, double eccentricityLimit)
-        {
-            JournalScan js = this;            
-
-            var information = new StringBuilder();
-
-            string bodyname = js.BodyDesignationOrName.ReplaceIfStartsWith(sys.Name);
-
-            // Name
-            information.Append(bodyname);
-
-            // symbols
-            if (js.Mapped)  // let the cmdr see that this body is already mapped
-                information.Append(" \u24C2");
-
-            if (js.CountOrganicsScansAnalysed > 0) // if scanned
-            {
-                if (js.CountOrganicsScansAnalysed == js.CountBioSignals)   // and show organic scan situation - fully with a tick
-                    information.Append(" \u232C\u2713");
-                else
-                    information.Append(" \u232C");  // partial
-            }
-
-            information.Append(" is a ".T(EDCTx.JournalScanInfo_isa));
-
-            // Additional information
-            information.Append((js.IsStar) ? Stars.StarName(js.StarTypeID) + "." : null);
-            information.Append((js.CanBeTerraformable) ? @"terraformable ".T(EDCTx.JournalScanInfo_terraformable) : null);
-            information.Append((js.IsPlanet) ? Planets.PlanetName(js.PlanetTypeID) + "." : null);
-            information.Append((js.nRadius < lowRadiusLimit && js.IsPlanet) ? @" Is tiny ".T(EDCTx.JournalScanInfo_LowRadius) + "(" + RadiusText() + ")." : null);
-            information.Append((js.nRadius > largeRadiusLimit && js.IsPlanet && js.IsLandable) ? @" Is large ".T(EDCTx.JournalScanInfo_LargeRadius) + "(" + RadiusText() + ")." : null);
-            information.Append((js.IsLandable) ? @" Is landable.".T(EDCTx.JournalScanInfo_islandable) : null);
-            information.Append((js.IsLandable && showGravity && js.nSurfaceGravityG.HasValue) ? @" (" + Math.Round(js.nSurfaceGravityG.Value, 2, MidpointRounding.AwayFromZero) + "g)" : null);
-            information.Append((js.HasAtmosphericComposition && showAtmos) ? @" Atmosphere: ".T(EDCTx.JournalScanInfo_Atmosphere) + (js.Atmosphere?.Replace(" atmosphere", "") ?? "unknown".T(EDCTx.JournalScanInfo_unknownAtmosphere)) + "." : null);
-            information.Append((js.IsLandable && js.nSurfaceTemperature.HasValue && showTemp) ? (string.Format(" Surface temperature: {0} K.".T(EDCTx.JournalScanInfo_SurfaceTemperature), Math.Round(js.nSurfaceTemperature.Value, 1, MidpointRounding.AwayFromZero))) : null);
-            information.Append((js.HasMeaningfulVolcanism && showvolcanism) ? @" Has ".T(EDCTx.JournalScanInfo_Has) + js.Volcanism + "." : null);
-            information.Append((hasminingsignals) ? " Has mining signals.".T(EDCTx.JournalScanInfo_Signals) : null);
-            information.Append((hasgeosignals) ? (string.Format(" Geological signals: {0}.".T(EDCTx.JournalScanInfo_GeoSignals), js.CountGeoSignals)) : null);
-            information.Append((hasbiosignals) ? (string.Format(" Biological signals: {0}.".T(EDCTx.JournalScanInfo_BioSignals), js.CountBioSignals)) : null);
-            information.Append((hasthargoidsignals) ? (string.Format(" Thargoid signals: {0}.".T(EDCTx.JournalScanInfo_ThargoidSignals), js.CountThargoidSignals)) : null);
-            information.Append((hasguardiansignals) ? (string.Format(" Guardian signals: {0}.".T(EDCTx.JournalScanInfo_GuardianSignals), js.CountGuardianSignals)) : null);
-            information.Append((hashumansignals) ? (string.Format(" Human signals: {0}.".T(EDCTx.JournalScanInfo_HumanSignals), js.CountHumanSignals)) : null);
-            information.Append((hasothersignals) ? (string.Format(" 'Other' signals: {0}.".T(EDCTx.JournalScanInfo_OtherSignals), js.CountOtherSignals)) : null);
-            information.Append((js.HasRingsOrBelts && showRings) ? @" Is ringed.".T(EDCTx.JournalScanInfo_Hasring) : null);
-            information.Append((js.nEccentricity >= eccentricityLimit) ? (string.Format(@" Has an high eccentricity of {0}.".T(EDCTx.JournalScanInfo_eccentricity), js.nEccentricity)) : null);
-            information.Append(hasscanorganics ? " Has been scanned for organics.".T(EDCTx.JournalScanInfo_scanorganics) : null);
-
-            var ev = js.GetEstimatedValues();
-
-            if (js.WasMapped == true && js.WasDiscovered == true)
-            {
-                information.Append(" (Mapped & Discovered)".T(EDCTx.JournalScanInfo_MandD));
-                if (showvalues)
-                {
-                    information.Append(' ').Append(ev.EstimatedValueMappedEfficiently.ToString("N0")).Append(" cr");
-                }
-            }
-            else if (js.WasMapped == true && js.WasDiscovered == false)
-            {
-                information.Append(" (Mapped)".T(EDCTx.JournalScanInfo_MP));
-                if (showvalues)
-                {
-                    information.Append(' ').Append(ev.EstimatedValueFirstMappedEfficiently.ToString("N0")).Append(" cr");
-                }
-            }
-            else if (js.WasDiscovered == true && js.WasMapped == false)
-            {
-                information.Append(" (Discovered)".T(EDCTx.JournalScanInfo_DIS));
-                if (showvalues)
-                {
-                    information.Append(' ').Append((ev.EstimatedValueFirstMappedEfficiently > 0 ? ev.EstimatedValueFirstMappedEfficiently : ev.EstimatedValueBase).ToString("N0")).Append(" cr");
-                }
-            }
-            else if (js.WasDiscovered == false && js.IsStar)
-            {
-                if (showvalues)
-                {
-                    information.Append(' ').Append((ev.EstimatedValueFirstDiscovered > 0 ? ev.EstimatedValueFirstDiscovered : ev.EstimatedValueBase).ToString("N0")).Append(" cr");
-                }
-            }
-            else
-            {
-                if (showvalues)
-                {
-                    information.Append(' ').Append((ev.EstimatedValueFirstDiscoveredFirstMappedEfficiently > 0 ? ev.EstimatedValueFirstDiscoveredFirstMappedEfficiently : ev.EstimatedValueBase).ToString("N0")).Append(" cr");
-                }
-            }
-
-            if (shortinfo)
-            {
-                information.Append(' ').Append(js.ShortInformation());
-            }
-            else
-                information.Append(' ').Append(js.DistanceFromArrivalText);
-
-            return information.ToString();
-        }
-
-        public string ShortInformation()
-        {
-            if (IsStar)
-            {
-
-                return BaseUtils.FieldBuilder.Build("Mass: ;SM;0.00".T(EDCTx.JournalScan_MSM), nStellarMass,
-                                                "Age: ;my;0.0".T(EDCTx.JournalScan_Age), nAge,
-                                                "Radius: ".T(EDCTx.JournalScan_RS), RadiusText(),
-                                                "Dist: ".T(EDCTx.JournalScan_DIST), DistanceFromArrivalLS > 0 ? DistanceFromArrivalText : null);
-            }
-            else
-            {
-                return BaseUtils.FieldBuilder.Build("Mass: ".T(EDCTx.JournalScan_MASS), MassEMText(),
-                                                 "Radius: ".T(EDCTx.JournalScan_RS), RadiusText(),
-                                                 "Dist: ".T(EDCTx.JournalScan_DIST), DistanceFromArrivalLS > 0 ? DistanceFromArrivalText : null);
-            }
-        }
-
 
 
 

@@ -30,6 +30,9 @@ namespace EliteDangerousCore
         public bool ShowOnlyMaterialsRare { get; set; } = false;
         public bool HideFullMaterials { get; set; } = false;
         public bool ShowAllG { get; set; } = true;
+        public bool ShowPlanetMass { get; set; } = true;
+        public bool ShowStarMass { get; set; } = true;
+        public bool ShowStarAge { get; set; } = true;
         public bool ShowHabZone { get; set; } = true;
         public bool ShowPlanetClasses { get; set; } = true;
         public bool ShowStarClasses { get; set; } = true;

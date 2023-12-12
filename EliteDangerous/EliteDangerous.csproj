@@ -123,6 +123,8 @@
     <Compile Include="Items\ItemWeapons.cs" />
     <Compile Include="JournalEvents\JournalEmbarkDisembark.cs" />
     <Compile Include="JournalEvents\JournalCarrier.cs" />
+    <Compile Include="JournalEvents\JournalScan_Helpers.cs" />
+    <Compile Include="JournalEvents\JournalScan_Surveyor.cs" />
     <Compile Include="JournalEvents\JournalScan_Display.cs" />
     <Compile Include="JournalEvents\JournalScan_Subclasses.cs" />
     <Compile Include="JournalEvents\JournalScanBarycentre.cs" />
