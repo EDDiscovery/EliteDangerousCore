@@ -891,6 +891,10 @@ SECTION JournalStoredShips
 .intransit: "<; in transit" => "<; unterwegs"
 .at: "< at " => "< bei "
 
+SECTION JournalSupercruiseEntry
+
+.Wanted: ", You are wanted." @
+
 SECTION JournalUnderAttack
 
 .ACOUNT: "times" => "mal"
