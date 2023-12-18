@@ -788,7 +788,7 @@ namespace EliteDangerousCore
             AddCommodity("Mollusc Fluid", ItemType.Salvage, "M_TissueSample_Fluid");
             AddCommodity("Mollusc Brain Tissue", ItemType.Salvage, "M_TissueSample_Nerves");
             AddCommodity("Pod Tissue", ItemType.Salvage, "S9_TissueSample_Shell");
-            AddCommodity("Anomaly Particles Missing", sv, "P_ParticulateSample");
+            AddCommodity("Anomaly Particles", sv, "P_ParticulateSample");
             AddCommodity("Titan Maw Partial Tissue Sample", sv, "ThargoidTissueSampleType10c");
             AddCommodity("Thargoid Orthrus Tissue Sample", sv, "ThargoidTissueSampleType5");
             AddCommodity("Caustic Tissue Sample", sv, "ThargoidGeneratorTissueSample");

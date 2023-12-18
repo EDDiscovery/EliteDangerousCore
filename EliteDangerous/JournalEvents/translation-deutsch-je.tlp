@@ -154,7 +154,7 @@ SECTION JournalTypeEnum
 .Statistics: "Statistics" => "Statistiken"
 .SupercruiseEntry: "Supercruise Entry" => "Eintritt Supercruise"
 .SupercruiseExit: "Supercruise Exit" => "Supercruise verlassen"
-.SupercruiseDestinationDrop: "Supercruise Destination Drop" @
+.SupercruiseDestinationDrop: "Supercruise Destination Drop" => "Supercruise Zielaustritt"
 .Synthesis: "Synthesis" => "Synthese"
 .SystemsShutdown: "Systems Shutdown" => "Systeme henunterfahren"
 .TechnologyBroker: "Technology Broker" => "Technologiehändler"
@@ -628,7 +628,7 @@ SECTION JournalStatistics
 .CQC: "CQC" => "CQC"
 .FLEETCARRIER: "Fleetcarrier" => "Carrier"
 .Exobiology: "Exobiology" => "Exobiologie"
-.Thargoids: "Thargoids" @
+.Thargoids: "Thargoids" => "Thargoiden"
 
 SECTION BankAccountClass
 
@@ -864,14 +864,14 @@ SECTION ExobiologyClass
 
 SECTION ThargoidsClass
 
-.EncounterWakes: "Thargoid wakes scanned: ;;N0" @
-.EncounterKilled: "Thargoids killed: ;;N0" @
-.EncounterImprint: "Thargoid structures: ;;N0" @
-.EncounterTotal: "Total encounters: ;;N0" @
-.LastSystem: "Last seen in: " @
-.LastTime: "Last seen on: " @
-.LastShip: "Last ship involved: " @
-.ScoutCount: "Thargoid Scouts killed: ;;N0" @
+.EncounterWakes: "Thargoid wakes scanned: ;;N0" => "Thargoidsogwolken gescannt: ;;N0"
+.EncounterKilled: "Thargoids killed: ;;N0" => "Thargoiden getötet: ;;N0"
+.EncounterImprint: "Thargoid structures: ;;N0" => "Thargoidenstrukturen: ;;N0"
+.EncounterTotal: "Total encounters: ;;N0" => "Gesammte Begegnungen: ;;N0"
+.LastSystem: "Last seen in: " => "Zuletzt gesehen in: "
+.LastTime: "Last seen on: " => "Zuletzt gesehen am: "
+.LastShip: "Last ship involved: " => "Letztes involviertes Schiff: "
+.ScoutCount: "Thargoid Scouts killed: ;;N0" => "Thargoidenscouts getötet: ;;N0"
 
 SECTION JournalStoredModules
 
@@ -890,6 +890,10 @@ SECTION JournalStoredShips
 .Remote: "Remote: " => "Abgelegen: "
 .intransit: "<; in transit" => "<; unterwegs"
 .at: "< at " => "< bei "
+
+SECTION JournalSupercruiseEntry
+
+.Wanted: ", You are wanted." => ", du wirst gesucht."
 
 SECTION JournalUnderAttack
 
@@ -1093,7 +1097,7 @@ SECTION JournalEntry
 .Taxi: "Taxi" => "Taxi"
 .Mods: "Mods: " => "Mods"
 .Class: "Class: " => "Klasse"
-.Pilot: "Pilot: " @
+.Pilot: "Pilot: " => "Pilot"
 
 SECTION JournalCarrierJump
 
@@ -1194,5 +1198,5 @@ SECTION Services
 
 SECTION JournalScanOrganics
 
-.Value: "Value: ; cr;N0" @
-.PotentialValue: "Potential Value: ; cr;N0" @
+.Value: "Value: ; cr;N0" => "Wert: ; Cr;N0"
+.PotentialValue: "Potential Value: ; cr;N0" => "Potentieller Wert: ; Cr;N0"
