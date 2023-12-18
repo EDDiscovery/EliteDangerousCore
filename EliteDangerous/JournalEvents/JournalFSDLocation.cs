@@ -645,14 +645,14 @@ namespace EliteDangerousCore.JournalEvents
             });
         }
 
-        internal void UpdateFirstDiscover(bool value, SQLiteConnectionUser cn, DbTransaction txnl = null)
+        internal void UpdateFirstDiscover(bool value, SQLiteConnectionUser cn)
         {
-            JObject jo = GetJson(Id, cn, txnl);
+            JObject jo = GetJson(Id, cn);
 
             if (jo != null)
             {
                 jo["EDD_EDSMFirstDiscover"] = value;
-                UpdateJsonEntry(jo, cn, txnl);
+                UpdateJsonEntry(jo, cn);
                 EDSMFirstDiscover = value;
             }
         }

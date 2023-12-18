@@ -84,7 +84,7 @@ namespace EliteDangerousCore
                     {
                         foreach (var tlu in tlutoadd)
                         {
-                            tlu.Add(cn, txn);
+                            tlu.Add(cn);
                         }
 
                         txn.Commit();
@@ -131,12 +131,12 @@ namespace EliteDangerousCore
 
                             if (!(previssame || nextissame))
                             {
-                                je.Add(jo, cn, tn);
+                                je.Add(jo, cn);
                                 System.Diagnostics.Debug.WriteLine("Add {0} {1}", je.EventTimeUTC, jo.ToString());
                             }
                         }
 
-                        reader.TravelLogUnit.Update(cn, tn);
+                        reader.TravelLogUnit.Update(cn);
 
                         tn.Commit();
                     }
