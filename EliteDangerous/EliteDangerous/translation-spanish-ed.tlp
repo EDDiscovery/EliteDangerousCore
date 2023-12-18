@@ -860,6 +860,32 @@ SECTION MaterialCommodityMicroResourceType
 .vipsecuritydetail: "VIP Security Detail" @
 .virus: "Virus" @
 .xenodefenceprotocols: "Xeno-Defence Protocols" @
+.tg_abrasion03: "Hardened Surface Fragments" @
+.tg_abrasion02: "Phasing Membrane Residue" @
+.heatexposurespecimen: "Heat Exposure Specimen" @
+.tg_causticcrystal: "Caustic Crystal" @
+.tg_causticshard: "Caustic Shard" @
+.tg_causticgeneratorparts: "Corrosive Mechanisms" @
+.tg_shutdowndata: "Massive Energy Surge Analytics" @
+.tg_interdictiondata: "Thargoid Interdiction Telemetry" @
+.ancientrelictg: "Unclassified Relic" @
+.p_particulatesample: "Anomaly Particles Missing" @
+.thargoidtissuesampletype10c: "Titan Maw Partial Tissue Sample" @
+.thargoidtissuesampletype5: "Thargoid Orthrus Tissue Sample" @
+.thargoidgeneratortissuesample: "Caustic Tissue Sample" @
+.unocuppiedescapepod: "Unoccupied Escape Pod" @
+.thargoidtissuesampletype6: "Thargoid Glaive Tissue Sample" @
+.thargoidtissuesampletype9a: "Titan Deep Tissue Sample" @
+.thargoidtissuesampletype9b: "Titan Tissue Sample" @
+.thargoidtissuesampletype9c: "Titan Partial Tissue Sample" @
+.thargoidtissuesampletype10a: "Titan Maw Deep Tissue Sample" @
+.thargoidtissuesampletype10b: "Titan Maw Tissue Sample" @
+.thargoidtissuesampletype7: "Thargoid Scythe Tissue Sample" @
+.unknownsack: "Protective Membrane Scrap" @
+.thargoidpod: "Xenobiological Prison Pod" @
+.coralsap: "Coral Sap" @
+.onionheadc: "Onionhead Gamma Strain" @
+.classifiedexperimentalequipment: "Classified Experimental Equipment" @
 
 SECTION EngineeringData
 
@@ -976,3 +1002,7 @@ SECTION ScanDisplayUserControl
 .Signals: "Signals" => "Señales"
 .Codex: "Codex" @
 .Organics: "Organics" @
+
+SECTION Signals
+
+.RingHotSpot: "Ring Hot Spot of type " @

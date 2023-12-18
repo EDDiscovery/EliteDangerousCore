@@ -427,6 +427,10 @@ SECTION JournalMultiSellExplorationData
 
 .Total: "Total: ; cr;N0" => "Razem: ; cr;N0"
 
+SECTION JournalSellOrganics
+
+.JournalSellOrganics_Detailed: "Genus: {0}, Species: {1}, Reward: {2} cr, First sample bonus: {3} cr, Total reward: {4} cr" @
+
 SECTION JournalProspectedAsteroid
 
 .Remaining: "Remaining: ;%;N1" => "Pozostało: ;%;N1"
@@ -624,6 +628,7 @@ SECTION JournalStatistics
 .CQC: "CQC" @
 .FLEETCARRIER: "Fleetcarrier" @
 .Exobiology: "Exobiology" @
+.Thargoids: "Thargoids" @
 
 SECTION BankAccountClass
 
@@ -640,7 +645,7 @@ SECTION BankAccountClass
 .SpentOnWeapons: "Spent on Weapons: ; cr;N0" @
 .SpentOnSuitConsumables: "Spent on Suit Consumables: ; cr;N0" @
 .SuitsOwned: "Suits Owned: ;;N0" @
-.WeaponsOwned: "WeaponsOwned: ;;N0" @
+.WeaponsOwned: "Weapons Owned: ;;N0" @
 .SpentOnPremiumStock: "Spent on Premium Stock: ; cr;N0" @
 .PremiumStockBought: "Premium Stock bought: ;;N0" @
 
@@ -735,7 +740,7 @@ SECTION ExplorationClass
 .NoofJumps: "No of Jumps: ;;N0" => "Ilość Skoków: ;;N0"
 .GreatestDistance: "Greatest Distance: ; ly;N0" => "Największy Dystans: ; ly;N0"
 .TimePlayed: "Time Played: " => "Czas Gry: "
-.OnFootDistanceTravelled: "Distance Travelled on Foot: ;m;N0" @
+.OnFootDistanceTravelled: "Distance Travelled on Foot: ; m;N0" @
 .EfficientScans: "Efficient Scans: ;;N0" @
 .ShuttleJourneys: "Shuttle Journeys: ;;N0" @
 .ShuttleDistanceTravelled: "Shuttle Distance Travelled: ; ly;N0" @
@@ -857,6 +862,17 @@ SECTION ExobiologyClass
 .OrganicGenus: "Unique Genus Data Logged: ;;N0" @
 .OrganicSpecies: "Unique Species Data Logged: ;;N0" @
 
+SECTION ThargoidsClass
+
+.EncounterWakes: "Thargoid wakes scanned: ;;N0" @
+.EncounterKilled: "Thargoids killed: ;;N0" @
+.EncounterImprint: "Thargoid structures: ;;N0" @
+.EncounterTotal: "Total encounters: ;;N0" @
+.LastSystem: "Last seen in: " @
+.LastTime: "Last seen on: " @
+.LastShip: "Last ship involved: " @
+.ScoutCount: "Thargoid Scouts killed: ;;N0" @
+
 SECTION JournalStoredModules
 
 .at: "< at " => "< w "
@@ -864,6 +880,7 @@ SECTION JournalStoredModules
 SECTION JournalSupercruiseExit
 
 .in: "< in " => "< w "
+.At: "At " => "W "
 
 SECTION JournalStoredShips
 
@@ -873,10 +890,6 @@ SECTION JournalStoredShips
 .Remote: "Remote: " => "Zdalne: "
 .intransit: "<; in transit" => "<; w tranzycie"
 .at: "< at " => "< w "
-
-SECTION JournalSupercruiseExit
-
-.At: "At " => "W "
 
 SECTION JournalUnderAttack
 
@@ -1080,6 +1093,7 @@ SECTION JournalEntry
 .Taxi: "Taxi" @
 .Mods: "Mods: " @
 .Class: "Class: " @
+.Pilot: "Pilot: " @
 
 SECTION JournalCarrierJump
 
@@ -1177,3 +1191,8 @@ SECTION Services
 .Bartender: "Concourse Bar" @
 .VistaGenomics: "Vista Genomics" @
 .PioneerSupplies: "Pioneer Supplies" @
+
+SECTION JournalScanOrganics
+
+.Value: "Value: ; cr;N0" @
+.PotentialValue: "Potential Value: ; cr;N0" @
