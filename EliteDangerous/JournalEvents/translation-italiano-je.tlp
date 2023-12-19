@@ -891,6 +891,10 @@ SECTION JournalStoredShips
 .intransit: "<; in transit" @
 .at: "< at " @
 
+SECTION JournalSupercruiseEntry
+
+.Wanted: ", You are wanted." @
+
 SECTION JournalUnderAttack
 
 .ACOUNT: "times" @
