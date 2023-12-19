@@ -24,49 +24,54 @@ namespace EliteDangerousCore
         public enum NameType        // describes the NID
         {
             NotSet,         // not set
-            Named,          // Named type in name table.  NameIDNumeric will hold index
-            Numeric,        // numeric name, NameIDNumeric will hold number, NumericDashPos and NumericDigits set to indicate format
+            Named,          // Named type (SOL or HIP-1234) 
+            Numeric,        // numeric name (29282-2902)
             Identifier,     // Pru Eurk CQ-L                                SectorName = sector, StarName = null, L1L2L3 set
             Masscode,       // Pru Eurk CQ-L d                              SectorName = sector, StarName = null, L1L2L3 set, MassCode set
             NValue,         // Pru Eurk CQ-L d2-3 or Pru Eurk CQ-L d2       SectorName = sector, StarName = null, L1L2L3 set, MassCode set, NValue set
             N1ValueOnly     // Pru Eurk CQ-L d2-                            SectorName = sector, StarName = null, L1L2L3 set, MassCode set, NValue set
         };
 
-        public NameType EntryType = NameType.NotSet;
-        public string SectorName = null;    // for string inputs, set always, the sector name (Pru Eurk or HIP) or "NotInSector" (Sol).            For numbers, null
-        public string StarName = null;      // for string inputs, set for HIP type names and non standard names, else                    For numbers, null
-        public uint L1, L2, L3, MassCode, NValue;   // set for standard names
-        public long NameIdNumeric = 0;      // NIndex into name table or numeric name
-        public uint NumericDashPos = 0;     // Numeric Dash position
-        public uint NumericDigits = 0;      // Numeric digits
+        public NameType EntryType { get; set; } = NameType.NotSet;
+        public string SectorName { get; set; } = null;    // for string inputs, set always. Either the sector name (Pru Eurk or survey HIP etc) or "NotInSector" for Named (Sol). For id input, null
+        public string StarName { get; set; } = null;      // for string inputs, set for surveys or non standard names, else null. For id input, null
+        public ulong NameIdNumeric { get; set; } = 0;      // for string inputs: if its a numeric, value, else 0. For id input, NIndex into name table (for Sol) or numeric name (for 12345=56) else zero
 
+        private uint L1, L2, L3, MassCode, NValue;   // set for standard names
+        private uint NumericDashPos = 0;     // Numeric Dash position
+        private uint NumericDigits = 0;      // Numeric digits
+
+        //   48    44   40   36   32   28   24   20   16   12    8    4    0
+        //       10xx x111 11L2 222L 3333 MMMM N111 1111 N222 2222 2222 2222               
         private const int StandardPosMarker = 47;   // Standard (L1/Mass/N apply).   47 means its in 6 bytes, fitting within a 6 byte SQL field
         private const int L1Marker = 38;            // Standard: 5 bits 38-42 (1 = A, 26=Z)
-        private const int L2Marker = 33;            // Standard: 5 bits 33-47 (1 = A, 26=Z)
-        private const int L3Marker = 28;            // Standard: 6 bits 28-32 (aligned for display purposes) (1 = A, 26=Z)
+        private const int L2Marker = 33;            // Standard: 5 bits 33-37 (1 = A, 26=Z)
+        private const int L3Marker = 28;            // Standard: 5 bits 28-32 (aligned for display purposes) (1 = A, 26=Z)
         private const int MassMarker = 24;          // Standard: 3 bits 24-27 (0=A,7=H)
         private const int NMarker = 0;              // Standard: N2 + N1<<16  
 
-        private const int NumericMarker = 46;       // Numeric. bits 0-35 hold value.  
+        //  48    44   40   36   32   28   24   20   16   12    8    4    0
+        //      01CC CCDD DDNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN               
+        private const int NumericMarker = 46;       // Numeric (HIP 1232-23). bits 0-35 hold value.  
         private const int NumericCountMarker = 42;  // Numeric: 4 bits 42-45 Number of digits in number
         private const int NumericDashMarker = 38;   // Numeric: 4 bits 38-41 position of dash in number (0 = none, 1 = 0 char in, 2 = 1 char in etc) 
         private const long NameIDNumbericMask = 0x3fffffffff;     // 38 bits
 
         public bool IsStandard { get { return EntryType >= NameType.NValue; } }     // meaning L1L2L3 MassCode NValue is set..
-        public bool IsStandardParts { get { return EntryType >= NameType.Identifier; } }
-        public bool IsNamed { get { return EntryType == NameType.Named; } }
-        public bool IsNumeric { get { return EntryType == NameType.Numeric; } }
+        public bool IsStandardParts { get { return EntryType >= NameType.Identifier; } }    // is L1L2L3 is set at least
+        public bool IsNamed { get { return EntryType == NameType.Named; } }     // name, such as Sol
+        public bool IsNumeric { get { return EntryType == NameType.Numeric; } } // numberic, such as HIP1234-33
 
-        public static bool IsIDStandard(ulong id)
+        public static bool IsIDStandard(ulong id)       // if encoded ID a standard masscode type
         {
             return (id & (1UL << StandardPosMarker)) != 0;
         }
-        public static bool IsIDNumeric(ulong id)
+        public static bool IsIDNumeric(ulong id)        // if encoded ID a numeric marker
         {
             return (id & (1UL << NumericMarker)) != 0;
         }
 
-        public ulong ID // get the ID code
+        public ulong ID // get the ID code which goes into the DB in the nameid field
         {
             get
             {
@@ -76,9 +81,13 @@ namespace EliteDangerousCore
                     return ((ulong)NValue << NMarker) | ((ulong)(MassCode) << MassMarker) | ((ulong)(L3) << L3Marker) | ((ulong)(L2) << L2Marker) | ((ulong)(L1) << L1Marker) | (1UL << StandardPosMarker);
                 }
                 else if (IsNumeric)
+                {
                     return (ulong)(NameIdNumeric) | (1UL << NumericMarker) | ((ulong)(NumericDashPos) << NumericDashMarker) | ((ulong)(NumericDigits) << NumericCountMarker);
+                }
                 else
+                {
                     return (ulong)(NameIdNumeric);
+                }
             }
         }
 
@@ -103,7 +112,8 @@ namespace EliteDangerousCore
                     else
                         return lcodes | ((ulong)NValue << NMarker); // no wild card here
                 }
-                else return ID;
+                else 
+                    return ID;
             }
         }
 
@@ -133,14 +143,14 @@ namespace EliteDangerousCore
             Classify(n);
         }
 
-        public EliteNameClassifier(ulong id)
+        public EliteNameClassifier(ulong id)        // set from DB encoded ID
         {
             Classify(id);
         }
 
-        public void Classify(ulong id)     // classify an ID.
+        public void Classify(ulong id)              // take the ID from the DB and turn it back into parts
         {
-            if (IsIDStandard(id))
+            if (IsIDStandard(id))       // ID has standard L1L2L3 masscode NValues
             {
                 NValue = (uint)(id >> NMarker) & 0xffffff;
                 MassCode = (char)(((id >> MassMarker) & 7));
@@ -150,23 +160,25 @@ namespace EliteDangerousCore
                 EntryType = NameType.NValue;
                 System.Diagnostics.Debug.Assert(L1 < 31 && L2 < 32 && L3 < 32 && NValue < 0xffffff && MassCode < 8);
             }
-            else if (IsIDNumeric(id))
+            else if (IsIDNumeric(id))   // 192929-290
             {
-                NameIdNumeric = (long)(id & NameIDNumbericMask);
+                NameIdNumeric = (ulong)(id & NameIDNumbericMask);
                 NumericDashPos = (uint)((id >> NumericDashMarker) & 15);
                 NumericDigits = (uint)((id >> NumericCountMarker) & 15);
                 EntryType = NameType.Numeric;
             }
             else
             {
-                NameIdNumeric = (long)(id & NameIDNumbericMask);
+                NameIdNumeric = (ulong)(id & NameIDNumbericMask);        // set the index into the name table
                 EntryType = NameType.Named;
             }
 
             SectorName = StarName = null;
         }
 
-        public void Classify(string starname)   // classify a string
+        // classify a string
+        // starname is case sensitive and case preserving
+        public void Classify(string starname)
         {
             EntryType = NameType.NotSet;
 
@@ -188,7 +200,7 @@ namespace EliteDangerousCore
                     {
                         string p = nameparts[i + 1];
 
-                        if (p.Length > 0)
+                        if (p.Length > 0)           // should have a or a56-229 or a56
                         {
                             char mc = char.ToLower(p[0]);
                             if (mc >= 'a' && mc <= 'h')
@@ -196,34 +208,54 @@ namespace EliteDangerousCore
                                 MassCode = (uint)(mc - 'a');
                                 EntryType = NameType.Masscode;
 
-                                int slash = p.IndexOf("-");
-
-                                int first = (slash >= 0 ? p.Substring(1, slash - 1) : p.Substring(1)).InvariantParseInt(-1);
-
-                                if (first >= 0)
+                                if (p.Length > 1)       // if we have text after, needs to be x or x-y.  No text, just masscode
                                 {
-                                    if (slash >= 0)
+                                    int slash = p.IndexOf("-");
+                                    int? first = (slash >= 0 ? p.Substring(1, slash - 1) : p.Substring(1)).InvariantParseIntNull();
+
+                                    if (first >= 0)     // must be a number which converted positive, else its a unique name
                                     {
-                                        System.Diagnostics.Debug.Assert(first < 256);
-                                        int second = p.Substring(slash + 1).InvariantParseInt(-1);
-                                        System.Diagnostics.Debug.Assert(second < 65536);
-                                        if (second >= 0)
+                                        if (slash > 0)     // if we have a slash
                                         {
-                                            NValue = (uint)first * 0x10000 + (uint)second;
-                                            EntryType = NameType.NValue;
+                                            string spart = p.Substring(slash + 1);  // the slash part
+
+                                            if (spart.Length > 0)     // if present
+                                            {
+                                                int? second = spart.InvariantParseIntNull();
+
+                                                if (first >= 0 && first < 256 && second >= 0 && second < 65536)    // first and second part must be a number in range
+                                                {
+                                                    NValue = (uint)first * 0x10000 + (uint)second;
+                                                    EntryType = NameType.NValue;
+                                                }
+                                                else
+                                                    EntryType = NameType.NotSet; // abandon, treat as a unique name
+                                            }
+                                            else
+                                            {
+                                                // just first, not second, so d29-
+                                                if (first >= 0 && first < 256)
+                                                {
+                                                    NValue = (uint)first * 0x10000;
+                                                    EntryType = NameType.N1ValueOnly;
+                                                }
+                                                else
+                                                    EntryType = NameType.NotSet; // abandon, treat as a unique name
+                                            }
                                         }
                                         else
-                                        {               // thats d29-
-                                            NValue = (uint)first * 0x10000;
-                                            EntryType = NameType.N1ValueOnly;
+                                        {       /// no slash, just a number
+                                            if (first >= 0 && first < 65536)
+                                            {
+                                                NValue = (uint)first;
+                                                EntryType = NameType.NValue;
+                                            }
+                                            else
+                                                EntryType = NameType.NotSet; // abandon, treat as a unique name
                                         }
                                     }
                                     else
-                                    {       // got to presume its the whole monty, d23
-                                        System.Diagnostics.Debug.Assert(first < 65536);
-                                        NValue = (uint)first;
-                                        EntryType = NameType.NValue;
-                                    }
+                                        EntryType = NameType.NotSet; // abandon, treat as a unique name
                                 }
                             }
                         }
@@ -244,14 +276,14 @@ namespace EliteDangerousCore
                                                 "SSTGLMC", "StKM", "UGCS"};
 
                 int dashpos = 0;
-                long? namenum = null;
+                ulong? namenum = null;
                 int countof = 0;
 
                 if (nameparts.Length >= 2)     // see if last is a number or number-number
                 {
                     dashpos = nameparts.Last().IndexOf('-');
                     string num = (dashpos >= 0 && nameparts.Last().Count(x => x == '-') == 1) ? nameparts.Last().Replace("-", "") : nameparts.Last();
-                    namenum = num.InvariantParseLongNull();
+                    namenum = num.InvariantParseULongNull();
                     countof = num.Length;
 
                     if (namenum.HasValue && namenum.Value > NameIDNumbericMask)
@@ -269,7 +301,7 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    if (surveys.Contains(nameparts[0],StringComparer.InvariantCultureIgnoreCase))
+                    if (surveys.Contains(nameparts[0], StringComparer.InvariantCultureIgnoreCase))
                     {
                         SectorName = nameparts[0];
                         StarName = starname.Mid(nameparts[0].Length + 1).Trim();

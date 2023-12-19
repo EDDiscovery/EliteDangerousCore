@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2021 EDDiscovery development team
+ * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using EliteDangerousCore.DB;
@@ -22,7 +20,7 @@ using System.IO;
 using System.Linq;
 using BaseUtils;
 
-namespace EliteDangerousCore.EDSM
+namespace EliteDangerousCore.GMO
 {
     public class GalacticMapping
     {
@@ -59,12 +57,12 @@ namespace EliteDangerousCore.EDSM
             }
         }
 
-        public bool ParseEDSMFile(string file)
+        public bool ParseGMPFile(string file, int idoffset)
         {
             try
             {
                 string json = File.ReadAllText(file);
-                return ParseEDSMJson(json);
+                return ParseGMPJson(json,idoffset);
             }
             catch (Exception ex)
             {
@@ -74,7 +72,7 @@ namespace EliteDangerousCore.EDSM
             return false;
         }
 
-        public bool ParseEDSMJson(string json)
+        public bool ParseGMPJson(string json, int idoffset)
         {
             try
             {
@@ -84,13 +82,51 @@ namespace EliteDangerousCore.EDSM
 
                     foreach (JObject jo in galobjects)
                     {
-                        GalacticMapObject galobject = new GalacticMapObject(jo);
-                        GalacticMapObjects.Add(galobject);
+                        GalacticMapObject newgmo = new GalacticMapObject(jo,idoffset);
 
-                        if (galobject.Points.Count == 1 && galobject.GalMapSearch != null && galobject.GalMapUrl != null)
+                        if (newgmo.Points.Count > 0) // need some sort of position
                         {
-                            var gms = new GalacticMapSystem(galobject);
-                            SystemCache.AddSystemToCache(gms);
+                            var previousstored = GalacticMapObjects.Find(x => Math.Abs(x.Points[0].X - newgmo.Points[0].X) < 0.25f &&
+                                                                         Math.Abs(x.Points[0].Y - newgmo.Points[0].Y) < 0.25f &&
+                                                                         Math.Abs(x.Points[0].Z - newgmo.Points[0].Z) < 0.25f);
+                            
+                            if (newgmo.Names[0] == "Great Annihilator Black Hole")  // manually remove
+                            {
+                                continue;
+                            }
+
+                            if (previousstored != null && newgmo.Points.Count == 1)
+                            {
+                                if ((newgmo.Names[0] == "Great Annihilator" || newgmo.Names[0] == "Galactic Centre")) // these take precedence
+                                {
+                                    string gmodesc = Environment.NewLine + "+++ " + previousstored.Names[0] + Environment.NewLine + previousstored.Description;
+                                    newgmo.AddDuplicateGMODescription(previousstored.Names[0],gmodesc);
+                                    GalacticMapObjects.Remove(previousstored);
+                                    GalacticMapObjects.Add(newgmo);
+                                  //  System.Diagnostics.Debug.WriteLine($"GMO Priority name store {newgmo.NameList} removing previous {previousstored.NameList}");
+                                }
+                                else if ( !previousstored.NameList.Contains(newgmo.Names[0],StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    string gmodesc = Environment.NewLine + "+++ " + newgmo.Names[0] + Environment.NewLine + newgmo.Description;
+                                    previousstored.AddDuplicateGMODescription(newgmo.Names[0], gmodesc);
+                               //     SystemCache.AddSystemToCache(newgmo.GetSystem());        // also add this name
+                                   // System.Diagnostics.Debug.WriteLine($"GMO Merge name {newgmo.NameList} with previous {previousstored.NameList}");
+                                }
+                                else
+                                {
+                                   // System.Diagnostics.Debug.WriteLine($"GMO Duplicate name {newgmo.NameList}");
+                                }
+                            }
+                            else
+                            {
+                               // System.Diagnostics.Debug.WriteLine($"GMO Add {newgmo.NameList} {newgmo.Type}");
+                                GalacticMapObjects.Add(newgmo);
+                             //   SystemCache.AddSystemToCache(newgmo.GetSystem());        // also add this name
+                            }
+                        }
+                        else
+                        {
+
                         }
                     }
 
@@ -111,17 +147,15 @@ namespace EliteDangerousCore.EDSM
             {
                 foreach (GalacticMapObject gmo in GalacticMapObjects)
                 {
-                    if (gmo.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase) || (contains && gmo.Name.IndexOf(name, StringComparison.InvariantCultureIgnoreCase) >= 0))
-                    {
+                    if (gmo.IsName(name,contains))
                         return gmo;
-                    }
                 }
             }
 
             return null;
         }
 
-        public GalacticMapObject FindNearest(double x, double y, double z)
+        public GalacticMapObject FindNearest(double x, double y, double z, double maxdist)
         {
             GalacticMapObject nearest = null;
 
@@ -133,7 +167,7 @@ namespace EliteDangerousCore.EDSM
                     if ( gmo.Points.Count == 1 )        // only for single point  bits
                     {
                         double distsq = (gmo.Points[0].X - x) * (gmo.Points[0].X - x) + (gmo.Points[0].Y - y) * (gmo.Points[0].Y - y) + (gmo.Points[0].Z - z) * (gmo.Points[0].Z - z);
-                        if ( distsq < mindist)
+                        if ( distsq <= maxdist*maxdist && distsq < mindist)
                         {
                             mindist = distsq;
                             nearest = gmo;
@@ -145,7 +179,7 @@ namespace EliteDangerousCore.EDSM
             return nearest;
         }
 
-        public List<string> GetGMONames()
+        public List<string> GetGMPNames()
         {
             List<string> ret = new List<string>();
 
@@ -153,12 +187,12 @@ namespace EliteDangerousCore.EDSM
             {
                 foreach (GalacticMapObject gmo in GalacticMapObjects)
                 {
-                    ret.Add(gmo.Name);
+                    foreach (var gmoname in gmo.Names)
+                        ret.Add(gmoname);
                 }
             }
 
             return ret;
         }
-            
     }
 }

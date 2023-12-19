@@ -39,6 +39,7 @@ namespace EliteDangerousCore
         public OutfittingList Outfitting { get; private set; } = new OutfittingList();        // outfitting on stations
         public StarScan StarScan { get; private set; } = new StarScan();      // the results of scanning
         public Dictionary<string, HistoryEntry> Visited { get; private set; } = new Dictionary<string, HistoryEntry>(StringComparer.InvariantCultureIgnoreCase);  // not in any particular order.
+        public Dictionary<string, EDStar> StarClass { get; private set; } = new Dictionary<string, EDStar>();     // not in any particular order.
         public Dictionary<string, Stats.FactionInfo> GetStatsAtGeneration(uint g) { return statisticsaccumulator.GetAtGeneration(g); }
 
         // History variables
@@ -62,7 +63,7 @@ namespace EliteDangerousCore
 
         public HistoryEntry MakeHistoryEntry(JournalEntry je)
         {
-            HistoryEntry he = HistoryEntry.FromJournalEntry(je, hlastprocessed);     // we may check edsm for this entry
+            HistoryEntry he = HistoryEntry.FromJournalEntry(je, hlastprocessed, StarClass);     // we may check edsm for this entry
 
             he.UnfilteredIndex = (hlastprocessed?.UnfilteredIndex?? -1) +1;
             he.UpdateMaterialsCommodities(MaterialCommoditiesMicroResources.Process(je, hlastprocessed?.journalEntry, he.Status.TravelState == HistoryEntryStatus.TravelStateType.SRV));
@@ -93,6 +94,8 @@ namespace EliteDangerousCore
             he.UpdateEngineering(Engineering.Process(he));
 
             he.UpdateTravelStatus(hlastprocessed);
+
+            Identifiers.Process(je);
 
             hlastprocessed = he;
 
@@ -211,7 +214,7 @@ namespace EliteDangerousCore
                     hist.AddToVisitsScan(null);  // add to scan database but don't complain
                     //System.Diagnostics.Debug.WriteLine($"Add {heh.EventTimeUTC} {heh.EntryType} {hist.StarScan.ScanDataByName.Count} {hist.Visited.Count}");
                 }
-           }
+            }
 
             hist.Carrier.CheckCarrierJump(DateTime.UtcNow);         // lets see if a jump has completed.
 
@@ -222,6 +225,8 @@ namespace EliteDangerousCore
                 s.Item1.FillInformation(out string info, out string detailed);
                 System.Diagnostics.Debug.WriteLine($"StarScan could not assign {s.Item1.EventTimeUTC} {s.Item1.GetType().Name} {info} {s.Item2?.Name ?? "???"} {s.Item2?.SystemAddress}");
             }
+
+            // foreach (var kvp in hist.IdentifierList.Items) System.Diagnostics.Debug.WriteLine($"IDList {kvp.Key} -> {kvp.Value}"); // debug
 
             //for (int i = hist.Count - 10; i < hist.Count; i++)  System.Diagnostics.Debug.WriteLine("Hist {0} {1} {2}", hist[i].EventTimeUTC, hist[i].Indexno , hist[i].EventSummary);
 
@@ -241,6 +246,9 @@ namespace EliteDangerousCore
             }
 
             //foreach( var kvp in hist.StarScan.ScanDataByName) if (kvp.Value.System.SystemAddress == null) System.Diagnostics.Debug.WriteLine($"{kvp.Value.System.Name} no SA");
+
+            //foreach (var x in Identifiers.Items) System.Diagnostics.Debug.WriteLine($"Identifiers {x.Key} = {x.Value}");
+
 
 #if LISTSCANS
             {
@@ -282,6 +290,16 @@ namespace EliteDangerousCore
             }
 
             int pos = historylist.Count - 1;                // current entry index
+
+            if (he.EntryType == JournalTypeEnum.StartJump)
+            {
+                var stj = he.journalEntry as JournalStartJump;
+                if (stj.EDStarClass != EDStar.Unknown)
+                {
+                    StarClass[stj.StarSystem] = stj.EDStarClass;
+                   // System.Diagnostics.Debug.WriteLine($"Star Jump gives star {stj.StarSystem} as class {stj.EDStarClass}");
+                }
+            }
 
             if (he.EntryType == JournalTypeEnum.Scan)       // may need to do a history match, so intercept
             {

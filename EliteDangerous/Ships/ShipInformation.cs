@@ -208,6 +208,26 @@ namespace EliteDangerousCore
             return null;
         }
 
+        // current jump range or null if can't calc
+        // if no parameters, uses maximum cargo and maximum fuel
+        public double? GetJumpRange(int? cargo =null, double? fuel=null)
+        {
+            var fsd = GetFSDSpec();
+            if (fsd != null)
+            {
+                if (cargo == null)
+                    cargo = CargoCapacity();
+                if (fuel == null)
+                    fuel = FuelCapacity;
+
+                var ji = fsd.GetJumpInfo(cargo.Value, ModuleMass() + HullMass(), fuel.Value, fuel.Value, 1.0);
+
+                return ji.cursinglejump;
+            }
+            else
+                return null;
+        }
+
         public double ModuleMass()
         {
             //foreach( var x in Modules)  System.Diagnostics.Debug.WriteLine($"Module {x.Value.Item} mass {x.Value.Mass}");
@@ -659,6 +679,11 @@ namespace EliteDangerousCore
 
         public string ToJSONCoriolis(out string errstring)
         {
+            return JSONCoriolis(out errstring).ToString();
+        }
+        
+        public JObject JSONCoriolis(out string errstring)
+        {
             errstring = "";
 
             JObject jo = new JObject();
@@ -671,13 +696,7 @@ namespace EliteDangerousCore
             {
                 JObject module = new JObject();
 
-                ItemData.ShipModule si = ItemData.GetShipModuleProperties(sm.ItemFD);
-
-                if (si.ModuleID == 0)
-                {
-                    errstring += sm.Item + ":" + sm.ItemFD + Environment.NewLine;
-                }
-                else
+                if (ItemData.TryGetShipModule(sm.ItemFD, out ItemData.ShipModule si, false) && si.ModuleID != 0)   // don't synth it
                 {
                     module["Item"] = sm.ItemFD;
                     module["Slot"] = sm.SlotFD;
@@ -689,13 +708,15 @@ namespace EliteDangerousCore
 
                     mlist.Add(module);
                 }
+                else
+                {
+                    errstring += sm.Item + ":" + sm.ItemFD + Environment.NewLine;
+                }
             }
 
             jo["Modules"] = mlist;
 
-            System.Diagnostics.Debug.WriteLine("Export " + jo.ToString());
-
-            return jo.ToString();
+            return jo;
         }
 
         private JObject ToJsonCoriolisEngineering(ShipModule module)
@@ -730,6 +751,11 @@ namespace EliteDangerousCore
         }
 
         public string ToJSONLoadout()
+        {
+            return JSONLoadout().ToString();
+        }
+
+        public JObject JSONLoadout()
         {
             JObject jo = new JObject();
 
@@ -782,7 +808,7 @@ namespace EliteDangerousCore
 
             jo["Modules"] = mlist;
 
-            return jo.ToString();
+            return jo;
         }
 
         #endregion

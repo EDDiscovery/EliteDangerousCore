@@ -41,17 +41,18 @@ namespace EliteDangerousCore
 
         private bool ProcessScanOrganicFound(JournalScanOrganic jsaa, ISystem sys)  // background or foreground.. FALSE if you can't process it
         {
-            SystemNode sn = GetOrCreateSystemNode(sys);
-            ScanNode relatednode = null;
+            SystemNode systemnode = GetOrCreateSystemNode(sys);
 
-            if (sn.NodesByID.ContainsKey((int)jsaa.Body)) // find by ID - thats the only thing we have
+            lock (systemnode)
             {
-                relatednode = sn.NodesByID[(int)jsaa.Body];
-            }
+                ScanNode relatednode = null;
 
-            if (relatednode != null)
-            {
-                lock (relatednode)
+                if (systemnode.NodesByID.ContainsKey((int)jsaa.Body)) // find by ID - thats the only thing we have
+                {
+                    relatednode = systemnode.NodesByID[(int)jsaa.Body];
+                }
+
+                if (relatednode != null)
                 {
                     if (relatednode.Organics == null)
                         relatednode.Organics = new List<JournalScanOrganic>();
@@ -65,13 +66,13 @@ namespace EliteDangerousCore
                         relatednode.ScanData.Organics = relatednode.Organics;       // make sure Scan node has same list as subnode
                                                                                     // System.Diagnostics.Debug.WriteLine($"Assign Scan organic signal list {string.Join(",", relatednode.Organics.Select(x => x.Species).ToList())} to {relatednode.FullName}");
                     }
-                }
 
-                return true;
-            }
-            else
-            {
-                return false;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
     }

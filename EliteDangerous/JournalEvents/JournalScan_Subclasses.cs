@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 - 2022 EDDiscovery development team
+ * Copyright 2016 - 2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- *
- *
  */
 
 using System;
@@ -28,7 +26,7 @@ namespace EliteDangerousCore.JournalEvents
             public string Name { get; set; }        
             [PropertyNameAttribute("Ring class")]
             public string RingClass { get; set; }               // FDName 
-            public enum RingClassEnum { Unknown , Rocky, Metalic, Icy, MetalRich }
+            public enum RingClassEnum { Unknown , Rocky, Metallic, Icy, MetalRich }
 
             [PropertyNameAttribute("Ring class as enumeration")]
             public RingClassEnum RingClassID { get; set; }      // Default will be unknown
@@ -44,7 +42,8 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise()
             {
-                if (Enum.TryParse<RingClassEnum>(RingClass.ReplaceIfStartsWith("eRingClass_"), true, out RingClassEnum rc))     // may not have eringclass on it if from EDSM
+                // typos  on metalic is in the journals, edsm/spansh seems to give metallic
+                if (Enum.TryParse<RingClassEnum>(RingClass.ReplaceIfStartsWith("eRingClass_").Replace("Metalic","Metallic"), true, out RingClassEnum rc))     // may not have eringclass on it if from EDSM
                     RingClassID = rc;
                 else
                 {
@@ -90,7 +89,7 @@ namespace EliteDangerousCore.JournalEvents
                         return "Rocky".T(EDCTx.StarPlanetRing_Rocky);
                     case RingClassEnum.MetalRich:
                         return "Metal Rich".T(EDCTx.StarPlanetRing_MetalRich);
-                    case RingClassEnum.Metalic:
+                    case RingClassEnum.Metallic:
                         return "Metallic".T(EDCTx.StarPlanetRing_Metallic);
                 }
             }

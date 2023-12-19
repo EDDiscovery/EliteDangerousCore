@@ -35,7 +35,7 @@ namespace EliteDangerousCore
             }
         }
 
-        public static HashSet<JournalTypeEnum> AllSearchableJournalTypes { get; } = new HashSet<JournalTypeEnum> 
+        public static HashSet<JournalTypeEnum> AllSearchableJournalTypes { get; } = new HashSet<JournalTypeEnum>
             { JournalTypeEnum.Scan, JournalTypeEnum.FSSBodySignals, JournalTypeEnum.SAASignalsFound, JournalTypeEnum.FSSSignalDiscovered , JournalTypeEnum.CodexEntry ,JournalTypeEnum.ScanOrganic };
 
         public enum QueryType { BuiltIn, User, Example };
@@ -48,11 +48,11 @@ namespace EliteDangerousCore
             public bool SortAscending { get; }
 
             [JsonIgnore]
-            public QueryType QueryType { get;  }
+            public QueryType QueryType { get; }
             [JsonIgnore]
             public bool DefaultSearch { get; set; }
 
-            public Query(string n, string c, QueryType qt, bool def = false, string sortcond= null, bool sortascending = false) 
+            public Query(string n, string c, QueryType qt, bool def = false, string sortcond = null, bool sortascending = false)
             { Name = n; Condition = c; QueryType = qt; DefaultSearch = def; SortCondition = sortcond; SortAscending = sortascending; }
 
             [JsonIgnore]
@@ -63,6 +63,7 @@ namespace EliteDangerousCore
 
         public List<Query> Searches = new List<Query>()
             {
+                // planet pos
                 new Query("Planet inside inner ring","(IsOrbitingBarycentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And nSemiMajorAxis <= Parent.RingsInnerm And Parent.Level >= 1)" + //single body
                             " Or (IsOrbitingBarycentre IsTrue And Parents[2].IsBarycentre IsFalse And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[1].Barycentre.SemiMajorAxis <= Parent.RingsInnerm And Parent.Level >= 1)" + // binary body
                             " Or (IsOrbitingBarycentre IsTrue And Parents[3].IsBarycentre IsFalse And Parents[2].IsBarycentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[2].Barycentre.SemiMajorAxis <= Parent.RingsInnerm And Parent.Level >= 1)" + // trinary and ((O-O)-(O-O)) quarteries
@@ -88,6 +89,8 @@ namespace EliteDangerousCore
                             " Or (IsOrbitingBarycentre IsTrue And Parents[3].IsBarycentre IsFalse And Parents[2].IsBarycentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[2].Barycentre.SemiMajorAxis >= Parent.Rings[2].OuterRad And Parents[2].Barycentre.SemiMajorAxis <= Parent.Rings[3].InnerRad And Parent.Level >= 1)" + // trinary and ((O-O)-(O-O)) quarteries
                             " Or (IsOrbitingBarycentre IsTrue And Parents[3].IsBarycentre IsTrue And Parents[2].IsBarycentre IsTrue And IsPlanet IsTrue And Parent.HasRings IsTrue And Parents[3].Barycentre.SemiMajorAxis >= Parent.Rings[2].OuterRad And Parents[3].Barycentre.SemiMajorAxis <= Parent.Rings[3].InnerRad And Parent.Level >= 1)", QueryType.BuiltIn ), // (((O-O)-O)-O) quartery
                 
+                // planet properties
+
                 new Query("Landable","IsPlanet IsTrue And IsLandable IsTrue", QueryType.BuiltIn ),
                 new Query("Landable and Terraformable","IsPlanet IsTrue And IsLandable IsTrue And Terraformable IsTrue", QueryType.BuiltIn , true ),
                 new Query("Landable with Atmosphere","IsPlanet IsTrue And IsLandable IsTrue And HasAtmosphere IsTrue", QueryType.BuiltIn ),
@@ -111,8 +114,8 @@ namespace EliteDangerousCore
                                 "( \"Abs(Parent.Rings[Iter1].InnerRad-nSemiMajorAxis)\" < nRadius*10 Or  \"Abs(Parent.Rings[Iter1].OuterRad-nSemiMajorAxis)\" < nRadius*10 )",
                     QueryType.BuiltIn, true ),
 
-                new Query("Binary close to rings","(IsOrbitingBarycentre IsTrue And Parents[2].IsBarycentre IsFalse And Parent.HasRings IsTrue And IsPlanet IsTrue) And " + 
-                            "(\"Abs(Parent.Rings[Iter1].InnerRad-Parents[1].Barycentre.SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\" Or \"Abs(Parent.Rings[Iter1].OuterRad-Parents[1].Barycentre.SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\")", 
+                new Query("Binary close to rings","(IsOrbitingBarycentre IsTrue And Parents[2].IsBarycentre IsFalse And Parent.HasRings IsTrue And IsPlanet IsTrue) And " +
+                            "(\"Abs(Parent.Rings[Iter1].InnerRad-Parents[1].Barycentre.SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\" Or \"Abs(Parent.Rings[Iter1].OuterRad-Parents[1].Barycentre.SemiMajorAxis)\" < \"(nSemiMajorAxis+nRadius)*20\")",
                     QueryType.BuiltIn, true ),
 
                 new Query("Planet with a large number of Moons","IsPlanet IsTrue And Child.Count >= 8", QueryType.BuiltIn, true, "Compare(left.Child.Count,right.Child.Count)" ),
@@ -149,7 +152,19 @@ namespace EliteDangerousCore
 
                 new Query("Ring contains Painite",  "Signals[Iter1].Type Contains Painite", QueryType.BuiltIn ),
 
+                // exo biology
+
                 new Query("Scanned all organics on a planet","CountOrganicsScansAnalysed >= 1 And CountOrganicsScansAnalysed == CountBioSignals", QueryType.BuiltIn ),
+                new Query("Exobiology possible Amphora body","PlanetTypeID $== Metal_rich_body And IsLandable IsTrue And ContainsBioSignals IsTrue And Bodies[Iter1].StarTypeID $== A And Bodies[Iter2].PlanetTypeID MatchCommaList Gas_giant_with_water_based_life,Earthlike_body,Gas_giant_with_ammonia_based_life", QueryType.BuiltIn ),
+
+                // multiple bodies in systems
+                new Query("Multiple Earth sized bodies in system","(nMassEM >= 0.8 And nMassEM <= 1.2 And IsPlanet IsTrue) And (\"BodiesExprCount(nMassEM>=0.8 && nMassEM<=1.2 && IsPlanet)\" >= 2)", QueryType.BuiltIn ),
+                new Query("Multiple Earth like bodies in system","(Earthlike IsTrue) And (\"BodiesPropertyCount(\\\"Earthlike\\\")\" >= 2)", QueryType.BuiltIn ),
+                new Query("Multiple Earth like bodies under same star","(Earthlike IsTrue) And (\"StarBodiesPropertyCount(\\\"Earthlike\\\")\" >= 2)", QueryType.BuiltIn ),
+                new Query("Multiple Gas Giants in system","(GasWorld IsTrue) And (\"BodiesPropertyCount(\\\"GasWorld\\\")\" >= 4)", QueryType.BuiltIn ),
+                new Query("Multiple Large Gas Giants in system","(GasWorld IsTrue And nMassEM >= 2000) And (\"BodiesExprCount(GasWorld && nMassEM>=2000)\" >= 2)", QueryType.BuiltIn ),
+
+                // stars
 
                 new Query("Star has Rings","HasRings IsTrue And IsStar IsTrue", QueryType.BuiltIn ),
                 new Query("Star is Main Sequence","IsStar IsTrue And StarType MatchSemicolon O;B;A;F;G;K;M", QueryType.BuiltIn ),
@@ -158,7 +173,7 @@ namespace EliteDangerousCore
                 new Query("Star is super bright","nAbsoluteMagnitude <= -2", QueryType.BuiltIn , false, "Compare(left.nAbsoluteMagnitude,right.nAbsoluteMagnitude)", true  ),
                 new Query("Star has same magnitude as Sol","nAbsoluteMagnitudeSol >= -0.5 And nAbsoluteMagnitudeSol <= 0.5", QueryType.BuiltIn, false, "Compare(left.nAbsoluteMagnitude,right.nAbsoluteMagnitude)", true),
                 new Query("Star has belts","HasBelts IsTrue", QueryType.BuiltIn ),
-                new Query("Star is heavier than Sol","nStellarMass > 1", QueryType.BuiltIn, false, "Compare(left.nStellarMass,right.nStellarMass)", false ), 
+                new Query("Star is heavier than Sol","nStellarMass > 1", QueryType.BuiltIn, false, "Compare(left.nStellarMass,right.nStellarMass)", false ),
                 new Query("Star is wider than Sol","nRadius > 695700000", QueryType.BuiltIn, false, "Compare(left.nRadius,right.nRadius)" ,false ),
 
                 new Query("Body Name","BodyName contains <name>", QueryType.Example ),
@@ -202,12 +217,12 @@ namespace EliteDangerousCore
         private HistoryListQueries()
         {
             JArray json = JArray.Parse(DB.UserDatabase.Instance.GetSettingString(DbUserQueries, ""));
-            if ( json != null )
+            if (json != null)
             {
-                foreach( var t in json )
+                foreach (var t in json)
                 {
-                    Searches.Insert(0, new Query(t["Name"].Str("Unknown"), t["Condition"].Str("Unknown"), QueryType.User, 
-                        sortcond:t["SortCondition"].Str(), sortascending:t["SortAscending"].Bool()));
+                    Searches.Insert(0, new Query(t["Name"].Str("Unknown"), t["Condition"].Str("Unknown"), QueryType.User,
+                        sortcond: t["SortCondition"].Str(), sortascending: t["SortAscending"].Bool()));
                 }
             }
         }
@@ -218,7 +233,7 @@ namespace EliteDangerousCore
             return names.Join(splitmarkerin);
         }
 
-        public void Set(string name, string expr, QueryType t, string sortcond = "", bool sortascending= false)
+        public void Set(string name, string expr, QueryType t, string sortcond = "", bool sortascending = false)
         {
             var entry = Searches.FindIndex(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             if (entry != -1)
@@ -262,7 +277,7 @@ namespace EliteDangerousCore
                     {
                         string sortcondition = to["SortCondition"].Str();
                         bool sortascending = to["SortAscending"].Bool();
-                        Set(name, condition, ty,sortcondition,sortascending);
+                        Set(name, condition, ty, sortcondition, sortascending);
                     }
                     else
                         return false;
@@ -278,31 +293,31 @@ namespace EliteDangerousCore
         static public List<BaseUtils.TypeHelpers.PropertyNameInfo> PropertyList()
         {
             List<BaseUtils.TypeHelpers.PropertyNameInfo> classnames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalScan),
-                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    bindingflags: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     classsepar: ".",
                     comment: "Scan");
 
             List<BaseUtils.TypeHelpers.PropertyNameInfo> othernames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalFSSSignalDiscovered),
-                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    bindingflags: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     classsepar: ".",
                     comment: "FSSSignalDiscovered");
             List<BaseUtils.TypeHelpers.PropertyNameInfo> saanames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalSAASignalsFound),
-                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    bindingflags: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     classsepar: ".",
                     comment: "SAASignalsFound");
             othernames.AddRange(saanames);
             List<BaseUtils.TypeHelpers.PropertyNameInfo> fssbodynames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalFSSBodySignals),
-                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    bindingflags: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     classsepar: ".",
                     comment: "FSSBodySignals");
             othernames.AddRange(fssbodynames);        // merge blind 
             List<BaseUtils.TypeHelpers.PropertyNameInfo> codexnames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalCodexEntry),
-                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    bindingflags: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     classsepar: ".",
                     comment: "CodexEntry");
             othernames.AddRange(codexnames);        // merge blind
             List<BaseUtils.TypeHelpers.PropertyNameInfo> scanorganicnames = BaseUtils.TypeHelpers.GetPropertyFieldNames(typeof(JournalScanOrganic),
-                    bf: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    bindingflags: System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     classsepar: ".",
                     comment: "ScanOrganic");
             othernames.AddRange(scanorganicnames);        // merge blind
@@ -326,10 +341,20 @@ namespace EliteDangerousCore
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("IsOdyssey", "Boolean value: 1 = true, 0 = false: Odyssey journal entry", BaseUtils.ConditionEntry.MatchType.IsTrue, "All"));
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("IsHorizons", "Boolean value: 1 = true, 0 = false: Horizons journal entry", BaseUtils.ConditionEntry.MatchType.IsTrue, "All"));
 
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Level", "Integer value: Level of body in system", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Sibling.Count", "Integer value: Number of siblings", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
+            // add on ones we synthesise
+
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Level", "Integer value: Level of body in system", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Sibling.Count", "Integer value: Number of siblings", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Bodies.Count", "Integer value: Number of bodies in the system", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("StarBodies.Count", "Integer value: Number of bodies in the star system the body is in", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));
             classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("Child.Count", "Integer value: Number of child moons", BaseUtils.ConditionEntry.MatchType.NumericEquals, "Scan"));     // add on ones we synthesise
-            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("JumponiumCount", "Integer value: Number of jumponium materials available", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));     // add on ones we synthesise
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("JumponiumCount", "Integer value: Number of jumponium materials available", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));
+
+            // Add functions
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("BodiesPropertyCount(\"scan bool property\")", "Integer value: Number of bodies with scans with this boolean property true (Earthlike, HasAtmosphere etc)", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("StarBodiesPropertyCount(\"scan bool property\")", "Integer value: Number of bodies with scans in this star system with this boolean property true", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("BodiesExprCount(expression)", "Integer value: Number of bodies with scans with this expression evaluating to non zero (nMassEM>=1 && nMassEM<2) etc", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));
+            classnames.Add(new BaseUtils.TypeHelpers.PropertyNameInfo("StarBodiesExprCount(expression)", "Integer value: Number of bodies with scans in this star system with this expression evaluating to non zero", BaseUtils.ConditionEntry.MatchType.NumericGreaterEqual, "Scan"));
 
             var defaultvars = new BaseUtils.Variables();
             defaultvars.AddPropertiesFieldsOfClass(new BodyPhysicalConstants(), "", null, 10);
@@ -342,7 +367,7 @@ namespace EliteDangerousCore
         }
 
         // Calculate from variables what is being searched for..
-        static public HashSet<JournalTypeEnum> NeededSearchableTypes(HashSet<string> allvars)
+        static public HashSet<JournalTypeEnum> NeededSearchableTypes(HashSet<string> allvars, HashSet<string> allfuncs)
         {
             var propertynames = PropertyList();
 
@@ -360,22 +385,29 @@ namespace EliteDangerousCore
                     {
                         var comment = propertynames[i].Comment;
                         bool all = comment.Contains("All");
-                        if (InComment(comment,"Scan",all))
+                        if (InComment(comment, "Scan", all))
                             res.Add(JournalTypeEnum.Scan);
-                        if (InComment(comment, "FSSSignalDiscovered",all))
+                        if (InComment(comment, "FSSSignalDiscovered", all))
                             res.Add(JournalTypeEnum.FSSSignalDiscovered);
-                        if (InComment(comment,"SAASignalsFound",all))
+                        if (InComment(comment, "SAASignalsFound", all))
                             res.Add(JournalTypeEnum.SAASignalsFound);
-                        if (InComment(comment,"FSSBodySignals",all))
+                        if (InComment(comment, "FSSBodySignals", all))
                             res.Add(JournalTypeEnum.FSSBodySignals);
-                        if (InComment(comment,"CodexEntry",all))
+                        if (InComment(comment, "CodexEntry", all))
                             res.Add(JournalTypeEnum.CodexEntry);
-                        if (InComment(comment,"ScanOrganic",all))
+                        if (InComment(comment, "ScanOrganic", all))
                             res.Add(JournalTypeEnum.ScanOrganic);
                     }
                 }
 
-                if (v.StartsWith("Parent.") || v.StartsWith("Sibling") || v.StartsWith("Child") || v.StartsWith("Star.") )      // specials, for scan
+                // specials, for scan
+                if (v.StartsWith("Parent.") || v.StartsWith("Sibling") || v.StartsWith("Child") || v.StartsWith("Star.") || v.StartsWith("Bodies") || v.StartsWith("StarBodies"))
+                    res.Add(JournalTypeEnum.Scan);
+            }
+
+            foreach(var v in allfuncs)
+            {
+                if ( v.StartsWith("Bodies") || v.StartsWith("StarBodies"))      // functions starting with these (sync with below) need scan
                     res.Add(JournalTypeEnum.Scan);
             }
 
@@ -392,7 +424,9 @@ namespace EliteDangerousCore
 
 
         //find a named search, async
-        public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist, Dictionary<string, List<ResultEntry>> results, string searchname, BaseUtils.Variables defaultvars,
+        public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist, Dictionary<string, List<ResultEntry>> results,
+                            string searchname,
+                            BaseUtils.Variables defaultvars,
                             StarScan starscan, bool wantdebug)
         {
             var search = Searches.Find(x => x.Name.Equals(searchname));
@@ -400,7 +434,7 @@ namespace EliteDangerousCore
             var cond = search != null ? new BaseUtils.ConditionLists(search.Condition) : null;
 
             if (cond == null)
-                System.Diagnostics.Trace.WriteLine($"Search missing {searchname}");
+                System.Diagnostics.Trace.WriteLine($"Queries did not find search {searchname} - probably the search list is out of date in surveyor");
 
             return Find(helist, results, searchname, cond, defaultvars, starscan, wantdebug);
         }
@@ -416,9 +450,10 @@ namespace EliteDangerousCore
         // default vars can be null
         static public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist,
                                    Dictionary<string, List<ResultEntry>> results, string filterdescription,
-                                   BaseUtils.ConditionLists cond, BaseUtils.Variables defaultvars, StarScan starscan, bool wantreport)
+                                   BaseUtils.ConditionLists cond,
+                                   BaseUtils.Variables defaultvars,
+                                   StarScan starscan, bool wantreport)
         {
-
             return System.Threading.Tasks.Task.Run(() =>
             {
                 if (cond == null || cond.Count == 0)
@@ -426,13 +461,17 @@ namespace EliteDangerousCore
 
                 StringBuilder resultinfo = new StringBuilder(10000);
 
-                var allvars = BaseUtils.Condition.EvalVariablesUsed(cond.List);
+                var func = new QueryFunctionHandler();
+                BaseUtils.Eval evl = new BaseUtils.Eval(func);          // evaluator, all true state, with a function handler..
 
-                bool wantiter1 = allvars.Contains("Iter1");
-                bool wantiter2 = allvars.Contains("Iter2");
+                BaseUtils.Condition.InUse(cond.List, evl, out HashSet<string> allvars, out HashSet<string> _);
+
+                int iterators = allvars.Where(x => x.StartsWith("Iter")).Select(x => x.Substring(4).InvariantParseInt(0)).DefaultIfEmpty(0).Max();
                 bool wantjumponium = allvars.Contains("JumponiumCount");
                 bool wantsiblingcount = allvars.Contains("Sibling.Count");
                 bool wantchildcount = allvars.Contains("Child.Count");
+                bool wantbodiescount = allvars.Contains("Bodies.Count");
+                bool wantstarbodiescount = allvars.Contains("StarBodies.Count");
                 bool wantlevel = allvars.Contains("Level");
 
                 // extract variables needed to be filled in by the AddPropertiesFieldsOfClass function. We extract only the ones we need for speed reason.
@@ -447,6 +486,8 @@ namespace EliteDangerousCore
                 HashSet<string> varsevent = new HashSet<string>();
                 HashSet<string> varsstar = new HashSet<string>();
                 HashSet<string> varsstarstar = new HashSet<string>();
+                HashSet<string> varsbodies = new HashSet<string>();
+                HashSet<string> varsstarbodies = new HashSet<string>();
 
                 foreach (var v in allvars)
                 {
@@ -464,7 +505,7 @@ namespace EliteDangerousCore
                     }
                     else if (v.StartsWith("Parent."))
                     {
-                        varsparent.Add(v.Substring(7, v.IndexOfOrLength(stoptext, startindex:7) - 7));
+                        varsparent.Add(v.Substring(7, v.IndexOfOrLength(stoptext, startindex: 7) - 7));
                     }
                     else if (v.StartsWith("Sibling["))
                     {
@@ -475,6 +516,16 @@ namespace EliteDangerousCore
                     {
                         var v1 = v.Substring(v.IndexOfOrLength("]", offset: 2));
                         varschildren.Add(v1.Substring(0, v1.IndexOfOrLength(stoptext)));
+                    }
+                    else if (v.StartsWith("Bodies["))
+                    {
+                        var v1 = v.Substring(v.IndexOfOrLength("]", offset: 2));
+                        varsbodies.Add(v1.Substring(0, v1.IndexOfOrLength(stoptext)));
+                    }
+                    else if (v.StartsWith("StarBodies["))
+                    {
+                        var v1 = v.Substring(v.IndexOfOrLength("]", offset: 2));
+                        varsstarbodies.Add(v1.Substring(0, v1.IndexOfOrLength(stoptext)));
                     }
                     else
                     {
@@ -489,6 +540,8 @@ namespace EliteDangerousCore
                 //foreach (var v in varsparentparent) System.Diagnostics.Debug.WriteLine($"Search Parent Parent Var {v}");
                 //foreach (var v in varssiblings) System.Diagnostics.Debug.WriteLine($"Search Sibling Var {v}");
                 //foreach (var v in varschildren) System.Diagnostics.Debug.WriteLine($"Search Child Var {v}");
+                //foreach (var v in varsbodies) System.Diagnostics.Debug.WriteLine($"Search Bodies Var {v}");
+                //foreach (var v in varsstarbodies) System.Diagnostics.Debug.WriteLine($"Search Star Bodies Var {v}");
 
                 Type[] ignoretypes = new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) };
 
@@ -507,7 +560,7 @@ namespace EliteDangerousCore
 
                     scandatavars["EventType"] = he.EntryType.ToString();
 
-                    scandatavars.AddPropertiesFieldsOfClass(he.journalEntry, "",ignoretypes, 5, varsevent, ensuredoublerep: true, classsepar:".");
+                    scandatavars.AddPropertiesFieldsOfClass(he.journalEntry, "", ignoretypes, 5, varsevent, ensuredoublerep: true, classsepar: ".");
 
                     if (wantjumponium)
                     {
@@ -520,98 +573,99 @@ namespace EliteDangerousCore
                     }
 
                     // if this is a journal scan, and we have a results on this bodyname
-                    if (he.EntryType == JournalTypeEnum.Scan && results.TryGetValue((he.journalEntry as JournalScan).BodyName, out List<ResultEntry> prevres))
+                    if (he.EntryType == JournalTypeEnum.Scan)
                     {
-                        // if we have a prev scan, we may have a repeat
-                        var prevscan = prevres.Find(x => x.HistoryEntry.EntryType == JournalTypeEnum.Scan);
-
-                        // we have a scan, and its got the same search ID name (note discoveries/surveyor reuse the results structure across search names, so need to screen it out)
-                        if (prevscan != null && prevscan.FilterPassed.Equals(filterdescription))      
+                        lock (results)      // parallel awaits, so lock
                         {
-                            string bodyname = (he.journalEntry as JournalScan).BodyName;
+                            if (results.TryGetValue((he.journalEntry as JournalScan).BodyName, out List<ResultEntry> prevres))
+                            {
+                                // if we have a prev scan, we may have a repeat
+                                var prevscan = prevres.Find(x => x.HistoryEntry.EntryType == JournalTypeEnum.Scan);
 
-                           // System.Diagnostics.Debug.WriteLine($"Detected repeated scan result on {bodyname}:`{filterdescription}` remove previous");
-                            prevres.Remove(prevscan);
-                            if (prevres.Count == 0)
-                                results.Remove(bodyname);
+                                // we have a scan, and its got the same search ID name (note discoveries/surveyor reuse the results structure across search names, so need to screen it out)
+                                if (prevscan != null && prevscan.FilterPassed.Equals(filterdescription))
+                                {
+                                    string bodyname = (he.journalEntry as JournalScan).BodyName;
+
+                                    // System.Diagnostics.Debug.WriteLine($"Detected repeated scan result on {bodyname}:`{filterdescription}` remove previous");
+                                    prevres.Remove(prevscan);
+                                    if (prevres.Count == 0)
+                                        results.Remove(bodyname);
+                                }
+                            }
                         }
                     }
+
                     // concurrency with the foreground adding new scan nodes as we process
-                    // we don't change data here
-                    // he.Scannode will either be set or not, the foreground does not set it, its only updated by the filler 
-                    // only child lists could be affected. Parents won't get deleted
 
                     if (he.ScanNode != null)      // if it has a scan node
                     {
-                        if (wantlevel)
-                            scandatavars["Level"] = he.ScanNode.Level.ToStringInvariant();
-
-                        if (he.ScanNode.Parent != null) // if we have a parent..  conconcurrency should be okay, parent won't be removed
+                        lock (he.ScanNode.SystemNode)   // no more changes to this system during processing
                         {
-                            if (varsparent.Count > 0)
-                            {
-                                // parent journal entry, may be null. No concurrency issues 
-                                var parentjs = he.ScanNode.Parent.ScanData;         
+                            if (wantlevel)
+                                scandatavars["Level"] = he.ScanNode.Level.ToStringInvariant();
 
-                                if (parentjs != null) // if want parent scan data
+                            if (he.ScanNode.Parent != null) // if we have a parent..  conconcurrency should be okay, parent won't be removed
+                            {
+                                if (varsparent.Count > 0)
                                 {
-                                    scandatavars.AddPropertiesFieldsOfClass(parentjs, "Parent.", ignoretypes, 5,varsparent, ensuredoublerep: true, classsepar: ".");
-                                    scandatavars["Parent.Level"] = he.ScanNode.Parent.Level.ToStringInvariant();
+                                    // parent journal entry, may be null. No concurrency issues 
+                                    var parentjs = he.ScanNode.Parent.ScanData;
+
+                                    if (parentjs != null) // if want parent scan data
+                                    {
+                                        scandatavars.AddPropertiesFieldsOfClass(parentjs, "Parent.", ignoretypes, 5, varsparent, ensuredoublerep: true, classsepar: ".");
+                                        scandatavars["Parent.Level"] = he.ScanNode.Parent.Level.ToStringInvariant();
+                                    }
                                 }
-                            }
 
-                            if (varsparentparent.Count > 0 && he.ScanNode.Parent.Parent != null)        // if want parent.parent and we have one
-                            {
-                                var parentparentjs = he.ScanNode.Parent.Parent.ScanData;               // parent journal entry, may be null
-
-                                if (parentparentjs != null) // if want parent scan data
+                                if (varsparentparent.Count > 0 && he.ScanNode.Parent.Parent != null)        // if want parent.parent and we have one
                                 {
-                                    scandatavars.AddPropertiesFieldsOfClass(parentparentjs, "Parent.Parent.", ignoretypes, 5, varsparentparent, ensuredoublerep: true, classsepar: ".");
-                                    scandatavars["Parent.Parent.Level"] = he.ScanNode.Parent.Level.ToStringInvariant();
+                                    var parentparentjs = he.ScanNode.Parent.Parent.ScanData;               // parent journal entry, may be null
+
+                                    if (parentparentjs != null) // if want parent scan data
+                                    {
+                                        scandatavars.AddPropertiesFieldsOfClass(parentparentjs, "Parent.Parent.", ignoretypes, 5, varsparentparent, ensuredoublerep: true, classsepar: ".");
+                                        scandatavars["Parent.Parent.Level"] = he.ScanNode.Parent.Level.ToStringInvariant();
+                                    }
                                 }
-                            }
 
-                            if (varsstar.Count > 0)
-                            {
-                                var scandata = FindStarJournalScanOf(he.ScanNode, 0);
-
-                                if (scandata != null)
+                                if (varsstar.Count > 0)
                                 {
-                                    //System.Diagnostics.Debug.WriteLine($"{scandata.BodyName} is the Star parent");
+                                    var scandata = FindStarJournalScanOf(he.ScanNode, 0);
 
-                                    scandatavars.AddPropertiesFieldsOfClass(scandata, "Star.",
-                                            new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                                            varsstar, ensuredoublerep: true, classsepar: ".");
+                                    if (scandata != null)
+                                    {
+                                        //System.Diagnostics.Debug.WriteLine($"{scandata.BodyName} is the Star parent");
+
+                                        scandatavars.AddPropertiesFieldsOfClass(scandata, "Star.",
+                                                new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
+                                                varsstar, ensuredoublerep: true, classsepar: ".");
+                                    }
                                 }
-                            }
 
 
-                            if (varsstarstar.Count > 0)
-                            {
-                                var scandata = FindStarJournalScanOf(he.ScanNode, 1);
-
-                                if (scandata != null)
+                                if (varsstarstar.Count > 0)
                                 {
-                                    //System.Diagnostics.Debug.WriteLine($"{scandata.BodyName} is the Star Star parent");
+                                    var scandata = FindStarJournalScanOf(he.ScanNode, 1);
 
-                                    scandatavars.AddPropertiesFieldsOfClass(scandata, "Star.Star.",
-                                            new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                                            varsstarstar, ensuredoublerep: true, classsepar: ".");
+                                    if (scandata != null)
+                                    {
+                                        //System.Diagnostics.Debug.WriteLine($"{scandata.BodyName} is the Star Star parent");
+
+                                        scandatavars.AddPropertiesFieldsOfClass(scandata, "Star.Star.",
+                                                new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
+                                                varsstarstar, ensuredoublerep: true, classsepar: ".");
+                                    }
                                 }
-                            }
 
 
-                            if (wantsiblingcount)
-                            {
-                                lock ( he.ScanNode.Parent)      // parent.children may have items added, protect
+                                if (wantsiblingcount)
                                 {
                                     scandatavars["Sibling.Count"] = ((he.ScanNode.Parent.Children.Count - 1)).ToStringInvariant();      // count of children or parent less ours
                                 }
-                            }
 
-                            if (varssiblings.Count > 0)        // if want sibling[
-                            {
-                                lock (he.ScanNode.Parent)
+                                if (varssiblings.Count > 0)        // if want sibling[
                                 {
                                     int cno = 1;
                                     foreach (var sn in he.ScanNode.Parent.Children.EmptyIfNull())
@@ -626,24 +680,18 @@ namespace EliteDangerousCore
                                     }
                                 }
                             }
-                        }
-                        else
-                        {                                                                           // does not have a parent, so at top of the tree, must be a star node.
+                            else
+                            {                                                                           // does not have a parent, so at top of the tree, must be a star node.
 
-                            System.Diagnostics.Debug.Assert(he.ScanNode.SystemNode != null);        // must be otherwise code error
+                                System.Diagnostics.Debug.Assert(he.ScanNode.SystemNode != null);        // must be otherwise code error
 
-                            if (wantsiblingcount)
-                            {
-                                lock (he.ScanNode.SystemNode.StarNodes)      // lock this node, note its locked in journalscans and scanbodyid when being added to.. (as currentnodelist)
+                                if (wantsiblingcount)
                                 {
                                     var starnodes = he.ScanNode.SystemNode.StarNodes.Where(x => x.Value.NodeType == StarScan.ScanNodeType.star).Count();
-                                    scandatavars["Sibling.Count"] = (starnodes-1).ToStringInvariant();      // count of nodes under this
+                                    scandatavars["Sibling.Count"] = (starnodes - 1).ToStringInvariant();      // count of nodes under this
                                 }
-                            }
 
-                            if (varssiblings.Count > 0)        // if want sibling[
-                            {
-                                lock (he.ScanNode.SystemNode.StarNodes)
+                                if (varssiblings.Count > 0)        // if want sibling[
                                 {
                                     int cno = 1;
                                     foreach (var kvp in he.ScanNode.SystemNode.StarNodes.EmptyIfNull())
@@ -657,34 +705,28 @@ namespace EliteDangerousCore
                                         }
                                     }
                                 }
-                            }
 
-                            if (varsstar.Count > 0)
-                            {
-                                var scandata = FindStarJournalScanOf(he.ScanNode, 0);
-
-                                if (scandata != null)
+                                if (varsstar.Count > 0)
                                 {
-                                    //System.Diagnostics.Debug.WriteLine($"{scandata.BodyName} is the Star parent");
+                                    var scandata = FindStarJournalScanOf(he.ScanNode, 0);
 
-                                    scandatavars.AddPropertiesFieldsOfClass(scandata, "Star.",
-                                            new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                                            varsstar, ensuredoublerep: true, classsepar: ".");
+                                    if (scandata != null)
+                                    {
+                                        //System.Diagnostics.Debug.WriteLine($"{scandata.BodyName} is the Star parent");
+
+                                        scandatavars.AddPropertiesFieldsOfClass(scandata, "Star.",
+                                                new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
+                                                varsstar, ensuredoublerep: true, classsepar: ".");
+                                    }
                                 }
                             }
-                        }
 
-                        if (wantchildcount)
-                        {
-                            lock ( he.ScanNode)        // Scannode.children may have items added, protect
+                            if (wantchildcount)
                             {
                                 scandatavars["Child.Count"] = ((he.ScanNode.Children?.Count ?? 0)).ToStringInvariant();      // count of children
                             }
-                        }
 
-                        if (varschildren.Count > 0)        // if want children[
-                        {
-                            lock (he.ScanNode)      // Scannode.Children may have items added to
+                            if (varschildren.Count > 0)        // if want children[
                             {
                                 int cno = 1;
                                 foreach (var sn in he.ScanNode.Children.EmptyIfNull())
@@ -701,34 +743,64 @@ namespace EliteDangerousCore
                                     }
                                 }
                             }
+
+                            if (wantbodiescount || varsbodies.Count > 0)
+                            {
+                                int count = 0;
+                                foreach (var sn in he.ScanNode.SystemNode.Bodies.EmptyIfNull())
+                                {
+                                    if (varsbodies.Count > 0 && sn.ScanData != null)
+                                    {
+                                        scandatavars.AddPropertiesFieldsOfClass(sn.ScanData, $"Bodies[{count + 1}].",
+                                                new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
+                                                varsbodies, ensuredoublerep: true, classsepar: ".");
+
+                                    }
+                                    count++;
+                                }
+
+                                if (wantbodiescount)
+                                    scandatavars["Bodies.Count"] = count.ToStringInvariant();
+                            }
+
+                            if (wantstarbodiescount || varsstarbodies.Count > 0)
+                            {
+                                int count = 0;
+                                foreach (var sn in he.ScanNode.ParentStar.Bodies.EmptyIfNull())        // from parent star decending
+                                {
+                                    if (varsstarbodies.Count > 0 && sn.ScanData != null)
+                                    {
+                                        scandatavars.AddPropertiesFieldsOfClass(sn.ScanData, $"StarBodies[{count + 1}].",
+                                                new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
+                                                varsstarbodies, ensuredoublerep: true, classsepar: ".");
+
+                                    }
+                                    count++;
+                                }
+
+                                if (wantstarbodiescount)
+                                    scandatavars["StarBodies.Count"] = count.ToStringInvariant();
+                            }
                         }
                     }
-
-                    if (wantiter1)      // set up default iter1
-                        scandatavars["Iter1"] = "1";
-                    if (wantiter2)      // set up default iter2
-                        scandatavars["Iter2"] = "1";
 
                     List<BaseUtils.ConditionEntry> testspassed = wantreport ? new List<BaseUtils.ConditionEntry>() : null;
 
                     //JournalScan jsc = he.journalEntry as JournalScan; if (jsc?.BodyName == "Blue Euq WA-E d12-32 7 a") debugit = true;
 
+                    //System.Diagnostics.Debug.WriteLine($"Star {he.System.Name}");
                     //foreach (var v in scandatavars.NameEnumuerable) System.Diagnostics.Debug.WriteLine($"Search scandata var {v} = {scandatavars[v]}");
 
-                    var res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, wantiter1 || wantiter2, debugit: debugit);
-                    
-                    //var resold = BaseUtils.ConditionLists.CheckConditionsEvalIterate(cond.List, scandatavars, out string errlist, out BaseUtils.ConditionLists.ErrorClass errcls, wantiter1 || wantiter2, debugit: debugit);
+                    evl.ReturnSymbolValue = scandatavars;                   // point the eval at our scan data variables for this particular instance
+                    func.SystemNode = he.ScanNode?.SystemNode;              // point the functions at system node, if it exists
+                    func.ParentStar = he.ScanNode?.ParentStar;              // point the functions at the parent star node, if it exists
 
-                    //if ( res.Item1 != resold.Item1)
-                    //{
-                    //}
-
-                    //if (res.Item1 == false && res.Item2.Last().ItemName.Contains("Parent.Rings[Iter1].OuterRad")) debugit = true;
+                    var res = BaseUtils.ConditionLists.CheckConditionsEvalIterate(evl, scandatavars, cond.List, iterators, debugit: debugit);
 
                     if (wantreport)
                     {
                         JournalScan jsi = he.journalEntry as JournalScan;
-                        resultinfo.AppendLine($"{he.EventTimeUTC} Journal type {he.EntryType} {jsi?.BodyName} : {res.Item1} : Last {res.Item2.Last().ItemName} {res.Item2.Last().MatchCondition} {res.Item2.Last().MatchString} : {res.Item3.Last()??""}");
+                        resultinfo.AppendLine($"{he.EventTimeUTC} Journal type {he.EntryType} {jsi?.BodyName} : {res.Item1} : Last {res.Item2.Last().ItemName} {res.Item2.Last().MatchCondition} {res.Item2.Last().MatchString} : {res.Item3.Last() ?? ""}");
                         //foreach ( var x in res.Item2)    resultinfo.AppendLine($"  {x.ItemName} {x.MatchCondition} {x.MatchString}");
 
                         // System.Diagnostics.Debug.WriteLine($"For entry type {he.EventTimeUTC} {he.EntryType} error: {resultinfo}");
@@ -783,13 +855,13 @@ namespace EliteDangerousCore
                                 var re = new ResultEntry { HistoryEntry = he, FilterPassed = filterdescription };
                                 if (results.TryGetValue(key, out List<ResultEntry> value))       // if key already exists, maybe set HE to us, and update filters passed
                                 {
-                                    value.Add( re );
-                                  //  System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC} `{filterdescription}` matched {key} added to list");
+                                    value.Add(re);
+                                    //  System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC} `{filterdescription}` matched {key} added to list");
                                 }
                                 else
                                 {                                                       // else make a new list
                                     results[key] = new List<ResultEntry> { re };
-                                 //   System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC} `{filterdescription}` matched {key} new body");
+                                    //   System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC} `{filterdescription}` matched {key} new body");
                                 }
                             }
                         }
@@ -838,7 +910,7 @@ namespace EliteDangerousCore
             {
                 var topnode = node.Parent;
 
-                while (topnode != null && topnode.Parent != null )       // find top node in tree
+                while (topnode != null && topnode.Parent != null)       // find top node in tree
                 {
                     topnode = topnode.Parent;
                 }
@@ -847,7 +919,7 @@ namespace EliteDangerousCore
 
                 // on the top node of the tree, if its a barycentre, we can use its first char name to work out which star to pick
 
-                if ( topnode != null && topnode.NodeType == StarScan.ScanNodeType.barycentre )  
+                if (topnode != null && topnode.NodeType == StarScan.ScanNodeType.barycentre)
                 {
                     startofind = topnode.OwnName.Substring(0, 1);       // first char
                 }
@@ -864,20 +936,20 @@ namespace EliteDangerousCore
         }
 
 
-        public static void GenerateReportFields(string bodykey, List<ResultEntry> resultlist, out string name, out string info, out string infotooltip, 
-                                                bool pinfowanted, out string pinfo, 
-                                                bool ppinfowanted, out string ppinfo, 
-                                                bool sinfowanted, out string sinfo, 
+        public static void GenerateReportFields(string bodykey, List<ResultEntry> resultlist, out string name, out string info, out string infotooltip,
+                                                bool pinfowanted, out string pinfo,
+                                                bool ppinfowanted, out string ppinfo,
+                                                bool sinfowanted, out string sinfo,
                                                 bool ssinfowanted, out string ssinfo)
         {
             name = bodykey;
-            
+
             info = pinfo = infotooltip = ppinfo = sinfo = ssinfo = "";
 
             // if we have a scan in the results list, do that first
             HistoryEntry hescan = resultlist.Select(sd => sd.HistoryEntry).Where(x => x.EntryType == JournalTypeEnum.Scan).LastOrDefault();
 
-            if ( hescan != null)
+            if (hescan != null)
             {
                 JournalScan js = hescan.journalEntry as JournalScan;
                 info = js.DisplayString();
@@ -938,8 +1010,129 @@ namespace EliteDangerousCore
                     }
                 }
             }
-
         }
     }
 
+    // Extra special functions for this dialog
+    public class QueryFunctionHandler : BaseUtils.BaseFunctionsForEval
+    {
+        public StarScan.SystemNode SystemNode { get; set; }     // node we are querying, may be null
+        public StarScan.ScanNode ParentStar { get; set; }       // Parent star node we are querying, may be null
+
+        public override object Execute(string name, BaseUtils.IEval evaluator, bool noop)
+        {
+            if (name == "BodiesPropertyCount" || name == "StarBodiesPropertyCount")
+            {
+                List<Object> plist = evaluator.Parameters(name, 1, new BaseUtils.IEvalParaListType[] { BaseUtils.IEvalParaListType.String });
+
+                if (plist != null)
+                {
+                    string p1 = plist[0] as string;
+
+                    if (noop)       // noop during func/sym collection, just return 0L
+                    {
+                        return 0L;
+                    }
+                    else if (SystemNode != null)
+                    {
+                        long count = 0;
+
+                        lock (SystemNode)
+                        {
+                            var bodies = name == "BodiesPropertyCount" ? SystemNode.Bodies : ParentStar.Bodies;
+
+                            foreach (var b in bodies.EmptyIfNull())
+                            {
+                                if (b.ScanData != null)
+                                {
+                                    if (BaseUtils.TypeHelpers.TryGetValue(b.ScanData, p1, out bool value))
+                                    {
+                                        if (value == true)
+                                            count++;
+                                    }
+                                    else
+                                        return new BaseUtils.StringParser.ConvertError(name + $"() property {p1} is not present or not bool");
+                                }
+                            }
+                        }
+
+                        if (count > 0) System.Diagnostics.Debug.WriteLine($"BodiesCount {SystemNode.System.Name} = {count}");
+
+                        return count;
+                    }
+                    else
+                        return new BaseUtils.StringParser.ConvertError(name + "() No system node");
+                }
+                else
+                    return new BaseUtils.StringParser.ConvertError(name + "() Missing string parameter of property name");
+            }
+            else if (name == "BodiesExprCount" || name == "StarBodiesExprCount")
+            {
+                List<Object> plist = evaluator.Parameters(name, 1, new BaseUtils.IEvalParaListType[] { BaseUtils.IEvalParaListType.CollectAsString});
+
+                if (plist != null)
+                {
+                    string expr = plist[0] as string;
+
+                    if (noop)       // noop during func/sym collection, just return 0L
+                    {
+                        return 0L;
+                    }
+                    else if (SystemNode != null)
+                    {
+                        if ( expr.HasChars() )
+                        { 
+                            BaseUtils.IEval neweval = evaluator.Clone(); // do not disturb the current eval
+
+                            neweval.SymbolsFuncsInExpression(expr, out HashSet<string> allvars, out HashSet<string> _);
+
+                            long count = 0;
+
+                            lock (SystemNode)
+                            {
+                                var bodies = name == "BodiesExprCount" ? SystemNode.Bodies : ParentStar.Bodies;
+
+                                foreach (var b in bodies.EmptyIfNull())
+                                {
+                                    if (b.ScanData != null)
+                                    {
+                                        BaseUtils.Variables scandatavars = new BaseUtils.Variables();
+
+                                        // enumerate this scan data into variable set
+
+                                        scandatavars.AddPropertiesFieldsOfClass(b.ScanData, "",
+                                                new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
+                                                allvars, ensuredoublerep: true, classsepar: ".");
+
+                                        neweval.ReturnSymbolValue = scandatavars;        // redirect symbols to gathered scandatavars
+
+                                        object res = neweval.Evaluate(expr);            // evaluate
+
+                                        if (res is long && (long)res != 0)              // if non zero and int, its a match
+                                        {
+                                            count++;
+                                        }
+                                    }
+                                }
+                            }
+
+                            //if (count > 0) System.Diagnostics.Debug.WriteLine($"BodiesCount {SystemNode.System.Name} = {count}");
+
+                            return count;
+                        }
+                        else
+                            return new BaseUtils.StringParser.ConvertError(name + "() Expression empty");
+
+                    }
+                    else
+                        return new BaseUtils.StringParser.ConvertError(name + "() No system node");
+                }
+                else
+                    return new BaseUtils.StringParser.ConvertError(name + "() Missing string parameter of property name");
+            }
+
+            return base.Execute(name, evaluator, noop);
+        }
+
+    }
 }

@@ -201,16 +201,16 @@ namespace EliteDangerousCore
                         {
                             if (filteredentries.Count > 0)
                             {
-                                filteredentries = filteredentries.Where(jre => JournalEntry.FindEntry(jre, cn, jre.GetJson(cn,txn)).Count == 0).ToList();
+                                filteredentries = filteredentries.Where(jre => JournalEntry.FindEntry(jre, cn, jre.GetJson(cn)).Count == 0).ToList();
 
                                 foreach (JournalEntry jre in filteredentries)
                                 {
-                                    var json = jre.GetJson(cn, txn);
-                                    jre.Add(json,cn,txn);
+                                    var json = jre.GetJson(cn);
+                                    jre.Add(json,cn);
                                 }
                             }
 
-                            lastnfi.TravelLogUnit.Update(cn, txn);       // update TLU pos
+                            lastnfi.TravelLogUnit.Update(cn);       // update TLU pos
 
                             txn.Commit();
                         }
@@ -288,7 +288,7 @@ namespace EliteDangerousCore
                         {
                             foreach (var tlu in tlutoadd)
                             {
-                                tlu.Add(cn, txn);
+                                tlu.Add(cn);
                             }
 
                             txn.Commit();
@@ -337,12 +337,12 @@ namespace EliteDangerousCore
                             {
                                 //System.Diagnostics.Trace.WriteLine(string.Format("--- Check {0} {1} Existing {2} : {3}", jre.EventTimeUTC, jre.EventTypeStr, existing[jre.EventTimeUTC].Count(), jre.GetJson().ToString()));
 
-                                if (!existing[jre.EventTimeUTC].Any(e => JournalEntry.AreSameEntry(jre, e, cn, ent1jo: jre.GetJson(cn,tn))))
+                                if (!existing[jre.EventTimeUTC].Any(e => JournalEntry.AreSameEntry(jre, e, cn, ent1jo: jre.GetJson(cn))))
                                 {
                                     //foreach (var x in existing[jre.EventTimeUTC]) { System.Diagnostics.Trace.WriteLine(string.Format(" passed vs {0} Deepequals {1}", x.GetJson().ToString(), x.GetJson().DeepEquals(jre.GetJson()))); }
 
-                                    QuickJSON.JObject jo = jre.GetJson(cn, tn);
-                                    jre.Add(jo, cn, tn);
+                                    QuickJSON.JObject jo = jre.GetJson(cn);
+                                    jre.Add(jo, cn);
 
                                     //System.Diagnostics.Trace.WriteLine(string.Format("Write Journal to db {0} {1}", jre.EventTimeUTC, jre.EventTypeStr));
                                 }
@@ -353,7 +353,7 @@ namespace EliteDangerousCore
                             }
 
                             if (readanything)
-                                reader.TravelLogUnit.Update(cn, tn);
+                                reader.TravelLogUnit.Update(cn);
 
                             tn.Commit();
                         }

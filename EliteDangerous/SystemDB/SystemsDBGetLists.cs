@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2015-2021 EDDiscovery development team
+ * Copyright 2015-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using System;
@@ -30,7 +28,7 @@ namespace EliteDangerousCore.DB
             return SystemsDatabase.Instance.DBRead(db =>
             {
                 var cn = db;
-                using (DbCommand cmd = cn.CreateCommand("select Count(1) from Systems"))
+                using (DbCommand cmd = cn.CreateCommand("select Count(1) from SystemTable"))
                 {
                     return (long)cmd.ExecuteScalar();
                 }
@@ -39,7 +37,7 @@ namespace EliteDangerousCore.DB
 
         // Beware with no extra conditions, you get them all..  Mostly used for debugging
         // use starreport to avoid storing the entries instead pass back one by one
-        public static List<ISystem> ListStars(string where = null, string orderby = null, string limit = null, 
+        public static List<ISystem> ListStars(string where = null, string orderby = null, string limit = null,
                                                 Action<ISystem> starreport = null)
         {
             List<ISystem> ret = new List<ISystem>();
@@ -54,7 +52,7 @@ namespace EliteDangerousCore.DB
 
                 var cn = db;
 
-                using (DbCommand selectSysCmd = cn.CreateSelect("Systems s", MakeSystemQueryNamed, where, orderby, limit: limit, joinlist: MakeSystemQueryNamedJoinList))
+                using (DbCommand selectSysCmd = cn.CreateSelect("SystemTable s", MakeSystemQueryNamed, where, orderby, limit: limit, joinlist: MakeSystemQueryNamedJoinList))
                 {
                     using (DbDataReader reader = selectSysCmd.ExecuteReader())
                     {
@@ -87,7 +85,7 @@ namespace EliteDangerousCore.DB
 
                 var cn = db;
 
-                using (DbCommand cmd = cn.CreateSelect("Systems s",
+                using (DbCommand cmd = cn.CreateSelect("SystemTable s",
                                                        outparas: "s.x,s.y,s.z",
                                                        where: "((s.edsmid*2333)%100) <" + percentage.ToStringInvariant()
                                                        ))
@@ -109,7 +107,8 @@ namespace EliteDangerousCore.DB
         // it returns a too long vector, for speed reasons
         // may return zero entries with empty arrays if nothing is present
         // may return zero/null if system DB is being built
-        public static int GetSystemList<V>(float x, float y, float z, float blocksize, ref string[] names, ref V[] vectors, Func<int, int, int, V> tovect,
+        // tovect is used to transform x,y,z,star type to a V type
+        public static int GetSystemList<V>(float x, float y, float z, float blocksize, ref string[] names, ref V[] vectors, Func<int, int, int, EDStar, V> tovect,
                                             Func<V, string, string> additionaltext, int chunksize = 10000)
         {
             string[] namesout = null;
@@ -120,7 +119,7 @@ namespace EliteDangerousCore.DB
             {
                 SystemsDatabase.Instance.DBRead(db =>
                 {
-                    fill = GetSystemList<V>(db,x, y, z, blocksize, ref namesout, ref vectsout, tovect, additionaltext, chunksize);
+                    fill = GetSystemList<V>(db, x, y, z, blocksize, ref namesout, ref vectsout, tovect, additionaltext, chunksize);
                 }, warnthreshold: 5000);
             }
 
@@ -130,15 +129,16 @@ namespace EliteDangerousCore.DB
         }
 
 
-        public static int GetSystemList<V>(SQLiteConnectionSystem cn, float x, float y, float z, float blocksize, ref string[] names, ref V[] vectors, Func<int, int, int, V> tovect,
-                                                Func<V, string, string> additionaltext, int chunksize )
+        public static int GetSystemList<V>(SQLiteConnectionSystem cn, float x, float y, float z, float blocksize, ref string[] names, ref V[] vectors,
+                                                Func<int, int, int, EDStar, V> tovect,
+                                                Func<V, string, string> additionaltext, int chunksize)
         {
             names = new string[chunksize];
             vectors = new V[chunksize];
             int fillpos = 0;
 
-            using (DbCommand cmd = cn.CreateSelect("Systems s",
-                                                    outparas: "s.x, s.y, s.z, c.name, s.nameid, n.Name",
+            using (DbCommand cmd = cn.CreateSelect("SystemTable s",
+                                                    outparas: "s.x, s.y, s.z, c.name, s.nameid, n.Name, s.info",
                                                     where: "s.x>=@p1 AND s.x<@p2 AND s.y>=@p3 AND s.y<@p4 AND s.z>=@p5 AND s.z<@p6",
                                                     paras: new Object[] {   SystemClass.DoubleToInt(x), SystemClass.DoubleToInt(x+blocksize),
                                                                             SystemClass.DoubleToInt(y), SystemClass.DoubleToInt(y+blocksize),
@@ -166,8 +166,9 @@ namespace EliteDangerousCore.DB
                         int sx = reader.GetInt32(0);
                         int sy = reader.GetInt32(1);
                         int sz = reader.GetInt32(2);
+                        EDStar startype = reader.IsDBNull(6) ? EDStar.Unknown : (EDStar)reader.GetInt32(6);
 
-                        vectors[fillpos] = tovect(sx, sy, sz);
+                        vectors[fillpos] = tovect(sx, sy, sz, startype);
 
                         EliteNameClassifier ec = new EliteNameClassifier((ulong)reader.GetInt64(4));
                         ec.SectorName = reader.GetString(3);

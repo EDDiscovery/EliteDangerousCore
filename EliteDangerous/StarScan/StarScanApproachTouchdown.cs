@@ -22,20 +22,20 @@ namespace EliteDangerousCore
     {
         public void AddApproachSettlement(JournalApproachSettlement je, ISystem sys)
         {
-            SystemNode sn = GetOrCreateSystemNode(sys);
+            SystemNode systemnode = GetOrCreateSystemNode(sys);
 
-            // caller has already screened bodyid,systemaddress.  Also body has already been added so this should always work!
-
-            if (sn.NodesByID.TryGetValue(je.BodyID.Value, out ScanNode node))
+            lock (systemnode)
             {
-                lock (node)
+                // caller has already screened bodyid,systemaddress.  Also body has already been added so this should always work!
+
+                if (systemnode.NodesByID.TryGetValue(je.BodyID.Value, out ScanNode node))
                 {
                     if (node.SurfaceFeatures == null)
                         node.SurfaceFeatures = new List<IBodyFeature>();
 
                     // see if we have another settlement with this name (Note touchdowns get name "Touchdown bodyname @ UTC")
 
-                    var existingnode = node.SurfaceFeatures.Find(x => x.Name == je.Name);      
+                    var existingnode = node.SurfaceFeatures.Find(x => x.Name == je.Name);
 
                     if (existingnode != null)       // already seen this
                     {
@@ -53,7 +53,7 @@ namespace EliteDangerousCore
                             }
                         }
                     }
-                    else 
+                    else
                     {
                         // if we have lat long, lets see if we have a touchdown position record near it
                         // this handles je not having lat/long
@@ -75,23 +75,22 @@ namespace EliteDangerousCore
                         //System.Diagnostics.Debug.WriteLine($"Starscan new approach settlement {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude}");
                     }
                 }
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine($"Starscan approach no-body {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.BodyName} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude}");
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"Starscan approach no-body {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.BodyName} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude}");
+                }
             }
         }
 
-
         public void AddTouchdown(JournalTouchdown je, ISystem sys)
         {
-            SystemNode sn = GetOrCreateSystemNode(sys);
+            SystemNode systemnode = GetOrCreateSystemNode(sys);
 
-            // caller has already screened bodyid,systemaddress.  Also body has already been added so this should always work!
-
-            if (sn.NodesByID.TryGetValue(je.BodyID.Value, out ScanNode node))
+            lock (systemnode)
             {
-                lock (node)
+                // caller has already screened bodyid,systemaddress.  Also body has already been added so this should always work!
+
+                if (systemnode.NodesByID.TryGetValue(je.BodyID.Value, out ScanNode node))
                 {
                     // this handles je not having lat/long..
                     var existingibf = node.FindSurfaceFeatureNear(je.Latitude, je.Longitude);
@@ -108,9 +107,9 @@ namespace EliteDangerousCore
                             node.ScanData.SurfaceFeatures = node.SurfaceFeatures;       // make sure Scan node has same list as subnode
                         }
 
-                       // System.Diagnostics.Debug.WriteLine($"Starscan new touchdown {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude}");
+                        // System.Diagnostics.Debug.WriteLine($"Starscan new touchdown {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude}");
                     }
-                    else if ( existingibf is JournalTouchdown )     // touchdown, after this touchdown
+                    else if (existingibf is JournalTouchdown)     // touchdown, after this touchdown
                     {
                         //System.Diagnostics.Debug.WriteLine($"Starscan touchdown near previous touchdown replaced it {existingibf.EventTimeUTC} -> {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude} {je.NearestDestination}");
                         // update the entry..
@@ -121,10 +120,10 @@ namespace EliteDangerousCore
                         //System.Diagnostics.Debug.WriteLine($"Starscan touchdown rejected as near approach settlement {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Name} {je.Name_Localised} {je.Latitude} {je.Longitude} {je.NearestDestination}");
                     }
                 }
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine($"Starscan touchdown no-body {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Latitude} {je.Longitude}");
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"Starscan touchdown no-body {je.EventTimeUTC} {je.CommanderId} {sys.Name} {je.BodyID} {je.Body} {je.Latitude} {je.Longitude}");
+                }
             }
         }
 
@@ -143,6 +142,15 @@ namespace EliteDangerousCore
             return res;
         }
 
+        static public bool SurfaceFeatureListContainsSettlements(List<IBodyFeature> list)
+        {
+            return list != null && list.FindIndex(x => x is JournalApproachSettlement) >= 0;
+        }
+
+        static public int SurfaceFeatureListSettlementsCount(List<IBodyFeature> list)
+        {
+            return list != null ? list.Count(x => x is JournalApproachSettlement) : 0;
+        }
 
     }
 }

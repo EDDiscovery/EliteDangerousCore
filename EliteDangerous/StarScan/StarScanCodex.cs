@@ -24,12 +24,12 @@ namespace EliteDangerousCore
         {
             if (jsd.SystemAddress.HasValue && jsd.SystemAddress >= 100000)       // system address 1 is found in early entries, a bug, so reject if small (arbitary 1000)
             {
-                if (ScanDataBySysaddr.TryGetValue(jsd.SystemAddress.Value, out SystemNode sn))       // if we have it
+                if (ScanDataBySysaddr.TryGetValue(jsd.SystemAddress.Value, out SystemNode systemnode))       // if we have it
                 {
-                    lock (sn)
+                    lock (systemnode)
                     {
-                        if (!sn.CodexEntryList.Contains(jsd))
-                            sn.CodexEntryList.Add(jsd);
+                        if (!systemnode.CodexEntryList.Contains(jsd))
+                            systemnode.CodexEntryList.Add(jsd);
                     }
                 }
                 else if (saveprocessinglater)

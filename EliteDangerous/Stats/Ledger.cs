@@ -23,6 +23,7 @@ namespace EliteDangerousCore
 {
     public class Ledger
     {
+        [System.Diagnostics.DebuggerDisplay("Tx {EventTimeUTC} {EventType} {CashAdjust} {CashTotal} {Notes}")]
         public class Transaction
         {
             public long JID { get; set; }
@@ -35,6 +36,7 @@ namespace EliteDangerousCore
             public long CashTotal { get; set; }                                  // cash total at this point
         }
 
+        // transactions are in ascending time order
         public List<Transaction> Transactions { get; private set; } = new List<Transaction>();
         public long CashTotal { get; set; } = 0;
         public long Assets { get; set; } = 0;

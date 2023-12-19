@@ -85,12 +85,14 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string Station { get; protected set; }
+        public string StationType { get; protected set; }           // may be null, not on older events 
+        public string CarrierDockingAccess { get; protected set; }  // will be null when not in carrier
         public string StarSystem { get; set; }
         public long? MarketID { get; set; }
         public List<CCommodities> Commodities { get; protected set; }   // never null
 
         public bool HasCommodity(string fdname) { return Commodities.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase)) >= 0; }
-        public bool HasCommodityToBuy(string fdname) { return Commodities.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase) && x.CanBeBought) >= 0; }
+        public bool HasCommodityToBuy(string fdname) { return Commodities.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase) && x.HasStock) >= 0; }
 
         public override void FillInformation(out string info, out string detailed)
         {
@@ -108,11 +110,11 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "Items to buy: ".T(EDCTx.JournalCommodityPricesBase_Itemstobuy) + System.Environment.NewLine;
             foreach (CCommodities c in Commodities)
             {
-                if (c.CanBeBought)
+                if (c.HasStock)
                 {
                     string name = MaterialCommodityMicroResourceType.GetNameByFDName(c.fdname);
 
-                    if (c.CanBeSold)
+                    if (c.HasDemandAndPrice)
                     {
                         detailed += string.Format("{0}: {1} sell {2} Diff {3} {4}%  ".T(EDCTx.JournalCommodityPricesBase_CPBBuySell),
                             name, c.buyPrice, c.sellPrice, c.buyPrice - c.sellPrice, 
@@ -136,7 +138,7 @@ namespace EliteDangerousCore.JournalEvents
             detailed += "Sell only Items: ".T(EDCTx.JournalCommodityPricesBase_SO) + System.Environment.NewLine;
             foreach (CCommodities c in Commodities)
             {
-                if (!c.CanBeBought)
+                if (!c.HasStock)
                 {
                     string name = MaterialCommodityMicroResourceType.GetNameByFDName(c.fdname);
 

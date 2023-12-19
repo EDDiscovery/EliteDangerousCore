@@ -46,8 +46,6 @@ namespace EliteDangerousCore.Inara
 
             apiKey = EDCommander.Current.InaraAPIKey;
             commanderName = string.IsNullOrEmpty(EDCommander.Current.InaraName) ? EDCommander.Current.Name : EDCommander.Current.InaraName;
-
-            MimeType = "application/json";      // sets Content-type
         }
 
         public InaraClass(EDCommander cmdr) : this()
@@ -86,7 +84,7 @@ namespace EliteDangerousCore.Inara
             //File.WriteAllText(@"c:\code\json.txt", request); 
             System.Diagnostics.Debug.WriteLine(ret + "Send inara " + request);
 
-            var response = RequestPost(request, InaraAPI, handleException: true);
+            var response = RequestPost(request, InaraAPI, handleException: true, contenttype: "application/json");
 
             if (response.Error)
                 return ret + "No Response" + Environment.NewLine;

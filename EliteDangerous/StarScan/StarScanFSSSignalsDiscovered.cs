@@ -22,10 +22,10 @@ namespace EliteDangerousCore
         {
             if (jsd.Signals[0].SystemAddress.HasValue)
             {
-                if (ScanDataBySysaddr.TryGetValue(jsd.Signals[0].SystemAddress.Value, out SystemNode sn))       // if we have it
+                if (ScanDataBySysaddr.TryGetValue(jsd.Signals[0].SystemAddress.Value, out SystemNode systemnode))       // if we have it
                 {
-                    lock( sn)
-                        sn.FSSSignalList.Add(jsd);
+                    lock( systemnode)
+                        systemnode.FSSSignalList.Add(jsd);
                 }
                 else if (saveprocessinglater)
                 {

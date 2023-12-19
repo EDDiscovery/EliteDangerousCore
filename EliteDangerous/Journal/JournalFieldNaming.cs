@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2017 EDDiscovery development team
+ * Copyright © 2015 - 2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,13 +10,10 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using System;
 using System.Collections.Generic;
-
 
 namespace EliteDangerousCore
 {
@@ -111,9 +108,11 @@ namespace EliteDangerousCore
 
         static public string GetBetterModuleName(string s)           
         {
-            if (s.Length>0)         // accept empty string, some of the fields are purposely blank from the journal because they are not set for a particular transaction
+            // screen out empty string, some of the fields are purposely blank from the journal because they are not set for a particular transaction
+            // do create as this is used by Loadout, ModuleBuy
+
+            if (s.Length>0 && ItemData.TryGetShipModule(s, out ItemData.ShipModule item, true))    
             {
-                ItemData.ShipModule item = ItemData.GetShipModuleProperties(s);
                 return item.ModName;
             }
             else
@@ -275,6 +274,27 @@ namespace EliteDangerousCore
                 return alt;
             else
                 return CheckLocalisation(loc, alt);
+        }
+
+        // attempt to find a better name for name as its a body name
+        static public string SignalBodyName(string name)
+        {
+            var res = Identifiers.Get(name);
+
+            if (res.StartsWith("$SAA_RingHotspot",StringComparison.InvariantCultureIgnoreCase))        // if still id
+            {
+                int indexof = res.IndexOf("#type=");
+                if ( indexof>0 && res.Length > indexof+6)
+                {
+                    string mintype = res.Substring(indexof + 6).Replace(";", "").Replace("_name","").Replace("$", "");
+                    var mcd = MaterialCommodityMicroResourceType.GetByFDName(mintype);
+                    if (mcd != null)    // if we find it, translate it, else leave it alone
+                        mintype = mcd.Name;
+
+                    res = "Ring Hot Spot of type ".TxID(EDCTx.Signals_RingHotSpot) + mintype;
+                }
+            }
+            return res;
         }
 
         public static string SubsituteCommanderName(string cmdrin)      // only for debugging, subsitute a commander name

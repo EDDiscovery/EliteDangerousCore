@@ -87,7 +87,11 @@ namespace EliteDangerousCore
 
     public interface IAdditionalFiles
     {
-        void ReadAdditionalFiles(string directory);     // true if your happy
+        void ReadAdditionalFiles(string directory); 
+    }
+    public interface IIdentifiers
+    {
+        void UpdateIdentifiers();
     }
 
     public interface IJournalJumpColor

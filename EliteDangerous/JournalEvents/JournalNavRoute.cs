@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- *
- *
  */
 using QuickJSON;
 using System.Collections.Generic;
@@ -58,18 +56,20 @@ namespace EliteDangerousCore.JournalEvents
                     }
                     else
                     {
+                        var sedsc = Stars.ToEnum(starclass);
+
                         routeents.Add(new NavRouteEntry     // 3.7 will have this
                         {
                             StarSystem = starsys.Str(),
                             SystemAddress = sysaddr.Long(),
                             StarPos = starpos,
-                            StarClass = starclass
-                        });
-                    }
+                            StarClass = starclass,
+                            EDStarClass = sedsc
+                        }) ;
 
-                    SystemClass s = new SystemClass(routeents.Last().StarSystem, starpos.X, starpos.Y, starpos.Z);
-                    s.Source = SystemSource.FromJournal;
-                    DB.SystemCache.AddSystemToCache(s);     // inform cache of this known system
+                        SystemClass s = new SystemClass(routeents.Last().StarSystem, sysaddr.Long(), starpos.X, starpos.Y, starpos.Z, SystemSource.FromJournal, sedsc);
+                        SystemCache.AddSystemToCache(s);     // inform cache of this known system
+                    }
                 }
 
                 Route = routeents.ToArray();
@@ -139,6 +139,7 @@ namespace EliteDangerousCore.JournalEvents
             public long SystemAddress { get; set; }
             public EMK.LightGeometry.Vector3 StarPos { get; set; }
             public string StarClass { get; set; }
+            public EDStar EDStarClass { get; set; }
         }
     }
 

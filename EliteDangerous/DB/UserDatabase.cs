@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2016-2021 EDDiscovery development team
+ * Copyright 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,16 +10,25 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using SQLLiteExtensions;
 using System;
+using System.Windows.Forms;
 
 namespace EliteDangerousCore.DB
 {
-    public class UserDatabase : SQLAdvProcessingThread<SQLiteConnectionUser>
+    // basic access to get and put settings
+    public interface IUserDatabaseSettingsSaver
+    {
+        T GetSetting<T>(string key, T defaultvalue);
+        bool PutSetting<T>(string key, T value);
+
+        bool DGVLoadColumnLayout(System.Windows.Forms.DataGridView dgv, string auxname = "", bool rowheaderselection = false);
+        void DGVSaveColumnLayout(System.Windows.Forms.DataGridView dgv, string auxname = "");
+    }
+
+    public class UserDatabase : SQLAdvProcessingThread<SQLiteConnectionUser>, IUserDatabaseSettingsSaver
     {
         private UserDatabase()
         {
@@ -161,5 +170,59 @@ namespace EliteDangerousCore.DB
                 db.ClearCommanderTable();
             });
         }
+
+        // should not use these directly, always thru another class
+        public bool DGVLoadColumnLayout(DataGridView dgv, string auxname = "", bool rowheaderselection = false)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void DGVSaveColumnLayout(DataGridView dgv, string auxname = "")
+        {
+            throw new NotImplementedException();
+        }
     }
+
+
+    // instance this class and you can pass the class for saving settings with a defined rootname
+
+    public class UserDatabaseSettingsSaver : IUserDatabaseSettingsSaver     
+    {                                        
+        public UserDatabaseSettingsSaver(IUserDatabaseSettingsSaver b, string rootname)
+        {
+            root = rootname;
+            ba = b;
+        }
+        public T GetSetting<T>(string key, T defaultvalue)
+        {
+            return ba.GetSetting(root + key, defaultvalue);
+        }
+
+        public bool PutSetting<T>(string key, T value)
+        {
+            return ba.PutSetting(root + key, value);
+        }
+
+        public bool DGVLoadColumnLayout(DataGridView dgv, string auxname = "", bool rowheaderselection = false)
+        {
+            return dgv.LoadColumnSettings(root + "_DGV_" + auxname, rowheaderselection,
+                                        (a) => EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt(a, int.MinValue),
+                                        (b) => EliteDangerousCore.DB.UserDatabase.Instance.GetSettingDouble(b, double.MinValue));
+        }
+
+
+        public void DGVSaveColumnLayout(DataGridView dgv, string auxname = "")
+        {
+            dgv.SaveColumnSettings(root + "_DGV_" + auxname,
+                                        (a, b) => EliteDangerousCore.DB.UserDatabase.Instance.PutSettingInt(a, b),
+                                        (c, d) => EliteDangerousCore.DB.UserDatabase.Instance.PutSettingDouble(c, d));
+        }
+
+
+        private string root;
+        private IUserDatabaseSettingsSaver ba;
+    }
+
+
 }

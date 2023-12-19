@@ -49,11 +49,11 @@ namespace EliteDangerousCore
             return UserDatabase.Instance.DBWrite<bool>(cn => { return Add(jo, cn); });
         }
 
-        internal bool Add(JObject jo, SQLiteConnectionUser cn, DbTransaction tn = null)
+        internal bool Add(JObject jo, SQLiteConnectionUser cn)
         {
             // note we don't use EDMSID any more, but we write a zero into it to keep 11.9.3 and before happy
 
-            using (DbCommand cmd = cn.CreateCommand("Insert into JournalEntries (EventTime, TravelLogID, CommanderId, EventTypeId , EventType, EventData, Synced, EdsmId) values (@EventTime, @TravelLogID, @CommanderID, @EventTypeId , @EventStrName, @EventData, @Synced, 0)", tn))
+            using (DbCommand cmd = cn.CreateCommand("Insert into JournalEntries (EventTime, TravelLogID, CommanderId, EventTypeId , EventType, EventData, Synced, EdsmId) values (@EventTime, @TravelLogID, @CommanderID, @EventTypeId , @EventStrName, @EventData, @Synced, 0)"))
             {
                 cmd.AddParameterWithValue("@EventTime", EventTimeUTC);           // MUST use UTC connection
                 cmd.AddParameterWithValue("@TravelLogID", TLUId);
@@ -78,9 +78,9 @@ namespace EliteDangerousCore
             return UserDatabase.Instance.DBWrite<bool>(cn => { return Update(cn); });
         }
 
-        private bool Update(SQLiteConnectionUser cn, DbTransaction tn = null)
+        private bool Update(SQLiteConnectionUser cn)
         {
-            using (DbCommand cmd = cn.CreateCommand("Update JournalEntries set EventTime=@EventTime, TravelLogID=@TravelLogID, CommanderID=@CommanderID, EventTypeId=@EventTypeId, EventType=@EventStrName, Synced=@Synced where ID=@id", tn))
+            using (DbCommand cmd = cn.CreateCommand("Update JournalEntries set EventTime=@EventTime, TravelLogID=@TravelLogID, CommanderID=@CommanderID, EventTypeId=@EventTypeId, EventType=@EventStrName, Synced=@Synced where ID=@id"))
             {
                 cmd.AddParameterWithValue("@ID", Id);
                 cmd.AddParameterWithValue("@EventTime", EventTimeUTC);  // MUST use UTC connection
@@ -95,14 +95,14 @@ namespace EliteDangerousCore
             }
         }
 
-        internal void UpdateJsonEntry(JObject jo, SQLiteConnectionUser cn, DbTransaction tn = null)
+        internal void UpdateJsonEntry(JObject jo, SQLiteConnectionUser cn)
         {
             if ( JsonCached != null )
             {
                 JsonCached = jo;
             }
 
-            using (DbCommand cmd = cn.CreateCommand("Update JournalEntries set EventData=@EventData where ID=@id", tn))
+            using (DbCommand cmd = cn.CreateCommand("Update JournalEntries set EventData=@EventData where ID=@id"))
             {
                 cmd.AddParameterWithValue("@ID", Id);
                 cmd.AddParameterWithValue("@EventData", jo.ToString());
@@ -131,16 +131,16 @@ namespace EliteDangerousCore
                 fsd.SetMapColour(v);
         }
 
-        internal void UpdateStarPosition(ISystem pos, SQLiteConnectionUser cn, DbTransaction tn = null)
+        internal void UpdateStarPosition(ISystem pos, SQLiteConnectionUser cn)
         {
-            JObject jo = GetJson(cn,tn);
+            JObject jo = GetJson(cn);
                                                                                 
             if (jo != null )
             {
                 jo["StarPos"] = new JArray() { pos.X, pos.Y, pos.Z };
                 jo["StarPosFromEDSM"] = true;
 
-                using (DbCommand cmd2 = cn.CreateCommand("Update JournalEntries set EventData = @EventData where ID = @ID", tn))
+                using (DbCommand cmd2 = cn.CreateCommand("Update JournalEntries set EventData = @EventData where ID = @ID"))
                 {
                     cmd2.AddParameterWithValue("@EventData", jo.ToString());
                     cmd2.AddParameterWithValue("@ID", Id);
@@ -161,7 +161,7 @@ namespace EliteDangerousCore
             else
                 Synced &= ~(int)bit2;
 
-            using (DbCommand cmd = cn.CreateCommand("Update JournalEntries set Synced = @sync where ID=@journalid", txn))
+            using (DbCommand cmd = cn.CreateCommand("Update JournalEntries set Synced = @sync where ID=@journalid"))
             {
                 cmd.AddParameterWithValue("@journalid", Id);
                 cmd.AddParameterWithValue("@sync", Synced);
@@ -223,11 +223,11 @@ namespace EliteDangerousCore
                 return JsonCached;
         }
 
-        internal JObject GetJson(SQLiteConnectionUser cn, DbTransaction tn = null)            // do not modify
+        internal JObject GetJson(SQLiteConnectionUser cn)            // do not modify
         {
             if (JsonCached == null)
             {
-                JsonCached = GetJson(Id, cn, tn);
+                JsonCached = GetJson(Id, cn);
             }
             return JsonCached;
         }
@@ -237,9 +237,9 @@ namespace EliteDangerousCore
             JsonCached = jo;
         }
 
-        static internal JObject GetJson(long journalid, SQLiteConnectionUser cn, DbTransaction tn = null)
+        static internal JObject GetJson(long journalid, SQLiteConnectionUser cn)
         {
-            using (DbCommand cmd = cn.CreateCommand("select EventData from JournalEntries where ID=@journalid", tn))
+            using (DbCommand cmd = cn.CreateCommand("select EventData from JournalEntries where ID=@journalid"))
             {
                 cmd.AddParameterWithValue("@journalid", journalid);
 
@@ -261,9 +261,9 @@ namespace EliteDangerousCore
             return UserDatabase.Instance.DBRead<JournalEntry>(cn => { return Get(journalid, cn); });
         }
 
-        static internal JournalEntry Get(long journalid, SQLiteConnectionUser cn, DbTransaction tn = null)
+        static internal JournalEntry Get(long journalid, SQLiteConnectionUser cn)
         {
-            using (DbCommand cmd = cn.CreateCommand("select * from JournalEntries where ID=@journalid", tn))
+            using (DbCommand cmd = cn.CreateCommand("select * from JournalEntries where ID=@journalid"))
             {
                 cmd.AddParameterWithValue("@journalid", journalid);
 

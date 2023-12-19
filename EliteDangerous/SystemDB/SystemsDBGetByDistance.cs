@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2015-2021 EDDiscovery development team
+ * Copyright 2015-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using System;
@@ -36,18 +34,13 @@ namespace EliteDangerousCore.DB
                                                         )
 
         {
-            // for comparision, using the grid screener is slower than the xy index. keep code for record
-            // grid screener..  "s.sectorid IN (Select id FROM Sectors sx where sx.gridid IN (" + strinlist + ")) " +
-            //var gridids = GridId.Ids(x - maxdist, x + maxdist, z - maxdist, z + maxdist);       // find applicable grid ids across this range..
-            //var strinlist = string.Join(",", (from x1 in gridids select x1.ToStringInvariant()));     // here we convert using invariant for paranoia sake.
-
             // System.Diagnostics.Debug.WriteLine("Time1 " + BaseUtils.AppTicks.TickCountLap("SDC"));
 
             int mindistint = mindist > 0 ? SystemClass.DoubleToInt(mindist) * SystemClass.DoubleToInt(mindist) : 0;
 
             // needs a xz index for speed
 
-            using (DbCommand cmd = cn.CreateSelect("Systems s",
+            using (DbCommand cmd = cn.CreateSelect("SystemTable s",
                 MakeSystemQueryNamed,
                 where:
                     "s.x >= @xv - @maxdist " +
@@ -68,7 +61,7 @@ namespace EliteDangerousCore.DB
                 cmd.AddParameterWithValue("@max", maxitems + 1);     // 1 more, because if we are on a System, that will be returned
                 cmd.AddParameterWithValue("@maxdist", SystemClass.DoubleToInt(maxdist));
 
-               // System.Diagnostics.Debug.WriteLine(cn.ExplainQueryPlanString(cmd));
+                // System.Diagnostics.Debug.WriteLine(cn.ExplainQueryPlanString(cmd));
 
                 int xi = SystemClass.DoubleToInt(x);
                 int yi = SystemClass.DoubleToInt(y);
@@ -77,7 +70,7 @@ namespace EliteDangerousCore.DB
 
                 using (DbDataReader reader = cmd.ExecuteReader())
                 {
-                  //  System.Diagnostics.Debug.WriteLine("Time1.5 " + BaseUtils.AppTicks.TickCountLap("SDC"));
+                    //  System.Diagnostics.Debug.WriteLine("Time1.5 " + BaseUtils.AppTicks.TickCountLap("SDC"));
 
                     while (reader.Read())      // already sorted, and already limited to max items
                     {
@@ -95,7 +88,7 @@ namespace EliteDangerousCore.DB
                         }
                     }
 
-                  //  System.Diagnostics.Debug.WriteLine("Time2 " + BaseUtils.AppTicks.TickCountLap("SDC") + "  count " + count);
+                    //  System.Diagnostics.Debug.WriteLine("Time2 " + BaseUtils.AppTicks.TickCountLap("SDC") + "  count " + count);
                 }
             }
         }
@@ -104,26 +97,21 @@ namespace EliteDangerousCore.DB
         internal static ISystem GetSystemByPosition(double x, double y, double z, SQLiteConnectionSystem cn, double maxdist = 0.125)
         {
             BaseUtils.SortedListDoubleDuplicate<ISystem> distlist = new BaseUtils.SortedListDoubleDuplicate<ISystem>();
-            GetSystemListBySqDistancesFrom(x, y, z, 1, 0, maxdist, true, cn, (d,s)=> { distlist.Add(d, s); }); // return 1 item, min dist 0, maxdist
+            GetSystemListBySqDistancesFrom(x, y, z, 1, 0, maxdist, true, cn, (d, s) => { distlist.Add(d, s); }); // return 1 item, min dist 0, maxdist
             return (distlist.Count > 0) ? distlist.First().Value : null;
         }
 
-        /////////////////////////////////////////////// Nearest to a point determined by a metric
+        // nearest system to wantedpos with max from currentpos
 
-        // either use CallBack or List
-        internal static void GetSystemNearestTo(
-                                                  Point3D currentpos,
+        internal static void GetSystemNearestTo(  Point3D currentpos,
                                                   Point3D wantedpos,
                                                   double maxfromcurpos,
                                                   double maxfromwanted,
                                                   int limitto,
                                                   SQLiteConnectionSystem cn,
-                                                  Action<ISystem> CallBack = null,
-                                                  List<ISystem> list = null)
+                                                  Action<ISystem> CallBack)
         {
-            System.Diagnostics.Debug.Assert(CallBack != null || list != null);
-
-            using (DbCommand cmd = cn.CreateSelect("Systems s",
+            using (DbCommand cmd = cn.CreateSelect("SystemTable s",
                         MakeSystemQueryNamed,
                         where:
                                 "x >= @xc - @maxfromcurpos " +
@@ -158,15 +146,11 @@ namespace EliteDangerousCore.DB
                     while (reader.Read())
                     {
                         var sys = MakeSystem(reader);
-                        if (CallBack!=null)
-                            CallBack(sys);
-                        else
-                            list.Add(sys);
+                        CallBack(sys);
                     }
                 }
             }
         }
-
     }
 }
 

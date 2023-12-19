@@ -30,7 +30,8 @@ namespace EliteDangerousCore
             public double OptimalMass { get; set; }
             public double MaxFuelPerJump { get; set; }
             public double FSDGuardianBoosterRange { get; set; }
-
+            public double FuelMultiplier { get { return LinearConstant * 0.001; } }
+            public double PowerFactor { get { return Math.Pow(MaxFuelPerJump / FuelMultiplier, 1 / PowerConstant); } }
             public FSDSpec(int fsdClass,
                 string rating,
                 double pc,

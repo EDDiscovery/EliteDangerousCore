@@ -860,6 +860,32 @@ SECTION MaterialCommodityMicroResourceType
 .vipsecuritydetail: "VIP Security Detail" => "VIP-Sicherheitsdienst"
 .virus: "Virus" => "Virus"
 .xenodefenceprotocols: "Xeno-Defence Protocols" => "Xeno-Abwehr-Protokolle"
+.tg_abrasion03: "Hardened Surface Fragments" => "Gehärtete Oberflächenfragmente"
+.tg_abrasion02: "Phasing Membrane Residue" => "Synchronisierungsmembranüberrest"
+.heatexposurespecimen: "Heat Exposure Specimen" => "Hitzebehandeltes Exemplar"
+.tg_causticcrystal: "Caustic Crystal" => "Ätzender Kristall"
+.tg_causticshard: "Caustic Shard" => "Ätzende Scherbe"
+.tg_causticgeneratorparts: "Corrosive Mechanisms" => "Korrosiver Mechanismus"
+.tg_shutdowndata: "Massive Energy Surge Analytics" => "Analyse einer massiven Energiewelle"
+.tg_interdictiondata: "Thargoid Interdiction Telemetry" => "Thargoid Unterbrechungstelemetrie"
+.ancientrelictg: "Unclassified Relic" => "Unklassifiziertes Relikt"
+.p_particulatesample: "Anomaly Particles" => "Anomaliepartikel"
+.thargoidtissuesampletype10c: "Titan Maw Partial Tissue Sample" => "Titanenschlund-Gewebeprobe"
+.thargoidtissuesampletype5: "Thargoid Orthrus Tissue Sample" => "Thargoid-Orthrus Gewebeprobe"
+.thargoidgeneratortissuesample: "Caustic Tissue Sample" => "Ätzende Gewebeprobe"
+.unocuppiedescapepod: "Unoccupied Escape Pod" => "Leere Fluchtkapsel"
+.thargoidtissuesampletype6: "Thargoid Glaive Tissue Sample" => "Thardoiden-Glaive Gewebeprobe"
+.thargoidtissuesampletype9a: "Titan Deep Tissue Sample" => "Titan tiefe Gewebeprobe"
+.thargoidtissuesampletype9b: "Titan Tissue Sample" => "Titan Gewebeprobe"
+.thargoidtissuesampletype9c: "Titan Partial Tissue Sample" => "Titan teilweise Gewebeprobe"
+.thargoidtissuesampletype10a: "Titan Maw Deep Tissue Sample" => "Titanenschlund tiefe Gewebeprobe"
+.thargoidtissuesampletype10b: "Titan Maw Tissue Sample" => "Titanenschlund Gewebeprobe"
+.thargoidtissuesampletype7: "Thargoid Scythe Tissue Sample" => "Thargoid-Scythe Gewebeprobe"
+.unknownsack: "Protective Membrane Scrap" => "Schutzmembranenrest"
+.thargoidpod: "Xenobiological Prison Pod" => "Xenobiologische Gefängniskapsel"
+.coralsap: "Coral Sap" => "Korallensaft"
+.onionheadc: "Onionhead Gamma Strain" => "Onionhead (Gamma)"
+.classifiedexperimentalequipment: "Classified Experimental Equipment" => "Geheime Experimentalausrüstung"
 
 SECTION EngineeringData
 
@@ -976,3 +1002,7 @@ SECTION ScanDisplayUserControl
 .Signals: "Signals" => "Signale"
 .Codex: "Codex" => "Kodex"
 .Organics: "Organics" => "Organsimen"
+
+SECTION Signals
+
+.RingHotSpot: "Ring Hot Spot of type " => "Ringhotspot des Typs "

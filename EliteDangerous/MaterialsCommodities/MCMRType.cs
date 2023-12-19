@@ -72,6 +72,7 @@ namespace EliteDangerousCore
         public bool IsManufactured { get { return Category == CatType.Manufactured; } }
         public bool IsEncodedOrManufactured { get { return Category == CatType.Encoded || Category == CatType.Manufactured; } }
         public bool IsRareCommodity { get { return Rarity && IsCommodity; } }
+        public bool IsNormalCommodity { get { return !Rarity && IsCommodity; } }
         public bool IsCommonMaterial { get { return Type == ItemType.Common || Type == ItemType.VeryCommon; } }
 
         public bool IsMicroResources { get { return Category >= CatType.Item; } }     // odyssey 4.0
@@ -143,14 +144,14 @@ namespace EliteDangerousCore
         public static MaterialCommodityMicroResourceType GetByShortName(string shortname)
         {
             List<MaterialCommodityMicroResourceType> lst = cachelist.Values.ToList();
-            int i = lst.FindIndex(x => x.Shortname.Equals(shortname));
+            int i = lst.FindIndex(x => x.Shortname.Equals(shortname, StringComparison.InvariantCultureIgnoreCase));
             return i >= 0 ? lst[i] : null;
         }
 
         public static MaterialCommodityMicroResourceType GetByEnglishName(string name)
         {
             List<MaterialCommodityMicroResourceType> lst = cachelist.Values.ToList();
-            int i = lst.FindIndex(x => x.EnglishName.Equals(name));
+            int i = lst.FindIndex(x => x.EnglishName.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             return i >= 0 ? lst[i] : null;
         }
 
@@ -160,16 +161,41 @@ namespace EliteDangerousCore
             return cachelist.Values.ToArray();
         }
 
+        public enum SortMethod
+        {
+            None, Alphabetical, AlphabeticalRaresLast
+        }
+
         // use this delegate to find them
-        public static MaterialCommodityMicroResourceType[] Get(Func<MaterialCommodityMicroResourceType, bool> func, bool sorted)
+        public static MaterialCommodityMicroResourceType[] Get(Func<MaterialCommodityMicroResourceType, bool> func, SortMethod sort)
         {
             MaterialCommodityMicroResourceType[] items = cachelist.Values.Where(func).ToArray();
 
-            if (sorted)
+            if (sort != SortMethod.None)
             {
                 Array.Sort(items, delegate (MaterialCommodityMicroResourceType left, MaterialCommodityMicroResourceType right)     // in order, name
                 {
-                    return left.Name.CompareTo(right.Name.ToString());
+                    if ( sort == SortMethod.AlphabeticalRaresLast)
+                    {
+                        if ( left.IsRareCommodity )
+                        {
+                            if (right.IsRareCommodity)
+                                return left.Name.CompareTo(right.Name.ToString());
+                            else
+                                return 1;
+                        }
+                        else if ( right.IsRareCommodity )
+                        {
+                            if (left.IsRareCommodity)
+                                return left.Name.CompareTo(right.Name.ToString());
+                            else
+                                return -1;
+                        }
+                        else
+                            return left.Name.CompareTo(right.Name.ToString());
+                    }
+                    else
+                        return left.Name.CompareTo(right.Name.ToString());
                 });
 
             }
@@ -177,17 +203,27 @@ namespace EliteDangerousCore
             return items;
         }
 
-        public static MaterialCommodityMicroResourceType[] GetCommodities(bool sorted)
+        public static MaterialCommodityMicroResourceType[] GetCommodities(SortMethod sorted)
         {
             return Get(x => x.IsCommodity, sorted);
         }
 
-        public static MaterialCommodityMicroResourceType[] GetMaterials(bool sorted)
+        public static MaterialCommodityMicroResourceType[] GetRareCommodities(SortMethod sorted)
+        {
+            return Get(x => x.IsRareCommodity, sorted);
+        }
+
+        public static MaterialCommodityMicroResourceType[] GetNormalCommodities(SortMethod sorted)
+        {
+            return Get(x => x.IsNormalCommodity, sorted);
+        }
+
+        public static MaterialCommodityMicroResourceType[] GetMaterials(SortMethod sorted)
         {
             return Get(x => x.IsMaterial, sorted);
         }
 
-        public static MaterialCommodityMicroResourceType[] GetMicroResources(bool sorted)
+        public static MaterialCommodityMicroResourceType[] GetMicroResources(SortMethod sorted)
         {
             return Get(x => x.IsMicroResources, sorted);
         }
@@ -592,7 +628,6 @@ namespace EliteDangerousCore
             AddManu("Bio-Mechanical Conduits", ItemType.Standard, MaterialGroupType.NA, "BMC", "TG_BioMechanicalConduits");
             AddManu("Propulsion Elements", ItemType.VeryRare, MaterialGroupType.NA, "PE", "TG_PropulsionElement");
             AddManu("Weapon Parts", ItemType.Rare, MaterialGroupType.NA, "WP", "TG_WeaponParts");
-            AddManu("Wreckage Components", ItemType.Standard, MaterialGroupType.NA, "WRC", "TG_WreckageComponents");
             AddEnc("Ship Flight Data", ItemType.Standard, MaterialGroupType.NA, "SFD", "TG_ShipFlightData");
             AddEnc("Ship Systems Data", ItemType.Rare, MaterialGroupType.NA, "SSD", "TG_ShipSystemsData");
 
@@ -753,7 +788,7 @@ namespace EliteDangerousCore
             AddCommodity("Mollusc Fluid", ItemType.Salvage, "M_TissueSample_Fluid");
             AddCommodity("Mollusc Brain Tissue", ItemType.Salvage, "M_TissueSample_Nerves");
             AddCommodity("Pod Tissue", ItemType.Salvage, "S9_TissueSample_Shell");
-            AddCommodity("Anomaly Particles Missing", sv, "P_ParticulateSample");
+            AddCommodity("Anomaly Particles", sv, "P_ParticulateSample");
             AddCommodity("Titan Maw Partial Tissue Sample", sv, "ThargoidTissueSampleType10c");
             AddCommodity("Thargoid Orthrus Tissue Sample", sv, "ThargoidTissueSampleType5");
             AddCommodity("Caustic Tissue Sample", sv, "ThargoidGeneratorTissueSample");
@@ -766,7 +801,12 @@ namespace EliteDangerousCore
             AddCommodity("Titan Partial Tissue Sample", sv, "ThargoidTissueSampleType9c");
             AddCommodity("Titan Maw Deep Tissue Sample", sv, "ThargoidTissueSampleType10a");
             AddCommodity("Titan Maw Tissue Sample", sv, "ThargoidTissueSampleType10b");
-            AddCommodity("Titan Maw Partial Tissue Sample", sv, "ThargoidTissueSampleType10c");
+
+            // update 16, devtalk
+            AddCommodity("Thargoid Scythe Tissue Sample", sv, "ThargoidTissueSampleType7");
+            AddCommodity("Protective Membrane Scrap", sv, "UnknownSack");
+            AddCommodity("Xenobiological Prison Pod", sv, "ThargoidPod");
+            AddCommodity("Coral Sap", sv, "CoralSap");
 
             ItemType nc = ItemType.Narcotics;
             AddCommodity("Narcotics", nc, "BasicNarcotics");

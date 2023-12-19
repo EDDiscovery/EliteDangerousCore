@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2019 EDDiscovery development team
+ * Copyright © 2019-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,16 +10,14 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using EliteDangerousCore.DB;
 using EliteDangerousCore.EDSM;
+using EliteDangerousCore.Spansh;
 using EMK.LightGeometry;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace EliteDangerousCore
@@ -34,7 +32,8 @@ namespace EliteDangerousCore
         public string ToSystem;
         public SystemCache.SystemsNearestMetric RouteMethod;
         public bool UseFsdBoost;
-        public bool EDSM;
+        public WebExternalDataLookup WebLookup;
+        public HashSet<long> DiscardList;
 
         public class ReturnInfo
         {
@@ -57,7 +56,11 @@ namespace EliteDangerousCore
             List<ISystem> routeSystems = new List<ISystem>();
             System.Diagnostics.Debug.WriteLine("From " + FromSystem + " to  " + ToSystem + ", using metric " + RouteMethod.ToString());
 
-            routeSystems.Add(new SystemClass(FromSystem, Coordsfrom.X, Coordsfrom.Y, Coordsfrom.Z));
+            ISystem startsystem = new SystemClass(FromSystem, null, Coordsfrom.X, Coordsfrom.Y, Coordsfrom.Z);
+            ISystem startfromdb = SystemCache.FindSystem(startsystem, WebLookup); // see if the cache knows more about it, if so, use that..
+            if (startfromdb != null)
+                startsystem = startfromdb;
+            routeSystems.Add(startsystem);
 
             info(new ReturnInfo(FromSystem, double.NaN, Coordsfrom,double.NaN,double.NaN,routeSystems[0]));
 
@@ -85,9 +88,9 @@ namespace EliteDangerousCore
 
                 if (bestsystem == null)
                 {
-                    if (EDSM)
+                    if (WebLookup != EliteDangerousCore.WebExternalDataLookup.None)
                     {
-                        bestsystem = GetBestEDSMSystem(curpos, travelvectorperly, maxfromwanted, MaxRange);
+                        bestsystem = GetBestWebSystem(curpos, travelvectorperly, maxfromwanted, MaxRange, WebLookup);
                     }
                 }
                 else
@@ -102,8 +105,8 @@ namespace EliteDangerousCore
                     boostStrength = 1 << boostStrength;
                     float maxRangeWithBoost = MaxRange * (1.0f + BoostPercentage(boostStrength));
                     ISystem bestSystemWithBoost = GetBestJumpSystem(curpos, travelvectorperly, maxfromwanted, maxRangeWithBoost);
-                    if ( bestSystemWithBoost == null && EDSM)
-                        bestSystemWithBoost = GetBestEDSMSystem(curpos, travelvectorperly, maxfromwanted, maxRangeWithBoost);
+                    if ( bestSystemWithBoost == null && WebLookup != WebExternalDataLookup.None)
+                        bestSystemWithBoost = GetBestWebSystem(curpos, travelvectorperly, maxfromwanted, maxRangeWithBoost, WebLookup);
                     if (bestSystemWithBoost != null)
                         bestsystem = bestSystemWithBoost;
                 }
@@ -119,8 +122,10 @@ namespace EliteDangerousCore
                     deltafromwaypoint = Point3D.DistanceBetween(nextpos, expectedNextPosition);     // how much in error
                     deviation = Point3D.DistanceBetween(curpos.InterceptPoint(expectedNextPosition, nextpos), nextpos);
                     sysname = bestsystem.Name;
+                    string tag = "Dev: " + deviation.ToString("N1") +"ly";
                     if (boostStrength > 0)
-                        sysname += " (+" + BoostPercentage(boostStrength) * 100 + "% Boost)";
+                        tag += " " + Environment.NewLine + "Boost: " + BoostPercentage(boostStrength) * 100 + "%";      // space on purpose in case word wrap in table not on
+                    bestsystem.Tag = tag;
                     routeSystems.Add(bestsystem);
                 }
 
@@ -132,7 +137,11 @@ namespace EliteDangerousCore
 
             } while ( !StopPlotter);
 
-            routeSystems.Add(new SystemClass(ToSystem, Coordsto.X, Coordsto.Y, Coordsto.Z));
+            ISystem endsystem = new SystemClass(ToSystem, null, Coordsto.X, Coordsto.Y, Coordsto.Z);
+            ISystem endfromdb = SystemCache.FindSystem(endsystem, WebLookup); // see if the cache knows more about it, if so, use that..
+            if (endfromdb != null)
+                endsystem = endfromdb;
+            routeSystems.Add(endsystem);
 
             actualdistance += Point3D.DistanceBetween(curpos, Coordsto);
 
@@ -147,7 +156,7 @@ namespace EliteDangerousCore
         private ISystem GetBestJumpSystem(Point3D currentPosition, Point3D travelVectorPerLy, float maxDistanceFromWanted, float maxRange)
         {
             Point3D nextPosition = GetNextPosition(currentPosition, travelVectorPerLy, maxRange);
-            ISystem bestSystem = DB.SystemCache.GetSystemNearestTo(currentPosition, nextPosition, maxRange, maxDistanceFromWanted, RouteMethod, 1000);  // at least get 1/4 way there, otherwise waypoint.  Best 1000 from waypoint checked
+            ISystem bestSystem = SystemCache.GetSystemNearestTo(currentPosition, nextPosition, maxRange, maxDistanceFromWanted, RouteMethod, 1000, DiscardList);  // at least get 1/4 way there, otherwise waypoint.  Best 1000 from waypoint checked
             return bestSystem;
         }
 
@@ -159,51 +168,72 @@ namespace EliteDangerousCore
         }
 
         static BaseUtils.MSTicks ratelimiter = new BaseUtils.MSTicks();
-        const int maxqueriesrate = 5000;
 
         // return an EDSM ISystem or null based on parameters
-        private static ISystem GetBestEDSMSystem( Point3D currentPosition, Point3D travelVectorPerLy, float maxDistanceFromWanted, float maxRange)
+        private static ISystem GetBestWebSystem( Point3D currentPosition, Point3D travelVectorPerLy, float maxDistanceFromWanted, float maxRange, WebExternalDataLookup weblookup)
         {
+            int maxqueriesratems = weblookup == WebExternalDataLookup.EDSM ? 5000 : 200;
+
             if (ratelimiter.IsRunning)      // first time, won't be running
             {
                 uint timerunning = ratelimiter.TimeRunning; // how long since ran?
 
-                if (timerunning < maxqueriesrate)       // if it is less than query rate, pause
+                if (timerunning < maxqueriesratems)       // if it is less than query rate, pause
                 {
-                    int delay = maxqueriesrate - (int)timerunning;
-                    System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.MSd} Rate limit EDSM queries by pausing for {delay}");
+                    int delay = maxqueriesratems - (int)timerunning;
+                    System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.MSd} Rate limit queries by pausing for {delay}");
                     System.Threading.Thread.Sleep(delay);
                 }
             }
 
             ratelimiter.Run();      // mark the start
 
-            EDSMClass edsm = new EDSMClass();
             Point3D next = GetNextPosition(currentPosition, travelVectorPerLy, maxRange);
-
-            System.Diagnostics.Debug.Write($"EDSM Query next pos wanted {next.X} {next.Y} {next.Z}");
-
             Point3D centrepos = GetNextPosition(currentPosition, travelVectorPerLy, maxRange - maxDistanceFromWanted / 2);        // centre of edsm sphere is made here, at maxdistance-maxwanted/2
-            var edsmresponse = edsm.GetSphereSystems(centrepos.X, centrepos.Y, centrepos.Z, maxDistanceFromWanted, 0);
+            System.Diagnostics.Debug.WriteLine($"Route Finder WebLookup next pos wanted {next} centrepos {centrepos}");
 
-            if (edsmresponse != null) // it did reply. May not due to limiter or general internet stuffy
+            if (weblookup == WebExternalDataLookup.Spansh || weblookup == WebExternalDataLookup.SpanshThenEDSM)
             {
-                var list = edsmresponse.
-                                // ensure its not too far.. don't trust edsm
-                                Where(x => (x.Item1.X - currentPosition.X) * (x.Item1.X - currentPosition.X) + (x.Item1.Y - currentPosition.Y) * (x.Item1.Y - currentPosition.Y) + (x.Item1.Z - currentPosition.Z) * (x.Item1.Z - currentPosition.Z) < maxRange * maxRange).
-                                // order by distance from next ascending
-                                OrderBy(x => (x.Item1.X - next.X) * (x.Item1.X - next.X) + (x.Item1.Y - next.Y) * (x.Item1.Y - next.Y) + (x.Item1.Z - next.Z) * (x.Item1.Z - next.Z)).
-                                ToList();
-                //foreach (var x in list)
-                //    System.Diagnostics.Debug.WriteLine($"Sys {x.Item1.Name} {x.Item1.X},{x.Item1.Y},{x.Item1.Z} dist {Math.Sqrt((x.Item1.X - next.X) * (x.Item1.X - next.X) + (x.Item1.Y - next.Y) * (x.Item1.Y - next.Y) + (x.Item1.Z - next.Z) * (x.Item1.Z - next.Z))}" +
-                //            $"distcur {Math.Sqrt((x.Item1.X - currentPosition.X) * (x.Item1.X - currentPosition.X) + (x.Item1.Y - currentPosition.Y) * (x.Item1.Y - currentPosition.Y) + (x.Item1.Z - currentPosition.Z) * (x.Item1.Z - currentPosition.Z))}"
-                //        );
+                SpanshClass spansh = new SpanshClass();     
+                var response = spansh.GetSphereSystems(centrepos.X, centrepos.Y, centrepos.Z, maxDistanceFromWanted, 0);        // checked nov 1st 2023
 
-                return list.Count > 0 ? list[0].Item1 : null;
+                if (response != null) // it did reply. May not due to limiter or general internet stuffy
+                {
+                    var list = response.
+                                    // ensure its not too far.. don't trust 
+                                    Where(x => (x.Item1.X - currentPosition.X) * (x.Item1.X - currentPosition.X) + (x.Item1.Y - currentPosition.Y) * (x.Item1.Y - currentPosition.Y) + (x.Item1.Z - currentPosition.Z) * (x.Item1.Z - currentPosition.Z) < maxRange * maxRange).
+                                    // order by distance from next ascending
+                                    OrderBy(x => (x.Item1.X - next.X) * (x.Item1.X - next.X) + (x.Item1.Y - next.Y) * (x.Item1.Y - next.Y) + (x.Item1.Z - next.Z) * (x.Item1.Z - next.Z)).
+                                    ToList();
+                    //foreach (var x in list)
+                    //{
+                    //    System.Diagnostics.Debug.WriteLine($"Sys {x.Item1.Name} {x.Item1.X},{x.Item1.Y},{x.Item1.Z} dist {Math.Sqrt((x.Item1.X - next.X) * (x.Item1.X - next.X) + (x.Item1.Y - next.Y) * (x.Item1.Y - next.Y) + (x.Item1.Z - next.Z) * (x.Item1.Z - next.Z))}" +
+                    //           $"distcur {Math.Sqrt((x.Item1.X - currentPosition.X) * (x.Item1.X - currentPosition.X) + (x.Item1.Y - currentPosition.Y) * (x.Item1.Y - currentPosition.Y) + (x.Item1.Z - currentPosition.Z) * (x.Item1.Z - currentPosition.Z))}");           
+                    //}
+
+                    return list.Count > 0 ? list[0].Item1 : null;
+                }
             }
-            else
-                return null;
 
+            if (weblookup == WebExternalDataLookup.EDSM || weblookup == WebExternalDataLookup.SpanshThenEDSM)
+            {
+                EDSMClass edsm = new EDSMClass();
+                var edsmresponse = edsm.GetSphereSystems(centrepos.X, centrepos.Y, centrepos.Z, maxDistanceFromWanted, 0);
+
+                if (edsmresponse != null) // it did reply. May not due to limiter or general internet stuffy
+                {
+                    var list = edsmresponse.
+                                    // ensure its not too far.. don't trust edsm
+                                    Where(x => (x.Item1.X - currentPosition.X) * (x.Item1.X - currentPosition.X) + (x.Item1.Y - currentPosition.Y) * (x.Item1.Y - currentPosition.Y) + (x.Item1.Z - currentPosition.Z) * (x.Item1.Z - currentPosition.Z) < maxRange * maxRange).
+                                    // order by distance from next ascending
+                                    OrderBy(x => (x.Item1.X - next.X) * (x.Item1.X - next.X) + (x.Item1.Y - next.Y) * (x.Item1.Y - next.Y) + (x.Item1.Z - next.Z) * (x.Item1.Z - next.Z)).
+                                    ToList();
+    
+                    return list.Count > 0 ? list[0].Item1 : null;
+                }
+            }
+
+            return null;
         }
 
         private static float BoostPercentage(int boostStrength)

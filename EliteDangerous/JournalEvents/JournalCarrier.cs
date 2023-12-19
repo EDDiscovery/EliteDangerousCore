@@ -281,7 +281,7 @@ namespace EliteDangerousCore.JournalEvents
             info = BaseUtils.FieldBuilder.Build("Name: ".T(EDCTx.JournalCarrier_Name), State.Name,
                                                 "Call Sign: ".T(EDCTx.JournalCarrier_Callsign), State.Callsign,
                                                 "Fuel Level: ;;N0".T(EDCTx.JournalCarrier_FuelLevel), State.FuelLevel,
-                                                "Jump Range: ;ly;0.0".T(EDCTx.JournalCarrier_JumpRange), State.JumpRangeCurr,
+                                                "Jump Range: ; ly;0.0".T(EDCTx.JournalCarrier_JumpRange), State.JumpRangeCurr,
                                                 "Carrier Balance: ; cr;N0".T(EDCTx.JournalCarrier_Balance), State.Finance.CarrierBalance,
                                                 "Reserve Balance: ; cr;N0".T(EDCTx.JournalCarrier_ReserveBalance), State.Finance.ReserveBalance,
                                                 "Available Balance: ; cr;N0".T(EDCTx.JournalCarrier_AvailableBalance), State.Finance.AvailableBalance,
@@ -959,7 +959,7 @@ namespace EliteDangerousCore.JournalEvents
                 detailed = "Items to buy: ".T(EDCTx.JournalCommodityPricesBase_Itemstobuy) + System.Environment.NewLine;
                 foreach (CCommodities c in Items)
                 {
-                    if (c.CanBeBought)
+                    if (c.HasStock)
                     {
                         string name = MaterialCommodityMicroResourceType.GetNameByFDName(c.fdname);
                         detailed += string.Format("{0}: {1}  ".T(EDCTx.JournalCommodityPricesBase_CPBBuy), name, c.buyPrice) + Environment.NewLine;
@@ -969,7 +969,7 @@ namespace EliteDangerousCore.JournalEvents
                 detailed += "Sell only Items: ".T(EDCTx.JournalCommodityPricesBase_SO) + System.Environment.NewLine;
                 foreach (CCommodities c in Items)
                 {
-                    if (!c.CanBeBought)
+                    if (!c.HasStock)
                     {
                         string name = MaterialCommodityMicroResourceType.GetNameByFDName(c.fdname);
                         detailed += string.Format("{0}: {1}  ".T(EDCTx.JournalCommodityPricesBase_CPBBuy), name, c.sellPrice) + Environment.NewLine;
@@ -978,9 +978,10 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
+        // pattern also used in journaldocking stationinfo
         public bool HasItem(string fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase)) >= 0; }
-        public bool HasItemToBuy(string fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase) && x.CanBeBought) >= 0; }
-        public bool HasItemToSell(string fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase) && x.CanBeSold) >= 0; }
+        public bool HasItemToBuy(string fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase) && x.HasStock) >= 0; }
+        public bool HasItemToSell(string fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase) && x.HasDemandAndPrice) >= 0; }
     }
 }
 

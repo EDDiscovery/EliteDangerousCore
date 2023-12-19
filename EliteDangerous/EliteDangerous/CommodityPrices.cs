@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2020 EDDiscovery development team
+ * Copyright © 2020-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using QuickJSON;
@@ -34,22 +32,50 @@ namespace EliteDangerousCore
         public string loccategory { get; private set; }     // in this context, it means, its type (Metals).. as per MaterialCommoditiesDB
         public string legality { get; private set; }        // CAPI only
 
-        [JsonIgnore]
-        public bool CanBeBought { get { return buyPrice > 0 && stock > 0; } }
-        [JsonIgnore]
-        public bool CanBeSold { get { return sellPrice > 0 && demand > 0; } }
-        [JsonIgnore]
-        public bool HasDemand { get { return demand > 1; } }        // 1 because lots of them are marked as 1, as in, they want it, but not much
+        // marketjson:
+        // a BUY from market entry:
+        // { "id":128049204, "Name":"$explosives_name;", "Name_Localised":"Explosives", "Category":"$MARKET_category_chemicals;", "Category_Localised":"Chemicals",
+        //  "BuyPrice":232,     -- display shows this is cost to buy
+        //  "SellPrice":208,
+        //  "MeanPrice":513,
+        //  "StockBracket":3,
+        //  "DemandBracket":0,
+        //  "Stock":1139919,
+        //  "Demand":1,
+        //  "Consumer":false, "Producer":true, "Rare":false },
 
-        public int buyPrice { get; private set; }
+        // a SELL to market entry:
+        // { "id":128924334, "Name":"$agronomictreatment_name;", "Name_Localised":"Agronomic Treatment", "Category":"$MARKET_category_chemicals;", "Category_Localised":"Chemicals",
+        // "BuyPrice":0,
+        // "SellPrice":3727,
+        // "MeanPrice":3105,
+        // "StockBracket":0,
+        // "DemandBracket":3,
+        // "Stock":0,
+        // "Demand":1299,
+        // "Consumer":true, "Producer":false, "Rare":false },
 
-        public int sellPrice { get; private set; }
-        public int meanPrice { get; private set; }
-        public int demandBracket { get; private set; }
+        // BUY from station
+        public int buyPrice { get; private set; }       // Price to be paid to buy from market
+        public int stock { get; private set; }          // how much station has
         public int stockBracket { get; private set; }
-        public int stock { get; private set; }
-        public int demand { get; private set; }
+        [JsonIgnore]
+        public bool HasStock { get { return stock > 0; } }
 
+        // SELL to station
+        public int sellPrice { get; private set; }      // price station will pay for it
+        public int demand { get; private set; }         // station demand for it
+        public int demandBracket { get; private set; }
+        [JsonIgnore]
+        public bool HasDemandAndPrice { get { return sellPrice > 0 && demand > 0; } }
+        [JsonIgnore]
+        public bool HasDemand { get { return demand > 0; } }
+
+        // Mean
+        public int meanPrice { get; private set; }
+
+
+        // can carry flags, such as Consumer/Producer/Rare
         public List<string> statusFlags { get; private set; }
 
         [JsonIgnore]
@@ -63,12 +89,18 @@ namespace EliteDangerousCore
         [JsonIgnore]
         public int CargoCarried { get; set; }                  // NOT in Frontier data, cargo currently carried for this item
 
-        public enum ReaderType { Market, CAPI, FCMaterials }
+        public CCommodities()
+        {
+        }
+
+        public enum ReaderType { Market, CAPI, FCMaterials, Spansh }
         public CCommodities(JObject jo, ReaderType ty )
         {
             if (ty == ReaderType.Market)
                 FromJsonMarket(jo);
             else if (ty == ReaderType.CAPI)
+                FromJsonCAPI(jo);
+            else if (ty == ReaderType.Spansh)
                 FromJsonCAPI(jo);
             else
                 FromJsonFCMaterials(jo);
@@ -130,7 +162,6 @@ namespace EliteDangerousCore
                     category = marketmarker + category;
 
                 legality = jo["legality"].Str();
-
 
                 buyPrice = jo["buyPrice"].Int();
                 sellPrice = jo["sellPrice"].Int();
@@ -240,12 +271,57 @@ namespace EliteDangerousCore
             }
         }
 
+        public bool FromJsonSpansh(JObject jo, bool dump)
+        {
+            try
+            {
+                string spanshname = jo[dump ? "name" : "commodity"].Str();
+                
+                var mcd = MaterialCommodityMicroResourceType.GetByEnglishName(spanshname);
+                if ( mcd != null )
+                {
+                    fdname = fdname_unnormalised = mcd.FDName;
+                    locName = mcd.Name;
+                    category = mcd.Type.ToString();
+                    loccategory = mcd.TranslatedType;
+                }
+                else
+                {
+                    fdname = fdname_unnormalised = locName = spanshname;
+                    loccategory = category = jo["category"].Str();
+                }
+
+                legality = "";
+
+                meanPrice = buyPrice = jo[dump ? "buyPrice" : "buy_price"].Int();
+                demandBracket = 0;
+                stockBracket = 0;
+
+                sellPrice = jo[dump ? "sellPrice" : "sell_price"].Int();
+                stock = jo["supply"].Int();
+                demand = jo["demand"].Int();
+                this.statusFlags = new List<string>(); // not present
+                //System.Diagnostics.Debug.WriteLine("Market field fd:'{0}' loc:'{1}' of type '{2}' '{3}'", fdname, locName, category, loccategory);
+
+                ComparisionLR = ComparisionRL = "";
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public override string ToString()
         {
-            return string.Format("{0} : {1} Buy {2} Sell {3} Mean {4}" + System.Environment.NewLine +
-                                 "Stock {5} Demand {6} " + System.Environment.NewLine + 
+            return string.Format("{0}: {1} Buy {2} Sell {3} Mean {4}" + System.Environment.NewLine +
+                                 "Stock {5} Demand {6} " + System.Environment.NewLine +
                                  "Stock Bracket {6} Demand Bracket {7}"
-                                 , loccategory, locName, buyPrice, sellPrice, meanPrice, stock, demand, stockBracket, demandBracket );
+                                 , loccategory, locName, buyPrice, sellPrice, meanPrice, stock, demand, stockBracket, demandBracket);
+        }
+        public string ToStringShort()
+        {
+            return string.Format("{0}: {1} Buy {2} Sell {3} Stock {4} Demand {5}" , loccategory, locName, buyPrice, sellPrice, stock, demand);
         }
 
         public static void Sort(List<CCommodities> list)
@@ -269,13 +345,13 @@ namespace EliteDangerousCore
                 CCommodities r = right.Find(x => x.fdname == l.fdname);
                 if (r != null)
                 {
-                    if (l.CanBeBought)     // if we can buy it..
+                    if (l.HasStock)     // if we can buy it..
                     {
                         m.ComparisionLR = (r.sellPrice - l.buyPrice).ToString();
                         m.ComparisionBuy = true;
                     }
 
-                    if (r.CanBeBought)     // if we can buy it..
+                    if (r.HasStock)     // if we can buy it..
                     {
                         m.ComparisionRL = (l.sellPrice - r.buyPrice).ToString();
                         m.ComparisionBuy = true;
@@ -283,7 +359,7 @@ namespace EliteDangerousCore
                 }
                 else
                 {                                   // not found in right..
-                    if (l.CanBeBought)             // if we can buy it here, note you can't price it in right
+                    if (l.HasStock)             // if we can buy it here, note you can't price it in right
                         m.ComparisionLR = "No Price";
                 }
 
@@ -299,7 +375,7 @@ namespace EliteDangerousCore
                     m = new CCommodities(r);
                     m.ComparisionRightOnly = true;
 
-                    if (r.CanBeBought)                             // if we can buy it there, but its not in the left list
+                    if (r.HasStock)                             // if we can buy it there, but its not in the left list
                     {
                         m.ComparisionBuy = true;
                         m.ComparisionRL = "No price";

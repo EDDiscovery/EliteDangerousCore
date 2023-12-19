@@ -22,7 +22,7 @@ using System.Data.Common;
 
 namespace EliteDangerousCore.JournalEvents
 {
-    public abstract class JournalLocOrJump : JournalEntry, ISystemStationEntry
+    public abstract class JournalLocOrJump : JournalEntry, ISystemStationEntry, IIdentifiers
     {
         public string StarSystem { get; set; }
         public EMK.LightGeometry.Vector3 StarPos { get; set; }
@@ -117,6 +117,7 @@ namespace EliteDangerousCore.JournalEvents
         protected JournalLocOrJump(DateTime utc, ISystem sys, JournalTypeEnum jtype, bool edsmsynced ) : base(utc, jtype, edsmsynced)
         {
             StarSystem = sys.Name;
+            SystemAddress = sys.SystemAddress;
             StarPos = new EMK.LightGeometry.Vector3((float)sys.X, (float)sys.Y, (float)sys.Z);
         }
 
@@ -200,6 +201,13 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
+        public void UpdateIdentifiers()
+        {
+            if (Economy.HasChars() && Economy_Localised.HasChars())
+                Identifiers.Add(Economy, Economy_Localised);
+            if (Government.HasChars() && Government_Localised.HasChars())
+                Identifiers.Add(Government, Government_Localised);
+        }
     }
 
 
@@ -351,7 +359,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void AddStarScan(StarScan s, ISystem system)
         {
-            s.AddLocation(new SystemClass(SystemAddress, StarSystem, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
+            s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }
 
         public void UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrier)
@@ -434,7 +442,7 @@ namespace EliteDangerousCore.JournalEvents
         }
         public void AddStarScan(StarScan s, ISystem system)
         {
-            s.AddLocation(new SystemClass(SystemAddress, StarSystem, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
+            s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }
 
 
@@ -536,7 +544,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string SummaryName(ISystem sys) { return string.Format("Jump to {0}".T(EDCTx.JournalFSDJump_Jumpto), StarSystem); }
         public void AddStarScan(StarScan s, ISystem system)
         {
-            s.AddLocation(new SystemClass(SystemAddress, StarSystem, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
+            s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }
 
         public override void FillInformation(out string info, out string detailed)
@@ -637,14 +645,14 @@ namespace EliteDangerousCore.JournalEvents
             });
         }
 
-        internal void UpdateFirstDiscover(bool value, SQLiteConnectionUser cn, DbTransaction txnl = null)
+        internal void UpdateFirstDiscover(bool value, SQLiteConnectionUser cn)
         {
-            JObject jo = GetJson(Id, cn, txnl);
+            JObject jo = GetJson(Id, cn);
 
             if (jo != null)
             {
                 jo["EDD_EDSMFirstDiscover"] = value;
-                UpdateJsonEntry(jo, cn, txnl);
+                UpdateJsonEntry(jo, cn);
                 EDSMFirstDiscover = value;
             }
         }
@@ -670,13 +678,15 @@ namespace EliteDangerousCore.JournalEvents
         {
             StarSystem = evt["Name"].Str();
             StarClass = evt["StarClass"].Str();
+            EDStarClass = Stars.ToEnum(StarClass);
             SystemAddress = evt["SystemAddress"].Long();
             RemainingJumpsInRoute = evt["RemainingJumpsInRoute"].IntNull();
-            FriendlyStarClass = (StarClass.Length > 0) ? Bodies.StarName(Bodies.StarStr2Enum(StarClass)) : "";
+            FriendlyStarClass = (StarClass.Length > 0) ? Stars.StarName(Stars.ToEnum(StarClass)) : "";
         }
 
         public string StarSystem { get; set; }
         public string StarClass { get; set; }
+        public EDStar EDStarClass { get; set; }
         public long SystemAddress { get; set; }
         public int? RemainingJumpsInRoute { get; set; }
         public string FriendlyStarClass { get; set; }
@@ -699,7 +709,8 @@ namespace EliteDangerousCore.JournalEvents
             IsHyperspace = JumpType.Equals("Hyperspace", System.StringComparison.InvariantCultureIgnoreCase);
             StarSystem = evt["StarSystem"].Str();
             StarClass = evt["StarClass"].Str();
-            FriendlyStarClass = (StarClass.Length > 0) ? Bodies.StarName(Bodies.StarStr2Enum(StarClass)) : "";
+            EDStarClass = Stars.ToEnum(StarClass);
+            FriendlyStarClass = (StarClass.Length > 0) ? Stars.StarName(Stars.ToEnum(StarClass)) : "";
             SystemAddress = evt["SystemAddress"].LongNull();
             InTaxi = evt["Taxi"].BoolNull();
         }
@@ -709,6 +720,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StarSystem { get; set; }
         public long? SystemAddress { get; set; }
         public string StarClass { get; set; }
+        public EDStar EDStarClass { get; set; }
         public string FriendlyStarClass { get; set; }
         public bool? InTaxi { get; set; }        // update 15+
 
@@ -726,7 +738,7 @@ namespace EliteDangerousCore.JournalEvents
         public void AddStarScan(StarScan s, ISystem system)
         {
             if ( IsHyperspace )
-                s.AddLocation(new SystemClass(SystemAddress, StarSystem));      // add so there is placeholder
+                s.AddLocation(new SystemClass(StarSystem,SystemAddress));      // add so there is placeholder
         }
     }
 }

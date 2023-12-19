@@ -14,10 +14,6 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <ContentSQLiteInteropFiles>true</ContentSQLiteInteropFiles>
-    <CopySQLiteInteropFiles>false</CopySQLiteInteropFiles>
-    <CleanSQLiteInteropFiles>false</CleanSQLiteInteropFiles>
-    <CollectSQLiteInteropFiles>false</CollectSQLiteInteropFiles>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,18 +37,11 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="QuickJSON, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RJKJSoft.QuickJSON.1.1.0\lib\net48\QuickJSON.dll</HintPath>
+    <Reference Include="QuickJSON, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\RJKJSoft.QuickJSON.1.4.0\lib\net48\QuickJSON.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.SQLite, Version=1.0.113.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>$(SolutionDir)\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.113.3\lib\net46\System.Data.SQLite.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite.Linq, Version=1.0.113.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>$(SolutionDir)\packages\System.Data.SQLite.Linq.1.0.113.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Web" />
@@ -65,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Computers\JournalStatsInfo.cs" />
     <Compile Include="Config\EliteConfigInstance.cs" />
     <Compile Include="Config\IEliteConfig.cs" />
     <Compile Include="Config\IEliteOptions.cs" />
@@ -94,16 +84,21 @@
     <Compile Include="EDSM\EDSMJournalSync.cs" />
     <Compile Include="EDSM\EDSMClass.cs" />
     <Compile Include="EDSM\EDSMLogFetcher.cs" />
-    <Compile Include="EDSM\GalMapType.cs" />
-    <Compile Include="EDSM\GalacticMapObject.cs" />
-    <Compile Include="EDSM\GalacticMapSystem.cs" />
-    <Compile Include="EDSM\GalacticMapping.cs" />
+    <Compile Include="EliteDangerous\PhysicalConstants.cs" />
+    <Compile Include="EliteDangerous\Stars.cs" />
+    <Compile Include="EliteDangerous\Stations.cs" />
+    <Compile Include="EliteDangerous\Government.cs" />
+    <Compile Include="EliteDangerous\Economy.cs" />
+    <Compile Include="GMO\GalMapType.cs" />
+    <Compile Include="GMO\GalacticMapObject.cs" />
+    <Compile Include="GMO\GalacticMapping.cs" />
     <Compile Include="Bindings\BindingsFile.cs" />
+    <Compile Include="EliteDangerous\BodyImages.cs" />
     <Compile Include="EliteDangerous\EliteReleaseDates.cs" />
-    <Compile Include="EliteDangerous\Bodies.cs" />
+    <Compile Include="EliteDangerous\Planets.cs" />
     <Compile Include="BodyDesignations\BodyDesignationsDefaults.cs" />
     <Compile Include="EliteDangerous\CommodityPrices.cs" />
-    <Compile Include="EliteDangerous\EDCalculations.cs" />
+    <Compile Include="EliteDangerous\FSDSpec.cs" />
     <Compile Include="DB\EDCommander.cs" />
     <Compile Include="EliteDangerous\EstimatedValues.cs" />
     <Compile Include="EliteDangerous\FrontierFolder.cs" />
@@ -128,6 +123,8 @@
     <Compile Include="Items\ItemWeapons.cs" />
     <Compile Include="JournalEvents\JournalEmbarkDisembark.cs" />
     <Compile Include="JournalEvents\JournalCarrier.cs" />
+    <Compile Include="JournalEvents\JournalScan_Helpers.cs" />
+    <Compile Include="JournalEvents\JournalScan_Surveyor.cs" />
     <Compile Include="JournalEvents\JournalScan_Display.cs" />
     <Compile Include="JournalEvents\JournalScan_Subclasses.cs" />
     <Compile Include="JournalEvents\JournalScanBarycentre.cs" />
@@ -153,6 +150,11 @@
     <Compile Include="Screenshots\ScreenShotConverter.cs" />
     <Compile Include="Screenshots\ScreenShotDirectoryWatcher.cs" />
     <Compile Include="Screenshots\ScreenShotImageConverter.cs" />
+    <Compile Include="Spansh\SpanshClassBodyList.cs" />
+    <Compile Include="Spansh\SpanshClassRouters.cs" />
+    <Compile Include="Spansh\SpanshClassSystems.cs" />
+    <Compile Include="Spansh\SpanshClassStation.cs" />
+    <Compile Include="Spansh\SpanshClass.cs" />
     <Compile Include="StarScan\StarScanApproachTouchdown.cs" />
     <Compile Include="StarScan\StarScanFSSBodySignals.cs" />
     <Compile Include="StarScan\StarScanBaryCentre.cs" />
@@ -171,11 +173,13 @@
     <Compile Include="StarScan\StarScanFSSSignalsDiscovered.cs" />
     <Compile Include="StarScan\StarScanSAASignalsFound.cs" />
     <Compile Include="StarScan\StarScanSAAScan.cs" />
+    <Compile Include="Items\Identifiers.cs" />
     <Compile Include="Stats\Carrier.cs" />
     <Compile Include="Stats\Stats.cs" />
     <Compile Include="Status\EDStatusReader.cs" />
     <Compile Include="Bindings\FrontierToVKey.cs" />
-    <Compile Include="EliteDangerous\ISystem.cs" />
+    <Compile Include="SystemDB\SystemsPermitSystems.cs" />
+    <Compile Include="Systems\ISystem.cs" />
     <Compile Include="Journal\JournalEntry.cs" />
     <Compile Include="Journal\JournalEntryAttributes.cs" />
     <Compile Include="Journal\JournalEntryInterfaces.cs" />
@@ -201,7 +205,7 @@
     <Compile Include="Ships\ShipYard.cs" />
     <Compile Include="Computers\StarDistanceComputer.cs" />
     <Compile Include="StarScan\StarScan.cs" />
-    <Compile Include="EliteDangerous\SystemClass.cs" />
+    <Compile Include="Systems\SystemClass.cs" />
     <Compile Include="EliteDangerous\VisitingStarsCacheFolder.cs" />
     <Compile Include="HistoryList\HistoryTravel.cs" />
     <Compile Include="HistoryList\HistoryEntry.cs" />
@@ -279,17 +283,18 @@
     <Compile Include="Suit\SuitInformation.cs" />
     <Compile Include="SystemDB\EliteNameClassifier.cs" />
     <Compile Include="SystemDB\SQLiteConnectionSystem.cs" />
-    <Compile Include="SystemDB\SystemCache.cs" />
+    <Compile Include="Systems\SystemCache.cs" />
     <Compile Include="SystemDB\SystemGridID.cs" />
     <Compile Include="SystemDB\SystemsDatabase.cs" />
-    <Compile Include="SystemDB\SystemsDBEDSMRemove.cs" />
-    <Compile Include="SystemDB\SystemsDBEDSMStore.cs" />
-    <Compile Include="SystemDB\SystemsDBEDSMSystemAliases.cs" />
+    <Compile Include="SystemDB\SystemsDBLoader3.cs" />
+    <Compile Include="SystemDB\SystemsDBStoreSystems.cs" />
+    <Compile Include="SystemDB\SystemsDBRemove.cs" />
     <Compile Include="SystemDB\SystemsDBGetByDistance.cs" />
-    <Compile Include="SystemDB\SystemsDBGetByGrid.cs" />
     <Compile Include="SystemDB\SystemsDBGetLists.cs" />
     <Compile Include="SystemDB\SystemsDBGetStars.cs" />
     <Compile Include="DB\UserDatabase.cs" />
+    <Compile Include="SystemDisplay\SystemDisplayDrawParts.cs" />
+    <Compile Include="SystemDisplay\SystemDisplayPlanetTree.cs" />
     <Compile Include="SystemDisplay\SystemDisplayNodes.cs" />
     <Compile Include="SystemDisplay\SystemDisplay.cs" />
     <Compile Include="SystemDisplay\SystemDisplayBarycentres.cs" />
@@ -381,9 +386,7 @@
     <None Include="JournalEvents\translation-polski-je.tlp" />
     <None Include="JournalEvents\translation-portugues-je.tlp" />
     <None Include="JournalEvents\translation-spanish-je.tlp" />
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="packages.config" />
     <None Include="Resources\Marx Nebula List 26-10-21.csv" />
   </ItemGroup>
   <ItemGroup>
@@ -406,11 +409,4 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('$(SolutionDir)\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.113.3\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.113.3\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
-  </Target>
-  <Import Project="$(SolutionDir)\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.113.3\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.113.3\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
 </Project>

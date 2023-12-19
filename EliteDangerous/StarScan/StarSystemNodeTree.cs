@@ -97,7 +97,7 @@ namespace EliteDangerousCore
 
                         if (parent.Children.ContainsKey(name))      // if parent already has child, it was made because we pre created the node tree
                         {                                           // probably does not happen due to layering already done in original structure. but best to cope with it
-                            newnode.Children = parent.Children[name].Children;  // copy current children in, since we must have made it and have children
+                            newnode.CopyChildren(parent.Children[name]);  // copy current children in, since we must have made it and have children
                             parent.Children[name] = newnode;        // reassign name to newnode
                         }
                         else
@@ -143,7 +143,7 @@ namespace EliteDangerousCore
                     // if we have data on a barycentre, add a new JournalScan for it
                     if (Barycentres.ContainsKey(cid))
                     {
-                        newnode.ScanData = new JournalScan(Barycentres[cid]);
+                        newnode.SetScanDataIfBetter( new JournalScan(Barycentres[cid]) );
                     }
                     else
                     {

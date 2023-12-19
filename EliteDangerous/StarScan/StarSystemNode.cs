@@ -53,15 +53,15 @@ namespace EliteDangerousCore
                     {
                         yield return sn;
 
-                        foreach (ScanNode c in sn.Descendants)
+                        foreach (ScanNode c in sn.Bodies)
                         {
                             yield return c;
                         }
                     }
                 }
             }
-
-            public long ScanValue(bool includeedsmvalue)
+ 
+            public long ScanValue(bool includewebvalue)
             {
                 long value = 0;
 
@@ -69,7 +69,7 @@ namespace EliteDangerousCore
                 {
                     if (body?.ScanData != null)
                     {
-                        if (includeedsmvalue || !body.ScanData.IsEDSMBody)
+                        if (includewebvalue || !body.ScanData.IsWebSourced)
                         {
                             value += body.ScanData.EstimatedValue;
                         }
@@ -93,9 +93,9 @@ namespace EliteDangerousCore
             {
                 return Bodies.Where(b => (b.NodeType == ScanNodeType.star || b.NodeType == ScanNodeType.body) && b.ScanData != null).Count();
             }
-            public int StarPlanetsScannednonEDSM()      // not include anything but these.  This corresponds to FSSDiscoveryScan
+            public int StarPlanetsScannednonWeb()      // not include anything but these.  This corresponds to FSSDiscoveryScan
             {
-                return Bodies.Where(b => (b.NodeType == ScanNodeType.star || b.NodeType == ScanNodeType.body) && b.ScanData != null && !b.ScanData.IsEDSMBody).Count();
+                return Bodies.Where(b => (b.NodeType == ScanNodeType.star || b.NodeType == ScanNodeType.body) && b.ScanData != null && !b.ScanData.IsWebSourced).Count();
             }
             public int StarsScanned()      // only stars
             {

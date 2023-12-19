@@ -24,7 +24,7 @@ namespace EliteDangerousCore
         // for very old netlogs find positions
         // call if you want to ensure we have the best posibile position data on FSD Jumps.  Only occurs on pre 2.1 netlogs
 
-        public void FillInPositionsFSDJumps(Action<string> logger)       
+        public void FillInPositionsFSDJumps(Action<string> logger, EliteDangerousCore.WebExternalDataLookup lookup = WebExternalDataLookup.All)       
         {
             List<Tuple<HistoryEntry, ISystem>> updatesystems = new List<Tuple<HistoryEntry, ISystem>>();
 
@@ -40,7 +40,7 @@ namespace EliteDangerousCore
 
                         if (!he.System.HasCoordinate || (Math.Abs(he.System.X) < 1 && Math.Abs(he.System.Y) < 1 && Math.Abs(he.System.Z) < 0 && he.System.Name != "Sol"))
                         {
-                            ISystem found = SystemCache.FindSystem(he.System, true);        // find, thru edsm if required
+                            ISystem found = SystemCache.FindSystem(he.System, lookup);        // find, thru edsm if required
 
                             if (found != null)
                             {
@@ -63,7 +63,7 @@ namespace EliteDangerousCore
                         foreach (Tuple<HistoryEntry, ISystem> hesys in updatesystems)
                         {
                             logger?.Invoke($"Update position of {hesys.Item1.System.Name} at {hesys.Item1.EntryNumber} in journal");
-                            hesys.Item1.journalEntry.UpdateStarPosition(hesys.Item2, cn, txn);
+                            hesys.Item1.journalEntry.UpdateStarPosition(hesys.Item2, cn);
                             hesys.Item1.UpdateSystem(hesys.Item2);
                         }
 
@@ -85,10 +85,11 @@ namespace EliteDangerousCore
                 if ( he.EntryType == JournalTypeEnum.Scan && he.ScanNode == null)
                 {
                     // if we have two scans of the same body, the starscan always replaces the journal scan with the latest.
-                    // maybe we should use bodyid
+                    // Don't try and find the scan node from the web
 
-                    var sysnode = StarScan.FindSystemSynchronous(he.System, false);                 // prob not null, but check
+                    var sysnode = StarScan.FindSystemSynchronous(he.System);
 
+                    // prob not null, but check. 
                     if ( sysnode != null)
                     {
                         var js = he.journalEntry as JournalEvents.JournalScan;

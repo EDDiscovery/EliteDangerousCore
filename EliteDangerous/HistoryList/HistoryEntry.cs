@@ -15,6 +15,7 @@
 using EliteDangerousCore.DB;
 using EliteDangerousCore.JournalEvents;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -127,7 +128,7 @@ namespace EliteDangerousCore
         {
         }
 
-        public static HistoryEntry FromJournalEntry(JournalEntry je, HistoryEntry prev)
+        public static HistoryEntry FromJournalEntry(JournalEntry je, HistoryEntry prev, Dictionary<string, EDStar> starclasses)
         {
             ISystem isys = prev == null ? new SystemClass("Unknown") : prev.System;
 
@@ -139,13 +140,9 @@ namespace EliteDangerousCore
 
                 if (jl != null && jl.HasCoordinate)       // LAZY LOAD IF it has a co-ord.. the front end will when it needs it
                 {
-                    newsys = new SystemClass(jl.StarSystem, jl.StarPos.X, jl.StarPos.Y, jl.StarPos.Z)
-                    {
-                        EDSMID = 0,         // not an EDSM entry
-                        SystemAddress = jl.SystemAddress,
-                        Source = jl.StarPosFromEDSM ? SystemSource.FromEDSM : SystemSource.FromJournal,
-                    };
-
+                    EDStar starclass = EDStar.Unknown;
+                    starclasses?.TryGetValue(jl.StarSystem, out starclass);     // see if its there, and star classes is defined
+                    newsys = new SystemClass(jl.StarSystem, jl.SystemAddress, jl.StarPos.X, jl.StarPos.Y, jl.StarPos.Z, jl.StarPosFromEDSM ? SystemSource.FromEDSM : SystemSource.FromJournal, starclass);
                     SystemCache.AddSystemToCache(newsys);        // this puts it in the cache
 
                     // If it was a new system, pass the coords back to the StartJump
@@ -284,7 +281,9 @@ namespace EliteDangerousCore
 
             if (isTravelling && (IsFSD || StopMarker))
             {
-                eventDescription = TravelledStats + ", " + eventDescription;
+                string ts = TravelledStats;
+                if ( ts.Length>0)
+                    eventDescription = ts + ", " + eventDescription;
             }
         }
 

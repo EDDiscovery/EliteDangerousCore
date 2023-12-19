@@ -81,6 +81,10 @@ namespace EliteDangerousCore.JournalEvents
                     r.Faction_Localised = JournalFieldNaming.CheckLocalisation(r.Faction_Localised, r.Faction);
                 }
             }
+
+            //new in patch 17
+            PilotName = evt["PilotName"].StrNull();
+            PilotName_Localised = JournalFieldNaming.CheckLocalisation(evt["PilotName_Localised"].StrNull(), PilotName);
         }
 
         public long TotalReward { get; set; }
@@ -90,6 +94,8 @@ namespace EliteDangerousCore.JournalEvents
         public string TargetLocalised { get; set; }
         public bool SharedWithOthers { get; set; }
         public BountyReward[] Rewards { get; set; }
+        public string PilotName { get; set; }   //may be null
+        public string PilotName_Localised { get; set; } //may be null
 
         // very old logs did not have target or victim faction, and therefore must be a ship
         public bool IsThargoid { get { return VictimFaction != null && VictimFaction.Contains("Thargoid", System.StringComparison.InvariantCultureIgnoreCase); } }       // seen both "Thargoid" and later "$faction_Thargoid;"
@@ -124,7 +130,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(out string info, out string detailed) 
         {
             
-            info = BaseUtils.FieldBuilder.Build("; cr;N0", TotalReward, "Target: ".T(EDCTx.JournalEntry_Target), TargetLocalised, "Victim faction: ".T(EDCTx.JournalEntry_Victimfaction), VictimFactionLocalised);
+            info = BaseUtils.FieldBuilder.Build("; cr;N0", TotalReward, "Target: ".T(EDCTx.JournalEntry_Target), TargetLocalised, "Pilot: ".T(EDCTx.JournalEntry_Pilot), PilotName_Localised, "Victim faction: ".T(EDCTx.JournalEntry_Victimfaction), VictimFactionLocalised);
 
             detailed = "";
             if ( Rewards!=null)
@@ -454,6 +460,7 @@ namespace EliteDangerousCore.JournalEvents
             ShipId = evt["ShipID"].ULong();
             MarketID = evt["MarketID"].Long();
             ShipMarketID = evt["ShipMarketID"].Long();
+            System = evt["System"].StrNull();
         }
 
         public string ShipType { get; set; }
@@ -461,10 +468,11 @@ namespace EliteDangerousCore.JournalEvents
         public ulong ShipId { get; set; }
         public long ShipMarketID { get; set; }
         public long MarketID { get; set; }
+        public string System { get; set; }  //patch 17, so may be null
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Ship: ".T(EDCTx.JournalEntry_Ship), ShipType_Localised);
+            info = BaseUtils.FieldBuilder.Build("Ship: ".T(EDCTx.JournalEntry_Ship), ShipType_Localised, "< in system ".T(EDCTx.JournalLocOrJump_insystem), System);
             detailed = "";
         }
     }

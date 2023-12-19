@@ -101,7 +101,7 @@ namespace EliteDangerousCore
                     if (lastlookuphomename != homesystem)
                     {
                         lastlookuphomename = homesystem;
-                        lookuphomesys = SystemCache.FindSystem(homesystem, true);      // look up thru edsm. note we cache ISystem so once done, it won't be checked again
+                        lookuphomesys = SystemCache.FindSystem(homesystem, EliteDangerousCore.WebExternalDataLookup.All);      // look up thru edsm. note we cache ISystem so once done, it won't be checked again
                     }
                 }
 
@@ -109,7 +109,7 @@ namespace EliteDangerousCore
             }
         }
 
-        public ISystem HomeSystemIOrSol { get { return HomeSystemI ?? new SystemClass("Sol", 0, 0, 0); } }
+        public ISystem HomeSystemIOrSol { get { return HomeSystemI ?? new SystemClass("Sol", 10477373803, 0, 0, 0); } }
 
         public int MapColour { set; get; } = System.Drawing.Color.Red.ToArgb();
 
@@ -381,6 +381,8 @@ namespace EliteDangerousCore
             SyncToIGAU = Convert.ToBoolean(reader["SyncToIGAU"]);
 
             Options = JObject.Parse(Convert.ToString(reader["Options"]));
+            if (Options == null)        // in case the string is garbarge, defend as we need a good Options object
+                Options = new JObject();
         }
 
         public EDCommander(int id, string Name)

@@ -10,16 +10,20 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- *
- *
  */
+
 using QuickJSON;
+using System;
 
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.Docked)]
-    public class JournalDocked : JournalEntry, ISystemStationEntry
+    public class JournalDocked : JournalEntry, ISystemStationEntry, IIdentifiers
     {
+        public JournalDocked(System.DateTime utc) : base(utc, JournalTypeEnum.Docked,false)
+        {
+        }
+
         public JournalDocked(JObject evt ) : base(evt, JournalTypeEnum.Docked)
         {
             StationName = evt["StationName"].Str();
@@ -47,7 +51,7 @@ namespace EliteDangerousCore.JournalEvents
 
             Economy = evt.MultiStr(new string[] { "StationEconomy", "Economy" });
             Economy_Localised = JournalFieldNaming.CheckLocalisation(evt.MultiStr(new string[] { "StationEconomy_Localised", "Economy_Localised" }),Economy);
-            EconomyList = evt["StationEconomies"]?.ToObjectQ<Economies[]>();
+            EconomyList = evt["StationEconomies"]?.ToObjectQ<Economies[]>();        // not checking custom attributes, so name in class
 
             Government = evt.MultiStr(new string[] { "StationGovernment", "Government" });
             Government_Localised = JournalFieldNaming.CheckLocalisation(evt.MultiStr(new string[] { "StationGovernment_Localised", "Government_Localised" }),Government);
@@ -91,16 +95,30 @@ namespace EliteDangerousCore.JournalEvents
 
         public bool? Taxi { get; set; }             //4.0 alpha 4
         public bool? Multicrew { get; set; }
-        public LandingPadList LandingPads { get; set; } // 4.0 update 5
+        public LandingPadList LandingPads { get; set; } // 4.0 update 5, may be null
 
         public bool IsTrainingEvent { get; private set; }
 
+        public bool HasAnyEconomyTypes(string[] fdnames)
+        {
+            return fdnames != null && (fdnames.IndexOf(Economy, StringComparison.InvariantCultureIgnoreCase) >= 0 ||
+                            (EconomyList != null && Array.FindIndex(EconomyList, 0, x => fdnames.IndexOf(x.Name, StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0));
+        }
+
+        public bool HasAnyServicesTypes(string[] fdnames)
+        {
+            return fdnames != null && StationServices != null && Array.FindIndex(StationServices, 0, x => fdnames.IndexOf(x, StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0;
+        }
+
         public class Economies
         {
+            [JsonName("name", "Name")]                  //name is for spansh, Name is for journal
             public string Name;
             public string Name_Localised;
-            public double Proportion;
+            [JsonName("Proportion", "share")]            //share is for spansh, proportion is for journal
+            public double Proportion;                   // 0-1
         }
+
 
         public class LandingPadList
         {
@@ -111,9 +129,18 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys) { return string.Format("At {0}".T(EDCTx.JournalDocked_At), StationName); }
 
-        public override void FillInformation(out string info, out string detailed)      
+        public override void FillInformation(out string info, out string detailed)
         {
-            info = "Docked".T(EDCTx.JournalTypeEnum_Docked) + ", ";
+            FillInformation(out info, out detailed, true);
+        }
+
+        public void FillInformation(out string info, out string detailed, bool printdocked)
+        {
+            info = "";
+            
+            if ( printdocked )
+                info += "Docked".T(EDCTx.JournalTypeEnum_Docked) + ", ";
+
             info += BaseUtils.FieldBuilder.Build("Type: ".T(EDCTx.JournalEntry_Type), StationType, "< in system ".T(EDCTx.JournalEntry_insystem), StarSystem, 
                 "State: ".TxID(EDCTx.JournalLocOrJump_State),StationState,
                 ";(Wanted)".T(EDCTx.JournalEntry_Wanted), Wanted, 
@@ -130,13 +157,23 @@ namespace EliteDangerousCore.JournalEvents
                 detailed += System.Environment.NewLine + "Station services: ".T(EDCTx.JournalEntry_Stationservices) + l;
             }
 
-            if ( EconomyList != null )
+            if (EconomyList != null)
             {
                 string l = "";
                 foreach (Economies e in EconomyList)
                     l = l.AppendPrePad(e.Name_Localised.Alt(e.Name) + " " + (e.Proportion * 100).ToString("0.#") + "%", ", ");
                 detailed += System.Environment.NewLine + "Economies: ".T(EDCTx.JournalEntry_Economies) + l;
             }
+        }
+
+        public void UpdateIdentifiers()
+        {
+            if (Economy.HasChars() && Economy_Localised.HasChars())
+                Identifiers.Add(Economy, Economy_Localised);
+            foreach ( var e in EconomyList.EmptyIfNull())
+                Identifiers.Add(e.Name,e.Name_Localised);
+            if (Government.HasChars() && Government_Localised.HasChars())
+                Identifiers.Add(Government, Government_Localised);
         }
     }
 

@@ -26,16 +26,16 @@ namespace EliteDangerousCore
         // used by historylist directly for a single update during play, in foreground..  Also used by above.. so can be either in fore/back
         public bool AddBarycentre(JournalScanBaryCentre jsa, ISystem sys, bool saveit = true)
         {
-            if (ScanDataBySysaddr.TryGetValue(jsa.SystemAddress, out SystemNode sn))       // if we have it
+            if (ScanDataBySysaddr.TryGetValue(jsa.SystemAddress, out SystemNode systemnode))       // if we have it
             {
-                lock (sn)
+                lock (systemnode)
                 {
                     //  System.Diagnostics.Debug.WriteLine($"Add barycentre {jsa.StarSystem} {jsa.BodyID}");
-                    sn.Barycentres[jsa.BodyID] = jsa;        // add it
+                    systemnode.Barycentres[jsa.BodyID] = jsa;        // add it
 
                     // find any stored scans associated with this scanbarycentre and assign
 
-                    var scannodelist = sn.Bodies.Where(x => x.ScanData?.Parents != null && x.ScanData.Parents.FindIndex(y => y.BodyID == jsa.BodyID) >= 0);   // all entries where JSA BodyID occurs
+                    var scannodelist = systemnode.Bodies.Where(x => x.ScanData?.Parents != null && x.ScanData.Parents.FindIndex(y => y.BodyID == jsa.BodyID) >= 0);   // all entries where JSA BodyID occurs
 
                     foreach (var scannode in scannodelist)
                     {

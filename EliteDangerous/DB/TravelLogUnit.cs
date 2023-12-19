@@ -83,13 +83,13 @@ namespace EliteDangerousCore.DB
             return UserDatabase.Instance.DBWrite<bool>(cn => { return Add(cn); });
         }
 
-        internal bool Add(SQLiteConnectionUser cn, DbTransaction tn = null)
+        internal bool Add(SQLiteConnectionUser cn)
         {
             FetchAll();
             System.Diagnostics.Debug.WriteLine($"Add TLU {Path} {filename}");
 
             using (DbCommand cmd = cn.CreateCommand(
-            "Insert into TravelLogUnit (Name, type, size, Path, CommanderID, GameVersion, Build) values (@name, @type, @size, @Path, @CommanderID, @GameVersion, @Build)", tn))
+            "Insert into TravelLogUnit (Name, type, size, Path, CommanderID, GameVersion, Build) values (@name, @type, @size, @Path, @CommanderID, @GameVersion, @Build)"))
             {
                 cmd.AddParameterWithValue("@name", filename);
                 cmd.AddParameterWithValue("@type", Type);
@@ -118,10 +118,10 @@ namespace EliteDangerousCore.DB
             return UserDatabase.Instance.DBWrite<bool>(cn => { return Update(cn); });
         }
 
-        internal bool Update(SQLiteConnectionUser cn, DbTransaction tn = null)
+        internal bool Update(SQLiteConnectionUser cn)
         {
             using (DbCommand cmd = cn.CreateCommand(
-            "Update TravelLogUnit set Name=@Name, Type=@type, size=@size, Path=@Path, CommanderID=@CommanderID, GameVersion=@GameVersion, Build=@Build where ID=@id", tn))
+            "Update TravelLogUnit set Name=@Name, Type=@type, size=@size, Path=@Path, CommanderID=@CommanderID, GameVersion=@GameVersion, Build=@Build where ID=@id"))
             {
                 cmd.AddParameterWithValue("@ID", ID);
                 cmd.AddParameterWithValue("@Name", filename);
