@@ -869,7 +869,7 @@ SECTION MaterialCommodityMicroResourceType
 .tg_shutdowndata: "Massive Energy Surge Analytics" @
 .tg_interdictiondata: "Thargoid Interdiction Telemetry" @
 .ancientrelictg: "Unclassified Relic" @
-.p_particulatesample: "Anomaly Particles Missing" @
+.p_particulatesample: "Anomaly Particles" @
 .thargoidtissuesampletype10c: "Titan Maw Partial Tissue Sample" @
 .thargoidtissuesampletype5: "Thargoid Orthrus Tissue Sample" @
 .thargoidgeneratortissuesample: "Caustic Tissue Sample" @
