@@ -185,38 +185,72 @@ namespace EliteDangerousCore
         }
 
         public static List<SynthesisRecipe> SynthesisRecipes = new List<SynthesisRecipe>()
-        {
-            new SynthesisRecipe( "FSD", "Premium","1C,1Ge,1Nb,1As,1Po,1Y" ),
-            new SynthesisRecipe( "FSD", "Standard","1C,1V,1Ge,1Cd,1Nb" ),
-            new SynthesisRecipe( "FSD", "Basic","1C,1V,1Ge" ),
-
+        {            
             new SynthesisRecipe( "AFM Refill", "Premium","6V,4Cr,2Zn,2Zr,1Te,1Ru" ),
             new SynthesisRecipe( "AFM Refill", "Standard","6V,2Mn,1Mo,1Zr,1Sn" ),
             new SynthesisRecipe( "AFM Refill", "Basic","3V,2Ni,2Cr,2Zn" ),
 
-            new SynthesisRecipe( "SRV Ammo", "Premium","2P,2Se,1Mo,1Tc" ),
-            new SynthesisRecipe( "SRV Ammo", "Standard","1P,1Se,1Mn,1Mo" ),
-            new SynthesisRecipe( "SRV Ammo", "Basic","1P,2S" ),
+            new SynthesisRecipe( "AX Explosive Munitions", "Basic", "3Fe,3Ni,4C,3PE" ),
+            new SynthesisRecipe( "AX Explosive Munitions", "Standard", "6S,6P,2Hg,4UKOC,4PE" ),
+            new SynthesisRecipe( "AX Explosive Munitions", "Premium", "5W,4Hg,2Po,5BMC,5PE,6SFD" ),
 
-            new SynthesisRecipe( "SRV Repair", "Premium","2V,1Zn,2Cr,1W,1Te" ),
-            new SynthesisRecipe( "SRV Repair", "Standard","3Ni,2V,1Mn,1Mo" ),
-            new SynthesisRecipe( "SRV Repair", "Basic","2Fe,1Ni" ),
+            new SynthesisRecipe( "AX Remote Flak Munitions", "Basic", "4Ni,3C,2S" ),
+            new SynthesisRecipe( "AX Remote Flak Munitions", "Standard", "2Sn,3Zn,1As,3UKTC,2WP" ),
+            new SynthesisRecipe( "AX Remote Flak Munitions", "Premium", "8Zn,2W,1As,3UES,4UKTC,1WP" ),
 
-            new SynthesisRecipe( "SRV Refuel", "Premium","1S,1As,1Hg,1Tc" ),
-            new SynthesisRecipe( "SRV Refuel", "Standard","1P,1S,1As,1Hg" ),
-            new SynthesisRecipe( "SRV Refuel", "Basic","1P,1S" ),
+            new SynthesisRecipe( "AX Small Calibre Munitions", "Basic", "2Fe,1Ni,2S,2WP" ),
+            new SynthesisRecipe( "AX Small Calibre Munitions", "Standard", "2Fe,2P,2Zr,3UES,4WP" ),
+            new SynthesisRecipe( "AX Small Calibre Munitions", "Premium", "3Fe,2P,2Zr,4UES,2UKCP,6WP" ),
 
-            new SynthesisRecipe( "Plasma Munitions", "Premium", "5Se,4Mo,4Cd,2Tc" ),
-            new SynthesisRecipe( "Plasma Munitions", "Standard","5P,1Se,3Mn,4Mo" ),
-            new SynthesisRecipe( "Plasma Munitions", "Basic","4P,3S,1Mn" ),
+            new SynthesisRecipe( "Caustic Sinks", "Basic", "1CSU, 1GA, 4CASH, 2COMEC" ),
+
+            new SynthesisRecipe( "Chaff", "Premium", "1CC,2FiC,1ThA,1PRA"),
+            new SynthesisRecipe( "Chaff", "Standard", "1CC,2FiC,1ThA"),
+            new SynthesisRecipe( "Chaff", "Basic", "1CC,1FiC"),
+
+            new SynthesisRecipe( "Configurable Explosive Munitions", "Basic", "3Fe,3Ni,4C,4S" ),
+            new SynthesisRecipe( "Configurable Explosive Munitions", "Standard", "6P,4As,2Hg,1GPCe,1GPC,1GTC" ),
+
+            new SynthesisRecipe( "Configurable Small Calibre Munitions", "Basic", "2Fe,1Ni,2S"),
+            new SynthesisRecipe( "Configurable Small Calibre Munitions", "Standard", "2Sn,3Zn,3P,1GPCe,1GPC,1GTC" ),
+
+            new SynthesisRecipe( "Enzyme Missile Launcher Munitions", "Basic", "3Fe,3S,4BMC,3PE,3WP,2Pb" ),
+            new SynthesisRecipe( "Enzyme Missile Launcher Munitions", "Standard", "6S,4W,5BMC,6PE,4WP,4Pb" ),
+            new SynthesisRecipe( "Enzyme Missile Launcher Munitions", "Premium", "5P,4W,6BMC,5PE,4WP,6Pb" ),
 
             new SynthesisRecipe( "Explosive Munitions", "Premium","5P,4As,5Hg,5Nb,5Po" ),
             new SynthesisRecipe( "Explosive Munitions", "Standard","6P,6S,4As,2Hg" ),
             new SynthesisRecipe( "Explosive Munitions", "Basic","4S,3Fe,3Ni,4C" ),
 
-            new SynthesisRecipe( "Small Calibre Munitions", "Premium","2P,2S,2Zr,2Hg,2W,1Sb" ),
-            new SynthesisRecipe( "Small Calibre Munitions", "Standard","2P,2Fe,2Zr,2Zn,2Se" ),
-            new SynthesisRecipe( "Small Calibre Munitions", "Basic","2S,2Fe,1Ni" ),
+            new SynthesisRecipe( "Flechette Launcher Munitions", "Basic", "1W,3EA,2MC,2B" ),
+            new SynthesisRecipe( "Flechette Launcher Munitions", "Standard", "4W,6EA,4MC,4B" ),
+            new SynthesisRecipe( "Flechette Launcher Munitions", "Premium", "6W,5EA,9MC,6B" ),
+
+            new SynthesisRecipe( "FSD", "Premium","1C,1Ge,1Nb,1As,1Po,1Y" ),
+            new SynthesisRecipe( "FSD", "Standard","1C,1V,1Ge,1Cd,1Nb" ),
+            new SynthesisRecipe( "FSD", "Basic","1C,1V,1Ge" ),
+
+            new SynthesisRecipe( "Guardian Gauss Cannon Munitions", "Basic", "3Mn,2FoC,2GPC,4GSWC" ),
+            new SynthesisRecipe( "Guardian Gauss Cannon Munitions", "Standard", "5Mn,3HRC,5FoC,4GPC,3GSWP" ),
+            new SynthesisRecipe( "Guardian Gauss Cannon Munitions", "Premium", "8Mn,4HRC,6FiC,10FoC" ),
+
+            new SynthesisRecipe( "Guardian Plasma Charger Munitions", "Basic", "3Cr,2HDP,3GPC,4GSWC" ),
+            new SynthesisRecipe( "Guardian Plasma Charger Munitions", "Standard", "4Cr,2HE,2PA,2GPCe,2GTC" ),
+            new SynthesisRecipe( "Guardian Plasma Charger Munitions", "Premium", "6Cr,2Zr,4HE,6PA,4GPCe,3GSWP" ),
+
+            new SynthesisRecipe( "Guardian Shard Cannon Munitions", "Basic", "3C,2V,3CS,3GPCe,5GSWC" ),
+            new SynthesisRecipe( "Guardian Shard Cannon Munitions", "Standard", "4CS,2GPCe,2GSWP" ),
+            new SynthesisRecipe( "Guardian Shard Cannon Munitions", "Premium", "8C,6GPCe,4V,8CS" ),
+
+            /*Don't know where this is from, but the upper recipes are correct
+            new SynthesisRecipe("Guardian Shard Cannon Munitions", "Basic", "3GR,2HDP,2FoC,2PA,2Pb"),
+            new SynthesisRecipe("Guardian Shard Cannon Munitions", "Standard", "5GR,3HDP,4FoC,5PA,3Pb"),
+            new SynthesisRecipe("Guardian Shard Cannon Munitions", "Premium", "7GR,4HDP,6FoC,8PA,5Pb"),
+            */
+
+            new SynthesisRecipe( "Heat Sinks", "Premium", "2BaC,2HCW,2HE,1PHR"),
+            new SynthesisRecipe( "Heat Sinks", "Standard", "2BaC,2HCW,2HE"),
+            new SynthesisRecipe( "Heat Sinks", "Basic", "1BaC,1HCW"),
 
             new SynthesisRecipe( "High Velocity Munitions", "Premium","4V,2Zr,4W,2Y" ),
             new SynthesisRecipe( "High Velocity Munitions", "Standard","4Fe,3V,2Zr,2W" ),
@@ -226,53 +260,37 @@ namespace EliteDangerousCore
             new SynthesisRecipe( "Large Calibre Munitions", "Standard","3P,2Zr,3Zn,1As,2Sn" ),
             new SynthesisRecipe( "Large Calibre Munitions", "Basic","2S,4Ni,3C" ),
 
-            new SynthesisRecipe( "Limpets", "Basic", "10Fe,10Ni"),
-
-            new SynthesisRecipe( "Chaff", "Premium", "1CC,2FiC,1ThA,1PRA"),
-            new SynthesisRecipe( "Chaff", "Standard", "1CC,2FiC,1ThA"),
-            new SynthesisRecipe( "Chaff", "Basic", "1CC,1FiC"),
-
-            new SynthesisRecipe( "Heat Sinks", "Premium", "2BaC,2HCW,2HE,1PHR"),
-            new SynthesisRecipe( "Heat Sinks", "Standard", "2BaC,2HCW,2HE"),
-            new SynthesisRecipe( "Heat Sinks", "Basic", "1BaC,1HCW"),
-
             new SynthesisRecipe( "Life Support", "Basic", "2Fe,1Ni"),
 
-            new SynthesisRecipe("AX Small Calibre Munitions", "Basic", "2Fe,1Ni,2S,2WP"),
-            new SynthesisRecipe("AX Small Calibre Munitions", "Standard", "2Fe,2P,2Zr,3UES,4WP" ),
-            new SynthesisRecipe("AX Small Calibre Munitions", "Premium", "3Fe,2P,2Zr,4UES,2UKCP,6WP" ),
+            new SynthesisRecipe( "Limpets", "Basic", "10Fe,10Ni"),
 
-            new SynthesisRecipe("Guardian Plasma Charger Munitions", "Basic", "3Cr,2HDP,3GPC,4GSWC"),
-            new SynthesisRecipe("Guardian Plasma Charger Munitions", "Standard", "4Cr,2HE,2PA,2GPCe,2GTC"),
-            new SynthesisRecipe("Guardian Plasma Charger Munitions", "Premium", "6Cr,2Zr,4HE,6PA,4GPCe,3GSWP"),
+            new SynthesisRecipe( "Plasma Munitions", "Premium", "5Se,4Mo,4Cd,2Tc" ),
+            new SynthesisRecipe( "Plasma Munitions", "Standard","5P,1Se,3Mn,4Mo" ),
+            new SynthesisRecipe( "Plasma Munitions", "Basic","4P,3S,1Mn" ),
 
-            new SynthesisRecipe("Guardian Gauss Cannon Munitions", "Basic", "3Mn,2FoC,2GPC,4GSWC"),
-            new SynthesisRecipe("Guardian Gauss Cannon Munitions", "Standard", "5Mn,3HRC,5FoC,4GPC,3GSWP"),
-            new SynthesisRecipe("Guardian Gauss Cannon Munitions", "Premium", "8Mn,4HRC,6FiC,10FoC"),
+            new SynthesisRecipe( "Seismic Charge Munitions", "Basic", "2Fe,2Ni,2S,3P,1Hg" ),
 
-            new SynthesisRecipe("Enzyme Missile Launcher Munitions", "Basic", "3Fe,3S,4BMC,3PE,3WP,2Pb"),
-            new SynthesisRecipe("Enzyme Missile Launcher Munitions", "Standard", "6S,4W,5BMC,6PE,4WP,4Pb"),
-            new SynthesisRecipe("Enzyme Missile Launcher Munitions", "Premium", "5P,4W,6BMC,5PE,4WP,6Pb"),
+            new SynthesisRecipe( "Shock Cannon Munitions", "Basic", "3GR,2HDP,2FoC,2PA,2Pb" ),
+            new SynthesisRecipe( "Shock Cannon Munitions", "Standard", "5GR,3HDP,4FoC,5PA,3Pb" ),
+            new SynthesisRecipe( "Shock Cannon Munitions", "Premium", "7GR,4HDP,6FoC,8PA,5Pb" ),
 
-            new SynthesisRecipe("AX Remote Flak Munitions", "Basic", "4Ni,3C,2S"),
-            new SynthesisRecipe("AX Remote Flak Munitions", "Standard", "2Sn,3Zn,1As,3UKTC,2WP"),
-            new SynthesisRecipe("AX Remote Flak Munitions", "Premium", "8Zn,2W,1As,3UES,4UKTC,1WP"),
+            new SynthesisRecipe( "Small Calibre Munitions", "Premium","2P,2S,2Zr,2Hg,2W,1Sb" ),
+            new SynthesisRecipe( "Small Calibre Munitions", "Standard","2P,2Fe,2Zr,2Zn,2Se" ),
+            new SynthesisRecipe( "Small Calibre Munitions", "Basic","2S,2Fe,1Ni" ),
 
-            new SynthesisRecipe("Flechette Launcher Munitions", "Basic", "1W,3EA,2MC,2B"),
-            new SynthesisRecipe("Flechette Launcher Munitions", "Standard", "4W,6EA,4MC,4B"),
-            new SynthesisRecipe("Flechette Launcher Munitions", "Premium", "6W,5EA,9MC,6B"),
+            new SynthesisRecipe( "SRV Ammo", "Premium","2P,2Se,1Mo,1Tc" ),
+            new SynthesisRecipe( "SRV Ammo", "Standard","1P,1Se,1Mn,1Mo" ),
+            new SynthesisRecipe( "SRV Ammo", "Basic","1P,2S" ),
 
-            new SynthesisRecipe("Guardian Shard Cannon Munitions", "Basic", "3C,2V,3CS,3GPCe,5GSWC"),
-            new SynthesisRecipe("Guardian Shard Cannon Munitions", "Standard", "4CS,2GPCe,2GSWP"),
-            new SynthesisRecipe("Guardian Shard Cannon Munitions", "Premium", "8C,3Se,4V,8CS"),
+            new SynthesisRecipe( "SRV Refuel", "Premium","1S,1As,1Hg,1Tc" ),
+            new SynthesisRecipe( "SRV Refuel", "Standard","1P,1S,1As,1Hg" ),
+            new SynthesisRecipe( "SRV Refuel", "Basic","1P,1S" ),
 
-            new SynthesisRecipe("Guardian Shard Cannon Munitions", "Basic", "3GR,2HDP,2FoC,2PA,2Pb"),
-            new SynthesisRecipe("Guardian Shard Cannon Munitions", "Standard", "5GR,3HDP,4FoC,5PA,3Pb"),
-            new SynthesisRecipe("Guardian Shard Cannon Munitions", "Premium", "7GR,4HDP,6FoC,8PA,5Pb"),
+            new SynthesisRecipe( "SRV Repair", "Premium","2V,1Zn,2Cr,1W,1Te" ),
+            new SynthesisRecipe( "SRV Repair", "Standard","3Ni,2V,1Mn,1Mo" ),
+            new SynthesisRecipe( "SRV Repair", "Basic","2Fe,1Ni" ),
 
-            new SynthesisRecipe("AX Explosive Munitions", "Basic", "3Fe,3Ni,4C,3PE"),
-            new SynthesisRecipe("AX Explosive Munitions", "Standard", "6S,6P,2Hg,4UKOC,4PE"),
-            new SynthesisRecipe("AX Explosive Munitions", "Premium", "5W,4Hg,2Po,5BMC,5PE,6SFD"),
+            new SynthesisRecipe( "Sub-Surface Displacement Munitions","Basic", "3Ni,3C,3S,2W" ),
         };
 
         public static Dictionary<MaterialCommodityMicroResourceType, List<SynthesisRecipe>> SynthesisRecipesByMaterial =
