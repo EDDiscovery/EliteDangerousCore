@@ -22,6 +22,118 @@ namespace EliteDangerousCore
     [System.Diagnostics.DebuggerDisplay("Mat {Category} {Type} {MaterialGroup} {Name} {FDName} {Shortname}")]
     public class MaterialCommodityMicroResourceType
     {
+        enum MCMR
+        {
+            //---------------------------------------------------------- Commodity
+            Advert1 = 0, AlacarakmoSkinArt, AlienEggs, AltairianSkin, BuckyballBeerMats, Clothing, ConsumerTechnology, CrystallineSpheres,
+            DomesticAppliances, Duradrives, EleuThermals, EshuUmbrellas, EvacuationShelter, HavasupaiDreamCatcher, JaquesQuinentianStill, JaradharrePuzzlebox,
+            JotunMookah, KaretiiCouture, KinagoInstruments, MomusBogSpaniel, NgunaModernAntiques, NjangariSaddles, OphiuchiExinoArtefacts, PersonalGifts,
+            RajukruStoves, ShansCharisOrchid, SoontillRelics, SurvivalEquipment, TheHuttonMug, TiolceWaste2PasteUnits, UzumokuLowGWings, VidavantianLace,
+            ZeesszeAntGlue, AgronomicTreatment, AnduligaFireWorks, DeltaPhoenicisPalms, Explosives, HIPOrganophosphates, HydrogenFuel, HydrogenPeroxide,
+            KorroKungPellets, LiquidOxygen, MineralOil, NerveAgents, Pesticides, RockforthFertiliser, SurfaceStabilisers, SyntheticReagents,
+            ToxandjiVirocide, Tritium, Water, Drones, AerialEdenApple, AlbinoQuechuaMammoth, Algae, AnimalMeat,
+            AnyNaCoffee, AroucaConventualSweets, BakedGreebles, BaltahSineVacuumKrill, CD75CatCoffee, CeremonialHeikeTea, CetiAepyornisEgg, CetiRabbits,
+            ChiEridaniMarinePaste, Coffee, CoquimSpongiformVictuals, DeuringasTruffles, DisoMaCorn, EsusekuCaviar, EthgrezeTeaBuds, Fish,
+            FoodCartridges, FruitandVegetables, GiantIrukamaSnails, GomanYauponCoffee, Grain, HaidneBlackBrew, HelvetitjPearls, HIP10175BushMeat,
+            HIP41181Squid, HR7221Wheat, JarouaRice, KarsukiLocusts, LFTVoidExtractCoffee, LiveHecateSeaWorms, LTTHyperSweet, MechucosHighTea,
+            MokojingBeastFeast, MukusubiiChitinOs, MulachiGiantFungus, NeritusBerries, OchoengChillies, OrrerianViciousBrew, SanumaMEAT, SyntheticMeat,
+            TanmarkTranquilTea, Tea, UszaianTreeGrub, UtgaroarMillenialEggs, WheemeteWheatCakes, WitchhaulKobeBeef, CeramicComposites, CMMComposite,
+            CoolingHoses, InsulatingMembrane, MedbStarlube, Metaalloys, NeofabricInsulation, Polymers, Semiconductors, Superconductors,
+            BastSnakeGin, Beer, BlueMilk, BootlegLiquor, BurnhamBileDistillate, CentauriMegaGin, ChateauDeAegaeon, EraninPearlWhisky,
+            GerasianGueuzeBeer, IndiBourbon, KamitraCigars, KonggaAle, LavianBrandy, LeestianEvilJuice, Liquor, RusaniOldSmokey,
+            SaxonWine, ThrutisCream, Tobacco, Wine, WuthieloKuFroth, YasoKondiLeaf, ArticulationMotors, AtmosphericExtractors,
+            BuildingFabricators, CropHarvesters, EmergencyPowerCells, ExhaustManifold, GeologicalEquipment, GiantVerrix, HeatsinkInterlink, HeliostaticFurnaces,
+            HNShockMount, IonDistributor, MagneticEmitterCoil, MarineSupplies, MineralExtractors, ModularTerminals, NonEuclidianExotanks, PowerConverter,
+            PowerGenerators, PowerGridAssembly, PowerTransferConduits, RadiationBaffle, ReinforcedMountingPlate, SkimerComponents, ThermalCoolingUnits, VolkhabBeeDrones,
+            WaterPurifiers, WulpaHyperboreSystems, AdvancedMedicines, AganippeRush, AgriculturalMedicines, AlyaBodilySoap, BasicMedicines, CombatStabilisers,
+            FujinTea, HonestyPills, KachiriginLeaches, Nanomedicines, PantaaPrayerSticks, PerformanceEnhancers, ProgenitorCells, TauriChimes,
+            TerraMaterBloodBores, VegaSlimWeed, VHerculisBodyRub, WatersOfShintara, Aluminium, Beryllium, Bismuth, Cobalt,
+            Copper, Gallium, Gold, Hafnium178, Indium, Lanthanum, Lithium, Osmium,
+            Palladium, Platinum, PlatinumAloy, Praseodymium, Samarium, Silver, SothisCrystallineGold, Tantalum,
+            Thallium, Thorium, Titanium, Uranium, Alexandrite, Bauxite, Benitoite, Bertrandite,
+            Bromellite, CherbonesBloodCrystals, Coltan, Cryolite, Gallite, Goslarite, Grandidierite, Indite,
+            Jadeite, Lepidolite, LithiumHydroxide, lowtemperaturediamond, MethaneClathrate, methanolmonohydratecrystals, Moissanite, Monazite,
+            Musgravite, NgadandariFireOpals, Opal, Painite, Pyrophyllite, Rhodplumsite, Rutile, Serendibite,
+            Taaffeite, Uraninite, AnimalEffigies, ApaVietii, BasicNarcotics, GeawenDanceDust, HarmaSilverSeaRum, LyraeWeed,
+            MotronaExperienceJelly, OnionHead, OnionHeadA, OnionHeadB, OnionHeadC, PavonisEarGrubs, TarachTorSpice, TransgenicOnionHead,
+            Wolf1301Fesh, AislingMediaMaterials, AislingMediaResources, AislingPromotionalMaterials, AllianceLegaslativeContracts, AllianceLegaslativeRecords, AllianceTradeAgreements, CounterCultureSupport,
+            FederalAid, FederalTradeContracts, GromCounterIntelligence, GromWarTrophies, IllicitConsignment, ImperialPrisoner, LavignyCorruptionDossiers, LavignyFieldSupplies,
+            LavignyGarisonSupplies, LiberalCampaignMaterials, LoanedArms, MarkedSlaves, OnionheadDerivatives, OnionheadSamples, OutOfDateGoods, PatreusFieldSupplies,
+            PatreusGarisonSupplies, RepublicanFieldSupplies, RepublicanGarisonSupplies, RestrictedIntel, RestrictedPackage, SiriusCommercialContracts, SiriusFranchisePackage, SiriusIndustrialEquipment,
+            TorvalCommercialContracts, TorvalDeeds, UndergroundSupport, UnmarkedWeapons, UtopianDissident, UtopianFieldSupplies, UtopianPublicity, AiRelics,
+            AncientCasket, AncientKey, AncientOrb, AncientRelic, AncientRelicTG, AncientTablet, AncientTotem, AncientUrn,
+            AntimatterContainmentUnit, AntiqueJewellery, Antiquities, AssaultPlans, ClassifiedExperimentalEquipment, ComercialSamples, CoralSap, DamagedEscapePod,
+            DataCore, DiplomaticBag, EarthRelics, EncriptedDataStorage, EncryptedCorrespondence, FossilRemnants, GalacticTravelGuide, GeneBank,
+            GeologicalSamples, Hostage, LargeExplorationDatacash, M_TissueSample_Fluid, M_TissueSample_Nerves, M_TissueSample_Soft, M3_TissueSample_Membrane, M3_TissueSample_Mycelium,
+            M3_TissueSample_Spores, MilitaryIntelligence, MysteriousIdol, OccupiedCryoPod, P_ParticulateSample, PersonalEffects, PoliticalPrisoner, PreciousGems,
+            ProhibitedResearchMaterials, S_TissueSample_Cells, S_TissueSample_Core, S_TissueSample_Surface, S6_TissueSample_Cells, S6_TissueSample_Coenosarc, S6_TissueSample_Mesoglea, S9_TissueSample_Shell,
+            Sap8CoreContainer, ScientificResearch, ScientificSamples, SmallExplorationDatacash, SpacePioneerRelics, TacticalData, ThargoidGeneratorTissueSample, ThargoidHeart,
+            ThargoidPod, ThargoidScoutTissueSample, ThargoidTissueSampleType1, ThargoidTissueSampleType10a, ThargoidTissueSampleType10b, ThargoidTissueSampleType10c, ThargoidTissueSampleType2, ThargoidTissueSampleType3,
+            ThargoidTissueSampleType4, ThargoidTissueSampleType5, ThargoidTissueSampleType6, ThargoidTissueSampleType7, ThargoidTissueSampleType9a, ThargoidTissueSampleType9b, ThargoidTissueSampleType9c, TimeCapsule,
+            TrinketsOfFortune, UnknownArtifact, UnknownArtifact2, UnknownArtifact3, UnknownBiologicalMatter, UnknownResin, UnknownSack, UnknownTechnologySamples,
+            UnocuppiedEscapePod, UnstableDataCore, USSCargoAncientArtefact, USSCargoBlackBox, USSCargoExperimentalChemicals, USSCargoMilitaryPlans, USSCargoPrototypeTech, USSCargoRareArtwork,
+            USSCargoRebelTransmissions, USSCargoTechnicalBlueprints, USSCargoTradeData, WreckageComponents, ImperialSlaves, MasterChefs, Slaves, AdvancedCatalysers,
+            AnimalMonitors, AquaponicSystems, autofabricators, AZCancriFormula42, BioreducingLichen, ComputerComponents, DiagnosticSensor, HazardousEnvironmentSuits,
+            MedicalDiagnosticEquipment, MicroControllers, MutomImager, Nanobreakers, ResonatingSeparators, Robotics, StructuralRegulators, TelemetrySuite,
+            TerrainEnrichmentSystems, XiheCompanions, BankiAmphibiousLeather, BelalansRayLeather, ChameleonCloth, ConductiveFabrics, DamnaCarapaces, Leather,
+            MilitaryGradeFabrics, NaturalFabrics, RapaBaoSnakeSkins, SyntheticFabrics, TiegfriesSynthSilk, VanayequiRhinoFur, Biowaste, ChemicalWaste,
+            Scrap, ToxicWaste, BattleWeapons, BorasetaniPathogenetics, GilyaSignatureWeapons, HIP118311Swarm, HolvaDuellingBlades, KamorinHistoricWeapons,
+            Landmines, NonLethalWeapons, PersonalWeapons, ReactiveArmour,
+            //---------------------------------------------------------- Raw
+            Carbon = 1000, Iron, Lead, Nickel, Phosphorus, Rhenium, Sulphur, Arsenic,
+            Chromium, Germanium, Manganese, Vanadium, Zinc, Zirconium, Boron, Cadmium,
+            Mercury, Molybdenum, Niobium, Tin, Tungsten, Antimony, Polonium, Ruthenium,
+            Selenium, Technetium, Tellurium, Yttrium,
+            //---------------------------------------------------------- Encoded
+            BulkScandata = 2000, DisruptedWakeEchoes, EncryptedFiles, LegacyFirmware, ScrambledeMissionData, ShieldCycleRecordings, ArchivedEmissionData, ConsumerFirmware,
+            EncryptionCodes, FSDTelemetry, ScanArchives, ShieldSoakAnalysis, TG_StructuralData, EmissionData, IndustrialFirmware, ScanDataNanks,
+            ShieldDensityReports, SymmetricKeys, TG_CompositionData, TG_ShipFlightData, UnknownShipSignature, WakeSolutions, AncientBiologicalData, AncientCulturalData,
+            AncientHistoricalData, AncientLanguageData, AncientTechnologicalData, DecodedEmissionData, EncodedScandata, EncryptionArchives, Guardian_ModuleBlueprint, Guardian_WeaponBlueprint,
+            HyperspaceTrajectories, SecurityFirmware, ShieldPatternAnalysis, TG_ResidueData, TG_ShipSystemsData, UnknownWakeData, AdaptiveEncryptors, ClassifiedScandata,
+            CompactEmissionsData, DataminedWake, EmbeddedFirmware, Guardian_VesselBlueprint, ShieldFrequencyData,
+            //---------------------------------------------------------- Manufactured
+            BasicConductors = 3000, ChemicalStorageUnits, CompactComposites, CrystalShards, GridResistors, Guardian_PowerCell, Guardian_Sentinel_WreckageComponents, HeatConductionWiring,
+            MechanicalScrap, SalvagedAlloys, TemperedAlloys, TG_Abrasion03, WornShieldEmitters, ChemicalProcessors, ConductiveComponents, FilamentComposites,
+            GalvanisingAlloys, Guardian_PowerConduit, HeatDispersionPlate, HeatResistantCeramics, HybridCapacitors, MechanicalEquipment, ShieldEmitters, UncutFocusCrystals,
+            UnknownCarapace, ChemicalDistillery, ConductiveCeramics, ElectrochemicalArrays, FocusCrystals, Guardian_Sentinel_WeaponParts, Guardian_TechComponent, HeatExchangers,
+            HighDensityComposites, MechanicalComponents, PhaseAlloys, PrecipitatedAlloys, ShieldingSensors, TG_Abrasion02, TG_BioMechanicalConduits, TG_CausticGeneratorParts,
+            TG_CausticShard, TG_InterdictionData, TG_ShutdownData, UnknownEnergycell, ChemicalManipulators, CompoundShielding, ConductivePolymers, ConfigurableComponents,
+            FedProprietaryComposites, HeatVanes, PolymerCapacitors, ProtoLightAlloys, RefinedFocusCrystals, TG_CausticCrystal, TG_WeaponParts, ThermicAlloys,
+            UnknownTechnologyComponents, BiotechConductors, ExquisiteFocusCrystals, FedCoreComposites, HeatExposureSpecimen, ImperialShielding, ImprovisedComponents, MilitaryGradeAlloys,
+            MilitarySupercapacitors, PharmaceuticalIsolators, ProtoHeatRadiators, ProtoRadiolicAlloys, TG_PropulsionElement, Unknownenergysource, UnknownOrganicCircuitry,
+            //---------------------------------------------------------- Item
+            AgriculturalProcessSample = 4000, BiochemicalAgent, BuildingSchematic, Californium, CastFossil, ChemicalProcessSample, ChemicalSample, CompactLibrary,
+            CompressionLiquefiedGas, DeepMantleSample, DegradedPowerRegulator, GeneticRepairMeds, GeneticSample, GMeds, HealthMonitor, Hush,
+            InertiaCanister, infinity, InorganicContaminant, insight, InsightDataBank, InsightEntertainmentSuite, IonisedGas, LargeCapacityPowerRegulator,
+            Lazarus, MicrobialInhibitor, MutagenicCatalyst, NutritionalConcentrate, PersonalComputer, PersonalDocuments, PetrifiedFossil, Push,
+            PyrolyticCatalyst, RefinementProcessSample, ShipSchematic, SuitSchematic, SurveillanceEquipment, SyntheticGenome, SyntheticPathogen, TrueFormFossil,
+            UniversalTranslator, VehicleSchematic, WeaponSchematic,
+            //---------------------------------------------------------- Component
+            Aerogel = 5000, CarbonFibrePlating, ChemicalCatalyst, ChemicalSuperbase, Circuitboard, CircuitSwitch, ElectricalFuse, ElectricalWiring,
+            Electromagnet, EncryptedMemoryChip, Epinephrine, EpoxyAdhesive, Graphene, IonBattery, MemoryChip, MetalCoil,
+            MicroElectrode, MicroHydraulics, MicroSupercapacitor, MicroThrusters, Microtransformer, Motor, OpticalFibre, OpticalLens,
+            OxygenicBacteria, pHNeutraliser, RDX, Scrambler, TitaniumPlating, Transmitter, TungstenCarbide, ViscoElasticPolymer,
+            WeaponComponent,
+            //---------------------------------------------------------- Data
+            AccidentLogs = 6000, AirqualityReports, AtmosphericData, AudioLogs, AXCombatLogs, BallisticsData, BiologicalWeaponData, BiometricData,
+            BlacklistData, BloodtestResults, CampaignPlans, CatMedia, CensusData, ChemicalExperimentData, ChemicalFormulae, ChemicalInventory,
+            ChemicalPatents, ChemicalWeaponData, ClassicEntertainment, CocktailRecipes, CombatantPerformance, CombatTrainingMaterial, ConflictHistory, CriminalRecords,
+            CropYieldAnalysis, CulinaryRecipes, DigitalDesigns, DutyRota, EmployeeDirectory, EmployeeExpenses, EmployeeGeneticData, EmploymentHistory,
+            EnhancedInterrogationRecordings, EspionageMaterial, EvacuationProtocols, ExplorationJournals, ExtractionYieldData, FactionAssociates, FactionDonatorList, FactionNews,
+            FinancialProjections, FleetRegistry, GeneSequencingData, GeneticResearch, GeographicalData, GeologicalData, HydroponicData, IncidentLogs,
+            InfluenceProjections, InternalCorrespondence, InterrogationRecordings, InterviewRecordings, JobApplications, Kompromat, LiteraryFiction, MaintenanceLogs,
+            ManufacturingInstructions, MedicalRecords, MedicalTrialRecords, MeetingMinutes, MineralSurvey, MiningAnalytics, MultimediaEntertainment, NetworkAccessHistory,
+            NetworkSecurityProtocols, NextofkinRecords, NOCData, OpinionPolls, PatientHistory, PatrolRoutes, PayrollInformation, PersonalLogs,
+            PharmaceuticalPatents, PhotoAlbums, PlantGrowthCharts, PoliticalAffiliations, PperationalManual, PrisonerLogs, ProductionReports, ProductionSchedule,
+            Propaganda, PurchaseRecords, PurchaseRequests, RadioactivityData, ReactorOutputReview, RecyclingLogs, ResidentialDirectory, RiskAssessments,
+            SalesRecords, SecurityExpenses, SeedGeneaology, SettlementAssaultPlans, SettlementDefencePlans, ShareholderInformation, SlushFundLogs, SmearCampaignPlans,
+            SpectralAnalysisData, Spyware, StellarActivityLogs, SurveilleanceLogs, TacticalPlans, TaxRecords, TopographicalSurveys, TravelPermits,
+            TroopDeploymentRecords, UnionmemberShip, VaccinationRecords, VaccineResearch, VIPSecurityDetail, VirologyData, Virus, VisitorRegister,
+            WeaponInventory, WeaponTestData, XenoDefenceProtocols,
+            //---------------------------------------------------------- Consumable
+            AMM_Grenade_EMP = 7000, AMM_Grenade_Frag, AMM_Grenade_Shield, Bypass, EnergyCell, HealthPack,
+        }
+
         public enum CatType
         {
             Commodity, Raw, Encoded, Manufactured,          // all
@@ -37,7 +149,6 @@ namespace EliteDangerousCore
         public string Name { get; private set; }                    // name of it in nice text. This gets translated
         public string EnglishName { get; private set; }             // name of it in English
         public string FDName { get; private set; }                  // fdname, lower case..
-
         public enum ItemType
         {
             VeryCommon, Common, Standard, Rare, VeryRare,           // materials
@@ -57,6 +168,7 @@ namespace EliteDangerousCore
             ManufacturedChemical, ManufacturedThermic, ManufacturedHeat, ManufacturedConductive, ManufacturedMechanicalComponents,
             ManufacturedCapacitors, ManufacturedShielding, ManufacturedComposite, ManufacturedCrystals, ManufacturedAlloys,
         };
+
 
         public MaterialGroupType MaterialGroup { get; private set; } // only for materials, grouping
         public string TranslatedMaterialGroup { get; private set; }
@@ -128,6 +240,7 @@ namespace EliteDangerousCore
 
         // name key is lower case normalised
         private static Dictionary<string, MaterialCommodityMicroResourceType> cachelist = null;
+        private static Dictionary<string, MaterialCommodityMicroResourceType> mcmrlist = null;
 
         public static MaterialCommodityMicroResourceType GetByFDName(string fdname)
         {
@@ -287,12 +400,12 @@ namespace EliteDangerousCore
         {
         }
 
-        public MaterialCommodityMicroResourceType(CatType cs, string n, string fd, ItemType t, MaterialGroupType mtg, string shortn, Color cl, bool rare)
+        public MaterialCommodityMicroResourceType(CatType cs, string englishtext, string fd, ItemType t, MaterialGroupType mtg, string shortn, Color cl, bool rare)
         {
             Category = cs;
             TranslatedCategory = (Category == CatType.Item) ? "Goods" : (Category == CatType.Component) ? "Assets" : Category.ToString();      // name is as the game does
             TranslatedCategory = TranslatedCategory.TxID(typeof(MaterialCommodityMicroResourceType), TranslatedCategory);        // valid to pass this thru the Tx( system
-            EnglishName = Name = n;
+            EnglishName = Name = englishtext;
             FDName = fd;
             Type = t;
             TranslatedType = Type.ToString().SplitCapsWord().TxID(typeof(MaterialCommodityMicroResourceType), Type.ToString());                // valid to pass this thru the Tx( system
@@ -432,31 +545,877 @@ namespace EliteDangerousCore
         public static string FDNameCnv(string normal)
         {
             string n = new string(normal.ToCharArray().Where(c => !Char.IsWhiteSpace(c)).ToArray());
-            return n.ToLowerInvariant();
+            return n;
         }
 
         private static bool AddEntry(CatType catname, Color colour, string aliasname, ItemType typeofit, MaterialGroupType mtg, string shortname, string fdName, bool comrare = false)
         {
-            if (shortname.HasChars() && cachelist.Values.ToList().Find(x => x.Shortname.Equals(shortname, StringComparison.InvariantCultureIgnoreCase)) != null)
-            {
-                System.Diagnostics.Debug.WriteLine("**** Shortname repeat for " + fdName);
-            }
-            System.Diagnostics.Debug.Assert(cachelist.ContainsKey(fdName) == false, "Repeated entry " + fdName);
 
-            string fdn = (fdName.Length > 0) ? fdName.ToLowerInvariant() : FDNameCnv(aliasname);       // always lower case fdname
+            string fdn = (fdName.Length > 0) ? fdName.ToLowerInvariant() : FDNameCnv(aliasname).ToLowerInvariant();       // always lower case fdname
 
             MaterialCommodityMicroResourceType mc = new MaterialCommodityMicroResourceType(catname, aliasname, fdn, typeofit, mtg, shortname, colour, comrare);
             mc.SetCache();
             return true;
         }
 
+        private static void Add(CatType catname, ItemType typeofit, MCMR id, string englishtext, bool rare = false) // p1
+        {
+            Add(catname, typeofit, MaterialGroupType.NA, id, englishtext, "", rare);
+        }
+        private static void Add(CatType catname, MCMR id, string englishtext, string shortname) // p4
+        {
+            Add(catname, ItemType.Unknown, id, englishtext, shortname);
+        }
+        private static void Add(CatType catname, ItemType typeofit, MCMR id, string englishtext, string shortname, bool rare = false) // p3
+        {
+            Add(catname, typeofit, MaterialGroupType.NA, id, englishtext, shortname, rare);
+        }
+        private static void Add(CatType catname, ItemType typeofit, MaterialGroupType mtg, MCMR id, string englishtext, string shortname, bool rare = false)
+        {
+            if (shortname.HasChars() && mcmrlist.Values.ToList().Find(x => x.Shortname.Equals(shortname, StringComparison.InvariantCultureIgnoreCase)) != null)
+            {
+                System.Diagnostics.Debug.WriteLine("**** Shortname repeat for " + id);
+            }
+
+            string fdname = id.ToString().ToLower();
+
+            System.Diagnostics.Debug.Assert(mcmrlist.ContainsKey(fdname) == false, "Repeated entry " + fdname);
+
+            var colour = typeofit < ItemType.Unknown ? CByType(typeofit) : Color.Green;
+            MaterialCommodityMicroResourceType m = new MaterialCommodityMicroResourceType(catname, englishtext, fdname, typeofit, mtg, shortname, colour, rare);
+            mcmrlist.Add(fdname,m);
+        }
+
         public static void FillTable()
         {
-            #region Materials  
+            mcmrlist = new Dictionary<string, MaterialCommodityMicroResourceType>();
+
+            #region Commodity
+
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.Clothing, "Clothing");
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.ConsumerTechnology, "Consumer Technology");
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.DomesticAppliances, "Domestic Appliances");
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.Duradrives, "Duradrives");
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.EvacuationShelter, "Evacuation Shelter");
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.SurvivalEquipment, "Survival Equipment");
+            Add(CatType.Commodity, ItemType.Chemicals, MCMR.AgronomicTreatment, "Agronomic Treatment");
+            Add(CatType.Commodity, ItemType.Chemicals, MCMR.Explosives, "Explosives");
+            Add(CatType.Commodity, ItemType.Chemicals, MCMR.HydrogenFuel, "Hydrogen Fuel");
+            Add(CatType.Commodity, ItemType.Chemicals, MCMR.HydrogenPeroxide, "Hydrogen Peroxide");
+            Add(CatType.Commodity, ItemType.Chemicals, MCMR.LiquidOxygen, "Liquid Oxygen");
+            Add(CatType.Commodity, ItemType.Chemicals, MCMR.MineralOil, "Mineral Oil");
+            Add(CatType.Commodity, ItemType.Chemicals, MCMR.NerveAgents, "Nerve Agents");
+            Add(CatType.Commodity, ItemType.Chemicals, MCMR.Pesticides, "Pesticides");
+            Add(CatType.Commodity, ItemType.Chemicals, MCMR.RockforthFertiliser, "Rockforth Fertiliser");
+            Add(CatType.Commodity, ItemType.Chemicals, MCMR.SurfaceStabilisers, "Surface Stabilisers");
+            Add(CatType.Commodity, ItemType.Chemicals, MCMR.SyntheticReagents, "Synthetic Reagents");
+            Add(CatType.Commodity, ItemType.Chemicals, MCMR.Tritium, "Tritium");
+            Add(CatType.Commodity, ItemType.Chemicals, MCMR.Water, "Water");
+            Add(CatType.Commodity, ItemType.Drones, MCMR.Drones, "Drones");
+            Add(CatType.Commodity, ItemType.Foods, MCMR.Algae, "Algae");
+            Add(CatType.Commodity, ItemType.Foods, MCMR.AnimalMeat, "Animal Meat");
+            Add(CatType.Commodity, ItemType.Foods, MCMR.Coffee, "Coffee");
+            Add(CatType.Commodity, ItemType.Foods, MCMR.Fish, "Fish");
+            Add(CatType.Commodity, ItemType.Foods, MCMR.FoodCartridges, "Food Cartridges");
+            Add(CatType.Commodity, ItemType.Foods, MCMR.FruitandVegetables, "Fruit and Vegetables");
+            Add(CatType.Commodity, ItemType.Foods, MCMR.Grain, "Grain");
+            Add(CatType.Commodity, ItemType.Foods, MCMR.SyntheticMeat, "Synthetic Meat");
+            Add(CatType.Commodity, ItemType.Foods, MCMR.Tea, "Tea");
+            Add(CatType.Commodity, ItemType.IndustrialMaterials, MCMR.CeramicComposites, "Ceramic Composites");
+            Add(CatType.Commodity, ItemType.IndustrialMaterials, MCMR.CMMComposite, "CMM Composite", "CMMC");
+            Add(CatType.Commodity, ItemType.IndustrialMaterials, MCMR.CoolingHoses, "Micro-Weave Cooling Hoses", "MWCH");
+            Add(CatType.Commodity, ItemType.IndustrialMaterials, MCMR.InsulatingMembrane, "Insulating Membrane");
+            Add(CatType.Commodity, ItemType.IndustrialMaterials, MCMR.Metaalloys, "Meta-Alloys", "MA");
+            Add(CatType.Commodity, ItemType.IndustrialMaterials, MCMR.NeofabricInsulation, "Neofabric Insulation", "NFI");
+            Add(CatType.Commodity, ItemType.IndustrialMaterials, MCMR.Polymers, "Polymers");
+            Add(CatType.Commodity, ItemType.IndustrialMaterials, MCMR.Semiconductors, "Semiconductors");
+            Add(CatType.Commodity, ItemType.IndustrialMaterials, MCMR.Superconductors, "Superconductors");
+            Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.Beer, "Beer");
+            Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.BootlegLiquor, "Bootleg Liquor");
+            Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.Liquor, "Liquor");
+            Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.Tobacco, "Tobacco");
+            Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.Wine, "Wine");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.ArticulationMotors, "Articulation Motors", "AM");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.AtmosphericExtractors, "Atmospheric Processors");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.BuildingFabricators, "Building Fabricators");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.CropHarvesters, "Crop Harvesters");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.EmergencyPowerCells, "Emergency Power Cells");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.ExhaustManifold, "Exhaust Manifold");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.GeologicalEquipment, "Geological Equipment");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.HeatsinkInterlink, "Heatsink Interlink", "HSI");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.HeliostaticFurnaces, "Microbial Furnaces");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.HNShockMount, "HN Shock Mount", "HNSM");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.IonDistributor, "Ion Distributor", "IOD");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.MagneticEmitterCoil, "Magnetic Emitter Coil", "MEC");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.MarineSupplies, "Marine Equipment");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.MineralExtractors, "Mineral Extractors");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.ModularTerminals, "Modular Terminals");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.PowerConverter, "Power Converter", "PC");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.PowerGenerators, "Power Generators");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.PowerGridAssembly, "Energy Grid Assembly", "EGA");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.PowerTransferConduits, "Power Transfer Bus", "PTB");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.RadiationBaffle, "Radiation Baffle", "RB");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.ReinforcedMountingPlate, "Reinforced Mounting Plate", "RMP");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.SkimerComponents, "Skimmer Components");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.ThermalCoolingUnits, "Thermal Cooling Units", "TCU");
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.WaterPurifiers, "Water Purifiers", "WPURE");
+            Add(CatType.Commodity, ItemType.Medicines, MCMR.AdvancedMedicines, "Advanced Medicines");
+            Add(CatType.Commodity, ItemType.Medicines, MCMR.AgriculturalMedicines, "Agri-Medicines");
+            Add(CatType.Commodity, ItemType.Medicines, MCMR.BasicMedicines, "Basic Medicines");
+            Add(CatType.Commodity, ItemType.Medicines, MCMR.CombatStabilisers, "Combat Stabilisers");
+            Add(CatType.Commodity, ItemType.Medicines, MCMR.Nanomedicines, "Nanomedicines");
+            Add(CatType.Commodity, ItemType.Medicines, MCMR.PerformanceEnhancers, "Performance Enhancers");
+            Add(CatType.Commodity, ItemType.Medicines, MCMR.ProgenitorCells, "Progenitor Cells");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Aluminium, "Aluminium");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Beryllium, "Beryllium");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Bismuth, "Bismuth");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Cobalt, "Cobalt");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Copper, "Copper");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Gallium, "Gallium");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Gold, "Gold");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Hafnium178, "Hafnium 178");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Indium, "Indium");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Lanthanum, "Lanthanum");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Lithium, "Lithium");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Osmium, "Osmium", "OSM");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Palladium, "Palladium");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Platinum, "Platinum");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.PlatinumAloy, "Platinum Alloy");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Praseodymium, "Praseodymium");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Samarium, "Samarium");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Silver, "Silver");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Tantalum, "Tantalum");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Thallium, "Thallium");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Thorium, "Thorium");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Titanium, "Titanium");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Uranium, "Uranium");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Alexandrite, "Alexandrite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Bauxite, "Bauxite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Benitoite, "Benitoite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Bertrandite, "Bertrandite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Bromellite, "Bromellite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Coltan, "Coltan");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Cryolite, "Cryolite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Gallite, "Gallite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Goslarite, "Goslarite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Grandidierite, "Grandidierite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Indite, "Indite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Jadeite, "Jadeite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Lepidolite, "Lepidolite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.LithiumHydroxide, "Lithium Hydroxide");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.lowtemperaturediamond, "Low Temperature Diamonds");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.MethaneClathrate, "Methane Clathrate");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.methanolmonohydratecrystals, "Methanol Monohydrate Crystals");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Moissanite, "Moissanite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Monazite, "Monazite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Musgravite, "Musgravite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Opal, "Void Opal");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Painite, "Painite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Pyrophyllite, "Pyrophyllite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Rhodplumsite, "Rhodplumsite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Rutile, "Rutile");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Serendibite, "Serendibite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Taaffeite, "Taaffeite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Uraninite, "Uraninite");
+            Add(CatType.Commodity, ItemType.Narcotics, MCMR.BasicNarcotics, "Narcotics");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.AislingMediaMaterials, "Aisling Media Materials");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.AislingMediaResources, "Aisling Sealed Contracts");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.AislingPromotionalMaterials, "Aisling Programme Materials");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.AllianceLegaslativeContracts, "Alliance Legislative Contracts");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.AllianceLegaslativeRecords, "Alliance Legislative Records");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.AllianceTradeAgreements, "Alliance Trade Agreements");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.CounterCultureSupport, "Revolutionary supplies");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.FederalAid, "Liberal Federal Aid");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.FederalTradeContracts, "Liberal Federal Packages");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.GromCounterIntelligence, "Grom Counter Intelligence");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.GromWarTrophies, "Yuri Grom's Military Supplies");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.IllicitConsignment, "Kumo Contraband Package");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.ImperialPrisoner, "Torval Political Prisoners");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.LavignyCorruptionDossiers, "Lavigny Corruption Reports");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.LavignyFieldSupplies, "Lavigny Field Supplies");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.LavignyGarisonSupplies, "Lavigny Garrison Supplies");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.LiberalCampaignMaterials, "Liberal Propaganda");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.LoanedArms, "Marked Military Arms");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.MarkedSlaves, "Marked Slaves");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.OnionheadDerivatives, "Onionhead Derivatives");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.OnionheadSamples, "Onionhead Samples");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.OutOfDateGoods, "Out Of Date Goods");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.PatreusFieldSupplies, "Patreus Field Supplies");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.PatreusGarisonSupplies, "Patreus Garrison Supplies");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.RepublicanFieldSupplies, "Hudson's Field Supplies");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.RepublicanGarisonSupplies, "Hudson Garrison Supplies");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.RestrictedIntel, "Hudson's Restricted Intel");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.RestrictedPackage, "Core Restricted Package");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.SiriusCommercialContracts, "Sirius Corporate Contracts");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.SiriusFranchisePackage, "Sirius Franchise Package");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.SiriusIndustrialEquipment, "Sirius Industrial Equipment");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.TorvalCommercialContracts, "Torval Trade Agreements");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.TorvalDeeds, "Torval Deeds");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.UndergroundSupport, "Grom Underground Support");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.UnmarkedWeapons, "Unmarked Military supplies");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.UtopianDissident, "Utopian Dissident");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.UtopianFieldSupplies, "Utopian Supplies");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.UtopianPublicity, "Utopian Publicity");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.AiRelics, "Ai Relics");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.AncientCasket, "Guardian Casket");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.AncientKey, "Ancient Key");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.AncientOrb, "Guardian Orb");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.AncientRelic, "Guardian Relic");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.AncientRelicTG, "Unclassified Relic", "ARTG");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.AncientTablet, "Guardian Tablet");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.AncientTotem, "Guardian Totem");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.AncientUrn, "Guardian Urn");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.AntimatterContainmentUnit, "Antimatter Containment Unit");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.AntiqueJewellery, "Antique Jewellery");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.Antiquities, "Antiquities");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.AssaultPlans, "Assault Plans");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ComercialSamples, "Commercial Samples");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.CoralSap, "Coral Sap");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.DamagedEscapePod, "Damaged Escape Pod");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.DataCore, "Data Core");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.DiplomaticBag, "Diplomatic Bag");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.EncriptedDataStorage, "Encrypted Data Storage");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.EncryptedCorrespondence, "Encrypted Correspondence");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.FossilRemnants, "Fossil Remnants");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.GeneBank, "Gene Bank");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.GeologicalSamples, "Geological Samples");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.Hostage, "Hostages");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.LargeExplorationDatacash, "Large Survey Data Cache");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.M_TissueSample_Fluid, "Mollusc Fluid");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.M_TissueSample_Nerves, "Mollusc Brain Tissue");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.M_TissueSample_Soft, "Mollusc Soft Tissue");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.M3_TissueSample_Membrane, "Mollusc Membrane");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.M3_TissueSample_Mycelium, "Mollusc Mycelium");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.M3_TissueSample_Spores, "Mollusc Spores");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.MilitaryIntelligence, "Military Intelligence");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.MysteriousIdol, "Mysterious Idol");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.OccupiedCryoPod, "Occupied Escape Pod");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.P_ParticulateSample, "Anomaly Particles");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.PersonalEffects, "Personal Effects");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.PoliticalPrisoner, "Political Prisoners");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.PreciousGems, "Precious Gems");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ProhibitedResearchMaterials, "Prohibited Research Materials");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.S_TissueSample_Cells, "Pod Core Tissue");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.S_TissueSample_Core, "Pod Surface Tissue");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.S_TissueSample_Surface, "Pod Dead Tissue");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.S6_TissueSample_Cells, "Pod Outer Tissue");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.S6_TissueSample_Coenosarc, "Pod Shell Tissue");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.S6_TissueSample_Mesoglea, "Pod Mesoglea");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.S9_TissueSample_Shell, "Pod Tissue");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.Sap8CoreContainer, "Sap 8 Core Container");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ScientificResearch, "Scientific Research");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ScientificSamples, "Scientific Samples");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.SmallExplorationDatacash, "Small Survey Data Cache");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.SpacePioneerRelics, "Space Pioneer Relics");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.TacticalData, "Tactical Data");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidGeneratorTissueSample, "Caustic Tissue Sample");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidHeart, "Thargoid Heart");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidPod, "Xenobiological Prison Pod");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidScoutTissueSample, "Thargoid Scout Tissue Sample");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidTissueSampleType1, "Thargoid Cyclops Tissue Sample");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidTissueSampleType10a, "Titan Maw Deep Tissue Sample");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidTissueSampleType10b, "Titan Maw Tissue Sample");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidTissueSampleType10c, "Titan Maw Partial Tissue Sample");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidTissueSampleType2, "Thargoid Basilisk Tissue Sample");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidTissueSampleType3, "Thargoid Medusa Tissue Sample");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidTissueSampleType4, "Thargoid Hydra Tissue Sample");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidTissueSampleType5, "Thargoid Orthrus Tissue Sample");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidTissueSampleType6, "Thargoid Glaive Tissue Sample");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidTissueSampleType7, "Thargoid Scythe Tissue Sample");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidTissueSampleType9a, "Titan Deep Tissue Sample");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidTissueSampleType9b, "Titan Tissue Sample");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidTissueSampleType9c, "Titan Partial Tissue Sample");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.TimeCapsule, "Time Capsule");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.TrinketsOfFortune, "Trinkets of Hidden Fortune");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.UnknownArtifact, "Thargoid Sensor");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.UnknownArtifact2, "Thargoid Probe");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.UnknownArtifact3, "Thargoid Link");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.UnknownBiologicalMatter, "Thargoid Biological Matter");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.UnknownResin, "Thargoid Resin");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.UnknownSack, "Protective Membrane Scrap");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.UnknownTechnologySamples, "Thargoid Technology Samples");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.UnocuppiedEscapePod, "Unoccupied Escape Pod");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.UnstableDataCore, "Unstable Data Core");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.USSCargoAncientArtefact, "Ancient Artefact");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.USSCargoBlackBox, "Black Box");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.USSCargoExperimentalChemicals, "Experimental Chemicals");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.USSCargoMilitaryPlans, "Military Plans");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.USSCargoPrototypeTech, "Prototype Tech");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.USSCargoRareArtwork, "Rare Artwork");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.USSCargoRebelTransmissions, "Rebel Transmissions");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.USSCargoTechnicalBlueprints, "Technical Blueprints");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.USSCargoTradeData, "Trade Data");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.WreckageComponents, "Wreckage Components");
+            Add(CatType.Commodity, ItemType.Slaves, MCMR.ImperialSlaves, "Imperial Slaves");
+            Add(CatType.Commodity, ItemType.Slaves, MCMR.Slaves, "Slaves");
+            Add(CatType.Commodity, ItemType.Technology, MCMR.AdvancedCatalysers, "Advanced Catalysers");
+            Add(CatType.Commodity, ItemType.Technology, MCMR.AnimalMonitors, "Animal Monitors");
+            Add(CatType.Commodity, ItemType.Technology, MCMR.AquaponicSystems, "Aquaponic Systems");
+            Add(CatType.Commodity, ItemType.Technology, MCMR.autofabricators, "Auto-Fabricators");
+            Add(CatType.Commodity, ItemType.Technology, MCMR.BioreducingLichen, "Bioreducing Lichen");
+            Add(CatType.Commodity, ItemType.Technology, MCMR.ComputerComponents, "Computer Components");
+            Add(CatType.Commodity, ItemType.Technology, MCMR.DiagnosticSensor, "Hardware Diagnostic Sensor", "DIS");
+            Add(CatType.Commodity, ItemType.Technology, MCMR.HazardousEnvironmentSuits, "H.E. Suits");
+            Add(CatType.Commodity, ItemType.Technology, MCMR.MedicalDiagnosticEquipment, "Medical Diagnostic Equipment");
+            Add(CatType.Commodity, ItemType.Technology, MCMR.MicroControllers, "Micro Controllers", "MCC");
+            Add(CatType.Commodity, ItemType.Technology, MCMR.MutomImager, "Muon Imager");
+            Add(CatType.Commodity, ItemType.Technology, MCMR.Nanobreakers, "Nanobreakers");
+            Add(CatType.Commodity, ItemType.Technology, MCMR.ResonatingSeparators, "Resonating Separators");
+            Add(CatType.Commodity, ItemType.Technology, MCMR.Robotics, "Robotics");
+            Add(CatType.Commodity, ItemType.Technology, MCMR.StructuralRegulators, "Structural Regulators");
+            Add(CatType.Commodity, ItemType.Technology, MCMR.TelemetrySuite, "Telemetry Suite");
+            Add(CatType.Commodity, ItemType.Technology, MCMR.TerrainEnrichmentSystems, "Land Enrichment Systems");
+            Add(CatType.Commodity, ItemType.Textiles, MCMR.ConductiveFabrics, "Conductive Fabrics");
+            Add(CatType.Commodity, ItemType.Textiles, MCMR.Leather, "Leather");
+            Add(CatType.Commodity, ItemType.Textiles, MCMR.MilitaryGradeFabrics, "Military Grade Fabrics");
+            Add(CatType.Commodity, ItemType.Textiles, MCMR.NaturalFabrics, "Natural Fabrics");
+            Add(CatType.Commodity, ItemType.Textiles, MCMR.SyntheticFabrics, "Synthetic Fabrics");
+            Add(CatType.Commodity, ItemType.Waste, MCMR.Biowaste, "Biowaste");
+            Add(CatType.Commodity, ItemType.Waste, MCMR.ChemicalWaste, "Chemical Waste");
+            Add(CatType.Commodity, ItemType.Waste, MCMR.Scrap, "Scrap");
+            Add(CatType.Commodity, ItemType.Waste, MCMR.ToxicWaste, "Toxic Waste");
+            Add(CatType.Commodity, ItemType.Weapons, MCMR.BattleWeapons, "Battle Weapons");
+            Add(CatType.Commodity, ItemType.Weapons, MCMR.Landmines, "Landmines");
+            Add(CatType.Commodity, ItemType.Weapons, MCMR.NonLethalWeapons, "Non-Lethal Weapons");
+            Add(CatType.Commodity, ItemType.Weapons, MCMR.PersonalWeapons, "Personal Weapons");
+            Add(CatType.Commodity, ItemType.Weapons, MCMR.ReactiveArmour, "Reactive Armour");
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.Advert1, "Ultra-Compact Processor Prototypes", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.AlacarakmoSkinArt, "Alacarakmo Skin Art", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.AlienEggs, "Leathery Eggs", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.AltairianSkin, "Altairian Skin", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.BuckyballBeerMats, "Buckyball Beer Mats", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.CrystallineSpheres, "Crystalline Spheres", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.EleuThermals, "Eleu Thermals", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.EshuUmbrellas, "Eshu Umbrellas", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.HavasupaiDreamCatcher, "Havasupai Dream Catcher", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.JaquesQuinentianStill, "Jaques Quinentian Still", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.JaradharrePuzzlebox, "Jaradharre Puzzle Box", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.JotunMookah, "Jotun Mookah", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.KaretiiCouture, "Karetii Couture", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.KinagoInstruments, "Kinago Violins", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.MomusBogSpaniel, "Momus Bog Spaniel", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.NgunaModernAntiques, "Nguna Modern Antiques", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.NjangariSaddles, "Njangari Saddles", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.OphiuchiExinoArtefacts, "Ophiuch Exino Artefacts", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.PersonalGifts, "Personal Gifts", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.RajukruStoves, "Rajukru Multi-Stoves", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.ShansCharisOrchid, "Shan's Charis Orchid", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.SoontillRelics, "Soontill Relics", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.TheHuttonMug, "The Hutton Mug", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.TiolceWaste2PasteUnits, "Tiolce Waste2Paste Units", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.UzumokuLowGWings, "Uzumoku Low-G Wings", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.VidavantianLace, "Vidavantian Lace", true);
+            Add(CatType.Commodity, ItemType.ConsumerItems, MCMR.ZeesszeAntGlue, "Zeessze Ant Grub Glue", true);
+            Add(CatType.Commodity, ItemType.Chemicals, MCMR.AnduligaFireWorks, "Anduliga Fire Works", true);
+            Add(CatType.Commodity, ItemType.Chemicals, MCMR.DeltaPhoenicisPalms, "Delta Phoenicis Palms", true);
+            Add(CatType.Commodity, ItemType.Chemicals, MCMR.HIPOrganophosphates, "Hip Organophosphates", true);
+            Add(CatType.Commodity, ItemType.Chemicals, MCMR.KorroKungPellets, "Koro Kung Pellets", true);
+            Add(CatType.Commodity, ItemType.Chemicals, MCMR.ToxandjiVirocide, "Toxandji Virocide", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.AerialEdenApple, "Eden Apples Of Aerial", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.AlbinoQuechuaMammoth, "Albino Quechua Mammoth Meat", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.AnyNaCoffee, "Any Na Coffee", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.AroucaConventualSweets, "Arouca Conventual Sweets", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.BakedGreebles, "Baked Greebles", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.BaltahSineVacuumKrill, "Baltah'sine Vacuum Krill", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.CD75CatCoffee, "CD-75 Kitten Brand Coffee", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.CeremonialHeikeTea, "Ceremonial Heike Tea", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.CetiAepyornisEgg, "Aepyornis Egg", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.CetiRabbits, "Ceti Rabbits", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.ChiEridaniMarinePaste, "Chi Eridani Marine Paste", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.CoquimSpongiformVictuals, "Coquim Spongiform Victuals", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.DeuringasTruffles, "Deuringas Truffles", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.DisoMaCorn, "Diso Ma Corn", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.EsusekuCaviar, "Esuseku Caviar", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.EthgrezeTeaBuds, "Ethgreze Tea Buds", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.GiantIrukamaSnails, "Giant Irukama Snails", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.GomanYauponCoffee, "Goman Yaupon Coffee", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.HaidneBlackBrew, "Haiden Black Brew", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.HelvetitjPearls, "Helvetitj Pearls", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.HIP10175BushMeat, "HIP 10175 Bush Meat", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.HIP41181Squid, "HIP Proto-Squid", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.HR7221Wheat, "HR 7221 Wheat", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.JarouaRice, "Jaroua Rice", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.KarsukiLocusts, "Karsuki Locusts", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.LFTVoidExtractCoffee, "Void Extract Coffee", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.LiveHecateSeaWorms, "Live Hecate Sea Worms", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.LTTHyperSweet, "LTT Hyper Sweet", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.MechucosHighTea, "Mechucos High Tea", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.MokojingBeastFeast, "Mokojing Beast Feast", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.MukusubiiChitinOs, "Mukusubii Chitin-os", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.MulachiGiantFungus, "Mulachi Giant Fungus", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.NeritusBerries, "Neritus Berries", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.OchoengChillies, "Ochoeng Chillies", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.OrrerianViciousBrew, "Orrerian Vicious Brew", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.SanumaMEAT, "Sanuma Decorative Meat", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.TanmarkTranquilTea, "Tanmark Tranquil Tea", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.UszaianTreeGrub, "Uszaian Tree Grub", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.UtgaroarMillenialEggs, "Utgaroar Millennial Eggs", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.WheemeteWheatCakes, "Wheemete Wheat Cakes", true);
+            Add(CatType.Commodity, ItemType.Foods, MCMR.WitchhaulKobeBeef, "Witchhaul Kobe Beef", true);
+            Add(CatType.Commodity, ItemType.IndustrialMaterials, MCMR.MedbStarlube, "Medb Starlube", true);
+            Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.BastSnakeGin, "Bast Snake Gin", true);
+            Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.BlueMilk, "Azure Milk", true);
+            Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.BurnhamBileDistillate, "Burnham Bile Distillate", true);
+            Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.CentauriMegaGin, "Centauri Mega Gin", true);
+            Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.ChateauDeAegaeon, "Chateau De Aegaeon", true);
+            Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.EraninPearlWhisky, "Eranin Pearl Whisky", true);
+            Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.GerasianGueuzeBeer, "Gerasian Gueuze Beer", true);
+            Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.IndiBourbon, "Indi Bourbon", true);
+            Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.KamitraCigars, "Kamitra Cigars", true);
+            Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.KonggaAle, "Kongga Ale", true);
+            Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.LavianBrandy, "Lavian Brandy", true);
+            Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.LeestianEvilJuice, "Leestian Evil Juice", true);
+            Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.RusaniOldSmokey, "Rusani Old Smokey", true);
+            Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.SaxonWine, "Saxon Wine", true);
+            Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.ThrutisCream, "Thrutis Cream", true);
+            Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.WuthieloKuFroth, "Wuthielo Ku Froth", true);
+            Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.YasoKondiLeaf, "Yaso Kondi Leaf", true);
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.GiantVerrix, "Giant Verrix", true);
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.NonEuclidianExotanks, "Non Euclidian Exotanks", true);
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.VolkhabBeeDrones, "Volkhab Bee Drones", true);
+            Add(CatType.Commodity, ItemType.Machinery, MCMR.WulpaHyperboreSystems, "Wulpa Hyperbore Systems", true);
+            Add(CatType.Commodity, ItemType.Medicines, MCMR.AganippeRush, "Aganippe Rush", true);
+            Add(CatType.Commodity, ItemType.Medicines, MCMR.AlyaBodilySoap, "Alya Body Soap", true);
+            Add(CatType.Commodity, ItemType.Medicines, MCMR.FujinTea, "Fujin Tea", true);
+            Add(CatType.Commodity, ItemType.Medicines, MCMR.HonestyPills, "Honesty Pills", true);
+            Add(CatType.Commodity, ItemType.Medicines, MCMR.KachiriginLeaches, "Kachirigin Filter Leeches", true);
+            Add(CatType.Commodity, ItemType.Medicines, MCMR.PantaaPrayerSticks, "Pantaa Prayer Sticks", true);
+            Add(CatType.Commodity, ItemType.Medicines, MCMR.TauriChimes, "Tauri Chimes", true);
+            Add(CatType.Commodity, ItemType.Medicines, MCMR.TerraMaterBloodBores, "Terra Mater Blood Bores", true);
+            Add(CatType.Commodity, ItemType.Medicines, MCMR.VegaSlimWeed, "Vega Slimweed", true);
+            Add(CatType.Commodity, ItemType.Medicines, MCMR.VHerculisBodyRub, "V Herculis Body Rub", true);
+            Add(CatType.Commodity, ItemType.Medicines, MCMR.WatersOfShintara, "The Waters Of Shintara", true);
+            Add(CatType.Commodity, ItemType.Metals, MCMR.SothisCrystallineGold, "Sothis Crystalline Gold", true);
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.CherbonesBloodCrystals, "Cherbones Blood Crystals", true);
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.NgadandariFireOpals, "Ngadandari Fire Opals", true);
+            Add(CatType.Commodity, ItemType.Narcotics, MCMR.AnimalEffigies, "Crom Silver Fesh", true);
+            Add(CatType.Commodity, ItemType.Narcotics, MCMR.ApaVietii, "Apa Vietii", true);
+            Add(CatType.Commodity, ItemType.Narcotics, MCMR.GeawenDanceDust, "Geawen Dance Dust", true);
+            Add(CatType.Commodity, ItemType.Narcotics, MCMR.HarmaSilverSeaRum, "Harma Silver Sea Rum", true);
+            Add(CatType.Commodity, ItemType.Narcotics, MCMR.LyraeWeed, "Lyrae Weed", true);
+            Add(CatType.Commodity, ItemType.Narcotics, MCMR.MotronaExperienceJelly, "Motrona Experience Jelly", true);
+            Add(CatType.Commodity, ItemType.Narcotics, MCMR.OnionHead, "Onionhead", true);
+            Add(CatType.Commodity, ItemType.Narcotics, MCMR.OnionHeadA, "Onionhead Alpha Strain", true);
+            Add(CatType.Commodity, ItemType.Narcotics, MCMR.OnionHeadB, "Onionhead Beta Strain", true);
+            Add(CatType.Commodity, ItemType.Narcotics, MCMR.OnionHeadC, "Onionhead Gamma Strain", true);
+            Add(CatType.Commodity, ItemType.Narcotics, MCMR.PavonisEarGrubs, "Pavonis Ear Grubs", true);
+            Add(CatType.Commodity, ItemType.Narcotics, MCMR.TarachTorSpice, "Tarach Spice", true);
+            Add(CatType.Commodity, ItemType.Narcotics, MCMR.TransgenicOnionHead, "Lucan Onionhead", true);
+            Add(CatType.Commodity, ItemType.Narcotics, MCMR.Wolf1301Fesh, "Wolf Fesh", true);
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ClassifiedExperimentalEquipment, "Classified Experimental Equipment", true);
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.EarthRelics, "Earth Relics", true);
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.GalacticTravelGuide, "Galactic Travel Guide", true);
+            Add(CatType.Commodity, ItemType.Slaves, MCMR.MasterChefs, "Master Chefs", true);
+            Add(CatType.Commodity, ItemType.Technology, MCMR.AZCancriFormula42, "AZ Cancri Formula 42", true);
+            Add(CatType.Commodity, ItemType.Technology, MCMR.XiheCompanions, "Xihe Biomorphic Companions", true);
+            Add(CatType.Commodity, ItemType.Textiles, MCMR.BankiAmphibiousLeather, "Banki Amphibious Leather", true);
+            Add(CatType.Commodity, ItemType.Textiles, MCMR.BelalansRayLeather, "Belalans Ray Leather", true);
+            Add(CatType.Commodity, ItemType.Textiles, MCMR.ChameleonCloth, "Chameleon Cloth", true);
+            Add(CatType.Commodity, ItemType.Textiles, MCMR.DamnaCarapaces, "Damna Carapaces", true);
+            Add(CatType.Commodity, ItemType.Textiles, MCMR.RapaBaoSnakeSkins, "Rapa Bao Snake Skins", true);
+            Add(CatType.Commodity, ItemType.Textiles, MCMR.TiegfriesSynthSilk, "Tiegfries Synth Silk", true);
+            Add(CatType.Commodity, ItemType.Textiles, MCMR.VanayequiRhinoFur, "Vanayequi Ceratomorpha Fur", true);
+            Add(CatType.Commodity, ItemType.Weapons, MCMR.BorasetaniPathogenetics, "Borasetani Pathogenetics", true);
+            Add(CatType.Commodity, ItemType.Weapons, MCMR.GilyaSignatureWeapons, "Gilya Signature Weapons", true);
+            Add(CatType.Commodity, ItemType.Weapons, MCMR.HIP118311Swarm, "HIP 118311 Swarm", true);
+            Add(CatType.Commodity, ItemType.Weapons, MCMR.HolvaDuellingBlades, "Holva Duelling Blades", true);
+            Add(CatType.Commodity, ItemType.Weapons, MCMR.KamorinHistoricWeapons, "Kamorin Historic Weapons", true);
+
+            #endregion
+
+            #region Raw Data - keep in this order
+
+            Add(CatType.Raw, ItemType.VeryCommon, MaterialGroupType.RawCategory1, MCMR.Carbon, "Carbon", "C");
+            Add(CatType.Raw, ItemType.VeryCommon, MaterialGroupType.RawCategory2, MCMR.Phosphorus, "Phosphorus", "P");
+            Add(CatType.Raw, ItemType.VeryCommon, MaterialGroupType.RawCategory3, MCMR.Sulphur, "Sulphur", "S");
+            Add(CatType.Raw, ItemType.VeryCommon, MaterialGroupType.RawCategory4, MCMR.Iron, "Iron", "Fe");
+            Add(CatType.Raw, ItemType.VeryCommon, MaterialGroupType.RawCategory5, MCMR.Nickel, "Nickel", "Ni");
+            Add(CatType.Raw, ItemType.VeryCommon, MaterialGroupType.RawCategory6, MCMR.Rhenium, "Rhenium", "Re");
+            Add(CatType.Raw, ItemType.VeryCommon, MaterialGroupType.RawCategory7, MCMR.Lead, "Lead", "Pb");
+
+            Add(CatType.Raw, ItemType.Common, MaterialGroupType.RawCategory1, MCMR.Vanadium, "Vanadium", "V");
+            Add(CatType.Raw, ItemType.Common, MaterialGroupType.RawCategory2, MCMR.Chromium, "Chromium", "Cr");
+            Add(CatType.Raw, ItemType.Common, MaterialGroupType.RawCategory3, MCMR.Manganese, "Manganese", "Mn");
+            Add(CatType.Raw, ItemType.Common, MaterialGroupType.RawCategory4, MCMR.Zinc, "Zinc", "Zn");
+            Add(CatType.Raw, ItemType.Common, MaterialGroupType.RawCategory5, MCMR.Germanium, "Germanium", "Ge");
+            Add(CatType.Raw, ItemType.Common, MaterialGroupType.RawCategory6, MCMR.Arsenic, "Arsenic", "As");
+            Add(CatType.Raw, ItemType.Common, MaterialGroupType.RawCategory7, MCMR.Zirconium, "Zirconium", "Zr");
+
+            Add(CatType.Raw, ItemType.Standard, MaterialGroupType.RawCategory1, MCMR.Niobium, "Niobium", "Nb");
+            Add(CatType.Raw, ItemType.Standard, MaterialGroupType.RawCategory2, MCMR.Molybdenum, "Molybdenum", "Mo");
+            Add(CatType.Raw, ItemType.Standard, MaterialGroupType.RawCategory3, MCMR.Cadmium, "Cadmium", "Cd");
+            Add(CatType.Raw, ItemType.Standard, MaterialGroupType.RawCategory4, MCMR.Tin, "Tin", "Sn");
+            Add(CatType.Raw, ItemType.Standard, MaterialGroupType.RawCategory5, MCMR.Tungsten, "Tungsten", "W");
+            Add(CatType.Raw, ItemType.Standard, MaterialGroupType.RawCategory6, MCMR.Mercury, "Mercury", "Hg");
+            Add(CatType.Raw, ItemType.Standard, MaterialGroupType.RawCategory7, MCMR.Boron, "Boron", "B");
+
+            Add(CatType.Raw, ItemType.Rare, MaterialGroupType.RawCategory1, MCMR.Yttrium, "Yttrium", "Y");
+            Add(CatType.Raw, ItemType.Rare, MaterialGroupType.RawCategory2, MCMR.Technetium, "Technetium", "Tc");
+            Add(CatType.Raw, ItemType.Rare, MaterialGroupType.RawCategory3, MCMR.Ruthenium, "Ruthenium", "Ru");
+            Add(CatType.Raw, ItemType.Rare, MaterialGroupType.RawCategory4, MCMR.Selenium, "Selenium", "Se");
+            Add(CatType.Raw, ItemType.Rare, MaterialGroupType.RawCategory5, MCMR.Tellurium, "Tellurium", "Te");
+            Add(CatType.Raw, ItemType.Rare, MaterialGroupType.RawCategory6, MCMR.Polonium, "Polonium", "Po");
+            Add(CatType.Raw, ItemType.Rare, MaterialGroupType.RawCategory7, MCMR.Antimony, "Antimony", "Sb");
+
+            #endregion
+
+            // TBD materialtrader does it still work?
+
+            #region Encoded - keep in this order for the Materialtrader.cs. 
+
+            // the order is 1/3 ratio, the first is the cheapest, the last is the most expensive
+            // so for a particular type (say EncodedEmissionsData), it will pick the verycommon first, common.. etc to veryrare
+            // see the code around 190 in materialtrader.cs - it wants it in verycommon - > veryrare order for a paricualt MaterialGroupType.
+
+            Add(CatType.Encoded, ItemType.VeryCommon, MaterialGroupType.EncodedEmissionData, MCMR.ScrambledeMissionData, "Exceptional Scrambled Emission Data", "ESED");
+            Add(CatType.Encoded, ItemType.VeryCommon, MaterialGroupType.EncodedWakeScans, MCMR.DisruptedWakeEchoes, "Atypical Disrupted Wake Echoes", "ADWE");
+            Add(CatType.Encoded, ItemType.VeryCommon, MaterialGroupType.EncodedShieldData, MCMR.ShieldCycleRecordings, "Distorted Shield Cycle Recordings", "DSCR");
+            Add(CatType.Encoded, ItemType.VeryCommon, MaterialGroupType.EncodedEncryptionFiles, MCMR.EncryptedFiles, "Unusual Encrypted Files", "UEF");
+            Add(CatType.Encoded, ItemType.VeryCommon, MaterialGroupType.EncodedDataArchives, MCMR.BulkScandata, "Anomalous Bulk Scan Data", "ABSD");
+            Add(CatType.Encoded, ItemType.VeryCommon, MaterialGroupType.EncodedFirmware, MCMR.LegacyFirmware, "Specialised Legacy Firmware", "SLF");
+
+            Add(CatType.Encoded, ItemType.Common, MaterialGroupType.EncodedEmissionData, MCMR.ArchivedEmissionData, "Irregular Emission Data", "IED");
+            Add(CatType.Encoded, ItemType.Common, MaterialGroupType.EncodedWakeScans, MCMR.FSDTelemetry, "Anomalous FSD Telemetry", "AFT");
+            Add(CatType.Encoded, ItemType.Common, MaterialGroupType.EncodedShieldData, MCMR.ShieldSoakAnalysis, "Inconsistent Shield Soak Analysis", "ISSA");
+            Add(CatType.Encoded, ItemType.Common, MaterialGroupType.EncodedEncryptionFiles, MCMR.EncryptionCodes, "Tagged Encryption Codes", "TEC");
+            Add(CatType.Encoded, ItemType.Common, MaterialGroupType.EncodedDataArchives, MCMR.ScanArchives, "Unidentified Scan Archives", "USA");
+            Add(CatType.Encoded, ItemType.Common, MaterialGroupType.EncodedFirmware, MCMR.ConsumerFirmware, "Modified Consumer Firmware", "MCF");
+
+            Add(CatType.Encoded, ItemType.Standard, MaterialGroupType.EncodedEmissionData, MCMR.EmissionData, "Unexpected Emission Data", "UED");
+            Add(CatType.Encoded, ItemType.Standard, MaterialGroupType.EncodedWakeScans, MCMR.WakeSolutions, "Strange Wake Solutions", "SWS");
+            Add(CatType.Encoded, ItemType.Standard, MaterialGroupType.EncodedShieldData, MCMR.ShieldDensityReports, "Untypical Shield Scans", "USS");
+            Add(CatType.Encoded, ItemType.Standard, MaterialGroupType.EncodedEncryptionFiles, MCMR.SymmetricKeys, "Open Symmetric Keys", "OSK");
+            Add(CatType.Encoded, ItemType.Standard, MaterialGroupType.EncodedDataArchives, MCMR.ScanDataNanks, "Classified Scan Databanks", "CSD");
+            Add(CatType.Encoded, ItemType.Standard, MaterialGroupType.EncodedFirmware, MCMR.IndustrialFirmware, "Cracked Industrial Firmware", "CIF");
+
+            Add(CatType.Encoded, ItemType.Rare, MaterialGroupType.EncodedEmissionData, MCMR.DecodedEmissionData, "Decoded Emission Data", "DED");
+            Add(CatType.Encoded, ItemType.Rare, MaterialGroupType.EncodedWakeScans, MCMR.HyperspaceTrajectories, "Eccentric Hyperspace Trajectories", "EHT");
+            Add(CatType.Encoded, ItemType.Rare, MaterialGroupType.EncodedShieldData, MCMR.ShieldPatternAnalysis, "Aberrant Shield Pattern Analysis", "ASPA");
+            Add(CatType.Encoded, ItemType.Rare, MaterialGroupType.EncodedEncryptionFiles, MCMR.EncryptionArchives, "Atypical Encryption Archives", "AEA");
+            Add(CatType.Encoded, ItemType.Rare, MaterialGroupType.EncodedDataArchives, MCMR.EncodedScandata, "Divergent Scan Data", "DSD");
+            Add(CatType.Encoded, ItemType.Rare, MaterialGroupType.EncodedFirmware, MCMR.SecurityFirmware, "Security Firmware Patch", "SFP");
+
+            Add(CatType.Encoded, ItemType.VeryRare, MaterialGroupType.EncodedEmissionData, MCMR.CompactEmissionsData, "Abnormal Compact Emissions Data", "CED");
+            Add(CatType.Encoded, ItemType.VeryRare, MaterialGroupType.EncodedWakeScans, MCMR.DataminedWake, "Datamined Wake Exceptions", "DWEx");
+            Add(CatType.Encoded, ItemType.VeryRare, MaterialGroupType.EncodedShieldData, MCMR.ShieldFrequencyData, "Peculiar Shield Frequency Data", "PSFD");
+            Add(CatType.Encoded, ItemType.VeryRare, MaterialGroupType.EncodedEncryptionFiles, MCMR.AdaptiveEncryptors, "Adaptive Encryptors Capture", "AEC");
+            Add(CatType.Encoded, ItemType.VeryRare, MaterialGroupType.EncodedDataArchives, MCMR.ClassifiedScandata, "Classified Scan Fragment", "CFSD");
+            Add(CatType.Encoded, ItemType.VeryRare, MaterialGroupType.EncodedFirmware, MCMR.EmbeddedFirmware, "Modified Embedded Firmware", "EFW");
+
+            Add(CatType.Manufactured, ItemType.VeryCommon, MaterialGroupType.ManufacturedChemical, MCMR.ChemicalStorageUnits, "Chemical Storage Units", "CSU");
+            Add(CatType.Manufactured, ItemType.VeryCommon, MaterialGroupType.ManufacturedThermic, MCMR.TemperedAlloys, "Tempered Alloys", "TeA");
+            Add(CatType.Manufactured, ItemType.VeryCommon, MaterialGroupType.ManufacturedHeat, MCMR.HeatConductionWiring, "Heat Conduction Wiring", "HCW");
+            Add(CatType.Manufactured, ItemType.VeryCommon, MaterialGroupType.ManufacturedConductive, MCMR.BasicConductors, "Basic Conductors", "BaC");
+            Add(CatType.Manufactured, ItemType.VeryCommon, MaterialGroupType.ManufacturedMechanicalComponents, MCMR.MechanicalScrap, "Mechanical Scrap", "MS");
+            Add(CatType.Manufactured, ItemType.VeryCommon, MaterialGroupType.ManufacturedCapacitors, MCMR.GridResistors, "Grid Resistors", "GR");
+            Add(CatType.Manufactured, ItemType.VeryCommon, MaterialGroupType.ManufacturedShielding, MCMR.WornShieldEmitters, "Worn Shield Emitters", "WSE");
+            Add(CatType.Manufactured, ItemType.VeryCommon, MaterialGroupType.ManufacturedComposite, MCMR.CompactComposites, "Compact Composites", "CC");
+            Add(CatType.Manufactured, ItemType.VeryCommon, MaterialGroupType.ManufacturedCrystals, MCMR.CrystalShards, "Crystal Shards", "CS");
+            Add(CatType.Manufactured, ItemType.VeryCommon, MaterialGroupType.ManufacturedAlloys, MCMR.SalvagedAlloys, "Salvaged Alloys", "SAll");
+
+            Add(CatType.Manufactured, ItemType.Common, MaterialGroupType.ManufacturedChemical, MCMR.ChemicalProcessors, "Chemical Processors", "CP");
+            Add(CatType.Manufactured, ItemType.Common, MaterialGroupType.ManufacturedThermic, MCMR.HeatResistantCeramics, "Heat Resistant Ceramics", "HRC");
+            Add(CatType.Manufactured, ItemType.Common, MaterialGroupType.ManufacturedHeat, MCMR.HeatDispersionPlate, "Heat Dispersion Plate", "HDP");
+            Add(CatType.Manufactured, ItemType.Common, MaterialGroupType.ManufacturedConductive, MCMR.ConductiveComponents, "Conductive Components", "CCo");
+            Add(CatType.Manufactured, ItemType.Common, MaterialGroupType.ManufacturedMechanicalComponents, MCMR.MechanicalEquipment, "Mechanical Equipment", "ME");
+            Add(CatType.Manufactured, ItemType.Common, MaterialGroupType.ManufacturedCapacitors, MCMR.HybridCapacitors, "Hybrid Capacitors", "HC");
+            Add(CatType.Manufactured, ItemType.Common, MaterialGroupType.ManufacturedShielding, MCMR.ShieldEmitters, "Shield Emitters", "SHE");
+            Add(CatType.Manufactured, ItemType.Common, MaterialGroupType.ManufacturedComposite, MCMR.FilamentComposites, "Filament Composites", "FiC");
+            Add(CatType.Manufactured, ItemType.Common, MaterialGroupType.ManufacturedCrystals, MCMR.UncutFocusCrystals, "Flawed Focus Crystals", "FFC");
+            Add(CatType.Manufactured, ItemType.Common, MaterialGroupType.ManufacturedAlloys, MCMR.GalvanisingAlloys, "Galvanising Alloys", "GA");
+
+            Add(CatType.Manufactured, ItemType.Standard, MaterialGroupType.ManufacturedChemical, MCMR.ChemicalDistillery, "Chemical Distillery", "CHD");
+            Add(CatType.Manufactured, ItemType.Standard, MaterialGroupType.ManufacturedThermic, MCMR.PrecipitatedAlloys, "Precipitated Alloys", "PAll");
+            Add(CatType.Manufactured, ItemType.Standard, MaterialGroupType.ManufacturedHeat, MCMR.HeatExchangers, "Heat Exchangers", "HE");
+            Add(CatType.Manufactured, ItemType.Standard, MaterialGroupType.ManufacturedConductive, MCMR.ConductiveCeramics, "Conductive Ceramics", "CCe");
+            Add(CatType.Manufactured, ItemType.Standard, MaterialGroupType.ManufacturedMechanicalComponents, MCMR.MechanicalComponents, "Mechanical Components", "MC");
+            Add(CatType.Manufactured, ItemType.Standard, MaterialGroupType.ManufacturedCapacitors, MCMR.ElectrochemicalArrays, "Electrochemical Arrays", "EA");
+            Add(CatType.Manufactured, ItemType.Standard, MaterialGroupType.ManufacturedShielding, MCMR.ShieldingSensors, "Shielding Sensors", "SS");
+            Add(CatType.Manufactured, ItemType.Standard, MaterialGroupType.ManufacturedComposite, MCMR.HighDensityComposites, "High Density Composites", "HDC");
+            Add(CatType.Manufactured, ItemType.Standard, MaterialGroupType.ManufacturedCrystals, MCMR.FocusCrystals, "Focus Crystals", "FoC");
+            Add(CatType.Manufactured, ItemType.Standard, MaterialGroupType.ManufacturedAlloys, MCMR.PhaseAlloys, "Phase Alloys", "PA");
+
+            Add(CatType.Manufactured, ItemType.Rare, MaterialGroupType.ManufacturedChemical, MCMR.ChemicalManipulators, "Chemical Manipulators", "CM");
+            Add(CatType.Manufactured, ItemType.Rare, MaterialGroupType.ManufacturedThermic, MCMR.ThermicAlloys, "Thermic Alloys", "ThA");
+            Add(CatType.Manufactured, ItemType.Rare, MaterialGroupType.ManufacturedHeat, MCMR.HeatVanes, "Heat Vanes", "HV");
+            Add(CatType.Manufactured, ItemType.Rare, MaterialGroupType.ManufacturedConductive, MCMR.ConductivePolymers, "Conductive Polymers", "CPo");
+            Add(CatType.Manufactured, ItemType.Rare, MaterialGroupType.ManufacturedMechanicalComponents, MCMR.ConfigurableComponents, "Configurable Components", "CCom");
+            Add(CatType.Manufactured, ItemType.Rare, MaterialGroupType.ManufacturedCapacitors, MCMR.PolymerCapacitors, "Polymer Capacitors", "PCa");
+            Add(CatType.Manufactured, ItemType.Rare, MaterialGroupType.ManufacturedShielding, MCMR.CompoundShielding, "Compound Shielding", "CoS");
+            Add(CatType.Manufactured, ItemType.Rare, MaterialGroupType.ManufacturedComposite, MCMR.FedProprietaryComposites, "Proprietary Composites", "FPC");
+            Add(CatType.Manufactured, ItemType.Rare, MaterialGroupType.ManufacturedCrystals, MCMR.RefinedFocusCrystals, "Refined Focus Crystals", "RFC");
+            Add(CatType.Manufactured, ItemType.Rare, MaterialGroupType.ManufacturedAlloys, MCMR.ProtoLightAlloys, "Proto Light Alloys", "PLA");
+
+            Add(CatType.Manufactured, ItemType.VeryRare, MaterialGroupType.ManufacturedChemical, MCMR.PharmaceuticalIsolators, "Pharmaceutical Isolators", "PI");
+            Add(CatType.Manufactured, ItemType.VeryRare, MaterialGroupType.ManufacturedThermic, MCMR.MilitaryGradeAlloys, "Military Grade Alloys", "MGA");
+            Add(CatType.Manufactured, ItemType.VeryRare, MaterialGroupType.ManufacturedHeat, MCMR.ProtoHeatRadiators, "Proto Heat Radiators", "PHR");
+            Add(CatType.Manufactured, ItemType.VeryRare, MaterialGroupType.ManufacturedConductive, MCMR.BiotechConductors, "Biotech Conductors", "BiC");
+            Add(CatType.Manufactured, ItemType.VeryRare, MaterialGroupType.ManufacturedMechanicalComponents, MCMR.ImprovisedComponents, "Improvised Components", "IC");
+            Add(CatType.Manufactured, ItemType.VeryRare, MaterialGroupType.ManufacturedCapacitors, MCMR.MilitarySupercapacitors, "Military Supercapacitors", "MSC");
+            Add(CatType.Manufactured, ItemType.VeryRare, MaterialGroupType.ManufacturedShielding, MCMR.ImperialShielding, "Imperial Shielding", "IS");
+            Add(CatType.Manufactured, ItemType.VeryRare, MaterialGroupType.ManufacturedComposite, MCMR.FedCoreComposites, "Core Dynamics Composites", "FCC");
+            Add(CatType.Manufactured, ItemType.VeryRare, MaterialGroupType.ManufacturedCrystals, MCMR.ExquisiteFocusCrystals, "Exquisite Focus Crystals", "EFC");
+            Add(CatType.Manufactured, ItemType.VeryRare, MaterialGroupType.ManufacturedAlloys, MCMR.ProtoRadiolicAlloys, "Proto Radiolic Alloys", "PRA");
+
+            #endregion
+
+            #region Other Encoded
+
+            Add(CatType.Encoded, ItemType.VeryRare, MCMR.Guardian_VesselBlueprint, "Guardian Vessel Blueprint Fragment", "GMVB");
+            Add(CatType.Encoded, ItemType.Rare, MCMR.AncientBiologicalData, "Pattern Alpha Obelisk Data", "PAOD");
+            Add(CatType.Encoded, ItemType.Rare, MCMR.AncientCulturalData, "Pattern Beta Obelisk Data", "PBOD");
+            Add(CatType.Encoded, ItemType.Rare, MCMR.AncientHistoricalData, "Pattern Gamma Obelisk Data", "PGOD");
+            Add(CatType.Encoded, ItemType.Rare, MCMR.AncientLanguageData, "Pattern Delta Obelisk Data", "PDOD");
+            Add(CatType.Encoded, ItemType.Rare, MCMR.AncientTechnologicalData, "Pattern Epsilon Obelisk Data", "PEOD");
+            Add(CatType.Encoded, ItemType.Rare, MCMR.Guardian_ModuleBlueprint, "Guardian Module Blueprint Fragment", "GMBS");
+            Add(CatType.Encoded, ItemType.Rare, MCMR.Guardian_WeaponBlueprint, "Guardian Weapon Blueprint Fragment", "GWBS");
+            Add(CatType.Encoded, ItemType.Rare, MCMR.TG_ResidueData, "Thargoid Residue Data", "URDA");
+            Add(CatType.Encoded, ItemType.Rare, MCMR.TG_ShipSystemsData, "Ship Systems Data", "SSD");
+            Add(CatType.Encoded, ItemType.Rare, MCMR.UnknownWakeData, "Thargoid Wake Data", "UWD");
+            Add(CatType.Encoded, ItemType.Common, MCMR.TG_StructuralData, "Thargoid Structural Data", "UKSD");
+            Add(CatType.Encoded, ItemType.Standard, MCMR.TG_CompositionData, "Thargoid Material Composition Data", "UMCD");
+            Add(CatType.Encoded, ItemType.Standard, MCMR.TG_ShipFlightData, "Ship Flight Data", "SFD");
+            Add(CatType.Encoded, ItemType.Standard, MCMR.UnknownShipSignature, "Thargoid Ship Signature", "USSig");
+
+            #endregion
+
+            #region Other Manufactured
+
+            Add(CatType.Manufactured, ItemType.VeryCommon, MCMR.Guardian_PowerCell, "Guardian Power Cell", "GPCe");
+            Add(CatType.Manufactured, ItemType.VeryCommon, MCMR.Guardian_Sentinel_WreckageComponents, "Guardian Wreckage Components", "GSWC");
+            Add(CatType.Manufactured, ItemType.VeryCommon, MCMR.TG_Abrasion03, "Hardened Surface Fragments", "HSF");
+            Add(CatType.Manufactured, ItemType.Common, MCMR.Guardian_PowerConduit, "Guardian Power Conduit", "GPC");
+            Add(CatType.Manufactured, ItemType.Common, MCMR.UnknownCarapace, "Thargoid Carapace", "UKCP");
+            Add(CatType.Manufactured, ItemType.Standard, MCMR.Guardian_Sentinel_WeaponParts, "Guardian Sentinel Weapon Parts", "GSWP");
+            Add(CatType.Manufactured, ItemType.Standard, MCMR.Guardian_TechComponent, "Guardian Technology Component", "GTC");
+            Add(CatType.Manufactured, ItemType.Standard, MCMR.TG_Abrasion02, "Phasing Membrane Residue", "PMR");
+            Add(CatType.Manufactured, ItemType.Standard, MCMR.TG_BioMechanicalConduits, "Bio-Mechanical Conduits", "BMC");
+            Add(CatType.Manufactured, ItemType.Standard, MCMR.TG_CausticGeneratorParts, "Corrosive Mechanisms", "COMEC");
+            Add(CatType.Manufactured, ItemType.Standard, MCMR.TG_CausticShard, "Caustic Shard", "CASH");
+            Add(CatType.Manufactured, ItemType.Standard, MCMR.TG_InterdictionData, "Thargoid Interdiction Telemetry", "TIT");
+            Add(CatType.Manufactured, ItemType.Standard, MCMR.TG_ShutdownData, "Massive Energy Surge Analytics", "MESA");
+            Add(CatType.Manufactured, ItemType.Standard, MCMR.UnknownEnergycell, "Thargoid Energy Cell", "UKEC");
+            Add(CatType.Manufactured, ItemType.Rare, MCMR.TG_CausticCrystal, "Caustic Crystal", "CACR");
+            Add(CatType.Manufactured, ItemType.Rare, MCMR.TG_WeaponParts, "Weapon Parts", "WP");
+            Add(CatType.Manufactured, ItemType.Rare, MCMR.UnknownTechnologyComponents, "Thargoid Technological Components", "UKTC");
+            Add(CatType.Manufactured, ItemType.VeryRare, MCMR.HeatExposureSpecimen, "Heat Exposure Specimen", "TG_Abrasion01");
+            Add(CatType.Manufactured, ItemType.VeryRare, MCMR.TG_PropulsionElement, "Propulsion Elements", "PE");
+            Add(CatType.Manufactured, ItemType.VeryRare, MCMR.Unknownenergysource, "Sensor Fragment", "UES");
+            Add(CatType.Manufactured, ItemType.VeryRare, MCMR.UnknownOrganicCircuitry, "Thargoid Organic Circuitry", "UKOC");
+
+            #endregion
+
+            #region MR
+
+            Add(CatType.Item, MCMR.AgriculturalProcessSample, "Agricultural Process Sample", "MRIAPS");
+            Add(CatType.Item, MCMR.BiochemicalAgent, "Biochemical Agent", "MRIBA");
+            Add(CatType.Item, MCMR.BuildingSchematic, "Building Schematic", "MRIBS");
+            Add(CatType.Item, MCMR.Californium, "Californium", "MRIC");
+            Add(CatType.Item, MCMR.CastFossil, "Cast Fossil", "MRICF");
+            Add(CatType.Item, MCMR.ChemicalProcessSample, "Chemical Process Sample", "MRICPS");
+            Add(CatType.Item, MCMR.ChemicalSample, "Chemical Sample", "MRICS");
+            Add(CatType.Item, MCMR.CompactLibrary, "Compact Library", "MRICL");
+            Add(CatType.Item, MCMR.CompressionLiquefiedGas, "Compression-Liquefied Gas", "MRICLG");
+            Add(CatType.Item, MCMR.DeepMantleSample, "Deep Mantle Sample", "MRIDMS");
+            Add(CatType.Item, MCMR.DegradedPowerRegulator, "Degraded Power Regulator", "MRIDPR");
+            Add(CatType.Item, MCMR.GeneticRepairMeds, "Genetic Repair Meds", "MRIGRM");
+            Add(CatType.Item, MCMR.GeneticSample, "Biological Sample", "MRIBIOSAMP");
+            Add(CatType.Item, MCMR.GMeds, "G-Meds", "MRIGM");
+            Add(CatType.Item, MCMR.HealthMonitor, "Health Monitor", "MRIHM");
+            Add(CatType.Item, MCMR.Hush, "Hush", "MRIH");
+            Add(CatType.Item, MCMR.InertiaCanister, "Inertia Canister", "MRIIC");
+            Add(CatType.Item, MCMR.infinity, "Infinity", "MRII");
+            Add(CatType.Item, MCMR.InorganicContaminant, "Inorganic Contaminant", "MRIINORGANC");
+            Add(CatType.Item, MCMR.insight, "Insight", "MRInsight");
+            Add(CatType.Item, MCMR.InsightDataBank, "Insight Data Bank", "MRIIDB");
+            Add(CatType.Item, MCMR.InsightEntertainmentSuite, "Insight Entertainment Suite", "MRIIES");
+            Add(CatType.Item, MCMR.IonisedGas, "Ionised Gas", "MRIIG");
+            Add(CatType.Item, MCMR.LargeCapacityPowerRegulator, "Power Regulator", "MRIPR");
+            Add(CatType.Item, MCMR.Lazarus, "Lazarus", "MRIL");
+            Add(CatType.Item, MCMR.MicrobialInhibitor, "Microbial Inhibitor", "MRIMI");
+            Add(CatType.Item, MCMR.MutagenicCatalyst, "Mutagenic Catalyst", "MRIMC");
+            Add(CatType.Item, MCMR.NutritionalConcentrate, "Nutritional Concentrate", "MRINC");
+            Add(CatType.Item, MCMR.PersonalComputer, "Personal Computer", "MRIPC");
+            Add(CatType.Item, MCMR.PersonalDocuments, "Personal Documents", "MRIPD");
+            Add(CatType.Item, MCMR.PetrifiedFossil, "Petrified Fossil", "MRIPF");
+            Add(CatType.Item, MCMR.Push, "Push", "MRIP");
+            Add(CatType.Item, MCMR.PyrolyticCatalyst, "Pyrolytic Catalyst", "MRIPRYOCAT");
+            Add(CatType.Item, MCMR.RefinementProcessSample, "Refinement Process Sample", "MRIRPS");
+            Add(CatType.Item, MCMR.ShipSchematic, "Ship Schematic", "MRIShipSch");
+            Add(CatType.Item, MCMR.SuitSchematic, "Suit Schematic", "MRISuitSch");
+            Add(CatType.Item, MCMR.SurveillanceEquipment, "Surveillance Equipment", "MRISE");
+            Add(CatType.Item, MCMR.SyntheticGenome, "Synthetic Genome", "MRISG");
+            Add(CatType.Item, MCMR.SyntheticPathogen, "Synthetic Pathogen", "MRISP");
+            Add(CatType.Item, MCMR.TrueFormFossil, "True Form Fossil", "MRITFF");
+            Add(CatType.Item, MCMR.UniversalTranslator, "Universal Translator", "MRIUT");
+            Add(CatType.Item, MCMR.VehicleSchematic, "Vehicle Schematic", "MRIVS");
+            Add(CatType.Item, MCMR.WeaponSchematic, "Weapon Schematic", "MRIWS");
+            Add(CatType.Component, MCMR.Aerogel, "Aerogel", "MRCA");
+            Add(CatType.Component, MCMR.CarbonFibrePlating, "Carbon Fibre Plating", "MRCCFP");
+            Add(CatType.Component, MCMR.ChemicalCatalyst, "Chemical Catalyst", "MRCCC");
+            Add(CatType.Component, MCMR.ChemicalSuperbase, "Chemical Superbase", "MRCCS");
+            Add(CatType.Component, MCMR.Circuitboard, "Circuit Board", "MRCCB");
+            Add(CatType.Component, MCMR.CircuitSwitch, "Circuit Switch", "MRCCIRSWITCH");
+            Add(CatType.Component, MCMR.ElectricalFuse, "Electrical Fuse", "MRCEF");
+            Add(CatType.Component, MCMR.ElectricalWiring, "Electrical Wiring", "MRCEW");
+            Add(CatType.Component, MCMR.Electromagnet, "Electromagnet", "MRCE");
+            Add(CatType.Component, MCMR.EncryptedMemoryChip, "Encrypted Memory Chip", "MRCEMC");
+            Add(CatType.Component, MCMR.Epinephrine, "Epinephrine", "MRCEPINE");
+            Add(CatType.Component, MCMR.EpoxyAdhesive, "Epoxy Adhesive", "MRCEA");
+            Add(CatType.Component, MCMR.Graphene, "Graphene", "MRCG");
+            Add(CatType.Component, MCMR.IonBattery, "Ion Battery", "MRCIB");
+            Add(CatType.Component, MCMR.MemoryChip, "Memory Chip", "MRCMC");
+            Add(CatType.Component, MCMR.MetalCoil, "Metal Coil", "MRCMETALCOIL");
+            Add(CatType.Component, MCMR.MicroElectrode, "Microelectrode", "MRCMICROELEC");
+            Add(CatType.Component, MCMR.MicroHydraulics, "Micro Hydraulics", "MRCMH");
+            Add(CatType.Component, MCMR.MicroSupercapacitor, "Micro Supercapacitor", "MRCMS");
+            Add(CatType.Component, MCMR.MicroThrusters, "Micro Thrusters", "MRCMT");
+            Add(CatType.Component, MCMR.Microtransformer, "Micro Transformer", "MRCMICTRANS");
+            Add(CatType.Component, MCMR.Motor, "Motor", "MRCMOTOR");
+            Add(CatType.Component, MCMR.OpticalFibre, "Optical Fibre", "MRCOF");
+            Add(CatType.Component, MCMR.OpticalLens, "Optical Lens", "MRCOL");
+            Add(CatType.Component, MCMR.OxygenicBacteria, "Oxygenic Bacteria", "MRCOXYBAC");
+            Add(CatType.Component, MCMR.pHNeutraliser, "pH Neutraliser", "MRCPHN");
+            Add(CatType.Component, MCMR.RDX, "RDX", "MRCR");
+            Add(CatType.Component, MCMR.Scrambler, "Scrambler", "MRCS");
+            Add(CatType.Component, MCMR.TitaniumPlating, "Titanium Plating", "MRCTP");
+            Add(CatType.Component, MCMR.Transmitter, "Transmitter", "MRCTX");
+            Add(CatType.Component, MCMR.TungstenCarbide, "Tungsten Carbide", "MRCTC");
+            Add(CatType.Component, MCMR.ViscoElasticPolymer, "Viscoelastic Polymer", "MRCVP");
+            Add(CatType.Component, MCMR.WeaponComponent, "Weapon Component", "MRCWC");
+            Add(CatType.Data, MCMR.AccidentLogs, "Accident Logs", "MRDACCLOGS");
+            Add(CatType.Data, MCMR.AirqualityReports, "Air Quality Reports", "MRDAQR");
+            Add(CatType.Data, MCMR.AtmosphericData, "Atmospheric Data", "MRDAD");
+            Add(CatType.Data, MCMR.AudioLogs, "Audio Logs", "MRDAL");
+            Add(CatType.Data, MCMR.AXCombatLogs, "AX Combat Logs", "MRDACL");
+            Add(CatType.Data, MCMR.BallisticsData, "Ballistics Data", "MRDBALD");
+            Add(CatType.Data, MCMR.BiologicalWeaponData, "Biological Weapon Data", "MRDBWD");
+            Add(CatType.Data, MCMR.BiometricData, "Biometric Data", "MRDBIOD");
+            Add(CatType.Data, MCMR.BlacklistData, "Blacklist Data", "MRDBD");
+            Add(CatType.Data, MCMR.BloodtestResults, "Blood Test Results", "MRDBTR");
+            Add(CatType.Data, MCMR.CampaignPlans, "Campaign Plans", "MRDCP");
+            Add(CatType.Data, MCMR.CatMedia, "Cat Media", "MRDCATMED");
+            Add(CatType.Data, MCMR.CensusData, "Census Data", "MRDCD");
+            Add(CatType.Data, MCMR.ChemicalExperimentData, "Chemical Experiment Data", "MRDCED");
+            Add(CatType.Data, MCMR.ChemicalFormulae, "Chemical Formulae", "MRDCF");
+            Add(CatType.Data, MCMR.ChemicalInventory, "Chemical Inventory", "MRDCI");
+            Add(CatType.Data, MCMR.ChemicalPatents, "Chemical Patents", "MRDCHEMPAT");
+            Add(CatType.Data, MCMR.ChemicalWeaponData, "Chemical Weapon Data", "MRDCWD");
+            Add(CatType.Data, MCMR.ClassicEntertainment, "Classic Entertainment", "MRDCE");
+            Add(CatType.Data, MCMR.CocktailRecipes, "Cocktail Recipes", "MRDCREC");
+            Add(CatType.Data, MCMR.CombatantPerformance, "Combatant Performance", "MRDCOMBPERF");
+            Add(CatType.Data, MCMR.CombatTrainingMaterial, "Combat Training Material", "MRDCTM");
+            Add(CatType.Data, MCMR.ConflictHistory, "Conflict History", "MRDCH");
+            Add(CatType.Data, MCMR.CriminalRecords, "Criminal Records", "MRDCRIMREC");
+            Add(CatType.Data, MCMR.CropYieldAnalysis, "Crop Yield Analysis", "MRDCYA");
+            Add(CatType.Data, MCMR.CulinaryRecipes, "Culinary Recipes", "MRDCULREC");
+            Add(CatType.Data, MCMR.DigitalDesigns, "Digital Designs", "MRDDD");
+            Add(CatType.Data, MCMR.DutyRota, "Duty Rota", "MRDDR");
+            Add(CatType.Data, MCMR.EmployeeDirectory, "Employee Directory", "MRDED");
+            Add(CatType.Data, MCMR.EmployeeExpenses, "Employee Expenses", "MRDEE");
+            Add(CatType.Data, MCMR.EmployeeGeneticData, "Employee Genetic Data", "MRDEGD");
+            Add(CatType.Data, MCMR.EmploymentHistory, "Employment History", "MRDEH");
+            Add(CatType.Data, MCMR.EnhancedInterrogationRecordings, "Enhanced Interrogation Recordings", "MRDEIR");
+            Add(CatType.Data, MCMR.EspionageMaterial, "Espionage Material", "MRDEM");
+            Add(CatType.Data, MCMR.EvacuationProtocols, "Evacuation Protocols", "MRDEP");
+            Add(CatType.Data, MCMR.ExplorationJournals, "Exploration Journals", "MRDEJ");
+            Add(CatType.Data, MCMR.ExtractionYieldData, "Extraction Yield Data", "MRDEYD");
+            Add(CatType.Data, MCMR.FactionAssociates, "Faction Associates", "MRDFA");
+            Add(CatType.Data, MCMR.FactionDonatorList, "Faction Donator List", "MRDFDL");
+            Add(CatType.Data, MCMR.FactionNews, "Faction News", "MRDFN");
+            Add(CatType.Data, MCMR.FinancialProjections, "Financial Projections", "MRDFP");
+            Add(CatType.Data, MCMR.FleetRegistry, "Fleet Registry", "MRDFR");
+            Add(CatType.Data, MCMR.GeneSequencingData, "Gene Sequencing Data", "MRDGSD");
+            Add(CatType.Data, MCMR.GeneticResearch, "Genetic Research", "MRDGR");
+            Add(CatType.Data, MCMR.GeographicalData, "Geographical Data", "MRDGEOD");
+            Add(CatType.Data, MCMR.GeologicalData, "Geological Data", "MRDGD");
+            Add(CatType.Data, MCMR.HydroponicData, "Hydroponic Data", "MRDHD");
+            Add(CatType.Data, MCMR.IncidentLogs, "Incident Logs", "MRDIL");
+            Add(CatType.Data, MCMR.InfluenceProjections, "Influence Projections", "MRDIP");
+            Add(CatType.Data, MCMR.InternalCorrespondence, "Internal Correspondence", "MRDIC");
+            Add(CatType.Data, MCMR.InterrogationRecordings, "Interrogation Recordings", "MRDINTERREC");
+            Add(CatType.Data, MCMR.InterviewRecordings, "Interview Recordings", "MRDINTERVREC");
+            Add(CatType.Data, MCMR.JobApplications, "Job Applications", "MRDJA");
+            Add(CatType.Data, MCMR.Kompromat, "Kompromat", "MRDK");
+            Add(CatType.Data, MCMR.LiteraryFiction, "Literary Fiction", "MRDLF");
+            Add(CatType.Data, MCMR.MaintenanceLogs, "Maintenance Logs", "MRDML");
+            Add(CatType.Data, MCMR.ManufacturingInstructions, "Manufacturing Instructions", "MRDMI");
+            Add(CatType.Data, MCMR.MedicalRecords, "Medical Records", "MRDMR");
+            Add(CatType.Data, MCMR.MedicalTrialRecords, "Clinical Trial Records", "MRDCTR");
+            Add(CatType.Data, MCMR.MeetingMinutes, "Meeting Minutes", "MRDMM");
+            Add(CatType.Data, MCMR.MineralSurvey, "Mineral Survey", "MRDMS");
+            Add(CatType.Data, MCMR.MiningAnalytics, "Mining Analytics", "MRDMA");
+            Add(CatType.Data, MCMR.MultimediaEntertainment, "Multimedia Entertainment", "MRDME");
+            Add(CatType.Data, MCMR.NetworkAccessHistory, "Network Access History", "MRDNAH");
+            Add(CatType.Data, MCMR.NetworkSecurityProtocols, "Network Security Protocols", "MRDNSP");
+            Add(CatType.Data, MCMR.NextofkinRecords, "Next of Kin Records", "MRDNKR");
+            Add(CatType.Data, MCMR.NOCData, "NOC Data", "MRDNOCD");
+            Add(CatType.Data, MCMR.OpinionPolls, "Opinion Polls", "MRDOP");
+            Add(CatType.Data, MCMR.PatientHistory, "Patient History", "MRDPH");
+            Add(CatType.Data, MCMR.PatrolRoutes, "Patrol Routes", "MRDPATR");
+            Add(CatType.Data, MCMR.PayrollInformation, "Payroll Information", "MRDPI");
+            Add(CatType.Data, MCMR.PersonalLogs, "Personal Logs", "MRDPL");
+            Add(CatType.Data, MCMR.PharmaceuticalPatents, "Pharmaceutical Patents", "MRDPP");
+            Add(CatType.Data, MCMR.PhotoAlbums, "Photo Albums", "MRDPHOTO");
+            Add(CatType.Data, MCMR.PlantGrowthCharts, "Plant Growth Charts", "MRDPGC");
+            Add(CatType.Data, MCMR.PoliticalAffiliations, "Political Affiliations", "MRDPOL");
+            Add(CatType.Data, MCMR.PperationalManual, "Operational Manual", "MRDOM");
+            Add(CatType.Data, MCMR.PrisonerLogs, "Prisoner Logs", "MRDPRISONL");
+            Add(CatType.Data, MCMR.ProductionReports, "Production Reports", "MRDPRODREP");
+            Add(CatType.Data, MCMR.ProductionSchedule, "Production Schedule", "MRDPS");
+            Add(CatType.Data, MCMR.Propaganda, "Propaganda", "MRPROPG");
+            Add(CatType.Data, MCMR.PurchaseRecords, "Purchase Records", "MRDPRCD");
+            Add(CatType.Data, MCMR.PurchaseRequests, "Purchase Requests", "MRDPR");
+            Add(CatType.Data, MCMR.RadioactivityData, "Radioactivity Data", "MRDRD");
+            Add(CatType.Data, MCMR.ReactorOutputReview, "Reactor Output Review", "MRDROR");
+            Add(CatType.Data, MCMR.RecyclingLogs, "Recycling Logs", "MRDRL");
+            Add(CatType.Data, MCMR.ResidentialDirectory, "Residential Directory", "MRDRDIR");
+            Add(CatType.Data, MCMR.RiskAssessments, "Risk Assessments", "MRDRA");
+            Add(CatType.Data, MCMR.SalesRecords, "Sales Records", "MRDSR");
+            Add(CatType.Data, MCMR.SecurityExpenses, "Security Expenses", "MRSECEXP");
+            Add(CatType.Data, MCMR.SeedGeneaology, "Seed Geneaology", "MRDSG");
+            Add(CatType.Data, MCMR.SettlementAssaultPlans, "Settlement Assault Plans", "MRDSAP");
+            Add(CatType.Data, MCMR.SettlementDefencePlans, "Settlement Defence Plans", "MRDSDP");
+            Add(CatType.Data, MCMR.ShareholderInformation, "Shareholder Information", "MRDSI");
+            Add(CatType.Data, MCMR.SlushFundLogs, "Slush Fund Logs", "MRDSFL");
+            Add(CatType.Data, MCMR.SmearCampaignPlans, "Smear Campaign Plans", "MRDSCP");
+            Add(CatType.Data, MCMR.SpectralAnalysisData, "Spectral Analysis Data", "MRDSAD");
+            Add(CatType.Data, MCMR.Spyware, "Spyware", "MRDS");
+            Add(CatType.Data, MCMR.StellarActivityLogs, "Stellar Activity Logs", "MRDSAL");
+            Add(CatType.Data, MCMR.SurveilleanceLogs, "Surveillance Logs", "MRDSL");
+            Add(CatType.Data, MCMR.TacticalPlans, "Tactical Plans", "MRDTACP");
+            Add(CatType.Data, MCMR.TaxRecords, "Tax Records", "MRDTR");
+            Add(CatType.Data, MCMR.TopographicalSurveys, "Topographical Surveys", "MRDTS");
+            Add(CatType.Data, MCMR.TravelPermits, "Travel Permits", "MRDTP");
+            Add(CatType.Data, MCMR.TroopDeploymentRecords, "Troop Deployment Records", "MRDTDR");
+            Add(CatType.Data, MCMR.UnionmemberShip, "Union Membership", "MRDUM");
+            Add(CatType.Data, MCMR.VaccinationRecords, "Vaccination Records", "MRDVR");
+            Add(CatType.Data, MCMR.VaccineResearch, "Vaccine Research", "MRDVACRES");
+            Add(CatType.Data, MCMR.VIPSecurityDetail, "VIP Security Detail", "MRDVSD");
+            Add(CatType.Data, MCMR.VirologyData, "Virology Data", "MRDVD");
+            Add(CatType.Data, MCMR.Virus, "Virus", "MRDV");
+            Add(CatType.Data, MCMR.VisitorRegister, "Visitor Register", "MRDVISREG");
+            Add(CatType.Data, MCMR.WeaponInventory, "Weapon Inventory", "MRDWI");
+            Add(CatType.Data, MCMR.WeaponTestData, "Weapon Test Data", "MRWTD");
+            Add(CatType.Data, MCMR.XenoDefenceProtocols, "Xeno-Defence Protocols", "MRDXDP");
+            Add(CatType.Consumable, MCMR.AMM_Grenade_EMP, "Shield Disruptor", "MRCSD");
+            Add(CatType.Consumable, MCMR.AMM_Grenade_Frag, "Frag Grenade", "MRCFG");
+            Add(CatType.Consumable, MCMR.AMM_Grenade_Shield, "Shield Projector", "MRCSP");
+            Add(CatType.Consumable, MCMR.Bypass, "E-Breach", "MRCEB");
+            Add(CatType.Consumable, MCMR.EnergyCell, "Energy Cell", "MRCEC");
+            Add(CatType.Consumable, MCMR.HealthPack, "Medkit", "MRCM");
+
+
+            #endregion
+
 
             cachelist = new Dictionary<string, MaterialCommodityMicroResourceType>();
 
+
+
             // NOTE KEEP IN ORDER BY Rarity and then Material Group Type
+            #region Materials  
+
 
             // very common raw
 
@@ -499,46 +1458,46 @@ namespace EliteDangerousCore
             AddRaw("Antimony", ItemType.Rare, MaterialGroupType.RawCategory7, "Sb");
 
             // very common data
-            AddEnc("Exceptional Scrambled Emission Data", ItemType.VeryCommon, MaterialGroupType.EncodedEmissionData, "ESED", "scrambledemissiondata");
-            AddEnc("Atypical Disrupted Wake Echoes", ItemType.VeryCommon, MaterialGroupType.EncodedWakeScans, "ADWE", "disruptedwakeechoes");
-            AddEnc("Distorted Shield Cycle Recordings", ItemType.VeryCommon, MaterialGroupType.EncodedShieldData, "DSCR", "shieldcyclerecordings");
-            AddEnc("Unusual Encrypted Files", ItemType.VeryCommon, MaterialGroupType.EncodedEncryptionFiles, "UEF", "encryptedfiles");
-            AddEnc("Anomalous Bulk Scan Data", ItemType.VeryCommon, MaterialGroupType.EncodedDataArchives, "ABSD", "bulkscandata");
-            AddEnc("Specialised Legacy Firmware", ItemType.VeryCommon, MaterialGroupType.EncodedFirmware, "SLF", "legacyfirmware");
+            AddEnc("Exceptional Scrambled Emission Data", ItemType.VeryCommon, MaterialGroupType.EncodedEmissionData, "ESED", "ScrambledeMissionData");
+            AddEnc("Atypical Disrupted Wake Echoes", ItemType.VeryCommon, MaterialGroupType.EncodedWakeScans, "ADWE", "DisruptedWakeEchoes");
+            AddEnc("Distorted Shield Cycle Recordings", ItemType.VeryCommon, MaterialGroupType.EncodedShieldData, "DSCR", "ShieldCycleRecordings");
+            AddEnc("Unusual Encrypted Files", ItemType.VeryCommon, MaterialGroupType.EncodedEncryptionFiles, "UEF", "EncryptedFiles");
+            AddEnc("Anomalous Bulk Scan Data", ItemType.VeryCommon, MaterialGroupType.EncodedDataArchives, "ABSD", "BulkScandata");
+            AddEnc("Specialised Legacy Firmware", ItemType.VeryCommon, MaterialGroupType.EncodedFirmware, "SLF", "LegacyFirmware");
 
             // common data
-            AddEnc("Irregular Emission Data", ItemType.Common, MaterialGroupType.EncodedEmissionData, "IED", "archivedemissiondata");
-            AddEnc("Anomalous FSD Telemetry", ItemType.Common, MaterialGroupType.EncodedWakeScans, "AFT", "fsdtelemetry");
-            AddEnc("Inconsistent Shield Soak Analysis", ItemType.Common, MaterialGroupType.EncodedShieldData, "ISSA", "shieldsoakanalysis");
-            AddEnc("Tagged Encryption Codes", ItemType.Common, MaterialGroupType.EncodedEncryptionFiles, "TEC", "encryptioncodes");
-            AddEnc("Unidentified Scan Archives", ItemType.Common, MaterialGroupType.EncodedDataArchives, "USA", "scanarchives");
-            AddEnc("Modified Consumer Firmware", ItemType.Common, MaterialGroupType.EncodedFirmware, "MCF", "consumerfirmware");
+            AddEnc("Irregular Emission Data", ItemType.Common, MaterialGroupType.EncodedEmissionData, "IED", "ArchivedEmissionData");
+            AddEnc("Anomalous FSD Telemetry", ItemType.Common, MaterialGroupType.EncodedWakeScans, "AFT", "FSDTelemetry");
+            AddEnc("Inconsistent Shield Soak Analysis", ItemType.Common, MaterialGroupType.EncodedShieldData, "ISSA", "ShieldSoakAnalysis");
+            AddEnc("Tagged Encryption Codes", ItemType.Common, MaterialGroupType.EncodedEncryptionFiles, "TEC", "EncryptionCodes");
+            AddEnc("Unidentified Scan Archives", ItemType.Common, MaterialGroupType.EncodedDataArchives, "USA", "ScanArchives");
+            AddEnc("Modified Consumer Firmware", ItemType.Common, MaterialGroupType.EncodedFirmware, "MCF", "ConsumerFirmware");
 
             // standard data
 
-            AddEnc("Unexpected Emission Data", ItemType.Standard, MaterialGroupType.EncodedEmissionData, "UED", "emissiondata");
-            AddEnc("Strange Wake Solutions", ItemType.Standard, MaterialGroupType.EncodedWakeScans, "SWS", "wakesolutions");
-            AddEnc("Untypical Shield Scans", ItemType.Standard, MaterialGroupType.EncodedShieldData, "USS", "shielddensityreports");
-            AddEnc("Open Symmetric Keys", ItemType.Standard, MaterialGroupType.EncodedEncryptionFiles, "OSK", "symmetrickeys");
-            AddEnc("Classified Scan Databanks", ItemType.Standard, MaterialGroupType.EncodedDataArchives, "CSD", "scandatabanks");
-            AddEnc("Cracked Industrial Firmware", ItemType.Standard, MaterialGroupType.EncodedFirmware, "CIF", "industrialfirmware");
+            AddEnc("Unexpected Emission Data", ItemType.Standard, MaterialGroupType.EncodedEmissionData, "UED", "EmissionData");
+            AddEnc("Strange Wake Solutions", ItemType.Standard, MaterialGroupType.EncodedWakeScans, "SWS", "WakeSolutions");
+            AddEnc("Untypical Shield Scans", ItemType.Standard, MaterialGroupType.EncodedShieldData, "USS", "ShieldDensityReports");
+            AddEnc("Open Symmetric Keys", ItemType.Standard, MaterialGroupType.EncodedEncryptionFiles, "OSK", "SymmetricKeys");
+            AddEnc("Classified Scan Databanks", ItemType.Standard, MaterialGroupType.EncodedDataArchives, "CSD", "ScanDataNanks");
+            AddEnc("Cracked Industrial Firmware", ItemType.Standard, MaterialGroupType.EncodedFirmware, "CIF", "IndustrialFirmware");
 
             // rare data
             AddEnc("Decoded Emission Data", ItemType.Rare, MaterialGroupType.EncodedEmissionData, "DED");
-            AddEnc("Eccentric Hyperspace Trajectories", ItemType.Rare, MaterialGroupType.EncodedWakeScans, "EHT", "hyperspacetrajectories");
-            AddEnc("Aberrant Shield Pattern Analysis", ItemType.Rare, MaterialGroupType.EncodedShieldData, "ASPA", "shieldpatternanalysis");
-            AddEnc("Atypical Encryption Archives", ItemType.Rare, MaterialGroupType.EncodedEncryptionFiles, "AEA", "encryptionarchives");
-            AddEnc("Divergent Scan Data", ItemType.Rare, MaterialGroupType.EncodedDataArchives, "DSD", "encodedscandata");
-            AddEnc("Security Firmware Patch", ItemType.Rare, MaterialGroupType.EncodedFirmware, "SFP", "securityfirmware");
+            AddEnc("Eccentric Hyperspace Trajectories", ItemType.Rare, MaterialGroupType.EncodedWakeScans, "EHT", "HyperspaceTrajectories");
+            AddEnc("Aberrant Shield Pattern Analysis", ItemType.Rare, MaterialGroupType.EncodedShieldData, "ASPA", "ShieldPatternAnalysis");
+            AddEnc("Atypical Encryption Archives", ItemType.Rare, MaterialGroupType.EncodedEncryptionFiles, "AEA", "EncryptionArchives");
+            AddEnc("Divergent Scan Data", ItemType.Rare, MaterialGroupType.EncodedDataArchives, "DSD", "EncodedScandata");
+            AddEnc("Security Firmware Patch", ItemType.Rare, MaterialGroupType.EncodedFirmware, "SFP", "SecurityFirmware");
 
             // very rare data
 
-            AddEnc("Abnormal Compact Emissions Data", ItemType.VeryRare, MaterialGroupType.EncodedEmissionData, "CED", "compactemissionsdata");
-            AddEnc("Datamined Wake Exceptions", ItemType.VeryRare, MaterialGroupType.EncodedWakeScans, "DWEx", "dataminedwake");
-            AddEnc("Peculiar Shield Frequency Data", ItemType.VeryRare, MaterialGroupType.EncodedShieldData, "PSFD", "shieldfrequencydata");
-            AddEnc("Adaptive Encryptors Capture", ItemType.VeryRare, MaterialGroupType.EncodedEncryptionFiles, "AEC", "adaptiveencryptors");
-            AddEnc("Classified Scan Fragment", ItemType.VeryRare, MaterialGroupType.EncodedDataArchives, "CFSD", "classifiedscandata");
-            AddEnc("Modified Embedded Firmware", ItemType.VeryRare, MaterialGroupType.EncodedFirmware, "EFW", "embeddedfirmware");
+            AddEnc("Abnormal Compact Emissions Data", ItemType.VeryRare, MaterialGroupType.EncodedEmissionData, "CED", "CompactEmissionsData");
+            AddEnc("Datamined Wake Exceptions", ItemType.VeryRare, MaterialGroupType.EncodedWakeScans, "DWEx", "DataminedWake");
+            AddEnc("Peculiar Shield Frequency Data", ItemType.VeryRare, MaterialGroupType.EncodedShieldData, "PSFD", "ShieldFrequencyData");
+            AddEnc("Adaptive Encryptors Capture", ItemType.VeryRare, MaterialGroupType.EncodedEncryptionFiles, "AEC", "AdaptiveEncryptors");
+            AddEnc("Classified Scan Fragment", ItemType.VeryRare, MaterialGroupType.EncodedDataArchives, "CFSD", "ClassifiedScandata");
+            AddEnc("Modified Embedded Firmware", ItemType.VeryRare, MaterialGroupType.EncodedFirmware, "EFW", "EmbeddedFirmware");
 
             // very common manu
 
@@ -563,7 +1522,7 @@ namespace EliteDangerousCore
             AddManu("Hybrid Capacitors", ItemType.Common, MaterialGroupType.ManufacturedCapacitors, "HC");
             AddManu("Shield Emitters", ItemType.Common, MaterialGroupType.ManufacturedShielding, "SHE");
             AddManu("Filament Composites", ItemType.Common, MaterialGroupType.ManufacturedComposite, "FiC");
-            AddManu("Flawed Focus Crystals", ItemType.Common, MaterialGroupType.ManufacturedCrystals, "FFC", "uncutfocuscrystals");
+            AddManu("Flawed Focus Crystals", ItemType.Common, MaterialGroupType.ManufacturedCrystals, "FFC", "UncutFocusCrystals");
             AddManu("Galvanising Alloys", ItemType.Common, MaterialGroupType.ManufacturedAlloys, "GA");
 
             // Standard manu
@@ -588,7 +1547,7 @@ namespace EliteDangerousCore
             AddManu("Configurable Components", ItemType.Rare, MaterialGroupType.ManufacturedMechanicalComponents, "CCom");
             AddManu("Polymer Capacitors", ItemType.Rare, MaterialGroupType.ManufacturedCapacitors, "PCa");
             AddManu("Compound Shielding", ItemType.Rare, MaterialGroupType.ManufacturedShielding, "CoS");
-            AddManu("Proprietary Composites", ItemType.Rare, MaterialGroupType.ManufacturedComposite, "FPC", "fedproprietarycomposites");
+            AddManu("Proprietary Composites", ItemType.Rare, MaterialGroupType.ManufacturedComposite, "FPC", "FedProprietaryComposites");
             AddManu("Refined Focus Crystals", ItemType.Rare, MaterialGroupType.ManufacturedCrystals, "RFC");
             AddManu("Proto Light Alloys", ItemType.Rare, MaterialGroupType.ManufacturedAlloys, "PLA");
 
@@ -601,30 +1560,30 @@ namespace EliteDangerousCore
             AddManu("Improvised Components", ItemType.VeryRare, MaterialGroupType.ManufacturedMechanicalComponents, "IC");
             AddManu("Military Supercapacitors", ItemType.VeryRare, MaterialGroupType.ManufacturedCapacitors, "MSC");
             AddManu("Imperial Shielding", ItemType.VeryRare, MaterialGroupType.ManufacturedShielding, "IS");
-            AddManu("Core Dynamics Composites", ItemType.VeryRare, MaterialGroupType.ManufacturedComposite, "FCC", "fedcorecomposites");
+            AddManu("Core Dynamics Composites", ItemType.VeryRare, MaterialGroupType.ManufacturedComposite, "FCC", "FedCoreComposites");
             AddManu("Exquisite Focus Crystals", ItemType.VeryRare, MaterialGroupType.ManufacturedCrystals, "EFC");
             AddManu("Proto Radiolic Alloys", ItemType.VeryRare, MaterialGroupType.ManufacturedAlloys, "PRA");
 
             // Obelisk
 
-            AddEnc("Pattern Alpha Obelisk Data", ItemType.Rare, MaterialGroupType.NA, "PAOD", "ancientbiologicaldata");
-            AddEnc("Pattern Beta Obelisk Data", ItemType.Rare, MaterialGroupType.NA, "PBOD", "ancientculturaldata");
-            AddEnc("Pattern Gamma Obelisk Data", ItemType.Rare, MaterialGroupType.NA, "PGOD", "ancienthistoricaldata");
-            AddEnc("Pattern Delta Obelisk Data", ItemType.Rare, MaterialGroupType.NA, "PDOD", "ancientlanguagedata");
-            AddEnc("Pattern Epsilon Obelisk Data", ItemType.Rare, MaterialGroupType.NA, "PEOD", "ancienttechnologicaldata");
+            AddEnc("Pattern Alpha Obelisk Data", ItemType.Rare, MaterialGroupType.NA, "PAOD", "AncientBiologicalData");
+            AddEnc("Pattern Beta Obelisk Data", ItemType.Rare, MaterialGroupType.NA, "PBOD", "AncientCulturalData");
+            AddEnc("Pattern Gamma Obelisk Data", ItemType.Rare, MaterialGroupType.NA, "PGOD", "AncientHistoricalData");
+            AddEnc("Pattern Delta Obelisk Data", ItemType.Rare, MaterialGroupType.NA, "PDOD", "AncientLanguageData");
+            AddEnc("Pattern Epsilon Obelisk Data", ItemType.Rare, MaterialGroupType.NA, "PEOD", "AncientTechnologicalData");
 
             // new to 3.1 frontier data
 
-            AddManu("Guardian Power Cell", ItemType.VeryCommon, MaterialGroupType.NA, "GPCe", "guardian_powercell");
-            AddManu("Guardian Power Conduit", ItemType.Common, MaterialGroupType.NA, "GPC", "guardian_powerconduit");
-            AddManu("Guardian Technology Component", ItemType.Standard, MaterialGroupType.NA, "GTC", "guardian_techcomponent");
-            AddManu("Guardian Sentinel Weapon Parts", ItemType.Standard, MaterialGroupType.NA, "GSWP", "guardian_sentinel_weaponparts");
-            AddManu("Guardian Wreckage Components", ItemType.VeryCommon, MaterialGroupType.NA, "GSWC", "guardian_sentinel_wreckagecomponents");
-            AddEnc("Guardian Weapon Blueprint Fragment", ItemType.Rare, MaterialGroupType.NA, "GWBS", "guardian_weaponblueprint");
-            AddEnc("Guardian Module Blueprint Fragment", ItemType.Rare, MaterialGroupType.NA, "GMBS", "guardian_moduleblueprint");
+            AddManu("Guardian Power Cell", ItemType.VeryCommon, MaterialGroupType.NA, "GPCe", "Guardian_PowerCell");
+            AddManu("Guardian Power Conduit", ItemType.Common, MaterialGroupType.NA, "GPC", "Guardian_PowerConduit");
+            AddManu("Guardian Technology Component", ItemType.Standard, MaterialGroupType.NA, "GTC", "Guardian_TechComponent");
+            AddManu("Guardian Sentinel Weapon Parts", ItemType.Standard, MaterialGroupType.NA, "GSWP", "Guardian_Sentinel_WeaponParts");
+            AddManu("Guardian Wreckage Components", ItemType.VeryCommon, MaterialGroupType.NA, "GSWC", "Guardian_Sentinel_WreckageComponents");
+            AddEnc("Guardian Weapon Blueprint Fragment", ItemType.Rare, MaterialGroupType.NA, "GWBS", "Guardian_WeaponBlueprint");
+            AddEnc("Guardian Module Blueprint Fragment", ItemType.Rare, MaterialGroupType.NA, "GMBS", "Guardian_ModuleBlueprint");
 
             // new to 3.2 frontier data
-            AddEnc("Guardian Vessel Blueprint Fragment", ItemType.VeryRare, MaterialGroupType.NA, "GMVB", "guardian_vesselblueprint");
+            AddEnc("Guardian Vessel Blueprint Fragment", ItemType.VeryRare, MaterialGroupType.NA, "GMVB", "Guardian_VesselBlueprint");
             AddManu("Bio-Mechanical Conduits", ItemType.Standard, MaterialGroupType.NA, "BMC", "TG_BioMechanicalConduits");
             AddManu("Propulsion Elements", ItemType.VeryRare, MaterialGroupType.NA, "PE", "TG_PropulsionElement");
             AddManu("Weapon Parts", ItemType.Rare, MaterialGroupType.NA, "WP", "TG_WeaponParts");
@@ -632,15 +1591,15 @@ namespace EliteDangerousCore
             AddEnc("Ship Systems Data", ItemType.Rare, MaterialGroupType.NA, "SSD", "TG_ShipSystemsData");
 
             // new to update 15 - inara/devtalk
-            AddManu("Hardened Surface Fragments", ItemType.VeryCommon, MaterialGroupType.NA, "HSF", "tg_abrasion03");
-            AddManu("Phasing Membrane Residue", ItemType.Standard, MaterialGroupType.NA, "PMR", "tg_abrasion02");
-            AddManu("Heat Exposure Specimen", ItemType.VeryRare, MaterialGroupType.NA, "tg_abrasion01");
+            AddManu("Hardened Surface Fragments", ItemType.VeryCommon, MaterialGroupType.NA, "HSF", "TG_Abrasion03");
+            AddManu("Phasing Membrane Residue", ItemType.Standard, MaterialGroupType.NA, "PMR", "TG_Abrasion02");
+            AddManu("Heat Exposure Specimen", ItemType.VeryRare, MaterialGroupType.NA, "TG_Abrasion01");
 
-            AddManu("Caustic Crystal", ItemType.Rare, MaterialGroupType.NA, "CACR", "tg_causticcrystal");       // inara
-            AddManu("Caustic Shard", ItemType.Standard, MaterialGroupType.NA, "CASH", "tg_causticshard");
-            AddManu("Corrosive Mechanisms", ItemType.Standard, MaterialGroupType.NA, "COMEC", "tg_causticgeneratorparts");
-            AddManu("Massive Energy Surge Analytics", ItemType.Standard, MaterialGroupType.NA, "MESA", "tg_shutdowndata");
-            AddManu("Thargoid Interdiction Telemetry", ItemType.Standard, MaterialGroupType.NA, "TIT", "tg_interdictiondata");
+            AddManu("Caustic Crystal", ItemType.Rare, MaterialGroupType.NA, "CACR", "TG_CausticCrystal");       // inara
+            AddManu("Caustic Shard", ItemType.Standard, MaterialGroupType.NA, "CASH", "TG_CausticShard");
+            AddManu("Corrosive Mechanisms", ItemType.Standard, MaterialGroupType.NA, "COMEC", "TG_CausticGeneratorParts");
+            AddManu("Massive Energy Surge Analytics", ItemType.Standard, MaterialGroupType.NA, "MESA", "TG_ShutdownData");
+            AddManu("Thargoid Interdiction Telemetry", ItemType.Standard, MaterialGroupType.NA, "TIT", "TG_InterdictionData");
 
             ItemType sv = ItemType.Salvage;
             AddCommodity("Thargoid Sensor", sv, "UnknownArtifact");
@@ -650,17 +1609,17 @@ namespace EliteDangerousCore
             AddCommodity("Thargoid Biological Matter", sv, "UnknownBiologicalMatter");
             AddCommodity("Thargoid Technology Samples", sv, "UnknownTechnologySamples");
 
-            AddManu("Thargoid Carapace", ItemType.Common, MaterialGroupType.NA, "UKCP", "unknowncarapace");
-            AddManu("Thargoid Energy Cell", ItemType.Standard, MaterialGroupType.NA, "UKEC", "unknownenergycell");
-            AddManu("Thargoid Organic Circuitry", ItemType.VeryRare, MaterialGroupType.NA, "UKOC", "unknownorganiccircuitry");
-            AddManu("Thargoid Technological Components", ItemType.Rare, MaterialGroupType.NA, "UKTC", "unknowntechnologycomponents");
-            AddManu("Sensor Fragment", ItemType.VeryRare, MaterialGroupType.NA, "UES", "unknownenergysource");
+            AddManu("Thargoid Carapace", ItemType.Common, MaterialGroupType.NA, "UKCP", "UnknownCarapace");
+            AddManu("Thargoid Energy Cell", ItemType.Standard, MaterialGroupType.NA, "UKEC", "UnknownEnergycell");
+            AddManu("Thargoid Organic Circuitry", ItemType.VeryRare, MaterialGroupType.NA, "UKOC", "UnknownOrganicCircuitry");
+            AddManu("Thargoid Technological Components", ItemType.Rare, MaterialGroupType.NA, "UKTC", "UnknownTechnologyComponents");
+            AddManu("Sensor Fragment", ItemType.VeryRare, MaterialGroupType.NA, "UES", "Unknownenergysource");
 
-            AddEnc("Thargoid Material Composition Data", ItemType.Standard, MaterialGroupType.NA, "UMCD", "tg_compositiondata");
-            AddEnc("Thargoid Structural Data", ItemType.Common, MaterialGroupType.NA, "UKSD", "tg_structuraldata");
-            AddEnc("Thargoid Residue Data", ItemType.Rare, MaterialGroupType.NA, "URDA", "tg_residuedata");
-            AddEnc("Thargoid Ship Signature", ItemType.Standard, MaterialGroupType.NA, "USSig", "unknownshipsignature");
-            AddEnc("Thargoid Wake Data", ItemType.Rare, MaterialGroupType.NA, "UWD", "unknownwakedata");
+            AddEnc("Thargoid Material Composition Data", ItemType.Standard, MaterialGroupType.NA, "UMCD", "TG_CompositionData");
+            AddEnc("Thargoid Structural Data", ItemType.Common, MaterialGroupType.NA, "UKSD", "TG_StructuralData");
+            AddEnc("Thargoid Residue Data", ItemType.Rare, MaterialGroupType.NA, "URDA", "TG_ResidueData");
+            AddEnc("Thargoid Ship Signature", ItemType.Standard, MaterialGroupType.NA, "USSig", "UnknownShipSignature");
+            AddEnc("Thargoid Wake Data", ItemType.Rare, MaterialGroupType.NA, "UWD", "UnknownWakeData");
 
             #endregion
 
@@ -680,8 +1639,8 @@ namespace EliteDangerousCore
 
             ItemType im = ItemType.IndustrialMaterials;
             AddCommodityList("Ceramic Composites;Insulating Membrane;Polymers;Semiconductors;Superconductors", im);
-            AddCommoditySN("Meta-Alloys", im, "MA", "metaalloys");
-            AddCommoditySN("Micro-Weave Cooling Hoses", im, "MWCH", "coolinghoses");
+            AddCommoditySN("Meta-Alloys", im, "MA", "Metaalloys");
+            AddCommoditySN("Micro-Weave Cooling Hoses", im, "MWCH", "CoolingHoses");
             AddCommoditySN("Neofabric Insulation", im, "NFI", "");
             AddCommoditySN("CMM Composite", im, "CMMC", "");
 
@@ -699,7 +1658,7 @@ namespace EliteDangerousCore
             AddCommoditySN("Thermal Cooling Units", m, "TCU", "");
             AddCommoditySN("Water Purifiers", m, "WPURE", "");
             AddCommoditySN("Heatsink Interlink", m, "HSI", "");
-            AddCommoditySN("Energy Grid Assembly", m, "EGA", "powergridassembly");
+            AddCommoditySN("Energy Grid Assembly", m, "EGA", "PowerGridAssembly");
             AddCommoditySN("Radiation Baffle", m, "RB", "");
             AddCommoditySN("Magnetic Emitter Coil", m, "MEC", "");
             AddCommoditySN("Articulation Motors", m, "AM", "");
@@ -710,12 +1669,12 @@ namespace EliteDangerousCore
 
             ItemType md = ItemType.Medicines;
             AddCommodityList("Advanced Medicines;Basic Medicines;Combat Stabilisers;Performance Enhancers;Progenitor Cells", md);
-            AddCommodity("Agri-Medicines", md, "agriculturalmedicines");
+            AddCommodity("Agri-Medicines", md, "AgriculturalMedicines");
             AddCommodity("Nanomedicines", md, "Nanomedicines"); // not in frontier data. Keep for now Jan 2020
 
             ItemType mt = ItemType.Metals;
             AddCommodityList("Aluminium;Beryllium;Bismuth;Cobalt;Copper;Gallium;Gold;Hafnium 178;Indium;Lanthanum;Lithium;Palladium;Platinum;Praseodymium;Samarium;Silver;Tantalum;Thallium;Thorium;Titanium;Uranium", mt);
-            AddCommoditySN("Osmium", mt, "OSM", "osmium");
+            AddCommoditySN("Osmium", mt, "OSM", "Osmium");
             AddCommodity("Platinum Alloy", mt, "PlatinumAloy");
 
             ItemType mi = ItemType.Minerals;
@@ -751,8 +1710,8 @@ namespace EliteDangerousCore
             AddCommodityList("Ai Relics;Antimatter Containment Unit;Antiquities;Assault Plans;Data Core;Diplomatic Bag;Encrypted Correspondence;Fossil Remnants", sv);
             AddCommodityList("Geological Samples;Military Intelligence;Mysterious Idol;Personal Effects;Precious Gems;Prohibited Research Materials", sv);
             AddCommodityList("Sap 8 Core Container;Scientific Research;Scientific Samples;Space Pioneer Relics;Tactical Data;Unstable Data Core", sv);
-            AddCommodity("Large Survey Data Cache", sv, "largeexplorationdatacash");
-            AddCommodity("Small Survey Data Cache", sv, "smallexplorationdatacash");
+            AddCommodity("Large Survey Data Cache", sv, "LargeExplorationDatacash");
+            AddCommodity("Small Survey Data Cache", sv, "SmallExplorationDatacash");
             AddCommodity("Ancient Artefact", sv, "USSCargoAncientArtefact");
             AddCommodity("Black Box", sv, "USSCargoBlackBox");
             AddCommodity("Political Prisoners", sv, "PoliticalPrisoner");
@@ -820,9 +1779,9 @@ namespace EliteDangerousCore
             AddCommoditySN("Micro Controllers", tc, "MCC", "MicroControllers");
             AddCommodityList("Medical Diagnostic Equipment", tc);
             AddCommodityList("Nanobreakers;Resonating Separators;Robotics;Structural Regulators;Telemetry Suite", tc);
-            AddCommodity("H.E. Suits", tc, "hazardousenvironmentsuits");
-            AddCommoditySN("Hardware Diagnostic Sensor", tc, "DIS", "diagnosticsensor");
-            AddCommodity("Muon Imager", tc, "mutomimager");
+            AddCommodity("H.E. Suits", tc, "HazardousEnvironmentSuits");
+            AddCommoditySN("Hardware Diagnostic Sensor", tc, "DIS", "DiagnosticSensor");
+            AddCommodity("Muon Imager", tc, "MutomImager");
             AddCommodity("Land Enrichment Systems", tc, "TerrainEnrichmentSystems");
 
             ItemType tx = ItemType.Textiles;
@@ -833,7 +1792,7 @@ namespace EliteDangerousCore
 
             ItemType wp = ItemType.Weapons;
             AddCommodityList("Battle Weapons;Landmines;Personal Weapons;Reactive Armour", wp);
-            AddCommodity("Non-Lethal Weapons", wp, "nonlethalweapons");
+            AddCommodity("Non-Lethal Weapons", wp, "NonLethalWeapons");
 
             #endregion
 
@@ -1028,35 +1987,35 @@ namespace EliteDangerousCore
 
             #region Microresources
 
-            AddMicroResource(CatType.Consumable, "E-Breach", "bypass", "MRCEB");
-            AddMicroResource(CatType.Consumable, "Energy Cell", "energycell", "MRCEC");
-            AddMicroResource(CatType.Consumable, "Medkit", "healthpack", "MRCM");
-            AddMicroResource(CatType.Consumable, "Frag Grenade", "amm_grenade_frag", "MRCFG");
-            AddMicroResource(CatType.Consumable, "Shield Disruptor", "amm_grenade_emp", "MRCSD");
-            AddMicroResource(CatType.Consumable, "Shield Projector", "amm_grenade_shield", "MRCSP");
+            AddMicroResource(CatType.Consumable, "E-Breach", "Bypass", "MRCEB");
+            AddMicroResource(CatType.Consumable, "Energy Cell", "EnergyCell", "MRCEC");
+            AddMicroResource(CatType.Consumable, "Medkit", "HealthPack", "MRCM");
+            AddMicroResource(CatType.Consumable, "Frag Grenade", "AMM_Grenade_Frag", "MRCFG");
+            AddMicroResource(CatType.Consumable, "Shield Disruptor", "AMM_Grenade_EMP", "MRCSD");
+            AddMicroResource(CatType.Consumable, "Shield Projector", "AMM_Grenade_Shield", "MRCSP");
 
-            AddMicroResource(CatType.Item, "Power Regulator", "largecapacitypowerregulator", "MRIPR");
-            AddMicroResource(CatType.Item, "Compact Library", "compactlibrary", "MRICL");
+            AddMicroResource(CatType.Item, "Power Regulator", "LargeCapacityPowerRegulator", "MRIPR");
+            AddMicroResource(CatType.Item, "Compact Library", "CompactLibrary", "MRICL");
             AddMicroResource(CatType.Item, "Infinity", "infinity", "MRII");
-            AddMicroResource(CatType.Item, "Insight Entertainment Suite", "insightentertainmentsuite", "MRIIES");
-            AddMicroResource(CatType.Item, "Lazarus", "lazarus", "MRIL");
-            AddMicroResource(CatType.Item, "Universal Translator", "universaltranslator", "MRIUT");
-            AddMicroResource(CatType.Item, "Biochemical Agent", "biochemicalagent", "MRIBA");
-            AddMicroResource(CatType.Item, "Degraded Power Regulator", "degradedpowerregulator", "MRIDPR");
-            AddMicroResource(CatType.Item, "Hush", "hush", "MRIH");
-            AddMicroResource(CatType.Item, "Push", "push", "MRIP");
-            AddMicroResource(CatType.Item, "Synthetic Pathogen", "syntheticpathogen", "MRISP");
-            AddMicroResource(CatType.Item, "Building Schematic", "buildingschematic", "MRIBS");
+            AddMicroResource(CatType.Item, "Insight Entertainment Suite", "InsightEntertainmentSuite", "MRIIES");
+            AddMicroResource(CatType.Item, "Lazarus", "Lazarus", "MRIL");
+            AddMicroResource(CatType.Item, "Universal Translator", "UniversalTranslator", "MRIUT");
+            AddMicroResource(CatType.Item, "Biochemical Agent", "BiochemicalAgent", "MRIBA");
+            AddMicroResource(CatType.Item, "Degraded Power Regulator", "DegradedPowerRegulator", "MRIDPR");
+            AddMicroResource(CatType.Item, "Hush", "Hush", "MRIH");
+            AddMicroResource(CatType.Item, "Push", "Push", "MRIP");
+            AddMicroResource(CatType.Item, "Synthetic Pathogen", "SyntheticPathogen", "MRISP");
+            AddMicroResource(CatType.Item, "Building Schematic", "BuildingSchematic", "MRIBS");
             AddMicroResource(CatType.Item, "Insight", "insight", "MRInsight");
-            AddMicroResource(CatType.Item, "Compression-Liquefied Gas", "compressionliquefiedgas", "MRICLG");
-            AddMicroResource(CatType.Item, "Health Monitor", "healthmonitor", "MRIHM");
-            AddMicroResource(CatType.Item, "Inertia Canister", "inertiacanister", "MRIIC");
-            AddMicroResource(CatType.Item, "Ionised Gas", "ionisedgas", "MRIIG");
-            AddMicroResource(CatType.Item, "Ship Schematic", "shipschematic", "MRIShipSch");
-            AddMicroResource(CatType.Item, "Suit Schematic", "suitschematic", "MRISuitSch");
-            AddMicroResource(CatType.Item, "Vehicle Schematic", "vehicleschematic", "MRIVS");
-            AddMicroResource(CatType.Item, "Weapon Schematic", "weaponschematic", "MRIWS");
-            AddMicroResource(CatType.Item, "True Form Fossil", "trueformfossil", "MRITFF");
+            AddMicroResource(CatType.Item, "Compression-Liquefied Gas", "CompressionLiquefiedGas", "MRICLG");
+            AddMicroResource(CatType.Item, "Health Monitor", "HealthMonitor", "MRIHM");
+            AddMicroResource(CatType.Item, "Inertia Canister", "InertiaCanister", "MRIIC");
+            AddMicroResource(CatType.Item, "Ionised Gas", "IonisedGas", "MRIIG");
+            AddMicroResource(CatType.Item, "Ship Schematic", "ShipSchematic", "MRIShipSch");
+            AddMicroResource(CatType.Item, "Suit Schematic", "SuitSchematic", "MRISuitSch");
+            AddMicroResource(CatType.Item, "Vehicle Schematic", "VehicleSchematic", "MRIVS");
+            AddMicroResource(CatType.Item, "Weapon Schematic", "WeaponSchematic", "MRIWS");
+            AddMicroResource(CatType.Item, "True Form Fossil", "TrueFormFossil", "MRITFF");
             AddMicroResource(CatType.Item, "Agricultural Process Sample", "AgriculturalProcessSample", "MRIAPS");
             AddMicroResource(CatType.Item, "Biological Sample", "GeneticSample", "MRIBIOSAMP");
             AddMicroResource(CatType.Item, "Californium", "Californium", "MRIC");
@@ -1079,107 +2038,123 @@ namespace EliteDangerousCore
             AddMicroResource(CatType.Item, "Surveillance Equipment", "SurveillanceEquipment", "MRISE");
             AddMicroResource(CatType.Item, "Synthetic Genome", "SyntheticGenome", "MRISG");
 
-            AddMicroResource(CatType.Component, "Carbon Fibre Plating", "carbonfibreplating", "MRCCFP");
-            AddMicroResource(CatType.Component, "Encrypted Memory Chip", "encryptedmemorychip", "MRCEMC");
-            AddMicroResource(CatType.Component, "Epoxy Adhesive", "epoxyadhesive", "MRCEA");
-            AddMicroResource(CatType.Component, "Graphene", "graphene", "MRCG");
-            AddMicroResource(CatType.Component, "Memory Chip", "memorychip", "MRCMC");
-            AddMicroResource(CatType.Component, "Microelectrode", "microelectrode", "MRCMICROELEC");
-            AddMicroResource(CatType.Component, "Micro Hydraulics", "microhydraulics", "MRCMH");
-            AddMicroResource(CatType.Component, "Micro Thrusters", "microthrusters", "MRCMT");
-            AddMicroResource(CatType.Component, "Optical Fibre", "opticalfibre", "MRCOF");
-            AddMicroResource(CatType.Component, "Optical Lens", "opticallens", "MRCOL");
-            AddMicroResource(CatType.Component, "RDX", "rdx", "MRCR");
-            AddMicroResource(CatType.Component, "Titanium Plating", "titaniumplating", "MRCTP");
-            AddMicroResource(CatType.Component, "Tungsten Carbide", "tungstencarbide", "MRCTC");
-            AddMicroResource(CatType.Component, "Weapon Component", "weaponcomponent", "MRCWC");
-            AddMicroResource(CatType.Component, "Aerogel", "aerogel", "MRCA");
-            AddMicroResource(CatType.Component, "Chemical Superbase", "chemicalsuperbase", "MRCCS");
-            AddMicroResource(CatType.Component, "Circuit Board", "circuitboard", "MRCCB");
-            AddMicroResource(CatType.Component, "Circuit Switch", "circuitswitch", "MRCCIRSWITCH");
-            AddMicroResource(CatType.Component, "Electrical Wiring", "electricalwiring", "MRCEW");
-            AddMicroResource(CatType.Component, "Electromagnet", "electromagnet", "MRCE");
-            AddMicroResource(CatType.Component, "Metal Coil", "metalcoil", "MRCMETALCOIL");
-            AddMicroResource(CatType.Component, "Motor", "motor", "MRCMOTOR");
-            AddMicroResource(CatType.Component, "Chemical Catalyst", "chemicalcatalyst", "MRCCC");
-            AddMicroResource(CatType.Component, "Micro Transformer", "microtransformer", "MRCMICTRANS");
-            AddMicroResource(CatType.Component, "Electrical Fuse", "electricalfuse", "MRCEF");
-            AddMicroResource(CatType.Component, "Micro Supercapacitor", "microsupercapacitor", "MRCMS");
-            AddMicroResource(CatType.Component, "Viscoelastic Polymer", "viscoelasticpolymer", "MRCVP");
-            AddMicroResource(CatType.Component, "Ion Battery", "ionbattery", "MRCIB");
-            AddMicroResource(CatType.Component, "Scrambler", "scrambler", "MRCS");
-            AddMicroResource(CatType.Component, "Oxygenic Bacteria", "oxygenicbacteria", "MRCOXYBAC");
+            AddMicroResource(CatType.Component, "Carbon Fibre Plating", "CarbonFibrePlating", "MRCCFP");
+            AddMicroResource(CatType.Component, "Encrypted Memory Chip", "EncryptedMemoryChip", "MRCEMC");
+            AddMicroResource(CatType.Component, "Epoxy Adhesive", "EpoxyAdhesive", "MRCEA");
+            AddMicroResource(CatType.Component, "Graphene", "Graphene", "MRCG");
+            AddMicroResource(CatType.Component, "Memory Chip", "MemoryChip", "MRCMC");
+            AddMicroResource(CatType.Component, "Microelectrode", "MicroElectrode", "MRCMICROELEC");
+            AddMicroResource(CatType.Component, "Micro Hydraulics", "MicroHydraulics", "MRCMH");
+            AddMicroResource(CatType.Component, "Micro Thrusters", "MicroThrusters", "MRCMT");
+            AddMicroResource(CatType.Component, "Optical Fibre", "OpticalFibre", "MRCOF");
+            AddMicroResource(CatType.Component, "Optical Lens", "OpticalLens", "MRCOL");
+            AddMicroResource(CatType.Component, "RDX", "RDX", "MRCR");
+            AddMicroResource(CatType.Component, "Titanium Plating", "TitaniumPlating", "MRCTP");
+            AddMicroResource(CatType.Component, "Tungsten Carbide", "TungstenCarbide", "MRCTC");
+            AddMicroResource(CatType.Component, "Weapon Component", "WeaponComponent", "MRCWC");
+            AddMicroResource(CatType.Component, "Aerogel", "Aerogel", "MRCA");
+            AddMicroResource(CatType.Component, "Chemical Superbase", "ChemicalSuperbase", "MRCCS");
+            AddMicroResource(CatType.Component, "Circuit Board", "Circuitboard", "MRCCB");
+            AddMicroResource(CatType.Component, "Circuit Switch", "CircuitSwitch", "MRCCIRSWITCH");
+            AddMicroResource(CatType.Component, "Electrical Wiring", "ElectricalWiring", "MRCEW");
+            AddMicroResource(CatType.Component, "Electromagnet", "Electromagnet", "MRCE");
+            AddMicroResource(CatType.Component, "Metal Coil", "MetalCoil", "MRCMETALCOIL");
+            AddMicroResource(CatType.Component, "Motor", "Motor", "MRCMOTOR");
+            AddMicroResource(CatType.Component, "Chemical Catalyst", "ChemicalCatalyst", "MRCCC");
+            AddMicroResource(CatType.Component, "Micro Transformer", "Microtransformer", "MRCMICTRANS");
+            AddMicroResource(CatType.Component, "Electrical Fuse", "ElectricalFuse", "MRCEF");
+            AddMicroResource(CatType.Component, "Micro Supercapacitor", "MicroSupercapacitor", "MRCMS");
+            AddMicroResource(CatType.Component, "Viscoelastic Polymer", "ViscoElasticPolymer", "MRCVP");
+            AddMicroResource(CatType.Component, "Ion Battery", "IonBattery", "MRCIB");
+            AddMicroResource(CatType.Component, "Scrambler", "Scrambler", "MRCS");
+            AddMicroResource(CatType.Component, "Oxygenic Bacteria", "OxygenicBacteria", "MRCOXYBAC");
             AddMicroResource(CatType.Component, "Epinephrine", "Epinephrine", "MRCEPINE");
             AddMicroResource(CatType.Component, "pH Neutraliser", "pHNeutraliser", "MRCPHN");
             AddMicroResource(CatType.Component, "Transmitter", "Transmitter", "MRCTX");
 
-            AddMicroResource(CatType.Data, "Chemical Inventory", "chemicalinventory", "MRDCI");
-            AddMicroResource(CatType.Data, "Duty Rota", "dutyrota", "MRDDR");
-            AddMicroResource(CatType.Data, "Evacuation Protocols", "evacuationprotocols", "MRDEP");
-            AddMicroResource(CatType.Data, "Exploration Journals", "explorationjournals", "MRDEJ");
-            AddMicroResource(CatType.Data, "Faction News", "factionnews", "MRDFN");
-            AddMicroResource(CatType.Data, "Financial Projections", "financialprojections", "MRDFP");
-            AddMicroResource(CatType.Data, "Sales Records", "salesrecords", "MRDSR");
-            AddMicroResource(CatType.Data, "Union Membership", "unionmembership", "MRDUM");
-            AddMicroResource(CatType.Data, "Maintenance Logs", "maintenancelogs", "MRDML");
-            AddMicroResource(CatType.Data, "Patrol Routes", "patrolroutes", "MRDPATR");
-            AddMicroResource(CatType.Data, "Settlement Defence Plans", "settlementdefenceplans", "MRDSDP");
-            AddMicroResource(CatType.Data, "Surveillance Logs", "surveilleancelogs", "MRDSL");
-            AddMicroResource(CatType.Data, "Operational Manual", "operationalmanual", "MRDOM");
-            AddMicroResource(CatType.Data, "Blacklist Data", "blacklistdata", "MRDBD");
-            AddMicroResource(CatType.Data, "Air Quality Reports", "airqualityreports", "MRDAQR");
-            AddMicroResource(CatType.Data, "Employee Directory", "employeedirectory", "MRDED");
-            AddMicroResource(CatType.Data, "Faction Associates", "factionassociates", "MRDFA");
-            AddMicroResource(CatType.Data, "Meeting Minutes", "meetingminutes", "MRDMM");
-            AddMicroResource(CatType.Data, "Multimedia Entertainment", "multimediaentertainment", "MRDME");
-            AddMicroResource(CatType.Data, "Network Access History", "networkaccesshistory", "MRDNAH");
-            AddMicroResource(CatType.Data, "Purchase Records", "purchaserecords", "MRDPRCD");
-            AddMicroResource(CatType.Data, "Radioactivity Data", "radioactivitydata", "MRDRD");
-            AddMicroResource(CatType.Data, "Residential Directory", "residentialdirectory", "MRDRDIR");
-            AddMicroResource(CatType.Data, "Shareholder Information", "shareholderinformation", "MRDSI");
-            AddMicroResource(CatType.Data, "Travel Permits", "travelpermits", "MRDTP");
-            AddMicroResource(CatType.Data, "Accident Logs", "accidentlogs", "MRDACCLOGS");
-            AddMicroResource(CatType.Data, "Campaign Plans", "campaignplans", "MRDCP");
-            AddMicroResource(CatType.Data, "Combat Training Material", "combattrainingmaterial", "MRDCTM");
-            AddMicroResource(CatType.Data, "Internal Correspondence", "internalcorrespondence", "MRDIC");
-            AddMicroResource(CatType.Data, "Payroll Information", "payrollinformation", "MRDPI");
-            AddMicroResource(CatType.Data, "Personal Logs", "personallogs", "MRDPL");
-            AddMicroResource(CatType.Data, "Weapon Inventory", "weaponinventory", "MRDWI");
-            AddMicroResource(CatType.Data, "Atmospheric Data", "atmosphericdata", "MRDAD");
-            AddMicroResource(CatType.Data, "Topographical Surveys", "topographicalsurveys", "MRDTS");
-            AddMicroResource(CatType.Data, "Literary Fiction", "literaryfiction", "MRDLF");
-            AddMicroResource(CatType.Data, "Reactor Output Review", "reactoroutputreview", "MRDROR");
-            AddMicroResource(CatType.Data, "Next of Kin Records", "nextofkinrecords", "MRDNKR");
-            AddMicroResource(CatType.Data, "Purchase Requests", "purchaserequests", "MRDPR");
-            AddMicroResource(CatType.Data, "Tax Records", "taxrecords", "MRDTR");
-            AddMicroResource(CatType.Data, "Visitor Register", "visitorregister", "MRDVISREG");
-            AddMicroResource(CatType.Data, "Pharmaceutical Patents", "pharmaceuticalpatents", "MRDPP");
-            AddMicroResource(CatType.Data, "Vaccine Research", "vaccineresearch", "MRDVACRES");
-            AddMicroResource(CatType.Data, "Virology Data", "virologydata", "MRDVD");
-            AddMicroResource(CatType.Data, "Vaccination Records", "vaccinationrecords", "MRDVR");
-            AddMicroResource(CatType.Data, "Census Data", "censusdata", "MRDCD");
-            AddMicroResource(CatType.Data, "Mineral Survey", "mineralsurvey", "MRDMS");
-            AddMicroResource(CatType.Data, "Chemical Formulae", "chemicalformulae", "MRDCF");
-            AddMicroResource(CatType.Data, "Chemical Experiment Data", "chemicalexperimentdata", "MRDCED");
-            AddMicroResource(CatType.Data, "Chemical Patents", "chemicalpatents", "MRDCHEMPAT");
-            AddMicroResource(CatType.Data, "Production Reports", "productionreports", "MRDPRODREP");
-            AddMicroResource(CatType.Data, "Production Schedule", "productionschedule", "MRDPS");
-            AddMicroResource(CatType.Data, "Blood Test Results", "bloodtestresults", "MRDBTR");
-            AddMicroResource(CatType.Data, "Combatant Performance", "combatantperformance", "MRDCOMBPERF");
-            AddMicroResource(CatType.Data, "Troop Deployment Records", "troopdeploymentrecords", "MRDTDR");
-            AddMicroResource(CatType.Data, "Cat Media", "catmedia", "MRDCATMED");
-            AddMicroResource(CatType.Data, "Employee Genetic Data", "employeegeneticdata", "MRDEGD");
-            AddMicroResource(CatType.Data, "Faction Donator List", "factiondonatorlist", "MRDFDL");
-            AddMicroResource(CatType.Data, "NOC Data", "nocdata", "MRDNOCD");
-            AddMicroResource(CatType.Data, "Manufacturing Instructions", "manufacturinginstructions", "MRDMI");
-            AddMicroResource(CatType.Data, "Propaganda", "propaganda", "MRPROPG");
-            AddMicroResource(CatType.Data, "Security Expenses", "securityexpenses", "MRSECEXP");
-            AddMicroResource(CatType.Data, "Weapon Test Data", "weapontestdata", "MRWTD");
+            AddMicroResource(CatType.Data, "Chemical Inventory", "ChemicalInventory", "MRDCI");
+            AddMicroResource(CatType.Data, "Duty Rota", "DutyRota", "MRDDR");
+            AddMicroResource(CatType.Data, "Evacuation Protocols", "EvacuationProtocols", "MRDEP");
+            AddMicroResource(CatType.Data, "Exploration Journals", "ExplorationJournals", "MRDEJ");
+            AddMicroResource(CatType.Data, "Faction News", "FactionNews", "MRDFN");
+
+            AddMicroResource(CatType.Data, "Financial Projections", "FinancialProjections", "MRDFP");
+            AddMicroResource(CatType.Data, "Sales Records", "SalesRecords", "MRDSR");
+            AddMicroResource(CatType.Data, "Union Membership", "UnionmemberShip", "MRDUM");
+            AddMicroResource(CatType.Data, "Maintenance Logs", "MaintenanceLogs", "MRDML");
+            AddMicroResource(CatType.Data, "Patrol Routes", "PatrolRoutes", "MRDPATR");
+
+            AddMicroResource(CatType.Data, "Settlement Defence Plans", "SettlementDefencePlans", "MRDSDP");
+            AddMicroResource(CatType.Data, "Surveillance Logs", "SurveilleanceLogs", "MRDSL");
+            AddMicroResource(CatType.Data, "Operational Manual", "PperationalManual", "MRDOM");
+            AddMicroResource(CatType.Data, "Blacklist Data", "BlacklistData", "MRDBD");
+            AddMicroResource(CatType.Data, "Air Quality Reports", "AirqualityReports", "MRDAQR");
+
+
+            AddMicroResource(CatType.Data, "Employee Directory", "EmployeeDirectory", "MRDED");
+            AddMicroResource(CatType.Data, "Faction Associates", "FactionAssociates", "MRDFA");
+            AddMicroResource(CatType.Data, "Meeting Minutes", "MeetingMinutes", "MRDMM");
+            AddMicroResource(CatType.Data, "Multimedia Entertainment", "MultimediaEntertainment", "MRDME");
+            AddMicroResource(CatType.Data, "Network Access History", "NetworkAccessHistory", "MRDNAH");
+
+            AddMicroResource(CatType.Data, "Purchase Records", "PurchaseRecords", "MRDPRCD");
+            AddMicroResource(CatType.Data, "Radioactivity Data", "RadioactivityData", "MRDRD");
+            AddMicroResource(CatType.Data, "Residential Directory", "ResidentialDirectory", "MRDRDIR");
+            AddMicroResource(CatType.Data, "Shareholder Information", "ShareholderInformation", "MRDSI");
+            AddMicroResource(CatType.Data, "Travel Permits", "TravelPermits", "MRDTP");
+
+            AddMicroResource(CatType.Data, "Accident Logs", "AccidentLogs", "MRDACCLOGS");
+            AddMicroResource(CatType.Data, "Campaign Plans", "CampaignPlans", "MRDCP");
+            AddMicroResource(CatType.Data, "Combat Training Material", "CombatTrainingMaterial", "MRDCTM");
+            AddMicroResource(CatType.Data, "Internal Correspondence", "InternalCorrespondence", "MRDIC");
+            AddMicroResource(CatType.Data, "Payroll Information", "PayrollInformation", "MRDPI");
+
+            AddMicroResource(CatType.Data, "Personal Logs", "PersonalLogs", "MRDPL");
+            AddMicroResource(CatType.Data, "Weapon Inventory", "WeaponInventory", "MRDWI");
+            AddMicroResource(CatType.Data, "Atmospheric Data", "AtmosphericData", "MRDAD");
+            AddMicroResource(CatType.Data, "Topographical Surveys", "TopographicalSurveys", "MRDTS");
+            AddMicroResource(CatType.Data, "Literary Fiction", "LiteraryFiction", "MRDLF");
+
+
+            AddMicroResource(CatType.Data, "Reactor Output Review", "ReactorOutputReview", "MRDROR");
+            AddMicroResource(CatType.Data, "Next of Kin Records", "NextofkinRecords", "MRDNKR");
+            AddMicroResource(CatType.Data, "Purchase Requests", "PurchaseRequests", "MRDPR");
+            AddMicroResource(CatType.Data, "Tax Records", "TaxRecords", "MRDTR");
+            AddMicroResource(CatType.Data, "Visitor Register", "VisitorRegister", "MRDVISREG");
+            AddMicroResource(CatType.Data, "Pharmaceutical Patents", "PharmaceuticalPatents", "MRDPP");
+
+            AddMicroResource(CatType.Data, "Vaccine Research", "VaccineResearch", "MRDVACRES");
+            AddMicroResource(CatType.Data, "Virology Data", "VirologyData", "MRDVD");
+            AddMicroResource(CatType.Data, "Vaccination Records", "VaccinationRecords", "MRDVR");
+            AddMicroResource(CatType.Data, "Census Data", "CensusData", "MRDCD");
+
+            AddMicroResource(CatType.Data, "Mineral Survey", "MineralSurvey", "MRDMS");
+            AddMicroResource(CatType.Data, "Chemical Formulae", "ChemicalFormulae", "MRDCF");
+            AddMicroResource(CatType.Data, "Chemical Experiment Data", "ChemicalExperimentData", "MRDCED");
+            AddMicroResource(CatType.Data, "Chemical Patents", "ChemicalPatents", "MRDCHEMPAT");
+            AddMicroResource(CatType.Data, "Production Reports", "ProductionReports", "MRDPRODREP");
+
+            AddMicroResource(CatType.Data, "Production Schedule", "ProductionSchedule", "MRDPS");
+            AddMicroResource(CatType.Data, "Blood Test Results", "BloodtestResults", "MRDBTR");
+            AddMicroResource(CatType.Data, "Combatant Performance", "CombatantPerformance", "MRDCOMBPERF");
+            AddMicroResource(CatType.Data, "Troop Deployment Records", "TroopDeploymentRecords", "MRDTDR");
+
+            AddMicroResource(CatType.Data, "Cat Media", "CatMedia", "MRDCATMED");
+            AddMicroResource(CatType.Data, "Employee Genetic Data", "EmployeeGeneticData", "MRDEGD");
+            AddMicroResource(CatType.Data, "Faction Donator List", "FactionDonatorList", "MRDFDL");
+            AddMicroResource(CatType.Data, "NOC Data", "NOCData", "MRDNOCD");
+            AddMicroResource(CatType.Data, "Manufacturing Instructions", "ManufacturingInstructions", "MRDMI");
+
+            AddMicroResource(CatType.Data, "Propaganda", "Propaganda", "MRPROPG");
+            AddMicroResource(CatType.Data, "Security Expenses", "SecurityExpenses", "MRSECEXP");
+            AddMicroResource(CatType.Data, "Weapon Test Data", "WeaponTestData", "MRWTD");
             AddMicroResource(CatType.Data, "Audio Logs", "AudioLogs", "MRDAL");
+
             AddMicroResource(CatType.Data, "AX Combat Logs", "AXCombatLogs", "MRDACL");
             AddMicroResource(CatType.Data, "Ballistics Data", "BallisticsData", "MRDBALD");
             AddMicroResource(CatType.Data, "Biological Weapon Data", "BiologicalWeaponData", "MRDBWD");
             AddMicroResource(CatType.Data, "Biometric Data", "BiometricData", "MRDBIOD");
+
             AddMicroResource(CatType.Data, "Chemical Weapon Data", "ChemicalWeaponData", "MRDCWD");
             AddMicroResource(CatType.Data, "Classic Entertainment", "ClassicEntertainment", "MRDCE");
             AddMicroResource(CatType.Data, "Cocktail Recipes", "CocktailRecipes", "MRDCREC");
@@ -1229,7 +2204,7 @@ namespace EliteDangerousCore
             AddMicroResource(CatType.Data, "Xeno-Defence Protocols", "XenoDefenceProtocols", "MRDXDP");
 
             // not in frontier spreadsheet, but seen in alpha logs
-            AddMicroResource(CatType.Data, "Geographical Data", "geographicaldata", "MRDGEOD");
+            AddMicroResource(CatType.Data, "Geographical Data", "GeographicalData", "MRDGEOD");
 
             #endregion
 
@@ -1246,7 +2221,84 @@ namespace EliteDangerousCore
                 x.Name = x.Name.TxID(typeof(MaterialCommodityMicroResourceType), x.FDName);
             }
 
+            //var cachecopy = new Dictionary<string, MaterialCommodityMicroResourceType>();
+
+            //foreach (var x in cachelist.OrderBy(x=>x.Value.Category).ThenBy(x => x.Value.Rarity).ThenBy(x=>x.Value.Type).ThenBy(x => x.Value.MaterialGroup).ThenBy(x => x.Value.FDName))
+            //{
+            //    cachecopy.Add(x.Key,x.Value);
+            //}
+
+            //foreach (var x in cachecopy)
+            //{
+            //    if (x.Value.Rarity)
+            //    {
+            //        System.Diagnostics.Debug.Assert(x.Value.Shortname.Length == 0);
+            //        System.Diagnostics.Debug.WriteLine($"Add(CatType.{x.Value.Category},ItemType.{x.Value.Type},MCMR.{x.Value.FDNameUC},\"{x.Value.EnglishName}\",true);"); // P1
+            //    }
+            //    else if (x.Value.MaterialGroup != MaterialGroupType.NA)
+            //    { // P2
+            //        System.Diagnostics.Debug.WriteLine($"Add(CatType.{x.Value.Category},ItemType.{x.Value.Type},MaterialGroupType.{x.Value.MaterialGroup},MCMR.{x.Value.FDNameUC},\"{x.Value.EnglishName}\",\"{x.Value.Shortname}\");");
+            //    }
+            //    else if (x.Value.Type != ItemType.Unknown)
+            //    {
+            //        if ( x.Value.Shortname.HasChars() )
+            //        { // p3
+            //            System.Diagnostics.Debug.WriteLine($"Add(CatType.{x.Value.Category},ItemType.{x.Value.Type},MCMR.{x.Value.FDNameUC},\"{x.Value.EnglishName}\",\"{x.Value.Shortname}\");"); // p3
+            //        }
+            //        else
+            //            System.Diagnostics.Debug.WriteLine($"Add(CatType.{x.Value.Category},ItemType.{x.Value.Type},MCMR.{x.Value.FDNameUC},\"{x.Value.EnglishName}\");");  // P1
+
+            //    }
+            //    else if (x.Value.Shortname.Length > 0)
+            //        System.Diagnostics.Debug.WriteLine($"Add(CatType.{x.Value.Category},MCMR.{x.Value.FDNameUC},\"{x.Value.EnglishName}\",\"{x.Value.Shortname}\");"); // p4
+            //    else
+            //        System.Diagnostics.Debug.Assert(false);
+
+            //}
+
+            foreach (var x in cachelist.Values)
+            {
+                if (mcmrlist.TryGetValue(x.FDName, out MaterialCommodityMicroResourceType value))
+                {
+                    System.Diagnostics.Debug.Assert(x.Category == value.Category);
+                    System.Diagnostics.Debug.Assert(x.Type == value.Type);
+                    System.Diagnostics.Debug.Assert(x.EnglishName == value.EnglishName);
+                    System.Diagnostics.Debug.Assert(x.Rarity == value.Rarity);
+                    System.Diagnostics.Debug.Assert(x.MaterialGroup == value.MaterialGroup);
+                    System.Diagnostics.Debug.Assert(x.Shortname == value.Shortname);
+                    System.Diagnostics.Debug.Assert(x.Colour == value.Colour);
+                }
+                else
+                    System.Diagnostics.Debug.Assert(false);
+            }
+
+            cachelist = mcmrlist;
+
+            //var lastcat = CatType.Component;
+            //int ii = 0;
+            //foreach (var x in cachecopy)
+            //{
+            //    if (lastcat != x.Value.Category)
+            //    {
+            //        System.Diagnostics.Debug.WriteLine($"\n//---------------------------------------------------------- {x.Value.Category}");
+            //        lastcat = x.Value.Category;
+            //        ii = 0;
+            //        System.Diagnostics.Debug.Write($"{x.Value.FDNameUC}={((int)x.Value.Category) * 1000},");
+            //    }
+            //    else
+            //    {
+            //        System.Diagnostics.Debug.Write($"{x.Value.FDNameUC},");
+
+            //    }
+
+            //    if (ii++ % 8 == 7)
+            //        System.Diagnostics.Debug.WriteLine("");
+
+            //}
+
+
             // foreach (MaterialCommodityData d in cachelist.Values) System.Diagnostics.Debug.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6}", d.Category, d.Type.ToString().SplitCapsWord(), d.MaterialGroup.ToString(), d.FDName, d.Name, d.Shortname, d.Rarity ));
+            //  }
         }
 
 
@@ -1314,7 +2366,7 @@ namespace EliteDangerousCore
                 return old;
         }
 
-        #endregion
+#endregion
     }
 }
 
