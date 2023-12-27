@@ -35,6 +35,7 @@ namespace EliteDangerousCore.DB
 
             SQLExtRegister reg = new SQLExtRegister(this);
             int dbver = reg.GetSetting("DBVer", (int)0);      // use reg, don't use the built in func as they create new connections and confuse the schema
+            int dborg = dbver;
 
             if (dbver < 210)    // less than 210, delete the lot and start again
             {
@@ -75,45 +76,45 @@ namespace EliteDangerousCore.DB
 
                 CreateStarTables();                     // ensure we have
                 CreateSystemDBTableIndexes();           // ensure they are there 
-                DropStarTables(tablepostfix);         // clean out any temp tables half prepared 
+                DropStarTables(tablepostfix);           // clean out any temp tables half prepared 
 
-                return 212;     // return, this makes the whole schebang up to 211
+                dbver = 212;                            // this makes the whole schebang up to 212
             }
 
-            if (dbver < 211)           // if we had 210, but not 211, we need to add a new column in but keep the data
+            if (dbver < 211)                            // if we had 210, but not 211, we need to add a new column in but keep the data
             {
-                ExecuteNonQueries(new string[]                  // always set up
+                ExecuteNonQueries(new string[]            
                     {
                         "ALTER TABLE Systems ADD COLUMN info INT DEFAULT NULL",
                         "ALTER TABLE Systems RENAME TO SystemTable",
                     });
 
-                return 212;
+                dbver = 212;
             }
 
-            if (dbver < 212)           // if not 212, then rename the systems to systemtable from now on, to cause previous versions to break on this DB
+            if (dbver < 212)                            // if we had 211, then rename the systems to systemtable from now on, to cause previous versions to break on this DB
             {
-                ExecuteNonQueries(new string[]                  // always set up
+                ExecuteNonQueries(new string[]            
                     {
                         "ALTER TABLE Systems RENAME TO SystemTable",
                     });
 
                 CreateSystemDBTableIndexes();           // ensure they are there 
-                return 212;
+                dbver = 212;
             }
 
-            if (dbver < 213)           // if not 212, then rename the systems to systemtable from now on, to cause previous versions to break on this DB
+            if (dbver < 213)                            // if not 213, add the permit systems table
             {
-                ExecuteNonQueries(new string[]                  // always set up
+                ExecuteNonQueries(new string[]            
                     {
                         "CREATE TABLE IF NOT EXISTS PermitSystems (edsmid INTEGER PRIMARY KEY NOT NULL)",
                     });
 
                 CreateSystemDBTableIndexes();           // ensure they are there 
-                return 213;
+                dbver = 213;
             }
 
-            return 0;
+            return dbver != dborg ? dbver : 0;
         }
 
         #endregion
