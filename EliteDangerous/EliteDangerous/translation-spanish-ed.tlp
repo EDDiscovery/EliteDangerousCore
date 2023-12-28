@@ -30,10 +30,10 @@ SECTION Bodies
 .MOG: "M Red Giant" => "M Red Giant"
 .KOG: "K Orange Giant" => "K Orange Giant"
 .RP: "Rogue Planet" => "Planeta pícaro"
-.Nebula: "Nebula" @
-.StellarRemnantNebula: "Stellar Remnant Nebula" @
-.SUnknown: "Unknown star class" @
-.UNK: "Class {0} star" => "Clase {0} estrella"
+.Nebula: "Nebula" => "Nébula"
+.StellarRemnantNebula: "Stellar Remnant Nebula" => "Nébula de Restos Estelares"
+.SUnknown: "Unknown star class" => "Estrella de clase desconocida"
+.UNK: "Class {0} star" => "Estrella clase {0}"
 
 SECTION EDPlanet
 
@@ -60,11 +60,11 @@ SECTION EDPlanet
 
 SECTION MaterialCommodityMicroResourceType
 
-.Consumable: "Consumable" @
-.Unknown: "Unknown" @
-.Goods: "Goods" @
-.Assets: "Assets" @
-.Data: "Data" @
+.Consumable: "Consumable" => "Consumible"
+.Unknown: "Unknown" => "Desconocido"
+.Goods: "Goods" => "Bienes"
+.Assets: "Assets" Recursos"
+.Data: "Data" => "Datos"
 .Raw: "Raw" => "Elemento"
 .VeryCommon: "Very Common" => "Muy común"
 .Common: "Common" => "Común"
@@ -660,226 +660,226 @@ SECTION MaterialCommodityMicroResourceType
 .tritium: "Tritium" => "Tritio"
 .s6_tissuesample_mesoglea: "Pod Mesoglea" => "Pod Mesoglea"
 .s6_tissuesample_cells: "Pod Outer Tissue" => "Tejido externo de la vaina"
-.bypass: "E-Breach" @
-.energycell: "Energy Cell" @
-.healthpack: "Medkit" @
-.amm_grenade_frag: "Frag Grenade" @
-.amm_grenade_emp: "Shield Disruptor" @
-.amm_grenade_shield: "Shield Projector" @
-.largecapacitypowerregulator: "Power Regulator" @
-.compactlibrary: "Compact Library" @
+.bypass: "E-Breach" => "Fisura"
+.energycell: "Energy Cell" => "Célula de Energía"
+.healthpack: "Medkit" => "Botiquín"
+.amm_grenade_frag: "Frag Grenade" => "Granada de Fragmentación"
+.amm_grenade_emp: "Shield Disruptor" => "Disruptor de Escudos"
+.amm_grenade_shield: "Shield Projector" => "Projector de Escudos"
+.largecapacitypowerregulator: "Power Regulator" => "Regulador de Potencia"
+.compactlibrary: "Compact Library" => "Biblioteca Compacta"
 .infinity: "Infinity" @
-.insightentertainmentsuite: "Insight Entertainment Suite" @
+.insightentertainmentsuite: "Insight Entertainment Suite" => "Paquete de Entretenimiento de Insight"
 .lazarus: "Lazarus" @
-.universaltranslator: "Universal Translator" @
-.biochemicalagent: "Biochemical Agent" @
-.degradedpowerregulator: "Degraded Power Regulator" @
+.universaltranslator: "Universal Translator" => "Traductor Universal"
+.biochemicalagent: "Biochemical Agent" => "Agente Bioquímico"
+.degradedpowerregulator: "Degraded Power Regulator" => "Regulador de Potencia Degradado"
 .hush: "Hush" @
 .push: "Push" @
-.syntheticpathogen: "Synthetic Pathogen" @
-.buildingschematic: "Building Schematic" @
+.syntheticpathogen: "Synthetic Pathogen" => "Patógeno Sintético"
+.buildingschematic: "Building Schematic" => "Esquema de Edifico"
 .insight: "Insight" @
-.compressionliquefiedgas: "Compression-Liquefied Gas" @
-.healthmonitor: "Health Monitor" @
-.inertiacanister: "Inertia Canister" @
-.ionisedgas: "Ionised Gas" @
-.shipschematic: "Ship Schematic" @
-.suitschematic: "Suit Schematic" @
-.vehicleschematic: "Vehicle Schematic" @
-.weaponschematic: "Weapon Schematic" @
-.trueformfossil: "True Form Fossil" @
-.carbonfibreplating: "Carbon Fibre Plating" @
-.encryptedmemorychip: "Encrypted Memory Chip" @
-.epoxyadhesive: "Epoxy Adhesive" @
-.graphene: "Graphene" @
-.memorychip: "Memory Chip" @
-.microelectrode: "Microelectrode" @
-.microhydraulics: "Micro Hydraulics" @
-.microthrusters: "Micro Thrusters" @
-.opticalfibre: "Optical Fibre" @
-.opticallens: "Optical Lens" @
+.compressionliquefiedgas: "Compression-Liquefied Gas" => "Gas Licuado Comprimido"
+.healthmonitor: "Health Monitor" => "Monitor de Salud"
+.inertiacanister: "Inertia Canister" => "Contenedor de Inercia"
+.ionisedgas: "Ionised Gas" => "Gas Ionizado"
+.shipschematic: "Ship Schematic" => "Esquema de Nave"
+.suitschematic: "Suit Schematic" => "Esquema de Traje"
+.vehicleschematic: "Vehicle Schematic" => "Esquema de Vehiculo"
+.weaponschematic: "Weapon Schematic" => "Esquema de Arma"
+.trueformfossil: "True Form Fossil" => "Fósil Puro"
+.carbonfibreplating: "Carbon Fibre Plating" => "Placa de Fibra de Carbono"
+.encryptedmemorychip: "Encrypted Memory Chip" => "Chip de Memoria Cifrado"
+.epoxyadhesive: "Epoxy Adhesive" => "Resina Epoxi"
+.graphene: "Graphene" => "Grafeno"
+.memorychip: "Memory Chip" => "Chip de Memoria"
+.microelectrode: "Microelectrode" => "Microelectrodo"
+.microhydraulics: "Micro Hydraulics" => "Microhidráulica"
+.microthrusters: "Micro Thrusters" => "Microimpulsores"
+.opticalfibre: "Optical Fibre" => "Fibra Óptica"
+.opticallens: "Optical Lens" => "Lente Óptica"
 .rdx: "RDX" @
-.titaniumplating: "Titanium Plating" @
-.tungstencarbide: "Tungsten Carbide" @
-.weaponcomponent: "Weapon Component" @
-.aerogel: "Aerogel" @
-.chemicalsuperbase: "Chemical Superbase" @
-.circuitboard: "Circuit Board" @
-.circuitswitch: "Circuit Switch" @
-.electricalwiring: "Electrical Wiring" @
-.electromagnet: "Electromagnet" @
-.metalcoil: "Metal Coil" @
-.motor: "Motor" @
-.chemicalcatalyst: "Chemical Catalyst" @
-.microtransformer: "Micro Transformer" @
-.electricalfuse: "Electrical Fuse" @
-.microsupercapacitor: "Micro Supercapacitor" @
-.viscoelasticpolymer: "Viscoelastic Polymer" @
-.ionbattery: "Ion Battery" @
-.scrambler: "Scrambler" @
-.chemicalinventory: "Chemical Inventory" @
-.dutyrota: "Duty Rota" @
-.evacuationprotocols: "Evacuation Protocols" @
-.explorationjournals: "Exploration Journals" @
-.factionnews: "Faction News" @
-.financialprojections: "Financial Projections" @
-.salesrecords: "Sales Records" @
-.unionmembership: "Union Membership" @
-.maintenancelogs: "Maintenance Logs" @
-.patrolroutes: "Patrol Routes" @
-.settlementdefenceplans: "Settlement Defence Plans" @
-.surveilleancelogs: "Surveillance Logs" @
-.operationalmanual: "Operational Manual" @
-.blacklistdata: "Blacklist Data" @
-.airqualityreports: "Air Quality Reports" @
-.employeedirectory: "Employee Directory" @
-.factionassociates: "Faction Associates" @
-.meetingminutes: "Meeting Minutes" @
-.multimediaentertainment: "Multimedia Entertainment" @
-.networkaccesshistory: "Network Access History" @
-.purchaserecords: "Purchase Records" @
-.radioactivitydata: "Radioactivity Data" @
-.residentialdirectory: "Residential Directory" @
-.shareholderinformation: "Shareholder Information" @
-.travelpermits: "Travel Permits" @
-.accidentlogs: "Accident Logs" @
-.campaignplans: "Campaign Plans" @
-.combattrainingmaterial: "Combat Training Material" @
-.internalcorrespondence: "Internal Correspondence" @
-.payrollinformation: "Payroll Information" @
-.personallogs: "Personal Logs" @
-.weaponinventory: "Weapon Inventory" @
-.atmosphericdata: "Atmospheric Data" @
-.topographicalsurveys: "Topographical Surveys" @
-.literaryfiction: "Literary Fiction" @
-.reactoroutputreview: "Reactor Output Review" @
-.nextofkinrecords: "Next of Kin Records" @
-.purchaserequests: "Purchase Requests" @
-.taxrecords: "Tax Records" @
-.visitorregister: "Visitor Register" @
-.pharmaceuticalpatents: "Pharmaceutical Patents" @
-.vaccineresearch: "Vaccine Research" @
-.virologydata: "Virology Data" @
-.vaccinationrecords: "Vaccination Records" @
-.censusdata: "Census Data" @
+.titaniumplating: "Titanium Plating" => "Placa de Titanio"
+.tungstencarbide: "Tungsten Carbide" => "Carburo de Tungsteno"
+.weaponcomponent: "Weapon Component" => "Componente de Arma"
+.aerogel: "Aerogel" => "Aerogel"
+.chemicalsuperbase: "Chemical Superbase" => "Superbase Química"
+.circuitboard: "Circuit Board" => "Placa Base"
+.circuitswitch: "Circuit Switch" => "Conmutador"
+.electricalwiring: "Electrical Wiring" => "Cables Electricos"
+.electromagnet: "Electromagnet" => "Electroimán"
+.metalcoil: "Metal Coil" => "Bobina de Metal"
+.motor: "Motor" => "Motor"
+.chemicalcatalyst: "Chemical Catalyst" => "Catalizador Químico"
+.microtransformer: "Micro Transformer" => "Microtransformador"
+.electricalfuse: "Electrical Fuse" => "Fusible"
+.microsupercapacitor: "Micro Supercapacitor" => "Microsupercondensador"
+.viscoelasticpolymer: "Viscoelastic Polymer" => "Polímero Viscoelástico"
+.ionbattery: "Ion Battery" => "Batería de Iones"
+.scrambler: "Scrambler" => "Desmodulador"
+.chemicalinventory: "Chemical Inventory" => "Inventario Químico"
+.dutyrota: "Duty Rota" => "Turnos de Guardia"
+.evacuationprotocols: "Evacuation Protocols" => "Protocolos de Evacuación"
+.explorationjournals: "Exploration Journals" => "Diarios de Exploración"
+.factionnews: "Faction News" => "Noticias de Facción"
+.financialprojections: "Financial Projections" => "Previsiones Financieras"
+.salesrecords: "Sales Records" => "Registros de Ventas"
+.unionmembership: "Union Membership" => "Afiliación Sindical"
+.maintenancelogs: "Maintenance Logs" => "Registros de Mantenimiento"
+.patrolroutes: "Patrol Routes" => "Rutas de Patrulla"
+.settlementdefenceplans: "Settlement Defence Plans" => "Planes de Defensa del Asentamiento"
+.surveilleancelogs: "Surveillance Logs" => "Registros de Vigilancia"
+.operationalmanual: "Operational Manual" => "Manual de Operaciones"
+.blacklistdata: "Blacklist Data" => "Datos de Lista Negra"
+.airqualityreports: "Air Quality Reports" => "Registros de Calidad del Aire"
+.employeedirectory: "Employee Directory" => "Directorio de Empleados"
+.factionassociates: "Faction Associates" => "Socios de Facción"
+.meetingminutes: "Meeting Minutes" => "Actas de Reuniones"
+.multimediaentertainment: "Multimedia Entertainment" => "Entretenimiento Multimedia"
+.networkaccesshistory: "Network Access History" => "Historial de Acceso a la Red"
+.purchaserecords: "Purchase Records" => "Registros de Compra"
+.radioactivitydata: "Radioactivity Data" => "Datos de Radioactividad"
+.residentialdirectory: "Residential Directory" => "Directorio Residencial"
+.shareholderinformation: "Shareholder Information" => "Infomación de Accionistas"
+.travelpermits: "Travel Permits" => "Permisos de Viaje"
+.accidentlogs: "Accident Logs" => "Registros de Accidentes"
+.campaignplans: "Campaign Plans" => "Planes de Campaña"
+.combattrainingmaterial: "Combat Training Material" => "Material de Entrenamiento de Combate"
+.internalcorrespondence: "Internal Correspondence" => "Correspondencia Interna"
+.payrollinformation: "Payroll Information" => "Infomación Salarial"
+.personallogs: "Personal Logs" => "Registros Personales"
+.weaponinventory: "Weapon Inventory" => "Inventario de Armas"
+.atmosphericdata: "Atmospheric Data" => "Datos Atmosféricos"
+.topographicalsurveys: "Topographical Surveys" => "Estudios Topográficos"
+.literaryfiction: "Literary Fiction" => "Ficción Literaria"
+.reactoroutputreview: "Reactor Output Review" => "Informe de Capacided del Reactor"
+.nextofkinrecords: "Next of Kin Records" => "Next of Kin Records"
+.purchaserequests: "Purchase Requests" => "Solicitudes de Compra"
+.taxrecords: "Tax Records" => "Registros Fiscales"
+.visitorregister: "Visitor Register" => "Registro de Visitantes"
+.pharmaceuticalpatents: "Pharmaceutical Patents" => "Patentes Farmacéuticas"
+.vaccineresearch: "Vaccine Research" => "Investigación sobre Vacunas"
+.virologydata: "Virology Data" => "Datos Virológicos"
+.vaccinationrecords: "Vaccination Records" => "Registros de Vacunación"
+.censusdata: "Census Data" => "Datos Censales"
 .geographicaldata: "Geographical Data" @
-.mineralsurvey: "Mineral Survey" @
-.chemicalformulae: "Chemical Formulae" @
-.chemicalexperimentdata: "Chemical Experiment Data" @
-.chemicalpatents: "Chemical Patents" @
-.productionreports: "Production Reports" @
-.productionschedule: "Production Schedule" @
-.bloodtestresults: "Blood Test Results" @
-.combatantperformance: "Combatant Performance" @
-.troopdeploymentrecords: "Troop Deployment Records" @
-.catmedia: "Cat Media" @
-.employeegeneticdata: "Employee Genetic Data" @
-.factiondonatorlist: "Faction Donator List" @
-.nocdata: "NOC Data" @
-.manufacturinginstructions: "Manufacturing Instructions" @
-.m_tissuesample_fluid: "Mollusc Fluid" @
-.m_tissuesample_nerves: "Mollusc Brain Tissue" @
-.s9_tissuesample_shell: "Pod Tissue" @
-.agriculturalprocesssample: "Agricultural Process Sample" @
-.geneticsample: "Biological Sample" @
-.californium: "Californium" @
-.castfossil: "Cast Fossil" @
-.chemicalprocesssample: "Chemical Process Sample" @
-.chemicalsample: "Chemical Sample" @
-.deepmantlesample: "Deep Mantle Sample" @
-.geneticrepairmeds: "Genetic Repair Meds" @
-.gmeds: "G-Meds" @
-.inorganiccontaminant: "Inorganic Contaminant" @
-.insightdatabank: "Insight Data Bank" @
-.microbialinhibitor: "Microbial Inhibitor" @
-.mutageniccatalyst: "Mutagenic Catalyst" @
-.nutritionalconcentrate: "Nutritional Concentrate" @
-.personalcomputer: "Personal Computer" @
-.personaldocuments: "Personal Documents" @
-.petrifiedfossil: "Petrified Fossil" @
-.pyrolyticcatalyst: "Pyrolytic Catalyst" @
-.refinementprocesssample: "Refinement Process Sample" @
-.surveillanceequipment: "Surveillance Equipment" @
-.syntheticgenome: "Synthetic Genome" @
-.oxygenicbacteria: "Oxygenic Bacteria" @
-.epinephrine: "Epinephrine" @
-.phneutraliser: "pH Neutraliser" @
-.transmitter: "Transmitter" @
+.mineralsurvey: "Mineral Survey" => "Estudio Mineral"
+.chemicalformulae: "Chemical Formulae" => "Formulas Químicas"
+.chemicalexperimentdata: "Chemical Experiment Data" => "Datos de Experimentos Químicos"
+.chemicalpatents: "Chemical Patents" => "Patentes Químicas"
+.productionreports: "Production Reports" => "Informes de Producción"
+.productionschedule: "Production Schedule" => "Programa de Producción"
+.bloodtestresults: "Blood Test Results" => "Resultados de Análisis de Sangre"
+.combatantperformance: "Combatant Performance" => "Rendimiento de Combatiente"
+.troopdeploymentrecords: "Troop Deployment Records" => "Registros de Despliegue de Tropas"
+.catmedia: "Cat Media" => "Catálogo de Medios"
+.employeegeneticdata: "Employee Genetic Data" => "Datos Genéticos de Empleados"
+.factiondonatorlist: "Faction Donator List" => "Lista de Donadores de Facción"
+.nocdata: "NOC Data" => "Datos del AEE"
+.manufacturinginstructions: "Manufacturing Instructions" => "Instrucciones de Fabricación"
+.m_tissuesample_fluid: "Mollusc Fluid" => "Fluido de molusco"
+.m_tissuesample_nerves: "Mollusc Brain Tissue" => "Tejido de cerebro de molusco"
+.s9_tissuesample_shell: "Pod Tissue" => "Tejido de la vaina"
+.agriculturalprocesssample: "Agricultural Process Sample" => "Muestra de Proceso Agrícola"
+.geneticsample: "Biological Sample" => "Muestra Biológica"
+.californium: "Californium" => "Californio"
+.castfossil: "Cast Fossil" => "Molde de Fósil"
+.chemicalprocesssample: "Chemical Process Sample" => "Muestra de Proceso Químico"
+.chemicalsample: "Chemical Sample" => "Muestra Química"
+.deepmantlesample: "Deep Mantle Sample" => "Muestra del Manto Profundo"
+.geneticrepairmeds: "Genetic Repair Meds" => "Medicinas de Reparación Genética"
+.gmeds: "G-Meds" => "Medicinas G"
+.inorganiccontaminant: "Inorganic Contaminant" => "P. Contaminante Inforgánico"
+.insightdatabank: "Insight Data Bank" => "Banco de Datos de Insight"
+.microbialinhibitor: "Microbial Inhibitor" => "Inhibidor Microbiano"
+.mutageniccatalyst: "Mutagenic Catalyst" => "Catalizador Mutagénico"
+.nutritionalconcentrate: "Nutritional Concentrate" => "Concentrado Nutritivo"
+.personalcomputer: "Personal Computer" => "Ordenador Personal"
+.personaldocuments: "Personal Documents" => "Documentos Personales"
+.petrifiedfossil: "Petrified Fossil" => "Fósil Petrificado"
+.pyrolyticcatalyst: "Pyrolytic Catalyst" => "Catalizador Pirolítico"
+.refinementprocesssample: "Refinement Process Sample" => "Muestra de Proceso Refinado"
+.surveillanceequipment: "Surveillance Equipment" => "Equipo de Supervivencia"
+.syntheticgenome: "Synthetic Genome" => "Genoma Sintético"
+.oxygenicbacteria: "Oxygenic Bacteria" => "Bacterias Oxigénicas"
+.epinephrine: "Epinephrine" => "Epinefrina"
+.phneutraliser: "pH Neutraliser" => "Neutralizador de pH"
+.transmitter: "Transmitter" => "Transmisor"
 .propaganda: "Propaganda" @
-.securityexpenses: "Security Expenses" @
-.weapontestdata: "Weapon Test Data" @
-.audiologs: "Audio Logs" @
-.axcombatlogs: "AX Combat Logs" @
-.ballisticsdata: "Ballistics Data" @
-.biologicalweapondata: "Biological Weapon Data" @
-.biometricdata: "Biometric Data" @
-.chemicalweapondata: "Chemical Weapon Data" @
-.classicentertainment: "Classic Entertainment" @
-.cocktailrecipes: "Cocktail Recipes" @
-.conflicthistory: "Conflict History" @
-.criminalrecords: "Criminal Records" @
-.cropyieldanalysis: "Crop Yield Analysis" @
-.culinaryrecipes: "Culinary Recipes" @
-.digitaldesigns: "Digital Designs" @
-.employeeexpenses: "Employee Expenses" @
-.employmenthistory: "Employment History" @
-.enhancedinterrogationrecordings: "Enhanced Interrogation Recordings" @
-.espionagematerial: "Espionage Material" @
-.extractionyielddata: "Extraction Yield Data" @
-.fleetregistry: "Fleet Registry" @
-.genesequencingdata: "Gene Sequencing Data" @
-.geneticresearch: "Genetic Research" @
-.geologicaldata: "Geological Data" @
-.hydroponicdata: "Hydroponic Data" @
-.incidentlogs: "Incident Logs" @
-.influenceprojections: "Influence Projections" @
-.interrogationrecordings: "Interrogation Recordings" @
-.interviewrecordings: "Interview Recordings" @
-.jobapplications: "Job Applications" @
-.kompromat: "Kompromat" @
-.medicalrecords: "Medical Records" @
-.medicaltrialrecords: "Clinical Trial Records" @
-.mininganalytics: "Mining Analytics" @
-.networksecurityprotocols: "Network Security Protocols" @
-.opinionpolls: "Opinion Polls" @
-.patienthistory: "Patient History" @
-.photoalbums: "Photo Albums" @
-.plantgrowthcharts: "Plant Growth Charts" @
-.politicalaffiliations: "Political Affiliations" @
-.prisonerlogs: "Prisoner Logs" @
-.recyclinglogs: "Recycling Logs" @
-.riskassessments: "Risk Assessments" @
-.seedgeneaology: "Seed Geneaology" @
-.settlementassaultplans: "Settlement Assault Plans" @
-.slushfundlogs: "Slush Fund Logs" @
-.smearcampaignplans: "Smear Campaign Plans" @
-.spectralanalysisdata: "Spectral Analysis Data" @
-.spyware: "Spyware" @
-.stellaractivitylogs: "Stellar Activity Logs" @
-.tacticalplans: "Tactical Plans" @
-.vipsecuritydetail: "VIP Security Detail" @
+.securityexpenses: "Security Expenses" => "Gastos de Seguridad"
+.weapontestdata: "Weapon Test Data" => "Datos de Pruebas Armamentísticas"
+.audiologs: "Audio Logs" => "Registros de Audio"
+.axcombatlogs: "AX Combat Logs" => "Registros de Combate AX"
+.ballisticsdata: "Ballistics Data" => "Datos Balísticos"
+.biologicalweapondata: "Biological Weapon Data" => "Datos de Armas Biológicas"
+.biometricdata: "Biometric Data" => "Datos Biométricos"
+.chemicalweapondata: "Chemical Weapon Data" => "Datos de Armas Químicas"
+.classicentertainment: "Classic Entertainment" => "Entretenimiento Clásico"
+.cocktailrecipes: "Cocktail Recipes" => "Recetas de Cócteles
+.conflicthistory: "Conflict History" => "Historial de Conflictos"
+.criminalrecords: "Criminal Records" => "Registros Criminales"
+.cropyieldanalysis: "Crop Yield Analysis" => "Análisis de Producción Agrícola"
+.culinaryrecipes: "Culinary Recipes" => "Recetas Culinarias"
+.digitaldesigns: "Digital Designs" => "Diseños Digitales"
+.employeeexpenses: "Employee Expenses" => "Gastos de Personal"
+.employmenthistory: "Employment History" => "Historial de Empleo"
+.enhancedinterrogationrecordings: "Enhanced Interrogation Recordings" => "Registros de Interrogatorios Mejorados"
+.espionagematerial: "Espionage Material" => "Material de Espionaje"
+.extractionyielddata: "Extraction Yield Data" => "Datos de Producción Minera"
+.fleetregistry: "Fleet Registry" => "Registro de Flota"
+.genesequencingdata: "Gene Sequencing Data" => "Datos de Secuenciación Genética"
+.geneticresearch: "Genetic Research" => "Estudio Genético"
+.geologicaldata: "Geological Data" => "Datos Geológicos"
+.hydroponicdata: "Hydroponic Data" => "Datos Hidropónicos"
+.incidentlogs: "Incident Logs" => "Registros de Incidentes"
+.influenceprojections: "Influence Projections" => "Previsiones de Influencia"
+.interrogationrecordings: "Interrogation Recordings" => "Registros de Interrogatorios"
+.interviewrecordings: "Interview Recordings" => "Registros de Entrevista"
+.jobapplications: "Job Applications" => "Solicitudes de Empleo"
+.kompromat: "Kompromat" => "Material Comprometedor"
+.medicalrecords: "Medical Records" => "Historiales Médicos"
+.medicaltrialrecords: "Clinical Trial Records" => "Registros de Ensayos Clínicos"
+.mininganalytics: "Mining Analytics" => "Análisis de Minería"
+.networksecurityprotocols: "Network Security Protocols" => "Protocolos de Seguridad de Red"
+.opinionpolls: "Opinion Polls" => "Sondeos de Opinión"
+.patienthistory: "Patient History" => "Historial Clínico"
+.photoalbums: "Photo Albums" => "Álbumes de Fotos"
+.plantgrowthcharts: "Plant Growth Charts" => "Gráficos de Crecimiento de Plantas"
+.politicalaffiliations: "Political Affiliations" => "Afiliaciones Políticas"
+.prisonerlogs: "Prisoner Logs" => "Registros de Prisioneros"
+.recyclinglogs: "Recycling Logs" => "Registros de Reciclaje"
+.riskassessments: "Risk Assessments" => "Valoración de Riesgos"
+.seedgeneaology: "Seed Geneaology" => "Genealogía de Simientes"
+.settlementassaultplans: "Settlement Assault Plans" => "Planes de Ataque del Asentamiento"
+.slushfundlogs: "Slush Fund Logs" => "Registros de fondos de reptiles"
+.smearcampaignplans: "Smear Campaign Plans" => "Planes de Campañas de Desprestigio"
+.spectralanalysisdata: "Spectral Analysis Data" => "Datos de Análisis de Espectro"
+.spyware: "Spyware" => "Software Espía"
+.stellaractivitylogs: "Stellar Activity Logs" => "Registros de Actividad Estelar"
+.tacticalplans: "Tactical Plans" => "Planes Tácticos"
+.vipsecuritydetail: "VIP Security Detail" => "Información de Seguridad VIP"
 .virus: "Virus" @
-.xenodefenceprotocols: "Xeno-Defence Protocols" @
-.tg_abrasion03: "Hardened Surface Fragments" @
-.tg_abrasion02: "Phasing Membrane Residue" @
-.heatexposurespecimen: "Heat Exposure Specimen" @
-.tg_causticcrystal: "Caustic Crystal" @
-.tg_causticshard: "Caustic Shard" @
-.tg_causticgeneratorparts: "Corrosive Mechanisms" @
-.tg_shutdowndata: "Massive Energy Surge Analytics" @
-.tg_interdictiondata: "Thargoid Interdiction Telemetry" @
-.ancientrelictg: "Unclassified Relic" @
-.p_particulatesample: "Anomaly Particles" @
-.thargoidtissuesampletype10c: "Titan Maw Partial Tissue Sample" @
+.xenodefenceprotocols: "Xeno-Defence Protocols" => "Protocolos de Xenodefensa"
+.tg_abrasion03: "Hardened Surface Fragments" => "Fragmentos de Superficie Endurecida"
+.tg_abrasion02: "Phasing Membrane Residue" => "Residuo de membrana fásica"
+.heatexposurespecimen: "Heat Exposure Specimen" => "Espécimen de exposición térmica"
+.tg_causticcrystal: "Caustic Crystal" => "Cristal Cáustico"
+.tg_causticshard: "Caustic Shard" => "Fragmento Cáustico"
+.tg_causticgeneratorparts: "Corrosive Mechanisms" => "Mecanismos Corrosivos"
+.tg_shutdowndata: "Massive Energy Surge Analytics" => "Análisis de sobrecarga de energía masiva"
+.tg_interdictiondata: "Thargoid Interdiction Telemetry" => "Telemetría de interdicción Thargoide"
+.ancientrelictg: "Unclassified Relic" => "Reliquia no Clasificada"
+.p_particulatesample: "Anomaly Particles Missing" @
+.thargoidtissuesampletype10c: "Titan Maw Partial Tissue Sample" => "Muestra de tejido parcial de fauces de Titan"
 .thargoidtissuesampletype5: "Thargoid Orthrus Tissue Sample" @
-.thargoidgeneratortissuesample: "Caustic Tissue Sample" @
-.unocuppiedescapepod: "Unoccupied Escape Pod" @
-.thargoidtissuesampletype6: "Thargoid Glaive Tissue Sample" @
-.thargoidtissuesampletype9a: "Titan Deep Tissue Sample" @
-.thargoidtissuesampletype9b: "Titan Tissue Sample" @
-.thargoidtissuesampletype9c: "Titan Partial Tissue Sample" @
-.thargoidtissuesampletype10a: "Titan Maw Deep Tissue Sample" @
-.thargoidtissuesampletype10b: "Titan Maw Tissue Sample" @
+.thargoidgeneratortissuesample: "Caustic Tissue Sample" => "Muestra de tejido caústico"
+.unocuppiedescapepod: "Unoccupied Escape Pod" => "Cápsula de escape vacía"
+.thargoidtissuesampletype6: "Thargoid Glaive Tissue Sample" => "Muestra de tejido de Glaive Thargoide"
+.thargoidtissuesampletype9a: "Titan Deep Tissue Sample" => "Muestra de tejido profundo de Titan"
+.thargoidtissuesampletype9b: "Titan Tissue Sample" => "Muestra de tejido de Titan"
+.thargoidtissuesampletype9c: "Titan Partial Tissue Sample" => "Muestra de tejido parcial de Titan"
+.thargoidtissuesampletype10a: "Titan Maw Deep Tissue Sample" => "Muestra de tejido profundo de fauces de Titan"
+.thargoidtissuesampletype10b: "Titan Maw Tissue Sample" => "Muestra de tejido de fauces de Titan"
 .thargoidtissuesampletype7: "Thargoid Scythe Tissue Sample" @
 .unknownsack: "Protective Membrane Scrap" @
 .thargoidpod: "Xenobiological Prison Pod" @
@@ -943,7 +943,7 @@ CommanderForm: "CommanderForm" => "CommanderForm"
 .extCheckBoxConsoleCommander: "Console Commander" => "Comandante de consola"
 .extGroupBoxEDAstro: "EDAstro" => "EDAstro"
 .extCheckBoxEDAstro: "Send Events to EDAstro" => "Enviar eventos a EDAstro"
-.extCheckBoxIncludeSubfolders: "Include Subfolders" @
+.extCheckBoxIncludeSubfolders: "Include Subfolders" => "Incluir Subcarpetas"
 
 SECTION ScreenshotDirectoryWatcher
 
@@ -986,7 +986,7 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Configurar captura de panta
 .labelClipboard: "Clipboard" => "Portapapeles"
 .labelOriginal: "Original Image" => "Imagen original"
 .labelEnabled: "Enable" => "Habilitar"
-.labelQuality: "JPEG Quality" @
+.labelQuality: "JPEG Quality" => "Calidad JPEG"
 
 SECTION Screenshot
 
@@ -998,11 +998,11 @@ SECTION ScanDisplayUserControl
 
 .NSD: "No scan data available" => "No hay datos de escaneo disponibles"
 .BC: "Barycentre of {0}" => "Baricentro de {0}"
-.SurfaceFeatures: "Surface features" @
+.SurfaceFeatures: "Surface features" => "Características de la superficie"
 .Signals: "Signals" => "Señales"
-.Codex: "Codex" @
-.Organics: "Organics" @
+.Codex: "Codex" => "Códice"
+.Organics: "Organics" => "Organicos"
 
 SECTION Signals
 
-.RingHotSpot: "Ring Hot Spot of type " @
+.RingHotSpot: "Ring Hot Spot of type " => "Zona caliente del anillo de tipo "
