@@ -69,8 +69,6 @@ namespace EliteDangerousCore
 
         public bool SyncToEddn { set; get; }
 
-        public bool SyncToIGAU { set; get; }
-
         public JObject Options { set; get; } = new JObject();
 
         public bool ConsoleCommander { get { return Options.Contains("CONSOLE"); } set { if (value) Options["CONSOLE"] = true; else Options.Remove("CONSOLE"); } }
@@ -118,7 +116,7 @@ namespace EliteDangerousCore
             get
             {
                 return BaseUtils.FieldBuilder.Build(";Console", ConsoleCommander, ";EDDN", SyncToEddn, ";EDSM", SyncToEdsm, 
-                                                    ";From EDSM", SyncFromEdsm, ";Inara", SyncToInara, ";IGAU", SyncToIGAU, ";EDAstro", SyncToEDAstro,
+                                                    ";From EDSM", SyncFromEdsm, ";Inara", SyncToInara, ";EDAstro", SyncToEDAstro,
                                                     ";Linked", LinkedCommanderID>=0
                                                     );
             }
@@ -147,7 +145,7 @@ namespace EliteDangerousCore
                                 other.SyncToEddn,
                                 other.SyncToInara, other.InaraName, other.InaraAPIKey,
                                 other.HomeSystem, other.MapColour,
-                                other.SyncToIGAU, other.Options.ToString());
+                                other.Options.ToString());
         }
 
         public static EDCommander Add(string name, string edsmName = null, string edsmApiKey = null, string journalpath = null,
@@ -155,7 +153,6 @@ namespace EliteDangerousCore
                                         bool toeddn = true,
                                         bool toinara = false, string inaraname = null, string inaraapikey = null,
                                         string homesystem = null, int mapcolour = -1,
-                                        bool toigau = false, 
                                         string options = "{\"SUBFOLDERS\":false}")      // default now is no subfolders
         {
             EDCommander cmdr = UserDatabase.Instance.DBWrite<EDCommander>(cn =>
@@ -183,7 +180,7 @@ namespace EliteDangerousCore
                     cmd.AddParameterWithValue("@MapColour", mapcolour == -1 ? System.Drawing.Color.Red.ToArgb() : mapcolour);
                     cmd.AddParameterWithValue("@MapCentreOnSelection", false); // unused since 15.0
                     cmd.AddParameterWithValue("@MapZoom", 0); // unused since 15.0
-                    cmd.AddParameterWithValue("@SyncToIGAU", toigau);
+                    cmd.AddParameterWithValue("@SyncToIGAU", false);    // removed 17.0.1 by request
                     cmd.AddParameterWithValue("@Options", options);
                     cmd.ExecuteNonQuery();
                 }
@@ -236,7 +233,7 @@ namespace EliteDangerousCore
                     cmd.AddParameterWithValue("@MapColour", cmdr.MapColour);
                     cmd.AddParameterWithValue("@MapCentreOnSelection", false); // unused
                     cmd.AddParameterWithValue("@MapZoom", 0); // unused
-                    cmd.AddParameterWithValue("@SyncToIGAU", cmdr.SyncToIGAU);
+                    cmd.AddParameterWithValue("@SyncToIGAU", false); // removed 17.0.1 by request
                     cmd.AddParameterWithValue("@Options", cmdr.Options.ToString());
                     cmd.ExecuteNonQuery();
 
@@ -377,8 +374,6 @@ namespace EliteDangerousCore
             HomeSystem = Convert.ToString(reader["HomeSystem"]) ?? "";        // may be null
 
             MapColour = reader["MapColour"] is System.DBNull ? System.Drawing.Color.Red.ToArgb() : Convert.ToInt32(reader["MapColour"]);
-
-            SyncToIGAU = Convert.ToBoolean(reader["SyncToIGAU"]);
 
             Options = JObject.Parse(Convert.ToString(reader["Options"]));
             if (Options == null)        // in case the string is garbarge, defend as we need a good Options object

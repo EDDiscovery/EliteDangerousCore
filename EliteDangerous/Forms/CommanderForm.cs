@@ -31,11 +31,11 @@ namespace EliteDangerousCore.Forms
         {
             InitializeComponent();
 
-            var enumlist = new Enum[] { EDCTx.CommanderForm, EDCTx.CommanderForm_extGroupBoxCommanderInfo, EDCTx.CommanderForm_HomeSys, EDCTx.CommanderForm_labelMapCol, EDCTx.CommanderForm_groupBoxCustomIGAU, EDCTx.CommanderForm_checkBoxIGAUSync, EDCTx.CommanderForm_extGroupBoxEDAstro, EDCTx.CommanderForm_extCheckBoxEDAstro, EDCTx.CommanderForm_groupBoxCustomInara, EDCTx.CommanderForm_labelINARAN, EDCTx.CommanderForm_labelInaraAPI, EDCTx.CommanderForm_checkBoxCustomInara, EDCTx.CommanderForm_groupBoxCustomEDSM, EDCTx.CommanderForm_checkBoxCustomEDSMFrom, EDCTx.CommanderForm_labelEDSMAPI, EDCTx.CommanderForm_labelEDSMN, EDCTx.CommanderForm_checkBoxCustomEDSMTo, 
+            var enumlist = new Enum[] { EDCTx.CommanderForm, EDCTx.CommanderForm_extGroupBoxCommanderInfo, EDCTx.CommanderForm_HomeSys, EDCTx.CommanderForm_labelMapCol, EDCTx.CommanderForm_extGroupBoxEDAstro, EDCTx.CommanderForm_extCheckBoxEDAstro, EDCTx.CommanderForm_groupBoxCustomInara, EDCTx.CommanderForm_labelINARAN, EDCTx.CommanderForm_labelInaraAPI, EDCTx.CommanderForm_checkBoxCustomInara, EDCTx.CommanderForm_groupBoxCustomEDSM, EDCTx.CommanderForm_checkBoxCustomEDSMFrom, EDCTx.CommanderForm_labelEDSMAPI, EDCTx.CommanderForm_labelEDSMN, EDCTx.CommanderForm_checkBoxCustomEDSMTo, 
                                         EDCTx.CommanderForm_groupBoxCustomEDDN, EDCTx.CommanderForm_checkBoxCustomEDDNTo, EDCTx.CommanderForm_groupBoxCustomJournal, 
                                         EDCTx.CommanderForm_labelCN, EDCTx.CommanderForm_labelJL, EDCTx.CommanderForm_buttonExtBrowse, EDCTx.CommanderForm_extCheckBoxConsoleCommander,
                                         EDCTx.CommanderForm_extCheckBoxIncludeSubfolders};
-            var enumlisttt = new Enum[] { EDCTx.CommanderForm_panel_defaultmapcolor_ToolTip, EDCTx.CommanderForm_checkBoxIGAUSync_ToolTip, EDCTx.CommanderForm_checkBoxCustomInara_ToolTip, EDCTx.CommanderForm_textBoxBorderInaraAPIKey_ToolTip, EDCTx.CommanderForm_textBoxBorderInaraName_ToolTip, EDCTx.CommanderForm_checkBoxCustomEDSMFrom_ToolTip, EDCTx.CommanderForm_checkBoxCustomEDSMTo_ToolTip, EDCTx.CommanderForm_textBoxBorderEDSMAPI_ToolTip, EDCTx.CommanderForm_textBoxBorderEDSMName_ToolTip, EDCTx.CommanderForm_checkBoxCustomEDDNTo_ToolTip, EDCTx.CommanderForm_textBoxBorderCmdr_ToolTip, EDCTx.CommanderForm_buttonExtBrowse_ToolTip, EDCTx.CommanderForm_textBoxBorderJournal_ToolTip };
+            var enumlisttt = new Enum[] { EDCTx.CommanderForm_panel_defaultmapcolor_ToolTip, EDCTx.CommanderForm_checkBoxCustomInara_ToolTip, EDCTx.CommanderForm_textBoxBorderInaraAPIKey_ToolTip, EDCTx.CommanderForm_textBoxBorderInaraName_ToolTip, EDCTx.CommanderForm_checkBoxCustomEDSMFrom_ToolTip, EDCTx.CommanderForm_checkBoxCustomEDSMTo_ToolTip, EDCTx.CommanderForm_textBoxBorderEDSMAPI_ToolTip, EDCTx.CommanderForm_textBoxBorderEDSMName_ToolTip, EDCTx.CommanderForm_checkBoxCustomEDDNTo_ToolTip, EDCTx.CommanderForm_textBoxBorderCmdr_ToolTip, EDCTx.CommanderForm_buttonExtBrowse_ToolTip, EDCTx.CommanderForm_textBoxBorderJournal_ToolTip };
 
             BaseUtils.Translator.Instance.TranslateControls(this, enumlist);          // before additional controls
             BaseUtils.Translator.Instance.TranslateTooltip(toolTip, enumlisttt, this);
@@ -94,7 +94,6 @@ namespace EliteDangerousCore.Forms
             checkBoxCustomEDSMFrom.Checked = cmdr.SyncFromEdsm;
             checkBoxCustomEDSMTo.Checked = cmdr.SyncToEdsm;
             checkBoxCustomEDDNTo.Checked = cmdr.SyncToEddn;
-            checkBoxIGAUSync.Checked = cmdr.SyncToIGAU;
             textBoxBorderInaraAPIKey.Text = cmdr.InaraAPIKey;
             textBoxBorderInaraName.Text = cmdr.InaraName;
             checkBoxCustomInara.Checked = cmdr.SyncToInara;
@@ -132,7 +131,6 @@ namespace EliteDangerousCore.Forms
             cmdr.SyncFromEdsm = checkBoxCustomEDSMFrom.Checked;
             cmdr.SyncToEdsm = checkBoxCustomEDSMTo.Checked;
             cmdr.SyncToEddn = checkBoxCustomEDDNTo.Checked;
-            cmdr.SyncToIGAU = checkBoxIGAUSync.Checked;
             cmdr.InaraAPIKey = textBoxBorderInaraAPIKey.Text;
             cmdr.InaraName = textBoxBorderInaraName.Text;
             cmdr.SyncToInara = checkBoxCustomInara.Checked;
