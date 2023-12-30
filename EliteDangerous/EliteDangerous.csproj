@@ -84,8 +84,11 @@
     <Compile Include="EDSM\EDSMJournalSync.cs" />
     <Compile Include="EDSM\EDSMClass.cs" />
     <Compile Include="EDSM\EDSMLogFetcher.cs" />
+    <Compile Include="EliteDangerous\Security.cs" />
+    <Compile Include="EliteDangerous\Allegiance.cs" />
     <Compile Include="EliteDangerous\PhysicalConstants.cs" />
     <Compile Include="EliteDangerous\Stars.cs" />
+    <Compile Include="EliteDangerous\StationInfo.cs" />
     <Compile Include="EliteDangerous\Stations.cs" />
     <Compile Include="EliteDangerous\Government.cs" />
     <Compile Include="EliteDangerous\Economy.cs" />

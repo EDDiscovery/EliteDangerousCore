@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 
 namespace EliteDangerousCore
@@ -20,6 +21,38 @@ namespace EliteDangerousCore
     {
         // from EDCD 
         // localisation can be provided via the Identifiers caching of $economy
+
+        public enum Economy
+        {
+            Unknown,
+            Agri,
+            Colony,
+            Extraction,
+            High_Tech,
+            Industrial,
+            Military,
+            None,
+            Refinery,
+            Service,
+            Terraforming,
+            Tourism,
+            Prison,
+            Damaged,
+            Rescue,
+            Repair,
+            Carrier,
+            Engineer,
+        }
+
+        // maps the $economy_id; to an enum
+        public static Economy ToEnum(string fdname)
+        {
+            fdname = fdname.ToLowerInvariant().Replace("$economy_", "").Replace(" ", "").Replace(";", "");
+            if (Enum.TryParse(fdname, true, out Economy value))
+                return value;
+            else
+                return Economy.Unknown;
+        }
 
         public static Dictionary<string, string> Types = new Dictionary<string, string>()
         {
@@ -40,7 +73,6 @@ namespace EliteDangerousCore
             ["$economy_repair;"] = "Repair",
             ["$economy_carrier;"] = "Private Enterprise",
             ["$economy_engineer;"] = "Engineering",
-            ["$economy_none;"] = "Training",
         };
 
         public static string ReverseLookup(string englishname)

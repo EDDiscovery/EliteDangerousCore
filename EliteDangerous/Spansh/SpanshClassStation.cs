@@ -285,7 +285,7 @@ namespace EliteDangerousCore.Spansh
             if (largepad.HasValue)
                 jo["filters"]["has_large_pad"] = new JObject() { ["value"] = largepad.Value };
             if (!inclcarriers)
-                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarportTypes.Values.Distinct().Where(x => x != "Drake-Class Carrier")) };
+                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarportNameTypes.Values.Distinct().Where(x => x != "Drake-Class Carrier")) };
 
             return IssueStationSearchQuery(jo);
         }
@@ -355,7 +355,7 @@ namespace EliteDangerousCore.Spansh
             if (largepad.HasValue)
                 jo["filters"]["has_large_pad"] = new JObject() { ["value"] = largepad.Value };
             if (!inclcarriers)
-                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarportTypes.Values.Distinct().Where(x => x != "Drake-Class Carrier")) };
+                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarportNameTypes.Values.Distinct().Where(x => x != "Drake-Class Carrier")) };
 
             return IssueStationSearchQuery(jo);
         }
@@ -467,7 +467,7 @@ namespace EliteDangerousCore.Spansh
             if (largepad.HasValue)
                 jo["filters"]["has_large_pad"] = new JObject() { ["value"] = largepad.Value };
             if (!inclcarriers)
-                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarportTypes.Values.Distinct().Where(x => x != "Drake-Class Carrier")) };
+                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarportNameTypes.Values.Distinct().Where(x => x != "Drake-Class Carrier")) };
 
             return IssueStationSearchQuery(jo);
         }
@@ -513,7 +513,7 @@ namespace EliteDangerousCore.Spansh
             if (largepad.HasValue)
                 jo["filters"]["has_large_pad"] = new JObject() { ["value"] = largepad.Value };
             if (!inclcarriers)
-                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarportTypes.Values.Distinct().Where(x => x != "Drake-Class Carrier")) };
+                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarportNameTypes.Values.Distinct().Where(x => x != "Drake-Class Carrier")) };
 
             return IssueStationSearchQuery(jo);
         }

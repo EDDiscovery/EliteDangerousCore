@@ -12,12 +12,43 @@
  * governing permissions and limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 
 namespace EliteDangerousCore
 {
     public class GovernmentDefinitions
     {
+        public enum Government
+        {
+            Unknown,
+            Anarchy,
+            Communism,
+            Confederacy,
+            Cooperative,
+            Corporate,
+            Democracy,
+            Dictatorship,
+            Feudal,
+            Imperial,
+            None,
+            Patronage,
+            PrisonColony,
+            Theocracy,
+            Engineer,
+            Carrier,
+        }
+
+        // maps the $government_id; to an enum
+        public static Government ToEnum(string fdname)
+        {
+            fdname = fdname.ToLowerInvariant().Replace("$government_", "").Replace(" ", "").Replace(";", "");
+            if (Enum.TryParse(fdname, true, out Government value))
+                return value;
+            else
+                return Government.Unknown;
+        }
+
         // from EDCD 
         // localisation can be provided via the Identifiers caching of $government
 
