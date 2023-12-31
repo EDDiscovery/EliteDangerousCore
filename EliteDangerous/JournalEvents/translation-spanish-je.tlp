@@ -224,47 +224,47 @@ SECTION JournalTypeEnum
 .NavRoute: "Nav Route" => "Ruta de navegación"
 .BookDropship: "Book Dropship" @
 .BookTaxi: "Book Taxi" @
-.BuyMicroResources: "Buy Micro Resources" @
-.BuySuit: "Buy Suit" @
-.BuyWeapon: "Buy Weapon" @
+.BuyMicroResources: "Buy Micro Resources" => "Comprar Micro-recursos"
+.BuySuit: "Buy Suit" => "Comprar Traje"
+.BuyWeapon: "Buy Weapon" => "Comprar Arma"
 .CancelDropship: "Cancel Dropship" @
-.CancelTaxi: "Cancel Taxi" @
+.CancelTaxi: "Cancel Taxi" => "Cancelar Taxi"
 .CollectItems: "Collect Items" @
 .CreateSuitLoadout: "Create Suit Loadout" @
 .DeleteSuitLoadout: "Delete Suit Loadout" @
-.Disembark: "Disembark" @
+.Disembark: "Disembark" => "Desembarcar"
 .DropItems: "Drop Items" @
-.Embark: "Embark" @
+.Embark: "Embark" => "Embarcar"
 .LoadoutEquipModule: "Loadout Equip Module" @
 .LoadoutRemoveModule: "Loadout Remove Module" @
 .RenameSuitLoadout: "Rename Suit Loadout" @
 .ScanOrganic: "Scan Organic" @
-.SellMicroResources: "Sell Micro Resources" @
+.SellMicroResources: "Sell Micro Resources" => "Vender Micro-recursos"
 .SellOrganicData: "Sell Organic Data" @
-.SellSuit: "Sell Suit" @
-.SellWeapon: "Sell Weapon" @
+.SellSuit: "Sell Suit" => "Vender Traje"
+.SellWeapon: "Sell Weapon" => "Vender Arma"
 .SwitchSuitLoadout: "Switch Suit Loadout" @
 .TradeMicroResources: "Trade Micro Resources" @
-.UpgradeSuit: "Upgrade Suit" @
-.UpgradeWeapon: "Upgrade Weapon" @
-.UseConsumable: "Use Consumable" @
+.UpgradeSuit: "Upgrade Suit" => "Mejorar Traje"
+.UpgradeWeapon: "Upgrade Weapon" => "Mejorar Arma"
+.UseConsumable: "Use Consumable" => "Usar Consumible"
 .SuitLoadout: "Suit Loadout" @
 .DropshipDeploy: "Dropship Deploy" @
 .FactionKillBond: "Faction Kill Bond" => "Bono de muerte de facción"
 .CapShipBond: "Capital Ship Bond" => "Cap Ship Bond"
 .BackpackChange: "Backpack Change" @
-.Backpack: "Backpack" @
+.Backpack: "Backpack" => "Mochila"
 .Resupply: "Resupply" @
 .ShipLocker: "Ship Locker" @
-.FSSBodySignals: "FSS Body Signals" @
+.FSSBodySignals: "FSS Body Signals" => "Señales de Cuerpos del ECS"
 .ModuleBuyAndStore: "Module Buy And Store" @
 .ScanBaryCentre: "Scan Bary Centre" @
-.NavRouteClear: "Nav Route Clear" @
+.NavRouteClear: "Nav Route Clear" => "Limpiar Ruta de Navegación"
 
 SECTION JournalCargo
 
 .CargoShip: "Ship" => "Nave"
-.CargoSRV: "SRV" => "SRV"
+.CargoSRV: "SRV" => "VRS"
 
 SECTION JournalCodexEntry
 
@@ -275,7 +275,7 @@ SECTION JournalCodexEntry
 
 SECTION JournalCommitCrime
 
-.Fine: " Fine {0:N0}" => " Bien {0:N0}"
+.Fine: " Fine {0:N0}" => " Multa {0:N0}"
 .Bounty: " Bounty {0:N0}" => " Recompensa {0:N0}"
 
 SECTION CommunityGoal
@@ -303,7 +303,7 @@ SECTION FSSSignal
 .ThreatLevel: "Threat Level: " => "Nivel de amenaza: "
 .StationBool: ";Station: " => ";Estación: "
 .CarrierBool: ";Carrier: " => ";Transportador: "
-.MegashipBool: ";Megaship: " @
+.MegashipBool: ";Megaship: " => ";Meganave: "
 .InstallationBool: ";Installation: " => ";Instalación: "
 .LastSeen: "Last Seen: " => "Ultima vez visto: "
 
@@ -443,8 +443,8 @@ SECTION JournalPromotion
 .Empire: "Empire" => "Imperio "
 .Federation: "Federation" => "Federación"
 .CQC: "CQC" => "CQC: "
-.Soldier: "Soldier" @
-.ExoBiologist: "ExoBiologist" @
+.Soldier: "Soldier" => "Soldado"
+.ExoBiologist: "ExoBiologist" => "ExoBiólogo"
 
 SECTION JournalReceiveText
 
@@ -626,9 +626,9 @@ SECTION JournalStatistics
 .Multicrew: "Multicrew" => "Multitripulación"
 .MaterialsandCommodityTrading: "Materials and Commodity Trading" => "Comercio de materiales y Mercancías"
 .CQC: "CQC" => "CQC"
-.FLEETCARRIER: "Fleetcarrier" @
-.Exobiology: "Exobiology" @
-.Thargoids: "Thargoids" @
+.FLEETCARRIER: "Fleetcarrier" => "Portanaves"
+.Exobiology: "Exobiology" => "Exobiología"
+.Thargoids: "Thargoids" => "Thargoides"
 
 SECTION BankAccountClass
 
@@ -641,11 +641,11 @@ SECTION BankAccountClass
 .InsuranceClaims: "Insurance Claims: ;;N0" => "Reclamaciones de seguros: ;;N0"
 .SpentonInsurance: "Spent on Insurance: ; cr;N0" => "Gastado en seguros: ; cr;N0"
 .OwnedShipCount: "Owned ships: ;;N0" => "Naves propios: ;;N0"
-.SpentOnSuits: "Spent on Suits: ; cr;N0" @
-.SpentOnWeapons: "Spent on Weapons: ; cr;N0" @
-.SpentOnSuitConsumables: "Spent on Suit Consumables: ; cr;N0" @
-.SuitsOwned: "Suits Owned: ;;N0" @
-.WeaponsOwned: "Weapons Owned: ;;N0" @
+.SpentOnSuits: "Spent on Suits: ; cr;N0" => "Gastado en Trajes: ; cr;N0"
+.SpentOnWeapons: "Spent on Weapons: ; cr;N0" => "Gastado en Armas: ; cr;N0"
+.SpentOnSuitConsumables: "Spent on Suit Consumables: ; cr;N0" => "Gastado en Consumibles: ; cr;N0"
+.SuitsOwned: "Suits Owned: ;;N0" => "Trajes en Posesión: ;;N0"
+.WeaponsOwned: "Weapons Owned: ;;N0" => "Armas en Posesión: ;;N0"
 .SpentOnPremiumStock: "Spent on Premium Stock: ; cr;N0" @
 .PremiumStockBought: "Premium Stock bought: ;;N0" @
 
@@ -865,13 +865,13 @@ SECTION ExobiologyClass
 SECTION ThargoidsClass
 
 .EncounterWakes: "Thargoid wakes scanned: ;;N0" @
-.EncounterKilled: "Thargoids killed: ;;N0" @
-.EncounterImprint: "Thargoid structures: ;;N0" @
-.EncounterTotal: "Total encounters: ;;N0" @
-.LastSystem: "Last seen in: " @
-.LastTime: "Last seen on: " @
-.LastShip: "Last ship involved: " @
-.ScoutCount: "Thargoid Scouts killed: ;;N0" @
+.EncounterKilled: "Thargoids killed: ;;N0" => "Thargoides Asesinados: ;;N0"
+.EncounterImprint: "Thargoid structures: ;;N0" => "Estructuras Thargoides: ;;N0"
+.EncounterTotal: "Total encounters: ;;N0" => "Encuentros totales: ;;N0"
+.LastSystem: "Last seen in: " => "Visto por última vez en: "
+.LastTime: "Last seen on: " => "Visto por última vez a las: "
+.LastShip: "Last ship involved: " => "Última nave involucrada: "
+.ScoutCount: "Thargoid Scouts killed: ;;N0" => "Scouts Thargoides Asesinados: ;;N0"
 
 SECTION JournalStoredModules
 
@@ -957,7 +957,7 @@ SECTION JournalEntry
 .offaction: "< of faction " => "< de la facción "
 .Rank: "Rank: " => "Rango: "
 .Crew: "Crew: " => "Tripulación: "
-.Telepresence: ";Telepresence" @
+.Telepresence: ";Telepresence" => ";Telepresencia"
 .Role: "Role: " => "Rol: "
 .CrewMember: "Crew Member: " => "Miembro de la tripulación: "
 .DuetoCrime: ";Due to Crime" => "; Debido a la delincuencia"
@@ -1018,9 +1018,9 @@ SECTION JournalEntry
 .Online: "Online: " => "En línea: "
 .Offline: "Offline: " => "Sin conexión: "
 .Unfriended: "Unfriended: " @
-.Declined: "Declined: " @
+.Declined: "Declined: " => "Rechazado: "
 .RequestedFriend: "Requested Friend: " @
-.AddedFriend: "Added Friend: " @
+.AddedFriend: "Added Friend: " => "Amigo Agregado: "
 .Submitted: ";Submitted" => ";Enviado"
 .NPC: "< (NPC);(Player)" => "< (NPC);(Player)"
 .Power: "Power: " => "Energía: "
@@ -1039,7 +1039,7 @@ SECTION JournalEntry
 .Failed: "Failed: " => "Ha fallado: "
 .Completed: "Completed: " => "Completado: "
 .Station: "Station: " => "Estación: "
-.Settlement: "Settlement: " @
+.Settlement: "Settlement: " => "Asentamiento: "
 .TargetFaction: "Target Faction: " => "Facción objetivo: "
 .Donation: "Donation: " => "Donación: "
 .Permits: "Permits: " => "Permisos: "
@@ -1089,15 +1089,15 @@ SECTION JournalEntry
 .Nearest: "Nearest: " => "Más cercano: "
 .Old: "Old: " => "Viejo: "
 .New: "New: " => "Nuevo: "
-.Near: "Near: " @
-.OnFootAt: "On Foot at {0}" @
+.Near: "Near: " => "Cerca: "
+.OnFootAt: "On Foot at {0}" => "A pie a {0}"
 .Wealth: "Wealth: ; cr;N0" => "Riqueza: ; cr;N0"
 .NotorietyIndex: "Notoriety Index: ;;N0" => "Índice de notoriedad: ;;N0"
 .Fuel: "Fuel: ; tons;0.0" => "Combustible: ; toneladas;0.0"
 .Taxi: "Taxi" @
 .Mods: "Mods: " @
-.Class: "Class: " @
-.Pilot: "Pilot: " @
+.Class: "Class: " => "Clase: "
+.Pilot: "Pilot: " => "Piloto: "
 
 SECTION JournalCarrierJump
 
@@ -1145,20 +1145,20 @@ SECTION JournalCarrier
 
 SECTION JournalMicroResources
 
-.Items: "Items" @
-.Components: "Components" @
-.Consumables: "Consumables" @
-.Data: "Data" @
+.Items: "Items" => "Artículos"
+.Components: "Components" => "Componentes"
+.Consumables: "Consumables" => "Consumibles"
+.Data: "Data" => "Datos"
 
 SECTION JournalScanInfo
 
 .isa: " is a " @
 .Atmosphere: " Atmosphere: " @
 .SurfaceTemperature: " Surface temperature: {0} K." @
-.terraformable: "terraformable " @
-.LowRadius: " Is tiny " => " Radio bajo"
-.LargeRadius: " Is large." @
-.Signals: " Has mining signals." => " Tiene señales"
+.terraformable: "terraformable " => "terraformable "
+.LowRadius: " Is tiny " => " Es pequeño "
+.LargeRadius: " Is large." => " Es Grande."
+.Signals: " Has mining signals." => " Tiene señales de minería."
 .BioSignals: " Biological signals: {0}." @
 .GeoSignals: " Geological signals: {0}." @
 .ThargoidSignals: " Thargoid signals: {0}." @
@@ -1177,18 +1177,18 @@ SECTION JournalScanInfo
 .SFSD: " Standard" => " Estándar"
 .PFSD: " Premium" => " Premium"
 .LE: "{0} has {1} level elements." => "{0} tiene {1} elementos de nivel"
-.scanorganics: " Has been scanned for organics." @
+.scanorganics: " Has been scanned for organics." => " Ha sido escaneado para orgánicos."
 
 SECTION Services
 
 .BridgeCrew: "Bridge Crew" @
 .CommodityTrading: "Commodity Trading" @
-.TritiumDepot: "Tritium Depot" @
-.Refuel: "Refuel Station" @
+.TritiumDepot: "Tritium Depot" => "Depósito de Tritio"
+.Refuel: "Refuel Station" => "Estación de Repostaje"
 .Repair: "Repair Crews" @
 .Rearm: "Armoury" @
-.VoucherRedemption: "Redemption Office" @
-.Shipyard: "Shipyard" @
+.VoucherRedemption: "Redemption Office" => "Oficina de Redención"
+.Shipyard: "Shipyard" => "Astillero"
 .Outfitting: "Outfitting" @
 .BlackMarket: "Secure Warehouse" @
 .Exploration: "Universal Cartographics" @
