@@ -82,7 +82,7 @@ namespace EliteDangerousCore
                 Point3D travelvectorperly = new Point3D(travelvector.X / distancetogo, travelvector.Y / distancetogo, travelvector.Z / distancetogo); // per ly travel vector
                 Point3D expectedNextPosition = GetNextPosition(curpos, travelvectorperly, MaxRange);    // where we would like to be..
 
-                System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.MSd} Route Plotter Query {curpos} -> {expectedNextPosition}");
+                System.Diagnostics.Debug.WriteLine($"\n{BaseUtils.AppTicks.MSd} Route Plotter Query {curpos} -> {expectedNextPosition}");
 
                 ISystem bestsystem = GetBestJumpSystem(curpos, travelvectorperly, maxfromwanted, MaxRange);    // see if we can find a system near  our target
 
@@ -108,10 +108,14 @@ namespace EliteDangerousCore
                 {
                     boostStrength = 1 << boostStrength;
                     float maxRangeWithBoost = MaxRange * (1.0f + BoostPercentage(boostStrength));
-                    System.Diagnostics.Debug.WriteLine($" .. Try boost {boostStrength}  {BoostPercentage(boostStrength)} {maxRangeWithBoost}");
-                    ISystem bestSystemWithBoost = GetBestJumpSystem(curpos, travelvectorperly, maxfromwanted, maxRangeWithBoost);
+                    float maxfromWantedWithBoost = maxfromwanted * (1.0f + BoostPercentage(boostStrength));
+                    System.Diagnostics.Debug.WriteLine($" .. Try boost {boostStrength}  {BoostPercentage(boostStrength)} maxrange {maxRangeWithBoost} maxwanted {maxfromWantedWithBoost}");
+
+                    ISystem bestSystemWithBoost = GetBestJumpSystem(curpos, travelvectorperly, maxfromWantedWithBoost, maxRangeWithBoost);
+                    
                     if ( bestSystemWithBoost == null && WebLookup != WebExternalDataLookup.None)
-                        bestSystemWithBoost = GetBestWebSystem(curpos, travelvectorperly, maxfromwanted, maxRangeWithBoost, WebLookup);
+                        bestSystemWithBoost = GetBestWebSystem(curpos, travelvectorperly, maxfromWantedWithBoost, maxRangeWithBoost, WebLookup);
+
                     if (bestSystemWithBoost != null)
                         bestsystem = bestSystemWithBoost;
                 }
@@ -205,7 +209,7 @@ namespace EliteDangerousCore
 
                 if (response != null) // it did reply. May not due to limiter or general internet stuffy
                 {
-                    //foreach (var s in response) System.Diagnostics.Debug.WriteLine($".. {s.Item1.Name} from next {s.Item1.Distance(next.X, next.Y, next.Z)} from curpos {s.Item1.Distance(currentPosition.X, currentPosition.Y, currentPosition.Z)} ");
+                    foreach (var s in response) System.Diagnostics.Debug.WriteLine($".. {s.Item1.Name} from next {s.Item1.Distance(next.X, next.Y, next.Z)} from curpos {s.Item1.Distance(currentPosition.X, currentPosition.Y, currentPosition.Z)} ");
 
                     var list = response
                                     // ensure its not too far from current.. don't trust 

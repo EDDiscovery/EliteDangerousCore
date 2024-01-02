@@ -138,7 +138,7 @@ namespace EliteDangerousCore.Spansh
             var data = response.Body;
             var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
 
-            System.Diagnostics.Debug.WriteLine($"Spansh returns {json?.ToString(true)}");
+           // System.Diagnostics.Debug.WriteLine($"Spansh returns {json?.ToString(true)}");
             //BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshsearch.txt", json?.ToString(true));
 
 
