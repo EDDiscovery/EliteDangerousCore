@@ -206,6 +206,27 @@ namespace EliteDangerousCore
             ["megashipcivilian"] = "Mega Ship",
 
         };
+
+        public enum StarportState
+        {
+            Unknown,
+            None,
+            UnderRepairs,
+            Damanged,
+            Abandoned,
+            UnderAttack,
+        }
+
+        // maps the StationType field to an enum
+        public static StarportState StarportStateToEnum(string fdname)
+        {
+            fdname = fdname.ToLowerInvariant().Replace(" ", "").Replace(";", "");
+            if (Enum.TryParse(fdname, true, out StarportState value))
+                return value;
+            else
+                return StarportState.Unknown;
+        }
+
     }
 }
 

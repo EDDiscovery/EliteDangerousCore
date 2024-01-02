@@ -530,7 +530,7 @@ namespace EliteDangerousCore.JournalEvents
         public double JumpDist { get; set; }
         public double FuelUsed { get; set; }
         public double FuelLevel { get; set; }
-        public int BoostUsed { get; set; }          // 1 = basic, 2 = standard, 3 = premium, 4 = ?
+        public int BoostUsed { get; set; }          // 1 = basic (25% x1.25), 2 = standard (50% x1.5), 3 = premium (100% x2 ), 4 = neutron (x4)
         public int MapColor { get; set; }
         public System.Drawing.Color MapColorARGB { get { return System.Drawing.Color.FromArgb(MapColor); } }
         public bool EDSMFirstDiscover { get; set; }
