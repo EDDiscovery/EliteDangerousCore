@@ -220,12 +220,6 @@ namespace EliteDangerousCore
             return list.Where(s => s.EventTimeUTC >= startutc && s.EventTimeUTC <= endutc).OrderByDescending(s => s.EventTimeUTC).ToList();
         }
 
-        // discoveryform menu item
-        static public List<HistoryEntry> FilterByScanNotEDDNSynced(List<HistoryEntry> list)
-        {
-            return (from s in list where s.EDDNSync == false && s.EntryType == JournalTypeEnum.Scan orderby s.EventTimeUTC ascending select s).ToList();
-        }
-
         // 2dmap
         static public List<HistoryEntry> FilterByFSDCarrierJumpAndPosition(List<HistoryEntry> list)
         {
@@ -241,23 +235,8 @@ namespace EliteDangerousCore
                     select s).ToList();
         }
 
-        // trilat/trippanel
+        // trilat
         public List<HistoryEntry> FilterByFSDOnly() { return (from s in historylist where s.EntryType == JournalTypeEnum.FSDJump select s).ToList(); }
-
-           // used by travel, spanel, journal to filter out by journal type
-        public static List<HistoryEntry> FilterByJournalEvent(List<HistoryEntry> he, string eventstring, out int count)
-        {
-            count = 0;
-            if (eventstring.Equals("All"))
-                return he;
-            else
-            {
-                string[] events = eventstring.Split(';');
-                List<HistoryEntry> ret = (from systems in he where systems.IsJournalEventInEventFilter(events) select systems).ToList();
-                count = he.Count - ret.Count;
-                return ret;
-            }
-        }
 
         #endregion
 
@@ -324,11 +303,9 @@ namespace EliteDangerousCore
                 return null;
         }
 
-        //tracker,notepanel
-        public HistoryEntry GetLastFSDCarrierJump() { return historylist.FindLast(x => x.IsFSDCarrierJump); }
-
         // trilat
-        public HistoryEntry GetLastFSDOnly() { return historylist.FindLast(x => x.EntryType == JournalTypeEnum.FSDJump); }
+
+        public HistoryEntry GetLastLocation() { return historylist.FindLast(x => x.IsFSDLocationCarrierJump); }
 
         // trippanel
         public HistoryEntry GetLastHistoryEntry(Predicate<HistoryEntry> where)
@@ -353,18 +330,6 @@ namespace EliteDangerousCore
             }
         }
 
-        // find the condition, from this HE inclusive, backwards, until stop date is passed.
-        public HistoryEntry GetLastHistoryEntry(Predicate<HistoryEntry> where, HistoryEntry frominclusive, DateTime stopbeforeinc)
-        {
-            for (int index = frominclusive.EntryNumber - 1; index >= 0 && index < historylist.Count && historylist[index].EventTimeUTC >= stopbeforeinc; index--)
-            {
-                if (where(historylist[index]))
-                    return historylist[index];
-            }
-
-            return null;
-        }
-
         // sysinfo, discoveryform
         public HistoryEntry GetLastWithPosition() { return historylist.FindLast(x => x.System.HasCoordinate); }
 
@@ -377,30 +342,6 @@ namespace EliteDangerousCore
                 return 0;
         }
 
-        //stats
-        // return trip start/stop he's within the date range.
-        // may return start but no end, or end without a start, or both null
-        public void FindStartStopMarkersWithinDateTimeRange(DateTime starttimeutc, DateTime endtimeutc, out HistoryEntry tripstarthe, out HistoryEntry tripendhe)
-        {
-            tripstarthe = tripendhe = null;
-
-            HistoryEntry firstdatebeforeend = GetLastHistoryEntry(x => x.EventTimeUTC <= endtimeutc);        // where is the entry at the end time..
-
-            if (firstdatebeforeend != null)     // found an entry within the range.
-            {
-                tripendhe = GetLastHistoryEntry(x => x.StopMarker, firstdatebeforeend, starttimeutc);       // from endtime, find the first stop marker
-
-                if (tripendhe != null)            // found one
-                {
-                    tripstarthe = GetLastHistoryEntry(x => x.StartMarker, tripendhe, starttimeutc);        // find the start marker if in the range.  May be null
-                }
-                else
-                {           // no end marker, is there a start?
-                    tripstarthe = GetLastHistoryEntry(x => x.StartMarker, firstdatebeforeend, starttimeutc);        // find the start marker if in the range.  May be null
-                }
-            }
-        }
-
         // historylist
         public string GetCommanderFID()     // may be null
         {
@@ -408,51 +349,7 @@ namespace EliteDangerousCore
             return (cmdr?.journalEntry as JournalCommander)?.FID;
         }
 
- 
-        // map3d
-        public static HistoryEntry FindLastKnownPosition(List<HistoryEntry> syslist)        // can return FSD, Carrier or Location
-        {
-            return syslist.FindLast(x => x.System.HasCoordinate && x.IsLocOrJump);
-        }
-
-        // map3d
-        public static HistoryEntry FindByPos(List<HistoryEntry> syslist, float x, float y, float z, double limit)     // go thru setting the lastknowsystem
-        {
-            return syslist.FindLast(s => s.System.HasCoordinate &&
-                                            Math.Abs(s.System.X - x) < limit &&
-                                            Math.Abs(s.System.Y - y) < limit &&
-                                            Math.Abs(s.System.Z - z) < limit);
-        }
-
-        // map3d
-        public List<HistoryEntry> FilterByTravelTime(DateTime? starttimeutc, DateTime? endtimeutc, bool musthavecoord)        // filter, in its own order. return FSD,carrier and location events after death
-        {
-            List<HistoryEntry> ents = new List<HistoryEntry>();
-            string lastsystem = null;
-            foreach (HistoryEntry he in historylist)        // in add order, oldest first
-            {
-                if ((he.EntryType == JournalTypeEnum.Location || he.EntryType == JournalTypeEnum.CarrierJump || he.EntryType == JournalTypeEnum.FSDJump) &&
-                    (he.System.HasCoordinate || !musthavecoord))
-                { 
-                    if ((starttimeutc == null || he.EventTimeUTC >= starttimeutc) && (endtimeutc == null || he.EventTimeUTC <= endtimeutc))
-                    {
-                        if (lastsystem != he.System.Name)
-                        {
-                            ents.Add(he);
-                            lastsystem = he.System.Name;
-                          //  System.Diagnostics.Debug.WriteLine($"TH {he.EventTimeUTC} {he.System.Name}");
-                        }
-                        else
-                        {
-                          //  System.Diagnostics.Debug.WriteLine($"Reject {he.EventTimeUTC} {he.System.Name}");
-                        }
-                    }
-                }
-            }
-
-            return ents;
-        }
-
+        // 3dmap
         public List<HistoryEntry> FilterByTravelTimeAndMulticrew(DateTime? starttimeutc, DateTime? endtimeutc, bool musthavecoord)        // filter, in its own order. return FSD,carrier and location events after death
         {
             List<HistoryEntry> ents = new List<HistoryEntry>();
@@ -555,55 +452,6 @@ namespace EliteDangerousCore
 
                     maxjumpsback--;
                 }
-            }
-        }
-
-        // findsystemusercontrol
-        // find the last jump entry to system name
-        public HistoryEntry FindLastFSDCarrierJumpBySystemName(string name)
-        {
-            return historylist.FindLast(x => x.IsFSDCarrierJump && x.System.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-        }
-
- 
-        // 3dmap only
-        public static HistoryEntry FindNextSystem(List<HistoryEntry> syslist, string sysname, int dir)
-        {
-            int index = syslist.FindIndex(x => x.System.Name.Equals(sysname));
-
-            if (index != -1)
-            {
-                if (dir == -1)
-                {
-                    if (index < 1)                                  //0, we go to the end and work from back..
-                        index = syslist.Count;
-
-                    int indexn = syslist.FindLastIndex(index - 1, x => x.System.HasCoordinate);
-
-                    if (indexn == -1)                             // from where we were, did not find one, try from back..
-                        indexn = syslist.FindLastIndex(x => x.System.HasCoordinate);
-
-                    return (indexn != -1) ? syslist[indexn] : null;
-                }
-                else
-                {
-                    index++;
-
-                    if (index == syslist.Count)             // if at end, go to beginning
-                        index = 0;
-
-                    int indexn = syslist.FindIndex(index, x => x.System.HasCoordinate);
-
-                    if (indexn == -1)                             // if not found, go to beginning
-                        indexn = syslist.FindIndex(x => x.System.HasCoordinate);
-
-                    return (indexn != -1) ? syslist[indexn] : null;
-                }
-            }
-            else
-            {
-                index = syslist.FindLastIndex(x => x.System.HasCoordinate);
-                return (index != -1) ? syslist[index] : null;
             }
         }
 
