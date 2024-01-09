@@ -80,16 +80,16 @@ namespace EliteDangerousCore.DB
 
         public bool Add()
         {
-            return UserDatabase.Instance.DBWrite<bool>(cn => { return Add(cn); });
+            return UserDatabase.Instance.DBWrite<bool>(cn => { return Add(cn,null); });
         }
 
-        internal bool Add(SQLiteConnectionUser cn)
+        internal bool Add(SQLiteConnectionUser cn, DbTransaction txn)
         {
             FetchAll();
             System.Diagnostics.Debug.WriteLine($"Add TLU {Path} {filename}");
 
             using (DbCommand cmd = cn.CreateCommand(
-            "Insert into TravelLogUnit (Name, type, size, Path, CommanderID, GameVersion, Build) values (@name, @type, @size, @Path, @CommanderID, @GameVersion, @Build)"))
+                                    "Insert into TravelLogUnit (Name, type, size, Path, CommanderID, GameVersion, Build) values (@name, @type, @size, @Path, @CommanderID, @GameVersion, @Build)"))
             {
                 cmd.AddParameterWithValue("@name", filename);
                 cmd.AddParameterWithValue("@type", Type);
@@ -99,7 +99,7 @@ namespace EliteDangerousCore.DB
                 cmd.AddParameterWithValue("@GameVersion", GameVersion);
                 cmd.AddParameterWithValue("@Build", Build);
 
-                cmd.ExecuteNonQuery();
+                cmd.ExecuteNonQuery(txn);
 
                 using (DbCommand cmd2 = cn.CreateCommand("Select Max(id) as id from TravelLogUnit"))
                 {

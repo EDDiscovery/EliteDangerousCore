@@ -484,7 +484,7 @@ namespace EliteDangerousCore.DB
                             // we should never enter the same sector twice due to the sector caching.. so INSERT INTO is ok
                             using (var cmd = db.CreateCommand(cmdt))
                             {
-                                cmd.ExecuteNonQuery();
+                                cmd.ExecuteNonQuery(txn);
                             }
                         }
 
@@ -495,7 +495,7 @@ namespace EliteDangerousCore.DB
 
                             using (var cmd = db.CreateCommand("INSERT OR REPLACE INTO Names" + tablepostfix + " (id,Name) VALUES " + nameinsertcmd.ToString()))
                             {
-                                cmd.ExecuteNonQuery();
+                                cmd.ExecuteNonQuery(txn);
                             }
                         }
 
@@ -509,7 +509,7 @@ namespace EliteDangerousCore.DB
                             using (var cmd = db.CreateCommand(
                                 (dontoverwrite ? "INSERT OR IGNORE INTO SystemTable" : "INSERT OR REPLACE INTO SystemTable") + tablepostfix + " (edsmid,sectorid,nameid,x,y,z,info) VALUES " + systeminsertcmd.ToString()))
                             {
-                                cmd.ExecuteNonQuery();
+                                cmd.ExecuteNonQuery(txn);
                             }
                         }
 
@@ -518,7 +518,7 @@ namespace EliteDangerousCore.DB
                             using (var cmd = db.CreateCommand(
                                 (dontoverwrite ? "INSERT OR IGNORE INTO PermitSystems" : "INSERT OR REPLACE INTO PermitSystems") + tablepostfix + " (edsmid) VALUES " + permitsystemsinsertcmd.ToString()))
                             {
-                                cmd.ExecuteNonQuery();
+                                cmd.ExecuteNonQuery(txn);
                             }
                         }
 

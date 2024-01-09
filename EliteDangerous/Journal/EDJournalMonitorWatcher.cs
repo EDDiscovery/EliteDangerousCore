@@ -206,7 +206,7 @@ namespace EliteDangerousCore
                                 foreach (JournalEntry jre in filteredentries)
                                 {
                                     var json = jre.GetJson(cn);
-                                    jre.Add(json,cn);
+                                    jre.Add(json,cn,txn);
                                 }
                             }
 
@@ -288,7 +288,7 @@ namespace EliteDangerousCore
                         {
                             foreach (var tlu in tlutoadd)
                             {
-                                tlu.Add(cn);
+                                tlu.Add(cn,txn);
                             }
 
                             txn.Commit();
@@ -331,7 +331,7 @@ namespace EliteDangerousCore
 
                         //System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLap("PJF"), i + " into db");
 
-                        using (DbTransaction tn = cn.BeginTransaction())
+                        using (DbTransaction txn = cn.BeginTransaction())
                         {
                             foreach (JournalEntry jre in dbentries)
                             {
@@ -342,7 +342,7 @@ namespace EliteDangerousCore
                                     //foreach (var x in existing[jre.EventTimeUTC]) { System.Diagnostics.Trace.WriteLine(string.Format(" passed vs {0} Deepequals {1}", x.GetJson().ToString(), x.GetJson().DeepEquals(jre.GetJson()))); }
 
                                     QuickJSON.JObject jo = jre.GetJson(cn);
-                                    jre.Add(jo, cn);
+                                    jre.Add(jo, cn, txn);
 
                                     //System.Diagnostics.Trace.WriteLine(string.Format("Write Journal to db {0} {1}", jre.EventTimeUTC, jre.EventTypeStr));
                                 }
@@ -355,7 +355,7 @@ namespace EliteDangerousCore
                             if (readanything)
                                 reader.TravelLogUnit.Update(cn);
 
-                            tn.Commit();
+                            txn.Commit();
                         }
                     });
                 }

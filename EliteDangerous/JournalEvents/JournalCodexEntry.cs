@@ -151,7 +151,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     jo["EDDBodyName"] = EDDBodyName;        // these are not in JSON from frontier, so add them in (or just overwrite them)
                     jo["EDDBodyID"] = EDDBodyId;
-                    UpdateJsonEntry(jo, cn);
+                    UpdateJsonEntry(jo, cn, null);
                 }
             });
 

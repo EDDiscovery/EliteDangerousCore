@@ -318,7 +318,7 @@ namespace EliteDangerousCore.EDSM
                                     if (systemCreated)
                                     {
                                         System.Diagnostics.Debug.WriteLine("** EDSM indicates first entry for " + he.System.Name);
-                                        (he.journalEntry as JournalFSDJump).UpdateFirstDiscover(true, cn);
+                                        (he.journalEntry as JournalFSDJump).UpdateFirstDiscover(true, cn, txn);
                                         firsts = firsts.AppendPrePad(he.System.Name, ";");
                                     }
                                 }

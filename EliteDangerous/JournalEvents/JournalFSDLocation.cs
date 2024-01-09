@@ -401,8 +401,8 @@ namespace EliteDangerousCore.JournalEvents
 
             StationGovernment = evt["StationGovernment"].Str();       // 3.3.2 empty before
             StationGovernment_Localised = evt["StationGovernment_Localised"].Str();       // 3.3.2 empty before
-            StationAllegiance = evt["StationAllegiance"].Str();       // 3.3.2 empty before
-                                                                      // tbd bug in journal over FactionState - its repeated twice..
+            StationAllegiance = evt["StationAllegiance"].Str();       // 3.3.2 empty before - can't see alliance 
+                                                                      
             StationServices = evt["StationServices"]?.ToObjectQ<string[]>();
             StationEconomyList = evt["StationEconomies"]?.ToObjectQ<JournalDocked.Economies[]>();
 
@@ -631,7 +631,7 @@ namespace EliteDangerousCore.JournalEvents
                 if (jo != null)
                 {
                     jo["EDDMapColor"] = mapcolour;
-                    UpdateJsonEntry(jo, cn);
+                    UpdateJsonEntry(jo, cn, null);
                     MapColor = mapcolour;
                 }
             });
@@ -641,18 +641,18 @@ namespace EliteDangerousCore.JournalEvents
         {
             UserDatabase.Instance.DBWrite(cn =>
             {
-                UpdateFirstDiscover(value, cn);
+                UpdateFirstDiscover(value, cn, null);
             });
         }
 
-        internal void UpdateFirstDiscover(bool value, SQLiteConnectionUser cn)
+        internal void UpdateFirstDiscover(bool value, SQLiteConnectionUser cn, DbTransaction txn)
         {
             JObject jo = GetJson(Id, cn);
 
             if (jo != null)
             {
                 jo["EDD_EDSMFirstDiscover"] = value;
-                UpdateJsonEntry(jo, cn);
+                UpdateJsonEntry(jo, cn, txn);
                 EDSMFirstDiscover = value;
             }
         }

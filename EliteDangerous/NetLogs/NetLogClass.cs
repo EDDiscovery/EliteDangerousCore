@@ -84,7 +84,7 @@ namespace EliteDangerousCore
                     {
                         foreach (var tlu in tlutoadd)
                         {
-                            tlu.Add(cn);
+                            tlu.Add(cn,txn);
                         }
 
                         txn.Commit();
@@ -104,7 +104,7 @@ namespace EliteDangerousCore
                     var systems = JournalEntry.GetAllByTLU(reader.ID, cn).OfType<JournalLocOrJump>().ToList();
                     var last = systems.LastOrDefault();     // find last system recorded for this TLU, may be null if no systems..
 
-                    using (DbTransaction tn = cn.BeginTransaction())
+                    using (DbTransaction txn = cn.BeginTransaction())
                     {
                         var ienum = reader.ReadSystems(last, cancelRequested, currentcmdrid);
                         System.Diagnostics.Debug.WriteLine("Scanning TLU " + reader.ID + " " + reader.FullName);
@@ -131,14 +131,14 @@ namespace EliteDangerousCore
 
                             if (!(previssame || nextissame))
                             {
-                                je.Add(jo, cn);
+                                je.Add(jo, cn, txn);
                                 System.Diagnostics.Debug.WriteLine("Add {0} {1}", je.EventTimeUTC, jo.ToString());
                             }
                         }
 
                         reader.TravelLogUnit.Update(cn);
 
-                        tn.Commit();
+                        txn.Commit();
                     }
 
                     if (updateProgress != null)

@@ -46,10 +46,10 @@ namespace EliteDangerousCore
 
         public bool Add(JObject jo)
         {
-            return UserDatabase.Instance.DBWrite<bool>(cn => { return Add(jo, cn); });
+            return UserDatabase.Instance.DBWrite<bool>(cn => { return Add(jo, cn, null); });
         }
 
-        internal bool Add(JObject jo, SQLiteConnectionUser cn)
+        internal bool Add(JObject jo, SQLiteConnectionUser cn, DbTransaction txn)
         {
             // note we don't use EDMSID any more, but we write a zero into it to keep 11.9.3 and before happy
 
@@ -63,7 +63,7 @@ namespace EliteDangerousCore
                 cmd.AddParameterWithValue("@EventData", jo.ToString());
                 cmd.AddParameterWithValue("@Synced", Synced);
 
-                cmd.ExecuteNonQuery();
+                cmd.ExecuteNonQuery(txn);
 
                 using (DbCommand cmd2 = cn.CreateCommand("Select Max(id) as id from JournalEntries"))
                 {
@@ -95,7 +95,7 @@ namespace EliteDangerousCore
             }
         }
 
-        internal void UpdateJsonEntry(JObject jo, SQLiteConnectionUser cn)
+        internal void UpdateJsonEntry(JObject jo, SQLiteConnectionUser cn, DbTransaction txn)
         {
             if ( JsonCached != null )
             {
@@ -106,7 +106,7 @@ namespace EliteDangerousCore
             {
                 cmd.AddParameterWithValue("@ID", Id);
                 cmd.AddParameterWithValue("@EventData", jo.ToString());
-                cmd.ExecuteNonQuery();
+                cmd.ExecuteNonQuery(txn);
             }
         }
 
@@ -131,7 +131,7 @@ namespace EliteDangerousCore
                 fsd.SetMapColour(v);
         }
 
-        internal void UpdateStarPosition(ISystem pos, SQLiteConnectionUser cn)
+        internal void UpdateStarPosition(ISystem pos, SQLiteConnectionUser cn, DbTransaction txn)
         {
             JObject jo = GetJson(cn);
                                                                                 
@@ -144,7 +144,7 @@ namespace EliteDangerousCore
                 {
                     cmd2.AddParameterWithValue("@EventData", jo.ToString());
                     cmd2.AddParameterWithValue("@ID", Id);
-                    cmd2.ExecuteNonQuery();
+                    cmd2.ExecuteNonQuery(txn);
                 }
             }
         }
@@ -166,7 +166,7 @@ namespace EliteDangerousCore
                 cmd.AddParameterWithValue("@journalid", Id);
                 cmd.AddParameterWithValue("@sync", Synced);
                 //System.Diagnostics.Trace.WriteLine(string.Format("Update sync flag ID {0} with {1}", Id, Synced));
-                cmd.ExecuteNonQuery();
+                cmd.ExecuteNonQuery(txn);
             }
         }
 
