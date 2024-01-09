@@ -247,7 +247,7 @@ namespace EliteDangerousCore.EDSM
                     {
                         System.Diagnostics.Trace.WriteLine(string.Format("Add {0} {1}", jfsd.EventTimeUTC, jfsd.StarSystem));
                         jfsd.SetTLUCommander(tlu.ID, tlu.CommanderId.Value);        // update its TLU id to the TLU made above
-                        jfsd.Add(jfsd.CreateFSDJournalEntryJson(), cn);     // add it to the db with the JSON created
+                        jfsd.Add(jfsd.CreateFSDJournalEntryJson(), cn, null);     // add it to the db with the JSON created
                     }
                 });
 
