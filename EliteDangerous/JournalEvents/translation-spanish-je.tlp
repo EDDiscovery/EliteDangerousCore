@@ -821,7 +821,7 @@ SECTION MaterialTraderStatsClass
 
 SECTION CQCClass
 
-.CreditsEarned: "Profits from CQC: ; cr;N0" => "Beneficios de CQC"
+.CreditsEarned: "Profits from CQC: ; cr;N0" => "Beneficios de CQC: ; cr;N0"
 .TimePlayed: "Time Played: " => "Tiempo jugado: "
 .KDRatio: "K/D Ratio: ;;N2" => "Relación K/D: ;;N2"
 .Kills: "Kills: ;;N0" => "Asesinatos: ;;N0"
@@ -893,7 +893,7 @@ SECTION JournalStoredShips
 
 SECTION JournalSupercruiseEntry
 
-.Wanted: ", You are wanted." => "Eres Buscado."
+.Wanted: ", You are wanted." => ", Eres Buscado."
 
 SECTION JournalUnderAttack
 
