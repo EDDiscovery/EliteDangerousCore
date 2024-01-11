@@ -904,7 +904,7 @@ SECTION MissionState
 
 SECTION CommanderForm
 
-.CommanderForm: "CommanderForm" => "Scheda"
+CommanderForm: "CommanderForm" => "Scheda"
 .extGroupBoxCommanderInfo: "Other" => "Altro"
 .labelMapCol: "Default Map Color" => "Colore della mappa normale"
 .HomeSys: "Home System:" => "Domicilio: "
@@ -957,7 +957,7 @@ SECTION ScreenShotImageConverter
 
 SECTION ScreenShotConfigureForm
 
-.ScreenShotConfigureForm: "Screen Shot Configure" => "Configurare Screenshot"
+ScreenShotConfigureForm: "Screen Shot Configure" => "Configurare Screenshot"
 .groupBoxCropSettings: "Crop/Resize Settings" => "Impostazionui di ritaglio"
 .extGroupBox1: "Crop/Resize Settings" => "Impostazioni di ritaglio/ridimensionamento"
 .labelHeight: "Height" => "Altezza"

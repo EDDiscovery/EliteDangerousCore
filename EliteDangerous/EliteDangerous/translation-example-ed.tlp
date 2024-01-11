@@ -904,7 +904,7 @@ SECTION MissionState
 
 SECTION CommanderForm
 
-.CommanderForm: "CommanderForm" @
+CommanderForm: "CommanderForm" @
 .extGroupBoxCommanderInfo: "Other" @
 .labelMapCol: "Default Map Color" @
 .HomeSys: "Home System:" @
@@ -954,7 +954,7 @@ SECTION ScreenShotImageConverter
 
 SECTION ScreenShotConfigureForm
 
-.ScreenShotConfigureForm: "Screen Shot Configure" @
+ScreenShotConfigureForm: "Screen Shot Configure" @
 .groupBoxCropSettings: "Crop/Resize Settings" @
 .extGroupBox1: "Crop/Resize Settings" @
 .labelHeight: "Height" @
