@@ -1221,15 +1221,13 @@ namespace EliteDangerousCore.EDSM
 
         #endregion
 
-        public static bool DownloadGMOFileFromEDSM(string file)
+        public static bool DownloadGMOFileFromEDSM(string file, Func<bool> cancelRequested)
         {
             try
             {
                 EDSMClass edsm = new EDSMClass();
                 string url = EDSMClass.ServerAddress + "en/galactic-mapping/json-edd";
-                bool newfile;
-
-                return BaseUtils.DownloadFile.HTTPDownloadFile(url, file, false, out newfile);
+                return BaseUtils.DownloadFile.HTTPDownloadFile(url, file, false, out bool _,cancelRequested:cancelRequested);
             }
             catch (Exception ex)
             {

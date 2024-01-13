@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Globalization;
-using System.Diagnostics;
 using EliteDangerousCore.JournalEvents;
 using EliteDangerousCore.DB;
 
@@ -44,26 +43,23 @@ namespace EliteDangerousCore.EDSM
             LogLine = logline;
         }
 
+        private string KeyName(string value="") { return "EDSMLogFetcher" + CommanderId.ToStringInvariant() + value; }
+
         public void Start( EDCommander cmdr )
         {
             ExitRequested.Reset();
 
-            Trace.WriteLine($"EDSM Fetch logs start with cmdr {cmdr.Id}");
-
-            if ( !object.ReferenceEquals(Commander,cmdr) )
-            {
-                Trace.WriteLine($"EDSM Fetch logs restart time");
-                //LastEventTime = DateTime.UtcNow;
-                //FirstEventTime = LastEventTime;
-            }
+            System.Diagnostics.Trace.WriteLine($"EDSM Fetch logs start with cmdr {cmdr.Id}");
 
             Commander = cmdr;
 
-            if (( ThreadEDSMFetchLogs == null || !ThreadEDSMFetchLogs.IsAlive) && Commander.SyncFromEdsm && EDSMClass.IsServerAddressValid )
-            {
-                ThreadEDSMFetchLogs = new Thread(FetcherThreadProc) { IsBackground = true, Name = "EDSM Log Fetcher" };
-                ThreadEDSMFetchLogs.Start();
-            }
+// disabled for now until i can test it
+
+            //if (( ThreadEDSMFetchLogs == null || !ThreadEDSMFetchLogs.IsAlive) && Commander.SyncFromEdsm && EDSMClass.IsServerAddressValid )
+            //{
+            //    ThreadEDSMFetchLogs = new Thread(FetcherThreadProc) { IsBackground = true, Name = "EDSM Log Fetcher" };
+            //    ThreadEDSMFetchLogs.Start();
+            //}
         }
 
         public void AsyncStop()
@@ -85,22 +81,21 @@ namespace EliteDangerousCore.EDSM
         {
             if (Commander != null)
             {
-                KeyName(out string latestdatekeyname, out string oldestdatekeyname);
-                EliteDangerousCore.DB.UserDatabase.Instance.DeleteKey(latestdatekeyname);
-                EliteDangerousCore.DB.UserDatabase.Instance.DeleteKey(oldestdatekeyname);
+                UserDatabase.Instance.DeleteKey(KeyName());
             }
         }
 
         private void FetcherThreadProc()
         {
-            Trace.WriteLine($"EDSM Thread logs start");
+            System.Diagnostics.Trace.WriteLine($"EDSM Thread logs start");
             DateTime lastCommentFetch = DateTime.MinValue;
 
             int waittime = 1000; // initial waittime, will be reestimated later
 
             DateTime curtime = DateTime.UtcNow;
+            int logscollected = 0;
 
-            KeyName(out string latestdatekeyname, out string oldestdatekeyname);
+            DateTime lastqueryendtime = UserDatabase.Instance.GetSettingDate(KeyName(), EliteReleaseDates.EDSMRelease.AddDays(7));
 
             while (!ExitRequested.WaitOne(waittime))
             {
@@ -117,65 +112,60 @@ namespace EliteDangerousCore.EDSM
                 {
                     if (DateTime.UtcNow > lastCommentFetch.AddHours(1))
                     {
-                        edsm.GetComments(l => Trace.WriteLine(l));
+  // tbd    edsm.GetComments(l => System.Diagnostics.Trace.WriteLine(l));
                         lastCommentFetch = DateTime.UtcNow;
                     }
 
-                    DateTime latestentry = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingDate(latestdatekeyname, EliteReleaseDates.GammaStart); // lastest entry
-                    DateTime oldestentry = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingDate(oldestdatekeyname, DateTime.UtcNow); // oldest entry
-
-                    DateTime logstarttime = DateTime.MinValue;      // return what we got..
-                    DateTime logendtime = DateTime.MinValue;
-                    List<JournalFSDJump> edsmlogs = null;
-                    BaseUtils.ResponseData response = default(BaseUtils.ResponseData);
-                    int res = -1;
-
-                    if (DateTime.UtcNow.Subtract(latestentry).TotalMinutes >= EDSMMaxLogAgeMinutes )    // is latest entry old?
+                    if ( (DateTime.UtcNow-lastqueryendtime).TotalMinutes >= EDSMMaxLogAgeMinutes) // if time to check
                     {
-                        DateTime askfor = DateTime.UtcNow;
-                        System.Diagnostics.Debug.WriteLine("Fetch latest since Curtime > lastestentry + gap " + askfor.ToStringZulu());
-                        res = edsm.GetLogs(null, askfor, out edsmlogs, out logstarttime, out logendtime, out response);
-                        //res = 100;  logstarttime = askfor.AddDays(-7); logendtime = askfor; // debug it
-                    }
-                    else if ( oldestentry > EliteReleaseDates.GammaStart )    // if oldest entry younger than gamma?
-                    {
-                        System.Diagnostics.Debug.WriteLine("Go back in time to gamma ");
-                        res = edsm.GetLogs(null, oldestentry, out edsmlogs, out logstarttime, out logendtime, out response);
-                        //res = 100; logstarttime = oldestentry.AddDays(-7); logendtime = oldestentry; // debug it
-                    }
+                        System.Diagnostics.Trace.WriteLine($"EDSM Log Fetcher ask for week up to {lastqueryendtime}");
+                        int res = edsm.GetLogs(null, lastqueryendtime, out List<JournalFSDJump> edsmlogs, out DateTime logstarttime, out DateTime logendtime, out BaseUtils.ResponseData response);
 
-                    if ( res == 100 )   // hunky dory - note if Anthor faults, we just retry again and again
-                    {
-                        System.Diagnostics.Debug.WriteLine("Data stored from " + oldestentry.ToStringZulu() + " -> " + latestentry.ToStringZulu());
-                        System.Diagnostics.Debug.WriteLine("Process logs from " + logstarttime.ToStringZulu() + " => " + logendtime.ToStringZulu());
-                        if (edsmlogs != null && edsmlogs.Count > 0)     // if anything to process..
-                            Process(edsmlogs, logstarttime, logendtime);
+                        if (res == 100)   // hunky dory - note if Anthor faults, we just retry again and again
+                        {
+                            System.Diagnostics.Trace.WriteLine("EDSM Log Fetcher Process logs from " + logstarttime.ToStringZulu() + " => " + logendtime.ToStringZulu());
+                            if (edsmlogs?.Count > 0)     // if anything to process..
+                            {
+                                Process(edsmlogs, logstarttime, logendtime);
+                                logscollected += edsmlogs.Count;
+                            }
 
-                        if (logendtime > latestentry)
-                            EliteDangerousCore.DB.UserDatabase.Instance.PutSettingDate(latestdatekeyname, logendtime);
+                            lastqueryendtime = lastqueryendtime.AddDays(7);                         // move 7 days forward. This may move it past current time, but will be corrected below
+                            UserDatabase.Instance.PutSettingDate(KeyName(), lastqueryendtime);      // save back for now in case it did not move it past
+                        }
+                        else if (res != -1)
+                        {
+                            System.Diagnostics.Debug.WriteLine("EDSM Log request rejected with " + res);
+                        }
 
-                        if (logstarttime < oldestentry)
-                            EliteDangerousCore.DB.UserDatabase.Instance.PutSettingDate(oldestdatekeyname, logstarttime);
-                    }
-                    else if ( res != -1 )
-                    {
-                        System.Diagnostics.Debug.WriteLine("EDSM Log request rejected with " + res);
-                    }
+                        if (response.Headers != null &&
+                            response.Headers["X-Rate-Limit-Limit"] != null &&
+                            response.Headers["X-Rate-Limit-Remaining"] != null &&
+                            response.Headers["X-Rate-Limit-Reset"] != null &&
+                            Int32.TryParse(response.Headers["X-Rate-Limit-Limit"], out int ratelimitlimit) &&
+                            Int32.TryParse(response.Headers["X-Rate-Limit-Remaining"], out int ratelimitremain) &&
+                            Int32.TryParse(response.Headers["X-Rate-Limit-Reset"], out int ratelimitreset))
+                        {
+                            if (ratelimitremain < ratelimitlimit * 2 / 4)       // lets keep at least X remaining for other purposes later..
+                                waittime = 1000 * ratelimitreset / (ratelimitlimit - ratelimitremain);    // slow down to its pace now.. example 878/(360-272) = 10 seconds per quota
+                            else
+                                waittime = 1000;        // 1 second so we don't thrash
 
-                    if (response.Headers != null &&
-                        response.Headers["X-Rate-Limit-Limit"] != null &&
-                        response.Headers["X-Rate-Limit-Remaining"] != null &&
-                        response.Headers["X-Rate-Limit-Reset"] != null &&
-                        Int32.TryParse(response.Headers["X-Rate-Limit-Limit"], out int ratelimitlimit) &&
-                        Int32.TryParse(response.Headers["X-Rate-Limit-Remaining"], out int ratelimitremain) &&
-                        Int32.TryParse(response.Headers["X-Rate-Limit-Reset"], out int ratelimitreset) )
-                    {
-                        if (ratelimitremain < ratelimitlimit * 2 / 4)       // lets keep at least X remaining for other purposes later..
-                            waittime = 1000 * ratelimitreset / (ratelimitlimit - ratelimitremain);    // slow down to its pace now.. example 878/(360-272) = 10 seconds per quota
-                        else
-                            waittime = 1000;        // 1 second so we don't thrash
+                            System.Diagnostics.Trace.WriteLine($"EDSM Log Fetcher Delay Parameters {ratelimitlimit} {ratelimitremain} {ratelimitreset} {waittime}ms");
+                        }
 
-                        System.Diagnostics.Debug.WriteLine("EDSM Log Delay Parameters {0} {1} {2} => {3}ms", ratelimitlimit, ratelimitremain, ratelimitreset, waittime);
+                        if (lastqueryendtime > DateTime.UtcNow)                                 // we have asked beyond our date, so we are at the end of the game
+                        {
+                            lastqueryendtime = DateTime.UtcNow;                                 // limit to now
+                            UserDatabase.Instance.PutSettingDate(KeyName(), lastqueryendtime);  // and save back
+
+                            if (logscollected > 0)                                              // if we collected logs, invoke the call back    
+                            {
+                                OnDownloadedSystems?.Invoke();
+                                logscollected = 0;
+                            }
+                        }
+
                     }
                 }
             }
@@ -251,17 +241,9 @@ namespace EliteDangerousCore.EDSM
                     }
                 });
 
-                LogLine($"Retrieved {toadd.Count} log entries from EDSM, from {logstarttime.ToLocalTime().ToString()} to {logendtime.ToLocalTime().ToString()}");
-
-                OnDownloadedSystems?.Invoke();
+                LogLine($"EDSM Log Fetcher Stored {toadd.Count} log entries from EDSM, from {logstarttime.ToLocalTime().ToString()} to {logendtime.ToLocalTime().ToString()}");
             }
         }
 
-        private void KeyName(out string latest, out string oldest)
-        {
-            string keyname = "EDSMLogFetcher" + CommanderId;
-            latest = keyname + "LatestDate";
-            oldest = keyname + "OldestDate";
-        }
     }
 }

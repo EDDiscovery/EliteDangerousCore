@@ -649,6 +649,8 @@ namespace EliteDangerousCore
             AddCommodity("Thargoid Resin", sv, "UnknownResin");
             AddCommodity("Thargoid Biological Matter", sv, "UnknownBiologicalMatter");
             AddCommodity("Thargoid Technology Samples", sv, "UnknownTechnologySamples");
+            AddCommodity("Impure Spire Material", sv, "UnknownMineral");
+            AddCommodity("Semi-Refined Spire Material", sv, "UnknownRefinedMineral");
 
             AddManu("Thargoid Carapace", ItemType.Common, MaterialGroupType.NA, "UKCP", "unknowncarapace");
             AddManu("Thargoid Energy Cell", ItemType.Standard, MaterialGroupType.NA, "UKEC", "unknownenergycell");

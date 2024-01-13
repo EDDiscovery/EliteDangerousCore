@@ -17,10 +17,11 @@ using System.Collections.Generic;
 
 namespace EliteDangerousCore
 {
+    // names as per journal with spaces replaced by _
     public enum EDPlanet
     {
         Unknown_Body_Type = 0,
-        Metal_rich_body = 1000,     // no idea why it does this, but keeping it
+        Metal_rich_body = 1000,     
         High_metal_content_body,
         Rocky_body,
         Icy_body,

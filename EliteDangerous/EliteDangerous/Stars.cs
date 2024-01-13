@@ -17,6 +17,7 @@ using System.Collections.Generic;
 
 namespace EliteDangerousCore
 {
+    // Naming is as per Journal 15.2
     public enum EDStar
     {
         Unknown = 0,

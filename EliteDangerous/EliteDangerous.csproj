@@ -93,6 +93,7 @@
     <Compile Include="EliteDangerous\Stations.cs" />
     <Compile Include="EliteDangerous\Government.cs" />
     <Compile Include="EliteDangerous\Economy.cs" />
+    <Compile Include="GEC\GEC.cs" />
     <Compile Include="GMO\GalMapType.cs" />
     <Compile Include="GMO\GalacticMapObject.cs" />
     <Compile Include="GMO\GalacticMapping.cs" />

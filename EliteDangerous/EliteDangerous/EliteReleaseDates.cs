@@ -19,6 +19,8 @@ namespace EliteDangerousCore
     public static class EliteReleaseDates
     {
         public static DateTime GammaStart = new DateTime(2014, 11, 22, 4, 0, 0, DateTimeKind.Utc);
+        public static DateTime GameRelease = new DateTime(2014, 12, 14, 12, 0, 0, DateTimeKind.Utc);
+        public static DateTime EDSMRelease = new DateTime(2015, 6, 1, 12, 0, 0, DateTimeKind.Utc);
         public static DateTime Release_2_2 = new DateTime(2017, 4, 11, 12, 0, 0, DateTimeKind.Utc);
         public static DateTime Release_3_2 = new DateTime(2018, 8, 28, 10, 0, 0, DateTimeKind.Utc);
         public static DateTime Release_3_3 = new DateTime(2018, 12, 11, 9, 0, 0, DateTimeKind.Utc);
