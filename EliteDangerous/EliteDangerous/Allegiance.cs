@@ -21,13 +21,14 @@ namespace EliteDangerousCore
         public enum Allegiance
         {
             Unknown = 0,
-            Federation = 1,
-            Empire = 2,
-            Independent = 3,
-            Alliance = 4,
-            Guardian = 5,
-            Thargoid = 6,
-            PilotsFederation = 7,
+            None,   // addition, for fleet carriers etc
+            Federation,
+            Empire,
+            Independent,
+            Alliance,
+            Guardian,
+            Thargoid,
+            PilotsFederation,
         }
 
         public static Allegiance ToEnum(string englishname)

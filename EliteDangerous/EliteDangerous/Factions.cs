@@ -21,6 +21,7 @@ namespace EliteDangerousCore
         public enum State
         {
             Unknown,
+            UnknownSpansh,
             None,
             Boom,
             Bust,
@@ -48,6 +49,7 @@ namespace EliteDangerousCore
             Revolution,
             TechnologicalLeap,
             TradeWar,
+            Exploited,
         }
 
         public static State ToEnum(string englishname)

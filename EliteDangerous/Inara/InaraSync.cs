@@ -126,21 +126,24 @@ namespace EliteDangerousCore.Inara
 
             if (last != null && last.EventTimeUTC > DateTime.UtcNow.AddDays(-30))
             {
+                DateTime tb = DateTime.UtcNow.AddSeconds(-120);     // we space out the time to avoid Inaras checking of duplicate sends (Jan 24 discovery)
+                int sendno = 0;
+
                 foreach( var s in history.ShipInformationList.Ships )
                 {
                     ShipInformation si = s.Value;
                     if ( si.State == ShipInformation.ShipState.Owned && ItemData.IsShip(si.ShipFD))
                     {
                         // loadout may be null if nothing in it.
-                        eventstosend.Add(InaraClass.setCommanderShipLoadout(si.ShipFD, si.ID, si.Modules.Values, DateTime.UtcNow));
+                        eventstosend.Add(InaraClass.setCommanderShipLoadout(si.ShipFD, si.ID, si.Modules.Values, tb.AddSeconds(sendno++)));
 
-                        eventstosend.Add(InaraClass.setCommanderShip(si.ShipFD, si.ID, DateTime.UtcNow,
+                        eventstosend.Add(InaraClass.setCommanderShip(si.ShipFD, si.ID, tb.AddSeconds(sendno++),
                                                                 si.ShipUserName, si.ShipUserIdent, last.ShipInformation.ID == si.ID, null,
                                                                 si.HullValue, si.ModulesValue, si.Rebuy, si.StoredAtSystem, si.StoredAtStation));
                     }
                 }
 
-                eventstosend.Add(InaraClass.setCommanderStorageModules(last.StoredModules.StoredModules, last.EventTimeUTC));
+                eventstosend.Add(InaraClass.setCommanderStorageModules(last.StoredModules.StoredModules, tb.AddSeconds(sendno++)));
             }
 
             eventstosend = eventstosend.Where(x => x != null).ToList();     // remove any nulls

@@ -69,6 +69,8 @@ namespace EliteDangerousCore
             ["$government_theocracy;"] = "Theocracy",
             ["$government_engineer;"] = "Engineer",
             ["$government_carrier;"] = "Private Ownership",
+
+            ["$government_unknown;"] = "Unknown",      // addition to allow Unknown to be mapped
         };
 
         public static string ReverseLookup(string englishname)

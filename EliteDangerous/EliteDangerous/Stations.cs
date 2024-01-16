@@ -149,7 +149,7 @@ namespace EliteDangerousCore
                 return StarportTypes.Unknown;
         }
 
-        public static string ReverseLookup(string englishname)
+        public static string ReverseLookupTypes(string englishname)
         {
             foreach(var kvp in ServiceTypes)
             {
@@ -207,9 +207,23 @@ namespace EliteDangerousCore
 
         };
 
+        public static string ReverseLookupStarportNameTypes(string englishname)
+        {
+            foreach (var kvp in StarportNameTypes)
+            {
+                if (englishname.Equals(kvp.Value, System.StringComparison.InvariantCultureIgnoreCase))
+                    return kvp.Key;
+            }
+
+            System.Diagnostics.Debug.WriteLine($"*** Reverse lookup name types failed {englishname}");
+            return "Unknown";
+        }
+
+
         public enum StarportState
         {
             Unknown,
+            UnknownSpansh,
             None,
             UnderRepairs,
             Damanged,

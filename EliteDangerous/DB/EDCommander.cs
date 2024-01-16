@@ -84,12 +84,8 @@ namespace EliteDangerousCore
 
         public JObject ConsoleUploadHistory { get { return Options["ConsoleUpload"].Object(); } set { Options["ConsoleUpload"] = value; } }     // may be null
 
-        private string homesystem = "";
-        private ISystem lookuphomesys = null;
-        private string lastlookuphomename = null;
         public string HomeSystem { get { return homesystem; } set { homesystem = value; lookuphomesys = null; lastlookuphomename = null; } }
-        public string HomeSystemTextOrSol { get { return homesystem.HasChars() ? homesystem : "Sol"; } }
-
+  
         public ISystem HomeSystemI
         {
             get
@@ -431,6 +427,9 @@ namespace EliteDangerousCore
         private bool syncfromedsm = false;
         private bool synctoedsm = false;
         private bool synctoinara = false;
+        private string homesystem = "";
+        private ISystem lookuphomesys = null;
+        private string lastlookuphomename = null;
 
         #endregion
 

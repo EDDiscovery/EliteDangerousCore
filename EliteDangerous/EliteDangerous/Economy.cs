@@ -73,6 +73,8 @@ namespace EliteDangerousCore
             ["$economy_repair;"] = "Repair",
             ["$economy_carrier;"] = "Private Enterprise",
             ["$economy_engineer;"] = "Engineering",
+
+            ["$economy_unknown;"] = "Unknown",      // addition to allow Unknown to be mapped
         };
 
         public static string ReverseLookup(string englishname)
