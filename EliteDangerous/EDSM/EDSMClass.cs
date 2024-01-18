@@ -358,7 +358,7 @@ namespace EliteDangerousCore.EDSM
         // Verified and recoded april 23
 
         public int GetLogs(DateTime? starttimeutc, DateTime? endtimeutc, out List<JournalFSDJump> fsdjumps, 
-                            out DateTime logstarttime, out DateTime logendtime, out BaseUtils.ResponseData response)
+                            out DateTime logstarttime, out DateTime logendtime, out BaseUtils.ResponseData response, Action<string> statusupdate)
         {
             fsdjumps = new List<JournalFSDJump>();
             logstarttime = DateTime.MaxValue;
@@ -416,9 +416,12 @@ namespace EliteDangerousCore.EDSM
                     if (enddatestr == null || !DateTime.TryParseExact(enddatestr, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out logendtime))
                         logendtime = DateTime.MinValue;
 
+                    statusupdate($"EDSM Log Fetcher got {logs.Count()} log entries from EDSM, from UTC {logstarttime} to {logendtime}");
+
                     var systems = new List<Tuple<ISystem,JObject>>();
 
                     // since EDSM does not give xyz in the log response, first see if any systems are in our DB
+
                     SystemsDatabase.Instance.DBRead(db =>
                     {
                         foreach (JObject jo in logs)
@@ -432,11 +435,16 @@ namespace EliteDangerousCore.EDSM
                                 if (!sc.EDSMID.HasValue)
                                     sc.EDSMID = jo["systemId"].LongNull();
                             }
+                            else
+                            {
+                            }
                             systems.Add(new Tuple<ISystem,JObject>(sc,jo));    // sc may be null
                         }
                     });
 
-                    // now some systems may be missing, so we can fill in with edsm queries
+                    // now some systems may not be in the database, or the database is empty
+                    // we can fill in with edsm queries
+
                     for (int i = 0; i < systems.Count; i++)
                     {
                         if ( systems[i].Item1 == null || !systems[i].Item1.HasCoordinate )  // if not known or no locations
