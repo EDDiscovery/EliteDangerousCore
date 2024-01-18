@@ -124,7 +124,7 @@ namespace EliteDangerousCore
         // if maxdateload set, only load up to that date
         
         public static void LoadHistory( HistoryList hist, 
-                                        Action<string> reportProgress, Func<bool> cancelRequested,
+                                        Action<int,string> reportProgress, Func<bool> cancelRequested,
                                         int commanderid, string cmdname, 
                                         int fullhistoryloaddaylimit, JournalTypeEnum[] loadedbeforelimitids, 
                                         DateTime? maxdateload
@@ -133,7 +133,7 @@ namespace EliteDangerousCore
 
             Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL", true).Item1 + $" History Load of {commanderid} {cmdname} {fullhistoryloaddaylimit} {maxdateload??DateTime.MinValue}");
 
-            reportProgress($"Reading Cmdr. {cmdname} database records");
+            reportProgress(-1,$"Reading Cmdr. {cmdname} database records");
 
             List<JournalEntry.TableData> tabledata;
 
@@ -157,7 +157,7 @@ namespace EliteDangerousCore
             {
                 Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + $" Journal Creation of {tabledata.Count}");
 
-                reportProgress($"Creating Cmdr. {cmdname} {tabledata.Count.ToString("N0")} journal entries");
+                reportProgress(-1,$"Creating Cmdr. {cmdname} {tabledata.Count.ToString("N0")} journal entries");
 
                 var jes = JournalEntry.CreateJournalEntries(tabledata, cancelRequested);
                 if (jes != null)        // if not cancelled, use it
@@ -177,12 +177,12 @@ namespace EliteDangerousCore
 
             foreach (JournalEntry je in journalentries)
             {
-                if (eno++ % 10000 == 0)
+                if (eno++ % 5000 == 0 || eno == journalentries.Length-1)
                 {
                     if (cancelRequested?.Invoke() ?? false)     // if cancelling, stop processing
                         break;
 
-                    reportProgress($"Creating Cmdr. {cmdname} history {(eno-1).ToString("N0")}/{journalentries.Length.ToString("N0")}");
+                    reportProgress(100*eno/journalentries.Length, $"Creating Cmdr. {cmdname} history {(eno-1).ToString("N0")}/{journalentries.Length.ToString("N0")}");
                 }
 
                 if (MergeJournalEntries(hist.hlastprocessed?.journalEntry, je))        // if we merge, don't store into HE
