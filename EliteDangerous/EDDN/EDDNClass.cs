@@ -1022,6 +1022,8 @@ namespace EliteDangerousCore.EDDN
 
                     sj["timestamp"] = sig.RecordedUTC.ToStringZuluInvariant();
                     sj["SignalName"] = sig.SignalName;
+                    if (sig.SignalType.HasChars())
+                        sj["SignalType"] = sig.SignalType;
                     if (sig.IsStation.HasValue)
                         sj["IsStation"] = sig.IsStation.Value;
                     if (sig.USSType.HasChars())
