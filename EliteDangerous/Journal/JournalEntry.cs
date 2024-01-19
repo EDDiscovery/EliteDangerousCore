@@ -324,10 +324,22 @@ namespace EliteDangerousCore
             return ret;
         }
 
+        private class JETable
+        {
+            public int processor;
+            public List<TableData> table;
+            public JournalEntry[] results;
+            public int start;
+            public int end;
+            public CountdownEvent finished;
+            public Func<bool> cancel;
+            public Action<int,float> progress;
+        }
+
         // from table data ID, travellogid, commanderid, event json, sync flag
         // create journal entries.  Multithreaded if many entries
         // null if cancelled
-        static public JournalEntry[] CreateJournalEntries(List<TableData> tabledata, Func<bool> cancelRequested = null)
+        static public JournalEntry[] CreateJournalEntries(List<TableData> tabledata, Func<bool> cancelRequested = null, Action<int> progress = null)
         {
             JournalEntry[] jlist = new JournalEntry[tabledata.Count];
 
@@ -336,6 +348,8 @@ namespace EliteDangerousCore
                 int threads = Math.Max(System.Environment.ProcessorCount/2,2);   // leave a few processors for other things
 
                 CountdownEvent cd = new CountdownEvent(threads);
+                float[] threadprogress = new float[threads];
+
                 for (int i = 0; i < threads; i++)
                 {
                     int s = i * tabledata.Count / threads;
@@ -343,8 +357,18 @@ namespace EliteDangerousCore
                     Thread t1 = new Thread(new ParameterizedThreadStart(CreateJEinThread));
                     t1.Priority = ThreadPriority.Highest;
                     t1.Name = $"GetAll {i}";
-                    System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.TickCount} Journal Creation Spawn {s}..{e}");
-                    t1.Start(new Tuple<List<TableData>, JournalEntry[], int, int, CountdownEvent, Func<bool>>(tabledata, jlist, s, e, cd, cancelRequested));
+                    
+                    System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCount} Journal Creation Spawn {s}..{e}");
+                    
+                    var data = new JETable() { processor = i, table = tabledata, results = jlist, start = s, end = e, finished = cd, cancel = cancelRequested.Invoke, 
+                                progress = (tno,p)=> {
+                                    threadprogress[tno] = p;
+                                    int percent = (int)(100 * threadprogress.Sum() / (threads));
+                                    progress?.Invoke(percent);
+                                   // System.Diagnostics.Debug.WriteLine($"CJE progress {p} from {tno} of {threads}, total {percent}");
+                                }
+                    };
+                    t1.Start(data);
                 }
 
                 cd.Wait();
@@ -367,17 +391,23 @@ namespace EliteDangerousCore
 
         private static void CreateJEinThread(Object o)
         {
-            var cmd = (Tuple<List<TableData>, JournalEntry[], int, int, CountdownEvent, Func<bool>>)o;
+            var data = (JETable)o;
 
-            for (int j = cmd.Item3; j < cmd.Item4; j++)
+            for (int j = data.start; j < data.end; j++)
             {
-                if (j % 10000 == 0 && (cmd.Item6?.Invoke() ?? false))       // check every X entries
-                    break;
-                var e = cmd.Item1[j];
-                cmd.Item2[j] = CreateJournalEntry(e.ID, e.TLUID, e.Cmdr, e.Json, e.Syncflag);
+                if (j % 2000 == 0)
+                {
+                    if (data.cancel?.Invoke() ?? false)       // check every X entries
+                        break;
+                    data.progress?.Invoke(data.processor, (j - data.start) / (float)(data.end - data.start));
+                }
+
+                var e = data.table[j];
+                data.results[j] = CreateJournalEntry(e.ID, e.TLUID, e.Cmdr, e.Json, e.Syncflag);
             }
 
-            cmd.Item5.Signal();
+            data.progress?.Invoke(data.processor, 1.0f);
+            data.finished.Signal();
         }
 
         #endregion
