@@ -81,6 +81,7 @@ namespace EliteDangerousCore
             public ISystem System { get; set; }
             public string WhereAmI { get; set; }
             public string NextJumpSystemName { get; set; }
+            public long? NextJumpSystemAddress { get; set; }
         };
 
         // define one of these, either FillInformation or FillInformationExtended

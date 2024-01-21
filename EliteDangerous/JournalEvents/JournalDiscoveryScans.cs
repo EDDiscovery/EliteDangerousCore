@@ -118,9 +118,8 @@ namespace EliteDangerousCore.JournalEvents
             [PropertyNameAttribute("Optional signal expiry time, Local")]
             public System.DateTime ExpiryLocal { get; set; }
 
-            public enum Classification { Station, Installation, NotableStellarPhenomena, ConflictZone, ResourceExtraction, Carrier, USS, Megaship, Other, NavBeacon, Titan, TouristBeacon, Codex};
             [PropertyNameAttribute("Signal class")]
-            public Classification ClassOfSignal { get; set; }
+            public SignalDefinitions.Classification ClassOfSignal { get; set; }
 
             const int CarrierExpiryTime = 10 * (60 * 60 * 24);              // days till we consider the carrier signal expired..
 
@@ -148,69 +147,11 @@ namespace EliteDangerousCore.JournalEvents
 
                 IsStation = evt["IsStation"].BoolNull();
 
-                if (SignalType.HasChars())
-                {
-                    if (SignalType.Contains("Station", StringComparison.InvariantCultureIgnoreCase) || (SignalType.Equals("Outpost", StringComparison.InvariantCultureIgnoreCase)))
-                        ClassOfSignal = Classification.Station;
-                    else if (SignalType.Equals("FleetCarrier", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            ClassOfSignal = Classification.Carrier;
-                            TimeRemaining = CarrierExpiryTime;
-                        }
-                    else if (SignalType.Equals("Installation", StringComparison.InvariantCultureIgnoreCase))
-                        ClassOfSignal = Classification.Installation;
-                    else if (SignalType.Equals("Megaship", StringComparison.InvariantCultureIgnoreCase))
-                        ClassOfSignal = Classification.Megaship;
-                    else if (SignalType.Equals("Combat", StringComparison.InvariantCultureIgnoreCase))
-                        ClassOfSignal = Classification.ConflictZone;
-                    else if (SignalType.Equals("ResourceExtraction", StringComparison.InvariantCultureIgnoreCase))
-                        ClassOfSignal = Classification.ResourceExtraction;
-                    else if (SignalType.Equals("NavBeacon", StringComparison.InvariantCultureIgnoreCase))
-                        ClassOfSignal = Classification.NavBeacon;
-                    else if (SignalType.Equals("Titan", StringComparison.InvariantCultureIgnoreCase))
-                        ClassOfSignal = Classification.Titan;
-                    else if (SignalType.Equals("TouristBeacon", StringComparison.InvariantCultureIgnoreCase))
-                        ClassOfSignal = Classification.TouristBeacon;
-                    else if (SignalType.Equals("USS", StringComparison.InvariantCultureIgnoreCase))
-                        ClassOfSignal = Classification.USS;
-                    else if (SignalType.Equals("Generic", StringComparison.InvariantCultureIgnoreCase))
-                        ClassOfSignal = Classification.Other;
-                    else if (SignalType.Equals("Codex", StringComparison.InvariantCultureIgnoreCase) && SignalName.StartsWith("$Fixed_Event_Life", StringComparison.InvariantCultureIgnoreCase))
-                        ClassOfSignal = Classification.NotableStellarPhenomena;
-                    else if (SignalType.Equals("Codex", StringComparison.InvariantCultureIgnoreCase))
-                        ClassOfSignal = Classification.Codex;
-                    else
-                        ClassOfSignal = Classification.Other;
+                ClassOfSignal = SignalDefinitions.GetClassification(SignalName, SignalType, IsStation == true, loc);
 
-                }
-                else
-                {
-                    if (IsStation == true)          // station flag
-                    {
-                        int dash = SignalName.LastIndexOf('-');
-                        if (SignalName.Length >= 5 && dash == SignalName.Length - 4 && char.IsLetterOrDigit(SignalName[dash + 1]) && char.IsLetterOrDigit(SignalName[dash - 1]))
-                        {
-                            ClassOfSignal = Classification.Carrier;
-                            TimeRemaining = CarrierExpiryTime;
-                        }
-                        else
-                            ClassOfSignal = Classification.Station;
-                    }
-                    else if (SignalName.StartsWith("$USS", StringComparison.InvariantCultureIgnoreCase) || SignalName.StartsWith("$RANDOM", StringComparison.InvariantCultureIgnoreCase))
-                        ClassOfSignal = Classification.USS;
-                    else if (SignalName.StartsWith("$Warzone", StringComparison.InvariantCultureIgnoreCase))
-                        ClassOfSignal = Classification.ConflictZone;
-                    else if (SignalName.StartsWith("$Fixed_Event_Life", StringComparison.InvariantCultureIgnoreCase))
-                        ClassOfSignal = Classification.NotableStellarPhenomena;
-                    else if (SignalName.StartsWith("$MULTIPLAYER_SCENARIO14", StringComparison.InvariantCultureIgnoreCase) || SignalName.StartsWith("$MULTIPLAYER_SCENARIO7", StringComparison.InvariantCultureIgnoreCase))
-                        ClassOfSignal = Classification.ResourceExtraction;
-                    else if (SignalName.Contains("-class"))
-                        ClassOfSignal = Classification.Megaship;
-                    else if (loc.Length == 0)      // other types, and old station entries, don't have localisation, so its an installation, put at end of list because other things than installations have no localised name too
-                        ClassOfSignal = Classification.Installation;                    
-                    else
-                        ClassOfSignal = Classification.Other;
-                }
+                if ( ClassOfSignal == SignalDefinitions.Classification.Carrier)
+                    TimeRemaining = CarrierExpiryTime;
+
                 RecordedUTC = EventTimeUTC;
 
                 if (TimeRemaining != null)
@@ -224,28 +165,28 @@ namespace EliteDangerousCore.JournalEvents
             {
                 return SignalName.Equals(other.SignalName) && SpawningFaction.Equals(other.SpawningFaction) && SpawningState.Equals(other.SpawningState) &&
                        USSType.Equals(other.USSType) && ThreatLevel == other.ThreatLevel &&
-                       (ClassOfSignal == Classification.Carrier || ExpiryUTC == other.ExpiryUTC);       // note carriers have our own expiry on it, so we don't
+                       (ClassOfSignal == SignalDefinitions.Classification.Carrier || ExpiryUTC == other.ExpiryUTC);       // note carriers have our own expiry on it, so we don't
             }
 
             public string ToString( bool showseentime)
             {
                 DateTime? outoftime = null;
-                if (TimeRemaining != null && ClassOfSignal != Classification.Carrier)       // ignore carrier timeout for printing
+                if (TimeRemaining != null && ClassOfSignal != SignalDefinitions.Classification.Carrier)       // ignore carrier timeout for printing
                     outoftime = ExpiryLocal;
 
                 DateTime? seen = null;
-                if (showseentime && (ClassOfSignal == Classification.Carrier || ClassOfSignal == Classification.Megaship)) //both move in and out of systems, so show last seen
+                if (showseentime && (ClassOfSignal == SignalDefinitions.Classification.Carrier || ClassOfSignal == SignalDefinitions.Classification.Megaship)) //both move in and out of systems, so show last seen
                     seen = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(RecordedUTC);
 
-                string signname = ClassOfSignal == Classification.USS ? null : SignalName_Localised;        // signal name for USS is boring, remove
+                string signname = ClassOfSignal == SignalDefinitions.Classification.USS ? null : SignalName_Localised;        // signal name for USS is boring, remove
 
                 string spstate = SpawningState_Localised != null ? SpawningState_Localised.Truncate(0, 32, "..") : null;
 
                 return BaseUtils.FieldBuilder.Build(
-                            ";Station: ".T(EDCTx.FSSSignal_StationBool), ClassOfSignal == Classification.Station,
-                            ";Carrier: ".T(EDCTx.FSSSignal_CarrierBool), ClassOfSignal == Classification.Carrier,
-                            ";Megaship: ".T(EDCTx.FSSSignal_MegashipBool), ClassOfSignal == Classification.Megaship,
-                            ";Installation: ".T(EDCTx.FSSSignal_InstallationBool), ClassOfSignal == Classification.Installation,
+                            ";Station: ".T(EDCTx.FSSSignal_StationBool), ClassOfSignal == SignalDefinitions.Classification.Station,
+                            ";Carrier: ".T(EDCTx.FSSSignal_CarrierBool), ClassOfSignal == SignalDefinitions.Classification.Carrier,
+                            ";Megaship: ".T(EDCTx.FSSSignal_MegashipBool), ClassOfSignal == SignalDefinitions.Classification.Megaship,
+                            ";Installation: ".T(EDCTx.FSSSignal_InstallationBool), ClassOfSignal == SignalDefinitions.Classification.Installation,
                             "<", signname,
                             "", USSTypeLocalised,
                             "Threat Level: ".T(EDCTx.FSSSignal_ThreatLevel), ThreatLevel,
@@ -276,21 +217,21 @@ namespace EliteDangerousCore.JournalEvents
         public ISystem EDDNSystem { get; set; }                 // set if FSS has been detected in the wrong system                  
 
         [PropertyNameAttribute("Count of station signals")]
-        public int CountStationSignals { get { return Signals?.Where(x => x.ClassOfSignal == FSSSignal.Classification.Station).Count() ?? 0; } }
+        public int CountStationSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Station).Count() ?? 0; } }
         [PropertyNameAttribute("Count of installation signals")]
-        public int CountInstallationSignals { get { return Signals?.Where(x => x.ClassOfSignal == FSSSignal.Classification.Installation).Count() ?? 0; } }
+        public int CountInstallationSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Installation).Count() ?? 0; } }
         [PropertyNameAttribute("Count of NSP signals")]
-        public int CountNotableStellarPhenomenaSignals { get { return Signals?.Where(x => x.ClassOfSignal == FSSSignal.Classification.NotableStellarPhenomena).Count() ?? 0; } }
+        public int CountNotableStellarPhenomenaSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.NotableStellarPhenomena).Count() ?? 0; } }
         [PropertyNameAttribute("Count of conflict zone signals")]
-        public int CountConflictZoneSignals { get { return Signals?.Where(x => x.ClassOfSignal == FSSSignal.Classification.ConflictZone).Count() ?? 0; } }
+        public int CountConflictZoneSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.ConflictZone).Count() ?? 0; } }
         [PropertyNameAttribute("Count of extraction zone signals")]
-        public int CountResourceExtractionZoneSignals { get { return Signals?.Where(x => x.ClassOfSignal == FSSSignal.Classification.ResourceExtraction).Count() ?? 0; } }
+        public int CountResourceExtractionZoneSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.ResourceExtraction).Count() ?? 0; } }
         [PropertyNameAttribute("Count of carrier signals")]
-        public int CountCarrierSignals { get { return Signals?.Where(x => x.ClassOfSignal == FSSSignal.Classification.Carrier).Count() ?? 0; } }
+        public int CountCarrierSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Carrier).Count() ?? 0; } }
         [PropertyNameAttribute("Count of USS signals")]
-        public int CountUSSSignals { get { return Signals?.Where(x => x.ClassOfSignal == FSSSignal.Classification.USS).Count() ?? 0; } }
+        public int CountUSSSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.USS).Count() ?? 0; } }
         [PropertyNameAttribute("Count of other signals")]
-        public int CountOtherSignals { get { return Signals?.Where(x => x.ClassOfSignal == FSSSignal.Classification.Other).Count() ?? 0; } }
+        public int CountOtherSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Other).Count() ?? 0; } }
 
         public void AddStarScan(StarScan s, ISystem system)
         {
@@ -302,10 +243,11 @@ namespace EliteDangerousCore.JournalEvents
             const int maxsignals = 20;
 
             detailed = "";
+            info = fid.NextJumpSystemName != null ? "@ " + fid.NextJumpSystemName + ": ": "";
 
             if (Signals.Count > 1)
             {
-                info = BaseUtils.FieldBuilder.Build("Detected ; signals".T(EDCTx.JournalFSSSignalDiscovered_Detected), Signals.Count);
+                info += BaseUtils.FieldBuilder.Build("Detected ; signals".T(EDCTx.JournalFSSSignalDiscovered_Detected), Signals.Count);
 
                 if (Signals.Count < maxsignals)
                 {
@@ -320,14 +262,12 @@ namespace EliteDangerousCore.JournalEvents
 
                 // in a jump seqence, those frontier people send a FSD while jumping, and HES records there is a jump system name, so use it. else use current system name
 
-                info = info.AppendPrePad("@ " + (fid.NextJumpSystemName ?? fid.System.Name), ", ");
-
                 foreach (var s in Signals)
                     detailed = detailed.AppendPrePad(s.ToString(false), System.Environment.NewLine);
             }
             else
             {
-                info = Signals[0].ToString(false);
+                info += Signals[0].ToString(false);
             }
         }
 

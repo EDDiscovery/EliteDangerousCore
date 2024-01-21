@@ -275,7 +275,7 @@ namespace EliteDangerousCore
             if (eventDescription == null)       // FillInformation was not implemented, try the next one
             {
                 JournalEntry.FillInformationData fid = new JournalEntry.FillInformationData() 
-                { System = this.System, WhereAmI = this.WhereAmI , NextJumpSystemName = this.Status.FSDJumpNextSystemName };
+                { System = this.System, WhereAmI = this.WhereAmI , NextJumpSystemName = this.Status.FSDJumpNextSystemName, NextJumpSystemAddress = this.Status.FSDJumpNextSystemAddress };
 
                 journalEntry.FillInformationExtended(fid,out eventDescription, out eventDetailedInfo);
             }

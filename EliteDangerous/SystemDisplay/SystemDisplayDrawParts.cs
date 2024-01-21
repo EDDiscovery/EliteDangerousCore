@@ -104,13 +104,13 @@ namespace EliteDangerousCore
 
             int[] count = new int[]     // in priority order
             {
-                signallist.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.Station).Count(),
-                signallist.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.Carrier).Count(),
-                signallist.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.Installation || x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.Megaship).Count(), //before the megaship calssification they were counted as installations, so put them here to not lose the count - might need something better in the future like their own icon
-                signallist.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.NotableStellarPhenomena).Count(),
-                signallist.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.ResourceExtraction).Count(),
-                signallist.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.ConflictZone).Count(),
-                signallist.Where(x => x.ClassOfSignal == JournalFSSSignalDiscovered.FSSSignal.Classification.USS).Count(),
+                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Station).Count(),
+                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Carrier).Count(),
+                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Installation || x.ClassOfSignal == SignalDefinitions.Classification.Megaship).Count(), //before the megaship calssification they were counted as installations, so put them here to not lose the count - might need something better in the future like their own icon
+                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.NotableStellarPhenomena).Count(),
+                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.ResourceExtraction).Count(),
+                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.ConflictZone).Count(),
+                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.USS).Count(),
                 0, // 7, slot for others
                 0, // 8, slot for codex
             };
