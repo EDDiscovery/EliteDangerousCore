@@ -394,11 +394,11 @@ namespace EliteDangerousCore
             if (je.EventTypeID == JournalTypeEnum.Friends)
                 return 2000;
             else if (je.EventTypeID == JournalTypeEnum.FSSSignalDiscovered)
-                return 2000;
+                return 250;                                         // each one of these pushes it another 250ms into the future
             else if (je.EventTypeID == JournalTypeEnum.FuelScoop)
                 return 10000;
             else if (je.EventTypeID == JournalTypeEnum.ShipTargeted)
-                return 250; // short, so normally does not merge unless your clicking around like mad
+                return 250;                                         // short, so normally does not merge unless your clicking around like mad
             else
                 return 0;
         }
