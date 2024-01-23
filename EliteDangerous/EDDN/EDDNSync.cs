@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 EDDiscovery development team
+ * Copyright © 2016-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- *
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using System;
@@ -165,13 +163,15 @@ namespace EliteDangerousCore.EDDN
             else if (je.EventTypeID == JournalTypeEnum.Market)      // from the journal
             {
                 JournalMarket jm = je as JournalMarket;
-                msg = eddn.CreateEDDNCommodityMessage(jm.GameVersion,jm.Build, jm.Commodities, jm.IsOdyssey, jm.IsHorizons, jm.StarSystem, jm.Station, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned
+                msg = eddn.CreateEDDNCommodityMessage(jm.GameVersion,jm.Build, jm.Commodities, jm.IsOdyssey, jm.IsHorizons, jm.StarSystem, 
+                    jm.Station, jm.StationType, jm.CarrierDockingAccess, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned
             }
             else if (je.EventTypeID == JournalTypeEnum.EDDCommodityPrices)  // synthesised EDD
             {
                 JournalEDDCommodityPrices jm = je as JournalEDDCommodityPrices;
                 bool legacy = EDCommander.IsLegacyCommander(je.CommanderId);
-                msg = eddn.CreateEDDNCommodityMessage( legacy ? "CAPI-Legacy-market" : "CAPI-Live-market", "", jm.Commodities, jm.IsOdyssey, jm.IsHorizons, jm.StarSystem, jm.Station, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned
+                msg = eddn.CreateEDDNCommodityMessage( legacy ? "CAPI-Legacy-market" : "CAPI-Live-market", "", jm.Commodities, jm.IsOdyssey, jm.IsHorizons, jm.StarSystem, 
+                            jm.Station, jm.StationType, jm.CarrierDockingAccess, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned
             }
             else if (je.EventTypeID == JournalTypeEnum.FSSDiscoveryScan)
             {
@@ -207,9 +207,17 @@ namespace EliteDangerousCore.EDDN
                 var fss = je as JournalFSSSignalDiscovered;
                 msg = eddn.CreateEDDNFSSSignalDiscovered(fss, fss.EDDNSystem != null ? fss.EDDNSystem : he.System);
             }
-            else if (je.EventTypeID == JournalTypeEnum.FCMaterials)       // not yet
+            else if (je.EventTypeID == JournalTypeEnum.FCMaterials)     
             {
                 msg = eddn.CreateEDDNFCMaterials(je as JournalFCMaterials, he.System);
+            }
+            else if (je.EventTypeID == JournalTypeEnum.DockingGranted)    
+            {
+                msg = eddn.CreateEDDNDockingGranted(je as JournalDockingGranted, he.System);
+            }
+            else if (je.EventTypeID == JournalTypeEnum.DockingDenied)      
+            {
+                msg = eddn.CreateEDDNDockingDenied(je as JournalDockingDenied, he.System);
             }
 
             if (msg != null)

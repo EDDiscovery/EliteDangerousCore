@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2022 EDDiscovery development team
+ * Copyright © 2016-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -44,6 +44,8 @@ namespace EliteDangerousCore.EDDN
         private readonly string FSSAllBodiesFoundSchema = "https://eddn.edcd.io/schemas/fssallbodiesfound/1";
         private readonly string FSSSignalDiscoveredSchema = "https://eddn.edcd.io/schemas/fsssignaldiscovered/1";
         private readonly string FCMaterialsSchema = "https://eddn.edcd.io/schemas/fcmaterials_journal/1";
+        private readonly string DockingDenied = "https://eddn.edcd.io/schemas/dockingdenied/1";
+        private readonly string DockingGranted = "https://eddn.edcd.io/schemas/dockinggranted/1";
 
         public EDDNClass(string commandernamep)
         {
@@ -84,8 +86,10 @@ namespace EliteDangerousCore.EDDN
                  EntryType == JournalTypeEnum.ApproachSettlement ||
                  EntryType == JournalTypeEnum.FSSAllBodiesFound ||
                  EntryType == JournalTypeEnum.FSSSignalDiscovered ||
-                 EntryType == JournalTypeEnum.FCMaterials 
-                 );
+                 EntryType == JournalTypeEnum.FCMaterials ||
+                 EntryType == JournalTypeEnum.DockingDenied ||
+                 EntryType == JournalTypeEnum.DockingGranted
+               );
         }
 
         private static readonly JObject AllowedFieldsCommon = new JObject
@@ -931,7 +935,8 @@ namespace EliteDangerousCore.EDDN
 
         // pass thru gameversion/build as its used for both journal market and capi EDDCommodityPrices
 
-        public JObject CreateEDDNCommodityMessage(string gameversion, string build, List<CCommodities> commodities, bool odyssey, bool horizons, string systemName, string stationName, long? marketID, DateTime time)
+        public JObject CreateEDDNCommodityMessage(string gameversion, string build, List<CCommodities> commodities, bool odyssey, bool horizons, string systemName, 
+                                string stationName, string stationType, string carrieraccess, long? marketID, DateTime time)
         {
             if (commodities == null) // now allowed to send empty lists for FC purposes (jan 21)
                 return null;
@@ -945,6 +950,10 @@ namespace EliteDangerousCore.EDDN
 
             message["systemName"] = systemName;
             message["stationName"] = stationName;
+            if ( stationType.HasChars())
+                message["stationType"] = stationType;
+            if (carrieraccess.HasChars())
+                message["carrierDockingAccess"] = carrieraccess;
             message["marketId"] = marketID;
             message["timestamp"] = time.ToStringZuluInvariant();
 
@@ -1055,7 +1064,7 @@ namespace EliteDangerousCore.EDDN
                 return null;
 
             JObject msg = new JObject();
-            msg["header"] = Header(journal.GameVersion,journal.Build);
+            msg["header"] = Header(journal.GameVersion, journal.Build);
             msg["$schemaRef"] = FCMaterialsSchema;
 
             JObject message = new JObject();
@@ -1081,7 +1090,52 @@ namespace EliteDangerousCore.EDDN
             }
 
             message["Items"] = ja;
-        
+
+            msg["message"] = message;
+
+            return msg;
+        }
+
+
+        public JObject CreateEDDNDockingDenied(JournalDockingDenied journal, ISystem system)
+        {
+            JObject msg = new JObject();
+            msg["header"] = Header(journal.GameVersion, journal.Build);
+            msg["$schemaRef"] = DockingDenied;
+
+            JObject message = new JObject();
+
+            message["timestamp"] = journal.EventTimeUTC.ToStringZuluInvariant();
+            message["event"] = "DockingDenied";
+            message["horizons"] = journal.IsHorizons;
+            message["odyssey"] = journal.IsOdyssey;
+            message["MarketID"] = journal.MarketID;
+            message["StationName"] = journal.StationName;
+            message["StationType"] = journal.StationType;
+            message["Reason"] = journal.Reason;
+
+            msg["message"] = message;
+
+            return msg;
+        }
+
+        public JObject CreateEDDNDockingGranted(JournalDockingGranted journal, ISystem system)
+        {
+            JObject msg = new JObject();
+            msg["header"] = Header(journal.GameVersion, journal.Build);
+            msg["$schemaRef"] = DockingGranted;
+
+            JObject message = new JObject();
+
+            message["timestamp"] = journal.EventTimeUTC.ToStringZuluInvariant();
+            message["event"] = "DockingGranted";
+            message["horizons"] = journal.IsHorizons;
+            message["odyssey"] = journal.IsOdyssey;
+            message["MarketID"] = journal.MarketID;
+            message["StationName"] = journal.StationName;
+            message["StationType"] = journal.StationType;
+            message["LandingPad"] = journal.LandingPad;
+
             msg["message"] = message;
 
             return msg;

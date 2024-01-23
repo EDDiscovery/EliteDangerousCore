@@ -85,8 +85,8 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string Station { get; protected set; }
-        public string StationType { get; protected set; }           // may be null, not on older events 
-        public string CarrierDockingAccess { get; protected set; }  // will be null when not in carrier
+        public string StationType { get; protected set; }           // may be null on older events, and not from CAPI
+        public string CarrierDockingAccess { get; protected set; }  // will be null when not in carrier or from CAPI
         public string StarSystem { get; set; }
         public long? MarketID { get; set; }
         public List<CCommodities> Commodities { get; protected set; }   // never null
