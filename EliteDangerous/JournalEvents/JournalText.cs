@@ -51,9 +51,9 @@ namespace EliteDangerousCore.JournalEvents
         public JournalReceiveText(JObject evt) : base(evt, JournalTypeEnum.ReceiveText)
         {
             From = evt["From"].Str();
-            FromLocalised = evt["From_Localised"].Str().Alt(From);
+            FromLocalised = JournalFieldNaming.CheckLocalisation(evt["From_Localised"].Str(), From);
             Message = evt["Message"].Str();
-            MessageLocalised = evt["Message_Localised"].Str().Alt(Message);
+            MessageLocalised = JournalFieldNaming.CheckLocalisation(evt["Message_Localised"].Str(), Message);
             Channel = evt["Channel"].Str();
 
             string[] specials = new string[] { "$COMMS_entered:", "$CHAT_intro;", "$HumanoidEmote" };
