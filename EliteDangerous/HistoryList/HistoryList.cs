@@ -157,7 +157,7 @@ namespace EliteDangerousCore
             {
                 Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + $" Journal Creation of {tabledata.Count}");
 
-                var jes = JournalEntry.CreateJournalEntries(tabledata, cancelRequested, (p) => reportProgress(p, $"Creating Cmdr. {cmdname} journal entries {(int)(tabledata.Count * p / 100)}/{tabledata.Count.ToString("N0")}"));
+                var jes = JournalEntry.CreateJournalEntries(tabledata, cancelRequested, (p) => reportProgress(p, $"Creating Cmdr. {cmdname} journal entries {(int)(tabledata.Count * p / 100):N0}/{tabledata.Count:N0}"));
                 if (jes != null)        // if not cancelled, use it
                     journalentries = jes;
             }
@@ -180,7 +180,7 @@ namespace EliteDangerousCore
                     if (cancelRequested?.Invoke() ?? false)     // if cancelling, stop processing
                         break;
 
-                    reportProgress(100*eno/journalentries.Length, $"Creating Cmdr. {cmdname} history {(eno-1).ToString("N0")}/{journalentries.Length.ToString("N0")}");
+                    reportProgress(100*eno/journalentries.Length, $"Creating Cmdr. {cmdname} history {(eno-1):N0}/{journalentries.Length:N0}");
                 }
 
                 if (MergeJournalEntries(hist.hlastprocessed?.journalEntry, je))        // if we merge, don't store into HE
