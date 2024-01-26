@@ -260,12 +260,13 @@ namespace EliteDangerousCore
                            // System.IO.File.AppendAllText(@"c:\code\loc.txt", $"Substitute loc '{loc}' for '{alt}'\r\n");
                         }
                     }
-
+                    
                     return alt;
                 }
             }
+
+            return loc != null ? loc.Replace("&nbsp;", " ") : loc; //Frontier returns spaces as separator as &nbsp; so let's replace it to make it readable
             
-            return loc;
         }
         
         static public string CheckLocalisationTranslation(string loc, string alt)      
