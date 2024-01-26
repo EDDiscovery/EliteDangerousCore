@@ -265,7 +265,7 @@ namespace EliteDangerousCore
                 }
             }
 
-            return loc != null && loc.Contains("&nbsp;") ? loc.Replace("&nbsp;", " ") : loc;
+            return loc != null ? loc.Replace("&nbsp;", " ") : loc; //Frontier returns spaces as separator as &nbsp; so let's replace it to make it readable
             
         }
         
