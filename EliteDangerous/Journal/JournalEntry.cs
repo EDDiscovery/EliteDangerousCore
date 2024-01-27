@@ -333,7 +333,7 @@ namespace EliteDangerousCore
             public int start;
             public int end;
             public CountdownEvent finished;
-            public Func<bool> cancel;
+            public Func<bool> iscancelled;
             public Action<int,float> progress;
         }
 
@@ -361,12 +361,13 @@ namespace EliteDangerousCore
                     
                     System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCount} Journal Creation Spawn {s}..{e}");
                     
-                    var data = new JETable() { processor = i, table = tabledata, results = jlist, start = s, end = e, finished = cd, cancel = cancelRequested.Invoke, 
+                    var data = new JETable() { processor = i, table = tabledata, results = jlist, start = s, end = e, finished = cd, 
+                                iscancelled = cancelRequested, 
                                 progress = (tno,p)=> {
-                                    threadprogress[tno] = p;
-                                    int percent = (int)(100 * threadprogress.Sum() / (threads));
-                                    progress?.Invoke(percent);
-                                   // System.Diagnostics.Debug.WriteLine($"CJE progress {p} from {tno} of {threads}, total {percent}");
+                                threadprogress[tno] = p;
+                                int percent = (int)(100 * threadprogress.Sum() / (threads));
+                                progress?.Invoke(percent);
+                                // System.Diagnostics.Debug.WriteLine($"CJE progress {p} from {tno} of {threads}, total {percent}");
                                 }
                     };
                     t1.Start(data);
@@ -398,7 +399,7 @@ namespace EliteDangerousCore
             {
                 if (j % 2000 == 0)
                 {
-                    if (data.cancel?.Invoke() ?? false)       // check every X entries
+                    if (data.iscancelled?.Invoke() ?? false)       // check every X entries, if cancel is not null
                         break;
                     data.progress?.Invoke(data.processor, (j - data.start) / (float)(data.end - data.start));
                 }
