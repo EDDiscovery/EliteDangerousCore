@@ -127,8 +127,7 @@ namespace EliteDangerousCore.EDSM
                         {
                             if (edsmlogs?.Count > 0)     // if anything to process..
                             {
-                                Process(edsmlogs, logstarttime, logendtime);
-                                logscollected += edsmlogs.Count;
+                                logscollected += Process(edsmlogs, logstarttime, logendtime);
                             }
                             else
                                 StatusLineUpdate(2, -1, $"EDSM Log Fetcher checked to UTC {lastqueryendtime} No logs");
@@ -176,7 +175,7 @@ namespace EliteDangerousCore.EDSM
             }
         }
 
-        void Process(List<JournalFSDJump> edsmlogs, DateTime logstarttime, DateTime logendtime)
+        private int Process(List<JournalFSDJump> edsmlogs, DateTime logstarttime, DateTime logendtime)
         {
             // Get all of the local entries now that we have the entries from EDSM
             // Moved here to avoid the race that could have been causing duplicate entries
@@ -245,8 +244,9 @@ namespace EliteDangerousCore.EDSM
                         jfsd.Add(jfsd.CreateFSDJournalEntryJson(), cn, null);     // add it to the db with the JSON created
                     }
                 });
-
             }
+
+            return toadd.Count;
         }
 
         private static int EDSMMaxLogAgeMinutes = 15;
