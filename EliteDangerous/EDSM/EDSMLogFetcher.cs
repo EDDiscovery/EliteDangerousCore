@@ -23,7 +23,7 @@ namespace EliteDangerousCore.EDSM
 {
     public class EDSMLogFetcher
     {
-        public EDSMLogFetcher(Action<string> logline, Action<int, int, string> statusLineUpdate)
+        public EDSMLogFetcher(Action<string> logline, Action<string> statusLineUpdate)
         {
             LogLine = logline;
             StatusLineUpdate = statusLineUpdate;
@@ -58,7 +58,7 @@ namespace EliteDangerousCore.EDSM
                 ExitRequested.Set();
                 ThreadEDSMFetchLogs.Join(); // wait for exit.
                 ThreadEDSMFetchLogs = null;
-                StatusLineUpdate(2, -1, "");
+                StatusLineUpdate("");
             }
         }
 
@@ -91,7 +91,7 @@ namespace EliteDangerousCore.EDSM
 
                 if (displayedstatus)
                 {
-                    StatusLineUpdate(2, -1, $"");
+                    StatusLineUpdate($"");
                     displayedstatus = false;
                 }
 
@@ -119,7 +119,7 @@ namespace EliteDangerousCore.EDSM
 
                         int res = edsm.GetLogs(null, lastqueryendtime, out List<JournalFSDJump> edsmlogs, 
                                         out DateTime logstarttime, out DateTime logendtime, 
-                                        out BaseUtils.ResponseData response, (s) => StatusLineUpdate(2,-1,s));
+                                        out BaseUtils.ResponseData response, (s) => StatusLineUpdate(s));
 
                         //int res = 100;  DateTime logstarttime = lastqueryendtime.AddDays(-7);  DateTime logendtime = lastqueryendtime.AddDays(-1); List<JournalFSDJump> edsmlogs = new List<JournalFSDJump>();
 
@@ -130,7 +130,7 @@ namespace EliteDangerousCore.EDSM
                                 logscollected += Process(edsmlogs, logstarttime, logendtime);
                             }
                             else
-                                StatusLineUpdate(2, -1, $"EDSM Log Fetcher checked to UTC {lastqueryendtime} No logs");
+                                StatusLineUpdate($"EDSM Log Fetcher checked to UTC {lastqueryendtime} No logs");
 
                             displayedstatus = true;
 
@@ -254,7 +254,7 @@ namespace EliteDangerousCore.EDSM
         private Thread ThreadEDSMFetchLogs;
         private ManualResetEvent ExitRequested = new ManualResetEvent(false);
         private Action<string> LogLine;
-        private Action<int, int, string> StatusLineUpdate;
+        private Action<string> StatusLineUpdate;
 
         public delegate void EDSMDownloadedSystems();
         public event EDSMDownloadedSystems OnDownloadedSystems;
