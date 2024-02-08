@@ -70,6 +70,8 @@ namespace EliteDangerousCore
         public bool HasDemandAndPrice { get { return sellPrice > 0 && demand > 0; } }
         [JsonIgnore]
         public bool HasDemand { get { return demand > 0; } }
+        [JsonIgnore]
+        public bool HasGoodDemand { get { return demand > 1; } }        // 1 seems the default for a lot of entries..
 
         // Mean
         public int meanPrice { get; private set; }
