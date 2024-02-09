@@ -82,7 +82,7 @@ namespace EliteDangerousCore.Inara
             string request = ToJSONString(events);
 
             //File.WriteAllText(@"c:\code\json.txt", request); 
-            System.Diagnostics.Debug.WriteLine(ret + "Send inara " + request);
+            //System.Diagnostics.Debug.WriteLine(ret + "Send inara " + request);
 
             var response = RequestPost(request, InaraAPI, handleException: true, contenttype: "application/json");
 
