@@ -908,8 +908,6 @@ CommanderForm: "CommanderForm" => "指挥官配置"
 .extGroupBoxCommanderInfo: "Other" @
 .labelMapCol: "Default Map Color" @
 .HomeSys: "Home System:" @
-.groupBoxCustomIGAU: "Intergalactic Astronomical Union [IGAU]" @
-.checkBoxIGAUSync: "Send Codex Entry Discovery Data to IGAU" @
 .groupBoxCustomInara: "Inara Information (optional)" => "Inara 设置（可选）"
 .labelINARAN: "Inara Name:" => "Inara 用户名："
 .labelInaraAPI: "Inara API Key:" => "Inara API Key："
@@ -926,7 +924,6 @@ CommanderForm: "CommanderForm" => "指挥官配置"
 .buttonExtBrowse: "Browse" => "浏览"
 .labelJL: "Journal Location:" => "游戏日志文件路径："
 .panel_defaultmapcolor.ToolTip: "New travel entries get this colour on the map" @
-.checkBoxIGAUSync.ToolTip: "https://github.com/Elite-IGAU/publications/blob/master/IGAU_Codex.csv" @
 .textBoxBorderInaraName.ToolTip: "Give the user name for this commander on Inara" => "输入此指挥官在 Inara 上对应的用户名"
 .checkBoxCustomInara.ToolTip: "Sync with Inara" => "与 Inara 同步"
 .textBoxBorderInaraAPIKey.ToolTip: "Enter the API key from the Inara Website\r\nGet an Inara API key from https://inara.cz" => "输入 Inara 网站的 API Key\n从 https://inara.cz 获取 API Key"

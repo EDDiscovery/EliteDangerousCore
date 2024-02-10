@@ -908,8 +908,6 @@ CommanderForm: "CommanderForm" => "Командир"
 .extGroupBoxCommanderInfo: "Other" @
 .labelMapCol: "Default Map Color" @
 .HomeSys: "Home System:" @
-.groupBoxCustomIGAU: "Intergalactic Astronomical Union [IGAU]" @
-.checkBoxIGAUSync: "Send Codex Entry Discovery Data to IGAU" @
 .groupBoxCustomInara: "Inara Information (optional)" => "Inara (необязательно)"
 .labelINARAN: "Inara Name:" => "Имя пользователя Inara"
 .labelInaraAPI: "Inara API Key:" => "Api-ключ Inara"
@@ -926,7 +924,6 @@ CommanderForm: "CommanderForm" => "Командир"
 .buttonExtBrowse: "Browse" => "Обзор"
 .labelJL: "Journal Location:" => "Путь к файлам журнала"
 .panel_defaultmapcolor.ToolTip: "New travel entries get this colour on the map" @
-.checkBoxIGAUSync.ToolTip: "https://github.com/Elite-IGAU/publications/blob/master/IGAU_Codex.csv" @
 .textBoxBorderInaraName.ToolTip: "Give the user name for this commander on Inara" => "Укажите имя пользователя Inara для этого командира"
 .checkBoxCustomInara.ToolTip: "Sync with Inara" => "Синхронизация с Inara"
 .textBoxBorderInaraAPIKey.ToolTip: "Enter the API key from the Inara Website\r\nGet an Inara API key from https://inara.cz" => "Укажите Api-ключ Inara\nЕго можно узнать на https://inara.cz"
