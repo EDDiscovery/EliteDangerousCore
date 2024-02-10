@@ -37,6 +37,7 @@ namespace EliteDangerousCore
             Soldier,
             Terrorist,
             Tourist,
+            AidWorker,
         }
     }
 }
