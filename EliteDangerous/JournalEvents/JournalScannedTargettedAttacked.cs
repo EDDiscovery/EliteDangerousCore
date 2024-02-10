@@ -143,7 +143,7 @@ namespace EliteDangerousCore.JournalEvents
                 else if (ScanStage.Value == 3)
                 {
                     info = BaseUtils.FieldBuilder.Build(
-                                    "", PilotName_Localised, "<(;)", LegalStatus, "Rank: ".T(EDCTx.JournalEntry_Rank), PilotRank, "< in ".T(EDCTx.JournalShipTargeted_in), Ship_Localised,
+                                    "", PilotName_Localised, "< (;)", LegalStatus, "Rank: ".T(EDCTx.JournalEntry_Rank), PilotRank, "< in ".T(EDCTx.JournalShipTargeted_in), Ship_Localised,
                                     "Shield ;;N1".T(EDCTx.JournalEntry_Shield), ShieldHealth, "Hull ;;N1".T(EDCTx.JournalShipTargeted_Hull), HullHealth,
                                     "Bounty: ; cr;N0".T(EDCTx.JournalEntry_Bounty), Bounty,
                                     "", SubSystem, "< at ;;N1".T(EDCTx.JournalShipTargeted_at), SubSystemHealth,

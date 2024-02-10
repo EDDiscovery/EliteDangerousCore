@@ -238,7 +238,7 @@ namespace EliteDangerousCore
         {
             if ( alt != null  )  // no point if alt is null
             { 
-                bool invalid = loc == null || loc.Length < 2 || loc.StartsWith("$int", StringComparison.InvariantCultureIgnoreCase) || loc.StartsWith("$hpt", StringComparison.InvariantCultureIgnoreCase) ||
+                bool invalid = loc.IsEmpty() || loc.StartsWith("$int", StringComparison.InvariantCultureIgnoreCase) || loc.StartsWith("$hpt", StringComparison.InvariantCultureIgnoreCase) ||
                                   (loc.StartsWith("$") && loc.EndsWith(";"));
 
                 if (invalid)
