@@ -42,14 +42,14 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(out string info, out string detailed) 
         {
-            info = BaseUtils.FieldBuilder.Build("", Combat.ToString().Replace("_", " "),
-                                      "", Trade.ToString().Replace("_", " "),
-                                      "", Explore.ToString().Replace("_", " "),
-                                      "", Soldier.ToString().Replace("_", " "),
-                                      "", ExoBiologist.ToString().Replace("_", " "),
-                                      "", Empire.ToString().Replace("_", " "),
-                                      "", Federation.ToString().Replace("_", " "),                                      
-                                      "", CQC.ToString().Replace("_", " "));
+            info = BaseUtils.FieldBuilder.Build("", RankDefinitions.FriendlyName(Combat),
+                                      "", RankDefinitions.FriendlyName(Trade),
+                                      "", RankDefinitions.FriendlyName(Explore),
+                                      "", RankDefinitions.FriendlyName(Soldier),
+                                      "", RankDefinitions.FriendlyName(ExoBiologist),
+                                      "", RankDefinitions.FriendlyName(Empire),
+                                      "", RankDefinitions.FriendlyName(Federation),                                      
+                                      "", RankDefinitions.FriendlyName(CQC));
             detailed = "";
         }
 
@@ -128,14 +128,14 @@ namespace EliteDangerousCore.JournalEvents
         {
             var names = JournalRank.TranslatedRankNames();
 
-            info = BaseUtils.FieldBuilder.Build(names[0] + ": ", Combat.HasValue ? Combat.ToString().Replace("_", " ") : null,
-                                      names[1] + ": ", Trade.HasValue ? Trade.ToString().Replace("_", " ") : null,
-                                      names[2] + ": ", Explore.HasValue ? Explore.ToString().Replace("_", " ") : null,
-                                      names[3] + ": ", Soldier.HasValue ? Soldier.ToString().Replace("_", " ") : null,
-                                      names[4] + ": ", ExoBiologist.HasValue ? ExoBiologist.ToString().Replace("_", " ") : null,
-                                      names[5] + ": ", Empire.HasValue ? Empire.ToString().Replace("_", " ") : null,
-                                      names[6] + ": ", Federation.HasValue ? Federation.ToString().Replace("_", " ") : null,
-                                      names[7] + ": ", CQC.HasValue ? CQC.ToString().Replace("_", " ") : null);
+            info = BaseUtils.FieldBuilder.Build(names[0] + ": ", Combat.HasValue ? RankDefinitions.FriendlyName(Combat.Value) : null,
+                                      names[1] + ": ", Trade.HasValue ? RankDefinitions.FriendlyName(Trade.Value) : null,
+                                      names[2] + ": ", Explore.HasValue ? RankDefinitions.FriendlyName(Explore.Value) : null,
+                                      names[3] + ": ", Soldier.HasValue ? RankDefinitions.FriendlyName(Soldier.Value) : null,
+                                      names[4] + ": ", ExoBiologist.HasValue ? RankDefinitions.FriendlyName(ExoBiologist.Value) : null,
+                                      names[5] + ": ", Empire.HasValue ? RankDefinitions.FriendlyName(Empire.Value) : null,
+                                      names[6] + ": ", Federation.HasValue ? RankDefinitions.FriendlyName(Federation.Value) : null,
+                                      names[7] + ": ", CQC.HasValue ? RankDefinitions.FriendlyName(CQC.Value) : null);
             detailed = "";
         }
 

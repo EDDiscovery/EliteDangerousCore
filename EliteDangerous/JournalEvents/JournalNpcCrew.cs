@@ -61,7 +61,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("<", Name, "Rank: ".T(EDCTx.JournalEntry_Rank), RankDefinitions.FriendlyCombatRank(RankCombat));
+            info = BaseUtils.FieldBuilder.Build("<", Name, "Rank: ".T(EDCTx.JournalEntry_Rank), RankDefinitions.FriendlyName(RankCombat));
             detailed = "";
         }
 

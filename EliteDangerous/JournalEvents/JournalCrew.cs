@@ -84,7 +84,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Hired: ;".T(EDCTx.JournalEntry_Hired), Name, "< of faction ".T(EDCTx.JournalEntry_offaction), 
-                            Faction, "Rank: ".T(EDCTx.JournalEntry_Rank), RankDefinitions.FriendlyCombatRank(CombatRank), "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost);
+                            Faction, "Rank: ".T(EDCTx.JournalEntry_Rank), RankDefinitions.FriendlyName(CombatRank), "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost);
             detailed = "";
         }
     }

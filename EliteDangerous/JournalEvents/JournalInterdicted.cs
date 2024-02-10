@@ -51,12 +51,12 @@ namespace EliteDangerousCore.JournalEvents
             // tbd thargoid
             if ( Submitted )
                 info = BaseUtils.FieldBuilder.Build(";Submitted".T(EDCTx.JournalEntry_Submitted), Submitted, "< to ".T(EDCTx.JournalEntry_to), Interdictor_Localised, 
-                    "< (NPC);(Player)".T(EDCTx.JournalEntry_NPC), IsPlayer, "Rank: ", RankDefinitions.FriendlyCombatRank(CombatRank), 
+                    "< (NPC);(Player)".T(EDCTx.JournalEntry_NPC), IsPlayer, "Rank: ", RankDefinitions.FriendlyName(CombatRank), 
                     "Faction: ".T(EDCTx.JournalEntry_Faction), Faction, "Power: ".T(EDCTx.JournalEntry_Power), Power);
             else
                 info = BaseUtils.FieldBuilder.Build("By: ".T(EDCTx.JournalEntry_By), Interdictor_Localised, 
                     "< (NPC);(Player)".T(EDCTx.JournalEntry_NPC), IsPlayer, 
-                    "Rank: ", RankDefinitions.FriendlyCombatRank(CombatRank), 
+                    "Rank: ", RankDefinitions.FriendlyName(CombatRank), 
                     "Faction: ".T(EDCTx.JournalEntry_Faction), Faction, "Power: ".T(EDCTx.JournalEntry_Power), Power);
 
             detailed = "";
@@ -95,7 +95,7 @@ namespace EliteDangerousCore.JournalEvents
 
             info = BaseUtils.FieldBuilder.Build("Failed to interdict;Interdicted".T(EDCTx.JournalEntry_Failedtointerdict), Success, "< ", Interdicted_Localised, 
                         "< (NPC);(Player)".T(EDCTx.JournalEntry_NPC), IsPlayer, 
-                        "Rank: ", RankDefinitions.FriendlyCombatRank(CombatRank), 
+                        "Rank: ", RankDefinitions.FriendlyName(CombatRank), 
                         "Faction: ".T(EDCTx.JournalEntry_Faction), Faction, "Power: ".T(EDCTx.JournalEntry_Power), Power);
             detailed = "";
         }

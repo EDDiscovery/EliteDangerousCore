@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 EDDiscovery development team
+ * Copyright 2024-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,15 +10,10 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
- using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
+
 
 namespace EliteDangerousCore
 {
@@ -51,9 +46,9 @@ namespace EliteDangerousCore
                 return CombatRank.Unknown;
         }
 
-        public static string FriendlyCombatRank(CombatRank cr)
+        public static string FriendlyName(CombatRank cr)
         {
-            return cr.ToString().SplitCapsWordFull();
+            return cr.ToString().Replace("_", " ");
         }
 
         public enum TradeRank
@@ -75,6 +70,11 @@ namespace EliteDangerousCore
             Elite_V
         }
 
+        public static string FriendlyName(TradeRank cr)
+        {
+            return cr.ToString().Replace("_", " ");
+        }
+
         public enum ExplorationRank
         {
             Unknown = -1,
@@ -92,6 +92,11 @@ namespace EliteDangerousCore
             Elite_III,
             Elite_IV,
             Elite_V
+        }
+
+        public static string FriendlyName(ExplorationRank cr)
+        {
+            return cr.ToString().Replace("_", " ");
         }
 
         public enum FederationRank
@@ -113,6 +118,10 @@ namespace EliteDangerousCore
             Vice_Admiral,
             Admiral
         }
+        public static string FriendlyName(FederationRank cr)
+        {
+            return cr.ToString().Replace("_", " ");
+        }
 
         public enum EmpireRank
         {
@@ -132,6 +141,10 @@ namespace EliteDangerousCore
             Duke,
             Prince,
             King
+        }
+        public static string FriendlyName(EmpireRank cr)
+        {
+            return cr.ToString().Replace("_", " ");
         }
 
         public enum CQCRank
@@ -153,6 +166,12 @@ namespace EliteDangerousCore
             Elite_V
         }
 
+        public static string FriendlyName(CQCRank cr)
+        {
+            return cr.ToString().Replace("_", " ");
+        }
+
+
         public enum SquadronRank       // these, as of 1/11/2018, are provisional
         {
             Unknown = -1,
@@ -162,9 +181,9 @@ namespace EliteDangerousCore
             Agent = 3,
             Rookie = 4,
         }
-        public static string FriendlySquadronRank(SquadronRank cr)
+        public static string FriendlyName(SquadronRank cr)
         {
-            return cr.ToString().SplitCapsWordFull();
+            return cr.ToString().Replace("_", " ");
         }
 
         public enum ExoBiologistRank
@@ -185,6 +204,11 @@ namespace EliteDangerousCore
             Elite_V
         }
 
+        public static string FriendlyName(ExoBiologistRank cr)
+        {
+            return cr.ToString().Replace("_", " ");
+        }
+
         public enum SoldierRank
         {
             Defenceless = 0,
@@ -201,6 +225,11 @@ namespace EliteDangerousCore
             Elite_III,
             Elite_IV,
             Elite_V
+        }
+
+        public static string FriendlyName(SoldierRank cr)
+        {
+            return cr.ToString().Replace("_", " ");
         }
     }
 }
