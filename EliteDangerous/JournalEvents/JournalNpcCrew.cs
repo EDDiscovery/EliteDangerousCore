@@ -51,17 +51,17 @@ namespace EliteDangerousCore.JournalEvents
         public JournalNpcCrewRank(JObject evt) : base(evt, JournalTypeEnum.NpcCrewRank)
         {
             NpcCrewID = evt["NpcCrewId"].Long();
-            RankCombat = (CombatRank)evt["RankCombat"].Int();
+            RankCombat = (RankDefinitions.CombatRank)evt["RankCombat"].Int();
             Name = evt["NpcCrewName"].Str().Alt("Unknown");
         }
 
         public long NpcCrewID { get; set; }
         public string Name { get; set; }
-        public CombatRank RankCombat { get; set; }
+        public RankDefinitions.CombatRank RankCombat { get; set; }
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("<", Name, "Rank: ".T(EDCTx.JournalEntry_Rank), RankCombat.ToString().SplitCapsWord());
+            info = BaseUtils.FieldBuilder.Build("<", Name, "Rank: ".T(EDCTx.JournalEntry_Rank), RankDefinitions.FriendlyCombatRank(RankCombat));
             detailed = "";
         }
 

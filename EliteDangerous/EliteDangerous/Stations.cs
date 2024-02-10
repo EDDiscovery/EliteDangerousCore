@@ -122,6 +122,11 @@ namespace EliteDangerousCore
 
         };
 
+        public static string ServicesFDNameToText(string fdname)
+        {
+            return ServiceTypes.TryGetValue(fdname.ToLowerInvariant(), out string value) ? value : "Unknown";
+        }
+
         public enum StarportTypes
         {
             Unknown,
@@ -229,6 +234,11 @@ namespace EliteDangerousCore
             Damanged,
             Abandoned,
             UnderAttack,
+        }
+
+        public static string StarPortStateToString(string fdname)
+        {
+            return fdname?.SplitCapsWordFull() ?? null;
         }
 
         // maps the StationType field to an enum

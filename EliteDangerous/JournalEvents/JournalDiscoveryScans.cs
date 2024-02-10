@@ -384,7 +384,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var s in Signals)      // some don't have localisation
                 {
-                    s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, s.Type.Replace("$SAA_","").SplitCapsWordFull());
+                    s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, JournalFieldNaming.Signals(s.Type));
                 }
             }
             Genuses = evt["Genuses"].ToObjectQ<List<SAAGenus>>();
@@ -392,7 +392,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var g in Genuses)      // some don't have localisation
                 {
-                    g.Genus_Localised = JournalFieldNaming.CheckLocalisation(g.Genus_Localised, g.Genus.Replace("_Name;","").Replace("$Codex_","").SplitCapsWordFull());
+                    g.Genus_Localised = JournalFieldNaming.CheckLocalisation(g.Genus_Localised,  JournalFieldNaming.Genus(g.Genus));
                 }
             }
         }
@@ -594,7 +594,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var s in Signals)      // some don't have localisation
                 {
-                    s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, s.Type.SplitCapsWordFull());
+                    s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, JournalFieldNaming.BodySignals(s.Type));
                 }
             }
         }

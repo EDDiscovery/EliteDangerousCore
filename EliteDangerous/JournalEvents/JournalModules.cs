@@ -381,7 +381,8 @@ namespace EliteDangerousCore.JournalEvents
             RetrievedItem = JournalFieldNaming.GetBetterModuleName(RetrievedItemFD);
             RetrievedItemLocalised = JournalFieldNaming.CheckLocalisation(evt["RetrievedItem_Localised"].Str(), RetrievedItem);
 
-            EngineerModifications = evt["EngineerModifications"].Str().SplitCapsWordFull();
+            FDEngineerModifications = evt["EngineerModifications"].Str();
+            EngineerModifications = JournalFieldNaming.EngineerMods(FDEngineerModifications);
 
             SwapOutItemFD = JournalFieldNaming.NormaliseFDItemName(evt["SwapOutItem"].Str());
             SwapOutItem = JournalFieldNaming.GetBetterModuleName(SwapOutItemFD);
@@ -404,7 +405,8 @@ namespace EliteDangerousCore.JournalEvents
         public string RetrievedItem { get; set; }
         public string RetrievedItemFD { get; set; }
         public string RetrievedItemLocalised { get; set; }
-        public string EngineerModifications { get; set; }
+        public string FDEngineerModifications { get; set; }       // FDName, empty if none
+        public string EngineerModifications { get; set; }       // Friendly, empty if none
         public string SwapOutItem { get; set; }
         public string SwapOutItemFD { get; set; }
         public string SwapOutItemLocalised { get; set; }
@@ -460,7 +462,8 @@ namespace EliteDangerousCore.JournalEvents
             StoredItem = JournalFieldNaming.GetBetterModuleName(StoredItemFD);
             StoredItemLocalised = JournalFieldNaming.CheckLocalisation(evt["StoredItem_Localised"].Str(), StoredItem);
 
-            EngineerModifications = evt["EngineerModifications"].StrNull().SplitCapsWordFull();
+            FDEngineerModifications = evt["EngineerModifications"].Str();
+            EngineerModifications = JournalFieldNaming.EngineerMods(FDEngineerModifications);
 
             ReplacementItemFD = JournalFieldNaming.NormaliseFDItemName(evt["ReplacementItem"].Str());
             ReplacementItem = JournalFieldNaming.GetBetterModuleName(ReplacementItemFD);
@@ -483,7 +486,8 @@ namespace EliteDangerousCore.JournalEvents
         public string StoredItem { get; set; }
         public string StoredItemFD { get; set; }
         public string StoredItemLocalised { get; set; }
-        public string EngineerModifications { get; set; }
+        public string FDEngineerModifications { get; set; }       // FDName, empty if none
+        public string EngineerModifications { get; set; }       // Friendly, empty if none
         public string ReplacementItem { get; set; }
         public string ReplacementItemFD { get; set; }
         public string ReplacementItemLocalised { get; set; }

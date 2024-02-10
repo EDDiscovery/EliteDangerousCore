@@ -39,7 +39,7 @@ namespace EliteDangerousCore.JournalEvents
                     {
                         ItemFD = itemfd,
                         Item = item,
-                        ItemLocalised = item.SplitCapsWordFull()
+                        ItemLocalised = JournalFieldNaming.RepairType(item)
                     };
 
                     ItemLocalised = ItemLocalised.AppendPrePad(repairitem.ItemLocalised, ", "); // for the voice pack, keep this going

@@ -31,7 +31,8 @@ namespace EliteDangerousCore.JournalEvents
         public void Rescan(JObject evt)
         {
             Station = evt["StationName"].Str();
-            StationType = evt["StationType"].StrNull();
+            FDStationType = evt["StationType"].StrNull();
+            StationType = JournalFieldNaming.StationType(FDStationType);
             CarrierDockingAccess = evt["CarrierDockingAccess"].StrNull();
             StarSystem = evt["StarSystem"].Str();
             MarketID = evt["MarketID"].LongNull();

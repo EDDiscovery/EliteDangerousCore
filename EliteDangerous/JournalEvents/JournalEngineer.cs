@@ -26,13 +26,15 @@ namespace EliteDangerousCore.JournalEvents
         public JournalEngineerApply(JObject evt ) : base(evt, JournalTypeEnum.EngineerApply)
         {
             Engineer = evt["Engineer"].Str();
-            Blueprint = evt["Blueprint"].Str().SplitCapsWordFull();
+            FDBlueprint = evt["Blueprint"].Str();
+            Blueprint = JournalFieldNaming.Blueprint(FDBlueprint);
             Level = evt["Level"].Int();
             Override = evt["Override"].Str();
         }
 
         public string Engineer { get; set; }
-        public string Blueprint { get; set; }
+        public string Blueprint { get; set; }       // friendly not fdev
+        public string FDBlueprint { get; set; }       // fdname
         public int Level { get; set; }
         public string Override { get; set; }
 

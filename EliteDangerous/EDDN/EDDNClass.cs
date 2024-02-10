@@ -411,6 +411,7 @@ namespace EliteDangerousCore.EDDN
             }
         }
 
+        // Create EDDN message from JSON Cloned
         public JObject CreateEDDNMessage(JournalFSDJump journal)
         {
             if (!journal.HasCoordinate || journal.StarPosFromEDSM || journal.SystemAddress == null)
@@ -453,6 +454,7 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
+        // Create EDDN message from JSON Cloned
         public JObject CreateEDDNMessage(JournalLocation journal)
         {
             if (!journal.HasCoordinate || journal.StarPosFromEDSM || journal.SystemAddress == null)
@@ -491,6 +493,7 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
+        // Create EDDN message for journal from JSON Cloned
         public JObject CreateEDDNMessage(JournalCarrierJump journal)
         {
             if (!journal.HasCoordinate || journal.StarPosFromEDSM || journal.SystemAddress == null)
@@ -529,6 +532,7 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
+        // Create EDDN message from JSON Cloned
         public JObject CreateEDDNMessage(JournalDocked journal, ISystem system)
         {
             if (!String.Equals(system.Name, journal.StarSystem, StringComparison.InvariantCultureIgnoreCase))
@@ -569,6 +573,7 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
+        // Create EDDN message from Journal fields
         public JObject CreateEDDNOutfittingMessage(JournalOutfitting journal)
         {
             if (journal.YardInfo.Items == null || journal.YardInfo.Items.Length == 0)   // not allowed to send empty lists jan 21
@@ -589,11 +594,10 @@ namespace EliteDangerousCore.EDDN
                 ["timestamp"] = journal.EventTimeUTC.ToStringZuluInvariant(),
                 ["systemName"] = journal.YardInfo.StarSystem,
                 ["stationName"] = journal.YardInfo.StationName,
-                ["stationName"] = journal.YardInfo.StationName,
                 ["marketId"] = journal.MarketID,
                 ["modules"] = new JArray(journal.YardInfo.Items
                                 .Where(m => m.FDName.StartsWith("Hpt_", StringComparison.InvariantCultureIgnoreCase) || m.FDName.StartsWith("Int_", StringComparison.InvariantCultureIgnoreCase)
-                                        || m.FDName.Contains("_armour_", StringComparison.InvariantCultureIgnoreCase))
+                                        || m.FDName.Contains("_armour_", StringComparison.InvariantCultureIgnoreCase))      // Use FDName here note
                                 .Select(m => JournalFieldNaming.NormaliseFDItemName(m.FDName)))
             };
 
@@ -604,6 +608,7 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
+        // Create EDDN message from Journal fields
         public JObject CreateEDDNShipyardMessage(JournalShipyard journal)
         {
             if (journal.Yard.Ships == null || journal.Yard.Ships.Length == 0) // not allowed to send empty lists jan 21
@@ -625,7 +630,7 @@ namespace EliteDangerousCore.EDDN
                 ["systemName"] = journal.Yard.StarSystem,
                 ["stationName"] = journal.Yard.StationName,
                 ["marketId"] = journal.MarketID,
-                ["ships"] = new JArray(journal.Yard.Ships.Select(m => m.ShipType))
+                ["ships"] = new JArray(journal.Yard.Ships.Select(m => m.ShipType))      // ship type if FDName
             };
 
             message["odyssey"] = journal.IsOdyssey;     // new may 21
@@ -635,6 +640,7 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
+        // Create EDDN message from JSON Cloned
         public JObject CreateEDDNMessage(JournalScan journal, ISystem system)
         {
             if (system.SystemAddress == null || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
@@ -698,6 +704,7 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
+        // Create EDDN message from JSON Cloned
         public JObject CreateEDDNMessage(JournalSAASignalsFound journal, ISystem system)
         {
             if (system.SystemAddress == null || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
@@ -742,6 +749,7 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
+        // Create EDDN message from JSON Cloned
         public JObject CreateEDDNFSSDiscoveryScan(JournalFSSDiscoveryScan journal, ISystem system)
         {
             if (system.SystemAddress == null || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
@@ -767,6 +775,8 @@ namespace EliteDangerousCore.EDDN
             msg["message"] = message;
             return msg;
         }
+
+        // Create EDDN message from JSON Cloned
         public JObject CreateEDDNNavBeaconScan( JournalNavBeaconScan journal, ISystem system)
         {
             if (system.SystemAddress == null || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
@@ -791,6 +801,7 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
+        // Create EDDN message from JSON Cloned
         public JObject CreateEDDNCodexEntry(JournalCodexEntry journal, ISystem system)
         {
             if (system.SystemAddress == null || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
@@ -827,6 +838,7 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
+        // Create EDDN message from JSON Cloned
         public JObject CreateEDDNNavRoute(JournalNavRoute journal)
         {
             JObject msg = new JObject();
@@ -852,6 +864,7 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
+        // Create EDDN message from JSON Cloned
         public JObject CreateEDDNScanBaryCentre(JournalScanBaryCentre journal, ISystem system)
         {
             if (system.SystemAddress == null || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
@@ -877,6 +890,7 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
+        // Create EDDN message from JSON Cloned
         public JObject CreateEDDNFSSAllBodiesFound(JournalFSSAllBodiesFound journal, ISystem system)
         {
             if (system.SystemAddress == null || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
@@ -902,6 +916,7 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
+        // Create EDDN message from JSON Cloned
         public JObject CreateEDDNApproachSettlement(JournalApproachSettlement journal, ISystem system)
         {
             if (system.SystemAddress == null || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
@@ -933,6 +948,7 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
+        // Create EDDN message from discrete parameters
         // pass thru gameversion/build as its used for both journal market and capi EDDCommodityPrices
 
         public JObject CreateEDDNCommodityMessage(string gameversion, string build, List<CCommodities> commodities, bool odyssey, bool horizons, string systemName, 
@@ -950,9 +966,9 @@ namespace EliteDangerousCore.EDDN
 
             message["systemName"] = systemName;
             message["stationName"] = stationName;
-            if ( stationType.HasChars())
+            if ( stationType.HasChars())                    // it may be null
                 message["stationType"] = stationType;
-            if (carrieraccess.HasChars())
+            if (carrieraccess.HasChars())                   // it may be null
                 message["carrierDockingAccess"] = carrieraccess;
             message["marketId"] = marketID;
             message["timestamp"] = time.ToStringZuluInvariant();
@@ -995,7 +1011,7 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
-
+        // Create EDDN message from journal
         public JObject CreateEDDNFSSSignalDiscovered(JournalFSSSignalDiscovered journal, ISystem system)
         {
             if (system.SystemAddress == null || !system.HasCoordinate || journal.Signals == null || journal.Signals.Count == 0 || system.SystemAddress != journal.Signals[0].SystemAddress)
@@ -1058,6 +1074,7 @@ namespace EliteDangerousCore.EDDN
             return msg;
         }
 
+        // Create EDDN message from journal
         public JObject CreateEDDNFCMaterials(JournalFCMaterials journal, ISystem system)
         {
             if (journal.Items == null)
@@ -1097,6 +1114,7 @@ namespace EliteDangerousCore.EDDN
         }
 
 
+        // Create EDDN message from journal
         public JObject CreateEDDNDockingDenied(JournalDockingDenied journal, ISystem system)
         {
             JObject msg = new JObject();
@@ -1111,14 +1129,15 @@ namespace EliteDangerousCore.EDDN
             message["odyssey"] = journal.IsOdyssey;
             message["MarketID"] = journal.MarketID;
             message["StationName"] = journal.StationName;
-            message["StationType"] = journal.StationType;
-            message["Reason"] = journal.Reason;
+            message["StationType"] = journal.FDStationType;
+            message["Reason"] = journal.FDReason;
 
             msg["message"] = message;
 
             return msg;
         }
 
+        // Create EDDN message from journal
         public JObject CreateEDDNDockingGranted(JournalDockingGranted journal, ISystem system)
         {
             JObject msg = new JObject();
@@ -1133,14 +1152,13 @@ namespace EliteDangerousCore.EDDN
             message["odyssey"] = journal.IsOdyssey;
             message["MarketID"] = journal.MarketID;
             message["StationName"] = journal.StationName;
-            message["StationType"] = journal.StationType;
+            message["StationType"] = journal.FDStationType;
             message["LandingPad"] = journal.LandingPad;
 
             msg["message"] = message;
 
             return msg;
         }
-
 
         public bool PostMessage(JObject msg, bool betaserver, bool testschema)
         {

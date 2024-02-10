@@ -84,7 +84,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             else 
             {
-                Ship = ShipFD.SplitCapsWordFull();
+                Ship = ShipFD.SplitCapsWordFull();  // emergency back up
             }
 
             Ship_Localised = Ship_Localised.Alt(Ship);

@@ -107,12 +107,12 @@ namespace EliteDangerousCore
                     crs.chart1data[ii][p++] = bountyStats.Where(x => x.IsSkimmer).Count();
                     crs.chart1data[ii][p++] = bountyStats.Where(x => x.StatsUnknownShip).Count();
                     crs.chart1data[ii][p++] = bountyStats.Where(x => x.StatsEliteAboveShip).Count();
-                    crs.chart1data[ii][p++] = bountyStats.Where(x => x.StatsRankShip(CombatRank.Deadly)).Count();
-                    crs.chart1data[ii][p++] = bountyStats.Where(x => x.StatsRankShip(CombatRank.Dangerous)).Count();
-                    crs.chart1data[ii][p++] = bountyStats.Where(x => x.StatsRankShip(CombatRank.Master)).Count();
-                    crs.chart1data[ii][p++] = bountyStats.Where(x => x.StatsRankShip(CombatRank.Expert)).Count();
-                    crs.chart1data[ii][p++] = bountyStats.Where(x => x.StatsRankShip(CombatRank.Competent)).Count();
-                    crs.chart1data[ii][p++] = bountyStats.Where(x => x.StatsRankShip(CombatRank.Novice)).Count();
+                    crs.chart1data[ii][p++] = bountyStats.Where(x => x.StatsRankShip(RankDefinitions.CombatRank.Deadly)).Count();
+                    crs.chart1data[ii][p++] = bountyStats.Where(x => x.StatsRankShip(RankDefinitions.CombatRank.Dangerous)).Count();
+                    crs.chart1data[ii][p++] = bountyStats.Where(x => x.StatsRankShip(RankDefinitions.CombatRank.Master)).Count();
+                    crs.chart1data[ii][p++] = bountyStats.Where(x => x.StatsRankShip(RankDefinitions.CombatRank.Expert)).Count();
+                    crs.chart1data[ii][p++] = bountyStats.Where(x => x.StatsRankShip(RankDefinitions.CombatRank.Competent)).Count();
+                    crs.chart1data[ii][p++] = bountyStats.Where(x => x.StatsRankShip(RankDefinitions.CombatRank.Novice)).Count();
                     crs.chart1data[ii][p++] = bountyStats.Where(x => x.StatsHarmlessShip).Count();
 
                     for (int pp = 0; pp < p; pp++)
@@ -142,14 +142,14 @@ namespace EliteDangerousCore
                     crs.griddata[row++][ii] = pvpStats.Count.ToString("N0");
 
                     p = 0;
-                    crs.chart2data[ii][p++] = pvpStats.Where(x => x.CombatRank >= CombatRank.Elite).Count();
-                    crs.chart2data[ii][p++] = pvpStats.Where(x => x.CombatRank == CombatRank.Deadly).Count();
-                    crs.chart2data[ii][p++] = pvpStats.Where(x => x.CombatRank == CombatRank.Dangerous).Count();
-                    crs.chart2data[ii][p++] = pvpStats.Where(x => x.CombatRank == CombatRank.Master).Count();
-                    crs.chart2data[ii][p++] = pvpStats.Where(x => x.CombatRank == CombatRank.Expert).Count();
-                    crs.chart2data[ii][p++] = pvpStats.Where(x => x.CombatRank == CombatRank.Competent).Count();
-                    crs.chart2data[ii][p++] = pvpStats.Where(x => x.CombatRank == CombatRank.Novice).Count();
-                    crs.chart2data[ii][p++] = pvpStats.Where(x => x.CombatRank <= CombatRank.Mostly_Harmless).Count();
+                    crs.chart2data[ii][p++] = pvpStats.Where(x => x.CombatRank >= RankDefinitions.CombatRank.Elite).Count();
+                    crs.chart2data[ii][p++] = pvpStats.Where(x => x.CombatRank == RankDefinitions.CombatRank.Deadly).Count();
+                    crs.chart2data[ii][p++] = pvpStats.Where(x => x.CombatRank == RankDefinitions.CombatRank.Dangerous).Count();
+                    crs.chart2data[ii][p++] = pvpStats.Where(x => x.CombatRank == RankDefinitions.CombatRank.Master).Count();
+                    crs.chart2data[ii][p++] = pvpStats.Where(x => x.CombatRank == RankDefinitions.CombatRank.Expert).Count();
+                    crs.chart2data[ii][p++] = pvpStats.Where(x => x.CombatRank == RankDefinitions.CombatRank.Competent).Count();
+                    crs.chart2data[ii][p++] = pvpStats.Where(x => x.CombatRank == RankDefinitions.CombatRank.Novice).Count();
+                    crs.chart2data[ii][p++] = pvpStats.Where(x => x.CombatRank <= RankDefinitions.CombatRank.Mostly_Harmless).Count();
 
                     for (int pp = 0; pp < p; pp++)
                     {

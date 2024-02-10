@@ -27,22 +27,14 @@ namespace EliteDangerousCore.JournalEvents
         public class Passengers
         {
             public ulong MissionID { get; set; }
-            public string Type { get; set; }
+            public string Type { get; set; }          // Friendly name, not fdev
+            public string FDType { get; set; }        // FDtype
             public bool VIP { get; set; }
             public bool Wanted { get; set; }
             public int Count { get; set; }
 
             public Passengers()
             { }
-
-            public Passengers(ulong i, string t, bool v, bool w, int c)
-            {
-                MissionID = i; Type = t; VIP = v; Wanted = w; Count = c;
-            }
-            public Passengers Clone()
-            {
-                return new Passengers(MissionID, Type, VIP, Wanted, Count);
-            }
         }
 
         public JournalPassengers(JObject evt) : base(evt, JournalTypeEnum.Passengers)
@@ -52,7 +44,10 @@ namespace EliteDangerousCore.JournalEvents
             if (Manifest != null )
             {
                 foreach (Passengers p in Manifest)
-                    p.Type = p.Type.SplitCapsWordFull();
+                {
+                    p.FDType = p.Type;
+                    p.Type = JournalFieldNaming.PassengerType(p.FDType);
+                }
             }
         }
 

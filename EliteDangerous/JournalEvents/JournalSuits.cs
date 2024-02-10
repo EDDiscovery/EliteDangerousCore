@@ -306,7 +306,7 @@ namespace EliteDangerousCore.JournalEvents
                 SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
                 SuitName = SuitName.ToLowerInvariant(); // normalise
                 ModuleNameFriendly = ItemData.GetWeapon(ModuleName, ModuleName_Localised)?.Name ?? ModuleName_Localised;
-                SlotFriendlyName = SlotName.SplitCapsWordFull();
+                SlotFriendlyName = JournalFieldNaming.SuitSlot(SlotName);
                 SlotName = SlotName.ToLowerInvariant();
                 ModuleName = ModuleName.ToLowerInvariant();
             }
@@ -314,17 +314,17 @@ namespace EliteDangerousCore.JournalEvents
 
         public string LoadoutName { get; set; }
         public ulong SuitID { get; set; }
-        public string SuitName { get; set; }
+        public string SuitName { get; set; }        // fdname
         public string SuitName_Localised { get; set; }
         public string SuitFriendlyName { get; set; }
         public ulong LoadoutID { get; set; }
-        public string SlotName { get; set; }        // lower normalised
+        public string SlotName { get; set; }        // fdname lower normalised
         public string SlotFriendlyName { get; set; }
-        public string ModuleName { get; set; }      // lower normalised
+        public string ModuleName { get; set; }      // fdname lower normalised
         public string ModuleName_Localised { get; set; }
         public string ModuleNameFriendly { get; set; }
         public int Class { get; set; }        // may not be there
-        public string[] WeaponMods { get; set; }    // may be null or empty
+        public string[] WeaponMods { get; set; }    // fdname, may be null or empty
         public ulong SuitModuleID { get; set; }         // aka weapon ID
 
         public override void FillInformation(out string info, out string detailed)
@@ -379,7 +379,7 @@ namespace EliteDangerousCore.JournalEvents
                 SuitName = SuitName.ToLowerInvariant(); // normalise
                 SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
                 ModuleNameFriendly = ItemData.GetWeapon(ModuleName, ModuleName_Localised)?.Name ?? ModuleName_Localised;
-                SlotFriendlyName = SlotName.SplitCapsWordFull();
+                SlotFriendlyName = JournalFieldNaming.SuitSlot(SlotName);
                 SlotName = SlotName.ToLowerInvariant();
                 ModuleName = ModuleName.ToLowerInvariant();
             }
@@ -387,19 +387,19 @@ namespace EliteDangerousCore.JournalEvents
 
         public string LoadoutName { get; set; }
         public ulong SuitID { get; set; }
-        public string SuitName { get; set; }
+        public string SuitName { get; set; }        // fdname
         public string SuitName_Localised { get; set; }
-        public string SuitFriendlyName { get; set; }
+        public string SuitFriendlyName { get; set; }    
         public ulong LoadoutID { get; set; }
-        public string SlotName { get; set; }        // lower normalised
+        public string SlotName { get; set; }        // fdname lower normalised
         public string SlotFriendlyName { get; set; }
-        public string ModuleName { get; set; }      // lower normalised
+        public string ModuleName { get; set; }      // fdname, lower normalised
         public string ModuleNameFriendly { get; set; }
         public string ModuleName_Localised { get; set; }
         public ulong SuitModuleID { get; set; }         // aka weapon ID
 
         public int Class { get; set; }        // may not be there
-        public string[] WeaponMods { get; set; }    // may be null or empty
+        public string[] WeaponMods { get; set; }    // fdname, may be null or empty
 
         public override void FillInformation(out string info, out string detailed)
         {

@@ -66,7 +66,7 @@ namespace EliteDangerousCore.JournalEvents
             Name = evt["Name"].Str();
             Faction = evt["Faction"].Str();
             Cost = evt["Cost"].Long();
-            CombatRank = (CombatRank)evt["CombatRank"].Int();
+            CombatRank = (RankDefinitions.CombatRank)evt["CombatRank"].Int();
             NpcCrewID = evt["CrewID"].Long();
         }
 
@@ -74,7 +74,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Name { get; set; }
         public string Faction { get; set; }
         public long Cost { get; set; }
-        public CombatRank CombatRank { get; set; }
+        public RankDefinitions.CombatRank CombatRank { get; set; }
 
         public void Ledger(Ledger mcl)
         {
@@ -83,7 +83,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Hired: ;".T(EDCTx.JournalEntry_Hired), Name, "< of faction ".T(EDCTx.JournalEntry_offaction), Faction, "Rank: ".T(EDCTx.JournalEntry_Rank), CombatRank.ToString().SplitCapsWord(), "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost);
+            info = BaseUtils.FieldBuilder.Build("Hired: ;".T(EDCTx.JournalEntry_Hired), Name, "< of faction ".T(EDCTx.JournalEntry_offaction), 
+                            Faction, "Rank: ".T(EDCTx.JournalEntry_Rank), RankDefinitions.FriendlyCombatRank(CombatRank), "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost);
             detailed = "";
         }
     }
@@ -153,12 +154,14 @@ namespace EliteDangerousCore.JournalEvents
         public JournalCrewMemberRoleChange(JObject evt) : base(evt, JournalTypeEnum.CrewMemberRoleChange)
         {
             Crew = evt["Crew"].Str();
-            Role = evt["Role"].Str().SplitCapsWord();
+            FDRole = evt["Role"].Str();
+            Role = JournalFieldNaming.CrewRole(FDRole);
             Telepresence = evt["Telepresence"].Bool();
         }
 
         public string Crew { get; set; }
         public string Role { get; set; }
+        public string FDRole { get; set; }
         public bool Telepresence { get; set; }
 
         public override void FillInformation(out string info, out string detailed)
@@ -215,11 +218,13 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalChangeCrewRole(JObject evt) : base(evt, JournalTypeEnum.ChangeCrewRole)
         {
-            Role = evt["Role"].Str().SplitCapsWordFull();
+            FDRole = evt["Role"].Str();
+            Role = JournalFieldNaming.CrewRole(FDRole);
             Telepresence = evt["Telepresence"].Bool();
         }
 
         public string Role { get; set; }
+        public string FDRole { get; set; }
         public bool Telepresence { get; set; }
 
         public override void FillInformation(out string info, out string detailed)

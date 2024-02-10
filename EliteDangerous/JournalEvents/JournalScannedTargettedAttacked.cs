@@ -25,10 +25,12 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalScanned(JObject evt) : base(evt, JournalTypeEnum.Scanned)
         {
-            ScanType = evt["ScanType"].Str().SplitCapsWordFull();
+            FDScanType = evt["ScanType"].Str();
+            ScanType = JournalFieldNaming.ScanType(FDScanType);
         }
 
-        public string ScanType { get; set; }
+        public string ScanType { get; set; }        // Friendly, not FDEV
+        public string FDScanType { get; set; }        // fdname
 
         public override void FillInformation(out string info, out string detailed) 
         {
@@ -56,9 +58,9 @@ namespace EliteDangerousCore.JournalEvents
             PilotName = evt["PilotName"].StrNull();
             PilotName_Localised = JournalFieldNaming.CheckLocalisation(evt["PilotName_Localised"].Str(), PilotName);
 
-            PilotRank = evt["PilotRank"].StrNull();     
-            if (PilotRank != null && Enum.TryParse<CombatRank>(PilotRank.Replace(" ","_"), true, out CombatRank cr))
-                PilotCombatRank = cr;           // default for CombatRank is Unknown
+            PilotRank = evt["PilotRank"].StrNull();
+            if ( PilotRank!=null)
+                PilotCombatRank = RankDefinitions.CombatRankToEnum(PilotRank);
 
             ShieldHealth = evt["ShieldHealth"].DoubleNull();
             HullHealth = evt["HullHealth"].DoubleNull();
@@ -78,8 +80,8 @@ namespace EliteDangerousCore.JournalEvents
         public string Ship_Localised { get; set; }      // 0 will be empty
         public string PilotName { get; set; }           // 1 null
         public string PilotName_Localised { get; set; } // 1 will be empty 
-        public string PilotRank { get; set; }           // 1 null
-        public CombatRank PilotCombatRank { get; set; } // 1 May be unknown at any level
+        public string PilotRank { get; set; }           // 1 null, Friendly name
+        public RankDefinitions.CombatRank PilotCombatRank { get; set; } // 1 May be unknown at any level
         public double? ShieldHealth { get; set; }       // 2 null
         public double? HullHealth { get; set; }         // 2 null
         public string Faction { get; set; }             // 3 null

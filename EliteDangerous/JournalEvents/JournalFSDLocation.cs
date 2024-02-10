@@ -30,8 +30,8 @@ namespace EliteDangerousCore.JournalEvents
         public bool StarPosFromEDSM { get; set; }
 
         public string Faction { get; set; }         // System Faction - keep name for backwards compat.
-        public string FactionState { get; set; }    // System Faction State - keep name for backwards compat.
-        public string Allegiance { get; set; }
+        public string FactionState { get; set; }    // System Faction - FDName, System Faction State - keep name for backwards compat.
+        public string Allegiance { get; set; }      // System Faction - FDName
         public string Economy { get; set; }
         public string Economy_Localised { get; set; }
         public string SecondEconomy { get; set; }
@@ -58,10 +58,10 @@ namespace EliteDangerousCore.JournalEvents
         public class FactionInformation
         {
             public string Name { get; set; }
-            public string FactionState { get; set; }    
+            public string FactionState { get; set; }    // fdname
             public string Government { get; set; }
             public double Influence { get; set; }
-            public string Allegiance { get; set; }
+            public string Allegiance { get; set; }  // fdname
             public string Happiness { get; set; }   //3.3, may be null
             public string Happiness_Localised { get; set; } //3.3, may be null
             public double? MyReputation { get; set; } //3.3, may be null
@@ -221,7 +221,8 @@ namespace EliteDangerousCore.JournalEvents
 
             Docked = evt["Docked"].Bool();
             StationName = evt["StationName"].Str();
-            StationType = evt["StationType"].Str().SplitCapsWord();
+            FDStationType = evt["StationType"].Str();
+            StationType = JournalFieldNaming.StationType(FDStationType);
             Body = evt["Body"].Str();
             BodyID = evt["BodyID"].IntNull();
             BodyType = JournalFieldNaming.NormaliseBodyType(evt["BodyType"].Str());
@@ -257,7 +258,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public bool Docked { get; set; }
         public string StationName { get; set; }
-        public string StationType { get; set; }
+        public string StationType { get; set; } // friendly name
+        public string FDStationType { get; set; } // fdname
         public string Body { get; set; }
         public int? BodyID { get; set; }
         public string BodyType { get; set; }
@@ -270,12 +272,12 @@ namespace EliteDangerousCore.JournalEvents
         public long? MarketID { get; set; }
 
         // 3.3.2 will be empty/null for previous logs.
-        public string StationFaction { get; set; }
-        public string StationFactionState { get; set; }
+        public string StationFaction { get; set; }  
+        public string StationFactionState { get; set; } // fdname
         public string StationGovernment { get; set; }
         public string StationGovernment_Localised { get; set; }
-        public string StationAllegiance { get; set; }
-        public string[] StationServices { get; set; }
+        public string StationAllegiance { get; set; }   // fdname
+        public string[] StationServices { get; set; }   // fdname
         public JournalDocked.Economies[] StationEconomyList { get; set; }        // may be null
 
         //4.0 alpha 4
@@ -307,15 +309,25 @@ namespace EliteDangerousCore.JournalEvents
             {
                 info = BaseUtils.FieldBuilder.Build("Type ".T(EDCTx.JournalLocOrJump_Type), StationType, "< in system ".T(EDCTx.JournalLocOrJump_insystem), StarSystem);
 
-                detailed = BaseUtils.FieldBuilder.Build("<;(Wanted) ".T(EDCTx.JournalLocOrJump_Wanted), Wanted, "Faction: ".T(EDCTx.JournalLocOrJump_Faction), StationFaction, "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), Allegiance, "Economy: ".T(EDCTx.JournalLocOrJump_Economy), Economy_Localised, "Government: ".T(EDCTx.JournalLocOrJump_Government), Government_Localised, "Security: ".T(EDCTx.JournalLocOrJump_Security), Security_Localised);
+                detailed = BaseUtils.FieldBuilder.Build("<;(Wanted) ".T(EDCTx.JournalLocOrJump_Wanted), Wanted, 
+                            "Faction: ".T(EDCTx.JournalLocOrJump_Faction), StationFaction,
+                            "State: ".T(EDCTx.JournalLocOrJump_State), JournalFieldNaming.FactionState(StationFactionState),
+                            "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), JournalFieldNaming.Allegiance(StationAllegiance), 
+                            "Economy: ".T(EDCTx.JournalLocOrJump_Economy), Economy_Localised, 
+                            "Government: ".T(EDCTx.JournalLocOrJump_Government), Government_Localised, 
+                            "Security: ".T(EDCTx.JournalLocOrJump_Security), Security_Localised);
 
                 if (Factions != null)
                 {
                     foreach (FactionInformation f in Factions)
                     {
                         detailed += Environment.NewLine;
-                        detailed += BaseUtils.FieldBuilder.Build("", f.Name, "State: ".T(EDCTx.JournalLocOrJump_State), f.FactionState.SplitCapsWord(), "Government: ".T(EDCTx.JournalLocOrJump_Government), f.Government,
-                            "Inf: ;%".T(EDCTx.JournalLocOrJump_Inf), (int)(f.Influence * 100), "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), f.Allegiance, "Happiness: ".T(EDCTx.JournalLocOrJump_Happiness), f.Happiness_Localised,
+                        detailed += BaseUtils.FieldBuilder.Build("", f.Name,
+                            "State: ".T(EDCTx.JournalLocOrJump_State), JournalFieldNaming.FactionState(f.FactionState),
+                            "Government: ".T(EDCTx.JournalLocOrJump_Government), f.Government,
+                            "Inf: ;%".T(EDCTx.JournalLocOrJump_Inf), (int)(f.Influence * 100), 
+                            "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), JournalFieldNaming.Allegiance(f.Allegiance), 
+                            "Happiness: ".T(EDCTx.JournalLocOrJump_Happiness), f.Happiness_Localised,
                             "Reputation: ;%;N1".T(EDCTx.JournalLocOrJump_Reputation), f.MyReputation,
                             ";Squadron System".T(EDCTx.JournalLocOrJump_SquadronSystem), f.SquadronFaction, 
                             ";Happiest System".T(EDCTx.JournalLocOrJump_HappiestSystem), f.HappiestSystem, 
@@ -378,7 +390,8 @@ namespace EliteDangerousCore.JournalEvents
 
             Docked = evt["Docked"].Bool();
             StationName = evt["StationName"].Str();
-            StationType = evt["StationType"].Str().SplitCapsWord();
+            FDStationType = evt["StationType"].Str();
+            StationType = JournalFieldNaming.StationType(FDStationType);
             Body = evt["Body"].Str();
             BodyID = evt["BodyID"].IntNull();
             BodyType = JournalFieldNaming.NormaliseBodyType(evt["BodyType"].Str());
@@ -414,7 +427,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public bool Docked { get; set; }
         public string StationName { get; set; }
-        public string StationType { get; set; }
+        public string StationType { get; set; } // friendly station type
+        public string FDStationType { get; set; } // fdname
         public string Body { get; set; }
         public int? BodyID { get; set; }
         public string BodyType { get; set; }
@@ -429,10 +443,10 @@ namespace EliteDangerousCore.JournalEvents
         public System.Drawing.Color MapColorARGB { get { return System.Drawing.Color.FromArgb(MapColor); } }
 
         public string StationFaction { get; set; }
-        public string StationFactionState { get; set; }
+        public string StationFactionState { get; set; }     // FDName
         public string StationGovernment { get; set; }
         public string StationGovernment_Localised { get; set; }
-        public string StationAllegiance { get; set; }
+        public string StationAllegiance { get; set; }   // fdname
         public string[] StationServices { get; set; }
         public JournalDocked.Economies[] StationEconomyList { get; set; }        // may be null
 
@@ -445,20 +459,28 @@ namespace EliteDangerousCore.JournalEvents
             s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }
 
-
         public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Type ".T(EDCTx.JournalLocOrJump_Type), StationType, "< in system ".T(EDCTx.JournalLocOrJump_insystem), StarSystem);
 
-            detailed = BaseUtils.FieldBuilder.Build("<;(Wanted) ".T(EDCTx.JournalLocOrJump_Wanted), Wanted, "Faction: ".T(EDCTx.JournalLocOrJump_Faction), StationFaction, "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), Allegiance, "Economy: ".T(EDCTx.JournalLocOrJump_Economy), Economy_Localised, "Government: ".T(EDCTx.JournalLocOrJump_Government), Government_Localised, "Security: ".T(EDCTx.JournalLocOrJump_Security), Security_Localised);
+            detailed = BaseUtils.FieldBuilder.Build("<;(Wanted) ".T(EDCTx.JournalLocOrJump_Wanted), Wanted, 
+                        "Faction: ".T(EDCTx.JournalLocOrJump_Faction), StationFaction, 
+                        "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), JournalFieldNaming.Allegiance(Allegiance), 
+                        "Economy: ".T(EDCTx.JournalLocOrJump_Economy), Economy_Localised, 
+                        "Government: ".T(EDCTx.JournalLocOrJump_Government), Government_Localised, 
+                        "Security: ".T(EDCTx.JournalLocOrJump_Security), Security_Localised);
 
             if (Factions != null)
             {
                 foreach (FactionInformation f in Factions)
                 {
                     detailed += Environment.NewLine;
-                    detailed += BaseUtils.FieldBuilder.Build("", f.Name, "State: ".T(EDCTx.JournalLocOrJump_State), f.FactionState.SplitCapsWord(), "Government: ".T(EDCTx.JournalLocOrJump_Government), f.Government,
-                        "Inf: ;%".T(EDCTx.JournalLocOrJump_Inf), (int)(f.Influence * 100), "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), f.Allegiance, "Happiness: ".T(EDCTx.JournalLocOrJump_Happiness), f.Happiness_Localised,
+                    detailed += BaseUtils.FieldBuilder.Build("", f.Name, 
+                        "State: ".T(EDCTx.JournalLocOrJump_State), JournalFieldNaming.FactionState(FactionState), 
+                        "Government: ".T(EDCTx.JournalLocOrJump_Government), f.Government,
+                        "Inf: ;%".T(EDCTx.JournalLocOrJump_Inf), (int)(f.Influence * 100), 
+                        "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), JournalFieldNaming.Allegiance(f.Allegiance), 
+                        "Happiness: ".T(EDCTx.JournalLocOrJump_Happiness), f.Happiness_Localised,
                         "Reputation: ;%;N1".T(EDCTx.JournalLocOrJump_Reputation), f.MyReputation,
                         ";Squadron System".T(EDCTx.JournalLocOrJump_SquadronSystem), f.SquadronFaction,
                         ";Happiest System".T(EDCTx.JournalLocOrJump_HappiestSystem), f.HappiestSystem,
@@ -564,8 +586,10 @@ namespace EliteDangerousCore.JournalEvents
 
             sb.Append(" ");
             sb.Append(BaseUtils.FieldBuilder.Build("Faction: ".T(EDCTx.JournalLocOrJump_Faction), Faction, "<;(Wanted) ".T(EDCTx.JournalLocOrJump_Wanted), Wanted,
-                                                    "State: ".T(EDCTx.JournalLocOrJump_State), FactionState, "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), Allegiance,
-                                                    "Economy: ".T(EDCTx.JournalLocOrJump_Economy), econ, "Population: ".T(EDCTx.JournalLocOrJump_Population), Population));
+                                                    "State: ".T(EDCTx.JournalLocOrJump_State), JournalFieldNaming.FactionState(FactionState), 
+                                                    "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), JournalFieldNaming.Allegiance(Allegiance),
+                                                    "Economy: ".T(EDCTx.JournalLocOrJump_Economy), econ, 
+                                                    "Population: ".T(EDCTx.JournalLocOrJump_Population), Population));
             info = sb.ToString();
 
             sb.Clear();
@@ -574,10 +598,10 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (FactionInformation i in Factions)
                 {
-                    sb.Append(BaseUtils.FieldBuilder.Build("", i.Name, "State: ".T(EDCTx.JournalLocOrJump_State), i.FactionState,
+                    sb.Append(BaseUtils.FieldBuilder.Build("", i.Name, "State: ".T(EDCTx.JournalLocOrJump_State), JournalFieldNaming.FactionState(i.FactionState),
                                                                     "Government: ".T(EDCTx.JournalLocOrJump_Government), i.Government,
                                                                     "Inf: ;%".T(EDCTx.JournalLocOrJump_Inf), (i.Influence * 100.0).ToString("0.0"),
-                                                                    "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), i.Allegiance,
+                                                                    "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), JournalFieldNaming.Allegiance(i.Allegiance),
                                                                     "Happiness: ".T(EDCTx.JournalLocOrJump_Happiness), i.Happiness_Localised,
                                                                     "Reputation: ;%;N1".T(EDCTx.JournalLocOrJump_Reputation), i.MyReputation,
                                                                     ";Squadron System".T(EDCTx.JournalLocOrJump_SquadronSystem), i.SquadronFaction, 

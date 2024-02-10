@@ -21,24 +21,24 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalRank(JObject evt ) : base(evt, JournalTypeEnum.Rank)
         {
-            Combat = (CombatRank)evt["Combat"].Int();
-            Trade = (TradeRank)evt["Trade"].Int();
-            Explore = (ExplorationRank)evt["Explore"].Int();
-            Soldier = (SoldierRank)evt["Soldier"].Int();
-            ExoBiologist = (ExoBiologistRank)evt["Exobiologist"].Int();
-            Empire = (EmpireRank)evt["Empire"].Int();
-            Federation = (FederationRank)evt["Federation"].Int();
-            CQC = (CQCRank)evt["CQC"].Int();
+            Combat = (RankDefinitions.CombatRank)evt["Combat"].Int();
+            Trade = (RankDefinitions.TradeRank)evt["Trade"].Int();
+            Explore = (RankDefinitions.ExplorationRank)evt["Explore"].Int();
+            Soldier = (RankDefinitions.SoldierRank)evt["Soldier"].Int();
+            ExoBiologist = (RankDefinitions.ExoBiologistRank)evt["Exobiologist"].Int();
+            Empire = (RankDefinitions.EmpireRank)evt["Empire"].Int();
+            Federation = (RankDefinitions.FederationRank)evt["Federation"].Int();
+            CQC = (RankDefinitions.CQCRank)evt["CQC"].Int();
         }
 
-        public CombatRank Combat { get; set; }
-        public TradeRank Trade { get; set; }
-        public ExplorationRank Explore { get; set; }
-        public SoldierRank Soldier { get; set; }
-        public ExoBiologistRank ExoBiologist { get; set; }
-        public EmpireRank Empire { get; set; }
-        public FederationRank Federation { get; set; }
-        public CQCRank CQC { get; set; }
+        public RankDefinitions.CombatRank Combat { get; set; }
+        public RankDefinitions.TradeRank Trade { get; set; }
+        public RankDefinitions.ExplorationRank Explore { get; set; }
+        public RankDefinitions.SoldierRank Soldier { get; set; }
+        public RankDefinitions.ExoBiologistRank ExoBiologist { get; set; }
+        public RankDefinitions.EmpireRank Empire { get; set; }
+        public RankDefinitions.FederationRank Federation { get; set; }
+        public RankDefinitions.CQCRank CQC { get; set; }
 
         public override void FillInformation(out string info, out string detailed) 
         {
@@ -84,45 +84,45 @@ namespace EliteDangerousCore.JournalEvents
         {
             int? c = evt["Combat"].IntNull();
             if (c.HasValue)
-                Combat = (CombatRank)c.Value;
+                Combat = (RankDefinitions.CombatRank)c.Value;
 
             int? t = evt["Trade"].IntNull();
             if (t.HasValue)
-                Trade = (TradeRank)t;
+                Trade = (RankDefinitions.TradeRank)t;
 
             int? e = evt["Explore"].IntNull();
             if (e.HasValue)
-                Explore = (ExplorationRank)e;
+                Explore = (RankDefinitions.ExplorationRank)e;
 
             int? b = evt["Exobiologist"].IntNull();
             if (b.HasValue)
-                ExoBiologist = (ExoBiologistRank)b;
+                ExoBiologist = (RankDefinitions.ExoBiologistRank)b;
 
             int? s = evt["Soldier"].IntNull();
             if (s.HasValue)
-                Soldier = (SoldierRank)s;
+                Soldier = (RankDefinitions.SoldierRank)s;
 
             int? q = evt["CQC"].IntNull();
             if (q.HasValue)
-                CQC = (CQCRank)q;
+                CQC = (RankDefinitions.CQCRank)q;
 
             int? f = evt["Federation"].IntNull();
             if (f.HasValue)
-                Federation = (FederationRank)f;
+                Federation = (RankDefinitions.FederationRank)f;
 
             int? evilempire = evt["Empire"].IntNull();
             if (evilempire.HasValue)
-                Empire = (EmpireRank)evilempire;
+                Empire = (RankDefinitions.EmpireRank)evilempire;
         }
 
-        public CombatRank? Combat { get; set; }
-        public TradeRank? Trade { get; set; }
-        public ExplorationRank? Explore { get; set; }
-        public SoldierRank? Soldier { get; set; }
-        public ExoBiologistRank? ExoBiologist { get; set; }
-        public EmpireRank? Empire { get; set; }
-        public FederationRank? Federation { get; set; }
-        public CQCRank? CQC { get; set; }
+        public RankDefinitions.CombatRank? Combat { get; set; }
+        public RankDefinitions.TradeRank? Trade { get; set; }
+        public RankDefinitions.ExplorationRank? Explore { get; set; }
+        public RankDefinitions.SoldierRank? Soldier { get; set; }
+        public RankDefinitions.ExoBiologistRank? ExoBiologist { get; set; }
+        public RankDefinitions.EmpireRank? Empire { get; set; }
+        public RankDefinitions.FederationRank? Federation { get; set; }
+        public RankDefinitions.CQCRank? CQC { get; set; }
 
         public override void FillInformation(out string info, out string detailed)
         {

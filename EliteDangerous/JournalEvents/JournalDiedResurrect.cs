@@ -147,12 +147,14 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalResurrect(JObject evt) : base(evt, JournalTypeEnum.Resurrect)
         {
-            Option = evt["Option"].Str().SplitCapsWordFull();
+            FDOption = evt["Option"].Str();
+            Option = JournalFieldNaming.ResurrectOption(FDOption);
             Cost = evt["Cost"].Long();
             Bankrupt = evt["Bankrupt"].Bool();
         }
 
-        public string Option { get; set; }
+        public string Option { get; set; }      // Friendly, not FDName
+        public string FDOption { get; set; }
         public long Cost { get; set; }
         public bool Bankrupt { get; set; }
 

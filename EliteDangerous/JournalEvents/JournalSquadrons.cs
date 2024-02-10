@@ -104,18 +104,19 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSquadronRankBase(JObject evt, JournalTypeEnum e) : base(evt, e)
         {
-            OldRank = (SquadronRank)evt["OldRank"].Int();
-            NewRank = (SquadronRank)evt["NewRank"].Int();
+            OldRank = (RankDefinitions.SquadronRank)evt["OldRank"].Int();
+            NewRank = (RankDefinitions.SquadronRank)evt["NewRank"].Int();
         }
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", Name, "Old: ".T(EDCTx.JournalEntry_Old), OldRank.ToString().SplitCapsWord(), "New: ".T(EDCTx.JournalEntry_New), NewRank.ToString().SplitCapsWord());
+            info = BaseUtils.FieldBuilder.Build("", Name, "Old: ".T(EDCTx.JournalEntry_Old), RankDefinitions.FriendlySquadronRank(OldRank), 
+                            "New: ".T(EDCTx.JournalEntry_New), RankDefinitions.FriendlySquadronRank(NewRank));
             detailed = "";
         }
 
-        public SquadronRank OldRank { get; set; }
-        public SquadronRank NewRank { get; set; }
+        public RankDefinitions.SquadronRank OldRank { get; set; }
+        public RankDefinitions.SquadronRank NewRank { get; set; }
     }
 
 
@@ -148,14 +149,14 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSquadronStartup(JObject evt) : base(evt, JournalTypeEnum.SquadronStartup)
         {
-            CurrentRank = (SquadronRank)evt["CurrentRank"].Int();
+            CurrentRank = (RankDefinitions.SquadronRank)evt["CurrentRank"].Int();
         }
 
-        public SquadronRank CurrentRank { get; set; }
+        public RankDefinitions.SquadronRank CurrentRank { get; set; }
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", Name, "Rank: ".T(EDCTx.JournalEntry_Rank), CurrentRank.ToString().SplitCapsWord());
+            info = BaseUtils.FieldBuilder.Build("", Name, "Rank: ".T(EDCTx.JournalEntry_Rank), RankDefinitions.FriendlySquadronRank(CurrentRank));
             detailed = "";
         }
     }

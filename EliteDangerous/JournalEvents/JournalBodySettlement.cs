@@ -105,6 +105,7 @@ namespace EliteDangerousCore.JournalEvents
             StationServices = evt["StationServices"]?.ToObjectQ<string[]>();
             Faction = evt["StationFaction"].I("Name").StrNull();
             FactionState = evt["StationFaction"].I("FactionState").StrNull();
+            FriendlyFactionState = JournalFieldNaming.FactionState(FactionState);
             StationAllegiance = evt["StationAllegiance"].StrNull();
         }
 
@@ -124,10 +125,11 @@ namespace EliteDangerousCore.JournalEvents
         public string StationEconomy_Localised { get; set; }// may be null
         public JournalDocked.Economies[] EconomyList { get; set; }        // may be null
 
-        public string[] StationServices { get; set; }       // may be null
+        public string[] StationServices { get; set; }       // may be null, fdnames
         public string Faction { get; set; }       //may be null
-        public string FactionState { get; set; }       //may be null
-        public string StationAllegiance { get; set; } //may be null
+        public string FactionState { get; set; }       //may be null, FDName
+        public string FriendlyFactionState { get; set; }       //may be null
+        public string StationAllegiance { get; set; } //fdname, may be null
 
 
         // IBodyFeature only
@@ -146,14 +148,17 @@ namespace EliteDangerousCore.JournalEvents
 
             if (StationGovernment != null)      // update 17
             {
-                detailed = BaseUtils.FieldBuilder.Build("Economy: ".T(EDCTx.JournalEntry_Economy), StationEconomy_Localised, "Government: ".T(EDCTx.JournalEntry_Government), StationGovernment_Localised,
-                    "Faction: ".T(EDCTx.JournalEntry_Faction), Faction, "< in state ".T(EDCTx.JournalEntry_instate), FactionState.SplitCapsWord(), "Allegiance: ".T(EDCTx.JournalEntry_Allegiance), StationAllegiance);
+                detailed = BaseUtils.FieldBuilder.Build("Economy: ".T(EDCTx.JournalEntry_Economy), StationEconomy_Localised, 
+                    "Government: ".T(EDCTx.JournalEntry_Government), StationGovernment_Localised,
+                    "Faction: ".T(EDCTx.JournalEntry_Faction), Faction, 
+                    "< in state ".T(EDCTx.JournalEntry_instate), FriendlyFactionState, 
+                    "Allegiance: ".T(EDCTx.JournalEntry_Allegiance), JournalFieldNaming.Allegiance(StationAllegiance));
 
                 if (StationServices != null)
                 {
                     string l = "";
                     foreach (string s in StationServices)
-                        l = l.AppendPrePad(s.SplitCapsWord(), ", ");
+                        l = l.AppendPrePad(StationDefinitions.ServicesFDNameToText(s), ", ");
                     detailed += System.Environment.NewLine + "Station services: ".T(EDCTx.JournalEntry_Stationservices) + l;
                 }
 

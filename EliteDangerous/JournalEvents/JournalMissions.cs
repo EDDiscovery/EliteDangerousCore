@@ -184,7 +184,7 @@ namespace EliteDangerousCore.JournalEvents
         public int? PassengerCount { get; private set; }            // for passenger missions
         public bool? PassengerVIPs { get; private set; }
         public bool? PassengerWanted { get; private set; }
-        public string PassengerType { get; private set; }
+        public string PassengerType { get; private set; }           // fdname, may be null
 
         public int? Reward { get; private set; }
 

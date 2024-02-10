@@ -24,15 +24,15 @@ namespace EliteDangerousCore.JournalEvents
         public JournalPVPKill(JObject evt) : base(evt, JournalTypeEnum.PVPKill)
         {
             Victim = evt["Victim"].Str();
-            CombatRank = (CombatRank)evt["CombatRank"].Int();
+            CombatRank = (RankDefinitions.CombatRank)evt["CombatRank"].Int();
         }
 
         public string Victim { get; set; }
-        public CombatRank CombatRank { get; set; }
+        public RankDefinitions.CombatRank CombatRank { get; set; }
 
         public override void FillInformation(out string info, out string detailed)  
         {
-            info = BaseUtils.FieldBuilder.Build("",Victim, "Rank: ".T(EDCTx.JournalEntry_Rank) , CombatRank.ToString().SplitCapsWord());
+            info = BaseUtils.FieldBuilder.Build("",Victim, "Rank: ".T(EDCTx.JournalEntry_Rank) , RankDefinitions.FriendlyCombatRank(CombatRank));
             detailed = "";
         }
     }

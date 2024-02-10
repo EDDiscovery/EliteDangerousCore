@@ -520,6 +520,7 @@ namespace EliteDangerousCore.JournalEvents
         public long CarrierID { get; set; }
         public string Operation { get; set; }
         public string CrewRole { get; set; }
+        public string FriendlyCrewRole { get; set; }
         public string CrewName { get; set; }
 
         // as per frontier CrewRole Entry
@@ -564,13 +565,14 @@ namespace EliteDangerousCore.JournalEvents
         {
             CarrierID = evt["CarrierID"].Long();
             CrewRole = evt["CrewRole"].Str();
+            FriendlyCrewRole = JournalFieldNaming.CrewRole(CrewRole);
             Operation = evt["Operation"].Str();
             CrewName = evt["CrewName"].Str();
         }
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Role: ".T(EDCTx.JournalEntry_Role), CrewRole.SplitCapsWordFull(),
+            info = BaseUtils.FieldBuilder.Build("Role: ".T(EDCTx.JournalEntry_Role), FriendlyCrewRole,
                                                 "Operation: ".T(EDCTx.JournalCarrier_Operation), Operation,
                                                 "Crew Member: ".T(EDCTx.JournalEntry_CrewMember), CrewName
                                                 );
@@ -668,6 +670,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public long CarrierID { get; set; }
         public string Operation { get; set; }       // BuyPack, SellPack
+        public string FriendlyOperation { get; set; }       // BuyPack, SellPack
         public string PackTheme { get; set; }
         public int PackTier { get; set; }
         public long? Cost { get; set; }
@@ -677,6 +680,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             CarrierID = evt["CarrierID"].Long();
             Operation = evt["Operation"].Str();
+            FriendlyOperation = JournalFieldNaming.ShipPackOperation(Operation);
             PackTheme = evt["PackTheme"].Str();
             PackTier = evt["PackTier"].Int();
             Cost = evt["Cost"].LongNull();
@@ -686,7 +690,7 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build(
-                                                "", Operation.SplitCapsWordFull(),
+                                                "", FriendlyOperation,
                                                 "", PackTheme,
                                                 "Tier: ".T(EDCTx.JournalCarrier_Tier), PackTier,
                                                 "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost,
@@ -707,6 +711,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public long CarrierID { get; set; }
         public string Operation { get; set; }
+        public string FriendlyOperation { get; set; }
         public string PackTheme { get; set; }
         public int PackTier { get; set; }
         public long? Cost { get; set; }
@@ -716,6 +721,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             CarrierID = evt["CarrierID"].Long();
             Operation = evt["Operation"].Str();
+            FriendlyOperation = JournalFieldNaming.ModulePackOperation(Operation);
             PackTheme = evt["PackTheme"].Str();
             PackTier = evt["PackTier"].Int();
             Cost = evt["Cost"].LongNull();
@@ -724,7 +730,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", Operation.SplitCapsWordFull(),
+            info = BaseUtils.FieldBuilder.Build("", FriendlyOperation,
                                                 "", PackTheme,
                                                 "Tier: ".T(EDCTx.JournalCarrier_Tier), PackTier,
                                                 "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost,

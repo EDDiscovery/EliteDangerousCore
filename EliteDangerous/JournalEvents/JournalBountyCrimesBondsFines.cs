@@ -108,10 +108,11 @@ namespace EliteDangerousCore.JournalEvents
 
         public JournalShipTargeted ShipTargettedForStatsOnly { get; set; }         // used in stats computation only.  Not in main code.
         public bool StatsUnknownShip { get => ShipTargettedForStatsOnly == null && IsShip; }
-        public bool StatsEliteAboveShip { get => ShipTargettedForStatsOnly != null && ShipTargettedForStatsOnly.PilotCombatRank >= CombatRank.Elite; }
-        public bool StatsRankShip(CombatRank r) { return ShipTargettedForStatsOnly != null && ShipTargettedForStatsOnly.PilotCombatRank == r; }
-        public bool StatsDangerousShip { get => ShipTargettedForStatsOnly != null && ShipTargettedForStatsOnly.PilotCombatRank == CombatRank.Dangerous; }
-        public bool StatsHarmlessShip { get => ShipTargettedForStatsOnly != null && ShipTargettedForStatsOnly.PilotCombatRank <= CombatRank.Mostly_Harmless && ShipTargettedForStatsOnly.PilotCombatRank>= CombatRank.Harmless; }
+        public bool StatsEliteAboveShip { get => ShipTargettedForStatsOnly != null && ShipTargettedForStatsOnly.PilotCombatRank >= RankDefinitions.CombatRank.Elite; }
+        public bool StatsRankShip(RankDefinitions.CombatRank r) { return ShipTargettedForStatsOnly != null && ShipTargettedForStatsOnly.PilotCombatRank == r; }
+        public bool StatsDangerousShip { get => ShipTargettedForStatsOnly != null && ShipTargettedForStatsOnly.PilotCombatRank == RankDefinitions.CombatRank.Dangerous; }
+        public bool StatsHarmlessShip { get => ShipTargettedForStatsOnly != null && ShipTargettedForStatsOnly.PilotCombatRank <= RankDefinitions.CombatRank.Mostly_Harmless && 
+                        ShipTargettedForStatsOnly.PilotCombatRank>= RankDefinitions.CombatRank.Harmless; }
 
         public void UpdateStats(Stats stats, string unusedstationfaction)
         {
@@ -230,14 +231,16 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalCommitCrime(JObject evt) : base(evt, JournalTypeEnum.CommitCrime)
         {
-            CrimeType = evt["CrimeType"].Str().SplitCapsWordFull();
+            FDCrimeType = evt["CrimeType"].Str();
+            CrimeType = JournalFieldNaming.CrimeType(FDCrimeType);
             Faction = evt["Faction"].Str();
             Victim = evt["Victim"].Str();
             VictimLocalised = JournalFieldNaming.CheckLocalisation(evt["Victim_Localised"].Str(), Victim);
             Fine = evt["Fine"].LongNull();
             Bounty = evt["Bounty"].LongNull();
         }
-        public string CrimeType { get; set; }
+        public string CrimeType { get; set; }       // friendly name
+        public string FDCrimeType { get; set; }     // FDName
         public string Faction { get; set; }
         public string Victim { get; set; }
         public string VictimLocalised { get; set; }
@@ -262,12 +265,14 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalCrimeVictim(JObject evt) : base(evt, JournalTypeEnum.CrimeVictim)
         {
-            CrimeType = evt["CrimeType"].Str().SplitCapsWordFull();
+            FDCrimeType = evt["CrimeType"].Str();
+            CrimeType = JournalFieldNaming.CrimeType(FDCrimeType);
             Offender = evt["Offender"].Str();
             OffenderLocalised = JournalFieldNaming.CheckLocalisation(evt["Offender_Localised"].Str(), Offender);
             Bounty = evt["Bounty"].Long();
         }
-        public string CrimeType { get; set; }
+        public string CrimeType { get; set; }       // friendly name
+        public string FDCrimeType { get; set; }
         public string Offender { get; set; }
         public string OffenderLocalised { get; set; }
         public long Bounty { get; set; }
@@ -425,13 +430,15 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalRedeemVoucher(JObject evt) : base(evt, JournalTypeEnum.RedeemVoucher)
         {
-            Type = evt["Type"].Str().SplitCapsWordFull();
+            FDType = evt["Type"].Str();
+            Type = JournalFieldNaming.RedeemVoucherType(FDType);
             Amount = evt["Amount"].Long();
             Faction = evt["Faction"].Str();
             BrokerPercentage = evt["BrokerPercentage"].Double();
         }
 
         public string Type { get; set; }
+        public string FDType { get; set; }
         public long Amount { get; set; }
         public string Faction { get; set; }
         public double BrokerPercentage { get; set; }

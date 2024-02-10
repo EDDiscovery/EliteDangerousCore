@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2023 EDDiscovery development team
+ * Copyright © 2015 - 2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -312,6 +312,101 @@ namespace EliteDangerousCore
         {
             TimeSpan time = TimeSpan.FromSeconds(seconds);
             return string.Format("{0} days {1} hours {2} minutes".T(EDCTx.JournalEntry_TME), time.Days, time.Hours, time.Minutes);
+        }
+
+        public static string StationType(string fdname)
+        {
+            if (fdname != null)
+            {
+                if (StationDefinitions.StarportNameTypes.TryGetValue(fdname.ToLowerInvariant(), out string res))
+                    return res;
+                else
+                    return "Unknown";
+            }
+            else
+                return null;
+        }
+
+        public static string Allegiance(string fdname)
+        {
+            return fdname?.SplitCapsWordFull() ?? null;
+        }
+
+        public static string DockingDeniedReason(string fdname)
+        {
+            return fdname.SplitCapsWordFull();
+        }
+        public static string CrimeType(string fdname)
+        {
+            return fdname?.SplitCapsWordFull() ?? null;
+        }
+        public static string RedeemVoucherType(string fdname)
+        {
+            return fdname?.SplitCapsWordFull() ?? null;
+        }
+        public static string FactionState(string fdname)
+        {
+            return fdname?.SplitCapsWordFull() ?? null;
+        }
+        public static string CrewRole(string fdname)
+        {
+            return fdname?.SplitCapsWordFull() ?? null;
+        }
+        public static string ModulePackOperation(string fdname)
+        {
+            return fdname?.SplitCapsWordFull() ?? null;
+        }
+        public static string ShipPackOperation(string fdname)
+        {
+            return fdname?.SplitCapsWordFull() ?? null;
+        }
+        public static string DataLinkType(string fdname)
+        {
+            return fdname?.SplitCapsWordFull() ?? null;
+        }
+        public static string ResurrectOption(string fdname)
+        {
+            return fdname?.SplitCapsWordFull() ?? null;
+        }
+        public static string Signals(string fdname)
+        {
+            return fdname?.Replace("$SAA_SignalType_", "").Replace(";", "").SplitCapsWordFull() ?? null;
+        }
+        public static string BodySignals(string fdname)
+        {
+            return fdname?.Replace("$SAA_SignalType_", "").Replace(";", "").SplitCapsWordFull() ?? null;
+        }
+        public static string Genus(string fdname)
+        {
+            return fdname?.Replace("$Codex_Ent_", "").Replace("_Name;", "").Replace(";", "").Replace("$Codex_", "").SplitCapsWordFull() ?? null;
+        }
+        public static string Blueprint(string fdname)
+        {
+            return fdname?.SplitCapsWordFull() ?? null;
+        }
+        public static string Synthesis(string fdname)
+        {
+            return fdname?.SplitCapsWordFull() ?? null;
+        }
+        public static string EngineerMods(string fdname)
+        {
+            return fdname?.SplitCapsWordFull() ?? null;
+        }
+        public static string PassengerType(string fdname)
+        {
+            return fdname?.SplitCapsWordFull() ?? null;
+        }
+        public static string RepairType(string fdname)
+        {
+            return fdname?.SplitCapsWordFull() ?? null;
+        }
+        public static string ScanType(string fdname)
+        {
+            return fdname?.SplitCapsWordFull() ?? null;
+        }
+        public static string SuitSlot(string fdname)
+        {
+            return fdname?.SplitCapsWordFull() ?? null;
         }
     }
 }

@@ -312,7 +312,8 @@ namespace EliteDangerousCore.JournalEvents
         {
             Materials = null;
 
-            Name = evt["Name"].Str().SplitCapsWordFull();
+            FDName = evt["Name"].Str();
+            Name = JournalFieldNaming.Synthesis(FDName);
             JToken mats = (JToken)evt["Materials"];
 
             if (mats != null)
@@ -348,7 +349,8 @@ namespace EliteDangerousCore.JournalEvents
                 FSDBoostValue = 2;
 
         }
-        public string Name { get; set; }
+        public string Name { get; set; }        // Friendly name
+        public string FDName { get; set; }        // FDName
         public Dictionary<string, int> Materials { get; set; }
 
         public double FSDBoostValue { get; set; }           // set non zero if its a FSD injection

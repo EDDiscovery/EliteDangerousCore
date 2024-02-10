@@ -164,14 +164,14 @@ namespace EliteDangerousCore.EDDN
             {
                 JournalMarket jm = je as JournalMarket;
                 msg = eddn.CreateEDDNCommodityMessage(jm.GameVersion,jm.Build, jm.Commodities, jm.IsOdyssey, jm.IsHorizons, jm.StarSystem, 
-                    jm.Station, jm.StationType, jm.CarrierDockingAccess, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned
+                    jm.Station, jm.FDStationType, jm.CarrierDockingAccess, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned
             }
             else if (je.EventTypeID == JournalTypeEnum.EDDCommodityPrices)  // synthesised EDD
             {
                 JournalEDDCommodityPrices jm = je as JournalEDDCommodityPrices;
                 bool legacy = EDCommander.IsLegacyCommander(je.CommanderId);
                 msg = eddn.CreateEDDNCommodityMessage( legacy ? "CAPI-Legacy-market" : "CAPI-Live-market", "", jm.Commodities, jm.IsOdyssey, jm.IsHorizons, jm.StarSystem, 
-                            jm.Station, jm.StationType, jm.CarrierDockingAccess, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned
+                            jm.Station, jm.FDStationType, jm.CarrierDockingAccess, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned
             }
             else if (je.EventTypeID == JournalTypeEnum.FSSDiscoveryScan)
             {

@@ -73,7 +73,7 @@ namespace EliteDangerousCore.Inara
 
         public string Send(List<JToken> events, out List<JObject> datalist) // string returned is errors, null if none..
         {
-            string ret = "[Inara] ";
+            string ret = "Inara ";
             datalist = new List<JObject>();
 
             if (!ValidCredentials)
@@ -122,13 +122,12 @@ namespace EliteDangerousCore.Inara
                             ret += "Error to request " + (events[i])["eventName"].Str() + " " + events[i].ToString() + " with " + ro["eventStatusText"].Str() + Environment.NewLine;
                     }
 
-                    //if (ret.Equals("[Inara] ")) ret = "ALL OK"; // debug!
-                    return ret.Equals("[Inara] ") ? $"{ret}Data sent successfully ({responses.Count} events)" : ret;
+                    return ret.Equals("Inara ") ? $"{ret}Data sent successfully ({responses.Count} events)" : ret;
                 }
             }
             catch( Exception e)
             {
-                return "[Inara] Exception " + e.ToString() + Environment.NewLine;
+                return "Inara Exception " + e.ToString() + Environment.NewLine;
             }
         }
 
@@ -480,7 +479,7 @@ namespace EliteDangerousCore.Inara
                 eventData["killCount"] = mission.KillCount;
 
             if (mission.PassengerType.HasChars())
-                eventData["passengerType"] = mission.PassengerType;
+                eventData["passengerType"] = mission.PassengerType;     // fdname
             if (mission.PassengerCount != null)
                 eventData["passengerCount"] = mission.PassengerCount.Value;
             if (mission.PassengerVIPs != null)
