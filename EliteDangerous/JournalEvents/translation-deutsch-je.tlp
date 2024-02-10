@@ -893,7 +893,7 @@ SECTION JournalStoredShips
 
 SECTION JournalSupercruiseEntry
 
-.Wanted: ", You are wanted." @
+.Wanted: ", You are wanted." => ", du bist gesucht."
 
 SECTION JournalUnderAttack
 
