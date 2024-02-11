@@ -998,7 +998,7 @@ SECTION ScanDisplayUserControl
 .SurfaceFeatures: "Surface features" => "Características de la superficie"
 .Signals: "Signals" => "Señales"
 .Codex: "Codex" => "Códice"
-.Organics: "Organics" => "Organicos"
+.Organics: "Organics" => "Orgánicos"
 
 SECTION Signals
 
