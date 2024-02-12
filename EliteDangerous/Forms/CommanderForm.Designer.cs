@@ -507,7 +507,8 @@
             // labelEDSMAPI
             // 
             this.labelEDSMAPI.AutoSize = true;
-            this.labelEDSMAPI.Location = new System.Drawing.Point(3, 29);
+            this.labelEDSMAPI.Location = new System.Drawing.Point(3, 32);
+            this.labelEDSMAPI.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.labelEDSMAPI.Name = "labelEDSMAPI";
             this.labelEDSMAPI.Size = new System.Drawing.Size(82, 13);
             this.labelEDSMAPI.TabIndex = 2;
@@ -516,7 +517,8 @@
             // labelEDSMN
             // 
             this.labelEDSMN.AutoSize = true;
-            this.labelEDSMN.Location = new System.Drawing.Point(3, 0);
+            this.labelEDSMN.Location = new System.Drawing.Point(3, 3);
+            this.labelEDSMN.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.labelEDSMN.Name = "labelEDSMN";
             this.labelEDSMN.Size = new System.Drawing.Size(72, 13);
             this.labelEDSMN.TabIndex = 2;
@@ -566,7 +568,8 @@
             // labelCN
             // 
             this.labelCN.AutoSize = true;
-            this.labelCN.Location = new System.Drawing.Point(3, 0);
+            this.labelCN.Location = new System.Drawing.Point(3, 3);
+            this.labelCN.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.labelCN.Name = "labelCN";
             this.labelCN.Size = new System.Drawing.Size(97, 13);
             this.labelCN.TabIndex = 2;
@@ -575,7 +578,8 @@
             // labelJL
             // 
             this.labelJL.AutoSize = true;
-            this.labelJL.Location = new System.Drawing.Point(3, 29);
+            this.labelJL.Location = new System.Drawing.Point(3, 32);
+            this.labelJL.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.labelJL.Name = "labelJL";
             this.labelJL.Size = new System.Drawing.Size(88, 13);
             this.labelJL.TabIndex = 2;
@@ -685,7 +689,8 @@
             // labelINARAN
             // 
             this.labelINARAN.AutoSize = true;
-            this.labelINARAN.Location = new System.Drawing.Point(3, 0);
+            this.labelINARAN.Location = new System.Drawing.Point(3, 3);
+            this.labelINARAN.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.labelINARAN.Name = "labelINARAN";
             this.labelINARAN.Size = new System.Drawing.Size(65, 13);
             this.labelINARAN.TabIndex = 2;
@@ -694,7 +699,8 @@
             // labelInaraAPI
             // 
             this.labelInaraAPI.AutoSize = true;
-            this.labelInaraAPI.Location = new System.Drawing.Point(3, 27);
+            this.labelInaraAPI.Location = new System.Drawing.Point(3, 30);
+            this.labelInaraAPI.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.labelInaraAPI.Name = "labelInaraAPI";
             this.labelInaraAPI.Size = new System.Drawing.Size(75, 13);
             this.labelInaraAPI.TabIndex = 2;
@@ -795,7 +801,8 @@
             // HomeSys
             // 
             this.HomeSys.AutoSize = true;
-            this.HomeSys.Location = new System.Drawing.Point(3, 0);
+            this.HomeSys.Location = new System.Drawing.Point(3, 3);
+            this.HomeSys.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.HomeSys.Name = "HomeSys";
             this.HomeSys.Size = new System.Drawing.Size(75, 13);
             this.HomeSys.TabIndex = 2;
@@ -804,7 +811,8 @@
             // labelMapCol
             // 
             this.labelMapCol.AutoSize = true;
-            this.labelMapCol.Location = new System.Drawing.Point(3, 20);
+            this.labelMapCol.Location = new System.Drawing.Point(3, 23);
+            this.labelMapCol.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.labelMapCol.Name = "labelMapCol";
             this.labelMapCol.Size = new System.Drawing.Size(92, 13);
             this.labelMapCol.TabIndex = 13;
