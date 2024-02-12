@@ -16,6 +16,7 @@
 using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 
@@ -30,8 +31,8 @@ namespace EliteDangerousCore.ScreenShots
         private Action<Action<ScreenShotImageConverter>> invokeonui;
         private FileSystemWatcher filesystemwatcher = null;
 
-        // ones already processed by journal screenshot system and which the originals did not get removed
-        private ConcurrentDictionary<string, JournalScreenshot> journalScreenshotted = new ConcurrentDictionary<string, JournalScreenshot>(StringComparer.InvariantCultureIgnoreCase);
+        // multithreaded, locked on access
+        private HashSet<string> screenshotted = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
 
         private ConcurrentDictionary<System.Timers.Timer, string> filewatchTimers = new ConcurrentDictionary<System.Timers.Timer, string>();
 
@@ -100,21 +101,33 @@ namespace EliteDangerousCore.ScreenShots
             if (je.EventTypeID == JournalTypeEnum.Screenshot)
             {
                 JournalScreenshot ss = je as JournalScreenshot;
-                System.Diagnostics.Trace.WriteLine("Journal Screenshot " + ss.Filename);
 
                 string ssname = ss.Filename.StartsWith("\\ED_Pictures\\") ? ss.Filename.Substring(13) : ss.Filename;
-                invokeonui?.Invoke(cp => 
-                    {
-                        bool leftinplace = ProcessScreenshot(ss.Filename, ss, cp);      
-                        if (leftinplace)
-                            journalScreenshotted[ssname] = ss;      // if we leave the file behind, tell the file watcher we have done it
-                    });
+                bool done = false;
+                lock (screenshotted)        // due to multi threads
+                {
+                    done = screenshotted.Contains(ssname);   // see if done,
+                    screenshotted.Add(ssname);               // indicate we have done it somehow
+                }
+
+                if (!done)     // if we have not screenshotted it
+                {
+                    System.Diagnostics.Trace.WriteLine($"Screenshot Journal entry received {ssname}, process {ss.Filename}");
+                    invokeonui?.Invoke(cp =>
+                        {
+                            ProcessScreenshot(ss.Filename, ss, cp);
+                        });
+                }
+                else
+                {
+                    System.Diagnostics.Trace.WriteLine("Screenshot Journal entry received but already processed " + ss.Filename);
+                }
             }
         }
 
         private void WatcherTripped(object sender, System.IO.FileSystemEventArgs e)     
         {
-            System.Diagnostics.Trace.WriteLine("Directory watcher picked up screenshot " + e.FullPath);
+            System.Diagnostics.Trace.WriteLine("Screenshot directory watcher picked up " + e.FullPath);
             invokeonui?.Invoke(cp => ProcessFilesystemEvent(sender, e, cp));
         }
 
@@ -124,7 +137,7 @@ namespace EliteDangerousCore.ScreenShots
 
             if (e.FullPath.ToLowerInvariant().EndsWith(".bmp"))     // cause its a frontier bmp file..
             {
-                System.Diagnostics.Debug.WriteLine("File watch start a timer to wait for SS entry");
+                System.Diagnostics.Debug.WriteLine($"Screenshot file watch start a timer to wait for SS entry for {e.FullPath}");
 
                 System.Timers.Timer t = new System.Timers.Timer(watchdelay);  // use a timer since we can set it up slowly before we start it
                 t.Elapsed += T_Elapsed;
@@ -147,19 +160,27 @@ namespace EliteDangerousCore.ScreenShots
             {
                 if (File.Exists(filename))     // still there.. it may have been removed by journal screenshot moving it
                 {
-                    if (!journalScreenshotted.ContainsKey(Path.GetFileName(filename)))     // and its not in the peristent list dealt with by screenshot
+                    string ssname = Path.GetFileName(filename);
+                    bool done = false;
+                    lock (screenshotted)        // due to multi threads
                     {
-                        System.Diagnostics.Debug.WriteLine("Timer timed out, not journal screen shotted");
+                        done = screenshotted.Contains(ssname);   // see if done,
+                        screenshotted.Add(ssname);               // indicate we have done it somehow
+                    }
+
+                    if (!done)          // and its not in the peristent list dealt with by screenshot
+                    {
+                        System.Diagnostics.Trace.WriteLine($"Screenshot Timer timed out, {ssname} is not been processed, so process {filename}");
                         this.invokeonui?.Invoke(cp => ProcessScreenshot(filename, null, cp)); //process on UI thread
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine("Timer timed out, screenshot was processed by journal screen shot");
+                        System.Diagnostics.Debug.WriteLine($"Screenshot Timer timed out, screenshot {ssname} file {filename} was processed by journal screen shot");
                     }
                 }
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine("Timer timed out, file was not there");
+                    System.Diagnostics.Debug.WriteLine($"Screenshot Timer timed out, file {filename} was not there");
                 }
             }
 
@@ -181,7 +202,7 @@ namespace EliteDangerousCore.ScreenShots
             string bodyname = (ss == null ? r.Item2 : ss.Body) ?? "Unknown";
             string cmdrname = (ss == null ? r.Item3 : EDCommander.GetCommander(ss.CommanderId)?.Name) ?? "Unknown";
 
-            System.Diagnostics.Debug.WriteLine("Process {0} s={1} b={2} c={3}", filenamepart, sysname, bodyname, cmdrname);
+            System.Diagnostics.Debug.WriteLine("Screenshot Process {0} s={1} b={2} c={3}", filenamepart, sysname, bodyname, cmdrname);
 
             try
             {
@@ -202,7 +223,7 @@ namespace EliteDangerousCore.ScreenShots
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.WriteLine("Exception watcher: " + ex.Message);
+                System.Diagnostics.Trace.WriteLine("Screenshot Exception watcher: " + ex.Message);
                 System.Diagnostics.Trace.WriteLine("Trace: " + ex.StackTrace);
                 logit("Error in executing image conversion, try another screenshot, check output path settings. (Exception ".T(EDCTx.ScreenshotDirectoryWatcher_Excp) + ex.Message + ")");
             }
