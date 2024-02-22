@@ -416,9 +416,9 @@ namespace EliteDangerousCore
 
                 sm.ShipType = ship;
                 sm.ShipFD = shipfd;
-                if (name != null)
+                if (name.HasNonSpaceChars())        // seen " " as a name!
                     sm.ShipUserName = name;
-                if (ident != null)
+                if (ident.HasNonSpaceChars())
                     sm.ShipUserIdent = ident;
                 if (fuellevel != 0)
                     sm.FuelLevel = fuellevel;
