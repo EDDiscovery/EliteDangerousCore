@@ -37,12 +37,12 @@ namespace EliteDangerousCore.EDSM
 
         private readonly string fromSoftwareVersion;
 
-        public EDSMClass()
+        public const string RootURL = "https://www.edsm.net/";
+
+        public EDSMClass() : base(RootURL)
         {
             var assemblyFullName = Assembly.GetEntryAssembly().FullName;
             fromSoftwareVersion = assemblyFullName.Split(',')[1].Split('=')[1];
-
-            base.httpserveraddress = ServerAddress;
 
             apiKey = EDCommander.Current.EDSMAPIKey;
             commanderName = string.IsNullOrEmpty(EDCommander.Current.EdsmName) ? EDCommander.Current.Name : EDCommander.Current.EdsmName;
@@ -57,10 +57,6 @@ namespace EliteDangerousCore.EDSM
             }
         }
 
-
-        static string edsm_server_address = "https://www.edsm.net/";
-        public static string ServerAddress { get { return edsm_server_address; } set { edsm_server_address = value; } }
-        public static bool IsServerAddressValid { get { return edsm_server_address.Length > 0; } }
 
         #region For Trilateration
 
@@ -84,7 +80,7 @@ namespace EliteDangerousCore.EDSM
 
             query += "] } ";
 
-            var response = RequestPost("{ \"data\": " + query + " }", "api-v1/submit-distances", handleException: true);
+            var response = RequestPost("{ \"data\": " + query + " }", "api-v1/submit-distances");
             if (response.Error)
                 return null;
             var data = response.Body;
@@ -153,7 +149,7 @@ namespace EliteDangerousCore.EDSM
         {
             string query = "system?systemName=" + HttpUtility.UrlEncode(sysName);
             string json = null;
-            var response = RequestGet("api-v1/" + query, handleException: true);
+            var response = RequestGet("api-v1/" + query);
             if (response.Error)
                 return false;
             json = response.Body;
@@ -181,7 +177,7 @@ namespace EliteDangerousCore.EDSM
         {
             List<string> systems = new List<string>();
 
-            var response = RequestGet(query, handleException: true, timeout: timeout);
+            var response = RequestGet(query, timeout: timeout);
             if (response.Error)
                 return systems;
 
@@ -207,7 +203,7 @@ namespace EliteDangerousCore.EDSM
         #region For System DB update
 
         // Verified Nov 20 - EDSM update working
-        public BaseUtils.ResponseData RequestSystemsData(DateTime startdate, DateTime enddate, int timeout = 5000)      // protect yourself against JSON errors!
+        public BaseUtils.HttpCom.Response RequestSystemsData(DateTime startdate, DateTime enddate, int timeout = 5000)      // protect yourself against JSON errors!
         {
             if (startdate < EDDFixesDates.EDSMMinimumSystemsDate)
                 startdate = EDDFixesDates.EDSMMinimumSystemsDate;
@@ -216,28 +212,18 @@ namespace EliteDangerousCore.EDSM
                 "?startdatetime=" + HttpUtility.UrlEncode(startdate.ToUniversalTime().ToStringYearFirstInvariant()) +
                 "&enddatetime=" + HttpUtility.UrlEncode(enddate.ToUniversalTime().ToStringYearFirstInvariant()) +
                 "&coords=1&known=1&showId=1";
-            return RequestGet(query, handleException: true, timeout: timeout);
+            return RequestGet(query, timeout: timeout);
         }
 
-        public string GetHiddenSystems(string file)   // Verfied Nov 20
+        public string GetHiddenSystems(string file, System.Threading.CancellationToken cancel)   // Verfied Nov 20
         {
-            try
+            if (DownloadFile(cancel,"api-v1/hidden-systems?showId=1", file, false, out bool newfile))
             {
-                if (BaseUtils.DownloadFile.HTTPDownloadFile(base.httpserveraddress + "api-v1/hidden-systems?showId=1", file, false, out bool newfile))
-                {
-                    string json = BaseUtils.FileHelpers.TryReadAllTextFromFile(file);
-                    return json;
-                }
-                else
-                    return null;
+                string json = BaseUtils.FileHelpers.TryReadAllTextFromFile(file);
+                return json;
             }
-
-            catch (Exception ex)
-            {
-                System.Diagnostics.Trace.WriteLine($"EDSM Hidden system Exception: {ex.Message}");
+            else
                 return null;
-            }
-
         }
 
         #endregion
@@ -250,7 +236,7 @@ namespace EliteDangerousCore.EDSM
                 return null;
 
             string query = "get-comments?startdatetime=" + HttpUtility.UrlEncode(starttime.ToStringYearFirstInvariant()) + "&apiKey=" + apiKey + "&commanderName=" + HttpUtility.UrlEncode(commanderName) + "&showId=1";
-            var response = RequestGet("api-logs-v1/" + query, handleException: true);
+            var response = RequestGet("api-logs-v1/" + query);
 
             if (response.Error)
                 return null;
@@ -326,7 +312,7 @@ namespace EliteDangerousCore.EDSM
                 query += "&systemId=" + edsmid;
             }
 
-            var response = RequestPost(query, "api-logs-v1/set-comment", handleException: true, contenttype: "application/x-www-form-urlencoded");
+            var response = RequestPost(query, "api-logs-v1/set-comment", contenttype: "application/x-www-form-urlencoded");
 
             if (response.Error)
                 return null;
@@ -358,12 +344,12 @@ namespace EliteDangerousCore.EDSM
         // Verified and recoded april 23
 
         public int GetLogs(DateTime? starttimeutc, DateTime? endtimeutc, out List<JournalFSDJump> fsdjumps, 
-                            out DateTime logstarttime, out DateTime logendtime, out BaseUtils.ResponseData response, Action<string> statusupdate)
+                            out DateTime logstarttime, out DateTime logendtime, out BaseUtils.HttpCom.Response response, Action<string> statusupdate)
         {
             fsdjumps = new List<JournalFSDJump>();
             logstarttime = DateTime.MaxValue;
             logendtime = DateTime.MinValue;
-            response = new BaseUtils.ResponseData { Error = true, StatusCode = HttpStatusCode.Unauthorized };
+            response = new BaseUtils.HttpCom.Response(HttpStatusCode.Unauthorized);
 
             if (!ValidCredentials)
                 return 0;
@@ -384,7 +370,7 @@ namespace EliteDangerousCore.EDSM
                 query += "&endDateTime=" + HttpUtility.UrlEncode(et);
             }
 
-            response = RequestGet("api-logs-v1/" + query, handleException: true);
+            response = RequestGet("api-logs-v1/" + query);
 
             if (response.Error)
             {
@@ -523,7 +509,7 @@ namespace EliteDangerousCore.EDSM
                     query = query + $"systemName[]={HttpUtility.UrlEncode(s)}";
                 }
 
-                var response = RequestGet(query, handleException: true);
+                var response = RequestGet(query);
                 if (response.Error)
                     return null;
 
@@ -579,7 +565,7 @@ namespace EliteDangerousCore.EDSM
 
             string query = String.Format("api-v1/systems?systemName={0}&showCoordinates=1&showId=1&showInformation=1&showPermit=1", Uri.EscapeDataString(systemName));
 
-            var response = RequestGet(query, handleException: true);
+            var response = RequestGet(query);
             if (response.Error)
                 return null;
 
@@ -633,7 +619,7 @@ namespace EliteDangerousCore.EDSM
             string query = String.Format("api-v1/sphere-systems?systemName={0}&radius={1}&minRadius={2}&showCoordinates=1&showId=1",
                                 Uri.EscapeDataString(systemName), maxradius.ToStringInvariant(), minradius.ToStringInvariant());
 
-            var response = RequestGet(query, handleException: true, timeout: 30000);
+            var response = RequestGet(query, timeout: 30000);
             if (response.Error)
                 return null;
 
@@ -687,7 +673,7 @@ namespace EliteDangerousCore.EDSM
 
             System.Diagnostics.Debug.WriteLine($"EDSM Query sphere {x} {y} {z} at {minradius} - {maxradius} ly");
 
-            var response = RequestGet(query, handleException: true, timeout: 30000);
+            var response = RequestGet(query, timeout: 30000);
             if (response.Error)
                 return null;
 
@@ -737,7 +723,7 @@ namespace EliteDangerousCore.EDSM
         public string GetUrlToSystem(string sysName)            // get a direct name, no check if exists
         {
             string encodedSys = HttpUtility.UrlEncode(sysName);
-            string url = base.httpserveraddress + "system?systemName=" + encodedSys;
+            string url = ServerAddress + "system?systemName=" + encodedSys;
             return url;
         }
 
@@ -761,7 +747,7 @@ namespace EliteDangerousCore.EDSM
             string encodedSys = HttpUtility.UrlEncode(sysName);
 
             string query = "system?systemName=" + encodedSys + "&showId=1";
-            var response = RequestGet("api-v1/" + query, handleException: true);
+            var response = RequestGet("api-v1/" + query);
             if (response.Error)
                 return "";
 
@@ -773,7 +759,7 @@ namespace EliteDangerousCore.EDSM
             if (id == -1)
                 return "";
 
-            string url = base.httpserveraddress + "system/id/" + id.ToStringInvariant() + "/name/" + encodedSys;
+            string url = ServerAddress + "system/id/" + id.ToStringInvariant() + "/name/" + encodedSys;
             return url;
         }
 
@@ -781,7 +767,7 @@ namespace EliteDangerousCore.EDSM
         public JObject GetSystemByAddress(long id64)
         {
             string query = "?systemId64=" + id64.ToStringInvariant() + "&showInformation=1&includeHidden=1&showCoordinates=1&&showId=1";
-            var response = RequestGet("api-v1/system" + query, handleException: true);
+            var response = RequestGet("api-v1/system" + query);
             if (response.Error)
                 return null;
 
@@ -797,7 +783,7 @@ namespace EliteDangerousCore.EDSM
         public JObject GetSystemByEDSMID(long edsmid)
         {
             string query = "?systemId=" + edsmid.ToStringInvariant() + "&showInformation=1&includeHidden=1&showCoordinates=1&&showId=1";
-            var response = RequestGet("api-v1/system" + query, handleException: true);
+            var response = RequestGet("api-v1/system" + query);
             if (response.Error)
                 return null;
 
@@ -818,7 +804,7 @@ namespace EliteDangerousCore.EDSM
             string encodedSys = HttpUtility.UrlEncode(sysName);
 
             string query = "bodies?systemName=" + sysName;
-            var response = RequestGet("api-system-v1/" + query, handleException: true);
+            var response = RequestGet("api-system-v1/" + query);
             if (response.Error)
                 return null;
 
@@ -833,7 +819,7 @@ namespace EliteDangerousCore.EDSM
         private JObject GetBodiesByID64(long id64)       // Verified Nov 20, null if bad json
         {
             string query = "bodies?systemId64=" + id64.ToStringInvariant();
-            var response = RequestGet("api-system-v1/" + query, handleException: true);
+            var response = RequestGet("api-system-v1/" + query);
             if (response.Error)
                 return null;
 
@@ -848,7 +834,7 @@ namespace EliteDangerousCore.EDSM
         private JObject GetBodies(long edsmID)          // Verified Nov 20, null if bad json
         {
             string query = "bodies?systemId=" + edsmID.ToString();
-            var response = RequestGet("api-system-v1/" + query, handleException: true);
+            var response = RequestGet("api-system-v1/" + query);
             if (response.Error)
                 return null;
 
@@ -964,8 +950,7 @@ namespace EliteDangerousCore.EDSM
                             }
                             catch (Exception ex)
                             {
-                                BaseUtils.HttpCom.WriteLog($"Exception Loop: {ex.Message}", "");
-                                System.Diagnostics.Trace.WriteLine($"Body List Exception Loop: {ex.Message}");
+                                WriteLog($"EDSM Decode Bodies Exception: {ex.Message}");
                             }
                         }
 
@@ -1193,11 +1178,11 @@ namespace EliteDangerousCore.EDSM
                               "&fromSoftwareVersion=" + Uri.EscapeDataString(fromSoftwareVersion) +
                               "&fromGameVersion=" + Uri.EscapeDataString(gameversion) +
                               "&fromGameBuild=" + Uri.EscapeDataString(gamebuild) +
-                              "&message=" + EscapeLongDataString(message.ToString());
+                              "&message=" + message.ToString().URIEscapeLongDataString();
 
             // System.Diagnostics.Debug.WriteLine("EDSM Send " + message.ToString());
 
-            var response = RequestPost(postdata, "api-journal-v1", handleException: true, contenttype: "application/x-www-form-urlencoded");
+            var response = RequestPost(postdata, "api-journal-v1", contenttype: "application/x-www-form-urlencoded");
 
             if (response.Error)
             {
@@ -1229,23 +1214,10 @@ namespace EliteDangerousCore.EDSM
 
         #endregion
 
-        public static bool DownloadGMOFileFromEDSM(string file, Func<bool> cancelRequested)
+        public static bool DownloadGMOFileFromEDSM(string file, System.Threading.CancellationToken cancel)
         {
-            try
-            {
-                EDSMClass edsm = new EDSMClass();
-                string url = EDSMClass.ServerAddress + "en/galactic-mapping/json-edd";
-                return BaseUtils.DownloadFile.HTTPDownloadFile(url, file, false, out bool _,cancelRequested:cancelRequested);
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Trace.WriteLine("DownloadFromEDSM exception:" + ex.Message);
-            }
-
-            return false;
+            EDSMClass edsm = new EDSMClass();
+            return edsm.DownloadFile(cancel, "en/galactic-mapping/json-edd", file, false, out bool _);
         }
-
-
-
     }
 }

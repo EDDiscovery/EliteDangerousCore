@@ -26,13 +26,11 @@ namespace EliteDangerousCore.EDAstro
         static public string SoftwareName { get; set; } = "EDDiscovery";
 
         private readonly string fromSoftwareVersion;
-        private readonly string EDAstroServer = "https://edastro.com/api/";
 
-        public EDAstroClass()
+        public EDAstroClass() : base("https://edastro.com/api/")
         {
             var assemblyFullName = Assembly.GetEntryAssembly().FullName;
             fromSoftwareVersion = assemblyFullName.Split(',')[1].Split('=')[1];
-            httpserveraddress = EDAstroServer;
         }
 
         private JObject Header(bool ody)
@@ -63,7 +61,7 @@ namespace EliteDangerousCore.EDAstro
 
             System.Diagnostics.Debug.WriteLine("EDAstro send " + message.ToString(true));
 
-            var response = RequestPost(message.ToString(), "journal", handleException: true);
+            var response = RequestPost(message.ToString(), "journal");
 
             return response.StatusCode == System.Net.HttpStatusCode.OK;
         }

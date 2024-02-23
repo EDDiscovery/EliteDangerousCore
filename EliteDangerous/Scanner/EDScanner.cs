@@ -271,9 +271,9 @@ namespace EliteDangerousCore
         // Go thru all watchers and check to see if any new files have been found, if so, process them and either store to DB return a list of them (if jes != null)
         // options to force reload of last N files, to fireback instead of storing the last n
 
-        public void ParseJournalFilesOnWatchers(Action<int, string> updateProgress,
-                                                DateTime minjournaldateutc, int reloadlastn, List<JournalEntry> jeslist = null,
-                                                EventWaitHandle closerequested = null)
+        public void ParseJournalFilesOnWatchers(Action<int, string> updateProgress, CancellationToken closerequested,
+                                                DateTime minjournaldateutc, int reloadlastn, List<JournalEntry> jeslist = null
+                                                )
         {
             System.Diagnostics.Debug.Assert(ScanThread == null);        // double check we are not scanning.
 

@@ -365,11 +365,12 @@ namespace EliteDangerousCore
         {
             if ( StatsThread != null && StatsThread.IsAlive)
             {
-                Exit = true;
+                Exit.Cancel();
                 StatsThread.Join();
             }
 
-            Exit = Running = false;
+            Running = false;
+            Exit = new CancellationTokenSource();
             StatsThread = null;
         }
 
@@ -395,7 +396,7 @@ namespace EliteDangerousCore
         {
             System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.TickCountLap("JSC", true)} Stats table read start for commander {cmdrid}");
 
-            var jlist = JournalEntry.GetAll(cmdrid, ids: events, startdateutc: start, enddateutc: end, cancelRequested:()=> { return Exit; });
+            var jlist = JournalEntry.GetAll(Exit.Token, cmdrid, ids: events, startdateutc: start, enddateutc: end);
 
             System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.TickCountLap("JSC")} Stats table read end - no {jlist.Length}");
 
@@ -404,7 +405,7 @@ namespace EliteDangerousCore
             foreach (var e in jlist)        // fire through stats
             {
                 stats.Process(e);
-                if (Exit)
+                if (Exit.IsCancellationRequested)
                 {
                     Running = false;
                     return;
@@ -431,6 +432,6 @@ namespace EliteDangerousCore
         private DateTime? end;
         private int cmdrid;
         private Action<JournalStats> callback;
-        private bool Exit;
+        private CancellationTokenSource Exit;
     };
 }

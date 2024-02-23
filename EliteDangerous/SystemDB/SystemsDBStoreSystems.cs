@@ -63,9 +63,10 @@ namespace EliteDangerousCore.DB
             {
                 // start loader, 10000 at a time, no overlapped so we don't load up the pc, and don't overwrite stuff already there
 
+                var cancel = new System.Threading.CancellationToken(); //can't be cancelled
                 SystemsDB.Loader3 loader3 = new SystemsDB.Loader3("", 10000, null, poverlapped: false, pdontoverwrite: true);
-                long updates = loader3.ParseJSONString(jlist.ToString(), () => false, (s) => System.Diagnostics.Debug.WriteLine($"Store Systems: {s}"));
-                loader3.Finish();
+                long updates = loader3.ParseJSONString(jlist.ToString(), cancel, (s) => System.Diagnostics.Debug.WriteLine($"Store Systems: {s}"));
+                loader3.Finish(cancel);
                 return updates;
 
             }

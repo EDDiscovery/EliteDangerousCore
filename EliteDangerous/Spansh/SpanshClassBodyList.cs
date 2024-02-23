@@ -32,7 +32,7 @@ namespace EliteDangerousCore.Spansh
             if (sys == null)
                 return null;
 
-            BaseUtils.ResponseData response = RequestGet("dump/" + sys.SystemAddress.ToStringInvariant(), handleException: true);
+            BaseUtils.HttpCom.Response response = RequestGet("dump/" + sys.SystemAddress.ToStringInvariant());
 
             if (response.Error)
                 return null;

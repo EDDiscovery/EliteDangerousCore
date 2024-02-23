@@ -1164,14 +1164,14 @@ namespace EliteDangerousCore.EDDN
         {
             try
             {
-                httpserveraddress = betaserver ? EDDNServerBeta : EDDNServer;
+                ServerAddress = betaserver ? EDDNServerBeta : EDDNServer;
 
                 if (testschema)
                     msg["$schemaRef"] = msg["$schemaRef"].Str() + "/test";
 
-                System.Diagnostics.Debug.WriteLine($"EDDN Send to {httpserveraddress} {msg.ToString()}");
+                System.Diagnostics.Debug.WriteLine($"EDDN Send to {ServerAddress} {msg.ToString()}");
 
-                BaseUtils.ResponseData resp = RequestPost(msg.ToString(), "");
+                BaseUtils.HttpCom.Response resp = RequestPost(msg.ToString(), "");
 
                 if (resp.StatusCode == System.Net.HttpStatusCode.OK)
                 {

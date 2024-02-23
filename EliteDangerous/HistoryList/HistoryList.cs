@@ -124,7 +124,7 @@ namespace EliteDangerousCore
         // if maxdateload set, only load up to that date
         
         public static void LoadHistory( HistoryList hist, 
-                                        Action<int,string> reportProgress, Func<bool> cancelRequested,
+                                        Action<int,string> reportProgress, System.Threading.CancellationToken cancelRequested,
                                         int commanderid, string cmdname, 
                                         int fullhistoryloaddaylimit, JournalTypeEnum[] loadedbeforelimitids, 
                                         DateTime? maxdateload
@@ -139,14 +139,13 @@ namespace EliteDangerousCore
 
             if (fullhistoryloaddaylimit > 0)            // if we are limiting 
             {
-                tabledata = JournalEntry.GetTableData(commanderid, enddateutc:maxdateload,
-                    ids: loadedbeforelimitids, allidsafterutc: DateTime.UtcNow.Subtract(new TimeSpan(fullhistoryloaddaylimit, 0, 0, 0)),
-                    cancelRequested:cancelRequested
+                tabledata = JournalEntry.GetTableData(cancelRequested, commanderid, enddateutc:maxdateload,
+                    ids: loadedbeforelimitids, allidsafterutc: DateTime.UtcNow.Subtract(new TimeSpan(fullhistoryloaddaylimit, 0, 0, 0))
                     );
             }
             else
             {
-                tabledata = JournalEntry.GetTableData(commanderid, cancelRequested:cancelRequested, enddateutc:maxdateload);
+                tabledata = JournalEntry.GetTableData(cancelRequested, commanderid, enddateutc:maxdateload);
             }
  
             JournalEntry[] journalentries = new JournalEntry[0];       // default empty array so rest of code works
@@ -177,7 +176,7 @@ namespace EliteDangerousCore
             {
                 if (eno++ % 5000 == 0 || eno == journalentries.Length-1)
                 {
-                    if (cancelRequested?.Invoke() ?? false)     // if cancelling, stop processing
+                    if (cancelRequested.IsCancellationRequested)     // if cancelling, stop processing
                         break;
 
                     reportProgress(100*eno/journalentries.Length, $"Creating Cmdr. {cmdname} history {(eno-1):N0}/{journalentries.Length:N0}");

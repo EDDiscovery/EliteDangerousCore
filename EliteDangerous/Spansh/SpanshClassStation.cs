@@ -40,7 +40,7 @@ namespace EliteDangerousCore.Spansh
             if (sys == null)
                 return null;
 
-            BaseUtils.ResponseData response = RequestGet("dump/" + sys.SystemAddress.ToStringInvariant(), handleException: true);
+            BaseUtils.HttpCom.Response response = RequestGet("dump/" + sys.SystemAddress.ToStringInvariant());
 
             if (response.Error)
                 return null;
@@ -522,7 +522,7 @@ namespace EliteDangerousCore.Spansh
         {
             System.Diagnostics.Debug.WriteLine($"Spansh post data for station search {query.ToString(true)}");
 
-            var response = RequestPost(query.ToString(), "stations/search", handleException: true);
+            var response = RequestPost(query.ToString(), "stations/search");
 
             if (response.Error)
                 return null;

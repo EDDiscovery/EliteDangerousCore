@@ -37,12 +37,10 @@ namespace EliteDangerousCore.Inara
 
         private string InaraAPI = "inapi/v1/";      // Action end point
 
-        private InaraClass()
+        private InaraClass() : base("https://inara.cz/")
         {
             var assemblyFullName = Assembly.GetEntryAssembly().FullName;
             fromSoftwareVersion = assemblyFullName.Split(',')[1].Split('=')[1];
-
-            base.httpserveraddress = @"https://inara.cz/";
 
             apiKey = EDCommander.Current.InaraAPIKey;
             commanderName = string.IsNullOrEmpty(EDCommander.Current.InaraName) ? EDCommander.Current.Name : EDCommander.Current.InaraName;
@@ -84,7 +82,7 @@ namespace EliteDangerousCore.Inara
             //File.WriteAllText(@"c:\code\json.txt", request); 
             //System.Diagnostics.Debug.WriteLine(ret + "Send inara " + request);
 
-            var response = RequestPost(request, InaraAPI, handleException: true, contenttype: "application/json");
+            var response = RequestPost(request, InaraAPI, contenttype: "application/json");
 
             if (response.Error)
                 return ret + "No Response" + Environment.NewLine;

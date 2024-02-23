@@ -39,7 +39,7 @@ namespace EliteDangerousCore.EDSM
 
             Commander = cmdr;
 
-            if ((ThreadEDSMFetchLogs == null || !ThreadEDSMFetchLogs.IsAlive) && Commander.SyncFromEdsm && EDSMClass.IsServerAddressValid)
+            if ((ThreadEDSMFetchLogs == null || !ThreadEDSMFetchLogs.IsAlive) && Commander.SyncFromEdsm )
             {
                 ThreadEDSMFetchLogs = new Thread(FetcherThreadProc) { IsBackground = true, Name = "EDSM Log Fetcher" };
                 ThreadEDSMFetchLogs.Start();
@@ -119,7 +119,7 @@ namespace EliteDangerousCore.EDSM
 
                         int res = edsm.GetLogs(null, lastqueryendtime, out List<JournalFSDJump> edsmlogs, 
                                         out DateTime logstarttime, out DateTime logendtime, 
-                                        out BaseUtils.ResponseData response, (s) => StatusLineUpdate(s));
+                                        out BaseUtils.HttpCom.Response response, (s) => StatusLineUpdate(s));
 
                         //int res = 100;  DateTime logstarttime = lastqueryendtime.AddDays(-7);  DateTime logendtime = lastqueryendtime.AddDays(-1); List<JournalFSDJump> edsmlogs = new List<JournalFSDJump>();
 
@@ -181,7 +181,7 @@ namespace EliteDangerousCore.EDSM
             // Moved here to avoid the race that could have been causing duplicate entries
             // EDSM only returns FSD entries, so only look for them.  Tested 27/4/2018 after the HE optimisations
 
-            List<HistoryEntry> hlfsdlist = JournalEntry.GetAll(Commander.Id, logstarttime.AddDays(-1), logendtime.AddDays(1)).
+            List<HistoryEntry> hlfsdlist = JournalEntry.GetAll(new CancellationToken(), Commander.Id, logstarttime.AddDays(-1), logendtime.AddDays(1)).
                 OfType<JournalLocOrJump>().OrderBy(je => je.EventTimeUTC).
                 Select(je => HistoryEntry.FromJournalEntry(je, null, null)).ToList();   
 

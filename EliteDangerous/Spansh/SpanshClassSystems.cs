@@ -130,7 +130,7 @@ namespace EliteDangerousCore.Spansh
         {
             //System.Diagnostics.Debug.WriteLine($"Spansh post data for search systems {query.ToString(true)}");
 
-            var response = RequestPost(query.ToString(), "systems/search", handleException: true);
+            var response = RequestPost(query.ToString(), "systems/search");
 
             if (response.Error)
                 return null;

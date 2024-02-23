@@ -35,7 +35,7 @@ namespace EliteDangerousCore.Spansh
             if (loop)               // don't give to if loop
                 to = null;
 
-            string query = MakeQuery("radius", radius,
+            string query = HTTPExtensions.MakeQuery("radius", radius,
                            "range", jumprange,
                            "from", from,
                            "to", to,
@@ -70,7 +70,7 @@ namespace EliteDangerousCore.Spansh
                                             int max_agesec,
                                             bool requires_large_pad, bool allow_prohibited, bool allow_planetary, bool avoid_loops, bool permit)
         {
-            string query = MakeQuery(nameof(max_hops), max_hops, nameof(max_hop_distance), max_hop_distance,
+            string query = HTTPExtensions.MakeQuery(nameof(max_hops), max_hops, nameof(max_hop_distance), max_hop_distance,
                            "system", fromsystem, "station", fromstation,
                            nameof(starting_capital), starting_capital, nameof(max_cargo), max_cargo, nameof(max_system_distance), max_system_distance,
                            "max_price_age", max_agesec,
@@ -142,7 +142,7 @@ namespace EliteDangerousCore.Spansh
         // return SPANSH GUID search ID
         public string RequestNeutronRouter(string from, string to, int jumprange, int efficiency)
         {
-            string query = MakeQuery("range", jumprange,
+            string query = HTTPExtensions.MakeQuery("range", jumprange,
                            "from", from,
                            "to", to,
                            "efficiency", efficiency);
@@ -197,7 +197,7 @@ namespace EliteDangerousCore.Spansh
         public string RequestFleetCarrierRouter(string source, List<string> destinations,
                                             int capacity_used, bool calculate_starting_fuel)
         {
-            string query = MakeQuery(nameof(source), source, nameof(capacity_used), capacity_used, nameof(calculate_starting_fuel), calculate_starting_fuel);
+            string query = HTTPExtensions.MakeQuery(nameof(source), source, nameof(capacity_used), capacity_used, nameof(calculate_starting_fuel), calculate_starting_fuel);
             foreach (var d in destinations)
                 query += $"&destinations={HttpUtility.UrlEncode(d)}";
 
@@ -270,7 +270,7 @@ namespace EliteDangerousCore.Spansh
             json.Add(obj);
             System.Diagnostics.Debug.WriteLine($"JSON export to Spansh {json.ToString(true)}");
 
-            string query = MakeQuery(nameof(source), source, nameof(destination), destination, nameof(is_supercharged), is_supercharged, nameof(use_supercharge), use_supercharge,
+            string query = HTTPExtensions.MakeQuery(nameof(source), source, nameof(destination), destination, nameof(is_supercharged), is_supercharged, nameof(use_supercharge), use_supercharge,
                             nameof(use_injections), use_injections, nameof(exclude_secondary), exclude_secondary,
                             "fuel_power", fsdspec.PowerConstant, "fuel_multiplier", fsdspec.FuelMultiplier,
                             "optimal_mass", fsdspec.OptimalMass, "base_mass", si.UnladenMass, "tank_size", si.FuelCapacity, "internal_tank_size", si.ReserveFuelCapacity,
@@ -344,7 +344,7 @@ namespace EliteDangerousCore.Spansh
             if (loop)               // don't give to if loop
                 to = null;
 
-            string query = MakeQuery("radius", radius,
+            string query = HTTPExtensions.MakeQuery("radius", radius,
                            "range", jumprange,
                            "from", from,
                            "to", to,
@@ -429,7 +429,7 @@ namespace EliteDangerousCore.Spansh
         {
             //query = "radius=500&range=50&from=Phoi+Aurb+HG-X+d1-499&to=Outotz+ZI-M+c22-0&max_results=100&max_distance=50000&min_value=1&avoid_thargoids=1&loop=1&body_types=Earth-like+world";
 
-            var response = RequestPost(query, api, handleException: true, contenttype: "application/x-www-form-urlencoded; charset=UTF-8");
+            var response = RequestPost(query, api, contenttype: "application/x-www-form-urlencoded; charset=UTF-8");
 
             var data = response.Body;
             var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
@@ -450,7 +450,7 @@ namespace EliteDangerousCore.Spansh
         // always return a tuple
         private Tuple<string, JToken> TryGetResponseToJob(string jobname)
         {
-            var response = RequestGet("results/" + jobname, handleException: true);
+            var response = RequestGet("results/" + jobname);
             var data = response.Body;
             var json = data != null ? JObject.Parse(data, JToken.ParseOptions.CheckEOL) : null;
 

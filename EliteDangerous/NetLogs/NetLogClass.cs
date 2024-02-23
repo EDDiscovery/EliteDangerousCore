@@ -22,13 +22,14 @@ using System.IO;
 using System.Linq;
 using System.Data.Common;
 using QuickJSON;
+using System.Threading;
 
 namespace EliteDangerousCore
 {
     public static class NetLogClass
     {
         static public void ParseFiles(string datapath, out string error, int defaultMapColour,
-                                     Func<bool> cancelRequested, Action<int, string> updateProgress,
+                                     CancellationToken cancel, Action<int, string> updateProgress,
                                      bool forceReload, int currentcmdrid)
         {
             error = null;
@@ -46,7 +47,7 @@ namespace EliteDangerousCore
             }
 
             // list of systems in journal, sorted by time
-            List<JournalLocOrJump> vsSystemsEnts = JournalEntry.GetAll(currentcmdrid).OfType<JournalLocOrJump>().OrderBy(j => j.EventTimeUTC).ToList();
+            List<JournalLocOrJump> vsSystemsEnts = JournalEntry.GetAll(cancel,currentcmdrid).OfType<JournalLocOrJump>().OrderBy(j => j.EventTimeUTC).ToList();
 
             // order by file write time so we end up on the last one written
             FileInfo[] allFiles = Directory.EnumerateFiles(datapath, "netLog.*.log", SearchOption.AllDirectories).Select(f => new FileInfo(f)).OrderBy(p => p.LastWriteTime).ToArray();
@@ -106,7 +107,7 @@ namespace EliteDangerousCore
 
                     using (DbTransaction txn = cn.BeginTransaction())
                     {
-                        var ienum = reader.ReadSystems(last, cancelRequested, currentcmdrid);
+                        var ienum = reader.ReadSystems(last, cancel, currentcmdrid);
                         System.Diagnostics.Debug.WriteLine("Scanning TLU " + reader.ID + " " + reader.FullName);
 
                         foreach (JObject jo in ienum)

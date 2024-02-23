@@ -203,11 +203,8 @@ namespace EliteDangerousCore
             }
         }
 
-        private bool ReadNetLogSystem(out JObject jo, out JournalLocOrJump je, Func<bool> cancelRequested = null, Stream stream = null, bool ownstream = false)
+        private bool ReadNetLogSystem(out JObject jo, out JournalLocOrJump je, System.Threading.CancellationToken cancel, Stream stream = null, bool ownstream = false)
         {
-            if (cancelRequested == null)
-                cancelRequested = () => false;
-
             try
             {
                 if (stream == null)
@@ -216,7 +213,7 @@ namespace EliteDangerousCore
                     ownstream = true;
                 }
 
-                while (!cancelRequested() )
+                while (!cancel.IsCancellationRequested )
                 {
                     string line = ReadLine();         // read line from TLU. Tell it if its in full read mode or play mode
 
@@ -435,11 +432,8 @@ namespace EliteDangerousCore
             return false;
         }
 
-        public IEnumerable<JObject> ReadSystems(JournalLocOrJump last, Func<bool> cancelRequested = null, int cmdrid = -1)
+        public IEnumerable<JObject> ReadSystems(JournalLocOrJump last, System.Threading.CancellationToken cancel, int cmdrid = -1)
         {
-            if (cancelRequested == null)
-                cancelRequested = () => false;
-
             if (cmdrid < 0)
             {
                 cmdrid = EDCommander.CurrentCmdrID;
@@ -462,7 +456,7 @@ namespace EliteDangerousCore
             {
                 System.Diagnostics.Debug.WriteLine("ReadData " + FullName + " from " + startpos + " to " + Pos);
 
-                while (!cancelRequested() && ReadNetLogSystem(out jo, out je, cancelRequested, stream))
+                while (!cancel.IsCancellationRequested && ReadNetLogSystem(out jo, out je, cancel, stream))
                 {
                     if (last != null && je.StarSystem.Equals(last.StarSystem, StringComparison.InvariantCultureIgnoreCase)
                                      && (!je.HasCoordinate || !last.HasCoordinate || (je.StarPos - last.StarPos).LengthSquared < 0.001))

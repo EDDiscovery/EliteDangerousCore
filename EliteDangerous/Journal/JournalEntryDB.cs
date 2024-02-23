@@ -292,9 +292,9 @@ namespace EliteDangerousCore
             public int Syncflag;
         }
 
-        static public List<TableData> GetTableData(int commander = -999, DateTime? startdateutc = null, DateTime? enddateutc = null,
-                             JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null,
-                             Func<bool> cancelRequested = null)
+        static public List<TableData> GetTableData(System.Threading.CancellationToken cancel, int commander = -999, DateTime? startdateutc = null, DateTime? enddateutc = null,
+                             JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null)
+                             
         {
             // in the connection thread, construct the command and execute a read..
 
@@ -343,7 +343,7 @@ namespace EliteDangerousCore
                 {
                 while (reader.Read())
                 {
-                    if (eno++ % 10000 == 0 && (cancelRequested?.Invoke() ?? false))       // check every X entries
+                    if (eno++ % 10000 == 0 && cancel.IsCancellationRequested)       // check every X entries
                         return null;
 
                     jdata.Add(new TableData() { ID = (long)reader[0], TLUID = (long)reader[1], Cmdr = (int)(long)reader[2], Json = (string)reader[3], Syncflag = (int)(long)reader[4] });
@@ -357,15 +357,16 @@ namespace EliteDangerousCore
         // Get All journals matching parameters. 
         // if cancelled, return empty array
 
-        static public JournalEntry[] GetAll(int commander = -999, DateTime? startdateutc = null, DateTime? enddateutc = null,
-                            JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null, 
-                            Func<bool> cancelRequested = null)
+        static public JournalEntry[] GetAll(System.Threading.CancellationToken cancel, 
+                            int commander = -999, DateTime? startdateutc = null, DateTime? enddateutc = null,
+                            JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null)
+                            
         {
-            var retlist = GetTableData(commander, startdateutc, enddateutc, ids, allidsafterutc, cancelRequested);
+            var retlist = GetTableData(cancel, commander, startdateutc, enddateutc, ids, allidsafterutc);
 
             if (retlist != null)   // if not cancelled
             {
-                var jlist = CreateJournalEntries(retlist, cancelRequested);
+                var jlist = CreateJournalEntries(retlist, cancel);
 
                 System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
                 GC.Collect();       // to try and lose the tabledata
@@ -543,7 +544,7 @@ namespace EliteDangerousCore
         public static int RemoveDuplicateFSDEntries(int currentcmdrid)
         {
             // list of systems in journal, sorted by time
-            List<JournalFSDJump> vsSystemsEnts = GetAll(currentcmdrid, ids: new[] { JournalTypeEnum.FSDJump }).OfType<JournalFSDJump>().OrderBy(j => j.EventTimeUTC).ToList();
+            List<JournalFSDJump> vsSystemsEnts = GetAll(new System.Threading.CancellationToken(), currentcmdrid, ids: new[] { JournalTypeEnum.FSDJump }).OfType<JournalFSDJump>().OrderBy(j => j.EventTimeUTC).ToList();
 
             int count = 0;
             UserDatabase.Instance.DBWrite(cn =>

@@ -300,11 +300,11 @@ namespace EliteDangerousCore
         }
 
         // given a list of files to reparse, either return a list of them (if jes != null), or store them in the db
-        public void ProcessDetectedNewFiles(List<EDJournalReader> readersToUpdate,  Action<int, string> updateProgress, List<JournalEntry> jeslist, EventWaitHandle closerequested = null)
+        public void ProcessDetectedNewFiles(List<EDJournalReader> readersToUpdate,  Action<int, string> updateProgress, List<JournalEntry> jeslist,CancellationToken cancel)
         {
             for (int i = 0; i < readersToUpdate.Count; i++)
             {
-                if (closerequested?.WaitOne(0) ?? false)
+                if (cancel.IsCancellationRequested)
                     break;
 
                 EDJournalReader reader = readersToUpdate[i];

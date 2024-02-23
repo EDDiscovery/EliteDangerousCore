@@ -113,7 +113,7 @@ namespace EliteDangerousCore.DB
 
         // this deletes the current DB data, reloads from the file, and recreates the indexes etc
 
-        public long MakeSystemTableFromFile(string filename, bool[] gridids, int blocksize, Func<bool> cancelRequested, Action<string> reportProgress,
+        public long MakeSystemTableFromFile(string filename, bool[] gridids, int blocksize, System.Threading.CancellationToken cancelRequested, Action<string> reportProgress,
                                             string debugoutputfile = null, int method = 0)
         {
             DBWrite(action: conn =>
@@ -146,7 +146,7 @@ namespace EliteDangerousCore.DB
             {
                 SystemsDB.Loader3 loader = new SystemsDB.Loader3(TempTablePostfix, blocksize, gridids, true, false, debugoutputfile);   // overlap write with insert or replace
                 updates = loader.ParseJSONFile(filename, cancelRequested, reportProgress);
-                loader.Finish();
+                loader.Finish(cancelRequested);
             }
             else
                 System.Diagnostics.Debug.Assert(false);

@@ -18,19 +18,10 @@ namespace EliteDangerousCore.GEC
 {
     public static class GECClass
     {
-        public static bool DownloadGECFile(string file, Func<bool> cancelRequested)
+        public static bool DownloadGECFile(string file, System.Threading.CancellationToken cancel)
         {
-            try
-            {
-                string url = @"https://edastro.com/gec/json/all";
-                return BaseUtils.DownloadFile.HTTPDownloadFile(url, file, false, out bool newfile, cancelRequested: cancelRequested);
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Trace.WriteLine("DownloadFromGEC exception:" + ex.Message);
-            }
-
-            return false;
+            string url = @"https://edastro.com/gec/json/all";
+            return BaseUtils.HttpCom.DownloadFileFromURI(cancel, url, file, false, out bool newfile);
         }
     }
 }

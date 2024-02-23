@@ -333,14 +333,14 @@ namespace EliteDangerousCore
             public int start;
             public int end;
             public CountdownEvent finished;
-            public Func<bool> iscancelled;
+            public CancellationToken iscancelled;
             public Action<int,float> progress;
         }
 
         // from table data ID, travellogid, commanderid, event json, sync flag
         // create journal entries.  Multithreaded if many entries
         // null if cancelled
-        static public JournalEntry[] CreateJournalEntries(List<TableData> tabledata, Func<bool> cancelRequested = null, Action<int> progress = null)
+        static public JournalEntry[] CreateJournalEntries(List<TableData> tabledata, CancellationToken cancel, Action<int> progress = null)
         {
             JournalEntry[] jlist = new JournalEntry[tabledata.Count];
 
@@ -362,7 +362,7 @@ namespace EliteDangerousCore
                     System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCount} Journal Creation Spawn {s}..{e}");
                     
                     var data = new JETable() { processor = i, table = tabledata, results = jlist, start = s, end = e, finished = cd, 
-                                iscancelled = cancelRequested, 
+                                iscancelled = cancel, 
                                 progress = (tno,p)=> {
                                 threadprogress[tno] = p;
                                 int percent = (int)(100 * threadprogress.Sum() / (threads));
@@ -384,7 +384,7 @@ namespace EliteDangerousCore
                 }
             }
 
-            if (cancelRequested?.Invoke() ?? false)
+            if (cancel.IsCancellationRequested)
             {
                 return null;
             }
@@ -399,7 +399,7 @@ namespace EliteDangerousCore
             {
                 if (j % 2000 == 0)
                 {
-                    if (data.iscancelled?.Invoke() ?? false)       // check every X entries, if cancel is not null
+                    if (data.iscancelled.IsCancellationRequested)       // check every X entries, if cancel is not null
                         break;
                     data.progress?.Invoke(data.processor, (j - data.start) / (float)(data.end - data.start));
                 }

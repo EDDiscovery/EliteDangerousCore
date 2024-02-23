@@ -22,12 +22,11 @@ namespace EliteDangerousCore.Spansh
 {
     public partial class SpanshClass : BaseUtils.HttpCom
     {
-        public SpanshClass()
+        public const string RootURL = "https://spansh.co.uk/";
+        public SpanshClass() : base(RootURL + "api/")
         {
-            base.httpserveraddress = RootURL + "api/";
         }
 
-        public const string RootURL = "https://spansh.co.uk/";
         public const int MaxReturnSize = 500;       // as coded by spansh
 
         public static TimeSpan MaxCacheAge = new TimeSpan(7, 0, 0, 0);
@@ -77,7 +76,7 @@ namespace EliteDangerousCore.Spansh
         {
             string query = "?q=" + HttpUtility.UrlEncode(name);
 
-            var response = RequestGet("systems/field_values/system_names/" + query, handleException: true);
+            var response = RequestGet("systems/field_values/system_names/" + query);
 
             if (response.Error)
                 return null;
@@ -92,7 +91,7 @@ namespace EliteDangerousCore.Spansh
         {
             string query = "?q=" + HttpUtility.UrlEncode(name);
 
-            var response = RequestGet("search/systems" + query, handleException: true);
+            var response = RequestGet("search/systems" + query);
 
             if (response.Error)
                 return null;

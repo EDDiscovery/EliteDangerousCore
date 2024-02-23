@@ -73,20 +73,20 @@ namespace EliteDangerousCore.DB
                 });
             }
 
-            public void Finish()
+            public void Finish(System.Threading.CancellationToken cancelRequested)
             {
                 // do not need to store back sector table - new sectors are made as they are created below
 
                 if (debugfile != null)
                     debugfile.Close();
 
-                SystemsDatabase.Instance.SetLastRecordTimeUTC(LastDate);
+                if ( !cancelRequested.IsCancellationRequested )     // if not cancelled
+                    SystemsDatabase.Instance.SetLastRecordTimeUTC(LastDate);        // update the DB with the last date
 
                 SystemsDatabase.Instance.WALCheckPoint();       // just make sure we don't leave behind a big WAL file
-
             }
 
-            public long ParseJSONFile(string filename, Func<bool> cancelRequested, Action<string> reportProgress)
+            public long ParseJSONFile(string filename, System.Threading.CancellationToken cancelRequested, Action<string> reportProgress)
             {
                 // if the filename ends in .gz, then decompress it on the fly
                 if (filename.EndsWith("gz"))
@@ -109,14 +109,14 @@ namespace EliteDangerousCore.DB
                 }
             }
 
-            public long ParseJSONString(string data, Func<bool> cancelRequested, Action<string> reportProgress)
+            public long ParseJSONString(string data, System.Threading.CancellationToken cancelRequested, Action<string> reportProgress)
             {
                 using (StringReader sr = new StringReader(data))         // read directly from file..
                     return ParseJSONTextReader(sr, cancelRequested, reportProgress);
             }
 
             // parse this textreader, allowing cancelling, reporting progress
-            public long ParseJSONTextReader(TextReader textreader, Func<bool> cancelRequested, Action<string> reportProgress)
+            public long ParseJSONTextReader(TextReader textreader, System.Threading.CancellationToken cancelRequested, Action<string> reportProgress)
             {
                 long updates = 0;
 
@@ -146,7 +146,7 @@ namespace EliteDangerousCore.DB
 
                 while (!stop)     // while not cancel, and got another char..
                 {
-                    stop = cancelRequested() || (nextchar = parser.GetChar()) == char.MinValue;
+                    stop = cancelRequested.IsCancellationRequested || (nextchar = parser.GetChar()) == char.MinValue;
 
                     if (!stop && nextchar == '{')       // if not stopping, and object (ignore anything between objects)
                     {
@@ -451,7 +451,7 @@ namespace EliteDangerousCore.DB
                 if (System.DateTime.TryParse(maxdatetimestr, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeUniversal | System.Globalization.DateTimeStyles.AdjustToUniversal, out DateTime ld))
                     LastDate = ld;
 
-                return updates;
+                return cancelRequested.IsCancellationRequested ? 0 : updates;       // return nothing if cancel has been requested
             }
 
             // we need this in a func. The function executes the c.Write in a thread, so we can't let c change
