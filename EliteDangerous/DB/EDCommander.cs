@@ -31,7 +31,7 @@ namespace EliteDangerousCore
 
         public int Id { set; get; }
         public string Name { set; get; } = "";
-        
+
         public string RootName { get { return GetRootName(Name); } }
 
         // The root name is used by CAPI to associate legacy/live/beta commanders with one oAUTH login
@@ -39,7 +39,7 @@ namespace EliteDangerousCore
         // note console commanders [C] name are purposely not removed by this, as we want them seperate, so they stay [C] name. That name gets placed in the downloaded journals, and is used in the capi login
         public static string GetRootName(string s)
         {
-            return s.Replace(" (Legacy)", "").Replace("[BETA] ", "");        
+            return s.Replace(" (Legacy)", "").Replace("[BETA] ", "");
         }
 
         public static bool NameIsConsoleCommander(string name) { return name.StartsWith("[C] "); }
@@ -59,7 +59,7 @@ namespace EliteDangerousCore
         public bool SyncFromEdsm { set { if (EDSMSupported) syncfromedsm = value; } get { return EDSMSupported ? syncfromedsm : false; } }
 
         public bool InaraSupported { get { return !LegacyCommander && !ConsoleCommander; } }
-        public bool SyncToInara { set { if (InaraSupported) synctoinara = value; } get { return InaraSupported ? synctoinara: false; } }
+        public bool SyncToInara { set { if (InaraSupported) synctoinara = value; } get { return InaraSupported ? synctoinara : false; } }
 
         public string EdsmName { set; get; } = "";
         public string EDSMAPIKey { set; get; } = "";
@@ -85,7 +85,7 @@ namespace EliteDangerousCore
         public JObject ConsoleUploadHistory { get { return Options["ConsoleUpload"].Object(); } set { Options["ConsoleUpload"] = value; } }     // may be null
 
         public string HomeSystem { get { return homesystem; } set { homesystem = value; lookuphomesys = null; lastlookuphomename = null; } }
-  
+
         public ISystem HomeSystemI
         {
             get
@@ -111,9 +111,9 @@ namespace EliteDangerousCore
         {
             get
             {
-                return BaseUtils.FieldBuilder.Build(";Console", ConsoleCommander, ";EDDN", SyncToEddn, ";EDSM", SyncToEdsm, 
+                return BaseUtils.FieldBuilder.Build(";Console", ConsoleCommander, ";EDDN", SyncToEddn, ";EDSM", SyncToEdsm,
                                                     ";From EDSM", SyncFromEdsm, ";Inara", SyncToInara, ";EDAstro", SyncToEDAstro,
-                                                    ";Linked", LinkedCommanderID>=0
+                                                    ";Linked", LinkedCommanderID >= 0
                                                     );
             }
         }
@@ -252,27 +252,59 @@ namespace EliteDangerousCore
             });
         }
 
-        
+
         #endregion
 
-        #region Properties
+        #region Construction
 
-        public static Dictionary<int, EDCommander> Commanders { get { if (intcmdrdict == null) LoadCommanders();  return intcmdrdict; } }
+        public EDCommander()
+        {
+            SyncToEddn = true;          // set it default to try and make them send it.
+            IncludeSubFolders = false;  // and no subfolders as the default now
+        }
+
+        public EDCommander(DbDataReader reader)
+        {
+            Id = Convert.ToInt32(reader["Id"]);
+            Name = Convert.ToString(reader["Name"]);
+            Deleted = Convert.ToBoolean(reader["Deleted"]);
+
+            JournalDir = Convert.ToString(reader["JournalDir"]) ?? "";
+
+            SyncToEdsm = Convert.ToBoolean(reader["SyncToEdsm"]);
+            SyncFromEdsm = Convert.ToBoolean(reader["SyncFromEdsm"]);
+            EdsmName = reader["EDSMName"] == DBNull.Value ? Name : Convert.ToString(reader["EDSMName"]) ?? Name;
+            EDSMAPIKey = Convert.ToString(reader["EdsmApiKey"]);
+
+            SyncToInara = Convert.ToBoolean(reader["SyncToInara"]);
+            InaraName = Convert.ToString(reader["InaraName"]);
+            InaraAPIKey = Convert.ToString(reader["InaraAPIKey"]);
+
+            SyncToEddn = Convert.ToBoolean(reader["SyncToEddn"]);
+
+            HomeSystem = Convert.ToString(reader["HomeSystem"]) ?? "";        // may be null
+
+            MapColour = reader["MapColour"] is System.DBNull ? System.Drawing.Color.Red.ToArgb() : Convert.ToInt32(reader["MapColour"]);
+
+            Options = JObject.Parse(Convert.ToString(reader["Options"]));
+            if (Options == null)        // in case the string is garbarge, defend as we need a good Options object
+                Options = new JObject();
+        }
+
+        public EDCommander(int id, string Name)
+        {
+            this.Id = id;
+            this.Name = Name;
+        }
+
+        #endregion
+
+        #region Static Properties
 
         public static int CurrentCmdrID
         {
             get
             {
-                if (currentcommander == Int32.MinValue)
-                {
-                    currentcommander = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("ActiveCommander", 0);
-                }
-
-                if (currentcommander >= 0 && !Commanders.ContainsKey(currentcommander) && Commanders.Count>0) // if not in list, pick first
-                {
-                    currentcommander = Commanders.Values.First().Id;
-                }
-
                 return currentcommander;
             }
             set
@@ -327,7 +359,6 @@ namespace EliteDangerousCore
             return GetCommander(id)?.LegacyCommander ?? false;
         }
 
-
         public static List<EDCommander> GetListInclHidden()
         {
             return Commanders.Values.OrderBy(v => v.Id).ToList();
@@ -337,54 +368,6 @@ namespace EliteDangerousCore
         {
             return Commanders.Values.Where(v => v.Id >= 0).OrderBy(v => v.Id).ToList();
         }
-
-        #endregion
-
-        #region Construction
-
-        public EDCommander()
-        {
-            SyncToEddn = true;          // set it default to try and make them send it.
-            IncludeSubFolders = false;  // and no subfolders as the default now
-        }
-
-        public EDCommander(DbDataReader reader)
-        {
-            Id = Convert.ToInt32(reader["Id"]);
-            Name = Convert.ToString(reader["Name"]);
-            Deleted = Convert.ToBoolean(reader["Deleted"]);
-
-            JournalDir = Convert.ToString(reader["JournalDir"]) ?? "";
-
-            SyncToEdsm = Convert.ToBoolean(reader["SyncToEdsm"]);
-            SyncFromEdsm = Convert.ToBoolean(reader["SyncFromEdsm"]);
-            EdsmName = reader["EDSMName"] == DBNull.Value ? Name : Convert.ToString(reader["EDSMName"]) ?? Name;
-            EDSMAPIKey = Convert.ToString(reader["EdsmApiKey"]);
-
-            SyncToInara = Convert.ToBoolean(reader["SyncToInara"]);
-            InaraName = Convert.ToString(reader["InaraName"]);
-            InaraAPIKey = Convert.ToString(reader["InaraAPIKey"]);
-
-            SyncToEddn = Convert.ToBoolean(reader["SyncToEddn"]);
-
-            HomeSystem = Convert.ToString(reader["HomeSystem"]) ?? "";        // may be null
-
-            MapColour = reader["MapColour"] is System.DBNull ? System.Drawing.Color.Red.ToArgb() : Convert.ToInt32(reader["MapColour"]);
-
-            Options = JObject.Parse(Convert.ToString(reader["Options"]));
-            if (Options == null)        // in case the string is garbarge, defend as we need a good Options object
-                Options = new JObject();
-        }
-
-        public EDCommander(int id, string Name)
-        {
-            this.Id = id;
-            this.Name = Name;
-        }
-
-        #endregion
-
-        #region Methods
 
         public static void LoadCommanders()
         {
@@ -401,7 +384,7 @@ namespace EliteDangerousCore
                             while (reader.Read())
                             {
                                 EDCommander edcmdr = new EDCommander(reader);
-                                intcmdrdict.Add(edcmdr.Id,edcmdr);
+                                intcmdrdict.Add(edcmdr.Id, edcmdr);
                             }
                         }
                     }
@@ -414,6 +397,13 @@ namespace EliteDangerousCore
 
                 EDCommander hidden = new EDCommander(-1, "Hidden Log");     // -1 is the hidden commander, add to list to make it
                 intcmdrdict[-1] = hidden;        // so we give back a valid entry when its selected
+
+                currentcommander = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("ActiveCommander", 0);
+
+                if (currentcommander >= 0 && !Commanders.ContainsKey(currentcommander) && Commanders.Count > 0) // if not in list, pick first
+                {
+                    currentcommander = Commanders.Values.First().Id;
+                }
             }
         }
 
@@ -430,6 +420,8 @@ namespace EliteDangerousCore
         private string homesystem = "";
         private ISystem lookuphomesys = null;
         private string lastlookuphomename = null;
+        private static Dictionary<int, EDCommander> Commanders { get { System.Diagnostics.Debug.Assert(intcmdrdict != null); return intcmdrdict; } }
+
 
         #endregion
 
