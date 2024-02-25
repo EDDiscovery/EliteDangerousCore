@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2020 EDDiscovery development team
+ * Copyright 2016-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using BaseUtils;
@@ -213,17 +211,13 @@ namespace EliteDangerousCore.ScreenShots
 
             if (OriginalImageOption == OriginalImageOptions.Delete)
             {
-                try
+                if (FileHelpers.DeleteFileNoError(inputfilepath))
                 {
-                    System.Diagnostics.Debug.WriteLine("Delete {0}", inputfilepath);
-                    File.Delete(inputfilepath);
+                    System.Diagnostics.Debug.WriteLine($"..Screenshot Delete {inputfilepath}");
                     inputfilepath = null;
                 }
-                catch
-                {
+                else
                     logit($"Unable to remove file {inputfilepath}");
-                }
-
             }
             else if (OriginalImageOption == OriginalImageOptions.Move)
             {
@@ -244,8 +238,6 @@ namespace EliteDangerousCore.ScreenShots
                     }
                 }
             }
-
-            System.Diagnostics.Debug.WriteLine("Convert " + inputfilename + " at " + systemname + " to " + outputfilepath);
 
             logit(string.Format("Converted {0} to {1}".T(EDCTx.ScreenShotImageConverter_CNV), inputfilename , outputfilepath));
 
@@ -280,6 +272,7 @@ namespace EliteDangerousCore.ScreenShots
                     bmp.Save(memstream, System.Drawing.Imaging.ImageFormat.Png);
                 }
 
+                System.Diagnostics.Debug.WriteLine($"..Screenshot Write BMP to {filename}");
                 File.WriteAllBytes(filename, memstream.ToArray());
                 File.SetCreationTime(filename, datetimeutc);
             }

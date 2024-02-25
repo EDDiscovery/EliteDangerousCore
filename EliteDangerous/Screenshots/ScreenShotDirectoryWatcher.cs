@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2020 EDDiscovery development team
+ * Copyright 2016-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,9 +10,8 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
+
 using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Concurrent;
@@ -32,7 +31,7 @@ namespace EliteDangerousCore.ScreenShots
         private FileSystemWatcher filesystemwatcher = null;
 
         // multithreaded, locked on access
-        private HashSet<string> screenshotted = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
+        private HashSet<Tuple<string, DateTime>> screenshotted = new HashSet<Tuple<string, DateTime>>();
 
         private ConcurrentDictionary<System.Timers.Timer, string> filewatchTimers = new ConcurrentDictionary<System.Timers.Timer, string>();
 
@@ -100,34 +99,54 @@ namespace EliteDangerousCore.ScreenShots
 
             if (je.EventTypeID == JournalTypeEnum.Screenshot)
             {
-                JournalScreenshot ss = je as JournalScreenshot;
+                JournalScreenshot jescreenshot = je as JournalScreenshot;
 
-                string ssname = ss.Filename.StartsWith("\\ED_Pictures\\") ? ss.Filename.Substring(13) : ss.Filename;
+                string filepath = jescreenshot.Filename;
+
+                if (filepath.StartsWith("\\ED_Pictures\\"))     // if its an ss record, try and find it either in watchedfolder or in default loc
+                {
+                    filepath = filepath.Substring(13);
+                    filepath = Path.Combine(watchedfolder, filepath);
+
+                    if (!File.Exists(filepath))
+                    {
+                        string defaultInputDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Frontier Developments", "Elite Dangerous");
+                        filepath = Path.Combine(defaultInputDir, filepath);
+                    }
+                }
+
+                if (!File.Exists(filepath))
+                {
+                    logit($"Journal screenshot {filepath} not found");
+                    return;
+                }
+
                 bool done = false;
                 lock (screenshotted)        // due to multi threads
                 {
-                    done = screenshotted.Contains(ssname);   // see if done,
-                    screenshotted.Add(ssname);               // indicate we have done it somehow
+                    var filedatetime = File.GetLastWriteTimeUtc(filepath);
+                    var key = new Tuple<string, DateTime>(filepath, filedatetime);
+                    done = screenshotted.Contains(key);   // see if done,
+                    System.Diagnostics.Debug.WriteLine($"Screenshot journal file {key} Done {done}");
+                    screenshotted.Add(key);               // indicate we have done it somehow
                 }
 
                 if (!done)     // if we have not screenshotted it
                 {
-                    System.Diagnostics.Trace.WriteLine($"Screenshot Journal entry received {ssname}, process {ss.Filename}");
                     invokeonui?.Invoke(cp =>
                         {
-                            ProcessScreenshot(ss.Filename, ss, cp);
+                            ProcessScreenshot(filepath, jescreenshot, cp);
                         });
                 }
                 else
                 {
-                    System.Diagnostics.Trace.WriteLine("Screenshot Journal entry received but already processed " + ss.Filename);
+                    System.Diagnostics.Trace.WriteLine("Screenshot Journal entry received but already processed " + jescreenshot.Filename);
                 }
             }
         }
 
         private void WatcherTripped(object sender, System.IO.FileSystemEventArgs e)     
         {
-            System.Diagnostics.Trace.WriteLine("Screenshot directory watcher picked up " + e.FullPath);
             invokeonui?.Invoke(cp => ProcessFilesystemEvent(sender, e, cp));
         }
 
@@ -146,7 +165,6 @@ namespace EliteDangerousCore.ScreenShots
             }
             else
             {
-                string name = Path.GetFileName(e.FullPath);
                 ProcessScreenshot(e.FullPath, null, cp);
             }
         }
@@ -156,31 +174,32 @@ namespace EliteDangerousCore.ScreenShots
             var t = sender as System.Timers.Timer;
             t.Stop();
 
-            if ( filewatchTimers.TryRemove(t,out string filename) )     // find the filename associated with this timer
+            if ( filewatchTimers.TryRemove(t,out string filepath) )     // find the filename associated with this timer
             {
-                if (File.Exists(filename))     // still there.. it may have been removed by journal screenshot moving it
+                if (File.Exists(filepath))     // still there.. it may have been removed by journal screenshot moving it
                 {
-                    string ssname = Path.GetFileName(filename);
                     bool done = false;
                     lock (screenshotted)        // due to multi threads
                     {
-                        done = screenshotted.Contains(ssname);   // see if done,
-                        screenshotted.Add(ssname);               // indicate we have done it somehow
+                        var filedatetime = File.GetLastWriteTimeUtc(filepath);
+                        var key = new Tuple<string, DateTime>(filepath, filedatetime);
+                        done = screenshotted.Contains(key);   // see if done,
+                        System.Diagnostics.Debug.WriteLine($"Screenshot filewatcher file {key} Done {done}");
+                        screenshotted.Add(key);               // indicate we have done it somehow
                     }
 
                     if (!done)          // and its not in the peristent list dealt with by screenshot
                     {
-                        System.Diagnostics.Trace.WriteLine($"Screenshot Timer timed out, {ssname} is not been processed, so process {filename}");
-                        this.invokeonui?.Invoke(cp => ProcessScreenshot(filename, null, cp)); //process on UI thread
+                        this.invokeonui?.Invoke(cp => ProcessScreenshot(filepath, null, cp)); //process on UI thread
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine($"Screenshot Timer timed out, screenshot {ssname} file {filename} was processed by journal screen shot");
+                        System.Diagnostics.Debug.WriteLine($"Screenshot Timer timed out, screenshot {filepath} was processed by journal screen shot");
                     }
                 }
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine($"Screenshot Timer timed out, file {filename} was not there");
+                    System.Diagnostics.Debug.WriteLine($"Screenshot Timer timed out, file {filepath} was not there");
                 }
             }
 
@@ -192,7 +211,7 @@ namespace EliteDangerousCore.ScreenShots
         // ss is not null if it was a screenshot
         // return if original is left in place
 
-        private bool ProcessScreenshot(string filenamepart, JournalScreenshot ss, ScreenShotImageConverter cp)
+        private bool ProcessScreenshot(string filepath, JournalScreenshot ss, ScreenShotImageConverter cp)
         {
             System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);  // UI thread
 
@@ -202,16 +221,14 @@ namespace EliteDangerousCore.ScreenShots
             string bodyname = (ss == null ? r.Item2 : ss.Body) ?? "Unknown";
             string cmdrname = (ss == null ? r.Item3 : EDCommander.GetCommander(ss.CommanderId)?.Name) ?? "Unknown";
 
-            System.Diagnostics.Debug.WriteLine("Screenshot Process {0} s={1} b={2} c={3}", filenamepart, sysname, bodyname, cmdrname);
+            System.Diagnostics.Debug.WriteLine("..Screenshot Process {0} s={1} b={2} c={3}", filepath, sysname, bodyname, cmdrname);
 
             try
             {
-                string filein = TryGetScreenshot(filenamepart, out Bitmap bmp, out DateTime timestamputc);
-
-                if (filein != null)
+                if (ReadBMP(filepath, out Bitmap bmp, out DateTime timestamputc))
                 {
                     // return input filename now, output filename and size
-                    var fs = cp.Convert(bmp, filein, timestamputc, outputfolder, bodyname, sysname, cmdrname, logit);
+                    var fs = cp.Convert(bmp, filepath, timestamputc, outputfolder, bodyname, sysname, cmdrname, logit);
 
                     if ( fs != null )
                         OnScreenshot?.Invoke(fs.Item1, fs.Item2, fs.Item3, ss);
@@ -219,7 +236,7 @@ namespace EliteDangerousCore.ScreenShots
                     return cp.OriginalImageOption == ScreenShotImageConverter.OriginalImageOptions.Leave;
                 }
                 else
-                    logit(string.Format("Failed to read screenshot {0}", filenamepart));
+                    logit(string.Format("Failed to read screenshot {0}", filepath));
             }
             catch (Exception ex)
             {
@@ -230,61 +247,43 @@ namespace EliteDangerousCore.ScreenShots
             return false;
         }
 
-        // given a filepart, try and read the file and datetime to bmp/timestamp
+        // given a filepath, try and read the file and datetime to bmp/timestamp
         // return null or filenamein
 
-        private string TryGetScreenshot(string filepart, out Bitmap bmp, out DateTime timestamputc)//, ref string store_name, ref Point finalsize, ref DateTime timestamp, out Bitmap bmp, out string readfilename, Action<string> logit, bool throwOnError = false)
+        private bool ReadBMP(string filepath, out Bitmap bmp, out DateTime timestamputc)//, ref string store_name, ref Point finalsize, ref DateTime timestamp, out Bitmap bmp, out string readfilename, Action<string> logit, bool throwOnError = false)
         {
             timestamputc = DateTime.UtcNow;
-            string filenameout = null;
             bmp = null;
 
             for (int tries = 60; tries > 0; tries--)          // wait 30 seconds and then try it anyway.. 32K hires shots take a while to write.
             {
-                filenameout = filepart;
-
-                if (filepart.StartsWith("\\ED_Pictures\\"))     // if its an ss record, try and find it either in watchedfolder or in default loc
-                {
-                    filepart = filepart.Substring(13);
-                    filenameout = Path.Combine(watchedfolder, filepart);
-
-                    if (!File.Exists(filenameout))
-                    {
-                        string defaultInputDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Frontier Developments", "Elite Dangerous");
-                        filenameout = Path.Combine(defaultInputDir, filepart);
-                    }
-                }
-
                 try
                 {
-                    System.Diagnostics.Debug.WriteLine("Try read " + filenameout);
-                    if (File.Exists(filenameout))
+                    System.Diagnostics.Debug.WriteLine("..Screenshot Try read " + filepath);
+                    if (File.Exists(filepath))
                     {
-                        using (FileStream testfile = File.Open(filenameout, FileMode.Open, FileAccess.Read, FileShare.Read))        // throws if can't open
+                        using (FileStream testfile = File.Open(filepath, FileMode.Open, FileAccess.Read, FileShare.Read))        // throws if can't open
                         {
-                            timestamputc = new FileInfo(filenameout).CreationTimeUtc;
+                            timestamputc = File.GetLastWriteTimeUtc(filepath);
                             MemoryStream memstrm = new MemoryStream(); // will be owned by bitmap
                             testfile.CopyTo(memstrm);
                             memstrm.Seek(0, SeekOrigin.Begin);
                             bmp = new Bitmap(memstrm);
                         }
 
-                        return filenameout;
+                        return true;
                     }
                 }
                 catch 
                 {
-                    if (bmp != null)
-                    {
-                        bmp.Dispose();
-                        bmp = null;
-                    }
+                    bmp?.Dispose();
+                    bmp = null;
                 }
 
                 System.Threading.Thread.Sleep(500);     // every 500ms see if we can read the file, if we can, go, else wait..
             }
 
-            return null;
+            return false;
         }
     }
 
