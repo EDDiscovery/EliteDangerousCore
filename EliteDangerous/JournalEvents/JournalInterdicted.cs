@@ -23,11 +23,14 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalInterdicted(JObject evt ) : base(evt, JournalTypeEnum.Interdicted)        // some nasty pilot has got you
         {
-            Submitted = evt["Submitted"].Bool();
-            Interdictor = evt["Interdictor"].Str();
-            Interdictor_Localised = JournalFieldNaming.CheckLocalisation(evt["Interdictor_Localised"].Str(),Interdictor);
             IsPlayer = evt["IsPlayer"].Bool();
             IsThargoid = evt["IsThargoid"].BoolNull();
+            Submitted = evt["Submitted"].Bool();
+
+            Interdictor = evt["Interdictor"].Str();
+            if (IsThargoid == true && Interdictor.IsEmpty())
+                Interdictor = "Thargoid";
+            Interdictor_Localised = JournalFieldNaming.CheckLocalisation(evt["Interdictor_Localised"].Str(),Interdictor);
             CombatRank = evt["CombatRank"].Enum<RankDefinitions.CombatRank>(RankDefinitions.CombatRank.Unknown);
             Faction = evt["Faction"].Str();
             Power = evt["Power"].Str();
@@ -107,10 +110,12 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalEscapeInterdiction(JObject evt) : base(evt, JournalTypeEnum.EscapeInterdiction)
         {
-            Interdictor = evt["Interdictor"].Str();
-            Interdictor_Localised = JournalFieldNaming.CheckLocalisation(evt["Interdictor_Localised"].Str(), Interdictor);
             IsPlayer = evt["IsPlayer"].Bool();
             IsThargoid = evt["IsThargoid"].BoolNull();
+            Interdictor = evt["Interdictor"].Str();
+            if (IsThargoid == true && Interdictor.IsEmpty())
+                Interdictor = "Thargoid";
+            Interdictor_Localised = JournalFieldNaming.CheckLocalisation(evt["Interdictor_Localised"].Str(), Interdictor);
         }
 
         public string Interdictor { get; set; }

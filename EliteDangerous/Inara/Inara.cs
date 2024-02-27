@@ -436,7 +436,7 @@ namespace EliteDangerousCore.Inara
             return Event("setCommanderTravelLocation", dt, eventData);
         }
 
-        static public JToken addCommanderMission(JournalMissionAccepted mission, string starsystem, string station)
+        static public JToken addCommanderMission(JournalMissionAccepted mission, DateTime dt, string starsystem, string station)
         {
             JObject eventData = new JObject();
             eventData["missionName"] = mission.FDName;
@@ -485,7 +485,7 @@ namespace EliteDangerousCore.Inara
             if (mission.PassengerWanted != null)
                 eventData["passengerIsWanted"] = mission.PassengerWanted.Value;
 
-            return Event("addCommanderMission", mission.EventTimeUTC, eventData);
+            return Event("addCommanderMission", dt, eventData);
         }
 
         static public JToken setCommanderMissionAbandoned(ulong id, DateTime dt)
