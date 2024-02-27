@@ -17,6 +17,14 @@ using QuickJSON;
 
 namespace EliteDangerousCore.JournalEvents
 {
+    // { } - no other fields
+    // {  "KillerShip":"tg_skimmer_01" }
+    // {  "KillerName":"Cmdr Bobby Stacks", "KillerShip":"tacticalsuit_class3", "KillerRank":"Deadly" }
+    // {  "KillerName":"$UNKNOWN;", "KillerName_Localised":"Unknown", "KillerShip":"scout", "KillerRank":"Elite" }
+    // {  "KillerName":"$UNKNOWN;", "KillerName_Localised":"Unknown", "KillerShip":"scout_nq", "KillerRank":"Elite" }
+    // {  "KillerName":"$UNKNOWN;", "KillerName_Localised":"Unknown", "KillerShip":"scout_q", "KillerRank":"Elite" }
+    // {  "Killers":[ { "Name":"Cmdr Bobby Stacks", "Ship":"tacticalsuit_class3", "Rank":"Deadly" }, { "Name":"Cmdr Death of Morpheus", "Ship":"tacticalsuit_class3", "Rank":"Expert" } ] }
+
     [JournalEntryType(JournalTypeEnum.Died)]
     public class JournalDied : JournalEntry, IMissions, ICommodityJournalEntry
     {
@@ -46,8 +54,8 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     string kship = evt["KillerShip"].StrNull();
                     if (kship != null)
-                    { // by an automated device
-                        Killers = new Killer[1] { new Killer { Name = "", Name_Localised = "", Ship = kship } };
+                    {
+                        Killers = new Killer[1] { new Killer { Name = kship, Name_Localised = kship.SplitCapsWordFull(), Ship = kship } };
                     }
                 }
             }
