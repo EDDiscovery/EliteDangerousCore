@@ -367,14 +367,28 @@ namespace EliteDangerousCore.EDDN
             }
         };
 
-
-        private void RemoveCommonKeys(JObject obj)
+        // Assumption: there are no cycling references
+        private void RemoveCommonKeys(JToken jToken)
         {
-            foreach (var key in obj.PropertyNames())
+            if (jToken is JObject jObject)
             {
-                if (key.EndsWith("_Localised") || key.StartsWith("EDD"))
+                foreach (var key in jObject.PropertyNames())
                 {
-                    obj.Remove(key);
+                    if (key.EndsWith("_Localised") || key.StartsWith("EDD"))
+                    {
+                        jObject.Remove(key);
+                    }
+                    else
+                    {
+                        RemoveCommonKeys(jObject[key]);
+                    }
+                }
+            }
+            else if (jToken is JArray jArray)
+            {
+                foreach (var item in jArray)
+                {
+                    RemoveCommonKeys(item);
                 }
             }
         }
