@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2016-2021 EDDiscovery development team
+ * Copyright 2016-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using QuickJSON;
@@ -27,10 +25,11 @@ namespace EliteDangerousCore.DB
     {
         public class Location
         {
-            public string Name;
-            public string Comment;
-            public double Latitude;
-            public double Longitude;
+            public string Name { get; set; }
+            public string Comment { get; set; }
+            public double Latitude { get; set; }
+            public double Longitude { get; set; }
+            public string Tags { get; set; } = "";     // tag;tag;  Preset to "" as older entries won't have it in json
 
             [JsonIgnore]
             public bool IsWholePlanetBookmark { get { return Latitude == 0 && Longitude == 0; } }
@@ -38,11 +37,11 @@ namespace EliteDangerousCore.DB
 
         public class Planet
         {
-            public string Name;
-            public List<Location> Locations;            // may be null from reader..
+            public string Name { get; set; }
+            public List<Location> Locations { get; set; }            // may be null from reader..
         }
 
-        public List<Planet> Planets;                    // may be null if no planets
+        public List<Planet> Planets { get; set; }                    // may be null if no planets
 
         public bool hasMarks { get { return Planets != null && Planets.Count > 0 && Planets.Where(pl => pl.Locations.Count > 0).Any(); } }
 
@@ -66,13 +65,14 @@ namespace EliteDangerousCore.DB
         {
         }
 
+        // May return null, if no Planets in JSON
         public string ToJsonString()
         {
             if (Planets != null)
             {
                 JArray ja = new JArray();
                 foreach (Planet p in Planets)
-                    ja.Add(JObject.FromObject(p));       //verified with basutils.json
+                    ja.Add(JObject.FromObject(p));     
 
                 JObject overall = new JObject();
                 overall["Marks"] = ja;
@@ -103,7 +103,7 @@ namespace EliteDangerousCore.DB
             return p?.Locations?.Find(x => x.Name.Equals(placename, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        public void AddOrUpdateLocation(string planet, string placename, string comment, double latp, double longp)
+        public void AddOrUpdateLocation(string planet, string placename, string comment, double latp, double longp, string tags)
         {
             Planet p = GetPlanet(planet);            // p = null if planet does not exist, else list of existing places
 
@@ -123,7 +123,7 @@ namespace EliteDangerousCore.DB
 
             if (l == null)                      // no location.. make one up and add
             {
-                l = new Location() { Name = placename, Comment = comment, Latitude = latp, Longitude = longp };
+                l = new Location() { Name = placename, Comment = comment, Latitude = latp, Longitude = longp, Tags = tags };
                 p.Locations.Add(l);
             }
             else
@@ -131,17 +131,18 @@ namespace EliteDangerousCore.DB
                 l.Comment = comment;        // update fields which may have changed
                 l.Latitude = latp;
                 l.Longitude = longp;
+                l.Tags = tags;
             }
         }
 
         public void AddOrUpdateLocation(string planet, Location loc)
         {
-            AddOrUpdateLocation(planet, loc.Name, loc.Comment, loc.Latitude, loc.Longitude);
+            AddOrUpdateLocation(planet, loc.Name, loc.Comment, loc.Latitude, loc.Longitude, loc.Tags);
         }
 
-        public void AddOrUpdatePlanetBookmark(string planet, string comment)
+        public void AddOrUpdatePlanetBookmark(string planet, string comment, string tags)
         {
-            AddOrUpdateLocation(planet, "", comment, 0,0 );
+            AddOrUpdateLocation(planet, "", comment, 0,0, tags );
         }
 
         public bool DeleteLocation(string planet, string placename)
@@ -176,26 +177,39 @@ namespace EliteDangerousCore.DB
             else
                 return false;
         }
+        public bool UpdateTags(string planet, string placename, string tags)
+        {
+            Planet p = GetPlanet(planet);            // p = null if planet does not exist, else list of existing places
+            Location l = GetLocation(p, placename); // if p != null, find placenameYour okay, its 
+            if (l != null)
+            {
+                l.Tags = tags;
+                return true;
+            }
+            else
+                return false;
+        }
     }
 
     [System.Diagnostics.DebuggerDisplay("{Name} {x} {y} {z} {Note}")]
     public class BookmarkClass
     {
-        public long id;
-        public string StarName;         // set if associated with a star, else null
-        public double x;                // x/y/z always set for render purposes
-        public double y;
-        public double z;
-        public DateTime TimeUTC;
-        public string Heading;          // set if region bookmark, else null if its a star
-        public string Note;
-        public PlanetMarks PlanetaryMarks;   // may be null
-        
-        public bool isRegion { get { return Heading != null; } }
-        public bool isStar { get { return Heading == null; } }
+        public long ID { get; set; }
+        public string StarName { get; set; }         // set if associated with a star, else null
+        public double X { get; set; }                // x/y/z always set for render purposes
+        public double Y { get; set; }
+        public double Z { get; set; }
+        public DateTime TimeUTC { get; set; }
+        public string Heading { get; set; }          // set if region bookmark, else null if its a star
+        public string Note { get; set; }
+        public PlanetMarks PlanetaryMarks { get; set; }   // may be null
+        public string Tags { get; set; } = "";      // tag;tag;  Preset to "" as older entries won't have it in json
+
+        public bool IsRegion { get { return Heading != null; } }
+        public bool IsStar { get { return Heading == null; } }
         public string Name { get { return Heading == null ? StarName : Heading; } }
 
-        public bool hasPlanetaryMarks
+        public bool HasPlanetaryMarks
         { get { return PlanetaryMarks != null && PlanetaryMarks.hasMarks; } }
 
         public BookmarkClass()
@@ -204,12 +218,12 @@ namespace EliteDangerousCore.DB
 
         public BookmarkClass(DbDataReader dr)
         {
-            id = (long)dr["id"];
+            ID = (long)dr["id"];
             if (System.DBNull.Value != dr["StarName"])
                 StarName = (string)dr["StarName"];
-            x = (double)dr["x"];
-            y = (double)dr["y"];
-            z = (double)dr["z"];
+            X = (double)dr["x"];
+            Y = (double)dr["y"];
+            Z = (double)dr["z"];
 
             DateTime t = (DateTime)dr["Time"];
             if (t < EDDFixesDates.BookmarkUTCswitchover)      // dates before this was stupidly recorded in here in local time.
@@ -227,6 +241,8 @@ namespace EliteDangerousCore.DB
                 //System.Diagnostics.Debug.WriteLine("Planet mark {0} {1}", StarName, (string)dr["PlanetMarks"]);
                 PlanetaryMarks = new PlanetMarks((string)dr["PlanetMarks"]);
             }
+
+            Tags = (string)dr["Tags"];
         }
 
         internal bool Add()
@@ -236,26 +252,27 @@ namespace EliteDangerousCore.DB
 
         private bool Add(SQLiteConnectionUser cn)
         {
-            using (DbCommand cmd = cn.CreateCommand("Insert into Bookmarks (StarName, x, y, z, Time, Heading, Note, PlanetMarks) values (@sname, @xp, @yp, @zp, @time, @head, @note, @pmarks)"))
+            using (DbCommand cmd = cn.CreateCommand("Insert into Bookmarks (StarName, x, y, z, Time, Heading, Note, PlanetMarks, Tags) values (@sname, @xp, @yp, @zp, @time, @head, @note, @pmarks,@tags)"))
             {
                 DateTime tme = TimeUTC;
                 if (TimeUTC < EDDFixesDates.BookmarkUTCswitchover)
                     tme = TimeUTC.ToLocalTime();
 
                 cmd.AddParameterWithValue("@sname", StarName);
-                cmd.AddParameterWithValue("@xp", x);
-                cmd.AddParameterWithValue("@yp", y);
-                cmd.AddParameterWithValue("@zp", z);
+                cmd.AddParameterWithValue("@xp", X);
+                cmd.AddParameterWithValue("@yp", Y);
+                cmd.AddParameterWithValue("@zp", Z);
                 cmd.AddParameterWithValue("@time", tme);
                 cmd.AddParameterWithValue("@head", Heading);
                 cmd.AddParameterWithValue("@note", Note);
                 cmd.AddParameterWithValue("@pmarks", PlanetaryMarks?.ToJsonString());
+                cmd.AddParameterWithValue("@tags", Tags);
 
                 cmd.ExecuteNonQuery();
 
                 using (DbCommand cmd2 = cn.CreateCommand("Select Max(id) as id from Bookmarks"))
                 {
-                    id = (long)cmd2.ExecuteScalar();
+                    ID = (long)cmd2.ExecuteScalar();
                 }
 
                 return true;
@@ -269,21 +286,22 @@ namespace EliteDangerousCore.DB
 
         private bool Update(SQLiteConnectionUser cn)
         {
-            using (DbCommand cmd = cn.CreateCommand("Update Bookmarks set StarName=@sname, x = @xp, y = @yp, z = @zp, Time=@time, Heading = @head, Note=@note, PlanetMarks=@pmarks  where ID=@id"))
+            using (DbCommand cmd = cn.CreateCommand("Update Bookmarks set StarName=@sname, x = @xp, y = @yp, z = @zp, Time=@time, Heading = @head, Note=@note, PlanetMarks=@pmarks, Tags=@tags  where ID=@id"))
             {
                 DateTime tme = TimeUTC;
                 if (TimeUTC < EDDFixesDates.BookmarkUTCswitchover)
                     tme = TimeUTC.ToLocalTime();
 
-                cmd.AddParameterWithValue("@ID", id);
+                cmd.AddParameterWithValue("@ID", ID);
                 cmd.AddParameterWithValue("@sname", StarName);
-                cmd.AddParameterWithValue("@xp", x);
-                cmd.AddParameterWithValue("@yp", y);
-                cmd.AddParameterWithValue("@zp", z);
+                cmd.AddParameterWithValue("@xp", X);
+                cmd.AddParameterWithValue("@yp", Y);
+                cmd.AddParameterWithValue("@zp", Z);
                 cmd.AddParameterWithValue("@time", tme);
                 cmd.AddParameterWithValue("@head", Heading);
                 cmd.AddParameterWithValue("@note", Note);
                 cmd.AddParameterWithValue("@pmarks", PlanetaryMarks?.ToJsonString());
+                cmd.AddParameterWithValue("@tags", Tags);
 
                 cmd.ExecuteNonQuery();
 
@@ -300,36 +318,40 @@ namespace EliteDangerousCore.DB
         {
             using (DbCommand cmd = cn.CreateCommand("DELETE FROM Bookmarks WHERE id = @id"))
             {
-                cmd.AddParameterWithValue("@id", id);
+                cmd.AddParameterWithValue("@id", ID);
                 cmd.ExecuteNonQuery();
                 return true;
             }
         }
 
         // with a found bookmark.. add locations in the system
-        public void AddOrUpdateLocation(string planet, string placename, string comment, double latp, double longp)
+        public void AddOrUpdateLocation(string planet, string placename, string comment, double latp, double longp, string tags)
         {
             if (PlanetaryMarks == null)
                 PlanetaryMarks = new PlanetMarks();
-            PlanetaryMarks.AddOrUpdateLocation(planet, placename, comment, latp, longp);
+            PlanetaryMarks.AddOrUpdateLocation(planet, placename, comment, latp, longp, tags);
             Update();
         }
 
-        public void AddOrUpdatePlanetBookmark(string planet, string comment)
+        public void AddOrUpdatePlanetBookmark(string planet, string comment, string tags)
         {
             if (PlanetaryMarks == null)
                 PlanetaryMarks = new PlanetMarks();
-            PlanetaryMarks.AddOrUpdatePlanetBookmark(planet, comment);
+            PlanetaryMarks.AddOrUpdatePlanetBookmark(planet, comment,tags);
             Update();
         }
 
-        // Update notes
-        public void UpdateNotes(string notes)
+        public void UpdateNote(string notes)
         {
             Note = notes;
             Update();
         }
-        
+        public void UpdateTags(string tags)
+        {
+            Tags = tags;
+            Update();
+        }
+
         public bool HasLocation(string planet, string placename)
         {
             return PlanetaryMarks != null && PlanetaryMarks.HasLocation(planet, placename);
@@ -348,7 +370,17 @@ namespace EliteDangerousCore.DB
 
         public bool UpdateLocationComment(string planet, string placename, string comment)
         {
-            if (PlanetaryMarks != null && PlanetaryMarks.UpdateComment(planet, placename,comment))
+            if (PlanetaryMarks != null && PlanetaryMarks.UpdateComment(planet, placename, comment))
+            {
+                Update();
+                return true;
+            }
+            else
+                return false;
+        }
+        public bool UpdateLocationTags(string planet, string placename, string tags)
+        {
+            if (PlanetaryMarks != null && PlanetaryMarks.UpdateTags(planet, placename, tags))
             {
                 Update();
                 return true;
@@ -435,15 +467,11 @@ namespace EliteDangerousCore.DB
             return (region) ? FindBookmarkOnRegion(name) : FindBookmarkOnSystem(name);
         }
 
-        // on a star system, if an existing bookmark, return it, else create a new one with these properties
-        public BookmarkClass EnsureBookmarkOnSystem(string name, double x, double y, double z, DateTime timeutc, string notes = null)
-        {
-            BookmarkClass bk = FindBookmarkOnSystem(name);
-            return bk != null ? bk : AddOrUpdateBookmark(null, true, name, x, y, z, timeutc, notes);
-        }
-
         // bk = null, new bookmark, else update.  isstar = true, region = false.
-        public BookmarkClass AddOrUpdateBookmark(BookmarkClass bk, bool isstar, string name, double x, double y, double z, DateTime timeutc, string notes = null, PlanetMarks planetMarks = null)
+        public BookmarkClass AddOrUpdateBookmark(BookmarkClass bk, bool isstar, string name, double x, double y, double z, DateTime timeutc, 
+                                                 string notes = null,       // if null, don't update notes
+                                                 string tags = null,        // if null, don't update tags
+                                                 PlanetMarks planetMarks = null)
         {
             System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);
             bool addit = bk == null;
@@ -461,11 +489,12 @@ namespace EliteDangerousCore.DB
             else
                 bk.Heading = name;
 
-            bk.x = x;
-            bk.y = y;
-            bk.z = z;
+            bk.X = x;
+            bk.Y = y;
+            bk.Z = z;
             bk.TimeUTC = timeutc;            bk.PlanetaryMarks = planetMarks ?? bk.PlanetaryMarks;
-            bk.Note = notes ?? bk.Note; // only override notes if its set.
+            bk.Note = notes ?? bk.Note; // only override if its set.
+            bk.Tags = tags ?? bk.Tags;// only override if its set.
 
             if (addit)
                 bk.Add();
@@ -475,7 +504,7 @@ namespace EliteDangerousCore.DB
                 bk.Update();
             }
 
-            System.Diagnostics.Debug.WriteLine("Write bookmark " + bk.Name + " Notes " + notes);
+            System.Diagnostics.Debug.WriteLine($"Write bookmark {bk.Name} Notes {notes} Tags {tags}");
 
             OnBookmarkChange?.Invoke(bk,false);
 
@@ -485,9 +514,9 @@ namespace EliteDangerousCore.DB
         public void Delete(BookmarkClass bk)
         {
             System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);
-            long id = bk.id;
+            long id = bk.ID;
             bk.Delete();
-            globalbookmarks.RemoveAll(x => x.id == id);
+            globalbookmarks.RemoveAll(x => x.ID == id);
             OnBookmarkChange?.Invoke(bk, true);
         }
 
