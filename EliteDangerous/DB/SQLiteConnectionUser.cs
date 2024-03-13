@@ -124,7 +124,7 @@ namespace EliteDangerousCore.DB
                 if (dbver < 130)
                     UpgradeUserDB130();
 
-                if ( dbver < 131 )
+                if (dbver < 131)
                     UpgradeUserDB131();
 
                 UpgradeUserDB132();
@@ -410,6 +410,22 @@ namespace EliteDangerousCore.DB
             string query = "ALTER TABLE Bookmarks ADD COLUMN Tags TEXT DEFAULT \"\"";
             ExecuteNonQueries(query);
         }
+        //private void UpgradeUserDB133()        abandoned demonstration of nerfing data
+        //{
+        //    // fix up captins log entries to new separ
+        //    string text = RegisterClass.GetSetting("CaptainsLogPanelTagNames", "").Replace(";", "\u2345");
+        //    RegisterClass.PutSetting("CaptainsLogPanelTagNames", text); 
+
+        //    var logs = CaptainsLogClass.ReadLogs(this);
+        //    foreach( var log in logs)
+        //    {
+        //        if ( log.Tags.HasChars())
+        //        {
+        //            log.Set(log.Commander, log.SystemName, log.BodyName, log.TimeUTC, log.Note, log.Tags.Replace(";", "\u2345"), log.Parameters);
+        //            log.Update(this);
+        //        }
+        //    }
+        //}
 
         private void DropOldUserTables()
         {

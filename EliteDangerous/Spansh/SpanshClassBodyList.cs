@@ -40,7 +40,7 @@ namespace EliteDangerousCore.Spansh
             var data = response.Body;
             var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
 
-            //BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshbodies.txt", json?.ToString(true));
+            BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshbodies.txt", json?.ToString(true));
 
             JArray resultsarray;
 
@@ -68,6 +68,7 @@ namespace EliteDangerousCore.Spansh
                         JObject evt = new JObject();
                         evt["ScanType"] = "Detailed";
                         evt["BodyName"] = so["name"];
+
                         evt["BodyID"] = so[dump ? "bodyId" : "body_id"];
                         evt["StarSystem"] = sys.Name;
                         evt["SystemAddress"] = sys.SystemAddress.HasValue ? sys.SystemAddress.Value : json["reference"]["id64"].Long();
@@ -289,13 +290,29 @@ namespace EliteDangerousCore.Spansh
         // EDSMBodiesCache gets either the body list, or null marking no EDSM server data
         static private Dictionary<string, List<JournalScan>> BodyCache = new Dictionary<string, List<JournalScan>>();
 
+        public static void ClearBodyCache()
+        {
+            lock (BodyCache) 
+            {
+                BodyCache.Clear();
+            }
+        }
+
+        // only one request at a time going, this is to prevent multiple requests for the same body
         public static bool HasBodyLookupOccurred(string name)
         {
-            return BodyCache.ContainsKey(name);
+            lock (BodyCache) 
+            {
+                return BodyCache.ContainsKey(name);
+            }
         }
-        public static bool HasNoDataBeenStoredOnBody(string name)      // true if lookup occurred, but no data. false otherwise
+        // true if lookup occurred, but no data. false otherwise
+        public static bool HasNoDataBeenStoredOnBody(string name)      
         {
-            return BodyCache.TryGetValue(name, out List<JournalScan> d) && d == null;
+            lock (BodyCache) // only one request at a time going, this is to prevent multiple requests for the same body
+            {
+                return BodyCache.TryGetValue(name, out List<JournalScan> d) && d == null;
+            }
         }
 
         static public GetBodiesResults GetBodiesList(ISystem sys, bool weblookup = true)
@@ -330,7 +347,7 @@ namespace EliteDangerousCore.Spansh
                         string cachedata = BaseUtils.FileHelpers.TryReadAllTextFromFile(cachefile); // try and read it
                         if (cachedata != null)
                         {
-                            System.Diagnostics.Debug.WriteLine($"Spansh Cache File read on {sys.Name} {sys.SystemAddress} from {cachefile}");
+                            //System.Diagnostics.Debug.WriteLine($"Spansh Cache File read on {sys.Name} {sys.SystemAddress} from {cachefile}");
                             jlist = JArray.Parse(cachedata, JToken.ParseOptions.CheckEOL);  // if so, try a conversion
                             fromcache = true;
                         }
@@ -341,7 +358,7 @@ namespace EliteDangerousCore.Spansh
                         if (!weblookup)         // must be set for a web lookup
                             return null;
 
-                        System.Diagnostics.Debug.WriteLine($"Spansh Web lookup on {sys.Name} {sys.SystemAddress}");
+                       // System.Diagnostics.Debug.WriteLine($"Spansh Web lookup on {sys.Name} {sys.SystemAddress}");
 
                         SpanshClass sp = new SpanshClass();
 
@@ -370,13 +387,13 @@ namespace EliteDangerousCore.Spansh
 
                         BodyCache[sys.Name] = bodies;
 
-                        System.Diagnostics.Debug.WriteLine($"Spansh Web/File Lookup complete {sys.Name} {bodies.Count} cache {fromcache}");
+                       // System.Diagnostics.Debug.WriteLine($"Spansh Web/File Lookup complete {sys.Name} {bodies.Count} cache {fromcache}");
                         return new GetBodiesResults(bodies, fromcache);
                     }
                     else
                     {
                         BodyCache[sys.Name] = null;
-                        System.Diagnostics.Debug.WriteLine($"Spansh Web Lookup complete no info {sys.Name}");
+                       // System.Diagnostics.Debug.WriteLine($"Spansh Web Lookup complete no info {sys.Name}");
                     }
                 }
             }

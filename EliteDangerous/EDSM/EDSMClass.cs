@@ -865,13 +865,27 @@ namespace EliteDangerousCore.EDSM
         // EDSMBodiesCache gets either the body list, or null marking no EDSM server data
         static private Dictionary<string, List<JournalScan>> BodyCache = new Dictionary<string, List<JournalScan>>();
 
+        public static void ClearBodyCache()
+        {
+            lock (BodyCache) // only one request at a time going, this is to prevent multiple requests for the same body
+            {
+                BodyCache.Clear();
+            }
+        }
+
         public static bool HasBodyLookupOccurred(string name)
         {
-            return BodyCache.ContainsKey(name);
+            lock (BodyCache)
+            {
+                return BodyCache.ContainsKey(name);
+            }
         }
         public static bool HasNoDataBeenStoredOnBody(string name)      // true if lookup occurred, but no data. false otherwise
         {
-            return BodyCache.TryGetValue(name, out List<JournalScan> d) && d == null;
+            lock (BodyCache)
+            {
+                return BodyCache.TryGetValue(name, out List<JournalScan> d) && d == null;
+            }
         }
 
         // returns null if EDSM says not there, else if returns list of bodies and a flag indicating if from cache. 

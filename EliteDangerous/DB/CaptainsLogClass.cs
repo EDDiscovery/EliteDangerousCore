@@ -22,6 +22,7 @@ using System.Linq;
 
 namespace EliteDangerousCore.DB
 {
+    [System.Diagnostics.DebuggerDisplay("{ID} {Commander} {TimeUTC} {SystemName} {BodyName} {Tags}")]
     public class CaptainsLogClass
     {
         public long ID { get; private set; }
@@ -30,8 +31,8 @@ namespace EliteDangerousCore.DB
         public string SystemName { get; private set; }
         public string BodyName { get; private set; }
         public string Note { get; private set; }
-        public string Tags { get; private set; }     // may be null
-        public string Parameters { get; private set; }     // may be null
+        public string Tags { get; private set; }     // may be null, tag<separ>tag<separ>
+        public string Parameters { get; private set; }     // may be null (not currently used)
 
         public CaptainsLogClass()
         {
@@ -95,7 +96,7 @@ namespace EliteDangerousCore.DB
             return UserDatabase.Instance.DBWrite<bool>(cn => { return Update(cn); });
         }
 
-        private bool Update(SQLiteConnectionUser cn)
+        internal bool Update(SQLiteConnectionUser cn)
         {
             using (DbCommand cmd = cn.CreateCommand("Update CaptainsLog set Commander=@c, Time=@t, SystemName=@s, BodyName=@b, Note=@n, Tags=@g, Parameters=@p where ID=@id"))
             {
@@ -128,13 +129,38 @@ namespace EliteDangerousCore.DB
             }
         }
 
-        // Update notes
+        // Update notes only
         public void UpdateNotes(string notes)
         {
             Note = notes;
             Update();
         }
-       
+
+        public static List<CaptainsLogClass> ReadLogs()
+        {
+            return UserDatabase.Instance.DBRead<List<CaptainsLogClass>>(cn =>
+            {
+                return ReadLogs(cn);
+            });
+        }
+
+        public static List<CaptainsLogClass> ReadLogs(SQLiteConnectionUser cn)
+        {
+            using (DbCommand cmd = cn.CreateCommand("select * from CaptainsLog"))
+            {
+                List<CaptainsLogClass> logs = new List<CaptainsLogClass>();
+
+                using (DbDataReader rdr = cmd.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
+                        logs.Add(new CaptainsLogClass(rdr));
+                    }
+                }
+
+                return logs;
+            }
+        }
     }
 
     // EVERYTHING goes thru list class for adding/deleting log entries
@@ -155,48 +181,11 @@ namespace EliteDangerousCore.DB
 
         private List<CaptainsLogClass> globallog = new List<CaptainsLogClass>();
 
-        public static bool LoadLog()
+        public static void LoadLog()
         {
             System.Diagnostics.Debug.Assert(gbl == null);       // no double instancing!
             gbl = new GlobalCaptainsLogList();
-
-            try
-            {
-                return UserDatabase.Instance.DBRead<bool>(cn =>
-                {
-                    using (DbCommand cmd = cn.CreateCommand("select * from CaptainsLog"))
-                    {
-                        List<CaptainsLogClass> logs = new List<CaptainsLogClass>();
-
-                        using (DbDataReader rdr = cmd.ExecuteReader())
-                        {
-                            while (rdr.Read())
-                            {
-                                logs.Add(new CaptainsLogClass(rdr));
-                            }
-                        }
-
-                        if (logs.Count == 0)
-                        {
-                            return false;
-                        }
-                        else
-                        {
-                            foreach (var bc in logs)
-                            {
-                                gbl.globallog.Add(bc);
-                            }
-
-                            return true;
-                        }
-                    }
-                });
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine("Exception " + ex.ToString());
-                return false;
-            }
+            gbl.globallog = CaptainsLogClass.ReadLogs();
         }
 
         public CaptainsLogClass[] FindUTC(DateTime startutc, DateTime endutc, int cmdr)
@@ -248,5 +237,18 @@ namespace EliteDangerousCore.DB
         {
             OnLogEntryChanged?.Invoke(bk, true);
         }
+
+        // return all taglists, bktags = true means bookmarks, else planet tags
+        public List<string> GetAllTags(int cmdrid)
+        {
+            List<string> taglist = new List<string>();
+            foreach (var x in globallog)
+            {
+                if (x.Tags.HasChars() && x.Commander == cmdrid)
+                    taglist.Add(x.Tags);
+            }
+            return taglist;
+        }
+
     }
 }

@@ -37,23 +37,40 @@ namespace EliteDangerousCore.Inara
 
         private string InaraAPI = "inapi/v1/";      // Action end point
 
-        private InaraClass() : base("https://inara.cz/")
+        public InaraClass() : base("https://inara.cz/")
         {
             var assemblyFullName = Assembly.GetEntryAssembly().FullName;
             fromSoftwareVersion = assemblyFullName.Split(',')[1].Split('=')[1];
-
             apiKey = EDCommander.Current.InaraAPIKey;
-            commanderName = string.IsNullOrEmpty(EDCommander.Current.InaraName) ? EDCommander.Current.Name : EDCommander.Current.InaraName;
         }
 
         public InaraClass(EDCommander cmdr) : this()
         {
+            commanderName = string.IsNullOrEmpty(EDCommander.Current.InaraName) ? EDCommander.Current.Name : EDCommander.Current.InaraName;
+
             if (cmdr != null)
             {
                 apiKey = cmdr.InaraAPIKey;
                 commanderFrontierID = cmdr.FID;
                 commanderName = string.IsNullOrEmpty(cmdr.InaraName) ? cmdr.Name : cmdr.InaraName;
             }
+        }
+
+        public void LaunchBrowserForSystem(string system)
+        {
+            BaseUtils.BrowserInfo.LaunchBrowser(URLForSystem(system));
+        }
+
+        public string URLForSystem(string system)
+        {
+            string url = ServerAddress + "elite/starsystem/?search=" + System.Web.HttpUtility.UrlEncode(system);
+            return url;
+        }
+
+        public void LaunchBrowserForStation(string system, string station)
+        {
+            string url = ServerAddress + "elite/station/?search=" + System.Web.HttpUtility.UrlEncode(system) + "[" + System.Web.HttpUtility.UrlEncode(station) + "]";
+            BaseUtils.BrowserInfo.LaunchBrowser(url);
         }
 
         #region Send and receive

@@ -29,7 +29,7 @@ namespace EliteDangerousCore.DB
             public string Comment { get; set; }
             public double Latitude { get; set; }
             public double Longitude { get; set; }
-            public string Tags { get; set; } = "";     // tag;tag;  Preset to "" as older entries won't have it in json
+            public string Tags { get; set; } = "";     // tag<separ>tag<separ>  Preset to "" as older entries won't have it in json
 
             [JsonIgnore]
             public bool IsWholePlanetBookmark { get { return Latitude == 0 && Longitude == 0; } }
@@ -203,7 +203,7 @@ namespace EliteDangerousCore.DB
         public string Heading { get; set; }          // set if region bookmark, else null if its a star
         public string Note { get; set; }
         public PlanetMarks PlanetaryMarks { get; set; }   // may be null
-        public string Tags { get; set; } = "";      // tag;tag;  Preset to "" as older entries won't have it in json
+        public string Tags { get; set; } = "";      // tag<separ>tag<separ>  Preset to "" as older entries won't have it in json
 
         public bool IsRegion { get { return Heading != null; } }
         public bool IsStar { get { return Heading == null; } }
@@ -388,6 +388,33 @@ namespace EliteDangerousCore.DB
             else
                 return false;
         }
+
+        public static List<BookmarkClass> ReadLogs()
+        {
+            return UserDatabase.Instance.DBRead<List<BookmarkClass>>(cn =>
+            {
+                return ReadLogs(cn);
+            });
+        }
+
+        public static List<BookmarkClass> ReadLogs(SQLiteConnectionUser cn)
+        {
+            var bookmarks = new List<BookmarkClass>();
+
+            using (DbCommand cmd = cn.CreateCommand("select * from Bookmarks"))
+            {
+                using (DbDataReader rdr = cmd.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
+                        bookmarks.Add(new BookmarkClass(rdr));
+                    }
+                }
+            }
+
+            return bookmarks;
+        }
+
     }
 
     // EVERYTHING goes thru list class for adding/deleting bookmarks
@@ -405,48 +432,11 @@ namespace EliteDangerousCore.DB
 
         private List<BookmarkClass> globalbookmarks = new List<BookmarkClass>();
 
-        public static bool LoadBookmarks()
+        public static void LoadBookmarks()
         {
             System.Diagnostics.Debug.Assert(gbl == null);       // no double instancing!
             gbl = new GlobalBookMarkList();
-
-            try
-            {
-                List<BookmarkClass> bookmarks = new List<BookmarkClass>();
-
-                UserDatabase.Instance.DBRead(cn =>
-                {
-                    using (DbCommand cmd = cn.CreateCommand("select * from Bookmarks"))
-                    {
-                        using (DbDataReader rdr = cmd.ExecuteReader())
-                        {
-                            while (rdr.Read())
-                            {
-                                bookmarks.Add(new BookmarkClass(rdr));
-                            }
-                        }
-                    }
-                });
-
-
-                if (bookmarks.Count == 0)
-                {
-                    return false;
-                }
-                else
-                {
-                    foreach (var bc in bookmarks)
-                    {
-                        gbl.globalbookmarks.Add(bc);
-                    }
-                    return true;
-                }
-            }
-            catch( Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine("Exception " + ex.ToString());
-                return false;
-            }
+            gbl.globalbookmarks = BookmarkClass.ReadLogs();
         }
 
         // return any mark
@@ -481,7 +471,7 @@ namespace EliteDangerousCore.DB
                 bk = new BookmarkClass();
                 bk.Note = "";       // set empty, in case notes==null
                 globalbookmarks.Add(bk);
-                System.Diagnostics.Debug.WriteLine("New bookmark created");
+                //System.Diagnostics.Debug.WriteLine("New bookmark created");
             }
 
             if (isstar)
@@ -524,5 +514,33 @@ namespace EliteDangerousCore.DB
         {
             OnBookmarkChange?.Invoke(bk, true);
         }
+
+        // return all taglists, bktags = true means bookmarks, else planet tags
+        public List<string> GetAllTags(bool bktags)
+        {
+            List<string> taglist = new List<string>();
+            foreach (var x in globalbookmarks)
+            {
+                if (bktags)
+                {
+                    if (x.Tags.HasChars())
+                        taglist.Add(x.Tags);
+                }
+                else
+                {
+                    foreach (var pl in x.PlanetaryMarks?.Planets.EmptyIfNull())
+                    {
+                        foreach (var lc in pl.Locations.EmptyIfNull())
+                        {
+                            if (lc.Tags.HasChars())
+                                taglist.Add(lc.Tags);
+                        }
+                    }
+                }
+            }
+            return taglist;
+        }
+
+
     }
 }
