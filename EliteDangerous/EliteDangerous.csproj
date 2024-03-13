@@ -37,8 +37,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="QuickJSON">
-      <HintPath>..\..\..\QuickJSON\QuickJSON\bin\Debug\net48\QuickJSON.dll</HintPath>
+    <Reference Include="QuickJSON, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>$(SolutionDir)\packages\RJKJSoft.QuickJSON.2.0.1\lib\net48\QuickJSON.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -391,6 +391,7 @@
     <None Include="JournalEvents\translation-polski-je.tlp" />
     <None Include="JournalEvents\translation-portugues-je.tlp" />
     <None Include="JournalEvents\translation-spanish-je.tlp" />
+    <None Include="packages.config" />
     <None Include="Resources\Marx Nebula List 26-10-21.csv" />
   </ItemGroup>
   <ItemGroup>
