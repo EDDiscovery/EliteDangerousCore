@@ -209,6 +209,7 @@ namespace EliteDangerousCore
 
                     hist.historylist.Add(heh);        // then add to history
                     hist.AddToVisitsScan(null);  // add to scan database but don't complain
+
                     //System.Diagnostics.Debug.WriteLine($"Add {heh.EventTimeUTC} {heh.EntryType} {hist.StarScan.ScanDataByName.Count} {hist.Visited.Count}");
                 }
             }
@@ -480,13 +481,13 @@ namespace EliteDangerousCore
             if (EliteConfigInstance.InstanceOptions.DisableMerge)
                 return new List<HistoryEntry> { he };
 
-            if ( historylist.Count > 0 )
+            if (historylist.Count > 0)
             {
                 // we generally try and remove these as spam if they did not do anything
-                if (he.EntryType == JournalTypeEnum.Cargo || he.EntryType == JournalTypeEnum.Materials)       
+                if (he.EntryType == JournalTypeEnum.Cargo || he.EntryType == JournalTypeEnum.Materials)
                 {
                     var lasthe = historylist.Last();
-                    if ( lasthe.MaterialCommodity != he.MaterialCommodity)  // they changed the mc list, keep
+                    if (lasthe.MaterialCommodity != he.MaterialCommodity)  // they changed the mc list, keep
                     {
                         //System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " " + he.EntryType.ToString() + " Update,keep");
                     }
@@ -497,10 +498,30 @@ namespace EliteDangerousCore
                     }
                 }
                 // these we try and stop repeats by not allowing more than one after docking
-                else if (he.EntryType == JournalTypeEnum.Outfitting || he.EntryType == JournalTypeEnum.Shipyard || 
-                                he.EntryType == JournalTypeEnum.StoredShips || he.EntryType == JournalTypeEnum.StoredModules)
+                else if (he.EntryType == JournalTypeEnum.Outfitting)
                 {
-                    HistoryEntry lasthe = FindBeforeLastDockLoadGameShutdown(1000,he.EntryType);     // don't look back forever
+                    HistoryEntry lasthe = FindBeforeLastDockLoadGameShutdown(1000, he.EntryType);     // don't look back forever
+
+                    if (lasthe != null && (lasthe.journalEntry as JournalOutfitting).YardInfo.Items?.Length > 0)
+                    {
+                        //System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " " + he.EntryType.ToString() + " Duplicate with " + lasthe.EventTimeUTC.ToString() + " remove");
+                        return null;
+                    }
+                }
+                else if (he.EntryType == JournalTypeEnum.Shipyard)
+                {
+                    HistoryEntry lasthe = FindBeforeLastDockLoadGameShutdown(1000, he.EntryType);     // don't look back forever
+
+                    if (lasthe != null && (lasthe.journalEntry as JournalShipyard).Yard.Ships?.Length > 0)
+                    {
+                        //System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " " + he.EntryType.ToString() + " Duplicate with " + lasthe.EventTimeUTC.ToString() + " remove");
+                        return null;
+                    }
+                }
+                else if( he.EntryType == JournalTypeEnum.StoredShips || he.EntryType == JournalTypeEnum.StoredModules)
+                {
+                    HistoryEntry lasthe = FindBeforeLastDockLoadGameShutdown(1000, he.EntryType);     // don't look back forever
+
                     if (lasthe != null)
                     {
                         //System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " " + he.EntryType.ToString() + " Duplicate with " + lasthe.EventTimeUTC.ToString() + " remove");
@@ -511,7 +532,7 @@ namespace EliteDangerousCore
                 else if (he.EntryType == JournalTypeEnum.EDDCommodityPrices || he.EntryType == JournalTypeEnum.Market)
                 {
                     HistoryEntry lasthe = FindBeforeLastDockLoadGameShutdown(1000, JournalTypeEnum.Market, JournalTypeEnum.EDDCommodityPrices);     // don't look back forever
-                    if (lasthe != null)
+                    if (lasthe != null && (lasthe.journalEntry as JournalCommodityPricesBase).Commodities?.Count > 0)
                     {
                         //System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " " + he.EntryType.ToString() + " Duplicate with " + lasthe.EntryType.ToString() + " " + lasthe.EventTimeUTC.ToString() + " remove");
                         return null;
