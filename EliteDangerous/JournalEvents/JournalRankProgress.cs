@@ -13,6 +13,7 @@
  */
 
 using QuickJSON;
+using System;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -29,6 +30,13 @@ namespace EliteDangerousCore.JournalEvents
             Empire = (RankDefinitions.EmpireRank)evt["Empire"].Int();
             Federation = (RankDefinitions.FederationRank)evt["Federation"].Int();
             CQC = (RankDefinitions.CQCRank)evt["CQC"].Int();
+        }
+
+        public JournalRank(DateTime utc, RankDefinitions.CombatRank c, RankDefinitions.TradeRank t, RankDefinitions.ExplorationRank e,
+                           RankDefinitions.SoldierRank s, RankDefinitions.ExoBiologistRank eb, RankDefinitions.EmpireRank ep, RankDefinitions.FederationRank fr, RankDefinitions.CQCRank cq) 
+            : base(utc,JournalTypeEnum.Rank,false)
+        {
+            Combat = c; Trade = t; Explore = e; Soldier = s; ExoBiologist = eb; Empire = ep; Federation = fr; CQC = cq;
         }
 
         public RankDefinitions.CombatRank Combat { get; set; }

@@ -50,6 +50,10 @@ namespace EliteDangerousCore
         {
             return cr.ToString().Replace("_", " ");
         }
+        public static string FriendlyName(CombatRank? cr, string unknown = "?")
+        {
+            return cr != null ? cr.ToString().Replace("_", " ") : unknown;
+        }
 
         public enum TradeRank
         {
@@ -75,6 +79,11 @@ namespace EliteDangerousCore
             return cr.ToString().Replace("_", " ");
         }
 
+        public static string FriendlyName(TradeRank? cr, string unknown = "?")
+        {
+            return cr != null ? cr.ToString().Replace("_", " ") : unknown;
+        }
+
         public enum ExplorationRank
         {
             Unknown = -1,
@@ -97,6 +106,10 @@ namespace EliteDangerousCore
         public static string FriendlyName(ExplorationRank cr)
         {
             return cr.ToString().Replace("_", " ");
+        }
+        public static string FriendlyName(ExplorationRank? cr, string unknown = "?")
+        {
+            return cr != null ? cr.ToString().Replace("_", " ") : unknown;
         }
 
         public enum FederationRank
@@ -122,7 +135,10 @@ namespace EliteDangerousCore
         {
             return cr.ToString().Replace("_", " ");
         }
-
+        public static string FriendlyName(FederationRank? cr, string unknown = "?")
+        {
+            return cr != null ? cr.ToString().Replace("_", " ") : unknown;
+        }
         public enum EmpireRank
         {
             Unknown = -1,
@@ -145,6 +161,10 @@ namespace EliteDangerousCore
         public static string FriendlyName(EmpireRank cr)
         {
             return cr.ToString().Replace("_", " ");
+        }
+        public static string FriendlyName(EmpireRank? cr, string unknown = "?")
+        {
+            return cr != null ? cr.ToString().Replace("_", " ") : unknown;
         }
 
         public enum CQCRank
@@ -170,6 +190,10 @@ namespace EliteDangerousCore
         {
             return cr.ToString().Replace("_", " ");
         }
+        public static string FriendlyName(CQCRank? cr, string unknown = "?")
+        {
+            return cr != null ? cr.ToString().Replace("_", " ") : unknown;
+        }
 
 
         public enum SquadronRank       // these, as of 1/11/2018, are provisional
@@ -184,6 +208,10 @@ namespace EliteDangerousCore
         public static string FriendlyName(SquadronRank cr)
         {
             return cr.ToString().Replace("_", " ");
+        }
+        public static string FriendlyName(SquadronRank? cr, string unknown = "?")
+        {
+            return cr != null ? cr.ToString().Replace("_", " ") : unknown;
         }
 
         public enum ExoBiologistRank
@@ -208,6 +236,10 @@ namespace EliteDangerousCore
         {
             return cr.ToString().Replace("_", " ");
         }
+        public static string FriendlyName(ExoBiologistRank? cr, string unknown = "?")
+        {
+            return cr != null ? cr.ToString().Replace("_", " ") : unknown;
+        }
 
         public enum SoldierRank
         {
@@ -231,5 +263,11 @@ namespace EliteDangerousCore
         {
             return cr.ToString().Replace("_", " ");
         }
+
+        public static string FriendlyName(SoldierRank? cr, string unknown = "?")
+        {
+            return cr != null ? cr.ToString().Replace("_", " ") : unknown;
+        }
+
     }
 }
