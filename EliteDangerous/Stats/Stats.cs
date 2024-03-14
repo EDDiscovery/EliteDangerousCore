@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2021 EDDiscovery development team
+ * Copyright 2021-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
  
 using BaseUtils;
@@ -21,10 +19,10 @@ namespace EliteDangerousCore
 {
     public class Stats
     {
-        public class FactionInfo
+        public class FactionStatistics
         {
-            public FactionInfo(string f) { Faction = f; }
-            public FactionInfo(FactionInfo other)
+            public FactionStatistics(string f) { Faction = f; }
+            public FactionStatistics(FactionStatistics other)
             {
                 Faction = other.Faction;
                 BoughtCommodity = other.BoughtCommodity; SoldCommodity = other.SoldCommodity; ProfitCommodity = other.ProfitCommodity;
@@ -32,6 +30,9 @@ namespace EliteDangerousCore
                 BountyKill = other.BountyKill;
                 BountyRewards = other.BountyRewards;
                 BountyRewardsValue = other.BountyRewardsValue;
+                RedeemVoucherValue = other.RedeemVoucherValue;
+                FineValue = other.FineValue;
+                PayBountyValue = other.PayBountyValue;
                 CapShipAwardAsAwaringFaction = other.CapShipAwardAsAwaringFaction;
                 CapShipAwardAsAwaringFactionValue = other.CapShipAwardAsAwaringFactionValue;
                 CapShipAwardAsVictimFaction = other.CapShipAwardAsVictimFaction;
@@ -42,6 +43,9 @@ namespace EliteDangerousCore
                 KillBondAwardAsAwaringFactionValue = other.KillBondAwardAsAwaringFactionValue;
                 KillBondAwardAsVictimFaction = other.KillBondAwardAsVictimFaction;
                 CartographicDataSold = other.CartographicDataSold;
+                DataLinkAwardAsPayeeFaction = other.DataLinkAwardAsPayeeFaction;
+                DataLinkAwardAsPayeeFactionValue = other.DataLinkAwardAsPayeeFactionValue;
+                DataLinkAwardAsVictimFaction = other.DataLinkAwardAsVictimFaction;
             }
 
             public string Faction { get; set; }
@@ -53,6 +57,9 @@ namespace EliteDangerousCore
             public int BountyKill { get; set; }
             public int BountyRewards { get; set; }
             public long BountyRewardsValue { get; set; }
+            public long RedeemVoucherValue { get; set; }
+            public long FineValue { get; set; }
+            public long PayBountyValue { get; set; }
             public int CapShipAwardAsAwaringFaction { get; set; }
             public long CapShipAwardAsAwaringFactionValue { get; set; }
             public int CapShipAwardAsVictimFaction { get; set; }
@@ -63,13 +70,16 @@ namespace EliteDangerousCore
             public long KillBondAwardAsAwaringFactionValue { get; set; }
             public int KillBondAwardAsVictimFaction { get; set; }
             public long CartographicDataSold { get; set; }
+            public long DataLinkAwardAsPayeeFaction { get; set; }
+            public long DataLinkAwardAsPayeeFactionValue { get; set; }
+            public long DataLinkAwardAsVictimFaction { get; set; }
         }
 
-        private GenerationalDictionary<string, FactionInfo> history;
+        private GenerationalDictionary<string, FactionStatistics> history;
 
         public Stats()
         {
-            history = new GenerationalDictionary<string, FactionInfo>();
+            history = new GenerationalDictionary<string, FactionStatistics>();
         }
 
         public Stats(Stats other)
@@ -77,22 +87,22 @@ namespace EliteDangerousCore
             history = other.history;
         }
 
-        public Dictionary<string, FactionInfo> GetAtGeneration(uint g)
+        public Dictionary<string, FactionStatistics> GetAtGeneration(uint g)
         {
             return history.Get(g);
         }
 
-        public Dictionary<string, FactionInfo> GetLastEntries()
+        public Dictionary<string, FactionStatistics> GetLastEntries()
         {
             return history.GetLast();
         }
 
-        private FactionInfo Clone(string faction, bool incrgen = true)               // clone both FactionInformation structure and a faction
+        private FactionStatistics Clone(string faction, bool incrgen = true)               // clone both FactionInformation structure and a faction
         {
             if (faction.HasChars() && faction != "$faction_none;")
             {
-                FactionInfo newfi = history.GetLast(faction);        // get the last one, or null
-                newfi = newfi != null ? new FactionInfo(newfi) : new FactionInfo(faction);  // make a new copy, or an empty copy
+                FactionStatistics newfi = history.GetLast(faction);        // get the last one, or null
+                newfi = newfi != null ? new FactionStatistics(newfi) : new FactionStatistics(faction);  // make a new copy, or an empty copy
                 if ( incrgen )
                     history.NextGeneration();
                 history[faction] = newfi;                    // add this new one to the history list
@@ -214,12 +224,56 @@ namespace EliteDangerousCore
             }
         }
 
+        public void DataLinkVoucher(string victimfaction, string payeefaction, long reward)
+        {
+            var vnewfi = Clone(victimfaction);      // if victimfaction = empty string, its a null, and we don't store. Some events have empty victim factions
+            if (vnewfi != null)
+                vnewfi.DataLinkAwardAsVictimFaction++;
+            else
+            { }
+
+            var anewfi = Clone(payeefaction, vnewfi == null);       // don't incr generation if we made a victim faction
+
+            if (anewfi != null)
+            {
+                anewfi.DataLinkAwardAsPayeeFaction++;
+                anewfi.DataLinkAwardAsPayeeFactionValue += reward;
+            }
+        }
+
         public void CartographicSold(string faction, long value)
         {
             var vnewfi = Clone(faction);
             if (vnewfi != null)
             {
                 vnewfi.CartographicDataSold += value;
+            }
+        }
+        public void PayBounties(string faction, long value)
+        {
+            var vnewfi = Clone(faction);
+            if (vnewfi != null)
+            {
+                vnewfi.PayBountyValue += value;
+            }
+
+        }
+
+        public void PayFines(string faction, long value)
+        {
+            var vnewfi = Clone(faction);
+            if (vnewfi != null)
+            {
+                vnewfi.FineValue += value;
+            }
+        }
+
+        public void RedeemVoucher(string faction, long value)
+        {
+            var vnewfi = Clone(faction);
+            if (vnewfi != null)
+            {
+                vnewfi.RedeemVoucherValue += value;
             }
         }
 
@@ -232,5 +286,6 @@ namespace EliteDangerousCore
 
             return history.Generation;
         }
+
     }
 }

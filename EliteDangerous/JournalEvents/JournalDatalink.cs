@@ -38,7 +38,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.DatalinkVoucher)]
-    public class JournalDatalinkVoucher : JournalEntry
+    public class JournalDatalinkVoucher : JournalEntry, IStatsJournalEntry
     {
         public JournalDatalinkVoucher(JObject evt) : base(evt, JournalTypeEnum.DatalinkVoucher)
         {
@@ -53,9 +53,13 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(out string info, out string detailed)
         {
-
             info = BaseUtils.FieldBuilder.Build("Reward: ; cr;N0".T(EDCTx.JournalEntry_Reward), Reward, "< from faction ".T(EDCTx.JournalEntry_fromfaction), PayeeFaction, "Against ".T(EDCTx.JournalEntry_Against), VictimFaction);
             detailed = "";
+        }
+
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            stats.DataLinkVoucher(VictimFaction, PayeeFaction, Reward);
         }
     }
 

@@ -40,7 +40,7 @@ namespace EliteDangerousCore
         public StarScan StarScan { get; private set; } = new StarScan();      // the results of scanning
         public Dictionary<string, HistoryEntry> Visited { get; private set; } = new Dictionary<string, HistoryEntry>(StringComparer.InvariantCultureIgnoreCase);  // not in any particular order.
         public Dictionary<string, EDStar> StarClass { get; private set; } = new Dictionary<string, EDStar>();     // not in any particular order.
-        public Dictionary<string, Stats.FactionInfo> GetStatsAtGeneration(uint g) { return statisticsaccumulator.GetAtGeneration(g); }
+        public Dictionary<string, Stats.FactionStatistics> GetStatsAtGeneration(uint g) { return statisticsaccumulator.GetAtGeneration(g); }
 
         // History variables
         public int CommanderId { get; private set; } = -999;                 // set by history load at end, indicating commander loaded

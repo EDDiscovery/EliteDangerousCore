@@ -332,7 +332,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.PayBounties)]
-    public class JournalPayBounties : JournalEntry, ILedgerJournalEntry
+    public class JournalPayBounties : JournalEntry, ILedgerJournalEntry, IStatsJournalEntry
     {
         public JournalPayBounties(JObject evt) : base(evt, JournalTypeEnum.PayBounties)
         {
@@ -363,11 +363,16 @@ namespace EliteDangerousCore.JournalEvents
                 info += string.Format(", Broker took {0:N0}%".T(EDCTx.JournalEntry_Brokertook), BrokerPercentage);
             detailed = "";
         }
+
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            stats.PayBounties(Faction, Amount);
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.PayFines)]
-    public class JournalPayFines : JournalEntry, ILedgerJournalEntry
-    {
+    public class JournalPayFines : JournalEntry, ILedgerJournalEntry, IStatsJournalEntry
+    { 
         public JournalPayFines(JObject evt) : base(evt, JournalTypeEnum.PayFines)
         {
             Amount = evt["Amount"].Long();
@@ -396,6 +401,11 @@ namespace EliteDangerousCore.JournalEvents
             if (BrokerPercentage > 0)
                 info += string.Format(", Broker took {0:N0}%".T(EDCTx.JournalEntry_Brokertook), BrokerPercentage);
             detailed = "";
+        }
+
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            stats.PayFines(Faction, Amount);
         }
     }
 
@@ -426,8 +436,8 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.RedeemVoucher)]
-    public class JournalRedeemVoucher : JournalEntry, ILedgerJournalEntry
-    {
+    public class JournalRedeemVoucher : JournalEntry, ILedgerJournalEntry, IStatsJournalEntry
+    { 
         public JournalRedeemVoucher(JObject evt) : base(evt, JournalTypeEnum.RedeemVoucher)
         {
             FDType = evt["Type"].Str();
@@ -454,6 +464,11 @@ namespace EliteDangerousCore.JournalEvents
             if (BrokerPercentage > 0)
                 info += string.Format(", Broker took {0:N0}%".T(EDCTx.JournalEntry_Brokertook), BrokerPercentage);
             detailed = "";
+        }
+
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            stats.RedeemVoucher(Faction, Amount);
         }
     }
 
