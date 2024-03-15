@@ -438,7 +438,8 @@ namespace EliteDangerousCore.JournalEvents
 
     [JournalEntryType(JournalTypeEnum.RedeemVoucher)]
     public class JournalRedeemVoucher : JournalEntry, ILedgerJournalEntry, IStatsJournalEntry
-    { 
+    {
+        [System.Diagnostics.DebuggerDisplay("{Faction} {Amount}")]
         public class FactionInfo
         {
             public string Faction { get; set; }
@@ -458,7 +459,10 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     Faction = "";
                     foreach (var x in Factions)
-                        Faction = Faction.AppendPrePad(x.Faction, ", ");
+                    {
+                        if ( x.Faction.HasChars())
+                            Faction = Faction.AppendPrePad(x.Faction, ", ");
+                    }
                 }
             }
             else
@@ -487,15 +491,31 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Type: ".T(EDCTx.JournalEntry_Type), Type, "Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), Amount, "Faction: ".T(EDCTx.JournalEntry_Faction), Faction);
+            info = BaseUtils.FieldBuilder.Build("Type: ".T(EDCTx.JournalEntry_Type), Type, "Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), Amount, "Factions: ".T(EDCTx.JournalEntry_Faction), Faction);
             if (BrokerPercentage > 0)
                 info += string.Format(", Broker took {0:N0}%".T(EDCTx.JournalEntry_Brokertook), BrokerPercentage);
             detailed = "";
+            if ( Factions?.Length > 1)
+            {
+                foreach (var f in Factions)
+                    detailed = detailed.AppendPrePad($"{f.Faction} = {f.Amount} cr", Environment.NewLine);
+            }
+
         }
 
         public void UpdateStats(Stats stats, string stationfaction)
         {
-            stats.RedeemVoucher(Faction, Amount);
+            if (Faction != null)
+            {
+                if (Factions?.Length > 1)
+                {
+                    foreach (var f in Factions)
+                        stats.RedeemVoucher(f.Faction, f.Amount);
+
+                }
+                else
+                    stats.RedeemVoucher(Faction, Amount);
+            }
         }
     }
 
