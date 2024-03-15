@@ -15,6 +15,7 @@
  */
 
 using QuickJSON;
+using System;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -438,19 +439,45 @@ namespace EliteDangerousCore.JournalEvents
     [JournalEntryType(JournalTypeEnum.RedeemVoucher)]
     public class JournalRedeemVoucher : JournalEntry, ILedgerJournalEntry, IStatsJournalEntry
     { 
+        public class FactionInfo
+        {
+            public string Faction { get; set; }
+            public long Amount { get; set; }
+        };
+
         public JournalRedeemVoucher(JObject evt) : base(evt, JournalTypeEnum.RedeemVoucher)
         {
             FDType = evt["Type"].Str();
             Type = JournalFieldNaming.RedeemVoucherType(FDType);
             Amount = evt["Amount"].Long();
-            Faction = evt["Faction"].Str();
+
+            if (evt.Contains("Factions"))
+            {
+                Factions = evt["Factions"]?.ToObjectQ<FactionInfo[]>();
+                if (Factions != null)
+                {
+                    Faction = "";
+                    foreach (var x in Factions)
+                        Faction = Faction.AppendPrePad(x.Faction, ", ");
+                }
+            }
+            else
+            {
+                Faction = evt["Faction"].Str();
+                if (Faction.Length == 0)
+                    Faction = null;
+                else
+                    Factions = new FactionInfo[] { new FactionInfo() { Faction = this.Faction, Amount = this.Amount } };
+            }
+
             BrokerPercentage = evt["BrokerPercentage"].Double();
         }
 
         public string Type { get; set; }
         public string FDType { get; set; }
         public long Amount { get; set; }
-        public string Faction { get; set; }
+        public string Faction { get; set; }     // if multiple, comma separ list.  If empty, its null
+        public FactionInfo[] Factions { get; set; }     // null if no factions, else at least one faction here
         public double BrokerPercentage { get; set; }
 
         public void Ledger(Ledger mcl)

@@ -203,7 +203,6 @@ namespace EliteDangerousCore.JournalEvents
             TotalItemsToDeliver = evt["TotalItemsToDeliver"].Int();
             ItemsToGo = TotalItemsToDeliver - ItemsDelivered;
             ProgressPercent = evt["Progress"].Double() * 100;
-            MarketID = evt["MarketID"].LongNull();
 
             if (ProgressPercent < 0.01)
                 ProgressPercent = ((double)System.Math.Max(ItemsCollected, ItemsDelivered) / (double)TotalItemsToDeliver) * 100;
@@ -227,8 +226,6 @@ namespace EliteDangerousCore.JournalEvents
         public int ItemsToGo { get; set; }
         public int TotalItemsToDeliver { get; set; }
         public double ProgressPercent { get; set; }
-
-        public long? MarketID { get; set; }
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
