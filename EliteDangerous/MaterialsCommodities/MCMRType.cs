@@ -119,6 +119,8 @@ namespace EliteDangerousCore
 
             // jan 9 2024
             UnknownMineral, UnknownRefinedMineral,
+            // march 15 2024
+            ThargoidTitanDriveComponent, ThargoidCystSpecimen, ThargoidBoneFragments, ThargoidOrganSample,
 
             //---------------------------------------------------------- Raw
             Carbon = 1000, Iron, Lead, Nickel, Phosphorus, Rhenium, Sulphur, Arsenic,
@@ -132,6 +134,9 @@ namespace EliteDangerousCore
             AncientHistoricalData, AncientLanguageData, AncientTechnologicalData, DecodedEmissionData, EncodedScandata, EncryptionArchives, Guardian_ModuleBlueprint, Guardian_WeaponBlueprint,
             HyperspaceTrajectories, SecurityFirmware, ShieldPatternAnalysis, TG_ResidueData, TG_ShipSystemsData, UnknownWakeData, AdaptiveEncryptors, ClassifiedScandata,
             CompactEmissionsData, DataminedWake, EmbeddedFirmware, Guardian_VesselBlueprint, ShieldFrequencyData,
+            // March 15 2024
+            TG_WreckageComponents,
+
             //---------------------------------------------------------- Manufactured
             BasicConductors = 3000, ChemicalStorageUnits, CompactComposites, CrystalShards, GridResistors, Guardian_PowerCell, Guardian_Sentinel_WreckageComponents, HeatConductionWiring,
             MechanicalScrap, SalvagedAlloys, TemperedAlloys, TG_Abrasion03, WornShieldEmitters, ChemicalProcessors, ConductiveComponents, FilamentComposites,
@@ -414,7 +419,7 @@ namespace EliteDangerousCore
 
         public static int fakeid = 20000;
 
-        public static MaterialCommodityMicroResourceType EnsurePresent(CatType cat, string fdname, string locname = null) 
+        public static MaterialCommodityMicroResourceType EnsurePresent(CatType cat, string fdname, string locname = null)
         {
             if (!mcmrlist.ContainsKey(fdname.ToLowerInvariant()))
             {
@@ -433,15 +438,15 @@ namespace EliteDangerousCore
 
         #region Initial setup
 
-        private static void Add(CatType catname, ItemType typeofit, MCMR id, string englishtext, bool rare = false) 
+        private static void Add(CatType catname, ItemType typeofit, MCMR id, string englishtext, bool rare = false)
         {
             Add(catname, typeofit, MaterialGroupType.NA, id, id.ToString(), englishtext, "", rare);
         }
-        private static void Add(CatType catname, MCMR id, string englishtext, string shortname) 
+        private static void Add(CatType catname, MCMR id, string englishtext, string shortname)
         {
             Add(catname, ItemType.Unknown, MaterialGroupType.NA, id, id.ToString(), englishtext, shortname);
         }
-        private static void Add(CatType catname, ItemType typeofit, MCMR id, string englishtext, string shortname, bool rare = false) 
+        private static void Add(CatType catname, ItemType typeofit, MCMR id, string englishtext, string shortname, bool rare = false)
         {
             Add(catname, typeofit, MaterialGroupType.NA, id, id.ToString(), englishtext, shortname, rare);
         }
@@ -470,7 +475,7 @@ namespace EliteDangerousCore
                 colour = Color.SandyBrown;
 
             MaterialCommodityMicroResourceType m = new MaterialCommodityMicroResourceType(catname, englishtext, id, fdname, typeofit, mtg, shortname, colour, rare);
-            mcmrlist.Add(m.FDName,m);
+            mcmrlist.Add(m.FDName, m);
         }
         public MaterialCommodityMicroResourceType(CatType cs, string englishtext, MCMR fdtype, string fdname, ItemType t, MaterialGroupType mtg, string shortn, Color cl, bool rare)
         {
@@ -756,6 +761,10 @@ namespace EliteDangerousCore
             Add(CatType.Commodity, ItemType.Salvage, MCMR.USSCargoTechnicalBlueprints, "Technical Blueprints");
             Add(CatType.Commodity, ItemType.Salvage, MCMR.USSCargoTradeData, "Trade Data");
             Add(CatType.Commodity, ItemType.Salvage, MCMR.WreckageComponents, "Wreckage Components");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidTitanDriveComponent, "Titan Drive Component");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidCystSpecimen, "Cyst Specimen");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidBoneFragments, "Bone Fragments");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidOrganSample, "Organ Sample");
             Add(CatType.Commodity, ItemType.Slaves, MCMR.ImperialSlaves, "Imperial Slaves");
             Add(CatType.Commodity, ItemType.Slaves, MCMR.Slaves, "Slaves");
             Add(CatType.Commodity, ItemType.Technology, MCMR.AdvancedCatalysers, "Advanced Catalysers");
@@ -1087,6 +1096,7 @@ namespace EliteDangerousCore
             Add(CatType.Encoded, ItemType.Standard, MCMR.TG_CompositionData, "Thargoid Material Composition Data", "UMCD");
             Add(CatType.Encoded, ItemType.Standard, MCMR.TG_ShipFlightData, "Ship Flight Data", "SFD");
             Add(CatType.Encoded, ItemType.Standard, MCMR.UnknownShipSignature, "Thargoid Ship Signature", "USSig");
+            Add(CatType.Encoded, ItemType.Standard, MCMR.TG_WreckageComponents, "Wreckage Components", "TGWC");
 
             #endregion
 
@@ -1327,7 +1337,7 @@ namespace EliteDangerousCore
             {
                 x.Name = x.Name.TxID(typeof(MaterialCommodityMicroResourceType), x.FDName);
             }
-          
+
         }
 
 
@@ -1397,7 +1407,7 @@ namespace EliteDangerousCore
                 return old;
         }
 
-#endregion
+        #endregion
     }
 }
 
