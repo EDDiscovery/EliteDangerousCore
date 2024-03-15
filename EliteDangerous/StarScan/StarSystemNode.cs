@@ -112,6 +112,16 @@ namespace EliteDangerousCore
                 return null;
             }
 
+            public ScanNode FindCustomNameOrFullname(string bodyname)
+            {
+                foreach (var b in Bodies)
+                {
+                    if (b.CustomNameOrOwnname.EqualsIIC(bodyname) || b.FullName.EqualsIIC(bodyname))
+                        return b;
+                }
+                return null;
+            }
+
             public ScanNode Find(JournalScan s)
             {
                 foreach (var b in Bodies)
