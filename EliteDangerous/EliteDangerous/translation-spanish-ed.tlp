@@ -886,6 +886,13 @@ SECTION MaterialCommodityMicroResourceType
 .coralsap: "Coral Sap" @
 .onionheadc: "Onionhead Gamma Strain" => "Cepa Gamma de Cebollazo"
 .classifiedexperimentalequipment: "Classified Experimental Equipment" @
+.unknownmineral: "Impure Spire Mineral" @
+.unknownrefinedmineral: "Semi-Refined Spire Mineral" @
+.thargoidtitandrivecomponent: "Titan Drive Component" @
+.thargoidcystspecimen: "Cyst Specimen" @
+.thargoidbonefragments: "Bone Fragments" @
+.thargoidorgansample: "Organ Sample" @
+.tg_abrasion01: "Heat Exposure Specimen" @
 
 SECTION EngineeringData
 
