@@ -36,6 +36,7 @@ namespace EliteDangerousCore.JournalEvents
             Region_Localised = evt["Region_Localised"].Str();
             System = evt["System"].Str();
             SystemAddress = evt["SystemAddress"].LongNull();
+            BodyID = evt["BodyID"].IntNull();
             IsNewEntry = evt["IsNewEntry"].BoolNull();
             NewTraitsDiscovered = evt["NewTraitsDiscovered"].BoolNull();
             NearestDestination = evt["NearestDestination"].StrNull();
@@ -75,6 +76,8 @@ namespace EliteDangerousCore.JournalEvents
         public string System { get; set; }
         [PropertyNameAttribute("FD System address")]
         public long? SystemAddress { get; set; }
+        [PropertyNameAttribute("FD Body ID - not on all entries")]
+        public int? BodyID { get; set; }
         [PropertyNameAttribute("Is it a new entry")]
         public bool? IsNewEntry { get; set; }
         [PropertyNameAttribute("Is traits discovered")]
@@ -103,7 +106,10 @@ namespace EliteDangerousCore.JournalEvents
                    SubCategory.Equals(other.SubCategory, StringComparison.CurrentCultureIgnoreCase) &&
                    Category.Equals(other.Category, StringComparison.CurrentCultureIgnoreCase) &&
                    Region.Equals(other.Region, StringComparison.CurrentCultureIgnoreCase) &&
-                   SystemAddress == other.SystemAddress;
+                   SystemAddress == other.SystemAddress &&
+                   BodyID == other.BodyID && 
+                   Latitude == other.Latitude && 
+                   Longitude == other.Longitude;
         }
 
         public void AddStarScan(StarScan s, ISystem system)

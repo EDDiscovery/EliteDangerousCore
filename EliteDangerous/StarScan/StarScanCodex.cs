@@ -28,8 +28,10 @@ namespace EliteDangerousCore
                 {
                     lock (systemnode)
                     {
-                        if (!systemnode.CodexEntryList.Contains(jsd))
+                        if (systemnode.CodexEntryList.Find(x=>x.Equals(jsd)) == null)       // if the Equals function can't find it, add.
                             systemnode.CodexEntryList.Add(jsd);
+                        else
+                        { }
                     }
                 }
                 else if (saveprocessinglater)
