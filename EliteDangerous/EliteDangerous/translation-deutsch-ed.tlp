@@ -886,13 +886,13 @@ SECTION MaterialCommodityMicroResourceType
 .coralsap: "Coral Sap" => "Korallensaft"
 .onionheadc: "Onionhead Gamma Strain" => "Onionhead (Gamma)"
 .classifiedexperimentalequipment: "Classified Experimental Equipment" => "Geheime Experimentalausrüstung"
-.unknownmineral: "Impure Spire Mineral" @
-.unknownrefinedmineral: "Semi-Refined Spire Mineral" @
-.thargoidtitandrivecomponent: "Titan Drive Component" @
-.thargoidcystspecimen: "Cyst Specimen" @
-.thargoidbonefragments: "Bone Fragments" @
-.thargoidorgansample: "Organ Sample" @
-.tg_abrasion01: "Heat Exposure Specimen" @
+.unknownmineral: "Impure Spire Mineral" => "Unreines Turmmineral"
+.unknownrefinedmineral: "Semi-Refined Spire Mineral" => "Halbraffiniertes Turmmineral"
+.thargoidtitandrivecomponent: "Titan Drive Component" => "Titan-Antriebskomponente"
+.thargoidcystspecimen: "Cyst Specimen" => "Zystenprobe"
+.thargoidbonefragments: "Bone Fragments" => "Knochenfragmente"
+.thargoidorgansample: "Organ Sample" => "Organprobe"
+.tg_abrasion01: "Heat Exposure Specimen" => "Hitzeexponierte Probe"
 
 SECTION EngineeringData
 

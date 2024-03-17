@@ -1023,7 +1023,7 @@ SECTION JournalEntry
 .AddedFriend: "Added Friend: " => "Amigo Agregado: "
 .Submitted: ";Submitted" => ";Enviado"
 .NPC: "< (NPC);(Player)" => "< (NPC);(Player)"
-.Power: "Power: " => "Energía: "
+.Power: "Power: " => "Potencia: "
 .Failedtointerdict: "Failed to interdict;Interdicted" => "No se pudo interceptar;interceptado"
 .Boost: "Boost: ;;0.0" => "Impulsar: ;;0.0"
 .buyprice: "< buy price ; cr;N0" => "< precio de compra ; cr;N0"

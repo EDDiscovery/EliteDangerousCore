@@ -869,7 +869,7 @@ SECTION MaterialCommodityMicroResourceType
 .tg_shutdowndata: "Massive Energy Surge Analytics" => "Análisis de sobrecarga de energía masiva"
 .tg_interdictiondata: "Thargoid Interdiction Telemetry" => "Telemetría de interdicción Thargoide"
 .ancientrelictg: "Unclassified Relic" => "Reliquia no Clasificada"
-.p_particulatesample: "Anomaly Particles" @
+.p_particulatesample: "Anomaly Particles" => "Partículas de Anomalía"
 .thargoidtissuesampletype10c: "Titan Maw Partial Tissue Sample" => "Muestra de tejido parcial de fauces de Titan"
 .thargoidtissuesampletype5: "Thargoid Orthrus Tissue Sample" => "Muestra de tejido Orthrus Thargoide"
 .thargoidgeneratortissuesample: "Caustic Tissue Sample" => "Muestra de tejido caústico"
@@ -888,10 +888,10 @@ SECTION MaterialCommodityMicroResourceType
 .classifiedexperimentalequipment: "Classified Experimental Equipment" @
 .unknownmineral: "Impure Spire Mineral" @
 .unknownrefinedmineral: "Semi-Refined Spire Mineral" @
-.thargoidtitandrivecomponent: "Titan Drive Component" @
-.thargoidcystspecimen: "Cyst Specimen" @
-.thargoidbonefragments: "Bone Fragments" @
-.thargoidorgansample: "Organ Sample" @
+.thargoidtitandrivecomponent: "Titan Drive Component" => "Componente de Motor de Titan"
+.thargoidcystspecimen: "Cyst Specimen" => "Espécimen de Quiste"
+.thargoidbonefragments: "Bone Fragments" => "Fragmentos de Hueso"
+.thargoidorgansample: "Organ Sample" => "Muestra de Órgano"
 .tg_abrasion01: "Heat Exposure Specimen" @
 
 SECTION EngineeringData
