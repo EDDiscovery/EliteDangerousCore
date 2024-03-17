@@ -1134,6 +1134,9 @@ namespace EliteDangerousCore
             { "hpt_atdumbfiremissile_turret_medium_v2", new ShipModule(129022083,4,1.3,"Damage: 12.2/S","Enhanced AX Missile Rack 2E",ShipModule.ModuleTypes.EnhancedAXMissileRack) },
             { "hpt_atdumbfiremissile_turret_large_v2", new ShipModule(129022082,8,1.85,"Damage: 12.2/S","Enhanced AX Missile Rack 3D",ShipModule.ModuleTypes.EnhancedAXMissileRack) },
 
+            { "hpt_atventdisruptorpylon_fixed_medium", new ShipModule(129030049,0,0,"","Guardian Nanite Torpedo Pylon",ShipModule.ModuleTypes.TorpedoPylon) },
+            { "hpt_atventdisruptorpylon_fixed_large", new ShipModule(129030050,0,0,"","Guardian Nanite Torpedo Pylon",ShipModule.ModuleTypes.TorpedoPylon) },
+
             { "hpt_basicmissilerack_fixed_small", new ShipModule(128049492,2,0.6,"Ammo:6/6, Damage:40, Speed:625m/s, Reload:12s, ThermL:3.6","Seeker Missile Rack Fixed Small",ShipModule.ModuleTypes.SeekerMissileRack) },     // EDDI
             { "hpt_basicmissilerack_fixed_medium", new ShipModule(128049493,4,1.2,"Ammo:18/6, Damage:40, Speed:625m/s, Reload:12s, ThermL:3.6","Seeker Missile Rack Fixed Medium",ShipModule.ModuleTypes.SeekerMissileRack) },
             { "hpt_basicmissilerack_fixed_large", new ShipModule(128049494,8,1.62,"Ammo:36/6, Damage:40, Speed:625m/s, Reload:12s, ThermL:3.6","Seeker Missile Rack Fixed Large",ShipModule.ModuleTypes.SeekerMissileRack) },
@@ -1155,7 +1158,6 @@ namespace EliteDangerousCore
             { "hpt_human_extraction_fixed_medium", new ShipModule(129028577,1,1.2,null,"Human Extraction Missile",ShipModule.ModuleTypes.MissileRack) },        // EDDI TBD CAT
 
             { "hpt_causticmissile_fixed_medium", new ShipModule(128833995,4,1.2,"Ammo:64/8, Damage:5, Speed:750m/s, Reload:5s, ThermL:1.5","Caustic Missile Fixed Medium",ShipModule.ModuleTypes.EnzymeMissileRack) },
-
 
             // Module Reinforcements
 
