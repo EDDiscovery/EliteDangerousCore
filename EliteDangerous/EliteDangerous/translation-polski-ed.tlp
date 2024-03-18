@@ -932,7 +932,7 @@ CommanderForm: "CommanderForm" => "Ustawienia Dowódcy"
 .labelJL: "Journal Location:" => "Lokalizacja Dzienników: "
 .panel_defaultmapcolor.ToolTip: "New travel entries get this colour on the map" @
 .textBoxBorderInaraName.ToolTip: "Give the user name for this commander on Inara" => "Wprowadź nazwę użytkownika z Inara dla tego Dowódcy"
-.checkBoxCustomInara.ToolTip: "Sync with Inara" => "Synchronizuj z Inara"
+.checkBoxCustomInara.ToolTip: "Sync with Inara" = CommanderForm.checkBoxCustomInara
 .textBoxBorderInaraAPIKey.ToolTip: "Enter the API key from the Inara Website\r\nGet an Inara API key from https://inara.cz" => "Wprowadź klucz API ze strony Inara\nKlucz API można otrzymać na https://inara.cz"
 .checkBoxCustomEDDNTo.ToolTip: "Click to send journal information to EDDN. EDDN feeds tools such as EDDB, EDSM, Inara with data from commanders. All data is made anonymised" => "Zaznacz, aby przesyłać informacje z dzienników do EDDN. EDDN przekazuje dane od dowódców narzędziom takim jak EDDB, EDSM, Inara. Dane są przekazywane anonimowo"
 .checkBoxCustomEDSMFrom.ToolTip: "Receive any FSD jumps from EDSM that are on their database but not in EDDiscovery" => "Pobierz wszystkie wpisy skoków FSD, które są w bazie danych EDSM, ale nie ma ich w bazie danych EDDiscovery"
@@ -973,11 +973,11 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Konfiguracja Zrzutów Ekran
 .labelLeft2: "Left" @
 .labelTop2: "Top" @
 .labelFolder: "ED/Steam Screenshot folder" => "Folder Zrzutów Ekranu ED/Steam"
-.buttonChangeScreenshotsFolder: "Browse" => "Przeglądaj"
+.buttonChangeScreenshotsFolder: "Browse" = CommanderForm.buttonExtBrowse
 .labelSubfolder: "In Sub folder" => "W podfolderze"
 .labelFileNameFormat: "In Filename format" => "Format nazwy pliku"
 .labelStoreFolder: "Store Converted pictures" => "Folder Przetworzonych Obrazów"
-.buttonEDChangeOutputFolder: "Browse" => "Przeglądaj"
+.buttonEDChangeOutputFolder: "Browse" = CommanderForm.buttonExtBrowse
 .labelScanFor: "Scan for" => "Szukaj plików w formacie"
 .labelSaveAs: "Save as" => "Zapisz jako"
 .extCheckBoxKeepMasterConvertedImage: "Keep master converted image" @

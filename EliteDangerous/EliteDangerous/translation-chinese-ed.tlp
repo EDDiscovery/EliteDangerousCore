@@ -973,11 +973,11 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "截图配置"
 .labelLeft2: "Left" @
 .labelTop2: "Top" @
 .labelFolder: "ED/Steam Screenshot folder" => "ED/Steam截图文件夹"
-.buttonChangeScreenshotsFolder: "Browse" => "浏览"
+.buttonChangeScreenshotsFolder: "Browse" = CommanderForm.buttonExtBrowse
 .labelSubfolder: "In Sub folder" => "创建子文件夹"
 .labelFileNameFormat: "In Filename format" => "文件名格式"
 .labelStoreFolder: "Store Converted pictures" => "转换后储存位置"
-.buttonEDChangeOutputFolder: "Browse" => "浏览"
+.buttonEDChangeOutputFolder: "Browse" = CommanderForm.buttonExtBrowse
 .labelScanFor: "Scan for" => "原始格式"
 .labelSaveAs: "Save as" => "转换为"
 .extCheckBoxKeepMasterConvertedImage: "Keep master converted image" @

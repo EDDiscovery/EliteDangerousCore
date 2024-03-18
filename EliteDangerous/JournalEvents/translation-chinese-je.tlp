@@ -1,7 +1,7 @@
 ﻿
 SECTION JournalTypeEnum
 
-.Unknown: "Unknown" => "未知"
+.Unknown: "Unknown" = Unknown
 .AfmuRepairs: "Afmu Repairs" => "模组维护工具"
 .ApproachBody: "Approach Body" => "接近星体"
 .ApproachSettlement: "Approach Settlement" => "接近地表移民地"
@@ -348,9 +348,9 @@ SECTION JournalLeaveBody
 
 SECTION JournalLocOrJump
 
-.Faction: "Faction: " => "派系："
+.Faction: "Faction: " = FSSSignal.Faction
 .Wanted: "<;(Wanted) " => "<;(被通缉)"
-.State: "State: " => "状态："
+.State: "State: " = FSSSignal.State
 .Allegiance: "Allegiance: " => "势力："
 .Economy: "Economy: " => "经济类型："
 .Population: "Population: " => "人口："
@@ -371,7 +371,7 @@ SECTION JournalLocation
 
 .AtStat: "At {0}" => "在 {0}"
 .LND: "Landed on {0}" => "登陆于 {0}"
-.AtStar: "At {0}" => "在 {0}"
+.AtStar: "At {0}" = JournalLocation.AtStat
 
 SECTION JournalLocOrJump
 
@@ -441,7 +441,7 @@ SECTION JournalPromotion
 .Trade: "Trade" => "贸易"
 .Exploration: "Exploration" => "探索"
 .Empire: "Empire" => "帝国"
-.Federation: "Federation" => "帝国"
+.Federation: "Federation" = JournalPromotion.Empire
 .CQC: "CQC" => "CQC缠斗"
 .Soldier: "Soldier" @
 .ExoBiologist: "ExoBiologist" @
@@ -717,8 +717,8 @@ SECTION TradingClass
 .MarketsTraded: "Markets Traded: ;;N0" => "交易过的市场：;;N0"
 .Profits: "Profits: ; cr;N0" => "贸易收益：; cr;N0"
 .No: "No. of Resources: ;;N0" => "交易货物总量：;t;N0"
-.AverageProfit: "Average Profit: ; cr;N0" => "平均收益：; cr;N0"
-.HighestSingleTransaction: "Highest Single Transaction: ; cr;N0" => "最高单笔交易额：; cr;N0"
+.AverageProfit: "Average Profit: ; cr;N0" = SmugglingClass.AverageProfit
+.HighestSingleTransaction: "Highest Single Transaction: ; cr;N0" = SmugglingClass.HighestSingleTransaction
 .DataSold: "Data Sold: ;;N0" @
 .GoodsSold: "Goods Sold: ;;N0" @
 .AssetsSold: "Assets Sold: ;;N0" @
@@ -916,7 +916,7 @@ SECTION JournalEntry
 .LegBounty: "{0} total {1:N0}" @
 .Target: "Target: " => "目标："
 .Victimfaction: "Victim faction: " => "受害者派系："
-.Faction: "Faction: " => "派系："
+.Faction: "Faction: " = FSSSignal.Faction
 .from: "< from " => "< 任务发配人："
 .dueto: "<, due to " => "<，由于"
 .0: "{0} on {1}" @
@@ -974,9 +974,9 @@ SECTION JournalEntry
 .Wanted: ";(Wanted)" => ";(被通缉)"
 .ActiveFine: ";Active Fine" => ";有罚款"
 .instate: "< in state " => "< 状态："
-.Allegiance: "Allegiance: " => "势力："
-.Economy: "Economy: " => "经济类型："
-.Government: "Government: " => "政府类型："
+.Allegiance: "Allegiance: " = JournalLocOrJump.Allegiance
+.Economy: "Economy: " = JournalLocOrJump.Economy
+.Government: "Government: " = JournalLocOrJump.Government
 .Stationservices: "Station services: " => "可用服务："
 .Economies: "Economies: " => "经济："
 .onpad: "< on pad " => "< 降落坪："
@@ -1091,8 +1091,8 @@ SECTION JournalEntry
 .New: "New: " @
 .Near: "Near: " @
 .OnFootAt: "On Foot at {0}" @
-.Wealth: "Wealth: ; cr;N0" => "资产：; cr;N0"
-.NotorietyIndex: "Notoriety Index: ;;N0" => "恶名度：;;N0"
+.Wealth: "Wealth: ; cr;N0" = BankAccountClass.Wealth
+.NotorietyIndex: "Notoriety Index: ;;N0" = CrimeClass.NotorietyIndex
 .Fuel: "Fuel: ; tons;0.0" => "添加的燃料量：; t;0.0"
 .Taxi: "Taxi" @
 .Mods: "Mods: " @

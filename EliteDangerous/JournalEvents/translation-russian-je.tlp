@@ -1,7 +1,7 @@
 ﻿
 SECTION JournalTypeEnum
 
-.Unknown: "Unknown" => "Неизвестно"
+.Unknown: "Unknown" = Unknown
 .AfmuRepairs: "Afmu Repairs" => "Ремонт с помощью АПР"
 .ApproachBody: "Approach Body" => "Сближение с небесным телом"
 .ApproachSettlement: "Approach Settlement" => "Сближение с поселением"
@@ -344,11 +344,11 @@ SECTION JournalFSDJump
 
 SECTION JournalLeaveBody
 
-.In: "In " => "Система: "
+.In: "In " = JournalCodexEntry.At
 
 SECTION JournalLocOrJump
 
-.Faction: "Faction: " => "фракция: "
+.Faction: "Faction: " = FSSSignal.Faction
 .Wanted: "<;(Wanted) " => "<;(в розыске) "
 .State: "State: " => "состояние: "
 .Allegiance: "Allegiance: " => "принадлежность: "
@@ -388,7 +388,7 @@ SECTION JournalLocOrJump
 SECTION JournalMissionAccepted
 
 .from: "< from " => "< от фракции "
-.Expiry: "Expiry: " => "срок: "
+.Expiry: "Expiry: " = CommunityGoal.Expires
 .Influence: "Influence: " => "влияние: "
 .Reputation: "Reputation: " => "репутация: "
 .Reward: "Reward: ; cr;N0" => "награда: ; кр.;N0"
@@ -417,7 +417,7 @@ SECTION JournalMissionRedirected
 SECTION MissionItem
 
 .Passenger: "<;(Passenger)" => "<; (пассажир)"
-.Expires: "Expires: " => "срок: "
+.Expires: "Expires: " = CommunityGoal.Expires
 
 SECTION JournalModuleInfo
 
@@ -571,11 +571,11 @@ SECTION JournalScreenshot
 
 SECTION JournalSearchAndRescue
 
-.Reward: "Reward: " => "награда: "
+.Reward: "Reward: " = CommunityGoal.Bonus
 
 SECTION JournalSellExplorationData
 
-.Total: "Total: ; cr;N0" => "всего: ; кр.;N0"
+.Total: "Total: ; cr;N0" = JournalMultiSellExplorationData.Total
 
 SECTION JournalSendText
 
@@ -600,7 +600,7 @@ SECTION JournalShipyardSell
 SECTION JournalShipyardSwap
 
 .Swap: "Swap " => "Замена "
-.fora: "< for a " => "< на "
+.fora: "< for a " = JournalCommodityPricesBase.CPBat
 
 SECTION JournalShipyardTransfer
 
@@ -619,8 +619,8 @@ SECTION JournalStatistics
 .Trading: "Trading" => "Торговля"
 .Mining: "Mining" => "Добыча ресурсов"
 .Exploration: "Exploration" => "Исследование"
-.Passengers: "Passengers" => "Пассажиры"
-.SearchandRescue: "Search and Rescue" => "Спасательные операции"
+.Passengers: "Passengers" = JournalTypeEnum.Passengers
+.SearchandRescue: "Search and Rescue" = JournalTypeEnum.SearchAndRescue
 .Engineers: "Engineers" => "Изготовление"
 .Crew: "Crew" => "Экипаж"
 .Multicrew: "Multicrew" => "Multi-crew"
@@ -717,8 +717,8 @@ SECTION TradingClass
 .MarketsTraded: "Markets Traded: ;;N0" => "Торговая сеть: ;;N0"
 .Profits: "Profits: ; cr;N0" => "Прибыль от торговли: ; кр.;N0"
 .No: "No. of Resources: ;;N0" => "Продано товаров: ;;N0"
-.AverageProfit: "Average Profit: ; cr;N0" => "Средний размер прибыли: ; кр.;N0"
-.HighestSingleTransaction: "Highest Single Transaction: ; cr;N0" => "Максимальный размер транзакции: ; кр.;N0"
+.AverageProfit: "Average Profit: ; cr;N0" = SmugglingClass.AverageProfit
+.HighestSingleTransaction: "Highest Single Transaction: ; cr;N0" = SmugglingClass.HighestSingleTransaction
 .DataSold: "Data Sold: ;;N0" @
 .GoodsSold: "Goods Sold: ;;N0" @
 .AssetsSold: "Assets Sold: ;;N0" @
@@ -822,7 +822,7 @@ SECTION MaterialTraderStatsClass
 SECTION CQCClass
 
 .CreditsEarned: "Profits from CQC: ; cr;N0" @
-.TimePlayed: "Time Played: " => "Время игры: "
+.TimePlayed: "Time Played: " = ExplorationClass.TimePlayed
 .KDRatio: "K/D Ratio: ;;N2" => "Соотношение убийств и смертей: ;;N2"
 .Kills: "Kills: ;;N0" => "Убийства: ;;N0"
 .Win: "Win/Loss Ratio: ;;N2" => "Соотношение побед и поражений: ;;N2"
@@ -879,7 +879,7 @@ SECTION JournalStoredModules
 
 SECTION JournalSupercruiseExit
 
-.in: "< in " => "< в системе "
+.in: "< in " = JournalStoredModules.at
 .At: "At " => "Выход у "
 
 SECTION JournalStoredShips
@@ -889,7 +889,7 @@ SECTION JournalStoredShips
 .SSP: "; cr;N0" => "; кр.;N0"
 .Remote: "Remote: " => "Корабли на других станциях: "
 .intransit: "<; in transit" => "<; в пути"
-.at: "< at " => "< в системе "
+.at: "< at " = JournalStoredModules.at
 
 SECTION JournalSupercruiseEntry
 
@@ -905,7 +905,7 @@ SECTION JournalNavRoute
 
 SECTION JournalApproachBody
 
-.In: "In " => "Система: "
+.In: "In " = JournalCodexEntry.At
 
 SECTION JournalEntry
 
@@ -916,7 +916,7 @@ SECTION JournalEntry
 .LegBounty: "{0} total {1:N0}" => "{0} всего {1:N0}"
 .Target: "Target: " => "\nЦель: "
 .Victimfaction: "Victim faction: " => "фракция цели: "
-.Faction: "Faction: " => "фракция: "
+.Faction: "Faction: " = FSSSignal.Faction
 .from: "< from " => "< из "
 .dueto: "<, due to " => "<, из-за "
 .0: "{0} on {1}" => "{0} на {1}"
@@ -929,8 +929,8 @@ SECTION JournalEntry
 .Reward: "Reward: ; cr;N0" => "Награда: ; кр.;N0"
 .to: "< to " => "<: "
 .Brokertook: ", Broker took {0:N0}%" => ", комиссия брокера: {0:N0}%"
-.Type: "Type: " => "Тип: "
-.Amount: "Amount: ; cr;N0" => "сумма: ; кр.;N0"
+.Type: "Type: " = JournalLocOrJump.Type
+.Amount: "Amount: ; cr;N0" = JournalEntry.Cost
 .System: "System: " => "\nСистема: "
 .NoCargo: "No Cargo" => "Нет груза"
 .Cargo: "Cargo, {0} items" => "{0} шт."
@@ -954,15 +954,15 @@ SECTION JournalEntry
 .torole: "< to role ;" => "< на роль ;"
 .fired: "; fired" => "; уволен(а)"
 .Hired: "Hired: ;" => "Нанят(а): ;"
-.offaction: "< of faction " => "<, фракция: "
+.offaction: "< of faction " = JournalEntry.onfaction
 .Rank: "Rank: " => "ранг: "
 .Crew: "Crew: " => "Член экипажа: "
 .Telepresence: ";Telepresence" @
 .Role: "Role: " => "роль: "
-.CrewMember: "Crew Member: " => "Член экипажа: "
+.CrewMember: "Crew Member: " = JournalEntry.Crew
 .DuetoCrime: ";Due to Crime" => "; из-за преступления"
 .Captain: "Captain: " => "Капитан: "
-.fromfaction: "< from faction " => "< от фракции "
+.fromfaction: "< from faction " = JournalMissionAccepted.from
 .Died: "{0} in ship type {1} rank {2}" => "{0}, тип корабля: {1}, ранг: {2}"
 .Killedby: "Killed by " => "Корабль уничтожил(а): "
 .Boom: "Boom!" => "Бум!"
@@ -970,13 +970,13 @@ SECTION JournalEntry
 .Bankrupt: ";Bankrupt" => ";Банкротство"
 .Dscan: "New bodies discovered: " => "Открыто новых тел: "
 .Bodies: "Bodies: " => "Небесные тела: "
-.insystem: "< in system " => "< в системе "
+.insystem: "< in system " = JournalStoredModules.at
 .Wanted: ";(Wanted)" => ";(розыск)"
 .ActiveFine: ";Active Fine" => ";действующие штрафы"
 .instate: "< in state " => "< в состоянии "
 .Allegiance: "Allegiance: " => "Принадлежность: "
-.Economy: "Economy: " => "экономика: "
-.Government: "Government: " => "форма правления: "
+.Economy: "Economy: " = JournalLocOrJump.Economy
+.Government: "Government: " = JournalLocOrJump.Government
 .Stationservices: "Station services: " => "Службы космопорта: "
 .Economies: "Economies: " => "Экономика: "
 .onpad: "< on pad " => "<, посадочная площадка "
@@ -993,7 +993,7 @@ SECTION JournalEntry
 .Override: "Override: " => "Заменяет: "
 .Commodity: "Commodity: " => "\nТовар: "
 .Material: "Material: " => "материал: "
-.Quantity: "Quantity: " => "количество: "
+.Quantity: "Quantity: " = JournalEntry.Count
 .TotalQuantity: "TotalQuantity: " => "общее количество: "
 .InSlot: "In Slot: " => "В слоте: "
 .By: "By: " => "Пытался перехватить пилот: "
@@ -1005,7 +1005,7 @@ SECTION JournalEntry
 .Version: "Version: " => "Версия: "
 .Build: "Build: " => "билд: "
 .Part: "Part: " => "часть: "
-.Ship: "Ship: " => "корабль: "
+.Ship: "Ship: " = JournalSetUserShipName.On
 .Ident: "Ident: " => "идентификатор: "
 .Credits: "Credits: ;;N0" => "баланс: ;;N0"
 .Mode: "Mode: " => "Режим: "
@@ -1030,7 +1030,7 @@ SECTION JournalEntry
 .sellprice: "< sell price ; cr;N0" => "< цена продажи ; кр.;N0"
 .Profit: "Profit: ; cr;N0" => "Прибыль: ; кр.;N0"
 .Legal: "Legal;Illegal" => "законный;незаконный"
-.NotStolen: "Not Stolen;Stolen" => ";украдено"
+.NotStolen: "Not Stolen;Stolen" = JournalEntry.Stolen
 .Market: "Market;BlackMarket" => "Рынок;Черный рынок"
 .MatC: "< ; items" => "<, ; шт."
 .Sold: "Sold: " => "\nПродано: "
@@ -1062,7 +1062,7 @@ SECTION JournalEntry
 .TransferCost: "Transfer Cost: ; cr;N0" => "цена перемещения: ; кр.;N0"
 .Time: "Time: " => "время: "
 .Value: "Value: ; cr;N0" => "стоимость: ; кр.;N0"
-.Totalmodules: "Total modules: " => "Всего модулей: "
+.Totalmodules: "Total modules: " = JournalModuleInfo.Modules
 .Intoship: "Into ship: " => "для корабля: "
 .TransferTime: "Transfer Time: " => "время перемещения: "
 .MusicTrack: "Music Track: " => "Музыкальный трек: "
@@ -1091,7 +1091,7 @@ SECTION JournalEntry
 .New: "New: " @
 .Near: "Near: " @
 .OnFootAt: "On Foot at {0}" @
-.Wealth: "Wealth: ; cr;N0" => "Текущие активы: ; кр.;N0"
+.Wealth: "Wealth: ; cr;N0" = BankAccountClass.Wealth
 .NotorietyIndex: "Notoriety Index: ;;N0" => "плохая репутация: ;;N0"
 .Fuel: "Fuel: ; tons;0.0" => "получено ;0.0 т топлива"
 .Taxi: "Taxi" @

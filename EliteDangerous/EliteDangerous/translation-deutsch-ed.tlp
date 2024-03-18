@@ -61,7 +61,7 @@ SECTION EDPlanet
 SECTION MaterialCommodityMicroResourceType
 
 .Consumable: "Consumable" => "Verbrauchsgegenstände"
-.Unknown: "Unknown" => "Unbekannt"
+.Unknown: "Unknown" = Unknown
 .Goods: "Goods" => "Waren"
 .Assets: "Assets" => "Material"
 .Data: "Data" => "Daten"
@@ -354,7 +354,7 @@ SECTION MaterialCommodityMicroResourceType
 .thargoidtissuesampletype2: "Thargoid Basilisk Tissue Sample" => "Gewebeprobe von Thargoidenschiffstyp Basilisk"
 .thargoidtissuesampletype3: "Thargoid Medusa Tissue Sample" => "Gewebeprobe von Thargoidenschiffstyp Medusa"
 .thargoidscouttissuesample: "Thargoid Scout Tissue Sample" => "Gewebeprobe von Thargoiden-Späher"
-.wreckagecomponents: "Wreckage Components" => "Wrackteilkomponenten"
+.wreckagecomponents: "Wreckage Components" = MaterialCommodityMicroResourceType.tg_wreckagecomponents
 .antiquejewellery: "Antique Jewellery" => "Antiker Schmuck"
 .airelics: "Ai Relics" => "KI-Relikte"
 .antimattercontainmentunit: "Antimatter Containment Unit" => "Antimaterie-Transporteinheit"
@@ -400,7 +400,7 @@ SECTION MaterialCommodityMicroResourceType
 .ancienttotem: "Guardian Totem" => "Guardian-Totem"
 .basicnarcotics: "Narcotics" => "Drogen"
 .imperialslaves: "Imperial Slaves" => "Imperiale Sklaven"
-.slaves: "Slaves" => "Sklaven"
+.slaves: "Slaves" = MaterialCommodityMicroResourceType.Slaves
 .advancedcatalysers: "Advanced Catalysers" => "Fortschr. Katalysatoren"
 .animalmonitors: "Animal Monitors" => "Tierüberwachung"
 .aquaponicsystems: "Aquaponic Systems" => "Aquaponiksysteme"
@@ -608,7 +608,7 @@ SECTION MaterialCommodityMicroResourceType
 .gromwartrophies: "Yuri Grom's Military Supplies" => "Yuri Groms Militärausrüstung"
 .markedslaves: "Marked Slaves" => "Markierte Sklaven"
 .torvaldeeds: "Torval Deeds" => "Torvals Urkunden"
-.drones: "Drones" => "Drohnen"
+.drones: "Drones" = MaterialCommodityMicroResourceType.Drones
 .guardian_vesselblueprint: "Guardian Vessel Blueprint Fragment" => "Guardian-Schiffsbauplanfragment"
 .duradrives: "Duradrives" => "Duradrives"
 .nanomedicines: "Nanomedicines" => "Nanomedizin"
@@ -968,16 +968,16 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Screenshotkonfiguration"
 .labelWidth: "Width" => "Breite"
 .labelLeft: "Left" => "Links"
 .labelTop: "Top" => "Oben"
-.labelHeight2: "Height" => "Höhe"
-.labelWidth2: "Width" => "Breite"
-.labelLeft2: "Left" => "Links"
-.labelTop2: "Top" => "Oben"
+.labelHeight2: "Height" = ScreenShotConfigureForm.labelHeight
+.labelWidth2: "Width" = ScreenShotConfigureForm.labelWidth
+.labelLeft2: "Left" = ScreenShotConfigureForm.labelLeft
+.labelTop2: "Top" = ScreenShotConfigureForm.labelTop
 .labelFolder: "ED/Steam Screenshot folder" => "ED/Steam-Screenshotordner"
 .buttonChangeScreenshotsFolder: "Browse" => "Durchsuchen"
 .labelSubfolder: "In Sub folder" => "Im Unterordner"
 .labelFileNameFormat: "In Filename format" => "Im Dateinamenformat"
 .labelStoreFolder: "Store Converted pictures" => "Speichere konvertierte Bilder"
-.buttonEDChangeOutputFolder: "Browse" => "Durchsuchen"
+.buttonEDChangeOutputFolder: "Browse" = ScreenShotConfigureForm.buttonChangeScreenshotsFolder
 .labelScanFor: "Scan for" => "Suche nach"
 .labelSaveAs: "Save as" => "Speichern als"
 .extCheckBoxKeepMasterConvertedImage: "Keep master converted image" => "Behalte konvertiertes Masterbild"
@@ -986,7 +986,7 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Screenshotkonfiguration"
 .labelCropResizeOptions: "Crop/Resize Options" => "Optionen für Beschneiden/Größe verändern"
 .extCheckBoxEnabled: "Conversion Enabled" => "Konvertierung"
 .extCheckBoxHiRes: "Mark HiRes Files" => "Hochauflösende Dateien markieren"
-.extButtonBrowseMoveOrg: "Browse" => "Durchsuchen"
+.extButtonBrowseMoveOrg: "Browse" = ScreenShotConfigureForm.buttonChangeScreenshotsFolder
 .labelClipboard: "Clipboard" => "Zwischenablage"
 .labelOriginal: "Original Image" => "Originalbild"
 .labelEnabled: "Enable" => "Aktivieren"

@@ -245,7 +245,7 @@ SECTION MaterialCommodityMicroResourceType
 .syntheticreagents: "Synthetic Reagents" => "Синтетические реагенты"
 .water: "Water" => "Вода"
 .clothing: "Clothing" => "Одежда"
-.consumertechnology: "Consumer Technology" => "Потребительские товары"
+.consumertechnology: "Consumer Technology" = MaterialCommodityMicroResourceType.ConsumerItems
 .domesticappliances: "Domestic Appliances" => "Бытовая техника"
 .evacuationshelter: "Evacuation Shelter" => "Эвакуационное убежище"
 .survivalequipment: "Survival Equipment" => "Снаряжение для выживания"
@@ -354,7 +354,7 @@ SECTION MaterialCommodityMicroResourceType
 .thargoidtissuesampletype2: "Thargoid Basilisk Tissue Sample" => "Образец ткани таргоидского корабля «Василиск»"
 .thargoidtissuesampletype3: "Thargoid Medusa Tissue Sample" => "Образец ткани таргоидского корабля «Медуза»"
 .thargoidscouttissuesample: "Thargoid Scout Tissue Sample" => "Образец тканей таргоида-разведчика"
-.wreckagecomponents: "Wreckage Components" => "Обломки кораблекрушений"
+.wreckagecomponents: "Wreckage Components" = MaterialCommodityMicroResourceType.tg_wreckagecomponents
 .antiquejewellery: "Antique Jewellery" => "Древние ювелирные украшения"
 .airelics: "Ai Relics" => "Фрагменты ИИ"
 .antimattercontainmentunit: "Antimatter Containment Unit" => "Контейнер с антиматерией"
@@ -398,7 +398,7 @@ SECTION MaterialCommodityMicroResourceType
 .ancienttablet: "Guardian Tablet" => "Древняя пластина"
 .ancienturn: "Guardian Urn" => "Древняя урна"
 .ancienttotem: "Guardian Totem" => "Древний тотем"
-.basicnarcotics: "Narcotics" => "Наркотики"
+.basicnarcotics: "Narcotics" = MaterialCommodityMicroResourceType.Narcotics
 .imperialslaves: "Imperial Slaves" => "Имперские рабы"
 .slaves: "Slaves" => "Рабы"
 .advancedcatalysers: "Advanced Catalysers" => "Улучшенные катализаторы"
@@ -608,7 +608,7 @@ SECTION MaterialCommodityMicroResourceType
 .gromwartrophies: "Yuri Grom's Military Supplies" => "Военные припасы Юрия Грома"
 .markedslaves: "Marked Slaves" => "Помеченные рабы"
 .torvaldeeds: "Torval Deeds" => "Договора Торвал"
-.drones: "Drones" => "Дроны"
+.drones: "Drones" = MaterialCommodityMicroResourceType.Drones
 .guardian_vesselblueprint: "Guardian Vessel Blueprint Fragment" => "Фрагмент чертежа судна защитника"
 .duradrives: "Duradrives" => "Дюрадрайвы"
 .nanomedicines: "Nanomedicines" => "Нанолекарства"
@@ -932,7 +932,7 @@ CommanderForm: "CommanderForm" => "Командир"
 .labelJL: "Journal Location:" => "Путь к файлам журнала"
 .panel_defaultmapcolor.ToolTip: "New travel entries get this colour on the map" @
 .textBoxBorderInaraName.ToolTip: "Give the user name for this commander on Inara" => "Укажите имя пользователя Inara для этого командира"
-.checkBoxCustomInara.ToolTip: "Sync with Inara" => "Синхронизация с Inara"
+.checkBoxCustomInara.ToolTip: "Sync with Inara" = CommanderForm.checkBoxCustomInara
 .textBoxBorderInaraAPIKey.ToolTip: "Enter the API key from the Inara Website\r\nGet an Inara API key from https://inara.cz" => "Укажите Api-ключ Inara\nЕго можно узнать на https://inara.cz"
 .checkBoxCustomEDDNTo.ToolTip: "Click to send journal information to EDDN. EDDN feeds tools such as EDDB, EDSM, Inara with data from commanders. All data is made anonymised" => "Нажмите, чтобы отправить информацию из журнала в EDDN. EDDN работает с такими приложениями, как EDDB, EDSM и Inara. Все данные анонимны"
 .checkBoxCustomEDSMFrom.ToolTip: "Receive any FSD jumps from EDSM that are on their database but not in EDDiscovery" => "Получать данные о FSD-прыжках, которые есть в EDSM, но нет в EDDiscovery"
@@ -973,11 +973,11 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Настройки скри
 .labelLeft2: "Left" @
 .labelTop2: "Top" @
 .labelFolder: "ED/Steam Screenshot folder" => "Папка сриншотов ED/Steam"
-.buttonChangeScreenshotsFolder: "Browse" => "Обзор"
+.buttonChangeScreenshotsFolder: "Browse" = CommanderForm.buttonExtBrowse
 .labelSubfolder: "In Sub folder" => "В подпапке"
 .labelFileNameFormat: "In Filename format" => "Формат имени файла"
 .labelStoreFolder: "Store Converted pictures" => "Сохранить преобразованные изображения"
-.buttonEDChangeOutputFolder: "Browse" => "Обзор"
+.buttonEDChangeOutputFolder: "Browse" = CommanderForm.buttonExtBrowse
 .labelScanFor: "Scan for" => "Искать"
 .labelSaveAs: "Save as" => "Сохранить как"
 .extCheckBoxKeepMasterConvertedImage: "Keep master converted image" @
