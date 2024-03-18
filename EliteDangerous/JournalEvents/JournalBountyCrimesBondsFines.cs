@@ -491,7 +491,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("Type: ".T(EDCTx.JournalEntry_Type), Type, "Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), Amount, "Factions: ".T(EDCTx.JournalEntry_Faction), Faction);
+            info = BaseUtils.FieldBuilder.Build("Type: ".T(EDCTx.JournalEntry_Type), Type, "Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), Amount, "Faction: ".T(EDCTx.JournalEntry_Faction), Faction);
             if (BrokerPercentage > 0)
                 info += string.Format(", Broker took {0:N0}%".T(EDCTx.JournalEntry_Brokertook), BrokerPercentage);
             detailed = "";
