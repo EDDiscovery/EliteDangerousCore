@@ -42,10 +42,13 @@ namespace EliteDangerousCore.JournalEvents
                 Status = Name = string.Empty;
             }
 
-            var last = StatusList.FindLast(x => x.Name.Equals(next.Name) && x.Status.Equals(next.Status));      // find last if same
+            var last = StatusList.FindLast(x => x.Name.Equals(next.Name));      // find last entry with same name
 
-            if (last == null)       // if not last in list, add as a new status
+            if (last == null || last.Status != next.Status)       // if not last in list, or not the same status, add as a new status
+            {
                 StatusList.Add(new FriendClass() { Status = next.Status, Name = next.Name });
+                //System.Diagnostics.Debug.WriteLine($"Friends {this.EventTimeUTC} Add new status {next.Status} {next.Name}");
+            }
             else
             {
                 //System.Diagnostics.Debug.WriteLine($"Friends {this.EventTimeUTC} Duplicate status {next.Status} {next.Name}");
