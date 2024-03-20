@@ -23,6 +23,7 @@ namespace EliteDangerousCore.DB
 {
     public class PlanetMarks
     {
+        [System.Diagnostics.DebuggerDisplay("{Name} {Comment} {Latitude} {Longitude} {Tags}")]
         public class Location
         {
             public string Name { get; set; }
@@ -35,6 +36,7 @@ namespace EliteDangerousCore.DB
             public bool IsWholePlanetBookmark { get { return Latitude == 0 && Longitude == 0; } }
         }
 
+        [System.Diagnostics.DebuggerDisplay("{Name} {Locations.Count}")]
         public class Planet
         {
             public string Name { get; set; }
@@ -191,7 +193,7 @@ namespace EliteDangerousCore.DB
         }
     }
 
-    [System.Diagnostics.DebuggerDisplay("{Name} {x} {y} {z} {Note}")]
+    [System.Diagnostics.DebuggerDisplay("{Name} {x} {y} {z} {Note} {PlantaryMarks?.Planets?.Count()}")]
     public class BookmarkClass
     {
         public long ID { get; set; }
