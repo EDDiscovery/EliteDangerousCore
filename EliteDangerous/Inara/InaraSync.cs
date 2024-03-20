@@ -577,26 +577,13 @@ namespace EliteDangerousCore.Inara
                 case JournalTypeEnum.Friends:
                     {
                         var je = he.journalEntry as JournalFriends;
-                        if ( je.StatusList != null )
+                        foreach( var f in je.Statuses())
                         {
-                            for( int i = 0; i < je.StatusList.Count; i++ )
-                            {
-                                var s = je.StatusList[i];
-                                if (s == JournalFriends.FriendStatus.Online || s == JournalFriends.FriendStatus.Added)
-                                    eventstosend.Add(InaraClass.addCommanderFriend(je.NameList[i], heutc));
-                                else if (s == JournalFriends.FriendStatus.Lost)
-                                    eventstosend.Add(InaraClass.delCommanderFriend(je.NameList[i], heutc));
-                            }
+                            if ( JournalFriends.IsFriend(f.Status))
+                                eventstosend.Add(InaraClass.addCommanderFriend(f.Name, heutc));
+                            else if (JournalFriends.IsNotFriend(f.Status))
+                                eventstosend.Add(InaraClass.delCommanderFriend(f.Name, heutc));
                         }
-                        else
-                        {
-                            var s = je.StatusEnum;
-                            if (s == JournalFriends.FriendStatus.Online || s == JournalFriends.FriendStatus.Added)
-                                eventstosend.Add(InaraClass.addCommanderFriend(je.Name, heutc));
-                            else if ( s == JournalFriends.FriendStatus.Lost)
-                                eventstosend.Add(InaraClass.delCommanderFriend(je.Name, heutc));
-                        }
-
                         break;
                     }
 
