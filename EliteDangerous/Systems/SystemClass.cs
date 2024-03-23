@@ -224,7 +224,12 @@ namespace EliteDangerousCore
 
         public override string ToString()
         {
-            return string.Format("{0} @ {1:N3},{2:N3},{3:N3}: {4}, {5}", Name, X, Y, Z, EDSMID, SystemAddress);
+            if (SystemAddress != null && EDSMID != null)
+                return string.Format($"{Name} @ {X:N3},{Y:N3},{Z:N3}: {EDSMID}, {SystemAddress}");
+            else if (SystemAddress != null)
+                return string.Format($"{Name} @ {X:N3},{Y:N3},{Z:N3}: {SystemAddress}");
+            else
+                return string.Format($"{Name} @ {X:N3},{Y:N3},{Z:N3}");
         }
 
     }

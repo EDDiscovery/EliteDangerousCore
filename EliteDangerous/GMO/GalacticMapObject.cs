@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2023 EDDiscovery development team
+ * Copyright © 2016-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -22,35 +22,32 @@ using BaseUtils;
 
 namespace EliteDangerousCore.GMO
 {
-    [DebuggerDisplay("GMO {Type} {NameList}")]
+    [DebuggerDisplay("GMO {GalMapType.Group} {GalMapType.VisibleType.Value} {NameList}")]
     public class GalacticMapObject
     {
         public int ID { get; set; }
-        public string Type { get; private set; }
-        public List<string> Names { get; private set; }     // now have a naming list to remove duplicate positions
-        public string Summary { get; private set; }         // GEC only
-        public string GalMapSearch { get; private set; }
+        public GalMapType GalMapType { get; private set; }  // type of object
+        public List<string> DescriptiveNames { get; private set; }     // now have a naming list to remove duplicate positions
+        public SystemClass StarSystem { get; private set; }     // set if it has a associated star system, else null
         public string GalMapUrl { get; private set; }
         public List<Vector3> Points { get; private set; }
-        public string Description { get; private set; }
-        public GalMapType GalMapType { get; private set; }
-        public string NameList { get { return string.Join(", ", Names); } }
-        public bool IsName(string name, bool contains = false)
+        public string Description { get; private set; }     // accumulated descriptions
+        public string NameList { get { return string.Join(", ", DescriptiveNames); } }
+        
+        public bool IsDescriptiveName(string name, bool wildcard, bool contains = false)
         {
-            foreach (var gmoname in Names)
+            foreach (var gmoname in DescriptiveNames)
             {
-                if (gmoname.Equals(name, StringComparison.InvariantCultureIgnoreCase) || (contains && gmoname.IndexOf(name, StringComparison.InvariantCultureIgnoreCase) >= 0))
-                    return true;
-            }
-
-            return false;
-        }
-        public bool IsNameWildCard(string name, bool caseinsensitive)
-        {
-            foreach (var gmoname in Names)
-            {
-                if (gmoname.WildCardMatch(name,caseinsensitive))
-                    return true;
+                if (wildcard)
+                {
+                    if (gmoname.WildCardMatch(name, true))
+                        return true;
+                }
+                else
+                {
+                    if ( gmoname.Equals(name, StringComparison.InvariantCultureIgnoreCase) || (contains && gmoname.IndexOf(name, StringComparison.InvariantCultureIgnoreCase) >= 0))
+                        return true;
+                }
             }
 
             return false;
@@ -61,28 +58,28 @@ namespace EliteDangerousCore.GMO
             Points = new List<Vector3>();
         }
 
-
         // programatically
-        public GalacticMapObject(string type, string name, string desc, Vector3 pos)
+        public GalacticMapObject(string type, string name, string starname, string desc, Vector3 pos)
         {
-            this.Type = type;
-            this.Names = new List<string> { name };
+            this.DescriptiveNames = new List<string> { name };
             this.Description = desc;
-            this.GalMapSearch = GalMapUrl = "";
+            this.StarSystem = new SystemClass(starname,null,pos.X,pos.Y,pos.Z);
+            this.GalMapUrl = "";
             Points = new List<Vector3>() { pos };
-            SetGalMapTypeFromTypeName();
+            SetGalMapTypeFromTypeName(type);
+
+           // System.Diagnostics.Debug.WriteLine($"GMOp {DescriptiveNames[0]} {GalMapType.Group} {GalMapType.VisibleType} : {StarSystem} : {Points[0].X} {Points[0].Y} {Points[0].Z}");
         }
 
-        // from EDSM JO
+        // from Json
         public GalacticMapObject(JObject jo, int idoffset)
         {
             ID = jo["id"].Int() + idoffset;
-            Type = jo["type"].Str("Not Set");
-            Names = new List<string> { jo["name"].Str("No name set") };
-            Summary = jo["summary"].Str("");
-            GalMapSearch = jo["galMapSearch"].Str("");
+            DescriptiveNames = new List<string> { jo["name"].Str("No name set") };
             GalMapUrl = jo["galMapUrl"].Str("");
             Description = jo["descriptionMardown"].Str("No description");       // default back up description in case html fails
+
+            string summary = jo["summary"].Str("");     //GEC only
 
             var descriptionhtml = jo["descriptionHtml"].StrNull();
 
@@ -94,13 +91,13 @@ namespace EliteDangerousCore.GMO
                     Description = res;
                 else
                 {
-                    Description = Summary + Environment.NewLine + Description;
+                    Description = summary;
+                    Description = Description.AppendPrePad(Description, Environment.NewLine);
                     //System.Diagnostics.Debug.WriteLine($"Description XML in error for {Name}\r\n{xmltext.LineNumbering(1,"N0",newline:"\n")}");
                 }
             }
 
-            SetGalMapTypeFromTypeName();
-
+            SetGalMapTypeFromTypeName(jo["type"].Str("Not Set"));
 
             Points = new List<Vector3>();
 
@@ -135,36 +132,38 @@ namespace EliteDangerousCore.GMO
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.WriteLine("GalacticMapObject parse coordinate error: type" + Type + " " + ex.Message);
+                System.Diagnostics.Trace.WriteLine("GalacticMapObject parse coordinate error: " + Description + " " + ex.Message);
                 Points = null;
             }
 
-           // System.Diagnostics.Debug.WriteLine($"GMO {Name} {Type} {Points[0].X} {Points[0].Y} {Points[0].Z}");
+            string name = jo["galMapSearch"].Str("");       // see if the star name is there, if so, and its 1 point, store
+            if (name.HasChars() && Points.Count == 1)
+                StarSystem = new SystemClass(name, null, Points[0].X, Points[0].Y, Points[0].Z);
+
+            System.Diagnostics.Debug.Assert(GalMapType.VisibleType == null || StarSystem != null);  // check for all visible markers have a StarSystem
+           // System.Diagnostics.Debug.WriteLine($"GMO {DescriptiveNames[0]} : {GalMapType.Group} : {GalMapType.VisibleType} : ss `{StarSystem}`");
         }
 
-        private void SetGalMapTypeFromTypeName()
+        private void SetGalMapTypeFromTypeName(string type)
         {
-            GalMapType ty = GalMapType.GalTypes.Find(x => x.TypeName.Equals(Type));
+            GalMapType ty = GalMapType.GalTypes.Find(x => x.Name.Equals(type));
 
             if (ty == null)
-                ty = GalMapType.GalTypes.Find(x => x.Description.Contains(Type));
+                ty = GalMapType.GalTypes.Find(x => x.Description.Contains(type));
+
             if ( ty == null)
             {
                 ty = GalMapType.GalTypes.Find(x => x.VisibleType == GalMapType.VisibleObjectsType.EDSMUnknown);      // select edsm unknown
-                System.Diagnostics.Debug.WriteLine($"GMO unknown type {Type}");
+                System.Diagnostics.Debug.WriteLine($"GMO unknown type {type}");
             }
 
             GalMapType = ty;
         }
 
-        public ISystem GetSystem()
+        // some GMO objects have multiple names at same position, accumulate
+        public void AddDuplicateGMONameDescription(string name, string s)
         {
-            return (Points.Count > 0) ? new SystemClass(Names[0], null, Points[0].X, Points[0].Y, Points[0].Z) : null;
-        }
-
-        public void AddDuplicateGMODescription(string name, string s)
-        {
-            Names.Add(name);
+            DescriptiveNames.Add(name);
             Description += s;
         }
 

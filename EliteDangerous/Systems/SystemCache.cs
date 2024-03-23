@@ -45,19 +45,17 @@ namespace EliteDangerousCore
             });
         }
 
+        // find system name, from db, web if selected, optional GMO list
         public static ISystem FindSystem(string name, GMO.GalacticMapping glist, WebExternalDataLookup lookup = WebExternalDataLookup.None)
         {
             ISystem sys = FindSystem(name, lookup);
 
             if (sys == null && glist != null)
             {
-                GMO.GalacticMapObject gmo = glist.Find(name, true);
+                GMO.GalacticMapObject gmo = glist.FindSystem(name);
 
-                if (gmo != null && gmo.Points.Count > 0)                // valid item, and has position
-                {
-                    var sysviadb = SystemCache.FindSystem(gmo.GalMapSearch);     // only thru the db/cache, as we checked above for edsm direct, may be null
-                    return sysviadb != null ? sysviadb : gmo.GetSystem();
-                }
+                if (gmo != null)
+                    return gmo.StarSystem;
             }
 
             return sys;
@@ -362,10 +360,10 @@ namespace EliteDangerousCore
 
             ISystem retsys = cachesys;
 
-            // if we have a gobj, and either we don't have a result, or glist is closer..
-            if (glistobj != null && (retsys == null || glistobj.GetSystem().Distance(x, y, z) < retsys.Distance(x, y, z)))
+            // if we have a gobj with a star system, and either we don't have a result, or glist is closer..
+            if (glistobj?.StarSystem != null && (retsys == null || glistobj.StarSystem.Distance(x, y, z) < retsys.Distance(x, y, z)))
             {
-                retsys = glistobj.GetSystem();
+                retsys = glistobj.StarSystem;
             }
 
             if (dbsys != null && (retsys == null || dbsys.Distance(x, y, z) < retsys.Distance(x, y, z)))

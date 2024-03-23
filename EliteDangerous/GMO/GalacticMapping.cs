@@ -25,7 +25,9 @@ namespace EliteDangerousCore.GMO
     public class GalacticMapping
     {
         public List<GalacticMapObject> GalacticMapObjects = null;
-        public GalacticMapObject[] VisibleMapObjects { get { return GalacticMapObjects.Where(x => x.GalMapType.VisibleType != null).ToArray(); } }
+
+        // these need have have a VisibleType AND have an associated star system
+        public GalacticMapObject[] VisibleMapObjects { get { return GalacticMapObjects.Where(x => x.GalMapType.VisibleType != null && x.StarSystem != null).ToArray(); } }
 
         public bool Loaded { get { return GalacticMapObjects.Count > 0; } }
 
@@ -46,7 +48,7 @@ namespace EliteDangerousCore.GMO
                                                         (float)(rw[4].InvariantParseDoubleNull() ?? 0));
                     if (pos.X != 0 && pos.Y != 0 && pos.Z != 0)
                     {
-                        var gmo = new GalacticMapObject("MarxNebula", rw[0] + " Nebula", "Marx sourced nebula", pos);
+                        var gmo = new GalacticMapObject(GalMapType.VisibleObjectsType.MarxNebula.ToString(), rw[0] + " Nebula", rw[0], "Marx sourced nebula", pos);
                         GalacticMapObjects.Add(gmo);
                     }
                     else
@@ -90,25 +92,25 @@ namespace EliteDangerousCore.GMO
                                                                          Math.Abs(x.Points[0].Y - newgmo.Points[0].Y) < 0.25f &&
                                                                          Math.Abs(x.Points[0].Z - newgmo.Points[0].Z) < 0.25f);
                             
-                            if (newgmo.Names[0] == "Great Annihilator Black Hole")  // manually remove
+                            if (newgmo.DescriptiveNames[0] == "Great Annihilator Black Hole")  // manually remove
                             {
                                 continue;
                             }
 
                             if (previousstored != null && newgmo.Points.Count == 1)
                             {
-                                if ((newgmo.Names[0] == "Great Annihilator" || newgmo.Names[0] == "Galactic Centre")) // these take precedence
+                                if ((newgmo.DescriptiveNames[0] == "Great Annihilator" || newgmo.DescriptiveNames[0] == "Galactic Centre")) // these take precedence
                                 {
-                                    string gmodesc = Environment.NewLine + "+++ " + previousstored.Names[0] + Environment.NewLine + previousstored.Description;
-                                    newgmo.AddDuplicateGMODescription(previousstored.Names[0],gmodesc);
+                                    string gmodesc = Environment.NewLine + "+++ " + previousstored.DescriptiveNames[0] + Environment.NewLine + previousstored.Description;
+                                    newgmo.AddDuplicateGMONameDescription(previousstored.DescriptiveNames[0],gmodesc);
                                     GalacticMapObjects.Remove(previousstored);
                                     GalacticMapObjects.Add(newgmo);
                                   //  System.Diagnostics.Debug.WriteLine($"GMO Priority name store {newgmo.NameList} removing previous {previousstored.NameList}");
                                 }
-                                else if ( !previousstored.NameList.Contains(newgmo.Names[0],StringComparison.InvariantCultureIgnoreCase))
+                                else if ( !previousstored.NameList.Contains(newgmo.DescriptiveNames[0],StringComparison.InvariantCultureIgnoreCase))
                                 {
-                                    string gmodesc = Environment.NewLine + "+++ " + newgmo.Names[0] + Environment.NewLine + newgmo.Description;
-                                    previousstored.AddDuplicateGMODescription(newgmo.Names[0], gmodesc);
+                                    string gmodesc = Environment.NewLine + "+++ " + newgmo.DescriptiveNames[0] + Environment.NewLine + newgmo.Description;
+                                    previousstored.AddDuplicateGMONameDescription(newgmo.DescriptiveNames[0], gmodesc);
                                //     SystemCache.AddSystemToCache(newgmo.GetSystem());        // also add this name
                                    // System.Diagnostics.Debug.WriteLine($"GMO Merge name {newgmo.NameList} with previous {previousstored.NameList}");
                                 }
@@ -141,18 +143,43 @@ namespace EliteDangerousCore.GMO
             return false;
         }
 
-        public GalacticMapObject Find(string name, bool contains = false)
+        // wildcard = true, contains ignored
+        // wildcard = false, either exact match or if contains = true then part of it
+        public GalacticMapObject FindDescriptiveName(string descripivename, bool wildcard, bool contains)
         {
-            if (GalacticMapObjects != null && name.HasChars())
+            if (GalacticMapObjects != null && descripivename.HasChars())
             {
                 foreach (GalacticMapObject gmo in GalacticMapObjects)
                 {
-                    if (gmo.IsName(name,contains))
+                    if (gmo.IsDescriptiveName(descripivename, wildcard, contains))
                         return gmo;
                 }
             }
 
             return null;
+        }
+
+        // find star system exact match
+        public GalacticMapObject FindSystem(string name)
+        {
+            if (GalacticMapObjects != null && name.HasChars())
+            {
+                foreach (GalacticMapObject gmo in GalacticMapObjects)
+                {
+                    if (gmo.StarSystem?.Name.EqualsIIC(name) ?? false)      // if it has an associated star system, and its name matches, return
+                        return gmo;
+                }
+            }
+
+            return null;
+        }
+
+        public GalacticMapObject FindDescriptiveNameOrSystem(string descripivenameorsystem, bool wildcard = false)
+        {
+            var gmo = FindSystem(descripivenameorsystem);
+            if (gmo == null)
+                gmo = FindDescriptiveName(descripivenameorsystem, wildcard,false);
+            return gmo;
         }
 
         public GalacticMapObject FindNearest(double x, double y, double z, double maxdist)
@@ -164,10 +191,10 @@ namespace EliteDangerousCore.GMO
                 double mindist = double.MaxValue;
                 foreach (GalacticMapObject gmo in GalacticMapObjects)
                 {
-                    if ( gmo.Points.Count == 1 )        // only for single point  bits
+                    if (gmo.Points.Count == 1)        // only for single point  bits
                     {
                         double distsq = (gmo.Points[0].X - x) * (gmo.Points[0].X - x) + (gmo.Points[0].Y - y) * (gmo.Points[0].Y - y) + (gmo.Points[0].Z - z) * (gmo.Points[0].Z - z);
-                        if ( distsq <= maxdist*maxdist && distsq < mindist)
+                        if (distsq <= maxdist * maxdist && distsq < mindist)
                         {
                             mindist = distsq;
                             nearest = gmo;
@@ -187,7 +214,7 @@ namespace EliteDangerousCore.GMO
             {
                 foreach (GalacticMapObject gmo in GalacticMapObjects)
                 {
-                    foreach (var gmoname in gmo.Names)
+                    foreach (var gmoname in gmo.DescriptiveNames)
                         ret.Add(gmoname);
                 }
             }

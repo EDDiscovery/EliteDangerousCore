@@ -55,15 +55,15 @@ namespace EliteDangerousCore.GMO
         static public List<GalMapType> GalTypes { get; private set; }  = CreateTypes();     // all the types.
         static public GalMapType[] VisibleTypes { get { return GalTypes.Where(x => x.VisibleType != null).ToArray(); } }
 
-        public string TypeName;         // mostly, EDSM type name
-        public string Description;
-        public GroupType Group;
-        public VisibleObjectsType? VisibleType;
-        public int Index;
+        public string Name;                         // type name from below
+        public string Description;                  // description from below
+        public GroupType Group;                     // Group type
+        public VisibleObjectsType? VisibleType;     // if null, its not visible, else its the visible type
+        public int Index;                           // which index it is, used for visual lookup
 
         private GalMapType(string id, string desc, GroupType g, VisibleObjectsType? te, int i)
         {
-            TypeName = id;
+            Name = id;
             Description = desc;
             Group = g;
             VisibleType = te;
