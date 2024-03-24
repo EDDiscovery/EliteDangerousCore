@@ -12,8 +12,6 @@
  * governing permissions and limitations under the License.
  */
 
-#define EDD     // here just for compatibility with the baseutils debug harness
-
 using BaseUtils;
 using EliteDangerousCore.DB;
 using EMK.LightGeometry;
@@ -27,7 +25,7 @@ namespace EliteDangerousCore
     {
         #region Public Interface for Find System
 
-#if EDD
+#if !TESTHARNESS
         // in historylist, addtocache for all fsd jumps and navroutes.
         public static System.Threading.Tasks.Task<ISystem> FindSystemAsync(string name, GMO.GalacticMapping glist, WebExternalDataLookup lookup = WebExternalDataLookup.None)
         {
@@ -307,7 +305,8 @@ namespace EliteDangerousCore
                 });
             }
         }
-#if EDD
+
+#if !TESTHARNESS
         //// find nearest system, from cache, from db, from web (opt), and from gmo (opt)
         public static ISystem FindNearestSystemTo(double x, double y, double z, double maxdistance, 
                                         WebExternalDataLookup weblookup, GMO.GalacticMapping glist = null)

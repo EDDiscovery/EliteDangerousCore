@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2023-2023 EDDiscovery development team
+ * Copyright 2022-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -78,11 +78,13 @@ namespace EliteDangerousCore
             }
         }
 
+#if !TESTHARNESS
         public static void Process(JournalEntry je)
         {
             if (je is IIdentifiers)
                 (je as IIdentifiers).UpdateIdentifiers();
         }
+#endif
 
         // from EDDI 17/11/23
 
@@ -163,6 +165,7 @@ namespace EliteDangerousCore
             "$warzone_tg_high","High Intensity AX Conflict Zone","High Intensity Thargoid Conflict Zone",
             "$warzone_tg_veryhigh","Very High Intensity AX Conflict Zone","Very High Intensity AX Conflict Zone",
             "$wreckage_ancientprobe","Minor Wreckage","Minor Wreckage",
+            "$settlement_unflattened_tgmegabarnacle","Thargoid Spire","Thargoid Spire",
         };
     }
 }

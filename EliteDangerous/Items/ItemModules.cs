@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2023 EDDiscovery development team
+ * Copyright 2016-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,9 +10,8 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * Data is intellectual property and copyright of Frontier Developments plc ('Frontier', 'Frontier Developments') and are subject to their terms and conditions.
  */
+
 
 using System;
 using System.Collections.Generic;
@@ -275,7 +274,7 @@ namespace EliteDangerousCore
         #endregion
 
         // History
-        // Originally from coriolis
+        // Originally from coriolis, but now not.  Synced with Frontier data
         // Nov 1/12/23 synched with EDDI data, with outfitting.csv
 
         #region Ship Modules
