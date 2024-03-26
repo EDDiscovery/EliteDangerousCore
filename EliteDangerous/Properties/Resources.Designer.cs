@@ -78,14 +78,5 @@ namespace EliteDangerous.Properties {
                 return ResourceManager.GetString("Marx_Nebula_List_26_10_21", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to https://coriolis.edcd.io/import?.
-        /// </summary>
-        public static string URLCoriolis {
-            get {
-                return ResourceManager.GetString("URLCoriolis", resourceCulture);
-            }
-        }
     }
 }
