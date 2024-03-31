@@ -85,17 +85,17 @@ namespace EliteDangerousCore.JournalEvents
             public string SignalName { get; set; }
             [PropertyNameAttribute("Signal name localised")]
             public string SignalName_Localised { get; set; }
-            [PropertyNameAttribute("Signal type, live only")]
-            public string SignalType { get; set; } 
-            [PropertyNameAttribute("Spawing state")]
+            [PropertyNameAttribute("Signal type, may not be present in old data")]
+            public string SignalType { get; set; }  // may be null/empty on older records
+            [PropertyNameAttribute("Spawing state, USS Only")]
             public string SpawningState { get; set; }
-            [PropertyNameAttribute("Signal state localised")]
+            [PropertyNameAttribute("Signal state localised, USS Only")]
             public string SpawningState_Localised { get; set; }
-            [PropertyNameAttribute("Signal faction, FDName")]
+            [PropertyNameAttribute("Signal faction, FDName, USS only")]
             public string SpawningFaction { get; set; }
-            [PropertyNameAttribute("Signal faction, Localised")]
+            [PropertyNameAttribute("Signal faction, Localised, USS only")]
             public string SpawningFaction_Localised { get; set; }
-            [PropertyNameAttribute("Optional time remaining seconds")]
+            [PropertyNameAttribute("Optional time remaining seconds for USS types")]
             public double? TimeRemaining { get; set; }          // null if not expiring
             [PropertyNameAttribute("Optional Frontier system address")]
             public long? SystemAddress { get; set; }
@@ -103,22 +103,22 @@ namespace EliteDangerousCore.JournalEvents
             [PropertyNameAttribute("Is it a station")]
             public bool? IsStation { get; set; }
             
-            [PropertyNameAttribute("Threat level")]
-            public int? ThreatLevel { get; set; }
+            [PropertyNameAttribute("Threat level, USS Only")]
+            public int? ThreatLevel { get; set; }           
             [PropertyNameAttribute("Optional USS Type, FDName")]
-            public string USSType { get; set; }
+            public string USSType { get; set; }     // only for signal types of USS
             [PropertyNameAttribute("Optional USS Type, Localised")]
             public string USSTypeLocalised { get; set; }
 
             [PropertyNameAttribute("When signal was recorded")]
             public System.DateTime RecordedUTC { get; set; }        // when it was recorded
 
-            [PropertyNameAttribute("Optional signal expiry time, UTC")]
+            [PropertyNameAttribute("Optional signal expiry time, UTC, USS types")]
             public System.DateTime ExpiryUTC { get; set; }
-            [PropertyNameAttribute("Optional signal expiry time, Local")]
+            [PropertyNameAttribute("Optional signal expiry time, Local, USS types")]
             public System.DateTime ExpiryLocal { get; set; }
 
-            [PropertyNameAttribute("Signal class")]
+            [PropertyNameAttribute("EDD Definition of signal classification")]
             public SignalDefinitions.Classification ClassOfSignal { get; set; }
 
             const int CarrierExpiryTime = 10 * (60 * 60 * 24);              // days till we consider the carrier signal expired..
@@ -126,8 +126,8 @@ namespace EliteDangerousCore.JournalEvents
             public FSSSignal(JObject evt, System.DateTime EventTimeUTC)
             {
                 SignalName = evt["SignalName"].Str();
-                string loc = evt["SignalName_Localised"].Str();     // not present for stations/installations
-                SignalName_Localised = loc.Alt(SignalName);         // don't mangle if no localisation, its prob not there because its a proper name
+                string signalnamelocalised = evt["SignalName_Localised"].Str();     // not present for stations/installations
+                SignalName_Localised = signalnamelocalised.Alt(SignalName);         // don't mangle if no localisation, its prob not there because its a proper name
                 SignalType = evt["SignalType"].Str();
 
                 SpawningState = evt["SpawningState"].Str();          // USS only, checked
@@ -147,7 +147,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 IsStation = evt["IsStation"].BoolNull();
 
-                ClassOfSignal = SignalDefinitions.GetClassification(SignalName, SignalType, IsStation == true, loc);
+                ClassOfSignal = SignalDefinitions.GetClassification(SignalName, SignalType, IsStation == true, signalnamelocalised);
 
                 if ( ClassOfSignal == SignalDefinitions.Classification.Carrier)
                     TimeRemaining = CarrierExpiryTime;
@@ -253,7 +253,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     foreach (var s in Signals)
                     {
-                        if (s.SignalName.StartsWith("$USS_"))
+                        if (s.ClassOfSignal == SignalDefinitions.Classification.USS)
                             info += ", " + s.USSTypeLocalised;
                         else
                             info += ", " + s.SignalName_Localised;

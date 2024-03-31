@@ -22,37 +22,37 @@ namespace EliteDangerousCore
 
         // SignalType could be null/empty, in which case its based on SignalName/IsStation/Localised string
         // older entries did not have SignalType.
-        public static Classification GetClassification(string signalname, string signaltype, bool isstation, string loc)
+        public static Classification GetClassification(string fdsignalname, string fdsignaltype, bool isstation, string signalnamelocalised)
         {
             Classification signalclass = Classification.Other;
 
-            if (signaltype.HasChars())
+            if (fdsignaltype.HasChars())
             {
-                if (signaltype.Contains("Station", StringComparison.InvariantCultureIgnoreCase) || (signaltype.Equals("Outpost", StringComparison.InvariantCultureIgnoreCase)))
+                if (fdsignaltype.Contains("Station", StringComparison.InvariantCultureIgnoreCase) || (fdsignaltype.Equals("Outpost", StringComparison.InvariantCultureIgnoreCase)))
                     signalclass = Classification.Station;
-                else if (signaltype.Equals("FleetCarrier", StringComparison.InvariantCultureIgnoreCase))
+                else if (fdsignaltype.Equals("FleetCarrier", StringComparison.InvariantCultureIgnoreCase))
                     signalclass = Classification.Carrier;
-                else if (signaltype.Equals("Installation", StringComparison.InvariantCultureIgnoreCase))
+                else if (fdsignaltype.Equals("Installation", StringComparison.InvariantCultureIgnoreCase))
                     signalclass = Classification.Installation;
-                else if (signaltype.Equals("Megaship", StringComparison.InvariantCultureIgnoreCase))
+                else if (fdsignaltype.Equals("Megaship", StringComparison.InvariantCultureIgnoreCase))
                     signalclass = Classification.Megaship;
-                else if (signaltype.Equals("Combat", StringComparison.InvariantCultureIgnoreCase))
+                else if (fdsignaltype.Equals("Combat", StringComparison.InvariantCultureIgnoreCase))
                     signalclass = Classification.ConflictZone;
-                else if (signaltype.Equals("ResourceExtraction", StringComparison.InvariantCultureIgnoreCase))
+                else if (fdsignaltype.Equals("ResourceExtraction", StringComparison.InvariantCultureIgnoreCase))
                     signalclass = Classification.ResourceExtraction;
-                else if (signaltype.Equals("NavBeacon", StringComparison.InvariantCultureIgnoreCase))
+                else if (fdsignaltype.Equals("NavBeacon", StringComparison.InvariantCultureIgnoreCase))
                     signalclass = Classification.NavBeacon;
-                else if (signaltype.Equals("Titan", StringComparison.InvariantCultureIgnoreCase))
+                else if (fdsignaltype.Equals("Titan", StringComparison.InvariantCultureIgnoreCase))
                     signalclass = Classification.Titan;
-                else if (signaltype.Equals("TouristBeacon", StringComparison.InvariantCultureIgnoreCase))
+                else if (fdsignaltype.Equals("TouristBeacon", StringComparison.InvariantCultureIgnoreCase))
                     signalclass = Classification.TouristBeacon;
-                else if (signaltype.Equals("USS", StringComparison.InvariantCultureIgnoreCase))
+                else if (fdsignaltype.Equals("USS", StringComparison.InvariantCultureIgnoreCase))
                     signalclass = Classification.USS;
-                else if (signaltype.Equals("Generic", StringComparison.InvariantCultureIgnoreCase))
+                else if (fdsignaltype.Equals("Generic", StringComparison.InvariantCultureIgnoreCase))
                     signalclass = Classification.Other;
-                else if (signaltype.Equals("Codex", StringComparison.InvariantCultureIgnoreCase) && signalname.StartsWith("$Fixed_Event_Life", StringComparison.InvariantCultureIgnoreCase))
+                else if (fdsignaltype.Equals("Codex", StringComparison.InvariantCultureIgnoreCase) && fdsignalname.StartsWith("$Fixed_Event_Life", StringComparison.InvariantCultureIgnoreCase))
                     signalclass = Classification.NotableStellarPhenomena;
-                else if (signaltype.Equals("Codex", StringComparison.InvariantCultureIgnoreCase))
+                else if (fdsignaltype.Equals("Codex", StringComparison.InvariantCultureIgnoreCase))
                     signalclass = Classification.Codex;
                 else
                     signalclass = Classification.Other;
@@ -61,23 +61,23 @@ namespace EliteDangerousCore
             {
                 if (isstation == true)          // station flag
                 {
-                    int dash = signalname.LastIndexOf('-');
-                    if (signalname.Length >= 5 && dash == signalname.Length - 4 && char.IsLetterOrDigit(signalname[dash + 1]) && char.IsLetterOrDigit(signalname[dash - 1]))
+                    int dash = fdsignalname.LastIndexOf('-');
+                    if (fdsignalname.Length >= 5 && dash == fdsignalname.Length - 4 && char.IsLetterOrDigit(fdsignalname[dash + 1]) && char.IsLetterOrDigit(fdsignalname[dash - 1]))
                         signalclass = Classification.Carrier;
                     else
                         signalclass = Classification.Station;
                 }
-                else if (signalname.StartsWith("$USS", StringComparison.InvariantCultureIgnoreCase) || signalname.StartsWith("$RANDOM", StringComparison.InvariantCultureIgnoreCase))
+                else if (fdsignalname.StartsWith("$USS", StringComparison.InvariantCultureIgnoreCase) || fdsignalname.StartsWith("$RANDOM", StringComparison.InvariantCultureIgnoreCase))
                     signalclass = Classification.USS;
-                else if (signalname.StartsWith("$Warzone", StringComparison.InvariantCultureIgnoreCase))
+                else if (fdsignalname.StartsWith("$Warzone", StringComparison.InvariantCultureIgnoreCase))
                     signalclass = Classification.ConflictZone;
-                else if (signalname.StartsWith("$Fixed_Event_Life", StringComparison.InvariantCultureIgnoreCase))
+                else if (fdsignalname.StartsWith("$Fixed_Event_Life", StringComparison.InvariantCultureIgnoreCase))
                     signalclass = Classification.NotableStellarPhenomena;
-                else if (signalname.StartsWith("$MULTIPLAYER_SCENARIO14", StringComparison.InvariantCultureIgnoreCase) || signalname.StartsWith("$MULTIPLAYER_SCENARIO7", StringComparison.InvariantCultureIgnoreCase))
+                else if (fdsignalname.StartsWith("$MULTIPLAYER_SCENARIO14", StringComparison.InvariantCultureIgnoreCase) || fdsignalname.StartsWith("$MULTIPLAYER_SCENARIO7", StringComparison.InvariantCultureIgnoreCase))
                     signalclass = Classification.ResourceExtraction;
-                else if (signalname.Contains("-class"))
+                else if (fdsignalname.Contains("-class"))
                     signalclass = Classification.Megaship;
-                else if (loc.Length == 0)      // other types, and old station entries, don't have localisation, so its an installation, put at end of list because other things than installations have no localised name too
+                else if (signalnamelocalised.Length == 0)      // other types, and old station entries, don't have localisation, so its an installation, put at end of list because other things than installations have no localised name too
                     signalclass = Classification.Installation;
                 else
                     signalclass = Classification.Other;
