@@ -73,7 +73,7 @@ namespace EliteDangerousCore.ScreenShots
             }
             else
             {
-                logit("Folder specified for image conversion does not exist, check screehshot settings in the Settings panel".T(EDCTx.ScreenshotDirectoryWatcher_NOF));
+                logit("Folder specified for image conversion does not exist, check screenshot settings in the Settings panel".T(EDCTx.ScreenshotDirectoryWatcher_NOF));
                 return false;
             }
         }
