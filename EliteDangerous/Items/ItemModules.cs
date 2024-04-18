@@ -1622,6 +1622,13 @@ namespace EliteDangerousCore
             { "hpt_xenoscannermk2_basic_tiny", new ShipModule(128808878,1.3,0.8,"Range:2000m","Xeno Scanner MK 2",ShipModule.ModuleTypes.EnhancedXenoScanner) },
             { "hpt_xenoscanner_advanced_tiny", new ShipModule(129022952,1.3,0.8,"Range:2000m","Advanced Xeno Scanner",ShipModule.ModuleTypes.EnhancedXenoScanner) },
 
+            { "int_hyperdrive_overcharge_size2_class3", new ShipModule(129030487,2.5,0.2,"OptMass: 60t, SpeedIncrease: 142%, AccelerationRate: 0.09, HeatGenerationRate: 0.41, ControlInterference: 0.24","Hyperdrive Overcharged Class 2 Rating C",ShipModule.ModuleTypes.FrameShiftDrive) },
+            { "int_hyperdrive_overcharge_size3_class3", new ShipModule(129030486,5,0.3,"OptMass: 100t, SpeedIncrease: 120%, AccelerationRate: 0.07, HeatGenerationRate: 0.49, ControlInterference: 0.29","Hyperdrive Overcharged Class 3 Rating C",ShipModule.ModuleTypes.FrameShiftDrive) },
+            { "int_hyperdrive_overcharge_size4_class3", new ShipModule(129030485,10,0.3,"OptMass: 350t, SpeedIncrease: 100%, AccelerationRate: 0.06, HeatGenerationRate: 1.23, ControlInterference: 0.35","Hyperdrive Overcharged Class 4 Rating C",ShipModule.ModuleTypes.FrameShiftDrive) },
+            { "int_hyperdrive_overcharge_size5_class3", new ShipModule(129030474,20,0.45,"OptMass: 665t, SpeedIncrease: 80%, AccelerationRate: 0.055, HeatGenerationRate: 1.4, ControlInterference: 0.4","Hyperdrive Overcharged Class 5 Rating C",ShipModule.ModuleTypes.FrameShiftDrive) },
+            { "int_hyperdrive_overcharge_size6_class3", new ShipModule(129030484,40,0.5,"OptMass: 1200t, SpeedIncrease: 62%, AccelerationRate: 0.045, HeatGenerationRate: 1.8, ControlInterference: 0.64","Hyperdrive Overcharged Class 6 Rating C",ShipModule.ModuleTypes.FrameShiftDrive) },
+            { "int_hyperdrive_overcharge_size7_class3", new ShipModule(129030483,80,0.68,"OptMass: 1710t, SpeedIncrease: 46%, AccelerationRate: 0.04, HeatGenerationRate: 2, ControlInterference: 0.67","Hyperdrive Overcharged Class 7 Rating C",ShipModule.ModuleTypes.FrameShiftDrive) },
+
         };
 
         // non buyable
