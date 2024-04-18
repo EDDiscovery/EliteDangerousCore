@@ -135,6 +135,10 @@ namespace EliteDangerousCore.JournalEvents
 
                 SpawningFaction = evt["SpawningFaction"].Str();      // USS only, checked
                 SpawningFaction_Localised = JournalFieldNaming.CheckLocalisation(evt["SpawningFaction_Localised"].Str(), SpawningFaction);
+                //if ( SpawningFaction.HasChars() ) System.Diagnostics.Debug.WriteLine($"DS {SpawningFaction} {SpawningFaction_Localised}");
+
+                if ( SpawningFaction.EqualsIIC("$faction_none;"))       // kill these none entries
+                    SpawningFaction = SpawningFaction_Localised = "";
 
                 USSType = evt["USSType"].Str();                     // USS Only, checked
                 USSTypeLocalised = JournalFieldNaming.CheckLocalisation(evt["USSType_Localised"].Str(), USSType);

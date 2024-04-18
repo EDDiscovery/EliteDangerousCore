@@ -18,7 +18,8 @@ namespace EliteDangerousCore
 {
     public class SignalDefinitions
     {
-        public enum Classification { Station, Installation, NotableStellarPhenomena, ConflictZone, ResourceExtraction, Carrier, USS, Megaship, Other, NavBeacon, Titan, TouristBeacon, Codex };
+        public enum Classification { Station, Installation, NotableStellarPhenomena, ConflictZone, ResourceExtraction, 
+                                    Carrier, USS, Megaship, Other, NavBeacon, Titan, TouristBeacon, Codex };
 
         // SignalType could be null/empty, in which case its based on SignalName/IsStation/Localised string
         // older entries did not have SignalType.

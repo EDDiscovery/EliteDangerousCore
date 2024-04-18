@@ -187,9 +187,9 @@ namespace EliteDangerousCore.JournalEvents
         public JournalCapShipBond(JObject evt) : base(evt, JournalTypeEnum.CapShipBond)
         {
             AwardingFaction = evt["AwardingFaction"].Str();
-            AwardingFaction_Localised = JournalFieldNaming.CheckLocalisation(evt["AwardingFaction_Localised"].Str(), AwardingFaction);
+            AwardingFaction_Localised = JournalFieldNaming.CheckLocalisation(evt["AwardingFaction_Localised"].Str(), AwardingFaction);      // no evidence of this, but keeping
             VictimFaction = evt["VictimFaction"].Str();
-            VictimFaction_Localised = JournalFieldNaming.CheckLocalisation(evt["VictimFaction_Localised"].Str(), VictimFaction);
+            VictimFaction_Localised = JournalFieldNaming.CheckLocalisation(evt["VictimFaction_Localised"].Str(), VictimFaction);            // no evidence of this, but keeping
             Reward = evt["Reward"].Long();
         }
 
@@ -256,7 +256,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", CrimeType, "< on faction ".T(EDCTx.JournalEntry_onfaction), Faction, "Against ".T(EDCTx.JournalEntry_Against), VictimLocalised, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Fine, "Bounty: ; cr;N0".T(EDCTx.JournalEntry_Bounty), Bounty);
+            info = BaseUtils.FieldBuilder.Build("", CrimeType, "< on faction ".T(EDCTx.JournalEntry_onfaction), Faction, 
+                        "Against ".T(EDCTx.JournalEntry_Against), VictimLocalised, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Fine, "Bounty: ; cr;N0".T(EDCTx.JournalEntry_Bounty), Bounty);
             detailed = "";
         }
     }

@@ -338,7 +338,7 @@ namespace EliteDangerousCore
         }
         public static string CrimeType(string fdname)
         {
-            return fdname?.SplitCapsWordFull() ?? null;
+            return Crimes.ToEnglish(fdname);
         }
         public static string RedeemVoucherType(string fdname)
         {
