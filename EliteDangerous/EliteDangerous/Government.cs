@@ -33,6 +33,7 @@ namespace EliteDangerousCore
             Imperial,
             None,
             Patronage,
+            Prison,
             PrisonColony,
             Theocracy,
             Engineer,
@@ -40,40 +41,60 @@ namespace EliteDangerousCore
         }
 
         // maps the $government_id; to an enum
+        // If null is passed in, its presumed field is missing and thus Unknown.
         public static Government ToEnum(string fdname)
         {
+            if (fdname == null)
+                return Government.Unknown;
+
             fdname = fdname.ToLowerInvariant().Replace("$government_", "").Replace(" ", "").Replace(";", "");
+
             if (Enum.TryParse(fdname, true, out Government value))
                 return value;
             else
+            {
+                System.Diagnostics.Debug.WriteLine($"**** Unknown government {fdname}");
                 return Government.Unknown;
+            }
+        }
+
+        public static string ToEnglish(Government g)
+        {
+            return g.ToString().SplitCapsWordFull();
+        }
+
+        public static string ToLocalisedLanguage(Government gv)
+        {
+            string id = "GovernmentTypes." + gv.ToString();
+            return BaseUtils.Translator.Instance.Translate(ToEnglish(gv), id);
         }
 
         // from EDCD 
         // localisation can be provided via the Identifiers caching of $government
 
-        public static Dictionary<string, string> Types = new Dictionary<string, string>()
+        private static Dictionary<Government, string> Types = new Dictionary<Government, string>()
         {
-            ["$government_anarchy;"] = "Anarchy",
-            ["$government_communism;"] = "Communism",
-            ["$government_confederacy;"] = "Confederacy",
-            ["$government_cooperative;"] = "Cooperative",
-            ["$government_corporate;"] = "Corporate",
-            ["$government_democracy;"] = "Democracy",
-            ["$government_dictatorship;"] = "Dictatorship",
-            ["$government_feudal;"] = "Feudal",
-            ["$government_imperial;"] = "Imperial",
-            ["$government_none;"] = "None",
-            ["$government_patronage;"] = "Patronage",
-            ["$government_prisoncolony;"] = "Prison Colony",
-            ["$government_theocracy;"] = "Theocracy",
-            ["$government_engineer;"] = "Engineer",
-            ["$government_carrier;"] = "Private Ownership",
+            [Government.Anarchy] = "Anarchy",
+            [Government.Communism] = "Communism",
+            [Government.Confederacy] = "Confederacy",
+            [Government.Cooperative] = "Cooperative",
+            [Government.Corporate] = "Corporate",
+            [Government.Democracy] = "Democracy",
+            [Government.Dictatorship] = "Dictatorship",
+            [Government.Feudal] = "Feudal",
+            [Government.Imperial] = "Imperial",
+            [Government.None] = "None",
+            [Government.Patronage] = "Patronage",
+            [Government.PrisonColony] = "Prison Colony",
+            [Government.Prison] = "Prison",
+            [Government.Theocracy] = "Theocracy",
+            [Government.Engineer] = "Engineer",
+            [Government.Carrier] = "Private Ownership",
 
-            ["$government_unknown;"] = "Unknown",      // addition to allow Unknown to be mapped
+            [Government.Unknown] = "Unknown",      // addition to allow Unknown to be mapped
         };
 
-        public static string ReverseLookup(string englishname)
+        public static Government SpashToEnum(string englishname)
         {
             foreach(var kvp in Types)
             {
@@ -81,8 +102,8 @@ namespace EliteDangerousCore
                     return kvp.Key;
             }
 
-            System.Diagnostics.Debug.WriteLine($"*** Reverse lookup government failed {englishname}");
-            return null;
+            System.Diagnostics.Debug.WriteLine($"*** Spansh Reverse lookup government failed {englishname}");
+            return Government.Unknown;
         }
     }
 }

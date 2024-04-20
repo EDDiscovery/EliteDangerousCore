@@ -52,14 +52,41 @@ namespace EliteDangerousCore
             Exploited,
         }
 
-        public static State ToEnum(string englishname)
+        public static State? ToEnum(string englishname)
         {
-            if (Enum.TryParse(englishname, true, out State value))
+            if (englishname == null)
+            {
+                //System.Diagnostics.Debug.WriteLine($"**** No faction state");
+                return null;
+            }
+            else if (Enum.TryParse(englishname, true, out State value)) // case insensitive
             {
                 return value;
             }
             else
+            {
+                System.Diagnostics.Debug.WriteLine($"**** Unknown faction state {englishname}");
                 return State.Unknown;
+            }
+        }
+
+        public static string ToEnglish(State? stat)
+        {
+            return stat != null ? stat.ToString().SplitCapsWordFull() : null;
+        }
+
+        public static string ToLocalisedLanguage(State? stat)
+        {
+            if (stat == null)
+                return null;
+            string id = "FactionStates." + stat.ToString();
+            return BaseUtils.Translator.Instance.Translate(ToEnglish(stat), id);
+        }
+
+        public static void IDSTx()
+        {
+            foreach (var name in Enum.GetNames(typeof(State)))
+                System.Diagnostics.Debug.WriteLine($".{name}: \"{name.SplitCapsWordFull()}\" @");
         }
     }
 }

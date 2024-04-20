@@ -966,7 +966,7 @@ namespace EliteDangerousCore.EDDN
         // pass thru gameversion/build as its used for both journal market and capi EDDCommodityPrices
 
         public JObject CreateEDDNCommodityMessage(string gameversion, string build, List<CCommodities> commodities, bool odyssey, bool horizons, string systemName, 
-                                string stationName, string stationType, string carrieraccess, long? marketID, DateTime time)
+                                string stationName, StationDefinitions.StarportTypes stationType, string carrieraccess, long? marketID, DateTime time)
         {
             if (commodities == null) // now allowed to send empty lists for FC purposes (jan 21)
                 return null;
@@ -980,8 +980,8 @@ namespace EliteDangerousCore.EDDN
 
             message["systemName"] = systemName;
             message["stationName"] = stationName;
-            if ( stationType.HasChars())                    // it may be null
-                message["stationType"] = stationType;
+            if ( stationType != StationDefinitions.StarportTypes.Unknown)                    // it may be unknown
+                message["stationType"] = stationType.ToString();
             if (carrieraccess.HasChars())                   // it may be null
                 message["carrierDockingAccess"] = carrieraccess;
             message["marketId"] = marketID;
@@ -1143,7 +1143,7 @@ namespace EliteDangerousCore.EDDN
             message["odyssey"] = journal.IsOdyssey;
             message["MarketID"] = journal.MarketID;
             message["StationName"] = journal.StationName;
-            message["StationType"] = journal.FDStationType;
+            message["StationType"] = journal.FDStationType.ToString();
             message["Reason"] = journal.FDReason;
 
             msg["message"] = message;
@@ -1166,7 +1166,7 @@ namespace EliteDangerousCore.EDDN
             message["odyssey"] = journal.IsOdyssey;
             message["MarketID"] = journal.MarketID;
             message["StationName"] = journal.StationName;
-            message["StationType"] = journal.FDStationType;
+            message["StationType"] = journal.FDStationType.ToString();
             message["LandingPad"] = journal.LandingPad;
 
             msg["message"] = message;

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2023-2023 EDDiscovery development team
+ * Copyright © 2024-2024 EDDiscovery development team
  *
  * Licensed under the Apache License", Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -17,7 +17,7 @@ using System.Collections.Generic;
 
 namespace EliteDangerousCore
 {
-    public class Crimes
+    public static class Crimes
     {
         // from EDCD 
 
@@ -27,12 +27,12 @@ namespace EliteDangerousCore
             ["collidedatspeedinnofirezone"] = "Collided at speed in a no fire zone",
             ["collidedatspeedinnofirezone_hulldamage"] = "Collided at speed in a no fire zone resulting in hull damage",
             ["disobeypolice"] = "Disobeyed a order from the police",
-            ["dockingmajorblockingairlock"] = "Blocking airlock",
+            ["dockingmajorblockingairlock"] = "Blocking an airlock",
             ["dockingmajorblockinglandingpad"] = "Blocking a landing pad",
             ["dockingmajortresspass"] = "Tresspass",
-            ["dockingminorblockingairlock"] = "Blocking a airlock",
-            ["dockingminorblockinglandingpad"] = "Blocking a landing pad",
-            ["dockingminortresspass"] = "Tresspass",
+            ["dockingminorblockingairlock"] = "Minor blocking of an airlock",
+            ["dockingminorblockinglandingpad"] = "Minor blocking of a landing pad",
+            ["dockingminortresspass"] = "Minor tresspass",
             ["dumpingdangerous"] = "Ejecting goods in a dangerous place",
             ["dumpingnearstation"] = "Ejecting goods near station",
             ["fireinnofirezone"] = "Firing weapons in a no fire zone",
@@ -62,10 +62,10 @@ namespace EliteDangerousCore
             ["passengerwanted"] = "Wanted passenger",
             ["piracy"] = "Piracy",
             ["recklessweaponsdischarge"] = "Discharging a weapon",
-            ["shuttledestruction"] = "Destroying a APEX Shuttle",
+            ["shuttledestruction"] = "Destroying an APEX Shuttle",
         };
 
-        // maps the $economy_id; to an enum
+        // maps CrimeType FDname to an english string
         public static string ToEnglish( string fdname)
         {
             //foreach( var kvp in crimesFDToEnglish) System.Diagnostics.Debug.WriteLine($"[\"{kvp.Key.ToLowerInvariant()}\"] = \"{kvp.Value}\",");
@@ -83,6 +83,19 @@ namespace EliteDangerousCore
                 System.Diagnostics.Debug.WriteLine($"**** Unknown crime type {fdname}");
                 return fdname.SplitCapsWordFull();
             }
+        }
+
+        // localised language or english
+        public static string ToLocalisedLanguage(string fdname )
+        {
+            string id = "Crimes." + fdname.ToLowerInvariant();
+            return BaseUtils.Translator.Instance.Translate(ToEnglish(fdname),id);
+        }
+
+        public static void IDSTx()
+        {
+            foreach (var kvp in crimesFDToEnglish) 
+                System.Diagnostics.Debug.WriteLine($".{kvp.Key.ToLowerInvariant()}: \"{ToEnglish(kvp.Key)}\" @");
         }
     }
 }

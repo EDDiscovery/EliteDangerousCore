@@ -234,6 +234,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             FDCrimeType = evt["CrimeType"].Str();
             CrimeType = JournalFieldNaming.CrimeType(FDCrimeType);
+            CrimeTypeTranslated = Crimes.ToLocalisedLanguage(FDCrimeType);
+            //System.Diagnostics.Debug.WriteLine($"{FDCrimeType} -> {CrimeType} -> {CrimeTypeTranslated}");
+
             Faction = evt["Faction"].Str();
             Victim = evt["Victim"].Str();
             VictimLocalised = JournalFieldNaming.CheckLocalisation(evt["Victim_Localised"].Str(), Victim);
@@ -242,6 +245,7 @@ namespace EliteDangerousCore.JournalEvents
         }
         public string CrimeType { get; set; }       // friendly name
         public string FDCrimeType { get; set; }     // FDName
+        public string CrimeTypeTranslated { get; set; }     // our translation of the crime type, or english if can't find a translation
         public string Faction { get; set; }
         public string Victim { get; set; }
         public string VictimLocalised { get; set; }
@@ -256,7 +260,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", CrimeType, "< on faction ".T(EDCTx.JournalEntry_onfaction), Faction, 
+            info = BaseUtils.FieldBuilder.Build("", CrimeTypeTranslated, "< on faction ".T(EDCTx.JournalEntry_onfaction), Faction, 
                         "Against ".T(EDCTx.JournalEntry_Against), VictimLocalised, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Fine, "Bounty: ; cr;N0".T(EDCTx.JournalEntry_Bounty), Bounty);
             detailed = "";
         }

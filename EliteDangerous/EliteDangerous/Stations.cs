@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EliteDangerousCore
 {
@@ -70,13 +71,26 @@ namespace EliteDangerousCore
             if (Enum.TryParse(fdname, true, out StationServices value))
                 return value;
             else
+            {
+                System.Diagnostics.Debug.WriteLine($"*** Unknown services type {fdname}");
                 return StationServices.Unknown;
+            }
         }
 
+        public static string ToEnglish(StationServices ec)
+        {
+            return ec.ToString().SplitCapsWordFull();
+        }
+
+        public static string ToLocalisedLanguage(StationServices sc)
+        {
+            string id = "StationServices." + sc.ToString();
+            return BaseUtils.Translator.Instance.Translate(ToEnglish(sc), id);
+        }
 
         // names left are in stationservices, names right are spansh names
 
-        public static Dictionary<string, string> ServiceTypes = new Dictionary<string, string>()
+        private static Dictionary<string, string> ServiceTypesSpansh = new Dictionary<string, string>()
         {
             ["apexinterstellar"] = "Apex Interstellar",
             ["autodock"] = "Autodock",
@@ -122,9 +136,11 @@ namespace EliteDangerousCore
 
         };
 
-        public static string ServicesFDNameToText(string fdname)
+
+        //  and text name
+        static public List<KeyValuePair<string, string>> SpanshNamesAndText()
         {
-            return ServiceTypes.TryGetValue(fdname.ToLowerInvariant(), out string value) ? value : "Unknown";
+            return ServiceTypesSpansh.Distinct().ToList();
         }
 
         public enum StarportTypes
@@ -144,29 +160,36 @@ namespace EliteDangerousCore
             CraterPort,
         }
 
-        // maps the StationType field to an enum
-        public static StarportTypes StarPortToEnum(string fdname)
+        // maps the StationType field to an enum.
+        // If null is passed in, its presumed field is missing and thus Unknown.
+        public static StarportTypes StarportTypeToEnum(string fdname)
         {
+            if (fdname == null)
+                return StarportTypes.Unknown;
+
             fdname = fdname.ToLowerInvariant().Replace(" ", "").Replace(";", "");
             if (Enum.TryParse(fdname, true, out StarportTypes value))
                 return value;
             else
-                return StarportTypes.Unknown;
-        }
-
-        public static string ReverseLookupTypes(string englishname)
-        {
-            foreach(var kvp in ServiceTypes)
             {
-                if (englishname.Equals(kvp.Value, System.StringComparison.InvariantCultureIgnoreCase))
-                    return kvp.Key;
+                System.Diagnostics.Debug.WriteLine($"*** Unknown starport type {fdname}");
+                return StarportTypes.Unknown;
             }
-
-            System.Diagnostics.Debug.WriteLine($"*** Reverse lookup services failed {englishname}");
-            return null;
         }
 
-        public static Dictionary<string, string> StarportNameTypes = new Dictionary<string, string>()
+        public static string ToEnglish(StarportTypes starporttype)
+        {
+            return starporttype.ToString().SplitCapsWordFull();
+        }
+
+        public static string ToLocalisedLanguage(StarportTypes sc)
+        {
+            string id = "StarportTypes." + sc.ToString();
+            return BaseUtils.Translator.Instance.Translate(ToEnglish(sc), id);
+        }
+
+        // on right, spansh name
+        private static Dictionary<string, string> StarportNameTypesToSpansh = new Dictionary<string, string>()
         {
             // in journal as of Nov 23
 
@@ -209,12 +232,16 @@ namespace EliteDangerousCore
             ["scientific outpost"] = "Outpost",
             ["outpostscientific"] = "Outpost",
             ["megashipcivilian"] = "Mega Ship",
-
         };
+
+        static public IEnumerable<string> StarPortTypesNamesSpansh()
+        {
+            return StarportNameTypesToSpansh.Values.Distinct();
+        }
 
         public static string ReverseLookupStarportNameTypes(string englishname)
         {
-            foreach (var kvp in StarportNameTypes)
+            foreach (var kvp in StarportNameTypesToSpansh)
             {
                 if (englishname.Equals(kvp.Value, System.StringComparison.InvariantCultureIgnoreCase))
                     return kvp.Key;
@@ -231,14 +258,9 @@ namespace EliteDangerousCore
             UnknownSpansh,
             None,
             UnderRepairs,
-            Damanged,
+            Damaged,
             Abandoned,
             UnderAttack,
-        }
-
-        public static string StarPortStateToString(string fdname)
-        {
-            return fdname?.SplitCapsWordFull() ?? null;
         }
 
         // maps the StationType field to an enum
@@ -248,7 +270,21 @@ namespace EliteDangerousCore
             if (Enum.TryParse(fdname, true, out StarportState value))
                 return value;
             else
+            {
+                System.Diagnostics.Debug.WriteLine($"*** Unknown starport state {fdname}");
                 return StarportState.Unknown;
+            }
+        }
+
+        public static string ToEnglish(StarportState sts)
+        {
+            return sts.ToString().SplitCapsWordFull();
+        }
+
+        public static string ToLocalisedLanguage(StarportState sc)
+        {
+            string id = "StarportStates." + sc.ToString();
+            return BaseUtils.Translator.Instance.Translate(ToEnglish(sc), id);
         }
 
     }

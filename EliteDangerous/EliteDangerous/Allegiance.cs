@@ -31,14 +31,32 @@ namespace EliteDangerousCore
             PilotsFederation,
         }
 
-        public static Allegiance ToEnum(string englishname)
+        // maps the allegiance fdname to an enum
+        // If null is passed in, its presumed field is missing and thus Unknown.
+        public static Allegiance ToEnum(string fdname)
         {
-            if (Enum.TryParse(englishname, true, out Allegiance value))
+            if (fdname == null)
+                return Allegiance.Unknown;
+
+            if (Enum.TryParse(fdname, true, out Allegiance value))
             {
                 return value;
             }
             else
+            {
+                System.Diagnostics.Debug.WriteLine($"*** Allegiance unknown {fdname}");
                 return Allegiance.Unknown;
+            }
+        }
+        public static string ToEnglish(Allegiance al)
+        {
+            return al.ToString().SplitCapsWordFull();
+        }
+
+        public static string ToLocalisedLanguage(Allegiance al)
+        {
+            string id = "Allegiances." + al.ToString();
+            return BaseUtils.Translator.Instance.Translate(ToEnglish(al), id);
         }
     }
 }

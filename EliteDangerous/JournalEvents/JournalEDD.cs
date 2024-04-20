@@ -86,7 +86,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Station { get; protected set; }
         public string StationType { get; protected set; } // may be "Unknown" on older events, and from CAPI
-        public string FDStationType { get; protected set; }         // FDName, may be null on older events, and from CAPI
+        public StationDefinitions.StarportTypes FDStationType { get; protected set; }         // FDName, may be null on older events, and from CAPI
         public string CarrierDockingAccess { get; protected set; }  // will be null when not in carrier or from CAPI
         public string StarSystem { get; set; }
         public long? MarketID { get; set; }

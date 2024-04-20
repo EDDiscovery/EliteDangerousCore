@@ -45,48 +45,85 @@ namespace EliteDangerousCore
         }
 
         // maps the $economy_id; to an enum
+        // If null is passed in, its presumed field is missing and thus Unknown.
         public static Economy ToEnum(string fdname)
         {
+            if (fdname == null)
+                return Economy.Unknown;
+
             fdname = fdname.ToLowerInvariant().Replace("$economy_", "").Replace(" ", "").Replace(";", "");
             if (Enum.TryParse(fdname, true, out Economy value))
                 return value;
+            else if (fdname == "hightech")
+                return Economy.High_Tech;
             else
+            {
+                System.Diagnostics.Debug.WriteLine($"*** Economy is unknown {fdname}");
                 return Economy.Unknown;
+            }
         }
 
-        public static Dictionary<string, string> Types = new Dictionary<string, string>()
+        public static string ToDecorated(Economy ec)
         {
-            ["$economy_agri;"] = "Agriculture",
-            ["$economy_colony;"] = "Colony",
-            ["$economy_extraction;"] = "Extraction",
-            ["$economy_hightech;"] = "High Tech",
-            ["$economy_industrial;"] = "Industrial",
-            ["$economy_military;"] = "Military",
-            ["$economy_none;"] = "None",
-            ["$economy_refinery;"] = "Refinery",
-            ["$economy_service;"] = "Service",
-            ["$economy_terraforming;"] = "Terraforming",
-            ["$economy_tourism;"] = "Tourism",
-            ["$economy_prison;"] = "Prison",
-            ["$economy_damaged;"] = "Damaged",
-            ["$economy_rescue;"] = "Rescue",
-            ["$economy_repair;"] = "Repair",
-            ["$economy_carrier;"] = "Private Enterprise",
-            ["$economy_engineer;"] = "Engineering",
+            return "$economy_" + ec.ToString() + ";";
+        }
 
-            ["$economy_unknown;"] = "Unknown",      // addition to allow Unknown to be mapped
+        public static string ToEnglish(Economy ec)
+        {
+            return ec.ToString().SplitCapsWordFull();
+        }
+
+        public static string ToLocalisedLanguage(Economy ec)
+        {
+            string id = "EconomyTypes." + ec.ToString();
+            return BaseUtils.Translator.Instance.Translate(ToEnglish(ec), id);
+        }
+
+
+        private static Dictionary<Economy, string> Types = new Dictionary<Economy, string>()
+        {
+            [Economy.Agri] = "Agriculture",
+            [Economy.Colony] = "Colony",
+            [Economy.Extraction] = "Extraction",
+            [Economy.High_Tech] = "High Tech",
+            [Economy.Industrial] = "Industrial",
+            [Economy.Military] = "Military",
+            [Economy.None] = "None",
+            [Economy.Refinery] = "Refinery",
+            [Economy.Service] = "Service",
+            [Economy.Terraforming] = "Terraforming",
+            [Economy.Tourism] = "Tourism",
+            [Economy.Prison] = "Prison",
+            [Economy.Damaged] = "Damaged",
+            [Economy.Rescue] = "Rescue",
+            [Economy.Repair] = "Repair",
+            [Economy.Carrier] = "Private Enterprise",
+            [Economy.Engineer] = "Engineering",
+
+            [Economy.Unknown] = "Unknown",      // addition to allow Unknown to be mapped
         };
 
-        public static string ReverseLookup(string englishname)
+        public static Economy SpanshToEnum(string englishname)
         {
             foreach(var kvp in Types)
             {
-                if (englishname.Equals(kvp.Value, System.StringComparison.InvariantCultureIgnoreCase))
+                if (englishname.EqualsIIC(kvp.Value))
                     return kvp.Key;
             }
-            System.Diagnostics.Debug.WriteLine($"*** Reverse lookup economy failed {englishname}");
-            return null;
+            System.Diagnostics.Debug.WriteLine($"*** Spansh Economy Reverse lookup failed {englishname}");
+            return Economy.Unknown;
         }
+
+        // $economy_ and text name
+        static public List<KeyValuePair<string, string>> DecoratedNamesAndText()
+        {
+            List<KeyValuePair<string, string>> s = new List<KeyValuePair<string, string>>();
+            foreach (var kvp in Types)
+                s.Add(new KeyValuePair<string, string>(ToDecorated(kvp.Key), kvp.Value));
+            return s;
+        }
+
+
     }
 }
 

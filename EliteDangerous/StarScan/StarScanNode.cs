@@ -36,8 +36,10 @@ namespace EliteDangerousCore
         public partial class ScanNode
         {
             public ScanNodeType NodeType { get; internal set; }
-            public string FullName{ get; private set; }                 // full name including star system
-            public string OwnName{ get; private set; }                  // own name excluding star system
+            public string FullName { get; private set; }                 // full name including star system
+            public string OwnName { get; private set; }                  // Just the name of the body under the parent, so "2" or "a" for 2 a etc.
+            // name of the body in the system (2 A)
+            public string SystemBodyName { get { return FullName.Length > SystemNode.System.Name.Length + 1 ? FullName.Substring(SystemNode.System.Name.Length + 1) : FullName; } }
             public string CustomName{ get; internal set; }               // if we can extract from the journals a custom name of it, this holds it. Mostly null
             public SortedList<string, ScanNode> Children{ get; private set; }   // kids, may ne null
             public ScanNode Parent{ get; private set; }                 // Parent of this node 

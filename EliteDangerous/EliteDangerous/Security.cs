@@ -28,13 +28,33 @@ namespace EliteDangerousCore
             Lawless,
         }
 
+
+        // maps the security to an enum
+        // If null is passed in, its presumed field is missing and thus Unknown.
         public static Security ToEnum(string fdname)
         {
+            if (fdname == null)
+                return Security.Unknown;
+
             fdname = fdname.ToLowerInvariant().Replace("$system_security_", "").Replace("$galaxy_map_info_state_", "").Replace(" ", "").Replace(";", "");
             if (Enum.TryParse(fdname, true, out Security value))
                 return value;
             else
+            {
+                System.Diagnostics.Debug.WriteLine($"*** Security is unknown {fdname}");
                 return Security.Unknown;
+            }
+        }
+
+        public static string ToEnglish(Security sec)
+        {
+            return sec.ToString();
+        }
+
+        public static string ToLocalisedLanguage(Security sc)
+        {
+            string id = "SecurityTypes." + sc.ToString();
+            return BaseUtils.Translator.Instance.Translate(ToEnglish(sc), id);
         }
 
     }

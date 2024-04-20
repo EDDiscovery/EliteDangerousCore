@@ -314,24 +314,6 @@ namespace EliteDangerousCore
             return string.Format("{0} days {1} hours {2} minutes".T(EDCTx.JournalEntry_TME), time.Days, time.Hours, time.Minutes);
         }
 
-        public static string StationType(string fdname)
-        {
-            if (fdname != null)
-            {
-                if (StationDefinitions.StarportNameTypes.TryGetValue(fdname.ToLowerInvariant(), out string res))
-                    return res;
-                else
-                    return "Unknown";
-            }
-            else
-                return null;
-        }
-
-        public static string Allegiance(string fdname)
-        {
-            return fdname?.SplitCapsWordFull() ?? null;
-        }
-
         public static string DockingDeniedReason(string fdname)
         {
             return fdname.SplitCapsWordFull();
@@ -341,10 +323,6 @@ namespace EliteDangerousCore
             return Crimes.ToEnglish(fdname);
         }
         public static string RedeemVoucherType(string fdname)
-        {
-            return fdname?.SplitCapsWordFull() ?? null;
-        }
-        public static string FactionState(string fdname)
         {
             return fdname?.SplitCapsWordFull() ?? null;
         }

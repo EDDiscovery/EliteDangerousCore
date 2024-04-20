@@ -102,21 +102,23 @@ namespace EliteDangerousCore
                 return Bodies.Where(b => b.NodeType == ScanNodeType.star && b.ScanData != null).Count();
             }
 
-            public ScanNode Find(string bodyname)
+            // finds full name "Oochorrs KP-A c16-0 2 a"
+            public ScanNode Find(string fullnameinclsystemname)
             {
                 foreach (var b in Bodies)
                 {
-                    if (b.FullName.Equals(bodyname, StringComparison.InvariantCultureIgnoreCase))
+                    if (b.FullName.Equals(fullnameinclsystemname, StringComparison.InvariantCultureIgnoreCase))
                         return b;
                 }
                 return null;
             }
 
+            // finds "Oochorrs KP-A c16-0 2 a" or "2 a" or a customname
             public ScanNode FindCustomNameOrFullname(string bodyname)
             {
                 foreach (var b in Bodies)
                 {
-                    if (b.CustomNameOrOwnname.EqualsIIC(bodyname) || b.FullName.EqualsIIC(bodyname))
+                    if (b.CustomName.EqualsIIC(bodyname) || b.SystemBodyName.EqualsIIC(bodyname) || b.FullName.EqualsIIC(bodyname))
                         return b;
                 }
                 return null;

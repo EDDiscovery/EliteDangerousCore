@@ -464,11 +464,11 @@ namespace EliteDangerousCore
         {
             JournalFSDJump lastfsd = GetLastHistoryEntry(x => x.journalEntry is EliteDangerousCore.JournalEvents.JournalFSDJump, he)?.journalEntry as EliteDangerousCore.JournalEvents.JournalFSDJump;
 
-            allegiance = lastfsd != null && lastfsd.Allegiance.Length > 0 ? lastfsd.Allegiance.SplitCapsWordFull() : "?";
+            allegiance = lastfsd != null && lastfsd.Allegiance != AllegianceDefinitions.Allegiance.Unknown ? AllegianceDefinitions.ToLocalisedLanguage(lastfsd.Allegiance) : "?";
             economy = lastfsd != null && lastfsd.Economy_Localised.Length > 0 ? lastfsd.Economy_Localised : "?";
             gov = lastfsd != null && lastfsd.Government_Localised.Length > 0 ? lastfsd.Government_Localised : "?";
             faction = lastfsd != null && lastfsd.Faction.Length > 0 ? lastfsd.Faction.SplitCapsWordFull() : "-";
-            factionstate = lastfsd != null && lastfsd.FactionState.Length > 0 ? JournalFieldNaming.FactionState(lastfsd.FactionState) : "?";
+            factionstate = lastfsd != null && lastfsd.FactionState != FactionDefinitions.State.Unknown ? lastfsd.FactionStateTranslated : "?";
             security = lastfsd != null && lastfsd.Security_Localised.Length > 0 ? lastfsd.Security_Localised : "-";
         }
 

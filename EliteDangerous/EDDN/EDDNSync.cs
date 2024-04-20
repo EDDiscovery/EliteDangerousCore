@@ -162,6 +162,7 @@ namespace EliteDangerousCore.EDDN
             }
             else if (je.EventTypeID == JournalTypeEnum.Market)      // from the journal
             {
+                // tbd
                 JournalMarket jm = je as JournalMarket;
                 msg = eddn.CreateEDDNCommodityMessage(jm.GameVersion,jm.Build, jm.Commodities, jm.IsOdyssey, jm.IsHorizons, jm.StarSystem, 
                     jm.Station, jm.FDStationType, jm.CarrierDockingAccess, jm.MarketID, jm.EventTimeUTC);      // if its devoid of data, null returned

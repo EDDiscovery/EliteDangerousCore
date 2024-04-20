@@ -97,16 +97,25 @@ namespace EliteDangerousCore.JournalEvents
             BodyName = evt["BodyName"].StrNull();
 
             //patch 17 content below
-            StationGovernment = evt["StationGovernment"].StrNull();
-            StationGovernment_Localised = JournalFieldNaming.CheckLocalisation(evt["StationGovernment_Localised"].StrNull(), StationGovernment);
-            StationEconomy = evt["StationEconomy"].StrNull();
-            StationEconomy_Localised = JournalFieldNaming.CheckLocalisation(evt["StationEconomy_Localised"].StrNull(), StationEconomy);
+
+            StationGovernment = GovernmentDefinitions.ToEnum(evt["StationGovernment"].StrNull());       // may not be present
+            StationGovernment_Localised = JournalFieldNaming.CheckLocalisation(evt["StationGovernment_Localised"].Str(), GovernmentDefinitions.ToEnglish(StationGovernment));
+
+            StationEconomy = EconomyDefinitions.ToEnum(evt["StationEconomy"].StrNull());
+            StationEconomy_Localised = JournalFieldNaming.CheckLocalisation(evt["StationEconomy_Localised"].StrNull(),  EconomyDefinitions.ToEnglish(StationEconomy));
+
             EconomyList = evt["StationEconomies"]?.ToObjectQ<JournalDocked.Economies[]>();
-            StationServices = evt["StationServices"]?.ToObjectQ<string[]>();
-            Faction = evt["StationFaction"].I("Name").StrNull();
-            FactionState = evt["StationFaction"].I("FactionState").StrNull();
-            FriendlyFactionState = JournalFieldNaming.FactionState(FactionState);
-            StationAllegiance = evt["StationAllegiance"].StrNull();
+
+            StationServices = evt["StationServices"]?.ToObjectQ<StationDefinitions.StationServices[]>();
+
+            Faction = evt["StationFaction"].I("Name").StrNull();        // may not be present, so null if not
+            FactionState = FactionDefinitions.ToEnum(evt["StationFaction"].I("FactionState").StrNull());    // null if not present
+            FriendlyFactionState = FactionDefinitions.ToEnglish(FactionState); // null if not present
+            FactionStateTranslated = FactionDefinitions.ToLocalisedLanguage(FactionState); // null if not present
+
+            StationAllegiance = AllegianceDefinitions.ToEnum( evt["StationAllegiance"].StrNull());
+
+            if (FactionState != null)  System.Diagnostics.Debug.WriteLine($"Faction {Faction} {FactionState} {FriendlyFactionState} {FactionStateTranslated}");
         }
 
         public string Name { get; set; }
@@ -119,17 +128,17 @@ namespace EliteDangerousCore.JournalEvents
         public int? BodyID { get; set; } // may be null
         public string BodyName { get; set; }        // from event, may be null
         public string BodyType { get { return "Settlement"; } }
-        public string StationGovernment { get; set; }// may be null
+        public GovernmentDefinitions.Government StationGovernment { get; set; }// may be null
         public string StationGovernment_Localised { get; set; }// may be null
-        public string StationEconomy { get; set; }// may be null
+        public EconomyDefinitions.Economy StationEconomy { get; set; }// may be null
         public string StationEconomy_Localised { get; set; }// may be null
         public JournalDocked.Economies[] EconomyList { get; set; }        // may be null
-
-        public string[] StationServices { get; set; }       // may be null, fdnames
+        public StationDefinitions.StationServices[] StationServices { get; set; }       // may be null, fdnames
         public string Faction { get; set; }       //may be null
-        public string FactionState { get; set; }       //may be null, FDName
-        public string FriendlyFactionState { get; set; }       //may be null
-        public string StationAllegiance { get; set; } //fdname, may be null
+        public FactionDefinitions.State? FactionState { get; set; }       //may be null, FDName
+        public string FriendlyFactionState { get; set; }       //may be null, in english
+        public string FactionStateTranslated { get; set; }       //may be null, in local language
+        public AllegianceDefinitions.Allegiance StationAllegiance { get; set; } //fdname, may be null
 
 
         // IBodyFeature only
@@ -146,19 +155,19 @@ namespace EliteDangerousCore.JournalEvents
 
             detailed = "";
 
-            if (StationGovernment != null)      // update 17
+            if (StationGovernment != GovernmentDefinitions.Government.Unknown)      // update 17
             {
-                detailed = BaseUtils.FieldBuilder.Build("Economy: ".T(EDCTx.JournalEntry_Economy), StationEconomy_Localised, 
-                    "Government: ".T(EDCTx.JournalEntry_Government), StationGovernment_Localised,
+                detailed = BaseUtils.FieldBuilder.Build("Economy: ".T(EDCTx.JournalEntry_Economy), EconomyDefinitions.ToLocalisedLanguage(StationEconomy), 
+                    "Government: ".T(EDCTx.JournalEntry_Government), GovernmentDefinitions.ToLocalisedLanguage(StationGovernment),
                     "Faction: ".T(EDCTx.JournalEntry_Faction), Faction, 
-                    "< in state ".T(EDCTx.JournalEntry_instate), FriendlyFactionState, 
-                    "Allegiance: ".T(EDCTx.JournalEntry_Allegiance), JournalFieldNaming.Allegiance(StationAllegiance));
+                    "< in state ".T(EDCTx.JournalEntry_instate), FactionStateTranslated, 
+                    "Allegiance: ".T(EDCTx.JournalEntry_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(StationAllegiance));
 
                 if (StationServices != null)
                 {
                     string l = "";
-                    foreach (string s in StationServices)
-                        l = l.AppendPrePad(StationDefinitions.ServicesFDNameToText(s), ", ");
+                    foreach (var s in StationServices)
+                        l = l.AppendPrePad(StationDefinitions.ToLocalisedLanguage(s), ", ");
                     detailed += System.Environment.NewLine + "Station services: ".T(EDCTx.JournalEntry_Stationservices) + l;
                 }
 
@@ -166,7 +175,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     string l = "";
                     foreach (JournalDocked.Economies e in EconomyList)
-                        l = l.AppendPrePad(e.Name_Localised.Alt(e.Name) + " " + (e.Proportion * 100).ToString("0.#") + "%", ", ");
+                        l = l.AppendPrePad(EconomyDefinitions.ToLocalisedLanguage(e.Name) + " " + (e.Proportion * 100).ToString("0.#") + "%", ", ");
                     detailed += System.Environment.NewLine + "Economies: ".T(EDCTx.JournalEntry_Economies) + l;
                 }
             }

@@ -123,16 +123,18 @@ namespace EliteDangerousCore.Spansh
 
             station.IsFleetCarrier = station.StationType.Contains("Carrier");
 
-            station.Allegiance = evt["allegiance"].StrNull();
+            station.Allegiance = AllegianceDefinitions.ToEnum( evt["allegiance"].StrNull() );
             station.Faction = evt["controllingFaction"].StrNull();
 
             // faction state
 
             station.DistanceToArrival = evt["distanceToArrival"].Double();
 
+            // tbd
+
             station.Economy_Localised = evt["primaryEconomy"].StrNull();
             if ( station.Economy_Localised!=null)
-                station.Economy = EconomyDefinitions.ReverseLookup(station.Economy_Localised) ?? station.Economy_Localised;
+                station.Economy = EconomyDefinitions.SpanshToEnum(station.Economy_Localised);
 
             JObject eco = evt["economies"].Object();
             if (eco != null)
@@ -141,18 +143,19 @@ namespace EliteDangerousCore.Spansh
                 int i = 0;
                 foreach (var e in eco)
                 {
-                    var ec = EconomyDefinitions.ReverseLookup(e.Key) ?? e.Key;
+                    var ec = EconomyDefinitions.SpanshToEnum(e.Key);
                     station.EconomyList[i++] = new JournalDocked.Economies { Name = ec, Name_Localised = e.Key, Proportion = e.Value.Double(0) / 100.0 };
                 }
             }
 
             station.Government_Localised = evt["government"].StrNull();
             if (station.Government_Localised != null)
-                station.Government = GovernmentDefinitions.ReverseLookup(station.Government_Localised) ?? station.Government_Localised;
+                station.Government = GovernmentDefinitions.SpashToEnum(station.Government_Localised);
 
             station.MarketID = evt["id"].LongNull();
 
-            station.StationServices = evt["services"]?.ToObject<string[]>();
+            // tbd
+            station.StationServices = evt["services"]?.ToObject<StationDefinitions.StationServices[]>();
 
             if (evt.Contains("landingPads"))
             {
@@ -285,7 +288,7 @@ namespace EliteDangerousCore.Spansh
             if (largepad.HasValue)
                 jo["filters"]["has_large_pad"] = new JObject() { ["value"] = largepad.Value };
             if (!inclcarriers)
-                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarportNameTypes.Values.Distinct().Where(x => x != "Drake-Class Carrier")) };
+                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarPortTypesNamesSpansh().Where(x => x != "Drake-Class Carrier")) }; // all but drake
 
             return IssueStationSearchQuery(jo);
         }
@@ -355,7 +358,7 @@ namespace EliteDangerousCore.Spansh
             if (largepad.HasValue)
                 jo["filters"]["has_large_pad"] = new JObject() { ["value"] = largepad.Value };
             if (!inclcarriers)
-                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarportNameTypes.Values.Distinct().Where(x => x != "Drake-Class Carrier")) };
+                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarPortTypesNamesSpansh().Where(x => x != "Drake-Class Carrier")) };
 
             return IssueStationSearchQuery(jo);
         }
@@ -467,7 +470,7 @@ namespace EliteDangerousCore.Spansh
             if (largepad.HasValue)
                 jo["filters"]["has_large_pad"] = new JObject() { ["value"] = largepad.Value };
             if (!inclcarriers)
-                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarportNameTypes.Values.Distinct().Where(x => x != "Drake-Class Carrier")) };
+                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarPortTypesNamesSpansh().Where(x => x != "Drake-Class Carrier")) };
 
             return IssueStationSearchQuery(jo);
         }
@@ -513,7 +516,7 @@ namespace EliteDangerousCore.Spansh
             if (largepad.HasValue)
                 jo["filters"]["has_large_pad"] = new JObject() { ["value"] = largepad.Value };
             if (!inclcarriers)
-                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarportNameTypes.Values.Distinct().Where(x => x != "Drake-Class Carrier")) };
+                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarPortTypesNamesSpansh().Where(x => x != "Drake-Class Carrier")) };
 
             return IssueStationSearchQuery(jo);
         }
@@ -562,37 +565,41 @@ namespace EliteDangerousCore.Spansh
                             station.Latitude = evt["latitude"].DoubleNull();
                             station.Longitude = evt["longitude"].DoubleNull();
 
+                            // tbd
+
                             station.StationName = evt["name"].StrNull();
                             station.StationType = evt["type"].StrNull();
-                            station.StationState = evt["power_state"].StrNull();
+                            station.StationState = StationDefinitions.StarportStateToEnum( evt["power_state"].Str() );
 
                             station.StarSystem = station.System.Name;
                             station.SystemAddress = station.System.SystemAddress;
-                            station.Allegiance = evt["allegiance"].StrNull();
+                            station.Allegiance = AllegianceDefinitions.ToEnum( evt["allegiance"].Str());
 
                             station.Economy_Localised = evt["primary_economy"].StrNull();
                             if (station.Economy_Localised != null)
-                                station.Economy = EconomyDefinitions.ReverseLookup(station.Economy_Localised) ?? station.Economy_Localised;
+                                station.Economy = EconomyDefinitions.SpanshToEnum(station.Economy_Localised);
 
                             station.EconomyList = evt["economies"]?.ToObject<JournalDocked.Economies[]>(checkcustomattr: true);
                             foreach (var x in station.EconomyList.EmptyIfNull())
                             {
-                                x.Name_Localised = x.Name;
+                                x.Name_Localised = EconomyDefinitions.ToEnglish(x.Name);
                                 x.Proportion /= 100;
                             }
 
                             station.Government_Localised = evt["government"].StrNull();
                             if (station.Government_Localised != null)
-                                station.Government = GovernmentDefinitions.ReverseLookup(station.Government_Localised) ?? station.Government_Localised;
+                                station.Government = GovernmentDefinitions.SpashToEnum(station.Government_Localised);
 
                             var ss = evt["services"].Array();
                             if (ss != null)
                             {
-                                station.StationServices = new string[ss.Count];
+                                station.StationServices = new StationDefinitions.StationServices[ss.Count];
                                 int i = 0;
                                 foreach (JObject sso in ss)
-                                    station.StationServices[i++] = sso["name"].Str();
+                                    station.StationServices[i++] = StationDefinitions.ServicesToEnum( sso["name"].Str() );
                             }
+
+                            // tbd all of this
 
                             if (evt.Contains("large_pads") || evt.Contains("medium_pads") || evt.Contains("small_pads"))     // at least one
                                 station.LandingPads = new JournalDocked.LandingPadList() { Large = evt["large_pads"].Int(), Medium = evt["medium_pads"].Int(), Small = evt["small_pads"].Int() };
