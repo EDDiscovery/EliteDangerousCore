@@ -462,14 +462,27 @@ namespace EliteDangerousCore
         public void ReturnSystemInfo(HistoryEntry he, out string allegiance, out string economy, out string gov,
                                 out string faction, out string factionstate, out string security)
         {
+            ReturnSystemInfo(he, out AllegianceDefinitions.Allegiance pallegiance, out EconomyDefinitions.Economy peconomy, out GovernmentDefinitions.Government pgov,
+                                out faction, out FactionDefinitions.State pfactionstate, out SecurityDefinitions.Security psecurity);
+
+            allegiance = pallegiance!=AllegianceDefinitions.Allegiance.Unknown ? AllegianceDefinitions.ToLocalisedLanguage(pallegiance) : "?";
+            economy = peconomy != EconomyDefinitions.Economy.Unknown ? EconomyDefinitions.ToLocalisedLanguage(peconomy) : "?";
+            gov = pgov != GovernmentDefinitions.Government.Unknown ? GovernmentDefinitions.ToLocalisedLanguage(pgov) : "?";
+            factionstate = pfactionstate != FactionDefinitions.State.Unknown ? FactionDefinitions.ToLocalisedLanguage(pfactionstate) : "?";
+            security = psecurity != SecurityDefinitions.Security.Unknown ? SecurityDefinitions.ToLocalisedLanguage(psecurity) : "-";
+        }
+
+        public void ReturnSystemInfo(HistoryEntry he, out AllegianceDefinitions.Allegiance allegiance, out EconomyDefinitions.Economy economy, out GovernmentDefinitions.Government gov,
+                                out string faction, out FactionDefinitions.State factionstate, out SecurityDefinitions.Security security)
+        {
             JournalFSDJump lastfsd = GetLastHistoryEntry(x => x.journalEntry is EliteDangerousCore.JournalEvents.JournalFSDJump, he)?.journalEntry as EliteDangerousCore.JournalEvents.JournalFSDJump;
 
-            allegiance = lastfsd != null && lastfsd.Allegiance != AllegianceDefinitions.Allegiance.Unknown ? AllegianceDefinitions.ToLocalisedLanguage(lastfsd.Allegiance) : "?";
-            economy = lastfsd != null && lastfsd.Economy_Localised.Length > 0 ? lastfsd.Economy_Localised : "?";
-            gov = lastfsd != null && lastfsd.Government_Localised.Length > 0 ? lastfsd.Government_Localised : "?";
+            allegiance = lastfsd != null ? lastfsd.Allegiance : AllegianceDefinitions.Allegiance.Unknown;
+            economy = lastfsd != null ? lastfsd.Economy : EconomyDefinitions.Economy.Unknown;
+            gov = lastfsd != null ? lastfsd.Government : GovernmentDefinitions.Government.Unknown;
             faction = lastfsd != null && lastfsd.Faction.Length > 0 ? lastfsd.Faction.SplitCapsWordFull() : "-";
-            factionstate = lastfsd != null && lastfsd.FactionState != FactionDefinitions.State.Unknown ? lastfsd.FactionStateTranslated : "?";
-            security = lastfsd != null && lastfsd.Security_Localised.Length > 0 ? lastfsd.Security_Localised : "-";
+            factionstate = lastfsd != null ? lastfsd.FactionState: FactionDefinitions.State.Unknown;
+            security = lastfsd != null ? lastfsd.Security : SecurityDefinitions.Security.Unknown;
         }
 
         #endregion

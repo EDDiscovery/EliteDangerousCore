@@ -31,7 +31,6 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Faction { get; set; }         // System Faction - keep name for backwards compat.
         public FactionDefinitions.State FactionState { get; set; }       //may be null, FDName
-        public string FactionStateTranslated { get; set; }       //may be null, in local language
         public AllegianceDefinitions.Allegiance Allegiance { get; set; }      // System Faction - FDName
         public EconomyDefinitions.Economy Economy { get; set; }
         public string Economy_Localised { get; set; }
@@ -61,7 +60,6 @@ namespace EliteDangerousCore.JournalEvents
         {
             public string Name { get; set; }
             public FactionDefinitions.State FactionState { get; set; }    // fdname
-            public string FactionStateTranslated { get; set; } 
             public GovernmentDefinitions.Government Government { get; set; }
             public double Influence { get; set; }
             public AllegianceDefinitions.Allegiance Allegiance { get; set; }  // fdname
@@ -172,12 +170,10 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     if (x.FactionState == FactionDefinitions.State.Unknown)  System.Diagnostics.Debug.WriteLine($"** Unknown faction state {evt["Factions"].ToString()}");
 
-                    x.FactionStateTranslated = FactionDefinitions.ToLocalisedLanguage(x.FactionState);
                     x.Happiness_Localised = JournalFieldNaming.CheckLocalisation(x.Happiness_Localised, x.Happiness);
                 }
             }
 
-            FactionStateTranslated = FactionDefinitions.ToLocalisedLanguage(FactionState); // translate after possible correction above.
 
             // don't moan if empty or not there as it could be due to training
             string al = evt.MultiStr(new string[] { "SystemAllegiance", "Allegiance" });
@@ -332,6 +328,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(out string info, out string detailed) 
         {
+            System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop); // because of translation
+
             if (Docked)
             {
                 info = BaseUtils.FieldBuilder.Build("Type ".T(EDCTx.JournalLocOrJump_Type), StationDefinitions.ToLocalisedLanguage(FDStationType), 
@@ -351,7 +349,7 @@ namespace EliteDangerousCore.JournalEvents
                     {
                         detailed += Environment.NewLine;
                         detailed += BaseUtils.FieldBuilder.Build("", f.Name,
-                            "State: ".T(EDCTx.JournalLocOrJump_State), f.FactionStateTranslated,
+                            "State: ".T(EDCTx.JournalLocOrJump_State), FactionDefinitions.ToLocalisedLanguage(f.FactionState),
                             "Government: ".T(EDCTx.JournalLocOrJump_Government), GovernmentDefinitions.ToLocalisedLanguage(f.Government),
                             "Inf: ;%".T(EDCTx.JournalLocOrJump_Inf), (int)(f.Influence * 100), 
                             "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(f.Allegiance), 
@@ -468,6 +466,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(out string info, out string detailed)
         {
+            System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop); // because of translation
+
             info = BaseUtils.FieldBuilder.Build("Type ".T(EDCTx.JournalLocOrJump_Type), StationDefinitions.ToLocalisedLanguage(FDStationType), 
                                                     "< in system ".T(EDCTx.JournalLocOrJump_insystem), StarSystem);
 
@@ -479,7 +479,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     detailed += Environment.NewLine;
                     detailed += BaseUtils.FieldBuilder.Build("", f.Name, 
-                        "State: ".T(EDCTx.JournalLocOrJump_State), f.FactionStateTranslated, 
+                        "State: ".T(EDCTx.JournalLocOrJump_State), FactionDefinitions.ToLocalisedLanguage(f.FactionState), 
                         "Government: ".T(EDCTx.JournalLocOrJump_Government), GovernmentDefinitions.ToLocalisedLanguage(f.Government),
                         "Inf: ;%".T(EDCTx.JournalLocOrJump_Inf), (int)(f.Influence * 100), 
                         "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(f.Allegiance), 
@@ -574,6 +574,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(out string info, out string detailed)
         {
+            System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop); // because of translation
+
             StringBuilder sb = new StringBuilder();
 
             if (JumpDist > 0)
@@ -588,7 +590,7 @@ namespace EliteDangerousCore.JournalEvents
             if (Faction.HasChars() || Allegiance != AllegianceDefinitions.Allegiance.Unknown || Economy != EconomyDefinitions.Economy.Unknown)
             {
                 sb.Append(BaseUtils.FieldBuilder.Build("Faction: ".T(EDCTx.JournalLocOrJump_Faction), Faction, "<;(Wanted) ".T(EDCTx.JournalLocOrJump_Wanted), Wanted,
-                                                    "State: ".T(EDCTx.JournalLocOrJump_State), FactionStateTranslated,
+                                                    "State: ".T(EDCTx.JournalLocOrJump_State), FactionDefinitions.ToLocalisedLanguage(FactionState),
                                                     "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(Allegiance),
                                                     "Economy: ".T(EDCTx.JournalLocOrJump_Economy), EconomyDefinitions.ToLocalisedLanguage(Economy),
                                                     "Population: ".T(EDCTx.JournalLocOrJump_Population), Population));
@@ -602,7 +604,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (FactionInformation i in Factions)
                 {
-                    sb.Append(BaseUtils.FieldBuilder.Build("", i.Name, "State: ".T(EDCTx.JournalLocOrJump_State), i.FactionStateTranslated,
+                    sb.Append(BaseUtils.FieldBuilder.Build("", i.Name, "State: ".T(EDCTx.JournalLocOrJump_State), FactionDefinitions.ToLocalisedLanguage(i.FactionState),
                                                                     "Government: ".T(EDCTx.JournalLocOrJump_Government), GovernmentDefinitions.ToLocalisedLanguage(i.Government),
                                                                     "Inf: ;%".T(EDCTx.JournalLocOrJump_Inf), (i.Influence * 100.0).ToString("0.0"),
                                                                     "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(i.Allegiance),

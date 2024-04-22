@@ -50,7 +50,7 @@ namespace EliteDangerousCore
 
                     var newmodule = new ShipModule(-1, 0, candidatename, IsVanity(lowername) ? ShipModule.ModuleTypes.VanityType : ShipModule.ModuleTypes.UnknownType);
 
-                    System.Diagnostics.Debug.WriteLine("******* Unknown Module { \"" + lowername + "\", new ShipModule(-1,0, \"" + newmodule.ModName + "\", " + (IsVanity(lowername) ? "VanityType" : "UnknownType") + " ) },");
+                    System.Diagnostics.Debug.WriteLine("*** Unknown Module { \"" + lowername + "\", new ShipModule(-1,0, \"" + newmodule.ModName + "\", " + (IsVanity(lowername) ? "ShipModule.ModuleTypes.VanityType" : "ShipModule.ModuleTypes.UnknownType") + " ) },");
 
                     synthesisedmodules[lowername] = m = newmodule;                   // lets cache them for completeness..
                 }
@@ -2709,6 +2709,7 @@ namespace EliteDangerousCore
             { "string_lights_coloured", new ShipModule(999999941,0,0,null,"String Lights Coloured", ShipModule.ModuleTypes.VanityType) },
             { "string_lights_thargoidprobe", new ShipModule(-1,0,0,null,"String Lights Thargoid probe", ShipModule.ModuleTypes.VanityType) },
             { "string_lights_warm_white", new ShipModule(999999944,0,0,null,"String Lights Warm White", ShipModule.ModuleTypes.VanityType) },
+            { "string_lights_skull", new ShipModule(-1,0, "String Lights Skull", ShipModule.ModuleTypes.VanityType ) },
             { "type6_shipkit1_bumper1", new ShipModule(-1,0,0,null,"Type 6 Shipkit 1 Bumper 1", ShipModule.ModuleTypes.VanityType) },
             { "type6_shipkit1_spoiler3", new ShipModule(-1,0,0,null,"Type 6 Shipkit 1 Spoiler 3", ShipModule.ModuleTypes.VanityType) },
             { "type6_shipkit1_wings1", new ShipModule(-1,0,0,null,"Type 6 Shipkit 1 Wings 1", ShipModule.ModuleTypes.VanityType) },

@@ -48,8 +48,6 @@ namespace EliteDangerousCore.JournalEvents
                 FactionState = FactionDefinitions.ToEnum(evt["FactionState"].Str("Unknown")).Value;           // PRE 2.3 .. not present in newer files, fixed up in next bit of code (but see 3.3.2 as its been incorrectly reintroduced)
             }
 
-            FactionStateTranslated = FactionDefinitions.ToLocalisedLanguage(FactionState); // null if not present
-
             Allegiance = AllegianceDefinitions.ToEnum( evt.MultiStr(new string[] { "StationAllegiance", "Allegiance" }, null) );    // may not be present, pass null to accept it
 
             Economy = EconomyDefinitions.ToEnum(evt.MultiStr(evt.MultiStr(new string[] { "StationEconomy", "Economy" }, null)));    // may not be present
@@ -89,7 +87,6 @@ namespace EliteDangerousCore.JournalEvents
         public bool CockpitBreach { get; set; }
         public string Faction { get; set; }
         public FactionDefinitions.State FactionState { get; set; }       //may be null, FDName
-        public string FactionStateTranslated { get; set; }       //may be null, in local language
         public AllegianceDefinitions.Allegiance Allegiance { get; set; }          // FDName
         public EconomyDefinitions.Economy Economy { get; set; }
         public string Economy_Localised { get; set; }
@@ -144,6 +141,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public void FillInformation(out string info, out string detailed, bool printdocked)
         {
+            System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop); // because of translation
+
             info = "";
             
             if ( printdocked )
@@ -154,7 +153,7 @@ namespace EliteDangerousCore.JournalEvents
                 ";(Wanted)".T(EDCTx.JournalEntry_Wanted), Wanted, 
                 ";Active Fine".T(EDCTx.JournalEntry_ActiveFine),ActiveFine,
                 "Faction: ".T(EDCTx.JournalEntry_Faction), Faction,  
-                "< in state ".T(EDCTx.JournalEntry_instate), FactionStateTranslated);
+                "< in state ".T(EDCTx.JournalEntry_instate), FactionDefinitions.ToLocalisedLanguage(FactionState));
 
             detailed = BaseUtils.FieldBuilder.Build("Allegiance: ".T(EDCTx.JournalEntry_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(Allegiance), 
                     "Economy: ".T(EDCTx.JournalEntry_Economy), EconomyDefinitions.ToLocalisedLanguage(Economy),

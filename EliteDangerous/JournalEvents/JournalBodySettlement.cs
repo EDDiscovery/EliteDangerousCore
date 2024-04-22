@@ -111,11 +111,10 @@ namespace EliteDangerousCore.JournalEvents
             Faction = evt["StationFaction"].I("Name").StrNull();        // may not be present, so null if not
             FactionState = FactionDefinitions.ToEnum(evt["StationFaction"].I("FactionState").StrNull());    // null if not present
             FriendlyFactionState = FactionDefinitions.ToEnglish(FactionState); // null if not present
-            FactionStateTranslated = FactionDefinitions.ToLocalisedLanguage(FactionState); // null if not present
 
             StationAllegiance = AllegianceDefinitions.ToEnum( evt["StationAllegiance"].StrNull());
 
-            if (FactionState != null)  System.Diagnostics.Debug.WriteLine($"Faction {Faction} {FactionState} {FriendlyFactionState} {FactionStateTranslated}");
+            if (FactionState != null)  System.Diagnostics.Debug.WriteLine($"Faction {Faction} {FactionState} {FriendlyFactionState}");
         }
 
         public string Name { get; set; }
@@ -137,7 +136,6 @@ namespace EliteDangerousCore.JournalEvents
         public string Faction { get; set; }       //may be null
         public FactionDefinitions.State? FactionState { get; set; }       //may be null, FDName
         public string FriendlyFactionState { get; set; }       //may be null, in english
-        public string FactionStateTranslated { get; set; }       //may be null, in local language
         public AllegianceDefinitions.Allegiance StationAllegiance { get; set; } //fdname, may be null
 
 
@@ -160,7 +158,7 @@ namespace EliteDangerousCore.JournalEvents
                 detailed = BaseUtils.FieldBuilder.Build("Economy: ".T(EDCTx.JournalEntry_Economy), EconomyDefinitions.ToLocalisedLanguage(StationEconomy), 
                     "Government: ".T(EDCTx.JournalEntry_Government), GovernmentDefinitions.ToLocalisedLanguage(StationGovernment),
                     "Faction: ".T(EDCTx.JournalEntry_Faction), Faction, 
-                    "< in state ".T(EDCTx.JournalEntry_instate), FactionStateTranslated, 
+                    "< in state ".T(EDCTx.JournalEntry_instate), FactionDefinitions.ToLocalisedLanguage(FactionState),
                     "Allegiance: ".T(EDCTx.JournalEntry_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(StationAllegiance));
 
                 if (StationServices != null)
