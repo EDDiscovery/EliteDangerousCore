@@ -1139,6 +1139,7 @@ Section EconomyTypes
 .Repair: "Repair" @
 .Carrier: "Carrier" @
 .Engineer: "Engineer" @
+.Undefined: "Undefined" @
 
 Section SecurityTypes
 .Low: "Low" @

@@ -42,6 +42,7 @@ namespace EliteDangerousCore
             Repair,
             Carrier,
             Engineer,
+            Undefined,      // Jugom logs
         }
 
         // maps the $economy_id; to an enum
@@ -99,6 +100,7 @@ namespace EliteDangerousCore
             [Economy.Repair] = "Repair",
             [Economy.Carrier] = "Private Enterprise",
             [Economy.Engineer] = "Engineering",
+            [Economy.Undefined] = "Undefined",
 
             [Economy.Unknown] = "Unknown",      // addition to allow Unknown to be mapped
         };
