@@ -130,10 +130,10 @@ namespace EliteDangerousCore
             return BaseUtils.Translator.Instance.Translate(ToEnglish(sc), id);
         }
 
-        public static StarportTypes[] ValidTypes()
+        public static StarportTypes[] ValidTypes(bool removeduplicates)
         {
             var list = (StarportTypes[])Enum.GetValues(typeof(StarportTypes));
-            return list.Where(x => x != StarportTypes.Unknown).ToArray();
+            return list.Where(x => x != StarportTypes.Unknown && (!removeduplicates || x != StarportTypes.Bernal)).ToArray();
         }
 
         #endregion
