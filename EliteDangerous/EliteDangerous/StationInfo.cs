@@ -39,6 +39,8 @@ namespace EliteDangerousCore
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
 
+        public PowerPlayDefinitions.State PowerplayState { get; set; }      // Spansh gives this in search stations
+
         public bool HasMarket { get; set; }                 // may be true because its noted in services, but with market = null because of no data
         public List<CCommodities> Market { get; set; }      // may be null
         public DateTime MarketUpdateUTC { get; set; }
@@ -85,7 +87,7 @@ namespace EliteDangerousCore
         public bool HasOutfitting { get; set; }// see market
         public List<Outfitting.OutfittingItem> Outfitting { get; set; }     // may be null
         public DateTime OutfittingUpdateUTC { get; set; }
-        public bool HasAnyModuleTypes(string[] fdnames) { return Outfitting != null && Outfitting.FindIndex(x => fdnames.IndexOf(x.ModType, StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0; }
+        public bool HasAnyModuleTypes(string[] fdnames) { return Outfitting != null && Outfitting.FindIndex(x => fdnames.IndexOf(x.FDName, StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0; }
         public double OutfittingAgeInDays { get { return DateTime.UtcNow.Subtract(OutfittingUpdateUTC).TotalDays; } }
         public string OutfittingStateString { get { if (HasOutfitting && Outfitting != null) return $"\u2713 {OutfittingAgeInDays:N1}"; else if (HasOutfitting) return "\u2713 ND"; else return ""; } }
 

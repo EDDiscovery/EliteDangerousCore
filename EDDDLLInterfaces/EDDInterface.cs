@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2022 EDDiscovery development team
+ * Copyright © 2015 - 2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -28,6 +28,7 @@ namespace EDDDLLInterfaces
             // offsets apply to WIN32 DLL
             // int/long = 4 offset, aligned 4
             // bool = 1 offset, next aligned to 1, first aligned 4
+            // string = 8 offset, aligned 8
             // BSTR/Safearray = 8 offset, aligned 8
 
             [FieldOffset(0)] public int ver;            // indicate version (JOURNALVERSION in init string)
@@ -113,9 +114,23 @@ namespace EDDDLLInterfaces
             [FieldOffset(344)] [MarshalAs(UnmanagedType.BStr)] public string gamebuild;
 
             // Version 6 Ends here (16.0.4 Dec 22)
+
+            [FieldOffset(352)] [MarshalAs(UnmanagedType.BStr)] public string fsdjumpnextsystemname;     // empty if not set
+            [FieldOffset(360)] public long fsdjumpnextsystemaddress;    // 0 if not set
+            [FieldOffset(368)] public long systemaddress;               // 0 if not known
+            [FieldOffset(376)] public long marketid;                    // 0 if not known
+            [FieldOffset(384)] public long fullbodyid;                  // 0 if not known    
+            [FieldOffset(392)] public long loan;
+            [FieldOffset(400)] public long assets;
+            [FieldOffset(408)] public double currentboost;
+            [FieldOffset(416)] public int visits;
+            [FieldOffset(420)] public bool multiplayer;
+            [FieldOffset(421)] public bool insupercruise;
+
+            // Version 7 Ends here (17.2 24/4/24)
         };
 
-        public const int JournalVersion = 6;
+        public const int JournalVersion = 7;
 
         #endregion
 

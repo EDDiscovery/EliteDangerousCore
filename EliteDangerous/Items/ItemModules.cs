@@ -60,20 +60,33 @@ namespace EliteDangerousCore
         }
 
         // List of ship modules. Synthesised are not included
-        static public List<ShipModule> GetShipModulesList(bool includenonbuyable = false, bool includesrv = false, bool includefighter = false, bool includevanity = false,  bool addunknowntype = false)       
+        static public Dictionary<string, ShipModule> GetShipModulesList(bool includenonbuyable = false, bool includesrv = false, bool includefighter = false, bool includevanity = false, bool addunknowntype = false)
         {
-            List<ShipModule> mlist = new List<ShipModule>(shipmodules.Values);
+            Dictionary<string, ShipModule> ml = new Dictionary<string, ShipModule>(shipmodules);
             if (includenonbuyable)
-                mlist.AddRange(othershipmodules.Values);
+            {
+                foreach (var x in othershipmodules) ml[x.Key] = x.Value;
+            }
             if (includesrv)
-                mlist.AddRange(srvmodules.Values);
+            {
+                foreach (var x in srvmodules) ml[x.Key] = x.Value;
+            }
             if (includefighter)
-                mlist.AddRange(fightermodules.Values);
+            {
+                foreach (var x in fightermodules) ml[x.Key] = x.Value;
+
+            }
             if (includevanity)
-                mlist.AddRange(vanitymodules.Values);
+            {
+                foreach (var x in vanitymodules) ml[x.Key] = x.Value;
+
+            }
             if (addunknowntype)
-                mlist.Add(new ShipModule(-1, 0, "Unknown Type", ShipModule.ModuleTypes.UnknownType));
-            return mlist;
+            {
+                ml["Unknown"] = new ShipModule(-1, 0, "Unknown Type", ShipModule.ModuleTypes.UnknownType);
+
+            }
+            return ml;
         }
 
         // Dictionary of ship modules, merged. Using this can show up repeats between dictionaries. Synthesised are not included
@@ -239,7 +252,7 @@ namespace EliteDangerousCore
                 VanityType,UnknownType,CockpitType,CargoBayDoorType,WearAndTearType,Codex,
             };
 
-            public string ModName { get; set; }
+            public string ModName { get; set; }     // english name
             public int ModuleID { get; set; }
             public double Mass { get; set; }
             public ModuleTypes ModType { get; set; }

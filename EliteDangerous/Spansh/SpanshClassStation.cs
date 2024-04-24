@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2023-2023 EDDiscovery development team
+ * Copyright © 2023-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -17,6 +17,9 @@ using QuickJSON;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static EliteDangerousCore.EconomyDefinitions;
+using static EliteDangerousCore.GovernmentDefinitions;
+using static EliteDangerousCore.StationDefinitions;
 
 namespace EliteDangerousCore.Spansh
 {
@@ -119,22 +122,27 @@ namespace EliteDangerousCore.Spansh
             station.Longitude = evt["longitude"].DoubleNull();
 
             if (station.StationType == null)
-                station.StationType = station.Latitude.HasValue ? "Settlement" : "Other";
+                station.StationType = station.Latitude.HasValue ? "Settlement" : "Unknown"; // must be getting nulls
+
+            station.FDStationType = StarportTypeNameToEnum(station.StationType);        // set type
 
             station.IsFleetCarrier = station.StationType.Contains("Carrier");
 
-            station.Allegiance = AllegianceDefinitions.ToEnum( evt["allegiance"].StrNull() );
+            station.Allegiance = AllegianceDefinitions.ToEnum( evt["allegiance"].StrNull() );   //22/4/24
+
             station.Faction = evt["controllingFaction"].StrNull();
+
+            station.StationState = StarportState.None; // don't know of a SPANSH return for this
+
+            station.PowerplayState = PowerPlayDefinitions.State.Unknown;    // does not report this in dump
 
             // faction state
 
             station.DistanceToArrival = evt["distanceToArrival"].Double();
 
-            // tbd
-
-            station.Economy_Localised = evt["primaryEconomy"].StrNull();
+            station.Economy_Localised = evt["primaryEconomy"].StrNull();        // 22/4/24
             if ( station.Economy_Localised!=null)
-                station.Economy = EconomyDefinitions.SpanshToEnum(station.Economy_Localised);
+                station.Economy = EconomyNameToEnum(station.Economy_Localised);
 
             JObject eco = evt["economies"].Object();
             if (eco != null)
@@ -143,19 +151,25 @@ namespace EliteDangerousCore.Spansh
                 int i = 0;
                 foreach (var e in eco)
                 {
-                    var ec = EconomyDefinitions.SpanshToEnum(e.Key);
+                    var ec = EconomyNameToEnum(e.Key);
                     station.EconomyList[i++] = new JournalDocked.Economies { Name = ec, Name_Localised = e.Key, Proportion = e.Value.Double(0) / 100.0 };
                 }
             }
 
-            station.Government_Localised = evt["government"].StrNull();
+            station.Government_Localised = evt["government"].StrNull();     // tested 22/4/24
             if (station.Government_Localised != null)
-                station.Government = GovernmentDefinitions.SpashToEnum(station.Government_Localised);
+                station.Government = GovernmentNameToEnum(station.Government_Localised);
 
             station.MarketID = evt["id"].LongNull();
 
-            // tbd
-            station.StationServices = evt["services"]?.ToObject<StationDefinitions.StationServices[]>();
+            var ss = evt["services"].Array();
+            if (ss != null)
+            {
+                station.StationServices = new StationDefinitions.StationServices[ss.Count];
+                int i = 0;
+                foreach (JToken name in ss)
+                    station.StationServices[i++] = StationServiceNameToEnum(name.Str("Failed"));
+            }
 
             if (evt.Contains("landingPads"))
             {
@@ -232,8 +246,6 @@ namespace EliteDangerousCore.Spansh
 
             station.IsPlanetary = station.BodyType == "Planet";
 
-            //  station.StationState = evt["power_state"].StrNull();    // not in spansh
-
             station.StarSystem = station.System.Name;
             station.SystemAddress = station.System.SystemAddress;
 
@@ -247,23 +259,27 @@ namespace EliteDangerousCore.Spansh
 
         #region Search
 
-        public System.Threading.Tasks.Task<List<StationInfo>> SearchServicesAsync(string systemname, string[] servicenames, double maxradius, bool? largepad, bool inclcarriers, int maxresults = 20)
+        public System.Threading.Tasks.Task<List<StationInfo>> SearchServicesAsync(string systemname, string[] fdservicenames, double maxradius, bool? largepad, bool inclcarriers, int maxresults = 20)
         {
             return System.Threading.Tasks.Task.Run(() =>
             {
-                return SearchServices(systemname, servicenames, maxradius, largepad, inclcarriers, maxresults);
+                return SearchServices(systemname, fdservicenames, maxradius, largepad, inclcarriers, maxresults);
             });
         }
 
-        public List<StationInfo> SearchServices(string systemname, string[] servicenames, double maxradius, bool? largepad, bool inclcarriers, int maxresults = 20)
+        public List<StationInfo> SearchServices(string systemname, string[] fdservicenames, double maxradius, bool? largepad, bool inclcarriers, int maxresults = 20)
         {
+            JArray jsrv = new JArray();
+            foreach (var x in fdservicenames)
+                jsrv.Add(spanshservicenames[(StationDefinitions.StationServices)Enum.Parse(typeof(StationDefinitions.StationServices), x)]);    // convert to spansh
+
             JObject jo = new JObject()
             {
                 ["filters"] = new JObject()
                 {
                     ["services"] = new JObject()
                     {
-                        ["value"] = new JArray(servicenames)
+                        ["value"] = jsrv
                     },
                     ["distance"] = new JObject()
                     {
@@ -288,7 +304,7 @@ namespace EliteDangerousCore.Spansh
             if (largepad.HasValue)
                 jo["filters"]["has_large_pad"] = new JObject() { ["value"] = largepad.Value };
             if (!inclcarriers)
-                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarPortTypesNamesSpansh().Where(x => x != "Drake-Class Carrier")) }; // all but drake
+                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(spanshstartporttypenames.Where(x => x.Key != StarportTypes.FleetCarrier).Select(x => x.Value)) }; // all but drake
 
             return IssueStationSearchQuery(jo);
         }
@@ -358,28 +374,32 @@ namespace EliteDangerousCore.Spansh
             if (largepad.HasValue)
                 jo["filters"]["has_large_pad"] = new JObject() { ["value"] = largepad.Value };
             if (!inclcarriers)
-                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarPortTypesNamesSpansh().Where(x => x != "Drake-Class Carrier")) };
+                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(spanshstartporttypenames.Where(x => x.Key != StarportTypes.FleetCarrier).Select(x => x.Value)) }; // all but drake
 
             return IssueStationSearchQuery(jo);
         }
 
-        public System.Threading.Tasks.Task<List<StationInfo>> SearchEconomyAsync(string systemname, string[] englisheconomynames, double maxradius, bool? largepad, int maxresults = 20)
+        public System.Threading.Tasks.Task<List<StationInfo>> SearchEconomyAsync(string systemname, string[] fdeconomynames, double maxradius, bool? largepad, int maxresults = 20)
         {
             return System.Threading.Tasks.Task.Run(() =>
             {
-                return SearchEconomy(systemname, englisheconomynames, maxradius, largepad, maxresults);
+                return SearchEconomy(systemname, fdeconomynames, maxradius, largepad, maxresults);
             });
         }
 
-        public List<StationInfo> SearchEconomy(string systemname, string[] englisheconomynames, double maxradius, bool? largepad, int maxresults = 20)
+        public List<StationInfo> SearchEconomy(string systemname, string[] fdeconomynames, double maxradius, bool? largepad, int maxresults = 20)
         {
+            JArray jeconames = new JArray();
+            foreach (var x in fdeconomynames)
+                jeconames.Add(spansheconomynames[(EconomyDefinitions.Economy)Enum.Parse(typeof(EconomyDefinitions.Economy), x)]);       // convert to spansh
+
             JObject jo = new JObject()
             {
                 ["filters"] = new JObject()
                 {
                     ["primary_economy"] = new JObject()
                     {
-                        ["value"] = new JArray(englisheconomynames),
+                        ["value"] = jeconames,
                     },
 
                     ["distance"] = new JObject()
@@ -408,20 +428,21 @@ namespace EliteDangerousCore.Spansh
             return IssueStationSearchQuery(jo);
         }
 
-        public System.Threading.Tasks.Task<List<StationInfo>> SearchOutfittingAsync(string systemname, string[] englishoutfittingnames, bool[] classlist, bool[] ratinglist, double maxradius, bool? largepad, bool inclcarriers, int maxresults = 20)
+        // classlist = [0] = All, [1] = class 0 .. [7] = class 6 [8] = class 7 [9] = class 8
+        // ratingslist = [0] = All [1] .. A [7] = G
+        // module names are per ModTypeString in ShipModule
+        public System.Threading.Tasks.Task<List<StationInfo>> SearchOutfittingAsync(string systemname, string[] spanshmoduletypenames, bool[] classlist, bool[] ratinglist, double maxradius, bool? largepad, bool inclcarriers, int maxresults = 20)
         {
             return System.Threading.Tasks.Task.Run(() =>
             {
-                return SearchOutfitting(systemname, englishoutfittingnames, classlist, ratinglist, maxradius, largepad, inclcarriers, maxresults);
+                return SearchOutfitting(systemname, spanshmoduletypenames, classlist, ratinglist, maxradius, largepad, inclcarriers, maxresults);
             });
         }
 
 
-        // classlist = [0] = All, else 0..6
-        // ratingslist = [0] = All, else A..G
-        public List<StationInfo> SearchOutfitting(string systemname, string[] englishoutfittingnames, bool[] classlist, bool[] ratinglist, double maxradius, bool? largepad, bool inclcarriers, int maxresults = 20)
+        public List<StationInfo> SearchOutfitting(string systemname, string[] spanshmoduletypenames, bool[] classlist, bool[] ratinglist, double maxradius, bool? largepad, bool inclcarriers, int maxresults = 20)
         {
-            System.Diagnostics.Debug.Assert(classlist.Length == 8);
+            System.Diagnostics.Debug.Assert(classlist.Length == 10);
             System.Diagnostics.Debug.Assert(ratinglist.Length == 8);
             JObject jo = new JObject()
             {
@@ -429,9 +450,7 @@ namespace EliteDangerousCore.Spansh
                 {
                     ["modules"] = new JObject()
                     {
-                        ["name"] = new JArray(englishoutfittingnames),
-                        ["class"] = new JArray(),                      // class 1-6
-                        ["rating"] = new JArray(),                    // rating A-G
+                        ["name"] = new JArray(spanshmoduletypenames),
                     },
 
                     ["distance"] = new JObject()
@@ -454,27 +473,38 @@ namespace EliteDangerousCore.Spansh
                 ["size"] = maxresults,
             };
 
-            JArray classarray = jo["filters"]["modules"]["class"].Array();
-            for (int i = 1; i <= 7; i++)
+            if (classlist[0] == false)  // if all, don't include it, otherwise for some modules spansh won't return anything (Mil composities for instance)
             {
-                if (classlist[i] || classlist[0])
-                    classarray.Add((i-1).ToStringInvariant());
+                JArray classarray = new JArray();
+                for (int i = 1; i < classlist.Length; i++)
+                {
+                    if (classlist[i])
+                        classarray.Add((i - 1).ToStringInvariant());
+                }
+                jo["filters"]["modules"]["class"] = classarray;
             }
-            JArray ratingarray = jo["filters"]["modules"]["rating"].Array();
-            for (int i = 1; i <= 7; i++)
+
+            if (ratinglist[0] == false)
             {
-                if (ratinglist[i] || ratinglist[0])
-                    ratingarray.Add(new string((char)('A' + i - 1), 1));
+                JArray ratingarray = new JArray();
+                for (int i = 1; i < ratinglist.Length; i++)
+                {
+                    if (ratinglist[i])
+                        ratingarray.Add(new string((char)('A' + i - 1), 1));
+                }
+
+                jo["filters"]["modules"]["rating"] = ratingarray;
             }
 
             if (largepad.HasValue)
                 jo["filters"]["has_large_pad"] = new JObject() { ["value"] = largepad.Value };
             if (!inclcarriers)
-                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarPortTypesNamesSpansh().Where(x => x != "Drake-Class Carrier")) };
+                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(spanshstartporttypenames.Where(x => x.Key != StarportTypes.FleetCarrier).Select(x => x.Value)) }; // all but drake
 
             return IssueStationSearchQuery(jo);
         }
 
+        // shipnames are EDCD ship name from ShipPropID
         public System.Threading.Tasks.Task<List<StationInfo>> SearchShipsAsync(string systemname, string[] englishshipnames, double maxradius, bool? largepad, bool inclcarriers, int maxresults = 20)
         {
             return System.Threading.Tasks.Task.Run(() =>
@@ -516,7 +546,7 @@ namespace EliteDangerousCore.Spansh
             if (largepad.HasValue)
                 jo["filters"]["has_large_pad"] = new JObject() { ["value"] = largepad.Value };
             if (!inclcarriers)
-                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(StationDefinitions.StarPortTypesNamesSpansh().Where(x => x != "Drake-Class Carrier")) };
+                jo["filters"]["type"] = new JObject() { ["value"] = new JArray(spanshstartporttypenames.Where(x => x.Key != StarportTypes.FleetCarrier).Select(x => x.Value)) }; // all but drake
 
             return IssueStationSearchQuery(jo);
         }
@@ -562,33 +592,45 @@ namespace EliteDangerousCore.Spansh
                             station.DistanceToArrival = evt["distance_to_arrival"].Double();
 
                             station.IsPlanetary = evt["is_planetary"].Bool();
-                            station.Latitude = evt["latitude"].DoubleNull();
-                            station.Longitude = evt["longitude"].DoubleNull();
-
-                            // tbd
 
                             station.StationName = evt["name"].StrNull();
                             station.StationType = evt["type"].StrNull();
-                            station.StationState = StationDefinitions.StarportStateToEnum( evt["power_state"].Str() );
+
+                            station.Latitude = evt["latitude"].DoubleNull();
+                            station.Longitude = evt["longitude"].DoubleNull();
+
+                            if (station.StationType == null)
+                                station.StationType = station.Latitude.HasValue ? "Settlement" : "Unknown"; // must be getting nulls
+
+                            station.FDStationType = StarportTypeNameToEnum(station.StationType);        // set type
+
+                            station.StationState = StarportState.None; // don't know of a SPANSH return for this
+
+                            station.PowerplayState = PowerPlayDefinitions.ToEnum(evt["power_state"].StrNull());     // this is in here, but not in dump!
 
                             station.StarSystem = station.System.Name;
                             station.SystemAddress = station.System.SystemAddress;
-                            station.Allegiance = AllegianceDefinitions.ToEnum( evt["allegiance"].Str());
+                            station.Allegiance = AllegianceDefinitions.ToEnum( evt["allegiance"].Str("Unknown"));   // unknown if not there
 
                             station.Economy_Localised = evt["primary_economy"].StrNull();
                             if (station.Economy_Localised != null)
-                                station.Economy = EconomyDefinitions.SpanshToEnum(station.Economy_Localised);
+                                station.Economy = EconomyNameToEnum(station.Economy_Localised);
 
-                            station.EconomyList = evt["economies"]?.ToObject<JournalDocked.Economies[]>(checkcustomattr: true);
-                            foreach (var x in station.EconomyList.EmptyIfNull())
+                            JObject eco = evt["economies"].Object();
+                            if (eco != null)
                             {
-                                x.Name_Localised = EconomyDefinitions.ToEnglish(x.Name);
-                                x.Proportion /= 100;
+                                station.EconomyList = new JournalDocked.Economies[eco.Count];
+                                int i = 0;
+                                foreach (var e in eco)
+                                {
+                                    var ec = EconomyNameToEnum(e.Key);
+                                    station.EconomyList[i++] = new JournalDocked.Economies { Name = ec, Name_Localised = e.Key, Proportion = e.Value.Double(0) / 100.0 };
+                                }
                             }
 
                             station.Government_Localised = evt["government"].StrNull();
                             if (station.Government_Localised != null)
-                                station.Government = GovernmentDefinitions.SpashToEnum(station.Government_Localised);
+                                station.Government = GovernmentNameToEnum(station.Government_Localised);
 
                             var ss = evt["services"].Array();
                             if (ss != null)
@@ -596,10 +638,8 @@ namespace EliteDangerousCore.Spansh
                                 station.StationServices = new StationDefinitions.StationServices[ss.Count];
                                 int i = 0;
                                 foreach (JObject sso in ss)
-                                    station.StationServices[i++] = StationDefinitions.ServicesToEnum( sso["name"].Str() );
+                                    station.StationServices[i++] = StationServiceNameToEnum( sso["name"].Str() );
                             }
-
-                            // tbd all of this
 
                             if (evt.Contains("large_pads") || evt.Contains("medium_pads") || evt.Contains("small_pads"))     // at least one
                                 station.LandingPads = new JournalDocked.LandingPadList() { Large = evt["large_pads"].Int(), Medium = evt["medium_pads"].Int(), Small = evt["small_pads"].Int() };
@@ -684,6 +724,165 @@ namespace EliteDangerousCore.Spansh
 
         #endregion
 
+        #region Translate
+
+        private static Dictionary<StationServices, string> spanshservicenames = new Dictionary<StationServices, string>()   // 22/4/24
+        {
+            [StationServices.ApexInterstellar] = "Apex Interstellar",
+            [StationServices.Autodock] = "Autodock",
+            [StationServices.Bartender] = "Bartender",
+            [StationServices.BlackMarket] = "Black Market",
+            [StationServices.Contacts] = "Contacts",
+            [StationServices.CrewLounge] = "Crew Lounge",
+            [StationServices.Dock] = "Dock",
+            [StationServices.FleetCarrierAdministration] = "Fleet Carrier Administration",
+            [StationServices.FleetCarrierManagement] = "Fleet Carrier Management",
+            [StationServices.FleetCarrierFuel] = "Fleet Carrier Fuel",
+            [StationServices.FleetCarrierVendor] = "Fleet Carrier Vendor",
+            [StationServices.FlightController] = "Flight Controller",
+            [StationServices.FrontlineSolutions] = "Frontline Solutions",
+            [StationServices.InterstellarFactorsContact] = "Interstellar Factors Contact",
+            [StationServices.Livery] = "Livery",
+            [StationServices.Market] = "Market",
+            [StationServices.MaterialTrader] = "Material Trader",
+            [StationServices.Missions] = "Missions",
+            [StationServices.MissionsGenerated] = "Missions Generated",
+            [StationServices.OnDockMission] = "On Dock Mission",
+            [StationServices.Outfitting] = "Outfitting",
+            [StationServices.PioneerSupplies] = "Pioneer Supplies",
+            [StationServices.Powerplay] = "Powerplay",
+            [StationServices.RedemptionOffice] = "Redemption Office",
+            [StationServices.Refuel] = "Refuel",
+            [StationServices.Repair] = "Repair",
+            [StationServices.Restock] = "Restock",
+            [StationServices.SearchAndRescue] = "Search And Rescue",
+            [StationServices.Shipyard] = "Shipyard",
+            [StationServices.Shop] = "Shop",
+            [StationServices.SocialSpace] = "Social Space",
+            [StationServices.StationMenu] = "Station Menu",
+            [StationServices.StationOperations] = "Station Operations",
+            [StationServices.TechnologyBroker] = "Technology Broker",
+            [StationServices.Tuning] = "Tuning",
+            [StationServices.UniversalCartographics] = "Universal Cartographics",
+            [StationServices.VistaGenomics] = "Vista Genomics",
+            [StationServices.Workshop] = "Workshop",
+        };
+
+        private static StationServices StationServiceNameToEnum(string fdname)
+        {
+            fdname = fdname.ToLowerInvariant().Replace(" ", "").Replace(";", "");
+            if (Enum.TryParse(fdname, true, out StationServices value))
+                return value;
+            else
+            {
+                System.Diagnostics.Debug.WriteLine($"*** Unknown Spansh services type {fdname}");
+                return StationServices.Unknown;
+            }
+        }
+
+        // 
+        private static Dictionary<Government, string> spanshgovernmentnames = new Dictionary<Government, string>()
+        {
+            [Government.Anarchy] = "Anarchy",
+            [Government.Communism] = "Communism",
+            [Government.Confederacy] = "Confederacy",
+            [Government.Cooperative] = "Cooperative",
+            [Government.Corporate] = "Corporate",
+            [Government.Democracy] = "Democracy",
+            [Government.Dictatorship] = "Dictatorship",
+            [Government.Engineer] = "Engineer",
+            [Government.Feudal] = "Feudal",
+            [Government.None] = "None",
+            [Government.Patronage] = "Patronage",
+            [Government.Prison] = "Prison",
+            [Government.PrisonColony] = "Prison Colony",    // not listed in spansh
+            [Government.Carrier] = "Private Ownership",
+            [Government.Theocracy] = "Theocracy",
+
+//            [Government.Imperial] = "Imperial",       // not in spansh
+
+            [Government.Unknown] = "Unknown",      // addition to allow Unknown to be mapped
+        };
+
+        private static Government GovernmentNameToEnum(string englishname)
+        {
+            foreach (var kvp in spanshgovernmentnames)
+            {
+                if (englishname.Equals(kvp.Value, System.StringComparison.InvariantCultureIgnoreCase))
+                    return kvp.Key;
+            }
+
+            System.Diagnostics.Debug.WriteLine($"*** Spansh Reverse lookup government failed {englishname}");
+            return Government.Unknown;
+        }
+
+        // converts spansh name to EDD name
+        private static Dictionary<Economy, string> spansheconomynames = new Dictionary<Economy, string>()
+        {
+            // 22/4/24 list
+            [Economy.Agri] = "Agriculture",
+            [Economy.Colony] = "Colony",
+            [Economy.Damaged] = "Damaged",
+            [Economy.Engineer] = "Engineering",
+            [Economy.Extraction] = "Extraction",
+            [Economy.High_Tech] = "High Tech",
+            [Economy.Industrial] = "Industrial",
+            [Economy.Military] = "Military",
+            [Economy.Prison] = "Prison",
+            [Economy.Carrier] = "Private Enterprise",
+            [Economy.Refinery] = "Refinery",
+            [Economy.Repair] = "Repair",
+            [Economy.Rescue] = "Rescue",
+            [Economy.Service] = "Service",
+            [Economy.Terraforming] = "Terraforming",
+            [Economy.Tourism] = "Tourism",
+
+            [Economy.None] = "None",
+            [Economy.Undefined] = "Undefined",
+            [Economy.Unknown] = "Unknown",      // addition to allow Unknown to be mapped
+        };
+
+        public static Economy EconomyNameToEnum(string englishname)
+        {
+            foreach (var kvp in spansheconomynames)
+            {
+                if (englishname.EqualsIIC(kvp.Value))
+                    return kvp.Key;
+            }
+            System.Diagnostics.Debug.WriteLine($"*** Spansh Economy Reverse lookup failed {englishname}");
+            return Economy.Unknown;
+        }
+
+        // on right, spansh name
+        private static Dictionary<StarportTypes, string> spanshstartporttypenames = new Dictionary<StarportTypes, string>()
+        {
+            [StarportTypes.AsteroidBase] = "Asteroid Base",
+            [StarportTypes.Coriolis] = "Coriolis Starport",
+            [StarportTypes.FleetCarrier] = "Drake-Class Carrier",
+            [StarportTypes.Megaship] = "Mega Ship",
+            [StarportTypes.Ocellus] = "Ocellus Starport",
+            [StarportTypes.Orbis] = "Orbis Starport",
+            [StarportTypes.Outpost] = "Outpost",
+            [StarportTypes.SurfaceStation] = "Planetary Outpost",
+            [StarportTypes.CraterPort] = "Planetary Port",
+            [StarportTypes.OnFootSettlement] = "Settlement",
+        };
+        
+        public static StarportTypes StarportTypeNameToEnum(string englishname)
+        {
+            foreach (var kvp in spanshstartporttypenames)
+            {
+                if (englishname.Equals(kvp.Value, System.StringComparison.InvariantCultureIgnoreCase))
+                    return kvp.Key;
+            }
+
+            System.Diagnostics.Debug.WriteLine($"*** Reverse lookup name types failed {englishname}");
+            return StarportTypes.Unknown;
+        }
+
+
+
+        #endregion
 
     }
 }

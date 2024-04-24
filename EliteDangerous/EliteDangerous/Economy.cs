@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EliteDangerousCore
 {
@@ -25,6 +26,7 @@ namespace EliteDangerousCore
         public enum Economy
         {
             Unknown,
+
             Agri,
             Colony,
             Extraction,
@@ -42,6 +44,7 @@ namespace EliteDangerousCore
             Repair,
             Carrier,
             Engineer,
+
             Undefined,      // Jugom logs
         }
 
@@ -80,52 +83,11 @@ namespace EliteDangerousCore
             return BaseUtils.Translator.Instance.Translate(ToEnglish(ec), id);
         }
 
-
-        private static Dictionary<Economy, string> Types = new Dictionary<Economy, string>()
+        public static Economy[] ValidStates()
         {
-            [Economy.Agri] = "Agriculture",
-            [Economy.Colony] = "Colony",
-            [Economy.Extraction] = "Extraction",
-            [Economy.High_Tech] = "High Tech",
-            [Economy.Industrial] = "Industrial",
-            [Economy.Military] = "Military",
-            [Economy.None] = "None",
-            [Economy.Refinery] = "Refinery",
-            [Economy.Service] = "Service",
-            [Economy.Terraforming] = "Terraforming",
-            [Economy.Tourism] = "Tourism",
-            [Economy.Prison] = "Prison",
-            [Economy.Damaged] = "Damaged",
-            [Economy.Rescue] = "Rescue",
-            [Economy.Repair] = "Repair",
-            [Economy.Carrier] = "Private Enterprise",
-            [Economy.Engineer] = "Engineering",
-            [Economy.Undefined] = "Undefined",
-
-            [Economy.Unknown] = "Unknown",      // addition to allow Unknown to be mapped
-        };
-
-        public static Economy SpanshToEnum(string englishname)
-        {
-            foreach(var kvp in Types)
-            {
-                if (englishname.EqualsIIC(kvp.Value))
-                    return kvp.Key;
-            }
-            System.Diagnostics.Debug.WriteLine($"*** Spansh Economy Reverse lookup failed {englishname}");
-            return Economy.Unknown;
+            var list = (Economy[])Enum.GetValues(typeof(Economy));
+            return list.Where(x => x != Economy.Unknown && x!=Economy.None && x!=Economy.Undefined).ToArray();
         }
-
-        // $economy_ and text name
-        static public List<KeyValuePair<string, string>> DecoratedNamesAndText()
-        {
-            List<KeyValuePair<string, string>> s = new List<KeyValuePair<string, string>>();
-            foreach (var kvp in Types)
-                s.Add(new KeyValuePair<string, string>(ToDecorated(kvp.Key), kvp.Value));
-            return s;
-        }
-
-
     }
 }
 

@@ -30,7 +30,7 @@ namespace EliteDangerousCore
             Democracy,
             Dictatorship,
             Feudal,
-            Imperial,
+          //  Imperial,  not seen
             None,
             Patronage,
             Prison,
@@ -69,42 +69,6 @@ namespace EliteDangerousCore
             return BaseUtils.Translator.Instance.Translate(ToEnglish(gv), id);
         }
 
-        // from EDCD 
-        // localisation can be provided via the Identifiers caching of $government
-
-        private static Dictionary<Government, string> Types = new Dictionary<Government, string>()
-        {
-            [Government.Anarchy] = "Anarchy",
-            [Government.Communism] = "Communism",
-            [Government.Confederacy] = "Confederacy",
-            [Government.Cooperative] = "Cooperative",
-            [Government.Corporate] = "Corporate",
-            [Government.Democracy] = "Democracy",
-            [Government.Dictatorship] = "Dictatorship",
-            [Government.Feudal] = "Feudal",
-            [Government.Imperial] = "Imperial",
-            [Government.None] = "None",
-            [Government.Patronage] = "Patronage",
-            [Government.PrisonColony] = "Prison Colony",
-            [Government.Prison] = "Prison",
-            [Government.Theocracy] = "Theocracy",
-            [Government.Engineer] = "Engineer",
-            [Government.Carrier] = "Private Ownership",
-
-            [Government.Unknown] = "Unknown",      // addition to allow Unknown to be mapped
-        };
-
-        public static Government SpashToEnum(string englishname)
-        {
-            foreach(var kvp in Types)
-            {
-                if (englishname.Equals(kvp.Value, System.StringComparison.InvariantCultureIgnoreCase))
-                    return kvp.Key;
-            }
-
-            System.Diagnostics.Debug.WriteLine($"*** Spansh Reverse lookup government failed {englishname}");
-            return Government.Unknown;
-        }
     }
 }
 

@@ -80,7 +80,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationName { get; set; }
         public string StationType { get; set; }             // Friendly name, used in action packs, may be null
         public StationDefinitions.StarportTypes FDStationType { get; set; }           // may be null
-        public StationDefinitions.StarportState StationState { get; set; }            // fdname, only present in stations not normal - UnderAttack, Damaged, UnderRepairs. Null otherwise
+        public StationDefinitions.StarportState StationState { get; set; }            // fdname, only present in stations not normal - UnderAttack, Damaged, UnderRepairs. None otherwise
         public string StarSystem { get; set; }
         public long? SystemAddress { get; set; }
         public long? MarketID { get; set; }
@@ -103,13 +103,14 @@ namespace EliteDangerousCore.JournalEvents
 
         public bool IsTrainingEvent { get; private set; }
 
-        // tbd check both below somehow
+        // these are EconomyDefinitions.Economies
         public bool HasAnyEconomyTypes(string[] fdnames)
         {
             return fdnames != null && (fdnames.IndexOf(Economy.ToString(), StringComparison.InvariantCultureIgnoreCase) >= 0 ||
                             (EconomyList != null && Array.FindIndex(EconomyList, 0, x => fdnames.IndexOf(x.Name.ToString(), StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0));
         }
 
+        // these are StationDefinitions.StationServices
         public bool HasAnyServicesTypes(string[] fdnames)
         {
             return fdnames != null && StationServices != null && Array.FindIndex(StationServices, 0, x => fdnames.IndexOf(x.ToString(), StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0;
@@ -118,9 +119,9 @@ namespace EliteDangerousCore.JournalEvents
         public class Economies
         {
             [JsonName("name", "Name")]                  //name is for spansh, Name is for journal
-            public EconomyDefinitions.Economy Name;
+            public EconomyDefinitions.Economy Name;     // fdname
             public string Name_Localised;
-            [JsonName("Proportion", "share")]            //share is for spansh, proportion is for journal
+            [JsonName("Proportion", "share")]           //share is for spansh, proportion is for journal
             public double Proportion;                   // 0-1
         }
 

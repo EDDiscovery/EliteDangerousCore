@@ -22,11 +22,12 @@ namespace EliteDangerousCore.DLL
 {
     static public class EDDDLLCallerHE
     {
+        static public int JournalVersion = 7;       // keep this up to date
         static public EDDDLLInterfaces.EDDDLLIF.JournalEntry CreateFromHistoryEntry(EliteDangerousCore.HistoryList hl, EliteDangerousCore.HistoryEntry he,
                                                                                      bool storedflag = false)
         {
             if (he == null)
-                return new EDDDLLInterfaces.EDDDLLIF.JournalEntry() { ver = 5, indexno = -1 };
+                return new EDDDLLInterfaces.EDDDLLIF.JournalEntry() { ver = JournalVersion, indexno = -1 };
             else
                 return CreateFromHistoryEntry(he, hl.MaterialCommoditiesMicroResources.GetMaterialsSorted(he.MaterialCommodity),
                                               hl.MaterialCommoditiesMicroResources.GetCommoditiesSorted(he.MaterialCommodity),
@@ -42,7 +43,7 @@ namespace EliteDangerousCore.DLL
                                                                                       bool storedflag = false)
         {
             if (he == null)
-                return new EDDDLLInterfaces.EDDDLLIF.JournalEntry() { ver = 3, indexno = -1 };
+                return new EDDDLLInterfaces.EDDDLLIF.JournalEntry() { ver = JournalVersion, indexno = -1 };
             else
             {
                 var mats = list.Where(x => x.Details.IsMaterial).OrderBy(x => x.Details.Type).ToList();
@@ -52,7 +53,6 @@ namespace EliteDangerousCore.DLL
             }
         }
 
-        static public int JournalVersion = 6;       // keep this up to date
 
         static private EDDDLLInterfaces.EDDDLLIF.JournalEntry CreateFromHistoryEntry(EliteDangerousCore.HistoryEntry he,
                                                                                          List<MaterialCommodityMicroResource> mats,
@@ -71,7 +71,7 @@ namespace EliteDangerousCore.DLL
             {
                 ver = JournalVersion,
                 //v1
-                indexno = he.Index == -1 ? (he.UnfilteredIndex+1) : he.EntryNumber,     // if we are making an unfiltered entry, set to unfiltered, else entry number
+                indexno = he.Index == -1 ? (he.UnfilteredIndex + 1) : he.EntryNumber,     // if we are making an unfiltered entry, set to unfiltered, else entry number
                 utctime = he.EventTimeUTC.ToStringZuluInvariant(),
                 name = he.EventSummary,
                 systemname = he.System.Name,
@@ -133,6 +133,18 @@ namespace EliteDangerousCore.DLL
                 gamebuild = he.journalEntry.Build,
                 gameversion = he.journalEntry.GameVersion,
 
+                // v7
+                fsdjumpnextsystemname = he.Status.FSDJumpNextSystemName ?? "",
+                fsdjumpnextsystemaddress = he.Status.FSDJumpNextSystemAddress ?? 0,
+                systemaddress = he.System.SystemAddress ?? 0,
+                marketid = he.Status.MarketID ?? 0,
+                fullbodyid = he.FullBodyID ?? 0,
+                loan = he.Loan,
+                assets = he.Assets,
+                currentboost = he.Status.CurrentBoost,
+                visits = he.Visits,
+                multiplayer = he.Status.MultiPlayer,
+                insupercruise = he.Status.IsInSupercruise,
             };
 
             // v1

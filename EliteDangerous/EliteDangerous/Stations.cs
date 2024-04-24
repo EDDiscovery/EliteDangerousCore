@@ -20,6 +20,7 @@ namespace EliteDangerousCore
 {
     public class StationDefinitions
     {
+        #region Services
         public enum StationServices
         {
             Unknown,
@@ -64,19 +65,6 @@ namespace EliteDangerousCore
             VistaGenomics,
         }
 
-        // maps the services names $government_id; to an enum
-        public static StationServices ServicesToEnum(string fdname)
-        {
-            fdname = fdname.ToLowerInvariant().Replace(" ", "").Replace(";", "");
-            if (Enum.TryParse(fdname, true, out StationServices value))
-                return value;
-            else
-            {
-                System.Diagnostics.Debug.WriteLine($"*** Unknown services type {fdname}");
-                return StationServices.Unknown;
-            }
-        }
-
         public static string ToEnglish(StationServices ec)
         {
             return ec.ToString().SplitCapsWordFull();
@@ -88,61 +76,15 @@ namespace EliteDangerousCore
             return BaseUtils.Translator.Instance.Translate(ToEnglish(sc), id);
         }
 
-        // names left are in stationservices, names right are spansh names
-
-        private static Dictionary<string, string> ServiceTypesSpansh = new Dictionary<string, string>()
+        public static StationServices[] ValidServices()
         {
-            ["apexinterstellar"] = "Apex Interstellar",
-            ["autodock"] = "Autodock",
-            ["bartender"] = "Bartender",
-            ["blackmarket"] = "Black Market",
-            ["contacts"] = "Contacts",
-            ["crewlounge"] = "Crew Lounge",
-            ["dock"] = "Dock",
-            ["workshop"] = "Workshop",      // synonmyms
-            ["engineer"] = "Workshop",
-            ["modulepacks"] = "Fleet Carrier Administration",
-            ["carrierfuel"] = "Fleet Carrier Fuel",
-            ["carriermanagement"] = "Fleet Carrier Management",
-            ["carriervendor"] = "Fleet Carrier Vendor",
-            ["flightcontroller"] = "Flight Controller",
-            ["frontlinesolutions"] = "Frontline Solutions",
-            ["facilitator"] = "Interstellar Factors Contact",
-            ["initiatives"] = "Initiatives",
-            ["livery"] = "Livery",
-            ["commodities"] = "Market",
-            ["materialtrader"] = "Material Trader",
-            ["missions"] = "Missions",
-            ["missionsgenerated"] = "Missions Generated",
-            ["ondockmission"] = "On Dock Mission",
-            ["outfitting"] = "Outfitting",
-            ["pioneersupplies"] = "Pioneer Supplies",
-            ["powerplay"] = "Powerplay",
-            ["voucherredemption"] = "Redemption Office",
-            ["refuel"] = "Refuel",
-            ["repair"] = "Repair",
-            ["rearm"] = "Restock",
-            ["searchandrescue"] = "Search And Rescue",
-            ["searchrescue"] = "Search And Rescue",
-            ["shipyard"] = "Shipyard",
-            ["shop"] = "Shop",
-            ["socialspace"] = "Social Space",
-            ["stationmenu"] = "Station Menu",
-            ["stationoperations"] = "Station Operations",
-            ["techbroker"] = "Technology Broker",
-            ["tuning"] = "Tuning",
-            ["exploration"] = "Universal Cartographics",
-            ["vistagenomics"] = "Vista Genomics",
-
-        };
-
-
-        //  and text name
-        static public List<KeyValuePair<string, string>> SpanshNamesAndText()
-        {
-            return ServiceTypesSpansh.Distinct().ToList();
+            var list = (StationServices[])Enum.GetValues(typeof(StationServices));
+            return list.Where(x => x != StationServices.Unknown).ToArray();
         }
 
+        #endregion
+
+        #region Starports
         public enum StarportTypes
         {
             Unknown,
@@ -188,74 +130,19 @@ namespace EliteDangerousCore
             return BaseUtils.Translator.Instance.Translate(ToEnglish(sc), id);
         }
 
-        // on right, spansh name
-        private static Dictionary<string, string> StarportNameTypesToSpansh = new Dictionary<string, string>()
+        public static StarportTypes[] ValidTypes()
         {
-            // in journal as of Nov 23
-
-            ["asteroidbase"] = "Asteroid Base",
-            ["coriolis"] = "Coriolis Starport", 
-
-            ["fleetcarrier"] = "Drake-Class Carrier",   
-            ["megaship"] = "Mega Ship",     
-
-            ["ocellus"] = "Ocellus Starport",   
-            ["bernal"] = "Ocellus Starport",    
-         
-            ["orbis"] = "Orbis Starport",       
-
-            ["outpost"] = "Outpost",            
-            ["onfootsettlement"] = "Settlement",    
-
-            ["surfacestation"] = "Planetary Outpost",   
-            ["crateroutpost"] = "Planetary Outpost",
-
-            ["craterport"] = "Planetary Port",       
-
-            // these are from Spansh but not seen in my journals
-
-            ["coriolis starport"] = "Coriolis Starport",
-            ["orbis starport"] = "Orbis Starport",
-            ["ocellus starport"] = "Ocellus Starport",
-
-            ["planetary outpost"] = "Planetary Outpost",
-            ["planetary port"] = "Planetary Port",
-                
-            ["settlement"] = "Settlement",      // only seen in redeemvoucher
-            ["carrier"] = "Drake-Class Carrier",
-
-            ["civilian outpost"] = "Outpost",
-            ["commercial outpost"] = "Outpost",
-            ["industrial outpost"] = "Outpost",
-            ["military outpost"] = "Outpost",
-            ["mining outpost"] = "Outpost",    
-            ["scientific outpost"] = "Outpost",
-            ["outpostscientific"] = "Outpost",
-            ["megashipcivilian"] = "Mega Ship",
-        };
-
-        static public IEnumerable<string> StarPortTypesNamesSpansh()
-        {
-            return StarportNameTypesToSpansh.Values.Distinct();
+            var list = (StarportTypes[])Enum.GetValues(typeof(StarportTypes));
+            return list.Where(x => x != StarportTypes.Unknown).ToArray();
         }
 
-        public static string ReverseLookupStarportNameTypes(string englishname)
-        {
-            foreach (var kvp in StarportNameTypesToSpansh)
-            {
-                if (englishname.Equals(kvp.Value, System.StringComparison.InvariantCultureIgnoreCase))
-                    return kvp.Key;
-            }
+        #endregion
 
-            System.Diagnostics.Debug.WriteLine($"*** Reverse lookup name types failed {englishname}");
-            return "Unknown";
-        }
-
+        #region Startport state
 
         public enum StarportState
         {
             Unknown,
-            UnknownSpansh,
             None,
             UnderRepairs,
             Damaged,
@@ -287,6 +174,13 @@ namespace EliteDangerousCore
             return BaseUtils.Translator.Instance.Translate(ToEnglish(sc), id);
         }
 
+        public static StarportState[] ValidStates()
+        {
+            var list = (StarportState[])Enum.GetValues(typeof(StarportState));
+            return list.Where(x => x != StarportState.Unknown).ToArray();
+        }
+
+        #endregion
     }
 }
 

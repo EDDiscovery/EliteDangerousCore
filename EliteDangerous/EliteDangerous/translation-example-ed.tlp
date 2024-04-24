@@ -1169,3 +1169,14 @@ Section StarportTypes
 .SurfaceStation: "Surface station" @
 .CraterOutpost: "Crater Outpost" @
 .CraterPort: "Crater Port" @
+
+Section PowerPlayStates
+.Unknown:"Unknown" @
+.InPrepareRadius:"In prepare radius" @
+.Prepared:"Prepared" @
+.Exploited:"Exploited" @
+.Contested:"Contested" @
+.Controlled:"Controlled" @
+.Turmoil:"In turmoil" @
+.HomeSystem:"Home system" @
+
