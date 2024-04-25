@@ -62,10 +62,10 @@ namespace EliteDangerousCore
         // List of ship modules. Synthesised are not included
         // default is buyable modules only
         // you can include other types
-        // compressarmour removes all armour entries except grade 1
+        // compressarmour removes all armour entries except the ones for the sidewinder
         static public Dictionary<string, ShipModule> GetShipModules(bool includebuyable = true, bool includenonbuyable = false, bool includesrv = false, 
                                                                     bool includefighter = false, bool includevanity = false, bool addunknowntype = false, 
-                                                                    bool compressarmour = false )
+                                                                    bool compressarmourtosidewinderonly = false )
         {
             Dictionary<string, ShipModule> ml = new Dictionary<string, ShipModule>();
 
@@ -74,12 +74,12 @@ namespace EliteDangerousCore
                 foreach (var x in shipmodules) ml[x.Key] = x.Value;
             }
 
-            if (compressarmour)        // remove all but _grade1 armours in list
+            if (compressarmourtosidewinderonly)        // remove all but _grade1 armours in list
             {
                 var list = shipmodules.Keys;
                 foreach (var name in list)
                 {
-                    if (name.Contains("_armour_") && !name.Contains("_grade1")) // only keep grade1
+                    if (name.Contains("_armour_") && !name.Contains("sidewinder")) // only keep sidewinder - all other ones are removed
                         ml.Remove(name);
                 }
             }
@@ -110,22 +110,26 @@ namespace EliteDangerousCore
             return ml;
         }
 
-        // given a module name list containing _armour_grade1 only, expand out to include all other armours
-        // used in spansh station to reduce list of armours shown, as if one is there for a ship, they all are
+        // given a module name list containing siderwinder_armour_gradeX only,
+        // expand out to include all other ships armours of the same grade
+        // used in spansh station to reduce list of shiptype armours shown, as if one is there for a ship, they all are there for all ships
         public static string[] ExpandArmours(string[] list)
         {
             List<string> ret = new List<string>();
             foreach( var x in list)
             {
-                ret.Add(x);
-                if ( x.EndsWith("_armour_grade1"))
+                if ( x.StartsWith("sidewinder_armour"))
                 {
-                    string front = x.Substring(0, x.IndexOf("_"));
-                    ret.Add(front + "_armour_grade2");
-                    ret.Add(front + "_armour_grade3");
-                    ret.Add(front + "_armour_mirrored");
-                    ret.Add(front + "_armour_reactive");
+                    string grade = x.Substring(x.IndexOf("_"));     // its grade (_armour_grade1, _grade2 etc)
+
+                    foreach( var kvp in shipmodules )
+                    {
+                        if (kvp.Key.EndsWith(grade))
+                            ret.Add(kvp.Key);
+                    }
                 }
+                else
+                    ret.Add(x);
             }
 
             return ret.ToArray();
