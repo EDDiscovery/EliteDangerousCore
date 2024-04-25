@@ -60,13 +60,34 @@ namespace EliteDangerousCore
         }
 
         // List of ship modules. Synthesised are not included
-        static public Dictionary<string, ShipModule> GetShipModulesList(bool includenonbuyable = false, bool includesrv = false, bool includefighter = false, bool includevanity = false, bool addunknowntype = false)
+        // default is buyable modules only
+        // you can include other types
+        // compressarmour removes all armour entries except grade 1
+        static public Dictionary<string, ShipModule> GetShipModules(bool includebuyable = true, bool includenonbuyable = false, bool includesrv = false, 
+                                                                    bool includefighter = false, bool includevanity = false, bool addunknowntype = false, 
+                                                                    bool compressarmour = false )
         {
-            Dictionary<string, ShipModule> ml = new Dictionary<string, ShipModule>(shipmodules);
+            Dictionary<string, ShipModule> ml = new Dictionary<string, ShipModule>();
+
+            if (includebuyable)
+            {
+                foreach (var x in shipmodules) ml[x.Key] = x.Value;
+            }
+
+            if (compressarmour)        // remove all but _grade1 armours in list
+            {
+                var list = shipmodules.Keys;
+                foreach (var name in list)
+                {
+                    if (name.Contains("_armour_") && !name.Contains("_grade1")) // only keep grade1
+                        ml.Remove(name);
+                }
+            }
+
             if (includenonbuyable)
             {
-                foreach (var x in othershipmodules) ml[x.Key] = x.Value;
-            }
+                    foreach (var x in othershipmodules) ml[x.Key] = x.Value;
+                }
             if (includesrv)
             {
                 foreach (var x in srvmodules) ml[x.Key] = x.Value;
@@ -89,32 +110,25 @@ namespace EliteDangerousCore
             return ml;
         }
 
-        // Dictionary of ship modules, merged. Using this can show up repeats between dictionaries. Synthesised are not included
-        static public Dictionary<string,ShipModule> GetShipModuleDictionary(bool includenonbuyable = false, bool includesrv = false, bool includefighter = false, bool includevanity = false)
+        // given a module name list containing _armour_grade1 only, expand out to include all other armours
+        // used in spansh station to reduce list of armours shown, as if one is there for a ship, they all are
+        public static string[] ExpandArmours(string[] list)
         {
-            Dictionary<string, ShipModule> res = new Dictionary<string, ShipModule>(shipmodules);
-            if (includenonbuyable)
+            List<string> ret = new List<string>();
+            foreach( var x in list)
             {
-                foreach (var kvp in othershipmodules)
-                    res.Add(kvp.Key, kvp.Value);
-            }
-            if (includesrv)
-            {
-                foreach (var kvp in srvmodules)
-                    res.Add(kvp.Key, kvp.Value);
-            }
-            if (includefighter)
-            {
-                foreach (var kvp in fightermodules)
-                    res.Add(kvp.Key, kvp.Value);
-            }
-            if (includevanity)
-            {
-                foreach (var kvp in vanitymodules)
-                    res.Add(kvp.Key, kvp.Value);
+                ret.Add(x);
+                if ( x.EndsWith("_armour_grade1"))
+                {
+                    string front = x.Substring(0, x.IndexOf("_"));
+                    ret.Add(front + "_armour_grade2");
+                    ret.Add(front + "_armour_grade3");
+                    ret.Add(front + "_armour_mirrored");
+                    ret.Add(front + "_armour_reactive");
+                }
             }
 
-            return res;
+            return ret.ToArray();
         }
 
         static public bool IsVanity(string ifd)
@@ -247,7 +261,7 @@ namespace EliteDangerousCore
                 XenoMultiLimpetController, 
                 XenoScanner,
 
-                // EDD, not buyable
+                // Not buyable, DiscoveryScanner marks the first non buyable
                 DiscoveryScanner,PrisonCells,DataLinkScanner,SRVScanner,FighterWeapon,
                 VanityType,UnknownType,CockpitType,CargoBayDoorType,WearAndTearType,Codex,
             };
@@ -259,8 +273,8 @@ namespace EliteDangerousCore
             public string ModTypeString {  get { return ModType.ToString().Replace("AX","AX ").Replace("_", "-").SplitCapsWordFull(); } }     // string should be in spansh/EDCD csv compatible format
             public double Power { get; set; }
             public string Info { get; set; }
-            
-            public bool IsBuyable { get { return !(ModType == ModuleTypes.VanityType || ModType == ModuleTypes.UnknownType || ModType == ModuleTypes.CockpitType || ModType == ModuleTypes.CargoBayDoorType || ModType == ModuleTypes.WearAndTearType || ModType == ModuleTypes.Codex); } }
+
+            public bool IsBuyable { get { return !(ModType < ModuleTypes.DiscoveryScanner); } }
 
             public ShipModule(int id, double mass, string descr, ModuleTypes modtype) { ModuleID = id; Mass = mass; ModName = descr; ModType = modtype; }
             public ShipModule(int id, double mass, double power, string descr, ModuleTypes modtype) { ModuleID = id; Mass = mass; Power = power; ModName = descr; ModType = modtype; }
