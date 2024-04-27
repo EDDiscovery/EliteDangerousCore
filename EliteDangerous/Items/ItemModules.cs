@@ -198,7 +198,7 @@ namespace EliteDangerousCore
                     {
                         string translated = TXIT(sm.EnglishModName.Substring(0, rindex));
                         string rat = TXIT(sm.EnglishModName.Substring(rindex + 1, 6));
-                        sm.TranslatedModName = translated + " " + rat + sm.EnglishModName.Substring(rindex + 6, 1);
+                        sm.TranslatedModName = translated + " " + rat + " " + sm.EnglishModName.Substring(rindex + 8, 1);
                     }
                     else
                     {

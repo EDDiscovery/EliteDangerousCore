@@ -1427,30 +1427,25 @@ Section ModulePartNames
 .Hyperdrive_Overcharged: "Hyperdrive Overcharged" @
 
 Section ShipSlots
-.Unknown_Type: "Unknown Type" @
-.Cockpit_Type: "Cockpit Type" @
-.Cargo_Bay_Door_Type: "Cargo Bay Door Type" @
-.Wear_And_Tear_Type: "Wear And Tear Type" @
-.Codex: "Codex" @
 .Unknown: "Unknown" @
 .Armour: "Armour" @
-.Bobble01: "Bobble 1" @
-.Bobble02: "Bobble 2" @
-.Bobble03: "Bobble 3" @
-.Bobble04: "Bobble 4" @
-.Bobble05: "Bobble 5" @
-.Bobble06: "Bobble 6" @
-.Bobble07: "Bobble 7" @
-.Bobble08: "Bobble 8" @
-.Bobble09: "Bobble 9" @
-.Bobble10: "Bobble 10" @
+.Bobble01: "Bobble Position 1" @
+.Bobble02: "Bobble Position 2" @
+.Bobble03: "Bobble Position 3" @
+.Bobble04: "Bobble Position 4" @
+.Bobble05: "Bobble Position 5" @
+.Bobble06: "Bobble Position 6" @
+.Bobble07: "Bobble Position 7" @
+.Bobble08: "Bobble Position 8" @
+.Bobble09: "Bobble Position 9" @
+.Bobble10: "Bobble Position 10" @
 .CargoHatch: "Cargo Hatch" @
 .CodexScanner: "Codex Scanner" @
 .DataLinkScanner: "Data Link Scanner" @
 .DiscoveryScanner: "Discovery Scanner" @
-.Decal1: "Decal 1" @
-.Decal2: "Decal 2" @
-.Decal3: "Decal 3" @
+.Decal1: "Decal Front (1)" @
+.Decal2: "Decal Right (2)" @
+.Decal3: "Decal Left (3)" @
 .EngineColour: "Engine Colour" @
 .Federation_Fighter_Shield: "Federation Fighter Shield" @
 .FrameShiftDrive: "Frame Shift Drive" @
@@ -1466,104 +1461,104 @@ Section ShipSlots
 .LargeHardpoint3: "Large Hardpoint 3" @
 .LargeHardpoint4: "Large Hardpoint 4" @
 .LifeSupport: "Life Support" @
-.MainEngines: "Main Engines" @
+.MainEngines: "Thrusters" @
 .MediumHardpoint1: "Medium Hardpoint 1" @
 .MediumHardpoint2: "Medium Hardpoint 2" @
 .MediumHardpoint3: "Medium Hardpoint 3" @
 .MediumHardpoint4: "Medium Hardpoint 4" @
 .MediumHardpoint5: "Medium Hardpoint 5" @
-.Military01: "Military 1" @
-.Military02: "Military 2" @
-.Military03: "Military 3" @
+.Military01: "Military Slot 1" @
+.Military02: "Military Slot 2" @
+.Military03: "Military Slot 3" @
 .PaintJob: "Paint Job" @
 .PlanetaryApproachSuite: "Planetary Approach Suite" @
 .PowerDistributor: "Power Distributor" @
 .PowerPlant: "Power Plant" @
-.Radar: "Radar" @
+.Radar: "Sensors" @
 .ShieldGenerator: "Shield Generator" @
 .ShipCockpit: "Ship Cockpit" @
-.ShipID0: "Ship ID 0" @
-.ShipID1: "Ship ID 1" @
+.ShipID0: "Ship ID Right (1)" @
+.ShipID1: "Ship ID Left (2)" @
 .ShipKitBumper: "Ship Kit Bumper" @
 .ShipKitSpoiler: "Ship Kit Spoiler" @
 .ShipKitTail: "Ship Kit Tail" @
 .ShipKitWings: "Ship Kit Wings" @
-.ShipName0: "Ship Name 0" @
-.ShipName1: "Ship Name 1" @
-.Slot00_Size8: "Slot 0 Size 8" @
-.Slot01_Size2: "Slot 1 Size 2" @
-.Slot01_Size3: "Slot 1 Size 3" @
-.Slot01_Size4: "Slot 1 Size 4" @
-.Slot01_Size5: "Slot 1 Size 5" @
-.Slot01_Size6: "Slot 1 Size 6" @
-.Slot01_Size7: "Slot 1 Size 7" @
-.Slot01_Size8: "Slot 1 Size 8" @
-.Slot02_Size2: "Slot 2 Size 2" @
-.Slot02_Size3: "Slot 2 Size 3" @
-.Slot02_Size4: "Slot 2 Size 4" @
-.Slot02_Size5: "Slot 2 Size 5" @
-.Slot02_Size6: "Slot 2 Size 6" @
-.Slot02_Size7: "Slot 2 Size 7" @
-.Slot02_Size8: "Slot 2 Size 8" @
-.Slot03_Size1: "Slot 3 Size 1" @
-.Slot03_Size2: "Slot 3 Size 2" @
-.Slot03_Size3: "Slot 3 Size 3" @
-.Slot03_Size4: "Slot 3 Size 4" @
-.Slot03_Size5: "Slot 3 Size 5" @
-.Slot03_Size6: "Slot 3 Size 6" @
-.Slot03_Size7: "Slot 3 Size 7" @
-.Slot04_Size1: "Slot 4 Size 1" @
-.Slot04_Size2: "Slot 4 Size 2" @
-.Slot04_Size3: "Slot 4 Size 3" @
-.Slot04_Size4: "Slot 4 Size 4" @
-.Slot04_Size5: "Slot 4 Size 5" @
-.Slot04_Size6: "Slot 4 Size 6" @
-.Slot05_Size1: "Slot 5 Size 1" @
-.Slot05_Size2: "Slot 5 Size 2" @
-.Slot05_Size3: "Slot 5 Size 3" @
-.Slot05_Size4: "Slot 5 Size 4" @
-.Slot05_Size5: "Slot 5 Size 5" @
-.Slot05_Size6: "Slot 5 Size 6" @
-.Slot06_Size1: "Slot 6 Size 1" @
-.Slot06_Size2: "Slot 6 Size 2" @
-.Slot06_Size3: "Slot 6 Size 3" @
-.Slot06_Size4: "Slot 6 Size 4" @
-.Slot06_Size5: "Slot 6 Size 5" @
-.Slot07_Size1: "Slot 7 Size 1" @
-.Slot07_Size2: "Slot 7 Size 2" @
-.Slot07_Size3: "Slot 7 Size 3" @
-.Slot07_Size4: "Slot 7 Size 4" @
-.Slot07_Size5: "Slot 7 Size 5" @
-.Slot08_Size1: "Slot 8 Size 1" @
-.Slot08_Size2: "Slot 8 Size 2" @
-.Slot08_Size3: "Slot 8 Size 3" @
-.Slot08_Size4: "Slot 8 Size 4" @
-.Slot09_Size1: "Slot 9 Size 1" @
-.Slot09_Size2: "Slot 9 Size 2" @
-.Slot09_Size3: "Slot 9 Size 3" @
-.Slot09_Size4: "Slot 9 Size 4" @
-.Slot10_Size1: "Slot 10 Size 1" @
-.Slot10_Size3: "Slot 10 Size 3" @
-.Slot10_Size4: "Slot 10 Size 4" @
-.Slot11_Size1: "Slot 11 Size 1" @
-.Slot11_Size2: "Slot 11 Size 2" @
-.Slot11_Size3: "Slot 11 Size 3" @
-.Slot12_Size1: "Slot 12 Size 1" @
-.Slot13_Size2: "Slot 13 Size 2" @
-.Slot14_Size1: "Slot 14 Size 1" @
+.ShipName0: "Nameplate Right (1)" @
+.ShipName1: "Nameplate Left (2)" @
+.Slot00_Size8: "Optional Slot 0 Class 8" @
+.Slot01_Size2: "Optional Slot 1 Class 2" @
+.Slot01_Size3: "Optional Slot 1 Class 3" @
+.Slot01_Size4: "Optional Slot 1 Class 4" @
+.Slot01_Size5: "Optional Slot 1 Class 5" @
+.Slot01_Size6: "Optional Slot 1 Class 6" @
+.Slot01_Size7: "Optional Slot 1 Class 7" @
+.Slot01_Size8: "Optional Slot 1 Class 8" @
+.Slot02_Size2: "Optional Slot 2 Class 2" @
+.Slot02_Size3: "Optional Slot 2 Class 3" @
+.Slot02_Size4: "Optional Slot 2 Class 4" @
+.Slot02_Size5: "Optional Slot 2 Class 5" @
+.Slot02_Size6: "Optional Slot 2 Class 6" @
+.Slot02_Size7: "Optional Slot 2 Class 7" @
+.Slot02_Size8: "Optional Slot 2 Class 8" @
+.Slot03_Size1: "Optional Slot 3 Class 1" @
+.Slot03_Size2: "Optional Slot 3 Class 2" @
+.Slot03_Size3: "Optional Slot 3 Class 3" @
+.Slot03_Size4: "Optional Slot 3 Class 4" @
+.Slot03_Size5: "Optional Slot 3 Class 5" @
+.Slot03_Size6: "Optional Slot 3 Class 6" @
+.Slot03_Size7: "Optional Slot 3 Class 7" @
+.Slot04_Size1: "Optional Slot 4 Class 1" @
+.Slot04_Size2: "Optional Slot 4 Class 2" @
+.Slot04_Size3: "Optional Slot 4 Class 3" @
+.Slot04_Size4: "Optional Slot 4 Class 4" @
+.Slot04_Size5: "Optional Slot 4 Class 5" @
+.Slot04_Size6: "Optional Slot 4 Class 6" @
+.Slot05_Size1: "Optional Slot 5 Class 1" @
+.Slot05_Size2: "Optional Slot 5 Class 2" @
+.Slot05_Size3: "Optional Slot 5 Class 3" @
+.Slot05_Size4: "Optional Slot 5 Class 4" @
+.Slot05_Size5: "Optional Slot 5 Class 5" @
+.Slot05_Size6: "Optional Slot 5 Class 6" @
+.Slot06_Size1: "Optional Slot 6 Class 1" @
+.Slot06_Size2: "Optional Slot 6 Class 2" @
+.Slot06_Size3: "Optional Slot 6 Class 3" @
+.Slot06_Size4: "Optional Slot 6 Class 4" @
+.Slot06_Size5: "Optional Slot 6 Class 5" @
+.Slot07_Size1: "Optional Slot 7 Class 1" @
+.Slot07_Size2: "Optional Slot 7 Class 2" @
+.Slot07_Size3: "Optional Slot 7 Class 3" @
+.Slot07_Size4: "Optional Slot 7 Class 4" @
+.Slot07_Size5: "Optional Slot 7 Class 5" @
+.Slot08_Size1: "Optional Slot 8 Class 1" @
+.Slot08_Size2: "Optional Slot 8 Class 2" @
+.Slot08_Size3: "Optional Slot 8 Class 3" @
+.Slot08_Size4: "Optional Slot 8 Class 4" @
+.Slot09_Size1: "Optional Slot 9 Class 1" @
+.Slot09_Size2: "Optional Slot 9 Class 2" @
+.Slot09_Size3: "Optional Slot 9 Class 3" @
+.Slot09_Size4: "Optional Slot 9 Class 4" @
+.Slot10_Size1: "Optional Slot 10 Class 1" @
+.Slot10_Size3: "Optional Slot 10 Class 3" @
+.Slot10_Size4: "Optional Slot 10 Class 4" @
+.Slot11_Size1: "Optional Slot 11 Class 1" @
+.Slot11_Size2: "Optional Slot 11 Class 2" @
+.Slot11_Size3: "Optional Slot 11 Class 3" @
+.Slot12_Size1: "Optional Slot 12 Class 1" @
+.Slot13_Size2: "Optional Slot 13 Class 2" @
+.Slot14_Size1: "Optional Slot 14 Class 1" @
 .SmallHardpoint1: "Small Hardpoint 1" @
 .SmallHardpoint2: "Small Hardpoint 2" @
 .SmallHardpoint3: "Small Hardpoint 3" @
 .SmallHardpoint4: "Small Hardpoint 4" @
 .StringLights: "String Lights" @
-.TinyHardpoint1: "Tiny Hardpoint 1" @
-.TinyHardpoint2: "Tiny Hardpoint 2" @
-.TinyHardpoint3: "Tiny Hardpoint 3" @
-.TinyHardpoint4: "Tiny Hardpoint 4" @
-.TinyHardpoint5: "Tiny Hardpoint 5" @
-.TinyHardpoint6: "Tiny Hardpoint 6" @
-.TinyHardpoint7: "Tiny Hardpoint 7" @
-.TinyHardpoint8: "Tiny Hardpoint 8" @
+.TinyHardpoint1: "Utility Mount 1" @
+.TinyHardpoint2: "Utility Mount 2" @
+.TinyHardpoint3: "Utility Mount 3" @
+.TinyHardpoint4: "Utility Mount 4" @
+.TinyHardpoint5: "Utility Mount 5" @
+.TinyHardpoint6: "Utility Mount 6" @
+.TinyHardpoint7: "Utility Mount 7" @
+.TinyHardpoint8: "Utility Mount 8" @
 .VesselVoice: "Vessel Voice" @
 .WeaponColour: "Weapon Colour" @
 
