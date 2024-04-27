@@ -33,7 +33,7 @@ namespace EliteDangerousCore.JournalEvents
                 foreach (var jitem in evt["Items"])
                 {
                     var itemfd = JournalFieldNaming.NormaliseFDItemName(jitem.Str());
-                    var item = JournalFieldNaming.GetBetterModuleName(itemfd);
+                    var item = JournalFieldNaming.GetBetterEnglishModuleName(itemfd);
 
                     var repairitem = new RepairItem
                     {
@@ -50,7 +50,7 @@ namespace EliteDangerousCore.JournalEvents
             else
             {
                 ItemFD = JournalFieldNaming.NormaliseFDItemName(evt["Item"].Str());
-                Item = JournalFieldNaming.GetBetterModuleName(ItemFD);
+                Item = JournalFieldNaming.GetBetterEnglishModuleName(ItemFD);
                 ItemLocalised = JournalFieldNaming.CheckLocalisation(evt["Item_Localised"].Str(),Item);
             }
 
@@ -59,7 +59,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public class RepairItem
         {
-            public string Item { get; set; }
+            public string Item { get; set; }        // English name
             public string ItemFD { get; set; }
             public string ItemLocalised { get; set; }
         }
@@ -74,12 +74,12 @@ namespace EliteDangerousCore.JournalEvents
         public void Ledger(Ledger mcl)
         {
             if ( Cost != 0)
-                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, ItemLocalised, -Cost);
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, JournalFieldNaming.GetForeignModuleName(ItemFD, ItemLocalised), -Cost);
         }
 
         public override void FillInformation(out string info, out string detailed) 
         {
-            info = BaseUtils.FieldBuilder.Build("",ItemLocalised, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost) , Cost );
+            info = BaseUtils.FieldBuilder.Build("", JournalFieldNaming.GetForeignModuleName(ItemFD,ItemLocalised), "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost) , Cost );
             detailed = "";
         }
     }
@@ -114,13 +114,13 @@ namespace EliteDangerousCore.JournalEvents
         public JournalAfmuRepairs(JObject evt) : base(evt, JournalTypeEnum.AfmuRepairs)
         {
             ModuleFD = JournalFieldNaming.NormaliseFDItemName(evt["Module"].Str());
-            Module = JournalFieldNaming.GetBetterModuleName(ModuleFD);
+            Module = JournalFieldNaming.GetBetterEnglishModuleName(ModuleFD);
             ModuleLocalised = JournalFieldNaming.CheckLocalisation(evt["Module_Localised"].Str(), Module);
             FullyRepaired = evt["FullyRepaired"].Bool();
             Health = evt["Health"].Float() * 100.0F;
         }
 
-        public string Module { get; set; }
+        public string Module { get; set; }  // english
         public string ModuleFD { get; set; }
         public string ModuleLocalised { get; set; }
         public bool FullyRepaired { get; set; }
@@ -128,7 +128,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", ModuleLocalised, "Health: ;%", (int)Health, ";Fully Repaired", FullyRepaired);
+            info = BaseUtils.FieldBuilder.Build("", JournalFieldNaming.GetForeignModuleName(ModuleFD, ModuleLocalised), "Health: ;%", (int)Health, ";Fully Repaired", FullyRepaired);
             detailed = "";
         }
     }
@@ -138,24 +138,29 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalRebootRepair(JObject evt) : base(evt, JournalTypeEnum.RebootRepair)
         {
-            Slots = evt["Modules"]?.ToObjectQ<string[]>();
+            Slots = evt["Modules"]?.ToObjectQ<ShipSlots.Slot[]>();
 
             if (Slots != null)
             {
                 FriendlySlots = new string[Slots.Length];
                 for (int i = 0; i < Slots.Length; i++)
-                    FriendlySlots[i] = JournalFieldNaming.GetBetterSlotName(Slots[i]);
+                    FriendlySlots[i] = ShipSlots.ToEnglish(Slots[i]);
             }
         }
 
-        public string[] Slots { get; set; }
-        public string[] FriendlySlots { get; set; }
+        public ShipSlots.Slot[] Slots { get; set; }            
+        public string[] FriendlySlots { get; set; }     // English name
 
         public override void FillInformation(out string info, out string detailed)
         {
             info = "";
             if (FriendlySlots != null)
-                info = string.Join(",", FriendlySlots);
+            {
+                for( int i = 0; i < FriendlySlots.Length; i++)
+                {
+                    info = info.AppendPrePad(ShipSlots.ToLocalisedLanguage(Slots[i]),", ");
+                }
+            }
             detailed = "";
         }
     }

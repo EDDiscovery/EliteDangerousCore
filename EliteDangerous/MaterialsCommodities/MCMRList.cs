@@ -89,19 +89,19 @@ namespace EliteDangerousCore
         public List<MaterialCommodityMicroResource> GetMaterialsSorted(uint gen)
         {
             var list = items.GetValues(gen, x => x.Details.IsMaterial);
-            return list.OrderBy(x => x.Details.Type).ThenBy(x => x.Details.Name).ToList();
+            return list.OrderBy(x => x.Details.Type).ThenBy(x => x.Details.TranslatedName).ToList();
         }
 
         public List<MaterialCommodityMicroResource> GetCommoditiesSorted(uint gen)
         {
             var list = items.GetValues(gen, x => x.Details.IsCommodity);
-            return list.OrderBy(x => x.Details.Type).ThenBy(x => x.Details.Name).ToList();
+            return list.OrderBy(x => x.Details.Type).ThenBy(x => x.Details.TranslatedName).ToList();
         }
 
         public List<MaterialCommodityMicroResource> GetMicroResourcesSorted(uint gen)
         {
             var list = items.GetValues(gen, x => x.Details.IsMicroResources);
-            return list.OrderBy(x => x.Details.Type).ThenBy(x => x.Details.Name).ToList();
+            return list.OrderBy(x => x.Details.Type).ThenBy(x => x.Details.TranslatedName).ToList();
         }
 
         public List<MaterialCommodityMicroResource> GetSorted(uint gen, bool commodityormaterial)       // true = commodity
@@ -110,9 +110,9 @@ namespace EliteDangerousCore
             List<MaterialCommodityMicroResource> ret = null;
 
             if (commodityormaterial)
-                ret = list.Where(x => x.Details.IsCommodity).OrderBy(x => x.Details.Type).ThenBy(x => x.Details.Name).ToList();
+                ret = list.Where(x => x.Details.IsCommodity).OrderBy(x => x.Details.Type).ThenBy(x => x.Details.TranslatedName).ToList();
             else
-                ret = list.Where(x => x.Details.IsMaterial).OrderBy(x => x.Details.Name).ToList();
+                ret = list.Where(x => x.Details.IsMaterial).OrderBy(x => x.Details.TranslatedName).ToList();
 
             return ret;
         }

@@ -91,7 +91,7 @@ namespace EliteDangerousCore.JournalEvents
                 int itemno = 0;
                 foreach (Outfitting.OutfittingItem m in YardInfo.Items)
                 {
-                    detailed = detailed.AppendPrePad(m.Name + ":" + m.BuyPrice.ToString("N0"), (itemno % 3 < 2) ? ", " : System.Environment.NewLine);
+                    detailed = detailed.AppendPrePad(m.TranslatedModuleName + ":" + m.BuyPrice.ToString("N0"), (itemno % 3 < 2) ? ", " : System.Environment.NewLine);
                     itemno++;
                 }
             }

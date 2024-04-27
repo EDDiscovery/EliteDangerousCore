@@ -68,7 +68,7 @@ namespace EliteDangerousCore
             {
                 get
                 {
-                    var ing = (from x in Ingredients select Amount[Array.IndexOf(Ingredients, x)].ToString() + " " + x.Name).ToArray();
+                    var ing = (from x in Ingredients select Amount[Array.IndexOf(Ingredients, x)].ToString() + " " + x.TranslatedName).ToArray();
                     return string.Join(", ", ing);
                 }
             }

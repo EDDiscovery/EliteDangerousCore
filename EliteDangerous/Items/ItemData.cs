@@ -25,5 +25,10 @@ namespace EliteDangerousCore
         {
         };
 
+        public static void Initialise()
+        {
+            TranslateModules();
+        }
+
     }
 }

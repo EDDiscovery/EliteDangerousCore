@@ -24,12 +24,12 @@ namespace EliteDangerousCore
         [System.Diagnostics.DebuggerDisplay("{ShipType_Localised} {ShipPrice}")]
         public class ShipyardItem : IEquatable<ShipyardItem>
         {
-            public long id;
-            public string ShipType;             //FDName, direct from entries
-            public string ShipType_Localised;
-            public long ShipPrice;
+            public long id { get; set; }
+            public string ShipType { get; set; }             //FDName, direct from entries
+            public string ShipType_Localised { get; set; }
+            public long ShipPrice { get; set; }
 
-            public string FriendlyShipType;   // from our database
+            public string FriendlyShipType { get; set; }   // from our database
 
             public void Normalise()
             {

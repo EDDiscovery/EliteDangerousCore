@@ -25,23 +25,23 @@ namespace EliteDangerousCore
     {
         public class StoredModule: IEquatable<StoredModule> // storage used by journal event..
         {
-            public int StorageSlot;
-            public string NameFD;
-            public string Name;
-            public string Name_Localised;
-            public string StarSystem;       // not while in transit
-            public long MarketID;       // not while in transit
-            public long TransferCost;   // not while in transit
-            public int TransferTime;    // not while in transit
-            public string EngineerModifications;    // null if none present
-            public double Quality;      // may not be there
-            public int Level;           // may not be there
-            public bool Hot;
-            public bool InTransit;
-            public int BuyPrice;
+            public int StorageSlot{ get; set; }
+            public string NameFD{ get; set; }
+            public string Name{ get; set; }         // English name, keyed on this
+            public string Name_Localised{ get; set; }
+            public string StarSystem{ get; set; }       // not while in transit
+            public long MarketID{ get; set; }       // not while in transit
+            public long TransferCost{ get; set; }   // not while in transit
+            public int TransferTime{ get; set; }    // not while in transit
+            public string EngineerModifications{ get; set; }    // null if none present
+            public double Quality{ get; set; }      // may not be there
+            public int Level{ get; set; }           // may not be there
+            public bool Hot{ get; set; }
+            public bool InTransit{ get; set; }
+            public int BuyPrice{ get; set; }
 
-            public System.TimeSpan TransferTimeSpan;        // computed
-            public string TransferTimeString; // computed, empty if not in tranfer (time<=0)
+            public System.TimeSpan TransferTimeSpan{ get; set; }        // computed
+            public string TransferTimeString{ get; set; } // computed, empty if not in tranfer (time<=0)
 
             public double Mass
             {
@@ -55,17 +55,17 @@ namespace EliteDangerousCore
             public void Normalise()
             {
                 NameFD = JournalFieldNaming.NormaliseFDItemName(Name);          // Name comes in with strange characters, normalise out
-                Name = JournalFieldNaming.GetBetterModuleName(NameFD);      // and look up a better name
+                Name = JournalFieldNaming.GetBetterEnglishModuleName(NameFD);      // and look up a better name
                 Name_Localised = Name_Localised.Alt(Name);
                 TransferTimeSpan = new System.TimeSpan((int)(TransferTime / 60 / 60), (int)((TransferTime / 60) % 60), (int)(TransferTime % 60));
                 TransferTimeString = TransferTime > 0 ? TransferTimeSpan.ToString() : "";
                 //System.Diagnostics.Debug.WriteLine($"SD Normalise '{NameFD}' '{Name}' '{Name_Localised}'");
             }
 
-            public StoredModule(string fdname, string name, string item_localised, string system, string eng, int? level , double? quality, bool? hot)
+            public StoredModule(string fdname, string englishname, string item_localised, string system, string eng, int? level , double? quality, bool? hot)
             {
                 NameFD = fdname;
-                Name = name;
+                Name = englishname;
                 Name_Localised = item_localised.Alt(Name);
                 //System.Diagnostics.Debug.WriteLine($"SD Make '{NameFD}' '{Name}' '{Name_Localised}'");
                 StarSystem = system;
@@ -92,7 +92,7 @@ namespace EliteDangerousCore
         }
 
 
-        public List<StoredModule> StoredModules { get; private set; }       // by STORE id
+        public List<StoredModule> StoredModules { get; private set; }     
 
         public ModulesInStore()
         {
@@ -105,10 +105,10 @@ namespace EliteDangerousCore
         }
 
         // ModuleBuy, ModuleBuyAndStore , ModuleRetrieve
-        public ModulesInStore StoreModule(string fdname, string name, string namelocalised, ISystem sys)
+        public ModulesInStore StoreModule(string fdname, string englishname, string namelocalised, ISystem sys)
         {
             ModulesInStore mis = this.ShallowClone();
-            mis.StoredModules.Add(new StoredModule(fdname, name, namelocalised ,sys.Name, "", null, null, null));
+            mis.StoredModules.Add(new StoredModule(fdname, englishname, namelocalised ,sys.Name, "", null, null, null));
             return mis;
         }
 
@@ -132,10 +132,10 @@ namespace EliteDangerousCore
             return mis;
         }
 
-        // ModuleRetrieve, ModuleSellRemote
-        public ModulesInStore RemoveModule(string item)
+        // ModuleRetrieve, ModuleSellRemote, remove on english name of module
+        public ModulesInStore RemoveModuleUsingEnglishName(string englishname)
         {
-            int index = StoredModules.FindIndex(x => x.Name.Equals(item, StringComparison.InvariantCultureIgnoreCase));  // if we have an item of this name
+            int index = StoredModules.FindIndex(x => x.Name.Equals(englishname, StringComparison.InvariantCultureIgnoreCase));  // if we have an item of this name
             if (index != -1)
             {
                 //System.Diagnostics.Debug.WriteLine("Remove module '" + item + "'  '" + StoredModules[index].Name_Localised + "'");

@@ -96,28 +96,39 @@ namespace EliteDangerousCore
             return inname.Replace("Mission ", "", StringComparison.InvariantCultureIgnoreCase);
         }
 
-        static Dictionary<string, string> replaceslots = new Dictionary<string, string>
-        {
-            {"Engines",     "Thrusters"},
-        };
-
-        static public string GetBetterSlotName(string s)
-        {
-            return s.SplitCapsWordFull(replaceslots);
-        }
-
-        static public string GetBetterModuleName(string s)           
+        static public string GetBetterEnglishModuleName(string fdid)           
         {
             // screen out empty string, some of the fields are purposely blank from the journal because they are not set for a particular transaction
             // do create as this is used by Loadout, ModuleBuy
 
-            if (s.Length>0 && ItemData.TryGetShipModule(s, out ItemData.ShipModule item, true))    
+            if (fdid.Length > 0 && ItemData.TryGetShipModule(fdid, out ItemData.ShipModule item, true))
             {
-                return item.ModName;
+                return item.EnglishModName;
             }
             else
-                return s;
+                return fdid;
         }
+
+        static public string GetForeignModuleName(string fdid, string localised)
+        {
+            if (fdid.Length > 0 && ItemData.TryGetShipModule(fdid, out ItemData.ShipModule item, true))
+            {
+                return item.TranslatedModName;
+            }
+            else
+                return localised ?? fdid;
+        }
+
+        static public string GetForeignModuleType(string fdid)
+        {
+            if (fdid.Length > 0 && ItemData.TryGetShipModule(fdid, out ItemData.ShipModule item, true))
+            {
+                return item.TranslatedModTypeString;
+            }
+            else
+                return "Unknown";
+        }
+
 
         // use when an identifier should be a ship
         static public string GetBetterShipName(string inname)
@@ -290,7 +301,7 @@ namespace EliteDangerousCore
                     string mintype = res.Substring(indexof + 6).Replace(";", "").Replace("_name","").Replace("$", "");
                     var mcd = MaterialCommodityMicroResourceType.GetByFDName(mintype);
                     if (mcd != null)    // if we find it, translate it, else leave it alone
-                        mintype = mcd.Name;
+                        mintype = mcd.TranslatedName;
 
                     res = "Ring Hot Spot of type ".TxID(EDCTx.Signals_RingHotSpot) + mintype;
                 }

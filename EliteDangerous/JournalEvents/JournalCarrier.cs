@@ -967,7 +967,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     if (c.HasStock)
                     {
-                        string name = MaterialCommodityMicroResourceType.GetNameByFDName(c.fdname);
+                        string name = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(c.fdname);
                         detailed += string.Format("{0}: {1}  ".T(EDCTx.JournalCommodityPricesBase_CPBBuy), name, c.buyPrice) + Environment.NewLine;
                     }
                 }
@@ -977,7 +977,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     if (!c.HasStock)
                     {
-                        string name = MaterialCommodityMicroResourceType.GetNameByFDName(c.fdname);
+                        string name = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(c.fdname);
                         detailed += string.Format("{0}: {1}  ".T(EDCTx.JournalCommodityPricesBase_CPBBuy), name, c.sellPrice) + Environment.NewLine;
                     }
                 }

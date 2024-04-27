@@ -57,12 +57,12 @@ namespace EliteDangerousCore.JournalEvents
 
             Commodity = evt["Commodity"].Str();
             Commodity = JournalFieldNaming.FDNameTranslation(Commodity);     // pre-mangle to latest names, in case we are reading old journal records
-            FriendlyCommodity = MaterialCommodityMicroResourceType.GetNameByFDName(Commodity);
+            FriendlyCommodity = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Commodity);
             Commodity_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Commodity_Localised"].Str(), FriendlyCommodity);
 
             Material = evt["Material"].Str();
             Material = JournalFieldNaming.FDNameTranslation(Material);     // pre-mangle to latest names, in case we are reading old journal records
-            FriendlyMaterial = MaterialCommodityMicroResourceType.GetNameByFDName(Material);
+            FriendlyMaterial = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Material);
             Material_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Material_Localised"].Str(), FriendlyMaterial);
 
             Quantity = evt["Quantity"].Int();
@@ -129,11 +129,11 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalEngineerCraftBase(JObject evt, JournalTypeEnum en) : base(evt, en)
         {
-            SlotFD = JournalFieldNaming.NormaliseFDSlotName(evt["Slot"].Str());
-            Slot = JournalFieldNaming.GetBetterSlotName(SlotFD);
+            SlotFD = ShipSlots.ToEnum(evt["Slot"].Str());
+            Slot = ShipSlots.ToEnglish(SlotFD);
 
             ModuleFD = JournalFieldNaming.NormaliseFDItemName(evt["Module"].Str());
-            Module = JournalFieldNaming.GetBetterModuleName(ModuleFD);
+            Module = JournalFieldNaming.GetBetterEnglishModuleName(ModuleFD);
 
             Engineering = new ShipModule.EngineeringData(evt);
 
@@ -142,7 +142,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (mats != null)
             {
-                Ingredients = new Dictionary<string, int>();
+                Ingredients = new List<Ingrediant>();
 
                 if (mats.IsObject)
                 {
@@ -150,38 +150,73 @@ namespace EliteDangerousCore.JournalEvents
 
                     if (temp != null)
                     {
-                        foreach (string key in temp.Keys)
-                            Ingredients[JournalFieldNaming.FDNameTranslation(key)] = temp[key];
+                        foreach (var kvp in temp)
+                        {
+                            string fdname = JournalFieldNaming.FDNameTranslation(kvp.Key);
+                            string name = MaterialCommodityMicroResourceType.GetByFDName(fdname)?.EnglishName ?? fdname;
+                            var i = new Ingrediant()
+                            {
+                                NameFD = fdname.ToLowerInvariant(),
+                                Name_Localised = name,
+                                Name = name,
+                                Count = kvp.Value
+                            };
+
+                            Ingredients.Add(i);
+                        };
                     }
                 }
                 else
                 {
                     foreach (JObject jo in (JArray)mats)
                     {
-                        Ingredients[JournalFieldNaming.FDNameTranslation(jo["Name"].Str("Default"))] = jo["Count"].Int();
+                        string fdname = jo["Name"].StrNull();
+                        string name = MaterialCommodityMicroResourceType.GetByFDName(fdname)?.EnglishName ?? fdname;
+                        if (fdname != null)
+                        {
+                            var i = new Ingrediant()
+                            {
+                                NameFD = fdname.ToLowerInvariant(),
+                                Name_Localised = jo["Name_Localised"].Str(name),
+                                Name = name,
+                                Count = jo["Count"].Int()
+                            };
+
+                            Ingredients.Add(i);
+                        }
                     }
                 }
             }
 
         }
 
-        public string Slot { get; set; }
-        public string SlotFD { get; set; }
-        public string Module { get; set; }
-        public string ModuleFD { get; set; }
+        public string Slot { get; set; }        // English name
+        public ShipSlots.Slot SlotFD { get; set; }
+        public string Module { get; set; }      // English module name
+        public string ModuleFD { get; set; }        
 
         public ShipModule.EngineeringData Engineering { get; set; }
 
         public bool? IsPreview { get; set; }            // Only for legacy convert
 
-        public Dictionary<string, int> Ingredients { get; set; }        // not for legacy convert
+        public class Ingrediant
+        {       
+            public string Name { get; set; }            // json, then english name
+            public string Name_Localised { get; set; }  // localised, or Name
+            public int Count { get; set; }              // count
+
+            public string NameFD { get; set; }          // normalised name
+        }
+
+
+        public List<Ingrediant> Ingredients { get; set; }  // always set
 
         public void UpdateMaterials(MaterialCommoditiesMicroResourceList mc)
         {
             if (Ingredients != null)
             {
-                foreach (KeyValuePair<string, int> k in Ingredients)        // may be commodities or materials but mostly materials so we put it under this
-                    mc.Craft(EventTimeUTC, k.Key, k.Value);
+                foreach (var k in Ingredients)        // may be commodities or materials but mostly materials so we put it under this
+                    mc.Craft(EventTimeUTC, k.NameFD, k.Count);
             }
         }
 
@@ -195,14 +230,17 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("In Slot: ".T(EDCTx.JournalEntry_InSlot), Slot, "", Module, "By: ".T(EDCTx.JournalEntry_By), Engineering.Engineer, "Blueprint: ".T(EDCTx.JournalEntry_Blueprint), Engineering.FriendlyBlueprintName, 
+            info = BaseUtils.FieldBuilder.Build("In Slot: ".T(EDCTx.JournalEntry_InSlot), ShipSlots.ToLocalisedLanguage(SlotFD), "", JournalFieldNaming.GetForeignModuleName(ModuleFD,null), 
+                "By: ".T(EDCTx.JournalEntry_By), Engineering.Engineer, "Blueprint: ".T(EDCTx.JournalEntry_Blueprint), Engineering.FriendlyBlueprintName, 
                 "Level: ".T(EDCTx.JournalEntry_Level), Engineering.Level);
 
             detailed = "";
             if (Ingredients != null)
             {
-                foreach (KeyValuePair<string, int> k in Ingredients)        // may be commodities or materials
-                    detailed += BaseUtils.FieldBuilder.Build("", MaterialCommodityMicroResourceType.GetNameByFDName(k.Key), "", k.Value) + "; ";
+                foreach (var i in Ingredients)        // may be commodities or materials
+                {
+                    detailed += BaseUtils.FieldBuilder.Build("", MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(i.NameFD), "", i.Count) + "; ";
+                }
             }
 
             if (Engineering != null)

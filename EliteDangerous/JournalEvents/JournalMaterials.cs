@@ -36,7 +36,7 @@ namespace EliteDangerousCore.JournalEvents
             public void Normalise()
             {
                 Name = JournalFieldNaming.FDNameTranslation(Name);
-                FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(Name);
+                FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Name);
             }
         }
 
@@ -129,7 +129,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             Category = JournalFieldNaming.NormaliseMaterialCategory(evt["Category"].Str());
             Name = JournalFieldNaming.FDNameTranslation(evt["Name"].Str());     // pre-mangle to latest names, in case we are reading old journal records
-            FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(Name);
+            FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Name);
             Count = evt["Count"].Int(1);
         }
         public string Category { get; set; }
@@ -165,7 +165,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             Category = JournalFieldNaming.NormaliseMaterialCategory(evt["Category"].Str());
             Name = JournalFieldNaming.FDNameTranslation(evt["Name"].Str());     // pre-mangle to latest names, in case we are reading old journal records
-            FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(Name);
+            FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Name);
             Count = evt["Count"].Int();
         }
 
@@ -201,7 +201,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             Category = JournalFieldNaming.NormaliseMaterialCategory(evt["Category"].Str());
             Name = JournalFieldNaming.FDNameTranslation(evt["Name"].Str());     // pre-mangle to latest names, in case we are reading old journal records
-            FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(Name);
+            FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Name);
             DiscoveryNumber = evt["DiscoveryNumber"].Int();
         }
 
@@ -262,7 +262,7 @@ namespace EliteDangerousCore.JournalEvents
             public void Normalise()
             {
                 Material = JournalFieldNaming.FDNameTranslation(Material);
-                FriendlyMaterial = MaterialCommodityMicroResourceType.GetNameByFDName(Material);
+                FriendlyMaterial = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Material);
                 Material_Localised = JournalFieldNaming.CheckLocalisationTranslation(Material_Localised ?? "", FriendlyMaterial);       // ensure.
 
                 if (Category != null)       // some entries do not have this
@@ -374,7 +374,7 @@ namespace EliteDangerousCore.JournalEvents
             info = Name;
             if (Materials != null)
                 foreach (KeyValuePair<string, int> k in Materials)
-                    info += ", " + MaterialCommodityMicroResourceType.GetNameByFDName(k.Key) + ": " + k.Value.ToString();
+                    info += ", " + MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(k.Key) + ": " + k.Value.ToString();
 
             detailed = "";
         }

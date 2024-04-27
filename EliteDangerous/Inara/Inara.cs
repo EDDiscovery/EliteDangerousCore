@@ -342,7 +342,7 @@ namespace EliteDangerousCore.Inara
             foreach (var x in list)
             {
                 JObject data = new JObject();
-                data["slotName"] = x.SlotFD;
+                data["slotName"] = x.SlotFD.ToString();
                 data["itemName"] = x.ItemFD;
                 if ( x.Value.HasValue )
                     data["itemValue"] = x.Value.Value;

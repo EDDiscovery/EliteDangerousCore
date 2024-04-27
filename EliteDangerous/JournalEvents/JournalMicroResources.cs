@@ -49,7 +49,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, Name);
                 Name = JournalFieldNaming.FDNameTranslation(Name);      // this lower cases the name
-                FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(Name);      // normalises to lower case  
+                FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Name);      // normalises to lower case  
                 if (cat != null)
                     Category = cat;
             }
@@ -376,7 +376,7 @@ namespace EliteDangerousCore.JournalEvents
 
             Received_Localised = JournalFieldNaming.CheckLocalisation(Received_Localised, Received);
             Received = JournalFieldNaming.FDNameTranslation(Received);
-            Received_FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(Received);
+            Received_FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Received);
         }
 
         public MicroResource[] Offered { get; set; }

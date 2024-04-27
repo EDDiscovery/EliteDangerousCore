@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2023 EDDiscovery development team
+ * Copyright © 2016-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- *
- *
  */
 using QuickJSON;
 using System;
@@ -65,12 +63,12 @@ namespace EliteDangerousCore.JournalEvents
                         engineering = new ShipModule.EngineeringData(jeng);
                     }
 
-                    string slotfdname = JournalFieldNaming.NormaliseFDSlotName(jo["Slot"].Str());
+                    ShipSlots.Slot slotfdname = ShipSlots.ToEnum(jo["Slot"].Str());
                     string itemfdname = JournalFieldNaming.NormaliseFDItemName(jo["Item"].Str());
 
-                    ShipModule module = new ShipModule(JournalFieldNaming.GetBetterSlotName(slotfdname),
+                    ShipModule module = new ShipModule(ShipSlots.ToEnglish(slotfdname),
                                                         slotfdname,
-                                                        JournalFieldNaming.GetBetterModuleName(itemfdname),
+                                                        JournalFieldNaming.GetBetterEnglishModuleName(itemfdname),
                                                         itemfdname,
                                                         jo["On"].BoolNull(),
                                                         jo["Priority"].IntNull(),
@@ -122,7 +120,9 @@ namespace EliteDangerousCore.JournalEvents
                 if (detailed.Length > 0)
                     detailed += Environment.NewLine;
 
-                detailed += BaseUtils.FieldBuilder.Build("", m.Slot, "<: ", m.Item, "", m.PE(), "Blueprint: ".T(EDCTx.JournalEntry_Blueprint), m.Engineering?.FriendlyBlueprintName, "<+", m.Engineering?.ExperimentalEffect_Localised, "< ", m.Engineering?.Engineer);
+                detailed += BaseUtils.FieldBuilder.Build("", ShipSlots.ToLocalisedLanguage(m.SlotFD), "<: ", 
+                                    JournalFieldNaming.GetForeignModuleName(m.ItemFD,m.LocalisedItem), "", m.PE(), 
+                                    "Blueprint: ".T(EDCTx.JournalEntry_Blueprint), m.Engineering?.FriendlyBlueprintName, "<+", m.Engineering?.ExperimentalEffect_Localised, "< ", m.Engineering?.Engineer);
             }
         }
     }
@@ -133,11 +133,11 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalModuleBuy(JObject evt ) : base(evt, JournalTypeEnum.ModuleBuy)
         {
-            SlotFD = JournalFieldNaming.NormaliseFDSlotName(evt["Slot"].Str());
-            Slot = JournalFieldNaming.GetBetterSlotName(SlotFD);
+            SlotFD = ShipSlots.ToEnum(evt["Slot"].Str());
+            Slot = ShipSlots.ToEnglish(SlotFD);
 
             BuyItemFD = JournalFieldNaming.NormaliseFDItemName(evt["BuyItem"].Str());
-            BuyItem = JournalFieldNaming.GetBetterModuleName(BuyItemFD);
+            BuyItem = JournalFieldNaming.GetBetterEnglishModuleName(BuyItemFD);
             BuyItemLocalised = JournalFieldNaming.CheckLocalisation(evt["BuyItem_Localised"].Str(),BuyItem);
             BuyPrice = evt["BuyPrice"].Long();
 
@@ -146,36 +146,36 @@ namespace EliteDangerousCore.JournalEvents
             ShipId = evt["ShipID"].ULong();
 
             SellItemFD = JournalFieldNaming.NormaliseFDItemName(evt["SellItem"].Str());
-            SellItem = JournalFieldNaming.GetBetterModuleName(SellItemFD);
+            SellItem = JournalFieldNaming.GetBetterEnglishModuleName(SellItemFD);
             SellItemLocalised = JournalFieldNaming.CheckLocalisation(evt["SellItem_Localised"].Str(),SellItem);
             SellPrice = evt["SellPrice"].LongNull();
 
             StoredItemFD = JournalFieldNaming.NormaliseFDItemName(evt["StoredItem"].Str());
-            StoredItem = JournalFieldNaming.GetBetterModuleName(StoredItemFD);
+            StoredItem = JournalFieldNaming.GetBetterEnglishModuleName(StoredItemFD);
             StoredItemLocalised = JournalFieldNaming.CheckLocalisation(evt["StoredItem_Localised"].Str(),StoredItem);
 
             MarketID = evt["MarketID"].LongNull();
         }
 
-        public string Slot { get; set; }
-        public string SlotFD { get; set; }
+        public string Slot { get; set; }                        // english name
+        public ShipSlots.Slot SlotFD { get; set; }
 
         public string Ship { get; set; }
         public string ShipFD { get; set; }
         public ulong ShipId { get; set; }
 
-        public string BuyItem { get; set; }
+        public string BuyItem { get; set; }                     // english name
         public string BuyItemFD { get; set; }
         public string BuyItemLocalised { get; set; }
         public long BuyPrice { get; set; }
 
-        public string SellItem { get; set; }                    // if sold previous one
-        public string SellItemFD { get; set; }                    // if sold previous one
+        public string SellItem { get; set; }                    // if sold previous one, english name
+        public string SellItemFD { get; set; }                  // if sold previous one
         public string SellItemLocalised { get; set; }
         public long? SellPrice { get; set; }
 
-        public string StoredItem { get; set; }                  // if stored previous one
-        public string StoredItemFD { get; set; }                  // if stored previous one
+        public string StoredItem { get; set; }                  // if stored previous one, english name
+        public string StoredItemFD { get; set; }                // if stored previous one
         public string StoredItemLocalised { get; set; }         // if stored previous one
 
         public long? MarketID { get; set; }
@@ -187,7 +187,7 @@ namespace EliteDangerousCore.JournalEvents
             if (diff != 0)
             {
                 string s = (BuyItemLocalised.Length > 0) ? BuyItemLocalised : BuyItem;
-                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, s + " on " + Ship, diff);
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, s + " @ " + Ship, diff);
             }
         }
 
@@ -199,11 +199,12 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(out string info, out string detailed) 
         {
             
-            info = BaseUtils.FieldBuilder.Build("", BuyItemLocalised, "< into ".T(EDCTx.JournalEntry_into), Slot, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), BuyPrice);
+            info = BaseUtils.FieldBuilder.Build("", JournalFieldNaming.GetForeignModuleName(BuyItemFD,BuyItemLocalised), "< into ".T(EDCTx.JournalEntry_into),
+                                                        ShipSlots.ToLocalisedLanguage(SlotFD), "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), BuyPrice);
             if (SellItem.Length > 0)
-                info += ", " + BaseUtils.FieldBuilder.Build("Sold: ".T(EDCTx.JournalEntry_Sold), SellItemLocalised, "Price: ; cr;N0".T(EDCTx.JournalEntry_Price), SellPrice);
+                info += ", " + BaseUtils.FieldBuilder.Build("Sold: ".T(EDCTx.JournalEntry_Sold), JournalFieldNaming.GetForeignModuleName(SellItemFD, SellItemLocalised), "Price: ; cr;N0".T(EDCTx.JournalEntry_Price), SellPrice);
             if (StoredItem.Length > 0)
-                info += ", " + BaseUtils.FieldBuilder.Build("Stored: ".T(EDCTx.JournalEntry_Stored), StoredItemLocalised);
+                info += ", " + BaseUtils.FieldBuilder.Build("Stored: ".T(EDCTx.JournalEntry_Stored), JournalFieldNaming.GetForeignModuleName(StoredItemFD, StoredItemLocalised));
 
             detailed = "";
         }
@@ -216,7 +217,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalModuleBuyAndStore(JObject evt) : base(evt, JournalTypeEnum.ModuleBuyAndStore)
         {
             BuyItemFD = JournalFieldNaming.NormaliseFDItemName(evt["BuyItem"].Str());
-            BuyItem = JournalFieldNaming.GetBetterModuleName(BuyItemFD);
+            BuyItem = JournalFieldNaming.GetBetterEnglishModuleName(BuyItemFD);
             BuyItemLocalised = JournalFieldNaming.CheckLocalisation(evt["BuyItem_Localised"].Str(), BuyItem);
 
             MarketID = evt["MarketID"].Long();
@@ -227,7 +228,7 @@ namespace EliteDangerousCore.JournalEvents
             ShipId = evt["ShipID"].ULong();
         }
 
-        public string BuyItem { get; set; }
+        public string BuyItem { get; set; }     // english name
         public string BuyItemFD { get; set; }
         public string BuyItemLocalised { get; set; }
 
@@ -242,7 +243,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             string s = (BuyItemLocalised.Length > 0) ? BuyItemLocalised : BuyItem;
 
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, s + " on " + Ship, -BuyPrice);
+            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, s + " @ " + Ship, -BuyPrice);
         }
 
         public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
@@ -252,7 +253,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", BuyItemLocalised, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), BuyPrice);
+            info = BaseUtils.FieldBuilder.Build("", JournalFieldNaming.GetForeignModuleName(BuyItemFD,BuyItemLocalised), "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), BuyPrice);
             detailed = "";
         }
     }
@@ -263,11 +264,11 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalModuleSell(JObject evt) : base(evt, JournalTypeEnum.ModuleSell)
         {
-            SlotFD = JournalFieldNaming.NormaliseFDSlotName(evt["Slot"].Str());
-            Slot = JournalFieldNaming.GetBetterSlotName(SlotFD);
+            SlotFD = ShipSlots.ToEnum(evt["Slot"].Str());
+            Slot = ShipSlots.ToEnglish(SlotFD);
 
             SellItemFD = JournalFieldNaming.NormaliseFDItemName(evt["SellItem"].Str());
-            SellItem = JournalFieldNaming.GetBetterModuleName(SellItemFD);
+            SellItem = JournalFieldNaming.GetBetterEnglishModuleName(SellItemFD);
             SellItemLocalised = JournalFieldNaming.CheckLocalisation(evt["SellItem_Localised"].Str(), SellItem);
 
             SellPrice = evt["SellPrice"].Long();
@@ -280,8 +281,8 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string Slot { get; set; }
-        public string SlotFD { get; set; }
-        public string SellItem { get; set; }
+        public ShipSlots.Slot SlotFD { get; set; }
+        public string SellItem { get; set; }    // english
         public string SellItemFD { get; set; }
         public string SellItemLocalised { get; set; }
         public long SellPrice { get; set; }
@@ -295,7 +296,7 @@ namespace EliteDangerousCore.JournalEvents
             if (SellPrice != 0)
             {
                 string s = (SellItemLocalised.Length > 0) ? SellItemLocalised : SellItem;
-                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, s + " on " + Ship, SellPrice);
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, s + " @ " + Ship, SellPrice);
             }
         }
 
@@ -306,7 +307,8 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(out string info, out string detailed)
         {
 
-            info = BaseUtils.FieldBuilder.Build("", SellItemLocalised, "< from ".T(EDCTx.JournalEntry_from), Slot, "Price: ; cr;N0".T(EDCTx.JournalEntry_Price), SellPrice);
+            info = BaseUtils.FieldBuilder.Build("", JournalFieldNaming.GetForeignModuleName(SellItemFD,SellItemLocalised), "< from ".T(EDCTx.JournalEntry_from),
+                                            ShipSlots.ToLocalisedLanguage(SlotFD), "Price: ; cr;N0".T(EDCTx.JournalEntry_Price), SellPrice);
             detailed = "";
         }
 
@@ -317,10 +319,10 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalModuleSellRemote(JObject evt) : base(evt, JournalTypeEnum.ModuleSellRemote)
         {
-            Slot = evt["StorageSlot"].Str();         // this is NOT a ship slot name, just a index
+            SlotNumber = evt["StorageSlot"].Int();
 
             SellItemFD = JournalFieldNaming.NormaliseFDItemName(evt["SellItem"].Str());
-            SellItem = JournalFieldNaming.GetBetterModuleName(SellItemFD);
+            SellItem = JournalFieldNaming.GetBetterEnglishModuleName(SellItemFD);
             SellItemLocalised = JournalFieldNaming.CheckLocalisation(evt["SellItem_Localised"].Str(), SellItem);
 
             SellPrice = evt["SellPrice"].Long();
@@ -332,8 +334,8 @@ namespace EliteDangerousCore.JournalEvents
             ServerId = evt["ServerId"].Int();
         }
 
-        public string Slot { get; set; }
-        public string SellItem { get; set; }
+        public int SlotNumber { get; set; }
+        public string SellItem { get; set; }    // english
         public string SellItemFD { get; set; }
         public string SellItemLocalised { get; set; }
         public long SellPrice { get; set; }
@@ -347,7 +349,7 @@ namespace EliteDangerousCore.JournalEvents
             if (SellPrice != 0)
             {
                 string s = (SellItemLocalised.Length > 0) ? SellItemLocalised : SellItem;
-                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, SellItemLocalised + " on " + Ship, SellPrice);
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, " @ " + Ship, SellPrice);
             }
         }
 
@@ -359,7 +361,8 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(out string info, out string detailed)
         {
 
-            info = BaseUtils.FieldBuilder.Build("Item: ".T(EDCTx.JournalEntry_Item), SellItemLocalised, "Price: ; cr;N0".T(EDCTx.JournalEntry_Price), SellPrice);
+            info = BaseUtils.FieldBuilder.Build("Item: ".T(EDCTx.JournalEntry_Item), JournalFieldNaming.GetForeignModuleName(SellItemFD,SellItemLocalised), 
+                                            "Price: ; cr;N0".T(EDCTx.JournalEntry_Price), SellPrice);
             detailed = BaseUtils.FieldBuilder.Build("Ship: ".T(EDCTx.JournalEntry_Ship), Ship);
         }
     }
@@ -370,22 +373,22 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalModuleRetrieve(JObject evt) : base(evt, JournalTypeEnum.ModuleRetrieve)
         {
-            SlotFD = JournalFieldNaming.NormaliseFDSlotName(evt["Slot"].Str());
-            Slot = JournalFieldNaming.GetBetterSlotName(SlotFD);
+            SlotFD = ShipSlots.ToEnum(evt["Slot"].Str());
+            Slot = ShipSlots.ToEnglish(SlotFD);
 
             ShipFD = JournalFieldNaming.NormaliseFDShipName(evt["Ship"].Str());
             Ship = JournalFieldNaming.GetBetterShipName(ShipFD);
             ShipId = evt["ShipID"].ULong();
 
             RetrievedItemFD = JournalFieldNaming.NormaliseFDItemName(evt["RetrievedItem"].Str());
-            RetrievedItem = JournalFieldNaming.GetBetterModuleName(RetrievedItemFD);
+            RetrievedItem = JournalFieldNaming.GetBetterEnglishModuleName(RetrievedItemFD);
             RetrievedItemLocalised = JournalFieldNaming.CheckLocalisation(evt["RetrievedItem_Localised"].Str(), RetrievedItem);
 
             FDEngineerModifications = evt["EngineerModifications"].Str();
             EngineerModifications = JournalFieldNaming.EngineerMods(FDEngineerModifications);
 
             SwapOutItemFD = JournalFieldNaming.NormaliseFDItemName(evt["SwapOutItem"].Str());
-            SwapOutItem = JournalFieldNaming.GetBetterModuleName(SwapOutItemFD);
+            SwapOutItem = JournalFieldNaming.GetBetterEnglishModuleName(SwapOutItemFD);
             SwapOutItemLocalised = JournalFieldNaming.CheckLocalisation(evt["SwapOutItem_Localised"].Str(), SwapOutItem);
 
             Cost = evt["Cost"].Long();
@@ -397,17 +400,17 @@ namespace EliteDangerousCore.JournalEvents
             MarketID = evt["MarketID"].LongNull();
         }
 
-        public string Slot { get; set; }
-        public string SlotFD { get; set; }
+        public string Slot { get; set; }        // english
+        public ShipSlots.Slot SlotFD { get; set; }
         public string Ship { get; set; }
         public string ShipFD { get; set; }
         public ulong ShipId { get; set; }
-        public string RetrievedItem { get; set; }
+        public string RetrievedItem { get; set; }   // english
         public string RetrievedItemFD { get; set; }
         public string RetrievedItemLocalised { get; set; }
         public string FDEngineerModifications { get; set; }       // FDName, empty if none
         public string EngineerModifications { get; set; }       // Friendly, empty if none
-        public string SwapOutItem { get; set; }
+        public string SwapOutItem { get; set; }     // english
         public string SwapOutItemFD { get; set; }
         public string SwapOutItemLocalised { get; set; }
         public long Cost { get; set; }
@@ -420,8 +423,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (Cost != 0)
             {
-                string s = (RetrievedItemLocalised.Length > 0) ? RetrievedItemLocalised : RetrievedItem;
-                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, s + " on " + Ship, -Cost);
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, JournalFieldNaming.GetForeignModuleName(RetrievedItemFD,RetrievedItemLocalised) + " @ " + Ship, -Cost);
             }
         }
 
@@ -433,12 +435,13 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(out string info, out string detailed)
         {
 
-            info = BaseUtils.FieldBuilder.Build("", RetrievedItemLocalised, "< into ".T(EDCTx.JournalEntry_into), Slot, ";(Hot)".T(EDCTx.JournalEntry_Hot), Hot);
+            info = BaseUtils.FieldBuilder.Build("", JournalFieldNaming.GetForeignModuleName(RetrievedItemFD, RetrievedItemLocalised), 
+                            "< into ".T(EDCTx.JournalEntry_into), ShipSlots.ToLocalisedLanguage(SlotFD), ";(Hot)".T(EDCTx.JournalEntry_Hot), Hot);
             if (Cost > 0)
                 info += " " + BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost);
 
             if (SwapOutItem.Length > 0)
-                info += ", " + BaseUtils.FieldBuilder.Build("Stored: ".T(EDCTx.JournalEntry_Stored), SwapOutItemLocalised);
+                info += ", " + BaseUtils.FieldBuilder.Build("Stored: ".T(EDCTx.JournalEntry_Stored), JournalFieldNaming.GetForeignModuleName(SwapOutItemFD, SwapOutItemLocalised));
             detailed = "";
         }
 
@@ -451,22 +454,22 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalModuleStore(JObject evt) : base(evt, JournalTypeEnum.ModuleStore)
         {
-            SlotFD = JournalFieldNaming.NormaliseFDSlotName(evt["Slot"].Str());
-            Slot = JournalFieldNaming.GetBetterSlotName(SlotFD);
+            SlotFD = ShipSlots.ToEnum(evt["Slot"].Str());
+            Slot = ShipSlots.ToEnglish(SlotFD);
 
             ShipFD = JournalFieldNaming.NormaliseFDShipName(evt["Ship"].Str());
             Ship = JournalFieldNaming.GetBetterShipName(ShipFD);
             ShipId = evt["ShipID"].ULong();
 
             StoredItemFD = JournalFieldNaming.NormaliseFDItemName(evt["StoredItem"].Str());
-            StoredItem = JournalFieldNaming.GetBetterModuleName(StoredItemFD);
+            StoredItem = JournalFieldNaming.GetBetterEnglishModuleName(StoredItemFD);
             StoredItemLocalised = JournalFieldNaming.CheckLocalisation(evt["StoredItem_Localised"].Str(), StoredItem);
 
             FDEngineerModifications = evt["EngineerModifications"].Str();
             EngineerModifications = JournalFieldNaming.EngineerMods(FDEngineerModifications);
 
             ReplacementItemFD = JournalFieldNaming.NormaliseFDItemName(evt["ReplacementItem"].Str());
-            ReplacementItem = JournalFieldNaming.GetBetterModuleName(ReplacementItemFD);
+            ReplacementItem = JournalFieldNaming.GetBetterEnglishModuleName(ReplacementItemFD);
             ReplacementItemLocalised = JournalFieldNaming.CheckLocalisation(evt["ReplacementItem_Localised"].Str(), ReplacementItem);
 
             Cost = evt["Cost"].LongNull();
@@ -479,16 +482,16 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string Slot { get; set; }
-        public string SlotFD { get; set; }
+        public ShipSlots.Slot SlotFD { get; set; }
         public string Ship { get; set; }
         public string ShipFD { get; set; }
         public ulong ShipId { get; set; }
-        public string StoredItem { get; set; }
+        public string StoredItem { get; set; }  // english
         public string StoredItemFD { get; set; }
         public string StoredItemLocalised { get; set; }
         public string FDEngineerModifications { get; set; }       // FDName, empty if none
         public string EngineerModifications { get; set; }       // Friendly, empty if none
-        public string ReplacementItem { get; set; }
+        public string ReplacementItem { get; set; } // english
         public string ReplacementItemFD { get; set; }
         public string ReplacementItemLocalised { get; set; }
         public long? Cost { get; set; }
@@ -501,8 +504,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (Cost.HasValue)
             {
-                string s = (StoredItemLocalised.Length > 0) ? StoredItemLocalised : StoredItem;
-                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, s + " on ".T(EDCTx.JournalEntry_on) + Ship, -(Cost.Value));
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, JournalFieldNaming.GetForeignModuleName(StoredItemFD, StoredItemLocalised) + " @ ".T(EDCTx.JournalEntry_on) + Ship, -(Cost.Value));
             }
         }
 
@@ -514,9 +516,12 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(out string info, out string detailed)
         {
 
-            info = BaseUtils.FieldBuilder.Build("", StoredItemLocalised, "< from ".T(EDCTx.JournalEntry_from), Slot, ";(Hot)".T(EDCTx.JournalEntry_Hot), Hot, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost);
+            info = BaseUtils.FieldBuilder.Build("", JournalFieldNaming.GetForeignModuleName(StoredItemFD,StoredItemLocalised), "< from ".T(EDCTx.JournalEntry_from),
+                               ShipSlots.ToLocalisedLanguage(SlotFD), ";(Hot)".T(EDCTx.JournalEntry_Hot), Hot, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost);
+
             if (ReplacementItem.Length > 0)
-                info = ", " + BaseUtils.FieldBuilder.Build("Replaced by: ".T(EDCTx.JournalEntry_Replacedby), ReplacementItemLocalised);
+                info = ", " + BaseUtils.FieldBuilder.Build("Replaced by: ".T(EDCTx.JournalEntry_Replacedby), JournalFieldNaming.GetForeignModuleName(ReplacementItemFD,ReplacementItemLocalised));
+
             detailed = BaseUtils.FieldBuilder.Build("Modifications: ".T(EDCTx.JournalEntry_Modifications), EngineerModifications);
         }
     }
@@ -527,18 +532,18 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalModuleSwap(JObject evt) : base(evt, JournalTypeEnum.ModuleSwap)
         {
-            FromSlotFD = JournalFieldNaming.NormaliseFDSlotName(evt["FromSlot"].Str());
-            FromSlot = JournalFieldNaming.GetBetterSlotName(FromSlotFD);
+            FromSlotFD = ShipSlots.ToEnum(evt["FromSlot"].Str());
+            FromSlot = ShipSlots.ToEnglish(FromSlotFD);
 
-            ToSlotFD = JournalFieldNaming.NormaliseFDSlotName(evt["ToSlot"].Str());
-            ToSlot = JournalFieldNaming.GetBetterSlotName(ToSlotFD);
+            ToSlotFD = ShipSlots.ToEnum(evt["ToSlot"].Str());
+            ToSlot = ShipSlots.ToEnglish(ToSlotFD);
 
             FromItemFD = JournalFieldNaming.NormaliseFDItemName(evt["FromItem"].Str());
-            FromItem = JournalFieldNaming.GetBetterModuleName(FromItemFD);
+            FromItem = JournalFieldNaming.GetBetterEnglishModuleName(FromItemFD);
             FromItemLocalised = JournalFieldNaming.CheckLocalisation(evt["FromItem_Localised"].Str(), FromItem);
 
             ToItemFD = JournalFieldNaming.NormaliseFDItemName(evt["ToItem"].Str());
-            ToItem = JournalFieldNaming.GetBetterModuleName(ToItemFD);
+            ToItem = JournalFieldNaming.GetBetterEnglishModuleName(ToItemFD);
             if (ToItem.Equals("Null"))      // Frontier bug.. something Null is here.. remove
                 ToItem = ToItemFD = "";
             ToItemLocalised = JournalFieldNaming.CheckLocalisation(evt["ToItem_Localised"].Str(), ToItem);        // if ToItem is null or not there, this won't be
@@ -550,15 +555,15 @@ namespace EliteDangerousCore.JournalEvents
             MarketID = evt["MarketID"].LongNull();
         }
 
-        public string FromSlot { get; set; }
-        public string FromSlotFD { get; set; }
-        public string ToSlot { get; set; }
-        public string ToSlotFD { get; set; }
-        public string FromItem { get; set; }
+        public string FromSlot { get; set; }    // english
+        public ShipSlots.Slot FromSlotFD { get; set; }
+        public string ToSlot { get; set; }      // english
+        public ShipSlots.Slot ToSlotFD { get; set; }
+        public string FromItem { get; set; }    // English
         public string FromItemFD { get; set; }
         public string FromItemLocalised { get; set; }
         public string ToItem { get; set; }
-        public string ToItemFD { get; set; }
+        public string ToItemFD { get; set; }        // English
         public string ToItemLocalised { get; set; }
         public string Ship { get; set; }
         public string ShipFD { get; set; }
@@ -572,10 +577,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(out string info, out string detailed)
         {
-
-            info = BaseUtils.FieldBuilder.Build("Slot: ".T(EDCTx.JournalEntry_Slot), FromSlot, "< to ".T(EDCTx.JournalEntry_to), ToSlot, "Item: ".T(EDCTx.JournalEntry_Item), FromItemLocalised);
+            info = BaseUtils.FieldBuilder.Build("Slot: ".T(EDCTx.JournalEntry_Slot), ShipSlots.ToLocalisedLanguage(FromSlotFD), "< to ".T(EDCTx.JournalEntry_to), ShipSlots.ToLocalisedLanguage(ToSlotFD), 
+                            "Item: ".T(EDCTx.JournalEntry_Item), JournalFieldNaming.GetForeignModuleName(FromItemFD, FromItemLocalised));
             if (ToItem.Length > 0)
-                info += ", Swapped with ".T(EDCTx.JournalEntry_Swappedwith) + ToItemLocalised;
+                info += ", Swapped with ".T(EDCTx.JournalEntry_Swappedwith) + JournalFieldNaming.GetForeignModuleName(ToItemFD,ToItemLocalised);
             detailed = "";
         }
     }
@@ -600,13 +605,12 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (JObject jo in jmodules)
                 {
-                    string slotfdname = JournalFieldNaming.NormaliseFDSlotName(jo["Slot"].Str());
+                    ShipSlots.Slot SlotFDname = ShipSlots.ToEnum(jo["Slot"].Str());
                     string itemfdname = JournalFieldNaming.NormaliseFDItemName(jo["Item"].Str());
 
-                    ShipModule module = new ShipModule(
-                                                        JournalFieldNaming.GetBetterSlotName(slotfdname),
-                                                        slotfdname,
-                                                        JournalFieldNaming.GetBetterModuleName(itemfdname),
+                    ShipModule module = new ShipModule( ShipSlots.ToEnglish(SlotFDname),
+                                                        SlotFDname,
+                                                        JournalFieldNaming.GetBetterEnglishModuleName(itemfdname),
                                                         itemfdname,
                                                         null, // unknown
                                                         jo["Priority"].IntNull(),
@@ -646,7 +650,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 double? power = (m.Power.HasValue && m.Power.Value > 0) ? m.Power : null;
 
-                detailed = detailed.AppendPrePad(BaseUtils.FieldBuilder.Build("", m.Slot, "<: ", m.Item, "; MW;0.###", power), Environment.NewLine);
+                detailed = detailed.AppendPrePad(BaseUtils.FieldBuilder.Build("", ShipSlots.ToLocalisedLanguage(m.SlotFD), "<: ", JournalFieldNaming.GetForeignModuleName(m.ItemFD,m.LocalisedItem), "; MW;0.###", power), Environment.NewLine);
             }
         }
     }
@@ -690,7 +694,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (ModulesInStore.StoredModule m in ModuleItems)
                 {
-                    detailed = detailed.AppendPrePad(BaseUtils.FieldBuilder.Build("", m.Name, "< at ".T(EDCTx.JournalStoredModules_at), m.StarSystem,
+                    detailed = detailed.AppendPrePad(BaseUtils.FieldBuilder.Build("", JournalFieldNaming.GetForeignModuleName(m.NameFD,m.Name_Localised), "< at ".T(EDCTx.JournalStoredModules_at), m.StarSystem,
                                 "Transfer Cost: ; cr;N0".T(EDCTx.JournalEntry_TransferCost), m.TransferCost,
                                 "Time: ".T(EDCTx.JournalEntry_Time), m.TransferTimeString,
                                 "Value: ; cr;N0".T(EDCTx.JournalEntry_Value), m.TransferCost, ";(Hot)".T(EDCTx.JournalEntry_Hot), m.Hot), System.Environment.NewLine);
@@ -715,10 +719,10 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (ModuleItem i in ModuleItems)
                 {
-                    i.SlotFD = JournalFieldNaming.NormaliseFDSlotName(i.Slot);
-                    i.Slot = JournalFieldNaming.GetBetterSlotName(i.SlotFD);
+                    i.SlotFD = ShipSlots.ToEnum(i.Slot);
+                    i.Slot = ShipSlots.ToEnglish(i.SlotFD);
                     i.NameFD = JournalFieldNaming.NormaliseFDItemName(i.Name);
-                    i.Name = JournalFieldNaming.GetBetterModuleName(i.NameFD);
+                    i.Name = JournalFieldNaming.GetBetterEnglishModuleName(i.NameFD);
                 }
             }
         }
@@ -741,18 +745,20 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
 
             if (ModuleItems != null)
+            {
                 foreach (ModuleItem m in ModuleItems)
                 {
-                    detailed = detailed.AppendPrePad(BaseUtils.FieldBuilder.Build("", m.Name, ";(Hot)".T(EDCTx.JournalEntry_Hot), m.Hot), ", ");
+                    detailed = detailed.AppendPrePad(BaseUtils.FieldBuilder.Build("", JournalFieldNaming.GetForeignModuleName(m.NameFD,m.Name_Localised), ";(Hot)".T(EDCTx.JournalEntry_Hot), m.Hot), ", ");
                 }
+            }
         }
 
         public class ModuleItem
         {
-            public string SlotFD;
-            public string Slot;
-            public string NameFD;
-            public string Name;
+            public ShipSlots.Slot SlotFD;       
+            public string Slot;                 // json, english text afterwards
+            public string NameFD;               // fdname
+            public string Name;                 // english name
             public string Name_Localised;
             public string EngineerModifications;
             public double? Quality { get; set; }
@@ -769,7 +775,7 @@ namespace EliteDangerousCore.JournalEvents
             StorageSlot = evt["StorageSlot"].Str();          // Slot number, not a slot on our ship
 
             StoredItemFD = JournalFieldNaming.NormaliseFDItemName(evt["StoredItem"].Str());
-            StoredItem = JournalFieldNaming.GetBetterModuleName(StoredItemFD);
+            StoredItem = JournalFieldNaming.GetBetterEnglishModuleName(StoredItemFD);
             StoredItemLocalised = JournalFieldNaming.CheckLocalisation(evt["StoredItem_Localised"].Str(), StoredItem);
 
             TransferCost = evt["TransferCost"].Long();
@@ -797,12 +803,12 @@ namespace EliteDangerousCore.JournalEvents
 
         public void Ledger(Ledger mcl)
         {
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, StoredItemLocalised + " on " + Ship, -TransferCost);
+            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, StoredItemLocalised + " @ " + Ship, -TransferCost);
         }
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("", StoredItemLocalised, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), TransferCost, "Into ship: ".T(EDCTx.JournalEntry_Intoship), Ship, "Transfer Time: ".T(EDCTx.JournalEntry_TransferTime), FriendlyTransferTime);
+            info = BaseUtils.FieldBuilder.Build("", JournalFieldNaming.GetForeignModuleName(StoredItemFD,StoredItemLocalised), "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), TransferCost, "Into ship: ".T(EDCTx.JournalEntry_Intoship), Ship, "Transfer Time: ".T(EDCTx.JournalEntry_TransferTime), FriendlyTransferTime);
             detailed = "";
         }
     }

@@ -132,7 +132,7 @@ namespace EliteDangerousCore.JournalEvents
             MissionId = evt["MissionID"].ULong();
 
             Commodity = JournalFieldNaming.FixCommodityName(evt["Commodity"].Str());        // instances of $_name, fix to fdname
-            FriendlyCommodity = MaterialCommodityMicroResourceType.GetNameByFDName(Commodity);
+            FriendlyCommodity = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Commodity);
             CommodityLocalised = JournalFieldNaming.CheckLocalisationTranslation(evt["Commodity_Localised"].Str(), FriendlyCommodity);
 
             Count = evt["Count"].IntNull();
@@ -278,7 +278,7 @@ namespace EliteDangerousCore.JournalEvents
 
             Commodity = JournalFieldNaming.FixCommodityName(evt["Commodity"].Str());             // evidence of $_name problem, fix to fdname
             Commodity = JournalFieldNaming.FDNameTranslation(Commodity);     // pre-mangle to latest names, in case we are reading old journal records
-            FriendlyCommodity = MaterialCommodityMicroResourceType.GetNameByFDName(Commodity);
+            FriendlyCommodity = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Commodity);
             CommodityLocalised = JournalFieldNaming.CheckLocalisationTranslation(evt["Commodity_Localised"].Str(), FriendlyCommodity);
 
             Count = evt["Count"].IntNull();
@@ -557,7 +557,7 @@ namespace EliteDangerousCore.JournalEvents
             public void Normalise()
             {
                 Name = JournalFieldNaming.FDNameTranslation(Name);
-                FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(Name);
+                FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Name);
                 Name_Localised = JournalFieldNaming.CheckLocalisationTranslation(Name_Localised ?? "", FriendlyName);
 
                 if (Category != null)
@@ -578,7 +578,7 @@ namespace EliteDangerousCore.JournalEvents
             public void Normalise()
             {
                 Name = JournalFieldNaming.FDNameTranslation(Name);
-                FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(Name);
+                FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Name);
                 Name_Localised = Name_Localised.Alt(FriendlyName);
             }
         }

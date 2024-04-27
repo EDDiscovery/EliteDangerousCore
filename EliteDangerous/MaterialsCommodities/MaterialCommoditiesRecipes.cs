@@ -75,8 +75,8 @@ namespace EliteDangerousCore
 
                     if (got < need)
                     {
-                        string sshort = (need - got).ToString() + (ingmct.IsEncodedOrManufactured ? " " + ingmct.Name : ingmct.Shortname);
-                        string slong = (need - got).ToString() + " x " + ingmct.Name + Environment.NewLine;
+                        string sshort = (need - got).ToString() + (ingmct.IsEncodedOrManufactured ? " " + ingmct.TranslatedName : ingmct.Shortname);
+                        string slong = (need - got).ToString() + " x " + ingmct.TranslatedName + Environment.NewLine;
 
                         if (neededstr.Length == 0)
                         {
@@ -112,8 +112,8 @@ namespace EliteDangerousCore
                     if ( reducetotals)  // may not want to chain recipes
                         available[ currentcontents[mi].Details.FDName] -= used;
 
-                    string dispshort = (currentcontents[mi].Details.IsEncodedOrManufactured) ? " " + currentcontents[mi].Details.Name : currentcontents[mi].Details.Shortname;
-                    string displong = " " + currentcontents[mi].Details.Name;
+                    string dispshort = (currentcontents[mi].Details.IsEncodedOrManufactured) ? " " + currentcontents[mi].Details.TranslatedName : currentcontents[mi].Details.Shortname;
+                    string displong = " " + currentcontents[mi].Details.TranslatedName;
 
                     usedstrshort.AppendPrePad(used.ToString() + dispshort, ", ");
                     usedstrlong.AppendPrePad(used.ToString() + " x " + displong, Environment.NewLine);
@@ -175,7 +175,7 @@ namespace EliteDangerousCore
                 }
             }
 
-            shoppingList.Sort(delegate (Tuple<MaterialCommodityMicroResource,int> left, Tuple<MaterialCommodityMicroResource,int> right) { return left.Item1.Details.Name.CompareTo(right.Item1.Details.Name); });
+            shoppingList.Sort(delegate (Tuple<MaterialCommodityMicroResource,int> left, Tuple<MaterialCommodityMicroResource,int> right) { return left.Item1.Details.TranslatedName.CompareTo(right.Item1.Details.TranslatedName); });
 
             return shoppingList;
         }

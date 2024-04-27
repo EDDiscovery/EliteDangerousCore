@@ -531,9 +531,9 @@ namespace EliteDangerousCore.Inara
 
                         if (je.Ingredients != null)
                         {
-                            foreach (KeyValuePair<string, int> k in je.Ingredients)
+                            foreach (var i in je.Ingredients)
                             {
-                                if (mcmr.TryGetValue(k.Key, out MaterialCommodityMicroResource item))
+                                if (mcmr.TryGetValue(i.NameFD, out MaterialCommodityMicroResource item))
                                     eventstosend.Add(InaraClass.setCommanderInventoryItem(item, heutc));
                             }
                         }

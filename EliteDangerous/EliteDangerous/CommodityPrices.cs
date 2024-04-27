@@ -283,7 +283,7 @@ namespace EliteDangerousCore
                 if ( mcd != null )
                 {
                     fdname = fdname_unnormalised = mcd.FDName;
-                    locName = mcd.Name;
+                    locName = mcd.TranslatedName;
                     category = mcd.Type.ToString();
                     loccategory = mcd.TranslatedType;
                 }

@@ -22,9 +22,9 @@ namespace EliteDangerousCore
     {
         #region Information interface
 
-        public string Slot { get; private set; }        // never null       - nice name, used to track 
-        public string SlotFD { get; private set; }      // never null       - FD normalised ID name (Int_CargoRack_Size6_Class1)
-        public string Item { get; private set; }        // never null       - nice name, used to track
+        public string Slot { get; private set; }        // never null       - english name
+        public ShipSlots.Slot SlotFD { get; private set; }    // never null    
+        public string Item { get; private set; }        // never null       - nice name, used to track, english
         public string ItemFD { get; private set; }      // never null     - FD normalised ID name
 
         public string LocalisedItem { get; set; }       // Modulex events only supply this. so it may be null if we have not seen one of them pass by with this Item name
@@ -51,7 +51,7 @@ namespace EliteDangerousCore
             return pe;
         }
 
-        public bool IsFSDSlot { get { return SlotFD.Contains("FrameShiftDrive"); } }
+        public bool IsFSDSlot { get { return SlotFD  == ShipSlots.Slot.FrameShiftDrive; } }
 
         public EliteDangerousCalculations.FSDSpec GetFSDSpec()      // may be null - not found
         {
@@ -126,7 +126,7 @@ namespace EliteDangerousCore
         public ShipModule()
         { }
 
-        public ShipModule(string s, string sfd, string i, string ifd,
+        public ShipModule(string s, ShipSlots.Slot sfd, string i, string ifd,
                         bool? e, int? prior, int? ac, int? ah, double? health, long? value,
                         double? power,
                         EngineeringData engineering)
@@ -148,7 +148,7 @@ namespace EliteDangerousCore
             Engineering = other.Engineering;
         }
 
-        public ShipModule(string s, string sfd, string i, string ifd, string l)
+        public ShipModule(string s, ShipSlots.Slot sfd, string i, string ifd, string l)
         {
             Slot = s; SlotFD = sfd; Item = i; ItemFD = ifd; LocalisedItem = l;
         }

@@ -59,7 +59,7 @@ namespace EliteDangerousCore.JournalEvents
                 if (current != null && (historic == null || historic.Count != current.Count))
                     matinfo += " Cur " + current.Count.ToString();
 
-                scanText.AppendFormat("{0} ({1}) {2} {3}% {4}\n", mc.Name, mc.Shortname, mc.TranslatedType, percent.ToString("N1"), matinfo);
+                scanText.AppendFormat("{0} ({1}) {2} {3}% {4}\n", mc.TranslatedName, mc.Shortname, mc.TranslatedType, percent.ToString("N1"), matinfo);
             }
             else
                 scanText.AppendFormat("{0} {1}%\n", System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(fdname.ToLowerInvariant()),

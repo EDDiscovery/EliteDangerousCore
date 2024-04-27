@@ -106,14 +106,14 @@ namespace EliteDangerousCore.JournalEvents
         // these are EconomyDefinitions.Economies
         public bool HasAnyEconomyTypes(string[] fdnames)
         {
-            return fdnames != null && (fdnames.IndexOf(Economy.ToString(), StringComparison.InvariantCultureIgnoreCase) >= 0 ||
-                            (EconomyList != null && Array.FindIndex(EconomyList, 0, x => fdnames.IndexOf(x.Name.ToString(), StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0));
+            return fdnames != null && (fdnames.Equals(Economy.ToString(), StringComparison.InvariantCultureIgnoreCase) >= 0 ||
+                            (EconomyList != null && Array.FindIndex(EconomyList, 0, x => fdnames.Equals(x.Name.ToString(), StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0));
         }
 
         // these are StationDefinitions.StationServices
         public bool HasAnyServicesTypes(string[] fdnames)
         {
-            return fdnames != null && StationServices != null && Array.FindIndex(StationServices, 0, x => fdnames.IndexOf(x.ToString(), StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0;
+            return fdnames != null && StationServices != null && Array.FindIndex(StationServices, 0, x => fdnames.Equals(x.ToString(), StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0;
         }
 
         public class Economies

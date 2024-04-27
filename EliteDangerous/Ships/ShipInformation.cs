@@ -54,12 +54,12 @@ namespace EliteDangerousCore
 
         public SubVehicleType SubVehicle { get; private set; } = SubVehicleType.None;    // if in a sub vehicle or mothership
 
-        public Dictionary<string, ShipModule> Modules { get; private set; }
+        public Dictionary<ShipSlots.Slot, ShipModule> Modules { get; private set; }     // slot to ship module installed
 
         public bool InTransit { get { return TransferArrivalTimeUTC.CompareTo(DateTime.UtcNow)>0; } }
 
-        public ShipModule GetModule(string name) { return Modules.ContainsKey(name) ? Modules[name] : null; }      // Name is the nice Slot name.
-        public ShipModule.EngineeringData GetEngineering(string name) { return Modules.ContainsKey(name) ? Modules[name].Engineering : null; }
+        public ShipModule GetModuleInSlot(ShipSlots.Slot slot) { return Modules.ContainsKey(slot) ? Modules[slot] : null; }      // Name is the nice Slot name.
+        public ShipModule.EngineeringData GetEngineering(ShipSlots.Slot slot) { return Modules.ContainsKey(slot) ? Modules[slot].Engineering : null; }
 
         public string ShipFullInfo(bool cargo = true, bool fuel = true)
         {
@@ -188,7 +188,7 @@ namespace EliteDangerousCore
 
         public EliteDangerousCalculations.FSDSpec GetFSDSpec()          // may be null due to not having the info
         {
-            ShipModule fsd = GetModule("Frame Shift Drive");
+            ShipModule fsd = GetModuleInSlot(ShipSlots.Slot.FrameShiftDrive);
             EliteDangerousCalculations.FSDSpec spec = fsd?.GetFSDSpec();
 
             if (spec != null)
@@ -266,7 +266,7 @@ namespace EliteDangerousCore
             {
                 ItemData.IModuleInfo md = ItemData.GetShipProperty(ShipFD, ItemData.ShipPropID.Boost);
                 double v = md != null ? (md as ItemData.ShipInfoInt).Value : 0;
-                ShipModule.EngineeringData ed = GetEngineering("Main Thrusters"); // aka "MainEngines" in fd speak, but we use a slot naming conversion
+                ShipModule.EngineeringData ed = GetEngineering(ShipSlots.Slot.MainEngines); // aka "MainEngines" in fd speak, but we use a slot naming conversion
                 ed?.EngineerThrusters(ref v);
                 return v;
             }
@@ -278,7 +278,7 @@ namespace EliteDangerousCore
             {
                 ItemData.IModuleInfo md = ItemData.GetShipProperty(ShipFD, ItemData.ShipPropID.Speed);
                 double v = md != null ? (md as ItemData.ShipInfoInt).Value : 0;
-                ShipModule.EngineeringData ed = GetEngineering("Main Thrusters");
+                ShipModule.EngineeringData ed = GetEngineering(ShipSlots.Slot.MainEngines);
                 ed?.EngineerThrusters(ref v);
                 return v;
             }
@@ -325,7 +325,7 @@ namespace EliteDangerousCore
         public ShipInformation(ulong id)
         {
             ID = id;
-            Modules = new Dictionary<string, ShipModule>();
+            Modules = new Dictionary<ShipSlots.Slot, ShipModule>();
         }
 
         public ShipInformation ShallowClone()          // shallow clone.. does not clone the ship modules, just the dictionary
@@ -349,20 +349,20 @@ namespace EliteDangerousCore
             sm.StoredAtSystem = this.StoredAtSystem;
             sm.TransferArrivalTimeUTC = this.TransferArrivalTimeUTC;
             sm.Hot = this.Hot;
-            sm.Modules = new Dictionary<string, ShipModule>(this.Modules);
+            sm.Modules = new Dictionary<ShipSlots.Slot, ShipModule>(this.Modules);
             return sm;
         }
 
-        public bool Contains(string slot)
+        public bool Contains(ShipSlots.Slot slot)
         {
             return Modules.ContainsKey(slot);
         }
 
         public bool Same(ShipModule sm)
         {
-            if (Modules.ContainsKey(sm.Slot))
+            if (Modules.ContainsKey(sm.SlotFD))
             {
-                return Modules[sm.Slot].Same(sm);
+                return Modules[sm.SlotFD].Same(sm);
             }
             else
                 return false;
@@ -370,16 +370,16 @@ namespace EliteDangerousCore
 
         public void SetModule(ShipModule sm)                // changed the module array, so you should have cloned that first..
         {
-            if (Modules.ContainsKey(sm.Slot))
+            if (Modules.ContainsKey(sm.SlotFD))
             {
-                ShipModule oldsm = Modules[sm.Slot];
+                ShipModule oldsm = Modules[sm.SlotFD];
 
                 if (sm.Item.Equals(oldsm.Item) && sm.LocalisedItem == null && oldsm.LocalisedItem != null)  // if item the same, old one has a localised name..
-                    sm.LocalisedItem = oldsm.LocalisedItem;
+                    sm.LocalisedItem = oldsm.LocalisedItem; // keep it
 
             }
 
-            Modules[sm.Slot] = sm;
+            Modules[sm.SlotFD] = sm;
 
             if (sm.Item.Contains("Fuel Tank") && sm.Item.IndexOf("Class ") != -1)
             {
@@ -502,12 +502,12 @@ namespace EliteDangerousCore
             return this;
         }
 
-        public ShipInformation AddModule(string slot, string slotfd, string item, string itemfd, string itemlocalised)
+        public ShipInformation AddModule(string slot, ShipSlots.Slot slotfd, string item, string itemfd, string itemlocalised)
         {
-            if (!Modules.ContainsKey(slot) || Modules[slot].Item.Equals(item) == false)       // if does not have it, or item is not the same..
+            if (!Modules.ContainsKey(slotfd) || Modules[slotfd].Item.Equals(item) == false)       // if does not have it, or item is not the same..
             {
                 ShipInformation sm = this.ShallowClone();
-                sm.Modules[slot] = new ShipModule(slot, slotfd, item, itemfd, itemlocalised);
+                sm.Modules[slotfd] = new ShipModule(slot, slotfd, item, itemfd, itemlocalised);
                 //System.Diagnostics.Debug.WriteLine("Slot add " + slot);
 
                 if (item.Contains("Fuel Tank") && item.IndexOf("Class ") != -1)
@@ -522,7 +522,7 @@ namespace EliteDangerousCore
             return this;
         }
 
-        public ShipInformation RemoveModule(string slot, string item)
+        public ShipInformation RemoveModule(ShipSlots.Slot slot, string item)
         {
             if (Modules.ContainsKey(slot))       // if has it..
             {
@@ -547,13 +547,13 @@ namespace EliteDangerousCore
             ShipInformation sm = null;
             foreach (var it in items)
             {
-                if (Modules.ContainsKey(it.Slot))       // if has it..
+                if (Modules.ContainsKey(it.SlotFD))       // if has it..
                 {
                     if (sm == null)
                         sm = this.ShallowClone();
 
                     //System.Diagnostics.Debug.WriteLine("Slot mass remove " + it.Slot + " Exists " + sm.Modules.ContainsKey(it.Slot));
-                    sm.Modules.Remove(it.Slot);
+                    sm.Modules.Remove(it.SlotFD);
 
                     if (it.Name.Contains("Fuel Tank") && it.Name.IndexOf("Class ") != -1)
                     {
@@ -567,20 +567,20 @@ namespace EliteDangerousCore
             return sm ?? this;
         }
 
-        public ShipInformation SwapModule(string fromslot, string fromslotfd, string fromitem, string fromitemfd, string fromiteml,
-                                          string toslot, string toslotfd, string toitem, string toitemfd, string toiteml)
+        public ShipInformation SwapModule(string fromslot, ShipSlots.Slot fromslotfd, string fromitem, string fromitemfd, string fromiteml,
+                                          string toslot, ShipSlots.Slot toslotfd, string toitem, string toitemfd, string toiteml)
         {
             ShipInformation sm = this.ShallowClone();
-            if (Modules.ContainsKey(fromslot))
+            if (Modules.ContainsKey(fromslotfd))
             {
-                if (Modules.ContainsKey(toslot))
+                if (Modules.ContainsKey(toslotfd))
                 {
-                    sm.Modules[fromslot] = new ShipModule(fromslot, fromslotfd, toitem, toitemfd, toiteml);
+                    sm.Modules[fromslotfd] = new ShipModule(fromslot, fromslotfd, toitem, toitemfd, toiteml);
                 }
                 else
-                    sm.Modules.Remove(fromslot);
+                    sm.Modules.Remove(fromslotfd);
 
-                sm.Modules[toslot] = new ShipModule(toslot, toslotfd, fromitem, fromitemfd, fromiteml);
+                sm.Modules[toslotfd] = new ShipModule(toslot, toslotfd, fromitem, fromitemfd, fromiteml);
 
                 if (fromitem != toitem && ((fromitem.Contains("Fuel Tank") && fromitem.IndexOf("Class ") != -1) ||
                                            (fromitem.Contains("Fuel Tank") && fromitem.IndexOf("Class ") != -1)))
@@ -593,13 +593,13 @@ namespace EliteDangerousCore
             return sm;
         }
 
-        public ShipInformation Craft(string slot, string item, ShipModule.EngineeringData eng)
+        public ShipInformation Craft(ShipSlots.Slot slotfd, string item, ShipModule.EngineeringData eng)
         {
-            if (Modules.ContainsKey(slot) && Modules[slot].Item.Equals(item))       // craft, module must be there, otherwise just ignore
+            if (Modules.ContainsKey(slotfd) && Modules[slotfd].Item.Equals(item))       // craft, module must be there, otherwise just ignore
             {
                 ShipInformation sm = this.ShallowClone();
-                sm.Modules[slot] = new ShipModule(sm.Modules[slot]);        // clone
-                sm.Modules[slot].SetEngineering(eng);                       // and update engineering
+                sm.Modules[slotfd] = new ShipModule(sm.Modules[slotfd]);        // clone
+                sm.Modules[slotfd].SetEngineering(eng);                       // and update engineering
                 return sm;
             }
 
@@ -699,7 +699,7 @@ namespace EliteDangerousCore
                 if (ItemData.TryGetShipModule(sm.ItemFD, out ItemData.ShipModule si, false) && si.ModuleID != 0)   // don't synth it
                 {
                     module["Item"] = sm.ItemFD;
-                    module["Slot"] = sm.SlotFD;
+                    module["Slot"] = sm.SlotFD.ToString();
                     module["On"] = sm.Enabled.HasValue ? sm.Enabled : true;
                     module["Priority"] = sm.Priority.HasValue ? sm.Priority : 0;
 
@@ -792,7 +792,7 @@ namespace EliteDangerousCore
             {
                 JObject module = new JObject();
 
-                module["Slot"] = sm.SlotFD;
+                module["Slot"] = sm.SlotFD.ToString();
                 module["Item"] = sm.ItemFD;
                 module["On"] = sm.Enabled.HasValue ? sm.Enabled : true;
                 module["Priority"] = sm.Priority.HasValue ? sm.Priority : 0;

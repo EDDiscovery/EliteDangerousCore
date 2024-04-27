@@ -212,7 +212,9 @@ namespace EliteDangerousCore.Spansh
                     oi.Normalise();
                     station.Outfitting.Add(oi);
                 }
-                station.Outfitting.Sort(delegate (Outfitting.OutfittingItem left, Outfitting.OutfittingItem right) { int v = left.ModType.CompareTo(right.ModType); return v != 0 ? v : left.Name.CompareTo(right.Name); });
+
+                // sorted by English module type and english name
+                station.Outfitting.Sort(delegate (Outfitting.OutfittingItem left, Outfitting.OutfittingItem right) { int v = left.EnglishModTypeString.CompareTo(right.EnglishModTypeString); return v != 0 ? v : left.Name.CompareTo(right.Name); });
 
                 station.OutfittingUpdateUTC = evt["outfitting"].I("updateTime").DateTimeUTC();
             }
@@ -676,8 +678,10 @@ namespace EliteDangerousCore.Spansh
                                     oi.Normalise();
                                     station.Outfitting.Add(oi);
                                 }
-                                station.Outfitting.Sort(delegate (Outfitting.OutfittingItem left, Outfitting.OutfittingItem right) { int v = left.ModType.CompareTo(right.ModType); return v != 0 ? v : left.Name.CompareTo(right.Name); });
 
+                                // sorted by English module type and english name
+                                station.Outfitting.Sort(delegate (Outfitting.OutfittingItem left, Outfitting.OutfittingItem right) { int v = left.EnglishModTypeString.CompareTo(right.EnglishModTypeString); return v != 0 ? v : left.Name.CompareTo(right.Name); });
+                                
                                 station.OutfittingUpdateUTC = evt["outfitting_updated_at"].DateTimeUTC();
                             }
 

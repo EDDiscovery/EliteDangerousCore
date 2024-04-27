@@ -80,21 +80,21 @@ namespace EliteDangerousCore
         public bool HasItemWithDemandAndPrice(string fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase) && x.HasDemandAndPrice) >= 0; }
 
         // go thru the market array, and see if any of the fdnames given matches that market entry
-        public bool HasAnyItem(string[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname, StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0; }
-        public bool HasAnyItemInStock(string[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname, StringComparison.InvariantCultureIgnoreCase) >= 0 && x.HasStock) >= 0; }
-        public bool HasAnyItemWithDemandAndPrice(string[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname, StringComparison.InvariantCultureIgnoreCase) >= 0 && x.HasDemandAndPrice) >= 0; }
+        public bool HasAnyItem(string[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.Equals(x.fdname, StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0; }
+        public bool HasAnyItemInStock(string[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.Equals(x.fdname, StringComparison.InvariantCultureIgnoreCase) >= 0 && x.HasStock) >= 0; }
+        public bool HasAnyItemWithDemandAndPrice(string[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.Equals(x.fdname, StringComparison.InvariantCultureIgnoreCase) >= 0 && x.HasDemandAndPrice) >= 0; }
 
         public bool HasOutfitting { get; set; }// see market
         public List<Outfitting.OutfittingItem> Outfitting { get; set; }     // may be null
         public DateTime OutfittingUpdateUTC { get; set; }
-        public bool HasAnyModuleTypes(string[] fdnames) { return Outfitting != null && Outfitting.FindIndex(x => fdnames.IndexOf(x.FDName, StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0; }
+        public bool HasAnyModuleTypes(string[] fdnames) { return Outfitting != null && Outfitting.FindIndex(x => fdnames.Equals(x.FDName, StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0; }
         public double OutfittingAgeInDays { get { return DateTime.UtcNow.Subtract(OutfittingUpdateUTC).TotalDays; } }
         public string OutfittingStateString { get { if (HasOutfitting && Outfitting != null) return $"\u2713 {OutfittingAgeInDays:N1}"; else if (HasOutfitting) return "\u2713 ND"; else return ""; } }
 
         public bool HasShipyard { get; set; }   // see market
         public List<ShipYard.ShipyardItem> Shipyard { get; set; }     // may be null
         public DateTime ShipyardUpdateUTC { get; set; }
-        public bool HasAnyShipTypes(string[] fdnames) { return Shipyard != null && Shipyard.FindIndex(x => fdnames.IndexOf(x.ShipType, StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0; }
+        public bool HasAnyShipTypes(string[] fdnames) { return Shipyard != null && Shipyard.FindIndex(x => fdnames.Equals(x.ShipType, StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0; }
         public double ShipyardAgeInDays { get { return DateTime.UtcNow.Subtract(ShipyardUpdateUTC).TotalDays; } }
         public string ShipyardStateString { get { if (HasShipyard && Shipyard != null) return $"\u2713 {ShipyardAgeInDays:N1}"; else if (HasShipyard) return "\u2713 ND"; else return ""; } }
 
@@ -198,8 +198,7 @@ namespace EliteDangerousCore
 
             foreach (var oi in si.Outfitting.EmptyIfNull())
             {
-                object[] rowobj = { oi.ModType,
-                                    oi.Name };
+                object[] rowobj = { oi.TranslatedModTypeString, oi.TranslatedModuleName };
                 var row = dgvpanel.DataGrid.RowTemplate.Clone() as DataGridViewRow;
                 row.CreateCells(dgvpanel.DataGrid, rowobj);
                 dgvpanel.DataGrid.Rows.Add(row);

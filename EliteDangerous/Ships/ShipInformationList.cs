@@ -80,11 +80,11 @@ namespace EliteDangerousCore
 
             ShipInformation newsm = null;       // if we change anything, we need a new clone..
 
-            Dictionary<string, ShipModule> moduleSlots = sm.Modules.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            Dictionary<ShipSlots.Slot, ShipModule> moduleSlots = sm.Modules.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             foreach (ShipModule m in modulelist)
             {
-                if (!sm.Contains(m.Slot) || !sm.Same(m))  // no slot, or not the same data.. (ignore localised item)
+                if (!sm.Contains(m.SlotFD) || !sm.Same(m))  // no slot, or not the same data.. (ignore localised item)
                 {
                     if (m.LocalisedItem == null && itemlocalisation.ContainsKey(m.Item))        // if we have a cached localisation, use it
                     {
@@ -101,7 +101,7 @@ namespace EliteDangerousCore
                     newsm.SetModule(m);                   // update entry only.. rest will still point to same entries
                 }
 
-                moduleSlots.Remove(m.Slot);
+                moduleSlots.Remove(m.SlotFD);
             }
 
             // Remove modules not in loadout
@@ -117,7 +117,7 @@ namespace EliteDangerousCore
                 foreach (ShipModule m in modulesToRemove)
                 {
                     //System.Diagnostics.Trace.WriteLine($"Warning: Module {m.Item} in slot {m.Slot} is missing from loadout");
-                    newsm = newsm.RemoveModule(m.Slot, m.Item);
+                    newsm = newsm.RemoveModule(m.SlotFD, m.Item);
                 }
 
                 Ships[sid] = newsm;
@@ -336,7 +336,7 @@ namespace EliteDangerousCore
                 StoredModules = StoredModules.StoreModule(e.StoredItemFD, e.StoredItem, e.StoredItemLocalised, sys);
 
             // if we sold it, who cares?
-            Ships[sid] = sm.AddModule(e.Slot, e.SlotFD, e.BuyItem, e.BuyItemFD, e.BuyItemLocalised);      // replace the slot with this
+        ////// tbd    Ships[sid] = sm.AddModule(e.Slot, e.SlotFD, e.BuyItem, e.BuyItemFD, e.BuyItemLocalised);      // replace the slot with this
 
             itemlocalisation[e.BuyItem] = e.BuyItemLocalised;       // record any localisations
             if (e.SellItem.Length > 0)
@@ -360,7 +360,7 @@ namespace EliteDangerousCore
             ShipInformation sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
 
             sm = sm.SetShipDetails(e.Ship, e.ShipFD);   // shallow copy if changed
-            Ships[sid] = sm.RemoveModule(e.Slot, e.SellItem);
+            Ships[sid] = sm.RemoveModule(e.SlotFD, e.SellItem);
 
             if (e.SellItem.Length > 0)
                 itemlocalisation[e.SellItem] = e.SellItemLocalised;
@@ -390,7 +390,7 @@ namespace EliteDangerousCore
             if (e.ReplacementItem.Length > 0)
                 Ships[sid] = sm.AddModule(e.Slot, e.SlotFD, e.ReplacementItem, e.ReplacementItemFD, e.ReplacementItemLocalised);
             else
-                Ships[sid] = sm.RemoveModule(e.Slot, e.StoredItem);
+                Ships[sid] = sm.RemoveModule(e.SlotFD, e.StoredItem);
 
             StoredModules = StoredModules.StoreModule(e,sys);
             VerifyList();
@@ -408,13 +408,13 @@ namespace EliteDangerousCore
 
             Ships[sid] = sm.AddModule(e.Slot, e.SlotFD, e.RetrievedItem, e.RetrievedItemFD, e.RetrievedItemLocalised);
 
-            StoredModules = StoredModules.RemoveModule(e.RetrievedItem);
+            StoredModules = StoredModules.RemoveModuleUsingEnglishName(e.RetrievedItem);
             VerifyList();
         }
 
         public void ModuleSellRemote(JournalModuleSellRemote e)
         {
-            StoredModules = StoredModules.RemoveModule(e.SellItem);
+            StoredModules = StoredModules.RemoveModuleUsingEnglishName(e.SellItem);
         }
 
         public void MassModuleStore(JournalMassModuleStore e, ISystem sys)
@@ -508,7 +508,7 @@ namespace EliteDangerousCore
         {
             if (HaveCurrentShip)
             {
-                Ships[currentid] = CurrentShip.Craft(c.Slot, c.Module, c.Engineering);
+                Ships[currentid] = CurrentShip.Craft(c.SlotFD, c.Module, c.Engineering);
             }
             VerifyList();
         }

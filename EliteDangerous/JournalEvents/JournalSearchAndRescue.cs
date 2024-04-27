@@ -25,7 +25,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             FDName = evt["Name"].Str();
             FDName = JournalFieldNaming.FDNameTranslation(FDName); // some premangling
-            FriendlyName = MaterialCommodityMicroResourceType.GetNameByFDName(FDName);
+            FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(FDName);
             Name_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Name_Localised"].Str(), FriendlyName);         // always ensure we have one
             Count = evt["Count"].Int();
             Reward = evt["Reward"].Long();

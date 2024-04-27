@@ -1180,3 +1180,390 @@ Section PowerPlayStates
 .Turmoil:"In turmoil" @
 .HomeSystem:"Home system" @
 
+Section ModuleTypeNames
+.AX_Missile_Rack: "AX Missile Rack" @
+.AX_Multi_Cannon: "AX Multi Cannon" @
+.Abrasion_Blaster: "Abrasion Blaster" @
+.Advanced_Docking_Computer: "Advanced Docking Computer" @
+.Advanced_Missile_Rack: "Advanced Missile Rack" @
+.Advanced_Multi_Cannon: "Advanced Multi Cannon" @
+.Advanced_Planetary_Approach_Suite: "Advanced Planetary Approach Suite" @
+.Advanced_Plasma_Accelerator: "Advanced Plasma Accelerator" @
+.Auto_Field_Maintenance_Unit: "Auto Field Maintenance Unit" @
+.Beam_Laser: "Beam Laser" @
+.Bi_Weave_Shield_Generator: "Bi Weave Shield Generator" @
+.Burst_Laser: "Burst Laser" @
+.Business_Class_Passenger_Cabin: "Business Class Passenger Cabin" @
+.Cannon: "Cannon" @
+.Cargo_Rack: "Cargo Rack" @
+.Cargo_Scanner: "Cargo Scanner" @
+.Caustic_Sink_Launcher: "Caustic Sink Launcher" @
+.Chaff_Launcher: "Chaff Launcher" @
+.Collector_Limpet_Controller: "Collector Limpet Controller" @
+.Corrosion_Resistant_Cargo_Rack: "Corrosion Resistant Cargo Rack" @
+.Cytoscrambler_Burst_Laser: "Cytoscrambler Burst Laser" @
+.Decontamination_Limpet_Controller: "Decontamination Limpet Controller" @
+.Detailed_Surface_Scanner: "Detailed Surface Scanner" @
+.Economy_Class_Passenger_Cabin: "Economy Class Passenger Cabin" @
+.Electronic_Countermeasure: "Electronic Countermeasure" @
+.Enforcer_Cannon: "Enforcer Cannon" @
+.Enhanced_AX_Missile_Rack: "Enhanced AX Missile Rack" @
+.Enhanced_AX_Multi_Cannon: "Enhanced AX Multi Cannon" @
+.Enhanced_Performance_Thrusters: "Enhanced Performance Thrusters" @
+.Enhanced_Xeno_Scanner: "Enhanced Xeno Scanner" @
+.Enzyme_Missile_Rack: "Enzyme Missile Rack" @
+.Experimental_Weapon_Stabiliser: "Experimental Weapon Stabiliser" @
+.Fighter_Hangar: "Fighter Hangar" @
+.First_Class_Passenger_Cabin: "First Class Passenger Cabin" @
+.Fragment_Cannon: "Fragment Cannon" @
+.Frame_Shift_Drive: "Frame Shift Drive" @
+.Frame_Shift_Drive_Interdictor: "Frame Shift Drive Interdictor" @
+.Frame_Shift_Wake_Scanner: "Frame Shift Wake Scanner" @
+.Fuel_Scoop: "Fuel Scoop" @
+.Fuel_Tank: "Fuel Tank" @
+.Fuel_Transfer_Limpet_Controller: "Fuel Transfer Limpet Controller" @
+.Guardian_FSD_Booster: "Guardian FSD Booster" @
+.Guardian_Gauss_Cannon: "Guardian Gauss Cannon" @
+.Guardian_Hull_Reinforcement: "Guardian Hull Reinforcement" @
+.Guardian_Hybrid_Power_Distributor: "Guardian Hybrid Power Distributor" @
+.Guardian_Hybrid_Power_Plant: "Guardian Hybrid Power Plant" @
+.Guardian_Module_Reinforcement: "Guardian Module Reinforcement" @
+.Guardian_Plasma_Charger: "Guardian Plasma Charger" @
+.Guardian_Shard_Cannon: "Guardian Shard Cannon" @
+.Guardian_Shield_Reinforcement: "Guardian Shield Reinforcement" @
+.Hatch_Breaker_Limpet_Controller: "Hatch Breaker Limpet Controller" @
+.Heat_Sink_Launcher: "Heat Sink Launcher" @
+.Hull_Reinforcement_Package: "Hull Reinforcement Package" @
+.Imperial_Hammer_Rail_Gun: "Imperial Hammer Rail Gun" @
+.Kill_Warrant_Scanner: "Kill Warrant Scanner" @
+.Life_Support: "Life Support" @
+.Lightweight_Alloy: "Lightweight Alloy" @
+.Luxury_Class_Passenger_Cabin: "Luxury Class Passenger Cabin" @
+.Meta_Alloy_Hull_Reinforcement: "Meta Alloy Hull Reinforcement" @
+.Military_Grade_Composite: "Military Grade Composite" @
+.Mine_Launcher: "Mine Launcher" @
+.Mining_Lance: "Mining Lance" @
+.Mining_Laser: "Mining Laser" @
+.Mining_Multi_Limpet_Controller: "Mining Multi Limpet Controller" @
+.Mirrored_Surface_Composite: "Mirrored Surface Composite" @
+.Missile_Rack: "Missile Rack" @
+.Module_Reinforcement_Package: "Module Reinforcement Package" @
+.Multi_Cannon: "Multi Cannon" @
+.Operations_Multi_Limpet_Controller: "Operations Multi Limpet Controller" @
+.Pacifier_Frag_Cannon: "Pacifier Frag Cannon" @
+.Pack_Hound_Missile_Rack: "Pack Hound Missile Rack" @
+.Planetary_Approach_Suite: "Planetary Approach Suite" @
+.Planetary_Vehicle_Hangar: "Planetary Vehicle Hangar" @
+.Plasma_Accelerator: "Plasma Accelerator" @
+.Point_Defence: "Point Defence" @
+.Power_Distributor: "Power Distributor" @
+.Power_Plant: "Power Plant" @
+.Prismatic_Shield_Generator: "Prismatic Shield Generator" @
+.Prospector_Limpet_Controller: "Prospector Limpet Controller" @
+.Pulse_Disruptor_Laser: "Pulse Disruptor Laser" @
+.Pulse_Laser: "Pulse Laser" @
+.Pulse_Wave_Analyser: "Pulse Wave Analyser" @
+.Rail_Gun: "Rail Gun" @
+.Reactive_Surface_Composite: "Reactive Surface Composite" @
+.Recon_Limpet_Controller: "Recon Limpet Controller" @
+.Refinery: "Refinery" @
+.Reinforced_Alloy: "Reinforced Alloy" @
+.Remote_Release_Flak_Launcher: "Remote Release Flak Launcher" @
+.Remote_Release_Flechette_Launcher: "Remote Release Flechette Launcher" @
+.Repair_Limpet_Controller: "Repair Limpet Controller" @
+.Rescue_Multi_Limpet_Controller: "Rescue Multi Limpet Controller" @
+.Research_Limpet_Controller: "Research Limpet Controller" @
+.Retributor_Beam_Laser: "Retributor Beam Laser" @
+.Rocket_Propelled_FSD_Disruptor: "Rocket Propelled FSD Disruptor" @
+.Seeker_Missile_Rack: "Seeker Missile Rack" @
+.Seismic_Charge_Launcher: "Seismic Charge Launcher" @
+.Sensors: "Sensors" @
+.Shield_Booster: "Shield Booster" @
+.Shield_Cell_Bank: "Shield Cell Bank" @
+.Shield_Generator: "Shield Generator" @
+.Shock_Cannon: "Shock Cannon" @
+.Shock_Mine_Launcher: "Shock Mine Launcher" @
+.Shutdown_Field_Neutraliser: "Shutdown Field Neutraliser" @
+.Standard_Docking_Computer: "Standard Docking Computer" @
+.Sub_Surface_Displacement_Missile: "Sub Surface Displacement Missile" @
+.Supercruise_Assist: "Supercruise Assist" @
+.Thrusters: "Thrusters" @
+.Torpedo_Pylon: "Torpedo Pylon" @
+.Universal_Multi_Limpet_Controller: "Universal Multi Limpet Controller" @
+.Xeno_Multi_Limpet_Controller: "Xeno Multi Limpet Controller" @
+.Xeno_Scanner: "Xeno Scanner" @
+
+.Discovery_Scanner: "Discovery Scanner" @
+.Prison_Cells: "Prison Cells" @
+.Data_Link_Scanner: "Data Link Scanner" @
+.SRV_Scanner: "SRV Scanner" @
+.Fighter_Weapon: "Fighter Weapon" @
+.Vanity_Type: "Vanity Type" @
+.Unknown_Type: "Unknown Type" @
+.Cockpit_Type: "Cockpit Type" @
+.Cargo_Bay_Door_Type: "Cargo Bay Door Type" @
+.Wear_And_Tear_Type: "Wear And Tear Type" @
+.Codex: "Codex" @
+
+
+Section ModulePartNames
+.Class: "Class" @
+.Rating: "Rating" @
+.Gimbal: "Gimbal" @
+.Fixed: "Fixed" @
+.Turret: "Turret" @
+.Small: "Small" @
+.Medium: "Medium" @
+.Large: "Large" @
+.Huge: "Huge" @
+.Tiny: "Tiny" @
+.Standard: "Standard" @
+.Advanced: "Advanced" @
+
+.Lightweight_Armour: "Lightweight Armour" @
+.Reinforced_Armour: "Reinforced Armour" @
+.Military_Armour: "Military Armour" @
+.Mirrored_Surface_Composite_Armour: "Mirrored Surface Composite Armour" @
+.Reactive_Surface_Composite_Armour: "Reactive Surface Composite Armour" @
+.Auto_Field_Maintenance: "Auto Field Maintenance" @
+.Beam_Laser: "Beam Laser" @
+.Burst_Laser: "Burst Laser" @
+.Cannon: "Cannon" @
+.Fragment_Cannon: "Fragment Cannon" @
+.Cargo_Rack: "Cargo Rack" @
+.Corrosion_Proof_Cargo_Rack: "Corrosion Proof Cargo Rack" @
+.Cargo_Scanner: "Cargo Scanner" @
+.Chaff_Launcher: "Chaff Launcher" @
+.Electronic_Countermeasure: "Electronic Countermeasure" @
+.Heat_Sink_Launcher: "Heat Sink Launcher" @
+.Caustic_Heat_Sink_Launcher: "Caustic Heat Sink Launcher" @
+.Plasma_Point_Defence: "Plasma Point Defence" @
+.Crime_Scanner: "Crime Scanner" @
+.Detailed_Surface_Scanner: "Detailed Surface Scanner" @
+.Docking_Computer: "Docking Computer" @
+.Fighter_Hangar: "Fighter Hangar" @
+.Flak_Mortar: "Flak Mortar" @
+.Flechette_Launcher: "Flechette Launcher" @
+.FSD_Interdictor: "FSD Interdictor" @
+.Fuel_Scoop: "Fuel Scoop" @
+.Fuel_Tank: "Fuel Tank" @
+.Guardian_Plasma_Launcher: "Guardian Plasma Launcher" @
+.Guardian_Shard_Cannon: "Guardian Shard Cannon" @
+.Guardian_Gauss_Cannon: "Guardian Gauss Cannon" @
+.Guardian_Hull_Reinforcement: "Guardian Hull Reinforcement" @
+.Guardian_Module_Reinforcement: "Guardian Module Reinforcement" @
+.Guardian_Shield_Reinforcement: "Guardian Shield Reinforcement" @
+.Guardian_FSD_Booster: "Guardian FSD Booster" @
+.Guardian_Power_Distributor: "Guardian Power Distributor" @
+.Guardian_Powerplant: "Guardian Powerplant" @
+.Hull_Reinforcement: "Hull Reinforcement" @
+.Hyperdrive: "Hyperdrive" @
+.Cloud_Scanner: "Cloud Scanner" @
+.Life_Support: "Life Support" @
+.Collection_Drone_Controller: "Collection Drone Controller" @
+.Fuel_Transfer_Drone_Controller: "Fuel Transfer Drone Controller" @
+.Hatch_Breaker_Drone_Controller: "Hatch Breaker Drone Controller" @
+.Hatch_Breaker_Limpet_Controller: "Hatch Breaker Limpet Controller" @
+.Prospector_Drone_Controller: "Prospector Drone Controller" @
+.Repair_Drone_Controller: "Repair Drone Controller" @
+.Drone_Controller_Vessel_Research: "Drone Controller Vessel Research" @
+.Decontamination_Drone_Controller: "Decontamination Drone Controller" @
+.Recon_Drone_Controller: "Recon Drone Controller" @
+.Multi_Purpose_Mining_Drone_Controller: "Multi Purpose Mining Drone Controller" @
+.Multi_Purpose_Operations_Drone_Controller: "Multi Purpose Operations Drone Controller" @
+.Multi_Purpose_Xeno_Drone_Controller: "Multi Purpose Xeno Drone Controller" @
+.Multi_Purpose_Universal_Drone_Controller: "Multi Purpose Universal Drone Controller" @
+.Meta_Alloy_Hull_Reinforcement: "Meta Alloy Hull Reinforcement" @
+.Mine_Launcher: "Mine Launcher" @
+.Mining_Abrasion_Blaster: "Mining Abrasion Blaster" @
+.Mining_Seismic_Charge_Warhead: "Mining Seismic Charge Warhead" @
+.Mining_Sub_Surface_Displacement_Missile: "Mining Sub Surface Displacement Missile" @
+.Mining_Subsurface_Displacement_Missile: "Mining Subsurface Displacement Missile" @
+.Mining_Laser: "Mining Laser" @
+.AX_Dumbfire_Missile: "AX Dumbfire Missile" @
+.Enhanced_AX_Missile_Rack: "Enhanced AX Missile Rack" @
+.Guardian_Nanite_Torpedo_Pylon: "Guardian Nanite Torpedo Pylon" @
+.Seeker_Missile_Rack: "Seeker Missile Rack" @
+.Dumbfire_Missile_Rack: "Dumbfire Missile Rack" @
+.Pack_Hound_Missile_Rack: "Pack Hound Missile Rack" @
+.Advanced_Torp_Pylon: "Advanced Torp Pylon" @
+.Human_Extraction_Missile: "Human Extraction Missile" @
+.Caustic_Missile: "Caustic Missile" @
+.Module_Reinforcement: "Module Reinforcement" @
+.AX_Multi_Cannon: "AX Multi Cannon" @
+.Enhanced_AX_Multi_Cannon: "Enhanced AX Multi Cannon" @
+.Multi_Cannon: "Multi Cannon" @
+.Economy_Passenger_Cabin: "Economy Passenger Cabin" @
+.Business: "Business" @
+.First: "First" @
+.Luxury_Passenger_Cabin: "Luxury Passenger Cabin" @
+.Advanced_Planet_Approach_Suite: "Advanced Planet Approach Suite" @
+.Planet_Approach_Suite: "Planet Approach Suite" @
+.Planetary_Vehicle_Hangar: "Planetary Vehicle Hangar" @
+.Plasma_Accelerator: "Plasma Accelerator" @
+.Plasma_Shock_Cannon: "Plasma Shock Cannon" @
+.Power_Distributor: "Power Distributor" @
+.Powerplant: "Powerplant" @
+.Pulse_Laser: "Pulse Laser" @
+.Pulse_Wave_scanner_Size_0: "Pulse Wave scanner Size 0" @
+.Pulse_Wave_sscanner_Size_0: "Pulse Wave sscanner Size 0" @
+.Pulse_Wave_scanner: "Pulse Wave scanner" @
+.Railgun: "Railgun" @
+.Refinery: "Refinery" @
+.Sensors: "Sensors" @
+.Shield_Booster: "Shield Booster" @
+.Shield_Cell_Bank: "Shield Cell Bank" @
+.Shield_Generator: "Shield Generator" @
+.Shutdown_Field_Neutraliser: "Shutdown Field Neutraliser" @
+.Enhanced_Shutdown_Field_Neutraliser: "Enhanced Shutdown Field Neutraliser" @
+.Exp_Module_Weapon_Stabiliser: "Exp Module Weapon Stabiliser" @
+.Supercruise_Assist: "Supercruise Assist" @
+.Stellar_Body_Discovery_Scanner: "Stellar Body Discovery Scanner" @
+.Intermediate: "Intermediate" @
+.Thrusters: "Thrusters" @
+.Xeno_Scanner: "Xeno Scanner" @
+.Xeno_Scanner_MK_2: "Xeno Scanner MK 2" @
+.Advanced_Xeno_Scanner: "Advanced Xeno Scanner" @
+.Hyperdrive_Overcharged: "Hyperdrive Overcharged" @
+
+Section ShipSlots
+.Unknown_Type: "Unknown Type" @
+.Cockpit_Type: "Cockpit Type" @
+.Cargo_Bay_Door_Type: "Cargo Bay Door Type" @
+.Wear_And_Tear_Type: "Wear And Tear Type" @
+.Codex: "Codex" @
+.Unknown: "Unknown" @
+.Armour: "Armour" @
+.Bobble01: "Bobble 1" @
+.Bobble02: "Bobble 2" @
+.Bobble03: "Bobble 3" @
+.Bobble04: "Bobble 4" @
+.Bobble05: "Bobble 5" @
+.Bobble06: "Bobble 6" @
+.Bobble07: "Bobble 7" @
+.Bobble08: "Bobble 8" @
+.Bobble09: "Bobble 9" @
+.Bobble10: "Bobble 10" @
+.CargoHatch: "Cargo Hatch" @
+.CodexScanner: "Codex Scanner" @
+.DataLinkScanner: "Data Link Scanner" @
+.DiscoveryScanner: "Discovery Scanner" @
+.Decal1: "Decal 1" @
+.Decal2: "Decal 2" @
+.Decal3: "Decal 3" @
+.EngineColour: "Engine Colour" @
+.Federation_Fighter_Shield: "Federation Fighter Shield" @
+.FrameShiftDrive: "Frame Shift Drive" @
+.FuelTank: "Fuel Tank" @
+.GDN_Hybrid_Fighter_V1_Shield: "GDN Hybrid Fighter V 1 Shield" @
+.GDN_Hybrid_Fighter_V2_Shield: "GDN Hybrid Fighter V 2 Shield" @
+.GDN_Hybrid_Fighter_V3_Shield: "GDN Hybrid Fighter V 3 Shield" @
+.HugeHardpoint1: "Huge Hardpoint 1" @
+.HugeHardpoint2: "Huge Hardpoint 2" @
+.Independent_Fighter_Shield: "Independent Fighter Shield" @
+.LargeHardpoint1: "Large Hardpoint 1" @
+.LargeHardpoint2: "Large Hardpoint 2" @
+.LargeHardpoint3: "Large Hardpoint 3" @
+.LargeHardpoint4: "Large Hardpoint 4" @
+.LifeSupport: "Life Support" @
+.MainEngines: "Main Engines" @
+.MediumHardpoint1: "Medium Hardpoint 1" @
+.MediumHardpoint2: "Medium Hardpoint 2" @
+.MediumHardpoint3: "Medium Hardpoint 3" @
+.MediumHardpoint4: "Medium Hardpoint 4" @
+.MediumHardpoint5: "Medium Hardpoint 5" @
+.Military01: "Military 1" @
+.Military02: "Military 2" @
+.Military03: "Military 3" @
+.PaintJob: "Paint Job" @
+.PlanetaryApproachSuite: "Planetary Approach Suite" @
+.PowerDistributor: "Power Distributor" @
+.PowerPlant: "Power Plant" @
+.Radar: "Radar" @
+.ShieldGenerator: "Shield Generator" @
+.ShipCockpit: "Ship Cockpit" @
+.ShipID0: "Ship ID 0" @
+.ShipID1: "Ship ID 1" @
+.ShipKitBumper: "Ship Kit Bumper" @
+.ShipKitSpoiler: "Ship Kit Spoiler" @
+.ShipKitTail: "Ship Kit Tail" @
+.ShipKitWings: "Ship Kit Wings" @
+.ShipName0: "Ship Name 0" @
+.ShipName1: "Ship Name 1" @
+.Slot00_Size8: "Slot 0 Size 8" @
+.Slot01_Size2: "Slot 1 Size 2" @
+.Slot01_Size3: "Slot 1 Size 3" @
+.Slot01_Size4: "Slot 1 Size 4" @
+.Slot01_Size5: "Slot 1 Size 5" @
+.Slot01_Size6: "Slot 1 Size 6" @
+.Slot01_Size7: "Slot 1 Size 7" @
+.Slot01_Size8: "Slot 1 Size 8" @
+.Slot02_Size2: "Slot 2 Size 2" @
+.Slot02_Size3: "Slot 2 Size 3" @
+.Slot02_Size4: "Slot 2 Size 4" @
+.Slot02_Size5: "Slot 2 Size 5" @
+.Slot02_Size6: "Slot 2 Size 6" @
+.Slot02_Size7: "Slot 2 Size 7" @
+.Slot02_Size8: "Slot 2 Size 8" @
+.Slot03_Size1: "Slot 3 Size 1" @
+.Slot03_Size2: "Slot 3 Size 2" @
+.Slot03_Size3: "Slot 3 Size 3" @
+.Slot03_Size4: "Slot 3 Size 4" @
+.Slot03_Size5: "Slot 3 Size 5" @
+.Slot03_Size6: "Slot 3 Size 6" @
+.Slot03_Size7: "Slot 3 Size 7" @
+.Slot04_Size1: "Slot 4 Size 1" @
+.Slot04_Size2: "Slot 4 Size 2" @
+.Slot04_Size3: "Slot 4 Size 3" @
+.Slot04_Size4: "Slot 4 Size 4" @
+.Slot04_Size5: "Slot 4 Size 5" @
+.Slot04_Size6: "Slot 4 Size 6" @
+.Slot05_Size1: "Slot 5 Size 1" @
+.Slot05_Size2: "Slot 5 Size 2" @
+.Slot05_Size3: "Slot 5 Size 3" @
+.Slot05_Size4: "Slot 5 Size 4" @
+.Slot05_Size5: "Slot 5 Size 5" @
+.Slot05_Size6: "Slot 5 Size 6" @
+.Slot06_Size1: "Slot 6 Size 1" @
+.Slot06_Size2: "Slot 6 Size 2" @
+.Slot06_Size3: "Slot 6 Size 3" @
+.Slot06_Size4: "Slot 6 Size 4" @
+.Slot06_Size5: "Slot 6 Size 5" @
+.Slot07_Size1: "Slot 7 Size 1" @
+.Slot07_Size2: "Slot 7 Size 2" @
+.Slot07_Size3: "Slot 7 Size 3" @
+.Slot07_Size4: "Slot 7 Size 4" @
+.Slot07_Size5: "Slot 7 Size 5" @
+.Slot08_Size1: "Slot 8 Size 1" @
+.Slot08_Size2: "Slot 8 Size 2" @
+.Slot08_Size3: "Slot 8 Size 3" @
+.Slot08_Size4: "Slot 8 Size 4" @
+.Slot09_Size1: "Slot 9 Size 1" @
+.Slot09_Size2: "Slot 9 Size 2" @
+.Slot09_Size3: "Slot 9 Size 3" @
+.Slot09_Size4: "Slot 9 Size 4" @
+.Slot10_Size1: "Slot 10 Size 1" @
+.Slot10_Size3: "Slot 10 Size 3" @
+.Slot10_Size4: "Slot 10 Size 4" @
+.Slot11_Size1: "Slot 11 Size 1" @
+.Slot11_Size2: "Slot 11 Size 2" @
+.Slot11_Size3: "Slot 11 Size 3" @
+.Slot12_Size1: "Slot 12 Size 1" @
+.Slot13_Size2: "Slot 13 Size 2" @
+.Slot14_Size1: "Slot 14 Size 1" @
+.SmallHardpoint1: "Small Hardpoint 1" @
+.SmallHardpoint2: "Small Hardpoint 2" @
+.SmallHardpoint3: "Small Hardpoint 3" @
+.SmallHardpoint4: "Small Hardpoint 4" @
+.StringLights: "String Lights" @
+.TinyHardpoint1: "Tiny Hardpoint 1" @
+.TinyHardpoint2: "Tiny Hardpoint 2" @
+.TinyHardpoint3: "Tiny Hardpoint 3" @
+.TinyHardpoint4: "Tiny Hardpoint 4" @
+.TinyHardpoint5: "Tiny Hardpoint 5" @
+.TinyHardpoint6: "Tiny Hardpoint 6" @
+.TinyHardpoint7: "Tiny Hardpoint 7" @
+.TinyHardpoint8: "Tiny Hardpoint 8" @
+.VesselVoice: "Vessel Voice" @
+.WeaponColour: "Weapon Colour" @
+

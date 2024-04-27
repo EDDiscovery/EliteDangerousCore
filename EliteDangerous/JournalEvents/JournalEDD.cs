@@ -113,7 +113,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if (c.HasStock)
                 {
-                    string name = MaterialCommodityMicroResourceType.GetNameByFDName(c.fdname);
+                    string name = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(c.fdname);
 
                     if (c.HasDemandAndPrice)
                     {
@@ -141,7 +141,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if (!c.HasStock)
                 {
-                    string name = MaterialCommodityMicroResourceType.GetNameByFDName(c.fdname);
+                    string name = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(c.fdname);
 
                     detailed += string.Format("{0}: {1}  ".T(EDCTx.JournalCommodityPricesBase_CPBBuy), name, c.sellPrice);
                     if (++col == maxcol)
@@ -199,7 +199,7 @@ namespace EliteDangerousCore.JournalEvents
                     if (comma)
                         info += ", ";
                     comma = true;
-                    info += BaseUtils.FieldBuilder.Build("Name: ".T(EDCTx.JournalEntry_Name), MaterialCommodityMicroResourceType.GetNameByFDName(m.Name), "", m.Count);
+                    info += BaseUtils.FieldBuilder.Build("Name: ".T(EDCTx.JournalEntry_Name), MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(m.Name), "", m.Count);
                 }
             }
 
@@ -210,7 +210,7 @@ namespace EliteDangerousCore.JournalEvents
                     if (comma)
                         info += ", ";
                     comma = true;
-                    info += BaseUtils.FieldBuilder.Build("Name: ".T(EDCTx.JournalEntry_Name), MaterialCommodityMicroResourceType.GetNameByFDName(m.Name), "", m.Count);
+                    info += BaseUtils.FieldBuilder.Build("Name: ".T(EDCTx.JournalEntry_Name), MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(m.Name), "", m.Count);
                 }
             }
             detailed = "";

@@ -18,23 +18,23 @@ namespace EliteDangerousCore
 {
     public class StoredShipInformation : IEquatable<StoredShipInformation>
     {
-        public ulong ShipID;      // both
-        public string ShipType; // both
-        public string ShipType_Localised; // both
-        public string Name;     // Both
-        public long Value;      // both
-        public bool Hot;        // both
+        public ulong ShipID { get; set; }      // both
+        public string ShipType { get; set; } // both
+        public string ShipType_Localised { get; set; } // both
+        public string Name { get; set; }     // Both
+        public long Value { get; set; }      // both
+        public bool Hot { get; set; }        // both
 
-        public string StarSystem;   // remote only and when not in transit, but filled in for local
-        public long ShipMarketID;   //remote
-        public long TransferPrice;  //remote
-        public long TransferTime;   //remote
-        public bool InTransit;      //remote, and that means StarSystem is not there.
+        public string StarSystem { get; set; }   // remote only and when not in transit, but filled in for local
+        public long ShipMarketID { get; set; }   //remote
+        public long TransferPrice { get; set; }  //remote
+        public long TransferTime { get; set; }   //remote
+        public bool InTransit { get; set; }      //remote, and that means StarSystem is not there.
 
-        public string StationName;  // local only, null otherwise, not compared due to it being computed
-        public string ShipTypeFD; // both, computed
-        public System.TimeSpan TransferTimeSpan;        // computed
-        public string TransferTimeString; // computed
+        public string StationName { get; set; }  // local only, null otherwise, not compared due to it being computed
+        public string ShipTypeFD { get; set; } // both, computed
+        public System.TimeSpan TransferTimeSpan { get; set; }        // computed
+        public string TransferTimeString { get; set; } // computed
 
         public void Normalise()
         {
