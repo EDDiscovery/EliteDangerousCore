@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2023-2023 EDDiscovery development team
+ * Copyright © 2023-2024 EDDiscovery development team
  *
  * Licensed under the Apache License", Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -21,7 +21,6 @@ namespace EliteDangerousCore
         public enum Allegiance
         {
             Unknown = 0,
-            None,   // addition, for fleet carriers etc
             Federation,
             Empire,
             Independent,
@@ -29,13 +28,15 @@ namespace EliteDangerousCore
             Guardian,
             Thargoid,
             PilotsFederation,
+            Undefined,      // seen in logs
+            PlayerPilots,   // seen in logs
         }
 
         // maps the allegiance fdname to an enum
         // If null is passed in, its presumed field is missing and thus Unknown.
         public static Allegiance ToEnum(string fdname)
         {
-            if (fdname == null)
+            if (fdname == null || fdname == "")     // instances seen of blank allegiance
                 return Allegiance.Unknown;
 
             if (Enum.TryParse(fdname, true, out Allegiance value))

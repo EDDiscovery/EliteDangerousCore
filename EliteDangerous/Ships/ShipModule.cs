@@ -182,34 +182,45 @@ namespace EliteDangerousCore
             public ulong BlueprintID { get; set; }
             public int Level { get; set; }
             public double Quality { get; set; }
-            public string ExperimentalEffect { get; set; }
-            public string ExperimentalEffect_Localised { get; set; }
+            public string ExperimentalEffect { get; set; }      // may be null
+            public string ExperimentalEffect_Localised { get; set; }    // may be null
             public EngineeringModifiers[] Modifiers { get; set; }       // may be null
 
+            // Post engineering changes
             public EngineeringData(JObject evt)
             {
                 Engineer = evt["Engineer"].Str();
-                EngineerID = evt["EngineerID"].ULong();
-                BlueprintName = evt["BlueprintName"].Str();
-                FriendlyBlueprintName = BlueprintName.SplitCapsWordFull();
-                BlueprintID = evt["BlueprintID"].ULong();
                 Level = evt["Level"].Int();
-                Quality = evt["Quality"].Double(0);
-                // EngineerCraft has it as Apply.. Loadout has just ExperimentalEffect.  Check both
-                ExperimentalEffect = evt.MultiStr(new string[] { "ExperimentalEffect", "ApplyExperimentalEffect" });
-                ExperimentalEffect_Localised = JournalFieldNaming.CheckLocalisation(evt["ExperimentalEffect_Localised"].Str(),ExperimentalEffect);
 
-                Modifiers = evt["Modifiers"]?.ToObject<EngineeringModifiers[]>(ignoretypeerrors:true,checkcustomattr:false);     // instances of Value being wrong type - ignore and continue
-
-                if (Modifiers != null)
+                if (evt.Contains("Blueprint"))     // old form
                 {
-                    foreach (EngineeringModifiers v in Modifiers)
-                        v.FriendlyLabel = v.Label.Replace("_", " ").SplitCapsWord();
+                    BlueprintName = evt["Blueprint"].Str();
                 }
                 else
                 {
+                    EngineerID = evt["EngineerID"].ULong();     // NEW FORM after engineering changes in about 2018
+                    BlueprintName = evt["BlueprintName"].Str();
+                    BlueprintID = evt["BlueprintID"].ULong();
+                    Quality = evt["Quality"].Double(0);
 
+                    // EngineerCraft has it as Apply.. Loadout has just ExperimentalEffect.  Check both
+                    ExperimentalEffect = evt.MultiStr(new string[] { "ExperimentalEffect", "ApplyExperimentalEffect" });
+                    ExperimentalEffect_Localised = JournalFieldNaming.CheckLocalisation(evt["ExperimentalEffect_Localised"].Str(), ExperimentalEffect);
+
+                    Modifiers = evt["Modifiers"]?.ToObject<EngineeringModifiers[]>(ignoretypeerrors: true, checkcustomattr: false);     // instances of Value being wrong type - ignore and continue
+
+                    if (Modifiers != null)
+                    {
+                        foreach (EngineeringModifiers v in Modifiers)
+                            v.FriendlyLabel = v.Label.Replace("_", " ").SplitCapsWord();
+                    }
+                    else
+                    {
+
+                    }
                 }
+
+                FriendlyBlueprintName = BlueprintName.SplitCapsWordFull();
             }
 
             public JObject ToJSONLoadout()  // reproduce the loadout format..

@@ -106,7 +106,7 @@ namespace EliteDangerousCore
         // If null is passed in, its presumed field is missing and thus Unknown.
         public static StarportTypes StarportTypeToEnum(string fdname)
         {
-            if (fdname == null)
+            if (fdname == null || fdname == "")     // again seen empty output from fdev of type
                 return StarportTypes.Unknown;
 
             fdname = fdname.ToLowerInvariant().Replace(" ", "").Replace(";", "");

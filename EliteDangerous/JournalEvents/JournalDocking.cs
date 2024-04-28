@@ -55,7 +55,7 @@ namespace EliteDangerousCore.JournalEvents
 
             EconomyList = evt["StationEconomies"]?.ToObjectQ<Economies[]>();        // not checking custom attributes, so name in class
 
-            Government = GovernmentDefinitions.ToEnum(evt.MultiStr(new string[] { "StationGovernment", "Government" }));
+            Government = GovernmentDefinitions.ToEnum(evt.MultiStr(new string[] { "StationGovernment", "Government" }, null));
             Government_Localised = JournalFieldNaming.CheckLocalisation(evt.MultiStr(new string[] { "StationGovernment_Localised", "Government_Localised" }), GovernmentDefinitions.ToEnglish(Government));
 
             Wanted = evt["Wanted"].Bool();

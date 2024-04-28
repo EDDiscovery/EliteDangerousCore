@@ -129,24 +129,24 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalEngineerCraftBase(JObject evt, JournalTypeEnum en) : base(evt, en)
         {
-            SlotFD = ShipSlots.ToEnum(evt["Slot"].Str());
+            SlotFD = ShipSlots.ToEnum(evt["Slot"].StrNull());       // may not be present, pass in null to indicate okay and set it to unknown
             Slot = ShipSlots.ToEnglish(SlotFD);
 
-            ModuleFD = JournalFieldNaming.NormaliseFDItemName(evt["Module"].Str());
+            ModuleFD = JournalFieldNaming.NormaliseFDItemName(evt["Module"].Str()); // may not be present
             Module = JournalFieldNaming.GetBetterEnglishModuleName(ModuleFD);
 
-            Engineering = new ShipModule.EngineeringData(evt);
+            Engineering = new ShipModule.EngineeringData(evt);  
 
             IsPreview = evt["IsPreview"].BoolNull();
-            JToken mats = (JToken)evt["Ingredients"];
+            JToken ingredients = (JToken)evt["Ingredients"];
 
-            if (mats != null)
+            if (ingredients != null)
             {
                 Ingredients = new List<Ingrediant>();
 
-                if (mats.IsObject)
+                if (ingredients.IsObject)
                 {
-                    Dictionary<string, int> temp = mats?.ToObjectQ<Dictionary<string, int>>();
+                    Dictionary<string, int> temp = ingredients?.ToObjectQ<Dictionary<string, int>>();
 
                     if (temp != null)
                     {
@@ -168,7 +168,7 @@ namespace EliteDangerousCore.JournalEvents
                 }
                 else
                 {
-                    foreach (JObject jo in (JArray)mats)
+                    foreach (JObject jo in (JArray)ingredients)
                     {
                         string fdname = jo["Name"].StrNull();
                         string name = MaterialCommodityMicroResourceType.GetByFDName(fdname)?.EnglishName ?? fdname;
@@ -190,16 +190,16 @@ namespace EliteDangerousCore.JournalEvents
 
         }
 
-        public string Slot { get; set; }        // English name
+        public string Slot { get; set; }        // English name, not present in v1 of this version
         public ShipSlots.Slot SlotFD { get; set; }
-        public string Module { get; set; }      // English module name
+        public string Module { get; set; }      // English module name, not present in V1 of this version
         public string ModuleFD { get; set; }        
 
         public ShipModule.EngineeringData Engineering { get; set; }
 
         public bool? IsPreview { get; set; }            // Only for legacy convert
 
-        public class Ingrediant
+        public class Ingrediant     
         {       
             public string Name { get; set; }            // json, then english name
             public string Name_Localised { get; set; }  // localised, or Name
@@ -210,7 +210,6 @@ namespace EliteDangerousCore.JournalEvents
 
 
         public List<Ingrediant> Ingredients { get; set; }  // always set
-
         public void UpdateMaterials(MaterialCommoditiesMicroResourceList mc)
         {
             if (Ingredients != null)

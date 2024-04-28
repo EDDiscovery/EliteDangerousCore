@@ -1443,9 +1443,9 @@ Section ShipSlots
 .CodexScanner: "Codex Scanner" @
 .DataLinkScanner: "Data Link Scanner" @
 .DiscoveryScanner: "Discovery Scanner" @
-.Decal1: "Decal Front (1)" @
-.Decal2: "Decal Right (2)" @
-.Decal3: "Decal Left (3)" @
+.Decal1: "Decal Front" @
+.Decal2: "Decal Right" @
+.Decal3: "Decal Left" @
 .EngineColour: "Engine Colour" @
 .Federation_Fighter_Shield: "Federation Fighter Shield" @
 .FrameShiftDrive: "Frame Shift Drive" @
@@ -1477,14 +1477,14 @@ Section ShipSlots
 .Radar: "Sensors" @
 .ShieldGenerator: "Shield Generator" @
 .ShipCockpit: "Ship Cockpit" @
-.ShipID0: "Ship ID Right (1)" @
-.ShipID1: "Ship ID Left (2)" @
+.ShipID0: "Ship ID Right" @
+.ShipID1: "Ship ID Left" @
 .ShipKitBumper: "Ship Kit Bumper" @
 .ShipKitSpoiler: "Ship Kit Spoiler" @
 .ShipKitTail: "Ship Kit Tail" @
 .ShipKitWings: "Ship Kit Wings" @
-.ShipName0: "Nameplate Right (1)" @
-.ShipName1: "Nameplate Left (2)" @
+.ShipName0: "Nameplate Right" @
+.ShipName1: "Nameplate Left" @
 .Slot00_Size8: "Optional Slot 0 Class 8" @
 .Slot01_Size2: "Optional Slot 1 Class 2" @
 .Slot01_Size3: "Optional Slot 1 Class 3" @
@@ -1538,6 +1538,7 @@ Section ShipSlots
 .Slot09_Size3: "Optional Slot 9 Class 3" @
 .Slot09_Size4: "Optional Slot 9 Class 4" @
 .Slot10_Size1: "Optional Slot 10 Class 1" @
+.Slot10_Size2: "Optional Slot 10 Class 2" @
 .Slot10_Size3: "Optional Slot 10 Class 3" @
 .Slot10_Size4: "Optional Slot 10 Class 4" @
 .Slot11_Size1: "Optional Slot 11 Class 1" @
