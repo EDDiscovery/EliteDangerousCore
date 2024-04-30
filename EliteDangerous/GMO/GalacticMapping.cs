@@ -36,27 +36,49 @@ namespace EliteDangerousCore.GMO
             GalacticMapObjects = new List<GalacticMapObject>();
         }
 
-        public bool LoadMarxObjects()
+        // expects a headerless CSV file (comma) with A = name, B = any descriptive text, C/D/E = x/y/z
+        // nameposfix text is added to name
+        // defaultdescription is used if B is empty
+        public bool LoadCSV(string csvfile, GalMapType.VisibleObjectsType otype, string namepostfix, string defaultdescription)
         {
-            using (StringReader t = new StringReader(EliteDangerous.Properties.Resources.Marx_Nebula_List_26_10_21))
-            {
-                CSVFile csv = new CSVFile();
+            return LoadCSV(new StringReader(csvfile), otype, namepostfix, defaultdescription);
+        }
 
-                return csv.Read(t, (r, rw) => {
-                    var pos = new EMK.LightGeometry.Vector3((float)(rw[2].InvariantParseDoubleNull() ?? 0),
-                                                        (float)(rw[3].InvariantParseDoubleNull() ?? 0),
-                                                        (float)(rw[4].InvariantParseDoubleNull() ?? 0));
-                    if (pos.X != 0 && pos.Y != 0 && pos.Z != 0)
+        public bool LoadCSV(StringReader t, GalMapType.VisibleObjectsType otype, string namepostfix, string defaultdescription)
+        { 
+            CSVFile csv = new CSVFile();
+
+            return csv.Read(t, (r, rw) => {
+
+                var pos = new EMK.LightGeometry.Vector3((float)(rw[2].InvariantParseDoubleNull() ?? 0),
+                                                    (float)(rw[3].InvariantParseDoubleNull() ?? 0),
+                                                    (float)(rw[4].InvariantParseDoubleNull() ?? 0));
+
+                if (pos.X != 0 && pos.Y != 0 && pos.Z != 0)
+                {
+                    var previousstored = GalacticMapObjects.Find(x => Math.Abs(x.Points[0].X - pos.X) < 0.25f &&
+                                                                    Math.Abs(x.Points[0].Y - pos.Y) < 0.25f &&
+                                                                    Math.Abs(x.Points[0].Z - pos.Z) < 0.25f);
+
+                    string nameofobject = rw[0] + namepostfix;
+                    string descriptivetext = rw[1].Length > 0 ? rw[1] : defaultdescription;
+
+                    if (previousstored != null)
                     {
-                        var gmo = new GalacticMapObject(GalMapType.VisibleObjectsType.MarxNebula.ToString(), rw[0] + " Nebula", rw[0], "Marx sourced nebula", pos);
-                        GalacticMapObjects.Add(gmo);
+                        //System.Diagnostics.Debug.WriteLine($"GMO Object repeat {nameofobject} {descriptivetext} at {pos.X} {pos.Y} {pos.Z}");
+                        previousstored.AddDuplicateGMONameDescription(nameofobject,Environment.NewLine+descriptivetext);
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine($"Reject Marx {rw[0]}");
+                        var gmo = new GalacticMapObject(otype.ToString(), nameofobject, rw[0], descriptivetext, pos);
+                        GalacticMapObjects.Add(gmo);
                     }
-                });
-            }
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"Reject Marx {rw[0]}");
+                }
+            });
         }
 
         public bool ParseGMPFile(string file, int idoffset)
@@ -88,14 +110,15 @@ namespace EliteDangerousCore.GMO
 
                         if (newgmo.Points.Count > 0) // need some sort of position
                         {
-                            var previousstored = GalacticMapObjects.Find(x => Math.Abs(x.Points[0].X - newgmo.Points[0].X) < 0.25f &&
-                                                                         Math.Abs(x.Points[0].Y - newgmo.Points[0].Y) < 0.25f &&
-                                                                         Math.Abs(x.Points[0].Z - newgmo.Points[0].Z) < 0.25f);
-                            
                             if (newgmo.DescriptiveNames[0] == "Great Annihilator Black Hole")  // manually remove
                             {
                                 continue;
                             }
+
+                            var previousstored = GalacticMapObjects.Find(x => Math.Abs(x.Points[0].X - newgmo.Points[0].X) < 0.25f &&
+                                                                         Math.Abs(x.Points[0].Y - newgmo.Points[0].Y) < 0.25f &&
+                                                                         Math.Abs(x.Points[0].Z - newgmo.Points[0].Z) < 0.25f);
+
 
                             if (previousstored != null && newgmo.Points.Count == 1)
                             {

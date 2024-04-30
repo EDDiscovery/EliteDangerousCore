@@ -58,10 +58,10 @@ namespace EliteDangerousCore.GMO
         }
 
         // programatically
-        public GalacticMapObject(string type, string name, string starname, string desc, Vector3 pos)
+        public GalacticMapObject(string type, string gmoname, string starname, string descriptivetext, Vector3 pos)
         {
-            this.DescriptiveNames = new List<string> { name };
-            this.Description = desc;
+            this.DescriptiveNames = new List<string> { gmoname };
+            this.Description = descriptivetext;
             this.StarSystem = new SystemClass(starname,null,pos.X,pos.Y,pos.Z);
             this.GalMapUrl = "";
             Points = new List<Vector3>() { pos };
@@ -160,10 +160,10 @@ namespace EliteDangerousCore.GMO
         }
 
         // some GMO objects have multiple names at same position, accumulate
-        public void AddDuplicateGMONameDescription(string name, string s)
+        public void AddDuplicateGMONameDescription(string nameofobject, string descriptivetext)
         {
-            DescriptiveNames.Add(name);
-            Description += s;
+            DescriptiveNames.Add(nameofobject);
+            Description += descriptivetext;
         }
 
         public void PrintElement(XElement x, int level)

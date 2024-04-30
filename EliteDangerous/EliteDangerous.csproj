@@ -396,7 +396,6 @@
     <None Include="JournalEvents\translation-portugues-je.tlp" />
     <None Include="JournalEvents\translation-spanish-je.tlp" />
     <None Include="packages.config" />
-    <None Include="Resources\Marx Nebula List 26-10-21.csv" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\BaseUtilities\BaseUtilities\BaseUtils.csproj">
@@ -416,6 +415,8 @@
       <Name>EDDDLLInterfaces</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
