@@ -16,13 +16,12 @@ using EMK.LightGeometry;
 using System;
 using System.Collections.Generic;
 using QuickJSON;
-using System.Diagnostics;
 using System.Xml.Linq;
 using BaseUtils;
 
 namespace EliteDangerousCore.GMO
 {
-    [DebuggerDisplay("GMO {GalMapType.Group} {GalMapType.VisibleType.Value} {NameList}")]
+    [System.Diagnostics.DebuggerDisplay("GMO {GalMapType.Group} {GalMapType.VisibleType.Value} {NameList}")]
     public class GalacticMapObject
     {
         public int ID { get; set; }
@@ -146,7 +145,7 @@ namespace EliteDangerousCore.GMO
 
         private void SetGalMapTypeFromTypeName(string type)
         {
-            GalMapType ty = GalMapType.GalTypes.Find(x => x.Name.Equals(type));
+            GalMapType ty = GalMapType.GalTypes.Find(x => x.TypeName.Equals(type));
 
             if (ty == null)
                 ty = GalMapType.GalTypes.Find(x => x.Description.Contains(type));
