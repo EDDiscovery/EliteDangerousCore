@@ -2376,6 +2376,7 @@ namespace EliteDangerousCore
             { "paintjob_asp_iridescenthighcolour_01", new ShipModule(-1,0,0,null,"Paint Job Asp Iridescent High Colour 1", ShipModule.ModuleTypes.VanityType) },
             { "paintjob_asp_largelogometallic_05", new ShipModule(-1,0,0,null,"Paint Job Asp Largelogometallic 5", ShipModule.ModuleTypes.VanityType) },
             { "paintjob_asp_metallic_gold", new ShipModule(-1,0,0,null,"Paint Job Asp Metallic Gold", ShipModule.ModuleTypes.VanityType) },
+            { "paintjob_asp_blackfriday2_01", new ShipModule(-1,0, "Paintjob Asp Blackfriday 2 1", ShipModule.ModuleTypes.VanityType ) },
             { "paintjob_asp_salvage_03", new ShipModule(-1,0,0,null,"Paint Job Asp Salvage 3", ShipModule.ModuleTypes.VanityType) },
             { "paintjob_asp_salvage_06", new ShipModule(-1,0,0,null,"Paint Job Asp Salvage 6", ShipModule.ModuleTypes.VanityType) },
             { "paintjob_asp_scout_blackfriday_01", new ShipModule(-1,0,0,null,"Paint Job Asp Scout Black Friday 1", ShipModule.ModuleTypes.VanityType) },

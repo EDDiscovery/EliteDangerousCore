@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2020 EDDiscovery development team
+ * Copyright © 2016-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using EliteDangerousCore.DB;
@@ -24,6 +22,7 @@ namespace EliteDangerousCore
     public class EDJournalReader : TravelLogUnitLogReader
     {
         bool cqc = false;
+        bool training = false;
 
         static JournalEvents.JournalContinued lastcontinued = null;
 
@@ -196,12 +195,14 @@ namespace EliteDangerousCore
                     TravelLogUnit.CommanderId = cmdrid;
                     //System.Diagnostics.Trace.WriteLine(string.Format("TLU {0} updated with commander {1} at {2}", TravelLogUnit.Path, cmdrid, TravelLogUnit.Size));
                 }
+
             }
-            else if (je is ISystemStationEntry && ((ISystemStationEntry)je).IsTrainingEvent)
-            {
-                //System.Diagnostics.Trace.WriteLine($"{filename} Training detected:\n{line}");
-                return null;
-            }
+
+            //if (Government == GovernmentDefinitions.Government.None)
+            //{
+            //    IsTrainingEvent = true;
+            //}
+
 
             // if in dynamic read during play, and its an additional file JE, and we are NOT a console commander, see if we can pick up extra info
 
@@ -209,13 +210,32 @@ namespace EliteDangerousCore
             {
                 (je as IAdditionalFiles).ReadAdditionalFiles(TravelLogUnit.Path);       // try and read file dynamically written.
             }
-           
-            if (je.EventTypeID == JournalTypeEnum.Undocked || je.EventTypeID == JournalTypeEnum.LoadGame || je.EventTypeID == JournalTypeEnum.Died)            
+
+            if (je.EventTypeID == JournalTypeEnum.FSDJump)
             {
-                 cqc = (je.EventTypeID == JournalTypeEnum.LoadGame) && string.IsNullOrEmpty((je as JournalEvents.JournalLoadGame)?.GameMode);
+                training |= (je as JournalEvents.JournalFSDJump).StarSystem == "Training";       // seen in logs..  we keep current training, but turn it on if star system is training
+                                                                                        // we need to keep current training as we may be jumping where we can't detect another training incident
             }
-            else if (je.EventTypeID == JournalTypeEnum.Music)
+            else if (je.EventTypeID == JournalTypeEnum.Location)        // "event":"Location", "Docked":false, "StarSystem":"Training"
             {
+                training |= (je as JournalEvents.JournalLocation).StarSystem == "Training"; // ditto above
+            }
+            else if (je.EventTypeID == JournalTypeEnum.Docked)          // "event":"Docked" "StationGovernment":"$government_None;", 
+            {
+                training = (je as JournalEvents.JournalDocked).Government == GovernmentDefinitions.Government.None; // all training has government none
+            }
+            // check some events for journal related events
+            else if (je.EventTypeID == JournalTypeEnum.Undocked || je.EventTypeID == JournalTypeEnum.Died)
+            {
+                cqc = false;        // clear the cqc flag
+            }
+            else if (je.EventTypeID == JournalTypeEnum.LoadGame)
+            {
+                cqc = string.IsNullOrEmpty((je as JournalEvents.JournalLoadGame)?.GameMode);        // set cqc flag on if gamemode is present
+                training = false;                                                                   // always clear training flag, never appears during it
+            }
+            else if (je.EventTypeID == JournalTypeEnum.Music)                                       // music is an indicator of CQC
+            {   
                 var music = je as JournalEvents.JournalMusic;
                 
                 if (music?.MusicTrackID == JournalEvents.EDMusicTrackEnum.CQC || music?.MusicTrackID == JournalEvents.EDMusicTrackEnum.CQCMenu)
@@ -224,12 +244,15 @@ namespace EliteDangerousCore
                 }
             }
 
-            if (cqc)  // Ignore events if in CQC
+            if (cqc || training)  // Ignore events if in CQC or training
             {
+               // System.Diagnostics.Debug.WriteLine($"Rejected journal {je.EventTypeStr} as in {(training ? "Training" : "CQC")}");
                 return null;
             }
 
-            je.SetTLUCommander(TravelLogUnit.ID, cmdrid);
+           // System.Diagnostics.Debug.WriteLine($"Accepted journal {je.EventTypeStr}");
+
+            je.SetTLUCommander(TravelLogUnit.ID, cmdrid);       // update the JE with info from where it came from and the commander
 
             return je;
         }

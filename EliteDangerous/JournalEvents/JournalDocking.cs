@@ -18,7 +18,7 @@ using System;
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.Docked)]
-    public class JournalDocked : JournalEntry, ISystemStationEntry
+    public class JournalDocked : JournalEntry
     {
         public JournalDocked(System.DateTime utc) : base(utc, JournalTypeEnum.Docked,false)
         {
@@ -63,13 +63,6 @@ namespace EliteDangerousCore.JournalEvents
             StationServices = evt["StationServices"]?.ToObjectQ<StationDefinitions.StationServices[]>();
 
             ActiveFine = evt["ActiveFine"].BoolNull();
-
-            // Government = None only happens in Training
-
-            if (Government == GovernmentDefinitions.Government.None)
-            {
-                IsTrainingEvent = true;
-            }
 
             Taxi = evt["Taxi"].BoolNull();
             Multicrew = evt["Multicrew"].BoolNull();

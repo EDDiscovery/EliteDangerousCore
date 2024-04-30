@@ -80,11 +80,6 @@ namespace EliteDangerousCore
         void UpdateMissions(MissionListAccumulator mlist, ISystem sys, string body);
     }
 
-    public interface ISystemStationEntry
-    {
-        bool IsTrainingEvent { get; }
-    }
-
     public interface IAdditionalFiles
     {
         void ReadAdditionalFiles(string directory); 

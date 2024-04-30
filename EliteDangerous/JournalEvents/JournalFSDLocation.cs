@@ -20,7 +20,7 @@ using System.Data.Common;
 
 namespace EliteDangerousCore.JournalEvents
 {
-    public abstract class JournalLocOrJump : JournalEntry, ISystemStationEntry
+    public abstract class JournalLocOrJump : JournalEntry
     {
         public string StarSystem { get; set; }
         public EMK.LightGeometry.Vector3 StarPos { get; set; }
@@ -265,13 +265,8 @@ namespace EliteDangerousCore.JournalEvents
             else if (th != null)
                 ThargoidSystemState = (ThargoidWar)th;
             else if ( evt.Contains("ThargoidWar"))
-                System.Diagnostics.Debug.WriteLine($"*** Bad thargoid status {evt["ThargoidWar"]?.ToString()}");
+               System.Diagnostics.Debug.WriteLine($"*** Bad thargoid status {evt["ThargoidWar"]?.ToString()}");
 
-            // Allegiance without Faction only occurs in Training
-            if (Allegiance == AllegianceDefinitions.Allegiance.Unknown && Faction == null && EventTimeUTC <= EliteFixesDates.ED_No_Training_Timestamp && (EventTimeUTC <= EliteFixesDates.ED_No_Faction_Timestamp || EventTypeID != JournalTypeEnum.FSDJump || StarSystem == "Eranin"))
-            {
-                IsTrainingEvent = true;
-            }
         }
 
         public void FillFactionConflictThargoidInfo(StringBuilder sb)
@@ -349,7 +344,7 @@ namespace EliteDangerousCore.JournalEvents
 
     //When written: at startup, or when being resurrected at a station
     [JournalEntryType(JournalTypeEnum.Location)]
-    public class JournalLocation : JournalLocOrJump, ISystemStationEntry, IBodyNameAndID, IStarScan, ICarrierStats
+    public class JournalLocation : JournalLocOrJump, IBodyNameAndID, IStarScan, ICarrierStats
     {
         public JournalLocation(JObject evt) : base(evt, JournalTypeEnum.Location)      // all have evidence 16/3/2017
         {
@@ -505,7 +500,7 @@ namespace EliteDangerousCore.JournalEvents
 
     //When written: when jumping with a fleet carrier
     [JournalEntryType(JournalTypeEnum.CarrierJump)]
-    public class JournalCarrierJump : JournalLocOrJump, ISystemStationEntry, IBodyNameAndID, IJournalJumpColor, IStarScan, ICarrierStats
+    public class JournalCarrierJump : JournalLocOrJump, IBodyNameAndID, IJournalJumpColor, IStarScan, ICarrierStats
     {
         public JournalCarrierJump(JObject evt) : base(evt, JournalTypeEnum.CarrierJump)
         {
@@ -585,7 +580,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.FSDJump)]
-    public class JournalFSDJump : JournalLocOrJump, IShipInformation, ISystemStationEntry, IJournalJumpColor, IStarScan
+    public class JournalFSDJump : JournalLocOrJump, IShipInformation, IJournalJumpColor, IStarScan
     {
         public JournalFSDJump(JObject evt) : base(evt, JournalTypeEnum.FSDJump)
         {

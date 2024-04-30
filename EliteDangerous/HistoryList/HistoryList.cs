@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 - 2022 EDDiscovery development team
+ * Copyright © 2016 - 2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -17,7 +17,6 @@
 using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace EliteDangerousCore
@@ -131,7 +130,7 @@ namespace EliteDangerousCore
                                         )
         {
 
-            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL", true).Item1 + $" History Load of {commanderid} {cmdname} {fullhistoryloaddaylimit} {maxdateload??DateTime.MinValue}");
+            System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL", true).Item1 + $" History Load of {commanderid} {cmdname} {fullhistoryloaddaylimit} {maxdateload??DateTime.MinValue}");
 
             reportProgress(-1,$"Reading Cmdr. {cmdname} database records");
 
@@ -154,7 +153,7 @@ namespace EliteDangerousCore
 
             if (tabledata != null)          // if not cancelled table read
             {
-                Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + $" Journal Creation of {tabledata.Count}");
+                System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + $" Journal Creation of {tabledata.Count}");
 
                 var jes = JournalEntry.CreateJournalEntries(tabledata, cancelRequested, (p) => reportProgress(p, $"Creating Cmdr. {cmdname} journal entries {(int)(tabledata.Count * p / 100):N0}/{tabledata.Count:N0}"));
                 if (jes != null)        // if not cancelled, use it
@@ -163,12 +162,12 @@ namespace EliteDangerousCore
 
             tabledata = null;
 
-            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + $" Table Clean {journalentries.Length} records");
+            System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + $" Table Clean {journalentries.Length} records");
 
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect();       // to try and lose the tabledata
 
-            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Journals read from DB");
+            System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + " Journals read from DB");
 
             int eno = 0;
 
@@ -216,7 +215,7 @@ namespace EliteDangerousCore
 
             hist.Carrier.CheckCarrierJump(DateTime.UtcNow);         // lets see if a jump has completed.
 
-            Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + $" History List Created {hist.Count}");
+            System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + $" History List Created {hist.Count}");
 
             foreach (var s in hist.StarScan.ToProcess)
             {
@@ -323,7 +322,7 @@ namespace EliteDangerousCore
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine("******** Cannot add scan to system " + (he.journalEntry as JournalScan).BodyName + " in " + he.System.Name);
+                        System.Diagnostics.Debug.WriteLine("*** Cannot add scan to system " + (he.journalEntry as JournalScan).BodyName + " in " + he.System.Name);
                     }
                 }
             }
