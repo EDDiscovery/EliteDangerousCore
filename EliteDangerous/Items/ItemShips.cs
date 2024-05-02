@@ -473,6 +473,17 @@ namespace EliteDangerousCore
             { ShipPropID.HullCost, new ShipInfoInt(55171380)},
             { ShipPropID.Class, new ShipInfoInt(2)},
         };
+        private static Dictionary<ShipPropID, IModuleInfo> pythonnx = new Dictionary<ShipPropID, IModuleInfo>
+        {
+            { ShipPropID.FDID, new ShipInfoString("Python_NX")},
+            { ShipPropID.HullMass, new ShipInfoDouble(0F)},
+            { ShipPropID.Name, new ShipInfoString("Python Mk II")},
+            { ShipPropID.Manu, new ShipInfoString("Faulcon DeLacy")},
+            { ShipPropID.Speed, new ShipInfoInt(0)},
+            { ShipPropID.Boost, new ShipInfoInt(0)},
+            { ShipPropID.HullCost, new ShipInfoInt(0)},
+            { ShipPropID.Class, new ShipInfoInt(2)},
+        };
         private static Dictionary<ShipPropID, IModuleInfo> sidewinder = new Dictionary<ShipPropID, IModuleInfo>
         {
             { ShipPropID.FDID, new ShipInfoString("SideWinder")},
@@ -596,6 +607,7 @@ namespace EliteDangerousCore
             { "mamba",mamba},
             { "orca",orca},
             { "python",python},
+            { "python_nx",pythonnx},
             { "sidewinder",sidewinder},
             { "type9_military",type_10_defender},
             { "type6",type_6_transporter},
