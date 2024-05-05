@@ -101,9 +101,6 @@ namespace EliteDangerousCore
             // does node have any non web scans (or empty scans) below it
             public bool DoesNodeHaveNonWebScansBelow()
             {
-                if (WebCreatedNode)        // its web created, so answer is false
-                    return false;
-
                 if (Children != null)
                 {
                     foreach (KeyValuePair<string, ScanNode> csn in Children)
@@ -113,7 +110,7 @@ namespace EliteDangerousCore
                     }
                 }
 
-                return true;
+                return WebCreatedNode == false;
             }
 
             public bool IsBodyInFilter(string[] filternames, bool checkchildren)
