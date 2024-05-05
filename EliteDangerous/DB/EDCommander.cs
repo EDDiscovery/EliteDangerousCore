@@ -392,7 +392,7 @@ namespace EliteDangerousCore
 
                 if (intcmdrdict.Count == 0)
                 {
-                    Add("Jameson (Default)");
+                    Add("Jameson (Default)",toeddn:false);
                 }
 
                 EDCommander hidden = new EDCommander(-1, "Hidden Log");     // -1 is the hidden commander, add to list to make it

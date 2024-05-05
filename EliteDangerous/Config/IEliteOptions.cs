@@ -24,5 +24,6 @@ namespace EliteDangerousCore
         bool DisableMerge { get; }
         bool DisableBetaCommanderCheck { get; }
         string ScanCachePath { get; }
+        bool SetEDDNforNewCommanders { get; }
     }
 }

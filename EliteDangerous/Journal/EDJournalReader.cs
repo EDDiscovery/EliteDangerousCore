@@ -159,6 +159,7 @@ namespace EliteDangerousCore
                         commander.Name = cmdrcreatedname;
                         commander.EdsmName = cmdrcreatedname;
                         commander.JournalDir = TravelLogUnit.Path;
+                        commander.SyncToEddn = EliteConfigInstance.InstanceOptions.SetEDDNforNewCommanders;
                         EDCommander.Update(commander);
                     }
                     else
@@ -166,7 +167,7 @@ namespace EliteDangerousCore
                         // make a new commander
                         // always add the path from now on
                         // note changing commander in EDCommander here does not work - it shows a mess of data - removed nov 22
-                        commander = EDCommander.Add(name: cmdrcreatedname, journalpath: TravelLogUnit.Path);        
+                        commander = EDCommander.Add(name: cmdrcreatedname, journalpath: TravelLogUnit.Path, toeddn: EliteConfigInstance.InstanceOptions.SetEDDNforNewCommanders);        
                     }
 
                     if ( legacy )
