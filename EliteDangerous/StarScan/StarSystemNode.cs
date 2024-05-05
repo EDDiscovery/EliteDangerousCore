@@ -89,13 +89,13 @@ namespace EliteDangerousCore
                 return s;
             }
 
-            public int StarPlanetsScanned()      // not include anything but these.  This corresponds to FSSDiscoveryScan
+            public int StarPlanetsWithData()      // This corresponds to FSSDiscoveryScan
             {
                 return Bodies.Where(b => (b.NodeType == ScanNodeType.star || b.NodeType == ScanNodeType.body) && b.ScanData != null).Count();
             }
-            public int StarPlanetsScannednonWeb()      // not include anything but these.  This corresponds to FSSDiscoveryScan
+            public int StarPlanetsWithData(bool includewebbodies)        // includewebbodies gives same total as above, false means only include ones which we have scanned
             {
-                return Bodies.Where(b => (b.NodeType == ScanNodeType.star || b.NodeType == ScanNodeType.body) && b.ScanData != null && !b.ScanData.IsWebSourced).Count();
+                return Bodies.Where(b => (b.NodeType == ScanNodeType.star || b.NodeType == ScanNodeType.body) && b.ScanData != null && (includewebbodies || !b.ScanData.IsWebSourced)).Count();
             }
             public int StarsScanned()      // only stars
             {
