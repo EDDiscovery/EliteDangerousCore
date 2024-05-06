@@ -44,6 +44,7 @@ namespace EliteDangerousCore.GMO
             EDSMUnknown,
 
             MarxNebula, // non EDSM
+            TouristBeacon,
         }
         public enum GroupType
         {
@@ -113,6 +114,7 @@ namespace EliteDangerousCore.GMO
             // not EDSM
 
             type.Add(new GalMapType("MarxNebula", "Marx Nebula List", GroupType.Markers, VisibleObjectsType.MarxNebula, index++));
+            type.Add(new GalMapType("TouristBeacon", "Tourist Beacon List", GroupType.Markers, VisibleObjectsType.TouristBeacon, index++));
 
             // not visual
             type.Add(new GalMapType("travelRoute", "Travel Route", GroupType.Routes , null,index++));

@@ -50,11 +50,11 @@ namespace EliteDangerousCore.GMO
 
             return csv.Read(t, (r, rw) => {
 
-                var pos = new EMK.LightGeometry.Vector3((float)(rw[2].InvariantParseDoubleNull() ?? 0),
-                                                    (float)(rw[3].InvariantParseDoubleNull() ?? 0),
-                                                    (float)(rw[4].InvariantParseDoubleNull() ?? 0));
+                var pos = new EMK.LightGeometry.Vector3((float)(rw[2].InvariantParseDouble(-999999)),
+                                                    (float)(rw[3].InvariantParseDouble(-999999)),
+                                                    (float)(rw[4].InvariantParseDouble(-999999)));
 
-                if (pos.X != 0 && pos.Y != 0 && pos.Z != 0)
+                if (pos.X != -999999 && pos.Y != -999999 && pos.Z != -999999)
                 {
                     var previousstored = GalacticMapObjects.Find(x => Math.Abs(x.Points[0].X - pos.X) < 0.25f &&
                                                                     Math.Abs(x.Points[0].Y - pos.Y) < 0.25f &&
@@ -62,11 +62,12 @@ namespace EliteDangerousCore.GMO
 
                     string nameofobject = rw[0] + namepostfix;
                     string descriptivetext = rw[1].Length > 0 ? rw[1] : defaultdescription;
+                    descriptivetext = descriptivetext.WordWrap(80);
 
                     if (previousstored != null)
                     {
-                        //System.Diagnostics.Debug.WriteLine($"GMO Object repeat {nameofobject} {descriptivetext} at {pos.X} {pos.Y} {pos.Z}");
                         previousstored.AddDuplicateGMONameDescription(nameofobject,Environment.NewLine+descriptivetext);
+                        System.Diagnostics.Debug.WriteLine($"GMO Object repeat {nameofobject} {descriptivetext} at {pos.X} {pos.Y} {pos.Z} :{string.Join(",",previousstored.DescriptiveNames)}");
                     }
                     else
                     {
@@ -76,7 +77,7 @@ namespace EliteDangerousCore.GMO
                 }
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine($"Reject Marx {rw[0]}");
+                    System.Diagnostics.Debug.WriteLine($"Load CSV GMO objects reject due to bad co-ords  {rw[0]}");
                 }
             });
         }

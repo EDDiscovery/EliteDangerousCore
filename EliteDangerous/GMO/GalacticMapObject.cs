@@ -162,7 +162,9 @@ namespace EliteDangerousCore.GMO
         // some GMO objects have multiple names at same position, accumulate
         public void AddDuplicateGMONameDescription(string nameofobject, string descriptivetext)
         {
-            DescriptiveNames.Add(nameofobject);
+            if ( !DescriptiveNames.Contains(nameofobject))      // don't double add the same
+                DescriptiveNames.Add(nameofobject);
+
             Description += descriptivetext;
         }
 
