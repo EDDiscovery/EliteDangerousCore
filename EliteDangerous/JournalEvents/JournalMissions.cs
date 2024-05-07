@@ -380,7 +380,7 @@ namespace EliteDangerousCore.JournalEvents
         public CommodityRewards[] CommodityReward { get; set; }
         public MaterialRewards[] MaterialsReward { get; set; }
 
-        public FactionEffectsEntry[] FactionEffects;
+        public FactionEffectsEntry[] FactionEffects { get; set; }
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
