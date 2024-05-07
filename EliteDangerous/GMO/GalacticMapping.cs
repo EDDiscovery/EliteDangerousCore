@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2023 EDDiscovery development team
+ * Copyright © 2016-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -12,7 +12,6 @@
  * governing permissions and limitations under the License.
  */
 
-using EliteDangerousCore.DB;
 using QuickJSON;
 using System;
 using System.Collections.Generic;
@@ -26,8 +25,8 @@ namespace EliteDangerousCore.GMO
     {
         public List<GalacticMapObject> GalacticMapObjects = null;
 
-        // these need have have a VisibleType AND have an associated star system
-        public GalacticMapObject[] VisibleMapObjects { get { return GalacticMapObjects.Where(x => x.GalMapType.VisibleType != null && x.StarSystem != null).ToArray(); } }
+        // these need have have a VisibleType in entry 0 AND have an associated star system
+        public GalacticMapObject[] VisibleMapObjects { get { return GalacticMapObjects.Where(x => x.GalMapTypes[0] != null && x.StarSystem != null).ToArray(); } }
 
         public bool Loaded { get { return GalacticMapObjects.Count > 0; } }
 
@@ -39,12 +38,12 @@ namespace EliteDangerousCore.GMO
         // expects a headerless CSV file (comma) with A = name, B = any descriptive text, C/D/E = x/y/z
         // nameposfix text is added to name
         // defaultdescription is used if B is empty
-        public bool LoadCSV(string csvfile, GalMapType.VisibleObjectsType otype, string namepostfix, string defaultdescription)
+        public bool LoadCSV(string csvfile, string type, string namepostfix, string defaultdescription)
         {
-            return LoadCSV(new StringReader(csvfile), otype, namepostfix, defaultdescription);
+            return LoadCSV(new StringReader(csvfile), type, namepostfix, defaultdescription);
         }
 
-        public bool LoadCSV(StringReader t, GalMapType.VisibleObjectsType otype, string namepostfix, string defaultdescription)
+        public bool LoadCSV(StringReader t, string type, string namepostfix, string defaultdescription)
         { 
             CSVFile csv = new CSVFile();
 
@@ -66,12 +65,11 @@ namespace EliteDangerousCore.GMO
 
                     if (previousstored != null)
                     {
-                        previousstored.AddDuplicateGMONameDescription(nameofobject,Environment.NewLine+descriptivetext);
-                        System.Diagnostics.Debug.WriteLine($"GMO Object repeat {nameofobject} {descriptivetext} at {pos.X} {pos.Y} {pos.Z} :{string.Join(",",previousstored.DescriptiveNames)}");
+                        previousstored.AddDuplicate1(type, nameofobject,Environment.NewLine+descriptivetext);
                     }
                     else
                     {
-                        var gmo = new GalacticMapObject(otype.ToString(), nameofobject, rw[0], descriptivetext, pos);
+                        var gmo = new GalacticMapObject(type, nameofobject, rw[0], descriptivetext, pos);
                         GalacticMapObjects.Add(gmo);
                     }
                 }
@@ -126,7 +124,7 @@ namespace EliteDangerousCore.GMO
                                 if ((newgmo.DescriptiveNames[0] == "Great Annihilator" || newgmo.DescriptiveNames[0] == "Galactic Centre")) // these take precedence
                                 {
                                     string gmodesc = Environment.NewLine + "+++ " + previousstored.DescriptiveNames[0] + Environment.NewLine + previousstored.Description;
-                                    newgmo.AddDuplicateGMONameDescription(previousstored.DescriptiveNames[0],gmodesc);
+                                    newgmo.AddDuplicate1(previousstored.GalMapTypes[0].TypeName, previousstored.DescriptiveNames[0],gmodesc);
                                     GalacticMapObjects.Remove(previousstored);
                                     GalacticMapObjects.Add(newgmo);
                                   //  System.Diagnostics.Debug.WriteLine($"GMO Priority name store {newgmo.NameList} removing previous {previousstored.NameList}");
@@ -134,7 +132,7 @@ namespace EliteDangerousCore.GMO
                                 else if ( !previousstored.NameList.Contains(newgmo.DescriptiveNames[0],StringComparison.InvariantCultureIgnoreCase))
                                 {
                                     string gmodesc = Environment.NewLine + "+++ " + newgmo.DescriptiveNames[0] + Environment.NewLine + newgmo.Description;
-                                    previousstored.AddDuplicateGMONameDescription(newgmo.DescriptiveNames[0], gmodesc);
+                                    previousstored.AddDuplicate1(newgmo.GalMapTypes[0].TypeName, newgmo.DescriptiveNames[0], gmodesc);
                                //     SystemCache.AddSystemToCache(newgmo.GetSystem());        // also add this name
                                    // System.Diagnostics.Debug.WriteLine($"GMO Merge name {newgmo.NameList} with previous {previousstored.NameList}");
                                 }
@@ -244,6 +242,14 @@ namespace EliteDangerousCore.GMO
             }
 
             return ret;
+        }
+
+        public void Dump()
+        {
+            foreach (GalacticMapObject gmo in GalacticMapObjects)
+            {
+                System.Diagnostics.Debug.WriteLine($"Name: {string.Join(",", gmo.DescriptiveNames)} : {gmo.GalMapTypes.Count} : {string.Join(",", gmo.GalMapTypes.Select(x => x.TypeName))} : {gmo.Points[0].ToString()}");
+            }
         }
     }
 }

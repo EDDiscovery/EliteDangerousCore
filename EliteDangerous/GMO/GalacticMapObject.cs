@@ -16,16 +16,15 @@ using EMK.LightGeometry;
 using System;
 using System.Collections.Generic;
 using QuickJSON;
-using System.Xml.Linq;
 using BaseUtils;
 
 namespace EliteDangerousCore.GMO
 {
-    [System.Diagnostics.DebuggerDisplay("GMO {GalMapType.Group} {GalMapType.VisibleType.Value} {NameList}")]
+    [System.Diagnostics.DebuggerDisplay("GMO {GalMapTypes[0].Group} {GalMapTypes[0].VisibleType} {NameList}")]
     public class GalacticMapObject
     {
         public int ID { get; set; }
-        public GalMapType GalMapType { get; private set; }  // type of object
+        public List<GalMapType> GalMapTypes { get; private set; }  // object type list
         public List<string> DescriptiveNames { get; private set; }     // now have a naming list to remove duplicate positions
         public SystemClass StarSystem { get; private set; }     // set if it has a associated star system, else null
         public string GalMapUrl { get; private set; }
@@ -60,12 +59,12 @@ namespace EliteDangerousCore.GMO
         // programatically
         public GalacticMapObject(string type, string gmoname, string starname, string descriptivetext, Vector3 pos)
         {
-            this.DescriptiveNames = new List<string> { gmoname };
-            this.Description = descriptivetext;
-            this.StarSystem = new SystemClass(starname,null,pos.X,pos.Y,pos.Z);
-            this.GalMapUrl = "";
+            GalMapTypes = new List<GalMapType>() { GetGalMapTypeFromTypeName(type) };
+            DescriptiveNames = new List<string> { gmoname };
+            Description = descriptivetext;
+            StarSystem = new SystemClass(starname,null,pos.X,pos.Y,pos.Z);
+            GalMapUrl = "";
             Points = new List<Vector3>() { pos };
-            SetGalMapTypeFromTypeName(type);
 
            // System.Diagnostics.Debug.WriteLine($"GMOp {DescriptiveNames[0]} {GalMapType.Group} {GalMapType.VisibleType} : {StarSystem} : {Points[0].X} {Points[0].Y} {Points[0].Z}");
         }
@@ -96,7 +95,7 @@ namespace EliteDangerousCore.GMO
                 }
             }
 
-            SetGalMapTypeFromTypeName(jo["type"].Str("Not Set"));
+            GalMapTypes = new List<GalMapType>() { GetGalMapTypeFromTypeName(jo["type"].Str("Not Set")) };
 
             Points = new List<Vector3>();
 
@@ -139,55 +138,62 @@ namespace EliteDangerousCore.GMO
             if (name.HasChars() && Points.Count == 1)
                 StarSystem = new SystemClass(name, null, Points[0].X, Points[0].Y, Points[0].Z);
 
-            System.Diagnostics.Debug.Assert(GalMapType.VisibleType == null || StarSystem != null);  // check for all visible markers have a StarSystem
+           // System.Diagnostics.Debug.Assert(GalMapType.VisibleType == null || StarSystem != null);  // check for all visible markers have a StarSystem
            // System.Diagnostics.Debug.WriteLine($"GMO {DescriptiveNames[0]} : {GalMapType.Group} : {GalMapType.VisibleType} : ss `{StarSystem}`");
         }
 
-        private void SetGalMapTypeFromTypeName(string type)
+        // some GMO objects have multiple names/types at same position, accumulate
+        public void AddDuplicate1(string type, string nameofobject, string descriptivetext)
         {
-            GalMapType ty = GalMapType.GalTypes.Find(x => x.TypeName.Equals(type));
-
-            if (ty == null)
-                ty = GalMapType.GalTypes.Find(x => x.Description.Contains(type));
-
-            if ( ty == null)
-            {
-                ty = GalMapType.GalTypes.Find(x => x.VisibleType == GalMapType.VisibleObjectsType.EDSMUnknown);      // select edsm unknown
-                System.Diagnostics.Debug.WriteLine($"GMO unknown type {type}");
-            }
-
-            GalMapType = ty;
-        }
-
-        // some GMO objects have multiple names at same position, accumulate
-        public void AddDuplicateGMONameDescription(string nameofobject, string descriptivetext)
-        {
-            if ( !DescriptiveNames.Contains(nameofobject))      // don't double add the same
+            if (!DescriptiveNames.Contains(nameofobject))      // don't double add the same
                 DescriptiveNames.Add(nameofobject);
 
+            var ty = GetGalMapTypeFromTypeName(type);
+            if (!GalMapTypes.Contains(ty))
+                GalMapTypes.Add(ty);
+
             Description += descriptivetext;
+
+            //System.Diagnostics.Debug.WriteLine($"GMO Object repeat type {type} : {nameofobject} {descriptivetext}");
         }
 
-        public void PrintElement(XElement x, int level)
+        private GalMapType GetGalMapTypeFromTypeName(string typename)
         {
-            string pad = "                    ".Substring(0, level);
-            System.Diagnostics.Debug.WriteLine(pad + $"{x.NodeType} {x.Name} : {x.Value}");
-            //                if (x.NodeType == System.Xml.XmlNodeType.Element)
-            if (x.HasAttributes)
+            GalMapType ty = GalMapType.GalTypes.Find(x => x.TypeName.Equals(typename));
+
+            if (ty == null)
+                ty = GalMapType.GalTypes.Find(x => x.Description.Contains(typename));
+
+            if (ty == null)
             {
-                foreach (var y in x.Attributes())
-                {
-                    System.Diagnostics.Debug.WriteLine(pad + $" {x.Name} attr {y.NodeType} {y.Name} : {y.Value}");
-                }
+                ty = GalMapType.GalTypes.Find(x => x.VisibleType == GalMapType.VisibleObjectsType.EDSMUnknown);      // select edsm unknown
+                System.Diagnostics.Debug.WriteLine($"GMO unknown type {typename}");
             }
-            if (x.HasElements)
-            {
-                foreach (XElement y in x.Descendants())
-                {
-                    PrintElement(y, level + 1);
-                }
-            }
+
+            return ty;
         }
+
+
+        //public void PrintElement(XElement x, int level)
+        //{
+        //    string pad = "                    ".Substring(0, level);
+        //    System.Diagnostics.Debug.WriteLine(pad + $"{x.NodeType} {x.Name} : {x.Value}");
+        //    //                if (x.NodeType == System.Xml.XmlNodeType.Element)
+        //    if (x.HasAttributes)
+        //    {
+        //        foreach (var y in x.Attributes())
+        //        {
+        //            System.Diagnostics.Debug.WriteLine(pad + $" {x.Name} attr {y.NodeType} {y.Name} : {y.Value}");
+        //        }
+        //    }
+        //    if (x.HasElements)
+        //    {
+        //        foreach (XElement y in x.Descendants())
+        //        {
+        //            PrintElement(y, level + 1);
+        //        }
+        //    }
+        //}
 
     }
 }
