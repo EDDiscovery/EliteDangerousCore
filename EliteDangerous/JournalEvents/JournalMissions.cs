@@ -332,6 +332,22 @@ namespace EliteDangerousCore.JournalEvents
             }
 
             FactionEffects = evt["FactionEffects"]?.ToObjectQ<FactionEffectsEntry[]>();      // NEEDS TEST
+            foreach( var fee in FactionEffects.EmptyIfNull())
+            {
+                foreach (var et in fee.Effects.EmptyIfNull())
+                {
+                    if (!et.Effect_Localised.HasChars())        // early entries has missing localisation
+                    {
+                        et.Effect_Localised = et.Effect.Replace("$MISSIONUTIL_", "").Replace(";", "").SplitCapsWordFull();
+                    }
+                    else
+                    {
+                        //$#MinorFaction; has improved in the $#System; system.
+                        et.Effect_Localised = et.Effect_Localised.Replace("$#MinorFaction;", fee.Faction).Replace("$#System;", DestinationSystem ?? "Unknown System");
+                    }
+                    System.Diagnostics.Debug.WriteLine($"{et.Effect} : {et.Effect_Localised} : {et.Trend}");
+                }
+            }
         }
 
         public string Name { get; set; }
@@ -498,18 +514,18 @@ namespace EliteDangerousCore.JournalEvents
             {
                 for (int i = 0; i < FactionEffects.Length; i++)
                 {
-                    detailed += FactionEffects[i].Faction + " " + FactionEffects[i].ReputationTrend + " " + FactionEffects[i].Reputation;
+                    detailed += FactionEffects[i].Faction + " (" + FactionEffects[i].ReputationTrend.SplitCapsWord() + ") " + FactionEffects[i].Reputation;
 
                     string effects = "";
                     foreach (var x in FactionEffects[i].Effects)
                     {
-                        effects = effects.AppendPrePad(x.Effect.Replace("$MISSIONUTIL_","").Replace(";","") + " " + x.Trend,",");
+                        effects = effects.AppendPrePad(x.Effect_Localised + " (" + x.Trend.SplitCapsWord() + ")", ", ");
                     }
 
                     string influence = "";
                     foreach (var x in FactionEffects[i].Influence)
                     {
-                        influence = influence.AppendPrePad(x.Trend + " " + x.Influence,",");
+                        influence = influence.AppendPrePad(x.Trend.SplitCapsWord() + " " + x.Influence, ", ");
                     }
 
                     string inf = "";
