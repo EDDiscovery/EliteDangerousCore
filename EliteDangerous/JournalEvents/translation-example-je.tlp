@@ -1100,9 +1100,11 @@ SECTION JournalEntry
 .Pilot: "Pilot: " @
 
 SECTION JournalCarrierJump
+
 .JumpedWith: "Jumped with carrier {0} to {1}" @
 
 SECTION JournalCarrier
+
 .At: "At " @
 .Callsign: "Call Sign: " @
 .Name: "Name: " @
@@ -1195,5 +1197,6 @@ SECTION Services
 .PioneerSupplies: "Pioneer Supplies" @
 
 SECTION JournalScanOrganics
+
 .Value: "Value: ; cr;N0" @
 .PotentialValue: "Potential Value: ; cr;N0" @

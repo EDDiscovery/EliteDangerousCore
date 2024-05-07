@@ -1,4 +1,4 @@
-
+﻿
 SECTION Bodies
 
 .HMS: "Luminous Hot {0} class star" @
@@ -1007,13 +1007,12 @@ SECTION ScanDisplayUserControl
 .Codex: "Codex" @
 .Organics: "Organics" @
 
-
 SECTION Signals
 
 .RingHotSpot: "Ring Hot Spot of type " @
 
-
 SECTION Crimes
+
 .assault: "Assault" @
 .collidedatspeedinnofirezone: "Collided at speed in a no fire zone" @
 .collidedatspeedinnofirezone_hulldamage: "Collided at speed in a no fire zone resulting in hull damage" @
@@ -1055,8 +1054,7 @@ SECTION Crimes
 .recklessweaponsdischarge: "Discharging a weapon" @
 .shuttledestruction: "Destroying an APEX Shuttle" @
 
-
-Section FactionStates
+SECTION FactionStates
 
 .Unknown: "Unknown" @
 .UnknownSpansh: "Unknown Spansh" @
@@ -1089,8 +1087,8 @@ Section FactionStates
 .TradeWar: "Trade War" @
 .Exploited: "Exploited" @
 
+SECTION Allegiances
 
-Section Allegiances
 .Unknown: "Unknown" @
 .None: "None" @
 .Federation: "Federation" @
@@ -1101,7 +1099,8 @@ Section Allegiances
 .Thargoid: "Thargoid" @
 .PilotsFederation: "Pilots Federation" @
 
-Section GovernmentTypes 
+SECTION GovernmentTypes
+
 .Unknown: "Unknown" @
 .Anarchy: "Anarchy" @
 .Communism: "Communism" @
@@ -1120,7 +1119,8 @@ Section GovernmentTypes
 .Engineer: "Engineer" @
 .Carrier: "Carrier" @
 
-Section EconomyTypes
+SECTION EconomyTypes
+
 .Unknown: "Unknown" @
 .Agri: "Agri" @
 .Colony: "Colony" @
@@ -1141,22 +1141,25 @@ Section EconomyTypes
 .Engineer: "Engineer" @
 .Undefined: "Undefined" @
 
-Section SecurityTypes
+SECTION SecurityTypes
+
 .Low: "Low" @
 .Medium: "Medium" @
 .High: "High" @
 .Anarchy: "Anarchy" @
 .Lawless: "Lawless" @
 
-Section StarportStates
-.Unknown : "Unknown" @
+SECTION StarportStates
+
+.Unknown: "Unknown" @
 .None: "None" @
 .UnderRepairs: "Under Repairs" @
 .Damaged: "Damaged" @
 .Abandoned: "Abandoned" @
 .UnderAttack: "Under Attack" @
 
-Section StarportTypes
+SECTION StarportTypes
+
 .AsteroidBase: "Asteroid Base" @
 .Coriolis: "Coriolis" @
 .FleetCarrier: "Fleet Carrier" @
@@ -1170,17 +1173,19 @@ Section StarportTypes
 .CraterOutpost: "Crater Outpost" @
 .CraterPort: "Crater Port" @
 
-Section PowerPlayStates
-.Unknown:"Unknown" @
-.InPrepareRadius:"In prepare radius" @
-.Prepared:"Prepared" @
-.Exploited:"Exploited" @
-.Contested:"Contested" @
-.Controlled:"Controlled" @
-.Turmoil:"In turmoil" @
-.HomeSystem:"Home system" @
+SECTION PowerPlayStates
 
-Section ModuleTypeNames
+.Unknown: "Unknown" @
+.InPrepareRadius: "In prepare radius" @
+.Prepared: "Prepared" @
+.Exploited: "Exploited" @
+.Contested: "Contested" @
+.Controlled: "Controlled" @
+.Turmoil: "In turmoil" @
+.HomeSystem: "Home system" @
+
+SECTION ModuleTypeNames
+
 .AX_Missile_Rack: "AX Missile Rack" @
 .AX_Multi_Cannon: "AX Multi Cannon" @
 .Abrasion_Blaster: "Abrasion Blaster" @
@@ -1292,7 +1297,6 @@ Section ModuleTypeNames
 .Universal_Multi_Limpet_Controller: "Universal Multi Limpet Controller" @
 .Xeno_Multi_Limpet_Controller: "Xeno Multi Limpet Controller" @
 .Xeno_Scanner: "Xeno Scanner" @
-
 .Discovery_Scanner: "Discovery Scanner" @
 .Prison_Cells: "Prison Cells" @
 .Data_Link_Scanner: "Data Link Scanner" @
@@ -1305,8 +1309,8 @@ Section ModuleTypeNames
 .Wear_And_Tear_Type: "Wear And Tear Type" @
 .Codex: "Codex" @
 
+SECTION ModulePartNames
 
-Section ModulePartNames
 .Class: "Class" @
 .Rating: "Rating" @
 .Gimbal: "Gimbal" @
@@ -1319,7 +1323,6 @@ Section ModulePartNames
 .Tiny: "Tiny" @
 .Standard: "Standard" @
 .Advanced: "Advanced" @
-
 .Lightweight_Armour: "Lightweight Armour" @
 .Reinforced_Armour: "Reinforced Armour" @
 .Military_Armour: "Military Armour" @
@@ -1426,7 +1429,8 @@ Section ModulePartNames
 .Advanced_Xeno_Scanner: "Advanced Xeno Scanner" @
 .Hyperdrive_Overcharged: "Hyperdrive Overcharged" @
 
-Section ShipSlots
+SECTION ShipSlots
+
 .Unknown: "Unknown" @
 .Armour: "Armour" @
 .Bobble01: "Bobble Position 1" @
@@ -1562,4 +1566,3 @@ Section ShipSlots
 .TinyHardpoint8: "Utility Mount 8" @
 .VesselVoice: "Vessel Voice" @
 .WeaponColour: "Weapon Colour" @
-
