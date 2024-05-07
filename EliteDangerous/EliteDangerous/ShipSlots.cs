@@ -326,7 +326,7 @@ namespace EliteDangerousCore
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine($"*** Slots unknown {fdname}");
+                System.Diagnostics.Trace.WriteLine($"*** Slots unknown {fdname}");
                 return Slot.Unknown;
             }
         }

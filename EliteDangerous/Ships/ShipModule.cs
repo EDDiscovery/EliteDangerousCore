@@ -57,7 +57,7 @@ namespace EliteDangerousCore
         {
             if (IsFSDSlot)
             {
-                EliteDangerousCalculations.FSDSpec spec = EliteDangerousCalculations.FindFSD(ClassOf, RatingOf);
+                EliteDangerousCalculations.FSDSpec spec = EliteDangerousCalculations.FindFSD(ClassOf, RatingOf, ItemFD.ContainsIIC("overcharge"));
 
                 if (spec != null)
                 {
@@ -68,7 +68,6 @@ namespace EliteDangerousCore
 
             return null;
         }
-
 
         public string RatingOf              // null if not rated
         {

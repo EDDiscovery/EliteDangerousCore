@@ -62,7 +62,7 @@ namespace EliteDangerousCore
                 return Economy.High_Tech;
             else
             {
-                System.Diagnostics.Debug.WriteLine($"*** Economy is unknown {fdname}");
+                System.Diagnostics.Trace.WriteLine($"*** Economy is unknown {fdname}");
                 return Economy.Unknown;
             }
         }

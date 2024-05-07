@@ -458,7 +458,7 @@ namespace EliteDangerousCore
         {
             if (shortname.HasChars() && mcmrlist.Values.ToList().Find(x => x.Shortname.Equals(shortname, StringComparison.InvariantCultureIgnoreCase)) != null)
             {
-                System.Diagnostics.Debug.WriteLine("**** Shortname repeat for " + id);
+                System.Diagnostics.Trace.WriteLine("**** Shortname repeat for " + id);
             }
 
             Color colour = Color.Green;

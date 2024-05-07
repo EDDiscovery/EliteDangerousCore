@@ -42,7 +42,7 @@ namespace EliteDangerousCore
                 return value;
             else
             {
-                System.Diagnostics.Debug.WriteLine($"*** Power Play state is unknown {fdname}");
+                System.Diagnostics.Trace.WriteLine($"*** Power Play state is unknown {fdname}");
                 return State.Unknown;
             }
         }

@@ -779,7 +779,7 @@ namespace EliteDangerousCore.Spansh
                 return value;
             else
             {
-                System.Diagnostics.Debug.WriteLine($"*** Unknown Spansh services type {fdname}");
+                System.Diagnostics.Trace.WriteLine($"*** Unknown Spansh services type {fdname}");
                 return StationServices.Unknown;
             }
         }
@@ -816,7 +816,7 @@ namespace EliteDangerousCore.Spansh
                     return kvp.Key;
             }
 
-            System.Diagnostics.Debug.WriteLine($"*** Spansh Reverse lookup government failed {englishname}");
+            System.Diagnostics.Trace.WriteLine($"*** Spansh Reverse lookup government failed {englishname}");
             return Government.Unknown;
         }
 
@@ -853,7 +853,7 @@ namespace EliteDangerousCore.Spansh
                 if (englishname.EqualsIIC(kvp.Value))
                     return kvp.Key;
             }
-            System.Diagnostics.Debug.WriteLine($"*** Spansh Economy Reverse lookup failed {englishname}");
+            System.Diagnostics.Trace.WriteLine($"*** Spansh Economy Reverse lookup failed {englishname}");
             return Economy.Unknown;
         }
 
@@ -880,7 +880,7 @@ namespace EliteDangerousCore.Spansh
                     return kvp.Key;
             }
 
-            System.Diagnostics.Debug.WriteLine($"*** Reverse lookup name types failed {englishname}");
+            System.Diagnostics.Trace.WriteLine($"*** Reverse lookup name types failed {englishname}");
             return StarportTypes.Unknown;
         }
 

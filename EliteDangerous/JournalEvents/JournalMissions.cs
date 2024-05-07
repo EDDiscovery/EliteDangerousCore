@@ -345,7 +345,7 @@ namespace EliteDangerousCore.JournalEvents
                         //$#MinorFaction; has improved in the $#System; system.
                         et.Effect_Localised = et.Effect_Localised.Replace("$#MinorFaction;", fee.Faction).Replace("$#System;", DestinationSystem ?? "Unknown System");
                     }
-                    System.Diagnostics.Debug.WriteLine($"{et.Effect} : {et.Effect_Localised} : {et.Trend}");
+                    //System.Diagnostics.Debug.WriteLine($"{et.Effect} : {et.Effect_Localised} : {et.Trend}");
                 }
             }
         }

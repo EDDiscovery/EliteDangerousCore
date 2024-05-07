@@ -530,7 +530,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (AtmosphereID == EDAtmosphereType.Unknown)
                 {
-                    System.Diagnostics.Debug.WriteLine("*** Atmos not recognised {0} '{1}' '{2}'", Atmosphere, evt["Atmosphere"].Str(), evt["AtmosphereType"].Str());
+                    System.Diagnostics.Trace.WriteLine($"*** Atmos not recognised {Atmosphere} '{evt["Atmosphere"].Str()}' '{evt["AtmosphereType"].Str()}'");
                 }
 
                 JObject composition = evt["Composition"].Object();

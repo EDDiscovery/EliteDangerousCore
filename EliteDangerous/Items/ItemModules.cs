@@ -50,7 +50,7 @@ namespace EliteDangerousCore
 
                     var newmodule = new ShipModule(-1, 0, candidatename, IsVanity(lowername) ? ShipModule.ModuleTypes.VanityType : ShipModule.ModuleTypes.UnknownType);
 
-                    System.Diagnostics.Debug.WriteLine("*** Unknown Module { \"" + lowername + "\", new ShipModule(-1,0, \"" + newmodule.EnglishModName + "\", " + (IsVanity(lowername) ? "ShipModule.ModuleTypes.VanityType" : "ShipModule.ModuleTypes.UnknownType") + " ) },");
+                    System.Diagnostics.Trace.WriteLine("*** Unknown Module { \"" + lowername + "\", new ShipModule(-1,0, \"" + newmodule.EnglishModName + "\", " + (IsVanity(lowername) ? "ShipModule.ModuleTypes.VanityType" : "ShipModule.ModuleTypes.UnknownType") + " ) }, - this will not affect operation but it would be nice to report it to us so we can add it to known module lists");
 
                     synthesisedmodules[lowername] = m = newmodule;                   // lets cache them for completeness..
                 }

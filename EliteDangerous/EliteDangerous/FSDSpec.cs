@@ -178,16 +178,59 @@ namespace EliteDangerousCore
             }
         }
 
-        public static FSDSpec FindFSD(int cls, string rat )     // allow rat to be null.  May be null return if not found
+        public static FSDSpec FindFSD(int cls, string rat, bool overcharge )     // allow rat to be null.  May be null return if not found
         {
-            return rat != null ? FSDList.Find(x => x.FsdClass == cls && x.Rating.Equals(rat, StringComparison.InvariantCultureIgnoreCase)) : null;
+            List<FSDSpec> specs = overcharge ? FSDListOverchargeFSD : FSDListNormalFSD;
+
+            return rat != null ? specs.Find(x => x.FsdClass == cls && x.Rating.Equals(rat, StringComparison.InvariantCultureIgnoreCase)) : null;
         }
 
-        public static List<FSDSpec> FSDList = new List<FSDSpec>(        // verified against website on 5 april 2018..  
+        public static List<FSDSpec> FSDListNormalFSD = new List<FSDSpec>(        // verified against website on 5 april 2018..  
             new FSDSpec[] {                                             // looks same as coriolis 
                           //C    R      pc  lc  mop mfpj
                 new FSDSpec(2,  "E",    2,  11, 48, 0.6),                // coriolis-data: frame_shift_drive.json   2A: fuelmul = 0.012, fuelpower=2
                 new FSDSpec(2,  "D" ,   2,  10, 54, 0.6),                // APP/shipyard/calculations.js does the same function
+                new FSDSpec(2,  "C" ,   2,  8,  60, 0.6),
+                new FSDSpec(2,  "B" ,   2,  10, 75, 0.8),
+                new FSDSpec(2,  "A",    2,  12, 90, 0.9),
+
+                new FSDSpec(3,  "E",    2.15    ,11 ,80,    1.2),
+                new FSDSpec(3,  "D",    2.15    ,10 ,90,    1.2),
+                new FSDSpec(3,  "C" ,   2.15,   8   ,100,   1.2),
+                new FSDSpec(3,  "B",    2.15,   10  ,125    ,1.5),
+                new FSDSpec(3,  "A" ,   2.15    ,12 ,150    ,1.8),
+
+                new FSDSpec(4,  "E",    2.3,    11  ,280,   2),
+                new FSDSpec(4,  "D" ,   2.3,    10, 315 ,2),
+                new FSDSpec(4,  "C"     ,2.3    ,8  ,350,   2),
+                new FSDSpec(4,  "B" ,   2.3 ,10,    438,    2.5),
+                new FSDSpec(4   ,"A",   2.3,    12  ,525    ,3),
+
+                new FSDSpec(5,  "E" ,   2.45,   11, 560 ,3.3),
+                new FSDSpec(5,  "D" ,   2.45    ,10 ,630,   3.3),
+                new FSDSpec(5   ,"C"    ,2.45,  8   ,700    ,3.3),
+                new FSDSpec(5   ,"B"    ,2.45   ,10 ,875    ,4.1),
+                new FSDSpec(5   ,"A"    ,2.45   ,12 ,1050   ,5),
+
+                new FSDSpec(6   ,"E"    ,2.6    ,11 ,960    ,5.3),
+                new FSDSpec(6   ,"D"    ,2.6    ,10 ,1080   ,5.3),
+                new FSDSpec(6   ,"C"    ,2.6    ,8  ,1200   ,5.3),
+                new FSDSpec(6   ,"B"    ,2.6    ,10 ,1500   ,6.6),
+                new FSDSpec(6   ,"A"    ,2.6    ,12 ,1800   ,8),
+
+                new FSDSpec(7,  "E"     ,2.75   ,11 ,1440   ,8.5),
+                new FSDSpec(7   ,"D"    ,2.75   ,10 ,1620   ,8.5),
+                new FSDSpec(7   ,"C"    ,2.75   ,8, 1800    ,8.5),
+                new FSDSpec(7   ,"B"    ,2.75   ,10 ,2250   ,10.6),
+                new FSDSpec(7   ,"A"    ,2.75   ,12 ,2700   ,12.8)
+            }
+        );
+
+        public static List<FSDSpec> FSDListOverchargeFSD = new List<FSDSpec>(        
+            new FSDSpec[] {                                             
+                          //C    R      pc  lc  mop mfpj
+                new FSDSpec(2,  "E",    2,  11, 48, 0.6),                   // TBD
+                new FSDSpec(2,  "D" ,   2,  10, 54, 0.6),               
                 new FSDSpec(2,  "C" ,   2,  8,  60, 0.6),
                 new FSDSpec(2,  "B" ,   2,  10, 75, 0.8),
                 new FSDSpec(2,  "A",    2,  12, 90, 0.9),

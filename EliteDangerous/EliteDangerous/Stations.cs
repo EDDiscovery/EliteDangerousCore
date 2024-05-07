@@ -114,7 +114,7 @@ namespace EliteDangerousCore
                 return value;
             else
             {
-                System.Diagnostics.Debug.WriteLine($"*** Unknown starport type {fdname}");
+                System.Diagnostics.Trace.WriteLine($"*** Unknown starport type {fdname}");
                 return StarportTypes.Unknown;
             }
         }
@@ -158,7 +158,7 @@ namespace EliteDangerousCore
                 return value;
             else
             {
-                System.Diagnostics.Debug.WriteLine($"*** Unknown starport state {fdname}");
+                System.Diagnostics.Trace.WriteLine($"*** Unknown starport state {fdname}");
                 return StarportState.Unknown;
             }
         }

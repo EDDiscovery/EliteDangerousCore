@@ -346,7 +346,7 @@ namespace EliteDangerousCore
 
             if (tabledata.Count > 10000 && System.Environment.ProcessorCount>1)  // a good amount, worth MTing - just in case someone is using this on a potato
             {
-                int threads = Math.Max(System.Environment.ProcessorCount/2,2);   // leave a few processors for other things
+                int threads = Math.Max(System.Environment.ProcessorCount*3/4,2);   // leave a few processors for other things
 
                 CountdownEvent cd = new CountdownEvent(threads);
                 float[] threadprogress = new float[threads];

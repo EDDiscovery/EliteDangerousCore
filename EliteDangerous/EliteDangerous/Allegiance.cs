@@ -45,7 +45,7 @@ namespace EliteDangerousCore
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine($"*** Allegiance unknown {fdname}");
+                System.Diagnostics.Trace.WriteLine($"*** Allegiance unknown {fdname}");
                 return Allegiance.Unknown;
             }
         }

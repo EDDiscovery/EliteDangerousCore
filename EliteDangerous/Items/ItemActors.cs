@@ -33,7 +33,7 @@ namespace EliteDangerousCore
                 return var;
             else
             {
-                System.Diagnostics.Debug.WriteLine("*********** Unknown Actor: {{ \"{0}\", new Actor(\"{1}\") }},", fdname, locname ?? fdname.SplitCapsWordFull());
+                System.Diagnostics.Trace.WriteLine($"*** Unknown Actor: {{ \"{fdname}\", new Actor(\"{locname ?? fdname.SplitCapsWordFull()}\") }},");
                 return null;
             }
         }

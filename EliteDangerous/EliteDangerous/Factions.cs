@@ -56,7 +56,7 @@ namespace EliteDangerousCore
         {
             if (englishname == null)
             {
-                //System.Diagnostics.Debug.WriteLine($"**** No faction state");
+                //System.Diagnostics.Trace.WriteLine($"**** No faction state");
                 return null;
             }
             else if (Enum.TryParse(englishname, true, out State value)) // case insensitive
@@ -65,7 +65,7 @@ namespace EliteDangerousCore
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine($"**** Unknown faction state {englishname}");
+                System.Diagnostics.Trace.WriteLine($"**** Unknown faction state {englishname}");
                 return State.Unknown;
             }
         }
@@ -86,7 +86,7 @@ namespace EliteDangerousCore
         public static void IDSTx()
         {
             foreach (var name in Enum.GetNames(typeof(State)))
-                System.Diagnostics.Debug.WriteLine($".{name}: \"{name.SplitCapsWordFull()}\" @");
+                System.Diagnostics.Trace.WriteLine($".{name}: \"{name.SplitCapsWordFull()}\" @");
         }
     }
 }

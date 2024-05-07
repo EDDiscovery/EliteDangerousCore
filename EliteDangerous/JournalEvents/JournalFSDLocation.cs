@@ -201,24 +201,24 @@ namespace EliteDangerousCore.JournalEvents
 
                 foreach (var x in Factions)     // normalise localised
                 {
-                    if (x.FactionState == FactionDefinitions.State.Unknown)  System.Diagnostics.Debug.WriteLine($"** Unknown faction state {evt["Factions"].ToString()}");
+                    if (x.FactionState == FactionDefinitions.State.Unknown)  System.Diagnostics.Trace.WriteLine($"** Unknown faction state {evt["Factions"].ToString()}");
 
                     x.Happiness_Localised = JournalFieldNaming.CheckLocalisation(x.Happiness_Localised, x.Happiness);
 
                     foreach (ActiveStatesInfo s in x.ActiveStates.EmptyIfNull())
                     {
                         if (s.State == PowerStatesInfo.States.Unknown)
-                            System.Diagnostics.Debug.WriteLine($"*** Unknown active state {evt["Factions"].ToString()}");
+                            System.Diagnostics.Trace.WriteLine($"*** Unknown active state {evt["Factions"].ToString()}");
                     }
                     foreach (PowerStatesInfo s in x.PendingStates.EmptyIfNull())
                     {
                         if (s.State == PowerStatesInfo.States.Unknown)
-                            System.Diagnostics.Debug.WriteLine($"*** Unknown pending state {evt["Factions"].ToString()}");
+                            System.Diagnostics.Trace.WriteLine($"*** Unknown pending state {evt["Factions"].ToString()}");
                     }
                     foreach (PowerStatesInfo s in x.RecoveringStates.EmptyIfNull())
                     {
                         if (s.State == PowerStatesInfo.States.Unknown)
-                            System.Diagnostics.Debug.WriteLine($"*** Unknown recovering state {evt["Factions"].ToString()}");
+                            System.Diagnostics.Trace.WriteLine($"*** Unknown recovering state {evt["Factions"].ToString()}");
                     }
                 }
             }
@@ -250,22 +250,22 @@ namespace EliteDangerousCore.JournalEvents
 
             var cf = evt["Conflicts"]?.ToObject(typeof(ConflictInfo[]), true, false);        // 3.4, allowing for type errors due to Status:"" 
             if (cf is JTokenExtensions.ToObjectError)
-                System.Diagnostics.Debug.WriteLine($"*** Bad conflict status {evt["Conflicts"]?.ToString()}");
+                System.Diagnostics.Trace.WriteLine($"*** Bad conflict status {evt["Conflicts"]?.ToString()}");
             else if (cf != null)
             {
                 Conflicts = (ConflictInfo[])cf;
             }
             else if (evt.Contains("Conflicts"))
-                System.Diagnostics.Debug.WriteLine($"*** Bad decode conflict status {evt["Conflicts"]?.ToString()}");
+                System.Diagnostics.Trace.WriteLine($"*** Bad decode conflict status {evt["Conflicts"]?.ToString()}");
 
 
             var th = evt["ThargoidWar"]?.ToObject(typeof(ThargoidWar), false, false);  // Odyssey update 15
             if (th is JTokenExtensions.ToObjectError)
-                System.Diagnostics.Debug.WriteLine($"*** Bad thargoid status {evt["ThargoidWar"]?.ToString()}");
+                System.Diagnostics.Trace.WriteLine($"*** Bad thargoid status {evt["ThargoidWar"]?.ToString()}");
             else if (th != null)
                 ThargoidSystemState = (ThargoidWar)th;
             else if ( evt.Contains("ThargoidWar"))
-               System.Diagnostics.Debug.WriteLine($"*** Bad thargoid status {evt["ThargoidWar"]?.ToString()}");
+               System.Diagnostics.Trace.WriteLine($"*** Bad thargoid status {evt["ThargoidWar"]?.ToString()}");
 
         }
 

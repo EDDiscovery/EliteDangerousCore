@@ -322,7 +322,7 @@ namespace EliteDangerousCore
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine("*** Cannot add scan to system " + (he.journalEntry as JournalScan).BodyName + " in " + he.System.Name);
+                        System.Diagnostics.Debug.WriteLine("HistoryList Cannot add scan to system " + (he.journalEntry as JournalScan).BodyName + " in " + he.System.Name);
                     }
                 }
             }

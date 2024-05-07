@@ -68,10 +68,10 @@ namespace EliteDangerousCore
         // maps CrimeType FDname to an english string
         public static string ToEnglish( string fdname)
         {
-            //foreach( var kvp in crimesFDToEnglish) System.Diagnostics.Debug.WriteLine($"[\"{kvp.Key.ToLowerInvariant()}\"] = \"{kvp.Value}\",");
+            //foreach( var kvp in crimesFDToEnglish) System.Diagnostics.Trace.WriteLine($"[\"{kvp.Key.ToLowerInvariant()}\"] = \"{kvp.Value}\",");
             if (fdname == null)
             {
-                System.Diagnostics.Debug.WriteLine($"**** NULL crime type error");
+                System.Diagnostics.Trace.WriteLine($"**** NULL crime type error");
                 return "Null Crime Type - ERROR";
             }
             else if (crimesFDToEnglish.TryGetValue(fdname.ToLowerInvariant(), out string english))
@@ -80,7 +80,7 @@ namespace EliteDangerousCore
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine($"**** Unknown crime type {fdname}");
+                System.Diagnostics.Trace.WriteLine($"**** Unknown crime type {fdname}");
                 return fdname.SplitCapsWordFull();
             }
         }
@@ -95,7 +95,7 @@ namespace EliteDangerousCore
         public static void IDSTx()
         {
             foreach (var kvp in crimesFDToEnglish) 
-                System.Diagnostics.Debug.WriteLine($".{kvp.Key.ToLowerInvariant()}: \"{ToEnglish(kvp.Key)}\" @");
+                System.Diagnostics.Trace.WriteLine($".{kvp.Key.ToLowerInvariant()}: \"{ToEnglish(kvp.Key)}\" @");
         }
     }
 }

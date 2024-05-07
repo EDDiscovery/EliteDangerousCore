@@ -53,7 +53,7 @@ namespace EliteDangerousCore
                 return value;
             else
             {
-                System.Diagnostics.Debug.WriteLine($"**** Unknown government {fdname}");
+                System.Diagnostics.Trace.WriteLine($"**** Unknown government {fdname}");
                 return Government.Unknown;
             }
         }
