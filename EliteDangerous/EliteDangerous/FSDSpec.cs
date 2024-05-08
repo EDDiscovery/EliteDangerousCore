@@ -90,24 +90,14 @@ namespace EliteDangerousCore
                 return (basev + FSDGuardianBoosterRange) * boost;
             }
 
-            // Eahlstan special, account for small fuel loads
             public double JumpRange(int currentCargo, double unladenMassHullModules, double fuel, double boost)
             {
                 double mass = currentCargo + unladenMassHullModules + fuel;
                 double massf = OptimalMass / mass;
                 double fuelmultiplier = (LinearConstant * 0.001);
-                if (fuel >= MaxFuelPerJump)
-                { 
-                    double powerf = Math.Pow(MaxFuelPerJump / fuelmultiplier, 1 / PowerConstant);
-                    double basev = powerf * massf;
-                    return (basev + FSDGuardianBoosterRange) * boost;
-                }
-                else
-                {
-                    double basemaxrange = (OptimalMass / mass) * Math.Pow((MaxFuelPerJump * 1000 / LinearConstant), (1 / PowerConstant));
-                    double boostfactor = Math.Pow((basemaxrange / (basemaxrange + FSDGuardianBoosterRange)), PowerConstant);
-                    return (Math.Pow((fuel / (boostfactor * fuelmultiplier)), (1 / PowerConstant)) * massf) * boost;
-                }
+                double powerf = Math.Pow(Math.Min(fuel, MaxFuelPerJump) / fuelmultiplier, 1 / PowerConstant); //important: Use fuel value instead of MFPJ in case fuel level is below MFPJ
+                double basev = powerf * massf;
+                return (basev + FSDGuardianBoosterRange) * boost;                
             }
 
             public class JumpInfo
