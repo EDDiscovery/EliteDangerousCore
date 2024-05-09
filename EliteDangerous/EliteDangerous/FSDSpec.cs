@@ -140,7 +140,7 @@ namespace EliteDangerousCore
                 for (int idx = 0; idx < jumps; idx++)   // if any more jumps past the first
                 {
                     mass += MaxFuelPerJump;
-                    d += Math.Pow(MaxFuelPerJump / (LinearConstant * 0.001), 1 / PowerConstant) * OptimalMass / mass + FSDGuardianBoosterRange;
+                    d += Math.Pow(Math.Min(fuel, MaxFuelPerJump) / (LinearConstant * 0.001), 1 / PowerConstant) * OptimalMass / mass + FSDGuardianBoosterRange;
                 }
 
                 return d;
@@ -151,7 +151,7 @@ namespace EliteDangerousCore
             {
                 double mass = unladenmass + cargo + fuel;  // weight
 
-                double basemaxrange = (OptimalMass / mass) * Math.Pow((MaxFuelPerJump * 1000 / LinearConstant), (1 / PowerConstant));
+                double basemaxrange = (OptimalMass / mass) * Math.Pow((Math.Min(fuel, MaxFuelPerJump) * 1000 / LinearConstant), (1 / PowerConstant));
                 double boostfactor = Math.Pow((basemaxrange / (basemaxrange + FSDGuardianBoosterRange)), PowerConstant);
 
                 return boostfactor * LinearConstant * 0.001 * Math.Pow(((distance / boost) * mass / OptimalMass), PowerConstant);
