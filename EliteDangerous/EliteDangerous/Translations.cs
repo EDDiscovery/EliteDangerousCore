@@ -251,6 +251,8 @@ namespace EliteDangerousCore
         JournalEntry_Near, // Near:
         JournalEntry_BartenderMaterials, 
         JournalEntry_Pilot, //Pilot: 
+        JournalEntry_ShipRedeem,
+        JournalEntry_ShipyardRedeem,
 
 
         JournalLocOrJump_Type, // "Type " @

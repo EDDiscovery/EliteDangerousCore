@@ -144,7 +144,7 @@ namespace EliteDangerousCore
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("Unknown Getter Ship Name:" + inname);
+                System.Diagnostics.Trace.WriteLine("*** Unknown Ship Name:" + inname);
                 return inname.SplitCapsWordFull();
             }
         }

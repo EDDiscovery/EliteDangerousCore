@@ -71,8 +71,8 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string StationName { get; set; }
-        public string StationType { get; set; }             // Friendly name, used in action packs, may be null
-        public StationDefinitions.StarportTypes FDStationType { get; set; }           // may be null
+        public string StationType { get; set; } // english, only on later events, else Unknown
+        public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
         public StationDefinitions.StarportState StationState { get; set; }            // fdname, only present in stations not normal - UnderAttack, Damaged, UnderRepairs. None otherwise
         public string StarSystem { get; set; }
         public long? SystemAddress { get; set; }
@@ -184,8 +184,8 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string StationName { get; set; }
-        public string StationType { get; set; } // friendly
-        public StationDefinitions.StarportTypes FDStationType { get; set; } 
+        public string StationType { get; set; } // english, only on later events, else Unknown
+        public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
         public long? MarketID { get; set; }
 
         public override void FillInformation(out string info, out string detailed)
@@ -211,8 +211,8 @@ namespace EliteDangerousCore.JournalEvents
         public string StationName { get; set; } 
         public string Reason { get; set; }      // friendly reason make cleaner
         public string FDReason { get; set; }    // frontier ID
-        public string StationType { get; set; } // friendly, in english
-        public StationDefinitions.StarportTypes FDStationType { get; set; }  
+        public string StationType { get; set; } // english, only on later events, else Unknown
+        public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
         public long? MarketID { get; set; }
 
         public override void FillInformation(out string info, out string detailed)
@@ -236,8 +236,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public string StationName { get; set; }
         public int LandingPad { get; set; }
-        public string StationType { get; set; } // friendly
-        public StationDefinitions.StarportTypes FDStationType { get; set; }   
+        public string StationType { get; set; } // english, only on later events, else Unknown
+        public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
         public long? MarketID { get; set; }
 
         public override void FillInformation(out string info, out string detailed)
@@ -260,8 +260,8 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string StationName { get; set; }
-        public string StationType { get; set; } // friendly
-        public StationDefinitions.StarportTypes FDStationType { get; set; }  
+        public string StationType { get; set; } // english, only on later events, else Unknown
+        public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
         public long? MarketID { get; set; }
         public JournalDocked.LandingPadList LandingPads { get; set; } // 4.0 update 5
 
@@ -284,8 +284,8 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string StationName { get; set; }
-        public string StationType { get; set; } // friendly
-        public StationDefinitions.StarportTypes FDStationType { get; set; }  
+        public string StationType { get; set; } // english, only on later events, else Unknown
+        public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
         public long? MarketID { get; set; }
 
         public override void FillInformation(out string info, out string detailed)
@@ -310,8 +310,8 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string StationName { get; set; }
-        public string StationType { get; set; } // friendly, may be null
-        public StationDefinitions.StarportTypes FDStationType { get; set; }   // may be null
+        public string StationType { get; set; } // english, only on later events, else Unknown
+        public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
         public long? MarketID { get; set; }
 
         public bool? Taxi { get; set; }             //4.0 alpha 4

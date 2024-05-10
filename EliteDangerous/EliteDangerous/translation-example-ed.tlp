@@ -1159,7 +1159,7 @@ SECTION StarportStates
 .UnderAttack: "Under Attack" @
 
 SECTION StarportTypes
-
+.Unknown: "Unknown" @
 .AsteroidBase: "Asteroid Base" @
 .Coriolis: "Coriolis" @
 .FleetCarrier: "Fleet Carrier" @
@@ -1169,7 +1169,7 @@ SECTION StarportTypes
 .Orbis: "Orbis" @
 .Outpost: "Outpost" @
 .OnFootSettlement: "On Foot Settlement" @
-.SurfaceStation: "Surface station" @
+.SurfaceStation: "Surface Station" @
 .CraterOutpost: "Crater Outpost" @
 .CraterPort: "Crater Port" @
 
@@ -1427,7 +1427,9 @@ SECTION ModulePartNames
 .Xeno_Scanner: "Xeno Scanner" @
 .Xeno_Scanner_MK_2: "Xeno Scanner MK 2" @
 .Advanced_Xeno_Scanner: "Advanced Xeno Scanner" @
-.Hyperdrive_Overcharged: "Hyperdrive Overcharged" @
+.Corrosion_Resistant_Cargo_Rack: "Corrosion Resistant Cargo Rack" @
+.Hyperdrive_Overcharge: "Hyperdrive Overcharge" @
+
 
 SECTION ShipSlots
 
@@ -1566,3 +1568,45 @@ SECTION ShipSlots
 .TinyHardpoint8: "Utility Mount 8" @
 .VesselVoice: "Vessel Voice" @
 .WeaponColour: "Weapon Colour" @
+
+Section StationServices
+.Unknown: "Unknown" @
+.ApexInterstellar: "Apex Interstellar" @
+.Autodock: "Autodock" @
+.Bartender: "Bartender" @
+.BlackMarket: "Black Market" @
+.Contacts: "Contacts" @
+.CrewLounge: "Crew Lounge" @
+.Dock: "Dock" @
+.Workshop: "Workshop" @
+.FleetCarrierAdministration: "Fleet Carrier Administration" @
+.FleetCarrierFuel: "Fleet Carrier Fuel" @
+.FleetCarrierManagement: "Fleet Carrier Management" @
+.FleetCarrierVendor: "Fleet Carrier Vendor" @
+.FlightController: "Flight Controller" @
+.FrontlineSolutions: "Frontline Solutions" @
+.InterstellarFactorsContact: "Interstellar Factors Contact" @
+.Initiatives: "Initiatives" @
+.Livery: "Livery" @
+.Market: "Market" @
+.MaterialTrader: "Material Trader" @
+.Missions: "Missions" @
+.MissionsGenerated: "Missions Generated" @
+.OnDockMission: "On Dock Mission" @
+.Outfitting: "Outfitting" @
+.PioneerSupplies: "Pioneer Supplies" @
+.Powerplay: "Powerplay" @
+.RedemptionOffice: "Redemption Office" @
+.Refuel: "Refuel" @
+.Repair: "Repair" @
+.Restock: "Restock" @
+.SearchAndRescue: "Search And Rescue" @
+.Shipyard: "Shipyard" @
+.Shop: "Shop" @
+.SocialSpace: "Social Space" @
+.StationMenu: "Station Menu" @
+.StationOperations: "Station Operations" @
+.TechnologyBroker: "Technology Broker" @
+.Tuning: "Tuning" @
+.UniversalCartographics: "Universal Cartographics" @
+.VistaGenomics: "Vista Genomics" @

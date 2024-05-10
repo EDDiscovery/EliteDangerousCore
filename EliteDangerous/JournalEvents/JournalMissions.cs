@@ -230,7 +230,7 @@ namespace EliteDangerousCore.JournalEvents
             return BaseUtils.FieldBuilder.Build(
                                         "Influence: ".T(EDCTx.JournalMissionAccepted_Influence), Influence,
                                         "Reputation: ".T(EDCTx.JournalMissionAccepted_Reputation), Reputation,
-                                        "Deliver: ".T(EDCTx.JournalMissionAccepted_Deliver), CommodityLocalised,
+                                        "Deliver: ".T(EDCTx.JournalMissionAccepted_Deliver), FriendlyCommodity,
                                         "Target: ".T(EDCTx.JournalEntry_Target), TargetLocalised,
                                         "Type: ".T(EDCTx.JournalEntry_Type), TargetTypeFriendly,
                                         "Target Faction: ".T(EDCTx.JournalEntry_TargetFaction), TargetFaction,

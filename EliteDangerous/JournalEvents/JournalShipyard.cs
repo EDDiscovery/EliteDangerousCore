@@ -111,9 +111,10 @@ namespace EliteDangerousCore.JournalEvents
         {
             ShipTypeFD = JournalFieldNaming.NormaliseFDShipName(evt["ShipType"].Str());
             ShipType = JournalFieldNaming.GetBetterShipName(ShipTypeFD);
+            ShipType_Localised = evt["ShipType_Localised"].Str().Alt(ShipType);
             ShipPrice = evt["ShipPrice"].Long();
 
-            StoreOldShipFD = evt["StoreOldShip"].StrNull();
+            StoreOldShipFD = evt["StoreOldShip"].StrNull();     // does not have localisation
             if (StoreOldShipFD != null)
             {
                 StoreOldShipFD = JournalFieldNaming.NormaliseFDShipName(StoreOldShipFD);
@@ -122,7 +123,7 @@ namespace EliteDangerousCore.JournalEvents
 
             StoreOldShipId = evt["StoreShipID"].ULongNull();
 
-            SellOldShipFD = evt["SellOldShip"].StrNull();
+            SellOldShipFD = evt["SellOldShip"].StrNull();      // does not have localisation
             if (SellOldShipFD != null)
             {
                 SellOldShipFD = JournalFieldNaming.NormaliseFDShipName(SellOldShipFD);
@@ -137,7 +138,8 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string ShipTypeFD { get; set; }
-        public string ShipType { get; set; }
+        public string ShipType { get; set; }            // english
+        public string ShipType_Localised { get; set; }  // only present on later events
         public long ShipPrice { get; set; }
 
         public string StoreOldShipFD { get; set; }      // may be null
@@ -185,11 +187,13 @@ namespace EliteDangerousCore.JournalEvents
         {
             ShipFD = JournalFieldNaming.NormaliseFDShipName(evt["ShipType"].Str());
             ShipType = JournalFieldNaming.GetBetterShipName(ShipFD);
+            ShipType_Localised = evt["ShipType_Localised"].Str().Alt(ShipType);
             ShipId = evt["NewShipID"].ULong();
         }
 
-        public string ShipType { get; set; }
         public string ShipFD { get; set; }
+        public string ShipType { get; set; }    // english
+        public string ShipType_Localised { get; set; } // only present on later events
         public ulong ShipId { get; set; }
 
         public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
@@ -213,6 +217,7 @@ namespace EliteDangerousCore.JournalEvents
             MarketID = evt["MarketID"].LongNull();
             ShipTypeFD = JournalFieldNaming.NormaliseFDShipName(evt["ShipType"].Str());
             ShipType = JournalFieldNaming.GetBetterShipName(ShipTypeFD);
+            ShipType_Localised = evt["ShipType_Localised"].Str().Alt(ShipType);
             SellShipId = evt["SellShipID"].ULong();
             ShipPrice = evt["ShipPrice"].Long();
             System = evt["System"].Str();
@@ -227,7 +232,8 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string ShipTypeFD { get; set; }
-        public string ShipType { get; set; }
+        public string ShipType { get; set; }    // english
+        public string ShipType_Localised { get; set; } // only present on later events
         public ulong SellShipId { get; set; }
         public long ShipPrice { get; set; }
         public string System { get; set; }      // may be empty
@@ -275,9 +281,10 @@ namespace EliteDangerousCore.JournalEvents
         {
             ShipFD = JournalFieldNaming.NormaliseFDShipName(evt["ShipType"].Str());
             ShipType = JournalFieldNaming.GetBetterShipName(ShipFD);
+            ShipType_Localised = evt["ShipType_Localised"].Str().Alt(ShipType);
             ShipId = evt["ShipID"].ULong();
 
-            StoreOldShip = StoreOldShipFD = evt["StoreOldShip"].Str();      // set to evt value first
+            StoreOldShip = StoreOldShipFD = evt["StoreOldShip"].Str();      // does not have localisation
             
             if (StoreOldShip.HasChars())    // if we have something, normalise
             {
@@ -291,7 +298,8 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string ShipFD { get; set; }
-        public string ShipType { get; set; }
+        public string ShipType { get; set; }        // english name
+        public string ShipType_Localised { get; set; }       // only later events
         public ulong ShipId { get; set; }
 
         public string StoreOldShipFD { get; set; }
@@ -320,6 +328,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             ShipTypeFD = JournalFieldNaming.NormaliseFDShipName(evt["ShipType"].Str());
             ShipType = JournalFieldNaming.GetBetterShipName(ShipTypeFD);
+            ShipType_Localised = evt["ShipType_Localised"].Str().Alt(ShipType);
             ShipId = evt["ShipID"].ULong();
 
             FromSystem = evt["System"].Str();
@@ -338,6 +347,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string ShipTypeFD { get; set; }
         public string ShipType { get; set; }
+        public string ShipType_Localised { get; set; }       // only later events
         public ulong ShipId { get; set; }
         public string FromSystem { get; set; }
         public double Distance { get; set; }
@@ -464,13 +474,15 @@ namespace EliteDangerousCore.JournalEvents
         {
             ShipTypeFD = JournalFieldNaming.NormaliseFDShipName(evt["ShipType"].Str());
             ShipType = JournalFieldNaming.GetBetterShipName(ShipTypeFD);
+            ShipType_Localised = evt["ShipType_Localised"].Str().Alt(ShipType);
             System = evt["System"].Str();
             SellShipId = evt["SellShipId"].ULong();
             ShipPrice = evt["ShipPrice"].Long();
         }
 
         public string ShipTypeFD { get; set; }
-        public string ShipType { get; set; }
+        public string ShipType { get; set; }    // english
+        public string ShipType_Localised { get; set; }    // only on later events
         public string System { get; set; }
         public ulong SellShipId { get; set; }
         public long ShipPrice { get; set; }
@@ -488,6 +500,55 @@ namespace EliteDangerousCore.JournalEvents
         public override void FillInformation(out string info, out string detailed)
         {
             info = BaseUtils.FieldBuilder.Build("Ship: ".T(EDCTx.JournalEntry_Ship), ShipType, "System: ".T(EDCTx.JournalEntry_System), System, "Price: ; cr;N0".T(EDCTx.JournalEntry_Price), ShipPrice);
+            detailed = "";
+        }
+    }
+
+    
+    [JournalEntryType(JournalTypeEnum.ShipyardRedeem)]
+    public class JournalShipyardRedeem : JournalEntry
+    {
+        public JournalShipyardRedeem(JObject evt) : base(evt, JournalTypeEnum.ShipyardRedeem)
+        {
+            ShipFD = JournalFieldNaming.NormaliseFDShipName(evt["ShipType"].Str());
+            ShipType = JournalFieldNaming.GetBetterShipName(ShipFD);
+            ShipType_Localised = evt["ShipType_Localised"].Str().Alt(ShipType);
+            MarketID = evt["MarketID"].Long();
+            BundleID = evt["BundleID"].Long();
+        }
+
+        public long MarketID { get; set; }
+        public long BundleID { get; set; }
+        public string ShipType { get; set; }    // english
+        public string ShipFD { get; set; }
+        public string ShipType_Localised { get; set; }
+
+        public override void FillInformationExtended(JournalEntry.FillInformationData fid, out string info, out string detailed)
+        {
+            info = string.Format("Redeem ship {0} at {1}, available to deploy".T(EDCTx.JournalEntry_ShipyardRedeem), ShipType, fid.WhereAmI);
+            detailed = "";
+        }
+    }
+
+    [JournalEntryType(JournalTypeEnum.ShipRedeemed)]
+    public class JournalShipRedeemed : JournalEntry
+    {
+        public JournalShipRedeemed(JObject evt) : base(evt, JournalTypeEnum.ShipRedeemed)
+        {
+            ShipFD = JournalFieldNaming.NormaliseFDShipName(evt["ShipType"].Str());
+            ShipType = JournalFieldNaming.GetBetterShipName(ShipFD);
+            ShipType_Localised = evt["ShipType_Localised"].Str().Alt(ShipType);
+            ShipId= evt["NewShipID"].ULong();
+        }
+
+        public string ShipType { get; set; }    // english
+        public string ShipFD { get; set; }
+        public string ShipType_Localised { get; set; }
+        public ulong ShipId { get; set; }
+
+        public override void FillInformationExtended(JournalEntry.FillInformationData fid, out string info, out string detailed)
+        {
+            info = string.Format("Redeemed and deployed ship {0} at {1} into shipyard".T(EDCTx.JournalEntry_ShipRedeem), ShipType, fid.WhereAmI);
             detailed = "";
         }
     }

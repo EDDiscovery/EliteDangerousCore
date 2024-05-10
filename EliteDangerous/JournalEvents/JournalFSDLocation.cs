@@ -351,12 +351,15 @@ namespace EliteDangerousCore.JournalEvents
             // base class does StarSystem/StarPos/Faction/Powerplay
 
             Docked = evt["Docked"].Bool();
-            StationName = evt["StationName"].Str();
-            string st = evt["StationType"].StrNull();
-            if (st!=null && st.Length == 0 )        // seem empty ones
-                st = null;
-            FDStationType = StationDefinitions.StarportTypeToEnum(st);    // may not be there
-            StationType = StationDefinitions.ToEnglish(FDStationType);
+            if (Docked)
+            {
+                StationName = evt["StationName"].Str();
+                string st = evt["StationType"].StrNull();
+                if (st != null && st.Length == 0)        // seem empty ones
+                    st = null;
+                FDStationType = StationDefinitions.StarportTypeToEnum(st);    // may not be there
+                StationType = StationDefinitions.ToEnglish(FDStationType);
+            }
             Body = evt["Body"].Str();
             BodyID = evt["BodyID"].IntNull();
             BodyType = JournalFieldNaming.NormaliseBodyType(evt["BodyType"].Str());
@@ -404,9 +407,9 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public bool Docked { get; set; }
-        public string StationName { get; set; }
-        public string StationType { get; set; } // friendly name
-        public StationDefinitions.StarportTypes FDStationType { get; set; } // fdname
+        public string StationName { get; set; } // will be null if not docked, 
+        public string StationType { get; set; } // will be null if not docked, english name
+        public StationDefinitions.StarportTypes FDStationType { get; set; } // will be null if not docked, fdname
         public string Body { get; set; }
         public int? BodyID { get; set; }
         public string BodyType { get; set; }
