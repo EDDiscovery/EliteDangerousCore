@@ -260,6 +260,8 @@ SECTION JournalTypeEnum
 .ModuleBuyAndStore: "Module Buy And Store" => "Modul kaufen und lagern"
 .ScanBaryCentre: "Scan Bary Centre" => "Baryzentrumsscan"
 .NavRouteClear: "Nav Route Clear" => "Navroute leeren"
+.ShipRedeemed: "Ship Redeemed" @
+.ShipyardRedeem: "Shipyard Redeem" @
 
 SECTION JournalCargo
 
@@ -1098,6 +1100,8 @@ SECTION JournalEntry
 .Mods: "Mods: " => "Mods"
 .Class: "Class: " => "Klasse"
 .Pilot: "Pilot: " => "Pilot"
+.ShipRedeem: "Redeemed and deployed ship {0} at {1} into shipyard" @
+.ShipyardRedeem: "Redeem ship {0} at {1}, available to deploy" @
 
 SECTION JournalCarrierJump
 
