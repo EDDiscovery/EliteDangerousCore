@@ -1032,7 +1032,6 @@ namespace EliteDangerousCore
             { "int_hyperdrive_size2_class1_free", new ShipModule(128666637,2.5,0.16,"OptMass:48t","Hyperdrive Class 2 Rating E",ShipModule.ModuleTypes.FrameShiftDrive) },
 
 
-            { "int_hyperdrive_overcharge_size3_class4", new ShipModule(129030583, 5, 0.38, "", "Hyperdrive Overcharge Class 3 Rating B", ShipModule.ModuleTypes.FrameShiftDrive ) },
             { "int_hyperdrive_overcharge_size2_class1", new ShipModule(129030577, 2.5, 0.2, "OptMass:60t, SpeedIncrease:25%, AccelerationRate:0.08 , HeatGenerationRate: , ControlInterference:0.25", "Hyperdrive Overcharge Class 2 Rating E", ShipModule.ModuleTypes.FrameShiftDrive ) },
             { "int_hyperdrive_overcharge_size2_class2", new ShipModule(129030578, 2.5, 0.25, "OptMass:90t, SpeedIncrease:142%, AccelerationRate:0.09 , HeatGenerationRate: , ControlInterference:0.24", "Hyperdrive Overcharge Class 2 Rating D", ShipModule.ModuleTypes.FrameShiftDrive ) },
             { "int_hyperdrive_overcharge_size2_class3", new ShipModule(129030487,2.5,0.25,"OptMass:90t, SpeedIncrease:142%, AccelerationRate: 0.09, HeatGenerationRate: 0.41, ControlInterference:0.24","Hyperdrive Overcharge Class 2 Rating C",ShipModule.ModuleTypes.FrameShiftDrive) },
