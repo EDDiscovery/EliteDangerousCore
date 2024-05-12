@@ -1381,7 +1381,6 @@ SECTION ModulePartNames
 .Mine_Launcher: "Mine Launcher" @
 .Mining_Abrasion_Blaster: "Mining Abrasion Blaster" @
 .Mining_Seismic_Charge_Warhead: "Mining Seismic Charge Warhead" @
-.Mining_Sub_Surface_Displacement_Missile: "Mining Sub Surface Displacement Missile" @
 .Mining_Subsurface_Displacement_Missile: "Mining Subsurface Displacement Missile" @
 .Mining_Laser: "Mining Laser" @
 .AX_Dumbfire_Missile: "AX Dumbfire Missile" @
@@ -1409,8 +1408,6 @@ SECTION ModulePartNames
 .Power_Distributor: "Power Distributor" @
 .Powerplant: "Powerplant" @
 .Pulse_Laser: "Pulse Laser" @
-.Pulse_Wave_scanner_Size_0: "Pulse Wave scanner Size 0" @
-.Pulse_Wave_sscanner_Size_0: "Pulse Wave sscanner Size 0" @
 .Pulse_Wave_scanner: "Pulse Wave scanner" @
 .Railgun: "Railgun" @
 .Refinery: "Refinery" @

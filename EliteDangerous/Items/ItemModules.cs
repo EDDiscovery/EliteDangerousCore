@@ -1282,9 +1282,9 @@ namespace EliteDangerousCore
             { "hpt_mining_seismchrgwarhd_fixed_medium", new ShipModule(128915460,4,1.2,"Ammo:72/1, Damage:15, Range:3000m, Speed:350m/s, ThermL:3.6","Mining Seismic Charge Warhead Fixed Medium",ShipModule.ModuleTypes.SeismicChargeLauncher) }, // EDDI
             { "hpt_mining_seismchrgwarhd_turret_medium", new ShipModule(128915461,4,1.2,"Ammo:72/1, Damage:15, Range:3000m, Speed:350m/s, ThermL:3.6","Mining Seismic Charge Warhead Turret Medium",ShipModule.ModuleTypes.SeismicChargeLauncher) },
 
-            { "hpt_mining_subsurfdispmisle_fixed_small", new ShipModule(128915454,2,0.42,"Ammo:32/1, Damage:5, Range:3000m, Speed:550m/s, Reload:2s, ThermL:2.2","Mining Sub Surface Displacement Missile Fixed Small",ShipModule.ModuleTypes.Sub_SurfaceDisplacementMissile) }, // EDDI
+            { "hpt_mining_subsurfdispmisle_fixed_small", new ShipModule(128915454,2,0.42,"Ammo:32/1, Damage:5, Range:3000m, Speed:550m/s, Reload:2s, ThermL:2.2","Mining Subsurface Displacement Missile Fixed Small",ShipModule.ModuleTypes.Sub_SurfaceDisplacementMissile) }, // EDDI
             { "hpt_mining_subsurfdispmisle_turret_small", new ShipModule(128915455,2,0.53,"Ammo:32/1, Damage:5, Range:3000m, Speed:550m/s, Reload:2s, ThermL:2.2","Mining Subsurface Displacement Missile Turret Small",ShipModule.ModuleTypes.Sub_SurfaceDisplacementMissile) },
-            { "hpt_mining_subsurfdispmisle_fixed_medium", new ShipModule(128915456,4,1.01,"Ammo:96/1, Damage:5, Range:3000m, Speed:550m/s, Reload:2s, ThermL:2.9","Mining Sub Surface Displacement Missile Fixed Medium",ShipModule.ModuleTypes.Sub_SurfaceDisplacementMissile) },
+            { "hpt_mining_subsurfdispmisle_fixed_medium", new ShipModule(128915456,4,1.01,"Ammo:96/1, Damage:5, Range:3000m, Speed:550m/s, Reload:2s, ThermL:2.9","Mining Subsurface Displacement Missile Fixed Medium",ShipModule.ModuleTypes.Sub_SurfaceDisplacementMissile) },
             { "hpt_mining_subsurfdispmisle_turret_medium", new ShipModule(128915457,4,0.93,"Ammo:96/1, Damage:5, Range:3000m, Speed:550m/s, Reload:2s, ThermL:2.9","Mining Subsurface Displacement Missile Turret Medium",ShipModule.ModuleTypes.Sub_SurfaceDisplacementMissile) },
 
             // Mining lasers
@@ -1536,10 +1536,10 @@ namespace EliteDangerousCore
 
             // Pulse wave Scanner
 
-            { "hpt_mrascanner_size0_class1", new ShipModule(128915718,1.3,0.2,null,"Pulse Wave scanner Size 0 Rating E",ShipModule.ModuleTypes.PulseWaveAnalyser) },    // EDDI
-            { "hpt_mrascanner_size0_class2", new ShipModule(128915719,1.3,0.4,null,"Pulse Wave sscanner Size 0 Rating D",ShipModule.ModuleTypes.PulseWaveAnalyser) },
-            { "hpt_mrascanner_size0_class3", new ShipModule(128915720,1.3,0.8,null,"Pulse Wave scanner Size 0 Rating C",ShipModule.ModuleTypes.PulseWaveAnalyser) },
-            { "hpt_mrascanner_size0_class4", new ShipModule(128915721,1.3,1.6,null,"Pulse Wave scanner Size 0 Rating B",ShipModule.ModuleTypes.PulseWaveAnalyser) },
+            { "hpt_mrascanner_size0_class1", new ShipModule(128915718,1.3,0.2,null,"Pulse Wave scanner Rating E",ShipModule.ModuleTypes.PulseWaveAnalyser) },    // EDDI
+            { "hpt_mrascanner_size0_class2", new ShipModule(128915719,1.3,0.4,null,"Pulse Wave scanner Rating D",ShipModule.ModuleTypes.PulseWaveAnalyser) },
+            { "hpt_mrascanner_size0_class3", new ShipModule(128915720,1.3,0.8,null,"Pulse Wave scanner Rating C",ShipModule.ModuleTypes.PulseWaveAnalyser) },
+            { "hpt_mrascanner_size0_class4", new ShipModule(128915721,1.3,1.6,null,"Pulse Wave scanner Rating B",ShipModule.ModuleTypes.PulseWaveAnalyser) },
             { "hpt_mrascanner_size0_class5", new ShipModule(128915722,1.3,3.2,null,"Pulse Wave scanner Rating A",ShipModule.ModuleTypes.PulseWaveAnalyser) },
 
             // Rail guns
