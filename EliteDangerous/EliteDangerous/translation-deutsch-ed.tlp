@@ -158,8 +158,8 @@ SECTION MaterialCommodityMicroResourceType
 .basicconductors: "Basic Conductors" => "Einfache Leiter"
 .chemicalstorageunits: "Chemical Storage Units" => "Lagerungseinheiten für Chemiestoffe"
 .compactcomposites: "Compact Composites" => "Kompaktkomposite"
-.crystalshards: "Crystal Shards" => "Kristallscherben"
-.gridresistors: "Grid Resistors" => "Gitterwiderstände"
+.crystalshards: "Crystal Shards" => "Kristallfragmente"
+.gridresistors: "Grid Resistors" => "Netzwiderstände"
 .heatconductionwiring: "Heat Conduction Wiring" => "Wärmeleitungsverdrahtung"
 .mechanicalscrap: "Mechanical Scrap" => "Mechanischer Schrott"
 .salvagedalloys: "Salvaged Alloys" => "Geborgene Legierungen"
@@ -864,7 +864,7 @@ SECTION MaterialCommodityMicroResourceType
 .tg_abrasion02: "Phasing Membrane Residue" => "Synchronisierungsmembranüberrest"
 .heatexposurespecimen: "Heat Exposure Specimen" => "Hitzebehandeltes Exemplar"
 .tg_causticcrystal: "Caustic Crystal" => "Ätzender Kristall"
-.tg_causticshard: "Caustic Shard" => "Ätzende Scherbe"
+.tg_causticshard: "Caustic Shard" => "Ätzendes Fragment"
 .tg_causticgeneratorparts: "Corrosive Mechanisms" => "Korrosiver Mechanismus"
 .tg_shutdowndata: "Massive Energy Surge Analytics" => "Analyse einer massiven Energiewelle"
 .tg_interdictiondata: "Thargoid Interdiction Telemetry" => "Thargoid Unterbrechungstelemetrie"
@@ -1013,598 +1013,598 @@ SECTION Signals
 
 SECTION Crimes
 
-.assault: "Assault" @
-.collidedatspeedinnofirezone: "Collided at speed in a no fire zone" @
-.collidedatspeedinnofirezone_hulldamage: "Collided at speed in a no fire zone resulting in hull damage" @
-.disobeypolice: "Disobeyed a order from the police" @
-.dockingmajorblockingairlock: "Blocking an airlock" @
-.dockingmajorblockinglandingpad: "Blocking a landing pad" @
-.dockingmajortresspass: "Tresspass" @
-.dockingminorblockingairlock: "Minor blocking of an airlock" @
-.dockingminorblockinglandingpad: "Minor blocking of a landing pad" @
-.dockingminortresspass: "Minor tresspass" @
-.dumpingdangerous: "Ejecting goods in a dangerous place" @
-.dumpingnearstation: "Ejecting goods near station" @
-.fireinnofirezone: "Firing weapons in a no fire zone" @
-.fireinstation: "Firing inside station" @
-.illegalcargo: "Carrying illegal cargo" @
-.interdiction: "Interdiction" @
-.murder: "Murder of pilot on ship" @
-.onfoot_arccutteruse: "Using an arc cutter" @
-.onfoot_breakingandentering: "Illegal Entry" @
-.onfoot_carryingillegaldata: "Carrying illegal data" @
-.onfoot_carryingillegalgoods: "Carrying illegal goods" @
-.onfoot_carryingstolengoods: "Carrying stolen goods" @
-.onfoot_damagingdefences: "Damaging station defenses" @
-.onfoot_datatransfer: "Illegal transfer of data" @
-.onfoot_detectionofweapon: "Carrying a weapon in violation of rules" @
-.onfoot_ebreachuse: "Using an E Breach" @
-.onfoot_failuretosubmittopolice: "Failure to submit to scan" @
-.onfoot_identitytheft: "Identity theft" @
-.onfoot_murder: "Murder of a person" @
-.onfoot_overchargeintent: "Intending to overcharge an access port" @
-.onfoot_overchargedport: "Illegal Overcharging an access port" @
-.onfoot_profilecloningintent: "Cloning a persons security profile" @
-.onfoot_propertytheft: "Theft of station property" @
-.onfoot_recklessendangerment: "Reckless Endangerment" @
-.onfoot_theft: "Theft of items" @
-.onfoot_trespass: "Tresspass on station" @
-.passengerwanted: "Wanted passenger" @
-.piracy: "Piracy" @
-.recklessweaponsdischarge: "Discharging a weapon" @
-.shuttledestruction: "Destroying an APEX Shuttle" @
+.assault: "Assault" => "Angriff"
+.collidedatspeedinnofirezone: "Collided at speed in a no fire zone" => "Mit Tempo in Waffenruhezone kollidiert"
+.collidedatspeedinnofirezone_hulldamage: "Collided at speed in a no fire zone resulting in hull damage" => "Mit Tempo in Waffenruhezone kollidiert und damit Hüllenschaden verursacht"
+.disobeypolice: "Disobeyed a order from the police" => "Polizeianweisung missachtet"
+.dockingmajorblockingairlock: "Blocking an airlock" => "Luftschleuse blockiert"
+.dockingmajorblockinglandingpad: "Blocking a landing pad" => "Landeplattform blockiert"
+.dockingmajortresspass: "Tresspass" => "Unbefugtes Betreten"
+.dockingminorblockingairlock: "Minor blocking of an airlock" => "Geringe Blockade einer Luftschleuse"
+.dockingminorblockinglandingpad: "Minor blocking of a landing pad" => "Geringe Blockade einer Landeplattform"
+.dockingminortresspass: "Minor tresspass" => "Geringes unbefugtes Betreten"
+.dumpingdangerous: "Ejecting goods in a dangerous place" => "Waren an einem gefährlichen Ort ausgeworfen"
+.dumpingnearstation: "Ejecting goods near station" => "Waren nahe einer Station ausgeworfen"
+.fireinnofirezone: "Firing weapons in a no fire zone" => "Waffen in einer Waffenruhezone abgefeuert"
+.fireinstation: "Firing inside station" => "Waffen in einer Station abgefeuert"
+.illegalcargo: "Carrying illegal cargo" => "Illegale Fracht geladen"
+.interdiction: "Interdiction" => "Unterbrechung"
+.murder: "Murder of pilot on ship" => "Mord des Schiffspiloten"
+.onfoot_arccutteruse: "Using an arc cutter" => "Brennschneider benutzt"
+.onfoot_breakingandentering: "Illegal Entry" => "Illegaler Zutritt"
+.onfoot_carryingillegaldata: "Carrying illegal data" => "Illegale Daten geladen"
+.onfoot_carryingillegalgoods: "Carrying illegal goods" => "Illegale Waren geladen"
+.onfoot_carryingstolengoods: "Carrying stolen goods" => "Gestohlene Waren geladen"
+.onfoot_damagingdefences: "Damaging station defenses" => "Stationsverteidigung beschädigt"
+.onfoot_datatransfer: "Illegal transfer of data" => "Illegaler Datentransfer"
+.onfoot_detectionofweapon: "Carrying a weapon in violation of rules" => "Regelwidriges Waffentragen"
+.onfoot_ebreachuse: "Using an E Breach" => "E-Breach benutzt"
+.onfoot_failuretosubmittopolice: "Failure to submit to scan" => "Versagt sich einem Scan unterziehen zu lassen"
+.onfoot_identitytheft: "Identity theft" => "Identitätsdiebstahl"
+.onfoot_murder: "Murder of a person" => "Mord"
+.onfoot_overchargeintent: "Intending to overcharge an access port" => "Absicht eine Zugriffsschnittstelle zu überladen"
+.onfoot_overchargedport: "Illegal Overcharging an access port" => "Illegales Überladen einer Zugriffsschnittstelle"
+.onfoot_profilecloningintent: "Cloning a persons security profile" => "Klonen eines persönlichen Sicherheitsprofils"
+.onfoot_propertytheft: "Theft of station property" => "Diebstahl von stationseigentum"
+.onfoot_recklessendangerment: "Reckless Endangerment" => "Rücksichtslose Gefährdung"
+.onfoot_theft: "Theft of items" => "Diebstahl von Gegenständen"
+.onfoot_trespass: "Tresspass on station" => "Unbefugtes Betreten einer Station"
+.passengerwanted: "Wanted passenger" => "Gesuchter Passagier"
+.piracy: "Piracy" => "Piraterie"
+.recklessweaponsdischarge: "Discharging a weapon" => "Abfeuern einer Waffe"
+.shuttledestruction: "Destroying an APEX Shuttle" => "Zerstörung eines APEX-Shuttles"
 
 SECTION FactionStates
 
-.Unknown: "Unknown" @
-.UnknownSpansh: "Unknown Spansh" @
-.None: "None" @
-.Boom: "Boom" @
-.Bust: "Bust" @
-.CivilUnrest: "Civil Unrest" @
-.CivilWar: "Civil War" @
-.Election: "Election" @
-.Expansion: "Expansion" @
-.Famine: "Famine" @
-.Investment: "Investment" @
-.Lockdown: "Lockdown" @
-.Outbreak: "Outbreak" @
-.Retreat: "Retreat" @
-.War: "War" @
-.CivilLiberty: "Civil Liberty" @
-.PirateAttack: "Pirate Attack" @
-.Blight: "Blight" @
-.Drought: "Drought" @
-.InfrastructureFailure: "Infrastructure Failure" @
-.NaturalDisaster: "Natural Disaster" @
-.PublicHoliday: "Public Holiday" @
-.Terrorism: "Terrorism" @
-.ColdWar: "Cold War" @
-.Colonisation: "Colonisation" @
-.HistoricEvent: "Historic Event" @
-.Revolution: "Revolution" @
-.TechnologicalLeap: "Technological Leap" @
-.TradeWar: "Trade War" @
-.Exploited: "Exploited" @
+.Unknown: "Unknown" => "Unbekannt"
+.UnknownSpansh: "Unknown Spansh" => "Unbekannt Spansh"
+.None: "None" => "Keine"
+.Boom: "Boom" => "Boom"
+.Bust: "Bust" => "Wirtschaftskrise"
+.CivilUnrest: "Civil Unrest" => "Zivile Unruhen"
+.CivilWar: "Civil War" => "Bürgerkrieg"
+.Election: "Election" => "Wahl"
+.Expansion: "Expansion" => "Expansion"
+.Famine: "Famine" => "Hungersnot"
+.Investment: "Investment" => "Investition"
+.Lockdown: "Lockdown" => "Lockdown"
+.Outbreak: "Outbreak" => "Krankheitsausbruch"
+.Retreat: "Retreat" => "Rückzug"
+.War: "War" => "Krieg"
+.CivilLiberty: "Civil Liberty" => "Zivile Freiheit"
+.PirateAttack: "Pirate Attack" => "Piratenangriff"
+.Blight: "Blight" => "Pflanzenfäule"
+.Drought: "Drought" => "Dürre"
+.InfrastructureFailure: "Infrastructure Failure" => "Infrastrukturversagen"
+.NaturalDisaster: "Natural Disaster" => "Naturkatastrophe"
+.PublicHoliday: "Public Holiday" => "Öffentliche Feiertage"
+.Terrorism: "Terrorism" => "Terrorismus"
+.ColdWar: "Cold War" => "Kalter Krieg"
+.Colonisation: "Colonisation" => "Kolonisierung"
+.HistoricEvent: "Historic Event" => "Historisches Ereignis"
+.Revolution: "Revolution" => "Revolution"
+.TechnologicalLeap: "Technological Leap" => "Technologischer Sprung"
+.TradeWar: "Trade War" => "Handelskrieg"
+.Exploited: "Exploited" => "Ausgebeutet"
 
 SECTION Allegiances
 
-.Unknown: "Unknown" @
-.None: "None" @
-.Federation: "Federation" @
-.Empire: "Empire" @
-.Independent: "Independent" @
-.Alliance: "Alliance" @
-.Guardian: "Guardian" @
-.Thargoid: "Thargoid" @
-.PilotsFederation: "Pilots Federation" @
+.Unknown: "Unknown" => "Unbekannt"
+.None: "None" => "Keine"
+.Federation: "Federation" => "Föderation"
+.Empire: "Empire" => "Imperium"
+.Independent: "Independent" => "Unabhängig"
+.Alliance: "Alliance" => "Allianz"
+.Guardian: "Guardian" => "Guardian"
+.Thargoid: "Thargoid" => "Thargoid"
+.PilotsFederation: "Pilots Federation" => "Pilotenföderation"
 
 SECTION GovernmentTypes
 
-.Unknown: "Unknown" @
-.Anarchy: "Anarchy" @
-.Communism: "Communism" @
-.Confederacy: "Confederacy" @
-.Cooperative: "Cooperative" @
-.Corporate: "Corporate" @
-.Democracy: "Democracy" @
-.Dictatorship: "Dictatorship" @
-.Feudal: "Feudal" @
-.Imperial: "Imperial" @
-.None: "None" @
-.Patronage: "Patronage" @
-.Prison: "Prison" @
-.PrisonColony: "Prison Colony" @
-.Theocracy: "Theocracy" @
-.Engineer: "Engineer" @
-.Carrier: "Carrier" @
+.Unknown: "Unknown" => "Unbekannt"
+.Anarchy: "Anarchy" => "Anarchie"
+.Communism: "Communism" => "Kommunismus"
+.Confederacy: "Confederacy" => "Konföderation"
+.Cooperative: "Cooperative" => "Kooperative"
+.Corporate: "Corporate" => "Konzern"
+.Democracy: "Democracy" => "Demokratie"
+.Dictatorship: "Dictatorship" => "Diktatur"
+.Feudal: "Feudal" => "Feudalismus"
+.Imperial: "Imperial" => "Imperialismus"
+.None: "None" => "Keine"
+.Patronage: "Patronage" => "Patronat"
+.Prison: "Prison" => "Gefängnis"
+.PrisonColony: "Prison Colony" => "Gefängniskolonie"
+.Theocracy: "Theocracy" => "Theokratie"
+.Engineer: "Engineer" => "Ingenieur"
+.Carrier: "Carrier" => "Carrier"
 
 SECTION EconomyTypes
 
-.Unknown: "Unknown" @
-.Agri: "Agri" @
-.Colony: "Colony" @
-.Extraction: "Extraction" @
-.High_Tech: "High Tech" @
-.Industrial: "Industrial" @
-.Military: "Military" @
-.None: "None" @
-.Refinery: "Refinery" @
-.Service: "Service" @
-.Terraforming: "Terraforming" @
-.Tourism: "Tourism" @
-.Prison: "Prison" @
-.Damaged: "Damaged" @
-.Rescue: "Rescue" @
-.Repair: "Repair" @
-.Carrier: "Carrier" @
-.Engineer: "Engineer" @
-.Undefined: "Undefined" @
+.Unknown: "Unknown" => "Unbekannt"
+.Agri: "Agri" => "Landwirtschaft"
+.Colony: "Colony" => "Kolonie"
+.Extraction: "Extraction" => "Extraktion"
+.High_Tech: "High Tech" => "Hochtechnologie"
+.Industrial: "Industrial" => "Industriell"
+.Military: "Military" => "Militärisch"
+.None: "None" => "Keine"
+.Refinery: "Refinery" => "Raffinerie"
+.Service: "Service" => "Dienstleistung"
+.Terraforming: "Terraforming" => "Terraformierung"
+.Tourism: "Tourism" => "Tourismus"
+.Prison: "Prison" => "Gefängnis"
+.Damaged: "Damaged" => "Beschädigt"
+.Rescue: "Rescue" => "Rettung"
+.Repair: "Repair" => "Reparatur"
+.Carrier: "Carrier" => "Carrier"
+.Engineer: "Engineer" => "Ingenieur"
+.Undefined: "Undefined" => "Undefiniert"
 
 SECTION SecurityTypes
 
-.Low: "Low" @
-.Medium: "Medium" @
-.High: "High" @
-.Anarchy: "Anarchy" @
-.Lawless: "Lawless" @
+.Low: "Low" => "Niedrig"
+.Medium: "Medium" => "Mittel"
+.High: "High" => "Hoch"
+.Anarchy: "Anarchy" => "Anarchie"
+.Lawless: "Lawless" => "Gesetzlos"
 
 SECTION StarportStates
 
-.Unknown: "Unknown" @
-.None: "None" @
-.UnderRepairs: "Under Repairs" @
-.Damaged: "Damaged" @
-.Abandoned: "Abandoned" @
-.UnderAttack: "Under Attack" @
+.Unknown: "Unknown" => "Unbekannt"
+.None: "None" => "Keiner"
+.UnderRepairs: "Under Repairs" => "In Reparatur"
+.Damaged: "Damaged" => "Beschädigt"
+.Abandoned: "Abandoned" => "Verlassen"
+.UnderAttack: "Under Attack" => "Wird angegriffen"
 
 SECTION StarportTypes
 
-.Unknown: "Unknown" @
-.AsteroidBase: "Asteroid Base" @
-.Coriolis: "Coriolis" @
-.FleetCarrier: "Fleet Carrier" @
-.Megaship: "Megaship" @
-.Ocellus: "Ocellus" @
-.Bernal: "Bernal" @
-.Orbis: "Orbis" @
-.Outpost: "Outpost" @
-.OnFootSettlement: "On Foot Settlement" @
-.SurfaceStation: "Surface Station" @
-.CraterOutpost: "Crater Outpost" @
-.CraterPort: "Crater Port" @
+.Unknown: "Unknown" => "Unbekannt"
+.AsteroidBase: "Asteroid Base" => "Asteroidenbasis"
+.Coriolis: "Coriolis" => "Coriolis"
+.FleetCarrier: "Fleet Carrier" => "Carrier"
+.Megaship: "Megaship" => "Megaschiff"
+.Ocellus: "Ocellus" => "Ocellus"
+.Bernal: "Bernal" => "Bernal"
+.Orbis: "Orbis" => "Orbis"
+.Outpost: "Outpost" => "Außenposten"
+.OnFootSettlement: "On Foot Settlement" => "Fußläufige Siedlung"
+.SurfaceStation: "Surface Station" => "Oberflächenstation"
+.CraterOutpost: "Crater Outpost" => "Krateraußenposten"
+.CraterPort: "Crater Port" => "Kraterhafen"
 
 SECTION PowerPlayStates
 
-.Unknown: "Unknown" @
-.InPrepareRadius: "In prepare radius" @
-.Prepared: "Prepared" @
-.Exploited: "Exploited" @
-.Contested: "Contested" @
-.Controlled: "Controlled" @
-.Turmoil: "In turmoil" @
-.HomeSystem: "Home system" @
+.Unknown: "Unknown" => "Unbekannt"
+.InPrepareRadius: "In prepare radius" => "Im Vorbereitungsradius"
+.Prepared: "Prepared" => "Vorbereitet"
+.Exploited: "Exploited" => "Ausgebeutet"
+.Contested: "Contested" => "Umstritten"
+.Controlled: "Controlled" => "Kontrolliert"
+.Turmoil: "In turmoil" => "In Aufruhr"
+.HomeSystem: "Home system" => "Heimatsystem"
 
 SECTION ModuleTypeNames
 
-.AX_Missile_Rack: "AX Missile Rack" @
-.AX_Multi_Cannon: "AX Multi Cannon" @
-.Abrasion_Blaster: "Abrasion Blaster" @
-.Advanced_Docking_Computer: "Advanced Docking Computer" @
-.Advanced_Missile_Rack: "Advanced Missile Rack" @
-.Advanced_Multi_Cannon: "Advanced Multi Cannon" @
-.Advanced_Planetary_Approach_Suite: "Advanced Planetary Approach Suite" @
-.Advanced_Plasma_Accelerator: "Advanced Plasma Accelerator" @
-.Auto_Field_Maintenance_Unit: "Auto Field Maintenance Unit" @
-.Beam_Laser: "Beam Laser" @
-.Bi_Weave_Shield_Generator: "Bi Weave Shield Generator" @
-.Burst_Laser: "Burst Laser" @
-.Business_Class_Passenger_Cabin: "Business Class Passenger Cabin" @
-.Cannon: "Cannon" @
-.Cargo_Rack: "Cargo Rack" @
-.Cargo_Scanner: "Cargo Scanner" @
-.Caustic_Sink_Launcher: "Caustic Sink Launcher" @
-.Chaff_Launcher: "Chaff Launcher" @
-.Collector_Limpet_Controller: "Collector Limpet Controller" @
-.Corrosion_Resistant_Cargo_Rack: "Corrosion Resistant Cargo Rack" @
-.Cytoscrambler_Burst_Laser: "Cytoscrambler Burst Laser" @
-.Decontamination_Limpet_Controller: "Decontamination Limpet Controller" @
-.Detailed_Surface_Scanner: "Detailed Surface Scanner" @
-.Economy_Class_Passenger_Cabin: "Economy Class Passenger Cabin" @
-.Electronic_Countermeasure: "Electronic Countermeasure" @
-.Enforcer_Cannon: "Enforcer Cannon" @
-.Enhanced_AX_Missile_Rack: "Enhanced AX Missile Rack" @
-.Enhanced_AX_Multi_Cannon: "Enhanced AX Multi Cannon" @
-.Enhanced_Performance_Thrusters: "Enhanced Performance Thrusters" @
-.Enhanced_Xeno_Scanner: "Enhanced Xeno Scanner" @
-.Enzyme_Missile_Rack: "Enzyme Missile Rack" @
-.Experimental_Weapon_Stabiliser: "Experimental Weapon Stabiliser" @
-.Fighter_Hangar: "Fighter Hangar" @
-.First_Class_Passenger_Cabin: "First Class Passenger Cabin" @
-.Fragment_Cannon: "Fragment Cannon" @
-.Frame_Shift_Drive: "Frame Shift Drive" @
-.Frame_Shift_Drive_Interdictor: "Frame Shift Drive Interdictor" @
-.Frame_Shift_Wake_Scanner: "Frame Shift Wake Scanner" @
-.Fuel_Scoop: "Fuel Scoop" @
-.Fuel_Tank: "Fuel Tank" @
-.Fuel_Transfer_Limpet_Controller: "Fuel Transfer Limpet Controller" @
-.Guardian_FSD_Booster: "Guardian FSD Booster" @
-.Guardian_Gauss_Cannon: "Guardian Gauss Cannon" @
-.Guardian_Hull_Reinforcement: "Guardian Hull Reinforcement" @
-.Guardian_Hybrid_Power_Distributor: "Guardian Hybrid Power Distributor" @
-.Guardian_Hybrid_Power_Plant: "Guardian Hybrid Power Plant" @
-.Guardian_Module_Reinforcement: "Guardian Module Reinforcement" @
-.Guardian_Plasma_Charger: "Guardian Plasma Charger" @
-.Guardian_Shard_Cannon: "Guardian Shard Cannon" @
-.Guardian_Shield_Reinforcement: "Guardian Shield Reinforcement" @
-.Hatch_Breaker_Limpet_Controller: "Hatch Breaker Limpet Controller" @
-.Heat_Sink_Launcher: "Heat Sink Launcher" @
-.Hull_Reinforcement_Package: "Hull Reinforcement Package" @
-.Imperial_Hammer_Rail_Gun: "Imperial Hammer Rail Gun" @
-.Kill_Warrant_Scanner: "Kill Warrant Scanner" @
-.Life_Support: "Life Support" @
-.Lightweight_Alloy: "Lightweight Alloy" @
-.Luxury_Class_Passenger_Cabin: "Luxury Class Passenger Cabin" @
-.Meta_Alloy_Hull_Reinforcement: "Meta Alloy Hull Reinforcement" @
-.Military_Grade_Composite: "Military Grade Composite" @
-.Mine_Launcher: "Mine Launcher" @
-.Mining_Lance: "Mining Lance" @
-.Mining_Laser: "Mining Laser" @
-.Mining_Multi_Limpet_Controller: "Mining Multi Limpet Controller" @
-.Mirrored_Surface_Composite: "Mirrored Surface Composite" @
-.Missile_Rack: "Missile Rack" @
-.Module_Reinforcement_Package: "Module Reinforcement Package" @
-.Multi_Cannon: "Multi Cannon" @
-.Operations_Multi_Limpet_Controller: "Operations Multi Limpet Controller" @
-.Pacifier_Frag_Cannon: "Pacifier Frag Cannon" @
-.Pack_Hound_Missile_Rack: "Pack Hound Missile Rack" @
-.Planetary_Approach_Suite: "Planetary Approach Suite" @
-.Planetary_Vehicle_Hangar: "Planetary Vehicle Hangar" @
-.Plasma_Accelerator: "Plasma Accelerator" @
-.Point_Defence: "Point Defence" @
-.Power_Distributor: "Power Distributor" @
-.Power_Plant: "Power Plant" @
-.Prismatic_Shield_Generator: "Prismatic Shield Generator" @
-.Prospector_Limpet_Controller: "Prospector Limpet Controller" @
-.Pulse_Disruptor_Laser: "Pulse Disruptor Laser" @
-.Pulse_Laser: "Pulse Laser" @
-.Pulse_Wave_Analyser: "Pulse Wave Analyser" @
-.Rail_Gun: "Rail Gun" @
-.Reactive_Surface_Composite: "Reactive Surface Composite" @
-.Recon_Limpet_Controller: "Recon Limpet Controller" @
-.Refinery: "Refinery" @
-.Reinforced_Alloy: "Reinforced Alloy" @
-.Remote_Release_Flak_Launcher: "Remote Release Flak Launcher" @
-.Remote_Release_Flechette_Launcher: "Remote Release Flechette Launcher" @
-.Repair_Limpet_Controller: "Repair Limpet Controller" @
-.Rescue_Multi_Limpet_Controller: "Rescue Multi Limpet Controller" @
-.Research_Limpet_Controller: "Research Limpet Controller" @
-.Retributor_Beam_Laser: "Retributor Beam Laser" @
-.Rocket_Propelled_FSD_Disruptor: "Rocket Propelled FSD Disruptor" @
-.Seeker_Missile_Rack: "Seeker Missile Rack" @
-.Seismic_Charge_Launcher: "Seismic Charge Launcher" @
-.Sensors: "Sensors" @
-.Shield_Booster: "Shield Booster" @
-.Shield_Cell_Bank: "Shield Cell Bank" @
-.Shield_Generator: "Shield Generator" @
-.Shock_Cannon: "Shock Cannon" @
-.Shock_Mine_Launcher: "Shock Mine Launcher" @
-.Shutdown_Field_Neutraliser: "Shutdown Field Neutraliser" @
-.Standard_Docking_Computer: "Standard Docking Computer" @
-.Sub_Surface_Displacement_Missile: "Sub Surface Displacement Missile" @
-.Supercruise_Assist: "Supercruise Assist" @
-.Thrusters: "Thrusters" @
-.Torpedo_Pylon: "Torpedo Pylon" @
-.Universal_Multi_Limpet_Controller: "Universal Multi Limpet Controller" @
-.Xeno_Multi_Limpet_Controller: "Xeno Multi Limpet Controller" @
-.Xeno_Scanner: "Xeno Scanner" @
-.Discovery_Scanner: "Discovery Scanner" @
-.Prison_Cells: "Prison Cells" @
-.Data_Link_Scanner: "Data Link Scanner" @
-.SRV_Scanner: "SRV Scanner" @
-.Fighter_Weapon: "Fighter Weapon" @
-.Vanity_Type: "Vanity Type" @
-.Unknown_Type: "Unknown Type" @
-.Cockpit_Type: "Cockpit Type" @
-.Cargo_Bay_Door_Type: "Cargo Bay Door Type" @
-.Wear_And_Tear_Type: "Wear And Tear Type" @
-.Codex: "Codex" @
+.AX_Missile_Rack: "AX Missile Rack" => "AX-Raketenrampe"
+.AX_Multi_Cannon: "AX Multi Cannon" => "AX-Mehrfachgeschütz"
+.Abrasion_Blaster: "Abrasion Blaster" => "AX-Abrasionsblaster"
+.Advanced_Docking_Computer: "Advanced Docking Computer" => "Erweiterter Landecomputer"
+.Advanced_Missile_Rack: "Advanced Missile Rack" => "Optimierte Raketenrampe"
+.Advanced_Multi_Cannon: "Advanced Multi Cannon" => "Optimiertes Mehrfachgeschütz"
+.Advanced_Planetary_Approach_Suite: "Advanced Planetary Approach Suite" => "Fortgeschrittene Planetenanflug-Suite"
+.Advanced_Plasma_Accelerator: "Advanced Plasma Accelerator" => "Optimierter Plasmabeschleuniger"
+.Auto_Field_Maintenance_Unit: "Auto Field Maintenance Unit" => "Automatische Feldwartungseinheit"
+.Beam_Laser: "Beam Laser" => "Strahlenlaser"
+.Bi_Weave_Shield_Generator: "Bi Weave Shield Generator" => "Zwei-Schicht-Schildgenerator"
+.Burst_Laser: "Burst Laser" => "Salvenlaser"
+.Business_Class_Passenger_Cabin: "Business Class Passenger Cabin" => "Business-Klasse-Passagierkabine"
+.Cannon: "Cannon" => "Kanone"
+.Cargo_Rack: "Cargo Rack" => "Frachtgestell"
+.Cargo_Scanner: "Cargo Scanner" => "Verzeichnisscanner"
+.Caustic_Sink_Launcher: "Caustic Sink Launcher" => "Ätzbehälterwerfer"
+.Chaff_Launcher: "Chaff Launcher" => "Düpelwerfer"
+.Collector_Limpet_Controller: "Collector Limpet Controller" => "Steuerung Sammeldrohne"
+.Corrosion_Resistant_Cargo_Rack: "Corrosion Resistant Cargo Rack" => "Korrosionsbeständiges Frachtgestell"
+.Cytoscrambler_Burst_Laser: "Cytoscrambler Burst Laser" => "Zytostreuer-Salvenlaser"
+.Decontamination_Limpet_Controller: "Decontamination Limpet Controller" => "Steuerung Dekontaminationsdrohnen"
+.Detailed_Surface_Scanner: "Detailed Surface Scanner" => "Detail-Oberflächenscanner"
+.Economy_Class_Passenger_Cabin: "Economy Class Passenger Cabin" => "Economy-Klasse-Passagierkabine"
+.Electronic_Countermeasure: "Electronic Countermeasure" => "Elektronische Gegenmaßnmahmen"
+.Enforcer_Cannon: "Enforcer Cannon" => "Vollstreckerkanone"
+.Enhanced_AX_Missile_Rack: "Enhanced AX Missile Rack" => "Verbesserte AX-Raketenrampe"
+.Enhanced_AX_Multi_Cannon: "Enhanced AX Multi Cannon" => "Verbesserte AX-Mehrfachgeschütz"
+.Enhanced_Performance_Thrusters: "Enhanced Performance Thrusters" => "Verbesserte Performance-Schubdüsen"
+.Enhanced_Xeno_Scanner: "Enhanced Xeno Scanner" => "Verbesserter Xenoscanner"
+.Enzyme_Missile_Rack: "Enzyme Missile Rack" => "Enzymraketenrampe"
+.Experimental_Weapon_Stabiliser: "Experimental Weapon Stabiliser" => "Experimenteller Waffenstabilisator"
+.Fighter_Hangar: "Fighter Hangar" => "Fighter-Bucht"
+.First_Class_Passenger_Cabin: "First Class Passenger Cabin" => "Erste-Klasse-Passagierkabine"
+.Fragment_Cannon: "Fragment Cannon" => "Splitterkanone"
+.Frame_Shift_Drive: "Frame Shift Drive" => "Frameshiftantrieb"
+.Frame_Shift_Drive_Interdictor: "Frame Shift Drive Interdictor" => "FSA-Unterbrecher"
+.Frame_Shift_Wake_Scanner: "Frame Shift Wake Scanner" => "FS-Sogwolkenscanner"
+.Fuel_Scoop: "Fuel Scoop" => "Treibstoffsammler"
+.Fuel_Tank: "Fuel Tank" => "Treibstofftank"
+.Fuel_Transfer_Limpet_Controller: "Fuel Transfer Limpet Controller" => "Treibstofftransfer-Drohnenstrg."
+.Guardian_FSD_Booster: "Guardian FSD Booster" => "Guardian-Frameshiftantrieb-Booster"
+.Guardian_Gauss_Cannon: "Guardian Gauss Cannon" => "Guardian-Gausskanone"
+.Guardian_Hull_Reinforcement: "Guardian Hull Reinforcement" => "Guardian-Rumpfhüllenverstärkung"
+.Guardian_Hybrid_Power_Distributor: "Guardian Hybrid Power Distributor" => "Guardian-Energieverteiler"
+.Guardian_Hybrid_Power_Plant: "Guardian Hybrid Power Plant" => "Guardian-Kraftwerk"
+.Guardian_Module_Reinforcement: "Guardian Module Reinforcement" => "Guardian-Modulverstärkung"
+.Guardian_Plasma_Charger: "Guardian Plasma Charger" => "Guardian-Plasmawerfer"
+.Guardian_Shard_Cannon: "Guardian Shard Cannon" => "Guardian-Fragmentkanone"
+.Guardian_Shield_Reinforcement: "Guardian Shield Reinforcement" => "Guardian-Schildverstärkung"
+.Hatch_Breaker_Limpet_Controller: "Hatch Breaker Limpet Controller" => "Steuerung Ladelukenöffnerdrohne"
+.Heat_Sink_Launcher: "Heat Sink Launcher" => "Kühlkörperwerfer"
+.Hull_Reinforcement_Package: "Hull Reinforcement Package" => "Rumpfhüllenverstärkung"
+.Imperial_Hammer_Rail_Gun: "Imperial Hammer Rail Gun" => "Imperiale Hammer-Schienenkanone"
+.Kill_Warrant_Scanner: "Kill Warrant Scanner" => "Tötungsbefehlscanner"
+.Life_Support: "Life Support" => "Lebenserhaltung"
+.Lightweight_Alloy: "Lightweight Alloy" => "Leichte Legierung"
+.Luxury_Class_Passenger_Cabin: "Luxury Class Passenger Cabin" => "Luxus-Klasse-Passagierkabine"
+.Meta_Alloy_Hull_Reinforcement: "Meta Alloy Hull Reinforcement" => "Metalegierung-Rumpfhüllenverstärkung"
+.Military_Grade_Composite: "Military Grade Composite" => "Militärkomposit"
+.Mine_Launcher: "Mine Launcher" => "Minenwerfer"
+.Mining_Lance: "Mining Lance" => "Lanzenabbaulaser"
+.Mining_Laser: "Mining Laser" => "Abbaulaser"
+.Mining_Multi_Limpet_Controller: "Mining Multi Limpet Controller" => "Abbau-Multidrohnensteuerung"
+.Mirrored_Surface_Composite: "Mirrored Surface Composite" => "Gespiegelte-Oberfläche-Komposit"
+.Missile_Rack: "Missile Rack" => "Raketenrampe"
+.Module_Reinforcement_Package: "Module Reinforcement Package" => "Modulverstärkung"
+.Multi_Cannon: "Multi Cannon" => "Mehrfachgeschütz"
+.Operations_Multi_Limpet_Controller: "Operations Multi Limpet Controller" => "Operationen-Drohnensteuerung"
+.Pacifier_Frag_Cannon: "Pacifier Frag Cannon" => "Friedensstifter-Splitterkanone"
+.Pack_Hound_Missile_Rack: "Pack Hound Missile Rack" => "Schwarmwerfer"
+.Planetary_Approach_Suite: "Planetary Approach Suite" => "Planetenanflug-Suite"
+.Planetary_Vehicle_Hangar: "Planetary Vehicle Hangar" => "Planetenmfahrzeug-Hangar"
+.Plasma_Accelerator: "Plasma Accelerator" => "Plasmabeschleuniger"
+.Point_Defence: "Point Defence" => "Punktverteidigungsgeschütz"
+.Power_Distributor: "Power Distributor" => "Energieverteiler"
+.Power_Plant: "Power Plant" => "Kraftwerk"
+.Prismatic_Shield_Generator: "Prismatic Shield Generator" => "Prismaschildgenerator"
+.Prospector_Limpet_Controller: "Prospector Limpet Controller" => "Steuerung Erzsuche-Drohne"
+.Pulse_Disruptor_Laser: "Pulse Disruptor Laser" => "Impulsunterbrecher-Laser"
+.Pulse_Laser: "Pulse Laser" => "Impulslaser"
+.Pulse_Wave_Analyser: "Pulse Wave Analyser" => "Impulswellen-Analysator"
+.Rail_Gun: "Rail Gun" => "Schienenkanone"
+.Reactive_Surface_Composite: "Reactive Surface Composite" => "Reaktive-Oberfläche-Komposit"
+.Recon_Limpet_Controller: "Recon Limpet Controller" => "Steuerung Aufklärungsdrohne"
+.Refinery: "Refinery" => "Raffinerie"
+.Reinforced_Alloy: "Reinforced Alloy" => "Verstärkte Legierungen"
+.Remote_Release_Flak_Launcher: "Remote Release Flak Launcher" => "Flakwerfer mit Fernzündung"
+.Remote_Release_Flechette_Launcher: "Remote Release Flechette Launcher" => "Pfeilwerfer mit Fernzündung"
+.Repair_Limpet_Controller: "Repair Limpet Controller" => "Steuerung Reparaturdrohne"
+.Rescue_Multi_Limpet_Controller: "Rescue Multi Limpet Controller" => "Rettungs-Drohnensteuerung"
+.Research_Limpet_Controller: "Research Limpet Controller" => "Steuerung Forschungsdrohne"
+.Retributor_Beam_Laser: "Retributor Beam Laser" => "Retributor-Strahlenlaser"
+.Rocket_Propelled_FSD_Disruptor: "Rocket Propelled FSD Disruptor" => "Containment-Rakete"
+.Seeker_Missile_Rack: "Seeker Missile Rack" => "Suchraketenrampe"
+.Seismic_Charge_Launcher: "Seismic Charge Launcher" => "Seismischer-Ladungswerfer"
+.Sensors: "Sensors" => "Sensoren"
+.Shield_Booster: "Shield Booster" => "Schild-Booster"
+.Shield_Cell_Bank: "Shield Cell Bank" => "Schildzellenbank"
+.Shield_Generator: "Shield Generator" => "Schildgenerator"
+.Shock_Cannon: "Shock Cannon" => "Schockkanone"
+.Shock_Mine_Launcher: "Shock Mine Launcher" => "Schock-Minenwerfer"
+.Shutdown_Field_Neutraliser: "Shutdown Field Neutraliser" => "Abschalt-Feldneutralisator"
+.Standard_Docking_Computer: "Standard Docking Computer" => "Standard-Landecomputer"
+.Sub_Surface_Displacement_Missile: "Sub Surface Displacement Missile" => "Untergrund-Verdrängungsrakete"
+.Supercruise_Assist: "Supercruise Assist" => "Supercruise-Assistent"
+.Thrusters: "Thrusters" => "Schubdüsen"
+.Torpedo_Pylon: "Torpedo Pylon" => "Torpedopylon"
+.Universal_Multi_Limpet_Controller: "Universal Multi Limpet Controller" => "Universelle Multi-Drohnensteuerung"
+.Xeno_Multi_Limpet_Controller: "Xeno Multi Limpet Controller" => "Xeno-Drohnensteuerung"
+.Xeno_Scanner: "Xeno Scanner" => "Xeno-Scanner"
+.Discovery_Scanner: "Discovery Scanner" => "Erkundungsscanner"
+.Prison_Cells: "Prison Cells" => "Gefängniszelle"
+.Data_Link_Scanner: "Data Link Scanner" => "Datanlink-Scanner"
+.SRV_Scanner: "SRV Scanner" => "SRV-Scanner"
+.Fighter_Weapon: "Fighter Weapon" => "Fighter-Waffe"
+.Vanity_Type: "Vanity Type" => "Kosmetik-Typ"
+.Unknown_Type: "Unknown Type" => "Unbekannter Typ"
+.Cockpit_Type: "Cockpit Type" => "Cockpit-Typ"
+.Cargo_Bay_Door_Type: "Cargo Bay Door Type" => "Frachtluken-Typ"
+.Wear_And_Tear_Type: "Wear And Tear Type" => "Verschleißteil"
+.Codex: "Codex" => "Codex"
 
 SECTION ModulePartNames
 
-.Class: "Class" @
-.Rating: "Rating" @
-.Gimbal: "Gimbal" @
-.Fixed: "Fixed" @
-.Turret: "Turret" @
-.Small: "Small" @
-.Medium: "Medium" @
-.Large: "Large" @
-.Huge: "Huge" @
-.Tiny: "Tiny" @
-.Standard: "Standard" @
-.Advanced: "Advanced" @
-.Lightweight_Armour: "Lightweight Armour" @
-.Reinforced_Armour: "Reinforced Armour" @
-.Military_Armour: "Military Armour" @
-.Mirrored_Surface_Composite_Armour: "Mirrored Surface Composite Armour" @
-.Reactive_Surface_Composite_Armour: "Reactive Surface Composite Armour" @
-.Auto_Field_Maintenance: "Auto Field Maintenance" @
-.Beam_Laser: "Beam Laser" @
-.Burst_Laser: "Burst Laser" @
-.Cannon: "Cannon" @
-.Fragment_Cannon: "Fragment Cannon" @
-.Cargo_Rack: "Cargo Rack" @
-.Corrosion_Proof_Cargo_Rack: "Corrosion Proof Cargo Rack" @
-.Cargo_Scanner: "Cargo Scanner" @
-.Chaff_Launcher: "Chaff Launcher" @
-.Electronic_Countermeasure: "Electronic Countermeasure" @
-.Heat_Sink_Launcher: "Heat Sink Launcher" @
-.Caustic_Heat_Sink_Launcher: "Caustic Heat Sink Launcher" @
-.Plasma_Point_Defence: "Plasma Point Defence" @
-.Crime_Scanner: "Crime Scanner" @
-.Detailed_Surface_Scanner: "Detailed Surface Scanner" @
-.Docking_Computer: "Docking Computer" @
-.Fighter_Hangar: "Fighter Hangar" @
-.Flak_Mortar: "Flak Mortar" @
-.Flechette_Launcher: "Flechette Launcher" @
-.FSD_Interdictor: "FSD Interdictor" @
-.Fuel_Scoop: "Fuel Scoop" @
-.Fuel_Tank: "Fuel Tank" @
-.Guardian_Plasma_Launcher: "Guardian Plasma Launcher" @
-.Guardian_Shard_Cannon: "Guardian Shard Cannon" @
-.Guardian_Gauss_Cannon: "Guardian Gauss Cannon" @
-.Guardian_Hull_Reinforcement: "Guardian Hull Reinforcement" @
-.Guardian_Module_Reinforcement: "Guardian Module Reinforcement" @
-.Guardian_Shield_Reinforcement: "Guardian Shield Reinforcement" @
-.Guardian_FSD_Booster: "Guardian FSD Booster" @
-.Guardian_Power_Distributor: "Guardian Power Distributor" @
-.Guardian_Powerplant: "Guardian Powerplant" @
-.Hull_Reinforcement: "Hull Reinforcement" @
-.Hyperdrive: "Hyperdrive" @
-.Cloud_Scanner: "Cloud Scanner" @
-.Life_Support: "Life Support" @
-.Collection_Drone_Controller: "Collection Drone Controller" @
-.Fuel_Transfer_Drone_Controller: "Fuel Transfer Drone Controller" @
-.Hatch_Breaker_Drone_Controller: "Hatch Breaker Drone Controller" @
-.Hatch_Breaker_Limpet_Controller: "Hatch Breaker Limpet Controller" @
-.Prospector_Drone_Controller: "Prospector Drone Controller" @
-.Repair_Drone_Controller: "Repair Drone Controller" @
-.Drone_Controller_Vessel_Research: "Drone Controller Vessel Research" @
-.Decontamination_Drone_Controller: "Decontamination Drone Controller" @
-.Recon_Drone_Controller: "Recon Drone Controller" @
-.Multi_Purpose_Mining_Drone_Controller: "Multi Purpose Mining Drone Controller" @
-.Multi_Purpose_Operations_Drone_Controller: "Multi Purpose Operations Drone Controller" @
-.Multi_Purpose_Xeno_Drone_Controller: "Multi Purpose Xeno Drone Controller" @
-.Multi_Purpose_Universal_Drone_Controller: "Multi Purpose Universal Drone Controller" @
-.Meta_Alloy_Hull_Reinforcement: "Meta Alloy Hull Reinforcement" @
-.Mine_Launcher: "Mine Launcher" @
-.Mining_Abrasion_Blaster: "Mining Abrasion Blaster" @
-.Mining_Seismic_Charge_Warhead: "Mining Seismic Charge Warhead" @
-.Mining_Subsurface_Displacement_Missile: "Mining Subsurface Displacement Missile" @
-.Mining_Laser: "Mining Laser" @
-.AX_Dumbfire_Missile: "AX Dumbfire Missile" @
-.Enhanced_AX_Missile_Rack: "Enhanced AX Missile Rack" @
-.Guardian_Nanite_Torpedo_Pylon: "Guardian Nanite Torpedo Pylon" @
-.Seeker_Missile_Rack: "Seeker Missile Rack" @
-.Dumbfire_Missile_Rack: "Dumbfire Missile Rack" @
-.Pack_Hound_Missile_Rack: "Pack Hound Missile Rack" @
-.Advanced_Torp_Pylon: "Advanced Torp Pylon" @
-.Human_Extraction_Missile: "Human Extraction Missile" @
-.Caustic_Missile: "Caustic Missile" @
-.Module_Reinforcement: "Module Reinforcement" @
-.AX_Multi_Cannon: "AX Multi Cannon" @
-.Enhanced_AX_Multi_Cannon: "Enhanced AX Multi Cannon" @
-.Multi_Cannon: "Multi Cannon" @
-.Economy_Passenger_Cabin: "Economy Passenger Cabin" @
-.Business: "Business" @
-.First: "First" @
-.Luxury_Passenger_Cabin: "Luxury Passenger Cabin" @
-.Advanced_Planet_Approach_Suite: "Advanced Planet Approach Suite" @
-.Planet_Approach_Suite: "Planet Approach Suite" @
-.Planetary_Vehicle_Hangar: "Planetary Vehicle Hangar" @
-.Plasma_Accelerator: "Plasma Accelerator" @
-.Plasma_Shock_Cannon: "Plasma Shock Cannon" @
-.Power_Distributor: "Power Distributor" @
-.Powerplant: "Powerplant" @
-.Pulse_Laser: "Pulse Laser" @
-.Pulse_Wave_scanner: "Pulse Wave scanner" @
-.Railgun: "Railgun" @
-.Refinery: "Refinery" @
-.Sensors: "Sensors" @
-.Shield_Booster: "Shield Booster" @
-.Shield_Cell_Bank: "Shield Cell Bank" @
-.Shield_Generator: "Shield Generator" @
-.Shutdown_Field_Neutraliser: "Shutdown Field Neutraliser" @
-.Enhanced_Shutdown_Field_Neutraliser: "Enhanced Shutdown Field Neutraliser" @
-.Exp_Module_Weapon_Stabiliser: "Exp Module Weapon Stabiliser" @
-.Supercruise_Assist: "Supercruise Assist" @
-.Stellar_Body_Discovery_Scanner: "Stellar Body Discovery Scanner" @
-.Intermediate: "Intermediate" @
-.Thrusters: "Thrusters" @
-.Xeno_Scanner: "Xeno Scanner" @
-.Xeno_Scanner_MK_2: "Xeno Scanner MK 2" @
-.Advanced_Xeno_Scanner: "Advanced Xeno Scanner" @
-.Corrosion_Resistant_Cargo_Rack: "Corrosion Resistant Cargo Rack" @
-.Hyperdrive_Overcharge: "Hyperdrive Overcharge" @
+.Class: "Class" => "Klasse"
+.Rating: "Rating" => "Güte"
+.Gimbal: "Gimbal" => "Kardanisch"
+.Fixed: "Fixed" => "Fest"
+.Turret: "Turret" => "Turm"
+.Small: "Small" => "Klein"
+.Medium: "Medium" => "Mittel"
+.Large: "Large" => "Groß"
+.Huge: "Huge" => "Riesig"
+.Tiny: "Tiny" => "Winzig"
+.Standard: "Standard" => "Standard"
+.Advanced: "Advanced" => "Optimiert"
+.Lightweight_Armour: "Lightweight Armour" => "Leichte Legierungen"
+.Reinforced_Armour: "Reinforced Armour" => "Verstärkte Legierungen"
+.Military_Armour: "Military Armour" => "Militär-Komposit"
+.Mirrored_Surface_Composite_Armour: "Mirrored Surface Composite Armour" => "Gespiegelte-Oberfläche-Komposit"
+.Reactive_Surface_Composite_Armour: "Reactive Surface Composite Armour" => "Reaktive-Oberfläche-Komposit"
+.Auto_Field_Maintenance: "Auto Field Maintenance" => "AFW"
+.Beam_Laser: "Beam Laser" => "Strahlenlaser"
+.Burst_Laser: "Burst Laser" => "Salvenlaser"
+.Cannon: "Cannon" => "Kanone"
+.Fragment_Cannon: "Fragment Cannon" => "Splitterkanone"
+.Cargo_Rack: "Cargo Rack" => "Frachtgestell"
+.Corrosion_Proof_Cargo_Rack: "Corrosion Proof Cargo Rack" => "Korrosionsbeständiges Frachtgestell"
+.Cargo_Scanner: "Cargo Scanner" => "Verzeichnisscanner"
+.Chaff_Launcher: "Chaff Launcher" => "Düpelwerfer"
+.Electronic_Countermeasure: "Electronic Countermeasure" => "Elektronische Gegenmaßnahmen"
+.Heat_Sink_Launcher: "Heat Sink Launcher" => "Kühlkörperwerfer"
+.Caustic_Heat_Sink_Launcher: "Caustic Heat Sink Launcher" => "Ätzbehälterwerfer"
+.Plasma_Point_Defence: "Plasma Point Defence" => "Plasma-Punktverteidigung"
+.Crime_Scanner: "Crime Scanner" => "Tötungsbefehl-Scanner"
+.Detailed_Surface_Scanner: "Detailed Surface Scanner" => "Detail-Oberflächenscanner"
+.Docking_Computer: "Docking Computer" => "Landecomputer"
+.Fighter_Hangar: "Fighter Hangar" => "Fighter-Hangar"
+.Flak_Mortar: "Flak Mortar" => "Flakwerfer"
+.Flechette_Launcher: "Flechette Launcher" => "Pfeilwerfer"
+.FSD_Interdictor: "FSD Interdictor" => "FSA-Unterbrecher"
+.Fuel_Scoop: "Fuel Scoop" => "Treibstoffsammler"
+.Fuel_Tank: "Fuel Tank" => "Treibstofftank"
+.Guardian_Plasma_Launcher: "Guardian Plasma Launcher" => "Guardian-Plasmawerfer"
+.Guardian_Shard_Cannon: "Guardian Shard Cannon" => "Guardian-Fragmentkanone"
+.Guardian_Gauss_Cannon: "Guardian Gauss Cannon" => "Guardian-Gausskanone"
+.Guardian_Hull_Reinforcement: "Guardian Hull Reinforcement" => "Guardian-Rumpfhüllenverstärkung"
+.Guardian_Module_Reinforcement: "Guardian Module Reinforcement" => "Guardian-Modulverstärkung"
+.Guardian_Shield_Reinforcement: "Guardian Shield Reinforcement" => "Guardian-Schildverstärkung"
+.Guardian_FSD_Booster: "Guardian FSD Booster" => "Guardian-FSA-Booster"
+.Guardian_Power_Distributor: "Guardian Power Distributor" => "Guardian-Energieverteiler"
+.Guardian_Powerplant: "Guardian Powerplant" => "Guardian-Kraftwerk"
+.Hull_Reinforcement: "Hull Reinforcement" => "Rumpfhüllenverstärkung"
+.Hyperdrive: "Hyperdrive" => "Hyperantrieb"
+.Cloud_Scanner: "Cloud Scanner" => "Sogwolkenscanner"
+.Life_Support: "Life Support" => "Lebenserhaltung"
+.Collection_Drone_Controller: "Collection Drone Controller" => "Steuerung Sammeldrohne"
+.Fuel_Transfer_Drone_Controller: "Fuel Transfer Drone Controller" => "Treibstofftransfer-Drohnenstrg."
+.Hatch_Breaker_Drone_Controller: "Hatch Breaker Drone Controller" => "Steuerung Ladelukenöffner-Drohne"
+.Hatch_Breaker_Limpet_Controller: "Hatch Breaker Limpet Controller" => "Steuerung Ladelukenöffner-Drohne"
+.Prospector_Drone_Controller: "Prospector Drone Controller" => "Steuerung Erzsuche-Drohne"
+.Repair_Drone_Controller: "Repair Drone Controller" => "Steuerung Reparaturdrohne"
+.Drone_Controller_Vessel_Research: "Drone Controller Vessel Research" => "Steuerung Forschungsdrohne"
+.Decontamination_Drone_Controller: "Decontamination Drone Controller" => "Steuerung Dekontaminationsdrohne"
+.Recon_Drone_Controller: "Recon Drone Controller" => "Steuerung Aufklärungsdrohne"
+.Multi_Purpose_Mining_Drone_Controller: "Multi Purpose Mining Drone Controller" => "Abbau-Multi-Drohnensteuerung"
+.Multi_Purpose_Operations_Drone_Controller: "Multi Purpose Operations Drone Controller" => "Operationen-Drohnensteuerung"
+.Multi_Purpose_Xeno_Drone_Controller: "Multi Purpose Xeno Drone Controller" => "Xeno-Drohnensteuerung"
+.Multi_Purpose_Universal_Drone_Controller: "Multi Purpose Universal Drone Controller" => "Universelle Multi-Drohnenstuerung"
+.Meta_Alloy_Hull_Reinforcement: "Meta Alloy Hull Reinforcement" => "Metalegierung-Rumpfhüllenverstärkung"
+.Mine_Launcher: "Mine Launcher" => "Minenwerfer"
+.Mining_Abrasion_Blaster: "Mining Abrasion Blaster" => "Abrasionsblaster"
+.Mining_Seismic_Charge_Warhead: "Mining Seismic Charge Warhead" => "Seismischer Ladungswerfer-Gefechtskopf"
+.Mining_Subsurface_Displacement_Missile: "Mining Subsurface Displacement Missile" => "Untergrund-Verdrängungsrakete"
+.Mining_Laser: "Mining Laser" => "Abbaulaser"
+.AX_Dumbfire_Missile: "AX Dumbfire Missile" => "AX-Dumbfire-Gefechtskopf"
+.Enhanced_AX_Missile_Rack: "Enhanced AX Missile Rack" => "Verbesserte AX-Raketenrampe"
+.Guardian_Nanite_Torpedo_Pylon: "Guardian Nanite Torpedo Pylon" => "Guardian-Nanobot-Torpedopylon"
+.Seeker_Missile_Rack: "Seeker Missile Rack" => "Suchraketenrampe"
+.Dumbfire_Missile_Rack: "Dumbfire Missile Rack" => "Raketenrampe"
+.Pack_Hound_Missile_Rack: "Pack Hound Missile Rack" => "Schwarmwerfer-Raketenrampe"
+.Advanced_Torp_Pylon: "Advanced Torp Pylon" => "Optimierter Torpedopylon"
+.Human_Extraction_Missile: "Human Extraction Missile" => "Menschenextraktionsrakete"
+.Caustic_Missile: "Caustic Missile" => "Ätzrakete"
+.Module_Reinforcement: "Module Reinforcement" => "Modulverstärkung"
+.AX_Multi_Cannon: "AX Multi Cannon" => "AX-Mehrfachgeschütz"
+.Enhanced_AX_Multi_Cannon: "Enhanced AX Multi Cannon" => "Verbessertes AX-Mehrfachgeschütz"
+.Multi_Cannon: "Multi Cannon" => "Mehrfachgeschütz"
+.Economy_Passenger_Cabin: "Economy Passenger Cabin" => "Economy-Klasse-Passagierkabine"
+.Business: "Business" => "Business"
+.First: "First" => "Erste"
+.Luxury_Passenger_Cabin: "Luxury Passenger Cabin" => "Luxus-Klasse-Passagierkabine"
+.Advanced_Planet_Approach_Suite: "Advanced Planet Approach Suite" => "Fortgeschrittene Planetenanflug-Suite"
+.Planet_Approach_Suite: "Planet Approach Suite" => "Planetenanflug-Suite"
+.Planetary_Vehicle_Hangar: "Planetary Vehicle Hangar" => "SRV-Hangar"
+.Plasma_Accelerator: "Plasma Accelerator" => "Plasmabeschleuniger"
+.Plasma_Shock_Cannon: "Plasma Shock Cannon" => "Plasma-Schockkanone"
+.Power_Distributor: "Power Distributor" => "Energieverteiler"
+.Powerplant: "Powerplant" => "Kraftwerk"
+.Pulse_Laser: "Pulse Laser" => "Impulslaser"
+.Pulse_Wave_scanner: "Pulse Wave scanner" => "Impulswellen-Analysator"
+.Railgun: "Railgun" => "Schienenkanone"
+.Refinery: "Refinery" => "Raffinierie"
+.Sensors: "Sensors" => "Sensoren"
+.Shield_Booster: "Shield Booster" => "Schild-Booster"
+.Shield_Cell_Bank: "Shield Cell Bank" => "Schildzellenbank"
+.Shield_Generator: "Shield Generator" => "Schildgenerator"
+.Shutdown_Field_Neutraliser: "Shutdown Field Neutraliser" => "Abschalt-Feldneutralisator"
+.Enhanced_Shutdown_Field_Neutraliser: "Enhanced Shutdown Field Neutraliser" => "Verbesserter Abschalt-Feldneutralisator"
+.Exp_Module_Weapon_Stabiliser: "Exp Module Weapon Stabiliser" => "Experimenteller Waffenstabilisator"
+.Supercruise_Assist: "Supercruise Assist" => "Supercruise-Assistent"
+.Stellar_Body_Discovery_Scanner: "Stellar Body Discovery Scanner" => "Erkundungsscanner"
+.Intermediate: "Intermediate" => "Mittelmaß"
+.Thrusters: "Thrusters" => "Schubdüsen"
+.Xeno_Scanner: "Xeno Scanner" => "Xeno-Scanner"
+.Xeno_Scanner_MK_2: "Xeno Scanner MK 2" => "Xeno-Scanner v2"
+.Advanced_Xeno_Scanner: "Advanced Xeno Scanner" => "Optimierter Xeno-Scanner"
+.Corrosion_Resistant_Cargo_Rack: "Corrosion Resistant Cargo Rack" => "Korrosionsbeständiges Frachtgestell"
+.Hyperdrive_Overcharge: "Hyperdrive Overcharge" => "Hyperantrieb-Überladung"
 
 SECTION ShipSlots
 
-.Unknown: "Unknown" @
-.Armour: "Armour" @
-.Bobble01: "Bobble Position 1" @
-.Bobble02: "Bobble Position 2" @
-.Bobble03: "Bobble Position 3" @
-.Bobble04: "Bobble Position 4" @
-.Bobble05: "Bobble Position 5" @
-.Bobble06: "Bobble Position 6" @
-.Bobble07: "Bobble Position 7" @
-.Bobble08: "Bobble Position 8" @
-.Bobble09: "Bobble Position 9" @
-.Bobble10: "Bobble Position 10" @
-.CargoHatch: "Cargo Hatch" @
-.CodexScanner: "Codex Scanner" @
-.DataLinkScanner: "Data Link Scanner" @
-.DiscoveryScanner: "Discovery Scanner" @
-.Decal1: "Decal Front" @
-.Decal2: "Decal Right" @
-.Decal3: "Decal Left" @
-.EngineColour: "Engine Colour" @
-.Federation_Fighter_Shield: "Federation Fighter Shield" @
-.FrameShiftDrive: "Frame Shift Drive" @
-.FuelTank: "Fuel Tank" @
-.GDN_Hybrid_Fighter_V1_Shield: "GDN Hybrid Fighter V 1 Shield" @
-.GDN_Hybrid_Fighter_V2_Shield: "GDN Hybrid Fighter V 2 Shield" @
-.GDN_Hybrid_Fighter_V3_Shield: "GDN Hybrid Fighter V 3 Shield" @
-.HugeHardpoint1: "Huge Hardpoint 1" @
-.HugeHardpoint2: "Huge Hardpoint 2" @
-.Independent_Fighter_Shield: "Independent Fighter Shield" @
-.LargeHardpoint1: "Large Hardpoint 1" @
-.LargeHardpoint2: "Large Hardpoint 2" @
-.LargeHardpoint3: "Large Hardpoint 3" @
-.LargeHardpoint4: "Large Hardpoint 4" @
-.LifeSupport: "Life Support" @
-.MainEngines: "Thrusters" @
-.MediumHardpoint1: "Medium Hardpoint 1" @
-.MediumHardpoint2: "Medium Hardpoint 2" @
-.MediumHardpoint3: "Medium Hardpoint 3" @
-.MediumHardpoint4: "Medium Hardpoint 4" @
-.MediumHardpoint5: "Medium Hardpoint 5" @
-.Military01: "Military Slot 1" @
-.Military02: "Military Slot 2" @
-.Military03: "Military Slot 3" @
-.PaintJob: "Paint Job" @
-.PlanetaryApproachSuite: "Planetary Approach Suite" @
-.PowerDistributor: "Power Distributor" @
-.PowerPlant: "Power Plant" @
-.Radar: "Sensors" @
-.ShieldGenerator: "Shield Generator" @
-.ShipCockpit: "Ship Cockpit" @
-.ShipID0: "Ship ID Right" @
-.ShipID1: "Ship ID Left" @
-.ShipKitBumper: "Ship Kit Bumper" @
-.ShipKitSpoiler: "Ship Kit Spoiler" @
-.ShipKitTail: "Ship Kit Tail" @
-.ShipKitWings: "Ship Kit Wings" @
-.ShipName0: "Nameplate Right" @
-.ShipName1: "Nameplate Left" @
-.Slot00_Size8: "Optional Slot 0 Class 8" @
-.Slot01_Size2: "Optional Slot 1 Class 2" @
-.Slot01_Size3: "Optional Slot 1 Class 3" @
-.Slot01_Size4: "Optional Slot 1 Class 4" @
-.Slot01_Size5: "Optional Slot 1 Class 5" @
-.Slot01_Size6: "Optional Slot 1 Class 6" @
-.Slot01_Size7: "Optional Slot 1 Class 7" @
-.Slot01_Size8: "Optional Slot 1 Class 8" @
-.Slot02_Size2: "Optional Slot 2 Class 2" @
-.Slot02_Size3: "Optional Slot 2 Class 3" @
-.Slot02_Size4: "Optional Slot 2 Class 4" @
-.Slot02_Size5: "Optional Slot 2 Class 5" @
-.Slot02_Size6: "Optional Slot 2 Class 6" @
-.Slot02_Size7: "Optional Slot 2 Class 7" @
-.Slot02_Size8: "Optional Slot 2 Class 8" @
-.Slot03_Size1: "Optional Slot 3 Class 1" @
-.Slot03_Size2: "Optional Slot 3 Class 2" @
-.Slot03_Size3: "Optional Slot 3 Class 3" @
-.Slot03_Size4: "Optional Slot 3 Class 4" @
-.Slot03_Size5: "Optional Slot 3 Class 5" @
-.Slot03_Size6: "Optional Slot 3 Class 6" @
-.Slot03_Size7: "Optional Slot 3 Class 7" @
-.Slot04_Size1: "Optional Slot 4 Class 1" @
-.Slot04_Size2: "Optional Slot 4 Class 2" @
-.Slot04_Size3: "Optional Slot 4 Class 3" @
-.Slot04_Size4: "Optional Slot 4 Class 4" @
-.Slot04_Size5: "Optional Slot 4 Class 5" @
-.Slot04_Size6: "Optional Slot 4 Class 6" @
-.Slot05_Size1: "Optional Slot 5 Class 1" @
-.Slot05_Size2: "Optional Slot 5 Class 2" @
-.Slot05_Size3: "Optional Slot 5 Class 3" @
-.Slot05_Size4: "Optional Slot 5 Class 4" @
-.Slot05_Size5: "Optional Slot 5 Class 5" @
-.Slot05_Size6: "Optional Slot 5 Class 6" @
-.Slot06_Size1: "Optional Slot 6 Class 1" @
-.Slot06_Size2: "Optional Slot 6 Class 2" @
-.Slot06_Size3: "Optional Slot 6 Class 3" @
-.Slot06_Size4: "Optional Slot 6 Class 4" @
-.Slot06_Size5: "Optional Slot 6 Class 5" @
-.Slot07_Size1: "Optional Slot 7 Class 1" @
-.Slot07_Size2: "Optional Slot 7 Class 2" @
-.Slot07_Size3: "Optional Slot 7 Class 3" @
-.Slot07_Size4: "Optional Slot 7 Class 4" @
-.Slot07_Size5: "Optional Slot 7 Class 5" @
-.Slot08_Size1: "Optional Slot 8 Class 1" @
-.Slot08_Size2: "Optional Slot 8 Class 2" @
-.Slot08_Size3: "Optional Slot 8 Class 3" @
-.Slot08_Size4: "Optional Slot 8 Class 4" @
-.Slot09_Size1: "Optional Slot 9 Class 1" @
-.Slot09_Size2: "Optional Slot 9 Class 2" @
-.Slot09_Size3: "Optional Slot 9 Class 3" @
-.Slot09_Size4: "Optional Slot 9 Class 4" @
-.Slot10_Size1: "Optional Slot 10 Class 1" @
-.Slot10_Size2: "Optional Slot 10 Class 2" @
-.Slot10_Size3: "Optional Slot 10 Class 3" @
-.Slot10_Size4: "Optional Slot 10 Class 4" @
-.Slot11_Size1: "Optional Slot 11 Class 1" @
-.Slot11_Size2: "Optional Slot 11 Class 2" @
-.Slot11_Size3: "Optional Slot 11 Class 3" @
-.Slot12_Size1: "Optional Slot 12 Class 1" @
-.Slot13_Size2: "Optional Slot 13 Class 2" @
-.Slot14_Size1: "Optional Slot 14 Class 1" @
-.SmallHardpoint1: "Small Hardpoint 1" @
-.SmallHardpoint2: "Small Hardpoint 2" @
-.SmallHardpoint3: "Small Hardpoint 3" @
-.SmallHardpoint4: "Small Hardpoint 4" @
-.StringLights: "String Lights" @
-.TinyHardpoint1: "Utility Mount 1" @
-.TinyHardpoint2: "Utility Mount 2" @
-.TinyHardpoint3: "Utility Mount 3" @
-.TinyHardpoint4: "Utility Mount 4" @
-.TinyHardpoint5: "Utility Mount 5" @
-.TinyHardpoint6: "Utility Mount 6" @
-.TinyHardpoint7: "Utility Mount 7" @
-.TinyHardpoint8: "Utility Mount 8" @
-.VesselVoice: "Vessel Voice" @
-.WeaponColour: "Weapon Colour" @
+.Unknown: "Unknown" => "Unbekannt"
+.Armour: "Armour" => "Rumpfhülle"
+.Bobble01: "Bobble Position 1" => "Armaturenbrett 1"
+.Bobble02: "Bobble Position 2" => "Armaturenbrett 2"
+.Bobble03: "Bobble Position 3" => "Armaturenbrett 3"
+.Bobble04: "Bobble Position 4" => "Armaturenbrett 4"
+.Bobble05: "Bobble Position 5" => "Armaturenbrett 5"
+.Bobble06: "Bobble Position 6" => "Armaturenbrett 6"
+.Bobble07: "Bobble Position 7" => "Armaturenbrett 7"
+.Bobble08: "Bobble Position 8" => "Armaturenbrett 8"
+.Bobble09: "Bobble Position 9" => "Armaturenbrett 9"
+.Bobble10: "Bobble Position 10" => "Armaturenbrett 10"
+.CargoHatch: "Cargo Hatch" => "Ladeluke"
+.CodexScanner: "Codex Scanner" => "Codex-Scanner"
+.DataLinkScanner: "Data Link Scanner" => "Datenlink-Scanner"
+.DiscoveryScanner: "Discovery Scanner" => "Erkundungsscanner"
+.Decal1: "Decal Front" => "Folie Vorne"
+.Decal2: "Decal Right" => "Folie Rechts"
+.Decal3: "Decal Left" => "Folie Links"
+.EngineColour: "Engine Colour" => "Antriebsverzierung"
+.Federation_Fighter_Shield: "Federation Fighter Shield" => "Föderations-Fighter-Schild"
+.FrameShiftDrive: "Frame Shift Drive" => "Frameshift-Antrieb"
+.FuelTank: "Fuel Tank" => "Treibstofftank"
+.GDN_Hybrid_Fighter_V1_Shield: "GDN Hybrid Fighter V 1 Shield" => "Guardian-Fighter v1 Schild"
+.GDN_Hybrid_Fighter_V2_Shield: "GDN Hybrid Fighter V 2 Shield" => "Guardian-Fighter v2 Schild"
+.GDN_Hybrid_Fighter_V3_Shield: "GDN Hybrid Fighter V 3 Shield" => "Guardian-Fighter v3 Schild"
+.HugeHardpoint1: "Huge Hardpoint 1" => "Riesige Aufhängung 1"
+.HugeHardpoint2: "Huge Hardpoint 2" => "Riesige Aufhängung 2"
+.Independent_Fighter_Shield: "Independent Fighter Shield" => "Unabhängiger-Fighter-Schild"
+.LargeHardpoint1: "Large Hardpoint 1" => "Große Aufhängung 1"
+.LargeHardpoint2: "Large Hardpoint 2" => "Große Aufhängung 2"
+.LargeHardpoint3: "Large Hardpoint 3" => "Große Aufhängung 3"
+.LargeHardpoint4: "Large Hardpoint 4" => "Große Aufhängung 4"
+.LifeSupport: "Life Support" => "Lebenserhaltung"
+.MainEngines: "Thrusters" => "Schubdüsen"
+.MediumHardpoint1: "Medium Hardpoint 1" => "Mittlere Aufhängung 1"
+.MediumHardpoint2: "Medium Hardpoint 2" => "Mittlere Aufhängung 2"
+.MediumHardpoint3: "Medium Hardpoint 3" => "Mittlere Aufhängung 3"
+.MediumHardpoint4: "Medium Hardpoint 4" => "Mittlere Aufhängung 4"
+.MediumHardpoint5: "Medium Hardpoint 5" => "Mittlere Aufhängung 5"
+.Military01: "Military Slot 1" => "Militärschacht 1"
+.Military02: "Military Slot 2" => "Militärschacht 2"
+.Military03: "Military Slot 3" => "Militärschacht 3"
+.PaintJob: "Paint Job" => "Lackierung"
+.PlanetaryApproachSuite: "Planetary Approach Suite" => "Planetenanflug-Suite"
+.PowerDistributor: "Power Distributor" => "Energieverteiler"
+.PowerPlant: "Power Plant" => "Kraftwerk"
+.Radar: "Sensors" => "Sensoren"
+.ShieldGenerator: "Shield Generator" => "Schildgenerator"
+.ShipCockpit: "Ship Cockpit" => "Schiffscockpit"
+.ShipID0: "Ship ID Right" => "Schiff-ID Rechts"
+.ShipID1: "Ship ID Left" => "Schiff-ID Links"
+.ShipKitBumper: "Ship Kit Bumper" => "Schiffsbausatz Bumper"
+.ShipKitSpoiler: "Ship Kit Spoiler" => "Schiffsbausatz Spoiler"
+.ShipKitTail: "Ship Kit Tail" => "Schiffsbausatz Heck"
+.ShipKitWings: "Ship Kit Wings" => "Schiffsbausatz Flügel"
+.ShipName0: "Nameplate Right" => "Namensschild Rechts"
+.ShipName1: "Nameplate Left" => "Namensschild Links"
+.Slot00_Size8: "Optional Slot 0 Class 8" => "Optionaler Schacht 0 Klasse 8"
+.Slot01_Size2: "Optional Slot 1 Class 2" => "Optionaler Schacht 1 Klasse 2"
+.Slot01_Size3: "Optional Slot 1 Class 3" => "Optionaler Schacht 1 Klasse 3"
+.Slot01_Size4: "Optional Slot 1 Class 4" => "Optionaler Schacht 1 Klasse 4"
+.Slot01_Size5: "Optional Slot 1 Class 5" => "Optionaler Schacht 1 Klasse 5"
+.Slot01_Size6: "Optional Slot 1 Class 6" => "Optionaler Schacht 1 Klasse 6"
+.Slot01_Size7: "Optional Slot 1 Class 7" => "Optionaler Schacht 1 Klasse 7"
+.Slot01_Size8: "Optional Slot 1 Class 8" => "Optionaler Schacht 1 Klasse 8"
+.Slot02_Size2: "Optional Slot 2 Class 2" => "Optionaler Schacht 2 Klasse 2"
+.Slot02_Size3: "Optional Slot 2 Class 3" => "Optionaler Schacht 2 Klasse 3"
+.Slot02_Size4: "Optional Slot 2 Class 4" => "Optionaler Schacht 2 Klasse 4"
+.Slot02_Size5: "Optional Slot 2 Class 5" => "Optionaler Schacht 2 Klasse 5"
+.Slot02_Size6: "Optional Slot 2 Class 6" => "Optionaler Schacht 2 Klasse 6"
+.Slot02_Size7: "Optional Slot 2 Class 7" => "Optionaler Schacht 2 Klasse 7"
+.Slot02_Size8: "Optional Slot 2 Class 8" => "Optionaler Schacht 2 Klasse 8"
+.Slot03_Size1: "Optional Slot 3 Class 1" => "Optionaler Schacht 3 Klasse 1"
+.Slot03_Size2: "Optional Slot 3 Class 2" => "Optionaler Schacht 3 Klasse 2"
+.Slot03_Size3: "Optional Slot 3 Class 3" => "Optionaler Schacht 3 Klasse 3"
+.Slot03_Size4: "Optional Slot 3 Class 4" => "Optionaler Schacht 3 Klasse 4"
+.Slot03_Size5: "Optional Slot 3 Class 5" => "Optionaler Schacht 3 Klasse 5"
+.Slot03_Size6: "Optional Slot 3 Class 6" => "Optionaler Schacht 3 Klasse 6"
+.Slot03_Size7: "Optional Slot 3 Class 7" => "Optionaler Schacht 3 Klasse 7"
+.Slot04_Size1: "Optional Slot 4 Class 1" => "Optionaler Schacht 4 Klasse 1"
+.Slot04_Size2: "Optional Slot 4 Class 2" => "Optionaler Schacht 4 Klasse 2"
+.Slot04_Size3: "Optional Slot 4 Class 3" => "Optionaler Schacht 4 Klasse 3"
+.Slot04_Size4: "Optional Slot 4 Class 4" => "Optionaler Schacht 4 Klasse 4"
+.Slot04_Size5: "Optional Slot 4 Class 5" => "Optionaler Schacht 4 Klasse 5"
+.Slot04_Size6: "Optional Slot 4 Class 6" => "Optionaler Schacht 4 Klasse 6"
+.Slot05_Size1: "Optional Slot 5 Class 1" => "Optionaler Schacht 5 Klasse 1"
+.Slot05_Size2: "Optional Slot 5 Class 2" => "Optionaler Schacht 5 Klasse 2"
+.Slot05_Size3: "Optional Slot 5 Class 3" => "Optionaler Schacht 5 Klasse 3"
+.Slot05_Size4: "Optional Slot 5 Class 4" => "Optionaler Schacht 5 Klasse 4"
+.Slot05_Size5: "Optional Slot 5 Class 5" => "Optionaler Schacht 5 Klasse 5"
+.Slot05_Size6: "Optional Slot 5 Class 6" => "Optionaler Schacht 5 Klasse 6"
+.Slot06_Size1: "Optional Slot 6 Class 1" => "Optionaler Schacht 6 Klasse 1"
+.Slot06_Size2: "Optional Slot 6 Class 2" => "Optionaler Schacht 6 Klasse 2"
+.Slot06_Size3: "Optional Slot 6 Class 3" => "Optionaler Schacht 6 Klasse 3"
+.Slot06_Size4: "Optional Slot 6 Class 4" => "Optionaler Schacht 6 Klasse 4"
+.Slot06_Size5: "Optional Slot 6 Class 5" => "Optionaler Schacht 6 Klasse 5"
+.Slot07_Size1: "Optional Slot 7 Class 1" => "Optionaler Schacht 7 Klasse 1"
+.Slot07_Size2: "Optional Slot 7 Class 2" => "Optionaler Schacht 7 Klasse 2"
+.Slot07_Size3: "Optional Slot 7 Class 3" => "Optionaler Schacht 7 Klasse 3"
+.Slot07_Size4: "Optional Slot 7 Class 4" => "Optionaler Schacht 7 Klasse 4"
+.Slot07_Size5: "Optional Slot 7 Class 5" => "Optionaler Schacht 7 Klasse 5"
+.Slot08_Size1: "Optional Slot 8 Class 1" => "Optionaler Schacht 8 Klasse 1"
+.Slot08_Size2: "Optional Slot 8 Class 2" => "Optionaler Schacht 8 Klasse 2"
+.Slot08_Size3: "Optional Slot 8 Class 3" => "Optionaler Schacht 8 Klasse 3"
+.Slot08_Size4: "Optional Slot 8 Class 4" => "Optionaler Schacht 8 Klasse 4"
+.Slot09_Size1: "Optional Slot 9 Class 1" => "Optionaler Schacht 9 Klasse 1"
+.Slot09_Size2: "Optional Slot 9 Class 2" => "Optionaler Schacht 9 Klasse 2"
+.Slot09_Size3: "Optional Slot 9 Class 3" => "Optionaler Schacht 9 Klasse 3"
+.Slot09_Size4: "Optional Slot 9 Class 4" => "Optionaler Schacht 9 Klasse 4"
+.Slot10_Size1: "Optional Slot 10 Class 1" => "Optionaler Schacht 10 Klasse 1"
+.Slot10_Size2: "Optional Slot 10 Class 2" => "Optionaler Schacht 10 Klasse 2"
+.Slot10_Size3: "Optional Slot 10 Class 3" => "Optionaler Schacht 10 Klasse 3"
+.Slot10_Size4: "Optional Slot 10 Class 4" => "Optionaler Schacht 10 Klasse 4"
+.Slot11_Size1: "Optional Slot 11 Class 1" => "Optionaler Schacht 11 Klasse 1"
+.Slot11_Size2: "Optional Slot 11 Class 2" => "Optionaler Schacht 11 Klasse 2"
+.Slot11_Size3: "Optional Slot 11 Class 3" => "Optionaler Schacht 11 Klasse 3"
+.Slot12_Size1: "Optional Slot 12 Class 1" => "Optionaler Schacht 12 Klasse 1"
+.Slot13_Size2: "Optional Slot 13 Class 2" => "Optionaler Schacht 13 Klasse 1"
+.Slot14_Size1: "Optional Slot 14 Class 1" => "Optionaler Schacht 14 Klasse 1"
+.SmallHardpoint1: "Small Hardpoint 1" => "Kleine Aufhängung 1"
+.SmallHardpoint2: "Small Hardpoint 2" => "Kleine Aufhängung 2"
+.SmallHardpoint3: "Small Hardpoint 3" => "Kleine Aufhängung 3"
+.SmallHardpoint4: "Small Hardpoint 4" => "Kleine Aufhängung 4"
+.StringLights: "String Lights" => "Lichterkette"
+.TinyHardpoint1: "Utility Mount 1" => "Werkzeugsteckplatz 1"
+.TinyHardpoint2: "Utility Mount 2" => "Werkzeugsteckplatz 2"
+.TinyHardpoint3: "Utility Mount 3" => "Werkzeugsteckplatz 3"
+.TinyHardpoint4: "Utility Mount 4" => "Werkzeugsteckplatz 4"
+.TinyHardpoint5: "Utility Mount 5" => "Werkzeugsteckplatz 5"
+.TinyHardpoint6: "Utility Mount 6" => "Werkzeugsteckplatz 6"
+.TinyHardpoint7: "Utility Mount 7" => "Werkzeugsteckplatz 7"
+.TinyHardpoint8: "Utility Mount 8" => "Werkzeugsteckplatz 8"
+.VesselVoice: "Vessel Voice" => "Schiffstimme"
+.WeaponColour: "Weapon Colour" => "Waffenverzierung"
 
 SECTION StationServices
 
-.Unknown: "Unknown" @
-.ApexInterstellar: "Apex Interstellar" @
-.Autodock: "Autodock" @
-.Bartender: "Bartender" @
-.BlackMarket: "Black Market" @
-.Contacts: "Contacts" @
-.CrewLounge: "Crew Lounge" @
-.Dock: "Dock" @
-.Workshop: "Workshop" @
-.FleetCarrierAdministration: "Fleet Carrier Administration" @
-.FleetCarrierFuel: "Fleet Carrier Fuel" @
-.FleetCarrierManagement: "Fleet Carrier Management" @
-.FleetCarrierVendor: "Fleet Carrier Vendor" @
-.FlightController: "Flight Controller" @
-.FrontlineSolutions: "Frontline Solutions" @
-.InterstellarFactorsContact: "Interstellar Factors Contact" @
-.Initiatives: "Initiatives" @
-.Livery: "Livery" @
-.Market: "Market" @
-.MaterialTrader: "Material Trader" @
-.Missions: "Missions" @
-.MissionsGenerated: "Missions Generated" @
-.OnDockMission: "On Dock Mission" @
-.Outfitting: "Outfitting" @
-.PioneerSupplies: "Pioneer Supplies" @
-.Powerplay: "Powerplay" @
-.RedemptionOffice: "Redemption Office" @
-.Refuel: "Refuel" @
-.Repair: "Repair" @
-.Restock: "Restock" @
-.SearchAndRescue: "Search And Rescue" @
-.Shipyard: "Shipyard" @
-.Shop: "Shop" @
-.SocialSpace: "Social Space" @
-.StationMenu: "Station Menu" @
-.StationOperations: "Station Operations" @
-.TechnologyBroker: "Technology Broker" @
-.Tuning: "Tuning" @
-.UniversalCartographics: "Universal Cartographics" @
-.VistaGenomics: "Vista Genomics" @
+.Unknown: "Unknown" => "Unbekannt"
+.ApexInterstellar: "Apex Interstellar" => "Apex Interstellar"
+.Autodock: "Autodock" => "Autodock"
+.Bartender: "Bartender" => "Barkeeper"
+.BlackMarket: "Black Market" => "Schwarzmarkt"
+.Contacts: "Contacts" => "Kontakte"
+.CrewLounge: "Crew Lounge" => "Crewlounge"
+.Dock: "Dock" => "Dock"
+.Workshop: "Workshop" => "Werkstatt"
+.FleetCarrierAdministration: "Fleet Carrier Administration" => "Carrier-Administration"
+.FleetCarrierFuel: "Fleet Carrier Fuel" => "Carrier-Treibstoff"
+.FleetCarrierManagement: "Fleet Carrier Management" => "Carrier-Managment"
+.FleetCarrierVendor: "Fleet Carrier Vendor" => "Carrier-Händler"
+.FlightController: "Flight Controller" => "Flugkontrolle"
+.FrontlineSolutions: "Frontline Solutions" => "Frontline Solutions"
+.InterstellarFactorsContact: "Interstellar Factors Contact" => "Interstellare-Faktoren-Kontakt"
+.Initiatives: "Initiatives" => "Initiativen"
+.Livery: "Livery" => "Lackiererei"
+.Market: "Market" => "Handelsplatz"
+.MaterialTrader: "Material Trader" => "Materialhändler"
+.Missions: "Missions" => "Missionen"
+.MissionsGenerated: "Missions Generated" => "Missionen Generiert"
+.OnDockMission: "On Dock Mission" => "Missionen angedockt"
+.Outfitting: "Outfitting" => "Ausstattung"
+.PioneerSupplies: "Pioneer Supplies" => "Pioneer Supplies"
+.Powerplay: "Powerplay" => "Machtspiele"
+.RedemptionOffice: "Redemption Office" => "Verwaltungskontakt"
+.Refuel: "Refuel" => "Auftanken"
+.Repair: "Repair" => "Rparatur"
+.Restock: "Restock" => "Nachladen"
+.SearchAndRescue: "Search And Rescue" => "Suchen und Retten"
+.Shipyard: "Shipyard" => "Werft"
+.Shop: "Shop" => "Laden"
+.SocialSpace: "Social Space" => "Abflughalle"
+.StationMenu: "Station Menu" => "Stationsmenü"
+.StationOperations: "Station Operations" => "Stationsoperationen"
+.TechnologyBroker: "Technology Broker" => "Technologie-Broker"
+.Tuning: "Tuning" => "Tuning"
+.UniversalCartographics: "Universal Cartographics" => "Universal Cartographics"
+.VistaGenomics: "Vista Genomics" => "Vista Genomics"
