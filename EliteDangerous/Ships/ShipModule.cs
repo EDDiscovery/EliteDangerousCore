@@ -26,7 +26,7 @@ namespace EliteDangerousCore
         public ShipSlots.Slot SlotFD { get; private set; }    // never null    
         public string Item { get; private set; }        // never null       - nice name, used to track, english
         public string ItemFD { get; private set; }      // never null     - FD normalised ID name
-
+        public ItemData.ShipModule ModuleData { get { return ItemData.TryGetShipModule(ItemFD, out ItemData.ShipModule sm, false) ? sm : null; } }      // may be null
         public string LocalisedItem { get; set; }       // Modulex events only supply this. so it may be null if we have not seen one of them pass by with this Item name
 
         public bool? Enabled { get; private set; }      // Loadout events, may be null
@@ -34,8 +34,9 @@ namespace EliteDangerousCore
         public int? Health { get; private set; }        //0-100
         public long? Value { get; private set; }
 
-        public int? AmmoClip { get; private set; }
+        public int? AmmoClip { get; private set; }      // from loadout event
         public int? AmmoHopper { get; private set; }
+
         public double? Power { get; private set; }      // ONLY via Modules Info
 
         public EngineeringData Engineering { get; private set; }       // may be NULL if module is not engineered or unknown
@@ -98,9 +99,9 @@ namespace EliteDangerousCore
             get
             {
                 ItemData.TryGetShipModule(ItemFD, out ItemData.ShipModule smd, false);    // find
-                if (smd != null)
+                if (smd != null && smd.Mass.HasValue)
                 {
-                    double mass = smd.Mass;
+                    double mass = smd.Mass.Value;
                     Engineering?.EngineerMass(ref mass);
                     return mass;
                 }
@@ -114,7 +115,7 @@ namespace EliteDangerousCore
             bool engsame = Engineering != null ? Engineering.Same(other.Engineering) : (other.Engineering == null);     // if null, both null, else use the same func
 
             return (Slot == other.Slot && Item == other.Item && Enabled == other.Enabled &&
-                     Priority == other.Priority && AmmoClip == other.AmmoClip && AmmoHopper == other.AmmoHopper &&
+                     Priority == other.Priority && //AmmoClip == other.AmmoClip && AmmoHopper == other.AmmoHopper &&
                      Health == other.Health && Value == other.Value && engsame);
         }
 
@@ -125,12 +126,15 @@ namespace EliteDangerousCore
         public ShipModule()
         { }
 
-        public ShipModule(string s, ShipSlots.Slot sfd, string i, string ifd,
-                        bool? e, int? prior, int? ac, int? ah, double? health, long? value,
-                        double? power,
+        public ShipModule(string slotname, ShipSlots.Slot slotfdname, string itemname, string itemfdname,
+                        bool? enabled, int? priority, 
+                        int? ammoclip, int? ammohopper, 
+                        double? health, long? value,
+                        double? power,                  // only from Modules info
                         EngineeringData engineering)
         {
-            Slot = s; SlotFD = sfd; Item = i; ItemFD = ifd; Enabled = e; Priority = prior; AmmoClip = ac; AmmoHopper = ah;
+            Slot = slotname; SlotFD = slotfdname; Item = itemname; ItemFD = itemfdname; Enabled = enabled; Priority = priority; 
+            AmmoClip = ammoclip; AmmoHopper = ammohopper;
             if (health.HasValue)
                 Health = (int)(health * 100.0);
             Value = value;
@@ -143,7 +147,8 @@ namespace EliteDangerousCore
             Slot = other.Slot; SlotFD = other.SlotFD; Item = other.Item; ItemFD = other.ItemFD;
             LocalisedItem = other.LocalisedItem;
             Enabled = other.Enabled; Priority = other.Priority; Health = other.Health; Value = other.Value;
-            AmmoClip = other.AmmoClip; AmmoHopper = other.AmmoHopper; Power = other.Power;
+            AmmoClip = other.AmmoClip; AmmoHopper = other.AmmoHopper; 
+            Power = other.Power;
             Engineering = other.Engineering;
         }
 
@@ -219,7 +224,7 @@ namespace EliteDangerousCore
                     }
                 }
 
-                FriendlyBlueprintName = BlueprintName.SplitCapsWordFull();
+                FriendlyBlueprintName = BlueprintName.HasChars() ? Recipes.GetBetterNameForEngineeringRecipe(BlueprintName) : "??";       // some journal entries has empty blueprints
             }
 
             public JObject ToJSONLoadout()  // reproduce the loadout format..

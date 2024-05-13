@@ -176,7 +176,10 @@ namespace EliteDangerousCore
         {
             var lfdname = fdname.ToLowerInvariant();
             var f = EngineeringRecipes.Find(x => x.FDName == lfdname);
-            return f == null ? fdname : f.Name;
+            if (f == null)
+                return fdname.SplitCapsWordFull();
+            else
+                return f.Name;
         }
 
         public static SynthesisRecipe FindSynthesis(string recipename, string level)
