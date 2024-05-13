@@ -85,7 +85,7 @@
     <Compile Include="EDSM\EDSMJournalSync.cs" />
     <Compile Include="EDSM\EDSMClass.cs" />
     <Compile Include="EDSM\EDSMLogFetcher.cs" />
-    <Compile Include="EliteDangerous\Engineering.cs" />
+    <Compile Include="EliteDangerous\EngineeringData.cs" />
     <Compile Include="EliteDangerous\ShipSlots.cs" />
     <Compile Include="EliteDangerous\PowerPlay.cs" />
     <Compile Include="EliteDangerous\Crimes.cs" />
