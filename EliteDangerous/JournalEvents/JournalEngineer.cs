@@ -135,7 +135,7 @@ namespace EliteDangerousCore.JournalEvents
             ModuleFD = JournalFieldNaming.NormaliseFDItemName(evt["Module"].Str()); // may not be present
             Module = JournalFieldNaming.GetBetterEnglishModuleName(ModuleFD);
 
-            Engineering = new ShipModule.EngineeringData(evt);  
+            Engineering = new EngineeringData(evt);  
 
             IsPreview = evt["IsPreview"].BoolNull();
             JToken ingredients = (JToken)evt["Ingredients"];
@@ -195,7 +195,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Module { get; set; }      // English module name, not present in V1 of this version
         public string ModuleFD { get; set; }        
 
-        public ShipModule.EngineeringData Engineering { get; set; }
+        public EngineeringData Engineering { get; set; }
 
         public bool? IsPreview { get; set; }            // Only for legacy convert
 

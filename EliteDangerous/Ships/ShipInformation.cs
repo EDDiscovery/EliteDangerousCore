@@ -59,7 +59,7 @@ namespace EliteDangerousCore
         public bool InTransit { get { return TransferArrivalTimeUTC.CompareTo(DateTime.UtcNow)>0; } }
 
         public ShipModule GetModuleInSlot(ShipSlots.Slot slot) { return Modules.ContainsKey(slot) ? Modules[slot] : null; }      // Name is the nice Slot name.
-        public ShipModule.EngineeringData GetEngineering(ShipSlots.Slot slot) { return Modules.ContainsKey(slot) ? Modules[slot].Engineering : null; }
+        public EngineeringData GetEngineering(ShipSlots.Slot slot) { return Modules.ContainsKey(slot) ? Modules[slot].Engineering : null; }
 
         public string ShipFullInfo(bool cargo = true, bool fuel = true)
         {
@@ -266,7 +266,7 @@ namespace EliteDangerousCore
             {
                 ItemData.IModuleInfo md = ItemData.GetShipProperty(ShipFD, ItemData.ShipPropID.Boost);
                 double v = md != null ? (md as ItemData.ShipInfoInt).Value : 0;
-                ShipModule.EngineeringData ed = GetEngineering(ShipSlots.Slot.MainEngines); // aka "MainEngines" in fd speak, but we use a slot naming conversion
+                EngineeringData ed = GetEngineering(ShipSlots.Slot.MainEngines); // aka "MainEngines" in fd speak, but we use a slot naming conversion
                 ed?.EngineerThrusters(ref v);
                 return v;
             }
@@ -278,7 +278,7 @@ namespace EliteDangerousCore
             {
                 ItemData.IModuleInfo md = ItemData.GetShipProperty(ShipFD, ItemData.ShipPropID.Speed);
                 double v = md != null ? (md as ItemData.ShipInfoInt).Value : 0;
-                ShipModule.EngineeringData ed = GetEngineering(ShipSlots.Slot.MainEngines);
+                EngineeringData ed = GetEngineering(ShipSlots.Slot.MainEngines);
                 ed?.EngineerThrusters(ref v);
                 return v;
             }
@@ -593,7 +593,7 @@ namespace EliteDangerousCore
             return sm;
         }
 
-        public ShipInformation Craft(ShipSlots.Slot slotfd, string item, ShipModule.EngineeringData eng)
+        public ShipInformation Craft(ShipSlots.Slot slotfd, string item, EngineeringData eng)
         {
             if (Modules.ContainsKey(slotfd) && Modules[slotfd].Item.Equals(item))       // craft, module must be there, otherwise just ignore
             {
@@ -731,7 +731,7 @@ namespace EliteDangerousCore
             if (module.Engineering.Modifiers != null) // may not have any
             {
                 JArray modifiers = new JArray();
-                foreach (ShipModule.EngineeringModifiers modifier in module.Engineering.Modifiers)
+                foreach (EngineeringModifiers modifier in module.Engineering.Modifiers)
                 {
                     JObject jmodifier = new JObject();
                     jmodifier["Label"] = modifier.Label;

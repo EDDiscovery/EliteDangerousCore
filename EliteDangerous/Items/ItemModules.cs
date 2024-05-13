@@ -448,7 +448,40 @@ namespace EliteDangerousCore
                 this.Range = Range;
             }
 
-            public string NonEngineeredProperties
+            // copy constructor
+            public ShipModule(ShipModule other)
+            {
+                this.EnglishModName = other.EnglishModName;
+                this.TranslatedModName = other.TranslatedModName;
+                this.ModuleID = other.ModuleID;
+                this.ModType = other.ModType;
+                this.Mass = other.Mass;
+                this.Power = other.Power;
+                this.Ammo = other.Ammo;
+                this.Damage = other.Damage;
+                this.ReloadTime = other.ReloadTime;
+                this.ThermL = other.ThermL;
+                this.Explosive = other.Explosive; 
+                this.Kinetic = other.Kinetic; 
+                this.Thermal = other.Thermal;
+                this.Range = other.Range;
+                this.Speed = Speed;
+                this.RepairTime = other.RepairTime;
+                this.Protection = other.Protection;
+                this.SysMW = other.SysMW; this.EngMW = other.EngMW; this.WepMW = other.WepMW;
+                this.PowerGen = other.Power;
+                this.MaxMass = other.MaxMass; this.MinMass = other.MinMass; this.OptMass = other.OptMass;
+                this.Prisoners = other.Prisoners;
+                this.Passengers = other.Passengers;
+                this.Size = other.Size;
+                this.RefillTime = other.RefillTime;
+                this.Time = other.Time;
+                this.Rebuilds = other.Rebuilds;
+                this.Boost = other.Boost;
+                this.SpeedIncrease = other.SpeedIncrease; this.AccelerationRate = other.AccelerationRate; this.HeatGenerationRate = other.HeatGenerationRate; this.ControlInterference = other.ControlInterference;
+            }
+
+            public string PropertiesAsText
             {
                 get
                 {
@@ -466,14 +499,6 @@ namespace EliteDangerousCore
                         );;
                 }
             }
-
-            //public override string ToString()
-            //{
-            //    string i = Info == null ? "null" : $"\"{Info}\"";
-            //    return $"{ModuleID},{Mass:0.##},{Power:0.##},{i},\"{EnglishModName}\",{EnglishModTypeString}";
-            //    //return $"{ModuleID}, {Mass:0.##}, {Power:0.##}, {i}, \"{ModName}\", {mt}";
-            //}
-
         };
 
         #endregion

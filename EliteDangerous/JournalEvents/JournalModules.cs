@@ -55,12 +55,12 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (JObject jo in jmodules)
                 {
-                    ShipModule.EngineeringData engineering = null;
+                    EngineeringData engineering = null;
 
                     JObject jeng = (JObject)jo["Engineering"];
                     if (jeng != null)
                     {
-                        engineering = new ShipModule.EngineeringData(jeng);
+                        engineering = new EngineeringData(jeng);
                     }
 
                     ShipSlots.Slot slotfdname = ShipSlots.ToEnum(jo["Slot"].Str());
