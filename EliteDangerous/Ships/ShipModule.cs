@@ -57,10 +57,11 @@ namespace EliteDangerousCore
         {
             if (IsFSDSlot)
             {
-                EliteDangerousCalculations.FSDSpec spec = EliteDangerousCalculations.FindFSD(ClassOf, RatingOf, ItemFD.ContainsIIC("overcharge"));
+                ItemData.ShipModule m = ModuleData;
 
-                if (spec != null)
+                if ( m!=null)
                 {
+                    EliteDangerousCalculations.FSDSpec spec = m.GetFSDSpec();
                     Engineering?.EngineerFSD(ref spec);
                     return spec;
                 }
@@ -68,31 +69,6 @@ namespace EliteDangerousCore
 
             return null;
         }
-
-        public string RatingOf              // null if not rated
-        {
-            get
-            {
-                int p = Item.IndexOf("Rating");
-                if (p >= 0 && Item.Length > p + 7)
-                    return Item[p + 7] + "";
-                else
-                    return null;
-            }
-        }
-
-        public int ClassOf                  // null if not classed
-        {
-            get
-            {
-                int p = Item.IndexOf("Class");
-                if (p >= 0 && Item.Length > p + 6)
-                    return Item[p + 6] - '0';
-                else
-                    return 0;
-            }
-        }
-
         public double Mass
         {
             get

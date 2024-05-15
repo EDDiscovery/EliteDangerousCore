@@ -200,7 +200,7 @@ namespace EliteDangerousCore
                 newmodule.Mass = mod.Value;
             mod = FindModification("FSDOptimalMass");
             if (mod != null)
-                newmodule.OptMass = mod.Value;
+                newmodule.OptMass = (int)mod.Value;
  
             return newmodule;
         }

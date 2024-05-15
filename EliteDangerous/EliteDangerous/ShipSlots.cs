@@ -156,6 +156,9 @@ namespace EliteDangerousCore
             TinyHardpoint8,
             VesselVoice,
             WeaponColour,
+            Turret,
+            SineWaveScanner,
+            BuddyCargoHatch,
         }
 
         private static Dictionary<Slot, string> english = new Dictionary<Slot, string>

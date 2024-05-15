@@ -195,10 +195,10 @@ namespace EliteDangerousCore
             {
                 foreach (ShipModule sm in Modules.Values)
                 {
-                    int classpos;
-                    if (sm.Item.Contains("Guardian FSD Booster") && (classpos = sm.Item.IndexOf("Class ")) != -1)
+                    ItemData.ShipModule m = sm.ModuleData;
+                    if (m?.ModType == ItemData.ShipModule.ModuleTypes.GuardianFSDBooster)             // if we have a guardian FSD booster..
                     {
-                        spec.SetGuardianFSDBooster(sm.Item[classpos + 6] - '0');
+                        spec.FSDGuardianBoosterRange = m.AdditionalRange.Value;
                         break;
                     }
                 }
