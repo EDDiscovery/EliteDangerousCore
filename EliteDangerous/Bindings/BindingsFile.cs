@@ -306,11 +306,11 @@ namespace EliteDangerousCore
 
                 foreach (string selline in bindlist)
                 {
-                    FileInfo[] allFiles = null;
+                  FileInfo[] allFiles = null;
 
                     // prefer files called with same index                     
                     if ( index > 0 )
-                        allFiles = Directory.EnumerateFiles(path, selline + "." + index.ToStringInvariant() + ".0.binds", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToArray();
+                        allFiles = Directory.EnumerateFiles(path, selline + "." + index.ToStringInvariant() + ".*.binds", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToArray();
 
                     // else any files with this prefix
                     if ( allFiles == null || allFiles.Length == 0)
