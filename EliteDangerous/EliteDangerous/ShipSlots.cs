@@ -222,7 +222,7 @@ namespace EliteDangerousCore
             [Slot.ShipName0] = "Nameplate Right",
             [Slot.ShipName1] = "Nameplate Left",
             [Slot.Slot00_Size8] = "Optional Slot 0 Class 8",
-            
+
             [Slot.Slot01_Size2] = "Optional Slot 1 Class 2",
             [Slot.Slot01_Size3] = "Optional Slot 1 Class 3",
             [Slot.Slot01_Size4] = "Optional Slot 1 Class 4",
@@ -230,7 +230,7 @@ namespace EliteDangerousCore
             [Slot.Slot01_Size6] = "Optional Slot 1 Class 6",
             [Slot.Slot01_Size7] = "Optional Slot 1 Class 7",
             [Slot.Slot01_Size8] = "Optional Slot 1 Class 8",
-            
+
             [Slot.Slot02_Size2] = "Optional Slot 2 Class 2",
             [Slot.Slot02_Size3] = "Optional Slot 2 Class 3",
             [Slot.Slot02_Size4] = "Optional Slot 2 Class 4",
@@ -239,28 +239,28 @@ namespace EliteDangerousCore
             [Slot.Slot02_Size7] = "Optional Slot 2 Class 7",
             [Slot.Slot02_Size8] = "Optional Slot 2 Class 8",
             [Slot.Slot03_Size1] = "Optional Slot 3 Class 1",
-            
+
             [Slot.Slot03_Size2] = "Optional Slot 3 Class 2",
             [Slot.Slot03_Size3] = "Optional Slot 3 Class 3",
             [Slot.Slot03_Size4] = "Optional Slot 3 Class 4",
             [Slot.Slot03_Size5] = "Optional Slot 3 Class 5",
             [Slot.Slot03_Size6] = "Optional Slot 3 Class 6",
             [Slot.Slot03_Size7] = "Optional Slot 3 Class 7",
-            
+
             [Slot.Slot04_Size1] = "Optional Slot 4 Class 1",
             [Slot.Slot04_Size2] = "Optional Slot 4 Class 2",
             [Slot.Slot04_Size3] = "Optional Slot 4 Class 3",
             [Slot.Slot04_Size4] = "Optional Slot 4 Class 4",
             [Slot.Slot04_Size5] = "Optional Slot 4 Class 5",
             [Slot.Slot04_Size6] = "Optional Slot 4 Class 6",
-            
+
             [Slot.Slot05_Size1] = "Optional Slot 5 Class 1",
             [Slot.Slot05_Size2] = "Optional Slot 5 Class 2",
             [Slot.Slot05_Size3] = "Optional Slot 5 Class 3",
             [Slot.Slot05_Size4] = "Optional Slot 5 Class 4",
             [Slot.Slot05_Size5] = "Optional Slot 5 Class 5",
             [Slot.Slot05_Size6] = "Optional Slot 5 Class 6",
-            
+
             [Slot.Slot06_Size1] = "Optional Slot 6 Class 1",
             [Slot.Slot06_Size2] = "Optional Slot 6 Class 2",
             [Slot.Slot06_Size3] = "Optional Slot 6 Class 3",
@@ -314,6 +314,9 @@ namespace EliteDangerousCore
 
             [Slot.VesselVoice] = "Vessel Voice",
             [Slot.WeaponColour] = "Weapon Colour",
+            [Slot.Turret] = "Turret",
+            [Slot.SineWaveScanner] = "Sine Wave Scanner",
+            [Slot.BuddyCargoHatch] = "Cargo Hatch",
         };
 
         // maps the slot fdname to an enum
