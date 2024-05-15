@@ -1329,104 +1329,119 @@ SECTION ModulePartNames
 .Military_Armour: "Military Armour" @
 .Mirrored_Surface_Composite_Armour: "Mirrored Surface Composite Armour" @
 .Reactive_Surface_Composite_Armour: "Reactive Surface Composite Armour" @
-.Auto_Field_Maintenance: "Auto Field Maintenance" @
+.Auto_Field_Maintenance_Unit: "Auto Field Maintenance Unit" @
 .Beam_Laser: "Beam Laser" @
+.Retributor_Beam_Laser: "Retributor Beam Laser" @
 .Burst_Laser: "Burst Laser" @
+.Cytoscrambler_Burst_Laser: "Cytoscrambler Burst Laser" @
 .Cannon: "Cannon" @
 .Fragment_Cannon: "Fragment Cannon" @
+.Pacifier_Fragment_Cannon: "Pacifier Fragment Cannon" @
 .Cargo_Rack: "Cargo Rack" @
-.Corrosion_Proof_Cargo_Rack: "Corrosion Proof Cargo Rack" @
-.Cargo_Scanner: "Cargo Scanner" @
+.Anti_Corrosion_Cargo_Rack: "Anti Corrosion Cargo Rack" @
+.Manifest_Scanner: "Manifest Scanner" @
 .Chaff_Launcher: "Chaff Launcher" @
 .Electronic_Countermeasure: "Electronic Countermeasure" @
 .Heat_Sink_Launcher: "Heat Sink Launcher" @
-.Caustic_Heat_Sink_Launcher: "Caustic Heat Sink Launcher" @
-.Plasma_Point_Defence: "Plasma Point Defence" @
-.Crime_Scanner: "Crime Scanner" @
+.Caustic_Sink_Launcher: "Caustic Sink Launcher" @
+.Point_Defence: "Point Defence" @
+.Kill_Warrant_Scanner: "Kill Warrant Scanner" @
 .Detailed_Surface_Scanner: "Detailed Surface Scanner" @
 .Docking_Computer: "Docking Computer" @
 .Fighter_Hangar: "Fighter Hangar" @
-.Flak_Mortar: "Flak Mortar" @
-.Flechette_Launcher: "Flechette Launcher" @
-.FSD_Interdictor: "FSD Interdictor" @
+.Remote_Release_Flak_Launcher: "Remote Release Flak Launcher" @
+.Remote_Release_Flechette_Launcher: "Remote Release Flechette Launcher" @
+.Frame_Shift_Drive_Interdictor: "Frame Shift Drive Interdictor" @
 .Fuel_Scoop: "Fuel Scoop" @
 .Fuel_Tank: "Fuel Tank" @
-.Guardian_Plasma_Launcher: "Guardian Plasma Launcher" @
+.Guardian_Plasma_Charger: "Guardian Plasma Charger" @
 .Guardian_Shard_Cannon: "Guardian Shard Cannon" @
 .Guardian_Gauss_Cannon: "Guardian Gauss Cannon" @
-.Guardian_Hull_Reinforcement: "Guardian Hull Reinforcement" @
-.Guardian_Module_Reinforcement: "Guardian Module Reinforcement" @
-.Guardian_Shield_Reinforcement: "Guardian Shield Reinforcement" @
-.Guardian_FSD_Booster: "Guardian FSD Booster" @
-.Guardian_Power_Distributor: "Guardian Power Distributor" @
-.Guardian_Powerplant: "Guardian Powerplant" @
-.Hull_Reinforcement: "Hull Reinforcement" @
-.Hyperdrive: "Hyperdrive" @
-.Cloud_Scanner: "Cloud Scanner" @
+.Guardian_Hull_Reinforcement_Package: "Guardian Hull Reinforcement Package" @
+.Guardian_Module_Reinforcement_Package: "Guardian Module Reinforcement Package" @
+.Guardian_Shield_Reinforcement_Package: "Guardian Shield Reinforcement Package" @
+.Guardian_Frame_Shift_Drive_Booster: "Guardian Frame Shift Drive Booster" @
+.Guardian_Hybrid_Power_Distributor: "Guardian Hybrid Power Distributor" @
+.Guardian_Hybrid_Power_Plant: "Guardian Hybrid Power Plant" @
+.Hull_Reinforcement_Package: "Hull Reinforcement Package" @
+.Frame_Shift_Drive: "Frame Shift Drive" @
+.Frame_Shift_Drive_(SCO): "Frame Shift Drive (SCO)" @
+.Frame_Shift_Wake_Scanner: "Frame Shift Wake Scanner" @
 .Life_Support: "Life Support" @
-.Collection_Drone_Controller: "Collection Drone Controller" @
-.Fuel_Transfer_Drone_Controller: "Fuel Transfer Drone Controller" @
-.Hatch_Breaker_Drone_Controller: "Hatch Breaker Drone Controller" @
+.Collector_Limpet_Controller: "Collector Limpet Controller" @
+.Fuel_Transfer_Limpet_Controller: "Fuel Transfer Limpet Controller" @
+.Limpet_Control: "Limpet Control" @
 .Hatch_Breaker_Limpet_Controller: "Hatch Breaker Limpet Controller" @
-.Prospector_Drone_Controller: "Prospector Drone Controller" @
-.Repair_Drone_Controller: "Repair Drone Controller" @
-.Drone_Controller_Vessel_Research: "Drone Controller Vessel Research" @
-.Decontamination_Drone_Controller: "Decontamination Drone Controller" @
-.Recon_Drone_Controller: "Recon Drone Controller" @
-.Multi_Purpose_Mining_Drone_Controller: "Multi Purpose Mining Drone Controller" @
-.Multi_Purpose_Operations_Drone_Controller: "Multi Purpose Operations Drone Controller" @
-.Multi_Purpose_Xeno_Drone_Controller: "Multi Purpose Xeno Drone Controller" @
-.Multi_Purpose_Universal_Drone_Controller: "Multi Purpose Universal Drone Controller" @
-.Meta_Alloy_Hull_Reinforcement: "Meta Alloy Hull Reinforcement" @
+.Prospector_Limpet_Controller: "Prospector Limpet Controller" @
+.Repair_Limpet_Controller: "Repair Limpet Controller" @
+.Research_Limpet_Controller: "Research Limpet Controller" @
+.Decontamination_Limpet_Controller: "Decontamination Limpet Controller" @
+.Recon_Limpet_Controller: "Recon Limpet Controller" @
+.Mining_Multi_Limpet_Controller: "Mining Multi Limpet Controller" @
+.Operations_Limpet_Controller: "Operations Limpet Controller" @
+.Rescue_Limpet_Controller: "Rescue Limpet Controller" @
+.Xeno_Limpet_Controller: "Xeno Limpet Controller" @
+.Universal_Multi_Limpet_Controller: "Universal Multi Limpet Controller" @
+.Meta_Alloy_Hull_Reinforcement_Package: "Meta Alloy Hull Reinforcement Package" @
 .Mine_Launcher: "Mine Launcher" @
-.Mining_Abrasion_Blaster: "Mining Abrasion Blaster" @
-.Mining_Seismic_Charge_Warhead: "Mining Seismic Charge Warhead" @
-.Mining_Subsurface_Displacement_Missile: "Mining Subsurface Displacement Missile" @
+.Shock_Mine_Launcher: "Shock Mine Launcher" @
+.Abrasion_Blaster: "Abrasion Blaster" @
+.Seismic_Charge_Launcher: "Seismic Charge Launcher" @
+.Sub_surface_Displacement_Missile: "Sub surface Displacement Missile" @
 .Mining_Laser: "Mining Laser" @
-.AX_Dumbfire_Missile: "AX Dumbfire Missile" @
+.Mining_Lance_Beam_Laser: "Mining Lance Beam Laser" @
+.AX_Missile_Rack: "AX Missile Rack" @
 .Enhanced_AX_Missile_Rack: "Enhanced AX Missile Rack" @
 .Guardian_Nanite_Torpedo_Pylon: "Guardian Nanite Torpedo Pylon" @
 .Seeker_Missile_Rack: "Seeker Missile Rack" @
-.Dumbfire_Missile_Rack: "Dumbfire Missile Rack" @
+.Missile_Rack: "Missile Rack" @
+.Rocket_Propelled_FSD_Disrupter: "Rocket Propelled FSD Disrupter" @
 .Pack_Hound_Missile_Rack: "Pack Hound Missile Rack" @
 .Advanced_Torp_Pylon: "Advanced Torp Pylon" @
+.Advanced_Missile_Rack: "Advanced Missile Rack" @
 .Human_Extraction_Missile: "Human Extraction Missile" @
-.Caustic_Missile: "Caustic Missile" @
-.Module_Reinforcement: "Module Reinforcement" @
+.Enzyme_Missile_Rack: "Enzyme Missile Rack" @
+.Module_Reinforcement_Package: "Module Reinforcement Package" @
 .AX_Multi_Cannon: "AX Multi Cannon" @
 .Enhanced_AX_Multi_Cannon: "Enhanced AX Multi Cannon" @
 .Multi_Cannon: "Multi Cannon" @
-.Economy_Passenger_Cabin: "Economy Passenger Cabin" @
+.Enforcer_Cannon: "Enforcer Cannon" @
+.Advanced_Multi_Cannon: "Advanced Multi Cannon" @
+.Economy: "Economy" @
 .Business: "Business" @
 .First: "First" @
-.Luxury_Passenger_Cabin: "Luxury Passenger Cabin" @
+.Luxury: "Luxury" @
 .Advanced_Planet_Approach_Suite: "Advanced Planet Approach Suite" @
 .Planet_Approach_Suite: "Planet Approach Suite" @
 .Planetary_Vehicle_Hangar: "Planetary Vehicle Hangar" @
 .Plasma_Accelerator: "Plasma Accelerator" @
-.Plasma_Shock_Cannon: "Plasma Shock Cannon" @
+.Advanced_Plasma_Accelerator: "Advanced Plasma Accelerator" @
+.Shock_Cannon: "Shock Cannon" @
 .Power_Distributor: "Power Distributor" @
-.Powerplant: "Powerplant" @
+.Power_Plant: "Power Plant" @
 .Pulse_Laser: "Pulse Laser" @
-.Pulse_Wave_scanner: "Pulse Wave scanner" @
-.Railgun: "Railgun" @
+.Pulse_Disruptor_Laser: "Pulse Disruptor Laser" @
+.Pulse_Wave_Analyser: "Pulse Wave Analyser" @
+.Rail_Gun: "Rail Gun" @
+.Imperial_Hammer_Rail_Gun: "Imperial Hammer Rail Gun" @
 .Refinery: "Refinery" @
 .Sensors: "Sensors" @
 .Shield_Booster: "Shield Booster" @
 .Shield_Cell_Bank: "Shield Cell Bank" @
 .Shield_Generator: "Shield Generator" @
+.Prismatic_Shield_Generator: "Prismatic Shield Generator" @
+.Bi_Weave_Shield_Generator: "Bi Weave Shield Generator" @
 .Shutdown_Field_Neutraliser: "Shutdown Field Neutraliser" @
-.Enhanced_Shutdown_Field_Neutraliser: "Enhanced Shutdown Field Neutraliser" @
+.Thargoid_Pulse_Neutraliser: "Thargoid Pulse Neutraliser" @
 .Exp_Module_Weapon_Stabiliser: "Exp Module Weapon Stabiliser" @
 .Supercruise_Assist: "Supercruise Assist" @
 .Stellar_Body_Discovery_Scanner: "Stellar Body Discovery Scanner" @
 .Intermediate: "Intermediate" @
 .Thrusters: "Thrusters" @
+.Enhanced_Performance_Thrusters: "Enhanced Performance Thrusters" @
 .Xeno_Scanner: "Xeno Scanner" @
-.Xeno_Scanner_MK_2: "Xeno Scanner MK 2" @
-.Advanced_Xeno_Scanner: "Advanced Xeno Scanner" @
-.Corrosion_Resistant_Cargo_Rack: "Corrosion Resistant Cargo Rack" @
-.Hyperdrive_Overcharge: "Hyperdrive Overcharge" @
+.Enhanced_Xeno_Scanner: "Enhanced Xeno Scanner" @
+.Pulse_Wave_Xeno_Scanner: "Pulse Wave Xeno Scanner" @
 
 SECTION ShipSlots
 
