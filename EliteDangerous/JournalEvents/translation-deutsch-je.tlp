@@ -261,7 +261,7 @@ SECTION JournalTypeEnum
 .ScanBaryCentre: "Scan Bary Centre" => "Baryzentrumsscan"
 .NavRouteClear: "Nav Route Clear" => "Navroute leeren"
 .ShipRedeemed: "Ship Redeemed" => "Schiff eingelöst"
-.ShipyardRedeem: "Shipyard Redeem" "Werfteinlösung"
+.ShipyardRedeem: "Shipyard Redeem" @
 
 SECTION JournalCargo
 
