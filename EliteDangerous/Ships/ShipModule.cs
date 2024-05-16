@@ -25,7 +25,6 @@ namespace EliteDangerousCore
         public ShipSlots.Slot SlotFD { get; private set; }    // never null    
         public string Item { get; private set; }        // never null       - nice name, used to track, english
         public string ItemFD { get; private set; }      // never null     - FD normalised ID name
-        public ItemData.ShipModule ModuleData { get { return ItemData.TryGetShipModule(ItemFD, out ItemData.ShipModule sm, false) ? sm : null; } }      // may be null
         public string LocalisedItem { get; set; }       // Modulex events only supply this. so it may be null if we have not seen one of them pass by with this Item name
 
         public bool? Enabled { get; private set; }      // Loadout events, may be null
@@ -53,36 +52,60 @@ namespace EliteDangerousCore
 
         public bool IsFSDSlot { get { return SlotFD  == ShipSlots.Slot.FrameShiftDrive; } }
 
-        public EliteDangerousCalculations.FSDSpec GetFSDSpec()      // may be null - not found
+        // will return null if unknown module
+        public ItemData.ShipModule ModuleDataUnengineered()
+        {
+            return ItemData.TryGetShipModule(ItemFD, out ItemData.ShipModule sm, false) ? sm : null;
+        }
+
+        // take the unengineered module data and engineer it with the Engineering data
+        // engineered may be null if we don't know the module
+        // bool says if we don't know how to modify a the module fully
+        public bool ModuleDataEngineered(out ItemData.ShipModule engineered)
+        {
+            engineered = null;
+
+            var mdu = ModuleDataUnengineered();
+
+            if (mdu != null)        // recognised module
+            {
+                if (Engineering != null)    // has enginerring
+                {
+                    return Engineering.EngineerModule(mdu, out engineered);
+                }
+                else
+                {
+                    engineered = mdu;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // return engineered FSD Spec 
+        public EliteDangerousCalculations.FSDSpec GetFSDSpec()
         {
             if (IsFSDSlot)
             {
-                ItemData.ShipModule m = ModuleData;
-
-                if ( m!=null)
+                ModuleDataEngineered(out ItemData.ShipModule engineered);
+                if (engineered != null)
                 {
-                    EliteDangerousCalculations.FSDSpec spec = m.GetFSDSpec();
-                    Engineering?.EngineerFSD(ref spec);
+                    EliteDangerousCalculations.FSDSpec spec = engineered.GetFSDSpec();
                     return spec;
                 }
+
             }
+
+            System.Diagnostics.Debug.WriteLine($"Failed to get FSD Spec {ItemFD}");
 
             return null;
         }
-        public double Mass
+
+        public double Mass()
         {
-            get
-            {
-                ItemData.TryGetShipModule(ItemFD, out ItemData.ShipModule smd, false);    // find
-                if (smd != null && smd.Mass.HasValue)
-                {
-                    double mass = smd.Mass.Value;
-                    Engineering?.EngineerMass(ref mass);
-                    return mass;
-                }
-                else
-                    return 0;
-            }
+            ModuleDataEngineered(out ItemData.ShipModule engineered);       // engineer the module the best we can. If we don't use the module, it will return null
+            return engineered?.Mass ?? 0;
         }
 
         public bool Same(ShipModule other)      // ignore localisased item, it does not occur everywhere..

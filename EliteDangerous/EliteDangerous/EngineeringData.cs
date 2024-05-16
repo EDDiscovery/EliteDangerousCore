@@ -143,10 +143,10 @@ namespace EliteDangerousCore
                         if (m.Value != m.OriginalValue)
                         {
                             bool better = m.LessIsGood ? (m.Value < m.OriginalValue) : (m.Value > m.OriginalValue);
-                            ret += BaseUtils.FieldBuilder.Build("", m.FriendlyLabel, "<: ;;N2", m.Value, "Original: ;;N2".T(EDCTx.EngineeringData_Original), m.OriginalValue, "< (Worse); (Better)".T(EDCTx.EngineeringData_Worse), better) + Environment.NewLine;
+                            ret += BaseUtils.FieldBuilder.Build("", m.FriendlyLabel, "(;)", m.Label, "<: ;;N2", m.Value, "Original: ;;N2".T(EDCTx.EngineeringData_Original), m.OriginalValue, "< (Worse); (Better)".T(EDCTx.EngineeringData_Worse), better) + Environment.NewLine;
                         }
                         else
-                            ret += BaseUtils.FieldBuilder.Build("", m.FriendlyLabel, "<: ;;N2", m.Value) + Environment.NewLine;
+                            ret += BaseUtils.FieldBuilder.Build("", m.FriendlyLabel, "(;)", m.Label, "<: ;;N2", m.Value) + Environment.NewLine;
                     }
                 }
             }
@@ -189,55 +189,74 @@ namespace EliteDangerousCore
             return Modifiers != null ? Array.Find(Modifiers, x => x.Label.Equals(name, StringComparison.InvariantCultureIgnoreCase)) : null;
         }
 
-        // this is for the future.. so we can produce an engineered module data from the standard module parameters.
-        public ItemData.ShipModule EngineerModule(ItemData.ShipModule module)
+        // take a module and engineer it with the modifiers
+        // false if we don't know how to use all the modifiers given, the ones we do know have been modified
+        public bool EngineerModule(ItemData.ShipModule original, out ItemData.ShipModule engineered)
         {
-            ItemData.ShipModule newmodule = new ItemData.ShipModule(module);
+            engineered = new ItemData.ShipModule(original);       // take a copy
 
-            EngineeringModifiers mod;
-            mod = FindModification("Mass");
-            if (mod != null)
-                newmodule.Mass = mod.Value;
-            mod = FindModification("FSDOptimalMass");
-            if (mod != null)
-                newmodule.OptMass = (int)mod.Value;
- 
-            return newmodule;
+            bool good = true;
+
+            foreach (var mf in Modifiers.EmptyIfNull())
+            {
+                if (mf.Label.EqualsIIC("Mass"))
+                {
+                    engineered.Mass = mf.Value;
+                    System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Mass} -> {engineered.Mass}");
+                }
+                else if (mf.Label.EqualsIIC("Integrity"))
+                { }     // we don't track this yet
+                else if (mf.Label.EqualsIIC("DefenceModifierHealthMultiplier")) // armour
+                {
+                    engineered.HullStrengthBonus = mf.Value;
+                    System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.HullStrengthBonus} -> {engineered.HullStrengthBonus}");
+                }
+                else if (mf.Label.EqualsIIC("KineticResistance"))
+                {
+                    engineered.Kinetic = mf.Value;
+                    System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Kinetic} -> {engineered.Kinetic}");
+
+                }
+                else if (mf.Label.EqualsIIC("ThermicResistance"))
+                {
+                    engineered.Thermal = mf.Value;
+                    System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Thermal} -> {engineered.Thermal}");
+
+                }
+                else if (mf.Label.EqualsIIC("ExplosiveResistance"))
+                {
+                    engineered.Explosive = mf.Value;
+                    System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Explosive} -> {engineered.Explosive}");
+                }
+                else if (mf.Label.EqualsIIC("PowerDraw"))
+                { }   
+                else if (mf.Label.EqualsIIC("DamagePerSecond"))
+                { }   
+                else if (mf.Label.EqualsIIC("DistributorDraw"))
+                { }   
+                else if (mf.Label.EqualsIIC("ThermalLoad"))
+                { }   
+                else if (mf.Label.EqualsIIC("AmmoClipSize"))
+                {
+                    engineered.Clip = (int)mf.Value;
+                    System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Clip} -> {engineered.Clip}");
+                }     
+                else if (mf.Label.EqualsIIC("FSDOptimalMass"))
+                    engineered.OptMass = (int)mf.Value;
+                else if (mf.Label.EqualsIIC("MaxFuelPerJump"))
+                    engineered.MaxFuelPerJump = mf.Value;
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"Failed to engineer {original.EnglishModName} with {BlueprintName} due to {mf.Label}");
+                    good = false;
+                }
+            }
+
+            return good;
         }
 
-        public bool EngineerMass(ref double mass)               // perform mass engineering
-        {
-            EngineeringModifiers mod = FindModification("Mass");
-            if (mod != null)
-            {
-                mass = mod.Value;
-                return true;
-            }
-            else
-                return false;
-        }
 
-        public bool EngineerFSD(ref EliteDangerousCalculations.FSDSpec spec)               // perform FSD
-        {
-            bool done = false;
-
-            EngineeringModifiers mod = FindModification("FSDOptimalMass");
-            if (mod != null)
-            {
-                spec.OptimalMass = mod.Value;
-                done = true;
-            }
-
-            mod = FindModification("MaxFuelPerJump");
-            if (mod != null)
-            {
-                spec.MaxFuelPerJump = mod.Value;
-                done = true;
-            }
-
-            return done;
-        }
-
+        // the whole thruster thing needs work tbd - to be removed
         public bool EngineerThrusters(ref double speed)
         {
             EngineeringModifiers mod = FindModification("EngineOptPerformance");

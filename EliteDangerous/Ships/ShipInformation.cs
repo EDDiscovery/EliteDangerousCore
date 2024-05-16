@@ -189,13 +189,14 @@ namespace EliteDangerousCore
         public EliteDangerousCalculations.FSDSpec GetFSDSpec()          // may be null due to not having the info
         {
             ShipModule fsd = GetModuleInSlot(ShipSlots.Slot.FrameShiftDrive);
+            
             EliteDangerousCalculations.FSDSpec spec = fsd?.GetFSDSpec();
 
             if (spec != null)
             {
                 foreach (ShipModule sm in Modules.Values)
                 {
-                    ItemData.ShipModule m = sm.ModuleData;
+                    ItemData.ShipModule m = sm.ModuleDataUnengineered();
                     if (m?.ModType == ItemData.ShipModule.ModuleTypes.GuardianFSDBooster)             // if we have a guardian FSD booster..
                     {
                         spec.FSDGuardianBoosterRange = m.AdditionalRange.Value;
@@ -231,7 +232,7 @@ namespace EliteDangerousCore
         public double ModuleMass()
         {
             //foreach( var x in Modules)  System.Diagnostics.Debug.WriteLine($"Module {x.Value.Item} mass {x.Value.Mass}");
-            return (from var in Modules select var.Value.Mass).Sum();
+            return (from var in Modules select var.Value.Mass()).Sum();
         }
 
         public double HullMass()
@@ -260,6 +261,7 @@ namespace EliteDangerousCore
             }
         }
 
+        // tbd wrong
         public double Boost
         {
             get
@@ -272,6 +274,7 @@ namespace EliteDangerousCore
             }
         }
 
+        // tbd wrong
         public double Speed
         {
             get
@@ -661,20 +664,12 @@ namespace EliteDangerousCore
 
         #region Export
 
-        public bool CheckMinimumJSONModules()
+        public bool CheckMinimumModulesForCoriolisEDSY()
         {
-            // these are required slots..
-            string[] requiredmodules = { "PowerPlant", "MainEngines", "FrameShiftDrive", "LifeSupport", "PowerDistributor", "Radar", "FuelTank", "Armour" };
-            int reqmodules = 0;
-
-            foreach (ShipModule sm in Modules.Values)
-            {
-                int index = Array.FindIndex(requiredmodules, x => x.Equals(sm.SlotFD));
-                if (index >= 0)
-                    reqmodules |= (1 << index);     // bit map them in, the old fashioned way
-            }
-
-            return (reqmodules == (1 << requiredmodules.Length) - 1);
+            return GetModuleInSlot(ShipSlots.Slot.PowerPlant) != null && GetModuleInSlot(ShipSlots.Slot.MainEngines) != null &&
+                    GetModuleInSlot(ShipSlots.Slot.FrameShiftDrive) != null && GetModuleInSlot(ShipSlots.Slot.LifeSupport) != null &&
+                    GetModuleInSlot(ShipSlots.Slot.PowerDistributor) != null && GetModuleInSlot(ShipSlots.Slot.Radar) != null &&
+                    GetModuleInSlot(ShipSlots.Slot.FuelTank) != null && GetModuleInSlot(ShipSlots.Slot.Armour) != null;
         }
 
         public string ToJSONCoriolis(out string errstring)

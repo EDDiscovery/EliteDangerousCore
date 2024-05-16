@@ -138,7 +138,9 @@ namespace EliteDangerousCore
             public ShipInfoDouble(double d) { Value = d; }
         };
 
-        #region ship data FROM COROLIS - use the netlogentry scanner
+        #region ships
+
+        // tbd encode ship sheilds and armour base value
 
         private static Dictionary<ShipPropID, IModuleInfo> adder = new Dictionary<ShipPropID, IModuleInfo>
         {
@@ -479,9 +481,9 @@ namespace EliteDangerousCore
             { ShipPropID.HullMass, new ShipInfoDouble(0F)},
             { ShipPropID.Name, new ShipInfoString("Python Mk II")},
             { ShipPropID.Manu, new ShipInfoString("Faulcon DeLacy")},
-            { ShipPropID.Speed, new ShipInfoInt(0)},
-            { ShipPropID.Boost, new ShipInfoInt(0)},
-            { ShipPropID.HullCost, new ShipInfoInt(0)},
+            { ShipPropID.Speed, new ShipInfoInt(256)},
+            { ShipPropID.Boost, new ShipInfoInt(345)},
+            { ShipPropID.HullCost, new ShipInfoInt(66161981)},
             { ShipPropID.Class, new ShipInfoInt(2)},
         };
         private static Dictionary<ShipPropID, IModuleInfo> sidewinder = new Dictionary<ShipPropID, IModuleInfo>

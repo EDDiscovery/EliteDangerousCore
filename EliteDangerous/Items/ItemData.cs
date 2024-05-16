@@ -27,6 +27,7 @@ namespace EliteDangerousCore
 
         public static void Initialise()
         {
+            CreateModules();
             TranslateModules();
         }
 
