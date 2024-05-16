@@ -378,14 +378,15 @@ namespace EliteDangerousCore
             public int? Clip { get; set; }
             public double? Damage { get; set; }
             public double? ReloadTime { get; set; } // s
-            public double? Explosive { get; set; } //%
-            public double? Kinetic { get; set; } //%
-            public double? Thermal { get; set; } //%
+            public double? Explosive { get; set; } //% bonus on base values
+            public double? Kinetic { get; set; } //% bonus on base values
+            public double? Thermal { get; set; } //% bonus on base values
             public double? ThermL { get; set; }
+            public double? HullStrengthBonus { get; set; }  // % bonus over the ship information armour value
             public double? CausticReinforcement { get; set; } //%
             public double? HullReinforcement { get; set; } // units
             public double? ShieldReinforcement { get; set; } // units
-            public double? AXResistance { get; set; } //%
+            public double? AXResistance { get; set; } //% bonus on base values
             public double? RegenRate { get; set; } // units/s
             public double? BrokenRegenRate { get; set; } // units/s
             public double? MinStrength { get; set; } // shields
@@ -516,7 +517,8 @@ namespace EliteDangerousCore
                     return BaseUtils.FieldBuilder.Build("Mass:;t;0.##", Mass, "Power:;MW;0.##", Power,
                         "Ammo:", Ammo, "Clip:", Clip, "Damage:", Damage, "Reload Time:;s", ReloadTime,
                         "Explosive:;%;0.#", Explosive, "Kinetic:;%;0.#", Kinetic, "Thermal:;%;0.#", Thermal,
-                        "Caustic Reinforcement:;%;0.#", CausticReinforcement, "Hull Reinforcement Package:; units;0.#", HullReinforcement, "Shield Reinforcement:; units;0.#", ShieldReinforcement, "AXResistance:;%;0.#", AXResistance,
+                        "Caustic Reinforcement:;%;0.#", CausticReinforcement, "Hull Reinforcement Package:; units;0.#", HullReinforcement, 
+                        "Shield Reinforcement:; units;0.#", ShieldReinforcement, "AXResistance:;%;0.#", AXResistance, "Hull Strength Bonus:;%;0.#",HullStrengthBonus,
                         "Generation Rate:; units/s;0.#", RegenRate, "Broken Generation Rate:; units/s;0.#", BrokenRegenRate,
                         "Min Strength:;%;0.#", MinStrength, "Optimum Strength:;%;0.#", OptStrength, "Maximum Strength:;%;0.#", MaxStrength,
                         "Typical Emissions:;m;0.#", TypicalEmission,
@@ -557,8 +559,16 @@ namespace EliteDangerousCore
                 if ( power>0)
                     Power = power;
             }
+            
+            // armour
+            public ShipModule(int id, ModuleTypes modtype, double mass, double power, string descr,
+                double Explosive, double Kinetic, double Thermal, double AXResistance, double HullStrengthBonus
+                ) : this(id, modtype, mass, power, descr)
+            {
+                this.Explosive = Explosive; this.Kinetic = Kinetic; this.Thermal = Thermal; this.AXResistance = AXResistance; this.HullStrengthBonus = HullStrengthBonus;
+            }
 
-            // armour/boosters
+            // armour boosters/shwield boosters
             public ShipModule(int id, ModuleTypes modtype, double mass, double power, string descr,
                 double Explosive, double Kinetic, double Thermal, double? ShieldReinforcement = null, double? HullReinforcement = null
                 ) : this(id, modtype, mass, power, descr)
@@ -575,7 +585,7 @@ namespace EliteDangerousCore
                 this.CausticReinforcement = CausticReinforcement; this.HullReinforcement = HullReinforcement;
             }
 
-            // guardian hull
+            // guardian hull reinforcement
             public ShipModule(int id, ModuleTypes modtype, double mass, double power, string descr,
                 double Thermal, double CausticReinforcement, double HullReinforcement
                 ) : this(id, modtype, mass, power, descr)
@@ -584,7 +594,7 @@ namespace EliteDangerousCore
                 this.CausticReinforcement = CausticReinforcement; this.HullReinforcement = HullReinforcement;
             }
 
-            // guardian hull
+            // guardian shield reinforcement
             public ShipModule(int id, ModuleTypes modtype, double mass, double power, string descr,
                 double ShieldReinforcement
                 ) : this(id, modtype, mass, power, descr)
@@ -592,7 +602,7 @@ namespace EliteDangerousCore
                 this.ShieldReinforcement = ShieldReinforcement;
             }
 
-            // guardian hull
+            // auto field maint
             public ShipModule(int id, ModuleTypes modtype, double mass, double power, string descr,
                 int Ammo
                 ) : this(id, modtype, mass, power, descr)
@@ -640,11 +650,12 @@ namespace EliteDangerousCore
                 this.Range = Range;
             }
 
-            public ShipModule(int id, ModuleTypes modtype, double mass, double power, string descr, 
+            // Weapons
+            public ShipModule(int id, ModuleTypes modtype, double mass, double power, string descr,
                                double Damage, int Range, int FallOff,
                                double BurstInterval, double ThermL, double? RateOfFire = null, int? Speed = null, double? Reload = null) : this(id, modtype, mass, power, descr)
             {
-                this.Damage = Damage; this.Range = Range; this.FallOff = FallOff; 
+                this.Damage = Damage; this.Range = Range; this.FallOff = FallOff;
                 this.BurstInterval = BurstInterval;
                 this.ThermL = ThermL;
                 this.RateOfFire = RateOfFire;
@@ -716,237 +727,242 @@ namespace EliteDangerousCore
 
         public static Dictionary<string, ShipModule> shipmodules = new Dictionary<string, ShipModule>
         {
-          // Armour, in ID order
+            // Armour, in ID order
+            // Raw Value of armour = ship.armour * (1+HullStrengthBonus/100)
+            // Kinetic resistance = Raw * (1+Kinteic/100)
+            // Explosive resistance = Raw * (1+Explosive/100)
+            // Thermal resistance = Raw * (1+Thermal/100)
+            // AX = Raw * (1+AXResistance/100) TBD
 
-            { "sidewinder_armour_grade1", new ShipModule(128049250,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Sidewinder Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "sidewinder_armour_grade2", new ShipModule(128049251,ShipModule.ModuleTypes.ReinforcedAlloy,2,0,"Sidewinder Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "sidewinder_armour_grade3", new ShipModule(128049252,ShipModule.ModuleTypes.MilitaryGradeComposite,4,0,"Sidewinder Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "sidewinder_armour_mirrored", new ShipModule(128049253,ShipModule.ModuleTypes.MirroredSurfaceComposite,4,0,"Sidewinder Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "sidewinder_armour_reactive", new ShipModule(128049254,ShipModule.ModuleTypes.ReactiveSurfaceComposite,4,0,"Sidewinder Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "sidewinder_armour_grade1", new ShipModule(128049250,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Sidewinder Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "sidewinder_armour_grade2", new ShipModule(128049251,ShipModule.ModuleTypes.ReinforcedAlloy,2,0,"Sidewinder Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "sidewinder_armour_grade3", new ShipModule(128049252,ShipModule.ModuleTypes.MilitaryGradeComposite,4,0,"Sidewinder Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "sidewinder_armour_mirrored", new ShipModule(128049253,ShipModule.ModuleTypes.MirroredSurfaceComposite,4,0,"Sidewinder Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "sidewinder_armour_reactive", new ShipModule(128049254,ShipModule.ModuleTypes.ReactiveSurfaceComposite,4,0,"Sidewinder Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "eagle_armour_grade1", new ShipModule(128049256,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Eagle Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "eagle_armour_grade2", new ShipModule(128049257,ShipModule.ModuleTypes.ReinforcedAlloy,4,0,"Eagle Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "eagle_armour_grade3", new ShipModule(128049258,ShipModule.ModuleTypes.MilitaryGradeComposite,8,0,"Eagle Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "eagle_armour_mirrored", new ShipModule(128049259,ShipModule.ModuleTypes.MirroredSurfaceComposite,8,0,"Eagle Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "eagle_armour_reactive", new ShipModule(128049260,ShipModule.ModuleTypes.ReactiveSurfaceComposite,8,0,"Eagle Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "eagle_armour_grade1", new ShipModule(128049256,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Eagle Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "eagle_armour_grade2", new ShipModule(128049257,ShipModule.ModuleTypes.ReinforcedAlloy,4,0,"Eagle Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "eagle_armour_grade3", new ShipModule(128049258,ShipModule.ModuleTypes.MilitaryGradeComposite,8,0,"Eagle Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "eagle_armour_mirrored", new ShipModule(128049259,ShipModule.ModuleTypes.MirroredSurfaceComposite,8,0,"Eagle Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "eagle_armour_reactive", new ShipModule(128049260,ShipModule.ModuleTypes.ReactiveSurfaceComposite,8,0,"Eagle Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "hauler_armour_grade1", new ShipModule(128049262,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Hauler Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "hauler_armour_grade2", new ShipModule(128049263,ShipModule.ModuleTypes.ReinforcedAlloy,1,0,"Hauler Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "hauler_armour_grade3", new ShipModule(128049264,ShipModule.ModuleTypes.MilitaryGradeComposite,2,0,"Hauler Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "hauler_armour_mirrored", new ShipModule(128049265,ShipModule.ModuleTypes.MirroredSurfaceComposite,2,0,"Hauler Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "hauler_armour_reactive", new ShipModule(128049266,ShipModule.ModuleTypes.ReactiveSurfaceComposite,2,0,"Hauler Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "hauler_armour_grade1", new ShipModule(128049262,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Hauler Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "hauler_armour_grade2", new ShipModule(128049263,ShipModule.ModuleTypes.ReinforcedAlloy,1,0,"Hauler Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "hauler_armour_grade3", new ShipModule(128049264,ShipModule.ModuleTypes.MilitaryGradeComposite,2,0,"Hauler Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "hauler_armour_mirrored", new ShipModule(128049265,ShipModule.ModuleTypes.MirroredSurfaceComposite,2,0,"Hauler Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "hauler_armour_reactive", new ShipModule(128049266,ShipModule.ModuleTypes.ReactiveSurfaceComposite,2,0,"Hauler Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "adder_armour_grade1", new ShipModule(128049268,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Adder Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "adder_armour_grade2", new ShipModule(128049269,ShipModule.ModuleTypes.ReinforcedAlloy,3,0,"Adder Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "adder_armour_grade3", new ShipModule(128049270,ShipModule.ModuleTypes.MilitaryGradeComposite,5,0,"Adder Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "adder_armour_mirrored", new ShipModule(128049271,ShipModule.ModuleTypes.MirroredSurfaceComposite,5,0,"Adder Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "adder_armour_reactive", new ShipModule(128049272,ShipModule.ModuleTypes.ReactiveSurfaceComposite,5,0,"Adder Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "adder_armour_grade1", new ShipModule(128049268,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Adder Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "adder_armour_grade2", new ShipModule(128049269,ShipModule.ModuleTypes.ReinforcedAlloy,3,0,"Adder Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "adder_armour_grade3", new ShipModule(128049270,ShipModule.ModuleTypes.MilitaryGradeComposite,5,0,"Adder Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "adder_armour_mirrored", new ShipModule(128049271,ShipModule.ModuleTypes.MirroredSurfaceComposite,5,0,"Adder Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "adder_armour_reactive", new ShipModule(128049272,ShipModule.ModuleTypes.ReactiveSurfaceComposite,5,0,"Adder Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "viper_armour_grade1", new ShipModule(128049274,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Viper Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "viper_armour_grade2", new ShipModule(128049275,ShipModule.ModuleTypes.ReinforcedAlloy,5,0,"Viper Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "viper_armour_grade3", new ShipModule(128049276,ShipModule.ModuleTypes.MilitaryGradeComposite,9,0,"Viper Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "viper_armour_mirrored", new ShipModule(128049277,ShipModule.ModuleTypes.MirroredSurfaceComposite,9,0,"Viper Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "viper_armour_reactive", new ShipModule(128049278,ShipModule.ModuleTypes.ReactiveSurfaceComposite,9,0,"Viper Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "viper_armour_grade1", new ShipModule(128049274,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Viper Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "viper_armour_grade2", new ShipModule(128049275,ShipModule.ModuleTypes.ReinforcedAlloy,5,0,"Viper Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "viper_armour_grade3", new ShipModule(128049276,ShipModule.ModuleTypes.MilitaryGradeComposite,9,0,"Viper Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "viper_armour_mirrored", new ShipModule(128049277,ShipModule.ModuleTypes.MirroredSurfaceComposite,9,0,"Viper Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "viper_armour_reactive", new ShipModule(128049278,ShipModule.ModuleTypes.ReactiveSurfaceComposite,9,0,"Viper Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "cobramkiii_armour_grade1", new ShipModule(128049280,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Cobra Mk III Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "cobramkiii_armour_grade2", new ShipModule(128049281,ShipModule.ModuleTypes.ReinforcedAlloy,14,0,"Cobra Mk III Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "cobramkiii_armour_grade3", new ShipModule(128049282,ShipModule.ModuleTypes.MilitaryGradeComposite,27,0,"Cobra Mk III Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "cobramkiii_armour_mirrored", new ShipModule(128049283,ShipModule.ModuleTypes.MirroredSurfaceComposite,27,0,"Cobra Mk III Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "cobramkiii_armour_reactive", new ShipModule(128049284,ShipModule.ModuleTypes.ReactiveSurfaceComposite,27,0,"Cobra Mk III Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "cobramkiii_armour_grade1", new ShipModule(128049280,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Cobra Mk III Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "cobramkiii_armour_grade2", new ShipModule(128049281,ShipModule.ModuleTypes.ReinforcedAlloy,14,0,"Cobra Mk III Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "cobramkiii_armour_grade3", new ShipModule(128049282,ShipModule.ModuleTypes.MilitaryGradeComposite,27,0,"Cobra Mk III Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "cobramkiii_armour_mirrored", new ShipModule(128049283,ShipModule.ModuleTypes.MirroredSurfaceComposite,27,0,"Cobra Mk III Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "cobramkiii_armour_reactive", new ShipModule(128049284,ShipModule.ModuleTypes.ReactiveSurfaceComposite,27,0,"Cobra Mk III Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "type6_armour_grade1", new ShipModule(128049286,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Type-6 Transporter Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "type6_armour_grade2", new ShipModule(128049287,ShipModule.ModuleTypes.ReinforcedAlloy,12,0,"Type-6 Transporter Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "type6_armour_grade3", new ShipModule(128049288,ShipModule.ModuleTypes.MilitaryGradeComposite,23,0,"Type-6 Transporter Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "type6_armour_mirrored", new ShipModule(128049289,ShipModule.ModuleTypes.MirroredSurfaceComposite,23,0,"Type-6 Transporter Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "type6_armour_reactive", new ShipModule(128049290,ShipModule.ModuleTypes.ReactiveSurfaceComposite,23,0,"Type-6 Transporter Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "type6_armour_grade1", new ShipModule(128049286,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Type-6 Transporter Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "type6_armour_grade2", new ShipModule(128049287,ShipModule.ModuleTypes.ReinforcedAlloy,12,0,"Type-6 Transporter Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "type6_armour_grade3", new ShipModule(128049288,ShipModule.ModuleTypes.MilitaryGradeComposite,23,0,"Type-6 Transporter Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "type6_armour_mirrored", new ShipModule(128049289,ShipModule.ModuleTypes.MirroredSurfaceComposite,23,0,"Type-6 Transporter Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "type6_armour_reactive", new ShipModule(128049290,ShipModule.ModuleTypes.ReactiveSurfaceComposite,23,0,"Type-6 Transporter Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "dolphin_armour_grade1", new ShipModule(128049292,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Dolphin Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "dolphin_armour_grade2", new ShipModule(128049293,ShipModule.ModuleTypes.ReinforcedAlloy,32,0,"Dolphin Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "dolphin_armour_grade3", new ShipModule(128049294,ShipModule.ModuleTypes.MilitaryGradeComposite,63,0,"Dolphin Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "dolphin_armour_mirrored", new ShipModule(128049295,ShipModule.ModuleTypes.MirroredSurfaceComposite,63,0,"Dolphin Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "dolphin_armour_reactive", new ShipModule(128049296,ShipModule.ModuleTypes.ReactiveSurfaceComposite,63,0,"Dolphin Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "dolphin_armour_grade1", new ShipModule(128049292,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Dolphin Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "dolphin_armour_grade2", new ShipModule(128049293,ShipModule.ModuleTypes.ReinforcedAlloy,32,0,"Dolphin Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "dolphin_armour_grade3", new ShipModule(128049294,ShipModule.ModuleTypes.MilitaryGradeComposite,63,0,"Dolphin Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "dolphin_armour_mirrored", new ShipModule(128049295,ShipModule.ModuleTypes.MirroredSurfaceComposite,63,0,"Dolphin Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "dolphin_armour_reactive", new ShipModule(128049296,ShipModule.ModuleTypes.ReactiveSurfaceComposite,63,0,"Dolphin Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "type7_armour_grade1", new ShipModule(128049298,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Type-7 Transporter Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "type7_armour_grade2", new ShipModule(128049299,ShipModule.ModuleTypes.ReinforcedAlloy,32,0,"Type-7 Transporter Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "type7_armour_grade3", new ShipModule(128049300,ShipModule.ModuleTypes.MilitaryGradeComposite,63,0,"Type-7 Transporter Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "type7_armour_mirrored", new ShipModule(128049301,ShipModule.ModuleTypes.MirroredSurfaceComposite,63,0,"Type-7 Transporter Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "type7_armour_reactive", new ShipModule(128049302,ShipModule.ModuleTypes.ReactiveSurfaceComposite,63,0,"Type-7 Transporter Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "type7_armour_grade1", new ShipModule(128049298,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Type-7 Transporter Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "type7_armour_grade2", new ShipModule(128049299,ShipModule.ModuleTypes.ReinforcedAlloy,32,0,"Type-7 Transporter Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "type7_armour_grade3", new ShipModule(128049300,ShipModule.ModuleTypes.MilitaryGradeComposite,63,0,"Type-7 Transporter Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "type7_armour_mirrored", new ShipModule(128049301,ShipModule.ModuleTypes.MirroredSurfaceComposite,63,0,"Type-7 Transporter Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "type7_armour_reactive", new ShipModule(128049302,ShipModule.ModuleTypes.ReactiveSurfaceComposite,63,0,"Type-7 Transporter Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "asp_armour_grade1", new ShipModule(128049304,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Asp Explorer Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "asp_armour_grade2", new ShipModule(128049305,ShipModule.ModuleTypes.ReinforcedAlloy,21,0,"Asp Explorer Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "asp_armour_grade3", new ShipModule(128049306,ShipModule.ModuleTypes.MilitaryGradeComposite,42,0,"Asp Explorer Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "asp_armour_mirrored", new ShipModule(128049307,ShipModule.ModuleTypes.MirroredSurfaceComposite,42,0,"Asp Explorer Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "asp_armour_reactive", new ShipModule(128049308,ShipModule.ModuleTypes.ReactiveSurfaceComposite,42,0,"Asp Explorer Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "asp_armour_grade1", new ShipModule(128049304,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Asp Explorer Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "asp_armour_grade2", new ShipModule(128049305,ShipModule.ModuleTypes.ReinforcedAlloy,21,0,"Asp Explorer Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "asp_armour_grade3", new ShipModule(128049306,ShipModule.ModuleTypes.MilitaryGradeComposite,42,0,"Asp Explorer Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "asp_armour_mirrored", new ShipModule(128049307,ShipModule.ModuleTypes.MirroredSurfaceComposite,42,0,"Asp Explorer Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "asp_armour_reactive", new ShipModule(128049308,ShipModule.ModuleTypes.ReactiveSurfaceComposite,42,0,"Asp Explorer Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "vulture_armour_grade1", new ShipModule(128049310,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Vulture Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "vulture_armour_grade2", new ShipModule(128049311,ShipModule.ModuleTypes.ReinforcedAlloy,17,0,"Vulture Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "vulture_armour_grade3", new ShipModule(128049312,ShipModule.ModuleTypes.MilitaryGradeComposite,35,0,"Vulture Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "vulture_armour_mirrored", new ShipModule(128049313,ShipModule.ModuleTypes.MirroredSurfaceComposite,35,0,"Vulture Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "vulture_armour_reactive", new ShipModule(128049314,ShipModule.ModuleTypes.ReactiveSurfaceComposite,35,0,"Vulture Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "vulture_armour_grade1", new ShipModule(128049310,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Vulture Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "vulture_armour_grade2", new ShipModule(128049311,ShipModule.ModuleTypes.ReinforcedAlloy,17,0,"Vulture Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "vulture_armour_grade3", new ShipModule(128049312,ShipModule.ModuleTypes.MilitaryGradeComposite,35,0,"Vulture Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "vulture_armour_mirrored", new ShipModule(128049313,ShipModule.ModuleTypes.MirroredSurfaceComposite,35,0,"Vulture Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "vulture_armour_reactive", new ShipModule(128049314,ShipModule.ModuleTypes.ReactiveSurfaceComposite,35,0,"Vulture Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "empire_trader_armour_grade1", new ShipModule(128049316,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Imperial Clipper Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "empire_trader_armour_grade2", new ShipModule(128049317,ShipModule.ModuleTypes.ReinforcedAlloy,30,0,"Imperial Clipper Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "empire_trader_armour_grade3", new ShipModule(128049318,ShipModule.ModuleTypes.MilitaryGradeComposite,60,0,"Imperial Clipper Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "empire_trader_armour_mirrored", new ShipModule(128049319,ShipModule.ModuleTypes.MirroredSurfaceComposite,60,0,"Imperial Clipper Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "empire_trader_armour_reactive", new ShipModule(128049320,ShipModule.ModuleTypes.ReactiveSurfaceComposite,60,0,"Imperial Clipper Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "empire_trader_armour_grade1", new ShipModule(128049316,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Imperial Clipper Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "empire_trader_armour_grade2", new ShipModule(128049317,ShipModule.ModuleTypes.ReinforcedAlloy,30,0,"Imperial Clipper Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "empire_trader_armour_grade3", new ShipModule(128049318,ShipModule.ModuleTypes.MilitaryGradeComposite,60,0,"Imperial Clipper Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "empire_trader_armour_mirrored", new ShipModule(128049319,ShipModule.ModuleTypes.MirroredSurfaceComposite,60,0,"Imperial Clipper Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "empire_trader_armour_reactive", new ShipModule(128049320,ShipModule.ModuleTypes.ReactiveSurfaceComposite,60,0,"Imperial Clipper Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "federation_dropship_armour_grade1", new ShipModule(128049322,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Federal Dropship Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "federation_dropship_armour_grade2", new ShipModule(128049323,ShipModule.ModuleTypes.ReinforcedAlloy,44,0,"Federal Dropship Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "federation_dropship_armour_grade3", new ShipModule(128049324,ShipModule.ModuleTypes.MilitaryGradeComposite,87,0,"Federal Dropship Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "federation_dropship_armour_mirrored", new ShipModule(128049325,ShipModule.ModuleTypes.MirroredSurfaceComposite,87,0,"Federal Dropship Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "federation_dropship_armour_reactive", new ShipModule(128049326,ShipModule.ModuleTypes.ReactiveSurfaceComposite,87,0,"Federal Dropship Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "federation_dropship_armour_grade1", new ShipModule(128049322,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Federal Dropship Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "federation_dropship_armour_grade2", new ShipModule(128049323,ShipModule.ModuleTypes.ReinforcedAlloy,44,0,"Federal Dropship Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "federation_dropship_armour_grade3", new ShipModule(128049324,ShipModule.ModuleTypes.MilitaryGradeComposite,87,0,"Federal Dropship Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "federation_dropship_armour_mirrored", new ShipModule(128049325,ShipModule.ModuleTypes.MirroredSurfaceComposite,87,0,"Federal Dropship Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "federation_dropship_armour_reactive", new ShipModule(128049326,ShipModule.ModuleTypes.ReactiveSurfaceComposite,87,0,"Federal Dropship Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "orca_armour_grade1", new ShipModule(128049328,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Orca Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "orca_armour_grade2", new ShipModule(128049329,ShipModule.ModuleTypes.ReinforcedAlloy,21,0,"Orca Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "orca_armour_grade3", new ShipModule(128049330,ShipModule.ModuleTypes.MilitaryGradeComposite,87,0,"Orca Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "orca_armour_mirrored", new ShipModule(128049331,ShipModule.ModuleTypes.MirroredSurfaceComposite,87,0,"Orca Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "orca_armour_reactive", new ShipModule(128049332,ShipModule.ModuleTypes.ReactiveSurfaceComposite,87,0,"Orca Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "orca_armour_grade1", new ShipModule(128049328,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Orca Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "orca_armour_grade2", new ShipModule(128049329,ShipModule.ModuleTypes.ReinforcedAlloy,21,0,"Orca Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "orca_armour_grade3", new ShipModule(128049330,ShipModule.ModuleTypes.MilitaryGradeComposite,87,0,"Orca Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "orca_armour_mirrored", new ShipModule(128049331,ShipModule.ModuleTypes.MirroredSurfaceComposite,87,0,"Orca Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "orca_armour_reactive", new ShipModule(128049332,ShipModule.ModuleTypes.ReactiveSurfaceComposite,87,0,"Orca Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "type9_armour_grade1", new ShipModule(128049334,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Type-9 Heavy Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "type9_armour_grade2", new ShipModule(128049335,ShipModule.ModuleTypes.ReinforcedAlloy,75,0,"Type-9 Heavy Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "type9_armour_grade3", new ShipModule(128049336,ShipModule.ModuleTypes.MilitaryGradeComposite,150,0,"Type-9 Heavy Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "type9_armour_mirrored", new ShipModule(128049337,ShipModule.ModuleTypes.MirroredSurfaceComposite,150,0,"Type-9 Heavy Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "type9_armour_reactive", new ShipModule(128049338,ShipModule.ModuleTypes.ReactiveSurfaceComposite,150,0,"Type-9 Heavy Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "type9_armour_grade1", new ShipModule(128049334,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Type-9 Heavy Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "type9_armour_grade2", new ShipModule(128049335,ShipModule.ModuleTypes.ReinforcedAlloy,75,0,"Type-9 Heavy Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "type9_armour_grade3", new ShipModule(128049336,ShipModule.ModuleTypes.MilitaryGradeComposite,150,0,"Type-9 Heavy Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "type9_armour_mirrored", new ShipModule(128049337,ShipModule.ModuleTypes.MirroredSurfaceComposite,150,0,"Type-9 Heavy Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "type9_armour_reactive", new ShipModule(128049338,ShipModule.ModuleTypes.ReactiveSurfaceComposite,150,0,"Type-9 Heavy Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "python_armour_grade1", new ShipModule(128049340,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Python Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "python_armour_grade2", new ShipModule(128049341,ShipModule.ModuleTypes.ReinforcedAlloy,26,0,"Python Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "python_armour_grade3", new ShipModule(128049342,ShipModule.ModuleTypes.MilitaryGradeComposite,53,0,"Python Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "python_armour_mirrored", new ShipModule(128049343,ShipModule.ModuleTypes.MirroredSurfaceComposite,53,0,"Python Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "python_armour_reactive", new ShipModule(128049344,ShipModule.ModuleTypes.ReactiveSurfaceComposite,53,0,"Python Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "python_armour_grade1", new ShipModule(128049340,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Python Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "python_armour_grade2", new ShipModule(128049341,ShipModule.ModuleTypes.ReinforcedAlloy,26,0,"Python Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "python_armour_grade3", new ShipModule(128049342,ShipModule.ModuleTypes.MilitaryGradeComposite,53,0,"Python Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "python_armour_mirrored", new ShipModule(128049343,ShipModule.ModuleTypes.MirroredSurfaceComposite,53,0,"Python Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "python_armour_reactive", new ShipModule(128049344,ShipModule.ModuleTypes.ReactiveSurfaceComposite,53,0,"Python Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "belugaliner_armour_grade1", new ShipModule(128049346,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Beluga Liner Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "belugaliner_armour_grade2", new ShipModule(128049347,ShipModule.ModuleTypes.ReinforcedAlloy,83,0,"Beluga Liner Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "belugaliner_armour_grade3", new ShipModule(128049348,ShipModule.ModuleTypes.MilitaryGradeComposite,165,0,"Beluga Liner Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "belugaliner_armour_mirrored", new ShipModule(128049349,ShipModule.ModuleTypes.MirroredSurfaceComposite,165,0,"Beluga Liner Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "belugaliner_armour_reactive", new ShipModule(128049350,ShipModule.ModuleTypes.ReactiveSurfaceComposite,165,0,"Beluga Liner Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "belugaliner_armour_grade1", new ShipModule(128049346,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Beluga Liner Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "belugaliner_armour_grade2", new ShipModule(128049347,ShipModule.ModuleTypes.ReinforcedAlloy,83,0,"Beluga Liner Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "belugaliner_armour_grade3", new ShipModule(128049348,ShipModule.ModuleTypes.MilitaryGradeComposite,165,0,"Beluga Liner Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "belugaliner_armour_mirrored", new ShipModule(128049349,ShipModule.ModuleTypes.MirroredSurfaceComposite,165,0,"Beluga Liner Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "belugaliner_armour_reactive", new ShipModule(128049350,ShipModule.ModuleTypes.ReactiveSurfaceComposite,165,0,"Beluga Liner Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "ferdelance_armour_grade1", new ShipModule(128049352,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Fer-de-Lance Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "ferdelance_armour_grade2", new ShipModule(128049353,ShipModule.ModuleTypes.ReinforcedAlloy,19,0,"Fer-de-Lance Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "ferdelance_armour_grade3", new ShipModule(128049354,ShipModule.ModuleTypes.MilitaryGradeComposite,38,0,"Fer-de-Lance Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "ferdelance_armour_mirrored", new ShipModule(128049355,ShipModule.ModuleTypes.MirroredSurfaceComposite,38,0,"Fer-de-Lance Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "ferdelance_armour_reactive", new ShipModule(128049356,ShipModule.ModuleTypes.ReactiveSurfaceComposite,38,0,"Fer-de-Lance Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "ferdelance_armour_grade1", new ShipModule(128049352,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Fer-de-Lance Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "ferdelance_armour_grade2", new ShipModule(128049353,ShipModule.ModuleTypes.ReinforcedAlloy,19,0,"Fer-de-Lance Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "ferdelance_armour_grade3", new ShipModule(128049354,ShipModule.ModuleTypes.MilitaryGradeComposite,38,0,"Fer-de-Lance Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "ferdelance_armour_mirrored", new ShipModule(128049355,ShipModule.ModuleTypes.MirroredSurfaceComposite,38,0,"Fer-de-Lance Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "ferdelance_armour_reactive", new ShipModule(128049356,ShipModule.ModuleTypes.ReactiveSurfaceComposite,38,0,"Fer-de-Lance Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "anaconda_armour_grade1", new ShipModule(128049364,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Anaconda Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "anaconda_armour_grade2", new ShipModule(128049365,ShipModule.ModuleTypes.ReinforcedAlloy,30,0,"Anaconda Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "anaconda_armour_grade3", new ShipModule(128049366,ShipModule.ModuleTypes.MilitaryGradeComposite,60,0,"Anaconda Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "anaconda_armour_mirrored", new ShipModule(128049367,ShipModule.ModuleTypes.MirroredSurfaceComposite,60,0,"Anaconda Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "anaconda_armour_reactive", new ShipModule(128049368,ShipModule.ModuleTypes.ReactiveSurfaceComposite,60,0,"Anaconda Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "anaconda_armour_grade1", new ShipModule(128049364,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Anaconda Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "anaconda_armour_grade2", new ShipModule(128049365,ShipModule.ModuleTypes.ReinforcedAlloy,30,0,"Anaconda Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "anaconda_armour_grade3", new ShipModule(128049366,ShipModule.ModuleTypes.MilitaryGradeComposite,60,0,"Anaconda Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "anaconda_armour_mirrored", new ShipModule(128049367,ShipModule.ModuleTypes.MirroredSurfaceComposite,60,0,"Anaconda Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "anaconda_armour_reactive", new ShipModule(128049368,ShipModule.ModuleTypes.ReactiveSurfaceComposite,60,0,"Anaconda Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "federation_corvette_armour_grade1", new ShipModule(128049370,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Federal Corvette Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "federation_corvette_armour_grade2", new ShipModule(128049371,ShipModule.ModuleTypes.ReinforcedAlloy,30,0,"Federal Corvette Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "federation_corvette_armour_grade3", new ShipModule(128049372,ShipModule.ModuleTypes.MilitaryGradeComposite,60,0,"Federal Corvette Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "federation_corvette_armour_mirrored", new ShipModule(128049373,ShipModule.ModuleTypes.MirroredSurfaceComposite,60,0,"Federal Corvette Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "federation_corvette_armour_reactive", new ShipModule(128049374,ShipModule.ModuleTypes.ReactiveSurfaceComposite,60,0,"Federal Corvette Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "federation_corvette_armour_grade1", new ShipModule(128049370,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Federal Corvette Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "federation_corvette_armour_grade2", new ShipModule(128049371,ShipModule.ModuleTypes.ReinforcedAlloy,30,0,"Federal Corvette Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "federation_corvette_armour_grade3", new ShipModule(128049372,ShipModule.ModuleTypes.MilitaryGradeComposite,60,0,"Federal Corvette Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "federation_corvette_armour_mirrored", new ShipModule(128049373,ShipModule.ModuleTypes.MirroredSurfaceComposite,60,0,"Federal Corvette Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "federation_corvette_armour_reactive", new ShipModule(128049374,ShipModule.ModuleTypes.ReactiveSurfaceComposite,60,0,"Federal Corvette Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "cutter_armour_grade1", new ShipModule(128049376,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Imperial Cutter Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "cutter_armour_grade2", new ShipModule(128049377,ShipModule.ModuleTypes.ReinforcedAlloy,30,0,"Imperial Cutter Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "cutter_armour_grade3", new ShipModule(128049378,ShipModule.ModuleTypes.MilitaryGradeComposite,60,0,"Imperial Cutter Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "cutter_armour_mirrored", new ShipModule(128049379,ShipModule.ModuleTypes.MirroredSurfaceComposite,60,0,"Imperial Cutter Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "cutter_armour_reactive", new ShipModule(128049380,ShipModule.ModuleTypes.ReactiveSurfaceComposite,60,0,"Imperial Cutter Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "cutter_armour_grade1", new ShipModule(128049376,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Imperial Cutter Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "cutter_armour_grade2", new ShipModule(128049377,ShipModule.ModuleTypes.ReinforcedAlloy,30,0,"Imperial Cutter Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "cutter_armour_grade3", new ShipModule(128049378,ShipModule.ModuleTypes.MilitaryGradeComposite,60,0,"Imperial Cutter Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "cutter_armour_mirrored", new ShipModule(128049379,ShipModule.ModuleTypes.MirroredSurfaceComposite,60,0,"Imperial Cutter Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "cutter_armour_reactive", new ShipModule(128049380,ShipModule.ModuleTypes.ReactiveSurfaceComposite,60,0,"Imperial Cutter Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "diamondbackxl_armour_grade1", new ShipModule(128671832,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Diamondback Explorer Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "diamondbackxl_armour_grade2", new ShipModule(128671833,ShipModule.ModuleTypes.ReinforcedAlloy,23,0,"Diamondback Explorer Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "diamondbackxl_armour_grade3", new ShipModule(128671834,ShipModule.ModuleTypes.MilitaryGradeComposite,47,0,"Diamondback Explorer Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "diamondbackxl_armour_mirrored", new ShipModule(128671835,ShipModule.ModuleTypes.MirroredSurfaceComposite,26,0,"Diamondback Explorer Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "diamondbackxl_armour_reactive", new ShipModule(128671836,ShipModule.ModuleTypes.ReactiveSurfaceComposite,47,0,"Diamondback Explorer Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
-
-
-            { "empire_eagle_armour_grade1", new ShipModule(128672140,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Imperial Eagle Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "empire_eagle_armour_grade2", new ShipModule(128672141,ShipModule.ModuleTypes.ReinforcedAlloy,4,0,"Imperial Eagle Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "empire_eagle_armour_grade3", new ShipModule(128672142,ShipModule.ModuleTypes.MilitaryGradeComposite,8,0,"Imperial Eagle Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "empire_eagle_armour_mirrored", new ShipModule(128672143,ShipModule.ModuleTypes.MirroredSurfaceComposite,8,0,"Imperial Eagle Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "empire_eagle_armour_reactive", new ShipModule(128672144,ShipModule.ModuleTypes.ReactiveSurfaceComposite,8,0,"Imperial Eagle Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
-
-            { "federation_dropship_mkii_armour_grade1", new ShipModule(128672147,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Federal Assault Ship Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "federation_dropship_mkii_armour_grade2", new ShipModule(128672148,ShipModule.ModuleTypes.ReinforcedAlloy,44,0,"Federal Assault Ship Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "federation_dropship_mkii_armour_grade3", new ShipModule(128672149,ShipModule.ModuleTypes.MilitaryGradeComposite,87,0,"Federal Assault Ship Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "federation_dropship_mkii_armour_mirrored", new ShipModule(128672150,ShipModule.ModuleTypes.MirroredSurfaceComposite,87,0,"Federal Assault Ship Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "federation_dropship_mkii_armour_reactive", new ShipModule(128672151,ShipModule.ModuleTypes.ReactiveSurfaceComposite,87,0,"Federal Assault Ship Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
-
-            { "federation_gunship_armour_grade1", new ShipModule(128672154,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Federal Gunship Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "federation_gunship_armour_grade2", new ShipModule(128672155,ShipModule.ModuleTypes.ReinforcedAlloy,44,0,"Federal Gunship Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "federation_gunship_armour_grade3", new ShipModule(128672156,ShipModule.ModuleTypes.MilitaryGradeComposite,87,0,"Federal Gunship Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "federation_gunship_armour_mirrored", new ShipModule(128672157,ShipModule.ModuleTypes.MirroredSurfaceComposite,87,0,"Federal Gunship Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "federation_gunship_armour_reactive", new ShipModule(128672158,ShipModule.ModuleTypes.ReactiveSurfaceComposite,87,0,"Federal Gunship Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
-
-            { "viper_mkiv_armour_grade1", new ShipModule(128672257,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Viper Mk IV Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "viper_mkiv_armour_grade2", new ShipModule(128672258,ShipModule.ModuleTypes.ReinforcedAlloy,5,0,"Viper Mk IV Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "viper_mkiv_armour_grade3", new ShipModule(128672259,ShipModule.ModuleTypes.MilitaryGradeComposite,9,0,"Viper Mk IV Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "viper_mkiv_armour_mirrored", new ShipModule(128672260,ShipModule.ModuleTypes.MirroredSurfaceComposite,9,0,"Viper Mk IV Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "viper_mkiv_armour_reactive", new ShipModule(128672261,ShipModule.ModuleTypes.ReactiveSurfaceComposite,9,0,"Viper Mk IV Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
-
-            { "cobramkiv_armour_grade1", new ShipModule(128672264,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Cobra Mk IV Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "cobramkiv_armour_grade2", new ShipModule(128672265,ShipModule.ModuleTypes.ReinforcedAlloy,14,0,"Cobra Mk IV Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "cobramkiv_armour_grade3", new ShipModule(128672266,ShipModule.ModuleTypes.MilitaryGradeComposite,27,0,"Cobra Mk IV Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "cobramkiv_armour_mirrored", new ShipModule(128672267,ShipModule.ModuleTypes.MirroredSurfaceComposite,27,0,"Cobra Mk IV Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "cobramkiv_armour_reactive", new ShipModule(128672268,ShipModule.ModuleTypes.ReactiveSurfaceComposite,27,0,"Cobra Mk IV Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
-
-            { "independant_trader_armour_grade1", new ShipModule(128672271,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Keelback Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "independant_trader_armour_grade2", new ShipModule(128672272,ShipModule.ModuleTypes.ReinforcedAlloy,12,0,"Keelback Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "independant_trader_armour_grade3", new ShipModule(128672273,ShipModule.ModuleTypes.MilitaryGradeComposite,23,0,"Keelback Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "independant_trader_armour_mirrored", new ShipModule(128672274,ShipModule.ModuleTypes.MirroredSurfaceComposite,23,0,"Keelback Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "independant_trader_armour_reactive", new ShipModule(128672275,ShipModule.ModuleTypes.ReactiveSurfaceComposite,23,0,"Keelback Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
-
-            { "asp_scout_armour_grade1", new ShipModule(128672278,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Asp Scout Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "asp_scout_armour_grade2", new ShipModule(128672279,ShipModule.ModuleTypes.ReinforcedAlloy,21,0,"Asp Scout Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "asp_scout_armour_grade3", new ShipModule(128672280,ShipModule.ModuleTypes.MilitaryGradeComposite,42,0,"Asp Scout Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "asp_scout_armour_mirrored", new ShipModule(128672281,ShipModule.ModuleTypes.MirroredSurfaceComposite,42,0,"Asp Scout Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "asp_scout_armour_reactive", new ShipModule(128672282,ShipModule.ModuleTypes.ReactiveSurfaceComposite,42,0,"Asp Scout Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "diamondbackxl_armour_grade1", new ShipModule(128671832,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Diamondback Explorer Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "diamondbackxl_armour_grade2", new ShipModule(128671833,ShipModule.ModuleTypes.ReinforcedAlloy,23,0,"Diamondback Explorer Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "diamondbackxl_armour_grade3", new ShipModule(128671834,ShipModule.ModuleTypes.MilitaryGradeComposite,47,0,"Diamondback Explorer Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "diamondbackxl_armour_mirrored", new ShipModule(128671835,ShipModule.ModuleTypes.MirroredSurfaceComposite,47,0,"Diamondback Explorer Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "diamondbackxl_armour_reactive", new ShipModule(128671836,ShipModule.ModuleTypes.ReactiveSurfaceComposite,47,0,"Diamondback Explorer Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
 
-            { "krait_mkii_armour_grade1", new ShipModule(128816569,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Krait Mk II Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "krait_mkii_armour_grade2", new ShipModule(128816570,ShipModule.ModuleTypes.ReinforcedAlloy,36,0,"Krait Mk II Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "krait_mkii_armour_grade3", new ShipModule(128816571,ShipModule.ModuleTypes.MilitaryGradeComposite,67,0,"Krait Mk II Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "krait_mkii_armour_mirrored", new ShipModule(128816572,ShipModule.ModuleTypes.MirroredSurfaceComposite,67,0,"Krait Mk II Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "krait_mkii_armour_reactive", new ShipModule(128816573,ShipModule.ModuleTypes.ReactiveSurfaceComposite,67,0,"Krait Mk II Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "empire_eagle_armour_grade1", new ShipModule(128672140,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Imperial Eagle Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "empire_eagle_armour_grade2", new ShipModule(128672141,ShipModule.ModuleTypes.ReinforcedAlloy,4,0,"Imperial Eagle Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "empire_eagle_armour_grade3", new ShipModule(128672142,ShipModule.ModuleTypes.MilitaryGradeComposite,8,0,"Imperial Eagle Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "empire_eagle_armour_mirrored", new ShipModule(128672143,ShipModule.ModuleTypes.MirroredSurfaceComposite,8,0,"Imperial Eagle Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "empire_eagle_armour_reactive", new ShipModule(128672144,ShipModule.ModuleTypes.ReactiveSurfaceComposite,8,0,"Imperial Eagle Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "typex_armour_grade1", new ShipModule(128816576,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Alliance Chieftain Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "typex_armour_grade2", new ShipModule(128816577,ShipModule.ModuleTypes.ReinforcedAlloy,40,0,"Alliance Chieftain Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "typex_armour_grade3", new ShipModule(128816578,ShipModule.ModuleTypes.MilitaryGradeComposite,78,0,"Alliance Chieftain Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "typex_armour_mirrored", new ShipModule(128816579,ShipModule.ModuleTypes.MirroredSurfaceComposite,78,0,"Alliance Chieftain Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "typex_armour_reactive", new ShipModule(128816580,ShipModule.ModuleTypes.ReactiveSurfaceComposite,78,0,"Alliance Chieftain Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "federation_dropship_mkii_armour_grade1", new ShipModule(128672147,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Federal Assault Ship Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "federation_dropship_mkii_armour_grade2", new ShipModule(128672148,ShipModule.ModuleTypes.ReinforcedAlloy,44,0,"Federal Assault Ship Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "federation_dropship_mkii_armour_grade3", new ShipModule(128672149,ShipModule.ModuleTypes.MilitaryGradeComposite,87,0,"Federal Assault Ship Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "federation_dropship_mkii_armour_mirrored", new ShipModule(128672150,ShipModule.ModuleTypes.MirroredSurfaceComposite,87,0,"Federal Assault Ship Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "federation_dropship_mkii_armour_reactive", new ShipModule(128672151,ShipModule.ModuleTypes.ReactiveSurfaceComposite,87,0,"Federal Assault Ship Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "typex_2_armour_grade1", new ShipModule(128816583,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Alliance Crusader Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "typex_2_armour_grade2", new ShipModule(128816584,ShipModule.ModuleTypes.ReinforcedAlloy,40,0,"Alliance Crusader Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "typex_2_armour_grade3", new ShipModule(128816585,ShipModule.ModuleTypes.MilitaryGradeComposite,78,0,"Alliance Crusader Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "typex_2_armour_mirrored", new ShipModule(128816586,ShipModule.ModuleTypes.MirroredSurfaceComposite,78,0,"Alliance Crusader Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "typex_2_armour_reactive", new ShipModule(128816587,ShipModule.ModuleTypes.ReactiveSurfaceComposite,78,0,"Alliance Crusader Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "federation_gunship_armour_grade1", new ShipModule(128672154,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Federal Gunship Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "federation_gunship_armour_grade2", new ShipModule(128672155,ShipModule.ModuleTypes.ReinforcedAlloy,44,0,"Federal Gunship Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "federation_gunship_armour_grade3", new ShipModule(128672156,ShipModule.ModuleTypes.MilitaryGradeComposite,87,0,"Federal Gunship Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "federation_gunship_armour_mirrored", new ShipModule(128672157,ShipModule.ModuleTypes.MirroredSurfaceComposite,87,0,"Federal Gunship Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "federation_gunship_armour_reactive", new ShipModule(128672158,ShipModule.ModuleTypes.ReactiveSurfaceComposite,87,0,"Federal Gunship Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "typex_3_armour_grade1", new ShipModule(128816590,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Alliance Challenger Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "typex_3_armour_grade2", new ShipModule(128816591,ShipModule.ModuleTypes.ReinforcedAlloy,40,0,"Alliance Challenger Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "typex_3_armour_grade3", new ShipModule(128816592,ShipModule.ModuleTypes.MilitaryGradeComposite,78,0,"Alliance Challenger Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "typex_3_armour_mirrored", new ShipModule(128816593,ShipModule.ModuleTypes.MirroredSurfaceComposite,78,0,"Alliance Challenger Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "typex_3_armour_reactive", new ShipModule(128816594,ShipModule.ModuleTypes.ReactiveSurfaceComposite,78,0,"Alliance Challenger Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "viper_mkiv_armour_grade1", new ShipModule(128672257,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Viper Mk IV Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "viper_mkiv_armour_grade2", new ShipModule(128672258,ShipModule.ModuleTypes.ReinforcedAlloy,5,0,"Viper Mk IV Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "viper_mkiv_armour_grade3", new ShipModule(128672259,ShipModule.ModuleTypes.MilitaryGradeComposite,9,0,"Viper Mk IV Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "viper_mkiv_armour_mirrored", new ShipModule(128672260,ShipModule.ModuleTypes.MirroredSurfaceComposite,9,0,"Viper Mk IV Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "viper_mkiv_armour_reactive", new ShipModule(128672261,ShipModule.ModuleTypes.ReactiveSurfaceComposite,9,0,"Viper Mk IV Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "diamondback_armour_grade1", new ShipModule(128671218,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Diamondback Scout Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "diamondback_armour_grade2", new ShipModule(128671219,ShipModule.ModuleTypes.ReinforcedAlloy,13,0,"Diamondback Scout Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "diamondback_armour_grade3", new ShipModule(128671220,ShipModule.ModuleTypes.MilitaryGradeComposite,26,0,"Diamondback Scout Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "diamondback_armour_mirrored", new ShipModule(128671221,ShipModule.ModuleTypes.MirroredSurfaceComposite,26,0,"Diamondback Scout Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "diamondback_armour_reactive", new ShipModule(128671222,ShipModule.ModuleTypes.ReactiveSurfaceComposite,26,0,"Diamondback Scout Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "cobramkiv_armour_grade1", new ShipModule(128672264,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Cobra Mk IV Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "cobramkiv_armour_grade2", new ShipModule(128672265,ShipModule.ModuleTypes.ReinforcedAlloy,14,0,"Cobra Mk IV Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "cobramkiv_armour_grade3", new ShipModule(128672266,ShipModule.ModuleTypes.MilitaryGradeComposite,27,0,"Cobra Mk IV Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "cobramkiv_armour_mirrored", new ShipModule(128672267,ShipModule.ModuleTypes.MirroredSurfaceComposite,27,0,"Cobra Mk IV Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "cobramkiv_armour_reactive", new ShipModule(128672268,ShipModule.ModuleTypes.ReactiveSurfaceComposite,27,0,"Cobra Mk IV Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "empire_courier_armour_grade1", new ShipModule(128671224,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Imperial Courier Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "empire_courier_armour_grade2", new ShipModule(128671225,ShipModule.ModuleTypes.ReinforcedAlloy,4,0,"Imperial Courier Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "empire_courier_armour_grade3", new ShipModule(128671226,ShipModule.ModuleTypes.MilitaryGradeComposite,8,0,"Imperial Courier Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "empire_courier_armour_mirrored", new ShipModule(128671227,ShipModule.ModuleTypes.MirroredSurfaceComposite,8,0,"Imperial Courier Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "empire_courier_armour_reactive", new ShipModule(128671228,ShipModule.ModuleTypes.ReactiveSurfaceComposite,8,0,"Imperial Courier Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "independant_trader_armour_grade1", new ShipModule(128672271,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Keelback Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "independant_trader_armour_grade2", new ShipModule(128672272,ShipModule.ModuleTypes.ReinforcedAlloy,12,0,"Keelback Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "independant_trader_armour_grade3", new ShipModule(128672273,ShipModule.ModuleTypes.MilitaryGradeComposite,23,0,"Keelback Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "independant_trader_armour_mirrored", new ShipModule(128672274,ShipModule.ModuleTypes.MirroredSurfaceComposite,23,0,"Keelback Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "independant_trader_armour_reactive", new ShipModule(128672275,ShipModule.ModuleTypes.ReactiveSurfaceComposite,23,0,"Keelback Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "type9_military_armour_grade1", new ShipModule(128785621,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Type-10 Defender Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "type9_military_armour_grade2", new ShipModule(128785622,ShipModule.ModuleTypes.ReinforcedAlloy,75,0,"Type-10 Defender Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "type9_military_armour_grade3", new ShipModule(128785623,ShipModule.ModuleTypes.MilitaryGradeComposite,150,0,"Type-10 Defender Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "type9_military_armour_mirrored", new ShipModule(128785624,ShipModule.ModuleTypes.MirroredSurfaceComposite,150,0,"Type-10 Defender Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "type9_military_armour_reactive", new ShipModule(128785625,ShipModule.ModuleTypes.ReactiveSurfaceComposite,150,0,"Type-10 Defender Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "asp_scout_armour_grade1", new ShipModule(128672278,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Asp Scout Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "asp_scout_armour_grade2", new ShipModule(128672279,ShipModule.ModuleTypes.ReinforcedAlloy,21,0,"Asp Scout Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "asp_scout_armour_grade3", new ShipModule(128672280,ShipModule.ModuleTypes.MilitaryGradeComposite,42,0,"Asp Scout Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "asp_scout_armour_mirrored", new ShipModule(128672281,ShipModule.ModuleTypes.MirroredSurfaceComposite,42,0,"Asp Scout Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "asp_scout_armour_reactive", new ShipModule(128672282,ShipModule.ModuleTypes.ReactiveSurfaceComposite,42,0,"Asp Scout Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
-            { "krait_light_armour_grade1", new ShipModule(128839283,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Krait Phantom Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "krait_light_armour_grade2", new ShipModule(128839284,ShipModule.ModuleTypes.ReinforcedAlloy,26,0,"Krait Phantom Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "krait_light_armour_grade3", new ShipModule(128839285,ShipModule.ModuleTypes.MilitaryGradeComposite,53,0,"Krait Phantom Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "krait_light_armour_mirrored", new ShipModule(128839286,ShipModule.ModuleTypes.MirroredSurfaceComposite,53,0,"Krait Phantom Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "krait_light_armour_reactive", new ShipModule(128839287,ShipModule.ModuleTypes.ReactiveSurfaceComposite,53,0,"Krait Phantom Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
 
-            { "mamba_armour_grade1", new ShipModule(128915981,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Mamba Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "mamba_armour_grade2", new ShipModule(128915982,ShipModule.ModuleTypes.ReinforcedAlloy,19,0,"Mamba Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "mamba_armour_grade3", new ShipModule(128915983,ShipModule.ModuleTypes.MilitaryGradeComposite,38,0,"Mamba Military Grade Composite",Explosive:-40, Kinetic:-20, Thermal:0 ) },
-            { "mamba_armour_mirrored", new ShipModule(128915984,ShipModule.ModuleTypes.MirroredSurfaceComposite,38,0,"Mamba Mirrored Surface Composite",Explosive:-50, Kinetic:-75, Thermal:50 ) },
-            { "mamba_armour_reactive", new ShipModule(128915985,ShipModule.ModuleTypes.ReactiveSurfaceComposite,38,0,"Mamba Reactive Surface Composite",Explosive:20, Kinetic:25, Thermal:-40 ) },
+            { "krait_mkii_armour_grade1", new ShipModule(128816569,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Krait Mk II Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "krait_mkii_armour_grade2", new ShipModule(128816570,ShipModule.ModuleTypes.ReinforcedAlloy,36,0,"Krait Mk II Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "krait_mkii_armour_grade3", new ShipModule(128816571,ShipModule.ModuleTypes.MilitaryGradeComposite,67,0,"Krait Mk II Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "krait_mkii_armour_mirrored", new ShipModule(128816572,ShipModule.ModuleTypes.MirroredSurfaceComposite,67,0,"Krait Mk II Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "krait_mkii_armour_reactive", new ShipModule(128816573,ShipModule.ModuleTypes.ReactiveSurfaceComposite,67,0,"Krait Mk II Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
+
+            { "typex_armour_grade1", new ShipModule(128816576,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Alliance Chieftain Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "typex_armour_grade2", new ShipModule(128816577,ShipModule.ModuleTypes.ReinforcedAlloy,40,0,"Alliance Chieftain Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "typex_armour_grade3", new ShipModule(128816578,ShipModule.ModuleTypes.MilitaryGradeComposite,78,0,"Alliance Chieftain Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "typex_armour_mirrored", new ShipModule(128816579,ShipModule.ModuleTypes.MirroredSurfaceComposite,78,0,"Alliance Chieftain Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "typex_armour_reactive", new ShipModule(128816580,ShipModule.ModuleTypes.ReactiveSurfaceComposite,78,0,"Alliance Chieftain Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
+
+            { "typex_2_armour_grade1", new ShipModule(128816583,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Alliance Crusader Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "typex_2_armour_grade2", new ShipModule(128816584,ShipModule.ModuleTypes.ReinforcedAlloy,40,0,"Alliance Crusader Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "typex_2_armour_grade3", new ShipModule(128816585,ShipModule.ModuleTypes.MilitaryGradeComposite,78,0,"Alliance Crusader Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "typex_2_armour_mirrored", new ShipModule(128816586,ShipModule.ModuleTypes.MirroredSurfaceComposite,78,0,"Alliance Crusader Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "typex_2_armour_reactive", new ShipModule(128816587,ShipModule.ModuleTypes.ReactiveSurfaceComposite,78,0,"Alliance Crusader Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
+
+            { "typex_3_armour_grade1", new ShipModule(128816590,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Alliance Challenger Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "typex_3_armour_grade2", new ShipModule(128816591,ShipModule.ModuleTypes.ReinforcedAlloy,40,0,"Alliance Challenger Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "typex_3_armour_grade3", new ShipModule(128816592,ShipModule.ModuleTypes.MilitaryGradeComposite,78,0,"Alliance Challenger Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "typex_3_armour_mirrored", new ShipModule(128816593,ShipModule.ModuleTypes.MirroredSurfaceComposite,78,0,"Alliance Challenger Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "typex_3_armour_reactive", new ShipModule(128816594,ShipModule.ModuleTypes.ReactiveSurfaceComposite,78,0,"Alliance Challenger Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
+
+            { "diamondback_armour_grade1", new ShipModule(128671218,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Diamondback Scout Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "diamondback_armour_grade2", new ShipModule(128671219,ShipModule.ModuleTypes.ReinforcedAlloy,13,0,"Diamondback Scout Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "diamondback_armour_grade3", new ShipModule(128671220,ShipModule.ModuleTypes.MilitaryGradeComposite,26,0,"Diamondback Scout Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "diamondback_armour_mirrored", new ShipModule(128671221,ShipModule.ModuleTypes.MirroredSurfaceComposite,26,0,"Diamondback Scout Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "diamondback_armour_reactive", new ShipModule(128671222,ShipModule.ModuleTypes.ReactiveSurfaceComposite,26,0,"Diamondback Scout Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
+
+            { "empire_courier_armour_grade1", new ShipModule(128671224,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Imperial Courier Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "empire_courier_armour_grade2", new ShipModule(128671225,ShipModule.ModuleTypes.ReinforcedAlloy,4,0,"Imperial Courier Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "empire_courier_armour_grade3", new ShipModule(128671226,ShipModule.ModuleTypes.MilitaryGradeComposite,8,0,"Imperial Courier Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "empire_courier_armour_mirrored", new ShipModule(128671227,ShipModule.ModuleTypes.MirroredSurfaceComposite,8,0,"Imperial Courier Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "empire_courier_armour_reactive", new ShipModule(128671228,ShipModule.ModuleTypes.ReactiveSurfaceComposite,8,0,"Imperial Courier Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
+
+            { "type9_military_armour_grade1", new ShipModule(128785621,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Type-10 Defender Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "type9_military_armour_grade2", new ShipModule(128785622,ShipModule.ModuleTypes.ReinforcedAlloy,75,0,"Type-10 Defender Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "type9_military_armour_grade3", new ShipModule(128785623,ShipModule.ModuleTypes.MilitaryGradeComposite,150,0,"Type-10 Defender Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "type9_military_armour_mirrored", new ShipModule(128785624,ShipModule.ModuleTypes.MirroredSurfaceComposite,150,0,"Type-10 Defender Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "type9_military_armour_reactive", new ShipModule(128785625,ShipModule.ModuleTypes.ReactiveSurfaceComposite,150,0,"Type-10 Defender Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
+
+            { "krait_light_armour_grade1", new ShipModule(128839283,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Krait Phantom Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "krait_light_armour_grade2", new ShipModule(128839284,ShipModule.ModuleTypes.ReinforcedAlloy,26,0,"Krait Phantom Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "krait_light_armour_grade3", new ShipModule(128839285,ShipModule.ModuleTypes.MilitaryGradeComposite,53,0,"Krait Phantom Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "krait_light_armour_mirrored", new ShipModule(128839286,ShipModule.ModuleTypes.MirroredSurfaceComposite,53,0,"Krait Phantom Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "krait_light_armour_reactive", new ShipModule(128839287,ShipModule.ModuleTypes.ReactiveSurfaceComposite,53,0,"Krait Phantom Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
+
+            { "mamba_armour_grade1", new ShipModule(128915981,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Mamba Lightweight Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:80 ) },
+            { "mamba_armour_grade2", new ShipModule(128915982,ShipModule.ModuleTypes.ReinforcedAlloy,19,0,"Mamba Reinforced Alloy", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:152 ) },
+            { "mamba_armour_grade3", new ShipModule(128915983,ShipModule.ModuleTypes.MilitaryGradeComposite,38,0,"Mamba Military Grade Composite", Explosive:-40, Kinetic:-20, Thermal:0, AXResistance:90, HullStrengthBonus:250 ) },
+            { "mamba_armour_mirrored", new ShipModule(128915984,ShipModule.ModuleTypes.MirroredSurfaceComposite,38,0,"Mamba Mirrored Surface Composite", Explosive:-50, Kinetic:-75, Thermal:50, AXResistance:90, HullStrengthBonus:250 ) },
+            { "mamba_armour_reactive", new ShipModule(128915985,ShipModule.ModuleTypes.ReactiveSurfaceComposite,38,0,"Mamba Reactive Surface Composite", Explosive:20, Kinetic:25, Thermal:-40, AXResistance:90, HullStrengthBonus:250 ) },
 
             { "python_nx_armour_grade1", new ShipModule(-1,ShipModule.ModuleTypes.LightweightAlloy,0,0,"Python Mk II Lightweight Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
             { "python_nx_armour_grade2", new ShipModule(-1,ShipModule.ModuleTypes.ReinforcedAlloy,19,0,"Python Mk II Reinforced Alloy",Explosive:-40, Kinetic:-20, Thermal:0 ) },
@@ -1979,6 +1995,7 @@ namespace EliteDangerousCore
             { "int_shieldcellbank_size8_class5", new ShipModule(128064337,ShipModule.ModuleTypes.ShieldCellBank,160,3.36,"Shield Cell Bank Class 8 Rating A", Ammo:4, Clip:1, ThermL:800 ) },
 
             // Shield Generators
+            // ship.sheilds
 
             { "int_shieldgenerator_size1_class1", new ShipModule(128064258,ShipModule.ModuleTypes.ShieldGenerator,1.3,0.72,"Shield Generator Class 1 Rating E", OptMass:25, MaxMass:63, MinMass:13, Explosive:50, Kinetic:40, Thermal:-20, AXResistance:95, RegenRate:1, BrokenRegenRate:1.6, MinStrength:30, OptStrength:80, MaxStrength:130 ) },
             { "int_shieldgenerator_size1_class2", new ShipModule(128064259,ShipModule.ModuleTypes.ShieldGenerator,0.5,0.96,"Shield Generator Class 1 Rating E", OptMass:25, MaxMass:63, MinMass:13, Explosive:50, Kinetic:40, Thermal:-20, AXResistance:95, RegenRate:1, BrokenRegenRate:1.6, MinStrength:40, OptStrength:90, MaxStrength:140 ) },
@@ -1999,7 +2016,10 @@ namespace EliteDangerousCore
             { "int_shieldgenerator_size4_class3", new ShipModule(128064275,ShipModule.ModuleTypes.ShieldGenerator,10,2.2,"Shield Generator Class 4 Rating C", OptMass:285, MaxMass:713, MinMass:143, Explosive:50, Kinetic:40, Thermal:-20, AXResistance:95, RegenRate:1, BrokenRegenRate:2.53, MinStrength:50, OptStrength:100, MaxStrength:150 ) },
             { "int_shieldgenerator_size4_class4", new ShipModule(128064276,ShipModule.ModuleTypes.ShieldGenerator,16,2.64,"Shield Generator Class 4 Rating B", OptMass:285, MaxMass:713, MinMass:143, Explosive:50, Kinetic:40, Thermal:-20, AXResistance:95, RegenRate:1, BrokenRegenRate:2.53, MinStrength:60, OptStrength:110, MaxStrength:160 ) },
             { "int_shieldgenerator_size4_class5", new ShipModule(128064277,ShipModule.ModuleTypes.ShieldGenerator,10,3.08,"Shield Generator Class 4 Rating A", OptMass:285, MaxMass:713, MinMass:143, Explosive:50, Kinetic:40, Thermal:-20, AXResistance:95, RegenRate:1, BrokenRegenRate:2.53, MinStrength:70, OptStrength:120, MaxStrength:170 ) },
+
+        //30550 : { mtype:'isg', cost:    63010, namekey:30110, name:'Shield Generator', class:5, rating:'E', mass: 20.00, integ: 77, pwrdraw:1.56, boottime:1, genminmass:203.0, genoptmass: 405.0, genmaxmass:1013.0, genminmul:30, genoptmul: 80, genmaxmul:130, genrate:1.0, bgenrate:3.75, /*thmload:1.2,*/ genpwr:0.6, kinres:40.0, thmres:-20.0, expres:50.0, axeres:95.0, limit:'isg', fdid:, fdname:'Int_ShieldGenerator_Size5_Class1', eddbid:1131 },
             { "int_shieldgenerator_size5_class1", new ShipModule(128064278,ShipModule.ModuleTypes.ShieldGenerator,20,1.56,"Shield Generator Class 5 Rating E", OptMass:405, MaxMass:1013, MinMass:203, Explosive:50, Kinetic:40, Thermal:-20, AXResistance:95, RegenRate:1, BrokenRegenRate:3.75, MinStrength:30, OptStrength:80, MaxStrength:130 ) },
+
             { "int_shieldgenerator_size5_class2", new ShipModule(128064279,ShipModule.ModuleTypes.ShieldGenerator,8,2.08,"Shield Generator Class 5 Rating D", OptMass:405, MaxMass:1013, MinMass:203, Explosive:50, Kinetic:40, Thermal:-20, AXResistance:95, RegenRate:1, BrokenRegenRate:3.75, MinStrength:40, OptStrength:90, MaxStrength:140 ) },
             { "int_shieldgenerator_size5_class3", new ShipModule(128064280,ShipModule.ModuleTypes.ShieldGenerator,20,2.6,"Shield Generator Class 5 Rating C", OptMass:405, MaxMass:1013, MinMass:203, Explosive:50, Kinetic:40, Thermal:-20, AXResistance:95, RegenRate:1, BrokenRegenRate:3.75, MinStrength:50, OptStrength:100, MaxStrength:150 ) },
             { "int_shieldgenerator_size5_class4", new ShipModule(128064281,ShipModule.ModuleTypes.ShieldGenerator,32,3.12,"Shield Generator Class 5 Rating B", OptMass:405, MaxMass:1013, MinMass:203, Explosive:50, Kinetic:40, Thermal:-20, AXResistance:95, RegenRate:1, BrokenRegenRate:3.75, MinStrength:60, OptStrength:110, MaxStrength:160 ) },
