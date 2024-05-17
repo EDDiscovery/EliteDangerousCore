@@ -207,7 +207,10 @@ namespace EliteDangerousCore
                         System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Mass} -> {engineered.Mass}");
                     }
                     else if (mf.Label.EqualsIIC("Integrity"))
-                    { }     // we don't track this yet
+                    {
+                        engineered.Integrity = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Integrity} -> {engineered.Integrity}");
+                    }     
                     else if (mf.Label.EqualsIIC("DefenceModifierHealthMultiplier")) // armour
                     {
                         engineered.HullStrengthBonus = mf.Value;
