@@ -201,20 +201,22 @@ namespace EliteDangerousCore
             {
                 try
                 {
-                    engineered.Mass = mf.Value;
-                    System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Mass} -> {engineered.Mass}");
-                }
-                else if (mf.Label.EqualsIIC("Integrity"))
-                { }     // we don't track this yet
-                else if (mf.Label.EqualsIIC("DefenceModifierHealthMultiplier")) // armour
-                {
-                    engineered.HullStrengthBonus = mf.Value;
-                    System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.HullStrengthBonus} -> {engineered.HullStrengthBonus}");
-                }
-                else if (mf.Label.EqualsIIC("KineticResistance"))
-                {
-                    engineered.Kinetic = mf.Value;
-                    System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Kinetic} -> {engineered.Kinetic}");
+                    if (mf.Label.EqualsIIC("Mass"))
+                    {
+                        engineered.Mass = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Mass} -> {engineered.Mass}");
+                    }
+                    else if (mf.Label.EqualsIIC("Integrity"))
+                    { }     // we don't track this yet
+                    else if (mf.Label.EqualsIIC("DefenceModifierHealthMultiplier")) // armour
+                    {
+                        engineered.HullStrengthBonus = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.HullStrengthBonus} -> {engineered.HullStrengthBonus}");
+                    }
+                    else if (mf.Label.EqualsIIC("KineticResistance"))
+                    {
+                        engineered.Kinetic = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Kinetic} -> {engineered.Kinetic}");
 
                     }
                     else if (mf.Label.EqualsIIC("ThermicResistance"))
