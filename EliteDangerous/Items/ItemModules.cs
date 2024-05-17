@@ -372,12 +372,11 @@ namespace EliteDangerousCore
             public string EnglishModTypeString { get { return ModType.ToString().Replace("AX", "AX ").Replace("_", "-").SplitCapsWordFull(); } }
             public string TranslatedModTypeString { get { return BaseUtils.Translator.Instance.Translate(EnglishModTypeString, "ModuleTypeNames." + EnglishModTypeString.Replace(" ", "_")); } }     // string should be in spansh/EDCD csv compatible format, in english
 
-            public double? Mass { get; set; }        // mass of module
-            public double? Power { get; set; }       // power used by module
+            public double? Mass { get; set; }        // mass of module t
+            public double? Power { get; set; }       // power used by module MW
             public int? Ammo { get; set; }
             public int? Clip { get; set; }
             public double? Integrity { get; set; }  // units
-            public double? PowerDraw { get; set; }  // MW
             public double? Damage { get; set; }
             public double? DamagePerSecond { get; set; } // /s
             public double? ReloadTime { get; set; } // s
@@ -451,7 +450,6 @@ namespace EliteDangerousCore
                 TranslatedModName = other.TranslatedModName;
                 ModuleID = other.ModuleID;
                 ModType = other.ModType;
-                PowerDraw = other.PowerDraw;
                 Integrity = other.Integrity;
                 Mass = other.Mass;
                 Power = other.Power;
@@ -546,8 +544,7 @@ namespace EliteDangerousCore
                         "Speed Increase:;%", SCOSpeedIncrease, "Acceleration Rate:;;0.##", SCOAccelerationRate, "Heat Generation Rate:;;0.##", SCOHeatGenerationRate, "Control Interference:;;0.##", SCOControlInterference,
                         "Thermal Limit:; units/s", ThermL,
                         "Additional Range:;ly;0.##", AdditionalRange,
-                        "Integrity:;;0.##", Integrity,
-                        "Power Draw:;MW;0.##", PowerDraw
+                        "Integrity:;;0.##", Integrity
                     );
                 }
             }
@@ -561,75 +558,23 @@ namespace EliteDangerousCore
 
             public ShipModule(int id, ModuleTypes modtype, double mass, double power, string descr)
             {
-                System.Diagnostics.Debug.WriteLine($"Constructing {descr}");
                 ModuleID = id; TranslatedModName = EnglishModName = descr; ModType = modtype;
                 if (mass > 0)
                     Mass = mass;
                 if (power > 0)
                     Power = power;
             }
-
-            public ShipModule(int id, ModuleTypes modtype, double mass, double power, string descr,
-                                          double Integrity, double PowerDraw,
-                                          double? BootTime = null,
-                                          int? Ammo = null, int? Clip = null, int? Speed = null,
-                                          double? Damage = null, double? DamagePerSecond = null, int? Range = null,
-                                          int? FallOff = null, double? RateOfFire = null,
-                                          double? BurstInterval = null,
-                                          double? Time = null,
-                                          double? Reload = null,
-                                          int? OptMass = null, int? MaxMass = null, int? MinMass = null,
-                                          double? Explosive = null, double? Kinetic = null, double? Thermal = null, double? AXResistance = null, double? HullStrengthBonus = null,
-                                          double? RegenRate = null, double? BrokenRegenRate = null, double? MinStrength = null, double? OptStrength = null, double? MaxStrength = null,
-                                          double? CausticReinforcement = null, double? ShieldReinforcement = null, double? HullReinforcement = null,
-                                          double? EngineOptMultiplier = null, double? EngineMinMultiplier = null, double? EngineMaxMultiplier = null,
-                                          double? PowerConstant = null, double? LinearConstant = null, double? MaxFuelPerJump = null,
-                                          double? ThermL = null,
-                                          double? SysMW = null, double? EngMW = null, double? WepMW = null, double? SysCap = null, double? EngCap = null, double? WepCap = null,
-                                          int? Size = null,
-                                          double? SCOSpeedIncrease = null, double? SCOAccelerationRate = null, double? SCOHeatGenerationRate = null, double? SCOControlInterference = null,
-                                          double? FacingLimit = null,
-                                          double? TypicalEmission = null,
-                                          int? Rebuilds = null,
-                                          int? Bins = null,
-                                          double? PowerGen = null,
-                                          double? HeatEfficiency = null,
-                                          double? RefillRate = null,
-                                          int? Limpets = null,
-                                          int? TargetRange = null,
-                                          double? HackTime = null,
-                                          int? MinCargo = null,
-                                          int? MaxCargo = null,
-                                          int? Passengers = null,
-                                          int? Prisoners = null,
-                                          double? AdditionalRange = null,
-                                          double? SCBHeat = null,
-                                          double? Protection = null
-                ) : this(id, modtype, mass, power, descr)
+            public ShipModule(int id, ModuleTypes modtype, string descr)
             {
+                ModuleID = id; TranslatedModName = EnglishModName = descr; ModType = modtype;
             }
 
-            public ShipModule(int id, ModuleTypes modtype, double mass, double power, string descr,
-                                          double Explosive, double Kinetic, double Thermal, double AXResistance, double HullStrengthBonus
-                ) : this(id, modtype, mass, power, descr)
-            {
-            }
-
-            public ShipModule(int id, ModuleTypes modtype, double mass, double power, string descr,
-                                          int Size
-                ) : this(id, modtype, mass, power, descr)
-            {
-            }
         }
 
 
     #endregion
 
-    // History
-    // Originally from coriolis, but now not.  Synced with Frontier data
-    // Nov 1/12/23 synched with EDDI data, with outfitting.csv
-
-    static private Dictionary<string, ShipModule> shipmodules;
+        static private Dictionary<string, ShipModule> shipmodules;
         static private Dictionary<string, ShipModule> synthesisedmodules = new Dictionary<string, ShipModule>();
         static private Dictionary<string, ShipModule> vanitymodules;
         static private Dictionary<string, ShipModule> srvmodules;
