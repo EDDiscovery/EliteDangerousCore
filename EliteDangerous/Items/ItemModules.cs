@@ -52,7 +52,7 @@ namespace EliteDangerousCore
                     candidatename = candidatename.SplitCapsWordFull();
 
                     var newmodule = new ShipModule(-1, IsVanity(lowername) ? ShipModule.ModuleTypes.VanityType : ShipModule.ModuleTypes.UnknownType, candidatename);
-                    System.Diagnostics.Trace.WriteLine($"*** Unknown Module {{ \"{lowername}\", new ShipModule(-1,{(IsVanity(lowername) ? "ShipModule.ModuleTypes.VanityType" : "ShipModule.ModuleTypes.UnknownType")},\"{candidatename}\" }}, - this will not affect operation but it would be nice to report it to us so we can add it to known module lists");
+                    System.Diagnostics.Trace.WriteLine($"*** Unknown Module {{ \"{lowername}\", new ShipModule(-1,{(IsVanity(lowername) ? "ShipModule.ModuleTypes.VanityType" : "ShipModule.ModuleTypes.UnknownType")},\"{candidatename}\") }}, - this will not affect operation but it would be nice to report it to us so we can add it to known module lists");
 
                     synthesisedmodules[lowername] = m = newmodule;                   // lets cache them for completeness..
                 }
@@ -3099,6 +3099,13 @@ namespace EliteDangerousCore
                 { "all", new ShipModule(-1,ShipModule.ModuleTypes.WearAndTearType,"Repair All") },
                 { "hull", new ShipModule(-1,ShipModule.ModuleTypes.WearAndTearType,"Repair All") },
                 { "wear", new ShipModule(-1,ShipModule.ModuleTypes.WearAndTearType,"Wear") },
+
+                 { "bobble_trophy_anti_thargoid", new ShipModule( -1,ShipModule.ModuleTypes.VanityType,"Bobble Trophy Anti Thargoid") },
+                 { "bobble_ap2_textminus", new ShipModule(-1, ShipModule.ModuleTypes.VanityType, "Bobble Ap 2 Textminus") }, 
+                 { "paintjob_anaconda_spring_02", new ShipModule(-1, ShipModule.ModuleTypes.VanityType, "Paintjob Anaconda Spring 2") },
+                 { "bobble_ap2_textunderscore", new ShipModule(-1, ShipModule.ModuleTypes.VanityType, "Bobble Ap 2 Textunderscore") }, 
+                 { "paintjob_krait_light_christmas_03", new ShipModule(-1, ShipModule.ModuleTypes.VanityType, "Paintjob Krait Light Christmas 3") },
+                 { "decal_exobio_elite05", new ShipModule(-1, ShipModule.ModuleTypes.VanityType, "Decal Exobio Elite 5") },
             };
         }
     }
