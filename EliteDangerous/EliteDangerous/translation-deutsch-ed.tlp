@@ -1324,11 +1324,11 @@ SECTION ModulePartNames
 .Tiny: "Tiny" => "Winzig"
 .Standard: "Standard" = MaterialCommodityMicroResourceType.Standard
 .Advanced: "Advanced" => "Optimiert"
-.Lightweight_Armour: "Lightweight Armour" => "Leichte Legierungen"
-.Reinforced_Armour: "Reinforced Armour" = ModuleTypeNames.Reinforced_Alloy
-.Military_Armour: "Military Armour" => "Militär-Komposit"
-.Mirrored_Surface_Composite_Armour: "Mirrored Surface Composite Armour" = ModuleTypeNames.Mirrored_Surface_Composite
-.Reactive_Surface_Composite_Armour: "Reactive Surface Composite Armour" = ModuleTypeNames.Reactive_Surface_Composite
+.Lightweight_Alloy: "Lightweight Alloy" @
+.Reinforced_Alloy: "Reinforced Alloy" @
+.Military_Grade_Composite: "Military Grade Composite" @
+.Mirrored_Surface_Composite: "Mirrored Surface Composite" @
+.Reactive_Surface_Composite: "Reactive Surface Composite" @
 .Auto_Field_Maintenance_Unit: "Auto Field Maintenance Unit" @
 .Beam_Laser: "Beam Laser" = ModuleTypeNames.Beam_Laser
 .Retributor_Beam_Laser: "Retributor Beam Laser" @
@@ -1346,8 +1346,8 @@ SECTION ModulePartNames
 .Caustic_Sink_Launcher: "Caustic Sink Launcher" @
 .Point_Defence: "Point Defence" @
 .Kill_Warrant_Scanner: "Kill Warrant Scanner" @
-.Detailed_Surface_Scanner: "Detailed Surface Scanner" = ModuleTypeNames.Detailed_Surface_Scanner
-.Docking_Computer: "Docking Computer" => "Landecomputer"
+.Standard_Docking_Computer: "Standard Docking Computer" @
+.Advanced_Docking_Computer: "Advanced Docking Computer" @
 .Fighter_Hangar: "Fighter Hangar" => "Fighter-Hangar"
 .Remote_Release_Flak_Launcher: "Remote Release Flak Launcher" @
 .Remote_Release_Flechette_Launcher: "Remote Release Flechette Launcher" @
@@ -1382,7 +1382,6 @@ SECTION ModulePartNames
 .Rescue_Limpet_Controller: "Rescue Limpet Controller" @
 .Xeno_Limpet_Controller: "Xeno Limpet Controller" @
 .Universal_Multi_Limpet_Controller: "Universal Multi Limpet Controller" @
-.Meta_Alloy_Hull_Reinforcement_Package: "Meta Alloy Hull Reinforcement Package" @
 .Mine_Launcher: "Mine Launcher" = ModuleTypeNames.Mine_Launcher
 .Shock_Mine_Launcher: "Shock Mine Launcher" @
 .Abrasion_Blaster: "Abrasion Blaster" @
@@ -1401,7 +1400,6 @@ SECTION ModulePartNames
 .Advanced_Missile_Rack: "Advanced Missile Rack" @
 .Human_Extraction_Missile: "Human Extraction Missile" => "Menschenextraktionsrakete"
 .Enzyme_Missile_Rack: "Enzyme Missile Rack" @
-.Module_Reinforcement_Package: "Module Reinforcement Package" @
 .AX_Multi_Cannon: "AX Multi Cannon" = ModuleTypeNames.AX_Multi_Cannon
 .Enhanced_AX_Multi_Cannon: "Enhanced AX Multi Cannon" => "Verbessertes AX-Mehrfachgeschütz"
 .Multi_Cannon: "Multi Cannon" = ModuleTypeNames.Multi_Cannon
@@ -1433,7 +1431,7 @@ SECTION ModulePartNames
 .Bi_Weave_Shield_Generator: "Bi Weave Shield Generator" @
 .Shutdown_Field_Neutraliser: "Shutdown Field Neutraliser" = ModuleTypeNames.Shutdown_Field_Neutraliser
 .Thargoid_Pulse_Neutraliser: "Thargoid Pulse Neutraliser" @
-.Exp_Module_Weapon_Stabiliser: "Exp Module Weapon Stabiliser" = ModuleTypeNames.Experimental_Weapon_Stabiliser
+.Experimental_Weapon_Stabiliser: "Experimental Weapon Stabiliser" @
 .Supercruise_Assist: "Supercruise Assist" = ModuleTypeNames.Supercruise_Assist
 .Stellar_Body_Discovery_Scanner: "Stellar Body Discovery Scanner" = ModuleTypeNames.Discovery_Scanner
 .Intermediate: "Intermediate" => "Mittelmaß"

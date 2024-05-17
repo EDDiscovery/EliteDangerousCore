@@ -28,6 +28,13 @@ namespace EliteDangerousCore
         public static void Initialise()
         {
             CreateModules();
+
+            //foreach (var m in GetShipModules())
+            //{
+            //    var text = m.Value.PropertiesAsText();
+            //    System.Diagnostics.Debug.WriteLine(m.Key + " " + text);
+            //}
+
             TranslateModules();
         }
 
