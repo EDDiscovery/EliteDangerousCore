@@ -199,7 +199,7 @@ namespace EliteDangerousCore
 
             foreach (var mf in Modifiers.EmptyIfNull())
             {
-                if (mf.Label.EqualsIIC("Mass"))
+                try
                 {
                     engineered.Mass = mf.Value;
                     System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Mass} -> {engineered.Mass}");
@@ -216,38 +216,62 @@ namespace EliteDangerousCore
                     engineered.Kinetic = mf.Value;
                     System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Kinetic} -> {engineered.Kinetic}");
 
-                }
-                else if (mf.Label.EqualsIIC("ThermicResistance"))
-                {
-                    engineered.Thermal = mf.Value;
-                    System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Thermal} -> {engineered.Thermal}");
+                    }
+                    else if (mf.Label.EqualsIIC("ThermicResistance"))
+                    {
+                        engineered.Thermal = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Thermal} -> {engineered.Thermal}");
 
+                    }
+                    else if (mf.Label.EqualsIIC("ExplosiveResistance"))
+                    {
+                        engineered.Explosive = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Explosive} -> {engineered.Explosive}");
+                    }
+                    else if (mf.Label.EqualsIIC("PowerDraw"))
+                    {
+                        engineered.Power = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Power} -> {engineered.Power}");
+                    }
+                    else if (mf.Label.EqualsIIC("DamagePerSecond"))
+                    {
+                        engineered.DPS = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.DPS} -> {engineered.DPS}");
+                    }
+                    else if (mf.Label.EqualsIIC("DistributorDraw"))
+                    {
+                        engineered.DistributorDraw = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.DistributorDraw} -> {engineered.DistributorDraw}");
+                    }
+                    else if (mf.Label.EqualsIIC("ThermalLoad"))
+                    {
+                        engineered.ThermL = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.ThermL} -> {engineered.ThermL}");
+                    }
+                    else if (mf.Label.EqualsIIC("AmmoClipSize"))
+                    {
+                        engineered.Clip = (int)mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Clip} -> {engineered.Clip}");
+                    }
+                    else if (mf.Label.EqualsIIC("FSDOptimalMass"))
+                    {
+                        engineered.OptMass = (int)mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.OptMass} -> {engineered.OptMass}");
+                    }
+                    else if (mf.Label.EqualsIIC("MaxFuelPerJump"))
+                    {
+                        engineered.MaxFuelPerJump = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MaxFuelPerJump} -> {engineered.MaxFuelPerJump}");
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Failed to engineer {original.EnglishModName} with {BlueprintName} due to {mf.Label}");
+                        good = false;
+                    }
                 }
-                else if (mf.Label.EqualsIIC("ExplosiveResistance"))
+                catch( Exception ex)
                 {
-                    engineered.Explosive = mf.Value;
-                    System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Explosive} -> {engineered.Explosive}");
-                }
-                else if (mf.Label.EqualsIIC("PowerDraw"))
-                { }   
-                else if (mf.Label.EqualsIIC("DamagePerSecond"))
-                { }   
-                else if (mf.Label.EqualsIIC("DistributorDraw"))
-                { }   
-                else if (mf.Label.EqualsIIC("ThermalLoad"))
-                { }   
-                else if (mf.Label.EqualsIIC("AmmoClipSize"))
-                {
-                    engineered.Clip = (int)mf.Value;
-                    System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Clip} -> {engineered.Clip}");
-                }     
-                else if (mf.Label.EqualsIIC("FSDOptimalMass"))
-                    engineered.OptMass = (int)mf.Value;
-                else if (mf.Label.EqualsIIC("MaxFuelPerJump"))
-                    engineered.MaxFuelPerJump = mf.Value;
-                else
-                {
-                    System.Diagnostics.Debug.WriteLine($"Failed to engineer {original.EnglishModName} with {BlueprintName} due to {mf.Label}");
+                    System.Diagnostics.Trace.WriteLine($"*** Engineering Craft failed {original.EnglishModName} with {BlueprintName} due to {mf.Label} : {ex} ");
                     good = false;
                 }
             }
