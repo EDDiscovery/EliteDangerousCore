@@ -21,6 +21,7 @@ namespace EliteDangerousCore
 {
     // this is bound into the TLU, so its really a class using the TLU, its not a generic log reader, so rename it thus
 
+    [System.Diagnostics.DebuggerDisplay("{ID}: {FullName} P:{Pos} S:{TravelLogUnit.Size}")]
     public class TravelLogUnitLogReader
     {
         // File buffer

@@ -409,7 +409,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool Docked { get; set; }
         public string StationName { get; set; } // will be null if not docked, 
         public string StationType { get; set; } // will be null if not docked, english name
-        public StationDefinitions.StarportTypes FDStationType { get; set; } // will be null if not docked, fdname
+        public StationDefinitions.StarportTypes FDStationType { get; set; } // will be Unknown if not docked
         public string Body { get; set; }
         public int? BodyID { get; set; }
         public string BodyType { get; set; }

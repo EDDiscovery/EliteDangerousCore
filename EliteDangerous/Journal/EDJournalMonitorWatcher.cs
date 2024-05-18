@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2020 EDDiscovery development team
+ * Copyright © 2016-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- *
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using EliteDangerousCore.DB;
@@ -27,20 +25,11 @@ namespace EliteDangerousCore
 {
     // watches a journal for changes, reads it, 
 
-    [System.Diagnostics.DebuggerDisplay("{WatcherFolder}")]
+    [System.Diagnostics.DebuggerDisplay("{Folder} {journalfilematch}")]
     public class JournalMonitorWatcher
     {
         public string Folder { get; set; }
         public bool IncludeSubfolders;
-
-        private Dictionary<string, EDJournalReader> netlogreaders = new Dictionary<string, EDJournalReader>();
-        private EDJournalReader lastnfi = null;          // last one read..
-        private FileSystemWatcher m_Watcher;
-        private int ticksNoActivity = 0;
-        private ConcurrentQueue<string> m_netLogFileQueue;
-        private bool StoreToDBDuringUpdateRead = false;
-        private string journalfilematch;
-        private DateTime mindateutc;
 
         public JournalMonitorWatcher(string folder, string journalmatchpattern, DateTime mindateutcp, bool pincludesubfolders)
         {
@@ -48,7 +37,7 @@ namespace EliteDangerousCore
             journalfilematch = journalmatchpattern;
             mindateutc = mindateutcp;
             IncludeSubfolders = pincludesubfolders;
-            //System.Diagnostics.Debug.WriteLine($"Monitor new watch {WatcherFolder} incl {IncludeSubfolders} match {journalfilematch} date {mindateutc} ");
+            //System.Diagnostics.Debug.WriteLine($"Monitor new watch {Folder} incl {IncludeSubfolders} match {journalfilematch} date {mindateutc} ");
         }
 
         #region Scan start stop and monitor
@@ -242,17 +231,18 @@ namespace EliteDangerousCore
 
         public List<EDJournalReader> ScanJournalFiles(DateTime minjournaldateutc, int reloadlastn)
         {
-            //            System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLap("PJF", true), "Scanned " + WatcherFolder);
 
             // order by file write time so we end up on the last one written
+            // EnumerateFile preserves the casing of Folder and adds on known files below it preserving case
+            // do not ToLower filenames due to linux
             FileInfo[] allFiles = Directory.EnumerateFiles(Folder, journalfilematch, IncludeSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).
                                         Select(f => new FileInfo(f)).Where(g=>g.LastWriteTime >= minjournaldateutc).OrderBy(p => p.LastWriteTime).ToArray();
+            
+            System.Diagnostics.Debug.WriteLine($"ScanJournalFiles {Folder}  {journalfilematch} Found {allFiles.Length}");
 
             List<EDJournalReader> readersToUpdate = new List<EDJournalReader>();
 
             List<TravelLogUnit> tlutoadd = new List<TravelLogUnit>();
-
-            //System.Diagnostics.Debug.WriteLine($"ScanJournalFiles {WatcherFolder} {allFiles.Length}");  var time = Environment.TickCount;
 
             for (int i = 0; i < allFiles.Length; i++)
             {
@@ -278,10 +268,11 @@ namespace EliteDangerousCore
                 }
             }
 
-            //System.Diagnostics.Debug.WriteLine($"ScanJournalFiles {Environment.TickCount-time} now TLU update {tlutoadd.Count}");
 
             if ( tlutoadd.Count > 0 )                      // now, on spinning rust, this takes ages for 600+ log files first time, so transaction it
             {
+                System.Diagnostics.Debug.WriteLine($"ScanJournalFiles Commit {tlutoadd.Count} TLUs");
+
                 UserDatabase.Instance.DBWrite(cn => 
                     {
                         using (DbTransaction txn = cn.BeginTransaction())
@@ -373,25 +364,28 @@ namespace EliteDangerousCore
         #region Open
 
         // open a new file for watching, place it into the netlogreaders list. Always return a reader
-
+        // delayadd will hold the DB write
         private EDJournalReader OpenFileReader(string filepath, bool delayadd = false)
         {
             EDJournalReader reader;
 
-            //System.Diagnostics.Trace.WriteLine(string.Format("{0} Opening File {1}", Environment.TickCount % 10000, fi.FullName));
-
-            if (netlogreaders.ContainsKey(filepath))        // cache
+            if (netlogreaders.ContainsKey(filepath))        //  if we already have a net log reader
             {
                 reader = netlogreaders[filepath];
             }
-            else if (TravelLogUnit.TryGet(filepath, out TravelLogUnit tlu))   // from db
-            {
+            else if (TravelLogUnit.TryGet(filepath, out TravelLogUnit tlu))   // if we have a TLU in the db, we can make one from that
+            { 
+                System.Diagnostics.Debug.Assert(tlu != null);
                 reader = new EDJournalReader(tlu);
+                System.Diagnostics.Debug.Assert(reader != null);
                 netlogreaders[filepath] = reader;
+                //System.Diagnostics.Trace.WriteLine($"Scanner {Folder}:{IncludeSubfolders} Add to its netlogreaders {filepath}");
             }
             else
             {
+                // new one to netlogreaders and optionally store in cache
                 reader = new EDJournalReader(filepath);
+                
                 reader.TravelLogUnit.Type = TravelLogUnit.JournalType;
                 var filename = Path.GetFileName(filepath);
                 if (filename.StartsWith("JournalBeta.", StringComparison.InvariantCultureIgnoreCase) ||
@@ -401,9 +395,12 @@ namespace EliteDangerousCore
                     reader.TravelLogUnit.Type |= TravelLogUnit.BetaMarker;
                 }
 
-                if (!delayadd)
+                if (!delayadd)                      // if we add immediately, add to db
                     reader.TravelLogUnit.Add();
+
                 netlogreaders[filepath] = reader;
+
+                //System.Diagnostics.Trace.WriteLine($"Create New TLU in DB {filepath}");
             }
 
             return reader;
@@ -411,5 +408,19 @@ namespace EliteDangerousCore
 
         #endregion
 
+        #region Vars
+
+        // key is file name in original case
+        private Dictionary<string, EDJournalReader> netlogreaders = new Dictionary<string, EDJournalReader>();
+
+        private EDJournalReader lastnfi = null;          // last one read..
+        private FileSystemWatcher m_Watcher;
+        private int ticksNoActivity = 0;
+        private ConcurrentQueue<string> m_netLogFileQueue;
+        private bool StoreToDBDuringUpdateRead = false;
+        private string journalfilematch;
+        private DateTime mindateutc;
+
+        #endregion
     }
 }

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2016-2021 EDDiscovery development team
+ * Copyright 2016-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,7 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
+
  */
 
 using System;
@@ -22,6 +21,7 @@ using System.Linq;
 
 namespace EliteDangerousCore.DB
 {
+    [System.Diagnostics.DebuggerDisplay("{ID} {Type} {FullName} {Size}")]
     public class TravelLogUnit
     {
         public const int NetLogType = 1;
@@ -108,7 +108,7 @@ namespace EliteDangerousCore.DB
 
                 //System.Diagnostics.Debug.WriteLine("Update cache with " + ID);
                 cacheid[ID] = this;
-                cachepath[FullName.ToLowerInvariant()] = this;       // name is v.important for speed
+                cachepath[FullName] = this;       // name is v.important for speed.   Store under original Path case
                 return true;
             }
         }
@@ -157,7 +157,7 @@ namespace EliteDangerousCore.DB
                                 TravelLogUnit sys = new TravelLogUnit(rdr);
                                 System.Diagnostics.Debug.Assert(!cacheid.ContainsKey(sys.ID));
                                 cacheid[sys.ID] = sys;
-                                cachepath[sys.FullName.ToLowerInvariant()] = sys;       // name is v.important for speed
+                                cachepath[sys.FullName] = sys;       // name is v.important for speed.  Keep case of filename for linux
                             }
                         }
                     }
@@ -180,7 +180,7 @@ namespace EliteDangerousCore.DB
         public static TravelLogUnit Get(string pathfilename)
         {
             FetchAll();
-            if (cachepath.TryGetValue(pathfilename.ToLowerInvariant(), out TravelLogUnit res))
+            if (cachepath.TryGetValue(pathfilename, out TravelLogUnit res))
                 return res;
             else
                 return null;
@@ -205,7 +205,9 @@ namespace EliteDangerousCore.DB
         }
 
         public static Dictionary<long, TravelLogUnit> cacheid = null;
-        public static Dictionary<string, TravelLogUnit> cachepath = null;
+
+        // key is in original filename case - do not ToLower it due to linux 
+        public static Dictionary<string, TravelLogUnit> cachepath = null;      
     }
 }
 

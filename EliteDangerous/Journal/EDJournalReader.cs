@@ -19,6 +19,7 @@ using System.Linq;
 
 namespace EliteDangerousCore
 {
+    [System.Diagnostics.DebuggerDisplay("{ID}: {FullName} P:{Pos} CQC:{cqc} Training:{training}")]
     public class EDJournalReader : TravelLogUnitLogReader
     {
         bool cqc = false;

@@ -251,11 +251,12 @@ namespace EliteDangerousCore
             ClearNextJump();
         }
 
-        public void Update(JournalLocation j, bool onfootfleetcarrier)            // odyssey up to patch 13 is writing Location on jump if in ship or on foot
+        public void Update(JournalLocation j, bool onfootfleetcarrier)            
         {
+            // odyssey up to patch 13 is writing Location on jump if in ship or on foot
             // if we have a location, and station type is fleet carrier, it jumped
-            
-            if (NextStarSystem != null && (onfootfleetcarrier || j.StationType.Contains("carrier",StringComparison.InvariantCultureIgnoreCase))) 
+
+            if (NextStarSystem != null && (onfootfleetcarrier || j.FDStationType == StationDefinitions.StarportTypes.FleetCarrier)) 
             {
                 StarSystem = new SystemClass(j.StarSystem, null, j.StarPos.X, j.StarPos.Y, j.StarPos.Z);                  // set new location with position
                 SystemAddress = NextSystemAddress;

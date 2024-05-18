@@ -1167,7 +1167,7 @@ namespace EliteDangerousCore
 
                 // Frame ship drive
 
-                { "int_hyperdrive_size2_class1_free", new ShipModule(128666637, ShipModule.ModuleTypes.FrameShiftDrive, "Frame Shift Drive Class 2 Rating E") { Power=0.16, Mass=2.5, Integrity=46, OptMass=48, PowerConstant=2, LinearConstant=11, MaxFuelPerJump=0.6, ThermL=10, BootTime=10 } },
+                { "int_hyperdrive_size2_class1_free", new ShipModule(128666637,ShipModule.ModuleTypes.FrameShiftDrive,"Frame Shift Drive Class 2 Rating E"){ Cost = 1980, Class = 2, Rating = "E", Mass = 2.5, Integrity = 46, Power = 0.16, BootTime = 10, OptMass = 48, ThermL = 10, MaxFuelPerJump = 0.6, LinearConstant = 11, PowerConstant = 2 } },
                 { "int_hyperdrive_size2_class1", new ShipModule(128064103,ShipModule.ModuleTypes.FrameShiftDrive,"Frame Shift Drive Class 2 Rating E"){ Cost = 1980, Class = 2, Rating = "E", Mass = 2.5, Integrity = 46, Power = 0.16, BootTime = 10, OptMass = 48, ThermL = 10, MaxFuelPerJump = 0.6, LinearConstant = 11, PowerConstant = 2 } },
                 { "int_hyperdrive_size2_class2", new ShipModule(128064104,ShipModule.ModuleTypes.FrameShiftDrive,"Frame Shift Drive Class 2 Rating D"){ Cost = 5930, Class = 2, Rating = "D", Mass = 1, Integrity = 41, Power = 0.18, BootTime = 10, OptMass = 54, ThermL = 10, MaxFuelPerJump = 0.6, LinearConstant = 10, PowerConstant = 2 } },
                 { "int_hyperdrive_size2_class3", new ShipModule(128064105,ShipModule.ModuleTypes.FrameShiftDrive,"Frame Shift Drive Class 2 Rating C"){ Cost = 17800, Class = 2, Rating = "C", Mass = 2.5, Integrity = 51, Power = 0.2, BootTime = 10, OptMass = 60, ThermL = 10, MaxFuelPerJump = 0.6, LinearConstant = 8, PowerConstant = 2 } },
