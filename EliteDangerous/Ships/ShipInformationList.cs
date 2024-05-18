@@ -1,4 +1,4 @@
-﻿/*
+﻿/*fModu
  * Copyright © 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -330,7 +330,8 @@ namespace EliteDangerousCore
             string sid = Key(e.ShipFD, e.ShipId);
 
             ShipInformation sm = EnsureShip(sid);              // this either gets current ship or makes a new one.
-            sm = sm.SetShipDetails(e.Ship, e.ShipFD);   // shallow copy if changed
+
+            Ships[sid] = sm = sm.SetShipDetails(e.Ship, e.ShipFD);   // shallow copy if changed, store back into array (bug may 24!)
 
             if (e.StoredItem.Length > 0)                             // if we stored something
                 StoredModules = StoredModules.StoreModule(e.StoredItemFD, e.StoredItem, e.StoredItemLocalised, sys);

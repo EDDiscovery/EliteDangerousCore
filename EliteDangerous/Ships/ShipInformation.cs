@@ -248,9 +248,16 @@ namespace EliteDangerousCore
 
         public double FuelWarningPercent
         {
-            get { return EliteDangerousCore.DB.UserDatabase.Instance.GetSettingDouble("ShipInformation:" + ShipFD + ID.ToStringInvariant() + "Warninglevel", 0); }
-            set { EliteDangerousCore.DB.UserDatabase.Instance.PutSettingDouble("ShipInformation:" + ShipFD + ID.ToStringInvariant() + "Warninglevel", value); }
+            get { return fuelwarningpercent; }
+            set { fuelwarningpercent = value; EliteDangerousCore.DB.UserDatabase.Instance.PutSettingDouble("ShipInformation:" + ShipFD + ID.ToStringInvariant() + "Warninglevel", value); }
         }
+        public void UpdateFuelWarningPercent()
+        {
+            if ( fuelwarningpercent == -999 )
+                fuelwarningpercent = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingDouble("ShipInformation:" + ShipFD + ID.ToStringInvariant() + "Warninglevel", 0);
+        }
+
+        private double fuelwarningpercent = -999;
 
         public string Manufacturer
         {
@@ -397,6 +404,8 @@ namespace EliteDangerousCore
                                     long hullvalue = 0, long modulesvalue = 0, long rebuy = 0,
                                     double unladenmass = 0, double reservefuelcap = 0 , double hullhealth = 0, bool? hot = null)
         {
+            System.Diagnostics.Debug.Assert(shipfd != null && ship != null);
+
             bool s1 = ShipFD != shipfd;
             bool s2 = ship != ShipType;
             bool s3 = name != null && name != ShipUserName;
