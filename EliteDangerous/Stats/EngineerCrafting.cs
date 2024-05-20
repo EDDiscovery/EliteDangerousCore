@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2021 - 2022 EDDiscovery development team
+ * Copyright © 2021 - 2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using BaseUtils;
@@ -22,14 +20,14 @@ using System.Linq;
 
 namespace EliteDangerousCore
 {
-    public class EngineeringList
+    public class EngineerCrafting
     {
         public const string TechBrokerID = "Tech Broker";
 
         // Get vertical slice of engineer or tech broker. In add order. Note it can hold any of the journal types involved in engineering
         public List<HistoryEntry> Get(uint gen, string engineer) { return crafting.GetHistoryOfKey(gen, engineer)?.Values.ToList(); }
 
-        public EngineeringList()
+        public EngineerCrafting()
         {
         }
 

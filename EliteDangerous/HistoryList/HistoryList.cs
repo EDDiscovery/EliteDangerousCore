@@ -30,7 +30,7 @@ namespace EliteDangerousCore
         public SuitWeaponList WeaponList { get; private set; } = new SuitWeaponList();
         public SuitList SuitList { get; private set; } = new SuitList();
         public SuitLoadoutList SuitLoadoutList { get; private set; } = new SuitLoadoutList();
-        public EngineeringList Engineering { get; private set; } = new EngineeringList();
+        public EngineerCrafting Engineering { get; private set; } = new EngineerCrafting();
         public CarrierStats Carrier { get; private set; } = new CarrierStats();
         public Ledger CashLedger { get; private set; } = new Ledger();       // and the ledger..
         public ShipInformationList ShipInformationList { get; private set; } = new ShipInformationList();     // ship info

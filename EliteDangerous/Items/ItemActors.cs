@@ -48,6 +48,13 @@ namespace EliteDangerousCore
         {
              { "skimmerdrone", new Actor("Skimmer Drone") },
              { "skimmer", new Actor("Skimmer Drone") },
+             { "tg_skimmer_01", new Actor("Thargoid Scavenger") },   // seen
+             { "tg_skimmer_02", new Actor("Thargoid Scavenger") },
+             { "tg_skimmer_03", new Actor("Thargoid Scavenger") },
+             { "titan_hardpoint01", new Actor("Thargoid Titan") },
+             { "titan_hardpoint02", new Actor("Thargoid Titan") },   // seen
+             { "titan_hardpoint03", new Actor("Thargoid Titan") },
+             { "glaive", new Actor("Thargoid Glaive") },        // seen
              { "ps_turretbasemedium02_6m", new Actor("Turret medium 2-6-M") },
              { "ps_turretbasesmall_3m", new Actor("Turret Small 3 M") },
              { "ps_turretbasemedium_skiff_6m", new Actor("Turret Medium 6 M") },
@@ -70,8 +77,13 @@ namespace EliteDangerousCore
              { "outpostcivilian", new Actor("Civilian Outpost") },
              { "asteroidbase", new Actor("Asteroid Base") },
              { "unknownsaucer", new Actor("Thargoid") },
-             { "unknownsaucer_f", new Actor("Thargoid") },
-             { "unknownsaucer_h", new Actor("Thargoid") },
+             { "unknownsaucer_a", new Actor("Thargoid") },
+             { "unknownsaucer_b", new Actor("Thargoid") },
+             { "unknownsaucer_c", new Actor("Thargoid") },
+             { "unknownsaucer_d", new Actor("Thargoid") },
+             { "unknownsaucer_e", new Actor("Thargoid") },  // seen
+             { "unknownsaucer_f", new Actor("Thargoid") },  
+             { "unknownsaucer_h", new Actor("Thargoid") },  // seen
              { "thargon", new Actor("Thargon") },
              { "coriolis", new Actor("Coriolis Station") },
              { "carrierdocka", new Actor("Carrier Dock A") },

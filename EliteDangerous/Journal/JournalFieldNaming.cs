@@ -175,7 +175,7 @@ namespace EliteDangerousCore
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine($"Unknown Ship/Suit/Actor: {{ \"{inname}\", new Actor(\"{inname.SplitCapsWordFull()}\") }},");
+                System.Diagnostics.Trace.WriteLine($"*** Unknown Ship/Suit/Actor: {{ \"{inname}\", new Actor(\"{inname.SplitCapsWordFull()}\") }},");
                 return inname.SplitCapsWordFull();
             }
         }
@@ -191,7 +191,7 @@ namespace EliteDangerousCore
                 return (i as ItemData.ShipInfoString).Value;
             else
             {
-                System.Diagnostics.Debug.WriteLine("Unknown FD ship ID:" + inname);
+                System.Diagnostics.Trace.WriteLine("*** Unknown FD ship ID:" + inname);
                 return inname;
             }
         }

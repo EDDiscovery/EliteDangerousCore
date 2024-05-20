@@ -75,16 +75,29 @@ namespace EliteDangerousCore.JournalEvents
             Ship_Localised = evt["Ship_Localised"].StrNull();       // may not be present
 
             if (ShipFD.Length == 0)      // Vega logs show no ship on certain logs.. handle it to prevent warnings.
-                Ship_Localised = ShipFD = "Unknown";
-
-            if ( ItemData.IsShip(ShipFD) || ItemData.IsSRVOrFighter(ShipFD))
-            { 
-                ShipFD = JournalFieldNaming.NormaliseFDShipName(ShipFD);
-                Ship = JournalFieldNaming.GetBetterShipSuitActorName(ShipFD);
-            }
-            else 
             {
-                Ship = ShipFD.SplitCapsWordFull();  // emergency back up
+                Ship_Localised = ShipFD = "Unknown";
+            }
+            else
+            {
+                if (ItemData.IsShipSRVOrFighter(ShipFD))
+                {
+                    ShipFD = JournalFieldNaming.NormaliseFDShipName(ShipFD);
+                    Ship = JournalFieldNaming.GetBetterShipSuitActorName(ShipFD);
+                }
+                else if ( ItemData.IsSuit(ShipFD))      
+                {
+                    Ship = JournalFieldNaming.GetBetterShipSuitActorName(ShipFD);
+                }
+                else if ( ItemData.IsTaxi(ShipFD))
+                {
+                    Ship = JournalFieldNaming.GetBetterShipSuitActorName(ShipFD.Replace("_taxi",""));
+                }
+                else
+                {
+                    System.Diagnostics.Trace.WriteLine($"*** Loadout in unknown ship type {ShipFD}");
+                    Ship = ShipFD.SplitCapsWordFull();  // emergency back up
+                }
             }
 
             Ship_Localised = Ship_Localised.Alt(Ship);

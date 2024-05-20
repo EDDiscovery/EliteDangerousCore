@@ -43,8 +43,7 @@ namespace EliteDangerousCore
 
         static public bool IsFighter(string shipfdname)
         {
-            shipfdname = shipfdname.ToLowerInvariant();
-            return shipfdname.Equals("federation_fighter") || shipfdname.Equals("empire_fighter") || shipfdname.Equals("independent_fighter") || shipfdname.Contains("hybrid_fighter");
+            return shipfdname.Contains("_fighter", StringComparison.InvariantCultureIgnoreCase);
         }
 
         static public bool IsSRVOrFighter(string shipfdname)

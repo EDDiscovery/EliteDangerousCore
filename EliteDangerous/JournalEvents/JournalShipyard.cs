@@ -115,7 +115,11 @@ namespace EliteDangerousCore.JournalEvents
             ShipPrice = evt["ShipPrice"].Long();
 
             StoreOldShipFD = evt["StoreOldShip"].StrNull();     // does not have localisation
-            if (StoreOldShipFD != null)
+            if (StoreOldShipFD?.Length == 0)      // some empty strings seen
+            {
+                StoreOldShip = StoreOldShipFD = "Unknown";
+            }
+            else if (StoreOldShipFD != null)   // if present
             {
                 StoreOldShipFD = JournalFieldNaming.NormaliseFDShipName(StoreOldShipFD);
                 StoreOldShip = JournalFieldNaming.GetBetterShipName(StoreOldShipFD);

@@ -115,7 +115,7 @@
     <Compile Include="EliteDangerous\EstimatedValues.cs" />
     <Compile Include="EliteDangerous\FrontierFolder.cs" />
     <Compile Include="EliteDangerous\Translations.cs" />
-    <Compile Include="Engineering\Engineering.cs" />
+    <Compile Include="Stats\EngineerCrafting.cs" />
     <Compile Include="Forms\CommanderForm.cs">
       <SubType>Form</SubType>
     </Compile>
