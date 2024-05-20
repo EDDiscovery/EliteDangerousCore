@@ -340,15 +340,159 @@ namespace EliteDangerousCore
                         engineered.Jitter = mf.Value;
                         System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Jitter} -> {engineered.Jitter}");
                     }
-                    // ? DamageType
+                    // ? DamageTyp
+                    // ? weaponMode
+
+
+                    else if (mf.Label.EqualsIIC("ShieldGenMinimumMass"))    // genminmass
+                    {
+                        engineered.MinMass = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MinMass} -> {engineered.MinMass}");
+                    }
+
+                    else if (mf.Label.EqualsIIC("ShieldGenOptimalMass"))    // genoptmass
+                    {
+                        engineered.OptMass = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.OptMass} -> {engineered.OptMass}");
+                    }
+
+                    else if (mf.Label.EqualsIIC("ShieldGenMaximumMass"))// genmaxmass
+                    {
+                        engineered.MaxMass = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MaxMass} -> {engineered.MaxMass}");
+                    }
+
+                    else if (mf.Label.EqualsIIC("ShieldGenMinStrength"))            // genminmul
+                    {
+                        engineered.MinStrength = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MinStrength} -> {engineered.MinStrength}");
+                    }
+
+                    else if (mf.Label.EqualsIIC("ShieldGenStrength"))   // genoptmul
+                    {
+                        engineered.OptStrength = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.OptStrength} -> {engineered.OptStrength}");
+                    }
+
+                    else if (mf.Label.EqualsIIC("ShieldGenMaxStrength")) // genmaxmul
+                    {
+                        engineered.MaxStrength = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MaxStrength} -> {engineered.MaxStrength}");
+                    }
+
+                    else if (mf.Label.EqualsIIC("RegenRate"))   // genrate
+                    {
+                        engineered.RegenRate = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.RegenRate} -> {engineered.RegenRate}");
+                    }
+
+                    else if (mf.Label.EqualsIIC("BrokenRegenRate")) // bgenrate
+                    {
+                        engineered.BrokenRegenRate = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.BrokenRegenRate} -> {engineered.BrokenRegenRate}");
+                    }
+
+                    else if (mf.Label.EqualsIIC("EnergyPerRegen")) // genpwr
+                    {
+                        engineered.MWPerUnit = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MWPerUnit} -> {engineered.MWPerUnit}");
+                    }
+
+                    else if (mf.Label.EqualsIIC("FSDOptimalMass")) // fsdoptmass
+                    {
+                        engineered.OptMass = (int)mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.OptMass} -> {engineered.OptMass}");
+                    }
+
+                    else if (mf.Label.EqualsIIC("FSDHeatRate")) // fsdheat
+                    {
+                        engineered.ThermL = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.ThermL} -> {engineered.ThermL}");
+                    }
+
+                    else if (mf.Label.EqualsIIC("MaxFuelPerJump")) // maxfuel
+                    {
+                        engineered.MaxFuelPerJump = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MaxFuelPerJump} -> {engineered.MaxFuelPerJump}");
+                    }
+
+                    else if (mf.Label.EqualsIIC("EngineMinimumMass")) // engminmass
+                    {
+                        engineered.MinMass = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MinMass} -> {engineered.MinMass}");
+                    }
+
+                    else if (mf.Label.EqualsIIC("EngineOptimalMass")) // engoptmass
+                    {
+                        engineered.OptMass = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.OptMass} -> {engineered.OptMass}");
+                    }
+
+                    else if (mf.Label.EqualsIIC("MaximumMass")) // engmaxmass
+                    {
+                        engineered.MaxMass = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MaxMass} -> {engineered.MaxMass}");
+                    }
+
+                    else if (mf.Label.EqualsIIC("EngineMinPerformance"))    // engminmul
+                    {
+                        engineered.EngineMinMultiplier = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.EngineMinMultiplier} -> {engineered.EngineMinMultiplier}");
+                    }
+
+                    else if (mf.Label.EqualsIIC("EngineOptPerformance"))    // engoptmul
+                    {
+                        engineered.EngineOptMultiplier = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.EngineOptMultiplier} -> {engineered.EngineOptMultiplier}");
+                    }
+
+                    else if (mf.Label.EqualsIIC("EngineMaxPerformance"))    // engmaxmul
+                    {
+                        engineered.EngineMaxMultiplier = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.EngineMaxMultiplier} -> {engineered.EngineMaxMultiplier}");
+                    }
+
+                    else if (mf.Label.EqualsIIC("EngineHeatRate"))  // engheat
+                    {
+                        engineered.ThermL = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.ThermL} -> {engineered.ThermL}");
+                    }
+
+                    else if (mf.Label.EqualsIIC("PowerCapacity"))   // pwrcap
+                    {
+                        engineered.PowerGen = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.PowerGen} -> {engineered.PowerGen}");
+                    }
+
+                    else if (mf.Label.EqualsIIC("HeatEfficiency"))  // heategg
+                    {
+                        engineered.HeatEfficiency = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.HeatEfficiency} -> {engineered.HeatEfficiency}");
+                    }
 
 
 
-                    //else if (mf.Label.EqualsIIC("")) 
+                    //else if (mf.Label.EqualsIIC(""))
                     //{
                     //    engineered. = mf.Value;
                     //    System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.ThermL} -> {engineered.ThermL}");
                     //}
+
+                    //else if (mf.Label.EqualsIIC(""))
+                    //{
+                    //    engineered. = mf.Value;
+                    //    System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.ThermL} -> {engineered.ThermL}");
+                    //}
+
+                    //else if (mf.Label.EqualsIIC(""))
+                    //{
+                    //    engineered. = mf.Value;
+                    //    System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.ThermL} -> {engineered.ThermL}");
+                    //}
+
+
+
+
 
 
                     else if (mf.Label.EqualsIIC("DefenceModifierHealthMultiplier"))
@@ -372,16 +516,6 @@ namespace EliteDangerousCore
                     {
                         engineered.Explosive = mf.Value;
                         System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Explosive} -> {engineered.Explosive}");
-                    }
-                    else if (mf.Label.EqualsIIC("FSDOptimalMass"))
-                    {
-                        engineered.OptMass = (int)mf.Value;
-                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.OptMass} -> {engineered.OptMass}");
-                    }
-                    else if (mf.Label.EqualsIIC("MaxFuelPerJump"))
-                    {
-                        engineered.MaxFuelPerJump = mf.Value;
-                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MaxFuelPerJump} -> {engineered.MaxFuelPerJump}");
                     }
                     else
                     {

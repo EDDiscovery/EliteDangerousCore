@@ -430,9 +430,9 @@ namespace EliteDangerousCore
             [PropertyNameAttribute("MW")] public double? PowerGen { get; set; } // MW power plant
             [PropertyNameAttribute("MW/u")] public double? MWPerUnit { get; set; } // MW per shield unit
             [PropertyNameAttribute("MW/s")] public double? MWPerSec { get; set; } // MW per sec
-            [PropertyNameAttribute("t")] public int? OptMass { get; set; } // t
-            [PropertyNameAttribute("t")] public int? MaxMass { get; set; } // t
-            [PropertyNameAttribute("t")] public int? MinMass { get; set; } // t
+            [PropertyNameAttribute("t")] public double? OptMass { get; set; } // t
+            [PropertyNameAttribute("t")] public double? MaxMass { get; set; } // t
+            [PropertyNameAttribute("t")] public double? MinMass { get; set; } // t
             [PropertyNameAttribute("")] public double? EngineOptMultiplier { get; set; }
             [PropertyNameAttribute("")] public double? EngineMinMultiplier { get; set; }
             [PropertyNameAttribute("")] public double? EngineMaxMultiplier { get; set; }
@@ -441,7 +441,7 @@ namespace EliteDangerousCore
 
             [PropertyNameAttribute("")] public int? Prisoners { get; set; }
             [PropertyNameAttribute("")] public int? Passengers { get; set; }
-            [PropertyNameAttribute("")] public int? Bins { get; set; }
+            [PropertyNameAttribute("")] public int? Capacity { get; set; }
             [PropertyNameAttribute("t")] public int? Size { get; set; } // tons
             [PropertyNameAttribute("/s")] public double? RefillRate { get; set; } // t/s
             [PropertyNameAttribute("s")] public double? Time { get; set; } // s
@@ -540,7 +540,7 @@ namespace EliteDangerousCore
                         {
                             if (output.Length > 0)
                                 output.Append(", ");
-                            output.Append($"{pi.Name}={value:0.###}{postfix}");
+                            output.Append($"{pi.Name}:{value:0.###}{postfix}");
                         }
                     }
                 }
@@ -982,9 +982,9 @@ namespace EliteDangerousCore
 
                 // figther bays
 
-                { "int_fighterbay_size5_class1", new ShipModule(128727930,ShipModule.ModuleTypes.FighterHangar,"Fighter Hangar Class 5 Rating E"){ Cost = 575660, Class = 5, Rating = "D", Mass = 20, Integrity = 60, Power = 0.25, BootTime = 5, Size = 1, Rebuilds = 6, AmmoCost = 1030 } },
-                { "int_fighterbay_size6_class1", new ShipModule(128727931,ShipModule.ModuleTypes.FighterHangar,"Fighter Hangar Class 6 Rating E"){ Cost = 1869350, Class = 6, Rating = "D", Mass = 40, Integrity = 80, Power = 0.35, BootTime = 5, Size = 2, Rebuilds = 8, AmmoCost = 1030 } },
-                { "int_fighterbay_size7_class1", new ShipModule(128727932,ShipModule.ModuleTypes.FighterHangar,"Fighter Hangar Class 7 Rating E"){ Cost = 2369330, Class = 7, Rating = "D", Mass = 60, Integrity = 120, Power = 0.35, BootTime = 5, Size = 2, Rebuilds = 15, AmmoCost = 1030 } },
+                { "int_fighterbay_size5_class1", new ShipModule(128727930,ShipModule.ModuleTypes.FighterHangar,"Fighter Hangar Class 5 Rating E"){ Cost = 575660, Class = 5, Rating = "D", Mass = 20, Integrity = 60, Power = 0.25, BootTime = 5, Capacity = 1, Rebuilds = 6, AmmoCost = 1030 } },
+                { "int_fighterbay_size6_class1", new ShipModule(128727931,ShipModule.ModuleTypes.FighterHangar,"Fighter Hangar Class 6 Rating E"){ Cost = 1869350, Class = 6, Rating = "D", Mass = 40, Integrity = 80, Power = 0.35, BootTime = 5, Capacity = 2, Rebuilds = 8, AmmoCost = 1030 } },
+                { "int_fighterbay_size7_class1", new ShipModule(128727932,ShipModule.ModuleTypes.FighterHangar,"Fighter Hangar Class 7 Rating E"){ Cost = 2369330, Class = 7, Rating = "D", Mass = 60, Integrity = 120, Power = 0.35, BootTime = 5, Capacity = 2, Rebuilds = 15, AmmoCost = 1030 } },
 
                 // flak
 
@@ -1580,12 +1580,12 @@ namespace EliteDangerousCore
 
                 // planetary hangar
 
-                { "int_buggybay_size2_class1", new ShipModule(128672288,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"Planetary Vehicle Hangar Class 2 Rating H"){ Cost = 18000, Class = 2, Rating = "H", Mass = 12, Integrity = 30, Power = 0.25, BootTime = 5, Size = 1, Rebuilds = 1, AmmoCost = 1030 } },
-                { "int_buggybay_size2_class2", new ShipModule(128672289,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"Planetary Vehicle Hangar Class 2 Rating G"){ Cost = 21600, Class = 2, Rating = "G", Mass = 6, Integrity = 30, Power = 0.75, BootTime = 5, Size = 1, Rebuilds = 1, AmmoCost = 1030 } },
-                { "int_buggybay_size4_class1", new ShipModule(128672290,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"Planetary Vehicle Hangar Class 4 Rating H"){ Cost = 72000, Class = 4, Rating = "H", Mass = 20, Integrity = 30, Power = 0.4, BootTime = 5, Size = 2, Rebuilds = 1, AmmoCost = 1030 } },
-                { "int_buggybay_size4_class2", new ShipModule(128672291,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"Planetary Vehicle Hangar Class 4 Rating G"){ Cost = 86400, Class = 4, Rating = "G", Mass = 10, Integrity = 30, Power = 1.2, BootTime = 5, Size = 2, Rebuilds = 1, AmmoCost = 1030 } },
-                { "int_buggybay_size6_class1", new ShipModule(128672292,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"Planetary Vehicle Hangar Class 6 Rating H"){ Cost = 576000, Class = 6, Rating = "H", Mass = 34, Integrity = 30, Power = 0.6, BootTime = 5, Size = 4, Rebuilds = 1, AmmoCost = 1030 } },
-                { "int_buggybay_size6_class2", new ShipModule(128672293,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"Planetary Vehicle Hangar Class 6 Rating G"){ Cost = 691200, Class = 6, Rating = "G", Mass = 17, Integrity = 30, Power = 1.8, BootTime = 5, Size = 4, Rebuilds = 1, AmmoCost = 1030 } },
+                { "int_buggybay_size2_class1", new ShipModule(128672288,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"Planetary Vehicle Hangar Class 2 Rating H"){ Cost = 18000, Class = 2, Rating = "H", Mass = 12, Integrity = 30, Power = 0.25, BootTime = 5, Capacity = 1, Rebuilds = 1, AmmoCost = 1030 } },
+                { "int_buggybay_size2_class2", new ShipModule(128672289,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"Planetary Vehicle Hangar Class 2 Rating G"){ Cost = 21600, Class = 2, Rating = "G", Mass = 6, Integrity = 30, Power = 0.75, BootTime = 5, Capacity = 1, Rebuilds = 1, AmmoCost = 1030 } },
+                { "int_buggybay_size4_class1", new ShipModule(128672290,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"Planetary Vehicle Hangar Class 4 Rating H"){ Cost = 72000, Class = 4, Rating = "H", Mass = 20, Integrity = 30, Power = 0.4, BootTime = 5, Capacity = 2, Rebuilds = 1, AmmoCost = 1030 } },
+                { "int_buggybay_size4_class2", new ShipModule(128672291,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"Planetary Vehicle Hangar Class 4 Rating G"){ Cost = 86400, Class = 4, Rating = "G", Mass = 10, Integrity = 30, Power = 1.2, BootTime = 5, Capacity = 2, Rebuilds = 1, AmmoCost = 1030 } },
+                { "int_buggybay_size6_class1", new ShipModule(128672292,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"Planetary Vehicle Hangar Class 6 Rating H"){ Cost = 576000, Class = 6, Rating = "H", Mass = 34, Integrity = 30, Power = 0.6, BootTime = 5, Capacity = 4, Rebuilds = 1, AmmoCost = 1030 } },
+                { "int_buggybay_size6_class2", new ShipModule(128672293,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"Planetary Vehicle Hangar Class 6 Rating G"){ Cost = 691200, Class = 6, Rating = "G", Mass = 17, Integrity = 30, Power = 1.8, BootTime = 5, Capacity = 4, Rebuilds = 1, AmmoCost = 1030 } },
 
                 // Plasmas
 
@@ -1726,26 +1726,26 @@ namespace EliteDangerousCore
 
                 // Refineries
 
-                { "int_refinery_size1_class1", new ShipModule(128666684,ShipModule.ModuleTypes.Refinery,"Refinery Class 1 Rating E"){ Cost = 6000, Class = 1, Rating = "E", Integrity = 32, Power = 0.14, BootTime = 10, Bins = 1 } },
-                { "int_refinery_size2_class1", new ShipModule(128666685,ShipModule.ModuleTypes.Refinery,"Refinery Class 2 Rating E"){ Cost = 12600, Class = 2, Rating = "E", Integrity = 41, Power = 0.17, BootTime = 10, Bins = 2 } },
-                { "int_refinery_size3_class1", new ShipModule(128666686,ShipModule.ModuleTypes.Refinery,"Refinery Class 3 Rating E"){ Cost = 26460, Class = 3, Rating = "E", Integrity = 51, Power = 0.2, BootTime = 10, Bins = 3 } },
-                { "int_refinery_size4_class1", new ShipModule(128666687,ShipModule.ModuleTypes.Refinery,"Refinery Class 4 Rating E"){ Cost = 55570, Class = 4, Rating = "E", Integrity = 64, Power = 0.25, BootTime = 10, Bins = 4 } },
-                { "int_refinery_size1_class2", new ShipModule(128666688,ShipModule.ModuleTypes.Refinery,"Refinery Class 1 Rating D"){ Cost = 18000, Class = 1, Rating = "D", Integrity = 24, Power = 0.18, BootTime = 10, Bins = 1 } },
-                { "int_refinery_size2_class2", new ShipModule(128666689,ShipModule.ModuleTypes.Refinery,"Refinery Class 2 Rating D"){ Cost = 37800, Class = 2, Rating = "D", Integrity = 31, Power = 0.22, BootTime = 10, Bins = 3 } },
-                { "int_refinery_size3_class2", new ShipModule(128666690,ShipModule.ModuleTypes.Refinery,"Refinery Class 3 Rating D"){ Cost = 79380, Class = 3, Rating = "D", Integrity = 38, Power = 0.27, BootTime = 10, Bins = 4 } },
-                { "int_refinery_size4_class2", new ShipModule(128666691,ShipModule.ModuleTypes.Refinery,"Refinery Class 4 Rating D"){ Cost = 166700, Class = 4, Rating = "D", Integrity = 48, Power = 0.33, BootTime = 10, Bins = 5 } },
-                { "int_refinery_size1_class3", new ShipModule(128666692,ShipModule.ModuleTypes.Refinery,"Refinery Class 1 Rating C"){ Cost = 54000, Class = 1, Rating = "C", Integrity = 40, Power = 0.23, BootTime = 10, Bins = 2 } },
-                { "int_refinery_size2_class3", new ShipModule(128666693,ShipModule.ModuleTypes.Refinery,"Refinery Class 2 Rating C"){ Cost = 113400, Class = 2, Rating = "C", Integrity = 51, Power = 0.28, BootTime = 10, Bins = 4 } },
-                { "int_refinery_size3_class3", new ShipModule(128666694,ShipModule.ModuleTypes.Refinery,"Refinery Class 3 Rating C"){ Cost = 238140, Class = 3, Rating = "C", Integrity = 64, Power = 0.34, BootTime = 10, Bins = 6 } },
-                { "int_refinery_size4_class3", new ShipModule(128666695,ShipModule.ModuleTypes.Refinery,"Refinery Class 4 Rating C"){ Cost = 500090, Class = 4, Rating = "C", Integrity = 80, Power = 0.41, BootTime = 10, Bins = 7 } },
-                { "int_refinery_size1_class4", new ShipModule(128666696,ShipModule.ModuleTypes.Refinery,"Refinery Class 1 Rating B"){ Cost = 162000, Class = 1, Rating = "B", Integrity = 56, Power = 0.28, BootTime = 10, Bins = 3 } },
-                { "int_refinery_size2_class4", new ShipModule(128666697,ShipModule.ModuleTypes.Refinery,"Refinery Class 2 Rating B"){ Cost = 340200, Class = 2, Rating = "B", Integrity = 71, Power = 0.34, BootTime = 10, Bins = 5 } },
-                { "int_refinery_size3_class4", new ShipModule(128666698,ShipModule.ModuleTypes.Refinery,"Refinery Class 3 Rating B"){ Cost = 714420, Class = 3, Rating = "B", Integrity = 90, Power = 0.41, BootTime = 10, Bins = 7 } },
-                { "int_refinery_size4_class4", new ShipModule(128666699,ShipModule.ModuleTypes.Refinery,"Refinery Class 4 Rating B"){ Cost = 1500280, Class = 4, Rating = "B", Integrity = 112, Power = 0.49, BootTime = 10, Bins = 9 } },
-                { "int_refinery_size1_class5", new ShipModule(128666700,ShipModule.ModuleTypes.Refinery,"Refinery Class 1 Rating A"){ Cost = 486000, Class = 1, Rating = "A", Integrity = 48, Power = 0.32, BootTime = 10, Bins = 4 } },
-                { "int_refinery_size2_class5", new ShipModule(128666701,ShipModule.ModuleTypes.Refinery,"Refinery Class 2 Rating A"){ Cost = 1020600, Class = 2, Rating = "A", Integrity = 61, Power = 0.39, BootTime = 10, Bins = 6 } },
-                { "int_refinery_size3_class5", new ShipModule(128666702,ShipModule.ModuleTypes.Refinery,"Refinery Class 3 Rating A"){ Cost = 2143260, Class = 3, Rating = "A", Integrity = 77, Power = 0.48, BootTime = 10, Bins = 8 } },
-                { "int_refinery_size4_class5", new ShipModule(128666703,ShipModule.ModuleTypes.Refinery,"Refinery Class 4 Rating A"){ Cost = 4500850, Class = 4, Rating = "A", Integrity = 96, Power = 0.57, BootTime = 10, Bins = 10 } },
+                { "int_refinery_size1_class1", new ShipModule(128666684,ShipModule.ModuleTypes.Refinery,"Refinery Class 1 Rating E"){ Cost = 6000, Class = 1, Rating = "E", Integrity = 32, Power = 0.14, BootTime = 10, Capacity = 1 } },
+                { "int_refinery_size2_class1", new ShipModule(128666685,ShipModule.ModuleTypes.Refinery,"Refinery Class 2 Rating E"){ Cost = 12600, Class = 2, Rating = "E", Integrity = 41, Power = 0.17, BootTime = 10, Capacity = 2 } },
+                { "int_refinery_size3_class1", new ShipModule(128666686,ShipModule.ModuleTypes.Refinery,"Refinery Class 3 Rating E"){ Cost = 26460, Class = 3, Rating = "E", Integrity = 51, Power = 0.2, BootTime = 10, Capacity = 3 } },
+                { "int_refinery_size4_class1", new ShipModule(128666687,ShipModule.ModuleTypes.Refinery,"Refinery Class 4 Rating E"){ Cost = 55570, Class = 4, Rating = "E", Integrity = 64, Power = 0.25, BootTime = 10, Capacity = 4 } },
+                { "int_refinery_size1_class2", new ShipModule(128666688,ShipModule.ModuleTypes.Refinery,"Refinery Class 1 Rating D"){ Cost = 18000, Class = 1, Rating = "D", Integrity = 24, Power = 0.18, BootTime = 10, Capacity = 1 } },
+                { "int_refinery_size2_class2", new ShipModule(128666689,ShipModule.ModuleTypes.Refinery,"Refinery Class 2 Rating D"){ Cost = 37800, Class = 2, Rating = "D", Integrity = 31, Power = 0.22, BootTime = 10, Capacity = 3 } },
+                { "int_refinery_size3_class2", new ShipModule(128666690,ShipModule.ModuleTypes.Refinery,"Refinery Class 3 Rating D"){ Cost = 79380, Class = 3, Rating = "D", Integrity = 38, Power = 0.27, BootTime = 10, Capacity = 4 } },
+                { "int_refinery_size4_class2", new ShipModule(128666691,ShipModule.ModuleTypes.Refinery,"Refinery Class 4 Rating D"){ Cost = 166700, Class = 4, Rating = "D", Integrity = 48, Power = 0.33, BootTime = 10, Capacity = 5 } },
+                { "int_refinery_size1_class3", new ShipModule(128666692,ShipModule.ModuleTypes.Refinery,"Refinery Class 1 Rating C"){ Cost = 54000, Class = 1, Rating = "C", Integrity = 40, Power = 0.23, BootTime = 10, Capacity = 2 } },
+                { "int_refinery_size2_class3", new ShipModule(128666693,ShipModule.ModuleTypes.Refinery,"Refinery Class 2 Rating C"){ Cost = 113400, Class = 2, Rating = "C", Integrity = 51, Power = 0.28, BootTime = 10, Capacity = 4 } },
+                { "int_refinery_size3_class3", new ShipModule(128666694,ShipModule.ModuleTypes.Refinery,"Refinery Class 3 Rating C"){ Cost = 238140, Class = 3, Rating = "C", Integrity = 64, Power = 0.34, BootTime = 10, Capacity = 6 } },
+                { "int_refinery_size4_class3", new ShipModule(128666695,ShipModule.ModuleTypes.Refinery,"Refinery Class 4 Rating C"){ Cost = 500090, Class = 4, Rating = "C", Integrity = 80, Power = 0.41, BootTime = 10, Capacity = 7 } },
+                { "int_refinery_size1_class4", new ShipModule(128666696,ShipModule.ModuleTypes.Refinery,"Refinery Class 1 Rating B"){ Cost = 162000, Class = 1, Rating = "B", Integrity = 56, Power = 0.28, BootTime = 10, Capacity = 3 } },
+                { "int_refinery_size2_class4", new ShipModule(128666697,ShipModule.ModuleTypes.Refinery,"Refinery Class 2 Rating B"){ Cost = 340200, Class = 2, Rating = "B", Integrity = 71, Power = 0.34, BootTime = 10, Capacity = 5 } },
+                { "int_refinery_size3_class4", new ShipModule(128666698,ShipModule.ModuleTypes.Refinery,"Refinery Class 3 Rating B"){ Cost = 714420, Class = 3, Rating = "B", Integrity = 90, Power = 0.41, BootTime = 10, Capacity = 7 } },
+                { "int_refinery_size4_class4", new ShipModule(128666699,ShipModule.ModuleTypes.Refinery,"Refinery Class 4 Rating B"){ Cost = 1500280, Class = 4, Rating = "B", Integrity = 112, Power = 0.49, BootTime = 10, Capacity = 9 } },
+                { "int_refinery_size1_class5", new ShipModule(128666700,ShipModule.ModuleTypes.Refinery,"Refinery Class 1 Rating A"){ Cost = 486000, Class = 1, Rating = "A", Integrity = 48, Power = 0.32, BootTime = 10, Capacity = 4 } },
+                { "int_refinery_size2_class5", new ShipModule(128666701,ShipModule.ModuleTypes.Refinery,"Refinery Class 2 Rating A"){ Cost = 1020600, Class = 2, Rating = "A", Integrity = 61, Power = 0.39, BootTime = 10, Capacity = 6 } },
+                { "int_refinery_size3_class5", new ShipModule(128666702,ShipModule.ModuleTypes.Refinery,"Refinery Class 3 Rating A"){ Cost = 2143260, Class = 3, Rating = "A", Integrity = 77, Power = 0.48, BootTime = 10, Capacity = 8 } },
+                { "int_refinery_size4_class5", new ShipModule(128666703,ShipModule.ModuleTypes.Refinery,"Refinery Class 4 Rating A"){ Cost = 4500850, Class = 4, Rating = "A", Integrity = 96, Power = 0.57, BootTime = 10, Capacity = 10 } },
 
                 // Sensors
 
