@@ -102,8 +102,10 @@ namespace EliteDangerousCore
         {
             SystemNode systemnode = GetOrCreateSystemNode(sys);
             lock (systemnode )
+            {
                 systemnode.FSSTotalBodies = je.BodyCount;
                 systemnode.FSSTotalNonBodies = je.NonBodyCount;
+            }
         }
 
         #endregion
