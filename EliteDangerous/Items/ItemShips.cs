@@ -52,7 +52,7 @@ namespace EliteDangerousCore
         }
 
 
-        public enum ShipPropID { FDID, HullMass, Name, Manu, Speed, Boost, HullCost, Class, EDCDName }
+        public enum ShipPropID { FDID, HullMass, Name, Manu, Speed, Boost, HullCost, Class, EDCDName, Shields, Armour, BoostCost, FuelReserve, Hardness, Crew }
 
         // get properties of a ship, case insensitive, may be null
         static public Dictionary<ShipPropID, IModuleInfo> GetShipProperties(string fdshipname)        
@@ -121,16 +121,19 @@ namespace EliteDangerousCore
             return null;
         }
 
+        [System.Diagnostics.DebuggerDisplay("{Value}")]
         public class ShipInfoString : IModuleInfo
         {
             public string Value;
             public ShipInfoString(string s) { Value = s; }
         };
+        [System.Diagnostics.DebuggerDisplay("{Value}")]
         public class ShipInfoInt : IModuleInfo
         {
             public int Value;
             public ShipInfoInt(int i) { Value = i; }
         };
+        [System.Diagnostics.DebuggerDisplay("{Value}")]
         public class ShipInfoDouble : IModuleInfo
         {
             public double Value;
@@ -139,483 +142,769 @@ namespace EliteDangerousCore
 
         #region ships
 
-        // tbd encode ship sheilds and armour base value
+        private static void AddExtraShipInfo()
+        {
+            Dictionary<string, string> Manu = new Dictionary<string, string>        // add manu info
+            {
+                ["Adder"] = "Zorgon Peterson",
+                ["TypeX_3"] = "Lakon",
+                ["TypeX"] = "Lakon",
+                ["TypeX_2"] = "Lakon",
+                ["Anaconda"] = "Faulcon DeLacy",
+                ["Asp"] = "Lakon",
+                ["Asp_Scout"] = "Lakon",
+                ["BelugaLiner"] = "Saud Kruger",
+                ["CobraMkIII"] = "Faulcon DeLacy",
+                ["CobraMkIV"] = "Faulcon DeLacy",
+                ["DiamondBackXL"] = "Lakon",
+                ["DiamondBack"] = "Lakon",
+                ["Dolphin"] = "Saud Kruger",
+                ["Eagle"] = "Core Dynamics",
+                ["Federation_Dropship_MkII"] = "Core Dynamics",
+                ["Federation_Corvette"] = "Core Dynamics",
+                ["Federation_Dropship"] = "Core Dynamics",
+                ["Federation_Gunship"] = "Core Dynamics",
+                ["FerDeLance"] = "Zorgon Peterson",
+                ["Hauler"] = "Zorgon Peterson",
+                ["Empire_Trader"] = "Gutamaya",
+                ["Empire_Courier"] = "Gutamaya",
+                ["Cutter"] = "Gutamaya",
+                ["Empire_Eagle"] = "Gutamaya",
+                ["Independant_Trader"] = "Lakon",
+                ["Krait_MkII"] = "Faulcon DeLacy",
+                ["Krait_Light"] = "Faulcon DeLacy",
+                ["Mamba"] = "Zorgon Peterson",
+                ["Orca"] = "Saud Kruger",
+                ["Python"] = "Faulcon DeLacy",
+                ["Python_NX"] = "Faulcon DeLacy",
+                ["SideWinder"] = "Faulcon DeLacy",
+                ["Type9_Military"] = "Lakon",
+                ["Type6"] = "Lakon",
+                ["Type7"] = "Lakon",
+                ["Type9"] = "Lakon",
+                ["Viper"] = "Faulcon DeLacy",
+                ["Viper_MkIV"] = "Faulcon DeLacy",
+                ["Vulture"] = "Core Dynamics",
+            };
+
+            foreach (var kvp in Manu)
+            {
+                spaceships[kvp.Key.ToLowerInvariant()].Add(ShipPropID.Manu, new ShipInfoString(kvp.Value));
+            }
+
+            // Add EDCD name overrides
+            cobramkiii.Add(ShipPropID.EDCDName, new ShipInfoString("Cobra MkIII"));
+            cobramkiv.Add(ShipPropID.EDCDName, new ShipInfoString("Cobra MkIV"));
+            krait_mkii.Add(ShipPropID.EDCDName, new ShipInfoString("Krait MkII"));
+            viper.Add(ShipPropID.EDCDName, new ShipInfoString("Viper MkIII"));
+            viper_mkiv.Add(ShipPropID.EDCDName, new ShipInfoString("Viper MkIV"));
+        }
+
+        private static Dictionary<ShipPropID, IModuleInfo> sidewinder = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("SideWinder") },
+        { ShipPropID.HullMass, new ShipInfoDouble(25F)},
+        { ShipPropID.Name, new ShipInfoString("Sidewinder")},
+        { ShipPropID.Speed, new ShipInfoInt(220)},
+        { ShipPropID.Boost, new ShipInfoInt(320)},
+        { ShipPropID.HullCost, new ShipInfoInt(5070)},
+        { ShipPropID.Class, new ShipInfoInt(1)},
+        { ShipPropID.Shields, new ShipInfoInt(40)},
+        { ShipPropID.Armour, new ShipInfoInt(60)},
+        { ShipPropID.BoostCost, new ShipInfoInt(7)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.3)},
+        { ShipPropID.Hardness, new ShipInfoInt(20)},
+        { ShipPropID.Crew, new ShipInfoInt(1)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> eagle = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Eagle") },
+        { ShipPropID.HullMass, new ShipInfoDouble(50F)},
+        { ShipPropID.Name, new ShipInfoString("Eagle")},
+        { ShipPropID.Speed, new ShipInfoInt(240)},
+        { ShipPropID.Boost, new ShipInfoInt(350)},
+        { ShipPropID.HullCost, new ShipInfoInt(7490)},
+        { ShipPropID.Class, new ShipInfoInt(1)},
+        { ShipPropID.Shields, new ShipInfoInt(60)},
+        { ShipPropID.Armour, new ShipInfoInt(40)},
+        { ShipPropID.BoostCost, new ShipInfoInt(8)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.34)},
+        { ShipPropID.Hardness, new ShipInfoInt(28)},
+        { ShipPropID.Crew, new ShipInfoInt(1)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> hauler = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Hauler") },
+        { ShipPropID.HullMass, new ShipInfoDouble(14F)},
+        { ShipPropID.Name, new ShipInfoString("Hauler")},
+        { ShipPropID.Speed, new ShipInfoInt(200)},
+        { ShipPropID.Boost, new ShipInfoInt(300)},
+        { ShipPropID.HullCost, new ShipInfoInt(8160)},
+        { ShipPropID.Class, new ShipInfoInt(1)},
+        { ShipPropID.Shields, new ShipInfoInt(50)},
+        { ShipPropID.Armour, new ShipInfoInt(100)},
+        { ShipPropID.BoostCost, new ShipInfoInt(7)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.25)},
+        { ShipPropID.Hardness, new ShipInfoInt(20)},
+        { ShipPropID.Crew, new ShipInfoInt(1)},
+        };
 
         private static Dictionary<ShipPropID, IModuleInfo> adder = new Dictionary<ShipPropID, IModuleInfo>
         {
-            { ShipPropID.FDID, new ShipInfoString("Adder")},
-            { ShipPropID.HullMass, new ShipInfoDouble(35F)},
-            { ShipPropID.Name, new ShipInfoString("Adder")},
-            { ShipPropID.Manu, new ShipInfoString("Zorgon Peterson")},
-            { ShipPropID.Speed, new ShipInfoInt(220)},
-            { ShipPropID.Boost, new ShipInfoInt(320)},
-            { ShipPropID.HullCost, new ShipInfoInt(40000)},
-            { ShipPropID.Class, new ShipInfoInt(1)},            // Class is the landing pad size
+        { ShipPropID.FDID, new ShipInfoString("Adder") },
+        { ShipPropID.HullMass, new ShipInfoDouble(35F)},
+        { ShipPropID.Name, new ShipInfoString("Adder")},
+        { ShipPropID.Speed, new ShipInfoInt(220)},
+        { ShipPropID.Boost, new ShipInfoInt(320)},
+        { ShipPropID.HullCost, new ShipInfoInt(18710)},
+        { ShipPropID.Class, new ShipInfoInt(1)},
+        { ShipPropID.Shields, new ShipInfoInt(60)},
+        { ShipPropID.Armour, new ShipInfoInt(90)},
+        { ShipPropID.BoostCost, new ShipInfoInt(8)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.36)},
+        { ShipPropID.Hardness, new ShipInfoInt(35)},
+        { ShipPropID.Crew, new ShipInfoInt(2)},
         };
-        private static Dictionary<ShipPropID, IModuleInfo> alliance_challenger = new Dictionary<ShipPropID, IModuleInfo>
+
+        private static Dictionary<ShipPropID, IModuleInfo> empire_eagle = new Dictionary<ShipPropID, IModuleInfo>
         {
-            { ShipPropID.FDID, new ShipInfoString("TypeX_3")},
-            { ShipPropID.HullMass, new ShipInfoDouble(450F)},
-            { ShipPropID.Name, new ShipInfoString("Alliance Challenger")},
-            { ShipPropID.Manu, new ShipInfoString("Lakon")},
-            { ShipPropID.Speed, new ShipInfoInt(204)},
-            { ShipPropID.Boost, new ShipInfoInt(310)},
-            { ShipPropID.HullCost, new ShipInfoInt(28041035)},
-            { ShipPropID.Class, new ShipInfoInt(2)},
+        { ShipPropID.FDID, new ShipInfoString("Empire_Eagle") },
+        { ShipPropID.HullMass, new ShipInfoDouble(50F)},
+        { ShipPropID.Name, new ShipInfoString("Imperial Eagle")},
+        { ShipPropID.Speed, new ShipInfoInt(300)},
+        { ShipPropID.Boost, new ShipInfoInt(400)},
+        { ShipPropID.HullCost, new ShipInfoInt(50890)},
+        { ShipPropID.Class, new ShipInfoInt(1)},
+        { ShipPropID.Shields, new ShipInfoInt(80)},
+        { ShipPropID.Armour, new ShipInfoInt(60)},
+        { ShipPropID.BoostCost, new ShipInfoInt(8)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.37)},
+        { ShipPropID.Hardness, new ShipInfoInt(28)},
+        { ShipPropID.Crew, new ShipInfoInt(1)},
         };
-        private static Dictionary<ShipPropID, IModuleInfo> alliance_chieftain = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("TypeX")},
-            { ShipPropID.HullMass, new ShipInfoDouble(400F)},
-            { ShipPropID.Name, new ShipInfoString("Alliance Chieftain")},
-            { ShipPropID.Manu, new ShipInfoString("Lakon")},
-            { ShipPropID.Speed, new ShipInfoInt(230)},
-            { ShipPropID.Boost, new ShipInfoInt(330)},
-            { ShipPropID.HullCost, new ShipInfoInt(18182883)},
-            { ShipPropID.Class, new ShipInfoInt(2)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> alliance_crusader = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("TypeX_2")},
-            { ShipPropID.HullMass, new ShipInfoDouble(500F)},
-            { ShipPropID.Name, new ShipInfoString("Alliance Crusader")},
-            { ShipPropID.Manu, new ShipInfoString("Lakon")},
-            { ShipPropID.Speed, new ShipInfoInt(180)},
-            { ShipPropID.Boost, new ShipInfoInt(300)},
-            { ShipPropID.HullCost, new ShipInfoInt(22866341)},
-            { ShipPropID.Class, new ShipInfoInt(2)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> anaconda = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Anaconda")},
-            { ShipPropID.HullMass, new ShipInfoDouble(400F)},
-            { ShipPropID.Name, new ShipInfoString("Anaconda")},
-            { ShipPropID.Manu, new ShipInfoString("Faulcon DeLacy")},
-            { ShipPropID.Speed, new ShipInfoInt(180)},
-            { ShipPropID.Boost, new ShipInfoInt(240)},
-            { ShipPropID.HullCost, new ShipInfoInt(141889930)},
-            { ShipPropID.Class, new ShipInfoInt(3)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> asp = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Asp")},
-            { ShipPropID.HullMass, new ShipInfoDouble(280F)},
-            { ShipPropID.Name, new ShipInfoString("Asp Explorer")},
-            { ShipPropID.Manu, new ShipInfoString("Lakon")},
-            { ShipPropID.Speed, new ShipInfoInt(250)},
-            { ShipPropID.Boost, new ShipInfoInt(340)},
-            { ShipPropID.HullCost, new ShipInfoInt(6135660)},
-            { ShipPropID.Class, new ShipInfoInt(2)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> asp_scout = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Asp_Scout")},
-            { ShipPropID.HullMass, new ShipInfoDouble(150F)},
-            { ShipPropID.Name, new ShipInfoString("Asp Scout")},
-            { ShipPropID.Manu, new ShipInfoString("Lakon")},
-            { ShipPropID.Speed, new ShipInfoInt(220)},
-            { ShipPropID.Boost, new ShipInfoInt(300)},
-            { ShipPropID.HullCost, new ShipInfoInt(3818240)},
-            { ShipPropID.Class, new ShipInfoInt(2)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> beluga = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("BelugaLiner")},
-            { ShipPropID.HullMass, new ShipInfoDouble(950F)},
-            { ShipPropID.Name, new ShipInfoString("Beluga Liner")},
-            { ShipPropID.Manu, new ShipInfoString("Saud Kruger")},
-            { ShipPropID.Speed, new ShipInfoInt(200)},
-            { ShipPropID.Boost, new ShipInfoInt(280)},
-            { ShipPropID.HullCost, new ShipInfoInt(79654610)},
-            { ShipPropID.Class, new ShipInfoInt(3)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> cobra_mk_iii = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("CobraMkIII")},
-            { ShipPropID.HullMass, new ShipInfoDouble(180F)},
-            { ShipPropID.Name, new ShipInfoString("Cobra Mk III")},
-            { ShipPropID.EDCDName, new ShipInfoString("Cobra MkIII")},
-            { ShipPropID.Manu, new ShipInfoString("Faulcon DeLacy")},
-            { ShipPropID.Speed, new ShipInfoInt(280)},
-            { ShipPropID.Boost, new ShipInfoInt(400)},
-            { ShipPropID.HullCost, new ShipInfoInt(205800)},
-            { ShipPropID.Class, new ShipInfoInt(1)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> cobra_mk_iv = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("CobraMkIV")},
-            { ShipPropID.HullMass, new ShipInfoDouble(210F)},
-            { ShipPropID.Name, new ShipInfoString("Cobra Mk IV")},
-            { ShipPropID.EDCDName, new ShipInfoString("Cobra MkIV")},
-            { ShipPropID.Manu, new ShipInfoString("Faulcon DeLacy")},
-            { ShipPropID.Speed, new ShipInfoInt(200)},
-            { ShipPropID.Boost, new ShipInfoInt(300)},
-            { ShipPropID.HullCost, new ShipInfoInt(603740)},
-            { ShipPropID.Class, new ShipInfoInt(1)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> diamondback_explorer = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("DiamondBackXL")},
-            { ShipPropID.HullMass, new ShipInfoDouble(260F)},
-            { ShipPropID.Name, new ShipInfoString("Diamondback Explorer")},
-            { ShipPropID.Manu, new ShipInfoString("Lakon")},
-            { ShipPropID.Speed, new ShipInfoInt(260)},
-            { ShipPropID.Boost, new ShipInfoInt(340)},
-            { ShipPropID.HullCost, new ShipInfoInt(1635700)},
-            { ShipPropID.Class, new ShipInfoInt(1)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> diamondback = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("DiamondBack")},
-            { ShipPropID.HullMass, new ShipInfoDouble(170F)},
-            { ShipPropID.Name, new ShipInfoString("Diamondback Scout")},
-            { ShipPropID.Manu, new ShipInfoString("Lakon")},
-            { ShipPropID.Speed, new ShipInfoInt(280)},
-            { ShipPropID.Boost, new ShipInfoInt(380)},
-            { ShipPropID.HullCost, new ShipInfoInt(461340)},
-            { ShipPropID.Class, new ShipInfoInt(1)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> dolphin = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Dolphin")},
-            { ShipPropID.HullMass, new ShipInfoDouble(140F)},
-            { ShipPropID.Name, new ShipInfoString("Dolphin")},
-            { ShipPropID.Manu, new ShipInfoString("Saud Kruger")},
-            { ShipPropID.Speed, new ShipInfoInt(250)},
-            { ShipPropID.Boost, new ShipInfoInt(350)},
-            { ShipPropID.HullCost, new ShipInfoInt(1115330)},
-            { ShipPropID.Class, new ShipInfoInt(1)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> eagle = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Eagle")},
-            { ShipPropID.HullMass, new ShipInfoDouble(50F)},
-            { ShipPropID.Name, new ShipInfoString("Eagle")},
-            { ShipPropID.Manu, new ShipInfoString("Core Dynamics")},
-            { ShipPropID.Speed, new ShipInfoInt(240)},
-            { ShipPropID.Boost, new ShipInfoInt(350)},
-            { ShipPropID.HullCost, new ShipInfoInt(10440)},
-            { ShipPropID.Class, new ShipInfoInt(1)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> federal_assault_ship = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Federation_Dropship_MkII")},
-            { ShipPropID.HullMass, new ShipInfoDouble(480F)},
-            { ShipPropID.Name, new ShipInfoString("Federal Assault Ship")},
-            { ShipPropID.Manu, new ShipInfoString("Core Dynamics")},
-            { ShipPropID.Speed, new ShipInfoInt(210)},
-            { ShipPropID.Boost, new ShipInfoInt(350)},
-            { ShipPropID.HullCost, new ShipInfoInt(19072000)},
-            { ShipPropID.Class, new ShipInfoInt(2)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> federal_corvette = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Federation_Corvette")},
-            { ShipPropID.HullMass, new ShipInfoDouble(900F)},
-            { ShipPropID.Name, new ShipInfoString("Federal Corvette")},
-            { ShipPropID.Manu, new ShipInfoString("Core Dynamics")},
-            { ShipPropID.Speed, new ShipInfoInt(200)},
-            { ShipPropID.Boost, new ShipInfoInt(260)},
-            { ShipPropID.HullCost, new ShipInfoInt(182589570)},
-            { ShipPropID.Class, new ShipInfoInt(3)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> federal_dropship = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Federation_Dropship")},
-            { ShipPropID.HullMass, new ShipInfoDouble(580F)},
-            { ShipPropID.Name, new ShipInfoString("Federal Dropship")},
-            { ShipPropID.Manu, new ShipInfoString("Core Dynamics")},
-            { ShipPropID.Speed, new ShipInfoInt(180)},
-            { ShipPropID.Boost, new ShipInfoInt(300)},
-            { ShipPropID.HullCost, new ShipInfoInt(13469990)},
-            { ShipPropID.Class, new ShipInfoInt(2)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> federal_gunship = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Federation_Gunship")},
-            { ShipPropID.HullMass, new ShipInfoDouble(580F)},
-            { ShipPropID.Name, new ShipInfoString("Federal Gunship")},
-            { ShipPropID.Manu, new ShipInfoString("Core Dynamics")},
-            { ShipPropID.Speed, new ShipInfoInt(170)},
-            { ShipPropID.Boost, new ShipInfoInt(280)},
-            { ShipPropID.HullCost, new ShipInfoInt(34774790)},
-            { ShipPropID.Class, new ShipInfoInt(2)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> fer_de_lance = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("FerDeLance")},
-            { ShipPropID.HullMass, new ShipInfoDouble(250F)},
-            { ShipPropID.Name, new ShipInfoString("Fer-de-Lance")},
-            { ShipPropID.Manu, new ShipInfoString("Zorgon Peterson")},
-            { ShipPropID.Speed, new ShipInfoInt(260)},
-            { ShipPropID.Boost, new ShipInfoInt(350)},
-            { ShipPropID.HullCost, new ShipInfoInt(51232230)},
-            { ShipPropID.Class, new ShipInfoInt(2)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> hauler = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Hauler")},
-            { ShipPropID.HullMass, new ShipInfoDouble(14F)},
-            { ShipPropID.Name, new ShipInfoString("Hauler")},
-            { ShipPropID.Manu, new ShipInfoString("Zorgon Peterson")},
-            { ShipPropID.Speed, new ShipInfoInt(200)},
-            { ShipPropID.Boost, new ShipInfoInt(300)},
-            { ShipPropID.HullCost, new ShipInfoInt(29790)},
-            { ShipPropID.Class, new ShipInfoInt(1)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> imperial_clipper = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Empire_Trader")},
-            { ShipPropID.HullMass, new ShipInfoDouble(400F)},
-            { ShipPropID.Name, new ShipInfoString("Imperial Clipper")},
-            { ShipPropID.Manu, new ShipInfoString("Gutamaya")},
-            { ShipPropID.Speed, new ShipInfoInt(300)},
-            { ShipPropID.Boost, new ShipInfoInt(380)},
-            { ShipPropID.HullCost, new ShipInfoInt(21077780)},
-            { ShipPropID.Class, new ShipInfoInt(3)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> imperial_courier = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Empire_Courier")},
-            { ShipPropID.HullMass, new ShipInfoDouble(35F)},
-            { ShipPropID.Name, new ShipInfoString("Imperial Courier")},
-            { ShipPropID.Manu, new ShipInfoString("Gutamaya")},
-            { ShipPropID.Speed, new ShipInfoInt(280)},
-            { ShipPropID.Boost, new ShipInfoInt(380)},
-            { ShipPropID.HullCost, new ShipInfoInt(2481550)},
-            { ShipPropID.Class, new ShipInfoInt(1)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> imperial_cutter = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Cutter")},
-            { ShipPropID.HullMass, new ShipInfoDouble(1100F)},
-            { ShipPropID.Name, new ShipInfoString("Imperial Cutter")},
-            { ShipPropID.Manu, new ShipInfoString("Gutamaya")},
-            { ShipPropID.Speed, new ShipInfoInt(200)},
-            { ShipPropID.Boost, new ShipInfoInt(320)},
-            { ShipPropID.HullCost, new ShipInfoInt(199926890)},
-            { ShipPropID.Class, new ShipInfoInt(3)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> imperial_eagle = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Empire_Eagle")},
-            { ShipPropID.HullMass, new ShipInfoDouble(50F)},
-            { ShipPropID.Name, new ShipInfoString("Imperial Eagle")},
-            { ShipPropID.Manu, new ShipInfoString("Gutamaya")},
-            { ShipPropID.Speed, new ShipInfoInt(300)},
-            { ShipPropID.Boost, new ShipInfoInt(400)},
-            { ShipPropID.HullCost, new ShipInfoInt(72180)},
-            { ShipPropID.Class, new ShipInfoInt(1)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> keelback = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Independant_Trader")},
-            { ShipPropID.HullMass, new ShipInfoDouble(180F)},
-            { ShipPropID.Name, new ShipInfoString("Keelback")},
-            { ShipPropID.Manu, new ShipInfoString("Lakon")},
-            { ShipPropID.Speed, new ShipInfoInt(200)},
-            { ShipPropID.Boost, new ShipInfoInt(300)},
-            { ShipPropID.HullCost, new ShipInfoInt(2943870)},
-            { ShipPropID.Class, new ShipInfoInt(2)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> krait_mkii = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Krait_MkII")},
-            { ShipPropID.HullMass, new ShipInfoDouble(320F)},
-            { ShipPropID.Name, new ShipInfoString("Krait Mk II")},
-            { ShipPropID.EDCDName, new ShipInfoString("Krait MkII")},
-            { ShipPropID.Manu, new ShipInfoString("Faulcon DeLacy")},
-            { ShipPropID.Speed, new ShipInfoInt(240)},
-            { ShipPropID.Boost, new ShipInfoInt(330)},
-            { ShipPropID.HullCost, new ShipInfoInt(42409425)},
-            { ShipPropID.Class, new ShipInfoInt(2)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> krait_phantom = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Krait_Light")},
-            { ShipPropID.HullMass, new ShipInfoDouble(270F)},
-            { ShipPropID.Name, new ShipInfoString("Krait Phantom")},
-            { ShipPropID.Manu, new ShipInfoString("Faulcon DeLacy")},
-            { ShipPropID.Speed, new ShipInfoInt(250)},
-            { ShipPropID.Boost, new ShipInfoInt(350)},
-            { ShipPropID.HullCost, new ShipInfoInt(42409425)},
-            { ShipPropID.Class, new ShipInfoInt(2)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> mamba = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Mamba")},
-            { ShipPropID.HullMass, new ShipInfoDouble(250F)},
-            { ShipPropID.Name, new ShipInfoString("Mamba")},
-            { ShipPropID.Manu, new ShipInfoString("Zorgon Peterson")},
-            { ShipPropID.Speed, new ShipInfoInt(310)},
-            { ShipPropID.Boost, new ShipInfoInt(380)},
-            { ShipPropID.HullCost, new ShipInfoInt(55866341)},
-            { ShipPropID.Class, new ShipInfoInt(2)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> orca = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Orca")},
-            { ShipPropID.HullMass, new ShipInfoDouble(290F)},
-            { ShipPropID.Name, new ShipInfoString("Orca")},
-            { ShipPropID.Manu, new ShipInfoString("Saud Kruger")},
-            { ShipPropID.Speed, new ShipInfoInt(300)},
-            { ShipPropID.Boost, new ShipInfoInt(380)},
-            { ShipPropID.HullCost, new ShipInfoInt(47790590)},
-            { ShipPropID.Class, new ShipInfoInt(3)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> python = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Python")},
-            { ShipPropID.HullMass, new ShipInfoDouble(350F)},
-            { ShipPropID.Name, new ShipInfoString("Python")},
-            { ShipPropID.Manu, new ShipInfoString("Faulcon DeLacy")},
-            { ShipPropID.Speed, new ShipInfoInt(230)},
-            { ShipPropID.Boost, new ShipInfoInt(300)},
-            { ShipPropID.HullCost, new ShipInfoInt(55171380)},
-            { ShipPropID.Class, new ShipInfoInt(2)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> pythonnx = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Python_NX")},
-            { ShipPropID.HullMass, new ShipInfoDouble(0F)},
-            { ShipPropID.Name, new ShipInfoString("Python Mk II")},
-            { ShipPropID.Manu, new ShipInfoString("Faulcon DeLacy")},
-            { ShipPropID.Speed, new ShipInfoInt(256)},
-            { ShipPropID.Boost, new ShipInfoInt(345)},
-            { ShipPropID.HullCost, new ShipInfoInt(66161981)},
-            { ShipPropID.Class, new ShipInfoInt(2)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> sidewinder = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("SideWinder")},
-            { ShipPropID.HullMass, new ShipInfoDouble(25F)},
-            { ShipPropID.Name, new ShipInfoString("Sidewinder")},
-            { ShipPropID.Manu, new ShipInfoString("Faulcon DeLacy")},
-            { ShipPropID.Speed, new ShipInfoInt(220)},
-            { ShipPropID.Boost, new ShipInfoInt(320)},
-            { ShipPropID.HullCost, new ShipInfoInt(4070)},
-            { ShipPropID.Class, new ShipInfoInt(1)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> type_10_defender = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Type9_Military")},
-            { ShipPropID.HullMass, new ShipInfoDouble(1200F)},
-            { ShipPropID.Name, new ShipInfoString("Type-10 Defender")},
-            { ShipPropID.Manu, new ShipInfoString("Lakon")},
-            { ShipPropID.Speed, new ShipInfoInt(179)},
-            { ShipPropID.Boost, new ShipInfoInt(219)},
-            { ShipPropID.HullCost, new ShipInfoInt(121454173)},
-            { ShipPropID.Class, new ShipInfoInt(3)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> type_6_transporter = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Type6")},
-            { ShipPropID.HullMass, new ShipInfoDouble(155F)},
-            { ShipPropID.Name, new ShipInfoString("Type-6 Transporter")},
-            { ShipPropID.Manu, new ShipInfoString("Lakon")},
-            { ShipPropID.Speed, new ShipInfoInt(220)},
-            { ShipPropID.Boost, new ShipInfoInt(350)},
-            { ShipPropID.HullCost, new ShipInfoInt(865790)},
-            { ShipPropID.Class, new ShipInfoInt(2)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> type_7_transport = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Type7")},
-            { ShipPropID.HullMass, new ShipInfoDouble(350F)},
-            { ShipPropID.Name, new ShipInfoString("Type-7 Transporter")},
-            { ShipPropID.Manu, new ShipInfoString("Lakon")},
-            { ShipPropID.Speed, new ShipInfoInt(180)},
-            { ShipPropID.Boost, new ShipInfoInt(300)},
-            { ShipPropID.HullCost, new ShipInfoInt(16780510)},
-            { ShipPropID.Class, new ShipInfoInt(3)},
-        };
-        private static Dictionary<ShipPropID, IModuleInfo> type_9_heavy = new Dictionary<ShipPropID, IModuleInfo>
-        {
-            { ShipPropID.FDID, new ShipInfoString("Type9")},
-            { ShipPropID.HullMass, new ShipInfoDouble(850F)},
-            { ShipPropID.Name, new ShipInfoString("Type-9 Heavy")},
-            { ShipPropID.Manu, new ShipInfoString("Lakon")},
-            { ShipPropID.Speed, new ShipInfoInt(130)},
-            { ShipPropID.Boost, new ShipInfoInt(200)},
-            { ShipPropID.HullCost, new ShipInfoInt(73255150)},
-            { ShipPropID.Class, new ShipInfoInt(3)},
-        };
+
         private static Dictionary<ShipPropID, IModuleInfo> viper = new Dictionary<ShipPropID, IModuleInfo>
         {
-            { ShipPropID.FDID, new ShipInfoString("Viper")},
-            { ShipPropID.HullMass, new ShipInfoDouble(50F)},
-            { ShipPropID.Name, new ShipInfoString("Viper Mk III")},
-            { ShipPropID.EDCDName, new ShipInfoString("Viper MkIII")},
-            { ShipPropID.Manu, new ShipInfoString("Faulcon DeLacy")},
-            { ShipPropID.Speed, new ShipInfoInt(320)},
-            { ShipPropID.Boost, new ShipInfoInt(400)},
-            { ShipPropID.HullCost, new ShipInfoInt(95900)},
-            { ShipPropID.Class, new ShipInfoInt(1)},
+        { ShipPropID.FDID, new ShipInfoString("Viper") },
+        { ShipPropID.HullMass, new ShipInfoDouble(50F)},
+        { ShipPropID.Name, new ShipInfoString("Viper Mk III")},
+        { ShipPropID.Speed, new ShipInfoInt(320)},
+        { ShipPropID.Boost, new ShipInfoInt(400)},
+        { ShipPropID.HullCost, new ShipInfoInt(74610)},
+        { ShipPropID.Class, new ShipInfoInt(1)},
+        { ShipPropID.Shields, new ShipInfoInt(105)},
+        { ShipPropID.Armour, new ShipInfoInt(70)},
+        { ShipPropID.BoostCost, new ShipInfoInt(10)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.41)},
+        { ShipPropID.Hardness, new ShipInfoInt(35)},
+        { ShipPropID.Crew, new ShipInfoInt(1)},
         };
-        private static Dictionary<ShipPropID, IModuleInfo> viper_mk_iv = new Dictionary<ShipPropID, IModuleInfo>
+
+        private static Dictionary<ShipPropID, IModuleInfo> cobramkiii = new Dictionary<ShipPropID, IModuleInfo>
         {
-            { ShipPropID.FDID, new ShipInfoString("Viper_MkIV")},
-            { ShipPropID.HullMass, new ShipInfoDouble(190F)},
-            { ShipPropID.Name, new ShipInfoString("Viper Mk IV")},
-            { ShipPropID.EDCDName, new ShipInfoString("Viper MkIV")},
-            { ShipPropID.Manu, new ShipInfoString("Faulcon DeLacy")},
-            { ShipPropID.Speed, new ShipInfoInt(270)},
-            { ShipPropID.Boost, new ShipInfoInt(340)},
-            { ShipPropID.HullCost, new ShipInfoInt(310220)},
-            { ShipPropID.Class, new ShipInfoInt(1)},
+        { ShipPropID.FDID, new ShipInfoString("CobraMkIII") },
+        { ShipPropID.HullMass, new ShipInfoDouble(180F)},
+        { ShipPropID.Name, new ShipInfoString("Cobra Mk III")},
+        { ShipPropID.Speed, new ShipInfoInt(280)},
+        { ShipPropID.Boost, new ShipInfoInt(400)},
+        { ShipPropID.HullCost, new ShipInfoInt(186260)},
+        { ShipPropID.Class, new ShipInfoInt(1)},
+        { ShipPropID.Shields, new ShipInfoInt(80)},
+        { ShipPropID.Armour, new ShipInfoInt(120)},
+        { ShipPropID.BoostCost, new ShipInfoInt(10)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.49)},
+        { ShipPropID.Hardness, new ShipInfoInt(35)},
+        { ShipPropID.Crew, new ShipInfoInt(2)},
         };
+
+        private static Dictionary<ShipPropID, IModuleInfo> viper_mkiv = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Viper_MkIV") },
+        { ShipPropID.HullMass, new ShipInfoDouble(190F)},
+        { ShipPropID.Name, new ShipInfoString("Viper Mk IV")},
+        { ShipPropID.Speed, new ShipInfoInt(270)},
+        { ShipPropID.Boost, new ShipInfoInt(340)},
+        { ShipPropID.HullCost, new ShipInfoInt(290680)},
+        { ShipPropID.Class, new ShipInfoInt(1)},
+        { ShipPropID.Shields, new ShipInfoInt(150)},
+        { ShipPropID.Armour, new ShipInfoInt(150)},
+        { ShipPropID.BoostCost, new ShipInfoInt(10)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.46)},
+        { ShipPropID.Hardness, new ShipInfoInt(35)},
+        { ShipPropID.Crew, new ShipInfoInt(1)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> diamondback = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("DiamondBack") },
+        { ShipPropID.HullMass, new ShipInfoDouble(170F)},
+        { ShipPropID.Name, new ShipInfoString("Diamondback Scout")},
+        { ShipPropID.Speed, new ShipInfoInt(280)},
+        { ShipPropID.Boost, new ShipInfoInt(380)},
+        { ShipPropID.HullCost, new ShipInfoInt(441800)},
+        { ShipPropID.Class, new ShipInfoInt(1)},
+        { ShipPropID.Shields, new ShipInfoInt(120)},
+        { ShipPropID.Armour, new ShipInfoInt(120)},
+        { ShipPropID.BoostCost, new ShipInfoInt(10)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.49)},
+        { ShipPropID.Hardness, new ShipInfoInt(40)},
+        { ShipPropID.Crew, new ShipInfoInt(1)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> cobramkiv = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("CobraMkIV") },
+        { ShipPropID.HullMass, new ShipInfoDouble(210F)},
+        { ShipPropID.Name, new ShipInfoString("Cobra Mk IV")},
+        { ShipPropID.Speed, new ShipInfoInt(200)},
+        { ShipPropID.Boost, new ShipInfoInt(300)},
+        { ShipPropID.HullCost, new ShipInfoInt(584200)},
+        { ShipPropID.Class, new ShipInfoInt(1)},
+        { ShipPropID.Shields, new ShipInfoInt(120)},
+        { ShipPropID.Armour, new ShipInfoInt(120)},
+        { ShipPropID.BoostCost, new ShipInfoInt(10)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.51)},
+        { ShipPropID.Hardness, new ShipInfoInt(35)},
+        { ShipPropID.Crew, new ShipInfoInt(2)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> type6 = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Type6") },
+        { ShipPropID.HullMass, new ShipInfoDouble(155F)},
+        { ShipPropID.Name, new ShipInfoString("Type-6 Transporter")},
+        { ShipPropID.Speed, new ShipInfoInt(220)},
+        { ShipPropID.Boost, new ShipInfoInt(350)},
+        { ShipPropID.HullCost, new ShipInfoInt(858010)},
+        { ShipPropID.Class, new ShipInfoInt(2)},
+        { ShipPropID.Shields, new ShipInfoInt(90)},
+        { ShipPropID.Armour, new ShipInfoInt(180)},
+        { ShipPropID.BoostCost, new ShipInfoInt(10)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.39)},
+        { ShipPropID.Hardness, new ShipInfoInt(35)},
+        { ShipPropID.Crew, new ShipInfoInt(1)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> dolphin = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Dolphin") },
+        { ShipPropID.HullMass, new ShipInfoDouble(140F)},
+        { ShipPropID.Name, new ShipInfoString("Dolphin")},
+        { ShipPropID.Speed, new ShipInfoInt(250)},
+        { ShipPropID.Boost, new ShipInfoInt(350)},
+        { ShipPropID.HullCost, new ShipInfoInt(1095780)},
+        { ShipPropID.Class, new ShipInfoInt(1)},
+        { ShipPropID.Shields, new ShipInfoInt(110)},
+        { ShipPropID.Armour, new ShipInfoInt(110)},
+        { ShipPropID.BoostCost, new ShipInfoInt(10)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.5)},
+        { ShipPropID.Hardness, new ShipInfoInt(35)},
+        { ShipPropID.Crew, new ShipInfoInt(1)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> diamondbackxl = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("DiamondBackXL") },
+        { ShipPropID.HullMass, new ShipInfoDouble(260F)},
+        { ShipPropID.Name, new ShipInfoString("Diamondback Explorer")},
+        { ShipPropID.Speed, new ShipInfoInt(260)},
+        { ShipPropID.Boost, new ShipInfoInt(340)},
+        { ShipPropID.HullCost, new ShipInfoInt(1616160)},
+        { ShipPropID.Class, new ShipInfoInt(1)},
+        { ShipPropID.Shields, new ShipInfoInt(150)},
+        { ShipPropID.Armour, new ShipInfoInt(150)},
+        { ShipPropID.BoostCost, new ShipInfoInt(13)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.52)},
+        { ShipPropID.Hardness, new ShipInfoInt(42)},
+        { ShipPropID.Crew, new ShipInfoInt(1)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> empire_courier = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Empire_Courier") },
+        { ShipPropID.HullMass, new ShipInfoDouble(35F)},
+        { ShipPropID.Name, new ShipInfoString("Imperial Courier")},
+        { ShipPropID.Speed, new ShipInfoInt(280)},
+        { ShipPropID.Boost, new ShipInfoInt(380)},
+        { ShipPropID.HullCost, new ShipInfoInt(2462010)},
+        { ShipPropID.Class, new ShipInfoInt(1)},
+        { ShipPropID.Shields, new ShipInfoInt(200)},
+        { ShipPropID.Armour, new ShipInfoInt(80)},
+        { ShipPropID.BoostCost, new ShipInfoInt(10)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.41)},
+        { ShipPropID.Hardness, new ShipInfoInt(30)},
+        { ShipPropID.Crew, new ShipInfoInt(1)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> independant_trader = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Independant_Trader") },
+        { ShipPropID.HullMass, new ShipInfoDouble(180F)},
+        { ShipPropID.Name, new ShipInfoString("Keelback")},
+        { ShipPropID.Speed, new ShipInfoInt(200)},
+        { ShipPropID.Boost, new ShipInfoInt(300)},
+        { ShipPropID.HullCost, new ShipInfoInt(2937840)},
+        { ShipPropID.Class, new ShipInfoInt(2)},
+        { ShipPropID.Shields, new ShipInfoInt(135)},
+        { ShipPropID.Armour, new ShipInfoInt(270)},
+        { ShipPropID.BoostCost, new ShipInfoInt(10)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.39)},
+        { ShipPropID.Hardness, new ShipInfoInt(45)},
+        { ShipPropID.Crew, new ShipInfoInt(2)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> asp_scout = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Asp_Scout") },
+        { ShipPropID.HullMass, new ShipInfoDouble(150F)},
+        { ShipPropID.Name, new ShipInfoString("Asp Scout")},
+        { ShipPropID.Speed, new ShipInfoInt(220)},
+        { ShipPropID.Boost, new ShipInfoInt(300)},
+        { ShipPropID.HullCost, new ShipInfoInt(3811220)},
+        { ShipPropID.Class, new ShipInfoInt(2)},
+        { ShipPropID.Shields, new ShipInfoInt(120)},
+        { ShipPropID.Armour, new ShipInfoInt(180)},
+        { ShipPropID.BoostCost, new ShipInfoInt(13)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.47)},
+        { ShipPropID.Hardness, new ShipInfoInt(52)},
+        { ShipPropID.Crew, new ShipInfoInt(2)},
+        };
+
         private static Dictionary<ShipPropID, IModuleInfo> vulture = new Dictionary<ShipPropID, IModuleInfo>
         {
-            { ShipPropID.FDID, new ShipInfoString("Vulture")},
-            { ShipPropID.HullMass, new ShipInfoDouble(230F)},
-            { ShipPropID.Name, new ShipInfoString("Vulture")},
-            { ShipPropID.Manu, new ShipInfoString("Core Dynamics")},
-            { ShipPropID.Speed, new ShipInfoInt(210)},
-            { ShipPropID.Boost, new ShipInfoInt(340)},
-            { ShipPropID.HullCost, new ShipInfoInt(4689640)},
-            { ShipPropID.Class, new ShipInfoInt(1)},
+        { ShipPropID.FDID, new ShipInfoString("Vulture") },
+        { ShipPropID.HullMass, new ShipInfoDouble(230F)},
+        { ShipPropID.Name, new ShipInfoString("Vulture")},
+        { ShipPropID.Speed, new ShipInfoInt(210)},
+        { ShipPropID.Boost, new ShipInfoInt(340)},
+        { ShipPropID.HullCost, new ShipInfoInt(4670100)},
+        { ShipPropID.Class, new ShipInfoInt(1)},
+        { ShipPropID.Shields, new ShipInfoInt(240)},
+        { ShipPropID.Armour, new ShipInfoInt(160)},
+        { ShipPropID.BoostCost, new ShipInfoInt(16)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.57)},
+        { ShipPropID.Hardness, new ShipInfoInt(55)},
+        { ShipPropID.Crew, new ShipInfoInt(2)},
         };
+
+        private static Dictionary<ShipPropID, IModuleInfo> asp = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Asp") },
+        { ShipPropID.HullMass, new ShipInfoDouble(280F)},
+        { ShipPropID.Name, new ShipInfoString("Asp Explorer")},
+        { ShipPropID.Speed, new ShipInfoInt(250)},
+        { ShipPropID.Boost, new ShipInfoInt(340)},
+        { ShipPropID.HullCost, new ShipInfoInt(6137180)},
+        { ShipPropID.Class, new ShipInfoInt(2)},
+        { ShipPropID.Shields, new ShipInfoInt(140)},
+        { ShipPropID.Armour, new ShipInfoInt(210)},
+        { ShipPropID.BoostCost, new ShipInfoInt(13)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.63)},
+        { ShipPropID.Hardness, new ShipInfoInt(52)},
+        { ShipPropID.Crew, new ShipInfoInt(2)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> federation_dropship = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Federation_Dropship") },
+        { ShipPropID.HullMass, new ShipInfoDouble(580F)},
+        { ShipPropID.Name, new ShipInfoString("Federal Dropship")},
+        { ShipPropID.Speed, new ShipInfoInt(180)},
+        { ShipPropID.Boost, new ShipInfoInt(300)},
+        { ShipPropID.HullCost, new ShipInfoInt(13501480)},
+        { ShipPropID.Class, new ShipInfoInt(2)},
+        { ShipPropID.Shields, new ShipInfoInt(200)},
+        { ShipPropID.Armour, new ShipInfoInt(300)},
+        { ShipPropID.BoostCost, new ShipInfoInt(19)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.83)},
+        { ShipPropID.Hardness, new ShipInfoInt(60)},
+        { ShipPropID.Crew, new ShipInfoInt(2)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> type7 = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Type7") },
+        { ShipPropID.HullMass, new ShipInfoDouble(350F)},
+        { ShipPropID.Name, new ShipInfoString("Type-7 Transporter")},
+        { ShipPropID.Speed, new ShipInfoInt(180)},
+        { ShipPropID.Boost, new ShipInfoInt(300)},
+        { ShipPropID.HullCost, new ShipInfoInt(16774470)},
+        { ShipPropID.Class, new ShipInfoInt(3)},
+        { ShipPropID.Shields, new ShipInfoInt(156)},
+        { ShipPropID.Armour, new ShipInfoInt(340)},
+        { ShipPropID.BoostCost, new ShipInfoInt(10)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.52)},
+        { ShipPropID.Hardness, new ShipInfoInt(54)},
+        { ShipPropID.Crew, new ShipInfoInt(1)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> typex = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("TypeX") },
+        { ShipPropID.HullMass, new ShipInfoDouble(400F)},
+        { ShipPropID.Name, new ShipInfoString("Alliance Chieftain")},
+        { ShipPropID.Speed, new ShipInfoInt(230)},
+        { ShipPropID.Boost, new ShipInfoInt(330)},
+        { ShipPropID.HullCost, new ShipInfoInt(18603850)},
+        { ShipPropID.Class, new ShipInfoInt(2)},
+        { ShipPropID.Shields, new ShipInfoInt(200)},
+        { ShipPropID.Armour, new ShipInfoInt(280)},
+        { ShipPropID.BoostCost, new ShipInfoInt(19)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.77)},
+        { ShipPropID.Hardness, new ShipInfoInt(65)},
+        { ShipPropID.Crew, new ShipInfoInt(2)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> federation_dropship_mkii = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Federation_Dropship_MkII") },
+        { ShipPropID.HullMass, new ShipInfoDouble(480F)},
+        { ShipPropID.Name, new ShipInfoString("Federal Assault Ship")},
+        { ShipPropID.Speed, new ShipInfoInt(210)},
+        { ShipPropID.Boost, new ShipInfoInt(350)},
+        { ShipPropID.HullCost, new ShipInfoInt(19102490)},
+        { ShipPropID.Class, new ShipInfoInt(2)},
+        { ShipPropID.Shields, new ShipInfoInt(200)},
+        { ShipPropID.Armour, new ShipInfoInt(300)},
+        { ShipPropID.BoostCost, new ShipInfoInt(19)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.72)},
+        { ShipPropID.Hardness, new ShipInfoInt(60)},
+        { ShipPropID.Crew, new ShipInfoInt(2)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> empire_trader = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Empire_Trader") },
+        { ShipPropID.HullMass, new ShipInfoDouble(400F)},
+        { ShipPropID.Name, new ShipInfoString("Imperial Clipper")},
+        { ShipPropID.Speed, new ShipInfoInt(300)},
+        { ShipPropID.Boost, new ShipInfoInt(380)},
+        { ShipPropID.HullCost, new ShipInfoInt(21108270)},
+        { ShipPropID.Class, new ShipInfoInt(3)},
+        { ShipPropID.Shields, new ShipInfoInt(180)},
+        { ShipPropID.Armour, new ShipInfoInt(270)},
+        { ShipPropID.BoostCost, new ShipInfoInt(19)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.74)},
+        { ShipPropID.Hardness, new ShipInfoInt(60)},
+        { ShipPropID.Crew, new ShipInfoInt(2)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> typex_2 = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("TypeX_2") },
+        { ShipPropID.HullMass, new ShipInfoDouble(500F)},
+        { ShipPropID.Name, new ShipInfoString("Alliance Crusader")},
+        { ShipPropID.Speed, new ShipInfoInt(180)},
+        { ShipPropID.Boost, new ShipInfoInt(300)},
+        { ShipPropID.HullCost, new ShipInfoInt(22087940)},
+        { ShipPropID.Class, new ShipInfoInt(2)},
+        { ShipPropID.Shields, new ShipInfoInt(200)},
+        { ShipPropID.Armour, new ShipInfoInt(300)},
+        { ShipPropID.BoostCost, new ShipInfoInt(19)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.77)},
+        { ShipPropID.Hardness, new ShipInfoInt(65)},
+        { ShipPropID.Crew, new ShipInfoInt(3)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> typex_3 = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("TypeX_3") },
+        { ShipPropID.HullMass, new ShipInfoDouble(450F)},
+        { ShipPropID.Name, new ShipInfoString("Alliance Challenger")},
+        { ShipPropID.Speed, new ShipInfoInt(200)},
+        { ShipPropID.Boost, new ShipInfoInt(310)},
+        { ShipPropID.HullCost, new ShipInfoInt(29561170)},
+        { ShipPropID.Class, new ShipInfoInt(2)},
+        { ShipPropID.Shields, new ShipInfoInt(220)},
+        { ShipPropID.Armour, new ShipInfoInt(300)},
+        { ShipPropID.BoostCost, new ShipInfoInt(19)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.77)},
+        { ShipPropID.Hardness, new ShipInfoInt(65)},
+        { ShipPropID.Crew, new ShipInfoInt(2)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> federation_gunship = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Federation_Gunship") },
+        { ShipPropID.HullMass, new ShipInfoDouble(580F)},
+        { ShipPropID.Name, new ShipInfoString("Federal Gunship")},
+        { ShipPropID.Speed, new ShipInfoInt(170)},
+        { ShipPropID.Boost, new ShipInfoInt(280)},
+        { ShipPropID.HullCost, new ShipInfoInt(34806280)},
+        { ShipPropID.Class, new ShipInfoInt(2)},
+        { ShipPropID.Shields, new ShipInfoInt(250)},
+        { ShipPropID.Armour, new ShipInfoInt(350)},
+        { ShipPropID.BoostCost, new ShipInfoInt(23)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.82)},
+        { ShipPropID.Hardness, new ShipInfoInt(60)},
+        { ShipPropID.Crew, new ShipInfoInt(2)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> krait_light = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Krait_Light") },
+        { ShipPropID.HullMass, new ShipInfoDouble(270F)},
+        { ShipPropID.Name, new ShipInfoString("Krait Phantom")},
+        { ShipPropID.Speed, new ShipInfoInt(250)},
+        { ShipPropID.Boost, new ShipInfoInt(350)},
+        { ShipPropID.HullCost, new ShipInfoInt(35732880)},
+        { ShipPropID.Class, new ShipInfoInt(2)},
+        { ShipPropID.Shields, new ShipInfoInt(200)},
+        { ShipPropID.Armour, new ShipInfoInt(180)},
+        { ShipPropID.BoostCost, new ShipInfoInt(13)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.63)},
+        { ShipPropID.Hardness, new ShipInfoInt(60)},
+        { ShipPropID.Crew, new ShipInfoInt(2)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> krait_mkii = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Krait_MkII") },
+        { ShipPropID.HullMass, new ShipInfoDouble(320F)},
+        { ShipPropID.Name, new ShipInfoString("Krait Mk II")},
+        { ShipPropID.Speed, new ShipInfoInt(240)},
+        { ShipPropID.Boost, new ShipInfoInt(330)},
+        { ShipPropID.HullCost, new ShipInfoInt(44152080)},
+        { ShipPropID.Class, new ShipInfoInt(2)},
+        { ShipPropID.Shields, new ShipInfoInt(220)},
+        { ShipPropID.Armour, new ShipInfoInt(220)},
+        { ShipPropID.BoostCost, new ShipInfoInt(13)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.63)},
+        { ShipPropID.Hardness, new ShipInfoInt(55)},
+        { ShipPropID.Crew, new ShipInfoInt(3)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> orca = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Orca") },
+        { ShipPropID.HullMass, new ShipInfoDouble(290F)},
+        { ShipPropID.Name, new ShipInfoString("Orca")},
+        { ShipPropID.Speed, new ShipInfoInt(300)},
+        { ShipPropID.Boost, new ShipInfoInt(380)},
+        { ShipPropID.HullCost, new ShipInfoInt(47792090)},
+        { ShipPropID.Class, new ShipInfoInt(3)},
+        { ShipPropID.Shields, new ShipInfoInt(220)},
+        { ShipPropID.Armour, new ShipInfoInt(220)},
+        { ShipPropID.BoostCost, new ShipInfoInt(16)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.79)},
+        { ShipPropID.Hardness, new ShipInfoInt(55)},
+        { ShipPropID.Crew, new ShipInfoInt(2)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> ferdelance = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("FerDeLance") },
+        { ShipPropID.HullMass, new ShipInfoDouble(250F)},
+        { ShipPropID.Name, new ShipInfoString("Fer-de-Lance")},
+        { ShipPropID.Speed, new ShipInfoInt(260)},
+        { ShipPropID.Boost, new ShipInfoInt(350)},
+        { ShipPropID.HullCost, new ShipInfoInt(51126980)},
+        { ShipPropID.Class, new ShipInfoInt(2)},
+        { ShipPropID.Shields, new ShipInfoInt(300)},
+        { ShipPropID.Armour, new ShipInfoInt(225)},
+        { ShipPropID.BoostCost, new ShipInfoInt(19)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.67)},
+        { ShipPropID.Hardness, new ShipInfoInt(70)},
+        { ShipPropID.Crew, new ShipInfoInt(2)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> mamba = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Mamba") },
+        { ShipPropID.HullMass, new ShipInfoDouble(250F)},
+        { ShipPropID.Name, new ShipInfoString("Mamba")},
+        { ShipPropID.Speed, new ShipInfoInt(310)},
+        { ShipPropID.Boost, new ShipInfoInt(380)},
+        { ShipPropID.HullCost, new ShipInfoInt(55434290)},
+        { ShipPropID.Class, new ShipInfoInt(2)},
+        { ShipPropID.Shields, new ShipInfoInt(270)},
+        { ShipPropID.Armour, new ShipInfoInt(230)},
+        { ShipPropID.BoostCost, new ShipInfoInt(16)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.5)},
+        { ShipPropID.Hardness, new ShipInfoInt(70)},
+        { ShipPropID.Crew, new ShipInfoInt(2)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> python = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Python") },
+        { ShipPropID.HullMass, new ShipInfoDouble(350F)},
+        { ShipPropID.Name, new ShipInfoString("Python")},
+        { ShipPropID.Speed, new ShipInfoInt(230)},
+        { ShipPropID.Boost, new ShipInfoInt(300)},
+        { ShipPropID.HullCost, new ShipInfoInt(55316050)},
+        { ShipPropID.Class, new ShipInfoInt(2)},
+        { ShipPropID.Shields, new ShipInfoInt(260)},
+        { ShipPropID.Armour, new ShipInfoInt(260)},
+        { ShipPropID.BoostCost, new ShipInfoInt(23)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.83)},
+        { ShipPropID.Hardness, new ShipInfoInt(65)},
+        { ShipPropID.Crew, new ShipInfoInt(2)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> type9 = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Type9") },
+        { ShipPropID.HullMass, new ShipInfoDouble(850F)},
+        { ShipPropID.Name, new ShipInfoString("Type-9 Heavy")},
+        { ShipPropID.Speed, new ShipInfoInt(130)},
+        { ShipPropID.Boost, new ShipInfoInt(200)},
+        { ShipPropID.HullCost, new ShipInfoInt(72108220)},
+        { ShipPropID.Class, new ShipInfoInt(3)},
+        { ShipPropID.Shields, new ShipInfoInt(240)},
+        { ShipPropID.Armour, new ShipInfoInt(480)},
+        { ShipPropID.BoostCost, new ShipInfoInt(19)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.77)},
+        { ShipPropID.Hardness, new ShipInfoInt(65)},
+        { ShipPropID.Crew, new ShipInfoInt(3)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> belugaliner = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("BelugaLiner") },
+        { ShipPropID.HullMass, new ShipInfoDouble(950F)},
+        { ShipPropID.Name, new ShipInfoString("Beluga Liner")},
+        { ShipPropID.Speed, new ShipInfoInt(200)},
+        { ShipPropID.Boost, new ShipInfoInt(280)},
+        { ShipPropID.HullCost, new ShipInfoInt(79686090)},
+        { ShipPropID.Class, new ShipInfoInt(3)},
+        { ShipPropID.Shields, new ShipInfoInt(280)},
+        { ShipPropID.Armour, new ShipInfoInt(280)},
+        { ShipPropID.BoostCost, new ShipInfoInt(19)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.81)},
+        { ShipPropID.Hardness, new ShipInfoInt(60)},
+        { ShipPropID.Crew, new ShipInfoInt(3)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> type9_military = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Type9_Military") },
+        { ShipPropID.HullMass, new ShipInfoDouble(1200F)},
+        { ShipPropID.Name, new ShipInfoString("Type-10 Defender")},
+        { ShipPropID.Speed, new ShipInfoInt(180)},
+        { ShipPropID.Boost, new ShipInfoInt(220)},
+        { ShipPropID.HullCost, new ShipInfoInt(121486140)},
+        { ShipPropID.Class, new ShipInfoInt(3)},
+        { ShipPropID.Shields, new ShipInfoInt(320)},
+        { ShipPropID.Armour, new ShipInfoInt(580)},
+        { ShipPropID.BoostCost, new ShipInfoInt(19)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.77)},
+        { ShipPropID.Hardness, new ShipInfoInt(75)},
+        { ShipPropID.Crew, new ShipInfoInt(3)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> anaconda = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Anaconda") },
+        { ShipPropID.HullMass, new ShipInfoDouble(400F)},
+        { ShipPropID.Name, new ShipInfoString("Anaconda")},
+        { ShipPropID.Speed, new ShipInfoInt(180)},
+        { ShipPropID.Boost, new ShipInfoInt(240)},
+        { ShipPropID.HullCost, new ShipInfoInt(142447820)},
+        { ShipPropID.Class, new ShipInfoInt(3)},
+        { ShipPropID.Shields, new ShipInfoInt(350)},
+        { ShipPropID.Armour, new ShipInfoInt(525)},
+        { ShipPropID.BoostCost, new ShipInfoInt(27)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(1.07)},
+        { ShipPropID.Hardness, new ShipInfoInt(65)},
+        { ShipPropID.Crew, new ShipInfoInt(3)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> federation_corvette = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Federation_Corvette") },
+        { ShipPropID.HullMass, new ShipInfoDouble(900F)},
+        { ShipPropID.Name, new ShipInfoString("Federal Corvette")},
+        { ShipPropID.Speed, new ShipInfoInt(200)},
+        { ShipPropID.Boost, new ShipInfoInt(260)},
+        { ShipPropID.HullCost, new ShipInfoInt(183147460)},
+        { ShipPropID.Class, new ShipInfoInt(3)},
+        { ShipPropID.Shields, new ShipInfoInt(555)},
+        { ShipPropID.Armour, new ShipInfoInt(370)},
+        { ShipPropID.BoostCost, new ShipInfoInt(27)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(1.13)},
+        { ShipPropID.Hardness, new ShipInfoInt(70)},
+        { ShipPropID.Crew, new ShipInfoInt(3)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> cutter = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Cutter") },
+        { ShipPropID.HullMass, new ShipInfoDouble(1100F)},
+        { ShipPropID.Name, new ShipInfoString("Imperial Cutter")},
+        { ShipPropID.Speed, new ShipInfoInt(200)},
+        { ShipPropID.Boost, new ShipInfoInt(320)},
+        { ShipPropID.HullCost, new ShipInfoInt(200484780)},
+        { ShipPropID.Class, new ShipInfoInt(3)},
+        { ShipPropID.Shields, new ShipInfoInt(600)},
+        { ShipPropID.Armour, new ShipInfoInt(400)},
+        { ShipPropID.BoostCost, new ShipInfoInt(23)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(1.16)},
+        { ShipPropID.Hardness, new ShipInfoInt(70)},
+        { ShipPropID.Crew, new ShipInfoInt(3)},
+        };
+
+        private static Dictionary<ShipPropID, IModuleInfo> python_nx = new Dictionary<ShipPropID, IModuleInfo>
+        {
+        { ShipPropID.FDID, new ShipInfoString("Python_NX") },
+        { ShipPropID.HullMass, new ShipInfoDouble(450F)},
+        { ShipPropID.Name, new ShipInfoString("Python Mk II")},
+        { ShipPropID.Speed, new ShipInfoInt(256)},
+        { ShipPropID.Boost, new ShipInfoInt(345)},
+        { ShipPropID.HullCost, new ShipInfoInt(66161981)},
+        { ShipPropID.Class, new ShipInfoInt(2)},
+        { ShipPropID.Shields, new ShipInfoInt(335)},
+        { ShipPropID.Armour, new ShipInfoInt(280)},
+        { ShipPropID.BoostCost, new ShipInfoInt(20)},
+        { ShipPropID.FuelReserve, new ShipInfoDouble(0.83)},
+        { ShipPropID.Hardness, new ShipInfoInt(70)},
+        { ShipPropID.Crew, new ShipInfoInt(2)},
+        };
+
+
 
         private static Dictionary<string, Dictionary<ShipPropID, IModuleInfo>> spaceships = new Dictionary<string, Dictionary<ShipPropID, IModuleInfo>>
         {
             { "adder",adder},
-            { "typex_3",alliance_challenger},
-            { "typex",alliance_chieftain},
-            { "typex_2",alliance_crusader},
+            { "typex_3",typex_3},
+            { "typex",typex},
+            { "typex_2",typex_2},
             { "anaconda",anaconda},
             { "asp",asp},
             { "asp_scout",asp_scout},
-            { "belugaliner",beluga},
-            { "cobramkiii",cobra_mk_iii},
-            { "cobramkiv",cobra_mk_iv},
-            { "diamondbackxl",diamondback_explorer},
+            { "belugaliner",belugaliner},
+            { "cobramkiii",cobramkiii},
+            { "cobramkiv",cobramkiv},
+            { "diamondbackxl",diamondbackxl},
             { "diamondback",diamondback},
             { "dolphin",dolphin},
             { "eagle",eagle},
-            { "federation_dropship_mkii",federal_assault_ship},
-            { "federation_corvette",federal_corvette},
-            { "federation_dropship",federal_dropship},
-            { "federation_gunship",federal_gunship},
-            { "ferdelance",fer_de_lance},
+            { "federation_dropship_mkii", federation_dropship_mkii},
+            { "federation_corvette",federation_corvette},
+            { "federation_dropship",federation_dropship},
+            { "federation_gunship",federation_gunship},
+            { "ferdelance",ferdelance},
             { "hauler",hauler},
-            { "empire_trader",imperial_clipper},
-            { "empire_courier",imperial_courier},
-            { "cutter",imperial_cutter},
-            { "empire_eagle",imperial_eagle},
-            { "independant_trader",keelback},
+            { "empire_trader",empire_trader},
+            { "empire_courier",empire_courier},
+            { "cutter",cutter},
+            { "empire_eagle",empire_eagle},
+            { "independant_trader",independant_trader},
             { "krait_mkii",krait_mkii},
-            { "krait_light",krait_phantom},
+            { "krait_light",krait_light},
             { "mamba",mamba},
             { "orca",orca},
             { "python",python},
-            { "python_nx",pythonnx},
+            { "python_nx",python_nx},
             { "sidewinder",sidewinder},
-            { "type9_military",type_10_defender},
-            { "type6",type_6_transporter},
-            { "type7",type_7_transport},
-            { "type9",type_9_heavy},
+            { "type9_military",type9_military},
+            { "type6",type6},
+            { "type7",type7},
+            { "type9",type9},
             { "viper",viper},
-            { "viper_mkiv",viper_mk_iv},
+            { "viper_mkiv",viper_mkiv},
             { "vulture",vulture},
         };
 
