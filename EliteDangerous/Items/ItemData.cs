@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BaseUtils;
 
 namespace EliteDangerousCore
 {
@@ -36,7 +37,67 @@ namespace EliteDangerousCore
             //}
 
             TranslateModules();
-        }
+
+            // AddExtraShipInfo();
+
+            Dictionary<ShipPropID, IModuleInfo>[] ships = GetSpaceships();
+            foreach (var x in ships)
+            {
+                var fdid = ((ShipInfoString)x[ShipPropID.FDID]).Value;
+                var manu = ((ShipInfoString)x[ShipPropID.Manu]).Value;
+                System.Diagnostics.Debug.WriteLine($" [{fdid.AlwaysQuoteString()}] = {manu.AlwaysQuoteString()},");
+
+            }
+
+
+            Dictionary<string, string> Manu = new Dictionary<string, string>
+            {
+                ["Adder"] = "Zorgon Peterson",
+                ["TypeX_3"] = "Lakon",
+                ["TypeX"] = "Lakon",
+                ["TypeX_2"] = "Lakon",
+                ["Anaconda"] = "Faulcon DeLacy",
+                ["Asp"] = "Lakon",
+                ["Asp_Scout"] = "Lakon",
+                ["BelugaLiner"] = "Saud Kruger",
+                ["CobraMkIII"] = "Faulcon DeLacy",
+                ["CobraMkIV"] = "Faulcon DeLacy",
+                ["DiamondBackXL"] = "Lakon",
+                ["DiamondBack"] = "Lakon",
+                ["Dolphin"] = "Saud Kruger",
+                ["Eagle"] = "Core Dynamics",
+                ["Federation_Dropship_MkII"] = "Core Dynamics",
+                ["Federation_Corvette"] = "Core Dynamics",
+                ["Federation_Dropship"] = "Core Dynamics",
+                ["Federation_Gunship"] = "Core Dynamics",
+                ["FerDeLance"] = "Zorgon Peterson",
+                ["Hauler"] = "Zorgon Peterson",
+                ["Empire_Trader"] = "Gutamaya",
+                ["Empire_Courier"] = "Gutamaya",
+                ["Cutter"] = "Gutamaya",
+                ["Empire_Eagle"] = "Gutamaya",
+                ["Independant_Trader"] = "Lakon",
+                ["Krait_MkII"] = "Faulcon DeLacy",
+                ["Krait_Light"] = "Faulcon DeLacy",
+                ["Mamba"] = "Zorgon Peterson",
+                ["Orca"] = "Saud Kruger",
+                ["Python"] = "Faulcon DeLacy",
+                ["Python_NX"] = "Faulcon DeLacy",
+                ["SideWinder"] = "Faulcon DeLacy",
+                ["Type9_Military"] = "Lakon",
+                ["Type6"] = "Lakon",
+                ["Type7"] = "Lakon",
+                ["Type9"] = "Lakon",
+                ["Viper"] = "Faulcon DeLacy",
+                ["Viper_MkIV"] = "Faulcon DeLacy",
+                ["Vulture"] = "Core Dynamics",
+            };
+
+            foreach( var kvp in Manu)
+            {
+       //         spaceships[kvp.Key.ToLowerInvariant()].Add(ShipPropID.Manu, new ShipInfoString(kvp.Value));
+            }
+    }
 
     }
 }
