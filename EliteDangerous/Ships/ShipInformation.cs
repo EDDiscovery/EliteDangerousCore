@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2023 EDDiscovery development team
+ * Copyright © 2016-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -41,6 +41,36 @@ namespace EliteDangerousCore
         public double FuelCapacity { get; private set; }    // fuel capacity may be 0 not known. Calculated as previous loadouts did not include this. 3.4 does
         public double ReserveFuelCapacity { get; private set; }  // 3.4 from loadout..
         public long Rebuy { get; private set; }             // may be 0, not known
+
+        // for this ship, the ship properites. May be null
+        public ItemData.ShipProperties GetShipProperties()  { return ItemData.GetShipProperties(ShipFD); }
+
+        // for this ship module the unengineered properties, may be null
+        public ItemData.ShipModule GetShipModulePropertiesUnengineered(ShipSlots.Slot slot)
+        {
+            if (Modules.TryGetValue(slot, out ShipModule module))
+                return module.GetModuleUnengineered();
+            else
+                return null;
+        }
+
+        // for this ship module the engineered properties, may be null.  If engineering fails, you still get the properties.
+        public ItemData.ShipModule GetShipModulePropertiesEngineered(ShipSlots.Slot slot)
+        {
+            if (Modules.TryGetValue(slot, out ShipModule module))
+            {
+                module.GetModuleEngineered(out ItemData.ShipModule smi);
+                return smi;
+            }
+            else
+                return null;
+        }
+
+        // slots with modules matching this test
+        public ShipSlots.Slot[] GetShipModulePropertiesEngineered(Predicate<ShipModule> test)
+        {
+            return Modules.Where(kvp => test(kvp.Value)).Select(x=>x.Key).ToArray();
+        }
 
         public string StoredAtSystem { get; private set; }  // null if not stored, else where stored
         public string StoredAtStation { get; private set; } // null if not stored or unknown
@@ -196,7 +226,7 @@ namespace EliteDangerousCore
             {
                 foreach (ShipModule sm in Modules.Values)
                 {
-                    ItemData.ShipModule m = sm.ModuleDataUnengineered();
+                    ItemData.ShipModule m = sm.GetModuleUnengineered();
                     if (m?.ModType == ItemData.ShipModule.ModuleTypes.GuardianFSDBooster)             // if we have a guardian FSD booster..
                     {
                         spec.FSDGuardianBoosterRange = m.AdditionalRange.Value;
@@ -237,8 +267,8 @@ namespace EliteDangerousCore
 
         public double HullMass()
         {
-            ItemData.IModuleInfo md = ItemData.GetShipProperty(ShipFD, ItemData.ShipPropID.HullMass);
-            return md != null ? (md as ItemData.ShipInfoDouble).Value : 0;
+            var ship = GetShipProperties();
+            return ship?.HullMass ?? 0;
         }
 
         public double HullModuleMass()      // based on modules and hull, not on FDev unladen mass in loadout
@@ -259,61 +289,6 @@ namespace EliteDangerousCore
 
         private double fuelwarningpercent = -999;
 
-        public string Manufacturer
-        {
-            get
-            {
-                ItemData.IModuleInfo md = ItemData.GetShipProperty(ShipFD, ItemData.ShipPropID.Manu);
-                return md != null ? (md as ItemData.ShipInfoString).Value : "Unknown";
-            }
-        }
-
-        // tbd wrong
-        public double Boost
-        {
-            get
-            {
-                ItemData.IModuleInfo md = ItemData.GetShipProperty(ShipFD, ItemData.ShipPropID.Boost);
-                double v = md != null ? (md as ItemData.ShipInfoInt).Value : 0;
-                EngineeringData ed = GetEngineering(ShipSlots.Slot.MainEngines); // aka "MainEngines" in fd speak, but we use a slot naming conversion
-                ed?.EngineerThrusters(ref v);
-                return v;
-            }
-        }
-
-        // tbd wrong
-        public double Speed
-        {
-            get
-            {
-                ItemData.IModuleInfo md = ItemData.GetShipProperty(ShipFD, ItemData.ShipPropID.Speed);
-                double v = md != null ? (md as ItemData.ShipInfoInt).Value : 0;
-                EngineeringData ed = GetEngineering(ShipSlots.Slot.MainEngines);
-                ed?.EngineerThrusters(ref v);
-                return v;
-            }
-        }
-
-        public string PadSize
-        {
-            get
-            {
-                ItemData.IModuleInfo md = ItemData.GetShipProperty(ShipFD, ItemData.ShipPropID.Class);
-                if (md == null)
-                    return "Unknown";
-                else
-                {
-                    int i = (md as ItemData.ShipInfoInt).Value;
-                    if (i == 1)
-                        return "Small";
-                    else if (i == 2)
-                        return "Medium";
-                    else
-                        return "Large";
-                }
-            }
-        }
-
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder(256);
@@ -326,6 +301,216 @@ namespace EliteDangerousCore
             }
 
             return sb.ToString();
+        }
+
+        #endregion
+
+        #region Stats
+        public class Stats
+        {
+            public double? ArmourRaw { get; set; }      // will be null if can't compute
+            public double ArmourKineticPercentage { get; set; }
+            public double ArmourThermalPercentage { get; set; }
+            public double ArmourExplosivePercentage { get; set; }
+            public double ArmourCausticPercentage { get; set; }
+            public double ArmourKineticValue { get; set; }
+            public double ArmourThermalValue { get; set; }
+            public double ArmourExplosiveValue { get; set; }
+            public double ArmourCausticValue { get; set; }
+            public double ShieldsSystemPercentage { get; set; }
+            public double ShieldsKineticPercentage { get; set; }
+            public double ShieldsThermalPercentage { get; set; }
+            public double ShieldsExplosivePercentage { get; set; }
+            public double ShieldsSystemValue { get; set; }
+            public double ShieldsKineticValue { get; set; }
+            public double ShieldsThermalValue { get; set; }
+            public double ShieldsExplosiveValue { get; set; }
+
+            public double? ShieldsRaw { get; set; }      // will be null if can't compute
+        }
+
+        // derived (nicked) from EDSY
+
+        private double getEffectiveDamageResistance(double baseres, double extrares, double exemptres, double bestres)
+        {
+            // https://forums.frontier.co.uk/threads/kinetic-resistance-calculation.266235/post-4230114
+            // https://forums.frontier.co.uk/threads/shield-booster-mod-calculator.286097/post-4998592
+
+            var lo = Math.Max(Math.Max(30, baseres), bestres);
+            var hi = 65; // half credit past 30% means 100% -> 30 + (100 - 30) / 2 = 65%
+            var expected = (1 - ((1 - baseres / 100) * (1 - extrares / 100))) * 100;
+            var penalized = lo + (expected - lo) / (100 - lo) * (hi - lo); // remap range [lo..100] to [lo..hi]
+            var actual = ((penalized >= 30) ? penalized : expected);
+            return (1 - ((1 - exemptres / 100) * (1 - actual / 100))) * 100;
+        }
+
+        private double getEffectiveShieldBoostMultiplier(double shieldbst)
+        {
+            // https://forums.frontier.co.uk/threads/very-experimental-shield-change.314820/post-4895068
+            var i = (1 + (shieldbst / 100));
+            return i;
+        }
+
+        private double getMassCurveMultiplier(double mass, double minMass, double optMass, double maxMass, double minMul, double optMul, double maxMul)
+        {
+            // https://forums.frontier.co.uk/threads/the-one-formula-to-rule-them-all-the-mechanics-of-shield-and-thruster-mass-curves.300225/
+
+            return (minMul + Math.Pow(Math.Min(1.0, (maxMass - mass) / (maxMass - minMass)), Math.Log((optMul - minMul) / (maxMul - minMul)) / Math.Log((maxMass - optMass) / (maxMass - minMass))) * (maxMul - minMul));
+        }
+
+        const int MAX_POWER_DIST = 8;
+        private double getPipDamageResistance(double sys)
+        {
+            // https://forums.frontier.co.uk/threads/2-3-the-commanders-changelog.341916/
+            return 60 * Math.Pow(sys / MAX_POWER_DIST, 0.85);
+
+        }
+
+
+        public Stats CalculateShipParameters()
+        {
+            var res = new Stats();
+            var ship = GetShipProperties();
+
+            if (ship != null)
+            {
+
+                double hullrnf = 0;
+                double hullbst = 0;
+                double kinmod_ihrp = 1;
+                double thmmod_ihrp = 1;
+                double expmod_ihrp = 1;
+                double caumod_ihrp = 1;
+                double kinmin_ihrp = 1;
+                double thmmin_ihrp = 1;
+                double expmin_ihrp = 1;
+                double caumin_ihrp = 1;
+                double kinmod_usb = 1;
+                double thmmod_usb = 1;
+                double expmod_usb = 1;
+                double caumod_usb = 1;
+                double shieldbst = 0;
+                double shieldrnf = 0;
+
+                foreach (var modkvp in Modules)
+                {
+                    modkvp.Value.GetModuleEngineered(out ItemData.ShipModule me);
+                    if (me.HullReinforcement.HasValue)    // hull reinforcements , Guardian Hull, meta allow hulls
+                    {
+                        hullrnf += me.HullReinforcement.Value;
+                        if (me.KineticResistance.HasValue) // hull reinforcements (ihrp = hull, guardian hull, imahrp = meta alloy)
+                        {
+                            double kinmod = (1 - me.KineticResistance.Value / 100.0);
+                            kinmod_ihrp *= kinmod;
+                            kinmin_ihrp = Math.Min(kinmin_ihrp, kinmod);
+                        }
+                        if (me.ThermalResistance.HasValue) // hull reinforcements, guardian hull
+                        {
+                            double thmmod = (1 - me.ThermalResistance.Value / 100.0);
+                            thmmod_ihrp *= thmmod;
+                            thmmin_ihrp = Math.Min(thmmin_ihrp, thmmod);
+                        }
+                        if (me.ExplosiveResistance.HasValue)  // hull reinforcements
+                        {
+                            double expmod = (1 - me.ExplosiveResistance.Value / 100.0);
+                            expmod_ihrp *= expmod;
+                            expmin_ihrp = Math.Min(expmin_ihrp, expmod);
+                        }
+                        if (me.CausticResistance.HasValue)  // meta allow hull , guardian hull
+                        {
+                            double caumod = (1 - me.CausticResistance.Value / 100.0);
+                            caumod_ihrp *= caumod;
+                            caumin_ihrp = Math.Min(caumin_ihrp, caumod);
+                        }
+                    }
+
+                    if (me.HullStrengthBonus.HasValue)      // armour
+                        hullbst += me.HullStrengthBonus.Value;
+                    if (me.ModType == ItemData.ShipModule.ModuleTypes.ShieldBooster) //  shieldbst
+                    {
+                        shieldbst += me.ShieldReinforcement.Value;
+                        kinmod_usb *= (1 - (me.KineticResistance.Value / 100));
+                        thmmod_usb *= (1 - (me.ThermalResistance.Value / 100));
+                        expmod_usb *= (1 - (me.ExplosiveResistance.Value / 100));
+                        caumod_usb *= (1 - ((me.CausticResistance ?? 0) / 100));      // not present currently
+                    }
+                    if (me.ModType == ItemData.ShipModule.ModuleTypes.GuardianShieldReinforcement) // shieldrnf
+                        shieldrnf += me.AdditionalReinforcement.Value;
+                }
+
+                var armourmoduleengineered = GetShipModulePropertiesEngineered(ShipSlots.Slot.Armour);
+                if (armourmoduleengineered != null)
+                {
+                    var armour = ship.Armour;
+                    var kinres = armourmoduleengineered.KineticResistance ?? 0;
+                    var thmres = armourmoduleengineered.ThermalResistance ?? 0;
+                    var expres = armourmoduleengineered.ExplosiveResistance ?? 0;
+                    var caures = armourmoduleengineered.CausticResistance ?? 0;     // should always be not defined.
+                    res.ArmourRaw = armour * (1 + hullbst / 100.0) + hullrnf;
+                    res.ArmourKineticPercentage = getEffectiveDamageResistance(kinres, (1 - kinmod_ihrp) * 100, 0, (1 - kinmin_ihrp) * 100);
+                    res.ArmourThermalPercentage = getEffectiveDamageResistance(thmres, (1 - thmmod_ihrp) * 100, 0, (1 - thmmin_ihrp) * 100);
+                    res.ArmourExplosivePercentage = getEffectiveDamageResistance(expres, (1 - expmod_ihrp) * 100, 0, (1 - expmin_ihrp) * 100);
+                    res.ArmourCausticPercentage = getEffectiveDamageResistance(caures, (1 - caumod_ihrp) * 100, 0, (1 - caumin_ihrp) * 100);
+
+                    res.ArmourKineticValue = res.ArmourRaw.Value / (1 - res.ArmourKineticPercentage / 100);
+                    res.ArmourThermalValue = res.ArmourRaw.Value / (1 - res.ArmourThermalPercentage / 100);
+                    res.ArmourExplosiveValue = res.ArmourRaw.Value / (1 - res.ArmourExplosivePercentage / 100);
+                    res.ArmourCausticValue = res.ArmourRaw.Value / (1 - res.ArmourCausticPercentage / 100);
+
+                }
+
+                var shieldlist = GetShipModulePropertiesEngineered(x => x.GetModuleUnengineered()?.IsShieldGenerator ?? false); // allow get module unengineered to fail, slots with shields 
+                if (shieldlist.Length == 1)
+                {
+                    ItemData.ShipModule shieldmoduleengineered = GetShipModulePropertiesEngineered(shieldlist[0]);
+                    var mass_hull = ship.HullMass;
+                    var maxmass = shieldmoduleengineered.MaxMass;
+                    if (maxmass >= mass_hull)
+                    {
+                        var shields = ship.Shields;
+                        var minmass = shieldmoduleengineered.MinMass;
+                        var optmass = shieldmoduleengineered.OptMass;
+                        var minmul = shieldmoduleengineered.MinStrength;
+                        var optmul = shieldmoduleengineered.OptStrength;
+                        var maxmul = shieldmoduleengineered.MaxStrength;
+                        var kinres = shieldmoduleengineered.KineticResistance ?? 0;
+                        var thmres = shieldmoduleengineered.ThermalResistance ?? 0;
+                        var expres = shieldmoduleengineered.ExplosiveResistance ?? 0;
+                        var caures = shieldmoduleengineered.CausticResistance ?? 0;  // should always be not defined.
+                        double rawShdStr = shields * getEffectiveShieldBoostMultiplier(shieldbst) *
+                                                    getMassCurveMultiplier(mass_hull, minmass.Value, optmass.Value, maxmass.Value, minmul.Value, optmul.Value, maxmul.Value) / 100
+                                                    + shieldrnf;
+                        res.ShieldsRaw = rawShdStr;
+
+                        var kinShdRes = res.ShieldsKineticPercentage = getEffectiveDamageResistance(0, (1 - kinmod_usb) * 100, kinres, 0);
+                        var thmShdRes = res.ShieldsThermalPercentage = getEffectiveDamageResistance(0, (1 - thmmod_usb) * 100, thmres, 0);
+                        var expShdRes = res.ShieldsExplosivePercentage = getEffectiveDamageResistance(0, (1 - expmod_usb) * 100, expres, 0);
+
+                        int powerdist_sys = 4;
+                        var absShdRes = res.ShieldsSystemPercentage = getPipDamageResistance(powerdist_sys);
+                        res.ShieldsSystemValue = rawShdStr / (1 - absShdRes / 100);
+                        res.ShieldsKineticValue = rawShdStr / (1 - absShdRes / 100) / (1 - kinShdRes / 100);
+                        res.ShieldsThermalValue = rawShdStr / (1 - absShdRes / 100) / (1 - thmShdRes / 100);
+                        res.ShieldsExplosiveValue = rawShdStr / (1 - absShdRes / 100) / (1 - expShdRes / 100);
+
+
+                        // var powerdistSysMul = Math.Pow((double)powerdist_sys / MAX_POWER_DIST, 1.1);
+                        // tbd boost time
+
+
+                        System.Diagnostics.Debug.WriteLine($"ABs {absShdRes * 100}% raw {res.ShieldsRaw} sys {res.ShieldsSystemValue} kin {res.ShieldsKineticValue} thm {res.ShieldsThermalValue} exp {res.ShieldsExplosiveValue}");
+
+                    }
+                    else
+                        res.ShieldsRaw = 0;     // mass too big
+                }
+
+                return res;
+            }
+            else
+
+
+                return null;
         }
 
         #endregion
@@ -813,6 +998,44 @@ namespace EliteDangerousCore
             jo["Modules"] = mlist;
 
             return jo;
+        }
+
+        #endregion
+
+        #region Create from loadout
+
+        public static ShipInformation CreateFromLoadout(string loadout)
+        {
+            JToken jo = JToken.Parse(loadout);
+
+            EliteDangerousCore.JournalEvents.JournalLoadout jloadout = null;
+            if (jo != null)
+            {
+                if (jo.IsArray && jo.Count == 1 && jo[0].IsObject && jo[0].Object().Contains("header") && jo[0].Object().Contains("data"))
+                {
+                    jo = jo[0]["data"];
+                    jloadout = new EliteDangerousCore.JournalEvents.JournalLoadout(jo.Object());
+                }
+                else if (jo.IsObject && jo["event"].Str() == "Loadout")
+                {
+                    jloadout = new EliteDangerousCore.JournalEvents.JournalLoadout(jo.Object());
+                }
+            }
+
+            if (jloadout != null)
+            {
+                ShipInformationList sl = new ShipInformationList();
+                jloadout.ShipInformation(sl, "Nowhere", new SystemClass("Sol"));
+                if (sl.Ships.Count > 0)
+                {
+                    ShipInformation importedship = sl.Ships.First().Value;
+                    importedship.State = ShipInformation.ShipState.Sold;
+
+                    return importedship;
+                }
+            }
+
+            return null;
         }
 
         #endregion

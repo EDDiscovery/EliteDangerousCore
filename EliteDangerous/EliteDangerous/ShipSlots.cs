@@ -69,7 +69,7 @@ namespace EliteDangerousCore
             PowerDistributor,
             PowerPlant,
             Radar,
-            ShieldGenerator,
+            ShieldGenerator,        // fighter
             ShipCockpit,
             ShipID0,
             ShipID1,

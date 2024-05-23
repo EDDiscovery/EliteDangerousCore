@@ -136,11 +136,11 @@ namespace EliteDangerousCore
             if (inname.IsEmpty())
                 return "No Ship Name Given";
 
-            ItemData.IModuleInfo i = ItemData.GetShipProperty(inname, ItemData.ShipPropID.Name);
+            var i = ItemData.GetShipName(inname);
 
             if (i != null)
             {
-                return (i as ItemData.ShipInfoString).Value;
+                return i;
             }
             else
             {
@@ -155,11 +155,11 @@ namespace EliteDangerousCore
             if (inname.IsEmpty())
                 return "No Ship/Actor/Suit Name Given";
 
-            ItemData.IModuleInfo i = ItemData.GetShipProperty(inname, ItemData.ShipPropID.Name);
+            var i = ItemData.GetShipName(inname);
 
             if (i != null)
             {
-                return (i as ItemData.ShipInfoString).Value;
+                return i;
             }
             else if (ItemData.IsActor(inname))
             {
@@ -186,9 +186,9 @@ namespace EliteDangerousCore
             if (inname.IsEmpty())
                 return "No Ship Name Given";
 
-            ItemData.IModuleInfo i = ItemData.GetShipProperty(inname, ItemData.ShipPropID.FDID);
+            var i = ItemData.GetShipFDID(inname);
             if (i != null)
-                return (i as ItemData.ShipInfoString).Value;
+                return i;
             else
             {
                 System.Diagnostics.Trace.WriteLine("*** Unknown FD ship ID:" + inname);

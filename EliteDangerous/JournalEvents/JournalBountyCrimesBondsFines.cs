@@ -48,7 +48,7 @@ namespace EliteDangerousCore.JournalEvents
                 var sp = ItemData.GetShipProperties(Target);        // if its a ship, replace with ship name
                 if (sp != null)
                 {
-                    TargetLocalised = ((ItemData.ShipInfoString)sp[ItemData.ShipPropID.Name]).Value;
+                    TargetLocalised = sp.Name;
                 }
                 else if (TargetLocalised.StartsWith("$"))
                 {

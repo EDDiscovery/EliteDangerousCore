@@ -529,8 +529,8 @@ namespace EliteDangerousCore
 
                     else if (mf.Label.EqualsIIC("DefenceModifierShieldAddition")) // shieldrnf = guardian shield boost = direct = AdditionalStrength
                     {
-                        engineered.AdditionalStrength = mf.Value;
-                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.AdditionalStrength} -> {engineered.AdditionalStrength}");
+                        engineered.AdditionalReinforcement = mf.Value;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.AdditionalReinforcement} -> {engineered.AdditionalReinforcement}");
                     }
 
 
@@ -728,20 +728,6 @@ namespace EliteDangerousCore
             }
 
             return good;
-        }
-
-
-        // the whole thruster thing needs work tbd - to be removed
-        public bool EngineerThrusters(ref double speed)
-        {
-            EngineeringModifiers mod = FindModification("EngineOptPerformance");
-            if (mod != null)
-            {
-                speed *= mod.Value / 100.0;
-                return true;
-            }
-            else
-                return false;
         }
 
     }

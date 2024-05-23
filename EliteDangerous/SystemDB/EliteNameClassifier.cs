@@ -41,8 +41,10 @@ namespace EliteDangerousCore
         private uint NumericDashPos = 0;     // Numeric Dash position
         private uint NumericDigits = 0;      // Numeric digits
 
-        //   48    44   40   36   32   28   24   20   16   12    8    4    0
-        //       10xx x111 11L2 222L 3333 MMMM N111 1111 N222 2222 2222 2222               
+        //   6    5    5    4  4444 4444    3    3    2    2    2    1    1      
+        //   0    6    2    8  7654 3210    6    2    8    4    0    6    2    8    4    0
+        //0000 0000 0000 0000  1000 0111 1122 2223 3333 MMMM N111 1111 N222 2222 2222 2222               
+        //   F    F    F    F     F    8    0    0    0    0    0    0    0    0    0    0
         private const int StandardPosMarker = 47;   // Standard (L1/Mass/N apply).   47 means its in 6 bytes, fitting within a 6 byte SQL field
         private const int L1Marker = 38;            // Standard: 5 bits 38-42 (1 = A, 26=Z)
         private const int L2Marker = 33;            // Standard: 5 bits 33-37 (1 = A, 26=Z)
@@ -50,11 +52,18 @@ namespace EliteDangerousCore
         private const int MassMarker = 24;          // Standard: 3 bits 24-27 (0=A,7=H)
         private const int NMarker = 0;              // Standard: N2 + N1<<16  
 
-        //  48    44   40   36   32   28   24   20   16   12    8    4    0
-        //      01CC CCDD DDNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN               
+        //   6    5    5    4  4444 4444    3    3    2    2    2    1    1      
+        //   0    6    2    8  7654 3210    6    2    8    4    0    6    2    8    4    0
+        //0000 0000 0000 0000  01CC CCDD DDNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN               
+        //   F    F    F    F     C    0    0    0    0    0    0    0    0    0    0    0
         private const int NumericMarker = 46;       // Numeric (HIP 1232-23). bits 0-35 hold value.  
         private const int NumericCountMarker = 42;  // Numeric: 4 bits 42-45 Number of digits in number
         private const int NumericDashMarker = 38;   // Numeric: 4 bits 38-41 position of dash in number (0 = none, 1 = 0 char in, 2 = 1 char in etc) 
+
+        //   6    5    5    4  4444 4444    3    3    2    2    2    1    1      
+        //   0    6    2    8  7654 3210    6    2    8    4    0    6    2    8    4    0
+        //0000 0000 0000 0000  00NN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN               
+        //   0    0    0    0     3    F    F    F    F    F    F    F    F    F    F    F
         private const long NameIDNumbericMask = 0x3fffffffff;     // 38 bits
 
         public bool IsStandard { get { return EntryType >= NameType.NValue; } }     // meaning L1L2L3 MassCode NValue is set..

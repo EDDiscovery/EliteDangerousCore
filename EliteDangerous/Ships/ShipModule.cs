@@ -53,7 +53,7 @@ namespace EliteDangerousCore
         public bool IsFSDSlot { get { return SlotFD  == ShipSlots.Slot.FrameShiftDrive; } }
 
         // will return null if unknown module
-        public ItemData.ShipModule ModuleDataUnengineered()
+        public ItemData.ShipModule GetModuleUnengineered()
         {
             return ItemData.TryGetShipModule(ItemFD, out ItemData.ShipModule sm, false) ? sm : null;
         }
@@ -61,11 +61,11 @@ namespace EliteDangerousCore
         // take the unengineered module data and engineer it with the Engineering data
         // engineered may be null if we don't know the module
         // bool says if we don't know how to modify a the module fully
-        public bool ModuleDataEngineered(out ItemData.ShipModule engineered)
+        public bool GetModuleEngineered(out ItemData.ShipModule engineered)
         {
             engineered = null;
 
-            var mdu = ModuleDataUnengineered();
+            var mdu = GetModuleUnengineered();
 
             if (mdu != null)        // recognised module
             {
@@ -88,7 +88,7 @@ namespace EliteDangerousCore
         {
             if (IsFSDSlot)
             {
-                ModuleDataEngineered(out ItemData.ShipModule engineered);
+                GetModuleEngineered(out ItemData.ShipModule engineered);
                 if (engineered != null)
                 {
                     EliteDangerousCalculations.FSDSpec spec = engineered.GetFSDSpec();
@@ -104,7 +104,7 @@ namespace EliteDangerousCore
 
         public double Mass()
         {
-            ModuleDataEngineered(out ItemData.ShipModule engineered);       // engineer the module the best we can. If we don't use the module, it will return null
+            GetModuleEngineered(out ItemData.ShipModule engineered);       // engineer the module the best we can. If we don't use the module, it will return null
             return engineered?.Mass ?? 0;
         }
 
