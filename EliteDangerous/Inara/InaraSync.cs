@@ -131,8 +131,8 @@ namespace EliteDangerousCore.Inara
 
                 foreach( var s in history.ShipInformationList.Ships )
                 {
-                    ShipInformation si = s.Value;
-                    if ( si.State == ShipInformation.ShipState.Owned && ItemData.IsShip(si.ShipFD))
+                    Ship si = s.Value;
+                    if ( si.State == Ship.ShipState.Owned && ItemData.IsShip(si.ShipFD))
                     {
                         // loadout may be null if nothing in it.
                         eventstosend.Add(InaraClass.setCommanderShipLoadout(si.ShipFD, si.ID, si.Modules.Values, tb.AddSeconds(sendno++)));

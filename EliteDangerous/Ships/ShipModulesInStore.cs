@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2023 EDDiscovery development team
+ * Copyright © 2016-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -13,7 +13,6 @@
  * 
  */
 
-using EliteDangerousCore;
 using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Generic;
@@ -21,7 +20,7 @@ using System.Linq;
 
 namespace EliteDangerousCore
 {
-    public class ModulesInStore
+    public class ShipModulesInStore
     {
         public class StoredModule: IEquatable<StoredModule> // storage used by journal event..
         {
@@ -94,36 +93,36 @@ namespace EliteDangerousCore
 
         public List<StoredModule> StoredModules { get; private set; }     
 
-        public ModulesInStore()
+        public ShipModulesInStore()
         {
             StoredModules = new List<StoredModule>();
         }
 
-        public ModulesInStore(List<StoredModule> list)
+        public ShipModulesInStore(List<StoredModule> list)
         {
             StoredModules = new List<StoredModule>(list);
         }
 
         // ModuleBuy, ModuleBuyAndStore , ModuleRetrieve
-        public ModulesInStore StoreModule(string fdname, string englishname, string namelocalised, ISystem sys)
+        public ShipModulesInStore StoreModule(string fdname, string englishname, string namelocalised, ISystem sys)
         {
-            ModulesInStore mis = this.ShallowClone();
+            ShipModulesInStore mis = this.ShallowClone();
             mis.StoredModules.Add(new StoredModule(fdname, englishname, namelocalised ,sys.Name, "", null, null, null));
             return mis;
         }
 
         // ModuleStore (has more info)
-        public ModulesInStore StoreModule(JournalModuleStore e, ISystem sys)
+        public ShipModulesInStore StoreModule(JournalModuleStore e, ISystem sys)
         {
-            ModulesInStore mis = this.ShallowClone();
+            ShipModulesInStore mis = this.ShallowClone();
             mis.StoredModules.Add(new StoredModule(e.StoredItemFD,e.StoredItem, e.StoredItemLocalised,sys.Name, e.EngineerModifications,e.Level,e.Quality,e.Hot));
             return mis;
         }
 
         // MassModuleStore
-        public ModulesInStore StoreModule(JournalMassModuleStore.ModuleItem[] items, Dictionary<string, string> itemlocalisation, ISystem sys)
+        public ShipModulesInStore StoreModule(JournalMassModuleStore.ModuleItem[] items, Dictionary<string, string> itemlocalisation, ISystem sys)
         {
-            ModulesInStore mis = this.ShallowClone();
+            ShipModulesInStore mis = this.ShallowClone();
             foreach (var it in items)
             {
                 string local = itemlocalisation.ContainsKey(it.Name) ? itemlocalisation[it.Name] : it.Name;
@@ -133,13 +132,13 @@ namespace EliteDangerousCore
         }
 
         // ModuleRetrieve, ModuleSellRemote, remove on english name of module
-        public ModulesInStore RemoveModuleUsingEnglishName(string englishname)
+        public ShipModulesInStore RemoveModuleUsingEnglishName(string englishname)
         {
             int index = StoredModules.FindIndex(x => x.Name.Equals(englishname, StringComparison.InvariantCultureIgnoreCase));  // if we have an item of this name
             if (index != -1)
             {
                 //System.Diagnostics.Debug.WriteLine("Remove module '" + item + "'  '" + StoredModules[index].Name_Localised + "'");
-                ModulesInStore mis = this.ShallowClone();
+                ShipModulesInStore mis = this.ShallowClone();
                 mis.StoredModules.RemoveAt(index);
                 return mis;
             }
@@ -148,15 +147,15 @@ namespace EliteDangerousCore
         }
 
         // StoredModules
-        public ModulesInStore UpdateStoredModules(StoredModule[] newlist)
+        public ShipModulesInStore UpdateStoredModules(StoredModule[] newlist)
         {
-            ModulesInStore mis = new ModulesInStore(newlist.ToList());      // copy constructor ..
+            ShipModulesInStore mis = new ShipModulesInStore(newlist.ToList());      // copy constructor ..
             return mis;
         }
 
-        public ModulesInStore ShallowClone()          // shallow clone.. does not clone the ship modules, just the dictionary
+        public ShipModulesInStore ShallowClone()          // shallow clone.. does not clone the ship modules, just the dictionary
         {
-            ModulesInStore mis = new ModulesInStore(this.StoredModules);
+            ShipModulesInStore mis = new ShipModulesInStore(this.StoredModules);
             return mis;
         }
     }

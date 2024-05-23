@@ -16,7 +16,7 @@ using System;
 
 namespace EliteDangerousCore
 {
-    public class StoredShipInformation : IEquatable<StoredShipInformation>
+    public class StoredShip : IEquatable<StoredShip>
     {
         public ulong ShipID { get; set; }      // both
         public string ShipType { get; set; } // both
@@ -45,7 +45,7 @@ namespace EliteDangerousCore
             TransferTimeString = TransferTimeSpan.ToString();
         }
 
-        public bool Equals(StoredShipInformation other)
+        public bool Equals(StoredShip other)
         {
             return ShipID == other.ShipID && string.Compare(ShipType, other.ShipType) == 0 &&
                         string.Compare(ShipType_Localised, other.ShipType_Localised) == 0 && string.Compare(Name, other.Name) == 0 &&

@@ -219,7 +219,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             if ((IsPreview == null || IsPreview.Value == false) && Engineering != null)
             {

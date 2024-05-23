@@ -22,10 +22,6 @@ namespace EliteDangerousCore
 {
     public partial class ItemData
     {
-        public interface IModuleInfo
-        {
-        };
-
         public static void Initialise()
         {
             CreateModules();

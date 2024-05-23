@@ -77,7 +77,7 @@ namespace EliteDangerousCore
                     return this;
             }
         }
-        public class Weapon : IModuleInfo
+        public class Weapon 
         {
             public string Name;
             public bool Primary;

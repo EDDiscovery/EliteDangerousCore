@@ -239,7 +239,7 @@ namespace EliteDangerousCore
 
         #region ShipModule
 
-        public class ShipModule : IModuleInfo
+        public class ShipModule 
         {
             public enum ModuleTypes
             {

@@ -162,7 +162,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, ShipType, -ShipPrice + (SellPrice ?? 0));
         }
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {                                   // new will come along and provide the new ship info
             //System.Diagnostics.Debug.WriteLine(EventTimeUTC + " Buy");
             if (StoreOldShipId != null && StoreOldShipFD != null)
@@ -200,7 +200,7 @@ namespace EliteDangerousCore.JournalEvents
         public string ShipType_Localised { get; set; } // only present on later events
         public ulong ShipId { get; set; }
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             //System.Diagnostics.Debug.WriteLine(EventTimeUTC + " NEW");
             shp.ShipyardNew(ShipType, ShipFD, ShipId);
@@ -248,7 +248,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, ShipType, ShipPrice);
         }
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             //Debug.WriteLine(EventTimeUTC + " SELL");
             shp.Sell(ShipTypeFD, SellShipId);
@@ -312,7 +312,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public long? MarketID { get; set; }
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             //System.Diagnostics.Debug.WriteLine(EventTimeUTC + " SWAP");
             shp.ShipyardSwap(this, whereami, system.Name);
@@ -366,7 +366,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, ShipType, -TransferPrice);
         }
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             DateTime arrival = EventTimeUTC.AddSeconds(nTransferTime ?? 0);
             //System.Diagnostics.Debug.WriteLine(EventTimeUTC + " Transfer");
@@ -391,7 +391,7 @@ namespace EliteDangerousCore.JournalEvents
             StarSystem = evt["StarSystem"].Str();
             MarketID = evt["MarketID"].LongNull();
 
-            ShipsHere = evt["ShipsHere"]?.ToObjectQ<StoredShipInformation[]>();
+            ShipsHere = evt["ShipsHere"]?.ToObjectQ<StoredShip[]>();
             Normalise(ShipsHere);
 
             if (ShipsHere != null)
@@ -403,7 +403,7 @@ namespace EliteDangerousCore.JournalEvents
                 }
             }
 
-            ShipsRemote = evt["ShipsRemote"]?.ToObjectQ<StoredShipInformation[]>();
+            ShipsRemote = evt["ShipsRemote"]?.ToObjectQ<StoredShip[]>();
             Normalise(ShipsRemote);
         }
 
@@ -411,8 +411,8 @@ namespace EliteDangerousCore.JournalEvents
         public string StarSystem { get; set; }
         public long? MarketID { get; set; }
 
-        public StoredShipInformation[] ShipsHere { get; set; }
-        public StoredShipInformation[] ShipsRemote { get; set; }
+        public StoredShip[] ShipsHere { get; set; }
+        public StoredShip[] ShipsRemote { get; set; }
 
         public override void FillInformation(out string info, out string detailed)
         {
@@ -421,14 +421,14 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
             if (ShipsHere != null)
             {
-                foreach (StoredShipInformation m in ShipsHere)
+                foreach (StoredShip m in ShipsHere)
                     detailed = detailed.AppendPrePad(BaseUtils.FieldBuilder.Build("", m.ShipType, "; cr;N0".T(EDCTx.JournalStoredShips_SSP), m.Value, ";(Hot)".T(EDCTx.JournalEntry_Hot), m.Hot), System.Environment.NewLine);
             }
             if (ShipsRemote != null)
             {
                 detailed = detailed.AppendPrePad("Remote: ".T(EDCTx.JournalStoredShips_Remote), System.Environment.NewLine + System.Environment.NewLine);
 
-                foreach (StoredShipInformation m in ShipsRemote)
+                foreach (StoredShip m in ShipsRemote)
                 {
                     if (m.InTransit)
                     {
@@ -450,16 +450,16 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void Normalise(StoredShipInformation[] s)
+        public void Normalise(StoredShip[] s)
         {
             if (s != null)
             {
-                foreach (StoredShipInformation i in s)
+                foreach (StoredShip i in s)
                     i.Normalise();
             }
         }
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             //System.Diagnostics.Debug.WriteLine(EventTimeUTC + " StoredShips");
             if (ShipsHere != null)
@@ -496,7 +496,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, ShipType, ShipPrice);
         }
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             shp.Sell(ShipType, SellShipId);
         }

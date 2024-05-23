@@ -42,7 +42,7 @@ namespace EliteDangerousCore
             return engineers.Values.Where(x => x.OdysseyEnginner == true).Select(x => x.Name).ToArray();
         }
 
-        public class EngineeringInfo : IModuleInfo
+        public class EngineeringInfo 
         {
             public string Name { get; set; }
             public string StarSystem { get; set; }

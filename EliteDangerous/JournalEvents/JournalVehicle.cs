@@ -62,7 +62,7 @@ namespace EliteDangerousCore.JournalEvents
 
         protected override JournalTypeEnum IconEventType { get { return To.Contains("Mothership") ? JournalTypeEnum.VehicleSwitch_Mothership : JournalTypeEnum.VehicleSwitch_Fighter; } }
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             shp.VehicleSwitch(To);
         }

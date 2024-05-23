@@ -103,8 +103,8 @@ namespace EliteDangerousCore
         // Calculated values, not from JE
 
         public uint MaterialCommodity { get; private set; } // generation index
-        public ShipInformation ShipInformation { get; private set; }     // may be null if not set up yet
-        public ModulesInStore StoredModules { get; private set; }
+        public Ship ShipInformation { get; private set; }     // may be null if not set up yet
+        public ShipModulesInStore StoredModules { get; private set; }
         public uint MissionList { get; private set; }       // generation index
         public uint Statistics { get; private set; }        // generation index
         public uint Weapons { get; private set; }           // generation index
@@ -182,12 +182,12 @@ namespace EliteDangerousCore
             Statistics = stats.Process(je, station);
         }
 
-        public void UpdateShipInformation(ShipInformation si)       // something externally updated SI
+        public void UpdateShipInformation(Ship si)       // something externally updated SI
         {
             ShipInformation = si;
         }
 
-        public void UpdateShipStoredModules(ModulesInStore ms)
+        public void UpdateShipStoredModules(ShipModulesInStore ms)
         {
             StoredModules = ms;
         }

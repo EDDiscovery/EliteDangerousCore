@@ -22,7 +22,7 @@ using QuickJSON;
 namespace EliteDangerousCore
 {
     [System.Diagnostics.DebuggerDisplay("{ID}:{ShipType}:{ShipFD}:{Modules.Count}")]
-    public class ShipInformation
+    public class Ship
     {
         #region Information interface
 
@@ -517,15 +517,15 @@ namespace EliteDangerousCore
 
         #region Creating and changing
 
-        public ShipInformation(ulong id)
+        public Ship(ulong id)
         {
             ID = id;
             Modules = new Dictionary<ShipSlots.Slot, ShipModule>();
         }
 
-        public ShipInformation ShallowClone()          // shallow clone.. does not clone the ship modules, just the dictionary
+        public Ship ShallowClone()          // shallow clone.. does not clone the ship modules, just the dictionary
         {
-            ShipInformation sm = new ShipInformation(this.ID);
+            Ship sm = new Ship(this.ID);
             sm.State = this.State;
             sm.ShipType = this.ShipType;
             sm.ShipFD = this.ShipFD;
@@ -584,7 +584,7 @@ namespace EliteDangerousCore
             }
         }
 
-        public ShipInformation SetShipDetails(string ship, string shipfd, string name = null, string ident = null, 
+        public Ship SetShipDetails(string ship, string shipfd, string name = null, string ident = null, 
                                     double fuellevel = 0, double fueltotal = 0,
                                     long hullvalue = 0, long modulesvalue = 0, long rebuy = 0,
                                     double unladenmass = 0, double reservefuelcap = 0 , double hullhealth = 0, bool? hot = null)
@@ -609,7 +609,7 @@ namespace EliteDangerousCore
             {
                 //System.Diagnostics.Debug.WriteLine($".. update SetShipDetails");
 
-                ShipInformation sm = this.ShallowClone();
+                Ship sm = this.ShallowClone();
 
                 sm.ShipType = ship;
                 sm.ShipFD = shipfd;
@@ -650,11 +650,11 @@ namespace EliteDangerousCore
             }
         }
 
-        public ShipInformation SetSubVehicle(SubVehicleType vh)
+        public Ship SetSubVehicle(SubVehicleType vh)
         {
             if (vh != this.SubVehicle)
             {
-                ShipInformation sm = this.ShallowClone();
+                Ship sm = this.ShallowClone();
                 sm.SubVehicle = vh;
                 return sm;
             }
@@ -662,11 +662,11 @@ namespace EliteDangerousCore
                 return this;
         }
 
-        public ShipInformation SetFuelLevel(double fuellevel)
+        public Ship SetFuelLevel(double fuellevel)
         {
             if (fuellevel != 0 && fuellevel != FuelLevel)
             {
-                ShipInformation sm = this.ShallowClone();
+                Ship sm = this.ShallowClone();
 
                 if (fuellevel != 0)
                     sm.FuelLevel = fuellevel;
@@ -679,13 +679,13 @@ namespace EliteDangerousCore
             return this;
         }
 
-        public ShipInformation SetFuelLevel(double fuellevel, double reserve)       // fuellevel >=0 to set
+        public Ship SetFuelLevel(double fuellevel, double reserve)       // fuellevel >=0 to set
         {
             if (fuellevel >= 0 && ( Math.Abs(FuelLevel - fuellevel) > 0.01 || Math.Abs(ReserveFuelCapacity - reserve) > 0.01))
             {
                 //System.Diagnostics.Debug.WriteLine("Update ship fuel to " + fuellevel + " " + reserve);
 
-                ShipInformation sm = this.ShallowClone();
+                Ship sm = this.ShallowClone();
 
                 if (fuellevel != 0)
                     sm.FuelLevel = fuellevel;
@@ -699,11 +699,11 @@ namespace EliteDangerousCore
             return this;
         }
 
-        public ShipInformation AddModule(string slot, ShipSlots.Slot slotfd, string item, string itemfd, string itemlocalised)
+        public Ship AddModule(string slot, ShipSlots.Slot slotfd, string item, string itemfd, string itemlocalised)
         {
             if (!Modules.ContainsKey(slotfd) || Modules[slotfd].Item.Equals(item) == false)       // if does not have it, or item is not the same..
             {
-                ShipInformation sm = this.ShallowClone();
+                Ship sm = this.ShallowClone();
                 sm.Modules[slotfd] = new ShipModule(slot, slotfd, item, itemfd, itemlocalised);
                 //System.Diagnostics.Debug.WriteLine("Slot add " + slot);
 
@@ -719,11 +719,11 @@ namespace EliteDangerousCore
             return this;
         }
 
-        public ShipInformation RemoveModule(ShipSlots.Slot slot, string item)
+        public Ship RemoveModule(ShipSlots.Slot slot, string item)
         {
             if (Modules.ContainsKey(slot))       // if has it..
             {
-                ShipInformation sm = this.ShallowClone();
+                Ship sm = this.ShallowClone();
                 sm.Modules.Remove(slot);
                 //System.Diagnostics.Debug.WriteLine("Slot remove " + slot);
 
@@ -739,9 +739,9 @@ namespace EliteDangerousCore
             return this;
         }
 
-        public ShipInformation RemoveModules(JournalMassModuleStore.ModuleItem[] items)
+        public Ship RemoveModules(JournalMassModuleStore.ModuleItem[] items)
         {
-            ShipInformation sm = null;
+            Ship sm = null;
             foreach (var it in items)
             {
                 if (Modules.ContainsKey(it.SlotFD))       // if has it..
@@ -764,10 +764,10 @@ namespace EliteDangerousCore
             return sm ?? this;
         }
 
-        public ShipInformation SwapModule(string fromslot, ShipSlots.Slot fromslotfd, string fromitem, string fromitemfd, string fromiteml,
+        public Ship SwapModule(string fromslot, ShipSlots.Slot fromslotfd, string fromitem, string fromitemfd, string fromiteml,
                                           string toslot, ShipSlots.Slot toslotfd, string toitem, string toitemfd, string toiteml)
         {
-            ShipInformation sm = this.ShallowClone();
+            Ship sm = this.ShallowClone();
             if (Modules.ContainsKey(fromslotfd))
             {
                 if (Modules.ContainsKey(toslotfd))
@@ -790,11 +790,11 @@ namespace EliteDangerousCore
             return sm;
         }
 
-        public ShipInformation Craft(ShipSlots.Slot slotfd, string item, EngineeringData eng)
+        public Ship Craft(ShipSlots.Slot slotfd, string item, EngineeringData eng)
         {
             if (Modules.ContainsKey(slotfd) && Modules[slotfd].Item.Equals(item))       // craft, module must be there, otherwise just ignore
             {
-                ShipInformation sm = this.ShallowClone();
+                Ship sm = this.ShallowClone();
                 sm.Modules[slotfd] = new ShipModule(sm.Modules[slotfd]);        // clone
                 sm.Modules[slotfd].SetEngineering(eng);                       // and update engineering
                 return sm;
@@ -803,27 +803,27 @@ namespace EliteDangerousCore
             return this;
         }
 
-        public ShipInformation SellShip()
+        public Ship SellShip()
         {
-            ShipInformation sm = this.ShallowClone();
+            Ship sm = this.ShallowClone();
             sm.State = ShipState.Sold;
             sm.SubVehicle = SubVehicleType.None;
             sm.ClearStorage();
             return sm;
         }
 
-        public ShipInformation Destroyed()
+        public Ship Destroyed()
         {
-            ShipInformation sm = this.ShallowClone();
+            Ship sm = this.ShallowClone();
             sm.State = ShipState.Destroyed;
             sm.SubVehicle = SubVehicleType.None;
             sm.ClearStorage();
             return sm;
         }
 
-        public ShipInformation Store(string station, string system)
+        public Ship Store(string station, string system)
         {
-            ShipInformation sm = this.ShallowClone();
+            Ship sm = this.ShallowClone();
             //if (sm.StoredAtSystem != null) { if (sm.StoredAtSystem.Equals(system)) System.Diagnostics.Debug.WriteLine("..Previous known stored at" + sm.StoredAtSystem + ":" + sm.StoredAtStation); else System.Diagnostics.Debug.WriteLine("************************ DISGREEE..Previous known stored at" + sm.StoredAtSystem + ":" + sm.StoredAtStation); }
             sm.SubVehicle = SubVehicleType.None;
             sm.StoredAtSystem = system;
@@ -832,16 +832,16 @@ namespace EliteDangerousCore
             return sm;                                              // don't change transfer time as it may be in progress..
         }
 
-        public ShipInformation SwapTo()
+        public Ship SwapTo()
         {
-            ShipInformation sm = this.ShallowClone();
+            Ship sm = this.ShallowClone();
             sm.ClearStorage();    // just in case
             return sm;
         }
 
-        public ShipInformation Transfer(string tosystem , string tostation, DateTime arrivaltimeutc)
+        public Ship Transfer(string tosystem , string tostation, DateTime arrivaltimeutc)
         {
-            ShipInformation sm = this.ShallowClone();
+            Ship sm = this.ShallowClone();
             sm.StoredAtStation = tostation;
             sm.StoredAtSystem = tosystem;
             sm.TransferArrivalTimeUTC = arrivaltimeutc;
@@ -1004,7 +1004,7 @@ namespace EliteDangerousCore
 
         #region Create from loadout
 
-        public static ShipInformation CreateFromLoadout(string loadout)
+        public static Ship CreateFromLoadout(string loadout)
         {
             JToken jo = JToken.Parse(loadout);
 
@@ -1024,12 +1024,12 @@ namespace EliteDangerousCore
 
             if (jloadout != null)
             {
-                ShipInformationList sl = new ShipInformationList();
+                ShipList sl = new ShipList();
                 jloadout.ShipInformation(sl, "Nowhere", new SystemClass("Sol"));
                 if (sl.Ships.Count > 0)
                 {
-                    ShipInformation importedship = sl.Ships.First().Value;
-                    importedship.State = ShipInformation.ShipState.Sold;
+                    Ship importedship = sl.Ships.First().Value;
+                    importedship.State = Ship.ShipState.Sold;
 
                     return importedship;
                 }

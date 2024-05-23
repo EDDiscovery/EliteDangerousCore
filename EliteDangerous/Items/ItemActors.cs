@@ -38,7 +38,7 @@ namespace EliteDangerousCore
             }
         }
 
-        public class Actor : IModuleInfo
+        public class Actor
         {
             public string Name;
             public Actor(string name) { Name = name; }

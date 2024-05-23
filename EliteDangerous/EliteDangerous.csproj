@@ -203,14 +203,14 @@
     <Compile Include="Stats\Outfitting.cs" />
     <Compile Include="MaterialsCommodities\MaterialCommoditiesRecipes.cs" />
     <Compile Include="Ships\ShipModulesInStore.cs" />
-    <Compile Include="Ships\ShipInformationList.cs" />
+    <Compile Include="Ships\ShipList.cs" />
     <Compile Include="Ships\ShipModule.cs" />
     <Compile Include="Items\ItemModules.cs" />
     <Compile Include="NetLogs\NetLogClass.cs" />
     <Compile Include="NetLogs\NetLogReader.cs" />
     <Compile Include="EliteDangerous\Ranks.cs" />
     <Compile Include="Computers\RoutePlotter.cs" />
-    <Compile Include="Ships\ShipInformation.cs" />
+    <Compile Include="Ships\Ship.cs" />
     <Compile Include="Ships\ShipStored.cs" />
     <Compile Include="Ships\ShipYard.cs" />
     <Compile Include="Computers\StarDistanceComputer.cs" />

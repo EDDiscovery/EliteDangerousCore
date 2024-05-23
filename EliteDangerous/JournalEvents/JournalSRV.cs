@@ -32,7 +32,7 @@ namespace EliteDangerousCore.JournalEvents
             SRVType_Localised = evt["SRVType_Localised"].StrNull();
         }
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             shp.DockSRV();
         }
@@ -62,7 +62,7 @@ namespace EliteDangerousCore.JournalEvents
         public string SRVType;          // new odyssey 9, dec 21, may be null
         public string SRVType_Localised; // new odyssey 9, dec 21, may be null
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             shp.LaunchSRV();
         }
@@ -91,7 +91,7 @@ namespace EliteDangerousCore.JournalEvents
             SRVType_Localised = evt["SRVType_Localised"].StrNull();
         }
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             shp.DestroyedSRV();
         }

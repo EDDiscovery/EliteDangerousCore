@@ -41,7 +41,7 @@ namespace EliteDangerousCore
     }
     public interface IShipInformation
     {
-        void ShipInformation(ShipInformationList shp, string whereami, ISystem system);
+        void ShipInformation(ShipList shp, string whereami, ISystem system);
     }
 
     public interface IStarScan

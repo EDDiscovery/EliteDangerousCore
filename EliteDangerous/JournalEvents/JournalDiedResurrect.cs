@@ -172,7 +172,7 @@ namespace EliteDangerousCore.JournalEvents
                 mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Option, -Cost);
         }
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             shp.Resurrect(Option.Equals("free", System.StringComparison.InvariantCultureIgnoreCase));    // if free, we did not rebuy the ship
         }

@@ -103,7 +103,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public List<ShipModule> ShipModules;
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             shp.Loadout(ShipId, Ship, ShipFD, ShipName, ShipIdent, ShipModules, HullValue ?? 0, ModulesValue ?? 0, Rebuy ?? 0,
                                 UnladenMass ?? 0, ReserveFuelCapacity ?? 0, HullHealth ?? 0, Hot);
@@ -191,7 +191,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             shp.ModuleBuy(this, system);
         }
@@ -246,7 +246,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, s + " @ " + Ship, -BuyPrice);
         }
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             shp.ModuleBuyAndStore(this,system);
         }
@@ -300,7 +300,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             shp.ModuleSell(this);
         }
@@ -353,7 +353,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             shp.ModuleSellRemote(this);
         }
@@ -427,7 +427,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             shp.ModuleRetrieve(this,system);
         }
@@ -508,7 +508,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             shp.ModuleStore(this,system);
         }
@@ -570,7 +570,7 @@ namespace EliteDangerousCore.JournalEvents
         public ulong ShipId { get; set; }
         public long? MarketID { get; set; }
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             shp.ModuleSwap(this);
         }
@@ -665,11 +665,11 @@ namespace EliteDangerousCore.JournalEvents
             StarSystem = evt["StarSystem"].Str();
             MarketID = evt["MarketID"].LongNull();
 
-            ModuleItems = evt["Items"]?.ToObjectQ<ModulesInStore.StoredModule[]>();
+            ModuleItems = evt["Items"]?.ToObjectQ<ShipModulesInStore.StoredModule[]>();
 
             if (ModuleItems != null)
             {
-                foreach (ModulesInStore.StoredModule i in ModuleItems)
+                foreach (ShipModulesInStore.StoredModule i in ModuleItems)
                     i.Normalise();
             }
         }
@@ -678,9 +678,9 @@ namespace EliteDangerousCore.JournalEvents
         public string StarSystem { get; set; }
         public long? MarketID { get; set; }
 
-        public ModulesInStore.StoredModule[] ModuleItems { get; set; }
+        public ShipModulesInStore.StoredModule[] ModuleItems { get; set; }
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             shp.UpdateStoredModules(this);
         }
@@ -692,7 +692,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (ModuleItems != null)
             {
-                foreach (ModulesInStore.StoredModule m in ModuleItems)
+                foreach (ShipModulesInStore.StoredModule m in ModuleItems)
                 {
                     detailed = detailed.AppendPrePad(BaseUtils.FieldBuilder.Build("", JournalFieldNaming.GetForeignModuleName(m.NameFD,m.Name_Localised), "< at ".T(EDCTx.JournalStoredModules_at), m.StarSystem,
                                 "Transfer Cost: ; cr;N0".T(EDCTx.JournalEntry_TransferCost), m.TransferCost,
@@ -734,7 +734,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public ModuleItem[] ModuleItems { get; set; }
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             shp.MassModuleStore(this,system);
         }

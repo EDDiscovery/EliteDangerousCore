@@ -33,7 +33,7 @@ namespace EliteDangerousCore
         public EngineerCrafting Engineering { get; private set; } = new EngineerCrafting();
         public CarrierStats Carrier { get; private set; } = new CarrierStats();
         public Ledger CashLedger { get; private set; } = new Ledger();       // and the ledger..
-        public ShipInformationList ShipInformationList { get; private set; } = new ShipInformationList();     // ship info
+        public ShipList ShipInformationList { get; private set; } = new ShipList();     // ship info
         public ShipYardList Shipyards { get; private set; } = new ShipYardList(); // yards in space (not meters)
         public OutfittingList Outfitting { get; private set; } = new OutfittingList();        // outfitting on stations
         public StarScan StarScan { get; private set; } = new StarScan();      // the results of scanning
@@ -84,7 +84,7 @@ namespace EliteDangerousCore
 
             Carrier.Process(je,he.Status.OnFootFleetCarrier);
 
-            Tuple<ShipInformation, ModulesInStore> ret = ShipInformationList.Process(je, he.WhereAmI, he.System);
+            Tuple<Ship, ShipModulesInStore> ret = ShipInformationList.Process(je, he.WhereAmI, he.System);
             he.UpdateShipInformation(ret.Item1);
             he.UpdateShipStoredModules(ret.Item2);
 

@@ -261,7 +261,7 @@ namespace EliteDangerousCore.Spansh
         }
 
         public string RequestGalaxyPlotter(string source, string destination, int cargo, bool is_supercharged, bool use_supercharge, bool use_injections, bool exclude_secondary,
-                                        ShipInformation si, string algorithm = "optimistic")
+                                        Ship si, string algorithm = "optimistic")
         {
             var fsdspec = si.GetFSDSpec();
             var json = new JArray();

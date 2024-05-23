@@ -173,7 +173,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void ShipInformation(ShipInformationList shp, string whereami, ISystem system)
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             if (InShipSRVOrFighter)        // only call if in these types from 4.0 we can be on foot or in a taxi
                 shp.LoadGame(ShipId, Ship, ShipFD, ShipName, ShipIdent, FuelLevel, FuelCapacity);

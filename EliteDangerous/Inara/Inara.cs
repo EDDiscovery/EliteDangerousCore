@@ -251,7 +251,7 @@ namespace EliteDangerousCore.Inara
         }
 
 
-        static public JToken setCommanderStorageModules(IEnumerable<ModulesInStore.StoredModule> list, DateTime dt)
+        static public JToken setCommanderStorageModules(IEnumerable<ShipModulesInStore.StoredModule> list, DateTime dt)
         {
             JObject eventData = new JObject();
             JArray items = new JArray();

@@ -94,7 +94,7 @@ namespace EliteDangerousCore
             }
         }
 
-        public class Suit : IModuleInfo
+        public class Suit 
         {
             public string Type;
             public int Class;
