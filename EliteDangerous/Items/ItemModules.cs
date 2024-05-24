@@ -371,6 +371,7 @@ namespace EliteDangerousCore
             public bool IsBuyable { get { return !(ModType < ModuleTypes.DiscoveryScanner); } }
 
             public bool IsShieldGenerator { get { return ModType == ModuleTypes.PrismaticShieldGenerator || ModType == ModuleTypes.Bi_WeaveShieldGenerator || ModType == ModuleTypes.ShieldGenerator; } }
+            public bool IsPowerDistributor { get { return ModType == ModuleTypes.PowerDistributor; } }
 
             // string should be in spansh/EDCD csv compatible format, in english, as it it fed into Spansh
             public string EnglishModTypeString { get { return ModType.ToString().Replace("AX", "AX ").Replace("_", "-").SplitCapsWordFull(); } }
@@ -380,14 +381,14 @@ namespace EliteDangerousCore
 
             public int? Class { get; set; }     // handled specifically
             public string Rating { get; set; }
-            [PropertyNameAttribute("t")] public double? Mass { get; set; }        // mass of module t
-            [PropertyNameAttribute("MW")] public double? Power { get; set; }       // power used by module MW
-            [PropertyNameAttribute("")] public string Mount { get; set; }
-            [PropertyNameAttribute("")] public int? Ammo { get; set; }
-            [PropertyNameAttribute("")] public int? Clip { get; set; }
+            [PropertyNameAttribute("t")] public double? Mass { get; set; }                  // 'mass' of module t
+            [PropertyNameAttribute("MW")] public double? Power { get; set; }                // 'pwrdraw'
+            [PropertyNameAttribute("")] public string Mount { get; set; }                   // 'mount'
+            [PropertyNameAttribute("")] public int? Ammo { get; set; }          
+            [PropertyNameAttribute("")] public int? Clip { get; set; }          
             [PropertyNameAttribute("")] public string MissileType { get; set; }
-            [PropertyNameAttribute("")] public string CabinClass { get; set; }
-            [PropertyNameAttribute("")] public double? Integrity { get; set; }  // units
+            [PropertyNameAttribute("")] public string CabinClass { get; set; }              // 'cabincls'
+            [PropertyNameAttribute("")] public double? Integrity { get; set; }  // units 'integ'
             [PropertyNameAttribute("")] public double? Damage { get; set; }
             [PropertyNameAttribute("/s")] public double? DPS { get; set; } // /s
             [PropertyNameAttribute("s")] public double? ReloadTime { get; set; } // s
@@ -400,8 +401,8 @@ namespace EliteDangerousCore
             [PropertyNameAttribute("%")] public double? HullStrengthBonus { get; set; }  // % bonus over the ship information armour value
             [PropertyNameAttribute("")] public double? HullReinforcement { get; set; } // units
             [PropertyNameAttribute("")] public double? ShieldReinforcement { get; set; } // units
-            [PropertyNameAttribute("/s")] public double? RegenRate { get; set; } // units/s
-            [PropertyNameAttribute("/s")] public double? BrokenRegenRate { get; set; } // units/s
+            [PropertyNameAttribute("/s")] public double? RegenRate { get; set; }                                // 'genrate' units/s
+            [PropertyNameAttribute("/s")] public double? BrokenRegenRate { get; set; }                          // 'bgenrate' units/s
             [PropertyNameAttribute("")] public double? MinStrength { get; set; } // shields
             [PropertyNameAttribute("")] public double? OptStrength { get; set; } // shields
             [PropertyNameAttribute("")] public double? MaxStrength { get; set; } // shields
@@ -413,7 +414,7 @@ namespace EliteDangerousCore
             [PropertyNameAttribute("s")] public double? HackTime { get; set; }// hatch breaker limpet
             [PropertyNameAttribute("")] public int? Limpets { get; set; }// collector controllers
             [PropertyNameAttribute("deg")] public double? Angle { get; set; } // angle
-            [PropertyNameAttribute("m")] public double? Range { get; set; } // m
+            [PropertyNameAttribute("m")] public double? Range { get; set; }                                     // 'maximumrng' 'lpactrng' 'ecmrng' 'barrierrng' 'scanrng' 'maxrng'
             [PropertyNameAttribute("m")] public double? Falloff { get; set; } // m weapon fall off distance
             [PropertyNameAttribute("m")] public double? TargetRange { get; set; } // m w
             [PropertyNameAttribute("s")] public double? BurstInterval { get; set; } // s weapon
@@ -422,47 +423,47 @@ namespace EliteDangerousCore
             [PropertyNameAttribute("deg")] public double? Jitter { get; set; } 
             [PropertyNameAttribute("m/s")] public double? Speed { get; set; } // m/s
             [PropertyNameAttribute("")] public double? Protection { get; set; } // multiplier
-            [PropertyNameAttribute("MW/s")] public double? SystemsRechargeRate { get; set; } // power distributor rate MW/s
-            [PropertyNameAttribute("MW/s")] public double? EngineRechargeRate { get; set; } // power distributor rate MW/s
-            [PropertyNameAttribute("MW/s")] public double? WeaponsRechargeRate { get; set; } // power distributor rate MW/s
-            [PropertyNameAttribute("MW")] public double? SystemsCapacity { get; set; } // max MW power distributor
-            [PropertyNameAttribute("MW")] public double? EngineCapacity { get; set; } // max MW power distributor
-            [PropertyNameAttribute("MW")] public double? WeaponsCapacity { get; set; } // max MW power distributor
+            [PropertyNameAttribute("MW/s")] public double? SystemsRechargeRate { get; set; }            // 'syschg' power distributor rate MW/s
+            [PropertyNameAttribute("MW/s")] public double? EngineRechargeRate { get; set; }             // 'engchg' power distributor rate MW/s
+            [PropertyNameAttribute("MW/s")] public double? WeaponsRechargeRate { get; set; }            // 'wepchg' power distributor rate MW/s
+            [PropertyNameAttribute("MW")] public double? SystemsCapacity { get; set; }                  // 'syscap' max MW power distributor
+            [PropertyNameAttribute("MW")] public double? EngineCapacity { get; set; }                   // 'engcap' max MW power distributor
+            [PropertyNameAttribute("MW")] public double? WeaponsCapacity { get; set; }                  // 'wepcap' max MW power distributor
             [PropertyNameAttribute("%")] public double? PowerBonus { get; set; } // guardian power bonus
             [PropertyNameAttribute("MW")] public double? PowerGen { get; set; } // MW power plant
-            [PropertyNameAttribute("MW/u")] public double? MWPerUnit { get; set; } // MW per shield unit
+            [PropertyNameAttribute("MW/u")] public double? MWPerUnit { get; set; }                  // 'genpwr' MW per shield unit
             [PropertyNameAttribute("MW/s")] public double? MWPerSec { get; set; } // MW per sec
-            [PropertyNameAttribute("t")] public double? OptMass { get; set; } // t
-            [PropertyNameAttribute("t")] public double? MaxMass { get; set; } // t
-            [PropertyNameAttribute("t")] public double? MinMass { get; set; } // t
-            [PropertyNameAttribute("")] public double? EngineOptMultiplier { get; set; }
-            [PropertyNameAttribute("")] public double? EngineMinMultiplier { get; set; }
-            [PropertyNameAttribute("")] public double? EngineMaxMultiplier { get; set; }
+            [PropertyNameAttribute("t")] public double? MinMass { get; set; }                       // 'fsdminmass' 'genminmass' 'engminmass'
+            [PropertyNameAttribute("t")] public double? OptMass { get; set; }                       // 'fsdoptmass' 'genoptmass' 'engoptmass'
+            [PropertyNameAttribute("t")] public double? MaxMass { get; set; }                       // 'fsdmaxmass' 'genmaxmass' 'engmaxmass'
+            [PropertyNameAttribute("")] public double? EngineMinMultiplier { get; set; }            // 'engminmul'
+            [PropertyNameAttribute("")] public double? EngineOptMultiplier { get; set; }            // 'engoptmul'
+            [PropertyNameAttribute("")] public double? EngineMaxMultiplier { get; set; }            // 'engmaxmul'
             [PropertyNameAttribute("s")] public double? SCBSpinUp { get; set; }
             [PropertyNameAttribute("s")] public double? SCBDuration { get; set; }
 
             [PropertyNameAttribute("")] public int? Prisoners { get; set; }
             [PropertyNameAttribute("")] public int? Passengers { get; set; }
-            [PropertyNameAttribute("")] public int? Capacity { get; set; }
-            [PropertyNameAttribute("t")] public int? Size { get; set; } // tons
+            [PropertyNameAttribute("")] public int? Capacity { get; set; }                          // 'bins' 'vslots'
+            [PropertyNameAttribute("t")] public int? Size { get; set; }                             // 'cargocap' 'fuelcap'
             [PropertyNameAttribute("/s")] public double? RefillRate { get; set; } // t/s
-            [PropertyNameAttribute("s")] public double? Time { get; set; } // s
-            [PropertyNameAttribute("")] public int? Rebuilds { get; set; } // number
+            [PropertyNameAttribute("s")] public double? Time { get; set; }                          // 'jamdir' 'ecmdur' 'hsdur' 'duration' 'emgcylife' 'limpettime' 'scantime' 'barrierdur'
+            [PropertyNameAttribute("")] public int? Rebuilds { get; set; }                          // 'vcount'
 
             [PropertyNameAttribute("")] public double? PowerConstant { get; set; } // Number
             [PropertyNameAttribute("")] public double? LinearConstant { get; set; } // Number
             [PropertyNameAttribute("t")] public double? MaxFuelPerJump { get; set; } // t
 
-            [PropertyNameAttribute("%")] public double? SCOSpeedIncrease { get; set; }  // %
-            [PropertyNameAttribute("")] public double? SCOAccelerationRate { get; set; }  // factor
-            [PropertyNameAttribute("")] public double? SCOHeatGenerationRate { get; set; }  // factor
-            [PropertyNameAttribute("")] public double? SCOControlInterference { get; set; }  // factor
+            [PropertyNameAttribute("%")] public double? SCOSpeedIncrease { get; set; }              // 'scospd' %
+            [PropertyNameAttribute("")] public double? SCOAccelerationRate { get; set; }            // 'scoacc' factor
+            [PropertyNameAttribute("")] public double? SCOHeatGenerationRate { get; set; }          // 'scoheat' factor
+            [PropertyNameAttribute("")] public double? SCOControlInterference { get; set; }         // 'scoconint' factor
 
             [PropertyNameAttribute("ly")] public double? AdditionalRange { get; set; } // ly
 
             [PropertyNameAttribute("")] public double? SCBHeat { get; set; } // waste heat
 
-            [PropertyNameAttribute("s")] public double? BootTime { get; set; } // seconds
+            [PropertyNameAttribute("s")] public double? BootTime { get; set; }                      // 'boottime'
             [PropertyNameAttribute("u/s")] public double? RateOfRepairConsumption { get; set; }
             [PropertyNameAttribute("i/m")] public double? RepairCostPerMat { get; set; }
 
@@ -474,7 +475,7 @@ namespace EliteDangerousCore
             [PropertyNameAttribute("%")] public double? ProportionThermal { get; set; }
             [PropertyNameAttribute("%")] public double? ProportionKinetic { get; set; }
             [PropertyNameAttribute("")] public double? Pierce { get; set; }
-            [PropertyNameAttribute("MW/Shot_or_s")] public double? DistributorDraw { get; set; }
+            [PropertyNameAttribute("MW/Shot_or_s")] public double? DistributorDraw { get; set; }    // 'distdraw'
             [PropertyNameAttribute("%")] public double? ExplosiveProportion { get; set; }
             [PropertyNameAttribute("%")] public double? KineticProportion { get; set; }
             [PropertyNameAttribute("%")] public double? ThermalProportion { get; set; }
@@ -550,12 +551,6 @@ namespace EliteDangerousCore
                 return output.ToString();
             }
 
-            public EliteDangerousCalculations.FSDSpec GetFSDSpec()
-            {
-                System.Diagnostics.Debug.Assert(LinearConstant != null && PowerConstant != null && MaxFuelPerJump != null && OptMass != null);
-                var fsd = new EliteDangerousCalculations.FSDSpec(PowerConstant.Value, LinearConstant.Value, OptMass.Value, MaxFuelPerJump.Value);
-                return fsd;
-            }
             public ShipModule(int id, ModuleTypes modtype, string descr)
             {
                 ModuleID = id; TranslatedModName = EnglishModName = descr; ModType = modtype;

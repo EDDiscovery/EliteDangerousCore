@@ -95,19 +95,19 @@ namespace EliteDangerousCore
             }
 
             // boost is multiplier due to neutron (4), jet cone (1.5), or synthesis (1.25/1.5/2)
-            public JumpInfo GetJumpInfo(int cargo, double mass, double currentfuel,double avgfuel, double boost)
+            public JumpInfo GetJumpInfo(int cargo, double mass, double currentfuel, double avgfuel, double boost)
             {
                 JumpInfo jid = new JumpInfo();
                 jid.cursinglejump = JumpRange(cargo, mass, currentfuel, boost);
                 jid.curfumessinglejump = JumpRange(cargo, mass, MaxFuelPerJump, boost);
                 jid.unladenmaxsinglejump = JumpRange(0, mass, MaxFuelPerJump, boost);
-                jid.avgsinglejump = JumpRange(cargo, mass, avgfuel , boost);
+                jid.avgsinglejump = JumpRange(cargo, mass, avgfuel, boost);
                 jid.avgsinglejumpnocargo = JumpRange(0, mass, avgfuel, boost);
                 jid.maxjumprange = CalculateMaxJumpDistance(cargo, mass, currentfuel, out jid.maxjumps);
                 return jid;
             }
 
-            private double CalculateMaxJumpDistance(double cargo, double unladenmass, double fuel, out double jumps)
+            public double CalculateMaxJumpDistance(double cargo, double unladenmass, double fuel, out double jumps)
             {
                 double fr = fuel % MaxFuelPerJump;                // fraction of fuel left.. up to maximum of fuel per jump
 

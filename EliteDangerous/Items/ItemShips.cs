@@ -21,6 +21,34 @@ namespace EliteDangerousCore
 {
     public partial class ItemData
     {
+        public class ShipProperties
+        {
+            public string FDID { get; set; }
+            public string EDCDID { get; set; }
+            public string Manufacturer { get; set; }
+            public double HullMass { get; set; }
+            public string Name { get; set; }
+            public int HullCost { get; set; }
+            public int Class { get; set; }
+            public int Shields { get; set; }
+            public int Armour { get; set; }
+            public double Speed { get; set; }
+            public int Boost { get; set; }
+            public int BoostCost { get; set; }
+            public double FuelCost { get; set; }
+            public double FuelReserve { get; set; }
+            public int Hardness { get; set; }
+            public int Crew { get; set; }
+            public double MinThrust { get; set; }
+            public double HeatCap { get; set; }
+            public double HeatDispMin { get; set; }
+            public double HeatDispMax { get; set; }
+            public double FwdAcc { get; set; }
+            public double RevAcc { get; set; }
+            public double LatAcc { get; set; }
+
+            public string ClassString { get { return Class == 1 ? "Small" : Class == 2 ? "Medium" : "Large"; } }
+        }
         static public bool IsTaxi(string shipfdname)       // If a taxi
         {
             return shipfdname.Contains("_taxi", StringComparison.InvariantCultureIgnoreCase);
@@ -52,26 +80,6 @@ namespace EliteDangerousCore
         }
 
 
-        public class ShipProperties
-        {
-            public string FDID { get; set; }
-            public string EDCDID { get; set; }
-            public string Manufacturer { get; set; }
-            public double HullMass { get; set; }
-            public string Name { get; set; }
-            public double Speed { get; set; }
-            public int Boost { get; set; }
-            public int HullCost { get; set; }
-            public int Class { get; set; }
-            public int Shields { get; set; }
-            public int Armour { get; set; }
-            public int BoostCost { get; set; }
-            public double FuelReserve { get; set; }
-            public int Hardness { get; set; }
-            public int Crew { get; set; }
-
-            public string ClassString { get { return Class == 1 ? "Small" : Class == 2 ? "Medium" : "Large"; } }
-        }
 
         // get properties of a ship, case insensitive, may be null
         static public ShipProperties GetShipProperties(string fdshipname)        
@@ -189,6 +197,8 @@ namespace EliteDangerousCore
             viper_mkiv.EDCDID = "Viper MkIV";
         }
 
+
+    
         private static ShipProperties sidewinder = new ShipProperties()
         {
             FDID = "SideWinder",
@@ -202,10 +212,18 @@ namespace EliteDangerousCore
             Class = 1,
             Shields = 40,
             Armour = 60,
+            MinThrust = 45.454,
             BoostCost = 7,
             FuelReserve = 0.3,
+            HeatCap = 140,
+            HeatDispMin = 1.18,
+            HeatDispMax = 18.15,
+            FuelCost = 50,
             Hardness = 20,
-            Crew = 1
+            Crew = 1,
+            FwdAcc = 44.39,
+            RevAcc = 29.96,
+            LatAcc = 29.96
         };
 
         private static ShipProperties eagle = new ShipProperties()
@@ -221,10 +239,18 @@ namespace EliteDangerousCore
             Class = 1,
             Shields = 60,
             Armour = 40,
+            MinThrust = 75,
             BoostCost = 8,
             FuelReserve = 0.34,
+            HeatCap = 165,
+            HeatDispMin = 1.38,
+            HeatDispMax = 21.48,
+            FuelCost = 50,
             Hardness = 28,
-            Crew = 1
+            Crew = 1,
+            FwdAcc = 43.97,
+            RevAcc = 29.97,
+            LatAcc = 29.86
         };
 
         private static ShipProperties hauler = new ShipProperties()
@@ -240,10 +266,18 @@ namespace EliteDangerousCore
             Class = 1,
             Shields = 50,
             Armour = 100,
+            MinThrust = 35,
             BoostCost = 7,
             FuelReserve = 0.25,
+            HeatCap = 123,
+            HeatDispMin = 1.06,
+            HeatDispMax = 16.2,
+            FuelCost = 50,
             Hardness = 20,
-            Crew = 1
+            Crew = 1,
+            FwdAcc = 39.87,
+            RevAcc = 29.95,
+            LatAcc = 29.95
         };
 
         private static ShipProperties adder = new ShipProperties()
@@ -259,10 +293,18 @@ namespace EliteDangerousCore
             Class = 1,
             Shields = 60,
             Armour = 90,
+            MinThrust = 45.454,
             BoostCost = 8,
             FuelReserve = 0.36,
+            HeatCap = 170,
+            HeatDispMin = 1.45,
+            HeatDispMax = 22.6,
+            FuelCost = 50,
             Hardness = 35,
-            Crew = 2
+            Crew = 2,
+            FwdAcc = 39.41,
+            RevAcc = 27.73,
+            LatAcc = 27.86
         };
 
         private static ShipProperties empire_eagle = new ShipProperties()
@@ -278,10 +320,18 @@ namespace EliteDangerousCore
             Class = 1,
             Shields = 80,
             Armour = 60,
+            MinThrust = 70,
             BoostCost = 8,
             FuelReserve = 0.37,
+            HeatCap = 163,
+            HeatDispMin = 1.5,
+            HeatDispMax = 21.2,
+            FuelCost = 50,
             Hardness = 28,
-            Crew = 1
+            Crew = 1,
+            FwdAcc = 34.54,
+            RevAcc = 27.84,
+            LatAcc = 27.84
         };
 
         private static ShipProperties viper = new ShipProperties()
@@ -297,10 +347,18 @@ namespace EliteDangerousCore
             Class = 1,
             Shields = 105,
             Armour = 70,
+            MinThrust = 62.5,
             BoostCost = 10,
             FuelReserve = 0.41,
+            HeatCap = 195,
+            HeatDispMin = 1.69,
+            HeatDispMax = 26.2,
+            FuelCost = 50,
             Hardness = 35,
-            Crew = 1
+            Crew = 1,
+            FwdAcc = 53.98,
+            RevAcc = 29.7,
+            LatAcc = 24.95
         };
 
         private static ShipProperties cobramkiii = new ShipProperties()
@@ -316,10 +374,18 @@ namespace EliteDangerousCore
             Class = 1,
             Shields = 80,
             Armour = 120,
+            MinThrust = 50,
             BoostCost = 10,
             FuelReserve = 0.49,
+            HeatCap = 225,
+            HeatDispMin = 1.92,
+            HeatDispMax = 30.63,
+            FuelCost = 50,
             Hardness = 35,
-            Crew = 2
+            Crew = 2,
+            FwdAcc = 35.03,
+            RevAcc = 25.16,
+            LatAcc = 20.02
         };
 
         private static ShipProperties viper_mkiv = new ShipProperties()
@@ -335,10 +401,18 @@ namespace EliteDangerousCore
             Class = 1,
             Shields = 150,
             Armour = 150,
+            MinThrust = 64.815,
             BoostCost = 10,
             FuelReserve = 0.46,
+            HeatCap = 209,
+            HeatDispMin = 1.82,
+            HeatDispMax = 28.98,
+            FuelCost = 50,
             Hardness = 35,
-            Crew = 1
+            Crew = 1,
+            FwdAcc = 53.84,
+            RevAcc = 30.14,
+            LatAcc = 24.97
         };
 
         private static ShipProperties diamondback = new ShipProperties()
@@ -354,10 +428,18 @@ namespace EliteDangerousCore
             Class = 1,
             Shields = 120,
             Armour = 120,
+            MinThrust = 60.714,
             BoostCost = 10,
             FuelReserve = 0.49,
+            HeatCap = 346,
+            HeatDispMin = 2.42,
+            HeatDispMax = 48.05,
+            FuelCost = 50,
             Hardness = 40,
-            Crew = 1
+            Crew = 1,
+            FwdAcc = 39.57,
+            RevAcc = 29.82,
+            LatAcc = 25.19
         };
 
         private static ShipProperties cobramkiv = new ShipProperties()
@@ -373,10 +455,18 @@ namespace EliteDangerousCore
             Class = 1,
             Shields = 120,
             Armour = 120,
+            MinThrust = 50,
             BoostCost = 10,
             FuelReserve = 0.51,
+            HeatCap = 228,
+            HeatDispMin = 1.99,
+            HeatDispMax = 31.68,
+            FuelCost = 50,
             Hardness = 35,
-            Crew = 2
+            Crew = 2,
+            FwdAcc = 27.84,
+            RevAcc = 19.91,
+            LatAcc = 15.03
         };
 
         private static ShipProperties type6 = new ShipProperties()
@@ -392,10 +482,18 @@ namespace EliteDangerousCore
             Class = 2,
             Shields = 90,
             Armour = 180,
+            MinThrust = 40.909,
             BoostCost = 10,
             FuelReserve = 0.39,
+            HeatCap = 179,
+            HeatDispMin = 1.7,
+            HeatDispMax = 24.55,
+            FuelCost = 50,
             Hardness = 35,
-            Crew = 1
+            Crew = 1,
+            FwdAcc = 20.1,
+            RevAcc = 14.96,
+            LatAcc = 15.07
         };
 
         private static ShipProperties dolphin = new ShipProperties()
@@ -411,10 +509,18 @@ namespace EliteDangerousCore
             Class = 1,
             Shields = 110,
             Armour = 110,
+            MinThrust = 48,
             BoostCost = 10,
             FuelReserve = 0.5,
+            HeatCap = 245,
+            HeatDispMin = 1.91,
+            HeatDispMax = 56,
+            FuelCost = 50,
             Hardness = 35,
-            Crew = 1
+            Crew = 1,
+            FwdAcc = 39.63,
+            RevAcc = 30.01,
+            LatAcc = 14.97
         };
 
         private static ShipProperties diamondbackxl = new ShipProperties()
@@ -430,10 +536,18 @@ namespace EliteDangerousCore
             Class = 1,
             Shields = 150,
             Armour = 150,
+            MinThrust = 61.538,
             BoostCost = 13,
             FuelReserve = 0.52,
+            HeatCap = 351,
+            HeatDispMin = 2.46,
+            HeatDispMax = 50.55,
+            FuelCost = 50,
             Hardness = 42,
-            Crew = 1
+            Crew = 1,
+            FwdAcc = 34.63,
+            RevAcc = 25.06,
+            LatAcc = 19.89
         };
 
         private static ShipProperties empire_courier = new ShipProperties()
@@ -449,10 +563,18 @@ namespace EliteDangerousCore
             Class = 1,
             Shields = 200,
             Armour = 80,
+            MinThrust = 78.571,
             BoostCost = 10,
             FuelReserve = 0.41,
+            HeatCap = 230,
+            HeatDispMin = 1.62,
+            HeatDispMax = 25.05,
+            FuelCost = 50,
             Hardness = 30,
-            Crew = 1
+            Crew = 1,
+            FwdAcc = 57.53,
+            RevAcc = 30.02,
+            LatAcc = 24.88
         };
 
         private static ShipProperties independant_trader = new ShipProperties()
@@ -468,10 +590,18 @@ namespace EliteDangerousCore
             Class = 2,
             Shields = 135,
             Armour = 270,
+            MinThrust = 45,
             BoostCost = 10,
             FuelReserve = 0.39,
+            HeatCap = 215,
+            HeatDispMin = 1.87,
+            HeatDispMax = 29.78,
+            FuelCost = 50,
             Hardness = 45,
-            Crew = 2
+            Crew = 2,
+            FwdAcc = 20.22,
+            RevAcc = 15.07,
+            LatAcc = 15.03
         };
 
         private static ShipProperties asp_scout = new ShipProperties()
@@ -487,10 +617,18 @@ namespace EliteDangerousCore
             Class = 2,
             Shields = 120,
             Armour = 180,
+            MinThrust = 50,
             BoostCost = 13,
             FuelReserve = 0.47,
+            HeatCap = 210,
+            HeatDispMin = 1.8,
+            HeatDispMax = 29.65,
+            FuelCost = 50,
             Hardness = 52,
-            Crew = 2
+            Crew = 2,
+            FwdAcc = 35.02,
+            RevAcc = 20.1,
+            LatAcc = 20.03
         };
 
         private static ShipProperties vulture = new ShipProperties()
@@ -506,10 +644,18 @@ namespace EliteDangerousCore
             Class = 1,
             Shields = 240,
             Armour = 160,
+            MinThrust = 90.476,
             BoostCost = 16,
             FuelReserve = 0.57,
+            HeatCap = 237,
+            HeatDispMin = 1.87,
+            HeatDispMax = 35.63,
+            FuelCost = 50,
             Hardness = 55,
-            Crew = 2
+            Crew = 2,
+            FwdAcc = 39.55,
+            RevAcc = 29.88,
+            LatAcc = 19.98
         };
 
         private static ShipProperties asp = new ShipProperties()
@@ -525,10 +671,18 @@ namespace EliteDangerousCore
             Class = 2,
             Shields = 140,
             Armour = 210,
+            MinThrust = 48,
             BoostCost = 13,
             FuelReserve = 0.63,
+            HeatCap = 272,
+            HeatDispMin = 2.34,
+            HeatDispMax = 39.9,
+            FuelCost = 50,
             Hardness = 52,
-            Crew = 2
+            Crew = 2,
+            FwdAcc = 23.64,
+            RevAcc = 15.04,
+            LatAcc = 14.97
         };
 
         private static ShipProperties federation_dropship = new ShipProperties()
@@ -544,10 +698,18 @@ namespace EliteDangerousCore
             Class = 2,
             Shields = 200,
             Armour = 300,
+            MinThrust = 55.556,
             BoostCost = 19,
             FuelReserve = 0.83,
+            HeatCap = 331,
+            HeatDispMin = 2.6,
+            HeatDispMax = 46.5,
+            FuelCost = 50,
             Hardness = 60,
-            Crew = 2
+            Crew = 2,
+            FwdAcc = 29.99,
+            RevAcc = 20.34,
+            LatAcc = 10.19
         };
 
         private static ShipProperties type7 = new ShipProperties()
@@ -563,10 +725,18 @@ namespace EliteDangerousCore
             Class = 3,
             Shields = 156,
             Armour = 340,
+            MinThrust = 33.333,
             BoostCost = 10,
             FuelReserve = 0.52,
+            HeatCap = 226,
+            HeatDispMin = 2.17,
+            HeatDispMax = 32.45,
+            FuelCost = 50,
             Hardness = 54,
-            Crew = 1
+            Crew = 1,
+            FwdAcc = 20.11,
+            RevAcc = 15.02,
+            LatAcc = 15.13
         };
 
         private static ShipProperties typex = new ShipProperties()
@@ -582,10 +752,18 @@ namespace EliteDangerousCore
             Class = 2,
             Shields = 200,
             Armour = 280,
+            MinThrust = 65.217,
             BoostCost = 19,
             FuelReserve = 0.77,
+            HeatCap = 289,
+            HeatDispMin = 2.6,
+            HeatDispMax = 46.5,
+            FuelCost = 50,
             Hardness = 65,
-            Crew = 2
+            Crew = 2,
+            FwdAcc = 37.84,
+            RevAcc = 25.84,
+            LatAcc = 20.01
         };
 
         private static ShipProperties federation_dropship_mkii = new ShipProperties()
@@ -601,10 +779,18 @@ namespace EliteDangerousCore
             Class = 2,
             Shields = 200,
             Armour = 300,
+            MinThrust = 71.429,
             BoostCost = 19,
             FuelReserve = 0.72,
+            HeatCap = 286,
+            HeatDispMin = 2.53,
+            HeatDispMax = 45.23,
+            FuelCost = 50,
             Hardness = 60,
-            Crew = 2
+            Crew = 2,
+            FwdAcc = 39.81,
+            RevAcc = 20.04,
+            LatAcc = 15.07
         };
 
         private static ShipProperties empire_trader = new ShipProperties()
@@ -620,10 +806,18 @@ namespace EliteDangerousCore
             Class = 3,
             Shields = 180,
             Armour = 270,
+            MinThrust = 60,
             BoostCost = 19,
             FuelReserve = 0.74,
+            HeatCap = 304,
+            HeatDispMin = 2.63,
+            HeatDispMax = 46.8,
+            FuelCost = 50,
             Hardness = 60,
-            Crew = 2
+            Crew = 2,
+            FwdAcc = 24.74,
+            RevAcc = 20.05,
+            LatAcc = 10.1
         };
 
         private static ShipProperties typex_2 = new ShipProperties()
@@ -639,10 +833,18 @@ namespace EliteDangerousCore
             Class = 2,
             Shields = 200,
             Armour = 300,
+            MinThrust = 61.11,
             BoostCost = 19,
             FuelReserve = 0.77,
+            HeatCap = 316,
+            HeatDispMin = 2.53,
+            HeatDispMax = 45.23,
+            FuelCost = 50,
             Hardness = 65,
-            Crew = 3
+            Crew = 3,
+            FwdAcc = 29.78,
+            RevAcc = 24.78,
+            LatAcc = 18.96
         };
 
         private static ShipProperties typex_3 = new ShipProperties()
@@ -658,10 +860,18 @@ namespace EliteDangerousCore
             Class = 2,
             Shields = 220,
             Armour = 300,
+            MinThrust = 65,
             BoostCost = 19,
             FuelReserve = 0.77,
+            HeatCap = 316,
+            HeatDispMin = 2.87,
+            HeatDispMax = 51.4,
+            FuelCost = 50,
             Hardness = 65,
-            Crew = 2
+            Crew = 2,
+            FwdAcc = 31.65,
+            RevAcc = 25.94,
+            LatAcc = 20.09
         };
 
         private static ShipProperties federation_gunship = new ShipProperties()
@@ -677,10 +887,18 @@ namespace EliteDangerousCore
             Class = 2,
             Shields = 250,
             Armour = 350,
+            MinThrust = 58.824,
             BoostCost = 23,
             FuelReserve = 0.82,
+            HeatCap = 325,
+            HeatDispMin = 2.87,
+            HeatDispMax = 51.4,
+            FuelCost = 50,
             Hardness = 60,
-            Crew = 2
+            Crew = 2,
+            FwdAcc = 24.61,
+            RevAcc = 17.83,
+            LatAcc = 10.08
         };
 
         private static ShipProperties krait_light = new ShipProperties()
@@ -696,10 +914,18 @@ namespace EliteDangerousCore
             Class = 2,
             Shields = 200,
             Armour = 180,
+            MinThrust = 64,
             BoostCost = 13,
             FuelReserve = 0.63,
+            HeatCap = 300,
+            HeatDispMin = 2.68,
+            HeatDispMax = 52.05,
+            FuelCost = 50,
             Hardness = 60,
-            Crew = 2
+            Crew = 2,
+            FwdAcc = -999,
+            RevAcc = -999,
+            LatAcc = -999
         };
 
         private static ShipProperties krait_mkii = new ShipProperties()
@@ -715,10 +941,18 @@ namespace EliteDangerousCore
             Class = 2,
             Shields = 220,
             Armour = 220,
+            MinThrust = 62.5,
             BoostCost = 13,
             FuelReserve = 0.63,
+            HeatCap = 300,
+            HeatDispMin = 2.68,
+            HeatDispMax = 52.05,
+            FuelCost = 50,
             Hardness = 55,
-            Crew = 3
+            Crew = 3,
+            FwdAcc = 28.01,
+            RevAcc = 18.04,
+            LatAcc = 15.12
         };
 
         private static ShipProperties orca = new ShipProperties()
@@ -734,10 +968,18 @@ namespace EliteDangerousCore
             Class = 3,
             Shields = 220,
             Armour = 220,
+            MinThrust = 66.667,
             BoostCost = 16,
             FuelReserve = 0.79,
+            HeatCap = 262,
+            HeatDispMin = 2.3,
+            HeatDispMax = 42.68,
+            FuelCost = 50,
             Hardness = 55,
-            Crew = 2
+            Crew = 2,
+            FwdAcc = 29.66,
+            RevAcc = 25.08,
+            LatAcc = 19.95
         };
 
         private static ShipProperties ferdelance = new ShipProperties()
@@ -753,10 +995,18 @@ namespace EliteDangerousCore
             Class = 2,
             Shields = 300,
             Armour = 225,
+            MinThrust = 84.615,
             BoostCost = 19,
             FuelReserve = 0.67,
+            HeatCap = 224,
+            HeatDispMin = 2.05,
+            HeatDispMax = 41.63,
+            FuelCost = 50,
             Hardness = 70,
-            Crew = 2
+            Crew = 2,
+            FwdAcc = 29.31,
+            RevAcc = 24.34,
+            LatAcc = 20.04
         };
 
         private static ShipProperties mamba = new ShipProperties()
@@ -772,10 +1022,18 @@ namespace EliteDangerousCore
             Class = 2,
             Shields = 270,
             Armour = 230,
+            MinThrust = 77.42,
             BoostCost = 16,
             FuelReserve = 0.5,
+            HeatCap = 165,
+            HeatDispMin = 2.05,
+            HeatDispMax = 41.63,
+            FuelCost = 50,
             Hardness = 70,
-            Crew = 2
+            Crew = 2,
+            FwdAcc = -999,
+            RevAcc = -999,
+            LatAcc = -999
         };
 
         private static ShipProperties python = new ShipProperties()
@@ -791,10 +1049,18 @@ namespace EliteDangerousCore
             Class = 2,
             Shields = 260,
             Armour = 260,
+            MinThrust = 60.87,
             BoostCost = 23,
             FuelReserve = 0.83,
+            HeatCap = 300,
+            HeatDispMin = 2.68,
+            HeatDispMax = 52.05,
+            FuelCost = 50,
             Hardness = 65,
-            Crew = 2
+            Crew = 2,
+            FwdAcc = 29.59,
+            RevAcc = 18.02,
+            LatAcc = 15.92
         };
 
         private static ShipProperties type9 = new ShipProperties()
@@ -810,10 +1076,18 @@ namespace EliteDangerousCore
             Class = 3,
             Shields = 240,
             Armour = 480,
+            MinThrust = 30.769,
             BoostCost = 19,
             FuelReserve = 0.77,
+            HeatCap = 289,
+            HeatDispMin = 3.1,
+            HeatDispMax = 48.35,
+            FuelCost = 50,
             Hardness = 65,
-            Crew = 3
+            Crew = 3,
+            FwdAcc = 20.03,
+            RevAcc = 10.11,
+            LatAcc = 10.03
         };
 
         private static ShipProperties belugaliner = new ShipProperties()
@@ -829,10 +1103,18 @@ namespace EliteDangerousCore
             Class = 3,
             Shields = 280,
             Armour = 280,
+            MinThrust = 55,
             BoostCost = 19,
             FuelReserve = 0.81,
+            HeatCap = 283,
+            HeatDispMin = 2.6,
+            HeatDispMax = 50.85,
+            FuelCost = 50,
             Hardness = 60,
-            Crew = 3
+            Crew = 3,
+            FwdAcc = 20.01,
+            RevAcc = 17.12,
+            LatAcc = 15.03
         };
 
         private static ShipProperties type9_military = new ShipProperties()
@@ -848,10 +1130,18 @@ namespace EliteDangerousCore
             Class = 3,
             Shields = 320,
             Armour = 580,
+            MinThrust = 83.333,
             BoostCost = 19,
             FuelReserve = 0.77,
+            HeatCap = 335,
+            HeatDispMin = 3.16,
+            HeatDispMax = 67.15,
+            FuelCost = 50,
             Hardness = 75,
-            Crew = 3
+            Crew = 3,
+            FwdAcc = 17.96,
+            RevAcc = 10.04,
+            LatAcc = 10.09
         };
 
         private static ShipProperties anaconda = new ShipProperties()
@@ -867,10 +1157,18 @@ namespace EliteDangerousCore
             Class = 3,
             Shields = 350,
             Armour = 525,
+            MinThrust = 44.444,
             BoostCost = 27,
             FuelReserve = 1.07,
+            HeatCap = 334,
+            HeatDispMin = 3.16,
+            HeatDispMax = 67.15,
+            FuelCost = 50,
             Hardness = 65,
-            Crew = 3
+            Crew = 3,
+            FwdAcc = 19.85,
+            RevAcc = 10.03,
+            LatAcc = 10.05
         };
 
         private static ShipProperties federation_corvette = new ShipProperties()
@@ -886,10 +1184,18 @@ namespace EliteDangerousCore
             Class = 3,
             Shields = 555,
             Armour = 370,
+            MinThrust = 50,
             BoostCost = 27,
             FuelReserve = 1.13,
+            HeatCap = 333,
+            HeatDispMin = 3.28,
+            HeatDispMax = 70.33,
+            FuelCost = 50,
             Hardness = 70,
-            Crew = 3
+            Crew = 3,
+            FwdAcc = 19.87,
+            RevAcc = 10.08,
+            LatAcc = 9.98
         };
 
         private static ShipProperties cutter = new ShipProperties()
@@ -905,10 +1211,18 @@ namespace EliteDangerousCore
             Class = 3,
             Shields = 600,
             Armour = 400,
+            MinThrust = 80,
             BoostCost = 23,
             FuelReserve = 1.16,
+            HeatCap = 327,
+            HeatDispMin = 3.27,
+            HeatDispMax = 72.58,
+            FuelCost = 50,
             Hardness = 70,
-            Crew = 3
+            Crew = 3,
+            FwdAcc = 29.37,
+            RevAcc = 10.04,
+            LatAcc = 6.06
         };
 
         private static ShipProperties python_nx = new ShipProperties()
@@ -924,12 +1238,22 @@ namespace EliteDangerousCore
             Class = 2,
             Shields = 335,
             Armour = 280,
+            MinThrust = 85.85,
             BoostCost = 20,
             FuelReserve = 0.83,
+            HeatCap = 260,
+            HeatDispMin = 2.68,
+            HeatDispMax = 52.05,
+            FuelCost = 50,
             Hardness = 70,
-            Crew = 2
+            Crew = 2,
+            FwdAcc = -999,
+            RevAcc = -999,
+            LatAcc = -999
         };
 
+
+        // MUST be after ship definitions else they are not constructed
 
         private static Dictionary<string, ShipProperties> spaceships = new Dictionary<string, ShipProperties>
         {

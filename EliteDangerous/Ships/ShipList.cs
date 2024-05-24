@@ -466,7 +466,7 @@ namespace EliteDangerousCore
         {
             if (HaveCurrentShip)
             {
-                Ships[currentid] = CurrentShip.SetFuelLevel(e.FuelMain);
+                Ships[currentid] = CurrentShip.SetFuelLevel(e.FuelMain, e.FuelReservoir);
             }
             VerifyList();
         }

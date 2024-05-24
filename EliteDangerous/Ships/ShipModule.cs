@@ -83,25 +83,6 @@ namespace EliteDangerousCore
             return false;
         }
 
-        // return engineered FSD Spec 
-        public EliteDangerousCalculations.FSDSpec GetFSDSpec()
-        {
-            if (IsFSDSlot)
-            {
-                GetModuleEngineered(out ItemData.ShipModule engineered);
-                if (engineered != null)
-                {
-                    EliteDangerousCalculations.FSDSpec spec = engineered.GetFSDSpec();
-                    return spec;
-                }
-
-            }
-
-            System.Diagnostics.Debug.WriteLine($"Failed to get FSD Spec {ItemFD}");
-
-            return null;
-        }
-
         public double Mass()
         {
             GetModuleEngineered(out ItemData.ShipModule engineered);       // engineer the module the best we can. If we don't use the module, it will return null

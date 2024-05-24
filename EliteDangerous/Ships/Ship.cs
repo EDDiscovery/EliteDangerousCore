@@ -37,13 +37,22 @@ namespace EliteDangerousCore
         public long ModulesValue { get; private set; }      // may be 0, not known
         public double HullHealthAtLoadout { get; private set; } // may be 0, in range 0-100.
         public double UnladenMass { get; private set; }     // may be 0, not known, from loadout
-        public double FuelLevel { get; private set; }       // fuel level may be 0 not known
+        public double FuelLevel { get; private set; }       // fuel level may be 0 not known, from UI event fuel or from other events which give fuel level (scoop etc)
         public double FuelCapacity { get; private set; }    // fuel capacity may be 0 not known. Calculated as previous loadouts did not include this. 3.4 does
-        public double ReserveFuelCapacity { get; private set; }  // 3.4 from loadout..
+        public double ReserveFuelCapacity { get; private set; }  // 3.4 from loadout.. you can also get this from Item ship data
+        public double ReserveFuelLevel { get; private set; }  // from UI event Fuel. 
         public long Rebuy { get; private set; }             // may be 0, not known
 
         // for this ship, the ship properites. May be null
         public ItemData.ShipProperties GetShipProperties()  { return ItemData.GetShipProperties(ShipFD); }
+
+
+        // Modules
+
+        public Dictionary<ShipSlots.Slot, ShipModule> Modules { get; private set; }     // slot to ship module installed
+
+        // null if nothing in slot
+        public ShipModule GetModuleInSlot(ShipSlots.Slot slot) { return Modules.ContainsKey(slot) ? Modules[slot] : null; }      
 
         // for this ship module the unengineered properties, may be null
         public ItemData.ShipModule GetShipModulePropertiesUnengineered(ShipSlots.Slot slot)
@@ -66,8 +75,8 @@ namespace EliteDangerousCore
                 return null;
         }
 
-        // slots with modules matching this test
-        public ShipSlots.Slot[] GetShipModulePropertiesEngineered(Predicate<ShipModule> test)
+        // slots with modules matching this test, return list of slots where they are in
+        public ShipSlots.Slot[] FindShipModules(Predicate<ShipModule> test)
         {
             return Modules.Where(kvp => test(kvp.Value)).Select(x=>x.Key).ToArray();
         }
@@ -84,12 +93,9 @@ namespace EliteDangerousCore
 
         public SubVehicleType SubVehicle { get; private set; } = SubVehicleType.None;    // if in a sub vehicle or mothership
 
-        public Dictionary<ShipSlots.Slot, ShipModule> Modules { get; private set; }     // slot to ship module installed
 
         public bool InTransit { get { return TransferArrivalTimeUTC.CompareTo(DateTime.UtcNow)>0; } }
 
-        public ShipModule GetModuleInSlot(ShipSlots.Slot slot) { return Modules.ContainsKey(slot) ? Modules[slot] : null; }      // Name is the nice Slot name.
-        public EngineeringData GetEngineering(ShipSlots.Slot slot) { return Modules.ContainsKey(slot) ? Modules[slot].Engineering : null; }
 
         public string ShipFullInfo(bool cargo = true, bool fuel = true)
         {
@@ -123,7 +129,7 @@ namespace EliteDangerousCore
 
                 if (cargo)
                 {
-                    double cap = CargoCapacity();
+                    double cap = CalculateCargoCapacity();
                     if (cap > 0)
                         sb.Append(" Cargo Cap " + cap);
                 }
@@ -184,23 +190,7 @@ namespace EliteDangerousCore
             }
         }
 
-        public int GetFuelCapacity()
-        {
-            int cap = 0;
-            foreach (ShipModule sm in Modules.Values)
-            {
-                int classpos;
-                if (sm.Item.Contains("Fuel Tank") && (classpos = sm.Item.IndexOf("Class ")) != -1)
-                {
-                    char digit = sm.Item[classpos + 6];
-                    cap += (1 << (digit - '0'));        // 1<<1 = 2.. 1<<2 = 4, etc.
-                }
-            }
-
-            return cap;
-        }
-
-        public int CargoCapacity()
+        public int CalculateCargoCapacity()
         {
             int cap = 0;
             foreach (ShipModule sm in Modules.Values)
@@ -216,44 +206,38 @@ namespace EliteDangerousCore
             return cap;
         }
 
-        public EliteDangerousCalculations.FSDSpec GetFSDSpec()          // may be null due to not having the info
+        //// may be null due to not having the info
+        public EliteDangerousCalculations.FSDSpec GetFSDSpec()
         {
-            ShipModule fsd = GetModuleInSlot(ShipSlots.Slot.FrameShiftDrive);
-            
-            EliteDangerousCalculations.FSDSpec spec = fsd?.GetFSDSpec();
-
-            if (spec != null)
+            var module = GetShipModulePropertiesEngineered(ShipSlots.Slot.FrameShiftDrive);
+            if (module != null)
             {
-                foreach (ShipModule sm in Modules.Values)
+                var spec = new EliteDangerousCalculations.FSDSpec(module.PowerConstant.Value, module.LinearConstant.Value, module.OptMass.Value, module.MaxFuelPerJump.Value);
+                var gmodules = FindShipModules(x => x.GetModuleUnengineered().ModType == ItemData.ShipModule.ModuleTypes.GuardianFSDBooster);
+                if (gmodules.Length == 1)
                 {
-                    ItemData.ShipModule m = sm.GetModuleUnengineered();
-                    if (m?.ModType == ItemData.ShipModule.ModuleTypes.GuardianFSDBooster)             // if we have a guardian FSD booster..
-                    {
-                        spec.FSDGuardianBoosterRange = m.AdditionalRange.Value;
-                        break;
-                    }
+                    spec.FSDGuardianBoosterRange = GetShipModulePropertiesEngineered(gmodules[0]).AdditionalRange.Value;
                 }
+
                 return spec;
             }
-
-            return null;
+            else
+                return null;
         }
 
         // current jump range or null if can't calc
         // if no parameters, uses maximum cargo and maximum fuel
-        public double? GetJumpRange(int? cargo =null, double? fuel=null)
+        public double? GetJumpRange(int? cargo = null, double? fuel = null)
         {
             var fsd = GetFSDSpec();
             if (fsd != null)
             {
                 if (cargo == null)
-                    cargo = CargoCapacity();
+                    cargo = CalculateCargoCapacity();
                 if (fuel == null)
                     fuel = FuelCapacity;
 
-                var ji = fsd.GetJumpInfo(cargo.Value, ModuleMass() + HullMass(), fuel.Value, fuel.Value, 1.0);
-
-                return ji.cursinglejump;
+                return fsd.JumpRange(cargo.Value, ModuleMass() + HullMass(), fuel.Value, 1.0);
             }
             else
                 return null;
@@ -317,6 +301,7 @@ namespace EliteDangerousCore
             public double ArmourThermalValue { get; set; }
             public double ArmourExplosiveValue { get; set; }
             public double ArmourCausticValue { get; set; }
+            public double? ShieldsRaw { get; set; }      // will be null if can't compute
             public double ShieldsSystemPercentage { get; set; }
             public double ShieldsKineticPercentage { get; set; }
             public double ShieldsThermalPercentage { get; set; }
@@ -326,55 +311,38 @@ namespace EliteDangerousCore
             public double ShieldsThermalValue { get; set; }
             public double ShieldsExplosiveValue { get; set; }
 
-            public double? ShieldsRaw { get; set; }      // will be null if can't compute
-        }
+            public double? ShieldBuildTime { get; set; }        // if null, can't find modules
+            public double ShieldRegenTime { get; set; }
+            
+            public double? CurrentSpeed { get; set; }                  // if null ,can't find modules
+            public double CurrentBoost { get; set; }
+            public double LadenSpeed { get; set; }
+            public double LadenBoost { get; set; }
+            public double UnladenSpeed { get; set; }
+            public double UnladenBoost { get; set; }
+            public double MaxSpeed { get; set; }
+            public double MaxBoost { get; set; }
+            public double CurrentBoostFrequency { get; set; }
+            public double MaxBoostFrequency { get; set; }
 
-        // derived (nicked) from EDSY
-
-        private double getEffectiveDamageResistance(double baseres, double extrares, double exemptres, double bestres)
-        {
-            // https://forums.frontier.co.uk/threads/kinetic-resistance-calculation.266235/post-4230114
-            // https://forums.frontier.co.uk/threads/shield-booster-mod-calculator.286097/post-4998592
-
-            var lo = Math.Max(Math.Max(30, baseres), bestres);
-            var hi = 65; // half credit past 30% means 100% -> 30 + (100 - 30) / 2 = 65%
-            var expected = (1 - ((1 - baseres / 100) * (1 - extrares / 100))) * 100;
-            var penalized = lo + (expected - lo) / (100 - lo) * (hi - lo); // remap range [lo..100] to [lo..hi]
-            var actual = ((penalized >= 30) ? penalized : expected);
-            return (1 - ((1 - exemptres / 100) * (1 - actual / 100))) * 100;
-        }
-
-        private double getEffectiveShieldBoostMultiplier(double shieldbst)
-        {
-            // https://forums.frontier.co.uk/threads/very-experimental-shield-change.314820/post-4895068
-            var i = (1 + (shieldbst / 100));
-            return i;
-        }
-
-        private double getMassCurveMultiplier(double mass, double minMass, double optMass, double maxMass, double minMul, double optMul, double maxMul)
-        {
-            // https://forums.frontier.co.uk/threads/the-one-formula-to-rule-them-all-the-mechanics-of-shield-and-thruster-mass-curves.300225/
-
-            return (minMul + Math.Pow(Math.Min(1.0, (maxMass - mass) / (maxMass - minMass)), Math.Log((optMul - minMul) / (maxMul - minMul)) / Math.Log((maxMass - optMass) / (maxMass - minMass))) * (maxMul - minMul));
-        }
-
-        const int MAX_POWER_DIST = 8;
-        private double getPipDamageResistance(double sys)
-        {
-            // https://forums.frontier.co.uk/threads/2-3-the-commanders-changelog.341916/
-            return 60 * Math.Pow(sys / MAX_POWER_DIST, 0.85);
+            public double? FSDCurrentRange { get; set; }        // if null, no fsd
+            public double FSDCurrentMaxRange { get; set; }       
+            public double FSDLadenRange { get; set; }      
+            public double FSDUnladenRange { get; set; }
+            public double FSDMaxRange { get; set; }
+            public double FSDMaxFuelPerJump { get; set; }
 
         }
 
+        // derived (nicked) from EDSY thank you
 
-        public Stats CalculateShipParameters()
+        public Stats CalculateShipStats(int powerdist_sys, int powerdist_eng, int currentcargo, double currentfuellevel, double currentreservelevel)
         {
             var res = new Stats();
             var ship = GetShipProperties();
 
             if (ship != null)
             {
-
                 double hullrnf = 0;
                 double hullbst = 0;
                 double kinmod_ihrp = 1;
@@ -459,10 +427,14 @@ namespace EliteDangerousCore
 
                 }
 
-                var shieldlist = GetShipModulePropertiesEngineered(x => x.GetModuleUnengineered()?.IsShieldGenerator ?? false); // allow get module unengineered to fail, slots with shields 
-                if (shieldlist.Length == 1)
+                ItemData.ShipModule powerdistributorengineered = GetShipModulePropertiesEngineered(ShipSlots.Slot.PowerDistributor);
+
+                var shieldlist = FindShipModules(x => x.GetModuleUnengineered()?.IsShieldGenerator ?? false); // allow get module unengineered to fail, slots with shields 
+
+                ItemData.ShipModule shieldmoduleengineered = shieldlist.Length == 1 ? GetShipModulePropertiesEngineered(shieldlist[0]) : null;
+
+                if (shieldmoduleengineered != null)
                 {
-                    ItemData.ShipModule shieldmoduleengineered = GetShipModulePropertiesEngineered(shieldlist[0]);
                     var mass_hull = ship.HullMass;
                     var maxmass = shieldmoduleengineered.MaxMass;
                     if (maxmass >= mass_hull)
@@ -486,30 +458,98 @@ namespace EliteDangerousCore
                         var thmShdRes = res.ShieldsThermalPercentage = getEffectiveDamageResistance(0, (1 - thmmod_usb) * 100, thmres, 0);
                         var expShdRes = res.ShieldsExplosivePercentage = getEffectiveDamageResistance(0, (1 - expmod_usb) * 100, expres, 0);
 
-                        int powerdist_sys = 4;
                         var absShdRes = res.ShieldsSystemPercentage = getPipDamageResistance(powerdist_sys);
                         res.ShieldsSystemValue = rawShdStr / (1 - absShdRes / 100);
                         res.ShieldsKineticValue = rawShdStr / (1 - absShdRes / 100) / (1 - kinShdRes / 100);
                         res.ShieldsThermalValue = rawShdStr / (1 - absShdRes / 100) / (1 - thmShdRes / 100);
                         res.ShieldsExplosiveValue = rawShdStr / (1 - absShdRes / 100) / (1 - expShdRes / 100);
 
-
-                        // var powerdistSysMul = Math.Pow((double)powerdist_sys / MAX_POWER_DIST, 1.1);
-                        // tbd boost time
-
-
                         System.Diagnostics.Debug.WriteLine($"ABs {absShdRes * 100}% raw {res.ShieldsRaw} sys {res.ShieldsSystemValue} kin {res.ShieldsKineticValue} thm {res.ShieldsThermalValue} exp {res.ShieldsExplosiveValue}");
 
+
+                        if (powerdistributorengineered != null)
+                        {
+                            var syscap = powerdistributorengineered.SystemsCapacity.Value;
+                            var syschg = powerdistributorengineered.SystemsRechargeRate.Value;
+
+                            var powerdistSysMul = Math.Pow((double)powerdist_sys / MAX_POWER_DIST, 1.1);
+                            var bgenrate = shieldmoduleengineered.BrokenRegenRate.Value;
+                            var genrate = shieldmoduleengineered.RegenRate.Value;
+                            var distdraw_mj = shieldmoduleengineered.MWPerUnit.Value;
+
+                            var bgenFastTime = Math.Min((rawShdStr / 2 / bgenrate), (syscap / Math.Max(0, bgenrate * distdraw_mj - syschg * powerdistSysMul)));
+                            var bgenSlowTime = (rawShdStr / 2 - bgenrate * bgenFastTime) / Math.Min(bgenrate, (syschg * powerdistSysMul) / distdraw_mj);
+
+                            var genFastTime = 0;
+                            var genSlowTime = (rawShdStr / 2) / Math.Min(genrate, (syschg * powerdistSysMul) / distdraw_mj);
+
+                            res.ShieldBuildTime = 16 + bgenFastTime + bgenSlowTime;
+                            res.ShieldRegenTime = genFastTime + genSlowTime;
+                        }
                     }
                     else
                         res.ShieldsRaw = 0;     // mass too big
                 }
 
+                var hullmodulemass = HullModuleMass();
+
+                ItemData.ShipModule thrustersengineered = GetShipModulePropertiesEngineered(ShipSlots.Slot.MainEngines);
+
+                if ( powerdistributorengineered != null && thrustersengineered != null)
+                {
+                    var minthrust = ship.MinThrust / 100;
+                    var boostcost = ship.BoostCost;
+                    var topspd = ship.Speed;
+                    var bstspd = ship.Boost;
+
+                    var engcap = powerdistributorengineered.EngineCapacity.Value;
+                    var engchg = powerdistributorengineered.EngineRechargeRate.Value;
+
+                    var minmass = thrustersengineered.MinMass.Value;
+                    var optmass = thrustersengineered.OptMass.Value;
+                    var maxmass = thrustersengineered.MaxMass.Value;
+                    var minmulspd = thrustersengineered.EngineMinMultiplier.Value;
+                    var optmulspd = thrustersengineered.EngineOptMultiplier.Value;
+                    var maxmulspd = thrustersengineered.EngineMaxMultiplier.Value;
+                    var fuelcap = FuelCapacity;
+
+                    var powerdistEngMul = (double)powerdist_eng / MAX_POWER_DIST;
+
+                    var cargocap = CalculateCargoCapacity();
+
+                    var curNavSpdMul = getMassCurveMultiplier(hullmodulemass + currentfuellevel + currentreservelevel + currentcargo, minmass, optmass, maxmass, minmulspd, optmulspd, maxmulspd) / 100;
+                    var ldnNavSpdMul = getMassCurveMultiplier(hullmodulemass + fuelcap + cargocap, minmass, optmass, maxmass, minmulspd, optmulspd, maxmulspd) / 100;
+                    var unlNavSpdMul = getMassCurveMultiplier(hullmodulemass + fuelcap, minmass, optmass, maxmass, minmulspd, optmulspd, maxmulspd) / 100;
+                    var maxNavSpdMul = getMassCurveMultiplier(hullmodulemass, minmass, optmass, maxmass, minmulspd, optmulspd, maxmulspd) / 100;
+
+                    res.CurrentSpeed = curNavSpdMul * topspd * (powerdistEngMul + minthrust * (1 - powerdistEngMul));
+                    res.LadenSpeed = ldnNavSpdMul * topspd;
+                    res.UnladenSpeed = unlNavSpdMul * topspd;
+                    res.MaxSpeed = maxNavSpdMul * topspd;
+
+                    res.CurrentBoost = curNavSpdMul * bstspd;
+                    res.LadenBoost = ldnNavSpdMul * bstspd;
+                    res.UnladenBoost = unlNavSpdMul * bstspd;
+                    res.MaxBoost = maxNavSpdMul * bstspd;
+
+                    res.CurrentBoostFrequency = (boostcost / (engchg * Math.Pow((double)powerdist_eng / MAX_POWER_DIST, 1.1)));
+                    res.MaxBoostFrequency = (boostcost / engchg);
+                }
+
+                var fsdspec = GetFSDSpec();
+                if ( fsdspec != null )
+                {
+                    res.FSDCurrentRange = fsdspec.JumpRange(currentcargo, hullmodulemass, currentfuellevel + currentreservelevel, 1.0);
+                    res.FSDCurrentMaxRange = fsdspec.CalculateMaxJumpDistance(currentcargo, hullmodulemass, currentfuellevel + currentreservelevel, out double _);
+                    res.FSDLadenRange = fsdspec.JumpRange(CalculateCargoCapacity(), hullmodulemass, currentfuellevel + currentreservelevel, 1.0);
+                    res.FSDUnladenRange = fsdspec.JumpRange(0, hullmodulemass, currentfuellevel + currentreservelevel, 1.0);
+                    res.FSDMaxRange = fsdspec.JumpRange(0, hullmodulemass, fsdspec.MaxFuelPerJump, 1.0);
+                    res.FSDMaxFuelPerJump = fsdspec.MaxFuelPerJump;
+                }
+
                 return res;
             }
             else
-
-
                 return null;
         }
 
@@ -540,6 +580,7 @@ namespace EliteDangerousCore
             sm.UnladenMass = this.UnladenMass;
             sm.Rebuy = this.Rebuy;
             sm.ReserveFuelCapacity = this.ReserveFuelCapacity;
+            sm.ReserveFuelLevel = this.ReserveFuelLevel;
             sm.StoredAtStation = this.StoredAtStation;
             sm.StoredAtSystem = this.StoredAtSystem;
             sm.TransferArrivalTimeUTC = this.TransferArrivalTimeUTC;
@@ -578,7 +619,7 @@ namespace EliteDangerousCore
 
             if (sm.Item.Contains("Fuel Tank") && sm.Item.IndexOf("Class ") != -1)
             {
-                FuelCapacity = GetFuelCapacity();
+                FuelCapacity = CalculateFuelCapacity();
                 if (FuelLevel > FuelCapacity)
                     FuelLevel = FuelCapacity;
             }
@@ -587,7 +628,7 @@ namespace EliteDangerousCore
         public Ship SetShipDetails(string ship, string shipfd, string name = null, string ident = null, 
                                     double fuellevel = 0, double fueltotal = 0,
                                     long hullvalue = 0, long modulesvalue = 0, long rebuy = 0,
-                                    double unladenmass = 0, double reservefuelcap = 0 , double hullhealth = 0, bool? hot = null)
+                                    double unladenmass = 0, double reservefuelcapacity = 0 , double hullhealth = 0, bool? hot = null)
         {
             System.Diagnostics.Debug.Assert(shipfd != null && ship != null);
 
@@ -601,7 +642,7 @@ namespace EliteDangerousCore
             bool s8 = modulesvalue != 0 && modulesvalue != ModulesValue;
             bool s9 = rebuy != 0 && rebuy != Rebuy;
             bool s10 = unladenmass != 0 && unladenmass != UnladenMass;
-            bool s11 = reservefuelcap != 0 && reservefuelcap != ReserveFuelCapacity;
+            bool s11 = reservefuelcapacity != 0 && reservefuelcapacity != ReserveFuelCapacity;
             bool s12 = hullhealth != 0 && HullHealthAtLoadout != hullhealth;
             bool s13 = hot != null && hot.Value != Hot;
 
@@ -631,8 +672,8 @@ namespace EliteDangerousCore
                     sm.Rebuy = rebuy;
                 if (unladenmass != 0)
                     sm.UnladenMass = unladenmass;
-                if (reservefuelcap != 0)
-                    sm.ReserveFuelCapacity = reservefuelcap;
+                if (reservefuelcapacity != 0)
+                    sm.ReserveFuelCapacity = reservefuelcapacity;
                 if (hullhealth != 0)
                     sm.HullHealthAtLoadout = hullhealth;
 
@@ -679,9 +720,10 @@ namespace EliteDangerousCore
             return this;
         }
 
-        public Ship SetFuelLevel(double fuellevel, double reserve)       // fuellevel >=0 to set
+        // from  UI event Fuel
+        public Ship SetFuelLevel(double fuellevel, double reservelevel)       // fuellevel >=0 to set
         {
-            if (fuellevel >= 0 && ( Math.Abs(FuelLevel - fuellevel) > 0.01 || Math.Abs(ReserveFuelCapacity - reserve) > 0.01))
+            if (fuellevel >= 0 && ( Math.Abs(FuelLevel - fuellevel) > 0.01 || Math.Abs(ReserveFuelLevel - reservelevel) > 0.01))
             {
                 //System.Diagnostics.Debug.WriteLine("Update ship fuel to " + fuellevel + " " + reserve);
 
@@ -691,7 +733,7 @@ namespace EliteDangerousCore
                     sm.FuelLevel = fuellevel;
                 if (fuellevel > sm.FuelCapacity)
                     sm.FuelCapacity = fuellevel;
-                sm.ReserveFuelCapacity = reserve;
+                sm.ReserveFuelLevel = reservelevel;
 
                 return sm;
             }
@@ -709,7 +751,7 @@ namespace EliteDangerousCore
 
                 if (item.Contains("Fuel Tank") && item.IndexOf("Class ") != -1)
                 {
-                    sm.FuelCapacity = sm.GetFuelCapacity();
+                    sm.FuelCapacity = sm.CalculateFuelCapacity();
                     if (sm.FuelLevel > sm.FuelCapacity)
                         sm.FuelLevel = sm.FuelCapacity;
                 }
@@ -729,7 +771,7 @@ namespace EliteDangerousCore
 
                 if (item.Contains("Fuel Tank") && item.IndexOf("Class ") != -1)
                 {
-                    sm.FuelCapacity = sm.GetFuelCapacity();
+                    sm.FuelCapacity = sm.CalculateFuelCapacity();
                     if (sm.FuelLevel > sm.FuelCapacity)
                         sm.FuelLevel = sm.FuelCapacity;
                 }
@@ -754,7 +796,7 @@ namespace EliteDangerousCore
 
                     if (it.Name.Contains("Fuel Tank") && it.Name.IndexOf("Class ") != -1)
                     {
-                        sm.FuelCapacity = sm.GetFuelCapacity();
+                        sm.FuelCapacity = sm.CalculateFuelCapacity();
                         if (sm.FuelLevel > sm.FuelCapacity)
                             sm.FuelLevel = sm.FuelCapacity;
                     }
@@ -782,7 +824,7 @@ namespace EliteDangerousCore
                 if (fromitem != toitem && ((fromitem.Contains("Fuel Tank") && fromitem.IndexOf("Class ") != -1) ||
                                            (fromitem.Contains("Fuel Tank") && fromitem.IndexOf("Class ") != -1)))
                 {
-                    sm.FuelCapacity = sm.GetFuelCapacity();
+                    sm.FuelCapacity = sm.CalculateFuelCapacity();
                     if (sm.FuelLevel > sm.FuelCapacity)
                         sm.FuelLevel = sm.FuelCapacity;
                 }
@@ -964,7 +1006,7 @@ namespace EliteDangerousCore
                 jo["HullHealth"] = HullHealthAtLoadout / 100.0;
             if (UnladenMass > 0)
                 jo["UnladenMass"] = UnladenMass;
-            jo["CargoCapacity"] = CargoCapacity();
+            jo["CargoCapacity"] = CalculateCargoCapacity();
             if (FuelCapacity > 0 && ReserveFuelCapacity > 0)
             {
                 JObject fc = new JObject();
@@ -1038,6 +1080,64 @@ namespace EliteDangerousCore
             return null;
         }
 
+        #endregion
+
+        #region Helpers
+
+        // called when modules changes
+        private int CalculateFuelCapacity()
+        {
+            int cap = 0;
+            foreach (ShipModule sm in Modules.Values)
+            {
+                int classpos;
+                if (sm.Item.Contains("Fuel Tank") && (classpos = sm.Item.IndexOf("Class ")) != -1)
+                {
+                    char digit = sm.Item[classpos + 6];
+                    cap += (1 << (digit - '0'));        // 1<<1 = 2.. 1<<2 = 4, etc.
+                }
+            }
+
+            return cap;
+        }
+
+
+        private double getEffectiveDamageResistance(double baseres, double extrares, double exemptres, double bestres)
+        {
+            // https://forums.frontier.co.uk/threads/kinetic-resistance-calculation.266235/post-4230114
+            // https://forums.frontier.co.uk/threads/shield-booster-mod-calculator.286097/post-4998592
+
+            var lo = Math.Max(Math.Max(30, baseres), bestres);
+            var hi = 65; // half credit past 30% means 100% -> 30 + (100 - 30) / 2 = 65%
+            var expected = (1 - ((1 - baseres / 100) * (1 - extrares / 100))) * 100;
+            var penalized = lo + (expected - lo) / (100 - lo) * (hi - lo); // remap range [lo..100] to [lo..hi]
+            var actual = ((penalized >= 30) ? penalized : expected);
+            return (1 - ((1 - exemptres / 100) * (1 - actual / 100))) * 100;
+        }
+
+        private double getEffectiveShieldBoostMultiplier(double shieldbst)
+        {
+            // https://forums.frontier.co.uk/threads/very-experimental-shield-change.314820/post-4895068
+            var i = (1 + (shieldbst / 100));
+            return i;
+        }
+
+        private double getMassCurveMultiplier(double mass, double minMass, double optMass, double maxMass, double minMul, double optMul, double maxMul)
+        {
+            // https://forums.frontier.co.uk/threads/the-one-formula-to-rule-them-all-the-mechanics-of-shield-and-thruster-mass-curves.300225/
+
+            return (minMul + Math.Pow(Math.Min(1.0, (maxMass - mass) / (maxMass - minMass)), Math.Log((optMul - minMul) / (maxMul - minMul)) / Math.Log((maxMass - optMass) / (maxMass - minMass))) * (maxMul - minMul));
+        }
+
+        private double getPipDamageResistance(double sys)
+        {
+            // https://forums.frontier.co.uk/threads/2-3-the-commanders-changelog.341916/
+            return 60 * Math.Pow(sys / MAX_POWER_DIST, 0.85);
+
+        }
+
+        const int MAX_POWER_DIST = 8;
+        const double BOOST_MARGIN = 0.005;
         #endregion
     }
 }

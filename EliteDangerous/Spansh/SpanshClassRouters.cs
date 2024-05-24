@@ -264,22 +264,27 @@ namespace EliteDangerousCore.Spansh
                                         Ship si, string algorithm = "optimistic")
         {
             var fsdspec = si.GetFSDSpec();
-            var json = new JArray();
-            var obj = new JObject();
-            obj["data"] = si.JSONLoadout();
-            json.Add(obj);
-            System.Diagnostics.Debug.WriteLine($"JSON export to Spansh {json.ToString(true)}");
+            if (fsdspec != null)
+            {
+                var json = new JArray();
+                var obj = new JObject();
+                obj["data"] = si.JSONLoadout();
+                json.Add(obj);
+                System.Diagnostics.Debug.WriteLine($"JSON export to Spansh {json.ToString(true)}");
 
-            string query = HTTPExtensions.MakeQuery(nameof(source), source, nameof(destination), destination, nameof(is_supercharged), is_supercharged, nameof(use_supercharge), use_supercharge,
-                            nameof(use_injections), use_injections, nameof(exclude_secondary), exclude_secondary,
-                            "fuel_power", fsdspec.PowerConstant, "fuel_multiplier", fsdspec.FuelMultiplier,
-                            "optimal_mass", fsdspec.OptimalMass, "base_mass", si.UnladenMass, "tank_size", si.FuelCapacity, "internal_tank_size", si.ReserveFuelCapacity,
-                            "max_fuel_per_jump", fsdspec.MaxFuelPerJump,
-                            nameof(cargo), cargo,
-                            nameof(algorithm), algorithm,
-                            "ship_build", json.ToString());
+                string query = HTTPExtensions.MakeQuery(nameof(source), source, nameof(destination), destination, nameof(is_supercharged), is_supercharged, nameof(use_supercharge), use_supercharge,
+                                nameof(use_injections), use_injections, nameof(exclude_secondary), exclude_secondary,
+                                "fuel_power", fsdspec.PowerConstant, "fuel_multiplier", fsdspec.FuelMultiplier,
+                                "optimal_mass", fsdspec.OptimalMass, "base_mass", si.UnladenMass, "tank_size", si.FuelCapacity, "internal_tank_size", si.ReserveFuelCapacity,
+                                "max_fuel_per_jump", fsdspec.MaxFuelPerJump,
+                                nameof(cargo), cargo,
+                                nameof(algorithm), algorithm,
+                                "ship_build", json.ToString());
 
-            return RequestJob("generic/route", query);
+                return RequestJob("generic/route", query);
+            }
+            else
+                return null;
         }
 
         public Tuple<string, List<ISystem>> TryGetGalaxyPlotter(string jobname)
