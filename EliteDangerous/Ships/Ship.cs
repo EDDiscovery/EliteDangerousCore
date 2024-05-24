@@ -539,11 +539,11 @@ namespace EliteDangerousCore
                 var fsdspec = GetFSDSpec();
                 if ( fsdspec != null )
                 {
-                    res.FSDCurrentRange = fsdspec.JumpRange(currentcargo, hullmodulemass, currentfuellevel + currentreservelevel, 1.0);
-                    res.FSDCurrentMaxRange = fsdspec.CalculateMaxJumpDistance(currentcargo, hullmodulemass, currentfuellevel + currentreservelevel, out double _);
-                    res.FSDLadenRange = fsdspec.JumpRange(CalculateCargoCapacity(), hullmodulemass, currentfuellevel + currentreservelevel, 1.0);
-                    res.FSDUnladenRange = fsdspec.JumpRange(0, hullmodulemass, currentfuellevel + currentreservelevel, 1.0);
-                    res.FSDMaxRange = fsdspec.JumpRange(0, hullmodulemass, fsdspec.MaxFuelPerJump, 1.0);
+                    res.FSDCurrentRange = fsdspec.JumpRange(currentcargo, hullmodulemass, currentfuellevel, 1.0);
+                    res.FSDCurrentMaxRange = fsdspec.CalculateMaxJumpDistance(currentcargo, hullmodulemass, currentfuellevel, out double _);
+                    res.FSDLadenRange = fsdspec.JumpRange(CalculateCargoCapacity(), hullmodulemass, FuelCapacity, 1.0);
+                    res.FSDUnladenRange = fsdspec.JumpRange(0, hullmodulemass, FuelCapacity, 1.0);
+                    res.FSDMaxRange = fsdspec.JumpRange(0, hullmodulemass, Math.Min(FuelCapacity, fsdspec.MaxFuelPerJump), 1.0);
                     res.FSDMaxFuelPerJump = fsdspec.MaxFuelPerJump;
                 }
 
