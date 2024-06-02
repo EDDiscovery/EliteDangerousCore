@@ -427,8 +427,11 @@ namespace EliteDangerousCore
 
                     else if (mf.Label.EqualsIIC("EngineOptimalMass")) // engoptmass
                     {
+                        double mul = mf.Value / engineered.OptMass.Value;       // it appears, engineering this also engineers the others to the same ratio
                         engineered.OptMass = mf.Value;
-                        //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.OptMass} -> {engineered.OptMass}");
+                        engineered.MinMass *= mul;
+                        engineered.MaxMass *= mul;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} min {original.MinMass} -> {engineered.MinMass} opt {original.OptMass} -> {engineered.OptMass} max {original.MaxMass} -> {engineered.MaxMass} ");
                     }
 
                     else if (mf.Label.EqualsIIC("MaximumMass")) // engmaxmass
@@ -445,8 +448,11 @@ namespace EliteDangerousCore
 
                     else if (mf.Label.EqualsIIC("EngineOptPerformance"))    // engoptmul
                     {
-                        engineered.EngineOptMultiplier = mf.Value;
-                        //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.EngineOptMultiplier} -> {engineered.EngineOptMultiplier}");
+                        double mul = mf.Value / engineered.EngineOptMultiplier.Value;       // it appears, engineering this also engineers the others to the same ratio
+                        engineered.EngineOptMultiplier = mf.Value;  
+                        engineered.EngineMinMultiplier *= mul;
+                        engineered.EngineMaxMultiplier *= mul;
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} min {original.EngineMinMultiplier} -> {engineered.EngineMinMultiplier} opt {original.EngineOptMultiplier} -> {engineered.EngineOptMultiplier} max {original.EngineMaxMultiplier} -> {engineered.EngineMaxMultiplier} ");
                     }
 
                     else if (mf.Label.EqualsIIC("EngineMaxPerformance"))    // engmaxmul

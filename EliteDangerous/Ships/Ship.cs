@@ -1211,7 +1211,7 @@ namespace EliteDangerousCore
                 {
                     Ship importedship = sl.Ships.First().Value;
                     importedship.State = Ship.ShipState.Imported;
-                    importedship.FuelLevel = importedship.FuelCapacity / 2; // presume half tank
+                    importedship.FuelLevel = importedship.FuelCapacity; // presume half tank
                     return importedship;
                 }
             }
