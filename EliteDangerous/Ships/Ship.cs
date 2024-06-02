@@ -27,7 +27,7 @@ namespace EliteDangerousCore
         #region Information interface
 
         public ulong ID { get; private set; }                 // its Frontier ID.     ID's are moved to high range when sold
-        public enum ShipState { Owned, Sold, Destroyed};
+        public enum ShipState { Owned, Sold, Destroyed, Imported};
         public ShipState State { get; set; } = ShipState.Owned; // if owned, sold, destroyed. Default owned
         public string ShipType { get; private set; }        // ship type name, nice, fer-de-lance, etc. can be null
         public string ShipFD { get; private set; }          // ship type name, fdname
@@ -332,11 +332,22 @@ namespace EliteDangerousCore
             public double FSDMaxRange { get; set; }
             public double FSDMaxFuelPerJump { get; set; }
 
+            public double? WeaponRaw { get; set; }              // if null, no pd
+            public double WeaponAbsolutePercentage { get; set; }  
+            public double WeaponThermalPercentage { get; set; }
+            public double WeaponKineticPercentage { get; set; }
+            public double WeaponExplosivePercentage { get; set; }
+            public double WeaponAXPercentage { get; set; }
+            public double WeaponDuration { get; set; }
+            public double WeaponDurationMax { get; set; }
+            public double WeaponAmmoDuration { get; set; }
+            public double WeaponCurSus { get; set; }
+            public double WeaponMaxSus { get; set; }
         }
 
         // derived (nicked) from EDSY thank you
 
-        public Stats CalculateShipStats(int powerdist_sys, int powerdist_eng, int currentcargo, double currentfuellevel, double currentreservelevel)
+        public Stats CalculateShipStats(int powerdist_sys, int powerdist_eng, int powerdist_wep, int currentcargo, double currentfuellevel, double currentreservelevel)
         {
             var res = new Stats();
             var ship = GetShipProperties();
@@ -359,6 +370,26 @@ namespace EliteDangerousCore
                 double caumod_usb = 1;
                 double shieldbst = 0;
                 double shieldrnf = 0;
+
+                double dps = 0;
+				double dps_abs= 0;
+                double dps_thm = 0;
+				double dps_kin= 0;
+                double dps_exp = 0;
+				double dps_axe= 0;
+                double dps_cau = 0;
+				double dps_nodistdraw= 0;
+                double dps_distdraw = 0;
+                double thmload_hardpoint_wepfull = 0;
+                double thmload_hardpoint_wepempty = 0;
+                double ammotime_wepcap = double.PositiveInfinity;
+                double ammotime_nocap = double.PositiveInfinity;
+                
+
+                ItemData.ShipModule powerdistributorengineered = GetShipModulePropertiesEngineered(ShipSlots.Slot.PowerDistributor); // may be null
+                double wepcap = powerdistributorengineered?.WeaponsCapacity ?? 10;      // set a minimum so does not except if PD not there
+
+                List<Tuple<double, double, double>> weapons = new List<Tuple<double, double, double>>();
 
                 foreach (var modkvp in Modules)
                 {
@@ -394,6 +425,7 @@ namespace EliteDangerousCore
 
                     if (me.HullStrengthBonus.HasValue)      // armour
                         hullbst += me.HullStrengthBonus.Value;
+
                     if (me.ModType == ItemData.ShipModule.ModuleTypes.ShieldBooster) //  shieldbst
                     {
                         shieldbst += me.ShieldReinforcement.Value;
@@ -402,8 +434,60 @@ namespace EliteDangerousCore
                         expmod_usb *= (1 - (me.ExplosiveResistance.Value / 100));
                         caumod_usb *= (1 - ((me.CausticResistance ?? 0) / 100));      // not present currently
                     }
+
                     if (me.ModType == ItemData.ShipModule.ModuleTypes.GuardianShieldReinforcement) // shieldrnf
                         shieldrnf += me.AdditionalReinforcement.Value;
+
+                    if (me.IsHardpoint)
+                    {
+                        var thmload = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.ThermL), 1);      // should always be there
+                        var distdraw = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.DistributorDraw), 1);// should always be there
+                        var ammoclip = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.Clip), 0);       // if weapon does not have limits, is 0
+                        var ammomax = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.Ammo), 0);
+                        var eps = me.getEffectiveAttrValue("eps");
+                        var seps = me.getEffectiveAttrValue("seps");
+                        var spc = me.getEffectiveAttrValue("spc", 1);
+                        if (spc == 0)
+                            spc = 1;
+                        var sspc = me.getEffectiveAttrValue("sspc",1);
+                        if (sspc == 0)
+                            sspc = 1;
+                        var sfpc = me.getEffectiveAttrValue("sfpc");
+                        var sdps = me.getEffectiveAttrValue("sdps");
+
+                        System.Diagnostics.Debug.WriteLine($"{me.EnglishModName}: {thmload} {distdraw} {ammoclip} {ammomax} eps {eps} seps {seps} spc {spc} sspc {sspc} sfpc {sfpc} sdps {sdps}");
+
+                        thmload *= sfpc / sspc;
+                        thmload_hardpoint_wepfull += getEffectiveWeaponThermalLoad(thmload, distdraw, wepcap, 1.0);
+                        thmload_hardpoint_wepempty += getEffectiveWeaponThermalLoad(thmload, distdraw, wepcap, 0.0);
+
+                        dps += sdps;
+                        dps_abs += sdps * me.getEffectiveAttrValue(nameof(ItemData.ShipModule.AbsoluteProportionDamage), 0) / 100.0;
+                        dps_thm += sdps * me.getEffectiveAttrValue(nameof(ItemData.ShipModule.ThermalProportionDamage), 0) / 100.0;
+                        dps_kin += sdps * me.getEffectiveAttrValue(nameof(ItemData.ShipModule.KineticProportionDamage), 0) / 100.0;
+                        dps_exp += sdps * me.getEffectiveAttrValue(nameof(ItemData.ShipModule.ExplosiveProportionDamage), 0) / 100.0;
+                        dps_axe += sdps * me.getEffectiveAttrValue(nameof(ItemData.ShipModule.AXPorportionDamage), 0) / 100.0;
+                        dps_cau += sdps * me.getEffectiveAttrValue(nameof(ItemData.ShipModule.CausticPorportionDamage), 0) / 100.0;
+
+                        System.Diagnostics.Debug.WriteLine($"{me.EnglishModName}: thmload {thmload} {thmload_hardpoint_wepfull} {thmload_hardpoint_wepempty}");
+                        System.Diagnostics.Debug.WriteLine($"{me.EnglishModName}: dps {dps} {dps_abs} {dps_thm}");
+
+                        weapons.Add(new Tuple<double, double, double>(spc, eps, seps));
+
+                        var ammotime = ammoclip != 0 ? (sspc * ((ammoclip + ammomax) / sfpc)) : double.PositiveInfinity;
+                        if (distdraw!=0)
+                        {
+                            dps_distdraw += sdps;
+                            ammotime_wepcap = Math.Min(ammotime_wepcap, ammotime);
+                        }
+                        else
+                        {
+                            dps_nodistdraw += sdps;
+                            ammotime_nocap = Math.Min(ammotime_nocap, ammotime);
+                        }
+
+                        System.Diagnostics.Debug.WriteLine($"{me.EnglishModName}: nodistdraw {dps_nodistdraw} {dps_distdraw} {ammotime_wepcap} {ammotime_nocap}");
+                    }
                 }
 
                 var armourmoduleengineered = GetShipModulePropertiesEngineered(ShipSlots.Slot.Armour);
@@ -427,10 +511,8 @@ namespace EliteDangerousCore
 
                 }
 
-                ItemData.ShipModule powerdistributorengineered = GetShipModulePropertiesEngineered(ShipSlots.Slot.PowerDistributor);
 
                 var shieldlist = FindShipModules(x => x.GetModuleUnengineered()?.IsShieldGenerator ?? false); // allow get module unengineered to fail, slots with shields 
-
                 ItemData.ShipModule shieldmoduleengineered = shieldlist.Length == 1 ? GetShipModulePropertiesEngineered(shieldlist[0]) : null;
 
                 if (shieldmoduleengineered != null)
@@ -545,6 +627,63 @@ namespace EliteDangerousCore
                     res.FSDUnladenRange = fsdspec.JumpRange(0, hullmodulemass, FuelCapacity, 1.0);
                     res.FSDMaxRange = fsdspec.JumpRange(0, hullmodulemass, Math.Min(FuelCapacity, fsdspec.MaxFuelPerJump), 1.0);
                     res.FSDMaxFuelPerJump = fsdspec.MaxFuelPerJump;
+                }
+
+                if (powerdistributorengineered != null)
+                {
+                    double wepchg = powerdistributorengineered.WeaponsRechargeRate.Value;
+                    double powerdistWepMul = Math.Pow((double)powerdist_wep / MAX_POWER_DIST, 1.1);
+
+                    // sort by spc (first tuple entry) spc,eps,seps
+                    weapons.Sort(delegate (Tuple<double, double, double> left, Tuple<double, double, double> right) { return left.Item1.CompareTo(right.Item1); });
+
+                    double eps = 0;
+                    double seps = 0;
+                    foreach (var w in weapons)      // spc,eps,seps
+                    {
+                        eps += w.Item2;
+                        seps += w.Item3;
+                    }
+
+                    var eps_cur = eps;
+                    var eps_max = eps;
+                    double wepcap_burst_cur = (wepcap / Math.Max(0, eps_cur - wepchg * powerdistWepMul));
+                    double wepcap_burst_max = (wepcap / Math.Max(0, eps_max - wepchg));
+                    foreach (var w in weapons)      // spc,eps,seps
+                    {
+                        if (wepcap_burst_cur >= w.Item1)        // spc
+                        {
+                            eps_cur = eps_cur - w.Item2 + w.Item3; // + eps-seps
+                            wepcap_burst_cur = (wepcap / Math.Max(0, eps_cur - wepchg * powerdistWepMul));
+                        }
+                        if (wepcap_burst_max >= w.Item1) // spc
+                        {
+                            eps_max = eps_max - w.Item2 + w.Item3;
+                            wepcap_burst_max = (wepcap / Math.Max(0, eps_max - wepchg));
+                        }
+                    }
+
+                    double wepchg_sustain_cur = Math.Min(Math.Max(wepchg * powerdistWepMul / seps, 0), 1);
+                    double wepchg_sustain_max = Math.Min(Math.Max(wepchg / seps, 0), 1);
+
+                    System.Diagnostics.Debug.WriteLine($"WEPAccum {wepcap_burst_cur} {wepcap_burst_max} {wepchg_sustain_cur} {wepchg_sustain_max}");
+
+                    // compute derived stats
+                    var curWpnSus = ((dps_nodistdraw + (dps_distdraw !=0 ? (dps_distdraw * wepchg_sustain_cur) : 0)) / dps);
+                    var maxWpnSus = ((dps_nodistdraw + (dps_distdraw !=0 ? (dps_distdraw * wepchg_sustain_max) : 0)) / dps);
+                    var ammWpnDur = Math.Min(ammotime_nocap, ((ammotime_wepcap <= wepcap_burst_max) ? ammotime_wepcap : (wepcap_burst_max + (ammotime_wepcap - wepcap_burst_max) / maxWpnSus)));
+
+                    res.WeaponRaw = dps;
+                    res.WeaponAbsolutePercentage = dps_abs / dps * 100.0;
+                    res.WeaponThermalPercentage = dps_thm / dps * 100.0;
+                    res.WeaponKineticPercentage = dps_kin / dps * 100.0;
+                    res.WeaponExplosivePercentage = dps_exp / dps * 100.0;
+                    res.WeaponAXPercentage = dps_axe / dps * 100.0;
+                    res.WeaponDuration = wepcap_burst_cur;
+                    res.WeaponDurationMax = wepcap_burst_max;
+                    res.WeaponAmmoDuration = ammWpnDur;
+                    res.WeaponCurSus = curWpnSus;
+                    res.WeaponMaxSus = maxWpnSus;
                 }
 
                 return res;
@@ -1071,8 +1210,8 @@ namespace EliteDangerousCore
                 if (sl.Ships.Count > 0)
                 {
                     Ship importedship = sl.Ships.First().Value;
-                    importedship.State = Ship.ShipState.Sold;
-
+                    importedship.State = Ship.ShipState.Imported;
+                    importedship.FuelLevel = importedship.FuelCapacity / 2; // presume half tank
                     return importedship;
                 }
             }
@@ -1136,7 +1275,14 @@ namespace EliteDangerousCore
 
         }
 
-        const int MAX_POWER_DIST = 8;
+        private double getEffectiveWeaponThermalLoad( double thmload, double distdraw, double wepcap, double weplvl) 
+        {
+		    // https://forums.frontier.co.uk/threads/research-detailed-heat-mechanics.286628/post-6408594
+    		return (thmload* (1 + 4 * Math.Min(Math.Max(1 - (wepcap* weplvl - distdraw) / wepcap, 0), 1)));
+    	}
+
+
+    const int MAX_POWER_DIST = 8;
         const double BOOST_MARGIN = 0.005;
         #endregion
     }
