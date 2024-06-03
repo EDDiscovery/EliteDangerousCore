@@ -343,8 +343,6 @@ namespace EliteDangerousCore
                         engineered.Jitter = mf.Value;
                         //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Jitter} -> {engineered.Jitter}");
                     }
-                    // ? DamageTyp
-                    // ? weaponMode
 
 
                     else if (mf.Label.EqualsIIC("ShieldGenMinimumMass"))    // genminmass
@@ -355,8 +353,10 @@ namespace EliteDangerousCore
 
                     else if (mf.Label.EqualsIIC("ShieldGenOptimalMass"))    // genoptmass
                     {
+                        double mul = mf.Value / engineered.OptMass.Value;   // scalar
+                        engineered.MinMass *= mul;
                         engineered.OptMass = mf.Value;
-                        //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.OptMass} -> {engineered.OptMass}");
+                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} min {original.MinMass} -> {engineered.MinMass} opt {original.OptMass} -> {engineered.OptMass}");
                     }
 
                     else if (mf.Label.EqualsIIC("ShieldGenMaximumMass"))// genmaxmass
@@ -364,6 +364,7 @@ namespace EliteDangerousCore
                         engineered.MaxMass = mf.Value;
                         //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MaxMass} -> {engineered.MaxMass}");
                     }
+
 
                     else if (mf.Label.EqualsIIC("ShieldGenMinStrength"))            // genminmul
                     {
@@ -373,7 +374,10 @@ namespace EliteDangerousCore
 
                     else if (mf.Label.EqualsIIC("ShieldGenStrength"))   // genoptmul
                     {
+                        double mul = mf.Value / mf.OriginalValue;
                         engineered.OptStrength = mf.Value;
+                        engineered.MinStrength *= mul;
+                        engineered.MaxStrength *= mul;
                         //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.OptStrength} -> {engineered.OptStrength}");
                     }
 
@@ -607,6 +611,9 @@ namespace EliteDangerousCore
                         engineered.Time = mf.Value;
                         //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Time} -> {engineered.Time}");
                     }
+
+
+// maxrng - > typemis
 
 
                     else if (mf.Label.EqualsIIC("ECMActivePowerConsumption"))   // ecmpwr

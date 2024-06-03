@@ -609,7 +609,7 @@ namespace EliteDangerousCore
                 }
             }
 
-            public string PropertiesAsText()
+            public string PropertiesAsText(string separ = ", ")
             {
                 StringBuilder output = new StringBuilder();
                 if (Class != null && Rating != null)
@@ -629,7 +629,7 @@ namespace EliteDangerousCore
                         if ( value != null )        // if not null, print value
                         {
                             if (output.Length > 0)
-                                output.Append(", ");
+                                output.Append(separ);
                             output.Append($"{pi.Name.SplitCapsWord()}:{value:0.###}{postfix}");
                         }
                     }
