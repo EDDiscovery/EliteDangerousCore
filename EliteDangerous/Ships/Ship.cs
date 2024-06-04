@@ -440,7 +440,7 @@ namespace EliteDangerousCore
 
                     if (me.IsHardpoint)
                     {
-                        var thmload = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.ThermL), 1);      // should always be there
+                        var thmload = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.ThermalLoad), 1);      // should always be there
                         var distdraw = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.DistributorDraw), 1);// should always be there
                         var ammoclip = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.Clip), 0);       // if weapon does not have limits, is 0
                         var ammomax = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.Ammo), 0);
