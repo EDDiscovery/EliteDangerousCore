@@ -39,8 +39,8 @@ namespace EliteDangerousCore
         public ulong BlueprintID { get; set; }
         public int Level { get; set; }
         public double Quality { get; set; }
-        public string ExperimentalEffect { get; set; }      // may be null
-        public string ExperimentalEffect_Localised { get; set; }    // may be null
+        public string ExperimentalEffect { get; set; }      // may be null or maybe empty (due to frontier) use HasChars()
+        public string ExperimentalEffect_Localised { get; set; }    // may be null or maybe empty (due to frontier)
         public EngineeringModifiers[] Modifiers { get; set; }       // may be null
 
         // Post engineering changes
@@ -61,8 +61,15 @@ namespace EliteDangerousCore
                 Quality = evt["Quality"].Double(0);
 
                 // EngineerCraft has it as Apply.. Loadout has just ExperimentalEffect.  Check both
-                ExperimentalEffect = evt.MultiStr(new string[] { "ExperimentalEffect", "ApplyExperimentalEffect" });
-                ExperimentalEffect_Localised = JournalFieldNaming.CheckLocalisation(evt["ExperimentalEffect_Localised"].Str(), ExperimentalEffect);
+                ExperimentalEffect = evt.MultiStr(new string[] { "ExperimentalEffect", "ApplyExperimentalEffect" }, null);
+                if (ExperimentalEffect.HasChars())
+                {
+                    string loc = evt["ExperimentalEffect_Localised"].StrNull();
+                    var recp = Recipes.FindRecipe(ExperimentalEffect);  // see if we have that recipe for backup name
+                    // seen records with localised=experimental effect so protect that.
+                    ExperimentalEffect_Localised = JournalFieldNaming.CheckLocalisation(!loc.EqualsIIC(ExperimentalEffect) ? loc : null, recp?.Name ?? ExperimentalEffect.SplitCapsWordFull());
+                    //System.Diagnostics.Debug.WriteLine($"Exp effect {ExperimentalEffect} loc {loc} recp {recp?.Name} = {ExperimentalEffect_Localised}");
+                }
 
                 Modifiers = evt["Modifiers"]?.ToObject<EngineeringModifiers[]>(ignoretypeerrors: true, checkcustomattr: false);     // instances of Value being wrong type - ignore and continue
 
@@ -145,7 +152,8 @@ namespace EliteDangerousCore
                         if (m.Value != m.OriginalValue)
                         {
                             bool better = m.LessIsGood ? (m.Value < m.OriginalValue) : (m.Value > m.OriginalValue);
-                            ret += BaseUtils.FieldBuilder.Build("", m.FriendlyLabel,"<: ;;0.###", m.Value, "Original: ;;0.###".T(EDCTx.EngineeringData_Original), m.OriginalValue, "< (Worse); (Better)".T(EDCTx.EngineeringData_Worse), better) + Environment.NewLine;
+                            double mul = m.OriginalValue / m.Value * 100 - 100;
+                            ret += BaseUtils.FieldBuilder.Build("", m.FriendlyLabel,"<: ;;0.###", m.Value, "Original: ;;0.###".T(EDCTx.EngineeringData_Original), m.OriginalValue, "Mult: ;%;N1", mul , "< (Worse); (Better)".T(EDCTx.EngineeringData_Worse), better) + Environment.NewLine;
                         }
                         else
                             ret += BaseUtils.FieldBuilder.Build("", m.FriendlyLabel, "<: ;;0.###", m.Value) + Environment.NewLine;
@@ -489,6 +497,20 @@ namespace EliteDangerousCore
                             engineered.EngineOptMultiplier = mf.Value;
                             engineered.EngineMinMultiplier *= mul;
                             engineered.EngineMaxMultiplier *= mul;
+
+                            if ( engineered.MinimumSpeedModifier.HasValue) // for advanced thrusters
+                            {
+                                engineered.MinimumSpeedModifier *= mul;
+                                engineered.OptimalSpeedModifier *= mul;
+                                engineered.MaximumSpeedModifier *= mul;
+                                engineered.MinimumAccelerationModifier *= mul;
+                                engineered.OptimalAccelerationModifier *= mul;
+                                engineered.MaximumAccelerationModifier *= mul;
+                                engineered.MinimumRotationModifier *= mul;
+                                engineered.OptimalRotationModifier *= mul;
+                                engineered.MaximumRotationModifier *= mul;
+                            }
+
                             System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} min {original.EngineMinMultiplier} -> {engineered.EngineMinMultiplier} opt {original.EngineOptMultiplier} -> {engineered.EngineOptMultiplier} max {original.EngineMaxMultiplier} -> {engineered.EngineMaxMultiplier} ");
                         }
 

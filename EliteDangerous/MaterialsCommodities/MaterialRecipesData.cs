@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2023 EDDiscovery development team
+ * Copyright © 2016-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -87,7 +87,7 @@ namespace EliteDangerousCore
         }
 
 
-        [System.Diagnostics.DebuggerDisplay("Rec {FDName} {Level} {ModulesString} {string.Join(\",\",Engineers)}")]
+        [System.Diagnostics.DebuggerDisplay("Rec {FDName} {Level} {ModuleList} {string.Join(\",\",Engineers)}")]
         public class EngineeringRecipe : Recipe
         {
             public string Level { get; private set; }       // may be NA or 1 to 5
@@ -115,10 +115,11 @@ namespace EliteDangerousCore
                 Engineers = type.Split(',');
             }
 
-            public EngineeringRecipe(string n, string mod, string indg)        // for special effects
+            public EngineeringRecipe(string n, string fdname, string mod, string indg)        // for special effects
                 : base(n, indg)
             {
                 Level = "NA";
+                this.FDName = fdname;
                 ModuleList = mod;
                 Engineers = new string[] { "Special Effect" };
             }
@@ -185,6 +186,13 @@ namespace EliteDangerousCore
         public static SynthesisRecipe FindSynthesis(string recipename, string level)
         {
             return SynthesisRecipes.Find(x => x.Name.Equals(recipename, StringComparison.InvariantCultureIgnoreCase) && x.Level.Equals(level, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        // find by fdname, may be null
+        public static EngineeringRecipe FindRecipe(string fdname)
+        {
+            fdname = fdname.ToLowerInvariant();
+            return EngineeringRecipes.Find(x=>x.FDName!=null && x.FDName.Equals(fdname));
         }
 
         public static List<SynthesisRecipe> SynthesisRecipes = new List<SynthesisRecipe>()
@@ -301,10 +309,11 @@ namespace EliteDangerousCore
                             .GroupBy(a => a.mat)
                             .ToDictionary(g => g.Key, g => g.Select(a => a.recipe).ToList());
 
+
         public static List<EngineeringRecipe> EngineeringRecipes = new List<EngineeringRecipe>()
         {
 
-#region Engineering Recipes
+        #region Engineering Recipes
 
         new EngineeringRecipe("Shielded", "misc_shielded", "1WSE", "AFM", "1", "Bill Turner,Lori Jameson,Petra Olmanova" ),
         new EngineeringRecipe("Shielded", "misc_shielded", "1C,1SHE", "AFM", "2", "Bill Turner,Lori Jameson,Petra Olmanova" ),
@@ -1201,92 +1210,92 @@ namespace EliteDangerousCore
 
             #region Special Effects
 
-            new EngineeringRecipe("Angled Plating", "Armour", "5CC,3HDC,3Zr"),
-            new EngineeringRecipe("Angled Plating", "Hull Reinforcement", "5TeA,3Zr,5C,3HDC"),
-            new EngineeringRecipe("Auto Loader", "Cannon,Multicannon", "4ME,3MC,3HDC"),
-            new EngineeringRecipe("Blast Block", "Shield Booster", "5ISSA,3HRC,3HDP,2Se"),
-            new EngineeringRecipe("Boss Cells", "Shield Cell", "5CSU,3Cr,1PCa"),
-            new EngineeringRecipe("Cluster Capacitors", "Power Distributor", "5P,3HRC,1Cd"),
-            new EngineeringRecipe("Concordant Sequence", "Pulse Laser,Burst Laser,Beam Laser", "5FoC,3EFW,1Zr"),
-            new EngineeringRecipe("Corrosive Shell", "Multicannon,Frag Cannon", "5CSU,4PAll,3As"),
-            new EngineeringRecipe("Dazzle Shell", "Plasma Accelerator,Frag Cannon", "5MS,4Mn,5HC,5MS"),
-            new EngineeringRecipe("Deep Charge", "FSD", "5ADWE,3GA,1EHT"),
-            new EngineeringRecipe("Deep Plating", "Armour", "5CC,3ME,2Mo"),
-            new EngineeringRecipe("Deep Plating", "Hull Reinforcement", "5CC,3Mo,2Ru"),
-            new EngineeringRecipe("Dispersal Field", "Plasma Accelerator,Cannon", "5CCo,5HC,5IED,5WSE"),
-            new EngineeringRecipe("Double Braced", "Weapon", "5MS,5CC,3V"),
-            new EngineeringRecipe("Double Braced", "FSD", "5ADWE,3GA,1CCom"),
-            new EngineeringRecipe("Double Braced", "Power Plant", "5GR,3V,1FPC"),
-            new EngineeringRecipe("Double Braced", "Shield Cell", "5CSU,3Cr,1Y"),
-            new EngineeringRecipe("Double Braced", "Engine", "5Fe,3HC,1FPC"),
-            new EngineeringRecipe("Double Braced", "Shield Generator", "5WSE,3FFC,1CCom"),
-            new EngineeringRecipe("Double Braced", "Power Distributor", "5P,3HRC,1FPC"),
-            new EngineeringRecipe("Double Braced", "Shield Booster", "5DSCR,3GA,3SHE"),
-            new EngineeringRecipe("Drag Drives", "Engine", "5Fe,3HC,1SFP"),
-            new EngineeringRecipe("Drag Munitions", "Frag Cannon,Seeker Missile", "5C,5GR,2Mo"),
-            new EngineeringRecipe("Drive Distributors", "Engine", "5Fe,3HC,1SFP"),
-            new EngineeringRecipe("Emissive Munitions", "Pulse Laser,Multicannon,Seeker Missile,Dumb Missile,Mine", "4ME,3UED,3HE,3Mn"),
-            new EngineeringRecipe("Fast Charge", "Shield Generator", "5WSE,3FFC,1CoS"),
-            new EngineeringRecipe("Feedback Cascade", "Rail Gun", "5OSK,5SHE,5FiC"),
-            new EngineeringRecipe("Flow Control", "Power Distributor", "5P,3HRC,1CPo"),
-            new EngineeringRecipe("Flow Control", "Weapon", "5MS,3HC,1EFW"),
-            new EngineeringRecipe("Flow Control", "Shield Booster", "5ISSA,3SFP,3FoC,3Nb"),
-            new EngineeringRecipe("Flow Control", "Shield Cell", "5CSU,3Cr,1CPo"),
-            new EngineeringRecipe("Force Block", "Shield Booster", "5USA,3SS,2ASPA"),
-            new EngineeringRecipe("Force Block", "Shield Generator", "5WSE,3FFC,1DED"),
-            new EngineeringRecipe("Force Shell", "Cannon", "5MS,5Zn,3PA,3HCW"),
-            new EngineeringRecipe("FSD Interrupt", "Dumb Missile", "3SWS,5AFT,5ME,3CCom"),
-            new EngineeringRecipe("Hi-Cap", "Shield Generator", "5WSE,3FFC,1CPo"),
-            new EngineeringRecipe("High Yield Shell", "Cannon", "5MS,3PLA,3CM,5Ni"),
-            new EngineeringRecipe("Incendiary Rounds", "Multicannon,Frag Cannon", "5HCW,5P,5S,3PA"),
-            new EngineeringRecipe("Inertial Impact", "Burst Laser", "5FFC,5DSCR,5ADWE"),
-            new EngineeringRecipe("Ion Disruption", "Mine", "5S,5P,3CHD,3EA"),
-            new EngineeringRecipe("Layered Plating", "Armour", "5HCW,3HDC,1Nb"),
-            new EngineeringRecipe("Layered Plating", "Hull Reinforcement", "5HCW,3SS,3W"),
-            new EngineeringRecipe("Lo-draw", "Shield Generator", "5WSE,3FFC,1CPo"),
-            new EngineeringRecipe("Mass Lock Munition", "Torpedo", "5ME,3HDC,3ASPA"),
-            new EngineeringRecipe("Mass Manager", "FSD", "5ADWE,3GA,1EHT"),
-            new EngineeringRecipe("Monstered", "Power Plant", "5GR,3V,1PCa"),
-            new EngineeringRecipe("Multi-servos", "Pulse Laser,Burst Laser,Cannon,Multicannon,Plasma Accelerator,Rail Gun,Frag Cannon,Missile", "5MS,4FoC,2CPo,2CCom"),
-            new EngineeringRecipe("Multi-weave", "Shield Generator", "5WSE,3FFC,1ASPA"),
-            new EngineeringRecipe("Overload Munitions", "Seeker Missile,Dumb Missile,Mine", "5FiC,4TEC,2ASPA,3Ge"),
-            new EngineeringRecipe("Oversized", "Weapon", "5MS,3MC,1Ru"),
-            new EngineeringRecipe("Penetrator Munitions", "Dumb Missile", "5GA,3EA,3Zr"),
-            new EngineeringRecipe("Penetrator Payload", "Torpedo", "3MC,3W,5ABSD,3Se"),
-            new EngineeringRecipe("Phasing Sequence", "Pulse Laser,Burst Laser,Plasma Accelerator", "5FoC,3ASPA,3Nb,3CCom"),
-            new EngineeringRecipe("Plasma Slug", "Plasma Accelerator", "3HE,2EFW,2RFC,4Hg"),
-            new EngineeringRecipe("Plasma Slug", "Rail Gun", "3HE,2EFW,2RFC,4Hg"),
-            new EngineeringRecipe("Radiant Canister", "Mine", "1Po,3PA,4HDP"),
-            new EngineeringRecipe("Recycling Cell", "Shield Cell", "5CSU,3Cr,1CCom"),
-            new EngineeringRecipe("Reflective Plating", "Armour", "5CC,3HDP,2ThA"),
-            new EngineeringRecipe("Reflective Plating", "Hull Reinforcement", "5HCW,3HDP,1PLA,4Zn"),
-            new EngineeringRecipe("Regeneration Sequence", "Beam Laser", "3RFC,4SS,1PSFD"),
-            new EngineeringRecipe("Reverberating Cascade", "Torpedo,Mine", "2CCom,3CSD,4FiC,4Cr"),
-            new EngineeringRecipe("Scramble Spectrum", "Pulse Laser,Burst Laser", "5CS,3USS,5ESED"),
-            new EngineeringRecipe("Screening Shell", "Frag Cannon", "5MS,5DSCR,5MCF,3Nb"),
-            new EngineeringRecipe("Shift-lock Canister", "Mine", "5TeA,3SWS,5SAll"),
-            new EngineeringRecipe("Smart Rounds", "Cannon,Multicannon", "5MS,3SFP,3DED,3CSD"),
-            new EngineeringRecipe("Stripped Down", "Engine", "5Fe,3HC,1PLA"),
-            new EngineeringRecipe("Stripped Down", "Power Distributor", "5P,3HRC,1PLA"),
-            new EngineeringRecipe("Stripped Down", "Weapon", "5SAll,5C,1Sn"),
-            new EngineeringRecipe("Stripped Down", "Shield Cell", "5CSU,3Cr,1PLA"),
-            new EngineeringRecipe("Stripped Down", "FSD", "5ADWE,3GA,1PLA"),
-            new EngineeringRecipe("Stripped Down", "Power Plant", "5GR,3V,1PLA"),
-            new EngineeringRecipe("Stripped Down", "Shield Generator", "5WSE,3FFC,1PLA"),
-            new EngineeringRecipe("Super Capacitors", "Shield Booster", "3USS,5CC,2Cd"),
-            new EngineeringRecipe("Super Conduits", "Power Distributor", "5P,3HRC,1SFP"),
-            new EngineeringRecipe("Super Penetrator", "Rail Gun", "3PLA,3RFC,3Zr,5USS"),
-            new EngineeringRecipe("Target Lock Breaker", "Plasma Accelerator", "5Se,3SFP,1AEC"),
-            new EngineeringRecipe("Thermal Cascade", "Cannon,Seeker Missile,Dumb Missile", "5HCW,4HC,3HDC,5P"),
-            new EngineeringRecipe("Thermal Conduit", "Beam Laser,Plasma Accelerator", "5HDP,5S,5TeA"),
-            new EngineeringRecipe("Thermal Shock", "Pulse Laser,Burst Laser,Beam Laser,Multicannon", "5FFC,3HRC,3CCo,3W"),
-            new EngineeringRecipe("Thermal Spread", "Power Plant", "5GR,3V,1HV"),
-            new EngineeringRecipe("Thermal Spread", "FSD", "5ADWE,3GA,1HV,3GR"),
-            new EngineeringRecipe("Thermal Spread", "Engine", "5Fe,3HC,1HV"),
-            new EngineeringRecipe("Thermal Vent", "Beam Laser", "5FFC,3CPo,3PAll"),
-            new EngineeringRecipe("Thermo Block", "Shield Generator", "5WSE,3FFC,1HV"),
-            new EngineeringRecipe("Thermo Block", "Shield Booster", "5ABSD,3CCe,3HV"),
-
+            new EngineeringRecipe("Angled Plating", "special_armour_kinetic", "Armour", "5CC,3HDC,3Zr"),
+            new EngineeringRecipe("Angled Plating", "special_hullreinforcement_kinetic", "Hull Reinforcement", "5TeA,3Zr,5C,3HDC"),
+            new EngineeringRecipe("Auto Loader", "special_auto_loader", "Cannon,Multicannon", "4ME,3MC,3HDC"),
+            new EngineeringRecipe("Blast Block", "special_shieldbooster_explosive", "Shield Booster", "5ISSA,3HRC,3HDP,2Se"),
+            new EngineeringRecipe("Boss Cells", "special_shieldcell_oversized", "Shield Cell", "5CSU,3Cr,1PCa"),
+            new EngineeringRecipe("Cluster Capacitors", "special_powerdistributor_capacity", "Power Distributor", "5P,3HRC,1Cd"),
+            new EngineeringRecipe("Concordant Sequence", "special_concordant_sequence", "Pulse Laser,Burst Laser,Beam Laser", "5FoC,3EFW,1Zr"),
+            new EngineeringRecipe("Corrosive Shell", "special_corrosive_shell", "Multicannon,Frag Cannon", "5CSU,4PAll,3As"),
+            new EngineeringRecipe("Dazzle Shell", "special_blinding_shell", "Plasma Accelerator,Frag Cannon", "5MS,4Mn,5HC,5MS"),
+            new EngineeringRecipe("Deep Charge", "special_fsd_fuelcapacity", "FSD", "5ADWE,3GA,1EHT"),
+            new EngineeringRecipe("Deep Plating", "special_armour_chunky", "Armour", "5CC,3ME,2Mo"),
+            new EngineeringRecipe("Deep Plating", "special_hullreinforcement_chunky", "Hull Reinforcement", "5CC,3Mo,2Ru"),
+            new EngineeringRecipe("Dispersal Field", "special_dispersal_field", "Plasma Accelerator,Cannon", "5CCo,5HC,5IED,5WSE"),
+            new EngineeringRecipe("Double Braced", "special_engine_toughened", "Engine", "5Fe,3HC,1FPC"),
+            new EngineeringRecipe("Double Braced", "special_fsd_toughened", "FSD", "5ADWE,3GA,1CCom"),
+            new EngineeringRecipe("Double Braced", "special_powerdistributor_toughened", "Power Distributor", "5P,3HRC,1FPC"),
+            new EngineeringRecipe("Double Braced", "special_powerplant_toughened", "Power Plant", "5GR,3V,1FPC"),
+            new EngineeringRecipe("Double Braced", "special_shield_toughened", "Shield Generator", "5WSE,3FFC,1CCom"),
+            new EngineeringRecipe("Double Braced", "special_shieldbooster_toughened", "Shield Booster", "5DSCR,3GA,3SHE"),
+            new EngineeringRecipe("Double Braced", "special_shieldcell_toughened", "Shield Cell", "5CSU,3Cr,1Y"),
+            new EngineeringRecipe("Double Braced", "special_weapon_toughened", "Weapon", "5MS,5CC,3V"),
+            new EngineeringRecipe("Drag Drives", "special_engine_overloaded", "Engine", "5Fe,3HC,1SFP"),
+            new EngineeringRecipe("Drag Munitions", "special_drag_munitions", "Frag Cannon,Seeker Missile", "5C,5GR,2Mo"),
+            new EngineeringRecipe("Drive Distributors", "special_engine_haulage", "Engine", "5Fe,3HC,1SFP"),
+            new EngineeringRecipe("Emissive Munitions", "special_emissive_munitions", "Pulse Laser,Multicannon,Seeker Missile,Dumb Missile,Mine", "4ME,3UED,3HE,3Mn"),
+            new EngineeringRecipe("Fast Charge", "special_shield_regenerative", "Shield Generator", "5WSE,3FFC,1CoS"),
+            new EngineeringRecipe("Feedback Cascade", "special_feedback_cascade_cooled", "Rail Gun", "5OSK,5SHE,5FiC"),
+            new EngineeringRecipe("Flow Control", "special_powerdistributor_efficient", "Power Distributor", "5P,3HRC,1CPo"),
+            new EngineeringRecipe("Flow Control", "special_shieldbooster_efficient", "Shield Booster", "5ISSA,3SFP,3FoC,3Nb"),
+            new EngineeringRecipe("Flow Control", "special_shieldcell_efficient", "Shield Cell", "5CSU,3Cr,1CPo"),
+            new EngineeringRecipe("Flow Control", "special_weapon_efficient", "Weapon", "5MS,3HC,1EFW"),
+            new EngineeringRecipe("Force Block", "special_shield_kinetic", "Shield Generator", "5WSE,3FFC,1DED"),
+            new EngineeringRecipe("Force Block", "special_shieldbooster_kinetic", "Shield Booster", "5USA,3SS,2ASPA"),
+            new EngineeringRecipe("Force Shell", "special_force_shell", "Cannon", "5MS,5Zn,3PA,3HCW"),
+            new EngineeringRecipe("FSD Interrupt", "special_fsd_interrupt", "Dumb Missile", "3SWS,5AFT,5ME,3CCom"),
+            new EngineeringRecipe("Hi-Cap", "special_shield_health", "Shield Generator", "5WSE,3FFC,1CPo"),
+            new EngineeringRecipe("High Yield Shell", "special_high_yield_shell", "Cannon", "5MS,3PLA,3CM,5Ni"),
+            new EngineeringRecipe("Incendiary Rounds", "special_incendiary_rounds", "Multicannon,Frag Cannon", "5HCW,5P,5S,3PA"),
+            new EngineeringRecipe("Inertial Impact", "special_distortion_field", "Burst Laser", "5FFC,5DSCR,5ADWE"),
+            new EngineeringRecipe("Ion Disruption", "special_choke_canister", "Mine", "5S,5P,3CHD,3EA"),
+            new EngineeringRecipe("Layered Plating", "special_armour_explosive", "Armour", "5HCW,3HDC,1Nb"),
+            new EngineeringRecipe("Layered Plating", "special_hullreinforcement_explosive", "Hull Reinforcement", "5HCW,3SS,3W"),
+            new EngineeringRecipe("Lo-draw", "special_shield_efficient", "Shield Generator", "5WSE,3FFC,1CPo"),
+            new EngineeringRecipe("Mass Lock Munition", "special_mass_lock", "Torpedo", "5ME,3HDC,3ASPA"),
+            new EngineeringRecipe("Mass Manager", "special_fsd_heavy", "FSD", "5ADWE,3GA,1EHT"),
+            new EngineeringRecipe("Monstered", "special_powerplant_highcharge", "Power Plant", "5GR,3V,1PCa"),
+            new EngineeringRecipe("Multi-servos", "special_weapon_rateoffire", "Pulse Laser,Burst Laser,Cannon,Multicannon,Plasma Accelerator,Rail Gun,Frag Cannon,Missile", "5MS,4FoC,2CPo,2CCom"),
+            new EngineeringRecipe("Multi-weave", "special_shield_resistive", "Shield Generator", "5WSE,3FFC,1ASPA"),
+            new EngineeringRecipe("Overload Munitions", "special_overload_munitions", "Seeker Missile,Dumb Missile,Mine", "5FiC,4TEC,2ASPA,3Ge"),
+            new EngineeringRecipe("Oversized", "special_weapon_damage", "Weapon", "5MS,3MC,1Ru"),
+            new EngineeringRecipe("Penetrator Munitions", "special_penetrator_munitions", "Dumb Missile", "5GA,3EA,3Zr"),
+            new EngineeringRecipe("Penetrator Payload", "special_deep_cut_payload", "Torpedo", "3MC,3W,5ABSD,3Se"),
+            new EngineeringRecipe("Phasing Sequence", "special_phasing_sequence", "Pulse Laser,Burst Laser,Plasma Accelerator", "5FoC,3ASPA,3Nb,3CCom"),
+            new EngineeringRecipe("Plasma Slug", "special_plasma_slug", "Plasma Accelerator", "3HE,2EFW,2RFC,4Hg"),
+            new EngineeringRecipe("Plasma Slug", "special_plasma_slug_cooled", "Rail Gun", "3HE,2EFW,2RFC,4Hg"),
+            new EngineeringRecipe("Radiant Canister", "special_radiant_canister", "Mine", "1Po,3PA,4HDP"),
+            new EngineeringRecipe("Recycling Cell", "special_shieldcell_gradual", "Shield Cell", "5CSU,3Cr,1CCom"),
+            new EngineeringRecipe("Reflective Plating", "special_armour_thermic", "Armour", "5CC,3HDP,2ThA"),
+            new EngineeringRecipe("Reflective Plating", "special_hullreinforcement_thermic", "Hull Reinforcement", "5HCW,3HDP,1PLA,4Zn"),
+            new EngineeringRecipe("Regeneration Sequence", "special_regeneration_sequence", "Beam Laser", "3RFC,4SS,1PSFD"),
+            new EngineeringRecipe("Reverberating Cascade", "special_reverberating_cascade", "Torpedo,Mine", "2CCom,3CSD,4FiC,4Cr"),
+            new EngineeringRecipe("Scramble Spectrum", "special_scramble_spectrum", "Pulse Laser,Burst Laser", "5CS,3USS,5ESED"),
+            new EngineeringRecipe("Screening Shell", "special_screening_shell", "Frag Cannon", "5MS,5DSCR,5MCF,3Nb"),
+            new EngineeringRecipe("Shift-lock Canister", "special_shiftlock_canister", "Mine", "5TeA,3SWS,5SAll"),
+            new EngineeringRecipe("Smart Rounds", "special_smart_rounds", "Cannon,Multicannon", "5MS,3SFP,3DED,3CSD"),
+            new EngineeringRecipe("Stripped Down", "special_engine_lightweight", "Engine", "5Fe,3HC,1PLA"),
+            new EngineeringRecipe("Stripped Down", "special_fsd_lightweight", "FSD", "5ADWE,3GA,1PLA"),
+            new EngineeringRecipe("Stripped Down", "special_powerdistributor_lightweight", "Power Distributor", "5P,3HRC,1PLA"),
+            new EngineeringRecipe("Stripped Down", "special_powerplant_lightweight", "Power Plant", "5GR,3V,1PLA"),
+            new EngineeringRecipe("Stripped Down", "special_shield_lightweight", "Shield Generator", "5WSE,3FFC,1PLA"),
+            new EngineeringRecipe("Stripped Down", "special_shieldcell_lightweight", "Shield Cell", "5CSU,3Cr,1PLA"),
+            new EngineeringRecipe("Stripped Down", "special_weapon_lightweight", "Weapon", "5SAll,5C,1Sn"),
+            new EngineeringRecipe("Super Capacitors", "special_shieldbooster_chunky", "Shield Booster", "3USS,5CC,2Cd"),
+            new EngineeringRecipe("Super Conduits", "special_powerdistributor_fast", "Power Distributor", "5P,3HRC,1SFP"),
+            new EngineeringRecipe("Super Penetrator", "special_super_penetrator_cooled", "Rail Gun", "3PLA,3RFC,3Zr,5USS"),
+            new EngineeringRecipe("Target Lock Breaker", "special_lock_breaker", "Plasma Accelerator", "5Se,3SFP,1AEC"),
+            new EngineeringRecipe("Thermal Cascade", "special_thermal_cascade", "Cannon,Seeker Missile,Dumb Missile", "5HCW,4HC,3HDC,5P"),
+            new EngineeringRecipe("Thermal Conduit", "special_thermal_conduit", "Beam Laser,Plasma Accelerator", "5HDP,5S,5TeA"),
+            new EngineeringRecipe("Thermal Shock", "special_thermalshock", "Pulse Laser,Burst Laser,Beam Laser,Multicannon", "5FFC,3HRC,3CCo,3W"),
+            new EngineeringRecipe("Thermal Spread", "special_engine_cooled", "Engine", "5Fe,3HC,1HV"),
+            new EngineeringRecipe("Thermal Spread", "special_fsd_cooled", "FSD", "5ADWE,3GA,1HV,3GR"),
+            new EngineeringRecipe("Thermal Spread", "special_powerplant_cooled", "Power Plant", "5GR,3V,1HV"),
+            new EngineeringRecipe("Thermal Vent", "special_thermal_vent", "Beam Laser", "5FFC,3CPo,3PAll"),
+            new EngineeringRecipe("Thermo Block", "special_shield_thermic", "Shield Generator", "5WSE,3FFC,1HV"),
+            new EngineeringRecipe("Thermo Block", "special_shieldbooster_thermic", "Shield Booster", "5ABSD,3CCe,3HV"),
+            
             #endregion
 
             #region suit/weapon levels
