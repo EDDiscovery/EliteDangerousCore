@@ -239,6 +239,7 @@ namespace EliteDangerousCore
 
         #region ShipModule
 
+        [System.Diagnostics.DebuggerDisplay("{EnglishModName} {ModType} {ModuleID} {Class} {Rating}")]
         public class ShipModule 
         {
             public enum ModuleTypes
@@ -437,8 +438,8 @@ namespace EliteDangerousCore
 
 
             [PropertyNameAttribute("%")] public double? KineticResistance { get; set; }             // 'kinres' % bonus on base values
-            [PropertyNameAttribute("%")] public double? ExplosiveResistance { get; set; }           // 'expres' % bonus on base values
             [PropertyNameAttribute("%")] public double? ThermalResistance { get; set; }             // 'thmres' % bonus on base values
+            [PropertyNameAttribute("%")] public double? ExplosiveResistance { get; set; }           // 'expres' % bonus on base values
             [PropertyNameAttribute("%")] public double? AXResistance { get; set; }                  // 'axeres' % bonus on base values armour - not engineered
             [PropertyNameAttribute("%")] public double? CausticResistance { get; set; }             // 'caures' % bonus on base values not armour
 
@@ -473,13 +474,15 @@ namespace EliteDangerousCore
             [PropertyNameAttribute("%")] public double? AXPorportionDamage { get; set; }            // 'axewgt'
 
 
+            [PropertyNameAttribute("MW")] public double? PowerGen { get; set; } // MW power plant
+            [PropertyNameAttribute("%")] public double? HeatEfficiency { get; set; } //% power plants
+
             // TO BE ORDERED
 
             [PropertyNameAttribute("")] public string CabinClass { get; set; }              // 'cabincls'
             [PropertyNameAttribute("")] public double? HullReinforcement { get; set; }                          // 'hullrnf' units
             [PropertyNameAttribute("")] public double? ShieldReinforcement { get; set; }                        // 'shieldrnf'
             [PropertyNameAttribute("")] public double? AdditionalReinforcement { get; set; } // shields additional strength, units
-            [PropertyNameAttribute("%")] public double? HeatEfficiency { get; set; } //% power plants
             [PropertyNameAttribute("")] public int? MaxCargo { get; set; } // hatch breaker limpet
             [PropertyNameAttribute("")] public int? MinCargo { get; set; } // hatch breaker limpet
             [PropertyNameAttribute("s")] public double? HackTime { get; set; }// hatch breaker limpet
@@ -491,7 +494,6 @@ namespace EliteDangerousCore
 
 
             [PropertyNameAttribute("%")] public double? PowerBonus { get; set; } // guardian power bonus
-            [PropertyNameAttribute("MW")] public double? PowerGen { get; set; } // MW power plant
             [PropertyNameAttribute("MW/u")] public double? MWPerUnit { get; set; }                  // 'genpwr' MW per shield unit
             [PropertyNameAttribute("MW/s")] public double? MWPerSec { get; set; } // MW per sec
             [PropertyNameAttribute("s")] public double? SCBSpinUp { get; set; }
@@ -2152,18 +2154,20 @@ namespace EliteDangerousCore
 
                 { "hpt_cargoscanner_basic_tiny", new ShipModule(-1,ShipModule.ModuleTypes.CargoScanner,"Manifest Scanner Basic" ) },
 
-               // { "int_corrosionproofcargorack_size2_class1", new ShipModule(-1,null,"Anti Corrosion Cargo Rack",ShipModule.ModuleTypes.CargoRack) },
-               // { "hpt_plasmaburstcannon_fixed_medium", new ShipModule(-1,1,1.4,null,"Plasma Burst Cannon Fixed Medium","Plasma Accelerator") },      // no evidence
-               // { "hpt_pulselaserstealth_fixed_small", new ShipModule(-1,1,0.2,null,"Pulse Laser Stealth Fixed Small",ShipModule.ModuleTypes.PulseLaser) },
+                // in frontier data but no game evidence
+                // { "hpt_plasmaburstcannon_fixed_medium", new ShipModule(-1,1,1.4,null,"Plasma Burst Cannon Fixed Medium","Plasma Accelerator") },      // no evidence
+                // { "hpt_pulselaserstealth_fixed_small", new ShipModule(-1,1,0.2,null,"Pulse Laser Stealth Fixed Small",ShipModule.ModuleTypes.PulseLaser) },
                 ///{ "int_shieldgenerator_size1_class4", new ShipModule(-1,2,1.44,null,"Shield Generator Class 1 Rating E",ShipModule.ModuleTypes.ShieldGenerator) },
+
+                // { "int_corrosionproofcargorack_size2_class1", new ShipModule(-1,null,"Anti Corrosion Cargo Rack",ShipModule.ModuleTypes.CargoRack) },
 
             };
 
             fightermodules = new Dictionary<string, ShipModule>
             {
-                { "hpt_guardiangauss_fixed_gdn_fighter", new ShipModule(899990050,ShipModule.ModuleTypes.FighterWeapon,"Guardian Gauss Fixed GDN Fighter")  },
-                { "hpt_guardianplasma_fixed_gdn_fighter", new ShipModule(899990050,ShipModule.ModuleTypes.FighterWeapon,"Guardian Plasma Fixed GDN Fighter") },
-                { "hpt_guardianshard_fixed_gdn_fighter", new ShipModule(899990050,ShipModule.ModuleTypes.FighterWeapon,"Guardian Shard Fixed GDN Fighter") },
+                { "hpt_guardiangauss_fixed_gdn_fighter", new ShipModule(899990050,ShipModule.ModuleTypes.FighterWeapon,"Guardian Gauss Fixed GDN Fighter")   { PowerDraw = 1 }},
+                { "hpt_guardianplasma_fixed_gdn_fighter", new ShipModule(899990050,ShipModule.ModuleTypes.FighterWeapon,"Guardian Plasma Fixed GDN Fighter")  { PowerDraw = 1 }},
+                { "hpt_guardianshard_fixed_gdn_fighter", new ShipModule(899990050,ShipModule.ModuleTypes.FighterWeapon,"Guardian Shard Fixed GDN Fighter")  { PowerDraw = 1 }},
 
                 { "empire_fighter_armour_standard", new ShipModule(899990059,ShipModule.ModuleTypes.LightweightAlloy,"Empire Fighter Armour Standard") },
                 { "federation_fighter_armour_standard", new ShipModule(899990060,ShipModule.ModuleTypes.LightweightAlloy,"Federation Fighter Armour Standard") },
@@ -2172,21 +2176,21 @@ namespace EliteDangerousCore
                 { "gdn_hybrid_fighter_v2_armour_standard", new ShipModule(899990060,ShipModule.ModuleTypes.LightweightAlloy,"GDN Hybrid Fighter V 2 Armour Standard") },
                 { "gdn_hybrid_fighter_v3_armour_standard", new ShipModule(899990060,ShipModule.ModuleTypes.LightweightAlloy,"GDN Hybrid Fighter V 3 Armour Standard") },
 
-                { "hpt_beamlaser_fixed_empire_fighter", new ShipModule(899990018,ShipModule.ModuleTypes.BeamLaser,"Beam Laser Fixed Empire Fighter") },
-                { "hpt_beamlaser_fixed_fed_fighter", new ShipModule(899990019,ShipModule.ModuleTypes.BeamLaser,"Beam Laser Fixed Federation Fighter") },
-                { "hpt_beamlaser_fixed_indie_fighter", new ShipModule(899990020,ShipModule.ModuleTypes.BeamLaser,"Beam Laser Fixed Indie Fighter") },
-                { "hpt_beamlaser_gimbal_empire_fighter", new ShipModule(899990023,ShipModule.ModuleTypes.BeamLaser,"Beam Laser Gimbal Empire Fighter") },
-                { "hpt_beamlaser_gimbal_fed_fighter", new ShipModule(899990024,ShipModule.ModuleTypes.BeamLaser,"Beam Laser Gimbal Federation Fighter") },
-                { "hpt_beamlaser_gimbal_indie_fighter", new ShipModule(899990025,ShipModule.ModuleTypes.BeamLaser,"Beam Laser Gimbal Indie Fighter") },
-                { "hpt_plasmarepeater_fixed_empire_fighter", new ShipModule(899990026,ShipModule.ModuleTypes.PlasmaAccelerator,"Plasma Repeater Fixed Empire Fighter") },
-                { "hpt_plasmarepeater_fixed_fed_fighter", new ShipModule(899990027,ShipModule.ModuleTypes.PlasmaAccelerator,"Plasma Repeater Fixed Fed Fighter") },
-                { "hpt_plasmarepeater_fixed_indie_fighter", new ShipModule(899990028,ShipModule.ModuleTypes.PlasmaAccelerator,"Plasma Repeater Fixed Indie Fighter") },
-                { "hpt_pulselaser_fixed_empire_fighter", new ShipModule(899990029,ShipModule.ModuleTypes.PulseLaser,"Pulse Laser Fixed Empire Fighter") },
-                { "hpt_pulselaser_fixed_fed_fighter", new ShipModule(899990030,ShipModule.ModuleTypes.PulseLaser,"Pulse Laser Fixed Federation Fighter") },
-                { "hpt_pulselaser_fixed_indie_fighter", new ShipModule(899990031,ShipModule.ModuleTypes.PulseLaser,"Pulse Laser Fixed Indie Fighter") },
-                { "hpt_pulselaser_gimbal_empire_fighter", new ShipModule(899990032,ShipModule.ModuleTypes.PulseLaser,"Pulse Laser Gimbal Empire Fighter") },
-                { "hpt_pulselaser_gimbal_fed_fighter", new ShipModule(899990033,ShipModule.ModuleTypes.PulseLaser,"Pulse Laser Gimbal Federation Fighter") },
-                { "hpt_pulselaser_gimbal_indie_fighter", new ShipModule(899990034,ShipModule.ModuleTypes.PulseLaser,"Pulse Laser Gimbal Indie Fighter") },
+                { "hpt_beamlaser_fixed_empire_fighter", new ShipModule(899990018,ShipModule.ModuleTypes.BeamLaser,"Beam Laser Fixed Empire Fighter")  { PowerDraw = 1 }},
+                { "hpt_beamlaser_fixed_fed_fighter", new ShipModule(899990019,ShipModule.ModuleTypes.BeamLaser,"Beam Laser Fixed Federation Fighter")  { PowerDraw = 1 } },
+                { "hpt_beamlaser_fixed_indie_fighter", new ShipModule(899990020,ShipModule.ModuleTypes.BeamLaser,"Beam Laser Fixed Indie Fighter")  { PowerDraw = 1 }},
+                { "hpt_beamlaser_gimbal_empire_fighter", new ShipModule(899990023,ShipModule.ModuleTypes.BeamLaser,"Beam Laser Gimbal Empire Fighter")  { PowerDraw = 1 }},
+                { "hpt_beamlaser_gimbal_fed_fighter", new ShipModule(899990024,ShipModule.ModuleTypes.BeamLaser,"Beam Laser Gimbal Federation Fighter")  { PowerDraw = 1 }},
+                { "hpt_beamlaser_gimbal_indie_fighter", new ShipModule(899990025,ShipModule.ModuleTypes.BeamLaser,"Beam Laser Gimbal Indie Fighter")  { PowerDraw = 1 }},
+                { "hpt_plasmarepeater_fixed_empire_fighter", new ShipModule(899990026,ShipModule.ModuleTypes.PlasmaAccelerator,"Plasma Repeater Fixed Empire Fighter")  { PowerDraw = 1 }},
+                { "hpt_plasmarepeater_fixed_fed_fighter", new ShipModule(899990027,ShipModule.ModuleTypes.PlasmaAccelerator,"Plasma Repeater Fixed Fed Fighter")  { PowerDraw = 1 }},
+                { "hpt_plasmarepeater_fixed_indie_fighter", new ShipModule(899990028,ShipModule.ModuleTypes.PlasmaAccelerator,"Plasma Repeater Fixed Indie Fighter")  { PowerDraw = 1 }},
+                { "hpt_pulselaser_fixed_empire_fighter", new ShipModule(899990029,ShipModule.ModuleTypes.PulseLaser,"Pulse Laser Fixed Empire Fighter")  { PowerDraw = 1 }},
+                { "hpt_pulselaser_fixed_fed_fighter", new ShipModule(899990030,ShipModule.ModuleTypes.PulseLaser,"Pulse Laser Fixed Federation Fighter")  { PowerDraw = 1 }},
+                { "hpt_pulselaser_fixed_indie_fighter", new ShipModule(899990031,ShipModule.ModuleTypes.PulseLaser,"Pulse Laser Fixed Indie Fighter")  { PowerDraw = 1 }},
+                { "hpt_pulselaser_gimbal_empire_fighter", new ShipModule(899990032,ShipModule.ModuleTypes.PulseLaser,"Pulse Laser Gimbal Empire Fighter")  { PowerDraw = 1 }},
+                { "hpt_pulselaser_gimbal_fed_fighter", new ShipModule(899990033,ShipModule.ModuleTypes.PulseLaser,"Pulse Laser Gimbal Federation Fighter")  { PowerDraw = 1 }},
+                { "hpt_pulselaser_gimbal_indie_fighter", new ShipModule(899990034,ShipModule.ModuleTypes.PulseLaser,"Pulse Laser Gimbal Indie Fighter")  { PowerDraw = 1 }},
 
                 { "int_engine_fighter_class1", new ShipModule(-1,ShipModule.ModuleTypes.Thrusters,"Fighter Engine Class 1") },
 
@@ -2194,10 +2198,10 @@ namespace EliteDangerousCore
                 { "gdn_hybrid_fighter_v2_cockpit", new ShipModule(899990102,ShipModule.ModuleTypes.CockpitType,"GDN Hybrid Fighter V 2 Cockpit") },
                 { "gdn_hybrid_fighter_v3_cockpit", new ShipModule(899990103,ShipModule.ModuleTypes.CockpitType,"GDN Hybrid Fighter V 3 Cockpit") },
 
-                { "hpt_atmulticannon_fixed_indie_fighter", new ShipModule(899990040,ShipModule.ModuleTypes.AXMulti_Cannon,"AX Multicannon Fixed Indie Fighter") },
-                { "hpt_multicannon_fixed_empire_fighter", new ShipModule(899990050,ShipModule.ModuleTypes.Multi_Cannon,"Multicannon Fixed Empire Fighter") },
-                { "hpt_multicannon_fixed_fed_fighter", new ShipModule(899990051,ShipModule.ModuleTypes.Multi_Cannon,"Multicannon Fixed Fed Fighter") },
-                { "hpt_multicannon_fixed_indie_fighter", new ShipModule(899990052,ShipModule.ModuleTypes.Multi_Cannon,"Multicannon Fixed Indie Fighter") },
+                { "hpt_atmulticannon_fixed_indie_fighter", new ShipModule(899990040,ShipModule.ModuleTypes.AXMulti_Cannon,"AX Multicannon Fixed Indie Fighter")  { PowerDraw = 1 }},
+                { "hpt_multicannon_fixed_empire_fighter", new ShipModule(899990050,ShipModule.ModuleTypes.Multi_Cannon,"Multicannon Fixed Empire Fighter")  { PowerDraw = 1 }},
+                { "hpt_multicannon_fixed_fed_fighter", new ShipModule(899990051,ShipModule.ModuleTypes.Multi_Cannon,"Multicannon Fixed Fed Fighter")  { PowerDraw = 1 }},
+                { "hpt_multicannon_fixed_indie_fighter", new ShipModule(899990052,ShipModule.ModuleTypes.Multi_Cannon,"Multicannon Fixed Indie Fighter")  { PowerDraw = 1 }},
 
                 { "int_powerdistributor_fighter_class1", new ShipModule(-1,ShipModule.ModuleTypes.PowerDistributor,"Int Powerdistributor Fighter Class 1") },
 

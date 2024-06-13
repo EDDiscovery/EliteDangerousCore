@@ -272,6 +272,7 @@ namespace EliteDangerousCore
             return changed;
         }
 
+#if !TESTHARNESS
         public uint Process(JournalEntry je, JournalEntry lastentry, bool insrv )
         {
             if (je is ICommodityJournalEntry || je is IMaterialJournalEntry || je is IMicroResourceJournalEntry)
@@ -311,5 +312,7 @@ namespace EliteDangerousCore
 
             return items.Generation;        // return the generation we are on.
         }
+
+#endif
     }
 }
