@@ -499,7 +499,7 @@ namespace EliteDangerousCore
             //System.Diagnostics.Debug.WriteLine($"Added {FDName} {Name} {Shortname}");
         }
 
-        public static void FillTable()
+        public static void Initialise()
         {
             mcmrlist = new Dictionary<string, MaterialCommodityMicroResourceType>();
 

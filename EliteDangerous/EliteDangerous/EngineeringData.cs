@@ -14,6 +14,8 @@
 
 using QuickJSON;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EliteDangerousCore
 {
@@ -139,6 +141,21 @@ namespace EliteDangerousCore
                     "Quality:".T(EDCTx.EngineeringData_Quality) + " ", Quality,
                     "Experimental Effect:".T(EDCTx.EngineeringData_ExperimentalEffect) + " ", ExperimentalEffect_Localised);
 
+            if (ExperimentalEffect.HasChars())
+            {
+                if (ItemData.TryGetSpecialEffect(ExperimentalEffect, out ItemData.ShipModule se))   // get the experimental effect ship module modifier
+                {
+                    foreach (var kvp in ItemData.ShipModule.GetPropertiesInOrder())     // all properties in the class
+                    {
+                        dynamic value = kvp.Key.GetValue(se);                       // if not null, we apply
+                        if (value != null)
+                        {
+                            ret = ret.AppendPrePad($"   {kvp.Key.Name}: {value}", Environment.NewLine);
+                        }
+                    }
+                }
+            }
+
             if (Modifiers != null)
             {
                 ret += Environment.NewLine;
@@ -152,7 +169,7 @@ namespace EliteDangerousCore
                         if (m.Value != m.OriginalValue)
                         {
                             bool better = m.LessIsGood ? (m.Value < m.OriginalValue) : (m.Value > m.OriginalValue);
-                            double mul = m.OriginalValue / m.Value * 100 - 100;
+                            double mul = m.Value / m.OriginalValue * 100 - 100;
                             ret += BaseUtils.FieldBuilder.Build("", m.FriendlyLabel,"<: ;;0.###", m.Value, "Original: ;;0.###".T(EDCTx.EngineeringData_Original), m.OriginalValue, "Mult: ;%;N1", mul , "< (Worse); (Better)".T(EDCTx.EngineeringData_Worse), better) + Environment.NewLine;
                         }
                         else
@@ -199,607 +216,322 @@ namespace EliteDangerousCore
             return Modifiers != null ? Array.Find(Modifiers, x => x.Label.Equals(name, StringComparison.InvariantCultureIgnoreCase)) : null;
         }
 
-        // take a module and engineer it with the modifiers
-        // false if we don't know how to use all the modifiers given, the ones we do know have been modified
-        public bool EngineerModule(ItemData.ShipModule original, out ItemData.ShipModule engineered)
+        // 0 = set, 1 = add, 2 means mod 100 on primary value, else its modmod together in %
+
+        Dictionary<string, double> modifiercontrolvalue = new Dictionary<string, double>
         {
+            ["BurstRateOfFire"] = 0,
+            ["BurstSize"] = 0,
+            ["Rounds"] = 1,
+            ["Jitter"] = 1,
+            ["KineticProportionDamage"] = 0,
+            ["ThermalProportionDamage"] = 0,
+            ["ExplosiveProportionDamage"] = 0,
+            ["AbsoluteProportionDamage"] = 0,
+            ["CausticPorportionDamage"] = 0,
+            ["AXPorportionDamage"] = 0,
+            ["HullStrengthBonus"] = 100,
+            ["ShieldReinforcement"] = 100,
+            ["KineticResistance"] = -100,
+            ["ThermalResistance"] = -100,
+            ["ExplosiveResistance"] = -100,
+            ["CausticResistance"] = -100,
+            ["AXResistance"] = -100,
+            ["Capacity"] = 1,
+            ["Limpets"] = 1,
+            ["MinCargo"] = 1,
+            ["MaxCargo"] = 1,
+            ["Capacity"] = 1,
+        };
+
+
+        // first entry must just be the name
+        // second and further entries can have | exceptions listed
+
+        Dictionary<string, string[]> modifierfdmapping = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["DamagePerSecond"] = new string[] { "DPS", "Damage!-Damage|-RateOfFire",     // change Damage as long as .. modifier labels are not there
+                                                        "BreachDamage!-Damage|-RateOfFire",           // change BreachDamage as long as .. is not there
+                                                },
+            ["Damage"] = new string[] { "Damage", "BreachDamage",
+                                                  "BurstInterval!+hpt_railgun*|+Weapon_HighCapacity"   // change burstinterval if module is railgun and recipe is High Capacity
+          
+                                                },
+            ["RateOfFire"] = new string[] { "RateOfFire", "/BurstInterval!-hpt_railgun*" },
+
+
+            ["Mass"] = new string[] { "Mass", },
+            ["Integrity"] = new string[] { "Integrity", },
+            ["Integrity"] = new string[] { "Integrity", },
+            ["PowerDraw"] = new string[] { "PowerDraw", },
+            ["BootTime"] = new string[] { "BootTime", },
+            ["ShieldBankSpinUp"] = new string[] { "SCBSpinUp", },
+            ["ShieldBankDuration"] = new string[] { "SCBDuration", },
+            ["ShieldBankReinforcement"] = new string[] { "ShieldReinforcement", },
+            ["ShieldBankHeat"] = new string[] { "SCBHeat", },
+            ["DistributorDraw"] = new string[] { "DistributorDraw", },
+            ["ThermalLoad"] = new string[] { "ThermalLoad", },
+            ["ArmourPenetration"] = new string[] { "ArmourPiercing", },
+            ["MaximumRange"] = new string[] { "Range" }, 
+            ["FalloffRange"] = new string[] { "Falloff", },
+            ["ShotSpeed"] = new string[] { "Speed", },
+            ["BurstRateOfFire"] = new string[] { "BurstRateOfFire", },
+            ["BurstSize"] = new string[] { "BurstSize", },
+            ["AmmoClipSize"] = new string[] { "Clip", },
+            ["AmmoMaximum"] = new string[] { "Ammo", },
+            ["RoundsPerShot"] = new string[] { "Rounds", },
+            ["ReloadTime"] = new string[] { "ReloadTime", },
+            ["BreachDamage"] = new string[] { "BreachDamage", },
+            ["MinBreachChance"] = new string[] { "BreachMin", },
+            ["MaxBreachChance"] = new string[] { "BreachMax", },
+            ["Jitter"] = new string[] { "Jitter", },
+
+            ["ShieldGenMinimumMass"] = new string[] { "MinMass", },
+            ["ShieldGenOptimalMass"] = new string[] { "OptMass", "MinMass" },       
+            ["ShieldGenMaximumMass"] = new string[] { "MaxMass", },
+
+            ["ShieldGenMinStrength"] = new string[] { "MinStrength" },
+            ["ShieldGenStrength"] = new string[] { "OptStrength", "MinStrength", "MaxStrength" },
+            ["ShieldGenMaxStrength"] = new string[] { "MaxStrength" },
+
+            ["RegenRate"] = new string[] { "RegenRate", },
+            ["BrokenRegenRate"] = new string[] { "BrokenRegenRate", },
+            ["EnergyPerRegen"] = new string[] { "MWPerUnit", },
+            ["FSDOptimalMass"] = new string[] { "OptMass", },
+            ["FSDHeatRate"] = new string[] { "ThermalLoad", },
+            ["MaxFuelPerJump"] = new string[] { "MaxFuelPerJump", },
+            ["EngineMinimumMass"] = new string[] { "MinMass", },
+            ["EngineOptimalMass"] = new string[] { "OptMass", "MinMass", "MaxMass"},
+            ["MaximumMass"] = new string[] { "MaxMass", },
+            ["EngineMinPerformance"] = new string[] { "EngineMinMultiplier", },
+            ["EngineOptPerformance"] = new string[] { "EngineOptMultiplier", nameof(ItemData.ShipModule.EngineMinMultiplier) , nameof(ItemData.ShipModule.EngineMaxMultiplier),
+                                                                nameof(ItemData.ShipModule.MinimumSpeedModifier) , nameof(ItemData.ShipModule.OptimalSpeedModifier), nameof(ItemData.ShipModule.MaximumSpeedModifier),
+                                                                nameof(ItemData.ShipModule.MinimumAccelerationModifier) , nameof(ItemData.ShipModule.OptimalAccelerationModifier), nameof(ItemData.ShipModule.MaximumAccelerationModifier),
+                                                                nameof(ItemData.ShipModule.MinimumRotationModifier) , nameof(ItemData.ShipModule.OptimalRotationModifier), nameof(ItemData.ShipModule.MaximumRotationModifier),
+                                                    },
+            ["EngineMaxPerformance"] = new string[] { "EngineMaxMultiplier", },
+            ["EngineHeatRate"] = new string[] { "ThermalLoad", },
+            ["PowerCapacity"] = new string[] { "PowerGen", },
+            ["HeatEfficiency"] = new string[] { "HeatEfficiency", },
+            ["WeaponsCapacity"] = new string[] { "WeaponsCapacity", },
+            ["WeaponsRecharge"] = new string[] { "WeaponsRechargeRate", },
+            ["EnginesCapacity"] = new string[] { "EngineCapacity", },
+            ["EnginesRecharge"] = new string[] { "EngineRechargeRate", },
+            ["SystemsCapacity"] = new string[] { "SystemsCapacity", },
+            ["SystemsRecharge"] = new string[] { "SystemsRechargeRate", },
+            ["DefenceModifierHealthMultiplier"] = new string[] { "HullStrengthBonus", },
+            ["DefenceModifierHealthAddition"] = new string[] { "HullReinforcement", },
+            ["DefenceModifierShieldMultiplier"] = new string[] { "ShieldReinforcement", },
+            ["DefenceModifierShieldAddition"] = new string[] { "AdditionalReinforcement", },
+            ["KineticResistance"] = new string[] { "KineticResistance", },
+            ["ThermicResistance"] = new string[] { "ThermalResistance", },
+            ["ExplosiveResistance"] = new string[] { "ExplosiveResistance", },
+            ["CausticResistance"] = new string[] { "CausticResistance", },
+            ["FSDInterdictorRange"] = new string[] { "TargetMaxTime", },
+            ["FSDInterdictorFacingLimit"] = new string[] { "Angle", },
+            ["ScannerRange"] = new string[] { "Range", },
+            ["MaxAngle"] = new string[] { "Angle", },
+            ["ScannerTimeToScan"] = new string[] { "Time", },
+            ["ChaffJamDuration"] = new string[] { "Time", },
+            ["ECMRange"] = new string[] { "Range", },
+            ["ECMTimeToCharge"] = new string[] { "Time", },
+            ["ECMActivePowerConsumption"] = new string[] { "ActivePower", },
+            ["ECMHeat"] = new string[] { "WasteHeat", },
+            ["ECMCooldown"] = new string[] { "ReloadTime", },
+            ["HeatSinkDuration"] = new string[] { "Time", },
+            ["ThermalDrain"] = new string[] { "WasteHeat", },
+            ["NumBuggySlots"] = new string[] { "Capacity", },
+            ["CargoCapacity"] = new string[] { "Size", },
+            ["MaxActiveDrones"] = new string[] { "Limpets", },
+            ["DroneTargetRange"] = new string[] { "TargetRange", },
+            ["DroneLifeTime"] = new string[] { "Time", },
+            ["DroneSpeed"] = new string[] { "Speed", },
+            ["DroneMultiTargetSpeed"] = new string[] { "MultiTargetSpeed", },
+            ["DroneFuelCapacity"] = new string[] { "FuelTransfer", },
+            ["DroneRepairCapacity"] = new string[] { "MaxRepairMaterialCapacity", },
+            ["DroneHackingTime"] = new string[] { "HackTime", },
+            ["DroneMinJettisonedCargo"] = new string[] { "MinCargo", },
+            ["DroneMaxJettisonedCargo"] = new string[] { "MaxCargo", },
+            ["FuelScoopRate"] = new string[] { "RefillRate", },
+            ["FuelCapacity"] = new string[] { "Size", },
+            ["OxygenTimeCapacity"] = new string[] { "Time", },
+            ["RefineryBins"] = new string[] { "Capacity", },
+            ["AFMRepairCapacity"] = new string[] { "Ammo", },
+            ["AFMRepairConsumption"] = new string[] { "RateOfRepairConsumption", },
+            ["AFMRepairPerAmmo"] = new string[] { "RepairCostPerMat", },
+            ["MaxRange"] = new string[] { "Range", },
+            ["SensorTargetScanAngle"] = new string[] { "Angle", },
+            ["Range"] = new string[] { "TypicalEmission", "Range" },
+            ["CabinCapacity"] = new string[] { "Passengers", },
+            ["CabinClass"] = new string[] { "CabinClass", },
+            ["DisruptionBarrierRange"] = new string[] { "Range", },
+            ["DisruptionBarrierChargeDuration"] = new string[] { "Time", },
+            ["DisruptionBarrierActivePower"] = new string[] { "MWPerSec", },
+            ["DisruptionBarrierCooldown"] = new string[] { "ReloadTime", },
+            ["FSDJumpRangeBoost"] = new string[] { "AdditionalRange", },
+            ["ModuleDefenceAbsorption"] = new string[] { "Protection", },
+            ["DSS_PatchRadius"] = new string[] { "ProbeRadius", },
+        };
+
+        public bool EngineerModule(string fdname, ItemData.ShipModule original, out ItemData.ShipModule engineered)
+        {
+            System.Diagnostics.Debug.WriteLine($"*** Engineer module {fdname} ");
             engineered = new ItemData.ShipModule(original);       // take a copy
+
+            ItemData.ShipModule specialeffect = null;
+
+            if (ExperimentalEffect.HasChars())
+                ItemData.TryGetSpecialEffect(ExperimentalEffect, out specialeffect);
+
+            var proplist = ItemData.ShipModule.GetPropertiesInOrder().Keys.ToList();
 
             bool good = true;
 
-            if ( Modifiers != null )
+            List<string> primarymodifiers = new List<string>();
+            foreach( var x in Modifiers)
             {
-                // beam laser - verified
-                // burst laser - verfied
-                // Cannon - verified
-                // guardian tbd
-                // shock - verified
-                // Frag Cannon verified
-                // mine launcher - verified
-                // abrasion - verified
-                // mining lance - verified
-                // missile rack - slight error in breach damage (20-19) in rapid fire
-                // multi cannon - verified
-                // pulse laser - verified
+                if (modifierfdmapping.TryGetValue(x.Label, out string[] modifyarray))  // get the modifier primary control value if present
+                    primarymodifiers.Add(modifyarray[0]);
+            }
 
-                bool containsdps = Array.Find(Modifiers, x => x.Label.EqualsIIC("DamagePerSecond")) != null;
-                bool containsrof = Array.Find(Modifiers, x => x.Label.EqualsIIC("RateOfFire")) != null;
-
-                foreach (var mf in Modifiers)
+            foreach (EngineeringModifiers mf in Modifiers)
+            {
+                if (modifierfdmapping.TryGetValue(mf.Label, out string[] modifyarray))  // get the modify commands from the label
                 {
-                    try
+                    double ratio = 0;                                   // primary ratio
+
+                    for (int pno = 0; pno < modifyarray.Length; pno++)        // for each modifier, 0 means primary
                     {
-                        // in the order of eddb.js attributes
+                        string pset = modifyarray[pno];                   // parameter, and optional set of cop outs
+                        bool divit = pset.StartsWith("/");              // / means we divide not multiply the ratio when setting the para
+                        if (divit)
+                            pset = pset.Substring(1);
 
-                        if (mf.Label.EqualsIIC("Mass"))
+                        string[] exceptiontypes = new string[0];        // split string into primary (pset) and exception list
+                        int excl = pset.IndexOf('!');
+                        if (excl > 0)
                         {
-                            engineered.Mass = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Mass} -> {engineered.Mass}");
+                            string ctrl = pset.Substring(excl + 1);
+                            exceptiontypes = ctrl.SplitNoEmptyStartFinish('|');
+                            pset = pset.Substring(0, excl);
                         }
-                        else if (mf.Label.EqualsIIC("Integrity"))
-                        {
-                            engineered.Integrity = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Integrity} -> {engineered.Integrity}");
-                        }
-                        else if (mf.Label.EqualsIIC("PowerDraw"))       // seen in edsy output as direct value
-                        {
-                            engineered.PowerDraw = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Power} -> {engineered.Power}");
-                        }
-                        else if (mf.Label.EqualsIIC("BootTime"))
-                        {
-                            engineered.BootTime = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.BootTime} -> {engineered.BootTime}");
-                        }
-                        else if (mf.Label.EqualsIIC("ShieldBankSpinUp"))
-                        {
-                            engineered.SCBSpinUp = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.SCBSpinUp} -> {engineered.SCBSpinUp}");
-                        }
-                        else if (mf.Label.EqualsIIC("ShieldBankDuration"))
-                        {
-                            engineered.SCBDuration = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.SCBDuration} -> {engineered.SCBDuration}");
-                        }
-                        else if (mf.Label.EqualsIIC("ShieldBankReinforcement"))
-                        {
-                            engineered.ShieldReinforcement = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.ShieldReinforcement} -> {engineered.ShieldReinforcement}");
-                        }
-                        else if (mf.Label.EqualsIIC("ShieldBankHeat"))
-                        {
-                            engineered.SCBHeat = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.SCBHeat} -> {engineered.SCBHeat}");
-                        }
-                        else if (mf.Label.EqualsIIC("DamagePerSecond")) // 'dps' seen in edsy output as direct value
-                        {
 
-                            double mul = mf.Value / mf.OriginalValue;       // seen in beam laser
-                            engineered.DPS = mf.Value;
+                        System.Reflection.PropertyInfo prop = proplist.Find(x => x.Name == pset);       // find parameter we are setting
+                        dynamic orgvalue = prop.GetValue(original);
 
-                            // Frag Cannon does not change damage/breach damage on this value - verified
-                            if (!containsrof)
+                        if (orgvalue != null)         // it may be null, because it may not be there..
+                        {
+                            double valuetoset;
+                            if (pno == 0)
                             {
-                                engineered.Damage *= mul;
-                                engineered.BreachDamage *= mul;
+                                valuetoset = mf.Value;
+                                ratio = mf.Value / mf.OriginalValue;
                             }
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.DPS} -> {engineered.DPS}");
-                        }
-                        else if (mf.Label.EqualsIIC("Damage"))      // seen in edsy output as direct value
-                        {
-                            double mul = mf.Value / mf.OriginalValue;
-                            engineered.Damage = mf.Value;
-                            if (engineered.BreachDamage.HasValue && !containsdps)   // burst laser efficient contains both DPS and Damage
-                                engineered.BreachDamage *= mul;
-
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Damage} -> {engineered.Damage}");
-                        }
-                        else if (mf.Label.EqualsIIC("DistributorDraw")) // seen in edsy output as direct value
-                        {
-                            engineered.DistributorDraw = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.DistributorDraw} -> {engineered.DistributorDraw}");
-                        }
-                        else if (mf.Label.EqualsIIC("ThermalLoad")) // seen in edsy output as direct value
-                        {
-                            engineered.ThermalLoad = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.ThermL} -> {engineered.ThermL}");
-                        }
-                        else if (mf.Label.EqualsIIC("ArmourPenetration"))
-                        {
-                            engineered.ArmourPiercing = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Pierce} -> {engineered.Pierce}");
-                        }
-                        else if (mf.Label.EqualsIIC("MaximumRange"))        // 'maximumrng'
-                        {
-                            double mul = mf.Value / mf.OriginalValue;
-                            engineered.Range = mf.Value;
-                            if (engineered.Speed.HasValue) // double check for this mod. as maximumrng is present in beam lasers etc.
-                                engineered.Speed *= mul;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Range} -> {engineered.Range}");
-                        }
-                        else if (mf.Label.EqualsIIC("FalloffRange"))
-                        {
-                            engineered.Falloff = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Falloff} -> {engineered.Falloff}");
-                        }
-                        else if (mf.Label.EqualsIIC("ShotSpeed") || mf.Label.EqualsIIC("DroneSpeed"))   // shotspd maxspd
-                        {
-                            engineered.Speed = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Speed} -> {engineered.Speed}");
-                        }
-                        else if (mf.Label.EqualsIIC("RateOfFire"))
-                        {
-                            double mul = mf.Value / mf.OriginalValue;
-                            engineered.RateOfFire = mf.Value;
-                            engineered.BurstInterval /= mul;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.RateOfFire} -> {engineered.RateOfFire}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("BurstRateOfFire"))
-                        {
-                            engineered.BurstRateOfFire = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.BurstRateOfFire} -> {engineered.BurstRateOfFire}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("BurstSize")) // seen in edsy output as direct value
-                        {
-                            engineered.BurstSize = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.BurstSize} -> {engineered.BurstSize}");
-                        }
-                        else if (mf.Label.EqualsIIC("AmmoClipSize"))
-                        {
-                            engineered.Clip = (int)mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Clip} -> {engineered.Clip}");
-                        }
-                        else if (mf.Label.EqualsIIC("AmmoMaximum") || mf.Label.EqualsIIC("AFMRepairCapacity"))
-                        {
-                            engineered.Ammo = (int)mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Ammo} -> {engineered.Ammo}");
-                        }
-                        else if (mf.Label.EqualsIIC("RoundsPerShot"))
-                        {
-                            engineered.Rounds = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Rounds} -> {engineered.Rounds}");
-                        }
-                        else if (mf.Label.EqualsIIC("ReloadTime")
-                            || mf.Label.EqualsIIC("DisruptionBarrierCooldown")// .. barriercool
-                            || mf.Label.EqualsIIC("ECMCooldown") //ecmcool
-                            )
-                        {
-                            engineered.ReloadTime = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.ReloadTime} -> {engineered.ReloadTime}");
-                        }
-                        else if (mf.Label.EqualsIIC("BreachDamage"))
-                        {
-                            engineered.BreachDamage = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.BreachDamage} -> {engineered.BreachDamage}");
-                        }
-                        else if (mf.Label.EqualsIIC("MinBreachChance"))
-                        {
-                            engineered.BreachMin = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.BreachMin} -> {engineered.BreachMin}");
-                        }
-                        else if (mf.Label.EqualsIIC("MaxBreachChance"))
-                        {
-                            engineered.BreachMax = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.BreachMax} -> {engineered.BreachMax}");
-                        }
-                        else if (mf.Label.EqualsIIC("Jitter"))
-                        {
-                            engineered.Jitter = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Jitter} -> {engineered.Jitter}");
-                        }
-                        else if (mf.Label.EqualsIIC("ShieldGenMinimumMass"))    // genminmass
-                        {
-                            engineered.MinMass = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MinMass} -> {engineered.MinMass}");
-                        }
-                        else if (mf.Label.EqualsIIC("ShieldGenOptimalMass"))    // genoptmass
-                        {
-                            double mul = mf.Value / engineered.OptMass.Value;   // scalar
-                            engineered.MinMass *= mul;
-                            engineered.OptMass = mf.Value;
-                            System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} min {original.MinMass} -> {engineered.MinMass} opt {original.OptMass} -> {engineered.OptMass}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("ShieldGenMaximumMass"))// genmaxmass
-                        {
-                            engineered.MaxMass = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MaxMass} -> {engineered.MaxMass}");
-                        }
-                        else if (mf.Label.EqualsIIC("ShieldGenMinStrength"))            // genminmul
-                        {
-                            engineered.MinStrength = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MinStrength} -> {engineered.MinStrength}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("ShieldGenStrength"))   // genoptmul
-                        {
-                            double mul = mf.Value / mf.OriginalValue;
-                            engineered.OptStrength = mf.Value;
-                            engineered.MinStrength *= mul;
-                            engineered.MaxStrength *= mul;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.OptStrength} -> {engineered.OptStrength}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("ShieldGenMaxStrength")) // genmaxmul
-                        {
-                            engineered.MaxStrength = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MaxStrength} -> {engineered.MaxStrength}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("RegenRate"))   // genrate
-                        {
-                            engineered.RegenRate = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.RegenRate} -> {engineered.RegenRate}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("BrokenRegenRate")) // bgenrate
-                        {
-                            engineered.BrokenRegenRate = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.BrokenRegenRate} -> {engineered.BrokenRegenRate}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("EnergyPerRegen")) // genpwr
-                        {
-                            engineered.MWPerUnit = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MWPerUnit} -> {engineered.MWPerUnit}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("FSDOptimalMass")) // fsdoptmass
-                        {
-                            engineered.OptMass = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.OptMass} -> {engineered.OptMass}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("FSDHeatRate")) // fsdheat
-                        {
-                            engineered.ThermalLoad = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.ThermL} -> {engineered.ThermL}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("MaxFuelPerJump")) // maxfuel
-                        {
-                            engineered.MaxFuelPerJump = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MaxFuelPerJump} -> {engineered.MaxFuelPerJump}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("EngineMinimumMass")) // engminmass
-                        {
-                            engineered.MinMass = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MinMass} -> {engineered.MinMass}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("EngineOptimalMass")) // engoptmass
-                        {
-                            double mul = mf.Value / engineered.OptMass.Value;       // it appears, engineering this also engineers the others to the same ratio
-                            engineered.OptMass = mf.Value;
-                            engineered.MinMass *= mul;
-                            engineered.MaxMass *= mul;
-                            System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} min {original.MinMass} -> {engineered.MinMass} opt {original.OptMass} -> {engineered.OptMass} max {original.MaxMass} -> {engineered.MaxMass} ");
-                        }
-
-                        else if (mf.Label.EqualsIIC("MaximumMass")) // engmaxmass
-                        {
-                            engineered.MaxMass = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MaxMass} -> {engineered.MaxMass}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("EngineMinPerformance"))    // engminmul
-                        {
-                            engineered.EngineMinMultiplier = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.EngineMinMultiplier} -> {engineered.EngineMinMultiplier}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("EngineOptPerformance"))    // engoptmul
-                        {
-                            double mul = mf.Value / engineered.EngineOptMultiplier.Value;       // it appears, engineering this also engineers the others to the same ratio
-                            engineered.EngineOptMultiplier = mf.Value;
-                            engineered.EngineMinMultiplier *= mul;
-                            engineered.EngineMaxMultiplier *= mul;
-
-                            if ( engineered.MinimumSpeedModifier.HasValue) // for advanced thrusters
+                            else
                             {
-                                engineered.MinimumSpeedModifier *= mul;
-                                engineered.OptimalSpeedModifier *= mul;
-                                engineered.MaximumSpeedModifier *= mul;
-                                engineered.MinimumAccelerationModifier *= mul;
-                                engineered.OptimalAccelerationModifier *= mul;
-                                engineered.MaximumAccelerationModifier *= mul;
-                                engineered.MinimumRotationModifier *= mul;
-                                engineered.OptimalRotationModifier *= mul;
-                                engineered.MaximumRotationModifier *= mul;
+                                if (divit)
+                                    valuetoset = (double)orgvalue / ratio;
+                                else
+                                    valuetoset = (double)orgvalue * ratio;
                             }
 
-                            System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} min {original.EngineMinMultiplier} -> {engineered.EngineMinMultiplier} opt {original.EngineOptMultiplier} -> {engineered.EngineOptMultiplier} max {original.EngineMaxMultiplier} -> {engineered.EngineMaxMultiplier} ");
-                        }
+                            if (pno > 0 && primarymodifiers.Find(x => x == pset) != null)        // if we are a secondary, but we are changing a primary modified value, don't change
+                            {
+                                System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} {mf.Label} {pset} NOT changing to {valuetoset} due to primary modifier being present");
+                                continue;
+                            }
 
-                        else if (mf.Label.EqualsIIC("EngineMaxPerformance"))    // engmaxmul
-                        {
-                            engineered.EngineMaxMultiplier = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.EngineMaxMultiplier} -> {engineered.EngineMaxMultiplier}");
-                        }
+                            bool stop = false;
+                            foreach (var exceptiontype in exceptiontypes)           // for all exception types..
+                            {
+                                bool negativecheck = exceptiontype[0] == '-';
+                                string exceptiontext = exceptiontype.Substring(1);
 
-                        else if (mf.Label.EqualsIIC("EngineHeatRate"))  // engheat
-                        {
-                            engineered.ThermalLoad = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.ThermL} -> {engineered.ThermL}");
-                        }
+                                bool anyfound = Array.Find(Modifiers, x => x.Label.EqualsIIC(exceptiontext)) != null ||
+                                              fdname.WildCardMatch(exceptiontext,true) == true ||
+                                              BlueprintName.EqualsIIC(exceptiontext);
 
-                        else if (mf.Label.EqualsIIC("PowerCapacity"))   // pwrcap
-                        {
-                            engineered.PowerGen = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.PowerGen} -> {engineered.PowerGen}");
-                        }
+                                if (negativecheck ? anyfound == true : anyfound == false)        // if they agree, then a negativecheck with a find of positive stops it, and visa versa
+                                {
+                                    System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} {mf.Label} {pset} {orgvalue} NOT changing to {valuetoset} due to {exceptiontype} being present");
+                                    stop = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    if (!negativecheck)
+                                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} {mf.Label} {pset} {orgvalue} passed test {exceptiontype}");
+                                }
+                            }
 
-                        else if (mf.Label.EqualsIIC("HeatEfficiency"))  // heategg
-                        {
-                            engineered.HeatEfficiency = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.HeatEfficiency} -> {engineered.HeatEfficiency}");
-                        }
+                            if (stop)
+                                continue;
 
-                        else if (mf.Label.EqualsIIC("WeaponsCapacity")) // wepcap WeaponCapacity
-                        {
-                            engineered.WeaponsCapacity = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.WeaponsCapacity} -> {engineered.WeaponsCapacity}");
-                        }
+                            System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} {mf.Label} {pset} {orgvalue} -> {valuetoset} ratio {ratio}");
 
-                        else if (mf.Label.EqualsIIC("WeaponsRecharge")) //wepchg WeaponRechargeRate
-                        {
-                            engineered.WeaponsRechargeRate = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.WeaponsRechargeRate} -> {engineered.WeaponsRechargeRate}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("EnginesCapacity")) // engcap EngineCapacity
-                        {
-                            engineered.EngineCapacity = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.EngineCapacity} -> {engineered.EngineCapacity}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("EnginesRecharge"))   // engchg EngineRechargeRate
-                        {
-                            engineered.EngineRechargeRate = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.EngineRechargeRate} -> {engineered.EngineRechargeRate}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("SystemsCapacity"))   // sysCap SystemsCapacity
-                        {
-                            engineered.SystemsCapacity = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.SystemsCapacity} -> {engineered.SystemsCapacity}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("SystemsRecharge"))   // syschg SystemsMW
-                        {
-                            engineered.SystemsRechargeRate = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.SystemsRechargeRate} -> {engineered.SystemsRechargeRate}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("DefenceModifierHealthMultiplier")) // hullbst = Hull Boost - this would affect the ships hull boost value = HullStrengthBonus = armour
-                        {
-                            engineered.HullStrengthBonus = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.HullStrengthBonus} -> {engineered.HullStrengthBonus}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("DefenceModifierHealthAddition")) // hullrnf direct - hull reinforcements = HullReinforcement
-                        {
-                            engineered.HullReinforcement = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.HullReinforcement} -> {engineered.HullReinforcement}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("DefenceModifierShieldMultiplier")) // shieldbst = Shield Boost = shield booster  = ShieldReinforcement
-                        {
-                            engineered.ShieldReinforcement = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.ShieldReinforcement} -> {engineered.ShieldReinforcement}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("DefenceModifierShieldAddition")) // shieldrnf = guardian shield boost = direct = AdditionalStrength
-                        {
-                            engineered.AdditionalReinforcement = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.AdditionalReinforcement} -> {engineered.AdditionalReinforcement}");
-                        }
-
-
-                        else if (mf.Label.EqualsIIC("CollisionResistance")) //absres - not seemingly used
-                        {
-                            //System.Diagnostics.Debug.WriteLine($"*** Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} ");
-                        }
-
-                        else if (mf.Label.EqualsIIC("KineticResistance"))   // kinres
-                        {
-                            engineered.KineticResistance = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.KineticResistance} -> {engineered.KineticResistance}");
-                        }
-
-
-                        else if (mf.Label.EqualsIIC("ThermicResistance"))       //thmres
-                        {
-                            engineered.ThermalResistance = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.ThermalResistance} -> {engineered.ThermalResistance}");
-                        }
-
-
-                        else if (mf.Label.EqualsIIC("ExplosiveResistance"))     // expres
-                        {
-                            engineered.ExplosiveResistance = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.ExplosiveResistance} -> {engineered.ExplosiveResistance}");
-                        }
-
-
-                        else if (mf.Label.EqualsIIC("CausticResistance"))       // caures
-                        {
-                            engineered.CausticResistance = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.CausticResistance} -> {engineered.CausticResistance}");
-                        }
-
-
-                        else if (mf.Label.EqualsIIC("FSDInterdictorRange")) // timerng
-                        {
-                            engineered.TargetMaxTime = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.TargetMaxTime} -> {engineered.TargetMaxTime}");
-                        }
-
-
-                        else if (mf.Label.EqualsIIC("FSDInterdictorFacingLimit")    // facinglim
-                                    || mf.Label.EqualsIIC("SensorTargetScanAngle")) // scanangle
-                        {
-                            engineered.Angle = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Angle} -> {engineered.Angle}");
-                        }
-
-
-                        else if (mf.Label.EqualsIIC("ScannerRange") || mf.Label.EqualsIIC("MaxAngle") || mf.Label.EqualsIIC("ECMRange")    // scanrng, maxangle, ecmrng
-                                    || mf.Label.EqualsIIC("DisruptionBarrierRange") // barrierrng
-                                    || mf.Label.EqualsIIC("MaxRange")) // maxrng
-                        {
-                            engineered.Range = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Range} -> {engineered.Range}");
-                        }
-
-
-                        else if (mf.Label.EqualsIIC("ScannerTimeToScan") || mf.Label.EqualsIIC("ChaffJamDuration") || mf.Label.EqualsIIC("EMCTimeToCharge") || // scantime, jamdur, ecmdur
-                                mf.Label.EqualsIIC("HeatSinkDuration") ||  // hsdur
-                                mf.Label.EqualsIIC("OxygenTimeCapacity") || // emgcylife
-                                mf.Label.EqualsIIC("DisruptionBarrierChangeDuration") || // barrierdur
-                                mf.Label.EqualsIIC("DroneLifeTime")    // limpettime 
-                                )
-                        {
-                            engineered.Time = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Time} -> {engineered.Time}");
-                        }
-
-
-                        // maxrng - > typemis
-
-
-                        else if (mf.Label.EqualsIIC("ECMActivePowerConsumption"))   // ecmpwr
-                        {
-                            engineered.ActivePower = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.ActivePower} -> {engineered.ActivePower}");
-                        }
-                        else if (mf.Label.EqualsIIC("ECMHeat") || mf.Label.EqualsIIC("ThermalDrain")) //ecmheat, thmdrain
-                        {
-                            engineered.WasteHeat = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.WasteHeat} -> {engineered.WasteHeat}");
-                        }
-                        else if (mf.Label.EqualsIIC("NumBuggySlots") || // vslots
-                                    mf.Label.EqualsIIC("RefineryBins"))    // bins
-                        {
-                            engineered.Capacity = (int)mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Capacity} -> {engineered.Capacity}");
-                        }
-                        else if (mf.Label.EqualsIIC("CargoCapacity")    //cargocap
-                                    || mf.Label.EqualsIIC("FuelCapacity"))    // fuelcap)
-                        {
-                            engineered.Size = (int)mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Size} -> {engineered.Size}");
-                        }
-                        else if (mf.Label.EqualsIIC("MaxActiveDrones"))   // maxlimpet
-                        {
-                            engineered.Limpets = (int)mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Limpets} -> {engineered.Limpets}");
-                        }
-                        else if (mf.Label.EqualsIIC("DroneTargetRange")) // targetrng
-                        {
-                            engineered.TargetRange = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.TargetRange} -> {engineered.TargetRange}");
-                        }
-                        else if (mf.Label.EqualsIIC("DroneMultiTargetSpeed"))   // multispd
-                        {
-                            engineered.MultiTargetSpeed = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MultiTargetSpeed} -> {engineered.MultiTargetSpeed}");
-                        }
-                        else if (mf.Label.EqualsIIC("DroneFuelCapacity"))   // fuelxfer
-                        {
-                            engineered.FuelTransfer = (int)mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.FuelTransfer} -> {engineered.FuelTransfer}");
-                        }
-                        else if (mf.Label.EqualsIIC("DroneRepairCapacity")) // lmprepcap
-                        {
-                            engineered.MaxRepairMaterialCapacity = (int)mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MaxRepairMaterialCapacity} -> {engineered.MaxRepairMaterialCapacity}");
-                        }
-                        else if (mf.Label.EqualsIIC("DroneHackingTime"))    // hacktime
-                        {
-                            engineered.HackTime = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.HackTime} -> {engineered.HackTime}");
-                        }
-                        else if (mf.Label.EqualsIIC("DroneMinJettisonedCargo")) // mincargo
-                        {
-                            engineered.MinCargo = (int)mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MinCargo} -> {engineered.MinCargo}");
-                        }
-                        else if (mf.Label.EqualsIIC("DroneMaxJettisonedCargo")) // maxcargo
-                        {
-                            engineered.MaxCargo = (int)mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MaxCargo} -> {engineered.MaxCargo}");
-                        }
-                        else if (mf.Label.EqualsIIC("FuelScoopRate"))   // scooprate
-                        {
-                            engineered.RefillRate = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.RefillRate} -> {engineered.RefillRate}");
-                        }
-                        else if (mf.Label.EqualsIIC("AFMRepairConsumption"))    // afmrepcap
-                        {
-                            engineered.RateOfRepairConsumption = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.RateOfRepairConsumption} -> {engineered.RateOfRepairConsumption}");
-                        }
-                        else if (mf.Label.EqualsIIC("AFMRepairPerAmmo"))    // repairrtg
-                        {
-                            engineered.RepairCostPerMat = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.RepairCostPerMat} -> {engineered.RepairCostPerMat}");
-                        }
-                        else if (mf.Label.EqualsIIC("Range"))   // typemis (its right mapping)
-                        {
-                            double mul = mf.Value / mf.OriginalValue;
-                            engineered.TypicalEmission = mf.Value;
-                            engineered.Range *= mul;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.TypicalEmission} -> {engineered.TypicalEmission}");
-                        }
-
-                        else if (mf.Label.EqualsIIC("CabinCapacity"))   // cabincap
-                        {
-                            engineered.Passengers = (int)mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Passengers} -> {engineered.Passengers}");
-                        }
-
-                        // CabinClass not implemented as its not in a recipe
-
-                        else if (mf.Label.EqualsIIC("DisruptionBarrierActivePower"))    // barrierpwr
-                        {
-                            engineered.MWPerSec = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.MWPerSec} -> {engineered.MWPerSec}");
-                        }
-                        else if (mf.Label.EqualsIIC("FSDJumpRangeBoost"))
-                        {
-                            engineered.AdditionalRange = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.AdditionalRange} -> {engineered.AdditionalRange}");
-                        }
-                        else if (mf.Label.EqualsIIC("ModuleDefenceAbsorption"))
-                        {
-                            engineered.Protection = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.Protection} -> {engineered.Protection}");
-                        }
-                        else if (mf.Label.EqualsIIC("DSS_PatchRadius")) // proberad
-                        {
-                            engineered.ProbeRadius = mf.Value;
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} with {BlueprintName}: {mf.Label} {original.ProbeRadius} -> {engineered.ProbeRadius}");
+                            if (orgvalue is double?)
+                            {
+                                prop.SetValue(engineered, valuetoset);
+                            }
+                            else if (orgvalue is int?)
+                            {
+                                prop.SetValue(engineered, (int)valuetoset);
+                            }
                         }
                         else
                         {
-                            //System.Diagnostics.Trace.WriteLine($"*** Failed to engineer {original.EnglishModName} with {BlueprintName} due to {mf.Label}");
+                            System.Diagnostics.Trace.WriteLine($"*** Engineering setting a null value {this.BlueprintName} {this.ExperimentalEffect} {pset}");
                             good = false;
                         }
                     }
-                    catch (Exception ex)
+                }
+                else
+                {
+                    System.Diagnostics.Trace.WriteLine($"*** Engineering unknown modifier {this.BlueprintName} {this.ExperimentalEffect} {mf.Label}");
+                    good = false;
+                }
+            }
+
+
+            if (ExperimentalEffect.HasChars())
+            {
+                if (ItemData.TryGetSpecialEffect(ExperimentalEffect, out ItemData.ShipModule se))   // get the experimental effect ship module modifier
+                {
+                    foreach (var kvp in ItemData.ShipModule.GetPropertiesInOrder())     // all properties in the class
                     {
-                        System.Diagnostics.Trace.WriteLine($"*** Engineering Craft failed {original.EnglishModName} with {BlueprintName} due to {mf.Label} : {ex} ");
-                        good = false;
+                        dynamic value = kvp.Key.GetValue(se);
+                        if (value != null)
+                        {
+                            if (!primarymodifiers.Contains(kvp.Key.Name))        // if not null, and we have not set it above..
+                            {
+                                dynamic curvalue = kvp.Key.GetValue(original);        // get original value
+
+                                if (!modifiercontrolvalue.TryGetValue(kvp.Key.Name, out double controlmod))
+                                    controlmod = 100;
+
+                                dynamic nextvalue = controlmod == 0 ? value : controlmod == 1 ? curvalue + value : curvalue * (1 + value / controlmod);
+
+                                kvp.Key.SetValue(engineered, nextvalue);
+
+                                System.Diagnostics.Debug.WriteLine($"SpecialEffect on {engineered.EnglishModName} SE {ExperimentalEffect} Property {kvp.Key.Name} adjust by {value}: {curvalue} -> {nextvalue}");
+                            }
+                            else
+                            {
+                                System.Diagnostics.Debug.WriteLine($"SpecialEffect on {engineered.EnglishModName} SE {ExperimentalEffect} Property {kvp.Key.Name} not changing due to change above");
+                            }
+                        }
+                        
                     }
                 }
+                else
+                    System.Diagnostics.Trace.WriteLine($"*** Special effect in engineering not known {ExperimentalEffect}");
             }
 
             return good;
         }
+
+
+
 
     }
 

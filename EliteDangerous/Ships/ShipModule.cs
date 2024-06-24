@@ -71,7 +71,7 @@ namespace EliteDangerousCore
             {
                 if (Engineering != null)    // has enginerring
                 {
-                    return Engineering.EngineerModule(mdu, out engineered);
+                    return Engineering.EngineerModule(ItemFD, mdu, out engineered);
                 }
                 else
                 {
@@ -85,8 +85,14 @@ namespace EliteDangerousCore
 
         public double Mass()
         {
-            GetModuleEngineered(out ItemData.ShipModule engineered);       // engineer the module the best we can. If we don't use the module, it will return null
-            return engineered?.Mass ?? 0;
+            var unmass = GetModuleUnengineered();
+            if (unmass.Mass != null)
+            {
+                GetModuleEngineered(out ItemData.ShipModule engineered);       
+                return engineered.Mass.Value;
+            }
+            else
+                return 0;
         }
 
         public bool Same(ShipModule other)      // ignore localisased item, it does not occur everywhere..

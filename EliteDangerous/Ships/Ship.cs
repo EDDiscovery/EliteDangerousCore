@@ -72,7 +72,10 @@ namespace EliteDangerousCore
                 return smi;
             }
             else
+            {
                 return null;
+            }
+                
         }
 
         // slots with modules matching this test, return list of slots where they are in
@@ -462,6 +465,7 @@ namespace EliteDangerousCore
                         thmload_hardpoint_wepempty += getEffectiveWeaponThermalLoad(thmload, distdraw, wepcap, 0.0);
 
                         dps += sdps;
+                        var thm = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.ThermalProportionDamage), 0);
                         dps_abs += sdps * me.getEffectiveAttrValue(nameof(ItemData.ShipModule.AbsoluteProportionDamage), 0) / 100.0;
                         dps_thm += sdps * me.getEffectiveAttrValue(nameof(ItemData.ShipModule.ThermalProportionDamage), 0) / 100.0;
                         dps_kin += sdps * me.getEffectiveAttrValue(nameof(ItemData.ShipModule.KineticProportionDamage), 0) / 100.0;
@@ -675,15 +679,15 @@ namespace EliteDangerousCore
 
                     res.WeaponRaw = dps;
                     res.WeaponAbsolutePercentage = dps_abs / dps * 100.0;
-                    res.WeaponThermalPercentage = dps_thm / dps * 100.0;
                     res.WeaponKineticPercentage = dps_kin / dps * 100.0;
+                    res.WeaponThermalPercentage = dps_thm / dps * 100.0;
                     res.WeaponExplosivePercentage = dps_exp / dps * 100.0;
                     res.WeaponAXPercentage = dps_axe / dps * 100.0;
                     res.WeaponDuration = wepcap_burst_cur;
                     res.WeaponDurationMax = wepcap_burst_max;
                     res.WeaponAmmoDuration = ammWpnDur;
-                    res.WeaponCurSus = curWpnSus;
-                    res.WeaponMaxSus = maxWpnSus;
+                    res.WeaponCurSus = curWpnSus * 100.0;
+                    res.WeaponMaxSus = maxWpnSus * 100.0;
                 }
 
                 return res;
