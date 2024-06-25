@@ -166,6 +166,7 @@ namespace EliteDangerousCore
             "$warzone_tg_veryhigh","Very High Intensity AX Conflict Zone","Very High Intensity AX Conflict Zone",
             "$wreckage_ancientprobe","Minor Wreckage","Minor Wreckage",
             "$settlement_unflattened_tgmegabarnacle","Thargoid Spire","Thargoid Spire",
+            "$fixed_event_life_cluster","Notable Stellar Phenomena","Notable Stellar Phenomena",
         };
     }
 }
