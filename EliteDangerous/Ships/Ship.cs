@@ -68,8 +68,7 @@ namespace EliteDangerousCore
         {
             if (Modules.TryGetValue(slot, out ShipModule module))
             {
-                module.GetModuleEngineered(out ItemData.ShipModule smi);
-                return smi;
+                return module.GetModuleEngineered();
             }
             else
             {
@@ -396,7 +395,8 @@ namespace EliteDangerousCore
 
                 foreach (var modkvp in Modules)
                 {
-                    modkvp.Value.GetModuleEngineered(out ItemData.ShipModule me);
+                    var me = modkvp.Value.GetModuleEngineered();
+
                     if (me.HullReinforcement.HasValue)    // hull reinforcements , Guardian Hull, meta allow hulls
                     {
                         hullrnf += me.HullReinforcement.Value;

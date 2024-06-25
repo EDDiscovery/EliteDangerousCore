@@ -210,43 +210,174 @@ namespace EliteDangerousCore
             return true;
         }
 
-
         public EngineeringModifiers FindModification(string name)
         {
             return Modifiers != null ? Array.Find(Modifiers, x => x.Label.Equals(name, StringComparison.InvariantCultureIgnoreCase)) : null;
         }
 
-        // 0 = set, 1 = add, 2 means mod 100 on primary value, else its modmod together in %
-
-        Dictionary<string, double> modifiercontrolvalue = new Dictionary<string, double>
+        public ItemData.ShipModule EngineerModule(string modulefdname, ItemData.ShipModule original)
         {
-            ["BurstRateOfFire"] = 0,
-            ["BurstSize"] = 0,
-            ["Rounds"] = 1,
-            ["Jitter"] = 1,
-            ["KineticProportionDamage"] = 0,
-            ["ThermalProportionDamage"] = 0,
-            ["ExplosiveProportionDamage"] = 0,
-            ["AbsoluteProportionDamage"] = 0,
-            ["CausticPorportionDamage"] = 0,
-            ["AXPorportionDamage"] = 0,
-            ["HullStrengthBonus"] = 100,
-            ["ShieldReinforcement"] = 100,
-            ["KineticResistance"] = -100,
-            ["ThermalResistance"] = -100,
-            ["ExplosiveResistance"] = -100,
-            ["CausticResistance"] = -100,
-            ["AXResistance"] = -100,
-            ["Capacity"] = 1,
-            ["Limpets"] = 1,
-            ["MinCargo"] = 1,
-            ["MaxCargo"] = 1,
-            ["Capacity"] = 1,
-        };
+            //System.Diagnostics.Debug.WriteLine($"*** Engineer module {fdname} ");
 
+            var engineered = new ItemData.ShipModule(original);       // take a copy
 
-        // first entry must just be the name
-        // second and further entries can have | exceptions listed
+            List<System.Reflection.PropertyInfo> proplist = ItemData.ShipModule.GetPropertiesInOrder().Keys.ToList();        // list of engineering properties
+
+            // list of primary modifiers in use from the Modifiers list..
+
+            List<string> primarymodifiers = new List<string>();
+            foreach( var x in Modifiers)
+            {
+                if (modifierfdmapping.TryGetValue(x.Label, out string[] modifyarray))  // get the modifier primary control value if present
+                    primarymodifiers.Add(modifyarray[0]);
+            }
+
+            // go thru modifiers
+            foreach (EngineeringModifiers mf in Modifiers)      
+            {
+                if (modifierfdmapping.TryGetValue(mf.Label, out string[] modifyarray))  // get the modify commands from the label
+                {
+                    double ratio = 0;                                   // primary ratio
+
+                    for (int pno = 0; pno < modifyarray.Length; pno++)        // for each modifier, 0 means primary
+                    {
+                        string pset = modifyarray[pno];                   // parameter, and optional set of cop outs
+                        bool divit = pset.StartsWith("/");              // / means we divide not multiply the ratio when setting the para
+                        if (divit)
+                            pset = pset.Substring(1);
+
+                        string[] exceptiontypes = new string[0];        // split string into primary (pset) and exception list
+                        int excl = pset.IndexOf('!');
+                        if (excl > 0)
+                        {
+                            string ctrl = pset.Substring(excl + 1);
+                            exceptiontypes = ctrl.SplitNoEmptyStartFinish('|');
+                            pset = pset.Substring(0, excl);
+                        }
+
+                        // if we are a secondary, but we are changing a primary modified value, don't change
+
+                        if (pno > 0 && primarymodifiers.Find(x => x == pset) != null)
+                        {
+                            //  System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} {mf.Label} {pset} NOT changing to {valuetoset} due to primary modifier being present");
+                            continue;
+                        }
+
+                        // for all exception types listed against this, see if we have an exception
+
+                        bool stop = false;
+                        foreach (var exceptiontype in exceptiontypes)
+                        {
+                            bool negativecheck = exceptiontype[0] == '-';
+                            string exceptiontext = exceptiontype.Substring(1);
+
+                            bool anyfound = Array.Find(Modifiers, x => x.Label.EqualsIIC(exceptiontext)) != null ||
+                                          modulefdname.WildCardMatch(exceptiontext, true) == true ||
+                                          BlueprintName.EqualsIIC(exceptiontext);
+
+                            if (negativecheck ? anyfound == true : anyfound == false)        // negative check means can't have any, position check means must have something
+                            {
+                                //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} {mf.Label} {pset} NOT changing due to condition {exceptiontype}");
+                                stop = true;
+                                break;
+                            }
+                        }
+
+                        if (stop)       // abandon if check failed
+                            continue;
+
+                        System.Reflection.PropertyInfo prop = proplist.Find(x => x.Name == pset);       // find parameter we are setting
+                        dynamic orgvalue = prop.GetValue(original);
+
+                        if (orgvalue != null)         // it may be null, because it may not be there..  thats a failure
+                        {
+                            double valuetoset;
+                            if (pno == 0)           // primary modifier, we set it and record the ratio
+                            {
+                                valuetoset = mf.Value;
+                                ratio = mf.Value / mf.OriginalValue;
+                            }
+                            else
+                            {                       // secondary, we apply the ratio
+                                if (divit)
+                                    valuetoset = (double)orgvalue / ratio;
+                                else
+                                    valuetoset = (double)orgvalue * ratio;
+                            }
+
+                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} {mf.Label} {pset} {orgvalue} -> {valuetoset} ratio {ratio}");
+
+                            if (orgvalue is double?)
+                            {
+                                prop.SetValue(engineered, valuetoset);
+                            }
+                            else if (orgvalue is int?)
+                            {
+                                prop.SetValue(engineered, (int)valuetoset);
+                            }
+                        }
+                        else
+                        {
+                            System.Diagnostics.Trace.WriteLine($"*** Engineering setting a null value {this.BlueprintName} {this.ExperimentalEffect} {pset}");
+                        }
+                    }
+                }
+                else
+                {
+                    System.Diagnostics.Trace.WriteLine($"*** Engineering unknown modifier {this.BlueprintName} {this.ExperimentalEffect} {mf.Label}");
+                }
+            }
+
+            // now apply special effects
+
+            if (ExperimentalEffect.HasChars())
+            {
+                if (ItemData.TryGetSpecialEffect(ExperimentalEffect, out ItemData.ShipModule se))   // get the experimental effect ship module modifier
+                {
+                    foreach (var kvp in ItemData.ShipModule.GetPropertiesInOrder())     // all properties in the class
+                    {
+                        dynamic value = kvp.Key.GetValue(se);
+                        if (value != null)
+                        {
+                            if (!primarymodifiers.Contains(kvp.Key.Name))        // if not null, and we have not set it above..
+                            {
+                                dynamic curvalue = kvp.Key.GetValue(original);        // get original value
+
+                                if (!specialeffectmodcontrol.TryGetValue(kvp.Key.Name, out double controlmod))
+                                    controlmod = 100;
+
+                                dynamic nextvalue = controlmod == 0 ? value : controlmod == 1 ? curvalue + value : curvalue * (1 + value / controlmod);
+
+                                kvp.Key.SetValue(engineered, nextvalue);
+
+                                //System.Diagnostics.Debug.WriteLine($"SpecialEffect on {engineered.EnglishModName} SE {ExperimentalEffect} Property {kvp.Key.Name} adjust by {value}: {curvalue} -> {nextvalue}");
+                            }
+                            else
+                            {
+                                //  System.Diagnostics.Debug.WriteLine($"SpecialEffect on {engineered.EnglishModName} SE {ExperimentalEffect} Property {kvp.Key.Name} not changing due to change above");
+                            }
+                        }
+
+                    }
+                }
+                else
+                {
+                    System.Diagnostics.Trace.WriteLine($"*** Special effect in engineering not known {ExperimentalEffect}");
+                }
+            }
+
+            return engineered;
+        }
+
+        const string enginefastonly = "!+*_class5_fast";     // only for these do we have these engine parameters
+
+        // key is the frontier label name
+        // for the string[]
+        // first entry must just be the name only and is the primary modifier
+        // second and further entries:
+        //      / means divide the primary ratio not multiply
+        //      ! don't do if the exceptions stop the application. A list of exceptions,  | separated
+        //          An exception is +/- <Engineering Variable>|<module name>|<blueprint name>.  - means it can't be true, + means it must be true
 
         Dictionary<string, string[]> modifierfdmapping = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)
         {
@@ -259,7 +390,6 @@ namespace EliteDangerousCore
                                                 },
             ["RateOfFire"] = new string[] { "RateOfFire", "/BurstInterval!-hpt_railgun*" },
 
-
             ["Mass"] = new string[] { "Mass", },
             ["Integrity"] = new string[] { "Integrity", },
             ["Integrity"] = new string[] { "Integrity", },
@@ -268,11 +398,11 @@ namespace EliteDangerousCore
             ["ShieldBankSpinUp"] = new string[] { "SCBSpinUp", },
             ["ShieldBankDuration"] = new string[] { "SCBDuration", },
             ["ShieldBankReinforcement"] = new string[] { "ShieldReinforcement", },
-            ["ShieldBankHeat"] = new string[] { "SCBHeat", },
+            ["ShieldBankHeat"] = new string[] { "ThermalLoad", },
             ["DistributorDraw"] = new string[] { "DistributorDraw", },
             ["ThermalLoad"] = new string[] { "ThermalLoad", },
             ["ArmourPenetration"] = new string[] { "ArmourPiercing", },
-            ["MaximumRange"] = new string[] { "Range" }, 
+            ["MaximumRange"] = new string[] { "Range" },
             ["FalloffRange"] = new string[] { "Falloff", },
             ["ShotSpeed"] = new string[] { "Speed", },
             ["BurstRateOfFire"] = new string[] { "BurstRateOfFire", },
@@ -287,7 +417,7 @@ namespace EliteDangerousCore
             ["Jitter"] = new string[] { "Jitter", },
 
             ["ShieldGenMinimumMass"] = new string[] { "MinMass", },
-            ["ShieldGenOptimalMass"] = new string[] { "OptMass", "MinMass" },       
+            ["ShieldGenOptimalMass"] = new string[] { "OptMass", "MinMass" },
             ["ShieldGenMaximumMass"] = new string[] { "MaxMass", },
 
             ["ShieldGenMinStrength"] = new string[] { "MinStrength" },
@@ -301,13 +431,21 @@ namespace EliteDangerousCore
             ["FSDHeatRate"] = new string[] { "ThermalLoad", },
             ["MaxFuelPerJump"] = new string[] { "MaxFuelPerJump", },
             ["EngineMinimumMass"] = new string[] { "MinMass", },
-            ["EngineOptimalMass"] = new string[] { "OptMass", "MinMass", "MaxMass"},
+            ["EngineOptimalMass"] = new string[] { "OptMass", "MinMass", "MaxMass" },
             ["MaximumMass"] = new string[] { "MaxMass", },
             ["EngineMinPerformance"] = new string[] { "EngineMinMultiplier", },
-            ["EngineOptPerformance"] = new string[] { "EngineOptMultiplier", nameof(ItemData.ShipModule.EngineMinMultiplier) , nameof(ItemData.ShipModule.EngineMaxMultiplier),
-                                                                nameof(ItemData.ShipModule.MinimumSpeedModifier) , nameof(ItemData.ShipModule.OptimalSpeedModifier), nameof(ItemData.ShipModule.MaximumSpeedModifier),
-                                                                nameof(ItemData.ShipModule.MinimumAccelerationModifier) , nameof(ItemData.ShipModule.OptimalAccelerationModifier), nameof(ItemData.ShipModule.MaximumAccelerationModifier),
-                                                                nameof(ItemData.ShipModule.MinimumRotationModifier) , nameof(ItemData.ShipModule.OptimalRotationModifier), nameof(ItemData.ShipModule.MaximumRotationModifier),
+            ["EngineOptPerformance"] = new string[] { "EngineOptMultiplier", 
+                                                                nameof(ItemData.ShipModule.EngineMinMultiplier) , 
+                                                                nameof(ItemData.ShipModule.EngineMaxMultiplier),
+                                                                nameof(ItemData.ShipModule.MinimumSpeedModifier)+ enginefastonly , 
+                                                                nameof(ItemData.ShipModule.OptimalSpeedModifier)+ enginefastonly, 
+                                                                nameof(ItemData.ShipModule.MaximumSpeedModifier)+ enginefastonly,
+                                                                nameof(ItemData.ShipModule.MinimumAccelerationModifier) + enginefastonly , 
+                                                                nameof(ItemData.ShipModule.OptimalAccelerationModifier)+ enginefastonly, 
+                                                                nameof(ItemData.ShipModule.MaximumAccelerationModifier)+ enginefastonly,
+                                                                nameof(ItemData.ShipModule.MinimumRotationModifier) + enginefastonly, 
+                                                                nameof(ItemData.ShipModule.OptimalRotationModifier)+ enginefastonly, 
+                                                                nameof(ItemData.ShipModule.MaximumRotationModifier)+ enginefastonly,
                                                     },
             ["EngineMaxPerformance"] = new string[] { "EngineMaxMultiplier", },
             ["EngineHeatRate"] = new string[] { "ThermalLoad", },
@@ -373,163 +511,35 @@ namespace EliteDangerousCore
             ["DSS_PatchRadius"] = new string[] { "ProbeRadius", },
         };
 
-        public bool EngineerModule(string fdname, ItemData.ShipModule original, out ItemData.ShipModule engineered)
+
+        // for special effects, what to do..
+        // 0 = set, 1 = add, 2 means mod 100 on primary value, else its modmod together in %
+
+        Dictionary<string, double> specialeffectmodcontrol = new Dictionary<string, double>
         {
-            System.Diagnostics.Debug.WriteLine($"*** Engineer module {fdname} ");
-            engineered = new ItemData.ShipModule(original);       // take a copy
-
-            ItemData.ShipModule specialeffect = null;
-
-            if (ExperimentalEffect.HasChars())
-                ItemData.TryGetSpecialEffect(ExperimentalEffect, out specialeffect);
-
-            var proplist = ItemData.ShipModule.GetPropertiesInOrder().Keys.ToList();
-
-            bool good = true;
-
-            List<string> primarymodifiers = new List<string>();
-            foreach( var x in Modifiers)
-            {
-                if (modifierfdmapping.TryGetValue(x.Label, out string[] modifyarray))  // get the modifier primary control value if present
-                    primarymodifiers.Add(modifyarray[0]);
-            }
-
-            foreach (EngineeringModifiers mf in Modifiers)
-            {
-                if (modifierfdmapping.TryGetValue(mf.Label, out string[] modifyarray))  // get the modify commands from the label
-                {
-                    double ratio = 0;                                   // primary ratio
-
-                    for (int pno = 0; pno < modifyarray.Length; pno++)        // for each modifier, 0 means primary
-                    {
-                        string pset = modifyarray[pno];                   // parameter, and optional set of cop outs
-                        bool divit = pset.StartsWith("/");              // / means we divide not multiply the ratio when setting the para
-                        if (divit)
-                            pset = pset.Substring(1);
-
-                        string[] exceptiontypes = new string[0];        // split string into primary (pset) and exception list
-                        int excl = pset.IndexOf('!');
-                        if (excl > 0)
-                        {
-                            string ctrl = pset.Substring(excl + 1);
-                            exceptiontypes = ctrl.SplitNoEmptyStartFinish('|');
-                            pset = pset.Substring(0, excl);
-                        }
-
-                        System.Reflection.PropertyInfo prop = proplist.Find(x => x.Name == pset);       // find parameter we are setting
-                        dynamic orgvalue = prop.GetValue(original);
-
-                        if (orgvalue != null)         // it may be null, because it may not be there..
-                        {
-                            double valuetoset;
-                            if (pno == 0)
-                            {
-                                valuetoset = mf.Value;
-                                ratio = mf.Value / mf.OriginalValue;
-                            }
-                            else
-                            {
-                                if (divit)
-                                    valuetoset = (double)orgvalue / ratio;
-                                else
-                                    valuetoset = (double)orgvalue * ratio;
-                            }
-
-                            if (pno > 0 && primarymodifiers.Find(x => x == pset) != null)        // if we are a secondary, but we are changing a primary modified value, don't change
-                            {
-                                System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} {mf.Label} {pset} NOT changing to {valuetoset} due to primary modifier being present");
-                                continue;
-                            }
-
-                            bool stop = false;
-                            foreach (var exceptiontype in exceptiontypes)           // for all exception types..
-                            {
-                                bool negativecheck = exceptiontype[0] == '-';
-                                string exceptiontext = exceptiontype.Substring(1);
-
-                                bool anyfound = Array.Find(Modifiers, x => x.Label.EqualsIIC(exceptiontext)) != null ||
-                                              fdname.WildCardMatch(exceptiontext,true) == true ||
-                                              BlueprintName.EqualsIIC(exceptiontext);
-
-                                if (negativecheck ? anyfound == true : anyfound == false)        // if they agree, then a negativecheck with a find of positive stops it, and visa versa
-                                {
-                                    System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} {mf.Label} {pset} {orgvalue} NOT changing to {valuetoset} due to {exceptiontype} being present");
-                                    stop = true;
-                                    break;
-                                }
-                                else
-                                {
-                                    if (!negativecheck)
-                                        System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} {mf.Label} {pset} {orgvalue} passed test {exceptiontype}");
-                                }
-                            }
-
-                            if (stop)
-                                continue;
-
-                            System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} {mf.Label} {pset} {orgvalue} -> {valuetoset} ratio {ratio}");
-
-                            if (orgvalue is double?)
-                            {
-                                prop.SetValue(engineered, valuetoset);
-                            }
-                            else if (orgvalue is int?)
-                            {
-                                prop.SetValue(engineered, (int)valuetoset);
-                            }
-                        }
-                        else
-                        {
-                            System.Diagnostics.Trace.WriteLine($"*** Engineering setting a null value {this.BlueprintName} {this.ExperimentalEffect} {pset}");
-                            good = false;
-                        }
-                    }
-                }
-                else
-                {
-                    System.Diagnostics.Trace.WriteLine($"*** Engineering unknown modifier {this.BlueprintName} {this.ExperimentalEffect} {mf.Label}");
-                    good = false;
-                }
-            }
-
-
-            if (ExperimentalEffect.HasChars())
-            {
-                if (ItemData.TryGetSpecialEffect(ExperimentalEffect, out ItemData.ShipModule se))   // get the experimental effect ship module modifier
-                {
-                    foreach (var kvp in ItemData.ShipModule.GetPropertiesInOrder())     // all properties in the class
-                    {
-                        dynamic value = kvp.Key.GetValue(se);
-                        if (value != null)
-                        {
-                            if (!primarymodifiers.Contains(kvp.Key.Name))        // if not null, and we have not set it above..
-                            {
-                                dynamic curvalue = kvp.Key.GetValue(original);        // get original value
-
-                                if (!modifiercontrolvalue.TryGetValue(kvp.Key.Name, out double controlmod))
-                                    controlmod = 100;
-
-                                dynamic nextvalue = controlmod == 0 ? value : controlmod == 1 ? curvalue + value : curvalue * (1 + value / controlmod);
-
-                                kvp.Key.SetValue(engineered, nextvalue);
-
-                                System.Diagnostics.Debug.WriteLine($"SpecialEffect on {engineered.EnglishModName} SE {ExperimentalEffect} Property {kvp.Key.Name} adjust by {value}: {curvalue} -> {nextvalue}");
-                            }
-                            else
-                            {
-                                System.Diagnostics.Debug.WriteLine($"SpecialEffect on {engineered.EnglishModName} SE {ExperimentalEffect} Property {kvp.Key.Name} not changing due to change above");
-                            }
-                        }
-                        
-                    }
-                }
-                else
-                    System.Diagnostics.Trace.WriteLine($"*** Special effect in engineering not known {ExperimentalEffect}");
-            }
-
-            return good;
-        }
-
+            ["BurstRateOfFire"] = 0,
+            ["BurstSize"] = 0,
+            ["Rounds"] = 1,
+            ["Jitter"] = 1,
+            ["KineticProportionDamage"] = 0,
+            ["ThermalProportionDamage"] = 0,
+            ["ExplosiveProportionDamage"] = 0,
+            ["AbsoluteProportionDamage"] = 0,
+            ["CausticPorportionDamage"] = 0,
+            ["AXPorportionDamage"] = 0,
+            ["HullStrengthBonus"] = 100,
+            ["ShieldReinforcement"] = 100,
+            ["KineticResistance"] = -100,
+            ["ThermalResistance"] = -100,
+            ["ExplosiveResistance"] = -100,
+            ["CausticResistance"] = -100,
+            ["AXResistance"] = -100,
+            ["Capacity"] = 1,
+            ["Limpets"] = 1,
+            ["MinCargo"] = 1,
+            ["MaxCargo"] = 1,
+            ["Capacity"] = 1,
+        };
 
 
 

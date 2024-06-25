@@ -1,5 +1,5 @@
 ﻿/*t
- * Copyright © 2018-2024 EDDiscovery development team
+ * Copyright © 2024-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -13,51 +13,422 @@
  */
 
 using QuickJSON;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using BaseUtils;
 
 namespace EliteDangerousCore
 {
     public static class EngineeringUnitTest
     {
-        static Ship lastship;
-        static ShipSlots.Slot lastslot;
-
-        [System.Diagnostics.DebuggerHidden]
-        public static ItemData.ShipModule GetModule(string loadout, ShipSlots.Slot slot)
-        {
-            Ship si = Ship.CreateFromLoadout(loadout);
-            lastship = si;
-            lastslot = slot;
-            System.Diagnostics.Debug.WriteLine($"\r\nTEST Module {si.Modules[slot].ItemFD} in {lastslot}");
-            //System.Diagnostics.Debug.WriteLine($"\r\nTEST Module {si.Modules[slot].ItemFD} in {lastslot} Engineering: {si.Modules[slot].Engineering?.ToString()}");
-            var module = si.GetShipModulePropertiesEngineered(slot);
-            return module ;
-        }
-
-        public static string GetLoadoutLong(string loadout)
-        {
-            JToken j  = JToken.Parse(loadout);
-            return j.ToString(true);
-        }
-
-        [System.Diagnostics.DebuggerHidden]
-        public static void Check(bool good)
-        {
-            if (!good)
-            {
-                var module = lastship.Modules[lastslot];
-                System.Diagnostics.Debug.Write($"{lastslot} error : {module.Engineering.ToString()}");
-                System.Diagnostics.Debugger.Break();
-            }
-        }
-
         public static void UnitTest()
         {
             MaterialCommodityMicroResourceType.Initialise();     // lets statically fill the table way before anyone wants to access it
             ItemData.Initialise();
+
+              {
+                // thrusters clean tuning thermal spread
+                string t = @"[{""header"":{""appName"":""EDSY"",""appVersion"":308189904,""appURL"":""https://edsy.org/#/L=H100000H4C0S00,Eht00FBR00,,9p300A3w00AJYG03L_W0AZo00Ans00B1U00BH600BWQ00,,7Og0003w00mpU0nG0-0nF0-""},""data"":{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":411380,""UnladenMass"":41.825,""CargoCapacity"":4,""MaxJumpRange"":8.356005,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":20822,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_beamlaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":74650},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class5"",""On"":true,""Priority"":0,""Value"":160140},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class5"",""On"":true,""Priority"":0,""Value"":160220,""Engineering"":{""BlueprintName"":""Engine_Tuned"",""Level"":5,""Quality"":1,""ExperimentalEffect"":""special_engine_cooled"",""Modifiers"":[{""Label"":""Mass"",""Value"":2.625,""OriginalValue"":2.5},{""Label"":""Integrity"",""Value"":47.04,""OriginalValue"":56},{""Label"":""PowerDraw"",""Value"":3.48,""OriginalValue"":3},{""Label"":""EngineOptimalMass"",""Value"":64.8,""OriginalValue"":72},{""Label"":""EngineOptPerformance"",""Value"":128,""OriginalValue"":100},{""Label"":""EngineHeatRate"",""Value"":0.468,""OriginalValue"":1.3}]}},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot01_Size2"",""Item"":""int_shieldgenerator_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""Slot02_Size2"",""Item"":""int_cargorack_size2_class1"",""On"":true,""Priority"":0,""Value"":3250},{""Slot"":""Slot05_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""Slot06_Size1"",""Item"":""int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":0}]}}]";
+                var mod = GetModule(t, ShipSlots.Slot.MainEngines);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(2.625));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(47.04));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(3.48));
+                Check(mod.MinMass.Value.ApproxEqualsPercent(32.4));
+                Check(mod.OptMass.Value.ApproxEqualsPercent(64.8));
+                Check(mod.MaxMass.Value.ApproxEqualsPercent(97.2));
+                Check(mod.EngineMinMultiplier.Value.ApproxEqualsPercent(122.8));
+                Check(mod.EngineOptMultiplier.Value.ApproxEqualsPercent(128));
+                Check(mod.EngineMaxMultiplier.Value.ApproxEqualsPercent(148.48));
+                Check(mod.ThermalLoad.Value.ApproxEqualsPercent(0.468));
+            }
+            {
+                // thrusters strengthing drive distrubutors
+                string t = @"[{""header"":{""appName"":""EDSY"",""appVersion"":308189904,""appURL"":""https://edsy.org/#/L=H100000H4C0S00,FBR00FBR00,,9p300A4Y00AKAG07J_W0AZo00Ans00B1U00BH600BWQ00,,7Og0003w00mpU0nG0-0nF0-""},""data"":{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":26930,""UnladenMass"":43.525,""CargoCapacity"":4,""MaxJumpRange"":8.034074,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":1600,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class1"",""On"":true,""Priority"":0,""Value"":1980,""Engineering"":{""BlueprintName"":""Engine_Reinforced"",""Level"":5,""Quality"":1,""ExperimentalEffect"":""special_engine_haulage"",""Modifiers"":[{""Label"":""Mass"",""Value"":3.125,""OriginalValue"":2.5},{""Label"":""Integrity"",""Value"":96.6,""OriginalValue"":46},{""Label"":""EngineOptimalMass"",""Value"":52.8,""OriginalValue"":48},{""Label"":""EngineHeatRate"",""Value"":0.65,""OriginalValue"":1.3}]}},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot01_Size2"",""Item"":""int_shieldgenerator_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""Slot02_Size2"",""Item"":""int_cargorack_size2_class1"",""On"":true,""Priority"":0,""Value"":3250},{""Slot"":""Slot05_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""Slot06_Size1"",""Item"":""int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":0}]}}]";
+                var mod = GetModule(t, ShipSlots.Slot.MainEngines);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(3.125));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(96.6));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(2));
+                Check(mod.MinMass.Value.ApproxEqualsPercent(26.4));
+                Check(mod.OptMass.Value.ApproxEqualsPercent(52.8));
+                Check(mod.MaxMass.Value.ApproxEqualsPercent(79.2));
+                Check(mod.EngineMinMultiplier.Value.ApproxEqualsPercent(83));
+                Check(mod.EngineOptMultiplier.Value.ApproxEqualsPercent(100));
+                Check(mod.EngineMaxMultiplier.Value.ApproxEqualsPercent(103));
+                Check(mod.ThermalLoad.Value.ApproxEqualsPercent(0.65));
+            }
+
+            {
+                // enhanced performance thrusters dirty tuning drive distributors
+                string t = @"{""event"":""Loadout"",""Ship"":""cobramkiii"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":186260,""ModulesValue"":5178500,""UnladenMass"":220,""CargoCapacity"":0,""MaxJumpRange"":12.113121,""FuelCapacity"":{""Main"":16,""Reserve"":0.49},""Rebuy"":268238,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""Armour"",""Item"":""cobramkiii_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size4_class1"",""On"":true,""Priority"":0,""Value"":17790},{""Slot"":""MainEngines"",""Item"":""int_engine_size3_class5_fast"",""On"":true,""Priority"":0,""Value"":5103950,""Engineering"":{""BlueprintName"":""Engine_Dirty"",""Level"":5,""Quality"":1,""ExperimentalEffect"":""special_engine_haulage"",""Modifiers"":[{""Label"":""Integrity"",""Value"":46.75,""OriginalValue"":55},{""Label"":""PowerDraw"",""Value"":5.6,""OriginalValue"":5},{""Label"":""EngineOptimalMass"",""Value"":86.625,""OriginalValue"":90},{""Label"":""EngineOptPerformance"",""Value"":161,""OriginalValue"":115},{""Label"":""EngineHeatRate"",""Value"":2.08,""OriginalValue"":1.3}]}},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size4_class1"",""On"":true,""Priority"":0,""Value"":19880},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size3_class1"",""On"":true,""Priority"":0,""Value"":4050},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size3_class1"",""On"":true,""Priority"":0,""Value"":4050},{""Slot"":""Radar"",""Item"":""int_sensors_size3_class1"",""On"":true,""Priority"":0,""Value"":4050},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size4_class3"",""On"":true,""Priority"":0,""Value"":24730}]}";
+                var mod = GetModule(t, ShipSlots.Slot.MainEngines);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(5));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(46.75));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(5.6));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(0));
+                Check(mod.MinMass.Value.ApproxEqualsPercent(67.38));
+                Check(mod.OptMass.Value.ApproxEqualsPercent(86.63));
+                Check(mod.MaxMass.Value.ApproxEqualsPercent(192.5));
+                Check(mod.EngineMinMultiplier.Value.ApproxEqualsPercent(126));
+                Check(mod.EngineOptMultiplier.Value.ApproxEqualsPercent(161));
+                Check(mod.EngineMaxMultiplier.Value.ApproxEqualsPercent(191.7));
+                Check(mod.MinimumSpeedModifier.Value.ApproxEqualsPercent(126));
+                Check(mod.OptimalSpeedModifier.Value.ApproxEqualsPercent(175));
+                Check(mod.MaximumSpeedModifier.Value.ApproxEqualsPercent(224));
+                Check(mod.MinimumAccelerationModifier.Value.ApproxEqualsPercent(126));
+                Check(mod.OptimalAccelerationModifier.Value.ApproxEqualsPercent(154));
+                Check(mod.MaximumAccelerationModifier.Value.ApproxEqualsPercent(168));
+                Check(mod.MinimumRotationModifier.Value.ApproxEqualsPercent(126));
+                Check(mod.OptimalRotationModifier.Value.ApproxEqualsPercent(154));
+                Check(mod.MaximumRotationModifier.Value.ApproxEqualsPercent(182));
+                Check(mod.ThermalLoad.Value.ApproxEqualsPercent(2.08));
+            }
+
+
+            {
+                // power plant armoured monstered
+                string t = @"[{""header"":{""appName"":""EDSY"",""appVersion"":308189904,""appURL"":""https://edsy.org/#/L=H100000H4C0S00,Eht00FBR00,,9p300A3wG03I_W0AKA00AZo00Ans00B1U00BH600BWQ00,,7Og0003w00mpU0nG0-0nF0-""},""data"":{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":253140,""UnladenMass"":42.116,""CargoCapacity"":4,""MaxJumpRange"":8.29908,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":12910,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_beamlaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":74650},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class5"",""On"":true,""Priority"":0,""Value"":160140,""Engineering"":{""BlueprintName"":""PowerPlant_Armoured"",""Level"":5,""Quality"":1,""ExperimentalEffect"":""special_powerplant_highcharge"",""Modifiers"":[{""Label"":""Mass"",""Value"":1.716,""OriginalValue"":1.3},{""Label"":""Integrity"",""Value"":123.2,""OriginalValue"":56},{""Label"":""PowerCapacity"",""Value"":11.2896,""OriginalValue"":9.6},{""Label"":""HeatEfficiency"",""Value"":0.352,""OriginalValue"":0.4}]}},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot01_Size2"",""Item"":""int_shieldgenerator_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""Slot02_Size2"",""Item"":""int_cargorack_size2_class1"",""On"":true,""Priority"":0,""Value"":3250},{""Slot"":""Slot05_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""Slot06_Size1"",""Item"":""int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":0}]}}]";
+                var mod = GetModule(t, ShipSlots.Slot.PowerPlant);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(1.7165));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(123.2));
+                Check(mod.PowerGen.Value.ApproxEqualsPercent(11.29));
+                Check(mod.HeatEfficiency.Value.ApproxEqualsPercent(0.352));
+            }
+
+            {
+                // power plant overcharge thermal spread
+                string t = @"[{""header"":{""appName"":""EDSY"",""appVersion"":308189904,""appURL"":""https://edsy.org/#/L=H100000H4C0S00,Eht00FBR00,,9p300A3wG07K_W0AKA00AZo00Ans00B1U00BH600BWQ00,,7Og0003w00mpU0nG0-0nF0-""},""data"":{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":253140,""UnladenMass"":41.7,""CargoCapacity"":4,""MaxJumpRange"":8.380697,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":12910,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_beamlaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":74650},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class5"",""On"":true,""Priority"":0,""Value"":160140,""Engineering"":{""BlueprintName"":""PowerPlant_Boosted"",""Level"":5,""Quality"":1,""ExperimentalEffect"":""special_powerplant_cooled"",""Modifiers"":[{""Label"":""Integrity"",""Value"":42,""OriginalValue"":56},{""Label"":""PowerCapacity"",""Value"":13.44,""OriginalValue"":9.6},{""Label"":""HeatEfficiency"",""Value"":0.45,""OriginalValue"":0.4}]}},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot01_Size2"",""Item"":""int_shieldgenerator_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""Slot02_Size2"",""Item"":""int_cargorack_size2_class1"",""On"":true,""Priority"":0,""Value"":3250},{""Slot"":""Slot05_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""Slot06_Size1"",""Item"":""int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":0}]}}]";
+                var mod = GetModule(t, ShipSlots.Slot.PowerPlant);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(1.3));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(42));
+                Check(mod.PowerGen.Value.ApproxEqualsPercent(13.44));
+                Check(mod.HeatEfficiency.Value.ApproxEqualsPercent(0.45));
+            }
+
+
+
+            {
+                // chaff
+                string t = @"{""event"":""Loadout"",""Ship"":""anaconda"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":142447820,""ModulesValue"":8668390,""UnladenMass"":1067.25,""CargoCapacity"":50,""MaxJumpRange"":9.632341,""FuelCapacity"":{""Main"":32,""Reserve"":1.07},""Rebuy"":7555810,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_pulselaser_fixed_small"",""On"":true,""Priority"":0,""Value"":2200},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_fixed_small"",""On"":true,""Priority"":0,""Value"":2200},{""Slot"":""TinyHardpoint1"",""Item"":""hpt_chafflauncher_tiny"",""On"":true,""Priority"":0,""Value"":8500,""Engineering"":{""BlueprintName"":""Misc_Reinforced"",""Level"":5,""Quality"":1,""Modifiers"":[{""Label"":""Mass"",""Value"":3.25,""OriginalValue"":1.3},{""Label"":""Integrity"",""Value"":80,""OriginalValue"":20}]}},{""Slot"":""Armour"",""Item"":""anaconda_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size8_class1"",""On"":true,""Priority"":0,""Value"":1441230},{""Slot"":""MainEngines"",""Item"":""int_engine_size7_class1"",""On"":true,""Priority"":0,""Value"":633200},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size5_class1"",""On"":true,""Priority"":0,""Value"":31780},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size8_class1"",""On"":true,""Priority"":0,""Value"":697580},{""Slot"":""Radar"",""Item"":""int_sensors_size8_class1"",""On"":true,""Priority"":0,""Value"":697580},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size5_class3"",""On"":true,""Priority"":0,""Value"":97750},{""Slot"":""Slot01_Size7"",""Item"":""int_refinery_size4_class5"",""On"":true,""Priority"":0,""Value"":4500850},{""Slot"":""Slot02_Size6"",""Item"":""int_cargorack_size5_class1"",""On"":true,""Priority"":0,""Value"":111570},{""Slot"":""Slot03_Size6"",""Item"":""int_shieldgenerator_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""Slot05_Size5"",""Item"":""int_cargorack_size4_class1"",""On"":true,""Priority"":0,""Value"":34330},{""Slot"":""Slot13_Size2"",""Item"":""int_cargorack_size1_class1"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot14_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":9120}]}";
+                var mod = GetModule(t, ShipSlots.Slot.TinyHardpoint1);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(3.25));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(80));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(0.2));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(0));
+                Check(mod.DistributorDraw.Value.ApproxEqualsPercent(4));
+                Check(mod.ThermalLoad.Value.ApproxEqualsPercent(4));
+                Check(mod.RateOfFire.Value.ApproxEqualsPercent(1));
+                Check(mod.BurstInterval.Value.ApproxEqualsPercent(1));
+                Check(mod.Clip == 1);
+                Check(mod.Ammo == 10);
+                Check(mod.ReloadTime == 10);
+                Check(mod.Time == 20);
+            }
+            {
+                // chaff ammo cap
+                string t = @"{""event"":""Loadout"",""Ship"":""anaconda"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":142447820,""ModulesValue"":8668390,""UnladenMass"":1066.6,""CargoCapacity"":50,""MaxJumpRange"":9.638182,""FuelCapacity"":{""Main"":32,""Reserve"":1.07},""Rebuy"":7555810,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_pulselaser_fixed_small"",""On"":true,""Priority"":0,""Value"":2200},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_fixed_small"",""On"":true,""Priority"":0,""Value"":2200},{""Slot"":""TinyHardpoint1"",""Item"":""hpt_chafflauncher_tiny"",""On"":true,""Priority"":0,""Value"":8500,""Engineering"":{""BlueprintName"":""Misc_ChaffCapacity"",""Level"":1,""Quality"":1,""Modifiers"":[{""Label"":""Mass"",""Value"":2.6,""OriginalValue"":1.3},{""Label"":""AmmoMaximum"",""Value"":15,""OriginalValue"":10},{""Label"":""ReloadTime"",""Value"":11,""OriginalValue"":10}]}},{""Slot"":""Armour"",""Item"":""anaconda_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size8_class1"",""On"":true,""Priority"":0,""Value"":1441230},{""Slot"":""MainEngines"",""Item"":""int_engine_size7_class1"",""On"":true,""Priority"":0,""Value"":633200},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size5_class1"",""On"":true,""Priority"":0,""Value"":31780},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size8_class1"",""On"":true,""Priority"":0,""Value"":697580},{""Slot"":""Radar"",""Item"":""int_sensors_size8_class1"",""On"":true,""Priority"":0,""Value"":697580},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size5_class3"",""On"":true,""Priority"":0,""Value"":97750},{""Slot"":""Slot01_Size7"",""Item"":""int_refinery_size4_class5"",""On"":true,""Priority"":0,""Value"":4500850},{""Slot"":""Slot02_Size6"",""Item"":""int_cargorack_size5_class1"",""On"":true,""Priority"":0,""Value"":111570},{""Slot"":""Slot03_Size6"",""Item"":""int_shieldgenerator_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""Slot05_Size5"",""Item"":""int_cargorack_size4_class1"",""On"":true,""Priority"":0,""Value"":34330},{""Slot"":""Slot13_Size2"",""Item"":""int_cargorack_size1_class1"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot14_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":9120}]}";
+                var mod = GetModule(t, ShipSlots.Slot.TinyHardpoint1);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(2.6));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(20));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(0.2));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(0));
+                Check(mod.DistributorDraw.Value.ApproxEqualsPercent(4));
+                Check(mod.ThermalLoad.Value.ApproxEqualsPercent(4));
+                Check(mod.RateOfFire.Value.ApproxEqualsPercent(1));
+                Check(mod.BurstInterval.Value.ApproxEqualsPercent(1));
+                Check(mod.Clip == 1);
+                Check(mod.Ammo == 15);
+                Check(mod.ReloadTime == 11);
+                Check(mod.Time == 20);
+            }
+
+            {
+                // ecm reinforced
+                string t = @"{""event"":""Loadout"",""Ship"":""anaconda"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":142447820,""ModulesValue"":8672390,""UnladenMass"":1067.25,""CargoCapacity"":50,""MaxJumpRange"":9.632341,""FuelCapacity"":{""Main"":32,""Reserve"":1.07},""Rebuy"":7556010,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_pulselaser_fixed_small"",""On"":true,""Priority"":0,""Value"":2200},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_fixed_small"",""On"":true,""Priority"":0,""Value"":2200},{""Slot"":""TinyHardpoint1"",""Item"":""hpt_electroniccountermeasure_tiny"",""On"":true,""Priority"":0,""Value"":12500,""Engineering"":{""BlueprintName"":""Misc_Reinforced"",""Level"":5,""Quality"":1,""Modifiers"":[{""Label"":""Mass"",""Value"":3.25,""OriginalValue"":1.3},{""Label"":""Integrity"",""Value"":80,""OriginalValue"":20}]}},{""Slot"":""Armour"",""Item"":""anaconda_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size8_class1"",""On"":true,""Priority"":0,""Value"":1441230},{""Slot"":""MainEngines"",""Item"":""int_engine_size7_class1"",""On"":true,""Priority"":0,""Value"":633200},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size5_class1"",""On"":true,""Priority"":0,""Value"":31780},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size8_class1"",""On"":true,""Priority"":0,""Value"":697580},{""Slot"":""Radar"",""Item"":""int_sensors_size8_class1"",""On"":true,""Priority"":0,""Value"":697580},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size5_class3"",""On"":true,""Priority"":0,""Value"":97750},{""Slot"":""Slot01_Size7"",""Item"":""int_refinery_size4_class5"",""On"":true,""Priority"":0,""Value"":4500850},{""Slot"":""Slot02_Size6"",""Item"":""int_cargorack_size5_class1"",""On"":true,""Priority"":0,""Value"":111570},{""Slot"":""Slot03_Size6"",""Item"":""int_shieldgenerator_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""Slot05_Size5"",""Item"":""int_cargorack_size4_class1"",""On"":true,""Priority"":0,""Value"":34330},{""Slot"":""Slot13_Size2"",""Item"":""int_cargorack_size1_class1"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot14_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":9120}]}";
+                var mod = GetModule(t, ShipSlots.Slot.TinyHardpoint1);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(3.25));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(80));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(0.2));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(0));
+                Check(mod.Range.Value.ApproxEqualsPercent(3000));
+                Check(mod.Time == 3);
+                Check(mod.ActivePower.Value.ApproxEqualsPercent(4));
+                Check(mod.ThermalLoad.Value.ApproxEqualsPercent(4));
+                Check(mod.ReloadTime.Value.ApproxEqualsPercent(10));
+            }
+
+            {
+                //  heat sink reinforced
+                string t = @"{""event"":""Loadout"",""Ship"":""anaconda"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":142447820,""ModulesValue"":8663390,""UnladenMass"":1067.25,""CargoCapacity"":50,""MaxJumpRange"":9.632341,""FuelCapacity"":{""Main"":32,""Reserve"":1.07},""Rebuy"":7555560,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_pulselaser_fixed_small"",""On"":true,""Priority"":0,""Value"":2200},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_fixed_small"",""On"":true,""Priority"":0,""Value"":2200},{""Slot"":""TinyHardpoint1"",""Item"":""hpt_heatsinklauncher_turret_tiny"",""On"":true,""Priority"":0,""Value"":3500,""Engineering"":{""BlueprintName"":""Misc_Reinforced"",""Level"":5,""Quality"":1,""Modifiers"":[{""Label"":""Mass"",""Value"":3.25,""OriginalValue"":1.3},{""Label"":""Integrity"",""Value"":180,""OriginalValue"":45}]}},{""Slot"":""Armour"",""Item"":""anaconda_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size8_class1"",""On"":true,""Priority"":0,""Value"":1441230},{""Slot"":""MainEngines"",""Item"":""int_engine_size7_class1"",""On"":true,""Priority"":0,""Value"":633200},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size5_class1"",""On"":true,""Priority"":0,""Value"":31780},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size8_class1"",""On"":true,""Priority"":0,""Value"":697580},{""Slot"":""Radar"",""Item"":""int_sensors_size8_class1"",""On"":true,""Priority"":0,""Value"":697580},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size5_class3"",""On"":true,""Priority"":0,""Value"":97750},{""Slot"":""Slot01_Size7"",""Item"":""int_refinery_size4_class5"",""On"":true,""Priority"":0,""Value"":4500850},{""Slot"":""Slot02_Size6"",""Item"":""int_cargorack_size5_class1"",""On"":true,""Priority"":0,""Value"":111570},{""Slot"":""Slot03_Size6"",""Item"":""int_shieldgenerator_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""Slot05_Size5"",""Item"":""int_cargorack_size4_class1"",""On"":true,""Priority"":0,""Value"":34330},{""Slot"":""Slot13_Size2"",""Item"":""int_cargorack_size1_class1"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot14_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":9120}]}";
+                var mod = GetModule(t, ShipSlots.Slot.TinyHardpoint1);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(3.25));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(180));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(0.2));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(0));
+                Check(mod.DistributorDraw.Value.ApproxEqualsPercent(2));
+                Check(mod.RateOfFire.Value.ApproxEqualsPercent(0.2));
+                Check(mod.Clip == 1);
+                Check(mod.Ammo == 2);
+                Check(mod.ReloadTime.Value.ApproxEqualsPercent(10));
+                Check(mod.Time.Value.ApproxEqualsPercent(10));
+                Check(mod.ThermalDrain.Value.ApproxEqualsPercent(100));
+            }
+            {
+                //  heat sink ammo cap
+                string t = @"{""event"":""Loadout"",""Ship"":""anaconda"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":142447820,""ModulesValue"":8663390,""UnladenMass"":1066.6,""CargoCapacity"":50,""MaxJumpRange"":9.638182,""FuelCapacity"":{""Main"":32,""Reserve"":1.07},""Rebuy"":7555560,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_pulselaser_fixed_small"",""On"":true,""Priority"":0,""Value"":2200},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_fixed_small"",""On"":true,""Priority"":0,""Value"":2200},{""Slot"":""TinyHardpoint1"",""Item"":""hpt_heatsinklauncher_turret_tiny"",""On"":true,""Priority"":0,""Value"":3500,""Engineering"":{""BlueprintName"":""Misc_HeatSinkCapacity"",""Level"":1,""Quality"":1,""Modifiers"":[{""Label"":""Mass"",""Value"":2.6,""OriginalValue"":1.3},{""Label"":""AmmoMaximum"",""Value"":3,""OriginalValue"":2},{""Label"":""ReloadTime"",""Value"":15,""OriginalValue"":10}]}},{""Slot"":""Armour"",""Item"":""anaconda_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size8_class1"",""On"":true,""Priority"":0,""Value"":1441230},{""Slot"":""MainEngines"",""Item"":""int_engine_size7_class1"",""On"":true,""Priority"":0,""Value"":633200},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size5_class1"",""On"":true,""Priority"":0,""Value"":31780},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size8_class1"",""On"":true,""Priority"":0,""Value"":697580},{""Slot"":""Radar"",""Item"":""int_sensors_size8_class1"",""On"":true,""Priority"":0,""Value"":697580},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size5_class3"",""On"":true,""Priority"":0,""Value"":97750},{""Slot"":""Slot01_Size7"",""Item"":""int_refinery_size4_class5"",""On"":true,""Priority"":0,""Value"":4500850},{""Slot"":""Slot02_Size6"",""Item"":""int_cargorack_size5_class1"",""On"":true,""Priority"":0,""Value"":111570},{""Slot"":""Slot03_Size6"",""Item"":""int_shieldgenerator_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""Slot05_Size5"",""Item"":""int_cargorack_size4_class1"",""On"":true,""Priority"":0,""Value"":34330},{""Slot"":""Slot13_Size2"",""Item"":""int_cargorack_size1_class1"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot14_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":9120}]}";
+                var mod = GetModule(t, ShipSlots.Slot.TinyHardpoint1);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(2.6));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(45));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(0.2));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(0));
+                Check(mod.DistributorDraw.Value.ApproxEqualsPercent(2));
+                Check(mod.RateOfFire.Value.ApproxEqualsPercent(0.2));
+                Check(mod.BurstInterval.Value.ApproxEqualsPercent(5));
+                Check(mod.Clip == 1);
+                Check(mod.Ammo == 3);
+                Check(mod.ReloadTime.Value.ApproxEqualsPercent(15));
+                Check(mod.Time.Value.ApproxEqualsPercent(10));
+                Check(mod.ThermalDrain.Value.ApproxEqualsPercent(100));
+            }
+            {
+                // kill warrant reinforced
+                string t = @"{""event"":""Loadout"",""Ship"":""anaconda"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":142447820,""ModulesValue"":4895970,""UnladenMass"":1023.25,""CargoCapacity"":0,""MaxJumpRange"":10.044399,""FuelCapacity"":{""Main"":32,""Reserve"":1.07},""Rebuy"":7367189,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""TinyHardpoint1"",""Item"":""hpt_crimescanner_size0_class5"",""On"":true,""Priority"":0,""Value"":1097100,""Engineering"":{""BlueprintName"":""Misc_Reinforced"",""Level"":5,""Quality"":1,""Modifiers"":[{""Label"":""Mass"",""Value"":3.25,""OriginalValue"":1.3},{""Label"":""Integrity"",""Value"":192,""OriginalValue"":48}]}},{""Slot"":""Armour"",""Item"":""anaconda_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size8_class1"",""On"":true,""Priority"":0,""Value"":1441230},{""Slot"":""MainEngines"",""Item"":""int_engine_size7_class1"",""On"":true,""Priority"":0,""Value"":633200},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size5_class1"",""On"":true,""Priority"":0,""Value"":31780},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size8_class1"",""On"":true,""Priority"":0,""Value"":697580},{""Slot"":""Radar"",""Item"":""int_sensors_size8_class1"",""On"":true,""Priority"":0,""Value"":697580},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size5_class3"",""On"":true,""Priority"":0,""Value"":97750}]}";
+                var mod = GetModule(t, ShipSlots.Slot.TinyHardpoint1);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(3.25));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(192));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(3.2));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(2));
+                Check(mod.Range.Value.ApproxEqualsPercent(4000));
+                Check(mod.Angle.Value.ApproxEqualsPercent(15));
+                Check(mod.Time.Value.ApproxEqualsPercent(10));
+            }
+            {
+                // manifest scanner shielded
+                string t = @"{""event"":""Loadout"",""Ship"":""anaconda"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":142447820,""ModulesValue"":4895970,""UnladenMass"":1021.3,""CargoCapacity"":0,""MaxJumpRange"":10.063478,""FuelCapacity"":{""Main"":32,""Reserve"":1.07},""Rebuy"":7367189,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""TinyHardpoint1"",""Item"":""hpt_cargoscanner_size0_class5"",""On"":true,""Priority"":0,""Value"":1097100,""Engineering"":{""BlueprintName"":""Misc_Shielded"",""Level"":5,""Quality"":1,""Modifiers"":[{""Label"":""Integrity"",""Value"":192,""OriginalValue"":48},{""Label"":""PowerDraw"",""Value"":6.4,""OriginalValue"":3.2}]}},{""Slot"":""Armour"",""Item"":""anaconda_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size8_class1"",""On"":true,""Priority"":0,""Value"":1441230},{""Slot"":""MainEngines"",""Item"":""int_engine_size7_class1"",""On"":true,""Priority"":0,""Value"":633200},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size5_class1"",""On"":true,""Priority"":0,""Value"":31780},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size8_class1"",""On"":true,""Priority"":0,""Value"":697580},{""Slot"":""Radar"",""Item"":""int_sensors_size8_class1"",""On"":true,""Priority"":0,""Value"":697580},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size5_class3"",""On"":true,""Priority"":0,""Value"":97750}]}";
+                var mod = GetModule(t, ShipSlots.Slot.TinyHardpoint1);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(1.3));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(192));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(6.4));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(3));
+                Check(mod.Range.Value.ApproxEqualsPercent(4000));
+                Check(mod.Angle.Value.ApproxEqualsPercent(15));
+                Check(mod.Time.Value.ApproxEqualsPercent(10));
+            }
+            {
+                // point defence
+                string t = @"{""event"":""Loadout"",""Ship"":""anaconda"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":142447820,""ModulesValue"":3817420,""UnladenMass"":1021,""CargoCapacity"":0,""MaxJumpRange"":10.06642,""FuelCapacity"":{""Main"":32,""Reserve"":1.07},""Rebuy"":7313262,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""TinyHardpoint1"",""Item"":""hpt_plasmapointdefence_turret_tiny"",""On"":true,""Priority"":0,""Value"":18550,""Engineering"":{""BlueprintName"":""Misc_PointDefenseCapacity"",""Level"":1,""Quality"":1,""Modifiers"":[{""Label"":""Mass"",""Value"":1,""OriginalValue"":0.5},{""Label"":""AmmoMaximum"",""Value"":15000,""OriginalValue"":10000},{""Label"":""ReloadTime"",""Value"":0.44,""OriginalValue"":0.4}]}},{""Slot"":""Armour"",""Item"":""anaconda_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size8_class1"",""On"":true,""Priority"":0,""Value"":1441230},{""Slot"":""MainEngines"",""Item"":""int_engine_size7_class1"",""On"":true,""Priority"":0,""Value"":633200},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size5_class1"",""On"":true,""Priority"":0,""Value"":31780},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size8_class1"",""On"":true,""Priority"":0,""Value"":697580},{""Slot"":""Radar"",""Item"":""int_sensors_size8_class1"",""On"":true,""Priority"":0,""Value"":697580},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size5_class3"",""On"":true,""Priority"":0,""Value"":97750}]}";
+                var mod = GetModule(t, ShipSlots.Slot.TinyHardpoint1);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(1));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(30));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(0.2));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(0));
+                Check(mod.DPS.Value.ApproxEqualsPercent(2));
+                Check(mod.Damage.Value.ApproxEqualsPercent(0.2));
+                Check(mod.ThermalLoad.Value.ApproxEqualsPercent(0.07));
+                Check(mod.Range.Value.ApproxEqualsPercent(2500));
+                Check(mod.Speed.Value.ApproxEqualsPercent(1000));
+                Check(mod.RateOfFire.Value.ApproxEqualsPercent(10));
+                Check(mod.BurstInterval.Value.ApproxEqualsPercent(0.2));
+                Check(mod.BurstRateOfFire.Value.ApproxEqualsPercent(15));
+                Check(mod.BurstSize.Value.ApproxEqualsPercent(4));
+                Check(mod.Clip.Value == 12);
+                Check(mod.Ammo.Value == 15000);
+                Check(mod.ReloadTime.Value.ApproxEqualsPercent(0.44));
+                Check(mod.Jitter.Value.ApproxEqualsPercent(0.75));
+                Check(mod.KineticProportionDamage.Value.ApproxEqualsPercent(100));
+            }
+            {
+                // frame shift wake scanner
+                string t = @"{""event"":""Loadout"",""Ship"":""anaconda"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":142447820,""ModulesValue"":4895970,""UnladenMass"":1022.6,""CargoCapacity"":0,""MaxJumpRange"":10.050751,""FuelCapacity"":{""Main"":32,""Reserve"":1.07},""Rebuy"":7367189,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""TinyHardpoint1"",""Item"":""hpt_cloudscanner_size0_class5"",""On"":true,""Priority"":0,""Value"":1097100,""Engineering"":{""BlueprintName"":""Sensor_WideAngle"",""Level"":5,""Quality"":1,""Modifiers"":[{""Label"":""Mass"",""Value"":2.6,""OriginalValue"":1.3},{""Label"":""MaxAngle"",""Value"":45,""OriginalValue"":15},{""Label"":""ScannerTimeToScan"",""Value"":15,""OriginalValue"":10}]}},{""Slot"":""Armour"",""Item"":""anaconda_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size8_class1"",""On"":true,""Priority"":0,""Value"":1441230},{""Slot"":""MainEngines"",""Item"":""int_engine_size7_class1"",""On"":true,""Priority"":0,""Value"":633200},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size5_class1"",""On"":true,""Priority"":0,""Value"":31780},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size8_class1"",""On"":true,""Priority"":0,""Value"":697580},{""Slot"":""Radar"",""Item"":""int_sensors_size8_class1"",""On"":true,""Priority"":0,""Value"":697580},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size5_class3"",""On"":true,""Priority"":0,""Value"":97750}]}";
+                var mod = GetModule(t, ShipSlots.Slot.TinyHardpoint1);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(2.6));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(48));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(3.2));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(1));
+                Check(mod.Range.Value.ApproxEqualsPercent(4000));
+                Check(mod.Angle.Value.ApproxEqualsPercent(45));
+                Check(mod.Time.Value.ApproxEqualsPercent(15));
+            }
+            {
+                // shield defence
+                string t = @"{""event"":""Loadout"",""Ship"":""anaconda"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":142447820,""ModulesValue"":4079870,""UnladenMass"":1034,""CargoCapacity"":0,""MaxJumpRange"":9.940505,""FuelCapacity"":{""Main"":32,""Reserve"":1.07},""Rebuy"":7326384,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""TinyHardpoint1"",""Item"":""hpt_shieldbooster_size0_class5"",""On"":true,""Priority"":0,""Value"":281000,""Engineering"":{""BlueprintName"":""ShieldBooster_HeavyDuty"",""Level"":5,""Quality"":1,""ExperimentalEffect"":""special_shieldbooster_chunky"",""Modifiers"":[{""Label"":""Mass"",""Value"":14,""OriginalValue"":3.5},{""Label"":""Integrity"",""Value"":55.2,""OriginalValue"":48},{""Label"":""PowerDraw"",""Value"":1.5,""OriginalValue"":1.2},{""Label"":""DefenceModifierShieldMultiplier"",""Value"":73.88,""OriginalValue"":20},{""Label"":""KineticResistance"",""Value"":-2,""OriginalValue"":0},{""Label"":""ThermicResistance"",""Value"":-2,""OriginalValue"":0},{""Label"":""ExplosiveResistance"",""Value"":-2,""OriginalValue"":0}]}},{""Slot"":""Armour"",""Item"":""anaconda_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size8_class1"",""On"":true,""Priority"":0,""Value"":1441230},{""Slot"":""MainEngines"",""Item"":""int_engine_size7_class1"",""On"":true,""Priority"":0,""Value"":633200},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size5_class1"",""On"":true,""Priority"":0,""Value"":31780},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size8_class1"",""On"":true,""Priority"":0,""Value"":697580},{""Slot"":""Radar"",""Item"":""int_sensors_size8_class1"",""On"":true,""Priority"":0,""Value"":697580},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size5_class3"",""On"":true,""Priority"":0,""Value"":97750}]}";
+                var mod = GetModule(t, ShipSlots.Slot.TinyHardpoint1);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(14));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(55.2));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(1.5));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(0));
+                Check(mod.ShieldReinforcement.Value.ApproxEqualsPercent(73.88));
+                Check(mod.KineticResistance.Value.ApproxEqualsPercent(-2));
+                Check(mod.ThermalResistance.Value.ApproxEqualsPercent(-2));
+                Check(mod.KineticResistance.Value.ApproxEqualsPercent(-2));
+            }
+
+            {
+                // SCB rapid charge flow control
+                string t = @"{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":81500,""UnladenMass"":42.9,""CargoCapacity"":4,""MaxJumpRange"":8.149506,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":4328,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot01_Size2"",""Item"":""int_shieldcellbank_size2_class5"",""On"":true,""Priority"":0,""Value"":56550,""Engineering"":{""BlueprintName"":""ShieldCellBank_Rapid"",""Level"":4,""Quality"":1,""ExperimentalEffect"":""special_shieldcell_efficient"",""Modifiers"":[{""Label"":""PowerDraw"",""Value"":1.062,""OriginalValue"":1.18},{""Label"":""BootTime"",""Value"":31.25,""OriginalValue"":25},{""Label"":""ShieldBankSpinUp"",""Value"":3,""OriginalValue"":5},{""Label"":""ShieldBankDuration"",""Value"":1.14,""OriginalValue"":1.5},{""Label"":""ShieldBankReinforcement"",""Value"":38.4,""OriginalValue"":32}]}},{""Slot"":""Slot02_Size2"",""Item"":""int_cargorack_size2_class1"",""On"":true,""Priority"":0,""Value"":3250},{""Slot"":""Slot05_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""Slot06_Size1"",""Item"":""int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":0}]}";
+                var mod = GetModule(t, ShipSlots.Slot.Slot01_Size2);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(2.5));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(61));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(1.062));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(31.25));
+                Check(mod.SCBSpinUp.Value.ApproxEqualsPercent(3));
+                Check(mod.SCBDuration.Value.ApproxEqualsPercent(1.14));
+                Check(mod.ShieldReinforcement.Value.ApproxEqualsPercent(38.4));
+                Check(mod.ThermalLoad.Value.ApproxEqualsPercent(240));
+                Check(mod.Clip == 1);
+                Check(mod.Ammo == 3);
+            }
+            {
+                // SCB specialised boss cells
+                string t = @"{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":81500,""UnladenMass"":42.9,""CargoCapacity"":4,""MaxJumpRange"":8.149506,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":4328,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot01_Size2"",""Item"":""int_shieldcellbank_size2_class5"",""On"":true,""Priority"":0,""Value"":56550,""Engineering"":{""BlueprintName"":""ShieldCellBank_Specialised"",""Level"":4,""Quality"":1,""ExperimentalEffect"":""special_shieldcell_oversized"",""Modifiers"":[{""Label"":""Integrity"",""Value"":48.8,""OriginalValue"":61},{""Label"":""PowerDraw"",""Value"":1.475,""OriginalValue"":1.18},{""Label"":""BootTime"",""Value"":17,""OriginalValue"":25},{""Label"":""ShieldBankSpinUp"",""Value"":6,""OriginalValue"":5},{""Label"":""ShieldBankReinforcement"",""Value"":36.96,""OriginalValue"":32},{""Label"":""ShieldBankHeat"",""Value"":182.4,""OriginalValue"":240}]}},{""Slot"":""Slot02_Size2"",""Item"":""int_cargorack_size2_class1"",""On"":true,""Priority"":0,""Value"":3250},{""Slot"":""Slot05_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""Slot06_Size1"",""Item"":""int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":0}]}";
+                var mod = GetModule(t, ShipSlots.Slot.Slot01_Size2);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(2.5));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(48.8));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(1.475));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(17));
+                Check(mod.SCBSpinUp.Value.ApproxEqualsPercent(6));
+                Check(mod.SCBDuration.Value.ApproxEqualsPercent(1.5));
+                Check(mod.ShieldReinforcement.Value.ApproxEqualsPercent(36.96));
+                Check(mod.ThermalLoad.Value.ApproxEqualsPercent(182.4));
+                Check(mod.Clip == 1);
+                Check(mod.Ammo == 3);
+            }
+
+            {
+                // detailed surface scanner expanded
+                string t = @"{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":274950,""UnladenMass"":40.4,""CargoCapacity"":4,""MaxJumpRange"":8.646427,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":14001,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot01_Size2"",""Item"":""int_detailedsurfacescanner_tiny"",""On"":true,""Priority"":0,""Value"":250000,""Engineering"":{""BlueprintName"":""Sensor_Expanded"",""Level"":5,""Quality"":1,""Modifiers"":[{""Label"":""DSS_PatchRadius"",""Value"":30,""OriginalValue"":20}]}},{""Slot"":""Slot02_Size2"",""Item"":""int_cargorack_size2_class1"",""On"":true,""Priority"":0,""Value"":3250},{""Slot"":""Slot05_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""Slot06_Size1"",""Item"":""int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":0}]}";
+                var mod = GetModule(t, ShipSlots.Slot.Slot01_Size2);
+
+                Check(mod.Integrity.Value.ApproxEqualsPercent(20));
+                Check(mod.Clip == 3);
+                Check(mod.ProbeRadius.Value.ApproxEqualsPercent(30));
+            }
+
+            {
+                // frame shift drive interdictos expanded arc capture
+                string t = @"{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":2746550,""UnladenMass"":42.9,""CargoCapacity"":4,""MaxJumpRange"":8.149506,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":137581,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot01_Size2"",""Item"":""int_fsdinterdictor_size2_class5"",""On"":true,""Priority"":0,""Value"":2721600,""Engineering"":{""BlueprintName"":""FSDinterdictor_Expanded"",""Level"":5,""Quality"":1,""Modifiers"":[{""Label"":""PowerDraw"",""Value"":0.585,""OriginalValue"":0.39},{""Label"":""FSDInterdictorRange"",""Value"":7,""OriginalValue"":10},{""Label"":""FSDInterdictorFacingLimit"",""Value"":110,""OriginalValue"":50}]}},{""Slot"":""Slot02_Size2"",""Item"":""int_cargorack_size2_class1"",""On"":true,""Priority"":0,""Value"":3250},{""Slot"":""Slot05_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""Slot06_Size1"",""Item"":""int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":0}]}";
+                var mod = GetModule(t, ShipSlots.Slot.Slot01_Size2);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(2.5));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(61));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(0.585));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(15));
+                Check(mod.TargetMaxTime == 7);
+                Check(mod.Angle.Value == 110);
+            }
+
+            {
+                // frame shift drive interdictos expanded arc capture
+                string t = @"{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":2746550,""UnladenMass"":43.65,""CargoCapacity"":4,""MaxJumpRange"":8.011378,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":137581,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot01_Size2"",""Item"":""int_fsdinterdictor_size2_class5"",""On"":true,""Priority"":0,""Value"":2721600,""Engineering"":{""BlueprintName"":""FSDinterdictor_LongRange"",""Level"":5,""Quality"":1,""Modifiers"":[{""Label"":""Mass"",""Value"":3.25,""OriginalValue"":2.5},{""Label"":""PowerDraw"",""Value"":0.585,""OriginalValue"":0.39},{""Label"":""FSDInterdictorRange"",""Value"":16,""OriginalValue"":10},{""Label"":""FSDInterdictorFacingLimit"",""Value"":35,""OriginalValue"":50}]}},{""Slot"":""Slot02_Size2"",""Item"":""int_cargorack_size2_class1"",""On"":true,""Priority"":0,""Value"":3250},{""Slot"":""Slot05_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""Slot06_Size1"",""Item"":""int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":0}]}";
+                var mod = GetModule(t, ShipSlots.Slot.Slot01_Size2);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(3.25));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(61));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(0.585));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(15));
+                Check(mod.TargetMaxTime == 16);
+                Check(mod.Angle.Value == 35);
+            }
+
+            {
+                // fuel scoop shielded
+                string t = @"{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":309790,""UnladenMass"":40.4,""CargoCapacity"":4,""MaxJumpRange"":8.646427,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":15743,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot01_Size2"",""Item"":""int_fuelscoop_size2_class5"",""On"":true,""Priority"":0,""Value"":284840,""Engineering"":{""BlueprintName"":""Misc_Shielded"",""Level"":5,""Quality"":1,""Modifiers"":[{""Label"":""Integrity"",""Value"":244,""OriginalValue"":61},{""Label"":""PowerDraw"",""Value"":0.78,""OriginalValue"":0.39}]}},{""Slot"":""Slot02_Size2"",""Item"":""int_cargorack_size2_class1"",""On"":true,""Priority"":0,""Value"":3250},{""Slot"":""Slot05_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""Slot06_Size1"",""Item"":""int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":0}]}";
+                var mod = GetModule(t, ShipSlots.Slot.Slot01_Size2);
+
+                Check(mod.Integrity.Value.ApproxEqualsPercent(244));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(0.78));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(4));
+                Check(mod.RefillRate.Value.ApproxEquals(0.075));
+            }
+
+            {
+                // fuel transfer limpet lightweight
+                string t = @"{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":34550,""UnladenMass"":40.595,""CargoCapacity"":4,""MaxJumpRange"":8.605498,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":1981,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot01_Size2"",""Item"":""int_dronecontrol_fueltransfer_size1_class5"",""On"":true,""Priority"":0,""Value"":9600,""Engineering"":{""BlueprintName"":""Misc_LightWeight"",""Level"":5,""Quality"":1,""Modifiers"":[{""Label"":""Mass"",""Value"":0.195,""OriginalValue"":1.3},{""Label"":""Integrity"",""Value"":28,""OriginalValue"":56}]}},{""Slot"":""Slot02_Size2"",""Item"":""int_cargorack_size2_class1"",""On"":true,""Priority"":0,""Value"":3250},{""Slot"":""Slot05_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""Slot06_Size1"",""Item"":""int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":0}]}";
+                var mod = GetModule(t, ShipSlots.Slot.Slot01_Size2);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(0.195));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(28));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(0.28));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(10));
+                Check(mod.Limpets == 1);
+                Check(mod.Range == 1400);
+                Check(mod.Time.Value == 60);
+                Check(mod.Speed.Value == 200);
+                Check(mod.FuelTransfer == 1);
+            }
+
+            {
+                // fuel transfer limpet reinforced
+                string t = @"{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":34550,""UnladenMass"":43.65,""CargoCapacity"":4,""MaxJumpRange"":8.011378,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":1981,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot01_Size2"",""Item"":""int_dronecontrol_fueltransfer_size1_class5"",""On"":true,""Priority"":0,""Value"":9600,""Engineering"":{""BlueprintName"":""Misc_Reinforced"",""Level"":5,""Quality"":1,""Modifiers"":[{""Label"":""Mass"",""Value"":3.25,""OriginalValue"":1.3},{""Label"":""Integrity"",""Value"":224,""OriginalValue"":56}]}},{""Slot"":""Slot02_Size2"",""Item"":""int_cargorack_size2_class1"",""On"":true,""Priority"":0,""Value"":3250},{""Slot"":""Slot05_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""Slot06_Size1"",""Item"":""int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":0}]}";
+                var mod = GetModule(t, ShipSlots.Slot.Slot01_Size2);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(3.25));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(224));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(0.28));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(10));
+                Check(mod.Limpets == 1);
+                Check(mod.Range == 1400);
+                Check(mod.Time.Value == 60);
+                Check(mod.Speed.Value == 200);
+                Check(mod.FuelTransfer == 1);
+            }
+            {
+                // prospector limpet reinforced
+                string t = @"{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":34550,""UnladenMass"":43.65,""CargoCapacity"":4,""MaxJumpRange"":8.011378,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":1981,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot01_Size2"",""Item"":""int_dronecontrol_prospector_size1_class5"",""On"":true,""Priority"":0,""Value"":9600,""Engineering"":{""BlueprintName"":""Misc_Reinforced"",""Level"":5,""Quality"":1,""Modifiers"":[{""Label"":""Mass"",""Value"":3.25,""OriginalValue"":1.3},{""Label"":""Integrity"",""Value"":224,""OriginalValue"":56}]}},{""Slot"":""Slot02_Size2"",""Item"":""int_cargorack_size2_class1"",""On"":true,""Priority"":0,""Value"":3250},{""Slot"":""Slot05_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""Slot06_Size1"",""Item"":""int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":0}]}";
+                var mod = GetModule(t, ShipSlots.Slot.Slot01_Size2);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(3.25));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(224));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(0.28));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(4));
+                Check(mod.Limpets == 1);
+                Check(mod.Range == 7000);
+                Check(mod.Speed.Value == 200);
+            }
+            {
+                // refinery shielded
+                string t = @"{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":1045550,""UnladenMass"":40.4,""CargoCapacity"":4,""MaxJumpRange"":8.646427,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":52531,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot01_Size2"",""Item"":""int_refinery_size2_class5"",""On"":true,""Priority"":0,""Value"":1020600,""Engineering"":{""BlueprintName"":""Misc_Shielded"",""Level"":5,""Quality"":1,""Modifiers"":[{""Label"":""Integrity"",""Value"":244,""OriginalValue"":61},{""Label"":""PowerDraw"",""Value"":0.78,""OriginalValue"":0.39}]}},{""Slot"":""Slot02_Size2"",""Item"":""int_cargorack_size2_class1"",""On"":true,""Priority"":0,""Value"":3250},{""Slot"":""Slot05_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""Slot06_Size1"",""Item"":""int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":0}]}";
+                var mod = GetModule(t, ShipSlots.Slot.Slot01_Size2);
+
+                Check(mod.Integrity.Value.ApproxEqualsPercent(244));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(0.78));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(10));
+                Check(mod.Capacity == 6);
+            }
+
+            {
+                // hatch breaker shielded
+                string t = @"{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":34550,""UnladenMass"":41.7,""CargoCapacity"":4,""MaxJumpRange"":8.380697,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":1981,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot01_Size2"",""Item"":""int_dronecontrol_resourcesiphon_size1_class5"",""On"":true,""Priority"":0,""Value"":9600,""Engineering"":{""BlueprintName"":""Misc_Shielded"",""Level"":5,""Quality"":1,""Modifiers"":[{""Label"":""Integrity"",""Value"":192,""OriginalValue"":48},{""Label"":""PowerDraw"",""Value"":0.56,""OriginalValue"":0.28}]}},{""Slot"":""Slot02_Size2"",""Item"":""int_cargorack_size2_class1"",""On"":true,""Priority"":0,""Value"":3250},{""Slot"":""Slot05_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""Slot06_Size1"",""Item"":""int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":0}]}";
+                var mod = GetModule(t, ShipSlots.Slot.Slot01_Size2);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(1.3));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(192));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(0.56));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(3));
+                Check(mod.Limpets == 1);
+                Check(mod.Range == 3600);
+                Check(mod.TargetRange == 3500);
+                Check(mod.Time.Value == 120);
+                Check(mod.Speed.Value == 500);
+                Check(mod.HackTime.Value == 10);
+                Check(mod.MinCargo == 5);
+                Check(mod.MaxCargo == 10);
+            }
+
             {
                 // shields enhanced low power multi weave
                 string t = @"{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":185170,""UnladenMass"":41.845,""CargoCapacity"":4,""MaxJumpRange"":18.234246,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":9512,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class5"",""On"":true,""Priority"":0,""Value"":160220},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520,""Engineering"":{""BlueprintName"":""PowerDistributor_Shielded"",""Level"":5,""Quality"":1,""ExperimentalEffect"":""special_powerdistributor_toughened"",""Modifiers"":[{""Label"":""Mass"",""Value"":1.495,""OriginalValue"":1.3},{""Label"":""Integrity"",""Value"":124.2,""OriginalValue"":36},{""Label"":""PowerDraw"",""Value"":0.224,""OriginalValue"":0.32}]}},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520,""Engineering"":{""BlueprintName"":""Sensor_WideAngle"",""Level"":5,""Quality"":1,""Modifiers"":[{""Label"":""PowerDraw"",""Value"":0.24,""OriginalValue"":0.16},{""Label"":""SensorTargetScanAngle"",""Value"":90,""OriginalValue"":30},{""Label"":""Range"",""Value"":3200,""OriginalValue"":4000}]}},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot01_Size2"",""Item"":""int_shieldgenerator_size2_class1"",""On"":true,""Priority"":0,""Value"":1980,""Engineering"":{""BlueprintName"":""ShieldGenerator_Optimised"",""Level"":5,""Quality"":1,""ExperimentalEffect"":""special_shield_resistive"",""Modifiers"":[{""Label"":""Mass"",""Value"":1.25,""OriginalValue"":2.5},{""Label"":""Integrity"",""Value"":30.75,""OriginalValue"":41},{""Label"":""PowerDraw"",""Value"":0.594,""OriginalValue"":0.9},{""Label"":""ShieldGenOptimalMass"",""Value"":51.7,""OriginalValue"":55},{""Label"":""ShieldGenStrength"",""Value"":92,""OriginalValue"":80},{""Label"":""EnergyPerRegen"",""Value"":0.75,""OriginalValue"":0.6},{""Label"":""KineticResistance"",""Value"":41.8,""OriginalValue"":40},{""Label"":""ThermicResistance"",""Value"":-16.4,""OriginalValue"":-20},{""Label"":""ExplosiveResistance"",""Value"":51.5,""OriginalValue"":50}]}},{""Slot"":""Slot02_Size2"",""Item"":""int_cargorack_size2_class1"",""On"":true,""Priority"":0,""Value"":3250},{""Slot"":""Slot05_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""Slot06_Size1"",""Item"":""int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":0}]}";
@@ -718,76 +1089,6 @@ namespace EliteDangerousCore
             }
 
             {
-                // power plant armoured monstered
-                string t = @"[{""header"":{""appName"":""EDSY"",""appVersion"":308189904,""appURL"":""https://edsy.org/#/L=H100000H4C0S00,Eht00FBR00,,9p300A3wG03I_W0AKA00AZo00Ans00B1U00BH600BWQ00,,7Og0003w00mpU0nG0-0nF0-""},""data"":{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":253140,""UnladenMass"":42.116,""CargoCapacity"":4,""MaxJumpRange"":8.29908,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":12910,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_beamlaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":74650},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class5"",""On"":true,""Priority"":0,""Value"":160140,""Engineering"":{""BlueprintName"":""PowerPlant_Armoured"",""Level"":5,""Quality"":1,""ExperimentalEffect"":""special_powerplant_highcharge"",""Modifiers"":[{""Label"":""Mass"",""Value"":1.716,""OriginalValue"":1.3},{""Label"":""Integrity"",""Value"":123.2,""OriginalValue"":56},{""Label"":""PowerCapacity"",""Value"":11.2896,""OriginalValue"":9.6},{""Label"":""HeatEfficiency"",""Value"":0.352,""OriginalValue"":0.4}]}},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot01_Size2"",""Item"":""int_shieldgenerator_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""Slot02_Size2"",""Item"":""int_cargorack_size2_class1"",""On"":true,""Priority"":0,""Value"":3250},{""Slot"":""Slot05_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""Slot06_Size1"",""Item"":""int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":0}]}}]";
-                var mod = GetModule(t, ShipSlots.Slot.PowerPlant);
-
-                Check(mod.Mass.Value.ApproxEqualsPercent(1.7165));
-                Check(mod.Integrity.Value.ApproxEqualsPercent(123.2));
-                Check(mod.PowerGen.Value.ApproxEqualsPercent(11.29));
-                Check(mod.HeatEfficiency.Value.ApproxEqualsPercent(0.352));
-            }
-
-            {
-                // power plant overcharge thermal spread
-                string t = @"[{""header"":{""appName"":""EDSY"",""appVersion"":308189904,""appURL"":""https://edsy.org/#/L=H100000H4C0S00,Eht00FBR00,,9p300A3wG07K_W0AKA00AZo00Ans00B1U00BH600BWQ00,,7Og0003w00mpU0nG0-0nF0-""},""data"":{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":253140,""UnladenMass"":41.7,""CargoCapacity"":4,""MaxJumpRange"":8.380697,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":12910,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_beamlaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":74650},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class5"",""On"":true,""Priority"":0,""Value"":160140,""Engineering"":{""BlueprintName"":""PowerPlant_Boosted"",""Level"":5,""Quality"":1,""ExperimentalEffect"":""special_powerplant_cooled"",""Modifiers"":[{""Label"":""Integrity"",""Value"":42,""OriginalValue"":56},{""Label"":""PowerCapacity"",""Value"":13.44,""OriginalValue"":9.6},{""Label"":""HeatEfficiency"",""Value"":0.45,""OriginalValue"":0.4}]}},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot01_Size2"",""Item"":""int_shieldgenerator_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""Slot02_Size2"",""Item"":""int_cargorack_size2_class1"",""On"":true,""Priority"":0,""Value"":3250},{""Slot"":""Slot05_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""Slot06_Size1"",""Item"":""int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":0}]}}]";
-                var mod = GetModule(t, ShipSlots.Slot.PowerPlant);
-
-                Check(mod.Mass.Value.ApproxEqualsPercent(1.3));
-                Check(mod.Integrity.Value.ApproxEqualsPercent(42));
-                Check(mod.PowerGen.Value.ApproxEqualsPercent(13.44));
-                Check(mod.HeatEfficiency.Value.ApproxEqualsPercent(0.45));
-            }
-
-            {
-                // thrusters dirty tuning drive distributors
-                string t = @"[{""header"":{""appName"":""EDSY"",""appVersion"":308189904,""appURL"":""https://edsy.org/#/L=H100000H4C0S00,Eht00FBR00,,9p300A3w00AJYG05J_W0AZo00Ans00B1U00BH600BWQ00,,7Og0003w00mpU0nG0-0nF0-""},""data"":{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":411380,""UnladenMass"":41.7,""CargoCapacity"":4,""MaxJumpRange"":8.380697,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":20822,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_beamlaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":74650},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class5"",""On"":true,""Priority"":0,""Value"":160140},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class5"",""On"":true,""Priority"":0,""Value"":160220,""Engineering"":{""BlueprintName"":""Engine_Dirty"",""Level"":5,""Quality"":1,""ExperimentalEffect"":""special_engine_haulage"",""Modifiers"":[{""Label"":""Integrity"",""Value"":47.6,""OriginalValue"":56},{""Label"":""PowerDraw"",""Value"":3.36,""OriginalValue"":3},{""Label"":""EngineOptimalMass"",""Value"":69.3,""OriginalValue"":72},{""Label"":""EngineOptPerformance"",""Value"":140,""OriginalValue"":100},{""Label"":""EngineHeatRate"",""Value"":2.08,""OriginalValue"":1.3}]}},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot01_Size2"",""Item"":""int_shieldgenerator_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""Slot02_Size2"",""Item"":""int_cargorack_size2_class1"",""On"":true,""Priority"":0,""Value"":3250},{""Slot"":""Slot05_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""Slot06_Size1"",""Item"":""int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":0}]}}]";
-                var mod = GetModule(t, ShipSlots.Slot.MainEngines);
-
-                Check(mod.Mass.Value.ApproxEqualsPercent(2.5));
-                Check(mod.Integrity.Value.ApproxEqualsPercent(47.6));
-                Check(mod.PowerDraw.Value.ApproxEqualsPercent(3.36));
-                Check(mod.MinMass.Value.ApproxEqualsPercent(34.65));
-                Check(mod.OptMass.Value.ApproxEqualsPercent(69.3));
-                Check(mod.MaxMass.Value.ApproxEqualsPercent(103.95));
-                Check(mod.EngineMinMultiplier.Value.ApproxEqualsPercent(134.4));
-                Check(mod.EngineOptMultiplier.Value.ApproxEqualsPercent(140));
-                Check(mod.EngineMaxMultiplier.Value.ApproxEqualsPercent(162.4));
-                Check(mod.ThermalLoad.Value.ApproxEqualsPercent(2.08));
-            }
-            {
-                // thrusters clean tuning thermal spread
-                string t = @"[{""header"":{""appName"":""EDSY"",""appVersion"":308189904,""appURL"":""https://edsy.org/#/L=H100000H4C0S00,Eht00FBR00,,9p300A3w00AJYG03L_W0AZo00Ans00B1U00BH600BWQ00,,7Og0003w00mpU0nG0-0nF0-""},""data"":{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":411380,""UnladenMass"":41.825,""CargoCapacity"":4,""MaxJumpRange"":8.356005,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":20822,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_beamlaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":74650},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class5"",""On"":true,""Priority"":0,""Value"":160140},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class5"",""On"":true,""Priority"":0,""Value"":160220,""Engineering"":{""BlueprintName"":""Engine_Tuned"",""Level"":5,""Quality"":1,""ExperimentalEffect"":""special_engine_cooled"",""Modifiers"":[{""Label"":""Mass"",""Value"":2.625,""OriginalValue"":2.5},{""Label"":""Integrity"",""Value"":47.04,""OriginalValue"":56},{""Label"":""PowerDraw"",""Value"":3.48,""OriginalValue"":3},{""Label"":""EngineOptimalMass"",""Value"":64.8,""OriginalValue"":72},{""Label"":""EngineOptPerformance"",""Value"":128,""OriginalValue"":100},{""Label"":""EngineHeatRate"",""Value"":0.468,""OriginalValue"":1.3}]}},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot01_Size2"",""Item"":""int_shieldgenerator_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""Slot02_Size2"",""Item"":""int_cargorack_size2_class1"",""On"":true,""Priority"":0,""Value"":3250},{""Slot"":""Slot05_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""Slot06_Size1"",""Item"":""int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":0}]}}]";
-                var mod = GetModule(t, ShipSlots.Slot.MainEngines);
-
-                Check(mod.Mass.Value.ApproxEqualsPercent(2.625));
-                Check(mod.Integrity.Value.ApproxEqualsPercent(47.04));
-                Check(mod.PowerDraw.Value.ApproxEqualsPercent(3.48));
-                Check(mod.MinMass.Value.ApproxEqualsPercent(32.4));
-                Check(mod.OptMass.Value.ApproxEqualsPercent(64.8));
-                Check(mod.MaxMass.Value.ApproxEqualsPercent(97.2));
-                Check(mod.EngineMinMultiplier.Value.ApproxEqualsPercent(122.8));
-                Check(mod.EngineOptMultiplier.Value.ApproxEqualsPercent(128));
-                Check(mod.EngineMaxMultiplier.Value.ApproxEqualsPercent(148.48));
-                Check(mod.ThermalLoad.Value.ApproxEqualsPercent(0.468));
-            }
-            {
-                // thrusters strengthing drive distrubutors
-                string t = @"[{""header"":{""appName"":""EDSY"",""appVersion"":308189904,""appURL"":""https://edsy.org/#/L=H100000H4C0S00,FBR00FBR00,,9p300A4Y00AKAG07J_W0AZo00Ans00B1U00BH600BWQ00,,7Og0003w00mpU0nG0-0nF0-""},""data"":{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":26930,""UnladenMass"":43.525,""CargoCapacity"":4,""MaxJumpRange"":8.034074,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":1600,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class1"",""On"":true,""Priority"":0,""Value"":1980,""Engineering"":{""BlueprintName"":""Engine_Reinforced"",""Level"":5,""Quality"":1,""ExperimentalEffect"":""special_engine_haulage"",""Modifiers"":[{""Label"":""Mass"",""Value"":3.125,""OriginalValue"":2.5},{""Label"":""Integrity"",""Value"":96.6,""OriginalValue"":46},{""Label"":""EngineOptimalMass"",""Value"":52.8,""OriginalValue"":48},{""Label"":""EngineHeatRate"",""Value"":0.65,""OriginalValue"":1.3}]}},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot01_Size2"",""Item"":""int_shieldgenerator_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""Slot02_Size2"",""Item"":""int_cargorack_size2_class1"",""On"":true,""Priority"":0,""Value"":3250},{""Slot"":""Slot05_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""Slot06_Size1"",""Item"":""int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":0}]}}]";
-                var mod = GetModule(t, ShipSlots.Slot.MainEngines);
-
-                Check(mod.Mass.Value.ApproxEqualsPercent(3.125));
-                Check(mod.Integrity.Value.ApproxEqualsPercent(96.6));
-                Check(mod.PowerDraw.Value.ApproxEqualsPercent(2));
-                Check(mod.MinMass.Value.ApproxEqualsPercent(26.4));
-                Check(mod.OptMass.Value.ApproxEqualsPercent(52.8));
-                Check(mod.MaxMass.Value.ApproxEqualsPercent(79.2));
-                Check(mod.EngineMinMultiplier.Value.ApproxEqualsPercent(83));
-                Check(mod.EngineOptMultiplier.Value.ApproxEqualsPercent(100));
-                Check(mod.EngineMaxMultiplier.Value.ApproxEqualsPercent(103));
-                Check(mod.ThermalLoad.Value.ApproxEqualsPercent(0.65));
-            }
-            {
                 // frame shift drive
                 string t = @"[{""header"":{""appName"":""EDSY"",""appVersion"":308189904,""appURL"":""https://edsy.org/#/L=H100000H4C0S00,FBR00FBR00,,9p300A4Y00AKAG07J_W0AZAG05J_W0Ans00B1U00BH600BWQ00,,7Og0003w00mpU0nG0-0nF0-""},""data"":{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":185170,""UnladenMass"":44.275,""CargoCapacity"":4,""MaxJumpRange"":27.812499,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":9512,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class1"",""On"":true,""Priority"":0,""Value"":1980,""Engineering"":{""BlueprintName"":""Engine_Reinforced"",""Level"":5,""Quality"":1,""ExperimentalEffect"":""special_engine_haulage"",""Modifiers"":[{""Label"":""Mass"",""Value"":3.125,""OriginalValue"":2.5},{""Label"":""Integrity"",""Value"":96.6,""OriginalValue"":46},{""Label"":""EngineOptimalMass"",""Value"":52.8,""OriginalValue"":48},{""Label"":""EngineHeatRate"",""Value"":0.65,""OriginalValue"":1.3}]}},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class5"",""On"":true,""Priority"":0,""Value"":160220,""Engineering"":{""BlueprintName"":""FSD_LongRange"",""Level"":5,""Quality"":1,""ExperimentalEffect"":""special_fsd_heavy"",""Modifiers"":[{""Label"":""Mass"",""Value"":3.25,""OriginalValue"":2.5},{""Label"":""Integrity"",""Value"":50.048,""OriginalValue"":64},{""Label"":""PowerDraw"",""Value"":0.345,""OriginalValue"":0.3},{""Label"":""FSDOptimalMass"",""Value"":145.08,""OriginalValue"":90}]}},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot01_Size2"",""Item"":""int_shieldgenerator_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""Slot02_Size2"",""Item"":""int_cargorack_size2_class1"",""On"":true,""Priority"":0,""Value"":3250},{""Slot"":""Slot05_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""Slot06_Size1"",""Item"":""int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":0}]}}]";
                 var mod = GetModule(t, ShipSlots.Slot.FrameShiftDrive);
@@ -887,6 +1188,29 @@ namespace EliteDangerousCore
             }
         }
 
+
+        static Ship lastship;
+        static ShipSlots.Slot lastslot;
+
+        [System.Diagnostics.DebuggerHidden]
+        public static ItemData.ShipModule GetModule(string loadout, ShipSlots.Slot slot)
+        {
+            Ship si = Ship.CreateFromLoadout(loadout);
+            DebuggerHelpers.BreakAssert(si != null, "Bad ship");
+            lastship = si;
+            lastslot = slot;
+            var module = si.GetShipModulePropertiesEngineered(slot);
+            DebuggerHelpers.BreakAssert(module != null, "Bad module");
+            //System.Diagnostics.Debug.WriteLine($"\r\nTEST Module {si.Modules[slot].ItemFD} in {lastslot} {si.Modules[slot]?.Engineering?.ToString()}");
+            System.Diagnostics.Debug.WriteLine($"\r\nTEST Module {si.Modules[slot].ItemFD} in {lastslot} ");
+            return module;
+        }
+
+        [System.Diagnostics.DebuggerHidden]
+        public static void Check(bool good)
+        {
+            DebuggerHelpers.BreakAssert(good, () => { var module = lastship.Modules[lastslot]; return $"{lastslot} error : {module.Engineering.ToString()}"; });
+        }
 
     }
 

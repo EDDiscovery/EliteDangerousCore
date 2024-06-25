@@ -61,26 +61,23 @@ namespace EliteDangerousCore
         // take the unengineered module data and engineer it with the Engineering data
         // engineered may be null if we don't know the module
         // bool says if we don't know how to modify a the module fully
-        public bool GetModuleEngineered(out ItemData.ShipModule engineered)
+        public ItemData.ShipModule GetModuleEngineered()
         {
-            engineered = null;
-
             var mdu = GetModuleUnengineered();
 
             if (mdu != null)        // recognised module
             {
-                if (Engineering != null)    // has enginerring
+                if (Engineering != null)    // has engineering
                 {
-                    return Engineering.EngineerModule(ItemFD, mdu, out engineered);
+                    return Engineering.EngineerModule(ItemFD, mdu);
                 }
                 else
                 {
-                    engineered = mdu;
-                    return true;
+                    return mdu;
                 }
             }
-
-            return false;
+            else
+                return null;
         }
 
         public double Mass()
@@ -88,8 +85,7 @@ namespace EliteDangerousCore
             var unmass = GetModuleUnengineered();
             if (unmass.Mass != null)
             {
-                GetModuleEngineered(out ItemData.ShipModule engineered);       
-                return engineered.Mass.Value;
+                return GetModuleEngineered().Mass.Value;       
             }
             else
                 return 0;
