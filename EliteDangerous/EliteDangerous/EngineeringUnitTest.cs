@@ -24,7 +24,36 @@ namespace EliteDangerousCore
             MaterialCommodityMicroResourceType.Initialise();     // lets statically fill the table way before anyone wants to access it
             ItemData.Initialise();
 
-              {
+            {
+                // burst laser focused inertial impact
+                string t = @"{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":61300,""UnladenMass"":38.4,""CargoCapacity"":0,""MaxJumpRange"":9.089833,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":3318,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_pulselaserburst_turret_small"",""On"":true,""Priority"":0,""Value"":52800,""Engineering"":{""BlueprintName"":""Weapon_Focused"",""Level"":5,""Quality"":1,""ExperimentalEffect"":""special_distortion_field"",""Modifiers"":[{""Label"":""DamagePerSecond"",""Value"":6.261364,""OriginalValue"":4.174242},{""Label"":""Damage"",""Value"":1.305,""OriginalValue"":0.87},{""Label"":""ThermalLoad"",""Value"":0.1995,""OriginalValue"":0.19},{""Label"":""ArmourPenetration"",""Value"":44,""OriginalValue"":20},{""Label"":""MaximumRange"",""Value"":6000,""OriginalValue"":3000},{""Label"":""FalloffRange"",""Value"":1000,""OriginalValue"":500},{""Label"":""Jitter"",""Value"":3,""OriginalValue"":0}]}},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000}]}";
+                var mod = GetModule(t, ShipSlots.Slot.SmallHardpoint1, true);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(2));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(40));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(0.6));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(0));
+                Check(mod.DPS.Value.ApproxEqualsPercent(6.261));
+                Check(mod.Damage.Value.ApproxEqualsPercent(1.305));
+                Check(mod.DistributorDraw.Value.ApproxEqualsPercent(0.139));
+                Check(mod.ThermalLoad.Value.ApproxEqualsPercent(0.1995));
+                Check(mod.ArmourPiercing.Value.ApproxEqualsPercent(44));
+                Check(mod.Range.Value.ApproxEqualsPercent(6000));
+                Check(mod.Falloff.Value.ApproxEqualsPercent(1000));
+                Check(mod.RateOfFire.Value.ApproxEqualsPercent(4.798));
+                Check(mod.BurstInterval.Value.ApproxEqualsPercent(0.52));
+                Check(mod.BurstRateOfFire.Value.ApproxEqualsPercent(19));
+                Check(mod.BurstSize.Value.ApproxEqualsPercent(3));
+                Check(mod.BreachDamage.Value.ApproxEqualsPercent(0.6));
+                Check(mod.BreachMin.Value.ApproxEqualsPercent(60));
+                Check(mod.BreachMax.Value.ApproxEqualsPercent(80));
+                Check(mod.Jitter.Value.ApproxEqualsPercent(3));
+                Check(mod.KineticProportionDamage.Value.ApproxEqualsPercent(50));
+                Check(mod.ThermalProportionDamage.Value.ApproxEqualsPercent(50));
+            }
+
+
+            {
                 // thrusters clean tuning thermal spread
                 string t = @"[{""header"":{""appName"":""EDSY"",""appVersion"":308189904,""appURL"":""https://edsy.org/#/L=H100000H4C0S00,Eht00FBR00,,9p300A3w00AJYG03L_W0AZo00Ans00B1U00BH600BWQ00,,7Og0003w00mpU0nG0-0nF0-""},""data"":{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":411380,""UnladenMass"":41.825,""CargoCapacity"":4,""MaxJumpRange"":8.356005,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":20822,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_beamlaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":74650},{""Slot"":""SmallHardpoint2"",""Item"":""hpt_pulselaser_gimbal_small"",""On"":true,""Priority"":0,""Value"":6600},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class5"",""On"":true,""Priority"":0,""Value"":160140},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class5"",""On"":true,""Priority"":0,""Value"":160220,""Engineering"":{""BlueprintName"":""Engine_Tuned"",""Level"":5,""Quality"":1,""ExperimentalEffect"":""special_engine_cooled"",""Modifiers"":[{""Label"":""Mass"",""Value"":2.625,""OriginalValue"":2.5},{""Label"":""Integrity"",""Value"":47.04,""OriginalValue"":56},{""Label"":""PowerDraw"",""Value"":3.48,""OriginalValue"":3},{""Label"":""EngineOptimalMass"",""Value"":64.8,""OriginalValue"":72},{""Label"":""EngineOptPerformance"",""Value"":128,""OriginalValue"":100},{""Label"":""EngineHeatRate"",""Value"":0.468,""OriginalValue"":1.3}]}},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot01_Size2"",""Item"":""int_shieldgenerator_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""Slot02_Size2"",""Item"":""int_cargorack_size2_class1"",""On"":true,""Priority"":0,""Value"":3250},{""Slot"":""Slot05_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""Slot06_Size1"",""Item"":""int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":0}]}}]";
                 var mod = GetModule(t, ShipSlots.Slot.MainEngines);
@@ -1193,13 +1222,13 @@ namespace EliteDangerousCore
         static ShipSlots.Slot lastslot;
 
         [System.Diagnostics.DebuggerHidden]
-        public static ItemData.ShipModule GetModule(string loadout, ShipSlots.Slot slot)
+        public static ItemData.ShipModule GetModule(string loadout, ShipSlots.Slot slot, bool debugit = false)
         {
             Ship si = Ship.CreateFromLoadout(loadout);
             DebuggerHelpers.BreakAssert(si != null, "Bad ship");
             lastship = si;
             lastslot = slot;
-            var module = si.GetShipModulePropertiesEngineered(slot);
+            var module = si.GetShipModulePropertiesEngineered(slot, debugit);
             DebuggerHelpers.BreakAssert(module != null, "Bad module");
             //System.Diagnostics.Debug.WriteLine($"\r\nTEST Module {si.Modules[slot].ItemFD} in {lastslot} {si.Modules[slot]?.Engineering?.ToString()}");
             System.Diagnostics.Debug.WriteLine($"\r\nTEST Module {si.Modules[slot].ItemFD} in {lastslot} ");
