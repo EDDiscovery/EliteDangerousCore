@@ -64,11 +64,11 @@ namespace EliteDangerousCore
         }
 
         // for this ship module the engineered properties, may be null.  If engineering fails, you still get the properties.
-        public ItemData.ShipModule GetShipModulePropertiesEngineered(ShipSlots.Slot slot)
+        public ItemData.ShipModule GetShipModulePropertiesEngineered(ShipSlots.Slot slot , bool debugit = false)
         {
             if (Modules.TryGetValue(slot, out ShipModule module))
             {
-                return module.GetModuleEngineered();
+                return module.GetModuleEngineered(debugit);
             }
             else
             {

@@ -215,9 +215,10 @@ namespace EliteDangerousCore
             return Modifiers != null ? Array.Find(Modifiers, x => x.Label.Equals(name, StringComparison.InvariantCultureIgnoreCase)) : null;
         }
 
-        public ItemData.ShipModule EngineerModule(string modulefdname, ItemData.ShipModule original)
+        public ItemData.ShipModule EngineerModule(string modulefdname, ItemData.ShipModule original, bool debugit = false)
         {
-            //System.Diagnostics.Debug.WriteLine($"*** Engineer module {fdname} ");
+            if (debugit)
+                System.Diagnostics.Debug.WriteLine($"*** Engineer module {modulefdname} ");
 
             var engineered = new ItemData.ShipModule(original);       // take a copy
 
@@ -228,7 +229,7 @@ namespace EliteDangerousCore
             List<string> primarymodifiers = new List<string>();
             foreach( var x in Modifiers)
             {
-                if (modifierfdmapping.TryGetValue(x.Label, out string[] modifyarray))  // get the modifier primary control value if present
+                if (modifierfdmapping.TryGetValue(x.Label, out string[] modifyarray) && modifyarray.Length>0)  // get the modifier primary control value if present
                     primarymodifiers.Add(modifyarray[0]);
             }
 
@@ -237,6 +238,13 @@ namespace EliteDangerousCore
             {
                 if (modifierfdmapping.TryGetValue(mf.Label, out string[] modifyarray))  // get the modify commands from the label
                 {
+                    if ( modifyarray.Length == 0 )
+                    {
+                        if (debugit)
+                            System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} {mf.Label} No variables associated with this FD property");
+                        continue;
+                    }
+
                     double ratio = 0;                                   // primary ratio
 
                     for (int pno = 0; pno < modifyarray.Length; pno++)        // for each modifier, 0 means primary
@@ -257,9 +265,12 @@ namespace EliteDangerousCore
 
                         // if we are a secondary, but we are changing a primary modified value, don't change
 
+                        string debugpad = pno == 0 ? "" : "   ";
+
                         if (pno > 0 && primarymodifiers.Find(x => x == pset) != null)
                         {
-                            //  System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} {mf.Label} {pset} NOT changing to {valuetoset} due to primary modifier being present");
+                            if (debugit)
+                                System.Diagnostics.Debug.WriteLine($"{debugpad}Engineer {original.EnglishModName} {mf.Label} {pset} NOT changing due to primary modifier being present");
                             continue;
                         }
 
@@ -277,7 +288,8 @@ namespace EliteDangerousCore
 
                             if (negativecheck ? anyfound == true : anyfound == false)        // negative check means can't have any, position check means must have something
                             {
-                                //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} {mf.Label} {pset} NOT changing due to condition {exceptiontype}");
+                                if (debugit)
+                                    System.Diagnostics.Debug.WriteLine($"{debugpad}Engineer {original.EnglishModName} {mf.Label} {pset} NOT changing due to condition {exceptiontype}");
                                 stop = true;
                                 break;
                             }
@@ -305,7 +317,8 @@ namespace EliteDangerousCore
                                     valuetoset = (double)orgvalue * ratio;
                             }
 
-                            //System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} {mf.Label} {pset} {orgvalue} -> {valuetoset} ratio {ratio}");
+                            if (debugit)
+                                System.Diagnostics.Debug.WriteLine($"{debugpad}Engineer {original.EnglishModName} {mf.Label} {pset} {orgvalue} -> {valuetoset} ratio {ratio}");
 
                             if (orgvalue is double?)
                             {
@@ -318,13 +331,13 @@ namespace EliteDangerousCore
                         }
                         else
                         {
-                            System.Diagnostics.Trace.WriteLine($"*** Engineering setting a null value {this.BlueprintName} {this.ExperimentalEffect} {pset}");
+                            System.Diagnostics.Trace.WriteLine($"*** Engineering setting a null value {modulefdname} {this.BlueprintName} {this.ExperimentalEffect} {pset}");
                         }
                     }
                 }
                 else
                 {
-                    System.Diagnostics.Trace.WriteLine($"*** Engineering unknown modifier {this.BlueprintName} {this.ExperimentalEffect} {mf.Label}");
+                    System.Diagnostics.Trace.WriteLine($"*** Engineering unknown modifier {modulefdname} {this.BlueprintName} {this.ExperimentalEffect} {mf.Label}");
                 }
             }
 
@@ -350,11 +363,13 @@ namespace EliteDangerousCore
 
                                 kvp.Key.SetValue(engineered, nextvalue);
 
-                                //System.Diagnostics.Debug.WriteLine($"SpecialEffect on {engineered.EnglishModName} SE {ExperimentalEffect} Property {kvp.Key.Name} adjust by {value}: {curvalue} -> {nextvalue}");
+                                if (debugit)
+                                    System.Diagnostics.Debug.WriteLine($"SpecialEffect on {engineered.EnglishModName} SE {ExperimentalEffect} Property {kvp.Key.Name} adjust by {value}: {curvalue} -> {nextvalue}");
                             }
                             else
                             {
-                                //  System.Diagnostics.Debug.WriteLine($"SpecialEffect on {engineered.EnglishModName} SE {ExperimentalEffect} Property {kvp.Key.Name} not changing due to change above");
+                                if (debugit)
+                                    System.Diagnostics.Debug.WriteLine($"SpecialEffect on {engineered.EnglishModName} SE {ExperimentalEffect} Property {kvp.Key.Name} not changing due to change above");
                             }
                         }
 
@@ -362,7 +377,7 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    System.Diagnostics.Trace.WriteLine($"*** Special effect in engineering not known {ExperimentalEffect}");
+                    System.Diagnostics.Trace.WriteLine($"*** Special effect in engineering not known {modulefdname} {BlueprintName} {ExperimentalEffect}");
                 }
             }
 
@@ -381,6 +396,8 @@ namespace EliteDangerousCore
 
         Dictionary<string, string[]> modifierfdmapping = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)
         {
+            // multiple ones
+
             ["DamagePerSecond"] = new string[] { "DPS", "Damage!-Damage|-RateOfFire",     // change Damage as long as .. modifier labels are not there
                                                         "BreachDamage!-Damage|-RateOfFire",           // change BreachDamage as long as .. is not there
                                                 },
@@ -390,8 +407,30 @@ namespace EliteDangerousCore
                                                 },
             ["RateOfFire"] = new string[] { "RateOfFire", "/BurstInterval!-hpt_railgun*" },
 
+            ["ShieldGenStrength"] = new string[] { "OptStrength", "MinStrength", "MaxStrength" },
+
+            ["ShieldGenOptimalMass"] = new string[] { "OptMass", "MinMass" },
+
+            ["EngineOptimalMass"] = new string[] { "OptMass", "MinMass", "MaxMass" },
+
+            ["EngineOptPerformance"] = new string[] { "EngineOptMultiplier",
+                                                                nameof(ItemData.ShipModule.EngineMinMultiplier) ,
+                                                                nameof(ItemData.ShipModule.EngineMaxMultiplier),
+                                                                nameof(ItemData.ShipModule.MinimumSpeedModifier)+ enginefastonly ,
+                                                                nameof(ItemData.ShipModule.OptimalSpeedModifier)+ enginefastonly,
+                                                                nameof(ItemData.ShipModule.MaximumSpeedModifier)+ enginefastonly,
+                                                                nameof(ItemData.ShipModule.MinimumAccelerationModifier) + enginefastonly ,
+                                                                nameof(ItemData.ShipModule.OptimalAccelerationModifier)+ enginefastonly,
+                                                                nameof(ItemData.ShipModule.MaximumAccelerationModifier)+ enginefastonly,
+                                                                nameof(ItemData.ShipModule.MinimumRotationModifier) + enginefastonly,
+                                                                nameof(ItemData.ShipModule.OptimalRotationModifier)+ enginefastonly,
+                                                                nameof(ItemData.ShipModule.MaximumRotationModifier)+ enginefastonly,
+                                                    },
+            ["Range"] = new string[] { "TypicalEmission", "Range", },
+
+            // simples. Empty string[] means there is no equivalent engineering variable we know about..
+
             ["Mass"] = new string[] { "Mass", },
-            ["Integrity"] = new string[] { "Integrity", },
             ["Integrity"] = new string[] { "Integrity", },
             ["PowerDraw"] = new string[] { "PowerDraw", },
             ["BootTime"] = new string[] { "BootTime", },
@@ -402,7 +441,7 @@ namespace EliteDangerousCore
             ["DistributorDraw"] = new string[] { "DistributorDraw", },
             ["ThermalLoad"] = new string[] { "ThermalLoad", },
             ["ArmourPenetration"] = new string[] { "ArmourPiercing", },
-            ["MaximumRange"] = new string[] { "Range" },
+            ["MaximumRange"] = new string[] { "Range", },
             ["FalloffRange"] = new string[] { "Falloff", },
             ["ShotSpeed"] = new string[] { "Speed", },
             ["BurstRateOfFire"] = new string[] { "BurstRateOfFire", },
@@ -415,15 +454,12 @@ namespace EliteDangerousCore
             ["MinBreachChance"] = new string[] { "BreachMin", },
             ["MaxBreachChance"] = new string[] { "BreachMax", },
             ["Jitter"] = new string[] { "Jitter", },
-
+            ["WeaponMode"] = new string[] { },
+            ["DamageType"] = new string[] { },
             ["ShieldGenMinimumMass"] = new string[] { "MinMass", },
-            ["ShieldGenOptimalMass"] = new string[] { "OptMass", "MinMass" },
             ["ShieldGenMaximumMass"] = new string[] { "MaxMass", },
-
-            ["ShieldGenMinStrength"] = new string[] { "MinStrength" },
-            ["ShieldGenStrength"] = new string[] { "OptStrength", "MinStrength", "MaxStrength" },
-            ["ShieldGenMaxStrength"] = new string[] { "MaxStrength" },
-
+            ["ShieldGenMinStrength"] = new string[] { "MinStrength", },
+            ["ShieldGenMaxStrength"] = new string[] { "MaxStrength", },
             ["RegenRate"] = new string[] { "RegenRate", },
             ["BrokenRegenRate"] = new string[] { "BrokenRegenRate", },
             ["EnergyPerRegen"] = new string[] { "MWPerUnit", },
@@ -431,22 +467,8 @@ namespace EliteDangerousCore
             ["FSDHeatRate"] = new string[] { "ThermalLoad", },
             ["MaxFuelPerJump"] = new string[] { "MaxFuelPerJump", },
             ["EngineMinimumMass"] = new string[] { "MinMass", },
-            ["EngineOptimalMass"] = new string[] { "OptMass", "MinMass", "MaxMass" },
             ["MaximumMass"] = new string[] { "MaxMass", },
             ["EngineMinPerformance"] = new string[] { "EngineMinMultiplier", },
-            ["EngineOptPerformance"] = new string[] { "EngineOptMultiplier", 
-                                                                nameof(ItemData.ShipModule.EngineMinMultiplier) , 
-                                                                nameof(ItemData.ShipModule.EngineMaxMultiplier),
-                                                                nameof(ItemData.ShipModule.MinimumSpeedModifier)+ enginefastonly , 
-                                                                nameof(ItemData.ShipModule.OptimalSpeedModifier)+ enginefastonly, 
-                                                                nameof(ItemData.ShipModule.MaximumSpeedModifier)+ enginefastonly,
-                                                                nameof(ItemData.ShipModule.MinimumAccelerationModifier) + enginefastonly , 
-                                                                nameof(ItemData.ShipModule.OptimalAccelerationModifier)+ enginefastonly, 
-                                                                nameof(ItemData.ShipModule.MaximumAccelerationModifier)+ enginefastonly,
-                                                                nameof(ItemData.ShipModule.MinimumRotationModifier) + enginefastonly, 
-                                                                nameof(ItemData.ShipModule.OptimalRotationModifier)+ enginefastonly, 
-                                                                nameof(ItemData.ShipModule.MaximumRotationModifier)+ enginefastonly,
-                                                    },
             ["EngineMaxPerformance"] = new string[] { "EngineMaxMultiplier", },
             ["EngineHeatRate"] = new string[] { "ThermalLoad", },
             ["PowerCapacity"] = new string[] { "PowerGen", },
@@ -461,6 +483,7 @@ namespace EliteDangerousCore
             ["DefenceModifierHealthAddition"] = new string[] { "HullReinforcement", },
             ["DefenceModifierShieldMultiplier"] = new string[] { "ShieldReinforcement", },
             ["DefenceModifierShieldAddition"] = new string[] { "AdditionalReinforcement", },
+            ["CollisionResistance"] = new string[] { },
             ["KineticResistance"] = new string[] { "KineticResistance", },
             ["ThermicResistance"] = new string[] { "ThermalResistance", },
             ["ExplosiveResistance"] = new string[] { "ExplosiveResistance", },
@@ -468,16 +491,18 @@ namespace EliteDangerousCore
             ["FSDInterdictorRange"] = new string[] { "TargetMaxTime", },
             ["FSDInterdictorFacingLimit"] = new string[] { "Angle", },
             ["ScannerRange"] = new string[] { "Range", },
+            ["DiscoveryScannerRange"] = new string[] { },
+            ["DiscoveryScannerPassiveRange"] = new string[] { },
             ["MaxAngle"] = new string[] { "Angle", },
             ["ScannerTimeToScan"] = new string[] { "Time", },
             ["ChaffJamDuration"] = new string[] { "Time", },
             ["ECMRange"] = new string[] { "Range", },
             ["ECMTimeToCharge"] = new string[] { "Time", },
             ["ECMActivePowerConsumption"] = new string[] { "ActivePower", },
-            ["ECMHeat"] = new string[] { "WasteHeat", },
+            ["ECMHeat"] = new string[] { "ThermalLoad", },
             ["ECMCooldown"] = new string[] { "ReloadTime", },
             ["HeatSinkDuration"] = new string[] { "Time", },
-            ["ThermalDrain"] = new string[] { "WasteHeat", },
+            ["ThermalDrain"] = new string[] { "ThermalDrain", },
             ["NumBuggySlots"] = new string[] { "Capacity", },
             ["CargoCapacity"] = new string[] { "Size", },
             ["MaxActiveDrones"] = new string[] { "Limpets", },
@@ -499,18 +524,42 @@ namespace EliteDangerousCore
             ["AFMRepairPerAmmo"] = new string[] { "RepairCostPerMat", },
             ["MaxRange"] = new string[] { "Range", },
             ["SensorTargetScanAngle"] = new string[] { "Angle", },
-            ["Range"] = new string[] { "TypicalEmission", "Range" },
+            ["VehicleCargoCapacity"] = new string[] { },
+            ["VehicleHullMass"] = new string[] { },
+            ["VehicleFuelCapacity"] = new string[] { },
+            ["VehicleArmourHealth"] = new string[] { },
+            ["VehicleShieldHealth"] = new string[] { },
+            ["FighterMaxSpeed"] = new string[] { },
+            ["FighterBoostSpeed"] = new string[] { },
+            ["FighterPitchRate"] = new string[] { },
+            ["FighterDPS"] = new string[] { },
+            ["FighterYawRate"] = new string[] { },
+            ["FighterRollRate"] = new string[] { },
             ["CabinCapacity"] = new string[] { "Passengers", },
             ["CabinClass"] = new string[] { "CabinClass", },
             ["DisruptionBarrierRange"] = new string[] { "Range", },
             ["DisruptionBarrierChargeDuration"] = new string[] { "Time", },
             ["DisruptionBarrierActivePower"] = new string[] { "MWPerSec", },
             ["DisruptionBarrierCooldown"] = new string[] { "ReloadTime", },
+            ["WingDamageReduction"] = new string[] { },
+            ["WingMinDuration"] = new string[] { },
+            ["WingMaxDuration"] = new string[] { },
+            ["ShieldSacrificeAmountRemoved"] = new string[] { },
+            ["ShieldSacrificeAmountGiven"] = new string[] { },
             ["FSDJumpRangeBoost"] = new string[] { "AdditionalRange", },
+            ["FSDFuelUseIncrease"] = new string[] { },
+            ["BoostSpeedMultiplier"] = new string[] { },
+            ["BoostAugmenterPowerUse"] = new string[] { },
             ["ModuleDefenceAbsorption"] = new string[] { "Protection", },
+            ["DSS_RangeMult"] = new string[] { },
+            ["DSS_AngleMult"] = new string[] { },
+            ["DSS_RateMult"] = new string[] { },
             ["DSS_PatchRadius"] = new string[] { "ProbeRadius", },
-        };
 
+            ["BurstRate"] = new string[] { "BurstRateOfFire" },
+            ["BurstSize"] = new string[] { "BurstSize" },
+            ["DamageFalloffRange"] = new string[] { "Falloff" },
+        };
 
         // for special effects, what to do..
         // 0 = set, 1 = add, 2 means mod 100 on primary value, else its modmod together in %

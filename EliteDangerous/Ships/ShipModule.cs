@@ -61,7 +61,7 @@ namespace EliteDangerousCore
         // take the unengineered module data and engineer it with the Engineering data
         // engineered may be null if we don't know the module
         // bool says if we don't know how to modify a the module fully
-        public ItemData.ShipModule GetModuleEngineered()
+        public ItemData.ShipModule GetModuleEngineered(bool debugit = false)
         {
             var mdu = GetModuleUnengineered();
 
@@ -69,7 +69,7 @@ namespace EliteDangerousCore
             {
                 if (Engineering != null)    // has engineering
                 {
-                    return Engineering.EngineerModule(ItemFD, mdu);
+                    return Engineering.EngineerModule(ItemFD, mdu, debugit);
                 }
                 else
                 {

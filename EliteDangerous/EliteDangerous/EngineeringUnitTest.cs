@@ -24,8 +24,73 @@ namespace EliteDangerousCore
             MaterialCommodityMicroResourceType.Initialise();     // lets statically fill the table way before anyone wants to access it
             ItemData.Initialise();
 
+
             {
-                // burst laser focused inertial impact
+
+            //TEST Module Hpt_pulselaserburst_gimbal_medium in MediumHardpoint2 Blueprint: Efficient Weapon
+            //Level: 5
+            //Quality: 1
+            //Power Draw: 0.541, Original: 1.04, Mult: -48.0 % (Worse)
+            //Damage Per Second: 12.767, Original: 10.296, Mult: 24.0 % (Better)
+            //Damage: 3.038, Original: 2.45, Mult: 24.0 % (Better)
+            //Distributor Draw: 0.27, Original: 0.49, Mult: -45.0 % (Worse)
+            //Thermal Load: 0.268, Original: 0.67, Mult: -60.0 % (Worse)
+
+            //Engineer Burst Laser Gimbal Medium PowerDraw PowerDraw 1.04-> 0.5408 ratio 0.52
+            //Engineer Burst Laser Gimbal Medium DamagePerSecond DPS 10.296-> 12.767457 ratio 1.24000003496389
+            //   Engineer Burst Laser Gimbal Medium DamagePerSecond Damage NOT changing due to primary modifier being present
+            //   Engineer Burst Laser Gimbal Medium DamagePerSecond BreachDamage NOT changing due to condition - Damage
+            //Engineer Burst Laser Gimbal Medium Damage Damage 2.45-> 3.038 ratio 1.24
+            //   Engineer Burst Laser Gimbal Medium Damage BreachDamage 2.1-> 2.604 ratio 1.24
+            //   Engineer Burst Laser Gimbal Medium Damage BurstInterval NOT changing due to condition +hpt_railgun *
+            //Engineer Burst Laser Gimbal Medium DistributorDraw DistributorDraw 0.49-> 0.2695 ratio 0.55
+            //Engineer Burst Laser Gimbal Medium ThermalLoad ThermalLoad 0.67-> 0.268 ratio 0.4
+
+                string t = @"{""event"":""Loadout"",""Ship"":""krait_mkii"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":44152080,""ModulesValue"":1708430,""UnladenMass"":636,""CargoCapacity"":82,""MaxJumpRange"":8.985727,""FuelCapacity"":{""Main"":32,""Reserve"":0.63},""Rebuy"":2293025,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""MediumHardpoint1"",""Item"":""hpt_pulselaser_fixed_small"",""On"":true,""Priority"":0,""Value"":2200},{""Slot"":""MediumHardpoint2"",""Item"":""hpt_pulselaserburst_gimbal_medium"",""On"":true,""Priority"":0,""Value"":48500,""Engineering"":{""BlueprintName"":""Weapon_Efficient"",""Level"":5,""Quality"":1,""Modifiers"":[{""Label"":""PowerDraw"",""Value"":0.5408,""OriginalValue"":1.04},{""Label"":""DamagePerSecond"",""Value"":12.767457,""OriginalValue"":10.296336},{""Label"":""Damage"",""Value"":3.038,""OriginalValue"":2.45},{""Label"":""DistributorDraw"",""Value"":0.2695,""OriginalValue"":0.49},{""Label"":""ThermalLoad"",""Value"":0.268,""OriginalValue"":0.67}]}},{""Slot"":""Armour"",""Item"":""krait_mkii_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size7_class1"",""On"":true,""Priority"":0,""Value"":480410},{""Slot"":""MainEngines"",""Item"":""int_engine_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size5_class1"",""On"":true,""Priority"":0,""Value"":63010},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size4_class1"",""On"":true,""Priority"":0,""Value"":11350},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size7_class1"",""On"":true,""Priority"":0,""Value"":249140},{""Slot"":""Radar"",""Item"":""int_sensors_size6_class1"",""On"":true,""Priority"":0,""Value"":88980},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size5_class3"",""On"":true,""Priority"":0,""Value"":97750},{""Slot"":""Slot01_Size6"",""Item"":""int_shieldgenerator_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""Slot02_Size6"",""Item"":""int_cargorack_size5_class1"",""On"":true,""Priority"":0,""Value"":111570},{""Slot"":""Slot03_Size5"",""Item"":""int_cargorack_size5_class1"",""On"":true,""Priority"":0,""Value"":111570},{""Slot"":""Slot04_Size5"",""Item"":""int_cargorack_size4_class1"",""On"":true,""Priority"":0,""Value"":34330},{""Slot"":""Slot08_Size2"",""Item"":""int_cargorack_size1_class1"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot09_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":9120}]}";
+                var mod = GetModule(t, ShipSlots.Slot.MediumHardpoint2, true);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(4));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(40));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(0.5408));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(0));
+                Check(mod.DPS.Value.ApproxEqualsPercent(12.767));
+                Check(mod.Damage.Value.ApproxEqualsPercent(3.038));
+                Check(mod.DistributorDraw.Value.ApproxEqualsPercent(0.2695));
+                Check(mod.ThermalLoad.Value.ApproxEqualsPercent(0.268));
+                Check(mod.ArmourPiercing.Value.ApproxEqualsPercent(35));
+                Check(mod.Range.Value.ApproxEqualsPercent(3000));
+                Check(mod.Falloff.Value.ApproxEqualsPercent(500));
+                Check(mod.RateOfFire.Value.ApproxEqualsPercent(4.203));
+                Check(mod.BurstInterval.Value.ApproxEqualsPercent(0.56));
+                Check(mod.BurstRateOfFire.Value.ApproxEqualsPercent(13));
+                Check(mod.BurstSize.Value.ApproxEqualsPercent(3));
+                Check(mod.BreachDamage.Value.ApproxEqualsPercent(2.604));
+                Check(mod.BreachMin.Value.ApproxEqualsPercent(40));
+                Check(mod.BreachMax.Value.ApproxEqualsPercent(80));
+                Check(mod.Jitter.Value.ApproxEqualsPercent(0));
+                Check(mod.KineticProportionDamage.Value.ApproxEqualsPercent(0));
+                Check(mod.ThermalProportionDamage.Value.ApproxEqualsPercent(100));
+            }
+
+
+            {
+                //TEST Module Hpt_pulselaserburst_turret_small in SmallHardpoint1 Blueprint: Focused Weapon
+                //Level: 5
+                //Quality: 1
+                //Experimental Effect: Inertial Impact
+                //   Damage: 50
+                //   Jitter: 3
+                //   KineticProportionDamage: 50
+                //   ThermalProportionDamage: 50
+
+                //Damage Per Second: 6.261, Original: 4.174, Mult: 50.0 % (Better)
+                //Damage: 1.305, Original: 0.87, Mult: 50.0 % (Better)
+                //Thermal Load: 0.2, Original: 0.19, Mult: 5.0 % (Better)
+                //Armour Penetration: 44, Original: 20, Mult: 120.0 % (Better)
+                //Maximum Range: 6000, Original: 3000, Mult: 100.0 % (Better)
+                //Falloff Range: 1000, Original: 500, Mult: 100.0 % (Better)
+                //Jitter: 3, Original: 0, Mult: ∞% (Better)
+
                 string t = @"{""event"":""Loadout"",""Ship"":""sidewinder"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":5070,""ModulesValue"":61300,""UnladenMass"":38.4,""CargoCapacity"":0,""MaxJumpRange"":9.089833,""FuelCapacity"":{""Main"":2,""Reserve"":0.3},""Rebuy"":3318,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""SmallHardpoint1"",""Item"":""hpt_pulselaserburst_turret_small"",""On"":true,""Priority"":0,""Value"":52800,""Engineering"":{""BlueprintName"":""Weapon_Focused"",""Level"":5,""Quality"":1,""ExperimentalEffect"":""special_distortion_field"",""Modifiers"":[{""Label"":""DamagePerSecond"",""Value"":6.261364,""OriginalValue"":4.174242},{""Label"":""Damage"",""Value"":1.305,""OriginalValue"":0.87},{""Label"":""ThermalLoad"",""Value"":0.1995,""OriginalValue"":0.19},{""Label"":""ArmourPenetration"",""Value"":44,""OriginalValue"":20},{""Label"":""MaximumRange"",""Value"":6000,""OriginalValue"":3000},{""Label"":""FalloffRange"",""Value"":1000,""OriginalValue"":500},{""Label"":""Jitter"",""Value"":3,""OriginalValue"":0}]}},{""Slot"":""Armour"",""Item"":""sidewinder_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""MainEngines"",""Item"":""int_engine_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size2_class1"",""On"":true,""Priority"":0,""Value"":1980},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""Radar"",""Item"":""int_sensors_size1_class1"",""On"":true,""Priority"":0,""Value"":520},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size1_class3"",""On"":true,""Priority"":0,""Value"":1000}]}";
                 var mod = GetModule(t, ShipSlots.Slot.SmallHardpoint1, true);
 
@@ -51,6 +116,258 @@ namespace EliteDangerousCore
                 Check(mod.KineticProportionDamage.Value.ApproxEqualsPercent(50));
                 Check(mod.ThermalProportionDamage.Value.ApproxEqualsPercent(50));
             }
+
+            {
+//TEST Module Hpt_pulselaserburst_gimbal_medium in MediumHardpoint2 Blueprint: Efficient Weapon
+//Level: 3
+//Quality: 1
+//Power Draw: 0.79, Original: 1.04, Mult: -24.0 % (Worse)
+//Damage Per Second: 11.944, Original: 10.296, Mult: 16.0 % (Better)
+//Damage: 2.842, Original: 2.45, Mult: 16.0 % (Better)
+//Distributor Draw: 0.368, Original: 0.49, Mult: -25.0 % (Worse)
+//Thermal Load: 0.352, Original: 0.67, Mult: -47.5 % (Worse)
+
+//Engineer Burst Laser Gimbal Medium PowerDraw PowerDraw 1.04-> 0.7904 ratio 0.76
+//Engineer Burst Laser Gimbal Medium DamagePerSecond DPS 10.296-> 11.94375 ratio 1.16000002330926
+//   Engineer Burst Laser Gimbal Medium DamagePerSecond Damage NOT changing due to primary modifier being present
+//   Engineer Burst Laser Gimbal Medium DamagePerSecond BreachDamage NOT changing due to condition - Damage
+//Engineer Burst Laser Gimbal Medium Damage Damage 2.45-> 2.842 ratio 1.16
+//   Engineer Burst Laser Gimbal Medium Damage BreachDamage 2.1-> 2.436 ratio 1.16
+//   Engineer Burst Laser Gimbal Medium Damage BurstInterval NOT changing due to condition +hpt_railgun *
+//Engineer Burst Laser Gimbal Medium DistributorDraw DistributorDraw 0.49-> 0.3675 ratio 0.75
+//Engineer Burst Laser Gimbal Medium ThermalLoad ThermalLoad 0.67-> 0.35175 ratio 0.525
+
+                string t = @"{""event"":""Loadout"",""Ship"":""krait_mkii"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":44152080,""ModulesValue"":1238890,""UnladenMass"":594,""CargoCapacity"":0,""MaxJumpRange"":9.617571,""FuelCapacity"":{""Main"":32,""Reserve"":0.63},""Rebuy"":2269548,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""MediumHardpoint2"",""Item"":""hpt_pulselaserburst_gimbal_medium"",""On"":true,""Priority"":0,""Value"":48500,""Engineering"":{""BlueprintName"":""Weapon_Efficient"",""Level"":3,""Quality"":1,""Modifiers"":[{""Label"":""PowerDraw"",""Value"":0.7904,""OriginalValue"":1.04},{""Label"":""DamagePerSecond"",""Value"":11.94375,""OriginalValue"":10.296336},{""Label"":""Damage"",""Value"":2.842,""OriginalValue"":2.45},{""Label"":""DistributorDraw"",""Value"":0.3675,""OriginalValue"":0.49},{""Label"":""ThermalLoad"",""Value"":0.35175,""OriginalValue"":0.67}]}},{""Slot"":""Armour"",""Item"":""krait_mkii_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size7_class1"",""On"":true,""Priority"":0,""Value"":480410},{""Slot"":""MainEngines"",""Item"":""int_engine_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size5_class1"",""On"":true,""Priority"":0,""Value"":63010},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size4_class1"",""On"":true,""Priority"":0,""Value"":11350},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size7_class1"",""On"":true,""Priority"":0,""Value"":249140},{""Slot"":""Radar"",""Item"":""int_sensors_size6_class1"",""On"":true,""Priority"":0,""Value"":88980},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size5_class3"",""On"":true,""Priority"":0,""Value"":97750}]}";
+                var mod = GetModule(t, ShipSlots.Slot.MediumHardpoint2, true);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(4));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(40));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(0.7904));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(0));
+                Check(mod.DPS.Value.ApproxEqualsPercent(11.944));
+                Check(mod.Damage.Value.ApproxEqualsPercent(2.842));
+                Check(mod.DistributorDraw.Value.ApproxEqualsPercent(0.3675));
+                Check(mod.ThermalLoad.Value.ApproxEqualsPercent(0.3518));
+                Check(mod.ArmourPiercing.Value.ApproxEqualsPercent(35));
+                Check(mod.Range.Value.ApproxEqualsPercent(3000));
+                Check(mod.Falloff.Value.ApproxEqualsPercent(500));
+                Check(mod.RateOfFire.Value.ApproxEqualsPercent(4.203));
+                Check(mod.BurstInterval.Value.ApproxEqualsPercent(0.56));
+                Check(mod.BurstRateOfFire.Value.ApproxEqualsPercent(13));
+                Check(mod.BurstSize.Value.ApproxEqualsPercent(3));
+                Check(mod.BreachDamage.Value.ApproxEqualsPercent(2.436));
+                Check(mod.BreachMin.Value.ApproxEqualsPercent(40));
+                Check(mod.BreachMax.Value.ApproxEqualsPercent(80));
+                Check(mod.Jitter.Value.ApproxEqualsPercent(0));
+                Check(mod.KineticProportionDamage.Value.ApproxEqualsPercent(0));
+                Check(mod.ThermalProportionDamage.Value.ApproxEqualsPercent(100));
+            }
+
+            {
+//TEST Module Hpt_pulselaserburst_gimbal_medium in MediumHardpoint2 Blueprint: Focused Weapon
+//Level: 3
+//Quality: 1
+//Thermal Load: 0.69, Original: 0.67, Mult: 3.0 % (Better)
+//Armour Penetration: 63, Original: 35, Mult: 80.0 % (Better)
+//Maximum Range: 5040, Original: 3000, Mult: 68.0 % (Better)
+//Falloff Range: 840, Original: 500, Mult: 68.0 % (Better)
+
+//* **Engineer module Hpt_pulselaserburst_gimbal_medium
+//Engineer Burst Laser Gimbal Medium ThermalLoad ThermalLoad 0.67-> 0.6901 ratio 1.03
+//Engineer Burst Laser Gimbal Medium ArmourPenetration ArmourPiercing 35-> 63 ratio 1.8
+//Engineer Burst Laser Gimbal Medium MaximumRange Range 3000-> 5040 ratio 1.68
+//Engineer Burst Laser Gimbal Medium FalloffRange Falloff 500-> 840 ratio 1.68
+
+
+                string t = @"{""event"":""Loadout"",""Ship"":""krait_mkii"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":44152080,""ModulesValue"":1238890,""UnladenMass"":594,""CargoCapacity"":0,""MaxJumpRange"":9.617571,""FuelCapacity"":{""Main"":32,""Reserve"":0.63},""Rebuy"":2269548,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""MediumHardpoint2"",""Item"":""hpt_pulselaserburst_gimbal_medium"",""On"":true,""Priority"":0,""Value"":48500,""Engineering"":{""BlueprintName"":""Weapon_Focused"",""Level"":3,""Quality"":1,""Modifiers"":[{""Label"":""ThermalLoad"",""Value"":0.6901,""OriginalValue"":0.67},{""Label"":""ArmourPenetration"",""Value"":63,""OriginalValue"":35},{""Label"":""MaximumRange"",""Value"":5040,""OriginalValue"":3000},{""Label"":""FalloffRange"",""Value"":840,""OriginalValue"":500}]}},{""Slot"":""Armour"",""Item"":""krait_mkii_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size7_class1"",""On"":true,""Priority"":0,""Value"":480410},{""Slot"":""MainEngines"",""Item"":""int_engine_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size5_class1"",""On"":true,""Priority"":0,""Value"":63010},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size4_class1"",""On"":true,""Priority"":0,""Value"":11350},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size7_class1"",""On"":true,""Priority"":0,""Value"":249140},{""Slot"":""Radar"",""Item"":""int_sensors_size6_class1"",""On"":true,""Priority"":0,""Value"":88980},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size5_class3"",""On"":true,""Priority"":0,""Value"":97750}]}";
+                var mod = GetModule(t, ShipSlots.Slot.MediumHardpoint2, true);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(4));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(40));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(1.04));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(0));
+                Check(mod.DPS.Value.ApproxEqualsPercent(10.296));
+                Check(mod.Damage.Value.ApproxEqualsPercent(2.45));
+                Check(mod.DistributorDraw.Value.ApproxEqualsPercent(0.49));
+                Check(mod.ThermalLoad.Value.ApproxEqualsPercent(0.6901));
+                Check(mod.ArmourPiercing.Value.ApproxEqualsPercent(63));
+                Check(mod.Range.Value.ApproxEqualsPercent(5040));
+                Check(mod.Falloff.Value.ApproxEqualsPercent(840));
+                Check(mod.RateOfFire.Value.ApproxEqualsPercent(4.203));
+                Check(mod.BurstInterval.Value.ApproxEqualsPercent(0.56));
+                Check(mod.BurstRateOfFire.Value.ApproxEqualsPercent(13));
+                Check(mod.BurstSize.Value.ApproxEqualsPercent(3));
+                Check(mod.BreachDamage.Value.ApproxEqualsPercent(2.1));
+                Check(mod.BreachMin.Value.ApproxEqualsPercent(40));
+                Check(mod.BreachMax.Value.ApproxEqualsPercent(80));
+                Check(mod.Jitter.Value.ApproxEqualsPercent(0));
+                Check(mod.KineticProportionDamage.Value.ApproxEqualsPercent(0));
+                Check(mod.ThermalProportionDamage.Value.ApproxEqualsPercent(100));
+            }
+
+            {
+// From edsy
+//TEST Module Hpt_pulselaserburst_gimbal_medium in MediumHardpoint2 Blueprint: Focused Weapon
+//Level: 3
+//Quality: 1
+//Experimental Effect: Inertial Impact
+//   Damage: 50
+//   Jitter: 3
+//   KineticProportionDamage: 50
+//   ThermalProportionDamage: 50
+                //Damage Per Second: 15.445, Original: 10.296, Mult: 50.0 % (Better)
+                //Damage: 3.675, Original: 2.45, Mult: 50.0 % (Better)
+//Thermal Load: 0.69, Original: 0.67, Mult: 3.0 % (Better)
+//Armour Penetration: 63, Original: 35, Mult: 80.0 % (Better)
+//Maximum Range: 5040, Original: 3000, Mult: 68.0 % (Better)
+//Falloff Range: 840, Original: 500, Mult: 68.0 % (Better)
+//Jitter: 3, Original: 0, Mult: ∞% (Better)
+
+                string t = @"{""event"":""Loadout"",""Ship"":""krait_mkii"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":44152080,""ModulesValue"":1238890,""UnladenMass"":594,""CargoCapacity"":0,""MaxJumpRange"":9.617571,""FuelCapacity"":{""Main"":32,""Reserve"":0.63},""Rebuy"":2269548,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""MediumHardpoint2"",""Item"":""hpt_pulselaserburst_gimbal_medium"",""On"":true,""Priority"":0,""Value"":48500,""Engineering"":{""BlueprintName"":""Weapon_Focused"",""Level"":3,""Quality"":1,""ExperimentalEffect"":""special_distortion_field"",""Modifiers"":[{""Label"":""DamagePerSecond"",""Value"":15.444504,""OriginalValue"":10.296336},{""Label"":""Damage"",""Value"":3.675,""OriginalValue"":2.45},{""Label"":""ThermalLoad"",""Value"":0.6901,""OriginalValue"":0.67},{""Label"":""ArmourPenetration"",""Value"":63,""OriginalValue"":35},{""Label"":""MaximumRange"",""Value"":5040,""OriginalValue"":3000},{""Label"":""FalloffRange"",""Value"":840,""OriginalValue"":500},{""Label"":""Jitter"",""Value"":3,""OriginalValue"":0}]}},{""Slot"":""Armour"",""Item"":""krait_mkii_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size7_class1"",""On"":true,""Priority"":0,""Value"":480410},{""Slot"":""MainEngines"",""Item"":""int_engine_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size5_class1"",""On"":true,""Priority"":0,""Value"":63010},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size4_class1"",""On"":true,""Priority"":0,""Value"":11350},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size7_class1"",""On"":true,""Priority"":0,""Value"":249140},{""Slot"":""Radar"",""Item"":""int_sensors_size6_class1"",""On"":true,""Priority"":0,""Value"":88980},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size5_class3"",""On"":true,""Priority"":0,""Value"":97750}]}";
+                var mod = GetModule(t, ShipSlots.Slot.MediumHardpoint2, true);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(4));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(40));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(1.04));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(0));
+                Check(mod.DPS.Value.ApproxEqualsPercent(15.445));
+                Check(mod.Damage.Value.ApproxEqualsPercent(3.675));
+                Check(mod.DistributorDraw.Value.ApproxEqualsPercent(0.49));
+                Check(mod.ThermalLoad.Value.ApproxEqualsPercent(0.6901));
+                Check(mod.ArmourPiercing.Value.ApproxEqualsPercent(63));
+                Check(mod.Range.Value.ApproxEqualsPercent(5040));
+                Check(mod.Falloff.Value.ApproxEqualsPercent(840));
+                Check(mod.RateOfFire.Value.ApproxEqualsPercent(4.203));
+                Check(mod.BurstInterval.Value.ApproxEqualsPercent(0.56));
+                Check(mod.BurstRateOfFire.Value.ApproxEqualsPercent(13));
+                Check(mod.BurstSize.Value.ApproxEqualsPercent(3));
+                Check(mod.BreachDamage.Value.ApproxEqualsPercent(3.15));
+                Check(mod.BreachMin.Value.ApproxEqualsPercent(40));
+                Check(mod.BreachMax.Value.ApproxEqualsPercent(80));
+                Check(mod.Jitter.Value.ApproxEqualsPercent(3));
+                Check(mod.KineticProportionDamage.Value.ApproxEqualsPercent(50));
+                Check(mod.ThermalProportionDamage.Value.ApproxEqualsPercent(50));
+            }
+
+
+            {
+                // from ealhstan ship import, to edsy, to export
+
+// TEST Module Hpt_pulselaserburst_gimbal_medium in MediumHardpoint2 Blueprint: Focused Weapon
+//Level: 3
+//Quality: 0
+//Experimental Effect: Inertial Impact
+//   Damage: 50
+//   Jitter: 3
+//   KineticProportionDamage: 50
+//   ThermalProportionDamage: 50
+//Damage Per Second: 15.445, Original: 10.296, Mult: 50.0 % (Better)
+//Damage: 3.675, Original: 2.45, Mult: 50.0 % (Better)
+//Thermal Load: 0.69, Original: 0.67, Mult: 3.0 % (Better)
+//Armour Penetration: 58.324, Original: 35, Mult: 66.6 % (Better)
+//Maximum Range: 4690.2, Original: 3000, Mult: 56.3 % (Better)
+//Falloff Range: 781.7, Original: 500, Mult: 56.3 % (Better)
+//Jitter: 3, Original: 0, Mult: ∞% (Better)
+
+                string t = @"{""event"":""Loadout"",""Ship"":""krait_mkii"",""ShipName"":"""",""ShipIdent"":""ST-13K"",""HullValue"":38743029,""ModulesValue"":115884722,""UnladenMass"":559,""CargoCapacity"":0,""MaxJumpRange"":21.837943,""FuelCapacity"":{""Main"":32,""Reserve"":0.63},""Rebuy"":7731387,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""MediumHardpoint2"",""Item"":""hpt_pulselaserburst_gimbal_medium"",""On"":true,""Priority"":0,""Value"":42559,""Engineering"":{""BlueprintName"":""Weapon_Focused"",""Level"":3,""Quality"":0.2713,""ExperimentalEffect"":""special_distortion_field"",""Modifiers"":[{""Label"":""DamagePerSecond"",""Value"":15.444504,""OriginalValue"":10.296336},{""Label"":""Damage"",""Value"":3.675,""OriginalValue"":2.45},{""Label"":""ThermalLoad"",""Value"":0.6901,""OriginalValue"":0.67},{""Label"":""ArmourPenetration"",""Value"":58.323997,""OriginalValue"":35},{""Label"":""MaximumRange"",""Value"":4690.200195,""OriginalValue"":3000},{""Label"":""FalloffRange"",""Value"":781.700012,""OriginalValue"":500},{""Label"":""Jitter"",""Value"":3,""OriginalValue"":0}]}},{""Slot"":""Armour"",""Item"":""krait_mkii_armour_reactive"",""On"":true,""Priority"":1,""Value"":94756030},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size7_class2"",""On"":true,""Priority"":1,""Value"":1264679},{""Slot"":""MainEngines"",""Item"":""int_engine_size6_class5"",""On"":true,""Priority"":0,""Value"":14197538},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size5_class5"",""On"":true,""Priority"":0,""Value"":4478716},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size4_class2"",""On"":true,""Priority"":0,""Value"":24895},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size7_class2"",""On"":true,""Priority"":0,""Value"":546542},{""Slot"":""Radar"",""Item"":""int_sensors_size6_class3"",""On"":true,""Priority"":0,""Value"":487987},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size5_class3"",""On"":true,""Priority"":1,""Value"":85776}]}";
+                var mod = GetModule(t, ShipSlots.Slot.MediumHardpoint2, true);
+                Check(mod.Mass.Value.ApproxEqualsPercent(4));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(40));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(1.04));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(0));
+                Check(mod.DPS.Value.ApproxEqualsPercent(15.445));
+                Check(mod.Damage.Value.ApproxEqualsPercent(3.675));
+                Check(mod.DistributorDraw.Value.ApproxEqualsPercent(0.49));
+                Check(mod.ThermalLoad.Value.ApproxEqualsPercent(0.6901));
+                Check(mod.ArmourPiercing.Value.ApproxEqualsPercent(58.32));
+                Check(mod.Range.Value.ApproxEqualsPercent(4690));
+                Check(mod.Falloff.Value.ApproxEqualsPercent(781.7));
+                Check(mod.RateOfFire.Value.ApproxEqualsPercent(4.203));
+                Check(mod.BurstInterval.Value.ApproxEqualsPercent(0.56));
+                Check(mod.BurstRateOfFire.Value.ApproxEqualsPercent(13));
+                Check(mod.BurstSize.Value.ApproxEqualsPercent(3));
+                Check(mod.BreachDamage.Value.ApproxEqualsPercent(3.15));
+                Check(mod.BreachMin.Value.ApproxEqualsPercent(40));
+                Check(mod.BreachMax.Value.ApproxEqualsPercent(80));
+                Check(mod.Jitter.Value.ApproxEqualsPercent(3));
+                Check(mod.KineticProportionDamage.Value.ApproxEqualsPercent(50));
+                Check(mod.ThermalProportionDamage.Value.ApproxEqualsPercent(50));
+            }
+
+            {
+                // from Ealhstan log directy, it fails. Missing Damage.
+                string t = @"{""timestamp"":""2024-06-27T10:22:51.919Z"",""event"":""Loadout"",""Ship"":""Krait_MkII"",""ShipID"":6,""ShipIdent"":""ST-13K"",""HullValue"":38743029,""ModulesValue"":124030355,""HullHealth"":1.0,""UnladenMass"":695.099976,""CargoCapacity"":64,""FuelCapacity"":{""Main"":32.0,""Reserve"":0.63},""Rebuy"":8138670,""Modules"":[{""Slot"":""Armour"",""Item"":""krait_mkii_Armour_reactive"",""On"":true,""Priority"":1,""Value"":94756032},{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""FrameShiftDrive"",""Item"":""Int_hyperdrive_size5_class5"",""On"":true,""Priority"":0,""Value"":4478720,""Engineering"":{""Engineer"":""Felicity Farseer"",""EngineerID"":300100,""BlueprintID"":128673691,""BlueprintName"":""FSD_LongRange"",""Level"":2,""Quality"":0.841,""ExperimentalEffect"":""special_fsd_heavy"",""ExperimentalEffect_Localised"":""Mass Manager"",""Modifiers"":[{""Label"":""Mass"",""Value"":23.0,""OriginalValue"":20.0,""LessIsGood"":1},{""Label"":""Integrity"",""Value"":103.776001,""OriginalValue"":120.0,""LessIsGood"":0},{""Label"":""PowerDraw"",""Value"":0.636,""OriginalValue"":0.6,""LessIsGood"":1},{""Label"":""FSDOptimalMass"",""Value"":1347.637085,""OriginalValue"":1050.0,""LessIsGood"":0}]}},{""Slot"":""FuelTank"",""Item"":""Int_fueltank_size5_class3"",""On"":true,""Priority"":1,""Value"":85779},{""Slot"":""LargeHardpoint1"",""Item"":""Hpt_multicannon_gimbal_large"",""On"":true,""Priority"":0,""Value"":507579},{""Slot"":""LargeHardpoint2"",""Item"":""Hpt_multicannon_gimbal_large"",""On"":true,""Priority"":0,""Value"":507579},{""Slot"":""LargeHardpoint3"",""Item"":""Hpt_multicannon_gimbal_large"",""On"":true,""Priority"":0,""Value"":507579},{""Slot"":""LifeSupport"",""Item"":""Int_lifesupport_size4_class2"",""On"":true,""Priority"":0,""Value"":24898},{""Slot"":""MediumHardpoint1"",""Item"":""Hpt_pulselaserburst_gimbal_medium"",""On"":true,""Priority"":0,""Value"":42559,""Engineering"":{""Engineer"":""The Dweller"",""EngineerID"":300180,""BlueprintID"":128673362,""BlueprintName"":""Weapon_Focused"",""Level"":3,""Quality"":0.3,""ExperimentalEffect"":""special_distortion_field"",""ExperimentalEffect_Localised"":""Inertial Impact"",""Modifiers"":[{""Label"":""ThermalLoad"",""Value"":0.6901,""OriginalValue"":0.67,""LessIsGood"":1},{""Label"":""ArmourPenetration"",""Value"":58.100002,""OriginalValue"":35.0,""LessIsGood"":0},{""Label"":""MaximumRange"",""Value"":4714.5,""OriginalValue"":3000.0,""LessIsGood"":0},{""Label"":""Jitter"",""Value"":3.0,""OriginalValue"":0.0,""LessIsGood"":1},{""Label"":""DamageType"",""ValueStr"":""$Kinetic;""},{""Label"":""DamageFalloffRange"",""Value"":785.750061,""OriginalValue"":500.0,""LessIsGood"":0}]}},{""Slot"":""MediumHardpoint2"",""Item"":""Hpt_pulselaserburst_gimbal_medium"",""On"":true,""Priority"":0,""Value"":42559,""Engineering"":{""Engineer"":""The Dweller"",""EngineerID"":300180,""BlueprintID"":128673362,""BlueprintName"":""Weapon_Focused"",""Level"":3,""Quality"":0.2713,""ExperimentalEffect"":""special_distortion_field"",""ExperimentalEffect_Localised"":""Inertial Impact"",""Modifiers"":[{""Label"":""ThermalLoad"",""Value"":0.6901,""OriginalValue"":0.67,""LessIsGood"":1},{""Label"":""ArmourPenetration"",""Value"":58.323997,""OriginalValue"":35.0,""LessIsGood"":0},{""Label"":""MaximumRange"",""Value"":4690.200195,""OriginalValue"":3000.0,""LessIsGood"":0},{""Label"":""Jitter"",""Value"":3.0,""OriginalValue"":0.0,""LessIsGood"":1},{""Label"":""DamageType"",""ValueStr"":""$Kinetic;""},{""Label"":""DamageFalloffRange"",""Value"":781.700012,""OriginalValue"":500.0,""LessIsGood"":0}]}},{""Slot"":""Slot01_Size6"",""Item"":""Int_shieldgenerator_size6_class3_fast"",""On"":true,""Priority"":0,""Value"":2366258},{""Slot"":""Slot02_Size6"",""Item"":""Int_cargorack_size6_class1"",""On"":true,""Priority"":1,""Value"":318174},{""Slot"":""Slot03_Size5"",""Item"":""Int_hullreinforcement_size5_class2"",""On"":true,""Priority"":1,""Value"":394875},{""Slot"":""Slot04_Size5"",""Item"":""Int_fighterbay_size5_class1"",""On"":true,""Priority"":0,""Value"":505128},{""Slot"":""Slot05_Size4"",""Item"":""Int_hullreinforcement_size4_class2"",""On"":true,""Priority"":1,""Value"":171113},{""Slot"":""Slot06_Size3"",""Item"":""Int_fsdinterdictor_size3_class3"",""On"":true,""Priority"":0,""Value"":742997,""Engineering"":{""Engineer"":""Felicity Farseer"",""EngineerID"":300100,""BlueprintID"":128673675,""BlueprintName"":""FSDinterdictor_Expanded"",""Level"":1,""Quality"":1.0,""Modifiers"":[{""Label"":""PowerDraw"",""Value"":0.374,""OriginalValue"":0.34,""LessIsGood"":1},{""Label"":""FSDInterdictorRange"",""Value"":9.9,""OriginalValue"":11.0,""LessIsGood"":0},{""Label"":""FSDInterdictorFacingLimit"",""Value"":70.0,""OriginalValue"":50.0,""LessIsGood"":0}]}},{""Slot"":""Slot07_Size3"",""Item"":""Int_guardianfsdbooster_size3"",""On"":true,""Priority"":0,""Value"":1421928},{""Slot"":""Slot08_Size2"",""Item"":""Int_modulereinforcement_size2_class2"",""On"":true,""Priority"":1,""Value"":31590},{""Slot"":""Slot09_Size1"",""Item"":""Int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":11854},{""Slot"":""PaintJob"",""Item"":""paintjob_krait_mkii_specialeffectchristmas_01"",""On"":true,""Priority"":1},{""Slot"":""PlanetaryApproachSuite"",""Item"":""Int_planetapproachsuite_advanced"",""On"":true,""Priority"":1},{""Slot"":""PowerDistributor"",""Item"":""Int_powerdistributor_size7_class2"",""On"":true,""Priority"":0,""Value"":546546,""Engineering"":{""Engineer"":""The Dweller"",""EngineerID"":300180,""BlueprintID"":128673731,""BlueprintName"":""PowerDistributor_HighCapacity"",""Level"":2,""Quality"":0.5863,""Modifiers"":[{""Label"":""Integrity"",""Value"":118.786499,""OriginalValue"":105.0,""LessIsGood"":0},{""Label"":""WeaponsCapacity"",""Value"":52.757397,""OriginalValue"":46.0,""LessIsGood"":0},{""Label"":""WeaponsRecharge"",""Value"":4.324,""OriginalValue"":4.6,""LessIsGood"":0},{""Label"":""EnginesCapacity"",""Value"":35.553898,""OriginalValue"":31.0,""LessIsGood"":0},{""Label"":""EnginesRecharge"",""Value"":2.82,""OriginalValue"":3.0,""LessIsGood"":0},{""Label"":""SystemsCapacity"",""Value"":35.553898,""OriginalValue"":31.0,""LessIsGood"":0},{""Label"":""SystemsRecharge"",""Value"":2.82,""OriginalValue"":3.0,""LessIsGood"":0}]}},{""Slot"":""PowerPlant"",""Item"":""Int_powerplant_size7_class2"",""On"":true,""Priority"":1,""Value"":1264683,""Engineering"":{""Engineer"":""Felicity Farseer"",""EngineerID"":300100,""BlueprintID"":128673765,""BlueprintName"":""PowerPlant_Boosted"",""Level"":1,""Quality"":1.0,""Modifiers"":[{""Label"":""Integrity"",""Value"":99.75,""OriginalValue"":105.0,""LessIsGood"":0},{""Label"":""PowerCapacity"",""Value"":25.200001,""OriginalValue"":22.5,""LessIsGood"":0},{""Label"":""HeatEfficiency"",""Value"":0.7875,""OriginalValue"":0.75,""LessIsGood"":1}]}},{""Slot"":""Radar"",""Item"":""Int_sensors_size6_class3"",""On"":true,""Priority"":0,""Value"":487987,""Engineering"":{""Engineer"":""Felicity Farseer"",""EngineerID"":300100,""BlueprintID"":128740132,""BlueprintName"":""Sensor_LongRange"",""Level"":1,""Quality"":0.9727,""Modifiers"":[{""Label"":""Mass"",""Value"":48.0,""OriginalValue"":40.0,""LessIsGood"":1},{""Label"":""SensorTargetScanAngle"",""Value"":27.0,""OriginalValue"":30.0,""LessIsGood"":0},{""Label"":""Range"",""Value"":6875.399902,""OriginalValue"":6000.0,""LessIsGood"":0}]}},{""Slot"":""ShipCockpit"",""Item"":""krait_mkii_cockpit"",""On"":true,""Priority"":1},{""Slot"":""MainEngines"",""Item"":""Int_engine_size6_class5"",""On"":true,""Priority"":0,""Value"":14197539,""Engineering"":{""Engineer"":""Felicity Farseer"",""EngineerID"":300100,""BlueprintID"":128673667,""BlueprintName"":""Engine_Tuned"",""Level"":3,""Quality"":0.942,""ExperimentalEffect"":""special_engine_lightweight"",""ExperimentalEffect_Localised"":""Stripped Down"",""Modifiers"":[{""Label"":""Mass"",""Value"":36.0,""OriginalValue"":40.0,""LessIsGood"":1},{""Label"":""Integrity"",""Value"":114.080002,""OriginalValue"":124.0,""LessIsGood"":0},{""Label"":""PowerDraw"",""Value"":8.164801,""OriginalValue"":7.56,""LessIsGood"":1},{""Label"":""EngineOptimalMass"",""Value"":1353.599976,""OriginalValue"":1440.0,""LessIsGood"":0},{""Label"":""EngineOptPerformance"",""Value"":117.910004,""OriginalValue"":100.0,""LessIsGood"":0},{""Label"":""EngineHeatRate"",""Value"":0.78754,""OriginalValue"":1.3,""LessIsGood"":1}]}},{""Slot"":""TinyHardpoint1"",""Item"":""Hpt_shieldbooster_size0_class5"",""On"":true,""Priority"":0,""Value"":246578,""Engineering"":{""Engineer"":""Felicity Farseer"",""EngineerID"":300100,""BlueprintID"":128673795,""BlueprintName"":""ShieldBooster_Thermic"",""Level"":1,""Quality"":1.0,""Modifiers"":[{""Label"":""KineticResistance"",""Value"":-0.999999,""OriginalValue"":0.0,""LessIsGood"":0},{""Label"":""ThermicResistance"",""Value"":6.999999,""OriginalValue"":0.0,""LessIsGood"":0},{""Label"":""ExplosiveResistance"",""Value"":-0.999999,""OriginalValue"":0.0,""LessIsGood"":0}]}},{""Slot"":""TinyHardpoint2"",""Item"":""Hpt_shieldbooster_size0_class5"",""On"":true,""Priority"":0,""Value"":246578,""Engineering"":{""Engineer"":""Felicity Farseer"",""EngineerID"":300100,""BlueprintID"":128673795,""BlueprintName"":""ShieldBooster_Thermic"",""Level"":1,""Quality"":1.0,""Modifiers"":[{""Label"":""KineticResistance"",""Value"":-0.999999,""OriginalValue"":0.0,""LessIsGood"":0},{""Label"":""ThermicResistance"",""Value"":6.999999,""OriginalValue"":0.0,""LessIsGood"":0},{""Label"":""ExplosiveResistance"",""Value"":-0.999999,""OriginalValue"":0.0,""LessIsGood"":0}]}},{""Slot"":""TinyHardpoint3"",""Item"":""Hpt_plasmapointdefence_turret_tiny"",""On"":true,""Priority"":0,""Value"":16275},{""Slot"":""TinyHardpoint4"",""Item"":""Hpt_crimescanner_size0_class3"",""On"":true,""Priority"":0,""Value"":106968},{""Slot"":""VesselVoice"",""Item"":""voicepack_verity"",""On"":true,""Priority"":1}]}";
+
+//from ealhstan->edsy import
+//TEST Module Hpt_pulselaserburst_gimbal_medium in MediumHardpoint2 Engineer: The Dweller
+//Blueprint: Focused Weapon
+//Level: 3
+//Quality: 0
+//Experimental Effect: Inertial Impact
+//   Damage: 50
+//   Jitter: 3
+//   KineticProportionDamage: 50
+//   ThermalProportionDamage: 50
+//Thermal Load: 0.69, Original: 0.67, Mult: 3.0 % (Worse)
+//Armour Penetration: 58.324, Original: 35, Mult: 66.6 % (Better)
+//Maximum Range: 4690.2, Original: 3000, Mult: 56.3 % (Better)
+//Jitter: 3, Original: 0, Mult: ∞% (Worse)
+//DamageType:$Kinetic;
+//Damage Falloff Range: 781.7, Original: 500, Mult: 56.3 % (Better)
+
+                var mod = GetModule(t, ShipSlots.Slot.MediumHardpoint2, true);
+            //    Check(mod.Mass.Value.ApproxEqualsPercent(4));
+            //    Check(mod.Integrity.Value.ApproxEqualsPercent(40));
+            //    Check(mod.PowerDraw.Value.ApproxEqualsPercent(1.04));
+            //    Check(mod.BootTime.Value.ApproxEqualsPercent(0));
+            //    Check(mod.DPS.Value.ApproxEqualsPercent(15.445));
+            //    Check(mod.Damage.Value.ApproxEqualsPercent(3.675));
+            //    Check(mod.DistributorDraw.Value.ApproxEqualsPercent(0.49));
+            //    Check(mod.ThermalLoad.Value.ApproxEqualsPercent(0.7035));
+            //    Check(mod.ArmourPiercing.Value.ApproxEqualsPercent(77));
+            //    Check(mod.Range.Value.ApproxEqualsPercent(6000));
+            //    Check(mod.Falloff.Value.ApproxEqualsPercent(1000));
+            //    Check(mod.RateOfFire.Value.ApproxEqualsPercent(4.203));
+            //    Check(mod.BurstInterval.Value.ApproxEqualsPercent(0.56));
+            //    Check(mod.BurstRateOfFire.Value.ApproxEqualsPercent(13));
+            //    Check(mod.BurstSize.Value.ApproxEqualsPercent(3));
+            //    Check(mod.BreachDamage.Value.ApproxEqualsPercent(3.15));
+            //    Check(mod.BreachMin.Value.ApproxEqualsPercent(40));
+            //    Check(mod.BreachMax.Value.ApproxEqualsPercent(60));
+            //    Check(mod.Jitter.Value.ApproxEqualsPercent(3));
+            //    Check(mod.KineticProportionDamage.Value.ApproxEqualsPercent(50));
+            //    Check(mod.ThermalProportionDamage.Value.ApproxEqualsPercent(50));
+            }
+
+
+            {
+                // burst laser focused  Level 3
+                string t = @"{""event"":""Loadout"",""Ship"":""krait_mkii"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":44152080,""ModulesValue"":1708430,""UnladenMass"":636,""CargoCapacity"":82,""MaxJumpRange"":8.985727,""FuelCapacity"":{""Main"":32,""Reserve"":0.63},""Rebuy"":2293025,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""MediumHardpoint1"",""Item"":""hpt_pulselaser_fixed_small"",""On"":true,""Priority"":0,""Value"":2200},{""Slot"":""MediumHardpoint2"",""Item"":""hpt_pulselaserburst_gimbal_medium"",""On"":true,""Priority"":0,""Value"":48500,""Engineering"":{""BlueprintName"":""Weapon_Focused"",""Level"":3,""Quality"":1,""Modifiers"":[{""Label"":""ThermalLoad"",""Value"":0.6901,""OriginalValue"":0.67},{""Label"":""ArmourPenetration"",""Value"":63,""OriginalValue"":35},{""Label"":""MaximumRange"",""Value"":5040,""OriginalValue"":3000},{""Label"":""FalloffRange"",""Value"":840,""OriginalValue"":500}]}},{""Slot"":""Armour"",""Item"":""krait_mkii_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size7_class1"",""On"":true,""Priority"":0,""Value"":480410},{""Slot"":""MainEngines"",""Item"":""int_engine_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size5_class1"",""On"":true,""Priority"":0,""Value"":63010},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size4_class1"",""On"":true,""Priority"":0,""Value"":11350},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size7_class1"",""On"":true,""Priority"":0,""Value"":249140},{""Slot"":""Radar"",""Item"":""int_sensors_size6_class1"",""On"":true,""Priority"":0,""Value"":88980},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size5_class3"",""On"":true,""Priority"":0,""Value"":97750},{""Slot"":""Slot01_Size6"",""Item"":""int_shieldgenerator_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""Slot02_Size6"",""Item"":""int_cargorack_size5_class1"",""On"":true,""Priority"":0,""Value"":111570},{""Slot"":""Slot03_Size5"",""Item"":""int_cargorack_size5_class1"",""On"":true,""Priority"":0,""Value"":111570},{""Slot"":""Slot04_Size5"",""Item"":""int_cargorack_size4_class1"",""On"":true,""Priority"":0,""Value"":34330},{""Slot"":""Slot08_Size2"",""Item"":""int_cargorack_size1_class1"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot09_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":9120}]}";
+                var mod = GetModule(t, ShipSlots.Slot.MediumHardpoint2, true);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(4));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(40));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(1.04));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(0));
+                Check(mod.DPS.Value.ApproxEqualsPercent(10.296));
+                Check(mod.Damage.Value.ApproxEqualsPercent(2.45));
+                Check(mod.DistributorDraw.Value.ApproxEqualsPercent(0.49));
+                Check(mod.ThermalLoad.Value.ApproxEqualsPercent(0.6901));
+                Check(mod.ArmourPiercing.Value.ApproxEqualsPercent(63));
+                Check(mod.Range.Value.ApproxEqualsPercent(5040));
+                Check(mod.Falloff.Value.ApproxEqualsPercent(840));
+                Check(mod.RateOfFire.Value.ApproxEqualsPercent(4.203));
+                Check(mod.BurstInterval.Value.ApproxEqualsPercent(0.56));
+                Check(mod.BurstRateOfFire.Value.ApproxEqualsPercent(13));
+                Check(mod.BurstSize.Value.ApproxEqualsPercent(3));
+                Check(mod.BreachDamage.Value.ApproxEqualsPercent(2.1));
+                Check(mod.BreachMin.Value.ApproxEqualsPercent(40));
+                Check(mod.BreachMax.Value.ApproxEqualsPercent(80));
+                Check(mod.Jitter.Value.ApproxEqualsPercent(0));
+                Check(mod.KineticProportionDamage.Value.ApproxEqualsPercent(0));
+                Check(mod.ThermalProportionDamage.Value.ApproxEqualsPercent(100));
+            }
+
 
 
             {
@@ -1228,10 +1545,12 @@ namespace EliteDangerousCore
             DebuggerHelpers.BreakAssert(si != null, "Bad ship");
             lastship = si;
             lastslot = slot;
+
+            System.Diagnostics.Debug.WriteLine($"\r\nTEST Module {si.Modules[slot].ItemFD} in {lastslot} {si.Modules[slot]?.Engineering?.ToString()}");
+            //System.Diagnostics.Debug.WriteLine($"\r\nTEST Module {si.Modules[slot].ItemFD} in {lastslot} ");
+
             var module = si.GetShipModulePropertiesEngineered(slot, debugit);
             DebuggerHelpers.BreakAssert(module != null, "Bad module");
-            //System.Diagnostics.Debug.WriteLine($"\r\nTEST Module {si.Modules[slot].ItemFD} in {lastslot} {si.Modules[slot]?.Engineering?.ToString()}");
-            System.Diagnostics.Debug.WriteLine($"\r\nTEST Module {si.Modules[slot].ItemFD} in {lastslot} ");
             return module;
         }
 
