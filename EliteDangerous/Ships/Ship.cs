@@ -349,7 +349,7 @@ namespace EliteDangerousCore
 
         // derived (nicked) from EDSY thank you
 
-        public Stats CalculateShipStats(int powerdist_sys, int powerdist_eng, int powerdist_wep, int currentcargo, double currentfuellevel, double currentreservelevel)
+        public Stats GetShipStats(int powerdist_sys, int powerdist_eng, int powerdist_wep, int currentcargo, double currentfuellevel, double currentreservelevel)
         {
             var res = new Stats();
             var ship = GetShipProperties();
@@ -473,8 +473,8 @@ namespace EliteDangerousCore
                         dps_axe += sdps * me.getEffectiveAttrValue(nameof(ItemData.ShipModule.AXPorportionDamage), 0) / 100.0;
                         dps_cau += sdps * me.getEffectiveAttrValue(nameof(ItemData.ShipModule.CausticPorportionDamage), 0) / 100.0;
 
-                        System.Diagnostics.Debug.WriteLine($"{me.EnglishModName}: thmload {thmload} {thmload_hardpoint_wepfull} {thmload_hardpoint_wepempty}");
-                        System.Diagnostics.Debug.WriteLine($"{me.EnglishModName}: dps {dps} {dps_abs} {dps_thm}");
+                        //System.Diagnostics.Debug.WriteLine($"{me.EnglishModName}: thmload {thmload} {thmload_hardpoint_wepfull} {thmload_hardpoint_wepempty}");
+                        //System.Diagnostics.Debug.WriteLine($"{me.EnglishModName}: dps {dps} {dps_abs} {dps_thm}");
 
                         weapons.Add(new Tuple<double, double, double>(spc, eps, seps));
 
@@ -490,7 +490,7 @@ namespace EliteDangerousCore
                             ammotime_nocap = Math.Min(ammotime_nocap, ammotime);
                         }
 
-                        System.Diagnostics.Debug.WriteLine($"{me.EnglishModName}: nodistdraw {dps_nodistdraw} {dps_distdraw} {ammotime_wepcap} {ammotime_nocap}");
+                        //System.Diagnostics.Debug.WriteLine($"{me.EnglishModName}: nodistdraw {dps_nodistdraw} {dps_distdraw} {ammotime_wepcap} {ammotime_nocap}");
                     }
                 }
 
@@ -550,7 +550,7 @@ namespace EliteDangerousCore
                         res.ShieldsThermalValue = rawShdStr / (1 - absShdRes / 100) / (1 - thmShdRes / 100);
                         res.ShieldsExplosiveValue = rawShdStr / (1 - absShdRes / 100) / (1 - expShdRes / 100);
 
-                        System.Diagnostics.Debug.WriteLine($"ABs {absShdRes * 100}% raw {res.ShieldsRaw} sys {res.ShieldsSystemValue} kin {res.ShieldsKineticValue} thm {res.ShieldsThermalValue} exp {res.ShieldsExplosiveValue}");
+                        //System.Diagnostics.Debug.WriteLine($"ABs {absShdRes * 100}% raw {res.ShieldsRaw} sys {res.ShieldsSystemValue} kin {res.ShieldsKineticValue} thm {res.ShieldsThermalValue} exp {res.ShieldsExplosiveValue}");
 
 
                         if (powerdistributorengineered != null)
@@ -670,7 +670,7 @@ namespace EliteDangerousCore
                     double wepchg_sustain_cur = Math.Min(Math.Max(wepchg * powerdistWepMul / seps, 0), 1);
                     double wepchg_sustain_max = Math.Min(Math.Max(wepchg / seps, 0), 1);
 
-                    System.Diagnostics.Debug.WriteLine($"WEPAccum {wepcap_burst_cur} {wepcap_burst_max} {wepchg_sustain_cur} {wepchg_sustain_max}");
+                    //System.Diagnostics.Debug.WriteLine($"WEPAccum {wepcap_burst_cur} {wepcap_burst_max} {wepchg_sustain_cur} {wepchg_sustain_max}");
 
                     // compute derived stats
                     var curWpnSus = ((dps_nodistdraw + (dps_distdraw !=0 ? (dps_distdraw * wepchg_sustain_cur) : 0)) / dps);

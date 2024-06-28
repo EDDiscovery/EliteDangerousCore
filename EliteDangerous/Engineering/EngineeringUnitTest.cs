@@ -12,13 +12,21 @@
  * governing permissions and limitations under the License.
  */
 
+// IF def it out - it adds over 300k to the DLL
+
+//#define INCLUDE_ENGINEERING
+
 using QuickJSON;
 using BaseUtils;
+using System;
 
 namespace EliteDangerousCore
 {
+    // done this way, instead of a unit test harness, because you'd have to include baseutils etc into the SLN (like ExtendedControls) and it just makes it harder.
+
     public static class EngineeringUnitTest
     {
+#if INCLUDE_ENGINEERING
         public static void UnitTest()
         {
             MaterialCommodityMicroResourceType.Initialise();     // lets statically fill the table way before anyone wants to access it
@@ -147,6 +155,62 @@ namespace EliteDangerousCore
                 Check(mod.ThermalResistance.Value.ApproxEqualsPercent(-3.89601));
                 Check(mod.ExplosiveResistance.Value.ApproxEqualsPercent(56.71));
                 Check(mod.AXResistance.Value.ApproxEqualsPercent(95));
+
+                Ship si = Ship.CreateFromLoadout(t);
+                DebuggerHelpers.BreakAssert(si != null, "Bad ship");
+
+                var stats = si.GetShipStats(4, 4, 4, 0, 8, 0);
+
+                Check(Math.Round(stats.CurrentSpeed.Value) == 361);
+                Check(Math.Round(stats.LadenSpeed) == 389);
+                Check(Math.Round(stats.UnladenSpeed) == 391);
+                Check(Math.Round(stats.MaxSpeed) == 393);
+                Check(Math.Round(stats.CurrentBoost) == 527);
+                Check(Math.Round(stats.LadenBoost) == 523);
+                Check(Math.Round(stats.UnladenBoost) == 527);
+                Check(Math.Round(stats.MaxBoost) == 529);
+                Check(stats.CurrentBoostFrequency.ApproxEqualsPercent(9.1867));
+                Check(stats.MaxBoostFrequency.ApproxEqualsPercent(4.2857));
+
+                Check(stats.ShieldsSystemPercentage.ApproxEqualsPercent(33.3));
+                Check(stats.ShieldsKineticPercentage.ApproxEqualsPercent(46.8));
+                Check(stats.ShieldsThermalPercentage.ApproxEqualsPercent(13.6312));
+                Check(stats.ShieldsExplosivePercentage.ApproxEqualsPercent(55.6277));
+                Check(stats.ShieldsSystemValue.ApproxEqualsPercent(1920.7));
+                Check(stats.ShieldsKineticValue.ApproxEqualsPercent(3607.2));
+                Check(stats.ShieldsThermalValue.ApproxEqualsPercent(2223.9));
+                Check(stats.ShieldsExplosiveValue.ApproxEqualsPercent(4328.7));
+                Check(stats.ShieldBuildTime.Value.ApproxEqualsPercent(3*60+26));
+                Check(stats.ShieldRegenTime.ApproxEqualsPercent(10 * 60 + 41));
+
+                Check(stats.ArmourRaw.Value.ApproxEqualsPercent(1031.625));
+                Check(stats.ArmourKineticPercentage.ApproxEqualsPercent(-14.312));
+                Check(stats.ArmourThermalPercentage.ApproxEqualsPercent(4.74));
+                Check(stats.ArmourExplosivePercentage.ApproxEqualsPercent(-33.363));
+                Check(stats.ArmourCausticPercentage.ApproxEqualsPercent(0));
+                Check(stats.ArmourKineticValue.ApproxEqualsPercent(902.464));
+                Check(stats.ArmourThermalValue.ApproxEqualsPercent(1082.95));
+                Check(stats.ArmourExplosiveValue.ApproxEqualsPercent(773.54));
+                Check(stats.ArmourCausticValue.ApproxEqualsPercent(1031.625));
+
+                Check(stats.FSDCurrentRange.Value.ApproxEqualsPercent(14.903));
+                Check(stats.FSDCurrentMaxRange.ApproxEqualsPercent(42.533));
+                Check(stats.FSDLadenRange.ApproxEqualsPercent(14.4587));
+                Check(stats.FSDUnladenRange.ApproxEqualsPercent(14.9034));
+                Check(stats.FSDMaxRange.ApproxEqualsPercent(15.048));
+                Check(stats.FSDMaxFuelPerJump.ApproxEqualsPercent(3));
+
+                Check(stats.WeaponRaw.Value.ApproxEqualsPercent(108.396));
+                Check(stats.WeaponAbsolutePercentage.ApproxEqualsPercent(0));
+                Check(stats.WeaponKineticPercentage.ApproxEqualsPercent(41.874));
+                Check(stats.WeaponThermalPercentage.ApproxEqualsPercent(37.624));
+                Check(stats.WeaponExplosivePercentage.ApproxEqualsPercent(20.5008));
+                Check(stats.WeaponAXPercentage.ApproxEqualsPercent(0));
+                Check(stats.WeaponDuration.ApproxEqualsPercent(5.172));
+                Check(stats.WeaponDurationMax.ApproxEqualsPercent(8.895));
+                Check(stats.WeaponAmmoDuration.ApproxEqualsPercent(3*60+35));
+                Check(stats.WeaponCurSus.ApproxEqualsPercent(28.559));
+                Check(stats.WeaponMaxSus.ApproxEqualsPercent(61.219));
 
             }
 
@@ -1670,6 +1734,8 @@ namespace EliteDangerousCore
             DebuggerHelpers.BreakAssert(good, () => { var module = lastship.Modules[lastslot]; return $"{lastslot} error : {module.Engineering.ToString()}"; });
         }
 
+#endif
     }
+
 
 }

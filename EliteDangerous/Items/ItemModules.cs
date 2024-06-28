@@ -390,7 +390,7 @@ namespace EliteDangerousCore
 
             public bool IsShieldGenerator { get { return ModType == ModuleTypes.PrismaticShieldGenerator || ModType == ModuleTypes.Bi_WeaveShieldGenerator || ModType == ModuleTypes.ShieldGenerator; } }
             public bool IsPowerDistributor { get { return ModType == ModuleTypes.PowerDistributor; } }
-            public bool IsHardpoint { get { return Damage.HasValue; } }
+            public bool IsHardpoint { get { return Damage.HasValue && ModuleID != 128049522; } }        // Damage, but not point defense
 
             // string should be in spansh/EDCD csv compatible format, in english, as it it fed into Spansh
             public string EnglishModTypeString { get { return ModType.ToString().Replace("AX", "AX ").Replace("_", "-").SplitCapsWordFull(); } }
@@ -3460,7 +3460,8 @@ namespace EliteDangerousCore
                  { "decal_trade_elite04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Trade Elite 4") },
             };
 
-            // this array maps a special effect fdname to the effect that it has - see also material commodities for fdname to materials used
+            // this array maps a special effect fdname to the effect that it has on module properties - see also material commodities for fdname to materials used
+            // automatically generated
 
             specialeffects = new Dictionary<string, ShipModule>
             {

@@ -331,7 +331,15 @@ namespace EliteDangerousCore
                         }
                         else
                         {
-                            System.Diagnostics.Trace.WriteLine($"*** Engineering setting a null value {modulefdname} {this.BlueprintName} {this.ExperimentalEffect} {pset}");
+                            if (pset == "PowerDraw" && mf.Value == 0)       // this occurs for engineering a detailed surface scanner, the power draw 0->0, but it may be more than just this module, so generic catch
+                            {
+                                if ( debugit )
+                                    System.Diagnostics.Debug.WriteLine($"*** Engineering setting a null value to zero {modulefdname} {this.BlueprintName} {this.ExperimentalEffect} {pset} ignoring it silently");
+                            }
+                            else
+                            {
+                                System.Diagnostics.Trace.WriteLine($"*** Engineering setting a null value {modulefdname} {this.BlueprintName} {this.ExperimentalEffect} {pset}");
+                            }
                         }
                     }
                 }
