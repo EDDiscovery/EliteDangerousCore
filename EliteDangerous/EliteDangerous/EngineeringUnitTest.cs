@@ -24,6 +24,162 @@ namespace EliteDangerousCore
             MaterialCommodityMicroResourceType.Initialise();     // lets statically fill the table way before anyone wants to access it
             ItemData.Initialise();
 
+            {
+                // robbies FDL
+                string t = @"{ ""timestamp"":""2024 - 06 - 28T09: 20:18.255Z"",""event"":""Loadout"",""Ship"":""FerDeLance"",""ShipID"":15,""ShipName"":""Intrepid"",""ShipIdent"":""RXP-2"",""HullValue"":51232230,""ModulesValue"":75512490,""HullHealth"":1.0,""UnladenMass"":512.199951,""CargoCapacity"":16,""FuelCapacity"":{ ""Main"":8.0,""Reserve"":0.67},""Rebuy"":4752930,""Modules"":[{""Slot"":""Armour"",""Item"":""ferdelance_Armour_grade3"",""On"":true,""Priority"":1,""Value"":39448786,""Engineering"":{""Engineer"":""Selene Jean"",""EngineerID"":300210,""BlueprintID"":128673644,""BlueprintName"":""Armour_HeavyDuty"",""Level"":5,""Quality"":0.74,""Modifiers"":[{""Label"":""Mass"",""Value"":49.399998,""OriginalValue"":38.0,""LessIsGood"":1},{""Label"":""DefenceModifierHealthMultiplier"",""Value"":358.5,""OriginalValue"":250.0,""LessIsGood"":0},{""Label"":""KineticResistance"",""Value"":-14.312005,""OriginalValue"":-20.000004,""LessIsGood"":0},{ ""Label"":""ThermicResistance"",""Value"":4.74,""OriginalValue"":0.0,""LessIsGood"":0},{ ""Label"":""ExplosiveResistance"",""Value"":-33.363998,""OriginalValue"":-39.999996,""LessIsGood"":0}]}},{ ""Slot"":""CargoHatch"",""Item"":""modularcargobaydoorfdl"",""On"":true,""Priority"":4},{ ""Slot"":""Decal1"",""Item"":""Decal_Combat_Dangerous"",""On"":true,""Priority"":1},{ ""Slot"":""Decal3"",""Item"":""Decal_Combat_Dangerous"",""On"":true,""Priority"":1},{ ""Slot"":""Decal2"",""Item"":""decal_explorer_elite"",""On"":true,""Priority"":1},{ ""Slot"":""FrameShiftDrive"",""Item"":""Int_hyperdrive_size4_class5"",""On"":true,""Priority"":0,""Value"":1610080,""Engineering"":{ ""Engineer"":""Professor Palin"",""EngineerID"":300220,""BlueprintID"":128673692,""BlueprintName"":""FSD_LongRange"",""Level"":3,""Quality"":0.888,""Modifiers"":[{ ""Label"":""Mass"",""Value"":12.0,""OriginalValue"":10.0,""LessIsGood"":1},{ ""Label"":""Integrity"",""Value"":91.0,""OriginalValue"":100.0,""LessIsGood"":0},{ ""Label"":""PowerDraw"",""Value"":0.4905,""OriginalValue"":0.45,""LessIsGood"":1},{ ""Label"":""FSDOptimalMass"",""Value"":702.869995,""OriginalValue"":525.0,""LessIsGood"":0}]} },{ ""Slot"":""FuelTank"",""Item"":""Int_fueltank_size3_class3"",""On"":true,""Priority"":1,""Value"":7063},{ ""Slot"":""HugeHardpoint1"",""Item"":""Hpt_multicannon_gimbal_huge"",""On"":true,""Priority"":0,""Value"":6377600,""Engineering"":{ ""Engineer"":""Tod 'The Blaster' McQuinn"",""EngineerID"":300260,""BlueprintID"":128673504,""BlueprintName"":""Weapon_Overcharged"",""Level"":5,""Quality"":0.362,""Modifiers"":[{ ""Label"":""DamagePerSecond"",""Value"":38.12291,""OriginalValue"":23.299664,""LessIsGood"":0},{ ""Label"":""Damage"",""Value"":5.661252,""OriginalValue"":3.46,""LessIsGood"":0},{ ""Label"":""DistributorDraw"",""Value"":0.4995,""OriginalValue"":0.37,""LessIsGood"":1},{ ""Label"":""ThermalLoad"",""Value"":0.5865,""OriginalValue"":0.51,""LessIsGood"":1},{ ""Label"":""AmmoClipSize"",""Value"":77.0,""OriginalValue"":90.0,""LessIsGood"":0}]} },{ ""Slot"":""LifeSupport"",""Item"":""Int_lifesupport_size4_class2"",""On"":true,""Priority"":0,""Value"":28373},{ ""Slot"":""MediumHardpoint1"",""Item"":""Hpt_beamlaser_gimbal_medium"",""On"":true,""Priority"":4,""Value"":500600,""Engineering"":{ ""Engineer"":""Broo Tarquin"",""EngineerID"":300030,""BlueprintID"":128739086,""BlueprintName"":""Weapon_Overcharged"",""Level"":5,""Quality"":0.291,""Modifiers"":[{ ""Label"":""DamagePerSecond"",""Value"":20.396334,""OriginalValue"":12.52,""LessIsGood"":0},{ ""Label"":""DistributorDraw"",""Value"":4.644,""OriginalValue"":3.44,""LessIsGood"":1},{ ""Label"":""ThermalLoad"",""Value"":6.118,""OriginalValue"":5.32,""LessIsGood"":1}]} },{ ""Slot"":""MediumHardpoint2"",""Item"":""Hpt_beamlaser_gimbal_medium"",""On"":true,""Priority"":0,""Value"":500600,""Engineering"":{ ""Engineer"":""Broo Tarquin"",""EngineerID"":300030,""BlueprintID"":128739086,""BlueprintName"":""Weapon_Overcharged"",""Level"":5,""Quality"":0.284,""Modifiers"":[{ ""Label"":""DamagePerSecond"",""Value"":20.387569,""OriginalValue"":12.52,""LessIsGood"":0},{ ""Label"":""DistributorDraw"",""Value"":4.644,""OriginalValue"":3.44,""LessIsGood"":1},{ ""Label"":""ThermalLoad"",""Value"":6.118,""OriginalValue"":5.32,""LessIsGood"":1}]} },{ ""Slot"":""Slot01_Size5"",""Item"":""Int_shieldgenerator_size5_class5"",""On"":true,""Priority"":0,""Value"":4338361,""Engineering"":{ ""Engineer"":""Lei Cheung"",""EngineerID"":300120,""BlueprintID"":128673838,""BlueprintName"":""ShieldGenerator_Reinforced"",""Level"":4,""Quality"":0.9617,""Modifiers"":[{ ""Label"":""ShieldGenStrength"",""Value"":158.124008,""OriginalValue"":120.000008,""LessIsGood"":0},{ ""Label"":""BrokenRegenRate"",""Value"":3.375,""OriginalValue"":3.75,""LessIsGood"":0},{ ""Label"":""EnergyPerRegen"",""Value"":0.66,""OriginalValue"":0.6,""LessIsGood"":1},{ ""Label"":""KineticResistance"",""Value"":48.051994,""OriginalValue"":39.999996,""LessIsGood"":0},{ ""Label"":""ThermicResistance"",""Value"":-3.89601,""OriginalValue"":-20.000004,""LessIsGood"":0},{ ""Label"":""ExplosiveResistance"",""Value"":56.709999,""OriginalValue"":50.0,""LessIsGood"":0}]} },{ ""Slot"":""Slot02_Size4"",""Item"":""Int_shieldcellbank_size4_class4"",""On"":true,""Priority"":3,""Value"":177331},{ ""Slot"":""PaintJob"",""Item"":""PaintJob_FerDeLance_BlackFriday_01"",""On"":true,""Priority"":1},{ ""Slot"":""PlanetaryApproachSuite"",""Item"":""Int_planetapproachsuite_advanced"",""On"":true,""Priority"":1},{ ""Slot"":""PowerDistributor"",""Item"":""Int_powerdistributor_size6_class5"",""On"":true,""Priority"":0,""Value"":3475688,""Engineering"":{ ""Engineer"":""The Dweller"",""EngineerID"":300180,""BlueprintID"":128673739,""BlueprintName"":""PowerDistributor_HighFrequency"",""Level"":5,""Quality"":0.2822,""Modifiers"":[{ ""Label"":""WeaponsCapacity"",""Value"":47.5,""OriginalValue"":50.0,""LessIsGood"":0},{ ""Label"":""WeaponsRecharge"",""Value"":7.20408,""OriginalValue"":5.2,""LessIsGood"":0},{ ""Label"":""EnginesCapacity"",""Value"":33.25,""OriginalValue"":35.0,""LessIsGood"":0},{ ""Label"":""EnginesRecharge"",""Value"":4.43328,""OriginalValue"":3.2,""LessIsGood"":0},{ ""Label"":""SystemsCapacity"",""Value"":33.25,""OriginalValue"":35.0,""LessIsGood"":0},{ ""Label"":""SystemsRecharge"",""Value"":4.43328,""OriginalValue"":3.2,""LessIsGood"":0}]} },{ ""Slot"":""PowerPlant"",""Item"":""Int_powerplant_size6_class5"",""On"":true,""Priority"":1,""Value"":13752602},{ ""Slot"":""Radar"",""Item"":""Int_sensors_size4_class2"",""On"":true,""Priority"":0,""Value"":28373,""Engineering"":{ ""Engineer"":""Lei Cheung"",""EngineerID"":300120,""BlueprintID"":128740136,""BlueprintName"":""Sensor_LongRange"",""Level"":5,""Quality"":0.3273,""Modifiers"":[{ ""Label"":""Mass"",""Value"":8.0,""OriginalValue"":4.0,""LessIsGood"":1},{ ""Label"":""SensorTargetScanAngle"",""Value"":21.0,""OriginalValue"":30.0,""LessIsGood"":0},{ ""Label"":""Range"",""Value"":8311.463867,""OriginalValue"":5040.0,""LessIsGood"":0}]} },{ ""Slot"":""ShipCockpit"",""Item"":""ferdelance_cockpit"",""On"":true,""Priority"":1},{ ""Slot"":""MainEngines"",""Item"":""Int_engine_size5_class5"",""On"":true,""Priority"":0,""Value"":4338361,""Engineering"":{ ""Engineer"":""Professor Palin"",""EngineerID"":300220,""BlueprintID"":128673659,""BlueprintName"":""Engine_Dirty"",""Level"":5,""Quality"":0.9757,""Modifiers"":[{ ""Label"":""Integrity"",""Value"":90.100006,""OriginalValue"":106.0,""LessIsGood"":0},{ ""Label"":""PowerDraw"",""Value"":6.8544,""OriginalValue"":6.12,""LessIsGood"":1},{ ""Label"":""EngineOptimalMass"",""Value"":735.0,""OriginalValue"":840.0,""LessIsGood"":0},{ ""Label"":""EngineOptPerformance"",""Value"":139.829987,""OriginalValue"":100.0,""LessIsGood"":0},{ ""Label"":""EngineHeatRate"",""Value"":2.08,""OriginalValue"":1.3,""LessIsGood"":1}]} },{ ""Slot"":""TinyHardpoint1"",""Item"":""Hpt_plasmapointdefence_turret_tiny"",""On"":true,""Priority"":0,""Value"":18546},{ ""Slot"":""TinyHardpoint2"",""Item"":""Hpt_shieldbooster_size0_class4"",""On"":true,""Priority"":0,""Value"":118950,""Engineering"":{ ""Engineer"":""Lei Cheung"",""EngineerID"":300120,""BlueprintID"":128673797,""BlueprintName"":""ShieldBooster_Thermic"",""Level"":3,""Quality"":0.974,""Modifiers"":[{ ""Label"":""KineticResistance"",""Value"":-2.499998,""OriginalValue"":0.0,""LessIsGood"":0},{ ""Label"":""ThermicResistance"",""Value"":16.869999,""OriginalValue"":0.0,""LessIsGood"":0},{ ""Label"":""ExplosiveResistance"",""Value"":-2.499998,""OriginalValue"":0.0,""LessIsGood"":0}]} },{ ""Slot"":""TinyHardpoint3"",""Item"":""Hpt_shieldbooster_size0_class5"",""On"":true,""Priority"":0,""Value"":281000,""Engineering"":{ ""Engineer"":""Lei Cheung"",""EngineerID"":300120,""BlueprintID"":128673782,""BlueprintName"":""ShieldBooster_HeavyDuty"",""Level"":3,""Quality"":0.8829,""Modifiers"":[{ ""Label"":""Mass"",""Value"":10.5,""OriginalValue"":3.5,""LessIsGood"":1},{ ""Label"":""Integrity"",""Value"":52.1712,""OriginalValue"":48.0,""LessIsGood"":0},{ ""Label"":""PowerDraw"",""Value"":1.38,""OriginalValue"":1.2,""LessIsGood"":1},{ ""Label"":""DefenceModifierShieldMultiplier"",""Value"":47.816002,""OriginalValue"":20.000004,""LessIsGood"":0}]} },{ ""Slot"":""TinyHardpoint4"",""Item"":""Hpt_shieldbooster_size0_class4"",""On"":true,""Priority"":0,""Value"":122000,""Engineering"":{ ""Engineer"":""Lei Cheung"",""EngineerID"":300120,""BlueprintID"":128673782,""BlueprintName"":""ShieldBooster_HeavyDuty"",""Level"":3,""Quality"":0.91,""Modifiers"":[{ ""Label"":""Mass"",""Value"":9.0,""OriginalValue"":3.0,""LessIsGood"":1},{ ""Label"":""Integrity"",""Value"":48.928501,""OriginalValue"":45.0,""LessIsGood"":0},{ ""Label"":""PowerDraw"",""Value"":1.15,""OriginalValue"":1.0,""LessIsGood"":1},{ ""Label"":""DefenceModifierShieldMultiplier"",""Value"":43.236794,""OriginalValue"":15.999996,""LessIsGood"":0}]} },{ ""Slot"":""TinyHardpoint5"",""Item"":""Hpt_plasmapointdefence_turret_tiny"",""On"":true,""Priority"":0,""Value"":18546},{ ""Slot"":""TinyHardpoint6"",""Item"":""Hpt_chafflauncher_tiny"",""On"":true,""Priority"":0,""Value"":8500},{ ""Slot"":""ShipName1"",""Item"":""Nameplate_Explorer01_White"",""On"":true,""Priority"":1},{ ""Slot"":""ShipName0"",""Item"":""Nameplate_Explorer01_White"",""On"":true,""Priority"":1},{ ""Slot"":""ShipID1"",""Item"":""nameplate_shipid_doubleline_white"",""On"":true,""Priority"":1},{ ""Slot"":""ShipID0"",""Item"":""nameplate_shipid_doubleline_white"",""On"":true,""Priority"":1},{ ""Slot"":""WeaponColour"",""Item"":""weaponcustomisation_red"",""On"":true,""Priority"":1},{ ""Slot"":""VesselVoice"",""Item"":""VoicePack_Verity"",""On"":true,""Priority"":1},{ ""Slot"":""Slot04_Size2"",""Item"":""Int_buggybay_size2_class1"",""On"":true,""Priority"":0,""Value"":17550},{ ""Slot"":""Slot06_Size1"",""Item"":""Int_dronecontrol_collection_size1_class5"",""On"":true,""Priority"":0,""Value"":9360},{ ""Slot"":""Slot03_Size4"",""Item"":""Int_cargorack_size4_class1"",""On"":true,""Priority"":1,""Value"":33470},{ ""Slot"":""Slot05_Size1"",""Item"":""Int_dronecontrol_collection_size1_class5"",""On"":true,""Priority"":0,""Value"":9360},{ ""Slot"":""MediumHardpoint3"",""Item"":""Hpt_multicannon_gimbal_medium"",""On"":true,""Priority"":0,""Value"":57000,""Engineering"":{ ""Engineer"":""Tod 'The Blaster' McQuinn"",""EngineerID"":300260,""BlueprintID"":128673504,""BlueprintName"":""Weapon_Overcharged"",""Level"":5,""Quality"":0.226,""Modifiers"":[{ ""Label"":""DamagePerSecond"",""Value"":20.469725,""OriginalValue"":12.615385,""LessIsGood"":0},{ ""Label"":""Damage"",""Value"":2.661064,""OriginalValue"":1.64,""LessIsGood"":0},{ ""Label"":""DistributorDraw"",""Value"":0.189,""OriginalValue"":0.14,""LessIsGood"":1},{ ""Label"":""ThermalLoad"",""Value"":0.23,""OriginalValue"":0.2,""LessIsGood"":1},{ ""Label"":""AmmoClipSize"",""Value"":77.0,""OriginalValue"":90.0,""LessIsGood"":0}]} },{ ""Slot"":""MediumHardpoint4"",""Item"":""Hpt_dumbfiremissilerack_fixed_medium"",""On"":true,""Priority"":0,""Value"":234390}]}";
+
+                var mod = GetModule(t, ShipSlots.Slot.HugeHardpoint1, true);
+                Check(mod.Mass.Value.ApproxEqualsPercent(16));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(80));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(1.22));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(0));
+                Check(mod.DPS.Value.ApproxEqualsPercent(38.12));
+                Check(mod.Damage.Value.ApproxEqualsPercent(5.661));
+                Check(mod.DistributorDraw.Value.ApproxEqualsPercent(0.4995));
+                Check(mod.ThermalLoad.Value.ApproxEqualsPercent(0.5865));
+                Check(mod.ArmourPiercing.Value.ApproxEqualsPercent(68));
+                Check(mod.Range.Value.ApproxEqualsPercent(4000));
+                Check(mod.Falloff.Value.ApproxEqualsPercent(2000));
+                Check(mod.Speed.Value.ApproxEqualsPercent(1600));
+                Check(mod.RateOfFire.Value.ApproxEqualsPercent(3.367));
+                Check(mod.BurstInterval.Value.ApproxEqualsPercent(0.297));
+                Check(mod.Clip == 77);
+                Check(mod.Ammo == 2100);
+                Check(mod.Rounds == 2);
+                Check(mod.ReloadTime.Value.ApproxEqualsPercent(5));
+                Check(mod.BreachDamage.Value.ApproxEqualsPercent(5.072));
+                Check(mod.BreachMin.Value.ApproxEqualsPercent(40));
+                Check(mod.BreachMax.Value.ApproxEqualsPercent(80));
+                Check(mod.Jitter.Value.ApproxEqualsPercent(0));
+                Check(mod.KineticProportionDamage.Value.ApproxEqualsPercent(100));
+                Check(mod.ThermalProportionDamage.Value.ApproxEqualsPercent(0));
+
+                mod = GetModule(t, ShipSlots.Slot.MediumHardpoint1);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(4));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(51));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(1));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(0));
+                Check(mod.DPS.Value.ApproxEqualsPercent(20.396));
+                Check(mod.Damage.Value.ApproxEqualsPercent(20.396));
+                Check(mod.DistributorDraw.Value.ApproxEqualsPercent(4.644));
+                Check(mod.ThermalLoad.Value.ApproxEqualsPercent(6.118));
+                Check(mod.ArmourPiercing.Value.ApproxEqualsPercent(35));
+                Check(mod.Range.Value.ApproxEqualsPercent(3000));
+                Check(mod.Falloff.Value.ApproxEqualsPercent(600));
+                Check(mod.BreachDamage.Value.ApproxEqualsPercent(16.291));
+                Check(mod.BreachMin.Value.ApproxEqualsPercent(40));
+                Check(mod.BreachMax.Value.ApproxEqualsPercent(80));
+                Check(mod.Jitter.Value.ApproxEqualsPercent(0));
+                Check(mod.ThermalProportionDamage.Value.ApproxEqualsPercent(100));
+
+                mod = GetModule(t, ShipSlots.Slot.MediumHardpoint3);
+                Check(mod.Mass.Value.ApproxEqualsPercent(4));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(51));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(0.64));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(0));
+                Check(mod.DPS.Value.ApproxEqualsPercent(20.47));
+                Check(mod.Damage.Value.ApproxEqualsPercent(2.661));
+                Check(mod.DistributorDraw.Value.ApproxEqualsPercent(0.189));
+                Check(mod.ThermalLoad.Value.ApproxEqualsPercent(0.23));
+                Check(mod.ArmourPiercing.Value.ApproxEqualsPercent(37));
+                Check(mod.Range.Value.ApproxEqualsPercent(4000));
+                Check(mod.Falloff.Value.ApproxEqualsPercent(2000));
+                Check(mod.Speed.Value.ApproxEqualsPercent(1600));
+                Check(mod.RateOfFire.Value.ApproxEqualsPercent(7.692));
+                Check(mod.BurstInterval.Value.ApproxEqualsPercent(0.13));
+                Check(mod.Clip.Value == 77);
+                Check(mod.Ammo.Value == 2100);
+                Check(mod.ReloadTime.Value.ApproxEqualsPercent(5));
+                Check(mod.BreachDamage.Value.ApproxEqualsPercent(2.4339));
+                Check(mod.BreachMin.Value.ApproxEqualsPercent(40));
+                Check(mod.BreachMax.Value.ApproxEqualsPercent(80));
+                Check(mod.Jitter.Value.ApproxEqualsPercent(0));
+                Check(mod.KineticProportionDamage.Value.ApproxEqualsPercent(100));
+                Check(mod.ThermalProportionDamage.Value.ApproxEqualsPercent(0));
+
+                mod = GetModule(t, ShipSlots.Slot.TinyHardpoint2);
+                Check(mod.Mass.Value.ApproxEqualsPercent(3));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(45));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(1));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(0));
+                Check(mod.ShieldReinforcement.Value.ApproxEqualsPercent(16));
+                Check(mod.KineticResistance.Value.ApproxEqualsPercent(-2.5));
+                Check(mod.ThermalResistance.Value.ApproxEqualsPercent(16.87));
+                Check(mod.KineticResistance.Value.ApproxEqualsPercent(-2.5));
+
+                mod = GetModule(t, ShipSlots.Slot.TinyHardpoint3);
+                Check(mod.Mass.Value.ApproxEqualsPercent(10.5));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(52.17));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(1.38));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(0));
+                Check(mod.ShieldReinforcement.Value.ApproxEqualsPercent(47.82));
+                Check(mod.KineticResistance.Value.ApproxEqualsPercent(0));
+                Check(mod.ThermalResistance.Value.ApproxEqualsPercent(0));
+                Check(mod.KineticResistance.Value.ApproxEqualsPercent(0));
+
+                mod = GetModule(t, ShipSlots.Slot.TinyHardpoint4);
+                Check(mod.Mass.Value.ApproxEqualsPercent(9));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(48.93));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(1.15));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(0));
+                Check(mod.ShieldReinforcement.Value.ApproxEqualsPercent(43.24));
+                Check(mod.KineticResistance.Value.ApproxEqualsPercent(0));
+                Check(mod.ThermalResistance.Value.ApproxEqualsPercent(0));
+                Check(mod.KineticResistance.Value.ApproxEqualsPercent(0));
+
+                mod = GetModule(t, ShipSlots.Slot.Slot01_Size5);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(20));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(115));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(3.64));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(1));
+                Check(mod.MinMass.Value.ApproxEqualsPercent(203));
+                Check(mod.OptMass.Value.ApproxEqualsPercent(405));
+                Check(mod.MaxMass.Value.ApproxEqualsPercent(1013));
+                Check(mod.MinStrength.Value.ApproxEqualsPercent(92.24));
+                Check(mod.OptStrength.Value.ApproxEqualsPercent(158.12));
+                Check(mod.MaxStrength.Value.ApproxEqualsPercent(224));
+                Check(mod.RegenRate.Value.ApproxEqualsPercent(1));
+                Check(mod.BrokenRegenRate.Value.ApproxEqualsPercent(3.375));
+                Check(mod.MWPerUnit.Value.ApproxEqualsPercent(0.66));
+                Check(mod.KineticResistance.Value.ApproxEqualsPercent(48.05));
+                Check(mod.ThermalResistance.Value.ApproxEqualsPercent(-3.89601));
+                Check(mod.ExplosiveResistance.Value.ApproxEqualsPercent(56.71));
+                Check(mod.AXResistance.Value.ApproxEqualsPercent(95));
+
+            }
+
+
+            {
+                // edsy mixed with ealhstans loadout description direct from game
+                string t = @"{ ""event"":""Loadout"",""Ship"":""krait_mkii"",""ShipName"":"""",""ShipIdent"":""ST-13K"",""HullValue"":38743029,""ModulesValue"":115884722,""UnladenMass"":559,""CargoCapacity"":0,""MaxJumpRange"":21.837943,""FuelCapacity"":{""Main"":32,""Reserve"":0.63},""Rebuy"":7731387,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""MediumHardpoint1"",""Item"":""Hpt_pulselaserburst_gimbal_medium"",""On"":true,""Priority"":0,""Value"":42559,""Engineering"":{""Engineer"":""The Dweller"",""EngineerID"":300180,""BlueprintID"":128673362,""BlueprintName"":""Weapon_Focused"",""Level"":3,""Quality"":0.3,""ExperimentalEffect"":""special_distortion_field"",""ExperimentalEffect_Localised"":""Inertial Impact"",""Modifiers"":[{""Label"":""ThermalLoad"",""Value"":0.6901,""OriginalValue"":0.67,""LessIsGood"":1},{""Label"":""ArmourPenetration"",""Value"":58.100002,""OriginalValue"":35.0,""LessIsGood"":0},{""Label"":""MaximumRange"",""Value"":4714.5,""OriginalValue"":3000.0,""LessIsGood"":0},{""Label"":""Jitter"",""Value"":3.0,""OriginalValue"":0.0,""LessIsGood"":1},{""Label"":""DamageType"",""ValueStr"":""$Kinetic;""},{""Label"":""DamageFalloffRange"",""Value"":785.750061,""OriginalValue"":500.0,""LessIsGood"":0}]}},{""Slot"":""Armour"",""Item"":""krait_mkii_armour_reactive"",""On"":true,""Priority"":1,""Value"":94756030},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size7_class2"",""On"":true,""Priority"":1,""Value"":1264679},{""Slot"":""MainEngines"",""Item"":""int_engine_size6_class5"",""On"":true,""Priority"":0,""Value"":14197538},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size5_class5"",""On"":true,""Priority"":0,""Value"":4478716},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size4_class2"",""On"":true,""Priority"":0,""Value"":24895},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size7_class2"",""On"":true,""Priority"":0,""Value"":546542},{""Slot"":""Radar"",""Item"":""int_sensors_size6_class3"",""On"":true,""Priority"":0,""Value"":487987},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size5_class3"",""On"":true,""Priority"":1,""Value"":85776}]}";
+                var mod = GetModule(t, ShipSlots.Slot.MediumHardpoint1, true);
+
+                Check(mod.Mass.Value.ApproxEqualsPercent(4));
+                Check(mod.Integrity.Value.ApproxEqualsPercent(40));
+                Check(mod.PowerDraw.Value.ApproxEqualsPercent(1.04));
+                Check(mod.BootTime.Value.ApproxEqualsPercent(0));
+                Check(mod.DPS.Value.ApproxEqualsPercent(15.445));
+                Check(mod.Damage.Value.ApproxEqualsPercent(3.675));
+                Check(mod.DistributorDraw.Value.ApproxEqualsPercent(0.49));
+                Check(mod.ThermalLoad.Value.ApproxEqualsPercent(0.6901));
+                Check(mod.ArmourPiercing.Value.ApproxEqualsPercent(58.1));
+                Check(mod.Range.Value.ApproxEqualsPercent(4715));
+                Check(mod.Falloff.Value.ApproxEqualsPercent(785.8));
+                Check(mod.RateOfFire.Value.ApproxEqualsPercent(4.203));
+                Check(mod.BurstInterval.Value.ApproxEqualsPercent(0.56));
+                Check(mod.BurstRateOfFire.Value.ApproxEqualsPercent(13));
+                Check(mod.BurstSize.Value.ApproxEqualsPercent(3));
+                Check(mod.BreachDamage.Value.ApproxEqualsPercent(3.15));
+                Check(mod.BreachMin.Value.ApproxEqualsPercent(40));
+                Check(mod.BreachMax.Value.ApproxEqualsPercent(80));
+                Check(mod.Jitter.Value.ApproxEqualsPercent(3));
+                Check(mod.KineticProportionDamage.Value.ApproxEqualsPercent(50));
+                Check(mod.ThermalProportionDamage.Value.ApproxEqualsPercent(50));
+
+
+            }
 
             {
 
@@ -293,52 +449,6 @@ namespace EliteDangerousCore
                 Check(mod.KineticProportionDamage.Value.ApproxEqualsPercent(50));
                 Check(mod.ThermalProportionDamage.Value.ApproxEqualsPercent(50));
             }
-
-            {
-                // from Ealhstan log directy, it fails. Missing Damage.
-                string t = @"{""timestamp"":""2024-06-27T10:22:51.919Z"",""event"":""Loadout"",""Ship"":""Krait_MkII"",""ShipID"":6,""ShipIdent"":""ST-13K"",""HullValue"":38743029,""ModulesValue"":124030355,""HullHealth"":1.0,""UnladenMass"":695.099976,""CargoCapacity"":64,""FuelCapacity"":{""Main"":32.0,""Reserve"":0.63},""Rebuy"":8138670,""Modules"":[{""Slot"":""Armour"",""Item"":""krait_mkii_Armour_reactive"",""On"":true,""Priority"":1,""Value"":94756032},{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""FrameShiftDrive"",""Item"":""Int_hyperdrive_size5_class5"",""On"":true,""Priority"":0,""Value"":4478720,""Engineering"":{""Engineer"":""Felicity Farseer"",""EngineerID"":300100,""BlueprintID"":128673691,""BlueprintName"":""FSD_LongRange"",""Level"":2,""Quality"":0.841,""ExperimentalEffect"":""special_fsd_heavy"",""ExperimentalEffect_Localised"":""Mass Manager"",""Modifiers"":[{""Label"":""Mass"",""Value"":23.0,""OriginalValue"":20.0,""LessIsGood"":1},{""Label"":""Integrity"",""Value"":103.776001,""OriginalValue"":120.0,""LessIsGood"":0},{""Label"":""PowerDraw"",""Value"":0.636,""OriginalValue"":0.6,""LessIsGood"":1},{""Label"":""FSDOptimalMass"",""Value"":1347.637085,""OriginalValue"":1050.0,""LessIsGood"":0}]}},{""Slot"":""FuelTank"",""Item"":""Int_fueltank_size5_class3"",""On"":true,""Priority"":1,""Value"":85779},{""Slot"":""LargeHardpoint1"",""Item"":""Hpt_multicannon_gimbal_large"",""On"":true,""Priority"":0,""Value"":507579},{""Slot"":""LargeHardpoint2"",""Item"":""Hpt_multicannon_gimbal_large"",""On"":true,""Priority"":0,""Value"":507579},{""Slot"":""LargeHardpoint3"",""Item"":""Hpt_multicannon_gimbal_large"",""On"":true,""Priority"":0,""Value"":507579},{""Slot"":""LifeSupport"",""Item"":""Int_lifesupport_size4_class2"",""On"":true,""Priority"":0,""Value"":24898},{""Slot"":""MediumHardpoint1"",""Item"":""Hpt_pulselaserburst_gimbal_medium"",""On"":true,""Priority"":0,""Value"":42559,""Engineering"":{""Engineer"":""The Dweller"",""EngineerID"":300180,""BlueprintID"":128673362,""BlueprintName"":""Weapon_Focused"",""Level"":3,""Quality"":0.3,""ExperimentalEffect"":""special_distortion_field"",""ExperimentalEffect_Localised"":""Inertial Impact"",""Modifiers"":[{""Label"":""ThermalLoad"",""Value"":0.6901,""OriginalValue"":0.67,""LessIsGood"":1},{""Label"":""ArmourPenetration"",""Value"":58.100002,""OriginalValue"":35.0,""LessIsGood"":0},{""Label"":""MaximumRange"",""Value"":4714.5,""OriginalValue"":3000.0,""LessIsGood"":0},{""Label"":""Jitter"",""Value"":3.0,""OriginalValue"":0.0,""LessIsGood"":1},{""Label"":""DamageType"",""ValueStr"":""$Kinetic;""},{""Label"":""DamageFalloffRange"",""Value"":785.750061,""OriginalValue"":500.0,""LessIsGood"":0}]}},{""Slot"":""MediumHardpoint2"",""Item"":""Hpt_pulselaserburst_gimbal_medium"",""On"":true,""Priority"":0,""Value"":42559,""Engineering"":{""Engineer"":""The Dweller"",""EngineerID"":300180,""BlueprintID"":128673362,""BlueprintName"":""Weapon_Focused"",""Level"":3,""Quality"":0.2713,""ExperimentalEffect"":""special_distortion_field"",""ExperimentalEffect_Localised"":""Inertial Impact"",""Modifiers"":[{""Label"":""ThermalLoad"",""Value"":0.6901,""OriginalValue"":0.67,""LessIsGood"":1},{""Label"":""ArmourPenetration"",""Value"":58.323997,""OriginalValue"":35.0,""LessIsGood"":0},{""Label"":""MaximumRange"",""Value"":4690.200195,""OriginalValue"":3000.0,""LessIsGood"":0},{""Label"":""Jitter"",""Value"":3.0,""OriginalValue"":0.0,""LessIsGood"":1},{""Label"":""DamageType"",""ValueStr"":""$Kinetic;""},{""Label"":""DamageFalloffRange"",""Value"":781.700012,""OriginalValue"":500.0,""LessIsGood"":0}]}},{""Slot"":""Slot01_Size6"",""Item"":""Int_shieldgenerator_size6_class3_fast"",""On"":true,""Priority"":0,""Value"":2366258},{""Slot"":""Slot02_Size6"",""Item"":""Int_cargorack_size6_class1"",""On"":true,""Priority"":1,""Value"":318174},{""Slot"":""Slot03_Size5"",""Item"":""Int_hullreinforcement_size5_class2"",""On"":true,""Priority"":1,""Value"":394875},{""Slot"":""Slot04_Size5"",""Item"":""Int_fighterbay_size5_class1"",""On"":true,""Priority"":0,""Value"":505128},{""Slot"":""Slot05_Size4"",""Item"":""Int_hullreinforcement_size4_class2"",""On"":true,""Priority"":1,""Value"":171113},{""Slot"":""Slot06_Size3"",""Item"":""Int_fsdinterdictor_size3_class3"",""On"":true,""Priority"":0,""Value"":742997,""Engineering"":{""Engineer"":""Felicity Farseer"",""EngineerID"":300100,""BlueprintID"":128673675,""BlueprintName"":""FSDinterdictor_Expanded"",""Level"":1,""Quality"":1.0,""Modifiers"":[{""Label"":""PowerDraw"",""Value"":0.374,""OriginalValue"":0.34,""LessIsGood"":1},{""Label"":""FSDInterdictorRange"",""Value"":9.9,""OriginalValue"":11.0,""LessIsGood"":0},{""Label"":""FSDInterdictorFacingLimit"",""Value"":70.0,""OriginalValue"":50.0,""LessIsGood"":0}]}},{""Slot"":""Slot07_Size3"",""Item"":""Int_guardianfsdbooster_size3"",""On"":true,""Priority"":0,""Value"":1421928},{""Slot"":""Slot08_Size2"",""Item"":""Int_modulereinforcement_size2_class2"",""On"":true,""Priority"":1,""Value"":31590},{""Slot"":""Slot09_Size1"",""Item"":""Int_dockingcomputer_advanced"",""On"":true,""Priority"":0,""Value"":11854},{""Slot"":""PaintJob"",""Item"":""paintjob_krait_mkii_specialeffectchristmas_01"",""On"":true,""Priority"":1},{""Slot"":""PlanetaryApproachSuite"",""Item"":""Int_planetapproachsuite_advanced"",""On"":true,""Priority"":1},{""Slot"":""PowerDistributor"",""Item"":""Int_powerdistributor_size7_class2"",""On"":true,""Priority"":0,""Value"":546546,""Engineering"":{""Engineer"":""The Dweller"",""EngineerID"":300180,""BlueprintID"":128673731,""BlueprintName"":""PowerDistributor_HighCapacity"",""Level"":2,""Quality"":0.5863,""Modifiers"":[{""Label"":""Integrity"",""Value"":118.786499,""OriginalValue"":105.0,""LessIsGood"":0},{""Label"":""WeaponsCapacity"",""Value"":52.757397,""OriginalValue"":46.0,""LessIsGood"":0},{""Label"":""WeaponsRecharge"",""Value"":4.324,""OriginalValue"":4.6,""LessIsGood"":0},{""Label"":""EnginesCapacity"",""Value"":35.553898,""OriginalValue"":31.0,""LessIsGood"":0},{""Label"":""EnginesRecharge"",""Value"":2.82,""OriginalValue"":3.0,""LessIsGood"":0},{""Label"":""SystemsCapacity"",""Value"":35.553898,""OriginalValue"":31.0,""LessIsGood"":0},{""Label"":""SystemsRecharge"",""Value"":2.82,""OriginalValue"":3.0,""LessIsGood"":0}]}},{""Slot"":""PowerPlant"",""Item"":""Int_powerplant_size7_class2"",""On"":true,""Priority"":1,""Value"":1264683,""Engineering"":{""Engineer"":""Felicity Farseer"",""EngineerID"":300100,""BlueprintID"":128673765,""BlueprintName"":""PowerPlant_Boosted"",""Level"":1,""Quality"":1.0,""Modifiers"":[{""Label"":""Integrity"",""Value"":99.75,""OriginalValue"":105.0,""LessIsGood"":0},{""Label"":""PowerCapacity"",""Value"":25.200001,""OriginalValue"":22.5,""LessIsGood"":0},{""Label"":""HeatEfficiency"",""Value"":0.7875,""OriginalValue"":0.75,""LessIsGood"":1}]}},{""Slot"":""Radar"",""Item"":""Int_sensors_size6_class3"",""On"":true,""Priority"":0,""Value"":487987,""Engineering"":{""Engineer"":""Felicity Farseer"",""EngineerID"":300100,""BlueprintID"":128740132,""BlueprintName"":""Sensor_LongRange"",""Level"":1,""Quality"":0.9727,""Modifiers"":[{""Label"":""Mass"",""Value"":48.0,""OriginalValue"":40.0,""LessIsGood"":1},{""Label"":""SensorTargetScanAngle"",""Value"":27.0,""OriginalValue"":30.0,""LessIsGood"":0},{""Label"":""Range"",""Value"":6875.399902,""OriginalValue"":6000.0,""LessIsGood"":0}]}},{""Slot"":""ShipCockpit"",""Item"":""krait_mkii_cockpit"",""On"":true,""Priority"":1},{""Slot"":""MainEngines"",""Item"":""Int_engine_size6_class5"",""On"":true,""Priority"":0,""Value"":14197539,""Engineering"":{""Engineer"":""Felicity Farseer"",""EngineerID"":300100,""BlueprintID"":128673667,""BlueprintName"":""Engine_Tuned"",""Level"":3,""Quality"":0.942,""ExperimentalEffect"":""special_engine_lightweight"",""ExperimentalEffect_Localised"":""Stripped Down"",""Modifiers"":[{""Label"":""Mass"",""Value"":36.0,""OriginalValue"":40.0,""LessIsGood"":1},{""Label"":""Integrity"",""Value"":114.080002,""OriginalValue"":124.0,""LessIsGood"":0},{""Label"":""PowerDraw"",""Value"":8.164801,""OriginalValue"":7.56,""LessIsGood"":1},{""Label"":""EngineOptimalMass"",""Value"":1353.599976,""OriginalValue"":1440.0,""LessIsGood"":0},{""Label"":""EngineOptPerformance"",""Value"":117.910004,""OriginalValue"":100.0,""LessIsGood"":0},{""Label"":""EngineHeatRate"",""Value"":0.78754,""OriginalValue"":1.3,""LessIsGood"":1}]}},{""Slot"":""TinyHardpoint1"",""Item"":""Hpt_shieldbooster_size0_class5"",""On"":true,""Priority"":0,""Value"":246578,""Engineering"":{""Engineer"":""Felicity Farseer"",""EngineerID"":300100,""BlueprintID"":128673795,""BlueprintName"":""ShieldBooster_Thermic"",""Level"":1,""Quality"":1.0,""Modifiers"":[{""Label"":""KineticResistance"",""Value"":-0.999999,""OriginalValue"":0.0,""LessIsGood"":0},{""Label"":""ThermicResistance"",""Value"":6.999999,""OriginalValue"":0.0,""LessIsGood"":0},{""Label"":""ExplosiveResistance"",""Value"":-0.999999,""OriginalValue"":0.0,""LessIsGood"":0}]}},{""Slot"":""TinyHardpoint2"",""Item"":""Hpt_shieldbooster_size0_class5"",""On"":true,""Priority"":0,""Value"":246578,""Engineering"":{""Engineer"":""Felicity Farseer"",""EngineerID"":300100,""BlueprintID"":128673795,""BlueprintName"":""ShieldBooster_Thermic"",""Level"":1,""Quality"":1.0,""Modifiers"":[{""Label"":""KineticResistance"",""Value"":-0.999999,""OriginalValue"":0.0,""LessIsGood"":0},{""Label"":""ThermicResistance"",""Value"":6.999999,""OriginalValue"":0.0,""LessIsGood"":0},{""Label"":""ExplosiveResistance"",""Value"":-0.999999,""OriginalValue"":0.0,""LessIsGood"":0}]}},{""Slot"":""TinyHardpoint3"",""Item"":""Hpt_plasmapointdefence_turret_tiny"",""On"":true,""Priority"":0,""Value"":16275},{""Slot"":""TinyHardpoint4"",""Item"":""Hpt_crimescanner_size0_class3"",""On"":true,""Priority"":0,""Value"":106968},{""Slot"":""VesselVoice"",""Item"":""voicepack_verity"",""On"":true,""Priority"":1}]}";
-
-//from ealhstan->edsy import
-//TEST Module Hpt_pulselaserburst_gimbal_medium in MediumHardpoint2 Engineer: The Dweller
-//Blueprint: Focused Weapon
-//Level: 3
-//Quality: 0
-//Experimental Effect: Inertial Impact
-//   Damage: 50
-//   Jitter: 3
-//   KineticProportionDamage: 50
-//   ThermalProportionDamage: 50
-//Thermal Load: 0.69, Original: 0.67, Mult: 3.0 % (Worse)
-//Armour Penetration: 58.324, Original: 35, Mult: 66.6 % (Better)
-//Maximum Range: 4690.2, Original: 3000, Mult: 56.3 % (Better)
-//Jitter: 3, Original: 0, Mult: ∞% (Worse)
-//DamageType:$Kinetic;
-//Damage Falloff Range: 781.7, Original: 500, Mult: 56.3 % (Better)
-
-                var mod = GetModule(t, ShipSlots.Slot.MediumHardpoint2, true);
-            //    Check(mod.Mass.Value.ApproxEqualsPercent(4));
-            //    Check(mod.Integrity.Value.ApproxEqualsPercent(40));
-            //    Check(mod.PowerDraw.Value.ApproxEqualsPercent(1.04));
-            //    Check(mod.BootTime.Value.ApproxEqualsPercent(0));
-            //    Check(mod.DPS.Value.ApproxEqualsPercent(15.445));
-            //    Check(mod.Damage.Value.ApproxEqualsPercent(3.675));
-            //    Check(mod.DistributorDraw.Value.ApproxEqualsPercent(0.49));
-            //    Check(mod.ThermalLoad.Value.ApproxEqualsPercent(0.7035));
-            //    Check(mod.ArmourPiercing.Value.ApproxEqualsPercent(77));
-            //    Check(mod.Range.Value.ApproxEqualsPercent(6000));
-            //    Check(mod.Falloff.Value.ApproxEqualsPercent(1000));
-            //    Check(mod.RateOfFire.Value.ApproxEqualsPercent(4.203));
-            //    Check(mod.BurstInterval.Value.ApproxEqualsPercent(0.56));
-            //    Check(mod.BurstRateOfFire.Value.ApproxEqualsPercent(13));
-            //    Check(mod.BurstSize.Value.ApproxEqualsPercent(3));
-            //    Check(mod.BreachDamage.Value.ApproxEqualsPercent(3.15));
-            //    Check(mod.BreachMin.Value.ApproxEqualsPercent(40));
-            //    Check(mod.BreachMax.Value.ApproxEqualsPercent(60));
-            //    Check(mod.Jitter.Value.ApproxEqualsPercent(3));
-            //    Check(mod.KineticProportionDamage.Value.ApproxEqualsPercent(50));
-            //    Check(mod.ThermalProportionDamage.Value.ApproxEqualsPercent(50));
-            }
-
 
             {
                 // burst laser focused  Level 3

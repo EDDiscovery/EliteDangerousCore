@@ -349,8 +349,8 @@ namespace EliteDangerousCore
                 {
                     foreach (var kvp in ItemData.ShipModule.GetPropertiesInOrder())     // all properties in the class
                     {
-                        dynamic value = kvp.Key.GetValue(se);
-                        if (value != null)
+                        dynamic modificationvalue = kvp.Key.GetValue(se);
+                        if (modificationvalue != null)
                         {
                             if (!primarymodifiers.Contains(kvp.Key.Name))        // if not null, and we have not set it above..
                             {
@@ -359,12 +359,26 @@ namespace EliteDangerousCore
                                 if (!specialeffectmodcontrol.TryGetValue(kvp.Key.Name, out double controlmod))
                                     controlmod = 100;
 
-                                dynamic nextvalue = controlmod == 0 ? value : controlmod == 1 ? curvalue + value : curvalue * (1 + value / controlmod);
+                                dynamic nextvalue = controlmod == 0 ? modificationvalue : controlmod == 1 ? curvalue + modificationvalue : curvalue * (1 + modificationvalue / controlmod);
 
                                 kvp.Key.SetValue(engineered, nextvalue);
 
                                 if (debugit)
-                                    System.Diagnostics.Debug.WriteLine($"SpecialEffect on {engineered.EnglishModName} SE {ExperimentalEffect} Property {kvp.Key.Name} adjust by {value}: {curvalue} -> {nextvalue}");
+                                    System.Diagnostics.Debug.WriteLine($"SpecialEffect on {engineered.EnglishModName} SE {ExperimentalEffect} Property {kvp.Key.Name} adjust by {modificationvalue}: {curvalue} -> {nextvalue}");
+
+                                if (kvp.Key.Name == "Damage")
+                                {
+                                    if (!primarymodifiers.Contains("DPS"))
+                                    {
+                                        curvalue = original.DPS;
+                                        nextvalue = controlmod == 0 ? modificationvalue : controlmod == 1 ? curvalue + modificationvalue : curvalue * (1 + modificationvalue / controlmod);
+                                        engineered.DPS = nextvalue;
+
+                                        curvalue = original.BreachDamage;
+                                        nextvalue = controlmod == 0 ? modificationvalue : controlmod == 1 ? curvalue + modificationvalue : curvalue * (1 + modificationvalue / controlmod);
+                                        engineered.BreachDamage = nextvalue;
+                                    }
+                                }
                             }
                             else
                             {
