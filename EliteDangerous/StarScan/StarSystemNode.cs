@@ -31,6 +31,7 @@ namespace EliteDangerousCore
             public SortedList<int, ScanNode> NodesByID { get; private set; } = new SortedList<int, ScanNode>();               // by ID list
             public SortedList<int, JournalScanBaryCentre> Barycentres { get; private set; } = new SortedList<int, JournalScanBaryCentre>();
             public int? FSSTotalBodies { get; set; }         // if we have FSSDiscoveryScan, this will be set
+            public int? FSSTotalNonBodies { get; set; }     // if we have FSSDiscoveryScan, this will be set
             public List<JournalFSSSignalDiscovered> FSSSignalList { get; private set; } = new List<JournalFSSSignalDiscovered>();       // List of FSS Signals journal entries on this node, by add order
             public List<JournalCodexEntry> CodexEntryList { get; private set; } = new List<JournalCodexEntry>();
 
@@ -100,6 +101,10 @@ namespace EliteDangerousCore
             public int StarsScanned()      // only stars
             {
                 return Bodies.Where(b => b.NodeType == ScanNodeType.star && b.ScanData != null).Count();
+            }
+            public int BeltClusters() // number of belt clusters
+            {
+                return Bodies.Where(b => b.NodeType == ScanNodeType.beltcluster && b.ScanData != null).Count();
             }
 
             // finds full name "Oochorrs KP-A c16-0 2 a"
