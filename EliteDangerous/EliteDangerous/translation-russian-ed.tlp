@@ -901,7 +901,7 @@ SECTION EngineeringData
 .Level: "Level:" => "Уровень: "
 .Quality: "Quality:" => "Качество: "
 .ExperimentalEffect: "Experimental Effect:" => "Экспериментальный эффект: "
-.Original: "Original: ;;N2" => "исходн.: ;;N2"
+.Original: "Original: ;;0.###" => "исходн.: ;;0.###"
 .Worse: "< (Worse); (Better)" => "< (хуже); (лучше)"
 
 SECTION MissionState

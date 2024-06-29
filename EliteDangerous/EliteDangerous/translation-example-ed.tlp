@@ -901,7 +901,7 @@ SECTION EngineeringData
 .Level: "Level:" @
 .Quality: "Quality:" @
 .ExperimentalEffect: "Experimental Effect:" @
-.Original: "Original: ;;N2" @
+.Original: "Original: ;;0.###" @
 .Worse: "< (Worse); (Better)" @
 
 SECTION MissionState

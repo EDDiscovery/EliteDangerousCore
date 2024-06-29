@@ -99,12 +99,14 @@ namespace EliteDangerousCore
         public bool InTransit { get { return TransferArrivalTimeUTC.CompareTo(DateTime.UtcNow)>0; } }
 
 
-        public string ShipFullInfo(bool cargo = true, bool fuel = true)
+        public string ShipFullInfo(bool cargo = true, bool fuel = true, bool manu = false)
         {
             StringBuilder sb = new StringBuilder(64);
             if (ShipUserIdent != null)
                 sb.Append(ShipUserIdent);
             sb.AppendPrePad(ShipUserName);
+            if (manu && GetShipProperties()?.Manufacturer != null)
+                sb.AppendPrePad(GetShipProperties().Manufacturer, ", ");
             sb.AppendPrePad(ShipType);
             sb.AppendPrePad("(" + ID.ToString() + ")");
 
@@ -334,6 +336,7 @@ namespace EliteDangerousCore
             public double FSDMaxRange { get; set; }
             public double FSDMaxFuelPerJump { get; set; }
 
+            public bool ValidWeaponData { get { return WeaponRaw.HasValue && !double.IsNaN(WeaponAbsolutePercentage); } }
             public double? WeaponRaw { get; set; }              // if null, no pd
             public double WeaponAbsolutePercentage { get; set; }  
             public double WeaponThermalPercentage { get; set; }
