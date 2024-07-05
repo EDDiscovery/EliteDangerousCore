@@ -1101,12 +1101,12 @@ namespace EliteDangerousCore
 
                 { "int_cargorack_size2_class1_free", new ShipModule(128666643, ShipModule.ModuleTypes.CargoRack, "Cargo Rack Class 2 Rating E") { Size = 4 } },
 
-                { "int_corrosionproofcargorack_size1_class1", new ShipModule(128681641,ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Anti Corrosion Cargo Rack Class 1 Rating E"){ Cost = 6250, Class = 1, Rating = "E", Size = 1 } },
-                { "int_corrosionproofcargorack_size1_class2", new ShipModule(128681992,ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Anti Corrosion Cargo Rack Class 1 Rating F"){ Cost = 12560, Class = 1, Rating = "F", Size = 2 } },
+                { "int_corrosionproofcargorack_size1_class1", new ShipModule(128681641,ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Corrosion Resistant Cargo Rack Class 1 Rating E"){ Cost = 6250, Class = 1, Rating = "E", Size = 1 } },
+                { "int_corrosionproofcargorack_size1_class2", new ShipModule(128681992,ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Corrosion Resistant Cargo Rack Class 1 Rating F"){ Cost = 12560, Class = 1, Rating = "F", Size = 2 } },
 
-                { "int_corrosionproofcargorack_size4_class1", new ShipModule(128833944,ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Anti Corrosion Cargo Rack Class 4 Rating E"){ Cost = 94330, Class = 4, Rating = "E", Size = 16 } },
-                { "int_corrosionproofcargorack_size5_class1", new ShipModule(128957069,ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Anti Corrosion Cargo Rack Class 5 Rating E"){ Cost = -999, Class = 5, Rating = "E", Size = 32 } },
-                { "int_corrosionproofcargorack_size6_class1", new ShipModule(999999906, ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Anti Corrosion Cargo Rack Class 6 Rating E") { Size = 64 } },
+                { "int_corrosionproofcargorack_size4_class1", new ShipModule(128833944,ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Corrosion Resistant Cargo Rack Class 4 Rating E"){ Cost = 94330, Class = 4, Rating = "E", Size = 16 } },
+                { "int_corrosionproofcargorack_size5_class1", new ShipModule(128957069,ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Corrosion Resistant Cargo Rack Class 5 Rating E"){ Cost = -999, Class = 5, Rating = "E", Size = 32 } },
+                { "int_corrosionproofcargorack_size6_class1", new ShipModule(999999906, ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Corrosion Resistant Cargo Rack Class 6 Rating E") { Size = 64 } },
 
                 // Manifest Scanner
 
