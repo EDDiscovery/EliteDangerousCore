@@ -1440,6 +1440,9 @@ SECTION ModulePartNames
 .Xeno_Scanner: "Xeno Scanner" = ModuleTypeNames.Xeno_Scanner
 .Enhanced_Xeno_Scanner: "Enhanced Xeno Scanner" @
 .Pulse_Wave_Xeno_Scanner: "Pulse Wave Xeno Scanner" @
+.Detailed_Surface_Scanner: "Detailed Surface Scanner" @
+.Meta_Alloy_Hull_Reinforcement_Package: "Meta Alloy Hull Reinforcement Package" @
+.Module_Reinforcement_Package: "Module Reinforcement Package" @
 
 SECTION ShipSlots
 
