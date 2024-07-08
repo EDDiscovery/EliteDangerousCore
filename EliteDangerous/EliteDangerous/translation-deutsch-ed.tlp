@@ -1214,7 +1214,7 @@ SECTION ModuleTypeNames
 .Electronic_Countermeasure: "Electronic Countermeasure" => "Elektronische Gegenmaßnmahmen"
 .Enforcer_Cannon: "Enforcer Cannon" => "Vollstreckerkanone"
 .Enhanced_AX_Missile_Rack: "Enhanced AX Missile Rack" => "Verbesserte AX-Raketenrampe"
-.Enhanced_AX_Multi_Cannon: "Enhanced AX Multi Cannon" => "Verbesserte AX-Mehrfachgeschütz"
+.Enhanced_AX_Multi_Cannon: "Enhanced AX Multi Cannon" => "Verbessertes AX-Mehrfachgeschütz"
 .Enhanced_Performance_Thrusters: "Enhanced Performance Thrusters" => "Verbesserte Performance-Schubdüsen"
 .Enhanced_Xeno_Scanner: "Enhanced Xeno Scanner" => "Verbesserter Xenoscanner"
 .Enzyme_Missile_Rack: "Enzyme Missile Rack" => "Enzymraketenrampe"
@@ -1222,7 +1222,7 @@ SECTION ModuleTypeNames
 .Fighter_Hangar: "Fighter Hangar" => "Fighter-Bucht"
 .First_Class_Passenger_Cabin: "First Class Passenger Cabin" => "Erste-Klasse-Passagierkabine"
 .Fragment_Cannon: "Fragment Cannon" => "Splitterkanone"
-.Frame_Shift_Drive: "Frame Shift Drive" => "Frameshiftantrieb"
+.Frame_Shift_Drive: "Frame Shift Drive" => "Frameshift-Antrieb"
 .Frame_Shift_Drive_Interdictor: "Frame Shift Drive Interdictor" => "FSA-Unterbrecher"
 .Frame_Shift_Wake_Scanner: "Frame Shift Wake Scanner" => "FS-Sogwolkenscanner"
 .Fuel_Scoop: "Fuel Scoop" => "Treibstoffsammler"
@@ -1237,7 +1237,7 @@ SECTION ModuleTypeNames
 .Guardian_Plasma_Charger: "Guardian Plasma Charger" => "Guardian-Plasmawerfer"
 .Guardian_Shard_Cannon: "Guardian Shard Cannon" => "Guardian-Fragmentkanone"
 .Guardian_Shield_Reinforcement: "Guardian Shield Reinforcement" => "Guardian-Schildverstärkung"
-.Hatch_Breaker_Limpet_Controller: "Hatch Breaker Limpet Controller" => "Steuerung Ladelukenöffnerdrohne"
+.Hatch_Breaker_Limpet_Controller: "Hatch Breaker Limpet Controller" => "Steuerung Ladelukenöffner-Drohne"
 .Heat_Sink_Launcher: "Heat Sink Launcher" => "Kühlkörperwerfer"
 .Hull_Reinforcement_Package: "Hull Reinforcement Package" => "Rumpfhüllenverstärkung"
 .Imperial_Hammer_Rail_Gun: "Imperial Hammer Rail Gun" => "Imperiale Hammer-Schienenkanone"
@@ -1257,9 +1257,9 @@ SECTION ModuleTypeNames
 .Multi_Cannon: "Multi Cannon" => "Mehrfachgeschütz"
 .Operations_Multi_Limpet_Controller: "Operations Multi Limpet Controller" => "Operationen-Drohnensteuerung"
 .Pacifier_Frag_Cannon: "Pacifier Frag Cannon" => "Friedensstifter-Splitterkanone"
-.Pack_Hound_Missile_Rack: "Pack Hound Missile Rack" => "Schwarmwerfer"
+.Pack_Hound_Missile_Rack: "Pack Hound Missile Rack" => "Schwarmwerfer-Raketenrampe"
 .Planetary_Approach_Suite: "Planetary Approach Suite" => "Planetenanflug-Suite"
-.Planetary_Vehicle_Hangar: "Planetary Vehicle Hangar" => "Planetenmfahrzeug-Hangar"
+.Planetary_Vehicle_Hangar: "Planetary Vehicle Hangar" => "Planetenfahrzeug-Hangar"
 .Plasma_Accelerator: "Plasma Accelerator" => "Plasmabeschleuniger"
 .Point_Defence: "Point Defence" => "Punktverteidigungsgeschütz"
 .Power_Distributor: "Power Distributor" => "Energieverteiler"
@@ -1324,125 +1324,125 @@ SECTION ModulePartNames
 .Tiny: "Tiny" => "Winzig"
 .Standard: "Standard" = MaterialCommodityMicroResourceType.Standard
 .Advanced: "Advanced" => "Optimiert"
-.Lightweight_Alloy: "Lightweight Alloy" @
-.Reinforced_Alloy: "Reinforced Alloy" @
-.Military_Grade_Composite: "Military Grade Composite" @
-.Mirrored_Surface_Composite: "Mirrored Surface Composite" @
-.Reactive_Surface_Composite: "Reactive Surface Composite" @
-.Auto_Field_Maintenance_Unit: "Auto Field Maintenance Unit" @
+.Lightweight_Alloy: "Lightweight Alloy" = ModuleTypeNames.Lightweight_Alloy
+.Reinforced_Alloy: "Reinforced Alloy" = ModuleTypeNames.Reinforced_Alloy
+.Military_Grade_Composite: "Military Grade Composite" = ModuleTypeNames.Military_Grade_Composite
+.Mirrored_Surface_Composite: "Mirrored Surface Composite" = ModuleTypeNames.Mirrored_Surface_Composite
+.Reactive_Surface_Composite: "Reactive Surface Composite" = ModuleTypeNames.Reactive_Surface_Composite
+.Auto_Field_Maintenance_Unit: "Auto Field Maintenance Unit" = ModuleTypeNames.Auto_Field_Maintenance_Unit
 .Beam_Laser: "Beam Laser" = ModuleTypeNames.Beam_Laser
-.Retributor_Beam_Laser: "Retributor Beam Laser" @
+.Retributor_Beam_Laser: "Retributor Beam Laser" = ModuleTypeNames.Retributor_Beam_Laser
 .Burst_Laser: "Burst Laser" = ModuleTypeNames.Burst_Laser
-.Cytoscrambler_Burst_Laser: "Cytoscrambler Burst Laser" @
+.Cytoscrambler_Burst_Laser: "Cytoscrambler Burst Laser" = ModuleTypeNames.Cytoscrambler_Burst_Laser
 .Cannon: "Cannon" = ModuleTypeNames.Cannon
 .Fragment_Cannon: "Fragment Cannon" = ModuleTypeNames.Fragment_Cannon
-.Pacifier_Fragment_Cannon: "Pacifier Fragment Cannon" @
+.Pacifier_Fragment_Cannon: "Pacifier Fragment Cannon" = ModuleTypeNames.Pacifier_Frag_Cannon
 .Cargo_Rack: "Cargo Rack" = ModuleTypeNames.Cargo_Rack
-.Anti_Corrosion_Cargo_Rack: "Anti Corrosion Cargo Rack" @
-.Manifest_Scanner: "Manifest Scanner" @
+.Anti_Corrosion_Cargo_Rack: "Anti Corrosion Cargo Rack" = ModuleTypeNames.Corrosion_Resistant_Cargo_Rack
+.Manifest_Scanner: "Manifest Scanner" = ModuleTypeNames.Cargo_Scanner
 .Chaff_Launcher: "Chaff Launcher" = ModuleTypeNames.Chaff_Launcher
-.Electronic_Countermeasure: "Electronic Countermeasure" => "Elektronische Gegenmaßnahmen"
+.Electronic_Countermeasure: "Electronic Countermeasure" = ModuleTypeNames.Electronic_Countermeasure
 .Heat_Sink_Launcher: "Heat Sink Launcher" = ModuleTypeNames.Heat_Sink_Launcher
-.Caustic_Sink_Launcher: "Caustic Sink Launcher" @
-.Point_Defence: "Point Defence" @
-.Kill_Warrant_Scanner: "Kill Warrant Scanner" @
-.Standard_Docking_Computer: "Standard Docking Computer" @
-.Advanced_Docking_Computer: "Advanced Docking Computer" @
-.Fighter_Hangar: "Fighter Hangar" => "Fighter-Hangar"
-.Remote_Release_Flak_Launcher: "Remote Release Flak Launcher" @
-.Remote_Release_Flechette_Launcher: "Remote Release Flechette Launcher" @
-.Frame_Shift_Drive_Interdictor: "Frame Shift Drive Interdictor" @
+.Caustic_Sink_Launcher: "Caustic Sink Launcher" = ModuleTypeNames.Caustic_Sink_Launcher
+.Point_Defence: "Point Defence" = ModuleTypeNames.Point_Defence
+.Kill_Warrant_Scanner: "Kill Warrant Scanner" = ModuleTypeNames.Kill_Warrant_Scanner
+.Standard_Docking_Computer: "Standard Docking Computer" = ModuleTypeNames.Standard_Docking_Computer
+.Advanced_Docking_Computer: "Advanced Docking Computer" = ModuleTypeNames.Advanced_Docking_Computer
+.Fighter_Hangar: "Fighter Hangar" = ModuleTypeNames.Fighter_Hangar
+.Remote_Release_Flak_Launcher: "Remote Release Flak Launcher" = ModuleTypeNames.Remote_Release_Flak_Launcher
+.Remote_Release_Flechette_Launcher: "Remote Release Flechette Launcher" = ModuleTypeNames.Remote_Release_Flechette_Launcher
+.Frame_Shift_Drive_Interdictor: "Frame Shift Drive Interdictor" = ModuleTypeNames.Frame_Shift_Drive_Interdictor
 .Fuel_Scoop: "Fuel Scoop" = ModuleTypeNames.Fuel_Scoop
 .Fuel_Tank: "Fuel Tank" = ModuleTypeNames.Fuel_Tank
-.Guardian_Plasma_Charger: "Guardian Plasma Charger" @
+.Guardian_Plasma_Charger: "Guardian Plasma Charger" = ModuleTypeNames.Guardian_Plasma_Charger
 .Guardian_Shard_Cannon: "Guardian Shard Cannon" = ModuleTypeNames.Guardian_Shard_Cannon
 .Guardian_Gauss_Cannon: "Guardian Gauss Cannon" = ModuleTypeNames.Guardian_Gauss_Cannon
-.Guardian_Hull_Reinforcement_Package: "Guardian Hull Reinforcement Package" @
-.Guardian_Module_Reinforcement_Package: "Guardian Module Reinforcement Package" @
-.Guardian_Shield_Reinforcement_Package: "Guardian Shield Reinforcement Package" @
-.Guardian_Frame_Shift_Drive_Booster: "Guardian Frame Shift Drive Booster" @
-.Guardian_Hybrid_Power_Distributor: "Guardian Hybrid Power Distributor" @
-.Guardian_Hybrid_Power_Plant: "Guardian Hybrid Power Plant" @
-.Hull_Reinforcement_Package: "Hull Reinforcement Package" @
-.Frame_Shift_Drive: "Frame Shift Drive" @
-.Frame_Shift_Drive_(SCO): "Frame Shift Drive (SCO)" @
-.Frame_Shift_Wake_Scanner: "Frame Shift Wake Scanner" @
+.Guardian_Hull_Reinforcement_Package: "Guardian Hull Reinforcement Package" = ModuleTypeNames.Guardian_Hull_Reinforcement
+.Guardian_Module_Reinforcement_Package: "Guardian Module Reinforcement Package" = ModuleTypeNames.Guardian_Module_Reinforcement
+.Guardian_Shield_Reinforcement_Package: "Guardian Shield Reinforcement Package" = ModuleTypeNames.Guardian_Shield_Reinforcement
+.Guardian_Frame_Shift_Drive_Booster: "Guardian Frame Shift Drive Booster" = ModuleTypeNames.Guardian_FSD_Booster
+.Guardian_Hybrid_Power_Distributor: "Guardian Hybrid Power Distributor" = ModuleTypeNames.Guardian_Hybrid_Power_Distributor
+.Guardian_Hybrid_Power_Plant: "Guardian Hybrid Power Plant" = ModuleTypeNames.Guardian_Hybrid_Power_Plant
+.Hull_Reinforcement_Package: "Hull Reinforcement Package" = ModuleTypeNames.Hull_Reinforcement_Package
+.Frame_Shift_Drive: "Frame Shift Drive" = ModuleTypeNames.Frame_Shift_Drive
+.Frame_Shift_Drive_(SCO): "Frame Shift Drive (SCO)" => "Frameshift-Antrieb (SCO)"
+.Frame_Shift_Wake_Scanner: "Frame Shift Wake Scanner" = ModuleTypeNames.Frame_Shift_Wake_Scanner
 .Life_Support: "Life Support" = ModuleTypeNames.Life_Support
-.Collector_Limpet_Controller: "Collector Limpet Controller" @
-.Fuel_Transfer_Limpet_Controller: "Fuel Transfer Limpet Controller" @
-.Limpet_Control: "Limpet Control" @
-.Hatch_Breaker_Limpet_Controller: "Hatch Breaker Limpet Controller" => "Steuerung Ladelukenöffner-Drohne"
-.Prospector_Limpet_Controller: "Prospector Limpet Controller" @
-.Repair_Limpet_Controller: "Repair Limpet Controller" @
-.Research_Limpet_Controller: "Research Limpet Controller" @
-.Decontamination_Limpet_Controller: "Decontamination Limpet Controller" @
-.Recon_Limpet_Controller: "Recon Limpet Controller" @
-.Mining_Multi_Limpet_Controller: "Mining Multi Limpet Controller" @
-.Operations_Limpet_Controller: "Operations Limpet Controller" @
-.Rescue_Limpet_Controller: "Rescue Limpet Controller" @
-.Xeno_Limpet_Controller: "Xeno Limpet Controller" @
-.Universal_Multi_Limpet_Controller: "Universal Multi Limpet Controller" @
+.Collector_Limpet_Controller: "Collector Limpet Controller" = ModuleTypeNames.Collector_Limpet_Controller
+.Fuel_Transfer_Limpet_Controller: "Fuel Transfer Limpet Controller" = ModuleTypeNames.Fuel_Transfer_Limpet_Controller
+.Limpet_Control: "Limpet Control" = ModuleTypeNames.Hatch_Breaker_Limpet_Controller
+.Hatch_Breaker_Limpet_Controller: "Hatch Breaker Limpet Controller" = ModuleTypeNames.Hatch_Breaker_Limpet_Controller
+.Prospector_Limpet_Controller: "Prospector Limpet Controller" = ModuleTypeNames.Prospector_Limpet_Controller
+.Repair_Limpet_Controller: "Repair Limpet Controller" = ModuleTypeNames.Repair_Limpet_Controller
+.Research_Limpet_Controller: "Research Limpet Controller" = ModuleTypeNames.Research_Limpet_Controller
+.Decontamination_Limpet_Controller: "Decontamination Limpet Controller" = ModuleTypeNames.Decontamination_Limpet_Controller
+.Recon_Limpet_Controller: "Recon Limpet Controller" = ModuleTypeNames.Recon_Limpet_Controller
+.Mining_Multi_Limpet_Controller: "Mining Multi Limpet Controller" = ModuleTypeNames.Mining_Multi_Limpet_Controller
+.Operations_Limpet_Controller: "Operations Limpet Controller" = ModuleTypeNames.Operations_Multi_Limpet_Controller
+.Rescue_Limpet_Controller: "Rescue Limpet Controller" = ModuleTypeNames.Rescue_Multi_Limpet_Controller
+.Xeno_Limpet_Controller: "Xeno Limpet Controller" = ModuleTypeNames.Xeno_Multi_Limpet_Controller
+.Universal_Multi_Limpet_Controller: "Universal Multi Limpet Controller" = ModuleTypeNames.Universal_Multi_Limpet_Controller
 .Mine_Launcher: "Mine Launcher" = ModuleTypeNames.Mine_Launcher
-.Shock_Mine_Launcher: "Shock Mine Launcher" @
-.Abrasion_Blaster: "Abrasion Blaster" @
-.Seismic_Charge_Launcher: "Seismic Charge Launcher" @
-.Sub_surface_Displacement_Missile: "Sub surface Displacement Missile" @
+.Shock_Mine_Launcher: "Shock Mine Launcher" = ModuleTypeNames.Shock_Mine_Launcher
+.Abrasion_Blaster: "Abrasion Blaster" = ModuleTypeNames.Abrasion_Blaster
+.Seismic_Charge_Launcher: "Seismic Charge Launcher" = ModuleTypeNames.Seismic_Charge_Launcher
+.Sub_surface_Displacement_Missile: "Sub surface Displacement Missile" = ModuleTypeNames.Sub_Surface_Displacement_Missile
 .Mining_Laser: "Mining Laser" = ModuleTypeNames.Mining_Laser
-.Mining_Lance_Beam_Laser: "Mining Lance Beam Laser" @
-.AX_Missile_Rack: "AX Missile Rack" @
+.Mining_Lance_Beam_Laser: "Mining Lance Beam Laser" = ModuleTypeNames.Mining_Lance
+.AX_Missile_Rack: "AX Missile Rack" = ModuleTypeNames.AX_Missile_Rack
 .Enhanced_AX_Missile_Rack: "Enhanced AX Missile Rack" = ModuleTypeNames.Enhanced_AX_Missile_Rack
 .Guardian_Nanite_Torpedo_Pylon: "Guardian Nanite Torpedo Pylon" => "Guardian-Nanobot-Torpedopylon"
 .Seeker_Missile_Rack: "Seeker Missile Rack" = ModuleTypeNames.Seeker_Missile_Rack
-.Missile_Rack: "Missile Rack" @
-.Rocket_Propelled_FSD_Disrupter: "Rocket Propelled FSD Disrupter" @
-.Pack_Hound_Missile_Rack: "Pack Hound Missile Rack" => "Schwarmwerfer-Raketenrampe"
+.Missile_Rack: "Missile Rack" = ModuleTypeNames.Missile_Rack
+.Rocket_Propelled_FSD_Disrupter: "Rocket Propelled FSD Disrupter" = ModuleTypeNames.Rocket_Propelled_FSD_Disrupter
+.Pack_Hound_Missile_Rack: "Pack Hound Missile Rack" = ModuleTypeNames.Pack_Hound_Missile_Rack
 .Advanced_Torp_Pylon: "Advanced Torp Pylon" => "Optimierter Torpedopylon"
-.Advanced_Missile_Rack: "Advanced Missile Rack" @
+.Advanced_Missile_Rack: "Advanced Missile Rack" = ModuleTypeNames.Advanced_Missile_Rack
 .Human_Extraction_Missile: "Human Extraction Missile" => "Menschenextraktionsrakete"
-.Enzyme_Missile_Rack: "Enzyme Missile Rack" @
+.Enzyme_Missile_Rack: "Enzyme Missile Rack" = ModuleTypeNames.Enzyme_Missile_Rack
 .AX_Multi_Cannon: "AX Multi Cannon" = ModuleTypeNames.AX_Multi_Cannon
-.Enhanced_AX_Multi_Cannon: "Enhanced AX Multi Cannon" => "Verbessertes AX-Mehrfachgeschütz"
+.Enhanced_AX_Multi_Cannon: "Enhanced AX Multi Cannon" = ModuleTypeNames.Enhanced_AX_Multi_Cannon
 .Multi_Cannon: "Multi Cannon" = ModuleTypeNames.Multi_Cannon
-.Enforcer_Cannon: "Enforcer Cannon" @
-.Advanced_Multi_Cannon: "Advanced Multi Cannon" @
-.Economy: "Economy" @
+.Enforcer_Cannon: "Enforcer Cannon" = ModuleTypeNames.Enforcer_Cannon
+.Advanced_Multi_Cannon: "Advanced Multi Cannon" = ModuleTypeNames.Advanced_Multi_Cannon
+.Economy: "Economy" => "Economy"
 .Business: "Business" => "Business"
 .First: "First" => "Erste"
-.Luxury: "Luxury" @
+.Luxury: "Luxury" => "Luxus"
 .Advanced_Planet_Approach_Suite: "Advanced Planet Approach Suite" = ModuleTypeNames.Advanced_Planetary_Approach_Suite
 .Planet_Approach_Suite: "Planet Approach Suite" = ModuleTypeNames.Planetary_Approach_Suite
-.Planetary_Vehicle_Hangar: "Planetary Vehicle Hangar" => "SRV-Hangar"
+.Planetary_Vehicle_Hangar: "Planetary Vehicle Hangar" = ModuleTypeNames.Planetary_Vehicle_Hangar
 .Plasma_Accelerator: "Plasma Accelerator" = ModuleTypeNames.Plasma_Accelerator
-.Advanced_Plasma_Accelerator: "Advanced Plasma Accelerator" @
-.Shock_Cannon: "Shock Cannon" @
+.Advanced_Plasma_Accelerator: "Advanced Plasma Accelerator" = ModuleTypeNames.Advanced_Plasma_Accelerator
+.Shock_Cannon: "Shock Cannon" = ModuleTypeNames.Shock_Cannon
 .Power_Distributor: "Power Distributor" = ModuleTypeNames.Power_Distributor
-.Power_Plant: "Power Plant" @
+.Power_Plant: "Power Plant" = ModuleTypeNames.Power_Plant
 .Pulse_Laser: "Pulse Laser" = ModuleTypeNames.Pulse_Laser
-.Pulse_Disruptor_Laser: "Pulse Disruptor Laser" @
-.Pulse_Wave_Analyser: "Pulse Wave Analyser" @
-.Rail_Gun: "Rail Gun" @
-.Imperial_Hammer_Rail_Gun: "Imperial Hammer Rail Gun" @
-.Refinery: "Refinery" => "Raffinierie"
+.Pulse_Disruptor_Laser: "Pulse Disruptor Laser" = ModuleTypeNames.Pulse_Disruptor_Laser
+.Pulse_Wave_Analyser: "Pulse Wave Analyser" = ModuleTypeNames.Pulse_Wave_Analyser
+.Rail_Gun: "Rail Gun" = ModuleTypeNames.Rail_Gun
+.Imperial_Hammer_Rail_Gun: "Imperial Hammer Rail Gun" = ModuleTypeNames.Imperial_Hammer_Rail_Gun
+.Refinery: "Refinery" = EconomyTypes.Refinery
 .Sensors: "Sensors" = ModuleTypeNames.Sensors
 .Shield_Booster: "Shield Booster" = ModuleTypeNames.Shield_Booster
 .Shield_Cell_Bank: "Shield Cell Bank" = ModuleTypeNames.Shield_Cell_Bank
 .Shield_Generator: "Shield Generator" = MaterialCommodityMicroResourceType.amm_grenade_shield
-.Prismatic_Shield_Generator: "Prismatic Shield Generator" @
-.Bi_Weave_Shield_Generator: "Bi Weave Shield Generator" @
+.Prismatic_Shield_Generator: "Prismatic Shield Generator" = ModuleTypeNames.Prismatic_Shield_Generator
+.Bi_Weave_Shield_Generator: "Bi Weave Shield Generator" = ModuleTypeNames.Bi_Weave_Shield_Generator
 .Shutdown_Field_Neutraliser: "Shutdown Field Neutraliser" = ModuleTypeNames.Shutdown_Field_Neutraliser
-.Thargoid_Pulse_Neutraliser: "Thargoid Pulse Neutraliser" @
-.Experimental_Weapon_Stabiliser: "Experimental Weapon Stabiliser" @
+.Thargoid_Pulse_Neutraliser: "Thargoid Pulse Neutraliser" => "Thargoid-Puls-Neutralisator"
+.Experimental_Weapon_Stabiliser: "Experimental Weapon Stabiliser" = ModuleTypeNames.Experimental_Weapon_Stabiliser
 .Supercruise_Assist: "Supercruise Assist" = ModuleTypeNames.Supercruise_Assist
 .Stellar_Body_Discovery_Scanner: "Stellar Body Discovery Scanner" = ModuleTypeNames.Discovery_Scanner
 .Intermediate: "Intermediate" => "Mittelmaß"
 .Thrusters: "Thrusters" = ModuleTypeNames.Thrusters
-.Enhanced_Performance_Thrusters: "Enhanced Performance Thrusters" @
+.Enhanced_Performance_Thrusters: "Enhanced Performance Thrusters" = ModuleTypeNames.Enhanced_Performance_Thrusters
 .Xeno_Scanner: "Xeno Scanner" = ModuleTypeNames.Xeno_Scanner
-.Enhanced_Xeno_Scanner: "Enhanced Xeno Scanner" @
-.Pulse_Wave_Xeno_Scanner: "Pulse Wave Xeno Scanner" @
-.Detailed_Surface_Scanner: "Detailed Surface Scanner" @
-.Meta_Alloy_Hull_Reinforcement_Package: "Meta Alloy Hull Reinforcement Package" @
-.Module_Reinforcement_Package: "Module Reinforcement Package" @
+.Enhanced_Xeno_Scanner: "Enhanced Xeno Scanner" = ModuleTypeNames.Enhanced_Xeno_Scanner
+.Pulse_Wave_Xeno_Scanner: "Pulse Wave Xeno Scanner" => "Impulswellen-Xeno-Scanner"
+.Detailed_Surface_Scanner: "Detailed Surface Scanner" = ModuleTypeNames.Detailed_Surface_Scanner
+.Meta_Alloy_Hull_Reinforcement_Package: "Meta Alloy Hull Reinforcement Package" = ModuleTypeNames.Meta_Alloy_Hull_Reinforcement
+.Module_Reinforcement_Package: "Module Reinforcement Package" = ModuleTypeNames.Module_Reinforcement_Package
 
 SECTION ShipSlots
 
