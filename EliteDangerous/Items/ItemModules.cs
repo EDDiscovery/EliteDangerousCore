@@ -3487,7 +3487,6 @@ namespace EliteDangerousCore
                 { "paintjob_krait_light_horus1_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Krait Light Horus 1 2") },
                 { "cutter_shipkit1_wings1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cutter Shipkit 1 Wings 1") },
                 { "bobble_ship_gdn_fighter_v1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Ship Gdn Fighter V 1") },
-                { "paintjob_ferdelance_tactical_grey", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Ferdelance Tactical Grey") },
                 { "ferdelance_shipkit1_spoiler1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Ferdelance Shipkit 1 Spoiler 1") },
                 { "ferdelance_shipkit1_tail4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Ferdelance Shipkit 1 Tail 4") },
                 { "paintjob_krait_light_vibrant_purple", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Krait Light Vibrant Purple") },
