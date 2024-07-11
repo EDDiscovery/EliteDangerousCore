@@ -316,7 +316,7 @@ namespace EliteDangerousCore
             [Slot.WeaponColour] = "Weapon Colour",
             [Slot.Turret] = "Turret",
             [Slot.SineWaveScanner] = "Sine Wave Scanner",
-            [Slot.BuddyCargoHatch] = "Cargo Hatch",
+            [Slot.BuggyCargoHatch] = "Cargo Hatch",
         };
 
         // maps the slot fdname to an enum
