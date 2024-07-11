@@ -3482,12 +3482,30 @@ namespace EliteDangerousCore
                 { "cobramkiii_shipkit1_spoiler3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cobramkiii Shipkit 1 Spoiler 3") },
                 { "nameplate_shipname_worn_grey", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Nameplate Shipname Worn Grey") },
 
+
                 { "paintjob_diamondbackxl_vibrant_purple", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Diamondbackxl Vibrant Purple") },
                 { "paintjob_krait_light_horus1_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Krait Light Horus 1 2") },
                 { "cutter_shipkit1_wings1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cutter Shipkit 1 Wings 1") },
                 { "bobble_ship_gdn_fighter_v1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Ship Gdn Fighter V 1") },
                 { "paintjob_ferdelance_tactical_grey", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Ferdelance Tactical Grey") },
                 { "ferdelance_shipkit1_spoiler1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Ferdelance Shipkit 1 Spoiler 1") },
+                { "ferdelance_shipkit1_tail4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Ferdelance Shipkit 1 Tail 4") },
+                { "paintjob_krait_light_vibrant_purple", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Krait Light Vibrant Purple") },
+                { "krait_light_shipkit1_tail1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Krait Light Shipkit 1 Tail 1") },
+                { "typex_3_shipkit1_wings3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Typex 3 Shipkit 1 Wings 3") },
+                { "typex_3_shipkit1_bumper4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Typex 3 Shipkit 1 Bumper 4") },
+                { "paintjob_typex_military_vibrant_purple", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Typex Military Vibrant Purple") },
+                { "typex_shipkit1_spoiler2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Typex Shipkit 1 Spoiler 2") },
+                { "typex_shipkit1_wings3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Typex Shipkit 1 Wings 3") },
+                { "typex_shipkit1_bumper2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Typex Shipkit 1 Bumper 2") },
+                { "nameplate_hunter03_white", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Nameplate Hunter 3 White") },
+                { "typex_3_shipkit1_wings1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Typex 3 Shipkit 1 Wings 1") },
+                { "typex_shipkit1_wings2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Typex Shipkit 1 Wings 2") },
+                { "typex_shipkit1_bumper4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Typex Shipkit 1 Bumper 4") },
+                { "paintjob_type9_military_vibrant_purple", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Type 9 Military Vibrant Purple") },
+                { "type9_military_shipkit1_spoiler4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Type 9 Military Shipkit 1 Spoiler 4") },
+                { "type9_military_shipkit1_wings2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Type 9 Military Shipkit 1 Wings 2") },
+
 
             };
 
