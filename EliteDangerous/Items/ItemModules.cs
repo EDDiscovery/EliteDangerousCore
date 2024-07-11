@@ -3475,9 +3475,19 @@ namespace EliteDangerousCore
                 { "paintjob_ferdelance_tactical_grey", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Ferdelance Tactical Grey") },
 
                 { "paintjob_krait_light_vibrant_yellow", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Krait Light Vibrant Yellow") }, 
-                { "decal_powerplay_yurigrom", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Powerplay Yurigrom") }, 
+                { "decal_powerplay_yurigrom", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Powerplay Yurigrom") },
 
+                { "paintjob_cobramkiii_pcgamer_pcgamer", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobra Mk III PC Gamer PC Gamer") },
+                { "paintjob_cobramkiii_tactical_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Cobramkiii Tactical Green") },
+                { "cobramkiii_shipkit1_spoiler3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cobramkiii Shipkit 1 Spoiler 3") },
+                { "nameplate_shipname_worn_grey", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Nameplate Shipname Worn Grey") },
 
+                { "paintjob_diamondbackxl_vibrant_purple", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Diamondbackxl Vibrant Purple") },
+                { "paintjob_krait_light_horus1_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Krait Light Horus 1 2") },
+                { "cutter_shipkit1_wings1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cutter Shipkit 1 Wings 1") },
+                { "bobble_ship_gdn_fighter_v1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Ship Gdn Fighter V 1") },
+                { "paintjob_ferdelance_tactical_grey", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Ferdelance Tactical Grey") },
+                { "ferdelance_shipkit1_spoiler1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Ferdelance Shipkit 1 Spoiler 1") },
 
             };
 
