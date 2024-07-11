@@ -1303,16 +1303,16 @@ namespace EliteDangerousCore
 
                 // Hull Reinforcement Packages 
 
-                { "int_hullreinforcement_size1_class1", new ShipModule(128668537,ShipModule.ModuleTypes.HullReinforcementPackage,"Hull Reinforcement Package Class 1 Rating E"){ Cost = 5000, Class = 1, Rating = "E", Mass = 2, HullReinforcement = 80, KineticResistance = 0.5, ThermalResistance = 0.5, ExplosiveResistance = 0.5 } },
-                { "int_hullreinforcement_size1_class2", new ShipModule(128668538,ShipModule.ModuleTypes.HullReinforcementPackage,"Hull Reinforcement Package Class 1 Rating D"){ Cost = 15000, Class = 1, Rating = "D", Mass = 1, HullReinforcement = 110, KineticResistance = 0.5, ThermalResistance = 0.5, ExplosiveResistance = 0.5 } },
-                { "int_hullreinforcement_size2_class1", new ShipModule(128668539,ShipModule.ModuleTypes.HullReinforcementPackage,"Hull Reinforcement Package Class 2 Rating E"){ Cost = 12000, Class = 2, Rating = "E", Mass = 4, HullReinforcement = 150, KineticResistance = 1, ThermalResistance = 1, ExplosiveResistance = 1 } },
-                { "int_hullreinforcement_size2_class2", new ShipModule(128668540,ShipModule.ModuleTypes.HullReinforcementPackage,"Hull Reinforcement Package Class 2 Rating D"){ Cost = 36000, Class = 2, Rating = "D", Mass = 2, HullReinforcement = 190, KineticResistance = 1, ThermalResistance = 1, ExplosiveResistance = 1 } },
-                { "int_hullreinforcement_size3_class1", new ShipModule(128668541,ShipModule.ModuleTypes.HullReinforcementPackage,"Hull Reinforcement Package Class 3 Rating E"){ Cost = 28000, Class = 3, Rating = "E", Mass = 8, HullReinforcement = 230, KineticResistance = 1.5, ThermalResistance = 1.5, ExplosiveResistance = 1.5 } },
-                { "int_hullreinforcement_size3_class2", new ShipModule(128668542,ShipModule.ModuleTypes.HullReinforcementPackage,"Hull Reinforcement Package Class 3 Rating D"){ Cost = 84000, Class = 3, Rating = "D", Mass = 4, HullReinforcement = 260, KineticResistance = 1.5, ThermalResistance = 1.5, ExplosiveResistance = 1.5 } },
-                { "int_hullreinforcement_size4_class1", new ShipModule(128668543,ShipModule.ModuleTypes.HullReinforcementPackage,"Hull Reinforcement Package Class 4 Rating E"){ Cost = 65000, Class = 4, Rating = "E", Mass = 16, HullReinforcement = 300, KineticResistance = 2, ThermalResistance = 2, ExplosiveResistance = 2 } },
-                { "int_hullreinforcement_size4_class2", new ShipModule(128668544,ShipModule.ModuleTypes.HullReinforcementPackage,"Hull Reinforcement Package Class 4 Rating D"){ Cost = 195000, Class = 4, Rating = "D", Mass = 8, HullReinforcement = 330, KineticResistance = 2, ThermalResistance = 2, ExplosiveResistance = 2 } },
-                { "int_hullreinforcement_size5_class1", new ShipModule(128668545,ShipModule.ModuleTypes.HullReinforcementPackage,"Hull Reinforcement Package Class 5 Rating E"){ Cost = 150000, Class = 5, Rating = "E", Mass = 32, HullReinforcement = 360, KineticResistance = 2.5, ThermalResistance = 2.5, ExplosiveResistance = 2.5 } },
-                { "int_hullreinforcement_size5_class2", new ShipModule(128668546,ShipModule.ModuleTypes.HullReinforcementPackage,"Hull Reinforcement Package Class 5 Rating D"){ Cost = 450000, Class = 5, Rating = "D", Mass = 16, HullReinforcement = 390, KineticResistance = 2.5, ThermalResistance = 2.5, ExplosiveResistance = 2.5 } },
+                { "int_hullreinforcement_size1_class1", new ShipModule(128668537,ShipModule.ModuleTypes.HullReinforcementPackage,"Hull Reinforcement Package Class 1 Rating E"){ Cost = 5000, Class = 1, Rating = "E", Mass = 2, HullReinforcement = 80, KineticResistance = 0.5, ThermalResistance = 0.5, ExplosiveResistance = 0.5, HullStrengthBonus = 0 } },
+                { "int_hullreinforcement_size1_class2", new ShipModule(128668538,ShipModule.ModuleTypes.HullReinforcementPackage,"Hull Reinforcement Package Class 1 Rating D"){ Cost = 15000, Class = 1, Rating = "D", Mass = 1, HullReinforcement = 110, KineticResistance = 0.5, ThermalResistance = 0.5, ExplosiveResistance = 0.5, HullStrengthBonus = 0 } },
+                { "int_hullreinforcement_size2_class1", new ShipModule(128668539,ShipModule.ModuleTypes.HullReinforcementPackage,"Hull Reinforcement Package Class 2 Rating E"){ Cost = 12000, Class = 2, Rating = "E", Mass = 4, HullReinforcement = 150, KineticResistance = 1, ThermalResistance = 1, ExplosiveResistance = 1, HullStrengthBonus = 0 } },
+                { "int_hullreinforcement_size2_class2", new ShipModule(128668540,ShipModule.ModuleTypes.HullReinforcementPackage,"Hull Reinforcement Package Class 2 Rating D"){ Cost = 36000, Class = 2, Rating = "D", Mass = 2, HullReinforcement = 190, KineticResistance = 1, ThermalResistance = 1, ExplosiveResistance = 1, HullStrengthBonus = 0 } },
+                { "int_hullreinforcement_size3_class1", new ShipModule(128668541,ShipModule.ModuleTypes.HullReinforcementPackage,"Hull Reinforcement Package Class 3 Rating E"){ Cost = 28000, Class = 3, Rating = "E", Mass = 8, HullReinforcement = 230, KineticResistance = 1.5, ThermalResistance = 1.5, ExplosiveResistance = 1.5, HullStrengthBonus = 0 } },
+                { "int_hullreinforcement_size3_class2", new ShipModule(128668542,ShipModule.ModuleTypes.HullReinforcementPackage,"Hull Reinforcement Package Class 3 Rating D"){ Cost = 84000, Class = 3, Rating = "D", Mass = 4, HullReinforcement = 260, KineticResistance = 1.5, ThermalResistance = 1.5, ExplosiveResistance = 1.5, HullStrengthBonus = 0 } },
+                { "int_hullreinforcement_size4_class1", new ShipModule(128668543,ShipModule.ModuleTypes.HullReinforcementPackage,"Hull Reinforcement Package Class 4 Rating E"){ Cost = 65000, Class = 4, Rating = "E", Mass = 16, HullReinforcement = 300, KineticResistance = 2, ThermalResistance = 2, ExplosiveResistance = 2, HullStrengthBonus = 0 } },
+                { "int_hullreinforcement_size4_class2", new ShipModule(128668544,ShipModule.ModuleTypes.HullReinforcementPackage,"Hull Reinforcement Package Class 4 Rating D"){ Cost = 195000, Class = 4, Rating = "D", Mass = 8, HullReinforcement = 330, KineticResistance = 2, ThermalResistance = 2, ExplosiveResistance = 2, HullStrengthBonus = 0 } },
+                { "int_hullreinforcement_size5_class1", new ShipModule(128668545,ShipModule.ModuleTypes.HullReinforcementPackage,"Hull Reinforcement Package Class 5 Rating E"){ Cost = 150000, Class = 5, Rating = "E", Mass = 32, HullReinforcement = 360, KineticResistance = 2.5, ThermalResistance = 2.5, ExplosiveResistance = 2.5, HullStrengthBonus = 0 } },
+                { "int_hullreinforcement_size5_class2", new ShipModule(128668546,ShipModule.ModuleTypes.HullReinforcementPackage,"Hull Reinforcement Package Class 5 Rating D"){ Cost = 450000, Class = 5, Rating = "D", Mass = 16, HullReinforcement = 390, KineticResistance = 2.5, ThermalResistance = 2.5, ExplosiveResistance = 2.5, HullStrengthBonus = 0 } },
 
                 { "int_guardianhullreinforcement_size1_class2", new ShipModule(128833946,ShipModule.ModuleTypes.GuardianHullReinforcement,"Guardian Hull Reinforcement Package Class 1 Rating D"){ Cost = 30000, Class = 1, Rating = "D", Mass = 1, PowerDraw = 0.56, HullReinforcement = 138, ThermalResistance = 2, CausticResistance = 5 } },
                 { "int_guardianhullreinforcement_size1_class1", new ShipModule(128833945,ShipModule.ModuleTypes.GuardianHullReinforcement,"Guardian Hull Reinforcement Package Class 1 Rating E"){ Cost = 10000, Class = 1, Rating = "E", Mass = 2, PowerDraw = 0.45, HullReinforcement = 100, ThermalResistance = 2, CausticResistance = 5 } },
@@ -3445,20 +3445,43 @@ namespace EliteDangerousCore
                 { "paintjob_asp_predator_teal", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Asp Predator Teal") },
 
 
-                 { "paintjob_asp_prestige_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Asp Prestige Blue") },
-                 { "paintjob_asp_prestige_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Asp Prestige Green") }, 
-                 { "decal_alien_hunter4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Alien Hunter 4") }, 
-                 { "decal_alien_hunter1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Alien Hunter 1") }, 
-                 { "decal_exobio_compiler", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Exobio Compiler") }, 
-                 { "paintjob_dolphin_tactical_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Dolphin Tactical Blue") }, 
-                 { "decal_military_elite03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Military Elite 3") }, 
-                 { "nameplate_shipname_grey", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Nameplate Shipname Grey") }, 
-                 { "paintjob_cobramkiii_iridescentblack_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Cobramkiii Iridescentblack 2") }, 
-                 { "decal_trade_elite01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Trade Elite 1") },
-                 { "decal_trade_elite02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Trade Elite 2") },
-                 { "decal_trade_elite03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Trade Elite 3") },
-                 { "decal_trade_elite04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Trade Elite 4") },
+                { "paintjob_asp_prestige_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Asp Prestige Blue") },
+                { "paintjob_asp_prestige_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Asp Prestige Green") }, 
+                { "decal_alien_hunter4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Alien Hunter 4") }, 
+                { "decal_alien_hunter1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Alien Hunter 1") }, 
+                { "decal_exobio_compiler", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Exobio Compiler") }, 
+                { "paintjob_dolphin_tactical_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Dolphin Tactical Blue") }, 
+                { "decal_military_elite03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Military Elite 3") }, 
+                { "nameplate_shipname_grey", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Nameplate Shipname Grey") }, 
+                { "paintjob_cobramkiii_iridescentblack_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Cobramkiii Iridescentblack 2") }, 
+                { "decal_trade_elite01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Trade Elite 1") },
+                { "decal_trade_elite02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Trade Elite 2") },
+                { "decal_trade_elite03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Trade Elite 3") },
+                { "decal_trade_elite04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Trade Elite 4") },
+
+                { "paintjob_feddropship_blackfriday_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Feddropship Blackfriday 1") }, 
+                { "paintjob_diamondbackxl_metallicdesign_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Diamondbackxl Metallicdesign 1") }, 
+                { "python_nx_fang_wings1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Python Nx Fang Wings 1") }, 
+                { "paintjob_federation_dropship_mkii_lrpo_azure", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Federation Dropship Mkii Lrpo Azure") }, 
+                { "paintjob_federation_gunship_lrpo_azure", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Federation Gunship Lrpo Azure") }, 
+                { "paintjob_type6_salvage_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Type 6 Salvage 3") }, 
+                { "type6_shipkit1_wings2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Type 6 Shipkit 1 Wings 2") }, 
+                { "type6_shipkit1_bumper2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Type 6 Shipkit 1 Bumper 2") }, 
+                { "paintjob_typex_iridescentblack_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Typex Iridescentblack 4") },
+                { "typex_shipkit1_spoiler4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Typex Shipkit 1 Spoiler 4") },
+
+                { "decal_titanreward3_white", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Titanreward 3 White") }, 
+                { "paintjob_typex_guardian_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Typex Guardian 1") }, 
+                { "paintjob_ferdelance_tactical_grey", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Ferdelance Tactical Grey") },
+
+                { "paintjob_krait_light_vibrant_yellow", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Krait Light Vibrant Yellow") }, 
+                { "decal_powerplay_yurigrom", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Powerplay Yurigrom") }, 
+
+
+
             };
+
+
 
             // this array maps a special effect fdname to the effect that it has on module properties - see also material commodities for fdname to materials used
             // automatically generated

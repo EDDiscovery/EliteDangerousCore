@@ -158,7 +158,7 @@ namespace EliteDangerousCore
             WeaponColour,
             Turret,
             SineWaveScanner,
-            BuddyCargoHatch,
+            BuggyCargoHatch,
         }
 
         private static Dictionary<Slot, string> english = new Dictionary<Slot, string>
