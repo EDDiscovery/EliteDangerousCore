@@ -2350,6 +2350,7 @@ namespace EliteDangerousCore
                 {"bobble_ap2_textu", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Ap 2 Text u") },
                 {"bobble_ap2_textunderscore", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Ap 2 Text Underscore") },
                 {"bobble_ap2_texty", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Ap 2 Text y") },
+                {"bobble_christmaspresents", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Christmaspresents") },
                 {"bobble_christmastree", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Christmas Tree") },
                 {"bobble_davidbraben", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble David Braben") },
                 {"bobble_dotd_blueskull", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Dotd Blueskull") },
@@ -2449,6 +2450,7 @@ namespace EliteDangerousCore
                 {"bobble_trophy_exploration_b", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Trophy Exploration B") },
                 {"bobble_trophy_exploration_s", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Trophy Exploration S") },
                 {"bobble_trophy_powerplay_b", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Trophy Powerplay B") },
+                {"bobble_trophy_trade_b", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Trophy Trade B") },
                 {"cobramkiii_shipkit1_bumper1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cobra MK III Shipkit 1 Bumper 1") },
                 {"cobramkiii_shipkit1_bumper3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cobramkiii Shipkit 1 Bumper 3") },
                 {"cobramkiii_shipkit1_bumper4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cobramkiii Shipkit 1 Bumper 4") },
@@ -2842,6 +2844,7 @@ namespace EliteDangerousCore
                 {"paintjob_asp_corrosive_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Asp Corrosive 4") },
                 {"paintjob_asp_corrosive_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Asp Corrosive 6") },
                 {"paintjob_asp_default_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Asp Default 2") },
+                {"paintjob_asp_eliteexpo_eliteexpo", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Elite Expo Elite Expo") },
                 {"paintjob_asp_faction1_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Asp Faction 1 1") },
                 {"paintjob_asp_gamescom_gamescom", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Games Com GamesCom") },
                 {"paintjob_asp_gold_wireframe_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Gold Wireframe 1") },
@@ -3036,7 +3039,8 @@ namespace EliteDangerousCore
                 {"paintjob_federation_corvette_colourgeo_grey", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Federation Corvette Colourgeo Grey") },
                 {"paintjob_federation_corvette_colourgeo_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Federation Corvette Colourgeo Red") },
                 {"paintjob_federation_corvette_colourgeo2_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Corvette Colour Geo 2 Blue") },
-                {"paintjob_federation_corvette_iridescentblack_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Corvette Iridescentblack 2") },
+                {"paintjob_federation_corvette_federal_victory_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Federation Corvette Federal Victory 6") },
+                {"paintjob_federation_corvette_iridescentblack_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Corvette Iridescent Black 2") },
                 {"paintjob_federation_corvette_iridescenthighcolour_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Corvette Iridescent High Colour 2") },
                 {"paintjob_federation_corvette_lrpo_azure", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Corvette Lrpo Azure") },
                 {"paintjob_federation_corvette_metallic_chrome", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Corvette Metallic Chrome") },
@@ -3057,7 +3061,7 @@ namespace EliteDangerousCore
                 {"paintjob_federation_gunship_blackfriday_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Federation Gunship Blackfriday 1") },
                 {"paintjob_federation_gunship_lrpo_azure", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Federation Gunship Lrpo Azure") },
                 {"paintjob_federation_gunship_metallic_chrome", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Metallic Chrome") },
-                {"paintjob_federation_gunship_militarystripe_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Federation Gunship Militarystripe Red") },
+                {"paintjob_federation_gunship_militarystripe_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Federation Gunship Military Stripe Red") },
                 {"paintjob_federation_gunship_tactical_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Tactical Blue") },
                 {"paintjob_federation_gunship_tactical_brown", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Federation Gunship Tactical Brown") },
                 {"paintjob_federation_gunship_tactical_grey", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Tactical Grey") },
@@ -3330,6 +3334,7 @@ namespace EliteDangerousCore
                 {"paintjob_viper_default_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Viper Default 3") },
                 {"paintjob_viper_faction1_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Viper Faction 1 1") },
                 {"paintjob_viper_flag_norway_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Viper Flag Norway 1") },
+                {"paintjob_viper_flag_switzerland_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Viper Flag Switzerland 1") },
                 {"paintjob_viper_flag_usa_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Viper Flag Usa 1") },
                 {"paintjob_viper_lrpo_azure", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Viper Lrpo Azure") },
                 {"paintjob_viper_merc", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Viper Merc") },
@@ -3475,10 +3480,12 @@ namespace EliteDangerousCore
                 {"weaponcustomisation_white", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Weapon Customisation White") },
                 {"weaponcustomisation_yellow", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Weapon Customisation Yellow") },
                 {"wear", new ShipModule(-1,ShipModule.ModuleTypes.WearAndTearType,"Wear") },
+
+
             };
 
             // used to resort above
-            //List<string> vanitynames = vanitymodules.Keys.ToList();  vanitynames.Sort();  foreach (var key in vanitynames) System.Diagnostics.Debug.WriteLine($"                {{{key.AlwaysQuoteString()}, new ShipModule({vanitymodules[key].ModuleID},ShipModule.ModuleTypes.{vanitymodules[key].ModType},{vanitymodules[key].EnglishModName.AlwaysQuoteString()}) }},");
+           // List<string> vanitynames = vanitymodules.Keys.ToList();  vanitynames.Sort();  string tout = "";  foreach (var key in vanitynames) tout += $"                {{{key.AlwaysQuoteString()}, new ShipModule({vanitymodules[key].ModuleID},ShipModule.ModuleTypes.{vanitymodules[key].ModType},{vanitymodules[key].EnglishModName.AlwaysQuoteString()}) }},\r\n"; BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\vanity.lst", tout);
 
             // this array maps a special effect fdname to the effect that it has on module properties - see also material commodities for fdname to materials used
             // automatically generated
