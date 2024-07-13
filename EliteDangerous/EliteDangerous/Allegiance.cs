@@ -32,14 +32,14 @@ namespace EliteDangerousCore
             PlayerPilots,   // seen in logs
         }
 
-        // maps the allegiance fdname to an enum
+        // maps the allegiance fdname to an enum.  Spaces can be in the name ("Pilots Federation") to cope with Spansh
         // If null is passed in, its presumed field is missing and thus Unknown.
         public static Allegiance ToEnum(string fdname)
         {
             if (fdname == null || fdname == "")     // instances seen of blank allegiance
                 return Allegiance.Unknown;
 
-            if (Enum.TryParse(fdname, true, out Allegiance value))
+            if (Enum.TryParse(fdname.Replace(" ",""), true, out Allegiance value))
             {
                 return value;
             }
