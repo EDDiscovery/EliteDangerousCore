@@ -1374,8 +1374,8 @@ SECTION ShipSlots
 .Decal3: "Decal Left" => "Folie Links"
 .EngineColour: "Engine Colour" => "Antriebsverzierung"
 .Federation_Fighter_Shield: "Federation Fighter Shield" => "Föderations-Fighter-Schild"
-.FrameShiftDrive: "Frame Shift Drive" => "Frameshift-Antrieb"
-.FuelTank: "Fuel Tank" => "Treibstofftank"
+.FrameShiftDrive: "Frame Shift Drive" = ModulePartNames.Frame_Shift_Drive
+.FuelTank: "Fuel Tank" = ModulePartNames.Fuel_Tank
 .GDN_Hybrid_Fighter_V1_Shield: "GDN Hybrid Fighter V 1 Shield" => "Guardian-Fighter v1 Schild"
 .GDN_Hybrid_Fighter_V2_Shield: "GDN Hybrid Fighter V 2 Shield" => "Guardian-Fighter v2 Schild"
 .GDN_Hybrid_Fighter_V3_Shield: "GDN Hybrid Fighter V 3 Shield" => "Guardian-Fighter v3 Schild"
@@ -1386,8 +1386,8 @@ SECTION ShipSlots
 .LargeHardpoint2: "Large Hardpoint 2" => "Große Aufhängung 2"
 .LargeHardpoint3: "Large Hardpoint 3" => "Große Aufhängung 3"
 .LargeHardpoint4: "Large Hardpoint 4" => "Große Aufhängung 4"
-.LifeSupport: "Life Support" => "Lebenserhaltung"
-.MainEngines: "Thrusters" => "Schubdüsen"
+.LifeSupport: "Life Support" = ModulePartNames.Life_Support
+.MainEngines: "Thrusters" = ModulePartNames.Thrusters
 .MediumHardpoint1: "Medium Hardpoint 1" => "Mittlere Aufhängung 1"
 .MediumHardpoint2: "Medium Hardpoint 2" => "Mittlere Aufhängung 2"
 .MediumHardpoint3: "Medium Hardpoint 3" => "Mittlere Aufhängung 3"
@@ -1398,9 +1398,9 @@ SECTION ShipSlots
 .Military03: "Military Slot 3" => "Militärschacht 3"
 .PaintJob: "Paint Job" => "Lackierung"
 .PlanetaryApproachSuite: "Planetary Approach Suite" = ModuleTypeNames.Planetary_Approach_Suite
-.PowerDistributor: "Power Distributor" => "Energieverteiler"
-.PowerPlant: "Power Plant" => "Kraftwerk"
-.Radar: "Sensors" => "Sensoren"
+.PowerDistributor: "Power Distributor" = ModulePartNames.Power_Distributor
+.PowerPlant: "Power Plant" = ModulePartNames.Power_Plant
+.Radar: "Sensors" = ModulePartNames.Sensors
 .ShieldGenerator: "Shield Generator" = MaterialCommodityMicroResourceType.amm_grenade_shield
 .ShipCockpit: "Ship Cockpit" => "Schiffscockpit"
 .ShipID0: "Ship ID Right" => "Schiff-ID Rechts"
