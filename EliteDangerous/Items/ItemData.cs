@@ -26,13 +26,10 @@ namespace EliteDangerousCore
         {
             CreateModules();
 
-            //foreach (var m in GetShipModules())
-            //{
-            //    var text = m.Value.PropertiesAsText();
-            //    System.Diagnostics.Debug.WriteLine(m.Key + " " + text);
-            //}
-
             TranslateModules();
+
+            // this ensures all is checked - use it against example.ex and check translator-ids.log
+            //foreach (var m in GetShipModules(true, true, true, true, true)) { string s = $"{m.Key} = {m.Value.TranslatedModName} {m.Value.TranslatedModTypeString}";  }
 
             AddExtraShipInfo();
         }
