@@ -3486,6 +3486,30 @@ namespace EliteDangerousCore
                 {"wear", new ShipModule(-1,ShipModule.ModuleTypes.WearAndTearType,"Wear") },
 
 
+{ "paintjob_type7_vibrant_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Type 7 Vibrant Green") },
+{ "nameplate_passenger02_white", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Nameplate Passenger 2 White") },
+{ "paintjob_cobramkiv_gradient2_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobra Mk IV Gradient 2 1") },
+{ "paintjob_type7_vibrant_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Type 7 Vibrant Red") },
+{ "python_industrial1_spoiler1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Python Industrial 1 Spoiler 1") },
+{ "python_industrial1_wings1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Python Industrial 1 Wings 1") },
+{ "python_industrial1_tail1", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Python Industrial 1 Tail 1") },
+{ "python_industrial1_bumper1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Python Industrial 1 Bumper 1") },
+{ "paintjob_eagle_hotrod_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Eagle Hotrod 3") },
+{ "paintjob_eagle_pax_south_pax_south", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Eagle Pax South") },
+{ "eagle_shipkit1_spoiler3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Eagle Shipkit 1 Spoiler 3") },
+{ "eagle_shipkit1_wings4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Eagle Shipkit 1 Wings 4") },
+{ "eagle_shipkit1_bumper1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Eagle Shipkit 1 Bumper 1") },
+{ "eagle_shipkit1_bumper3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Eagle Shipkit 1 Bumper 3") },
+{ "paintjob_diamondbackxl_christmas_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Diamondback XL Christmas 1") },
+{ "paintjob_diamondbackxl_christmas_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob Diamondback XL Christmas 2") },
+{ "independant_trader_shipkit1_spoiler4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Independant Trader Shipkit 1 Spoiler 4") },
+{ "independant_trader_shipkit1_wings1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Independant Trader Shipkit 1 Wings 1") },
+{ "independant_trader_shipkit1_bumper2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Independant Trader Shipkit 1 Bumper 2") },
+{ "paintjob_federation_gunship_gradient2_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Gradient 2 1") },
+{ "paintjob_testbuggy_chase_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paintjob SRV Chase 3") },
+{ "krait_mkii_shipkit1_spoiler3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Krait Mkii Shipkit 1 Spoiler 3") },
+{ "decal_titanreward1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Titanreward 1") },
+
             };
 
             // used to resort above
