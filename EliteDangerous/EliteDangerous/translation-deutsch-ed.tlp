@@ -1279,7 +1279,6 @@ SECTION ModulePartNames
 .Life_Support: "Life Support" => "Lebenserhaltung"
 .Collector_Limpet_Controller: "Collector Limpet Controller" => "Steuerung Sammeldrohne"
 .Fuel_Transfer_Limpet_Controller: "Fuel Transfer Limpet Controller" => "Treibstofftransfer-Drohnenstrg."
-.Hatch_Breaking_Limpet_Controller: "Hatch Breaking Limpet Controller" @
 .Hatch_Breaker_Limpet_Controller: "Hatch Breaker Limpet Controller" => "Steuerung Ladelukenöffner-Drohne"
 .Prospector_Limpet_Controller: "Prospector Limpet Controller" => "Steuerung Erzsuche-Drohne"
 .Repair_Limpet_Controller: "Repair Limpet Controller" => "Steuerung Reparaturdrohne"

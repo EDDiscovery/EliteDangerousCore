@@ -1168,7 +1168,7 @@ SECTION StarportTypes
 .Ocellus: "Ocellus" @
 .Bernal: "Bernal" @
 .Orbis: "Orbis" @
-.Outpost: "Outpost" @
+.Outpost: "Outpost" => "Base Espacial"
 .OnFootSettlement: "On Foot Settlement" => "Asentamiento a Pie"
 .SurfaceStation: "Surface Station" => "Estación de Superficie"
 .CraterOutpost: "Crater Outpost" @
@@ -1187,7 +1187,7 @@ SECTION PowerPlayStates
 
 SECTION ModuleTypeNames
 
-.Pacifier_Frag_Cannon: "Pacifier Frag Cannon" @
+.Pacifier_Frag_Cannon: "Pacifier Frag Cannon" => "Cañón de Fragmentación Pacificador"
 .Cargo_Scanner: "Cargo Scanner" @
 .Guardian_Module_Reinforcement: "Guardian Module Reinforcement" => "Refuerzo de Módulo Guardián"
 .Guardian_Shield_Reinforcement: "Guardian Shield Reinforcement" => "Refuerzo de Escudo Guardián"
@@ -1197,14 +1197,14 @@ SECTION ModuleTypeNames
 .Operations_Multi_Limpet_Controller: "Operations Multi Limpet Controller" => "Multilanzador Dron de Operaciones"
 .Rescue_Multi_Limpet_Controller: "Rescue Multi Limpet Controller" => "Lanzador Dron de Rescate"
 .Xeno_Multi_Limpet_Controller: "Xeno Multi Limpet Controller" => "Multilanzador Dron Xeno"
-.Mining_Lance: "Mining Lance" @
+.Mining_Lance: "Mining Lance" => "Láser de Rayo Lanza Perforadora"
 .Torpedo_Pylon: "Torpedo Pylon" => "Lanzatorpedos"
-.Rocket_Propelled_FSD_Disruptor: "Rocket Propelled FSD Disruptor" @
+.Rocket_Propelled_FSD_Disruptor: "Rocket Propelled FSD Disruptor" => "Misil de Contención Propulsado por Cohetes"
 .Economy_Class_Passenger_Cabin: "Economy Class Passenger Cabin" => "Cabina de Pasajeros Clase Económica"
 .Business_Class_Passenger_Cabin: "Business Class Passenger Cabin" => "Cabina de Pasajeros Clase Preferente"
 .First_Class_Passenger_Cabin: "First Class Passenger Cabin" => "Cabina de Pasajero Primera Clase"
 .Luxury_Class_Passenger_Cabin: "Luxury Class Passenger Cabin" => "Cabina de Pasajero Clase Lujo"
-.Advanced_Planetary_Approach_Suite: "Advanced Planetary Approach Suite" => "Equipo de Aproximación Planetaria"
+.Advanced_Planetary_Approach_Suite: "Advanced Planetary Approach Suite" => "Equipo de Aproximación Planetaria Avanzado"
 .Planetary_Approach_Suite: "Planetary Approach Suite" = ModuleTypeNames.Advanced_Planetary_Approach_Suite
 .Discovery_Scanner: "Discovery Scanner" => "Escáner de Exploración"
 .Cockpit_Type: "Cockpit Type" => "Tipo de Cabina"
@@ -1235,25 +1235,25 @@ SECTION ModulePartNames
 .Reinforced_Alloy: "Reinforced Alloy" => "Aleación Reforzada"
 .Military_Grade_Composite: "Military Grade Composite" => "Compuesto de Grado Militar"
 .Mirrored_Surface_Composite: "Mirrored Surface Composite" => "Compuesto de Superficie Reflectante"
-.Reactive_Surface_Composite: "Reactive Surface Composite" => "Compuesto de Superficia Reactivo"
+.Reactive_Surface_Composite: "Reactive Surface Composite" => "Compuesto de Superficie Reactivo"
 .Auto_Field_Maintenance_Unit: "Auto Field Maintenance Unit" => "Unidad de Automantenimiento"
 .Beam_Laser: "Beam Laser" => "Láser de Rayo"
-.Retributor_Beam_Laser: "Retributor Beam Laser" @
+.Retributor_Beam_Laser: "Retributor Beam Laser" => "Láser de Rayo Vengador"
 .Burst_Laser: "Burst Laser" => "Láser de Ráfagas"
-.Cytoscrambler_Burst_Laser: "Cytoscrambler Burst Laser" @
+.Cytoscrambler_Burst_Laser: "Cytoscrambler Burst Laser" => "Láser de Ráfagas de Citodistorsión"
 .Cannon: "Cannon" => "Cañon"
 .Fragment_Cannon: "Fragment Cannon" => "Cañón de Fragmentación"
-.Pacifier_Fragment_Cannon: "Pacifier Fragment Cannon" @
+.Pacifier_Fragment_Cannon: "Pacifier Fragment Cannon" = ModuleTypeNames.Pacifier_Frag_Cannon
 .Cargo_Rack: "Cargo Rack" => "Bodega de Carga"
-.Corrosion_Resistant_Cargo_Rack: "Corrosion Resistant Cargo Rack" @
+.Corrosion_Resistant_Cargo_Rack: "Corrosion Resistant Cargo Rack" => "Bodega de Carga Anticorrosión"
 .Manifest_Scanner: "Manifest Scanner" => "Escáner de Manifiesto"
 .Chaff_Launcher: "Chaff Launcher" => "Lanzador de Señuelos"
-.Electronic_Countermeasure: "Electronic Countermeasure" @
+.Electronic_Countermeasure: "Electronic Countermeasure" => "Contramedida Electrónica"
 .Heat_Sink_Launcher: "Heat Sink Launcher" => "Lanzador de Eyector Térmico"
 .Caustic_Sink_Launcher: "Caustic Sink Launcher" => "Eyector Cáustico"
 .Point_Defence: "Point Defence" => "Torreta de Defensa de Punto"
 .Kill_Warrant_Scanner: "Kill Warrant Scanner" => "Escáner de Registro Criminal"
-.Detailed_Surface_Scanner: "Detailed Surface Scanner" @
+.Detailed_Surface_Scanner: "Detailed Surface Scanner" => "Escáner de Analisis de Superficie"
 .Standard_Docking_Computer: "Standard Docking Computer" => "Computadora de Aterrizaje Asistido"
 .Advanced_Docking_Computer: "Advanced Docking Computer" => "Computadora de Aterrizaje Avanzada"
 .Fighter_Hangar: "Fighter Hangar" => "Hangar de Caza"
@@ -1279,7 +1279,6 @@ SECTION ModulePartNames
 .Life_Support: "Life Support" => "Soporte Vital"
 .Collector_Limpet_Controller: "Collector Limpet Controller" => "Lanzador Dron Colector"
 .Fuel_Transfer_Limpet_Controller: "Fuel Transfer Limpet Controller" => "Lanzador Dron Combust."
-.Hatch_Breaking_Limpet_Controller: "Hatch Breaking Limpet Controller" @
 .Hatch_Breaker_Limpet_Controller: "Hatch Breaker Limpet Controller" => "Lanzador Dron Extractor"
 .Prospector_Limpet_Controller: "Prospector Limpet Controller" => "Lanzador Dron Prospector"
 .Repair_Limpet_Controller: "Repair Limpet Controller" => "Lanzador Dron Reparador"
@@ -1295,65 +1294,65 @@ SECTION ModulePartNames
 .Shock_Mine_Launcher: "Shock Mine Launcher" => "Lanzaminas de Impacto"
 .Abrasion_Blaster: "Abrasion Blaster" => "Destructor de Abrasión"
 .Seismic_Charge_Launcher: "Seismic Charge Launcher" => "Lanzador de Carga Sísmica"
-.Sub_Surface_Displacement_Missile: "Sub Surface Displacement Missile" @
+.Sub_Surface_Displacement_Missile: "Sub Surface Displacement Missile" => "Misil de Desplaz. Subterraneo"
 .Mining_Laser: "Mining Laser" => "Láser de Minería"
-.Mining_Lance_Beam_Laser: "Mining Lance Beam Laser" @
+.Mining_Lance_Beam_Laser: "Mining Lance Beam Laser" = ModuleTypeNames.Mining_Lance
 .AX_Missile_Rack: "AX Missile Rack" => "Lanzamisiles AX"
 .Enhanced_AX_Missile_Rack: "Enhanced AX Missile Rack" => "Lanzamisiles AX Mejorado"
-.Guardian_Nanite_Torpedo_Pylon: "Guardian Nanite Torpedo Pylon" @
+.Guardian_Nanite_Torpedo_Pylon: "Guardian Nanite Torpedo Pylon" => "Lanzatorpedos Nanotecnológico Guardián"
 .Seeker_Missile_Rack: "Seeker Missile Rack" => "Lanzamisiles G."
 .Missile_Rack: "Missile Rack" => "Lanzamisiles"
-.Rocket_Propelled_FSD_Disrupter: "Rocket Propelled FSD Disrupter" @
-.Pack_Hound_Missile_Rack: "Pack Hound Missile Rack" @
-.Advanced_Torp_Pylon: "Advanced Torp Pylon" @
+.Rocket_Propelled_FSD_Disrupter: "Rocket Propelled FSD Disrupter" = ModuleTypeNames.Rocket_Propelled_FSD_Disruptor
+.Pack_Hound_Missile_Rack: "Pack Hound Missile Rack" => "Lanzamisiles Jauría de Sabuesos"
+.Advanced_Torp_Pylon: "Advanced Torp Pylon" => "Lanzatorpedos Avanzado"
 .Advanced_Missile_Rack: "Advanced Missile Rack" => "Lanzamisiles Avanzado"
 .Human_Extraction_Missile: "Human Extraction Missile" @
 .Enzyme_Missile_Rack: "Enzyme Missile Rack" @
-.Module_Reinforcement_Package: "Module Reinforcement Package" @
+.Module_Reinforcement_Package: "Module Reinforcement Package" => "Paquete de Refuerzo de Módulo"
 .AX_Multi_Cannon: "AX Multi Cannon" => "Multicañón AX"
 .Enhanced_AX_Multi_Cannon: "Enhanced AX Multi Cannon" => "Multicañón AX Mejorado"
 .Multi_Cannon: "Multi Cannon" => "Multicañón"
-.Enforcer_Cannon: "Enforcer Cannon" @
+.Enforcer_Cannon: "Enforcer Cannon" => "Multicañón Ejecutor"
 .Advanced_Multi_Cannon: "Advanced Multi Cannon" => "Multicañón Avanzado"
 .Economy: "Economy" => "Economía"
 .Business: "Business" => "Preferente"
 .First: "First" => "Primera"
 .Luxury: "Luxury" => "De Lujo"
-.Advanced_Planet_Approach_Suite: "Advanced Planet Approach Suite" @
-.Planet_Approach_Suite: "Planet Approach Suite" @
-.Planetary_Vehicle_Hangar: "Planetary Vehicle Hangar" @
-.Plasma_Accelerator: "Plasma Accelerator" @
-.Advanced_Plasma_Accelerator: "Advanced Plasma Accelerator" @
+.Advanced_Planet_Approach_Suite: "Advanced Planet Approach Suite" => "Equipo de Aproximación Planetaria"
+.Planet_Approach_Suite: "Planet Approach Suite" = ModulePartNames.Advanced_Planet_Approach_Suite
+.Planetary_Vehicle_Hangar: "Planetary Vehicle Hangar" => "Hangar de Vehículo Planetario"
+.Plasma_Accelerator: "Plasma Accelerator" => "Acelerador de Plasma"
+.Advanced_Plasma_Accelerator: "Advanced Plasma Accelerator" => "Acelerador de Plasma Avanzado"
 .Shock_Cannon: "Shock Cannon" @
-.Power_Distributor: "Power Distributor" @
-.Power_Plant: "Power Plant" @
-.Pulse_Laser: "Pulse Laser" @
-.Pulse_Disruptor_Laser: "Pulse Disruptor Laser" @
-.Pulse_Wave_Analyser: "Pulse Wave Analyser" @
-.Rail_Gun: "Rail Gun" @
-.Imperial_Hammer_Rail_Gun: "Imperial Hammer Rail Gun" @
-.Refinery: "Refinery" @
-.Sensors: "Sensors" @
-.Shield_Booster: "Shield Booster" @
-.Shield_Cell_Bank: "Shield Cell Bank" @
-.Shield_Generator: "Shield Generator" @
-.Prismatic_Shield_Generator: "Prismatic Shield Generator" @
-.Bi_Weave_Shield_Generator: "Bi Weave Shield Generator" @
-.Shutdown_Field_Neutraliser: "Shutdown Field Neutraliser" @
-.Thargoid_Pulse_Neutraliser: "Thargoid Pulse Neutraliser" @
-.Experimental_Weapon_Stabiliser: "Experimental Weapon Stabiliser" @
-.Supercruise_Assist: "Supercruise Assist" @
+.Power_Distributor: "Power Distributor" => "Distribuidor de Energía"
+.Power_Plant: "Power Plant" => "Núcleo de Energía"
+.Pulse_Laser: "Pulse Laser" => "Láser de Pulsos"
+.Pulse_Disruptor_Laser: "Pulse Disruptor Laser" => "Láser de Pulsos Disruptores"
+.Pulse_Wave_Analyser: "Pulse Wave Analyser" => "Analizador de Onda de Pulsos"
+.Rail_Gun: "Rail Gun" => "Cañón de Riel"
+.Imperial_Hammer_Rail_Gun: "Imperial Hammer Rail Gun" => "Cañón de Riel Martillo Imperial"
+.Refinery: "Refinery" = EconomyTypes.Refinery
+.Sensors: "Sensors" => "Sensores"
+.Shield_Booster: "Shield Booster" => "Potenciador de Escudos"
+.Shield_Cell_Bank: "Shield Cell Bank" => "Acm. Escudos"
+.Shield_Generator: "Shield Generator" => "Generador de Escudos"
+.Prismatic_Shield_Generator: "Prismatic Shield Generator" => "Generador de Escudos Prismáticos"
+.Bi_Weave_Shield_Generator: "Bi Weave Shield Generator" => "Generador de Escudos Entrelazados"
+.Shutdown_Field_Neutraliser: "Shutdown Field Neutraliser" => "Neutralizador de Campo de Desactivación"
+.Thargoid_Pulse_Neutraliser: "Thargoid Pulse Neutraliser" => "Neutralizador de Pulsos Thargoide"
+.Experimental_Weapon_Stabiliser: "Experimental Weapon Stabiliser" => "Estabilizador de Armas Experimentales"
+.Supercruise_Assist: "Supercruise Assist" => "Asistencia de Supercrusero"
 .Stellar_Body_Discovery_Scanner: "Stellar Body Discovery Scanner" @
 .Intermediate: "Intermediate" @
-.Thrusters: "Thrusters" @
-.Enhanced_Performance_Thrusters: "Enhanced Performance Thrusters" @
-.Xeno_Scanner: "Xeno Scanner" @
-.Enhanced_Xeno_Scanner: "Enhanced Xeno Scanner" @
-.Pulse_Wave_Xeno_Scanner: "Pulse Wave Xeno Scanner" @
+.Thrusters: "Thrusters" => "Impulsores"
+.Enhanced_Performance_Thrusters: "Enhanced Performance Thrusters" => "Propulsores de Rendimiento Mejorado"
+.Xeno_Scanner: "Xeno Scanner" => "Escáner Xeno"
+.Enhanced_Xeno_Scanner: "Enhanced Xeno Scanner" => "Xenoescáner Mejorado"
+.Pulse_Wave_Xeno_Scanner: "Pulse Wave Xeno Scanner" => "Xenoescáner de Onda de Pulsos"
 
 SECTION ShipSlots
 
-.Unknown: "Unknown" @
+.Unknown: "Unknown" = Unknown
 .Armour: "Armour" => "Blindaje"
 .Bobble01: "Bobble Position 1" => "Salpicadero 1"
 .Bobble02: "Bobble Position 2" => "Salpicadero 2"
@@ -1367,15 +1366,15 @@ SECTION ShipSlots
 .Bobble10: "Bobble Position 10" => "Salpicadero 10"
 .CargoHatch: "Cargo Hatch" => "Escotilla de Carga"
 .CodexScanner: "Codex Scanner" @
-.DataLinkScanner: "Data Link Scanner" @
-.DiscoveryScanner: "Discovery Scanner" @
+.DataLinkScanner: "Data Link Scanner" = ModuleTypeNames.Data_Link_Scanner
+.DiscoveryScanner: "Discovery Scanner" = ModuleTypeNames.Discovery_Scanner
 .Decal1: "Decal Front" => "Emblema Delantero"
 .Decal2: "Decal Right" => "Emblema Derecho"
 .Decal3: "Decal Left" => "Emblema Izquierdo"
 .EngineColour: "Engine Colour" => "Color de Motores"
 .Federation_Fighter_Shield: "Federation Fighter Shield" @
-.FrameShiftDrive: "Frame Shift Drive" @
-.FuelTank: "Fuel Tank" @
+.FrameShiftDrive: "Frame Shift Drive" = ModulePartNames.Frame_Shift_Drive
+.FuelTank: "Fuel Tank" = ModulePartNames.Fuel_Tank
 .GDN_Hybrid_Fighter_V1_Shield: "GDN Hybrid Fighter V 1 Shield" @
 .GDN_Hybrid_Fighter_V2_Shield: "GDN Hybrid Fighter V 2 Shield" @
 .GDN_Hybrid_Fighter_V3_Shield: "GDN Hybrid Fighter V 3 Shield" @
@@ -1386,8 +1385,8 @@ SECTION ShipSlots
 .LargeHardpoint2: "Large Hardpoint 2" => "Anclaje Grande 2"
 .LargeHardpoint3: "Large Hardpoint 3" => "Anclaje Grande 3"
 .LargeHardpoint4: "Large Hardpoint 4" => "Anclaje Grande 4"
-.LifeSupport: "Life Support" @
-.MainEngines: "Thrusters" @
+.LifeSupport: "Life Support" = ModulePartNames.Life_Support
+.MainEngines: "Thrusters" = ModulePartNames.Thrusters
 .MediumHardpoint1: "Medium Hardpoint 1" => "Anclaje Mediano 1"
 .MediumHardpoint2: "Medium Hardpoint 2" => "Anclaje Mediano 2"
 .MediumHardpoint3: "Medium Hardpoint 3" => "Anclaje Mediano 3"
@@ -1397,11 +1396,11 @@ SECTION ShipSlots
 .Military02: "Military Slot 2" => "Compartimento Militar 2"
 .Military03: "Military Slot 3" => "Compartimento Militar 3"
 .PaintJob: "Paint Job" => "Diseño"
-.PlanetaryApproachSuite: "Planetary Approach Suite" @
-.PowerDistributor: "Power Distributor" @
-.PowerPlant: "Power Plant" @
-.Radar: "Sensors" @
-.ShieldGenerator: "Shield Generator" @
+.PlanetaryApproachSuite: "Planetary Approach Suite" = ModulePartNames.Advanced_Planet_Approach_Suite
+.PowerDistributor: "Power Distributor" = ModulePartNames.Power_Distributor
+.PowerPlant: "Power Plant" = ModulePartNames.Power_Plant
+.Radar: "Sensors" = ModulePartNames.Sensors
+.ShieldGenerator: "Shield Generator" = ModulePartNames.Shield_Generator
 .ShipCockpit: "Ship Cockpit" => "Cabina de la Nave"
 .ShipID0: "Ship ID Right" => "ID de la Nave Derecha"
 .ShipID1: "Ship ID Left" => "ID de la Nave Izquierda"
@@ -1487,7 +1486,7 @@ SECTION ShipSlots
 .TinyHardpoint7: "Utility Mount 7" => "Anclaje de Apoyo 7"
 .TinyHardpoint8: "Utility Mount 8" => "Anclaje de Apoyo 8"
 .VesselVoice: "Vessel Voice" => "Voz de la Nave"
-.WeaponColour: "Weapon Colour" @
+.WeaponColour: "Weapon Colour" => "Color del Arma"
 
 SECTION StationServices
 
@@ -1502,9 +1501,9 @@ SECTION StationServices
 .Workshop: "Workshop" => "Taller"
 .FleetCarrierAdministration: "Fleet Carrier Administration" => "Administración de Portanaves"
 .FleetCarrierFuel: "Fleet Carrier Fuel" @
-.FleetCarrierManagement: "Fleet Carrier Management" @
+.FleetCarrierManagement: "Fleet Carrier Management" => "Gestión del Portanaves"
 .FleetCarrierVendor: "Fleet Carrier Vendor" => "Vendedor del Portanaves"
-.FlightController: "Flight Controller" @
+.FlightController: "Flight Controller" => "Controlador de Vuelo"
 .FrontlineSolutions: "Frontline Solutions" @
 .InterstellarFactorsContact: "Interstellar Factors Contact" => "Contacto de Interstellar Factors"
 .Initiatives: "Initiatives" @
@@ -1521,7 +1520,7 @@ SECTION StationServices
 .Refuel: "Refuel" => "Repostar"
 .Repair: "Repair" => "Reparar"
 .Restock: "Restock" => "Reaprovisionar"
-.SearchAndRescue: "Search And Rescue" => "Busqueda y Rescate"
+.SearchAndRescue: "Search And Rescue" => "Búsqueda y Rescate"
 .Shipyard: "Shipyard" => "Astillero"
 .Shop: "Shop" @
 .SocialSpace: "Social Space" @

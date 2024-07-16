@@ -1282,7 +1282,6 @@ SECTION ModulePartNames
 .Life_Support: "Life Support" @
 .Collector_Limpet_Controller: "Collector Limpet Controller" @
 .Fuel_Transfer_Limpet_Controller: "Fuel Transfer Limpet Controller" @
-.Hatch_Breaking_Limpet_Controller: "Hatch Breaking Limpet Controller" @
 .Hatch_Breaker_Limpet_Controller: "Hatch Breaker Limpet Controller" @
 .Prospector_Limpet_Controller: "Prospector Limpet Controller" @
 .Repair_Limpet_Controller: "Repair Limpet Controller" @
@@ -1353,7 +1352,6 @@ SECTION ModulePartNames
 .Xeno_Scanner: "Xeno Scanner" @
 .Enhanced_Xeno_Scanner: "Enhanced Xeno Scanner" @
 .Pulse_Wave_Xeno_Scanner: "Pulse Wave Xeno Scanner" @
-
 
 
 SECTION ShipSlots
