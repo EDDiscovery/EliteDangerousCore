@@ -44,7 +44,7 @@ namespace EliteDangerousCore
         // If null is passed in, its presumed field is missing and thus Unknown.
         public static Government ToEnum(string fdname)
         {
-            if (fdname == null || fdname == "")     // instances seen of blank fdnames
+            if (!fdname.HasChars()) // null or empty
                 return Government.Unknown;
 
             fdname = fdname.ToLowerInvariant().Replace("$government_", "").Replace(" ", "").Replace(";", "");

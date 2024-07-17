@@ -33,7 +33,7 @@ namespace EliteDangerousCore
         // If null is passed in, its presumed field is missing and thus Unknown.
         public static Security ToEnum(string fdname)
         {
-            if (fdname == null)
+            if (!fdname.HasChars()) // null or empty
                 return Security.Unknown;
 
             fdname = fdname.ToLowerInvariant().Replace("$system_security_", "").Replace("$galaxy_map_info_state_", "").Replace(" ", "").Replace(";", "");

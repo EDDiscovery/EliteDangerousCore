@@ -52,7 +52,7 @@ namespace EliteDangerousCore
         // If null is passed in, its presumed field is missing and thus Unknown.
         public static Economy ToEnum(string fdname)
         {
-            if (fdname == null)
+            if (!fdname.HasChars()) // null or empty
                 return Economy.Unknown;
 
             fdname = fdname.ToLowerInvariant().Replace("$economy_", "").Replace(" ", "").Replace(";", "");

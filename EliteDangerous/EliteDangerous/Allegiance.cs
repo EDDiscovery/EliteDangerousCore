@@ -36,7 +36,7 @@ namespace EliteDangerousCore
         // If null is passed in, its presumed field is missing and thus Unknown.
         public static Allegiance ToEnum(string fdname)
         {
-            if (fdname == null || fdname == "")     // instances seen of blank allegiance
+            if (!fdname.HasChars()) // null or empty
                 return Allegiance.Unknown;
 
             if (Enum.TryParse(fdname.Replace(" ",""), true, out Allegiance value))
