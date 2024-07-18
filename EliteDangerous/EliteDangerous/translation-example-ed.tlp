@@ -1491,8 +1491,13 @@ SECTION ShipSlots
 .TinyHardpoint8: "Utility Mount 8" @
 .VesselVoice: "Vessel Voice" @
 .WeaponColour: "Weapon Colour" @
+.Turret: "Turret" @
+.Turret2: "Turret Type 2" @
+.SineWaveScanner: "Sine Wave Scanner" @
+.BuggyCargoHatch: "Cargo Hatch" @
 
 Section StationServices
+
 .Unknown: "Unknown" @
 .ApexInterstellar: "Apex Interstellar" @
 .Autodock: "Autodock" @
@@ -1533,3 +1538,4 @@ Section StationServices
 .Tuning: "Tuning" @
 .UniversalCartographics: "Universal Cartographics" @
 .VistaGenomics: "Vista Genomics" @
+

@@ -26,7 +26,9 @@ namespace EliteDangerousCore
             return actors.ContainsKey(fdname.ToLowerInvariant());
         }
 
-        static public Actor GetActor(string fdname, string locname = null)         // actors are things like skimmer drones
+        // actors are things like skimmer drones
+        // may return null if not known
+        static public Actor GetActor(string fdname, string locname = null)         
         {
             fdname = fdname.ToLowerInvariant();
             if (actors.TryGetValue(fdname, out Actor var))
@@ -54,10 +56,13 @@ namespace EliteDangerousCore
              { "titan_hardpoint01", new Actor("Thargoid Titan") },
              { "titan_hardpoint02", new Actor("Thargoid Titan") },   // seen
              { "titan_hardpoint03", new Actor("Thargoid Titan") },
+             { "titan", new Actor("Titan") },
              { "glaive", new Actor("Thargoid Glaive") },        // seen
              { "ps_turretbasemedium02_6m", new Actor("Turret medium 2-6-M") },
              { "ps_turretbasesmall_3m", new Actor("Turret Small 3 M") },
              { "ps_turretbasemedium_skiff_6m", new Actor("Turret Medium 6 M") },
+             { "poi_turretbunkera", new Actor("Turret Bunker A") },
+             { "poi_turretplatforma", new Actor("Turret Platform A") },
              { "scout", new Actor("Thargoid Scout") },
              { "scout_q", new Actor("Thargoid Scout (Q)") },
              { "scout_hq", new Actor("Thargoid Scout (HQ)") },
@@ -70,6 +75,7 @@ namespace EliteDangerousCore
              { "planetportf", new Actor("Planet Port") },
              { "planetportg", new Actor("Planet Port") },           // seen g, presuming at least a-f
              { "megashipdockrehab", new Actor("Mega Ship Prison") },
+             { "megashipdocka", new Actor("Mega Ship Dock A") },
              { "diamondback_taxi", new Actor("Taxi (Diamondback)") },
              { "viper_taxi", new Actor("Taxi (Viper)") },
              { "adder_taxi", new Actor("Taxi (Adder)") },
@@ -89,7 +95,8 @@ namespace EliteDangerousCore
              { "carrierdocka", new Actor("Carrier Dock A") },
              { "carrierdockb", new Actor("Carrier Dock B") },
              { "missileskimmer", new Actor("Skimmer Missile") },
-             { "bossskimmer", new Actor("Boss Skimmer") }
+             { "bossskimmer", new Actor("Boss Skimmer") },
+             { "thargonswarm", new Actor("Thargon Swarm") },
         };
 
 

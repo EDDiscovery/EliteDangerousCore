@@ -157,6 +157,7 @@ namespace EliteDangerousCore
             VesselVoice,
             WeaponColour,
             Turret,
+            Turret2,        // reported by users
             SineWaveScanner,
             BuggyCargoHatch,
         }
@@ -315,6 +316,7 @@ namespace EliteDangerousCore
             [Slot.VesselVoice] = "Vessel Voice",
             [Slot.WeaponColour] = "Weapon Colour",
             [Slot.Turret] = "Turret",
+            [Slot.Turret2] = "Turret Type 2",
             [Slot.SineWaveScanner] = "Sine Wave Scanner",
             [Slot.BuggyCargoHatch] = "Cargo Hatch",
         };
@@ -323,7 +325,7 @@ namespace EliteDangerousCore
         // If null is passed in, its presumed field is missing and thus Unknown.
         public static Slot ToEnum(string fdname)
         {
-            if (fdname == null)
+            if (!fdname.HasChars())
                 return Slot.Unknown;
 
             if (Enum.TryParse(fdname, true, out Slot value))

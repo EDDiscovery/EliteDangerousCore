@@ -1487,6 +1487,10 @@ SECTION ShipSlots
 .TinyHardpoint8: "Utility Mount 8" => "Anclaje de Apoyo 8"
 .VesselVoice: "Vessel Voice" => "Voz de la Nave"
 .WeaponColour: "Weapon Colour" => "Color del Arma"
+.Turret: "Turret" @
+.Turret2: "Turret Type 2" @
+.SineWaveScanner: "Sine Wave Scanner" @
+.BuggyCargoHatch: "Cargo Hatch" @
 
 SECTION StationServices
 
