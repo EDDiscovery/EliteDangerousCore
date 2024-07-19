@@ -40,8 +40,9 @@ namespace EliteDangerousCore
             MulticrewSupercruise,
             MulticrewLanded,
             MulticrewSRV,
+            MulticrewFighter,
 
-            SRV,            // in srv
+            SRV,                // in srv
             Fighter,            // in fighter
 
             OnFootStarPort,      
@@ -59,7 +60,7 @@ namespace EliteDangerousCore
 
         public bool IsLandedInShipOrSRV { get
             {
-                return TravelState == HistoryEntryStatus.TravelStateType.Landed || TravelState == HistoryEntryStatus.TravelStateType.SRV ||
+                return TravelState == HistoryEntryStatus.TravelStateType.Landed || TravelState == HistoryEntryStatus.TravelStateType.SRV || 
                     TravelState == HistoryEntryStatus.TravelStateType.MulticrewLanded || TravelState == HistoryEntryStatus.TravelStateType.MulticrewSRV;
             }}
 
@@ -93,6 +94,8 @@ namespace EliteDangerousCore
         public string FSDJumpNextSystemName { get; private set; } = null;   // null when not jumping
         public long? FSDJumpNextSystemAddress { get; private set; } = null; // null when not jumping
         public bool FSDJumpSequence{ get { return FSDJumpNextSystemName != null; } }    // true from startjump until location/fsdjump
+        public string GameModeGroup { get { return GameMode + (Group.HasChars() ? (":" + Group) : ""); } }
+        public string GameModeGroupMulticrew { get { return GameMode + (Group.HasChars() ? (":" + Group) : "") + (OnCrewWithCaptain.HasChars() ? " @ Cmdr " + OnCrewWithCaptain :""); } }
 
         private HistoryEntryStatus()
         {
@@ -360,7 +363,7 @@ namespace EliteDangerousCore
                 case JournalTypeEnum.LaunchSRV:
                     hes = new HistoryEntryStatus(prev)
                     {
-                        TravelState = TravelStateType.SRV
+                        TravelState = prev.TravelState == TravelStateType.MulticrewLanded ? TravelStateType.MulticrewSRV : TravelStateType.SRV,
                     };
                     break;
 
@@ -368,7 +371,7 @@ namespace EliteDangerousCore
                 case JournalTypeEnum.DockSRV:
                     hes = new HistoryEntryStatus(prev)
                     {
-                        TravelState = TravelStateType.Landed
+                        TravelState = prev.TravelState == TravelStateType.MulticrewSRV ? TravelStateType.MulticrewLanded : TravelStateType.Landed,
                     };
                     break;
                 
@@ -405,11 +408,18 @@ namespace EliteDangerousCore
                 case JournalTypeEnum.FighterDestroyed:
                 case JournalTypeEnum.DockFighter:
                     {
-                        if ( prev.TravelState == TravelStateType.Fighter)
+                        if (prev.TravelState == TravelStateType.Fighter)
                         {
                             hes = new HistoryEntryStatus(prev)
                             {
                                 TravelState = TravelStateType.NormalSpace
+                            };
+                        }
+                        else if (prev.TravelState == TravelStateType.MulticrewFighter)
+                        {
+                            hes = new HistoryEntryStatus(prev)
+                            {
+                                TravelState = TravelStateType.MulticrewNormalSpace
                             };
                         }
                         break;
@@ -423,7 +433,7 @@ namespace EliteDangerousCore
                     {
                         hes = new HistoryEntryStatus(prev)
                         {
-                            TravelState = TravelStateType.Fighter,
+                            TravelState = prev.TravelState == TravelStateType.MulticrewNormalSpace ? TravelStateType.MulticrewFighter : TravelStateType.Fighter,
                         };
                     }
                     break;

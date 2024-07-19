@@ -65,8 +65,6 @@ namespace EliteDangerousCore
 
         public HistoryEntryStatus Status { get { return EntryStatus; } }
         public string WhereAmI { get { return EntryStatus.StationName ?? EntryStatus.BodyName ?? "Unknown"; } }
-        public string GameModeGroup { get { return Status.GameMode + (String.IsNullOrEmpty(Status.Group) ? "" : (":" + Status.Group)); } }
-
 
         public int Visits { get; private set; }                                     // set by Historylist, visits up to this point in time
 

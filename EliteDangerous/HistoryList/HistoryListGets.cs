@@ -76,10 +76,13 @@ namespace EliteDangerousCore
             return Enumerable.Reverse(list).Take(max).ToList();
         }
 
-        // history filter
-        static public List<HistoryEntry> LimitByDate(List<HistoryEntry> list, TimeSpan days, HashSet<JournalTypeEnum> entries = null, bool reverse = true)     // list should be in entry order (oldest first)
+        // history filter - limit by date, from startdate backwards by days
+        static public List<HistoryEntry> LimitByDate(List<HistoryEntry> list, DateTime startdate, TimeSpan days, HashSet<JournalTypeEnum> entries = null, bool reverse = true)     // list should be in entry order (oldest first)
         {
-            var oldestData = DateTime.UtcNow.Subtract(days);
+            System.Diagnostics.Debug.Assert(startdate.Kind == DateTimeKind.Utc);
+
+            var oldestData = startdate.Subtract(days);
+
             if (entries != null)
             {
                 if (reverse)
