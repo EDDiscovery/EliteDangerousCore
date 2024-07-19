@@ -1006,7 +1006,7 @@ SECTION ScanDisplayUserControl
 .Signals: "Signals" => "Signale"
 .Codex: "Codex" => "Kodex"
 .Organics: "Organics" => "Organsimen"
-.Genuses: "Genuses" @
+.Genuses: "Genuses" => "Gattungen"
 
 SECTION Signals
 
@@ -1246,7 +1246,7 @@ SECTION ModulePartNames
 .Fragment_Cannon: "Fragment Cannon" => "Splitterkanone"
 .Pacifier_Fragment_Cannon: "Pacifier Fragment Cannon" = ModuleTypeNames.Pacifier_Frag_Cannon
 .Cargo_Rack: "Cargo Rack" => "Frachtgestell"
-.Corrosion_Resistant_Cargo_Rack: "Corrosion Resistant Cargo Rack" @
+.Corrosion_Resistant_Cargo_Rack: "Corrosion Resistant Cargo Rack" => "Korrosionsbeständiges Frachtgestell"
 .Manifest_Scanner: "Manifest Scanner" = ModuleTypeNames.Cargo_Scanner
 .Chaff_Launcher: "Chaff Launcher" => "Düpelwerfer"
 .Electronic_Countermeasure: "Electronic Countermeasure" => "Elektronische Gegenmaßnmahmen"
@@ -1295,7 +1295,7 @@ SECTION ModulePartNames
 .Shock_Mine_Launcher: "Shock Mine Launcher" => "Schock-Minenwerfer"
 .Abrasion_Blaster: "Abrasion Blaster" => "AX-Abrasionsblaster"
 .Seismic_Charge_Launcher: "Seismic Charge Launcher" => "Seismischer-Ladungswerfer"
-.Sub_Surface_Displacement_Missile: "Sub Surface Displacement Missile" @
+.Sub_Surface_Displacement_Missile: "Sub Surface Displacement Missile" => "Untergrund-Verdrängungsrakete"
 .Mining_Laser: "Mining Laser" => "Abbaulaser"
 .Mining_Lance_Beam_Laser: "Mining Lance Beam Laser" = ModuleTypeNames.Mining_Lance
 .AX_Missile_Rack: "AX Missile Rack" => "AX-Raketenrampe"
@@ -1303,7 +1303,7 @@ SECTION ModulePartNames
 .Guardian_Nanite_Torpedo_Pylon: "Guardian Nanite Torpedo Pylon" => "Guardian-Nanobot-Torpedopylon"
 .Seeker_Missile_Rack: "Seeker Missile Rack" => "Suchraketenrampe"
 .Missile_Rack: "Missile Rack" => "Raketenrampe"
-.Rocket_Propelled_FSD_Disrupter: "Rocket Propelled FSD Disrupter" @
+.Rocket_Propelled_FSD_Disrupter: "Rocket Propelled FSD Disrupter" => "Containment-Rakete"
 .Pack_Hound_Missile_Rack: "Pack Hound Missile Rack" => "Schwarmwerfer-Raketenrampe"
 .Advanced_Torp_Pylon: "Advanced Torp Pylon" => "Optimierter Torpedopylon"
 .Advanced_Missile_Rack: "Advanced Missile Rack" => "Optimierte Raketenrampe"
@@ -1488,10 +1488,10 @@ SECTION ShipSlots
 .TinyHardpoint8: "Utility Mount 8" => "Werkzeugsteckplatz 8"
 .VesselVoice: "Vessel Voice" => "Schiffstimme"
 .WeaponColour: "Weapon Colour" => "Waffenverzierung"
-.Turret: "Turret" @
-.Turret2: "Turret Type 2" @
-.SineWaveScanner: "Sine Wave Scanner" @
-.BuggyCargoHatch: "Cargo Hatch" @
+.Turret: "Turret" => "Geschützturm"
+.Turret2: "Turret Type 2" => "Geschützturm 2"
+.SineWaveScanner: "Sine Wave Scanner" => "Sinuswellen-Scanner"
+.BuggyCargoHatch: "Cargo Hatch" => "Ladeluke"
 
 SECTION StationServices
 
