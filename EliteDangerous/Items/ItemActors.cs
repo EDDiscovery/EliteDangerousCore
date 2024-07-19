@@ -50,23 +50,35 @@ namespace EliteDangerousCore
         {
              { "skimmerdrone", new Actor("Skimmer Drone") },
              { "skimmer", new Actor("Skimmer Drone") },
+             { "missileskimmer", new Actor("Skimmer Missile") },
+             { "bossskimmer", new Actor("Boss Skimmer") },
+
+             { "thargon", new Actor("Thargon") },
+             { "thargonswarm", new Actor("Thargon Swarm") },
              { "tg_skimmer_01", new Actor("Thargoid Scavenger") },   // seen
              { "tg_skimmer_02", new Actor("Thargoid Scavenger") },
              { "tg_skimmer_03", new Actor("Thargoid Scavenger") },
+             { "tg_banshee_01", new Actor("Thargoid Banshee Type 1") },
+             { "tg_banshee_02", new Actor("Thargoid Banshee Type 2") },
+             { "tg_scavenger", new Actor("Thargoid Scavenger") },
              { "titan_hardpoint01", new Actor("Thargoid Titan") },
              { "titan_hardpoint02", new Actor("Thargoid Titan") },   // seen
              { "titan_hardpoint03", new Actor("Thargoid Titan") },
              { "titan", new Actor("Titan") },
              { "glaive", new Actor("Thargoid Glaive") },        // seen
+
              { "ps_turretbasemedium02_6m", new Actor("Turret medium 2-6-M") },
              { "ps_turretbasesmall_3m", new Actor("Turret Small 3 M") },
              { "ps_turretbasemedium_skiff_6m", new Actor("Turret Medium 6 M") },
+
              { "poi_turretbunkera", new Actor("Turret Bunker A") },
              { "poi_turretplatforma", new Actor("Turret Platform A") },
+
              { "scout", new Actor("Thargoid Scout") },
              { "scout_q", new Actor("Thargoid Scout (Q)") },
              { "scout_hq", new Actor("Thargoid Scout (HQ)") },
              { "scout_nq", new Actor("Thargoid Scout (NQ)") },
+
              { "planetporta", new Actor("Planet Port") },
              { "planetportb", new Actor("Planet Port") },
              { "planetportc", new Actor("Planet Port") },
@@ -74,14 +86,25 @@ namespace EliteDangerousCore
              { "planetporte", new Actor("Planet Port") },
              { "planetportf", new Actor("Planet Port") },
              { "planetportg", new Actor("Planet Port") },           // seen g, presuming at least a-f
-             { "megashipdockrehab", new Actor("Mega Ship Prison") },
-             { "megashipdocka", new Actor("Mega Ship Dock A") },
+             { "planetporth", new Actor("Planet Port") },
+             { "planetporti", new Actor("Planet Port") },           // seen up to i now july 24
+
              { "diamondback_taxi", new Actor("Taxi (Diamondback)") },
              { "viper_taxi", new Actor("Taxi (Viper)") },
              { "adder_taxi", new Actor("Taxi (Adder)") },
+
              { "oneillcylinder", new Actor("O'Neill Cylinder") },
              { "outpostcivilian", new Actor("Civilian Outpost") },
+             { "outpostindustrial", new Actor("Industrial Outpost") },
+             { "megashipdockrehab", new Actor("Mega Ship Prison") },
+             { "megashipdocka", new Actor("Mega Ship Dock A") },
              { "asteroidbase", new Actor("Asteroid Base") },
+             { "bernalsphere", new Actor("Station") },
+             { "coriolis", new Actor("Coriolis Station") },
+             { "carrierdocka", new Actor("Carrier Dock A") },
+             { "carrierdockb", new Actor("Carrier Dock B") },
+             { "federation_capitalship", new Actor("Federation Capital Ship") },
+
              { "unknownsaucer", new Actor("Thargoid") },
              { "unknownsaucer_a", new Actor("Thargoid") },
              { "unknownsaucer_b", new Actor("Thargoid") },
@@ -90,13 +113,7 @@ namespace EliteDangerousCore
              { "unknownsaucer_e", new Actor("Thargoid") },  // seen
              { "unknownsaucer_f", new Actor("Thargoid") },  
              { "unknownsaucer_h", new Actor("Thargoid") },  // seen
-             { "thargon", new Actor("Thargon") },
-             { "coriolis", new Actor("Coriolis Station") },
-             { "carrierdocka", new Actor("Carrier Dock A") },
-             { "carrierdockb", new Actor("Carrier Dock B") },
-             { "missileskimmer", new Actor("Skimmer Missile") },
-             { "bossskimmer", new Actor("Boss Skimmer") },
-             { "thargonswarm", new Actor("Thargon Swarm") },
+
         };
 
 
