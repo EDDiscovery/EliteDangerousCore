@@ -1006,6 +1006,7 @@ SECTION ScanDisplayUserControl
 .Signals: "Signals" => "Signale"
 .Codex: "Codex" => "Kodex"
 .Organics: "Organics" => "Organsimen"
+.Genuses: "Genuses" @
 
 SECTION Signals
 
