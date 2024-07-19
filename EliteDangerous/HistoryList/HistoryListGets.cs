@@ -131,7 +131,7 @@ namespace EliteDangerousCore
         // history filter, combat panel. List should be in entry order.
         static public List<HistoryEntry> ToLastDock(List<HistoryEntry> list, HashSet<JournalTypeEnum> entriestoaccept = null, bool reverse = true)
         {
-            int lastdock = list.FindLastIndex(x => !x.Status.MultiPlayer && x.EntryType == JournalTypeEnum.Docked);
+            int lastdock = list.FindLastIndex(x => !x.Status.IsInMultiPlayer && x.EntryType == JournalTypeEnum.Docked);
             if (lastdock >= 0)
             {
                 List<HistoryEntry> tolastdock = new List<HistoryEntry>();
@@ -360,7 +360,7 @@ namespace EliteDangerousCore
             foreach (HistoryEntry he in historylist)        // in add order, oldest first
             {
                 if ((he.EntryType == JournalTypeEnum.Location || he.EntryType == JournalTypeEnum.CarrierJump || he.EntryType == JournalTypeEnum.FSDJump) &&
-                    (he.System.HasCoordinate || !musthavecoord) && !he.Status.MultiPlayer)
+                    (he.System.HasCoordinate || !musthavecoord) && !he.Status.IsInMultiPlayer)
                 {
                     if ((starttimeutc == null || he.EventTimeUTC >= starttimeutc) && (endtimeutc == null || he.EventTimeUTC <= endtimeutc))
                     {

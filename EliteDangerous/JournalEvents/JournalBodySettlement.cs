@@ -114,7 +114,7 @@ namespace EliteDangerousCore.JournalEvents
 
             StationAllegiance = AllegianceDefinitions.ToEnum( evt["StationAllegiance"].StrNull());
 
-            if (FactionState != null)  System.Diagnostics.Debug.WriteLine($"Faction {Faction} {FactionState} {FriendlyFactionState}");
+            //if (FactionState != null)  System.Diagnostics.Debug.WriteLine($"Faction {Faction} {FactionState} {FriendlyFactionState}");
         }
 
         public string Name { get; set; }

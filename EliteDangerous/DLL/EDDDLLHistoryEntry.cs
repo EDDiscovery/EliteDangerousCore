@@ -143,7 +143,7 @@ namespace EliteDangerousCore.DLL
                 assets = he.Assets,
                 currentboost = he.Status.CurrentBoost,
                 visits = he.Visits,
-                multiplayer = he.Status.MultiPlayer,
+                multiplayer = he.Status.IsInMultiPlayer,
                 insupercruise = he.Status.IsInSupercruise,
             };
 

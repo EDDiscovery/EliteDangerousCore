@@ -40,7 +40,7 @@ namespace EliteDangerousCore
             MulticrewSupercruise,
             MulticrewLanded,
             MulticrewSRV,
-            MulticrewFighter,
+            MulticrewFighter,       // see below for gettings relying on order
 
             SRV,                // in srv
             Fighter,            // in fighter
@@ -67,6 +67,9 @@ namespace EliteDangerousCore
         public bool IsInSupercruise { get { return TravelState == HistoryEntryStatus.TravelStateType.Supercruise || TravelState == TravelStateType.TaxiSupercruise || 
                                             TravelState == TravelStateType.MulticrewSupercruise || TravelState == TravelStateType.DropShipSupercruise; } }
 
+        // true for OnCrewWithCaptain entries (they seem  to be marked with Multicrew) and true if entries are in physical multicrew
+        public bool IsInMultiCrew { get { return TravelState >= TravelStateType.MulticrewDocked && TravelState <= TravelStateType.MulticrewFighter; } }     
+
         public TravelStateType TravelState { get; private set; } = TravelStateType.Unknown;  // travel state
 
         public string BodyName { get; private set; }
@@ -83,7 +86,8 @@ namespace EliteDangerousCore
         public bool IsSRV { get { return ItemData.IsSRV(ShipTypeFD); } }
         public bool IsFighter { get { return ItemData.IsFighter(ShipTypeFD); } }
         public string OnCrewWithCaptain { get; private set; } = null;     // if not null, your in another multiplayer ship
-        public bool MultiPlayer { get { return OnCrewWithCaptain != null; } }
+        public bool IsOnCrewWithCaptain { get { return OnCrewWithCaptain != null; } }
+        public bool IsInMultiPlayer { get { return IsOnCrewWithCaptain || IsInMultiCrew; } }       // we can be OnCrewWithCaptain with multicrew markers true, or just in physical multicrew 
         public string GameMode { get; private set; } = "Unknown";         // game mode, from LoadGame event, Unknown if not set or missing
         public string Group { get; private set; } = "";                   // group.. empty if not in group
         public bool Wanted { get; private set; } = false;

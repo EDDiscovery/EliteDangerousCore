@@ -57,7 +57,7 @@ namespace EliteDangerousCore.EDSM
                         he.journalEntry.SetEdsmSync();       // crappy slow but unusual, but lets mark them as sent..
                         hasbeta = true;
                     }
-                    else if (!(he.Status.MultiPlayer || discardEvents.Contains(eventtype) || alwaysDiscard.Contains(eventtype)))
+                    else if (!(he.Status.IsInMultiPlayer || discardEvents.Contains(eventtype) || alwaysDiscard.Contains(eventtype)))
                     {
                         list.Add(he);
                     }
@@ -76,7 +76,7 @@ namespace EliteDangerousCore.EDSM
             lock (alwaysDiscard)        // use this as a perm proxy to lock discardEvents
             {
                 string eventtype = he.EntryType.ToString();
-                return !(he.Commander.NameIsBeta || he.journalEntry.IsBeta || he.Status.MultiPlayer || discardEvents.Contains(eventtype) || alwaysDiscard.Contains(eventtype));
+                return !(he.Commander.NameIsBeta || he.journalEntry.IsBeta || he.Status.IsInMultiPlayer || discardEvents.Contains(eventtype) || alwaysDiscard.Contains(eventtype));
             }
         }
 
