@@ -12,8 +12,6 @@
  * governing permissions and limitations under the License.
  */
 
-//#define VANITYADD
-
 using BaseUtils;
 using System;
 using System.Collections.Generic;
@@ -2386,7 +2384,7 @@ namespace EliteDangerousCore
 
             vanitymodules = new Dictionary<string, ShipModule>   
             {
-                {"adder_shipkit1_bumper2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Adder Shipkit 1 Bumper 2") },
+                                {"adder_shipkit1_bumper2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Adder Shipkit 1 Bumper 2") },
                 {"adder_shipkit1_bumper3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Adder Shipkit 1 Bumper 3") },
                 {"adder_shipkit1_bumper4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Adder Shipkit 1 Bumper 4") },
                 {"adder_shipkit1_spoiler1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Adder Shipkit 1 Spoiler 1") },
@@ -2749,6 +2747,7 @@ namespace EliteDangerousCore
                 {"decal_lavecon", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Lave Con") },
                 {"decal_met_billionaires_treasure_hunts_gold", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Met Billionaires Treasure Hunts Gold") },
                 {"decal_met_bountyhunter_gold", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Met Bountyhunter Gold") },
+                {"decal_met_bountyhunter_silver", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Met Bountyhunter Silver") },
                 {"decal_met_brewercorporation_bronze", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Met Brewercorporation Bronze") },
                 {"decal_met_brewercorporation_gold", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Met Brewercorporation Gold") },
                 {"decal_met_brewercorporation_silver", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Met Brewercorporation Silver") },
@@ -3198,6 +3197,7 @@ namespace EliteDangerousCore
                 {"paintjob_anaconda_militaire_earth_yellow", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Anaconda Militaire Earth Yellow") },
                 {"paintjob_anaconda_militaire_forest_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Anaconda Militaire Forest Green") },
                 {"paintjob_anaconda_militaire_sand", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Anaconda Militaire Sand") },
+                {"paintjob_anaconda_operator_gold", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Anaconda Operator Gold") },
                 {"paintjob_anaconda_operator_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Anaconda Operator Red") },
                 {"paintjob_anaconda_prestige_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Anaconda Prestige Blue") },
                 {"paintjob_anaconda_prestige_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Anaconda Prestige Green") },
@@ -3231,6 +3231,7 @@ namespace EliteDangerousCore
                 {"paintjob_anaconda_winter1_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Anaconda Winter 1 3") },
                 {"paintjob_anaconda_winter1_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Anaconda Winter 1 6") },
                 {"paintjob_anaconda_wireframe_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Anaconda Wireframe 1") },
+                {"paintjob_asp_autumn_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Autumn 2") },
                 {"paintjob_asp_autumn_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Autumn 3") },
                 {"paintjob_asp_blackfriday_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Blackfriday 1") },
                 {"paintjob_asp_blackfriday2_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Blackfriday 2 1") },
@@ -3295,6 +3296,7 @@ namespace EliteDangerousCore
                 {"paintjob_asp_vibrant_yellow", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Vibrant Yellow") },
                 {"paintjob_asp_wireframe_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Wireframe 1") },
                 {"paintjob_belugaliner_blackfriday_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Belugaliner Blackfriday 1") },
+                {"paintjob_belugaliner_calligraphy_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Belugaliner Calligraphy 3") },
                 {"paintjob_belugaliner_calligraphy_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Belugaliner Calligraphy 5") },
                 {"paintjob_belugaliner_corporatefleet_fleeta", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Belugaliner Corporate Fleet Fleet A") },
                 {"paintjob_belugaliner_ember_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Belugaliner Ember Blue") },
@@ -3425,6 +3427,7 @@ namespace EliteDangerousCore
                 {"paintjob_diamondbackxl_blackfriday_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Diamondbackxl Blackfriday 1") },
                 {"paintjob_diamondbackxl_christmas_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Diamondback XL Christmas 1") },
                 {"paintjob_diamondbackxl_christmas_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Diamondback XL Christmas 2") },
+                {"paintjob_diamondbackxl_christmas_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Diamondbackxl Christmas 6") },
                 {"paintjob_diamondbackxl_horus1_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Diamondbackxl Horus 1 3") },
                 {"paintjob_diamondbackxl_horus2_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Diamondbackxl Horus 2 2") },
                 {"paintjob_diamondbackxl_horus2_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Diamondbackxl Horus 2 3") },
@@ -3442,6 +3445,7 @@ namespace EliteDangerousCore
                 {"paintjob_diamondbackxl_salvage_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Diamondbackxl Salvage 5") },
                 {"paintjob_diamondbackxl_science_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Diamondbackxl Science 3") },
                 {"paintjob_diamondbackxl_summer_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Diamondbackxl Summer 4") },
+                {"paintjob_diamondbackxl_summer_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Diamondbackxl Summer 5") },
                 {"paintjob_diamondbackxl_tactical_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Diamondbackxl Tactical Blue") },
                 {"paintjob_diamondbackxl_tactical_grey", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Diamondbackxl Tactical Grey") },
                 {"paintjob_diamondbackxl_tactical_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Diamondbackxl Tactical Red") },
@@ -3551,6 +3555,7 @@ namespace EliteDangerousCore
                 {"paintjob_feddropship_tactical_white", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Feddropship Tactical White") },
                 {"paintjob_feddropship_vibrant_orange", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Feddropship Vibrant Orange") },
                 {"paintjob_federation_corvette_blackfriday_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Corvette Blackfriday 1") },
+                {"paintjob_federation_corvette_blackfriday2_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Corvette Blackfriday 2 1") },
                 {"paintjob_federation_corvette_colourgeo_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Corvette Colour Geo Blue") },
                 {"paintjob_federation_corvette_colourgeo_grey", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Corvette Colourgeo Grey") },
                 {"paintjob_federation_corvette_colourgeo_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Corvette Colourgeo Red") },
@@ -3606,6 +3611,7 @@ namespace EliteDangerousCore
                 {"paintjob_federation_gunship_tactical_grey", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Tactical Grey") },
                 {"paintjob_federation_gunship_tactical_white", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Tactical White") },
                 {"paintjob_ferdelance_blackfriday_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Fer De Lance Black Friday 1") },
+                {"paintjob_ferdelance_blackfriday2_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Ferdelance Blackfriday 2 1") },
                 {"paintjob_ferdelance_gradient2_crimson", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Ferdelance Gradient 2 Crimson") },
                 {"paintjob_ferdelance_gradient2_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Ferdelance Gradient 2 Green") },
                 {"paintjob_ferdelance_gradient2_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Ferdelance Gradient 2 Red") },
@@ -3624,6 +3630,7 @@ namespace EliteDangerousCore
                 {"paintjob_ferdelance_salvation_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Ferdelance Salvation 3") },
                 {"paintjob_ferdelance_salvation_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Ferdelance Salvation 4") },
                 {"paintjob_ferdelance_slipstream_orange", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Ferdelance Slipstream Orange") },
+                {"paintjob_ferdelance_summer1_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Ferdelance Summer 1 1") },
                 {"paintjob_ferdelance_tactical_grey", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Ferdelance Tactical Grey") },
                 {"paintjob_ferdelance_tactical_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Fer De Lance Tactical Red") },
                 {"paintjob_ferdelance_tactical_white", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Ferdelance Tactical White") },
@@ -3665,10 +3672,13 @@ namespace EliteDangerousCore
                 {"paintjob_indfighter_vibrant_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Ind Fighter Vibrant Red") },
                 {"paintjob_indfighter_vibrant_yellow", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Ind Fighter Vibrant Yellow") },
                 {"paintjob_krait_light_blackfriday_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Light Blackfriday 1") },
+                {"paintjob_krait_light_blackfriday2_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Light Blackfriday 2 1") },
                 {"paintjob_krait_light_christmas_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Light Christmas 3") },
+                {"paintjob_krait_light_christmas_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Light Christmas 6") },
                 {"paintjob_krait_light_egypt_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Light Egypt 2") },
                 {"paintjob_krait_light_faction1_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Light Faction 1 4") },
                 {"paintjob_krait_light_gradient2_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Light Gradient 2 Blue") },
+                {"paintjob_krait_light_gradient2_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Light Gradient 2 Green") },
                 {"paintjob_krait_light_gradient2_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Light Gradient 2 Red") },
                 {"paintjob_krait_light_hornet_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Light Hornet 4") },
                 {"paintjob_krait_light_horus1_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Light Horus 1 2") },
@@ -3725,6 +3735,7 @@ namespace EliteDangerousCore
                 {"paintjob_krait_mkii_iridescentblack_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mkii Iridescentblack 6") },
                 {"paintjob_krait_mkii_iridescenthighcolour_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mk II Iridescent High Colour 1") },
                 {"paintjob_krait_mkii_iridescenthighcolour_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mk II Iridescent High Colour 5") },
+                {"paintjob_krait_mkii_lowlighteffect_01_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mkii Lowlighteffect 1 3") },
                 {"paintjob_krait_mkii_lowlighteffect_01_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mkii Lowlighteffect 1 6") },
                 {"paintjob_krait_mkii_lrpo_azure", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mkii Lrpo Azure") },
                 {"paintjob_krait_mkii_metallic2_chrome", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mkii Metallic 2 Chrome") },
@@ -3809,6 +3820,7 @@ namespace EliteDangerousCore
                 {"paintjob_python_horus2_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Horus 2 2") },
                 {"paintjob_python_horus2_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Horus 2 3") },
                 {"paintjob_python_industrial_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Industrial 1") },
+                {"paintjob_python_industrial_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Industrial 3") },
                 {"paintjob_python_iridescentblack_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Iridescentblack 2") },
                 {"paintjob_python_iridescentblack_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Iridescentblack 4") },
                 {"paintjob_python_iridescentblack_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Iridescentblack 5") },
@@ -4019,6 +4031,7 @@ namespace EliteDangerousCore
                 {"paintjob_typex_festive_silver", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Typex Festive Silver") },
                 {"paintjob_typex_guardian_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Typex Guardian 1") },
                 {"paintjob_typex_horus1_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Typex Horus 1 1") },
+                {"paintjob_typex_horus2_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Typex Horus 2 3") },
                 {"paintjob_typex_iridescentblack_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Typex Iridescentblack 2") },
                 {"paintjob_typex_iridescentblack_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Typex Iridescentblack 4") },
                 {"paintjob_typex_iridescentblack_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Typex Iridescent black 5") },
