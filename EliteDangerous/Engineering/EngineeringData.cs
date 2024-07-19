@@ -215,10 +215,10 @@ namespace EliteDangerousCore
             return Modifiers != null ? Array.Find(Modifiers, x => x.Label.Equals(name, StringComparison.InvariantCultureIgnoreCase)) : null;
         }
 
-        public ItemData.ShipModule EngineerModule(string modulefdname, ItemData.ShipModule original, bool debugit = false)
+        public ItemData.ShipModule EngineerModule(ItemData.ShipModule original, string modulefdname = "", ShipSlots.Slot slotfd = ShipSlots.Slot.Unknown, bool debugit = false)
         {
             if (debugit)
-                System.Diagnostics.Debug.WriteLine($"*** Engineer module {modulefdname} ");
+                System.Diagnostics.Debug.WriteLine($"*** Engineer module {modulefdname} in {slotfd}");
 
             var engineered = new ItemData.ShipModule(original);       // take a copy
 
@@ -241,7 +241,7 @@ namespace EliteDangerousCore
                     if ( modifyarray.Length == 0 )
                     {
                         if (debugit)
-                            System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName} {mf.Label} No variables associated with this FD property");
+                            System.Diagnostics.Debug.WriteLine($"Engineer {original.EnglishModName}, fd {mf.Label}: No variables associated with this FD property");
                         continue;
                     }
 
@@ -252,6 +252,9 @@ namespace EliteDangerousCore
                         string pset = modifyarray[pno];                   // parameter, and optional set of cop outs
                         bool divit = pset.StartsWith("/");              // / means we divide not multiply the ratio when setting the para
                         if (divit)
+                            pset = pset.Substring(1);
+                        bool doubleit = pset.StartsWith("2");
+                        if ( doubleit)
                             pset = pset.Substring(1);
 
                         string[] exceptiontypes = new string[0];        // split string into primary (pset) and exception list
@@ -270,7 +273,7 @@ namespace EliteDangerousCore
                         if (pno > 0 && primarymodifiers.Find(x => x == pset) != null)
                         {
                             if (debugit)
-                                System.Diagnostics.Debug.WriteLine($"{debugpad}Engineer {original.EnglishModName} {mf.Label} {pset} NOT changing due to primary modifier being present");
+                                System.Diagnostics.Debug.WriteLine($"{debugpad}Engineer {original.EnglishModName}, fd {mf.Label}, para {pset}: NOT changing due to primary modifier being present");
                             continue;
                         }
 
@@ -289,7 +292,7 @@ namespace EliteDangerousCore
                             if (negativecheck ? anyfound == true : anyfound == false)        // negative check means can't have any, position check means must have something
                             {
                                 if (debugit)
-                                    System.Diagnostics.Debug.WriteLine($"{debugpad}Engineer {original.EnglishModName} {mf.Label} {pset} NOT changing due to condition {exceptiontype}");
+                                    System.Diagnostics.Debug.WriteLine($"{debugpad}Engineer {original.EnglishModName}, fd {mf.Label}, para {pset}: NOT changing due to condition {exceptiontype}");
                                 stop = true;
                                 break;
                             }
@@ -304,21 +307,26 @@ namespace EliteDangerousCore
                         if (orgvalue != null)         // it may be null, because it may not be there..  thats a failure
                         {
                             double valuetoset;
+                            double ratiotoapply = ratio;
+                            
                             if (pno == 0)           // primary modifier, we set it and record the ratio
                             {
                                 valuetoset = mf.Value;
-                                ratio = mf.Value / mf.OriginalValue;
+                                ratio = ratiotoapply = mf.Value / mf.OriginalValue;
                             }
                             else
                             {                       // secondary, we apply the ratio
+                                if (doubleit)
+                                    ratiotoapply = ((ratio - 1) * 2) + 1;      // take off the 1 to get scalar direct (say 0.21), then double it (0.42), and move back to 1. this is different to just doubling 1.21. Its a percentage double
+
                                 if (divit)
-                                    valuetoset = (double)orgvalue / ratio;
+                                    valuetoset = (double)orgvalue * (1 - (ratiotoapply - 1));   // apply using it as a percentage
                                 else
-                                    valuetoset = (double)orgvalue * ratio;
+                                    valuetoset = (double)orgvalue * ratiotoapply;
                             }
 
                             if (debugit)
-                                System.Diagnostics.Debug.WriteLine($"{debugpad}Engineer {original.EnglishModName} {mf.Label} {pset} {orgvalue} -> {valuetoset} ratio {ratio}");
+                                System.Diagnostics.Debug.WriteLine($"{debugpad}Engineer {original.EnglishModName}, fd {mf.Label}, para {pset}: orgvalue {orgvalue} -> {valuetoset} ratio {ratiotoapply}");
 
                             if (orgvalue is double?)
                             {
@@ -338,7 +346,7 @@ namespace EliteDangerousCore
                             }
                             else
                             {
-                                System.Diagnostics.Trace.WriteLine($"*** Engineering setting a null value {modulefdname} {this.BlueprintName} {this.ExperimentalEffect} {pset}");
+                                System.Diagnostics.Trace.WriteLine($"*** Engineering setting a null value in module {modulefdname} at {slotfd} blueprint '{this.BlueprintName}' se '{this.ExperimentalEffect}' para '{pset}' value {mf.Value}");
                                 
                                 if ( prop.PropertyType.FullName.Contains("System.Double"))
                                 {
@@ -431,10 +439,14 @@ namespace EliteDangerousCore
                                                         "BreachDamage!-Damage|-RateOfFire",           // change BreachDamage as long as .. is not there
                                                 },
             ["Damage"] = new string[] { "Damage", "BreachDamage",
-                                                  "BurstInterval!+hpt_railgun*|+Weapon_HighCapacity"   // change burstinterval if module is railgun and recipe is High Capacity
+                                                  "BurstInterval!+hpt_railgun*|+Weapon_HighCapacity",   // change burstinterval if module is railgun and recipe is High Capacity
+                                                  // error "BurstInterval!+hpt_guardian_gausscannon*"   // change burstinterval if module is guass cannon
           
                                                 },
-            ["RateOfFire"] = new string[] { "RateOfFire", "/BurstInterval!-hpt_railgun*" },
+            ["RateOfFire"] = new string[] { "RateOfFire", 
+                                                   "/BurstInterval!-hpt_railgun*|-hpt_slugshot*",       // reduce by as long as not these types
+                                                   "/2BurstInterval!+hpt_guardian_gausscannon*",       // double reduce if gauss cannon (this overrides above)
+                                           },
 
             ["ShieldGenStrength"] = new string[] { "OptStrength", "MinStrength", "MaxStrength" },
 

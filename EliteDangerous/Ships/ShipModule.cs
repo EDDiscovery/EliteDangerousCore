@@ -69,7 +69,7 @@ namespace EliteDangerousCore
             {
                 if (Engineering != null)    // has engineering
                 {
-                    return Engineering.EngineerModule(ItemFD, mdu, debugit);
+                    return Engineering.EngineerModule(mdu, ItemFD, SlotFD, debugit);
                 }
                 else
                 {
