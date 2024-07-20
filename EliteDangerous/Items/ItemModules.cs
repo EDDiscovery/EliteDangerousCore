@@ -4348,6 +4348,8 @@ namespace EliteDangerousCore
                             vanitymodules.Add(id, sm);
                             added = true;
                         }
+                        else
+                            System.Diagnostics.Debug.WriteLine($"Module exists {id}");
                     }
                 }
 

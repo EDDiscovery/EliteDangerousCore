@@ -71,8 +71,11 @@ namespace EliteDangerousCore
              { "ps_turretbasesmall_3m", new Actor("Turret Small 3 M") },
              { "ps_turretbasemedium_skiff_6m", new Actor("Turret Medium 6 M") },
 
+             { "poi_turretbasea", new Actor("Turret Base") },
              { "poi_turretbunkera", new Actor("Turret Bunker A") },
              { "poi_turretplatforma", new Actor("Turret Platform A") },
+
+             { "mega_defences", new Actor("Mega Defences") },
 
              { "scout", new Actor("Thargoid Scout") },
              { "scout_q", new Actor("Thargoid Scout (Q)") },
@@ -94,6 +97,7 @@ namespace EliteDangerousCore
              { "adder_taxi", new Actor("Taxi (Adder)") },
 
              { "oneillcylinder", new Actor("O'Neill Cylinder") },
+             { "oneillorbis", new Actor("O'Neill Orbis") },
              { "outpostcivilian", new Actor("Civilian Outpost") },
              { "outpostindustrial", new Actor("Industrial Outpost") },
              { "megashipdockrehab", new Actor("Mega Ship Prison") },
