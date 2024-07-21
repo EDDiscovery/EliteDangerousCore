@@ -100,6 +100,7 @@ namespace EliteDangerousCore
              { "oneillorbis", new Actor("O'Neill Orbis") },
              { "outpostcivilian", new Actor("Civilian Outpost") },
              { "outpostindustrial", new Actor("Industrial Outpost") },
+             { "outpostcriminal", new Actor("Criminal Outpost") },
              { "megashipdockrehab", new Actor("Mega Ship Prison") },
              { "megashipdocka", new Actor("Mega Ship Dock A") },
              { "asteroidbase", new Actor("Asteroid Base") },
