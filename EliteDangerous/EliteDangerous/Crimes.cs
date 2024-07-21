@@ -40,6 +40,7 @@ namespace EliteDangerousCore
             ["illegalcargo"] = "Carrying illegal cargo",
             ["interdiction"] = "Interdiction",
             ["murder"] = "Murder of pilot on ship",
+            ["onfoot_assault"] = "Assaulting a Person",
             ["onfoot_arccutteruse"] = "Using an arc cutter",
             ["onfoot_breakingandentering"] = "Illegal Entry",
             ["onfoot_carryingillegaldata"] = "Carrying illegal data",

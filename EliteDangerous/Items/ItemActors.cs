@@ -66,6 +66,19 @@ namespace EliteDangerousCore
              { "titan_hardpoint03", new Actor("Thargoid Titan") },
              { "titan", new Actor("Titan") },
              { "glaive", new Actor("Thargoid Glaive") },        // seen
+             { "scythe", new Actor("Scythe") },
+             { "scout_cargo", new Actor("Cargo Scout") },
+
+             { "unknownsaucer", new Actor("Thargoid") },
+             { "unknownsaucer_a", new Actor("Thargoid") },
+             { "unknownsaucer_b", new Actor("Thargoid") },
+             { "unknownsaucer_c", new Actor("Thargoid") },
+             { "unknownsaucer_d", new Actor("Thargoid") },
+             { "unknownsaucer_e", new Actor("Thargoid") },  // seen
+             { "unknownsaucer_f", new Actor("Thargoid") },
+             { "unknownsaucer_h", new Actor("Thargoid") },  // seen
+
+             { "guardian_sentinel", new Actor("Guardian Sentinel") },
 
              { "ps_turretbasemedium02_6m", new Actor("Turret medium 2-6-M") },
              { "ps_turretbasesmall_3m", new Actor("Turret Small 3 M") },
@@ -110,14 +123,6 @@ namespace EliteDangerousCore
              { "carrierdockb", new Actor("Carrier Dock B") },
              { "federation_capitalship", new Actor("Federation Capital Ship") },
 
-             { "unknownsaucer", new Actor("Thargoid") },
-             { "unknownsaucer_a", new Actor("Thargoid") },
-             { "unknownsaucer_b", new Actor("Thargoid") },
-             { "unknownsaucer_c", new Actor("Thargoid") },
-             { "unknownsaucer_d", new Actor("Thargoid") },
-             { "unknownsaucer_e", new Actor("Thargoid") },  // seen
-             { "unknownsaucer_f", new Actor("Thargoid") },  
-             { "unknownsaucer_h", new Actor("Thargoid") },  // seen
 
         };
 
