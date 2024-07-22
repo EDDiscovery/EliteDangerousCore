@@ -469,6 +469,8 @@ namespace EliteDangerousCore
                                                     },
             ["Range"] = new string[] { "TypicalEmission", "Range", },
 
+            ["GuardianModuleResistance"] = new string[] { },       // turned up in issue #3529, not in edsy as of 22/7/24.  Ignore for now.
+
             // simples. Empty string[] means there is no equivalent engineering variable we know about..
 
             ["Mass"] = new string[] { nameof(ItemData.ShipModule.Mass), },
@@ -600,6 +602,7 @@ namespace EliteDangerousCore
             ["BurstRate"] = new string[] { nameof(ItemData.ShipModule.BurstRateOfFire) },
             ["BurstSize"] = new string[] { nameof(ItemData.ShipModule.BurstSize) },
             ["DamageFalloffRange"] = new string[] { nameof(ItemData.ShipModule.Falloff) },
+        
         };
 
         // for special effects, what to do..
