@@ -92,7 +92,7 @@ namespace EliteDangerousCore
                             {
                                 string text = vanitymodules[id].EnglishModName;
                                 ShipModule sm2 = new ShipModule(vanitymodules[id].ModuleID, vanitymodules[id].ModType, text.Substring(0, text.Length - 1) + i.ToStringInvariant());
-                                System.Diagnostics.Debug.WriteLine($"Added new module {newid}");
+                                System.Diagnostics.Debug.WriteLine($"Added estimated module {newid}");
                                 vanitymodules.Add(newid, sm2);
                                 added = true;
                             }
@@ -105,7 +105,7 @@ namespace EliteDangerousCore
                     foreach (var cl4 in checklist4)
                     {
                         int pos = id.IndexOf(cl4);
-                        if (pos > 0)
+                        if (pos > 0 && pos+cl4.Length == id.Length-1)
                         {
                             for (int i = 1; i <= 4; i++)
                             {
@@ -114,7 +114,7 @@ namespace EliteDangerousCore
                                 {
                                     string text = vanitymodules[id].EnglishModName;
                                     ShipModule sm2 = new ShipModule(vanitymodules[id].ModuleID, vanitymodules[id].ModType, text.Substring(0, text.Length - 1) + i.ToStringInvariant());
-                                    System.Diagnostics.Debug.WriteLine($"Added new module {newid}");
+                                    System.Diagnostics.Debug.WriteLine($"Added estimated module {newid}");
                                     vanitymodules.Add(newid, sm2);
                                     added = true;
                                 }
