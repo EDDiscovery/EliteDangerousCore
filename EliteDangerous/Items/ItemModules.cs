@@ -68,14 +68,6 @@ namespace EliteDangerousCore
             return state;
         }
 
-        // look up a special effect and get a ship module describing the deltas to the parameters
-        static public bool TryGetSpecialEffect(string fdid, out ShipModule m)
-        {
-            string lowername = fdid.ToLowerInvariant();
-
-            return specialeffects.TryGetValue(lowername, out m);
-        }
-
         // List of ship modules. Synthesised are not included
         // default is buyable modules only
         // you can include other types
@@ -734,7 +726,6 @@ namespace EliteDangerousCore
         static private Dictionary<string, ShipModule> srvmodules;
         static private Dictionary<string, ShipModule> fightermodules;
         static private Dictionary<string, ShipModule> othershipmodules;
-        static private Dictionary<string, ShipModule> specialeffects;
 
         static void CreateModules()
         {
@@ -2288,99 +2279,6 @@ namespace EliteDangerousCore
             // this array maps a special effect fdname to the effect that it has on module properties - see also material commodities for fdname to materials used
             // automatically generated
 
-            specialeffects = new Dictionary<string, ShipModule>
-            {
-                ["special_auto_loader"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Auto reload while firing") { },
-                ["special_concordant_sequence"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Wing shield regen increased") { ThermalLoad = 50 },
-                ["special_corrosive_shell"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Target armor hardness reduced") { Ammo = -20 },
-                ["special_blinding_shell"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Target sensor acuity reduced") { },
-                ["special_dispersal_field"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Target gimbal/turret tracking reduced") { },
-                ["special_weapon_toughened"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 15 },
-                ["special_drag_munitions"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Target speed reduced") { },
-                ["special_emissive_munitions"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Target signature increased") { ThermalLoad = 100 },
-                ["special_feedback_cascade_cooled"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Target shield cell disrupted") { Damage = -20, ThermalLoad = -40 },
-                ["special_weapon_efficient"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = -10 },
-                ["special_force_shell"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Target pushed off course") { Speed = -16.666666666666671 },
-                ["special_fsd_interrupt"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Target FSD reboots") { Damage = -30, BurstInterval = 50 },
-                ["special_high_yield_shell"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Target module damage") { Damage = -35, BurstInterval = 11.111111111111111, KineticProportionDamage = 50, ExplosiveProportionDamage = 50 },
-                ["special_incendiary_rounds"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { BurstInterval = 5.2631578947368416, ThermalLoad = 200, KineticProportionDamage = 10, ThermalProportionDamage = 90 },
-                ["special_distortion_field"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { Damage = 50, KineticProportionDamage = 50, ThermalProportionDamage = 50, Jitter = 3 },
-                ["special_choke_canister"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Target thrusters reboot") { },
-                ["special_mass_lock"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Target FSD inhibited") { },
-                ["special_weapon_rateoffire"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = 5, BurstInterval = -2.9126213592233 },
-                ["special_overload_munitions"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { ThermalProportionDamage = 50, ExplosiveProportionDamage = 50 },
-                ["special_weapon_damage"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = 5, Damage = 3 },
-                ["special_penetrator_munitions"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Target module damage") { },
-                ["special_deep_cut_payload"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Target module damage") { },
-                ["special_phasing_sequence"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "10% of damage bypasses shields") { Damage = -10 },
-                ["special_plasma_slug"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Reload from ship fuel") { Damage = -10, Ammo = -100 },
-                ["special_plasma_slug_cooled"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Reload from ship fuel") { Damage = -10, ThermalLoad = -40, Ammo = -100 },
-                ["special_radiant_canister"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Area heat increased and sensors disrupted") { },
-                ["special_regeneration_sequence"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Target wing shields regenerated") { Damage = -10 },
-                ["special_reverberating_cascade"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Target shield generator damaged") { },
-                ["special_scramble_spectrum"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Target modules malfunction") { BurstInterval = 11.111111111111111 },
-                ["special_screening_shell"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Effective against munitions") { ReloadTime = -50 },
-                ["special_shiftlock_canister"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Area FSDs reboot") { },
-                ["special_smart_rounds"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "No damage to untargeted ships") { },
-                ["special_weapon_lightweight"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { Mass = -10 },
-                ["special_super_penetrator_cooled"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Target module damage") { ThermalLoad = -40, ReloadTime = 50 },
-                ["special_lock_breaker"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Target loses target lock") { },
-                ["special_thermal_cascade"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Shielded target heat increased") { },
-                ["special_thermal_conduit"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Damage increases with heat level") { },
-                ["special_thermalshock"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Target heat increased") { },
-                ["special_thermal_vent"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "Heat reduced when striking a target") { },
-                ["special_shieldbooster_explosive"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { ShieldReinforcement = -1, ExplosiveResistance = 2 },
-                ["special_shieldbooster_toughened"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 15 },
-                ["special_shieldbooster_efficient"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = -10 },
-                ["special_shieldbooster_kinetic"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { ShieldReinforcement = -1, KineticResistance = 2 },
-                ["special_shieldbooster_chunky"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { ShieldReinforcement = 5, KineticResistance = -2, ThermalResistance = -2, ExplosiveResistance = -2 },
-                ["special_shieldbooster_thermic"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { ShieldReinforcement = -1, ThermalResistance = 2 },
-                ["special_armour_kinetic"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { HullStrengthBonus = -3, KineticResistance = 8 },
-                ["special_armour_chunky"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { HullStrengthBonus = 8, KineticResistance = -3, ThermalResistance = -3, ExplosiveResistance = -3 },
-                ["special_armour_explosive"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { HullStrengthBonus = -3, ExplosiveResistance = 8 },
-                ["special_armour_thermic"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { HullStrengthBonus = -3, ThermalResistance = 8 },
-                ["special_powerplant_toughened"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 15 },
-                ["special_powerplant_highcharge"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { Mass = 10, PowerGen = 5 },
-                ["special_powerplant_lightweight"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { Mass = -10 },
-                ["special_powerplant_cooled"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { HeatEfficiency = -10 },
-                ["special_engine_toughened"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 15 },
-                ["special_engine_overloaded"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { EngineOptMultiplier = 4, ThermalLoad = 10 },
-                ["special_engine_haulage"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { OptMass = 10 },
-                ["special_engine_lightweight"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { Mass = -10 },
-                ["special_engine_cooled"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { Mass = 5, ThermalLoad = -10 },
-                ["special_fsd_fuelcapacity"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = 5, MaxFuelPerJump = 10 },
-                ["special_fsd_toughened"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 25 },
-                ["special_fsd_heavy"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = -8, OptMass = 4 },
-                ["special_fsd_lightweight"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { Mass = -10 },
-                ["special_fsd_cooled"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { ThermalLoad = -10 },
-                ["special_powerdistributor_capacity"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { WeaponsCapacity = 8, WeaponsRechargeRate = -2, EngineCapacity = 8, EngineRechargeRate = -2, SystemsCapacity = 8, SystemsRechargeRate = -2 },
-                ["special_powerdistributor_toughened"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 15 },
-                ["special_powerdistributor_efficient"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = -10 },
-                ["special_powerdistributor_lightweight"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { Mass = -10 },
-                ["special_powerdistributor_fast"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { WeaponsCapacity = -4, WeaponsRechargeRate = 4, EngineCapacity = -4, EngineRechargeRate = 4, SystemsCapacity = -4, SystemsRechargeRate = 4 },
-                ["special_hullreinforcement_kinetic"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { HullReinforcement = -5, KineticResistance = 2 },
-                ["special_hullreinforcement_chunky"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { HullReinforcement = 10, KineticResistance = -2, ThermalResistance = -2, ExplosiveResistance = -2 },
-                ["special_hullreinforcement_explosive"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { HullReinforcement = -5, ExplosiveResistance = 2 },
-                ["special_hullreinforcement_thermic"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { HullReinforcement = -5, ThermalResistance = 2 },
-                ["special_shieldcell_oversized"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { SCBSpinUp = 20, ShieldReinforcement = 5 },
-                ["special_shieldcell_toughened"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 15 },
-                ["special_shieldcell_efficient"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = -10 },
-                ["special_shieldcell_gradual"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { SCBDuration = 10, ShieldReinforcement = -5 },
-                ["special_shieldcell_lightweight"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { Mass = -10 },
-                ["special_shield_toughened"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 15 },
-                ["special_shield_regenerative"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { RegenRate = 15, BrokenRegenRate = 15, KineticResistance = -1.5, ThermalResistance = -1.5, ExplosiveResistance = -1.5 },
-                ["special_shield_kinetic"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { OptStrength = -3, KineticResistance = 8 },
-                ["special_shield_health"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = 10, OptStrength = 6, MWPerUnit = 25 },
-                ["special_shield_efficient"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = -20, OptStrength = -2, MWPerUnit = -20, KineticResistance = -1, ThermalResistance = -1, ExplosiveResistance = -1 },
-                ["special_shield_resistive"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = 10, MWPerUnit = 25, KineticResistance = 3, ThermalResistance = 3, ExplosiveResistance = 3 },
-                ["special_shield_lightweight"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { Mass = -10 },
-                ["special_shield_thermic"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { OptStrength = -3, ThermalResistance = 8 },
-
-                // added older no longer supported ones
-                ["special_feedback_cascade"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { },
-                ["special_super_penetrator"] = new ShipModule(0, ShipModule.ModuleTypes.SpecialEffect, "") { },
-
-            };
 
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2891,6 +2789,7 @@ namespace EliteDangerousCore
                 {"decal_exobio_elite04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Exobio Elite 4") },
                 {"decal_exobio_elite05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Exobio Elite 5") },
                 {"decal_exobio_geneticist", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Exobio Geneticist") },
+                {"decal_exobio_mostly_directionless", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Exobio Mostly Directionless") },
                 {"decal_exobio_taxonomist", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Exobio Taxonomist") },
                 {"decal_exploration_emissblue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Exploration Emissblue") },
                 {"decal_exploration_emissred", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Exploration Emissred") },
@@ -3504,6 +3403,12 @@ namespace EliteDangerousCore
                 {"paintjob_adder_lrpo_azure", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Lrpo Azure") },
                 {"paintjob_adder_metallic_chrome", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Metallic Chrome") },
                 {"paintjob_adder_metallic2_chrome", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Metallic 2 Chrome") },
+                {"paintjob_adder_salvage_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Salvage 1") },
+                {"paintjob_adder_salvage_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Salvage 3") },
+                {"paintjob_adder_salvage_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Salvage 2") },
+                {"paintjob_adder_salvage_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Salvage 4") },
+                {"paintjob_adder_salvage_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Salvage 5") },
+                {"paintjob_adder_salvage_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Salvage 6") },
                 {"paintjob_adder_tactical_grey", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Tactical Grey") },
                 {"paintjob_adder_tactical_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Tactical Red") },
                 {"paintjob_adder_vibrant_orange", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Vibrant Orange") },
@@ -5149,6 +5054,7 @@ namespace EliteDangerousCore
                 {"paintjob_krait_mkii_egypt_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mkii Egypt 5") },
                 {"paintjob_krait_mkii_egypt_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mkii Egypt 6") },
                 {"paintjob_krait_mkii_festive_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mkii Festive Green") },
+                {"paintjob_krait_mkii_festive_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mkii Festive Red") },
                 {"paintjob_krait_mkii_festive_silver", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mkii Festive Silver") },
                 {"paintjob_krait_mkii_festive_white", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mkii Festive White") },
                 {"paintjob_krait_mkii_gradient2_crimson", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mkii Gradient 2 Crimson") },

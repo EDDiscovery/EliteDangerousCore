@@ -123,6 +123,7 @@ namespace EliteDangerousCore
              { "carrierdockb", new Actor("Carrier Dock B") },
              { "federation_capitalship", new Actor("Federation Capital Ship") },
 
+             { "lizryder", new Actor("Engineer Liz Ryder") },
 
         };
 
