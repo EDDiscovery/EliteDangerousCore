@@ -1950,8 +1950,8 @@ namespace EliteDangerousCore
                     System.Diagnostics.Debug.WriteLine($"Cannot read file {x.FullName}");
             }
 
-#endif
         }
+#endif
     }
 
 }
