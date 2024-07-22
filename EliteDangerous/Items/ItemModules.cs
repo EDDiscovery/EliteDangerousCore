@@ -4370,6 +4370,12 @@ namespace EliteDangerousCore
                 {"paintjob_feddropship_mkii_blackfriday_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Fed Dropship Mk II Black Friday 4") },
                 {"paintjob_feddropship_mkii_blackfriday_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Fed Dropship Mk II Black Friday 5") },
                 {"paintjob_feddropship_mkii_blackfriday_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Fed Dropship Mk II Black Friday 6") },
+                {"paintjob_feddropship_mkii_blackfriday2_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Feddropship Mkii Blackfriday 2 1") },
+                {"paintjob_feddropship_mkii_blackfriday2_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Feddropship Mkii Blackfriday 2 2") },
+                {"paintjob_feddropship_mkii_blackfriday2_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Feddropship Mkii Blackfriday 2 3") },
+                {"paintjob_feddropship_mkii_blackfriday2_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Feddropship Mkii Blackfriday 2 4") },
+                {"paintjob_feddropship_mkii_blackfriday2_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Feddropship Mkii Blackfriday 2 5") },
+                {"paintjob_feddropship_mkii_blackfriday2_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Feddropship Mkii Blackfriday 2 6") },
                 {"paintjob_feddropship_mkii_faction1_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Feddropship Mkii Faction 1 1") },
                 {"paintjob_feddropship_mkii_faction1_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Feddropship Mkii Faction 1 2") },
                 {"paintjob_feddropship_mkii_faction1_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Feddropship Mkii Faction 1 3") },
@@ -5946,7 +5952,6 @@ namespace EliteDangerousCore
                 {"weaponcustomisation_white", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Weapon Customisation White") },
                 {"weaponcustomisation_yellow", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Weapon Customisation Yellow") },
                 {"wear", new ShipModule(-1,ShipModule.ModuleTypes.WearAndTearType,"Wear") },
-
             };
 
 #if VANITYADD
@@ -5955,7 +5960,6 @@ namespace EliteDangerousCore
             {
                 string[] toadd = System.IO.File.ReadAllLines(infile);
                 bool added = false;
-                string outfile = @"c:\code\vanity.lst";
 
                 foreach (var line in toadd)
                 {
@@ -6011,13 +6015,51 @@ namespace EliteDangerousCore
 
                 if (added)
                 {
+                    System.Diagnostics.Trace.WriteLine($"*** NEW MODULES!");
+
                     List<string> vanitynames = vanitymodules.Keys.ToList();
                     vanitynames.Sort();
+
+                    // output to file
+                    string outfile = @"c:\code\vanity.lst";
+
                     string tout = "";
                     foreach (var key in vanitynames)
                         tout += $"                {{{key.AlwaysQuoteString()}, new ShipModule({vanitymodules[key].ModuleID},ShipModule.ModuleTypes.{vanitymodules[key].ModType},{vanitymodules[key].EnglishModName.AlwaysQuoteString()}) }},\r\n";
                     BaseUtils.FileHelpers.TryWriteToFile(outfile, tout);
-                    System.Diagnostics.Trace.WriteLine($"*** NEW MODULES!");
+
+                    // auto update cs file - this breaks the debugger note and causes it to notice text updates. Just ignore
+
+                    string csfile = @"c:\code\eddiscovery\elitedangerouscore\elitedangerous\items\itemmodules.cs";
+
+                    if (System.IO.File.Exists(csfile))
+                    {
+                        string[] itemmodules = System.IO.File.ReadAllLines(csfile);
+                        List<string> newfile = new List<string>();
+                        bool done = false;
+                        for (int i = 0; i < itemmodules.Length; i++)
+                        {
+                            if (!done && itemmodules[i].Contains("vanitymodules = new Dictionary"))
+                            {
+                                newfile.Add(itemmodules[i]);
+                                newfile.Add("            {");
+                                foreach (var keya in vanitynames)
+                                    newfile.Add($"                {{{keya.AlwaysQuoteString()}, new ShipModule({vanitymodules[keya].ModuleID},ShipModule.ModuleTypes.{vanitymodules[keya].ModType},{vanitymodules[keya].EnglishModName.AlwaysQuoteString()}) }},");
+
+                                while (!itemmodules[++i].Contains("};"))        // go to line with };
+                                    ;
+
+                                done = true;
+                            }
+
+                            newfile.Add(itemmodules[i]);
+                        }
+
+                        System.Diagnostics.Debug.Assert(done == true);
+                        System.IO.File.WriteAllLines(csfile, newfile);
+
+                        System.Diagnostics.Trace.WriteLine($"*** UPDATED CS FILE");
+                    }
                 }
             }
 
