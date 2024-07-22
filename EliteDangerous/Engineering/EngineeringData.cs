@@ -31,7 +31,7 @@ namespace EliteDangerousCore
         public bool LessIsGood { get; set; }
     }
 
-    [System.Diagnostics.DebuggerDisplay("{Engineer] {BlueprintName} {Level} {ExperimentalEffect]")]
+    [System.Diagnostics.DebuggerDisplay("{Engineer} {BlueprintName} {Level} {ExperimentalEffect}")]
     public class EngineeringData
     {
         public string Engineer { get; set; }
@@ -45,10 +45,12 @@ namespace EliteDangerousCore
         public string ExperimentalEffect_Localised { get; set; }    // may be null or maybe empty (due to frontier)
         public EngineeringModifiers[] Modifiers { get; set; }       // may be null
 
+        public bool IsValid { get { return Level >= 1 && BlueprintName.HasChars(); } }
+
         // Post engineering changes
         public EngineeringData(JObject evt)
         {
-            Engineer = evt["Engineer"].Str();
+            Engineer = evt["Engineer"].Str("Unknown");
             Level = evt["Level"].Int();
 
             if (evt.Contains("Blueprint"))     // old form
@@ -215,10 +217,12 @@ namespace EliteDangerousCore
             return Modifiers != null ? Array.Find(Modifiers, x => x.Label.Equals(name, StringComparison.InvariantCultureIgnoreCase)) : null;
         }
 
-        public ItemData.ShipModule EngineerModule(ItemData.ShipModule original, string modulefdname = "", ShipSlots.Slot slotfd = ShipSlots.Slot.Unknown, bool debugit = false)
+        public ItemData.ShipModule EngineerModule(ItemData.ShipModule original, out string report, string modulefdname = "", ShipSlots.Slot slotfd = ShipSlots.Slot.Unknown, bool debugit = false)
         {
+            report = "";
+
             if (debugit)
-                System.Diagnostics.Debug.WriteLine($"*** Engineer module {modulefdname} in {slotfd}");
+                System.Diagnostics.Debug.WriteLine($"###### Engineer module {modulefdname} in {slotfd}");
 
             var engineered = new ItemData.ShipModule(original);       // take a copy
 
@@ -227,14 +231,14 @@ namespace EliteDangerousCore
             // list of primary modifiers in use from the Modifiers list..
 
             List<string> primarymodifiers = new List<string>();
-            foreach( var x in Modifiers)
+            foreach( var x in Modifiers.EmptyIfNull())
             {
                 if (modifierfdmapping.TryGetValue(x.Label, out string[] modifyarray) && modifyarray.Length>0)  // get the modifier primary control value if present
                     primarymodifiers.Add(modifyarray[0]);
             }
 
             // go thru modifiers
-            foreach (EngineeringModifiers mf in Modifiers)      
+            foreach (EngineeringModifiers mf in Modifiers.EmptyIfNull())        // modifiers may be null
             {
                 if (modifierfdmapping.TryGetValue(mf.Label, out string[] modifyarray))  // get the modify commands from the label
                 {
@@ -342,11 +346,13 @@ namespace EliteDangerousCore
                             if (pset == "PowerDraw" && mf.Value == 0)       // this occurs for engineering a detailed surface scanner, the power draw 0->0, but it may be more than just this module, so generic catch
                             {
                                 if ( debugit )
-                                    System.Diagnostics.Debug.WriteLine($"*** Engineering setting a null value to zero {modulefdname} {this.BlueprintName} {this.ExperimentalEffect} {pset} ignoring it silently");
+                                    System.Diagnostics.Debug.WriteLine($"*** Engineering setting a null value to zero, module {modulefdname} at {slotfd}, blueprint '{this.BlueprintName}' se '{this.ExperimentalEffect}' para '{pset}' ignoring it silently");
                             }
                             else
                             {
-                                System.Diagnostics.Trace.WriteLine($"*** Engineering setting a null value in module {modulefdname} at {slotfd} blueprint '{this.BlueprintName}' se '{this.ExperimentalEffect}' para '{pset}' value {mf.Value}");
+                                string msg = $"*** Engineering setting a null value in module {modulefdname} at {slotfd} blueprint '{this.BlueprintName}' se '{this.ExperimentalEffect}' para '{pset}' value {mf.Value}";
+                                System.Diagnostics.Trace.WriteLine(msg);
+                                report += msg + Environment.NewLine;
                                 
                                 if ( prop.PropertyType.FullName.Contains("System.Double"))
                                 {
@@ -360,7 +366,9 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    System.Diagnostics.Trace.WriteLine($"*** Engineering unknown modifier {modulefdname} {this.BlueprintName} {this.ExperimentalEffect} {mf.Label}");
+                    string msg = $"*** Engineering unknown modifier for module {modulefdname} at {slotfd}, blueprint '{this.BlueprintName}' se '{this.ExperimentalEffect}' para '{mf.Label}'";
+                    System.Diagnostics.Trace.WriteLine(msg);
+                    report += msg + Environment.NewLine;
                 }
             }
 
@@ -389,7 +397,7 @@ namespace EliteDangerousCore
                                 if (debugit)
                                     System.Diagnostics.Debug.WriteLine($"SpecialEffect on {engineered.EnglishModName} SE {ExperimentalEffect} Property {kvp.Key.Name} adjust by {modificationvalue}: {curvalue} -> {nextvalue}");
 
-                                if (kvp.Key.Name == "Damage")
+                                if (kvp.Key.Name == "Damage")       // special code for Damage, do not apply if DPS is a primary 
                                 {
                                     if (!primarymodifiers.Contains("DPS"))
                                     {
@@ -414,7 +422,9 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    System.Diagnostics.Trace.WriteLine($"*** Special effect in engineering not known {modulefdname} {BlueprintName} {ExperimentalEffect}");
+                    string msg = $"*** Special effect in engineering not known {modulefdname} {BlueprintName} {ExperimentalEffect}";
+                    System.Diagnostics.Trace.WriteLine(msg);
+                    report += msg + Environment.NewLine;
                 }
             }
 

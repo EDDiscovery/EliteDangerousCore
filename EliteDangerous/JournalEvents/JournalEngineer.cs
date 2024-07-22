@@ -135,7 +135,12 @@ namespace EliteDangerousCore.JournalEvents
             ModuleFD = JournalFieldNaming.NormaliseFDItemName(evt["Module"].Str()); // may not be present
             Module = JournalFieldNaming.GetBetterEnglishModuleName(ModuleFD);
 
-            Engineering = new EngineeringData(evt);  
+            Engineering = new EngineeringData(evt);
+            if (!Engineering.IsValid)
+            {
+                System.Diagnostics.Debug.WriteLine($"Bad Engineering line Craft {evt.ToString()}");
+                Engineering = null;
+            }
 
             IsPreview = evt["IsPreview"].BoolNull();
             JToken ingredients = (JToken)evt["Ingredients"];

@@ -64,17 +64,31 @@ namespace EliteDangerousCore
         }
 
         // for this ship module the engineered properties, may be null.  If engineering fails, you still get the properties.
-        public ItemData.ShipModule GetShipModulePropertiesEngineered(ShipSlots.Slot slot , bool debugit = false)
+        public ItemData.ShipModule GetShipModulePropertiesEngineered(ShipSlots.Slot slot, bool debugit = false)
         {
             if (Modules.TryGetValue(slot, out ShipModule module))
             {
-                return module.GetModuleEngineered(debugit);
+                return module.GetModuleEngineered(out string _, debugit);
             }
             else
             {
                 return null;
             }
-                
+
+        }
+        // for this ship module the engineered properties, may be null.  If engineering fails, you still get the properties.
+        public ItemData.ShipModule GetShipModulePropertiesEngineered(ShipSlots.Slot slot, out string report, bool debugit = false)
+        {
+            report = "";
+            if (Modules.TryGetValue(slot, out ShipModule module))
+            {
+                return module.GetModuleEngineered(out report, debugit);
+            }
+            else
+            {
+                return null;
+            }
+
         }
 
         // slots with modules matching this test, return list of slots where they are in
@@ -398,7 +412,7 @@ namespace EliteDangerousCore
 
                 foreach (var modkvp in Modules)
                 {
-                    var me = modkvp.Value.GetModuleEngineered();
+                    var me = modkvp.Value.GetModuleEngineered(out string _);
 
                     if (me.HullReinforcement.HasValue)    // hull reinforcements , Guardian Hull, meta allow hulls
                     {

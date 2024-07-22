@@ -61,6 +61,11 @@ namespace EliteDangerousCore.JournalEvents
                     if (jeng != null)
                     {
                         engineering = new EngineeringData(jeng);
+                        if (!engineering.IsValid)       // we get some bad engineering lines, if so, then remove the engineering
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Bad Engineering line loadout : {jo.ToString()}");
+                            engineering = null;
+                        }
                     }
 
                     ShipSlots.Slot slotfdname = ShipSlots.ToEnum(jo["Slot"].Str());

@@ -19,6 +19,7 @@
 using QuickJSON;
 using BaseUtils;
 using System;
+using System.Linq;
 
 namespace EliteDangerousCore
 {
@@ -313,7 +314,7 @@ namespace EliteDangerousCore
                 Check(stats.ShieldsKineticValue.ApproxEqualsPercent(3607.2));
                 Check(stats.ShieldsThermalValue.ApproxEqualsPercent(2223.9));
                 Check(stats.ShieldsExplosiveValue.ApproxEqualsPercent(4328.7));
-                Check(stats.ShieldBuildTime.Value.ApproxEqualsPercent(3*60+26));
+                Check(stats.ShieldBuildTime.Value.ApproxEqualsPercent(3 * 60 + 26));
                 Check(stats.ShieldRegenTime.ApproxEqualsPercent(10 * 60 + 41));
 
                 Check(stats.ArmourRaw.Value.ApproxEqualsPercent(1031.625));
@@ -341,7 +342,7 @@ namespace EliteDangerousCore
                 Check(stats.WeaponAXPercentage.ApproxEqualsPercent(0));
                 Check(stats.WeaponDuration.ApproxEqualsPercent(5.172));
                 Check(stats.WeaponDurationMax.ApproxEqualsPercent(8.895));
-                Check(stats.WeaponAmmoDuration.ApproxEqualsPercent(3*60+35));
+                Check(stats.WeaponAmmoDuration.ApproxEqualsPercent(3 * 60 + 35));
                 Check(stats.WeaponCurSus.ApproxEqualsPercent(28.559));
                 Check(stats.WeaponMaxSus.ApproxEqualsPercent(61.219));
 
@@ -405,24 +406,24 @@ namespace EliteDangerousCore
 
             {
 
-            //TEST Module Hpt_pulselaserburst_gimbal_medium in MediumHardpoint2 Blueprint: Efficient Weapon
-            //Level: 5
-            //Quality: 1
-            //Power Draw: 0.541, Original: 1.04, Mult: -48.0 % (Worse)
-            //Damage Per Second: 12.767, Original: 10.296, Mult: 24.0 % (Better)
-            //Damage: 3.038, Original: 2.45, Mult: 24.0 % (Better)
-            //Distributor Draw: 0.27, Original: 0.49, Mult: -45.0 % (Worse)
-            //Thermal Load: 0.268, Original: 0.67, Mult: -60.0 % (Worse)
+                //TEST Module Hpt_pulselaserburst_gimbal_medium in MediumHardpoint2 Blueprint: Efficient Weapon
+                //Level: 5
+                //Quality: 1
+                //Power Draw: 0.541, Original: 1.04, Mult: -48.0 % (Worse)
+                //Damage Per Second: 12.767, Original: 10.296, Mult: 24.0 % (Better)
+                //Damage: 3.038, Original: 2.45, Mult: 24.0 % (Better)
+                //Distributor Draw: 0.27, Original: 0.49, Mult: -45.0 % (Worse)
+                //Thermal Load: 0.268, Original: 0.67, Mult: -60.0 % (Worse)
 
-            //Engineer Burst Laser Gimbal Medium PowerDraw PowerDraw 1.04-> 0.5408 ratio 0.52
-            //Engineer Burst Laser Gimbal Medium DamagePerSecond DPS 10.296-> 12.767457 ratio 1.24000003496389
-            //   Engineer Burst Laser Gimbal Medium DamagePerSecond Damage NOT changing due to primary modifier being present
-            //   Engineer Burst Laser Gimbal Medium DamagePerSecond BreachDamage NOT changing due to condition - Damage
-            //Engineer Burst Laser Gimbal Medium Damage Damage 2.45-> 3.038 ratio 1.24
-            //   Engineer Burst Laser Gimbal Medium Damage BreachDamage 2.1-> 2.604 ratio 1.24
-            //   Engineer Burst Laser Gimbal Medium Damage BurstInterval NOT changing due to condition +hpt_railgun *
-            //Engineer Burst Laser Gimbal Medium DistributorDraw DistributorDraw 0.49-> 0.2695 ratio 0.55
-            //Engineer Burst Laser Gimbal Medium ThermalLoad ThermalLoad 0.67-> 0.268 ratio 0.4
+                //Engineer Burst Laser Gimbal Medium PowerDraw PowerDraw 1.04-> 0.5408 ratio 0.52
+                //Engineer Burst Laser Gimbal Medium DamagePerSecond DPS 10.296-> 12.767457 ratio 1.24000003496389
+                //   Engineer Burst Laser Gimbal Medium DamagePerSecond Damage NOT changing due to primary modifier being present
+                //   Engineer Burst Laser Gimbal Medium DamagePerSecond BreachDamage NOT changing due to condition - Damage
+                //Engineer Burst Laser Gimbal Medium Damage Damage 2.45-> 3.038 ratio 1.24
+                //   Engineer Burst Laser Gimbal Medium Damage BreachDamage 2.1-> 2.604 ratio 1.24
+                //   Engineer Burst Laser Gimbal Medium Damage BurstInterval NOT changing due to condition +hpt_railgun *
+                //Engineer Burst Laser Gimbal Medium DistributorDraw DistributorDraw 0.49-> 0.2695 ratio 0.55
+                //Engineer Burst Laser Gimbal Medium ThermalLoad ThermalLoad 0.67-> 0.268 ratio 0.4
 
                 string t = @"{""event"":""Loadout"",""Ship"":""krait_mkii"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":44152080,""ModulesValue"":1708430,""UnladenMass"":636,""CargoCapacity"":82,""MaxJumpRange"":8.985727,""FuelCapacity"":{""Main"":32,""Reserve"":0.63},""Rebuy"":2293025,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""MediumHardpoint1"",""Item"":""hpt_pulselaser_fixed_small"",""On"":true,""Priority"":0,""Value"":2200},{""Slot"":""MediumHardpoint2"",""Item"":""hpt_pulselaserburst_gimbal_medium"",""On"":true,""Priority"":0,""Value"":48500,""Engineering"":{""BlueprintName"":""Weapon_Efficient"",""Level"":5,""Quality"":1,""Modifiers"":[{""Label"":""PowerDraw"",""Value"":0.5408,""OriginalValue"":1.04},{""Label"":""DamagePerSecond"",""Value"":12.767457,""OriginalValue"":10.296336},{""Label"":""Damage"",""Value"":3.038,""OriginalValue"":2.45},{""Label"":""DistributorDraw"",""Value"":0.2695,""OriginalValue"":0.49},{""Label"":""ThermalLoad"",""Value"":0.268,""OriginalValue"":0.67}]}},{""Slot"":""Armour"",""Item"":""krait_mkii_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size7_class1"",""On"":true,""Priority"":0,""Value"":480410},{""Slot"":""MainEngines"",""Item"":""int_engine_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size5_class1"",""On"":true,""Priority"":0,""Value"":63010},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size4_class1"",""On"":true,""Priority"":0,""Value"":11350},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size7_class1"",""On"":true,""Priority"":0,""Value"":249140},{""Slot"":""Radar"",""Item"":""int_sensors_size6_class1"",""On"":true,""Priority"":0,""Value"":88980},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size5_class3"",""On"":true,""Priority"":0,""Value"":97750},{""Slot"":""Slot01_Size6"",""Item"":""int_shieldgenerator_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""Slot02_Size6"",""Item"":""int_cargorack_size5_class1"",""On"":true,""Priority"":0,""Value"":111570},{""Slot"":""Slot03_Size5"",""Item"":""int_cargorack_size5_class1"",""On"":true,""Priority"":0,""Value"":111570},{""Slot"":""Slot04_Size5"",""Item"":""int_cargorack_size4_class1"",""On"":true,""Priority"":0,""Value"":34330},{""Slot"":""Slot08_Size2"",""Item"":""int_cargorack_size1_class1"",""On"":true,""Priority"":0,""Value"":1000},{""Slot"":""Slot09_Size1"",""Item"":""int_supercruiseassist"",""On"":true,""Priority"":0,""Value"":9120}]}";
                 var mod = GetModule(t, ShipSlots.Slot.MediumHardpoint2, true);
@@ -496,24 +497,24 @@ namespace EliteDangerousCore
             }
 
             {
-//TEST Module Hpt_pulselaserburst_gimbal_medium in MediumHardpoint2 Blueprint: Efficient Weapon
-//Level: 3
-//Quality: 1
-//Power Draw: 0.79, Original: 1.04, Mult: -24.0 % (Worse)
-//Damage Per Second: 11.944, Original: 10.296, Mult: 16.0 % (Better)
-//Damage: 2.842, Original: 2.45, Mult: 16.0 % (Better)
-//Distributor Draw: 0.368, Original: 0.49, Mult: -25.0 % (Worse)
-//Thermal Load: 0.352, Original: 0.67, Mult: -47.5 % (Worse)
+                //TEST Module Hpt_pulselaserburst_gimbal_medium in MediumHardpoint2 Blueprint: Efficient Weapon
+                //Level: 3
+                //Quality: 1
+                //Power Draw: 0.79, Original: 1.04, Mult: -24.0 % (Worse)
+                //Damage Per Second: 11.944, Original: 10.296, Mult: 16.0 % (Better)
+                //Damage: 2.842, Original: 2.45, Mult: 16.0 % (Better)
+                //Distributor Draw: 0.368, Original: 0.49, Mult: -25.0 % (Worse)
+                //Thermal Load: 0.352, Original: 0.67, Mult: -47.5 % (Worse)
 
-//Engineer Burst Laser Gimbal Medium PowerDraw PowerDraw 1.04-> 0.7904 ratio 0.76
-//Engineer Burst Laser Gimbal Medium DamagePerSecond DPS 10.296-> 11.94375 ratio 1.16000002330926
-//   Engineer Burst Laser Gimbal Medium DamagePerSecond Damage NOT changing due to primary modifier being present
-//   Engineer Burst Laser Gimbal Medium DamagePerSecond BreachDamage NOT changing due to condition - Damage
-//Engineer Burst Laser Gimbal Medium Damage Damage 2.45-> 2.842 ratio 1.16
-//   Engineer Burst Laser Gimbal Medium Damage BreachDamage 2.1-> 2.436 ratio 1.16
-//   Engineer Burst Laser Gimbal Medium Damage BurstInterval NOT changing due to condition +hpt_railgun *
-//Engineer Burst Laser Gimbal Medium DistributorDraw DistributorDraw 0.49-> 0.3675 ratio 0.75
-//Engineer Burst Laser Gimbal Medium ThermalLoad ThermalLoad 0.67-> 0.35175 ratio 0.525
+                //Engineer Burst Laser Gimbal Medium PowerDraw PowerDraw 1.04-> 0.7904 ratio 0.76
+                //Engineer Burst Laser Gimbal Medium DamagePerSecond DPS 10.296-> 11.94375 ratio 1.16000002330926
+                //   Engineer Burst Laser Gimbal Medium DamagePerSecond Damage NOT changing due to primary modifier being present
+                //   Engineer Burst Laser Gimbal Medium DamagePerSecond BreachDamage NOT changing due to condition - Damage
+                //Engineer Burst Laser Gimbal Medium Damage Damage 2.45-> 2.842 ratio 1.16
+                //   Engineer Burst Laser Gimbal Medium Damage BreachDamage 2.1-> 2.436 ratio 1.16
+                //   Engineer Burst Laser Gimbal Medium Damage BurstInterval NOT changing due to condition +hpt_railgun *
+                //Engineer Burst Laser Gimbal Medium DistributorDraw DistributorDraw 0.49-> 0.3675 ratio 0.75
+                //Engineer Burst Laser Gimbal Medium ThermalLoad ThermalLoad 0.67-> 0.35175 ratio 0.525
 
                 string t = @"{""event"":""Loadout"",""Ship"":""krait_mkii"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":44152080,""ModulesValue"":1238890,""UnladenMass"":594,""CargoCapacity"":0,""MaxJumpRange"":9.617571,""FuelCapacity"":{""Main"":32,""Reserve"":0.63},""Rebuy"":2269548,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""MediumHardpoint2"",""Item"":""hpt_pulselaserburst_gimbal_medium"",""On"":true,""Priority"":0,""Value"":48500,""Engineering"":{""BlueprintName"":""Weapon_Efficient"",""Level"":3,""Quality"":1,""Modifiers"":[{""Label"":""PowerDraw"",""Value"":0.7904,""OriginalValue"":1.04},{""Label"":""DamagePerSecond"",""Value"":11.94375,""OriginalValue"":10.296336},{""Label"":""Damage"",""Value"":2.842,""OriginalValue"":2.45},{""Label"":""DistributorDraw"",""Value"":0.3675,""OriginalValue"":0.49},{""Label"":""ThermalLoad"",""Value"":0.35175,""OriginalValue"":0.67}]}},{""Slot"":""Armour"",""Item"":""krait_mkii_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size7_class1"",""On"":true,""Priority"":0,""Value"":480410},{""Slot"":""MainEngines"",""Item"":""int_engine_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size5_class1"",""On"":true,""Priority"":0,""Value"":63010},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size4_class1"",""On"":true,""Priority"":0,""Value"":11350},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size7_class1"",""On"":true,""Priority"":0,""Value"":249140},{""Slot"":""Radar"",""Item"":""int_sensors_size6_class1"",""On"":true,""Priority"":0,""Value"":88980},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size5_class3"",""On"":true,""Priority"":0,""Value"":97750}]}";
                 var mod = GetModule(t, ShipSlots.Slot.MediumHardpoint2, true);
@@ -542,19 +543,19 @@ namespace EliteDangerousCore
             }
 
             {
-//TEST Module Hpt_pulselaserburst_gimbal_medium in MediumHardpoint2 Blueprint: Focused Weapon
-//Level: 3
-//Quality: 1
-//Thermal Load: 0.69, Original: 0.67, Mult: 3.0 % (Better)
-//Armour Penetration: 63, Original: 35, Mult: 80.0 % (Better)
-//Maximum Range: 5040, Original: 3000, Mult: 68.0 % (Better)
-//Falloff Range: 840, Original: 500, Mult: 68.0 % (Better)
+                //TEST Module Hpt_pulselaserburst_gimbal_medium in MediumHardpoint2 Blueprint: Focused Weapon
+                //Level: 3
+                //Quality: 1
+                //Thermal Load: 0.69, Original: 0.67, Mult: 3.0 % (Better)
+                //Armour Penetration: 63, Original: 35, Mult: 80.0 % (Better)
+                //Maximum Range: 5040, Original: 3000, Mult: 68.0 % (Better)
+                //Falloff Range: 840, Original: 500, Mult: 68.0 % (Better)
 
-//* **Engineer module Hpt_pulselaserburst_gimbal_medium
-//Engineer Burst Laser Gimbal Medium ThermalLoad ThermalLoad 0.67-> 0.6901 ratio 1.03
-//Engineer Burst Laser Gimbal Medium ArmourPenetration ArmourPiercing 35-> 63 ratio 1.8
-//Engineer Burst Laser Gimbal Medium MaximumRange Range 3000-> 5040 ratio 1.68
-//Engineer Burst Laser Gimbal Medium FalloffRange Falloff 500-> 840 ratio 1.68
+                //* **Engineer module Hpt_pulselaserburst_gimbal_medium
+                //Engineer Burst Laser Gimbal Medium ThermalLoad ThermalLoad 0.67-> 0.6901 ratio 1.03
+                //Engineer Burst Laser Gimbal Medium ArmourPenetration ArmourPiercing 35-> 63 ratio 1.8
+                //Engineer Burst Laser Gimbal Medium MaximumRange Range 3000-> 5040 ratio 1.68
+                //Engineer Burst Laser Gimbal Medium FalloffRange Falloff 500-> 840 ratio 1.68
 
 
                 string t = @"{""event"":""Loadout"",""Ship"":""krait_mkii"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":44152080,""ModulesValue"":1238890,""UnladenMass"":594,""CargoCapacity"":0,""MaxJumpRange"":9.617571,""FuelCapacity"":{""Main"":32,""Reserve"":0.63},""Rebuy"":2269548,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""MediumHardpoint2"",""Item"":""hpt_pulselaserburst_gimbal_medium"",""On"":true,""Priority"":0,""Value"":48500,""Engineering"":{""BlueprintName"":""Weapon_Focused"",""Level"":3,""Quality"":1,""Modifiers"":[{""Label"":""ThermalLoad"",""Value"":0.6901,""OriginalValue"":0.67},{""Label"":""ArmourPenetration"",""Value"":63,""OriginalValue"":35},{""Label"":""MaximumRange"",""Value"":5040,""OriginalValue"":3000},{""Label"":""FalloffRange"",""Value"":840,""OriginalValue"":500}]}},{""Slot"":""Armour"",""Item"":""krait_mkii_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size7_class1"",""On"":true,""Priority"":0,""Value"":480410},{""Slot"":""MainEngines"",""Item"":""int_engine_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size5_class1"",""On"":true,""Priority"":0,""Value"":63010},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size4_class1"",""On"":true,""Priority"":0,""Value"":11350},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size7_class1"",""On"":true,""Priority"":0,""Value"":249140},{""Slot"":""Radar"",""Item"":""int_sensors_size6_class1"",""On"":true,""Priority"":0,""Value"":88980},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size5_class3"",""On"":true,""Priority"":0,""Value"":97750}]}";
@@ -584,22 +585,22 @@ namespace EliteDangerousCore
             }
 
             {
-// From edsy
-//TEST Module Hpt_pulselaserburst_gimbal_medium in MediumHardpoint2 Blueprint: Focused Weapon
-//Level: 3
-//Quality: 1
-//Experimental Effect: Inertial Impact
-//   Damage: 50
-//   Jitter: 3
-//   KineticProportionDamage: 50
-//   ThermalProportionDamage: 50
+                // From edsy
+                //TEST Module Hpt_pulselaserburst_gimbal_medium in MediumHardpoint2 Blueprint: Focused Weapon
+                //Level: 3
+                //Quality: 1
+                //Experimental Effect: Inertial Impact
+                //   Damage: 50
+                //   Jitter: 3
+                //   KineticProportionDamage: 50
+                //   ThermalProportionDamage: 50
                 //Damage Per Second: 15.445, Original: 10.296, Mult: 50.0 % (Better)
                 //Damage: 3.675, Original: 2.45, Mult: 50.0 % (Better)
-//Thermal Load: 0.69, Original: 0.67, Mult: 3.0 % (Better)
-//Armour Penetration: 63, Original: 35, Mult: 80.0 % (Better)
-//Maximum Range: 5040, Original: 3000, Mult: 68.0 % (Better)
-//Falloff Range: 840, Original: 500, Mult: 68.0 % (Better)
-//Jitter: 3, Original: 0, Mult: ∞% (Better)
+                //Thermal Load: 0.69, Original: 0.67, Mult: 3.0 % (Better)
+                //Armour Penetration: 63, Original: 35, Mult: 80.0 % (Better)
+                //Maximum Range: 5040, Original: 3000, Mult: 68.0 % (Better)
+                //Falloff Range: 840, Original: 500, Mult: 68.0 % (Better)
+                //Jitter: 3, Original: 0, Mult: ∞% (Better)
 
                 string t = @"{""event"":""Loadout"",""Ship"":""krait_mkii"",""ShipName"":"""",""ShipIdent"":"""",""HullValue"":44152080,""ModulesValue"":1238890,""UnladenMass"":594,""CargoCapacity"":0,""MaxJumpRange"":9.617571,""FuelCapacity"":{""Main"":32,""Reserve"":0.63},""Rebuy"":2269548,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""MediumHardpoint2"",""Item"":""hpt_pulselaserburst_gimbal_medium"",""On"":true,""Priority"":0,""Value"":48500,""Engineering"":{""BlueprintName"":""Weapon_Focused"",""Level"":3,""Quality"":1,""ExperimentalEffect"":""special_distortion_field"",""Modifiers"":[{""Label"":""DamagePerSecond"",""Value"":15.444504,""OriginalValue"":10.296336},{""Label"":""Damage"",""Value"":3.675,""OriginalValue"":2.45},{""Label"":""ThermalLoad"",""Value"":0.6901,""OriginalValue"":0.67},{""Label"":""ArmourPenetration"",""Value"":63,""OriginalValue"":35},{""Label"":""MaximumRange"",""Value"":5040,""OriginalValue"":3000},{""Label"":""FalloffRange"",""Value"":840,""OriginalValue"":500},{""Label"":""Jitter"",""Value"":3,""OriginalValue"":0}]}},{""Slot"":""Armour"",""Item"":""krait_mkii_armour_grade1"",""On"":true,""Priority"":0,""Value"":0},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size7_class1"",""On"":true,""Priority"":0,""Value"":480410},{""Slot"":""MainEngines"",""Item"":""int_engine_size6_class1"",""On"":true,""Priority"":0,""Value"":199750},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size5_class1"",""On"":true,""Priority"":0,""Value"":63010},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size4_class1"",""On"":true,""Priority"":0,""Value"":11350},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size7_class1"",""On"":true,""Priority"":0,""Value"":249140},{""Slot"":""Radar"",""Item"":""int_sensors_size6_class1"",""On"":true,""Priority"":0,""Value"":88980},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size5_class3"",""On"":true,""Priority"":0,""Value"":97750}]}";
                 var mod = GetModule(t, ShipSlots.Slot.MediumHardpoint2, true);
@@ -631,21 +632,21 @@ namespace EliteDangerousCore
             {
                 // from ealhstan ship import, to edsy, to export
 
-// TEST Module Hpt_pulselaserburst_gimbal_medium in MediumHardpoint2 Blueprint: Focused Weapon
-//Level: 3
-//Quality: 0
-//Experimental Effect: Inertial Impact
-//   Damage: 50
-//   Jitter: 3
-//   KineticProportionDamage: 50
-//   ThermalProportionDamage: 50
-//Damage Per Second: 15.445, Original: 10.296, Mult: 50.0 % (Better)
-//Damage: 3.675, Original: 2.45, Mult: 50.0 % (Better)
-//Thermal Load: 0.69, Original: 0.67, Mult: 3.0 % (Better)
-//Armour Penetration: 58.324, Original: 35, Mult: 66.6 % (Better)
-//Maximum Range: 4690.2, Original: 3000, Mult: 56.3 % (Better)
-//Falloff Range: 781.7, Original: 500, Mult: 56.3 % (Better)
-//Jitter: 3, Original: 0, Mult: ∞% (Better)
+                // TEST Module Hpt_pulselaserburst_gimbal_medium in MediumHardpoint2 Blueprint: Focused Weapon
+                //Level: 3
+                //Quality: 0
+                //Experimental Effect: Inertial Impact
+                //   Damage: 50
+                //   Jitter: 3
+                //   KineticProportionDamage: 50
+                //   ThermalProportionDamage: 50
+                //Damage Per Second: 15.445, Original: 10.296, Mult: 50.0 % (Better)
+                //Damage: 3.675, Original: 2.45, Mult: 50.0 % (Better)
+                //Thermal Load: 0.69, Original: 0.67, Mult: 3.0 % (Better)
+                //Armour Penetration: 58.324, Original: 35, Mult: 66.6 % (Better)
+                //Maximum Range: 4690.2, Original: 3000, Mult: 56.3 % (Better)
+                //Falloff Range: 781.7, Original: 500, Mult: 56.3 % (Better)
+                //Jitter: 3, Original: 0, Mult: ∞% (Better)
 
                 string t = @"{""event"":""Loadout"",""Ship"":""krait_mkii"",""ShipName"":"""",""ShipIdent"":""ST-13K"",""HullValue"":38743029,""ModulesValue"":115884722,""UnladenMass"":559,""CargoCapacity"":0,""MaxJumpRange"":21.837943,""FuelCapacity"":{""Main"":32,""Reserve"":0.63},""Rebuy"":7731387,""Modules"":[{""Slot"":""CargoHatch"",""Item"":""modularcargobaydoor"",""On"":true,""Priority"":0},{""Slot"":""MediumHardpoint2"",""Item"":""hpt_pulselaserburst_gimbal_medium"",""On"":true,""Priority"":0,""Value"":42559,""Engineering"":{""BlueprintName"":""Weapon_Focused"",""Level"":3,""Quality"":0.2713,""ExperimentalEffect"":""special_distortion_field"",""Modifiers"":[{""Label"":""DamagePerSecond"",""Value"":15.444504,""OriginalValue"":10.296336},{""Label"":""Damage"",""Value"":3.675,""OriginalValue"":2.45},{""Label"":""ThermalLoad"",""Value"":0.6901,""OriginalValue"":0.67},{""Label"":""ArmourPenetration"",""Value"":58.323997,""OriginalValue"":35},{""Label"":""MaximumRange"",""Value"":4690.200195,""OriginalValue"":3000},{""Label"":""FalloffRange"",""Value"":781.700012,""OriginalValue"":500},{""Label"":""Jitter"",""Value"":3,""OriginalValue"":0}]}},{""Slot"":""Armour"",""Item"":""krait_mkii_armour_reactive"",""On"":true,""Priority"":1,""Value"":94756030},{""Slot"":""PowerPlant"",""Item"":""int_powerplant_size7_class2"",""On"":true,""Priority"":1,""Value"":1264679},{""Slot"":""MainEngines"",""Item"":""int_engine_size6_class5"",""On"":true,""Priority"":0,""Value"":14197538},{""Slot"":""FrameShiftDrive"",""Item"":""int_hyperdrive_size5_class5"",""On"":true,""Priority"":0,""Value"":4478716},{""Slot"":""LifeSupport"",""Item"":""int_lifesupport_size4_class2"",""On"":true,""Priority"":0,""Value"":24895},{""Slot"":""PowerDistributor"",""Item"":""int_powerdistributor_size7_class2"",""On"":true,""Priority"":0,""Value"":546542},{""Slot"":""Radar"",""Item"":""int_sensors_size6_class3"",""On"":true,""Priority"":0,""Value"":487987},{""Slot"":""FuelTank"",""Item"":""int_fueltank_size5_class3"",""On"":true,""Priority"":1,""Value"":85776}]}";
                 var mod = GetModule(t, ShipSlots.Slot.MediumHardpoint2, true);
@@ -1894,8 +1895,63 @@ namespace EliteDangerousCore
             DebuggerHelpers.BreakAssert(good, () => { var module = lastship.Modules[lastslot]; return $"{lastslot} error : {module.Engineering.ToString()}"; });
         }
 
-#endif
-    }
 
+        // this one scans logs for Loadouts and engineers them..
+
+        public static void ScanLoadouts()
+        {
+            MaterialCommodityMicroResourceType.Initialise();     // lets statically fill the table way before anyone wants to access it
+            ItemData.Initialise();
+
+            var filelist = System.IO.Directory.EnumerateFiles(@"c:\code\logs", "Journal*.log", System.IO.SearchOption.AllDirectories).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToArray();
+
+            foreach (var x in filelist)
+            {
+                string[] filelines = BaseUtils.FileHelpers.TryReadAllLinesFromFile(x.FullName);
+                if (filelines != null)
+                {
+                    foreach (var line in filelines)
+                    {
+                        JObject jo = JObject.Parse(line, JToken.ParseOptions.CheckEOL);     // may be bad json, ignore
+                        if (jo != null)
+                        {
+                            if (jo.Contains("timestamp") && jo.Contains("event") && jo["event"].Str() == "Loadout")
+                            {
+                                Ship si = Ship.CreateFromLoadout(line);
+                                if (si != null)
+                                { 
+                                    foreach( ShipSlots.Slot slot in Enum.GetValues(typeof(ShipSlots.Slot)))
+                                    {
+                                        ShipModule sm = si.GetModuleInSlot(slot);       // do we have it?
+                                        if (sm != null)
+                                        {
+                                            if ( sm.Engineering != null )   // is it engineered?
+                                            {
+                                                //  System.Diagnostics.Debug.WriteLine($"Engineer {sm.ItemFD} with {sm.Engineering.BlueprintName}");
+
+                                                ItemData.ShipModule sme = si.GetShipModulePropertiesEngineered(slot, out string errorlist, false);
+                                                if ( errorlist.HasChars() )
+                                                {
+                                                    System.Diagnostics.Debug.WriteLine($"Engineer {sm.ItemFD} with {sm.Engineering.BlueprintName} produced errors {errorlist}");
+                                                }
+
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                    System.Diagnostics.Debug.WriteLine($"Cannot make ship {line}");
+                            }
+                                
+                        }
+                    }
+                }
+                else
+                    System.Diagnostics.Debug.WriteLine($"Cannot read file {x.FullName}");
+            }
+
+#endif
+        }
+    }
 
 }
