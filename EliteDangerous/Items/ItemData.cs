@@ -78,6 +78,8 @@ namespace EliteDangerousCore
                 }
 
                 List<string> keylist = vanitymodules.Keys.ToList();
+                foreach (var kc in keylist)
+                    System.Diagnostics.Debug.Assert(!keylist.Contains(" "));        // just check no spaces are in the IDs due to grep replace
 
                 foreach (string id in keylist)
                 {
