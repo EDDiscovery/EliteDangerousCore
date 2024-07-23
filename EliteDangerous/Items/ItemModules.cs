@@ -57,9 +57,10 @@ namespace EliteDangerousCore
 
                     candidatename = candidatename.SplitCapsWordFull();
                     candidatename = candidatename.Replace("Paintjob", "Paint Job");
-                    candidatename = candidatename.Replace("Cobramkiii", "Cobra Mk III");
-                    candidatename = candidatename.Replace("Cobramkiv", "Cobra Mk IV");
                     candidatename = candidatename.Replace("Mkii", "Mk II");
+                    candidatename = candidatename.Replace("Mkiv", "Mk IV");
+                    candidatename = candidatename.Replace("mkiii", " Mk III");
+                    candidatename = candidatename.Replace("mkiv", " Mk IV");
                     candidatename = candidatename.Replace("Python Nx", "Python Mk II");
 
                     var newmodule = new ShipModule(-1, IsVanity(lowername) ? ShipModule.ModuleTypes.VanityType : ShipModule.ModuleTypes.UnknownType, candidatename);
@@ -2713,6 +2714,14 @@ namespace EliteDangerousCore
                 {"cutter_shipkit1_wings2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cutter Shipkit 1 Wings 2") },
                 {"cutter_shipkit1_wings3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cutter Shipkit 1 Wings 3") },
                 {"cutter_shipkit1_wings4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cutter Shipkit 1 Wings 4") },
+                {"cutter_shipkitraider1_bumper1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cutter Shipkitraider 1 Bumper 1") },
+                {"cutter_shipkitraider1_bumper2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cutter Shipkitraider 1 Bumper 2") },
+                {"cutter_shipkitraider1_bumper3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cutter Shipkitraider 1 Bumper 3") },
+                {"cutter_shipkitraider1_bumper4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cutter Shipkitraider 1 Bumper 4") },
+                {"cutter_shipkitraider1_spoiler1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cutter Shipkitraider 1 Spoiler 1") },
+                {"cutter_shipkitraider1_spoiler2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cutter Shipkitraider 1 Spoiler 2") },
+                {"cutter_shipkitraider1_spoiler3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cutter Shipkitraider 1 Spoiler 3") },
+                {"cutter_shipkitraider1_spoiler4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cutter Shipkitraider 1 Spoiler 4") },
                 {"cutter_thargoid1_bumper1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cutter Thargoid 1 Bumper 1") },
                 {"cutter_thargoid1_bumper2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cutter Thargoid 1 Bumper 2") },
                 {"cutter_thargoid1_bumper3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cutter Thargoid 1 Bumper 3") },
@@ -2756,6 +2765,7 @@ namespace EliteDangerousCore
                 {"decal_bounty_hunter_emisswhite", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Bounty Hunter Emisswhite") },
                 {"decal_bridgingthegap", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Bridgingthegap") },
                 {"decal_cannon", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Cannon") },
+                {"decal_cobweb", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Cobweb") },
                 {"decal_colonia_imigration_appeal", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Colonia Imigration Appeal") },
                 {"decal_combat_competent", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Combat Competent") },
                 {"decal_combat_dangerous", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Combat Dangerous") },
@@ -4120,6 +4130,12 @@ namespace EliteDangerousCore
                 {"paintjob_cutter_calligraphy_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cutter Calligraphy 4") },
                 {"paintjob_cutter_calligraphy_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cutter Calligraphy 5") },
                 {"paintjob_cutter_calligraphy_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cutter Calligraphy 6") },
+                {"paintjob_cutter_corrosive_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cutter Corrosive 1") },
+                {"paintjob_cutter_corrosive_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cutter Corrosive 2") },
+                {"paintjob_cutter_corrosive_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cutter Corrosive 3") },
+                {"paintjob_cutter_corrosive_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cutter Corrosive 4") },
+                {"paintjob_cutter_corrosive_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cutter Corrosive 5") },
+                {"paintjob_cutter_corrosive_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cutter Corrosive 6") },
                 {"paintjob_cutter_expressway_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cutter Expressway 1") },
                 {"paintjob_cutter_expressway_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cutter Expressway 2") },
                 {"paintjob_cutter_expressway_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cutter Expressway 3") },
@@ -4787,6 +4803,7 @@ namespace EliteDangerousCore
                 {"paintjob_federation_gunship_tactical_grey", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Tactical Grey") },
                 {"paintjob_federation_gunship_tactical_white", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Tactical White") },
                 {"paintjob_federation_gunship_vibrant_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Vibrant Blue") },
+                {"paintjob_federation_gunship_vibrant_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Vibrant Green") },
                 {"paintjob_federation_gunship_vibrant_purple", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Vibrant Purple") },
                 {"paintjob_ferdelance_blackfriday_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Fer De Lance Black Friday 1") },
                 {"paintjob_ferdelance_blackfriday_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Fer De Lance Black Friday 2") },
@@ -5096,6 +5113,12 @@ namespace EliteDangerousCore
                 {"paintjob_krait_mkii_gradient2_crimson", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mk II Gradient 2 Crimson") },
                 {"paintjob_krait_mkii_gradient2_lime", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mk II Gradient 2 Lime") },
                 {"paintjob_krait_mkii_gradient2_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mk II Gradient 2 Red") },
+                {"paintjob_krait_mkii_heraldry_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mkii Heraldry 1") },
+                {"paintjob_krait_mkii_heraldry_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mkii Heraldry 2") },
+                {"paintjob_krait_mkii_heraldry_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mkii Heraldry 3") },
+                {"paintjob_krait_mkii_heraldry_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mkii Heraldry 4") },
+                {"paintjob_krait_mkii_heraldry_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mkii Heraldry 5") },
+                {"paintjob_krait_mkii_heraldry_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mkii Heraldry 6") },
                 {"paintjob_krait_mkii_horus1_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mk II Horus 1 1") },
                 {"paintjob_krait_mkii_horus1_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mk II Horus 1 2") },
                 {"paintjob_krait_mkii_horus1_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mk II Horus 1 3") },
@@ -5519,6 +5542,7 @@ namespace EliteDangerousCore
                 {"paintjob_sidewinder_thirds_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Sidewinder Thirds 6") },
                 {"paintjob_sidewinder_thirds_07", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Sidewinder Thirds 7") },
                 {"paintjob_sidewinder_vibrant_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Sidewinder Vibrant Blue") },
+                {"paintjob_sidewinder_vibrant_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Sidewinder Vibrant Green") },
                 {"paintjob_sidewinder_vibrant_orange", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Sidewinder Vibrant Orange") },
                 {"paintjob_sidewinder_vibrant_purple", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Sidewinder Vibrant Purple") },
                 {"paintjob_sidewinder_vibrant_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Sidewinder Vibrant Red") },
