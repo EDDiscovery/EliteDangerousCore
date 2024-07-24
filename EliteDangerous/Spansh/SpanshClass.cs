@@ -32,40 +32,42 @@ namespace EliteDangerousCore.Spansh
         public static TimeSpan MaxCacheAge = new TimeSpan(7, 0, 0, 0);
 
         #region Browser
-        static public void LaunchBrowserForSystem(long sysaddr)
-        {
-            BaseUtils.BrowserInfo.LaunchBrowser(RootURL + "system/" + sysaddr.ToStringInvariant());
-        }
         static public string URLForSystem(long sysaddr)
         {
             return RootURL + "system/" + sysaddr.ToStringInvariant();
         }
 
-        static public void LaunchBrowserForStationByMarketID(long marketid)
+        static public bool LaunchBrowserForSystem(long sysaddr)
         {
-            BaseUtils.BrowserInfo.LaunchBrowser(RootURL + "station/" + marketid.ToStringInvariant());
+            return BaseUtils.BrowserInfo.LaunchBrowser(RootURL + "system/" + sysaddr.ToStringInvariant());
+        }
+        static public bool LaunchBrowserForStationByMarketID(long marketid)
+        {
+            return BaseUtils.BrowserInfo.LaunchBrowser(RootURL + "station/" + marketid.ToStringInvariant());
         }
 
-        static public void LaunchBrowserForStationByFullBodyID(long fullbodyid)
+        static public bool LaunchBrowserForStationByFullBodyID(long fullbodyid)
         {
-            BaseUtils.BrowserInfo.LaunchBrowser(RootURL + "body/" + fullbodyid.ToStringInvariant());
+            return BaseUtils.BrowserInfo.LaunchBrowser(RootURL + "body/" + fullbodyid.ToStringInvariant());
         }
 
-
-        static public void LaunchBrowserForSystem(string name)
+        static public bool LaunchBrowserForSystem(string name)
         {
             SpanshClass sp = new SpanshClass();
             ISystem s = sp.GetSystem(name);
             if (s != null)
-                LaunchBrowserForSystem(s.SystemAddress.Value);
+                return LaunchBrowserForSystem(s.SystemAddress.Value);
+            return false;
         }
 
-        static public void LaunchBrowserForSystem(ISystem sys)
+        static public bool LaunchBrowserForSystem(ISystem sys)
         {
             if (sys.SystemAddress.HasValue)
-                LaunchBrowserForSystem(sys.SystemAddress.Value);
+            {
+                return LaunchBrowserForSystem(sys.SystemAddress.Value);
+            }
             else
-                LaunchBrowserForSystem(sys.Name);
+                return LaunchBrowserForSystem(sys.Name);
         }
 
         #endregion
