@@ -341,8 +341,10 @@ namespace EliteDangerousCore
                 case JournalTypeEnum.Disembark:     // SRV/Ship -> on foot
                     var disem = (JournalDisembark)je;
 
-                    bool instation = disem.StationType.HasChars() || prev.StationType.HasChars();
+                    bool instation = disem.HasStationTypeName || prev.StationType.HasChars();       // due to bug, stationname/type is now always given
                     bool fc = prev.StationType.HasChars() && prev.StationType.Equals("Fleet Carrier", System.StringComparison.CurrentCultureIgnoreCase);
+
+                    //System.Diagnostics.Debug.WriteLine($"Disembark JID {disem.Id} instation {instation} fc {fc} d.Onstation {disem.OnStation} d.Onplanet {disem.OnPlanet} d.SN `{disem.StationName}` d.ST `{disem.StationType}`");
 
                     hes = new HistoryEntryStatus(prev)
                     {
@@ -351,8 +353,8 @@ namespace EliteDangerousCore
                                         disem.OnStation == true ?  TravelStateType.OnFootStarPort :
                                             disem.OnPlanet == true && instation ? TravelStateType.OnFootPlanetaryPort :
                                             TravelStateType.OnFootPlanet,
-                        StationName = disem.StationType.HasChars() ? disem.StationName.Alt("Unknown") : prev.StationName,       // copying it over due to bug in alpha4
-                        StationType = disem.StationType.HasChars() ? disem.StationType : prev.StationType,
+                        StationName = disem.HasStationTypeName ? disem.StationName.Alt("Unknown") : prev.StationName,       // copying it over due to missing station name/type
+                        StationType = disem.HasStationTypeName ? disem.StationType : prev.StationType,
                         CurrentBoost = 1,
                     };
                     break;

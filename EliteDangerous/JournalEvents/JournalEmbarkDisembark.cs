@@ -98,6 +98,7 @@ namespace EliteDangerousCore.JournalEvents
             OnPlanet = evt["OnPlanet"].BoolNull();
             OnStation = evt["OnStation"].BoolNull();
             StationName = evt["StationName"].StrNull();
+            HasStationTypeName = StationName.HasChars() && evt["StationType"] != null;
             FDStationType = StationDefinitions.StarportTypeToEnum(evt["StationType"].StrNull());        // null means its not present, will be set to Unknown
             StationType = StationDefinitions.ToEnglish(FDStationType);
             MarketID = evt["MarketID"].LongNull();
@@ -114,11 +115,12 @@ namespace EliteDangerousCore.JournalEvents
         public long? SystemAddress { get; set; }
         public string Body { get; set; }
         public long? BodyID { get; set; }
-        public bool? OnStation { get; set; }
+        public bool? OnStation { get; set; }            // note bugs means this is unreliable
         public bool? OnPlanet { get; set; }
-        public string StationName { get; set; }
-        public string StationType { get; set; } // friendly, may be null
-        public StationDefinitions.StarportTypes FDStationType { get; set; }   // may be null
+        public bool HasStationTypeName { get; set; }        // note bugs means that stationname/type does not seem to appear always even if you jump out to a station
+        public string StationName { get; set; } // may be null, but that does not mean we may not be in a station
+        public string StationType { get; set; } // english friendly, may be Unknown if not there
+        public StationDefinitions.StarportTypes FDStationType { get; set; }   // will be Unknown for no station given
         public long? MarketID { get; set; }
 
         protected override JournalTypeEnum IconEventType { get { return SRV ? JournalTypeEnum.DisembarkSRV : JournalTypeEnum.Disembark; } }
