@@ -138,7 +138,7 @@ namespace EliteDangerousCore.JournalEvents
             Engineering = new EngineeringData(evt);
             if (!Engineering.IsValid)
             {
-                System.Diagnostics.Debug.WriteLine($"Bad Engineering line Craft {evt.ToString()}");
+                //System.Diagnostics.Debug.WriteLine($"Bad Engineering line Craft {evt.ToString()}");
                 Engineering = null;
             }
 

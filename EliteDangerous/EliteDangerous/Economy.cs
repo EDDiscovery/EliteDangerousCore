@@ -56,10 +56,13 @@ namespace EliteDangerousCore
                 return Economy.Unknown;
 
             fdname = fdname.ToLowerInvariant().Replace("$economy_", "").Replace(" ", "").Replace(";", "");
+
             if (Enum.TryParse(fdname, true, out Economy value))
                 return value;
             else if (fdname == "hightech")
                 return Economy.High_Tech;
+            else if (fdname == "unknown_value")     // this has been found in a few 2017/2018 journal files
+                return Economy.Unknown;
             else
             {
                 System.Diagnostics.Trace.WriteLine($"*** Economy is unknown {fdname}");

@@ -50,30 +50,43 @@ namespace EliteDangerousCore
                 {
                     if (line.Contains("new ShipModule"))
                     {
-                        StringParser sp = new StringParser(line.Substring(line.IndexOf("{") + 1));
-                        string id = sp.NextQuotedWordComma();
-                        sp.SkipUntil(new char[] { '(' });
-                        sp.MoveOn(1);
-                        int? fid = sp.NextIntComma(" ,");
-                        string type = sp.NextWordComma();
-                        string text = sp.NextQuotedWord();
-                        System.Diagnostics.Debug.Assert(text != null && type != null && fid != null);
-
-                        ShipModule.ModuleTypes modtype = (ShipModule.ModuleTypes)Enum.Parse(typeof(ShipModule.ModuleTypes), type.Substring(type.LastIndexOf(".") + 1));
-
-                        ShipModule sm = new ShipModule(fid.Value, modtype, text);
-
-                        if (!vanitymodules.ContainsKey(id))
+                        if (line.Contains("{"))
                         {
-                            System.Diagnostics.Debug.WriteLine($"Added new module {id}");
-                            vanitymodules.Add(id, sm);
-                            added = true;
+                            StringParser sp = new StringParser(line.Substring(line.IndexOf("{") + 1));
+                            string id = sp.NextQuotedWordComma();
+                            if (id != null)
+                            {
+                                sp.SkipUntil(new char[] { '(' });
+                                sp.MoveOn(1);
+                                int? fid = sp.NextIntComma(" ,");
+                                string type = sp.NextWordComma();
+                                string text = sp.NextQuotedWord();
+                                System.Diagnostics.Debug.Assert(text != null && type != null && fid != null);
+
+                                ShipModule.ModuleTypes modtype = (ShipModule.ModuleTypes)Enum.Parse(typeof(ShipModule.ModuleTypes), type.Substring(type.LastIndexOf(".") + 1));
+
+                                ShipModule sm = new ShipModule(fid.Value, modtype, text);
+
+                                if (!vanitymodules.ContainsKey(id))
+                                {
+                                    System.Diagnostics.Debug.WriteLine($"Added new module {id}");
+                                    vanitymodules[id] = sm;
+                                    added = true;
+                                }
+                                else
+                                {
+                                    //System.Diagnostics.Debug.WriteLine($"Module exists {id}");
+                                }
+                            }
+                            else
+                            {
+                                System.Diagnostics.Debug.WriteLine($"Bad line {line}");
+                            }
                         }
                         else
                         {
-                            //System.Diagnostics.Debug.WriteLine($"Module exists {id}");
+                            System.Diagnostics.Debug.WriteLine($"Bad line missing {{ {line}");
                         }
-
                     }
                 }
 
