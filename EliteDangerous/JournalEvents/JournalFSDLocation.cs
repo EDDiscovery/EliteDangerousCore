@@ -638,31 +638,32 @@ namespace EliteDangerousCore.JournalEvents
         {
             System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop); // because of translation
 
-            StringBuilder sb = new StringBuilder();
+            double? tempdist = JumpDist > 0 ? JumpDist : default(double?);
+            double? tempused = FuelUsed > 0 ? FuelUsed : default(double?);
+            double? templevel = FuelLevel > 0 ? FuelLevel : default(double?);
 
-            if (JumpDist > 0)
-                sb.Append(JumpDist.ToString("N2") + " ly");
-            if (FuelUsed > 0)
-                sb.Append(", Fuel ".T(EDCTx.JournalFSDJump_Fuel) + FuelUsed.ToString("N2") + "t");
-            if (FuelLevel > 0)
-                sb.Append(" left ".T(EDCTx.JournalFSDJump_left) + FuelLevel.ToString("N2") + "t");
-
-            sb.Append(" ");
+            info = BaseUtils.FieldBuilder.Build(
+                    "; ly;N2".T(EDCTx.JournalFSDJump_Distance), tempdist, "Fuel used: ; t;N2".T(EDCTx.JournalFSDJump_FuelUsed), tempused, "Fuel left: ; t;N2".T(EDCTx.JournalFSDJump_FuelLeft), templevel);
 
             if (Faction.HasChars() || Allegiance != AllegianceDefinitions.Allegiance.Unknown || Economy != EconomyDefinitions.Economy.Unknown)
             {
-                sb.Append(BaseUtils.FieldBuilder.Build("Faction: ".T(EDCTx.JournalLocOrJump_Faction), Faction, "<;(Wanted) ".T(EDCTx.JournalLocOrJump_Wanted), Wanted,
-                                                    "State: ".T(EDCTx.JournalLocOrJump_State), FactionDefinitions.ToLocalisedLanguage(FactionState),
-                                                    "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(Allegiance),
-                                                    "Economy: ".T(EDCTx.JournalLocOrJump_Economy), EconomyDefinitions.ToLocalisedLanguage(Economy),
-                                                    "Population: ".T(EDCTx.JournalLocOrJump_Population), Population));
+                info += ", " + BaseUtils.FieldBuilder.Build(
+                    "Faction: ".T(EDCTx.JournalLocOrJump_Faction), Faction, "<;(Wanted) ".T(EDCTx.JournalLocOrJump_Wanted), Wanted,
+                    "State: ".T(EDCTx.JournalLocOrJump_State), FactionDefinitions.ToLocalisedLanguage(FactionState),
+                    "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(Allegiance),
+                    "Economy: ".T(EDCTx.JournalLocOrJump_Economy), EconomyDefinitions.ToLocalisedLanguage(Economy),
+                    "Population: ".T(EDCTx.JournalLocOrJump_Population), Population);
             }
 
-            info = sb.ToString();
+            detailed = "";
 
-            sb.Clear();
-            FillFactionConflictThargoidInfo(sb);
-            detailed = sb.ToString();
+            if (Factions != null)
+            {
+                StringBuilder sb = new StringBuilder();
+                FillFactionConflictThargoidInfo(sb);
+                detailed = sb.ToString();
+            }
+            
         }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)

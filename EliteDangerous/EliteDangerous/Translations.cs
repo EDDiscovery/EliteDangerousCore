@@ -688,8 +688,9 @@ namespace EliteDangerousCore
         JournalCarrierJump_JumpedWith, // Jumped with carrier {0} to {1}
 
         JournalFSDJump_Jumpto, // Jump to {0}
-        JournalFSDJump_Fuel, //  Fuel
-        JournalFSDJump_left, //  left
+        JournalFSDJump_Distance, // ; ly;N2
+        JournalFSDJump_FuelUsed, //  Fuel used: ; t;N2
+        JournalFSDJump_FuelLeft, //  Fuel left: ; t;N2
 
         JournalStartJump_ChargingFSD, // Charging FSD
 
