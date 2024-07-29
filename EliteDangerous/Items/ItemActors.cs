@@ -108,6 +108,7 @@ namespace EliteDangerousCore
              { "diamondback_taxi", new Actor("Taxi (Diamondback)") },
              { "viper_taxi", new Actor("Taxi (Viper)") },
              { "adder_taxi", new Actor("Taxi (Adder)") },
+             { "vulture_taxi", new Actor("Taxi (Vulture)") },
 
              { "oneillcylinder", new Actor("O'Neill Cylinder") },
              { "oneillorbis", new Actor("O'Neill Orbis") },
