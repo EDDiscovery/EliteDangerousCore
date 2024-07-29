@@ -341,8 +341,9 @@ SECTION JournalEngineerProgress
 SECTION JournalFSDJump
 
 .Jumpto: "Jump to {0}" => "跳跃至星系 {0}"
-.Fuel: ", Fuel " => "使用燃料："
-.left: " left " => "剩余："
+.Distance: "; ly;N2" @
+.FuelUsed: "Fuel used: ; t;N2" => "使用燃料 ; t;N2"
+.FuelLeft: "Fuel left: ; t;N2" => "剩余 ; t;N2"
 
 SECTION JournalLeaveBody
 

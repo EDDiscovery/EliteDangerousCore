@@ -341,8 +341,9 @@ SECTION JournalEngineerProgress
 SECTION JournalFSDJump
 
 .Jumpto: "Jump to {0}" => "Saut vers {0}"
-.Fuel: ", Fuel " => ", carburant "
-.left: " left " => " restant "
+.Distance: "; ly;N2" @
+.FuelUsed: "Fuel used: ; t;N2" => "Carburant utilisé: ; t;N2"
+.FuelLeft: "Fuel left: ; t;N2" => "Reste du carburant: ; t;N2"
 
 SECTION JournalLeaveBody
 
