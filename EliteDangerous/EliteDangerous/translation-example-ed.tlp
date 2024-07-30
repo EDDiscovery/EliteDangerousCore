@@ -1099,6 +1099,7 @@ SECTION Allegiances
 .Guardian: "Guardian" @
 .Thargoid: "Thargoid" @
 .PilotsFederation: "Pilots Federation" @
+.PlayerPilots: "Player Pilots Federation" @
 
 SECTION GovernmentTypes
 
