@@ -51,25 +51,7 @@ namespace EliteDangerousCore
             {
                 lock (synthesisedmodules)  // lock for safety
                 {
-                    string candidatename = fdid;
-                    candidatename = candidatename.Replace("weaponcustomisation", "WeaponCustomisation").Replace("testbuggy", "SRV").
-                                            Replace("enginecustomisation", "EngineCustomisation");
-
-                    candidatename = candidatename.SplitCapsWordFull();
-                    candidatename = candidatename.Replace("Paintjob", "Paint Job");
-                    candidatename = candidatename.Replace("Mkii", "Mk II");
-                    candidatename = candidatename.Replace("Mkiv", "Mk IV");
-                    candidatename = candidatename.Replace("mkiii", " Mk III");
-                    candidatename = candidatename.Replace("mkiv", " Mk IV");
-                    candidatename = candidatename.Replace("Python Nx", "Python Mk II");
-                    candidatename = candidatename.Replace("Typex 2", "Alliance Crusader");
-                    candidatename = candidatename.Replace("Typex 3", "Alliance Challenger");
-                    candidatename = candidatename.Replace("Empire Trader", "Imperial Clipper");
-                    candidatename = candidatename.Replace("Krait Light", "Krait Phantom");
-                    candidatename = candidatename.Replace("Ferdelance", "Fer-De-Lance");
-                    candidatename = candidatename.Replace("Type 9 Military", "Type 10 Defender");
-                    candidatename = candidatename.Replace("Type 9 Militarystripe", "Type 10 Defender Stripe");
-                    candidatename = candidatename.Replace("Belugaliner", "Beluga Liner");
+                    string candidatename = GenerateCandidateModuleName(fdid);
    
                     var newmodule = new ShipModule(-1, IsVanity(lowername) ? ShipModule.ModuleTypes.VanityType : ShipModule.ModuleTypes.UnknownType, candidatename);
                     System.Diagnostics.Trace.WriteLine($"*** Unknown Module {{ \"{lowername}\", new ShipModule(-1,{(IsVanity(lowername) ? "ShipModule.ModuleTypes.VanityType" : "ShipModule.ModuleTypes.UnknownType")},\"{candidatename}\") }}, - this is NOT an error, it will not affect operation, but it would be nice to report it to us so we can add it to known module lists");
@@ -79,6 +61,29 @@ namespace EliteDangerousCore
             }
 
             return state;
+        }
+
+        internal static string GenerateCandidateModuleName(string fdid)
+        {
+            string candidatename = fdid.Replace("weaponcustomisation", "WeaponCustomisation").Replace("testbuggy", "SRV").
+                                    Replace("enginecustomisation", "EngineCustomisation");
+
+            candidatename = candidatename.SplitCapsWordFull();
+            candidatename = candidatename.Replace("Paintjob", "Paint Job");
+            candidatename = candidatename.Replace("Mkii", "Mk II");
+            candidatename = candidatename.Replace("Mkiv", "Mk IV");
+            candidatename = candidatename.Replace("mkiii", " Mk III");
+            candidatename = candidatename.Replace("mkiv", " Mk IV");
+            candidatename = candidatename.Replace("Python Nx", "Python Mk II");
+            candidatename = candidatename.Replace("Typex 2", "Alliance Crusader");
+            candidatename = candidatename.Replace("Typex 3", "Alliance Challenger");
+            candidatename = candidatename.Replace("Empire Trader", "Imperial Clipper");
+            candidatename = candidatename.Replace("Krait Light", "Krait Phantom");
+            candidatename = candidatename.Replace("Ferdelance", "Fer-De-Lance");
+            candidatename = candidatename.Replace("Type 9 Military", "Type 10 Defender");
+            candidatename = candidatename.Replace("Type 9 Militarystripe", "Type 10 Defender Stripe");
+            candidatename = candidatename.Replace("Belugaliner", "Beluga Liner");
+            return candidatename;
         }
 
         // List of ship modules. Synthesised are not included

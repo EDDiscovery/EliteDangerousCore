@@ -65,11 +65,11 @@ namespace EliteDangerousCore
 
                                 ShipModule.ModuleTypes modtype = (ShipModule.ModuleTypes)Enum.Parse(typeof(ShipModule.ModuleTypes), type.Substring(type.LastIndexOf(".") + 1));
 
-                                ShipModule sm = new ShipModule(fid.Value, modtype, text);
+                                ShipModule sm = new ShipModule(fid.Value, modtype, GenerateCandidateModuleName(text));
 
                                 if (!vanitymodules.ContainsKey(id))
                                 {
-                                    System.Diagnostics.Debug.WriteLine($"Added new module {id}");
+                                    System.Diagnostics.Debug.WriteLine($"Added new module {fid.Value}, {sm.ModuleID} {sm.ModType} {sm.EnglishModName}");
                                     vanitymodules[id] = sm;
                                     added = true;
                                 }
