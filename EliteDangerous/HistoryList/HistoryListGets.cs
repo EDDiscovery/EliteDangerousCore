@@ -240,9 +240,14 @@ namespace EliteDangerousCore
 
         // market data, backwards in time, ordered by system, then by whereis, then by time.  
         // not been easy!
-        static public List<List<IGrouping<string, HistoryEntry>>> FilterByCommodityPricesBackwardsSystemWhereAmI(List<HistoryEntry> list)
+        //(!filteroutempty || (x.journalEntry as JournalCommodityPricesBase).Commodities.Count > 0)
+        static public List<List<IGrouping<string, HistoryEntry>>> FilterByCommodityPricesBackwardsSystemWhereAmI(List<HistoryEntry> list, bool filteroutempty = false)
         {
-            var c1 = list.Where(x => x.EntryType == JournalTypeEnum.Market || x.EntryType == JournalTypeEnum.EDDCommodityPrices).OrderByDescending(x => x.EventTimeUTC).ToList();
+            var c1 = list.Where( x => (x.EntryType == JournalTypeEnum.Market || x.EntryType == JournalTypeEnum.EDDCommodityPrices) &&
+                                (!filteroutempty || (x.journalEntry as JournalCommodityPricesBase).Commodities.Count > 0) 
+                                )
+                                .OrderByDescending(x => x.EventTimeUTC)
+                                .ToList();
 
             List<IGrouping<string, HistoryEntry>> systems = c1.GroupBy(x => x.System.Name).ToList();        // group into Systems ordered by time
 
