@@ -238,6 +238,36 @@ namespace EliteDangerousCore
                     select s).ToList();
         }
 
+        // market data, backwards in time, ordered by system, then by whereis, then by time.  
+        // not been easy!
+        static public List<List<IGrouping<string, HistoryEntry>>> FilterByCommodityPricesBackwardsSystemWhereAmI(List<HistoryEntry> list)
+        {
+            var c1 = list.Where(x => x.EntryType == JournalTypeEnum.Market || x.EntryType == JournalTypeEnum.EDDCommodityPrices).OrderByDescending(x => x.EventTimeUTC).ToList();
+
+            List<IGrouping<string, HistoryEntry>> systems = c1.GroupBy(x => x.System.Name).ToList();        // group into Systems ordered by time
+
+            List<List<IGrouping<string, HistoryEntry>>> systemwhere = new List<List<IGrouping<string, HistoryEntry>>>();
+
+            foreach (IGrouping<string, HistoryEntry> sys in systems)    // now go thru systems and create a grouping based on whereami (prob use a linq but hard to work out)
+            {
+                List<IGrouping<string, HistoryEntry>> values = sys.GroupBy(x => x.WhereAmI).ToList();
+                systemwhere.Add(values);
+            }
+
+            //foreach (List<IGrouping<string, HistoryEntry>> s in systemwhere)
+            //{
+            //    foreach (var w in s)
+            //    {
+            //        foreach (var h in w)
+            //            System.Diagnostics.Debug.WriteLine($"Entry {h.System.Name} | {h.WhereAmI} | {h.EventTimeUTC}");
+            //    }
+            //    System.Diagnostics.Debug.WriteLine($"-");
+            //}
+
+            return systemwhere;
+        }
+
+
         // trilat
         public List<HistoryEntry> FilterByFSDOnly() { return (from s in historylist where s.EntryType == JournalTypeEnum.FSDJump select s).ToList(); }
 
