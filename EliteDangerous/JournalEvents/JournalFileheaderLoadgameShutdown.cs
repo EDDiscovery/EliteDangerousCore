@@ -51,6 +51,9 @@ namespace EliteDangerousCore.JournalEvents
                 if (GameVersion.Equals("2.2") && (Build.Contains("r121645/r0") || Build.Contains("r129516/r0")))
                     return true;
 
+                if (Build.Contains("r304032/r0") && EventTimeUTC < EliteReleaseDates.OdysseyType8) // august 2024 pre-release for T8
+                    return true;
+
                 return false;
             }
         }

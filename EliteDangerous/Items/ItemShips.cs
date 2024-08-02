@@ -178,6 +178,7 @@ namespace EliteDangerousCore
                 ["Type9_Military"] = "Lakon",
                 ["Type6"] = "Lakon",
                 ["Type7"] = "Lakon",
+                ["Type8"] = "Lakon",
                 ["Type9"] = "Lakon",
                 ["Viper"] = "Faulcon DeLacy",
                 ["Viper_MkIV"] = "Faulcon DeLacy",
@@ -1063,6 +1064,34 @@ namespace EliteDangerousCore
             LatAcc = 15.92
         };
 
+        private static ShipProperties type8 = new ShipProperties()
+        {
+            FDID = "Type8",
+            EDCDID = "Type8",
+            Manufacturer = "<code>",
+            HullMass = 400F,
+            Name = "Type-8 Transporter",
+            Speed = 201,        // game
+            Boost = 342,        // game
+            // unknown        
+                    HullCost = 72108220,
+                    Class = 3,
+                    Shields = 240,
+                    Armour = 480,
+                    MinThrust = 30.769,
+                    BoostCost = 19,
+                    FuelReserve = 0.52,
+                    HeatCap = 289,
+                    HeatDispMin = 3.1,
+                    HeatDispMax = 48.35,
+                    FuelCost = 50,
+                    Hardness = 65,
+                    Crew = 3,
+                    FwdAcc = 20.03,
+                    RevAcc = 10.11,
+                    LatAcc = 10.03
+        };
+
         private static ShipProperties type9 = new ShipProperties()
         {
             FDID = "Type9",
@@ -1292,6 +1321,7 @@ namespace EliteDangerousCore
             { "type9_military",type9_military},
             { "type6",type6},
             { "type7",type7},
+            { "type8",type8},
             { "type9",type9},
             { "viper",viper},
             { "viper_mkiv",viper_mkiv},

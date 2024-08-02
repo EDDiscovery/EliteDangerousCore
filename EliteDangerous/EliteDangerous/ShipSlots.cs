@@ -145,6 +145,8 @@ namespace EliteDangerousCore
             SmallHardpoint2,
             SmallHardpoint3,
             SmallHardpoint4,
+            SmallHardpoint5,        //type8
+            SmallHardpoint6,        //type8
             StringLights,
             TinyHardpoint1,
             TinyHardpoint2,
@@ -301,6 +303,8 @@ namespace EliteDangerousCore
             [Slot.SmallHardpoint2] = "Small Hardpoint 2",
             [Slot.SmallHardpoint3] = "Small Hardpoint 3",
             [Slot.SmallHardpoint4] = "Small Hardpoint 4",
+            [Slot.SmallHardpoint5] = "Small Hardpoint 5",
+            [Slot.SmallHardpoint6] = "Small Hardpoint 6",
 
             [Slot.StringLights] = "String Lights",
 
