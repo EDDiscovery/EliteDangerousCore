@@ -77,11 +77,11 @@ namespace EliteDangerousCore
         }
 
         // history filter - limit by date, from startdate backwards by days
-        static public List<HistoryEntry> LimitByDate(List<HistoryEntry> list, DateTime startdate, TimeSpan days, HashSet<JournalTypeEnum> entries = null, bool reverse = true)     // list should be in entry order (oldest first)
+        static public List<HistoryEntry> LimitByDate(List<HistoryEntry> list, DateTime startdateutc, TimeSpan days, HashSet<JournalTypeEnum> entries = null, bool reverse = true)     // list should be in entry order (oldest first)
         {
-            System.Diagnostics.Debug.Assert(startdate.Kind == DateTimeKind.Utc);
+            System.Diagnostics.Debug.Assert(startdateutc.Kind == DateTimeKind.Utc);
 
-            var oldestData = startdate.Subtract(days);
+            var oldestData = startdateutc.Subtract(days);
 
             if (entries != null)
             {
@@ -96,6 +96,27 @@ namespace EliteDangerousCore
                     return list.Where(x => x.EventTimeUTC >= oldestData).Reverse().ToList();
                 else
                     return list.Where(x => x.EventTimeUTC >= oldestData).ToList();
+            }
+        }
+
+        // history filter - limit by date range
+        static public List<HistoryEntry> LimitByDate(List<HistoryEntry> list, DateTime startdateutc, DateTime enddaysutc, HashSet<JournalTypeEnum> entries = null, bool reverse = true)     // list should be in entry order (oldest first)
+        {
+            System.Diagnostics.Debug.Assert(startdateutc.Kind == DateTimeKind.Utc);
+
+            if (entries != null)
+            {
+                if (reverse)
+                    return list.Where(x => entries.Contains(x.EntryType) && x.EventTimeUTC >= startdateutc && x.EventTimeUTC <= enddaysutc).Reverse().ToList();
+                else
+                    return list.Where(x => entries.Contains(x.EntryType) && x.EventTimeUTC >= startdateutc && x.EventTimeUTC <= enddaysutc).ToList();
+            }
+            else
+            {
+                if (reverse)
+                    return list.Where(x => x.EventTimeUTC >= startdateutc && x.EventTimeUTC <= enddaysutc).Reverse().ToList();
+                else
+                    return list.Where(x => x.EventTimeUTC >= startdateutc && x.EventTimeUTC <= enddaysutc).ToList();
             }
         }
 

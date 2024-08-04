@@ -125,11 +125,6 @@ namespace EliteDangerousCore
             Update(this);
         }
 
-        public void Delete()
-        {
-            Delete(this);
-        }
-
         #endregion
 
         #region DB
@@ -195,7 +190,7 @@ namespace EliteDangerousCore
                 return cmdr;
             });
 
-            Commanders[cmdr.Id] = cmdr;
+            commanders[cmdr.Id] = cmdr;
             return cmdr;
         }
 
@@ -233,26 +228,69 @@ namespace EliteDangerousCore
                     cmd.AddParameterWithValue("@Options", cmdr.Options.ToString());
                     cmd.ExecuteNonQuery();
 
-                    Commanders[cmdr.Id] = cmdr;
+                    commanders[cmdr.Id] = cmdr;
                 }
             });
         }
 
-        public static void Delete(EDCommander cmdr)
+        // if permdelete, its wiped. If not, its marked deleted and won't appear again
+        public static void Delete(int id, bool permdelete = false)
         {
-            Commanders.Remove(cmdr.Id);
+            commanders.Remove(id);      // its hidden, and we only have non hidden commanders in the list
+
+            if (commanders.Count == 0)     // must have 1
+            {
+                Add("Jameson (Default)", toeddn: false);
+            }
+
+            currentcommander = commanders.Values.First().Id;    // pick first
 
             UserDatabase.Instance.DBWrite(cn =>
             {
-                using (DbCommand cmd = cn.CreateCommand("UPDATE Commanders SET Deleted = 1 WHERE Id = @Id"))
+                if (permdelete)
                 {
-                    cmd.AddParameterWithValue("@Id", cmdr.Id);
-                    cmd.ExecuteNonQuery();
+                    using (DbCommand cmd = cn.CreateCommand("DELETE FROM Commanders WHERE Id = @Id"))
+                    {
+                        cmd.AddParameterWithValue("@Id", id);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                else
+                {
+                    using (DbCommand cmd = cn.CreateCommand("UPDATE Commanders SET Deleted = 1 WHERE Id = @Id"))
+                    {
+                        cmd.AddParameterWithValue("@Id", id);
+                        cmd.ExecuteNonQuery();
+                    }
                 }
             });
         }
 
-       
+        public static int DeletedCommanders()
+        {
+            return UserDatabase.Instance.DBRead<int>(cn =>
+            {
+                using (DbCommand cmd = cn.CreateCommand("Select Count(Id) FROM Commanders WHERE Deleted=1"))
+                {
+                    return (int)(long)cmd.ExecuteScalar();
+                }
+            });
+        }
+
+        public static void UndeleteCommanders()
+        {
+            UserDatabase.Instance.DBWrite(cn =>
+            {
+                using (DbCommand cmd = cn.CreateCommand("UPDATE Commanders SET Deleted=0 WHERE Deleted=1"))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            });
+
+            lock (locker)           // add only new ones, we will have references (in settings) to commanders dictionary so don't make a new one
+                RefreshList();
+        }
+
         #endregion
 
         #region Construction
@@ -309,10 +347,10 @@ namespace EliteDangerousCore
             }
             set
             {
-                if (value != currentcommander && Commanders.ContainsKey(value))
+                if (value != currentcommander && commanders.ContainsKey(value))
                 {
                     currentcommander = value;
-                    EliteDangerousCore.DB.UserDatabase.Instance.PutSettingInt("ActiveCommander", value);
+                    UserDatabase.Instance.PutSettingInt("ActiveCommander", value);
                 }
             }
         }
@@ -321,7 +359,7 @@ namespace EliteDangerousCore
         {
             get
             {
-                return Commanders[CurrentCmdrID];
+                return commanders[CurrentCmdrID];
             }
         }
 
@@ -329,15 +367,15 @@ namespace EliteDangerousCore
         {
             get
             {
-                return Commanders.Count;
+                return commanders.Count;
             }
         }
 
         public static EDCommander GetCommander(int id)      // null if not valid - cope with it. Hidden gets returned.
         {
-            if (Commanders.ContainsKey(id))
+            if (commanders.ContainsKey(id))
             {
-                return Commanders[id];
+                return commanders[id];
             }
             else
             {
@@ -347,12 +385,12 @@ namespace EliteDangerousCore
 
         public static EDCommander GetCommander(string name)
         {
-            return Commanders.Values.FirstOrDefault(c => c.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            return commanders.Values.FirstOrDefault(c => c.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public static bool IsCommanderPresent(string name)
         {
-            return Commanders.Values.ToList().FindIndex(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)) != -1;
+            return commanders.Values.ToList().FindIndex(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)) != -1;
         }
         public static bool IsLegacyCommander(int id)
         {
@@ -361,50 +399,55 @@ namespace EliteDangerousCore
 
         public static List<EDCommander> GetListInclHidden()
         {
-            return Commanders.Values.OrderBy(v => v.Id).ToList();
+            return commanders.Values.OrderBy(v => v.Id).ToList();
         }
 
         public static List<EDCommander> GetListCommanders()
         {
-            return Commanders.Values.Where(v => v.Id >= 0).OrderBy(v => v.Id).ToList();
+            return commanders.Values.Where(v => v.Id >= 0).OrderBy(v => v.Id).ToList();
         }
 
         public static void LoadCommanders()
         {
-            lock (locker)
+            lock (locker)       // unsure what this is for.
             {
-                intcmdrdict = new Dictionary<int, EDCommander>();
+                commanders = new Dictionary<int, EDCommander>();
+                RefreshList();
 
-                UserDatabase.Instance.DBRead(cn =>
+                if (commanders.Count == 0)
                 {
-                    using (DbCommand cmd = cn.CreateCommand("SELECT * FROM Commanders Where Deleted=0"))
-                    {
-                        using (DbDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                EDCommander edcmdr = new EDCommander(reader);
-                                intcmdrdict.Add(edcmdr.Id,edcmdr);
-                            }
-                        }
-                    }
-                });
-
-                if (intcmdrdict.Count == 0)
-                {
-                    Add("Jameson (Default)",toeddn:false);
+                    Add("Jameson (Default)", toeddn: false);
                 }
 
-                EDCommander hidden = new EDCommander(-1, "Hidden Log");     // -1 is the hidden commander, add to list to make it
-                intcmdrdict[-1] = hidden;        // so we give back a valid entry when its selected
+                EDCommander hidden = new EDCommander(-1, "Hidden Log");     // -1 is the hidden commander, add to list
+                commanders[-1] = hidden;                                    // so we give back a valid entry when its selected
 
-                currentcommander = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("ActiveCommander", 0);
+                currentcommander = UserDatabase.Instance.GetSettingInt("ActiveCommander", 0);
 
-                if (currentcommander >= 0 && !Commanders.ContainsKey(currentcommander) && Commanders.Count > 0) // if not in list, pick first
+                if (!commanders.ContainsKey(currentcommander))              // if not in list, pick first, will always be there
                 {
-                    currentcommander = Commanders.Values.First().Id;
+                    currentcommander = commanders.Values.First().Id;
                 }
             }
+        }
+
+        public static void RefreshList()
+        {
+            UserDatabase.Instance.DBRead(cn =>
+            {
+                using (DbCommand cmd = cn.CreateCommand("SELECT * FROM Commanders Where Deleted=0"))
+                {
+                    using (DbDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            EDCommander edcmdr = new EDCommander(reader);       // add only non deleted
+                            if ( !commanders.ContainsKey(edcmdr.Id))            // add new ones only
+                                commanders.Add(edcmdr.Id, edcmdr);
+                        }
+                    }
+                }
+            });
         }
 
         #endregion
@@ -412,7 +455,7 @@ namespace EliteDangerousCore
         #region Private properties and methods
 
         private static Object locker = new object();
-        private static Dictionary<int, EDCommander> intcmdrdict = null;
+        private static Dictionary<int, EDCommander> commanders;
         private static int currentcommander = Int32.MinValue;
         private bool syncfromedsm = false;
         private bool synctoedsm = false;
@@ -420,7 +463,6 @@ namespace EliteDangerousCore
         private string homesystem = "";
         private ISystem lookuphomesys = null;
         private string lastlookuphomename = null;
-        private static Dictionary<int, EDCommander> Commanders { get { System.Diagnostics.Debug.Assert(intcmdrdict != null);  return intcmdrdict; } }
 
 
         #endregion

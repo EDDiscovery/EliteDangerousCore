@@ -112,7 +112,7 @@ namespace EliteDangerousCore
 
         static public void Delete(long idvalue)
         {
-            UserDatabase.Instance.DBWrite(cn => { Delete(idvalue,cn); });
+            UserDatabase.Instance.DBWrite(cn => { Delete(idvalue, cn); });
         }
 
         static private void Delete(long idvalue, SQLiteConnectionUser cn)
@@ -120,6 +120,20 @@ namespace EliteDangerousCore
             using (DbCommand cmd = cn.CreateCommand("DELETE FROM JournalEntries WHERE id = @id"))
             {
                 cmd.AddParameterWithValue("@id", idvalue);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        static public void DeleteCommander(int cmdrid)
+        {
+            UserDatabase.Instance.DBWrite(cn => { DeleteCommander(cmdrid, cn); });
+        }
+
+        static private void DeleteCommander(int cmdrid, SQLiteConnectionUser cn)
+        {
+            using (DbCommand cmd = cn.CreateCommand("DELETE FROM JournalEntries WHERE CommanderId = @id"))
+            {
+                cmd.AddParameterWithValue("@id", cmdrid);
                 cmd.ExecuteNonQuery();
             }
         }
