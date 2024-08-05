@@ -192,7 +192,7 @@ namespace EliteDangerousCore
                 }
             }
 
-            foreach (var cmdr in EDCommander.GetListCommanders())       // setup any commander folders first, so the watches are established with subfolder search
+            foreach (var cmdr in EDCommander.GetListActiveCommanders())       // setup any commander folders first, so the watches are established with subfolder search
             {
                 if (!cmdr.ConsoleCommander && cmdr.JournalDir.HasChars())
                 {

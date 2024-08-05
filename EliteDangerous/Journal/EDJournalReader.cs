@@ -153,10 +153,13 @@ namespace EliteDangerousCore
                 if (commander == null )
                 {
                     // in the default condition, we have a hidden commander, and first Cmdr. Jameson.
+                    // get list of all active or deleted commanders - deleted cause we don't want to create one if purposely deleted
 
-                    commander = EDCommander.GetListCommanders().FirstOrDefault();
-                    if (EDCommander.NumberOfCommanders == 2 && commander != null && commander.Name == "Jameson (Default)")
+                    var actives = EDCommander.GetListActiveCommanders();
+
+                    if (actives.Count == 1 && actives[0].Name == "Jameson (Default)")   // if only 1 active and its Jameson
                     {
+                        commander = actives[0];     // overwrite
                         commander.Name = cmdrcreatedname;
                         commander.EdsmName = cmdrcreatedname;
                         commander.JournalDir = TravelLogUnit.Path;
@@ -170,6 +173,8 @@ namespace EliteDangerousCore
                         // note changing commander in EDCommander here does not work - it shows a mess of data - removed nov 22
                         commander = EDCommander.Add(name: cmdrcreatedname, journalpath: TravelLogUnit.Path, toeddn: EliteConfigInstance.InstanceOptions.SetEDDNforNewCommanders);        
                     }
+
+                    EDCommander.AddOrUpdateCount++;     // update the count, used to detect changes in commander by external systems
 
                     if ( legacy )
                     {
