@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2022-2022 EDDiscovery development team
+ * Copyright © 2022-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,11 +10,8 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
  
-using BaseUtils;
 using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Generic;
@@ -39,12 +36,8 @@ namespace EliteDangerousCore
         public string CurrentPositionText { get { return StarSystem.Name + (Body.Equals(StarSystem.Name, StringComparison.InvariantCultureIgnoreCase) || Body.IsEmpty() ? "" : (": " + Body)); } }
 
         // CarrierBuy
-
         public long Cost { get; private set; }                                   // cost to buy
         public string Variant { get; private set; }                              // and its variant type
-
-        // CarrierCrewServices  (note CarrierStats does not carry name but crew services do, so cache)
-        public Dictionary<JournalCarrierCrewServices.ServiceType, string> CrewNames { get; set; } = new Dictionary<JournalCarrierCrewServices.ServiceType, string>();
 
         // CarrierModulePack/ShipPack (not CarrierStats does not carry cost but these do, so cache). key is PackTheme:PackTier
         public Dictionary<string, long> PackCost { get; set; } = new Dictionary<string, long>();
@@ -52,7 +45,6 @@ namespace EliteDangerousCore
         static public string PackCostKey(CarrierState.PackClass pc) { return pc.PackTheme + ":" + pc.PackTier.ToStringInvariant(); }
 
         // from CarrierJumpRequest
-
         public string NextStarSystem { get; private set; }                       // null if not jumping
         public long NextSystemAddress { get; private set; }
         public string NextBody { get; private set; }            // null if not jumping. If jumping, its empty or the body name
@@ -331,54 +323,58 @@ namespace EliteDangerousCore
             else
                 System.Diagnostics.Debug.WriteLine($"Carrier Docking perm but no carrier!");
         }
-        public void Update(JournalCarrierCrewServices j)
+        public void Update(JournalCarrierCrewServices jentry)
         {
             if (State.HaveCarrier)                     // must have a carrier
             {
+                // ensure we have a State.Services for the Crew Roll
+
                 if (State.Services == null) // if no array, make it
                     State.Services = new List<CarrierState.ServicesClass>(); // checked this by making carrier states not set Crew.
 
-                CarrierState.ServicesClass cc = State.Services.Find(x => x.CrewRole.Equals(j.CrewRole,StringComparison.InvariantCultureIgnoreCase));        
-                if ( cc == null )       // if no CrewRoll, make one
+                CarrierState.ServicesClass srventry = State.Services.Find(x => x.CrewRole.Equals(jentry.CrewRole,StringComparison.InvariantCultureIgnoreCase));        
+                if ( srventry == null )       // if no CrewRoll, make one
                 {
-                    cc = new CarrierState.ServicesClass() { CrewRole = j.CrewRole, CrewName=  j.CrewName };
-                    State.Services.Add(cc);
+                    srventry = new CarrierState.ServicesClass() { CrewRole = jentry.CrewRole, CrewName=  jentry.CrewName };
+                    State.Services.Add(srventry);
                 }
 
-                var optype = j.GetOperation();
+                // on operation type..
+
+                var optype = jentry.GetOperation();
 
                 if (optype == JournalCarrierCrewServices.OperationType.Activate)
                 {
-                    cc.Enabled = cc.Activated = true;
+                    srventry.Enabled = srventry.Activated = true;
+                    srventry.CrewName = jentry.CrewName;
 
-                    var sdata = j.GetDataOnService;
-                    if (sdata != null)      // may fail due to not having the right name in the table in the future
+                    var sdata = jentry.GetDataOnService;     // lookup fixed service data for the service
+
+                    if (sdata != null)      // may fail due to not having the right name in the table in the future. If not, update ledger
                     {
                         State.Finance.CarrierBalance -= sdata.InstallCost;
-                        Ledger.Add(new LedgerEntry(j, StarSystem, Body, State.Finance.CarrierBalance, "+ " + j.CrewRole.SplitCapsWordFull()));
+                        Ledger.Add(new LedgerEntry(jentry, StarSystem, Body, State.Finance.CarrierBalance, "+ " + jentry.CrewRole.SplitCapsWordFull()));
                     }
 
-                    CrewNames[j.GetServiceType()] = j.CrewName;
                 }
                 else if (optype == JournalCarrierCrewServices.OperationType.Deactivate)
                 {
-                    cc.Enabled = cc.Activated = false;
+                    srventry.Enabled = srventry.Activated = false;
                 }
                 else if (optype == JournalCarrierCrewServices.OperationType.Pause)
                 {
-                    cc.Enabled = false;
+                    srventry.Enabled = false;
                 }
                 else if (optype == JournalCarrierCrewServices.OperationType.Resume)
                 {
-                    cc.Enabled = true;
+                    srventry.Enabled = true;
                 }
                 else if (optype == JournalCarrierCrewServices.OperationType.Replace)
                 {
-                    cc.CrewName = j.CrewName;   // set crewname
-                    CrewNames[j.GetServiceType()] = j.CrewName;
+                    srventry.CrewName = jentry.CrewName;   // set crewname
                 }
                 else
-                    System.Diagnostics.Debug.WriteLine($"Crew services unknown action {j.Operation}");
+                    System.Diagnostics.Debug.WriteLine($"Crew services unknown action {jentry.Operation}");
             }
             else
                 System.Diagnostics.Debug.WriteLine($"Crew services but no carrier!");

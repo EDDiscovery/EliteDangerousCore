@@ -531,6 +531,7 @@ namespace EliteDangerousCore.JournalEvents
             Unknown
         };
 
+        // turn CrewRole into Service type
         public ServiceType GetServiceType() { return Enum.TryParse(CrewRole, true, out ServiceType typefound) ? typefound : ServiceType.Unknown; }
         static public ServiceType GetServiceType(string name) { return Enum.TryParse(name, true, out ServiceType typefound) ? typefound : ServiceType.Unknown; }
 
@@ -546,6 +547,7 @@ namespace EliteDangerousCore.JournalEvents
 
         // as per frontier Operation Entry
 
+        [System.Diagnostics.DebuggerDisplay("{Service} {CargoSize}t {InstallCost}cr up {UpkeepCost}")]
         public class ServicesData       // https://elite-dangerous.fandom.com/wiki/Drake-Class_Carrier
         {
             public ServicesData(ServiceType t, long cost, long upkeep, long suspendedcost, int cargosize) 
@@ -559,6 +561,8 @@ namespace EliteDangerousCore.JournalEvents
 
         // may return null if names don't match in future.
         public static ServicesData GetDataOnServiceType(ServiceType t) { return Array.Find(ServiceInformation, x => x.Service == t); }
+
+        // get data on journal service type
         public ServicesData GetDataOnService { get { var t = GetServiceType();  return Array.Find(ServiceInformation, x => x.Service == t); } }
 
         public JournalCarrierCrewServices(JObject evt) : base(evt, JournalTypeEnum.CarrierCrewServices)
