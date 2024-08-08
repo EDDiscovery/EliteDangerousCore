@@ -155,11 +155,10 @@ namespace EliteDangerousCore
                     // in the default condition, we have a hidden commander, and first Cmdr. Jameson.
                     // get list of all active or deleted commanders - deleted cause we don't want to create one if purposely deleted
 
-                    var actives = EDCommander.GetListActiveCommanders();
+                    commander = EDCommander.GetCommander("Jameson (Default)");      // see if the place holder is there..
 
-                    if (actives.Count == 1 && actives[0].Name == "Jameson (Default)")   // if only 1 active and its Jameson
+                    if (commander != null)      // if so, replace..
                     {
-                        commander = actives[0];     // overwrite
                         commander.Name = cmdrcreatedname;
                         commander.EdsmName = cmdrcreatedname;
                         commander.JournalDir = TravelLogUnit.Path;

@@ -383,11 +383,20 @@ namespace EliteDangerousCore
         }
 
         // gets a commander, including hidden or deleted
+        // if two commanders have same name, for whatever reason, one is deleted, one is not, prefers active commander
         // null if not there
         public static EDCommander GetCommander(string name)
         {
             lock (locker)
-                return commanders.Values.FirstOrDefault(c => c.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            {
+                var cmdr = commanders.Values.FirstOrDefault(c => c.Deleted == false && c.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+                if (cmdr == null)
+                {
+                    //System.Diagnostics.Debug.WriteLine($"Failed to find active commander, try deleted");
+                    cmdr = commanders.Values.FirstOrDefault(c => c.Deleted == true && c.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+                }
+                return cmdr;
+            }
         }
 
         // gets a commander, including hidden or deleted
