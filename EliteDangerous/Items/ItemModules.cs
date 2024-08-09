@@ -570,7 +570,8 @@ namespace EliteDangerousCore
             [OrderedPropertyNameAttribute(999,"ly")] public double? AdditionalRange { get; set; } // ly
             [OrderedPropertyNameAttribute(999,"s")] public double? TargetMaxTime { get; set; }
             [OrderedPropertyNameAttribute(999,"")] public double? MineBonus { get; set; }
-            [OrderedPropertyNameAttribute(999,"")] public double? ProbeRadius { get; set; }
+            [OrderedPropertyNameAttribute(999, "")] public double? ProbeRadius { get; set; }
+            [OrderedPropertyNameAttribute(999, "")] public string GuardianModuleResistance { get; set; }        // Active, blank
 
             // at end
 
@@ -700,7 +701,10 @@ namespace EliteDangerousCore
                         string title = kvp.Key.Name.SplitCapsWord() + ':';
                         //if (namepadding > 0 && title.Length < namepadding)  title += new string(' ', namepadding - title.Length); // does not work due to prop font
                         output.Append(title);
-                        output.Append($"{value:0.####}{postfix}");
+                        if ( value is string )
+                            output.Append($"{value}{postfix}");
+                        else
+                            output.Append($"{value:0.####}{postfix}");
                     }
                 }
 
@@ -979,10 +983,10 @@ namespace EliteDangerousCore
 
                 // IDs are real, properties have no real data on these. holding for real data
                 { "type8_armour_grade1", new ShipModule(129030535,ShipModule.ModuleTypes.LightweightAlloy,"Type 8 Transporter Lightweight Alloy"){ Mass=0, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=80 } },
-                { "type8_armour_grade2", new ShipModule(129030536,ShipModule.ModuleTypes.ReinforcedAlloy,"Type 8 Transporter Reinforced Alloy"){ Mass=75, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=152 } },
-                { "type8_armour_grade3", new ShipModule(129030537,ShipModule.ModuleTypes.MilitaryGradeComposite,"Type 8 Transporter Military Grade Composite"){ Mass=150, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=250 } },
-                { "type8_armour_mirrored", new ShipModule(129030538, ShipModule.ModuleTypes.MirroredSurfaceComposite,"Type 8 Transporter Mirrored Surface Composite"){ Mass=150, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
-                { "type8_armour_reactive", new ShipModule(129030539, ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Type 8 Transporter Reactive Surface Composite"){ Mass=150, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
+                { "type8_armour_grade2", new ShipModule(129030536,ShipModule.ModuleTypes.ReinforcedAlloy,"Type 8 Transporter Reinforced Alloy"){ Mass=32, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=152 } },
+                { "type8_armour_grade3", new ShipModule(129030537,ShipModule.ModuleTypes.MilitaryGradeComposite,"Type 8 Transporter Military Grade Composite"){ Mass=63, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=250 } },
+                { "type8_armour_mirrored", new ShipModule(129030538,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Type 8 Transporter Mirrored Surface Composite"){ Mass=63, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
+                { "type8_armour_reactive", new ShipModule(129030539,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Type 8 Transporter Reactive Surface Composite"){ Mass=63, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
                 // end
 
 
@@ -998,11 +1002,11 @@ namespace EliteDangerousCore
                 { "mamba_armour_mirrored", new ShipModule(128915984,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Mamba Mirrored Surface Composite"){ Mass=38, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
                 { "mamba_armour_reactive", new ShipModule(128915985,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Mamba Reactive Surface Composite"){ Mass=38, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
 
-                { "python_nx_armour_grade1", new ShipModule(-1, ShipModule.ModuleTypes.LightweightAlloy,"Python Mk II Lightweight Alloy") { Mass= 0, ExplosiveResistance= -40, KineticResistance= -20, ThermalResistance= 0, AXResistance= 90, HullStrengthBonus= 80 } },
-                { "python_nx_armour_grade2", new ShipModule(-1, ShipModule.ModuleTypes.ReinforcedAlloy, "Python Mk II Reinforced Alloy") { Mass=26, ExplosiveResistance= -40, KineticResistance= -20, ThermalResistance= 0, AXResistance= 90, HullStrengthBonus= 152 } },
-                { "python_nx_armour_grade3", new ShipModule(-1, ShipModule.ModuleTypes.MilitaryGradeComposite, "Python Mk II Military Grade Composite") { Mass=53, ExplosiveResistance= -40, KineticResistance= -20, ThermalResistance= 0, AXResistance= 90, HullStrengthBonus= 250 } },
-                { "python_nx_armour_mirrored", new ShipModule(-1, ShipModule.ModuleTypes.MirroredSurfaceComposite, "Python Mk II Mirrored Surface Composite") { Mass=53, ExplosiveResistance= -50, KineticResistance= -75, ThermalResistance= 50, AXResistance= 90, HullStrengthBonus= 250 } },
-                { "python_nx_armour_reactive", new ShipModule(-1, ShipModule.ModuleTypes.ReactiveSurfaceComposite, "Python Mk II Reactive Surface Composite") { Mass=53, ExplosiveResistance= 20, KineticResistance= 25, ThermalResistance= -40, AXResistance= 90, HullStrengthBonus= 250 } },
+                { "python_nx_armour_grade1", new ShipModule(-1,ShipModule.ModuleTypes.LightweightAlloy,"Python Mk II Lightweight Alloy"){ Mass=0, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=80 } },
+                { "python_nx_armour_grade2", new ShipModule(-1,ShipModule.ModuleTypes.ReinforcedAlloy,"Python Mk II Reinforced Alloy"){ Mass=26, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=152 } },
+                { "python_nx_armour_grade3", new ShipModule(-1,ShipModule.ModuleTypes.MilitaryGradeComposite,"Python Mk II Military Grade Composite"){ Mass=53, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=250 } },
+                { "python_nx_armour_mirrored", new ShipModule(-1,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Python Mk II Mirrored Surface Composite"){ Mass=53, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
+                { "python_nx_armour_reactive", new ShipModule(-1,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Python Mk II Reactive Surface Composite"){ Mass=53, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
 
                 // Auto field maint
 
@@ -1128,7 +1132,7 @@ namespace EliteDangerousCore
                 { "int_corrosionproofcargorack_size1_class2", new ShipModule(128681992,ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Corrosion Resistant Cargo Rack Class 1 Rating F"){ Cost = 12560, Class = 1, Rating = "F", Size = 2 } },
 
                 { "int_corrosionproofcargorack_size4_class1", new ShipModule(128833944,ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Corrosion Resistant Cargo Rack Class 4 Rating E"){ Cost = 94330, Class = 4, Rating = "E", Size = 16 } },
-                { "int_corrosionproofcargorack_size5_class1", new ShipModule(128957069,ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Corrosion Resistant Cargo Rack Class 5 Rating E"){ Cost = -999, Class = 5, Rating = "E", Size = 32 } },
+                { "int_corrosionproofcargorack_size5_class1", new ShipModule(128957069,ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Corrosion Resistant Cargo Rack Class 5 Rating E"){ Class = 5, Rating = "E", Size = 32 } },
                 { "int_corrosionproofcargorack_size6_class1", new ShipModule(999999906, ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Corrosion Resistant Cargo Rack Class 6 Rating E") { Size = 64 } },
 
                 // Manifest Scanner
@@ -1663,8 +1667,8 @@ namespace EliteDangerousCore
                 { "hpt_atdumbfiremissile_turret_medium_v2", new ShipModule(129022083,ShipModule.ModuleTypes.EnhancedAXMissileRack,"Enhanced AX Missile Rack Medium"){ Cost = 2666290, Mount = "T", MissileType = "D", Class = 2, Rating = "E", Mass = 4, Integrity = 51, PowerDraw = 1.3, BootTime = 0, DPS = 32, Damage = 64, DistributorDraw = 0.08, ThermalLoad = 1.5, ArmourPiercing = 60, Range = 5000, Speed = 1250, RateOfFire = 0.5, BurstInterval = 2, Clip = 8, Ammo = 64, ReloadTime = 5, BreachDamage = 0, BreachMin = 80, BreachMax = 100, AXPorportionDamage = 68.75, ExplosiveProportionDamage = 31.25, AmmoCost = 235, Jitter = 0 } },
                 { "hpt_atdumbfiremissile_turret_large_v2", new ShipModule(129022082,ShipModule.ModuleTypes.EnhancedAXMissileRack,"Enhanced AX Missile Rack Large"){ Cost = 5347530, Mount = "T", MissileType = "D", Class = 3, Rating = "D", Mass = 8, Integrity = 64, PowerDraw = 1.85, BootTime = 0, DPS = 32, Damage = 64, DistributorDraw = 0.14, ThermalLoad = 1.9, ArmourPiercing = 60, Range = 5000, Speed = 1250, RateOfFire = 0.5, BurstInterval = 2, Clip = 12, Ammo = 128, ReloadTime = 5, BreachDamage = 0, BreachMin = 80, BreachMax = 100, AXPorportionDamage = 68.75, ExplosiveProportionDamage = 31.25, AmmoCost = 235, Jitter = 0 } },
 
-                { "hpt_atventdisruptorpylon_fixed_medium", new ShipModule(129030049,ShipModule.ModuleTypes.TorpedoPylon,"Guardian Nanite Torpedo Pylon Medium"){ Cost = 843170, Mount = "F", MissileType = "S", Class = 2, Rating = "I", Mass = 3, Integrity = 50, PowerDraw = 0.4, BootTime = 0, DPS = 0, Damage = 0, DistributorDraw = 0, ThermalLoad = 35, Speed = 1000, RateOfFire = 0.5, BurstInterval = 2, Clip = 1, Ammo = 64, ReloadTime = 3, BreachDamage = 0, Jitter = 0, AmmoCost = 15000 } },
-                { "hpt_atventdisruptorpylon_fixed_large", new ShipModule(129030050,ShipModule.ModuleTypes.TorpedoPylon,"Guardian Nanite Torpedo Pylon Large"){ Cost = 1627420, Mount = "F", MissileType = "S", Class = 3, Rating = "I", Mass = 5, Integrity = 80, PowerDraw = 0.7, BootTime = 0, DPS = 0, Damage = 0, DistributorDraw = 0, ThermalLoad = 35, Speed = 1000, RateOfFire = 0.5, BurstInterval = 2, Clip = 1, Ammo = 128, ReloadTime = 3, BreachDamage = 0, Jitter = 0, AmmoCost = 15000 } },
+                { "hpt_atventdisruptorpylon_fixed_medium", new ShipModule(129030049,ShipModule.ModuleTypes.TorpedoPylon,"Guardian Nanite Torpedo Pylon Medium"){ Cost = 843170, Mount = "F", MissileType = "S", Class = 2, Rating = "I", Mass = 3, Integrity = 50, PowerDraw = 0.4, BootTime = 0, DPS = 0, Damage = 0, DistributorDraw = 0, ThermalLoad = 35, Speed = 1000, RateOfFire = 0.5, BurstInterval = 2, Clip = 1, Ammo = 64, ReloadTime = 3, BreachDamage = 0, Jitter = 0, AmmoCost = 15000, GuardianModuleResistance = "Active" } },
+                { "hpt_atventdisruptorpylon_fixed_large", new ShipModule(129030050,ShipModule.ModuleTypes.TorpedoPylon,"Guardian Nanite Torpedo Pylon Large"){ Cost = 1627420, Mount = "F", MissileType = "S", Class = 3, Rating = "I", Mass = 5, Integrity = 80, PowerDraw = 0.7, BootTime = 0, DPS = 0, Damage = 0, DistributorDraw = 0, ThermalLoad = 35, Speed = 1000, RateOfFire = 0.5, BurstInterval = 2, Clip = 1, Ammo = 128, ReloadTime = 3, BreachDamage = 0, Jitter = 0, AmmoCost = 15000, GuardianModuleResistance = "Active" } },
 
                 { "hpt_basicmissilerack_fixed_small", new ShipModule(128049492,ShipModule.ModuleTypes.SeekerMissileRack,"Seeker Missile Rack Fixed Small"){ Cost = 72600, Mount = "F", MissileType = "S", Class = 1, Rating = "B", Mass = 2, Integrity = 40, PowerDraw = 0.6, BootTime = 0, DPS = 13.333, Damage = 40, DistributorDraw = 0.24, ThermalLoad = 3.6, ArmourPiercing = 60, Speed = 625, RateOfFire = 0.333, BurstInterval = 3, Clip = 6, Ammo = 6, ReloadTime = 12, BreachDamage = 16, BreachMin = 0, BreachMax = 0, ExplosiveProportionDamage = 100, ThermalProportionDamage = 0, AmmoCost = 500, Jitter = 0 } },
                 { "hpt_basicmissilerack_fixed_medium", new ShipModule(128049493,ShipModule.ModuleTypes.SeekerMissileRack,"Seeker Missile Rack Fixed Medium"){ Cost = 512400, Mount = "F", MissileType = "S", Class = 2, Rating = "B", Mass = 4, Integrity = 51, PowerDraw = 1.2, BootTime = 0, DPS = 13.333, Damage = 40, DistributorDraw = 0.24, ThermalLoad = 3.6, ArmourPiercing = 60, Speed = 625, RateOfFire = 0.333, BurstInterval = 3, Clip = 6, Ammo = 18, ReloadTime = 12, BreachDamage = 16, BreachMin = 0, BreachMax = 0, ExplosiveProportionDamage = 100, ThermalProportionDamage = 0, AmmoCost = 500, Jitter = 0 } },
@@ -1732,7 +1736,7 @@ namespace EliteDangerousCore
 
                 { "hpt_multicannon_gimbal_huge", new ShipModule(128681996,ShipModule.ModuleTypes.Multi_Cannon,"Multi Cannon Gimbal Huge"){ Cost = 6377600, Mount = "G", Class = 4, Rating = "A", Mass = 16, Integrity = 80, PowerDraw = 1.22, BootTime = 0, DPS = 23.3, Damage = 3.46, DistributorDraw = 0.37, ThermalLoad = 0.51, ArmourPiercing = 68, Range = 4000, Speed = 1600, RateOfFire = 3.367, BurstInterval = 0.297, Clip = 90, Ammo = 2100, Rounds = 2, ReloadTime = 5, BreachDamage = 3.1, BreachMin = 40, BreachMax = 80, KineticProportionDamage = 100, ThermalProportionDamage = 0, Falloff = 2000, AmmoCost = 1, Jitter = 0 } },
 
-                { "hpt_multicannon_fixed_small_strong", new ShipModule(128671345,ShipModule.ModuleTypes.EnforcerCannon,"Enforcer Cannon Fixed Small"){ Cost = 14250, Mount = "F", Class = 1, Rating = "F", Mass = 2, Integrity = 40, PowerDraw = 0.28, BootTime = 0, DPS = 12.391, Damage = 2.85, DistributorDraw = 0.12, ThermalLoad = 0.18, ArmourPiercing = 30, Range = 4500, Speed = 1800, RateOfFire = 4.348, BurstInterval = 0.23, Clip = 60, Ammo = 1000, ReloadTime = 4, BreachDamage = 2.6, BreachMin = 40, BreachMax = 80, KineticProportionDamage = 100, ThermalProportionDamage = 0, Falloff = -999, AmmoCost = 1, Jitter = 0 } },
+                { "hpt_multicannon_fixed_small_strong", new ShipModule(128671345,ShipModule.ModuleTypes.EnforcerCannon,"Enforcer Cannon Fixed Small"){ Cost = 14250, Mount = "F", Class = 1, Rating = "F", Mass = 2, Integrity = 40, PowerDraw = 0.28, BootTime = 0, DPS = 12.391, Damage = 2.85, DistributorDraw = 0.12, ThermalLoad = 0.18, ArmourPiercing = 30, Range = 4500, Speed = 1800, RateOfFire = 4.348, BurstInterval = 0.23, Clip = 60, Ammo = 1000, ReloadTime = 4, BreachDamage = 2.6, BreachMin = 40, BreachMax = 80, KineticProportionDamage = 100, ThermalProportionDamage = 0, Falloff = 3000, AmmoCost = 1, Jitter = 0 } },
 
                 { "hpt_multicannon_fixed_medium_advanced", new ShipModule(128935980,ShipModule.ModuleTypes.AdvancedMulti_Cannon,"Advanced Multi Cannon Fixed Medium"){ Cost = 38000, Mount = "F", Class = 2, Rating = "E", Mass = 4, Integrity = 51, PowerDraw = 0.46, BootTime = 0, DPS = 15.643, Damage = 2.19, DistributorDraw = 0.11, ThermalLoad = 0.18, ArmourPiercing = 37, Range = 4000, Speed = 1600, RateOfFire = 7.143, BurstInterval = 0.14, Clip = 100, Ammo = 2100, ReloadTime = 4, BreachDamage = 2, BreachMin = 40, BreachMax = 80, KineticProportionDamage = 100, ThermalProportionDamage = 0, Falloff = 2000, AmmoCost = 1, Jitter = 0 } },
                 { "hpt_multicannon_fixed_small_advanced", new ShipModule(128935981,ShipModule.ModuleTypes.AdvancedMulti_Cannon,"Advanced Multi Cannon Fixed Small"){ Cost = 9500, Mount = "F", Class = 1, Rating = "F", Mass = 2, Integrity = 40, PowerDraw = 0.28, BootTime = 0, DPS = 8.615, Damage = 1.12, DistributorDraw = 0.06, ThermalLoad = 0.09, ArmourPiercing = 22, Range = 4000, Speed = 1600, RateOfFire = 7.692, BurstInterval = 0.13, Clip = 100, Ammo = 2100, ReloadTime = 4, BreachDamage = 1, BreachMin = 40, BreachMax = 80, KineticProportionDamage = 100, ThermalProportionDamage = 0, Falloff = 2000, AmmoCost = 1, Jitter = 0 } },
@@ -2549,6 +2553,7 @@ namespace EliteDangerousCore
                 {"bobble_oldskool_thargoid", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Oldskool Thargoid") },
                 {"bobble_pilot_dave_expo_flight_suit", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Pilot Dave Expo Flight Suit") },
                 {"bobble_pilotfemale", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Pilot Female") },
+                {"bobble_pilotfemale_expo_flight_suit", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Pilot Female Expo Flight Suit") },
                 {"bobble_pilotmale", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Pilot Male") },
                 {"bobble_pilotmale_expo_flight_suit", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Pilot Male Expo Flight Suit") },
                 {"bobble_planet_earth", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Planet Earth") },
@@ -2908,6 +2913,7 @@ namespace EliteDangerousCore
                 {"decal_military_elite07", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Military Elite 7") },
                 {"decal_military_gladiator", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Military Gladiator") },
                 {"decal_military_gunslinger", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Military Gunslinger") },
+                {"decal_military_mostly_defenceless", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Military Mostly Defenceless") },
                 {"decal_military_rookie", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Military Rookie") },
                 {"decal_military_warrior", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Military Warrior") },
                 {"decal_mining", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Mining") },
@@ -3947,6 +3953,7 @@ namespace EliteDangerousCore
                 {"paintjob_asp_synth_rose", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Synth Rose") },
                 {"paintjob_asp_tactical_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Tactical Blue") },
                 {"paintjob_asp_tactical_brown", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Tactical Brown") },
+                {"paintjob_asp_tactical_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Tactical Green") },
                 {"paintjob_asp_tactical_grey", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Tactical Grey") },
                 {"paintjob_asp_tactical_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Tactical Red") },
                 {"paintjob_asp_tactical_white", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Tactical White") },
@@ -4089,6 +4096,7 @@ namespace EliteDangerousCore
                 {"paintjob_cobramkiii_faction1_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobra Mk III Faction 1 4") },
                 {"paintjob_cobramkiii_faction1_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobra Mk III Faction 1 5") },
                 {"paintjob_cobramkiii_faction1_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobra Mk III Faction 1 6") },
+                {"paintjob_cobramkiii_festive_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobra Mk III Festive Blue") },
                 {"paintjob_cobramkiii_festive_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobra Mk III Festive Red") },
                 {"paintjob_cobramkiii_festive_silver", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobra Mk III Festive Silver") },
                 {"paintjob_cobramkiii_flag_canada_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobra Mk III Flag Canada 1") },
@@ -4158,6 +4166,12 @@ namespace EliteDangerousCore
                 {"paintjob_cobramkiii_iridescenthighcolour_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobra Mk III Iridescent High Colour 5") },
                 {"paintjob_cobramkiii_iridescenthighcolour_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobra Mk III Iridescent High Colour 6") },
                 {"paintjob_cobramkiii_lrpo_azure", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobra Mk III Lrpo Azure") },
+                {"paintjob_cobramkiii_luminous_stripe_ver2_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobra Mk III Luminous Stripe Ver 2 1") },
+                {"paintjob_cobramkiii_luminous_stripe_ver2_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobra Mk III Luminous Stripe Ver 2 2") },
+                {"paintjob_cobramkiii_luminous_stripe_ver2_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobra Mk III Luminous Stripe Ver 2 3") },
+                {"paintjob_cobramkiii_luminous_stripe_ver2_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobra Mk III Luminous Stripe Ver 2 4") },
+                {"paintjob_cobramkiii_luminous_stripe_ver2_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobra Mk III Luminous Stripe Ver 2 5") },
+                {"paintjob_cobramkiii_luminous_stripe_ver2_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobra Mk III Luminous Stripe Ver 2 6") },
                 {"paintjob_cobramkiii_medusa_aquamarine", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobra Mk III Medusa Aqua Marine") },
                 {"paintjob_cobramkiii_merc", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobra Mk III Merc") },
                 {"paintjob_cobramkiii_metallic2_chrome", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobra Mk III Metallic 2 Chrome") },
@@ -4638,6 +4652,12 @@ namespace EliteDangerousCore
                 {"paintjob_eagle_blackfriday_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Eagle Black Friday 5") },
                 {"paintjob_eagle_blackfriday_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Eagle Black Friday 6") },
                 {"paintjob_eagle_crimson", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Eagle Crimson") },
+                {"paintjob_eagle_doublestripe_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Eagle Doublestripe 1") },
+                {"paintjob_eagle_doublestripe_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Eagle Doublestripe 2") },
+                {"paintjob_eagle_doublestripe_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Eagle Doublestripe 3") },
+                {"paintjob_eagle_doublestripe_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Eagle Doublestripe 4") },
+                {"paintjob_eagle_doublestripe_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Eagle Doublestripe 5") },
+                {"paintjob_eagle_doublestripe_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Eagle Doublestripe 6") },
                 {"paintjob_eagle_hotrod_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Eagle Hotrod 1") },
                 {"paintjob_eagle_hotrod_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Eagle Hotrod 2") },
                 {"paintjob_eagle_hotrod_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Eagle Hotrod 3") },
@@ -5048,6 +5068,12 @@ namespace EliteDangerousCore
                 {"paintjob_federation_corvette_winter1_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Corvette Winter 1 6") },
                 {"paintjob_federation_dropship_lrpo_azure", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Dropship Lrpo Azure") },
                 {"paintjob_federation_dropship_mkii_lrpo_azure", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Dropship Mk II Lrpo Azure") },
+                {"paintjob_federation_fighter_blackfriday_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Fighter Black Friday 1") },
+                {"paintjob_federation_fighter_blackfriday_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Fighter Black Friday 2") },
+                {"paintjob_federation_fighter_blackfriday_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Fighter Black Friday 3") },
+                {"paintjob_federation_fighter_blackfriday_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Fighter Black Friday 4") },
+                {"paintjob_federation_fighter_blackfriday_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Fighter Black Friday 5") },
+                {"paintjob_federation_fighter_blackfriday_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Fighter Black Friday 6") },
                 {"paintjob_federation_fighter_gladiator_orangegrey", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Fighter Gladiator Orange Grey") },
                 {"paintjob_federation_fighter_tactical_grey", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Fighter Tactical Grey") },
                 {"paintjob_federation_fighter_tactical_white", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Fighter Tactical White") },
@@ -5085,6 +5111,7 @@ namespace EliteDangerousCore
                 {"paintjob_federation_gunship_lrpo_azure", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Lrpo Azure") },
                 {"paintjob_federation_gunship_metallic_chrome", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Metallic Chrome") },
                 {"paintjob_federation_gunship_militaire_earth_yellow", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Militaire Earth Yellow") },
+                {"paintjob_federation_gunship_militaire_forest_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Militaire Forest Green") },
                 {"paintjob_federation_gunship_militarystripe_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Military Stripe Red") },
                 {"paintjob_federation_gunship_operator_gold", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Operator Gold") },
                 {"paintjob_federation_gunship_operator_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Operator Green") },
@@ -5119,6 +5146,7 @@ namespace EliteDangerousCore
                 {"paintjob_ferdelance_faction1_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Fer-de-Lance Faction 1 6") },
                 {"paintjob_ferdelance_gradient2_crimson", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Fer-de-Lance Gradient 2 Crimson") },
                 {"paintjob_ferdelance_gradient2_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Fer-de-Lance Gradient 2 Green") },
+                {"paintjob_ferdelance_gradient2_lime", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Fer De Lance Gradient 2 Lime") },
                 {"paintjob_ferdelance_gradient2_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Fer-de-Lance Gradient 2 Red") },
                 {"paintjob_ferdelance_iridescentblack_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Fer-de-Lance Iridescentblack 1") },
                 {"paintjob_ferdelance_iridescentblack_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Fer-de-Lance Iridescentblack 2") },
@@ -5562,7 +5590,14 @@ namespace EliteDangerousCore
                 {"paintjob_mamba_blackfriday_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mamba Black Friday 5") },
                 {"paintjob_mamba_blackfriday_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mamba Black Friday 6") },
                 {"paintjob_mamba_fullmetal_paladium", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mamba Fullmetal Paladium") },
+                {"paintjob_mamba_gradient2_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mamba Gradient 2 Blue") },
                 {"paintjob_mamba_gradient2_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mamba Gradient 2 Red") },
+                {"paintjob_mamba_horus2_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mamba Horus 2 1") },
+                {"paintjob_mamba_horus2_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mamba Horus 2 2") },
+                {"paintjob_mamba_horus2_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mamba Horus 2 3") },
+                {"paintjob_mamba_horus2_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mamba Horus 2 4") },
+                {"paintjob_mamba_horus2_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mamba Horus 2 5") },
+                {"paintjob_mamba_horus2_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mamba Horus 2 6") },
                 {"paintjob_mamba_iridescentblack_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mamba Iridescentblack 1") },
                 {"paintjob_mamba_iridescentblack_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mamba Iridescentblack 2") },
                 {"paintjob_mamba_iridescentblack_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mamba Iridescentblack 3") },
@@ -5818,6 +5853,12 @@ namespace EliteDangerousCore
                 {"paintjob_python_outrun_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Outrun 4") },
                 {"paintjob_python_outrun_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Outrun 5") },
                 {"paintjob_python_outrun_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Outrun 6") },
+                {"paintjob_python_popart_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Popart 1") },
+                {"paintjob_python_popart_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Popart 2") },
+                {"paintjob_python_popart_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Popart 3") },
+                {"paintjob_python_popart_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Popart 4") },
+                {"paintjob_python_popart_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Popart 5") },
+                {"paintjob_python_popart_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Popart 6") },
                 {"paintjob_python_salvage_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Salvage 1") },
                 {"paintjob_python_salvage_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Salvage 2") },
                 {"paintjob_python_salvage_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Salvage 3") },
@@ -6124,6 +6165,12 @@ namespace EliteDangerousCore
                 {"paintjob_type9_iridescentblack_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Iridescentblack 4") },
                 {"paintjob_type9_iridescentblack_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Iridescentblack 5") },
                 {"paintjob_type9_iridescentblack_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Iridescentblack 6") },
+                {"paintjob_type9_iridescenthighcolour_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Iridescenthighcolour 1") },
+                {"paintjob_type9_iridescenthighcolour_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Iridescenthighcolour 2") },
+                {"paintjob_type9_iridescenthighcolour_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Iridescenthighcolour 3") },
+                {"paintjob_type9_iridescenthighcolour_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Iridescenthighcolour 4") },
+                {"paintjob_type9_iridescenthighcolour_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Iridescenthighcolour 5") },
+                {"paintjob_type9_iridescenthighcolour_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Iridescenthighcolour 6") },
                 {"paintjob_type9_largelogometallic_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Largelogometallic 1") },
                 {"paintjob_type9_largelogometallic_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Largelogometallic 2") },
                 {"paintjob_type9_largelogometallic_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Largelogometallic 3") },
@@ -6273,6 +6320,7 @@ namespace EliteDangerousCore
                 {"paintjob_typex_2_metalcamo_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Alliance Crusader Metalcamo 5") },
                 {"paintjob_typex_2_metalcamo_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Alliance Crusader Metalcamo 6") },
                 {"paintjob_typex_2_metallic2_chrome", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Alliance Crusader Metallic 2 Chrome") },
+                {"paintjob_typex_2_military_tactical_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Alliance Crusader Military Tactical Blue") },
                 {"paintjob_typex_2_military_tactical_grey", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type X 2 Military Tactical Grey") },
                 {"paintjob_typex_2_military_tactical_white", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Alliance Crusader Military Tactical White") },
                 {"paintjob_typex_2_military_vibrant_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type X 2 Military Vibrant Red") },
@@ -6311,6 +6359,7 @@ namespace EliteDangerousCore
                 {"paintjob_typex_3_thargoid_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Alliance Challenger Thargoid 5") },
                 {"paintjob_typex_3_thargoid_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Alliance Challenger Thargoid 6") },
                 {"paintjob_typex_3_trims_blackmagenta", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Alliance Challenger Trims Blackmagenta") },
+                {"paintjob_typex_3_trims_blueorange", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Alliance Challenger Trims Blueorange") },
                 {"paintjob_typex_3_trims_greyorange", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Alliance Challenger Trims Greyorange") },
                 {"paintjob_typex_3_trims_yellowblack", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Alliance Challenger Trims Yellowblack") },
                 {"paintjob_typex_blackfriday_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Typex Blackfriday 1") },
@@ -6572,6 +6621,12 @@ namespace EliteDangerousCore
                 {"paintjob_vulture_iridescentblack_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Vulture Iridescentblack 4") },
                 {"paintjob_vulture_iridescentblack_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Vulture Iridescentblack 5") },
                 {"paintjob_vulture_iridescentblack_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Vulture Iridescentblack 6") },
+                {"paintjob_vulture_iridescenthighcolour_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Vulture Iridescenthighcolour 1") },
+                {"paintjob_vulture_iridescenthighcolour_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Vulture Iridescenthighcolour 2") },
+                {"paintjob_vulture_iridescenthighcolour_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Vulture Iridescenthighcolour 3") },
+                {"paintjob_vulture_iridescenthighcolour_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Vulture Iridescenthighcolour 4") },
+                {"paintjob_vulture_iridescenthighcolour_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Vulture Iridescenthighcolour 5") },
+                {"paintjob_vulture_iridescenthighcolour_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Vulture Iridescenthighcolour 6") },
                 {"paintjob_vulture_lrpo_azure", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Vulture Lrpo Azure") },
                 {"paintjob_vulture_luminous_stripe_ver2_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Vulture Luminous Stripe Ver 2 1") },
                 {"paintjob_vulture_luminous_stripe_ver2_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Vulture Luminous Stripe Ver 2 2") },

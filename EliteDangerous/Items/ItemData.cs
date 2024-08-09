@@ -75,7 +75,7 @@ namespace EliteDangerousCore
                                 }
                                 else
                                 {
-                                    //System.Diagnostics.Debug.WriteLine($"Module exists {id}");
+                                    System.Diagnostics.Debug.WriteLine($"Module exists {fid.Value}, {sm.ModuleID} {sm.ModType} {sm.EnglishModName}");
                                 }
                             }
                             else
@@ -88,6 +88,9 @@ namespace EliteDangerousCore
                             System.Diagnostics.Debug.WriteLine($"Bad line missing {{ {line}");
                         }
                     }
+                    else if ( line.Trim().Length>0)
+                        System.Diagnostics.Debug.WriteLine($"No data on this line {line}");
+
                 }
 
                 List<string> keylist = vanitymodules.Keys.ToList();

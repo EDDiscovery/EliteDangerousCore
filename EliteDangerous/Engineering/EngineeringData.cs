@@ -308,11 +308,17 @@ namespace EliteDangerousCore
                         System.Reflection.PropertyInfo prop = proplist.Find(x => x.Name == pset);       // find parameter we are setting
                         dynamic orgvalue = prop.GetValue(original);
 
-                        if (orgvalue != null)         // it may be null, because it may not be there..  thats a failure
+                        if (orgvalue is string)     // if its string, value is localised or valuestr.  We accept that a string could be null setting in the module data and just override it
+                        {
+                            string value = (mf.ValueStr_Localised ?? mf.ValueStr ?? "");
+                            value = value.Replace("$INT_PANEL_module_", "").Replace(";", "").SplitCapsWordFull();
+                            prop.SetValue(engineered, value);
+                        }
+                        else if (orgvalue != null)         // if its non null, we override it
                         {
                             double valuetoset;
                             double ratiotoapply = ratio;
-                            
+
                             if (pno == 0)           // primary modifier, we set it and record the ratio
                             {
                                 valuetoset = mf.Value;
@@ -341,8 +347,8 @@ namespace EliteDangerousCore
                                 prop.SetValue(engineered, (int)valuetoset);
                             }
                         }
-                        else
-                        {
+                        else           // else it was null, so we moan gently, then set it
+                        {                   
                             if (pset == "PowerDraw" && mf.Value == 0)       // this occurs for engineering a detailed surface scanner, the power draw 0->0, but it may be more than just this module, so generic catch
                             {
                                 if ( debugit )
@@ -350,16 +356,19 @@ namespace EliteDangerousCore
                             }
                             else
                             {
-                                string msg = $"*** Engineering setting a null value in module {modulefdname} at {slotfd} blueprint '{this.BlueprintName}' se '{this.ExperimentalEffect}' para '{pset}' value {mf.Value}";
+                                string msg = $"Engineering setting a null value in module {modulefdname} at {slotfd} blueprint '{this.BlueprintName}' se '{this.ExperimentalEffect}' para '{pset}' value {mf.Value}";
                                 System.Diagnostics.Trace.WriteLine(msg);
                                 report += msg + Environment.NewLine;
-                                
-                                if ( prop.PropertyType.FullName.Contains("System.Double"))
+
+                                // don't need to do system.string as we accept nulls for it above
+                                if (prop.PropertyType.FullName.Contains("System.Double"))
                                 {
                                     prop.SetValue(engineered, mf.Value);
                                 }
-                                else
+                                else if (prop.PropertyType.FullName.Contains("System.Int32"))
+                                {
                                     prop.SetValue(engineered, (int)mf.Value);
+                                }
                             }
                         }
                     }
@@ -478,8 +487,6 @@ namespace EliteDangerousCore
                                                                 nameof(ItemData.ShipModule.MaximumRotationModifier)+ enginefastonly,
                                                     },
             ["Range"] = new string[] { "TypicalEmission", "Range", },
-
-            ["GuardianModuleResistance"] = new string[] { },       // turned up in issue #3529, not in edsy as of 22/7/24.  Ignore for now.
 
             // simples. Empty string[] means there is no equivalent engineering variable we know about..
 
@@ -612,7 +619,8 @@ namespace EliteDangerousCore
             ["BurstRate"] = new string[] { nameof(ItemData.ShipModule.BurstRateOfFire) },
             ["BurstSize"] = new string[] { nameof(ItemData.ShipModule.BurstSize) },
             ["DamageFalloffRange"] = new string[] { nameof(ItemData.ShipModule.Falloff) },
-        
+
+            ["GuardianModuleResistance"] = new string[] { nameof(ItemData.ShipModule.GuardianModuleResistance) },       // add in edsy aug 24 version. String, Active or ""
         };
 
         static private Dictionary<string, ItemData.ShipModule> specialeffects = new Dictionary<string, ItemData.ShipModule>
