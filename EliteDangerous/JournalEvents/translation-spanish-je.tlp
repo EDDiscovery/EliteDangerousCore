@@ -341,7 +341,7 @@ SECTION JournalEngineerProgress
 SECTION JournalFSDJump
 
 .Jumpto: "Jump to {0}" => "Ir a {0}"
-.Distance: "; ly;N2"  => "; al;N2"
+.Distance: "; ly;N2" => "; al;N2"
 .FuelUsed: "Fuel used: ; t;N2" => "Combustible Utilizado: ; t;N2"
 .FuelLeft: "Fuel left: ; t;N2" => "Combustible Restante: ; t;N2"
 

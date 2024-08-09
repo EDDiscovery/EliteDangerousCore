@@ -1099,6 +1099,7 @@ SECTION Allegiances
 .Guardian: "Guardian" => "Guardian"
 .Thargoid: "Thargoid" => "Thargoid"
 .PilotsFederation: "Pilots Federation" => "Pilotenföderation"
+.PlayerPilots: "Player Pilots Federation" @
 
 SECTION GovernmentTypes
 
@@ -1303,7 +1304,7 @@ SECTION ModulePartNames
 .Guardian_Nanite_Torpedo_Pylon: "Guardian Nanite Torpedo Pylon" => "Guardian-Nanobot-Torpedopylon"
 .Seeker_Missile_Rack: "Seeker Missile Rack" => "Suchraketenrampe"
 .Missile_Rack: "Missile Rack" => "Raketenrampe"
-.Rocket_Propelled_FSD_Disrupter: "Rocket Propelled FSD Disrupter" => "Containment-Rakete"
+.Rocket_Propelled_FSD_Disrupter: "Rocket Propelled FSD Disrupter" = ModuleTypeNames.Rocket_Propelled_FSD_Disruptor
 .Pack_Hound_Missile_Rack: "Pack Hound Missile Rack" => "Schwarmwerfer-Raketenrampe"
 .Advanced_Torp_Pylon: "Advanced Torp Pylon" => "Optimierter Torpedopylon"
 .Advanced_Missile_Rack: "Advanced Missile Rack" => "Optimierte Raketenrampe"
@@ -1477,6 +1478,8 @@ SECTION ShipSlots
 .SmallHardpoint2: "Small Hardpoint 2" => "Kleine Aufhängung 2"
 .SmallHardpoint3: "Small Hardpoint 3" => "Kleine Aufhängung 3"
 .SmallHardpoint4: "Small Hardpoint 4" => "Kleine Aufhängung 4"
+.SmallHardpoint5: "Small Hardpoint 5" @
+.SmallHardpoint6: "Small Hardpoint 6" @
 .StringLights: "String Lights" => "Lichterkette"
 .TinyHardpoint1: "Utility Mount 1" => "Werkzeugsteckplatz 1"
 .TinyHardpoint2: "Utility Mount 2" => "Werkzeugsteckplatz 2"
@@ -1491,7 +1494,7 @@ SECTION ShipSlots
 .Turret: "Turret" => "Geschützturm"
 .Turret2: "Turret Type 2" => "Geschützturm 2"
 .SineWaveScanner: "Sine Wave Scanner" => "Sinuswellen-Scanner"
-.BuggyCargoHatch: "Cargo Hatch" => "Ladeluke"
+.BuggyCargoHatch: "Cargo Hatch" = ShipSlots.CargoHatch
 
 SECTION StationServices
 

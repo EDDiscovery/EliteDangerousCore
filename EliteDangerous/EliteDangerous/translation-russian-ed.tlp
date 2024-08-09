@@ -1099,6 +1099,7 @@ SECTION Allegiances
 .Guardian: "Guardian" @
 .Thargoid: "Thargoid" @
 .PilotsFederation: "Pilots Federation" @
+.PlayerPilots: "Player Pilots Federation" @
 
 SECTION GovernmentTypes
 
@@ -1477,6 +1478,8 @@ SECTION ShipSlots
 .SmallHardpoint2: "Small Hardpoint 2" @
 .SmallHardpoint3: "Small Hardpoint 3" @
 .SmallHardpoint4: "Small Hardpoint 4" @
+.SmallHardpoint5: "Small Hardpoint 5" @
+.SmallHardpoint6: "Small Hardpoint 6" @
 .StringLights: "String Lights" @
 .TinyHardpoint1: "Utility Mount 1" @
 .TinyHardpoint2: "Utility Mount 2" @

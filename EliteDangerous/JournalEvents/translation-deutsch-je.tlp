@@ -342,7 +342,7 @@ SECTION JournalFSDJump
 
 .Jumpto: "Jump to {0}" => "Springe zu {0}"
 .Distance: "; ly;N2" @
-.FuelUsed: "Fuel used: ; t;N2" => "Treibstoff verbraucht: ; t; N2"
+.FuelUsed: "Fuel used: ; t;N2" => "Treibstoff verbraucht: ; t;N2"
 .FuelLeft: "Fuel left: ; t;N2" => "Treibstoff übrig: ; t;N2"
 
 SECTION JournalLeaveBody
