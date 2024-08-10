@@ -333,16 +333,26 @@ namespace EliteDangerousCore
         {
             lock (locker)
             {
+                string idlist = "";
                 foreach (var kvp in commanders)     // all deleted flags to zero
-                    kvp.Value.Deleted = false;
-
-                UserDatabase.Instance.DBWrite(cn =>
                 {
-                    using (DbCommand cmd = cn.CreateCommand("UPDATE Commanders SET Deleted=0 WHERE Deleted=1"))
+                    if (kvp.Value.Deleted)
                     {
-                        cmd.ExecuteNonQuery();
+                        kvp.Value.Deleted = false;
+                        idlist = idlist.AppendPrePad(kvp.Key.ToStringInvariant(), ",");
                     }
-                });
+                }
+
+                if (idlist.HasChars())
+                {
+                    UserDatabase.Instance.DBWrite(cn =>
+                    {
+                        using (DbCommand cmd = cn.CreateCommand($"UPDATE Commanders SET Deleted=0 WHERE Id In ({idlist})"))
+                        {
+                            cmd.ExecuteNonQuery();
+                        }
+                    });
+                }
             }
         }
 
@@ -464,7 +474,27 @@ namespace EliteDangerousCore
                     }
                 });
 
-                if (ActiveCommanderListInt().Count() == 0)     // we must have 1 active commander
+                var activecommanders = ActiveCommanderListInt();        // ones not deleted and not hidden log
+
+                // we have commander records out there with a deleted 'Fred' and an active 'Fred'. Previous code would only see the active 'Fred' and assign it
+                // this code holds both deleted and active commanders
+                // so we make sure we don't have repeats of names here where one is deleted and the other is not
+                // the GetCommander by name already prefers active commanders, but the Undelete option looks at the number of deleted commanders to enable it, so we need to fix it now
+
+                List<int> toremove = new List<int>();
+                foreach( var kvp in commanders.Where(x=>x.Value.Deleted))       // lets look at deleted commanders, are they have an active component, remove them
+                {
+                    if (activecommanders.FindIndex(x => x.Name.EqualsIIC(kvp.Value.Name)) >= 0)
+                        toremove.Add(kvp.Key);
+                }
+
+                foreach (var id in toremove)                            // remove from memory so they can't be seen by the program, leave in db so we have a trace it happened.
+                {
+                    System.Diagnostics.Trace.WriteLine($"DB has duplicate commanders of same name, one deleted : {id} {commanders[id].Name}");
+                    commanders.Remove(id);
+                }
+
+                if (activecommanders.Count == 0)     // we must have 1 active commander
                 {
                     Add("Jameson (Default)", toeddn: false);        
                 }
