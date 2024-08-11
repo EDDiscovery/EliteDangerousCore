@@ -285,9 +285,17 @@ namespace EliteDangerousCore
 
                             if (sn.Organics != null)
                             {
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Journal.ScanOrganic"), new Rectangle(0, vpos, iconsize, iconsize));
-                                vpos += iconsize + iconvspacing;
-                            }
+                                if (sn.CountBioSignals == sn.CountOrganicsScansAnalysed)
+                                    {
+                                        g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Journal.ScanOrganic"), new Rectangle(0, vpos, iconsize, iconsize));
+                                        vpos += iconsize + iconvspacing;
+                                    }
+                                else
+                                    {
+                                        g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.OrganicIncomplete"), new Rectangle(0, vpos, iconsize, iconsize));
+                                        vpos += iconsize + iconvspacing;
+                                    }
+                                }
                         }
 
                         if (materialsicon)
