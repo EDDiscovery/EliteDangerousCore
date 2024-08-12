@@ -285,17 +285,10 @@ namespace EliteDangerousCore
 
                             if (sn.Organics != null)
                             {
-                                if (sn.CountBioSignals == sn.CountOrganicsScansAnalysed)
-                                    {
-                                        g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Journal.ScanOrganic"), new Rectangle(0, vpos, iconsize, iconsize));
-                                        vpos += iconsize + iconvspacing;
-                                    }
-                                else
-                                    {
-                                        g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.OrganicIncomplete"), new Rectangle(0, vpos, iconsize, iconsize));
-                                        vpos += iconsize + iconvspacing;
-                                    }
-                                }
+                                string imagename = sn.CountBioSignals == sn.CountOrganicsScansAnalysed ? "Journal.ScanOrganic" : "Controls.OrganicIncomplete";
+                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon(imagename), new Rectangle(0, vpos, iconsize, iconsize));
+                                vpos += iconsize + iconvspacing;
+                            }
                         }
 
                         if (materialsicon)
