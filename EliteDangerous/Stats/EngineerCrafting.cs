@@ -36,8 +36,11 @@ namespace EliteDangerousCore
             if (he.journalEntry is JournalEngineerCraftBase)
             {
                 var jecb = he.journalEntry as JournalEngineerCraftBase;
-                crafting.NextGeneration();
-                crafting.Add(jecb.Engineering.Engineer, he);
+                if (jecb.Engineering != null)      // may be invalid due to bad frontier data (bug found)
+                {
+                    crafting.NextGeneration();
+                    crafting.Add(jecb.Engineering.Engineer, he);
+                }
             }
             else if (he.EntryType == JournalTypeEnum.TechnologyBroker)
             {

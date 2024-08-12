@@ -509,6 +509,8 @@ namespace EliteDangerousCore
         {
             if (HaveCurrentShip)
             {
+                System.Diagnostics.Debug.Assert(c.Engineering != null);     // double check its being passed a good engineering
+
                 Ships[currentid] = CurrentShip.Craft(c.SlotFD, c.Module, c.Engineering);
             }
             VerifyList();

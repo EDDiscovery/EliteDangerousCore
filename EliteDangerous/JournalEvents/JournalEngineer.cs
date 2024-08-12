@@ -136,9 +136,9 @@ namespace EliteDangerousCore.JournalEvents
             Module = JournalFieldNaming.GetBetterEnglishModuleName(ModuleFD);
 
             Engineering = new EngineeringData(evt);
-            if (!Engineering.IsValid)
+            if (!Engineering.IsValid)       // various frontier records across commanders show crap output
             {
-                //System.Diagnostics.Debug.WriteLine($"Bad Engineering line Craft {evt.ToString()}");
+               // System.Diagnostics.Trace.WriteLine($"Bad Engineering line Craft {evt.ToString()}");
                 Engineering = null;
             }
 
@@ -176,9 +176,10 @@ namespace EliteDangerousCore.JournalEvents
                     foreach (JObject jo in (JArray)ingredients)
                     {
                         string fdname = jo["Name"].StrNull();
-                        string name = MaterialCommodityMicroResourceType.GetByFDName(fdname)?.EnglishName ?? fdname;
-                        if (fdname != null)
+                        if (fdname != null)     // must be present and non null
                         {
+                            string name = MaterialCommodityMicroResourceType.GetByFDName(fdname)?.EnglishName ?? fdname;
+
                             var i = new Ingrediant()
                             {
                                 NameFD = fdname.ToLowerInvariant(),
@@ -200,7 +201,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Module { get; set; }      // English module name, not present in V1 of this version
         public string ModuleFD { get; set; }        
 
-        public EngineeringData Engineering { get; set; }
+        public EngineeringData Engineering { get; set; }        // may be null if engineering invalid, which some frontier modules have 
 
         public bool? IsPreview { get; set; }            // Only for legacy convert
 
@@ -234,9 +235,13 @@ namespace EliteDangerousCore.JournalEvents
 
         public override void FillInformation(out string info, out string detailed)
         {
-            info = BaseUtils.FieldBuilder.Build("In Slot: ".T(EDCTx.JournalEntry_InSlot), ShipSlots.ToLocalisedLanguage(SlotFD), "", JournalFieldNaming.GetForeignModuleName(ModuleFD,null), 
-                "By: ".T(EDCTx.JournalEntry_By), Engineering.Engineer, "Blueprint: ".T(EDCTx.JournalEntry_Blueprint), Engineering.FriendlyBlueprintName, 
-                "Level: ".T(EDCTx.JournalEntry_Level), Engineering.Level);
+            // engineering may be null due to frontier bad json, protect
+
+            info = BaseUtils.FieldBuilder.Build("In Slot: ".T(EDCTx.JournalEntry_InSlot), ShipSlots.ToLocalisedLanguage(SlotFD), 
+                "", JournalFieldNaming.GetForeignModuleName(ModuleFD,null), 
+                "By: ".T(EDCTx.JournalEntry_By), Engineering?.Engineer, 
+                "Blueprint: ".T(EDCTx.JournalEntry_Blueprint), Engineering?.FriendlyBlueprintName, 
+                "Level: ".T(EDCTx.JournalEntry_Level), Engineering?.Level);
 
             detailed = "";
             if (Ingredients != null)
