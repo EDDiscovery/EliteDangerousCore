@@ -165,7 +165,7 @@ namespace EliteDangerousCore
                 foreach (EngineeringModifiers m in Modifiers)
                 {
                     if (m.ValueStr != null)
-                        ret += BaseUtils.FieldBuilder.Build("", m.Label, "<:", m.ValueStr) + Environment.NewLine;
+                        ret += BaseUtils.FieldBuilder.Build("", m.Label, "<:", m.ValueStr_Localised ?? m.ValueStr ?? "Not set") + Environment.NewLine;
                     else
                     {
                         if (m.Value != m.OriginalValue)
@@ -308,7 +308,7 @@ namespace EliteDangerousCore
                         System.Reflection.PropertyInfo prop = proplist.Find(x => x.Name == pset);       // find parameter we are setting
                         dynamic orgvalue = prop.GetValue(original);
 
-                        if (orgvalue is string)     // if its string, value is localised or valuestr.  We accept that a string could be null setting in the module data and just override it
+                        if (prop.PropertyType.FullName.Contains("System.String"))     // if its string, value is localised or valuestr.  We accept that a string could be null setting in the module data and just override it
                         {
                             string value = (mf.ValueStr_Localised ?? mf.ValueStr ?? "");
                             value = value.Replace("$INT_PANEL_module_", "").Replace(";", "").SplitCapsWordFull();
