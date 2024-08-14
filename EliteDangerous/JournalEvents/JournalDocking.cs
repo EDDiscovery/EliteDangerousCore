@@ -53,14 +53,14 @@ namespace EliteDangerousCore.JournalEvents
             Economy = EconomyDefinitions.ToEnum(evt.MultiStr(evt.MultiStr(new string[] { "StationEconomy", "Economy" }, null)));    // may not be present
             Economy_Localised = JournalFieldNaming.CheckLocalisation(evt.MultiStr(new string[] { "StationEconomy_Localised", "Economy_Localised" }), EconomyDefinitions.ToEnglish(Economy));
 
-            EconomyList = evt["StationEconomies"]?.ToObjectQ<Economies[]>();        // not checking custom attributes, so name in class
+            EconomyList = ReadFromJson(evt["StationEconomies"]);        // not checking custom attributes, so name in class
 
             Government = GovernmentDefinitions.ToEnum(evt.MultiStr(new string[] { "StationGovernment", "Government" }, null));
             Government_Localised = JournalFieldNaming.CheckLocalisation(evt.MultiStr(new string[] { "StationGovernment_Localised", "Government_Localised" }), GovernmentDefinitions.ToEnglish(Government));
 
             Wanted = evt["Wanted"].Bool();
 
-            StationServices = evt["StationServices"]?.ToObjectQ<StationDefinitions.StationServices[]>();
+            StationServices = StationDefinitions.ReadJson(evt["StationServices"]);
 
             ActiveFine = evt["ActiveFine"].BoolNull();
 
@@ -118,6 +118,19 @@ namespace EliteDangerousCore.JournalEvents
             public double Proportion;                   // 0-1
         }
 
+        public static Economies[] ReadFromJson(JToken evt)
+        {
+            if (evt != null)
+            {
+                var ret = evt?.ToObject<Economies[]>(false, false, preprocess: (t, x) => {
+                    return EconomyDefinitions.PreProcessFDName(x);      // for enums, we need to preprocess..
+                });
+                
+                return ret;
+            }
+            else
+                return null;
+        }
 
         public class LandingPadList
         {

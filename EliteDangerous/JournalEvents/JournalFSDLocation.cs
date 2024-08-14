@@ -248,7 +248,10 @@ namespace EliteDangerousCore.JournalEvents
 
             Wanted = evt["Wanted"].Bool();      // if absence, your not wanted, by definition of frontier in journal (only present if wanted, see docked)
 
-            var cf = evt["Conflicts"]?.ToObject(typeof(ConflictInfo[]), true, false);        // 3.4, allowing for type errors due to Status:"" 
+            // 3.4, preprocess out Status:"" to Unknown
+            var cf = evt["Conflicts"]?.ToObject(typeof(ConflictInfo[]), false, false, preprocess:(t,x)=> { 
+                return x.Length > 0 ? x : t.Name== "StatusState" ? nameof(ConflictInfo.StatusState.NoStatus) : nameof(ConflictInfo.WarTypeState.Unknown); }
+            );       
             if (cf is JTokenExtensions.ToObjectError)
                 System.Diagnostics.Trace.WriteLine($"*** Bad conflict status {evt["Conflicts"]?.ToString()}");
             else if (cf != null)
@@ -396,9 +399,10 @@ namespace EliteDangerousCore.JournalEvents
             StationGovernment_Localised = JournalFieldNaming.CheckLocalisation(evt["StationGovernment_Localised"].Str(), GovernmentDefinitions.ToEnglish(Government));
 
             StationAllegiance = AllegianceDefinitions.ToEnum(evt["StationAllegiance"].StrNull());    // may be missing, due to training
-            
-            StationServices = evt["StationServices"]?.ToObjectQ<StationDefinitions.StationServices[]>();
-            StationEconomyList = evt["StationEconomies"]?.ToObjectQ<JournalDocked.Economies[]>();
+
+            //StationServices = evt["StationServices"]?.ToObjectQ<StationDefinitions.StationServices[]>();
+            StationServices = StationDefinitions.ReadJson(evt["StationServices"]);
+            StationEconomyList = JournalDocked.ReadFromJson(evt["StationEconomies"]);
 
             Taxi = evt["Taxi"].BoolNull();
             Multicrew = evt["Multicrew"].BoolNull();
@@ -428,7 +432,7 @@ namespace EliteDangerousCore.JournalEvents
         public GovernmentDefinitions.Government StationGovernment { get; set; }
         public string StationGovernment_Localised { get; set; }
         public AllegianceDefinitions.Allegiance StationAllegiance { get; set; }   // fdname
-        public StationDefinitions.StationServices[] StationServices { get; set; }   // fdname
+        public StationDefinitions.StationServices[] StationServices { get; set; }   // may be null
         public JournalDocked.Economies[] StationEconomyList { get; set; }        // may be null
 
         //4.0 alpha 4
@@ -519,8 +523,8 @@ namespace EliteDangerousCore.JournalEvents
             MarketID = evt["MarketID"].LongNull();
 
             // don't bother with StationGovernment, StationFaction, StationEconomy, StationEconomies
-                                                                     
-            StationServices = evt["StationServices"]?.ToObjectQ<StationDefinitions.StationServices[]>();
+
+            StationServices = StationDefinitions.ReadJson(evt["StationServices"]);
 
             Body = evt["Body"].Str();
             BodyID = evt["BodyID"].IntNull();

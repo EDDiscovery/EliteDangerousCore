@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+using QuickJSON;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,45 +25,80 @@ namespace EliteDangerousCore
         public enum StationServices
         {
             Unknown,
-            ApexInterstellar,
-            Autodock,
-            Bartender,
-            BlackMarket,
-            Contacts,
-            CrewLounge,
-            Dock,
-            Workshop,      // synonmyms
-            FleetCarrierAdministration,
-            FleetCarrierFuel,
-            FleetCarrierManagement,
-            FleetCarrierVendor,
-            FlightController,
-            FrontlineSolutions,
-            InterstellarFactorsContact,
-            Initiatives,
-            Livery,
-            Market,
-            MaterialTrader,
-            Missions,
-            MissionsGenerated,
-            OnDockMission,
-            Outfitting,
-            PioneerSupplies,
-            Powerplay,
-            RedemptionOffice,
-            Refuel,
-            Repair,
-            Restock,
-            SearchAndRescue,
-            Shipyard,
-            Shop,
-            SocialSpace,
-            StationMenu,
-            StationOperations,
-            TechnologyBroker,
-            Tuning,
-            UniversalCartographics,
-            VistaGenomics,
+                ApexInterstellar,
+                Autodock,
+                Bartender,
+                BlackMarket,
+                Contacts,
+                CrewLounge,
+                Dock,
+            Workshop,                   // engineer
+            FleetCarrierAdministration, // modulepacks
+            FleetCarrierFuel,           // carrierfuel
+            FleetCarrierManagement,     // carriermanagment
+            FleetCarrierVendor,         // carriervendor
+                FlightController,
+                FrontlineSolutions,
+            InterstellarFactorsContact, // facilitator
+                Initiatives,
+                Livery,
+            Market,                     // commodities
+                MaterialTrader,
+                Missions,
+                MissionsGenerated,
+                OnDockMission,
+                Outfitting,
+                PioneerSupplies,
+                Powerplay,
+            RedemptionOffice,           // voucherredemption
+                Refuel,
+                Repair,
+            Restock,                    // rearm
+                SearchAndRescue,        // also searchrescue
+                Shipyard,
+                Shop,
+                SocialSpace,
+                StationMenu,
+                StationOperations,
+            TechnologyBroker,           // techbroker
+                Tuning,
+            UniversalCartographics,     // exploration
+                VistaGenomics,
+        }
+
+        // convert to array from Jarray, may be null if fails
+        public static StationServices[] ReadJson(JToken services)
+        {
+            if (services != null)
+            {
+                Dictionary<string, string> translations = new Dictionary<string, string>
+                {
+                    ["engineer"] = "Workshop",
+                    ["modulepacks"] = "FleetCarrierAdministration",
+                    ["carrierfuel"] = "FleetCarrierFuel",
+                    ["carriermanagement"] = "FleetCarrierManagement",
+                    ["carriervendor"] = "FleetCarrierVendor",
+                    ["facilitator"] = "InterstellarFactorsContact",
+                    ["commodities"] = "Market",
+                    ["voucherredemption"] = "RedemptionOffice",
+                    ["rearm"] = "Restock",
+                    ["searchrescue"] = "SearchAndRescue",
+                    ["techbroker"] = "TechnologyBroker",
+                    ["exploration"] = "UniversalCartographics",
+                };
+                var ret = services.Array()?.ToObject<StationDefinitions.StationServices[]>(false, false,
+                        preprocess: (t, x) =>
+                        {
+                            if (translations.TryGetValue(x.ToLowerInvariant(), out string tx))
+                                return tx;
+                            else
+                                return x;
+                        });
+
+                return ret;
+            }
+            else
+                return null;
         }
 
         public static string ToEnglish(StationServices ec)

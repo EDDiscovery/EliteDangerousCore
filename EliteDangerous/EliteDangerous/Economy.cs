@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+using QuickJSON;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,6 +69,19 @@ namespace EliteDangerousCore
                 System.Diagnostics.Trace.WriteLine($"*** Economy is unknown {fdname}");
                 return Economy.Unknown;
             }
+        }
+
+        // process out fdname to an enum - same as above really
+        public static string PreProcessFDName(string fdname)
+        {
+            if (!fdname.HasChars() || fdname == "unknown_value") // null or empty
+                return "Unknown";
+            
+            fdname = fdname.ToLowerInvariant().Replace("$economy_", "").Replace(" ", "").Replace(";", "");
+
+            if (fdname == "hightech")
+                fdname ="High_Tech";
+            return fdname;
         }
 
         public static string ToDecorated(Economy ec)
