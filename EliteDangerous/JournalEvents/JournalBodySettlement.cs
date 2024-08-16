@@ -104,9 +104,9 @@ namespace EliteDangerousCore.JournalEvents
             StationEconomy = EconomyDefinitions.ToEnum(evt["StationEconomy"].StrNull());
             StationEconomy_Localised = JournalFieldNaming.CheckLocalisation(evt["StationEconomy_Localised"].StrNull(),  EconomyDefinitions.ToEnglish(StationEconomy));
 
-            EconomyList = JournalDocked.ReadFromJson(evt["StationEconomies"]);
+            EconomyList = JournalDocked.ReadEconomiesClassFromJson(evt["StationEconomies"]);
 
-            StationServices = StationDefinitions.ReadJson(evt["StationServices"]);
+            StationServices = StationDefinitions.ReadServicesFromJson(evt["StationServices"]);
 
             Faction = evt["StationFaction"].I("Name").StrNull();        // may not be present, so null if not
             FactionState = FactionDefinitions.ToEnum(evt["StationFaction"].I("FactionState").StrNull());    // null if not present

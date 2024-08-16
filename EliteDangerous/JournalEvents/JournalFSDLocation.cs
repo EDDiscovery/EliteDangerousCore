@@ -400,9 +400,8 @@ namespace EliteDangerousCore.JournalEvents
 
             StationAllegiance = AllegianceDefinitions.ToEnum(evt["StationAllegiance"].StrNull());    // may be missing, due to training
 
-            //StationServices = evt["StationServices"]?.ToObjectQ<StationDefinitions.StationServices[]>();
-            StationServices = StationDefinitions.ReadJson(evt["StationServices"]);
-            StationEconomyList = JournalDocked.ReadFromJson(evt["StationEconomies"]);
+            StationServices = StationDefinitions.ReadServicesFromJson(evt["StationServices"]);          // need to read thru these functions to do some name mangling
+            StationEconomyList = JournalDocked.ReadEconomiesClassFromJson(evt["StationEconomies"]);
 
             Taxi = evt["Taxi"].BoolNull();
             Multicrew = evt["Multicrew"].BoolNull();
@@ -524,7 +523,7 @@ namespace EliteDangerousCore.JournalEvents
 
             // don't bother with StationGovernment, StationFaction, StationEconomy, StationEconomies
 
-            StationServices = StationDefinitions.ReadJson(evt["StationServices"]);
+            StationServices = StationDefinitions.ReadServicesFromJson(evt["StationServices"]);
 
             Body = evt["Body"].Str();
             BodyID = evt["BodyID"].IntNull();

@@ -344,7 +344,7 @@ namespace EliteDangerousCore
         {
             JournalEntry[] jlist = new JournalEntry[tabledata.Count];
 
-            if (tabledata.Count > 100000000 && System.Environment.ProcessorCount>1)  // a good amount, worth MTing - just in case someone is using this on a potato
+            if (tabledata.Count > 10000 && System.Environment.ProcessorCount>1)  // a good amount, worth MTing - just in case someone is using this on a potato
             {
                 int threads = Math.Max(System.Environment.ProcessorCount*3/4,2);   // leave a few processors for other things
 

@@ -22,6 +22,8 @@ namespace EliteDangerousCore
     public class StationDefinitions
     {
         #region Services
+
+        // Names are sort of syned with Spansh, and are more meaningful than fdnames.
         public enum StationServices
         {
             Unknown,
@@ -66,8 +68,8 @@ namespace EliteDangerousCore
                 VistaGenomics,
         }
 
-        // convert to array from Jarray, may be null if fails
-        public static StationServices[] ReadJson(JToken services)
+        // convert to array from Jarray as formatted using Frontier names, may be null if fails
+        public static StationServices[] ReadServicesFromJson(JToken services)
         {
             if (services != null)
             {

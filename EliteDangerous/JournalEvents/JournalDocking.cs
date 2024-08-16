@@ -53,14 +53,14 @@ namespace EliteDangerousCore.JournalEvents
             Economy = EconomyDefinitions.ToEnum(evt.MultiStr(evt.MultiStr(new string[] { "StationEconomy", "Economy" }, null)));    // may not be present
             Economy_Localised = JournalFieldNaming.CheckLocalisation(evt.MultiStr(new string[] { "StationEconomy_Localised", "Economy_Localised" }), EconomyDefinitions.ToEnglish(Economy));
 
-            EconomyList = ReadFromJson(evt["StationEconomies"]);        // not checking custom attributes, so name in class
+            EconomyList = ReadEconomiesClassFromJson(evt["StationEconomies"]);        // not checking custom attributes, so name in class
 
             Government = GovernmentDefinitions.ToEnum(evt.MultiStr(new string[] { "StationGovernment", "Government" }, null));
             Government_Localised = JournalFieldNaming.CheckLocalisation(evt.MultiStr(new string[] { "StationGovernment_Localised", "Government_Localised" }), GovernmentDefinitions.ToEnglish(Government));
 
             Wanted = evt["Wanted"].Bool();
 
-            StationServices = StationDefinitions.ReadJson(evt["StationServices"]);
+            StationServices = StationDefinitions.ReadServicesFromJson(evt["StationServices"]);
 
             ActiveFine = evt["ActiveFine"].BoolNull();
 
@@ -118,7 +118,8 @@ namespace EliteDangerousCore.JournalEvents
             public double Proportion;                   // 0-1
         }
 
-        public static Economies[] ReadFromJson(JToken evt)
+        // we need to read the economy list from json and preprocess the economy names, removing the decoration
+        public static Economies[] ReadEconomiesClassFromJson(JToken evt)
         {
             if (evt != null)
             {

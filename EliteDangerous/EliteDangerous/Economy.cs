@@ -71,7 +71,7 @@ namespace EliteDangerousCore
             }
         }
 
-        // process out fdname to an enum - same as above really
+        // process out fdname to an string matching our names removing decoration - its the same as above really, but not using it since above is slightly better performance.
         public static string PreProcessFDName(string fdname)
         {
             if (!fdname.HasChars() || fdname == "unknown_value") // null or empty
