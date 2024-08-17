@@ -100,6 +100,8 @@ namespace EliteDangerousCore
         }
 
         // history filter - limit by date range
+        // reverse means reverse whatever order the list is in
+        // entries means only accept these entries
         static public List<HistoryEntry> LimitByDate(List<HistoryEntry> list, DateTime startdateutc, DateTime enddaysutc, HashSet<JournalTypeEnum> entries = null, bool reverse = true)     // list should be in entry order (oldest first)
         {
             System.Diagnostics.Debug.Assert(startdateutc.Kind == DateTimeKind.Utc);

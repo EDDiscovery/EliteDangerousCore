@@ -37,7 +37,10 @@ namespace EliteDangerousCore
         public ShipYardList Shipyards { get; private set; } = new ShipYardList(); // yards in space (not meters)
         public OutfittingList Outfitting { get; private set; } = new OutfittingList();        // outfitting on stations
         public StarScan StarScan { get; private set; } = new StarScan();      // the results of scanning
-        public Dictionary<string, HistoryEntry> Visited { get; private set; } = new Dictionary<string, HistoryEntry>(StringComparer.InvariantCultureIgnoreCase);  // not in any particular order.
+
+        // not in any particular order.  Each entry is pointing to the HE of the last time you entered the system (if your in there a while, no more updates are made)
+        public Dictionary<string, HistoryEntry> Visited { get; private set; } = new Dictionary<string, HistoryEntry>(StringComparer.InvariantCultureIgnoreCase);  
+
         public Dictionary<string, EDStar> StarClass { get; private set; } = new Dictionary<string, EDStar>();     // not in any particular order.
         public Dictionary<string, Stats.FactionStatistics> GetStatsAtGeneration(uint g) { return statisticsaccumulator.GetAtGeneration(g); }
 
@@ -272,15 +275,17 @@ namespace EliteDangerousCore
 
             if ((LastSystem == null || he.System.Name != LastSystem ) && he.System.Name != "Unknown" )   // if system is not last, we moved somehow (FSD, location, carrier jump), add
             {
-                if (Visited.TryGetValue(he.System.Name, out var value))
+                if (Visited.TryGetValue(he.System.Name, out var value))     // if we have it
                 {
-                    he.UpdateVisits(value.Visits + 1);               // visits is 1 more than previous entry
-                    Visited[he.System.Name] = he;          // reset to point to latest he
+                    he.UpdateVisits(value.Visits + 1);                      // visits is 1 more than previous entry
+                    Visited[he.System.Name] = he;                           // reset to point to he where we entered the system
+                    //System.Diagnostics.Debug.WriteLine($"Visited {he.System.Name} on {he.EventTimeUTC} for {value.Visits + 1} times");
                 }
                 else
                 {
                     he.UpdateVisits(1);               // visits is 1 more than previous entry
                     Visited[he.System.Name] = he;          // point to he
+                    //System.Diagnostics.Debug.WriteLine($"Visited {he.System.Name} on {he.EventTimeUTC} for first time");
                 }
 
                 LastSystem = he.System.Name;
