@@ -28,14 +28,28 @@ namespace EliteDangerousCore.DB
         const string tablepostfix = "temp"; // postfix for temp tables
 
         // will throw on error
-        // returns 0 DB was good, else version number
+        // returns 0 DB was good no change, else changed version number
         public int UpgradeSystemsDB()
         {
             // BE VERY careful with connections when creating/deleting tables - you end up with SQL Schema errors or it not seeing the table
 
             SQLExtRegister reg = new SQLExtRegister(this);
-            int dbver = reg.GetSetting("DBVer", (int)0);      // use reg, don't use the built in func as they create new connections and confuse the schema
+
+            int dbver = reg.GetSetting("DBVer", (int)0);      // use reg, don't use the built in func as they create new connections and confuse the schema. Use 0 as the default no DB present
             int dborg = dbver;
+
+            int dbclassifiermode = reg.GetSetting("DBClassifier", (int)0);      // get the flag indicating new EC classifiers, if not there, use 0, meaning off
+            
+            if ( dbver == 0 )                                   // if new DB (no version)
+            {
+                dbclassifiermode = 1;
+                reg.PutSetting("DBClassifier", dbclassifiermode); // and remember for next start up
+            }
+
+            if ( dbclassifiermode == 1 )
+            {
+                EliteNameClassifier.ChangeToNewBitPositions();  // new mode
+            }
 
             if (dbver < 210)    // less than 210, delete the lot and start again
             {
