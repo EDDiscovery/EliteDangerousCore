@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2023 EDDiscovery development team
+ * Copyright © 2016-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,13 +10,13 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- *
- *
  */
+
+// use to provide more data points for testing
+//#define FAKEMARKETDATA
+
 using QuickJSON;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -49,6 +49,22 @@ namespace EliteDangerousCore.JournalEvents
 
                 Commodities.Sort((l, r) => l.locName.CompareTo(r.locName));
             }
+            else
+            {
+#if FAKEMARKETDATA
+                var commds = MaterialCommodityMicroResourceType.GetCommodities(MaterialCommodityMicroResourceType.SortMethod.None);
+                foreach (var x in commds)
+                {
+                    if (rnd.Next(5) == 0)
+                    {
+                        int buyprice = 100 + rnd.Next(200);
+                        int stock = 12000 + rnd.Next(12000);
+                        Commodities.Add(new CCommodities(-1, x.FDName, x.TranslatedName, x.Type.ToString(), x.TranslatedType, buyprice, buyprice - 100, 1, 1, stock, 1));
+                    }
+                }
+#endif
+
+            }
         }
 
         public bool Equals(JournalMarket other)
@@ -65,6 +81,11 @@ namespace EliteDangerousCore.JournalEvents
                 UpdateJson(jnew);
             }
         }
+
+#if FAKEMARKETDATA
+        System.Random rnd = new System.Random(1);
+#endif
+
 
     }
 
