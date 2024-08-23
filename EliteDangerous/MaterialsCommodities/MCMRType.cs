@@ -134,9 +134,6 @@ namespace EliteDangerousCore
             AncientHistoricalData, AncientLanguageData, AncientTechnologicalData, DecodedEmissionData, EncodedScandata, EncryptionArchives, Guardian_ModuleBlueprint, Guardian_WeaponBlueprint,
             HyperspaceTrajectories, SecurityFirmware, ShieldPatternAnalysis, TG_ResidueData, TG_ShipSystemsData, UnknownWakeData, AdaptiveEncryptors, ClassifiedScandata,
             CompactEmissionsData, DataminedWake, EmbeddedFirmware, Guardian_VesselBlueprint, ShieldFrequencyData,
-            // March 15 2024
-            TG_WreckageComponents,
-
             //---------------------------------------------------------- Manufactured
             BasicConductors = 3000, ChemicalStorageUnits, CompactComposites, CrystalShards, GridResistors, Guardian_PowerCell, Guardian_Sentinel_WreckageComponents, HeatConductionWiring,
             MechanicalScrap, SalvagedAlloys, TemperedAlloys, TG_Abrasion03, WornShieldEmitters, ChemicalProcessors, ConductiveComponents, FilamentComposites,
@@ -147,6 +144,8 @@ namespace EliteDangerousCore
             FedProprietaryComposites, HeatVanes, PolymerCapacitors, ProtoLightAlloys, RefinedFocusCrystals, TG_CausticCrystal, TG_WeaponParts, ThermicAlloys,
             UnknownTechnologyComponents, BiotechConductors, ExquisiteFocusCrystals, FedCoreComposites, TG_Abrasion01, ImperialShielding, ImprovisedComponents, MilitaryGradeAlloys,
             MilitarySupercapacitors, PharmaceuticalIsolators, ProtoHeatRadiators, ProtoRadiolicAlloys, TG_PropulsionElement, Unknownenergysource, UnknownOrganicCircuitry,
+            // March 15 2024
+            TG_WreckageComponents,
             //---------------------------------------------------------- Item
             AgriculturalProcessSample = 4000, BiochemicalAgent, BuildingSchematic, Californium, CastFossil, ChemicalProcessSample, ChemicalSample, CompactLibrary,
             CompressionLiquefiedGas, DeepMantleSample, DegradedPowerRegulator, GeneticRepairMeds, GeneticSample, GMeds, HealthMonitor, Hush,
@@ -1096,7 +1095,6 @@ namespace EliteDangerousCore
             Add(CatType.Encoded, ItemType.Standard, MCMR.TG_CompositionData, "Thargoid Material Composition Data", "UMCD");
             Add(CatType.Encoded, ItemType.Standard, MCMR.TG_ShipFlightData, "Ship Flight Data", "SFD");
             Add(CatType.Encoded, ItemType.Standard, MCMR.UnknownShipSignature, "Thargoid Ship Signature", "USSig");
-            Add(CatType.Encoded, ItemType.Standard, MCMR.TG_WreckageComponents, "Wreckage Components", "TGWC");
 
             #endregion
 
@@ -1116,6 +1114,7 @@ namespace EliteDangerousCore
             Add(CatType.Manufactured, ItemType.Standard, MCMR.TG_InterdictionData, "Thargoid Interdiction Telemetry", "TIT");
             Add(CatType.Manufactured, ItemType.Standard, MCMR.TG_ShutdownData, "Massive Energy Surge Analytics", "MESA");
             Add(CatType.Manufactured, ItemType.Standard, MCMR.UnknownEnergycell, "Thargoid Energy Cell", "UKEC");
+            Add(CatType.Manufactured, ItemType.Standard, MCMR.TG_WreckageComponents, "Wreckage Components", "TGWC");
             Add(CatType.Manufactured, ItemType.Rare, MCMR.TG_CausticCrystal, "Caustic Crystal", "CACR");
             Add(CatType.Manufactured, ItemType.Rare, MCMR.TG_WeaponParts, "Weapon Parts", "WP");
             Add(CatType.Manufactured, ItemType.Rare, MCMR.UnknownTechnologyComponents, "Thargoid Technological Components", "UKTC");
