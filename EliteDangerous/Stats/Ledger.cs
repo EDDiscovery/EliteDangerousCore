@@ -46,10 +46,22 @@ namespace EliteDangerousCore
         {
         }
 
-        public Transaction TransactionBefore(DateTime dateutc)
+        // find first transaction from tx with a date time at or before the time distance timespan
+        public Transaction TransactionBefore(Transaction tx, TimeSpan timespan)
         {
-            int index = Transactions.FindLastIndex(x => x.EventTimeUTC < dateutc);
-            return index >= 0 ? Transactions[index] : null;
+            int index = Transactions.IndexOf(tx);
+            if (index >= 0)
+            {
+                DateTime before = tx.EventTimeUTC - timespan;
+                while (--index >= 0)
+                {
+                    //System.Diagnostics.Debug.WriteLine($"...try {Transactions[index].EventTimeUTC}");
+                    if (Transactions[index].EventTimeUTC <= before)
+                        return Transactions[index];
+                }
+            }
+
+            return null;
         }
 
         public void AddEvent(long jidn, DateTime t, JournalTypeEnum j, string n, long ca)      // event with cash adjust but no profit
