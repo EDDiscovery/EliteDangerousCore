@@ -977,8 +977,6 @@ namespace EliteDangerousCore
 
             #endregion
 
-            // TBD materialtrader does it still work?
-
             #region Encoded 
 
             // Keep in ItemType order for the Materialtrader.cs. It relies on the Key returns being in add order to fill its info in properly

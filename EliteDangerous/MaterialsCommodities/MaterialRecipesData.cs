@@ -22,15 +22,15 @@ namespace EliteDangerousCore
     {
         public class Recipe
         {
-            public string Name { get; private set; }
+            public string Name { get; private set; }        // name of receipe ie "Lightweight Hull Reinforcement"
             public MaterialCommodityMicroResourceType[] Ingredients { get; private set; }
             public int[] Amount { get; private set; }
             public int Count { get { return Ingredients.Length; } }
             public int Amounts { get { return Amount.Sum(); } }     // number of items
 
-            public Recipe(string n, string ingredientsstring)
+            public Recipe(string name, string ingredientsstring)
             {
-                Name = n;
+                Name = name;
                 string[] ilist = ingredientsstring.Split(',');
                 Ingredients = new MaterialCommodityMicroResourceType[ilist.Length];
                 Amount = new int[ilist.Length];
@@ -92,51 +92,51 @@ namespace EliteDangerousCore
         {
             public string Level { get; private set; }       // may be NA or 1 to 5
             public int LevelInt { get { return Level.InvariantParseInt(-1); } }     // -1 or 1 to 5
-            public string ModuleList { get; private set; }
+            public string ModuleList { get; private set; }  // comma separ list of module type names (although we don't use this feature now)
             public string[] Modules { get { return ModuleList.Split(','); } }
             public string[] Engineers { get ; private set; }
             public string FDName { get; private set; }       // only certain types have a fdname
 
-            public EngineeringRecipe(string n, string fdname, string indg, string mod, string lvl, string engnrs)
-                : base(n, indg)
+            public EngineeringRecipe(string name, string fdname, string ingredientlist, string moduletypelist, string lvl, string engnrs)   // normal recipes
+                : base(name, ingredientlist)
             {
                 this.FDName = fdname;
                 Level = lvl;
-                ModuleList = mod;
+                ModuleList = moduletypelist;
                 Engineers = engnrs.Split(',');
             }
 
-            public EngineeringRecipe(string n, string fdname, string type, string mod, string indg)        // for tech broker
-                : base(n, indg)
+            public EngineeringRecipe(string name, string fdname, string type, string moduletypelist, string ingredientlist)        // for tech broker
+                : base(name, ingredientlist)
             {
                 Level = "NA";
                 this.FDName = fdname;
-                ModuleList = mod;
+                ModuleList = moduletypelist;
                 Engineers = type.Split(',');
             }
 
-            public EngineeringRecipe(string n, string fdname, string mod, string indg)        // for special effects
-                : base(n, indg)
+            public EngineeringRecipe(string n, string fdname, string moduletypelist, string ingredientlist)        // for special effects
+                : base(n, ingredientlist)
             {
                 Level = "NA";
                 this.FDName = fdname;
-                ModuleList = mod;
+                ModuleList = moduletypelist;
                 Engineers = new string[] { "Special Effect" };
             }
 
-            public EngineeringRecipe(string type, string manu, int lvl, string indg)        // for suit/weapon upgrades
-                : base(manu, indg)
+            public EngineeringRecipe(string type, string manu, int lvl, string ingredientlist)        // for suit/weapon upgrades
+                : base(manu, ingredientlist)
             {
                 Level = lvl.ToString();
                 ModuleList = type;
                 Engineers = type.Split(',');
             }
 
-            public EngineeringRecipe(string type, string fdname, string manu, string n, int cost, string indg, string eng)        // for suit/weapon engineer mods
-                : base(n + (manu != "All" ? (": " + manu) : ""), indg)
+            public EngineeringRecipe(string moduletypelist, string fdname, string manu, string name, int cost, string ingredientlist, string eng)        // for suit/weapon engineer mods
+                : base(name + (manu != "All" ? (": " + manu) : ""), ingredientlist)
             {
                 Level = "NA";
-                ModuleList = type;
+                ModuleList = moduletypelist;
                 this.FDName = fdname;
                 Engineers = eng.Split(',');
             }
