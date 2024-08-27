@@ -3002,6 +3002,7 @@ namespace EliteDangerousCore
                 {"decal_titanreward4_white", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Titanreward 4 White") },
                 {"decal_titanreward5", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Titanreward 5") },
                 {"decal_titanreward5_white", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Titanreward 5 White") },
+                {"decal_titanreward6", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Titanreward 6") },
                 {"decal_trade_broker", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Trade Broker") },
                 {"decal_trade_dealer", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Trade Dealer") },
                 {"decal_trade_elite", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Trade Elite") },
