@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Threading;
 using EliteDangerousCore.JournalEvents;
+using QuickJSON;
 
 namespace EliteDangerousCore.EDDN
 {
@@ -122,15 +123,6 @@ namespace EliteDangerousCore.EDDN
             if (he.Commander == null || he.journalEntry == null)     // why ever? but protect since code in here did.  But its probably v.old code reasons not valid now
                 return null;
 
-            // journal should have both set, CAPI only has gameversion set and build empty.
-            // should never happen unless the game files are somehow corrupted and lacking fileheader/loadgame
-
-            if ( he.journalEntry.Build == null || he.journalEntry.GameVersion.IsEmpty() )     
-            {
-                System.Diagnostics.Trace.WriteLine("*** EDDN message not sent due to empty Build/GameVersion");
-                return null;
-            }
-
             EDDNClass eddn = new EDDNClass(he.Commander.Name);
 
             JournalEntry je = he.journalEntry;
@@ -232,6 +224,14 @@ namespace EliteDangerousCore.EDDN
 
             if (msg != null)
             {
+                string gameversion = msg["header"].I("gameversion").Str();
+
+                if ( gameversion.IsEmpty())     // ensure gameversion is set, in case journal entries do not have it. CAPI will fill it in. Ignore build, it will be empty for CAPI.
+                {
+                    System.Diagnostics.Trace.WriteLine("*** EDDN message not sent due to empty gameversion");
+                    return null;
+                }
+
                 if (sendtotest) // make sure it looks fresh if send to test
                     msg["message"]["timestamp"] = DateTime.UtcNow.ToStringZuluInvariant();
 
