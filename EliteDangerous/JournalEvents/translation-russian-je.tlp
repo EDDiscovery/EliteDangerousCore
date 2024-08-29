@@ -894,7 +894,7 @@ SECTION JournalStoredShips
 .intransit: "<; in transit" => "<; в пути"
 .at: "< at " = JournalStoredModules.at
 
-SECTION JournalSupercruiseEntry
+SECTION JournalSuperCruiseEntry
 
 .Wanted: ", You are wanted." @
 

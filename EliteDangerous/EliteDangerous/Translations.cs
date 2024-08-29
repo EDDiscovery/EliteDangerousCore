@@ -69,13 +69,11 @@ namespace EliteDangerousCore
         JournalEntry_Class,
         JournalEntry_Mods,
         JournalEntry_OnFootAt, 
-        JournalEntry_LegBounty, // {0} total {1:N0}
         JournalEntry_Target, // Target:
         JournalEntry_Victimfaction, // Victim faction:
         JournalEntry_Faction, // Faction:
         JournalEntry_from, // < from
         JournalEntry_dueto, // < , due to
-        JournalEntry_0, // {0} on {1}
         JournalEntry_onfaction, // < on faction
         JournalEntry_Against, // Against
         JournalEntry_Cost, // Cost:; cr;N0
@@ -572,12 +570,9 @@ namespace EliteDangerousCore
         StarPlanetRing_Rocky, // Rocky
         StarPlanetRing_MetalRich, // Metal Rich
         StarPlanetRing_Metallic, // Metallic
-        StarPlanetRing_RockyIce, // Rocky Ice
 
         JournalApproachBody_In, // In
         JournalLeaveBody_In, // In
-        JournalCommitCrime_Fine, //  Fine {0:N0}
-        JournalCommitCrime_Bounty, //  Bounty {0:N0}
 
         FSSSignal_State, // State:
         FSSSignal_Faction, // Faction:
@@ -622,7 +617,6 @@ namespace EliteDangerousCore
         JournalCarrier_ReserveBalance, 
         JournalCarrier_AvailableBalance,
         JournalCarrier_ReservePercent,
-        JournalCarrier_TaxRate, // Tax Rate: ;;N1
         JournalCarrier_TaxRatePioneersupplies, // Tax Rate Pioneersupplies: ;;N1
         JournalCarrier_TaxRateShipyard, // Tax Rate Shipyard: ;;N1
         JournalCarrier_TaxRateRearm, // Tax Rate Rearm: ;;N1
@@ -745,7 +739,6 @@ namespace EliteDangerousCore
         JournalSellExplorationData_Total, // Total:; cr;N0
         JournalSetUserShipName_On, // On:
         JournalMultiSellExplorationData_Total, // Total:; cr;N0
-        JournalSellOrganics_Detailed, // Genus: {0}, Species: {1}, Reward: {2} cr, First sample bonus: {3} cr, Total reward: {4} cr
 
         JournalMissionAccepted_from, // < from
         JournalMissionAccepted_Expiry, // Expiry:
