@@ -146,6 +146,8 @@ namespace EliteDangerousCore
             MilitarySupercapacitors, PharmaceuticalIsolators, ProtoHeatRadiators, ProtoRadiolicAlloys, TG_PropulsionElement, Unknownenergysource, UnknownOrganicCircuitry,
             // March 15 2024
             TG_WreckageComponents,
+            // August 29 2024
+            TacticalCoreChip,
             //---------------------------------------------------------- Item
             AgriculturalProcessSample = 4000, BiochemicalAgent, BuildingSchematic, Californium, CastFossil, ChemicalProcessSample, ChemicalSample, CompactLibrary,
             CompressionLiquefiedGas, DeepMantleSample, DegradedPowerRegulator, GeneticRepairMeds, GeneticSample, GMeds, HealthMonitor, Hush,
@@ -721,7 +723,7 @@ namespace EliteDangerousCore
             Add(CatType.Commodity, ItemType.Salvage, MCMR.SpacePioneerRelics, "Space Pioneer Relics");
             Add(CatType.Commodity, ItemType.Salvage, MCMR.TacticalData, "Tactical Data");
             Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidGeneratorTissueSample, "Caustic Tissue Sample");
-            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidHeart, "Thargoid Heart");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidHeart, "Thargoid Heart","THH");
             Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidPod, "Xenobiological Prison Pod");
             Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidScoutTissueSample, "Thargoid Scout Tissue Sample");
             Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidTissueSampleType1, "Thargoid Cyclops Tissue Sample");
@@ -1103,6 +1105,7 @@ namespace EliteDangerousCore
             Add(CatType.Manufactured, ItemType.VeryCommon, MCMR.TG_Abrasion03, "Hardened Surface Fragments", "HSF");
             Add(CatType.Manufactured, ItemType.Common, MCMR.Guardian_PowerConduit, "Guardian Power Conduit", "GPC");
             Add(CatType.Manufactured, ItemType.Common, MCMR.UnknownCarapace, "Thargoid Carapace", "UKCP");
+            Add(CatType.Manufactured, ItemType.Common, MCMR.TacticalCoreChip, "Tactical Core Chip", "TCC");
             Add(CatType.Manufactured, ItemType.Standard, MCMR.Guardian_Sentinel_WeaponParts, "Guardian Sentinel Weapon Parts", "GSWP");
             Add(CatType.Manufactured, ItemType.Standard, MCMR.Guardian_TechComponent, "Guardian Technology Component", "GTC");
             Add(CatType.Manufactured, ItemType.Standard, MCMR.TG_Abrasion02, "Phasing Membrane Residue", "PMR");
