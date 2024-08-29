@@ -894,7 +894,7 @@ SECTION JournalStoredShips
 .intransit: "<; in transit" => "<; en tránsito"
 .at: "< at " = JournalCommodityPricesBase.CPBat
 
-SECTION JournalSupercruiseEntry
+SECTION JournalSuperCruiseEntry
 
 .Wanted: ", You are wanted." => ", Eres Buscado."
 
