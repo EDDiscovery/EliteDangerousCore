@@ -197,6 +197,8 @@ namespace EliteDangerousCore
 
         public static List<SynthesisRecipe> SynthesisRecipes = new List<SynthesisRecipe>()
         {            
+            // inara https://inara.cz/elite/synthesis
+
             new SynthesisRecipe( "AFM Refill", "Premium","6V,4Cr,2Zn,2Zr,1Te,1Ru" ),
             new SynthesisRecipe( "AFM Refill", "Standard","6V,2Mn,1Mo,1Zr,1Sn" ),
             new SynthesisRecipe( "AFM Refill", "Basic","3V,2Ni,2Cr,2Zn" ),
@@ -206,7 +208,7 @@ namespace EliteDangerousCore
             new SynthesisRecipe( "AX Explosive Munitions", "Premium", "5W,4Hg,2Po,5BMC,5PE,6SFD" ),
 
             new SynthesisRecipe( "AX Remote Flak Munitions", "Basic", "4Ni,3C,2S" ),
-            new SynthesisRecipe( "AX Remote Flak Munitions", "Standard", "2Sn,3Zn,1As,3UKTC,2WP" ),
+            new SynthesisRecipe( "AX Remote Flak Munitions", "Standard", "2Sn,3Zn,1As,3UKTC,2TGWC" ),
             new SynthesisRecipe( "AX Remote Flak Munitions", "Premium", "8Zn,2W,1As,3UES,4UKTC,1WP" ),
 
             new SynthesisRecipe( "AX Small Calibre Munitions", "Basic", "2Fe,1Ni,2S,2WP" ),
@@ -253,12 +255,6 @@ namespace EliteDangerousCore
             new SynthesisRecipe( "Guardian Shard Cannon Munitions", "Standard", "4CS,2GPCe,2GSWP" ),
             new SynthesisRecipe( "Guardian Shard Cannon Munitions", "Premium", "8C,6GPCe,4V,8CS" ),
 
-            /*Don't know where this is from, but the upper recipes are correct
-            new SynthesisRecipe("Guardian Shard Cannon Munitions", "Basic", "3GR,2HDP,2FoC,2PA,2Pb"),
-            new SynthesisRecipe("Guardian Shard Cannon Munitions", "Standard", "5GR,3HDP,4FoC,5PA,3Pb"),
-            new SynthesisRecipe("Guardian Shard Cannon Munitions", "Premium", "7GR,4HDP,6FoC,8PA,5Pb"),
-            */
-
             new SynthesisRecipe( "Heat Sinks", "Premium", "2BaC,2HCW,2HE,1PHR"),
             new SynthesisRecipe( "Heat Sinks", "Standard", "2BaC,2HCW,2HE"),
             new SynthesisRecipe( "Heat Sinks", "Basic", "1BaC,1HCW"),
@@ -274,6 +270,8 @@ namespace EliteDangerousCore
             new SynthesisRecipe( "Life Support", "Basic", "2Fe,1Ni"),
 
             new SynthesisRecipe( "Limpets", "Basic", "10Fe,10Ni"),
+            
+            new SynthesisRecipe( "Nanite Munitions", "Basic", "2GPCe,2HEXS,3PMR"),
 
             new SynthesisRecipe( "Plasma Munitions", "Premium", "5Se,4Mo,4Cd,2Tc" ),
             new SynthesisRecipe( "Plasma Munitions", "Standard","5P,1Se,3Mn,4Mo" ),
@@ -1148,20 +1146,26 @@ namespace EliteDangerousCore
 
             #region Tech broker - some of these have unknown IDs
 
-            // inara, 10, 
+            // inara, https://inara.cz/elite/techbroker/#tab_techbrokerslot1 left column august 2024
 
-            // bobblehead - Don't have thargoid heart in list. 
+            new EngineeringRecipe("Sirius AX Missile Rack Fixed Large","unknown","Human","Missile","20ME,9HDP,13V,10HDC,10MSC,3Tc"),
+            new EngineeringRecipe("Sirius AX Missile Rack Fixed Medium","unknown","Human","Missile","12ME,6HDP,8V,5HDC,5MSC"),
+            new EngineeringRecipe("Azimuth Enhanced AX Multi Cannon Gimballed Large","unknown","Human","Multicannon","11Fe,16Zr,9BMC,12TGWC,17WP,6SSD"),
+            new EngineeringRecipe("Azimuth Enhanced AX Multi Cannon Gimballed Medium","unknown","Human","Multicannon","9Fe,11Zr,6BMC,7TGWC,14WP"),
+            new EngineeringRecipe("Bobblehead","unknown","Human","Vanity","10MA,1THH"),
             new EngineeringRecipe("Corrosion Resistant Cargo Rack Size 4 Class 1","int_corrosionproofcargorack_size4_class1","Human","Cargo Rack","16MA,26Fe,18CM,22RB,12NFI"),
             new EngineeringRecipe("Detailed Surface Scanner (Engineered V1)","int_detailedsurfacescanner_tiny","Human","Surface Scanner", "22Ge,24Nb,28MC,26MS"),
             new EngineeringRecipe("Enzyme Missile Rack Fixed Medium","hpt_causticmissile_fixed_medium","Human","Missile","16UKEC,18UKOC,16Mo,15W,6RB"),
             new EngineeringRecipe("Engineered FSD V1 (Class 5)","int_hyperdrive_size5_class5","Human","FSD","18DWEx,26Te,26EA,28CP"),
+            new EngineeringRecipe("Sirius Heat Sink Launcher","unknown","Human","Heat Sink Launcher","8MS,6Nb,6V,5MC"),
             new EngineeringRecipe("Meta Alloy Hull Reinforcement Size 1 Class 1","int_metaalloyhullreinforcement_size1_class1","Human","Hull Reinforcement","16MA,15FoC,22ASPA,20CCom,12RMP"),
             new EngineeringRecipe("Mining Laser (Fixed Small)","?","Human","Mining Laser","16OSM,20As,24Re,28P"),
+
+            // inara, https://inara.cz/elite/techbroker/#tab_techbrokerslot1 right column august 2024
+
             new EngineeringRecipe("Flechette Launcher Fixed Medium","hpt_flechettelauncher_fixed_medium","Human","Flechette","30Fe,24Mo,22Re,26Ge,8CMMC"),
             new EngineeringRecipe("Flechette Launcher Turret Medium","hpt_flechettelauncher_turret_medium","Human","Flechette","28Fe,28Mo,20Re,24Ge,10AM"),
             new EngineeringRecipe("Engineered Seeker Missile Rack V1 (Fixed, Class 2)","?","Human","Missile","10OSM,16PRA,24CCe,26HC,28P"),
-
-            // Inara, 9, right column, correct
             new EngineeringRecipe("Plasma Shock Cannon Fixed Large","hpt_plasmashockcannon_fixed_large","Human","Shock Cannon","28V,26W,24Re,26Tc,8PC"),
             new EngineeringRecipe("Plasma Shock Cannon Fixed Medium","hpt_plasmashockcannon_fixed_medium","Human","Shock Cannon","24V,26W,20Re,28Tc,6IOD"),
             new EngineeringRecipe("Plasma Shock Cannon Fixed Small","hpt_plasmashockcannon_fixed_small","Human","Shock Cannon","8V,10W,8Re,12Tc,4PC"),
@@ -1173,7 +1177,7 @@ namespace EliteDangerousCore
             new EngineeringRecipe("Plasma Shock Cannon Gimbal Small","hpt_plasmashockcannon_gimbal_small","Human","Shock Cannon","10V,11W,8Re,10Tc,4PTB"),
             new EngineeringRecipe("TG Pulse Neutraliser","hpt_antiunknownshutdown_tiny_v2","Human","Anti Thargoid","5MESA,5PE,5UES,1ARTG"),
 
-            // Inara 9
+            // Inara https://inara.cz/elite/techbroker/#tab_techbrokerslot2  August 2024
 
             new EngineeringRecipe("Guardian FSD Booster Size 1","int_guardianfsdbooster_size1","Guardian","FSD","1GMBS,21GPCe,21GTC,24FoC,8HNSM"),
             new EngineeringRecipe("Guardian Hull Reinforcement Size 1 Class 1","int_guardianhullreinforcement_size1_class1","Guardian","Hull Reinforcement","1GMBS,21GSWC,16PBOD,16PGOD,12RMP"),
@@ -1185,7 +1189,8 @@ namespace EliteDangerousCore
             new EngineeringRecipe("Guardian Power Plant Size 2","int_guardianpowerplant_size2","Guardian","Power Plant","1GMBS,18GPC,21PEOD,15HRC,10EGA"),
             new EngineeringRecipe("Guardian Shield Reinforcement Size 1 Class 1","int_guardianshieldreinforcement_size1_class1","Guardian","Shield Generator","1GMBS,17GPCe,20GTC,24PDOD,8DIS"),
 
-            // Inara 9 left
+            // Inara https://inara.cz/elite/techbroker/#tab_techbrokerslot3 left column August 2024
+
             new EngineeringRecipe("Guardian Gauss Cannon Fixed Medium","hpt_guardian_gausscannon_fixed_medium", "Guardian Weapons","Gauss Cannon","1GWBS,18GPCe,20GTC,15Mn,6MEC"),
             new EngineeringRecipe("Guardian Gauss Cannon Fixed Medium Modified","?","Guardian Weapons","Gauss Cannon","6TCU,18GPCe,20GTC,15Nb,1GWBS"),
             new EngineeringRecipe("Guardian Gauss Cannon Fixed Small","hpt_guardian_gausscannon_fixed_small","Guardian Weapons","Gauss Cannon","1GWBS,12GPC,12GSWC,15GSWP"),
@@ -1196,7 +1201,8 @@ namespace EliteDangerousCore
             new EngineeringRecipe("Guardian Plasma Launcher Turret Large","hpt_guardian_plasmalauncher_turret_large","Guardian Weapons","Plasma Accelerator","2GWBS,20GPC,24GSWP,26Cr,10AM"),
             new EngineeringRecipe("Guardian Plasma Launcher Turret Medium","hpt_guardian_plasmalauncher_turret_medium","Guardian Weapons","Plasma Accelerator","2GWBS,21GPC,20GSWP,16Cr,8AM"),
 
-            // Inara 9 right
+            // Inara https://inara.cz/elite/techbroker/#tab_techbrokerslot3 right column August 2024
+
             new EngineeringRecipe("Guardian Plasma Launcher Turret Small","hpt_guardian_plasmalauncher_turret_small","Guardian Weapons","Plasma Accelerator","1GWBS,12GPCe,12GTC,15GSWP"),
             new EngineeringRecipe("Guardian Shard Cannon Fixed Large","hpt_guardian_shardcannon_fixed_large","Guardian Weapons","Shard Cannon","1GWBS,20GSWC,28GTC,20C,18MCC"),
             new EngineeringRecipe("Guardian Shard Cannon Fixed Medium Modified","?","Guardian Weapons","Shard Cannon","12PC,20GSWC,18GTC,14Ge,1GWBS"),
@@ -1206,6 +1212,13 @@ namespace EliteDangerousCore
             new EngineeringRecipe("Guardian Shard Cannon Turret Large","hpt_guardian_shardcannon_turret_large","Guardian Weapons","Shard Cannon","2GWBS,20GSWC,26GTC,28C,12MCC"),
             new EngineeringRecipe("Guardian Shard Cannon Turret Medium","hpt_guardian_shardcannon_turret_medium","Guardian Weapons","Shard Cannon","2GWBS,16GSWC,20GTC,15C,12MCC"),
             new EngineeringRecipe("Guardian Shard Cannon Turret Small","hpt_guardian_shardcannon_turret_small","Guardian Weapons","Shard Cannon","1GWBS,12GPC,15GTC,12GSWP"),
+
+            // Special internal modules not associated with engineers - a few on https://inara.cz/elite/blueprints/#tab_outfittingslot3
+
+            new EngineeringRecipe("Anti-Guardian Zone Resistance FSD", "guardian_fsd_unknown", "Guardian", "FSD", "2HSF,1CACR,1TCC" ),
+            new EngineeringRecipe("Anti-Guardian Zone Resistance Hull", "guardian_hull_unknown", "Guardian", "Hull Reinforcement", "2HSF,1CACR,1TCC" ),
+            new EngineeringRecipe("Anti-Guardian Zone Resistance Modules", "guardian_modules_unknown", "Guardian", "Module", "2HSF,1CACR,1TCC" ),
+
             #endregion
 
             #region Special Effects

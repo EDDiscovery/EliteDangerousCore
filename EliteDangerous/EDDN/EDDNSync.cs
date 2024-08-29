@@ -122,7 +122,10 @@ namespace EliteDangerousCore.EDDN
             if (he.Commander == null || he.journalEntry == null)     // why ever? but protect since code in here did.  But its probably v.old code reasons not valid now
                 return null;
 
-            if ( he.journalEntry.Build.IsEmpty() || he.journalEntry.GameVersion.IsEmpty() )     // should never happen unless the game files are somehow corrupted and lacking fileheader/loadgame
+            // journal should have both set, CAPI only has gameversion set and build empty.
+            // should never happen unless the game files are somehow corrupted and lacking fileheader/loadgame
+
+            if ( he.journalEntry.Build == null || he.journalEntry.GameVersion.IsEmpty() )     
             {
                 System.Diagnostics.Trace.WriteLine("*** EDDN message not sent due to empty Build/GameVersion");
                 return null;
