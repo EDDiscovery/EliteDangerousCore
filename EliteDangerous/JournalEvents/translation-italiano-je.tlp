@@ -275,11 +275,6 @@ SECTION JournalCodexEntry
 .NewEntry: ";New Entry" @
 .Traits: ";Traits" @
 
-SECTION JournalCommitCrime
-
-.Fine: " Fine {0:N0}" @
-.Bounty: " Bounty {0:N0}" @
-
 SECTION CommunityGoal
 
 .Title: "Title: " @
@@ -430,10 +425,6 @@ SECTION JournalMultiSellExplorationData
 
 .Total: "Total: ; cr;N0" @
 
-SECTION JournalSellOrganics
-
-.JournalSellOrganics_Detailed: "Genus: {0}, Species: {1}, Reward: {2} cr, First sample bonus: {3} cr, Total reward: {4} cr" @
-
 SECTION JournalProspectedAsteroid
 
 .Remaining: "Remaining: ;%;N1" @
@@ -483,7 +474,6 @@ SECTION StarPlanetRing
 .Rocky: "Rocky" @
 .MetalRich: "Metal Rich" @
 .Metallic: "Metallic" @
-.RockyIce: "Rocky Ice" @
 
 SECTION JournalScan
 
@@ -874,7 +864,6 @@ SECTION ThargoidsClass
 .LastSystem: "Last seen in: " @
 .LastTime: "Last seen on: " @
 .LastShip: "Last ship involved: " @
-.ScoutCount: "Thargoid Scouts killed: ;;N0" @
 
 SECTION JournalStoredModules
 
@@ -916,13 +905,11 @@ SECTION JournalEntry
 .TME: "{0} days {1} hours {2} minutes" @
 .Hyperspace: "Hyperspace" @
 .Supercruise: "Supercruise" @
-.LegBounty: "{0} total {1:N0}" @
 .Target: "Target: " @
 .Victimfaction: "Victim faction: " @
 .Faction: "Faction: " @
 .from: "< from " @
 .dueto: "<, due to " @
-.0: "{0} on {1}" @
 .onfaction: "< on faction " @
 .Against: "Against " @
 .Cost: "Cost: ; cr;N0" @
@@ -1118,7 +1105,6 @@ SECTION JournalCarrier
 .ReserveBalance: "Reserve Balance: ; cr;N0" @
 .AvailableBalance: "Available Balance: ; cr;N0" @
 .ReservePercent: "Reserve Percent: ;;N1" @
-.TaxRate: "Tax Rate: ;;N1" @
 .TaxRatePioneersupplies: "Tax Rate Pioneersupplies: ;;N1" @
 .TaxRateShipyard: "Tax Rate Shipyard: ;;N1" @
 .TaxRateRearm: "Tax Rate Rearm: ;;N1" @

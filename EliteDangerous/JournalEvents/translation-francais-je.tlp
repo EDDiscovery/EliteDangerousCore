@@ -275,11 +275,6 @@ SECTION JournalCodexEntry
 .NewEntry: ";New Entry" => ";Nouvelle Entrée"
 .Traits: ";Traits" => ";Caractéristiques"
 
-SECTION JournalCommitCrime
-
-.Fine: " Fine {0:N0}" => " Amende {0:N0}"
-.Bounty: " Bounty {0:N0}" => " Prime {0:N0}"
-
 SECTION CommunityGoal
 
 .Title: "Title: " => "Titre: "
@@ -430,10 +425,6 @@ SECTION JournalMultiSellExplorationData
 
 .Total: "Total: ; cr;N0" @
 
-SECTION JournalSellOrganics
-
-.JournalSellOrganics_Detailed: "Genus: {0}, Species: {1}, Reward: {2} cr, First sample bonus: {3} cr, Total reward: {4} cr" @
-
 SECTION JournalProspectedAsteroid
 
 .Remaining: "Remaining: ;%;N1" => "Reste: ;%;N1"
@@ -483,7 +474,6 @@ SECTION StarPlanetRing
 .Rocky: "Rocky" => "Rocheux"
 .MetalRich: "Metal Rich" => "Riche en métaux"
 .Metallic: "Metallic" => "Metalique"
-.RockyIce: "Rocky Ice" => "Rocheux Glacé"
 
 SECTION JournalScan
 
@@ -874,7 +864,6 @@ SECTION ThargoidsClass
 .LastSystem: "Last seen in: " @
 .LastTime: "Last seen on: " @
 .LastShip: "Last ship involved: " @
-.ScoutCount: "Thargoid Scouts killed: ;;N0" @
 
 SECTION JournalStoredModules
 
@@ -916,13 +905,11 @@ SECTION JournalEntry
 .TME: "{0} days {1} hours {2} minutes" => "{0} jours {1} heures {2} minutes"
 .Hyperspace: "Hyperspace" @
 .Supercruise: "Supercruise" @
-.LegBounty: "{0} total {1:N0}" @
 .Target: "Target: " => "Cible: "
 .Victimfaction: "Victim faction: " => "Faction de la victime: "
 .Faction: "Faction: " @
 .from: "< from " = JournalMissionAccepted.from
 .dueto: "<, due to " => "<, attendu à "
-.0: "{0} on {1}" => "{0} sur {1}"
 .onfaction: "< on faction " => "< à la faction "
 .Against: "Against " => "Contre "
 .Cost: "Cost: ; cr;N0" => "Coût: ; cr;N0"
@@ -1118,7 +1105,6 @@ SECTION JournalCarrier
 .ReserveBalance: "Reserve Balance: ; cr;N0" @
 .AvailableBalance: "Available Balance: ; cr;N0" @
 .ReservePercent: "Reserve Percent: ;;N1" @
-.TaxRate: "Tax Rate: ;;N1" @
 .TaxRatePioneersupplies: "Tax Rate Pioneersupplies: ;;N1" @
 .TaxRateShipyard: "Tax Rate Shipyard: ;;N1" @
 .TaxRateRearm: "Tax Rate Rearm: ;;N1" @

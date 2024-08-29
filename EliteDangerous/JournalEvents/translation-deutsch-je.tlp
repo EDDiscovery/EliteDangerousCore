@@ -275,11 +275,6 @@ SECTION JournalCodexEntry
 .NewEntry: ";New Entry" => ";neuer Eintrag"
 .Traits: ";Traits" => ";Merkmale"
 
-SECTION JournalCommitCrime
-
-.Fine: " Fine {0:N0}" => " Strafe {0:N0}"
-.Bounty: " Bounty {0:N0}" => " Kopfgeld {0:N0}"
-
 SECTION CommunityGoal
 
 .Title: "Title: " => "Titel: "
@@ -430,10 +425,6 @@ SECTION JournalMultiSellExplorationData
 
 .Total: "Total: ; cr;N0" => "Gesamt: ; Cr;N0"
 
-SECTION JournalSellOrganics
-
-.JournalSellOrganics_Detailed: "Genus: {0}, Species: {1}, Reward: {2} cr, First sample bonus: {3} cr, Total reward: {4} cr" => "Genus: {0}, Spezies: {1}, Belohnung: {2} cr, Erste-Probe-Bonus: {3} cr, Belohnung gesamt: {4} cr"
-
 SECTION JournalProspectedAsteroid
 
 .Remaining: "Remaining: ;%;N1" => "Übrig: ;%;N1"
@@ -483,7 +474,6 @@ SECTION StarPlanetRing
 .Rocky: "Rocky" => "Felsig"
 .MetalRich: "Metal Rich" => "Reich an Erzen"
 .Metallic: "Metallic" => "Metallisch"
-.RockyIce: "Rocky Ice" => "Vereist-Felsig"
 
 SECTION JournalScan
 
@@ -874,7 +864,6 @@ SECTION ThargoidsClass
 .LastSystem: "Last seen in: " => "Zuletzt gesehen in: "
 .LastTime: "Last seen on: " => "Zuletzt gesehen am: "
 .LastShip: "Last ship involved: " => "Letztes involviertes Schiff: "
-.ScoutCount: "Thargoid Scouts killed: ;;N0" => "Thargoidenscouts getötet: ;;N0"
 
 SECTION JournalStoredModules
 
@@ -916,13 +905,11 @@ SECTION JournalEntry
 .TME: "{0} days {1} hours {2} minutes" => "{0} Tage {1} Stunden {2} Minuten"
 .Hyperspace: "Hyperspace" => "Hyperraum"
 .Supercruise: "Supercruise" => "Supercruise"
-.LegBounty: "{0} total {1:N0}" => "{0} Gesamt {1:N0}"
 .Target: "Target: " => "Ziel: "
 .Victimfaction: "Victim faction: " => "Opferfraktion: "
 .Faction: "Faction: " = JournalLocOrJump.Faction
 .from: "< from " => "< von "
 .dueto: "<, due to " => "<, wegen "
-.0: "{0} on {1}" => "{0} auf {1}"
 .onfaction: "< on faction " => "< auf Fraktion "
 .Against: "Against " => "Gegen "
 .Cost: "Cost: ; cr;N0" => "Kosten: ; Cr;N0"
@@ -1118,7 +1105,6 @@ SECTION JournalCarrier
 .ReserveBalance: "Reserve Balance: ; cr;N0" => "Reservekontostand: ; Cr;N0"
 .AvailableBalance: "Available Balance: ; cr;N0" => "Verfügbarer Kontostand: ; Cr;N0"
 .ReservePercent: "Reserve Percent: ;;N1" => "Reserve Prozent: ;;N1"
-.TaxRate: "Tax Rate: ;;N1" => "Steuersatz: ;;N1"
 .TaxRatePioneersupplies: "Tax Rate Pioneersupplies: ;;N1" => "Steuersatz Pioniervorräte: ;;N1"
 .TaxRateShipyard: "Tax Rate Shipyard: ;;N1" => "Steuersatz Werft: ;;N1"
 .TaxRateRearm: "Tax Rate Rearm: ;;N1" => "Steuersatz Nachladen: ;;N1"
