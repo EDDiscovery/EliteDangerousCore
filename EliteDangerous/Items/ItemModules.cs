@@ -3533,6 +3533,7 @@ namespace EliteDangerousCore
                 {"paintjob_adder_tactical_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Tactical Green") },
                 {"paintjob_adder_tactical_grey", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Tactical Grey") },
                 {"paintjob_adder_tactical_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Tactical Red") },
+                {"paintjob_adder_tactical_white", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Tactical White") },
                 {"paintjob_adder_vibrant_orange", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Vibrant Orange") },
                 {"paintjob_adder_vibrant_purple", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Vibrant Purple") },
                 {"paintjob_adder_vibrant_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Vibrant Red") },

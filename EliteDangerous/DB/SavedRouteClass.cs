@@ -526,13 +526,13 @@ namespace EliteDangerousCore.DB
 
                     double interceptvalue = lastp3d.InterceptPercentageDistance(top3d, currentsystemp3d, out double distancefrominterceptpoint);       //dist to intercept point on line note.
 
-                    System.Diagnostics.Debug.WriteLine($"From {knownsystems[i - 1].Item1} to {knownsystems[i].Item1} intercept {interceptvalue:N5} Point Distance from path {distancefrominterceptpoint:N5} Distance to Start {disttostart:N5} end {disttoend:N5}");
+                    //System.Diagnostics.Debug.WriteLine($"From {knownsystems[i - 1].Item1} to {knownsystems[i].Item1} intercept {interceptvalue:N5} Point Distance from path {distancefrominterceptpoint:N5} Distance to Start {disttostart:N5} end {disttoend:N5}");
 
                     if (interceptvalue >= -0.01 && interceptvalue < 1.01        // allow a little margin in the intercept point for randomness
                             && (distancefrominterceptpoint <= mininterceptdist || disttostart <= 2)        // if closer to line than last, or we are very close to the start
                             && distancefrominterceptpoint < distbetween)        // and we are not stupidly far from the path
                     {
-                        System.Diagnostics.Debug.WriteLine($"   chosen ");
+                        //System.Diagnostics.Debug.WriteLine($"   chosen ");
                         wpto = i;
                         mininterceptdist = distancefrominterceptpoint;
                     }
