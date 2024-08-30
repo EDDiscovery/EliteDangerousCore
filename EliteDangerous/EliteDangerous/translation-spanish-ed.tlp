@@ -893,6 +893,7 @@ SECTION MaterialCommodityMicroResourceType
 .thargoidbonefragments: "Bone Fragments" => "Fragmentos de Hueso"
 .thargoidorgansample: "Organ Sample" => "Muestra de Órgano"
 .tg_abrasion01: "Heat Exposure Specimen" @
+.tacticalcorechip: "Tactical Core Chip" @
 
 SECTION EngineeringData
 

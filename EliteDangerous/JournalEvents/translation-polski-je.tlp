@@ -275,11 +275,6 @@ SECTION JournalCodexEntry
 .NewEntry: ";New Entry" => ";Nowy Wpis"
 .Traits: ";Traits" => ";Cechy"
 
-SECTION JournalCommitCrime
-
-.Fine: " Fine {0:N0}" => "Kara {0:N0}"
-.Bounty: " Bounty {0:N0}" => "Wyzn. Nagroda {0:N0}"
-
 SECTION CommunityGoal
 
 .Title: "Title: " => "Nazwa: "
@@ -430,10 +425,6 @@ SECTION JournalMultiSellExplorationData
 
 .Total: "Total: ; cr;N0" => "Razem: ; cr;N0"
 
-SECTION JournalSellOrganics
-
-.JournalSellOrganics_Detailed: "Genus: {0}, Species: {1}, Reward: {2} cr, First sample bonus: {3} cr, Total reward: {4} cr" @
-
 SECTION JournalProspectedAsteroid
 
 .Remaining: "Remaining: ;%;N1" => "Pozostało: ;%;N1"
@@ -483,7 +474,6 @@ SECTION StarPlanetRing
 .Rocky: "Rocky" => "Skalisty"
 .MetalRich: "Metal Rich" => "Bogaty w Metale"
 .Metallic: "Metallic" => "Metaliczny"
-.RockyIce: "Rocky Ice" => "Skalisto-Lodowy"
 
 SECTION JournalScan
 
@@ -874,7 +864,6 @@ SECTION ThargoidsClass
 .LastSystem: "Last seen in: " @
 .LastTime: "Last seen on: " @
 .LastShip: "Last ship involved: " @
-.ScoutCount: "Thargoid Scouts killed: ;;N0" @
 
 SECTION JournalStoredModules
 
@@ -916,13 +905,11 @@ SECTION JournalEntry
 .TME: "{0} days {1} hours {2} minutes" => "{0} dni, {1} godzin, {2} minut"
 .Hyperspace: "Hyperspace" @
 .Supercruise: "Supercruise" @
-.LegBounty: "{0} total {1:N0}" => "{0} razem {1:N0}"
 .Target: "Target: " => "Cel: "
 .Victimfaction: "Victim faction: " => "Frakcja Celu: "
 .Faction: "Faction: " = FSSSignal.Faction
 .from: "< from " = JournalMissionAccepted.from
 .dueto: "<, due to " => "<, z powodu "
-.0: "{0} on {1}" => "{0} w {1}"
 .onfaction: "< on faction " => "< we frakcji "
 .Against: "Against " => "Przeciwko "
 .Cost: "Cost: ; cr;N0" => "Koszt: ; cr;N0"
@@ -1118,7 +1105,6 @@ SECTION JournalCarrier
 .ReserveBalance: "Reserve Balance: ; cr;N0" @
 .AvailableBalance: "Available Balance: ; cr;N0" @
 .ReservePercent: "Reserve Percent: ;;N1" @
-.TaxRate: "Tax Rate: ;;N1" @
 .TaxRatePioneersupplies: "Tax Rate Pioneersupplies: ;;N1" @
 .TaxRateShipyard: "Tax Rate Shipyard: ;;N1" @
 .TaxRateRearm: "Tax Rate Rearm: ;;N1" @
