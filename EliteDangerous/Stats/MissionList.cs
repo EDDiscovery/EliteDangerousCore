@@ -20,7 +20,7 @@ using System.Linq;
 
 namespace EliteDangerousCore
 {
-    [System.Diagnostics.DebuggerDisplay("Mission {Mission.Name} {State} {DestinationSystemStation()}")]
+    [System.Diagnostics.DebuggerDisplay("Mission {Mission.EventTimeUTC} {Mission.Name} {State} {DestinationSystemStationSettlement()}")]
     public class MissionState
     {
         public enum StateTypes { InProgress, Completed, Abandoned, Failed, Died };    
@@ -161,6 +161,13 @@ namespace EliteDangerousCore
         public List<MissionState> GetAllMissions()  // all missions stored, always return array
         {
             return history.GetLastValues();
+        }
+
+        // all missions between startutc/endutc either started, or completed
+        public List<MissionState> GetMissionsBetween(DateTime startutc, DateTime endutc)
+        {
+            var all = history.GetLastValues();
+            return all.Where(x => (x.Mission.EventTimeUTC >= startutc && x.Mission.EventTimeUTC <= endutc) || (x.Completed != null && x.Completed.EventTimeUTC >= startutc && x.Completed.EventTimeUTC <= endutc)).ToList();
         }
 
         public List<MissionState> GetMissionList(uint generation)   // missions at a generation. Always return array

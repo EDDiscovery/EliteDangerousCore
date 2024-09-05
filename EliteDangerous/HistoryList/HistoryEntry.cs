@@ -104,7 +104,6 @@ namespace EliteDangerousCore
         public Ship ShipInformation { get; private set; }     // may be null if not set up yet
         public ShipModulesInStore StoredModules { get; private set; }
         public uint MissionList { get; private set; }       // generation index
-        public uint Statistics { get; private set; }        // generation index
         public uint Weapons { get; private set; }           // generation index
         public uint Suits { get; private set; }             // generation index
         public uint Loadouts { get; private set; }          // generation index
@@ -177,7 +176,7 @@ namespace EliteDangerousCore
 
         public void UpdateStats(JournalEntry je, Stats stats, string station)
         {
-            Statistics = stats.Process(je, station);
+            stats.Process(je, station);
         }
 
         public void UpdateShipInformation(Ship si)       // something externally updated SI

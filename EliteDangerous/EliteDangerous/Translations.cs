@@ -11,6 +11,12 @@ namespace EliteDangerousCore
         Cancel, // Cancel
         Unknown, // Unknown
         RemoveAll, // Remove All
+        Hostile,
+        Unfriendly,
+        Neutral,
+        Cordial,
+        Friendly,
+        Allied,
 
         JournalTypeEnum_Docked,
 

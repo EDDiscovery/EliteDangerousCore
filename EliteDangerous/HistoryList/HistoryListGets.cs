@@ -239,6 +239,10 @@ namespace EliteDangerousCore
         {
             return list.Where(s => s.EventTimeUTC >= startutc && s.EventTimeUTC <= endutc).ToList();
         }
+        static public List<HistoryEntry> FilterByDateRange(List<HistoryEntry> list, DateTime startutc, DateTime endutc, Predicate<HistoryEntry> pred) // UTC! in time ascending order
+        {
+            return list.Where(s => pred(s) && s.EventTimeUTC >= startutc && s.EventTimeUTC <= endutc).ToList();
+        }
 
         // combat panel, List should be in entry order.
         static public List<HistoryEntry> FilterByDateRangeLatestFirst(List<HistoryEntry> list, DateTime startutc, DateTime endutc) // UTC! in time ascending order

@@ -411,7 +411,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateStats(Stats stats, string stationfaction)
         {
-            stats.PayFines(Faction, Amount);
+            if ( Faction.HasChars())
+                stats.PayFines(Faction, Amount);
         }
     }
 

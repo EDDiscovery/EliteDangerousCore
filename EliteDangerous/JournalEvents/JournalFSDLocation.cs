@@ -20,7 +20,7 @@ using System.Data.Common;
 
 namespace EliteDangerousCore.JournalEvents
 {
-    public abstract class JournalLocOrJump : JournalEntry
+    public abstract class JournalLocOrJump : JournalEntry, IStatsJournalEntry
     {
         public string StarSystem { get; set; }
         public EMK.LightGeometry.Vector3 StarPos { get; set; }
@@ -42,112 +42,14 @@ namespace EliteDangerousCore.JournalEvents
         public PowerPlayDefinitions.State PowerplayState { get; set; }      // seen in CarrierJump, Location and FSDJump.  Not in docked
         public string[] PowerplayPowers { get; set; }
         public bool Wanted { get; set; }
-        public FactionInformation[] Factions { get; set; }      // may be null for older entries
-        public ConflictInfo[] Conflicts { get; set; }           // may be null for older entries
-        public ThargoidWar ThargoidSystemState { get; set; }    // may be null for older entries or systems without thargoid war
+        public FactionDefinitions.FactionInformation[] Factions { get; set; }      // may be null for older entries
+        public FactionDefinitions.ConflictInfo[] Conflicts { get; set; }           // may be null for older entries
+        public ThargoidDefinitions.ThargoidWar ThargoidSystemState { get; set; }    // may be null for older entries or systems without thargoid war
         public bool HasCoordinate { get { return !float.IsNaN(StarPos.X); } }
         public bool IsTrainingEvent { get; private set; } // True if detected to be in training
 
-        [System.Diagnostics.DebuggerDisplay("{Name} {FactionState} {Government} {Allegiance}")]
-        public class FactionInformation
-        {
-            public string Name { get; set; }
-            public FactionDefinitions.State FactionState { get; set; }    // fdname
-            public GovernmentDefinitions.Government Government { get; set; }
-            public double Influence { get; set; }
-            public AllegianceDefinitions.Allegiance Allegiance { get; set; }  // fdname
-            public string Happiness { get; set; }   // 3.3 May be missing null, an empty string, or $Faction_HappinessBand1 to 5.   Not enuming due to the $ in the name.
-            public string Happiness_Localised { get; set; } //3.3, may be null
-            public double? MyReputation { get; set; } //3.3, may be null
-
-            public PowerStatesInfo[] PendingStates { get; set; }
-            public PowerStatesInfo[] RecoveringStates { get; set; }
-            public ActiveStatesInfo[] ActiveStates { get; set; }    //3.3, may be null
-
-            public bool? SquadronFaction;       //3.3, may be null
-            public bool? HappiestSystem;       //3.3, may be null
-            public bool? HomeSystem;       //3.3, may be null
-        }
-
-        public class PowerStatesInfo
-        {
-            public enum States
-            {
-                Unknown,
-                Blight,
-                Boom, 
-                Bust, 
-                CivilLiberty, 
-                CivilUnrest, 
-                CivilWar, 
-                Drought, 
-                Election,
-                Expansion,
-                Famine, 
-                InfrastructureFailure, 
-                Investment, 
-                Lockdown, 
-                NaturalDisaster, 
-                Outbreak, 
-                PirateAttack, 
-                PublicHoliday,
-                Retreat, 
-                Terrorism, 
-                War, 
-            }
-            public States State { get; set; }
-            public int Trend { get; set; }
-        }
-
-        public class ActiveStatesInfo       // Howard info via discord .. just state
-        {
-            public PowerStatesInfo.States State { get; set; }
-        }
-
-        public class ConflictFactionInfo   // 3.4
-        {
-            public string Name { get; set; }
-            public string Stake { get; set; }   
-            public int WonDays { get; set; }
-        }
-
-        public class ConflictInfo   // 3.4
-        {
-            public enum WarTypeState
-            {
-                Unknown,
-                War,        // lower case in frontier, but the json decoder allows case insenitivity for enums
-                CivilWar,
-                Election,
-            }
-            public WarTypeState WarType { get; set; }
-
-            public enum StatusState
-            {
-                NoStatus,        // found in numerous logs as "" - map to NoStatus
-                Active,
-                Pending,
-            }
-            public StatusState Status { get; set; }
-            public ConflictFactionInfo Faction1 { get; set; }
-            public ConflictFactionInfo Faction2 { get; set; }
-        }
-
-        public class ThargoidWar
-        {
-            // CurrentState and NextState are the same state values that are listed in factions, "Lockdown", "Bust", etc.. 
-            // new states related to thargoid systems are "Thargoid_Probing", "Thargoid_Harvest", "Thargoid_Controlled", "Thargoid_Stronghold", "Thargoid_Recovery"
-
-            // Not going to Enum this due to states sometimes having "" as their values - not enough journal records to go on
-            public string CurrentState { get; set; }
-            public string NextStateSuccess {get;set; }       
-            public string NextStateFailure {get;set;}
-            public bool SuccessStateReached {get;set;}
-            public double WarProgress {get;set;}        // 0 to 1
-            public int RemainingPorts {get;set;}        
-            public string EstimatedRemainingTime {get;set;}    // "0 days" !
-        }
-
+   
+ 
         protected JournalLocOrJump(DateTime utc, ISystem sys, JournalTypeEnum jtype, bool edsmsynced ) : base(utc, jtype, edsmsynced)
         {
             StarSystem = sys.Name;
@@ -191,38 +93,15 @@ namespace EliteDangerousCore.JournalEvents
                 FactionState = FactionDefinitions.ToEnum(evt["FactionState"].Str("Unknown")).Value;           // PRE 2.3 .. not present in newer files, fixed up in next bit of code (but see 3.3.2 as its been incorrectly reintroduced)
             }
 
-            Factions = evt["Factions"]?.ToObjectQ<FactionInformation[]>()?.OrderByDescending(x => x.Influence)?.ToArray();  // POST 2.3
+            if (evt.Contains("Factions"))      // if contains factions
+                Factions = FactionDefinitions.FactionInformation.ReadJSON(evt["Factions"].Array(), EventTimeUTC, new SystemClass(StarSystem, SystemAddress));
 
-            if (Factions != null)
+            if (Factions != null)   // if read okay, make sure FactionState is set appropriately
             {
                 int i = Array.FindIndex(Factions, x => x.Name == Faction);
                 if (i != -1)
                     FactionState = Factions[i].FactionState;        // set to State of controlling faction
-
-                foreach (var x in Factions)     // normalise localised
-                {
-                    if (x.FactionState == FactionDefinitions.State.Unknown)  System.Diagnostics.Trace.WriteLine($"** Unknown faction state {evt["Factions"].ToString()}");
-
-                    x.Happiness_Localised = JournalFieldNaming.CheckLocalisation(x.Happiness_Localised, x.Happiness);
-
-                    foreach (ActiveStatesInfo s in x.ActiveStates.EmptyIfNull())
-                    {
-                        if (s.State == PowerStatesInfo.States.Unknown)
-                            System.Diagnostics.Trace.WriteLine($"*** Unknown active state {evt["Factions"].ToString()}");
-                    }
-                    foreach (PowerStatesInfo s in x.PendingStates.EmptyIfNull())
-                    {
-                        if (s.State == PowerStatesInfo.States.Unknown)
-                            System.Diagnostics.Trace.WriteLine($"*** Unknown pending state {evt["Factions"].ToString()}");
-                    }
-                    foreach (PowerStatesInfo s in x.RecoveringStates.EmptyIfNull())
-                    {
-                        if (s.State == PowerStatesInfo.States.Unknown)
-                            System.Diagnostics.Trace.WriteLine($"*** Unknown recovering state {evt["Factions"].ToString()}");
-                    }
-                }
             }
-
 
             // don't moan if empty or not there as it could be due to training
             string al = evt.MultiStr(new string[] { "SystemAllegiance", "Allegiance" });
@@ -248,27 +127,11 @@ namespace EliteDangerousCore.JournalEvents
 
             Wanted = evt["Wanted"].Bool();      // if absence, your not wanted, by definition of frontier in journal (only present if wanted, see docked)
 
-            // 3.4, preprocess out Status:"" to Unknown
-            var cf = evt["Conflicts"]?.ToObject(typeof(ConflictInfo[]), false, false, preprocess:(t,x)=> { 
-                return x.Length > 0 ? x : t.Name== "StatusState" ? nameof(ConflictInfo.StatusState.NoStatus) : nameof(ConflictInfo.WarTypeState.Unknown); }
-            );       
-            if (cf is JTokenExtensions.ToObjectError)
-                System.Diagnostics.Trace.WriteLine($"*** Bad conflict status {evt["Conflicts"]?.ToString()}");
-            else if (cf != null)
-            {
-                Conflicts = (ConflictInfo[])cf;
-            }
-            else if (evt.Contains("Conflicts"))
-                System.Diagnostics.Trace.WriteLine($"*** Bad decode conflict status {evt["Conflicts"]?.ToString()}");
+            if (evt.Contains("Conflicts"))      // if contains conflicts
+                Conflicts = FactionDefinitions.ConflictInfo.ReadJSON(evt["Conflicts"].Array(), EventTimeUTC);
 
-
-            var th = evt["ThargoidWar"]?.ToObject(typeof(ThargoidWar), false, false);  // Odyssey update 15
-            if (th is JTokenExtensions.ToObjectError)
-                System.Diagnostics.Trace.WriteLine($"*** Bad thargoid status {evt["ThargoidWar"]?.ToString()}");
-            else if (th != null)
-                ThargoidSystemState = (ThargoidWar)th;
-            else if ( evt.Contains("ThargoidWar"))
-               System.Diagnostics.Trace.WriteLine($"*** Bad thargoid status {evt["ThargoidWar"]?.ToString()}");
+            if (evt.Contains("ThargoidWar"))      // if contains factions
+                ThargoidSystemState = ThargoidDefinitions.ThargoidWar.ReadJSON(evt, EventTimeUTC);
 
         }
 
@@ -276,44 +139,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (Factions != null)
             {
-                foreach (FactionInformation i in Factions)
+                foreach (FactionDefinitions.FactionInformation i in Factions)
                 {
-                    sb.Append(BaseUtils.FieldBuilder.Build("", i.Name, "State: ".T(EDCTx.JournalLocOrJump_State), FactionDefinitions.ToLocalisedLanguage(i.FactionState),
-                                                                    "Government: ".T(EDCTx.JournalLocOrJump_Government), GovernmentDefinitions.ToLocalisedLanguage(i.Government),
-                                                                    "Inf: ;%".T(EDCTx.JournalLocOrJump_Inf), (i.Influence * 100.0).ToString("0.0"),
-                                                                    "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(i.Allegiance),
-                                                                    "Happiness: ".T(EDCTx.JournalLocOrJump_Happiness), i.Happiness_Localised,
-                                                                    "Reputation: ;%;N1".T(EDCTx.JournalLocOrJump_Reputation), i.MyReputation,
-                                                                    ";Squadron System".T(EDCTx.JournalLocOrJump_SquadronSystem), i.SquadronFaction,
-                                                                    ";Happiest System".T(EDCTx.JournalLocOrJump_HappiestSystem), i.HappiestSystem,
-                                                                    ";Home System".T(EDCTx.JournalLocOrJump_HomeSystem), i.HomeSystem
-                                                                    ));
-
-                    if (i.PendingStates != null)
-                    {
-                        sb.Append(BaseUtils.FieldBuilder.Build(",", "Pending State: ".T(EDCTx.JournalLocOrJump_PendingState)));
-
-                        foreach (JournalLocation.PowerStatesInfo state in i.PendingStates)
-                            sb.Append(BaseUtils.FieldBuilder.Build(" ", state.State, "<(;)", state.Trend));
-
-                    }
-
-                    if (i.RecoveringStates != null)
-                    {
-                        sb.Append(BaseUtils.FieldBuilder.Build(",", "Recovering State: ".T(EDCTx.JournalLocOrJump_RecoveringState)));
-
-                        foreach (JournalLocation.PowerStatesInfo state in i.RecoveringStates)
-                            sb.Append(BaseUtils.FieldBuilder.Build(" ", state.State, "<(;)", state.Trend));
-                    }
-
-                    if (i.ActiveStates != null)
-                    {
-                        sb.Append(BaseUtils.FieldBuilder.Build(",", "Active State: ".T(EDCTx.JournalLocOrJump_ActiveState)));
-
-                        foreach (JournalLocation.ActiveStatesInfo state in i.ActiveStates)
-                            sb.Append(BaseUtils.FieldBuilder.Build(" ", state.State));
-                    }
-                    sb.Append(Environment.NewLine);
+                    i.ToString(sb);
                 }
             }
 
@@ -321,27 +149,23 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach( var cf in Conflicts)
                 {
-                    sb.AppendLine($"Conflict: {cf.WarType.ToString().SplitCapsWordFull()}, {cf.Status.ToString().SplitCapsWordFull()} : {cf.Faction1.Name} vs {cf.Faction2.Name}");
-                    sb.AppendLine($"  Won days: {cf.Faction1.WonDays} vs {cf.Faction2.WonDays}");
-                    string s = BaseUtils.FieldBuilder.Build($"  Stake: ", cf.Faction1.Stake, "< vs ", cf.Faction2.Stake);
-                    if (s != null)
-                        sb.AppendLine(s);
+                    cf.ToString(sb);
                 }
             }
 
             if ( ThargoidSystemState != null )
             {
-                sb.AppendLine(BaseUtils.FieldBuilder.Build("Thargoid: ", ThargoidSystemState.CurrentState.SplitCapsWordFull(),
-                                                           "< +++ ", ThargoidSystemState.NextStateSuccess.SplitCapsWordFull(),
-                                                           "< --- ", ThargoidSystemState.NextStateFailure.SplitCapsWordFull(),
-                                                           ";Reached", ThargoidSystemState.SuccessStateReached,
-                                                           "Progress ", ThargoidSystemState.WarProgress,
-                                                           "Remaining Ports ", ThargoidSystemState.RemainingPorts,
-                                                           "Time remaining ", ThargoidSystemState.EstimatedRemainingTime));
+                ThargoidSystemState.ToString(sb);
             }
         }
 
-
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            if (Factions != null)
+            {
+                stats.UpdateFactions(this);
+            }
+        }
     }
 
 

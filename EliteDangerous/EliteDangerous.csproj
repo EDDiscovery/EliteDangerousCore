@@ -85,6 +85,7 @@
     <Compile Include="EDSM\EDSMJournalSync.cs" />
     <Compile Include="EDSM\EDSMClass.cs" />
     <Compile Include="EDSM\EDSMLogFetcher.cs" />
+    <Compile Include="EliteDangerous\Thargoids.cs" />
     <Compile Include="Engineering\EngineeringData.cs" />
     <Compile Include="Engineering\EngineeringUnitTest.cs" />
     <Compile Include="EliteDangerous\ShipSlots.cs" />

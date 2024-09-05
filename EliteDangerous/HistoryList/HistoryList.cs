@@ -42,7 +42,7 @@ namespace EliteDangerousCore
         public Dictionary<string, HistoryEntry> Visited { get; private set; } = new Dictionary<string, HistoryEntry>(StringComparer.InvariantCultureIgnoreCase);  
 
         public Dictionary<string, EDStar> StarClass { get; private set; } = new Dictionary<string, EDStar>();     // not in any particular order.
-        public Dictionary<string, Stats.FactionStatistics> GetStatsAtGeneration(uint g) { return statisticsaccumulator.GetAtGeneration(g); }
+        public Stats Stats { get; private set; } = new Stats();               // stats on all entries, not generationally recorded
 
         // History variables
         public int CommanderId { get; private set; } = -999;                 // set by history load at end, indicating commander loaded
@@ -50,7 +50,6 @@ namespace EliteDangerousCore
 
         // privates
         private List<HistoryEntry> historylist = new List<HistoryEntry>();  // oldest first here
-        private Stats statisticsaccumulator = new Stats();
 
         private HistoryEntry hlastprocessed = null;
 
@@ -75,7 +74,7 @@ namespace EliteDangerousCore
             he.UpdateWeapons(WeaponList.Process(je, he.WhereAmI, he.System));
             he.UpdateLoadouts(SuitLoadoutList.Process(je, WeaponList, he.WhereAmI, he.System));
 
-            he.UpdateStats(je, statisticsaccumulator, he.Status.StationFaction);
+            he.UpdateStats(je, Stats, he.Status.StationFaction);
 
             CashLedger.Process(je);
             he.Credits = CashLedger.CashTotal;

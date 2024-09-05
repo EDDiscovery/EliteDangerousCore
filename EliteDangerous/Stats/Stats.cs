@@ -13,42 +13,19 @@
  */
  
 using BaseUtils;
+using System;
 using System.Collections.Generic;
 
 namespace EliteDangerousCore
 {
+    // generic class to hold Stats accumulated during journal reading
+    // used for FactionStats, but can be used for other stats
     public class Stats
     {
         public class FactionStatistics
         {
             public FactionStatistics(string f) { Faction = f; }
-            public FactionStatistics(FactionStatistics other)
-            {
-                Faction = other.Faction;
-                BoughtCommodity = other.BoughtCommodity; SoldCommodity = other.SoldCommodity; ProfitCommodity = other.ProfitCommodity;
-                BoughtMaterial = other.BoughtMaterial; SoldMaterial = other.SoldMaterial;
-                BountyKill = other.BountyKill;
-                BountyRewards = other.BountyRewards;
-                BountyRewardsValue = other.BountyRewardsValue;
-                RedeemVoucherValue = other.RedeemVoucherValue;
-                FineValue = other.FineValue;
-                PayBountyValue = other.PayBountyValue;
-                CapShipAwardAsAwaringFaction = other.CapShipAwardAsAwaringFaction;
-                CapShipAwardAsAwaringFactionValue = other.CapShipAwardAsAwaringFactionValue;
-                CapShipAwardAsVictimFaction = other.CapShipAwardAsVictimFaction;
-                CrimesAgainst = other.CrimesAgainst;
-                Interdicted = other.Interdicted;
-                Interdiction = other.Interdiction;
-                KillBondAwardAsAwaringFaction = other.KillBondAwardAsAwaringFaction;
-                KillBondAwardAsAwaringFactionValue = other.KillBondAwardAsAwaringFactionValue;
-                KillBondAwardAsVictimFaction = other.KillBondAwardAsVictimFaction;
-                CartographicDataSold = other.CartographicDataSold;
-                DataLinkAwardAsPayeeFaction = other.DataLinkAwardAsPayeeFaction;
-                DataLinkAwardAsPayeeFactionValue = other.DataLinkAwardAsPayeeFactionValue;
-                DataLinkAwardAsVictimFaction = other.DataLinkAwardAsVictimFaction;
-            }
-
-            public string Faction { get; set; }
+            public string Faction { get; set; }     // faction name
             public int BoughtCommodity { get; set; }
             public int SoldCommodity { get; set; }
             public long ProfitCommodity { get; set; }
@@ -73,51 +50,37 @@ namespace EliteDangerousCore
             public long DataLinkAwardAsPayeeFaction { get; set; }
             public long DataLinkAwardAsPayeeFactionValue { get; set; }
             public long DataLinkAwardAsVictimFaction { get; set; }
+            public double? LastReputation { get; set; }
+            public Dictionary<string, FactionDefinitions.FactionInformation> FactionInfoPerSystem { get; set; } = new Dictionary<string, FactionDefinitions.FactionInformation>();  // per system, faction info from fsdjump/loc
+            public class FactionDocked
+            {
+                public DateTime UTC { get; set; }
+                public string System { get; set; }
+                public FactionDefinitions.State State { get; set; }
+            }
+
+            public Dictionary<string, FactionDocked> FactionInfoPerStation { get; set; } = new Dictionary<string, FactionDocked>();  // per station, faction info from docked
         }
 
-        private GenerationalDictionary<string, FactionStatistics> history;
+        private Dictionary<string, FactionStatistics> factions = new Dictionary<string, FactionStatistics>();
 
         public Stats()
         {
-            history = new GenerationalDictionary<string, FactionStatistics>();
         }
 
-        public Stats(Stats other)
+        // faction data, never null, may be empty!
+        public Dictionary<string,FactionStatistics> GetFactionData() => factions;
+        // may return null
+        public FactionStatistics GetFaction(string faction)
         {
-            history = other.history;
-        }
-
-        public Dictionary<string, FactionStatistics> GetAtGeneration(uint g)
-        {
-            return history.Get(g);
-        }
-
-        public Dictionary<string, FactionStatistics> GetLastEntries()
-        {
-            return history.GetLast();
-        }
-
-        private FactionStatistics Clone(string faction, bool incrgen = true)               // clone both FactionInformation structure and a faction
-        {
-            if (faction.HasChars() && faction != "$faction_none;")
-            {
-                FactionStatistics newfi = history.GetLast(faction);        // get the last one, or null
-                newfi = newfi != null ? new FactionStatistics(newfi) : new FactionStatistics(faction);  // make a new copy, or an empty copy
-                if ( incrgen )
-                    history.NextGeneration();
-                history[faction] = newfi;                    // add this new one to the history list
-                return newfi;
-            }
-            else
-                return null;
+            return factions.ContainsKey(faction) ?  factions[faction] : null;
         }
 
         public void UpdateCommodity(string name, int amount, long profit, string faction)
         {
-            var newfi = Clone(faction);
+            var newfi = GetOrMake(faction);
             if (newfi != null)
             {
-//                if (faction == "89 Leonis Republic Party") { } // debug
                 if (amount < 0)
                     newfi.SoldCommodity += -amount;
                 else
@@ -129,7 +92,7 @@ namespace EliteDangerousCore
 
         public void UpdateMaterial(string name, int amount, string faction)
         {
-            var newfi = Clone(faction);
+            var newfi = GetOrMake(faction);
             if (newfi != null)
             {
                 if (amount < 0)
@@ -151,7 +114,7 @@ namespace EliteDangerousCore
 
         public void BountyKill(string victimfaction)
         {
-            var newfi = Clone(victimfaction);
+            var newfi = GetOrMake(victimfaction);
             if (newfi != null)
             {
                 newfi.BountyKill++;
@@ -160,7 +123,7 @@ namespace EliteDangerousCore
 
         public void BountyRewards(string victimfaction, long reward)
         {
-            var newfi = Clone(victimfaction);
+            var newfi = GetOrMake(victimfaction);
             if (newfi != null)
             {
                 newfi.BountyRewards++;
@@ -170,10 +133,10 @@ namespace EliteDangerousCore
 
         public void CapShipAward(string awardingfaction, string victimfaction, long reward)
         {
-            var vnewfi = Clone(victimfaction);
+            var vnewfi = GetOrMake(victimfaction);
             if (vnewfi != null)
             {
-                var anewfi = Clone(awardingfaction,false);      // not a new generation, part of this generation
+                var anewfi = GetOrMake(awardingfaction);      // not a new generation, part of this generation
                 if (anewfi != null)
                 {
                     anewfi.CapShipAwardAsAwaringFaction++;
@@ -185,7 +148,7 @@ namespace EliteDangerousCore
 
         public void CommitCrime(string againstfaction)
         {
-            var newfi = Clone(againstfaction);
+            var newfi = GetOrMake(againstfaction);
             if (newfi != null)
             {
                 newfi.CrimesAgainst++;
@@ -194,7 +157,7 @@ namespace EliteDangerousCore
 
         public void Interdicted(string byfaction)
         {
-            var newfi = Clone(byfaction);
+            var newfi = GetOrMake(byfaction);
             if (newfi != null)
             {
                 newfi.Interdicted++;
@@ -202,7 +165,7 @@ namespace EliteDangerousCore
         }
         public void Interdiction(string onfaction)
         {
-            var newfi = Clone(onfaction);
+            var newfi = GetOrMake(onfaction);
             if (newfi != null)
             {
                 newfi.Interdiction++;
@@ -211,10 +174,10 @@ namespace EliteDangerousCore
 
         public void KillBond(string awardingfaction, string victimfaction, long reward)
         {
-            var vnewfi = Clone(victimfaction);
+            var vnewfi = GetOrMake(victimfaction);
             if (vnewfi != null)
             {
-                var anewfi = Clone(awardingfaction,false);
+                var anewfi = GetOrMake(awardingfaction);
                 if (anewfi != null)
                 {
                     anewfi.KillBondAwardAsAwaringFaction++;
@@ -226,13 +189,13 @@ namespace EliteDangerousCore
 
         public void DataLinkVoucher(string victimfaction, string payeefaction, long reward)
         {
-            var vnewfi = Clone(victimfaction);      // if victimfaction = empty string, its a null, and we don't store. Some events have empty victim factions
+            var vnewfi = GetOrMake(victimfaction);      // if victimfaction = empty string, its a null, and we don't store. Some events have empty victim factions
             if (vnewfi != null)
                 vnewfi.DataLinkAwardAsVictimFaction++;
             else
             { }
 
-            var anewfi = Clone(payeefaction, vnewfi == null);       // don't incr generation if we made a victim faction
+            var anewfi = GetOrMake(payeefaction);       // don't incr generation if we made a victim faction
 
             if (anewfi != null)
             {
@@ -243,7 +206,7 @@ namespace EliteDangerousCore
 
         public void CartographicSold(string faction, long value)
         {
-            var vnewfi = Clone(faction);
+            var vnewfi = GetOrMake(faction);
             if (vnewfi != null)
             {
                 vnewfi.CartographicDataSold += value;
@@ -251,7 +214,7 @@ namespace EliteDangerousCore
         }
         public void PayBounties(string faction, long value)
         {
-            var vnewfi = Clone(faction);
+            var vnewfi = GetOrMake(faction);
             if (vnewfi != null)
             {
                 vnewfi.PayBountyValue += value;
@@ -261,7 +224,7 @@ namespace EliteDangerousCore
 
         public void PayFines(string faction, long value)
         {
-            var vnewfi = Clone(faction);
+            var vnewfi = GetOrMake(faction);
             if (vnewfi != null)
             {
                 vnewfi.FineValue += value;
@@ -270,22 +233,62 @@ namespace EliteDangerousCore
 
         public void RedeemVoucher(string faction, long value)
         {
-            var vnewfi = Clone(faction);
+            var vnewfi = GetOrMake(faction);
             if (vnewfi != null)
             {
                 vnewfi.RedeemVoucherValue += value;
             }
         }
+        
+        public void UpdateFactions(JournalEvents.JournalLocOrJump locorjump)
+        {
+            foreach( var f in locorjump.Factions)
+            {
+                var vnewfi = GetOrMake(f.Name);
+                if ( vnewfi != null)
+                {
+                    //System.Diagnostics.Debug.WriteLine($"Update faction info {f.Name} at {locorjump.StarSystem} : {f.FactionState} {f.Government} {f.Influence} {f.Allegiance} {f.MyReputation}");
+                    vnewfi.FactionInfoPerSystem[locorjump.StarSystem.ToLowerInvariant()] = f;
+                    if (f.MyReputation.HasValue)        // only update if set..
+                        vnewfi.LastReputation = f.MyReputation;
+                }
+            }
+        }
 
-        public uint Process(JournalEntry je, string stationfaction)
+        public void Docking(JournalEvents.JournalDocked docked)
+        {
+            var vnewfi = GetOrMake(docked.Faction);
+            if ( vnewfi != null )
+            {
+                //System.Diagnostics.Debug.WriteLine($"Stats Docked at {docked.EventTimeUTC} {docked.Faction} {docked.FactionState}");
+                vnewfi.FactionInfoPerStation[docked.StationName.ToLowerInvariant()] = new FactionStatistics.FactionDocked { System = docked.StarSystem, UTC = docked.EventTimeUTC, State = docked.FactionState };
+            }
+        }
+
+        public void Process(JournalEntry je, string stationfaction)
         {
             if (je is IStatsJournalEntry)
             {
                 ((IStatsJournalEntry)je).UpdateStats(this, stationfaction);
             }
-
-            return history.Generation;
         }
+
+
+        // get existing, or make new. null if its unhappy with name
+        private FactionStatistics GetOrMake(string faction)
+        {
+            if (faction.HasChars() && faction != "$faction_none;")
+            {
+                if (!factions.TryGetValue(faction, out FactionStatistics fs))
+                    fs = factions[faction] = new FactionStatistics(faction);
+                return fs;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
 
     }
 }

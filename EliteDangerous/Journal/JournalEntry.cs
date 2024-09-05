@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -27,7 +26,7 @@ using System.Threading;
 
 namespace EliteDangerousCore
 {
-    [DebuggerDisplay("Event {EventTypeStr} {EventTimeUTC} JID {Id} C {CommanderId}")]
+    [System.Diagnostics.DebuggerDisplay("Event {EventTypeStr} {EventTimeUTC} JID {Id} C {CommanderId}")]
     public abstract partial class JournalEntry
     {
         #region Public Instance properties and fields

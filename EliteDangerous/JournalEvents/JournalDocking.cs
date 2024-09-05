@@ -18,7 +18,7 @@ using System;
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.Docked)]
-    public class JournalDocked : JournalEntry
+    public class JournalDocked : JournalEntry, IStatsJournalEntry
     {
         public JournalDocked(System.DateTime utc) : base(utc, JournalTypeEnum.Docked,false)
         {
@@ -184,6 +184,11 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
+        public void UpdateStats(Stats stats, string stationfaction)
+        {
+            if (Faction.HasChars())
+                stats.Docking(this);
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.DockingCancelled)]
