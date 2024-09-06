@@ -99,12 +99,12 @@ namespace EliteDangerousCore.JournalEvents
                 mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Commodity, -Quantity, 0);
         }
 
-        public void UpdateStats(Stats stats, string unusedstationfaction)
+        public void UpdateStats(Stats stats, ISystem system, string unusedstationfaction)
         {
             if (Type.Equals("Materials"))
-                stats.UpdateEngineerMaterial(Engineer, Material, Quantity);
+                stats.UpdateEngineerMaterial(system, Engineer, Material, Quantity);
             if (Type.Equals("Commodity"))
-                stats.UpdateEngineerCommodity(Engineer, Commodity, Quantity);
+                stats.UpdateEngineerCommodity(system, Engineer, Commodity, Quantity);
         }
 
         public void Ledger(Ledger mcl)

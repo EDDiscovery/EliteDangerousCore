@@ -141,7 +141,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (FactionDefinitions.FactionInformation i in Factions)
                 {
-                    i.ToString(sb);
+                    i.ToString(sb,false,true,true,true,true,true);
                 }
             }
 
@@ -159,11 +159,11 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void UpdateStats(Stats stats, string stationfaction)
+        public void UpdateStats(Stats stats, ISystem system, string stationfaction)
         {
             if (Factions != null)
             {
-                stats.UpdateFactions(this);
+                stats.UpdateFactions(system, this);
             }
         }
     }

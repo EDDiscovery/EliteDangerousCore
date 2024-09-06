@@ -92,14 +92,13 @@ namespace EliteDangerousCore
         }
 
         // from journal location or fsd jump or carrier jump, faction info array
-
         [System.Diagnostics.DebuggerDisplay("{Name} {FactionState} {Government} {Allegiance}")]
         public class FactionInformation
         {
             public string Name { get; set; }                                    // All properties except noted from Json of event
-            public FactionDefinitions.State FactionState { get; set; }
+            public State FactionState { get; set; }
             public GovernmentDefinitions.Government Government { get; set; }
-            public double Influence { get; set; }                               // influence of faction in system
+            public double Influence { get; set; }                               // influence of faction in system, fractional
             public AllegianceDefinitions.Allegiance Allegiance { get; set; }
             public enum HappinessState { Unknown, Band1, Band2, Band3, Band4, Band5 };
             public HappinessState Happiness { get; set; }   // 3.3 May be missing thus Unknown
@@ -176,33 +175,33 @@ namespace EliteDangerousCore
             public bool? HomeSystem { get; set; }                   //3.3, may be null
 
             public DateTime UTC { get; set; }                       // EDD addition, UTC of record
-            public ISystem System {get;set;}
-
-            // short form report
-            public override string ToString()
-            {
-                return EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(UTC).ToString("yyyy/MM/dd HH:mm") + Environment.NewLine +
-                        ToLocalisedLanguage(FactionState) + Environment.NewLine +
-                        AllegianceDefinitions.ToLocalisedLanguage(Allegiance) + Environment.NewLine +
-                        GovernmentDefinitions.ToLocalisedLanguage(Government) + Environment.NewLine +
-                        "Rep:" + (MyReputation?.ToString("N2") ?? "-");
-            }
 
             // long form report into string builder
-            public void ToString(System.Text.StringBuilder sb)
+            public void ToString(System.Text.StringBuilder sb, bool datetime, bool frontpart, bool otherinfo, bool pendingstates, bool recoveringstates, bool activestates)
             {
-                sb.Append(BaseUtils.FieldBuilder.Build("", Name, "State: ".T(EDCTx.JournalLocOrJump_State), FactionDefinitions.ToLocalisedLanguage(FactionState),
-                                                                   "Government: ".T(EDCTx.JournalLocOrJump_Government), GovernmentDefinitions.ToLocalisedLanguage(Government),
-                                                                   "Inf: ;%".T(EDCTx.JournalLocOrJump_Inf), (Influence * 100.0).ToString("0.0"),
-                                                                   "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(Allegiance),
-                                                                   "Happiness: ".T(EDCTx.JournalLocOrJump_Happiness), Happiness_Localised,
+                if (datetime)
+                    sb.Append(EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(UTC).ToString("yyyy/MM/dd") + Environment.NewLine);
+
+                if (frontpart)
+                {
+                    sb.Append(BaseUtils.FieldBuilder.Build("", Name, "State: ".T(EDCTx.JournalLocOrJump_State), FactionDefinitions.ToLocalisedLanguage(FactionState),
                                                                    "Reputation: ;%;N1".T(EDCTx.JournalLocOrJump_Reputation), MyReputation,
+                                                                   "Government: ".T(EDCTx.JournalLocOrJump_Government), GovernmentDefinitions.ToLocalisedLanguage(Government),
+                                                                   "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(Allegiance),
+                                                                   "Inf: ;%".T(EDCTx.JournalLocOrJump_Inf), (Influence * 100.0).ToString("0.0")
+                                                                   ));
+                }
+
+                if (otherinfo)
+                {
+                    sb.Append(BaseUtils.FieldBuilder.Build("Happiness: ".T(EDCTx.JournalLocOrJump_Happiness), Happiness_Localised,
                                                                    ";Squadron System".T(EDCTx.JournalLocOrJump_SquadronSystem), SquadronFaction,
                                                                    ";Happiest System".T(EDCTx.JournalLocOrJump_HappiestSystem), HappiestSystem,
                                                                    ";Home System".T(EDCTx.JournalLocOrJump_HomeSystem), HomeSystem
                                                                    ));
+                }
 
-                if (PendingStates != null)
+                if (pendingstates && PendingStates != null)
                 {
                     sb.Append(BaseUtils.FieldBuilder.Build(",", "Pending State: ".T(EDCTx.JournalLocOrJump_PendingState)));
 
@@ -211,7 +210,7 @@ namespace EliteDangerousCore
 
                 }
 
-                if (RecoveringStates != null)
+                if (recoveringstates && RecoveringStates != null)
                 {
                     sb.Append(BaseUtils.FieldBuilder.Build(",", "Recovering State: ".T(EDCTx.JournalLocOrJump_RecoveringState)));
 
@@ -219,7 +218,7 @@ namespace EliteDangerousCore
                         sb.Append(BaseUtils.FieldBuilder.Build(" ", state.State, "<(;)", state.Trend));
                 }
 
-                if (ActiveStates != null)
+                if (activestates && ActiveStates != null)
                 {
                     sb.Append(BaseUtils.FieldBuilder.Build(",", "Active State: ".T(EDCTx.JournalLocOrJump_ActiveState)));
 
@@ -227,7 +226,6 @@ namespace EliteDangerousCore
                         sb.Append(BaseUtils.FieldBuilder.Build(" ", state.State));
                 }
                 sb.Append(Environment.NewLine);
-
             }
 
             // handle reading from JSON this field
@@ -251,7 +249,6 @@ namespace EliteDangerousCore
                     {
                         x.Happiness_Localised = JournalFieldNaming.CheckLocalisation(x.Happiness_Localised, x.Happiness.ToString());
                         x.UTC = utc;
-                        x.System = sys;
                     }
                 }
                 else

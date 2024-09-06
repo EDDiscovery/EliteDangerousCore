@@ -502,10 +502,10 @@ namespace EliteDangerousCore.JournalEvents
             mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, "tritium", -Amount, 0);
         }
 
-        public void UpdateStats(Stats stats, string stationfaction)
+        public void UpdateStats(Stats stats, ISystem system, string stationfaction)
         {
             if (stationfaction.HasChars())
-                stats.UpdateCommodity("tritium", -Amount, 0, stationfaction);
+                stats.UpdateCommodity(system, "tritium", -Amount, 0, stationfaction);
         }
 
         public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)

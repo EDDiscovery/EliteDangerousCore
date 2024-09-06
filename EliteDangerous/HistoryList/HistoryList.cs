@@ -74,7 +74,7 @@ namespace EliteDangerousCore
             he.UpdateWeapons(WeaponList.Process(je, he.WhereAmI, he.System));
             he.UpdateLoadouts(SuitLoadoutList.Process(je, WeaponList, he.WhereAmI, he.System));
 
-            he.UpdateStats(je, Stats, he.Status.StationFaction);
+            he.UpdateStats(je, Stats);
 
             CashLedger.Process(je);
             he.Credits = CashLedger.CashTotal;

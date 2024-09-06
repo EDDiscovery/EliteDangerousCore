@@ -70,10 +70,10 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void UpdateStats(Stats stats, string stationfaction)
+        public void UpdateStats(Stats stats, ISystem system, string stationfaction)
         {
             if (stationfaction.HasChars())
-                stats.CartographicSold(stationfaction, TotalEarnings);
+                stats.CartographicSold(system, stationfaction, TotalEarnings);
         }
 
         public override void FillInformation(out string info, out string detailed)
@@ -135,10 +135,10 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void UpdateStats(Stats stats, string stationfaction)
+        public void UpdateStats(Stats stats, ISystem system, string stationfaction)
         {
             if (stationfaction.HasChars())
-                stats.CartographicSold(stationfaction, TotalEarnings);
+                stats.CartographicSold(system,stationfaction, TotalEarnings);
         }
 
         public override void FillInformation(out string info, out string detailed)
@@ -155,7 +155,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.SellOrganicData)]
-    public class JournalSellOrganicData : JournalEntry, ILedgerJournalEntry
+    public class JournalSellOrganicData : JournalEntry, ILedgerJournalEntry, IStatsJournalEntry
     {
         public JournalSellOrganicData(JObject evt) : base(evt, JournalTypeEnum.SellOrganicData)
         {
@@ -209,6 +209,14 @@ namespace EliteDangerousCore.JournalEvents
                 mcl.AddEvent(Id, EventTimeUTC, EventTypeID, (Bios?.Length ?? 0).ToString("N0"), TotalValue);
             }
         }
+
+        public void UpdateStats(Stats stats, ISystem system, string stationfaction)
+        {
+            if (stationfaction.HasChars())
+                stats.OrganicDataSold(system, stationfaction, TotalValue);
+        }
+
+
 
     }
 

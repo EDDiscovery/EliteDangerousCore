@@ -57,9 +57,9 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void UpdateStats(Stats stats, string stationfaction)
+        public void UpdateStats(Stats stats, ISystem system, string stationfaction)
         {
-            stats.DataLinkVoucher(VictimFaction, PayeeFaction, Reward);
+            stats.DataLinkVoucher(system,VictimFaction, PayeeFaction, Reward);
         }
     }
 

@@ -283,12 +283,12 @@ namespace EliteDangerousCore.JournalEvents
         }
 
 
-        public void UpdateStats(Stats stats, string stationfaction)
+        public void UpdateStats(Stats stats, ISystem system, string stationfaction)
         {
             if (stationfaction.HasChars())
             {
-                stats.UpdateMaterial(Paid.Material, -Paid.Quantity, stationfaction);
-                stats.UpdateMaterial(Received.Material, Received.Quantity, stationfaction);
+                stats.UpdateMaterial(system, Paid.Material, -Paid.Quantity, stationfaction);
+                stats.UpdateMaterial(system, Received.Material, Received.Quantity, stationfaction);
             }
         }
 

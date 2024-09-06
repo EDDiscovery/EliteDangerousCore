@@ -174,9 +174,9 @@ namespace EliteDangerousCore
             MaterialCommodity = gen;
         }
 
-        public void UpdateStats(JournalEntry je, Stats stats, string station)
+        public void UpdateStats(JournalEntry je, Stats stats)
         {
-            stats.Process(je, station);
+            stats.Process(je, System, Status.StationFaction);
         }
 
         public void UpdateShipInformation(Ship si)       // something externally updated SI

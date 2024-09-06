@@ -121,10 +121,10 @@ namespace EliteDangerousCore.JournalEvents
             mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Type, Count, BuyPrice);
         }
 
-        public void UpdateStats(Stats stats, string stationfaction)
+        public void UpdateStats(Stats stats, ISystem system, string stationfaction)
         {
             if (stationfaction.HasChars())
-                stats.UpdateCommodity(Type, Count, 0, stationfaction);
+                stats.UpdateCommodity(system,Type, Count, 0, stationfaction);
         }
 
         public void Ledger(Ledger mcl)
@@ -182,10 +182,10 @@ namespace EliteDangerousCore.JournalEvents
             mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Type, -Count, 0);
         }
 
-        public void UpdateStats(Stats stats, string stationfaction)
+        public void UpdateStats(Stats stats, ISystem system, string stationfaction)
         {
             if (stationfaction.HasChars())
-                stats.UpdateCommodity(Type, -Count, Profit, stationfaction);
+                stats.UpdateCommodity(system, Type, -Count, Profit, stationfaction);
         }
 
         public void Ledger(Ledger mcl)

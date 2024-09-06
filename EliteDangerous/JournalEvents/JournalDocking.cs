@@ -184,10 +184,10 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void UpdateStats(Stats stats, string stationfaction)
+        public void UpdateStats(Stats stats, ISystem system, string stationfaction)
         {
             if (Faction.HasChars())
-                stats.Docking(this);
+                stats.Docking(system,this);
         }
     }
 

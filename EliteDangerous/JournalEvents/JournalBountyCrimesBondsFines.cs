@@ -115,16 +115,16 @@ namespace EliteDangerousCore.JournalEvents
         public bool StatsHarmlessShip { get => ShipTargettedForStatsOnly != null && ShipTargettedForStatsOnly.PilotCombatRank <= RankDefinitions.CombatRank.Mostly_Harmless && 
                         ShipTargettedForStatsOnly.PilotCombatRank>= RankDefinitions.CombatRank.Harmless; }
 
-        public void UpdateStats(Stats stats, string unusedstationfaction)
+        public void UpdateStats(Stats stats, ISystem system, string unusedstationfaction)
         {
 //            System.Diagnostics.Debug.WriteLine("Bounty Victim " + VictimFactionLocalised);
-            stats.BountyKill(VictimFactionLocalised);
+            stats.BountyKill(system, VictimFactionLocalised);
             if (Rewards != null)
             {
                 foreach (var r in Rewards)
                 {
   //                  System.Diagnostics.Debug.WriteLine("..Bounty Reward {0} {1}" , r.Faction, r.Reward);
-                    stats.BountyRewards(r.Faction_Localised, r.Reward);
+                    stats.BountyRewards(system, r.Faction_Localised, r.Reward);
                 }
             }
         }
@@ -200,9 +200,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public long Reward { get; set; }
 
-        public void UpdateStats(Stats stats, string unusedstationfaction)
+        public void UpdateStats(Stats stats, ISystem system , string unusedstationfaction)
         {
-            stats.CapShipAward(AwardingFaction_Localised, VictimFaction_Localised, Reward);
+            stats.CapShipAward(system, AwardingFaction_Localised, VictimFaction_Localised, Reward);
         }
 
         public override void FillInformation(out string info, out string detailed)
@@ -251,9 +251,9 @@ namespace EliteDangerousCore.JournalEvents
         public long? Bounty { get; set; }
         public long Cost { get { return (Fine.HasValue ? Fine.Value : 0) + (Bounty.HasValue ? Bounty.Value : 0); } }
 
-        public void UpdateStats(Stats stats, string unusedstationfaction)
+        public void UpdateStats(Stats stats, ISystem system, string unusedstationfaction)
         {
-            stats.CommitCrime(Faction);
+            stats.CommitCrime(system,Faction);
         }
 
         public override void FillInformation(out string info, out string detailed)
@@ -313,9 +313,9 @@ namespace EliteDangerousCore.JournalEvents
         public string TargetFaction { get { return VictimFaction; } }
 
 
-        public void UpdateStats(Stats stats, string unusedstationfaction)
+        public void UpdateStats(Stats stats, ISystem system, string unusedstationfaction)
         {
-            stats.KillBond(AwardingFaction_Localised, VictimFaction_Localised, Reward);
+            stats.KillBond(system, AwardingFaction_Localised, VictimFaction_Localised, Reward);
         }
 
         public override void FillInformation(out string info, out string detailed)
@@ -370,9 +370,9 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void UpdateStats(Stats stats, string stationfaction)
+        public void UpdateStats(Stats stats, ISystem system, string stationfaction)
         {
-            stats.PayBounties(Faction, Amount);
+            stats.PayBounties(system,Faction, Amount);
         }
     }
 
@@ -409,10 +409,10 @@ namespace EliteDangerousCore.JournalEvents
             detailed = "";
         }
 
-        public void UpdateStats(Stats stats, string stationfaction)
+        public void UpdateStats(Stats stats, ISystem system, string stationfaction)
         {
             if ( Faction.HasChars())
-                stats.PayFines(Faction, Amount);
+                stats.PayFines(system, Faction, Amount);
         }
     }
 
@@ -509,18 +509,18 @@ namespace EliteDangerousCore.JournalEvents
 
         }
 
-        public void UpdateStats(Stats stats, string stationfaction)
+        public void UpdateStats(Stats stats, ISystem system, string stationfaction)
         {
             if (Faction != null)
             {
                 if (Factions?.Length > 1)
                 {
                     foreach (var f in Factions)
-                        stats.RedeemVoucher(f.Faction, f.Amount);
+                        stats.RedeemVoucher(system, f.Faction, f.Amount);
 
                 }
                 else
-                    stats.RedeemVoucher(Faction, Amount);
+                    stats.RedeemVoucher(system, Faction, Amount);
             }
         }
     }

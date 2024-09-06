@@ -25,21 +25,21 @@ namespace EliteDangerousCore
     {
         public enum StateTypes { InProgress, Completed, Abandoned, Failed, Died };    
 
+        // Journal entries
         public JournalMissionAccepted Mission { get; private set; }                  // never null
         public JournalMissionCompleted Completed { get; private set; }               // null until completed properly, may be complete but with this missing
         public JournalMissionRedirected Redirected { get; private set; }             // null unless redirected
         public JournalCargoDepot CargoDepot { get; private set; }                    // null unless we received a CD on this mission
 
+        // Mission state info
+        public ISystem OriginatingSystem { get; private set; }                      // where the mission originated from
+        public string OriginatingStation { get; private set; }                      // where the mission originated from
         public StateTypes State { get; private set; }
         public DateTime MissionEndTime { get; private set; }  // on Accepted, Expiry time, then actual finish time on Completed/Abandoned/Failed
-        private ISystem sys;                                      // where it was found
-        private string body;                                        // and body
 
         public bool InProgress { get { return (State == StateTypes.InProgress); } }
         public bool InProgressDateTime(DateTime compare) { return InProgress && DateTime.Compare(compare, Mission.Expiry)<0; }
         public ulong Id { get { return Mission.MissionId; } }                         // id of entry
-        public string OriginatingSystem { get { return sys.Name; } }
-        public string OriginatingStation { get { return body; } }
 
         public string DestinationSystemStationSettlement()        // allowing for redirection
         {
@@ -101,8 +101,8 @@ namespace EliteDangerousCore
 
             State = StateTypes.InProgress;
             MissionEndTime = m.Expiry;
-            sys = s;
-            body = b;
+            OriginatingSystem = s;
+            OriginatingStation = b;
         }
 
         public MissionState(MissionState other, JournalMissionRedirected m)      // redirected mission
@@ -113,8 +113,8 @@ namespace EliteDangerousCore
 
             State = other.State;
             MissionEndTime = other.MissionEndTime;
-            sys = other.sys;
-            body = other.body;
+            OriginatingSystem = other.OriginatingSystem;
+            OriginatingStation = other.OriginatingStation;
         }
 
         public MissionState(MissionState other, JournalMissionCompleted m)      // completed mission
@@ -126,8 +126,8 @@ namespace EliteDangerousCore
 
             State = StateTypes.Completed;
             MissionEndTime = m.EventTimeUTC;
-            sys = other.sys;
-            body = other.body;
+            OriginatingSystem = other.OriginatingSystem;
+            OriginatingStation = other.OriginatingStation;
         }
 
         public MissionState(MissionState other, JournalCargoDepot cd)           // cargo depot
@@ -138,8 +138,8 @@ namespace EliteDangerousCore
 
             State = other.State;
             MissionEndTime = other.MissionEndTime;
-            sys = other.sys;
-            body = other.body;
+            OriginatingSystem = other.OriginatingSystem;
+            OriginatingStation = other.OriginatingStation;
         }
 
         public MissionState(MissionState other, StateTypes type, DateTime? endtime)           // changed to another state..
@@ -150,8 +150,8 @@ namespace EliteDangerousCore
 
             State = type;
             MissionEndTime = (endtime != null) ? endtime.Value : other.MissionEndTime;
-            sys = other.sys;
-            body = other.body;
+            OriginatingSystem = other.OriginatingSystem;
+            OriginatingStation = other.OriginatingStation;
         }
     }
 

@@ -97,7 +97,7 @@ namespace EliteDangerousCore
 
     public interface IStatsJournalEntry
     {
-        void UpdateStats(Stats stats, string stationfaction);
+        void UpdateStats(Stats stats, ISystem system, string stationfaction);
     }
 
     public class IStatsItemsInfo
