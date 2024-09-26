@@ -68,33 +68,51 @@ namespace EliteDangerousCore
                 VistaGenomics,
         }
 
+        public static StationServices StationServicesToEnum(string fdname)
+        {
+            if (!fdname.HasChars()) // null or empty
+                return StationServices.Unknown;
+
+            if (stationservicesparselist.TryGetValue(fdname.ToLowerInvariant(), out StationServices value))
+                return value;
+            else
+            {
+                System.Diagnostics.Trace.WriteLine($"*** Station Services is unknown {fdname}");
+                return StationServices.Unknown;
+            }
+        }
+
+
+        // translate between some journal names and ours
+        static Dictionary<string, StationServices> translations = new Dictionary<string, StationServices>
+        {
+            ["engineer"] = StationServices.Workshop,
+            ["modulepacks"] = StationServices.FleetCarrierAdministration,
+            ["carrierfuel"] = StationServices.FleetCarrierFuel,
+            ["carriermanagement"] = StationServices.FleetCarrierManagement,
+            ["carriervendor"] = StationServices.FleetCarrierVendor,
+            ["facilitator"] = StationServices.InterstellarFactorsContact,
+            ["commodities"] = StationServices.Market,
+            ["voucherredemption"] = StationServices.RedemptionOffice,
+            ["rearm"] = StationServices.Restock,
+            ["searchrescue"] = StationServices.SearchAndRescue,
+            ["techbroker"] = StationServices.TechnologyBroker,
+            ["exploration"] = StationServices.UniversalCartographics,
+        };
+
+
         // convert to array from Jarray as formatted using Frontier names, may be null if fails
         public static StationServices[] ReadServicesFromJson(JToken services)
         {
             if (services != null)
             {
-                Dictionary<string, string> translations = new Dictionary<string, string>
-                {
-                    ["engineer"] = "Workshop",
-                    ["modulepacks"] = "FleetCarrierAdministration",
-                    ["carrierfuel"] = "FleetCarrierFuel",
-                    ["carriermanagement"] = "FleetCarrierManagement",
-                    ["carriervendor"] = "FleetCarrierVendor",
-                    ["facilitator"] = "InterstellarFactorsContact",
-                    ["commodities"] = "Market",
-                    ["voucherredemption"] = "RedemptionOffice",
-                    ["rearm"] = "Restock",
-                    ["searchrescue"] = "SearchAndRescue",
-                    ["techbroker"] = "TechnologyBroker",
-                    ["exploration"] = "UniversalCartographics",
-                };
                 var ret = services.Array()?.ToObject<StationDefinitions.StationServices[]>(false, false,
-                        preprocess: (t, x) =>
+                        process: (t, x) =>      // we need to process the station services enum ourself
                         {
-                            if (translations.TryGetValue(x.ToLowerInvariant(), out string tx))
+                            if (translations.TryGetValue(x.ToLowerInvariant(), out StationServices tx))     // if its a special name
                                 return tx;
                             else
-                                return x;
+                                return StationServicesToEnum(x);
                         });
 
                 return ret;
@@ -148,7 +166,7 @@ namespace EliteDangerousCore
                 return StarportTypes.Unknown;
 
             fdname = fdname.ToLowerInvariant().Replace(" ", "").Replace(";", "");
-            if (Enum.TryParse(fdname, true, out StarportTypes value))
+            if (starporttypesparselist.TryGetValue(fdname,out StarportTypes value))
                 return value;
             else
             {
@@ -219,6 +237,21 @@ namespace EliteDangerousCore
         }
 
         #endregion
+
+
+        static Dictionary<string, StationServices> stationservicesparselist;
+        static Dictionary<string, StarportTypes> starporttypesparselist;
+        static StationDefinitions()
+        {
+            stationservicesparselist = new Dictionary<string, StationServices>();
+            foreach (var v in Enum.GetValues(typeof(StationServices)))
+                stationservicesparselist[v.ToString().ToLowerInvariant()] = (StationServices)v;
+            starporttypesparselist = new Dictionary<string, StarportTypes>();
+            foreach (var v in Enum.GetValues(typeof(StarportTypes)))
+                starporttypesparselist[v.ToString().ToLowerInvariant()] = (StarportTypes)v;
+        }
+
+
     }
 }
 

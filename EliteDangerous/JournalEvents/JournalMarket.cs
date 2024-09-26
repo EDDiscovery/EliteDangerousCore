@@ -46,8 +46,6 @@ namespace EliteDangerousCore.JournalEvents
                     CCommodities com = new CCommodities(commodity, CCommodities.ReaderType.Market);
                     Commodities.Add(com);
                 }
-
-                Commodities.Sort((l, r) => l.locName.CompareTo(r.locName));
             }
             else
             {

@@ -69,13 +69,20 @@ namespace EliteDangerousCore
                 if (ExperimentalEffect.HasChars())
                 {
                     string loc = evt["ExperimentalEffect_Localised"].StrNull();
-                    var recp = Recipes.FindRecipe(ExperimentalEffect);  // see if we have that recipe for backup name
+
                     // seen records with localised=experimental effect so protect that.
-                    ExperimentalEffect_Localised = JournalFieldNaming.CheckLocalisation(!loc.EqualsIIC(ExperimentalEffect) ? loc : null, recp?.Name ?? ExperimentalEffect.SplitCapsWordFull());
+                    if (loc.EqualsIIC(ExperimentalEffect))
+                    {
+                        var recp = Recipes.FindRecipe(ExperimentalEffect);  // see if we have that recipe for backup name
+                        ExperimentalEffect_Localised = recp?.Name ?? ExperimentalEffect.SplitCapsWordFull();
+                    }
+                    else
+                        ExperimentalEffect_Localised = loc;
+
                     //System.Diagnostics.Debug.WriteLine($"Exp effect {ExperimentalEffect} loc {loc} recp {recp?.Name} = {ExperimentalEffect_Localised}");
                 }
 
-                Modifiers = evt["Modifiers"]?.ToObject<EngineeringModifiers[]>(ignoretypeerrors: true, checkcustomattr: false);     // instances of Value being wrong type - ignore and continue
+                Modifiers = evt["Modifiers"]?.ToObject<EngineeringModifiers[]>(true,false);     // instances of Value being wrong type - ignore and continue
 
                 if (Modifiers != null)
                 {

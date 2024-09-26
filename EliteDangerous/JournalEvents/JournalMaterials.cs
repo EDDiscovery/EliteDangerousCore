@@ -42,11 +42,11 @@ namespace EliteDangerousCore.JournalEvents
 
         public JournalMaterials(JObject evt) : base(evt, JournalTypeEnum.Materials)
         {
-            Raw = evt["Raw"]?.ToObjectQ<Material[]>()?.OrderBy(x => x.Name)?.ToArray();
+            Raw = evt["Raw"]?.ToObjectQ<Material[]>()?.ToArray();
             FixNames(Raw);
-            Manufactured = evt["Manufactured"]?.ToObjectQ<Material[]>()?.OrderBy(x => x.Name)?.ToArray();
+            Manufactured = evt["Manufactured"]?.ToObjectQ<Material[]>()?.ToArray();
             FixNames(Manufactured);
-            Encoded = evt["Encoded"]?.ToObjectQ<Material[]>()?.OrderBy(x => x.Name)?.ToArray();
+            Encoded = evt["Encoded"]?.ToObjectQ<Material[]>()?.ToArray();
             FixNames(Encoded);
         }
 

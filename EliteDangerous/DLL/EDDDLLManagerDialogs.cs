@@ -40,13 +40,13 @@ namespace EliteDangerousCore.DLL
                 if (setting.Length >= 2)    // double check
                 {
                     string name = setting.Substring(1);
-                    f.Add(new ExtendedControls.ConfigurableForm.Entry(name, typeof(ExtendedControls.ExtCheckBox), name, new Point(margin, vpos), new Size(width - margin - 20, 20), null) { CheckBoxChecked = setting[0] == '+' });
+                    f.Add(new ExtendedControls.ConfigurableEntryList.Entry(name, typeof(ExtendedControls.ExtCheckBox), name, new Point(margin, vpos), new Size(width - margin - 20, 20), null) { CheckBoxChecked = setting[0] == '+' });
                     vpos += 30;
                 }
             }
 
             vpos += 20;
-            f.Add(new ExtendedControls.ConfigurableForm.Entry("CALL", typeof(ExtendedControls.ExtButton), "Remove All".TxID(EDCTx.RemoveAll), new Point(margin, vpos), new Size(100, 20), null));
+            f.Add(new ExtendedControls.ConfigurableEntryList.Entry("CALL", typeof(ExtendedControls.ExtButton), "Remove All".TxID(EDCTx.RemoveAll), new Point(margin, vpos), new Size(100, 20), null));
             f.AddOK(new Point(width - margin - 100, vpos), "OK".TxID(EDCTx.OK));
             f.AddCancel(new Point(width - margin - 200, vpos), "Cancel".TxID(EDCTx.Cancel));
 
@@ -70,7 +70,7 @@ namespace EliteDangerousCore.DLL
             if (res == DialogResult.OK)
             {
                 alloweddisallowed = "";
-                foreach (var e in f.Entries.Where(x => x.ControlType == typeof(ExtendedControls.ExtCheckBox)))
+                foreach (var e in f.Entries.Entries.Where(x => x.ControlType == typeof(ExtendedControls.ExtCheckBox)))
                     alloweddisallowed = alloweddisallowed.AppendPrePad((f.Get(e.Name) == "1" ? "+" : "-") + e.Name, ",");
 
                 return alloweddisallowed;
@@ -98,7 +98,7 @@ namespace EliteDangerousCore.DLL
             {
                 if (dll.HasConfig())
                 {
-                    f.Add(new ExtendedControls.ConfigurableForm.Entry(dll.Name, typeof(ExtendedControls.ExtButton), dll.Name, new Point(margin, vpos), new Size(width - margin - 20, 20), null) );
+                    f.Add(new ExtendedControls.ConfigurableEntryList.Entry(dll.Name, typeof(ExtendedControls.ExtButton), dll.Name, new Point(margin, vpos), new Size(width - margin - 20, 20), null) );
                     vpos += 30;
                     hasconfig = true;
                 }
@@ -106,7 +106,7 @@ namespace EliteDangerousCore.DLL
 
             if (!hasconfig)
             {
-                f.Add(new ExtendedControls.ConfigurableForm.Entry("label", typeof(Label), "No DLLs support configuration", new Point(margin, vpos), new Size(width - margin - 20, 20), null));
+                f.Add(new ExtendedControls.ConfigurableEntryList.Entry("label", typeof(Label), "No DLLs support configuration", new Point(margin, vpos), new Size(width - margin - 20, 20), null));
                 vpos += 30;
             }
 

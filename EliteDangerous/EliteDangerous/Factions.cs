@@ -14,6 +14,7 @@
 
 using QuickJSON;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace EliteDangerousCore
@@ -54,14 +55,14 @@ namespace EliteDangerousCore
             Exploited,
         }
 
-        public static State? ToEnum(string englishname)
+        public static State? FactionStateToEnum(string englishname)
         {
             if (englishname == null)
             {
                 //System.Diagnostics.Trace.WriteLine($"**** No faction state");
                 return null;
             }
-            else if (Enum.TryParse(englishname, true, out State value)) // case insensitive
+            else if (parseliststate.TryGetValue(englishname.ToLowerInvariant(),out State value)) // case insensitive
             {
                 return value;
             }
@@ -89,6 +90,14 @@ namespace EliteDangerousCore
         {
             foreach (var name in Enum.GetNames(typeof(State)))
                 System.Diagnostics.Trace.WriteLine($".{name}: \"{name.SplitCapsWordFull()}\" @");
+        }
+
+        static Dictionary<string, State> parseliststate;
+        static FactionDefinitions()
+        {
+            parseliststate = new Dictionary<string, State>();
+            foreach (var v in Enum.GetValues(typeof(State)))
+                parseliststate[v.ToString().ToLowerInvariant()] = (State)v;
         }
 
         // from journal location or fsd jump or carrier jump, faction info array
@@ -231,14 +240,21 @@ namespace EliteDangerousCore
             // handle reading from JSON this field
             public static FactionInformation[] ReadJSON(JArray evt, DateTime utc, ISystem sys)
             {
-                var Factions = evt.ToObject<FactionInformation[]>(false, false, (type, s) =>
+                var Factions = evt.ToObject<FactionInformation[]>(false, false, process: (t, x) =>
                 {
-                    if (type.Name.Contains("Happiness"))
+                    if (t.Name.Contains("Happiness"))
                     {
-                        return s.IsEmpty() ? "Unknown" : s.Mid(18).Replace(";", "");
+                        return x.IsEmpty() ? HappinessState.Unknown : (HappinessState)Enum.Parse(typeof(HappinessState), x.Mid(18).Replace(";", ""), true);
                     }
+                    else if (t.Name.Contains("Government"))
+                        return GovernmentDefinitions.ToEnum(x);
+                    else if (t.Name.Contains("Allegiance"))
+                        return AllegianceDefinitions.ToEnum(x);
+                    else if (t.Name.Contains("State"))
+                        return FactionDefinitions.FactionStateToEnum(x);
                     else
-                        return s;
+                        System.Diagnostics.Debug.Assert(false);
+                    return null;
                 });
 
                 if (Factions != null)   // if read okay
@@ -295,9 +311,12 @@ namespace EliteDangerousCore
 
             public static ConflictInfo[] ReadJSON(JArray evt, DateTime utc)
             {
-                var Conflicts = evt.ToObject<ConflictInfo[]>(false, false, (t, x) =>
+                var Conflicts = evt.ToObject<ConflictInfo[]>(false, false, process: (t, x) =>
                     {
-                        return x.Length > 0 ? x : t.Name == "StatusState" ? nameof(ConflictInfo.StatusState.NoStatus) : nameof(ConflictInfo.WarTypeState.Unknown);
+                        if ( t == typeof(WarTypeState))
+                            return x.Length > 0 ? (WarTypeState)Enum.Parse(typeof(WarTypeState), x, true) : ConflictInfo.WarTypeState.Unknown;
+                        else
+                            return x.Length > 0 ? (StatusState)Enum.Parse(typeof(StatusState), x, true) : ConflictInfo.StatusState.NoStatus;
                     }
                 );
 

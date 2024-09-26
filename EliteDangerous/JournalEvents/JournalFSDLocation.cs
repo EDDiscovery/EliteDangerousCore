@@ -84,13 +84,13 @@ namespace EliteDangerousCore.JournalEvents
             if (jk != null && jk.IsObject)                  // new 3.03
             {
                 Faction = jk["Name"].Str();                // system faction pick up
-                FactionState = FactionDefinitions.ToEnum(jk["FactionState"].Str("Unknown")).Value;      // 16 august 22, analysed journals, appears not written if faction state is none, so use as default
+                FactionState = FactionDefinitions.FactionStateToEnum(jk["FactionState"].Str("Unknown")).Value;      // 16 august 22, analysed journals, appears not written if faction state is none, so use as default
             }
             else
             {
                 // old pre 3.3.3 had this - for system faction
                 Faction = evt.MultiStr(new string[] { "SystemFaction", "Faction" });
-                FactionState = FactionDefinitions.ToEnum(evt["FactionState"].Str("Unknown")).Value;           // PRE 2.3 .. not present in newer files, fixed up in next bit of code (but see 3.3.2 as its been incorrectly reintroduced)
+                FactionState = FactionDefinitions.FactionStateToEnum(evt["FactionState"].Str("Unknown")).Value;           // PRE 2.3 .. not present in newer files, fixed up in next bit of code (but see 3.3.2 as its been incorrectly reintroduced)
             }
 
             if (evt.Contains("Factions"))      // if contains factions
@@ -204,7 +204,7 @@ namespace EliteDangerousCore.JournalEvents
             if ( jk != null )
             {
                 StationFaction = jk["Name"].Str();                // system faction pick up
-                StationFactionState = FactionDefinitions.ToEnum(jk["FactionState"].Str("Unknown")).Value;
+                StationFactionState = FactionDefinitions.FactionStateToEnum(jk["FactionState"].Str("Unknown")).Value;
 
                 if (StationFactionState == FactionDefinitions.State.Unknown && Factions != null) // no data on this in event, but we have factions..
                 {

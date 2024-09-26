@@ -39,13 +39,13 @@ namespace EliteDangerousCore.JournalEvents
             if (jk != null && jk.IsObject)     // new 3.03
             {
                 Faction = jk["Name"].Str();                // system faction pick up
-                FactionState = FactionDefinitions.ToEnum(jk["FactionState"].Str("Unknown")).Value;
+                FactionState = FactionDefinitions.FactionStateToEnum(jk["FactionState"].Str("Unknown")).Value;
             }
             else
             {
                 // old pre 3.3.3 had this
                 Faction = evt.MultiStr(new string[] { "StationFaction", "Faction" });
-                FactionState = FactionDefinitions.ToEnum(evt["FactionState"].Str("Unknown")).Value;           // PRE 2.3 .. not present in newer files, fixed up in next bit of code (but see 3.3.2 as its been incorrectly reintroduced)
+                FactionState = FactionDefinitions.FactionStateToEnum(evt["FactionState"].Str("Unknown")).Value;           // PRE 2.3 .. not present in newer files, fixed up in next bit of code (but see 3.3.2 as its been incorrectly reintroduced)
             }
 
             Allegiance = AllegianceDefinitions.ToEnum( evt.MultiStr(new string[] { "StationAllegiance", "Allegiance" }, null) );    // may not be present, pass null to accept it
@@ -123,8 +123,8 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (evt != null)
             {
-                var ret = evt?.ToObject<Economies[]>(false, false, preprocess: (t, x) => {
-                    return EconomyDefinitions.PreProcessFDName(x);      // for enums, we need to preprocess..
+                var ret = evt?.ToObject<Economies[]>(false, false, process: (t, x) => {
+                    return EconomyDefinitions.ToEnum(x);      // for enums, we need to process them ourselves
                 });
                 
                 return ret;

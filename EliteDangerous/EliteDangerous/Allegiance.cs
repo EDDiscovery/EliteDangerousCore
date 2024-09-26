@@ -13,6 +13,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 namespace EliteDangerousCore
 {
@@ -39,7 +40,11 @@ namespace EliteDangerousCore
             if (!fdname.HasChars()) // null or empty
                 return Allegiance.Unknown;
 
-            if (Enum.TryParse(fdname.Replace(" ",""), true, out Allegiance value))
+            if (parselist.TryGetValue(fdname.ToLower(), out Allegiance value))
+            {
+                return value;
+            }
+            else if (parselist.TryGetValue(fdname.ToLower().Replace(" ", ""), out value))
             {
                 return value;
             }
@@ -59,6 +64,15 @@ namespace EliteDangerousCore
             string id = "Allegiances." + al.ToString();
             return BaseUtils.Translator.Instance.Translate(ToEnglish(al), id);
         }
+
+        static Dictionary<string, Allegiance> parselist;
+        static AllegianceDefinitions()
+        {
+            parselist = new Dictionary<string, Allegiance>();
+            foreach (var v in Enum.GetValues(typeof(Allegiance)))
+                parselist[v.ToString().ToLowerInvariant()] = (Allegiance)v;
+        }
+
     }
 }
 

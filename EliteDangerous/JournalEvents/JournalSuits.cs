@@ -27,7 +27,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             SuitID = ulong.MaxValue;        // pre alpha 4 this was missing.
             // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            evt.ToObjectProtected(this.GetType(), true, 
+                    membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    initialobject: this);        // read fields named in this structure matching JSON names
             if (Name.HasChars())    // protect against bad json
             {
                 FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
@@ -71,7 +73,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             SuitID = ulong.MaxValue;        // pre alpha 4 this was missing
             // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            evt.ToObjectProtected(this.GetType(), true, 
+                    membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    initialobject: this);        // read fields named in this structure matching JSON names
             if (Name.HasChars())    // protect against bad json
             {
                 FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
@@ -141,7 +145,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            evt.ToObjectProtected(this.GetType(), true, 
+                membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                initialobject: this);        // read fields named in this structure matching JSON names
 
             if (SuitName.HasChars())    // protect against bad json
             {
@@ -201,7 +207,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            evt.ToObjectProtected(this.GetType(), true, 
+                membersearchflags:System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, 
+                initialobject: this);        // read fields named in this structure matching JSON names
 
             if (SuitName.HasChars())
             {
@@ -260,7 +268,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            evt.ToObjectProtected(this.GetType(), true,
+                membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                initialobject: this);        // read fields named in this structure matching JSON names
             if (SuitName.HasChars())
             {
                 SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
@@ -298,7 +308,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            evt.ToObjectProtected(this.GetType(), true, 
+                membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                initialobject: this);        // read fields named in this structure matching JSON names
 
             if (SuitName.HasChars() && ModuleName.HasChars())
             {
@@ -371,7 +383,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            evt.ToObjectProtected(this.GetType(), true, 
+                membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                initialobject: this);        // read fields named in this structure matching JSON names
 
             if (SuitName.HasChars() && ModuleName.HasChars())
             {
@@ -430,7 +444,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            evt.ToObjectProtected(this.GetType(), true, 
+                membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                initialobject: this);        // read fields named in this structure matching JSON names
 
             if (SuitName.HasChars())
             {
@@ -471,7 +487,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            evt.ToObjectProtected(this.GetType(), true, 
+                membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                initialobject: this);        // read fields named in this structure matching JSON names
             if (SuitName.HasChars())
             {
                 SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
@@ -523,7 +541,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            evt.ToObjectProtected(this.GetType(), true, 
+                membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                initialobject: this);        // read fields named in this structure matching JSON names
             if (Name.HasChars())
             {
                 FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;

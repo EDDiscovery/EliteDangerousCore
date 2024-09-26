@@ -670,7 +670,13 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalScanOrganic(JObject evt) : base(evt, JournalTypeEnum.ScanOrganic)
         {
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            evt.ToObjectProtected(this.GetType(), true, 
+                membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                initialobject: this,
+                process:(t,x)=> {
+                            return (ScanTypeEnum)Enum.Parse(typeof(ScanTypeEnum),x,true);       // only enum, and we just use Parse
+                        }
+                );        // read fields named in this structure matching JSON names
 
             Species = Species.Alt("Unknown");       // seen entries with empty entries for these, set to unknown.
             Species_Localised = Species_Localised.Alt(Species);

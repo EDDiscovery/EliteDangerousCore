@@ -109,7 +109,7 @@ namespace EliteDangerousCore.JournalEvents
             StationServices = StationDefinitions.ReadServicesFromJson(evt["StationServices"]);
 
             Faction = evt["StationFaction"].I("Name").StrNull();        // may not be present, so null if not
-            FactionState = FactionDefinitions.ToEnum(evt["StationFaction"].I("FactionState").StrNull());    // null if not present
+            FactionState = FactionDefinitions.FactionStateToEnum(evt["StationFaction"].I("FactionState").StrNull());    // null if not present
             FriendlyFactionState = FactionDefinitions.ToEnglish(FactionState); // null if not present
 
             StationAllegiance = AllegianceDefinitions.ToEnum( evt["StationAllegiance"].StrNull());

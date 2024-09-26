@@ -164,6 +164,7 @@ namespace EliteDangerousCore
             BuggyCargoHatch,
         }
 
+
         private static Dictionary<Slot, string> english = new Dictionary<Slot, string>
         {
             [Slot.Unknown] = "Unknown",
@@ -332,7 +333,7 @@ namespace EliteDangerousCore
             if (!fdname.HasChars())
                 return Slot.Unknown;
 
-            if (Enum.TryParse(fdname, true, out Slot value))
+            if (parselist.TryGetValue(fdname.ToLower(), out Slot value))
             {
                 return value;
             }
@@ -352,6 +353,17 @@ namespace EliteDangerousCore
             string id = "ShipSlots." + al.ToString();
             return BaseUtils.Translator.Instance.Translate(ToEnglish(al), id);
         }
+
+        static Dictionary<string, Slot> parselist;
+        static ShipSlots()
+        {
+            parselist = new Dictionary<string, Slot>();
+            foreach (var v in Enum.GetValues(typeof(Slot)))
+                parselist[v.ToString().ToLowerInvariant()] = (Slot)v;
+        }
+
+
+
     }
 }
 

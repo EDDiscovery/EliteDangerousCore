@@ -85,8 +85,6 @@ namespace EliteDangerousCore.JournalEvents
                                                         engineering);
                     ShipModules.Add(module);
                 }
-
-                ShipModules = ShipModules.OrderBy(x => x.Slot).ToList();            // sort for presentation..
             }
         }
 
@@ -628,8 +626,6 @@ namespace EliteDangerousCore.JournalEvents
                                                         );
                     ShipModules.Add(module);
                 }
-
-                ShipModules = ShipModules.OrderBy(x => x.Slot).ToList();            // sort for presentation..
             }
         }
 

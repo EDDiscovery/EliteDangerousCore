@@ -58,7 +58,7 @@ namespace EliteDangerousCore
 
             fdname = fdname.ToLowerInvariant().Replace("$economy_", "").Replace(" ", "").Replace(";", "");
 
-            if (Enum.TryParse(fdname, true, out Economy value))
+            if (parselist.TryGetValue(fdname.ToLowerInvariant(), out Economy value))
                 return value;
             else if (fdname == "hightech")
                 return Economy.High_Tech;
@@ -71,19 +71,7 @@ namespace EliteDangerousCore
             }
         }
 
-        // process out fdname to an string matching our names removing decoration - its the same as above really, but not using it since above is slightly better performance.
-        public static string PreProcessFDName(string fdname)
-        {
-            if (!fdname.HasChars() || fdname == "unknown_value") // null or empty
-                return "Unknown";
-            
-            fdname = fdname.ToLowerInvariant().Replace("$economy_", "").Replace(" ", "").Replace(";", "");
-
-            if (fdname == "hightech")
-                fdname ="High_Tech";
-            return fdname;
-        }
-
+ 
         public static string ToDecorated(Economy ec)
         {
             return "$economy_" + ec.ToString() + ";";
@@ -104,6 +92,14 @@ namespace EliteDangerousCore
         {
             var list = (Economy[])Enum.GetValues(typeof(Economy));
             return list.Where(x => x != Economy.Unknown && x!=Economy.None && x!=Economy.Undefined).ToArray();
+        }
+
+        static Dictionary<string, Economy> parselist;
+        static EconomyDefinitions()
+        {
+            parselist = new Dictionary<string, Economy>();
+            foreach (var v in Enum.GetValues(typeof(Economy)))
+                parselist[v.ToString().ToLowerInvariant()] = (Economy)v;
         }
     }
 }

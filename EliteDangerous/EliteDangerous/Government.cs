@@ -49,7 +49,7 @@ namespace EliteDangerousCore
 
             fdname = fdname.ToLowerInvariant().Replace("$government_", "").Replace(" ", "").Replace(";", "");
 
-            if (Enum.TryParse(fdname, true, out Government value))
+            if (parselist.TryGetValue(fdname.ToLowerInvariant(), out Government value))
                 return value;
             else
             {
@@ -67,6 +67,14 @@ namespace EliteDangerousCore
         {
             string id = "GovernmentTypes." + gv.ToString();
             return BaseUtils.Translator.Instance.Translate(ToEnglish(gv), id);
+        }
+        
+        static Dictionary<string, Government> parselist;
+        static GovernmentDefinitions()
+        {
+            parselist = new Dictionary<string, Government>();
+            foreach (var v in Enum.GetValues(typeof(Government)))
+                parselist[v.ToString().ToLowerInvariant()] = (Government)v;
         }
 
     }

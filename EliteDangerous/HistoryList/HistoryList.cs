@@ -157,7 +157,10 @@ namespace EliteDangerousCore
             {
                 System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + $" Journal Creation of {tabledata.Count}");
 
-                var jes = JournalEntry.CreateJournalEntries(tabledata, cancelRequested, (p) => reportProgress(p, $"Creating Cmdr. {cmdname} journal entries {(int)(tabledata.Count * p / 100):N0}/{tabledata.Count:N0}"));
+                var jes = JournalEntry.CreateJournalEntries(tabledata, cancelRequested, 
+                            (p) => reportProgress(p, $"Creating Cmdr. {cmdname} journal entries {(int)(tabledata.Count * p / 100):N0}/{tabledata.Count:N0}"),
+                            true);
+
                 if (jes != null)        // if not cancelled, use it
                     journalentries = jes;
             }
